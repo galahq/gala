@@ -1,5 +1,4 @@
 import React from 'react'
-import '../stylesheets/Sidebar.scss'
 
 class Sidebar extends React.Component {
   render () {
@@ -26,10 +25,13 @@ class Headline extends React.Component {
 class TableOfContents extends React.Component {
   render() {
     return(
-      <ol>
-        <li>One</li>
-        <li>Two</li>
-      </ol>
+      <div id="TableOfContents">
+        <h4>Table of Contents</h4>
+        <ol>
+          <li>One</li>
+          <li>Two</li>
+        </ol>
+      </div>
     )
   }
 }

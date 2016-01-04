@@ -1,5 +1,4 @@
 import React from 'react'
-import '../stylesheets/Narrative.scss';
 
 class Narrative extends React.Component {
   render() {
@@ -19,10 +18,15 @@ export default Narrative
 class Section extends React.Component {
   render() {
     /* TODO: Generate from <a> tags */
-    let edgenotes = [{
-      "cover": <img />,
+    let edgenotes = [
+      {
+        "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
       "caption": "Edgenote"
-    }]
+      }, {
+        "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Canis_lupus_howling_%28illustration%29.jpg" />,
+      "caption": "Second"
+      }
+    ]
     let aside = edgenotes.map( (note) => {
       return <Edgenote contents={note} />
     } )

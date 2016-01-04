@@ -1,5 +1,130 @@
-@import 'main'
+@import 'main';
 
-h1.case-title {
-  color: $white;
+#CaseReader {
+  background: url('http://d2t44wh9rnwl5y.cloudfront.net/gsc/INZVOM/cb/58/c4/cb58c4713cfd48889f5bb6652889766f/images/wolf_case/u0.jpg?token=a967698df3df20ca7d34d0f33ce61130') no-repeat center center fixed; 
+  background-size: cover;
+
+  header {
+    background-color: $umichBlue;
+
+    padding: 1em;
+    margin-bottom: 1em;
+
+    h1 {
+      margin: 0;
+      color: $umichMaize;
+    }
+  }
+
+  #Sidebar {
+    width: 13em;
+    position: absolute;
+
+    background-color: rgba( darken($black, 10%), 0.4 );
+
+    margin: 2em 1em;
+    padding: 1em;
+
+    #Headline {
+      color: $white;
+      h2 { margin: 0 }
+    }
+
+    #TableOfContents {
+      h4 {
+        font: 13pt 'Alegreya Sans', sans-serif;
+        font-style: italic;
+        color: $white;
+
+        margin-bottom: 0;
+      }
+      ol {
+        font: 11pt/16pt 'Alegreya Sans', sans-serif;
+        color: lighten($umichMaize, 20%);
+        margin: 0.5em 0;
+        padding-left: 2em;
+      }
+    }
+  }
+
+  article {
+
+    section {
+      margin-left: 17em;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -webkit-justify-content: space-between;
+      justify-content:space-between;
+
+      .Card {
+        background-color: $white;
+        height: 100%;
+
+        -webkit-flex: 0 1 50em;
+        flex: 0 1 50em;
+
+        padding: 1em 2em;
+        margin: 1em;
+
+        a {
+          text-decoration: none;
+          color: inherit;
+          box-shadow: inset 0 -.4em 0 $lightGreen;
+          transition: background .15s cubic-bezier(.33, .66, .66, 1);
+        }
+
+        a:hover {
+          background-color: $lightGreen;
+        }
+      }
+
+      aside {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-flow: row wrap;
+        flex-flow: row wrap;
+        -webkit-justify-content: center;
+        justify-content: center;
+
+        -webkit-flex: 1 1 20em;
+        flex: 1 1 20em;
+        max-width: 53em;
+
+        margin: 1em;
+        padding: 0.5em;
+        padding-bottom: 0;
+        height: 100%;
+
+        background-color: rgba( darken($black, 10%), 0.4 );
+
+        figure {
+          -webkit-flex: 1 0 45%;
+          flex: 1 0 45%;
+
+          max-width: 20em;
+          height: 100%;
+
+          margin: 0.5em;
+          padding: 0.75em;
+
+          img {
+            width: 100%;
+          }
+
+          figcaption {
+            font-family: 'Alegreya Sans';
+            font-style: italic;
+            color: $white;
+            font-size: 12pt;
+          }
+        }
+
+        figure.focus {
+          background-color: $darkGreen;
+        }
+      }
+    }
+  }
 }

@@ -9,8 +9,19 @@ class CaseReader extends React.Component {
     let {title, narrative} = this.props
     narrative = [
       <div>
-        <p>These are the contents of the card, and <a>it has Edgenotes</a>.</p>
-        <p>Here is the second paragraph in this card.</p>
+        <h3>1. Introduction</h3>
+        <p>J. R. Richardson took a break from some documents he was reading to
+          think about a difficult decision that he would face in the upcoming
+          days: whether to vote in favor of allowing a wolf hunt to take place
+          in the state of Michigan. As chair of the Natural Resources Commission
+          (NRC), a seven-person policy advisory body to the state’s Department
+          of Natural Resources (DNR), Richardson had dealt with his fair share
+          of contentious issues during his tenure at the NRC since 2007. But he
+          could remember none that had aroused such passion from all sides as
+          the wolf hunt issue. As a result, he felt a great deal of pressure to
+          lead the NRC to make the right decision based on sound science,
+          respect <a href="#">for the needs of the people who are affected</a> by
+          the presence of wolves, and sensitivity to public opinion.</p>
       </div>,
       <div>
         <p>These are the contents of the card, and <a>it has Edgenotes</a>.  These are the contents of the card, and <a>it has Edgenotes</a>.</p>
@@ -19,10 +30,10 @@ class CaseReader extends React.Component {
     return (
       <div id="CaseReader">
         <header>
-          <h1 id="logo">Michigan Sustainability Cases</h1>
+          <h1 id="logo">MSC Logo</h1>
         </header>
-        <Narrative sections={narrative}/>
         <Sidebar title={title} />
+        <Narrative sections={narrative}/>
       </div>
     )
   }
