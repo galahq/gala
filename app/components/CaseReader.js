@@ -4,36 +4,68 @@ import '../stylesheets/CaseReader.scss';
 import Narrative from './Narrative.js'
 import Sidebar from './Sidebar.js'
 
+function mapNL(nodeList, callback) {
+  var arr = [];
+  for(var i = 0, ll = nodeList.length; i != ll; i++) {
+    arr.push(callback(nodeList[i]));
+  }
+  return arr;
+}
+
 class CaseReader extends React.Component {
+
+  constructor() {
+    super()
+
+    this.state = {
+      title: '',
+      chapters: []
+    }
+  }
+
+  generateChapters(splits) {
+    return splits.map( (split) => {
+
+      var x = document.createElement('div');
+      x.innerHTML = split;
+
+      return mapNL(x.children, (para) => {
+        return {__html: para.outerHTML}
+      } )
+    } )
+  }
+
+  parseCaseFromJSON(response) {
+    let chapters = this.generateChapters(response.content.rendered.split('<hr />'))
+    return({
+      title: response.title.rendered,
+      chapters: chapters
+    })
+  }
+
+  componentDidMount() {
+    $.ajax({
+      type: 'GET',
+      url: 'http://remley.wcbn.org/ihih-msc/index.php',
+      data: [
+        {name: 'rest_route', value: `/wp/v2/posts/${this.props.id}`}
+      ],
+      dataType: 'json',
+      success: (response) => {
+        this.setState(this.parseCaseFromJSON(response))
+      }
+    })
+  }
+
   render () {
-    let {title, narrative} = this.props
-    narrative = [
-      <div>
-        <h3>1. Introduction</h3>
-        <p>J. R. Richardson took a break from some documents he was reading to
-          think about a difficult decision that he would face in the upcoming
-          days: whether to vote in favor of allowing a wolf hunt to take place
-          in the state of Michigan. As chair of the Natural Resources Commission
-          (NRC), a seven-person policy advisory body to the state’s Department
-          of Natural Resources (DNR), Richardson had dealt with his fair share
-          of contentious issues during his tenure at the NRC since 2007. But he
-          could remember none that had aroused such passion from all sides as
-          the wolf hunt issue. As a result, he felt a great deal of pressure to
-          lead the NRC to make the right decision based on sound science,
-          respect <a href="#">for the needs of the people who are affected</a> by
-          the presence of wolves, and sensitivity to public opinion.</p>
-      </div>,
-      <div>
-        <p>These are the contents of the card, and <a>it has Edgenotes</a>.  These are the contents of the card, and <a>it has Edgenotes</a>.</p>
-      </div>
-    ]
+    let {title, chapters} = this.state
     return (
       <div id="CaseReader">
         <header>
           <h1 id="logo">MSC Logo</h1>
         </header>
         <Sidebar title={title} />
-        <Narrative sections={narrative}/>
+        <Narrative chapters={chapters}/>
       </div>
     )
   }

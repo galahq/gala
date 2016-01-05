@@ -1,23 +1,41 @@
 import React from 'react'
 
 class Narrative extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      chapter: 0
+    }
+  }
+
   render() {
-    let sections = this.props.sections.map( (section, i) => {
-      return <Section key={i} contents={section} />
-    })
+    if (this.props.chapters.length === 0) {
+      return <article />
+    }
+    let chapter = this.props.chapters[this.state.chapter]
     return (
-      <article>
-        {sections}
-      </article>
+      <Chapter paragraphs={chapter} />
     )
   }
 }
 
 export default Narrative
 
-class Section extends React.Component {
+class Chapter extends React.Component {
   render() {
-    /* TODO: Generate from <a> tags */
+    let paragraphs = this.props.paragraphs.map( (para) => {
+      return <Paragraph contents={para} />
+    } )
+    return(
+      <article>
+        {paragraphs}
+      </article>
+    )
+  }
+}
+
+class Paragraph extends React.Component {
+  render() {
     let edgenotes = [
       {
         "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
@@ -44,9 +62,7 @@ class Section extends React.Component {
 class Card extends React.Component {
   render () {
     return (
-      <div className="Card">
-        {this.props.contents}
-      </div>
+      <div className="Card" dangerouslySetInnerHTML={this.props.contents} />
     )
   }
 }
