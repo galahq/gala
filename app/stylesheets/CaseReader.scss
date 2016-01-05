@@ -49,6 +49,20 @@
         color: lighten($umichMaize, 20%);
         margin: 0.5em 0;
         padding-left: 2em;
+
+        li a {
+          color: inherit !important;
+          text-decoration: none;
+          transition: background .15s cubic-bezier(.33, .66, .66, 1);
+        }
+
+        li:hover a {
+          background-color: $purple
+        }
+
+        li.focus a {
+          background-color: $purple;
+        }
       }
     }
   }

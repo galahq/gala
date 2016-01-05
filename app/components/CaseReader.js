@@ -19,7 +19,8 @@ class CaseReader extends React.Component {
 
     this.state = {
       title: '',
-      chapters: []
+      chapters: [],
+      chapter: 5
     }
   }
 
@@ -28,8 +29,8 @@ class CaseReader extends React.Component {
 
       var x = document.createElement('div');
       x.innerHTML = split;
-
-      return mapNL(x.children, (para) => { return para } )
+      let title = x.querySelector('h1, h2, h3, h4, h5, h6').innerHTML
+      return {title: title, contents: mapNL(x.children, (para) => { return para } )}
     } )
   }
 
@@ -56,14 +57,19 @@ class CaseReader extends React.Component {
   }
 
   render () {
-    let {title, chapters} = this.state
+    let {title, chapters, chapter} = this.state
+    let chapterTitles = chapters.map((c) => {return c.title})
     return (
       <div id="CaseReader">
         <header>
           <h1 id="logo">MSC Logo</h1>
         </header>
-        <Sidebar title={title} />
-        <Narrative chapters={chapters}/>
+        <Sidebar
+          title={title}
+          chapterTitles={chapterTitles}
+          chapter={chapter}
+        />
+        <Narrative chapters={chapters} chapter={chapter}/>
       </div>
     )
   }

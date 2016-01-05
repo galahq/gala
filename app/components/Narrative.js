@@ -1,18 +1,11 @@
 import React from 'react'
 
 class Narrative extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      chapter: 3
-    }
-  }
-
   render() {
     if (this.props.chapters.length === 0) {
       return <article />
     }
-    let chapter = this.props.chapters[this.state.chapter]
+    let chapter = this.props.chapters[this.props.chapter].contents
     return (
       <Chapter paragraphs={chapter} />
     )

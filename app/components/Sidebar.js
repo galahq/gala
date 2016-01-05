@@ -2,11 +2,10 @@ import React from 'react'
 
 class Sidebar extends React.Component {
   render () {
-    let {title, sections} = this.props
     return (
       <aside id="Sidebar">
-        <Headline caseTitle={title}/>
-        <TableOfContents sections={sections}/>
+        <Headline caseTitle={this.props.title}/>
+        <TableOfContents chapterTitles={this.props.chapterTitles} chapter={this.props.chapter}/>
       </aside>
     )
   }
@@ -23,13 +22,22 @@ class Headline extends React.Component {
 }
 
 class TableOfContents extends React.Component {
+  renderChapterTitles() {
+    let titleList = this.props.chapterTitles.map( (title, idx) => {
+      return(
+        <li className={idx === this.props.chapter ? "focus" : ""}>
+          <a href="#">{title}</a>
+        </li>
+      )
+    } )
+    return titleList
+  }
   render() {
     return(
       <div id="TableOfContents">
         <h4>Table of Contents</h4>
         <ol>
-          <li>One</li>
-          <li>Two</li>
+          {this.renderChapterTitles()}
         </ol>
       </div>
     )
