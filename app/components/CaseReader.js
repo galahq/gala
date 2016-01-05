@@ -29,9 +29,7 @@ class CaseReader extends React.Component {
       var x = document.createElement('div');
       x.innerHTML = split;
 
-      return mapNL(x.children, (para) => {
-        return {__html: para.outerHTML}
-      } )
+      return mapNL(x.children, (para) => { return para } )
     } )
   }
 

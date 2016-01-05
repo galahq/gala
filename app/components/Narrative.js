@@ -4,7 +4,7 @@ class Narrative extends React.Component {
   constructor() {
     super()
     this.state = {
-      chapter: 0
+      chapter: 3
     }
   }
 
@@ -22,9 +22,21 @@ class Narrative extends React.Component {
 export default Narrative
 
 class Chapter extends React.Component {
+
+  renderParagraph(paraNode, index) {
+    switch (paraNode.nodeName){
+      case "H1": case "H2": case "H3": case "H4": case "H5": case "H6": case "BLOCKQUOTE":
+        let innerHTML = {__html: paraNode.innerHTML}
+        let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
+        return <NonParagraph key={`P${index}`} contents={element} />
+      case "P": case "UL": case "OL":
+        return <Paragraph key={`P${index}`} contents={{__html: paraNode.outerHTML}} />
+    }
+  }
+
   render() {
-    let paragraphs = this.props.paragraphs.map( (para) => {
-      return <Paragraph contents={para} />
+    let paragraphs = this.props.paragraphs.map( (para, i) => {
+      return this.renderParagraph(para, i)
     } )
     return(
       <article>
@@ -34,26 +46,42 @@ class Chapter extends React.Component {
   }
 }
 
+class NonParagraph extends React.Component {
+  render() {
+    return (
+      <section>
+        {this.props.contents}
+      </section>
+    )
+  }
+}
+
+
 class Paragraph extends React.Component {
   render() {
     let edgenotes = [
-      {
-        "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
-      "caption": "Edgenote"
-      }, {
-        "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Canis_lupus_howling_%28illustration%29.jpg" />,
-      "caption": "Second"
-      }
+      //{
+        //"cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
+      //"caption": "Edgenote"
+      //}, {
+        //"cover": <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Canis_lupus_howling_%28illustration%29.jpg" />,
+      //"caption": "Second"
+      //}
     ]
-    let aside = edgenotes.map( (note) => {
-      return <Edgenote contents={note} />
-    } )
+    let aside
+    if (edgenotes.length != 0) {
+      aside = <aside>
+                {
+                  edgenotes.map( (note) => {
+                    return <Edgenote contents={note} />
+                    } )
+                }
+              </aside>
+    }
     return (
       <section>
         <Card contents={this.props.contents} />
-        <aside>
-          {aside}
-        </aside>
+        {aside}
       </section>
     )
   }
