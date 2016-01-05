@@ -4,6 +4,8 @@
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://www.osu.edu/alumni/assets/uploads/galleries/Wolves_of_Yellowstone_Pic_1.jpg') no-repeat center center fixed; 
   background-size: cover;
 
+  position: relative;
+
   header {
     background-color: $umichBlue;
 
@@ -17,8 +19,11 @@
   }
 
   #Sidebar {
-    width: 13em;
-    position: absolute;
+    @media screen and (min-width: $mobileCutoff) {
+      width: 13em;
+      position: absolute;
+      top: 5em;
+    }
 
     background-color: rgba( darken($black, 10%), 0.4 );
 
@@ -70,7 +75,9 @@
   article {
 
     section {
-      margin-left: 17em;
+      @media screen and (min-width: $mobileCutoff) {
+        margin-left: 17em;
+      }
       display: -webkit-flex;
       display: flex;
       -webkit-flex-flow: row wrap;
