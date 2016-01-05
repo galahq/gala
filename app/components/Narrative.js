@@ -1,4 +1,5 @@
 import React from 'react'
+import mapNL from '../mapNL.js'
 
 class Narrative extends React.Component {
   render() {
@@ -51,30 +52,47 @@ class NonParagraph extends React.Component {
 
 
 class Paragraph extends React.Component {
-  render() {
-    let edgenotes = [
-      //{
-        //"cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
-      //"caption": "Edgenote"
-      //}, {
-        //"cover": <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Canis_lupus_howling_%28illustration%29.jpg" />,
-      //"caption": "Second"
-      //}
-    ]
+  constructor() {
+    super()
+    this.state= {
+      edgenotes: []
+    }
+  }
+
+  downloadEdgenotes() {
+    var contentsNode = document.createElement('div')
+    contentsNode.innerHTML = this.props.contents.__html
+    var aNodes = contentsNode.querySelectorAll('a')
+    let edgenoteStub = {
+      "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
+      "caption": "Edgenote"
+    }
+    this.setState({edgenotes: mapNL(aNodes, () => {return edgenoteStub}) })
+  }
+
+  componentDidMount() {
+    this.downloadEdgenotes()
+  }
+
+  renderEdgenotes() {
     let aside
-    if (edgenotes.length != 0) {
+    if (this.state.edgenotes.length != 0) {
       aside = <aside>
                 {
-                  edgenotes.map( (note) => {
+                  this.state.edgenotes.map( (note) => {
                     return <Edgenote contents={note} />
                     } )
                 }
               </aside>
     }
+    return aside
+  }
+
+  render() {
     return (
       <section>
         <Card contents={this.props.contents} />
-        {aside}
+        {this.renderEdgenotes()}
       </section>
     )
   }

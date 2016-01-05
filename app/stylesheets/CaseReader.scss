@@ -83,6 +83,9 @@
         color: $white;
         margin: 20px 44px 0 44px;
       }
+      blockquote{
+        background-color: rgba($black, 0.6);
+      }
 
       .Card {
         background-color: $white;
@@ -123,7 +126,7 @@
         padding-bottom: 0;
         height: 100%;
 
-        background-color: rgba( darken($black, 10%), 0.4 );
+        background-color: rgba( darken($black, 10%), 0.6 );
 
         figure {
           -webkit-flex: 1 0 45%;
@@ -142,6 +145,8 @@
           figcaption {
             font-family: 'Alegreya Sans';
             font-style: italic;
+            font-weight: 600;
+            letter-spacing: 0.4px;
             color: $white;
             font-size: 12pt;
           }

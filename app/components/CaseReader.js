@@ -1,16 +1,10 @@
 import React from 'react';
 import '../stylesheets/CaseReader.scss';
 
+import mapNL from '../mapNL.js'
+
 import Narrative from './Narrative.js'
 import Sidebar from './Sidebar.js'
-
-function mapNL(nodeList, callback) {
-  var arr = [];
-  for(var i = 0, ll = nodeList.length; i != ll; i++) {
-    arr.push(callback(nodeList[i]));
-  }
-  return arr;
-}
 
 class CaseReader extends React.Component {
 
@@ -20,7 +14,7 @@ class CaseReader extends React.Component {
     this.state = {
       title: '',
       chapters: [],
-      chapter: 5
+      chapter: 0
     }
   }
 

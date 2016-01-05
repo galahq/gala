@@ -12,7 +12,7 @@ $black: #262626;
 $white: #EBEAE4;
 
 body {
-  background-color: lighten($black, 10%);
+  background-color: $umichBlue;
   margin: 0;
   font: 11pt/19pt 'Merriweather', serif;
 }
@@ -59,6 +59,4 @@ blockquote {
   line-height: 1.5em;
   width: 50em;
   padding: 0 2em 0 2em;
-
-  background-color: rgba($black, 0.6);
 }
