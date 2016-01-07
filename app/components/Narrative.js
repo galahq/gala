@@ -59,9 +59,9 @@ class Paragraph extends React.Component {
     }
   }
 
-  downloadEdgenotes() {
+  downloadEdgenotes(contents) {
     var contentsNode = document.createElement('div')
-    contentsNode.innerHTML = this.props.contents.__html
+    contentsNode.innerHTML = contents.__html
     var aNodes = contentsNode.querySelectorAll('a')
     let edgenoteStub = {
       "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
@@ -71,7 +71,11 @@ class Paragraph extends React.Component {
   }
 
   componentDidMount() {
-    this.downloadEdgenotes()
+    this.downloadEdgenotes(this.props.contents)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.downloadEdgenotes(nextProps.contents)
   }
 
   renderEdgenotes() {
@@ -79,8 +83,8 @@ class Paragraph extends React.Component {
     if (this.state.edgenotes.length != 0) {
       aside = <aside>
                 {
-                  this.state.edgenotes.map( (note) => {
-                    return <Edgenote contents={note} />
+                  this.state.edgenotes.map( (note, idx) => {
+                    return <Edgenote contents={note} key={`${note}${idx}`} />
                     } )
                 }
               </aside>
