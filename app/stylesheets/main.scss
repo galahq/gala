@@ -13,10 +13,14 @@ $white: #EBEAE4;
 
 $mobileCutoff: 650px;
 
+html {height: 100%}
+body {height: 100%}
+div#container { height: 100% }
 body {
   background-color: $umichBlue;
   margin: 0;
   font: 11pt/19pt 'Merriweather', serif;
+  height: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
