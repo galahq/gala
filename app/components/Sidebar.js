@@ -1,11 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router'
 
 class Sidebar extends React.Component {
   render () {
+    let {title, caseID, chapterTitles, chapter} = this.props
     return (
       <aside id="Sidebar">
-        <Headline caseTitle={this.props.title}/>
-        <TableOfContents chapterTitles={this.props.chapterTitles} chapter={this.props.chapter}/>
+        <Headline caseTitle={title}/>
+        <TableOfContents caseID={caseID} chapterTitles={chapterTitles} chapter={chapter}/>
       </aside>
     )
   }
@@ -25,8 +27,8 @@ class TableOfContents extends React.Component {
   renderChapterTitles() {
     let titleList = this.props.chapterTitles.map( (title, idx) => {
       return(
-        <li className={idx === this.props.chapter ? "focus" : ""}>
-          <a href="#">{title}</a>
+        <li className={idx === parseInt(this.props.chapter) ? "focus" : ""}>
+          <Link to={`/read/${this.props.caseID}/${idx}`}>{title}</Link>
         </li>
       )
     } )

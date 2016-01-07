@@ -3,7 +3,6 @@ import '../stylesheets/CaseReader.scss';
 
 import mapNL from '../mapNL.js'
 
-import Narrative from './Narrative.js'
 import Sidebar from './Sidebar.js'
 
 class CaseReader extends React.Component {
@@ -13,8 +12,7 @@ class CaseReader extends React.Component {
 
     this.state = {
       title: '',
-      chapters: [],
-      chapter: 0
+      chapters: []
     }
   }
 
@@ -41,7 +39,7 @@ class CaseReader extends React.Component {
       type: 'GET',
       url: 'http://remley.wcbn.org/ihih-msc/index.php',
       data: [
-        {name: 'rest_route', value: `/wp/v2/posts/${this.props.id}`}
+        {name: 'rest_route', value: `/wp/v2/posts/${this.props.params.id}`}
       ],
       dataType: 'json',
       success: (response) => {
@@ -51,22 +49,25 @@ class CaseReader extends React.Component {
   }
 
   render () {
-    let {title, chapters, chapter} = this.state
+    let {title, chapters} = this.state
     let chapterTitles = chapters.map((c) => {return c.title})
+    let chapter= this.props.params.chapter || 0
     return (
       <div id="CaseReader">
         <header>
           <h1 id="logo">MSC Logo</h1>
         </header>
         <Sidebar
+          caseID={this.props.params.id}
           title={title}
           chapterTitles={chapterTitles}
           chapter={chapter}
         />
-        <Narrative chapters={chapters} chapter={chapter}/>
+        {this.props.children && React.cloneElement(this.props.children, {chapters: chapters})}
       </div>
     )
   }
 }
+        //<Narrative chapters={chapters} chapter={chapter}/>
 
 export default CaseReader

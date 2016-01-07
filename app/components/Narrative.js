@@ -6,7 +6,7 @@ class Narrative extends React.Component {
     if (this.props.chapters.length === 0) {
       return <article />
     }
-    let chapter = this.props.chapters[this.props.chapter].contents
+    let chapter = this.props.chapters[this.props.params.chapter].contents
     return (
       <Chapter paragraphs={chapter} />
     )
