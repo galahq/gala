@@ -1,4 +1,5 @@
 @import 'main';
+@import '_flexbox';
 
 #CaseReader {
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://www.osu.edu/alumni/assets/uploads/galleries/Wolves_of_Yellowstone_Pic_1.jpg') no-repeat center center fixed; 
@@ -79,12 +80,9 @@
       @media screen and (min-width: $mobileCutoff) {
         margin-left: 17em;
       }
-      display: -webkit-flex;
-      display: flex;
-      -webkit-flex-flow: row wrap;
-      flex-flow: row wrap;
-      -webkit-justify-content: space-between;
-      justify-content:space-between;
+      @include flexbox;
+      @include flex-flow(row wrap);
+      @include justify-content(space-between);
 
       h1, h2, h3, h4, h5, h6,
       blockquote {
@@ -99,8 +97,7 @@
         background-color: $white;
         height: 100%;
 
-        -webkit-flex: 0 1 50em;
-        flex: 0 1 50em;
+        @include flex($fg: 0, $fs: 1, $fb: 50em);
 
         padding: 1em 2em;
         margin: 1em;
@@ -118,15 +115,12 @@
       }
 
       aside {
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-flow: row wrap;
-        flex-flow: row wrap;
-        -webkit-justify-content: center;
-        justify-content: center;
+        @include flexbox;
+        @include flex-flow(row wrap);
+        @include justify-content(center);
 
-        -webkit-flex: 1 1 20em;
-        flex: 1 1 20em;
+        @include flex($fg: 1, $fs: 1, $fb: 20em);
+
         max-width: 53em;
 
         margin: 1em;
@@ -137,8 +131,7 @@
         background-color: rgba( darken($black, 10%), 0.6 );
 
         figure {
-          -webkit-flex: 1 0 45%;
-          flex: 1 0 45%;
+          @include flex($fg: 1, $fs: 0, $fb: 45%);
 
           max-width: 20em;
           height: 100%;
