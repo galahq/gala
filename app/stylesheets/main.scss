@@ -1,18 +1,68 @@
 // GLOBAL VARIABLES
 $darkGreen: #357E3C;
 $lightGreen: #6ACB72;
-$blue: #7351D4;
+$purple: #7351D4;
 $lightBrown: #986A40;
 $darkBrown: #7E5C3C;
+
+$umichMaize: #F1C432;
+$umichBlue: #02284B;
 
 $black: #262626;
 $white: #EBEAE4;
 
+$mobileCutoff: 650px;
+
+html {height: 100%}
+body {height: 100%}
+div#container { height: 100% }
 body {
-  background-color: $black;
+  background-color: $umichBlue;
+  margin: 0;
+  font: 11pt/19pt 'Merriweather', serif;
+  height: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  margin-left: 0;
+}
+
+h1, h2, h3 {
   font-family: 'Alegreya Sans SC', sans-serif;
-  letter-spacing: 1px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: 1.8em;
+}
+h2 {
+  font-size: 1.5em;
+}
+h3 {
+  font-size: 1.4em;
+}
+
+h4, h5, h6 {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-size: 1.4em;
+}
+
+h5 {
+  font-style: italic;
+}
+
+h6 {
+  font-size: 1.2em;
+}
+
+ul, ol {
+  padding-left: 1em;
+}
+
+blockquote {
+  font-size: 0.90em;
+  line-height: 1.5em;
+  width: 50em;
+  padding: 0 2em 0 2em;
 }
