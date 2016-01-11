@@ -19,12 +19,12 @@ class Chapter extends React.Component {
 
   renderParagraph(paraNode, index) {
     switch (paraNode.nodeName){
-      case "H1": case "H2": case "H3": case "H4": case "H5": case "H6": case "BLOCKQUOTE":
+      case "H1": case "H2": case "H3": case "H4": case "H5": case "H6":
         let innerHTML = {__html: paraNode.innerHTML}
         let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
         return <NonParagraph key={`P${index}`} contents={element} />
-      case "P": case "UL": case "OL":
-        return <Paragraph key={`P${index}`} contents={{__html: paraNode.outerHTML}} />
+      case "P": case "UL": case "OL": case "BLOCKQUOTE":
+        return <Paragraph key={`P${index}`} contents={{__html: paraNode.innerHTML}} />
     }
   }
 
