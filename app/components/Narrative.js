@@ -54,20 +54,42 @@ class NonParagraph extends React.Component {
 class Paragraph extends React.Component {
   constructor() {
     super()
-    this.state= {
+    this.state = {
       edgenotes: []
     }
+  }
+
+  parseEdgenoteFromJSON(response) {
+    let e = {
+    "caption": {__html: response.title.rendered},
+    "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />
+    }
+    return e
+  }
+
+  downloadEdgenote(a, i) {
+    let url = a.getAttribute("href")
+    let post_id = /p=([^&]+)/.exec(url)[1]
+    $.ajax({
+      type: 'GET',
+      url: 'http://remley.wcbn.org/ihih-msc/index.php',
+      data: [
+        {name: 'rest_route', value: `/wp/v2/posts/${post_id}`}
+      ],
+      dataType: 'json',
+      success: (response) => {
+        let edgenotes = this.state.edgenotes
+        edgenotes[i] = this.parseEdgenoteFromJSON(response)
+        this.setState({edgenotes: edgenotes})
+      }
+    })
   }
 
   downloadEdgenotes(contents) {
     var contentsNode = document.createElement('div')
     contentsNode.innerHTML = contents.__html
     var aNodes = contentsNode.querySelectorAll('a')
-    let edgenoteStub = {
-      "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />,
-      "caption": "Edgenote"
-    }
-    this.setState({edgenotes: mapNL(aNodes, () => {return edgenoteStub}) })
+    mapNL(aNodes, (a, i) => {this.downloadEdgenote(a, i)})
   }
 
   componentDidMount() {
@@ -75,6 +97,7 @@ class Paragraph extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.setState( { edgenotes: [] } )
     this.downloadEdgenotes(nextProps.contents)
   }
 
@@ -116,7 +139,7 @@ class Edgenote extends React.Component {
     return (
       <figure>
         <div>{cover}</div>
-        <figcaption>{caption}</figcaption>
+        <figcaption dangerouslySetInnerHTML={caption} />
       </figure>
     )
   }
