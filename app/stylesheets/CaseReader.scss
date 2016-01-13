@@ -22,7 +22,7 @@
 
   #Sidebar {
     @media screen and (min-width: $mobileCutoff) {
-      width: 13em;
+      width: 12em;
       position: absolute;
       top: 5em;
     }
@@ -35,8 +35,9 @@
     #Headline {
       color: $white;
       h2 {
-        font: 1.5em 'Alegreya Sans';
-        font-weight: 500;
+        font: 17pt $headlineFont;
+        line-height: 20pt;
+        font-weight: 600;
         letter-spacing: 0px;
         margin: 0;
       }
@@ -44,7 +45,7 @@
 
     #TableOfContents {
       h4 {
-        font: 1.1em 'Alegreya Sans', sans-serif;
+        font: 12pt $sansFont;
         font-style: italic;
         letter-spacing: 0;
         color: $white;
@@ -52,11 +53,14 @@
         margin-bottom: 0;
       }
       ol {
-        font: 11pt/16pt 'Alegreya Sans', sans-serif;
+        font: 11pt/14pt $sansFont;
         color: lighten($umichMaize, 20%);
         margin: 0.5em 0;
-        padding-left: 2em;
+        padding-left: 1.5em;
 
+        li {
+          margin: 0.3em 0;
+        }
         li a {
           color: inherit !important;
           text-decoration: none;
@@ -78,7 +82,7 @@
 
     section {
       @media screen and (min-width: $mobileCutoff) {
-        margin-left: 17em;
+        margin-left: 15em;
       }
       @include flexbox;
       @include flex-flow(row wrap);
@@ -94,18 +98,21 @@
       }
 
       .Card {
+        font-size: 14pt;
+        line-height: 14pt * 1.43;
         background-color: $white;
         height: 100%;
 
         @include flex($fg: 0, $fs: 1, $fb: 50em);
 
-        padding: 1em 2em;
+        padding: 1em 1.4em;
         margin: 1em;
 
         a {
           text-decoration: none;
           color: inherit;
-          box-shadow: inset 0 -.4em 0 $lightGreen;
+          box-shadow: inset 0 -.3em 0 $lightGreen;
+          border-bottom: 1px solid $lightGreen;
           transition: background .15s cubic-bezier(.33, .66, .66, 1);
         }
 
@@ -144,10 +151,9 @@
           }
 
           figcaption {
-            font-family: 'Alegreya Sans';
+            font-family: $sansFont;
             font-style: italic;
             font-weight: 600;
-            letter-spacing: 0.4px;
             color: $white;
             font-size: 12pt;
           }

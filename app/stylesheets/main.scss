@@ -13,13 +13,34 @@ $white: #EBEAE4;
 
 $mobileCutoff: 650px;
 
+$serifFont: "Freight Text Book";
+$serifFontSize: 12pt;
+$serifLeading: $serifFontSize * 1.43;
+
+$headlineFont: "Aleo";
+$sansFont: "Alegreya Sans";
+
+strong {
+  font-weight: inherit;
+  font-family: $serifFont + " SC";
+  letter-spacing: 1px;
+}
+em {
+  font-family: $serifFont + " Italic";
+  font-style: normal;
+}
+
+
 html {height: 100%}
 body {height: 100%}
 div#container { height: 100% }
 body {
   background-color: $umichBlue;
   margin: 0;
-  font: 11pt/19pt 'Merriweather', serif;
+  font: $serifFontSize $serifFont;
+  line-height: $serifLeading;
+  font-kerning: normal;
+  -webkit-font-kerning: normal;
   height: 100%;
 }
 
@@ -27,25 +48,20 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: 0;
 }
 
-h1, h2, h3 {
-  font-family: 'Alegreya Sans SC', sans-serif;
-  font-weight: 700;
-  letter-spacing: 2px;
+h1, h2, h3, h4, h5, h6 {
+  font-family: $headlineFont;
+  font-weight: 600;
 }
 
 h1 {
-  font-size: 1.8em;
+  font-size: 1.5em;
+  line-height: 1.0em;
 }
 h2 {
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 h3 {
-  font-size: 1.4em;
-}
-
-h4, h5, h6 {
-  font-family: 'Alegreya Sans', sans-serif;
-  font-size: 1.4em;
+  font-size: 1em;
 }
 
 h5 {
@@ -53,7 +69,7 @@ h5 {
 }
 
 h6 {
-  font-size: 1.2em;
+  font-size: 0.9em;
 }
 
 ul, ol {
