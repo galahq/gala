@@ -23,7 +23,7 @@ class Chapter extends React.Component {
         let innerHTML = {__html: paraNode.innerHTML}
         let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
         return <NonParagraph key={`P${index}`} contents={element} />
-      case "P": case "UL": case "OL": case "BLOCKQUOTE":
+      case "P": case "UL": case "OL": case "BLOCKQUOTE": case "SECTION":
         return <Paragraph key={`P${index}`} contents={{__html: paraNode.innerHTML}} />
     }
   }

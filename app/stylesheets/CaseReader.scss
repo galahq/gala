@@ -103,10 +103,10 @@
         background-color: $white;
         height: 100%;
 
-        @include flex($fg: 0, $fs: 1, $fb: 50em);
+        @include flex($fg: 0, $fs: 1, $fb: 35em);
 
         padding: 1em 1.4em;
-        margin: 1em;
+        margin: 0.5em 1em;
 
         a {
           text-decoration: none;
@@ -138,7 +138,7 @@
         background-color: rgba( darken($black, 10%), 0.6 );
 
         figure {
-          @include flex($fg: 1, $fs: 0, $fb: 45%);
+          @include flex($fg: 1, $fs: 0, $fb: 38%);
 
           max-width: 20em;
           height: 100%;
