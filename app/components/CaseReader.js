@@ -55,7 +55,9 @@ class CaseReader extends React.Component {
     return (
       <div id="CaseReader">
         <header>
-          <h1 id="logo">MSC Logo</h1>
+          <h1 id="logo">
+            <span>Michigan Sustainability Cases</span>
+          </h1>
         </header>
         <Sidebar
           caseID={this.props.params.id}

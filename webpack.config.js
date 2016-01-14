@@ -18,6 +18,12 @@ module.exports = {
           presets: ['es2015', 'react']
         }
       }, {
+        test: /\.(png|jpg)$/,
+        loader: 'url?limit=25000'
+      }, {
+        test: /\.woff$/,
+        loader: 'url?limit=100000'
+      }, {
         test: /\.scss$/,
         loader: 'style!css!sass'
       }

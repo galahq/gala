@@ -11,7 +11,7 @@ $umichBlue: #02284B;
 $black: #262626;
 $white: #EBEAE4;
 
-$mobileCutoff: 650px;
+$mobileCutoff: 740px;
 
 $serifFont: "Freight Text Book";
 $serifFontSize: 12pt;
@@ -19,6 +19,11 @@ $serifLeading: $serifFontSize * 1.43;
 
 $headlineFont: "Aleo";
 $sansFont: "Alegreya Sans";
+
+@font-face {
+  font-family: "Aleo";
+  src: url('../fonts/aleo-regular-webfont.woff') format('woff');
+}
 
 strong {
   font-weight: inherit;
