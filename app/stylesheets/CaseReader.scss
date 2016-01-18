@@ -191,12 +191,24 @@
             color: $white;
             font-size: 12pt;
             display: inline;
+            padding: 2pt;
+            padding-left: 0;
+            padding-right: 0;
+            -webkit-box-decoration-break: clone;
+            -ms-box-decoration-break: clone;
+            -o-box-decoration-break: clone;
+            box-decoration-break: clone;
+
+            box-shadow: 2pt 0 0 none, -2pt 0 0 none;
+            transition: background .15s cubic-bezier(.33, .66, .66, 1),
+                        box-shadow .15s cubic-bezier(.33, .66, .66, 1),
+                        color .15s cubic-bezier(.33, .66, .66, 1);
           }
 
-          figcaption.focus {
+          figcaption:hover, figcaption.focus {
             background-color: $lightGreen;
-            border: 2px solid $lightGreen;
             color: $black;
+            box-shadow: 2pt 0 0 $lightGreen, -2pt 0 0 $lightGreen;
           }
         }
       }

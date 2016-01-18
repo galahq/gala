@@ -24,9 +24,9 @@ class Chapter extends React.Component {
         let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
         return <NonParagraph key={`P${index}`} contents={element} />
       case "P":
-        return <Paragraph key={`P${index}`} contents={{__html: paraNode.outerHTML}} />
+        return <Paragraph id={index} key={`P${index}`} contents={paraNode.outerHTML} />
       case "UL": case "OL": case "BLOCKQUOTE": case "SECTION":
-        return <Paragraph key={`P${index}`} contents={{__html: paraNode.innerHTML}} />
+        return <Paragraph id={index} key={`P${index}`} contents={paraNode.innerHTML} />
     }
   }
 
@@ -52,19 +52,24 @@ class NonParagraph extends React.Component {
   }
 }
 
+String.prototype.addAttributeToLinks = function (attribute) {
+  return this.replace(/(<a href=\"[^ ]*[?&]p=([0-9]+)\")/g, '$1 ' + attribute)
+}
 
 class Paragraph extends React.Component {
   constructor() {
     super()
     this.state = {
+      selected_id: 0,
       edgenotes: []
     }
   }
 
   parseEdgenoteFromJSON(response) {
     let e = {
-    "caption": {__html: response.title.rendered},
-    "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />
+      "id": response.id,
+      "caption": {__html: response.title.rendered},
+      "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />
     }
     return e
   }
@@ -87,11 +92,23 @@ class Paragraph extends React.Component {
     })
   }
 
+  addHoverCallbacksToParagraphText(paragraph) {
+    let mouseover = 'onmouseover="window.handleHover'+this.props.id+'($2)"'
+    let mouseout = 'onmouseout="window.handleHover'+this.props.id+'(0)"'
+    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout) }
+  }
+
   downloadEdgenotes(contents) {
     var contentsNode = document.createElement('div')
-    contentsNode.innerHTML = contents.__html
+    contentsNode.innerHTML = contents
     var aNodes = contentsNode.querySelectorAll('a')
     mapNL(aNodes, (a, i) => {this.downloadEdgenote(a, i)})
+  }
+
+  componentWillMount() {
+    window["handleHover"+this.props.id] = (id) => {
+      this.setState({selected_id: id})
+    }
   }
 
   componentDidMount() {
@@ -109,7 +126,7 @@ class Paragraph extends React.Component {
       aside = <aside>
                 {
                   this.state.edgenotes.map( (note, idx) => {
-                    return <Edgenote contents={note} key={`${note}${idx}`} />
+                    return <Edgenote selected_id={this.state.selected_id} contents={note} key={`${note}${idx}`} />
                     } )
                 }
               </aside>
@@ -120,7 +137,7 @@ class Paragraph extends React.Component {
   render() {
     return (
       <section>
-        <Card contents={this.props.contents} />
+        <Card contents={this.addHoverCallbacksToParagraphText(this.props.contents)} />
         {this.renderEdgenotes()}
       </section>
     )
@@ -137,11 +154,11 @@ class Card extends React.Component {
 
 class Edgenote extends React.Component {
   render () {
-    let {cover, caption} = this.props.contents
+    let {id, cover, caption} = this.props.contents
     return (
       <figure>
         <div>{cover}</div>
-        <figcaption dangerouslySetInnerHTML={caption} />
+        <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
       </figure>
     )
   }
