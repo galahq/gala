@@ -17,10 +17,14 @@
     margin-bottom: 1em;
 
     h1 {
-      margin: 0;
-      height: 2em;
-      background-image: url('../images/logo.png');
+      margin: 2pt 1pt;
+      height: 1.1em;
+      background-image: url('../images/msc-logo.svg');
       background-size: 15em;
+      @media screen and (max-width: $mobileCutoff) {
+        background-size: 12em;
+        height: 0.9em;
+      }
       background-repeat: no-repeat;
       span { display: none }
     }
@@ -30,7 +34,7 @@
     @media screen and (min-width: $mobileCutoff) {
       width: 12em;
       position: absolute;
-      top: 5em;
+      top: 4.4em;
     }
 
     background-color: rgba( darken($black, 10%), 0.6 );
@@ -145,7 +149,7 @@
 
         @include flex($fg: 1, $fs: 1, $fb: 20em);
 
-        max-width: 43.3em;
+        max-width: 45.6em;
 
         margin: 9px;
         padding: 0.3em;
