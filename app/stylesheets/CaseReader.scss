@@ -35,6 +35,8 @@
 
     background-color: rgba( darken($black, 10%), 0.6 );
 
+    border-radius: 2pt;
+
     margin: 2em 1em;
     padding: 1em;
 
@@ -112,6 +114,8 @@
         background-color: $white;
         height: 100%;
 
+        border-radius: 2pt;
+
         @include flex($fg: 0, $fs: 1, $fb: 35em);
 
         padding: 0em 0.7em;
@@ -156,6 +160,8 @@
 
         background-color: rgba( darken($black, 10%), 0.6 );
 
+        border-radius: 2pt;
+
         figure {
           @media screen and (min-width: $mobileCutoff) {
             @include flex($fg: 1, $fs: 0, $fb: 35%);
@@ -177,7 +183,7 @@
           }
 
           figcaption {
-            font-family: $serifFont + " Italic";
+            font-family: $serifFont + " Medium Italic";
             color: $white;
             font-size: 12pt;
             display: inline;

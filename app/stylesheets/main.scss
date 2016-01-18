@@ -13,7 +13,7 @@ $white: #EBEAE4;
 
 $mobileCutoff: 740px;
 
-$serifFont: "Freight Text Book";
+$serifFont: "Freight Text";
 $serifFontSize: 12pt;
 $serifLeading: $serifFontSize * 1.43;
 
@@ -27,11 +27,11 @@ $sansFont: "Alegreya Sans";
 
 strong {
   font-weight: inherit;
-  font-family: $serifFont + " SC";
+  font-family: $serifFont + " Book SC";
   letter-spacing: 1px;
 }
 em {
-  font-family: $serifFont + " Italic";
+  font-family: $serifFont + " Book Italic";
   font-style: normal;
 }
 
@@ -43,7 +43,7 @@ body {
   -webkit-font-smoothing: antialiased;
   background-color: $umichBlue;
   margin: 0;
-  font: $serifFontSize $serifFont;
+  font: $serifFontSize $serifFont + " Book";
   line-height: $serifLeading;
   font-kerning: normal;
   -webkit-font-kerning: normal;
