@@ -56,6 +56,10 @@ String.prototype.addAttributeToLinks = function (attribute) {
   return this.replace(/(<a href=\"[^ ]*[?&]p=([0-9]+)\")/g, '$1 ' + attribute)
 }
 
+String.prototype.addAttributeToLinksPointingToEdgenoteID = function (id, attribute) {
+  return this.replace(new RegExp('(<a href=\"[^ ]*[?&]p='+id+'\")', 'g'), '$1 ' + attribute)
+}
+
 class Paragraph extends React.Component {
   constructor() {
     super()
@@ -126,7 +130,7 @@ class Paragraph extends React.Component {
       aside = <aside>
                 {
                   this.state.edgenotes.map( (note, idx) => {
-                    return <Edgenote selected_id={this.state.selected_id} contents={note} key={`${note}${idx}`} />
+                    return <Edgenote selected_id={this.state.selected_id} contents={note} key={`${note}${idx}`} handleHoverID={this.props.id} />
                     } )
                 }
               </aside>
@@ -135,9 +139,11 @@ class Paragraph extends React.Component {
   }
 
   render() {
+    //let paragraph = this.props.contents.addAttributeToLinksPointingToEdgenoteID(this.state.selected_id, 'class="focus"')
+    let paragraph = this.props.contents
     return (
       <section>
-        <Card contents={this.addHoverCallbacksToParagraphText(this.props.contents)} />
+        <Card contents={this.addHoverCallbacksToParagraphText(paragraph)} />
         {this.renderEdgenotes()}
       </section>
     )
@@ -153,12 +159,32 @@ class Card extends React.Component {
 }
 
 class Edgenote extends React.Component {
+  handleMouseOver() {
+    this.setState( { hovering: true } )
+  }
+  handleMouseOut() {
+    this.setState( { hovering: false } )
+  }
+
+  constructor() {
+    super()
+    this.state = { hovering: false }
+  }
+
+  className() {
+    if (this.state.hovering)
+      return "pop"
+  }
+
   render () {
     let {id, cover, caption} = this.props.contents
+    let className = this.className()
     return (
-      <figure>
-        <div>{cover}</div>
-        <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
+      <figure className={className} onMouseOver={this.handleMouseOver.bind(this)} onMouseOut={this.handleMouseOut.bind(this)} >
+        <div>
+          <div>{cover}</div>
+          <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
+        </div>
       </figure>
     )
   }

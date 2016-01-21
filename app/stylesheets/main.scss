@@ -41,12 +41,11 @@ body {height: 100%}
 div#container { height: 100% }
 body {
   -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
   background-color: $umichBlue;
   margin: 0;
   font: $serifFontSize $serifFont + " Book";
   line-height: $serifLeading;
-  font-kerning: normal;
-  -webkit-font-kerning: normal;
   height: 100%;
 }
 
@@ -87,4 +86,14 @@ blockquote {
   line-height: 1.5em;
   width: 50em;
   padding: 0 2em 0 2em;
+}
+
+h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
+em, strong {
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures, contextual;
+  -moz-font-feature-settings: "kern", "liga", "clig", "calt";
+  -ms-font-feature-settings: "kern", "liga", "clig", "alt";
+  -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
+  font-feature-settings: "kern", "liga", "clig", "calt";
 }
