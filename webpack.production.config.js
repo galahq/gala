@@ -1,12 +1,23 @@
+var path = require('path');
+var webpack = require('webpack');
+
 module.exports = {
+  devtool: 'source-map',
   entry: './app/application.js',
   output: {
-    path: './public/',
-    filename: 'bundle.js'
+    path: path.join(__dirname, 'public'),
+    filenmae: 'bundle.js',
+    publicPath: '/public/'
   },
-  devServer: {
-    inline: true,
-    port: 3333
+  plugins: [
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJSPlugin({
+      minimize: true,
+      compress: { warnings: false }
+    })
+  ],
+  resolve: {
+    extensions: ['', '.js', '.jsx']
   },
   module: {
     loaders: [
@@ -29,4 +40,4 @@ module.exports = {
       }
     ]
   }
-};
+}
