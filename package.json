@@ -4,9 +4,9 @@
   "description": "Learning system for Michigan Sustainability Cases",
   "main": "app/application.js",
   "scripts": {
-    "build": "webpack -p",
+    "build": "webpack -p --progress --colors",
     "dev": "webpack-dev-server --devtool eval --content-base public --host 0.0.0.0",
-    "postinstall": "webpack --config ./webpack.production.config.js --progress --colors",
+    "postinstall": "webpack --config ./webpack-production.config.js --progress --colors",
     "start": "node server.js"
   },
   "repository": {

@@ -6,12 +6,12 @@ module.exports = {
   entry: './app/application.js',
   output: {
     path: path.join(__dirname, 'public'),
-    filenmae: 'bundle.js',
+    filename: 'bundle.js',
     publicPath: '/public/'
   },
   plugins: [
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJSPlugin({
+    new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       compress: { warnings: false }
     })
