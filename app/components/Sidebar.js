@@ -27,7 +27,7 @@ class TableOfContents extends React.Component {
   renderChapterTitles() {
     let titleList = this.props.chapterTitles.map( (title, idx) => {
       return(
-        <li className={idx === parseInt(this.props.chapter) ? "focus" : ""}>
+        <li key={idx} className={idx === parseInt(this.props.chapter) ? "focus" : ""}>
           <Link to={`/read/${this.props.caseID}/${idx}`}>{title}</Link>
         </li>
       )

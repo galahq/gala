@@ -5,6 +5,11 @@ import mapNL from '../mapNL.js'
 
 import Sidebar from './Sidebar.js'
 
+String.prototype.trunc = String.prototype.trunc ||
+  function(n){
+    return (this.length > n) ? this.substr(0,n-1)+'...' : this;
+  };
+
 class CaseReader extends React.Component {
 
   constructor() {
@@ -48,10 +53,21 @@ class CaseReader extends React.Component {
     })
   }
 
+  log(caseTitle, chapterNum, chapterTitle) {
+    if (caseTitle)
+    ga("set", "page", location.pathname)
+    ga("send", "pageview", { "title": `${caseTitle.trunc(23)} ${chapterNum}: ${chapterTitle.trunc(20)}` })
+  }
+
   render () {
     let {title, chapters} = this.state
     let chapterTitles = chapters.map((c) => {return c.title})
     let chapter= this.props.params.chapter || 0
+
+    if (title !== "") {
+      this.log(title, chapter, chapterTitles[chapter])
+    }
+
     return (
       <div id="CaseReader">
         <header>
