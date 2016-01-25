@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router'
 
+import '../stylesheets/Sidebar.scss';
+
 class Sidebar extends React.Component {
   render () {
     let {title, caseID, chapterTitles, chapter} = this.props
