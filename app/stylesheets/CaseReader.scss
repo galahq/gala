@@ -171,7 +171,7 @@
             @include flex($fg: 1, $fs: 0, $fb: 35%);
           }
 
-          max-width: 20em;
+          width: 100%;
           height: 100%;
 
           margin: 0.5em;
@@ -182,10 +182,21 @@
           @media screen and (min-width: $mobileCutoff) {
             margin: 0.5em;
             padding: 0.75em;
+            max-width: 20em;
+          }
+
+          & > div {
+            @media screen and (max-width: $mobileCutoff) {
+              margin: auto;
+              padding: 0.5em;
+            }
           }
 
           img {
             width: 100%;
+            min-height: 3em;
+            background-color: lighten($umichBlue, 5%);
+            background: radial-gradient(ellipse at top center, lighten($umichBlue, 10%) 0%, lighten($umichBlue, 5%) 100%);
           }
 
           figcaption {

@@ -69,11 +69,20 @@ class Paragraph extends React.Component {
     }
   }
 
+  edgenoteCoverImage(response) {
+    if (response.better_featured_image !== null) {
+      return <img src={response.better_featured_image.source_url} />
+    } else {
+      return <img />
+    }
+  }
+
   parseEdgenoteFromJSON(response) {
     let e = {
       "id": response.id,
       "caption": {__html: response.title.rendered},
-      "cover": <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Canis_lupus_laying_in_grass.jpg" />
+      "cover": this.edgenoteCoverImage(response),
+      "format": response.format
     }
     return e
   }
@@ -177,12 +186,12 @@ class Edgenote extends React.Component {
   }
 
   render () {
-    let {id, cover, caption} = this.props.contents
+    let {id, cover, caption, format} = this.props.contents
     let className = this.className()
     return (
       <figure className={className} onMouseOver={this.handleMouseOver.bind(this)} onMouseOut={this.handleMouseOut.bind(this)} >
         <div>
-          <div>{cover}</div>
+          <div className={`edgenote-${format}`}>{cover}</div>
           <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
         </div>
       </figure>
