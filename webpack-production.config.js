@@ -29,8 +29,11 @@ module.exports = {
           presets: ['es2015', 'react']
         }
       }, {
-        test: /\.(svg|png|jpg)$/,
+        test: /\.(png|jpg)$/,
         loader: 'url?limit=25000'
+      }, {
+        test: /\.(svg)$/,
+        loader: 'raw-loader'
       }, {
         test: /\.woff$/,
         loader: 'url?limit=100000'

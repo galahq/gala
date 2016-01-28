@@ -93,4 +93,18 @@ article > section > aside {
     box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
   }
 
+  figure {
+    & > div { position: relative; }
+
+    .edgenote-icon{
+      display: inline-block;
+      margin-right: 4pt;
+      position: relative;
+      bottom: -4pt;
+      path, circle {
+        fill: $umichMaize;
+      }
+    }
+  }
+
 }

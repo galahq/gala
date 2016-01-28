@@ -25,7 +25,8 @@ class Edgenote extends React.Component {
     return (
       <figure className={className} onMouseOver={this.handleMouseOver.bind(this)} onMouseOut={this.handleMouseOut.bind(this)} >
         <div>
-          <div className={`edgenote-${format}`}>{cover}</div>
+          <div>{cover}</div>
+          <div className={`edgenote-icon edgenote-icon-${format}`} dangerouslySetInnerHTML={{__html: require(`../images/edgenote-${format}.svg`)}} />
           <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
         </div>
       </figure>

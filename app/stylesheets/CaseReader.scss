@@ -17,13 +17,12 @@
     margin-bottom: 1em;
 
     h1 {
-      margin: 2pt 1pt;
-      height: 1.1em;
-      background-image: url('../images/msc-logo.svg');
-      background-size: 15em;
-      @media screen and (max-width: $mobileCutoff) {
-        background-size: 12em;
-        height: 0.9em;
+      margin: 0pt 1pt;
+      svg {
+        width: 15em;
+        @media screen and (max-width: $mobileCutoff) {
+          width: 12em;
+        }
       }
       background-repeat: no-repeat;
       span { display: none }

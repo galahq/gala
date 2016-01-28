@@ -71,8 +71,7 @@ class CaseReader extends React.Component {
     return (
       <div id="CaseReader">
         <header>
-          <h1 id="logo">
-            <span>Michigan Sustainability Cases</span>
+          <h1 id="logo" dangerouslySetInnerHTML={{__html: require('../images/msc-logo.svg')}}>
           </h1>
         </header>
         <Sidebar
