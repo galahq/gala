@@ -80,7 +80,7 @@ class CaseReader extends React.Component {
           chapterTitles={chapterTitles}
           chapter={chapter}
         />
-        {this.props.children && React.cloneElement(this.props.children, {chapters: chapters})}
+        {this.props.children && React.cloneElement(this.props.children, {chapterTitles: chapterTitles, chapters: chapters})}
       </div>
     )
   }

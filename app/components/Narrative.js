@@ -1,16 +1,29 @@
 import React from 'react'
 import mapNL from '../mapNL.js'
 import Edgenote from './Edgenote.js'
+import {Link} from 'react-router'
 import '../stylesheets/Narrative.scss';
 
 class Narrative extends React.Component {
+  nextLink() {
+    let nextChapterID = parseInt(this.props.params.chapter) + 1
+    if (nextChapterID < this.props.chapters.length) {
+      return <Link className="nextLink" to={`/read/${this.props.params.id}/${nextChapterID}`}>Next: {this.props.chapterTitles[nextChapterID]}</Link>
+    } else {
+      return <footer><h2>End</h2></footer>
+    }
+  }
+
   render() {
     if (this.props.chapters.length === 0) {
       return <article />
     }
     let chapter = this.props.chapters[this.props.params.chapter].contents
     return (
-      <Chapter paragraphs={chapter} />
+      <main>
+        <Chapter paragraphs={chapter} />
+        {this.nextLink()}
+      </main>
     )
   }
 }
