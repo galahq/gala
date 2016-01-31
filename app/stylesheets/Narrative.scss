@@ -24,34 +24,39 @@ article {
     }
 
     .Card {
-      font-size: 14pt;
-      line-height: 14pt * 1.43;
-      background-color: $white;
       height: 100%;
-
-      border-radius: 2pt;
 
       @include flex($fg: 0, $fs: 1, $fb: 35em);
 
-      padding: 0em 0.7em;
       margin: 9px;
       @media screen and (min-width: $mobileCutoff) {
-        padding: 1.2em 2.4em;
         margin: 0.5em 1em;
       }
 
-      a {
-        text-decoration: none;
-        color: inherit;
-        box-shadow: inset 0 -.35em 0 $lightGreen;
-        border-bottom: 1px solid $lightGreen;
-        transition: background .15s cubic-bezier(.33, .66, .66, 1);
-      }
-
-      a:hover {
-        background-color: $lightGreen;
-      }
     }
+  }
+}
+
+.Card {
+  font-size: 14pt;
+  line-height: 14pt * 1.43;
+  background-color: $white;
+  border-radius: 2pt;
+  padding: 0em 0.7em;
+  @media screen and (min-width: $mobileCutoff) {
+    padding: 1.2em 2.4em;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    box-shadow: inset 0 -.35em 0 $lightGreen;
+    border-bottom: 1px solid $lightGreen;
+    transition: background .15s cubic-bezier(.33, .66, .66, 1);
+  }
+
+  a:hover {
+    background-color: $lightGreen;
   }
 }
 

@@ -21,8 +21,9 @@ class Narrative extends React.Component {
     let chapter = this.props.chapters[this.props.params.chapter].contents
     return (
       <main>
-        <Chapter paragraphs={chapter} />
+        <Chapter params={this.props.params} paragraphs={chapter} />
         {this.nextLink()}
+        {this.props.children}
       </main>
     )
   }
@@ -31,17 +32,17 @@ class Narrative extends React.Component {
 export default Narrative
 
 class Chapter extends React.Component {
-
   renderParagraph(paraNode, index) {
+    let params = this.props.params
     switch (paraNode.nodeName){
       case "H1": case "H2": case "H3": case "H4": case "H5": case "H6":
         let innerHTML = {__html: paraNode.innerHTML}
         let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
         return <NonParagraph key={`P${index}`} contents={element} />
       case "P":
-        return <Paragraph id={index} key={`P${index}`} contents={paraNode.outerHTML} />
+        return <Paragraph params={params} id={index} key={`P${index}`} contents={paraNode.outerHTML} />
       case "UL": case "OL": case "BLOCKQUOTE": case "SECTION":
-        return <Paragraph id={index} key={`P${index}`} contents={paraNode.innerHTML} />
+        return <Paragraph params={params} id={index} key={`P${index}`} contents={paraNode.innerHTML} />
     }
   }
 
@@ -144,8 +145,10 @@ class Paragraph extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState( { edgenotes: [] } )
-    this.downloadEdgenotes(nextProps.contents)
+    if (this.props.params.id !== nextProps.params.id || this.props.params.chapter !== nextProps.params.chapter) {
+      this.setState( { edgenotes: [] } )
+      this.downloadEdgenotes(nextProps.contents)
+    }
   }
 
   renderEdgenotes() {
@@ -154,7 +157,7 @@ class Paragraph extends React.Component {
       aside = <aside>
                 {
                   this.state.edgenotes.map( (note, idx) => {
-                    return <Edgenote selected_id={this.state.selected_id} contents={note} key={`${note}${idx}`} handleHoverID={this.props.id} />
+                    return <Edgenote params={this.props.params} selected_id={this.state.selected_id} contents={note} key={`${note}${idx}`} handleHoverID={this.props.id} />
                     } )
                 }
               </aside>

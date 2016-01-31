@@ -24,7 +24,9 @@ article > section > aside {
 
   border-radius: 2pt;
 
-  figure {
+  a {
+    text-decoration: none;
+
     @media screen and (min-width: $mobileCutoff) {
       @include flex($fg: 1, $fs: 0, $fb: 35%);
     }
@@ -83,7 +85,7 @@ article > section > aside {
     }
   }
 
-  figure.pop {
+  a.pop {
     cursor: pointer;
     transform: scale(1.02);
     background-color: rgba(138, 199, 255, 0.07);
@@ -93,7 +95,7 @@ article > section > aside {
     box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
   }
 
-  figure {
+  a {
     & > div { position: relative; }
 
     .edgenote-icon{

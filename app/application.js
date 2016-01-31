@@ -6,12 +6,15 @@ window.$ = require('jquery');
 
 import CaseReader from './components/CaseReader.js'
 import Narrative from './components/Narrative.js'
+import Modal from './components/Modal.js'
 
 render((
-  <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
+  <Router history={browserHistory}>
     <Route path="/read/:id(/)" component={CaseReader}>
       <IndexRedirect to="0" />
-      <Route path=":chapter" component={Narrative} />
+      <Route onEnter={() => window.scrollTo(0, 0)} path=":chapter" component={Narrative}>
+        <Route path="edgenotes/:edgenoteID" component={Modal} />
+      </Route>
     </Route>
   </Router>
 ), document.getElementById('container'))
