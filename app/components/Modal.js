@@ -1,7 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router'
-import '../stylesheets/Modal.scss'
+import fetchFromWP from '../wp-api.js'
 
+import '../stylesheets/Modal.scss'
 
 class Modal extends React.Component {
 
@@ -12,28 +13,27 @@ class Modal extends React.Component {
     }
   }
 
-  parseContentsFromJSON(r) {
-    this.setState({
-      contents: {__html: r.content.rendered}
-    })
+  modalShouldOpenLinks(r) {
+    return r.format === "link"
   }
 
-  downloadEdgenote() {
-    $.ajax({
-      type: 'GET',
-      url: 'http://remley.wcbn.org/ihih-msc/index.php',
-      data: [
-        {name: 'rest_route', value: `/wp/v2/posts/${this.props.params.edgenoteID}`}
-      ],
-      dataType: 'json',
-      success: (response) => {
-        this.parseContentsFromJSON(response)
+  parseContentsFromJSON(r) {
+    if (this.modalShouldOpenLinks(r)) {
+      let linkMatch = r.content.rendered.match(/<a href=\"([^ ]*)\"/)
+      var link
+      if (linkMatch !== null) {
+        link = linkMatch[1]
+        window.open(link, "_blank")
       }
-    })
+    } else {
+      this.setState({
+        contents: {__html: r.content.rendered}
+      })
+    }
   }
 
   componentDidMount() {
-    this.downloadEdgenote()
+    fetchFromWP(this.props.params.edgenoteID, this.parseContentsFromJSON.bind(this))
   }
 
   render() {
@@ -42,7 +42,14 @@ class Modal extends React.Component {
         <Link to={`/read/${this.props.params.id}/${this.props.params.chapter}`} className="modalDismiss">
           &nbsp;
         </Link>
-        <aside className="Card" dangerouslySetInnerHTML={this.state.contents} />
+        <aside className="Card">
+          <Link
+            to={`/read/${this.props.params.id}/${this.props.params.chapter}`}
+            className="modalClose"
+            dangerouslySetInnerHTML={{__html: require("../images/modal-close.svg")}}
+          />
+          <div dangerouslySetInnerHTML={this.state.contents} />
+        </aside>
       </div>
     )
   }

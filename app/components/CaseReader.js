@@ -2,6 +2,7 @@ import React from 'react';
 import '../stylesheets/CaseReader.scss';
 
 import mapNL from '../mapNL.js'
+import fetchFromWP from '../wp-api.js'
 
 import Sidebar from './Sidebar.js'
 
@@ -33,24 +34,14 @@ class CaseReader extends React.Component {
 
   parseCaseFromJSON(response) {
     let chapters = this.generateChapters(response.content.rendered.split('<hr />'))
-    return({
+    this.setState({
       title: response.title.rendered,
       chapters: chapters
     })
   }
 
   componentDidMount() {
-    $.ajax({
-      type: 'GET',
-      url: 'http://remley.wcbn.org/ihih-msc/index.php',
-      data: [
-        {name: 'rest_route', value: `/wp/v2/posts/${this.props.params.id}`}
-      ],
-      dataType: 'json',
-      success: (response) => {
-        this.setState(this.parseCaseFromJSON(response))
-      }
-    })
+    fetchFromWP(this.props.params.id, this.parseCaseFromJSON.bind(this))
   }
 
   log(caseTitle, chapterNum, chapterTitle) {

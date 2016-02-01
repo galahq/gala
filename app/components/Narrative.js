@@ -2,6 +2,7 @@ import React from 'react'
 import mapNL from '../mapNL.js'
 import Edgenote from './Edgenote.js'
 import {Link} from 'react-router'
+import fetchFromWP from '../wp-api.js'
 import '../stylesheets/Narrative.scss';
 
 class Narrative extends React.Component {
@@ -76,6 +77,10 @@ String.prototype.addAttributeToLinksPointingToEdgenoteID = function (id, attribu
   return this.replace(new RegExp('(<a href=\"[^ ]*[?&]p='+id+'\")', 'g'), '$1 ' + attribute)
 }
 
+String.prototype.removeHREFContents = function() {
+  return this.replace(/href=\"[^ ]*\"/g, "")
+}
+
 class Paragraph extends React.Component {
   constructor() {
     super()
@@ -106,25 +111,18 @@ class Paragraph extends React.Component {
   downloadEdgenote(a, i) {
     let url = a.getAttribute("href")
     let post_id = /p=([^&]+)/.exec(url)[1]
-    $.ajax({
-      type: 'GET',
-      url: 'http://remley.wcbn.org/ihih-msc/index.php',
-      data: [
-        {name: 'rest_route', value: `/wp/v2/posts/${post_id}`}
-      ],
-      dataType: 'json',
-      success: (response) => {
+    fetchFromWP(post_id, 
+                (response) => {
         let edgenotes = this.state.edgenotes
         edgenotes[i] = this.parseEdgenoteFromJSON(response)
         this.setState({edgenotes: edgenotes})
-      }
-    })
+      })
   }
 
   addHoverCallbacksToParagraphText(paragraph) {
     let mouseover = 'onmouseover="window.handleHover'+this.props.id+'($2)"'
     let mouseout = 'onmouseout="window.handleHover'+this.props.id+'(0)"'
-    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout) }
+    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout).removeHREFContents() }
   }
 
   downloadEdgenotes(contents) {
