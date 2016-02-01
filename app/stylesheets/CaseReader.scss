@@ -2,31 +2,12 @@
 @import '_flexbox';
 @import '_tint_and_shade';
 
-#CaseReader {
-  /*background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://www.osu.edu/alumni/assets/uploads/galleries/Wolves_of_Yellowstone_Pic_1.jpg') no-repeat center center fixed; */
-  /*background-size: cover;*/
+#CaseReader,
+#CaseOverview {
   background-color: tint($umichBlue, 20%);
 
   min-height: 100%;
   position: relative;
 
-  header {
-    background-color: $umichBlue;
-
-    padding: 1em;
-    margin-bottom: 1em;
-
-    h1 {
-      margin: 0pt 1pt;
-      svg {
-        width: 15em;
-        @media screen and (max-width: $mobileCutoff) {
-          width: 12em;
-        }
-      }
-      background-repeat: no-repeat;
-      span { display: none }
-    }
-  }
-
+  padding-top: 1em;
 }

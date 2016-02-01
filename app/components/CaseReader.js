@@ -5,6 +5,7 @@ import mapNL from '../mapNL.js'
 import fetchFromWP from '../wp-api.js'
 
 import Sidebar from './Sidebar.js'
+import Narrative from './Narrative.js'
 
 String.prototype.trunc = String.prototype.trunc ||
   function(n){
@@ -61,17 +62,14 @@ class CaseReader extends React.Component {
 
     return (
       <div id="CaseReader">
-        <header>
-          <h1 id="logo" dangerouslySetInnerHTML={{__html: require('../images/msc-logo.svg')}}>
-          </h1>
-        </header>
         <Sidebar
           caseID={this.props.params.id}
           title={title}
           chapterTitles={chapterTitles}
           chapter={chapter}
         />
-        {this.props.children && React.cloneElement(this.props.children, {chapterTitles: chapterTitles, chapters: chapters})}
+        <Narrative chapterTitles={chapterTitles} chapters={chapters} params={this.props.params} />
+        {this.props.children}
       </div>
     )
   }

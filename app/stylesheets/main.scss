@@ -97,3 +97,21 @@ em, strong {
   -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
   font-feature-settings: "kern", "liga", "clig", "calt";
 }
+
+header {
+  background-color: $umichBlue;
+
+  padding: 1em;
+
+  h1 {
+    margin: 0pt 1pt;
+    svg {
+      width: 15em;
+      @media screen and (max-width: $mobileCutoff) {
+        width: 12em;
+      }
+    }
+    background-repeat: no-repeat;
+    span { display: none }
+  }
+}

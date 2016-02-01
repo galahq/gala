@@ -24,7 +24,6 @@ class Narrative extends React.Component {
       <main>
         <Chapter params={this.props.params} paragraphs={chapter} />
         {this.nextLink()}
-        {this.props.children}
       </main>
     )
   }
