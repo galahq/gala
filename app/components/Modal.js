@@ -38,12 +38,12 @@ class Modal extends React.Component {
 
   render() {
     return (
-      <dialog>
+      <div className="Modal">
         <Link to={`/read/${this.props.params.id}/${this.props.params.chapter}`} className="modalDismiss">
           &nbsp;
         </Link>
         <aside className="Card" dangerouslySetInnerHTML={this.state.contents} />
-      </dialog>
+      </div>
     )
   }
 
