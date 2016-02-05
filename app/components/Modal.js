@@ -14,7 +14,7 @@ class Modal extends React.Component {
   }
 
   modalShouldOpenLinks(r) {
-    return r.format === "link"
+    return r.format === "link" || (r.format === "video" && r.content.rendered.match(/<a href=/))
   }
 
   parseContentsFromJSON(r) {

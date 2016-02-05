@@ -39,12 +39,13 @@ em {
 html {height: 100%}
 body {height: 100%}
 div#container { height: 100% }
+div#container > div { height: 100%; }
 body {
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
   background-color: $umichBlue;
   margin: 0;
-  font: $serifFontSize $serifFont + " Book";
+  font: $serifFontSize $sansFont ;
   line-height: $serifLeading;
   height: 100%;
 }

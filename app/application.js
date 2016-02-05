@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
 window.$ = require('jquery');
 
+import Case from './components/Case.js'
 import CaseReader from './components/CaseReader.js'
 import CaseOverview from './components/CaseOverview.js'
 import Modal from './components/Modal.js'
@@ -23,10 +24,12 @@ class App extends React.Component {
 
 render((
   <Router history={browserHistory}>
-    <Route path="/read/:id" component={App}>
-      <IndexRoute component={CaseOverview} />
-      <Route onEnter={() => window.scrollTo(0, 0)} path=":chapter" component={CaseReader}>
-        <Route path="edgenotes/:edgenoteID" component={Modal} />
+    <Route path="/" component={App}>
+      <Route path="read/:id" component={Case}>
+        <IndexRoute component={CaseOverview} />
+        <Route onEnter={() => window.scrollTo(0, 0)} path=":chapter" component={CaseReader}>
+          <Route path="edgenotes/:edgenoteID" component={Modal} />
+        </Route>
       </Route>
     </Route>
   </Router>

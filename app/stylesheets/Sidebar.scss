@@ -24,38 +24,45 @@
     }
   }
 
-  #TableOfContents {
-    h4 {
-      font: 12pt $sansFont;
-      font-style: italic;
-      letter-spacing: 0;
-      color: $white;
+}
 
-      margin-bottom: 0;
+#TableOfContents {
+  ol {
+    font: 11pt/14pt $sansFont;
+    color: lighten($umichMaize, 20%);
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+
+    li {
+      margin: 0.3em 0;
     }
-    ol {
-      font: 11pt/14pt $sansFont;
-      color: lighten($umichMaize, 20%);
-      margin: 0.5em 0;
-      padding-left: 1.5em;
 
-      li {
-        margin: 0.3em 0;
-      }
-      li a {
-        color: inherit !important;
-        text-decoration: none;
-        transition: background .15s cubic-bezier(.33, .66, .66, 1);
-      }
+    li:hover a {
+      background-color: $purple;
+    }
 
-      li:hover a {
-        background-color: $purple;
-      }
-
-      li.focus a {
-        background-color: $purple;
-      }
+    li.focus a {
+      background-color: $purple;
     }
   }
 }
 
+a {
+  color: lighten($umichMaize, 20%);
+  text-decoration: none;
+  transition: background .15s cubic-bezier(.33, .66, .66, 1);
+}
+
+a:hover {
+  background-color: $purple;
+  color: lighten($umichMaize, 20%);
+}
+
+h4.list-head {
+  font: 12pt $sansFont;
+  font-style: italic;
+  letter-spacing: 0;
+  color: $white;
+
+  margin: 0.5em 0;
+}

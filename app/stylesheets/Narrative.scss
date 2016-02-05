@@ -2,6 +2,8 @@
 
 article {
 
+  font-family: $serifFont + ' Book';
+
   section {
     @media screen and (min-width: $mobileCutoff) {
       margin-left: 16em;
@@ -74,9 +76,17 @@ article {
   text-decoration: none;
 }
 
+a.nextLink:hover {
+  background-color: transparent;
+}
+
 footer h2 {
   width: 100%;
   text-align: center;
   padding-bottom: 2em;
   color: $white;
+}
+
+.Card {
+  font-family: $serifFont + ' Book';
 }
