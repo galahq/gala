@@ -9,7 +9,8 @@ class Case extends React.Component {
 
     this.state = {
       title: '',
-      chapters: []
+      chapters: [],
+      metadata: {}
     }
   }
 
@@ -28,7 +29,13 @@ class Case extends React.Component {
     this.setState({
       title: response.title.rendered,
       chapters: chapters,
-      featuredImageURL: response.better_featured_image ? response.better_featured_image.source_url : ""
+      metadata: {
+        snippet: response.acf.case_summary,
+        case_authors: response.acf.case_authors,
+        podcast_name: response.acf.podcast_name,
+        podcast_url: response.acf.podcast_url,
+        featuredImageURL: response.better_featured_image ? response.better_featured_image.source_url : ""
+      }
     })
   }
 
@@ -37,7 +44,7 @@ class Case extends React.Component {
   }
 
   render() {
-    let {title, chapters, featuredImageURL} = this.state
+    let {title, chapters, metadata} = this.state
     var chapterTitles = []
     if (chapters.length !== 0) {
       chapterTitles = chapters.map((c) => {return c.title})
@@ -52,7 +59,7 @@ class Case extends React.Component {
                                                       title: title,
                                                       chapterTitles: chapterTitles,
                                                       chapters: chapters,
-                                                      featuredImageURL: featuredImageURL
+                                                      metadata: metadata
                                                     })
         }
       </div>
