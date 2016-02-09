@@ -26,16 +26,24 @@ a.modalDismiss {
 
   font-family: $serifFont + ' Book';
 
-  a.modalClose {
+  a {
     box-shadow: none;
     border-bottom: 0px;
+    color: $darkGreen;
   }
-  a.modalClose:hover {
+  a.modalClose {
+    color: $black;
+  }
+  a:hover {
     box-shadow: none;
     background-color: transparent;
+    border-bottom: 1px solid $darkGreen;
     path {
       stroke: $purple;
     }
+  }
+  a.modalClose:hover{
+    border-bottom: 0px;
   }
 
   iframe {
