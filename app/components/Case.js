@@ -32,8 +32,10 @@ class Case extends React.Component {
       metadata: {
         snippet: response.acf.case_summary,
         case_authors: response.acf.case_authors,
+        has_podcast: response.acf.has_podcast,
         podcast_name: response.acf.podcast_name,
         podcast_url: response.acf.podcast_url,
+        consider_links: response.acf.consider_links,
         featuredImageURL: response.better_featured_image ? response.better_featured_image.source_url : ""
       }
     })

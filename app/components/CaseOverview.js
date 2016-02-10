@@ -21,64 +21,90 @@ class Billboard extends React.Component {
 }
 
 class Actions extends React.Component {
+
+  renderConsiderLinks() {
+    if (this.props.caseInfo.metadata.consider_links && this.props.caseInfo.metadata.consider_links !== "") {
+      return (
+        <div>
+          <h2>
+            <div
+              className="ActionIcon"
+              dangerouslySetInnerHTML={{__html: require('../images/consider.svg')}}
+            />
+            Consider
+          </h2>
+          <div dangerouslySetInnerHTML={{__html: this.props.caseInfo.metadata.consider_links}} />
+        </div>
+      )
+    }
+  }
+
+  renderPodcast() {
+    if (this.props.caseInfo.metadata.has_podcast) {
+      return (
+        <div>
+          <h2>
+            <div
+              className="ActionIcon"
+              dangerouslySetInnerHTML={{__html: require('../images/listen.svg')}}
+            />
+            Listen
+          </h2>
+          <h4 className="list-head">Related podcast:</h4>
+          <a href={this.props.caseInfo.metadata.podcast_url}>
+            {this.props.caseInfo.metadata.podcast_name}
+          </a>
+        </div>
+      )
+    }
+  }
+
   render() {
     return (
       <aside className="Actions">
 
+        <div>
+          <h2>
+            <div
+              className="ActionIcon"
+              dangerouslySetInnerHTML={{__html: require('../images/read.svg')}}
+            />
+            Read
+          </h2>
+          <TableOfContents
+            caseID={this.props.caseInfo.caseID}
+            chapterTitles={this.props.caseInfo.chapterTitles}
+            chapter={null}
+          />
+        </div>
+
+      {this.renderPodcast()}
+
+      {/*
+      <div>
         <h2>
           <div
             className="ActionIcon"
-            dangerouslySetInnerHTML={{__html: require('../images/read.svg')}}
+            dangerouslySetInnerHTML={{__html: require('../images/explore.svg')}}
           />
-          Read
+          Explore
         </h2>
-        <TableOfContents
-          caseID={this.props.caseInfo.caseID}
-          chapterTitles={this.props.caseInfo.chapterTitles}
-          chapter={null}
-        />
+        <a href="#">Edgenote Gallery</a>
+      </div>
+      */}
 
-      <h2>
-        <div
-          className="ActionIcon"
-          dangerouslySetInnerHTML={{__html: require('../images/listen.svg')}}
-        />
-        Listen
-      </h2>
-      <h4 className="list-head">Related podcast:</h4>
-      <a href={this.props.caseInfo.metadata.podcast_url}>
-        {this.props.caseInfo.metadata.podcast_name}
-      </a>
+      {this.renderConsiderLinks()}
 
-      <h2>
-        <div
-          className="ActionIcon"
-          dangerouslySetInnerHTML={{__html: require('../images/explore.svg')}}
-        />
-        Explore
-      </h2>
-      <a href="#">Edgenote Gallery</a>
-
-      <h2>
-        <div
-          className="ActionIcon"
-          dangerouslySetInnerHTML={{__html: require('../images/consider.svg')}}
-        />
-        Consider
-      </h2>
-      <ul>
-        <li><a href="#">Stakeholder perspectives</a></li>
-        <li><a href="#">Apply your knowledge</a></li>
-      </ul>
-
-      <h2>
-        <div
-          className="ActionIcon"
-          dangerouslySetInnerHTML={{__html: require('../images/respond.svg')}}
-        />
-        Respond
-      </h2>
-      <a href="#">Give us your feedback about this case.</a>
+      <div>
+        <h2>
+          <div
+            className="ActionIcon"
+            dangerouslySetInnerHTML={{__html: require('../images/respond.svg')}}
+          />
+          Respond
+        </h2>
+        <a href="http://goo.gl/forms/32tzg5yZTd" target="_blank">Give us your feedback about this case.</a>
+      </div>
     </aside>
     )
   }
