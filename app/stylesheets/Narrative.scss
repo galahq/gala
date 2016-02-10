@@ -91,4 +91,7 @@ footer h2 {
 
 .Card {
   font-family: $serifFont + ' Book';
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
