@@ -28,6 +28,9 @@ article {
       height: 100%;
 
       @include flex($fg: 0, $fs: 1, $fb: 35em);
+      @media screen and (max-width: 1440px) {
+        @include flex($fg: 0, $fs: 1, $fb: 27em);
+      }
 
       margin: 9px;
       @media screen and (min-width: $mobileCutoff) {
