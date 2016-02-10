@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
+
 import fetchFromWP from '../wp-api.js'
 
 import '../stylesheets/Modal.scss'
@@ -9,7 +10,7 @@ class Modal extends React.Component {
   constructor() {
     super()
     this.state = {
-      contents: {__html: ""}
+      contents: null
     }
   }
 
@@ -39,12 +40,15 @@ class Modal extends React.Component {
     fetchFromWP(this.props.params.edgenoteID, this.parseContentsFromJSON.bind(this))
   }
 
-  render() {
-    return (
-      <div className="Modal">
-        <Link to={`/read/${this.props.params.id}/${this.props.params.chapter}`} className="modalDismiss">
-          &nbsp;
-        </Link>
+  renderModalContents() {
+    if (this.state.contents === null) {
+      return (
+        <aside>
+          <div className="loading-icon" dangerouslySetInnerHTML={{__html: require('../images/loading.svg')}} />
+        </aside>
+      )
+    } else {
+      return (
         <aside className="Card">
           <Link
             to={`/read/${this.props.params.id}/${this.props.params.chapter}`}
@@ -53,6 +57,17 @@ class Modal extends React.Component {
           />
           <div dangerouslySetInnerHTML={this.state.contents} />
         </aside>
+      )
+    }
+  }
+
+  render() {
+    return (
+      <div className="Modal">
+        <Link to={`/read/${this.props.params.id}/${this.props.params.chapter}`} className="modalDismiss">
+          &nbsp;
+        </Link>
+        {this.renderModalContents()}
       </div>
     )
   }
