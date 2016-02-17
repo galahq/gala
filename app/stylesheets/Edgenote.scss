@@ -1,6 +1,6 @@
 @import 'Narrative';
 
-article > section > aside {
+aside.edgenotes {
   @include flexbox;
   @include flex-flow(row wrap);
   @include justify-content(center);

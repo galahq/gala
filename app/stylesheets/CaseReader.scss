@@ -1,9 +1,6 @@
 @import 'main';
-@import '_flexbox';
-@import '_tint_and_shade';
 
-#CaseReader,
-#CaseOverview {
+.window {
   background-color: tint($umichBlue, 20%);
 
   min-height: 100%;

@@ -20,7 +20,7 @@ class Case extends React.Component {
       var x = document.createElement('div');
       x.innerHTML = split;
       let title = x.querySelector('h1, h2, h3, h4, h5, h6').innerHTML
-      return {title: title, contents: mapNL(x.children, (para) => { return para } )}
+      return {title: title, innerHTML: split, contents: mapNL(x.children, (para) => { return para } )}
     } )
   }
 

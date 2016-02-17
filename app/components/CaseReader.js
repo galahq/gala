@@ -27,7 +27,7 @@ class CaseReader extends React.Component {
     }
 
     return (
-      <div id="CaseReader">
+      <div id="CaseReader" className="window">
         <Sidebar
           caseID={this.props.params.id}
           title={title}

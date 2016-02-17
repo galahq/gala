@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router'
 import TableOfContents from './TableOfContents.js'
 import '../stylesheets/CaseOverview.scss'
 
@@ -80,7 +81,6 @@ class Actions extends React.Component {
 
       {this.renderPodcast()}
 
-      {/*
       <div>
         <h2>
           <div
@@ -89,9 +89,8 @@ class Actions extends React.Component {
           />
           Explore
         </h2>
-        <a href="#">Edgenote Gallery</a>
+        <Link to={`/read/${this.props.caseInfo.caseID}/edgenotes`}>Edgenote Gallery</Link>
       </div>
-      */}
 
       {this.renderConsiderLinks()}
 
@@ -113,7 +112,7 @@ class Actions extends React.Component {
 class CaseOverview extends React.Component {
   render () {
     return (
-      <div id="CaseOverview">
+      <div id="CaseOverview" className="window">
         <Billboard caseInfo={this.props} />
         <Actions caseInfo={this.props} />
       </div>

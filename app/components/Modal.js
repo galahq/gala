@@ -61,10 +61,18 @@ class Modal extends React.Component {
     }
   }
 
+  returnLink() {
+    if (this.props.params.chapter) {
+      return `/read/${this.props.params.id}/${this.props.params.chapter}`
+    } else {
+      return `/read/${this.props.params.id}/edgenotes`
+    }
+  }
+
   render() {
     return (
       <div className="Modal">
-        <Link to={`/read/${this.props.params.id}/${this.props.params.chapter}`} className="modalDismiss">
+        <Link to={this.returnLink()} className="modalDismiss">
           &nbsp;
         </Link>
         {this.renderModalContents()}

@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
 import fetchFromWP from '../wp-api.js'
+import LoadingIcon from './LoadingIcon.js'
 import '../stylesheets/Edgenote.scss'
 
 class Edgenote extends React.Component {
@@ -42,7 +43,9 @@ class Edgenote extends React.Component {
 
   className() {
     if (this.state.hovering)
-      return "pop"
+      return "Edgenote pop"
+    else
+      return "Edgenote"
   }
 
   componentDidMount() {
@@ -73,7 +76,7 @@ class Edgenote extends React.Component {
       )
     } else {
       return (
-        <div className="loading-icon" dangerouslySetInnerHTML={{__html: require('../images/loading.svg')}} />
+        <LoadingIcon />
       )
     }
   }

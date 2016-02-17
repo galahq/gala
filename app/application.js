@@ -7,7 +7,9 @@ window.$ = require('jquery');
 import Case from './components/Case.js'
 import CaseReader from './components/CaseReader.js'
 import CaseOverview from './components/CaseOverview.js'
+import EdgenoteGallery from './components/EdgenoteGallery.js'
 import Modal from './components/Modal.js'
+import fetchFromWP from './wp-api.js'
 
 class App extends React.Component {
   render() {
@@ -27,6 +29,9 @@ render((
     <Route path="/" component={App}>
       <Route path="read/:id" component={Case}>
         <IndexRoute component={CaseOverview} />
+        <Route onEnter={() => window.scrollTo(0, 0)} path="edgenotes" component={EdgenoteGallery}>
+          <Route path=":edgenoteID" component={Modal} />
+        </Route>
         <Route onEnter={() => window.scrollTo(0, 0)} path=":chapter" component={CaseReader}>
           <Route path="edgenotes/:edgenoteID" component={Modal} />
         </Route>
