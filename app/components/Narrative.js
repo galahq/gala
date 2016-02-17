@@ -1,8 +1,7 @@
 import React from 'react'
-import mapNL from '../mapNL.js'
 import Edgenote from './Edgenote.js'
 import {Link} from 'react-router'
-import fetchFromWP from '../wp-api.js'
+import gatherEdgenotes from '../gatherEdgenotes.js'
 import '../stylesheets/Narrative.scss';
 
 class Narrative extends React.Component {
@@ -85,37 +84,8 @@ class Paragraph extends React.Component {
     super()
     this.state = {
       selected_id: 0,
-      edgenotes: []
+      edgenote_ids: []
     }
-  }
-
-  edgenoteCoverImage(response) {
-    if (response.better_featured_image !== null) {
-      return <img src={response.better_featured_image.source_url} />
-    } else {
-      return <img />
-    }
-  }
-
-  parseEdgenoteFromJSON(response) {
-    let e = {
-      "id": response.id,
-      "caption": {__html: response.title.rendered},
-      "cover": this.edgenoteCoverImage(response),
-      "format": response.format
-    }
-    return e
-  }
-
-  downloadEdgenote(a, i) {
-    let url = a.getAttribute("href")
-    let post_id = /p=([^&]+)/.exec(url)[1]
-    fetchFromWP(post_id, 
-                (response) => {
-        let edgenotes = this.state.edgenotes
-        edgenotes[i] = this.parseEdgenoteFromJSON(response)
-        this.setState({edgenotes: edgenotes})
-      })
   }
 
   addHoverCallbacksToParagraphText(paragraph) {
@@ -124,11 +94,9 @@ class Paragraph extends React.Component {
     return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout).removeHREFContents() }
   }
 
-  downloadEdgenotes(contents) {
-    var contentsNode = document.createElement('div')
-    contentsNode.innerHTML = contents
-    var aNodes = contentsNode.querySelectorAll('a')
-    mapNL(aNodes, (a, i) => {this.downloadEdgenote(a, i)})
+  setEdgenotes(contents) {
+    let edgenote_ids = gatherEdgenotes(contents)
+    this.setState({edgenote_ids: edgenote_ids})
   }
 
   componentWillMount() {
@@ -138,23 +106,31 @@ class Paragraph extends React.Component {
   }
 
   componentDidMount() {
-    this.downloadEdgenotes(this.props.contents)
+    this.setEdgenotes(this.props.contents)
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.params.id !== nextProps.params.id || this.props.params.chapter !== nextProps.params.chapter) {
-      this.setState( { edgenotes: [] } )
-      this.downloadEdgenotes(nextProps.contents)
+      this.setState({ edgenote_ids: [] })
+      this.setEdgenotes(nextProps.contents)
     }
   }
 
   renderEdgenotes() {
     let aside
-    if (this.state.edgenotes.length != 0) {
+    if (this.state.edgenote_ids.length != 0) {
       aside = <aside>
                 {
-                  this.state.edgenotes.map( (note, idx) => {
-                    return <Edgenote params={this.props.params} selected_id={this.state.selected_id} contents={note} key={`${note}${idx}`} handleHoverID={this.props.id} />
+                  this.state.edgenote_ids.map( (id) => {
+                    return (
+                      <Edgenote
+                        path_prefix={`/read/${this.props.params.id}/${this.props.params.chapter}`}
+                        selected_id={this.state.selected_id}
+                        id={id}
+                        key={`edgenote_${id}`}
+                        handleHoverID={this.props.id}
+                      />
+                      )
                     } )
                 }
               </aside>

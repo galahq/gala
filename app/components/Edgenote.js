@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
+import fetchFromWP from '../wp-api.js'
 import '../stylesheets/Edgenote.scss'
 
 class Edgenote extends React.Component {
@@ -12,7 +13,31 @@ class Edgenote extends React.Component {
 
   constructor() {
     super()
-    this.state = { hovering: false }
+    this.state = {
+      hovering: false,
+      contents: null
+    }
+  }
+
+  edgenoteCoverImage(response) {
+    if (response.better_featured_image !== null) {
+      return <img src={response.better_featured_image.source_url} />
+    } else {
+      return <img />
+    }
+  }
+
+  parseContentsFromJSON(response) {
+    let contents = {
+      "caption": {__html: response.title.rendered},
+      "cover": this.edgenoteCoverImage(response),
+      "format": response.format
+    }
+    this.setState({contents: contents})
+  }
+
+  downloadContents() {
+    fetchFromWP(this.props.id, this.parseContentsFromJSON.bind(this))
   }
 
   className() {
@@ -20,18 +45,37 @@ class Edgenote extends React.Component {
       return "pop"
   }
 
+  componentDidMount() {
+    this.downloadContents()
+  }
+
   render () {
-    let {id, cover, caption, format} = this.props.contents
-    let className = this.className()
-    return (
-      <Link to={`/read/${this.props.params.id}/${this.props.params.chapter}/edgenotes/${id}`} className={className} onMouseOver={this.handleMouseOver.bind(this)} onMouseOut={this.handleMouseOut.bind(this)} >
-        <div>
-          <div>{cover}</div>
-          <div className={`edgenote-icon edgenote-icon-${format}`} dangerouslySetInnerHTML={{__html: require(`../images/edgenote-${format}.svg`)}} />
-          <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
-        </div>
-      </Link>
-    )
+    if (this.state.contents && this.state.contents !== null) {
+      let {cover, caption, format} = this.state.contents
+      let id = this.props.id
+      let className = this.className()
+      return (
+        <Link
+          to={`${this.props.path_prefix}/edgenotes/${id}`}
+          className={className}
+          onMouseOver={this.handleMouseOver.bind(this)}
+          onMouseOut={this.handleMouseOut.bind(this)}
+          >
+          <div>
+            <div>{cover}</div>
+            <div
+              className={`edgenote-icon edgenote-icon-${format}`}
+              dangerouslySetInnerHTML={{__html: require(`../images/edgenote-${format}.svg`)}}
+            />
+            <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
+          </div>
+        </Link>
+      )
+    } else {
+      return (
+        <div className="loading-icon" dangerouslySetInnerHTML={{__html: require('../images/loading.svg')}} />
+      )
+    }
   }
 }
 
