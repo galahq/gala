@@ -5,22 +5,55 @@
     margin-left: 16em;
   }
 
-  aside.edgenotes {
-    @include flexbox;
-    @include flex-flow(row wrap);
-    @include justify-content(flex-start);
-
-    @include flex($fg: 0, $fs: 0, $fb: 100%);
+  div.edgenotes {
+    -webkit-column-count: 5;
+    -webkit-column-gap: 1em;
+    -webkit-column-fill: auto;
+    -moz-column-count: 5;
+    -moz-column-gap: 1em;
+    -moz-column-fill: auto;
+    column-count: 5;
+    column-gap: 1em;
+    column-fill: auto;
     max-width: none;
+    margin: 0 2em;
+
+    @media screen and (max-width: 1980px) {
+      -webkit-column-count: 4;
+      -moz-column-count: 4;
+      column-count: 4;
+    }
+
+    @media screen and (max-width: 1646px) {
+      -webkit-column-count: 3;
+      -moz-column-count: 3;
+      column-count: 3;
+    }
+
+    @media screen and (max-width: 1312px) {
+      -webkit-column-count: 2;
+      -moz-column-count: 2;
+      column-count: 2;
+    }
+
+    @media screen and (max-width: 982px) {
+      -webkit-column-count: 1;
+      -moz-column-count: 1;
+      column-count: 1;
+    }
+
 
     background-color: transparent;
 
     .Edgenote {
-
-      @include flex($fg: 1, $fs: 1, $fb: 18em);
+      display: inline-block;
+      -webkit-column-break-inside: avoid;
+      -moz-column-break-inside: avoid;
+      column-break-inside: avoid;
       padding: 1em;
       border-radius: 2pt;
       background-color: $white;
+      width: 18em;
 
       svg path {
         stroke: lighten($umichBlue, 15%);

@@ -30,11 +30,12 @@ class EdgenoteGallery extends React.Component {
   renderEdgenotes() {
     let block
     if (this.state.edgenote_ids.length != 0) {
-      block = <aside className="edgenotes">
+      block = <div className="edgenotes">
                 {
                   this.state.edgenote_ids.map( (id) => {
                     return (
                       <Edgenote
+                        random={true}
                         path_prefix={`/read/${this.props.params.id}`}
                         selected_id={this.state.selected_id}
                         id={id}
@@ -44,7 +45,7 @@ class EdgenoteGallery extends React.Component {
                     )
                   } )
                 }
-              </aside>
+              </div>
     } else {
       block =  <LoadingIcon />
     }

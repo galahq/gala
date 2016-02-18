@@ -24,90 +24,90 @@ aside.edgenotes {
 
   border-radius: 2pt;
 
-  a {
-    text-decoration: none;
+}
 
-    @media screen and (min-width: $mobileCutoff) {
-      @include flex($fg: 1, $fs: 0, $fb: 35%);
-    }
+a.Edgenote {
+  text-decoration: none;
 
-    width: 100%;
-    height: 100%;
+  @media screen and (min-width: $mobileCutoff) {
+    @include flex($fg: 1, $fs: 0, $fb: 35%);
+  }
 
+  width: 100%;
+  height: 100%;
+
+  margin: 0.5em;
+  padding: 0.11em;
+
+  transition: all .15s cubic-bezier(.33, .66, .66, 1);
+
+  @media screen and (min-width: $mobileCutoff) {
     margin: 0.5em;
-    padding: 0.11em;
+    padding: 0.75em;
+    max-width: 20em;
+  }
 
-    transition: all .15s cubic-bezier(.33, .66, .66, 1);
-
-    @media screen and (min-width: $mobileCutoff) {
-      margin: 0.5em;
-      padding: 0.75em;
-      max-width: 20em;
-    }
-
-    & > div {
-      @media screen and (max-width: $mobileCutoff) {
-        margin: auto;
-        padding: 0.5em;
-      }
-    }
-
-    img {
-      width: 100%;
-      min-height: 3em;
-      background-color: lighten($umichBlue, 5%);
-      background: radial-gradient(ellipse at top center, lighten($umichBlue, 10%) 0%, lighten($umichBlue, 5%) 100%);
-    }
-
-    figcaption {
-      font-family: $serifFont + " Medium Italic";
-      color: $white;
-      font-size: 12pt;
-      display: inline;
-      padding: 2pt;
-      padding-left: 0;
-      padding-right: 0;
-      -webkit-box-decoration-break: clone;
-      -ms-box-decoration-break: clone;
-      -o-box-decoration-break: clone;
-      box-decoration-break: clone;
-
-      box-shadow: 2pt 0 0 none, -2pt 0 0 none;
-      transition: background .15s cubic-bezier(.33, .66, .66, 1),
-                  box-shadow .15s cubic-bezier(.33, .66, .66, 1),
-                  color .15s cubic-bezier(.33, .66, .66, 1);
-    }
-
-    figcaption.focus {
-      background-color: $lightGreen;
-      color: $black;
-      box-shadow: 2pt 0 0 $lightGreen, -2pt 0 0 $lightGreen;
+  & > div {
+    @media screen and (max-width: $mobileCutoff) {
+      margin: auto;
+      padding: 0.5em;
     }
   }
 
-  a.pop {
-    cursor: pointer;
-    transform: scale(1.02);
-    background-color: rgba(138, 199, 255, 0.07);
-    border-radius: 2pt;
-    -webkit-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
-    -moz-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
-    box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+  img {
+    width: 100%;
+    min-height: 3em;
+    background-color: lighten($umichBlue, 5%);
+    background: radial-gradient(ellipse at top center, lighten($umichBlue, 10%) 0%, lighten($umichBlue, 5%) 100%);
   }
 
-  a {
-    & > div { position: relative; }
+  figcaption {
+    font-family: $serifFont + " Medium Italic";
+    color: $white;
+    font-size: 12pt;
+    display: inline;
+    padding: 2pt;
+    padding-left: 0;
+    padding-right: 0;
+    -webkit-box-decoration-break: clone;
+    -ms-box-decoration-break: clone;
+    -o-box-decoration-break: clone;
+    box-decoration-break: clone;
 
-    .edgenote-icon{
-      display: inline-block;
-      margin-right: 4pt;
-      position: relative;
-      bottom: -4pt;
-    }
+    box-shadow: 2pt 0 0 none, -2pt 0 0 none;
+    transition: background .15s cubic-bezier(.33, .66, .66, 1),
+    box-shadow .15s cubic-bezier(.33, .66, .66, 1),
+    color .15s cubic-bezier(.33, .66, .66, 1);
   }
 
-  a:hover {
-    background-color: rgba(138, 199, 255, 0.07);
+  figcaption.focus {
+    background-color: $lightGreen;
+    color: $black;
+    box-shadow: 2pt 0 0 $lightGreen, -2pt 0 0 $lightGreen;
   }
+}
 
+a.Edgenote.pop {
+  cursor: pointer;
+  transform: scale(1.02);
+  background-color: rgba(138, 199, 255, 0.07);
+  border-radius: 2pt;
+  -webkit-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+  -moz-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+  box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+}
+
+a.Edgenote {
+  & > div { position: relative; }
+
+  .edgenote-icon{
+    display: inline-block;
+    margin-right: 4pt;
+    position: relative;
+    bottom: -4pt;
+  }
+}
+
+a.Edgenote:hover {
+  background-color: rgba(138, 199, 255, 0.07);
 }
