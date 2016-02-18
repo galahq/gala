@@ -51,7 +51,7 @@ class Modal extends React.Component {
       return (
         <aside className="Card">
           <Link
-            to={`/read/${this.props.params.id}/${this.props.params.chapter}`}
+            to={this.returnLink()}
             className="modalClose"
             dangerouslySetInnerHTML={{__html: require("../images/modal-close.svg")}}
           />
