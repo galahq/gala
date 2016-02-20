@@ -15,19 +15,6 @@
     .BillboardTitle {
       padding: 1em 2em;
       padding-top: 10em;
-      background-size: cover;
-      background-position: center;
-      border-radius: 2pt;
-
-      h1 {
-        color: $white;
-        margin-bottom: 0;
-      }
-      h4 {
-        font-family: $sansFont;
-        color: $white;
-        margin-top: 0.5em;
-      }
     }
 
     .Card.BillboardSnippet {
@@ -72,3 +59,20 @@
     }
   }
 }
+
+.BillboardTitle {
+  background-size: cover;
+  background-position: center;
+  border-radius: 2pt;
+
+  h1 {
+    color: $white;
+    margin-bottom: 0;
+  }
+  h4 {
+    font-family: $sansFont;
+    color: $white;
+    margin-top: 0.5em;
+  }
+}
+

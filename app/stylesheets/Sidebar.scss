@@ -2,27 +2,31 @@
 
 #Sidebar {
   @media screen and (min-width: $mobileCutoff) {
-    width: 12em;
+    width: 14em;
     position: absolute;
+    margin: 1.6em 1em;
   }
 
-  background-color: rgba( darken($black, 10%), 0.6 );
-
-  border-radius: 2pt;
-
-  margin: 2em 1em;
-  padding: 1em;
-
-  #Headline {
-    color: $white;
-    h2 {
-      font: 17pt $headlineFont;
-      line-height: 20pt;
-      font-weight: 600;
-      letter-spacing: 0px;
-      margin: 0;
-    }
+  & > a {
+    display: inline-block;
+    margin: 0.5em 1em;
   }
+
+  margin: 0em 1em;
+
+  .BillboardTitle {
+    padding: 1em 1em;
+    padding-top: 4em;
+    border-radius: 2pt;
+  }
+
+  #TableOfContents {
+    background-color: rgba( darken($black, 10%), 0.6 );
+    padding: 1em;
+    margin-top: 1em;
+    border-radius: 2pt;
+  }
+
 
 }
 

@@ -19,7 +19,7 @@ class CaseReader extends React.Component {
   }
 
   render () {
-    let {title, chapters, chapterTitles} = this.props
+    let {title, chapters, chapterTitles, metadata} = this.props
     let chapter= this.props.params.chapter || 0
 
     if (title !== "") {
@@ -33,6 +33,7 @@ class CaseReader extends React.Component {
           title={title}
           chapterTitles={chapterTitles}
           chapter={chapter}
+          metadata={metadata}
         />
         <Narrative chapterTitles={chapterTitles} chapters={chapters} params={this.props.params} />
         {this.props.children}

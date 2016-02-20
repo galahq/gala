@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'
 import TableOfContents from './TableOfContents.js'
+import BillboardTitle from './BillboardTitle.js'
 import '../stylesheets/CaseOverview.scss'
 
 class Billboard extends React.Component {
@@ -8,10 +9,7 @@ class Billboard extends React.Component {
     let {title, metadata} = this.props.caseInfo
     return (
       <section className="Billboard">
-        <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${metadata.featuredImageURL})`}}>
-          <h1>{title}</h1>
-          <h4>{metadata.case_authors}</h4>
-        </div>
+        <BillboardTitle title={title} featuredImageURL={metadata.featuredImageURL} case_authors={metadata.case_authors} />
         <div className="Card BillboardSnippet">
           <h3>Case Summary</h3>
           {metadata.snippet}

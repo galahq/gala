@@ -58,6 +58,7 @@ class EdgenoteGallery extends React.Component {
         <Sidebar
           caseID={this.props.params.id}
           title={this.props.title}
+          metadata={this.props.metadata}
         />
         <main id="EdgenoteGallery">
           <div id="EdgenoteGalleryHeader">

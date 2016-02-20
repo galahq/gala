@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import BillboardTitle from './BillboardTitle.js'
 
 import '../stylesheets/Sidebar.scss';
 
@@ -14,13 +15,13 @@ class Sidebar extends React.Component {
     }
   }
   render () {
-    let {title, caseID} = this.props
+    let {title, caseID, metadata} = this.props
     return (
       <aside id="Sidebar">
         <Link to={`/read/${caseID}`} className="backLink">
           Back to overview
         </Link>
-        <Headline caseTitle={title}/>
+        <BillboardTitle title={title} featuredImageURL={metadata.featuredImageURL} />
         {this.renderTOC()}
       </aside>
     )
@@ -28,11 +29,3 @@ class Sidebar extends React.Component {
 }
 
 export default Sidebar
-
-class Headline extends React.Component {
-  render() { return (
-    <div id="Headline">
-      <h2>{this.props.caseTitle}</h2>
-    </div>
-  ) }
-}

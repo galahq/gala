@@ -4,7 +4,29 @@ import {Link} from 'react-router'
 import gatherEdgenotes from '../gatherEdgenotes.js'
 import '../stylesheets/Narrative.scss';
 
+function isElementInViewport (el) {
+
+  //special bonus for those using jQuery
+  if (typeof jQuery === "function" && el instanceof jQuery) {
+    el = el[0];
+  }
+
+  var rect = el.getBoundingClientRect();
+
+  return (
+    rect.top >= 0 &&
+      rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+  );
+}
+
 class Narrative extends React.Component {
+  componentDidUpdate() {
+    let top = document.getElementById('top');
+    if (top && window.innerWidth < 749) {top.scrollIntoView()}
+  }
+
   nextLink() {
     let nextChapterID = parseInt(this.props.params.chapter) + 1
     if (nextChapterID < this.props.chapters.length) {
@@ -21,6 +43,7 @@ class Narrative extends React.Component {
     let chapter = this.props.chapters[this.props.params.chapter].contents
     return (
       <main>
+        <a id="top" />
         <Chapter params={this.props.params} paragraphs={chapter} />
         {this.nextLink()}
       </main>
