@@ -51,7 +51,7 @@ class Modal extends React.Component {
       return (
         <aside className="Card">
           <Link
-            to={this.returnLink()}
+            onClick={this.closeModal.bind(this)}
             className="modalClose"
             dangerouslySetInnerHTML={{__html: require("../images/modal-close.svg")}}
           />
@@ -69,10 +69,16 @@ class Modal extends React.Component {
     }
   }
 
+  closeModal() {
+    if (this.props.history) {
+      this.props.history.goBack()
+    }
+  }
+
   render() {
     return (
       <div className="Modal">
-        <Link to={this.returnLink()} className="modalDismiss">
+        <Link onClick={this.closeModal.bind(this)} className="modalDismiss">
           &nbsp;
         </Link>
         {this.renderModalContents()}
