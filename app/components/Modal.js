@@ -105,12 +105,15 @@ class Modal extends React.Component {
     let {caption} = this.state
     return (
       <div className="Modal">
-        <Link onClick={this.closeModal.bind(this)} className="modalDismiss">
+        <Link 
+          to={this.returnLink()}
+          className="modalDismiss"
+        >
           &nbsp;
         </Link>
         <header className="Modal-header">
           <Link
-            onClick={this.closeModal.bind(this)}
+            to={this.returnLink()}
             className="modalClose"
             dangerouslySetInnerHTML={{__html: require("../images/modal-close.svg")}}
           />
