@@ -4,12 +4,12 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
 window.$ = require('jquery');
 
+import Catalog from './components/Catalog.js'
 import Case from './components/Case.js'
 import CaseReader from './components/CaseReader.js'
 import CaseOverview from './components/CaseOverview.js'
 import EdgenoteGallery from './components/EdgenoteGallery.js'
 import Modal from './components/Modal.js'
-import fetchFromWP from './wp-api.js'
 
 class App extends React.Component {
   render() {
@@ -27,6 +27,7 @@ class App extends React.Component {
 render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
+      <IndexRoute component={Catalog} />
       <Route path="read/:id" component={Case}>
         <IndexRoute component={CaseOverview} />
         <Route onEnter={() => window.scrollTo(0, 0)} path="edgenotes" component={EdgenoteGallery}>

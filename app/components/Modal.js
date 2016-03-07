@@ -31,13 +31,30 @@ class Modal extends React.Component {
       }
     } else {
       this.setState({
-        contents: {__html: r.content.rendered}
+        caption: {__html: r.title.rendered},
+        contents: {__html: r.content.rendered},
+        format: r.format
       })
     }
   }
 
   componentDidMount() {
     fetchFromWP(this.props.params.edgenoteID, this.parseContentsFromJSON.bind(this))
+  }
+
+  renderFormatDifferentiatedContent(format) {
+    var x = document.createElement("div")
+    x.innerHTML = this.state.contents.__html
+
+    var formats = {
+      "aside": () => {
+        return <div className="Card" dangerouslySetInnerHTML={this.state.contents} />
+      }
+    }
+    if (formats[format])
+      return formats[format]()
+    else
+      return formats["aside"]()
   }
 
   renderModalContents() {
@@ -49,14 +66,23 @@ class Modal extends React.Component {
       )
     } else {
       return (
-        <aside className="Card">
-          <Link
-            onClick={this.closeModal.bind(this)}
-            className="modalClose"
-            dangerouslySetInnerHTML={{__html: require("../images/modal-close.svg")}}
-          />
-          <div dangerouslySetInnerHTML={this.state.contents} />
+        <aside>
+          <div className="Modal-contents" >
+            {this.renderFormatDifferentiatedContent(this.state.format)}
+          </div>
         </aside>
+      )
+    }
+  }
+
+  renderFormatIcon() {
+    let {format} = this.state
+    if (format !== undefined) {
+      return (
+        <div
+          className={`edgenote-icon edgenote-icon-${format}`}
+          dangerouslySetInnerHTML={{__html: require(`../images/edgenote-${format}.svg`)}}
+        />
       )
     }
   }
@@ -76,11 +102,21 @@ class Modal extends React.Component {
   }
 
   render() {
+    let {caption} = this.state
     return (
       <div className="Modal">
         <Link onClick={this.closeModal.bind(this)} className="modalDismiss">
           &nbsp;
         </Link>
+        <header className="Modal-header">
+          <Link
+            onClick={this.closeModal.bind(this)}
+            className="modalClose"
+            dangerouslySetInnerHTML={{__html: require("../images/modal-close.svg")}}
+          />
+          {this.renderFormatIcon()}
+          <h4 dangerouslySetInnerHTML={caption} />
+        </header>
         {this.renderModalContents()}
       </div>
     )
