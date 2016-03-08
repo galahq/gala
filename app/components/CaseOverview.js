@@ -4,7 +4,7 @@ import TableOfContents from './TableOfContents.js'
 import BillboardTitle from './BillboardTitle.js'
 import '../stylesheets/CaseOverview.scss'
 
-class Billboard extends React.Component {
+export class Billboard extends React.Component {
   render() {
     let {title, metadata} = this.props.caseInfo
     return (
@@ -107,7 +107,7 @@ class Actions extends React.Component {
   }
 }
 
-class CaseOverview extends React.Component {
+export class CaseOverview extends React.Component {
   render () {
     return (
       <div id="CaseOverview" className="window">
@@ -117,5 +117,3 @@ class CaseOverview extends React.Component {
     )
   }
 }
-
-export default CaseOverview

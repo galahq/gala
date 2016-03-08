@@ -41,7 +41,7 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    fetchFromWP(this.props.params.edgenoteID, this.parseContentsFromJSON.bind(this))
+    fetchFromWP({id: this.props.params.edgenoteID}, this.parseContentsFromJSON.bind(this))
   }
 
   renderFormatDifferentiatedContent(format) {

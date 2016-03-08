@@ -12,11 +12,6 @@
     @include flex($fg: 0, $fs: 1, $fb: 40em);
     margin: 1em;
 
-    .BillboardTitle {
-      padding: 1em 2em;
-      padding-top: 10em;
-    }
-
     .Card.BillboardSnippet {
       margin-top: 1.5em !important;
       padding: 1em 2em;
@@ -65,14 +60,20 @@
   background-position: center;
   border-radius: 2pt;
 
+  padding: 1em 2em;
+  padding-top: 10em;
+
   h1 {
     color: $white;
     margin-bottom: 0;
+    width: 100%;
   }
   h4 {
     font-family: $sansFont;
     color: $white;
+    width: 100%;
     margin-top: 0.5em;
+    line-height: 1.1;
   }
 }
 

@@ -1,4 +1,5 @@
 @import 'CaseReader';
+@import '_columns';
 
 #EdgenoteGallery {
   @media screen and (min-width: $mobileCutoff) {
@@ -6,50 +7,16 @@
   }
 
   div.edgenotes {
-    -webkit-column-count: 5;
-    -webkit-column-gap: 1em;
-    -webkit-column-fill: auto;
-    -moz-column-count: 5;
-    -moz-column-gap: 1em;
-    -moz-column-fill: auto;
-    column-count: 5;
-    column-gap: 1em;
-    column-fill: auto;
     max-width: none;
     margin: 0 2em;
 
-    @media screen and (max-width: 1980px) {
-      -webkit-column-count: 4;
-      -moz-column-count: 4;
-      column-count: 4;
-    }
-
-    @media screen and (max-width: 1583px) {
-      -webkit-column-count: 3;
-      -moz-column-count: 3;
-      column-count: 3;
-    }
-
-    @media screen and (max-width: 1266px) {
-      -webkit-column-count: 2;
-      -moz-column-count: 2;
-      column-count: 2;
-    }
-
-    @media screen and (max-width: 945px) {
-      -webkit-column-count: 1;
-      -moz-column-count: 1;
-      column-count: 1;
-    }
-
+    @include columns;
 
     background-color: transparent;
 
     .Edgenote {
+      @include avoid-column-break-inside;
       display: inline-block;
-      -webkit-column-break-inside: avoid;
-      -moz-column-break-inside: avoid;
-      column-break-inside: avoid;
       padding: 1em;
       border-radius: 2pt;
       background-color: $white;

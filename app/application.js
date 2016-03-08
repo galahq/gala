@@ -7,7 +7,7 @@ window.$ = require('jquery');
 import Catalog from './components/Catalog.js'
 import Case from './components/Case.js'
 import CaseReader from './components/CaseReader.js'
-import CaseOverview from './components/CaseOverview.js'
+import {CaseOverview} from './components/CaseOverview.js'
 import EdgenoteGallery from './components/EdgenoteGallery.js'
 import Modal from './components/Modal.js'
 

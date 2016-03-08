@@ -38,7 +38,7 @@ class Edgenote extends React.Component {
   }
 
   downloadContents() {
-    fetchFromWP(this.props.id, this.parseContentsFromJSON.bind(this))
+    fetchFromWP({id: this.props.id}, this.parseContentsFromJSON.bind(this))
   }
 
   className() {

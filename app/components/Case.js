@@ -42,7 +42,7 @@ class Case extends React.Component {
   }
 
   componentDidMount() {
-    fetchFromWP(this.props.params.id, this.parseCaseFromJSON.bind(this))
+    fetchFromWP({id: this.props.params.id}, this.parseCaseFromJSON.bind(this))
   }
 
   render() {
