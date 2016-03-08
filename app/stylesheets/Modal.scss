@@ -58,24 +58,21 @@ a.modalDismiss {
   height: 100%;
 
   aside {
-    position: relative;
-    margin-top: 4em;
+    position: absolute;
+    margin-top: 5em;
     z-index: 100;
     width: 100%;
     height: 100%;
 
     pointer-events: none;
 
-    overflow: scroll;
-
     font-family: $serifFont + ' Book';
 
     .Modal-contents {
-      overflow: scroll;
       width: 100%;
-      height: 100%;
+      height: calc(100% - 4em);
 
-      > * { pointer-events: initial; }
+      overflow: scroll;
 
       .loading-icon {
         width: 2em;
@@ -85,18 +82,31 @@ a.modalDismiss {
       .Card {
         max-width: 40em;
         margin: 1em auto;
+        pointer-events: initial;
       }
 
-      .theatre {
+      .Modal-theatre,
+      .Modal-gallery{
         @include flexbox;
         @include flex-flow(column);
-        height: 90%;
+        @include justify-content(flex-start);
+        overflow-y: scroll;
+
+        padding-bottom: 2em;
 
         > * {
-          @include flex($fg: 1, $fs: 1, $fb: auto);
+          @include flex($fg: 0, $fs: 0, $fb: auto);
+          height: auto;
           padding: 1em;
-          margin: auto;
-          height: auto
+          margin: 0 auto;
+          pointer-events: initial;
+        }
+      }
+
+      .Modal-theatre{
+        height: 100%;
+        > * {
+          height: 90%;
         }
       }
 

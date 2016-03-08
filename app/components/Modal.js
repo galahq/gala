@@ -1,6 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router'
 
+import {ScrollLock} from './ScrollLock.js'
+
 import fetchFromWP from '../wp-api.js'
 
 import '../stylesheets/Modal.scss'
@@ -49,6 +51,24 @@ class Modal extends React.Component {
     var formats = {
       "aside": () => {
         return <div className="Card" dangerouslySetInnerHTML={this.state.contents} />
+      },
+      "video": () => {
+        var video = x.querySelector('iframe')
+        if (video)
+          return <div className="Modal-theatre" dangerouslySetInnerHTML={{__html: video.outerHTML}} />
+      },
+      "image": () => {
+        var image = x.querySelector('img')
+        var caption = x.textContent||x.innerText
+        if (caption && caption.trim() ) {
+          var captionCard = <div className="Card" dangerouslySetInnerHTML={{__html: caption}} />
+        }
+        return (
+          <div className="Modal-gallery">
+            <img src={image.getAttribute("src")} />
+            {captionCard}
+          </div>
+        )
       }
     }
     if (formats[format])
@@ -127,4 +147,4 @@ class Modal extends React.Component {
 
 }
 
-export default Modal
+export default ScrollLock(Modal)

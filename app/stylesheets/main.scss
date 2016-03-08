@@ -41,8 +41,8 @@ em, i {
 
 html {height: 100%}
 body {height: 100%}
-div#container { height: 100% }
-div#container > div { height: 100%; }
+div#container { height: calc(100% - 70px) }
+div#container > div { height: 100% }
 body {
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
