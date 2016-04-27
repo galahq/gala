@@ -65,6 +65,8 @@ Vagrant.configure(2) do |config|
      sudo apt-get update
      curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
      sudo apt-get install -y nodejs
+     cd /vagrant
+     npm install
      npm rebuild node-sass
    SHELL
 end
