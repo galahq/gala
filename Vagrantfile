@@ -62,11 +62,9 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: <<-SHELL
-     sudo apt-get update
-     curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
-     sudo apt-get install -y nodejs
+     wget -q http://nodejs.org/dist/v5.1.0/node-v5.1.0-linux-x64.tar.gz  
+     sudo tar -C /usr/local --strip-components 1 -xzf node-v5.1.0-linux-x64.tar.gz 
      cd /vagrant
      npm install
-     npm rebuild node-sass
    SHELL
 end
