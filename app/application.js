@@ -14,7 +14,7 @@ import Modal from './components/Modal.js'
 class App extends React.Component {
   render() {
     return (
-      <div id="App">
+      <div id="container">
         <header>
           <h1 id="logo" dangerouslySetInnerHTML={{__html: require('./images/msc-logo.svg')}} />
         </header>
