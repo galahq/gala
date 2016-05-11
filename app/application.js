@@ -11,6 +11,8 @@ import {CaseOverview} from './components/CaseOverview.js'
 import EdgenoteGallery from './components/EdgenoteGallery.js'
 import Modal from './components/Modal.js'
 
+import './css.js'
+
 class App extends React.Component {
   render() {
     return (

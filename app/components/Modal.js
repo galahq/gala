@@ -5,8 +5,6 @@ import {ScrollLock} from './ScrollLock.js'
 
 import fetchFromWP from '../wp-api.js'
 
-import '../stylesheets/Modal.scss'
-
 class Modal extends React.Component {
 
   constructor() {

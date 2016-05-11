@@ -2,9 +2,8 @@ import React from 'react';
 import {Link} from 'react-router'
 import fetchFromWP from '../wp-api.js'
 
-import '../stylesheets/Catalog.scss'
-
 import BillboardTitle from './BillboardTitle.js'
+
 
 class Catalog extends React.Component {
 

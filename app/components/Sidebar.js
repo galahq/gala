@@ -2,8 +2,6 @@ import React from 'react'
 import { Link } from 'react-router'
 import BillboardTitle from './BillboardTitle.js'
 
-import '../stylesheets/Sidebar.scss';
-
 import TableOfContents from './TableOfContents.js'
 
 class Sidebar extends React.Component {

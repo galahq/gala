@@ -1,4 +1,5 @@
-@import 'Narrative';
+@import '_globals';
+@import '_flexbox';
 
 aside.edgenotes {
   @include flexbox;

@@ -1,8 +1,7 @@
 import React from 'react'
 import Edgenote from './Edgenote.js'
 import {Link} from 'react-router'
-import gatherEdgenotes from '../gatherEdgenotes.js'
-import '../stylesheets/Narrative.scss';
+import gatherEdgenotes from '../gatherEdgenotes.js';
 
 function isElementInViewport (el) {
 

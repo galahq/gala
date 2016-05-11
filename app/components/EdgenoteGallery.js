@@ -1,5 +1,4 @@
 import React from 'react'
-import '../stylesheets/EdgenoteGallery.scss'
 import Sidebar from './Sidebar.js'
 import Edgenote from './Edgenote.js'
 import LoadingIcon from './LoadingIcon.js'

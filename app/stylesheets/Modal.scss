@@ -1,4 +1,6 @@
-@import 'Edgenote';
+@import '_globals';
+@import '_flexbox';
+@import '_columns';
 
 .Modal-header {
   position: fixed;

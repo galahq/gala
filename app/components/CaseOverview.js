@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router'
 import TableOfContents from './TableOfContents.js'
 import BillboardTitle from './BillboardTitle.js'
-import '../stylesheets/CaseOverview.scss'
 
 export class Billboard extends React.Component {
   render() {

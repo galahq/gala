@@ -1,27 +1,6 @@
+@import '_globals';
 @import '_flexbox';
 @import '_tint_and_shade';
-
-// GLOBAL VARIABLES
-$darkGreen: #357E3C;
-$lightGreen: #6ACB72;
-$purple: #7351D4;
-$lightBrown: #986A40;
-$darkBrown: #7E5C3C;
-
-$umichMaize: #F1C432;
-$umichBlue: #02284B;
-
-$black: #262626;
-$white: #EBEAE4;
-
-$mobileCutoff: 740px;
-
-$serifFont: "Freight Text";
-$serifFontSize: 12pt;
-$serifLeading: $serifFontSize * 1.43;
-
-$headlineFont: "Aleo";
-$sansFont: "Alegreya Sans";
 
 @font-face {
   font-family: "Aleo";
