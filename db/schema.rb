@@ -11,20 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160512172735) do
+ActiveRecord::Schema.define(version: 20160511203111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "cases", force: :cascade do |t|
-    t.boolean  "published",  default: false
-    t.text     "title"
-    t.text     "slug",                       null: false
-    t.string   "authors"
-    t.text     "summary"
-    t.text     "tags",       default: [],                 array: true
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.boolean  "published",      default: false
+    t.hstore   "title_i18n"
+    t.text     "slug",                           null: false
+    t.string   "authors",        default: [],                 array: true
+    t.hstore   "summary_i18n"
+    t.text     "tags",           default: [],                 array: true
+    t.hstore   "narrative_i18n"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
@@ -44,9 +46,9 @@ ActiveRecord::Schema.define(version: 20160512172735) do
     t.inet     "last_sign_in_ip"
     t.string   "provider"
     t.string   "uid"
+    t.text     "authentication_token"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.text     "authentication_token"
     t.index ["authentication_token"], name: "index_readers_on_authentication_token", unique: true, using: :btree
     t.index ["email"], name: "index_readers_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_readers_on_reset_password_token", unique: true, using: :btree

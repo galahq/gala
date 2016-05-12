@@ -37,11 +37,15 @@ class DeviseCreateReaders < ActiveRecord::Migration[5.0]
       t.string :provider
       t.string :uid
 
+      ## Token Authenticable
+      t.text :authentication_token
+
       t.timestamps null: false
     end
 
     add_index :readers, :email,                unique: true
     add_index :readers, :reset_password_token, unique: true
+    add_index :readers, :authentication_token, unique: true
     # add_index :readers, :confirmation_token,   unique: true
     # add_index :readers, :unlock_token,         unique: true
   end

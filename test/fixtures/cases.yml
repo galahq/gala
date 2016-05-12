@@ -1,19 +1,1 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-ethiopia:
-  published: true
-  title: "Ethiopia’s National Adaptation Plan of Action: How will Ethiopia respond to climate change?"
-  slug: ethiopia-napa
-  authors: Mohammad Golrokhian, Katie Browne, Emily Durand, Benjamin Fortney, Brendan Malone, Alexander Natanson, and Nadia Vandergriff
-  summary: This real-life case takes place in August 2015 in Ethiopia. Kidane Asefa, the chairman of the National Adaptation Program of Action (NAPA) and focal point for the United Nations Framework Convention on Climate Change (UNFCCC) in Ethiopia, is faced with the challenge of selecting and prioritizing proposed climate adaptation projects. Though the NAPA committee has already identified the most promising projects for consideration, Mr. Asefa is now responsible for weighing the relative costs and benefits of each plan and deciding how to best allocate Ethiopia’s limited financial, technical and administrative resources. The analytical techniques Mr. Asefa chooses to employ, and ultimately the projects he selects, will guide how his country addresses and adapts to the critical challenge of climate change.
-  tags:
-    - region:africa
-
-birdshead:
-  published: true
-  title: "Financing Biodiversity Conservation: The Bird’s Head Seascape"
-  slug: indonesia-biodiversity
-  authors: Katie Browne, Laure Katz, and Arun Agrawal
-  summary: In 2004, Conservation International led an unprecedented coalition of international and local partners in launching the Bird’s Head Seascape Initiative. Protecting the incredible ecological value of West Papua, Indonesia, the Seascape has grown over the past decade into one of the most ambitious and effective marine conservation programs in the world, a model of indigenous community-driven conservation. Prompted by recent shifts in the Seascape’s traditional funding structure, however, the Bird’s Head Coalition must rapidly formulate a strategy to transfer management to local bodies and establish a sustainable funding model. This case puts readers in the shoes of Laure Katz, Director of the Seascapes Program at Conservation International, who must develop and execute this transition strategy, securing the Bird’s Head as a global model for effective, community-driven conservation.
-  tags:
-    - region:asia
