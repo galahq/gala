@@ -27,5 +27,6 @@ module Orchard
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.middleware.use Rack::Session::Cookie, secret: Rails.application.secrets.secret_key_base
+    config.middleware.use ActionDispatch::Flash
   end
 end
