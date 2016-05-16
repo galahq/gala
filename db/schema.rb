@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160516145146) do
+ActiveRecord::Schema.define(version: 20160516153452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20160516145146) do
     t.hstore   "narrative_i18n"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.string   "cover_url"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
@@ -34,17 +35,17 @@ ActiveRecord::Schema.define(version: 20160516145146) do
   create_table "edgenotes", force: :cascade do |t|
     t.hstore   "caption_i18n"
     t.string   "format"
-    t.string   "thumb"
+    t.string   "thumbnail_url"
     t.hstore   "content_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
   end
 
   create_table "readers", force: :cascade do |t|
     t.text     "name"
-    t.text     "image"
+    t.text     "image_url"
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
