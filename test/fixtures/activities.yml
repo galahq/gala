@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name_i18n: 
+  description_i18n: 
+  pdf_url_i18n: 
+  case: one
+
+two:
+  name_i18n: 
+  description_i18n: 
+  pdf_url_i18n: 
+  case: two

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :activities
   resources :podcasts
   resources :edgenotes
   devise_for :readers, defaults: { format: :json  },
