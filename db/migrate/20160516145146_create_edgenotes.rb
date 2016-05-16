@@ -3,7 +3,7 @@ class CreateEdgenotes < ActiveRecord::Migration[5.0]
     create_table :edgenotes do |t|
       t.hstore :caption_i18n
       t.string :format
-      t.string :thumb
+      t.string :thumbnail_url
       t.hstore :content_i18n
       t.references :case
 

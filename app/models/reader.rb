@@ -8,7 +8,7 @@ class Reader < ApplicationRecord
       reader.email = auth.info.email
       reader.password = Devise.friendly_token[0,20]
       reader.name = auth.info.name
-      reader.image = auth.info.image
+      reader.image_url = auth.info.image
     end
   end
 

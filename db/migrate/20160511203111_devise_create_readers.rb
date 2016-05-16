@@ -2,7 +2,7 @@ class DeviseCreateReaders < ActiveRecord::Migration[5.0]
   def change
     create_table :readers do |t|
       t.text :name
-      t.text :image
+      t.text :image_url
 
       ## Database authenticatable
       t.string :email,              null: false, default: ""
