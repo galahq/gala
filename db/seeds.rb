@@ -30,3 +30,8 @@ wolf.narrative = <<-NARRATIVE
 <p><strong>J. R. Richardson</strong> marqua une pause à propos des documents qu’il lisait pour réfléchir sur la décision difficile qu’il devrait prendre dans les jours à venir : s'il faut voter en faveur ou non de la permission de la chasse au loup dans l'Etat du Michigan. En tant que Président de <em>La Commission des Ressources Naturelles</em> (CRN ou NRC en anglais), un organe consultatif composé de sept cadres du <em>Ministère d’Etat des Ressources Naturelles</em> (MRN ou DNR en anglais), Richardson avait traité sa juste part des questions litigieuses pendant son mandat au CRN depuis 2007. Mais il pouvait se souvenir qu’aucun problème n’avait suscité une telle passion de tous les côtés comme celui de la chasse au loup. En conséquence, il a ressenti beaucoup de pressions pour conduire le CRN à prendre la bonne décision, c’est-à-dire celle basée sur des principes scientifiques, le respect des <a href="/read/497/0/edgenotes/502">besoins des personnes qui sont affectées</a> par la présence de loups et la sensibilité à l'opinion publique.</p>
 NARRATIVE
 wolf.save
+
+I18n.locale = :en
+cameron = Reader.create(id: 1, name: "Cameron Bothner", image_url: "https://lh3.googleusercontent.com/-_i-0kZDjsWI/AAA...", email: "cbothner@umich.edu", password: "$2a$11$iJwtewgka8OW9qPEvdUxHOYbe6g2EUFN8Fp2HfoMDTM...", provider: "google_oauth2", uid: "102343030121442585482", authentication_token: "sdsRFgm-ZznkejWt4D4K")
+cameron.groups.create(name: "Team Koala")
+cameron.cases << wolf
