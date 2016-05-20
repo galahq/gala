@@ -1,4 +1,10 @@
 class Reader < ApplicationRecord
+  has_many :comments
+  has_many :group_memberships, dependent: :delete_all
+  has_many :groups, through: :group_memberships
+  has_many :enrollments, dependent: :delete_all
+  has_many :cases, through: :enrollments
+
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
          :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :google_oauth2]
   before_save :ensure_authentication_token

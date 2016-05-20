@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160516155813) do
+ActiveRecord::Schema.define(version: 20160518200132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,25 @@ ActiveRecord::Schema.define(version: 20160516155813) do
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
 
+  create_table "comment_threads", force: :cascade do |t|
+    t.integer  "case_id"
+    t.integer  "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_comment_threads_on_case_id", using: :btree
+    t.index ["group_id"], name: "index_comment_threads_on_group_id", using: :btree
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.hstore   "content_i18n"
+    t.integer  "reader_id"
+    t.integer  "comment_thread_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["comment_thread_id"], name: "index_comments_on_comment_thread_id", using: :btree
+    t.index ["reader_id"], name: "index_comments_on_reader_id", using: :btree
+  end
+
   create_table "edgenotes", force: :cascade do |t|
     t.hstore   "caption_i18n"
     t.string   "format"
@@ -51,6 +70,30 @@ ActiveRecord::Schema.define(version: 20160516155813) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
+  end
+
+  create_table "enrollments", force: :cascade do |t|
+    t.integer  "reader_id"
+    t.integer  "case_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_enrollments_on_case_id", using: :btree
+    t.index ["reader_id"], name: "index_enrollments_on_reader_id", using: :btree
+  end
+
+  create_table "group_memberships", force: :cascade do |t|
+    t.integer  "reader_id"
+    t.integer  "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_memberships_on_group_id", using: :btree
+    t.index ["reader_id"], name: "index_group_memberships_on_reader_id", using: :btree
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.hstore   "name_i18n"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "podcasts", force: :cascade do |t|
@@ -87,5 +130,13 @@ ActiveRecord::Schema.define(version: 20160516155813) do
   end
 
   add_foreign_key "activities", "cases"
+  add_foreign_key "comment_threads", "cases"
+  add_foreign_key "comment_threads", "groups"
+  add_foreign_key "comments", "comment_threads"
+  add_foreign_key "comments", "readers"
+  add_foreign_key "enrollments", "cases"
+  add_foreign_key "enrollments", "readers"
+  add_foreign_key "group_memberships", "groups"
+  add_foreign_key "group_memberships", "readers"
   add_foreign_key "podcasts", "cases"
 end

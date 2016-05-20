@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :enrollments
+  resources :groups
+  resources :comment_threads
+  resources :comments
   resources :activities
   resources :podcasts
   resources :edgenotes
