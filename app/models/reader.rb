@@ -6,7 +6,7 @@ class Reader < ApplicationRecord
   has_many :cases, through: :enrollments
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-         :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :google_oauth2]
+         :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :google_oauth2, :lti]
   before_save :ensure_authentication_token
 
   def self.from_omniauth(auth)

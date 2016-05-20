@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'gala/open'
+
   resources :enrollments
   resources :groups
   resources :comment_threads
@@ -9,5 +11,5 @@ Rails.application.routes.draw do
   devise_for :readers, defaults: { format: :json  },
     controllers: {omniauth_callbacks: 'readers/omniauth_callbacks'}
   resources :cases, param: :slug
-  root to: "cases#index"
+  root to: "gala#open"
 end

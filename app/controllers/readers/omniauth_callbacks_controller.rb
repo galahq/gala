@@ -19,6 +19,15 @@ class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
+  def lti
+    if @reader.persisted?
+      sign_in_and_redirect @reader, event: :authentication
+    else
+      session["devise.lti_data"] = request.env["omniauth.auth"]
+      redirect_to new_user_registration_url
+    end
+  end
+
   def failure
     redirect_to root_path
   end
