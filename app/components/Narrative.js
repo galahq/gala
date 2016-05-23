@@ -2,6 +2,7 @@ import React from 'react'
 import Edgenote from './Edgenote.js'
 import {Link} from 'react-router'
 import gatherEdgenotes from '../gatherEdgenotes.js';
+import {I18n} from './I18n.js'
 
 function isElementInViewport (el) {
 
@@ -29,9 +30,9 @@ class Narrative extends React.Component {
   nextLink() {
     let nextChapterID = parseInt(this.props.params.chapter) + 1
     if (nextChapterID < this.props.chapters.length) {
-      return <Link className="nextLink" to={`/read/${this.props.params.id}/${nextChapterID}`}>Next: {this.props.chapterTitles[nextChapterID]}</Link>
+      return <Link className="nextLink" to={`/read/${this.props.params.id}/${nextChapterID}`}><I18n meaning="next" /> {this.props.chapterTitles[nextChapterID]}</Link>
     } else {
-      return <footer><h2>End</h2></footer>
+      return <footer><h2><I18n meaning="end" /></h2></footer>
     }
   }
 

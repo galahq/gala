@@ -3,6 +3,7 @@ import Sidebar from './Sidebar.js'
 import Edgenote from './Edgenote.js'
 import LoadingIcon from './LoadingIcon.js'
 import gatherEdgenotes from '../gatherEdgenotes.js'
+import { I18n } from "./I18n.js"
 
 class EdgenoteGallery extends React.Component {
   constructor() {
@@ -61,7 +62,7 @@ class EdgenoteGallery extends React.Component {
         />
         <main id="EdgenoteGallery">
           <div id="EdgenoteGalleryHeader">
-            <h1>Edgenote Gallery</h1>
+            <h1><I18n meaning="edgenote_gallery" /></h1>
           </div>
           {this.renderEdgenotes()}
         </main>

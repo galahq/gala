@@ -1,0 +1,50 @@
+{
+  "en": {
+    "summary": "Case Summary",
+    "table_of_contents": "Table of Contents",
+    "read": "Read",
+    "listen": "Listen",
+    "related_podcast": "Related podcast",
+    "explore": "Explore",
+    "edgenote_gallery": "Edgenote Gallery",
+    "consider": "Consider",
+    "respond": "Respond",
+    "give_feedback": "Give us your feedback about this case.",
+    "back_to_overview": "Back to overview",
+    "next": "Next",
+    "open_in_new_tab": "Open in a new tab.",
+    "end": "End"
+  },
+  "fr": {
+    "summary": "Résumé du cas d'étude",
+    "table_of_contents": "Table des matières",
+    "read": "Lirez",
+    "listen": "Écoutez",
+    "related_podcast": "Podcast connexe",
+    "explore": "Explorer",
+    "edgenote_gallery": "Galerie des Edgenotes",
+    "consider": "Considérez",
+    "respond": "Répondez",
+    "give_feedback": "Donnez-nous votre commentaires sur ce cas d'étude",
+    "back_to_overview": "Retour au résumé",
+    "next": "Prochaine",
+    "open_in_new_tab": "Ouvrir dans un nouvel onglet.",
+    "end": "Fin"
+  },
+  "zh-CN": {
+    "summary": "摘要",
+    "table_of_contents": "目录",
+    "read": "阅读",
+    "listen": "收听",
+    "related_podcast": "相关节目",
+    "explore": "探索",
+    "edgenote_gallery": "Edgenote资料库",
+    "consider": "练习",
+    "respond": "建议",
+    "give_feedback": "请告诉我们你的想法和建议。",
+    "back_to_overview": "返回主页",
+    "next": "下一页：",
+    "open_in_new_tab": "在新的窗口中打开",
+    "end": "终"
+  }
+}
