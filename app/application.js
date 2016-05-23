@@ -14,7 +14,7 @@ import Modal from './components/Modal.js'
 import './css.js'
 
 window.i18n = {}
-window.i18n.locale = 'zh-CN'
+window.i18n.locale = 'ja'
 
 class App extends React.Component {
   render() {
