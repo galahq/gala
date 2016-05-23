@@ -8,4 +8,8 @@ class Case < ApplicationRecord
   has_many :readers, through: :enrollments
 
   translates :title, :summary, :narrative
+
+  def case_authors
+    authors.to_sentence
+  end
 end
