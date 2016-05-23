@@ -47,5 +47,5 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.gala_url = "http://localhost:3333"
+  config.gala_url = "localhost:3333"
 end

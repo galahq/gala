@@ -1,6 +1,6 @@
 class CasesController < ApplicationController
-  before_action :authenticate_reader_from_token!
-  before_action :authenticate_reader!
+  #before_action :authenticate_reader_from_token!
+  #before_action :authenticate_reader!
   before_action :set_case, only: [:show, :update, :destroy]
 
   # GET /cases
