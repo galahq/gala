@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router'
-import fetchFromWP from '../wp-api.js'
+import {orchard} from '../orchard.js'
 
 import BillboardTitle from './BillboardTitle.js'
 
@@ -18,18 +18,17 @@ class Catalog extends React.Component {
   parseJSON(r) {
     let caseObjects = r.map( (c) => {
       return ({
-        id: c.id,
-        title: c.title.rendered,
-        case_authors: c.acf.case_authors,
-        featuredImageURL: c.better_featured_image ? c.better_featured_image.source_url : ""
+        id: c.slug,
+        title: c.title,
+        case_authors: c.case_authors,
+        featuredImageURL: c.cover_url
       })
     } )
     this.setState( {cases: caseObjects} )
   }
 
   componentDidMount() {
-    let params = {onlyMainText: true}
-    fetchFromWP(params, this.parseJSON.bind(this))
+    orchard('cases').then((r) => { this.parseJSON(r) })
   }
 
   renderCatalog() {
