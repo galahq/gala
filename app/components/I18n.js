@@ -3,7 +3,7 @@ var strings = require('../locales.json')
 
 export class I18n extends React.Component {
   t(key) {
-    return strings[window.i18n.locale][key] || strings.en[key] || key
+    return (strings[window.i18n.locale] && strings[window.i18n.locale][key]) || strings.en[key] || key
   }
 
   render() {
