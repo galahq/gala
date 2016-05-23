@@ -45,7 +45,7 @@
 
 a.modalDismiss {
   position: fixed;
-  background-color: rgba( darken($black, 10%), 0.8 );
+  background-color: rgba( darken($black, 10%), 0.8 ) !important;
   top: 0;
   left: 0;
   height: 100%;
