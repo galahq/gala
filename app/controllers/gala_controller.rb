@@ -1,5 +1,5 @@
 class GalaController < ApplicationController
   def open
-    redirect_to "http://msc-gala.herokuapp.com"
+    redirect_to Orchard::Application.config.gala_url
   end
 end
