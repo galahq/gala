@@ -33,10 +33,11 @@
   }
 
   h4 {
-    font-family: $serifFont + ' Book Italic';
+    font-family: $serifFont;
     color: $black;
     display: inline;
     font-weight: 400;
+    font-style: italic;
     margin-left: 0.75em;
     position: relative;
     bottom: 3pt;
@@ -68,7 +69,8 @@ a.modalDismiss {
 
     pointer-events: none;
 
-    font-family: $serifFont + ' Book';
+    font-family: $serifFont;
+    font-weight: 400;
 
     .Modal-contents {
       width: 100%;
