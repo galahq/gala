@@ -3,18 +3,8 @@
 @import '_tint_and_shade';
 
 @font-face {
-  font-family: "Aleo";
+  font-family: "aleo";
   src: url('../fonts/aleo-regular-webfont.woff') format('woff');
-}
-
-strong {
-  font-weight: inherit;
-  font-family: $serifFont + " Book SC";
-  letter-spacing: 1px;
-}
-em, i {
-  font-family: $serifFont + " Book Italic";
-  font-style: normal;
 }
 
 html {height: 100%}
@@ -71,12 +61,15 @@ blockquote {
 
 h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
 em, strong {
-  font-kerning: normal;
-  font-variant-ligatures: common-ligatures, contextual;
-  -moz-font-feature-settings: "kern", "liga", "clig", "calt";
-  -ms-font-feature-settings: "kern", "liga", "clig", "alt";
-  -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
-  font-feature-settings: "kern", "liga", "clig", "calt";
+  -webkit-font-feature-settings: "kern", "liga";
+  font-feature-settings: "kern", "liga";
+}
+
+strong {
+  font-weight: inherit;
+  letter-spacing: 1px;
+  font-feature-settings: "smcp";
+  -webkit-font-feature-settings: "smcp";
 }
 
 header {

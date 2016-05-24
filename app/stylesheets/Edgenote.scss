@@ -63,13 +63,13 @@ a.Edgenote {
   }
 
   figcaption {
-    font-family: $serifFont + " Medium Italic";
+    font-family: $serifFont;
+    font-weight: 500;
+    font-style: italic;
     color: $white;
-    font-size: 12pt;
+    font-size: 16px;
     display: inline;
-    padding: 2pt;
-    padding-left: 0;
-    padding-right: 0;
+    padding-bottom: 1pt;
     -webkit-box-decoration-break: clone;
     -ms-box-decoration-break: clone;
     -o-box-decoration-break: clone;
