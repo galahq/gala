@@ -5,7 +5,10 @@
 #CaseOverview {
 
   @include flexbox;
-  @include flex-flow(row wrap);
+  @include flex-flow(row);
+  @media screen and (max-width: $mobileCutoff) {
+    @include flex-flow(row wrap);
+  }
   @include justify-content(center);
 
   .Billboard {
