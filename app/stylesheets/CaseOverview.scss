@@ -1,0 +1,79 @@
+@import 'main';
+@import '_flexbox';
+@import '_tint_and_shade';
+
+#CaseOverview {
+
+  @include flexbox;
+  @include flex-flow(row wrap);
+  @include justify-content(center);
+
+  .Billboard {
+    @include flex($fg: 0, $fs: 1, $fb: 40em);
+    margin: 1em;
+
+    .Card.BillboardSnippet {
+      margin-top: 1.5em !important;
+      padding: 1em 2em;
+      @media screen and (max-width: $mobileCutoff) {
+        padding: 1em;
+      }
+    }
+  }
+
+  .Actions {
+    @include flex($fg: 0, $fs: 1, $fb: 25em);
+    margin: 1em;
+    background-color: rgba( darken($black, 10%), 0.6 );
+    border-radius: 2pt;
+    height: 100%;
+    padding: 1em;
+
+    ul {
+      color: lighten($umichMaize, 20%);
+      list-style-type: circle;
+      margin: 0.5em 0;
+      padding-left: 1.5em;
+    }
+
+    h2 {
+      color: $white;
+
+      .ActionIcon {
+        float: left;
+        margin-top: -5px;
+        margin-right: 0.5em;
+      }
+    }
+
+    & >div {
+      margin-top: 2em;
+    }
+    & > div:first-child {
+      margin-top: 1em;
+    }
+  }
+}
+
+.BillboardTitle {
+  background-size: cover;
+  background-position: center;
+  border-radius: 2pt;
+
+  padding: 1em 2em;
+  padding-top: 10em;
+
+  h1 {
+    color: $white;
+    margin-bottom: 0;
+    width: 100%;
+  }
+  h4 {
+    font-family: $sansFont;
+    color: $white;
+    width: 100%;
+    margin-top: 0.5em;
+    line-height: 1.1;
+  }
+}
+

@@ -1,0 +1,72 @@
+@import 'CaseReader';
+
+#Sidebar {
+  @media screen and (min-width: $mobileCutoff) {
+    width: 14em;
+    position: absolute;
+    margin: 1.6em 1em;
+  }
+
+  & > a {
+    display: inline-block;
+    margin: 0.5em 1em;
+  }
+
+  margin: 0em 1em;
+
+  .BillboardTitle {
+    padding: 1em 1em;
+    padding-top: 4em;
+    border-radius: 2pt;
+  }
+
+  #TableOfContents {
+    background-color: rgba( darken($black, 10%), 0.6 );
+    padding: 1em;
+    margin-top: 1em;
+    border-radius: 2pt;
+  }
+
+
+}
+
+#TableOfContents {
+  ol {
+    font: 11pt/14pt $sansFont;
+    color: lighten($umichMaize, 20%);
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+
+    li {
+      margin: 0.3em 0;
+    }
+
+    li:hover a {
+      background-color: $purple;
+    }
+
+    li.focus a {
+      background-color: $purple;
+    }
+  }
+}
+
+a {
+  color: lighten($umichMaize, 20%);
+  text-decoration: none;
+  transition: background .15s cubic-bezier(.33, .66, .66, 1);
+}
+
+a:hover {
+  background-color: $purple;
+  color: lighten($umichMaize, 20%);
+}
+
+h4.list-head {
+  font: 12pt $sansFont;
+  font-style: italic;
+  letter-spacing: 0;
+  color: $white;
+
+  margin: 0.5em 0;
+}

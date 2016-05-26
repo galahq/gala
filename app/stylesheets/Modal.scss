@@ -1,0 +1,144 @@
+@import 'Edgenote';
+
+.Modal-header {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 100;
+
+  background-color: $white;
+
+  .modalClose {
+    position: relative;
+    bottom: -3pt;
+    g {
+      stroke: $purple;
+    }
+  }
+  .modalClose:hover{
+    background-color: transparent;
+    path { stroke: $purple }
+  }
+
+  .edgenote-icon {
+    display: inline;
+    position: relative;
+    bottom: -3pt;
+    margin-left: 2em;
+    g {
+      stroke: tint($umichBlue, 30%);
+    }
+  }
+
+  h4 {
+    font-family: $serifFont + ' Book Italic';
+    color: $black;
+    display: inline;
+    font-weight: 400;
+    margin-left: 0.75em;
+    position: relative;
+    bottom: 3pt;
+  }
+}
+
+a.modalDismiss {
+  position: fixed;
+  background-color: rgba( darken($black, 10%), 0.8 );
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 50;
+}
+
+.Modal {
+  position: fixed;
+  top: 0px; left: 0px;
+  width: 100%;
+  height: 100%;
+
+  aside {
+    position: absolute;
+    margin-top: 5em;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    font-family: $serifFont + ' Book';
+
+    .Modal-contents {
+      width: 100%;
+      height: calc(100% - 4em);
+
+      overflow: scroll;
+
+      .loading-icon {
+        width: 2em;
+        margin: auto;
+      }
+
+      .Card {
+        max-width: 40em;
+        margin: 1em auto;
+        pointer-events: initial;
+      }
+
+      .Modal-theatre,
+      .Modal-gallery{
+        @include flexbox;
+        @include flex-flow(column);
+        @include justify-content(flex-start);
+        overflow-y: scroll;
+
+        padding-bottom: 2em;
+
+        > * {
+          @include flex($fg: 0, $fs: 0, $fb: auto);
+          height: auto;
+          padding: 1em;
+          margin: 0 auto;
+          pointer-events: initial;
+        }
+      }
+
+      .Modal-theatre{
+        height: 100%;
+        > * {
+          height: 90%;
+        }
+      }
+
+    }
+
+    a {
+      box-shadow: none;
+      border-bottom: 0px;
+      color: $darkGreen;
+    }
+    a.modalClose {
+      color: $black;
+    }
+    a:hover {
+      box-shadow: none;
+      background-color: transparent;
+      border-bottom: 1px solid $darkGreen;
+      path {
+        stroke: $purple;
+      }
+    }
+    a.modalClose:hover{
+      border-bottom: 0px;
+    }
+
+    iframe {
+      width: 90%;
+    }
+
+    figcaption {
+      font-size: 90%;
+      line-height: 1.4;
+    }
+  }
+}
