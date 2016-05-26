@@ -1,8 +1,10 @@
-@import 'CaseReader';
+@import '_globals';
+@import '_flexbox';
 
 article {
 
-  font-family: $serifFont + ' Book';
+  font-family: $serifFont;
+  font-weight: 400;
 
   section {
     @media screen and (min-width: $mobileCutoff) {
@@ -27,7 +29,7 @@ article {
     .Card {
       height: 100%;
 
-      @include flex($fg: 0, $fs: 1, $fb: 35em);
+      @include flex($fg: 0, $fs: 1, $fb: 36em);
       @media screen and (max-width: 1440px) {
         @include flex($fg: 0, $fs: 1, $fb: 27em);
       }
@@ -46,8 +48,8 @@ article {
 }
 
 .Card {
-  font-size: 14pt;
-  line-height: 14pt * 1.43;
+  font-size: 19px;
+  line-height: 19pt;
   background-color: $white;
   border-radius: 2pt;
   padding: 0em 0.7em;
@@ -94,7 +96,8 @@ footer h2 {
 }
 
 .Card {
-  font-family: $serifFont + ' Book';
+  font-family: $serifFont;
+  font-weight: 400;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;

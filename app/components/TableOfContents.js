@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { I18n } from './I18n.js'
 
 class TableOfContents extends React.Component {
   renderChapterTitles() {
@@ -15,7 +16,7 @@ class TableOfContents extends React.Component {
   render() {
     return(
       <div id="TableOfContents">
-        <h4 className="list-head">Table of Contents</h4>
+        <h4 className="list-head"><I18n meaning="table_of_contents" /></h4>
         <ol>
           {this.renderChapterTitles()}
         </ol>

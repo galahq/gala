@@ -1,5 +1,4 @@
 import React from 'react';
-import '../stylesheets/CaseOverview.scss'
 
 class BillboardTitle extends React.Component {
   renderAuthors() {

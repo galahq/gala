@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   devtool: 'source-map',
-  entry: './app/application.js',
+  entry: ['whatwg-fetch', './app/application.js'],
   output: {
     path: path.join(__dirname, 'public'),
     filename: 'bundle.js',
@@ -40,6 +40,9 @@ module.exports = {
       }, {
         test: /\.scss$/,
         loader: 'style!css!sass'
+      }, {
+        test: /\.json$/,
+        loader: 'json'
       }
     ]
   }

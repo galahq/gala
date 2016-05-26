@@ -1,4 +1,6 @@
-@import 'Edgenote';
+@import '_globals';
+@import '_flexbox';
+@import '_columns';
 
 .Modal-header {
   position: fixed;
@@ -31,10 +33,11 @@
   }
 
   h4 {
-    font-family: $serifFont + ' Book Italic';
+    font-family: $serifFont;
     color: $black;
     display: inline;
     font-weight: 400;
+    font-style: italic;
     margin-left: 0.75em;
     position: relative;
     bottom: 3pt;
@@ -43,7 +46,7 @@
 
 a.modalDismiss {
   position: fixed;
-  background-color: rgba( darken($black, 10%), 0.8 );
+  background-color: rgba( darken($black, 10%), 0.8 ) !important;
   top: 0;
   left: 0;
   height: 100%;
@@ -66,7 +69,8 @@ a.modalDismiss {
 
     pointer-events: none;
 
-    font-family: $serifFont + ' Book';
+    font-family: $serifFont;
+    font-weight: 400;
 
     .Modal-contents {
       width: 100%;

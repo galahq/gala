@@ -1,43 +1,11 @@
+@import '_globals';
 @import '_flexbox';
 @import '_tint_and_shade';
 
-// GLOBAL VARIABLES
-$darkGreen: #357E3C;
-$lightGreen: #6ACB72;
-$purple: #7351D4;
-$lightBrown: #986A40;
-$darkBrown: #7E5C3C;
-
-$umichMaize: #F1C432;
-$umichBlue: #02284B;
-
-$black: #262626;
-$white: #EBEAE4;
-
-$mobileCutoff: 740px;
-
-$serifFont: "Freight Text";
-$serifFontSize: 12pt;
-$serifLeading: $serifFontSize * 1.43;
-
-$headlineFont: "Aleo";
-$sansFont: "Alegreya Sans";
-
 @font-face {
-  font-family: "Aleo";
+  font-family: "aleo";
   src: url('../fonts/aleo-regular-webfont.woff') format('woff');
 }
-
-strong {
-  font-weight: inherit;
-  font-family: $serifFont + " Book SC";
-  letter-spacing: 1px;
-}
-em, i {
-  font-family: $serifFont + " Book Italic";
-  font-style: normal;
-}
-
 
 html {height: 100%}
 body {height: 100%}
@@ -93,12 +61,15 @@ blockquote {
 
 h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
 em, strong {
-  font-kerning: normal;
-  font-variant-ligatures: common-ligatures, contextual;
-  -moz-font-feature-settings: "kern", "liga", "clig", "calt";
-  -ms-font-feature-settings: "kern", "liga", "clig", "alt";
-  -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
-  font-feature-settings: "kern", "liga", "clig", "calt";
+  -webkit-font-feature-settings: "kern", "liga";
+  font-feature-settings: "kern", "liga";
+}
+
+strong {
+  font-weight: inherit;
+  letter-spacing: 1px;
+  font-feature-settings: "smcp";
+  -webkit-font-feature-settings: "smcp";
 }
 
 header {

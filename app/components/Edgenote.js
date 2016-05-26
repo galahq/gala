@@ -2,7 +2,6 @@ import React from 'react'
 import {Link} from 'react-router'
 import fetchFromWP from '../wp-api.js'
 import LoadingIcon from './LoadingIcon.js'
-import '../stylesheets/Edgenote.scss'
 
 class Edgenote extends React.Component {
   handleMouseOver() {

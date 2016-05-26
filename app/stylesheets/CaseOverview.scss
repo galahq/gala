@@ -1,11 +1,14 @@
-@import 'main';
+@import '_globals';
 @import '_flexbox';
 @import '_tint_and_shade';
 
 #CaseOverview {
 
   @include flexbox;
-  @include flex-flow(row wrap);
+  @include flex-flow(row);
+  @media screen and (max-width: $mobileCutoff) {
+    @include flex-flow(row wrap);
+  }
   @include justify-content(center);
 
   .Billboard {
@@ -70,6 +73,7 @@
   }
   h4 {
     font-family: $sansFont;
+    font-weight: 500;
     color: $white;
     width: 100%;
     margin-top: 0.5em;
