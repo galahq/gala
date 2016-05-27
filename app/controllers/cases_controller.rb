@@ -10,7 +10,6 @@ class CasesController < ApplicationController
 
   # GET /cases/1
   def show
-    @path = "/#{params[:path]}"
   end
 
   # POST /cases

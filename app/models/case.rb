@@ -9,6 +9,10 @@ class Case < ApplicationRecord
 
   translates :title, :summary, :narrative
 
+  def to_param
+    slug
+  end
+
   def case_authors
     authors.to_sentence
   end
