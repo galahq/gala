@@ -18,3 +18,7 @@
 
 # Ignore vagrant box files
 .vagrant
+
+node_modules/
+
+app/assets/javascripts/bundle.js

@@ -1,0 +1,21 @@
+@import 'main';
+@import '_flexbox';
+
+#Catalog > div {
+  @include flexbox;
+  @include flex-flow(row wrap);
+  @include justify-content(center);
+
+  a {
+    @include flex($fg: 0, $fs: 1, $fb: 30em);
+    margin: 1em;
+
+    .BillboardTitle {
+      margin: 0;
+    }
+  }
+
+  a:hover {
+    background-color: transparent;
+  }
+}

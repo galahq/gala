@@ -1,0 +1,10 @@
+@import 'main';
+
+.window {
+  background-color: tint($umichBlue, 20%);
+
+  min-height: 100%;
+  position: relative;
+
+  padding-top: 1em;
+}

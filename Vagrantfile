@@ -29,7 +29,10 @@ Vagrant.configure(2) do |config|
     cd /vagrant
     bundle install
     rake db:setup
+
+    wget -q http://nodejs.org/dist/v5.1.0/node-v5.1.0-linux-x64.tar.gz
+    sudo tar -C /usr/local --strip-components 1 -xzf node-v5.1.0-linux-x64.tar.gz
+    cd /vagrant
+    npm install
   SHELL
-
 end
-

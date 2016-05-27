@@ -1,0 +1,37 @@
+@import 'CaseReader';
+@import '_columns';
+
+#EdgenoteGallery {
+  @media screen and (min-width: $mobileCutoff) {
+    margin-left: 16em;
+  }
+
+  div.edgenotes {
+    max-width: none;
+    margin: 0 2em;
+
+    @include columns;
+
+    background-color: transparent;
+
+    .Edgenote {
+      @include avoid-column-break-inside;
+      display: inline-block;
+      padding: 1em;
+      border-radius: 2pt;
+      background-color: $white;
+      width: 17em;
+
+      svg path {
+        stroke: lighten($umichBlue, 15%);
+      }
+
+      figcaption { color: $black; }
+    }
+  }
+}
+
+#EdgenoteGalleryHeader {
+  margin: 0 2em;
+  color: $white;
+}
