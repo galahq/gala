@@ -3,12 +3,19 @@ var strings = require('../locales.json')
 
 export class I18n extends React.Component {
   t(key) {
-    return (strings[window.i18n.locale] && strings[window.i18n.locale][key]) || strings.en[key] || key
+    let locale = window.i18n.locale
+    let minimalLocale = locale.split('-')[0]
+    return (
+      (strings[minimalLocale] && strings[minimalLocale][key]) ||
+      (strings[locale] && strings[locale][key]) ||
+      strings.en[key] ||
+      key
+    )
   }
 
   render() {
     return (
-      <span lang={window.i18n.locale}>
+      <span lang={window.i18n.locale.split('-')[0]}>
         {this.t(this.props.meaning)}
       </span>
     )

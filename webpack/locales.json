@@ -62,5 +62,21 @@
     "next": "下一页：",
     "open_in_new_tab": "在新的窗口中打开",
     "end": "终"
+  },
+  "zh-TW": {
+    "summary": "摘要",
+    "table_of_contents": "目錄",
+    "read": "閱讀",
+    "listen": "收聽",
+    "related_podcast": "相關節目",
+    "explore": "探索",
+    "edgenote_gallery": "Edgenote資料庫",
+    "consider": "練習",
+    "respond": "建議",
+    "give_feedback": "請告訴我們你的想法和建議。",
+    "back_to_overview": "返回主頁",
+    "next": "下一頁：",
+    "open_in_new_tab": "在新的窗口中打開",
+    "end": "終"
   }
 }

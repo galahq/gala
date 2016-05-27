@@ -11,8 +11,6 @@ import {CaseOverview} from './components/CaseOverview.js'
 import EdgenoteGallery from './components/EdgenoteGallery.js'
 import Modal from './components/Modal.js'
 
-window.i18n = {}
-window.i18n.locale = 'ja'
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false  })
 
 render((
