@@ -1,13 +1,21 @@
+var webpack = require('webpack');
+
 module.exports = {
-  entry: ['whatwg-fetch', './app/application.js'],
+  devtool: 'source-map',
+  entry: ['whatwg-fetch', './webpack/application.js'],
   output: {
-    path: './public/',
+    path: './app/assets/javascripts/react',
     filename: 'bundle.js'
   },
-  devServer: {
-    inline: true,
-    port: 3333,
-    historyApiFallback: true
+  plugins: [
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+      compress: { warnings: false }
+    })
+  ],
+  resolve: {
+    extensions: ['', '.js', '.jsx']
   },
   module: {
     loaders: [
@@ -36,4 +44,4 @@ module.exports = {
       }
     ]
   }
-};
+}

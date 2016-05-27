@@ -10,7 +10,7 @@ class CasesController < ApplicationController
 
   # GET /cases/1
   def show
-    render json: @case
+    @path = "/#{params[:path]}"
   end
 
   # POST /cases
