@@ -35,4 +35,5 @@ Vagrant.configure(2) do |config|
     cd /vagrant
     npm install
   SHELL
+
 end
