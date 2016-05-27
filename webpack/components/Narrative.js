@@ -102,7 +102,7 @@ String.prototype.removeHREFContents = function() {
   return this.replace(/href=\"[^ ]*\"/g, "")
 }
 String.prototype.replaceHREFContents = function(firstPartOfPath) {
-  return this.replace(/href=\"[^ ]*[?&]p=([0-9]+)\"/g, `href=\"${firstPartOfPath}/edgenotes/$1\"`)
+  return this.replace(/href=\"[^ ]*[?&]p=([0-9]+)\"/g, `href=\"#${firstPartOfPath}/edgenotes/$1\"`)
 }
 
 class Paragraph extends React.Component {
@@ -117,7 +117,7 @@ class Paragraph extends React.Component {
   addHoverCallbacksToParagraphText(paragraph) {
     let mouseover = 'onmouseover="window.handleHover'+this.props.id+'($2)"'
     let mouseout = 'onmouseout="window.handleHover'+this.props.id+'(0)"'
-    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout).replaceHREFContents(`/read/${this.props.params.id}/${this.props.params.chapter}`) }
+    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout).replaceHREFContents(`/${this.props.params.chapter}`) }
   }
 
   setEdgenotes(contents) {
