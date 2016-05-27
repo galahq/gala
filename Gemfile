@@ -39,3 +39,5 @@ gem 'omniauth-lti'
 gem 'rails-i18n'
 gem 'trasto'
 gem 'http_accept_language'
+
+ruby '2.3.0'
