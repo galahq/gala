@@ -36,7 +36,7 @@ class EdgenoteGallery extends React.Component {
                     return (
                       <Edgenote
                         random={true}
-                        path_prefix={`/read/${this.props.params.id}`}
+                        path_prefix={""}
                         selected_id={this.state.selected_id}
                         id={id}
                         key={`edgenote_${id}`}

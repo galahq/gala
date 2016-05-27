@@ -1,0 +1,9 @@
+<div id="container"></div>
+
+<%=javascript_tag do %>
+  window.params = {
+    slug: "<%=params[:slug] %>"
+  }
+<% end %>
+
+<%=javascript_include_tag "react/bundle"%>

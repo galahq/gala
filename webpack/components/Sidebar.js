@@ -17,7 +17,7 @@ class Sidebar extends React.Component {
     let {title, caseID, metadata} = this.props
     return (
       <aside id="Sidebar">
-        <Link to={`/read/${caseID}`} className="backLink">
+        <Link to={`/`} className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
         <BillboardTitle title={title} featuredImageURL={metadata.featuredImageURL} />

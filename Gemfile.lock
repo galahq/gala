@@ -71,6 +71,10 @@ GEM
     ims-lti (1.1.11)
       builder
       oauth (~> 0.4.5)
+    inline_svg (0.8.0)
+      activesupport (>= 4.0.4)
+      loofah (>= 2.0)
+      nokogiri (~> 1.6)
     jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -127,7 +131,6 @@ GEM
     puma (3.4.0)
     rack (2.0.0.rc1)
       json
-    rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.0.rc1)
@@ -211,6 +214,7 @@ DEPENDENCIES
   devise (~> 4.1)
   haml
   http_accept_language
+  inline_svg
   jbuilder (~> 2.0)
   jquery-rails
   listen (~> 3.0.5)
@@ -219,7 +223,6 @@ DEPENDENCIES
   omniauth-lti
   pg (~> 0.18)
   puma (~> 3.0)
-  rack-cors
   rails (>= 5.0.0.rc1, < 5.1)
   rails-i18n
   redis (~> 3.0)

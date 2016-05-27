@@ -107,9 +107,9 @@ class Modal extends React.Component {
 
   returnLink() {
     if (this.props.params.chapter) {
-      return `/read/${this.props.params.id}/${this.props.params.chapter}`
+      return `/${this.props.params.chapter}`
     } else {
-      return `/read/${this.props.params.id}/edgenotes`
+      return `/edgenotes`
     }
   }
 

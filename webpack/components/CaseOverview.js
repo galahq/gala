@@ -87,7 +87,7 @@ class Actions extends React.Component {
           />
           <I18n meaning="explore" />
         </h2>
-        <Link to={`/read/${this.props.caseInfo.caseID}/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
+        <Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
       </div>
 
       {this.renderConsiderLinks()}

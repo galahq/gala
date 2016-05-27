@@ -42,7 +42,7 @@ class Case extends React.Component {
   }
 
   componentDidMount() {
-    fetchFromWP({id: this.props.params.id}, this.parseCaseFromJSON.bind(this))
+    fetchFromWP({id: params.slug}, this.parseCaseFromJSON.bind(this))
   }
 
   render() {
@@ -53,18 +53,14 @@ class Case extends React.Component {
     }
 
     return (
-      <div>
-        {
-          this.props.children && React.cloneElement(this.props.children,
-                                                    {
-                                                      caseID: this.props.params.id,
-                                                      title: title,
-                                                      chapterTitles: chapterTitles,
-                                                      chapters: chapters,
-                                                      metadata: metadata
-                                                    })
-        }
-      </div>
+      this.props.children && React.cloneElement(this.props.children,
+                                                {
+                                                  caseID: params.slug,
+                                                  title: title,
+                                                  chapterTitles: chapterTitles,
+                                                  chapters: chapters,
+                                                  metadata: metadata
+                                                })
     )
   }
 

@@ -30,7 +30,7 @@ class Narrative extends React.Component {
   nextLink() {
     let nextChapterID = parseInt(this.props.params.chapter) + 1
     if (nextChapterID < this.props.chapters.length) {
-      return <Link className="nextLink" to={`/read/${this.props.params.id}/${nextChapterID}`}><I18n meaning="next" /> {this.props.chapterTitles[nextChapterID]}</Link>
+      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.chapterTitles[nextChapterID]}</Link>
     } else {
       return <footer><h2><I18n meaning="end" /></h2></footer>
     }
@@ -150,7 +150,7 @@ class Paragraph extends React.Component {
                   this.state.edgenote_ids.map( (id) => {
                     return (
                       <Edgenote
-                        path_prefix={`/read/${this.props.params.id}/${this.props.params.chapter}`}
+                        path_prefix={`/${this.props.params.chapter}`}
                         selected_id={this.state.selected_id}
                         id={id}
                         key={`edgenote_${id}`}
