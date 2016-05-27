@@ -1,6 +1,4 @@
 import React from 'react';
-import '../stylesheets/CaseReader.scss';
-
 
 import Sidebar from './Sidebar.js'
 import Narrative from './Narrative.js'

@@ -1,4 +1,5 @@
-@import 'main';
+@import '_globals';
+@import '_tint_and_shade';
 
 .window {
   background-color: tint($umichBlue, 20%);

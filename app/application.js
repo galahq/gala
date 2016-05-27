@@ -11,10 +11,15 @@ import {CaseOverview} from './components/CaseOverview.js'
 import EdgenoteGallery from './components/EdgenoteGallery.js'
 import Modal from './components/Modal.js'
 
+import './css.js'
+
+window.i18n = {}
+window.i18n.locale = 'ja'
+
 class App extends React.Component {
   render() {
     return (
-      <div id="container">
+      <div id="container" lang={window.i18n.locale}>
         <header>
           <h1 id="logo" dangerouslySetInnerHTML={{__html: require('./images/msc-logo.svg')}} />
         </header>
