@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, useRouterHistory } from 'react-router'
+import { createHashHistory } from 'history'
 
 window.$ = require('jquery');
 
@@ -12,9 +13,10 @@ import Modal from './components/Modal.js'
 
 window.i18n = {}
 window.i18n.locale = 'ja'
+const appHistory = useRouterHistory(createHashHistory)({ queryKey: false  })
 
 render((
-  <Router history={hashHistory}>
+  <Router history={appHistory}>
     <Route path="/" component={Case}>
       <IndexRoute component={CaseOverview} />
       <Route onEnter={() => window.scrollTo(0, 0)} path="edgenotes" component={EdgenoteGallery}>
