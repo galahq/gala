@@ -1,6 +1,6 @@
 export var orchard = (path) => {
   let r = new Request(
-    `http://localhost:3000/${path}`, {
+    `http://localhost:3000/${path}.json`, {
       headers: new Headers({
         'Accept-Language': window.i18n.locale
       })

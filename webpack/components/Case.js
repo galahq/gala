@@ -1,6 +1,6 @@
 import React from 'react';
 import mapNL from '../mapNL.js'
-import fetchFromWP from '../wp-api.js'
+import { orchard } from '../orchard.js'
 
 class Case extends React.Component {
 
@@ -24,25 +24,25 @@ class Case extends React.Component {
     } )
   }
 
-  parseCaseFromJSON(response) {
-    let chapters = this.generateChapters(response.content.rendered.split('<hr />'))
+  parseCaseFromJSON(r) {
+    //let chapters = this.generateChapters(response.content.rendered.split('<hr />'))
     this.setState({
-      title: response.title.rendered,
-      chapters: chapters,
+      title: r.title,
+      chapters: [{title: "Chapter", innerHTML: "", contents: [""]}],
       metadata: {
-        snippet: response.acf.case_summary,
-        case_authors: response.acf.case_authors,
-        has_podcast: response.acf.has_podcast,
-        podcast_name: response.acf.podcast_name,
-        podcast_url: response.acf.podcast_url,
-        consider_links: response.acf.consider_links,
-        featuredImageURL: response.better_featured_image ? response.better_featured_image.source_url : ""
+        snippet: r.summary,
+        case_authors: r.case_authors,
+        has_podcast: false,
+        podcast_name: "",
+        podcast_url: "",
+        consider_links: "",
+        featuredImageURL: r.cover_url
       }
     })
   }
 
   componentDidMount() {
-    fetchFromWP({id: params.slug}, this.parseCaseFromJSON.bind(this))
+    orchard(`cases/${window.params.slug}`).then(this.parseCaseFromJSON.bind(this))
   }
 
   render() {
@@ -55,7 +55,7 @@ class Case extends React.Component {
     return (
       this.props.children && React.cloneElement(this.props.children,
                                                 {
-                                                  caseID: params.slug,
+                                                  caseID: window.params.slug,
                                                   title: title,
                                                   chapterTitles: chapterTitles,
                                                   chapters: chapters,
