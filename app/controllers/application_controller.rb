@@ -4,7 +4,8 @@ class ApplicationController < ActionController::Base
   private
 
   def set_locale
-    I18n.locale = http_accept_language.user_preferred_languages.first
+    logger.debug "User preferred languages: #{http_accept_language.user_preferred_languages}"
+    I18n.locale = http_accept_language.compatible_language_from I18n.available_locales
     logger.debug "Locale set to #{I18n.locale}"
   end
 
