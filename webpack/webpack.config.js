@@ -1,7 +1,7 @@
 var webpack = require('webpack');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'eval',
   entry: ['whatwg-fetch', './webpack/application.js'],
   output: {
     path: './app/assets/javascripts/react',
