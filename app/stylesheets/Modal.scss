@@ -6,9 +6,10 @@
   position: fixed;
   top: 0px;
   width: 100%;
-  z-index: 100;
+  z-index: 101;
 
   background-color: $white;
+  border-bottom: 3px solid $purple;
 
   .modalClose {
     position: relative;
@@ -62,21 +63,17 @@ a.modalDismiss {
 
   aside {
     position: absolute;
-    margin-top: 5em;
+    margin-top: 4em;
     z-index: 100;
     width: 100%;
     height: 100%;
-
-    pointer-events: none;
 
     font-family: $serifFont;
     font-weight: 400;
 
     .Modal-contents {
-      width: 100%;
       height: calc(100% - 4em);
-
-      overflow: scroll;
+      overflow: scroll !important;
 
       .loading-icon {
         width: 2em;
@@ -84,9 +81,8 @@ a.modalDismiss {
       }
 
       .Card {
-        max-width: 40em;
         margin: 1em auto;
-        pointer-events: initial;
+        max-width: 40em;
       }
 
       .Modal-theatre,
@@ -111,6 +107,7 @@ a.modalDismiss {
         height: 100%;
         > * {
           height: 90%;
+          overflow: show;
         }
       }
 
