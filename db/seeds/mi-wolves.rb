@@ -85,7 +85,7 @@ regulating any public wolf hunt on the plate of the NRC.</p>
   decisions for the stakeholders involved? Richardson returned to his reading
   with these questions weighing heavily on his mind.</p>
 </section>
-    <hr>
+
 <h1>The history of gray wolves in the United States and Michigan</h1>
 <section>
   <p>The history of <a href="http://remley.wcbn.org/ihih-msc/?p=539">gray
@@ -151,7 +151,7 @@ Legislature and the U.S. Fish and Wildlife Service removed Michigan’s wolves
 from the state and federal endangered species lists in 2009 and 2012,
 respectively. Removal from the federal list gave full control to the state of
 Michigan to manage its wolf populations.</p>
-    <hr>
+
 <h1>Biology, conservation, and scientific management</h1>
 <h2>Importance of wolves in the ecosystem</h2>
 <section>
@@ -302,7 +302,7 @@ or solid scientific support for a public wolf hunt. Moreover, they argue that
 public concerns about human–wolf interactions are overblown and that those
 interactions tend to be so rare that a public wolf hunt is not a sensible
 approach for dealing with them.</p>
-    <hr>
+
 <h1>Humans and wolves: A delicate relationship</h1>
 <p>Wolves hold a distinct place in Western European culture. Children’s
 stories and fairy tales written centuries ago provide a glimpse of one
@@ -367,7 +367,7 @@ herding cattle, negatively affecting the efficiency of livestock operations.
 Farmers and ranchers note that indirect impacts on productivity do not
 qualify for compensation under programs designed to mitigate the impact of
 wolf depredations.</p>
-    <hr>
+
 <h1>A political and regulatory saga</h1>
 <p>The path leading up to the NRC’s decision is marked by political drama, in
 which the Michigan Legislature repeatedly took action to advance the state
@@ -432,7 +432,7 @@ population&nbsp;exceeds 350,&nbsp;<a href=
 reservations</a>. The population goal was met in 2004, and the state status
 was changed from “threatened” to “protected wild animal.” For the 2012 hunt,
 the DNR set a quota of 201, with an actual harvest of 117.&nbsp;</p>
-    <hr>
+
 <h1>The choice at hand</h1>
 <section>
   <p>J. R. Richardson stares at the stack of public comments, the DNR
@@ -566,7 +566,7 @@ revienne au CRN.</p>
   pour les parties prenantes&nbsp;? Richardson retourna à sa lecture avec ces
   questions qui pesaient lourdement dans son esprit.</p>
 </section>
-    <hr>
+
 <h1>L’histoire de loups gris dans les États-Unis et le Michigan</h1>
 <section>
   <p>L’histoire des <a href="http://remley.wcbn.org/ihih-msc/?p=539">loups
@@ -645,7 +645,7 @@ américains de la Pêche et de la Faune et la Flore, ont supprimé les loups de
 l’Etat du Michigan des listes fédérales des espèces en voie de disparition,
 respectivement en 2009 et 2012. La radiation de la liste fédérale a donné le
 contrôle total à l’état du Michigan pour gérer ses populations de loup.</p>
-    <hr>
+
 <h1>La biologie, la conservation et la gestion scientifique</h1>
 <h2>L’importance des loups dans un écosystème</h2>
 <section>
@@ -818,7 +818,7 @@ font valoir que les préoccupations du public concernant les interactions
 homme-loup sont exagérées et que ces interactions tendent à être tellement
 rares qu’une chasse publique au loup n’est pas une approche raisonnable pour
 y remédier.</p>
-    <hr>
+
 <h1>Les humains et les loups : une relation délicate</h1>
 <p>Les loups occupent une place distincte dans la culture occidentale
 européenne. Les histoires d’enfants et les contes de fées écrits il y a des
@@ -893,7 +893,7 @@ négative sur l’efficacité les opérations (ou l’exploitation) de l’élev
 Les agriculteurs et les éleveurs notent tout de même (ou regrettent) que des
 impacts indirects sur la productivité ne sont pas indemnisés en vertu des
 programmes visant à atténuer l’impact des déprédations des loups.</p>
-    <hr>
+
 <h1>Une saga politique et réglementaire</h1>
 <p>Le sentier qui mène jusqu’à la décision du CRN est marqué par un drame
 politique, en ce sens que la législature ou le Parlement du Michigan a pris,
@@ -973,7 +973,7 @@ amérindiennes</a>. L’objectif de population a été atteint en 2004, et le
 statut d’État a changé de “menacer” à “protéger les animaux sauvages”. Pour
 la chasse de 2012, le MRN avait fixé un quota de 201 loups et avec une
 récolte réelle de 117.</p>
-    <hr>
+
 <h1>Le choix à portée de main</h1>
 <section>
   <p>J. R. Richardson fixe de regard la pile des observations du public, la

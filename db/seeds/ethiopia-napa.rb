@@ -49,7 +49,7 @@ negative impacts. Kidane abandoned a successful engineering career in order
 to answer this important calling. And the decision-making process needed to
 happen quickly: the UNFCCC requested a report with recommended projects and
 prioritizations by November, and already it is August.</p>
-    <hr>
+
 <h1>National Adaptation Plans of Action (NAPA)</h1>
 <p>NAPAs provide a guided process for <strong>Least Developed
 Countries</strong> (LDCs) to identify priority activities that respond to
@@ -73,7 +73,7 @@ to the main sectors into which the project falls; however, some projects and
 activities are diverse in nature and difficult to classify into any one
 sector. Such projects have been categorized into a ‘cross-sectoral’
 group.</p>
-    <hr>
+
 <h1>Time to Get Moving!</h1>
 <p>After checking with his secretary to see if there were any messages,
 Kidane headed to the embassy where Fahmy Abdel Aal, the Executive Director of
@@ -138,8 +138,8 @@ of climate change</a>.</p>
   months to arrange that!”</p>
   <p>Head spinning, Kidane spent the whole afternoon studying the report.</p>
 </section>
-    <hr>
-<h2>The Minister of Finance and Economic Development</h2>
+
+<h1>The Minister of Finance and Economic Development</h1>
 <p>The next morning he went directly to the ministry to meet Mr. Sufian
 Ahmed, the Minister of Finance and Economic Development. From the beginning
 of the meeting, Sufian carried himself with an air of superiority. This
@@ -194,8 +194,8 @@ Kidane didn’t have much time to ponder, as his secretary soon buzzed his desk
 phone. “Yes?” “Mr. Kidane, you wanted me to remind you about your son’s
 recital.” Oh, yes, thank you.” Kidane packed up his briefcase and headed out
 of the office.</p>
-    <hr>
-<h2>An Unexpected Request</h2>
+
+<h1>An Unexpected Request</h1>
 <blockquote>
   <p>As he was headed toward his car he heard someone call his name. “Mr.
   Asefa?” Kidane turned around. A man was standing behind him. He was lean
@@ -263,8 +263,8 @@ day. He thought to himself that he had no answers and only more questions
 than ever before. But he couldn’t stay stuck in thought forever; he had to
 brush off these disconcerting thoughts to see his son in his first recital.
 His wife would kill him if he missed it.</p>
-    <hr>
-<h2>The Minister of Environment and Forests</h2>
+
+<h1>The Minister of Environment and Forests</h1>
 <p>The next day, Kidane met with Million Belay, the Minister of Environment
 and Forests. “Mr. Belay, I was hoping I could consult with you on the NAPA
 adaptation plans,” Kidane opened the discussion. Minister Belay shuffled
@@ -315,8 +315,8 @@ Ethiopia’s adaptation to climate change. These projects also needed to
 fulfill the criteria for UNEP funding. He knew he’d have to come up with a
 definitive list of criteria to help him determine the best projects to
 pursue.</p>
-    <hr>
-<h2>The NAPA Steering Committee</h2>
+
+<h1>The NAPA Steering Committee</h1>
 <p>A week later, Kidane had to meet with other members of the NAPA Steering
 Committee to talk over the available projects and decide which ones to
 recommend for action. In the room with him were Dawit Asfaw, Solomon Ejigu,
