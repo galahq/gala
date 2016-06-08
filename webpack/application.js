@@ -20,7 +20,7 @@ render((
       <Route onEnter={() => window.scrollTo(0, 0)} path="edgenotes" component={EdgenoteGallery}>
         <Route path=":edgenoteID" component={Modal} />
       </Route>
-      <Route onEnter={() => window.scrollTo(0, 0)} path=":chapter" component={CaseReader}>
+      <Route onEnter={() => window.scrollTo(0, 0)} path=":selectedSegment" component={CaseReader}>
         <Route path="edgenotes/:edgenoteID" component={Modal} />
       </Route>
     </Route>

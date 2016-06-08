@@ -6,13 +6,13 @@ import {I18n} from './I18n.js'
 
 export class Billboard extends React.Component {
   render() {
-    let {title, metadata} = this.props.caseInfo
+    let {title, coverURL, summary, caseAuthors} = this.props
     return (
       <section className="Billboard">
-        <BillboardTitle title={title} featuredImageURL={metadata.featuredImageURL} case_authors={metadata.case_authors} />
+        <BillboardTitle title={title} coverURL={coverURL} caseAuthors={caseAuthors} />
         <div className="Card BillboardSnippet">
           <h3><I18n meaning="summary" /></h3>
-          {metadata.snippet}
+          {summary}
         </div>
       </section>
     )
@@ -22,7 +22,8 @@ export class Billboard extends React.Component {
 class Actions extends React.Component {
 
   renderConsiderLinks() {
-    if (this.props.caseInfo.metadata.consider_links && this.props.caseInfo.metadata.consider_links !== "") {
+    let activities = this.props.activities
+    if (activities && activities !== []) {
       return (
         <div>
           <h2>
@@ -32,14 +33,15 @@ class Actions extends React.Component {
             />
             <I18n meaning="consider"/>
           </h2>
-          <div dangerouslySetInnerHTML={{__html: this.props.caseInfo.metadata.consider_links}} />
+          <div dangerouslySetInnerHTML={{__html: activities}} />
         </div>
       )
     }
   }
 
   renderPodcast() {
-    if (this.props.caseInfo.metadata.has_podcast) {
+    let podcasts = this.props.podcasts
+    if (podcasts && podcasts !== []) {
       return (
         <div>
           <h2>
@@ -50,8 +52,8 @@ class Actions extends React.Component {
             <I18n meaning="listen" />
           </h2>
           <h4 className="list-head"><I18n meaning="related_podcast" /></h4>
-          <a href={this.props.caseInfo.metadata.podcast_url}>
-            {this.props.caseInfo.metadata.podcast_name}
+          <a href={podcasts[0].url}>
+            {podcasts[0].name}
           </a>
         </div>
       )
@@ -71,9 +73,9 @@ class Actions extends React.Component {
             <I18n meaning="read" />
           </h2>
           <TableOfContents
-            caseID={this.props.caseInfo.caseID}
-            chapterTitles={this.props.caseInfo.chapterTitles}
-            chapter={null}
+            slug={this.props.slug}
+            segmentTitles={this.props.segmentTitles}
+            currentSegment={null}
           />
         </div>
 
@@ -111,8 +113,8 @@ export class CaseOverview extends React.Component {
   render () {
     return (
       <div id="CaseOverview" className="window">
-        <Billboard caseInfo={this.props} />
-        <Actions caseInfo={this.props} />
+        <Billboard {...this.props} />
+        <Actions {...this.props} />
       </div>
     )
   }

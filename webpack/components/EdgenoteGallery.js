@@ -19,11 +19,7 @@ class EdgenoteGallery extends React.Component {
   }
 
   componentDidMount() {
-    let contents = this.props.chapters.length > 0 ? this.props.chapters.map((x) => {return x.innerHTML}) : ""
-    this.setEdgenotes(contents)
-  }
-  componentWillReceiveProps(nextProps) {
-    let contents = nextProps.chapters.length > 0 ? nextProps.chapters.map((x) => {return x.innerHTML}) : ""
+    let contents = window.caseData.segments.length > 0 ? window.caseData.segments.map((x) => {return x[1]}) : ""
     this.setEdgenotes(contents)
   }
 

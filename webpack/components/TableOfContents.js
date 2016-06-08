@@ -4,10 +4,10 @@ import { I18n } from './I18n.js'
 
 class TableOfContents extends React.Component {
   renderChapterTitles() {
-    let titleList = this.props.chapterTitles.map( (title, idx) => {
+    let titleList = this.props.segmentTitles.map( (title, idx) => {
       return(
-        <li key={idx} className={idx === parseInt(this.props.chapter) ? "focus" : ""}>
-          <Link to={`/${idx}`}>{title}</Link>
+        <li key={idx + 1} className={idx === parseInt(this.props.selectedSegment) ? "focus" : ""}>
+          <Link to={`/${idx + 1}`}>{title}</Link>
         </li>
       )
     } )

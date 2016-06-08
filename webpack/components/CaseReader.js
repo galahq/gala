@@ -11,29 +11,34 @@ String.prototype.trunc = String.prototype.trunc ||
 class CaseReader extends React.Component {
 
   log(caseTitle, chapterNum, chapterTitle) {
-    if (caseTitle)
-    ga("set", "page", location.pathname)
-    ga("send", "pageview", { "title": `${caseTitle.trunc(23)} ${chapterNum}: ${chapterTitle.trunc(20)}` })
+    if (window.ga && caseTitle) {
+      window.ga("set", "page", location.pathname)
+      window.ga("send", "pageview", { "title": `${caseTitle.trunc(23)} ${chapterNum}: ${chapterTitle.trunc(20)}` })
+    }
   }
 
   render () {
-    let {title, chapters, chapterTitles, metadata} = this.props
-    let chapter= this.props.params.chapter || 0
+    let {slug, coverURL, title, segmentContents, segmentTitles} = this.props
+    let selectedSegment = parseInt(this.props.params.selectedSegment) - 1
 
     if (title !== "") {
-      this.log(title, chapter, chapterTitles[chapter])
+      this.log(title, selectedSegment, segmentTitles[selectedSegment])
     }
 
     return (
       <div className="window">
         <Sidebar
-          caseID={this.props.params.id}
+          slug={slug}
+          coverURL={coverURL}
           title={title}
-          chapterTitles={chapterTitles}
-          chapter={chapter}
-          metadata={metadata}
+          segmentTitles={segmentTitles}
+          selectedSegment={selectedSegment}
         />
-        <Narrative chapterTitles={chapterTitles} chapters={chapters} params={this.props.params} />
+        <Narrative
+          segmentTitles={segmentTitles}
+          segmentContents={segmentContents}
+          selectedSegment={selectedSegment}
+        />
         {this.props.children}
       </div>
     )

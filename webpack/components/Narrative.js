@@ -28,23 +28,24 @@ class Narrative extends React.Component {
   }
 
   nextLink() {
-    let nextChapterID = parseInt(this.props.params.chapter) + 1
-    if (nextChapterID < this.props.chapters.length) {
-      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.chapterTitles[nextChapterID]}</Link>
+    let nextChapterID = this.props.selectedSegment + 2
+    if (nextChapterID - 1 < this.props.segmentContents.length) {
+      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.segmentTitles[nextChapterID - 1]}</Link>
     } else {
       return <footer><h2><I18n meaning="end" /></h2></footer>
     }
   }
 
   render() {
-    if (this.props.chapters.length === 0) {
+    let i = this.props.selectedSegment
+    if (this.props.segmentContents.length === 0) {
       return <article />
     }
-    let chapter = this.props.chapters[this.props.params.chapter].contents
+    let segment = this.props.segmentContents[i]
     return (
       <main>
         <a id="top" />
-        <Chapter params={this.props.params} paragraphs={chapter} />
+        <Chapter selectedSegment={i} segmentTitle={this.props.segmentTitles[i]} paragraphs={segment} />
         {this.nextLink()}
       </main>
     )
@@ -55,16 +56,15 @@ export default Narrative
 
 class Chapter extends React.Component {
   renderParagraph(paraNode, index) {
-    let params = this.props.params
     switch (paraNode.nodeName){
       case "H1": case "H2": case "H3": case "H4": case "H5": case "H6":
         let innerHTML = {__html: paraNode.innerHTML}
         let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
         return <NonParagraph key={`P${index}`} contents={element} />
       case "P":
-        return <Paragraph params={params} id={index} key={`P${index}`} contents={paraNode.outerHTML} />
+        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.outerHTML} />
       case "UL": case "OL": case "BLOCKQUOTE": case "SECTION":
-        return <Paragraph params={params} id={index} key={`P${index}`} contents={paraNode.innerHTML} />
+        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.innerHTML} />
     }
   }
 
@@ -74,6 +74,7 @@ class Chapter extends React.Component {
     } )
     return(
       <article>
+        <NonParagraph contents={<h1>{this.props.segmentTitle}</h1>} />
         {paragraphs}
       </article>
     )
@@ -117,7 +118,7 @@ class Paragraph extends React.Component {
   addHoverCallbacksToParagraphText(paragraph) {
     let mouseover = 'onmouseover="window.handleHover'+this.props.id+'($2)"'
     let mouseout = 'onmouseout="window.handleHover'+this.props.id+'(0)"'
-    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout).replaceHREFContents(`/${this.props.params.chapter}`) }
+    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout).replaceHREFContents(`/${this.props.selectedSegment + 1}`) }
   }
 
   setEdgenotes(contents) {
@@ -136,7 +137,7 @@ class Paragraph extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.params.id !== nextProps.params.id || this.props.params.chapter !== nextProps.params.chapter) {
+    if (this.props.selectedSegment !== nextProps.selectedSegment) {
       this.setState({ edgenote_ids: [] })
       this.setEdgenotes(nextProps.contents)
     }
@@ -150,7 +151,7 @@ class Paragraph extends React.Component {
                   this.state.edgenote_ids.map( (id) => {
                     return (
                       <Edgenote
-                        path_prefix={`/${this.props.params.chapter}`}
+                        path_prefix={`/${this.props.selectedSegment + 1}`}
                         selected_id={this.state.selected_id}
                         id={id}
                         key={`edgenote_${id}`}

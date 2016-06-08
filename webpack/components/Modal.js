@@ -106,8 +106,8 @@ class Modal extends React.Component {
   }
 
   returnLink() {
-    if (this.props.params.chapter) {
-      return `/${this.props.params.chapter}`
+    if (this.props.params.selectedSegment) {
+      return `/${this.props.params.selectedSegment}`
     } else {
       return `/edgenotes`
     }
@@ -123,7 +123,7 @@ class Modal extends React.Component {
     let {caption} = this.state
     return (
       <div className="Modal">
-        <Link 
+        <Link
           to={this.returnLink()}
           className="modalDismiss"
         >

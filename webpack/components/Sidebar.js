@@ -7,20 +7,20 @@ import TableOfContents from './TableOfContents.js'
 
 class Sidebar extends React.Component {
   renderTOC() {
-    if (this.props.chapterTitles) {
+    if (this.props.segmentTitles) {
       return (
-        <TableOfContents caseID={this.props.caseID} chapterTitles={this.props.chapterTitles} chapter={this.props.chapter}/>
+        <TableOfContents segmentTitles={this.props.segmentTitles} selectedSegment={this.props.selectedSegment}/>
       )
     }
   }
   render () {
-    let {title, caseID, metadata} = this.props
+    let {title, coverURL} = this.props
     return (
       <aside id="Sidebar">
         <Link to={`/`} className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
-        <BillboardTitle title={title} featuredImageURL={metadata.featuredImageURL} />
+        <BillboardTitle title={title} coverURL={coverURL} />
         {this.renderTOC()}
       </aside>
     )
