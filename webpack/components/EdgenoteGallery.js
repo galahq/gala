@@ -49,12 +49,16 @@ class EdgenoteGallery extends React.Component {
   }
 
   render() {
+    let {slug, coverURL, title, segmentTitles} = this.props
+    let selectedSegment = parseInt(this.props.params.selectedSegment) - 1
     return (
       <div className="window">
         <Sidebar
-          caseID={this.props.params.id}
-          title={this.props.title}
-          metadata={this.props.metadata}
+          slug={slug}
+          coverURL={coverURL}
+          title={title}
+          segmentTitles={segmentTitles}
+          selectedSegment={selectedSegment}
         />
         <main id="EdgenoteGallery">
           <div id="EdgenoteGalleryHeader">
