@@ -9,13 +9,13 @@ class EdgenoteGallery extends React.Component {
   constructor() {
     super()
     this.state = {
-      edgenote_ids: []
+      edgenoteSlugs: []
     }
   }
 
   setEdgenotes(contents) {
-    let edgenote_ids = gatherEdgenotes(contents)
-    this.setState({edgenote_ids: edgenote_ids})
+    let edgenoteSlugs = gatherEdgenotes(contents)
+    this.setState({edgenoteSlugs: edgenoteSlugs})
   }
 
   componentDidMount() {
@@ -25,18 +25,17 @@ class EdgenoteGallery extends React.Component {
 
   renderEdgenotes() {
     let block
-    if (this.state.edgenote_ids.length != 0) {
+    if (this.state.edgenoteSlugs.length != 0) {
       block = <div className="edgenotes">
                 {
-                  this.state.edgenote_ids.map( (id) => {
+                  this.state.edgenoteSlugs.map( (slug) => {
                     return (
                       <Edgenote
                         random={true}
-                        path_prefix={""}
-                        selected_id={this.state.selected_id}
-                        id={id}
-                        key={`edgenote_${id}`}
-                        handleHoverID={this.props.id}
+                        pathPrefix={""}
+                        selectedEdgenote={null}
+                        slug={slug}
+                        key={`edgenote_${slug}`}
                       />
                     )
                   } )
