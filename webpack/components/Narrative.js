@@ -92,43 +92,41 @@ class NonParagraph extends React.Component {
 }
 
 String.prototype.addAttributeToLinks = function (attribute) {
-  return this.replace(/(<a href=\"[^ ]*[?&]p=([0-9]+)\")/g, '$1 ' + attribute)
+  return this.replace(/(<a data-edgenote=\"([a-zA-Z0-9-]+)\")/g, '$1 ' + attribute)
 }
 
 String.prototype.addAttributeToLinksPointingToEdgenoteID = function (id, attribute) {
-  return this.replace(new RegExp('(<a href=\"[^ ]*[?&]p='+id+'\")', 'g'), '$1 ' + attribute)
+  return this.replace(new RegExp('(<a data-edgenote=\"'+id+'\")', 'g'), '$1 ' + attribute)
 }
 
-String.prototype.removeHREFContents = function() {
-  return this.replace(/href=\"[^ ]*\"/g, "")
-}
-String.prototype.replaceHREFContents = function(firstPartOfPath) {
-  return this.replace(/href=\"[^ ]*[?&]p=([0-9]+)\"/g, `href=\"#${firstPartOfPath}/edgenotes/$1\"`)
+String.prototype.addHREF = function(firstPartOfPath) {
+  return this.addAttributeToLinks(`href=\"#${firstPartOfPath}/edgenotes/$2\"`)
 }
 
 class Paragraph extends React.Component {
   constructor() {
     super()
     this.state = {
-      selected_id: 0,
-      edgenote_ids: []
+      selectedEdgenote: null,
+      edgenoteSlugs: []
     }
   }
 
   addHoverCallbacksToParagraphText(paragraph) {
-    let mouseover = 'onmouseover="window.handleHover'+this.props.id+'($2)"'
-    let mouseout = 'onmouseout="window.handleHover'+this.props.id+'(0)"'
-    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout).replaceHREFContents(`/${this.props.selectedSegment + 1}`) }
+    let mouseover = 'onmouseover=\'window.handleHover'+this.props.id+'(\"$2\")\''
+    let mouseout = 'onmouseout=\'window.handleHover'+this.props.id+'(null)\''
+    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout)
+      .addHREF(`/${this.props.selectedSegment + 1}`) }
   }
 
   setEdgenotes(contents) {
-    let edgenote_ids = gatherEdgenotes(contents)
-    this.setState({edgenote_ids: edgenote_ids})
+    let edgenoteSlugs = gatherEdgenotes(contents)
+    this.setState({edgenoteSlugs: edgenoteSlugs})
   }
 
   componentWillMount() {
-    window["handleHover"+this.props.id] = (id) => {
-      this.setState({selected_id: id})
+    window["handleHover"+this.props.id] = (slug) => {
+      this.setState({selectedEdgenote: slug})
     }
   }
 
@@ -138,23 +136,23 @@ class Paragraph extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.selectedSegment !== nextProps.selectedSegment) {
-      this.setState({ edgenote_ids: [] })
+      this.setState({ edgenoteSlugs: [] })
       this.setEdgenotes(nextProps.contents)
     }
   }
 
   renderEdgenotes() {
     let aside
-    if (this.state.edgenote_ids.length != 0) {
+    if (this.state.edgenoteSlugs.length != 0) {
       aside = <aside className="edgenotes">
                 {
-                  this.state.edgenote_ids.map( (id) => {
+                  this.state.edgenoteSlugs.map( (slug) => {
                     return (
                       <Edgenote
-                        path_prefix={`/${this.props.selectedSegment + 1}`}
-                        selected_id={this.state.selected_id}
-                        id={id}
-                        key={`edgenote_${id}`}
+                        pathPrefix={`/${this.props.selectedSegment + 1}`}
+                        selectedEdgenote={this.state.selectedEdgenote}
+                        slug={slug}
+                        key={`edgenote_${slug}`}
                         handleHoverID={this.props.id}
                       />
                       )

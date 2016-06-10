@@ -5,7 +5,7 @@ var gatherEdgenotes = (contents) => {
   contentsNode.innerHTML = contents
   var aNodes = contentsNode.querySelectorAll('a')
   return mapNL(aNodes, (a) => {
-    return /p=([^&]+)/.exec(a.getAttribute('href'))[1]
+    return a.getAttribute('data-edgenote')
   })
 }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
-import fetchFromWP from '../wp-api.js'
+import {orchard} from '../orchard.js'
 import LoadingIcon from './LoadingIcon.js'
 
 class Edgenote extends React.Component {
@@ -19,25 +19,17 @@ class Edgenote extends React.Component {
     }
   }
 
-  edgenoteCoverImage(response) {
-    if (response.better_featured_image !== null) {
-      return <img src={response.better_featured_image.source_url} />
-    } else {
-      return <img />
-    }
-  }
-
   parseContentsFromJSON(response) {
     let contents = {
-      "caption": {__html: response.title.rendered},
-      "cover": this.edgenoteCoverImage(response),
+      "caption": {__html: response.caption},
+      "cover": <img src={response.thumbnail_url} />,
       "format": response.format
     }
     this.setState({contents: contents})
   }
 
   downloadContents() {
-    fetchFromWP({id: this.props.id}, this.parseContentsFromJSON.bind(this))
+    orchard(`edgenotes/${this.props.slug}`).then(this.parseContentsFromJSON.bind(this))
   }
 
   className() {
@@ -54,11 +46,11 @@ class Edgenote extends React.Component {
   render () {
     if (this.state.contents && this.state.contents !== null) {
       let {cover, caption, format} = this.state.contents
-      let id = this.props.id
+      let slug = this.props.slug
       let className = this.className()
       return (
         <Link
-          to={`${this.props.path_prefix}/edgenotes/${id}`}
+          to={`${this.props.pathPrefix}/edgenotes/${slug}`}
           className={className}
           onMouseOver={this.handleMouseOver.bind(this)}
           onMouseOut={this.handleMouseOut.bind(this)}
@@ -69,7 +61,7 @@ class Edgenote extends React.Component {
               className={`edgenote-icon edgenote-icon-${format}`}
               dangerouslySetInnerHTML={{__html: require(`../images/edgenote-${format}.svg`)}}
             />
-            <figcaption className={ id == this.props.selected_id ? "focus" : "" } dangerouslySetInnerHTML={caption} />
+            <figcaption className={ slug == this.props.selectedEdgenote ? "focus" : "" } dangerouslySetInnerHTML={caption} />
           </div>
         </Link>
       )
