@@ -539,20 +539,19 @@ revienne au CRN.</p>
   aussi en sa qualité de passionné du plein air, d’homme d’affaires et
   ingénieur possédant une vaste expérience en matière de ressources
   naturelles, Richardson avait des sentiments personnels et professionnels
-  contradictoires sur cette affaire de loup. D’une part, il a vu <a data-edgenote="residents-weigh-hunt">le retour du loup comme un signe
-  de l’assainissement et de la prospérité de l’environnement naturel</a>, et
-  il veut protéger l’équilibre écologique. D’autre part, il connaissait
-  personnellement <a data-edgenote="residents-weigh-hunt">certaines
-  personnes dont le bétail avait été la proie des loups</a> et était
-  directement informé sur les conflits hommes-loups issus de cette question
-  politiquement importante. Les préoccupations scientifiques, politiques et
-  communautaires autour de la possibilité d’une chasse au loup laissaient
-  transparaître que quelle que soit la décision qu’allait prendre le CRN,
-  tout le monde ne devait pas être satisfait. Et Richardson devrait être la
-  personne du CRN qui devrait prendre cette décision en tenant compte des
-  pressions du Gouverneur, du Parlement, des défenseurs du Loup, des groupes
-  tribaux, des chasseurs, des éleveurs et du public, qui critiqueront
-  fortement cette décision.</p>
+  contradictoires sur cette affaire de loup. D’une part, il a vu le retour du
+  loup comme un signe de l’assainissement et de la prospérité de l’environnement
+  naturel, et il veut protéger l’équilibre écologique. D’autre part, il
+  connaissait personnellement <a data-edgenote="residents-weigh-hunt">certaines
+  personnes dont le bétail avait été la proie des loups</a> et était directement
+  informé sur les conflits hommes-loups issus de cette question politiquement
+  importante. Les préoccupations scientifiques, politiques et communautaires
+  autour de la possibilité d’une chasse au loup laissaient transparaître que
+  quelle que soit la décision qu’allait prendre le CRN, tout le monde ne devait
+  pas être satisfait. Et Richardson devrait être la personne du CRN qui devrait
+  prendre cette décision en tenant compte des pressions du Gouverneur, du
+  Parlement, des défenseurs du Loup, des groupes tribaux, des chasseurs, des
+  éleveurs et du public, qui critiqueront fortement cette décision.</p>
   <p>Maintenant, à la veille de cette importante décision, Richardson
   réfléchissait sur ses options. Devait-il prendre en compte les appels des
   personnes opposées à la chasse et de certains scientifiques qui pensent que
