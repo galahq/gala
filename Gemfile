@@ -36,8 +36,8 @@ gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-lti'
 
-gem 'rails-i18n'
 gem 'trasto'
 gem 'http_accept_language'
+gem 'i18n_generators'
 
 ruby '2.3.0'

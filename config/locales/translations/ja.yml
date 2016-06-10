@@ -1,0 +1,96 @@
+ja:
+  activerecord:
+    models:
+      activity: アクティビティ  #g
+      case: 場合  #g
+      comment: コメント  #g
+      comment_thread: コメントスレッド  #g
+      edgenote: Edgenote  #g
+      enrollment: 登録  #g
+      group: グループ  #g
+      group_membership: グループのメンバーシップ  #g
+      podcast: ポッドキャスト  #g
+      reader: リーダー  #g
+
+    attributes:
+      activity:
+        case: :activerecord.models.case  #g
+        description_i18n: 説明国際化  #g
+        pdf_url_i18n: PDFファイルのURLの国際化  #g
+        title_i18n: タイトルの国際化  #g
+
+      case:
+        activities: 活動  #g
+        authors: 著者  #g
+        comment_threads: コメントスレッド  #g
+        comments: 注釈  #g
+        cover_url: カバーのURL  #g
+        edgenotes: Edgenotes  #g
+        enrollments: 入学者数  #g
+        narrative_i18n: 物語の国際化  #g
+        podcasts: ポッドキャスト  #g
+        published: 公開  #g
+        readers: 読者  #g
+        slug: ナメクジ  #g
+        summary_i18n: 概要国際化  #g
+        tags: タグ  #g
+        title_i18n: タイトルの国際化  #g
+
+      comment:
+        comment_thread: :activerecord.models.comment_thread  #g
+        content_i18n: コンテンツ国際化  #g
+        reader: :activerecord.models.reader  #g
+
+      comment_thread:
+        case: :activerecord.models.case  #g
+        comments: 注釈  #g
+        group: :activerecord.models.group  #g
+
+      edgenote:
+        caption_i18n: キャプション国際化  #g
+        case: :activerecord.models.case  #g
+        content_i18n: コンテンツ国際化  #g
+        format: フォーマット  #g
+        slug: ナメクジ  #g
+        thumbnail_url: サムネイルのURL  #g
+
+      enrollment:
+        case: :activerecord.models.case  #g
+        reader: :activerecord.models.reader  #g
+
+      group:
+        comment_threads: コメントスレッド  #g
+        group_memberships: グループメンバーシップ  #g
+        name_i18n: 名前I18N  #g
+        readers: 読者  #g
+
+      group_membership:
+        group: :activerecord.models.group  #g
+        reader: :activerecord.models.reader  #g
+
+      podcast:
+        audio_url_i18n: オーディオのURLの国際化  #g
+        case: :activerecord.models.case  #g
+        description_i18n: 説明国際化  #g
+        title_i18n: タイトルの国際化  #g
+
+      reader:
+        authentication_token: 認証トークン  #g
+        cases: ケース  #g
+        comments: 注釈  #g
+        current_sign_in_at: 現在の兆候  #g
+        current_sign_in_ip: 腹腔内の現在の兆候  #g
+        email: Eメール  #g
+        encrypted_password: 暗号化されたパスワード  #g
+        enrollments: 入学者数  #g
+        group_memberships: グループメンバーシップ  #g
+        groups: グループ  #g
+        image_url: 画像のURL  #g
+        last_sign_in_at: 最後の記号  #g
+        last_sign_in_ip: 腹腔内の最後の記号  #g
+        name: 名  #g
+        provider: プロバイダー  #g
+        remember_created_at: で作成されたことを覚えておいてください  #g
+        reset_password_sent_at: で送信されたパスワードをリセット  #g
+        reset_password_token: パスワードトークンをリセット  #g
+        uid: UID  #g

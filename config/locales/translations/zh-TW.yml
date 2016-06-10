@@ -1,0 +1,96 @@
+zh-TW:
+  activerecord:
+    models:
+      activity: 活动  #g
+      case: 案件  #g
+      comment: 评论  #g
+      comment_thread: 跟帖评论  #g
+      edgenote: 沿注  #g
+      enrollment: 注册  #g
+      group: 组  #g
+      group_membership: 组成员  #g
+      podcast: 播客  #g
+      reader: 读者  #g
+
+    attributes:
+      activity:
+        case: :activerecord.models.case  #g
+        description_i18n: 说明国际化  #g
+        pdf_url_i18n: 全文链接国际化  #g
+        title_i18n: 标题国际化  #g
+
+      case:
+        activities: 活动  #g
+        authors: 作者  #g
+        comment_threads: 评论主题  #g
+        comments: 注释  #g
+        cover_url: 封面网址  #g
+        edgenotes: Edgenotes  #g
+        enrollments: 扩招  #g
+        narrative_i18n: 国际化叙事  #g
+        podcasts: 播客  #g
+        published: 发布时间  #g
+        readers: 读者  #g
+        slug: 金属块  #g
+        summary_i18n: 总结国际化  #g
+        tags: 标签  #g
+        title_i18n: 标题国际化  #g
+
+      comment:
+        comment_thread: :activerecord.models.comment_thread  #g
+        content_i18n: 内容国际化  #g
+        reader: :activerecord.models.reader  #g
+
+      comment_thread:
+        case: :activerecord.models.case  #g
+        comments: 注释  #g
+        group: :activerecord.models.group  #g
+
+      edgenote:
+        caption_i18n: 标题国际化  #g
+        case: :activerecord.models.case  #g
+        content_i18n: 内容国际化  #g
+        format: 格式  #g
+        slug: 金属块  #g
+        thumbnail_url: 缩略图网址  #g
+
+      enrollment:
+        case: :activerecord.models.case  #g
+        reader: :activerecord.models.reader  #g
+
+      group:
+        comment_threads: 评论主题  #g
+        group_memberships: 组成员  #g
+        name_i18n: 名称国际化  #g
+        readers: 读者  #g
+
+      group_membership:
+        group: :activerecord.models.group  #g
+        reader: :activerecord.models.reader  #g
+
+      podcast:
+        audio_url_i18n: 音频网址国际化  #g
+        case: :activerecord.models.case  #g
+        description_i18n: 说明国际化  #g
+        title_i18n: 标题国际化  #g
+
+      reader:
+        authentication_token: 认证令牌  #g
+        cases: Cases  #g
+        comments: 注释  #g
+        current_sign_in_at: 目前在标志  #g
+        current_sign_in_ip: 目前在IP标志  #g
+        email: 电子邮件  #g
+        encrypted_password: 加密密码  #g
+        enrollments: 扩招  #g
+        group_memberships: 组成员  #g
+        groups: 组  #g
+        image_url: 图片网址  #g
+        last_sign_in_at: 上次登录在  #g
+        last_sign_in_ip: 上次登录IP  #g
+        name: 名称  #g
+        provider: 提供商  #g
+        remember_created_at: 在创建记得  #g
+        reset_password_sent_at: 在重置密码发送  #g
+        reset_password_token: 重置密码令牌  #g
+        uid: UID  #g

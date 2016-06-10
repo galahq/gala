@@ -1,7 +1,7 @@
 .window
   #CaseOverview
     .Card
-      %h1 All Cases
+      %h1=t '.title'
       %ul
         - @cases.each do |c|
           %li=link_to c.title, c
