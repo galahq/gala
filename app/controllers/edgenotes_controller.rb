@@ -10,7 +10,6 @@ class EdgenotesController < ApplicationController
 
   # GET /edgenotes/1
   def show
-    render json: @edgenote
   end
 
   # POST /edgenotes
@@ -41,7 +40,7 @@ class EdgenotesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_edgenote
-      @edgenote = Edgenote.find(params[:id])
+      @edgenote = Edgenote.find_by_slug params[:slug]
     end
 
     # Only allow a trusted parameter "white list" through.
