@@ -43,8 +43,8 @@ Commission</em> (NRC), a seven-person policy advisory body to the state’s
 fair share of contentious issues during his tenure at the NRC since 2007. But
 he could remember none that had aroused such passion from all sides as the
 wolf hunt issue. As a result, he felt a great deal of pressure to lead the
-NRC to make the right decision based on sound science, respect <a href=
-"http://remley.wcbn.org/ihih-msc/?p=502">for the needs of the people who are
+NRC to make the right decision based on sound science, respect <a
+data-edgenote="a-heated-debate">for the needs of the people who are
 affected</a> by the presence of wolves, and sensitivity to public
 opinion.</p>
 <p>The NRC, whose job is to regulate game species, did not appear to be the
@@ -63,11 +63,10 @@ regulating any public wolf hunt on the plate of the NRC.</p>
   state’s wolf population resides, as well as an avid outdoorsman,
   businessman, and engineer with extensive experience in natural resource
   issues, Richardson had conflicting personal and professional feelings about
-  the wolf harvest. On the one hand, he saw <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=513">the wolf’s comeback as a sign that
-  the natural environment was healthy and thriving</a>, and he wanted to
-  protect that ecological balance. On the other, he personally knew <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=516">some whose livestock had been
+  the wolf harvest. On the one hand, he saw the wolf’s comeback as a sign that
+  the natural environment was healthy and thriving, and he wanted to
+  protect that ecological balance. On the other, he personally knew <a
+  data-edgenote="residents-weigh-hunt">some whose livestock had been
   preyed on by wolves</a> and had firsthand knowledge of the human–wolf
   conflicts that made this issue so politically charged. The science,
   politics, and community concerns surrounding the possibility of a wolf hunt
@@ -88,7 +87,7 @@ regulating any public wolf hunt on the plate of the NRC.</p>
 
 <h1>The history of gray wolves in the United States and Michigan</h1>
 <section>
-  <p>The history of <a href="http://remley.wcbn.org/ihih-msc/?p=539">gray
+  <p>The history of <a data-edgenote="gray-wolf">gray
   wolves</a> in Michigan, which parallels the greater story of the species in
   the Great Lakes and throughout North America, is woven with trials and
   triumphs. Native to Michigan, wolves once roamed every county in the state,
@@ -112,9 +111,9 @@ regulating any public wolf hunt on the plate of the NRC.</p>
   the country, and Michigan’s wolves were not spared. Wolves were eliminated
   from the southern part of the state by the 1830s, and by the 1900s they had
   all but disappeared. A tiny population remained in the Isle Royale island
-  north of <a href="http://remley.wcbn.org/ihih-msc/?p=552">Michigan’s Upper
+  north of <a data-edgenote="michigan">Michigan’s Upper
   Peninsula</a>, considered possibly one of the last wolf populations in
-  North America during <a href="http://remley.wcbn.org/ihih-msc/?p=556">the
+  North America during <a data-edgenote="gray-wolf-range">the
   final stage of wolf extermination in the 1960s</a>.</p>
   <p>In a major turnaround for the species, Michigan followed other states in
   legislating protection for wolves in 1965. This gave the few remaining
@@ -132,8 +131,8 @@ wolves before they had time to reproduce, causing Michigan’s DNR to decide
 that it would no longer try to intervene in the reestablishment of wolves in
 the state. This natural recovery gained steam when a pair of wolves was
 discovered to have immigrated from nearby states into the central U.P. in the
-1980s. As the pair began to reproduce in the early 1990s, <a href=
-"http://remley.wcbn.org/ihih-msc/?p=563">a steady increase in the population
+1980s. As the pair began to reproduce in the early 1990s, <a
+data-edgenote="mi-wolf-population">a steady increase in the population
 ensued</a>. In 2010, 687 wolves were documented to be living in the state.
 Simultaneously, the public was becoming increasingly supportive of the wolf
 comeback, with a majority of Michigan residents supporting wolf recovery in
@@ -142,7 +141,7 @@ the state.</p>
 Recovery Plan, developed to meet ESA requirements, stipulated that the
 Wisconsin–Michigan population must exceed 100 for a minimum of five
 consecutive years to ensure the survival of the species, which was achieved
-by 1994. In 1997, <a href="http://remley.wcbn.org/ihih-msc/?p=566">Michigan
+by 1994. In 1997, <a data-edgenote="perversion-of-democracy">Michigan
 completed its own recovery plan</a>, the Michigan Wolf Recovery and
 Management Plan, recommending a population of 200 for five consecutive years.
 Meeting these goals would pave the way for the removal of the species from
@@ -178,7 +177,7 @@ Michigan to manage its wolf populations.</p>
 </section>
 <p>Although wolf reintroduction has led to a dramatic restoration of
 biodiversity and riparian ecosystems in Yellowstone, researchers are
-realizing that <a href="http://remley.wcbn.org/ihih-msc/?p=569">reintroducing
+realizing that <a data-edgenote="death-of-832f">reintroducing
 a top predator after a 70-year absence</a> does not solve all problems. In
 some areas, willows and cottonwoods are still failing to thrive and beaver
 have not returned. This is because heavy browsing in the absence of wolves
@@ -197,8 +196,8 @@ highly preferred species, reducing plant diversity and in the extreme,
 creating near mono-cultures.”</p>
 <section>
   <p>Hunters have noted that the growing wolf population in the Upper
-  Peninsula of Michigan coincides with <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=572">a declining deer population</a>.
+  Peninsula of Michigan coincides with <a
+  data-edgenote="bear-wolf-coyote-deer-pop">a declining deer population</a>.
   However, recent studies of causes of deer mortality in this area point
   instead to hard winters and coyote as the main drivers.</p>
   <p>Maintaining the ecological benefit of wolves is an explicit goal of the
@@ -241,13 +240,14 @@ species.</p>
 and ecological goals in wolf management decision-making. Whereas the 1997
 Michigan <em>Wolf Recovery and Management Plan</em> was created largely in
 the context of protecting the species and ensuring its successful recovery,
-the 2008 version of the plan was updated to take <a href=
-"http://remley.wcbn.org/ihih-msc/?p=576">a more holistic view of protecting
+the 2008 version of the plan was updated to take <a
+data-edgenote="recovery-management-plan-goals">a more holistic view of
+protecting
 wolves</a> while addressing their coexistence with humans.</p>
 <p>Defining successful wolf management depends on the goals of managing the
 population and the context for establishing those goals. The DNR notes that
-the <strong>biological carrying capacity&nbsp;</strong>and <strong><a href=
-"http://remley.wcbn.org/ihih-msc/?p=580">social carrying
+the <strong>biological carrying capacity&nbsp;</strong>and <strong><a
+data-edgenote="measure-tolerance-carrying-capacity">social carrying
 capacity</a></strong>&nbsp;of wolves should be considered. Biological
 carrying capacity refers to the concept that the population of a species is
 limited by the ability of the environment to support it with food, water, and
@@ -326,7 +326,7 @@ attributed to wolves afflicted with rabies.</p>
 <p>While no documented wolf attacks on humans have occurred in Michigan,
 there have been a handful of attacks on dogs. A 2011 paper found 34 instances
 of domestic dog depredations between 1996 and 2008. Moreover, a majority of
-<a href="http://remley.wcbn.org/ihih-msc/?p=582">residents in the U.P.
+<a data-edgenote="too-close-for-comfort">residents in the U.P.
 believe that wolves are becoming increasingly comfortable with humans</a>,
 which increases the risks of wolves attacking people.</p>
 <section>
@@ -354,11 +354,11 @@ which increases the risks of wolves attacking people.</p>
 attack and injure or kill livestock. Across North America, sheep and cattle
 are the most common targets, but any type of livestock can be subject to
 depredation. Between 1996 and 2008, 87 livestock depredations were recorded
-in Michigan, <a href="http://remley.wcbn.org/ihih-msc/?p=585">with 70% of
+in Michigan, <a data-edgenote="most-polarizing-farmer">with 70% of
 events involving cattle</a>. There is a positive relationship between wolf
 abundance and cattle depredation in the U.P., and the 1996–2008 data suggest
-that for each additional 100 wolves, there will be <a href=
-"http://remley.wcbn.org/ihih-msc/?p=587">an additional three cattle
+that for each additional 100 wolves, there will be <a
+data-edgenote="cattle-depredations-mi-radio">an additional three cattle
 depredations</a>. Even when wolf incursions onto farm or ranch land do not
 directly result in injury, close encounters can frighten cattle and cause
 them to be less willing to graze. Reduced grazing results in smaller and less
@@ -376,7 +376,7 @@ hunt, and anti-hunting groups sought to use them to stop the hunt. <em>Public
 Act 377</em> granted the NRC exclusive authority to regulate the taking of
 game in Michigan, removing that power from the Director of the <em>Department
 of Natural Resources</em>. The proposal was an outgrowth of a ballot
-initiative funded by <a href="http://remley.wcbn.org/ihih-msc/?p=590">outdoor
+initiative funded by <a data-edgenote="hunting-conservation-economics">outdoor
 recreation and hunting organizations</a>, &nbsp;and passed by a 69% to 31%
 margin. Along with granting the NRC new authority, the statute requires that
 the NRC, “to the greatest extent practicable… use principles of sound
@@ -400,11 +400,11 @@ scientific management in making decisions regarding the taking of game.”</p>
 </section>
 <p>In accordance with the requirements of <em>PA 377</em> to make decisions
 based on sound science, the NRC asked the Michigan DNR to make a
-recommendation on whether or not to create a hunting season. <a href=
-"http://remley.wcbn.org/ihih-msc/?p=592">The DNR concluded that a public wolf
+recommendation on whether or not to create a hunting season. <a data-edgenote=
+"hunt-as-management-tool">The DNR concluded that a public wolf
 hunt in three specific areas of the U.P</a>. would reduce human–wolf
 conflicts without hampering the overall abundance of the wolf population. The
-<a href="http://remley.wcbn.org/ihih-msc/?p=595">DNR Wolf Management Unit
+<a data-edgenote="dnr-management-proposal">DNR Wolf Management Unit
 proposal</a> included recommended areas for a limited hunt, the size of the
 areas, the number of wolves removed by the United States Department of
 Agriculture Wildlife Services in 2012, and the number of wolves authorized
@@ -427,8 +427,8 @@ harvest targets of 18, 117, and 265, respectively. The 2012 hunt resulted in
 requires a wolf hunting and trapping season. Act 169, signed in April 2012,
 authorized the Wisconsin DNR to design an appropriate hunting and trapping
 season. Wisconsin’s wolf management plan allows for a public hunt if the wolf
-population&nbsp;exceeds 350,&nbsp;<a href=
-"http://remley.wcbn.org/ihih-msc/?p=599">outside of Native American
+population&nbsp;exceeds 350,&nbsp;<a
+data-edgenote="hunt-on-native-land-mpr">outside of Native American
 reservations</a>. The population goal was met in 2004, and the state status
 was changed from “threatened” to “protected wild animal.” For the 2012 hunt,
 the DNR set a quota of 201, with an actual harvest of 117.&nbsp;</p>
@@ -445,7 +445,7 @@ the DNR set a quota of 201, with an actual harvest of 117.&nbsp;</p>
   <p>But science alone does not seem to hold the answer to whether a public
   hunt should be held. Besides, the gray wolf is such a polarizing animal and
   the politics of the issue so charged, Richardson has no choice but to
-  consider the <a href="http://remley.wcbn.org/ihih-msc/?p=606">complex
+  consider the <a data-edgenote="wolves-in-ojibwe">complex
   social and political implications</a> of the decision.</p>
 </section>
 <p>Richardson has also become aware that the NRC’s choice is not limited to a
@@ -516,10 +516,9 @@ CRN depuis 2007. Mais il pouvait se souvenir qu’aucun problème n’avait
 suscité une telle passion de tous les côtés comme celui de la chasse au loup.
 En conséquence, il a ressenti beaucoup de pressions pour conduire le CRN à
 prendre la bonne décision, c’est-à-dire celle basée sur des principes
-scientifiques, le respect <a href=
-"http://remley.wcbn.org/ihih-msc/?p=502">des besoins des personnes qui sont
-affectées</a> par la présence de loups et la sensibilité à l’opinion
-publique.</p>
+scientifiques, le respect <a data-edgenote="a-heated-debate">des besoins des
+personnes qui sont affectées</a> par la présence de loups et la sensibilité à
+l’opinion publique.</p>
 <p>La CRN, dont le travail consiste à réguler les espèces chassables, ne
 semble pas être l’organe décisionnel le plus approprié quand il s’agit des
 loups dans le Michigan. En effet, compte tenu de l’extermination systématique
@@ -540,11 +539,10 @@ revienne au CRN.</p>
   aussi en sa qualité de passionné du plein air, d’homme d’affaires et
   ingénieur possédant une vaste expérience en matière de ressources
   naturelles, Richardson avait des sentiments personnels et professionnels
-  contradictoires sur cette affaire de loup. D’une part, il a vu <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=513">le retour du loup comme un signe
+  contradictoires sur cette affaire de loup. D’une part, il a vu <a data-edgenote="residents-weigh-hunt">le retour du loup comme un signe
   de l’assainissement et de la prospérité de l’environnement naturel</a>, et
   il veut protéger l’équilibre écologique. D’autre part, il connaissait
-  personnellement <a href="http://remley.wcbn.org/ihih-msc/?p=516">certaines
+  personnellement <a data-edgenote="residents-weigh-hunt">certaines
   personnes dont le bétail avait été la proie des loups</a> et était
   directement informé sur les conflits hommes-loups issus de cette question
   politiquement importante. Les préoccupations scientifiques, politiques et
@@ -569,7 +567,7 @@ revienne au CRN.</p>
 
 <h1>L’histoire de loups gris dans les États-Unis et le Michigan</h1>
 <section>
-  <p>L’histoire des <a href="http://remley.wcbn.org/ihih-msc/?p=539">loups
+  <p>L’histoire des <a data-edgenote="gray-wolf">loups
   gris</a> dans le Michigan, qui évolue en parallèle avec la grande histoire
   des espèces dans les Grands Lacs et dans toute l’Amérique du Nord, est
   faite de procès et de triomphes. Originaires du Michigan, les loups
@@ -597,11 +595,10 @@ revienne au CRN.</p>
   pas été épargnés. Les loups avaient été éliminés de la partie méridionale
   de l’État dans les années 1830, et dans les années 1900, ils avaient
   pratiquement disparu. Une petite population qui était restée dans l’île
-  Royale de l’Isle au nord de la <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=552">Péninsule Supérieure du
+  Royale de l’Isle au nord de la <a data-edgenote="michigan">Péninsule Supérieure du
   Michigan</a>, était considérée probablement comme une des dernières
-  populations des loups en Amérique du Nord pendant <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=556">l’étape finale d’extermination du
+  populations des loups en Amérique du Nord pendant <a
+data-edgenote="gray-wolf-range">l’étape finale d’extermination du
   loup dans les années 1960</a>.</p>
   <p>Dans un revirement de situation majeur pour les espèces, l’Etat du
   Michigan avait fait comme dans les autres États, en légiférant la
@@ -624,8 +621,8 @@ reproduire, conduisant ainsi le DNR du Michigan à décider de ne plus
 intervenir à propos de la reproduction des loups dans l’Etat. Cette
 régénération naturelle débuta quand un couple de loups avait été découvert en
 provenance des États voisins de la PS centrale dans années 1980. Comme le
-couple a commencé à se reproduire dans les années 1990, <a href=
-"http://remley.wcbn.org/ihih-msc/?p=563">une augmentation constante de la
+couple a commencé à se reproduire dans les années 1990, <a
+data-edgenote="mi-wolf-population">une augmentation constante de la
 population de loups a suivi</a>. En 2010, 687 loups ont été recensés comme
 vivant dans l’État. Simultanément, les gens devinrent de plus en plus
 favorables au retour des loups, notamment la majorité des habitants du
@@ -634,8 +631,8 @@ Michigan ont soutenu le rétablissement du loup dans l’État.</p>
 rétablissement des loups. Le Plan de relance des loups, mis au place en 1994
 pour répondre aux exigences de l’AEME, a stipulé que la population de loups
 du Wisconsin – Michigan doit dépasser 100 pendant au moins cinq années
-consécutives pour assurer la survie de l’espèce. En 1997, <a href=
-"http://remley.wcbn.org/ihih-msc/?p=566">l’Etat du Michigan a complété son
+consécutives pour assurer la survie de l’espèce. En 1997, <a
+data-edgenote="perversion-of-democracy">l’Etat du Michigan a complété son
 propre plan de relance</a>, le redressement des loups du Michigan et le plan
 de gestion, qui recommande une population de 200 pendant cinq années
 consécutives. Atteindre ces objectifs devrait ouvrir la voie pour
@@ -675,8 +672,8 @@ contrôle total à l’état du Michigan pour gérer ses populations de loup.</p
 </section>
 <p>Bien que la réintroduction du loup a conduit à une spectaculaire
 restauration de la biodiversité et les écosystèmes riverains à Yellowstone,
-les chercheurs se sont rendus compte que la <a href=
-"http://remley.wcbn.org/ihih-msc/?p=569">réintroduction d’un prédateur après
+les chercheurs se sont rendus compte que la <a
+data-edgenote="death-of-832f">réintroduction d’un prédateur après
 une absence de 70 ans</a> ne résout pas tous les problèmes. Dans certaines
 régions, les saules et les peupliers ne parviennent pas toujours à s’épanouir
 et les castors ne sont pas de retour. C’est parce que la migration lourde
@@ -698,8 +695,8 @@ recommandées, réduisant la diversité des plantes à l’extrême, et en créa
 quasiment des mono-cultures.”</p>
 <section>
   <p>Les chasseurs ont noté que la population croissante de loups dans la
-  Péninsule Supérieure du Michigan coïncide avec <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=572">une population de cerfs en
+  Péninsule Supérieure du Michigan coïncide avec <a
+  data-edgenote="bear-wolf-coyote-deer-pop">une population de cerfs en
   déclin</a>. Toutefois, des études récentes sur les causes de mortalité de
   cerfs dans ce domaine mettent plutôt en lumière des hivers durs et les
   coyotes comme les principaux responsables.</p>
@@ -747,14 +744,14 @@ d’atteindre les objectifs sociaux et écologiques dans le processus
 décisionnel de gestion du loup. Toutefois, <em>le Plan de récupération et de
 gestion du loup par le Michigan</em> en 1997 a été créé en grande partie dans
 le cadre de la protection de l’espèce et pour assurer la réussite de sa
-récupération, la version 2008 du plan a été mise à jour pour avoir <a href=
-"http://remley.wcbn.org/ihih-msc/?p=576">une vision plus globale de la
+récupération, la version 2008 du plan a été mise à jour pour avoir <a
+data-edgenote="recovery-management-plan-goals">une vision plus globale de la
 protection des loups</a> tout en tenant compte de leur coexistence avec les
 humains.</p>
 <p>Définir une politique de gestion réussie du loup dépend des objectifs de
 gestion de la population et le cadre pour l’établissement de ces objectifs.
 La DNR fait remarquer que la <strong>capacité biologique&nbsp;</strong>et la
-<strong><a href="http://remley.wcbn.org/ihih-msc/?p=580">capacité
+<strong><a data-edgenote="measure-tolerance-carrying-capacity">capacité
 sociale</a></strong>&nbsp;de loups devraient être considérées. La capacité
 biologique se réfère à la notion que la population d’une espèce est limitée
 par la capacité de l’environnement à la supporter en termes de nourriture,
@@ -823,7 +820,7 @@ y remédier.</p>
 <p>Les loups occupent une place distincte dans la culture occidentale
 européenne. Les histoires d’enfants et les contes de fées écrits il y a des
 siècles offrent un aperçu d’une attitude face à l’animal: <em>le garçon qui
-criait au loup</em>, <em>Little Red Riding Hood</em>, et<em>les trois petits
+criait au loup</em>, <em>Little Red Riding Hood</em>, et <em>les trois petits
 cochons</em> présentent tous l’archétype du grand méchant loup. Mais au XXIe
 siècle avec une population urbaine plus développé, un paysage plus développé
 et un très petit nombre de prédateurs, le risque d’attaque par des loups
@@ -844,8 +841,8 @@ par opposition aux décès attribués aux loups atteints de la rage.</p>
 <p>Alors qu’aucune attaque documentée de loup sur les êtres humains n’a eu
 lieu dans le Michigan, il y a eu une poignée d’attaques sur les chiens. Un
 article de 2011 a trouvé 34 cas de déprédations de chiens domestiques entre
-1996 et 2008. Par ailleurs, une majorité des <a href=
-"http://remley.wcbn.org/ihih-msc/?p=582">résidants dans la Péninsule
+1996 et 2008. Par ailleurs, une majorité des <a
+data-edgenote="too-close-for-comfort">résidants dans la Péninsule
 Supérieure. pense que les loups sont de plus en plus à l’aise avec les
 humains</a>, ce qui accroît les risques que loups attaquent les gens.</p>
 <section>
@@ -876,12 +873,12 @@ quand les loups attaquent et blessent ou tuent le bétail. En Amérique du
 Nord, les ovins et bovins sont les principales cibles, mais n’importe quel
 type de bétail peut faire l’objet de déprédation. Entre 1996 et 2008, 87
 déprédations (ravages) de bétail ont été enregistrées dans le Michigan,
-<a href="http://remley.wcbn.org/ihih-msc/?p=585">avec 70&nbsp;% des
+<a data-edgenote="most-polarizing-farmer">avec 70&nbsp;% des
 événements impliquant des bovins</a>. Il existe une relation positive (ou
 fondée) entre le nombre élevé de loups et le ravage des bovins dans la
 Péninsule Supérieure. Et les données de 1996 – 2008 suggèrent que pour chaque
-100 autres loups ajoutés, il faudra compter <a href=
-"http://remley.wcbn.org/ihih-msc/?p=587">trois moments de déprédation
+100 autres loups ajoutés, il faudra compter <a
+data-edgenote="cattle-depredations-mi-radio">trois moments de déprédation
 supplémentaires de bovins</a>. Même quand les incursions des loups vers les
 fermes ou ranchs ne résultent pas directement par des blessures, mais le
 simple fait pour les bovins de les voir, les effraie et cela peut les amener
@@ -905,8 +902,8 @@ cherchèrent à utiliser une telle mesure pour arrêter la chasse. Ainsi, la loi
 pour réguler la capture ou la chasse de gibier dans le Michigan, et retirant
 à cet effet ce pouvoir au directeur du <em>département (ministère) des
 ressources naturelles</em>. La proposition de vote par bulletin n’était plus
-intéressante. C’était une initiative appuyée par les <a href=
-"http://remley.wcbn.org/ihih-msc/?p=590">organisations de chasse en plein
+intéressante. C’était une initiative appuyée par les <a
+data-edgenote="hunting-conservation-economics">organisations de chasse en plein
 air</a> et adoptée par une marge de 69&nbsp;% contre 31&nbsp;%. Avec l’octroi
 de la nouvelle autorité au NRC, la loi exige que le CRN, “dans la mesure du
 possible… utilise les principes de bonne gestion scientifique dans les
@@ -935,11 +932,11 @@ décisions concernant la chasse du gibier.</p>
 <p>Selon les prescriptions de la loi <em>377 AP</em>, pour prendre des
 décisions, on se base sur des principes scientifiques. Alors le CRN a demandé
 au MRN du Michigan, de faire une recommandation sur l’opportunité de créer
-une saison de chasse. <a href="http://remley.wcbn.org/ihih-msc/?p=592">Le MRN
+une saison de chasse. <a data-edgenote="hunt-as-management-tool">Le MRN
 a conclu qu’une chasse publique au loup dans trois régions spécifiques de la
 Péninsule Supérieure</a>, réduirait les conflits entre les hommes et les
-loups sans entraver l’augmentation de la population de loups. La <a href=
-"http://remley.wcbn.org/ihih-msc/?p=595">proposition de l’unité de gestion
+loups sans entraver l’augmentation de la population de loups. La <a
+data-edgenote="dnr-management-proposal">proposition de l’unité de gestion
 des loups par le MRN a</a> inclue les zones recommandées pour une chasse
 limitée, la taille des zones, le nombre de loups retirés par le département
 des Services de l’agriculture et de la faune aux États-Unis en 2012, le
@@ -967,8 +964,7 @@ l’État qui admet une chasse au loup et une saison de piégeage appropriées. 
 loi 169, signée en avril 2012, autorisa le MRN du Wisconsin de concevoir une
 chasse au loup et une saison de piégeage. Le plan de gestion pour les loups
 du Wisconsin permet une chasse publique si seulement si la population de
-loups est supérieure à 350, <a href=
-"http://remley.wcbn.org/ihih-msc/?p=599">en dehors des réserves
+loups est supérieure à 350, <a data-edgenote="hunt-on-native-land-mpr">en dehors des réserves
 amérindiennes</a>. L’objectif de population a été atteint en 2004, et le
 statut d’État a changé de “menacer” à “protéger les animaux sauvages”. Pour
 la chasse de 2012, le MRN avait fixé un quota de 201 loups et avec une
@@ -988,7 +984,7 @@ récolte réelle de 117.</p>
   question de savoir si une chasse publique devrait se tenir. Par ailleurs,
   le loup gris est comme un animal polarisant et la politique de la question
   ainsi établi, Richardson n’a aucun autre choix que de considérer les
-  <a href="http://remley.wcbn.org/ihih-msc/?p=606">implications sociales et
+  <a data-edgenote="wolves-in-ojibwe">implications sociales et
   politiques complexes</a> de cette décision.</p>
 </section>
 <p>Richardson s’est aussi rendu compte que le choix du CRN n’est pas limité à
@@ -1027,3 +1023,4 @@ NARRATIVE
 
 wolf.save
 
+require './db/seeds/edgenotes/mi-wolves-edgenotes.rb'
