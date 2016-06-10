@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resources :cases, param: :slug do
     resources :activities
     resources :podcasts
-    resources :edgenotes
+    resources :edgenotes, param: :slug
   end
   root to: "cases#index"
 end
