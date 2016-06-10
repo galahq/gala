@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     resources :groups
     resources :comment_threads
     resources :comments
-    resources :cases, param: :slug do
+    resources :cases, param: :slug, shallow: true do
       resources :activities
       resources :podcasts
       resources :edgenotes, param: :slug
