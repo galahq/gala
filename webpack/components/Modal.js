@@ -3,7 +3,7 @@ import {Link} from 'react-router'
 
 import {ScrollLock} from './ScrollLock.js'
 
-import fetchFromWP from '../wp-api.js'
+import {orchard} from '../orchard.js'
 
 class Modal extends React.Component {
 
@@ -15,12 +15,12 @@ class Modal extends React.Component {
   }
 
   modalShouldOpenLinks(r) {
-    return r.format === "link" || (r.format === "video" && r.content.rendered.match(/<a href=/))
+    return r.format === "link" || (r.format === "video" && r.content.match(/<a href=/))
   }
 
   parseContentsFromJSON(r) {
     if (this.modalShouldOpenLinks(r)) {
-      let linkMatch = r.content.rendered.match(/<a href=\"([^ ]*)\"/)
+      let linkMatch = r.content.match(/<a href=\"([^ ]*)\"/)
       var link
       if (linkMatch !== null) {
         link = linkMatch[1]
@@ -31,15 +31,15 @@ class Modal extends React.Component {
       }
     } else {
       this.setState({
-        caption: {__html: r.title.rendered},
-        contents: {__html: r.content.rendered},
+        caption: {__html: r.caption},
+        contents: {__html: r.content},
         format: r.format
       })
     }
   }
 
   componentDidMount() {
-    fetchFromWP({id: this.props.params.edgenoteID}, this.parseContentsFromJSON.bind(this))
+    orchard(`edgenotes/${this.props.params.edgenoteID}`).then(this.parseContentsFromJSON.bind(this))
   }
 
   renderFormatDifferentiatedContent(format) {
