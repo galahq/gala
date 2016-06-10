@@ -26,6 +26,8 @@ class Modal extends React.Component {
         link = linkMatch[1]
         window.open(link, "_blank")
         this.setState({
+          format: r.format,
+          caption: {__html: r.caption},
           contents: {__html: `<a href="${link}" target="_blank">open_in_new_tab</a>`}
         })
       }
