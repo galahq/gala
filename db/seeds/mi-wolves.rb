@@ -492,12 +492,12 @@ confronté à une décision difficile à prendre. Autrefois une des espèces en 
 de disparition, les loups gris se sont récemment rétablis dans le nord du
 Michigan, plusieurs groupes de personnes font pression pour qu’une chasse
 publique au loup soit autorisée. Le Ministère des Ressources Naturelles du
-Michigan (MRNM ou MDNR en anglais) est d'accord, et estime qu'une chasse
-publique limitée est scientifiquement et économiquement justifiée. Mais d'autres
+Michigan (MRNM ou MDNR en anglais) est d’accord, et estime qu’une chasse
+publique limitée est scientifiquement et économiquement justifiée. Mais d’autres
 ne sont pas convaincus et ont réagi avec scepticisme et hostilité. Quelle
 devrait être la décision du Président? Cette affaire demande que l’on examine la
 question avec des points de vue opposés, nuancés et guidés par une analyse
-scientifique, politique, économique et sociale. En fin de compte, on s'attendra
+scientifique, politique, économique et sociale. En fin de compte, on s’attendra
 à formuler une recommandation de politique responsable et durable concernant la
 population de loups du Michigan.
 SUMMARY
@@ -1024,6 +1024,15 @@ wolf.save
 
 I18n.locale = :en
 pod = wolf.podcasts.build title: "Ecology of Fear and Fear of Ecology — Can science do more to improve human–wildlife cohabitation?", audio_url: "http://www.hotinhere.us/podcast/ecology-of-fear-and-fear-of-ecology/"
+I18n.locale = :fr
+pod.title = "En anglais: L’écologie de la peur et la peur de l’écologie. "
 pod.save
+
+I18n.locale = :en
+perspectives = wolf.activities.build title: "Stakeholder perspectives", pdf_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/03/wolf-stakeholder-perspectives.pdf"
+I18n.locale = :fr
+perspectives.title = "Les perspectives des intervenants"
+perspectives.pdf_url = "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/05/wolf-stakeholder-perspectives-French.pdf"
+perspectives.save
 
 require './db/seeds/edgenotes/mi-wolves-edgenotes.rb'

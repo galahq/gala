@@ -25,7 +25,8 @@ class Case extends React.Component {
                                                   segmentContents: this.generateChapters(c.segments),
                                                   summary: c.summary,
                                                   coverURL: c.cover_url,
-                                                  podcasts: c.podcasts
+                                                  podcasts: c.podcasts,
+                                                  activities: c.activities
                                                 })
     )
   }

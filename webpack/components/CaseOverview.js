@@ -23,6 +23,10 @@ class Actions extends React.Component {
 
   renderConsiderLinks() {
     let activities = this.props.activities
+
+    let list = this.props.activities.map( (activity) => {
+      return <li><a target="_blank" href={activity.pdf_url}>{ activity.title }</a></li>
+    } )
     if (activities && activities !== []) {
       return (
         <div>
@@ -33,7 +37,9 @@ class Actions extends React.Component {
             />
             <I18n meaning="consider"/>
           </h2>
-          <div dangerouslySetInnerHTML={{__html: activities}} />
+          <ul>
+            {list}
+          </ul>
         </div>
       )
     }
