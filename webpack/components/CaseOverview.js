@@ -52,8 +52,8 @@ class Actions extends React.Component {
             <I18n meaning="listen" />
           </h2>
           <h4 className="list-head"><I18n meaning="related_podcast" /></h4>
-          <a href={podcasts[0].url}>
-            {podcasts[0].name}
+          <a href={podcasts[0].audio_url}>
+            {podcasts[0].title}
           </a>
         </div>
       )

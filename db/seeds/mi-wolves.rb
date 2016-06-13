@@ -1022,4 +1022,8 @@ NARRATIVE
 
 wolf.save
 
+I18n.locale = :en
+pod = wolf.podcasts.build title: "Ecology of Fear and Fear of Ecology — Can science do more to improve human–wildlife cohabitation?", audio_url: "http://www.hotinhere.us/podcast/ecology-of-fear-and-fear-of-ecology/"
+pod.save
+
 require './db/seeds/edgenotes/mi-wolves-edgenotes.rb'

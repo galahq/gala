@@ -24,7 +24,8 @@ class Case extends React.Component {
                                                   segmentTitles: c.segments.map( (x) => { return x[0] } ),
                                                   segmentContents: this.generateChapters(c.segments),
                                                   summary: c.summary,
-                                                  coverURL: c.cover_url
+                                                  coverURL: c.cover_url,
+                                                  podcasts: c.podcasts
                                                 })
     )
   }
