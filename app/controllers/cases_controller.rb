@@ -6,6 +6,7 @@ class CasesController < ApplicationController
   # GET /cases
   def index
     @cases = Case.all
+    render layout: "card"
   end
 
   # GET /cases/1
