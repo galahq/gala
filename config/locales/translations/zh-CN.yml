@@ -94,3 +94,9 @@ zh-CN:
         reset_password_sent_at: 在重置密码发送  #g
         reset_password_token: 重置密码令牌  #g
         uid: UID  #g
+        current_password: "当前密码"
+        password: "密码"
+        password_confirmation: "密码确认"
+        remember_me: "记住登录信息"
+        reset_password_token: 
+        unlock_token: 

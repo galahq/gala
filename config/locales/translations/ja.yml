@@ -80,7 +80,6 @@ ja:
         comments: 注釈  #g
         current_sign_in_at: 現在の兆候  #g
         current_sign_in_ip: 腹腔内の現在の兆候  #g
-        email: Eメール  #g
         encrypted_password: 暗号化されたパスワード  #g
         enrollments: 入学者数  #g
         group_memberships: グループメンバーシップ  #g
@@ -94,3 +93,10 @@ ja:
         reset_password_sent_at: で送信されたパスワードをリセット  #g
         reset_password_token: パスワードトークンをリセット  #g
         uid: UID  #g
+        current_password: "現在のパスワード"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "確認用パスワード"
+        remember_me: "ログインを記憶"
+        reset_password_token: 
+        unlock_token: 

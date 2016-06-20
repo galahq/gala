@@ -80,7 +80,6 @@ fr:
         comments: commentaires  #g
         current_sign_in_at: Signe actuelle au  #g
         current_sign_in_ip: signe actuelle ip  #g
-        email: Email  #g
         encrypted_password: Mot de passe crypté  #g
         enrollments: inscriptions  #g
         group_memberships: Les appartenances aux groupes  #g
@@ -94,3 +93,10 @@ fr:
         reset_password_sent_at: Réinitialiser le mot de passe envoyé à  #g
         reset_password_token: Réinitialiser le mot de passe de jeton  #g
         uid: uid  #g
+        current_password: Mot de passe actuel
+        email: Courriel
+        password: Mot de passe
+        password_confirmation: Confirmation du mot de passe
+        remember_me: Se souvenir de moi
+        reset_password_token: 
+        unlock_token: 

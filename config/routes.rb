@@ -1,8 +1,6 @@
 locale_regex = /#{Rails.application.config.i18n.available_locales.map(&:to_s).join("|")}/
 
 Rails.application.routes.draw do
-  devise_for :readers, controllers: {omniauth_callbacks:
-                                     'readers/omniauth_callbacks'}
   scope "(:locale)", locale: locale_regex do
     resources :enrollments
     resources :groups
@@ -13,6 +11,9 @@ Rails.application.routes.draw do
       resources :podcasts
       resources :edgenotes, param: :slug
     end
+    devise_for :readers, skip: :omniauth_callbacks
   end
+  devise_for :readers, only: :omniauth_callbacks, controllers:
+    {omniauth_callbacks: 'readers/omniauth_callbacks'}
   root to: "cases#index"
 end
