@@ -1,0 +1,23 @@
+@import '_globals';
+
+.flash {
+  font: 90% $sansFont;
+  color: $white;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.05em;
+  width: 100%;
+  padding: 0.2em;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+}
+
+.flash-alert {
+  background-color: $red;
+  border-bottom-color: darken($red, 10%);
+}
+
+.flash-notice {
+  background-color: darken($lightGreen, 10%);
+  border-bottom-color: darken($lightGreen, 20%);
+}

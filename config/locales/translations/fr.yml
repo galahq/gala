@@ -100,3 +100,6 @@ fr:
         remember_me: Se souvenir de moi
         reset_password_token: 
         unlock_token: 
+  devise:
+    sessions:
+      destroy: Déconnexion
