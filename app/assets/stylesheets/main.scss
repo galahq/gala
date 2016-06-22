@@ -71,24 +71,6 @@ strong {
   -webkit-font-feature-settings: "smcp";
 }
 
-header {
-  background-color: $umichBlue;
-
-  padding: 1em;
-
-  h1 {
-    margin: 0pt 1pt;
-    svg {
-      width: 15em;
-      @media screen and (max-width: $mobileCutoff) {
-        width: 12em;
-      }
-    }
-    background-repeat: no-repeat;
-    span { display: none }
-  }
-}
-
 .loading-icon {
   @include flex($fg: 0, $fs: 0);
   @include justify-content(center);

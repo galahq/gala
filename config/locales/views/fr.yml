@@ -2,3 +2,6 @@ fr:
   cases:
     index:
       title: "Tous les cas d’étude"
+  reader:
+    show:
+      my_account: 'Mon compte'

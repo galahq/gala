@@ -18,7 +18,27 @@
   <body>
     <header>
       <h1 id="logo"><%= inline_svg 'msc-logo.svg' %></h1>
+      <% if reader_signed_in? %>
+        <div id="reader-menu">
+          <div id="reader-menu-dismiss" class="hidden menu-dismiss"></div>
+          <ul id="reader-menu-dropdown" class="hidden">
+            <li><%=link_to t('reader.show.my_account'), '#'%></li>
+            <li><%=link_to t('devise.sessions.destroy'), destroy_reader_session_path, method: :delete %></li>
+          </ul>
+          <div id="reader-icon">
+            <%= current_reader.initials %>
+          </div>
+          <span class="dropdown-caret"></span>
+        </div>
+      <% end %>
     </header>
+
+    <% if flash[:notice] %>
+      <div class="flash flash-notice"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="flash flash-alert"><%= flash[:alert] %></div>
+    <% end %>
 
     <%= yield %>
 

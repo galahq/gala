@@ -2,3 +2,6 @@ en:
   cases:
     index:
       title: "All Cases"
+  reader:
+    show:
+      my_account: 'My Account'

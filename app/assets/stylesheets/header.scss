@@ -1,0 +1,89 @@
+@import '_globals';
+@import '_flexbox';
+
+header {
+  background-color: $umichBlue;
+
+  padding: 1em;
+
+  display: flex;
+  justify-content: space-between;
+
+  h1 {
+    margin: 0pt 1pt;
+    svg {
+      width: 15em;
+      @media screen and (max-width: $mobileCutoff) {
+        width: 12em;
+      }
+    }
+    background-repeat: no-repeat;
+    span { display: none }
+  }
+  #reader-menu {
+    cursor: pointer;
+
+    #reader-icon {
+      font-size: 90%;
+      text-transform: uppercase;
+      border: 2px solid $white;
+      color: $white;
+      background: $darkBlue;
+      display: inline-block;
+      width: 2.2rem;
+      height: 1.8rem;
+      border-radius: 4rem;
+      padding-top: 0.4rem;
+      text-align: center;
+      position: absolute;
+      z-index: 50;
+      right: 3em;
+    }
+  }
+  ul#reader-menu-dropdown {
+    background-color: $purple;
+    position: absolute;
+    z-index: 50;
+    width: 10em;
+    top: -1em;
+    right: -1em;
+    margin: 0;
+    padding: 5.3em 0 0 1.5em;
+    list-style: none;
+
+    li {
+      padding: 0.5em 2em 0.5em 1em;
+      border-top: 1px solid $darkPurple;
+      text-align: right;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    li:hover {
+      background-color: $darkPurple;
+    }
+    a { background-color: transparent; }
+    li a:hover { color: lighten($umichMaize, 20%); }
+  }
+  .dropdown-caret {
+    position: absolute;
+    top: 2.1em;
+    right: 1.4em;
+    z-index:100;
+  }
+}
+
+.dropdown-caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: -2px;
+  content: "";
+  border: 4px solid $white;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  margin-left: 0.3em;
+}
+
+.hidden { display: none; }

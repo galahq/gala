@@ -3,10 +3,14 @@
 @import '_columns';
 @import '_tint_and_shade';
 
+.Modal {
+  z-index: 100;
+}
 .Modal-header {
   position: fixed;
   top: 0px;
   width: 100%;
+  display: block;
   z-index: 101;
 
   background-color: $white;
@@ -46,14 +50,18 @@
   }
 }
 
-a.modalDismiss {
+a.modalDismiss,
+.menu-dismiss {
   position: fixed;
-  background-color: rgba( darken($black, 10%), 0.8 ) !important;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  z-index: 50;
+  z-index: 49;
+}
+
+a.modalDismiss {
+  background-color: rgba( darken($black, 10%), 0.8 ) !important;
 }
 
 .Modal {

@@ -40,26 +40,20 @@
     li {
       margin: 0.3em 0;
     }
-
-    li:hover a {
-      background-color: $purple;
-    }
-
-    li.focus a {
-      background-color: $purple;
-    }
   }
 }
 
 a {
   color: lighten($umichMaize, 20%);
   text-decoration: none;
-  transition: background .15s cubic-bezier(.33, .66, .66, 1);
+  transition: .15s cubic-bezier(.33, .66, .66, 1);
+  transition-property: color, background-color;
 }
 
+#TableOfContents li.focus a,
 a:hover {
-  background-color: $purple;
-  color: lighten($umichMaize, 20%);
+  background-color: $lightGreen;
+  color: $darkBlue;
 }
 
 h4.list-head {
