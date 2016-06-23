@@ -36,6 +36,8 @@ gem 'devise-i18n'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-lti'
+gem 'authority'
+gem 'rolify'
 
 gem 'trasto'
 gem 'http_accept_language'

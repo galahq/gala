@@ -1,4 +1,6 @@
 class Case < ApplicationRecord
+  include Authority::Abilities
+
   has_many :edgenotes
   has_many :podcasts
   has_many :activities

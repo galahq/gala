@@ -1,13 +1,18 @@
 class Reader < ApplicationRecord
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable,
+         :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :google, :lti]
+  before_save :ensure_authentication_token
+
+  include Authority::UserAbilities
+  include Authority::Abilities
+
+  rolify
+
   has_many :comments
   has_many :group_memberships, dependent: :delete_all
   has_many :groups, through: :group_memberships
   has_many :enrollments, dependent: :delete_all
   has_many :cases, through: :enrollments
-
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-         :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :google, :lti]
-  before_save :ensure_authentication_token
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |reader|
