@@ -1,3 +1,11 @@
+<% unless @case.published %>
+  <div class="flash flash-info">
+    <%= t '.this_case_is_not_yet_published' %>
+    —
+    <%= link_to t('.edit_this_case'), edit_case_path(@case) %>
+  </div>
+<% end %>
+
 <div id="container"></div>
 
 <%=javascript_tag do %>

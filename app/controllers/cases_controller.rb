@@ -5,7 +5,11 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all
+    @cases = if current_reader.can_create? Case
+               Case.all
+             else
+               Case.published
+             end
     render layout: "card"
   end
 

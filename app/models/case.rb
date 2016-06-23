@@ -11,6 +11,8 @@ class Case < ApplicationRecord
 
   translates :title, :summary, :narrative
 
+  scope :published, -> { where(published: true)  }
+
   def to_param
     slug
   end

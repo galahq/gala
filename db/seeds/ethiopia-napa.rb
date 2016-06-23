@@ -2,7 +2,7 @@ I18n.locale = :en
 
 ethiopia = Case.create(
   slug: "ethiopia-napa",
-  published: true,
+  published: false,
   tags: %w(region:africa exercise:quantitative),
   cover_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/01/1200px-Semien_Mountains_13.jpg",
   authors: [
@@ -365,3 +365,4 @@ the 80’s</a>. Maybe the forecasting program would be best.” Dawit nodded.</p
 NARRATIVE
 )
 
+pod = ethiopia.podcasts.create title: "Science and Social Conflicts in Climate Planning: The view from Ethiopia", audio_url: "http://www.hotinhere.us/podcast/08-28-2015science-and-social-conflicts-in-climate-planning-the-view-from-ethiopia/"
