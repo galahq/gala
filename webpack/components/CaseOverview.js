@@ -5,6 +5,11 @@ import BillboardTitle from './BillboardTitle.js'
 import {I18n} from './I18n.js'
 
 export class Billboard extends React.Component {
+
+  prepareSave(e) {
+    this.props.handleEdit("summary", e.target.innerText)
+  }
+
   render() {
     let {title, coverURL, summary, caseAuthors, handleEdit} = this.props
     return (
@@ -12,7 +17,7 @@ export class Billboard extends React.Component {
         <BillboardTitle title={title} coverURL={coverURL} caseAuthors={caseAuthors} handleEdit={handleEdit} />
         <div className="Card BillboardSnippet">
           <h3><I18n meaning="summary" /></h3>
-          <p contentEditable={handleEdit !== null}>
+          <p contentEditable={handleEdit !== null} onInput={this.prepareSave.bind(this)}>
             {summary}
           </p>
         </div>
@@ -29,7 +34,7 @@ class Actions extends React.Component {
     let list = this.props.activities.map( (activity) => {
       return <li><a target="_blank" href={activity.pdf_url}>{ activity.title }</a></li>
     } )
-    if ((activities && activities.length !== 0) || this.props.editing) {
+    if ((activities && activities.length !== 0) || this.props.handleEdit !== null) {
       return (
         <div>
           <h2>
@@ -52,7 +57,7 @@ class Actions extends React.Component {
     let list = podcasts.map( (podcast) => {
       return <a href={podcast.audio_url}>{podcast.title}</a>
     } )
-    if ((podcasts && podcasts.length !== 0) || this.props.editing) {
+    if ((podcasts && podcasts.length !== 0) || this.props.handleEdit !== null) {
       return (
         <div>
           <h2>

@@ -3,12 +3,15 @@ import mapNL from '../mapNL.js'
 import {I18n} from './I18n.js'
 import {Link} from 'react-router'
 
+import {update} from '../orchard.js'
+
 class Case extends React.Component {
 
   constructor() {
     super()
     this.state = {
-      save_message: "edit_instructions"
+      save_message: "edit_instructions",
+      caseData: window.caseData
     }
   }
 
@@ -25,12 +28,20 @@ class Case extends React.Component {
     return this.props.location.pathname.slice(1,5) === "edit"
   }
 
-  saveChanges() {
+  saveChanges(attribute, content) {
     this.setState({ save_message: "saving" })
+
+    var caseParams = {}
+    caseParams[attribute] = content
+
+    update(`cases/${window.caseData.slug}`, {case: caseParams})
+      .then(() => {
+        this.setState({save_message: "saved"})
+      })
   }
 
   render() {
-    let c = window.caseData
+    let c = this.state.caseData
 
     let editStatusBar
 
