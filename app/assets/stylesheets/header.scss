@@ -9,6 +9,8 @@ header {
   display: flex;
   justify-content: space-between;
 
+  & > a:hover { background-color: inherit }
+
   h1 {
     margin: 0pt 1pt;
     svg {

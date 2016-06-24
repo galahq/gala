@@ -17,7 +17,9 @@
 
   <body>
     <header>
-      <h1 id="logo"><%= inline_svg 'msc-logo.svg' %></h1>
+      <%= link_to root_path do %>
+        <h1 id="logo"><%= inline_svg 'msc-logo.svg' %></h1>
+      <% end %>
       <% if reader_signed_in? %>
         <div id="reader-menu">
           <div id="reader-menu-dismiss" class="hidden menu-dismiss"></div>
