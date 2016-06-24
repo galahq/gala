@@ -17,7 +17,7 @@ export class Billboard extends React.Component {
         <BillboardTitle title={title} coverURL={coverURL} caseAuthors={caseAuthors} handleEdit={handleEdit} />
         <div className="Card BillboardSnippet">
           <h3><I18n meaning="summary" /></h3>
-          <p contentEditable={handleEdit !== null} onInput={this.prepareSave.bind(this)}>
+          <p contentEditable={handleEdit !== null} onBlur={this.prepareSave.bind(this)}>
             {summary}
           </p>
         </div>

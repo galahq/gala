@@ -3,14 +3,14 @@ import mapNL from '../mapNL.js'
 import {I18n} from './I18n.js'
 import {Link} from 'react-router'
 
-import {update} from '../orchard.js'
+import {orchard, update} from '../orchard.js'
 
 class Case extends React.Component {
 
   constructor() {
     super()
     this.state = {
-      save_message: "edit_instructions",
+      saveMessage: "edit_instructions",
       caseData: window.caseData
     }
   }
@@ -29,15 +29,20 @@ class Case extends React.Component {
   }
 
   saveChanges(attribute, content) {
-    this.setState({ save_message: "saving" })
+    this.setState({ saveMessage: "saving" })
 
     var caseParams = {}
     caseParams[attribute] = content
 
-    update(`cases/${window.caseData.slug}`, {case: caseParams})
+    let slug = this.state.caseData.slug
+    update(`cases/${slug}`, {case: caseParams})
       .then(() => {
-        this.setState({save_message: "saved"})
-      })
+        orchard(`cases/${slug}`).then( (response) => {
+        this.setState({
+          saveMessage: "saved",
+          caseData: response
+        })
+        })})
   }
 
   render() {
@@ -47,7 +52,7 @@ class Case extends React.Component {
 
     if (this.editing()) {
       editStatusBar = <div className="flash flash-editing">
-                        <I18n meaning={this.state.save_message} />
+                        <I18n meaning={this.state.saveMessage} />
                       </div>
     } else {
       editStatusBar = <div className="flash flash-info">
