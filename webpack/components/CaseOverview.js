@@ -6,13 +6,13 @@ import {I18n} from './I18n.js'
 
 export class Billboard extends React.Component {
   render() {
-    let {title, coverURL, summary, caseAuthors} = this.props
+    let {title, coverURL, summary, caseAuthors, handleEdit} = this.props
     return (
       <section className="Billboard">
-        <BillboardTitle title={title} coverURL={coverURL} caseAuthors={caseAuthors} />
+        <BillboardTitle title={title} coverURL={coverURL} caseAuthors={caseAuthors} handleEdit={handleEdit} />
         <div className="Card BillboardSnippet">
           <h3><I18n meaning="summary" /></h3>
-          <p contentEditable={this.props.editing}>
+          <p contentEditable={handleEdit !== null}>
             {summary}
           </p>
         </div>
@@ -70,7 +70,7 @@ class Actions extends React.Component {
   }
 
   renderUnlessEditing(component) {
-    if (!this.props.editing) {
+    if (this.props.handleEdit === null) {
       return component
     }
   }
@@ -91,6 +91,7 @@ class Actions extends React.Component {
             slug={this.props.slug}
             segmentTitles={this.props.segmentTitles}
             currentSegment={null}
+            handleEdit={this.props.handleEdit}
           />
         </div>
 
@@ -132,7 +133,7 @@ class Actions extends React.Component {
 export class CaseOverview extends React.Component {
   render () {
     return (
-      <div id="CaseOverview" className={ `window ${this.props.editing ? 'editing' : ''}` }>
+      <div id="CaseOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
         <Billboard {...this.props} />
         <Actions {...this.props} />
       </div>

@@ -10,7 +10,7 @@ class BillboardTitle extends React.Component {
   render() {
     return (
       <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${this.props.coverURL})`}}>
-        <h1>{this.props.title}</h1>
+        <h1 contentEditable={this.props.handleEdit !== null}>{this.props.title}</h1>
         {this.renderAuthors()}
       </div>
     )

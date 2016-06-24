@@ -8,7 +8,7 @@ class Case extends React.Component {
   constructor() {
     super()
     this.state = {
-      saved: true
+      save_message: "edit_instructions"
     }
   }
 
@@ -25,6 +25,10 @@ class Case extends React.Component {
     return this.props.location.pathname.slice(1,5) === "edit"
   }
 
+  saveChanges() {
+    this.setState({ save_message: "saving" })
+  }
+
   render() {
     let c = window.caseData
 
@@ -32,12 +36,11 @@ class Case extends React.Component {
 
     if (this.editing()) {
       editStatusBar = <div className="flash flash-editing">
-                        <I18n meaning={"edit_instructions"} /> (
-                        <I18n meaning={this.state.saved ? "saved" : "saving"} />)
+                        <I18n meaning={this.state.save_message} />
                       </div>
     } else {
       editStatusBar = <div className="flash flash-info">
-                        <I18n meaning='this_case_is_not_yet_published' /> —
+                        <I18n meaning='this_case_is_not_yet_published' />&ensp;&mdash;&ensp;
                         <Link to={`/edit${this.props.location.pathname}`}>
                           <I18n meaning="edit_this_case" />
                         </Link>
@@ -49,7 +52,7 @@ class Case extends React.Component {
         {editStatusBar}
         {this.props.children && React.cloneElement(this.props.children,
                                                   {
-                                                    editing: (this.editing()),
+                                                    handleEdit: this.editing() ? this.saveChanges.bind(this) : null,
                                                     slug: c.slug,
                                                     title: c.title,
                                                     caseAuthors: c.case_authors,

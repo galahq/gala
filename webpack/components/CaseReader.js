@@ -18,7 +18,7 @@ class CaseReader extends React.Component {
   }
 
   render () {
-    let {slug, coverURL, title, segmentContents, segmentTitles} = this.props
+    let {slug, coverURL, title, segmentContents, segmentTitles, handleEdit} = this.props
     let selectedSegment = parseInt(this.props.params.selectedSegment) - 1
 
     if (title !== "") {
@@ -26,18 +26,20 @@ class CaseReader extends React.Component {
     }
 
     return (
-      <div className="window">
+      <div className={`window ${handleEdit !== null ? 'editing' : ''}`}>
         <Sidebar
           slug={slug}
           coverURL={coverURL}
           title={title}
           segmentTitles={segmentTitles}
           selectedSegment={selectedSegment}
+          handleEdit={handleEdit}
         />
         <Narrative
           segmentTitles={segmentTitles}
           segmentContents={segmentContents}
           selectedSegment={selectedSegment}
+          handleEdit={handleEdit}
         />
         {this.props.children}
       </div>

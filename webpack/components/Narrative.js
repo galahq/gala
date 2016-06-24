@@ -45,7 +45,12 @@ class Narrative extends React.Component {
     return (
       <main>
         <a id="top" />
-        <Chapter selectedSegment={i} segmentTitle={this.props.segmentTitles[i]} paragraphs={segment} />
+        <Chapter
+          selectedSegment={i}
+          segmentTitle={this.props.segmentTitles[i]}
+          paragraphs={segment}
+          handleEdit={this.props.handleEdit}
+        />
         {this.nextLink()}
       </main>
     )
@@ -60,11 +65,11 @@ class Chapter extends React.Component {
       case "H1": case "H2": case "H3": case "H4": case "H5": case "H6":
         let innerHTML = {__html: paraNode.innerHTML}
         let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
-        return <NonParagraph key={`P${index}`} contents={element} />
+        return <NonParagraph key={`P${index}`} contents={element} handleEdit={this.props.handleEdit} />
       case "P":
-        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.outerHTML} />
+        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.outerHTML} handleEdit={this.props.handleEdit} />
       case "UL": case "OL": case "BLOCKQUOTE": case "SECTION":
-        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.innerHTML} />
+        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.innerHTML} handleEdit={this.props.handleEdit} />
     }
   }
 
@@ -74,7 +79,7 @@ class Chapter extends React.Component {
     } )
     return(
       <article>
-        <NonParagraph contents={<h1>{this.props.segmentTitle}</h1>} />
+        <NonParagraph contents={<h1>{this.props.segmentTitle}</h1>} handleEdit={this.props.handleEdit} />
         {paragraphs}
       </article>
     )
@@ -84,7 +89,7 @@ class Chapter extends React.Component {
 class NonParagraph extends React.Component {
   render() {
     return (
-      <section>
+      <section contentEditable={this.props.handleEdit !== null}>
         {this.props.contents}
       </section>
     )
@@ -168,7 +173,7 @@ class Paragraph extends React.Component {
     let paragraph = this.props.contents
     return (
       <section>
-        <Card contents={this.addHoverCallbacksToParagraphText(paragraph)} />
+        <Card contents={this.addHoverCallbacksToParagraphText(paragraph)} handleEdit={this.props.handleEdit} />
         {this.renderEdgenotes()}
       </section>
     )
@@ -178,7 +183,12 @@ class Paragraph extends React.Component {
 class Card extends React.Component {
   render () {
     return (
-      <div className="Card" dangerouslySetInnerHTML={this.props.contents} />
+      <div
+        className="Card"
+        contentEditable={this.props.handleEdit !== null}
+        onInput={this.props.handleEdit}
+        dangerouslySetInnerHTML={this.props.contents}
+      />
     )
   }
 }

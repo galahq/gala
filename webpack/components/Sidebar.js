@@ -9,7 +9,11 @@ class Sidebar extends React.Component {
   renderTOC() {
     if (this.props.segmentTitles) {
       return (
-        <TableOfContents segmentTitles={this.props.segmentTitles} selectedSegment={this.props.selectedSegment}/>
+        <TableOfContents
+          segmentTitles={this.props.segmentTitles}
+          selectedSegment={this.props.selectedSegment}
+          handleEdit={this.props.handleEdit}
+        />
       )
     }
   }
@@ -17,7 +21,7 @@ class Sidebar extends React.Component {
     let {title, coverURL} = this.props
     return (
       <aside id="Sidebar">
-        <Link to={`/`} className="backLink">
+        <Link to={`/${this.props.handleEdit !== null ? "edit/" : ""}`} className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
         <BillboardTitle title={title} coverURL={coverURL} />

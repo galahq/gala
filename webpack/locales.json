@@ -13,7 +13,12 @@
     "back_to_overview": "Back to overview",
     "next": "Next: ",
     "open_in_new_tab": "Open in a new tab.",
-    "end": "End"
+    "end": "End",
+    "this_case_is_not_yet_published": "This case is not yet published",
+    "edit_this_case": "Edit this case",
+    "edit_instructions": "To edit this case, just change the text",
+    "saved": "Saved",
+    "saving": "Saving…"
   },
   "ja": {
     "summary": "要約",
@@ -45,7 +50,12 @@
     "back_to_overview": "Retour au résumé",
     "next": "Suite: ",
     "open_in_new_tab": "Ouvrir dans un nouvel onglet.",
-    "end": "Fin"
+    "end": "Fin",
+    "this_case_is_not_yet_published": "Ce cas d’étude n’a pas été publié",
+    "edit_this_case": "Modifiez ce cas",
+    "edit_instructions": "Pour modifiez ce cas, il suffit de changer le texte",
+    "saved": "Enregistré",
+    "saving": "En enregistrant…"
   },
   "zh-CN": {
     "summary": "摘要",
