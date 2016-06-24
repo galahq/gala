@@ -12,7 +12,9 @@ export class Billboard extends React.Component {
         <BillboardTitle title={title} coverURL={coverURL} caseAuthors={caseAuthors} />
         <div className="Card BillboardSnippet">
           <h3><I18n meaning="summary" /></h3>
-          {summary}
+          <p contentEditable={this.props.editing}>
+            {summary}
+          </p>
         </div>
       </section>
     )
@@ -27,7 +29,7 @@ class Actions extends React.Component {
     let list = this.props.activities.map( (activity) => {
       return <li><a target="_blank" href={activity.pdf_url}>{ activity.title }</a></li>
     } )
-    if (activities && activities !== []) {
+    if ((activities && activities.length !== 0) || this.props.editing) {
       return (
         <div>
           <h2>
@@ -47,7 +49,10 @@ class Actions extends React.Component {
 
   renderPodcast() {
     let podcasts = this.props.podcasts
-    if (podcasts && podcasts !== []) {
+    let list = podcasts.map( (podcast) => {
+      return <a href={podcast.audio_url}>{podcast.title}</a>
+    } )
+    if ((podcasts && podcasts.length !== 0) || this.props.editing) {
       return (
         <div>
           <h2>
@@ -58,11 +63,15 @@ class Actions extends React.Component {
             <I18n meaning="listen" />
           </h2>
           <h4 className="list-head"><I18n meaning="related_podcast" /></h4>
-          <a href={podcasts[0].audio_url}>
-            {podcasts[0].title}
-          </a>
+          {list}
         </div>
       )
+    }
+  }
+
+  renderUnlessEditing(component) {
+    if (!this.props.editing) {
+      return component
     }
   }
 
@@ -87,29 +96,34 @@ class Actions extends React.Component {
 
       {this.renderPodcast()}
 
-      <div>
-        <h2>
-          <div
-            className="ActionIcon"
-            dangerouslySetInnerHTML={{__html: require('../images/explore.svg')}}
-          />
-          <I18n meaning="explore" />
-        </h2>
-        <Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
-      </div>
+      {this.renderUnlessEditing(
+        <div>
+          <h2>
+            <div
+              className="ActionIcon"
+              dangerouslySetInnerHTML={{__html: require('../images/explore.svg')}}
+            />
+            <I18n meaning="explore" />
+          </h2>
+          <Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
+        </div>
+      )}
 
       {this.renderConsiderLinks()}
 
-      <div>
-        <h2>
-          <div
-            className="ActionIcon"
-            dangerouslySetInnerHTML={{__html: require('../images/respond.svg')}}
-          />
-          <I18n meaning="respond" />
-        </h2>
-        <a href="http://goo.gl/forms/32tzg5yZTd" target="_blank"><I18n meaning="give_feedback" /></a>
-      </div>
+      {this.renderUnlessEditing(
+        <div>
+          <h2>
+            <div
+              className="ActionIcon"
+              dangerouslySetInnerHTML={{__html: require('../images/respond.svg')}}
+            />
+            <I18n meaning="respond" />
+          </h2>
+          <a href="http://goo.gl/forms/32tzg5yZTd" target="_blank"><I18n meaning="give_feedback" /></a>
+        </div>
+      )}
+
     </aside>
     )
   }
@@ -118,7 +132,7 @@ class Actions extends React.Component {
 export class CaseOverview extends React.Component {
   render () {
     return (
-      <div id="CaseOverview" className="window">
+      <div id="CaseOverview" className={ `window ${this.props.editing ? 'editing' : ''}` }>
         <Billboard {...this.props} />
         <Actions {...this.props} />
       </div>

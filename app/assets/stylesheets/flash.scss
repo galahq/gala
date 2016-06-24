@@ -32,3 +32,9 @@
   background-color: #666;
   border-bottom-color: #444;
 }
+
+.flash-editing {
+  background-color: $white;
+  border-bottom-color: darken($white, 20%);
+  color: $black;
+}

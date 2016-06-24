@@ -15,7 +15,7 @@ const appHistory = useRouterHistory(createHashHistory)({ queryKey: false  })
 
 render((
   <Router history={appHistory}>
-    <Route path="/" component={Case}>
+    <Route path="/(edit)" component={Case}>
       <IndexRoute component={CaseOverview} />
       <Route onEnter={() => window.scrollTo(0, 0)} path="edgenotes" component={EdgenoteGallery}>
         <Route path=":edgenoteID" component={Modal} />
