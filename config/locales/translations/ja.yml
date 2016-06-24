@@ -100,3 +100,6 @@ ja:
         remember_me: "ログインを記憶"
         reset_password_token: 
         unlock_token: 
+  devise:
+    sessions:
+      destroy: ログアウト

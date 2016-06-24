@@ -2,3 +2,6 @@ ja:
   cases:
     index:
       title: "全ての事例研究"
+  reader:
+    show:
+      my_account: 'マイアカウント'

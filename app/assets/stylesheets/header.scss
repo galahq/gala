@@ -46,7 +46,7 @@ header {
     background-color: $purple;
     position: absolute;
     z-index: 50;
-    width: 10em;
+    min-width: 10em;
     top: -1em;
     right: -1em;
     margin: 0;

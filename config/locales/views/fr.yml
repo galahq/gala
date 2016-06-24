@@ -2,9 +2,6 @@ fr:
   cases:
     index:
       title: "Tous les cas d’étude"
-    show:
-      this_case_is_not_yet_published: "Ce cas d’étude n’a pas encore été publié"
-      edit_this_case: "Modifiez ce cas"
   reader:
     show:
       my_account: 'Mon compte'

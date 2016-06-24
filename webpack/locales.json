@@ -34,7 +34,12 @@
     "back_to_overview": "戻る",
     "next": "次：",
     "open_in_new_tab": "新たなタッブで開く。",
-    "end": "終わり"
+    "end": "終わり",
+    "this_case_is_not_yet_published": "この事例研究はまだ発刊していない",
+    "edit_this_case": "編集",
+    "edit_instructions": "テキストを変化するのができる。",
+    "saved": "保存できた",
+    "saving": "保存中"
   },
   "fr": {
     "summary": "Résumé du cas d’étude",

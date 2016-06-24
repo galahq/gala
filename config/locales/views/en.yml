@@ -2,9 +2,6 @@ en:
   cases:
     index:
       title: "All Cases"
-    show:
-      this_case_is_not_yet_published: "This case is not yet published"
-      edit_this_case: "Edit this case"
   reader:
     show:
       my_account: 'My Account'
