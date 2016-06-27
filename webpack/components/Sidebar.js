@@ -18,13 +18,13 @@ class Sidebar extends React.Component {
     }
   }
   render () {
-    let {title, coverURL} = this.props
+    let {title, coverURL, handleEdit} = this.props
     return (
       <aside id="Sidebar">
         <Link to={`/${this.props.handleEdit !== null ? "edit/" : ""}`} className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
-        <BillboardTitle title={title} coverURL={coverURL} />
+        <BillboardTitle title={title} coverURL={coverURL} handleEdit={handleEdit} />
         {this.renderTOC()}
       </aside>
     )
