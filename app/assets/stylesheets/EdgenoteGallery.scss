@@ -3,10 +3,6 @@
 @import '_columns';
 
 #EdgenoteGallery {
-  @media screen and (min-width: $mobileCutoff) {
-    margin-left: 16em;
-  }
-
   div.edgenotes {
     max-width: none;
     margin: 0 2em;
