@@ -28,31 +28,29 @@
     color: $white;
 
     h1 {
-      margin: 0 0 0.5em 0;
+      margin: 0;
     }
 
+    & > div { overflow: hidden; }
     dl {
       margin:0;
+      padding-top: 0.5em;
 
       dt, dd {
         display: inline;
         margin: 0;
       }
 
-      &.podcast-playing dd { display: none; }
       dd:after {
         content: '';
         display:block;
-        margin-bottom: 0.3em;
+        margin-bottom: 0.25em;
       }
 
       dt {
         font-weight: 600;
       }
       dt:after { content: ': ' }
-      &.podcast-playing dt:not(:last-of-type):after { content: " • " }
-      &.podcast-playing dt:last-of-type:after { content: "" }
-
     }
   }
 

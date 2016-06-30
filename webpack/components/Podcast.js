@@ -1,22 +1,52 @@
-import React from 'react';
+import React from 'react'
+import Animate from 'react-animate'
 import Sidebar from './Sidebar.js'
 import {I18n} from './I18n.js'
 import {Card} from './Narrative.js'
 
-class PodcastPlayer extends React.Component {
+let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {
     super()
-    this.state = { playing: false }
+    this.state = { playing: false, creditsVisible: true }
+  }
+
+  showCredits() {
+    this[Animate['@animate']](
+      'podcast-hosts-fade', { maxHeight: 0 }, { maxHeight: 1000 }, 200,
+      {onComplete: () => {this.setState({creditsVisible: true})}}
+    )
+  }
+  hideCredits() {
+    this[Animate['@animate']](
+      'podcast-hosts-fade', { maxHeight: 1000 }, { maxHeight: 0 }, 200,
+      {onComplete: () => {this.setState({creditsVisible: false})}}
+    )
+  }
+  toggleCredits() {
+    if (this.state.playing && this.state.creditsVisible) {
+      this.hideCredits()
+    } else if (!this.state.creditsVisible) {
+      this.showCredits()
+    }
+  }
+
+  setPlaying() {
+    this.setState({playing: true})
+    if (this.state.creditsVisible) {
+      this.hideCredits()
+    }
+  }
+  setPaused() {
+    this.setState({playing: false})
   }
 
   renderHosts() {
-    let p = this.state.playing ? "podcast-playing" : ""
     let {guests, hosts} = this.props.names
     let guestList = guests.map((guest) => {
       return [<dt>{guest.name}</dt>, <dd>{guest.title}</dd>]
     })
-    return <div>
-      <dl className={p}>{guestList}</dl>
+    return <div style={this[Animate['@getAnimatedStyle']]('podcast-hosts-fade')}>
+      <dl>{guestList}</dl>
       <em><I18n meaning="hosted_by" /> {hosts}</em>
     </div>
   }
@@ -24,27 +54,29 @@ class PodcastPlayer extends React.Component {
   render() {
     let {title, artwork, audio} = this.props
     return (
-      <div className="PodcastPlayer">
-        <div
-          className="artwork"
+      <div className="PodcastPlayer" > <div className="artwork"
           style={{backgroundImage: `url(${artwork})`}}>
         </div>
-        <div className="credits">
-          <h1>{title}</h1>
+        <div
+          className="credits"
+          onClick={this.toggleCredits.bind(this)}
+        >
+          <h1>{title}{ this.state.creditsVisible ? "" : " ▸" }</h1>
           {this.renderHosts()}
         </div>
 
         <audio
           src={audio}
           controls="controls"
-          onPlay={() => { this.setState({playing: true}) }}
-          onPause={() => { this.setState({playing: false}) }}
+          preload="auto"
+          onPlay={this.setPlaying.bind(this)}
+          onPause={this.setPaused.bind(this)}
         />
 
       </div>
     )
   }
-}
+})
 
 class Podcast extends React.Component {
   render() {
@@ -76,7 +108,7 @@ export class PodcastOverview extends React.Component {
 
   render () {
     let {slug, title, coverURL, segmentTitles, selectedSegment, handleEdit} = this.props
-    let description = {__html: "<p>Our hosts were joined in-studio and by pre-recorded interviews by guests including, Dr. Matthew Kauffman from the Wyoming Migration Initiative, Maurita Holland from the Washtenaw Citizens for Ecological Balance, and Mayank Vikas from the UM School of Natural Resources and Environment.</p><p>Dr. Matthew Kauffman is a Professor of Zoology and Physiology at the University of Wyoming, director and co-founder of the Wyoming Migration Initative, and is also the Leader of the Wyoming Cooperative Fish and Wildlife Research Unit. He received his Ph.D. from the University of California – Santa Cruz and did his post-doctoral research and teaching at the University of Montana. Dr. Kauffman is broadly trained as an ecologist and has research experience in a wide variety of ecosystems. He has a strong quantitative background with expertise in population and ecosystem modeling and analysis of spatial data. While in Montana, his research focused on predator-prey relationships between gray wolves and elk in the Greater Yellowstone Ecosystem. Dr. Kauffman began service at the Wyoming Cooperative Fish and Wildlife Research Unit during the summer of 2006. His current research focuses primarily on large carnivores and ungulates in terrestrial ecosystems. He continues research on Gray wolves and elk in the Greater Yellowstone Ecosystem, and has expanded his research to include moose and grizzly bears in that ecosystem. Dr. Kauffman is also conducting research on the effects of natural gas development on mule deer, elk, and pronghorn in the sagebrush biome and habitat fragmentation on avian communities. Dr. Kauffman is also conducting research on drought and predation effects on elk migrations in Wyoming, food webs and migration, semi-permeable barriers and migration, influence of elk migration on wolf habitat use, prioritizing migration routes for conservation and stopover ecology of migratory ungulate.</p>"}
+    let description = {__html: "<p>Our hosts were joined in-studio and by pre-recorded interviews by guests including, Dr. Matthew Kauffman from the Wyoming Migration Initiative, Maurita Holland from the Washtenaw Citizens for Ecological Balance, and Mayank Vikas from the UM School of Natural Resources and Environment.</p><p>Dr. Matthew Kauffman is a Professor of Zoology and Physiology at the University of Wyoming, director and co-founder of the Wyoming Migration Initative, and is also the Leader of the Wyoming Cooperative Fish and Wildlife Research Unit. He received his Ph.D. from the University of California – Santa Cruz and did his post-doctoral research and teaching at the University of Montana. Dr. Kauffman is broadly trained as an ecologist and has research experience in a wide variety of ecosystems. He has a strong quantitative background with expertise in population and ecosystem modeling and analysis of spatial data. While in Montana, his research focused on predator-prey relationships between gray wolves and elk in the Greater Yellowstone Ecosystem. Dr. Kauffman began service at the Wyoming Cooperative Fish and Wildlife Research Unit during the summer of 2006. </p>"}
 
     return (
       <div id="PodcastOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
