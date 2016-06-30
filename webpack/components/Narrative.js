@@ -180,13 +180,13 @@ class Paragraph extends React.Component {
   }
 }
 
-class Card extends React.Component {
+export class Card extends React.Component {
   render () {
     return (
       <div
         className="Card"
         contentEditable={this.props.handleEdit !== null}
-        onInput={this.props.handleEdit}
+        onBlur={this.props.prepareSave}
         dangerouslySetInnerHTML={this.props.contents}
       />
     )
