@@ -365,4 +365,18 @@ the 80’s</a>. Maybe the forecasting program would be best.” Dawit nodded.</p
 NARRATIVE
 )
 
-pod = ethiopia.podcasts.create title: "Science and Social Conflicts in Climate Planning: The view from Ethiopia", audio_url: "http://www.hotinhere.us/podcast/08-28-2015science-and-social-conflicts-in-climate-planning-the-view-from-ethiopia/"
+pod = ethiopia.podcasts.create(
+  title: "Science and Social Conflicts in Climate Planning: The View from Ethiopia",
+  audio_url: "http://www.hotinhere.us/podcast-download/13/08-28-2015science-and-social-conflicts-in-climate-planning-the-view-from-ethiopia.mp3?ref=download",
+  order: 1,
+  artwork_url: "http://i2.wp.com/www.hotinhere.us/wp-content/uploads/2015/08/ethiopia_wCredit.jpg?resize=1038%2C576",
+  credits_list: {
+    hosts: ["Katie Browne", "Arman Golrokhian", "Rebecca Hardin"],
+    guests: [
+      {name: "Kelly Askew", title: "Professor, Department of Anthropology & Department of African and Afroamerican Studies, University of Michigan" },
+      {name: "Laura Beny", title: "Professor, Law School, University of Michigan" },
+      {name: "Benjamin Larroquette", title: "Regional Technical Advisor, United Nations Development Programme" },
+      {name: "Benjamin Morse", title: "Masters Student, School of Natural Resources and Environment, University of Michigan"}
+    ]
+  }
+)
