@@ -45,13 +45,16 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
 
   renderHosts() {
     if (!this.props.credits) { return }
-    let {guests, hosts} = this.props.credits
+
+    let {guests, hosts, hosts_string} = this.props.credits
     let guestList = guests.map((guest) => {
       return [<dt>{guest.name}</dt>, <dd>{guest.title}</dd>]
     })
+    let hostMeaningString = hosts.length > 1 ? 'with_hosts' : 'with_host'
+
     return <div style={this[Animate['@getAnimatedStyle']]('podcast-hosts-fade')}>
       <dl>{guestList}</dl>
-      <em><I18n meaning="hosted_by" /> {hosts}</em>
+      <em><I18n meaning={hostMeaningString} /> {hosts_string}</em>
     </div>
   }
 

@@ -19,8 +19,34 @@
     "edit_instructions": "To edit this case, just change the text",
     "saved": "Saved",
     "saving": "Saving…",
-    "hosted_by": "Hosted by"
+    "with_host": "with host",
+    "with_hosts": "with hosts"
   },
+
+  "fr": {
+    "summary": "Résumé du cas d’étude",
+    "table_of_contents": "Table des matières",
+    "read": "Lisez",
+    "listen": "Écoutez",
+    "related_podcast": "Podcast",
+    "explore": "Explorez",
+    "edgenote_gallery": "Galerie des Edgenotes",
+    "consider": "Considérez",
+    "respond": "Répondez",
+    "give_feedback": "Donnez-nous vos commentaires sur ce cas d'étude.",
+    "back_to_overview": "Retour au résumé",
+    "next": "Suite: ",
+    "open_in_new_tab": "Ouvrir dans un nouvel onglet.",
+    "end": "Fin",
+    "this_case_is_not_yet_published": "Ce cas d’étude n’a pas été publié",
+    "edit_this_case": "Modifiez ce cas",
+    "edit_instructions": "Pour modifiez ce cas, il suffit de changer le texte",
+    "saved": "Enregistré",
+    "saving": "En enregistrant…",
+    "with_host": "avec animateur/-trice",
+    "with_hosts": "avec animateurs/-trices"
+  },
+
   "ja": {
     "summary": "要約",
     "table_of_contents": "目次",
@@ -42,27 +68,7 @@
     "saved": "保存できた",
     "saving": "保存中"
   },
-  "fr": {
-    "summary": "Résumé du cas d’étude",
-    "table_of_contents": "Table des matières",
-    "read": "Lisez",
-    "listen": "Écoutez",
-    "related_podcast": "Podcast",
-    "explore": "Explorez",
-    "edgenote_gallery": "Galerie des Edgenotes",
-    "consider": "Considérez",
-    "respond": "Répondez",
-    "give_feedback": "Donnez-nous vos commentaires sur ce cas d'étude.",
-    "back_to_overview": "Retour au résumé",
-    "next": "Suite: ",
-    "open_in_new_tab": "Ouvrir dans un nouvel onglet.",
-    "end": "Fin",
-    "this_case_is_not_yet_published": "Ce cas d’étude n’a pas été publié",
-    "edit_this_case": "Modifiez ce cas",
-    "edit_instructions": "Pour modifiez ce cas, il suffit de changer le texte",
-    "saved": "Enregistré",
-    "saving": "En enregistrant…"
-  },
+
   "zh-CN": {
     "summary": "摘要",
     "table_of_contents": "目录",
@@ -79,6 +85,7 @@
     "open_in_new_tab": "在新的窗口中打开",
     "end": "终"
   },
+
   "zh-TW": {
     "summary": "摘要",
     "table_of_contents": "目錄",

@@ -13,8 +13,8 @@ class CreditsList
   attribute :guests, Array[Guest]
 
   def to_sentence
-    x = self
-    x.hosts = x.hosts.to_sentence
-    x.attributes
+    x = self.attributes
+    x["hosts_string"] = hosts.to_sentence
+    x
   end
 end
