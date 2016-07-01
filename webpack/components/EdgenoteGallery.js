@@ -48,7 +48,7 @@ class EdgenoteGallery extends React.Component {
   }
 
   render() {
-    let {slug, coverURL, title, segmentTitles} = this.props
+    let {slug, coverURL, title, segmentTitles, handleEdit} = this.props
     let selectedSegment = parseInt(this.props.params.selectedSegment) - 1
     return (
       <div className="window">
@@ -58,6 +58,7 @@ class EdgenoteGallery extends React.Component {
           title={title}
           segmentTitles={segmentTitles}
           selectedSegment={selectedSegment}
+          handleEdit={handleEdit}
         />
         <main id="EdgenoteGallery">
           <div id="EdgenoteGalleryHeader">
