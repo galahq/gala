@@ -3,14 +3,12 @@ class PodcastsController < ApplicationController
 
   # GET /podcasts
   def index
-    @podcasts = Podcast.all
-
-    render json: @podcasts
+    set_case
+    @podcasts = @case.podcasts
   end
 
   # GET /podcasts/1
   def show
-    render json: @podcast
   end
 
   # POST /podcasts
@@ -41,7 +39,12 @@ class PodcastsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_podcast
-      @podcast = Podcast.find(params[:id])
+      set_case
+      @podcast = Podcast.where("case": @case, order: params[:order])
+    end
+
+    def set_case
+      @case = Case.find_by_slug(params[:case_slug])
     end
 
     # Only allow a trusted parameter "white list" through.

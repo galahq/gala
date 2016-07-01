@@ -7,7 +7,10 @@ import {Card} from './Narrative.js'
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {
     super()
-    this.state = { playing: false, creditsVisible: true }
+    this.state = {
+      playing: false,
+      creditsVisible: true
+    }
   }
 
   showCredits() {
@@ -41,7 +44,8 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   }
 
   renderHosts() {
-    let {guests, hosts} = this.props.names
+    if (!this.props.credits) { return }
+    let {guests, hosts} = this.props.credits
     let guestList = guests.map((guest) => {
       return [<dt>{guest.name}</dt>, <dd>{guest.title}</dd>]
     })
@@ -84,17 +88,10 @@ class Podcast extends React.Component {
     return (
       <div className="Podcast">
         <PodcastPlayer
-          title="Ecology of Fear and Fear of Ecology: Can science do more to improve human–wildlife cohabitation?"
-          artwork="https://www.nps.gov/common/uploads/photogallery/imr/park/yell/954CBB82-155D-451F-6759DA7CD789DC9F/954CBB82-155D-451F-6759DA7CD789DC9F.jpg"
-          audio="http://www.hotinhere.us/podcast-download/28/ecology-of-fear-and-fear-of-ecology.mp3?ref=download"
-          names={{
-            guests: [
-              {name: "Matthew Kauffman", title: "Professor of Zoology and Physiology at the University of Wyoming"},
-              {name: "Maurita Holland", title: "Associate Professor Emerita, School of Information, University of Michigan"},
-              {name: "Mayank Vikas", title: "Fulbright-Nehru Masters Fellow, School of Natural Resources and Environment, University of Michigan"}
-            ],
-            hosts: "Rebecca Hardin"
-          }}
+          title={this.props.podcast.title}
+          artwork={this.props.podcast.artwork_url}
+          audio={this.props.podcast.audio_url}
+          credits={this.props.podcast.credits}
         />
       </div>
     )
@@ -102,13 +99,27 @@ class Podcast extends React.Component {
 }
 
 export class PodcastOverview extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      pod: {}
+    }
+  }
+
+  componentDidMount() {
+    let pod = this.props.podcasts.find( (p) => {return p.order === parseInt(this.props.params.podcastID)} )
+    this.setState ({
+      pod: pod
+    })
+  }
+
   prepareSave() {
     this.props.handleEdit
   }
 
   render () {
     let {slug, title, coverURL, segmentTitles, selectedSegment, handleEdit} = this.props
-    let description = {__html: "<p>Our hosts were joined in-studio and by pre-recorded interviews by guests including, Dr. Matthew Kauffman from the Wyoming Migration Initiative, Maurita Holland from the Washtenaw Citizens for Ecological Balance, and Mayank Vikas from the UM School of Natural Resources and Environment.</p><p>Dr. Matthew Kauffman is a Professor of Zoology and Physiology at the University of Wyoming, director and co-founder of the Wyoming Migration Initative, and is also the Leader of the Wyoming Cooperative Fish and Wildlife Research Unit. He received his Ph.D. from the University of California – Santa Cruz and did his post-doctoral research and teaching at the University of Montana. Dr. Kauffman is broadly trained as an ecologist and has research experience in a wide variety of ecosystems. He has a strong quantitative background with expertise in population and ecosystem modeling and analysis of spatial data. While in Montana, his research focused on predator-prey relationships between gray wolves and elk in the Greater Yellowstone Ecosystem. Dr. Kauffman began service at the Wyoming Cooperative Fish and Wildlife Research Unit during the summer of 2006. </p>"}
+    let description = {__html: this.state.pod.description}
 
     return (
       <div id="PodcastOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
@@ -122,7 +133,7 @@ export class PodcastOverview extends React.Component {
           handleEdit={handleEdit}
         />
 
-        <Podcast />
+        <Podcast podcast={this.state.pod} />
 
         <div className="PodcastInfo">
           <Card

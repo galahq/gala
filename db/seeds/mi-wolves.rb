@@ -1023,13 +1023,26 @@ NARRATIVE
 wolf.save
 
 I18n.locale = :en
-pod = wolf.podcasts.build title: "Ecology of Fear and Fear of Ecology — Can science do more to improve human–wildlife cohabitation?", audio_url: "http://www.hotinhere.us/podcast/ecology-of-fear-and-fear-of-ecology/"
+pod = wolf.podcasts.build(
+  title: "Ecology of Fear and Fear of Ecology — Can science do more to improve human–wildlife cohabitation?",
+  audio_url: "http://www.hotinhere.us/podcast-download/28/ecology-of-fear-and-fear-of-ecology.mp3?ref=download",
+  order: 1,
+  artwork_url: "https://www.nps.gov/common/uploads/photogallery/imr/park/yell/954CBB82-155D-451F-6759DA7CD789DC9F/954CBB82-155D-451F-6759DA7CD789DC9F.jpg",
+  credits_list: {
+    hosts: ["Rebecca Hardin"],
+    guests: [
+      {name: "Matthew Kauffman", title: "Professor of Zoology and Physiology at the University of Wyoming"},
+      {name: "Maurita Holland", title: "Associate Professor Emerita, School of Information, University of Michigan"},
+      {name: "Mayank Vikas", title: "Fulbright-Nehru Masters Fellow, School of Natural Resources and Environment, University of Michigan"}
+    ]
+  }
+)
 I18n.locale = :fr
 pod.title = "En anglais: L’écologie de la peur et la peur de l’écologie. "
 pod.save
 
 I18n.locale = :en
-perspectives = wolf.activities.build title: "Stakeholder perspectives", pdf_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/03/wolf-stakeholder-perspectives.pdf"
+perspectives = wolf.activities.build title: "Stakeholder perspectives", pdf_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/03/wolf-stakeholder-perspectives.pdf", order: 1
 I18n.locale = :fr
 perspectives.title = "Les perspectives des intervenants"
 perspectives.pdf_url = "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/05/wolf-stakeholder-perspectives-French.pdf"

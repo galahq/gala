@@ -24,7 +24,7 @@ render((
       <Route onEnter={() => window.scrollTo(0, 0)} path=":selectedSegment" component={CaseReader}>
         <Route path="edgenotes/:edgenoteID" component={Modal} />
       </Route>
-      <Route path="podcast/:podcastID" component={PodcastOverview} />
+      <Route path="podcasts/:podcastID" component={PodcastOverview} />
     </Route>
   </Router>
 ), document.getElementById('container'))
