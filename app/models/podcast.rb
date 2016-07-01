@@ -8,6 +8,6 @@ class Podcast < ApplicationRecord
   end
 
   def credits_list
-    CreditsList.new(YAML.load self.credits) if self.credits
+    self.credits ? CreditsList.new(YAML.load self.credits) : CreditsList.new
   end
 end
