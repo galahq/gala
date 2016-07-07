@@ -370,6 +370,7 @@ pod = ethiopia.podcasts.create(
   audio_url: "http://www.hotinhere.us/podcast-download/13/08-28-2015science-and-social-conflicts-in-climate-planning-the-view-from-ethiopia.mp3?ref=download",
   order: 1,
   artwork_url: "http://i2.wp.com/www.hotinhere.us/wp-content/uploads/2015/08/ethiopia_wCredit.jpg?resize=1038%2C576",
+  description: "<p>This week’s show brings our listeners more than an hour of in-depth analysis and lively conversation on the challenges of climate change planning, both in Ethiopia and across the diverse governance landscape of East and North Africa. Tying in closely with a case study newly developed by a team of SNRE students for the pilot project “Michigan Sustainability Cases,” the broadcast explores the complexity of crafting effective and equitable adaptation policy. Specifically, we ask how national adaptation plans are made? By and for whom? What are the decision-making criteria? And what could these criteria fail to account for? Bringing together legal, anthropological, and environmental expertise, the broadcast takes adaptation policy as the starting point for a broad-ranging dialogue on climate change impacts, social conflict across ethno-linguistic groups, and national planning as a tool of marginalization.</p>",
   credits_list: {
     hosts: ["Katie Browne", "Arman Golrokhian", "Rebecca Hardin"],
     guests: [
