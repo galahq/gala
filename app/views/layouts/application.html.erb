@@ -33,6 +33,10 @@
           </div>
           <span class="dropdown-caret"></span>
         </div>
+      <% else %>
+        <div id="reader-sign-in">
+          <%=link_to t('devise.sessions.new.sign_in'), new_reader_session_path %>
+        </div>
       <% end %>
     </header>
 
