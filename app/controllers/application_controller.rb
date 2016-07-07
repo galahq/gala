@@ -26,4 +26,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_user
+    current_reader || AnonymousUser.new
+  end
+
 end

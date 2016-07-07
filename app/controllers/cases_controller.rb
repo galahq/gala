@@ -1,20 +1,18 @@
 class CasesController < ApplicationController
-  before_action :authenticate_reader_from_token!
-  before_action :authenticate_reader!
+  before_action :authenticate_reader!, only: %i(create update destroy)
   before_action :set_case, only: [:show, :update, :destroy]
+
+  authorize_actions_for Case, except: %i(index show)
 
   # GET /cases
   def index
-    @cases = if current_reader.can_create? Case
-               Case.all
-             else
-               Case.published
-             end
+    @cases = Case.all
     render layout: "card"
   end
 
   # GET /cases/1
   def show
+    authorize_action_for @case
   end
 
   # POST /cases
