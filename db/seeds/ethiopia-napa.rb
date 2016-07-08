@@ -2,7 +2,7 @@ I18n.locale = :en
 
 ethiopia = Case.create(
   slug: "ethiopia-napa",
-  published: false,
+  published: true,
   tags: %w(region:africa exercise:quantitative),
   cover_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/01/1200px-Semien_Mountains_13.jpg",
   authors: [
@@ -14,8 +14,9 @@ ethiopia = Case.create(
     "Alexander Natanson",
     "Nadia Vandergriff",
   ],
+  translators: [],
 
-  title: "Ethiopia’s National Adaptation Plan of Action: How will Ethiopia respond to climate change?",
+  title: "National Adaptation Programme of Action: Ethiopia Plans Responses to Climate Change",
 
   summary: <<-SUMMARY,
 This real-life case takes place in August 2015 in Ethiopia. Kidane Asefa, the
@@ -30,10 +31,13 @@ analytical techniques Mr. Asefa chooses to employ, and ultimately the projects
 he selects, will guide how his country addresses and adapts to the critical
 challenge of climate change.
 SUMMARY
+)
 
-  narrative: <<-NARRATIVE,
-<h1>Kidane Asefa</h1>
-<p><strong><a href="http://remley.wcbn.org/ihih-msc/?p=614">Kidane
+ethiopia_p1 = ethiopia.pages.create( order: 1, title: "Kidane Asefa" )
+ethiopia_p1_c1 = ethiopia_p1.cards.create(
+order: 1,
+content: <<-CARD
+<p><strong><a data-edgenote="kidane-asefa">Kidane
 Asefa</a></strong> has had a very busy morning. He is rushing to meet with
 Fahmy Abdel Aal, Executive Director of the <em>United Nations Environmental
 Program</em>, and Sufian Ahmed, the Ethiopian Minister of Finance and
@@ -49,14 +53,19 @@ negative impacts. Kidane abandoned a successful engineering career in order
 to answer this important calling. And the decision-making process needed to
 happen quickly: the UNFCCC requested a report with recommended projects and
 prioritizations by November, and already it is August.</p>
+CARD
+)
 
-<h1>National Adaptation Plans of Action (NAPA)</h1>
+ethiopia_p2 = ethiopia.pages.create( order: 2, title: "National Adaptation Plans of Action (NAPA)" )
+ethiopia_p2_c1 = ethiopia_p2.cards.create(
+order: 1,
+content: <<-CARD
 <p>NAPAs provide a guided process for <strong>Least Developed
 Countries</strong> (LDCs) to identify priority activities that respond to
-their <a href="http://remley.wcbn.org/ihih-msc/?p=617">urgent and immediate
+their <a data-edgenote="climate-change-impact-livelihoods">urgent and immediate
 needs to adapt to climate change</a>, those needs for which further delay
 would increase a country’s vulnerability and/or future costs. The main
-content of a <a href="http://remley.wcbn.org/ihih-msc/?p=624">NAPA</a> is a
+content of a <a data-edgenote="napa">NAPA</a> is a
 list of ranked priority adaptation activities and projects, as well as short
 profiles of each activity or project, designed to facilitate the development
 of proposals for implementation. Accordingly, NAPAs must be action-oriented,
@@ -67,17 +76,32 @@ level decision-makers and the public. Finally, NAPAs are expected to
 primarily utilize existing data. Because no new research is required,
 countries are not permitted to delay NAPA processes in the name of data
 collection.</p>
+CARD
+)
+ethiopia_p2_c2 = ethiopia_p2.cards.create(
+order: 2,
+content: <<-CARD
 <p>The NAPA project database organizes projects by country and sector and
 includes project costs and projected impacts. Projects are grouped according
 to the main sectors into which the project falls; however, some projects and
 activities are diverse in nature and difficult to classify into any one
 sector. Such projects have been categorized into a ‘cross-sectoral’
 group.</p>
+CARD
+)
 
-<h1>Time to Get Moving!</h1>
+ethiopia_p3 = ethiopia.pages.create( order: 3, title: "Time to Get Moving!" )
+ethiopia_p3_c1 = ethiopia_p3.cards.create(
+order: 1,
+content: <<-CARD
 <p>After checking with his secretary to see if there were any messages,
 Kidane headed to the embassy where Fahmy Abdel Aal, the Executive Director of
 the United Nations Environmental Program, was staying.</p>
+CARD
+)
+ethiopia_p3_c2 = ethiopia_p3.cards.create(
+order: 2,
+content: <<-CARD
 <blockquote>
   <p>“Would you like some coffee?” Fahmy greeted him.</p>
   <p>“Yes, thank you. And how are your kids doing?”</p>
@@ -92,10 +116,14 @@ the United Nations Environmental Program, was staying.</p>
   <p>“Yes, I understand,” said Kidane. “I’m meeting with both the Minister of
   Economic Development and the Minister of the Environment this week,” Kidane
   said. “It took a long time to get on their schedules.”</p>
-  <p>“Well, Kidane, you know that <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=620">time is of the essence</a>. Every
+  <p>“Well, Kidane, you know that <a data-edgenote="vulnerability-map">time is of the essence</a>. Every
   day that passes is time we can’t get back.”</p>
 </blockquote>
+CARD
+)
+ethiopia_p3_c3 = ethiopia_p3.cards.create(
+order: 3,
+content: <<-CARD
 <blockquote>
   <p>“Yes, of course,” Kidane replied. “Do you have any advice before I meet
   with the ministers?”</p>
@@ -121,51 +149,76 @@ the United Nations Environmental Program, was staying.</p>
   gratefully, but also with some trepidation. “We have narrowed down the
   number of potential projects from eleven to four.”</p>
 </blockquote>
+CARD
+)
+ethiopia_p3_c4 = ethiopia_p3.cards.create(
+order: 4,
+content: <<-CARD
 <p>Arriving back at his office, Kidane felt overwhelmed. While Fahmy had
 given him some good advice, he was still unsure of how to prioritize the
 proposed projects and which were the correct criteria to employ. He felt
-tremendous pressure to quickly formulate a plan. With floods and <a href=
-"http://remley.wcbn.org/ihih-msc/?p=627">droughts increasing
+tremendous pressure to quickly formulate a plan. With floods and <a data-edgenote="drought-and-hazard-frequency">droughts increasing
 dramatically</a>&nbsp;over the past few years, Kidane knew his country was
-already feeling the <a href="http://remley.wcbn.org/ihih-msc/?p=630">effects
+already feeling the <a data-edgenote="executive-summary-of-ethiopia-uncertain-climate-future">effects
 of climate change</a>.</p>
-<section>
-  <p>“Mr. Asefa,” said his secretary, entering the room with a thick pile of
-  papers. “I just received the Economic Assessment of the NAPA projects
-  report. Remember? You asked for the detailed costs and benefits of the top
-  4 NAPA projects last week. “Here they are”. And don’t forget that you have
-  a meeting with Mr. Sufian Ahmed tomorrow morning. It took me three whole
-  months to arrange that!”</p>
-  <p>Head spinning, Kidane spent the whole afternoon studying the report.</p>
-</section>
+CARD
+)
+ethiopia_p3_c5 = ethiopia_p3.cards.create(
+order: 5,
+content: <<-CARD
+<p>“Mr. Asefa,” said his secretary, entering the room with a thick pile of
+papers. “I just received the Economic Assessment of the NAPA projects
+report. Remember? You asked for the detailed costs and benefits of the top
+4 NAPA projects last week. “Here they are”. And don’t forget that you have
+a meeting with Mr. Sufian Ahmed tomorrow morning. It took me three whole
+months to arrange that!”</p>
+<p>Head spinning, Kidane spent the whole afternoon studying the report.</p>
+CARD
+)
 
-<h1>The Minister of Finance and Economic Development</h1>
+ethiopia_p4 = ethiopia.pages.create( order: 4, title: "The Minister of Finance and Economic Development" )
+ethiopia_p4_c1 = ethiopia_p4.cards.create(
+order: 1,
+content: <<-CARD
 <p>The next morning he went directly to the ministry to meet Mr. Sufian
 Ahmed, the Minister of Finance and Economic Development. From the beginning
 of the meeting, Sufian carried himself with an air of superiority. This
 greatly annoyed Kidane, but of course he couldn’t let the Minister see that.
 It had taken almost three months just to get on his calendar.</p>
+CARD
+)
+ethiopia_p4_c2 = ethiopia_p4.cards.create(
+order: 2,
+content: <<-CARD
 <p>After exchanging pleasantries, Kidane began outlining some possible
 adaptation projects. Sufian cut him off, saying, “Well you had better be
-careful about those farming plans you mentioned. <a href=
-"http://remley.wcbn.org/ihih-msc/?p=636">The Chinese have already bought up a
+careful about those farming plans you mentioned. <a data-edgenote="chinese-investment-in-transportation">The Chinese have already bought up a
 lot of land</a>, and we’re in the middle of negotiations right now for
 another large purchase. So far, they’ve invested 1.1 billion dollars in
 Ethiopia. They even paid to build the new African Union conference center and
 just recently donated a 13 million dollar hospital to our people. We cannot
 afford to displease them.”</p>
+CARD
+)
+ethiopia_p4_c3 = ethiopia_p4.cards.create(
+order: 3,
+content: <<-CARD
 <blockquote>
   <p>“No, I hadn’t realized that,” Kidane replied, puzzled.</p>
   <p>“Yes, well, just be well aware of the context of your plans. Those food
   programs and forestry initiatives you mentioned aren’t likely to go through
-  on account of the Chinese. They’re our <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=638">third largest foreign
+  on account of the Chinese. They’re our <a data-edgenote="chinese-fdi-in-ethiopia">third largest foreign
   investor</a>. You must understand that.”</p>
   <p>“I see,” said Kidane.</p>
   <p>“Furthermore,” said Mr. Ahmed, “I don’t know why exactly you wanted to
   meet with me. A lot of these projects seem environmental; they don’t have
   much to do with economics.”</p>
 </blockquote>
+CARD
+)
+ethiopia_p4_c4 = ethiopia_p4.cards.create(
+order: 4,
+content: <<-CARD
 <blockquote>
   <p>“Well, Mr. Ahmed,” Kidane answered, “The NAPA plans were designed to
   meet both development and environmental needs. In other words, they are
@@ -176,15 +229,25 @@ afford to displease them.”</p>
   economic growth if we don’t plan for them in advance. Believe me, the
   UNFCCC is committed to development just as much as it is to the
   environment.”</p>
-  <p>“To me <a href="http://remley.wcbn.org/ihih-msc/?p=641">development
+  <p>“To me <a data-edgenote="ethiopia-economy-growth-concerns">development
   comes first</a>,” The Minister replied. “Those other countries that caused
   climate change are the ones that have to fix it. If it comes to saving our
   planet or our people, I will always choose our people. We cannot sacrifice
   our development, sanitation, education and public health.”</p>
 </blockquote>
+CARD
+)
+ethiopia_p4_c5 = ethiopia_p4.cards.create(
+order: 5,
+content: <<-CARD
 <p>Kidane attempted to outline some other options for adaptation investment,
 but the minister had to cut their meeting short; he had suddenly received an
 important phone call.</p>
+CARD
+)
+ethiopia_p4_c6 = ethiopia_p4.cards.create(
+order: 6,
+content: <<-CARD
 <p>Back at his office, Kidane took some time to gather his thoughts. What
 course of action should he take? He had to give some attention to development
 initiatives. The poor were already the most vulnerable to the effects of
@@ -194,8 +257,13 @@ Kidane didn’t have much time to ponder, as his secretary soon buzzed his desk
 phone. “Yes?” “Mr. Kidane, you wanted me to remind you about your son’s
 recital.” Oh, yes, thank you.” Kidane packed up his briefcase and headed out
 of the office.</p>
+CARD
+)
 
-<h1>An Unexpected Request</h1>
+ethiopia_p5 = ethiopia.pages.create( order: 5, title: "An Unexpected Request" )
+ethiopia_p5_c1 = ethiopia_p5.cards.create(
+order: 1,
+content: <<-CARD
 <blockquote>
   <p>As he was headed toward his car he heard someone call his name. “Mr.
   Asefa?” Kidane turned around. A man was standing behind him. He was lean
@@ -212,10 +280,14 @@ of the office.</p>
   to meet with me?” He shuffled his briefcase between hands; he didn’t have
   much time to get to the recital.</p>
 </blockquote>
+CARD
+)
+ethiopia_p5_c2 = ethiopia_p5.cards.create(
+order: 2,
+content: <<-CARD
 <p>“I came to plead the case of my people,” Mohammed replied. “The Somali
 living in western Ethiopia have long been oppressed by the Oromo. They
-outnumber us greatly. We have <a href=
-"http://remley.wcbn.org/ihih-msc/?p=645">too few seats in parliament</a> to
+outnumber us greatly. We have <a data-edgenote="ethiopia-parliament">too few seats in parliament</a> to
 allow us to defend our rights and represent ourselves properly. I wanted to
 ask that you consider Somaliland for the implementation of the adaptation
 plans. Our district has suffered many droughts in recent years—we are in a
@@ -223,8 +295,13 @@ very drought prone area. According to your NAPA report, the water reserved in
 dams will be used for agriculture and electricity generation for large Somali
 cities, leaving us behind with no water for agriculture as droughts
 worsen.”</p>
+CARD
+)
+ethiopia_p5_c3 = ethiopia_p5.cards.create(
+order: 3,
+content: <<-CARD
 <p>“At the same time, we’ve had many floods the last few years.
-Some&nbsp;<a href="http://remley.wcbn.org/ihih-msc/?p=647">refugee camps</a>
+Some&nbsp;<a data-edgenote="ethiopia-refugees">refugee camps</a>
 housed in our land have even been washed out, which burdens our villages as
 we are left to feed and house the refugees. We haven’t gotten much help from
 UNHCR, let alone our own Ethiopian government. I also want to ask that you
@@ -235,6 +312,11 @@ Our livelihood depends on agriculture. If you chose development projects that
 were slated for Somali land, my people would benefit greatly and we can
 reduce tension in the region. Think about it, Mr. Asefa. You could address
 poverty and global warming at the same time.”</p>
+CARD
+)
+ethiopia_p5_c4 = ethiopia_p5.cards.create(
+order: 4,
+content: <<-CARD
 <p>The man’s words were true. Kidane knew he wasn’t lying when he described
 the situation of the Ethiopian Somali. As a minority population, they had
 little presence in the government while they were subject to majority rule.
@@ -242,6 +324,11 @@ And everyone in Ethiopia knew that the Somali were poor; as farmers living on
 land prone to both droughts and floods, it was a struggle for the Somali to
 simply survive from year to year. Many NGOs operated in Somaliland to bring
 in emergency food supplies – they’d been doing so since the 1980’s.</p>
+CARD
+)
+ethiopia_p5_c5 = ethiopia_p5.cards.create(
+order: 5,
+content: <<-CARD
 <blockquote>
   <p>After thinking for a moment, Kidane addressed the man. “Thank you for
   sharing your concerns with me, Mr. Osman, but why come to me? Couldn’t
@@ -255,6 +342,11 @@ in emergency food supplies – they’d been doing so since the 1980’s.</p>
   need all the help we can get, and things will only get worse as the weather
   continues to change.”</p>
 </blockquote>
+CARD
+)
+ethiopia_p5_c6 = ethiopia_p5.cards.create(
+order: 6,
+content: <<-CARD
 <p>Kidane, who was keenly aware of recent political history, recognized the
 desperation of a plea coming from someone who was accustomed to having his
 people’s opinions and needs ignored by an unresponsive government. As he
@@ -263,12 +355,22 @@ day. He thought to himself that he had no answers and only more questions
 than ever before. But he couldn’t stay stuck in thought forever; he had to
 brush off these disconcerting thoughts to see his son in his first recital.
 His wife would kill him if he missed it.</p>
+CARD
+)
 
-<h1>The Minister of Environment and Forests</h1>
+ethiopia_p6 = ethiopia.pages.create( order: 6, title: "The Minister of Environment and Forests" )
+ethiopia_p6_c1 = ethiopia_p6.cards.create(
+order: 1,
+content: <<-CARD
 <p>The next day, Kidane met with Million Belay, the Minister of Environment
 and Forests. “Mr. Belay, I was hoping I could consult with you on the NAPA
 adaptation plans,” Kidane opened the discussion. Minister Belay shuffled
 papers around his desk, barely glancing at Kidane.</p>
+CARD
+)
+ethiopia_p6_c2 = ethiopia_p6.cards.create(
+order: 2,
+content: <<-CARD
 <blockquote>
   <p>“Well, Mr. Asefa, I’ve looked over the NAPA plans and I don’t really see
   how the projects are all that environmental; they look like regular
@@ -284,13 +386,17 @@ papers around his desk, barely glancing at Kidane.</p>
   development from my point of view. I can’t point you in any direction
   because I’m still not sold that these adaptation plans will make all that
   much difference in conserving the environment and coping with climate
-  risks. My Ministry’s performance is judged by its successes in <a href=
-  "http://remley.wcbn.org/ihih-msc/?p=651">forest preservation, ecosystem
+  risks. My Ministry’s performance is judged by its successes in <a data-edgenote="ethiopia-climate-complexity">forest preservation, ecosystem
   integrity and endangered species protection</a>. We are losing our forests
   at an unprecedented rate, and I have to focus on that. Sorry that I can’t
   be more helpful in contributing any financial resources to these NAPA
   projects.”</p>
 </blockquote>
+CARD
+)
+ethiopia_p6_c3 = ethiopia_p6.cards.create(
+order: 3,
+content: <<-CARD
 <p>Kidane left the Minister’s office in a very confused state. When he
 arrived at his car he saw something that made his heart sink: two eggs had
 been thrown against the car windshield. He supposed that Mohammed had told
@@ -298,6 +404,11 @@ the rest of his group about their meeting yesterday, and someone was
 obviously upset with Kidane. He wished they could direct their concerns at
 the government instead of getting mad at him. He looked around for a store to
 buy some cleaner.</p>
+CARD
+)
+ethiopia_p6_c4 = ethiopia_p6.cards.create(
+order: 4,
+content: <<-CARD
 <p>Now the stress was really beginning to overwhelm Kidane. He wanted to pick
 the best adaptation plans for Ethiopia, but the context he was working with
 seemed to grow murkier and murkier. At first he thought making a plan would
@@ -309,19 +420,34 @@ economic minister didn’t think the projects had development merit and the
 environment minister didn’t think the projects had any environmental merit?
 Kidane needed government support and additional resources to carry any of
 these projects out.</p>
-<p><a href="http://remley.wcbn.org/ihih-msc/?p=656">Somehow, he had to pick
+CARD
+)
+ethiopia_p6_c5 = ethiopia_p6.cards.create(
+order: 5,
+content: <<-CARD
+<p><a data-edgenote="basics-of-cba">Somehow, he had to pick
 the best projects</a> to gain public approval and have an immediate impact on
 Ethiopia’s adaptation to climate change. These projects also needed to
 fulfill the criteria for UNEP funding. He knew he’d have to come up with a
 definitive list of criteria to help him determine the best projects to
 pursue.</p>
+CARD
+)
 
-<h1>The NAPA Steering Committee</h1>
+ethiopia_p7 = ethiopia.pages.create( order: 7, title: "The NAPA Steering Committee" )
+ethiopia_p7_c1 = ethiopia_p7.cards.create(
+order: 1,
+content: <<-CARD
 <p>A week later, Kidane had to meet with other members of the NAPA Steering
 Committee to talk over the available projects and decide which ones to
 recommend for action. In the room with him were Dawit Asfaw, Solomon Ejigu,
 Mulugeta Abera, and Helina Mehretu. Kidane had a lot on his mind, so he
 simply listened while the others talked.</p>
+CARD
+)
+ethiopia_p7_c2 = ethiopia_p7.cards.create(
+order: 2,
+content: <<-CARD
 <blockquote>
   <p>“I think that we should go with the capacity building project. It has a
   synergistic effect on other sectors and helps increase the possibility of
@@ -346,10 +472,20 @@ simply listened while the others talked.</p>
   We must invest our limited resources in projects with higher
   priorities.”</p>
 </blockquote>
+CARD
+)
+ethiopia_p7_c3 = ethiopia_p7.cards.create(
+order: 3,
+content: <<-CARD
 <p>“Well,” Mulugehta asked, “What do you think about the forecasting system?
 We’ve got droughts every two years, and we don’t want a situation like the
-<a href="http://remley.wcbn.org/ihih-msc/?p=658">starvation that happened in
+<a data-edgenote="mass-starvation-in-ethiopia">starvation that happened in
 the 80’s</a>. Maybe the forecasting program would be best.” Dawit nodded.</p>
+CARD
+)
+ethiopia_p7_c4 = ethiopia_p7.cards.create(
+order: 4,
+content: <<-CARD
 <blockquote>
   <p>“What do you think, Kidane?” asked Helina.</p>
   <p>Kidane was silent for a moment, and he rubbed his temples. He was
@@ -362,15 +498,15 @@ the 80’s</a>. Maybe the forecasting program would be best.” Dawit nodded.</p
   problems. It involved considering not only environmental effects, but
   social outcomes as well. He finally began to speak. “I have an idea…”</p>
 </blockquote>
-NARRATIVE
+CARD
 )
 
-pod = ethiopia.podcasts.create(
+pod = ethiopia.podcasts.build(
   title: "Science and Social Conflicts in Climate Planning: The View from Ethiopia",
   audio_url: "http://www.hotinhere.us/podcast-download/13/08-28-2015science-and-social-conflicts-in-climate-planning-the-view-from-ethiopia.mp3?ref=download",
   order: 1,
-  artwork_url: "http://i2.wp.com/www.hotinhere.us/wp-content/uploads/2015/08/ethiopia_wCredit.jpg?resize=1038%2C576",
   description: "<p>This week’s show brings our listeners more than an hour of in-depth analysis and lively conversation on the challenges of climate change planning, both in Ethiopia and across the diverse governance landscape of East and North Africa. Tying in closely with a case study newly developed by a team of SNRE students for the pilot project “Michigan Sustainability Cases,” the broadcast explores the complexity of crafting effective and equitable adaptation policy. Specifically, we ask how national adaptation plans are made? By and for whom? What are the decision-making criteria? And what could these criteria fail to account for? Bringing together legal, anthropological, and environmental expertise, the broadcast takes adaptation policy as the starting point for a broad-ranging dialogue on climate change impacts, social conflict across ethno-linguistic groups, and national planning as a tool of marginalization.</p>",
+  artwork_url: "http://i2.wp.com/www.hotinhere.us/wp-content/uploads/2015/08/ethiopia_wCredit.jpg?resize=1038%2C576",
   credits_list: {
     hosts: ["Katie Browne", "Arman Golrokhian", "Rebecca Hardin"],
     guests: [
@@ -381,3 +517,5 @@ pod = ethiopia.podcasts.create(
     ]
   }
 )
+
+require './db/seeds/edgenotes/ethiopia-napa-edgenotes.rb'
