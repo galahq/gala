@@ -1,4 +1,5 @@
-%h1=t '.title'
-%ul
-  - @cases.each do |c|
-    %li=link_to c.title, c
+.catalog-cases
+  %h6=t '.featured_cases'
+  .catalog-cases-featured
+    - @cases.each do |c|
+      = render partial: 'case', locals: {c: c}

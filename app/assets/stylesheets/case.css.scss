@@ -1,0 +1,61 @@
+@import '_globals';
+@import '_flexbox';
+@import '_tint_and_shade';
+
+.catalog-cases {
+  width: 100%;
+
+  h6 {
+    color: $white;
+    text-align: center;
+    margin: 0.5em 0;
+    font-family: $sansFont;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &:first-child { margin-top: -0.5em; }
+  }
+}
+
+.catalog-cases-featured {
+  @include flexbox;
+  width: 100%;
+  overflow-x: scroll;
+  background-color: tint($umichBlue, 25%);
+  padding: 1rem 0;
+
+  .catalog-case {
+    @include flexbox;
+    @include flex-flow(column);
+    @include justify-content(flex-end);
+    @include flex(0, 0, 30em);
+
+    height: 17rem !important;
+    margin: 0 0.5rem;
+    padding: 0.5rem 1.5rem;
+    position: relative;
+
+    &:first-child { margin-left: auto; }
+    &:last-child { margin-right: auto; }
+  }
+}
+
+.catalog-case {
+  &-unpublished {
+    cursor: default;
+
+    &-banner {
+      color: $black;
+      background-color: $lightGreen;
+      border-left: 0.35rem solid $darkGreen;
+      position: absolute;
+      top: 1em;
+      right: 0;
+      padding: 0.2rem 0.5rem 0.2rem 0.4rem;
+      font-size: 90%;
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 0.6px;
+    }
+  }
+}
