@@ -5,5 +5,5 @@
     .catalog-case-unpublished-banner
       =t '.forthcoming'
   .catalog-case-credits
-    %h1=c.title
-    %h4=c.case_authors
+    %h1=title_for_catalog c
+    %h4{style: c.featured? ? "" : "display: none"}=c.case_authors

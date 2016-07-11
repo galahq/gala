@@ -8,7 +8,7 @@
   h6 {
     color: $white;
     text-align: center;
-    margin: 0.5em 0;
+    margin: 1em 0 0.5em 0;
     font-family: $sansFont;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -25,22 +25,39 @@
   padding: 1rem 0;
 
   .catalog-case {
-    @include flexbox;
-    @include flex-flow(column);
-    @include justify-content(flex-end);
     @include flex(0, 0, 30em);
-
     height: 17rem !important;
-    margin: 0 0.5rem;
-    padding: 0.5rem 1.5rem;
-    position: relative;
-
     &:first-child { margin-left: auto; }
     &:last-child { margin-right: auto; }
   }
 }
 
+.catalog-cases-index {
+  @include flexbox;
+  @include flex-flow(row wrap);
+  @include justify-content(center);
+
+  .catalog-case {
+    @include flex(0, 0, 15em);
+    height: 15em;
+    margin: 0 0.5rem 1rem 0.5rem;
+
+    h1 {
+      margin-bottom: 1em;
+      font-size: 130%;
+    }
+    h4 { margin-top: -1em; }
+  }
+}
+
 .catalog-case {
+  @include flexbox;
+  @include flex-flow(column);
+  @include justify-content(flex-end);
+  margin: 0 0.5rem;
+  padding: 0.5rem 1.5rem;
+  position: relative;
+
   &-unpublished {
     cursor: default;
 

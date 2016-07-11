@@ -1,5 +1,9 @@
 .catalog-cases
   %h6=t '.featured_cases'
   .catalog-cases-featured
-    - @cases.each do |c|
+    - @featured.each do |c|
+      = render partial: 'case', locals: {c: c}
+  %h6=t '.case_index'
+  .catalog-cases-index
+    - @index.each do |c|
       = render partial: 'case', locals: {c: c}

@@ -1,6 +1,9 @@
 class Case < ApplicationRecord
   include Authority::Abilities
 
+  translates :title, :summary, :narrative
+  enum catalog_position: %i(in_index featured)
+
   has_many :edgenotes
   has_many :podcasts
   has_many :activities
@@ -8,8 +11,6 @@ class Case < ApplicationRecord
   has_many :comments, through: :comment_threads
   has_many :enrollments
   has_many :readers, through: :enrollments
-
-  translates :title, :summary, :narrative
 
   scope :published, -> { where(published: true)  }
 

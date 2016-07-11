@@ -6,7 +6,8 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all
+    @featured = Case.featured
+    @index = Case.in_index.sort_by &:title
     render layout: "window"
   end
 
