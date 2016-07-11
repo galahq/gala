@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160701213227) do
+ActiveRecord::Schema.define(version: 20160709160633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,16 +29,19 @@ ActiveRecord::Schema.define(version: 20160701213227) do
   end
 
   create_table "cases", force: :cascade do |t|
-    t.boolean  "published",      default: false
+    t.boolean  "published",        default: false
     t.hstore   "title_i18n"
-    t.text     "slug",                           null: false
-    t.string   "authors",        default: [],                 array: true
+    t.text     "slug",                             null: false
+    t.string   "authors",          default: [],                 array: true
     t.hstore   "summary_i18n"
-    t.text     "tags",           default: [],                 array: true
+    t.text     "tags",             default: [],                 array: true
     t.hstore   "narrative_i18n"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "cover_url"
+    t.date     "publication_date"
+    t.integer  "catalog_position", default: 0,     null: false
+    t.text     "short_title"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end

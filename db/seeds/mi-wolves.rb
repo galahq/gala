@@ -14,7 +14,7 @@ wolf = Case.create(
     "David Wang",
     "Sheena Vanleuven",
   ],
-
+  catalog_position: :featured,
   title: "Wolf Wars: Should We Hunt Gray Wolves in Michigan?",
 
   summary: <<-SUMMARY,

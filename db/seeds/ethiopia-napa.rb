@@ -14,7 +14,7 @@ ethiopia = Case.create(
     "Alexander Natanson",
     "Nadia Vandergriff",
   ],
-
+  catalog_position: :featured,
   title: "Ethiopia’s National Adaptation Plan of Action: How will Ethiopia respond to climate change?",
 
   summary: <<-SUMMARY,
