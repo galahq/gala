@@ -16,7 +16,10 @@ class Case < ApplicationRecord
   scope :published, -> { where(published: true)  }
 
   def <=>(anOther)
-    return -1 if published
+    if published ^ anOther.published
+      return -1 if published
+      return 1
+    end
     publication_date <=> anOther.publication_date
   end
 

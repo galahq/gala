@@ -1,6 +1,7 @@
-- classes = "BillboardTitle catalog-case #{"catalog-case-unpublished" unless c.published}"
+- accessible = c.published || current_user.can_update?(c)
+- classes = "BillboardTitle catalog-case #{"catalog-case-unpublished" unless c.published} #{'catalog-case-accessible' if accessible}"
 - background = "background-image:linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(#{c.cover_url})"
-=link_to (c.published || current_user.can_update?(c) ? c : ''), class: classes, style: background do
+=link_to (accessible ? c : ''), class: classes, style: background do
   - unless c.published
     .catalog-case-unpublished-banner
       =t '.forthcoming'
