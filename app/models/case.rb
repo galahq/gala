@@ -1,5 +1,6 @@
 class Case < ApplicationRecord
   include Authority::Abilities
+  include Comparable
 
   translates :title, :summary, :narrative
   enum catalog_position: %i(in_index featured)
@@ -13,6 +14,11 @@ class Case < ApplicationRecord
   has_many :readers, through: :enrollments
 
   scope :published, -> { where(published: true)  }
+
+  def <=>(anOther)
+    return -1 if published
+    publication_date <=> anOther.publication_date
+  end
 
   def to_param
     slug

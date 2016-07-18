@@ -104,7 +104,7 @@ tesla = Case.create(
   slug: "tesla-powerwall",
   published: false,
   tags: %w(region:usa),
-  cover_url: "https://images.unsplash.com/reserve/E5CwLOxQSFimIXJurfpq_IMG_6424%20(1).jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=38642d551c3ba3b7401b27b1491a35b4",
+  cover_url: "https://images.unsplash.com/photo-1466624815543-f56cb34de2ea?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=7861b01250690258a3474e74cabc4621",
   authors: [
     "Andrea Kraus",
     "Braxton Mashburn",
