@@ -32,7 +32,7 @@ class Case < ApplicationRecord
   end
 
   def segments
-    narrative.split(/(?:<h1.*?>(.*?)<\/h1>)/)[1..-1].each_slice(2).to_a
+    narrative.split(/(?:<h1.*?>(.*?)<\/h1>)/)[1..-1].each_slice(2).to_a rescue []
   end
 
 end
