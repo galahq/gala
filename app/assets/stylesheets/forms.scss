@@ -1,76 +1,76 @@
 @import "_globals";
 
 form {
-  color: $darkPurple;
+  color: $purple;
 
   .field div { display: inline; }
   .error_explanation, .field_with_errors label {
     color: $red;
   }
+}
 
-  label,
-  input[type="button"],
-  input[type="submit"] {
-    font: 600 80% $sansFont;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+label,
+button,
+input[type="submit"] {
+  font: 600 80% $sansFont;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field em {
+  font: 400 80% $sansFont;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+{
+  font: 80% $sansFont;
+  color: inherit;
+  border: 0.1em solid $darkPurple;
+  width: calc(100% - 1em);
+  height: 1.5em;
+  padding: 0.1em 0.5em;
+  margin-bottom: 0.5em;
+
+  &:focus {
+    border: 0.15em solid $purple;
+    outline: none;
+    padding: 0.1em 0.45em 0em 0.45em;
   }
+}
 
-  .field em {
-    font: 400 80% $sansFont;
+button,
+input[type="submit"] {
+  font: 600 80% $sansFont;
+  letter-spacing: 0.1em;
+  background-color: $purple;
+  color: $yellow;
+  border: 1px solid $purple;
+  width: 100%;
+  padding: 0.3em 0.5em;
+  margin-top: 0.5em;
+  -webkit-hyphens: none;
+  hyphens: none;
+  white-space: normal;
+
+  &:hover,
+  &:focus {
+    background-color: $darkPurple;
+    cursor: pointer;
+    outline: none;
   }
+}
 
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  {
-    font: 80% $sansFont;
-    color: inherit;
-    border: 0.1em solid $darkPurple;
-    width: calc(100% - 1em);
-    height: 1.5em;
-    padding: 0.1em 0.5em;
-    margin-bottom: 0.5em;
-
-    &:focus {
-      border: 0.15em solid $purple;
-      outline: none;
-      padding: 0.1em 0.45em 0em 0.45em;
-    }
-  }
-
-  input[type="button"],
-  input[type="submit"] {
-    font: 600 80% $sansFont;
-    letter-spacing: 0.1em;
-    background-color: $purple;
-    color: $yellow;
-    border: 1px solid $purple;
-    width: 100%;
-    padding: 0.3em 0.5em;
-    margin-top: 0.5em;
-    -webkit-hyphens: none;
-    hyphens: none;
-    white-space: normal;
-
-    &:hover,
-    &:focus {
-      background-color: $darkPurple;
-      cursor: pointer;
-      outline: none;
-    }
-  }
-
-  input[type="checkbox"] {
-    bottom: 1px;
-    position: relative;
-  }
+input[type="checkbox"] {
+  bottom: 1px;
+  position: relative;
 }
 
 .devise {
   form {
     width: 15em;
-    margin-bottom: 1em;
+    margin: 0.5em 0 1em 0;
 
     #error_explanation {
       h2 { display: none; }
@@ -80,6 +80,9 @@ form {
     }
   }
 
+}
+
+.dialog {
   a {
     font: 90% $sansFont;
     color: $purple;

@@ -2,6 +2,14 @@ en:
   cases:
     index:
       title: "All Cases"
+      redefining_sustainability_education: Redefining sustainability education
+      intro_paragraph: |
+        MSCs provide an immersive and exploratory educational approach to teach
+        practical skills in environmental sustainability.  Sign up for a free
+        account to learn with us.
+      featured_cases: Featured Cases
+      case_index: Case Index
+      learn_more: Learn more about what we’re doing
   reader:
     show:
       my_account: 'My Account'
