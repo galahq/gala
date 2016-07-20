@@ -15,8 +15,8 @@ ethiopia = Case.create(
     "Nadia Vandergriff",
   ],
   translators: [],
-
-  title: "National Adaptation Programme of Action: Ethiopia Plans Responses to Climate Change",
+  catalog_position: :featured,
+  title: "Ethiopia’s National Adaptation Plan of Action: How will Ethiopia respond to climate change?",
 
   summary: <<-SUMMARY,
 This real-life case takes place in August 2015 in Ethiopia. Kidane Asefa, the

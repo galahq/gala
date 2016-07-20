@@ -2,6 +2,14 @@ fr:
   cases:
     index:
       title: "Tous les cas d’étude"
+      redefining_sustainability_education: La renaissance de l’éducation sur l’environnement
+      intro_paragraph: |
+        MSCs fournissent une approche éducative immersive et exploratoire pour
+        enseigner des compétences pratiques en matière de durabilité
+        environnementale. Inscrivez-vous pour un compte gratuit pour apprendre
+        avec nous.
+      featured_cases: Cas d’étude en vedette
+      case_index: L’indice des cas d’étude
   reader:
     show:
       my_account: 'Mon compte'

@@ -1,5 +1,9 @@
 class Case < ApplicationRecord
   include Authority::Abilities
+  include Comparable
+
+  translates :title, :summary, :narrative
+  enum catalog_position: %i(in_index featured)
 
   has_many :edgenotes
   has_many :podcasts
@@ -9,9 +13,15 @@ class Case < ApplicationRecord
   has_many :enrollments
   has_many :readers, through: :enrollments
 
-  translates :title, :summary, :narrative
-
   scope :published, -> { where(published: true)  }
+
+  def <=>(anOther)
+    if published ^ anOther.published
+      return -1 if published
+      return 1
+    end
+    publication_date <=> anOther.publication_date
+  end
 
   def to_param
     slug
@@ -22,7 +32,7 @@ class Case < ApplicationRecord
   end
 
   def segments
-    narrative.split(/(?:<h1.*?>(.*?)<\/h1>)/)[1..-1].each_slice(2).to_a
+    narrative.split(/(?:<h1.*?>(.*?)<\/h1>)/)[1..-1].each_slice(2).to_a rescue []
   end
 
 end

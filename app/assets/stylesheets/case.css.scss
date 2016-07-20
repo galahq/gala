@@ -1,0 +1,113 @@
+@import '_globals';
+@import '_flexbox';
+@import '_tint_and_shade';
+
+.catalog-cases {
+  width: 100%;
+
+  h6 {
+    color: $white;
+    text-align: center;
+    margin: 1em 0 0.5em 0;
+    font-family: $sansFont;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &:first-child { margin-top: -0.5em; }
+  }
+}
+
+.catalog-cases-featured {
+  @include flexbox;
+  width: 100%;
+  overflow-x: scroll;
+  background-color: tint($umichBlue, 25%);
+  padding: 1rem 0;
+
+  .catalog-case {
+    @include flex(0, 0, 30em);
+    height: 17rem !important;
+    &:first-child { margin-left: auto; }
+    &:last-child { margin-right: auto; }
+  }
+}
+
+.catalog-cases-index {
+  @include flexbox;
+  @include flex-flow(row wrap);
+  @include justify-content(center);
+
+  .catalog-case {
+    @include flex(0, 0, 15em);
+    height: 15em;
+    margin: 0 0.5rem 1rem 0.5rem;
+
+    h1 {
+      margin-bottom: 1em;
+      font-size: 130%;
+      line-height: 1.1em;
+    }
+    h4 { margin-top: -1em; }
+  }
+}
+
+.catalog-case {
+  @include flexbox;
+  @include flex-flow(column);
+  @include justify-content(flex-end);
+  margin: 0 0.5rem;
+  padding: 0.5rem 1.5rem;
+  position: relative;
+
+  &-unpublished {
+    cursor: default;
+
+    &-banner {
+      color: $black;
+      background-color: $lightGreen;
+      border-left: 0.35rem solid $darkGreen;
+      position: absolute;
+      top: 1em;
+      right: 0;
+      padding: 0.2rem 0.5rem 0.15rem 0.4rem;
+      font-size: 85%;
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 0.6px;
+    }
+  }
+}
+
+.catalog-case-accessible {
+  transition: box-shadow .15s cubic-bezier(.33, .66, .66, 1), transform .15s cubic-bezier(.33, .66, .66, 1);
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+    -webkit-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+    -moz-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+    box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+  }
+}
+
+.catalog-splash {
+  padding: 1em;
+  margin-top: -1em;
+}
+.catalog-welcome {
+  @include flexbox;
+  @include justify-content(space-between);
+  margin: auto;
+  max-width: 50em;
+
+  &-message {
+    @include flex(0 1 33em)
+  }
+
+  &-sign-in {
+    @include flex(0 1 15em);
+    margin-left: 1em;
+  }
+
+  h2 { margin-top: 0 }
+}

@@ -15,7 +15,8 @@ wolf = Case.create(
     "Sheena Vanleuven",
   ],
   translators: [],
-
+  catalog_position: :featured,
+  publication_date: Time.zone.parse('January 21, 2016 12:00:00'),
   title: "Wolf Wars: Should We Hunt Gray Wolves in Michigan?",
 
   summary: <<-SUMMARY,
