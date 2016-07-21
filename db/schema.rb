@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160720202753) do
+ActiveRecord::Schema.define(version: 20160721182654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,8 +32,9 @@ ActiveRecord::Schema.define(version: 20160720202753) do
     t.integer  "position"
     t.hstore   "content_i18n"
     t.integer  "page_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "solid",        default: true
     t.index ["page_id"], name: "index_cards_on_page_id", using: :btree
   end
 

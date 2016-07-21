@@ -185,6 +185,7 @@ CARD
 wolf_p3 = wolf.pages.create( position: 3, title: "Biology, conservation, and scientific management" )
 wolf_p3_c1 = wolf_p3.cards.create(
 position: 1,
+solid: false,
 content: <<-CARD
 <h2>Importance of wolves in the ecosystem</h2>
 CARD
@@ -264,6 +265,7 @@ CARD
 )
 wolf_p3_c6 = wolf_p3.cards.create(
 position: 6,
+solid: false,
 content: <<-CARD
 <h2>Responsibility for wolf management in Michigan: The DNR and other
 entities</h2>
@@ -302,6 +304,7 @@ CARD
 )
 wolf_p3_c9 = wolf_p3.cards.create(
 position: 9,
+solid: false,
 content: <<-CARD
 <h2>Wolf Management</h2>
 CARD
@@ -412,6 +415,7 @@ CARD
 )
 wolf_p4_c2 = wolf_p4.cards.create(
 position: 2,
+solid: false,
 content: <<-CARD
 <h2>Attacks on people and dogs</h2>
 CARD
@@ -467,6 +471,7 @@ CARD
 )
 wolf_p4_c6 = wolf_p4.cards.create(
 position: 6,
+solid: false,
 content: <<-CARD
 <h2>Livestock disturbances</h2>
 CARD
@@ -550,6 +555,7 @@ CARD
 )
 wolf_p5_c4 = wolf_p5.cards.create(
 position: 4,
+solid: false,
 content: <<-CARD
 <h2>Neighboring states: Examples for Michigan?</h2>
 CARD

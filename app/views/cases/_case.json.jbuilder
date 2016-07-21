@@ -4,9 +4,7 @@ json.pages c.pages do |page|
   json.position page.position
   json.title page.title
   json.cards page.cards do |card|
-    json.id card.id
-    json.position card.position
-    json.content card.content
+    json.extract! card, *%i(id position solid content)
   end
 end
 json.podcasts c.podcasts do |podcast|
