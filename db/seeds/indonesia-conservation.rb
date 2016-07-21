@@ -182,7 +182,7 @@ content: <<-CARD
 CARD
 )
 
-indonesia_p8 = indonesia.pages.create( position: 8, title: "Financial Analysis" )
+indonesia_p8 = indonesia.pages.create( position: 8, title: "A Discussion of Options" )
 indonesia_p8_c1 = indonesia_p8.cards.create(
 position: 1,
 content: <<-CARD
@@ -197,7 +197,7 @@ content: <<-CARD
 CARD
 )
 
-indonesia_p9 = indonesia.pages.create( position: 9, title: "Financial Analysis" )
+indonesia_p9 = indonesia.pages.create( position: 9, title: "Supporting Bird’s Head in Perpetuity" )
 indonesia_p9_c1 = indonesia_p9.cards.create(
 position: 1,
 content: <<-CARD
@@ -205,7 +205,7 @@ content: <<-CARD
 CARD
 )
 
-pod = indonesia.podcasts.build(
+pod = indonesia.podcasts.create(
   title: "Financing Biodiversity Conservation: The case of the Bird’s Head Seascape",
   audio_url: "http://www.hotinhere.us/podcast-download/1259/financing-biodiversity-conservation-the-case-of-the-birds-head-seascape.mp3?ref=download",
   position: 1,

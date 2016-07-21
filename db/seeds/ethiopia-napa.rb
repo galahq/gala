@@ -103,53 +103,49 @@ CARD
 ethiopia_p3_c2 = ethiopia_p3.cards.create(
 position: 2,
 content: <<-CARD
-<blockquote>
-  <p>“Would you like some coffee?” Fahmy greeted him.</p>
-  <p>“Yes, thank you. And how are your kids doing?”</p>
-  <p>“Oh, pretty well. You know how teenagers are.”</p>
-  <p>Kidane laughed. “I fear for those coming days.”</p>
-  <p>“How is your family, Kidane?”</p>
-  <p>“We are blessed. My wife just got a promotion, and my son is doing well
-  in school. I can’t help him with his schoolwork anymore. Even in college we
-  didn’t study those topics!”</p>
-  <p>“Congratulations to her!” replied Fahmy. “Now, tell me what progress you
-  have made so far. We need to get moving on this plan.”</p>
-  <p>“Yes, I understand,” said Kidane. “I’m meeting with both the Minister of
-  Economic Development and the Minister of the Environment this week,” Kidane
-  said. “It took a long time to get on their schedules.”</p>
-  <p>“Well, Kidane, you know that <a data-edgenote="vulnerability-map">time is of the essence</a>. Every
-  day that passes is time we can’t get back.”</p>
-</blockquote>
+<p>“Would you like some coffee?” Fahmy greeted him.</p>
+<p>“Yes, thank you. And how are your kids doing?”</p>
+<p>“Oh, pretty well. You know how teenagers are.”</p>
+<p>Kidane laughed. “I fear for those coming days.”</p>
+<p>“How is your family, Kidane?”</p>
+<p>“We are blessed. My wife just got a promotion, and my son is doing well
+in school. I can’t help him with his schoolwork anymore. Even in college we
+didn’t study those topics!”</p>
+<p>“Congratulations to her!” replied Fahmy. “Now, tell me what progress you
+have made so far. We need to get moving on this plan.”</p>
+<p>“Yes, I understand,” said Kidane. “I’m meeting with both the Minister of
+Economic Development and the Minister of the Environment this week,” Kidane
+said. “It took a long time to get on their schedules.”</p>
+<p>“Well, Kidane, you know that <a data-edgenote="vulnerability-map">time is of the essence</a>. Every
+day that passes is time we can’t get back.”</p>
 CARD
 )
 ethiopia_p3_c3 = ethiopia_p3.cards.create(
 position: 3,
 content: <<-CARD
-<blockquote>
-  <p>“Yes, of course,” Kidane replied. “Do you have any advice before I meet
-  with the ministers?”</p>
-  <p>“Determine your criteria as soon as possible and narrow down our list of
-  options. We have to quickly decide on projects, have them approved, and
-  begin their implementation. You are aware that many bureaucratic checks and
-  balances exist within the UN system, and every penny spent requires several
-  certifications. And of course funding is always limited. The original
-  estimation for NAPA projects in Ethiopia was 770 million dollars, and you
-  have only got 15 million up to now and God know how much we will get later!
-  The Climate Change negotiations are moving forward as we had expected, and
-  the developed nations are not contributing as much as we had hoped.</p>
-  <p>“We have a long list of projects that could be potentially implemented,
-  but we need to be strategic and allocate our limited budget to the projects
-  with the highest impact. We should aim to build partnerships with the
-  ministries in order to draw on their funding as well. Try to pick projects
-  that will have a major overall impact in several sectors. Again, please
-  make your decisions quickly. Don’t worry too much about what the ministers
-  want, they view this issue from only their own limited perspective and
-  still think they know what’s best for the country. These plans are supposed
-  to come from and be for the people.”</p>
-  <p>“Yes, thank you. I will certainly do my best.” Replied Kidane
-  gratefully, but also with some trepidation. “We have narrowed down the
-  number of potential projects from eleven to four.”</p>
-</blockquote>
+<p>“Yes, of course,” Kidane replied. “Do you have any advice before I meet
+with the ministers?”</p>
+<p>“Determine your criteria as soon as possible and narrow down our list of
+options. We have to quickly decide on projects, have them approved, and
+begin their implementation. You are aware that many bureaucratic checks and
+balances exist within the UN system, and every penny spent requires several
+certifications. And of course funding is always limited. The original
+estimation for NAPA projects in Ethiopia was 770 million dollars, and you
+have only got 15 million up to now and God know how much we will get later!
+The Climate Change negotiations are moving forward as we had expected, and
+the developed nations are not contributing as much as we had hoped.</p>
+<p>“We have a long list of projects that could be potentially implemented,
+but we need to be strategic and allocate our limited budget to the projects
+with the highest impact. We should aim to build partnerships with the
+ministries in order to draw on their funding as well. Try to pick projects
+that will have a major overall impact in several sectors. Again, please
+make your decisions quickly. Don’t worry too much about what the ministers
+want, they view this issue from only their own limited perspective and
+still think they know what’s best for the country. These plans are supposed
+to come from and be for the people.”</p>
+<p>“Yes, thank you. I will certainly do my best.” Replied Kidane
+gratefully, but also with some trepidation. “We have narrowed down the
+number of potential projects from eleven to four.”</p>
 CARD
 )
 ethiopia_p3_c4 = ethiopia_p3.cards.create(
@@ -204,38 +200,34 @@ CARD
 ethiopia_p4_c3 = ethiopia_p4.cards.create(
 position: 3,
 content: <<-CARD
-<blockquote>
-  <p>“No, I hadn’t realized that,” Kidane replied, puzzled.</p>
-  <p>“Yes, well, just be well aware of the context of your plans. Those food
-  programs and forestry initiatives you mentioned aren’t likely to go through
-  on account of the Chinese. They’re our <a data-edgenote="chinese-fdi-in-ethiopia">third largest foreign
-  investor</a>. You must understand that.”</p>
-  <p>“I see,” said Kidane.</p>
-  <p>“Furthermore,” said Mr. Ahmed, “I don’t know why exactly you wanted to
-  meet with me. A lot of these projects seem environmental; they don’t have
-  much to do with economics.”</p>
-</blockquote>
+<p>“No, I hadn’t realized that,” Kidane replied, puzzled.</p>
+<p>“Yes, well, just be well aware of the context of your plans. Those food
+programs and forestry initiatives you mentioned aren’t likely to go through
+on account of the Chinese. They’re our <a data-edgenote="chinese-fdi-in-ethiopia">third largest foreign
+investor</a>. You must understand that.”</p>
+<p>“I see,” said Kidane.</p>
+<p>“Furthermore,” said Mr. Ahmed, “I don’t know why exactly you wanted to
+meet with me. A lot of these projects seem environmental; they don’t have
+much to do with economics.”</p>
 CARD
 )
 ethiopia_p4_c4 = ethiopia_p4.cards.create(
 position: 4,
 content: <<-CARD
-<blockquote>
-  <p>“Well, Mr. Ahmed,” Kidane answered, “The NAPA plans were designed to
-  meet both development and environmental needs. In other words, they are
-  designed for sustainable development. We hope that by investing in
-  development projects that help Ethiopia adapt to the coming changes, we’ll
-  be able to have an impact in reducing poverty as well as prepare the
-  country for environmental changes that could have a negative impact on our
-  economic growth if we don’t plan for them in advance. Believe me, the
-  UNFCCC is committed to development just as much as it is to the
-  environment.”</p>
-  <p>“To me <a data-edgenote="ethiopia-economy-growth-concerns">development
-  comes first</a>,” The Minister replied. “Those other countries that caused
-  climate change are the ones that have to fix it. If it comes to saving our
-  planet or our people, I will always choose our people. We cannot sacrifice
-  our development, sanitation, education and public health.”</p>
-</blockquote>
+<p>“Well, Mr. Ahmed,” Kidane answered, “The NAPA plans were designed to
+meet both development and environmental needs. In other words, they are
+designed for sustainable development. We hope that by investing in
+development projects that help Ethiopia adapt to the coming changes, we’ll
+be able to have an impact in reducing poverty as well as prepare the
+country for environmental changes that could have a negative impact on our
+economic growth if we don’t plan for them in advance. Believe me, the
+UNFCCC is committed to development just as much as it is to the
+environment.”</p>
+<p>“To me <a data-edgenote="ethiopia-economy-growth-concerns">development
+comes first</a>,” The Minister replied. “Those other countries that caused
+climate change are the ones that have to fix it. If it comes to saving our
+planet or our people, I will always choose our people. We cannot sacrifice
+our development, sanitation, education and public health.”</p>
 CARD
 )
 ethiopia_p4_c5 = ethiopia_p4.cards.create(
@@ -265,22 +257,20 @@ ethiopia_p5 = ethiopia.pages.create( position: 5, title: "An Unexpected Request"
 ethiopia_p5_c1 = ethiopia_p5.cards.create(
 position: 1,
 content: <<-CARD
-<blockquote>
-  <p>As he was headed toward his car he heard someone call his name. “Mr.
-  Asefa?” Kidane turned around. A man was standing behind him. He was lean
-  and tall, and spoke in a deep, steady voice.</p>
-  <p>“Mr. Asefa, I am Mohammed O. Osman, and I represent the Ethiopian Somali
-  Ogden National Liberation Front. I was hoping I could speak to you about
-  the adaptation plans, but I was unable to make an appointment with
-  you.”</p>
-  <p>“How much do you know about NAPA?” Kidane was surprised; the planning
-  process had not yet come to the attention of the general public.</p>
-  <p>“I have friends in high places,” said Mohammed. “I’ve read the NAPA
-  document. A lot of it sounds good.”</p>
-  <p>“Well, that’s nice to hear,” said Kidane, “but why did you feel the need
-  to meet with me?” He shuffled his briefcase between hands; he didn’t have
-  much time to get to the recital.</p>
-</blockquote>
+<p>As he was headed toward his car he heard someone call his name. “Mr.
+Asefa?” Kidane turned around. A man was standing behind him. He was lean
+and tall, and spoke in a deep, steady voice.</p>
+<p>“Mr. Asefa, I am Mohammed O. Osman, and I represent the Ethiopian Somali
+Ogden National Liberation Front. I was hoping I could speak to you about
+the adaptation plans, but I was unable to make an appointment with
+you.”</p>
+<p>“How much do you know about NAPA?” Kidane was surprised; the planning
+process had not yet come to the attention of the general public.</p>
+<p>“I have friends in high places,” said Mohammed. “I’ve read the NAPA
+document. A lot of it sounds good.”</p>
+<p>“Well, that’s nice to hear,” said Kidane, “but why did you feel the need
+to meet with me?” He shuffled his briefcase between hands; he didn’t have
+much time to get to the recital.</p>
 CARD
 )
 ethiopia_p5_c2 = ethiopia_p5.cards.create(
@@ -330,19 +320,17 @@ CARD
 ethiopia_p5_c5 = ethiopia_p5.cards.create(
 position: 5,
 content: <<-CARD
-<blockquote>
-  <p>After thinking for a moment, Kidane addressed the man. “Thank you for
-  sharing your concerns with me, Mr. Osman, but why come to me? Couldn’t
-  someone with more power better address your concerns?”</p>
-  <p>“No one in the government will meet with me.” Mohammed replied. “I said
-  I have friends in high places who can see what is happening within the
-  system, but they don’t have any power to do anything. The government sees
-  ONLF (Ogaden National Liberation Front) as opposition, so they won’t talk
-  with any of us. I was hoping that since you’re the one making decisions on
-  NAPA projects, you could direct some of their benefits our way. Please, we
-  need all the help we can get, and things will only get worse as the weather
-  continues to change.”</p>
-</blockquote>
+<p>After thinking for a moment, Kidane addressed the man. “Thank you for
+sharing your concerns with me, Mr. Osman, but why come to me? Couldn’t
+someone with more power better address your concerns?”</p>
+<p>“No one in the government will meet with me.” Mohammed replied. “I said
+I have friends in high places who can see what is happening within the
+system, but they don’t have any power to do anything. The government sees
+ONLF (Ogaden National Liberation Front) as opposition, so they won’t talk
+with any of us. I was hoping that since you’re the one making decisions on
+NAPA projects, you could direct some of their benefits our way. Please, we
+need all the help we can get, and things will only get worse as the weather
+continues to change.”</p>
 CARD
 )
 ethiopia_p5_c6 = ethiopia_p5.cards.create(
@@ -372,27 +360,25 @@ CARD
 ethiopia_p6_c2 = ethiopia_p6.cards.create(
 position: 2,
 content: <<-CARD
-<blockquote>
-  <p>“Well, Mr. Asefa, I’ve looked over the NAPA plans and I don’t really see
-  how the projects are all that environmental; they look like regular
-  development to me. Food security? That’s just expanding the market so that
-  more farmers can participate. Building dams? You know how damaging dams are
-  for ecosystems, right? Not that development’s a bad thing. I just don’t see
-  how the NAPA board believes some of these endeavors will really help us
-  adapt to climate change.”</p>
-  <p>Kidane was slightly taken aback. “But food security is necessary to feed
-  the nation,” he replied. “What about forest carbon sequestration? That’s
-  certainly an environmental plan.”</p>
-  <p>“Yeah, it all sounds good Kidane, but these initiatives are mostly
-  development from my point of view. I can’t point you in any direction
-  because I’m still not sold that these adaptation plans will make all that
-  much difference in conserving the environment and coping with climate
-  risks. My Ministry’s performance is judged by its successes in <a data-edgenote="ethiopia-climate-complexity">forest preservation, ecosystem
-  integrity and endangered species protection</a>. We are losing our forests
-  at an unprecedented rate, and I have to focus on that. Sorry that I can’t
-  be more helpful in contributing any financial resources to these NAPA
-  projects.”</p>
-</blockquote>
+<p>“Well, Mr. Asefa, I’ve looked over the NAPA plans and I don’t really see
+how the projects are all that environmental; they look like regular
+development to me. Food security? That’s just expanding the market so that
+more farmers can participate. Building dams? You know how damaging dams are
+for ecosystems, right? Not that development’s a bad thing. I just don’t see
+how the NAPA board believes some of these endeavors will really help us
+adapt to climate change.”</p>
+<p>Kidane was slightly taken aback. “But food security is necessary to feed
+the nation,” he replied. “What about forest carbon sequestration? That’s
+certainly an environmental plan.”</p>
+<p>“Yeah, it all sounds good Kidane, but these initiatives are mostly
+development from my point of view. I can’t point you in any direction
+because I’m still not sold that these adaptation plans will make all that
+much difference in conserving the environment and coping with climate
+risks. My Ministry’s performance is judged by its successes in <a data-edgenote="ethiopia-climate-complexity">forest preservation, ecosystem
+integrity and endangered species protection</a>. We are losing our forests
+at an unprecedented rate, and I have to focus on that. Sorry that I can’t
+be more helpful in contributing any financial resources to these NAPA
+projects.”</p>
 CARD
 )
 ethiopia_p6_c3 = ethiopia_p6.cards.create(
@@ -449,30 +435,28 @@ CARD
 ethiopia_p7_c2 = ethiopia_p7.cards.create(
 position: 2,
 content: <<-CARD
-<blockquote>
-  <p>“I think that we should go with the capacity building project. It has a
-  synergistic effect on other sectors and helps increase the possibility of
-  implementation of other projects in future” said Solomon.</p>
-  <p>“We’ll need sustainable agriculture, since most of the country is
-  agricultural.”</p>
-  <p>“I think the hydropower project is the best,” said Dawit. “By the time
-  climate change really hits, most people will have migrated to cities. We
-  need to look at more urban projects, and the hydropower project will serve
-  some semi-urban areas. I don’t want to use too many technical terms, but
-  this project has the highest NPV and IRR, which means that it is the best
-  one.”</p>
-  <p>“You mean the best in terms of economic indicators, which are highly
-  dependent on many assumptions. In addition, sustainability is not all about
-  economics. There are other aspects that we need to consider as well. I
-  think the forestry project makes the most sense,” said Helina.</p>
-  <p>“We need to start carbon sequestration. We lost two thirds of our forest
-  during the last decades.”</p>
-  <p>“I’d like to see us go for something that encompasses development more,”
-  said Dawit. “People don’t have clean water to drink, sufficient food to eat
-  or proper sanitation and we want them to be concerned about climate change?
-  We must invest our limited resources in projects with higher
-  priorities.”</p>
-</blockquote>
+<p>“I think that we should go with the capacity building project. It has a
+synergistic effect on other sectors and helps increase the possibility of
+implementation of other projects in future” said Solomon.</p>
+<p>“We’ll need sustainable agriculture, since most of the country is
+agricultural.”</p>
+<p>“I think the hydropower project is the best,” said Dawit. “By the time
+climate change really hits, most people will have migrated to cities. We
+need to look at more urban projects, and the hydropower project will serve
+some semi-urban areas. I don’t want to use too many technical terms, but
+this project has the highest NPV and IRR, which means that it is the best
+one.”</p>
+<p>“You mean the best in terms of economic indicators, which are highly
+dependent on many assumptions. In addition, sustainability is not all about
+economics. There are other aspects that we need to consider as well. I
+think the forestry project makes the most sense,” said Helina.</p>
+<p>“We need to start carbon sequestration. We lost two thirds of our forest
+during the last decades.”</p>
+<p>“I’d like to see us go for something that encompasses development more,”
+said Dawit. “People don’t have clean water to drink, sufficient food to eat
+or proper sanitation and we want them to be concerned about climate change?
+We must invest our limited resources in projects with higher
+priorities.”</p>
 CARD
 )
 ethiopia_p7_c3 = ethiopia_p7.cards.create(
@@ -487,22 +471,20 @@ CARD
 ethiopia_p7_c4 = ethiopia_p7.cards.create(
 position: 4,
 content: <<-CARD
-<blockquote>
-  <p>“What do you think, Kidane?” asked Helina.</p>
-  <p>Kidane was silent for a moment, and he rubbed his temples. He was
-  getting a headache. All four of the projects were good; he had no idea how
-  to find the correct one that everyone would support, including the
-  stakeholders he’d met with previously. He thought back to an
-  intergovernmental decisionmaking class he took in graduate school. They
-  used a multi-criteria cost-benefit analysis technique looking through
-  several different economic, social and political lenses to solve complex
-  problems. It involved considering not only environmental effects, but
-  social outcomes as well. He finally began to speak. “I have an idea…”</p>
-</blockquote>
+<p>“What do you think, Kidane?” asked Helina.</p>
+<p>Kidane was silent for a moment, and he rubbed his temples. He was
+getting a headache. All four of the projects were good; he had no idea how
+to find the correct one that everyone would support, including the
+stakeholders he’d met with previously. He thought back to an
+intergovernmental decisionmaking class he took in graduate school. They
+used a multi-criteria cost-benefit analysis technique looking through
+several different economic, social and political lenses to solve complex
+problems. It involved considering not only environmental effects, but
+social outcomes as well. He finally began to speak. “I have an idea…”</p>
 CARD
 )
 
-pod = ethiopia.podcasts.build(
+pod = ethiopia.podcasts.create(
   title: "Science and Social Conflicts in Climate Planning: The View from Ethiopia",
   audio_url: "http://www.hotinhere.us/podcast-download/13/08-28-2015science-and-social-conflicts-in-climate-planning-the-view-from-ethiopia.mp3?ref=download",
   position: 1,
