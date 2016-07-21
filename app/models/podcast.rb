@@ -1,5 +1,6 @@
 class Podcast < ApplicationRecord
   belongs_to :case
+  acts_as_list scope: :case
 
   translates :title, :audio_url, :description, :credits
 

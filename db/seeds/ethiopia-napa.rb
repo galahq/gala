@@ -16,6 +16,7 @@ ethiopia = Case.create(
   ],
   translators: [],
   catalog_position: :featured,
+  publication_date: Time.zone.parse('January 21, 2016 18:00:00 EST'),
   title: "Ethiopia’s National Adaptation Plan of Action: How will Ethiopia respond to climate change?",
 
   summary: <<-SUMMARY,
@@ -33,9 +34,9 @@ challenge of climate change.
 SUMMARY
 )
 
-ethiopia_p1 = ethiopia.pages.create( order: 1, title: "Kidane Asefa" )
+ethiopia_p1 = ethiopia.pages.create( position: 1, title: "Kidane Asefa" )
 ethiopia_p1_c1 = ethiopia_p1.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p><strong><a data-edgenote="kidane-asefa">Kidane
 Asefa</a></strong> has had a very busy morning. He is rushing to meet with
@@ -56,9 +57,9 @@ prioritizations by November, and already it is August.</p>
 CARD
 )
 
-ethiopia_p2 = ethiopia.pages.create( order: 2, title: "National Adaptation Plans of Action (NAPA)" )
+ethiopia_p2 = ethiopia.pages.create( position: 2, title: "National Adaptation Plans of Action (NAPA)" )
 ethiopia_p2_c1 = ethiopia_p2.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>NAPAs provide a guided process for <strong>Least Developed
 Countries</strong> (LDCs) to identify priority activities that respond to
@@ -79,7 +80,7 @@ collection.</p>
 CARD
 )
 ethiopia_p2_c2 = ethiopia_p2.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>The NAPA project database organizes projects by country and sector and
 includes project costs and projected impacts. Projects are grouped according
@@ -90,9 +91,9 @@ group.</p>
 CARD
 )
 
-ethiopia_p3 = ethiopia.pages.create( order: 3, title: "Time to Get Moving!" )
+ethiopia_p3 = ethiopia.pages.create( position: 3, title: "Time to Get Moving!" )
 ethiopia_p3_c1 = ethiopia_p3.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>After checking with his secretary to see if there were any messages,
 Kidane headed to the embassy where Fahmy Abdel Aal, the Executive Director of
@@ -100,7 +101,7 @@ the United Nations Environmental Program, was staying.</p>
 CARD
 )
 ethiopia_p3_c2 = ethiopia_p3.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <blockquote>
   <p>“Would you like some coffee?” Fahmy greeted him.</p>
@@ -122,7 +123,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p3_c3 = ethiopia_p3.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <blockquote>
   <p>“Yes, of course,” Kidane replied. “Do you have any advice before I meet
@@ -152,7 +153,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p3_c4 = ethiopia_p3.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <p>Arriving back at his office, Kidane felt overwhelmed. While Fahmy had
 given him some good advice, he was still unsure of how to prioritize the
@@ -164,7 +165,7 @@ of climate change</a>.</p>
 CARD
 )
 ethiopia_p3_c5 = ethiopia_p3.cards.create(
-order: 5,
+position: 5,
 content: <<-CARD
 <p>“Mr. Asefa,” said his secretary, entering the room with a thick pile of
 papers. “I just received the Economic Assessment of the NAPA projects
@@ -176,9 +177,9 @@ months to arrange that!”</p>
 CARD
 )
 
-ethiopia_p4 = ethiopia.pages.create( order: 4, title: "The Minister of Finance and Economic Development" )
+ethiopia_p4 = ethiopia.pages.create( position: 4, title: "The Minister of Finance and Economic Development" )
 ethiopia_p4_c1 = ethiopia_p4.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>The next morning he went directly to the ministry to meet Mr. Sufian
 Ahmed, the Minister of Finance and Economic Development. From the beginning
@@ -188,7 +189,7 @@ It had taken almost three months just to get on his calendar.</p>
 CARD
 )
 ethiopia_p4_c2 = ethiopia_p4.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>After exchanging pleasantries, Kidane began outlining some possible
 adaptation projects. Sufian cut him off, saying, “Well you had better be
@@ -201,7 +202,7 @@ afford to displease them.”</p>
 CARD
 )
 ethiopia_p4_c3 = ethiopia_p4.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <blockquote>
   <p>“No, I hadn’t realized that,” Kidane replied, puzzled.</p>
@@ -217,7 +218,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p4_c4 = ethiopia_p4.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <blockquote>
   <p>“Well, Mr. Ahmed,” Kidane answered, “The NAPA plans were designed to
@@ -238,7 +239,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p4_c5 = ethiopia_p4.cards.create(
-order: 5,
+position: 5,
 content: <<-CARD
 <p>Kidane attempted to outline some other options for adaptation investment,
 but the minister had to cut their meeting short; he had suddenly received an
@@ -246,7 +247,7 @@ important phone call.</p>
 CARD
 )
 ethiopia_p4_c6 = ethiopia_p4.cards.create(
-order: 6,
+position: 6,
 content: <<-CARD
 <p>Back at his office, Kidane took some time to gather his thoughts. What
 course of action should he take? He had to give some attention to development
@@ -260,9 +261,9 @@ of the office.</p>
 CARD
 )
 
-ethiopia_p5 = ethiopia.pages.create( order: 5, title: "An Unexpected Request" )
+ethiopia_p5 = ethiopia.pages.create( position: 5, title: "An Unexpected Request" )
 ethiopia_p5_c1 = ethiopia_p5.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <blockquote>
   <p>As he was headed toward his car he heard someone call his name. “Mr.
@@ -283,7 +284,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p5_c2 = ethiopia_p5.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>“I came to plead the case of my people,” Mohammed replied. “The Somali
 living in western Ethiopia have long been oppressed by the Oromo. They
@@ -298,7 +299,7 @@ worsen.”</p>
 CARD
 )
 ethiopia_p5_c3 = ethiopia_p5.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>“At the same time, we’ve had many floods the last few years.
 Some&nbsp;<a data-edgenote="ethiopia-refugees">refugee camps</a>
@@ -315,7 +316,7 @@ poverty and global warming at the same time.”</p>
 CARD
 )
 ethiopia_p5_c4 = ethiopia_p5.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <p>The man’s words were true. Kidane knew he wasn’t lying when he described
 the situation of the Ethiopian Somali. As a minority population, they had
@@ -327,7 +328,7 @@ in emergency food supplies – they’d been doing so since the 1980’s.</p>
 CARD
 )
 ethiopia_p5_c5 = ethiopia_p5.cards.create(
-order: 5,
+position: 5,
 content: <<-CARD
 <blockquote>
   <p>After thinking for a moment, Kidane addressed the man. “Thank you for
@@ -345,7 +346,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p5_c6 = ethiopia_p5.cards.create(
-order: 6,
+position: 6,
 content: <<-CARD
 <p>Kidane, who was keenly aware of recent political history, recognized the
 desperation of a plea coming from someone who was accustomed to having his
@@ -358,9 +359,9 @@ His wife would kill him if he missed it.</p>
 CARD
 )
 
-ethiopia_p6 = ethiopia.pages.create( order: 6, title: "The Minister of Environment and Forests" )
+ethiopia_p6 = ethiopia.pages.create( position: 6, title: "The Minister of Environment and Forests" )
 ethiopia_p6_c1 = ethiopia_p6.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>The next day, Kidane met with Million Belay, the Minister of Environment
 and Forests. “Mr. Belay, I was hoping I could consult with you on the NAPA
@@ -369,7 +370,7 @@ papers around his desk, barely glancing at Kidane.</p>
 CARD
 )
 ethiopia_p6_c2 = ethiopia_p6.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <blockquote>
   <p>“Well, Mr. Asefa, I’ve looked over the NAPA plans and I don’t really see
@@ -395,7 +396,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p6_c3 = ethiopia_p6.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>Kidane left the Minister’s office in a very confused state. When he
 arrived at his car he saw something that made his heart sink: two eggs had
@@ -407,7 +408,7 @@ buy some cleaner.</p>
 CARD
 )
 ethiopia_p6_c4 = ethiopia_p6.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <p>Now the stress was really beginning to overwhelm Kidane. He wanted to pick
 the best adaptation plans for Ethiopia, but the context he was working with
@@ -423,7 +424,7 @@ these projects out.</p>
 CARD
 )
 ethiopia_p6_c5 = ethiopia_p6.cards.create(
-order: 5,
+position: 5,
 content: <<-CARD
 <p><a data-edgenote="basics-of-cba">Somehow, he had to pick
 the best projects</a> to gain public approval and have an immediate impact on
@@ -434,9 +435,9 @@ pursue.</p>
 CARD
 )
 
-ethiopia_p7 = ethiopia.pages.create( order: 7, title: "The NAPA Steering Committee" )
+ethiopia_p7 = ethiopia.pages.create( position: 7, title: "The NAPA Steering Committee" )
 ethiopia_p7_c1 = ethiopia_p7.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>A week later, Kidane had to meet with other members of the NAPA Steering
 Committee to talk over the available projects and decide which ones to
@@ -446,7 +447,7 @@ simply listened while the others talked.</p>
 CARD
 )
 ethiopia_p7_c2 = ethiopia_p7.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <blockquote>
   <p>“I think that we should go with the capacity building project. It has a
@@ -475,7 +476,7 @@ content: <<-CARD
 CARD
 )
 ethiopia_p7_c3 = ethiopia_p7.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>“Well,” Mulugehta asked, “What do you think about the forecasting system?
 We’ve got droughts every two years, and we don’t want a situation like the
@@ -484,7 +485,7 @@ the 80’s</a>. Maybe the forecasting program would be best.” Dawit nodded.</p
 CARD
 )
 ethiopia_p7_c4 = ethiopia_p7.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <blockquote>
   <p>“What do you think, Kidane?” asked Helina.</p>
@@ -504,7 +505,7 @@ CARD
 pod = ethiopia.podcasts.build(
   title: "Science and Social Conflicts in Climate Planning: The View from Ethiopia",
   audio_url: "http://www.hotinhere.us/podcast-download/13/08-28-2015science-and-social-conflicts-in-climate-planning-the-view-from-ethiopia.mp3?ref=download",
-  order: 1,
+  position: 1,
   description: "<p>This week’s show brings our listeners more than an hour of in-depth analysis and lively conversation on the challenges of climate change planning, both in Ethiopia and across the diverse governance landscape of East and North Africa. Tying in closely with a case study newly developed by a team of SNRE students for the pilot project “Michigan Sustainability Cases,” the broadcast explores the complexity of crafting effective and equitable adaptation policy. Specifically, we ask how national adaptation plans are made? By and for whom? What are the decision-making criteria? And what could these criteria fail to account for? Bringing together legal, anthropological, and environmental expertise, the broadcast takes adaptation policy as the starting point for a broad-ranging dialogue on climate change impacts, social conflict across ethno-linguistic groups, and national planning as a tool of marginalization.</p>",
   artwork_url: "http://i2.wp.com/www.hotinhere.us/wp-content/uploads/2015/08/ethiopia_wCredit.jpg?resize=1038%2C576",
   credits_list: {

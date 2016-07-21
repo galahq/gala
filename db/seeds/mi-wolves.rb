@@ -16,7 +16,7 @@ wolf = Case.create(
   ],
   translators: [],
   catalog_position: :featured,
-  publication_date: Time.zone.parse('January 21, 2016 12:00:00'),
+  publication_date: Time.zone.parse('January 21, 2016 12:00:00 EST'),
   title: "Wolf Wars: Should We Hunt Gray Wolves in Michigan?",
 
   summary: <<-SUMMARY,
@@ -35,9 +35,9 @@ Michigan’s wolf population.
 SUMMARY
 )
 
-wolf_p1 = wolf.pages.create( order: 1, title: "Introduction" )
+wolf_p1 = wolf.pages.create( position: 1, title: "Introduction" )
 wolf_p1_c1 = wolf_p1.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p><strong>J. R. Richardson</strong> took a break from some documents he was
 reading to think about a difficult decision that he would face in the
@@ -55,7 +55,7 @@ opinion.</p>
 CARD
 )
 wolf_p1_c2 = wolf_p1.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>The NRC, whose job is to regulate game species, did not appear to be the
 most likely decision making body when it came to wolves in Michigan. Indeed,
@@ -71,7 +71,7 @@ regulating any public wolf hunt on the plate of the NRC.</p>
 CARD
 )
 wolf_p1_c3 = wolf_p1.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>As a lifelong resident of Michigan’s Upper Peninsula (U.P.), where the
 state’s wolf population resides, as well as an avid outdoorsman,
@@ -100,9 +100,9 @@ with these questions weighing heavily on his mind.</p>
 CARD
 )
 
-wolf_p2 = wolf.pages.create( order: 2, title: "The history of gray wolves in the United States and Michigan" )
+wolf_p2 = wolf.pages.create( position: 2, title: "The history of gray wolves in the United States and Michigan" )
 wolf_p2_c1 = wolf_p2.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>The history of <a data-edgenote="gray-wolf">gray
 wolves</a> in Michigan, which parallels the greater story of the species in
@@ -125,7 +125,7 @@ termed wolves “beasts of waste and desolation.”</p>
 CARD
 )
 wolf_p2_c2 = wolf_p2.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>The federal wolf pelt bounty program decimated wolf populations across
 the country, and Michigan’s wolves were not spared. Wolves were eliminated
@@ -145,7 +145,7 @@ listing of wolves as an endangered species soon after the passage of the
 CARD
 )
 wolf_p2_c3 = wolf_p2.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>There were signs that wolves were staging a comeback, as reports of
 sightings in Michigan’s U.P. began to increase in the 1970s. To try to speed
@@ -164,7 +164,7 @@ the state.</p>
 CARD
 )
 wolf_p2_c4 = wolf_p2.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <p>Federal and state protection was pivotal in wolves’ recovery. The Wolf
 Recovery Plan, developed to meet ESA requirements, stipulated that the
@@ -182,15 +182,15 @@ Michigan to manage its wolf populations.</p>
 CARD
 )
 
-wolf_p3 = wolf.pages.create( order: 3, title: "Biology, conservation, and scientific management" )
+wolf_p3 = wolf.pages.create( position: 3, title: "Biology, conservation, and scientific management" )
 wolf_p3_c1 = wolf_p3.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <h2>Importance of wolves in the ecosystem</h2>
 CARD
 )
 wolf_p3_c2 = wolf_p3.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>Gray wolves are considered to be a <strong>keystone</strong> species
 that plays a unique role in maintaining the health of many ecosystems.
@@ -215,7 +215,7 @@ to the biodiversity of the landscape.</p>
 CARD
 )
 wolf_p3_c3 = wolf_p3.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>Although wolf reintroduction has led to a dramatic restoration of
 biodiversity and riparian ecosystems in Yellowstone, researchers are
@@ -231,7 +231,7 @@ hydrology and landscape of Yellowstone.</p>
 CARD
 )
 wolf_p3_c4 = wolf_p3.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <p>In Michigan, wolves are a key predator of white-tailed deer, a browsing
 species commonly found throughout the United States. In part because of a
@@ -244,7 +244,7 @@ creating near mono-cultures.”</p>
 CARD
 )
 wolf_p3_c5 = wolf_p3.cards.create(
-order: 5,
+position: 5,
 content: <<-CARD
 <p>Hunters have noted that the growing wolf population in the Upper
 Peninsula of Michigan coincides with <a
@@ -263,14 +263,14 @@ but to have an ecologically effective density.”</p>
 CARD
 )
 wolf_p3_c6 = wolf_p3.cards.create(
-order: 6,
+position: 6,
 content: <<-CARD
 <h2>Responsibility for wolf management in Michigan: The DNR and other
 entities</h2>
 CARD
 )
 wolf_p3_c7 = wolf_p3.cards.create(
-order: 7,
+position: 7,
 content: <<-CARD
 <p>The Michigan Department of Natural Resources is responsible for
 conserving, protecting, and managing the state’s natural and cultural
@@ -287,7 +287,7 @@ economic considerations, as discussed further below.</p>
 CARD
 )
 wolf_p3_c8 = wolf_p3.cards.create(
-order: 8,
+position: 8,
 content: <<-CARD
 <p>Various committees and groups within the DNR contribute to wildlife
 management decision making in the state. The Michigan <em>Wolf Management
@@ -301,13 +301,13 @@ species.</p>
 CARD
 )
 wolf_p3_c9 = wolf_p3.cards.create(
-order: 9,
+position: 9,
 content: <<-CARD
 <h2>Wolf Management</h2>
 CARD
 )
 wolf_p3_c10 = wolf_p3.cards.create(
-order: 10,
+position: 10,
 content: <<-CARD
 <p>State and federal regulatory bodies consider how to achieve both social
 and ecological goals in wolf management decision-making. Whereas the 1997
@@ -320,7 +320,7 @@ wolves</a> while addressing their coexistence with humans.</p>
 CARD
 )
 wolf_p3_c11 = wolf_p3.cards.create(
-order: 11,
+position: 11,
 content: <<-CARD
 <p>Defining successful wolf management depends on the goals of managing the
 population and the context for establishing those goals. The DNR notes that
@@ -342,7 +342,7 @@ ecosystem benefits and human conflicts.</p>
 CARD
 )
 wolf_p3_c12 = wolf_p3.cards.create(
-order: 12,
+position: 12,
 content: <<-CARD
 <p>The <em>Michigan Wolf Roundtable</em>, a stakeholder committee
 reflecting various points of view, was convened by the DNR to provide
@@ -364,7 +364,7 @@ important differences in fundamental values.”</p>
 CARD
 )
 wolf_p3_c13 = wolf_p3.cards.create(
-order: 13,
+position: 13,
 content: <<-CARD
 <p>Managing the wolf population can involve various methods of population
 control, including fertility control, translocation to less populated areas,
@@ -382,7 +382,7 @@ being addressed.</p>
 CARD
 )
 wolf_p3_c14 = wolf_p3.cards.create(
-order: 14,
+position: 14,
 content: <<-CARD
 <p>Scientists on both sides of the debate appear to recognize the importance
 of balancing social and ecological concerns, but disagreement arises over how
@@ -396,9 +396,9 @@ approach for dealing with them.</p>
 CARD
 )
 
-wolf_p4 = wolf.pages.create( order: 4, title: "Humans and wolves: A delicate relationship" )
+wolf_p4 = wolf.pages.create( position: 4, title: "Humans and wolves: A delicate relationship" )
 wolf_p4_c1 = wolf_p4.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>Wolves hold a distinct place in Western European culture. Children’s
 stories and fairy tales written centuries ago provide a glimpse of one
@@ -411,13 +411,13 @@ a threat to life and livelihood?</p>
 CARD
 )
 wolf_p4_c2 = wolf_p4.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <h2>Attacks on people and dogs</h2>
 CARD
 )
 wolf_p4_c3 = wolf_p4.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>There are few documented wolf-related human deaths in North America. Since
 2000, three documented deaths have occurred as a result of wolf attacks (two
@@ -432,7 +432,7 @@ attributed to wolves afflicted with rabies.</p>
 CARD
 )
 wolf_p4_c4 = wolf_p4.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <p>While no documented wolf attacks on humans have occurred in Michigan,
 there have been a handful of attacks on dogs. A 2011 paper found 34 instances
@@ -443,7 +443,7 @@ which increases the risks of wolves attacking people.</p>
 CARD
 )
 wolf_p4_c5 = wolf_p4.cards.create(
-order: 5,
+position: 5,
 content: <<-CARD
 <p>In an April 2013 memo, the DNR comments on human–wolf interactions in
 Gogebic County, MI:</p>
@@ -466,13 +466,13 @@ of the 20th century.</p>
 CARD
 )
 wolf_p4_c6 = wolf_p4.cards.create(
-order: 6,
+position: 6,
 content: <<-CARD
 <h2>Livestock disturbances</h2>
 CARD
 )
 wolf_p4_c7 = wolf_p4.cards.create(
-order: 7,
+position: 7,
 content: <<-CARD
 <p>The most visible type of livestock disturbance is depredation, when wolves
 attack and injure or kill livestock. Across North America, sheep and cattle
@@ -494,9 +494,9 @@ wolf depredations.</p>
 CARD
 )
 
-wolf_p5 = wolf.pages.create( order: 5, title: "A political and regulatory saga" )
+wolf_p5 = wolf.pages.create( position: 5, title: "A political and regulatory saga" )
 wolf_p5_c1 = wolf_p5.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>The path leading up to the NRC’s decision is marked by political drama, in
 which the Michigan Legislature repeatedly took action to advance the state
@@ -513,7 +513,7 @@ scientific management in making decisions regarding the taking of game.”</p>
 CARD
 )
 wolf_p5_c2 = wolf_p5.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>In 2012, State Senator Tom Casperson (R-Escanaba), representing a U.P.
 congressional district, introduced a bill that would list the wolf as a
@@ -533,7 +533,7 @@ overwhelming support.</p>
 CARD
 )
 wolf_p5_c3 = wolf_p5.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>In accordance with the requirements of <em>PA 377</em> to make decisions
 based on sound science, the NRC asked the Michigan DNR to make a
@@ -549,13 +549,13 @@ for harvesting in each area.</p>
 CARD
 )
 wolf_p5_c4 = wolf_p5.cards.create(
-order: 4,
+position: 4,
 content: <<-CARD
 <h2>Neighboring states: Examples for Michigan?</h2>
 CARD
 )
 wolf_p5_c5 = wolf_p5.cards.create(
-order: 5,
+position: 5,
 content: <<-CARD
 <p>Michigan can look to its neighbors to the west for a picture of how a wolf
 hunt might play out. Following federal delisting early in 2012, Minnesota and
@@ -566,7 +566,7 @@ during the decision-making process.</p>
 CARD
 )
 wolf_p5_c6 = wolf_p5.cards.create(
-order: 6,
+position: 6,
 content: <<-CARD
 <p>Minnesota’s wolf hunt was authorized by its legislature after classifying
 wolves as small game through state statute. The Minnesota DNR performed a
@@ -578,7 +578,7 @@ harvest targets of 18, 117, and 265, respectively. The 2012 hunt resulted in
 CARD
 )
 wolf_p5_c7 = wolf_p5.cards.create(
-order: 7,
+position: 7,
 content: <<-CARD
 <p>Wisconsin’s wolf hunt was also authorized through a state statute that
 requires a wolf hunting and trapping season. Act 169, signed in April 2012,
@@ -592,9 +592,9 @@ the DNR set a quota of 201, with an actual harvest of 117.</p>
 CARD
 )
 
-wolf_p6 = wolf.pages.create( order: 6, title: "The choice at hand" )
+wolf_p6 = wolf.pages.create( position: 6, title: "The choice at hand" )
 wolf_p6_c1 = wolf_p6.cards.create(
-order: 1,
+position: 1,
 content: <<-CARD
 <p>J. R. Richardson stares at the stack of public comments, the DNR
 recommendation, and a pile of expert interviews, knowing that the fate of
@@ -611,7 +611,7 @@ social and political implications</a> of the decision.</p>
 CARD
 )
 wolf_p6_c2 = wolf_p6.cards.create(
-order: 2,
+position: 2,
 content: <<-CARD
 <p>Richardson has also become aware that the NRC’s choice is not limited to a
 simple yes or no on a hunt, but a range of related questions as to who should
@@ -624,7 +624,7 @@ economic opportunity.</p>
 CARD
 )
 wolf_p6_c3 = wolf_p6.cards.create(
-order: 3,
+position: 3,
 content: <<-CARD
 <p>He wonders whether there is a scientifically correct answer? Or an
 ethically correct answer? Do the politics of the matter warrant a decision
@@ -669,14 +669,13 @@ scientifique, politique, économique et sociale. En fin de compte, on s’attend
 à formuler une recommandation de politique responsable et durable concernant la
 population de loups du Michigan.
 SUMMARY
-)
 
 wolf.translators = ["Franck Kumba Binze"]
 wolf.save
 
-wolf_p1.update_columns title: "Introduction"
+wolf_p1.update_attributes title: "Introduction"
 
-wolf_p1_c1.update_columns(
+wolf_p1_c1.update_attributes(
 content: <<-CARD
 <p><strong>J. R. Richardson</strong> marqua une pause à propos des documents
 qu’il lisait pour réfléchir sur la décision difficile qu’il devrait prendre
@@ -696,7 +695,7 @@ l’opinion publique.</p>
 CARD
 )
 
-wolf_p1_c2.update_columns(
+wolf_p1_c2.update_attributes(
 content: <<-CARD
 <p>La CRN, dont le travail consiste à réguler les espèces chassables, ne
 semble pas être l’organe décisionnel le plus approprié quand il s’agit des
@@ -714,7 +713,7 @@ entraîné que la responsabilité de réglementer toute chasse publique au loup
 revienne au CRN.</p>
 CARD
 )
-wolf_p1_c3.update_columns(
+wolf_p1_c3.update_attributes(
 content: <<-CARD
 <p>Pour avoir résidé toute sa vie dans la Péninsule Supérieure (PS ou UP)
 de l’Etat du Michigan, où se trouve la population de loups de l’Etat, mais
@@ -747,9 +746,9 @@ questions qui pesaient lourdement dans son esprit.</p>
 CARD
 )
 
-wolf_p2.update_columns title: "L’histoire de loups gris dans les États-Unis et le Michigan"
+wolf_p2.update_attributes title: "L’histoire de loups gris dans les États-Unis et le Michigan"
 
-wolf_p2_c1.update_columns(
+wolf_p2_c1.update_attributes(
 content: <<-CARD
 <p>L’histoire des <a data-edgenote="gray-wolf">loups
 gris</a> dans le Michigan, qui évolue en parallèle avec la grande histoire
@@ -774,7 +773,7 @@ de l’environnement, a reflété le sentiment d’une Nation lorsqu’il appela
 les loups “bêtes de déchets et de désolation.”</p>
 CARD
 )
-wolf_p2_c2.update_columns(
+wolf_p2_c2.update_attributes(
 content: <<-CARD
 <p>Le programme fédéral de primes de fourrure de loup a décimé les
 populations de loups à travers tout le pays, et les loups du Michigan n’ont
@@ -798,7 +797,7 @@ place de l’association fédérale des <em>Actes pour les espèces menacées
 d’extinction</em> (AEME) en 1973.</p>
 CARD
 )
-wolf_p2_c3.update_columns(
+wolf_p2_c3.update_attributes(
 content: <<-CARD
 <p>Il y avait des signes que le retour des loups était probable comme le
 soulignent les rapports d’observation dans la PS du Michigan, mentionnant
@@ -818,7 +817,7 @@ favorables au retour des loups, notamment la majorité des habitants du
 Michigan ont soutenu le rétablissement du loup dans l’État.</p>
 CARD
 )
-wolf_p2_c4.update_columns(
+wolf_p2_c4.update_attributes(
 content: <<-CARD
 <p>La protection fédérale et étatique a été déterminante dans le
 rétablissement des loups. Le Plan de relance des loups, mis au place en 1994
@@ -838,14 +837,14 @@ contrôle total à l’état du Michigan pour gérer ses populations de loup.</p
 CARD
 )
 
-wolf_p3.update_columns title: "a biologie, la conservation et la gestion scientifique"
+wolf_p3.update_attributes title: "a biologie, la conservation et la gestion scientifique"
 
-wolf_p3_c1.update_columns(
+wolf_p3_c1.update_attributes(
 content: <<-CARD
 <h2>L’importance des loups dans un écosystème</h2>
 CARD
 )
-wolf_p3_c2.update_columns(
+wolf_p3_c2.update_attributes(
 content: <<-CARD
 <p>Les loups gris sont considérés comme une espèce clé qui joue un rôle
 unique dans le maintien de la santé de nombreux écosystèmes. L’étude
@@ -872,7 +871,7 @@ laissées par les loups servent de nourriture aux charognards, qui
 contribuent à la biodiversité du paysage.</p>
 CARD
 )
-wolf_p3_c3.update_columns(
+wolf_p3_c3.update_attributes(
 content: <<-CARD
 <p>Bien que la réintroduction du loup a conduit à une spectaculaire
 restauration de la biodiversité et les écosystèmes riverains à Yellowstone,
@@ -889,7 +888,7 @@ introduits ont maintenant réduit les déplacements du wapiti, il faudra plus
 pour inverser l’hydrologie et changer le paysage de Yellowstone.</p>
 CARD
 )
-wolf_p3_c4.update_columns(
+wolf_p3_c4.update_attributes(
 content: <<-CARD
 <p>Dans le Michigan, les loups sont un prédateur essentiel du cerf de
 Virginie, une espèce de migratoire (navigation) qu’on trouve couramment dans
@@ -903,7 +902,7 @@ recommandées, réduisant la diversité des plantes à l’extrême, et en créa
 quasiment des mono-cultures.”</p>
 CARD
 )
-wolf_p3_c5.update_columns(
+wolf_p3_c5.update_attributes(
 content: <<-CARD
 <p>Les chasseurs ont noté que la population croissante de loups dans la
 Péninsule Supérieure du Michigan coïncide avec <a
@@ -923,13 +922,13 @@ serait peut être nécessaire que les loups soient non seulement présents,
 mais qu’ils assurent également une densité écologiquement efficace.”</p>
 CARD
 )
-wolf_p3_c6.update_columns(
+wolf_p3_c6.update_attributes(
 content: <<-CARD
 <h2>La responsabilité de la gestion du loup dans le Michigan&nbsp;: le DNR et
 les autres entités</h2>
 CARD
 )
-wolf_p3_c7.update_columns(
+wolf_p3_c7.update_attributes(
 content: <<-CARD
 <p>Le ministère des ressources naturelles du Michigan est responsable de la
 conservation, la protection et la gestion des ressources naturelles et
@@ -946,7 +945,7 @@ considérations biologiques, sociales et économiques, comme nous le verrons
 plus loin ci-dessous.</p>
 CARD
 )
-wolf_p3_c8.update_columns(
+wolf_p3_c8.update_attributes(
 content: <<-CARD
 <p>Divers comités et groupes au sein de la DNR contribuent à la prise de
 décision de gestion de la faune dans l’État. <em>Le Conseil consultatif de la
@@ -960,12 +959,12 @@ orientations de la DNR. Le CRN a aussi le pouvoir de réglementer les espèces
 chassables ou gibiers.</p>
 CARD
 )
-wolf_p3_c9.update_columns(
+wolf_p3_c9.update_attributes(
 content: <<-CARD
 <h2>La gestion du loup</h2>
 CARD
 )
-wolf_p3_c10.update_columns(
+wolf_p3_c10.update_attributes(
 content: <<-CARD
 <p>L’État et les organismes fédéraux de réglementation étudient les moyens
 d’atteindre les objectifs sociaux et écologiques dans le processus
@@ -978,7 +977,7 @@ protection des loups</a> tout en tenant compte de leur coexistence avec les
 humains.</p>
 CARD
 )
-wolf_p3_c11.update_columns(
+wolf_p3_c11.update_attributes(
 content: <<-CARD
 <p>Définir une politique de gestion réussie du loup dépend des objectifs de
 gestion de la population et le cadre pour l’établissement de ces objectifs.
@@ -1000,7 +999,7 @@ scientifique. Les objectifs de gestion sont développés de façon à établir u
 équilibre entre avantages de l’écosystème et les conflits humains.</p>
 CARD
 )
-wolf_p3_c12.update_columns(
+wolf_p3_c12.update_attributes(
 content: <<-CARD
 <p>La <em>table ronde des loups du Michigan</em>, un Comité d’intervenants
 reflétant les différents points de vue, a été convoquée par le DNR pour
@@ -1025,7 +1024,7 @@ n’était pas possible parce que le désaccord portait principalement sur des
 différences importantes dans les valeurs fondamentales”.</p>
 CARD
 )
-wolf_p3_c13.update_columns(
+wolf_p3_c13.update_attributes(
 content: <<-CARD
 <p>La gestion de la population des loups peut impliquer diverses méthodes de
 contrôle de la population, y compris le contrôle de la fertilité, la
@@ -1044,7 +1043,7 @@ Les chasseurs bénéficient d’une nouvelle opportunité, et les résidents
 perçoivent que le problème du conflit homme-loup est traité.</p>
 CARD
 )
-wolf_p3_c14.update_columns(
+wolf_p3_c14.update_attributes(
 content: <<-CARD
 <p>Les scientifiques des deux côtés du débat semblent reconnaître
 l’importance de l’équilibre entre les préoccupations sociales et écologiques,
@@ -1060,9 +1059,9 @@ y remédier.</p>
 CARD
 )
 
-wolf_p4.update_columns title: "Les humains et les loups : une relation délicate"
+wolf_p4.update_attributes title: "Les humains et les loups : une relation délicate"
 
-wolf_p4_c1.update_columns(
+wolf_p4_c1.update_attributes(
 content: <<-CARD
 p>Les loups occupent une place distincte dans la culture occidentale
 européenne. Les histoires d’enfants et les contes de fées écrits il y a des
@@ -1075,12 +1074,12 @@ est-il un réel problème&nbsp;? Les loups ont-ils besoin d’être traités com
 une menace à la vie humaine et à nos moyens de subsistance?</p>
 CARD
 )
-wolf_p4_c2.update_columns(
+wolf_p4_c2.update_attributes(
 content: <<-CARD
 <h2>Les attaques sur les personnes et les chiens</h2>
 CARD
 )
-wolf_p4_c3.update_columns(
+wolf_p4_c3.update_attributes(
 content: <<-CARD
 <p>Il y a quelques documents sur des décès humains causés par le loup en
 Amérique du Nord. Depuis 2000, trois décès documentés sont survenus à la
@@ -1095,7 +1094,7 @@ déclaré qu’aucun décès humain n’a été attribué à des loups sains dep
 par opposition aux décès attribués aux loups atteints de la rage.</p>
 CARD
 )
-wolf_p4_c4.update_columns(
+wolf_p4_c4.update_attributes(
 content: <<-CARD
 <p>Alors qu’aucune attaque documentée de loup sur les êtres humains n’a eu
 lieu dans le Michigan, il y a eu une poignée d’attaques sur les chiens. Un
@@ -1106,7 +1105,7 @@ Supérieure. pense que les loups sont de plus en plus à l’aise avec les
 humains</a>, ce qui accroît les risques que loups attaquent les gens.</p>
 CARD
 )
-wolf_p4_c5.update_columns(
+wolf_p4_c5.update_attributes(
 content: <<-CARD
 <p>Dans un mémo d’avril 2013, le DNR a fait un commentaire sur les
 interactions homme-loup dans le comté de Gogebic, MI:</p>
@@ -1130,12 +1129,12 @@ tient compte de l’absence des loups pendant la majeure partie du XXe
 siècle.</p>
 CARD
 )
-wolf_p4_c6.update_columns(
+wolf_p4_c6.update_attributes(
 content: <<-CARD
 <h2>Les perturbations sur l’élevage</h2>
 CARD
 )
-wolf_p4_c7.update_columns(
+wolf_p4_c7.update_attributes(
 content: <<-CARD
 <p>Le type de perturbation de l’élevage le plus visible est la déprédation,
 quand les loups attaquent et blessent ou tuent le bétail. En Amérique du
@@ -1162,9 +1161,9 @@ programmes visant à atténuer l’impact des déprédations des loups.</p>
 CARD
 )
 
-wolf_p5.update_columns title: "Une saga politique et réglementaire"
+wolf_p5.update_attributes title: "Une saga politique et réglementaire"
 
-wolf_p5_c1.update_columns(
+wolf_p5_c1.update_attributes(
 content: <<-CARD
 <p>Le sentier qui mène jusqu’à la décision du CRN est marqué par un drame
 politique, en ce sens que la législature ou le Parlement du Michigan a pris,
@@ -1184,7 +1183,7 @@ possible… utilise les principes de bonne gestion scientifique dans les
 décisions concernant la chasse du gibier.</p>
 CARD
 )
-wolf_p5_c2.update_columns(
+wolf_p5_c2.update_attributes(
 content: <<-CARD
 <p>En 2012, le sénateur de l’État Tom Casperson (R-Escanaba), représentant
 un district congestionnel de la Péninsule Supérieure, présenta un projet
@@ -1207,7 +1206,7 @@ groupes luttant contre la chasse. Ce projet de loi fut également adopté par
 le Parlement avec un soutien écrasant.</p>
 CARD
 )
-wolf_p5_c3.update_columns(
+wolf_p5_c3.update_attributes(
 content: <<-CARD
 <p>Selon les prescriptions de la loi <em>377 AP</em>, pour prendre des
 décisions, on se base sur des principes scientifiques. Alors le CRN a demandé
@@ -1223,12 +1222,12 @@ des Services de l’agriculture et de la faune aux États-Unis en 2012, le
 nombre de loups autorisé d’être chassé dans chaque région.</p>
 CARD
 )
-wolf_p5_c4.update_columns(
+wolf_p5_c4.update_attributes(
 content: <<-CARD
 <h2>Les pays voisins: des exemples pour le Michigan</h2>
 CARD
 )
-wolf_p5_c5.update_columns(
+wolf_p5_c5.update_attributes(
 content: <<-CARD
 <p>L’Etat du Michigan peut regarder chez ses voisins de l’ouest comment une
 chasse au loup pourrait s’y dérouler. Après la radiation de la liste fédérale
@@ -1240,7 +1239,7 @@ significativement des troubles politiques importants pendant le processus
 décisionnel.</p>
 CARD
 )
-wolf_p5_c6.update_columns(
+wolf_p5_c6.update_attributes(
 content: <<-CARD
 <p>La Chasse au loup du Minnesota a été autorisée par sa législature après un
 certain classement des loups comme petits gibiers grâce à la loi de l’État.
@@ -1253,7 +1252,7 @@ avec des objectifs de récolte s’élevant respectivement à 18, 117 et 265. En
 400.</p>
 CARD
 )
-wolf_p5_c7.update_columns(
+wolf_p5_c7.update_attributes(
 content: <<-CARD
 <p>La chasse au loup du Wisconsin a été également autorisée par une loi de
 l’État qui admet une chasse au loup et une saison de piégeage appropriées. La
@@ -1268,9 +1267,9 @@ récolte réelle de 117.</p>
 CARD
 )
 
-wolf_p6.update_columns title: "Le choix à portée de main"
+wolf_p6.update_attributes title: "Le choix à portée de main"
 
-wolf_p6_c1.update_columns(
+wolf_p6_c1.update_attributes(
 content: <<-CARD
 <p>J. R. Richardson fixe de regard la pile des observations du public, la
 recommandation de DNR et un tas d’interviews d’experts, sachant que le sort
@@ -1288,7 +1287,7 @@ ainsi établi, Richardson n’a aucun autre choix que de considérer les
 politiques complexes</a> de cette décision.</p>
 CARD
 )
-wolf_p6_c2.update_columns(
+wolf_p6_c2.update_attributes(
 content: <<-CARD
 <p>Richardson s’est aussi rendu compte que le choix du CRN n’est pas limité à
 un simple oui ou non sur une chasse, mais il s’agit de répondre à une série
@@ -1302,7 +1301,7 @@ important de commencer par des moyens de contrôle non létal. Mais d’autres
 économiques et de loisir.</p>
 CARD
 )
-wolf_p6_c3.update_columns(
+wolf_p6_c3.update_attributes(
 content: <<-CARD
 <p>Il se demande donc s’il existe une réponse scientifiquement correcte ou
 une réponse correcte sur le plan éthique. Est-ce que la politique de cette
@@ -1332,7 +1331,7 @@ I18n.locale = :en
 pod = wolf.podcasts.build(
   title: "Ecology of Fear and Fear of Ecology — Can science do more to improve human–wildlife cohabitation?",
   audio_url: "http://www.hotinhere.us/podcast-download/28/ecology-of-fear-and-fear-of-ecology.mp3?ref=download",
-  order: 1,
+  position: 1,
   description: "<p>Our hosts were joined in-studio and by pre-recorded interviews by guests including, Dr. Matthew Kauffman from the Wyoming Migration Initiative, Maurita Holland from the Washtenaw Citizens for Ecological Balance, and Mayank Vikas from the UM School of Natural Resources and Environment.</p>",
   artwork_url: "https://www.nps.gov/common/uploads/photogallery/imr/park/yell/954CBB82-155D-451F-6759DA7CD789DC9F/954CBB82-155D-451F-6759DA7CD789DC9F.jpg",
   credits_list: {
@@ -1349,7 +1348,7 @@ pod.title = "En anglais: L’écologie de la peur et la peur de l’écologie. "
 pod.save
 
 I18n.locale = :en
-perspectives = wolf.activities.build title: "Stakeholder perspectives", pdf_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/03/wolf-stakeholder-perspectives.pdf", order: 1
+perspectives = wolf.activities.build title: "Stakeholder perspectives", pdf_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/03/wolf-stakeholder-perspectives.pdf", position: 1
 I18n.locale = :fr
 perspectives.title = "Les perspectives des intervenants"
 perspectives.pdf_url = "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/05/wolf-stakeholder-perspectives-French.pdf"
