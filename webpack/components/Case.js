@@ -75,6 +75,7 @@ class Case extends React.Component {
                                                     summary: c.summary,
                                                     coverURL: c.cover_url,
                                                     podcasts: c.podcasts,
+                                                    edgenotes: c.edgenotes,
                                                     activities: c.activities
                                                   })}
       </div>

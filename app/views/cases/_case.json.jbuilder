@@ -7,6 +7,9 @@ json.pages c.pages do |page|
     json.extract! card, *%i(id position solid content)
   end
 end
+json.edgenotes do
+  json.array! c.edgenotes.map(&:slug)
+end
 json.podcasts c.podcasts do |podcast|
   json.partial! podcast
 end

@@ -6,29 +6,13 @@ import gatherEdgenotes from '../gatherEdgenotes.js'
 import { I18n } from "./I18n.js"
 
 class EdgenoteGallery extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      edgenoteSlugs: []
-    }
-  }
-
-  setEdgenotes(contents) {
-    let edgenoteSlugs = gatherEdgenotes(contents)
-    this.setState({edgenoteSlugs: edgenoteSlugs})
-  }
-
-  componentDidMount() {
-    let contents = window.caseData.segments.length > 0 ? window.caseData.segments.map((x) => {return x[1]}) : ""
-    this.setEdgenotes(contents)
-  }
 
   renderEdgenotes() {
     let block
-    if (this.state.edgenoteSlugs.length != 0) {
+    if (this.props.edgenotes != 0) {
       block = <div className="edgenotes">
                 {
-                  this.state.edgenoteSlugs.map( (slug) => {
+                  this.props.edgenotes.map( (slug) => {
                     return (
                       <Edgenote
                         random={true}
@@ -48,16 +32,15 @@ class EdgenoteGallery extends React.Component {
   }
 
   render() {
-    let {slug, coverURL, title, segmentTitles, handleEdit} = this.props
-    let selectedSegment = parseInt(this.props.params.selectedSegment) - 1
+    let {slug, coverURL, title, pages, handleEdit} = this.props
     return (
       <div className="window">
         <Sidebar
           slug={slug}
           coverURL={coverURL}
           title={title}
-          segmentTitles={segmentTitles}
-          selectedSegment={selectedSegment}
+          pageTitles={pages.map( (p) => { return p.title } )}
+          selectedPage={null}
           handleEdit={handleEdit}
         />
         <main id="EdgenoteGallery">
