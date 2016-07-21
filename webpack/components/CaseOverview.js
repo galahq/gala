@@ -54,9 +54,8 @@ class Actions extends React.Component {
 
   renderPodcasts() {
     let podcasts = this.props.podcasts
-    let list = podcasts.sort((a, b) => { return a.order - b.order })
-      .map( (pod) => {
-        return <Link key={`podcast-${pod.order}`} to={`podcasts/${pod.order}`}>{pod.title}</Link>
+    let list = podcasts.map( (pod) => {
+        return <Link key={`podcast-${pod.position}`} to={`podcasts/${pod.position}`}>{pod.title}</Link>
     } )
     if ((podcasts && podcasts.length !== 0) || this.props.handleEdit !== null) {
       return (

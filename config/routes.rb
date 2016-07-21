@@ -7,8 +7,8 @@ Rails.application.routes.draw do
     resources :comment_threads
     resources :comments
     resources :cases, param: :slug do
-      resources :activities, param: :order
-      resources :podcasts, param: :order
+      resources :activities, param: :position
+      resources :podcasts, param: :position
       resources :edgenotes, shallow: true, param: :slug
     end
     devise_for :readers, skip: :omniauth_callbacks

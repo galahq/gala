@@ -110,7 +110,7 @@ export class PodcastOverview extends React.Component {
   }
 
   componentDidMount() {
-    let pod = this.props.podcasts.find( (p) => {return p.order === parseInt(this.props.params.podcastID)} )
+    let pod = this.props.podcasts.find( (p) => {return p.position === parseInt(this.props.params.podcastID)} )
     this.setState ({
       pod: pod
     })
@@ -121,7 +121,7 @@ export class PodcastOverview extends React.Component {
   }
 
   render () {
-    let {slug, title, coverURL, segmentTitles, selectedSegment, handleEdit} = this.props
+    let {slug, title, coverURL, pages, handleEdit} = this.props
     let description = {__html: this.state.pod.description}
 
     return (
@@ -131,18 +131,18 @@ export class PodcastOverview extends React.Component {
           slug={slug}
           coverURL={coverURL}
           title={title}
-          segmentTitles={segmentTitles}
-          selectedSegment={selectedSegment}
+          pageTitles={pages.map( (p) => { return p.title } )}
+          selectedPage={null}
           handleEdit={handleEdit}
         />
 
         <Podcast podcast={this.state.pod} />
 
         <div className="PodcastInfo">
-          <Card
-            handleEdit={this.props.handleEdit}
-            prepareSave={this.prepareSave.bind(this)}
-            contents={description}
+          <div className="Card"
+            contentEditable={this.props.handleEdit !== null}
+            onBlur={this.prepareSave.bind(this)}
+            dangerouslySetInnerHTML={description}
           />
         </div>
 
