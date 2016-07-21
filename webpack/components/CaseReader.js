@@ -18,11 +18,13 @@ class CaseReader extends React.Component {
   }
 
   render () {
-    let {slug, coverURL, title, segmentContents, segmentTitles, handleEdit} = this.props
-    let selectedSegment = parseInt(this.props.params.selectedSegment) - 1
+    let {slug, coverURL, title, pages, handleEdit} = this.props
+    let selectedPage = parseInt(this.props.params.selectedPage) - 1
+
+    let pageTitles = this.props.pages.map( (p) => { return p.title } )
 
     if (title !== "") {
-      this.log(title, selectedSegment, segmentTitles[selectedSegment])
+      this.log(title, selectedPage, pageTitles[selectedPage])
     }
 
     return (
@@ -31,14 +33,13 @@ class CaseReader extends React.Component {
           slug={slug}
           coverURL={coverURL}
           title={title}
-          segmentTitles={segmentTitles}
-          selectedSegment={selectedSegment}
+          pageTitles={pageTitles}
+          selectedPage={selectedPage}
           handleEdit={handleEdit}
         />
         <Narrative
-          segmentTitles={segmentTitles}
-          segmentContents={segmentContents}
-          selectedSegment={selectedSegment}
+          pages={pages}
+          selectedPage={selectedPage}
           handleEdit={handleEdit}
         />
         {this.props.children}

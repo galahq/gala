@@ -49,7 +49,6 @@ class Case extends React.Component {
     let c = this.state.caseData
 
     let editStatusBar
-
     if (this.editing()) {
       editStatusBar = <div className="flash flash-editing">
                         <I18n meaning={this.state.saveMessage} />
@@ -72,8 +71,7 @@ class Case extends React.Component {
                                                     slug: c.slug,
                                                     title: c.title,
                                                     caseAuthors: c.case_authors,
-                                                    segmentTitles: c.segments.map( (x) => { return x[0] } ),
-                                                    segmentContents: this.generateChapters(c.segments),
+                                                    pages: c.pages,
                                                     summary: c.summary,
                                                     coverURL: c.cover_url,
                                                     podcasts: c.podcasts,

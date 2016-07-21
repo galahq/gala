@@ -7,11 +7,11 @@ import TableOfContents from './TableOfContents.js'
 
 class Sidebar extends React.Component {
   renderTOC() {
-    if (this.props.segmentTitles) {
+    if (this.props.pageTitles) {
       return (
         <TableOfContents
-          segmentTitles={this.props.segmentTitles}
-          selectedSegment={this.props.selectedSegment}
+          pageTitles={this.props.pageTitles}
+          selectedPage={this.props.selectedPage}
           handleEdit={this.props.handleEdit}
         />
       )

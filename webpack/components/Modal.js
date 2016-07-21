@@ -108,8 +108,8 @@ class Modal extends React.Component {
   }
 
   returnLink() {
-    if (this.props.params.selectedSegment) {
-      return `/${this.props.params.selectedSegment}`
+    if (this.props.params.selectedPage) {
+      return `/${this.props.params.selectedPage}`
     } else {
       return `/edgenotes`
     }

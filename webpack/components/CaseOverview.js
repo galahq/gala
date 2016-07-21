@@ -82,6 +82,7 @@ class Actions extends React.Component {
   }
 
   render() {
+    let pageTitles = this.props.pages.map( (p) => { return p.title } )
     return (
       <aside className="Actions">
 
@@ -95,8 +96,8 @@ class Actions extends React.Component {
           </h2>
           <TableOfContents
             slug={this.props.slug}
-            segmentTitles={this.props.segmentTitles}
-            currentSegment={null}
+            pageTitles={pageTitles}
+            currentPage={null}
             handleEdit={this.props.handleEdit}
           />
         </div>

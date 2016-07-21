@@ -28,27 +28,25 @@ class Narrative extends React.Component {
   }
 
   nextLink() {
-    let nextChapterID = this.props.selectedSegment + 2
-    if (nextChapterID - 1 < this.props.segmentContents.length) {
-      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.segmentTitles[nextChapterID - 1]}</Link>
+    let nextChapterID = this.props.selectedPage + 2
+    if (nextChapterID - 1 < this.props.pages.length) {
+      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.pages[nextChapterID - 1].title}</Link>
     } else {
       return <footer><h2><I18n meaning="end" /></h2></footer>
     }
   }
 
   render() {
-    let i = this.props.selectedSegment
-    if (this.props.segmentContents.length === 0) {
+    let i = this.props.selectedPage
+    if (this.props.pages.length === 0) {
       return <article />
     }
-    let segment = this.props.segmentContents[i]
+    let page = this.props.pages[i]
     return (
       <main>
         <a id="top" />
-        <Chapter
-          selectedSegment={i}
-          segmentTitle={this.props.segmentTitles[i]}
-          paragraphs={segment}
+        <Page
+          page={page}
           handleEdit={this.props.handleEdit}
         />
         {this.nextLink()}
@@ -59,56 +57,39 @@ class Narrative extends React.Component {
 
 export default Narrative
 
-class Chapter extends React.Component {
-  renderParagraph(paraNode, index) {
-    switch (paraNode.nodeName){
-      case "H1": case "H2": case "H3": case "H4": case "H5": case "H6":
-        let innerHTML = {__html: paraNode.innerHTML}
-        let element = React.createElement(paraNode.nodeName, {dangerouslySetInnerHTML: innerHTML})
-        return <NonParagraph key={`P${index}`} contents={element} handleEdit={this.props.handleEdit} />
-      case "P":
-        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.outerHTML} handleEdit={this.props.handleEdit} />
-      case "UL": case "OL": case "BLOCKQUOTE": case "SECTION":
-        return <Paragraph selectedSegment={this.props.selectedSegment} id={index} key={`P${index}`} contents={paraNode.innerHTML} handleEdit={this.props.handleEdit} />
-    }
-  }
-
+class Page extends React.Component {
   render() {
-    let paragraphs = this.props.paragraphs.map( (para, i) => {
-      return this.renderParagraph(para, i)
+    let {page} = this.props
+    let cards = page.cards.map( (card, i) => {
+      return <Card id={i} key={`c${i}`}
+                   handleEdit={this.props.handleEdit}
+                   selectedPage={page.position}
+                   solid={card.solid}
+                   card={card} />
     } )
-    return(
+
+    return (
       <article>
-        <NonParagraph contents={<h1>{this.props.segmentTitle}</h1>} handleEdit={this.props.handleEdit} />
-        {paragraphs}
+        <section><h1>{page.title}</h1></section>
+        {cards}
       </article>
     )
   }
 }
 
-class NonParagraph extends React.Component {
-  render() {
-    return (
-      <section contentEditable={this.props.handleEdit !== null}>
-        {this.props.contents}
-      </section>
-    )
-  }
-}
-
 String.prototype.addAttributeToLinks = function (attribute) {
-  return this.replace(/(<a data-edgenote=\"([a-zA-Z0-9-]+)\")/g, '$1 ' + attribute)
+  return this.replace(/(data-edgenote=\"([a-zA-Z0-9-]+)\")/g, '$1 ' + attribute)
 }
 
 String.prototype.addAttributeToLinksPointingToEdgenoteID = function (id, attribute) {
-  return this.replace(new RegExp('(<a data-edgenote=\"'+id+'\")', 'g'), '$1 ' + attribute)
+  return this.replace(new RegExp('(data-edgenote=\"'+id+'\")', 'g'), '$1 ' + attribute)
 }
 
 String.prototype.addHREF = function(firstPartOfPath) {
   return this.addAttributeToLinks(`href=\"#${firstPartOfPath}/edgenotes/$2\"`)
 }
 
-class Paragraph extends React.Component {
+class Card extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -121,7 +102,7 @@ class Paragraph extends React.Component {
     let mouseover = 'onmouseover=\'window.handleHover'+this.props.id+'(\"$2\")\''
     let mouseout = 'onmouseout=\'window.handleHover'+this.props.id+'(null)\''
     return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout)
-      .addHREF(`/${this.props.selectedSegment + 1}`) }
+      .addHREF(`/${this.props.selectedPage + 1}`) }
   }
 
   setEdgenotes(contents) {
@@ -136,13 +117,13 @@ class Paragraph extends React.Component {
   }
 
   componentDidMount() {
-    this.setEdgenotes(this.props.contents)
+    this.setEdgenotes(this.props.card.content)
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.selectedSegment !== nextProps.selectedSegment) {
+    if (this.props.selectedPage !== nextProps.selectedPage) {
       this.setState({ edgenoteSlugs: [] })
-      this.setEdgenotes(nextProps.contents)
+      this.setEdgenotes(nextProps.card.content)
     }
   }
 
@@ -154,7 +135,7 @@ class Paragraph extends React.Component {
                   this.state.edgenoteSlugs.map( (slug) => {
                     return (
                       <Edgenote
-                        pathPrefix={`/${this.props.selectedSegment + 1}`}
+                        pathPrefix={`/${this.props.selectedPage}`}
                         selectedEdgenote={this.state.selectedEdgenote}
                         slug={slug}
                         key={`edgenote_${slug}`}
@@ -168,27 +149,19 @@ class Paragraph extends React.Component {
     return aside
   }
 
+  prepareSave() {}
+
   render() {
     //let paragraph = this.props.contents.addAttributeToLinksPointingToEdgenoteID(this.state.selected_id, 'class="focus"')
-    let paragraph = this.props.contents
+    let paragraph = this.props.card.content
     return (
       <section>
-        <Card contents={this.addHoverCallbacksToParagraphText(paragraph)} handleEdit={this.props.handleEdit} />
+        <div className={this.props.card.solid ? "Card" : ""}
+          contentEditable={this.props.handleEdit !== null}
+          dangerouslySetInnerHTML={this.addHoverCallbacksToParagraphText(paragraph)}
+          onBlur={this.prepareSave.bind(this)} />
         {this.renderEdgenotes()}
       </section>
-    )
-  }
-}
-
-export class Card extends React.Component {
-  render () {
-    return (
-      <div
-        className="Card"
-        contentEditable={this.props.handleEdit !== null}
-        onBlur={this.props.prepareSave}
-        dangerouslySetInnerHTML={this.props.contents}
-      />
     )
   }
 }
