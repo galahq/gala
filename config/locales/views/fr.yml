@@ -10,6 +10,11 @@ fr:
         avec nous.
       featured_cases: Cas d’étude en vedette
       case_index: L’indice des cas d’étude
+      learn_more: En savoir plus sur ce que nous faisons
+    case:
+      translator:
+        one: Traducteur(-rice)
+        many: Traducteurs(-rices)
   reader:
     show:
       my_account: 'Mon compte'

@@ -11,10 +11,10 @@ export class Billboard extends React.Component {
   }
 
   render() {
-    let {title, coverURL, summary, caseAuthors, handleEdit} = this.props
+    let {title, coverURL, summary, caseAuthors, translators, handleEdit} = this.props
     return (
       <section className="Billboard">
-        <BillboardTitle title={title} coverURL={coverURL} caseAuthors={caseAuthors} handleEdit={handleEdit} />
+        <BillboardTitle title={title} translators={translators} coverURL={coverURL} caseAuthors={caseAuthors} handleEdit={handleEdit} />
         <div className="Card BillboardSnippet">
           <h3><I18n meaning="summary" /></h3>
           <p contentEditable={handleEdit !== null} onBlur={this.prepareSave.bind(this)}>

@@ -10,6 +10,10 @@ en:
       featured_cases: Featured Cases
       case_index: Case Index
       learn_more: Learn more about what we’re doing
+    case:
+      translator:
+        one: Translator
+        many: Translators
   reader:
     show:
       my_account: 'My Account'

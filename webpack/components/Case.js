@@ -71,6 +71,7 @@ class Case extends React.Component {
                                                     slug: c.slug,
                                                     title: c.title,
                                                     caseAuthors: c.case_authors,
+                                                    translators: c.translators,
                                                     pages: c.pages,
                                                     summary: c.summary,
                                                     coverURL: c.cover_url,

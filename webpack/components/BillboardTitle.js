@@ -5,10 +5,20 @@ class BillboardTitle extends React.Component {
     this.props.handleEdit("title", e.target.innerText)
   }
 
+  renderTranslators() {
+    if (this.props.translators !== "") {
+      return <em>{this.props.translators}</em>
+    }
+  }
+
   renderAuthors() {
     let {caseAuthors} = this.props
     if (caseAuthors && caseAuthors !== "") {
-      return <h4>{caseAuthors}</h4>
+      return (<h4>
+        {caseAuthors}
+        <br />
+        {this.renderTranslators()}
+      </h4>)
     }
   }
 
