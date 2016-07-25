@@ -83,7 +83,11 @@
     "back_to_overview": "返回主页",
     "next": "下一页：",
     "open_in_new_tab": "在新的窗口中打开",
-    "end": "终"
+    "end": "终",
+    "saved": "已保存",
+    "saving": "保存中",
+    "with_host": "主持：",
+    "with_hosts": "主持："
   },
 
   "zh-TW": {

@@ -100,3 +100,6 @@ zh-CN:
         remember_me: "记住登录信息"
         reset_password_token: 
         unlock_token: 
+  devise:
+    sessions:
+      destroy: 登出
