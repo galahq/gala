@@ -198,7 +198,7 @@ zh-CN:
         delimiter: ''
   support:
     array:
-      last_word_connector: "、"
+      last_word_connector: "和"
       two_words_connector: "和"
       words_connector: "、"
   time:
