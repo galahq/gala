@@ -1,0 +1,19 @@
+am:
+  cases:
+    index:
+      title: በሁሉም ጉዳዮች
+      redefining_sustainability_education: አካባቢያዊ ዘላቂነት ስለ የፈጠራ ትምህርት
+      intro_paragraph: |
+        MSCs አካባቢያዊ ዘላቂነት ውስጥ ተግባራዊ ትምህርት ለመስጠት መሳጭ እና ለመመርመር የትምህርት አቀራረብ ይሰጣሉ.
+        ከእኛ ጋር ለማወቅ አንድ ነጻ መለያ ይመዝገቡ.
+      featured_cases: ተለይተው የቀረቡ ጉዳዮች
+      case_index: ጉዳዮች መረጃ ጠቋሚ
+      learn_more: እኛ ምን እየሰሩ ተጨማሪ ይወቁ
+    case:
+      forthcoming: ከማሰማቱም
+      translator:
+        one: ተርጓሚ
+        many: ተርጓሚዎች
+  reader:
+    show:
+      my_account: አካውንቴ
