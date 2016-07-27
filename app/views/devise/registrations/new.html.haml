@@ -14,21 +14,26 @@
     = f.text_field :initials, tabindex: 10
 
   .field
+    = f.label :locale
+    %br
+    = f.select :locale, options_for_select(locale_names), tabindex: 2
+
+  .field
     = f.label :email
     %br
-    = f.email_field :email, tabindex: 2
+    = f.email_field :email, tabindex: 3
 
   .field
     = f.label :password
     - if @minimum_password_length
       %em= t '.minimum_characters', count: @minimum_password_length
     %br
-    = f.password_field :password, autocomplete: "off", tabindex: 3
+    = f.password_field :password, autocomplete: "off", tabindex: 4
 
   .field
     = f.label :password_confirmation
     %br
-    = f.password_field :password_confirmation, autocomplete: "off", tabindex: 4
+    = f.password_field :password_confirmation, autocomplete: "off", tabindex: 5
 
   .actions
     = f.submit t('.sign_up')

@@ -17,4 +17,10 @@ module ApplicationHelper
   def resource_class
     devise_mapping.to
   end
+
+  def locale_names
+    I18n.available_locales.map do |l|
+      [I18n.t('name', locale: l), l]
+    end
+  end
 end
