@@ -16,7 +16,7 @@
   .field
     = f.label :locale
     %br
-    = f.select :locale, options_for_select(locale_names), tabindex: 2
+    = f.select :locale, options_for_select(locale_names, I18n.locale), tabindex: 2
 
   .field
     = f.label :email
