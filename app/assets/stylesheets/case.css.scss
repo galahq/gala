@@ -81,12 +81,14 @@
 .catalog-case-accessible {
   transition: box-shadow .15s cubic-bezier(.33, .66, .66, 1), transform .15s cubic-bezier(.33, .66, .66, 1);
 
-  &:hover {
+  &:hover,
+  &:focus {
     cursor: pointer;
     transform: scale(1.02);
     -webkit-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
     -moz-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
     box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+    outline: none;
   }
 }
 
