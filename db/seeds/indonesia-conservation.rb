@@ -206,10 +206,25 @@ CARD
 )
 
 pod = indonesia.podcasts.create(
-  title: "Financing Biodiversity Conservation: The case of the Bird’s Head Seascape",
+  title: "A Balancing Act: Marine Conservation in a Shifting Landscape",
   audio_url: "http://www.hotinhere.us/podcast-download/1259/financing-biodiversity-conservation-the-case-of-the-birds-head-seascape.mp3?ref=download",
   position: 1,
-  description: "<p>This week’s broadcast debuts a new partnership between IHIH and Michigan Sustainability Cases (MSC), a new case-based learning platform which integrates podcasts into sustainability curriculum. Hosts Katie Browne and Andrea Kraus first speak with Laure Katz of Conservation International about her role managing the transition of the Bird’s Head Seascape, from donor-supported to fully financially self-sustaining — in four short years. Suffice to say the demands of such a challenge live little time for sleep.</p><p>We are then joined in studio by Peter Pellitier, a student of both coral and soil, who conducted research in Papua New Guinea and the Coral Triangle a year ago. Peter speaks to the importance of protecting marine biodiversity, as a foundation of livelihoods and buffer against climate change, and the difficulty of sustaining homegrown conservation initiative.</p>",
+  description: <<-DESCRIPTION,
+  <p>Laure Katz, Director of Conservation International’s
+  Seascapes Program, and Peter Pellitier, former Fulbright Scholar in Papua New
+  Guinea, join hosts Andrea Kraus and Katie Browne to discuss the multifaceted
+  challenges of marine conservation in the Coral Triangle. As an epicenter of
+  marine biodiversity, the Bird’s Head Seascape is considered a conservation
+  priority, both by major international NGOs and the local populations which
+  rely upon its fisheries for livelihoods and way of life. Responsible for
+  managing the Seascape’s transition from donor-supported to fully financially
+  self-sustaining, Katz outlines the strategies, struggles, and loss of sleep
+  that have defined the transition’s four short years. Pellitier then speaks to
+  the importance of marine biodiversity as a foundation to livelihoods and
+    buffer to climate change, and outlines the difficulty of sustaining the sort
+  of homegrown conservation initiative Katz hopes the Bird’s Head Seascape will
+  grow to be.</p>
+DESCRIPTION
   artwork_url: "http://i0.wp.com/www.hotinhere.us/wp-content/uploads/2016/02/image-2.jpeg?zoom=2&resize=546%2C317",
   credits_list: {
     hosts: ["Katie Browne", "Andrea Kraus"],
