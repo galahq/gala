@@ -24,36 +24,39 @@
     }
   }
 
-  .Actions {
+  .CaseOverviewRight {
     @include flex($fg: 0, $fs: 1, $fb: 25em);
-    margin: 1em;
-    background-color: rgba( darken($black, 10%), 0.6 );
-    border-radius: 2pt;
-    height: 100%;
-    padding: 1em;
 
-    ul {
-      color: lighten($umichMaize, 20%);
-      list-style-type: circle;
-      margin: 0.5em 0;
-      padding-left: 1.5em;
-    }
+    & > * { margin: 1em; }
+    .Actions {
+      background-color: rgba( darken($black, 10%), 0.6 );
+      border-radius: 2pt;
+      height: 100%;
+      padding: 1em;
 
-    h2 {
-      color: $white;
-
-      .ActionIcon {
-        float: left;
-        margin-top: -5px;
-        margin-right: 0.5em;
+      ul {
+        color: lighten($umichMaize, 20%);
+        list-style-type: circle;
+        margin: 0.5em 0;
+        padding-left: 1.5em;
       }
-    }
 
-    & >div {
-      margin-top: 2em;
-    }
-    & > div:first-child {
-      margin-top: 1em;
+      h2 {
+        color: $white;
+
+        .ActionIcon {
+          float: left;
+          margin-top: -5px;
+          margin-right: 0.5em;
+        }
+      }
+
+      & >div {
+        margin-top: 2em;
+      }
+      & > div:first-child {
+        margin-top: 1em;
+      }
     }
   }
 }

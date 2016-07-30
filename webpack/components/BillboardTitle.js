@@ -24,7 +24,7 @@ class BillboardTitle extends React.Component {
 
   render() {
     return (
-      <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${this.props.coverURL})`}}>
+      <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${this.props.coverUrl})`}}>
         <h1 contentEditable={this.props.handleEdit !== null} onBlur={this.prepareSave.bind(this)}>
           {this.props.title}
         </h1>

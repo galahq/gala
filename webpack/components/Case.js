@@ -62,23 +62,12 @@ class Case extends React.Component {
                       </div>
     }
 
+    c.handleEdit = this.editing() ? this.saveChanges.bind(this) : null
+
     return (
       <div id="Case">
         {editStatusBar}
-        {this.props.children && React.cloneElement(this.props.children,
-                                                  {
-                                                    handleEdit: this.editing() ? this.saveChanges.bind(this) : null,
-                                                    slug: c.slug,
-                                                    title: c.title,
-                                                    caseAuthors: c.case_authors,
-                                                    translators: c.translators,
-                                                    pages: c.pages,
-                                                    summary: c.summary,
-                                                    coverURL: c.cover_url,
-                                                    podcasts: c.podcasts,
-                                                    edgenotes: c.edgenotes,
-                                                    activities: c.activities
-                                                  })}
+        {this.props.children && React.cloneElement(this.props.children, c)}
       </div>
     )
   }

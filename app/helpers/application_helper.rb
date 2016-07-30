@@ -7,4 +7,14 @@ module ApplicationHelper
   def current_user
     current_reader || AnonymousUser.new
   end
+
+  def devise_mapping
+    Devise.mappings[:reader]
+  end
+  def resource_name
+    devise_mapping.name
+  end
+  def resource_class
+    devise_mapping.to
+  end
 end

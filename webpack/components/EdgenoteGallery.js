@@ -32,12 +32,12 @@ class EdgenoteGallery extends React.Component {
   }
 
   render() {
-    let {slug, coverURL, title, pages, handleEdit} = this.props
+    let {slug, coverUrl, title, pages, handleEdit} = this.props
     return (
       <div className="window">
         <Sidebar
           slug={slug}
-          coverURL={coverURL}
+          coverUrl={coverUrl}
           title={title}
           pageTitles={pages.map( (p) => { return p.title } )}
           selectedPage={null}

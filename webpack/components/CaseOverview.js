@@ -11,10 +11,10 @@ export class Billboard extends React.Component {
   }
 
   render() {
-    let {title, coverURL, summary, caseAuthors, translators, handleEdit} = this.props
+    let {title, coverUrl, summary, caseAuthors, translators, handleEdit} = this.props
     return (
       <section className="Billboard">
-        <BillboardTitle title={title} translators={translators} coverURL={coverURL} caseAuthors={caseAuthors} handleEdit={handleEdit} />
+        <BillboardTitle title={title} translators={translators} coverUrl={coverUrl} caseAuthors={caseAuthors} handleEdit={handleEdit} />
         <div className="Card BillboardSnippet">
           <h3><I18n meaning="summary" /></h3>
           <p contentEditable={handleEdit !== null} onBlur={this.prepareSave.bind(this)}>
@@ -74,8 +74,14 @@ class Actions extends React.Component {
     }
   }
 
-  renderUnlessEditing(component) {
-    if (this.props.handleEdit === null) {
+  renderSignInForm() {
+    if (this.props.signInForm !== undefined) {
+      return <div className="dialog" dangerouslySetInnerHTML={{__html: this.props.signInForm}} />
+    }
+  }
+
+  renderIfReading(component) {
+    if (this.props.handleEdit === null && this.props.reader !== undefined) {
       return component
     }
   }
@@ -83,54 +89,58 @@ class Actions extends React.Component {
   render() {
     let pageTitles = this.props.pages.map( (p) => { return p.title } )
     return (
-      <aside className="Actions">
+      <aside className="CaseOverviewRight">
 
-        <div>
-          <h2>
-            <div
-              className="ActionIcon"
-              dangerouslySetInnerHTML={{__html: require('../images/read.svg')}}
+        {this.renderSignInForm()}
+
+        <div className={`Actions ${this.props.reader === undefined ? "pointer-events-disabled" : ""}`}>
+          <div>
+            <h2>
+              <div
+                className="ActionIcon"
+                dangerouslySetInnerHTML={{__html: require('../images/read.svg')}}
+              />
+              <I18n meaning="read" />
+            </h2>
+            <TableOfContents
+              slug={this.props.slug}
+              pageTitles={pageTitles}
+              currentPage={null}
+              handleEdit={this.props.handleEdit}
             />
-            <I18n meaning="read" />
-          </h2>
-          <TableOfContents
-            slug={this.props.slug}
-            pageTitles={pageTitles}
-            currentPage={null}
-            handleEdit={this.props.handleEdit}
-          />
-        </div>
+          </div>
 
-      {this.renderPodcasts()}
+        {this.renderPodcasts()}
 
-      {this.renderUnlessEditing(
-        <div>
-          <h2>
-            <div
-              className="ActionIcon"
-              dangerouslySetInnerHTML={{__html: require('../images/explore.svg')}}
-            />
-            <I18n meaning="explore" />
-          </h2>
-          <Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
-        </div>
-      )}
+        {this.renderIfReading(
+          <div>
+            <h2>
+              <div
+                className="ActionIcon"
+                dangerouslySetInnerHTML={{__html: require('../images/explore.svg')}}
+              />
+              <I18n meaning="explore" />
+            </h2>
+            <Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
+          </div>
+        )}
 
-      {this.renderConsiderLinks()}
+        {this.renderConsiderLinks()}
 
-      {this.renderUnlessEditing(
-        <div>
-          <h2>
-            <div
-              className="ActionIcon"
-              dangerouslySetInnerHTML={{__html: require('../images/respond.svg')}}
-            />
-            <I18n meaning="respond" />
-          </h2>
-          <a href="http://goo.gl/forms/32tzg5yZTd" target="_blank"><I18n meaning="give_feedback" /></a>
-        </div>
-      )}
+        {this.renderIfReading(
+          <div>
+            <h2>
+              <div
+                className="ActionIcon"
+                dangerouslySetInnerHTML={{__html: require('../images/respond.svg')}}
+              />
+              <I18n meaning="respond" />
+            </h2>
+            <a href="http://goo.gl/forms/32tzg5yZTd" target="_blank"><I18n meaning="give_feedback" /></a>
+          </div>
+        )}
 
+      </div>
     </aside>
     )
   }
