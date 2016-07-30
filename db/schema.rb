@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20160721182654) do
     t.date     "publication_date"
     t.integer  "catalog_position", default: 0,     null: false
     t.text     "short_title"
-    t.text     "translators",      default: [],                 array: true
+    t.hstore   "translators_i18n"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end

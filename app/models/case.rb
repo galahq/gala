@@ -2,7 +2,7 @@ class Case < ApplicationRecord
   include Authority::Abilities
   include Comparable
 
-  translates :title, :summary, :narrative
+  translates :title, :summary, :narrative, :translators
   enum catalog_position: %i(in_index featured)
 
   has_many :edgenotes
@@ -34,6 +34,17 @@ class Case < ApplicationRecord
 
   def case_authors
     authors.to_sentence
+  end
+
+  def has_translators?
+    locales_for_reading_column(:translators).include? I18n.locale
+  end
+
+  def translator_names
+    JSON.parse translators
+  end
+  def translator_names=(t)
+    translators = t.to_json
   end
 
 end
