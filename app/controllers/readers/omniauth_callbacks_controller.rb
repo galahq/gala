@@ -1,5 +1,5 @@
 class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  before_filter :set_reader, except: [:failure]
+  before_action :set_reader, except: [:failure]
 
   def facebook
     if @reader.persisted?

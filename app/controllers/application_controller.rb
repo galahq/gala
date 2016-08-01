@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   def set_locale
     if params[:locale]
       I18n.locale = params[:locale]
+    elsif reader_signed_in? && !current_reader.locale.blank?
+      I18n.locale = current_reader.locale
     else
       logger.debug "User preferred languages: #{http_accept_language.user_preferred_languages}"
       I18n.locale = http_accept_language.compatible_language_from I18n.available_locales

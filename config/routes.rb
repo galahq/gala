@@ -11,9 +11,12 @@ Rails.application.routes.draw do
       resources :podcasts, param: :position
       resources :edgenotes, shallow: true, param: :slug
     end
-    devise_for :readers, skip: :omniauth_callbacks
+    devise_for :readers, skip: :omniauth_callbacks, controllers: {
+      registrations: 'readers/registrations'
+    }
   end
-  devise_for :readers, only: :omniauth_callbacks, controllers:
-    {omniauth_callbacks: 'readers/omniauth_callbacks'}
+  devise_for :readers, only: :omniauth_callbacks, controllers: {
+    omniauth_callbacks: 'readers/omniauth_callbacks',
+  }
   root to: "cases#index"
 end
