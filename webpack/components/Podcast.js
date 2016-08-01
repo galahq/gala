@@ -92,8 +92,8 @@ class Podcast extends React.Component {
       <div className="Podcast">
         <PodcastPlayer
           title={this.props.podcast.title}
-          artwork={this.props.podcast.artwork_url}
-          audio={this.props.podcast.audio_url}
+          artwork={this.props.podcast.artworkUrl}
+          audio={this.props.podcast.audioUrl}
           credits={this.props.podcast.credits}
         />
       </div>
@@ -121,7 +121,7 @@ export class PodcastOverview extends React.Component {
   }
 
   render () {
-    let {slug, title, coverURL, pages, handleEdit} = this.props
+    let {slug, title, coverUrl, pages, handleEdit} = this.props
     let description = {__html: this.state.pod.description}
 
     return (
@@ -129,7 +129,7 @@ export class PodcastOverview extends React.Component {
 
         <Sidebar
           slug={slug}
-          coverURL={coverURL}
+          coverUrl={coverUrl}
           title={title}
           pageTitles={pages.map( (p) => { return p.title } )}
           selectedPage={null}
