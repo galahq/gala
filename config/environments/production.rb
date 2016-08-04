@@ -66,9 +66,9 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'learnmsc.org' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
+    address:              'smtp.mail.umich.edu',
     port:                 587,
-    domain:               'gmail.com',
+    domain:               'umich.edu',
     user_name:            ENV['GALA_GMAIL_USER'],
     password:             ENV['GALA_GMAIL_PASS'],
     authentication:       :login,
