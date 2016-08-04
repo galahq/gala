@@ -10,7 +10,7 @@ class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def google_oauth2
+  def google
     if @reader.persisted?
       sign_in_and_redirect @reader, event: :authentication
     else

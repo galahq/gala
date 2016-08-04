@@ -12,8 +12,10 @@ Rails.application.routes.draw do
       resources :edgenotes, shallow: true, param: :slug
     end
     devise_for :readers, skip: :omniauth_callbacks, controllers: {
+      sessions: 'readers/sessions',
       registrations: 'readers/registrations'
     }
+    resources :readers
   end
   devise_for :readers, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'readers/omniauth_callbacks',
