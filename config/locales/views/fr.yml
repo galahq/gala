@@ -16,6 +16,7 @@ fr:
       translator:
         one: Traducteur(-rice)
         many: Traducteurs(-rices)
-  reader:
-    show:
+  readers:
+    form:
       my_account: 'Mon compte'
+      save: 'Modifier mon profil'

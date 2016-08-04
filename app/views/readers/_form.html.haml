@@ -1,0 +1,25 @@
+.dialog
+  %h2= t '.my_account'
+  = form_for @reader do |f|
+    .field.field-reader-name
+      = f.label :name
+      %br
+      = f.text_field :name, autofocus: true, tabindex: 1
+
+    .field.field-reader-initials
+      = f.label :initials
+      %br
+      = f.text_field :initials, tabindex: 10
+
+    .field
+      = f.label :locale
+      %br
+      = f.select :locale, options_for_select(locale_names, I18n.locale), tabindex: 2
+
+    .field
+      = f.label :email
+      %br
+      = f.email_field :email, tabindex: 3
+
+    .actions
+      = f.submit t('.save')

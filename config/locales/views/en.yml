@@ -14,6 +14,7 @@ en:
       translator:
         one: Translator
         many: Translators
-  reader:
-    show:
+  readers:
+    form:
       my_account: 'My Account'
+      save: 'Update profile'

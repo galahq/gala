@@ -54,7 +54,6 @@ header {
     list-style: none;
 
     li {
-      padding: 0.5em 2em 0.5em 1em;
       border-top: 1px solid $darkPurple;
       text-align: right;
       font-weight: 500;
@@ -64,7 +63,11 @@ header {
     li:hover {
       background-color: $darkPurple;
     }
-    a { background-color: transparent; }
+    a {
+      display: block;
+      background-color: transparent;
+      padding: 0.5em 2em 0.5em 1em;
+    }
     li a:hover { color: lighten($umichMaize, 20%); }
   }
   .dropdown-caret {
