@@ -42,6 +42,8 @@ gem 'omniauth-lti'
 gem 'authority'
 gem 'rolify'
 
+gem 'postmark-rails'
+
 gem 'trasto'
 gem 'http_accept_language'
 gem 'i18n_generators'

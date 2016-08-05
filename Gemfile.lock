@@ -151,6 +151,12 @@ GEM
       omniauth (~> 1.2)
     orm_adapter (0.5.0)
     pg (0.18.4)
+    postmark (1.8.1)
+      json
+      rake
+    postmark-rails (0.13.0)
+      actionmailer (>= 3.0.0)
+      postmark (~> 1.8.0)
     puma (3.4.0)
     rack (2.0.0.rc1)
       json
@@ -250,6 +256,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-lti
   pg (~> 0.18)
+  postmark-rails
   puma (~> 3.0)
   rails (>= 5.0.0.rc1, < 5.1)
   redis (~> 3.0)
