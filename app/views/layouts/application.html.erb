@@ -28,8 +28,8 @@
             <li><%=link_to t('readers.form.my_account'), edit_reader_path(current_reader) %></li>
             <li><%=link_to t('devise.sessions.destroy'), destroy_reader_session_path, method: :delete %></li>
           </ul>
-          <div id="reader-icon">
-            <%= current_reader.initials %>
+          <div id="reader-icon"<%= raw " style=\"background-image: url('#{current_reader.image_url}')\"" unless current_reader.image_url.blank? %>>
+            <%= current_reader.initials if current_reader.image_url.blank? %>
           </div>
           <span class="dropdown-caret"></span>
         </div>
