@@ -5,8 +5,8 @@ class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @reader.persisted?
       sign_in_and_redirect @reader, event: :authentication
     else
-      session["devise.facebook_data"] = request.env["omniauth.auth"]
-      redirect_to new_user_registration_url
+      session["devise.omniauth"] = request.env["omniauth.auth"]
+      redirect_to new_reader_registration_url
     end
   end
 
@@ -14,8 +14,8 @@ class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @reader.persisted?
       sign_in_and_redirect @reader, event: :authentication
     else
-      session["devise.google_data"] = request.env["omniauth.auth"]
-      redirect_to new_user_registration_url
+      session["devise.google_data"] = request.env["omniauth.auth"].except(:extra)
+      render 'devise/registrations/new'
     end
   end
 
@@ -24,7 +24,7 @@ class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @reader, event: :authentication
     else
       session["devise.lti_data"] = request.env["omniauth.auth"]
-      redirect_to new_user_registration_url
+      redirect_to new_reader_registration_url
     end
   end
 
