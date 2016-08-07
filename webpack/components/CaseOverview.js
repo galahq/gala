@@ -32,7 +32,7 @@ class Actions extends React.Component {
     let activities = this.props.activities
 
     let list = this.props.activities.map( (activity) => {
-      return <li><a target="_blank" href={activity.pdf_url}>{ activity.title }</a></li>
+      return <li><a target="_blank" href={activity.pdfUrl}>{ activity.title }</a></li>
     } )
     if ((activities && activities.length !== 0) || this.props.handleEdit !== null) {
       return (
