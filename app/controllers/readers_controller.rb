@@ -1,6 +1,9 @@
 class ReadersController < ApplicationController
+  before_action :authenticate_reader!
   before_action :set_reader, only: [:show, :edit, :update, :destroy]
   layout "window"
+
+  authorize_actions_for Case, except: [:show, :edit, :update]
 
   # GET /readers
   # GET /readers.json

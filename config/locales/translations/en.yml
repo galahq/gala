@@ -101,3 +101,9 @@ en:
     registrations:
       new:
         minimum_characters: '%{count} characters minimum'
+      edit:
+        change_my_password: Change my password
+        my_account: My account
+        leave_blank_if_you_dont_want_to_change_it: leave blank if you don’t want to change it
+        to_confirm_your_changes: to confirm your changes
+        save: Save

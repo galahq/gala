@@ -106,3 +106,8 @@ fr:
     registrations:
       new:
         minimum_characters: '%{count} caractères au moins'
+      edit:
+        change_my_password: Changez mon mot de passe
+        my_account: Mon compte
+        to_confirm_your_changes: pour confirmer vos changes
+        save: Enregistrer

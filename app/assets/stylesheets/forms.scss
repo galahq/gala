@@ -129,3 +129,6 @@ form + ul {
     text-decoration: underline;
   }
 }
+.dialog:not(:first-child) {
+  margin-left: 1em;
+}
