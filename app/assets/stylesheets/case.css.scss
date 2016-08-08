@@ -103,13 +103,22 @@
   max-width: 50em;
 
   &-message {
-    @include flex(0 1 33em)
+    @include flex(0 1 33em);
+
+    h1, p, a {
+      font-size: 19px !important;
+      line-height: 26px !important;
+    }
   }
 
   &-sign-in {
-    @include flex(0 1 15em);
+    @include flex(1 1 15em);
     margin-left: 1em;
+
+    h2 {
+      line-height: 26px !important;
+      margin-top: 0;
+    }
   }
 
-  h2 { margin-top: 0 }
 }
