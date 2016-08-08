@@ -15,7 +15,7 @@ class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @reader, event: :authentication
     else
       session["devise.google_data"] = request.env["omniauth.auth"].except(:extra)
-      render 'devise/registrations/new'
+      render 'devise/registrations/new', layout: "window"
     end
   end
 
