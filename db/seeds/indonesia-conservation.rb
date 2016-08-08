@@ -2,7 +2,7 @@ I18n.locale = :en
 
 indonesia = Case.create(
   slug: "indonesia-conservation",
-  published: false,
+  published: true,
   tags: %w(region:indonesia exercise:),
   cover_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/02/ci_65657554.jpg",
   authors: [
