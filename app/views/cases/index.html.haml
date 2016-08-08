@@ -10,27 +10,14 @@
           %p=link_to "#{t('.learn_more')} ▸", "//www.teachmsc.org"
         .catalog-welcome-sign-in
           = render partial: 'devise/sessions/sign_in', locals: {resource: Reader.new}
-          -#= form_for Reader.new, as: :reader, url: session_path(:reader) do |f|
-            -#%h2=t 'devise.sessions.new.sign_in'
-            -#.field
-              -#=f.label :email
-              -#%br
-              -#=f.email_field :email, autofocus: true, spellcheck: false
-            -#.field
-              -#=f.label :password
-              -#%br
-              -#=f.password_field :password, autocomplete: "off"
-            -#.field
-              -#=f.check_box :remember_me
-              -#=f.label :remember_me
-            -#.actions
-              -#=f.submit t('devise.sessions.new.sign_in')
-            -#= link_to t('devise.registrations.new.sign_up'), new_registration_path(:reader)
 
   %h6=t '.featured_cases'
-  .catalog-cases-featured
-    - @featured.each do |c|
-      = render partial: 'case', locals: {c: c}
+  .carousel
+    .catalog-cases-featured
+      - @featured.each do |c|
+        = render partial: 'case', locals: {c: c}
+    .carousel-button.carousel-button-left ‹
+    .carousel-button.carousel-button-right ›
 
   %h6=t '.case_index'
   .catalog-cases-index

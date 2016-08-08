@@ -20,7 +20,7 @@
 .catalog-cases-featured {
   @include flexbox;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: hidden;
   background-color: tint($umichBlue, 25%);
   padding: 1rem 0;
 
@@ -29,6 +29,31 @@
     height: 17rem !important;
     &:first-child { margin-left: auto; }
     &:last-child { margin-right: auto; }
+  }
+}
+
+.carousel {
+  position: relative;
+}
+.carousel-button {
+  display: inline-block;
+  position: absolute;
+  top: 8.5rem;
+  z-index: 200;
+  cursor:pointer;
+
+  font-size: 25px;
+  background-color: $lightGreen;
+  padding: 0.6em 0.5em;
+
+
+  &-left {
+    border-right: 0.35rem solid $darkGreen;
+    left: -3em;
+  }
+  &-right {
+    border-left: 0.35rem solid $darkGreen;
+    right: -3em;
   }
 }
 

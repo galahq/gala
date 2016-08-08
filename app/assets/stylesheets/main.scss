@@ -7,6 +7,7 @@
   src: font-url('aleo-regular-webfont.woff') format('woff');
 }
 
+html { overflow-x: hidden; }
 html, body, div#Case {height: 100%}
 div#container { height: calc(100% - 70px - 1em) }
 body {
