@@ -501,4 +501,7 @@ pod = ethiopia.podcasts.create(
   }
 )
 
+act1 = ethiopia.activities.create title: "Review project proposals", position: 1, pdf_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/02/projects.pdf"
+act2 = ethiopia.activities.create title: "Conduct cost–benefit analysis", position: 2, pdf_url: "http://remley.wcbn.org/ihih-msc/wp-content/uploads/2016/02/Ethiopia-Case-CBA.xlsx"
+
 require './db/seeds/edgenotes/ethiopia-napa-edgenotes.rb'
