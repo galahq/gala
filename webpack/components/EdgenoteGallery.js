@@ -32,16 +32,13 @@ class EdgenoteGallery extends React.Component {
   }
 
   render() {
-    let {slug, coverUrl, title, pages, handleEdit} = this.props
+    let {pages} = this.props
     return (
       <div className="window">
         <Sidebar
-          slug={slug}
-          coverUrl={coverUrl}
-          title={title}
           pageTitles={pages.map( (p) => { return p.title } )}
           selectedPage={null}
-          handleEdit={handleEdit}
+          {...this.props}
         />
         <main id="EdgenoteGallery">
           <div id="EdgenoteGalleryHeader">

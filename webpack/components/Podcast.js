@@ -121,19 +121,16 @@ export class PodcastOverview extends React.Component {
   }
 
   render () {
-    let {slug, title, coverUrl, pages, handleEdit} = this.props
+    let {pages} = this.props
     let description = {__html: this.state.pod.description}
 
     return (
       <div id="PodcastOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
 
         <Sidebar
-          slug={slug}
-          coverUrl={coverUrl}
-          title={title}
           pageTitles={pages.map( (p) => { return p.title } )}
           selectedPage={null}
-          handleEdit={handleEdit}
+          {...this.props}
         />
 
         <Podcast podcast={this.state.pod} />
