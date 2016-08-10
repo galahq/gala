@@ -18,7 +18,7 @@ ethiopia = Case.create(
   catalog_position: :featured,
   publication_date: Time.zone.parse('January 21, 2016 18:00:00 EST'),
   kicker: "National Adaptation",
-  title: "How will Ethiopia plan for climate change",
+  title: "How will Ethiopia plan for climate change?",
   dek: "The UNDP has limited resources to mitigate the effects of climate change, and lots of worthy projects to choose from.",
 
   summary: <<-SUMMARY,
