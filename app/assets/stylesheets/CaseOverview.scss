@@ -34,6 +34,10 @@
       height: 100%;
       padding: 1em;
 
+      &.disabled {
+        ul, ol, a { color: mix($darkBlue, $white, 40%); }
+      }
+
       ul {
         color: lighten($umichMaize, 20%);
         list-style-type: circle;

@@ -100,7 +100,7 @@ class Actions extends React.Component {
 
         {this.renderSignInForm()}
 
-        <div className={`Actions ${this.props.reader === undefined ? "pointer-events-disabled" : ""}`}>
+        <div className={`Actions ${this.props.reader === undefined ? "disabled" : ""}`}>
           <div>
             <h2>
               <div
