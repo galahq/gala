@@ -102,7 +102,7 @@ class Card extends React.Component {
     let mouseover = 'onmouseover=\'window.handleHover'+this.props.id+'(\"$2\")\''
     let mouseout = 'onmouseout=\'window.handleHover'+this.props.id+'(null)\''
     return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout)
-      .addHREF(`/${this.props.selectedPage + 1}`) }
+      .addHREF(`/${this.props.selectedPage}`) }
   }
 
   setEdgenotes(contents) {
