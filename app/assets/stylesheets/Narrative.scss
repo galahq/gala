@@ -70,17 +70,23 @@ article {
 
 .nextLink {
   margin-left: 1em;
-  padding-bottom: 2em;
+  padding: 0.5em 0 2em 0;
   display: block;
 
   font-family: $headlineFont;
   font-weight: 600;
   color: $umichMaize;
   text-decoration: none;
+
+  &:after {
+    content: ' ▸';
+  }
 }
 
 a.nextLink:hover {
   background-color: transparent;
+  color: $umichMaize;
+  text-decoration: underline;
 }
 
 footer h2 {
