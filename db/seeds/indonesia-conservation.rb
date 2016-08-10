@@ -13,7 +13,9 @@ indonesia = Case.create(
   translators: [],
   catalog_position: :featured,
   publication_date: Time.zone.parse('February 12, 2016 12:00:00 EST'),
-  title: "Financing Biodiversity Conservation: The Bird’s Head Seascape",
+  kicker: "Making Funding Last",
+  title: "How can Indonesia finance indefinite conservation of the Bird’s Head Seascape?",
+  dek: "Conservation International wants to preserve one of the most biodiverse areas of the earth, but their big sponsor just pulled out.",
 
   summary: <<-SUMMARY,
 In 2004, Conservation International led an unprecedented coalition of international and local partners in launching the Bird’s Head Seascape Initiative. Protecting the incredible ecological value of West Papua, Indonesia, the Seascape has grown over the past decade into one of the most ambitious and effective marine conservation programs in the world, a model of indigenous community-driven conservation. Prompted by recent shifts in the Seascape’s traditional funding structure, however, the Bird’s Head Coalition must rapidly formulate a strategy to transfer management to local bodies and establish a sustainable funding model. This case puts readers in the shoes of Laure Katz, Director of the Seascapes Program at Conservation International, who must develop and execute this transition strategy, securing the Bird’s Head as a global model for effective, community-driven conservation.

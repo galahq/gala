@@ -1,5 +1,5 @@
 json.key_format! camelize: :lower
-json.extract! c, :slug, :published, :title, :case_authors, :summary, :tags, :cover_url
+json.extract! c, *%i(slug published kicker title dek case_authors summary tags cover_url)
 json.translators translators_string c
 json.pages c.pages do |page|
   json.id page.id

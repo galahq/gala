@@ -5,16 +5,18 @@
 .catalog-cases {
   width: 100%;
 
-  h6 {
-    color: $white;
-    text-align: center;
-    margin: 1em 0 0.5em 0;
-    font-family: $sansFont;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+}
 
-    &:first-child { margin-top: -0.5em; }
-  }
+.catalog-cases h6,
+.BillboardTitle h6 {
+  color: $white;
+  text-align: center;
+  margin: 1em 0 0.5em 0;
+  font-family: $sansFont;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  &:first-child { margin-top: -0.5em; }
 }
 
 .catalog-cases-featured {
@@ -84,6 +86,7 @@
   }
 }
 
+.catalog-case h6, .BillboardTitle h6 { text-align: left; }
 .catalog-case {
   @include flexbox;
   @include flex-flow(column);

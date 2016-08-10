@@ -17,7 +17,9 @@ ethiopia = Case.create(
   translators: [],
   catalog_position: :featured,
   publication_date: Time.zone.parse('January 21, 2016 18:00:00 EST'),
-  title: "Ethiopia’s National Adaptation Plan of Action: How will Ethiopia respond to climate change?",
+  kicker: "National Adaptation",
+  title: "How will Ethiopia plan for climate change",
+  dek: "The UNDP has limited resources to mitigate the effects of climate change, and lots of worthy projects to choose from.",
 
   summary: <<-SUMMARY,
 This real-life case takes place in August 2015 in Ethiopia. Kidane Asefa, the

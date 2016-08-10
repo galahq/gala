@@ -17,7 +17,9 @@ wolf = Case.create(
   translators: [],
   catalog_position: :featured,
   publication_date: Time.zone.parse('January 21, 2016 12:00:00 EST'),
-  title: "Wolf Wars: Should We Hunt Gray Wolves in Michigan?",
+  kicker: "Wolf Wars",
+  title: "Should we hunt gray wolves in Michigan?",
+  dek: "The wolf population has rebounded in Northern MI; now some are advocating to open hunting season again.",
 
   summary: <<-SUMMARY,
 This case study details an active issue in the state of Michigan: whether or not
@@ -656,7 +658,8 @@ CARD
 ##########
 I18n.locale = :fr
 
-wolf.title = "La guerre des loups: Devrions-nous chasser le loup gris en Michigan?"
+wolf.kicker = "La Guerre des Loups "
+wolf.title = "Devrions-nous chasser le loup gris en Michigan?"
 
 wolf.summary = <<-SUMMARY
 Ce cas d’étude décrit un problème important dans l’Etat du Michigan, aux USA :

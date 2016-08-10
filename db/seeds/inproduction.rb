@@ -111,7 +111,9 @@ tesla = Case.create(
     "Jeremiah Johnson",
   ],
   catalog_position: :featured,
-  title: "Green Mountain Power & Tesla Powerwall: Innovation within a conservative industry"
+  kicker: "Energy Storage Innovation",
+  title: "Green Mountain Power & Tesla Powerwall: Innovation within a conservative industry",
+  dek: "Right now, what’s holding us back from 100% renewable power is the hour a day when everyone turns on their AC; energy storage might hold the key."
 )
 
 flintwater = Case.create(

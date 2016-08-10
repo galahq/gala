@@ -2,7 +2,7 @@ class Case < ApplicationRecord
   include Authority::Abilities
   include Comparable
 
-  translates :title, :summary, :narrative, :translators
+  translates :kicker, :title, :dek, :summary, :narrative, :translators
   enum catalog_position: %i(in_index featured)
 
   has_many :edgenotes

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727194935) do
+ActiveRecord::Schema.define(version: 20160810151157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,9 @@ ActiveRecord::Schema.define(version: 20160727194935) do
     t.date     "publication_date"
     t.integer  "catalog_position", default: 0,     null: false
     t.text     "short_title"
-    t.hstore   "translators_i18n"
+    t.hstore   "translators_i18n", default: '"en"=>"[]"',    null: false
+    t.hstore   "kicker_i18n"
+    t.hstore   "dek_i18n"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
