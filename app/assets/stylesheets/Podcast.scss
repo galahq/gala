@@ -56,6 +56,18 @@
 
   audio {
     width: 100%;
+    border-bottom: 4px solid $lightGreen;
+    border-radius: 2pt;
+
+    &::-webkit-media-controls {
+      &-play-button,
+      &-mute-button,
+      &-seek-back-button,
+      &-rewind-button,
+      &-timeline {
+        cursor: pointer;
+      }
+    }
   }
 }
 
