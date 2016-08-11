@@ -37,8 +37,10 @@ class ApplicationController < ActionController::Base
     store_location_for(:user, request.url)
   end
 
-  def after_sign_out_path_for(resource)
-    request.referrer || root_path
+  def after_sign_in_path_for(resource_or_scope)
+    path = request.env['omniauth.origin']
+    path ||= stored_location_for(resource_or_scope)
+    path ||= signed_in_root_path(resource_or_scope)
   end
 
 end
