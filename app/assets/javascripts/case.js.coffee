@@ -5,7 +5,7 @@ carouselShouldScroll = (carousel) ->
   amountOffscreen > halfItemWidth
 
 scrollCarousel = () ->
-  carouselLeft()
+  carouselLeft()  if $('.catalog-cases-featured').length > 0
 
 carouselLeft = () ->
   carousel = $(".catalog-cases-featured")
