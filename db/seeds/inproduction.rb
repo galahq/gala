@@ -4,7 +4,7 @@ damremoval = Case.create(
   slug: "maple-dam-removal",
   published: false,
   tags: %w(region:usa),
-  cover_url: "https://images.unsplash.com/photo-1465483967189-014cda7fe81a?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=512&h=512&fit=crop&s=34078177536e9d171de38c92181fb81b",
+  cover_url: "https://farm8.staticflickr.com/7384/10092633705_739973e235_k_d.jpg",
   authors: [
     "Paul Moore",
     "Molly Watters",
@@ -91,8 +91,8 @@ ghana_ewaste = Case.create(
     "Brian Arbic",
   ],
   kicker: "Dealing with E-Debris",
-  title: "How do we balance livelihoods with long-life expectancy in the computer landfills of Accra, Ghana?",
-  dek: "Processing e-waste is profitable but risky; municipal control would have costs and benefits for Ghana's urban poor."
+  title: "How do we balance livelihoods and life expectancy in the tech landfills of Ghana?",
+  dek: "Processing e-waste is profitable but risky; municipal control would have costs and benefits for Accra's urban poor."
 )
 
 smartmeters = Case.create(
@@ -115,7 +115,7 @@ tesla = Case.create(
   slug: "tesla-powerwall",
   published: false,
   tags: %w(region:usa),
-  cover_url: "https://images.unsplash.com/photo-1466624815543-f56cb34de2ea?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=512&h=512&fit=crop&s=7861b01250690258a3474e74cabc4621",
+  cover_url: "https://images.unsplash.com/photo-1468434453985-b1ca3b555f00?dpr=2&amp;auto=format&amp;crop=entropy&amp;fit=crop&amp;w=1500&amp;h=1000&amp;q=80&amp;cs=tinysrgb",
   authors: [
     "Andrea Kraus",
     "Braxton Mashburn",
