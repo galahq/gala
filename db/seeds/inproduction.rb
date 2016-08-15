@@ -11,8 +11,9 @@ damremoval = Case.create(
     "Kevin He",
     "Lauren Edson",
   ],
-  short_title: "Should we un-dam the Maple River?",
-  title: "Maple River–Lake Kathleen Dam Removal"
+  kicker: "Unmaking Lake Kathleen",
+  title: "Is dam removal right for the Maple River?",
+  dek: "New approaches to undoing dams can limit ecological impact and toxins, but might be too costly."
 )
 
 cookstove = Case.create(
@@ -25,7 +26,9 @@ cookstove = Case.create(
     "Ember McCoy",
     "Arun Agrawal",
   ],
-  title: "Clean Cookstoves in Gabon: Finding a Sustainable Design"
+  kicker: "Codesigning Efficiency",
+  title: "Who knows the best cookstove design for Gabonese communities?",
+  dek: "Inefficient stoves cause health problems, deforestation, and air pollution; collaborative construction could offer alternatives."
 )
 
 landcover = Case.create(
@@ -40,7 +43,9 @@ landcover = Case.create(
     "Larissa Larsen",
   ],
 
-  title: "Land Cover Mapping of Addis Ababa, Ethiopia"
+  kicker: "Planning by the People",
+  title: "Can participatory urban planning in Addis Ababa be a model for cities everywhere?",
+  dek: "Innovative land-cover mapping at the neighborhood scale in Africa helps resolve food and water security challenges."
 )
 
 lead = Case.create(
@@ -54,7 +59,9 @@ lead = Case.create(
     "Austin Martin",
     "Paul Mohai",
   ],
-  title: "The Dread of Lead in Gasoline: Environmental Decision-Making & Federal Legislation"
+  kicker: "Tailpipe to Tap",
+  title: "How did the Reagan administration become leaders on unleaded gasoline?",
+  dek: "Today's water safety advocates might take cues from leadership lessons in the past."
 )
 
 chinainafrica = Case.create(
@@ -67,14 +74,15 @@ chinainafrica = Case.create(
     "Maddie Bianchie",
     "Omolade Adunbi",
   ],
-
-  title: "China–Africa: Infrastructure, Oil, and Sustainability"
+  kicker: "Deep Port Politics",
+  title: "Will China's investment in African infrastructure harm economies?",
+  dek: "China is building roads, harbors, and railroads, but monetary and ecological monitoring is crucial."
 )
 
-ghanarenewable = Case.create(
-  slug: "ghana-renewable",
+ghana_ewaste = Case.create(
+  slug: "ewaste-in-ghana",
   published: false,
-  tags: %w(region:africa exercise:quantitative),
+  tags: %w(region:africa :quantitative),
   cover_url: "https://images.unsplash.com/photo-1417144527634-653e3dec77b2?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=512&h=512&fit=crop&s=ac3484b17524e1b918a6fd7a6435193d",
   authors: [
     "Elizabeth Oliphant",
@@ -82,8 +90,9 @@ ghanarenewable = Case.create(
     "Adam Simon",
     "Brian Arbic",
   ],
-
-  title: "Renewable Energy Infrastructure in Ghana"
+  kicker: "Dealing with E-Debris",
+  title: "How do we balance livelihoods with long-life expectancy in the computer landfills of Accra, Ghana?",
+  dek: "Processing e-waste is profitable but risky; municipal control would have costs and benefits for Ghana's urban poor."
 )
 
 smartmeters = Case.create(
@@ -97,7 +106,9 @@ smartmeters = Case.create(
     "Michael Moore",
   ],
 
-  title: "Smarting over Smart Meters - The Heated Debate in Maryland over Real-Time Electric Consumption Data"
+  kicker: "Smarting over Smart Meters",
+  title: "Will Baltimore Gas & Electric clients accept comprehensive monitoring?",
+  dek: "BG&E is trying to reconcile consumer privacy with service provisioning efficiency."
 )
 
 tesla = Case.create(
@@ -112,7 +123,7 @@ tesla = Case.create(
   ],
   catalog_position: :featured,
   kicker: "Energy Storage Innovation",
-  title: "Can Green Mountain Power use the Tesla Powerwall to solve the “peak” problem?",
+  title: "Can Green Mountain Power and Tesla solve the “peak” problem?",
   dek: "Right now, what’s holding us back from 100% renewable power is the hour a day when everyone turns on their AC; energy storage might hold the key."
 )
 
@@ -129,44 +140,65 @@ flintwater = Case.create(
     "Arun Agrawal",
   ],
 
-  title: "The Flint Water Crisis: Funding Allocation in Nonprofit Collaboration"
+  kicker: "Water Crisis Confidential",
+  title: "Can Flint nonprofit funding meet urgent community needs?",
+  dek: "Emergencies demand rapid response: NGOs need to know how to move money around fast."
 )
 
 gelman = Case.create(
-  slug: "gelman",
+  slug: "dioxane-plume",
   published: false,
   tags: %w(region:usa),
-  cover_url: "http://media.mlive.com/annarbornews_impact/photo/19679893-standard.jpg",
+  cover_url: "http://www.hotinhere.us/wp-content/uploads/2016/08/IMG_0384cropped-1024x728.png",
   authors: [
     "Anna Prushinskaya",
     "Allen Burton",
   ],
 
-  title: "Gelman Plume Pollution"
+  kicker: "Dioxane Plume Pollution",
+  title: "Should Ann Arbor be a superfund site?",
+  dek: "City, county, and federal actors confer about limited remediation where cleanup is too costly."
 )
 
 cherrygrower = Case.create(
-  slug: "michigan-cherry-grower",
+  slug: "michigan-cherry-growers",
   published: false,
   tags: %w(region:usa),
-  cover_url: "https://images.unsplash.com/photo-1447690709975-318628b14c57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=512&h=512&fit=crop&s=c1da61c882bdff4c01b8301c6aae96f0",
+  cover_url: "http://i1.wp.com/www.hotinhere.us/wp-content/uploads/2016/08/5126578305_eef5d26783_o.png",
   authors: [
-    "Edward Waisanen",
+    "Ed Waisanen",
     "Paige Fischer",
   ],
 
-  title: "Northwest Michigan Cherry Growers' Adaptation to Climate Change"
+  kicker: "Souring Climate",
+  title: "Can Michigan tart cherry growers adapt to changing weather?",
+  dek: "As earlier blooms expose cherries frost, the industry searches for a solution."
 )
 
 fracking = Case.create(
   slug: "michigan-fracking",
   published: false,
   tags: %w(region:usa exercise:quantitative),
-  cover_url: "http://i.huffpost.com/gen/3033338/images/o-FRACKING-facebook.jpg",
+  cover_url: "https://upload.wikimedia.org/wikipedia/commons/9/95/Process_of_mixing_water_with_fracking_fluids_to_be_injected_into_the_ground.JPG",
   authors: [
     "Alexander Truelove",
     "Victoria Campbell-Arvai",
   ],
 
-  title: "The wicked problem of unconventional oil and gas development in Michigan"
+  kicker: "Fuel Fracas",
+  title: "Can Michigan legislators create frameworks for limiting damage from fracking?",
+  dek: "Efforts to ban hydraulic fracturing have failed; governance solutions remain to be tested."
+)
+
+fairtrade = Case.create(
+  slug: "fair-trade-coffee",
+  published: false,
+  authors: [
+    "Carissa de Young",
+    "Joe Arvai"
+  ],
+  cover_url: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?dpr=2&amp;auto=format&amp;crop=entropy&amp;fit=crop&amp;w=1500&amp;h=1144&amp;q=80&amp;cs=tinysrgb",
+  kicker: "Certified “fair”",
+  title: "Are direct trade supply chains better for Peruvian coffee producers?",
+  dek: "Certification is a complex process and consumers increasingly have alternatives."
 )

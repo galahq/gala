@@ -13,8 +13,8 @@ indonesia = Case.create(
   translators: [],
   catalog_position: :featured,
   publication_date: Time.zone.parse('February 12, 2016 12:00:00 EST'),
-  kicker: "Making Funding Last",
-  title: "How can Indonesia finance indefinite conservation of the Bird’s Head Seascape?",
+  kicker: "Futures of Conservation Funding",
+  title: "Can Indonesia sustain financing of the Bird’s Head Seascape?",
   dek: "Conservation International wants to preserve one of the most biodiverse areas of the earth, but their big sponsor just pulled out.",
 
   summary: <<-SUMMARY,
