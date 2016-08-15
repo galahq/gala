@@ -1,0 +1,25 @@
+.catalog-cases
+
+  - unless reader_signed_in?
+    .catalog-splash
+      .catalog-welcome.dialog
+        .catalog-welcome-message
+          %h1=t '.redefining_sustainability_education'
+          %p
+            =t '.intro_paragraph'
+          %p=link_to "#{t('.learn_more')} ▸", "//www.teachmsc.org"
+        .catalog-welcome-sign-in
+          = render partial: 'devise/sessions/sign_in', locals: {resource: Reader.new}
+
+  %h6=t '.featured_cases'
+  .carousel
+    .catalog-cases-featured
+      - @featured.each do |c|
+        = render partial: 'case', locals: {c: c}
+    .carousel-button.carousel-button-left ‹
+    .carousel-button.carousel-button-right ›
+
+  %h6=t '.case_index'
+  .catalog-cases-index
+    - @index.each do |c|
+      = render partial: 'case', locals: {c: c}

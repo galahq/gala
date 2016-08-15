@@ -1,0 +1,7 @@
+<div id="container"></div>
+
+<%=javascript_tag do %>
+  window.caseData = <%= raw render partial: "case", formats: [:json], locals: {c: @case} %>
+<% end %>
+
+<%=javascript_include_tag "react/bundle"%>

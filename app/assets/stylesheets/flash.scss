@@ -1,0 +1,44 @@
+@import '_globals';
+
+.flash {
+  font: 90% $sansFont;
+  color: $white;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.05em;
+  width: 100%;
+  padding: 0.2em;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    &:hover { background-color: transparent; }
+  }
+}
+
+.flash-alert {
+  background-color: $red;
+  border-bottom-color: darken($red, 10%);
+}
+
+.flash-notice {
+  background-color: darken($lightGreen, 10%);
+  border-bottom-color: darken($lightGreen, 20%);
+}
+
+.flash-info {
+  background-color: #666;
+  border-bottom-color: #444;
+  text-transform: initial;
+  letter-spacing: 0em;
+}
+
+.flash-editing {
+  background-color: $white;
+  border-bottom-color: darken($white, 20%);
+  color: $black;
+  text-transform: initial;
+  letter-spacing: 0em;
+}

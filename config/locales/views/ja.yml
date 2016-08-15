@@ -1,0 +1,23 @@
+ja:
+  cases:
+    index:
+      title: "全ての事例研究"
+      redefining_sustainability_education: 環境科学の教育の新たな方法
+      intro_paragraph: |
+        Michigan Sustainability Cases（MSC：ミシガン大学の持続可能性の事例研究）
+        というプロジェクトは、様々な専門職大学院のために事例研究を元にして環境科学
+        の教育課程を発刊する。多様な視聴覚の教材と現実の意思決定者との会話を
+        組入れることによって、没入型にニュアンスをわからせる持続可能性と環境の
+        教育的アプローチのは、MSCだ。
+      featured_cases: 注目の事例研究
+      case_index: 全ての事例研究
+      learn_more: プロジェクトの詳細については、こちらをご覧ください
+    case:
+      forthcoming: 今後
+      translator:
+        one: 翻訳
+        many: 翻訳
+  readers:
+    form:
+      my_account: 'マイアカウント'
+      save: プロフィールの変化を保存

@@ -1,0 +1,109 @@
+en:
+  activerecord:
+    models:
+      activity: Activity  #g
+      case: Case  #g
+      comment: Comment  #g
+      comment_thread: Comment thread  #g
+      edgenote: Edgenote  #g
+      enrollment: Enrollment  #g
+      group: Group  #g
+      group_membership: Group membership  #g
+      podcast: Podcast  #g
+      reader: Reader  #g
+
+    attributes:
+      activity:
+        case: :activerecord.models.case  #g
+        description_i18n: Description  #g
+        pdf_url_i18n: PDF URL  #g
+        title_i18n: Title  #g
+
+      case:
+        activities: Activities  #g
+        authors: Authors  #g
+        comment_threads: Comment threads  #g
+        comments: Comments  #g
+        cover_url: Cover URL  #g
+        edgenotes: Edgenotes  #g
+        enrollments: Enrollments  #g
+        narrative_i18n: Narrative #g
+        podcasts: Podcasts  #g
+        published: Published  #g
+        readers: Readers  #g
+        slug: Slug  #g
+        summary_i18n: Summary #g
+        tags: Tags  #g
+        title_i18n: Title #g
+
+      comment:
+        comment_thread: :activerecord.models.comment_thread  #g
+        content_i18n: Content #g
+        reader: :activerecord.models.reader  #g
+
+      comment_thread:
+        case: :activerecord.models.case  #g
+        comments: Comments  #g
+        group: :activerecord.models.group  #g
+
+      edgenote:
+        caption_i18n: Caption #g
+        case: :activerecord.models.case  #g
+        content_i18n: Content #g
+        format: Format  #g
+        slug: Slug  #g
+        thumbnail_url: Thumbnail URL  #g
+
+      enrollment:
+        case: :activerecord.models.case  #g
+        reader: :activerecord.models.reader  #g
+
+      group:
+        comment_threads: Comment threads  #g
+        group_memberships: Group memberships  #g
+        name_i18n: Name #g
+        readers: Readers  #g
+
+      group_membership:
+        group: :activerecord.models.group  #g
+        reader: :activerecord.models.reader  #g
+
+      podcast:
+        audio_url_i18n: Audio URL #g
+        case: :activerecord.models.case  #g
+        description_i18n: Description #g
+        title_i18n: Title #g
+
+      reader:
+        authentication_token: Authentication token  #g
+        cases: Cases  #g
+        comments: Comments  #g
+        current_sign_in_at: Current sign in at  #g
+        current_sign_in_ip: Current sign in IP  #g
+        email: Email  #g
+        encrypted_password: Encrypted password  #g
+        enrollments: Enrollments  #g
+        group_memberships: Group memberships  #g
+        groups: Groups  #g
+        image_url: Image URL  #g
+        last_sign_in_at: Last sign in at  #g
+        last_sign_in_ip: Last sign in IP  #g
+        name: Full Name  #g
+        provider: Provider  #g
+        remember_created_at: Remember created at  #g
+        reset_password_sent_at: Reset password sent at  #g
+        reset_password_token: Reset password token  #g
+        uid: UID  #g
+        initials: Initials
+  devise:
+    sessions:
+      destroy: Sign out
+    registrations:
+      new:
+        minimum_characters: '%{count} characters minimum'
+      edit:
+        change_my_password: Change my password
+        my_account: My account
+        leave_blank_if_you_dont_want_to_change_it: leave blank if you don’t want to change it
+        to_confirm_your_changes: to confirm your changes
+        save: Save

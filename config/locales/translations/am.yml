@@ -1,0 +1,140 @@
+am:
+  activerecord:
+    models:
+      activity: ሥራ  #g
+      card: ካርድ  #g
+      case: ክስ  #g
+      comment: አስተያየት  #g
+      comment_thread: የአስተያየት ክር  #g
+      edgenote: Edgenote  #g
+      enrollment: ምዝገባ  #g
+      group: ቡድን  #g
+      group_membership: የቡድን አባልነት  #g
+      habtm_readers: Habtm አንባቢዎች  #g
+      habtm_roles: Habtm ሚና  #g
+      page: ገጽ  #g
+      podcast: ፖድካስት  #g
+      reader: አንባቢ  #g
+      role: ሚና  #g
+
+    attributes:
+      activity:
+        case: :activerecord.models.case  #g
+        description_i18n: መግለጫ i18n  #g
+        pdf_url_i18n: Pdf ዩአርኤል i18n  #g
+        position: የስራ መደቡ  #g
+        title_i18n: ርዕስ i18n  #g
+
+      card:
+        content_i18n: የይዘት i18n  #g
+        page: :activerecord.models.page  #g
+        position: የስራ መደቡ  #g
+        solid: ጠንካራ  #g
+
+      case:
+        activities: ተግባራት  #g
+        authors: ደራሲያን  #g
+        cases: አጋጣሚዎች  #g
+        catalog_position: ካታሎግ ቦታ  #g
+        comment_threads: የአስተያየት ተከታታዮች  #g
+        comments: አስተያየቶች  #g
+        cover_url: የሽፋን ዩአርኤል  #g
+        edgenotes: Edgenotes  #g
+        enrollments: የመመዝገቢያ  #g
+        narrative_i18n: የትረካ i18n  #g
+        pages: ገጾች  #g
+        podcasts: ፖድካስቶች  #g
+        publication_date: የታተመበት ቀን  #g
+        published: የታተመ  #g
+        readers: አንባቢዎች  #g
+        short_title: አጭር ርዕስ  #g
+        slug: የቅጠል ትል  #g
+        summary_i18n: ማጠቃለያ i18n  #g
+        tags: መለያዎች  #g
+        title_i18n: ርዕስ i18n  #g
+        translators: ተርጓሚዎች  #g
+
+      comment:
+        comment_thread: :activerecord.models.comment_thread  #g
+        content_i18n: የይዘት i18n  #g
+        reader: :activerecord.models.reader  #g
+
+      comment_thread:
+        case: :activerecord.models.case  #g
+        comments: አስተያየቶች  #g
+        group: :activerecord.models.group  #g
+
+      edgenote:
+        caption_i18n: የመግለጫ i18n  #g
+        card: :activerecord.models.card  #g
+        case: :activerecord.models.case  #g
+        content_i18n: የይዘት i18n  #g
+        format: ቅርጸት  #g
+        slug: የቅጠል ትል  #g
+        thumbnail_url: ድንክዬ ዩ አር ኤል  #g
+
+      enrollment:
+        case: :activerecord.models.case  #g
+        reader: :activerecord.models.reader  #g
+
+      group:
+        comment_threads: የአስተያየት ተከታታዮች  #g
+        group_memberships: ቡድን አባልነት  #g
+        name_i18n: ስም i18n  #g
+        readers: አንባቢዎች  #g
+
+      group_membership:
+        group: :activerecord.models.group  #g
+        reader: :activerecord.models.reader  #g
+
+      habtm_readers:
+        left_side: :activerecord.models.left_side  #g
+        reader: :activerecord.models.reader  #g
+
+      habtm_roles:
+        left_side: :activerecord.models.left_side  #g
+        role: :activerecord.models.role  #g
+
+      page:
+        cards: ካርዶች  #g
+        case: :activerecord.models.case  #g
+        position: የስራ መደቡ  #g
+        title_i18n: ርዕስ i18n  #g
+
+      podcast:
+        artwork_url: የስነ ጥበብ ዩአርኤል  #g
+        audio_url_i18n: የተሰሚ ዩአርኤል i18n  #g
+        case: :activerecord.models.case  #g
+        credits_i18n: ምስጋናዎች i18n  #g
+        description_i18n: መግለጫ i18n  #g
+        position: የስራ መደቡ  #g
+        title_i18n: ርዕስ i18n  #g
+
+      reader:
+        authentication_token: የማረጋገጫ ማስመሰያ  #g
+        cases: አጋጣሚዎች  #g
+        comments: አስተያየቶች  #g
+        current_sign_in_at: በ ውስጥ የአሁኑ ምልክት  #g
+        current_sign_in_ip: ፒ ውስጥ የአሁኑ ምልክት  #g
+        email: ኢሜይል  #g
+        encrypted_password: የተመሰጠረ የይለፍ ቃል  #g
+        enrollments: የመመዝገቢያ  #g
+        group_memberships: ቡድን አባልነት  #g
+        groups: ቡድኖች  #g
+        image_url: የምስል ዩአርኤል  #g
+        initials: ፊርማዎች  #g
+        last_sign_in_at: በ ውስጥ የመጨረሻው ምልክት  #g
+        last_sign_in_ip: ፒ ውስጥ የመጨረሻው ምልክት  #g
+        name: ስም  #g
+        provider: አቅራቢ  #g
+        remember_created_at: ላይ የተፈጠረ አትዘንጋ  #g
+        reset_password_sent_at: ይላካል የይለፍ ቃል ዳግም አስጀምር  #g
+        reset_password_token: የይለፍ ቃል ዳግም ማስመሰያ  #g
+        roles: ሚናዎችን  #g
+        uid: UID  #g
+
+      role:
+        name: ስም  #g
+        readers: አንባቢዎች  #g
+        resource: :activerecord.models.resource  #g
+        resource_type: የንብረት አይነት  #g

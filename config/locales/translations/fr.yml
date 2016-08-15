@@ -1,0 +1,113 @@
+fr:
+  activerecord:
+    models:
+      activity: Activité  #g
+      case: Cas  #g
+      comment: Commentaire  #g
+      comment_thread: Commentaire fil  #g
+      edgenote: Edgenote  #g
+      enrollment: Inscription  #g
+      group: Groupe  #g
+      group_membership: Appartenance à un groupe  #g
+      podcast: Podcast  #g
+      reader: Lecteur  #g
+
+    attributes:
+      activity:
+        case: :activerecord.models.case  #g
+        description_i18n: Description de i18n  #g
+        pdf_url_i18n: Pdf url i18n  #g
+        title_i18n: Titre i18n  #g
+
+      case:
+        activities: Activités  #g
+        authors: Auteurs  #g
+        comment_threads: Commentaire fils  #g
+        comments: commentaires  #g
+        cover_url: Cover url  #g
+        edgenotes: Edgenotes  #g
+        enrollments: inscriptions  #g
+        narrative_i18n: i18n narrative  #g
+        podcasts: Podcasts  #g
+        published: Publié  #g
+        readers: Les lecteurs  #g
+        slug: Limace  #g
+        summary_i18n: Résumé i18n  #g
+        tags: Mots clés  #g
+        title_i18n: Titre i18n  #g
+
+      comment:
+        comment_thread: :activerecord.models.comment_thread  #g
+        content_i18n: i18n Content  #g
+        reader: :activerecord.models.reader  #g
+
+      comment_thread:
+        case: :activerecord.models.case  #g
+        comments: commentaires  #g
+        group: :activerecord.models.group  #g
+
+      edgenote:
+        caption_i18n: Légende i18n  #g
+        case: :activerecord.models.case  #g
+        content_i18n: i18n Content  #g
+        format: Format  #g
+        slug: Limace  #g
+        thumbnail_url: url Thumbnail  #g
+
+      enrollment:
+        case: :activerecord.models.case  #g
+        reader: :activerecord.models.reader  #g
+
+      group:
+        comment_threads: Commentaire fils  #g
+        group_memberships: Les appartenances aux groupes  #g
+        name_i18n: Nom i18n  #g
+        readers: Les lecteurs  #g
+
+      group_membership:
+        group: :activerecord.models.group  #g
+        reader: :activerecord.models.reader  #g
+
+      podcast:
+        audio_url_i18n: url Audio i18n  #g
+        case: :activerecord.models.case  #g
+        description_i18n: Description de i18n  #g
+        title_i18n: Titre i18n  #g
+
+      reader:
+        authentication_token: Le jeton d'authentification  #g
+        cases: Les cas  #g
+        comments: commentaires  #g
+        current_sign_in_at: Signe actuelle au  #g
+        current_sign_in_ip: signe actuelle ip  #g
+        encrypted_password: Mot de passe crypté  #g
+        enrollments: inscriptions  #g
+        group_memberships: Les appartenances aux groupes  #g
+        groups: Groupes  #g
+        image_url: URL de l'image  #g
+        last_sign_in_at: Dernière connexion à  #g
+        last_sign_in_ip: Dernière connexion ip  #g
+        name: nom complet  #g
+        provider: Fournisseur  #g
+        remember_created_at: Rappelez-vous créé  #g
+        reset_password_sent_at: Réinitialiser le mot de passe envoyé à  #g
+        reset_password_token: Réinitialiser le mot de passe de jeton  #g
+        uid: uid  #g
+        current_password: Mot de passe actuel
+        email: Courriel
+        password: Mot de passe
+        password_confirmation: Confirmation du mot de passe
+        remember_me: Se souvenir de moi
+        reset_password_token: 
+        unlock_token: 
+  devise:
+    sessions:
+      destroy: Déconnexion
+    registrations:
+      new:
+        minimum_characters: '%{count} caractères au moins'
+      edit:
+        change_my_password: Changez mon mot de passe
+        my_account: Mon compte
+        to_confirm_your_changes: pour confirmer vos changes
+        save: Enregistrer

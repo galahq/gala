@@ -1,0 +1,65 @@
+@import '_globals';
+
+#Sidebar {
+  @media screen and (min-width: $mobileCutoff) {
+    margin: 1.6em 1em;
+  }
+
+  & > a {
+    display: inline-block;
+    margin: 0.5em 1em;
+  }
+
+  margin: 0em 1em;
+
+  .BillboardTitle {
+    padding: 1em 1em;
+    padding-top: 6em;
+    border-radius: 2pt;
+    font-size: 80%;
+  }
+
+  #TableOfContents {
+    background-color: rgba( darken($black, 10%), 0.6 );
+    padding: 1em;
+    margin-top: 1em;
+    border-radius: 2pt;
+  }
+
+
+}
+
+#TableOfContents {
+  ol {
+    font: 11pt/14pt $sansFont;
+    color: lighten($umichMaize, 20%);
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+
+    li {
+      margin: 0.3em 0;
+    }
+  }
+}
+
+a {
+  color: lighten($umichMaize, 20%);
+  text-decoration: none;
+  transition: .15s cubic-bezier(.33, .66, .66, 1);
+  transition-property: color, background-color;
+}
+
+#TableOfContents li.focus a,
+a:hover {
+  background-color: $lightGreen;
+  color: $darkBlue;
+}
+
+h4.list-head {
+  font: 12pt $sansFont;
+  font-style: italic;
+  letter-spacing: 0;
+  color: $white;
+
+  margin: 0.5em 0;
+}

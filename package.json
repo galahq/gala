@@ -1,17 +1,16 @@
 {
-  "name": "msc_platform",
+  "name": "gala",
   "version": "1.0.0",
   "description": "Learning system for Michigan Sustainability Cases",
   "main": "app/application.js",
   "scripts": {
-    "build": "webpack -p --progress --colors",
-    "dev": "webpack-dev-server --devtool eval --content-base public --host 0.0.0.0",
-    "postinstall": "webpack --config ./webpack-production.config.js --progress --colors",
-    "start": "node server.js"
+    "webpack:deploy": "webpack --config=./webpack/webpack.config.js -p --progress --colors",
+    "webpack:watch": "webpack --config=./webpack/webpack.config.js -p --progress --colors --watch",
+    "heroku-postbuild": "npm run webpack:deploy"
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.eecs.umich.edu/cbothner/msc-thingy.git"
+    "url": "https://gitlab.com/michigansustainabilitycases/gala.git"
   },
   "author": "Cameron L Bothner",
   "license": "---",
@@ -25,16 +24,19 @@
     "file-loader": "^0.8.5",
     "history": "^1.17.0",
     "jquery": "^2.2.0",
+    "json-loader": "^0.5.4",
     "node-sass": "^3.4.2",
     "raw-loader": "^0.5.1",
     "react": "^0.14.5",
+    "react-animate": "^3.0.0",
     "react-dom": "^0.14.5",
     "react-google-analytics": "^0.2.0",
     "react-router": "^2.0.0-rc5",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.9"
+    "webpack": "^1.12.9",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "webpack-dev-server": "^1.14.0"
