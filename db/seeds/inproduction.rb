@@ -20,7 +20,7 @@ cookstove = Case.create(
   slug: "gabon-cookstove",
   published: false,
   tags: %w(region:africa),
-  cover_url: "https://images.unsplash.com/photo-1462058294476-57b85c9f2bf5?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=512&h=512&fit=crop&s=b6f9d07443a5fb6998fa0fe95e548790",
+  cover_url: "http://www.hotinhere.us/wp-content/uploads/2016/08/IMG_0181-e1471290543275.jpg",
   authors: [
     "Alex Clayton",
     "Ember McCoy",

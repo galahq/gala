@@ -660,6 +660,7 @@ I18n.locale = :fr
 
 wolf.kicker = "La Guerre des Loups "
 wolf.title = "Devrions-nous chasser le loup gris en Michigan?"
+wolf.dek = "La population des loups s’accroit dans le nord de l’etat de Michigan ; certains voudraient reouvrir la chasse aux loups."
 
 wolf.summary = <<-SUMMARY
 Ce cas d’étude décrit un problème important dans l’Etat du Michigan, aux USA :
@@ -846,7 +847,7 @@ contrôle total à l’état du Michigan pour gérer ses populations de loup.</p
 CARD
 )
 
-wolf_p3.update_attributes title: "a biologie, la conservation et la gestion scientifique"
+wolf_p3.update_attributes title: "La biologie, la conservation et la gestion scientifique"
 
 wolf_p3_c1.update_attributes(
 content: <<-CARD
