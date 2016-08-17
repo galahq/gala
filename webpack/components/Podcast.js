@@ -87,6 +87,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
 
 class Podcast extends React.Component {
   render() {
+    let description = {__html: this.props.podcast.description}
 
     return (
       <div className="Podcast">
@@ -96,6 +97,12 @@ class Podcast extends React.Component {
           audio={this.props.podcast.audioUrl}
           credits={this.props.podcast.credits}
         />
+
+        <div className="PodcastInfo">
+          <div className="Card"
+            dangerouslySetInnerHTML={description}
+          />
+        </div>
       </div>
     )
   }
@@ -122,7 +129,6 @@ export class PodcastOverview extends React.Component {
 
   render () {
     let {pages} = this.props
-    let description = {__html: this.state.pod.description}
 
     return (
       <div id="PodcastOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
@@ -134,14 +140,6 @@ export class PodcastOverview extends React.Component {
         />
 
         <Podcast podcast={this.state.pod} />
-
-        <div className="PodcastInfo">
-          <div className="Card"
-            contentEditable={this.props.handleEdit !== null}
-            onBlur={this.prepareSave.bind(this)}
-            dangerouslySetInnerHTML={description}
-          />
-        </div>
 
       </div>
     )
