@@ -1,3 +1,27 @@
+###########
+# CREDITS #
+###########
+
+$(document).on 'ready turbolinks:load', ->
+  $(".catalog-cases-index a.catalog-case").on 'mouseenter focus', (e) ->
+    box = $(e.currentTarget)
+    authors = box.find('h4')
+    box.find('.catalog-case-credits').addClass('dimmed')
+    authors.slideDown duration: 200, easing: 'easeOutExpo'
+
+  $(".catalog-cases-index a.catalog-case").on 'mouseleave blur', (e) ->
+    box = $(e.currentTarget)
+    authors = box.find('h4')
+    box.find('.catalog-case-credits').removeClass('dimmed')
+    authors.slideUp duration: 200, easing: 'easeOutExpo'
+
+  $(".catalog-case-unpublished:not(.catalog-case-accessible)").on 'click', (e) ->
+    e.preventDefault()
+
+############
+# CAROUSEL #
+############
+
 carouselShouldScroll = (carousel) ->
   return false unless carousel
   amountOffscreen = carousel[0].scrollWidth - carousel[0].clientWidth
@@ -28,34 +52,19 @@ carouselRight = () ->
       items.last().detach()
 
 $(document).on 'ready turbolinks:load', ->
-  $(".catalog-cases-index a.catalog-case").on 'mouseenter focus', (e) ->
-    box = $(e.currentTarget)
-    authors = box.find('h4')
-    box.find('.catalog-case-credits').addClass('dimmed')
-    authors.slideDown duration: 200, easing: 'easeOutExpo'
-
-  $(".catalog-cases-index a.catalog-case").on 'mouseleave blur', (e) ->
-    box = $(e.currentTarget)
-    authors = box.find('h4')
-    box.find('.catalog-case-credits').removeClass('dimmed')
-    authors.slideUp duration: 200, easing: 'easeOutExpo'
-
-  $(".catalog-case-unpublished:not(.catalog-case-accessible)").on 'click', (e) ->
-    e.preventDefault()
-
   window.carouselScrollInterval = setInterval scrollCarousel, 5000
 
   $('.carousel').on 'mouseenter', (e) ->
     clearInterval(window.carouselScrollInterval)
-    $('.carousel-button-left').animate({ left: 0  }, 400, "easeOutQuad")
-    $('.carousel-button-right').animate({ right: 0  }, 400, "easeOutQuad")
+    $('.carousel-button-left').show().animate({ left: 0  }, 400, "easeOutQuad")
+    $('.carousel-button-right').show().animate({ right: 0  }, 400, "easeOutQuad")
 
   $('.carousel').on 'mouseleave', (e) ->
     window.carouselScrollInterval = setInterval scrollCarousel, 5000
-    $('.carousel-button-left').animate { left: '-3em';  }, 400, "easeInQuad"
-      #this.hide()
-    $('.carousel-button-right').animate { right: '-3em';  }, 400, "easeInQuad"
-      #this.hide()
+    $('.carousel-button-left').animate { left: '-3em';  }, 400, "easeInQuad", ->
+      $(this).hide()
+    $('.carousel-button-right').animate { right: '-3em';  }, 400, "easeInQuad", ->
+      $(this).hide()
 
   $('.carousel-button-left').on 'click', () -> carouselRight()
   $('.carousel-button-right').on 'click', () -> carouselLeft()
