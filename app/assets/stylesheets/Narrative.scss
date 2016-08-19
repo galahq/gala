@@ -103,3 +103,31 @@ footer h2 {
   -moz-hyphens: auto;
   hyphens: auto;
 }
+
+.citation {
+  position: relative;
+
+  .citation-label {
+    color: shade($lightGreen, 30%)
+  }
+
+  cite {
+    display: inline-block;
+    font-style: initial;
+    position: absolute;
+    background: $lightGreen;
+    font: 14px $sansFont;
+    width: 12em;
+    padding: 0.25em 0.5em;
+    left: 0.75em;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(black, 0.2);
+
+    opacity: 0;
+  }
+
+  &:hover cite {
+    opacity: 100;
+  }
+}
+

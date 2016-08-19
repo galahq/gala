@@ -77,18 +77,6 @@ class Page extends React.Component {
   }
 }
 
-String.prototype.addAttributeToLinks = function (attribute) {
-  return this.replace(/(data-edgenote=\"([a-zA-Z0-9-]+)\")/g, '$1 ' + attribute)
-}
-
-String.prototype.addAttributeToLinksPointingToEdgenoteID = function (id, attribute) {
-  return this.replace(new RegExp('(data-edgenote=\"'+id+'\")', 'g'), '$1 ' + attribute)
-}
-
-String.prototype.addHREF = function(firstPartOfPath) {
-  return this.addAttributeToLinks(`href=\"#${firstPartOfPath}/edgenotes/$2\"`)
-}
-
 class Card extends React.Component {
   constructor() {
     super()
@@ -96,18 +84,6 @@ class Card extends React.Component {
       selectedEdgenote: null,
       edgenoteSlugs: []
     }
-  }
-
-  addHoverCallbacksToParagraphText(paragraph) {
-    let mouseover = 'onmouseover=\'window.handleHover'+this.props.id+'(\"$2\")\''
-    let mouseout = 'onmouseout=\'window.handleHover'+this.props.id+'(null)\''
-    return { __html: paragraph.addAttributeToLinks(mouseover).addAttributeToLinks(mouseout)
-      .addHREF(`/${this.props.selectedPage}`) }
-  }
-
-  setEdgenotes(contents) {
-    let edgenoteSlugs = gatherEdgenotes(contents)
-    this.setState({edgenoteSlugs: edgenoteSlugs})
   }
 
   componentWillMount() {
@@ -125,6 +101,39 @@ class Card extends React.Component {
       this.setState({ edgenoteSlugs: [] })
       this.setEdgenotes(nextProps.card.content)
     }
+  }
+
+  setEdgenotes(contents) {
+    let edgenoteSlugs = gatherEdgenotes(contents)
+    this.setState({edgenoteSlugs: edgenoteSlugs})
+  }
+
+  addAttributeToLinks(content, attribute) {
+    return content.replace(/(data-edgenote=\"([a-zA-Z0-9-]+)\")/g, '$1 ' + attribute)
+  }
+
+  addHoverCallbacks(content) {
+    let mouseover = 'onmouseover=\'window.handleHover'+this.props.id+'(\"$2\")\''
+    content = this.addAttributeToLinks(content, mouseover)
+    let mouseout = 'onmouseout=\'window.handleHover'+this.props.id+'(null)\''
+    content = this.addAttributeToLinks(content, mouseout)
+    return content
+  }
+
+  addHREF(content, firstPartOfPath) {
+    return this.addAttributeToLinks(content, `href=\"#${firstPartOfPath}/edgenotes/$2\"`)
+  }
+
+  renderCitations(content) {
+    return content.replace(/(<cite>.+?<\/cite>)/, '<span class="citation"><span class="citation-label"> °</span>$1</span>')
+  }
+
+  renderContent() {
+    var {content} = this.props.card
+    content = this.addHoverCallbacks(content)
+    content = this.addHREF(content, `/${this.props.selectedPage}`)
+    content = this.renderCitations(content)
+    return { __html: content }
   }
 
   renderEdgenotes() {
@@ -158,7 +167,7 @@ class Card extends React.Component {
       <section>
         <div className={this.props.card.solid ? "Card" : ""}
           contentEditable={this.props.handleEdit !== null}
-          dangerouslySetInnerHTML={this.addHoverCallbacksToParagraphText(paragraph)}
+          dangerouslySetInnerHTML={this.renderContent(paragraph)}
           onBlur={this.prepareSave.bind(this)} />
         {this.renderEdgenotes()}
       </section>
