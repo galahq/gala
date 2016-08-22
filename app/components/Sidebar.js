@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router'
-import BillboardTitle from './BillboardTitle.js'
-import {I18n} from './I18n.js'
+import BillboardTitle from 'BillboardTitle.js'
+import {I18n} from 'I18n.js'
 
-import TableOfContents from './TableOfContents.js'
+import TableOfContents from 'TableOfContents.js'
 
 class Sidebar extends React.Component {
   renderTOC() {

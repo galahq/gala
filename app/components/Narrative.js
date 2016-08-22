@@ -1,10 +1,10 @@
 import React from 'react'
-import Edgenote from './Edgenote.js'
+import Edgenote from 'Edgenote.js'
 import {Link} from 'react-router'
-import gatherEdgenotes from '../gatherEdgenotes.js';
-import {I18n} from './I18n.js'
+import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
+import {I18n} from 'I18n.js'
 
-function isElementInViewport (el) {
+export function isElementInViewport (el) {
 
   //special bonus for those using jQuery
   if (typeof jQuery === "function" && el instanceof jQuery) {

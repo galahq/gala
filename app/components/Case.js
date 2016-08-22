@@ -1,9 +1,9 @@
 import React from 'react';
-import mapNL from '../mapNL.js'
-import {I18n} from './I18n.js'
+import mapNL from 'concerns/mapNL.js'
+import {I18n} from 'I18n.js'
 import {Link} from 'react-router'
 
-import {orchard, update} from '../orchard.js'
+import {orchard, update} from 'concerns/orchard.js'
 
 class Case extends React.Component {
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import { I18n } from './I18n.js'
+import { I18n } from 'I18n.js'
 
 class TableOfContents extends React.Component {
   renderChapterTitles() {

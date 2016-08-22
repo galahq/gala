@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
-import {orchard} from '../orchard.js'
-import LoadingIcon from './LoadingIcon.js'
+import {orchard} from 'concerns/orchard.js'
+import LoadingIcon from 'LoadingIcon.js'
 
 class Edgenote extends React.Component {
   handleMouseOver() {
@@ -59,7 +59,7 @@ class Edgenote extends React.Component {
             <div>{cover}</div>
             <div
               className={`edgenote-icon edgenote-icon-${format}`}
-              dangerouslySetInnerHTML={{__html: require(`../images/edgenote-${format}.svg`)}}
+              dangerouslySetInnerHTML={{__html: require(`edgenote-${format}.svg`)}}
             />
             <figcaption className={ slug == this.props.selectedEdgenote ? "focus" : "" } dangerouslySetInnerHTML={caption} />
           </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-var strings = require('../locales.json')
+var strings = require('locales.json')
 
 export class I18n extends React.Component {
   t(key) {

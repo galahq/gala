@@ -1,9 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router'
 
-import {ScrollLock} from './ScrollLock.js'
+import {ScrollLock} from 'ScrollLock.js'
 
-import {orchard} from '../orchard.js'
+import {orchard} from 'concerns/orchard.js'
 
 class Modal extends React.Component {
 
@@ -81,7 +81,7 @@ class Modal extends React.Component {
     if (this.state.contents === null) {
       return (
         <aside>
-          <div className="loading-icon" dangerouslySetInnerHTML={{__html: require('../images/loading.svg')}} />
+          <div className="loading-icon" dangerouslySetInnerHTML={{__html: require('loading.svg')}} />
         </aside>
       )
     } else {
@@ -101,7 +101,7 @@ class Modal extends React.Component {
       return (
         <div
           className={`edgenote-icon edgenote-icon-${format}`}
-          dangerouslySetInnerHTML={{__html: require(`../images/edgenote-${format}.svg`)}}
+          dangerouslySetInnerHTML={{__html: require(`edgenote-${format}.svg`)}}
         />
       )
     }
@@ -135,7 +135,7 @@ class Modal extends React.Component {
           <Link
             to={this.returnLink()}
             className="modalClose"
-            dangerouslySetInnerHTML={{__html: require("../images/modal-close.svg")}}
+            dangerouslySetInnerHTML={{__html: require("modal-close.svg")}}
           />
           {this.renderFormatIcon()}
           <h4 dangerouslySetInnerHTML={caption} />

@@ -1,8 +1,8 @@
 import React from 'react'
 import Animate from 'react-animate'
-import Sidebar from './Sidebar.js'
-import {I18n} from './I18n.js'
-import {Card} from './Narrative.js'
+import Sidebar from 'Sidebar.js'
+import {I18n} from 'I18n.js'
+import {Card} from 'Narrative.js'
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {

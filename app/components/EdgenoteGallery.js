@@ -1,9 +1,9 @@
 import React from 'react'
-import Sidebar from './Sidebar.js'
-import Edgenote from './Edgenote.js'
-import LoadingIcon from './LoadingIcon.js'
-import gatherEdgenotes from '../gatherEdgenotes.js'
-import { I18n } from "./I18n.js"
+import Sidebar from 'Sidebar.js'
+import Edgenote from 'Edgenote.js'
+import LoadingIcon from 'LoadingIcon.js'
+import gatherEdgenotes from 'concerns/gatherEdgenotes.js'
+import { I18n } from "I18n.js"
 
 class EdgenoteGallery extends React.Component {
 

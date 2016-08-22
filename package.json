@@ -4,8 +4,8 @@
   "description": "Learning system for Michigan Sustainability Cases",
   "main": "app/application.js",
   "scripts": {
-    "webpack:deploy": "webpack --config=./webpack/webpack.config.js -p --progress --colors",
-    "webpack:watch": "webpack --config=./webpack/webpack.config.js -p --progress --colors --watch",
+    "webpack:deploy": "webpack --config=./lib/webpack/webpack.config.js -p --progress --colors",
+    "webpack:watch": "webpack --config=./lib/webpack/webpack.config.js -p --progress --colors --watch",
     "heroku-postbuild": "npm run webpack:deploy"
   },
   "repository": {
