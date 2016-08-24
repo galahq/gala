@@ -1,0 +1,92 @@
+@import '_globals';
+@import '_flexbox';
+@import '_columns';
+@import '_tint_and_shade';
+
+.EdgenoteContents {
+  position: fixed;
+  top: 0px; left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
+  &-window {
+    z-index: 110;
+    -webkit-box-sizing: border-box;
+    flex: 0 1 auto;
+    margin: 7%;
+    padding: 1em;
+    background-color: rgba( darken($black, 10%), 0.8 );
+    border-radius: 2px;
+    box-shadow: 0 0 3em rgba(black, 0.5);
+    display: flex;
+    position: relative;
+    min-width: 20em;
+  }
+}
+
+.dismiss {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+}
+
+.EdgenoteContents-dismiss {
+  -webkit-backdrop-filter: blur(5px) brightness(60%);
+  background-color: transparent !important;
+  @supports not (-webkit-backdrop-filter: blur(5px)) {
+    background-color: rgba( $black, 0.5 ) !important;
+  }
+}
+
+.EdgenoteDisplay {
+  position: relative;
+  flex: 3;
+  display: flex;
+
+  img {
+    border-radius: 2px;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    cursor: zoom;
+  }
+}
+
+.EdgenoteSidebar {
+  flex: 2;
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
+
+  &-meta {
+    flex: 0 0 auto;
+    padding: 0.75em 1.5em;
+    border: 0.5em solid $lightGreen;
+    background-color: $white;
+
+    .edgenote-icon { bottom: -6pt; }
+    g { stroke: shade($lightGreen, 60%) }
+
+    h4 {
+      display: inline;
+      font-family: $sansFont;
+      color: $black;
+    }
+
+    p {
+      margin: 0.5em 0 0 0;
+    }
+  }
+
+  .CommentThread {
+    margin-top: 1em;
+    flex: 0 1 auto;
+    overflow: scroll;
+  }
+}

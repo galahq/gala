@@ -101,12 +101,12 @@ a.Edgenote.pop {
 a.Edgenote {
   & > div { position: relative; }
 
-  .edgenote-icon{
-    display: inline-block;
-    margin-right: 4pt;
-    position: relative;
-    bottom: -4pt;
-  }
+}
+.edgenote-icon{
+  display: inline-block;
+  margin-right: 4pt;
+  position: relative;
+  bottom: -4pt;
 }
 
 a.Edgenote:hover {

@@ -55,7 +55,7 @@ export var ScrollLock = ComposedComponent => class extends React.Component {
   }
 
   onScrollHandler(e) {
-    var elem = ReactDOM.findDOMNode(this).querySelector(".Modal-contents")
+    var elem = ReactDOM.findDOMNode(this).querySelector('.scrolling')
     var scrollTop = elem.scrollTop;
     var scrollHeight = elem.scrollHeight;
     var height = elem.clientHeight;
