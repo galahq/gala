@@ -1,0 +1,19 @@
+{
+  "app/components/*.js": {
+    "command": "component",
+    "template": [
+      "import React from 'react'",
+      "",
+      "export class {camelcase|capitalize|dot} extends React.Component {",
+      "",
+      "  render() {",
+      "    return (",
+      "      <div />",
+      "    )",
+      "  }",
+      "",
+      "}"
+    ],
+    "related": "app/assets/stylesheets/{camelcase|capitalize}.css.scss"
+  }
+}
