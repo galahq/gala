@@ -59,7 +59,7 @@ class Edgenote extends React.Component {
             <div>{cover}</div>
             <div
               className={`edgenote-icon edgenote-icon-${format}`}
-              dangerouslySetInnerHTML={{__html: require(`edgenote-${format}.svg`)}}
+              dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
             />
             <figcaption className={ slug == this.props.selectedEdgenote ? "focus" : "" } dangerouslySetInnerHTML={caption} />
           </div>

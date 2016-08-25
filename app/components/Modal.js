@@ -101,7 +101,7 @@ class Modal extends React.Component {
       return (
         <div
           className={`edgenote-icon edgenote-icon-${format}`}
-          dangerouslySetInnerHTML={{__html: require(`edgenote-${format}.svg`)}}
+          dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
         />
       )
     }
