@@ -9,10 +9,16 @@
   background-color: $white;
 
   form {
+    margin-top: 1em;
     #CommentSubmit {
       display: flex;
       align-items: baseline;
-      input { flex: 5 }
+      input {
+        flex: 5;
+        &::-webkit-input-placeholder {
+          color: $purple;
+        }
+      }
       button {
         flex: 1;
         margin-left: 1em;
@@ -25,13 +31,7 @@
   color: shade($purple, 40%);
   line-height: 90%;
 
-  cite {
-    font-weight: 700;
-    font-style: normal;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: block;
-  }
+  cite { display: block; }
   i {
     color: $purple;
     font-size: 80%;
@@ -49,4 +49,14 @@
   &:not(:first-child) {
     margin-top: 1em;
   }
+}
+
+.Comment cite,
+.CommentThread form label {
+  font-size: 95%;
+  color: shade($purple, 40%);
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }

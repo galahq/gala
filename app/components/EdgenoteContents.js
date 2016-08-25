@@ -60,9 +60,20 @@ export default ScrollLock(EdgenoteContents, ".EdgenoteContents-window")
 
 class EdgenoteDisplay extends React.Component {
 
+  renderContent() {
+    switch(this.props.format) {
+    //case "link":
+      //return <a href={this.props.url} target="_blank">
+        //<img src={this.props.thumbnailUrl} />
+      //</a>
+    default:
+      return <img src={this.props.url} />
+    }
+  }
+
   render() {
     return <div className="EdgenoteDisplay">
-      <img src={this.props.url} />
+      {this.renderContent()}
     </div>
   }
 
@@ -81,7 +92,6 @@ class EdgenoteSidebar extends React.Component {
       )
     }
   }
-
 
   render() {
     return <div className="EdgenoteSidebar">
