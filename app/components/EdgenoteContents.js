@@ -66,6 +66,8 @@ class EdgenoteDisplay extends React.Component {
       //return <a href={this.props.url} target="_blank">
         //<img src={this.props.thumbnailUrl} />
       //</a>
+    case "video":
+      return <div style={{height: "100%", width: "100%"}} dangerouslySetInnerHTML={{__html: this.props.content}} />
     default:
       return <img src={this.props.url} />
     }
@@ -118,7 +120,7 @@ class EdgenoteSidebar extends React.Component {
           </blockquote>
         </div>
         <form>
-          <label for="CommentSubmit">Cameron Bothner</label><br />
+          <label htmlFor="CommentSubmit">Cameron Bothner</label><br />
           <div id="CommentSubmit">
             <input type="text" placeholder="Write a reply..." />
             <button type="submit">Submit</button>
