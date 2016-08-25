@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router'
-import TableOfContents from './TableOfContents.js'
-import BillboardTitle from './BillboardTitle.js'
-import {I18n} from './I18n.js'
+import TableOfContents from 'TableOfContents.js'
+import BillboardTitle from 'BillboardTitle.js'
+import {I18n} from 'I18n.js'
 
 export class Billboard extends React.Component {
 
@@ -47,7 +47,7 @@ class Actions extends React.Component {
           <h2>
             <div
               className="ActionIcon"
-              dangerouslySetInnerHTML={{__html: require('../images/consider.svg')}}
+              dangerouslySetInnerHTML={{__html: require('consider.svg')}}
             />
             <I18n meaning="consider"/>
           </h2>
@@ -70,7 +70,7 @@ class Actions extends React.Component {
           <h2>
             <div
               className="ActionIcon"
-              dangerouslySetInnerHTML={{__html: require('../images/listen.svg')}}
+              dangerouslySetInnerHTML={{__html: require('listen.svg')}}
             />
             <I18n meaning="listen" />
           </h2>
@@ -105,7 +105,7 @@ class Actions extends React.Component {
             <h2>
               <div
                 className="ActionIcon"
-                dangerouslySetInnerHTML={{__html: require('../images/read.svg')}}
+                dangerouslySetInnerHTML={{__html: require('read.svg')}}
               />
               <I18n meaning="read" />
             </h2>
@@ -124,7 +124,7 @@ class Actions extends React.Component {
             <h2>
               <div
                 className="ActionIcon"
-                dangerouslySetInnerHTML={{__html: require('../images/explore.svg')}}
+                dangerouslySetInnerHTML={{__html: require('explore.svg')}}
               />
               <I18n meaning="explore" />
             </h2>
@@ -139,7 +139,7 @@ class Actions extends React.Component {
             <h2>
               <div
                 className="ActionIcon"
-                dangerouslySetInnerHTML={{__html: require('../images/respond.svg')}}
+                dangerouslySetInnerHTML={{__html: require('respond.svg')}}
               />
               <I18n meaning="respond" />
             </h2>

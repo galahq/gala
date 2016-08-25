@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Sidebar from './Sidebar.js'
-import Narrative from './Narrative.js'
+import Sidebar from 'Sidebar.js'
+import Narrative from 'Narrative.js'
 
 String.prototype.trunc = String.prototype.trunc ||
   function(n){

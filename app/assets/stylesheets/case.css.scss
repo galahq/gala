@@ -42,7 +42,7 @@
   position: relative;
 }
 .carousel-button {
-  display: inline-block;
+  display: none;
   position: absolute;
   top: 8.5rem;
   z-index: 200;
@@ -51,7 +51,6 @@
   font-size: 25px;
   background-color: $lightGreen;
   padding: 0.6em 0.5em;
-
 
   &-left {
     border-right: 0.35rem solid $darkGreen;
