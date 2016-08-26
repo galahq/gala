@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+window.$ = require('jquery');
+
 /**
  * Prevent default behavior for event
  *
@@ -55,7 +57,8 @@ export var ScrollLock = ComposedComponent => class extends React.Component {
   }
 
   onScrollHandler(e) {
-    var elem = ReactDOM.findDOMNode(this).querySelector('.scrolling')
+    var elem = $(e.srcElement).closest('.scrolling')[0]
+    if (elem === undefined) { return cancelScrollEvent(e); }
     var scrollTop = elem.scrollTop;
     var scrollHeight = elem.scrollHeight;
     var height = elem.clientHeight;
