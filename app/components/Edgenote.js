@@ -22,7 +22,7 @@ class Edgenote extends React.Component {
   parseContentsFromJSON(response) {
     let contents = {
       "caption": {__html: response.caption},
-      "cover": <img src={response.thumbnail_url} />,
+      "cover": <img src={response.thumbnailUrl} />,
       "format": response.format
     }
     this.setState({contents: contents})

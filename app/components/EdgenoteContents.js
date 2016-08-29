@@ -23,13 +23,7 @@ class EdgenoteContents extends React.Component {
   }
 
   parseContentsFromJSON(r) {
-    this.setState({
-      caption: r.caption,
-      content: r.content,
-      instructions: r.instructions,
-      format: r.format,
-      url: r.url
-    })
+    this.setState(r)
   }
 
   returnLink() {
@@ -62,14 +56,17 @@ class EdgenoteDisplay extends React.Component {
 
   renderContent() {
     switch(this.props.format) {
-    //case "link":
-      //return <a href={this.props.url} target="_blank">
-        //<img src={this.props.thumbnailUrl} />
-      //</a>
+    case "link":
+      return <a href={this.props.websiteUrl} target="_blank">
+        <div className="linkOverlay" dangerouslySetInnerHTML={{__html: require(`../assets/images/react/link.svg`)}} />
+        <img src={`${this.props.imageUrl}?w=700&htn=3&con=-40&mono=1E2934`} />
+      </a>
+    case "aside":
+      return <div className="Card scrolling" dangerouslySetInnerHTML={{__html: this.props.content}} />
     case "video":
       return <div style={{height: "100%", width: "100%"}} dangerouslySetInnerHTML={{__html: this.props.content}} />
     default:
-      return <img src={this.props.url} />
+      return <img src={this.props.imageUrl} />
     }
   }
 

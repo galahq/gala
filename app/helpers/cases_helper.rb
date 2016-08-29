@@ -6,7 +6,7 @@ module CasesHelper
   end
 
   def ix_cover_image(c, size)
-    opts = %w(fit=crop crop=entropy)
+    opts = %w(fit=crop crop=faces,entropy)
     opts += case size
            when :square
              %w(w=600 h=600)
