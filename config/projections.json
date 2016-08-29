@@ -1,4 +1,12 @@
 {
+  "app/authorizers/*_authorizer.rb": {
+    "command": "authorizer",
+    "template": [
+      "class {camelcase|capitalize|colon} < ApplicationAuthorizer",
+      "",
+      "end"
+    ]
+  },
   "app/components/*.js": {
     "command": "component",
     "template": [

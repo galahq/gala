@@ -25,6 +25,7 @@ end
 if reader_signed_in?
   json.reader do
     json.partial! current_reader
+    json.can_update_case current_reader.can_update? c
   end
 else
   json.sign_in_form (render partial: 'devise/sessions/sign_in', formats: [:html],

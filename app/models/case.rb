@@ -5,6 +5,8 @@ class Case < ApplicationRecord
   translates :kicker, :title, :dek, :summary, :narrative, :translators
   enum catalog_position: %i(in_index featured)
 
+  resourcify
+
   has_many :edgenotes
   has_many :podcasts, -> { order position: :asc }
   has_many :activities, -> { order position: :asc }
@@ -20,7 +22,7 @@ class Case < ApplicationRecord
   validates :publication_date, presence: true, if: :published?
 
   def <=>(anOther)
-    if published ^ anOther.published
+    if published ^ anOther.try(:published)
       return published ? -1 : 1
     elsif publication_date == nil || anOther.publication_date == nil
       return publication_date.nil? ? 1 : -1

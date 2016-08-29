@@ -54,11 +54,18 @@ class Case extends React.Component {
                         <I18n meaning={this.state.saveMessage} />
                       </div>
     } else if (!c.published) {
+      var link = null
+      if (c.reader.canUpdateCase) {
+        link = <span>
+                 &ensp;&mdash;&ensp;
+                 <Link to={`/edit${this.props.location.pathname}`}>
+                   <I18n meaning="edit_this_case" />
+                 </Link>
+               </span>
+      }
       editStatusBar = <div className="flash flash-info">
-                        <I18n meaning='this_case_is_not_yet_published' />&ensp;&mdash;&ensp;
-                        <Link to={`/edit${this.props.location.pathname}`}>
-                          <I18n meaning="edit_this_case" />
-                        </Link>
+                        <I18n meaning='this_case_is_not_yet_published' />
+                        {link}
                       </div>
     }
 
