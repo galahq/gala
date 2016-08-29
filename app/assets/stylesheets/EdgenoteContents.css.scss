@@ -24,6 +24,7 @@
     display: flex;
     position: relative;
     min-width: 20em;
+    flex-flow: column-reverse;
   }
 }
 
@@ -103,9 +104,11 @@
   margin-left: 1em;
   display: flex;
   flex-direction: column;
+  height: auto;
 
   &-meta {
     flex: 0 0 auto;
+    margin-bottom: 1em;
     padding: 0.75em 1.5em;
     border: 0.5em solid $lightGreen;
     background-color: $white;

@@ -93,38 +93,13 @@ class EdgenoteSidebar extends React.Component {
   }
 
   render() {
-    return <div className="EdgenoteSidebar">
-      <section className="EdgenoteSidebar-meta">
+    return <section className="EdgenoteSidebar-meta">
         <div>
           {this.renderFormatIcon()}
           <h4>{this.props.caption}</h4>
         </div>
         <p>{this.props.instructions}</p>
       </section>
-      <aside className="CommentThread scrolling">
-        <div className="Comment">
-          <cite>ARMAN GOLROKHIAN</cite>
-          <i>07/06/2015 4:35 PM NEW YORK, NY</i>
-          <blockquote>
-            This is really interesting in light of some recent research by Obama, Biden, et al. (2016) which suggests that it might be better to use a model based on diachronic transformations. That insight, applied here, would suggest that collusion would be a better choice.
-          </blockquote>
-        </div>
-        <div className="Comment">
-          <cite>KATIE BROWNE</cite>
-          <i>07/06/2015 7:12 PM DAKAR, SENEGAL</i>
-          <blockquote>
-            I think it could be seen as an interaction between the various polarities of each node in the value network. After all, it’s not so simple as black or white in this field. CI made this decision after a lot of research, and in light of all the complexity here it can barely be blamed.
-          </blockquote>
-        </div>
-        <form>
-          <label htmlFor="CommentSubmit">Cameron Bothner</label><br />
-          <div id="CommentSubmit">
-            <input type="text" placeholder="Write a reply..." />
-            <button type="submit">Submit</button>
-          </div>
-        </form>
-      </aside>
-    </div>
   }
 
 }
