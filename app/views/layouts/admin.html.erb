@@ -1,0 +1,11 @@
+<nav class="admin-menu admin-menu-first">
+  <ul>
+    <li> <%= link_to "Cases", cases_path %> </li>
+    <li> <%= link_to "Readers", readers_path %> </li>
+</nav>
+
+<div class="window window-admin">
+  <%= yield %>
+</div>
+
+<% parent_layout 'application' %>

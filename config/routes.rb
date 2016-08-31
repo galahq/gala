@@ -20,8 +20,14 @@ Rails.application.routes.draw do
       sessions: 'readers/sessions',
       registrations: 'readers/registrations'
     }
-    resources :readers
+    resources :readers, only: %i(show edit update)
   end
+
+  scope 'admin' do
+    resources :readers, except: %i(show edit update)
+    resources :enrollments
+  end
+
   devise_for :readers, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'readers/omniauth_callbacks',
   }

@@ -8,7 +8,9 @@ class ReadersController < ApplicationController
   # GET /readers
   # GET /readers.json
   def index
-    @readers = Reader.all
+    @readers = Reader.all.order(:name)
+
+    render layout: 'admin'
   end
 
   # GET /readers/1

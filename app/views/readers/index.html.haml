@@ -1,0 +1,20 @@
+= render "admin_readers_menu"
+
+%main
+  %h2 Reader Accounts
+  %table
+    %thead
+      %td
+      %td Name
+      %td Email
+      %td Provider
+      %td Last Signed In
+    -@readers.each do |r|
+      %tr
+        %td
+          #reader-icon{style: ("background-image: url(#{r.image_url})" unless r.image_url.blank?)}
+            = r.initials if r.image_url.blank?
+        %td= r.name
+        %td= r.email
+        %td= r.provider.capitalize rescue "—"
+        %td= time_ago_in_words(r.last_sign_in_at) rescue ""
