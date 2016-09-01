@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160810151157) do
+ActiveRecord::Schema.define(version: 20160901142137) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,18 +40,18 @@ ActiveRecord::Schema.define(version: 20160810151157) do
   create_table "cases", force: :cascade do |t|
     t.boolean  "published",        default: false
     t.hstore   "title_i18n"
-    t.text     "slug",                             null: false
-    t.string   "authors",          default: [],                 array: true
+    t.text     "slug",                                    null: false
+    t.string   "authors",          default: [],                        array: true
     t.hstore   "summary_i18n"
-    t.text     "tags",             default: [],                 array: true
+    t.text     "tags",             default: [],                        array: true
     t.hstore   "narrative_i18n"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.string   "cover_url"
     t.date     "publication_date"
-    t.integer  "catalog_position", default: 0,     null: false
+    t.integer  "catalog_position", default: 0,            null: false
     t.text     "short_title"
-    t.hstore   "translators_i18n", default: '"en"=>"[]"',    null: false
+    t.hstore   "translators_i18n", default: {"en"=>"[]"}, null: false
     t.hstore   "kicker_i18n"
     t.hstore   "dek_i18n"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
@@ -84,10 +83,14 @@ ActiveRecord::Schema.define(version: 20160810151157) do
     t.string   "thumbnail_url"
     t.hstore   "content_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.text     "slug",          null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.text     "slug",              null: false
     t.integer  "card_id"
+    t.hstore   "instructions_i18n"
+    t.hstore   "image_url_i18n"
+    t.hstore   "website_url_i18n"
+    t.hstore   "embed_code_i18n"
     t.index ["card_id"], name: "index_edgenotes_on_card_id", using: :btree
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
     t.index ["slug"], name: "index_edgenotes_on_slug", unique: true, using: :btree
@@ -96,8 +99,9 @@ ActiveRecord::Schema.define(version: 20160810151157) do
   create_table "enrollments", force: :cascade do |t|
     t.integer  "reader_id"
     t.integer  "case_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "status",     default: 0
     t.index ["case_id"], name: "index_enrollments_on_case_id", using: :btree
     t.index ["reader_id"], name: "index_enrollments_on_reader_id", using: :btree
   end

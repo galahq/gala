@@ -41,6 +41,10 @@ class Reader < ApplicationRecord
     end
   end
 
+  def enrollment_for_case(c)
+    enrollments.find_by_case_id(c.id)
+  end
+
   private
   def generate_authentication_token
     loop do
