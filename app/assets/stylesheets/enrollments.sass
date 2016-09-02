@@ -1,0 +1,108 @@
+@import _globals
+@import case
+
+section.enrollments-section
+  height: auto
+  color: $white
+
+  a:hover
+    background-color: transparent
+    color: inherit
+    text-decoration: underline
+
+  form
+    color: tint($umichBlue, 80%)
+    width: 14em
+    margin-bottom: 1em
+
+    input
+      background-color: tint($umichBlue, 40%)
+      border-color: tint($umichBlue, 80%)
+      &:focus
+        border-color: tint($umichBlue, 80%)
+
+  &-readers
+    flex: 0 1 18em
+    background-color: tint($umichBlue, 23%)
+
+    h2
+      margin: 2rem 2rem 1rem 2rem
+      a
+        color: tint($umichBlue, 60%)
+
+    form, ul
+      margin: 0 2rem
+
+    .reader-tag
+      cursor: pointer
+
+    .enrollments-reader-plus
+      font-weight: bold
+      position: relative
+      display: inline-block
+      top: -1px
+      padding-left: 0.25em
+
+  .enrollments-section-readers-bucket
+    position: fixed
+    z-index: 200
+    bottom: -0.5em
+    padding-bottom: 0.25em
+    width: 18em
+    background-color: rgba($lightGreen, 0.8)
+
+    h3
+      flex: 0 0 100%
+      font-family: $sansFont
+      font-size: 95%
+      margin: 0
+      background-color: $darkGreen
+      padding: 0.1em 1em
+      display: flex
+      justify-content: space-between
+
+      span
+        text-transform: uppercase
+        letter-spacing: 1px
+
+    & > div
+      display: flex
+      flex-flow: row wrap
+      padding: 0.5em
+      #reader-icon
+        flex: 0 0 auto
+        margin: 0.21em
+
+        &:nth-child(n+7)
+          margin-top: -1.5em
+
+  &-cases
+    padding: 1em 2em
+    flex: 1
+
+    table
+      border-collapse: collapse
+
+    .enrollments-case
+      vertical-align: center
+
+      td
+        padding: 0.25em 0.75em
+        &:first-child
+          padding-left: 0
+
+        &.enrollments-case-kicker
+          padding-right: 3em
+
+      img
+        width: 50px
+        height: 50px
+        object-fit: cover
+        border-radius: 2px
+
+      &-status-drop
+        width: 10em
+        padding: 0.5em
+        text-align: center
+        background-color: tint($umichBlue, 22%)
+        border: 1px solid tint($umichBlue, 26%)

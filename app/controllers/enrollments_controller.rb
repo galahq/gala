@@ -1,11 +1,13 @@
 class EnrollmentsController < ApplicationController
   before_action :set_enrollment, only: [:show, :update, :destroy]
 
+  layout "admin"
+  helper CasesHelper
+
   # GET /enrollments
   def index
-    @enrollments = Enrollment.all
-
-    render json: @enrollments
+    @cases = Case.all.includes(:enrollments).sort_by(&:kicker)
+    @readers = Reader.all.order(:name)
   end
 
   # GET /enrollments/1

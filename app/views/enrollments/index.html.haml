@@ -1,0 +1,51 @@
+= render "admin_readers_menu"
+
+%section.enrollments-section.enrollments-section-readers
+  %h2
+    %span Readers
+    •
+    %a{href: "#"} Groups
+  %form
+    %label{for: "filter-readers"} Filter Readers:
+    %input{name: "filter-readers", type: 'text'}
+
+  %ul
+    -@readers.each do |r|
+      %li.enrollments-reader{data: {reader_id: r.id}}
+        .reader-tag
+          #reader-icon{style: ("background-image: url(#{r.image_url})" unless r.image_url.blank?)}
+            %span= r.initials if r.image_url.blank?
+          %span.reader-name
+            = r.name
+            .enrollments-reader-plus
+              +
+  .enrollments-section-readers-bucket
+    %h3
+      %span Selected Readers
+      %a{href: "#"} + Group
+    %div
+      -@readers.sample(9).each do |r|
+        #reader-icon{style: ("background-image: url(#{r.image_url})" unless r.image_url.blank?)}
+          %span= r.initials if r.image_url.blank?
+
+
+%section.enrollments-section.enrollments-section-cases
+  %h2 Cases
+  %form
+    %label{for: "filter-cases"} Filter Cases:
+    %input{name: "filter-cases", type: 'text'}
+
+  %table
+    -@cases.each do |c|
+      %tr.enrollments-case
+        %td
+          %img{src: ix_cover_image(c, :small)}
+        %td.enrollments-case-kicker= c.kicker
+        - Enrollment.statuses.each do |status, status_i|
+          %td
+            .enrollments-case-status-drop{data: {case_slug: c.slug, enrollment_status: status}}
+              = num = c.enrollments.where(status: status_i).count
+              = status.pluralize(num)
+
+
+
