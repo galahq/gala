@@ -1,6 +1,12 @@
 @import _globals
 @import case
 
+main#enrollments-app
+  display: flex
+  margin: 0
+  padding: 0 !important
+  height: auto
+
 section.enrollments-section
   height: auto
   color: $white
@@ -26,6 +32,7 @@ section.enrollments-section
     background-color: tint($umichBlue, 23%)
 
     h2
+      text-transform: capitalize
       margin: 2rem 2rem 1rem 2rem
       a
         color: tint($umichBlue, 60%)
@@ -35,6 +42,9 @@ section.enrollments-section
 
     .reader-tag
       cursor: pointer
+
+      span.reader-name.reader-selected
+        background-color: rgba($lightGreen, 0.5)
 
     .enrollments-reader-plus
       font-weight: bold
@@ -69,6 +79,7 @@ section.enrollments-section
       display: flex
       flex-flow: row wrap
       padding: 0.5em
+      position: relative
       #reader-icon
         flex: 0 0 auto
         margin: 0.21em
@@ -106,3 +117,7 @@ section.enrollments-section
         text-align: center
         background-color: tint($umichBlue, 22%)
         border: 1px solid tint($umichBlue, 26%)
+
+        &-over
+          background-color: rgba($lightGreen, 0.3)
+          border-color: $lightGreen

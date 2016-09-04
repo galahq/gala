@@ -19,4 +19,8 @@ module CasesHelper
             end || []
     return "#{c.cover_url}?#{opts.join '&'}"
   end
+
+  def cases_as_json(cases)
+    array = cases.map { |c| raw render partial: 'cases/case', formats: [:json], locals: {c: c} }
+  end
 end
