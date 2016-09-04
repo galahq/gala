@@ -3,8 +3,6 @@ import { render } from 'react-dom';
 import { Router, Route, IndexRoute, useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history'
 
-window.$ = require('jquery');
-
 import Case from 'Case.js'
 import CaseReader from 'CaseReader.js'
 import {CaseOverview} from 'CaseOverview.js'
