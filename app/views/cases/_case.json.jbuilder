@@ -32,7 +32,7 @@ if reader_signed_in?
   if current_reader.can_update? c
     json.enrollments do
       json.student c.enrollments.select(&:student?)
-      json.reviewer c.enrollments.select(&:reviewer?)
+      json.instructor c.enrollments.select(&:instructor?)
     end
   end
 else

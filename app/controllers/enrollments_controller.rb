@@ -24,7 +24,7 @@ class EnrollmentsController < ApplicationController
       Enrollment.transaction do
         enrollments.each(&:save!)
       end
-      render json: {student: c.enrollments.select(&:student?), reviewer: c.enrollments.select(&:reviewer?)}
+      render json: {student: c.enrollments.select(&:student?), instructor: c.enrollments.select(&:instructor?)}
     rescue ActiveRecord::RecordInvalid => invalid
       render status: :unprocessable_entity
     end

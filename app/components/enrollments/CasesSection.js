@@ -9,7 +9,7 @@ class CaseRow extends React.Component {
     return <tr className="enrollments-case">
       <td><img src={smallCoverUrl} /></td>
       <td className="enrollments-case-kicker">{kicker}</td>
-      {['student', 'reviewer'].map((type) => {
+      {['student', 'instructor'].map((type) => {
         return <td key={type}>
           <CaseEnrollment
             caseSlug={slug}
