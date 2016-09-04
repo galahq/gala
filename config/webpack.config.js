@@ -29,7 +29,7 @@ module.exports = {
   module: {
     loaders: [
       {
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules\/(?!(react-animate)\/.*)/,
         test: /\.jsx?$/,
         loader: 'babel',
         query: {

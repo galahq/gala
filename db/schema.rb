@@ -83,14 +83,10 @@ ActiveRecord::Schema.define(version: 20160901142137) do
     t.string   "thumbnail_url"
     t.hstore   "content_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.text     "slug",              null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.text     "slug",          null: false
     t.integer  "card_id"
-    t.hstore   "instructions_i18n"
-    t.hstore   "image_url_i18n"
-    t.hstore   "website_url_i18n"
-    t.hstore   "embed_code_i18n"
     t.index ["card_id"], name: "index_edgenotes_on_card_id", using: :btree
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
     t.index ["slug"], name: "index_edgenotes_on_slug", unique: true, using: :btree
