@@ -24,14 +24,32 @@ class CaseRow extends React.Component {
 }
 
 class CasesTable extends React.Component {
-  render() {
-    return <table>
+  renderCases(cases) {
+    return cases.map((c) => {
+      return <CaseRow key={c.slug} case={c} updateEnrollments={this.props.updateEnrollments} />
+    })
+  }
+
+  renderCaseSection(sectionName, cases) {
+    if (cases.length > 0) {
+      return [
+        <thead>
+          <td colSpan="4">{sectionName}</td>
+        </thead>,
         <tbody>
-          {this.props.cases.map((c) => {
-            return <CaseRow key={c.slug} case={c} updateEnrollments={this.props.updateEnrollments} />
-          })}
+          {this.renderCases(cases)}
         </tbody>
-      </table>
+      ]
+    } else { return null }
+  }
+
+  render() {
+    let forthcomingCases = this.props.cases.filter( (c) => { return c.published !== true } )
+    let publishedCases = this.props.cases.filter( (c) => { return c.published === true } )
+    return <table>
+      {this.renderCaseSection("Forthcoming Cases", forthcomingCases)}
+      {this.renderCaseSection("Published Cases", publishedCases)}
+    </table>
   }
 }
 
