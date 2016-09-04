@@ -3,7 +3,7 @@ import mapNL from 'concerns/mapNL.js'
 import {I18n} from 'I18n.js'
 import {Link} from 'react-router'
 
-import {orchard, update} from 'concerns/orchard.js'
+import {orchard, updateOrchard} from 'concerns/orchard.js'
 
 class Case extends React.Component {
 
@@ -35,7 +35,7 @@ class Case extends React.Component {
     caseParams[attribute] = content
 
     let slug = this.state.caseData.slug
-    update(`cases/${slug}`, {case: caseParams})
+    updateOrchard(`cases/${slug}`, {case: caseParams})
       .then(() => {
         orchard(`cases/${slug}`).then( (response) => {
         this.setState({
