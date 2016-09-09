@@ -11,7 +11,7 @@ export class Billboard extends React.Component {
   }
 
   render() {
-    let {kicker, title, dek, coverUrl, summary, caseAuthors, translators, handleEdit} = this.props
+    let {kicker, title, dek, coverUrl, photoCredit, summary, caseAuthors, translators, handleEdit} = this.props
     return (
       <section className="Billboard">
         <BillboardTitle
@@ -19,6 +19,7 @@ export class Billboard extends React.Component {
           title={title}
           translators={translators}
           coverUrl={coverUrl}
+          photoCredit={photoCredit}
           caseAuthors={caseAuthors}
           handleEdit={handleEdit}
         />

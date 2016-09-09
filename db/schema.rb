@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160901142137) do
+ActiveRecord::Schema.define(version: 20160909151439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20160901142137) do
     t.hstore   "translators_i18n", default: {"en"=>"[]"}, null: false
     t.hstore   "kicker_i18n"
     t.hstore   "dek_i18n"
+    t.text     "photo_credit"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
@@ -87,6 +88,7 @@ ActiveRecord::Schema.define(version: 20160901142137) do
     t.datetime "updated_at",    null: false
     t.text     "slug",          null: false
     t.integer  "card_id"
+    t.text     "photo_credit"
     t.index ["card_id"], name: "index_edgenotes_on_card_id", using: :btree
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
     t.index ["slug"], name: "index_edgenotes_on_slug", unique: true, using: :btree
@@ -136,6 +138,7 @@ ActiveRecord::Schema.define(version: 20160901142137) do
     t.integer  "position"
     t.string   "artwork_url"
     t.hstore   "credits_i18n"
+    t.text     "photo_credit"
     t.index ["case_id"], name: "index_podcasts_on_case_id", using: :btree
   end
 

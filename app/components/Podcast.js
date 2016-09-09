@@ -59,10 +59,14 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   }
 
   render() {
-    let {title, artwork, audio} = this.props
+    let {title, artwork, audio, photoCredit} = this.props
     return (
-      <div className="PodcastPlayer" > <div className="artwork"
-          style={{backgroundImage: `url(${artwork})`}}>
+      <div className="PodcastPlayer" >
+        <div
+          className="artwork"
+          style={{backgroundImage: `url(${artwork})`}}
+        >
+          <cite dangerouslySetInnerHTML={{__html: photoCredit}} />
         </div>
         <div
           className="credits"
@@ -96,6 +100,7 @@ class Podcast extends React.Component {
           artwork={this.props.podcast.artworkUrl}
           audio={this.props.podcast.audioUrl}
           credits={this.props.podcast.credits}
+          photoCredit={this.props.podcast.photoCredit}
         />
 
         <div className="PodcastInfo">
