@@ -2,6 +2,8 @@ class EnrollmentsController < ApplicationController
   layout "admin"
   helper CasesHelper
 
+  before_action :authenticate_reader!
+  authorize_actions_for Enrollment
   authority_actions :upsert => 'update'
 
   # GET /enrollments
