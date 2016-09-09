@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-window.$ = require('jquery');
-
 /**
  * Prevent default behavior for event
  *
