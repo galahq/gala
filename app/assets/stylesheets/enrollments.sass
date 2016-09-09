@@ -99,13 +99,21 @@ section.enrollments-section
       letter-spacing: 1px
       padding-left: 0 !important
 
+    td
+      border-width: 1px
+      border-style: solid
+      border-color: transparent
+
     .enrollments-case
       vertical-align: center
 
+      &:hover
+        cursor: pointer
+        td
+          background-color: tint($umichBlue, 22%)
+
       td
         padding: 0.25em 0.75em
-        &:first-child
-          padding-left: 0
 
         &.enrollments-case-kicker
           padding-right: 3em
@@ -126,3 +134,23 @@ section.enrollments-section
         &-over
           background-color: rgba($lightGreen, 0.3)
           border-color: $lightGreen
+
+.enrollments-details
+  padding: 0em 0.5em 1em 0.5em
+  display: flex
+
+  .BillboardTitle
+    flex: 2
+    padding: 0
+    h1
+      font-size: 110%
+
+  .enrollments-case-enrolled-readers
+    flex: 1
+
+    h5
+      font-family: $sansFont
+      text-transform: uppercase
+      font-weight: bold
+      font-style: normal
+      letter-spacing: 1px
