@@ -40,7 +40,7 @@ class SelectedReadersBucket extends React.Component {
       return <div className="enrollments-section-readers-bucket">
         <h3>
           <span>Selected Readers</span>
-          <a>+ Group</a>
+          <a onClick={this.props.clearSelection}>Clear</a>
         </h3>
         <SelectedReaders selectedReaders={selectedReaders} />
       </div>
@@ -84,6 +84,10 @@ export class ReadersSection extends React.Component {
       })
   }
 
+  clearSelectedReaders() {
+    this.setState({selectedReaders: []})
+  }
+
   onSubmit(e) {
     e.preventDefault()
 
@@ -122,7 +126,10 @@ export class ReadersSection extends React.Component {
           selectReader={this.selectReader.bind(this)}
         />
 
-        <SelectedReadersBucket selectedReaders={this.state.selectedReaders} />
+        <SelectedReadersBucket
+          selectedReaders={this.state.selectedReaders}
+          clearSelection={this.clearSelectedReaders.bind(this)}
+        />
       </section>
     )
 
