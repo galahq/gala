@@ -11,7 +11,7 @@ export var orchard = (path) => {
     then( (response) => { return response.json() } )
 }
 
-export var update = (path, params) => {
+export var updateOrchard = (path, params) => {
   let body = JSON.stringify(params)
   let r = new Request(
     `/${path}.json`, {
@@ -25,5 +25,6 @@ export var update = (path, params) => {
       })
     }
   )
-  return fetch(r)
+  return fetch(r).
+    then( (response) => { return response.json() } )
 }

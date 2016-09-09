@@ -1,5 +1,6 @@
 json.key_format! camelize: :lower
-json.extract! c, *%i(slug published kicker title dek case_authors summary tags)
+json.extract! c, *%i(slug published kicker title dek case_authors summary tags photo_credit)
+json.small_cover_url ix_cover_image(c, :small)
 json.cover_url ix_cover_image(c, :billboard)
 json.translators translators_string c
 json.pages c.pages do |page|
@@ -25,6 +26,14 @@ end
 if reader_signed_in?
   json.reader do
     json.partial! current_reader
+    json.can_update_case current_reader.can_update? c
+  end
+
+  if current_reader.can_update? c
+    json.enrollments do
+      json.student c.enrollments.select(&:student?)
+      json.instructor c.enrollments.select(&:instructor?)
+    end
   end
 else
   json.sign_in_form (render partial: 'devise/sessions/sign_in', formats: [:html],

@@ -3,10 +3,13 @@ var path = require('path');
 
 module.exports = {
   devtool: 'eval',
-  entry: ['whatwg-fetch', './lib/webpack/application.js'],
+  entry: {
+    "case": ['whatwg-fetch', 'case.entry.js'],
+    enrollments: ['whatwg-fetch', 'enrollments.entry.js']
+  },
   output: {
     path: './app/assets/javascripts/react',
-    filename: 'bundle.js'
+    filename: '[name].bundle.js'
   },
   plugins: [
     new webpack.optimize.DedupePlugin(),
@@ -26,6 +29,7 @@ module.exports = {
   module: {
     loaders: [
       {
+        exclude: /node_modules\/(?!(react-animate)\/.*)/,
         test: /\.jsx?$/,
         loader: 'babel',
         query: {

@@ -4,8 +4,8 @@
   "description": "Learning system for Michigan Sustainability Cases",
   "main": "app/application.js",
   "scripts": {
-    "webpack:deploy": "webpack --config=./lib/webpack/webpack.config.js -p --progress --colors",
-    "webpack:watch": "webpack --config=./lib/webpack/webpack.config.js -p --progress --colors --watch",
+    "webpack:deploy": "webpack --config=./config/webpack.config.js -p --progress --colors",
+    "webpack:watch": "webpack --config=./config/webpack.config.js -p --progress --colors --watch",
     "heroku-postbuild": "npm run webpack:deploy"
   },
   "repository": {
@@ -23,12 +23,13 @@
     "express": "^4.13.3",
     "file-loader": "^0.8.5",
     "history": "^1.17.0",
-    "jquery": "^2.2.0",
     "json-loader": "^0.5.4",
     "node-sass": "^3.4.2",
     "raw-loader": "^0.5.1",
     "react": "^0.14.5",
     "react-animate": "^3.0.0",
+    "react-dnd": "^2.1.4",
+    "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^0.14.5",
     "react-google-analytics": "^0.2.0",
     "react-router": "^2.0.0-rc5",

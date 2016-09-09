@@ -7,11 +7,10 @@ Rails.application.routes.draw do
   get '/read/497/(*x)', to: redirect('/cases/mi-wolves')
 
   scope "(:locale)", locale: locale_regex do
-    resources :enrollments
     resources :groups
     resources :comment_threads
     resources :comments
-    resources :cases, param: :slug do
+    resources :cases, only: %i(index show), param: :slug do
       resources :activities, param: :position
       resources :podcasts, param: :position
       resources :edgenotes, shallow: true, param: :slug
@@ -20,8 +19,27 @@ Rails.application.routes.draw do
       sessions: 'readers/sessions',
       registrations: 'readers/registrations'
     }
-    resources :readers
+    resources :readers, only: %i(show edit update)
   end
+
+  scope 'admin' do
+    resources :readers, except: %i(show edit update) do
+      collection do
+        resources :enrollments, only: %i(index)
+      end
+    end
+    resources :cases, except: %i(index show), param: :slug do
+      resources :readers, only: %i(destroy) do
+        resources :enrollments, only: [] do
+          collection do
+            put :upsert
+            delete :destroy
+          end
+        end
+      end
+    end
+  end
+
   devise_for :readers, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'readers/omniauth_callbacks',
   }

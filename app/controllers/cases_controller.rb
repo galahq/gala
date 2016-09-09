@@ -6,8 +6,9 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @featured = Case.featured.sort
-    @index = Case.in_index.sort_by &:title
+    @cases = Case.all.includes(:activities, :podcasts, :enrollments, :edgenotes, pages: [:cards]).sort_by &:kicker
+    @featured = @cases.select(&:featured?).sort
+    @index = @cases.select(&:in_index?).sort_by &:title
     render layout: "window"
   end
 

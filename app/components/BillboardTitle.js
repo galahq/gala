@@ -30,6 +30,7 @@ class BillboardTitle extends React.Component {
           {this.props.title}
         </h1>
         {this.renderAuthors()}
+        <cite dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
       </div>
     )
   }

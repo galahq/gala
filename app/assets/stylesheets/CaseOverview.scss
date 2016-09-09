@@ -90,3 +90,23 @@
   }
 }
 
+.BillboardTitle,
+.PodcastPlayer .artwork {
+
+  position: relative;
+
+  cite {
+    font-size: 65%;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+    text-transform: uppercase;
+    color: $white;
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.75em;
+    text-align: right;
+    max-width: 18em;
+    line-height: 1em;
+  }
+}

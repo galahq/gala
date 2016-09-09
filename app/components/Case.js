@@ -3,7 +3,7 @@ import mapNL from 'concerns/mapNL.js'
 import {I18n} from 'I18n.js'
 import {Link} from 'react-router'
 
-import {orchard, update} from 'concerns/orchard.js'
+import {orchard, updateOrchard} from 'concerns/orchard.js'
 
 class Case extends React.Component {
 
@@ -35,7 +35,7 @@ class Case extends React.Component {
     caseParams[attribute] = content
 
     let slug = this.state.caseData.slug
-    update(`cases/${slug}`, {case: caseParams})
+    updateOrchard(`cases/${slug}`, {case: caseParams})
       .then(() => {
         orchard(`cases/${slug}`).then( (response) => {
         this.setState({
@@ -54,11 +54,18 @@ class Case extends React.Component {
                         <I18n meaning={this.state.saveMessage} />
                       </div>
     } else if (!c.published) {
+      var link = null
+      if (c.reader.canUpdateCase) {
+        link = <span>
+                 &ensp;&mdash;&ensp;
+                 <Link to={`/edit${this.props.location.pathname}`}>
+                   <I18n meaning="edit_this_case" />
+                 </Link>
+               </span>
+      }
       editStatusBar = <div className="flash flash-info">
-                        <I18n meaning='this_case_is_not_yet_published' />&ensp;&mdash;&ensp;
-                        <Link to={`/edit${this.props.location.pathname}`}>
-                          <I18n meaning="edit_this_case" />
-                        </Link>
+                        <I18n meaning='this_case_is_not_yet_published' />
+                        {link}
                       </div>
     }
 
