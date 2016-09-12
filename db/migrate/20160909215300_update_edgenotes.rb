@@ -281,7 +281,8 @@ class UpdateEdgenotes < ActiveRecord::Migration
       image_url: "https://msc-gala.imgix.net/carbon-sequester-in-coastal-habitats-screenshot.png",
     )
 
-    Edgenote.find_by_slug("decline-in-tourism-in-2002").update(
+    Edgenote.find_by_slug("decline-in-tourism-in-2002-and-2005").update(
+      slug: "decline-in-tourism-in-2002",
       thumbnail_url: "https://msc-gala.imgix.net/decline-in-tourism-in-2002-and-2005-thumb.jpg",
       website_url: "http://www.insideindonesia.org/post-bomb-lessons",
       image_url: "https://msc-gala.imgix.net/decline-in-tourism-in-2002-and-2005-screenshot.png",
