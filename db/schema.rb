@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909151439) do
+ActiveRecord::Schema.define(version: 20160909215300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,11 +88,12 @@ ActiveRecord::Schema.define(version: 20160909151439) do
     t.datetime "updated_at",        null: false
     t.text     "slug",              null: false
     t.integer  "card_id"
-    t.text     "photo_credit"
     t.hstore   "instructions_i18n"
     t.hstore   "image_url_i18n"
     t.hstore   "website_url_i18n"
     t.hstore   "embed_code_i18n"
+    t.hstore   "photo_credit_i18n"
+    t.hstore   "pdf_url_i18n"
     t.index ["card_id"], name: "index_edgenotes_on_card_id", using: :btree
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
     t.index ["slug"], name: "index_edgenotes_on_slug", unique: true, using: :btree

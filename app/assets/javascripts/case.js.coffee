@@ -79,3 +79,12 @@ $(document).on 'ready turbolinks:load', ->
 
   $('.carousel').on 'swiperight', () -> carouselRight()
   $('.carousel').on 'swiperight', () -> carouselLeft()
+
+#############
+# CITATIONS #
+#############
+
+$(document).on "ready gala:narrative:load", () ->
+  console.log("gala:narrative:load")
+  $(".citation").click () ->
+    $(this).toggleClass "citation-visible"

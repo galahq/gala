@@ -7,15 +7,15 @@ class Case < ApplicationRecord
 
   resourcify
 
-  has_many :edgenotes
-  has_many :podcasts, -> { order position: :asc }
-  has_many :activities, -> { order position: :asc }
-  has_many :comment_threads
+  has_many :edgenotes, dependent: :destroy
+  has_many :podcasts, -> { order position: :asc }, dependent: :destroy
+  has_many :activities, -> { order position: :asc }, dependent: :destroy
+  has_many :comment_threads, dependent: :destroy
   has_many :comments, through: :comment_threads
-  has_many :enrollments
+  has_many :enrollments, dependent: :destroy
   has_many :readers, through: :enrollments
-  has_many :pages, -> { order position: :asc }
-  has_many :cases, through: :pages
+  has_many :pages, -> { order position: :asc }, dependent: :destroy
+  has_many :cards, through: :pages
 
   scope :published, -> { where(published: true)  }
 
@@ -23,9 +23,9 @@ class Case < ApplicationRecord
 
   def <=>(anOther)
     if published ^ anOther.try(:published)
-      return published ? -1 : 1
+      return published ? 1 : -1
     elsif publication_date == nil || anOther.publication_date == nil
-      return publication_date.nil? ? 1 : -1
+      return publication_date.nil? ? -1 : 1
     end
     publication_date <=> anOther.publication_date
   end

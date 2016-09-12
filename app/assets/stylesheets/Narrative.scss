@@ -54,17 +54,25 @@ article {
     padding: 1.2em 2.4em;
   }
 
-  a {
+  a:not([data-edgenote]) {
+    color: $darkGreen;
+    &:hover {
+      background-color: transparent;
+      text-decoration: underline;
+    }
+  }
+
+  a[data-edgenote] {
     text-decoration: none;
     color: inherit;
     box-shadow: inset 0 -.35em 0 $lightGreen;
     border-bottom: 1px solid $lightGreen;
     transition: background .15s cubic-bezier(.33, .66, .66, 1);
-  }
 
-  a:hover {
-    background-color: $lightGreen;
-    color: inherit;
+    &:hover {
+      background-color: $lightGreen;
+      color: inherit;
+    }
   }
 }
 
@@ -106,6 +114,7 @@ footer h2 {
 
 .citation {
   position: relative;
+  cursor: pointer;
 
   .citation-label {
     color: shade($lightGreen, 30%)
@@ -117,17 +126,21 @@ footer h2 {
     position: absolute;
     background: $lightGreen;
     font: 14px $sansFont;
-    width: 12em;
+    width: 20em;
     padding: 0.25em 0.5em;
     left: 0.75em;
     border-radius: 2px;
     box-shadow: 0 0 10px rgba(black, 0.2);
 
     opacity: 0;
+    pointer-events: none;
+
+    & a { text-decoration: underline }
   }
 
-  &:hover cite {
+  &.citation-visible cite {
     opacity: 100;
+    pointer-events: initial;
   }
 }
 

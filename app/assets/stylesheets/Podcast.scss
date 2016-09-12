@@ -8,7 +8,7 @@ $threeColumnCutoff: 930px;
 }
 
 .Podcast {
-  flex: 0 2 50em;
+  flex: 0 2 70em;
   display: flex;
   @media screen and (max-width: $threeColumnCutoff) { flex-flow: row wrap; }
   position: relative;
@@ -83,7 +83,7 @@ $threeColumnCutoff: 930px;
 
 .PodcastInfo {
   min-width: 20em;
-  flex: 0 1 35em;
+  flex: 0 1 45em;
   margin: 0 1em;
   p { @media screen and (max-width: $mobileCutoff) { padding: 0.5em 0; } }
   @media screen and (max-width: $threeColumnCutoff) { flex-grow: 1; }

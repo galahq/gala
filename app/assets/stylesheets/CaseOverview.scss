@@ -91,7 +91,8 @@
 }
 
 .BillboardTitle,
-.PodcastPlayer .artwork {
+.PodcastPlayer .artwork,
+.EdgenoteDisplay {
 
   position: relative;
 
@@ -108,5 +109,6 @@
     text-align: right;
     max-width: 18em;
     line-height: 1em;
+    text-shadow: 0 0 1em rgba(black, 40%);
   }
 }

@@ -15,7 +15,7 @@
   &-window {
     z-index: 110;
     -webkit-box-sizing: border-box;
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     margin: 7%;
     padding: 1em;
     background-color: rgba( darken($black, 10%), 0.8 );
@@ -56,6 +56,7 @@
     max-height: 100%;
     object-fit: contain;
     cursor: zoom;
+    margin: 0 auto;
   }
 
   a {
@@ -92,6 +93,14 @@
     overflow: scroll;
     width: 100%;
 
+    figure {
+      margin: 1em auto 0 auto;
+      figcaption {
+        font-size: 90%;
+        font-style: italic;
+      }
+    }
+
     & > * {
       margin: auto;
       max-width: 35em;
@@ -112,6 +121,8 @@
     padding: 0.75em 1.5em;
     border: 0.5em solid $lightGreen;
     background-color: $white;
+    max-height: 12.85em;
+    overflow: scroll;
 
     .edgenote-icon { bottom: -6pt; }
     g { stroke: shade($lightGreen, 60%) }
@@ -124,6 +135,12 @@
 
     p {
       margin: 0.5em 0 0 0;
+
+      a { color: lighten($umichBlue, 15%); }
+      a:hover {
+        background-color: transparent;
+        text-decoration: underline;
+      }
     }
   }
 
