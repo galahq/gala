@@ -78,7 +78,7 @@ class EdgenoteDisplay extends React.Component {
   }
 
   renderImage() {
-    return <img src={this.props.imageUrl} />
+    return <a target="_blank" href={this.props.imageUrl}><img src={this.props.imageUrl} /></a>
   }
 
   renderPDF() {
