@@ -93,6 +93,11 @@
     overflow: scroll;
     width: 100%;
 
+    p {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
     figure {
       margin: 1em auto 0 auto;
       figcaption {
