@@ -25,7 +25,6 @@ class Narrative extends React.Component {
   componentDidUpdate() {
     let top = document.getElementById('top');
     if (top && window.innerWidth < 749) {top.scrollIntoView()}
-    $(document).trigger("gala:narrative:load")
   }
 
   nextLink() {
@@ -126,7 +125,7 @@ class Card extends React.Component {
   }
 
   renderCitations(content) {
-    return content.replace(/(<cite>.+?<\/cite>)/g, '<span class="citation"><span class="citation-label"> °</span>$1</span>')
+    return content.replace(/(<cite>.+?<\/cite>)/g, '<span class="citation" onclick="toggleCitation(event)"><span class="citation-label"><sup>◦</sup></span>$1</span>')
   }
 
   renderContent() {
