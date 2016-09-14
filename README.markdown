@@ -14,3 +14,9 @@ vagrant`, perhaps), and then
 4. `cd /vagrant`
 5. `npm run dev`
 6. Browse to http://localhost:3333/
+
+
+# Changelog
+
+## 1.0 (2016-08-15)
+Rails stack.

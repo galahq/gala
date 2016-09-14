@@ -7,6 +7,7 @@
   src: font-url('aleo-regular-webfont.woff') format('woff');
 }
 
+html { overflow-x: hidden; }
 html, body, div#Case {height: 100%}
 div#container { height: calc(100% - 70px - 1em) }
 body {
@@ -117,4 +118,41 @@ strong {
     to {
         transform:rotate(360deg);
     }
+}
+
+.dialog {
+  background-color: $white;
+  border: 0.5em solid $purple;
+  padding: 1em;
+
+  color: $darkPurple;
+
+  h1, h2, h3, h4, h5, h6, p, a {
+    font-size: 17px;
+    font-family: $sansFont;
+    &:first-child {margin-top: 0}
+    &:last-child {margin-bottom: 0}
+  }
+
+  h1, h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+}
+
+a {
+  cursor: pointer;
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+sup, sub {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.4em;
+}
+sub {
+  top: 0.4em;
 }

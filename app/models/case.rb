@@ -1,17 +1,34 @@
 class Case < ApplicationRecord
   include Authority::Abilities
+  include Comparable
 
-  has_many :edgenotes
-  has_many :podcasts
-  has_many :activities
-  has_many :comment_threads
+  translates :kicker, :title, :dek, :summary, :narrative, :translators
+  enum catalog_position: %i(in_index featured)
+
+  resourcify
+
+  has_many :edgenotes, dependent: :destroy
+  has_many :podcasts, -> { order position: :asc }, dependent: :destroy
+  has_many :activities, -> { order position: :asc }, dependent: :destroy
+  has_many :comment_threads, dependent: :destroy
   has_many :comments, through: :comment_threads
-  has_many :enrollments
+  has_many :enrollments, dependent: :destroy
   has_many :readers, through: :enrollments
-
-  translates :title, :summary, :narrative
+  has_many :pages, -> { order position: :asc }, dependent: :destroy
+  has_many :cards, through: :pages
 
   scope :published, -> { where(published: true)  }
+
+  validates :publication_date, presence: true, if: :published?
+
+  def <=>(anOther)
+    if published ^ anOther.try(:published)
+      return published ? 1 : -1
+    elsif publication_date == nil || anOther.publication_date == nil
+      return publication_date.nil? ? -1 : 1
+    end
+    publication_date <=> anOther.publication_date
+  end
 
   def to_param
     slug
@@ -21,8 +38,15 @@ class Case < ApplicationRecord
     authors.to_sentence
   end
 
-  def segments
-    narrative.split(/(?:<h1.*?>(.*?)<\/h1>)/)[1..-1].each_slice(2).to_a
+  def has_translators?
+    locales_for_reading_column(:translators).include? I18n.locale
+  end
+
+  def translator_names
+    JSON.parse translators
+  end
+  def translator_names=(t)
+    translators = t.to_json
   end
 
 end

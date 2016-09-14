@@ -87,7 +87,7 @@ fr:
         image_url: URL de l'image  #g
         last_sign_in_at: Dernière connexion à  #g
         last_sign_in_ip: Dernière connexion ip  #g
-        name: prénom  #g
+        name: nom complet  #g
         provider: Fournisseur  #g
         remember_created_at: Rappelez-vous créé  #g
         reset_password_sent_at: Réinitialiser le mot de passe envoyé à  #g
@@ -103,3 +103,11 @@ fr:
   devise:
     sessions:
       destroy: Déconnexion
+    registrations:
+      new:
+        minimum_characters: '%{count} caractères au moins'
+      edit:
+        change_my_password: Changez mon mot de passe
+        my_account: Mon compte
+        to_confirm_your_changes: pour confirmer vos changes
+        save: Enregistrer

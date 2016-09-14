@@ -1,49 +1,44 @@
 class EnrollmentsController < ApplicationController
-  before_action :set_enrollment, only: [:show, :update, :destroy]
+  layout "admin"
+  helper CasesHelper
+
+  before_action :authenticate_reader!
+  authorize_actions_for Enrollment
+  authority_actions :upsert => 'update'
 
   # GET /enrollments
   def index
-    @enrollments = Enrollment.all
-
-    render json: @enrollments
+    @cases = Case.all.includes(:enrollments).sort_by(&:kicker)
+    @readers = Reader.all.order(:name)
   end
 
-  # GET /enrollments/1
-  def show
-    render json: @enrollment
-  end
+  def upsert
+    c = Case.find_by_slug params[:case_slug]
+    readers = params[:reader_id].split ','
 
-  # POST /enrollments
-  def create
-    @enrollment = Enrollment.new(enrollment_params)
-
-    if @enrollment.save
-      render json: @enrollment, status: :created, location: @enrollment
-    else
-      render json: @enrollment.errors, status: :unprocessable_entity
+    enrollments = readers.map do |reader_id|
+      enrollment = Enrollment.find_or_initialize_by(case_id: c.id, reader_id: reader_id)
+      enrollment.status = Enrollment.statuses[params[:status]]
+      enrollment
     end
-  end
 
-  # PATCH/PUT /enrollments/1
-  def update
-    if @enrollment.update(enrollment_params)
-      render json: @enrollment
-    else
-      render json: @enrollment.errors, status: :unprocessable_entity
+    begin
+      Enrollment.transaction do
+        enrollments.each(&:save!)
+      end
+      render json: {student: c.enrollments.select(&:student?), instructor: c.enrollments.select(&:instructor?)}
+    rescue ActiveRecord::RecordInvalid => invalid
+      render status: :unprocessable_entity
     end
   end
 
   # DELETE /enrollments/1
   def destroy
-    @enrollment.destroy
+    @enrollments = Enrollment.find(params[:id])
+    @enrollments.each(&:destroy)
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_enrollment
-      @enrollment = Enrollment.find(params[:id])
-    end
-
     # Only allow a trusted parameter "white list" through.
     def enrollment_params
       params.require(:enrollment).permit(:reader_id, :case_id)

@@ -21,39 +21,47 @@
       @media screen and (max-width: $mobileCutoff) {
         padding: 1em;
       }
+      h3 { font-style: italic }
     }
   }
 
-  .Actions {
+  .CaseOverviewRight {
     @include flex($fg: 0, $fs: 1, $fb: 25em);
-    margin: 1em;
-    background-color: rgba( darken($black, 10%), 0.6 );
-    border-radius: 2pt;
-    height: 100%;
-    padding: 1em;
 
-    ul {
-      color: lighten($umichMaize, 20%);
-      list-style-type: circle;
-      margin: 0.5em 0;
-      padding-left: 1.5em;
-    }
+    & > * { margin: 1em; }
+    .Actions {
+      background-color: rgba( darken($black, 10%), 0.6 );
+      border-radius: 2pt;
+      height: 100%;
+      padding: 1em;
 
-    h2 {
-      color: $white;
-
-      .ActionIcon {
-        float: left;
-        margin-top: -5px;
-        margin-right: 0.5em;
+      &.disabled {
+        ul, ol, a { color: mix($darkBlue, $white, 40%); }
       }
-    }
 
-    & >div {
-      margin-top: 2em;
-    }
-    & > div:first-child {
-      margin-top: 1em;
+      ul {
+        color: lighten($umichMaize, 20%);
+        list-style-type: circle;
+        margin: 0.5em 0;
+        padding-left: 1.5em;
+      }
+
+      h2 {
+        color: $white;
+
+        .ActionIcon {
+          float: left;
+          margin-top: -5px;
+          margin-right: 0.5em;
+        }
+      }
+
+      & >div {
+        margin-top: 2em;
+      }
+      & > div:first-child {
+        margin-top: 1em;
+      }
     }
   }
 }
@@ -68,7 +76,7 @@
 
   h1 {
     color: $white;
-    margin-bottom: 0;
+    margin: 0;
     width: 100%;
     line-height: 1.1;
   }
@@ -82,3 +90,25 @@
   }
 }
 
+.BillboardTitle,
+.PodcastPlayer .artwork,
+.EdgenoteDisplay {
+
+  position: relative;
+
+  cite {
+    font-size: 65%;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+    text-transform: uppercase;
+    color: $white;
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.75em;
+    text-align: right;
+    max-width: 18em;
+    line-height: 1em;
+    text-shadow: 0 0 1em rgba(black, 40%);
+  }
+}

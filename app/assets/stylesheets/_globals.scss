@@ -1,3 +1,4 @@
+@import '_tint_and_shade';
 $darkGreen: #357E3C;
 $lightGreen: #6ACB72;
 $purple: #7351D4;
@@ -10,6 +11,7 @@ $umichMaize: #F1C432;
 $umichBlue: #02284B;
 
 $darkBlue: #1E2934;
+$background: tint($umichBlue, 20%);
 
 $yellow: lighten($umichMaize, 20%);
 
@@ -22,5 +24,5 @@ $serifFont: "freight-text-pro";
 $serifFontSize: 100%;
 $serifLeading: $serifFontSize * 1.43;
 
-$headlineFont: "aleo";
+$headlineFont: "adelle";
 $sansFont: "tenso";

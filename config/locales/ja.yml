@@ -1,5 +1,6 @@
 ---
 ja:
+  name: 日本語
   activerecord:
     errors:
       messages:

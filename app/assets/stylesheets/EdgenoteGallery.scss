@@ -19,7 +19,9 @@
       background-color: $white;
       width: 17em;
 
-      svg path {
+      svg path,
+      svg polygon,
+      svg rect {
         stroke: lighten($umichBlue, 15%);
       }
 

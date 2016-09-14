@@ -1,5 +1,6 @@
 ---
 zh-TW:
+  name: 中文（簡體）
   activerecord:
     errors:
       messages:

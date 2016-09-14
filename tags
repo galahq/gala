@@ -1,0 +1,228 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+<=>	app/models/case.rb	/^  def <=>(anOther)$/;"	f	class:Case
+ActiveSupport	test/test_helper.rb	/^class ActiveSupport::TestCase$/;"	c
+ActivitiesController	app/controllers/activities_controller.rb	/^class ActivitiesController < ApplicationController$/;"	c
+ActivitiesControllerTest	test/controllers/activities_controller_test.rb	/^class ActivitiesControllerTest < ActionDispatch::IntegrationTest$/;"	c
+Activity	app/models/activity.rb	/^class Activity < ApplicationRecord$/;"	c
+ActivityTest	test/models/activity_test.rb	/^class ActivityTest < ActiveSupport::TestCase$/;"	c
+AddCardToEdgenotes	db/migrate/20160720200640_add_card_to_edgenotes.rb	/^class AddCardToEdgenotes < ActiveRecord::Migration[5.0]$/;"	c
+AddCatalogInfoToCases	db/migrate/20160709160633_add_catalog_info_to_cases.rb	/^class AddCatalogInfoToCases < ActiveRecord::Migration[5.0]$/;"	c
+AddCoverUrlToCase	db/migrate/20160516153452_add_cover_url_to_case.rb	/^class AddCoverUrlToCase < ActiveRecord::Migration[5.0]$/;"	c
+AddDetailsToPodcasts	db/migrate/20160701213227_add_details_to_podcasts.rb	/^class AddDetailsToPodcasts < ActiveRecord::Migration[5.0]$/;"	c
+AddInitialsToReader	db/migrate/20160622194431_add_initials_to_reader.rb	/^class AddInitialsToReader < ActiveRecord::Migration[5.0]$/;"	c
+AddKickerDekToCase	db/migrate/20160810151157_add_kicker_dek_to_case.rb	/^class AddKickerDekToCase < ActiveRecord::Migration[5.0]$/;"	c
+AddLocaleToReader	db/migrate/20160727194935_add_locale_to_reader.rb	/^class AddLocaleToReader < ActiveRecord::Migration[5.0]$/;"	c
+AddPositionToPodcastActivities	db/migrate/20160630171433_add_position_to_podcast_activities.rb	/^class AddPositionToPodcastActivities < ActiveRecord::Migration[5.0]$/;"	c
+AddSlugToEdgenote	db/migrate/20160609160112_add_slug_to_edgenote.rb	/^class AddSlugToEdgenote < ActiveRecord::Migration[5.0]$/;"	c
+AddSolidToCards	db/migrate/20160721182654_add_solid_to_cards.rb	/^class AddSolidToCards < ActiveRecord::Migration[5.0]$/;"	c
+AddTranslatorsToCase	db/migrate/20160720202753_add_translators_to_case.rb	/^class AddTranslatorsToCase < ActiveRecord::Migration[5.0]$/;"	c
+AnonymousUser	app/models/anonymous_user.rb	/^class AnonymousUser$/;"	c
+Application	config/application.rb	/^  class Application < Rails::Application$/;"	c	class:Orchard
+ApplicationAuthorizer	app/authorizers/application_authorizer.rb	/^class ApplicationAuthorizer < Authority::Authorizer$/;"	c
+ApplicationCable	app/channels/application_cable/channel.rb	/^module ApplicationCable$/;"	m
+ApplicationCable	app/channels/application_cable/connection.rb	/^module ApplicationCable$/;"	m
+ApplicationController	app/controllers/application_controller.rb	/^class ApplicationController < ActionController::Base$/;"	c
+ApplicationHelper	app/helpers/application_helper.rb	/^module ApplicationHelper$/;"	m
+ApplicationJob	app/jobs/application_job.rb	/^class ApplicationJob < ActiveJob::Base$/;"	c
+ApplicationMailer	app/mailers/application_mailer.rb	/^class ApplicationMailer < ActionMailer::Base$/;"	c
+ApplicationRecord	app/models/application_record.rb	/^class ApplicationRecord < ActiveRecord::Base$/;"	c
+Card	app/models/card.rb	/^class Card < ApplicationRecord$/;"	c
+CardTest	test/models/card_test.rb	/^class CardTest < ActiveSupport::TestCase$/;"	c
+Case	app/models/case.rb	/^class Case < ApplicationRecord$/;"	c
+CaseAuthorizer	app/authorizers/case_authorizer.rb	/^class CaseAuthorizer < ApplicationAuthorizer$/;"	c
+CaseTest	test/models/case_test.rb	/^class CaseTest < ActiveSupport::TestCase$/;"	c
+CasesController	app/controllers/cases_controller.rb	/^class CasesController < ApplicationController$/;"	c
+CasesControllerTest	test/controllers/cases_controller_test.rb	/^class CasesControllerTest < ActionDispatch::IntegrationTest$/;"	c
+CasesHelper	app/helpers/cases_helper.rb	/^module CasesHelper$/;"	m
+Channel	app/channels/application_cable/channel.rb	/^  class Channel < ActionCable::Channel::Base$/;"	c	class:ApplicationCable
+Comment	app/models/comment.rb	/^class Comment < ApplicationRecord$/;"	c
+CommentTest	test/models/comment_test.rb	/^class CommentTest < ActiveSupport::TestCase$/;"	c
+CommentThread	app/models/comment_thread.rb	/^class CommentThread < ApplicationRecord$/;"	c
+CommentThreadTest	test/models/comment_thread_test.rb	/^class CommentThreadTest < ActiveSupport::TestCase$/;"	c
+CommentThreadsController	app/controllers/comment_threads_controller.rb	/^class CommentThreadsController < ApplicationController$/;"	c
+CommentThreadsControllerTest	test/controllers/comment_threads_controller_test.rb	/^class CommentThreadsControllerTest < ActionDispatch::IntegrationTest$/;"	c
+CommentsController	app/controllers/comments_controller.rb	/^class CommentsController < ApplicationController$/;"	c
+CommentsControllerTest	test/controllers/comments_controller_test.rb	/^class CommentsControllerTest < ActionDispatch::IntegrationTest$/;"	c
+Connection	app/channels/application_cable/connection.rb	/^  class Connection < ActionCable::Connection::Base$/;"	c	class:ApplicationCable
+CreateActivities	db/migrate/20160516155813_create_activities.rb	/^class CreateActivities < ActiveRecord::Migration[5.0]$/;"	c
+CreateCards	db/migrate/20160720200605_create_cards.rb	/^class CreateCards < ActiveRecord::Migration[5.0]$/;"	c
+CreateCases	db/migrate/20160511194730_create_cases.rb	/^class CreateCases < ActiveRecord::Migration[5.0]$/;"	c
+CreateCommentThreads	db/migrate/20160518190257_create_comment_threads.rb	/^class CreateCommentThreads < ActiveRecord::Migration[5.0]$/;"	c
+CreateComments	db/migrate/20160518190358_create_comments.rb	/^class CreateComments < ActiveRecord::Migration[5.0]$/;"	c
+CreateEdgenotes	db/migrate/20160516145146_create_edgenotes.rb	/^class CreateEdgenotes < ActiveRecord::Migration[5.0]$/;"	c
+CreateEnrollments	db/migrate/20160518200132_create_enrollments.rb	/^class CreateEnrollments < ActiveRecord::Migration[5.0]$/;"	c
+CreateGroupMemberships	db/migrate/20160518192901_create_group_memberships.rb	/^class CreateGroupMemberships < ActiveRecord::Migration[5.0]$/;"	c
+CreateGroups	db/migrate/20160518190159_create_groups.rb	/^class CreateGroups < ActiveRecord::Migration[5.0]$/;"	c
+CreatePages	db/migrate/20160720200457_create_pages.rb	/^class CreatePages < ActiveRecord::Migration[5.0]$/;"	c
+CreatePodcasts	db/migrate/20160516153854_create_podcasts.rb	/^class CreatePodcasts < ActiveRecord::Migration[5.0]$/;"	c
+CreditsList	app/models/credits_list.rb	/^class CreditsList$/;"	c
+DeviseCreateReaders	db/migrate/20160511203111_devise_create_readers.rb	/^class DeviseCreateReaders < ActiveRecord::Migration[5.0]$/;"	c
+Edgenote	app/models/edgenote.rb	/^class Edgenote < ApplicationRecord$/;"	c
+EdgenoteTest	test/models/edgenote_test.rb	/^class EdgenoteTest < ActiveSupport::TestCase$/;"	c
+EdgenotesController	app/controllers/edgenotes_controller.rb	/^class EdgenotesController < ApplicationController$/;"	c
+EdgenotesControllerTest	test/controllers/edgenotes_controller_test.rb	/^class EdgenotesControllerTest < ActionDispatch::IntegrationTest$/;"	c
+Enrollment	app/models/enrollment.rb	/^class Enrollment < ApplicationRecord$/;"	c
+EnrollmentTest	test/models/enrollment_test.rb	/^class EnrollmentTest < ActiveSupport::TestCase$/;"	c
+EnrollmentsController	app/controllers/enrollments_controller.rb	/^class EnrollmentsController < ApplicationController$/;"	c
+EnrollmentsControllerTest	test/controllers/enrollments_controller_test.rb	/^class EnrollmentsControllerTest < ActionDispatch::IntegrationTest$/;"	c
+GalaControllerTest	test/controllers/gala_controller_test.rb	/^class GalaControllerTest < ActionDispatch::IntegrationTest$/;"	c
+Group	app/models/group.rb	/^class Group < ApplicationRecord$/;"	c
+GroupMembership	app/models/group_membership.rb	/^class GroupMembership < ApplicationRecord$/;"	c
+GroupMembershipTest	test/models/group_membership_test.rb	/^class GroupMembershipTest < ActiveSupport::TestCase$/;"	c
+GroupTest	test/models/group_test.rb	/^class GroupTest < ActiveSupport::TestCase$/;"	c
+GroupsController	app/controllers/groups_controller.rb	/^class GroupsController < ApplicationController$/;"	c
+GroupsControllerTest	test/controllers/groups_controller_test.rb	/^class GroupsControllerTest < ActionDispatch::IntegrationTest$/;"	c
+Guest	app/models/credits_list.rb	/^  class Guest$/;"	c	class:CreditsList
+Orchard	config/application.rb	/^module Orchard$/;"	m
+Page	app/models/page.rb	/^class Page < ApplicationRecord$/;"	c
+PageTest	test/models/page_test.rb	/^class PageTest < ActiveSupport::TestCase$/;"	c
+Podcast	app/models/podcast.rb	/^class Podcast < ApplicationRecord$/;"	c
+PodcastTest	test/models/podcast_test.rb	/^class PodcastTest < ActiveSupport::TestCase$/;"	c
+PodcastsController	app/controllers/podcasts_controller.rb	/^class PodcastsController < ApplicationController$/;"	c
+PodcastsControllerTest	test/controllers/podcasts_controller_test.rb	/^class PodcastsControllerTest < ActionDispatch::IntegrationTest$/;"	c
+Reader	app/models/reader.rb	/^class Reader < ApplicationRecord$/;"	c
+ReaderAuthorizer	app/authorizers/reader_authorizer.rb	/^class ReaderAuthorizer < ApplicationAuthorizer$/;"	c
+ReaderTest	test/models/reader_test.rb	/^class ReaderTest < ActiveSupport::TestCase$/;"	c
+Readers	app/controllers/readers/omniauth_callbacks_controller.rb	/^class Readers::OmniauthCallbacksController < Devise::OmniauthCallbacksController$/;"	c
+Readers	app/controllers/readers/registrations_controller.rb	/^class Readers::RegistrationsController < Devise::RegistrationsController$/;"	c
+Readers	app/controllers/readers/sessions_controller.rb	/^class Readers::SessionsController < Devise::SessionsController$/;"	c
+ReadersController	app/controllers/readers_controller.rb	/^class ReadersController < ApplicationController$/;"	c
+ReadersControllerTest	test/controllers/readers_controller_test.rb	/^class ReadersControllerTest < ActionDispatch::IntegrationTest$/;"	c
+ReadersHelper	app/helpers/readers_helper.rb	/^module ReadersHelper$/;"	m
+Role	app/models/role.rb	/^class Role < ApplicationRecord$/;"	c
+RoleTest	test/models/role_test.rb	/^class RoleTest < ActiveSupport::TestCase$/;"	c
+RolifyCreateRoles	db/migrate/20160623134628_rolify_create_roles.rb	/^class RolifyCreateRoles < ActiveRecord::Migration$/;"	c
+activity_params	app/controllers/activities_controller.rb	/^    def activity_params$/;"	f	class:ActivitiesController
+after_sign_in_path_for	app/controllers/application_controller.rb	/^  def after_sign_in_path_for(resource_or_scope)$/;"	f	class:ApplicationController
+after_sign_in_path_for	app/controllers/readers/sessions_controller.rb	/^  def after_sign_in_path_for(resource)$/;"	f	class:Readers
+authenticate_reader_from_token!	app/controllers/application_controller.rb	/^  def authenticate_reader_from_token!$/;"	f	class:ApplicationController
+case_authors	app/models/case.rb	/^  def case_authors$/;"	f	class:Case
+case_params	app/controllers/cases_controller.rb	/^    def case_params$/;"	f	class:CasesController
+change	db/migrate/20160511194730_create_cases.rb	/^  def change$/;"	f	class:CreateCases
+change	db/migrate/20160511203111_devise_create_readers.rb	/^  def change$/;"	f	class:DeviseCreateReaders
+change	db/migrate/20160516145146_create_edgenotes.rb	/^  def change$/;"	f	class:CreateEdgenotes
+change	db/migrate/20160516153452_add_cover_url_to_case.rb	/^  def change$/;"	f	class:AddCoverUrlToCase
+change	db/migrate/20160516153854_create_podcasts.rb	/^  def change$/;"	f	class:CreatePodcasts
+change	db/migrate/20160516155813_create_activities.rb	/^  def change$/;"	f	class:CreateActivities
+change	db/migrate/20160518190159_create_groups.rb	/^  def change$/;"	f	class:CreateGroups
+change	db/migrate/20160518190257_create_comment_threads.rb	/^  def change$/;"	f	class:CreateCommentThreads
+change	db/migrate/20160518190358_create_comments.rb	/^  def change$/;"	f	class:CreateComments
+change	db/migrate/20160518192901_create_group_memberships.rb	/^  def change$/;"	f	class:CreateGroupMemberships
+change	db/migrate/20160518200132_create_enrollments.rb	/^  def change$/;"	f	class:CreateEnrollments
+change	db/migrate/20160609160112_add_slug_to_edgenote.rb	/^  def change$/;"	f	class:AddSlugToEdgenote
+change	db/migrate/20160622194431_add_initials_to_reader.rb	/^  def change$/;"	f	class:AddInitialsToReader
+change	db/migrate/20160623134628_rolify_create_roles.rb	/^  def change$/;"	f	class:RolifyCreateRoles
+change	db/migrate/20160630171433_add_position_to_podcast_activities.rb	/^  def change$/;"	f	class:AddPositionToPodcastActivities
+change	db/migrate/20160701213227_add_details_to_podcasts.rb	/^  def change$/;"	f	class:AddDetailsToPodcasts
+change	db/migrate/20160709160633_add_catalog_info_to_cases.rb	/^  def change$/;"	f	class:AddCatalogInfoToCases
+change	db/migrate/20160720200457_create_pages.rb	/^  def change$/;"	f	class:CreatePages
+change	db/migrate/20160720200605_create_cards.rb	/^  def change$/;"	f	class:CreateCards
+change	db/migrate/20160720200640_add_card_to_edgenotes.rb	/^  def change$/;"	f	class:AddCardToEdgenotes
+change	db/migrate/20160720202753_add_translators_to_case.rb	/^  def change$/;"	f	class:AddTranslatorsToCase
+change	db/migrate/20160721182654_add_solid_to_cards.rb	/^  def change$/;"	f	class:AddSolidToCards
+change	db/migrate/20160727194935_add_locale_to_reader.rb	/^  def change$/;"	f	class:AddLocaleToReader
+change	db/migrate/20160810151157_add_kicker_dek_to_case.rb	/^  def change$/;"	f	class:AddKickerDekToCase
+comment_params	app/controllers/comments_controller.rb	/^    def comment_params$/;"	f	class:CommentsController
+comment_thread_params	app/controllers/comment_threads_controller.rb	/^    def comment_thread_params$/;"	f	class:CommentThreadsController
+configure_account_update_params	app/controllers/readers/registrations_controller.rb	/^   def configure_account_update_params$/;"	f	class:Readers
+configure_sign_up_params	app/controllers/readers/registrations_controller.rb	/^   def configure_sign_up_params$/;"	f	class:Readers
+create	app/controllers/activities_controller.rb	/^  def create$/;"	f	class:ActivitiesController
+create	app/controllers/cases_controller.rb	/^  def create$/;"	f	class:CasesController
+create	app/controllers/comment_threads_controller.rb	/^  def create$/;"	f	class:CommentThreadsController
+create	app/controllers/comments_controller.rb	/^  def create$/;"	f	class:CommentsController
+create	app/controllers/edgenotes_controller.rb	/^  def create$/;"	f	class:EdgenotesController
+create	app/controllers/enrollments_controller.rb	/^  def create$/;"	f	class:EnrollmentsController
+create	app/controllers/groups_controller.rb	/^  def create$/;"	f	class:GroupsController
+create	app/controllers/podcasts_controller.rb	/^  def create$/;"	f	class:PodcastsController
+create	app/controllers/readers_controller.rb	/^  def create$/;"	f	class:ReadersController
+credits_list	app/models/podcast.rb	/^  def credits_list$/;"	f	class:Podcast
+credits_list=	app/models/podcast.rb	/^  def credits_list=(credits_list)$/;"	f	class:Podcast
+current_user	app/controllers/application_controller.rb	/^  def current_user$/;"	f	class:ApplicationController
+current_user	app/helpers/application_helper.rb	/^  def current_user$/;"	f	class:ApplicationHelper
+default	app/authorizers/application_authorizer.rb	/^  def self.default(adjective, reader)$/;"	F	class:ApplicationAuthorizer
+default_url_options	app/controllers/application_controller.rb	/^  def default_url_options(options = {})$/;"	f	class:ApplicationController
+destroy	app/controllers/activities_controller.rb	/^  def destroy$/;"	f	class:ActivitiesController
+destroy	app/controllers/cases_controller.rb	/^  def destroy$/;"	f	class:CasesController
+destroy	app/controllers/comment_threads_controller.rb	/^  def destroy$/;"	f	class:CommentThreadsController
+destroy	app/controllers/comments_controller.rb	/^  def destroy$/;"	f	class:CommentsController
+destroy	app/controllers/edgenotes_controller.rb	/^  def destroy$/;"	f	class:EdgenotesController
+destroy	app/controllers/enrollments_controller.rb	/^  def destroy$/;"	f	class:EnrollmentsController
+destroy	app/controllers/groups_controller.rb	/^  def destroy$/;"	f	class:GroupsController
+destroy	app/controllers/podcasts_controller.rb	/^  def destroy$/;"	f	class:PodcastsController
+destroy	app/controllers/readers_controller.rb	/^  def destroy$/;"	f	class:ReadersController
+devise_mapping	app/helpers/application_helper.rb	/^  def devise_mapping$/;"	f	class:ApplicationHelper
+edgenote_params	app/controllers/edgenotes_controller.rb	/^    def edgenote_params$/;"	f	class:EdgenotesController
+edit	app/controllers/readers_controller.rb	/^  def edit$/;"	f	class:ReadersController
+enrollment_params	app/controllers/enrollments_controller.rb	/^    def enrollment_params$/;"	f	class:EnrollmentsController
+ensure_authentication_token	app/models/reader.rb	/^  def ensure_authentication_token$/;"	f	class:Reader
+facebook	app/controllers/readers/omniauth_callbacks_controller.rb	/^  def facebook$/;"	f	class:Readers
+failure	app/controllers/readers/omniauth_callbacks_controller.rb	/^  def failure$/;"	f	class:Readers
+from_omniauth	app/models/reader.rb	/^  def self.from_omniauth(auth)$/;"	F	class:Reader
+generate_authentication_token	app/models/reader.rb	/^  def generate_authentication_token$/;"	f	class:Reader
+google	app/controllers/readers/omniauth_callbacks_controller.rb	/^  def google$/;"	f	class:Readers
+group_params	app/controllers/groups_controller.rb	/^    def group_params$/;"	f	class:GroupsController
+has_role?	app/models/anonymous_user.rb	/^  def has_role? role$/;"	f	class:AnonymousUser
+has_translators?	app/models/case.rb	/^  def has_translators?$/;"	f	class:Case
+index	app/controllers/activities_controller.rb	/^  def index$/;"	f	class:ActivitiesController
+index	app/controllers/cases_controller.rb	/^  def index$/;"	f	class:CasesController
+index	app/controllers/comment_threads_controller.rb	/^  def index$/;"	f	class:CommentThreadsController
+index	app/controllers/comments_controller.rb	/^  def index$/;"	f	class:CommentsController
+index	app/controllers/edgenotes_controller.rb	/^  def index$/;"	f	class:EdgenotesController
+index	app/controllers/enrollments_controller.rb	/^  def index$/;"	f	class:EnrollmentsController
+index	app/controllers/groups_controller.rb	/^  def index$/;"	f	class:GroupsController
+index	app/controllers/podcasts_controller.rb	/^  def index$/;"	f	class:PodcastsController
+index	app/controllers/readers_controller.rb	/^  def index$/;"	f	class:ReadersController
+locale_names	app/helpers/application_helper.rb	/^  def locale_names$/;"	f	class:ApplicationHelper
+lti	app/controllers/readers/omniauth_callbacks_controller.rb	/^  def lti$/;"	f	class:Readers
+new	app/controllers/readers_controller.rb	/^  def new$/;"	f	class:ReadersController
+new_with_session	app/models/reader.rb	/^  def self.new_with_session(params, session)$/;"	F	class:Reader
+parent_layout	app/helpers/application_helper.rb	/^  def parent_layout(layout)$/;"	f	class:ApplicationHelper
+podcast_params	app/controllers/podcasts_controller.rb	/^    def podcast_params$/;"	f	class:PodcastsController
+readable_by?	app/authorizers/case_authorizer.rb	/^  def readable_by? reader$/;"	f	class:CaseAuthorizer
+reader_params	app/controllers/readers_controller.rb	/^    def reader_params$/;"	f	class:ReadersController
+resource_class	app/helpers/application_helper.rb	/^  def resource_class$/;"	f	class:ApplicationHelper
+resource_name	app/helpers/application_helper.rb	/^  def resource_name$/;"	f	class:ApplicationHelper
+set_activity	app/controllers/activities_controller.rb	/^    def set_activity$/;"	f	class:ActivitiesController
+set_case	app/controllers/cases_controller.rb	/^    def set_case$/;"	f	class:CasesController
+set_case	app/controllers/podcasts_controller.rb	/^    def set_case$/;"	f	class:PodcastsController
+set_comment	app/controllers/comments_controller.rb	/^    def set_comment$/;"	f	class:CommentsController
+set_comment_thread	app/controllers/comment_threads_controller.rb	/^    def set_comment_thread$/;"	f	class:CommentThreadsController
+set_edgenote	app/controllers/edgenotes_controller.rb	/^    def set_edgenote$/;"	f	class:EdgenotesController
+set_enrollment	app/controllers/enrollments_controller.rb	/^    def set_enrollment$/;"	f	class:EnrollmentsController
+set_group	app/controllers/groups_controller.rb	/^    def set_group$/;"	f	class:GroupsController
+set_locale	app/controllers/application_controller.rb	/^  def set_locale$/;"	f	class:ApplicationController
+set_podcast	app/controllers/podcasts_controller.rb	/^    def set_podcast$/;"	f	class:PodcastsController
+set_reader	app/controllers/readers/omniauth_callbacks_controller.rb	/^  def set_reader$/;"	f	class:Readers
+set_reader	app/controllers/readers_controller.rb	/^    def set_reader$/;"	f	class:ReadersController
+show	app/controllers/activities_controller.rb	/^  def show$/;"	f	class:ActivitiesController
+show	app/controllers/cases_controller.rb	/^  def show$/;"	f	class:CasesController
+show	app/controllers/comment_threads_controller.rb	/^  def show$/;"	f	class:CommentThreadsController
+show	app/controllers/comments_controller.rb	/^  def show$/;"	f	class:CommentsController
+show	app/controllers/edgenotes_controller.rb	/^  def show$/;"	f	class:EdgenotesController
+show	app/controllers/enrollments_controller.rb	/^  def show$/;"	f	class:EnrollmentsController
+show	app/controllers/groups_controller.rb	/^  def show$/;"	f	class:GroupsController
+show	app/controllers/podcasts_controller.rb	/^  def show$/;"	f	class:PodcastsController
+show	app/controllers/readers_controller.rb	/^  def show$/;"	f	class:ReadersController
+store_current_location	app/controllers/application_controller.rb	/^  def store_current_location$/;"	f	class:ApplicationController
+system!	bin/setup	/^def system!(*args)$/;"	f
+system!	bin/update	/^def system!(*args)$/;"	f
+to_param	app/models/case.rb	/^  def to_param$/;"	f	class:Case
+to_sentence	app/models/credits_list.rb	/^  def to_sentence$/;"	f	class:CreditsList
+translator_names	app/models/case.rb	/^  def translator_names$/;"	f	class:Case
+translator_names=	app/models/case.rb	/^  def translator_names=(t)$/;"	f	class:Case
+translators_string	app/helpers/cases_helper.rb	/^  def translators_string c$/;"	f	class:CasesHelper
+updatable_by?	app/authorizers/reader_authorizer.rb	/^  def updatable_by? reader$/;"	f	class:ReaderAuthorizer
+update	app/controllers/activities_controller.rb	/^  def update$/;"	f	class:ActivitiesController
+update	app/controllers/cases_controller.rb	/^  def update$/;"	f	class:CasesController
+update	app/controllers/comment_threads_controller.rb	/^  def update$/;"	f	class:CommentThreadsController
+update	app/controllers/comments_controller.rb	/^  def update$/;"	f	class:CommentsController
+update	app/controllers/edgenotes_controller.rb	/^  def update$/;"	f	class:EdgenotesController
+update	app/controllers/enrollments_controller.rb	/^  def update$/;"	f	class:EnrollmentsController
+update	app/controllers/groups_controller.rb	/^  def update$/;"	f	class:GroupsController
+update	app/controllers/podcasts_controller.rb	/^  def update$/;"	f	class:PodcastsController
+update	app/controllers/readers_controller.rb	/^  def update$/;"	f	class:ReadersController

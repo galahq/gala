@@ -1,0 +1,27 @@
+{
+  "app/authorizers/*_authorizer.rb": {
+    "command": "authorizer",
+    "template": [
+      "class {camelcase|capitalize|colon} < ApplicationAuthorizer",
+      "",
+      "end"
+    ]
+  },
+  "app/components/*.js": {
+    "command": "component",
+    "template": [
+      "import React from 'react'",
+      "",
+      "export class {camelcase|capitalize|dot} extends React.Component {",
+      "",
+      "  render() {",
+      "    return (",
+      "      <div />",
+      "    )",
+      "  }",
+      "",
+      "}"
+    ],
+    "related": "app/assets/stylesheets/{camelcase|capitalize}.css.scss"
+  }
+}

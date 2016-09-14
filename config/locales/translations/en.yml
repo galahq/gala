@@ -88,12 +88,22 @@ en:
         image_url: Image URL  #g
         last_sign_in_at: Last sign in at  #g
         last_sign_in_ip: Last sign in IP  #g
-        name: Name  #g
+        name: Full Name  #g
         provider: Provider  #g
         remember_created_at: Remember created at  #g
         reset_password_sent_at: Reset password sent at  #g
         reset_password_token: Reset password token  #g
         uid: UID  #g
+        initials: Initials
   devise:
     sessions:
       destroy: Sign out
+    registrations:
+      new:
+        minimum_characters: '%{count} characters minimum'
+      edit:
+        change_my_password: Change my password
+        my_account: My account
+        leave_blank_if_you_dont_want_to_change_it: leave blank if you don’t want to change it
+        to_confirm_your_changes: to confirm your changes
+        save: Save

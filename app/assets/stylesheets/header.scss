@@ -26,17 +26,6 @@ header {
     cursor: pointer;
 
     #reader-icon {
-      font-size: 90%;
-      text-transform: uppercase;
-      border: 2px solid $white;
-      color: $white;
-      background: $darkBlue;
-      display: inline-block;
-      width: 2.2rem;
-      height: 1.8rem;
-      border-radius: 4rem;
-      padding-top: 0.4rem;
-      text-align: center;
       position: absolute;
       z-index: 50;
       right: 3em;
@@ -54,7 +43,6 @@ header {
     list-style: none;
 
     li {
-      padding: 0.5em 2em 0.5em 1em;
       border-top: 1px solid $darkPurple;
       text-align: right;
       font-weight: 500;
@@ -64,7 +52,11 @@ header {
     li:hover {
       background-color: $darkPurple;
     }
-    a { background-color: transparent; }
+    a {
+      display: block;
+      background-color: transparent;
+      padding: 0.5em 2em 0.5em 1em;
+    }
     li a:hover { color: lighten($umichMaize, 20%); }
   }
   .dropdown-caret {
@@ -73,6 +65,21 @@ header {
     right: 1.4em;
     z-index:100;
   }
+}
+
+#reader-icon {
+  font-size: 90%;
+  text-transform: uppercase;
+  border: 2px solid $white;
+  color: $white;
+  background: $darkBlue;
+  background-size: cover;
+  display: inline-block;
+  width: 2.2rem;
+  height: 1.8rem;
+  border-radius: 4rem;
+  padding-top: 0.4rem;
+  text-align: center;
 }
 
 #reader-sign-in {

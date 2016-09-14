@@ -1,5 +1,6 @@
 ---
 fr:
+  name: Français
   activerecord:
     errors:
       messages:

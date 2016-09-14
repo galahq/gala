@@ -100,6 +100,15 @@ ja:
         remember_me: "ログインを記憶"
         reset_password_token: 
         unlock_token: 
+        locale: 言語
   devise:
     sessions:
       destroy: ログアウト
+    registrations:
+      new:
+        minimum_characters: '%{count}字以上'
+      edit:
+        change_my_password: パスワードを変化
+        my_account: アカウント
+        to_confirm_your_changes: 
+        save: 変化を保存

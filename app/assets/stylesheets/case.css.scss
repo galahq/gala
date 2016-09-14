@@ -5,57 +5,184 @@
 .catalog-cases {
   width: 100%;
 
-  h6 {
-    color: $white;
-    text-align: center;
-    margin: 0.5em 0;
-    font-family: $sansFont;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+}
 
-    &:first-child { margin-top: -0.5em; }
-  }
+.catalog-cases h6,
+.BillboardTitle h6 {
+  color: $white;
+  text-align: center;
+  margin: 1em 0 0.5em 0;
+  font-family: $sansFont;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2em;
+
+  &:first-child { margin-top: -0.5em; }
 }
 
 .catalog-cases-featured {
   @include flexbox;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: hidden;
   background-color: tint($umichBlue, 25%);
   padding: 1rem 0;
 
   .catalog-case {
-    @include flexbox;
-    @include flex-flow(column);
-    @include justify-content(flex-end);
     @include flex(0, 0, 30em);
-
+    @media screen and (max-width: $mobileCutoff) {
+      @include flex(0, 0, 25em);
+      font-size: 13px;
+    }
     height: 17rem !important;
-    margin: 0 0.5rem;
-    padding: 0.5rem 1.5rem;
-    position: relative;
-
     &:first-child { margin-left: auto; }
     &:last-child { margin-right: auto; }
   }
 }
 
+.carousel {
+  position: relative;
+}
+.carousel-button {
+  display: none;
+  position: absolute;
+  top: 8.5rem;
+  z-index: 200;
+  cursor:pointer;
+
+  font-size: 25px;
+  background-color: $lightGreen;
+  padding: 0.6em 0.5em;
+
+  &-left {
+    border-right: 0.35rem solid $darkGreen;
+    left: -3em;
+  }
+  &-right {
+    border-left: 0.35rem solid $darkGreen;
+    right: -3em;
+  }
+}
+
+.catalog-cases-index {
+  @include flexbox;
+  @include flex-flow(row wrap);
+  @include justify-content(center);
+
+  .catalog-case {
+    @include flex(0, 0, 15em);
+    height: 15em;
+    @media screen and (max-width: $mobileCutoff) {
+      @include flex(1, 0, 15em);
+      height: 10em;
+    }
+    margin: 0 0.5rem 1rem 0.5rem;
+
+    h1 {
+      margin-bottom: 1em;
+      font-size: 130%;
+      line-height: 1.1em;
+    }
+    h4 { margin-top: -1em; }
+  }
+}
+
+@mixin banner {
+  color: $black;
+  position: absolute;
+  top: 1em;
+  right: 0;
+  padding: 0.2rem 0.5rem 0.15rem 0.4rem;
+  font-size: 85%;
+  @media screen and (max-width: $mobileCutoff) {
+    font-size: 70%;
+  }
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+}
+
+.catalog-case h6, .BillboardTitle h6 { text-align: left; }
 .catalog-case {
+  @include flexbox;
+  @include flex-flow(column);
+  @include justify-content(flex-end);
+  margin: 0 0.5rem;
+  padding: 0.5rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+
+  &-credits {
+    transition: box-shadow .15s cubic-bezier(.33, .66, .66, 1);
+    box-shadow: 0 0 0 10em rgba(0,0,0,0), inset 0 0 0 10em rgba(0,0,0,0);
+    &.dimmed {
+      box-shadow: 0 0 0 10em rgba(0,0,0,.5), inset 0 0 0 10em rgba(0,0,0,.5);
+    }
+  }
+
+  &-preview-banner {
+    @include banner;
+    background-color: lighten($purple, 10%);
+    border-left: 0.35rem solid shade($purple, 20%);
+  }
+
   &-unpublished {
     cursor: default;
 
     &-banner {
-      color: $black;
+      @include banner;
       background-color: $lightGreen;
       border-left: 0.35rem solid $darkGreen;
-      position: absolute;
-      top: 1em;
-      right: 0;
-      padding: 0.2rem 0.5rem 0.2rem 0.4rem;
-      font-size: 90%;
-      text-transform: uppercase;
-      font-weight: 500;
-      letter-spacing: 0.6px;
     }
   }
+}
+
+.catalog-case-accessible {
+  transition: box-shadow .15s cubic-bezier(.33, .66, .66, 1), transform .15s cubic-bezier(.33, .66, .66, 1);
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    transform: scale(1.02);
+    -webkit-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+    -moz-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+    box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
+    outline: none;
+  }
+}
+
+.catalog-splash {
+  padding: 1em;
+  margin-top: -1em;
+}
+.catalog-welcome {
+  @include flexbox;
+  @include justify-content(space-between);
+  @media screen and (max-width: $mobileCutoff) {
+    @include flex-flow(row wrap);
+  }
+  margin: auto;
+  max-width: 50em;
+
+  &-message {
+    @include flex(0 1 33em);
+
+    @media screen and (min-width: $mobileCutoff) {
+      h1, p, a {
+        font-size: 19px !important;
+        line-height: 26px !important;
+      }
+    }
+  }
+
+  &-sign-in {
+    @include flex(1 1 15em);
+    @media screen and (min-width: $mobileCutoff) { margin-left: 1em; }
+    @media screen and (max-width: $mobileCutoff) { margin-top: 1em; }
+
+    h2 {
+      line-height: 26px !important;
+      margin-top: 0;
+    }
+  }
+
 }

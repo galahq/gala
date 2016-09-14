@@ -40,7 +40,7 @@ class PodcastsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_podcast
       set_case
-      @podcast = Podcast.where("case": @case, order: params[:order])
+      @podcast = Podcast.where("case": @case, position: params[:position])
     end
 
     def set_case
