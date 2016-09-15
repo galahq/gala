@@ -37,7 +37,7 @@ class BillboardTitle extends React.Component {
 
         {this.renderAuthors()}
 
-        <Editable uri={`${endpoint}:photoCredit`} didSave={didSave}>
+        <Editable uri={`${endpoint}:photo_credit`} didSave={didSave} html={true}>
           <cite dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
         </Editable>
 

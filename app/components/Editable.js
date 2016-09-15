@@ -3,11 +3,6 @@ import React, {PropTypes} from 'react'
 import {orchard, updateOrchard} from 'concerns/orchard.js'
 
 export class Editable extends React.Component {
-
-  getDefaultProps() {
-    return { html: false }
-  }
-
   saveChanges(attribute, content) {
     this.setState({ saveMessage: "saving" })
 
@@ -65,4 +60,8 @@ Editable.propTypes = {
   didSave: PropTypes.func,
   html: PropTypes.bool,
   uri: PropTypes.string.isRequired
+}
+
+Editable.defaultProps = {
+  html: false
 }
