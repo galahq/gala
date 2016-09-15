@@ -30,12 +30,11 @@ export class Editable extends React.Component {
     let endpoint = args[0]
     let attribute = args[1]
 
-    let params = endpoint.split('/')
-    if (params.length > 2) { throw URIError(`$(this.props.uri) is not a valid orchard reference`) }
-    let model = params[0]
+    let params = endpoint.split(/(.*)\//)
+    let model = params[1].split('/').pop().slice(0, -1)
 
     let object = {
-      [`${model.slice(0, -1)}`]: {
+      [`${model}`]: {
         [`${attribute}`]: newContent
       }
     }

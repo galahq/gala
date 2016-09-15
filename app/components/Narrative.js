@@ -3,6 +3,7 @@ import Edgenote from 'Edgenote.js'
 import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
+import {Editable} from 'Editable.js'
 
 export function isElementInViewport (el) {
 
@@ -47,7 +48,7 @@ class Narrative extends React.Component {
         <a id="top" />
         <Page
           page={page}
-          handleEdit={this.props.handleEdit}
+          didSave={this.props.didSave}
         />
         {this.nextLink()}
       </main>
@@ -62,7 +63,7 @@ class Page extends React.Component {
     let {page} = this.props
     let cards = page.cards.map( (card, i) => {
       return <Card id={i} key={`c${i}`}
-                   handleEdit={this.props.handleEdit}
+                   didSave={this.props.didSave}
                    selectedPage={page.position}
                    solid={card.solid}
                    card={card} />
@@ -70,7 +71,11 @@ class Page extends React.Component {
 
     return (
       <article>
-        <section><h1>{page.title}</h1></section>
+        <section>
+          <Editable uri={`pages/${page.id}:title`} didSave={this.props.didSave}>
+            <h1>{page.title}</h1>
+          </Editable>
+        </section>
         {cards}
       </article>
     )

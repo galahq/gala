@@ -14,6 +14,9 @@ Rails.application.routes.draw do
       resources :activities, param: :position
       resources :podcasts, param: :position
       resources :edgenotes, shallow: true, param: :slug
+      resources :pages, only: %i(create update destroy), shallow: true do
+        resources :cards, only: %i(create update destroy), shallow: true
+      end
     end
     devise_for :readers, skip: :omniauth_callbacks, controllers: {
       sessions: 'readers/sessions',
