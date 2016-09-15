@@ -18,7 +18,7 @@ class CaseReader extends React.Component {
   }
 
   render () {
-    let {title, pages, handleEdit} = this.props
+    let {title, pages, didSave} = this.props
     let selectedPage = parseInt(this.props.params.selectedPage) - 1
 
     let pageTitles = this.props.pages.map( (p) => { return p.title } )
@@ -28,7 +28,7 @@ class CaseReader extends React.Component {
     }
 
     return (
-      <div className={`window ${handleEdit !== null ? 'editing' : ''}`}>
+      <div className={`window ${didSave !== null ? 'editing' : ''}`}>
         <Sidebar
           pageTitles={pageTitles}
           selectedPage={selectedPage}
@@ -37,7 +37,7 @@ class CaseReader extends React.Component {
         <Narrative
           pages={pages}
           selectedPage={selectedPage}
-          handleEdit={handleEdit}
+          didSave={didSave}
         />
         {this.props.children}
       </div>

@@ -3,8 +3,6 @@ import mapNL from 'concerns/mapNL.js'
 import {I18n} from 'I18n.js'
 import {Link} from 'react-router'
 
-import {orchard, updateOrchard} from 'concerns/orchard.js'
-
 class Case extends React.Component {
 
   constructor() {
@@ -28,21 +26,11 @@ class Case extends React.Component {
     return this.props.location.pathname.slice(1,5) === "edit"
   }
 
-  saveChanges(attribute, content) {
-    this.setState({ saveMessage: "saving" })
-
-    var caseParams = {}
-    caseParams[attribute] = content
-
-    let slug = this.state.caseData.slug
-    updateOrchard(`cases/${slug}`, {case: caseParams})
-      .then(() => {
-        orchard(`cases/${slug}`).then( (response) => {
-        this.setState({
-          saveMessage: "saved",
-          caseData: response
-        })
-        })})
+  didSave(newData) {
+    this.setState({
+      saveMessage: "saved",
+      caseData: newData
+    })
   }
 
   render() {
@@ -69,7 +57,7 @@ class Case extends React.Component {
                       </div>
     }
 
-    c.handleEdit = this.editing() ? this.saveChanges.bind(this) : null
+    c.didSave = this.editing() ? this.didSave.bind(this) : null
 
     return (
       <div id="Case">

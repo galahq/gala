@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     resources :groups
     resources :comment_threads
     resources :comments
-    resources :cases, only: %i(index show), param: :slug do
+    resources :cases, param: :slug do
       resources :activities, param: :position
       resources :podcasts, param: :position
       resources :edgenotes, shallow: true, param: :slug
@@ -28,7 +28,7 @@ Rails.application.routes.draw do
         resources :enrollments, only: %i(index)
       end
     end
-    resources :cases, except: %i(index show), param: :slug do
+    resources :cases, only: [], param: :slug do
       resources :readers, only: %i(destroy) do
         resources :enrollments, only: [] do
           collection do

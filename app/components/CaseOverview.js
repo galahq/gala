@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import TableOfContents from 'TableOfContents.js'
 import BillboardTitle from 'BillboardTitle.js'
 import {I18n} from 'I18n.js'
+import {Editable} from 'Editable.js'
 
 export class Billboard extends React.Component {
 
@@ -11,23 +12,14 @@ export class Billboard extends React.Component {
   }
 
   render() {
-    let {kicker, title, dek, coverUrl, photoCredit, summary, caseAuthors, translators, handleEdit} = this.props
+    let {dek, summary, didSave} = this.props
+    let endpoint = `cases/${this.props.slug}`
     return (
       <section className="Billboard">
-        <BillboardTitle
-          kicker={kicker}
-          title={title}
-          translators={translators}
-          coverUrl={coverUrl}
-          photoCredit={photoCredit}
-          caseAuthors={caseAuthors}
-          handleEdit={handleEdit}
-        />
+        <BillboardTitle {...this.props} />
         <div className="Card BillboardSnippet">
-          <h3>{dek}</h3>
-          <p contentEditable={handleEdit !== null} onBlur={this.prepareSave.bind(this)}>
-            {summary}
-          </p>
+          <Editable uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
+          <Editable uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>
         </div>
       </section>
     )
@@ -40,7 +32,7 @@ class Actions extends React.Component {
     let activities = this.props.activities
 
     let list = this.props.activities.map( (activity) => {
-      return <li><a href={activity.pdfUrl}>{ activity.title }</a></li>
+      return <li key={`activity/${activity.id}`}><a href={activity.pdfUrl}>{ activity.title }</a></li>
     } )
     if ((activities && activities.length !== 0) || this.props.handleEdit !== null) {
       return (
@@ -157,7 +149,7 @@ class Actions extends React.Component {
 export class CaseOverview extends React.Component {
   render () {
     return (
-      <div id="CaseOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
+      <div id="CaseOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
         <Billboard {...this.props} />
         <Actions {...this.props} />
       </div>
