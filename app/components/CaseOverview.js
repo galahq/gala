@@ -6,11 +6,6 @@ import {I18n} from 'I18n.js'
 import {Editable} from 'Editable.js'
 
 export class Billboard extends React.Component {
-
-  prepareSave(e) {
-    this.props.handleEdit("summary", e.target.innerText)
-  }
-
   render() {
     let {dek, summary, didSave} = this.props
     let endpoint = `cases/${this.props.slug}`
@@ -34,7 +29,7 @@ class Actions extends React.Component {
     let list = this.props.activities.map( (activity) => {
       return <li key={`activity/${activity.id}`}><a href={activity.pdfUrl}>{ activity.title }</a></li>
     } )
-    if ((activities && activities.length !== 0) || this.props.handleEdit !== null) {
+    if ((activities && activities.length !== 0) || this.props.didSave !== null) {
       return (
         <div>
           <h2>
@@ -57,7 +52,7 @@ class Actions extends React.Component {
     let list = podcasts.map( (pod) => {
         return <Link key={`podcast-${pod.position}`} to={`podcasts/${pod.position}`}>{pod.title}</Link>
     } )
-    if ((podcasts && podcasts.length !== 0) || this.props.handleEdit !== null) {
+    if ((podcasts && podcasts.length !== 0) || this.props.didSave !== null) {
       return (
         <div>
           <h2>
@@ -81,7 +76,7 @@ class Actions extends React.Component {
   }
 
   renderIfReading(component) {
-    if (this.props.handleEdit === null && this.props.reader !== undefined) {
+    if (this.props.didSave === null && this.props.reader !== undefined) {
       return component
     }
   }
@@ -106,7 +101,7 @@ class Actions extends React.Component {
               slug={this.props.slug}
               pageTitles={pageTitles}
               currentPage={null}
-              handleEdit={this.props.handleEdit}
+              didSave={this.props.didSave}
             />
           </div>
 

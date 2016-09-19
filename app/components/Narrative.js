@@ -163,17 +163,14 @@ class Card extends React.Component {
     return aside
   }
 
-  prepareSave() {}
-
   render() {
     //let paragraph = this.props.contents.addAttributeToLinksPointingToEdgenoteID(this.state.selected_id, 'class="focus"')
     let paragraph = this.props.card.content
     return (
       <section>
         <div className={this.props.card.solid ? "Card" : ""}
-          contentEditable={this.props.handleEdit !== null}
           dangerouslySetInnerHTML={this.renderContent(paragraph)}
-          onBlur={this.prepareSave.bind(this)} />
+        />
         {this.renderEdgenotes()}
       </section>
     )

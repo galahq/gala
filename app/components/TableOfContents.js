@@ -7,7 +7,7 @@ class TableOfContents extends React.Component {
     let titleList = this.props.pageTitles.map( (title, idx) => {
       return(
         <li key={idx + 1} className={idx === parseInt(this.props.selectedPage) ? "focus" : ""}>
-          <Link to={`${this.props.handleEdit !== null ? "/edit/" : ""}${idx + 1}`}>{title}</Link>
+          <Link to={`${this.props.didSave !== null ? "/edit/" : ""}${idx + 1}`}>{title}</Link>
         </li>
       )
     } )
