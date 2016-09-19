@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
-import {orchard} from 'concerns/orchard.js'
+import {Orchard} from 'concerns/orchard.js'
 import LoadingIcon from 'LoadingIcon.js'
 
 class Edgenote extends React.Component {
@@ -29,7 +29,7 @@ class Edgenote extends React.Component {
   }
 
   downloadContents() {
-    orchard(`edgenotes/${this.props.slug}`).then(this.parseContentsFromJSON.bind(this))
+    Orchard.harvest(`edgenotes/${this.props.slug}`).then(this.parseContentsFromJSON.bind(this))
   }
 
   className() {

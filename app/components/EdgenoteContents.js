@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
 import {ScrollLock} from 'ScrollLock.js'
-import {orchard} from 'concerns/orchard.js'
+import {Orchard} from 'concerns/orchard.js'
 
 class EdgenoteContents extends React.Component {
 
@@ -13,7 +13,7 @@ class EdgenoteContents extends React.Component {
   }
 
   componentDidMount() {
-    orchard(`edgenotes/${this.props.params.edgenoteID}`).then(this.parseContentsFromJSON.bind(this))
+    Orchard.harvest(`edgenotes/${this.props.params.edgenoteID}`).then(this.parseContentsFromJSON.bind(this))
     $(document).on('keydown', (e) => {
       if (e.which === 27) {
         $(document).off('keydown')

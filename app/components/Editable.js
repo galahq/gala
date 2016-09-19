@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 
-import {orchard, updateOrchard} from 'concerns/orchard.js'
+import {Orchard} from 'concerns/orchard.js'
 
 export class Editable extends React.Component {
   saveChanges(attribute, content) {
@@ -10,9 +10,9 @@ export class Editable extends React.Component {
     caseParams[attribute] = content
 
     let slug = this.state.caseData.slug
-    updateOrchard(`cases/${slug}`, {case: caseParams})
+    Orchard.espalier(`cases/${slug}`, {case: caseParams})
       .then(() => {
-        orchard(`cases/${slug}`).then( (response) => {
+        Orchard.harvest(`cases/${slug}`).then( (response) => {
         this.setState({
           saveMessage: "saved",
           caseData: response
@@ -39,7 +39,7 @@ export class Editable extends React.Component {
       }
     }
 
-    updateOrchard(endpoint, object).then((response) => {
+    Orchard.espalier(endpoint, object).then((response) => {
       this.props.didSave(response)
     })
   }
