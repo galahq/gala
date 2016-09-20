@@ -26,11 +26,17 @@ class Case extends React.Component {
     return this.props.location.pathname.slice(1,5) === "edit"
   }
 
-  didSave(newData) {
+  didSave(newData, shouldReturnToOverview = false, saveMessage = "saved") {
+    if (shouldReturnToOverview) { this.props.history.push('/edit') }
+
     this.setState({
-      saveMessage: "saved",
+      saveMessage: saveMessage,
       caseData: newData
     })
+
+    setTimeout(() => {
+      this.setState({saveMessage: 'edit_instructions'})
+    }, 2000)
   }
 
   render() {

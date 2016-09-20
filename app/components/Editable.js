@@ -3,25 +3,6 @@ import React, {PropTypes} from 'react'
 import {Orchard} from 'concerns/orchard.js'
 
 export class Editable extends React.Component {
-  saveChanges(attribute, content) {
-    this.setState({ saveMessage: "saving" })
-
-    var caseParams = {}
-    caseParams[attribute] = content
-
-    let slug = this.state.caseData.slug
-    Orchard.espalier(`cases/${slug}`, {case: caseParams})
-      .then(() => {
-        Orchard.harvest(`cases/${slug}`).then( (response) => {
-        this.setState({
-          saveMessage: "saved",
-          caseData: response
-        })
-      })
-    })
-  }
-
-
   prepareSave(e) {
     let newContent = this.props.html ? e.target.innerHTML : e.target.innerText
 
@@ -39,10 +20,8 @@ export class Editable extends React.Component {
       }
     }
 
-    Orchard.espalier(endpoint, object).then((response) => {
-      this.props.didSave(response)
-    })
-  }
+    Orchard.espalier(endpoint, object)
+      .then((response) => { this.props.didSave(response) }) }
 
   render() {
     let editable = this.props.didSave !== null

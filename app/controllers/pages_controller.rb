@@ -6,7 +6,7 @@ class PagesController < ApplicationController
   authorize_actions_for Page
 
   def create
-    @page = @case.pages.build(page_params)
+    @page = @case.pages.build(title: "New page")
 
     if @page.save
       render partial: 'cases/case', locals: {c: @page.case}

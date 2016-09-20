@@ -14,7 +14,6 @@ article {
     h1, h2, h3, h4, h5, h6 {
       color: $white;
       margin: 20px 20px 0 20px;
-      width: 100%;
       @media screen and (min-width: $mobileCutoff) {
         margin: 20px 30px 5px 30px;
       }
@@ -40,6 +39,18 @@ article {
         margin: 1em 0;
       }
 
+    }
+
+    &.Page-meta {
+      align-items: baseline;
+    }
+
+    .Page-delete-option {
+      font-family: $sansFont;
+      color: $red;
+      background-color: $white;
+      padding: .1em .25em;
+      &:hover { text-decoration: underline }
     }
   }
 }

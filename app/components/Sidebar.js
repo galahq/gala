@@ -10,6 +10,7 @@ class Sidebar extends React.Component {
     if (this.props.pageTitles) {
       return (
         <TableOfContents
+          slug={this.props.slug}
           pageTitles={this.props.pageTitles}
           selectedPage={this.props.selectedPage}
           didSave={this.props.didSave}

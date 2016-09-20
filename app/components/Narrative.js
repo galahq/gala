@@ -4,6 +4,7 @@ import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
 import {Editable} from 'Editable.js'
+import {Orchard} from 'concerns/orchard.js'
 
 export function isElementInViewport (el) {
 
@@ -31,7 +32,8 @@ class Narrative extends React.Component {
   nextLink() {
     let nextChapterID = this.props.selectedPage + 2
     if (nextChapterID - 1 < this.props.pages.length) {
-      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.pages[nextChapterID - 1].title}</Link>
+      let edit = this.props.didSave === null ? "" : 'edit/'
+      return <Link className="nextLink" to={`/${edit}${nextChapterID}`}><I18n meaning="next" /> {this.props.pages[nextChapterID - 1].title}</Link>
     } else {
       return <footer><h2><I18n meaning="end" /></h2></footer>
     }
@@ -59,11 +61,28 @@ class Narrative extends React.Component {
 export default Narrative
 
 class Page extends React.Component {
+  deletePage() {
+    let confirmation = window.confirm("\
+Are you sure you want to delete this page and all of its cards?\n\n\
+Edgenotes attached to cards on this page will not be deleted.\n\n\
+This action cannot be undone.")
+    if (!confirmation) { return }
+
+    Orchard.prune(`pages/${this.props.page.id}`).then((response) => {
+      this.props.didSave(response, true, 'deleted')
+    })
+
+  }
+
+  renderDeleteOption() {
+    return <a onClick={this.deletePage.bind(this)} className="Page-delete-option">Delete</a>
+  }
+
   render() {
-    let {page} = this.props
+    let {page, didSave} = this.props
     let cards = page.cards.map( (card, i) => {
       return <Card id={i} key={`c${i}`}
-                   didSave={this.props.didSave}
+                   didSave={didSave}
                    selectedPage={page.position}
                    solid={card.solid}
                    card={card} />
@@ -71,10 +90,11 @@ class Page extends React.Component {
 
     return (
       <article>
-        <section>
+        <section className="Page-meta">
           <Editable uri={`pages/${page.id}:title`} didSave={this.props.didSave}>
             <h1>{page.title}</h1>
           </Editable>
+          {this.renderDeleteOption()}
         </section>
         {cards}
       </article>
