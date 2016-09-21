@@ -1,5 +1,9 @@
 class PodcastsController < ApplicationController
+  before_action :authenticate_reader!
   before_action :set_podcast, only: [:show, :update, :destroy]
+  before_action :set_case, only: [:create]
+
+  authorize_actions_for Podcast
 
   # GET /podcasts
   def index
@@ -13,10 +17,10 @@ class PodcastsController < ApplicationController
 
   # POST /podcasts
   def create
-    @podcast = Podcast.new(podcast_params)
+    @podcast = @case.podcasts.build(title: "New podcast")
 
     if @podcast.save
-      render json: @podcast, status: :created, location: @podcast
+      render partial: 'cases/case', locals: {c: @case}
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -25,7 +29,7 @@ class PodcastsController < ApplicationController
   # PATCH/PUT /podcasts/1
   def update
     if @podcast.update(podcast_params)
-      render json: @podcast
+      render partial: 'cases/case', locals: {c: @podcast.case}
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -37,6 +41,10 @@ class PodcastsController < ApplicationController
   end
 
   private
+    def set_case
+      @case = Case.find_by_slug params[:case_slug]
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_podcast
       set_case

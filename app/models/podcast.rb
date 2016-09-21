@@ -1,4 +1,6 @@
 class Podcast < ApplicationRecord
+  include Authority::Abilities
+
   belongs_to :case
   acts_as_list scope: :case
 

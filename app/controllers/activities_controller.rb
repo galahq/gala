@@ -1,5 +1,9 @@
 class ActivitiesController < ApplicationController
+  before_action :authenticate_reader!
   before_action :set_activity, only: [:show, :update, :destroy]
+  before_action :set_case, only: [:create]
+
+  authorize_actions_for Activity
 
   # GET /activities
   def index
@@ -15,10 +19,10 @@ class ActivitiesController < ApplicationController
 
   # POST /activities
   def create
-    @activity = Activity.new(activity_params)
+    @activity = @case.activities.build(title: "New activity")
 
     if @activity.save
-      render json: @activity, status: :created, location: @activity
+      render partial: 'cases/case', locals: {c: @case}
     else
       render json: @activity.errors, status: :unprocessable_entity
     end
@@ -27,7 +31,7 @@ class ActivitiesController < ApplicationController
   # PATCH/PUT /activities/1
   def update
     if @activity.update(activity_params)
-      render json: @activity
+      render partial: 'cases/case', locals: {c: @activity.case}
     else
       render json: @activity.errors, status: :unprocessable_entity
     end
@@ -39,6 +43,10 @@ class ActivitiesController < ApplicationController
   end
 
   private
+    def set_case
+      @case = Case.find_by_slug params[:case_slug]
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_activity
       @activity = Activity.find(params[:id])

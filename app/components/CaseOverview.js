@@ -4,6 +4,7 @@ import TableOfContents from 'TableOfContents.js'
 import BillboardTitle from 'BillboardTitle.js'
 import {I18n} from 'I18n.js'
 import {Editable} from 'Editable.js'
+import {EditableList} from 'EditableList.js'
 
 export class Billboard extends React.Component {
   render() {
@@ -27,7 +28,7 @@ class Actions extends React.Component {
     let activities = this.props.activities
 
     let list = this.props.activities.map( (activity) => {
-      return <li key={`activity/${activity.id}`}><a href={activity.pdfUrl}>{ activity.title }</a></li>
+      return <a href={activity.pdfUrl}>{ activity.title }</a>
     } )
     if ((activities && activities.length !== 0) || this.props.didSave !== null) {
       return (
@@ -39,9 +40,12 @@ class Actions extends React.Component {
             />
             <I18n meaning="consider"/>
           </h2>
-          <ul>
-            {list}
-          </ul>
+          <EditableList
+            elements={list}
+            ordered={false}
+            uri={`cases/${this.props.slug}/activities`}
+            didSave={this.props.didSave}
+          />
         </div>
       )
     }
@@ -63,7 +67,12 @@ class Actions extends React.Component {
             <I18n meaning="listen" />
           </h2>
           <h4 className="list-head"><I18n meaning="related_podcast" /></h4>
-          {list}
+          <EditableList
+            elements={list}
+            ordered={false}
+            uri={`cases/${this.props.slug}/podcasts`}
+            didSave={this.props.didSave}
+          />
         </div>
       )
     }

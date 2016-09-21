@@ -35,7 +35,7 @@ class PagesController < ApplicationController
   end
 
   def set_page
-    @page = Page.find_by_id params[:id]
+    @page = Page.find params[:id]
   end
 
   def page_params
