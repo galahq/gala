@@ -13,17 +13,19 @@ Rails.application.routes.draw do
     resources :cases, param: :slug do
       resources :activities, param: :position
       resources :podcasts, param: :position
+      resources :pages, only: %i(create)
       resources :edgenotes, shallow: true, param: :slug
-      resources :pages, only: %i(create update), param: :position do
-        resources :cards, only: %i(create update), param: :position
-      end
     end
-    resources :pages, only: %i(update destroy)
+    resources :pages, only: %i(update destroy) do
+      resources :cards, only: %i(create)
+    end
     resources :cards, only: %i(update destroy)
+
     devise_for :readers, skip: :omniauth_callbacks, controllers: {
       sessions: 'readers/sessions',
       registrations: 'readers/registrations'
     }
+
     resources :readers, only: %i(show edit update)
   end
 

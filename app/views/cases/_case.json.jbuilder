@@ -9,7 +9,8 @@ json.pages c.pages do |page|
   json.title page.title
   if reader_signed_in?
     json.cards page.cards do |card|
-      json.extract! card, *%i(id position solid content)
+      json.extract! card, *%i(id position solid)
+      json.content card.content || ""
     end
   end
 end

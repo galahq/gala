@@ -7,7 +7,7 @@ export class EditableList extends React.Component {
   renderElements() {
     let {elements, selectedIndex, selectedClass} = this.props
     return elements.map((e, i) =>
-      <li className={i === selectedIndex ? selectedClass : ""}>
+      <li key={i} className={i === selectedIndex ? selectedClass : ""}>
         {e}
       </li>
                        )

@@ -7,6 +7,7 @@ class CardsController < ApplicationController
 
   def create
     @card = @page.cards.build(card_params)
+    @card.content ||= ""
 
     if @card.save
       render partial: 'cases/case', locals: {c: @card.case}

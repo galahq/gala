@@ -1,4 +1,6 @@
 class Card < ApplicationRecord
+  include Authority::Abilities
+
   belongs_to :page
   acts_as_list scope: :page
 

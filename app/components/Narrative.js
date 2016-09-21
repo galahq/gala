@@ -80,15 +80,27 @@ This action cannot be undone.")
     }
   }
 
+  renderCreateCardLink(i) {
+    if (this.props.didSave !== null) {
+      return <CreateCardLink pageId={this.props.page.id} i={i} didSave={this.props.didSave} />
+    }
+  }
+
   render() {
     let {page, didSave} = this.props
-    let cards = page.cards.map( (card, i) => {
-      return <Card id={i} key={`c${i}`}
-                   didSave={didSave}
-                   selectedPage={page.position}
-                   solid={card.solid}
-                   card={card} />
+
+    var cards = page.cards.map( (card, i) => {
+      return [
+        this.renderCreateCardLink(i),
+        <Card i={i} key={card.id}
+          didSave={didSave}
+          selectedPage={page.position}
+          solid={card.solid}
+          card={card}
+        />
+      ]
     } )
+    cards.push(this.renderCreateCardLink())
 
     return (
       <article>
@@ -104,6 +116,20 @@ This action cannot be undone.")
   }
 }
 
+class CreateCardLink extends React.Component {
+  createCard() {
+    let { pageId, i, didSave } = this.props
+    Orchard.graft(`pages/${pageId}/cards`, {position: i + 1})
+      .then((response) => {
+        didSave(response)
+      })
+  }
+
+  render() {
+    return <a onClick={this.createCard.bind(this)} className="Card-create">Create card</a>
+  }
+}
+
 class Card extends React.Component {
   constructor() {
     super()
@@ -114,7 +140,7 @@ class Card extends React.Component {
   }
 
   componentWillMount() {
-    window["handleHover"+this.props.id] = (slug) => {
+    window["handleHover"+this.props.i] = (slug) => {
       this.setState({selectedEdgenote: slug})
     }
   }
@@ -140,9 +166,9 @@ class Card extends React.Component {
   }
 
   addHoverCallbacks(content) {
-    let mouseover = 'onmouseover=\'window.handleHover'+this.props.id+'(\"$2\")\''
+    let mouseover = 'onmouseover=\'window.handleHover'+this.props.i+'(\"$2\")\''
     content = this.addAttributeToLinks(content, mouseover)
-    let mouseout = 'onmouseout=\'window.handleHover'+this.props.id+'(null)\''
+    let mouseout = 'onmouseout=\'window.handleHover'+this.props.i+'(null)\''
     content = this.addAttributeToLinks(content, mouseout)
     return content
   }
@@ -175,7 +201,7 @@ class Card extends React.Component {
                         selectedEdgenote={this.state.selectedEdgenote}
                         slug={slug}
                         key={`edgenote_${slug}`}
-                        handleHoverID={this.props.id}
+                        handleHoverID={this.props.i}
                       />
                       )
                     } )
