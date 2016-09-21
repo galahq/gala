@@ -133,7 +133,7 @@ export class PodcastOverview extends React.Component {
     let {pages} = this.props
 
     return (
-      <div id="PodcastOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
+      <div id="PodcastOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
 
         <Sidebar
           pageTitles={pages.map( (p) => { return p.title } )}

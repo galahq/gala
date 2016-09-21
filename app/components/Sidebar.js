@@ -20,13 +20,13 @@ class Sidebar extends React.Component {
   }
 
   render () {
-    let {kicker, title, coverUrl} = this.props
+    let {slug, kicker, title, coverUrl, didSave} = this.props
     return (
       <aside id="Sidebar">
         <Link to={`/${this.props.didSave !== null ? "edit/" : ""}`} className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
-        <BillboardTitle kicker={kicker} title={title} coverUrl={coverUrl} didSave={null} />
+        <BillboardTitle kicker={kicker} title={title} coverUrl={coverUrl} didSave={didSave} slug={slug} />
         {this.renderTOC()}
       </aside>
     )

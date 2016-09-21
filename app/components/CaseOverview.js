@@ -53,8 +53,9 @@ class Actions extends React.Component {
 
   renderPodcasts() {
     let podcasts = this.props.podcasts
+    let edit = this.props.didSave !== null ? "edit/" : ""
     let list = podcasts.map( (pod) => {
-        return <Link key={`podcast-${pod.position}`} to={`podcasts/${pod.position}`}>{pod.title}</Link>
+        return <Link key={`podcast-${pod.position}`} to={`${edit}podcasts/${pod.position}`}>{pod.title}</Link>
     } )
     if ((podcasts && podcasts.length !== 0) || this.props.didSave !== null) {
       return (
