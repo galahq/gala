@@ -61,6 +61,7 @@ article {
   background-color: $white;
   border-radius: 2pt;
   padding: 0em 0.7em;
+  position: relative;
   @media screen and (min-width: $mobileCutoff) {
     padding: 1.2em 2.4em;
   }
@@ -85,11 +86,25 @@ article {
       color: inherit;
     }
   }
+
+  .Card-delete-option {
+    color: $red !important;
+    font-family: $sansFont;
+    font-size: 80%;
+    position: absolute;
+    top: 0.25em;
+    right: 0.5em;
+  }
 }
 
 .Card-create {
   font-family: $sansFont;
   margin-left: 2em;
+  &:hover {
+    background-color: transparent;
+    color: $umichMaize;
+    text-decoration: underline;
+  }
 }
 
 .nextLink {

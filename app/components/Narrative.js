@@ -76,7 +76,7 @@ This action cannot be undone.")
 
   renderDeleteOption() {
     if (this.props.didSave !== null) {
-      return <a onClick={this.deletePage.bind(this)} className="Page-delete-option">Delete</a>
+      return <a onClick={this.deletePage.bind(this)} className="Page-delete-option">Delete page</a>
     }
   }
 
@@ -156,6 +156,18 @@ class Card extends React.Component {
     }
   }
 
+  deleteCard() {
+    let confirmation = window.confirm("\
+Are you sure you want to delete this card and its contents?\n\n\
+Edgenotes attached to it will not be deleted, although they will be detached.\n\n\
+This action cannot be undone.")
+    if (!confirmation) { return }
+
+    Orchard.prune(`cards/${this.props.card.id}`).then((response) => {
+      this.props.didSave(response, false, 'deleted')
+    })
+  }
+
   setEdgenotes(contents) {
     let edgenoteSlugs = gatherEdgenotes(contents)
     this.setState({edgenoteSlugs: edgenoteSlugs})
@@ -211,14 +223,21 @@ class Card extends React.Component {
     return aside
   }
 
+  renderDeleteOption() {
+    if (this.props.didSave !== null) {
+      return <a onClick={this.deleteCard.bind(this)} className="Card-delete-option">Delete card</a>
+    }
+  }
+
   render() {
     //let paragraph = this.props.contents.addAttributeToLinksPointingToEdgenoteID(this.state.selected_id, 'class="focus"')
     let paragraph = this.props.card.content
     return (
       <section>
-        <div className={this.props.card.solid ? "Card" : ""}
-          dangerouslySetInnerHTML={this.renderContent(paragraph)}
-        />
+        <div className={this.props.card.solid ? "Card" : ""}>
+          {this.renderDeleteOption()}
+          <div dangerouslySetInnerHTML={this.renderContent(paragraph)} />
+        </div>
         {this.renderEdgenotes()}
       </section>
     )
