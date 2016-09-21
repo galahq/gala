@@ -41,14 +41,9 @@ class PodcastsController < ApplicationController
   end
 
   private
-    def set_case
-      @case = Case.find_by_slug params[:case_slug]
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_podcast
-      set_case
-      @podcast = Podcast.where("case": @case, position: params[:position])
+      @podcast = Podcast.find(params[:id])
     end
 
     def set_case
@@ -57,6 +52,6 @@ class PodcastsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def podcast_params
-      params.require(:podcast).permit(:title_i18n, :audio_url_i18n, :description_i18n, :case_id)
+      params.require(:podcast).permit(:title, :audio_url, :description, :case_id)
     end
 end

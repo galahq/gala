@@ -2,7 +2,7 @@ import React from 'react'
 import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
 import {I18n} from 'I18n.js'
-import {Card} from 'Narrative.js'
+import {Editable} from 'Editable.js'
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {
@@ -59,20 +59,19 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   }
 
   render() {
-    let {title, artwork, audio, photoCredit} = this.props
+    let {id, title, artwork, audio, photoCredit, didSave} = this.props
     return (
       <div className="PodcastPlayer" >
-        <div
-          className="artwork"
-          style={{backgroundImage: `url(${artwork})`}}
-        >
+        <div className="artwork" style={{backgroundImage: `url(${artwork})`}} >
           <cite dangerouslySetInnerHTML={{__html: photoCredit}} />
         </div>
-        <div
-          className="credits"
-          onClick={this.toggleCredits.bind(this)}
-        >
-          <h1>{title}{ this.state.creditsVisible ? "" : " ▸" }</h1>
+
+        <div className="credits" onClick={this.toggleCredits.bind(this)} >
+          <h1>
+            <Editable uri={`podcasts/${id}:title`} didSave={didSave}><span>{title}</span></Editable>
+            { this.state.creditsVisible ? "" : " ▸" }
+          </h1>
+
           {this.renderHosts()}
         </div>
 
@@ -92,16 +91,14 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
 class Podcast extends React.Component {
   render() {
     let description = {__html: this.props.podcast.description}
+    let {podcast, didSave} = this.props
+    let {id, title, artworkUrl, audioUrl, credits, photoCredit} = podcast
 
     return (
       <div className="Podcast">
-        <PodcastPlayer
-          title={this.props.podcast.title}
-          artwork={this.props.podcast.artworkUrl}
-          audio={this.props.podcast.audioUrl}
-          credits={this.props.podcast.credits}
-          photoCredit={this.props.podcast.photoCredit}
-        />
+        <PodcastPlayer id={id} title={title} artwork={artworkUrl}
+          audio={audioUrl} credits={credits} photoCredit={photoCredit}
+          didSave={didSave} />
 
         <div className="PodcastInfo">
           <div className="Card"
@@ -144,7 +141,7 @@ export class PodcastOverview extends React.Component {
           {...this.props}
         />
 
-        <Podcast podcast={this.state.pod} />
+        <Podcast didSave={this.props.didSave} podcast={this.state.pod} />
 
       </div>
     )

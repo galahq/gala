@@ -11,8 +11,8 @@ Rails.application.routes.draw do
     resources :comment_threads
     resources :comments
     resources :cases, param: :slug do
-      resources :activities, param: :position
-      resources :podcasts, param: :position
+      resources :activities, shallow: true
+      resources :podcasts, shallow: true
       resources :pages, only: %i(create)
       resources :edgenotes, shallow: true, param: :slug
     end
