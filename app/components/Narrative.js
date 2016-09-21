@@ -75,7 +75,9 @@ This action cannot be undone.")
   }
 
   renderDeleteOption() {
-    return <a onClick={this.deletePage.bind(this)} className="Page-delete-option">Delete</a>
+    if (this.props.didSave !== null) {
+      return <a onClick={this.deletePage.bind(this)} className="Page-delete-option">Delete</a>
+    }
   }
 
   render() {
