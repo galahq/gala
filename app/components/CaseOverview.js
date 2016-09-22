@@ -14,8 +14,8 @@ export class Billboard extends React.Component {
       <section className="Billboard">
         <BillboardTitle {...this.props} />
         <div className="Card BillboardSnippet">
-          <Editable uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
-          <Editable uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>
+          <Editable placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case." uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
+          <Editable placeholder="Summarize the case in a short paragraph." uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>
         </div>
       </section>
     )

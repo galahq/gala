@@ -25,20 +25,20 @@ class BillboardTitle extends React.Component {
     return (
       <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${this.props.coverUrl})`}}>
 
-        <Editable uri={`${endpoint}:kicker`} didSave={didSave}>
+        <Editable placeholder="Snappy kicker" uri={`${endpoint}:kicker`} didSave={didSave}>
           <h6>{this.props.kicker}</h6>
         </Editable>
 
-        <h1>
-          <Editable uri={`${endpoint}:title`} didSave={didSave}>
-            <span>{this.props.title}</span>
-          </Editable>
-        </h1>
+        <Editable placeholder="What is the central question of the case?" uri={`${endpoint}:title`} didSave={didSave}>
+          <h1>
+            {this.props.title}
+          </h1>
+        </Editable>
 
         {this.renderAuthors()}
 
-        <Editable uri={`${endpoint}:photo_credit`} didSave={didSave} html={true}>
-          <cite dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
+        <Editable placeholder="Photo credit" uri={`${endpoint}:photo_credit`} didSave={didSave}>
+          <cite>{this.props.photoCredit}</cite>
         </Editable>
 
       </div>

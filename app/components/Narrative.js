@@ -105,7 +105,7 @@ This action cannot be undone.")
     return (
       <article>
         <section className="Page-meta">
-          <Editable uri={`pages/${page.id}:title`} didSave={this.props.didSave}>
+          <Editable placeholder="Page title" uri={`pages/${page.id}:title`} didSave={this.props.didSave}>
             <h1>{page.title}</h1>
           </Editable>
           {this.renderDeleteOption()}

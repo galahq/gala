@@ -3,8 +3,24 @@ import React, {PropTypes} from 'react'
 import {Orchard} from 'concerns/orchard.js'
 
 export class Editable extends React.Component {
+  editable() { return this.props.didSave !== null }
+  shouldHoldPlace() {
+    return this.editable() && (
+      this.props.children.props.children === "" ||
+      this.props.children.props.children === null
+    )
+
+  }
+
+  clearPlaceholder(e) {
+    if (this.shouldHoldPlace()) {
+      e.target.innerText = ""
+      e.target.focus()
+    }
+  }
+
   prepareSave(e) {
-    let newContent = this.props.html ? e.target.innerHTML : e.target.innerText
+    let newContent = e.target.innerText
 
     let args = this.props.uri.split(':')
     if (args.length != 2) { throw URIError(`$(this.props.uri) is not a valid orchard reference`) }
@@ -21,25 +37,28 @@ export class Editable extends React.Component {
     }
 
     Orchard.espalier(endpoint, object)
-      .then((response) => { this.props.didSave(response) }) }
+      .then((response) => { this.props.didSave(response) })
+  }
 
   render() {
-    let editable = this.props.didSave !== null
+    let {placeholder, children} = this.props
 
-    return ( this.props.children && React.cloneElement(this.props.children, {
-      contentEditable: editable,
-      onBlur: this.prepareSave.bind(this)
-    }) )
+    let grandchildren = this.shouldHoldPlace() ? placeholder : children.props.children
+
+    let child = React.cloneElement(this.props.children, {
+      contentEditable: this.editable(),
+      onClick: this.clearPlaceholder.bind(this),
+      onBlur: this.prepareSave.bind(this),
+      children: grandchildren
+    })
+
+    return child
   }
 }
 
 Editable.propTypes = {
+  placeholder: PropTypes.string,
   children: PropTypes.element.isRequired,
   didSave: PropTypes.func,
-  html: PropTypes.bool,
   uri: PropTypes.string.isRequired
-}
-
-Editable.defaultProps = {
-  html: false
 }
