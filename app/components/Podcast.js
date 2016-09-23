@@ -3,6 +3,7 @@ import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
 import {I18n} from 'I18n.js'
 import {Editable} from 'Editable.js'
+import {EditableHTML} from 'EditableHTML.js'
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {
@@ -101,9 +102,11 @@ class Podcast extends React.Component {
           didSave={didSave} />
 
         <div className="PodcastInfo">
-          <div className="Card"
-            dangerouslySetInnerHTML={description}
-          />
+          <EditableHTML uri={`podcasts/${id}:description`} placeholder="<!-- HTML podcast description -->" didSave={didSave}>
+            <div className="Card"
+              dangerouslySetInnerHTML={description}
+            />
+          </EditableHTML>
         </div>
       </div>
     )

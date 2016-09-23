@@ -2,12 +2,14 @@ import React, {PropTypes} from 'react'
 
 import {Orchard} from 'concerns/orchard.js'
 
-export class Editable extends React.Component {
+export class EditableHTML extends React.Component {
+
   editable() { return this.props.didSave !== null }
+
   shouldHoldPlace() {
     return this.editable() && (
-      this.props.children.props.children === "" ||
-      this.props.children.props.children === null
+      this.props.children.props.dangerouslySetInnerHTML.__html === "" ||
+      this.props.children.props.dangerouslySetInnerHTML.__html === null
     )
   }
 
@@ -40,20 +42,24 @@ export class Editable extends React.Component {
   }
 
   render() {
-    let {placeholder, children} = this.props
-
-    let grandchildren = this.shouldHoldPlace() ? placeholder : children.props.children
+    let children = this.editable()
+      ? this.props.children.props.children || this.props.children.props.dangerouslySetInnerHTML.__html
+      : null
+    let dangerouslySetInnerHTML = this.editable() ? null : this.props.children.props.dangerouslySetInnerHTML
 
     return React.cloneElement(this.props.children, {
       contentEditable: this.editable(),
       onClick: this.clearPlaceholder.bind(this),
       onBlur: this.prepareSave.bind(this),
-      children: grandchildren
+      children: this.shouldHoldPlace() ? this.props.placeholder : children,
+      dangerouslySetInnerHTML: dangerouslySetInnerHTML,
+      className: this.editable() ? `${this.props.children.props.className || ""} EditableHTML-editing` : this.props.children.props.className
     })
   }
+
 }
 
-Editable.propTypes = {
+EditableHTML.propTypes = {
   placeholder: PropTypes.string,
   children: PropTypes.element.isRequired,
   didSave: PropTypes.func,

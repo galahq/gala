@@ -4,6 +4,7 @@ import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
 import {Editable} from 'Editable.js'
+import {EditableHTML} from 'EditableHTML.js'
 import {Orchard} from 'concerns/orchard.js'
 
 export function isElementInViewport (el) {
@@ -150,7 +151,8 @@ class Card extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.selectedPage !== nextProps.selectedPage) {
+    if (this.didSave !== null ||
+        this.props.selectedPage !== nextProps.selectedPage) {
       this.setState({ edgenoteSlugs: [] })
       this.setEdgenotes(nextProps.card.content)
     }
@@ -236,7 +238,9 @@ This action cannot be undone.")
       <section>
         <div className={this.props.card.solid ? "Card" : ""}>
           {this.renderDeleteOption()}
-          <div dangerouslySetInnerHTML={this.renderContent(paragraph)} />
+          <EditableHTML uri={`cards/${this.props.card.id}:content`} placeholder="<!-- HTML content of card -->" didSave={this.props.didSave}>
+            <div dangerouslySetInnerHTML={this.renderContent(paragraph)}>{paragraph}</div>
+          </EditableHTML>
         </div>
         {this.renderEdgenotes()}
       </section>
