@@ -55,7 +55,7 @@ export class Editable extends React.Component {
 
 Editable.propTypes = {
   placeholder: PropTypes.string,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
   didSave: PropTypes.func,
   uri: PropTypes.string.isRequired
 }
@@ -83,6 +83,21 @@ export class EditableHTML extends Editable {
       dangerouslySetInnerHTML: dangerouslySetInnerHTML,
       className: this.editable() ? `${this.props.children.props.className || ""} EditableHTML-editing` : this.props.children.props.className
     })
+  }
+
+}
+
+export class EditableAttribute extends Editable {
+
+  render() {
+    if (this.editable()) {
+      return <div className="EditableAttribute">
+        <label>{this.props.placeholder}: </label>
+        <span contentEditable={true} onBlur={this.prepareSave.bind(this)}>{this.props.children}</span>
+      </div>
+    } else {
+      return <span />
+    }
   }
 
 }

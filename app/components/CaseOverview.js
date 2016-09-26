@@ -3,16 +3,18 @@ import { Link } from 'react-router'
 import TableOfContents from 'TableOfContents.js'
 import BillboardTitle from 'BillboardTitle.js'
 import {I18n} from 'I18n.js'
-import {Editable} from 'Editable.js'
+import {Editable, EditableAttribute} from 'Editable.js'
 import {EditableList} from 'EditableList.js'
 
 export class Billboard extends React.Component {
   render() {
-    let {dek, summary, didSave} = this.props
+    let {dek, summary, didSave, baseCoverUrl} = this.props
     let endpoint = `cases/${this.props.slug}`
     return (
       <section className="Billboard">
         <BillboardTitle {...this.props} />
+        <EditableAttribute placeholder="Base cover image URL"
+          uri={`${endpoint}:cover_url`} didSave={didSave}>{baseCoverUrl}</EditableAttribute>
         <div className="Card BillboardSnippet">
           <Editable placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case." uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
           <Editable placeholder="Summarize the case in a short paragraph." uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>

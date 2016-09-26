@@ -2,7 +2,7 @@ import React from 'react'
 import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
 import {I18n} from 'I18n.js'
-import {Editable, EditableHTML} from 'Editable.js'
+import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {
@@ -62,7 +62,12 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
     let {id, title, artwork, audio, photoCredit, didSave} = this.props
     return (
       <div className="PodcastPlayer" >
+
         <div className="artwork" style={{backgroundImage: `url(${artwork})`}} >
+          <EditableAttribute placeholder="Artwork URL"
+            uri={`podcasts/${id}:artwork_url`}
+            didSave={didSave}>{artwork}</EditableAttribute>
+
           <cite dangerouslySetInnerHTML={{__html: photoCredit}} />
         </div>
 
@@ -82,6 +87,10 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
           onPlay={this.setPlaying.bind(this)}
           onPause={this.setPaused.bind(this)}
         />
+
+        <EditableAttribute placeholder="Audio URL"
+          uri={`podcasts/${id}:audio_url`}
+          didSave={didSave}>{audio}</EditableAttribute>
 
       </div>
     )
@@ -127,12 +136,16 @@ export class PodcastOverview extends React.Component {
     })
   }
 
+  podcast() {
+    return this.props.podcasts.find( (p) => (p.position === parseInt(this.props.params.podcastID)) ) || {}
+  }
+
   prepareSave() {
     this.props.handleEdit
   }
 
   render () {
-    let {pages} = this.props
+    let {pages, didSave} = this.props
 
     return (
       <div id="PodcastOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
@@ -143,7 +156,7 @@ export class PodcastOverview extends React.Component {
           {...this.props}
         />
 
-        <Podcast didSave={this.props.didSave} podcast={this.state.pod} />
+        <Podcast didSave={didSave} podcast={this.podcast()} />
 
       </div>
     )

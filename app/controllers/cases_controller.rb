@@ -52,6 +52,6 @@ class CasesController < ApplicationController
     def case_params
       params.require(:case).permit(:published, :kicker, :title, :dek, :slug,
                                    :authors, :translators, :photo_credit,
-                                   :summary, :tags)
+                                   :summary, :tags, :cover_url)
     end
 end
