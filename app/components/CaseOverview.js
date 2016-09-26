@@ -30,7 +30,15 @@ class Actions extends React.Component {
     let activities = this.props.activities
 
     let list = this.props.activities.map( (activity) => {
-      return <a href={activity.pdfUrl}>{ activity.title }</a>
+      return [
+        <Editable placeholder="Activity name"
+          uri={`activities/${activity.id}:title`} didSave={this.props.didSave}><a
+          href={activity.pdfUrl}>{ activity.title }</a></Editable>,
+        <EditableAttribute placeholder="Activity URL"
+          uri={`activities/${activity.id}:pdf_url`}
+          didSave={this.props.didSave}>{activity.pdfUrl}</EditableAttribute>
+      ]
+
     } )
     if ((activities && activities.length !== 0) || this.props.didSave !== null) {
       return (

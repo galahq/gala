@@ -27,7 +27,7 @@ export class Editable extends React.Component {
     let attribute = args[1]
 
     let params = endpoint.split(/(.*)\//)
-    let model = params[1].split('/').pop().slice(0, -1)
+      let model = params[1].split('/').pop().slice(0, -1).replace(/ie$/, 'y')
 
     let object = {
       [`${model}`]: {
@@ -55,7 +55,7 @@ export class Editable extends React.Component {
 
 Editable.propTypes = {
   placeholder: PropTypes.string,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.element.isRequired,
   didSave: PropTypes.func,
   uri: PropTypes.string.isRequired
 }
