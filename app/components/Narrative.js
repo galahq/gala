@@ -3,8 +3,7 @@ import Edgenote from 'Edgenote.js'
 import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
-import {Editable} from 'Editable.js'
-import {EditableHTML} from 'EditableHTML.js'
+import {Editable, EditableHTML} from 'Editable.js'
 import {Orchard} from 'concerns/orchard.js'
 
 export function isElementInViewport (el) {

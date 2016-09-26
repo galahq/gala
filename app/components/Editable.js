@@ -59,3 +59,30 @@ Editable.propTypes = {
   didSave: PropTypes.func,
   uri: PropTypes.string.isRequired
 }
+
+export class EditableHTML extends Editable {
+
+  shouldHoldPlace() {
+    return this.editable() && (
+      this.props.children.props.dangerouslySetInnerHTML.__html === "" ||
+      this.props.children.props.dangerouslySetInnerHTML.__html === null
+    )
+  }
+
+  render() {
+    let children = this.editable()
+      ? this.props.children.props.children || this.props.children.props.dangerouslySetInnerHTML.__html
+      : null
+    let dangerouslySetInnerHTML = this.editable() ? null : this.props.children.props.dangerouslySetInnerHTML
+
+    return React.cloneElement(this.props.children, {
+      contentEditable: this.editable(),
+      onClick: this.clearPlaceholder.bind(this),
+      onBlur: this.prepareSave.bind(this),
+      children: this.shouldHoldPlace() ? this.props.placeholder : children,
+      dangerouslySetInnerHTML: dangerouslySetInnerHTML,
+      className: this.editable() ? `${this.props.children.props.className || ""} EditableHTML-editing` : this.props.children.props.className
+    })
+  }
+
+}
