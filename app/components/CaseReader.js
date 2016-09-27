@@ -39,7 +39,7 @@ class CaseReader extends React.Component {
           selectedPage={selectedPage}
           didSave={didSave}
         />
-        {this.props.children}
+        {this.props.children && React.cloneElement(this.props.children, {didSave: didSave})}
       </div>
     )
   }

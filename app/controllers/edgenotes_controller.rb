@@ -17,7 +17,7 @@ class EdgenotesController < ApplicationController
     @edgenote = Edgenote.new(edgenote_params)
 
     if @edgenote.save
-      render json: @edgenote, status: :created, location: @edgenote
+      render partial: 'edgenote', locals: {edgenote: @edgenote}
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class EdgenotesController < ApplicationController
   # PATCH/PUT /edgenotes/1
   def update
     if @edgenote.update(edgenote_params)
-      render json: @edgenote
+      render partial: 'edgenote', locals: {edgenote: @edgenote}
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -45,6 +45,6 @@ class EdgenotesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def edgenote_params
-      params.require(:edgenote).permit(:caption_i18n, :format, :thumb, :content_i18n)
+      params.require(:edgenote).permit(:caption, :format, :thumbnail_url, :content, :embed_code, :website_url, :image_url, :pdf_url, :instructions, :photo_credit, :slug)
     end
 end

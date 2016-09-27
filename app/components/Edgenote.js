@@ -2,6 +2,7 @@ import React from 'react'
 import {Link} from 'react-router'
 import {Orchard} from 'concerns/orchard.js'
 import LoadingIcon from 'LoadingIcon.js'
+import {EditableAttribute} from 'Editable.js'
 
 class Edgenote extends React.Component {
   handleMouseOver() {
@@ -20,11 +21,9 @@ class Edgenote extends React.Component {
   }
 
   parseContentsFromJSON(response) {
-    let contents = {
-      "caption": {__html: response.caption},
-      "cover": <img src={`${response.thumbnailUrl}?w=640`} />,
-      "format": response.format
-    }
+    let contents = response
+    contents.caption = {__html: response.caption}
+    contents.cover = <img src={`${response.thumbnailUrl}?w=640`} />
     this.setState({contents: contents})
   }
 
@@ -43,32 +42,32 @@ class Edgenote extends React.Component {
     this.downloadContents()
   }
 
-  render () {
-    if (this.state.contents && this.state.contents !== null) {
-      let {cover, caption, format} = this.state.contents
-      let slug = this.props.slug
-      let className = this.className()
-      return (
-        <Link
-          to={`${this.props.pathPrefix}/edgenotes/${slug}`}
-          className={className}
-          onMouseOver={this.handleMouseOver.bind(this)}
-          onMouseOut={this.handleMouseOut.bind(this)}
-          >
-          <div>
-            <div>{cover}</div>
-            <div
-              className={`edgenote-icon edgenote-icon-${format}`}
-              dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
-            />
-            <figcaption className={ slug == this.props.selectedEdgenote ? "focus" : "" } dangerouslySetInnerHTML={caption} />
-          </div>
-        </Link>
-      )
+  renderEdgenote() {
+    let {cover, caption, format} = this.state.contents
+    let slug = this.props.slug
+    let className = this.className()
+    return <Link
+      to={`${this.props.pathPrefix}/edgenotes/${slug}`}
+      className={className}
+      onMouseOver={this.handleMouseOver.bind(this)}
+      onMouseOut={this.handleMouseOut.bind(this)}
+    >
+      <div>
+        <div>{cover}</div>
+        <div
+          className={`edgenote-icon edgenote-icon-${format}`}
+          dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
+        />
+        <figcaption className={ slug == this.props.selectedEdgenote ? "focus" : "" } dangerouslySetInnerHTML={caption} />
+      </div>
+    </Link>
+  }
+
+  render() {
+    if (this.state.contents !== null) {
+      return this.renderEdgenote()
     } else {
-      return (
-        <LoadingIcon />
-      )
+      return <LoadingIcon />
     }
   }
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import {Link} from 'react-router'
 import {ScrollLock} from 'ScrollLock.js'
 import {Orchard} from 'concerns/orchard.js'
+import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 
 class EdgenoteContents extends React.Component {
 
@@ -30,27 +31,35 @@ class EdgenoteContents extends React.Component {
   }
 
   parseContentsFromJSON(r) {
+    delete r["case"]
     this.setState(r)
     this.log()
   }
 
+  didSave(newData) {
+    this.props.didSave(newData["case"])
+    this.parseContentsFromJSON(newData)
+  }
+
   returnLink() {
     if (this.props.params.selectedPage) {
-      return `/${this.props.params.selectedPage}`
+      let edit = this.props.didSave !== null ? "/edit" : ""
+      return `${edit}/${this.props.params.selectedPage}`
     } else {
       return `/edgenotes`
     }
   }
 
   render() {
+    let didSave = this.props.didSave && this.didSave.bind(this)
     return (
       <div className="EdgenoteContents">
         <Link to={this.returnLink()} className="dismiss EdgenoteContents-dismiss">
           &nbsp;
         </Link>
         <aside className="EdgenoteContents-window">
-          <EdgenoteDisplay {...this.state} />
-          <EdgenoteSidebar {...this.state} />
+          <EdgenoteDisplay didSave={didSave} {...this.state} />
+          <EdgenoteSidebar didSave={didSave} {...this.state} />
         </aside>
       </div>
     )
@@ -70,7 +79,9 @@ class EdgenoteDisplay extends React.Component {
   }
 
   renderAside() {
-    return <div className="Card scrolling" dangerouslySetInnerHTML={{__html: this.props.content}} />
+    return <EditableHTML uri={`edgenotes/${this.props.slug}:content`} placeholder="<!-- HTML aside content -->" didSave={this.props.didSave}>
+      <div className="Card scrolling" dangerouslySetInnerHTML={{__html: this.props.content}} />
+    </EditableHTML>
   }
 
   renderTheatre() {
@@ -96,7 +107,9 @@ class EdgenoteDisplay extends React.Component {
   render() {
     return <div className="EdgenoteDisplay">
       {this.renderContent()}
-      <cite dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
+      <EditableHTML uri={`edgenotes/${this.props.slug}:photo_credit`} placeholder="<!-- HTML photo credit -->" didSave={this.props.didSave}>
+        <cite dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
+      </EditableHTML>
     </div>
   }
 
@@ -117,14 +130,40 @@ class EdgenoteSidebar extends React.Component {
   }
 
   render() {
+    let {caption, format, thumbnailUrl, embedCode, websiteUrl,
+      imageUrl, pdfUrl, instructions, photoCredit, slug, didSave} = this.props
+    let endpoint = `edgenotes/${slug}`
     return <div className="EdgenoteSidebar">
       <section className="EdgenoteSidebar-meta scrolling">
         <div>
           {this.renderFormatIcon()}
-          <h4>{this.props.caption}</h4>
+          <Editable uri={`${endpoint}:caption`} placeholder="Edgenote Caption" didSave={didSave}>
+            <h4>{caption}</h4>
+          </Editable>
         </div>
-        <p dangerouslySetInnerHTML={{__html: this.props.instructions}} />
+        <EditableHTML uri={`${endpoint}:instructions`} placeholder="<!-- HTML instructions -->" didSave={didSave}>
+          <p dangerouslySetInnerHTML={{__html: instructions}} />
+        </EditableHTML>
       </section>
+      <div>
+        <EditableAttribute placeholder="Thumbnail URL"
+          uri={`${endpoint}:thumbnail_url`}
+          didSave={didSave}>{thumbnailUrl}</EditableAttribute>
+      </div>
+      <div>
+        <EditableAttribute placeholder="Embed Code"
+          uri={`${endpoint}:embed_code`}
+          didSave={didSave}>{embedCode}</EditableAttribute>
+        <EditableAttribute placeholder="PDF URL"
+          uri={`${endpoint}:pdf_url`}
+          didSave={didSave}>{pdfUrl}</EditableAttribute>
+        <EditableAttribute placeholder="Website URL"
+          uri={`${endpoint}:website_url`}
+          didSave={didSave}>{websiteUrl}</EditableAttribute>
+        <EditableAttribute placeholder="Image URL"
+          uri={`${endpoint}:image_url`}
+          didSave={didSave}>{imageUrl}</EditableAttribute>
+      </div>
     </div>
   }
 

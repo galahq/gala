@@ -203,6 +203,7 @@ This action cannot be undone.")
   }
 
   renderEdgenotes() {
+    let edit = this.props.didSave !== null ? "/edit" : ""
     let aside
     if (this.state.edgenoteSlugs.length != 0) {
       aside = <aside className="edgenotes">
@@ -210,11 +211,12 @@ This action cannot be undone.")
                   this.state.edgenoteSlugs.map( (slug) => {
                     return (
                       <Edgenote
-                        pathPrefix={`/${this.props.selectedPage}`}
+                        pathPrefix={`${edit}/${this.props.selectedPage}`}
                         selectedEdgenote={this.state.selectedEdgenote}
                         slug={slug}
                         key={`edgenote_${slug}`}
                         handleHoverID={this.props.i}
+                        didSave={this.props.didSave}
                       />
                       )
                     } )
