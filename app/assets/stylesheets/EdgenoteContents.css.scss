@@ -16,7 +16,7 @@
     z-index: 110;
     -webkit-box-sizing: border-box;
     flex: 1 1 auto;
-    margin: 7%;
+    margin: 4%;
     padding: 1em;
     background-color: rgba( darken($black, 10%), 0.8 );
     border-radius: 2px;
@@ -24,7 +24,7 @@
     display: flex;
     position: relative;
     min-width: 20em;
-    flex-flow: column-reverse;
+    @media screen and (max-width: 1024px) { flex-flow: column-reverse; }
   }
 }
 
@@ -115,19 +115,25 @@
 
 .EdgenoteSidebar {
   flex: 2;
-  margin-left: 1em;
   display: flex;
   flex-direction: column;
+  margin-left: 1em;
   height: auto;
+  @media screen and (max-width: 1024px) {
+    flex: initial;
+    margin-left: 0em;
+    max-height: 15em;
+  }
 
   &-meta {
-    flex: 0 0 auto;
-    margin-bottom: 1em;
     padding: 0.75em 1.5em;
     border: 0.5em solid $lightGreen;
     background-color: $white;
-    max-height: 5.5em;
     overflow: scroll;
+
+    @media screen and (max-width: 1024px) {
+      margin-bottom: 1em;
+    }
 
     .edgenote-icon { bottom: -6pt; }
     g { stroke: shade($lightGreen, 60%) }
