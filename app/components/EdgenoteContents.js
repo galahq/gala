@@ -117,13 +117,15 @@ class EdgenoteSidebar extends React.Component {
   }
 
   render() {
-    return <section className="EdgenoteSidebar-meta scrolling">
+    return <div className="EdgenoteSidebar">
+      <section className="EdgenoteSidebar-meta scrolling">
         <div>
           {this.renderFormatIcon()}
           <h4>{this.props.caption}</h4>
         </div>
         <p dangerouslySetInnerHTML={{__html: this.props.instructions}} />
       </section>
+    </div>
   }
 
 }
