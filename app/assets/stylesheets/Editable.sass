@@ -23,13 +23,21 @@
 
 .EditableAttribute
   background-color: rgba($white, .7)
-  border-radius: 2px
-  padding: 0.5em 1em
-  margin: 1em 0
+  color: $black !important
+  padding: 0.25em 1em
   &:first-child
-    margin-top: 0
+    border-top-left-radius: 2px
+    border-top-right-radius: 2px
+    padding-top: 0.5em
+    margin-top: 0.25em
+  &:last-child
+    border-bottom-left-radius: 2px
+    border-bottom-right-radius: 2px
+    padding-bottom: 0.5em
+    margin-bottom: 0.25em
 
   & > span
     font-family: "fira-mono" !important
     font-size: 10pt !important
     word-break: break-all
+

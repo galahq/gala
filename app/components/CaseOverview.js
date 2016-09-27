@@ -13,8 +13,8 @@ export class Billboard extends React.Component {
     return (
       <section className="Billboard">
         <BillboardTitle {...this.props} />
-        <EditableAttribute placeholder="Base cover image URL"
-          uri={`${endpoint}:cover_url`} didSave={didSave}>{baseCoverUrl}</EditableAttribute>
+        <div><EditableAttribute placeholder="Base cover image URL"
+            uri={`${endpoint}:cover_url`} didSave={didSave}>{baseCoverUrl}</EditableAttribute></div>
         <div className="Card BillboardSnippet">
           <Editable placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case." uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
           <Editable placeholder="Summarize the case in a short paragraph." uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>
@@ -34,9 +34,9 @@ class Actions extends React.Component {
         <Editable placeholder="Activity name"
           uri={`activities/${activity.id}:title`} didSave={this.props.didSave}><a
           href={activity.pdfUrl}>{ activity.title }</a></Editable>,
-        <EditableAttribute placeholder="Activity URL"
+        <div><EditableAttribute placeholder="Activity URL"
           uri={`activities/${activity.id}:pdf_url`}
-          didSave={this.props.didSave}>{activity.pdfUrl}</EditableAttribute>
+          didSave={this.props.didSave}>{activity.pdfUrl}</EditableAttribute></div>
       ]
 
     } )

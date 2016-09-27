@@ -88,9 +88,9 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
           onPause={this.setPaused.bind(this)}
         />
 
-        <EditableAttribute placeholder="Audio URL"
+        <div><EditableAttribute placeholder="Audio URL"
           uri={`podcasts/${id}:audio_url`}
-          didSave={didSave}>{audio}</EditableAttribute>
+          didSave={didSave}>{audio}</EditableAttribute></div>
 
       </div>
     )
