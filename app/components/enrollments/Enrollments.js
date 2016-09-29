@@ -1,7 +1,7 @@
 import React from 'react'
 import {ReadersSection} from 'enrollments/ReadersSection'
 import {CasesSection} from 'enrollments/CasesSection'
-import {orchard} from 'concerns/orchard.js'
+import {Orchard} from 'concerns/orchard.js'
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
 import update from 'react/lib/update'
@@ -19,8 +19,8 @@ class Enrollments extends React.Component {
   }
 
   download() {
-    orchard('admin/readers').then((r) => {this.setState({readers: r})})
-    orchard('cases').then((r) => {this.setState({cases: r})})
+    Orchard.harvest('admin/readers').then((r) => {this.setState({readers: r})})
+    Orchard.harvest('cases').then((r) => {this.setState({cases: r})})
     //orchard('groups').then((r) => {this.setState({cases: r})})
   }
 

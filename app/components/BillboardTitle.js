@@ -1,10 +1,7 @@
-import React from 'react';
+import React from 'react'
+import {Editable} from 'Editable.js'
 
 class BillboardTitle extends React.Component {
-  prepareSave(e) {
-    this.props.handleEdit("title", e.target.innerText)
-  }
-
   renderTranslators() {
     if (this.props.translators !== "") {
       return <em>{this.props.translators}</em>
@@ -23,14 +20,27 @@ class BillboardTitle extends React.Component {
   }
 
   render() {
+    let endpoint = `cases/${this.props.slug}`
+    let {didSave} = this.props
     return (
       <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${this.props.coverUrl})`}}>
-        <h6>{this.props.kicker}</h6>
-        <h1 contentEditable={this.props.handleEdit !== null} onBlur={this.prepareSave.bind(this)}>
-          {this.props.title}
-        </h1>
+
+        <Editable placeholder="Snappy kicker" uri={`${endpoint}:kicker`} didSave={didSave}>
+          <h6>{this.props.kicker}</h6>
+        </Editable>
+
+        <Editable placeholder="What is the central question of the case?" uri={`${endpoint}:title`} didSave={didSave}>
+          <h1>
+            {this.props.title}
+          </h1>
+        </Editable>
+
         {this.renderAuthors()}
-        <cite dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
+
+        <Editable placeholder="Photo credit" uri={`${endpoint}:photo_credit`} didSave={didSave}>
+          <cite>{this.props.photoCredit}</cite>
+        </Editable>
+
       </div>
     )
   }

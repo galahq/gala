@@ -1,1 +1,1 @@
-json.extract! activity, :title, :description, :pdf_url
+json.extract! activity, :id, :position, :title, :description, :pdf_url

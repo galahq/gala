@@ -1,5 +1,6 @@
 class EdgenotesController < ApplicationController
   before_action :set_edgenote, only: [:show, :update, :destroy]
+  before_action :set_case, only: [:create]
 
   # GET /edgenotes
   def index
@@ -14,10 +15,10 @@ class EdgenotesController < ApplicationController
 
   # POST /edgenotes
   def create
-    @edgenote = Edgenote.new(edgenote_params)
+    @edgenote = @case.edgenotes.build(slug: params[:slug], caption: "“#{params[:slug]}” Edgenote", format: 'aside')
 
     if @edgenote.save
-      render json: @edgenote, status: :created, location: @edgenote
+      render partial: 'edgenote', locals: {edgenote: @edgenote}
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -26,7 +27,7 @@ class EdgenotesController < ApplicationController
   # PATCH/PUT /edgenotes/1
   def update
     if @edgenote.update(edgenote_params)
-      render json: @edgenote
+      render partial: 'edgenote', locals: {edgenote: @edgenote}
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -43,8 +44,12 @@ class EdgenotesController < ApplicationController
       @edgenote = Edgenote.find_by_slug params[:slug]
     end
 
+    def set_case
+      @case = Case.find_by_slug(params[:case_slug])
+    end
+
     # Only allow a trusted parameter "white list" through.
     def edgenote_params
-      params.require(:edgenote).permit(:caption_i18n, :format, :thumb, :content_i18n)
+      params.require(:edgenote).permit(:caption, :format, :thumbnail_url, :content, :embed_code, :website_url, :image_url, :pdf_url, :instructions, :photo_credit, :slug)
     end
 end

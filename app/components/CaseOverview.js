@@ -3,31 +3,21 @@ import { Link } from 'react-router'
 import TableOfContents from 'TableOfContents.js'
 import BillboardTitle from 'BillboardTitle.js'
 import {I18n} from 'I18n.js'
+import {Editable, EditableAttribute} from 'Editable.js'
+import {EditableList} from 'EditableList.js'
 
 export class Billboard extends React.Component {
-
-  prepareSave(e) {
-    this.props.handleEdit("summary", e.target.innerText)
-  }
-
   render() {
-    let {kicker, title, dek, coverUrl, photoCredit, summary, caseAuthors, translators, handleEdit} = this.props
+    let {dek, summary, didSave, baseCoverUrl} = this.props
+    let endpoint = `cases/${this.props.slug}`
     return (
       <section className="Billboard">
-        <BillboardTitle
-          kicker={kicker}
-          title={title}
-          translators={translators}
-          coverUrl={coverUrl}
-          photoCredit={photoCredit}
-          caseAuthors={caseAuthors}
-          handleEdit={handleEdit}
-        />
+        <BillboardTitle {...this.props} />
+        <div><EditableAttribute placeholder="Base cover image URL"
+            uri={`${endpoint}:cover_url`} didSave={didSave}>{baseCoverUrl}</EditableAttribute></div>
         <div className="Card BillboardSnippet">
-          <h3>{dek}</h3>
-          <p contentEditable={handleEdit !== null} onBlur={this.prepareSave.bind(this)}>
-            {summary}
-          </p>
+          <Editable placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case." uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
+          <Editable placeholder="Summarize the case in a short paragraph." uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>
         </div>
       </section>
     )
@@ -40,9 +30,17 @@ class Actions extends React.Component {
     let activities = this.props.activities
 
     let list = this.props.activities.map( (activity) => {
-      return <li><a href={activity.pdfUrl}>{ activity.title }</a></li>
+      return [
+        <Editable placeholder="Activity name"
+          uri={`activities/${activity.id}:title`} didSave={this.props.didSave}><a
+          href={activity.pdfUrl}>{ activity.title }</a></Editable>,
+        <div><EditableAttribute placeholder="Activity URL"
+          uri={`activities/${activity.id}:pdf_url`}
+          didSave={this.props.didSave}>{activity.pdfUrl}</EditableAttribute></div>
+      ]
+
     } )
-    if ((activities && activities.length !== 0) || this.props.handleEdit !== null) {
+    if ((activities && activities.length !== 0) || this.props.didSave !== null) {
       return (
         <div>
           <h2>
@@ -52,9 +50,12 @@ class Actions extends React.Component {
             />
             <I18n meaning="consider"/>
           </h2>
-          <ul>
-            {list}
-          </ul>
+          <EditableList
+            elements={list}
+            ordered={false}
+            uri={`cases/${this.props.slug}/activities`}
+            didSave={this.props.didSave}
+          />
         </div>
       )
     }
@@ -62,10 +63,11 @@ class Actions extends React.Component {
 
   renderPodcasts() {
     let podcasts = this.props.podcasts
+    let edit = this.props.didSave !== null ? "edit/" : ""
     let list = podcasts.map( (pod) => {
-        return <Link key={`podcast-${pod.position}`} to={`podcasts/${pod.position}`}>{pod.title}</Link>
+        return <Link key={`podcast-${pod.position}`} to={`${edit}podcasts/${pod.position}`}>{pod.title}</Link>
     } )
-    if ((podcasts && podcasts.length !== 0) || this.props.handleEdit !== null) {
+    if ((podcasts && podcasts.length !== 0) || this.props.didSave !== null) {
       return (
         <div>
           <h2>
@@ -76,7 +78,12 @@ class Actions extends React.Component {
             <I18n meaning="listen" />
           </h2>
           <h4 className="list-head"><I18n meaning="related_podcast" /></h4>
-          {list}
+          <EditableList
+            elements={list}
+            ordered={false}
+            uri={`cases/${this.props.slug}/podcasts`}
+            didSave={this.props.didSave}
+          />
         </div>
       )
     }
@@ -89,7 +96,7 @@ class Actions extends React.Component {
   }
 
   renderIfReading(component) {
-    if (this.props.handleEdit === null && this.props.reader !== undefined) {
+    if (this.props.didSave === null && this.props.reader !== undefined) {
       return component
     }
   }
@@ -114,7 +121,7 @@ class Actions extends React.Component {
               slug={this.props.slug}
               pageTitles={pageTitles}
               currentPage={null}
-              handleEdit={this.props.handleEdit}
+              didSave={this.props.didSave}
             />
           </div>
 
@@ -157,7 +164,7 @@ class Actions extends React.Component {
 export class CaseOverview extends React.Component {
   render () {
     return (
-      <div id="CaseOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
+      <div id="CaseOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
         <Billboard {...this.props} />
         <Actions {...this.props} />
       </div>

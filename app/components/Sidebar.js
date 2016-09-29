@@ -10,21 +10,23 @@ class Sidebar extends React.Component {
     if (this.props.pageTitles) {
       return (
         <TableOfContents
+          slug={this.props.slug}
           pageTitles={this.props.pageTitles}
           selectedPage={this.props.selectedPage}
-          handleEdit={this.props.handleEdit}
+          didSave={this.props.didSave}
         />
       )
     }
   }
+
   render () {
-    let {kicker, title, coverUrl, handleEdit} = this.props
+    let {slug, kicker, title, coverUrl, didSave} = this.props
     return (
       <aside id="Sidebar">
-        <Link to={`/${this.props.handleEdit !== null ? "edit/" : ""}`} className="backLink">
+        <Link to={`/${this.props.didSave !== null ? "edit/" : ""}`} className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
-        <BillboardTitle kicker={kicker} title={title} coverUrl={coverUrl} handleEdit={handleEdit} />
+        <BillboardTitle kicker={kicker} title={title} coverUrl={coverUrl} didSave={didSave} slug={slug} />
         {this.renderTOC()}
       </aside>
     )

@@ -31,7 +31,7 @@ class CasesController < ApplicationController
   # PATCH/PUT /cases/1
   def update
     if @case.update(case_params)
-      render json: @case
+      render :show, status: :ok, location: @case
     else
       render json: @case.errors, status: :unprocessable_entity
     end
@@ -50,6 +50,8 @@ class CasesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def case_params
-      params.require(:case).permit(:published, :title, :slug, :authors, :text, :summary, :tags)
+      params.require(:case).permit(:published, :kicker, :title, :dek, :slug,
+                                   :authors, :translators, :photo_credit,
+                                   :summary, :tags, :cover_url)
     end
 end

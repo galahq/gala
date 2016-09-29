@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
-import {orchard} from 'concerns/orchard.js'
+import {Orchard} from 'concerns/orchard.js'
 import LoadingIcon from 'LoadingIcon.js'
 
 class Edgenote extends React.Component {
@@ -19,17 +19,30 @@ class Edgenote extends React.Component {
     }
   }
 
-  parseContentsFromJSON(response) {
-    let contents = {
-      "caption": {__html: response.caption},
-      "cover": <img src={`${response.thumbnailUrl}?w=640`} />,
-      "format": response.format
+  componentWillReceiveProps() {
+    if (this.props.didSave !== null) {
+      this.downloadContents()
     }
-    this.setState({contents: contents})
+  }
+
+  parseContentsFromJSON(response) {
+    let contents = response
+    contents.caption = {__html: response.caption}
+    contents.cover = <img src={`${response.thumbnailUrl}?w=640`} />
+    this.setState({
+      contents: contents,
+      extant: true
+    })
   }
 
   downloadContents() {
-    orchard(`edgenotes/${this.props.slug}`).then(this.parseContentsFromJSON.bind(this))
+    Orchard.harvest(`edgenotes/${this.props.slug}`).then(this.parseContentsFromJSON.bind(this)).catch(() => {
+      this.setState({ extant: false })
+    })
+  }
+
+  createEdgenote() {
+    Orchard.graft(`cases/${this.props.caseSlug}/edgenotes`, {slug: this.props.slug}).then(this.parseContentsFromJSON.bind(this))
   }
 
   className() {
@@ -43,32 +56,34 @@ class Edgenote extends React.Component {
     this.downloadContents()
   }
 
-  render () {
-    if (this.state.contents && this.state.contents !== null) {
-      let {cover, caption, format} = this.state.contents
-      let slug = this.props.slug
-      let className = this.className()
-      return (
-        <Link
-          to={`${this.props.pathPrefix}/edgenotes/${slug}`}
-          className={className}
-          onMouseOver={this.handleMouseOver.bind(this)}
-          onMouseOut={this.handleMouseOut.bind(this)}
-          >
-          <div>
-            <div>{cover}</div>
-            <div
-              className={`edgenote-icon edgenote-icon-${format}`}
-              dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
-            />
-            <figcaption className={ slug == this.props.selectedEdgenote ? "focus" : "" } dangerouslySetInnerHTML={caption} />
-          </div>
-        </Link>
-      )
+  renderEdgenote() {
+    let {cover, caption, format} = this.state.contents
+    let slug = this.props.slug
+    let className = this.className()
+    return <Link
+      to={`${this.props.pathPrefix}/edgenotes/${slug}`}
+      className={className}
+      onMouseOver={this.handleMouseOver.bind(this)}
+      onMouseOut={this.handleMouseOut.bind(this)}
+    >
+      <div>
+        <div>{cover}</div>
+        <div
+          className={`edgenote-icon edgenote-icon-${format}`}
+          dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
+        />
+        <figcaption className={ slug == this.props.selectedEdgenote ? "focus" : "" } dangerouslySetInnerHTML={caption} />
+      </div>
+    </Link>
+  }
+
+  render() {
+    if (this.state.extant) {
+      return this.renderEdgenote()
+    } else if (this.state.extant === false) {
+      return <button onClick={this.createEdgenote.bind(this)}>{`Create ${this.props.slug} Edgenote`}</button>
     } else {
-      return (
-        <LoadingIcon />
-      )
+      return <LoadingIcon />
     }
   }
 }

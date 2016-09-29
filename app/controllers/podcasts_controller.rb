@@ -1,5 +1,9 @@
 class PodcastsController < ApplicationController
+  before_action :authenticate_reader!
   before_action :set_podcast, only: [:show, :update, :destroy]
+  before_action :set_case, only: [:create]
+
+  authorize_actions_for Podcast
 
   # GET /podcasts
   def index
@@ -13,10 +17,10 @@ class PodcastsController < ApplicationController
 
   # POST /podcasts
   def create
-    @podcast = Podcast.new(podcast_params)
+    @podcast = @case.podcasts.build(title: "New podcast")
 
     if @podcast.save
-      render json: @podcast, status: :created, location: @podcast
+      render partial: 'cases/case', locals: {c: @case}
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -25,7 +29,7 @@ class PodcastsController < ApplicationController
   # PATCH/PUT /podcasts/1
   def update
     if @podcast.update(podcast_params)
-      render json: @podcast
+      render partial: 'cases/case', locals: {c: @podcast.case}
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -39,8 +43,7 @@ class PodcastsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_podcast
-      set_case
-      @podcast = Podcast.where("case": @case, position: params[:position])
+      @podcast = Podcast.find(params[:id])
     end
 
     def set_case
@@ -49,6 +52,6 @@ class PodcastsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def podcast_params
-      params.require(:podcast).permit(:title_i18n, :audio_url_i18n, :description_i18n, :case_id)
+      params.require(:podcast).permit(:title, :audio_url, :description, :case_id, :artwork_url)
     end
 end

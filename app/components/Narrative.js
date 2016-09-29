@@ -3,6 +3,8 @@ import Edgenote from 'Edgenote.js'
 import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
+import {Editable, EditableHTML} from 'Editable.js'
+import {Orchard} from 'concerns/orchard.js'
 
 export function isElementInViewport (el) {
 
@@ -30,7 +32,8 @@ class Narrative extends React.Component {
   nextLink() {
     let nextChapterID = this.props.selectedPage + 2
     if (nextChapterID - 1 < this.props.pages.length) {
-      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.pages[nextChapterID - 1].title}</Link>
+      let edit = this.props.didSave === null ? "" : 'edit/'
+      return <Link className="nextLink" to={`/${edit}${nextChapterID}`}><I18n meaning="next" /> {this.props.pages[nextChapterID - 1].title}</Link>
     } else {
       return <footer><h2><I18n meaning="end" /></h2></footer>
     }
@@ -47,7 +50,8 @@ class Narrative extends React.Component {
         <a id="top" />
         <Page
           page={page}
-          handleEdit={this.props.handleEdit}
+          didSave={this.props.didSave}
+          caseSlug={this.props.slug}
         />
         {this.nextLink()}
       </main>
@@ -58,22 +62,73 @@ class Narrative extends React.Component {
 export default Narrative
 
 class Page extends React.Component {
+  deletePage() {
+    let confirmation = window.confirm("\
+Are you sure you want to delete this page and all of its cards?\n\n\
+Edgenotes attached to cards on this page will not be deleted.\n\n\
+This action cannot be undone.")
+    if (!confirmation) { return }
+
+    Orchard.prune(`pages/${this.props.page.id}`).then((response) => {
+      this.props.didSave(response, true, 'deleted')
+    })
+
+  }
+
+  renderDeleteOption() {
+    if (this.props.didSave !== null) {
+      return <a onClick={this.deletePage.bind(this)} className="Page-delete-option">Delete page</a>
+    }
+  }
+
+  renderCreateCardLink(i) {
+    if (this.props.didSave !== null) {
+      return <CreateCardLink pageId={this.props.page.id} i={i} didSave={this.props.didSave} />
+    }
+  }
+
   render() {
-    let {page} = this.props
-    let cards = page.cards.map( (card, i) => {
-      return <Card id={i} key={`c${i}`}
-                   handleEdit={this.props.handleEdit}
-                   selectedPage={page.position}
-                   solid={card.solid}
-                   card={card} />
+    let {page, didSave} = this.props
+
+    var cards = page.cards.map( (card, i) => {
+      return [
+        this.renderCreateCardLink(i),
+        <Card i={i} key={card.id}
+          didSave={didSave}
+          selectedPage={page.position}
+          solid={card.solid}
+          card={card}
+          caseSlug={this.props.caseSlug}
+        />
+      ]
     } )
+    cards.push(this.renderCreateCardLink())
 
     return (
       <article>
-        <section><h1>{page.title}</h1></section>
+        <section className="Page-meta">
+          <Editable placeholder="Page title" uri={`pages/${page.id}:title`} didSave={this.props.didSave}>
+            <h1>{page.title}</h1>
+          </Editable>
+          {this.renderDeleteOption()}
+        </section>
         {cards}
       </article>
     )
+  }
+}
+
+class CreateCardLink extends React.Component {
+  createCard() {
+    let { pageId, i, didSave } = this.props
+    Orchard.graft(`pages/${pageId}/cards`, {position: i + 1})
+      .then((response) => {
+        didSave(response)
+      })
+  }
+
+  render() {
+    return <a onClick={this.createCard.bind(this)} className="Card-create">Create card</a>
   }
 }
 
@@ -87,7 +142,7 @@ class Card extends React.Component {
   }
 
   componentWillMount() {
-    window["handleHover"+this.props.id] = (slug) => {
+    window["handleHover"+this.props.i] = (slug) => {
       this.setState({selectedEdgenote: slug})
     }
   }
@@ -97,10 +152,23 @@ class Card extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.selectedPage !== nextProps.selectedPage) {
+    if (this.props.didSave !== null ||
+        this.props.selectedPage !== nextProps.selectedPage) {
       this.setState({ edgenoteSlugs: [] })
       this.setEdgenotes(nextProps.card.content)
     }
+  }
+
+  deleteCard() {
+    let confirmation = window.confirm("\
+Are you sure you want to delete this card and its contents?\n\n\
+Edgenotes attached to it will not be deleted, although they will be detached.\n\n\
+This action cannot be undone.")
+    if (!confirmation) { return }
+
+    Orchard.prune(`cards/${this.props.card.id}`).then((response) => {
+      this.props.didSave(response, false, 'deleted')
+    })
   }
 
   setEdgenotes(contents) {
@@ -113,9 +181,9 @@ class Card extends React.Component {
   }
 
   addHoverCallbacks(content) {
-    let mouseover = 'onmouseover=\'window.handleHover'+this.props.id+'(\"$2\")\''
+    let mouseover = 'onmouseover=\'window.handleHover'+this.props.i+'(\"$2\")\''
     content = this.addAttributeToLinks(content, mouseover)
-    let mouseout = 'onmouseout=\'window.handleHover'+this.props.id+'(null)\''
+    let mouseout = 'onmouseout=\'window.handleHover'+this.props.i+'(null)\''
     content = this.addAttributeToLinks(content, mouseout)
     return content
   }
@@ -137,6 +205,7 @@ class Card extends React.Component {
   }
 
   renderEdgenotes() {
+    let edit = this.props.didSave !== null ? "/edit" : ""
     let aside
     if (this.state.edgenoteSlugs.length != 0) {
       aside = <aside className="edgenotes">
@@ -144,11 +213,13 @@ class Card extends React.Component {
                   this.state.edgenoteSlugs.map( (slug) => {
                     return (
                       <Edgenote
-                        pathPrefix={`/${this.props.selectedPage}`}
+                        pathPrefix={`${edit}/${this.props.selectedPage}`}
                         selectedEdgenote={this.state.selectedEdgenote}
                         slug={slug}
                         key={`edgenote_${slug}`}
-                        handleHoverID={this.props.id}
+                        handleHoverID={this.props.i}
+                        didSave={this.props.didSave}
+                        caseSlug={this.props.caseSlug}
                       />
                       )
                     } )
@@ -158,17 +229,23 @@ class Card extends React.Component {
     return aside
   }
 
-  prepareSave() {}
+  renderDeleteOption() {
+    if (this.props.didSave !== null) {
+      return <a onClick={this.deleteCard.bind(this)} className="Card-delete-option">Delete card</a>
+    }
+  }
 
   render() {
     //let paragraph = this.props.contents.addAttributeToLinksPointingToEdgenoteID(this.state.selected_id, 'class="focus"')
     let paragraph = this.props.card.content
     return (
       <section>
-        <div className={this.props.card.solid ? "Card" : ""}
-          contentEditable={this.props.handleEdit !== null}
-          dangerouslySetInnerHTML={this.renderContent(paragraph)}
-          onBlur={this.prepareSave.bind(this)} />
+        <div className={this.props.card.solid ? "Card" : ""}>
+          {this.renderDeleteOption()}
+          <EditableHTML uri={`cards/${this.props.card.id}:content`} placeholder="<!-- HTML content of card -->" didSave={this.props.didSave}>
+            <div dangerouslySetInnerHTML={this.renderContent(paragraph)}>{paragraph}</div>
+          </EditableHTML>
+        </div>
         {this.renderEdgenotes()}
       </section>
     )

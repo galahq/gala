@@ -1,0 +1,43 @@
+@import _globals
+
+.EditableList-add
+  list-style-type: none
+
+  a
+    color: $lightGreen
+    &:hover
+      color: $lightGreen
+      background-color: transparent
+      text-decoration: underline
+
+.EditableHTML-editing
+  white-space: pre-wrap
+  font-family: "fira-mono" !important
+  font-size: 11pt !important
+
+  &.Card
+    padding: 2em 2.4em
+
+.Card > .EditableHTML-editing
+  margin-top: 0.6em
+
+.EditableAttribute
+  background-color: rgba($white, .7)
+  color: $black !important
+  padding: 0.25em 1em
+  &:first-child
+    border-top-left-radius: 2px
+    border-top-right-radius: 2px
+    padding-top: 0.5em
+    margin-top: 0.25em
+  &:last-child
+    border-bottom-left-radius: 2px
+    border-bottom-right-radius: 2px
+    padding-bottom: 0.5em
+    margin-bottom: 0.25em
+
+  & > span
+    font-family: "fira-mono" !important
+    font-size: 10pt !important
+    word-break: break-all
+

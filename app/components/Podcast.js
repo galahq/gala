@@ -2,7 +2,7 @@ import React from 'react'
 import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
 import {I18n} from 'I18n.js'
-import {Card} from 'Narrative.js'
+import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {
@@ -59,20 +59,24 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   }
 
   render() {
-    let {title, artwork, audio, photoCredit} = this.props
+    let {id, title, artwork, audio, photoCredit, didSave} = this.props
     return (
       <div className="PodcastPlayer" >
-        <div
-          className="artwork"
-          style={{backgroundImage: `url(${artwork})`}}
-        >
+
+        <div className="artwork" style={{backgroundImage: `url(${artwork})`}} >
+          <EditableAttribute placeholder="Artwork URL"
+            uri={`podcasts/${id}:artwork_url`}
+            didSave={didSave}>{artwork}</EditableAttribute>
+
           <cite dangerouslySetInnerHTML={{__html: photoCredit}} />
         </div>
-        <div
-          className="credits"
-          onClick={this.toggleCredits.bind(this)}
-        >
-          <h1>{title}{ this.state.creditsVisible ? "" : " ▸" }</h1>
+
+        <div className="credits" onClick={this.toggleCredits.bind(this)} >
+          <h1>
+            <Editable uri={`podcasts/${id}:title`} didSave={didSave}><span>{title}</span></Editable>
+            { this.state.creditsVisible ? "" : " ▸" }
+          </h1>
+
           {this.renderHosts()}
         </div>
 
@@ -84,6 +88,10 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
           onPause={this.setPaused.bind(this)}
         />
 
+        <div><EditableAttribute placeholder="Audio URL"
+          uri={`podcasts/${id}:audio_url`}
+          didSave={didSave}>{audio}</EditableAttribute></div>
+
       </div>
     )
   }
@@ -92,21 +100,21 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
 class Podcast extends React.Component {
   render() {
     let description = {__html: this.props.podcast.description}
+    let {podcast, didSave} = this.props
+    let {id, title, artworkUrl, audioUrl, credits, photoCredit} = podcast
 
     return (
       <div className="Podcast">
-        <PodcastPlayer
-          title={this.props.podcast.title}
-          artwork={this.props.podcast.artworkUrl}
-          audio={this.props.podcast.audioUrl}
-          credits={this.props.podcast.credits}
-          photoCredit={this.props.podcast.photoCredit}
-        />
+        <PodcastPlayer id={id} title={title} artwork={artworkUrl}
+          audio={audioUrl} credits={credits} photoCredit={photoCredit}
+          didSave={didSave} />
 
         <div className="PodcastInfo">
-          <div className="Card"
-            dangerouslySetInnerHTML={description}
-          />
+          <EditableHTML uri={`podcasts/${id}:description`} placeholder="<!-- HTML podcast description -->" didSave={didSave}>
+            <div className="Card"
+              dangerouslySetInnerHTML={description}
+            />
+          </EditableHTML>
         </div>
       </div>
     )
@@ -128,15 +136,19 @@ export class PodcastOverview extends React.Component {
     })
   }
 
+  podcast() {
+    return this.props.podcasts.find( (p) => (p.position === parseInt(this.props.params.podcastID)) ) || {}
+  }
+
   prepareSave() {
     this.props.handleEdit
   }
 
   render () {
-    let {pages} = this.props
+    let {pages, didSave} = this.props
 
     return (
-      <div id="PodcastOverview" className={ `window ${this.props.handleEdit !== null ? 'editing' : ''}` }>
+      <div id="PodcastOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
 
         <Sidebar
           pageTitles={pages.map( (p) => { return p.title } )}
@@ -144,7 +156,7 @@ export class PodcastOverview extends React.Component {
           {...this.props}
         />
 
-        <Podcast podcast={this.state.pod} />
+        <Podcast didSave={didSave} podcast={this.podcast()} />
 
       </div>
     )

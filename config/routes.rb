@@ -10,15 +10,22 @@ Rails.application.routes.draw do
     resources :groups
     resources :comment_threads
     resources :comments
-    resources :cases, only: %i(index show), param: :slug do
-      resources :activities, param: :position
-      resources :podcasts, param: :position
+    resources :cases, param: :slug do
+      resources :activities, shallow: true
+      resources :podcasts, shallow: true
+      resources :pages, only: %i(create)
       resources :edgenotes, shallow: true, param: :slug
     end
+    resources :pages, only: %i(update destroy) do
+      resources :cards, only: %i(create)
+    end
+    resources :cards, only: %i(update destroy)
+
     devise_for :readers, skip: :omniauth_callbacks, controllers: {
       sessions: 'readers/sessions',
       registrations: 'readers/registrations'
     }
+
     resources :readers, only: %i(show edit update)
   end
 
@@ -28,7 +35,7 @@ Rails.application.routes.draw do
         resources :enrollments, only: %i(index)
       end
     end
-    resources :cases, except: %i(index show), param: :slug do
+    resources :cases, only: [], param: :slug do
       resources :readers, only: %i(destroy) do
         resources :enrollments, only: [] do
           collection do

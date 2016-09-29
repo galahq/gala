@@ -1,11 +1,11 @@
 import React from 'react'
 import { DropTarget } from 'react-dnd'
-import { updateOrchard } from 'concerns/orchard'
+import { Orchard } from 'concerns/orchard'
 
 let CaseEnrollmentTarget = {
   drop(props, monitor) {
     let item = monitor.getItem()
-    updateOrchard(`admin/cases/${props.caseSlug}/readers/${item.readers}/enrollments/upsert`, {status: props.type})
+    Orchard.espalier(`admin/cases/${props.caseSlug}/readers/${item.readers}/enrollments/upsert`, {status: props.type})
       .then((r) => {
         props.updateEnrollments(props.caseSlug, r)
       })

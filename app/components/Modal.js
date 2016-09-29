@@ -3,7 +3,7 @@ import {Link} from 'react-router'
 
 import {ScrollLock} from 'ScrollLock.js'
 
-import {orchard} from 'concerns/orchard.js'
+import {Orchard} from 'concerns/orchard.js'
 
 class Modal extends React.Component {
 
@@ -41,7 +41,7 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    orchard(`edgenotes/${this.props.params.edgenoteID}`).then(this.parseContentsFromJSON.bind(this))
+    Orchard.harvest(`edgenotes/${this.props.params.edgenoteID}`).then(this.parseContentsFromJSON.bind(this))
   }
 
   renderFormatDifferentiatedContent(format) {

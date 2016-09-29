@@ -14,7 +14,6 @@ article {
     h1, h2, h3, h4, h5, h6 {
       color: $white;
       margin: 20px 20px 0 20px;
-      width: 100%;
       @media screen and (min-width: $mobileCutoff) {
         margin: 20px 30px 5px 30px;
       }
@@ -41,6 +40,18 @@ article {
       }
 
     }
+
+    &.Page-meta {
+      align-items: baseline;
+    }
+
+    .Page-delete-option {
+      font-family: $sansFont;
+      color: $red;
+      background-color: $white;
+      padding: .1em .25em;
+      &:hover { text-decoration: underline }
+    }
   }
 }
 
@@ -50,6 +61,7 @@ article {
   background-color: $white;
   border-radius: 2pt;
   padding: 0em 0.7em;
+  position: relative;
   @media screen and (min-width: $mobileCutoff) {
     padding: 1.2em 2.4em;
   }
@@ -73,6 +85,25 @@ article {
       background-color: $lightGreen;
       color: inherit;
     }
+  }
+
+  .Card-delete-option {
+    color: $red !important;
+    font-family: $sansFont;
+    font-size: 80%;
+    position: absolute;
+    top: 0.25em;
+    right: 0.5em;
+  }
+}
+
+.Card-create {
+  font-family: $sansFont;
+  margin-left: 2em;
+  &:hover {
+    background-color: transparent;
+    color: $umichMaize;
+    text-decoration: underline;
   }
 }
 
