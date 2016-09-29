@@ -131,7 +131,7 @@ class EdgenoteSidebar extends React.Component {
 
   render() {
     let {caption, format, thumbnailUrl, embedCode, websiteUrl,
-      imageUrl, pdfUrl, instructions, photoCredit, slug, didSave} = this.props
+      imageUrl, pdfUrl, instructions, slug, didSave} = this.props
     let endpoint = `edgenotes/${slug}`
     return <div className="EdgenoteSidebar">
       <section className="EdgenoteSidebar-meta scrolling">
@@ -149,6 +149,7 @@ class EdgenoteSidebar extends React.Component {
         <EditableAttribute placeholder="Thumbnail URL"
           uri={`${endpoint}:thumbnail_url`}
           didSave={didSave}>{thumbnailUrl}</EditableAttribute>
+        <EditableAttribute placeholder="Format" uri={`${endpoint}:format`} didSave={didSave}>{format}</EditableAttribute>
       </div>
       <div>
         <EditableAttribute placeholder="Embed Code"
