@@ -51,6 +51,7 @@ class Narrative extends React.Component {
         <Page
           page={page}
           didSave={this.props.didSave}
+          caseSlug={this.props.slug}
         />
         {this.nextLink()}
       </main>
@@ -97,6 +98,7 @@ This action cannot be undone.")
           selectedPage={page.position}
           solid={card.solid}
           card={card}
+          caseSlug={this.props.caseSlug}
         />
       ]
     } )
@@ -150,7 +152,7 @@ class Card extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.didSave !== null ||
+    if (this.props.didSave !== null ||
         this.props.selectedPage !== nextProps.selectedPage) {
       this.setState({ edgenoteSlugs: [] })
       this.setEdgenotes(nextProps.card.content)
@@ -217,6 +219,7 @@ This action cannot be undone.")
                         key={`edgenote_${slug}`}
                         handleHoverID={this.props.i}
                         didSave={this.props.didSave}
+                        caseSlug={this.props.caseSlug}
                       />
                       )
                     } )

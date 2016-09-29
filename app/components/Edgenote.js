@@ -2,7 +2,6 @@ import React from 'react'
 import {Link} from 'react-router'
 import {Orchard} from 'concerns/orchard.js'
 import LoadingIcon from 'LoadingIcon.js'
-import {EditableAttribute} from 'Editable.js'
 
 class Edgenote extends React.Component {
   handleMouseOver() {
@@ -20,15 +19,30 @@ class Edgenote extends React.Component {
     }
   }
 
+  componentWillReceiveProps() {
+    if (this.props.didSave !== null) {
+      this.downloadContents()
+    }
+  }
+
   parseContentsFromJSON(response) {
     let contents = response
     contents.caption = {__html: response.caption}
     contents.cover = <img src={`${response.thumbnailUrl}?w=640`} />
-    this.setState({contents: contents})
+    this.setState({
+      contents: contents,
+      extant: true
+    })
   }
 
   downloadContents() {
-    Orchard.harvest(`edgenotes/${this.props.slug}`).then(this.parseContentsFromJSON.bind(this))
+    Orchard.harvest(`edgenotes/${this.props.slug}`).then(this.parseContentsFromJSON.bind(this)).catch(() => {
+      this.setState({ extant: false })
+    })
+  }
+
+  createEdgenote() {
+    Orchard.graft(`cases/${this.props.caseSlug}/edgenotes`, {slug: this.props.slug}).then(this.parseContentsFromJSON.bind(this))
   }
 
   className() {
@@ -64,8 +78,10 @@ class Edgenote extends React.Component {
   }
 
   render() {
-    if (this.state.contents !== null) {
+    if (this.state.extant) {
       return this.renderEdgenote()
+    } else if (this.state.extant === false) {
+      return <button onClick={this.createEdgenote.bind(this)}>{`Create ${this.props.slug} Edgenote`}</button>
     } else {
       return <LoadingIcon />
     }

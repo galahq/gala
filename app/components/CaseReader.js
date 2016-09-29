@@ -18,7 +18,7 @@ class CaseReader extends React.Component {
   }
 
   render () {
-    let {title, pages, didSave} = this.props
+    let {title, pages, didSave, slug} = this.props
     let selectedPage = parseInt(this.props.params.selectedPage) - 1
 
     let pageTitles = this.props.pages.map( (p) => { return p.title } )
@@ -38,6 +38,7 @@ class CaseReader extends React.Component {
           pages={pages}
           selectedPage={selectedPage}
           didSave={didSave}
+          slug={slug}
         />
         {this.props.children && React.cloneElement(this.props.children, {didSave: didSave})}
       </div>

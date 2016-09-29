@@ -1,5 +1,6 @@
 class EdgenotesController < ApplicationController
   before_action :set_edgenote, only: [:show, :update, :destroy]
+  before_action :set_case, only: [:create]
 
   # GET /edgenotes
   def index
@@ -14,7 +15,7 @@ class EdgenotesController < ApplicationController
 
   # POST /edgenotes
   def create
-    @edgenote = Edgenote.new(edgenote_params)
+    @edgenote = @case.edgenotes.build(slug: params[:slug], caption: "“#{params[:slug]}” Edgenote", format: 'aside')
 
     if @edgenote.save
       render partial: 'edgenote', locals: {edgenote: @edgenote}
@@ -41,6 +42,10 @@ class EdgenotesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_edgenote
       @edgenote = Edgenote.find_by_slug params[:slug]
+    end
+
+    def set_case
+      @case = Case.find_by_slug(params[:case_slug])
     end
 
     # Only allow a trusted parameter "white list" through.
