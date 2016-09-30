@@ -8,15 +8,10 @@ We’re using Vagrant, which lets developers spin up virtual machines with all t
 right configuration to develop Gala. Install Vagrant (`brew cask install
 vagrant`, perhaps), and then
 
-1. Clone and navigate to the repository
-2. `vagrant up`
-3. `vagrant ssh`
-4. `cd /vagrant`
-5. `npm run dev`
-6. Browse to http://localhost:3333/
+1. `vagrant up`
+2. In two tmux panes/terminal windows, `vagrant ssh`
+3. then `cd /vagrant`.
+4. In one pane, `npm run webpack:watch`
+5. `rails server` in another
+6. Browse to http://localhost:3000/
 
-
-# Changelog
-
-## 1.0 (2016-08-15)
-Rails stack.
