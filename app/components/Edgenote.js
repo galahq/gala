@@ -61,7 +61,7 @@ class Edgenote extends React.Component {
     let slug = this.props.slug
     let className = this.className()
     return <Link
-      to={`${this.props.pathPrefix}/edgenotes/${slug}`}
+      to={`${this.props.pathPrefix || ""}/edgenotes/${slug}`}
       className={className}
       onMouseOver={this.handleMouseOver.bind(this)}
       onMouseOut={this.handleMouseOut.bind(this)}

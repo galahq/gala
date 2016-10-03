@@ -5,7 +5,8 @@ module.exports = {
   devtool: 'eval',
   entry: {
     "case": ['whatwg-fetch', 'case.entry.js'],
-    enrollments: ['whatwg-fetch', 'enrollments.entry.js']
+    enrollments: ['whatwg-fetch', 'enrollments.entry.js'],
+    edgenote: ['whatwg-fetch', 'edgenote.entry.js']
   },
   output: {
     path: './app/assets/javascripts/react',

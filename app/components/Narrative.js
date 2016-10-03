@@ -132,7 +132,7 @@ class CreateCardLink extends React.Component {
   }
 }
 
-class Card extends React.Component {
+export class Card extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -189,7 +189,7 @@ This action cannot be undone.")
   }
 
   addHREF(content, firstPartOfPath) {
-    return this.addAttributeToLinks(content, `href=\"#${firstPartOfPath}/edgenotes/$2\"`)
+    return this.addAttributeToLinks(content, `href=\"#${firstPartOfPath || ""}/edgenotes/$2\"`)
   }
 
   renderCitations(content) {
@@ -199,7 +199,7 @@ This action cannot be undone.")
   renderContent() {
     var {content} = this.props.card
     content = this.addHoverCallbacks(content)
-    content = this.addHREF(content, `/${this.props.selectedPage}`)
+    content = this.addHREF(content, this.props.selectedPage && `/${this.props.selectedPage}`)
     content = this.renderCitations(content)
     return { __html: content }
   }
@@ -213,7 +213,7 @@ This action cannot be undone.")
                   this.state.edgenoteSlugs.map( (slug) => {
                     return (
                       <Edgenote
-                        pathPrefix={`${edit}/${this.props.selectedPage}`}
+                        pathPrefix={this.props.selectedPage && `${edit}/${this.props.selectedPage}`}
                         selectedEdgenote={this.state.selectedEdgenote}
                         slug={slug}
                         key={`edgenote_${slug}`}

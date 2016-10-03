@@ -2,8 +2,8 @@ export class Orchard {
 
   static harvest(endpoint) {
     let r = new Request(
-      `/${endpoint}.json`, {
-        credentials: 'same-origin',
+      `${window.galaHostname || ""}/${endpoint}.json`, {
+        //credentials: 'same-origin',
         headers: new Headers({
           'Accept-Language': window.i18n.locale
         })
