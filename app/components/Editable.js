@@ -19,6 +19,8 @@ export class Editable extends React.Component {
   }
 
   prepareSave(e) {
+    if (!this.editable()) { return }
+
     let newContent = e.target.innerText
 
     let args = this.props.uri.split(':')
