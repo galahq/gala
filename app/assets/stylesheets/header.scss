@@ -25,6 +25,10 @@ header {
   #reader-menu {
     cursor: pointer;
 
+    .dismiss {
+      z-index: 40;
+    }
+
     #reader-icon {
       position: absolute;
       z-index: 50;
