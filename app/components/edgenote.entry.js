@@ -31,7 +31,7 @@ class EmbeddedCard extends React.Component {
 $('.gala-embedded-card').each( (i, reactTarget) => {
 
   render(<Router history={appHistory}>
-    <Route path="/(edgenotes)" card={{content: $(reactTarget).html()}} component={EmbeddedCard}>
+    <Route path="/(edgenotes)" card={{content: $(reactTarget).html()}} component={EmbeddedCard} i={i}>
       <Route path="/:selectedPage/:edgenoteID" component={EdgenoteContents} />
     </Route>
   </Router>, $(reactTarget)[0])
