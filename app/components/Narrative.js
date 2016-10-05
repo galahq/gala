@@ -24,6 +24,18 @@ export function isElementInViewport (el) {
 }
 
 class Narrative extends React.Component {
+  componentDidMount() {
+    if (this.props.didSave !== null) { return }
+
+    $(document).on('keydown', (e) => {
+      if (e.which === 37) {
+        this.props.history.push(`/${Math.max(this.props.selectedPage, 1)}`)
+      } else if (e.which === 39) {
+        this.props.history.push(`/${Math.min(this.props.selectedPage + 2, this.props.pages.length)}`)
+      }
+    })
+  }
+
   componentDidUpdate() {
     let top = document.getElementById('top');
     if (top && window.innerWidth < 749) {top.scrollIntoView()}
