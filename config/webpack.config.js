@@ -3,15 +3,18 @@ var path = require('path');
 
 module.exports = {
   devtool: 'eval',
+
   entry: {
-    "case": ['whatwg-fetch', 'case.entry.js'],
-    enrollments: ['whatwg-fetch', 'enrollments.entry.js'],
-    edgenote: ['whatwg-fetch', 'edgenote.entry.js']
+    "case": ['babel-polyfill', 'whatwg-fetch', 'case.entry.js'],
+    //edgenote: ['whatwg-fetch', 'edgenote.entry.js'],
+    enrollments: ['babel-polyfill', 'whatwg-fetch', 'enrollments.entry.js']
   },
+
   output: {
     path: './app/assets/javascripts/react',
     filename: '[name].bundle.js'
   },
+
   plugins: [
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({
@@ -19,6 +22,7 @@ module.exports = {
       compress: { warnings: false }
     })
   ],
+
   resolve: {
     extensions: ['', '.js', '.jsx'],
     root: [
@@ -27,6 +31,7 @@ module.exports = {
       path.resolve('./app/assets/images/react')
     ]
   },
+
   module: {
     loaders: [
       {
