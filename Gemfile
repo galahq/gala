@@ -48,6 +48,9 @@ gem 'rolify'
 
 gem 'postmark-rails'
 
+gem 'ahoy_matey'
+gem 'groupdate'
+
 gem 'trasto'
 gem 'http_accept_language'
 gem 'i18n_generators'

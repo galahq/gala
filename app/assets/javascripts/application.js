@@ -12,5 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require ahoy
 //= require_directory .
 //= require_directory ./channels
