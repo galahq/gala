@@ -28,6 +28,7 @@ class Narrative extends React.Component {
     if (this.props.didSave !== null) { return }
 
     $(document).on('keydown', (e) => {
+      if (this.props.didSave !== null)  { return }
       if (e.which === 37) {
         this.props.history.push(`/${Math.max(this.props.selectedPage, 1)}`)
       } else if (e.which === 39) {
