@@ -1,0 +1,165 @@
+@import '_globals';
+@import '_flexbox';
+@import '_columns';
+@import '_tint_and_shade';
+
+.EdgenoteContents {
+  position: fixed;
+  z-index: 200;
+  top: 0px; left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
+  &-window {
+    z-index: 110;
+    -webkit-box-sizing: border-box;
+    flex: 1 1 auto;
+    margin: 4%;
+    padding: 1em;
+    background-color: rgba( darken($black, 10%), 0.8 );
+    border-radius: 2px;
+    box-shadow: 0 0 3em rgba(black, 0.5);
+    display: flex;
+    position: relative;
+    min-width: 20em;
+    @media screen and (max-width: 1024px) { flex-flow: column-reverse; }
+  }
+}
+
+.dismiss {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+}
+
+.EdgenoteContents-dismiss {
+  -webkit-backdrop-filter: blur(5px) brightness(150%);
+  background-color: transparent !important;
+  @supports not (-webkit-backdrop-filter: blur(5px)) {
+    background-color: rgba( $white, 0.5 ) !important;
+  }
+}
+
+.EdgenoteDisplay {
+  position: relative;
+  flex: 3;
+  display: flex;
+
+  img {
+    border-radius: 2px;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    cursor: zoom;
+    margin: 0 auto;
+  }
+
+  a {
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    img {
+      max-height: none;
+      overflow: hidden;
+    }
+    .linkOverlay {
+      transition: opacity 0.2s;
+      opacity: 0;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    &:hover {
+      background-color: transparent;
+
+      .linkOverlay {
+       opacity: 1;
+      }
+    }
+  }
+
+  iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  .Card {
+    overflow: scroll;
+    width: 100%;
+
+    p {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
+    figure {
+      margin: 1em auto 0 auto;
+      figcaption {
+        font-size: 90%;
+        font-style: italic;
+      }
+    }
+
+    & > * {
+      margin: auto;
+      max-width: 35em;
+    }
+  }
+}
+
+.EdgenoteSidebar {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  margin-left: 1em;
+  height: auto;
+  @media screen and (max-width: 1024px) {
+    flex: initial;
+    margin-left: 0em;
+    max-height: 15em;
+  }
+
+  &-meta {
+    padding: 0.75em 1.5em;
+    border: 0.5em solid $lightGreen;
+    background-color: $white;
+    overflow: scroll;
+
+    @media screen and (max-width: 1024px) {
+      margin-bottom: 1em;
+    }
+
+    .edgenote-icon { bottom: -6pt; }
+    g { stroke: shade($lightGreen, 60%) }
+
+    h4 {
+      display: inline;
+      font-family: $sansFont;
+      font-weight: 600;
+      color: $black;
+    }
+
+    p {
+      margin: 0.5em 0 0 0;
+
+      a { color: lighten($umichBlue, 15%); }
+      a:hover {
+        background-color: transparent;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .CommentThread {
+    margin-top: 1em;
+    flex: 0 1 auto;
+    overflow: scroll;
+  }
+}
