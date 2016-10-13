@@ -8,7 +8,7 @@ class CasesController < ApplicationController
   def index
     @cases = Case.all.includes(:activities, :podcasts, :enrollments, :edgenotes, pages: [:cards]).sort_by &:kicker
     @featured = @cases.select(&:featured?).sort.reverse
-    @index = @cases.select(&:in_index?).sort_by &:title
+    @index = @cases.select(&:in_index?).sort_by &:kicker
     render layout: "window"
   end
 
