@@ -9,9 +9,9 @@ right configuration to develop Gala. Install Vagrant (`brew cask install
 vagrant`, perhaps), and then
 
 1. `vagrant up`
-2. In two tmux panes/terminal windows, `vagrant ssh`
+2. `vagrant ssh`
 3. then `cd /vagrant`.
-4. In one pane, `npm run webpack:watch`
+4. `npm run webpack:watch` in one tmux pane
 5. `rails server` in another
 6. Browse to http://localhost:3000/
 
