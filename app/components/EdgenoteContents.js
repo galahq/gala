@@ -1,10 +1,17 @@
 import React from 'react'
+import {Trackable} from 'concerns/trackable.js'
 import {Link} from 'react-router'
 import {ScrollLock} from 'ScrollLock.js'
 import {Orchard} from 'concerns/orchard.js'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 
-class EdgenoteContents extends React.Component {
+class EdgenoteContents extends Trackable {
+  eventName() { return "visit_edgenote" }
+
+  trackableArgs() { return {
+    edgenote_slug: this.props.params.edgenoteID,
+    case_slug: this.state.caseSlug
+  } }
 
   constructor() {
     super()
@@ -14,6 +21,7 @@ class EdgenoteContents extends React.Component {
   }
 
   componentDidMount() {
+    super.componentDidMount()
     Orchard.harvest(`edgenotes/${this.props.params.edgenoteID}`).then(this.parseContentsFromJSON.bind(this))
     $(document).on('keydown', (e) => {
       if (e.which === 27) {
@@ -23,17 +31,10 @@ class EdgenoteContents extends React.Component {
     })
   }
 
-  log() {
-    if (window.ga) {
-      window.ga('set', 'page', `${location.pathname}${location.hash}`)
-      window.ga('send', 'pageview', { "title": `${this.state.caption.trunc(40)}` })
-    }
-  }
-
   parseContentsFromJSON(r) {
+    r.caseSlug = r.case.slug
     delete r["case"]
     this.setState(r)
-    this.log()
   }
 
   didSave(newData) {

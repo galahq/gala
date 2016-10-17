@@ -1,4 +1,5 @@
 import React from 'react'
+import {Trackable} from 'concerns/trackable.js'
 import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
 import {I18n} from 'I18n.js'
@@ -121,7 +122,18 @@ class Podcast extends React.Component {
   }
 }
 
-export class PodcastOverview extends React.Component {
+export class PodcastOverview extends Trackable {
+  eventName() { return "visit_podcast" }
+
+  trackableArgs() { return {
+    case_slug: this.props.slug,
+    podcast_id: this.state.pod.id
+  } }
+
+  newPropsAreDifferent(nextProps) {
+    this.props.params.podcastID !== nextProps.params.podcastID
+  }
+
   constructor() {
     super()
     this.state = {
@@ -130,6 +142,7 @@ export class PodcastOverview extends React.Component {
   }
 
   componentDidMount() {
+    super.componentDidMount()
     let pod = this.props.podcasts.find( (p) => {return p.position === parseInt(this.props.params.podcastID)} )
     this.setState ({
       pod: pod

@@ -10,22 +10,11 @@ String.prototype.trunc = String.prototype.trunc ||
 
 class CaseReader extends React.Component {
 
-  log(caseTitle, chapterNum, chapterTitle) {
-    if (window.ga && caseTitle) {
-      window.ga("set", "page", location.pathname)
-      window.ga("send", "pageview", { "title": `${caseTitle.trunc(23)} ${chapterNum}: ${chapterTitle.trunc(20)}` })
-    }
-  }
-
   render () {
-    let {title, didSave} = this.props
+    let {didSave} = this.props
     let selectedPage = parseInt(this.props.params.selectedPage) - 1
 
     let pageTitles = this.props.pages.map( (p) => { return p.title } )
-
-    if (title !== "") {
-      this.log(title, selectedPage, pageTitles[selectedPage])
-    }
 
     return (
       <div className={`window ${didSave !== null ? 'editing' : ''}`}>
