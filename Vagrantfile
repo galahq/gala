@@ -7,7 +7,8 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.network 'private_network', type: "dhcp" # needed for the nfs synced_folder
-  config.vm.synced_folder ".", "/vagrant", type: "nfs" # needed because the default synced_folder method is way too slow
+  # needed because the default synced_folder method is way too slow
+  config.vm.synced_folder ".", "/vagrant", type: "nfs", fsnotify: true
   config.vm.network "forwarded_port", guest: 3000, host: 3000
 
   config.vm.provision "shell", inline: <<-SHELL
@@ -26,7 +27,8 @@ Vagrant.configure(2) do |config|
       build-essential libreadline-dev \
       libpq-dev libkrb5-dev \
       libxslt-dev libxml2-dev \
-      ruby-dev
+      ruby-dev \
+      phantomjs
 
     RUBY_VERSION=`ruby --version | cut -c6-10`
     if [ "x${RUBY_VERSION}" != "x2.3.0" ]; then
@@ -51,6 +53,7 @@ Vagrant.configure(2) do |config|
 
     su vagrant -c "bundle install"
     su vagrant -c "bundle exec rake db:create"
+    su vagrant -c "bundle exec rake db:create RAILS_ENV=test"
 
     wget -q http://nodejs.org/dist/v5.1.0/node-v5.1.0-linux-x64.tar.gz
     sudo tar -C /usr/local --strip-components 1 -xzf node-v5.1.0-linux-x64.tar.gz
@@ -60,6 +63,7 @@ Vagrant.configure(2) do |config|
     su vagrant -c "wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh"
 
     echo "alias heroku-pull='export DISABLE_DATABASE_ENVIRONMENT_CHECK=1; bundle exec rake db:drop && heroku pg:pull DATABASE_URL postgresql:///orchard_development --app msc-gala'" >> /home/vagrant/.bashrc
+    echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
   SHELL
 
