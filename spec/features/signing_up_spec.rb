@@ -12,8 +12,6 @@ feature 'Signing up' do
     fill_in 'Password confirmation', with: password
     click_button 'Sign up'
 
-    save_screenshot('sign_up_clicked.png')
-
     expect(page).to have_content "SIGNED UP SUCCESSFULLY"
   end
 
