@@ -47,6 +47,8 @@ RSpec.configure do |config|
     begin
       DatabaseCleaner.strategy = :truncation
       DatabaseCleaner.clean_with(:truncation)
+      FactoryGirl.factories.clear
+      FactoryGirl.find_definitions
     end
   end
 

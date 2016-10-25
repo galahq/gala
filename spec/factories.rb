@@ -9,7 +9,7 @@ FactoryGirl.define do
       pages_count { rand(4...7) }
     end
 
-    slug { Faker::Internet.slug(nil, '-') }
+    sequence(:slug) { |n| "#{Faker::Internet.slug(nil, '-')}#{n}" }
     title { "#{%w(Can Does Will).sample} #{Faker::Hipster.sentence.downcase.chop}?" }
     kicker { Faker::Hipster.sentence(3, true, 1).chop }
     dek { Faker::Hipster.sentence 5, true, 3 }
@@ -33,8 +33,51 @@ FactoryGirl.define do
 
 
   factory :card do
+    transient do
+      edgenotes_count { rand(1...2) }
+    end
+
     page
+    content { rand(1...2).times.map { "<p>#{Faker::Hipster.paragraph}</p>" }.join }
+
+    after :create do |card, evaluator|
+      edgenote = create :edgenote, case: card.page.case
+      card.update content: "#{card.content}<p><a data-edgenote=\"#{edgenote.slug}\">Edgenote</a></p>"
+    end
+  end
+
+
+  factory :edgenote do
+    association :case
+
+    sequence(:slug) { |n| "#{Faker::Internet.slug(nil, '-')}#{n}" }
+    caption { Faker::Hipster.sentence }
+    thumbnail_url { Faker::Placeholdit.image }
+    photo_credit { Faker::Name.name }
+    format :aside
     content { rand(1...3).times.map { "<p>#{Faker::Hipster.paragraph}</p>" }.join }
+    instructions { Faker::Hipster.sentences }
+
+    trait :graphic do
+      format :graphic
+      image_url { Faker::Placeholdit.image "700x700" }
+    end
+
+    trait :link do
+      format :link
+      image_url { Faker::Placeholdit.image "700x700" }
+      website_url { Faker::Internet.url }
+    end
+
+    trait :pdf do
+      format :report
+      pdf_url "https://www.dropbox.com/s/98j607ngkfnrv4j/criteria.pdf?dl=1"
+    end
+
+    trait :video do
+      format :video
+      embed_code '<iframe width="560" height="315" src="https://www.youtube.com/embed/ZvGbcKXZBLg" frameborder="0" allowfullscreen></iframe>'
+    end
   end
 
 
