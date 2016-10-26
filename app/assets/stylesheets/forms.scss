@@ -80,6 +80,16 @@ input[type="submit"] {
   }
 }
 
+.button--subtle input {
+  background-color: transparent !important;
+  color: lighten($purple, 10%);
+
+  &:hover {
+    color: lighten($purple, 20%);
+    border-color: $purple;
+  }
+}
+
 input[type="checkbox"] {
   bottom: 1px;
   position: relative;

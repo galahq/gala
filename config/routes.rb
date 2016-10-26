@@ -31,6 +31,7 @@ Rails.application.routes.draw do
 
   scope 'admin' do
     resources :readers, except: %i(show edit update) do
+      resources :roles, only: %i(create destroy)
       collection do
         resources :enrollments, only: %i(index)
       end

@@ -9,5 +9,7 @@ class Role < ApplicationRecord
             :inclusion => { :in => Rolify.resource_types },
             :allow_nil => true
 
+  default_scope { order('id ASC') }
+
   scopify
 end

@@ -8,9 +8,14 @@
       %td Email
       %td Provider
       %td Last Signed In
-    -@readers.each do |r|
-      %tr
-        %td= render r
-        %td= r.email
-        %td= r.provider.capitalize rescue "—"
-        %td= time_ago_in_words(r.last_sign_in_at) rescue ""
+      - Role.all.each do |role|
+        %td=role.name.capitalize
+    -@readers.each do |reader|
+      %tr{data: { reader_id: reader.id }}
+        %td= render reader
+        %td= reader.email
+        %td= reader.provider.capitalize rescue "—"
+        %td= time_ago_in_words(reader.last_sign_in_at) rescue ""
+        - Role.all.each do |role|
+          %td
+            = toggle_role_button reader, role
