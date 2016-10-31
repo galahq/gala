@@ -109,7 +109,7 @@ class EdgenoteDisplay extends React.Component {
     return <div className="EdgenoteDisplay">
       {this.renderContent()}
       <EditableHTML uri={`edgenotes/${this.props.slug}:photo_credit`} placeholder="<!-- HTML photo credit -->" didSave={this.props.didSave}>
-        <cite dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
+        <cite className="o-bottom-right c-photo-credit" dangerouslySetInnerHTML={{__html: this.props.photoCredit}} />
       </EditableHTML>
     </div>
   }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>watch 2.3.3.1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="watch-2.3.3.1" transform="translate(1.000000, 0.000000)">
+            <g id="Group">
+                <g id="Outline_Icons_1_">
+                    <g id="Outline_Icons">
+                        <g id="Group">
+                            <ellipse id="Oval" stroke="#000000" stroke-width="0.8" cx="6.70833333" cy="7.29166667" rx="4.08333333" ry="4.08333333"></ellipse>
+                            <polyline id="Shape" stroke="#000000" stroke-width="0.8" points="6.70833333 5.83333333 6.70833333 7.29166667 8.45833333 9.04166667"></polyline>
+                            <polyline id="Shape" stroke="#000000" stroke-width="0.8" points="8.16666667 3.5 10.2083333 1.45833333 12.5416667 3.79166667 10.5 5.83333333"></polyline>
+                            <polyline id="Shape" stroke="#000000" stroke-width="0.8" points="2.91666667 8.77741667 0.291666667 11.375 0.291666667 13.7083333 2.625 13.7083333 5.24066667 11.1014167"></polyline>
+                            <polyline id="Shape" stroke="#000000" stroke-width="0.8" points="10.2083333 1.45833333 11.375 0.291666667 13.7083333 2.625 12.5416667 3.79166667"></polyline>
+                            <path d="M11.375,2.625 L12.5416667,1.45833333" id="Shape" stroke="#000000" stroke-width="0.8"></path>
+                            <path d="M2.04166667,11.6666667 C1.8795,11.6666667 1.75,11.7973333 1.75,11.9583333 C1.75,12.1193333 1.8795,12.25 2.04166667,12.25 C2.2015,12.25 2.33333333,12.1193333 2.33333333,11.9583333 C2.33333333,11.7973333 2.2015,11.6666667 2.04166667,11.6666667 L2.04166667,11.6666667 L2.04166667,11.6666667 Z" id="Shape" fill="#000000"></path>
+                            <path d="M2.91666667,10.7916667 C2.7545,10.7916667 2.625,10.9223333 2.625,11.0833333 C2.625,11.2443333 2.7545,11.375 2.91666667,11.375 C3.0765,11.375 3.20833333,11.2443333 3.20833333,11.0833333 C3.20833333,10.9223333 3.0765,10.7916667 2.91666667,10.7916667 L2.91666667,10.7916667 L2.91666667,10.7916667 Z" id="Shape" fill="#000000"></path>
+                        </g>
+                    </g>
+                </g>
+                <g id="Invisible_Shape">
+                    <rect id="Rectangle-path" x="0" y="0" width="14" height="14"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>circle view.3.3.1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="circle-view.3.3.1" transform="translate(0.000000, 1.000000)">
+            <g id="Group">
+                <g id="Outline_Icons" stroke-width="0.8" stroke="#000000">
+                    <g id="Group">
+                        <g transform="translate(0.750000, 0.083333)">
+                            <path d="M11.87,6.91666667 C11.87,6.91666667 9.791,9.54166667 7.2255,9.54166667 C4.66116667,9.54166667 2.58158333,6.91666667 2.58158333,6.91666667 C2.58158333,6.91666667 4.66058333,4.29166667 7.2255,4.29166667 C9.79041667,4.29166667 11.87,6.91666667 11.87,6.91666667 L11.87,6.91666667 Z" id="Shape"></path>
+                            <ellipse id="Oval" cx="7.2255" cy="6.91666667" rx="1.45833333" ry="1.45833333"></ellipse>
+                            <circle id="Oval" stroke-dasharray="4.510000228881836,2.410000085830688" cx="7.25" cy="6.91666667" r="6.70833333"></circle>
+                        </g>
+                    </g>
+                </g>
+                <g id="Invisibla_Shape" transform="translate(1.000000, 0.000000)">
+                    <rect id="Rectangle-path" x="0" y="0" width="14" height="14"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

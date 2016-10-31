@@ -69,7 +69,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
             uri={`podcasts/${id}:artwork_url`}
             didSave={didSave}>{artwork}</EditableAttribute>
 
-          <cite dangerouslySetInnerHTML={{__html: photoCredit}} />
+          <cite className="o-bottom-right c-photo-credit" dangerouslySetInnerHTML={{__html: photoCredit}} />
         </div>
 
         <div className="credits" onClick={this.toggleCredits.bind(this)} >

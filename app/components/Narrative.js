@@ -50,6 +50,7 @@ class Narrative extends React.Component {
           page={page}
           didSave={this.props.didSave}
           caseSlug={this.props.slug}
+          reader={this.props.reader}
         />
         {this.nextLink()}
       </main>
@@ -109,6 +110,7 @@ This action cannot be undone.")
           solid={card.solid}
           card={card}
           caseSlug={this.props.caseSlug}
+          reader={this.props.reader}
         />
       ]
     } )
@@ -306,9 +308,24 @@ This action cannot be undone.")
           <EditableHTML uri={`cards/${this.props.card.id}:content`} placeholder="<!-- HTML content of card -->" didSave={this.props.didSave}>
             <div dangerouslySetInnerHTML={this.renderContent(paragraph)}>{paragraph}</div>
           </EditableHTML>
+          <CardStatistics card={this.props.card} reader={this.props.reader} />
         </div>
         {this.renderEdgenotes()}
       </section>
     )
+  }
+}
+
+class CardStatistics extends React.Component {
+  render() {
+    let {uniques, views, averageTime} = this.props.card
+    return <p className="o-bottom-right c-card-statistics">
+      <span className='c-card-statistics__icon' dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-uniques.svg')}} />
+      {uniques}
+      <span className='c-card-statistics__icon' dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-views.svg')}} />
+      {views}
+      <span className='c-card-statistics__icon--less-space' dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-duration.svg')}} />
+      {averageTime}
+    </p>
   }
 }

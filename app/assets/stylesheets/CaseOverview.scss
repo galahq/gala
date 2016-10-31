@@ -96,19 +96,26 @@
 
   position: relative;
 
-  cite {
-    font-size: 65%;
-    font-style: normal;
-    font-weight: 500;
-    letter-spacing: 0.25px;
-    text-transform: uppercase;
-    color: $white;
-    position: absolute;
-    bottom: 0.5em;
-    right: 0.75em;
-    text-align: right;
-    max-width: 18em;
-    line-height: 1em;
-    text-shadow: 0 0 1em rgba(black, 40%);
-  }
+}
+
+.o-bottom-right {
+  font-size: 65%;
+  font-style: normal;
+
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  margin: 0;
+
+  text-align: right;
+  line-height: 1em;
+}
+
+.c-photo-credit {
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+  color: $white;
+  font-weight: 500;
+  text-shadow: 0 0 1em rgba(black, 40%);
+  max-width: 18em;
 }
