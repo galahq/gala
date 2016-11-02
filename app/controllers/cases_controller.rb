@@ -1,15 +1,11 @@
 class CasesController < ApplicationController
-  before_action :authenticate_reader!, only: %i(create update destroy)
+  before_action :authenticate_reader!, except: %i(show)
   before_action :set_case, only: [:show, :update, :destroy]
 
-  authorize_actions_for Case, except: %i(index show)
+  authorize_actions_for Case, except: %i(show)
 
   # GET /cases
   def index
-    @cases = Case.all.includes(:activities, :podcasts, :enrollments, :edgenotes, pages: [:cards]).sort_by &:kicker
-    @featured = @cases.select(&:featured?).sort.reverse
-    @index = @cases.select(&:in_index?).sort_by &:kicker
-    render layout: "window"
   end
 
   # GET /cases/1

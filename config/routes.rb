@@ -1,6 +1,8 @@
 locale_regex = /#{Rails.application.config.i18n.available_locales.map(&:to_s).join("|")}/
 
 Rails.application.routes.draw do
+  get 'catalog/home'
+
   get '/read/1071/(*x)', to: redirect('/fr/cases/mi-wolves')
   get '/read/862/(*x)', to: redirect('/cases/indonesia-conservation')
   get '/read/611/(*x)', to: redirect('/cases/ethiopia-napa')
@@ -51,5 +53,5 @@ Rails.application.routes.draw do
   devise_for :readers, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'readers/omniauth_callbacks',
   }
-  root to: "cases#index"
+  root to: "catalog#home"
 end

@@ -1,5 +1,5 @@
 <ul>
-<%- if controller_name != 'sessions' && controller_name != 'cases' %>
+<%- if controller_name != 'sessions' && controller_name != 'catalog' %>
   <li><%= link_to t('.sign_in'), new_session_path(resource_name) %></li>
 <% end -%>
 

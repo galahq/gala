@@ -1,6 +1,6 @@
 zh-CN:
-  cases:
-    index:
+  catalog:
+    home:
       title: "全部案例"
       redefining_sustainability_education: 重新定义你的课程学习
       intro_paragraph: |
@@ -8,6 +8,7 @@ zh-CN:
       featured_cases: 推荐案例
       case_index: 所有案例
       learn_more: 了解更多
+  cases:
     case:
       forthcoming: 即将出版
       translator:

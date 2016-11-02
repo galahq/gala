@@ -1,6 +1,6 @@
 en:
-  cases:
-    index:
+  catalog:
+    home:
       title: "All Cases"
       redefining_sustainability_education: Redefining sustainability education
       intro_paragraph: |
@@ -10,6 +10,7 @@ en:
       featured_cases: Featured Cases
       case_index: Case Index
       learn_more: Learn more about what we’re doing
+  cases:
     case:
       forthcoming: Forthcoming
       translator:

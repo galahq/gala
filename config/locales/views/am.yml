@@ -1,6 +1,6 @@
 am:
-  cases:
-    index:
+  catalog:
+    home:
       title: በሁሉም ጉዳዮች
       redefining_sustainability_education: አካባቢያዊ ዘላቂነት ስለ የፈጠራ ትምህርት
       intro_paragraph: |
@@ -9,6 +9,7 @@ am:
       featured_cases: ተለይተው የቀረቡ ጉዳዮች
       case_index: ጉዳዮች መረጃ ጠቋሚ
       learn_more: እኛ ምን እየሰሩ ተጨማሪ ይወቁ
+  cases:
     case:
       forthcoming: ከማሰማቱም
       translator:

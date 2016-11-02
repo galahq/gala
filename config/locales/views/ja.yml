@@ -1,6 +1,6 @@
 ja:
-  cases:
-    index:
+  catalog:
+    home:
       title: "全ての事例研究"
       redefining_sustainability_education: 環境科学の教育の新たな方法
       intro_paragraph: |
@@ -12,6 +12,7 @@ ja:
       featured_cases: 注目の事例研究
       case_index: 全ての事例研究
       learn_more: プロジェクトの詳細については、こちらをご覧ください
+  cases:
     case:
       forthcoming: 今後
       translator:

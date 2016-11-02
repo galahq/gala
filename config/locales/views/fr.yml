@@ -1,6 +1,6 @@
 fr:
-  cases:
-    index:
+  catalog:
+    home:
       title: "Tous les cas d’étude"
       redefining_sustainability_education: La renaissance de l’éducation sur l’environnement
       intro_paragraph: |
@@ -11,6 +11,7 @@ fr:
       featured_cases: Cas d’étude en vedette
       case_index: L’indice des cas d’étude
       learn_more: En savoir plus sur ce que nous faisons
+  cases:
     case:
       forthcoming: À venir
       translator:
