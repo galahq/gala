@@ -2,6 +2,7 @@ import React from 'react'
 import {Link} from 'react-router'
 import {Orchard} from 'concerns/orchard.js'
 import LoadingIcon from 'LoadingIcon.js'
+import {Statistics} from 'Statistics.js'
 
 class Edgenote extends React.Component {
   handleMouseOver() {
@@ -66,8 +67,11 @@ class Edgenote extends React.Component {
       onMouseOver={this.handleMouseOver.bind(this)}
       onMouseOut={this.handleMouseOut.bind(this)}
     >
-      <div>
-        <div>{cover}</div>
+      <div className="c-edgenote s-edgenote">
+        <Statistics statistics={this.state.contents.statistics} inline={true} />
+        <div className="c-edgenote__cover">
+          {cover}
+        </div>
         <div
           className={`edgenote-icon edgenote-icon-${format}`}
           dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}

@@ -7,4 +7,12 @@ class Edgenote < ApplicationRecord
   validates :caption, :format, presence: true
   validates :format, inclusion: {in: %w{aside audio graphic link photo quote report video}}
 
+  include Trackable
+  def event_name
+    'visit_edgenote'
+  end
+
+  def event_properties
+    { edgenote_slug: slug }
+  end
 end

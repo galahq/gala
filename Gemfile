@@ -66,4 +66,4 @@ gem 'trasto'
 gem 'http_accept_language'
 gem 'i18n_generators'
 
-ruby '2.3.0'
+ruby '2.3.1'

@@ -13,4 +13,13 @@ class Podcast < ApplicationRecord
   def credits_list
     self.credits ? CreditsList.new(YAML.load self.credits) : CreditsList.new
   end
+
+  include Trackable
+  def event_name
+    'visit_podcast'
+  end
+
+  def event_properties
+    {podcast_id: id}
+  end
 end

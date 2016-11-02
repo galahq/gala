@@ -98,17 +98,20 @@
 
 }
 
-.o-bottom-right {
+.o-tag {
   font-size: 65%;
   font-style: normal;
+  text-align: right;
+  line-height: 1em;
+  margin: 0.5em 0;
+}
 
+.o-bottom-right {
+  @extend .o-tag;
   position: absolute;
   bottom: 0.5rem;
   right: 0.75rem;
   margin: 0;
-
-  text-align: right;
-  line-height: 1em;
 }
 
 .c-photo-credit {

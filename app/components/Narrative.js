@@ -1,6 +1,7 @@
 import React from 'react'
 import {findDOMNode} from 'react-dom'
 import {Trackable} from 'concerns/trackable.js'
+import {Statistics} from 'Statistics.js'
 import Edgenote from 'Edgenote.js'
 import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
@@ -308,24 +309,10 @@ This action cannot be undone.")
           <EditableHTML uri={`cards/${this.props.card.id}:content`} placeholder="<!-- HTML content of card -->" didSave={this.props.didSave}>
             <div dangerouslySetInnerHTML={this.renderContent(paragraph)}>{paragraph}</div>
           </EditableHTML>
-          <CardStatistics card={this.props.card} reader={this.props.reader} />
+          <Statistics statistics={this.props.card.statistics} reader={this.props.reader} />
         </div>
         {this.renderEdgenotes()}
       </section>
     )
-  }
-}
-
-class CardStatistics extends React.Component {
-  render() {
-    let {uniques, views, averageTime} = this.props.card
-    return <p className="o-bottom-right c-card-statistics">
-      <span className='c-card-statistics__icon' dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-uniques.svg')}} />
-      {uniques}
-      <span className='c-card-statistics__icon' dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-views.svg')}} />
-      {views}
-      <span className='c-card-statistics__icon--less-space' dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-duration.svg')}} />
-      {averageTime}
-    </p>
   }
 }

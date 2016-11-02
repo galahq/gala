@@ -174,22 +174,3 @@ footer h2 {
     pointer-events: initial;
   }
 }
-
-.c-card-statistics {
-  font-weight: 300;
-  font-family: $sansFont;
-  text-transform: uppercase;
-  letter-spacing: 0.25px;
-  display: flex;
-  align-items: center;
-}
-
-.c-card-statistics__icon {
-  margin-left: .7em;
-  margin-right: .2em;
-}
-
-.c-card-statistics__icon--less-space {
-  margin-left: .6em;
-  margin-right: .1em;
-}

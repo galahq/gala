@@ -4,3 +4,5 @@ json.extract! edgenote, :slug, :caption, :format, :thumbnail_url, :content, :web
 json.case do
   json.partial! "cases/case", c: edgenote.case
 end
+
+json.partial! 'trackable/statistics', locals: {trackable: edgenote}

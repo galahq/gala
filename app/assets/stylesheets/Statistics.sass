@@ -1,0 +1,32 @@
+@import _globals
+
+.c-statistics
+  font-weight: 300
+  font-family: $sansFont
+  text-transform: uppercase
+  letter-spacing: 0.25px
+  display: flex
+  align-items: center
+
+.c-statistics__icon
+  margin-left: .7em
+  margin-right: .2em
+
+  &--less-space
+    margin-left: .6em
+    margin-right: .1em
+
+.s-edgenote
+  .o-bottom-right
+    bottom: 0.2rem
+
+  .c-statistics
+    color: lighten($umichMaize, 20%)
+    justify-content: flex-end
+
+    &:hover
+      color: lighten($umichMaize, 20%)
+
+  .c-statistics__icon
+    path, circle, ellipse, polyline
+      stroke: lighten($umichMaize, 20%)

@@ -31,16 +31,16 @@ Vagrant.configure(2) do |config|
       phantomjs
 
     RUBY_VERSION=`ruby --version | cut -c6-10`
-    if [ "x${RUBY_VERSION}" != "x2.3.0" ]; then
+    if [ "x${RUBY_VERSION}" != "x2.3.1" ]; then
         cd /usr/src
-        curl -s -O https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.bz2
-        tar xjf ruby-2.3.0.tar.bz2
-        cd ruby-2.3.0/
+        curl -s -O https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.bz2
+        tar xjf ruby-2.3.1.tar.bz2
+        cd ruby-2.3.1/
         ./configure
         make
         make install
     else
-        echo "ruby 2.3.0 already installed"
+        echo "ruby 2.3.1 already installed"
     fi
 
     cd /vagrant

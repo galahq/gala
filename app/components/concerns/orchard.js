@@ -3,7 +3,7 @@ export class Orchard {
   static harvest(endpoint) {
     let r = new Request(
       `${window.galaHostname || ""}/${endpoint}.json`, {
-        //credentials: 'same-origin',
+        credentials: 'same-origin',
         headers: new Headers({
           'Accept-Language': window.i18n.locale
         })
