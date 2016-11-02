@@ -14,6 +14,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'inline_svg'
 
 gem 'redis', '~> 3.0'
+gem 'dalli'
 
 gem 'newrelic_rpm'
 
