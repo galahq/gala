@@ -4,6 +4,7 @@ import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
 import {I18n} from 'I18n.js'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
+import {Statistics} from 'Statistics.js'
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   constructor() {
@@ -60,14 +61,14 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   }
 
   render() {
-    let {id, title, artwork, audio, photoCredit, didSave} = this.props
+    let {id, title, artworkUrl, audioUrl, photoCredit, didSave, statistics} = this.props
     return (
       <div className="PodcastPlayer" >
 
-        <div className="artwork" style={{backgroundImage: `url(${artwork})`}} >
+        <div className="artwork" style={{backgroundImage: `url(${artworkUrl})`}} >
           <EditableAttribute placeholder="Artwork URL"
             uri={`podcasts/${id}:artwork_url`}
-            didSave={didSave}>{artwork}</EditableAttribute>
+            didSave={didSave}>{artworkUrl}</EditableAttribute>
 
           <cite className="o-bottom-right c-photo-credit" dangerouslySetInnerHTML={{__html: photoCredit}} />
         </div>
@@ -81,8 +82,10 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
           {this.renderHosts()}
         </div>
 
+        <Statistics statistics={statistics} inline={true} />
+
         <audio
-          src={audio}
+          src={audioUrl}
           controls="controls"
           preload="auto"
           onPlay={this.setPlaying.bind(this)}
@@ -91,7 +94,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
 
         <div><EditableAttribute placeholder="Audio URL"
           uri={`podcasts/${id}:audio_url`}
-          didSave={didSave}>{audio}</EditableAttribute></div>
+          didSave={didSave}>{audioUrl}</EditableAttribute></div>
 
       </div>
     )
@@ -102,13 +105,11 @@ class Podcast extends React.Component {
   render() {
     let description = {__html: this.props.podcast.description}
     let {podcast, didSave} = this.props
-    let {id, title, artworkUrl, audioUrl, credits, photoCredit} = podcast
+    let {id} = podcast
 
     return (
       <div className="Podcast">
-        <PodcastPlayer id={id} title={title} artwork={artworkUrl}
-          audio={audioUrl} credits={credits} photoCredit={photoCredit}
-          didSave={didSave} />
+        <PodcastPlayer didSave={didSave} {...podcast} />
 
         <div className="PodcastInfo">
           <EditableHTML uri={`podcasts/${id}:description`} placeholder="<!-- HTML podcast description -->" didSave={didSave}>

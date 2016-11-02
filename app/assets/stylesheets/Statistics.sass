@@ -16,17 +16,21 @@
     margin-left: .6em
     margin-right: .1em
 
-.s-edgenote
-  .o-bottom-right
-    bottom: 0.2rem
-
+@mixin recolor-statistics($color: $white)
   .c-statistics
-    color: lighten($umichMaize, 20%)
-    justify-content: flex-end
+    color: $color
 
     &:hover
-      color: lighten($umichMaize, 20%)
+      color: $color
 
   .c-statistics__icon
     path, circle, ellipse, polyline
-      stroke: lighten($umichMaize, 20%)
+      stroke: $color
+
+.s-edgenote
+  .o-bottom-right
+    bottom: 0.2rem
+  @include recolor-statistics(lighten($umichMaize, 20%))
+
+.PodcastPlayer
+  @include recolor-statistics($white)
