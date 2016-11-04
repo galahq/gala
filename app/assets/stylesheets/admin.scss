@@ -46,3 +46,16 @@ div.window.window-admin {
   }
 
 }
+
+.admin-case-slug {
+  text-align: right;
+}
+
+tbody .admin-case-slug {
+  font-size: 11pt !important;
+  font-family: "fira-mono" !important;
+}
+
+.admin-case-date--forthcoming {
+  opacity: 0.6;
+}

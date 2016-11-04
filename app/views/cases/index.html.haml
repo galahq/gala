@@ -1,0 +1,32 @@
+= render "admin_cases_menu"
+
+%main
+  %h2
+    All Cases
+
+  %table
+    %thead
+      %td.admin-case-slug Slug
+      %td
+      %td
+      %td Catalog Position
+      %td Published
+      -#%td Category
+      %td
+        = button_to "New Case", new_case_path,
+          method: :get
+    %tbody
+      -@cases.each do |kase|
+        %tr
+          %td.admin-case-slug=kase.slug
+          %td
+            %img.admin-case-cover-thumbnail{src: ix_cover_image(kase, :small)}
+          %td=kase.kicker.upcase
+          %td=kase.catalog_position.humanize.titlecase
+          %td{class: "admin-case-date#{kase.publication_date.nil? ? '--forthcoming' : '--published'}"}
+            =kase.publication_date || "Forthcoming"
+          -#%td
+          %td
+            = button_to "Edit Case", case_path(kase, anchor: "/edit"),
+              method: :get,
+              form_class: "button--subtle"

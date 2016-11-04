@@ -19,6 +19,8 @@ class Case < ApplicationRecord
 
   scope :published, -> { where(published: true)  }
 
+  validates :slug, presence: true, uniqueness: true
+  validates_format_of :slug, with: /\A[a-z0-9-]+\Z/
   validates :publication_date, presence: true, if: :published?
 
   def <=>(anOther)

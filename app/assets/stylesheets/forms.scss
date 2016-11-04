@@ -23,6 +23,7 @@ input[type="submit"] {
 
 select,
 input[type="text"],
+input[type="date"],
 input[type="email"],
 input[type="password"],
 { 
@@ -109,6 +110,10 @@ input[type="checkbox"] {
   }
 }
 
+.dialog--admin {
+  width: 30em;
+}
+
 .field-reader-name {
   float: left;
   width: 70%;
@@ -141,4 +146,9 @@ form + ul {
 }
 .dialog:not(:first-child) {
   margin-left: 1em;
+}
+
+.actions--horizontal {
+  display: flex;
+  flex-flow: column;
 }

@@ -1,26 +1,39 @@
 class CasesController < ApplicationController
   before_action :authenticate_reader!, except: %i(show)
-  before_action :set_case, only: [:show, :update, :destroy]
+  before_action :set_case, only: [:show, :edit, :update, :destroy]
 
   authorize_actions_for Case, except: %i(show)
 
+  layout 'admin'
+
   # GET /cases
   def index
+    @cases = Case.all.order :slug
   end
 
   # GET /cases/1
   def show
     authorize_action_for @case
+    render layout: 'application'
+  end
+
+  def new
+    @case = Case.new
   end
 
   # POST /cases
   def create
     @case = Case.new(case_params)
+    @case.kicker ||= @case.slug.split('-').join(' ').titlecase
 
-    if @case.save
-      render json: @case, status: :created, location: @case
-    else
-      render json: @case.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @case.save
+        format.html { redirect_to case_path(@case, anchor: "/edit") }
+        format.json { render json: @case, status: :created, location: @case }
+      else
+        format.html { render :new }
+        format.json { render json: @case.errors, status: :unprocessable_entity }
+      end
     end
   end
 
