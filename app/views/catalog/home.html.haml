@@ -1,5 +1,9 @@
 .catalog-cases
-  - unless reader_signed_in?
+  - if reader_signed_in?
+    .catalog-dashboard
+      .catalog-dashboard__reader
+        - reader_icon current_reader
+  - else
     .catalog-splash
       .catalog-welcome.dialog
         .catalog-welcome-message
