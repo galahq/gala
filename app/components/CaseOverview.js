@@ -18,9 +18,36 @@ export class Billboard extends React.Component {
         <div className="Card BillboardSnippet">
           <Editable placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case." uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
           <Editable placeholder="Summarize the case in a short paragraph." uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>
+          <FlagLinks languages={this.props.otherAvailableLocales} slug={this.props.slug} />
         </div>
       </section>
     )
+  }
+}
+
+class FlagLinks extends React.Component {
+  flagLink(lx) {
+    return <a
+      href={`/${lx}/cases/${this.props.slug}`}>
+      <span className="flag-links__icon" dangerouslySetInnerHTML={{__html: require(`../assets/images/react/flag-${lx}.svg`)}} />
+      &nbsp;
+      <I18n meaning={lx} />
+    </a>
+  }
+
+  render() {
+    if (this.props.languages.length > 0) {
+      return <div
+          className="flag-links">
+        <I18n meaning="other-languages" />
+        <br />
+        {this.props.languages.map( (lx) => {
+          return this.flagLink(lx)
+        } )}
+      </div>
+    } else {
+      return <span />
+    }
   }
 }
 

@@ -21,7 +21,12 @@
     "saving": "Saving…",
     "with_host": "with host",
     "with_hosts": "with hosts",
-    "create": "Create"
+    "create": "Create",
+    "other-languages": "This case is also available in these languages: ",
+    "en": "English",
+    "fr": "French",
+    "ja": "Japanese",
+    "am": "Amharic"
   },
 
   "fr": {
@@ -45,7 +50,12 @@
     "saved": "Enregistré",
     "saving": "En enregistrant…",
     "with_host": "avec animateur/-trice",
-    "with_hosts": "avec animateurs/-trices"
+    "with_hosts": "avec animateurs/-trices",
+    "other-languages": "Ce cas d’étude est aussi disponible dans ces langues-ci :",
+    "en": "Anglais",
+    "fr": "Français",
+    "ja": "Japonais",
+    "am": "Amharic"
   },
 
   "ja": {

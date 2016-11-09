@@ -123,3 +123,13 @@
   text-shadow: 0 0 1em rgba(black, 40%);
   max-width: 18em;
 }
+
+.flag-links {
+  font-family: $sansFont;
+  font-size: 12pt;
+}
+
+.flag-links__icon {
+  position: relative;
+  bottom: -2px;
+}

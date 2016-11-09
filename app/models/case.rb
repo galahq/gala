@@ -40,6 +40,10 @@ class Case < ApplicationRecord
     authors.to_sentence
   end
 
+  def other_available_locales
+    locales_for_reading_column(:title) - [I18n.locale.to_s]
+  end
+
   def has_translators?
     locales_for_reading_column(:translators).include? I18n.locale
   end
