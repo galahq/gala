@@ -219,7 +219,8 @@
       text-align: left;
       width: 8em;
     }
-    @media screen and (max-width: 320px) { width: 6.5em; }
+    @media screen and (max-width: 375px) { width: 7.25em; }
+    @media screen and (max-width: 320px) { width: 6.75em; }
   }
 
   &__my-cases {
@@ -286,7 +287,7 @@
         margin: 0.5rem;
       }
 
-      ul {
+      ul, p {
         margin: 0.25em 0;
         list-style: none;
         & > li { text-indent: -1em; }
