@@ -1,9 +1,6 @@
 .catalog-cases
-  - if reader_signed_in?
-    .catalog-dashboard
-      .catalog-dashboard__reader
-        - reader_icon current_reader
-  - else
+
+  - unless reader_signed_in?
     .catalog-splash
       .catalog-welcome.dialog
         .catalog-welcome-message
@@ -13,6 +10,32 @@
           %p=link_to "#{t('.learn_more')} ▸", "//www.teachmsc.org"
         .catalog-welcome-sign-in
           = render partial: 'devise/sessions/sign_in', locals: {resource: Reader.new}
+
+  - else
+    .catalog-dashboard
+      .catalog-dashboard__reader
+        %h1
+          Hello,
+          = current_reader.initials
+        %h2 My Cases
+      - unless @my_cases.empty?
+        .catalog-dashboard__my-cases
+          - @my_cases.each do |kase|
+            =link_to kase, class: 'catalog-dashboard__my-cases__case' do
+              %img{src: ix_cover_image(kase, :square)}
+              %strong=kase.kicker
+      - else
+        .catalog-dashboard__my-cases--empty__case
+          %img{src: "https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&w=300&h=300&fit=crop&crop=focalpoint&fp-x=.535&fp-y=.6&fp-z=2.5&mono=493092"}
+          %strong Study a Case
+        .catalog-dashboard__my-cases--empty__intro
+          %h3 Make learning stick
+          %ul
+            %li See problems through the eyes of the decision-makers and learn inductively.
+            %li Meet different stakeholders and dive deep with a multimodal narrative.
+            %li Shortcut experience by putting principles into practice.
+
+
 
   %h6=t '.featured_cases'
   .carousel
