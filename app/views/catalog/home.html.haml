@@ -32,15 +32,17 @@
 
 
 
-  %h6=t '.featured_cases'
-  .carousel
-    .catalog-cases-featured
-      - @featured.each do |c|
-        = render partial: 'cases/case', locals: {c: c}
-    .carousel-button.carousel-button-left ‹
-    .carousel-button.carousel-button-right ›
+  - unless @featured.empty?
+    %h6=t '.featured_cases'
+    .carousel
+      .catalog-cases-featured
+        - @featured.each do |c|
+          = render partial: 'cases/case', locals: {c: c}
+      .carousel-button.carousel-button-left ‹
+      .carousel-button.carousel-button-right ›
 
-  %h6=t '.case_index'
-  .catalog-cases-index
-    - @index.each do |c|
-      = render partial: 'cases/case', locals: {c: c}
+  - unless @index.empty?
+    %h6=t '.case_index'
+    .catalog-cases-index
+      - @index.each do |c|
+        = render partial: 'cases/case', locals: {c: c}
