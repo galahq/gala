@@ -12,6 +12,16 @@ ja:
       featured_cases: 注目の事例研究
       case_index: 全ての事例研究
       learn_more: プロジェクトの詳細については、こちらをご覧ください
+      greeting: ようこそ
+      my_cases: マイ事例研究
+      study_a_case: ケースを勉強
+      my_cases_placeholder: |
+        ###自分で選んで
+
+        - 様々な視点から見て、詳しいストーリーで熟考する。
+        - 基本的な原理を使うように経験を得る。
+
+        以下の索引から選んだケースをこちらですぐに見つけられる。
   cases:
     case:
       forthcoming: 今後

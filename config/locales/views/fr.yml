@@ -11,6 +11,16 @@ fr:
       featured_cases: Cas d’étude en vedette
       case_index: L’indice des cas d’étude
       learn_more: En savoir plus sur ce que nous faisons
+      greeting: "Salut, %{initials}"
+      my_cases: Mes cas d’étude
+      study_a_case: Étudiez un cas
+      my_cases_placeholder: |
+        ###Choisissez vous-même
+
+        - Rencontrez des intervenants différents et comprenez profondément avec un récit multimodal.
+        - Raccourcir l'expérience en mettant les principes en pratique.
+
+          Les cas sélectionnés dans l'index ci-dessous seront présentés ici pour accès facile.
   cases:
     case:
       forthcoming: À venir

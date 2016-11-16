@@ -10,6 +10,16 @@ en:
       featured_cases: Featured Cases
       case_index: Case Index
       learn_more: Learn more about what we’re doing
+      greeting: "Hello, %{initials}"
+      my_cases: My Cases
+      study_a_case: Study a Case
+      my_cases_placeholder: |
+        ###Choose for yourself
+
+        - Meet different stakeholders and dive deep with a multimodal narrative.
+        - Shortcut experience by putting principles into practice.
+
+        Cases you select from the index below will be presented here for easy access.
   cases:
     case:
       forthcoming: Forthcoming

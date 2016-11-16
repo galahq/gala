@@ -14,10 +14,8 @@
   - else
     .catalog-dashboard
       .catalog-dashboard__reader
-        %h1
-          Hello,
-          = current_reader.initials
-        %h2 My Cases
+        %h1=t '.greeting', initials: current_reader.initials
+        %h2=t '.my_cases'
       - unless @my_cases.empty?
         .catalog-dashboard__my-cases
           - @my_cases.each do |kase|
@@ -27,13 +25,10 @@
       - else
         .catalog-dashboard__my-cases--empty__case
           %img{src: "https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&w=300&h=300&fit=crop&crop=focalpoint&fp-x=.535&fp-y=.6&fp-z=2.5&mono=493092"}
-          %strong Study a Case
+          %strong=t '.study_a_case'
         .catalog-dashboard__my-cases--empty__intro
-          %h3 Choose for yourself
-          %ul
-            %li Meet different stakeholders and dive deep with a multimodal narrative.
-            %li Shortcut experience by putting principles into practice.
-          %p Cases you select from the index below will be presented here for easy access.
+          :markdown
+            #{t '.my_cases_placeholder'}
 
 
 
