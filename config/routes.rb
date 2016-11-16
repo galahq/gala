@@ -29,22 +29,22 @@ Rails.application.routes.draw do
     }
 
     resources :readers, only: %i(show edit update)
-  end
 
-  scope 'admin' do
-    resources :readers, except: %i(show edit update) do
-      resources :roles, only: %i(create destroy)
-      collection do
-        resources :enrollments, only: %i(index)
+    scope 'admin' do
+      resources :readers, except: %i(show edit update) do
+        resources :roles, only: %i(create destroy)
+        collection do
+          resources :enrollments, only: %i(index)
+        end
       end
-    end
 
-    resources :cases, only: %i(index create edit), param: :slug do
-      resources :readers, only: %i(destroy) do
-        resources :enrollments, only: [] do
-          collection do
-            put :upsert
-            delete :destroy
+      resources :cases, only: %i(index create edit), param: :slug do
+        resources :readers, only: %i(destroy) do
+          resources :enrollments, only: [] do
+            collection do
+              put :upsert
+              delete :destroy
+            end
           end
         end
       end
