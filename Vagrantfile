@@ -48,8 +48,11 @@ Vagrant.configure(2) do |config|
     gem install bundler debugger-ruby_core_source
 
     su postgres -c "createuser vagrant --superuser" || echo "postgres user 'vagrant' already exists"
-    su postgres -c "psql -c 'ALTER USER vagrant WITH PASSWORD \'vagrant\''"
-    echo "*:*:*:vagrant:vagrant" > ~/.pgpass && chmod 0600 ~/.pgpass
+    su postgres -c "psql <<PSQL
+ALTER USER vagrant WITH PASSWORD 'vagrant'
+PSQL
+    "
+    su vagrant -c 'echo "*:*:*:vagrant:vagrant" > ~/.pgpass && chmod 0600 ~/.pgpass'
 
     su vagrant -c "bundle install"
     su vagrant -c "bundle exec rake db:create"
