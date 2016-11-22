@@ -2,8 +2,8 @@ import React from 'react'
 import { Link } from 'react-router'
 import BillboardTitle from 'BillboardTitle.js'
 import {I18n} from 'I18n.js'
-
 import TableOfContents from 'TableOfContents.js'
+import {EnrollForm} from 'EnrollForm.js'
 
 class Sidebar extends React.Component {
   renderTOC() {
@@ -19,6 +19,14 @@ class Sidebar extends React.Component {
     }
   }
 
+  renderEnrollForm() {
+    if (!this.props.reader.enrolled) {
+      return <div style={{paddingTop: '1em'}}>
+        <EnrollForm enrolled={this.props.enrolled} readerId={this.props.reader.id} caseSlug={this.props.slug} />
+      </div>
+    }
+  }
+
   render () {
     let {slug, kicker, title, coverUrl, didSave} = this.props
     return (
@@ -28,6 +36,7 @@ class Sidebar extends React.Component {
         </Link>
         <BillboardTitle kicker={kicker} title={title} coverUrl={coverUrl} didSave={didSave} slug={slug} />
         {this.renderTOC()}
+        {this.renderEnrollForm()}
       </aside>
     )
   }
