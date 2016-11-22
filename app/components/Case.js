@@ -64,6 +64,7 @@ class Case extends React.Component {
     }
 
     c.didSave = this.editing() ? this.didSave.bind(this) : null
+    c.enrolled = this.didSave.bind(this)
 
     return (
       <div id="Case">

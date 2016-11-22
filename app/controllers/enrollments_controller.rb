@@ -13,23 +13,21 @@ class EnrollmentsController < ApplicationController
   end
 
   def upsert
-    c = Case.find_by_slug params[:case_slug]
-    readers = params[:reader_id].split ','
-
-    enrollments = readers.map do |reader_id|
-      enrollment = Enrollment.find_or_initialize_by(case_id: c.id, reader_id: reader_id)
-      enrollment.status = Enrollment.statuses[params[:status]]
-      enrollment
-    end
+    kase = Case.find_by_slug params[:case_slug]
+    reader_ids = params[:reader_id].split ','
 
     begin
       Enrollment.transaction do
-        enrollments.each(&:save!)
+        reader_ids.each do |reader_id|
+          Enrollment.upsert case_id: kase.id, reader_id: reader_id, status: params[:status]
+        end
       end
-      render json: {student: c.enrollments.select(&:student?), instructor: c.enrollments.select(&:instructor?)}
+      render partial: 'cases/case', locals: {c: kase}
+
     rescue ActiveRecord::RecordInvalid => invalid
       render status: :unprocessable_entity
     end
+
   end
 
   # DELETE /enrollments/1

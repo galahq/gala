@@ -28,9 +28,8 @@ class Enrollments extends React.Component {
     this.download()
   }
 
-  updateEnrollments(caseSlug, newEnrollments) {
+  updateEnrollments(caseSlug, newCase) {
     let i = this.state.cases.findIndex((c) => { return c.slug === caseSlug })
-    let newCase = update(this.state.cases[i], {enrollments: {$set: newEnrollments}})
     this.setState(update(this.state, {
       cases: {$splice: [[i, 1, newCase]]}
     }))

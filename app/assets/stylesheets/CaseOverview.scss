@@ -133,3 +133,25 @@
   position: relative;
   bottom: -2px;
 }
+
+.CaseOverview--enroll-form {
+  border-bottom: 5px solid $darkPurple;
+  background-color: $purple;
+  color: $white;
+  padding: 1em;
+  h2 {
+    font-family: $sansFont;
+    margin: 0;
+  }
+  p { margin: 0.35em 0; }
+  button {
+    background-color: $darkPurple;
+    color: $white;
+    padding: 0.5em 1em;
+    width: auto;
+
+    &:hover {
+      background-color: darken($darkPurple, 10%);
+    }
+  }
+}
