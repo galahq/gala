@@ -120,7 +120,7 @@ class Actions extends React.Component {
   renderForm() {
     if (this.props.signInForm !== undefined) {
       return <div className="dialog" dangerouslySetInnerHTML={{__html: this.props.signInForm}} />
-    } else if (!this.props.reader.enrolled) {
+    } else if (!this.props.reader.enrollment) {
       return <EnrollForm enrolled={this.props.enrolled} readerId={this.props.reader.id} caseSlug={this.props.slug} />
     }
   }

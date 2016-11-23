@@ -28,7 +28,7 @@ if reader_signed_in?
   json.reader do
     json.partial! current_reader
     json.can_update_case current_reader.can_update? c
-    json.enrolled current_reader.cases.include? c
+    json.enrollment current_reader.enrollments.where(case: c).first
   end
 
   if current_reader.can_update? c

@@ -20,7 +20,7 @@ class Sidebar extends React.Component {
   }
 
   renderEnrollForm() {
-    if (!this.props.reader.enrolled) {
+    if (!this.props.reader.enrollment) {
       return <div style={{paddingTop: '1em'}}>
         <EnrollForm enrolled={this.props.enrolled} readerId={this.props.reader.id} caseSlug={this.props.slug} />
       </div>
