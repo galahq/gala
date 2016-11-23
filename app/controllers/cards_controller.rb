@@ -17,6 +17,8 @@ class CardsController < ApplicationController
   end
 
   def update
+    @card.set_solidity_from_contents
+
     if @card.update(card_params)
       render partial: 'cases/case', locals: {c: @card.case}
     else

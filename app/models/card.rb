@@ -1,4 +1,6 @@
 class Card < ApplicationRecord
+  before_save :set_solidity_from_contents
+
   include Authority::Abilities
 
   belongs_to :page
@@ -17,6 +19,18 @@ class Card < ApplicationRecord
 
   def case
     page.case
+  end
+
+  def set_solidity_from_contents
+    self.solid = !content_is_title?(content)
+    puts self.solid ? "card" : "title"
+    true
+  end
+
+  UNSOLID_ROOT_TAGS = %w(h1 h2 h3 h4 h5 h6)
+  def content_is_title? c
+    html_fragment = Nokogiri::HTML::DocumentFragment.parse c
+    html_fragment.children.count == 1 && html_fragment.children.first.name.in?(UNSOLID_ROOT_TAGS)
   end
 
 end
