@@ -7,7 +7,8 @@ module.exports = {
   entry: {
     "case": ['babel-polyfill', 'whatwg-fetch', 'case.entry.js'],
     //edgenote: ['whatwg-fetch', 'edgenote.entry.js'],
-    enrollments: ['babel-polyfill', 'whatwg-fetch', 'enrollments.entry.js']
+    enrollments: ['babel-polyfill', 'whatwg-fetch', 'enrollments.entry.js'],
+    dashboard: ['babel-polyfill', 'whatwg-fetch', 'dashboard.entry.js']
   },
 
   output: {

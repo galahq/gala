@@ -12,25 +12,24 @@
           = render partial: 'devise/sessions/sign_in', locals: {resource: Reader.new}
 
   - else
-    .catalog-dashboard
-      .catalog-dashboard__reader
-        %h1=t '.greeting', initials: current_reader.initials
-        %h2=t '.my_cases'
-      - unless @my_cases.empty?
-        .catalog-dashboard__my-cases
-          - @my_cases.each do |kase|
-            =link_to kase, class: 'catalog-dashboard__my-cases__case' do
-              %img{src: ix_cover_image(kase, :square)}
-              %strong=kase.kicker
-      - else
-        .catalog-dashboard__my-cases--empty__case
-          %img{src: "https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&w=300&h=300&fit=crop&crop=focalpoint&fp-x=.535&fp-y=.6&fp-z=2.5&mono=493092"}
-          %strong=t '.study_a_case'
-        .catalog-dashboard__my-cases--empty__intro
-          :markdown
-            #{t '.my_cases_placeholder'}
-
-
+    #dashboard-app
+      .catalog-dashboard
+        .catalog-dashboard__reader
+          %h1=t '.greeting', initials: current_reader.initials
+          %h2=t '.my_cases'
+        - unless @my_cases.empty?
+          .catalog-dashboard__my-cases
+            - @my_cases.each do |kase|
+              =link_to kase, class: 'catalog-dashboard__my-cases__case' do
+                %img{src: ix_cover_image(kase, :square)}
+                %strong=kase.kicker
+        - else
+          .catalog-dashboard__my-cases--empty__case
+            %img{src: "https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&w=300&h=300&fit=crop&crop=focalpoint&fp-x=.535&fp-y=.6&fp-z=2.5&mono=493092"}
+            %strong=t '.study_a_case'
+          .catalog-dashboard__my-cases--empty__intro
+            :markdown
+              #{t '.my_cases_placeholder'}
 
   - unless @featured.empty?
     %h6=t '.featured_cases'
@@ -46,3 +45,7 @@
     .catalog-cases-index
       - @index.each do |c|
         = render partial: 'cases/case', locals: {c: c}
+
+
+
+= javascript_include_tag "react/dashboard.bundle"
