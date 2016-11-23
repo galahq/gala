@@ -2,6 +2,7 @@ import React from 'react';
 import mapNL from 'concerns/mapNL.js'
 import {I18n} from 'I18n.js'
 import {Link} from 'react-router'
+import { StatusBar } from 'StatusBar.js'
 
 class Case extends React.Component {
 
@@ -39,10 +40,11 @@ class Case extends React.Component {
     }, 2000)
   }
 
-  render() {
+  renderEditStatusBar() {
     let c = this.state.caseData
+    if ( !this.editing() && c.published ) { return <div /> }
+    else { return <StatusBar editing={this.editing()} saveMessage={this.state.saveMessage} reader={c.reader} {...this.props} /> }
 
-    let editStatusBar
     if (this.editing()) {
       editStatusBar = <div className="flash flash-editing">
                         <I18n meaning={this.state.saveMessage} />
@@ -62,12 +64,16 @@ class Case extends React.Component {
                         {link}
                       </div>
     }
+  }
+
+  render() {
+    let c = this.state.caseData
 
     c.didSave = this.editing() ? this.didSave.bind(this) : null
 
     return (
       <div id="Case">
-        {editStatusBar}
+        {this.renderEditStatusBar()}
         {this.props.children && React.cloneElement(this.props.children, c)}
       </div>
     )
