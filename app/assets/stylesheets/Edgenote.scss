@@ -90,7 +90,7 @@ a.Edgenote {
 
 a.Edgenote.pop {
   cursor: pointer;
-  transform: scale(1.02);
+  transform: scale(1.02) !important;
   background-color: rgba(138, 199, 255, 0.07);
   border-radius: 2pt;
   -webkit-box-shadow: 0 10px 6px -6px rgba(0,0,0,.4);
@@ -100,6 +100,7 @@ a.Edgenote.pop {
 
 a.Edgenote {
   & > div { position: relative; }
+  transform: scale(1);
   border: none;
 }
 .edgenote-icon{

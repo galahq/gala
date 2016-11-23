@@ -299,17 +299,23 @@ This action cannot be undone.")
     }
   }
 
+  renderStats() {
+    if (this.props.card.solid && this.props.didSave === null) {
+      <Statistics statistics={this.props.card.statistics} reader={this.props.reader} />
+    }
+  }
+
   render() {
     //let paragraph = this.props.contents.addAttributeToLinksPointingToEdgenoteID(this.state.selected_id, 'class="focus"')
     let paragraph = this.props.card.content
     return (
       <section>
-        <div className={this.props.card.solid ? "Card" : ""}>
+        <div className={this.props.card.solid ? "Card" : "nonCard"}>
           {this.renderDeleteOption()}
           <EditableHTML uri={`cards/${this.props.card.id}:content`} placeholder="<!-- HTML content of card -->" didSave={this.props.didSave}>
             <div dangerouslySetInnerHTML={this.renderContent(paragraph)}>{paragraph}</div>
           </EditableHTML>
-          <Statistics statistics={this.props.card.statistics} reader={this.props.reader} />
+          {this.renderStats()}
         </div>
         {this.renderEdgenotes()}
       </section>

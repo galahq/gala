@@ -86,15 +86,30 @@ article {
       color: inherit;
     }
   }
-
   .Card-delete-option {
-    color: $red !important;
-    font-family: $sansFont;
-    font-size: 80%;
-    position: absolute;
     top: 0.25em;
     right: 0.5em;
   }
+}
+
+.nonCard {
+  position: relative;
+  a:not([data-edgenote]):hover {
+    text-decoration: underline;
+  }
+  .Card-delete-option {
+    top: -.2em;
+    right: -7em;
+    background-color: $white;
+    padding: .1em .25em;
+  }
+}
+
+.Card-delete-option {
+  color: $red !important;
+  font-family: $sansFont;
+  font-size: 80%;
+  position: absolute;
 }
 
 .Card-create {
