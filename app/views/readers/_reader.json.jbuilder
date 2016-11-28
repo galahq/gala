@@ -5,3 +5,7 @@ json.roles do
     json.set! role.name, reader.roles.include?(role)
   end
 end
+json.cases reader.cases do |c|
+  json.(c, *%i(slug kicker))
+  json.square_cover_url ix_cover_image(c, :square)
+end

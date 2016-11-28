@@ -4,5 +4,5 @@ import { render } from 'react-dom';
 import { Dashboard } from 'dashboard/Dashboard.js'
 
 render((
-  <Dashboard />
+  <Dashboard {...window.reader} />
 ), document.getElementById('dashboard-app'))
