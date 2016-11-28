@@ -25,6 +25,7 @@ class CasesController < ApplicationController
   def create
     @case = Case.new(case_params)
     @case.kicker ||= @case.slug.split('-').join(' ').titlecase
+    @case.title ||= ""
 
     respond_to do |format|
       if @case.save

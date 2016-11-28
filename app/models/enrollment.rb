@@ -4,7 +4,7 @@ class Enrollment < ApplicationRecord
   belongs_to :reader
   belongs_to :case
 
-  enum status: %i(student instructor)
+  enum status: %i(student instructor treatment)
 
   def self.upsert(case_id:, reader_id:, status:)
     enrollment = find_or_initialize_by( case_id: case_id, reader_id: reader_id )

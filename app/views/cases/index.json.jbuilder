@@ -8,8 +8,9 @@ json.array! @cases do |c|
   if reader_signed_in?
     if current_reader.can_update? c
       json.enrollments do
-        json.student c.enrollments.select(&:student?)
-        json.instructor c.enrollments.select(&:instructor?)
+        Enrollment.statuses.each do |status, num|
+          json.set! status, c.enrollments.select(&:"#{status}?")
+        end
       end
     end
   end

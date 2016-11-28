@@ -23,7 +23,6 @@ class EnrollmentsController < ApplicationController
         end
       end
       render partial: 'cases/case', locals: {c: kase}
-
     rescue ActiveRecord::RecordInvalid => invalid
       render status: :unprocessable_entity
     end

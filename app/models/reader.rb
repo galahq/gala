@@ -45,6 +45,7 @@ class Reader < ApplicationRecord
     enrollments.find_by_case_id(c.id)
   end
 
+
   private
   def generate_authentication_token
     loop do

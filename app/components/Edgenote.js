@@ -20,8 +20,8 @@ class Edgenote extends React.Component {
     }
   }
 
-  componentWillReceiveProps() {
-    if (this.props.didSave !== null) {
+  componentWillReceiveProps(nextProps) {
+    if (this.props.slug !== nextProps.slug) {
       this.downloadContents()
     }
   }

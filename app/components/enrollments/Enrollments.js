@@ -21,7 +21,7 @@ class Enrollments extends React.Component {
   download() {
     Orchard.harvest('admin/readers').then((r) => {this.setState({readers: r})})
     Orchard.harvest('admin/cases').then((r) => {this.setState({cases: r})})
-    //orchard('groups').then((r) => {this.setState({cases: r})})
+    Orchard.harvest('admin/groups').then((r) => {this.setState({groups: r})})
   }
 
   componentDidMount() {

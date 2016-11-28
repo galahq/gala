@@ -8,7 +8,7 @@ class ReadersController < ApplicationController
   # GET /readers
   # GET /readers.json
   def index
-    @readers = Reader.all.order(:name).includes( :roles )
+    @readers = Reader.all.order(:name).preload(:roles)
 
     render layout: 'admin'
   end

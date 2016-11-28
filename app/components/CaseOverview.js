@@ -90,6 +90,10 @@ class Actions extends React.Component {
   }
 
   renderPodcasts() {
+    if (this.props.reader.enrollment && this.props.reader.enrollment.status === "treatment") {
+      return null
+    }
+
     let podcasts = this.props.podcasts
     let edit = this.props.didSave !== null ? "edit/" : ""
     let list = podcasts.map( (pod) => {

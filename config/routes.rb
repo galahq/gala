@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   get '/read/497/(*x)', to: redirect('/cases/mi-wolves')
 
   scope "(:locale)", locale: locale_regex do
-    resources :groups
     resources :comment_threads
     resources :comments
     resources :cases, except: %i(index create edit), param: :slug do
@@ -31,6 +30,7 @@ Rails.application.routes.draw do
     resources :readers, only: %i(show edit update)
 
     scope 'admin' do
+
       resources :readers, except: %i(show edit update) do
         resources :roles, only: %i(create destroy)
         collection do
@@ -48,6 +48,9 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      resources :groups
+
     end
   end
 

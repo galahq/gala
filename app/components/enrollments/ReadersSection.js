@@ -2,18 +2,29 @@ import React from 'react'
 
 import {Filter} from 'enrollments/Filter'
 import {Reader} from 'enrollments/Reader'
+import {Group} from 'enrollments/Group'
 import {SelectedReaders} from 'enrollments/SelectedReaders'
 
 class ReadersList extends React.Component {
   selected(reader) {
     let {model, selectedReaders} = this.props
-    return model === "readers" && selectedReaders.indexOf(reader) !== -1
+    return selectedReaders.indexOf(reader) !== -1
   }
 
   render() {
     return <ul>
       {this.props.readers.map((reader) => {
         return <Reader key={reader.id} reader={reader} selected={this.selected(reader)} selectReader={this.props.selectReader} />
+      })}
+    </ul>
+  }
+}
+
+class GroupsList extends React.Component {
+  render() {
+    return <ul>
+      {this.props.groups.map((group) => {
+        return <Group key={group.id} group={group} />
       })}
     </ul>
   }
@@ -59,6 +70,14 @@ export class ReadersSection extends React.Component {
       model: "readers",
       selectedReaders: []
     }
+
+
+    this.filter = this.filter.bind(this)
+    this.selectReader = this.selectReader.bind(this)
+    this.changeTab = this.changeTab.bind(this)
+    this.changeFilter = this.changeFilter.bind(this)
+    this.clearSelectedReaders = this.clearSelectedReaders.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
   changeTab(name) {
@@ -92,10 +111,24 @@ export class ReadersSection extends React.Component {
     e.preventDefault()
 
     let {model} = this.state
-    let readers = this.props.readers.filter(this.filter.bind(this))
+    let readers = this.props.readers.filter(this.filter)
     if (model === "readers" && readers.length === 1) {
       this.selectReader(readers[0])
       this.setState({filterString: ""})
+    }
+  }
+
+  renderList() {
+    if (this.state.model === "readers") {
+      return <ReadersList
+        readers={this.props.readers.filter(this.filter)}
+        selectedReaders={this.state.selectedReaders}
+        selectReader={this.selectReader}
+      />
+    } else {
+      return <GroupsList
+        groups={this.props.groups.filter(this.filter)}
+      />
     }
   }
 
@@ -105,30 +138,25 @@ export class ReadersSection extends React.Component {
       <section className="enrollments-section enrollments-section-readers">
 
         <h2>
-          <Tab name="readers" selectedTab={model} changeTab={this.changeTab.bind(this)} />
+          <Tab name="readers" selectedTab={model} changeTab={this.changeTab} />
           &nbsp;•&nbsp;
-          <Tab name="groups" selectedTab={model} changeTab={this.changeTab.bind(this)} />
+          <Tab name="groups" selectedTab={model} changeTab={this.changeTab} />
         </h2>
 
         <Filter
           filterString={filterString}
           model={model}
-          onChange={this.changeFilter.bind(this)}
-          selectReader={this.selectReader.bind(this)}
-          onSubmit={this.onSubmit.bind(this)}
+          onChange={this.changeFilter}
+          selectReader={this.selectReader}
+          onSubmit={this.onSubmit}
           autoFocus={true}
         />
 
-        <ReadersList
-          model={model}
-          readers={this.props[model].filter(this.filter.bind(this))}
-          selectedReaders={selectedReaders}
-          selectReader={this.selectReader.bind(this)}
-        />
+        {this.renderList()}
 
         <SelectedReadersBucket
           selectedReaders={this.state.selectedReaders}
-          clearSelection={this.clearSelectedReaders.bind(this)}
+          clearSelection={this.clearSelectedReaders}
         />
       </section>
     )
