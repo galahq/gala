@@ -6,13 +6,38 @@ import {I18n} from 'I18n.js'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 import {Statistics} from 'Statistics.js'
 
-let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
+let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
+  eventName() { return "visit_podcast" }
+
+  trackableArgs() { return {
+    case_slug: this.props.slug,
+    podcast_id: this.props.id
+  } }
+
+  newPropsAreDifferent(nextProps) {
+    this.props.id !== nextProps.id
+  }
+
   constructor() {
     super()
     this.state = {
       playing: false,
       creditsVisible: true
     }
+  }
+
+  componentDidMount() {
+    // Not calling super---overriding timer cues.
+    window.addEventListener("beforeunload", this.log)
+  }
+
+  visibilityChange() {
+    // Not calling super---overriding timer cues.
+  }
+
+  componentWillUnmount() {
+    this.log()
+    window.removeEventListener("beforeunload", this.log)
   }
 
   showCredits() {
@@ -36,13 +61,20 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
   }
 
   setPlaying() {
-    this.setState({playing: true})
+    this.setState({
+      playing: true,
+      timeArrived: Date.now()
+    })
     if (this.state.creditsVisible) {
       this.hideCredits()
     }
   }
   setPaused() {
-    this.setState({playing: false})
+    this.setState({
+      playing: false,
+      durationSoFar: this.timeSinceArrival(),
+      timeArrived: Date.now()
+    })
   }
 
   renderHosts() {
@@ -104,12 +136,12 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends React.Component {
 class Podcast extends React.Component {
   render() {
     let description = {__html: this.props.podcast.description}
-    let {podcast, didSave} = this.props
+    let {podcast, didSave, slug} = this.props
     let {id} = podcast
 
     return (
       <div className="Podcast">
-        <PodcastPlayer didSave={didSave} {...podcast} />
+        <PodcastPlayer slug={slug} didSave={didSave} {...podcast} />
 
         <div className="PodcastInfo">
           <EditableHTML uri={`podcasts/${id}:description`} placeholder="<!-- HTML podcast description -->" didSave={didSave}>
@@ -123,18 +155,7 @@ class Podcast extends React.Component {
   }
 }
 
-export class PodcastOverview extends Trackable {
-  eventName() { return "visit_podcast" }
-
-  trackableArgs() { return {
-    case_slug: this.props.slug,
-    podcast_id: this.state.pod.id
-  } }
-
-  newPropsAreDifferent(nextProps) {
-    this.props.params.podcastID !== nextProps.params.podcastID
-  }
-
+export class PodcastOverview extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -143,7 +164,6 @@ export class PodcastOverview extends Trackable {
   }
 
   componentDidMount() {
-    super.componentDidMount()
     let pod = this.props.podcasts.find( (p) => {return p.position === parseInt(this.props.params.podcastID)} )
     this.setState ({
       pod: pod
@@ -159,7 +179,7 @@ export class PodcastOverview extends Trackable {
   }
 
   render () {
-    let {pages, didSave} = this.props
+    let {pages, didSave, slug} = this.props
 
     return (
       <div id="PodcastOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
@@ -170,7 +190,7 @@ export class PodcastOverview extends Trackable {
           {...this.props}
         />
 
-        <Podcast didSave={didSave} podcast={this.podcast()} />
+        <Podcast slug={slug} didSave={didSave} podcast={this.podcast()} />
 
       </div>
     )
