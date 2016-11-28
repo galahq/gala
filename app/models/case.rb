@@ -55,4 +55,12 @@ class Case < ApplicationRecord
     translators = t.to_json
   end
 
+  def readers_by_enrollment_status
+    hash = Hash.new
+    Enrollment.statuses.each do |type, _|
+      hash[type] = enrollments.select(&:"#{type}?")
+    end
+    hash
+  end
+
 end

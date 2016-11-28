@@ -29,7 +29,7 @@ class CaseRow extends React.Component {
               <h1>{title}</h1>
               <h4>{caseAuthors}</h4>
             </div>
-            {['student', 'instructor'].map((type) => {
+            {['student', 'treatment', 'instructor'].map((type) => {
               return this.renderEnrolledReaders(type)
             })}
           </div>
@@ -46,7 +46,7 @@ class CaseRow extends React.Component {
         <td className="enrollments-case-kicker">
           {kicker}
         </td>
-        {['student', 'instructor'].map((type) => {
+        {['student', 'treatment', 'instructor'].map((type) => {
           return <td key={type}>
             <CaseEnrollment
               caseSlug={slug}
