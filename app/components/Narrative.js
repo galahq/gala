@@ -202,9 +202,13 @@ export class Card extends Trackable {
 
   componentDidMount() {
     // Not calling super---overriding timer cues.
-    this.setEdgenotes(this.props.card.content)
     window.addEventListener('scroll',  this.setNeedsCheckVisibility)
-    this.setState({interval: setInterval(this.checkVisibility.bind(this), 1000)})
+
+    this.setState({
+      edgenoteSlugs: gatherEdgenotes(this.props.card.content),
+      interval: setInterval(this.checkVisibility.bind(this), 1000)
+    })
+
     this.setNeedsCheckVisibility()
   }
 
@@ -216,10 +220,11 @@ export class Card extends Trackable {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.didSave !== null ||
-        this.props.selectedPage !== nextProps.selectedPage) {
-      this.setState({ edgenoteSlugs: [] })
-      this.setEdgenotes(nextProps.card.content)
+    let edgenoteSlugs = gatherEdgenotes(this.props.card.content)
+    if (!edgenoteSlugs.every((e, i) => {
+      return e === this.state.edgenoteSlugs[i]
+    })) {
+      this.setState({edgenoteSlugs: edgenoteSlugs})
     }
   }
 
