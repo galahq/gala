@@ -306,7 +306,7 @@ This action cannot be undone.")
 
   renderStats() {
     if (this.props.card.solid && this.props.didSave === null) {
-      <Statistics statistics={this.props.card.statistics} reader={this.props.reader} />
+      return <Statistics statistics={this.props.card.statistics} reader={this.props.reader} />
     }
   }
 
