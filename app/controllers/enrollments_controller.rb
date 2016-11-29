@@ -19,7 +19,10 @@ class EnrollmentsController < ApplicationController
     begin
       Enrollment.transaction do
         reader_ids.each do |reader_id|
-          Enrollment.upsert case_id: kase.id, reader_id: reader_id, status: params[:status]
+          @enrollment = Enrollment.find_or_initialize_by case_id: kase.id, reader_id: reader_id
+          @enrollment.status = params[:status]
+          authorize_action_for @enrollment
+          @enrollment.save!
         end
       end
       render partial: 'cases/case', locals: {c: kase}
@@ -35,9 +38,4 @@ class EnrollmentsController < ApplicationController
     @enrollments.each(&:destroy)
   end
 
-  private
-    # Only allow a trusted parameter "white list" through.
-    def enrollment_params
-      params.require(:enrollment).permit(:reader_id, :case_id)
-    end
 end

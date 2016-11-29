@@ -6,10 +6,10 @@ class Enrollment < ApplicationRecord
 
   enum status: %i(student instructor treatment)
 
-  def self.upsert(case_id:, reader_id:, status:)
-    enrollment = find_or_initialize_by( case_id: case_id, reader_id: reader_id )
-    enrollment.status = statuses[status]
-    enrollment.save!
+  def upsert
+    enrollment = Self.find_or_initialize_by( case_id: case_id, reader_id: reader_id )
+    enrollment.status = status
+    enrollment.save! unless enrollment.persisted?
     enrollment
   end
 
