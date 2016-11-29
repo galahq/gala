@@ -42,11 +42,13 @@ class EdgenotesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_edgenote
-      @edgenote = Edgenote.find_by_slug params[:slug]
+      @edgenote = Edgenote.where(slug: params[:slug]).includes( case: [:podcasts, :edgenotes, pages:[:cards], enrollments: [:reader]] )
+        .first
     end
 
     def set_case
-      @case = Case.find_by_slug(params[:case_slug])
+      @case = Case.where(params[:case_slug])
+        .first
     end
 
     # Only allow a trusted parameter "white list" through.
