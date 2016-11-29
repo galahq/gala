@@ -102,7 +102,9 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
             uri={`podcasts/${id}:artwork_url`}
             didSave={didSave}>{artworkUrl}</EditableAttribute>
 
-          <cite className="o-bottom-right c-photo-credit" dangerouslySetInnerHTML={{__html: photoCredit}} />
+          <Editable placeholder="Photo credit" uri={`podcasts/${id}:photo_credit`} didSave={didSave}>
+            <cite className="o-bottom-right c-photo-credit">{photoCredit}</cite>
+          </Editable>
         </div>
 
         <div className="credits" onClick={this.toggleCredits.bind(this)} >
