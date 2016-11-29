@@ -218,9 +218,29 @@
       margin: 0.5rem;
       text-align: left;
       width: 8em;
+      h2 a.catalog-dashboard__edit {
+        display: inline-block;
+      }
     }
     @media screen and (max-width: 375px) { width: 7.25em; }
     @media screen and (max-width: 320px) { width: 6.75em; }
+
+  }
+
+  &__edit {
+    display: block;
+    margin-top: 0.1em;
+    opacity: .5;
+    font-size: 90%;
+    color: $white;
+
+    svg { margin-bottom: -1px; }
+
+    &:hover {
+      background-color: transparent;
+      color: $white;
+      opacity: 1;
+    }
   }
 
   &__my-cases {

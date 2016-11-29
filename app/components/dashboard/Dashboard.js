@@ -4,8 +4,22 @@ import { DashboardCase } from 'dashboard/DashboardCase.js'
 
 export class Dashboard extends React.Component {
 
+  constructor() {
+    super()
+    this.state = {editing: false}
+    this.setEditing = this.setEditing.bind(this)
+  }
+
+  setEditing() {
+    if (this.state.editing) {
+      this.setState({editing: false})
+    } else {
+      this.setState({editing: true})
+    }
+  }
+
   renderCases() {
-    return this.props.cases.map((kase) => <DashboardCase {...kase} />)
+    return this.props.cases.map((kase) => <DashboardCase editing={this.state.editing} {...kase} />)
   }
 
   renderInstructions() {
@@ -38,11 +52,22 @@ export class Dashboard extends React.Component {
   }
 
   render() {
+    let {initials} = this.props
+    let {editing} = this.state
     return (
       <div className="catalog-dashboard">
         <div className="catalog-dashboard__reader">
-          <h1>Hello, {this.props.initials}</h1>
-          <h2><I18n meaning="my_cases" /></h2>
+          <h1>Hello, {initials}</h1>
+          <h2>
+            <I18n meaning="my_cases" />
+            <a
+              className="catalog-dashboard__edit"
+              onClick={this.setEditing}
+            >
+              { editing ? "Done" : "Edit" }
+              <span dangerouslySetInnerHTML={{__html: require(`../../assets/images/react/dashboard-${editing ? 'done' : 'edit'}.svg`)}} />
+            </a>
+          </h2>
         </div>
         {this.renderCasesOrInstructions()}
       </div>
