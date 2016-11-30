@@ -65,7 +65,7 @@ PSQL
 
     su vagrant -c "wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh"
 
-    echo "alias heroku-pull='export DISABLE_DATABASE_ENVIRONMENT_CHECK=1; bundle exec rake db:drop && heroku pg:pull DATABASE_URL postgresql:///orchard_development --app msc-gala'" >> /home/vagrant/.bashrc
+    echo "alias heroku-pull='DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rake db:drop && heroku pg:pull DATABASE_URL postgresql:///orchard_development --app msc-gala'" >> /home/vagrant/.bashrc
     echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
   SHELL
