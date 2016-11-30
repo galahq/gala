@@ -257,6 +257,13 @@
       color: $white !important;
       width: 10em;
       transition: transform .15s cubic-bezier(.33, .66, .66, 1);
+      position: relative;
+
+      &__delete {
+        position: absolute;
+        top: -12px;
+        right: 17px;
+      }
 
       img {
         width: 8em; height: 8em;
