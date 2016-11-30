@@ -1,4 +1,6 @@
 class Edgenote < ApplicationRecord
+  include Authority::Abilities
+
   belongs_to :case
   belongs_to :card
 
