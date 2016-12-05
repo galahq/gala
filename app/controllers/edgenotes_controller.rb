@@ -49,7 +49,7 @@ class EdgenotesController < ApplicationController
     end
 
     def set_case
-      @case = Case.where(params[:case_slug])
+      @case = Case.where(slug: params[:case_slug])
         .first
     end
 
