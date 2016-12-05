@@ -1,0 +1,11 @@
+Hello <%= @reader.initials %>,
+
+You were just enrolled in a new Michigan Sustainability Case.
+
+**<%= @case.kicker.titlecase %> — <%= @case.title %>**
+
+*<%= @case.dek %>*
+
+<%= @case.summary %>
+
+[Read the case](<%= case_url(@reader.locale, @case.slug) %>) on the Michigan Sustainability Cases website.

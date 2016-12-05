@@ -22,6 +22,7 @@ class EnrollmentsController < ApplicationController
           @enrollment = Enrollment.find_or_initialize_by case_id: kase.id, reader_id: reader_id
           @enrollment.status = params[:status]
           authorize_action_for @enrollment
+          EnrollmentMailer.introduce_case(@enrollment).deliver  if params[:send_emails]
           @enrollment.save!
         end
       end

@@ -156,6 +156,7 @@ GEM
       thor (>= 0.14, < 2.0)
     json (2.0.2)
     jwt (1.5.4)
+    kramdown (1.13.1)
     launchy (2.4.3)
       addressable (~> 2.3)
     letter_opener (1.4.1)
@@ -169,6 +170,9 @@ GEM
     lumberjack (1.0.10)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    maildown (2.0.0)
+      kramdown
+      rails (>= 4.0.0)
     method_source (0.8.2)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
@@ -369,6 +373,7 @@ DEPENDENCIES
   jquery-rails
   letter_opener
   listen (~> 3.1.5)
+  maildown
   newrelic_rpm
   omniauth-facebook
   omniauth-google-oauth2
