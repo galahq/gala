@@ -1,4 +1,4 @@
-class EnrollmentMailer < ActionMailer::Base
+class EnrollmentMailer < ApplicationMailer
   def introduce_case(enrollment)
     @case = enrollment.case
     @reader = enrollment.reader
