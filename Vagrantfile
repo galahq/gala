@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
     sudo apt-get update -y
 
     sudo apt-get --no-install-recommends install -y \
-      postgresql postgresql-contrib-9.5 libpq-dev \
+      postgresql postgresql-contrib-9.6 libpq-dev \
       nodejs git \
       build-essential libreadline-dev \
       libpq-dev libkrb5-dev \
