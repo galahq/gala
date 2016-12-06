@@ -2,9 +2,9 @@ Hello <%= @reader.initials %>,
 
 You were just enrolled in a new Michigan Sustainability Case.
 
-**<%= @case.kicker.titlecase %> — <%= @case.title %>**
+**<%= @case.kicker.gsub(/\n/, '').titlecase %> — <%= @case.title.gsub(/\n/, '') %>**
 
-*<%= @case.dek %>*
+*<%= @case.dek.gsub(/\n/, '') %>*
 
 <%= @case.summary %>
 
