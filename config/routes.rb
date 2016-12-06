@@ -43,13 +43,13 @@ Rails.application.routes.draw do
           resources :enrollments, only: [] do
             collection do
               put :upsert
-              delete :destroy
             end
           end
         end
       end
 
       resources :groups
+      resources :enrollments, only: [:destroy]
 
     end
   end

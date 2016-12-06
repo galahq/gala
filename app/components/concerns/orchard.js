@@ -54,8 +54,7 @@ export class Orchard {
         })
       }
     )
-    return fetch(r).
-      then((response) => (response.json()))
+    return fetch(r)
   }
 
 }

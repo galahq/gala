@@ -1,13 +1,21 @@
 import React from 'react'
 import { I18n } from 'I18n.js'
 import { DashboardCase } from 'dashboard/DashboardCase.js'
+import {Orchard} from 'concerns/orchard.js'
 
 export class Dashboard extends React.Component {
 
-  constructor() {
-    super()
-    this.state = {editing: false}
+  constructor(props) {
+    super(props)
+    this.state = {editing: false, cases: this.props.cases}
     this.setEditing = this.setEditing.bind(this)
+    this.deleteEnrollment = this.deleteEnrollment.bind(this)
+  }
+
+  deleteEnrollment(enrollmentId) {
+    Orchard.prune(`admin/enrollments/${enrollmentId}`).then(() => {
+      window.location.reload()
+    })
   }
 
   setEditing() {
@@ -19,7 +27,7 @@ export class Dashboard extends React.Component {
   }
 
   renderCases() {
-    return this.props.cases.map((kase) => <DashboardCase editing={this.state.editing} {...kase} />)
+    return this.state.cases.map((kase) => <DashboardCase key={kase.slug} editing={this.state.editing} deleteEnrollment={this.deleteEnrollment} {...kase} />)
   }
 
   renderInstructions() {
@@ -42,7 +50,7 @@ export class Dashboard extends React.Component {
   }
 
   renderCasesOrInstructions() {
-    if (this.props.cases.length > 0) {
+    if (this.state.cases.length > 0) {
       return <div className="catalog-dashboard__my-cases">
         {this.renderCases()}
       </div>

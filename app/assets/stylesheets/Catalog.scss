@@ -193,6 +193,11 @@
   color: $white;
   padding: 0.5em 0;
 
+  a:hover {
+    background-color: transparent;
+    color: inherit;
+  }
+
   @include flexbox;
   @include justify-content(flex-start);
   @media screen and (max-width: $mobileCutoff) {
@@ -258,11 +263,16 @@
       width: 10em;
       transition: transform .15s cubic-bezier(.33, .66, .66, 1);
       position: relative;
+      cursor: default;
 
       &__delete {
         position: absolute;
-        top: -12px;
-        right: 17px;
+        top: -4px;
+        right: 14px;
+        transition: transform .1s cubic-bezier(.33, .66, .66, 1);
+        &:hover {
+          transform: scale(1.1);
+        }
       }
 
       img {
@@ -277,9 +287,9 @@
         line-height: 1.1em;
       }
 
-      &:hover,
-      &:focus {
-        background: transparent;
+      &[href^='/cases/']:hover,
+      &[href^='/cases/']:focus {
+        cursor: pointer;
         transform: scale(1.02);
         outline: none;
 

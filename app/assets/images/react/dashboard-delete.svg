@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="31px" height="31px" viewBox="0 0 31 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
-    <title>Artboard</title>
+    <title>Shape</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <path d="M15.5,3 C9.148,3 4,8.148 4,14.5 C4,20.852 9.148,26 15.5,26 C21.852,26 27,20.852 27,14.5 C27,8.148 21.852,3 15.5,3 Z M20.096,18.389 C20.291,18.584 20.291,18.901 20.096,19.096 C19.901,19.291 19.584,19.291 19.389,19.096 L15.5,15.207 L11.611,19.096 C11.416,19.291 11.099,19.291 10.904,19.096 C10.709,18.901 10.709,18.584 10.904,18.389 L14.793,14.5 L10.904,10.611 C10.709,10.416 10.709,10.099 10.904,9.904 C11.099,9.709 11.416,9.709 11.611,9.904 L15.5,13.793 L19.389,9.904 C19.584,9.709 19.901,9.709 20.096,9.904 C20.291,10.099 20.291,10.416 20.096,10.611 L16.207,14.5 L20.096,18.389 Z" id="path-1"></path>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard" fill="#EBEAE4">
-            <path d="M12.5,1 C6.148,1 1,6.148 1,12.5 C1,18.852 6.148,24 12.5,24 C18.852,24 24,18.852 24,12.5 C24,6.148 18.852,1 12.5,1 Z M17.096,16.389 C17.291,16.584 17.291,16.901 17.096,17.096 C16.901,17.291 16.584,17.291 16.389,17.096 L12.5,13.207 L8.611,17.096 C8.416,17.291 8.099,17.291 7.904,17.096 C7.709,16.901 7.709,16.584 7.904,16.389 L11.793,12.5 L7.904,8.611 C7.709,8.416 7.709,8.099 7.904,7.904 C8.099,7.709 8.416,7.709 8.611,7.904 L12.5,11.793 L16.389,7.904 C16.584,7.709 16.901,7.709 17.096,7.904 C17.291,8.099 17.291,8.416 17.096,8.611 L13.207,12.5 L17.096,16.389 Z" id="Shape"></path>
+        <g id="Shape">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#EBEAE4" fill-rule="evenodd" xlink:href="#path-1"></use>
         </g>
     </g>
 </svg>

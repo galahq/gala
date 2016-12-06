@@ -5,7 +5,8 @@ json.roles do
     json.set! role.name, reader.roles.include?(role)
   end
 end
-json.cases reader.cases do |c|
-  json.(c, *%i(slug kicker))
-  json.square_cover_url ix_cover_image(c, :square)
+json.cases reader.enrollments do |e|
+  json.(e.case, *%i(slug kicker))
+  json.square_cover_url ix_cover_image(e.case, :square)
+  json.enrollment_id e.id
 end

@@ -34,8 +34,8 @@ class EnrollmentsController < ApplicationController
 
   # DELETE /enrollments/1
   def destroy
-    @enrollments = Enrollment.find(params[:id])
-    @enrollments.each(&:destroy)
+    @enrollment = Enrollment.find(params[:id])
+    @enrollment.destroy
   end
 
 end
