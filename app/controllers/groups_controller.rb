@@ -3,7 +3,7 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    @groups = Group.all
+    @groups = Group.all.includes(readers: [:cases, enrollments: [:case]])
   end
 
   # GET /groups/1
