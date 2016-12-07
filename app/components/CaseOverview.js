@@ -90,7 +90,8 @@ class Actions extends React.Component {
   }
 
   renderPodcasts() {
-    if (this.props.reader.enrollment && this.props.reader.enrollment.status === "treatment") {
+    if (this.props.reader && this.props.reader.enrollment &&
+        this.props.reader.enrollment.status === "treatment") {
       return null
     }
 
