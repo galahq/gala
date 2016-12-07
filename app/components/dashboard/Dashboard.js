@@ -9,13 +9,16 @@ export class Dashboard extends React.Component {
     super(props)
     this.state = {editing: false, cases: this.props.cases}
     this.setEditing = this.setEditing.bind(this)
-    this.deleteEnrollment = this.deleteEnrollment.bind(this)
+    this.deleteEnrollmentFor = this.deleteEnrollmentFor.bind(this)
   }
 
-  deleteEnrollment(enrollmentId) {
-    Orchard.prune(`admin/enrollments/${enrollmentId}`).then(() => {
-      window.location.reload()
-    })
+  deleteEnrollmentFor(kase) {
+    if (kase.published || this.props.roles.editor
+        || window.confirm("Are you sure you want to unenroll in this case? Because it is a beta release, you will not be able to reenroll.")) {
+      Orchard.prune(`admin/enrollments/${kase.enrollmentId}`).then(() => {
+        window.location.reload()
+      })
+    }
   }
 
   setEditing() {
@@ -27,7 +30,10 @@ export class Dashboard extends React.Component {
   }
 
   renderCases() {
-    return this.state.cases.map((kase) => <DashboardCase key={kase.slug} editing={this.state.editing} deleteEnrollment={this.deleteEnrollment} {...kase} />)
+    return this.state.cases.map((kase) => <DashboardCase key={kase.slug}
+                                editing={this.state.editing}
+                                deleteEnrollmentFor={this.deleteEnrollmentFor}
+                                case={kase} />)
   }
 
   renderInstructions() {

@@ -4,16 +4,17 @@ export class DashboardCase extends React.Component {
 
   renderDeleteButton() {
     if (this.props.editing) {
-      return <a 
+      return <a
         className="catalog-dashboard__my-cases__case__delete"
         dangerouslySetInnerHTML={{__html: require('dashboard-delete.svg')}}
-        onClick={() => {this.props.deleteEnrollment(this.props.enrollmentId)}}
+        onClick={() => {this.props.deleteEnrollmentFor(this.props.case)}}
       />
     }
   }
 
   render() {
-    let {slug, kicker, squareCoverUrl, editing} = this.props
+    let {editing} = this.props
+    let {slug, kicker, squareCoverUrl} = this.props.case
     return (
       <div style={{position: 'relative'}}>
         <a className="catalog-dashboard__my-cases__case" href={editing ? '#' : `/cases/${slug}`}>
@@ -29,9 +30,11 @@ export class DashboardCase extends React.Component {
 
 DashboardCase.propTypes = {
   editing: PropTypes.bool,
-  slug: PropTypes.string,
-  squareCoverUrl: PropTypes.string,
-  kicker: PropTypes.string,
-  enrollmentId: PropTypes.number,
-  deleteEnrollment: PropTypes.func
+  "case": PropTypes.shape({
+    slug: PropTypes.string,
+    squareCoverUrl: PropTypes.string,
+    kicker: PropTypes.string,
+    enrollmentId: PropTypes.number
+  }),
+  deleteEnrollmentFor: PropTypes.func
 }
