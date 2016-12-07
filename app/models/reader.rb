@@ -46,6 +46,10 @@ class Reader < ApplicationRecord
   end
 
 
+  def name_and_email
+    "#{name} <#{email}>"
+  end
+
   private
   def generate_authentication_token
     loop do

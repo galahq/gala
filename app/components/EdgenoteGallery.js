@@ -2,7 +2,6 @@ import React from 'react'
 import Sidebar from 'Sidebar.js'
 import Edgenote from 'Edgenote.js'
 import LoadingIcon from 'LoadingIcon.js'
-import gatherEdgenotes from 'concerns/gatherEdgenotes.js'
 import { I18n } from "I18n.js"
 
 class EdgenoteGallery extends React.Component {
@@ -32,7 +31,7 @@ class EdgenoteGallery extends React.Component {
   }
 
   render() {
-    let {pages} = this.props
+    let {pages, didSave} = this.props
     return (
       <div className="window">
         <Sidebar
@@ -46,7 +45,7 @@ class EdgenoteGallery extends React.Component {
           </div>
           {this.renderEdgenotes()}
         </main>
-        {this.props.children}
+        {this.props.children && React.cloneElement(this.props.children, {didSave: didSave})}
       </div>
     )
   }

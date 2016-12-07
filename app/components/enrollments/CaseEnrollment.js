@@ -5,7 +5,8 @@ import { Orchard } from 'concerns/orchard'
 let CaseEnrollmentTarget = {
   drop(props, monitor) {
     let item = monitor.getItem()
-    Orchard.espalier(`admin/cases/${props.caseSlug}/readers/${item.readers}/enrollments/upsert`, {status: props.type})
+    let shouldEmail = window.prompt(`Would you like to send email notifications to ${item.readers.length} ${item.readers.length === 1 ? 'person' : 'people'}? If so, type "send".`) === "send"
+    Orchard.espalier(`admin/cases/${props.caseSlug}/readers/${item.readers}/enrollments/upsert`, {status: props.type, send_emails: shouldEmail})
       .then((r) => {
         props.updateEnrollments(props.caseSlug, r)
       })

@@ -10,7 +10,7 @@ class ApplicationAuthorizer < Authority::Authorizer
   def self.default(adjective, reader)
     # 'Whitelist' strategy for security: anything not explicitly allowed is
     # considered forbidden.
-    reader.has_role? :editor
+    reader.has_cached_role? :editor
   end
 
 end

@@ -3,6 +3,8 @@ class EdgenotesController < ApplicationController
   before_action :set_case, only: [:create]
   before_action :set_cors_headers, only: [:show]
 
+  authorize_actions_for Edgenote, except: %i(show)
+
   # GET /edgenotes
   def index
     @edgenotes = Edgenote.all
@@ -47,7 +49,7 @@ class EdgenotesController < ApplicationController
     end
 
     def set_case
-      @case = Case.where(params[:case_slug])
+      @case = Case.where(slug: params[:case_slug])
         .first
     end
 

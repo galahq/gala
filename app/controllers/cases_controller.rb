@@ -8,7 +8,7 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all.order :slug
+    @cases = Case.all.order(:slug).includes(enrollments: [:reader])
   end
 
   # GET /cases/1

@@ -13,6 +13,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'inline_svg'
+gem 'maildown'
 
 gem 'redis', '~> 3.0'
 gem 'dalli'
