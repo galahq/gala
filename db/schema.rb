@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011183206) do
+ActiveRecord::Schema.define(version: 20161208171215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,9 +95,9 @@ ActiveRecord::Schema.define(version: 20161011183206) do
     t.string   "thumbnail_url"
     t.hstore   "content_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.text     "slug",              null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.text     "slug",                            null: false
     t.integer  "card_id"
     t.hstore   "instructions_i18n"
     t.hstore   "image_url_i18n"
@@ -105,6 +105,12 @@ ActiveRecord::Schema.define(version: 20161011183206) do
     t.hstore   "embed_code_i18n"
     t.hstore   "photo_credit_i18n"
     t.hstore   "pdf_url_i18n"
+    t.integer  "style",               default: 0
+    t.hstore   "pull_quote_i18n"
+    t.hstore   "attribution_i18n"
+    t.hstore   "call_to_action_i18n"
+    t.hstore   "audio_url_i18n"
+    t.hstore   "youtube_slug_i18n"
     t.index ["card_id"], name: "index_edgenotes_on_card_id", using: :btree
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
     t.index ["slug"], name: "index_edgenotes_on_slug", unique: true, using: :btree
