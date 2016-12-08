@@ -42,7 +42,7 @@ class Reader < ApplicationRecord
   end
 
   def enrollment_for_case(c)
-    enrollments.find { |e| e.case == c }
+    enrollments.find { |e| e.case.id == c.id }
   end
 
 
