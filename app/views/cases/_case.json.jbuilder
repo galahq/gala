@@ -15,7 +15,11 @@ json.pages c.pages do |page|
   end
 end
 json.edgenotes do
-  json.array! c.edgenotes.map(&:slug)
+  c.edgenotes.each do |edgenote|
+    json.set! edgenote.slug do
+      json.partial! edgenote
+    end
+  end
 end
 json.podcasts c.podcasts do |podcast|
   json.partial! podcast

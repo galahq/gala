@@ -44,14 +44,16 @@ class Narrative extends React.Component {
       return <article />
     }
     let page = this.props.pages[i]
+    let {edgenotes, didSave, slug, reader} = this.props
     return (
       <main>
         <a id="top" />
         <Page
           page={page}
-          didSave={this.props.didSave}
-          caseSlug={this.props.slug}
-          reader={this.props.reader}
+          edgenotes={edgenotes}
+          didSave={didSave}
+          caseSlug={slug}
+          reader={reader}
         />
         {this.nextLink()}
       </main>
@@ -100,7 +102,7 @@ This action cannot be undone.")
   }
 
   render() {
-    let {page, didSave} = this.props
+    let {page, didSave, caseSlug, edgenotes, reader} = this.props
 
     var cards = page.cards.map( (card, i) => {
       return [
@@ -110,8 +112,9 @@ This action cannot be undone.")
           selectedPage={page.position}
           solid={card.solid}
           card={card}
-          caseSlug={this.props.caseSlug}
-          reader={this.props.reader}
+          caseSlug={caseSlug}
+          edgenotes={edgenotes}
+          reader={reader}
         />
       ]
     } )
@@ -283,12 +286,13 @@ This action cannot be undone.")
                     return (
                       <OldEdgenote
                         pathPrefix={this.props.selectedPage && `${edit}/${this.props.selectedPage}`}
-                        selectedEdgenote={this.state.selectedEdgenote}
+                        selected={slug == this.state.selectedEdgenote}
                         slug={slug}
                         key={`edgenote_${slug}`}
                         handleHoverID={this.props.i}
                         didSave={this.props.didSave}
                         caseSlug={this.props.caseSlug}
+                        contents={this.props.edgenotes[slug]}
                       />
                       )
                     } )
