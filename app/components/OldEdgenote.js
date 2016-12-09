@@ -4,7 +4,7 @@ import {Orchard} from 'concerns/orchard.js'
 import LoadingIcon from 'LoadingIcon.js'
 import {Statistics} from 'Statistics.js'
 
-class Edgenote extends React.Component {
+class OldEdgenote extends React.Component {
   handleMouseOver() {
     this.setState( { hovering: true } )
   }
@@ -92,4 +92,4 @@ class Edgenote extends React.Component {
   }
 }
 
-export default Edgenote
+export default OldEdgenote

@@ -1,6 +1,6 @@
 import React from 'react'
 import Sidebar from 'Sidebar.js'
-import Edgenote from 'Edgenote.js'
+import OldEdgenote from 'OldEdgenote.js'
 import LoadingIcon from 'LoadingIcon.js'
 import { I18n } from "I18n.js"
 
@@ -13,7 +13,7 @@ class EdgenoteGallery extends React.Component {
                 {
                   this.props.edgenotes.map( (slug) => {
                     return (
-                      <Edgenote
+                      <OldEdgenote
                         random={true}
                         pathPrefix={""}
                         selectedEdgenote={null}

@@ -2,7 +2,7 @@ import React from 'react'
 import {findDOMNode} from 'react-dom'
 import {Trackable} from 'concerns/trackable.js'
 import {Statistics} from 'Statistics.js'
-import Edgenote from 'Edgenote.js'
+import OldEdgenote from 'OldEdgenote.js'
 import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
@@ -281,7 +281,7 @@ This action cannot be undone.")
                 {
                   this.state.edgenoteSlugs.map( (slug) => {
                     return (
-                      <Edgenote
+                      <OldEdgenote
                         pathPrefix={this.props.selectedPage && `${edit}/${this.props.selectedPage}`}
                         selectedEdgenote={this.state.selectedEdgenote}
                         slug={slug}
