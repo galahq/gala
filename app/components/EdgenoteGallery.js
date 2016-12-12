@@ -27,7 +27,7 @@ class EdgenoteGallery extends React.Component {
   }
 
   render() {
-    let {pages, didSave} = this.props
+    let {pages} = this.props
     return (
       <div className="window">
         <Sidebar
@@ -41,7 +41,7 @@ class EdgenoteGallery extends React.Component {
           </div>
           {this.renderEdgenotes()}
         </main>
-        {this.props.children && React.cloneElement(this.props.children, {didSave: didSave})}
+        {this.props.children && React.cloneElement(this.props.children, this.props)}
       </div>
     )
   }

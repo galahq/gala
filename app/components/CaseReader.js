@@ -27,7 +27,8 @@ class CaseReader extends React.Component {
           selectedPage={selectedPage}
           {...this.props}
         />
-        {this.props.children && React.cloneElement(this.props.children, {didSave: didSave})}
+        {this.props.children &&
+          React.cloneElement(this.props.children, this.props)}
       </div>
     )
   }

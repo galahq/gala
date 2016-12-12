@@ -2,7 +2,6 @@ import React from 'react'
 import {Trackable} from 'concerns/trackable.js'
 import {Link} from 'react-router'
 import {ScrollLock} from 'ScrollLock.js'
-import {Orchard} from 'concerns/orchard.js'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 
 class EdgenoteContents extends Trackable {
@@ -15,26 +14,16 @@ class EdgenoteContents extends Trackable {
 
   constructor() {
     super()
-    this.state = {
-      content: null
-    }
   }
 
   componentDidMount() {
     super.componentDidMount()
-    Orchard.harvest(`edgenotes/${this.props.params.edgenoteID}`).then(this.parseContentsFromJSON.bind(this))
     $(document).on('keydown', (e) => {
       if (e.which === 27) {
         $(document).off('keydown')
         this.props.history.push(this.returnLink())
       }
     })
-  }
-
-  parseContentsFromJSON(r) {
-    r.caseSlug = r.case.slug
-    delete r["case"]
-    this.setState(r)
   }
 
   didSave(newData) {
@@ -59,8 +48,8 @@ class EdgenoteContents extends Trackable {
           &nbsp;
         </Link>
         <aside className="EdgenoteContents-window">
-          <EdgenoteDisplay didSave={didSave} {...this.state} />
-          <EdgenoteSidebar didSave={didSave} {...this.state} />
+          <EdgenoteDisplay didSave={didSave} {...this.props.edgenotes[this.props.params.edgenoteID]} />
+          <EdgenoteSidebar didSave={didSave} {...this.props.edgenotes[this.props.params.edgenoteID]} />
         </aside>
       </div>
     )
