@@ -1,33 +1,29 @@
 import React from 'react'
 import Sidebar from 'Sidebar.js'
 import OldEdgenote from 'OldEdgenote.js'
-import LoadingIcon from 'LoadingIcon.js'
 import { I18n } from "I18n.js"
 
 class EdgenoteGallery extends React.Component {
 
   renderEdgenotes() {
-    let block
-    if (this.props.edgenotes != 0) {
-      block = <div className="edgenotes">
-                {
-                  this.props.edgenotes.map( (slug) => {
-                    return (
-                      <OldEdgenote
-                        random={true}
-                        pathPrefix={""}
-                        selectedEdgenote={null}
-                        slug={slug}
-                        key={`edgenote_${slug}`}
-                      />
-                    )
-                  } )
-                }
-              </div>
-    } else {
-      block =  <LoadingIcon />
-    }
-    return block
+    let {edgenotes, caseSlug} = this.props
+    return <div className="edgenotes">
+      {
+        Object.keys(edgenotes).map( (slug) => {
+          return (
+            <OldEdgenote
+              slug={slug}
+              contents={edgenotes[slug]}
+              caseSlug={caseSlug}
+              pathPrefix={""}
+              selected={false}
+              key={`${slug}`}
+              didSave={null}
+            />
+            )
+        } )
+      }
+    </div>
   }
 
   render() {

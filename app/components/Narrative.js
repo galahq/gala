@@ -220,6 +220,25 @@ export class Card extends Trackable {
     clearInterval(this.state.interval)
   }
 
+  render() {
+    return (
+      <section>
+        <CardContents {...this.props} {...this.props.card} />
+        <EdgenotesCard
+          card={this.props.card}
+          caseSlug={this.props.caseSlug}
+          selectedPage={this.props.selectedPage}
+          selectedEdgenote={this.state.selectedEdgenote}
+          didSave={this.props.didSave}
+          edgenoteLibrary={this.props.edgenotes}
+        />
+      </section>
+    )
+  }
+}
+
+class CardContents extends React.Component {
+
   deleteCard() {
     let confirmation = window.confirm("\
 Are you sure you want to delete this card and its contents?\n\n\
@@ -227,7 +246,7 @@ Edgenotes attached to it will not be deleted, although they will be detached.\n\
 This action cannot be undone.")
     if (!confirmation) { return }
 
-    Orchard.prune(`cards/${this.props.card.id}`).then((response) => {
+    Orchard.prune(`cards/${this.props.id}`).then((response) => {
       this.props.didSave(response, false, 'deleted')
     })
   }
@@ -253,7 +272,7 @@ This action cannot be undone.")
   }
 
   renderContent() {
-    var {content} = this.props.card
+    var {content} = this.props
     content = this.addHoverCallbacks(content)
     content = this.addHREF(content, this.props.selectedPage && `/${this.props.selectedPage}`)
     content = this.renderCitations(content)
@@ -267,32 +286,19 @@ This action cannot be undone.")
   }
 
   renderStats() {
-    if (this.props.card.solid && this.props.didSave === null) {
+    if (this.props.solid && this.props.didSave === null) {
       return <Statistics statistics={this.props.card.statistics} reader={this.props.reader} />
     }
   }
 
   render() {
-    //let paragraph = this.props.contents.addAttributeToLinksPointingToEdgenoteID(this.state.selected_id, 'class="focus"')
-    let paragraph = this.props.card.content
-    return (
-      <section>
-        <div className={this.props.card.solid ? "Card" : "nonCard"}>
-          {this.renderDeleteOption()}
-          <EditableHTML uri={`cards/${this.props.card.id}:content`} placeholder="<!-- HTML content of card -->" didSave={this.props.didSave}>
-            <div dangerouslySetInnerHTML={this.renderContent(paragraph)}>{paragraph}</div>
-          </EditableHTML>
-          {this.renderStats()}
-        </div>
-        <EdgenotesCard
-          card={this.props.card}
-          caseSlug={this.props.caseSlug}
-          selectedPage={this.props.selectedPage}
-          selectedEdgenote={this.state.selectedEdgenote}
-          didSave={this.props.didSave}
-          edgenoteLibrary={this.props.edgenotes}
-        />
-      </section>
-    )
+    let {solid, id, didSave, content} = this.props
+    return <div className={solid ? "Card" : "nonCard"}>
+      {this.renderDeleteOption()}
+      <EditableHTML uri={`cards/${id}:content`} placeholder="<!-- HTML content of card -->" didSave={didSave}>
+        <div dangerouslySetInnerHTML={this.renderContent(content)}>{content}</div>
+      </EditableHTML>
+      {this.renderStats()}
+    </div>
   }
 }
