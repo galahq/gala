@@ -2,7 +2,7 @@ import React from 'react'
 import {findDOMNode} from 'react-dom'
 import {Trackable} from 'concerns/trackable.js'
 import {Statistics} from 'Statistics.js'
-import OldEdgenote from 'OldEdgenote.js'
+import {EdgenotesCard} from 'EdgenotesCard.js'
 import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
@@ -188,7 +188,6 @@ export class Card extends Trackable {
     super()
     this.state = {
       selectedEdgenote: null,
-      edgenoteSlugs: [],
       visible: false
     }
 
@@ -208,7 +207,6 @@ export class Card extends Trackable {
     window.addEventListener('scroll',  this.setNeedsCheckVisibility)
 
     this.setState({
-      edgenoteSlugs: gatherEdgenotes(this.props.card.content),
       interval: setInterval(this.checkVisibility.bind(this), 1000)
     })
 
@@ -222,15 +220,6 @@ export class Card extends Trackable {
     clearInterval(this.state.interval)
   }
 
-  componentWillReceiveProps(nextProps) {
-    let edgenoteSlugs = gatherEdgenotes(this.props.card.content)
-    if (!edgenoteSlugs.every((e, i) => {
-      return e === this.state.edgenoteSlugs[i]
-    })) {
-      this.setState({edgenoteSlugs: edgenoteSlugs})
-    }
-  }
-
   deleteCard() {
     let confirmation = window.confirm("\
 Are you sure you want to delete this card and its contents?\n\n\
@@ -241,11 +230,6 @@ This action cannot be undone.")
     Orchard.prune(`cards/${this.props.card.id}`).then((response) => {
       this.props.didSave(response, false, 'deleted')
     })
-  }
-
-  setEdgenotes(contents) {
-    let edgenoteSlugs = gatherEdgenotes(contents)
-    this.setState({edgenoteSlugs: edgenoteSlugs})
   }
 
   addAttributeToLinks(content, attribute) {
@@ -276,32 +260,6 @@ This action cannot be undone.")
     return { __html: content }
   }
 
-  renderEdgenotes() {
-    let edit = this.props.didSave !== null ? "/edit" : ""
-    let aside
-    if (this.state.edgenoteSlugs.length != 0) {
-      aside = <aside className="edgenotes">
-                {
-                  this.state.edgenoteSlugs.map( (slug) => {
-                    return (
-                      <OldEdgenote
-                        pathPrefix={this.props.selectedPage && `${edit}/${this.props.selectedPage}`}
-                        selected={slug == this.state.selectedEdgenote}
-                        slug={slug}
-                        key={`edgenote_${slug}`}
-                        handleHoverID={this.props.i}
-                        didSave={this.props.didSave}
-                        caseSlug={this.props.caseSlug}
-                        contents={this.props.edgenotes[slug]}
-                      />
-                      )
-                    } )
-                }
-              </aside>
-    }
-    return aside
-  }
-
   renderDeleteOption() {
     if (this.props.didSave !== null) {
       return <a onClick={this.deleteCard.bind(this)} className="Card-delete-option">Delete card</a>
@@ -326,7 +284,14 @@ This action cannot be undone.")
           </EditableHTML>
           {this.renderStats()}
         </div>
-        {this.renderEdgenotes()}
+        <EdgenotesCard
+          card={this.props.card}
+          caseSlug={this.props.caseSlug}
+          selectedPage={this.props.selectedPage}
+          selectedEdgenote={this.state.selectedEdgenote}
+          didSave={this.props.didSave}
+          edgenoteLibrary={this.props.edgenotes}
+        />
       </section>
     )
   }
