@@ -13,6 +13,7 @@ class CasesController < ApplicationController
 
   # GET /cases/1
   def show
+    authenticate_reader! unless @case.published
     authorize_action_for @case
     render layout: 'application'
   end
