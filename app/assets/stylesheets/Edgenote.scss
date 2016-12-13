@@ -1,32 +1,37 @@
 @import '_globals';
 @import '_flexbox';
 
+.c-edgenotes-card,
 aside.edgenotes {
   @include flexbox;
   @include flex-flow(row wrap);
-  @include justify-content(center);
 
   @include flex($fg: 1, $fs: 1, $fb: 20em);
 
   max-width: 36.3em;
 
+
+  height: 100%;
+}
+
+.c-edgenotes-card {
+  margin-top: 1.5em;
+}
+
+aside.edgenotes {
+  @include justify-content(center);
   margin: 9px;
   padding: 0.3em;
   padding-bottom: 0;
-
   @media screen and (min-width: $mobileCutoff) {
     margin: 10px 1em;
     padding: 0.5em;
   }
-
-  height: 100%;
-
   background-color: rgba( darken($black, 10%), 0.6 );
-
   border-radius: 2pt;
-
 }
 
+.edge,
 a.Edgenote {
   text-decoration: none;
 
@@ -38,14 +43,31 @@ a.Edgenote {
   height: 100%;
 
   margin: 0.5em;
-  padding: 0.11em;
 
   transition: all .15s cubic-bezier(.33, .66, .66, 1);
 
   @media screen and (min-width: $mobileCutoff) {
+    max-width: 20em;
+  }
+}
+
+.edge {
+  font-family: $sansFont;
+  font-weight: 500;
+  color: $white;
+
+  a {
+    color: inherit !important;
+    &:hover { color: inherit }
+  }
+}
+
+a.Edgenote {
+  padding: 0.11em;
+
+  @media screen and (min-width: $mobileCutoff) {
     margin: 0.5em;
     padding: 0.75em;
-    max-width: 20em;
   }
 
   & > div {

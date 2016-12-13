@@ -8,7 +8,6 @@ class Edgenote < ApplicationRecord
     embed_code photo_credit pdf_url pull_quote attribution call_to_action
                  audio_url youtube_slug)
 
-  validates :caption, :format, presence: true
   validates :format, inclusion: {in: %w{aside audio graphic link photo quote report video}}
 
   enum style: %i(v1 v2)
