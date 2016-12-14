@@ -16,7 +16,6 @@ aside.edgenotes {
 
 .c-edgenotes-card {
   margin: 0.5em auto;
-  text-align: center;
   @include justify-content(center);
 
   @media screen and (min-width: $mobileCutoff) {
@@ -25,7 +24,6 @@ aside.edgenotes {
 
   @media screen and (min-width: 1234px) {
     margin: 1.5em 1em 0 0;
-    text-align: left;
     @include justify-content(flex-start);
   }
 }
