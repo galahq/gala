@@ -58,7 +58,10 @@ a.Edgenote {
 
   a {
     color: inherit !important;
-    &:hover { color: inherit }
+    &:hover {
+      color: inherit;
+      background-color: transparent
+    }
   }
 }
 

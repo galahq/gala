@@ -76,6 +76,17 @@ class Page extends Trackable {
     return this.props.page.id !== nextProps.page.id
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {selectedEdgenote: null}
+  }
+
+  componentWillMount() {
+    window.handleEdgenoteHover = (slug) => {
+      this.setState({selectedEdgenote: slug})
+    }
+  }
+
   deletePage() {
     let confirmation = window.confirm("\
 Are you sure you want to delete this page and all of its cards?\n\n\
@@ -114,6 +125,7 @@ This action cannot be undone.")
           card={card}
           caseSlug={caseSlug}
           edgenotes={edgenotes}
+          selectedEdgenote={this.state.selectedEdgenote}
           reader={reader}
         />
       ]
@@ -187,17 +199,10 @@ export class Card extends Trackable {
   constructor() {
     super()
     this.state = {
-      selectedEdgenote: null,
       visible: false
     }
 
     this.setNeedsCheckVisibility = this.setNeedsCheckVisibility.bind(this)
-  }
-
-  componentWillMount() {
-    window["handleHover"+this.props.i] = (slug) => {
-      this.setState({selectedEdgenote: slug})
-    }
   }
 
   setNeedsCheckVisibility() { this.setState({needsCheckVisibility: true}) }
@@ -228,7 +233,7 @@ export class Card extends Trackable {
           card={this.props.card}
           caseSlug={this.props.caseSlug}
           selectedPage={this.props.selectedPage}
-          selectedEdgenote={this.state.selectedEdgenote}
+          selectedEdgenote={this.props.selectedEdgenote}
           didSave={this.props.didSave}
           edgenoteLibrary={this.props.edgenotes}
         />
@@ -256,9 +261,9 @@ This action cannot be undone.")
   }
 
   addHoverCallbacks(content) {
-    let mouseover = 'onmouseover=\'window.handleHover'+this.props.i+'(\"$2\")\''
+    let mouseover = 'onmouseover=\'window.handleEdgenoteHover'+'(\"$2\")\''
     content = this.addAttributeToLinks(content, mouseover)
-    let mouseout = 'onmouseout=\'window.handleHover'+this.props.i+'(null)\''
+    let mouseout = 'onmouseout=\'window.handleEdgenoteHover'+'(null)\''
     content = this.addAttributeToLinks(content, mouseout)
     return content
   }
