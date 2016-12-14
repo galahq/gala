@@ -72,7 +72,6 @@ const AudioPlayer = ({src}) => src
   ? <audio
     style={{width: '100%', borderRadius: 2, borderBottom: `4px solid ${lightGreen}`}}
     controls
-    preload
     src={src} />
   : null
 
