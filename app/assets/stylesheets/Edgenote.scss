@@ -15,7 +15,19 @@ aside.edgenotes {
 }
 
 .c-edgenotes-card {
-  margin-top: 1.5em;
+  margin: 0.5em auto;
+  text-align: center;
+  @include justify-content(center);
+
+  @media screen and (min-width: $mobileCutoff) {
+    margin: 0.5em 1.75em;
+  }
+
+  @media screen and (min-width: 1234px) {
+    margin: 1.5em 1em 0 0;
+    text-align: left;
+    @include justify-content(flex-start);
+  }
 }
 
 aside.edgenotes {

@@ -5,10 +5,12 @@ export const Edgenote = ({contents, selected}) => {
   let {slug, caption, youtubeSlug, pullQuote, imageUrl, callToAction, websiteUrl} = contents
 
   let ConditionalLink = callToAction ? "a" : "div"
+  let conditionalHoverCallbacks = callToAction
+    ? { onMouseEnter: () => {window.handleEdgenoteHover(slug)},
+        onMouseLeave: () => {window.handleEdgenoteHover(null)} }
+    : {}
 
-  return <figure className="edge" id={slug}
-           onMouseEnter={() => {window.handleEdgenoteHover(slug)}}
-           onMouseLeave={() => {window.handleEdgenoteHover(null)}}>
+  return <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
     <ConditionalLink target="_blank" href={websiteUrl}>
       <YouTube slug={youtubeSlug} />
       { !!youtubeSlug || <PullQuote contents={pullQuote} selected={selected} /> }
