@@ -7,6 +7,7 @@ import {Link} from 'react-router'
 import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
 import {Editable, EditableHTML} from 'Editable.js'
+import {EditableCard} from 'EditableCard.js'
 import {Orchard} from 'concerns/orchard.js'
 
 class Narrative extends React.Component {
@@ -300,9 +301,13 @@ This action cannot be undone.")
     let {solid, id, didSave, content} = this.props
     return <div className={solid ? "Card" : "nonCard"}>
       {this.renderDeleteOption()}
-      <EditableHTML uri={`cards/${id}:content`} placeholder="<!-- HTML content of card -->" didSave={didSave}>
+
+      <EditableCard content={content} didSave={didSave} />
+
+      {/*<EditableHTML uri={`cards/${id}:content`} placeholder="<!-- HTML content of card -->" didSave={didSave}>
         <div dangerouslySetInnerHTML={this.renderContent(content)}>{content}</div>
-      </EditableHTML>
+      </EditableHTML>*/}
+
       {this.renderStats()}
     </div>
   }
