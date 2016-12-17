@@ -13,7 +13,7 @@
     "url": "https://gitlab.com/michigansustainabilitycases/gala.git"
   },
   "author": "Cameron L Bothner",
-  "license": "---",
+  "license": "MIT",
   "dependencies": {
     "babel-core": "^6.3.26",
     "babel-loader": "^6.2.0",
@@ -21,8 +21,7 @@
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
-    "css-loader": "^0.23.1",
-    "express": "^4.13.3",
+    "draft-js": "facebook/draft-js#0.10-stable",
     "file-loader": "^0.8.5",
     "history": "^1.17.0",
     "json-loader": "^0.5.4",
@@ -41,8 +40,5 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.12.9",
     "whatwg-fetch": "^1.0.0"
-  },
-  "devDependencies": {
-    "webpack-dev-server": "^1.14.0"
   }
 }

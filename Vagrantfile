@@ -19,7 +19,7 @@ Vagrant.configure(2) do |config|
 
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
     wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
-    sudo apt-get update -y
+    curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 
     sudo apt-get --no-install-recommends install -y \
       postgresql postgresql-contrib-9.6 libpq-dev \
@@ -27,8 +27,9 @@ Vagrant.configure(2) do |config|
       build-essential libreadline-dev \
       libpq-dev libkrb5-dev \
       libxslt-dev libxml2-dev \
-      ruby-dev \
-      phantomjs
+      ruby-dev zlib1g-dev \
+      phantomjs \
+      git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev
 
     RUBY_VERSION=`ruby --version | cut -c6-10`
     if [ "x${RUBY_VERSION}" != "x2.3.1" ]; then
@@ -58,10 +59,7 @@ PSQL
     su vagrant -c "bundle exec rake db:create"
     su vagrant -c "bundle exec rake db:create RAILS_ENV=test"
 
-    wget -q http://nodejs.org/dist/v5.1.0/node-v5.1.0-linux-x64.tar.gz
-    sudo tar -C /usr/local --strip-components 1 -xzf node-v5.1.0-linux-x64.tar.gz
-    cd /vagrant
-    npm install
+    su vagrant -c "npm install"
 
     su vagrant -c "wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh"
 
