@@ -3,10 +3,28 @@ import {
   Editor,
   EditorState,
   CompositeDecorator,
-  convertToRaw,
-  convertFromRaw
+  RichUtils,
+  convertFromRaw,
+  DefaultDraftBlockRenderMap
 } from 'draft-js'
+import Immutable from 'immutable'
 import convertFromOldStyleCardSerialization from 'concerns/convertFromOldStyleCardSerialization.js'
+
+const blockRenderMap = Immutable.Map({
+  'unstyled': {
+    element: 'p'
+  }
+})
+const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap)
+
+const styleMap = {
+  'BOLD': {
+    fontWeight: 'inherit',
+    letterSpacing: 1,
+    fontVariant: 'small-caps'
+  },
+  'UNDERLINE': {}
+}
 
 export class EditableCard extends React.Component {
 
@@ -36,17 +54,31 @@ export class EditableCard extends React.Component {
       editorState: EditorState.createWithContent(contentState, decorator)
     }
 
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()))
+    this.handleKeyCommand = this.handleKeyCommand.bind(this)
+    this.onChange = (editorState) => {this.setState({editorState: editorState})}
   }
 
   render() {
     return <Editor
-      editorState={this.state.editorState}
+      blockRenderMap={extendedBlockRenderMap}
+      customStyleMap={styleMap}
+
       readOnly={!this.props.didSave}
-      onChange={(eS) => {this.setState({editorState: eS})}}
+      editorState={this.state.editorState}
+
+      handleKeyCommand={this.handleKeyCommand}
+      onChange={this.onChange}
     />
   }
 
+  handleKeyCommand(command) {
+    const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
+    if (newState) {
+      this.onChange(newState);
+      return 'handled';
+    }
+    return 'not-handled';
+  }
 }
 
 function getFindEntityFunction(type) {
@@ -66,7 +98,13 @@ function getFindEntityFunction(type) {
 
 const EdgenoteEntity = (props) => {
   let {slug} = props.contentState.getEntity(props.entityKey).getData()
-  return <a data-edgenote={slug}>{props.children}</a>
+  return <a
+    data-edgenote={slug}
+    onMouseOver={() => {window.handleEdgenoteHover(slug)}}
+    onMouseOut={() =>  {window.handleEdgenoteHover(null)}}
+  >
+    {props.children}
+  </a>
 }
 
 const CitationEntity = (props) => {
