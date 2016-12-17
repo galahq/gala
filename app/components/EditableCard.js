@@ -1,13 +1,12 @@
 import React from 'react'
 import {
   Editor,
-  ContentState,
   EditorState,
   CompositeDecorator,
-  convertFromHTML,
-  convertFromRaw,
-  convertToRaw
+  convertToRaw,
+  convertFromRaw
 } from 'draft-js'
+import convertFromOldStyleCardSerialization from 'concerns/convertFromOldStyleCardSerialization.js'
 
 export class EditableCard extends React.Component {
 
@@ -18,45 +17,26 @@ export class EditableCard extends React.Component {
 
     const decorator = new CompositeDecorator([
       {
-        strategy: findEdgenoteEntities,
-        component: EdgenoteHighlight
+        strategy: getFindEntityFunction('EDGENOTE'),
+        component: EdgenoteEntity
+      }, {
+        strategy: getFindEntityFunction('CITATION'),
+        component: CitationEntity
       }
     ])
 
-    const EdgenoteUrlPrefix = "http://learnmsc.org///edgenote/"
-
-    if (!rawContent) {
-      // If there is no RawDraftContentState persisted, we need to try to
-      // convert from the old way of serializing edgenotes and citations in HTML
-      // as anchors and cite tags.
-      // Since draft.js only preserves href from links, we're going to have to
-      // add a specially formatted href.
-      let transformedContent = content.replace(/data-edgenote="/g, `href="${EdgenoteUrlPrefix}`)
-      let blocksFromHTML = convertFromHTML(transformedContent)
-      var convertedRawContent = convertToRaw(ContentState.createFromBlockArray(
-        blocksFromHTML.contentBlocks,
-        blocksFromHTML.entityMap
-      ))
-
-      Object.keys(convertedRawContent.entityMap).forEach((key) => {
-        let entity = convertedRawContent.entityMap[`${key}`]
-        if (entity.data.url.startsWith(EdgenoteUrlPrefix)) {
-          convertedRawContent.entityMap[`${key}`] = {
-            type: "EDGENOTE",
-            mutability: "MUTABLE",
-            data: { slug: entity.data.url.match(RegExp(`${EdgenoteUrlPrefix}(.+)`))[1] }
-          }
-        }
-      })
-
-      contentState = convertFromRaw(convertedRawContent)
-    } else {
+    if (rawContent) {
       contentState = convertFromRaw(rawContent)
+    } else {
+      let convertedRawContent = convertFromOldStyleCardSerialization(content)
+      contentState = convertFromRaw(convertedRawContent)
     }
 
     this.state = {
       editorState: EditorState.createWithContent(contentState, decorator)
     }
+
+    console.log(convertToRaw(this.state.editorState.getCurrentContent()))
   }
 
   render() {
@@ -69,20 +49,34 @@ export class EditableCard extends React.Component {
 
 }
 
-function findEdgenoteEntities(contentBlock, callback, contentState) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-          contentState.getEntity(entityKey).getType() === 'EDGENOTE'
-      )
-    },
-    callback
-  )
+function getFindEntityFunction(type) {
+  return (contentBlock, callback, contentState) => {
+    contentBlock.findEntityRanges(
+      (character) => {
+        const entityKey = character.getEntity();
+        return (
+          entityKey !== null &&
+            contentState.getEntity(entityKey).getType() === type
+        )
+      },
+      callback
+    )
+  }
 }
 
-const EdgenoteHighlight = (props) => {
-  const {slug} = props.contentState.getEntity(props.entityKey).getData()
+const EdgenoteEntity = (props) => {
+  let {slug} = props.contentState.getEntity(props.entityKey).getData()
   return <a data-edgenote={slug}>{props.children}</a>
+}
+
+const CitationEntity = (props) => {
+  let {href, contents} = props.contentState.getEntity(props.entityKey).getData()
+  return <span className="citation" onClick={(e) => window.toggleCitation(e)}>
+    <span className="citation-label"><sup>◦</sup></span>
+    <cite>
+      {contents}
+      {" "}
+      <a href={href} target="_blank">Read more ›</a>
+    </cite>
+  </span>
 }
