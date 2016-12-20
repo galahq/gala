@@ -1,9 +1,18 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import {Link} from 'react-router'
 import {Orchard} from 'concerns/orchard.js'
 import {Statistics} from 'Statistics.js'
 
-class OldEdgenote extends React.Component {
+const mapStateToProps = (state, ownProps) => {
+  return {
+    ...ownProps,
+    contents: state.edgenotesBySlug[ownProps.slug],
+    selected: ownProps.slug === state.ui.highlightedEdgenote
+  }
+}
+
+class OldEdgenoteFigure extends React.Component {
 
   constructor() {
     super()
@@ -55,4 +64,5 @@ class OldEdgenote extends React.Component {
   }
 }
 
+const OldEdgenote = connect(mapStateToProps)(OldEdgenoteFigure)
 export default OldEdgenote

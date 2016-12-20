@@ -1,32 +1,8 @@
 import React from 'react'  // eslint-disable-line no-unused-vars
+import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
 
-const backgroundedStyle = {
-  backgroundColor: "#49647D",
-  padding: '0.5em 1em',
-  borderRadius: '2px 2px 0 0'
-}
-
-const lightGreen = "#6ACB72"
-
-const highlightableStyle = {
-  transition: `background .15s cubic-bezier(.33, .66, .66, 1),
-    box-shadow .15s cubic-bezier(.33, .66, .66, 1),
-    color .15s cubic-bezier(.33, .66, .66, 1)`
-}
-const highlightedStyle = {
-  backgroundColor: lightGreen,
-  color: "#000",
-  boxShadow: `
-    ${lightGreen} -0.15em 0      0,
-    ${lightGreen} -0.15em 0.05em 0,
-    ${lightGreen} 0.2em   0.05em 0,
-    ${lightGreen} 0.2em   0      0`
-}
-
-
-
-export const Edgenote = ({contents, selected}) => {
+const EdgenoteFigure = ({contents, selected}) => {
   let {slug, caption, youtubeSlug, pullQuote, imageUrl, callToAction,
     websiteUrl, audioUrl, attribution} = contents
 
@@ -111,3 +87,39 @@ const PullQuote = ({contents, selected}) => contents
 const Attribution = ({name}) => name
   ? <cite style={{textAlign: 'right', display: 'block', fontStyle: 'normal', margin: '0.5em 0 0.25em 0'}}>— {name}</cite>
   : null
+
+
+
+const backgroundedStyle = {
+  backgroundColor: "#49647D",
+  padding: '0.5em 1em',
+  borderRadius: '2px 2px 0 0'
+}
+
+const lightGreen = "#6ACB72"
+
+const highlightableStyle = {
+  transition: `background .15s cubic-bezier(.33, .66, .66, 1),
+    box-shadow .15s cubic-bezier(.33, .66, .66, 1),
+    color .15s cubic-bezier(.33, .66, .66, 1)`
+}
+const highlightedStyle = {
+  backgroundColor: lightGreen,
+  color: "#000",
+  boxShadow: `
+    ${lightGreen} -0.15em 0      0,
+    ${lightGreen} -0.15em 0.05em 0,
+    ${lightGreen} 0.2em   0.05em 0,
+    ${lightGreen} 0.2em   0      0`
+}
+
+
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    selected: ownProps.slug === state.ui.highlightedEdgenote,
+    contents: state.edgenotesBySlug[ownProps.slug]
+  }
+}
+
+export const Edgenote = connect(mapStateToProps)(EdgenoteFigure)

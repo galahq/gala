@@ -10,6 +10,8 @@ import {
 import Immutable from 'immutable'
 import convertFromOldStyleCardSerialization from 'concerns/convertFromOldStyleCardSerialization.js'
 
+import EdgenoteEntity from 'EdgenoteEntity.js'
+
 const blockRenderMap = Immutable.Map({
   'unstyled': {
     element: 'p'
@@ -94,17 +96,6 @@ function getFindEntityFunction(type) {
       callback
     )
   }
-}
-
-const EdgenoteEntity = (props) => {
-  let {slug} = props.contentState.getEntity(props.entityKey).getData()
-  return <a
-    data-edgenote={slug}
-    onMouseOver={() => {window.handleEdgenoteHover(slug)}}
-    onMouseOut={() =>  {window.handleEdgenoteHover(null)}}
-  >
-    {props.children}
-  </a>
 }
 
 const CitationEntity = (props) => {

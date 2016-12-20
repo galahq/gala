@@ -15,7 +15,7 @@ export class EdgenotesCard extends React.Component {
   }
 
   render() {
-    let {edgenoteLibrary, caseSlug, selectedPage, selectedEdgenote, didSave } = this.props
+    let {edgenoteLibrary, caseSlug, selectedPage, didSave } = this.props
     let edit = didSave !== null ? "/edit" : ""
 
     let edgenotes = this.edgenotes()
@@ -29,10 +29,8 @@ export class EdgenotesCard extends React.Component {
           (slug) => {
             return <AnEdgenote
               slug={slug}
-              contents={edgenoteLibrary[slug]}
               caseSlug={caseSlug}
               pathPrefix={`${edit}/${selectedPage}`}
-              selected={slug == selectedEdgenote}
               key={`${slug}`}
               didSave={didSave}
             />

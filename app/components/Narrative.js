@@ -261,14 +261,6 @@ This action cannot be undone.")
     return content.replace(/(data-edgenote=\"([a-zA-Z0-9-]+)\")/g, '$1 ' + attribute)
   }
 
-  addHoverCallbacks(content) {
-    let mouseover = 'onmouseover=\'window.handleEdgenoteHover'+'(\"$2\")\''
-    content = this.addAttributeToLinks(content, mouseover)
-    let mouseout = 'onmouseout=\'window.handleEdgenoteHover'+'(null)\''
-    content = this.addAttributeToLinks(content, mouseout)
-    return content
-  }
-
   addHREF(content, firstPartOfPath) {
     return this.addAttributeToLinks(content, `href=\"#${firstPartOfPath || ""}/edgenotes/$2\"`)
   }
@@ -279,7 +271,6 @@ This action cannot be undone.")
 
   renderContent() {
     var {content} = this.props
-    content = this.addHoverCallbacks(content)
     content = this.addHREF(content, this.props.selectedPage && `/${this.props.selectedPage}`)
     content = this.renderCitations(content)
     return { __html: content }
@@ -298,7 +289,7 @@ This action cannot be undone.")
   }
 
   render() {
-    let {solid, id, didSave, content} = this.props
+    let {solid, didSave, content} = this.props
     return <div className={solid ? "Card" : "nonCard"}>
       {this.renderDeleteOption()}
 

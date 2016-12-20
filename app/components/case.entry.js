@@ -1,5 +1,9 @@
-import React from 'react';
-import { render } from 'react-dom';
+import React from 'react'
+import { render } from 'react-dom'
+
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+
 import { Router, Route, IndexRoute, useRouterHistory, Redirect } from 'react-router'
 import { createHashHistory } from 'history'
 
@@ -9,6 +13,15 @@ import {CaseOverview} from 'CaseOverview.js'
 import EdgenoteGallery from 'EdgenoteGallery.js'
 import {PodcastOverview} from 'Podcast.js'
 import EdgenoteContents from 'EdgenoteContents.js'
+
+const gala = (state, action) => {
+  switch (action.type) {
+    case 'HIGHLIGHT_EDGENOTE': return {...state, ui:{...state.ui, highlightedEdgenote: action.edgenoteSlug}}
+    default: return state
+  }
+}
+let store = createStore(gala, {edgenotesBySlug: window.caseData.edgenotes, ui: {highlightedEdgenote: null}})
+// Feed the edgenotes with the redux store, just for kicks.
 
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false  })
 
@@ -23,14 +36,16 @@ let authenticatedRoutes = [
 ]
 
 render((
-  <Router history={appHistory}>
-    <Route path="/(edit)" component={Case}>
-      <IndexRoute component={CaseOverview} />
+  <Provider store={store}>
+    <Router history={appHistory}>
+      <Route path="/(edit)" component={Case}>
+        <IndexRoute component={CaseOverview} />
 
-      { window.caseData.reader
-        ? authenticatedRoutes
-        : <Redirect from="*" to="/" /> }
+        { window.caseData.reader
+          ? authenticatedRoutes
+          : <Redirect from="*" to="/" /> }
 
-    </Route>
-  </Router>
+      </Route>
+    </Router>
+  </Provider>
 ), document.getElementById('container'))
