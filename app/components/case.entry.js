@@ -17,10 +17,17 @@ import EdgenoteContents from 'EdgenoteContents.js'
 const gala = (state, action) => {
   switch (action.type) {
     case 'HIGHLIGHT_EDGENOTE': return {...state, ui:{...state.ui, highlightedEdgenote: action.edgenoteSlug}}
+    case 'ACTIVATE_EDGENOTE': return {...state, ui: {...state.ui, activeEdgenote: action.edgenoteSlug}}
     default: return state
   }
 }
-let store = createStore(gala, {edgenotesBySlug: window.caseData.edgenotes, ui: {highlightedEdgenote: null}})
+let store = createStore(gala, {
+  edgenotesBySlug: window.caseData.edgenotes,
+  ui: {
+    highlightedEdgenote: null,
+    activeEdgenote: null
+  }
+})
 // Feed the edgenotes with the redux store, just for kicks.
 
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false  })

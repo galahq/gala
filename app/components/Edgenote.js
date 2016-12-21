@@ -1,55 +1,112 @@
 import React from 'react'  // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
+import YoutubePlayer from 'react-youtube-player'
 
-const EdgenoteFigure = ({contents, selected}) => {
-  let {slug, caption, youtubeSlug, pullQuote, imageUrl, callToAction,
-    websiteUrl, audioUrl, attribution} = contents
+class EdgenoteFigure extends React.Component {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.active && this.props.active) {
+      if (this.props.contents.callToAction && this.props.contents.websiteUrl) {
+        window.open(this.props.contents.websiteUrl, '_blank')
+        setTimeout(() => {this.props.deactivate()}, 300)
+      }
+    }
+  }
 
-  let ConditionalLink = callToAction ? "a" : "div"
-  let conditionalHoverCallbacks = callToAction
-    ? { onMouseEnter: () => {window.handleEdgenoteHover(slug)},
-        onMouseLeave: () => {window.handleEdgenoteHover(null)} }
+  render() {
+    let {contents, selected, active, activate, deactivate, onMouseOver, onMouseOut} = this.props
+    let {slug, caption, youtubeSlug, pullQuote, imageUrl, callToAction,
+      websiteUrl, audioUrl, attribution} = contents
+
+    let ConditionalLink = callToAction ? "a" : "div"
+    let conditionalHoverCallbacks = callToAction
+    ? { onMouseEnter: onMouseOver,
+      onMouseLeave: onMouseOut }
     : {}
 
-  return <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
-    <ConditionalLink target="_blank" href={websiteUrl}>
-      <YouTube slug={youtubeSlug} />
-      { !!youtubeSlug || !!pullQuote || <Image src={imageUrl} /> }
+    let activationProps = {active: active, activate: activate, deactivate: deactivate}
 
-      <Background visible={!!audioUrl}>
-        { !!youtubeSlug || <PullQuote contents={pullQuote} selected={selected} /> }
-        <Attribution name={attribution} />
-      </Background>
-      <AudioPlayer src={audioUrl} />
+    return <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
+      <ConditionalLink target="_blank" href={websiteUrl}>
 
-      <Caption contents={caption} selected={selected} />
-      <CallToAction contents={callToAction} />
-    </ConditionalLink>
-  </figure>
+        <YouTube slug={youtubeSlug} {...activationProps} />
+
+        { !!youtubeSlug || !!pullQuote ||
+          <Image src={imageUrl} {...activationProps} /> }
+
+          <Background visible={!!audioUrl}>
+            { !!youtubeSlug || <PullQuote contents={pullQuote} selected={selected} /> }
+            <Attribution name={attribution} />
+          </Background>
+          <AudioPlayer src={audioUrl} {...activationProps} />
+
+          <Caption contents={caption} selected={selected} />
+          <CallToAction contents={callToAction} />
+
+        </ConditionalLink>
+      </figure>
+  }
 }
 
-const Image = ({src}) => src
+const mapStateToProps = (state, ownProps) => {
+  return {
+    selected: ownProps.slug === state.ui.highlightedEdgenote,
+    active: ownProps.slug === state.ui.activeEdgenote,
+    contents: state.edgenotesBySlug[ownProps.slug]
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    activate: () => { dispatch({type: 'ACTIVATE_EDGENOTE', edgenoteSlug: ownProps.slug}) },
+    deactivate: () => { dispatch({type: 'ACTIVATE_EDGENOTE', edgenoteSlug: null}) },
+    onMouseOver: () => { dispatch({type: 'HIGHLIGHT_EDGENOTE', edgenoteSlug: ownProps.slug}) },
+    onMouseOut: () => { dispatch({type: 'HIGHLIGHT_EDGENOTE', edgenoteSlug: null}) }
+  }
+}
+
+export const Edgenote = connect(mapStateToProps, mapDispatchToProps)(EdgenoteFigure)
+
+
+
+const YouTube = ({slug, active, activate, deactivate}) => slug
+  ? <YoutubePlayer
+    videoId={slug}
+    playbackState={active ? 'playing' : 'paused'}
+    onPlay={activate}
+    onPause={deactivate}
+    configuration={{
+      theme: 'light'
+    }}
+  />
+  : null
+
+const Image = ({src, active}) => src
   ? <ImageZoom
+      isZoomed={active}
       shouldRespectMaxDimension
       defaultStyles={{overlay: {backgroundColor: '#1D2934'}}}
-      image={{style: {width: '100%', minHeight: '3em'}, src: src}} />
+      image={{style: {width: '100%', minHeight: '3em', display: 'block'}, src: src}} />
   : null
 
-const YouTube = ({slug}) => slug
-  ? <iframe
-      style={{width: '100%'}}
-      src={`https://www.youtube.com/embed/${slug}` }
-      frameBorder="0"
-      allowFullScreen />
-  : null
+class AudioPlayer extends React.Component {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.active && this.props.active) {
+      this.audioPlayer && this.audioPlayer.play()
+    }
+  }
 
-const AudioPlayer = ({src}) => src
-  ? <audio
-    style={{width: '100%', borderRadius: 2, borderBottom: `4px solid ${lightGreen}`}}
-    controls
-    src={src} />
-  : null
+  render() {
+    let {src} = this.props
+    return src
+    ? <audio
+      ref={c => {this.audioPlayer = c}}
+      style={{width: '100%', borderRadius: 2, borderBottom: `4px solid ${lightGreen}`}}
+      controls
+      src={src} />
+    : null
+  }
+}
 
 const Background = ({visible, children}) => <div style={visible ? backgroundedStyle : {}}>{children}</div>
 
@@ -59,15 +116,14 @@ const CallToAction = ({contents}) => contents
 
 
 const Caption = ({contents, selected}) => contents
-  ? <figcaption
+  ? <div style={{margin: '0.25em 0 0 0'}}><figcaption
     style={{
-      margin: '0.25em 0 0 0',
       fontSize: "110%",
       lineHeight: 1.1,
       display: "inline",
       ...highlightableStyle,
       ...(selected && highlightedStyle)
-    }}>{contents}</figcaption>
+    }}>{contents}</figcaption></div>
   : null
 
 const PullQuote = ({contents, selected}) => contents
@@ -111,15 +167,5 @@ const highlightedStyle = {
     ${lightGreen} -0.15em 0.05em 0,
     ${lightGreen} 0.2em   0.05em 0,
     ${lightGreen} 0.2em   0      0`
+
 }
-
-
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    selected: ownProps.slug === state.ui.highlightedEdgenote,
-    contents: state.edgenotesBySlug[ownProps.slug]
-  }
-}
-
-export const Edgenote = connect(mapStateToProps)(EdgenoteFigure)
