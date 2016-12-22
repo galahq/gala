@@ -119,7 +119,7 @@ This action cannot be undone.")
     var cards = page.cards.map( (card, i) => {
       return [
         this.renderCreateCardLink(i),
-        <Card i={i} key={card.id}
+        <Card id={card.id} key={card.id}
           didSave={didSave}
           selectedPage={page.position}
           solid={card.solid}
@@ -168,7 +168,7 @@ export class Card extends Trackable {
     card_id: this.props.card.id
   } }
   newPropsAreDifferent(nextProps) {
-    return this.props.card.id !== nextProps.card.id
+    return this.props.id !== nextProps.id
   }
 
   isVisible(threshold, mode) {
@@ -255,25 +255,6 @@ This action cannot be undone.")
     Orchard.prune(`cards/${this.props.id}`).then((response) => {
       this.props.didSave(response, false, 'deleted')
     })
-  }
-
-  addAttributeToLinks(content, attribute) {
-    return content.replace(/(data-edgenote=\"([a-zA-Z0-9-]+)\")/g, '$1 ' + attribute)
-  }
-
-  addHREF(content, firstPartOfPath) {
-    return this.addAttributeToLinks(content, `href=\"#${firstPartOfPath || ""}/edgenotes/$2\"`)
-  }
-
-  renderCitations(content) {
-    return content.replace(/(<cite>.+?<\/cite>)/g, '<span class="citation" onclick="toggleCitation(event)"><span class="citation-label"><sup>◦</sup></span>$1</span>')
-  }
-
-  renderContent() {
-    var {content} = this.props
-    content = this.addHREF(content, this.props.selectedPage && `/${this.props.selectedPage}`)
-    content = this.renderCitations(content)
-    return { __html: content }
   }
 
   renderDeleteOption() {

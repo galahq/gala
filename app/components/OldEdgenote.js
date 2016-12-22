@@ -8,7 +8,14 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
     contents: state.edgenotesBySlug[ownProps.slug],
-    selected: ownProps.slug === state.ui.highlightedEdgenote
+    selected: ownProps.slug === state.ui.highlightedEdgenote,
+    active: ownProps.slug === state.ui.activeEdgenote
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deactivate: () => { dispatch({type: 'ACTIVATE_EDGENOTE', edgenoteSlug: null}) }
   }
 }
 
@@ -17,6 +24,13 @@ class OldEdgenoteFigure extends React.Component {
   constructor() {
     super()
     this.state = { hovering: false }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.active && this.props.active) {
+      window.location.hash = `#${this.props.pathPrefix || ""}/edgenotes/${this.props.slug}`
+      setTimeout(() => {this.props.deactivate()}, 300)
+    }
   }
 
   createEdgenote() {
@@ -64,5 +78,5 @@ class OldEdgenoteFigure extends React.Component {
   }
 }
 
-const OldEdgenote = connect(mapStateToProps)(OldEdgenoteFigure)
+const OldEdgenote = connect(mapStateToProps, mapDispatchToProps)(OldEdgenoteFigure)
 export default OldEdgenote
