@@ -1,16 +1,18 @@
 import React from 'react'  // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 
+import { openCitation } from 'redux/actions.js'
+
 const mapStateToProps = (state, ownProps) => {
   return {
-    isOpen: state.ui.openCitation === ownProps.entityKey
+    isOpen: state.ui.openCitation === ownProps.entityKey,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    open: () => {dispatch({type: 'OPEN_CITATION', entityKey: ownProps.entityKey})},
-    close: () => {dispatch({type: 'OPEN_CITATION', entityKey: null})}
+    open: () => {dispatch( openCitation(ownProps.entityKey) )},
+    close: () => {dispatch( openCitation(null) )},
   }
 }
 
@@ -44,7 +46,7 @@ class CitationSpan extends React.Component {
       position: 'absolute',
       left: left,
       top: top,
-      transform: "translate(-50%, calc(-100% + 6px))"
+      transform: "translate(-50%, calc(-100% + 6px))",
     }
   }
 }
@@ -60,7 +62,7 @@ const styles = {
     cursor: 'pointer',
     display: 'inline-block',
     marginLeft: -2,
-    width: 8
+    width: 8,
   },
   tooltip: {
     background: "#6ACB72",
@@ -70,6 +72,6 @@ const styles = {
     display: 'block',
     font: "14px tenso",
     maxWidth: "20em",
-    padding: "0.25em 0.5em"
-  }
+    padding: "0.25em 0.5em",
+  },
 }

@@ -14,23 +14,9 @@ import EdgenoteGallery from 'EdgenoteGallery.js'
 import {PodcastOverview} from 'Podcast.js'
 import EdgenoteContents from 'EdgenoteContents.js'
 
-const gala = (state, action) => {
-  switch (action.type) {
-    case 'HIGHLIGHT_EDGENOTE': return {...state, ui:{...state.ui, highlightedEdgenote: action.edgenoteSlug}}
-    case 'ACTIVATE_EDGENOTE': return {...state, ui: {...state.ui, activeEdgenote: action.edgenoteSlug}}
-    case 'OPEN_CITATION': return {...state, ui: {...state.ui, openCitation: action.entityKey}}
-    default: return state
-  }
-}
-let store = createStore(gala, {
-  edgenotesBySlug: window.caseData.edgenotes,
-  ui: {
-    highlightedEdgenote: null,
-    activeEdgenote: null,
-    openCitation: null
-  }
-})
-// Feed the edgenotes with the redux store, just for kicks.
+import reducer from 'redux/reducers.js'
+
+let store = createStore(reducer)
 
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false  })
 
@@ -41,7 +27,7 @@ let authenticatedRoutes = [
   <Route onEnter={() => window.scrollTo(0, 0)} path=":selectedPage" component={CaseReader}>
     <Route path="edgenotes/:edgenoteID" component={EdgenoteContents} />
   </Route>,
-  <Route path="podcasts/:podcastID" component={PodcastOverview} />
+  <Route path="podcasts/:podcastID" component={PodcastOverview} />,
 ]
 
 render((
