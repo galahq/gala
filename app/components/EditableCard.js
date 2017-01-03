@@ -11,6 +11,7 @@ import Immutable from 'immutable'
 import convertFromOldStyleCardSerialization from 'concerns/convertFromOldStyleCardSerialization.js'
 
 import EdgenoteEntity from 'EdgenoteEntity.js'
+import CitationEntity from 'CitationEntity.js'
 
 const blockRenderMap = Immutable.Map({
   'unstyled': {
@@ -96,16 +97,4 @@ function getFindEntityFunction(type) {
       callback
     )
   }
-}
-
-const CitationEntity = (props) => {
-  let {href, contents} = props.contentState.getEntity(props.entityKey).getData()
-  return <span className="citation" onClick={(e) => window.toggleCitation(e)}>
-    <span className="citation-label"><sup>◦</sup></span>
-    <cite>
-      {contents}
-      {" "}
-      <a href={href} target="_blank">Read more ›</a>
-    </cite>
-  </span>
 }

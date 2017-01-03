@@ -18,6 +18,7 @@ const gala = (state, action) => {
   switch (action.type) {
     case 'HIGHLIGHT_EDGENOTE': return {...state, ui:{...state.ui, highlightedEdgenote: action.edgenoteSlug}}
     case 'ACTIVATE_EDGENOTE': return {...state, ui: {...state.ui, activeEdgenote: action.edgenoteSlug}}
+    case 'OPEN_CITATION': return {...state, ui: {...state.ui, openCitation: action.entityKey}}
     default: return state
   }
 }
@@ -25,7 +26,8 @@ let store = createStore(gala, {
   edgenotesBySlug: window.caseData.edgenotes,
   ui: {
     highlightedEdgenote: null,
-    activeEdgenote: null
+    activeEdgenote: null,
+    openCitation: null
   }
 })
 // Feed the edgenotes with the redux store, just for kicks.
