@@ -12,15 +12,10 @@
     "template": [
       "import React from 'react'",
       "",
-      "export class {camelcase|capitalize|dot} extends React.Component {",
+      "const {camelcase|capitalize|dot} () =>",
+      "  <div />",
       "",
-      "  render() {",
-      "    return (",
-      "      <div />",
-      "    )",
-      "  }",
-      "",
-      "}"
+      "export default {camelcase|capitalize|dot}"
     ],
     "related": "app/assets/stylesheets/{camelcase|capitalize}.css.scss"
   }

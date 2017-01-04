@@ -4,16 +4,24 @@ json.base_cover_url c.cover_url
 json.small_cover_url ix_cover_image(c, :small)
 json.cover_url ix_cover_image(c, :billboard)
 json.translators translators_string c
+
 json.pages c.pages do |page|
   json.id page.id
   json.position page.position
   json.title page.title
-  if reader_signed_in?
-    json.cards page.cards do |card|
+  json.cards page.cards do |card|
+    json.partial! card
+  end
+end
+
+json.cards do
+  c.cards.each do |card|
+    json.set! card.id do
       json.partial! card
     end
   end
 end
+
 json.edgenotes do
   c.edgenotes.each do |edgenote|
     json.set! edgenote.slug do
@@ -21,6 +29,7 @@ json.edgenotes do
     end
   end
 end
+
 json.podcasts c.podcasts do |podcast|
   json.partial! podcast
 end

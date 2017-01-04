@@ -1,13 +1,11 @@
 import React from 'react'
 import {findDOMNode} from 'react-dom'
 import {Trackable} from 'concerns/trackable.js'
-import {Statistics} from 'Statistics.js'
 import {EdgenotesCard} from 'EdgenotesCard.js'
 import {Link} from 'react-router'
-import gatherEdgenotes from 'concerns/gatherEdgenotes.js';
 import {I18n} from 'I18n.js'
-import {Editable, EditableHTML} from 'Editable.js'
-import {EditableCard} from 'EditableCard.js'
+import {Editable} from 'Editable.js'
+import CardContents from 'CardContents.js'
 import {Orchard} from 'concerns/orchard.js'
 
 class Narrative extends React.Component {
@@ -229,7 +227,7 @@ export class Card extends Trackable {
   render() {
     return (
       <section>
-        <CardContents {...this.props} {...this.props.card} />
+        <CardContents id={this.props.card.id} didSave={this.props.didSave} />
         <EdgenotesCard
           card={this.props.card}
           caseSlug={this.props.caseSlug}
@@ -240,47 +238,5 @@ export class Card extends Trackable {
         />
       </section>
     )
-  }
-}
-
-class CardContents extends React.Component {
-
-  deleteCard() {
-    let confirmation = window.confirm("\
-Are you sure you want to delete this card and its contents?\n\n\
-Edgenotes attached to it will not be deleted, although they will be detached.\n\n\
-This action cannot be undone.")
-    if (!confirmation) { return }
-
-    Orchard.prune(`cards/${this.props.id}`).then((response) => {
-      this.props.didSave(response, false, 'deleted')
-    })
-  }
-
-  renderDeleteOption() {
-    if (this.props.didSave !== null) {
-      return <a onClick={this.deleteCard.bind(this)} className="Card-delete-option">Delete card</a>
-    }
-  }
-
-  renderStats() {
-    if (this.props.solid && this.props.didSave === null) {
-      return <Statistics statistics={this.props.card.statistics} reader={this.props.reader} />
-    }
-  }
-
-  render() {
-    let {solid, didSave, content} = this.props
-    return <div className={solid ? "Card" : "nonCard"}>
-      {this.renderDeleteOption()}
-
-      <EditableCard content={content} didSave={didSave} />
-
-      {/*<EditableHTML uri={`cards/${id}:content`} placeholder="<!-- HTML content of card -->" didSave={didSave}>
-        <div dangerouslySetInnerHTML={this.renderContent(content)}>{content}</div>
-      </EditableHTML>*/}
-
-      {this.renderStats()}
-    </div>
   }
 }
