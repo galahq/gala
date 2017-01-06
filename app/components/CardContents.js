@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import { Editor, RichUtils } from 'draft-js'
 import { blockRenderMap, customStyleMap } from 'concerns/draftConfig.js'
 
+import EditorToolbar from 'EditorToolbar.js'
 import { Statistics } from 'Statistics.js'
 
 import { updateCardContents } from 'redux/actions.js'
@@ -18,8 +19,9 @@ const mapStateToProps = (state, ownProps) => {
   let {solid, statistics, editorState} = state.cardsById[ownProps.id]
 
   return {
-    //editing: state.editing,
-    editing: ownProps.didSave !== null,
+    //editable: state.editing,
+    editable: ownProps.didSave !== null,
+    editing: editorState.getSelection().hasFocus,
     solid,
     statistics,
     editorState,
@@ -56,25 +58,23 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-const CardContents = ({solid, statistics, editing, editorState, onChange,
+const CardContents = ({solid, statistics, editable, editing, editorState, onChange,
                       handleKeyCommand, onDelete}) =>
-  <div className={solid ? 'Card' : 'nonCard'}>
-    { editing && <a className="Card-delete-option" onClick={onDelete}>
-      Delete card
-    </a> }
+  <div className={solid ? 'Card' : 'nonCard'} style={{transition: 'padding-top .1s', paddingTop: editing && '2em'}}>
 
+    {editing && <EditorToolbar editorState={editorState} onChange={onChange} />}
     <Editor
       blockRenderMap={blockRenderMap}
       customStyleMap={customStyleMap}
 
-      readOnly={!editing}
+      readOnly={!editable}
       editorState={editorState}
 
       handleKeyCommand={handleKeyCommand}
       onChange={onChange}
     />
 
-    { solid && editing && <Statistics statistics={statistics} /> }
+    { solid && editable && <Statistics statistics={statistics} /> }
   </div>
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(CardContents)

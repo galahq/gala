@@ -12,7 +12,7 @@
     "template": [
       "import React from 'react'",
       "",
-      "const {camelcase|capitalize|dot} () =>",
+      "const {camelcase|capitalize|dot} = () =>",
       "  <div />",
       "",
       "export default {camelcase|capitalize|dot}"

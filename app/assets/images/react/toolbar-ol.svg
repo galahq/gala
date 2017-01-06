@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>toolbar-ol</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="-102" y="-15" width="212" height="56"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="212" height="56" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <use id="Rectangle-3" stroke="#BFBDAF" mask="url(#mask-2)" stroke-width="2" fill="#D6D4CA" xlink:href="#path-1"></use>
+        <g id="toolbar-ol">
+            <rect id="Rectangle-2-Copy-3" fill="#BFBDB1" x="0" y="0" width="24" height="24"></rect>
+            <path d="M8.33333333,7.25 L19.6666667,7.25" id="Shape" stroke="#000000"></path>
+            <path d="M8.33333333,12.7045455 L19.6666667,12.7045455" id="Shape" stroke="#000000"></path>
+            <path d="M8.33333333,18.1590909 L19.6666667,18.1590909" id="Shape" stroke="#000000"></path>
+            <polyline id="Shape" stroke="#000000" points="5.33333333 8.61363636 5.33333333 5.93613636 4.33333333 6.93431818"></polyline>
+            <path d="M5.71266667,14.0681818 L4.33333333,14.0681818 C5.32,12.7045455 5.66666667,12.8163636 5.66666667,12.0479545 C5.66666667,11.6715909 5.36733333,11.3784091 5,11.3784091 C4.63133333,11.3784091 4.35666667,11.6661364 4.35666667,12.0425" id="Shape" stroke="#000000"></path>
+            <path d="M4.33333333,16.7954545 L5.62066667,16.7954545 L4.954,17.8434091 C5.50466667,17.8434091 5.62066667,18.1713636 5.62066667,18.5122727 C5.62066667,18.8531818 5.50466667,19.1818182 4.954,19.1818182 L4.33333333,19.1818182" id="Shape" stroke="#000000"></path>
+        </g>
+    </g>
+</svg>

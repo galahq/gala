@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>toolbar-edgenote</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="-128" y="-15" width="212" height="56"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="212" height="56" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <use id="Rectangle-3" stroke="#BFBDAF" mask="url(#mask-2)" stroke-width="2" fill="#D6D4CA" xlink:href="#path-1"></use>
+        <g id="toolbar-edgenote">
+            <rect id="Rectangle-2-Copy-4" fill="#BFBDB1" x="0" y="0" width="24" height="24"></rect>
+            <polygon id="Shape" stroke="#000000" points="8.6565097 8.98614958 12.2465374 11.2299169 8.6565097 13.4736842"></polygon>
+            <polyline id="Shape" stroke="#000000" points="11.3157895 18.2936288 5.33240997 18.2936288 5.33240997 4.33240997 12.6454294 4.33240997 15.9695291 7.6565097 15.9695291 10.3157895"></polyline>
+            <polyline id="Shape" stroke="#000000" points="12.6454294 4.33240997 12.6454294 7.6565097 15.9695291 7.6565097"></polyline>
+            <ellipse id="Oval" stroke="#000000" cx="16.634349" cy="15.634349" rx="3.98891967" ry="3.98891967"></ellipse>
+            <path d="M14.1246537,15.634349 L18.9899055,15.634349" id="Shape" stroke="#000000"></path>
+            <path d="M16.634349,17.9861496 L16.634349,13.1246537" id="Shape" stroke="#000000"></path>
+        </g>
+    </g>
+</svg>
