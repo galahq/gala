@@ -74,7 +74,7 @@ const CardContents = ({solid, statistics, editable, editing, editorState, onChan
       onChange={onChange}
     />
 
-    { solid && editable && <Statistics statistics={statistics} /> }
+    { solid && !editable && <Statistics statistics={statistics} /> }
   </div>
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(CardContents)
