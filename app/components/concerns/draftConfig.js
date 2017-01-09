@@ -1,6 +1,9 @@
 import {
   CompositeDecorator,
   DefaultDraftBlockRenderMap,
+  RichUtils,
+  Modifier,
+  EditorState,
 } from 'draft-js'
 import Immutable from 'immutable'
 
@@ -21,6 +24,9 @@ export const customStyleMap = {
     fontVariant: 'small-caps',
   },
   'UNDERLINE': {},
+  'SELECTION': {
+    backgroundColor: '#ccc',
+  },
 }
 
 function getFindEntityFunction(type) {
@@ -47,3 +53,32 @@ export const decorator = new CompositeDecorator([
     component: CitationEntity,
   },
 ])
+
+// We need the selection to remain visible while the user interacts with the
+// edgenote creation popover, so we add an inline style of type "SELECTION",
+// which gives a grey background.
+export function addShadowSelection(editorState) {
+  if (!editorState.getSelection().isCollapsed()) {
+    return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
+  } else {
+    return editorState
+  }
+}
+
+export function removeShadowSelection(editorState) {
+  if (editorState.getCurrentInlineStyle().has('SELECTION')) {
+    return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
+  } else {
+    return editorState
+  }
+}
+
+
+export function addEntity(editorState, {type, mutability, data}) {
+  const contentState = editorState.getCurrentContent()
+  const contentStateWithEntity = contentState.createEntity(type, mutability, data)
+  const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
+  const contentStateWithEntityApplied = Modifier.applyEntity(contentStateWithEntity, editorState.getSelection(), entityKey)
+  const editorStateWithEntity = EditorState.set(editorState, {currentContent: contentStateWithEntityApplied})
+  return editorStateWithEntity
+}

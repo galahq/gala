@@ -1,6 +1,11 @@
 import React from 'react'
-import { RichUtils } from 'draft-js'
+import {
+  EditorState,
+  Modifier,
+  RichUtils,
+} from 'draft-js'
 
+import { addEntity } from 'concerns/draftConfig.js'
 
 const EditorToolbar = ({editorState, onChange}) => {
   let toggleInline = (style) => () => {
@@ -11,25 +16,41 @@ const EditorToolbar = ({editorState, onChange}) => {
     onChange(RichUtils.toggleBlockType(editorState, type))
   }
 
+  let addCitation = () => {
+    const selection = editorState.getSelection()
+    const collapsedSelection = selection.merge({
+      anchorOffset: selection.getEndOffset(),
+      focusOffset: selection.getEndOffset(),
+    })
+    const contentStateWithCircle = Modifier.insertText(
+      editorState.getCurrentContent(),
+      collapsedSelection,
+      "°",
+    )
+    const circleSelection = collapsedSelection.merge({focusOffset: collapsedSelection.focusOffset + 1})
+    const editorStateWithCircle = EditorState.set(editorState, {currentContent: contentStateWithCircle})
+    const newEditorState = EditorState.forceSelection(editorStateWithCircle, circleSelection)
+    onChange(addEntity(newEditorState, {type: 'CITATION', mutability: 'IMMUTABLE', data: {}}))
+  }
+
   return <div className="c-editor-toolbar" style={styles.bar}>
-    <a onMouseDown={e => e.preventDefault()} onClick={toggleInline('BOLD')}
-      dangerouslySetInnerHTML={{__html: require(`toolbar-small-caps.svg`)}} />
-
-    <a onMouseDown={e => e.preventDefault()} onClick={toggleInline('ITALIC')}
-      dangerouslySetInnerHTML={{__html: require(`toolbar-italic.svg`)}} />
-
-    <a onMouseDown={e => e.preventDefault()} onClick={toggleBlock('ordered-list-item')}
-      dangerouslySetInnerHTML={{__html: require(`toolbar-ol.svg`)}} />
-
-    <a onMouseDown={e => e.preventDefault()} onClick={toggleBlock('unordered-list-item')}
-      dangerouslySetInnerHTML={{__html: require(`toolbar-ul.svg`)}} />
-
-    <a dangerouslySetInnerHTML={{__html: require(`toolbar-edgenote.svg`)}} />
-    <a dangerouslySetInnerHTML={{__html: require(`toolbar-citation.svg`)}} />
+    <EditorToolbarButton onClick={toggleInline('BOLD')} icon={require("toolbar-small-caps.svg")} />
+    <EditorToolbarButton onClick={toggleInline('ITALIC')} icon={require(`toolbar-italic.svg`)} />
+    <EditorToolbarButton onClick={toggleBlock('ordered-list-item')} icon={require(`toolbar-ol.svg`)} />
+    <EditorToolbarButton onClick={toggleBlock('unordered-list-item')} icon={require(`toolbar-ul.svg`)} />
+    <EditorToolbarButton onClick={() => {}} icon={require(`toolbar-edgenote.svg`)} />
+    <EditorToolbarButton onClick={addCitation} icon={require(`toolbar-citation.svg`)} />
   </div>
 }
 
 export default EditorToolbar
+
+
+const EditorToolbarButton = ({icon, onClick}) => <a
+  onMouseDown={e => e.preventDefault()}
+  onClick={onClick}
+  dangerouslySetInnerHTML={{__html: icon}}
+/>
 
 
 const styles = {

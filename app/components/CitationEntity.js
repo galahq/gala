@@ -18,7 +18,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 class CitationSpan extends React.Component {
   render() {
-    let {isOpen, open, close } = this.props
+    let {isOpen, open, close} = this.props
 
     let citationLabel = isOpen ? '×' : '◦'
     let toggle = isOpen ? close : open
