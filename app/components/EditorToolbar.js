@@ -7,40 +7,63 @@ import {
 
 import { addEntity } from 'concerns/draftConfig.js'
 
-const EditorToolbar = ({editorState, onChange}) => {
-  let toggleInline = (style) => () => {
-    onChange(RichUtils.toggleInlineStyle(editorState, style))
+class EditorToolbar extends React.Component {
+  constructor(props) {
+    super(props)
+
+    let {onChange} = this.props
+
+    // These must call this.props.editorState individually to keep from
+    // capturing editorState as it exists when EditorToolbar is constructed.
+    //
+    this.toggleInline = (style) =>
+      () => onChange(RichUtils.toggleInlineStyle(this.props.editorState, style))
+
+    this.toggleBlock = (type) =>
+      () => onChange(RichUtils.toggleBlockType(this.props.editorState, type))
+
+    this.addCitation = this.addCitation.bind(this)
+    this.addEdgenote = this.addEdgenote.bind(this)
   }
 
-  let toggleBlock = (type) => () => {
-    onChange(RichUtils.toggleBlockType(editorState, type))
-  }
+  addCitation() {
+    let {onChange, editorState} = this.props
+    let selection = editorState.getSelection()
 
-  let addCitation = () => {
-    const selection = editorState.getSelection()
     const collapsedSelection = selection.merge({
       anchorOffset: selection.getEndOffset(),
       focusOffset: selection.getEndOffset(),
     })
+
     const contentStateWithCircle = Modifier.insertText(
       editorState.getCurrentContent(),
       collapsedSelection,
       "°",
     )
-    const circleSelection = collapsedSelection.merge({focusOffset: collapsedSelection.focusOffset + 1})
-    const editorStateWithCircle = EditorState.set(editorState, {currentContent: contentStateWithCircle})
-    const newEditorState = EditorState.forceSelection(editorStateWithCircle, circleSelection)
-    onChange(addEntity(newEditorState, {type: 'CITATION', mutability: 'IMMUTABLE', data: {}}))
+
+    const circleSelection = collapsedSelection.merge({
+      anchorOffset: collapsedSelection.focusOffset,
+      focusOffset: collapsedSelection.focusOffset + 1,
+    })
+
+    onChange(addEntity({type: 'CITATION', mutability: 'IMMUTABLE', data: {}}, editorState, circleSelection, contentStateWithCircle ))
   }
 
-  return <div className="c-editor-toolbar" style={styles.bar}>
-    <EditorToolbarButton onClick={toggleInline('BOLD')} icon={require("toolbar-small-caps.svg")} />
-    <EditorToolbarButton onClick={toggleInline('ITALIC')} icon={require(`toolbar-italic.svg`)} />
-    <EditorToolbarButton onClick={toggleBlock('ordered-list-item')} icon={require(`toolbar-ol.svg`)} />
-    <EditorToolbarButton onClick={toggleBlock('unordered-list-item')} icon={require(`toolbar-ul.svg`)} />
-    <EditorToolbarButton onClick={() => {}} icon={require(`toolbar-edgenote.svg`)} />
-    <EditorToolbarButton onClick={addCitation} icon={require(`toolbar-citation.svg`)} />
-  </div>
+  addEdgenote() {
+    const slug = prompt('Slug?')
+    this.props.onChange(addEntity({type: 'EDGENOTE', mutability: 'MUTABLE', data: {slug}}, this.props.editorState))
+  }
+
+  render() {
+    return <div className="c-editor-toolbar" style={styles.bar}>
+      <EditorToolbarButton onClick={this.toggleInline('BOLD')} icon={require("toolbar-small-caps.svg")} />
+      <EditorToolbarButton onClick={this.toggleInline('ITALIC')} icon={require(`toolbar-italic.svg`)} />
+      <EditorToolbarButton onClick={this.toggleBlock('ordered-list-item')} icon={require(`toolbar-ol.svg`)} />
+      <EditorToolbarButton onClick={this.toggleBlock('unordered-list-item')} icon={require(`toolbar-ul.svg`)} />
+      <EditorToolbarButton onClick={this.addEdgenote} icon={require(`toolbar-edgenote.svg`)} />
+      <EditorToolbarButton onClick={this.addCitation} icon={require(`toolbar-citation.svg`)} />
+    </div>
+  }
 }
 
 export default EditorToolbar

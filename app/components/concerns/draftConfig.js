@@ -74,11 +74,14 @@ export function removeShadowSelection(editorState) {
 }
 
 
-export function addEntity(editorState, {type, mutability, data}) {
-  const contentState = editorState.getCurrentContent()
+export function addEntity({type, mutability, data},
+                          editorState,
+                          selection = editorState.getSelection(),
+                          contentState = editorState.getCurrentContent(),
+                         ) {
   const contentStateWithEntity = contentState.createEntity(type, mutability, data)
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-  const contentStateWithEntityApplied = Modifier.applyEntity(contentStateWithEntity, editorState.getSelection(), entityKey)
-  const editorStateWithEntity = EditorState.set(editorState, {currentContent: contentStateWithEntityApplied})
+  const contentStateWithEntityApplied = Modifier.applyEntity(contentStateWithEntity, selection, entityKey)
+  const editorStateWithEntity = EditorState.push(editorState, contentStateWithEntityApplied, 'apply-entity')
   return editorStateWithEntity
 }

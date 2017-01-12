@@ -4,50 +4,29 @@ import { connect } from 'react-redux'
 import { openCitation } from 'redux/actions.js'
 
 const mapStateToProps = (state, ownProps) => {
+  const citation = state.ui.openedCitation
   return {
-    isOpen: state.ui.openCitation === ownProps.entityKey,
+    editable: state.editable,
+    isOpen: citation && citation.key === ownProps.entityKey,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    open: () => {dispatch( openCitation(ownProps.entityKey) )},
-    close: () => {dispatch( openCitation(null) )},
+    open: (labelRef) => dispatch( openCitation(ownProps.entityKey, labelRef) ),
+    close: () => dispatch( openCitation(null) ),
   }
 }
 
 class CitationSpan extends React.Component {
   render() {
-    let {isOpen, open, close} = this.props
+    let {isOpen, open, close, editable} = this.props
 
-    let citationLabel = isOpen ? '×' : '◦'
-    let toggle = isOpen ? close : open
+    let citationLabel = !editable && isOpen ? '×' : '◦'
+    let toggle = isOpen ? close : () => open(this.label)
     return <span style={styles.label} onClick={toggle}>
       <sup ref={e => this.label = e}>{citationLabel}</sup>
-      {isOpen && this.renderTooltip()}
     </span>
-  }
-
-  renderTooltip() {
-    let {href, contents} = this.props.contentState.getEntity(this.props.entityKey).getData()
-    return <cite style={this.getTooltipStyles()}>
-      {contents}
-      {" "}
-      <a href={href} target="_blank">Read&nbsp;more&nbsp;›</a>
-    </cite>
-  }
-
-  getTooltipStyles() {
-    let left = this.label.offsetLeft
-    let top = this.label.offsetTop
-
-    return {
-      ...styles.tooltip,
-      position: 'absolute',
-      left: left,
-      top: top,
-      transform: "translate(-50%, calc(-100% + 6px))",
-    }
   }
 }
 
@@ -63,15 +42,5 @@ const styles = {
     display: 'inline-block',
     marginLeft: -2,
     width: 8,
-  },
-  tooltip: {
-    background: "#6ACB72",
-    borderRadius: 2,
-    boxShadow: "0 0 10px rgba(black, 0.2)",
-    color: 'black',
-    display: 'block',
-    font: "14px tenso",
-    maxWidth: "20em",
-    padding: "0.25em 0.5em",
   },
 }

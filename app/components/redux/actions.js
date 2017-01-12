@@ -20,6 +20,6 @@ export function activateEdgenote(slug) {
   return {type: ACTIVATE_EDGENOTE, slug}
 }
 
-export function openCitation(key) {
-  return {type: OPEN_CITATION, key}
+export function openCitation(key, labelRef) {
+  return {type: OPEN_CITATION, data: {key, labelRef}}
 }

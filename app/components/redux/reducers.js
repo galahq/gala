@@ -47,8 +47,18 @@ function cardsById(state, action) {
   }
 }
 
+function editable(state = true, action) {
+  return state
+}
 
-function ui(state = {}, action) {
+
+function ui(state, action) {
+  if (typeof state === 'undefined') {
+    return {
+      openedCitation: {},
+    }
+  }
+
   switch (action.type) {
   case HIGHLIGHT_EDGENOTE:
     return {
@@ -65,7 +75,7 @@ function ui(state = {}, action) {
   case OPEN_CITATION:
     return {
       ...state,
-      openCitation: action.key,
+      openedCitation: action.data,
     }
 
   default: return state
@@ -77,5 +87,6 @@ export default combineReducers({
   edgenotesBySlug,
   //pagesById,
   cardsById,
+  editable,
   ui,
 })

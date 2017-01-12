@@ -6,6 +6,7 @@ import { highlightEdgenote, activateEdgenote } from 'redux/actions.js'
 const mapStateToProps = (state, ownProps) => {
   let {slug} = ownProps.contentState.getEntity(ownProps.entityKey).getData()
   return {
+    editable: state.editable,
     children: ownProps.children,
     slug,
   }
@@ -21,12 +22,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-const EdgenoteSpan = ({slug, onMouseOver, onMouseOut, onClick, children}) => {
+const EdgenoteSpan = ({slug, editable, onMouseOver, onMouseOut, onClick, children}) => {
   return <a
     data-edgenote={slug}
     onMouseOver={onMouseOver}
     onMouseOut={onMouseOut}
-    onClick={onClick}
+    onClick={editable ? null : onClick}
   >
     {children}
   </a>

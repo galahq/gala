@@ -12,16 +12,18 @@ import { blockRenderMap, customStyleMap } from 'concerns/draftConfig.js'
 
 import EditorToolbar from 'EditorToolbar.js'
 import { Statistics } from 'Statistics.js'
+import CitationTooltip from 'CitationTooltip.js'
 
-import { updateCardContents } from 'redux/actions.js'
+import { updateCardContents, openCitation } from 'redux/actions.js'
 
 const mapStateToProps = (state, ownProps) => {
   let {solid, statistics, editorState} = state.cardsById[ownProps.id]
 
   return {
     //editable: state.editing,
-    editable: ownProps.didSave !== null,
+    editable: (ownProps.didSave !== null),
     editing: editorState.getSelection().hasFocus,
+    openedCitation: state.ui.openedCitation,
     solid,
     statistics,
     editorState,
@@ -42,6 +44,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onChange: eS => dispatch(updateCardContents(ownProps.id, eS)),
+    onCloseCitation: () => dispatch( openCitation(null) ),
   }
 }
 
@@ -58,23 +61,50 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-const CardContents = ({solid, statistics, editable, editing, editorState, onChange,
-                      handleKeyCommand, onDelete}) =>
-  <div className={solid ? 'Card' : 'nonCard'} style={{transition: 'padding-top .1s', paddingTop: editing && '2em'}}>
+class CardContents extends React.Component {
+  render() {
+    let {solid, statistics, editable, editing, editorState, onChange,
+      handleKeyCommand, onDelete, onCloseCitation, openedCitation} = this.props
 
-    {editing && <EditorToolbar editorState={editorState} onChange={onChange} />}
-    <Editor
-      blockRenderMap={blockRenderMap}
-      customStyleMap={customStyleMap}
+      let citationOpenWithinCard
+      try {
+        !!editorState.getCurrentContent().getEntity(openedCitation.key)
+        citationOpenWithinCard = citationInsideThisCard(this.cardRef, openedCitation.labelRef)
+      } catch(e) {
+        citationOpenWithinCard = false
+      }
 
-      readOnly={!editable}
-      editorState={editorState}
+      return <div
+        ref={el => this.cardRef = el}
+        className={solid ? 'Card' : 'nonCard'}
+        style={{transition: 'padding-top .1s', paddingTop: editing && '2em'}}
+      >
 
-      handleKeyCommand={handleKeyCommand}
-      onChange={onChange}
-    />
+      {editing && <EditorToolbar editorState={editorState} onChange={onChange} />}
+      <Editor
+        blockRenderMap={blockRenderMap}
+        customStyleMap={customStyleMap}
 
-    { solid && !editable && <Statistics statistics={statistics} /> }
-  </div>
+        readOnly={!editable || openedCitation.key}
+        editorState={editorState}
+
+        handleKeyCommand={handleKeyCommand}
+        onChange={onChange}
+      />
+
+      {
+        citationOpenWithinCard && <CitationTooltip {...{editorState, openedCitation, onChange, editable, onCloseCitation}} />
+      }
+
+      { solid && !editable && <Statistics statistics={statistics} /> }
+    </div>
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(CardContents)
+
+function citationInsideThisCard(card, citation) {
+  if (!card || !citation)  return false
+  if (card === citation) return true
+  return citationInsideThisCard(card, citation.parentElement)
+}
