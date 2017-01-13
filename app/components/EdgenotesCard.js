@@ -1,45 +1,48 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { convertToRaw } from 'draft-js'
 import OldEdgenote from 'OldEdgenote.js'
 import {Edgenote} from 'Edgenote.js'
-import mapNL from 'concerns/mapNL.js'
 
-export class EdgenotesCard extends React.Component {
-
-  edgenotes() {
-    var contentsNode = document.createElement('div')
-    contentsNode.innerHTML = this.props.card.content
-    var aNodes = contentsNode.querySelectorAll('a[data-edgenote]')
-    return mapNL(aNodes, (a) => {
-      return a.getAttribute('data-edgenote')
-    })
+function mapStateToProps(state, ownProps) {
+  let edgenoteSlugs = getEdgenoteSlugs(state.cardsById[ownProps.cardId].editorState)
+  return {
+    oldStyle: edgenoteSlugs.some( x => state.edgenotesBySlug[x].style === 'v1' ),
+    edgenoteSlugs,
   }
+}
 
-  render() {
-    let {edgenoteLibrary, caseSlug, selectedPage, didSave } = this.props
-    let edit = didSave !== null ? "/edit" : ""
+const EdgenotesCard = ({edgenoteSlugs, oldStyle, caseSlug, selectedPage, didSave}) => {
+  let edit = didSave !== null ? "/edit" : ""
 
-    let edgenotes = this.edgenotes()
-    let oldStyle = edgenotes.some(x => edgenoteLibrary[x].style === 'v1')
-    const AnEdgenote = oldStyle ? OldEdgenote : Edgenote
+  const AnEdgenote = oldStyle ? OldEdgenote : Edgenote
 
-    if (edgenotes.length > 0) {
-      return <aside
-        className={oldStyle ? "edgenotes" : 'c-edgenotes-card'}
-        children={ edgenotes.map(
-          (slug) => {
-            return <AnEdgenote
-              slug={slug}
-              caseSlug={caseSlug}
-              pathPrefix={`${edit}/${selectedPage}`}
-              key={`${slug}`}
-              didSave={didSave}
-            />
+  if (edgenoteSlugs.length > 0) {
+    return <aside
+      className={oldStyle ? "edgenotes" : 'c-edgenotes-card'}
+      children={ edgenoteSlugs.map(
+        (slug) => {
+          return <AnEdgenote
+            slug={slug}
+            caseSlug={caseSlug}
+            pathPrefix={`${edit}/${selectedPage}`}
+            key={`${slug}`}
+            didSave={didSave}
+          />
           })
-        }
-      />
-    } else {
-      return null
-    }
+      }
+    />
+  } else {
+    return null
   }
+}
 
+export default connect(mapStateToProps)(EdgenotesCard)
+
+
+function getEdgenoteSlugs(editorState) {
+  const rawContent = convertToRaw(editorState.getCurrentContent())
+  return Object.values(rawContent.entityMap)
+    .filter( entity => entity.type === "EDGENOTE" )
+    .map( entity => entity.data.slug )
 }

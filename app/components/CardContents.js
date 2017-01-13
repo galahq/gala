@@ -63,7 +63,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 
 class CardContents extends React.Component {
   render() {
-    let {solid, statistics, editable, editing, editorState, onChange,
+    let {id, solid, statistics, editable, editing, editorState, onChange,
       handleKeyCommand, onDelete, onCloseCitation, openedCitation} = this.props
 
       let citationOpenWithinCard
@@ -80,20 +80,26 @@ class CardContents extends React.Component {
         style={{transition: 'padding-top .1s', paddingTop: editing && '2em'}}
       >
 
-      {editing && <EditorToolbar editorState={editorState} onChange={onChange} />}
+      {editing && <EditorToolbar cardId={id} />}
       <Editor
-        blockRenderMap={blockRenderMap}
-        customStyleMap={customStyleMap}
-
         readOnly={!editable || openedCitation.key}
-        editorState={editorState}
-
-        handleKeyCommand={handleKeyCommand}
-        onChange={onChange}
+        {...{
+          blockRenderMap,
+          customStyleMap,
+          editorState,
+          handleKeyCommand,
+          onChange,
+        }}
       />
 
       {
-        citationOpenWithinCard && <CitationTooltip {...{editorState, openedCitation, onChange, editable, onCloseCitation}} />
+        citationOpenWithinCard && <CitationTooltip {...{
+                                    editorState,
+                                    openedCitation,
+                                    onChange,
+                                    editable,
+                                    onCloseCitation,
+                                  }} />
       }
 
       { solid && !editable && <Statistics statistics={statistics} /> }

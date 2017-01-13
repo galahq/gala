@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import {
   EditorState,
   Modifier,
@@ -6,28 +7,46 @@ import {
 } from 'draft-js'
 
 import { addEntity } from 'concerns/draftConfig.js'
+import { Orchard } from 'concerns/orchard.js'
+
+import { updateCardContents, createEdgenote } from 'redux/actions.js'
+
+function mapStateToProps(state, ownProps) {
+  return {
+    caseSlug: state.caseData.slug,
+    editorState: state.cardsById[ownProps.cardId].editorState,
+    edgenoteExists: slug => !!state.edgenotesBySlug[slug],
+  }
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+  return {
+    updateEditorState: eS => dispatch(updateCardContents(ownProps.cardId, eS)),
+    createEdgenoteRecord: (slug, data) => dispatch(createEdgenote(slug, data)),
+  }
+}
 
 class EditorToolbar extends React.Component {
   constructor(props) {
     super(props)
 
-    let {onChange} = this.props
+    let {updateEditorState} = this.props
 
     // These must call this.props.editorState individually to keep from
     // capturing editorState as it exists when EditorToolbar is constructed.
     //
     this.toggleInline = (style) =>
-      () => onChange(RichUtils.toggleInlineStyle(this.props.editorState, style))
+      () => updateEditorState(RichUtils.toggleInlineStyle(this.props.editorState, style))
 
     this.toggleBlock = (type) =>
-      () => onChange(RichUtils.toggleBlockType(this.props.editorState, type))
+      () => updateEditorState(RichUtils.toggleBlockType(this.props.editorState, type))
 
     this.addCitation = this.addCitation.bind(this)
     this.addEdgenote = this.addEdgenote.bind(this)
   }
 
   addCitation() {
-    let {onChange, editorState} = this.props
+    let {editorState, updateEditorState} = this.props
     let selection = editorState.getSelection()
 
     const collapsedSelection = selection.merge({
@@ -46,12 +65,38 @@ class EditorToolbar extends React.Component {
       focusOffset: collapsedSelection.focusOffset + 1,
     })
 
-    onChange(addEntity({type: 'CITATION', mutability: 'IMMUTABLE', data: {}}, editorState, circleSelection, contentStateWithCircle ))
+    updateEditorState(addEntity({type: 'CITATION', mutability: 'IMMUTABLE', data: {}},
+                       editorState, circleSelection, contentStateWithCircle ))
   }
 
   addEdgenote() {
+    let {
+      caseSlug,
+      editorState,
+      updateEditorState,
+      edgenoteExists,
+      createEdgenoteRecord,
+    } = this.props
+
     const slug = prompt('Slug?')
-    this.props.onChange(addEntity({type: 'EDGENOTE', mutability: 'MUTABLE', data: {slug}}, this.props.editorState))
+    if (slug.length === "")  return
+
+    const addHighlight = () => updateEditorState(
+      addEntity({type: 'EDGENOTE', mutability: 'MUTABLE', data: {slug}},
+                editorState)
+    )
+
+    if (edgenoteExists(slug)) {
+      addHighlight()
+    } else {
+      Orchard.graft(`cases/${caseSlug}/edgenotes`, {slug}).then(
+        data => {
+          createEdgenoteRecord(slug, data)
+          addHighlight()
+        }
+      )
+    }
+
   }
 
   render() {
@@ -66,7 +111,7 @@ class EditorToolbar extends React.Component {
   }
 }
 
-export default EditorToolbar
+export default connect(mapStateToProps, mapDispatchToProps)(EditorToolbar)
 
 
 const EditorToolbarButton = ({icon, onClick}) => <a

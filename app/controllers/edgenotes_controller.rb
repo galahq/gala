@@ -18,7 +18,12 @@ class EdgenotesController < ApplicationController
 
   # POST /edgenotes
   def create
-    @edgenote = @case.edgenotes.build(slug: params[:slug], caption: "“#{params[:slug]}” Edgenote", format: 'aside')
+    @edgenote = @case.edgenotes.build(
+      slug: params[:slug],
+      caption: "“#{params[:slug]}” Edgenote",
+      format: 'aside',
+      style: :v2
+    )
 
     if @edgenote.save
       render partial: 'edgenote', locals: {edgenote: @edgenote}

@@ -2,15 +2,31 @@ import { combineReducers } from 'redux'
 
 import {
   UPDATE_CARD_CONTENTS,
+  CREATE_EDGENOTE,
   HIGHLIGHT_EDGENOTE,
   ACTIVATE_EDGENOTE,
   OPEN_CITATION,
 } from './actions.js'
 
+function caseData(state, action) {
+  if (typeof state === 'undefined') {
+    return window.caseData
+  }
 
-
-function edgenotesBySlug(state = window.caseData.edgenotes) {
   return state
+}
+
+function edgenotesBySlug(state = window.caseData.edgenotes, action) {
+  switch (action.type) {
+  case CREATE_EDGENOTE:
+    return {
+      ...state,
+      [action.slug]: action.data,
+    }
+
+  default:
+    return state
+  }
 }
 
 
@@ -84,6 +100,7 @@ function ui(state, action) {
 
 
 export default combineReducers({
+  caseData,
   edgenotesBySlug,
   //pagesById,
   cardsById,

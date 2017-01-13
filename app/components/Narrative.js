@@ -1,7 +1,7 @@
 import React from 'react'
 import {findDOMNode} from 'react-dom'
 import {Trackable} from 'concerns/trackable.js'
-import {EdgenotesCard} from 'EdgenotesCard.js'
+import EdgenotesCard from 'EdgenotesCard.js'
 import {Link} from 'react-router'
 import {I18n} from 'I18n.js'
 import {Editable} from 'Editable.js'
@@ -229,12 +229,10 @@ export class Card extends Trackable {
       <section>
         <CardContents id={this.props.card.id} didSave={this.props.didSave} />
         <EdgenotesCard
-          card={this.props.card}
+          cardId={this.props.card.id}
           caseSlug={this.props.caseSlug}
           selectedPage={this.props.selectedPage}
-          selectedEdgenote={this.props.selectedEdgenote}
           didSave={this.props.didSave}
-          edgenoteLibrary={this.props.edgenotes}
         />
       </section>
     )
