@@ -68,7 +68,7 @@ class Page extends Trackable {
   trackableArgs() { return {
     case_slug: this.props.caseSlug,
     page_id: this.props.page.id,
-    page_position: this.props.page.position
+    page_position: this.props.page.position,
   } }
 
   newPropsAreDifferent(nextProps) {
@@ -107,7 +107,7 @@ This action cannot be undone.")
 
   renderCreateCardLink(i) {
     if (this.props.didSave !== null) {
-      return <CreateCardLink pageId={this.props.page.id} i={i} didSave={this.props.didSave} />
+      return <CreateCardLink pageId={this.props.page.id} i={i} key={`create-${i}`} didSave={this.props.didSave} />
     }
   }
 
@@ -126,7 +126,7 @@ This action cannot be undone.")
           edgenotes={edgenotes}
           selectedEdgenote={this.state.selectedEdgenote}
           reader={reader}
-        />
+        />,
       ]
     } )
     cards.push(this.renderCreateCardLink())
@@ -163,7 +163,7 @@ export class Card extends Trackable {
   eventName() { return "read_card" }
   trackableArgs() { return {
     case_slug: this.props.caseSlug,
-    card_id: this.props.card.id
+    card_id: this.props.card.id,
   } }
   newPropsAreDifferent(nextProps) {
     return this.props.id !== nextProps.id
@@ -198,7 +198,7 @@ export class Card extends Trackable {
   constructor() {
     super()
     this.state = {
-      visible: false
+      visible: false,
     }
 
     this.setNeedsCheckVisibility = this.setNeedsCheckVisibility.bind(this)
@@ -211,7 +211,7 @@ export class Card extends Trackable {
     window.addEventListener('scroll',  this.setNeedsCheckVisibility)
 
     this.setState({
-      interval: setInterval(this.checkVisibility.bind(this), 1000)
+      interval: setInterval(this.checkVisibility.bind(this), 1000),
     })
 
     this.setNeedsCheckVisibility()
