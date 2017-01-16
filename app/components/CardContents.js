@@ -14,7 +14,7 @@ import EditorToolbar from 'EditorToolbar.js'
 import { Statistics } from 'Statistics.js'
 import CitationTooltip from 'CitationTooltip.js'
 
-import { updateCardContents, openCitation } from 'redux/actions.js'
+import { updateCardContents } from 'redux/actions.js'
 
 const mapStateToProps = (state, ownProps) => {
   let {solid, statistics, editorState} = state.cardsById[ownProps.id]
@@ -44,7 +44,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onChange: eS => dispatch(updateCardContents(ownProps.id, eS)),
-    onCloseCitation: () => dispatch( openCitation(null) ),
   }
 }
 
@@ -64,7 +63,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 class CardContents extends React.Component {
   render() {
     let {id, solid, statistics, editable, editing, editorState, onChange,
-      handleKeyCommand, onDelete, onCloseCitation, openedCitation} = this.props
+      handleKeyCommand, onDelete, openedCitation} = this.props
 
       let citationOpenWithinCard
       try {
@@ -93,12 +92,12 @@ class CardContents extends React.Component {
       />
 
       {
-        citationOpenWithinCard && <CitationTooltip {...{
-                                    editorState,
+        citationOpenWithinCard && <CitationTooltip cardId={id} {...{
+                                    //editorState,
                                     openedCitation,
-                                    onChange,
+                                    //onChange,
                                     editable,
-                                    onCloseCitation,
+                                    //onCloseCitation,
                                   }} />
       }
 

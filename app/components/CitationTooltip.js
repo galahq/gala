@@ -1,11 +1,25 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { EditorState } from 'draft-js'
 
-const CitationTooltip = ({editorState, onChange, openedCitation, editable, onCloseCitation}) => {
+import { updateCardContents, openCitation } from 'redux/actions.js'
 
+function mapStateToProps(state, ownProps) {
+  let { editorState } = state.cardsById[ownProps.cardId]
   let {href, contents} = editorState.getCurrentContent()
-    .getEntity(openedCitation.key).getData()
+    .getEntity(ownProps.openedCitation.key).getData()
 
+  return { editorState, href, contents }
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+  return {
+    onChange: eS => dispatch(updateCardContents(ownProps.cardId, eS)),
+    onCloseCitation: () => dispatch(openCitation(null)),
+  }
+}
+
+const CitationTooltip = ({openedCitation, editable, editorState, href, contents, onChange, onCloseCitation}) => {
   let label = openedCitation.labelRef
   let left = label.offsetLeft
   let top = label.offsetTop
@@ -21,8 +35,14 @@ const CitationTooltip = ({editorState, onChange, openedCitation, editable, onClo
 
   let updateCitation = attr => e => {
     const contentState = editorState.getCurrentContent()
-    const newContentState = contentState.mergeEntityData(openedCitation.key, {[attr]: e.currentTarget.value})
-    onChange(EditorState.push(editorState, newContentState, 'apply-entity'))
+    /*let newContentState = */contentState.mergeEntityData(openedCitation.key, {[attr]: e.currentTarget.value})
+    // When eventually the Entity API is rejiggered so entities are inside of
+    // ContentState, then we’ll have to push newcontentState. For now,
+    // mergeEntityData is mutating editorState, so we just dispatch the object
+    // itself.
+    //
+    // onChange(EditorState.push(editorState, newContentState, 'apply-entity'))
+    onChange(editorState)
   }
 
   return <cite onClick={closeCitation} style={{ ...styles.tooltip, ...positionalStyles}}>
@@ -39,7 +59,7 @@ const CitationTooltip = ({editorState, onChange, openedCitation, editable, onClo
 
 }
 
-export default CitationTooltip
+export default connect(mapStateToProps, mapDispatchToProps)(CitationTooltip)
 
 const styles = {
   tooltip: {
