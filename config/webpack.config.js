@@ -8,12 +8,12 @@ module.exports = {
     "case": ['babel-polyfill', 'whatwg-fetch', 'case.entry.js'],
     //edgenote: ['whatwg-fetch', 'edgenote.entry.js'],
     enrollments: ['babel-polyfill', 'whatwg-fetch', 'enrollments.entry.js'],
-    dashboard: ['babel-polyfill', 'whatwg-fetch', 'dashboard.entry.js']
+    dashboard: ['babel-polyfill', 'whatwg-fetch', 'dashboard.entry.js'],
   },
 
   output: {
     path: './app/assets/javascripts/react',
-    filename: '[name].bundle.js'
+    filename: '[name].bundle.js',
   },
 
   resolve: {
@@ -21,8 +21,8 @@ module.exports = {
     root: [
       path.resolve('./app/components'),
       path.resolve('./config/locales/react'),
-      path.resolve('./app/assets/images/react')
-    ]
+      path.resolve('./app/assets/images/react'),
+    ],
   },
 
   module: {
@@ -33,24 +33,24 @@ module.exports = {
         loader: 'babel',
         query: {
           presets: ['es2015', 'react'],
-          plugins: ["transform-object-rest-spread"]
-        }
+          plugins: ["transform-object-rest-spread"],
+        },
       }, {
         test: /\.(png|jpg)$/,
-        loader: 'url?limit=25000'
+        loader: 'url?limit=25000',
       }, {
         test: /\.(svg)$/,
-        loader: 'raw-loader'
+        loader: 'raw-loader',
       }, {
         test: /\.woff$/,
-        loader: 'url?limit=100000'
+        loader: 'url?limit=100000',
       }, {
-        test: /\.scss$/,
-        loader: 'style!css!sass'
+        test: /\.s?css$/,
+        loader: 'style!css!sass',
       }, {
         test: /\.json$/,
-        loader: 'json'
-      }
-    ]
-  }
+        loader: 'json',
+      },
+    ],
+  },
 }

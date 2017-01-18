@@ -7,6 +7,7 @@ gem 'puma', '~> 3.0'
 
 gem 'haml'
 gem 'sass-rails', '~> 5.0'
+gem 'bourbon'
 gem 'redcarpet'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'

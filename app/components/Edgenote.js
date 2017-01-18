@@ -2,6 +2,7 @@ import React from 'react'  // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
 import YoutubePlayer from 'react-youtube-player'
+import {EditableText} from '@blueprintjs/core'
 
 class EdgenoteFigure extends React.Component {
   componentDidUpdate(prevProps) {
@@ -123,7 +124,9 @@ const Caption = ({contents, selected}) => contents
       display: "inline",
       ...highlightableStyle,
       ...(selected && highlightedStyle)
-    }}>{contents}</figcaption></div>
+    }}>
+      <EditableText multiline placeholder="Edit caption..." value={contents} />
+    </figcaption></div>
   : null
 
 const PullQuote = ({contents, selected}) => contents
@@ -136,12 +139,15 @@ const PullQuote = ({contents, selected}) => contents
       display: "inline",
       ...highlightableStyle,
       ...(selected && highlightedStyle)
-    }}
-      children={`“${contents}…”`} />
+    }}>
+    <EditableText multiline placeholder="“Edit quotation...”" value={`“${contents}…”`} />
+      </blockquote>
   : null
 
 const Attribution = ({name}) => name
-  ? <cite style={{textAlign: 'right', display: 'block', fontStyle: 'normal', margin: '0.5em 0 0.25em 0'}}>— {name}</cite>
+  ? <cite style={{textAlign: 'right', display: 'block', fontStyle: 'normal', margin: '0.5em 0 0.25em 0'}}>
+    <EditableText multiline placeholder="Add attribution..." value={`– ${name}`} />
+    </cite>
   : null
 
 

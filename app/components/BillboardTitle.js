@@ -1,5 +1,7 @@
 import React from 'react'
 import {Editable} from 'Editable.js'
+import {EditableText} from '@blueprintjs/core'
+import {Orchard} from 'concerns/orchard.js'
 
 class BillboardTitle extends React.Component {
   renderTranslators() {
@@ -25,21 +27,28 @@ class BillboardTitle extends React.Component {
     return (
       <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${this.props.coverUrl})`}}>
 
-        <Editable placeholder="Snappy kicker" uri={`${endpoint}:kicker`} didSave={didSave}>
-          <h6>{this.props.kicker}</h6>
-        </Editable>
+        <h6>
+          <EditableText defaultValue={this.props.kicker} disabled={!didSave}
+            placeholder="Snappy kicker"
+            onConfirm={value => Orchard.espalier(endpoint, { "case": { kicker: value } }).then( r => didSave(r) )}
+          />
+        </h6>
 
-        <Editable placeholder="What is the central question of the case?" uri={`${endpoint}:title`} didSave={didSave}>
-          <h1>
-            {this.props.title}
-          </h1>
-        </Editable>
+        <h1>
+          <EditableText multiline defaultValue={this.props.title} disabled={!didSave}
+            placeholder="What is the central question of the case?"
+            onConfirm={value => Orchard.espalier(endpoint, { "case": { title: value } }).then( r => didSave(r) )}
+          />
+        </h1>
 
         {this.renderAuthors()}
 
-        <Editable placeholder="Photo credit" uri={`${endpoint}:photo_credit`} didSave={didSave}>
-          <cite className="o-bottom-right c-photo-credit">{this.props.photoCredit}</cite>
-        </Editable>
+        <cite className="o-bottom-right c-photo-credit">
+          <EditableText defaultValue={this.props.photoCredit} disabled={!didSave}
+            placeholder={ !!didSave && "Photo credit" }
+            onConfirm={value => Orchard.espalier(endpoint, { "case":  { photo_credit: value } }).then( r => didSave(r) )}
+          />
+        </cite>
 
       </div>
     )

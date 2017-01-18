@@ -1,11 +1,12 @@
 import React from 'react'
 import {findDOMNode} from 'react-dom'
 import {Trackable} from 'concerns/trackable.js'
-import EdgenotesCard from 'EdgenotesCard.js'
+import {EditableText} from '@blueprintjs/core'
 import {Link} from 'react-router'
-import {I18n} from 'I18n.js'
-import {Editable} from 'Editable.js'
+
+import EdgenotesCard from 'EdgenotesCard.js'
 import CardContents from 'CardContents.js'
+import {I18n} from 'I18n.js'
 import {Orchard} from 'concerns/orchard.js'
 
 class Narrative extends React.Component {
@@ -134,9 +135,11 @@ This action cannot be undone.")
     return (
       <article>
         <section className="Page-meta">
-          <Editable placeholder="Page title" uri={`pages/${page.id}:title`} didSave={this.props.didSave}>
-            <h1>{page.title}</h1>
-          </Editable>
+          <h2 key={`h2:${page.id}`}>
+            <EditableText multiline placeholder="Page title" defaultValue={page.title} disabled={!didSave}
+              onConfirm={value => Orchard.espalier(`pages/${page.id}`, { page: { title: value } }).then( r => didSave(r) )}
+            />
+          </h2>
           {this.renderDeleteOption()}
         </section>
         {cards}

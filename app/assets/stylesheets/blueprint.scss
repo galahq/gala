@@ -1,0 +1,98 @@
+.pt-editable-text {
+  display: inline-block;
+  position: relative;
+  cursor: text;
+  max-width: 100%;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.pt-editable-text.pt-multiline {
+  display: block;
+}
+
+.pt-editable-text::before {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  bottom: -3px;
+  left: -3px;
+  border-radius: 3px;
+  content: "";
+  transition: background-color 100ms cubic-bezier(0.4, 1, 0.75, 0.9), box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+}
+
+.pt-editable-input, .pt-editable-content {
+  display: inherit !important;
+  position: relative;
+  min-width: inherit !important;
+  max-width: inherit !important;
+  vertical-align: top !important;
+  text-transform: inherit !important;
+  letter-spacing: inherit !important;
+  color: inherit;
+  font: inherit !important;
+  resize: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  outline: 0;
+}
+
+.pt-editable-text.pt-multiline .pt-editable-content {
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+.pt-editable-content {
+  overflow: hidden;
+  padding-right: 2px;
+  text-overflow: ellipsis;
+  white-space: pre;
+}
+
+.pt-editable-placeholder > .pt-editable-content {
+  color: rgba(191, 204, 214, 0.5);
+}
+
+.pt-editable-input {
+  border: none;
+  box-shadow: none;
+  background: none;
+  width: 100%;
+  padding: 0;
+  white-space: pre-wrap;
+}
+
+.pt-editable-editing > .pt-editable-content {
+  position: absolute;
+  left: 0;
+  visibility: hidden;
+}
+
+.pt-editable-text:hover::before {
+    box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.pt-editable-text.pt-editable-editing::before {
+  box-shadow: 0 0 0 1px #137cbd, 0 0 0 3px rgba(19, 124, 189, 0.3), inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4);
+  background-color: rgba(16, 22, 26, 0.3);
+}
+
+.pt-light .pt-editable-text:hover::before {
+  box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15);
+}
+
+.pt-light .pt-editable-text.pt-editable-editing::before {
+    box-shadow: 0 0 0 1px #137cbd, 0 0 0 3px rgba(19, 124, 189, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.2);
+    background-color: #ffffff;
+}
+
+.pt-light .pt-editable-placeholder > .pt-editable-content {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.pt-light .pt-editable-text.pt-disabled::before,
+.pt-editable-text.pt-disabled::before {
+  box-shadow: none;
+}

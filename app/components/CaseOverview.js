@@ -6,6 +6,8 @@ import {I18n} from 'I18n.js'
 import {Editable, EditableAttribute} from 'Editable.js'
 import {EditableList} from 'EditableList.js'
 import {EnrollForm} from 'EnrollForm.js'
+import {Orchard} from 'concerns/orchard.js'
+import {EditableText} from '@blueprintjs/core'
 
 export class Billboard extends React.Component {
   render() {
@@ -16,9 +18,19 @@ export class Billboard extends React.Component {
         <BillboardTitle {...this.props} />
         <div><EditableAttribute placeholder="Base cover image URL"
             uri={`${endpoint}:cover_url`} didSave={didSave}>{baseCoverUrl}</EditableAttribute></div>
-        <div className="Card BillboardSnippet">
-          <Editable placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case." uri={`${endpoint}:dek`} didSave={didSave}><h3>{dek}</h3></Editable>
-          <Editable placeholder="Summarize the case in a short paragraph." uri={`${endpoint}:summary`} didSave={didSave}><p>{summary}</p></Editable>
+        <div className="Card BillboardSnippet pt-light">
+          <h3>
+            <EditableText multiline defaultValue={dek} disabled={!didSave}
+              placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
+              onConfirm={value => Orchard.espalier(endpoint, { "case": { dek: value } }).then( r => didSave(r) )}
+              />
+          </h3>
+          <p>
+            <EditableText multiline defaultValue={summary} disabled={!didSave}
+              placeholder="Summarize the case in a short paragraph."
+              onConfirm={value => Orchard.espalier(endpoint, { "case": { summary: value } }).then( r => didSave(r) )}
+            />
+          </p>
           <FlagLinks languages={this.props.otherAvailableLocales} slug={this.props.slug} />
         </div>
       </section>
