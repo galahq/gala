@@ -1,68 +1,14 @@
-import React from 'react';
+import React from 'react'
+import { connect } from 'react-redux'
+
 import { Link } from 'react-router'
+
 import TableOfContents from 'TableOfContents.js'
-import BillboardTitle from 'BillboardTitle.js'
+import Billboard from 'Billboard.js'
 import {I18n} from 'I18n.js'
 import {Editable, EditableAttribute} from 'Editable.js'
 import {EditableList} from 'EditableList.js'
 import {EnrollForm} from 'EnrollForm.js'
-import {Orchard} from 'concerns/orchard.js'
-import {EditableText} from '@blueprintjs/core'
-
-export class Billboard extends React.Component {
-  render() {
-    let {dek, summary, didSave, baseCoverUrl} = this.props
-    let endpoint = `cases/${this.props.slug}`
-    return (
-      <section className="Billboard">
-        <BillboardTitle {...this.props} />
-        <div><EditableAttribute placeholder="Base cover image URL"
-            uri={`${endpoint}:cover_url`} didSave={didSave}>{baseCoverUrl}</EditableAttribute></div>
-        <div className="Card BillboardSnippet pt-light">
-          <h3>
-            <EditableText multiline defaultValue={dek} disabled={!didSave}
-              placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
-              onConfirm={value => Orchard.espalier(endpoint, { "case": { dek: value } }).then( r => didSave(r) )}
-              />
-          </h3>
-          <p>
-            <EditableText multiline defaultValue={summary} disabled={!didSave}
-              placeholder="Summarize the case in a short paragraph."
-              onConfirm={value => Orchard.espalier(endpoint, { "case": { summary: value } }).then( r => didSave(r) )}
-            />
-          </p>
-          <FlagLinks languages={this.props.otherAvailableLocales} slug={this.props.slug} />
-        </div>
-      </section>
-    )
-  }
-}
-
-class FlagLinks extends React.Component {
-  flagLink(lx) {
-    return <a
-      href={`/${lx}/cases/${this.props.slug}`}>
-      <span className="flag-links__icon" dangerouslySetInnerHTML={{__html: require(`../assets/images/react/flag-${lx}.svg`)}} />
-      &nbsp;
-      <I18n meaning={lx} />
-    </a>
-  }
-
-  render() {
-    if (this.props.languages.length > 0) {
-      return <div
-          className="flag-links">
-        <I18n meaning="other-languages" />
-        <br />
-        {this.props.languages.map( (lx) => {
-          return this.flagLink(lx)
-        } )}
-      </div>
-    } else {
-      return <span />
-    }
-  }
-}
 
 class Actions extends React.Component {
 
@@ -208,13 +154,14 @@ class Actions extends React.Component {
   }
 }
 
-export class CaseOverview extends React.Component {
-  render () {
-    return (
-      <div id="CaseOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
-        <Billboard {...this.props} />
-        <Actions {...this.props} />
-      </div>
-    )
-  }
+const CaseOverview = (props) => {
+  let { editing } = props
+  return <div id="CaseOverview" className={`window ${editing && 'editing'}`}>
+    <Billboard />
+    <Actions {...props} />
+  </div>
 }
+
+export default connect(
+  state => ({editing: state.edit.inProgress})
+)(CaseOverview)

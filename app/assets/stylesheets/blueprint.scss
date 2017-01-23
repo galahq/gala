@@ -11,6 +11,11 @@
   display: block;
 }
 
+.pt-editable-text.pt-disabled {
+  display: inline !important;
+  cursor: inherit;
+}
+
 .pt-editable-text::before {
   position: absolute;
   top: -3px;

@@ -2,7 +2,7 @@ import React from 'react';
 import mapNL from 'concerns/mapNL.js'
 import {I18n} from 'I18n.js'
 import {Link} from 'react-router'
-import { StatusBar } from 'StatusBar.js'
+import StatusBar from 'StatusBar.js'
 
 class Case extends React.Component {
 
@@ -12,15 +12,6 @@ class Case extends React.Component {
       saveMessage: "edit_instructions",
       caseData: window.caseData
     }
-  }
-
-  generateChapters(splits) {
-    return splits.map( (split) => {
-
-      var x = document.createElement('div');
-      x.innerHTML = split[1];
-      return mapNL(x.children, (para) => { return para } )
-    } )
   }
 
   editing() {
@@ -44,26 +35,6 @@ class Case extends React.Component {
     let c = this.state.caseData
     if ( !this.editing() && c.published ) { return <div /> }
     else { return <StatusBar editing={this.editing()} saveMessage={this.state.saveMessage} reader={c.reader} {...this.props} /> }
-
-    if (this.editing()) {
-      editStatusBar = <div className="flash flash-editing">
-                        <I18n meaning={this.state.saveMessage} />
-                      </div>
-    } else if (!c.published) {
-      var link = null
-      if (c.reader.canUpdateCase) {
-        link = <span>
-                 &ensp;&mdash;&ensp;
-                 <Link to={`/edit${this.props.location.pathname}`}>
-                   <I18n meaning="edit_this_case" />
-                 </Link>
-               </span>
-      }
-      editStatusBar = <div className="flash flash-info">
-                        <I18n meaning='this_case_is_not_yet_published' />
-                        {link}
-                      </div>
-    }
   }
 
   render() {

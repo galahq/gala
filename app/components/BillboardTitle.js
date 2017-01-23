@@ -1,58 +1,66 @@
 import React from 'react'
-import {Editable} from 'Editable.js'
-import {EditableText} from '@blueprintjs/core'
-import {Orchard} from 'concerns/orchard.js'
+import { connect } from 'react-redux'
 
-class BillboardTitle extends React.Component {
-  renderTranslators() {
-    if (this.props.translators !== "") {
-      return <em>{this.props.translators}</em>
-    }
-  }
+import { EditableText } from '@blueprintjs/core'
 
-  renderAuthors() {
-    let {caseAuthors} = this.props
-    if (caseAuthors && caseAuthors !== "") {
-      return (<h4>
-        {caseAuthors}
-        <br />
-        {this.renderTranslators()}
-      </h4>)
-    }
-  }
+import { updateCase } from 'redux/actions.js'
 
-  render() {
-    let endpoint = `cases/${this.props.slug}`
-    let {didSave} = this.props
-    return (
-      <div className="BillboardTitle" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(${this.props.coverUrl})`}}>
+function mapStateToProps(state) {
+  let { edit, caseData } = state
+  let {
+    slug, kicker, title, photoCredit, caseAuthors, translators, coverUrl,
+  } = caseData
 
-        <h6>
-          <EditableText defaultValue={this.props.kicker} disabled={!didSave}
-            placeholder="Snappy kicker"
-            onConfirm={value => Orchard.espalier(endpoint, { "case": { kicker: value } }).then( r => didSave(r) )}
-          />
-        </h6>
-
-        <h1>
-          <EditableText multiline defaultValue={this.props.title} disabled={!didSave}
-            placeholder="What is the central question of the case?"
-            onConfirm={value => Orchard.espalier(endpoint, { "case": { title: value } }).then( r => didSave(r) )}
-          />
-        </h1>
-
-        {this.renderAuthors()}
-
-        <cite className="o-bottom-right c-photo-credit">
-          <EditableText defaultValue={this.props.photoCredit} disabled={!didSave}
-            placeholder={ !!didSave && "Photo credit" }
-            onConfirm={value => Orchard.espalier(endpoint, { "case":  { photo_credit: value } }).then( r => didSave(r) )}
-          />
-        </cite>
-
-      </div>
-    )
+  return {
+    slug, kicker, title, photoCredit, caseAuthors, translators, coverUrl,
+    editing: edit.inProgress,
   }
 }
 
-export default BillboardTitle
+const BillboardTitle = ({ editing, slug, kicker, title, photoCredit, caseAuthors,
+                          translators, coverUrl, updateCase, minimal,
+}) => {
+
+  let background = { backgroundImage: `
+      linear-gradient(rgba(0,0,0,0.0), rgba(0,0,0,0.5)),
+      url(${coverUrl})
+    `,
+  }
+
+  return <div className="BillboardTitle" style={background}>
+    <h6>
+      <EditableText value={kicker} disabled={!editing || minimal}
+        placeholder="Snappy kicker"
+        onChange={value => updateCase(slug, {kicker: value})}
+      />
+    </h6>
+
+    <h1>
+      <EditableText multiline value={title} disabled={!editing || minimal}
+        placeholder="What is the central question of the case?"
+        onChange={value => updateCase(slug, {title: value})}
+      />
+    </h1>
+
+    { !minimal && caseAuthors !== "" &&
+      <h4>
+        { caseAuthors }
+        <br />
+        { translators !== "" && <em>{ translators }</em> }
+      </h4>
+      }
+
+      <cite className="o-bottom-right c-photo-credit">
+        {minimal || <EditableText value={photoCredit} disabled={!editing}
+          placeholder={ !!editing && "Photo credit" }
+          onChange={value => updateCase(slug, {photoCredit: value})}
+        />}
+      </cite>
+    </div>
+}
+
+
+export default connect(
+  mapStateToProps,
+  { updateCase },
+)(BillboardTitle)

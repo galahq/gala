@@ -1,4 +1,11 @@
+import { Orchard } from 'concerns/orchard.js'
+
 // Models
+export const UPDATE_CASE = "UPDATE_CASE"
+export function updateCase(slug, data) {
+  return {type: UPDATE_CASE, data}
+}
+
 export const UPDATE_CARD_CONTENTS = "UPDATE_CARD_CONTENTS"
 export function updateCardContents(id, editorState) {
   return {type: UPDATE_CARD_CONTENTS, id, editorState}
@@ -7,6 +14,12 @@ export function updateCardContents(id, editorState) {
 export const CREATE_EDGENOTE = "CREATE_EDGENOTE"
 export function createEdgenote(slug, data) {
   return {type: CREATE_EDGENOTE, slug, data}
+}
+
+// Edit
+export const TOGGLE_EDITING = "TOGGLE_EDITING"
+export function toggleEditing() {
+  return {type: TOGGLE_EDITING}
 }
 
 // UI

@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 
 import {
+  UPDATE_CASE,
   UPDATE_CARD_CONTENTS,
   CREATE_EDGENOTE,
+  TOGGLE_EDITING,
   HIGHLIGHT_EDGENOTE,
   ACTIVATE_EDGENOTE,
   OPEN_CITATION,
@@ -13,7 +15,17 @@ function caseData(state, action) {
     return window.caseData
   }
 
-  return state
+  switch (action.type) {
+
+  case UPDATE_CASE:
+    return {
+      ...state,
+      ...action.data,
+    }
+
+  default: return state
+
+  }
 }
 
 function edgenotesBySlug(state = window.caseData.edgenotes, action) {
@@ -24,8 +36,7 @@ function edgenotesBySlug(state = window.caseData.edgenotes, action) {
       [action.slug]: action.data,
     }
 
-  default:
-    return state
+  default: return state
   }
 }
 
@@ -35,16 +46,19 @@ function edgenotesBySlug(state = window.caseData.edgenotes, action) {
 //}
 
 import { EditorState, convertFromRaw } from 'draft-js'
-import convertFromOldStyleCardSerialization from 'concerns/convertFromOldStyleCardSerialization.js'
+import convertFromOldStyleCardSerialization
+  from 'concerns/convertFromOldStyleCardSerialization.js'
 import { decorator } from 'concerns/draftConfig.js'
 
 function cardsById(state, action) {
   if (typeof state === 'undefined') {
     state = window.caseData.cards
     Object.values(state).forEach( card => {
-      let content = card.rawContent || convertFromOldStyleCardSerialization(card.content)
+      let content = card.rawContent
+        || convertFromOldStyleCardSerialization(card.content)
       let contentState = convertFromRaw(content)
-      state[card.id].editorState = EditorState.createWithContent(contentState, decorator)
+      state[card.id].editorState = EditorState.createWithContent(contentState,
+                                                                 decorator)
     } )
     return state
   }
@@ -63,8 +77,22 @@ function cardsById(state, action) {
   }
 }
 
-function editable(state = true, action) {
-  return state
+function edit(state, action) {
+  if (typeof state === 'undefined') {
+    return {
+      possible: window.caseData.canUpdateCase,
+      inProgress: false,
+    }
+  }
+
+  switch (action.type) {
+  case TOGGLE_EDITING:
+    return {
+      ...state,
+      inProgress: !state.inProgress,
+    }
+  default: return state
+  }
 }
 
 
@@ -104,6 +132,6 @@ export default combineReducers({
   edgenotesBySlug,
   //pagesById,
   cardsById,
-  editable,
+  edit,
   ui,
 })

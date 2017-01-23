@@ -1,42 +1,33 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import {I18n} from 'I18n.js'
-import {Link} from 'react-router'
+import { toggleEditing } from 'redux/actions.js'
 
-export class StatusBar extends React.Component {
-
-  link() {
-    let path = this.props.location.pathname
-    if (this.props.editing) {
-      return{href: path.slice(5), meaning: "stop_editing_this_case"}
-    } else {
-      return {href: `edit${path}`, meaning: "edit_this_case"}
-    }
+function mapStateToProps(state) {
+  let {edit, caseData} = state
+  let {possible, inProgress} = edit
+  let {published} = caseData
+  return {
+    editing: inProgress,
+    message: possible
+      ? 'edit_instructions'
+      : ( published || 'this_case_is_not_yet_published' ),
   }
-
-  renderMessage() {
-    if (this.props.editing) {
-      return <I18n meaning={this.props.saveMessage} />
-    } else {
-      return <I18n meaning="this_case_is_not_yet_published" />
-    }
-  }
-
-  renderLink() {
-    if (!this.props.reader.canUpdateCase) { return null }
-
-    return <span>
-      &ensp;&mdash;&ensp;
-      <Link to={this.link().href}>
-        <I18n meaning={this.link().meaning} />
-      </Link>
-    </span>
-  }
-
-  render() {
-    return <div className={`flash flash-${this.props.editing ? "editing" : "info"}`}>
-      { this.renderMessage() }
-      { this.renderLink() }
-    </div>
-  }
-
 }
+
+const StatusBar = ({editing, message, toggleEditing}) =><div
+  className={`flash flash-${editing ? "editing" : "info"}`}
+>
+  <I18n meaning={message}/>
+  <span>
+    &ensp;&mdash;&ensp;
+    <a onClick={toggleEditing}>
+      <I18n meaning={editing ? "stop_editing_this_case" : "edit_this_case"} />
+    </a>
+  </span>
+</div>
+
+export default connect(
+  mapStateToProps,
+  {toggleEditing}
+)(StatusBar)

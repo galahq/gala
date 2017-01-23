@@ -9,7 +9,7 @@ import { createHashHistory } from 'history'
 
 import Case from 'Case.js'
 import CaseReader from 'CaseReader.js'
-import {CaseOverview} from 'CaseOverview.js'
+import CaseOverview from 'CaseOverview.js'
 import EdgenoteGallery from 'EdgenoteGallery.js'
 import {PodcastOverview} from 'Podcast.js'
 import EdgenoteContents from 'EdgenoteContents.js'

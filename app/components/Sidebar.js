@@ -28,13 +28,12 @@ class Sidebar extends React.Component {
   }
 
   render () {
-    let {slug, kicker, title, coverUrl, didSave} = this.props
     return (
       <aside id="Sidebar">
-        <Link to={`/${this.props.didSave !== null ? "edit/" : ""}`} className="backLink">
+        <Link to="/" className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
-        <BillboardTitle kicker={kicker} title={title} coverUrl={coverUrl} didSave={didSave} slug={slug} />
+        <BillboardTitle minimal />
         {this.renderTOC()}
         {this.renderEnrollForm()}
       </aside>

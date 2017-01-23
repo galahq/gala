@@ -4,6 +4,8 @@ import ImageZoom from 'react-medium-image-zoom'
 import YoutubePlayer from 'react-youtube-player'
 import {EditableText} from '@blueprintjs/core'
 
+import { highlightEdgenote, activateEdgenote } from 'redux/actions.js'
+
 class EdgenoteFigure extends React.Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.active && this.props.active) {
@@ -15,7 +17,8 @@ class EdgenoteFigure extends React.Component {
   }
 
   render() {
-    let {contents, selected, active, activate, deactivate, onMouseOver, onMouseOut} = this.props
+    let {contents, selected, active, activate, deactivate, onMouseOver,
+      onMouseOut, editing} = this.props
     let {slug, caption, youtubeSlug, pullQuote, imageUrl, callToAction,
       websiteUrl, audioUrl, attribution} = contents
 
@@ -25,23 +28,23 @@ class EdgenoteFigure extends React.Component {
       onMouseLeave: onMouseOut }
     : {}
 
-    let activationProps = {active: active, activate: activate, deactivate: deactivate}
+    let reduxProps = { active, activate, deactivate, editing, selected }
 
     return <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
       <ConditionalLink target="_blank" href={websiteUrl}>
 
-        <YouTube slug={youtubeSlug} {...activationProps} />
+        <YouTube slug={youtubeSlug} {...reduxProps} />
 
         { !!youtubeSlug || !!pullQuote ||
-          <Image src={imageUrl} {...activationProps} /> }
+          <Image src={imageUrl} {...reduxProps} /> }
 
           <Background visible={!!audioUrl}>
-            { !!youtubeSlug || <PullQuote contents={pullQuote} selected={selected} /> }
-            <Attribution name={attribution} />
+            {!!youtubeSlug || <PullQuote contents={pullQuote} {...reduxProps}/>}
+            <Attribution name={attribution} {...reduxProps} />
           </Background>
-          <AudioPlayer src={audioUrl} {...activationProps} />
+          <AudioPlayer src={audioUrl} {...reduxProps} />
 
-          <Caption contents={caption} selected={selected} />
+          <Caption contents={caption} {...reduxProps} />
           <CallToAction contents={callToAction} />
 
         </ConditionalLink>
@@ -51,22 +54,26 @@ class EdgenoteFigure extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    editing: state.edit.inProgress,
     selected: ownProps.slug === state.ui.highlightedEdgenote,
     active: ownProps.slug === state.ui.activeEdgenote,
-    contents: state.edgenotesBySlug[ownProps.slug]
+    contents: state.edgenotesBySlug[ownProps.slug],
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    activate: () => { dispatch({type: 'ACTIVATE_EDGENOTE', edgenoteSlug: ownProps.slug}) },
-    deactivate: () => { dispatch({type: 'ACTIVATE_EDGENOTE', edgenoteSlug: null}) },
-    onMouseOver: () => { dispatch({type: 'HIGHLIGHT_EDGENOTE', edgenoteSlug: ownProps.slug}) },
-    onMouseOut: () => { dispatch({type: 'HIGHLIGHT_EDGENOTE', edgenoteSlug: null}) }
+    activate: () => { dispatch(activateEdgenote(ownProps.slug)) },
+    deactivate: () => { dispatch(activateEdgenote(null)) },
+    onMouseOver: () => { dispatch(highlightEdgenote(ownProps.slug)) },
+    onMouseOut: () => { dispatch(highlightEdgenote(null)) },
   }
 }
 
-export const Edgenote = connect(mapStateToProps, mapDispatchToProps)(EdgenoteFigure)
+export const Edgenote = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(EdgenoteFigure)
 
 
 
@@ -77,7 +84,7 @@ const YouTube = ({slug, active, activate, deactivate}) => slug
     onPlay={activate}
     onPause={deactivate}
     configuration={{
-      theme: 'light'
+      theme: 'light',
     }}
   />
   : null
@@ -87,7 +94,7 @@ const Image = ({src, active}) => src
       isZoomed={active}
       shouldRespectMaxDimension
       defaultStyles={{overlay: {backgroundColor: '#1D2934'}}}
-      image={{style: {width: '100%', minHeight: '3em', display: 'block'}, src: src}} />
+      image={{style: {width: '100%', minHeight: '3em', display: 'block'}, src}} />
   : null
 
 class AudioPlayer extends React.Component {
@@ -109,27 +116,29 @@ class AudioPlayer extends React.Component {
   }
 }
 
-const Background = ({visible, children}) => <div style={visible ? backgroundedStyle : {}}>{children}</div>
+const Background = ({visible, children}) =>
+  <div style={visible ? backgroundedStyle : {}}>{children}</div>
 
 const CallToAction = ({contents}) => contents
   ? <p style={{margin: "0.25em 0 0 0"}}>{contents}&nbsp;›</p>
   : null
 
 
-const Caption = ({contents, selected}) => contents
+const Caption = ({contents, selected, editing}) => contents
   ? <div style={{margin: '0.25em 0 0 0'}}><figcaption
     style={{
       fontSize: "110%",
       lineHeight: 1.1,
       display: "inline",
       ...highlightableStyle,
-      ...(selected && highlightedStyle)
+      ...(selected && highlightedStyle),
     }}>
-      <EditableText multiline placeholder="Edit caption..." value={contents} />
+      <EditableText multiline placeholder="Edit caption..." value={contents}
+        disabled={!editing} />
     </figcaption></div>
   : null
 
-const PullQuote = ({contents, selected}) => contents
+const PullQuote = ({contents, selected, editing}) => contents
   ? <blockquote
     style={{
       fontSize: '140%',
@@ -138,15 +147,22 @@ const PullQuote = ({contents, selected}) => contents
       padding: '0',
       display: "inline",
       ...highlightableStyle,
-      ...(selected && highlightedStyle)
+      ...(selected && highlightedStyle),
     }}>
-    <EditableText multiline placeholder="“Edit quotation...”" value={`“${contents}…”`} />
+    <EditableText multiline placeholder="“Edit quotation...”"
+      value={`“${contents}…”`} disabled={!editing} />
       </blockquote>
   : null
 
-const Attribution = ({name}) => name
-  ? <cite style={{textAlign: 'right', display: 'block', fontStyle: 'normal', margin: '0.5em 0 0.25em 0'}}>
-    <EditableText multiline placeholder="Add attribution..." value={`– ${name}`} />
+const Attribution = ({name, editing}) => name
+  ? <cite style={{
+      textAlign: 'right',
+      display: 'block',
+      fontStyle: 'normal',
+      margin: '0.5em 0 0.25em 0',
+    }}>
+      <EditableText multiline placeholder="Add attribution..."
+        value={`–${name}`} disabled={!editing} />
     </cite>
   : null
 
@@ -155,7 +171,7 @@ const Attribution = ({name}) => name
 const backgroundedStyle = {
   backgroundColor: "#49647D",
   padding: '0.5em 1em',
-  borderRadius: '2px 2px 0 0'
+  borderRadius: '2px 2px 0 0',
 }
 
 const lightGreen = "#6ACB72"
@@ -163,7 +179,7 @@ const lightGreen = "#6ACB72"
 const highlightableStyle = {
   transition: `background .15s cubic-bezier(.33, .66, .66, 1),
     box-shadow .15s cubic-bezier(.33, .66, .66, 1),
-    color .15s cubic-bezier(.33, .66, .66, 1)`
+    color .15s cubic-bezier(.33, .66, .66, 1)`,
 }
 const highlightedStyle = {
   backgroundColor: lightGreen,
@@ -172,6 +188,5 @@ const highlightedStyle = {
     ${lightGreen} -0.15em 0      0,
     ${lightGreen} -0.15em 0.05em 0,
     ${lightGreen} 0.2em   0.05em 0,
-    ${lightGreen} 0.2em   0      0`
-
+    ${lightGreen} 0.2em   0      0`,
 }

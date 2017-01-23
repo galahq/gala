@@ -20,8 +20,7 @@ const mapStateToProps = (state, ownProps) => {
   let {solid, statistics, editorState} = state.cardsById[ownProps.id]
 
   return {
-    //editable: state.editing,
-    editable: (ownProps.didSave !== null),
+    editable: state.edit.inProgress,
     editing: editorState.getSelection().hasFocus,
     openedCitation: state.ui.openedCitation,
     solid,
