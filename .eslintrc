@@ -16,5 +16,6 @@
   ],
   "rules": {
     "comma-dangle": [2, "always-multiline"],
+    "indent": [2, 2, {"SwitchCase": 1}],
   }
 }

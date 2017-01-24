@@ -1,8 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
 
 import { Router, Route, IndexRoute, useRouterHistory, Redirect } from 'react-router'
 import { createHashHistory } from 'history'
@@ -16,7 +17,12 @@ import EdgenoteContents from 'EdgenoteContents.js'
 
 import reducer from 'redux/reducers.js'
 
-let store = createStore(reducer)
+let store = createStore(
+  reducer,
+  applyMiddleware(
+    thunkMiddleware,
+  )
+)
 
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false  })
 

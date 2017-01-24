@@ -1,9 +1,15 @@
 import { combineReducers } from 'redux'
 
+import { EditorState, convertFromRaw } from 'draft-js'
+import convertFromOldStyleCardSerialization
+  from 'concerns/convertFromOldStyleCardSerialization.js'
+import { decorator } from 'concerns/draftConfig.js'
+
 import {
   UPDATE_CASE,
   UPDATE_CARD_CONTENTS,
   CREATE_EDGENOTE,
+  CLEAR_UNSAVED,
   TOGGLE_EDITING,
   HIGHLIGHT_EDGENOTE,
   ACTIVATE_EDGENOTE,
@@ -12,50 +18,46 @@ import {
 
 function caseData(state, action) {
   if (typeof state === 'undefined') {
-    return window.caseData
+    return {...window.caseData}
   }
 
   switch (action.type) {
 
-  case UPDATE_CASE:
-    return {
-      ...state,
-      ...action.data,
-    }
+    case UPDATE_CASE:
+      return {
+        ...state,
+        ...action.data,
+      }
 
-  default: return state
+    default: return state
 
   }
 }
 
-function edgenotesBySlug(state = window.caseData.edgenotes, action) {
+function edgenotesBySlug(state = {...window.caseData.edgenotes}, action) {
   switch (action.type) {
-  case CREATE_EDGENOTE:
-    return {
-      ...state,
-      [action.slug]: action.data,
-    }
+    case CREATE_EDGENOTE:
+      return {
+        ...state,
+        [action.slug]: action.data,
+      }
 
-  default: return state
+    default: return state
   }
 }
 
 
-//function pagesById(state = window.caseData.pages) {
+//function pagesById(state = {...window.caseData.pages}) {
   //return state
 //}
 
-import { EditorState, convertFromRaw } from 'draft-js'
-import convertFromOldStyleCardSerialization
-  from 'concerns/convertFromOldStyleCardSerialization.js'
-import { decorator } from 'concerns/draftConfig.js'
-
 function cardsById(state, action) {
   if (typeof state === 'undefined') {
-    state = window.caseData.cards
+    state = {...window.caseData.cards}
     Object.values(state).forEach( card => {
       let content = card.rawContent
-        || convertFromOldStyleCardSerialization(card.content)
+        ? JSON.parse(card.rawContent)
+        : convertFromOldStyleCardSerialization(card.content)
       let contentState = convertFromRaw(content)
       state[card.id].editorState = EditorState.createWithContent(contentState,
                                                                  decorator)
@@ -64,34 +66,67 @@ function cardsById(state, action) {
   }
 
   switch (action.type) {
-  case UPDATE_CARD_CONTENTS:
-    return {
-      ...state,
-      [action.id]: {
-        ...state[action.id],
-        editorState: action.editorState,
-      },
-    }
+    case UPDATE_CARD_CONTENTS:
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          editorState: action.editorState,
+        },
+      }
 
-  default: return state
+    default: return state
   }
 }
 
 function edit(state, action) {
   if (typeof state === 'undefined') {
     return {
-      possible: window.caseData.canUpdateCase,
+      possible: window.caseData.reader.canUpdateCase,
       inProgress: false,
+      changed: false,
+      unsavedChanges: {
+        // Using this like a Set
+        // [`${modelName}/${modelId}` || "caseData"]: true,
+      },
     }
   }
 
   switch (action.type) {
-  case TOGGLE_EDITING:
-    return {
-      ...state,
-      inProgress: !state.inProgress,
-    }
-  default: return state
+    case CLEAR_UNSAVED:
+      return {
+        ...state,
+        changed: false,
+        unsavedChanges: {},
+      }
+
+    case TOGGLE_EDITING:
+      return {
+        ...state,
+        inProgress: !state.inProgress,
+      }
+
+    case UPDATE_CASE:
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          caseData: true,
+        },
+      }
+
+    case UPDATE_CARD_CONTENTS:
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          [`cards/${action.id}`]: true,
+        },
+      }
+
+    default: return state
   }
 }
 
@@ -104,25 +139,25 @@ function ui(state, action) {
   }
 
   switch (action.type) {
-  case HIGHLIGHT_EDGENOTE:
-    return {
-      ...state,
-      highlightedEdgenote: action.slug,
-    }
+    case HIGHLIGHT_EDGENOTE:
+      return {
+        ...state,
+        highlightedEdgenote: action.slug,
+      }
 
-  case ACTIVATE_EDGENOTE:
-    return {
-      ...state,
-      activeEdgenote: action.slug,
-    }
+    case ACTIVATE_EDGENOTE:
+      return {
+        ...state,
+        activeEdgenote: action.slug,
+      }
 
-  case OPEN_CITATION:
-    return {
-      ...state,
-      openedCitation: action.data,
-    }
+    case OPEN_CITATION:
+      return {
+        ...state,
+        openedCitation: action.data,
+      }
 
-  default: return state
+    default: return state
   }
 }
 

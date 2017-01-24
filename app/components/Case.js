@@ -1,7 +1,4 @@
 import React from 'react';
-import mapNL from 'concerns/mapNL.js'
-import {I18n} from 'I18n.js'
-import {Link} from 'react-router'
 import StatusBar from 'StatusBar.js'
 
 class Case extends React.Component {
@@ -10,7 +7,7 @@ class Case extends React.Component {
     super()
     this.state = {
       saveMessage: "edit_instructions",
-      caseData: window.caseData
+      caseData: window.caseData,
     }
   }
 
@@ -23,18 +20,12 @@ class Case extends React.Component {
 
     this.setState({
       saveMessage: saveMessage,
-      caseData: newData
+      caseData: newData,
     })
 
     setTimeout(() => {
       this.setState({saveMessage: 'edit_instructions'})
     }, 2000)
-  }
-
-  renderEditStatusBar() {
-    let c = this.state.caseData
-    if ( !this.editing() && c.published ) { return <div /> }
-    else { return <StatusBar editing={this.editing()} saveMessage={this.state.saveMessage} reader={c.reader} {...this.props} /> }
   }
 
   render() {
@@ -45,7 +36,7 @@ class Case extends React.Component {
 
     return (
       <div id="Case">
-        {this.renderEditStatusBar()}
+        <StatusBar />
         {this.props.children && React.cloneElement(this.props.children, c)}
       </div>
     )

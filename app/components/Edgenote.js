@@ -124,7 +124,7 @@ const CallToAction = ({contents}) => contents
   : null
 
 
-const Caption = ({contents, selected, editing}) => contents
+const Caption = ({contents, selected, editing}) => contents || editing
   ? <div style={{margin: '0.25em 0 0 0'}}><figcaption
     style={{
       fontSize: "110%",
@@ -138,7 +138,7 @@ const Caption = ({contents, selected, editing}) => contents
     </figcaption></div>
   : null
 
-const PullQuote = ({contents, selected, editing}) => contents
+const PullQuote = ({contents, selected, editing}) => contents || editing
   ? <blockquote
     style={{
       fontSize: '140%',
@@ -150,19 +150,19 @@ const PullQuote = ({contents, selected, editing}) => contents
       ...(selected && highlightedStyle),
     }}>
     <EditableText multiline placeholder="“Edit quotation...”"
-      value={`“${contents}…”`} disabled={!editing} />
+      value={contents} disabled={!editing} />
       </blockquote>
   : null
 
-const Attribution = ({name, editing}) => name
+const Attribution = ({name, editing}) => name || editing
   ? <cite style={{
       textAlign: 'right',
       display: 'block',
       fontStyle: 'normal',
       margin: '0.5em 0 0.25em 0',
     }}>
-      <EditableText multiline placeholder="Add attribution..."
-        value={`–${name}`} disabled={!editing} />
+      <EditableText multiline placeholder="— Attribution"
+        value={name} disabled={!editing} />
     </cite>
   : null
 

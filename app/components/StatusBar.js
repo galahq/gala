@@ -1,33 +1,37 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {I18n} from 'I18n.js'
-import { toggleEditing } from 'redux/actions.js'
+import { toggleEditing, saveChanges } from 'redux/actions.js'
 
 function mapStateToProps(state) {
   let {edit, caseData} = state
-  let {possible, inProgress} = edit
+  let {inProgress} = edit
   let {published} = caseData
   return {
+    editable: edit.possible,
     editing: inProgress,
-    message: possible
+    edited: edit.changed,
+    message: inProgress
       ? 'edit_instructions'
       : ( published || 'this_case_is_not_yet_published' ),
   }
 }
 
-const StatusBar = ({editing, message, toggleEditing}) =><div
+const StatusBar = ({editable, editing, edited, message, toggleEditing,
+                   saveChanges}) => <div
   className={`flash flash-${editing ? "editing" : "info"}`}
 >
   <I18n meaning={message}/>
   <span>
     &ensp;&mdash;&ensp;
-    <a onClick={toggleEditing}>
+    { editable && <a onClick={toggleEditing}>
       <I18n meaning={editing ? "stop_editing_this_case" : "edit_this_case"} />
-    </a>
+    </a> }
+    { edited && [<span>&ensp;</span>, <a onClick={saveChanges}>Save</a>] }
   </span>
 </div>
 
 export default connect(
   mapStateToProps,
-  {toggleEditing}
+  {toggleEditing, saveChanges}
 )(StatusBar)

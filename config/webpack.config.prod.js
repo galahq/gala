@@ -8,23 +8,23 @@ module.exports = {
     "case": ['babel-polyfill', 'whatwg-fetch', 'case.entry.js'],
     //edgenote: ['whatwg-fetch', 'edgenote.entry.js'],
     enrollments: ['babel-polyfill', 'whatwg-fetch', 'enrollments.entry.js'],
-    dashboard: ['babel-polyfill', 'whatwg-fetch', 'dashboard.entry.js']
+    dashboard: ['babel-polyfill', 'whatwg-fetch', 'dashboard.entry.js'],
   },
 
   output: {
     path: './app/assets/javascripts/react',
-    filename: '[name].bundle.js'
+    filename: '[name].bundle.js',
   },
 
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
+        'NODE_ENV': JSON.stringify('production'),
+      },
     }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin()
+    new webpack.optimize.AggressiveMergingPlugin(),
   ],
 
   resolve: {
@@ -32,8 +32,8 @@ module.exports = {
     root: [
       path.resolve('./app/components'),
       path.resolve('./config/locales/react'),
-      path.resolve('./app/assets/images/react')
-    ]
+      path.resolve('./app/assets/images/react'),
+    ],
   },
 
   module: {
@@ -43,25 +43,25 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel',
         query: {
-          presets: ['es2015', 'react'],
-          plugins: ["transform-object-rest-spread"]
-        }
+          presets: ['es2015', 'react', 'stage-3'],
+          plugins: ["transform-object-rest-spread"],
+        },
       }, {
         test: /\.(png|jpg)$/,
-        loader: 'url?limit=25000'
+        loader: 'url?limit=25000',
       }, {
         test: /\.(svg)$/,
-        loader: 'raw-loader'
+        loader: 'raw-loader',
       }, {
         test: /\.woff$/,
-        loader: 'url?limit=100000'
+        loader: 'url?limit=100000',
       }, {
         test: /\.scss$/,
-        loader: 'style!css!sass'
+        loader: 'style!css!sass',
       }, {
         test: /\.json$/,
-        loader: 'json'
-      }
-    ]
-  }
+        loader: 'json',
+      },
+    ],
+  },
 }

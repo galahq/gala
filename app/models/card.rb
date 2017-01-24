@@ -6,7 +6,7 @@ class Card < ApplicationRecord
   belongs_to :page
   acts_as_list scope: :page
 
-  translates :content
+  translates :content, :raw_content
 
   include Trackable
   def event_name

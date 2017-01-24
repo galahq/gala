@@ -20,7 +20,7 @@ class CardsController < ApplicationController
     @card.set_solidity_from_contents
 
     if @card.update(card_params)
-      render partial: 'cases/case', locals: {c: @card.case}
+      render @card
     else
       render json: @card.errors, status: :unprocessable_entity
     end
@@ -42,6 +42,6 @@ class CardsController < ApplicationController
   end
 
   def card_params
-    params.require(:card).permit(:position, :content, :solid)
+    params.require(:card).permit(:position, :raw_content, :solid)
   end
 end
