@@ -3,19 +3,30 @@ import { connect } from 'react-redux'
 import {Link} from 'react-router'
 import {Orchard} from 'concerns/orchard.js'
 import {Statistics} from 'Statistics.js'
+import {
+  activateEdgenote,
+  updateEdgenote,
+} from 'redux/actions.js'
 
-const mapStateToProps = (state, ownProps) => {
+const CONFIRMATION = "Are you sure you want to upgrade this edgenote to the new style? This cannot be undone. Note: it will not be displayed differently until all edgenotes for this card have been converted."
+
+const mapStateToProps = (state, {slug}) => {
   return {
-    ...ownProps,
-    contents: state.edgenotesBySlug[ownProps.slug],
-    selected: ownProps.slug === state.ui.highlightedEdgenote,
-    active: ownProps.slug === state.ui.activeEdgenote
+    contents: state.edgenotesBySlug[slug],
+    selected: slug === state.ui.highlightedEdgenote,
+    active: slug === state.ui.activeEdgenote,
+    editing: state.edit.inProgress,
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, {slug}) => {
   return {
-    deactivate: () => { dispatch({type: 'ACTIVATE_EDGENOTE', edgenoteSlug: null}) }
+    deactivate: () => dispatch(activateEdgenote(null)),
+    upgrade: e => {
+      if (!window.confirm(CONFIRMATION))  return
+      dispatch(updateEdgenote(slug, {style: 'v2'}))
+      e.preventDefault()
+    },
   }
 }
 
@@ -45,12 +56,16 @@ class OldEdgenoteFigure extends React.Component {
   }
 
   renderEdgenote() {
-    let {selected, contents, slug, pathPrefix} = this.props
-    let {caption, format, statistics, thumbnailUrl} = contents
+    let {selected, contents, slug, pathPrefix, editing, upgrade} = this.props
+    let {caption, format, statistics, thumbnailUrl, style} = contents
     let className = this.className()
 
+    const linkDestination = style === "v2" || editing
+      ? pathPrefix
+      : `${pathPrefix || ""}/edgenotes/${slug}`
+
     return <Link
-      to={`${pathPrefix || ""}/edgenotes/${slug}`}
+      to={linkDestination}
       className={className}
       onMouseOver={() => {this.setState({hovering: true})}}
       onMouseOut={() => {this.setState({hovering: false})}}
@@ -65,6 +80,7 @@ class OldEdgenoteFigure extends React.Component {
           dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
         />
         <figcaption className={ selected ? "focus" : "" } dangerouslySetInnerHTML={{__html: caption}} />
+        {editing && style === 'v1' && <button onClick={upgrade}>Upgrade</button>}
       </div>
     </Link>
   }

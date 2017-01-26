@@ -72,7 +72,7 @@ class EdgenoteFigure extends React.Component {
 
         { !!youtubeSlug || !!pullQuote || !!audioUrl ||
           <Image src={imageUrl} onChange={onChange('imageUrl')}
-            {...reduxProps} />
+            callToAction={callToAction} {...reduxProps} />
         }
 
         <Caption contents={caption} onChange={onChange('caption')}
@@ -132,22 +132,26 @@ const YouTube = ({slug, active, activate, deactivate, editing,
       onChange={onChange} />
   </div>
 
-const Image = ({src, active, activate, deactivate, editing, onChange}) => <div>
-    { src && <ImageZoom
+const Image = ({src, callToAction, active, activate, deactivate, editing,
+               onChange}) => {
+  let imageProps = {
+    style: {width: '100%', minHeight: '3em', display: 'block'},
+    src: `${src}?w=640`,
+  }
+  let imageComponent = callToAction ? <img {...imageProps} /> : <ImageZoom
       isZoomed={active}
       onZoom={activate}
       onUnzoom={deactivate}
-      shouldRespectMaxDimension
       defaultStyles={{overlay: {backgroundColor: '#1D2934'}}}
-      image={{
-        style: {width: '100%', minHeight: '3em', display: 'block'},
-        src: `${src}?w=640`,
-      }}
-      zoomImage={{src}} />
-    }
+      image={imageProps}
+      zoomImage={{src}} /> 
+
+  return <div>
+    { src && imageComponent}
     <EditableAttribute disabled={!editing} title="image url" value={src}
       onChange={onChange} />
   </div>
+}
 
 class AudioPlayer extends React.Component {
   componentDidUpdate(prevProps) {
