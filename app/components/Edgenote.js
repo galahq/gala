@@ -132,9 +132,11 @@ const YouTube = ({slug, active, activate, deactivate, editing,
       onChange={onChange} />
   </div>
 
-const Image = ({src, active, editing, onChange}) => <div>
+const Image = ({src, active, activate, deactivate, editing, onChange}) => <div>
     { src && <ImageZoom
       isZoomed={active}
+      onZoom={activate}
+      onUnzoom={deactivate}
       shouldRespectMaxDimension
       defaultStyles={{overlay: {backgroundColor: '#1D2934'}}}
       image={{style: {width: '100%', minHeight: '3em', display: 'block'}, src}} />
