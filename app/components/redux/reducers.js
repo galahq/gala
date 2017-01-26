@@ -9,6 +9,7 @@ import {
   UPDATE_CASE,
   UPDATE_CARD_CONTENTS,
   CREATE_EDGENOTE,
+  UPDATE_EDGENOTE,
   CLEAR_UNSAVED,
   TOGGLE_EDITING,
   HIGHLIGHT_EDGENOTE,
@@ -40,6 +41,15 @@ function edgenotesBySlug(state = {...window.caseData.edgenotes}, action) {
       return {
         ...state,
         [action.slug]: action.data,
+      }
+
+    case UPDATE_EDGENOTE:
+      return {
+        ...state,
+        [action.slug]: {
+          ...state[action.slug],
+          ...action.data,
+        },
       }
 
     default: return state
@@ -104,6 +114,16 @@ function edit(state, action) {
       return {
         ...state,
         inProgress: !state.inProgress,
+      }
+
+    case UPDATE_EDGENOTE:
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          [`edgenotes/${action.slug}`]: true,
+        },
       }
 
     case UPDATE_CASE:

@@ -20,7 +20,6 @@ class EdgenotesController < ApplicationController
   def create
     @edgenote = @case.edgenotes.build(
       slug: params[:slug],
-      caption: "“#{params[:slug]}” Edgenote",
       format: 'aside',
       style: :v2
     )
@@ -60,7 +59,12 @@ class EdgenotesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def edgenote_params
-      params.require(:edgenote).permit(:caption, :format, :thumbnail_url, :content, :embed_code, :website_url, :image_url, :pdf_url, :instructions, :photo_credit, :slug)
+      params.require(:edgenote).permit(*%i(
+        caption format thumbnail_url content embed_code website_url image_url
+        pdf_url instructions photo_credit slug style pull_quote attribution
+        call_to_action audio_url youtube_slug statistics
+      ))
+
     end
 
     def set_cors_headers

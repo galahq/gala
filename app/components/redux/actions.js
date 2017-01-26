@@ -17,6 +17,11 @@ export function createEdgenote(slug, data) {
   return {type: CREATE_EDGENOTE, slug, data}
 }
 
+export const UPDATE_EDGENOTE = "UPDATE_EDGENOTE"
+export function updateEdgenote(slug, data) {
+  return {type: UPDATE_EDGENOTE, slug, data}
+}
+
 // Edit
 export const TOGGLE_EDITING = "TOGGLE_EDITING"
 export function toggleEditing() {
