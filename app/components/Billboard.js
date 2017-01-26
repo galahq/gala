@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { EditableText } from '@blueprintjs/core'
+import EditableAttribute from 'EditableAttribute.js'
 
 import BillboardTitle from 'BillboardTitle.js'
 import { I18n } from 'I18n.js'
@@ -20,10 +21,10 @@ const Billboard = ({
   editing, slug, dek, summary, baseCoverUrl, updateCase, otherAvailableLocales,
 }) => <section className="Billboard">
     <BillboardTitle />
-    {
-      //<div><EditableAttribute placeholder="Base cover image URL"
-          //uri={`${endpoint}:cover_url`} didSave={didSave}>{baseCoverUrl}</EditableAttribute></div>
-    }
+    <EditableAttribute disabled={!editing} title="Base cover image URL"
+      onChange={v => updateCase(slug, {baseCoverUrl: v, coverUrl: v})}
+      value={baseCoverUrl} style={{color: '#EBEAE4'}}
+    />
     <div className="Card BillboardSnippet pt-light">
       <h3>
         <EditableText multiline value={dek} disabled={!editing}

@@ -51,10 +51,11 @@ async function saveModel(endpoint, state) {
   switch (model) {
     case 'cases':
       let {published, kicker, title, dek, slug, photoCredit, summary,
-        coverUrl} = state.caseData
+        baseCoverUrl} = state.caseData
       data = {
         case: {
-          published, kicker, title, dek, slug, photoCredit, summary, coverUrl,
+          published, kicker, title, dek, slug, photoCredit, summary,
+          coverUrl: baseCoverUrl,
         },
       }
       break
