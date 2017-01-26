@@ -139,7 +139,11 @@ const Image = ({src, active, activate, deactivate, editing, onChange}) => <div>
       onUnzoom={deactivate}
       shouldRespectMaxDimension
       defaultStyles={{overlay: {backgroundColor: '#1D2934'}}}
-      image={{style: {width: '100%', minHeight: '3em', display: 'block'}, src}} />
+      image={{
+        style: {width: '100%', minHeight: '3em', display: 'block'},
+        src: `${src}?w=640`,
+      }}
+      zoomImage={{src}} />
     }
     <EditableAttribute disabled={!editing} title="image url" value={src}
       onChange={onChange} />
