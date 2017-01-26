@@ -76,6 +76,19 @@ a.Edgenote {
   }
 }
 
+.edge .pt-editable-content {
+  box-shadow: 2pt 0 0 none, -2pt 0 0 none;
+  transition: background .15s cubic-bezier(.33, .66, .66, 1),
+              box-shadow .15s cubic-bezier(.33, .66, .66, 1),
+              color .15s cubic-bezier(.33, .66, .66, 1);
+}
+
+.edge--highlighted .pt-editable-content {
+    background-color: $lightGreen;
+    color: $black;
+    box-shadow: 2pt 0 0 $lightGreen, -2pt 0 0 $lightGreen;
+}
+
 a.Edgenote {
   padding: 0.11em;
 

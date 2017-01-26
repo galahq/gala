@@ -76,7 +76,7 @@ class EdgenoteFigure extends React.Component {
         }
 
         <Caption contents={caption} onChange={onChange('caption')}
-          {...reduxProps} />
+          {...reduxProps} {...(pullQuote ? {selected: false} : {})} />
         { !!youtubeSlug || !!audioUrl ||
           <CallToAction websiteUrl={websiteUrl} onChange={onChange}
             contents={callToAction}
@@ -189,13 +189,11 @@ const CallToAction = ({contents, websiteUrl, editing, onChange}) => <div>
 
 const Caption = ({contents, selected, editing, onChange}) => contents || editing
   ? <div style={{margin: '0.25em 0 0 0'}}><figcaption
-    style={{
-      fontSize: "110%",
-      lineHeight: 1.1,
-      display: "inline",
-      ...highlightableStyle,
-      ...(selected && highlightedStyle),
-    }}>
+      className={selected && "edge--highlighted"}
+      style={{
+        fontSize: "110%",
+        lineHeight: 1.1,
+      }}>
       <EditableText multiline placeholder="Add caption..." value={contents}
         disabled={!editing} onChange={onChange} />
     </figcaption></div>
@@ -204,15 +202,13 @@ const Caption = ({contents, selected, editing, onChange}) => contents || editing
 const PullQuote = ({contents, selected, editing, onChange}) =>
   contents || editing
   ? <blockquote
-    style={{
-      fontSize: '140%',
-      lineHeight: 1.3,
-      margin: '0 0 0.5em 0',
-      padding: '0',
-      display: "inline",
-      ...highlightableStyle,
-      ...(selected && highlightedStyle),
-    }}>
+      className={selected && "edge--highlighted"}
+      style={{
+        fontSize: '140%',
+        lineHeight: 1.3,
+        margin: '0 0 0.5em 0',
+        padding: '0',
+      }}>
     <EditableText multiline placeholder="“Add quotation...”"
       value={contents} disabled={!editing} onChange={onChange} />
       </blockquote>
@@ -220,11 +216,11 @@ const PullQuote = ({contents, selected, editing, onChange}) =>
 
 const Attribution = ({name, editing, onChange}) => name || editing
   ? <cite style={{
-      textAlign: 'right',
-      display: 'block',
-      fontStyle: 'normal',
-      margin: '0.5em 0 0.25em 0',
-    }}>
+    textAlign: 'right',
+    display: 'block',
+    fontStyle: 'normal',
+    margin: '0.5em 0 0.25em 0',
+  }}>
       <EditableText multiline placeholder="— Attribution"
         value={name} disabled={!editing} onChange={onChange} />
     </cite>
