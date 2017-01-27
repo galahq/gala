@@ -4,15 +4,16 @@ import { connect } from 'react-redux'
 import Sidebar from 'Sidebar.js'
 import Narrative from 'Narrative.js'
 
-function mapStateToProps(state) {
+function mapStateToProps(state, {params}) {
   return {
     editing: state.edit.inProgress,
+    pages: state.caseData.pageIds.map(id => state.pagesById[id]),
+    selectedPage: state.caseData.pageIds[parseInt(params.selectedPage) - 1],
   }
 }
 
 const CaseReader = props => {
-  let {editing, params, pages, children} = props
-  let selectedPage = parseInt(params.selectedPage) - 1
+  let {editing,  pages, children, selectedPage} = props
 
   let pageTitles = pages.map( (p) => { return p.title } )
 
@@ -24,7 +25,7 @@ const CaseReader = props => {
   />
   <Narrative
     selectedPage={selectedPage}
-    {...props}
+    pages={pages}
   />
   {children &&
     React.cloneElement(children, props)}

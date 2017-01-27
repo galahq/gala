@@ -5,12 +5,13 @@ json.small_cover_url ix_cover_image(c, :small)
 json.cover_url ix_cover_image(c, :billboard)
 json.translators translators_string c
 
-json.pages c.pages do |page|
-  json.id page.id
-  json.position page.position
-  json.title page.title
-  json.cards page.cards do |card|
-    json.partial! card
+json.page_ids c.pages.map &:id
+
+json.pages do
+  c.pages.each do |page|
+    json.set! page.id do
+      json.partial! page
+    end
   end
 end
 

@@ -8,6 +8,7 @@ import { decorator } from 'concerns/draftConfig.js'
 import {
   UPDATE_CASE,
   UPDATE_CARD_CONTENTS,
+  UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
   CLEAR_UNSAVED,
@@ -57,9 +58,19 @@ function edgenotesBySlug(state = {...window.caseData.edgenotes}, action) {
 }
 
 
-//function pagesById(state = {...window.caseData.pages}) {
-  //return state
-//}
+function pagesById(state = {...window.caseData.pages}, action) {
+  switch (action.type) {
+    case UPDATE_PAGE:
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          ...action.data,
+        },
+      }
+    default: return state
+  }
+}
 
 function cardsById(state, action) {
   if (typeof state === 'undefined') {
@@ -116,16 +127,6 @@ function edit(state, action) {
         inProgress: !state.inProgress,
       }
 
-    case UPDATE_EDGENOTE:
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`edgenotes/${action.slug}`]: true,
-        },
-      }
-
     case UPDATE_CASE:
       return {
         ...state,
@@ -143,6 +144,26 @@ function edit(state, action) {
         unsavedChanges: {
           ...state.unsavedChanges,
           [`cards/${action.id}`]: true,
+        },
+      }
+
+    case UPDATE_PAGE:
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          [`pages/${action.id}`]: true,
+        },
+      }
+
+    case UPDATE_EDGENOTE:
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          [`edgenotes/${action.slug}`]: true,
         },
       }
 
@@ -185,7 +206,7 @@ function ui(state, action) {
 export default combineReducers({
   caseData,
   edgenotesBySlug,
-  //pagesById,
+  pagesById,
   cardsById,
   edit,
   ui,

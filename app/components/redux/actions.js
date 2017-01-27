@@ -7,6 +7,11 @@ export function updateCase(slug, data) {
   return {type: UPDATE_CASE, data}
 }
 
+export const UPDATE_PAGE = "UPDATE_PAGE"
+export function updatePage(id, data) {
+  return {type: UPDATE_PAGE, id, data}
+}
+
 export const UPDATE_CARD_CONTENTS = "UPDATE_CARD_CONTENTS"
 export function updateCardContents(id, editorState) {
   return {type: UPDATE_CARD_CONTENTS, id, editorState}
