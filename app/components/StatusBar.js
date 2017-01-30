@@ -13,22 +13,22 @@ function mapStateToProps(state) {
     edited: edit.changed,
     message: inProgress
       ? 'edit_instructions'
-      : ( published || 'this_case_is_not_yet_published' ),
+      : ( published ? "" : 'this_case_is_not_yet_published' ),
   }
 }
 
 const StatusBar = ({editable, editing, edited, message, toggleEditing,
                    saveChanges}) => <div
-  className={`flash flash-${editing ? "editing" : "info"}`}
+  className={(message || editable) && `flash flash-${editing ? "editing" : "info"}`}
 >
   <I18n meaning={message}/>
-  <span>
-    &ensp;&mdash;&ensp;
+  { (editable || edited) && <span>
+    { message && <span>&ensp;&mdash;&ensp;</span> }
     { editable && <a onClick={toggleEditing}>
       <I18n meaning={editing ? "stop_editing_this_case" : "edit_this_case"} />
     </a> }
     { edited && [<span>&ensp;</span>, <a onClick={saveChanges}>Save</a>] }
-  </span>
+  </span> }
 </div>
 
 export default connect(
