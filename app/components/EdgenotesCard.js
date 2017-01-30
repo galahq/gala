@@ -12,9 +12,7 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-const EdgenotesCard = ({edgenoteSlugs, oldStyle, caseSlug, selectedPage, didSave}) => {
-  let edit = didSave !== null ? "/edit" : ""
-
+const EdgenotesCard = ({edgenoteSlugs, oldStyle, caseSlug, selectedPage}) => {
   const AnEdgenote = oldStyle ? OldEdgenote : Edgenote
 
   if (edgenoteSlugs.length > 0) {
@@ -25,11 +23,11 @@ const EdgenotesCard = ({edgenoteSlugs, oldStyle, caseSlug, selectedPage, didSave
           return <AnEdgenote
             slug={slug}
             caseSlug={caseSlug}
-            pathPrefix={`${edit}/${selectedPage}`}
+            pathPrefix={`${selectedPage}`}
             key={`${slug}`}
-            didSave={didSave}
+            didSave={null}
           />
-          })
+        })
       }
     />
   } else {
