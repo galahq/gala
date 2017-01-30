@@ -162,6 +162,4 @@ const CaseOverview = (props) => {
   </div>
 }
 
-export default connect(
-  state => ({editing: state.edit.inProgress})
-)(CaseOverview)
+export default CaseOverview

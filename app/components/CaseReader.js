@@ -6,9 +6,7 @@ import Narrative from 'Narrative.js'
 
 function mapStateToProps(state, {params}) {
   return {
-    editing: state.edit.inProgress,
-    pages: state.caseData.pageIds.map(id => state.pagesById[id]),
-    selectedPage: state.caseData.pageIds[parseInt(params.selectedPage) - 1],
+    selectedPage: parseInt(params.selectedPage) - 1,
   }
 }
 

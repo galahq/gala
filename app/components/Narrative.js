@@ -29,7 +29,7 @@ class Narrative extends React.Component {
       <main>
         <a id="top" />
         <Page
-          id={selectedPage}
+          id={pages[selectedPage].id}
         />
         {this.nextLink()}
       </main>

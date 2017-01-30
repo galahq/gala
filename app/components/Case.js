@@ -1,5 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import StatusBar from 'StatusBar.js'
+
+function mapStateToProps(state) {
+  return {
+    editing: state.edit.inProgress,
+    pages: state.caseData.pageIds.map( id => state.pagesById[id] ),
+  }
+}
 
 class Case extends React.Component {
 
@@ -30,6 +38,7 @@ class Case extends React.Component {
 
   render() {
     let c = this.state.caseData
+    let { editing, pages } = this.props
 
     c.didSave = this.editing() ? this.didSave.bind(this) : null
     c.enrolled = this.didSave.bind(this)
@@ -37,11 +46,18 @@ class Case extends React.Component {
     return (
       <div id="Case">
         <StatusBar />
-        {this.props.children && React.cloneElement(this.props.children, c)}
+        {this.props.children && React.cloneElement(
+          this.props.children,
+          {
+            ...c,
+            editing, pages,
+          })}
       </div>
     )
   }
 
 }
 
-export default Case
+export default connect(
+  mapStateToProps,
+)(Case)
