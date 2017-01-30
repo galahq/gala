@@ -120,18 +120,19 @@ class Actions extends React.Component {
 
         {this.renderPodcasts()}
 
-        {this.renderIfReading(
-          <div>
-            <h2>
-              <div
-                className="ActionIcon"
-                dangerouslySetInnerHTML={{__html: require('explore.svg')}}
-              />
-              <I18n meaning="explore" />
-            </h2>
-            <Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
-          </div>
-        )}
+        {//this.renderIfReading(
+          //<div>
+            //<h2>
+              //<div
+                //className="ActionIcon"
+                //dangerouslySetInnerHTML={{__html: require('explore.svg')}}
+              ///>
+              //<I18n meaning="explore" />
+            //</h2>
+            //<Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
+          //</div>
+        //)
+        }
 
         {this.renderConsiderLinks()}
 
