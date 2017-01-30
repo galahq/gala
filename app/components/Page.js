@@ -45,6 +45,7 @@ class Page extends Trackable {
         <section className="Page-meta">
           <h2 key={`h2:${id}`}>
             <EditableText placeholder="Page title" value={title}
+              multiline
               disabled={!editing}
               onChange={value => updatePage(id, { title: value })}
             />

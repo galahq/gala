@@ -65,7 +65,9 @@ a.Edgenote {
   font-family: $sansFont;
   font-weight: 500;
   color: $white;
-  width: 46%;
+  @media screen and (min-width: $mobileCutoff) {
+    width: 46%;
+  }
 
   a {
     color: inherit !important;

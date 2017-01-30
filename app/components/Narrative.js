@@ -5,7 +5,9 @@ import {I18n} from 'I18n.js'
 import Page from 'Page.js'
 
 class Narrative extends React.Component {
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedPage === this.props.selectedPage)  return
+
     let top = document.getElementById('top');
     if (top && window.innerWidth < 749) {top.scrollIntoView()}
   }
