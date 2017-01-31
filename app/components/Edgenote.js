@@ -220,6 +220,7 @@ const Attribution = ({name, editing, onChange}) => name || editing
     display: 'block',
     fontStyle: 'normal',
     margin: '0.5em 0 0.25em 0',
+    lineHeight: 1,
   }}>
       <EditableText multiline placeholder="— Attribution"
         value={name} disabled={!editing} onChange={onChange} />
