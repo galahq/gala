@@ -1,19 +1,25 @@
 import { Orchard } from 'concerns/orchard.js'
 import { convertToRaw } from 'draft-js'
 
+const setUnsaved = () => window.onbeforeunload = () =>
+  "You have unsaved changes. Are you sure you want to leave?"
+
 // Models
 export const UPDATE_CASE = "UPDATE_CASE"
 export function updateCase(slug, data) {
+  setUnsaved()
   return {type: UPDATE_CASE, data}
 }
 
 export const UPDATE_PAGE = "UPDATE_PAGE"
 export function updatePage(id, data) {
+  setUnsaved()
   return {type: UPDATE_PAGE, id, data}
 }
 
 export const UPDATE_CARD_CONTENTS = "UPDATE_CARD_CONTENTS"
 export function updateCardContents(id, editorState) {
+  setUnsaved()
   return {type: UPDATE_CARD_CONTENTS, id, editorState}
 }
 
@@ -24,6 +30,7 @@ export function createEdgenote(slug, data) {
 
 export const UPDATE_EDGENOTE = "UPDATE_EDGENOTE"
 export function updateEdgenote(slug, data) {
+  setUnsaved()
   return {type: UPDATE_EDGENOTE, slug, data}
 }
 
@@ -38,6 +45,7 @@ export function saveChanges() {
     const state = {...getState()}
 
     dispatch(clearUnsaved())
+    window.onbeforeunload = null
 
     Object.keys(state.edit.unsavedChanges).forEach(
       endpoint => {
