@@ -1,8 +1,15 @@
 import React, {PropTypes} from 'react'
+import { connect } from 'react-redux'
 import {I18n} from 'I18n.js'
 import {Orchard} from 'concerns/orchard.js'
 
-export class EditableList extends React.Component {
+function mapStateToProps(state) {
+  return {
+    editing: state.edit.inProgress,
+  }
+}
+
+class EditableListClass extends React.Component {
 
   renderElements() {
     let {elements, selectedIndex, selectedClass} = this.props
@@ -14,22 +21,12 @@ export class EditableList extends React.Component {
   }
 
   addElement() {
-    let args = this.props.uri.split(':')
-    let endpoint = args[0]
-    let attribute = args[1]
-
-    if (attribute) {
-      let params = endpoint.split(/(.*)\//)
-      let model = params[1].split('/').pop().slice(0, -1)
-      return
-    } else {
-      Orchard.graft(this.props.uri, {})
-        .then((response) => {this.props.didSave(response)})
-    }
+    Orchard.graft(this.props.uri, {})
+      .then(setTimeout(() => location.reload(), 50))
   }
 
   renderAddOption() {
-    if (this.props.didSave !== null) {
+    if (this.props.editing) {
       return <li className="EditableList-add">
         <a onClick={this.addElement.bind(this)}><I18n meaning="create" /></a>
       </li>
@@ -49,6 +46,7 @@ export class EditableList extends React.Component {
 
 }
 
+export const EditableList = connect(mapStateToProps)(EditableListClass)
 
 EditableList.propTypes = {
   elements: PropTypes.arrayOf(PropTypes.element),

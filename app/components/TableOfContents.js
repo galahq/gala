@@ -1,7 +1,15 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { I18n } from 'I18n.js'
 import {EditableList} from 'EditableList.js'
+
+function mapStateToProps(state) {
+  return {
+    editing: state.edit.inProgress,
+    pageTitles: state.caseData.pageIds.map( id => state.pagesById[id].title )
+  }
+}
 
 class TableOfContents extends React.Component {
   renderChapterLinks() {
@@ -30,4 +38,4 @@ class TableOfContents extends React.Component {
   }
 }
 
-export default TableOfContents
+export default connect(mapStateToProps)(TableOfContents)

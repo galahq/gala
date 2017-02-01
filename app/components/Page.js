@@ -66,11 +66,9 @@ class Page extends Trackable {
 
 class CreateCardLink extends React.Component {
   createCard() {
-    let { pageId, i, didSave } = this.props
+    let { pageId, i} = this.props
     Orchard.graft(`pages/${pageId}/cards`, {position: i + 1})
-      .then((response) => {
-        didSave(response)
-      })
+      .then(setTimeout(() => location.reload(), 50))
   }
 
   render() {
