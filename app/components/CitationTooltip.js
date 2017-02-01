@@ -19,16 +19,20 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 }
 
-const CitationTooltip = ({openedCitation, editable, editorState, href, contents, onChange, onCloseCitation}) => {
+const CitationTooltip = ({openedCitation, editable, editorState, href, contents,
+                          onChange, onCloseCitation, cardWidth}) => {
   let label = openedCitation.labelRef
-  let left = label.offsetLeft
   let top = label.offsetTop
+
+  let horizontalCenter = label.offsetLeft - tooltipWidth / 2
+  let left = Math.min(cardWidth - tooltipWidth - 21, Math.max(horizontalCenter, 7))
+
 
   let positionalStyles = {
     position: 'absolute',
     left: left,
     top: top,
-    transform: "translate(-50%, calc(-100% + 3px))",
+    transform: 'translateY(calc(-100% + 3px)',
   }
 
   let closeCitation = editable ? null : close
@@ -61,6 +65,7 @@ const CitationTooltip = ({openedCitation, editable, editorState, href, contents,
 
 export default connect(mapStateToProps, mapDispatchToProps)(CitationTooltip)
 
+const tooltipWidth = 294
 const styles = {
   tooltip: {
     background: "#6ACB72",
@@ -69,7 +74,7 @@ const styles = {
     color: 'black',
     display: 'block',
     font: "14px tenso",
-    maxWidth: "20em",
+    width: tooltipWidth,
     padding: "0.25em 0.5em",
   },
   field: {

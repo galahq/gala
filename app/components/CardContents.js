@@ -91,13 +91,10 @@ class CardContents extends React.Component {
       />
 
       {
-        citationOpenWithinCard && <CitationTooltip cardId={id} {...{
-                                    //editorState,
-                                    openedCitation,
-                                    //onChange,
-                                    editable,
-                                    //onCloseCitation,
-                                  }} />
+        citationOpenWithinCard && <CitationTooltip cardId={id}
+          cardWidth={this.cardRef.clientWidth}
+          {...{openedCitation, editable }}
+        />
       }
 
       { solid && !editable && <Statistics statistics={statistics} /> }
