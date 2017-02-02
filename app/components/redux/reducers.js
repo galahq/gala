@@ -1,13 +1,7 @@
 import { combineReducers } from 'redux'
 
-import { EditorState, convertFromRaw } from 'draft-js'
-import convertFromOldStyleCardSerialization
-  from 'concerns/convertFromOldStyleCardSerialization.js'
-import { decorator } from 'concerns/draftConfig.js'
-
 import {
   UPDATE_CASE,
-  UPDATE_CARD_CONTENTS,
   UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
@@ -16,6 +10,7 @@ import {
   OPEN_CITATION,
 } from './actions.js'
 
+import cardsById from './reducers/cards.js'
 import edit from './reducers/edit.js'
 import statistics from './reducers/statistics.js'
 
@@ -69,34 +64,6 @@ function pagesById(state = {...window.caseData.pages}, action) {
           ...action.data,
         },
       }
-    default: return state
-  }
-}
-
-function cardsById(state, action) {
-  if (typeof state === 'undefined') {
-    state = {...window.caseData.cards}
-    Object.values(state).forEach( card => {
-      let content = card.rawContent
-        ? JSON.parse(card.rawContent)
-        : convertFromOldStyleCardSerialization(card.content)
-      let contentState = convertFromRaw(content)
-      state[card.id].editorState = EditorState.createWithContent(contentState,
-                                                                 decorator)
-    } )
-    return state
-  }
-
-  switch (action.type) {
-    case UPDATE_CARD_CONTENTS:
-      return {
-        ...state,
-        [action.id]: {
-          ...state[action.id],
-          editorState: action.editorState,
-        },
-      }
-
     default: return state
   }
 }

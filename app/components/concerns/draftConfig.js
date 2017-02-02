@@ -9,6 +9,7 @@ import Immutable from 'immutable'
 
 import EdgenoteEntity from 'EdgenoteEntity.js'
 import CitationEntity from 'CitationEntity.js'
+import CommentThreadEntity from '../comments/CommentThreadEntity.js'
 
 const newBlockRenderMap = Immutable.Map({
   'unstyled': {
@@ -48,9 +49,14 @@ export const decorator = new CompositeDecorator([
   {
     strategy: getFindEntityFunction('EDGENOTE'),
     component: EdgenoteEntity,
-  }, {
+  },
+  {
     strategy: getFindEntityFunction('CITATION'),
     component: CitationEntity,
+  },
+  {
+    strategy: getFindEntityFunction('COMMENT_THREAD'),
+    component: CommentThreadEntity,
   },
 ])
 
