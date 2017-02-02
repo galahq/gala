@@ -11,12 +11,13 @@ import {
   UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
-  CLEAR_UNSAVED,
-  TOGGLE_EDITING,
   HIGHLIGHT_EDGENOTE,
   ACTIVATE_EDGENOTE,
   OPEN_CITATION,
 } from './actions.js'
+
+import edit from './reducers/edit.js'
+import statistics from './reducers/statistics.js'
 
 function caseData(state, action) {
   if (typeof state === 'undefined') {
@@ -100,77 +101,6 @@ function cardsById(state, action) {
   }
 }
 
-function edit(state, action) {
-  if (typeof state === 'undefined') {
-    return {
-      possible: window.caseData.reader.canUpdateCase,
-      inProgress: false,
-      changed: false,
-      unsavedChanges: {
-        // Using this like a Set
-        // [`${modelName}/${modelId}` || "caseData"]: true,
-      },
-    }
-  }
-
-  switch (action.type) {
-    case CLEAR_UNSAVED:
-      return {
-        ...state,
-        changed: false,
-        unsavedChanges: {},
-      }
-
-    case TOGGLE_EDITING:
-      return {
-        ...state,
-        inProgress: !state.inProgress,
-      }
-
-    case UPDATE_CASE:
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          caseData: true,
-        },
-      }
-
-    case UPDATE_CARD_CONTENTS:
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`cards/${action.id}`]: true,
-        },
-      }
-
-    case UPDATE_PAGE:
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`pages/${action.id}`]: true,
-        },
-      }
-
-    case UPDATE_EDGENOTE:
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`edgenotes/${action.slug}`]: true,
-        },
-      }
-
-    default: return state
-  }
-}
-
 
 function ui(state, action) {
   if (typeof state === 'undefined') {
@@ -208,6 +138,7 @@ export default combineReducers({
   edgenotesBySlug,
   pagesById,
   cardsById,
+  statistics,
   edit,
   ui,
 })
