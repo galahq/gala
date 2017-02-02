@@ -3,6 +3,7 @@ class Card < ApplicationRecord
 
   include Authority::Abilities
 
+  has_many :comment_threads
   belongs_to :page
   acts_as_list scope: :page
 

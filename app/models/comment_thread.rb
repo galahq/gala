@@ -1,5 +1,4 @@
 class CommentThread < ApplicationRecord
-  belongs_to :case
-  belongs_to :group
-  has_many :comments, dependent: :delete_all
+  belongs_to :card
+  has_many :comments
 end
