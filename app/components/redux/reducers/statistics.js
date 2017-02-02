@@ -1,8 +1,5 @@
-import { combineReducers } from 'redux'
-
-function cards(state = window.caseData.statistics.cards, action) {
+function statistics(state = window.caseData.statistics, action) {
   return state
 }
-export default combineReducers({
-  cards,
-})
+
+export default statistics

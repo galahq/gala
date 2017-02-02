@@ -4,8 +4,7 @@ import Icon from 'Icon.js'
 
 function mapStateToProps(state, ownProps) {
   let { uri } = ownProps
-  let [model, id] = uri.split('/')
-  let {uniques, views, averageTime, updatedAt} = state.statistics[model][id] || {}
+  let {uniques, views, averageTime, updatedAt} = state.statistics[uri] || {}
   return {
     visible: !!uniques,
     uniques,
