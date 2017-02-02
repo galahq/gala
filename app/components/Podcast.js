@@ -4,7 +4,7 @@ import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
 import {I18n} from 'I18n.js'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
-import {Statistics} from 'Statistics.js'
+import Statistics from 'Statistics.js'
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
   eventName() { return "visit_podcast" }

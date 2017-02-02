@@ -23,6 +23,18 @@ json.cards do
   end
 end
 
+if current_user.has_cached_role? :editor
+  json.statistics do
+    c.cards.each do |card|
+        json.set! "cards/#{card.id}" do
+          json.partial! "trackable/statistics", locals: { trackable: card }
+        end
+    end
+  end
+else
+  json.statistics false
+end
+
 json.edgenotes do
   c.edgenotes.each do |edgenote|
     json.set! edgenote.slug do

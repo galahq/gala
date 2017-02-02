@@ -1,21 +1,39 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import Icon from 'Icon.js'
 
-export class Statistics extends React.Component {
+function mapStateToProps(state, ownProps) {
+  let { uri } = ownProps
+  let {uniques, views, averageTime, updatedAt} = state.statistics[uri] || {}
+  return {
+    visible: !!uniques,
+    uniques,
+    views,
+    averageTime,
+    updatedAt,
+  }
+}
+
+class Statistics extends React.Component {
 
   render() {
-    if (this.props.statistics === undefined) { return <span /> }
-    let {uniques, views, averageTime} = this.props.statistics
-    return <p className={`o-${this.props.inline ? 'tag' : 'bottom-right'} c-statistics`}>
-      <span className='c-statistics__icon'
-        dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-uniques.svg')}} />
+    let {visible, uniques, views, averageTime, inline} = this.props
+
+    if (!visible)  return null
+    return <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
+
+      <Icon filename="ahoy-uniques" className='c-statistics__icon' />
       {uniques}
-      <span className='c-statistics__icon'
-        dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-views.svg')}} />
+
+      <Icon filename="ahoy-views" className='c-statistics__icon' />
       {views}
-      <span className='c-statistics__icon c-statistics__icon--less-space'
-        dangerouslySetInnerHTML={{__html: require('../assets/images/react/ahoy-duration.svg')}} />
+
+      <Icon filename="ahoy-duration"
+        className='c-statistics__icon c-statistics__icon--less-space' />
       {averageTime}
+
     </p>
   }
-
 }
+
+export default connect(mapStateToProps)(Statistics)

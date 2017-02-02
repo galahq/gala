@@ -11,7 +11,7 @@ import { Editor, RichUtils } from 'draft-js'
 import { blockRenderMap, customStyleMap } from 'concerns/draftConfig.js'
 
 import EditorToolbar from 'EditorToolbar.js'
-import { Statistics } from 'Statistics.js'
+import Statistics from 'Statistics.js'
 import CitationTooltip from 'CitationTooltip.js'
 
 import { updateCardContents } from 'redux/actions.js'
@@ -61,7 +61,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 
 class CardContents extends React.Component {
   render() {
-    let {id, solid, statistics, editable, editing, editorState, onChange,
+    let {id, solid, editable, editing, editorState, onChange,
       handleKeyCommand, onDelete, openedCitation} = this.props
 
       let citationOpenWithinCard
@@ -97,7 +97,7 @@ class CardContents extends React.Component {
         />
       }
 
-      { solid && !editable && <Statistics statistics={statistics} /> }
+      { solid && !editable && <Statistics uri={`cards::${id}`} /> }
     </div>
   }
 }
