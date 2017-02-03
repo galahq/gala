@@ -28,6 +28,13 @@ export const customStyleMap = {
   'SELECTION': {
     backgroundColor: '#ccc',
   },
+  'THREAD': {
+    background: "linear-gradient(rgba(115,81,212, 0.7),rgba(115,81,212, 0.7))",
+    backgroundSize: "1px 1px",
+    backgroundRepeat: "repeat-x",
+    backgroundPosition: "0 93%",
+    textShadow: "0.03em 0 #EBEAE4, -0.03em 0 #EBEAE4, 0 0.03em #EBEAE4, 0 -0.03em #EBEAE4, 0.06em 0 #EBEAE4, -0.06em 0 #EBEAE4, 0.09em 0 #EBEAE4, -0.09em 0 #EBEAE4, 0.12em 0 #EBEAE4, -0.12em 0 #EBEAE4, 0.15em 0 #EBEAE4, -0.15em 0 #EBEAE4",
+  },
 }
 
 function getFindEntityFunction(type) {

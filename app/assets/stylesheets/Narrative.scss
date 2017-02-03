@@ -111,6 +111,8 @@ article {
     border-bottom: 1px solid $lightGreen;
     transition: background .15s cubic-bezier(.33, .66, .66, 1);
 
+    span { text-shadow: none; }
+
     &:hover {
       background-color: $lightGreen;
       color: inherit;
