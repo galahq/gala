@@ -4,7 +4,11 @@ import convertFromOldStyleCardSerialization
 import { addCommentThreads } from 'concerns/commentThreads.js'
 import { decorator } from 'concerns/draftConfig.js'
 
-import { UPDATE_CARD_CONTENTS, APPLY_SELECTION } from '../actions.js'
+import {
+  UPDATE_CARD_CONTENTS,
+  APPLY_SELECTION,
+  REPLACE_CARD,
+} from '../actions.js'
 
 let { forceSelection } = EditorState
 
@@ -30,6 +34,15 @@ function cardsById(state = getInitialState(), action) {
         },
       }
 
+    case REPLACE_CARD:
+      return {
+        ...state,
+        [action.cardId]: {
+          ...action.newCard,
+          editorState: parseEditorStateFromPersistedCard(action.newCard),
+        },
+      }
+
     default: return state
   }
 }
@@ -43,18 +56,20 @@ function getInitialState() {
   let state = {...window.caseData.cards}
 
   Object.values(state).forEach( card => {
-
-    const content = card.rawContent
-      ? JSON.parse(card.rawContent)
-      : convertFromOldStyleCardSerialization(card.content)
-
-    const contentWithCommentThreads = addCommentThreads(content, card)
-
-    const contentState = convertFromRaw(contentWithCommentThreads)
-
-    state[card.id].editorState = EditorState.createWithContent(contentState,
-                                                               decorator)
+    state[card.id].editorState = parseEditorStateFromPersistedCard(card)
   } )
 
   return state
+}
+
+function parseEditorStateFromPersistedCard(card) {
+  const content = card.rawContent
+    ? JSON.parse(card.rawContent)
+    : convertFromOldStyleCardSerialization(card.content)
+
+  const contentWithCommentThreads = addCommentThreads(content, card)
+
+  const contentState = convertFromRaw(contentWithCommentThreads)
+
+  return EditorState.createWithContent(contentState, decorator)
 }

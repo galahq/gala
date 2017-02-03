@@ -20,7 +20,9 @@ Rails.application.routes.draw do
     resources :pages, only: %i(update destroy) do
       resources :cards, only: %i(create)
     end
-    resources :cards, only: %i(update destroy)
+    resources :cards, only: %i(update destroy) do
+      resources :comment_threads, only: %i(create)
+    end
 
     devise_for :readers, skip: :omniauth_callbacks, controllers: {
       sessions: 'readers/sessions',

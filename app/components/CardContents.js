@@ -15,7 +15,11 @@ import EditorToolbar from 'EditorToolbar.js'
 import Statistics from 'Statistics.js'
 import CitationTooltip from 'CitationTooltip.js'
 
-import { updateCardContents, applySelection } from 'redux/actions.js'
+import {
+  updateCardContents,
+  applySelection,
+  createCommentThread,
+} from 'redux/actions.js'
 
 const mapStateToProps = (state, ownProps) => {
   let {solid, statistics, editorState} = state.cardsById[ownProps.id]
@@ -47,17 +51,21 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onMakeSelectionForComment: eS => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus())  return
-      const selectionState = selection.isCollapsed()
+      const selectionState = (selection.isCollapsed()
+                              || selection.getStartKey() !== selection.getEndKey())
         ? SelectionState.createEmpty(selection.getAnchorKey())
         : selection
       dispatch(applySelection(ownProps.id, selectionState))
     },
+    createCommentThread: (cardId, editorState) =>
+      dispatch(createCommentThread(cardId, editorState)),
   }
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const { editable } = stateProps
-  const { onChangeContents, onMakeSelectionForComment } = dispatchProps
+  const { editable, editorState } = stateProps
+  const { onChangeContents, onMakeSelectionForComment,
+    createCommentThread } = dispatchProps
 
   const onChange = editable ? onChangeContents : onMakeSelectionForComment
 
@@ -68,8 +76,14 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 
     onChange,
     handleKeyCommand: command => {
-      let newState = RichUtils.handleKeyCommand(stateProps.editorState, command)
+      let newState = RichUtils.handleKeyCommand(editorState, command)
       return newState ? onChange(newState) && 'handled' : 'not-handled'
+    },
+
+    addHighlight: () => {
+      if (!editable && !editorState.getSelection().isCollapsed()) {
+        createCommentThread(ownProps.id, editorState)
+      }
     },
   }
 }
@@ -77,7 +91,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, editorState, onChange,
-      handleKeyCommand, onDelete, openedCitation} = this.props
+      handleKeyCommand, onDelete, openedCitation, addHighlight} = this.props
 
     let citationOpenWithinCard
     try {
@@ -103,6 +117,8 @@ class CardContents extends React.Component {
           onChange,
         }}
       />
+
+      <a onClick={addHighlight}>Add highlight</a>
 
       {
         citationOpenWithinCard && <CitationTooltip cardId={id}

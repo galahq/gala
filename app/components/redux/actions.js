@@ -110,6 +110,32 @@ export function applySelection(cardId, selectionState) {
   return { type: APPLY_SELECTION, cardId, selectionState }
 }
 
+export function createCommentThread(cardId, editorState) {
+  return async (dispatch) => {
+    const selection = editorState.getSelection()
+    const start = selection.getStartOffset()
+    const end = selection.getEndOffset()
+    const length = end - start
+
+    const blocks = editorState.getCurrentContent().getBlocksAsArray()
+    const blockKey = selection.getStartKey()
+    const blockIndex = blocks.findIndex(b => b.getKey() === blockKey)
+
+    const originalHighlightText = blocks[blockIndex].getText().slice(start, end)
+
+    let newCard = await Orchard.graft(`cards/${cardId}/comment_threads`, {
+      commentThread: { blockIndex, start, length, originalHighlightText },
+    })
+
+    dispatch(replaceCard(cardId, newCard))
+  }
+}
+
+export const REPLACE_CARD = "REPLACE_CARD"
+function replaceCard(cardId, newCard) {
+  return { type: REPLACE_CARD, cardId, newCard }
+}
+
 
 // UI
 export const HIGHLIGHT_EDGENOTE = "HIGHLIGHT_EDGENOTE"

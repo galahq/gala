@@ -1,51 +1,27 @@
 class CommentThreadsController < ApplicationController
-  before_action :set_comment_thread, only: [:show, :update, :destroy]
+  before_action :authenticate_reader!
+  before_action :set_card, only: [:create]
 
-  # GET /comment_threads
-  def index
-    @comment_threads = CommentThread.all
+  # authorize_actions_for CommentThread
 
-    render json: @comment_threads
-  end
-
-  # GET /comment_threads/1
-  def show
-    render json: @comment_thread
-  end
-
-  # POST /comment_threads
   def create
-    @comment_thread = CommentThread.new(comment_thread_params)
+    @comment_thread = @card.comment_threads.build(comment_thread_params)
+    @comment_thread.locale = I18n.locale
 
     if @comment_thread.save
-      render json: @comment_thread, status: :created, location: @comment_thread
+      render partial: 'cards/card', locals: {card: @comment_thread.card}
     else
       render json: @comment_thread.errors, status: :unprocessable_entity
     end
-  end
-
-  # PATCH/PUT /comment_threads/1
-  def update
-    if @comment_thread.update(comment_thread_params)
-      render json: @comment_thread
-    else
-      render json: @comment_thread.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /comment_threads/1
-  def destroy
-    @comment_thread.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_comment_thread
-      @comment_thread = CommentThread.find(params[:id])
-    end
+  def set_card
+    @card = Card.find params[:card_id]
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def comment_thread_params
-      params.require(:comment_thread).permit(:group_id, :case_id)
-    end
+  def comment_thread_params
+    params.require(:comment_thread).permit(*%i(start length block_index
+                                              original_highlight_text))
+  end
 end
