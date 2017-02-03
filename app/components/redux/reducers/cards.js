@@ -4,7 +4,9 @@ import convertFromOldStyleCardSerialization
 import { addCommentThreads } from 'concerns/commentThreads.js'
 import { decorator } from 'concerns/draftConfig.js'
 
-import { UPDATE_CARD_CONTENTS } from '../actions.js'
+import { UPDATE_CARD_CONTENTS, APPLY_SELECTION } from '../actions.js'
+
+let { forceSelection } = EditorState
 
 function cardsById(state = getInitialState(), action) {
   switch (action.type) {
@@ -14,6 +16,17 @@ function cardsById(state = getInitialState(), action) {
         [action.id]: {
           ...state[action.id],
           editorState: action.editorState,
+        },
+      }
+
+    case APPLY_SELECTION:
+      let editorState = state[action.cardId].editorState
+
+      return {
+        ...state,
+        [action.cardId]: {
+          ...state[action.cardId],
+          editorState: forceSelection(editorState, action.selectionState),
         },
       }
 

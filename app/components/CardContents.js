@@ -7,21 +7,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Editor, RichUtils } from 'draft-js'
+import { Editor, RichUtils, SelectionState} from 'draft-js'
 import { blockRenderMap, customStyleMap } from 'concerns/draftConfig.js'
+import { selectedCommentStyle } from 'concerns/commentThreads.js'
 
 import EditorToolbar from 'EditorToolbar.js'
 import Statistics from 'Statistics.js'
 import CitationTooltip from 'CitationTooltip.js'
 
-import { updateCardContents } from 'redux/actions.js'
+import { updateCardContents, applySelection } from 'redux/actions.js'
 
 const mapStateToProps = (state, ownProps) => {
   let {solid, statistics, editorState} = state.cardsById[ownProps.id]
 
   return {
     editable: state.edit.inProgress,
-    editing: editorState.getSelection().hasFocus,
+    editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     openedCitation: state.ui.openedCitation,
     solid,
     statistics,
@@ -42,19 +43,33 @@ const mapStateToProps = (state, ownProps) => {
   //}
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onChange: eS => dispatch(updateCardContents(ownProps.id, eS)),
+    onChangeContents: eS => dispatch(updateCardContents(ownProps.id, eS)),
+    onMakeSelectionForComment: eS => {
+      const selection = eS.getSelection()
+      if (!selection.getHasFocus())  return
+      const selectionState = selection.isCollapsed()
+        ? SelectionState.createEmpty(selection.getAnchorKey())
+        : selection
+      dispatch(applySelection(ownProps.id, selectionState))
+    },
   }
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const { editable } = stateProps
+  const { onChangeContents, onMakeSelectionForComment } = dispatchProps
+
+  const onChange = editable ? onChangeContents : onMakeSelectionForComment
+
   return {
     ...ownProps,
     ...stateProps,
     ...dispatchProps,
 
+    onChange,
     handleKeyCommand: command => {
       let newState = RichUtils.handleKeyCommand(stateProps.editorState, command)
-      return newState ? dispatchProps.onChange(newState) && 'handled' : 'not-handled'
+      return newState ? onChange(newState) && 'handled' : 'not-handled'
     },
   }
 }
@@ -64,26 +79,25 @@ class CardContents extends React.Component {
     let {id, solid, editable, editing, editorState, onChange,
       handleKeyCommand, onDelete, openedCitation} = this.props
 
-      let citationOpenWithinCard
-      try {
-        !!editorState.getCurrentContent().getEntity(openedCitation.key)
-        citationOpenWithinCard = citationInsideThisCard(this.cardRef, openedCitation.labelRef)
-      } catch(e) {
-        citationOpenWithinCard = false
-      }
+    let citationOpenWithinCard
+    try {
+      citationOpenWithinCard = citationInsideThisCard(this.cardRef, openedCitation.labelRef)
+    } catch(e) {
+      citationOpenWithinCard = false
+    }
 
-      return <div
-        ref={el => this.cardRef = el}
-        className={solid ? 'Card' : 'nonCard'}
-        style={{transition: 'padding-top .1s', paddingTop: editing && '2em'}}
-      >
+    return <div
+      ref={el => this.cardRef = el}
+      className={solid ? 'Card' : 'nonCard'}
+      style={{transition: 'padding-top .1s', paddingTop: editing && '2em'}}
+    >
 
       {editing && <EditorToolbar cardId={id} />}
       <Editor
-        readOnly={!editable || openedCitation.key}
+        readOnly={openedCitation.key}
+        customStyleMap={{...customStyleMap, 'thread--6': selectedCommentStyle}}
         {...{
           blockRenderMap,
-          customStyleMap,
           editorState,
           handleKeyCommand,
           onChange,
@@ -102,7 +116,11 @@ class CardContents extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(CardContents)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
+)(CardContents)
 
 function citationInsideThisCard(card, citation) {
   if (!card || !citation)  return false

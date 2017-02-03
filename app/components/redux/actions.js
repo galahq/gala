@@ -104,6 +104,13 @@ function clearUnsaved() {
 }
 
 
+// Comment Threads
+export const APPLY_SELECTION = "APPLY_SELECTION"
+export function applySelection(cardId, selectionState) {
+  return { type: APPLY_SELECTION, cardId, selectionState }
+}
+
+
 // UI
 export const HIGHLIGHT_EDGENOTE = "HIGHLIGHT_EDGENOTE"
 export function highlightEdgenote(slug) {
