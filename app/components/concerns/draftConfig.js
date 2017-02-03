@@ -29,7 +29,7 @@ export const customStyleMap = {
     backgroundColor: '#ccc',
   },
   'THREAD': {
-    background: "linear-gradient(rgba(115,81,212, 0.7),rgba(115,81,212, 0.7))",
+    background: "linear-gradient(rgba(115,81,212, 1),rgba(115,81,212, 1))",
     backgroundSize: "1px 1px",
     backgroundRepeat: "repeat-x",
     backgroundPosition: "0 93%",
