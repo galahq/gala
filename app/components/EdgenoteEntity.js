@@ -12,7 +12,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-
 const mapDispatchToProps = (dispatch, ownProps) => {
   let {slug} = ownProps.contentState.getEntity(ownProps.entityKey).getData()
   return {

@@ -91,6 +91,11 @@ article {
     padding: 1.2em 2.4em;
   }
 
+  ::selection {
+    background-color: rgb(159, 187, 214);
+    text-shadow: none;
+  }
+
   a:not([data-edgenote]) {
     color: $darkGreen;
     &:hover {
