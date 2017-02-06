@@ -103,7 +103,7 @@ function cardsById(state, action) {
 function edit(state, action) {
   if (typeof state === 'undefined') {
     return {
-      possible: window.caseData.reader.canUpdateCase,
+      possible: window.caseData.reader && window.caseData.reader.canUpdateCase,
       inProgress: false,
       changed: false,
       unsavedChanges: {
