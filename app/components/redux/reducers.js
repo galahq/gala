@@ -68,7 +68,6 @@ function pagesById(state = {...window.caseData.pages}, action) {
   }
 }
 
-
 function ui(state, action) {
   if (typeof state === 'undefined') {
     return {
