@@ -48,12 +48,13 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onChangeContents: eS => dispatch(updateCardContents(ownProps.id, eS)),
-    onMakeSelectionForComment: eS => {
-      const selection = eS.getSelection()
+    onMakeSelectionForComment: (editorState, editor) => {
+      const selection = editorState.getSelection()
       if (!selection.getHasFocus())  return
-      const selectionState = (selection.isCollapsed()
-                              || selection.getStartKey() !== selection.getEndKey())
-        ? SelectionState.createEmpty(selection.getAnchorKey())
+      const selectionState = (
+        selection.isCollapsed()
+          || selection.getStartKey() !== selection.getEndKey()
+      ) ? SelectionState.createEmpty(selection.getAnchorKey())
         : selection
       dispatch(applySelection(ownProps.id, selectionState))
     },
@@ -107,14 +108,14 @@ class CardContents extends React.Component {
     >
 
       {editing && <EditorToolbar cardId={id} />}
-      <Editor
+      <Editor ref={ed => this.editor = ed}
         readOnly={openedCitation.key}
         customStyleMap={{...customStyleMap, 'thread--6': selectedCommentStyle}}
+        onChange={eS => onChange(eS, this.editor)}
         {...{
           blockRenderMap,
           editorState,
           handleKeyCommand,
-          onChange,
         }}
       />
 

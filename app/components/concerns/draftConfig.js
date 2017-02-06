@@ -52,6 +52,10 @@ function getFindEntityFunction(type) {
   }
 }
 
+function findCommentThreadEntity(contentBlock, cb) {
+  contentBlock.findStyleRanges(character => character.hasStyle("THREAD"), cb)
+}
+
 export const decorator = new CompositeDecorator([
   {
     strategy: getFindEntityFunction('EDGENOTE'),
@@ -62,7 +66,7 @@ export const decorator = new CompositeDecorator([
     component: CitationEntity,
   },
   {
-    strategy: getFindEntityFunction('COMMENT_THREAD'),
+    strategy: findCommentThreadEntity,
     component: CommentThreadEntity,
   },
 ])
