@@ -119,12 +119,6 @@
     }
   }
 
-  &-preview-banner {
-    @include banner;
-    background-color: lighten($purple, 10%);
-    border-left: 0.35rem solid shade($purple, 20%);
-  }
-
   &-unpublished {
     cursor: default;
 
@@ -135,6 +129,13 @@
     }
   }
 }
+.catalog-case-preview-banner {
+  @include banner;
+  font-family: $sansFont;
+  background-color: lighten($purple, 10%);
+  border-left: 0.35rem solid shade($purple, 20%);
+}
+
 
 .catalog-case-accessible {
   transition: box-shadow .15s cubic-bezier(.33, .66, .66, 1), transform .15s cubic-bezier(.33, .66, .66, 1);

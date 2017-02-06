@@ -14,6 +14,7 @@ import { selectedCommentStyle } from 'concerns/commentThreads.js'
 import EditorToolbar from 'EditorToolbar.js'
 import Statistics from 'Statistics.js'
 import CitationTooltip from 'CitationTooltip.js'
+import CommentThreadsTag from 'comments/CommentThreadsTag.js'
 
 import {
   updateCardContents,
@@ -119,7 +120,7 @@ class CardContents extends React.Component {
         }}
       />
 
-      <a onClick={addHighlight}>Add highlight</a>
+      <CommentThreadsTag cardId={id} />
 
       {
         citationOpenWithinCard && <CitationTooltip cardId={id}

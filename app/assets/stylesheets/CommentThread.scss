@@ -2,6 +2,7 @@
 @import '_flexbox';
 @import '_columns';
 @import '_tint_and_shade';
+@import 'Catalog';
 
 .CommentThread {
   padding: 1.5em;
@@ -59,4 +60,15 @@
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.CommentThread__banner {
+  @include banner;
+  font-family: $sansFont;
+  top: 0.8em;
+  padding: 0 0.5rem 0 0.4rem;
+  font-size: 70%;
+  color: lighten($umichMaize, 20%);
+  background-color: $purple;
+  border-left: 0.35rem solid shade($purple, 30%);
 }
