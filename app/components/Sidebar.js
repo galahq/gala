@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import BillboardTitle from 'BillboardTitle.js'
 import {I18n} from 'I18n.js'
@@ -29,7 +30,7 @@ class Sidebar extends React.Component {
 
   render () {
     return (
-      <aside id="Sidebar">
+      <aside id="Sidebar" className={this.props.commentsOpen && "has-comments-open"}>
         <Link to="/" className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
@@ -41,4 +42,6 @@ class Sidebar extends React.Component {
   }
 }
 
-export default Sidebar
+export default connect(
+  (state) => ({ commentsOpen: !!state.ui.commentsOpenForCard })
+)(Sidebar)

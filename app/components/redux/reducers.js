@@ -8,6 +8,7 @@ import {
   HIGHLIGHT_EDGENOTE,
   ACTIVATE_EDGENOTE,
   OPEN_CITATION,
+  OPEN_COMMENTS,
 } from './actions.js'
 
 import cardsById from './reducers/cards.js'
@@ -72,6 +73,7 @@ function ui(state, action) {
   if (typeof state === 'undefined') {
     return {
       openedCitation: {},
+      commentsOpenForCard: null,
     }
   }
 
@@ -92,6 +94,12 @@ function ui(state, action) {
       return {
         ...state,
         openedCitation: action.data,
+      }
+
+    case OPEN_COMMENTS:
+      return {
+        ...state,
+        commentsOpenForCard: action.cardId,
       }
 
     default: return state

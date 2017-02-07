@@ -15,6 +15,7 @@ import EditorToolbar from 'EditorToolbar.js'
 import Statistics from 'Statistics.js'
 import CitationTooltip from 'CitationTooltip.js'
 import CommentThreadsTag from 'comments/CommentThreadsTag.js'
+import CommentsCard from 'comments/CommentsCard.js'
 
 import {
   updateCardContents,
@@ -29,6 +30,7 @@ const mapStateToProps = (state, ownProps) => {
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     openedCitation: state.ui.openedCitation,
+    commentsOpen: ownProps.id === state.ui.commentsOpenForCard,
     solid,
     statistics,
     editorState,
@@ -48,7 +50,9 @@ const mapStateToProps = (state, ownProps) => {
   //}
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+
     onChangeContents: eS => dispatch(updateCardContents(ownProps.id, eS)),
+
     onMakeSelectionForComment: (editorState, editor) => {
       const selection = editorState.getSelection()
       if (!selection.getHasFocus())  return
@@ -59,8 +63,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         : selection
       dispatch(applySelection(ownProps.id, selectionState))
     },
+
     createCommentThread: (cardId, editorState) =>
       dispatch(createCommentThread(cardId, editorState)),
+
   }
 }
 
@@ -93,7 +99,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, editorState, onChange,
-      handleKeyCommand, onDelete, openedCitation, addHighlight} = this.props
+      handleKeyCommand, onDelete, openedCitation, addHighlight,
+      commentsOpen} = this.props
 
     let citationOpenWithinCard
     try {
@@ -104,8 +111,11 @@ class CardContents extends React.Component {
 
     return <div
       ref={el => this.cardRef = el}
-      className={solid ? 'Card' : 'nonCard'}
-      style={{transition: 'padding-top .1s', paddingTop: editing && '2em'}}
+      className={`${solid ? 'Card' : 'nonCard'} ${commentsOpen && "has-comments-open"}`}
+      style={{
+        paddingTop: editing && '2em',
+        zIndex: commentsOpen && 300,
+      }}
     >
 
       {editing && <EditorToolbar cardId={id} />}
@@ -121,6 +131,7 @@ class CardContents extends React.Component {
       />
 
       <CommentThreadsTag cardId={id} />
+      { commentsOpen && <CommentsCard cardId={id} /> }
 
       {
         citationOpenWithinCard && <CitationTooltip cardId={id}

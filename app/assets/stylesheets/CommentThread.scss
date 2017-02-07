@@ -4,6 +4,26 @@
 @import '_tint_and_shade';
 @import 'Catalog';
 
+.CommentThread__banner {
+  @include banner;
+  font-family: $sansFont;
+  top: 0.8em;
+  padding: 0 0.5rem 0 0.4rem;
+  font-size: 70%;
+  color: lighten($umichMaize, 20%);
+  background-color: $purple;
+  border-left: 0.35rem solid shade($purple, 30%);
+}
+
+#Case article div.Card {
+  transition: padding-top 0.1s, margin-left 0.3s;
+}
+#Case article div.Card.has-comments-open {
+  margin-left: -14.3em;
+  margin-right: 16em;
+}
+
+
 .CommentThread {
   padding: 1.5em;
   border: 0.5em solid $purple;
@@ -60,15 +80,4 @@
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.CommentThread__banner {
-  @include banner;
-  font-family: $sansFont;
-  top: 0.8em;
-  padding: 0 0.5rem 0 0.4rem;
-  font-size: 70%;
-  color: lighten($umichMaize, 20%);
-  background-color: $purple;
-  border-left: 0.35rem solid shade($purple, 30%);
 }

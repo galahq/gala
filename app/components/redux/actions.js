@@ -152,3 +152,8 @@ export const OPEN_CITATION = "OPEN_CITATION"
 export function openCitation(key, labelRef) {
   return {type: OPEN_CITATION, data: {key, labelRef}}
 }
+
+export const OPEN_COMMENTS = "OPEN_COMMENTS"
+export function openComments(cardId) {
+  return {type: OPEN_COMMENTS, cardId}
+}
