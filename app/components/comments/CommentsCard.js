@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Portal } from '@blueprintjs/core'
 
-import { openComments, selectCommentThread } from 'redux/actions.js'
+import { openCommentThreads, selectCommentThread } from 'redux/actions.js'
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -11,7 +11,7 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-const CommentThreadsCard = ({commentThreads, openComments,
+const CommentThreadsCard = ({commentThreads, openCommentThreads,
                              selectedCommentThread, selectCommentThread}) => {
   const positionalStyles = {
     position: 'absolute',
@@ -46,7 +46,7 @@ const CommentThreadsCard = ({commentThreads, openComments,
 
     {
       <Portal>
-        <div style={styles.backdrop} onClick={() => openComments(null)}/>
+        <div style={styles.backdrop} onClick={() => openCommentThreads(null)}/>
       </Portal>
     }
   </div>
@@ -55,7 +55,7 @@ const CommentThreadsCard = ({commentThreads, openComments,
 
 export default connect(
   mapStateToProps,
-  {openComments, selectCommentThread},
+  {openCommentThreads, selectCommentThread},
 )(CommentThreadsCard)
 
 

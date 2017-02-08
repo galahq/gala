@@ -8,7 +8,7 @@ import {
   HIGHLIGHT_EDGENOTE,
   ACTIVATE_EDGENOTE,
   OPEN_CITATION,
-  OPEN_COMMENTS,
+  OPEN_COMMENT_THREADS,
   SELECT_COMMENT_THREAD,
 } from './actions.js'
 
@@ -74,7 +74,7 @@ function ui(state, action) {
   if (typeof state === 'undefined') {
     return {
       openedCitation: {},
-      commentsOpenForCard: null,
+      commentThreadsOpenForCard: null,
       selectedCommentThread: null,
     }
   }
@@ -98,10 +98,10 @@ function ui(state, action) {
         openedCitation: action.data,
       }
 
-    case OPEN_COMMENTS:
+    case OPEN_COMMENT_THREADS:
       return {
         ...state,
-        commentsOpenForCard: action.cardId,
+        commentThreadsOpenForCard: action.cardId,
       }
 
     case SELECT_COMMENT_THREAD:

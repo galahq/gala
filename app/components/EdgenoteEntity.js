@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     editable: state.editable,
     children: ownProps.children,
-    commentsOpen: !!state.ui.commentsOpenForCard,
+    commentThreadsOpen: !!state.ui.commentThreadsOpenForCard,
     slug,
   }
 }
@@ -27,11 +27,17 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     ...ownProps,
     ...stateProps,
     ...dispatchProps,
-    onMouseOver: stateProps.commentsOpen ? () => {} : dispatchProps.onMouseOver,
+    onClick: stateProps.commentThreadsOpen
+      ? () => {}
+      : dispatchProps.onClick,
+    onMouseOver: stateProps.commentThreadsOpen
+      ? () => {}
+      : dispatchProps.onMouseOver,
   }
 }
 
-const EdgenoteSpan = ({slug, editable, onMouseOver, onMouseOut, onClick, children}) => {
+const EdgenoteSpan = ({slug, editable, onMouseOver, onMouseOut, onClick,
+                      children}) => {
   return <a
     data-edgenote={slug}
     onMouseOver={onMouseOver}

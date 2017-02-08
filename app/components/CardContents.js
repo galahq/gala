@@ -33,7 +33,7 @@ const mapStateToProps = (state, ownProps) => {
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     openedCitation: state.ui.openedCitation,
-    commentsOpen: ownProps.id === state.ui.commentsOpenForCard,
+    commentThreadsOpen: ownProps.id === state.ui.commentThreadsOpenForCard,
     selectedCommentThread: state.ui.selectedCommentThread,
     solid,
     statistics,
@@ -104,7 +104,7 @@ class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, editorState, onChange,
       handleKeyCommand, onDelete, openedCitation, addHighlight,
-      commentsOpen, selectedCommentThread} = this.props
+      commentThreadsOpen, commentsOpen, selectedCommentThread} = this.props
 
     let citationOpenWithinCard
     try {
@@ -126,7 +126,7 @@ class CardContents extends React.Component {
       className={`${solid ? 'Card' : 'nonCard'} ${commentsOpen && "has-comments-open"}`}
       style={{
         paddingTop: editing && '2em',
-        zIndex: commentsOpen && 300,
+        zIndex: commentThreadsOpen && 300,
       }}
     >
 
@@ -143,7 +143,7 @@ class CardContents extends React.Component {
       />
 
       <CommentThreadsTag cardId={id} />
-      { commentsOpen && <CommentsCard cardId={id} /> }
+      { commentThreadsOpen && <CommentsCard cardId={id} /> }
 
       {
         citationOpenWithinCard && <CitationTooltip cardId={id}

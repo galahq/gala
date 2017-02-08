@@ -163,9 +163,10 @@ export function openCitation(key, labelRef) {
   return {type: OPEN_CITATION, data: {key, labelRef}}
 }
 
-export const OPEN_COMMENTS = "OPEN_COMMENTS"
-export function openComments(cardId) {
-  return {type: OPEN_COMMENTS, cardId}
+export const OPEN_COMMENT_THREADS = "OPEN_COMMENT_THREADS"
+export function openCommentThreads(cardId) {
+  return {type: OPEN_COMMENT_THREADS, cardId}
+}
 
 export const SELECT_COMMENT_THREAD = "SELECT_COMMENT_THREAD"
 export function selectCommentThread(id) {
