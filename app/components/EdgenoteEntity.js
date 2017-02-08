@@ -8,6 +8,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     editable: state.editable,
     children: ownProps.children,
+    commentsOpen: !!state.ui.commentsOpenForCard,
     slug,
   }
 }
@@ -15,9 +16,18 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   let {slug} = ownProps.contentState.getEntity(ownProps.entityKey).getData()
   return {
-    onMouseOver: () => {dispatch( highlightEdgenote(slug) )},
-    onMouseOut: () => {dispatch( highlightEdgenote(null) )},
-    onClick: () => {dispatch( activateEdgenote(slug) )},
+    onMouseOver: () => dispatch( highlightEdgenote(slug) ),
+    onMouseOut: () => dispatch( highlightEdgenote(null) ),
+    onClick: () => dispatch( activateEdgenote(slug) ),
+  }
+}
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    onMouseOver: stateProps.commentsOpen ? () => {} : dispatchProps.onMouseOver,
   }
 }
 
@@ -32,6 +42,10 @@ const EdgenoteSpan = ({slug, editable, onMouseOver, onMouseOut, onClick, childre
   </a>
 }
 
-const EdgenoteEntity = connect(mapStateToProps, mapDispatchToProps)(EdgenoteSpan)
+const EdgenoteEntity = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps,
+)(EdgenoteSpan)
 
 export default EdgenoteEntity

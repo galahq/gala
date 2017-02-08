@@ -166,4 +166,8 @@ export function openCitation(key, labelRef) {
 export const OPEN_COMMENTS = "OPEN_COMMENTS"
 export function openComments(cardId) {
   return {type: OPEN_COMMENTS, cardId}
+
+export const SELECT_COMMENT_THREAD = "SELECT_COMMENT_THREAD"
+export function selectCommentThread(id) {
+  return {type: SELECT_COMMENT_THREAD, id}
 }

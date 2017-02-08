@@ -9,6 +9,7 @@ import {
   ACTIVATE_EDGENOTE,
   OPEN_CITATION,
   OPEN_COMMENTS,
+  SELECT_COMMENT_THREAD,
 } from './actions.js'
 
 import cardsById from './reducers/cards.js'
@@ -74,6 +75,7 @@ function ui(state, action) {
     return {
       openedCitation: {},
       commentsOpenForCard: null,
+      selectedCommentThread: null,
     }
   }
 
@@ -100,6 +102,12 @@ function ui(state, action) {
       return {
         ...state,
         commentsOpenForCard: action.cardId,
+      }
+
+    case SELECT_COMMENT_THREAD:
+      return {
+        ...state,
+        selectedCommentThread: action.id,
       }
 
     default: return state

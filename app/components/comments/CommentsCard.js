@@ -2,15 +2,17 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Portal } from '@blueprintjs/core'
 
-import { openComments } from 'redux/actions.js'
+import { openComments, selectCommentThread } from 'redux/actions.js'
 
 function mapStateToProps(state, ownProps) {
   return {
     commentThreads: state.cardsById[ownProps.cardId].commentThreads,
+    selectedCommentThread: state.ui.selectedCommentThread,
   }
 }
 
-const CommentsCard = ({commentThreads, openComments}) => {
+const CommentThreadsCard = ({commentThreads, openComments,
+                             selectedCommentThread, selectCommentThread}) => {
   const positionalStyles = {
     position: 'absolute',
     top: 0 /* Height of header */,
@@ -26,10 +28,11 @@ const CommentsCard = ({commentThreads, openComments}) => {
 
     <ol style={styles.commentList}>
       { commentThreads.map( (thread, i) =>
-        <li style={{
+        <li key={thread.id} style={{
           ...styles.commentListItem,
           borderBottom: i < commentThreads.length - 1 && '1px solid #513992',
-        }}>
+          ...(selectedCommentThread === thread.id ? {backgroundColor: "#493092"} : {}),
+        }} onClick={() => selectCommentThread(thread.id)}>
           <h5 style={styles.author}>Arman Golrokhian</h5>
           <p style={styles.commentSnippet}>
             This is really interesting in light of some recent research by Obama,
@@ -50,20 +53,13 @@ const CommentsCard = ({commentThreads, openComments}) => {
 
 }
 
-export default connect(mapStateToProps, {openComments})(CommentsCard)
+export default connect(
+  mapStateToProps,
+  {openComments, selectCommentThread},
+)(CommentThreadsCard)
 
 
 const styles = {
-  commentsCard: {
-    backgroundColor: "#7351D4",
-    width: '16.5rem',
-    position: 'absolute',
-    color: '#F8DF91',
-    fontFamily: 'tenso',
-    fontWeight: 500,
-    fontSize: '12pt',
-  },
-
   backdrop: {
     position: 'fixed',
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -72,6 +68,16 @@ const styles = {
     width: '100%',
     height: '100%',
     zIndex: 200,
+  },
+
+  commentsCard: {
+    backgroundColor: "#7351D4",
+    width: 267,
+    position: 'absolute',
+    color: '#F8DF91',
+    fontFamily: 'tenso',
+    fontWeight: 500,
+    fontSize: '12pt',
   },
 
   header: {
@@ -85,15 +91,18 @@ const styles = {
   },
 
   commentList: {
-    margin: '0 0 0 1em',
+    margin: 0,
+    padding: 0,
     minHeight: '1em',
   },
 
   commentListItem: {
-    padding: '0.65em 0.5em 0.65em 0',
+    padding: '0.65em 0.5em 0.65em 1em',
+    listStylePosition: 'inside',
   },
 
   author: {
+    display: 'inline',
     margin: 0,
     fontFamily: 'tenso',
     fontSize: 'inherit',
@@ -104,7 +113,7 @@ const styles = {
   },
 
   commentSnippet: {
-    margin: 0,
+    margin: '0 0 0 1em',
     fontWeight: 400,
     lineHeight: 1.4,
   },
