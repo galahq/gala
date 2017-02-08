@@ -57,7 +57,7 @@ const CitationTooltip = ({openedCitation, editable, editorState, href, contents,
           <input style={styles.field} onChange={updateCitation('href')} value={href} placeholder="Resource URL" />
           <button style={styles.button} onClick={onCloseCitation}>Close</button>
         </form>
-        : [contents, " ", <a href={href} target="_blank">Read&nbsp;more&nbsp;›</a>]
+        : [contents, " ", href && <a href={href} target="_blank">Read&nbsp;more&nbsp;›</a>]
     }
   </cite>
 
