@@ -62,7 +62,7 @@ async function saveModel(endpoint, state) {
 
   let data
   switch (model) {
-    case 'cases':
+    case 'cases': {
       let {published, kicker, title, dek, slug, photoCredit, summary,
         baseCoverUrl} = state.caseData
       data = {
@@ -71,9 +71,10 @@ async function saveModel(endpoint, state) {
           coverUrl: baseCoverUrl,
         },
       }
+    }
       break
 
-    case 'cards':
+    case 'cards': {
       let {editorState} = state.cardsById[id]
       data = {
         card: {
@@ -81,14 +82,23 @@ async function saveModel(endpoint, state) {
             JSON.stringify(convertToRaw(editorState.getCurrentContent())),
         },
       }
+    }
       break
 
-    case 'pages':
-      data = state.pagesById[id]
+    case 'pages': {
+      const { title, position } = state.pagesById[id]
+      data = {
+        page: {
+          title,
+          position,
+        },
+      }
+    }
       break
 
-    case 'edgenotes':
+    case 'edgenotes': {
       data = { edgenote: state.edgenotesBySlug[id] }
+    }
       break
 
     default:

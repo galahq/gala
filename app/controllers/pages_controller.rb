@@ -9,7 +9,7 @@ class PagesController < ApplicationController
     @page = @case.pages.build(title: "New page")
 
     if @page.save
-      render partial: 'cases/case', locals: {c: @page.case}
+      render @page
     else
       render json: @page.errors, status: :unprocessable_entity
     end
@@ -17,7 +17,7 @@ class PagesController < ApplicationController
 
   def update
     if @page.update(page_params)
-      render partial: 'cases/case', locals: {c: @page.case}
+      render @page
     else
       render json: @page.errors, status: :unprocessable_entity
     end
