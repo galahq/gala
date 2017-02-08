@@ -118,9 +118,8 @@
 .c-photo-credit {
   text-transform: uppercase;
   letter-spacing: 0.25px;
-  color: $white;
+  color: rgba($white, 0.5);
   font-weight: 500;
-  text-shadow: 0 0 1em rgba(black, 40%);
   max-width: 18em;
 }
 
