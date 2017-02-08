@@ -2,7 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Portal } from '@blueprintjs/core'
 
-import { openCommentThreads, selectCommentThread } from 'redux/actions.js'
+import {
+  selectCommentThread,
+  closeCommentThreads,
+} from 'redux/actions.js'
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -11,8 +14,9 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-const CommentThreadsCard = ({commentThreads, openCommentThreads,
-                             selectedCommentThread, selectCommentThread}) => {
+const CommentThreadsCard = ({commentThreads, selectedCommentThread,
+                            selectCommentThread, closeCommentThreads,
+                            addCommentThread}) => {
   const positionalStyles = {
     position: 'absolute',
     top: 0 /* Height of header */,
@@ -42,11 +46,16 @@ const CommentThreadsCard = ({commentThreads, openCommentThreads,
         )}
     </ol>
 
-    <button style={styles.newCommentButton}>Write a new response</button>
+    <button
+      onClick={addCommentThread}
+      className="CommentThreads__new-button"
+    >
+      Write a new response
+    </button>
 
     {
       <Portal>
-        <div style={styles.backdrop} onClick={() => openCommentThreads(null)}/>
+        <div style={styles.backdrop} onClick={closeCommentThreads}/>
       </Portal>
     }
   </div>
@@ -55,7 +64,7 @@ const CommentThreadsCard = ({commentThreads, openCommentThreads,
 
 export default connect(
   mapStateToProps,
-  {openCommentThreads, selectCommentThread},
+  {selectCommentThread, closeCommentThreads},
 )(CommentThreadsCard)
 
 
@@ -117,16 +126,5 @@ const styles = {
     margin: '0 0 0 1em',
     fontWeight: 400,
     lineHeight: 1.4,
-  },
-
-  newCommentButton: {
-    margin: 0,
-    padding: '0.75em',
-    backgroundColor: '#493092',
-    borderWidth: 0,
-    borderTop: '1px solid #351D7A',
-    fontSize: '11pt',
-    letterSpacing: 0.4,
-    fontWeight: 500,
   },
 }

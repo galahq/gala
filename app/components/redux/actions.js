@@ -172,3 +172,10 @@ export const SELECT_COMMENT_THREAD = "SELECT_COMMENT_THREAD"
 export function selectCommentThread(id) {
   return {type: SELECT_COMMENT_THREAD, id}
 }
+
+export function closeCommentThreads() {
+  return dispatch => {
+    dispatch(openCommentThreads(null))
+    dispatch(selectCommentThread(null))
+  }
+}

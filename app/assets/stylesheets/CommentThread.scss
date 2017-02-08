@@ -4,6 +4,22 @@
 @import '_tint_and_shade';
 @import 'Catalog';
 
+.CommentThreads__new-button {
+  margin: 0;
+  padding: 0.75em;
+  background-color: #493092;
+  border-width: 0;
+  border-top: 1px solid #351D7A;
+  font-size: 11pt;
+  letter-spacing: 0.4px;
+  font-weight: 500;
+  transition: background-color 0.1s;
+
+  &:hover {
+    background-color: darken(#493092, 5%);
+  }
+}
+
 .CommentThread__banner {
   @include banner;
   font-family: $sansFont;

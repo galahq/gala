@@ -36,10 +36,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-const EdgenoteSpan = ({slug, editable, onMouseOver, onMouseOut, onClick,
-                      children}) => {
+const EdgenoteSpan = ({editable, onMouseOver, onMouseOut, onClick,
+                      children, commentThreadsOpen}) => {
   return <a
-    data-edgenote={slug}
+    className={`c-edgenote-entity${commentThreadsOpen ? "--inactive" : ""}`}
     onMouseOver={onMouseOver}
     onMouseOut={onMouseOut}
     onClick={editable ? null : onClick}

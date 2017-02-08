@@ -92,7 +92,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       return newState ? onChange(newState) && 'handled' : 'not-handled'
     },
 
-    addHighlight: () => {
+    addCommentThread: () => {
       if (!editable && !editorState.getSelection().isCollapsed()) {
         createCommentThread(ownProps.id, editorState)
       }
@@ -103,7 +103,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, editorState, onChange,
-      handleKeyCommand, onDelete, openedCitation, addHighlight,
+      handleKeyCommand, onDelete, openedCitation, addCommentThread,
       commentThreadsOpen, commentsOpen, selectedCommentThread} = this.props
 
     let citationOpenWithinCard
@@ -143,7 +143,8 @@ class CardContents extends React.Component {
       />
 
       <CommentThreadsTag cardId={id} />
-      { commentThreadsOpen && <CommentsCard cardId={id} /> }
+      { commentThreadsOpen && <CommentsCard cardId={id}
+        addCommentThread={addCommentThread} /> }
 
       {
         citationOpenWithinCard && <CitationTooltip cardId={id}

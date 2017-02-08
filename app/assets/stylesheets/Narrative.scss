@@ -104,7 +104,7 @@ article {
     }
   }
 
-  a[data-edgenote] {
+  a.c-edgenote-entity {
     text-decoration: none;
     color: inherit;
     box-shadow: inset 0 -.35em 0 $lightGreen;
@@ -116,6 +116,14 @@ article {
     &:hover {
       background-color: $lightGreen;
       color: inherit;
+    }
+    &--inactive {
+      @extend a.c-edgenote-entity;
+      background-color: inherit;
+      &:hover {
+        background-color: inherit;
+        text-decoration: none;
+      }
     }
   }
   .Card-delete-option {
