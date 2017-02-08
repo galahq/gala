@@ -13,6 +13,7 @@
   color: lighten($umichMaize, 20%);
   background-color: $purple;
   border-left: 0.35rem solid shade($purple, 30%);
+  cursor: pointer;
 }
 
 #Case article div.Card {

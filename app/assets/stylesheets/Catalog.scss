@@ -131,7 +131,6 @@
 }
 .catalog-case-preview-banner {
   @include banner;
-  font-family: $sansFont;
   background-color: lighten($purple, 10%);
   border-left: 0.35rem solid shade($purple, 20%);
 }

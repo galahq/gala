@@ -99,6 +99,7 @@ const styles = {
   commentListItem: {
     padding: '0.65em 0.5em 0.65em 1em',
     listStylePosition: 'inside',
+    cursor: 'pointer',
   },
 
   author: {
