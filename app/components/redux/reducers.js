@@ -66,12 +66,22 @@ function pagesById(state = {...window.caseData.pages}, action) {
   }
 }
 
+function commentThreadsById(state = {...window.caseData.commentThreads}) {
+  return state
+}
+
+function commentsById(state = {...window.caseData.comments}) {
+  return state
+}
+
 
 export default combineReducers({
   caseData,
   edgenotesBySlug,
   pagesById,
   cardsById,
+  commentThreadsById,
+  commentsById,
   statistics,
   edit,
   ui,

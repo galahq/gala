@@ -34,6 +34,7 @@ export const customStyleMap = {
     backgroundRepeat: "repeat-x",
     backgroundPosition: "0 93%",
     textShadow: "0.03em 0 #EBEAE4, -0.03em 0 #EBEAE4, 0 0.03em #EBEAE4, 0 -0.03em #EBEAE4, 0.06em 0 #EBEAE4, -0.06em 0 #EBEAE4, 0.09em 0 #EBEAE4, -0.09em 0 #EBEAE4, 0.12em 0 #EBEAE4, -0.12em 0 #EBEAE4, 0.15em 0 #EBEAE4, -0.15em 0 #EBEAE4",
+    cursor: 'pointer',
   },
 }
 

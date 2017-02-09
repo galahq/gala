@@ -23,7 +23,23 @@ json.cards do
   end
 end
 
-if current_user.has_cached_role? :editor
+json.comment_threads do
+  c.comment_threads.each do |comment_thread|
+    json.set! comment_thread.id do
+      json.partial! comment_thread
+    end
+  end
+end
+
+json.comments do
+  c.comments.each do |comment|
+    json.set! comment.id do
+      json.partial! comment
+    end
+  end
+end
+
+if false && current_user.has_cached_role?(:editor)
   json.statistics do
     c.cards.each do |card|
         json.set! "cards/#{card.id}" do

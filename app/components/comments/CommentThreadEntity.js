@@ -1,18 +1,46 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { openCommentThreads, selectCommentThread } from 'redux/actions.js'
 
-const CommentThreadEntity = ({ contentState, children }) => {
-  const threadIds = getThreadIds(contentState, children[0])
-  return <span onClick={() => window.alert(`Open comment thread id: ${JSON.stringify(threadIds)}`)}>
+function mapStateToProps(state, { contentState, children }) {
+  let commentThreadId = getFirstThreadId(contentState, children[0])
+  return {
+    cardId: state.commentThreadsById[commentThreadId].cardId,
+    commentThreadId,
+  }
+}
+
+function mergeProps(
+  {cardId, commentThreadId},
+  {openCommentThreads, selectCommentThread},
+  {children}
+) {
+  return {
+    onClick: () => {
+      openCommentThreads(cardId) &&
+        selectCommentThread(parseInt(commentThreadId, 10))
+    },
+    children,
+  }
+}
+
+const CommentThreadEntity = ({ onClick, children }) => {
+  return <span onClick={onClick}>
     {children}
   </span>
 }
 
-export default CommentThreadEntity
+export default connect(
+  mapStateToProps,
+  { openCommentThreads, selectCommentThread },
+  mergeProps,
+)(CommentThreadEntity)
 
-function getThreadIds(contentState, leaf) {
+function getFirstThreadId(contentState, leaf) {
   const styles = contentState.getBlockForKey(leaf.props.blockKey)
     .getInlineStyleAt(leaf.props.start)
-  return styles.map(s => s.match(/thread--([0-9]+)/))
+  const ids = styles.map(s => s.match(/thread--([0-9]+)/))
     .filter(s => s && s[1])
     .map(s => s[1])
+  return ids.count() > 0 ? ids.toJS()[0] : null
 }

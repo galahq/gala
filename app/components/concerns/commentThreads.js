@@ -22,6 +22,7 @@ export const openCommentsStyle = {
   textShadow: 'none',
   boxShadow: 'inset 0 -0.35em 0 #9776F4',
   borderBottom: '1px solid #9776F4',
+  cursor: 'pointer',
 }
 
 export const selectedCommentStyle = {

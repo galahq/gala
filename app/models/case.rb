@@ -63,4 +63,12 @@ class Case < ApplicationRecord
     hash
   end
 
+  def comment_threads
+    cards.flat_map(&:comment_threads).uniq
+  end
+
+  def comments
+    comment_threads.flat_map(&:comments)
+  end
+
 end

@@ -116,13 +116,14 @@ article {
     &:hover {
       background-color: $lightGreen;
       color: inherit;
+      text-decoration: none;
     }
     &--inactive {
       @extend a.c-edgenote-entity;
       background-color: inherit;
+      cursor: initial;
       &:hover {
         background-color: inherit;
-        text-decoration: none;
       }
     }
   }

@@ -32,7 +32,8 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
     <div style={styles.header}>
       { commentThreads.length === 0
         ? "No responses"
-        : `${commentThreads.length} response${commentThreads.length !== 1 && 's'}` }
+        : `${commentThreads.length} response${commentThreads.length !== 1
+                                                ? 's' : ""}` }
     </div>
 
     <ol style={styles.commentList}>
