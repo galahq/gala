@@ -18,6 +18,11 @@
   &:hover {
     background-color: darken(#493092, 5%);
   }
+
+  &:disabled {
+    cursor: initial;
+    &:hover { background-color: #493092; }
+  }
 }
 
 .CommentThread__banner {

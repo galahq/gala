@@ -115,6 +115,11 @@ function clearUnsaved() {
 
 
 // Comment Threads
+export const ACCEPT_SELECTION = "ACCEPT_SELECTION"
+export function acceptSelection() {
+  return {type: ACCEPT_SELECTION}
+}
+
 export const APPLY_SELECTION = "APPLY_SELECTION"
 export function applySelection(cardId, selectionState) {
   return { type: APPLY_SELECTION, cardId, selectionState }

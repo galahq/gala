@@ -34,6 +34,7 @@ const mapStateToProps = (state, ownProps) => {
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     openedCitation: state.ui.openedCitation,
     commentThreadsOpen: ownProps.id === state.ui.commentThreadsOpenForCard,
+    acceptingSelection: state.ui.acceptingSelection,
     selectedCommentThread: state.ui.selectedCommentThread,
     solid,
     statistics,
@@ -104,7 +105,8 @@ class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, editorState, onChange,
       handleKeyCommand, onDelete, openedCitation, addCommentThread,
-      commentThreadsOpen, commentsOpen, selectedCommentThread} = this.props
+      commentThreadsOpen, commentsOpen, acceptingSelection, 
+      selectedCommentThread} = this.props
 
     let citationOpenWithinCard
     try {
@@ -132,7 +134,7 @@ class CardContents extends React.Component {
 
       {editing && <EditorToolbar cardId={id} />}
       <Editor ref={ed => this.editor = ed}
-        readOnly={openedCitation.key}
+        readOnly={!acceptingSelection || openedCitation.key}
         customStyleMap={styleMap}
         onChange={eS => onChange(eS, this.editor)}
         {...{

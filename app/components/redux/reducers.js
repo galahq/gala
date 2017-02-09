@@ -5,16 +5,12 @@ import {
   UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
-  HIGHLIGHT_EDGENOTE,
-  ACTIVATE_EDGENOTE,
-  OPEN_CITATION,
-  OPEN_COMMENT_THREADS,
-  SELECT_COMMENT_THREAD,
 } from './actions.js'
 
 import cardsById from './reducers/cards.js'
 import edit from './reducers/edit.js'
 import statistics from './reducers/statistics.js'
+import ui from './reducers/ui.js'
 
 function caseData(state, action) {
   if (typeof state === 'undefined') {
@@ -66,50 +62,6 @@ function pagesById(state = {...window.caseData.pages}, action) {
           ...action.data,
         },
       }
-    default: return state
-  }
-}
-
-function ui(state, action) {
-  if (typeof state === 'undefined') {
-    return {
-      openedCitation: {},
-      commentThreadsOpenForCard: null,
-      selectedCommentThread: null,
-    }
-  }
-
-  switch (action.type) {
-    case HIGHLIGHT_EDGENOTE:
-      return {
-        ...state,
-        highlightedEdgenote: action.slug,
-      }
-
-    case ACTIVATE_EDGENOTE:
-      return {
-        ...state,
-        activeEdgenote: action.slug,
-      }
-
-    case OPEN_CITATION:
-      return {
-        ...state,
-        openedCitation: action.data,
-      }
-
-    case OPEN_COMMENT_THREADS:
-      return {
-        ...state,
-        commentThreadsOpenForCard: action.cardId,
-      }
-
-    case SELECT_COMMENT_THREAD:
-      return {
-        ...state,
-        selectedCommentThread: action.id,
-      }
-
     default: return state
   }
 }

@@ -5,18 +5,23 @@ import { Portal } from '@blueprintjs/core'
 import {
   selectCommentThread,
   closeCommentThreads,
+  acceptSelection,
 } from 'redux/actions.js'
 
 function mapStateToProps(state, ownProps) {
   return {
     commentThreads: state.cardsById[ownProps.cardId].commentThreads,
+    acceptingSelection: state.ui.acceptingSelection,
+    selectionPending: !state.cardsById[ownProps.cardId].editorState
+      .getSelection().isCollapsed(),
     selectedCommentThread: state.ui.selectedCommentThread,
   }
 }
 
-const CommentThreadsCard = ({commentThreads, selectedCommentThread,
+const CommentThreadsCard = ({commentThreads, acceptingSelection,
+                            selectionPending, selectedCommentThread,
                             selectCommentThread, closeCommentThreads,
-                            addCommentThread}) => {
+                            acceptSelection, addCommentThread}) => {
   const positionalStyles = {
     position: 'absolute',
     top: 0 /* Height of header */,
@@ -47,10 +52,13 @@ const CommentThreadsCard = ({commentThreads, selectedCommentThread,
     </ol>
 
     <button
-      onClick={addCommentThread}
+      onClick={acceptingSelection ? addCommentThread : acceptSelection}
       className="CommentThreads__new-button"
+      disabled={acceptingSelection && !selectionPending}
     >
-      Write a new response
+      { !acceptingSelection
+        ? "Write a new response"
+        : ( !selectionPending ? "Select a few words" : "Respond here" ) }
     </button>
 
     {
@@ -64,7 +72,7 @@ const CommentThreadsCard = ({commentThreads, selectedCommentThread,
 
 export default connect(
   mapStateToProps,
-  {selectCommentThread, closeCommentThreads},
+  {selectCommentThread, closeCommentThreads, acceptSelection},
 )(CommentThreadsCard)
 
 
