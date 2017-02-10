@@ -25,6 +25,10 @@
   }
 }
 
+.Card.accepting-selection ::selection {
+  background-color: #bfaeec;
+}
+
 .CommentThread__banner {
   @include banner;
   font-family: $sansFont;

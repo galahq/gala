@@ -117,7 +117,15 @@ function clearUnsaved() {
 // Comment Threads
 export const ACCEPT_SELECTION = "ACCEPT_SELECTION"
 export function acceptSelection() {
+  clearSelection()
   return {type: ACCEPT_SELECTION}
+}
+function clearSelection() {
+  if ( document.selection  ) {
+    document.selection.empty();
+  } else if ( window.getSelection  ) {
+    window.getSelection().removeAllRanges();
+  }
 }
 
 export const APPLY_SELECTION = "APPLY_SELECTION"
