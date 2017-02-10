@@ -5,6 +5,7 @@ import {
   UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
+  REPLACE_CARD,
 } from './actions.js'
 
 import cardsById from './reducers/cards.js'
@@ -66,8 +67,24 @@ function pagesById(state = {...window.caseData.pages}, action) {
   }
 }
 
-function commentThreadsById(state = {...window.caseData.commentThreads}) {
-  return state
+function commentThreadsById(
+  state = {...window.caseData.commentThreads},
+  action,
+) {
+  switch (action.type) {
+    case REPLACE_CARD:
+      const newCommentThreads = action.newCard.commentThreads.reduce(
+      (obj, el) => ({
+        ...obj,
+        [el.id]: el,
+      }), {})
+      return {
+        ...state,
+        ...newCommentThreads,
+      }
+
+    default: return state
+  }
 }
 
 function commentsById(state = {...window.caseData.comments}) {

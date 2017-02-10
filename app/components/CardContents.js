@@ -125,7 +125,7 @@ class CardContents extends React.Component {
 
     return <div
       ref={el => this.cardRef = el}
-      className={`${solid ? 'Card' : 'nonCard'} ${commentsOpen && "has-comments-open"}`}
+      className={`${solid ? 'Card' : 'nonCard'} ${commentsOpen ? "has-comments-open" : ""}`}
       style={{
         paddingTop: editing && '2em',
         zIndex: commentThreadsOpen && 300,
