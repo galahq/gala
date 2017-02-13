@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import { Portal } from '@blueprintjs/core'
 
 import {
-  selectCommentThread,
   closeCommentThreads,
   acceptSelection,
 } from 'redux/actions.js'
+
+import CommentThread from 'comments/CommentThread.js'
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -14,13 +15,11 @@ function mapStateToProps(state, ownProps) {
     acceptingSelection: state.ui.acceptingSelection,
     selectionPending: !state.cardsById[ownProps.cardId].editorState
       .getSelection().isCollapsed(),
-    selectedCommentThread: state.ui.selectedCommentThread,
   }
 }
 
 const CommentThreadsCard = ({commentThreads, acceptingSelection,
-                            selectionPending, selectedCommentThread,
-                            selectCommentThread, closeCommentThreads,
+                            selectionPending, closeCommentThreads,
                             acceptSelection, addCommentThread}) => {
   const positionalStyles = {
     position: 'absolute',
@@ -37,19 +36,11 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
     </div>
 
     <ol style={styles.commentList}>
-      { commentThreads.map( (thread, i) =>
-        <li key={thread.id} style={{
-          ...styles.commentListItem,
-          borderBottom: i < commentThreads.length - 1 && '1px solid #513992',
-          ...(selectedCommentThread === thread.id ? {backgroundColor: "#493092"} : {}),
-        }} onClick={() => selectCommentThread(thread.id)}>
-          <h5 style={styles.author}>Arman Golrokhian</h5>
-          <p style={styles.commentSnippet}>
-            This is really interesting in light of some recent research by Obama,
-            Biden, et al. (2016)...
-          </p>
-        </li>
-        )}
+      { commentThreads.map( (thread, i) => <CommentThread
+        threadId={thread.id}
+        last={i === commentThreads.length - 1}
+      />
+      )}
     </ol>
 
     <button
@@ -73,7 +64,7 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
 
 export default connect(
   mapStateToProps,
-  {selectCommentThread, closeCommentThreads, acceptSelection},
+  {closeCommentThreads, acceptSelection},
 )(CommentThreadsCard)
 
 
@@ -112,28 +103,5 @@ const styles = {
     margin: 0,
     padding: 0,
     minHeight: '1em',
-  },
-
-  commentListItem: {
-    padding: '0.65em 0.5em 0.65em 1em',
-    listStylePosition: 'inside',
-    cursor: 'pointer',
-  },
-
-  author: {
-    display: 'inline',
-    margin: 0,
-    fontFamily: 'tenso',
-    fontSize: 'inherit',
-    fontStyle: 'normal',
-    textTransform: 'uppercase',
-    letterSpacing: 0.4,
-    color: 'inherit',
-  },
-
-  commentSnippet: {
-    margin: '0 0 0 1em',
-    fontWeight: 400,
-    lineHeight: 1.4,
   },
 }

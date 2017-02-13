@@ -18,7 +18,7 @@ import EditorToolbar from 'EditorToolbar.js'
 import Statistics from 'Statistics.js'
 import CitationTooltip from 'CitationTooltip.js'
 import CommentThreadsTag from 'comments/CommentThreadsTag.js'
-import CommentsCard from 'comments/CommentsCard.js'
+import CommentThreadsCard from 'comments/CommentThreadsCard.js'
 
 import {
   updateCardContents,
@@ -145,7 +145,7 @@ class CardContents extends React.Component {
       />
 
       <CommentThreadsTag cardId={id} />
-      { commentThreadsOpen && <CommentsCard cardId={id}
+      { commentThreadsOpen && <CommentThreadsCard cardId={id}
         addCommentThread={addCommentThread} /> }
 
       {

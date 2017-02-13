@@ -16,7 +16,7 @@ const CommentThreadsTag = ({commentThreads, cardId, openCommentThreads}) =>
   >
     { commentThreads.length > 0
       ? `${commentThreads.length} RESPONSE${
-                                      commentThreads.length  === 1 ? "" : 'S'}`
+                                      commentThreads.length === 1 ? "" : 'S'}`
       : `RESPOND` }
   </div>
 
