@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { selectCommentThread } from 'redux/actions.js'
+import Truncate from 'react-truncate'
 
 function mapStateToProps(state, ownProps) {
   const thread = state.commentThreadsById[ownProps.threadId]
@@ -24,7 +25,7 @@ const CommentThread = ({author, snippet, threadId, selected, selectCommentThread
     ...(selected ? {backgroundColor: "#493092"} : {}),
   }} onClick={() => selectCommentThread(threadId)}>
   <h4 style={styles.author}>{author}</h4>
-  <p style={styles.commentSnippet}>{snippet}</p>
+  <p style={styles.commentSnippet}><Truncate lines={3}>{snippet}</Truncate></p>
 </li>
 
 export default connect(

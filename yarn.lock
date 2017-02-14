@@ -2202,6 +2202,10 @@ react-router@^3.0.0:
     loose-envify "^1.2.0"
     warning "^3.0.0"
 
+react-truncate@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-truncate/-/react-truncate-2.0.5.tgz#a8307f022db05e6971c82992e55c41955c3986f8"
+
 react-youtube-player@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/react-youtube-player/-/react-youtube-player-0.3.3.tgz#2fe9818623425176a92596bc7edcbdd4d4d55d73"
