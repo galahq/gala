@@ -1,5 +1,7 @@
 class CommentsController < ApplicationController
+  before_action :authenticate_reader!, only: %i(create update destroy)
   before_action :set_comment, only: [:show, :update, :destroy]
+  before_action :set_comment_thread, only: [:create]
 
   # GET /comments
   def index
@@ -10,15 +12,16 @@ class CommentsController < ApplicationController
 
   # GET /comments/1
   def show
-    render json: @comment
+    render partial: @comment
   end
 
   # POST /comments
   def create
-    @comment = Comment.new(comment_params)
+    @comment = @comment_thread.comments.build(comment_params)
+    @comment.reader = current_reader
 
     if @comment.save
-      render json: @comment, status: :created, location: @comment
+      render partial: @comment
     else
       render json: @comment.errors, status: :unprocessable_entity
     end
@@ -26,6 +29,7 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /comments/1
   def update
+    authorize_action_for @comment
     if @comment.update(comment_params)
       render json: @comment
     else
@@ -35,6 +39,7 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1
   def destroy
+    authorize_action_for @comment
     @comment.destroy
   end
 
@@ -44,8 +49,12 @@ class CommentsController < ApplicationController
       @comment = Comment.find(params[:id])
     end
 
+    def set_comment_thread
+      @comment_thread = CommentThread.find(params[:comment_thread_id])
+    end
+
     # Only allow a trusted parameter "white list" through.
     def comment_params
-      params.require(:comment).permit(:content_i18n, :reader_id, :thread_id)
+      params.require(:comment).permit(:content)
     end
 end

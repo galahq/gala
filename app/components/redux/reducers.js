@@ -6,6 +6,7 @@ import {
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
   REPLACE_CARD,
+  ADD_COMMENT,
 } from './actions.js'
 
 import cardsById from './reducers/cards.js'
@@ -83,12 +84,32 @@ function commentThreadsById(
         ...newCommentThreads,
       }
 
+    case ADD_COMMENT:
+      return {
+        ...state,
+        [action.data.commentThreadId]: {
+          ...state[action.data.commentThreadId],
+          commentIds: [
+            ...state[action.data.commentThreadId].commentIds,
+            action.data.id,
+          ],
+        },
+      }
+
     default: return state
   }
 }
 
-function commentsById(state = {...window.caseData.comments}) {
-  return state
+function commentsById(state = {...window.caseData.comments}, action) {
+  switch (action.type) {
+    case ADD_COMMENT:
+      return {
+        ...state,
+        [action.data.id]: action.data,
+      }
+
+    default: return state
+  }
 }
 
 

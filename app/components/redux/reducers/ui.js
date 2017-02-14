@@ -6,6 +6,7 @@ import {
   SELECT_COMMENT_THREAD,
   ACCEPT_SELECTION,
   REPLACE_CARD,
+  CHANGE_COMMENT_IN_PROGRESS,
 } from '../actions.js'
 
 export default function ui(state, action) {
@@ -15,6 +16,7 @@ export default function ui(state, action) {
       acceptingSelection: false,
       commentThreadsOpenForCard: null,
       selectedCommentThread: null,
+      commentInProgress: {},
     }
   }
 
@@ -38,6 +40,15 @@ export default function ui(state, action) {
 
     case SELECT_COMMENT_THREAD:
       return { ...state, selectedCommentThread: action.id }
+
+    case CHANGE_COMMENT_IN_PROGRESS:
+      return {
+        ...state,
+        commentInProgress: {
+          ...state.commentInProgress,
+          [action.threadId]: action.content,
+        },
+      }
 
     default: return state
   }

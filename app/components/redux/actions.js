@@ -159,6 +159,23 @@ function replaceCard(cardId, newCard) {
   return { type: REPLACE_CARD, cardId, newCard }
 }
 
+export const ADD_COMMENT = "CREATE_COMMENT"
+function addComment(data) {
+  return { type: ADD_COMMENT, data }
+}
+
+export function createComment(threadId, content) {
+  return async dispatch => {
+    dispatch(changeCommentInProgress(threadId, ""))
+    const newComment = await Orchard.graft(
+      `comment_threads/${threadId}/comments`,
+      { comment: { content } },
+    )
+
+    dispatch(addComment(newComment))
+  }
+}
+
 
 // UI
 export const HIGHLIGHT_EDGENOTE = "HIGHLIGHT_EDGENOTE"
@@ -191,4 +208,9 @@ export function closeCommentThreads() {
     dispatch(openCommentThreads(null))
     dispatch(selectCommentThread(null))
   }
+}
+
+export const CHANGE_COMMENT_IN_PROGRESS = "CHANGE_COMMENT_IN_PROGRESS"
+export function changeCommentInProgress(threadId, content) {
+  return { type: CHANGE_COMMENT_IN_PROGRESS, threadId, content }
 }
