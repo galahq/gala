@@ -41,12 +41,11 @@
   cursor: pointer;
 }
 
-#Case article div.Card {
-  transition: padding-top 0.1s, margin-left 0.3s;
+#Sidebar {
+  transition: margin-left 0.3s;
 }
-#Case article div.Card.has-comments-open {
-  margin-left: -14.3em;
-  margin-right: 16em;
+#Sidebar.has-comments-open {
+  margin-left: -10.5em;
 }
 
 
@@ -54,21 +53,33 @@
   padding: 1.5em;
   border: 0.5em solid $purple;
   background-color: $white;
+  position: absolute;
+  top: 0;
+  left: 18.1em;
+  width: 26em;
+  box-shadow: 0 0.5em 1em rgba(0,0,0,0.3);
 
   form {
     margin-top: 1em;
     #CommentSubmit {
       display: flex;
-      align-items: baseline;
-      input {
+      align-items: flex-end;
+      margin-bottom: 0.15em;
+      textarea {
         flex: 5;
+        height: 3em;
+        margin: 0;
+        padding: 0.5em;
         &::-webkit-input-placeholder {
           color: $purple;
+        }
+        &:focus {
+          box-shadow: 0 0 0 1px #137cbd, 0 0 0 3px rgba(19, 124, 189, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.2);
         }
       }
       button {
         flex: 1;
-        margin-left: 1em;
+        margin: 0 0 0 1em;
       }
     }
   }
@@ -78,19 +89,23 @@
   color: shade($purple, 40%);
   line-height: 90%;
 
-  cite { display: block; }
+  cite {
+    display: block;
+  }
   i {
     color: $purple;
     font-size: 80%;
     font-style: normal;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0.3rem 0;
+    letter-spacing: 0.3px;
+    margin: 0.1rem 0 0.3rem 0;
     display: block;
   }
   blockquote {
     margin: 0;
     padding: 0;
+    line-height: 1.3;
+    font-weight: 400;
   }
 
   &:not(:first-child) {
@@ -105,5 +120,5 @@
   font-weight: 700;
   font-style: normal;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.4px;
 }

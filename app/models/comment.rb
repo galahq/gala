@@ -5,4 +5,8 @@ class Comment < ApplicationRecord
   translates :content
 
   acts_as_list  scope: :comment_thread
+
+  def timestamp
+    I18n.l created_at, format: :long
+  end
 end

@@ -8,6 +8,7 @@ import {
 } from 'redux/actions.js'
 
 import CommentThread from 'comments/CommentThread.js'
+import CommentsCard from 'comments/CommentsCard.js'
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -15,12 +16,14 @@ function mapStateToProps(state, ownProps) {
     acceptingSelection: state.ui.acceptingSelection,
     selectionPending: !state.cardsById[ownProps.cardId].editorState
       .getSelection().isCollapsed(),
+    commentThreadSelected: !!state.ui.selectedCommentThread,
   }
 }
 
 const CommentThreadsCard = ({commentThreads, acceptingSelection,
                             selectionPending, closeCommentThreads,
-                            acceptSelection, addCommentThread}) => {
+                            commentThreadSelected, acceptSelection,
+                            addCommentThread}) => {
   const positionalStyles = {
     position: 'absolute',
     top: 0 /* Height of header */,
@@ -32,7 +35,7 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
       { commentThreads.length === 0
         ? "No responses"
         : `${commentThreads.length} response${commentThreads.length !== 1
-                                                ? 's' : ""}` }
+                                                ? "s" : ""}` }
     </div>
 
     <ol style={styles.commentList}>
@@ -58,6 +61,8 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
         <div style={styles.backdrop} onClick={closeCommentThreads}/>
       </Portal>
     }
+
+    { commentThreadSelected && <CommentsCard /> }
   </div>
 
 }
@@ -87,6 +92,7 @@ const styles = {
     fontFamily: 'tenso',
     fontWeight: 500,
     fontSize: '12pt',
+    boxShadow: '0 0.5em 1em rgba(0,0,0,0.3)',
   },
 
   header: {

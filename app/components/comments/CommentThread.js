@@ -9,10 +9,10 @@ function mapStateToProps(state, ownProps) {
 
   return {
     selected: ownProps.threadId === state.ui.selectedCommentThread,
-    author: firstComment.author
-      ? firstComment.author.name
+    author: firstComment.reader
+      ? firstComment.reader.name
       : state.caseData.reader.name,
-    snippet: firstComment.content,
+    snippet: firstComment.content || "New comment...",
   }
 }
 
@@ -23,7 +23,7 @@ const CommentThread = ({author, snippet, threadId, selected, selectCommentThread
     borderBottom: last || '1px solid #513992',
     ...(selected ? {backgroundColor: "#493092"} : {}),
   }} onClick={() => selectCommentThread(threadId)}>
-  <h5 style={styles.author}>{author}</h5>
+  <h4 style={styles.author}>{author}</h4>
   <p style={styles.commentSnippet}>{snippet}</p>
 </li>
 

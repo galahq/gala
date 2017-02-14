@@ -30,7 +30,8 @@ class Sidebar extends React.Component {
 
   render () {
     return (
-      <aside id="Sidebar" className={this.props.commentsOpen && "has-comments-open"}>
+      <aside id="Sidebar" className={this.props.commentsOpen
+                                      ? "has-comments-open" : ""}>
         <Link to="/" className="backLink">
           <I18n meaning="back_to_overview" />
         </Link>
@@ -43,5 +44,5 @@ class Sidebar extends React.Component {
 }
 
 export default connect(
-  (state) => ({ commentsOpen: !!state.ui.commentsOpenForCard })
+  (state) => ({ commentsOpen: !!state.ui.selectedCommentThread })
 )(Sidebar)

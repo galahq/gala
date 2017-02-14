@@ -29,13 +29,15 @@ import {
 const mapStateToProps = (state, ownProps) => {
   let {solid, statistics, editorState} = state.cardsById[ownProps.id]
 
+  const commentThreadsOpen = ownProps.id === state.ui.commentThreadsOpenForCard
   return {
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     openedCitation: state.ui.openedCitation,
-    commentThreadsOpen: ownProps.id === state.ui.commentThreadsOpenForCard,
+    commentsOpen: !!state.ui.selectedCommentThread,
     acceptingSelection: state.ui.acceptingSelection,
     selectedCommentThread: state.ui.selectedCommentThread,
+    commentThreadsOpen,
     solid,
     statistics,
     editorState,
@@ -129,6 +131,7 @@ class CardContents extends React.Component {
       style={{
         paddingTop: editing && '2em',
         zIndex: commentThreadsOpen && 300,
+        transition: "padding-top 0.1s",
       }}
     >
 
