@@ -8,11 +8,12 @@ import {
   UPDATE_CARD_CONTENTS,
   APPLY_SELECTION,
   REPLACE_CARD,
+  PARSE_ALL_CARDS,
 } from '../actions.js'
 
 let { forceSelection } = EditorState
 
-function cardsById(state = getInitialState(), action) {
+function cardsById(state = getInitialEmptyCards(), action) {
   switch (action.type) {
     case UPDATE_CARD_CONTENTS:
       return {
@@ -43,6 +44,15 @@ function cardsById(state = getInitialState(), action) {
         },
       }
 
+    case PARSE_ALL_CARDS:
+      return Object.values(state).reduce( (all, card) => ({
+        ...all,
+        [card.id]: {
+          ...card,
+          editorState: parseEditorStateFromPersistedCard(card),
+        },
+      }), {})
+
     default: return state
   }
 }
@@ -52,11 +62,11 @@ export default cardsById
 
 
 
-function getInitialState() {
+function getInitialEmptyCards() {
   let state = {...window.caseData.cards}
 
   Object.values(state).forEach( card => {
-    state[card.id].editorState = parseEditorStateFromPersistedCard(card)
+    state[card.id].editorState = EditorState.createEmpty()
   } )
 
   return state

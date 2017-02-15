@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import StatusBar from 'StatusBar.js'
+import { parseAllCards } from 'redux/actions.js'
 
 function mapStateToProps(state) {
   return {
@@ -10,7 +11,6 @@ function mapStateToProps(state) {
 }
 
 class Case extends React.Component {
-
   constructor() {
     super()
     this.state = {
@@ -19,21 +19,8 @@ class Case extends React.Component {
     }
   }
 
-  editing() {
-    return this.props.location.pathname.slice(1,5) === "edit"
-  }
-
-  didSave(newData = this.state.caseData, shouldReturnToOverview = false, saveMessage = "saved") {
-    if (shouldReturnToOverview) { this.props.history.push('/edit') }
-
-    this.setState({
-      saveMessage: saveMessage,
-      caseData: newData,
-    })
-
-    setTimeout(() => {
-      this.setState({saveMessage: 'edit_instructions'})
-    }, 2000)
+  componentDidMount() {
+    setTimeout( () => this.props.parseAllCards(), 1 )
   }
 
   render() {
@@ -56,8 +43,25 @@ class Case extends React.Component {
     )
   }
 
+  editing() {
+    return this.props.location.pathname.slice(1,5) === "edit"
+  }
+
+  didSave(newData = this.state.caseData, shouldReturnToOverview = false, saveMessage = "saved") {
+    if (shouldReturnToOverview) { this.props.history.push('/edit') }
+
+    this.setState({
+      saveMessage: saveMessage,
+      caseData: newData,
+    })
+
+    setTimeout(() => {
+      this.setState({saveMessage: 'edit_instructions'})
+    }, 2000)
+  }
 }
 
 export default connect(
   mapStateToProps,
+  { parseAllCards },
 )(Case)

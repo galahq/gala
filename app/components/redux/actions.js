@@ -103,6 +103,11 @@ export function updatePage(id, data) {
 
 // CARD
 //
+export const PARSE_ALL_CARDS = "PARSE_ALL_CARDS"
+export function parseAllCards() {
+  return { type: PARSE_ALL_CARDS }
+}
+
 export const UPDATE_CARD_CONTENTS = "UPDATE_CARD_CONTENTS"
 export function updateCardContents(id, editorState) {
   setUnsaved()
@@ -110,7 +115,7 @@ export function updateCardContents(id, editorState) {
 }
 
 export const REPLACE_CARD = "REPLACE_CARD"
-function replaceCard(cardId, newCard) {
+export function replaceCard(cardId, newCard) {
   return { type: REPLACE_CARD, cardId, newCard }
 }
 
