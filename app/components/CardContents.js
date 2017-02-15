@@ -8,11 +8,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Editor, RichUtils, SelectionState} from 'draft-js'
-import { blockRenderMap, customStyleMap } from 'concerns/draftConfig.js'
-import {
-  openCommentsStyle,
-  selectedCommentStyle,
-} from 'concerns/commentThreads.js'
+import { blockRenderMap, getStyleMap } from 'concerns/draftConfig.js'
 
 import EditorToolbar from 'EditorToolbar.js'
 import Statistics from 'Statistics.js'
@@ -27,16 +23,19 @@ import {
 } from 'redux/actions.js'
 
 const mapStateToProps = (state, ownProps) => {
-  let {solid, statistics, editorState} = state.cardsById[ownProps.id]
-
+  const { solid, statistics, editorState } = state.cardsById[ownProps.id]
+  const { openedCitation, hoveredCommentThread, selectedCommentThread,
+    acceptingSelection } = state.ui
   const commentThreadsOpen = ownProps.id === state.ui.commentThreadsOpenForCard
+
   return {
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
-    openedCitation: state.ui.openedCitation,
-    commentsOpen: !!state.ui.selectedCommentThread,
-    acceptingSelection: state.ui.acceptingSelection,
-    selectedCommentThread: state.ui.selectedCommentThread,
+    commentsOpen: !!selectedCommentThread,
+    openedCitation,
+    acceptingSelection,
+    hoveredCommentThread,
+    selectedCommentThread,
     commentThreadsOpen,
     solid,
     statistics,
@@ -60,7 +59,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     onChangeContents: eS => dispatch(updateCardContents(ownProps.id, eS)),
 
-    onMakeSelectionForComment: (editorState, editor) => {
+    onMakeSelectionForComment: (editorState) => {
       const selection = editorState.getSelection()
       if (!selection.getHasFocus())  return
       const selectionState = (
@@ -107,8 +106,8 @@ class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, editorState, onChange,
       handleKeyCommand, onDelete, openedCitation, addCommentThread,
-      commentThreadsOpen, commentsOpen, acceptingSelection, 
-      selectedCommentThread} = this.props
+      commentThreadsOpen, commentsOpen, acceptingSelection,
+      hoveredCommentThread, selectedCommentThread} = this.props
 
     let citationOpenWithinCard
     try {
@@ -117,13 +116,8 @@ class CardContents extends React.Component {
       citationOpenWithinCard = false
     }
 
-    const styleMap = {
-      ...customStyleMap,
-      ...(commentThreadsOpen ? {'THREAD': openCommentsStyle} : {}),
-      ...(commentThreadsOpen && selectedCommentThread
-           ? {[`thread--${selectedCommentThread}`]: selectedCommentStyle}
-           : {}),
-    }
+    const styleMap = getStyleMap({commentThreadsOpen, hoveredCommentThread,
+      selectedCommentThread})
 
     return <div
       ref={el => this.cardRef = el}
@@ -139,7 +133,7 @@ class CardContents extends React.Component {
       <Editor ref={ed => this.editor = ed}
         readOnly={!acceptingSelection || openedCitation.key}
         customStyleMap={styleMap}
-        onChange={eS => onChange(eS, this.editor)}
+        onChange={eS => onChange(eS)}
         {...{
           blockRenderMap,
           editorState,

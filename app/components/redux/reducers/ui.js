@@ -4,6 +4,7 @@ import {
   OPEN_CITATION,
   OPEN_COMMENT_THREADS,
   SELECT_COMMENT_THREAD,
+  HOVER_COMMENT_THREAD,
   ACCEPT_SELECTION,
   REPLACE_CARD,
   CHANGE_COMMENT_IN_PROGRESS,
@@ -16,6 +17,7 @@ export default function ui(state, action) {
       acceptingSelection: false,
       commentThreadsOpenForCard: null,
       selectedCommentThread: null,
+      hoveredCommentThread: null,
       commentInProgress: {},
     }
   }
@@ -40,6 +42,9 @@ export default function ui(state, action) {
 
     case SELECT_COMMENT_THREAD:
       return { ...state, selectedCommentThread: action.id }
+
+    case HOVER_COMMENT_THREAD:
+      return { ...state, hoveredCommentThread: action.id }
 
     case CHANGE_COMMENT_IN_PROGRESS:
       return {

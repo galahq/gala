@@ -173,6 +173,11 @@ export function selectCommentThread(id) {
   return {type: SELECT_COMMENT_THREAD, id}
 }
 
+export const HOVER_COMMENT_THREAD = "HOVER_COMMENT_THREAD"
+export function hoverCommentThread(id) {
+  return {type: HOVER_COMMENT_THREAD, id}
+}
+
 export function closeCommentThreads() {
   return dispatch => {
     dispatch(openCommentThreads(null))

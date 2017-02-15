@@ -18,17 +18,14 @@ const newBlockRenderMap = Immutable.Map({
 })
 export const blockRenderMap = DefaultDraftBlockRenderMap.merge(newBlockRenderMap)
 
-export const customStyleMap = {
-  'BOLD': {
+const styles = {
+  smallCaps: {
     fontWeight: 'inherit',
     letterSpacing: 1,
     fontVariant: 'small-caps',
   },
-  'UNDERLINE': {},
-  'SELECTION': {
-    backgroundColor: '#ccc',
-  },
-  'THREAD': {
+
+  thinUnderline: {
     background: "linear-gradient(rgba(115,81,212, 1),rgba(115,81,212, 1))",
     backgroundSize: "1px 1px",
     backgroundRepeat: "repeat-x",
@@ -36,6 +33,43 @@ export const customStyleMap = {
     textShadow: "0.03em 0 #EBEAE4, -0.03em 0 #EBEAE4, 0 0.03em #EBEAE4, 0 -0.03em #EBEAE4, 0.06em 0 #EBEAE4, -0.06em 0 #EBEAE4, 0.09em 0 #EBEAE4, -0.09em 0 #EBEAE4, 0.12em 0 #EBEAE4, -0.12em 0 #EBEAE4, 0.15em 0 #EBEAE4, -0.15em 0 #EBEAE4",
     cursor: 'pointer',
   },
+
+  lightPurpleUnderline: {
+    textShadow: 'none',
+    boxShadow: 'inset 0 -0.35em 0 #9776F4',
+    borderBottom: '1px solid #9776F4',
+    cursor: 'pointer',
+  },
+
+  darkPurpleUnderline: {
+    textShadow: 'none',
+    boxShadow: 'inset 0 -0.35em 0 #7351D4',
+    borderBottom: '1px solid #7351D4',
+    cursor: 'pointer',
+  },
+
+  purpleHighlight: {
+    backgroundColor: "#7351D4",
+    borderBottom: "1px solid #493092",
+    boxShadow: "inset 0 -0.35em 0 #493092",
+    textShadow: 'none',
+    color: "white",
+  },
+}
+
+export function getStyleMap({commentThreadsOpen, hoveredCommentThread,
+                             selectedCommentThread}) {
+  const hoveredCommentKey = `thread--${hoveredCommentThread}`
+  const selectedCommentKey = `thread--${selectedCommentThread}`
+  return {
+    'BOLD': styles.smallCaps,
+    'UNDERLINE': {},
+    'THREAD': commentThreadsOpen
+                ? styles.lightPurpleUnderline
+                : styles.thinUnderline,
+    [hoveredCommentKey]: styles.darkPurpleUnderline,
+    [selectedCommentKey]: styles.purpleHighlight,
+  }
 }
 
 function getFindEntityFunction(type) {

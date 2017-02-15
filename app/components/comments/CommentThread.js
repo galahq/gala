@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { selectCommentThread } from 'redux/actions.js'
+import { selectCommentThread, hoverCommentThread } from 'redux/actions.js'
 import Truncate from 'react-truncate'
 
 function mapStateToProps(state, ownProps) {
@@ -9,6 +9,7 @@ function mapStateToProps(state, ownProps) {
   const firstComment = comments.length > 0 ? comments[0] : {}
 
   return {
+    hovered: ownProps.threadId === state.ui.hoveredCommentThread,
     selected: ownProps.threadId === state.ui.selectedCommentThread,
     lead: {
       author: firstComment.reader
@@ -20,13 +21,23 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-const CommentThread = ({lead, responses, threadId, selected, selectCommentThread,
-                       last}) =>
-  <li key={threadId} style={{
-    ...styles.commentListItem,
-    borderBottom: last || '1px solid #513992',
-    ...(selected ? {backgroundColor: "#493092"} : {}),
-  }} onClick={() => selectCommentThread(threadId)}>
+function mapDispatchToProps(dispatch, ownProps) {
+  const {threadId} = ownProps
+  return {
+    handleClick: () => dispatch(selectCommentThread(threadId)),
+    handleMouseEnter: () => dispatch(hoverCommentThread(threadId)),
+    handleMouseLeave: () => dispatch(hoverCommentThread(null)),
+  }
+}
+
+const CommentThread = ({lead, responses, threadId, hovered, selected, last,
+  handleClick, handleMouseEnter, handleMouseLeave}) => <li
+    key={threadId}
+    style={styles.getCommentListItemStyle({last, selected, hovered})}
+    onClick={handleClick}
+    onMouseEnter={handleMouseEnter}
+    onMouseLeave={handleMouseLeave}
+  >
   <h4 style={styles.author}>{lead.author}</h4>
   <p style={styles.commentSnippet}>
     <Truncate lines={3}>{lead.content}</Truncate>
@@ -57,15 +68,18 @@ const CommentThread = ({lead, responses, threadId, selected, selectCommentThread
 
 export default connect(
   mapStateToProps,
-  {selectCommentThread},
+  mapDispatchToProps,
 )(CommentThread)
 
 const styles = {
-  commentListItem: {
+  getCommentListItemStyle: ({last, selected, hovered}) => ({
     padding: '0.65em 0.5em 0.65em 1em',
     listStylePosition: 'inside',
     cursor: 'pointer',
-  },
+    borderBottom: last || '1px solid #513992',
+    ...(hovered ? {backgroundColor: '#6543c5'} : {}),
+    ...(selected ? {backgroundColor: '#493092'} : {}),
+  }),
 
   author: {
     display: 'inline',
