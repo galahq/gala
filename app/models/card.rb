@@ -3,7 +3,7 @@ class Card < ApplicationRecord
 
   include Authority::Abilities
 
-  has_many :comment_threads
+  has_many :comment_threads, -> { order(:block_index, :start) }
   belongs_to :page
   acts_as_list scope: :page
 

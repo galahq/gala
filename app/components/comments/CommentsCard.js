@@ -17,10 +17,11 @@ const CommentsCard = ({threadId, comments, commentInProgress,
                        changeCommentInProgress, createComment}) =>
   <aside className="CommentThread scrolling">
     { comments.map( comment => <Comment {...comment} /> ) }
-    <form>
+    <form style={comments.length === 0 ? { marginTop: 0 } : {}}>
       <label htmlFor="CommentSubmit">Cameron Bothner</label><br />
       <div id="CommentSubmit">
         <textarea placeholder="Write a reply..."
+          autoFocus
           value={commentInProgress}
           onChange={ e => changeCommentInProgress(threadId, e.target.value) } />
         <button onClick={ () => createComment(threadId, commentInProgress) }>

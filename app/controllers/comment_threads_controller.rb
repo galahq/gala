@@ -1,6 +1,7 @@
 class CommentThreadsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_card, only: [:create]
+  before_action :set_comment_thread, only: [:show]
 
   # authorize_actions_for CommentThread
 
@@ -9,13 +10,19 @@ class CommentThreadsController < ApplicationController
     @comment_thread.locale = I18n.locale
 
     if @comment_thread.save
-      render partial: 'cards/card', locals: {card: @comment_thread.card}
+      render :show, status: :created, location: @comment_thread
     else
       render json: @comment_thread.errors, status: :unprocessable_entity
     end
   end
 
+  def show
+  end
+
   private
+  def set_comment_thread
+    @comment_thread = CommentThread.find params[:id]
+  end
   def set_card
     @card = Card.find params[:card_id]
   end

@@ -146,11 +146,12 @@ export function createCommentThread(cardId, editorState) {
 
     const originalHighlightText = blocks[blockIndex].getText().slice(start, end)
 
-    let newCard = await Orchard.graft(`cards/${cardId}/comment_threads`, {
+    let newCommentThread = await Orchard.graft(`cards/${cardId}/comment_threads`, {
       commentThread: { blockIndex, start, length, originalHighlightText },
     })
 
-    dispatch(replaceCard(cardId, newCard))
+    dispatch(replaceCard(cardId, newCommentThread.card))
+    dispatch(selectCommentThread(newCommentThread.id))
   }
 }
 
