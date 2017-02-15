@@ -1,40 +1,9 @@
 import { Orchard } from 'concerns/orchard.js'
 import { convertToRaw } from 'draft-js'
 
-const setUnsaved = () => window.onbeforeunload = () =>
-  "You have unsaved changes. Are you sure you want to leave?"
 
-// Models
-export const UPDATE_CASE = "UPDATE_CASE"
-export function updateCase(slug, data) {
-  setUnsaved()
-  return {type: UPDATE_CASE, data}
-}
-
-export const UPDATE_PAGE = "UPDATE_PAGE"
-export function updatePage(id, data) {
-  setUnsaved()
-  return {type: UPDATE_PAGE, id, data}
-}
-
-export const UPDATE_CARD_CONTENTS = "UPDATE_CARD_CONTENTS"
-export function updateCardContents(id, editorState) {
-  setUnsaved()
-  return {type: UPDATE_CARD_CONTENTS, id, editorState}
-}
-
-export const CREATE_EDGENOTE = "CREATE_EDGENOTE"
-export function createEdgenote(slug, data) {
-  return {type: CREATE_EDGENOTE, slug, data}
-}
-
-export const UPDATE_EDGENOTE = "UPDATE_EDGENOTE"
-export function updateEdgenote(slug, data) {
-  setUnsaved()
-  return {type: UPDATE_EDGENOTE, slug, data}
-}
-
-// Edit
+// GENERAL
+//
 export const TOGGLE_EDITING = "TOGGLE_EDITING"
 export function toggleEditing() {
   return {type: TOGGLE_EDITING}
@@ -108,13 +77,50 @@ async function saveModel(endpoint, state) {
   return await Orchard.espalier(endpoint, data)
 }
 
+const setUnsaved = () => window.onbeforeunload = () =>
+  "You have unsaved changes. Are you sure you want to leave?"
+
 export const CLEAR_UNSAVED = "CLEAR_UNSAVED"
 function clearUnsaved() {
   return { type: CLEAR_UNSAVED }
 }
 
+// CASE
+//
+export const UPDATE_CASE = "UPDATE_CASE"
+export function updateCase(slug, data) {
+  setUnsaved()
+  return {type: UPDATE_CASE, data}
+}
 
-// Comment Threads
+// PAGE
+//
+export const UPDATE_PAGE = "UPDATE_PAGE"
+export function updatePage(id, data) {
+  setUnsaved()
+  return {type: UPDATE_PAGE, id, data}
+}
+
+// CARD
+//
+export const UPDATE_CARD_CONTENTS = "UPDATE_CARD_CONTENTS"
+export function updateCardContents(id, editorState) {
+  setUnsaved()
+  return {type: UPDATE_CARD_CONTENTS, id, editorState}
+}
+
+export const REPLACE_CARD = "REPLACE_CARD"
+function replaceCard(cardId, newCard) {
+  return { type: REPLACE_CARD, cardId, newCard }
+}
+
+export const OPEN_CITATION = "OPEN_CITATION"
+export function openCitation(key, labelRef) {
+  return {type: OPEN_CITATION, data: {key, labelRef}}
+}
+
+// SELECTION
+//
 export const ACCEPT_SELECTION = "ACCEPT_SELECTION"
 export function acceptSelection() {
   clearSelection()
@@ -133,6 +139,8 @@ export function applySelection(cardId, selectionState) {
   return { type: APPLY_SELECTION, cardId, selectionState }
 }
 
+// COMMENT THREAD
+//
 export function createCommentThread(cardId, editorState) {
   return async (dispatch) => {
     const selection = editorState.getSelection()
@@ -155,9 +163,28 @@ export function createCommentThread(cardId, editorState) {
   }
 }
 
-export const REPLACE_CARD = "REPLACE_CARD"
-function replaceCard(cardId, newCard) {
-  return { type: REPLACE_CARD, cardId, newCard }
+export const OPEN_COMMENT_THREADS = "OPEN_COMMENT_THREADS"
+export function openCommentThreads(cardId) {
+  return {type: OPEN_COMMENT_THREADS, cardId}
+}
+
+export const SELECT_COMMENT_THREAD = "SELECT_COMMENT_THREAD"
+export function selectCommentThread(id) {
+  return {type: SELECT_COMMENT_THREAD, id}
+}
+
+export function closeCommentThreads() {
+  return dispatch => {
+    dispatch(openCommentThreads(null))
+    dispatch(selectCommentThread(null))
+  }
+}
+
+// COMMENT
+//
+export const CHANGE_COMMENT_IN_PROGRESS = "CHANGE_COMMENT_IN_PROGRESS"
+export function changeCommentInProgress(threadId, content) {
+  return { type: CHANGE_COMMENT_IN_PROGRESS, threadId, content }
 }
 
 export const ADD_COMMENT = "CREATE_COMMENT"
@@ -178,7 +205,19 @@ export function createComment(threadId, content) {
 }
 
 
-// UI
+// EDGENOTE
+//
+export const CREATE_EDGENOTE = "CREATE_EDGENOTE"
+export function createEdgenote(slug, data) {
+  return {type: CREATE_EDGENOTE, slug, data}
+}
+
+export const UPDATE_EDGENOTE = "UPDATE_EDGENOTE"
+export function updateEdgenote(slug, data) {
+  setUnsaved()
+  return {type: UPDATE_EDGENOTE, slug, data}
+}
+
 export const HIGHLIGHT_EDGENOTE = "HIGHLIGHT_EDGENOTE"
 export function highlightEdgenote(slug) {
   return {type: HIGHLIGHT_EDGENOTE, slug}
@@ -187,31 +226,4 @@ export function highlightEdgenote(slug) {
 export const ACTIVATE_EDGENOTE = "ACTIVATE_EDGENOTE"
 export function activateEdgenote(slug) {
   return {type: ACTIVATE_EDGENOTE, slug}
-}
-
-export const OPEN_CITATION = "OPEN_CITATION"
-export function openCitation(key, labelRef) {
-  return {type: OPEN_CITATION, data: {key, labelRef}}
-}
-
-export const OPEN_COMMENT_THREADS = "OPEN_COMMENT_THREADS"
-export function openCommentThreads(cardId) {
-  return {type: OPEN_COMMENT_THREADS, cardId}
-}
-
-export const SELECT_COMMENT_THREAD = "SELECT_COMMENT_THREAD"
-export function selectCommentThread(id) {
-  return {type: SELECT_COMMENT_THREAD, id}
-}
-
-export function closeCommentThreads() {
-  return dispatch => {
-    dispatch(openCommentThreads(null))
-    dispatch(selectCommentThread(null))
-  }
-}
-
-export const CHANGE_COMMENT_IN_PROGRESS = "CHANGE_COMMENT_IN_PROGRESS"
-export function changeCommentInProgress(threadId, content) {
-  return { type: CHANGE_COMMENT_IN_PROGRESS, threadId, content }
 }
