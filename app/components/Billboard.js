@@ -5,7 +5,7 @@ import { EditableText } from '@blueprintjs/core'
 import EditableAttribute from 'EditableAttribute.js'
 
 import BillboardTitle from 'BillboardTitle.js'
-import { I18n } from 'I18n.js'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { updateCase } from 'redux/actions.js'
 
 function mapStateToProps(state) {
@@ -51,7 +51,7 @@ export default connect(
 const FlagLinks = ({ languages, slug }) => languages.length > 0
 ? <div
     className="flag-links">
-    <I18n meaning="other-languages" />
+    <FormattedMessage id="overview.otherLanguages" />
     <br />
     {languages.map( lx => <FlagLink key={lx} lx={lx} slug={slug} /> )}
   </div>
@@ -61,5 +61,5 @@ const FlagLinks = ({ languages, slug }) => languages.length > 0
 const FlagLink = ({ slug, lx }) => <a href={`/${lx}/cases/${slug}`}>
   <span className="flag-links__icon" dangerouslySetInnerHTML={{__html: require(`../assets/images/react/flag-${lx}.svg`)}} />
   &nbsp;
-  <I18n meaning={lx} />
+  <FormattedMessage id={lx} />
 </a>

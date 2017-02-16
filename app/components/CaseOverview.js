@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 
 import { Link } from 'react-router'
 
+import { injectIntl, FormattedMessage } from 'react-intl'
+
 import TableOfContents from 'TableOfContents.js'
 import Billboard from 'Billboard.js'
-import {I18n} from 'I18n.js'
 import {Editable, EditableAttribute} from 'Editable.js'
 import {EditableList} from 'EditableList.js'
 import {EnrollForm} from 'EnrollForm.js'
@@ -34,7 +35,7 @@ class Actions extends React.Component {
               className="ActionIcon"
               dangerouslySetInnerHTML={{__html: require('consider.svg')}}
             />
-            <I18n meaning="consider"/>
+            <FormattedMessage id="overview.consider"/>
           </h2>
           <EditableList
             elements={list}
@@ -66,9 +67,11 @@ class Actions extends React.Component {
               className="ActionIcon"
               dangerouslySetInnerHTML={{__html: require('listen.svg')}}
             />
-            <I18n meaning="listen" />
+            <FormattedMessage id="overview.listen" />
           </h2>
-          <h4 className="list-head"><I18n meaning="related_podcast" /></h4>
+          <h4 className="list-head">
+            <FormattedMessage id="overview.relatedPodcast" />
+          </h4>
           <EditableList
             elements={list}
             ordered={false}
@@ -108,7 +111,7 @@ class Actions extends React.Component {
                 className="ActionIcon"
                 dangerouslySetInnerHTML={{__html: require('read.svg')}}
               />
-              <I18n meaning="read" />
+              <FormattedMessage id="overview.read" />
             </h2>
             <TableOfContents
               slug={this.props.slug}
@@ -127,9 +130,11 @@ class Actions extends React.Component {
                 //className="ActionIcon"
                 //dangerouslySetInnerHTML={{__html: require('explore.svg')}}
               ///>
-              //<I18n meaning="explore" />
+              //<FormattedMessage id="overview.explore" />
             //</h2>
-            //<Link to={`/edgenotes`}><I18n meaning="edgenote_gallery" /></Link>
+            //<Link to={`/edgenotes`}>
+              //<FormattedMessage id="overview.edgenoteGallery" />
+            //</Link>
           //</div>
         //)
         }
@@ -143,9 +148,11 @@ class Actions extends React.Component {
                 className="ActionIcon"
                 dangerouslySetInnerHTML={{__html: require('respond.svg')}}
               />
-              <I18n meaning="respond" />
+              <FormattedMessage id="overview.respond" />
             </h2>
-            <a href="http://goo.gl/forms/32tzg5yZTd" target="_blank"><I18n meaning="give_feedback" /></a>
+            <a href="http://goo.gl/forms/32tzg5yZTd" target="_blank">
+              <FormattedMessage id="overview.giveFeedback" />
+            </a>
           </div>
         )}
 
