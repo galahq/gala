@@ -2,11 +2,11 @@ import React from 'react'
 import {Trackable} from 'concerns/trackable.js'
 import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
-import {I18n} from 'I18n.js'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 import {Statistics} from 'Statistics.js'
 
-let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
+let PodcastPlayer = injectIntl(Animate.extend(class PodcastPlayer extends Trackable {
   eventName() { return "visit_podcast" }
 
   trackableArgs() { return {
@@ -84,11 +84,14 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
     let guestList = guests.map((guest) => {
       return [<dt>{guest.name}</dt>, <dd>{guest.title}</dd>]
     })
-    let hostMeaningString = hosts.length > 1 ? 'with_hosts' : 'with_host'
 
     return <div style={this[Animate['@getAnimatedStyle']]('podcast-hosts-fade')}>
       <dl>{guestList}</dl>
-      <em><I18n meaning={hostMeaningString} /> {hosts_string}</em>
+      <em>
+        <FormattedMessage id="podcast.hosts" values={{count: hosts.length}} />
+        {" "}
+        {hosts_string}
+      </em>
     </div>
   }
 
@@ -133,7 +136,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
       </div>
     )
   }
-})
+}))
 
 class Podcast extends React.Component {
   render() {

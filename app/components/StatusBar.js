@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {I18n} from 'I18n.js'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { toggleEditing, saveChanges } from 'redux/actions.js'
 
 function mapStateToProps(state) {
@@ -11,27 +11,33 @@ function mapStateToProps(state) {
     editable: edit.possible,
     editing: inProgress,
     edited: edit.changed,
-    message: inProgress
-      ? 'edit_instructions'
-      : ( published ? "" : 'this_case_is_not_yet_published' ),
+    messages: {
+      instructions: inProgress
+        ? 'statusBar.editInstructions'
+        : ( published ? "" : 'statusBar.betaNotification' ),
+      editToggle: inProgress ? "statusBar.endEdit" : "statusBar.beginEdit",
+      save: 'statusBar.save',
+    },
   }
 }
 
-const StatusBar = ({editable, editing, edited, message, toggleEditing,
+const StatusBar = ({editable, editing, edited, messages, toggleEditing,
                    saveChanges}) => <div
-  className={(message || editable) && `flash flash-${editing ? "editing" : "info"}`}
+  className={(messages.instructions || editable) && `flash flash-${editing ? "editing" : "info"}`}
 >
-  <I18n meaning={message}/>
+  { messages.instructions && <FormattedMessage id={messages.instructions} /> }
   { (editable || edited) && <span>
-    { message && <span>&ensp;&mdash;&ensp;</span> }
+    { messages.instructions && <span>&ensp;&mdash;&ensp;</span> }
     { editable && <a onClick={toggleEditing}>
-      <I18n meaning={editing ? "stop_editing_this_case" : "edit_this_case"} />
+      { messages.editToggle && <FormattedMessage id={messages.editToggle} /> }
     </a> }
-    { edited && [<span>&ensp;</span>, <a onClick={saveChanges}>Save</a>] }
+    { edited && [<span>&ensp;</span>, <a onClick={saveChanges}>
+      { messages.save && <FormattedMessage id={messages.save} /> }
+    </a>] }
   </span> }
 </div>
 
 export default connect(
   mapStateToProps,
   {toggleEditing, saveChanges}
-)(StatusBar)
+)(injectIntl(StatusBar))

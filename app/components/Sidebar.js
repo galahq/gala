@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import BillboardTitle from 'BillboardTitle.js'
-import {I18n} from 'I18n.js'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import TableOfContents from 'TableOfContents.js'
 import {EnrollForm} from 'EnrollForm.js'
 
@@ -31,7 +31,7 @@ class Sidebar extends React.Component {
     return (
       <aside id="Sidebar">
         <Link to="/" className="backLink">
-          <I18n meaning="back_to_overview" />
+          <FormattedMessage id="case.backToOverview" />
         </Link>
         <BillboardTitle minimal />
         {this.renderTOC()}
@@ -41,4 +41,4 @@ class Sidebar extends React.Component {
   }
 }
 
-export default Sidebar
+export default injectIntl(Sidebar)

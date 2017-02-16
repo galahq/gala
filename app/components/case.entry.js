@@ -8,6 +8,8 @@ import thunkMiddleware from 'redux-thunk'
 import { Router, Route, IndexRoute, useRouterHistory, Redirect } from 'react-router'
 import { createHashHistory } from 'history'
 
+import { addLocaleData, IntlProvider } from 'react-intl'
+
 import Case from 'Case.js'
 import CaseReader from 'CaseReader.js'
 import CaseOverview from 'CaseOverview.js'
@@ -36,17 +38,30 @@ let authenticatedRoutes = [
   <Route path="podcasts/:podcastID" component={PodcastOverview} />,
 ]
 
-render((
+import en from 'react-intl/locale-data/en'
+import fr from 'react-intl/locale-data/fr'
+import ja from 'react-intl/locale-data/ja'
+import zh from 'react-intl/locale-data/zh'
+import am from 'react-intl/locale-data/am'
+addLocaleData([...en, ...fr, ...ja, ...zh, ...am])
+
+import messages from 'locales.json'
+const { locale } = window.i18n
+
+render(
   <Provider store={store}>
-    <Router history={appHistory}>
-      <Route path="/(edit)" component={Case}>
-        <IndexRoute component={CaseOverview} />
+    <IntlProvider locale={locale} messages={messages[locale]}>
+      <Router history={appHistory}>
+        <Route path="/(edit)" component={Case}>
+          <IndexRoute component={CaseOverview} />
 
-        { window.caseData.reader
-          ? authenticatedRoutes
-          : <Redirect from="*" to="/" /> }
+          { window.caseData.reader
+            ? authenticatedRoutes
+            : <Redirect from="*" to="/" /> }
 
-      </Route>
-    </Router>
-  </Provider>
-), document.getElementById('container'))
+          </Route>
+        </Router>
+      </IntlProvider>
+    </Provider>,
+  document.getElementById('container'),
+)
