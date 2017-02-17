@@ -8,6 +8,7 @@ class Reader < ApplicationRecord
 
   rolify
 
+  has_many :comment_threads
   has_many :comments
   has_many :group_memberships, dependent: :delete_all
   has_many :groups, through: :group_memberships

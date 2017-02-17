@@ -7,6 +7,7 @@ class CommentThreadsController < ApplicationController
 
   def create
     @comment_thread = @card.comment_threads.build(comment_thread_params)
+    @comment_thread.reader = current_reader
     @comment_thread.locale = I18n.locale
 
     if @comment_thread.save

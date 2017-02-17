@@ -24,7 +24,6 @@ class Card < ApplicationRecord
 
   def set_solidity_from_contents
     self.solid = !content_is_title?(content)
-    puts self.solid ? "card" : "title"
     true
   end
 

@@ -24,7 +24,7 @@ json.cards do
 end
 
 json.comment_threads do
-  c.comment_threads.each do |comment_thread|
+  c.comment_threads.select { |x| x.visible_to_reader? current_reader }.each do |comment_thread|
     json.set! comment_thread.id do
       json.partial! comment_thread
     end
