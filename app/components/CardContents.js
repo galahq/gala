@@ -141,7 +141,7 @@ class CardContents extends React.Component {
         }}
       />
 
-      <CommentThreadsTag cardId={id} />
+    {solid && <CommentThreadsTag cardId={id} />}
       { commentThreadsOpen && <CommentThreadsCard cardId={id}
         addCommentThread={addCommentThread} /> }
 

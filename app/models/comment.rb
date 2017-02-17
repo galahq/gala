@@ -6,6 +6,8 @@ class Comment < ApplicationRecord
 
   acts_as_list  scope: :comment_thread
 
+  validates :content, presence: :true
+
   def timestamp
     I18n.l created_at, format: :long
   end

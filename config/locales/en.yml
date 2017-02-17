@@ -108,10 +108,10 @@ en:
     format: "%{attribute} %{message}"
     messages:
       accepted: must be accepted
-      blank: can't be blank
+      blank: can’t be blank
       present: must be blank
-      confirmation: doesn't match %{attribute}
-      empty: can't be empty
+      confirmation: doesn’t match %{attribute}
+      empty: can’t be empty
       equal_to: must be equal to %{count}
       even: must be even
       exclusion: is reserved

@@ -8,6 +8,8 @@ import {
   ACCEPT_SELECTION,
   REPLACE_CARD,
   CHANGE_COMMENT_IN_PROGRESS,
+  REGISTER_TOASTER,
+  DISPLAY_TOAST,
 } from '../actions.js'
 
 export default function ui(state, action) {
@@ -19,6 +21,7 @@ export default function ui(state, action) {
       selectedCommentThread: null,
       hoveredCommentThread: null,
       commentInProgress: {},
+      toaster: null,
     }
   }
 
@@ -54,6 +57,16 @@ export default function ui(state, action) {
           [action.threadId]: action.content,
         },
       }
+
+    case REGISTER_TOASTER:
+      return {
+        ...state,
+        toaster: action.toaster,
+      }
+
+    case DISPLAY_TOAST:
+      state.toaster.show(action.options)
+      return state
 
     default: return state
   }

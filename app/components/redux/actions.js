@@ -1,6 +1,6 @@
 import { Orchard } from 'concerns/orchard.js'
 import { convertToRaw } from 'draft-js'
-
+import { Intent } from '@blueprintjs/core'
 
 // GENERAL
 //
@@ -203,14 +203,19 @@ function addComment(data) {
 }
 
 export function createComment(threadId, content) {
-  return async dispatch => {
-    dispatch(changeCommentInProgress(threadId, ""))
-    const newComment = await Orchard.graft(
+  return dispatch => {
+    Orchard.graft(
       `comment_threads/${threadId}/comments`,
       { comment: { content } },
-    )
-
-    dispatch(addComment(newComment))
+    ).then(newComment => {
+      dispatch(addComment(newComment))
+      dispatch(changeCommentInProgress(threadId, ""))
+    }).catch(error => {
+      dispatch(displayToast({
+        message: `Error saving: ${error.message}`,
+        intent: Intent.WARNING,
+      }))
+    })
   }
 }
 
@@ -236,4 +241,15 @@ export function highlightEdgenote(slug) {
 export const ACTIVATE_EDGENOTE = "ACTIVATE_EDGENOTE"
 export function activateEdgenote(slug) {
   return {type: ACTIVATE_EDGENOTE, slug}
+}
+
+// TOASTS
+//
+export const REGISTER_TOASTER = "REGISTER_TOASTER"
+export function registerToaster(toaster) {
+  return {type: REGISTER_TOASTER, toaster}
+}
+export const DISPLAY_TOAST = "DISPLAY_TOAST"
+export function displayToast(options) {
+  return {type: DISPLAY_TOAST, options}
 }

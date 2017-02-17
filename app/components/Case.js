@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import StatusBar from 'StatusBar.js'
-import { parseAllCards } from 'redux/actions.js'
+import { parseAllCards, registerToaster } from 'redux/actions.js'
+import { Toaster } from '@blueprintjs/core'
 
 function mapStateToProps(state) {
   return {
@@ -21,6 +22,8 @@ class Case extends React.Component {
 
   componentDidMount() {
     setTimeout( () => this.props.parseAllCards(), 1 )
+
+    this.props.registerToaster(Toaster.create())
   }
 
   render() {
@@ -63,5 +66,5 @@ class Case extends React.Component {
 
 export default connect(
   mapStateToProps,
-  { parseAllCards },
+  { parseAllCards, registerToaster },
 )(Case)
