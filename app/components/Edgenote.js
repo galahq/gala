@@ -26,6 +26,8 @@ class EdgenoteFigure extends React.Component {
       contents, selected, active, activate, deactivate, onMouseOver, onMouseOut,
       editing, onChange,
     } = this.props
+    if (!contents)  return null
+
     const {
       slug, caption, youtubeSlug, pullQuote, imageUrl, callToAction, websiteUrl,
       audioUrl, attribution,

@@ -86,11 +86,8 @@ class OldEdgenoteFigure extends React.Component {
   }
 
   render() {
-    if (this.props.contents !== null) {
-      return this.renderEdgenote()
-    } else {
-      return <button onClick={this.createEdgenote.bind(this)}>{`Create ${this.props.slug} Edgenote`}</button>
-    }
+    if (!this.props.contents)  return null
+    return this.renderEdgenote()
   }
 }
 
