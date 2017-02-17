@@ -14,6 +14,10 @@ export function saveChanges() {
     const state = {...getState()}
 
     dispatch(clearUnsaved())
+    dispatch(displayToast({
+      message: "Saved successfully",
+      intent: Intent.SUCCESS,
+    }))
     window.onbeforeunload = null
 
     Object.keys(state.edit.unsavedChanges).forEach(
