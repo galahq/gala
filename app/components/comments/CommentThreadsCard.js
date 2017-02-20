@@ -23,7 +23,7 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-const CommentThreadsCard = ({commentThreads, acceptingSelection,
+const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
                             selectionPending, closeCommentThreads,
                             commentThreadSelected, acceptSelection,
                             addCommentThread}) => {
@@ -54,6 +54,7 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
 
     <ol style={styles.commentList}>
       { commentThreads.map( (thread, i) => <CommentThread
+        cardId={cardId}
         threadId={thread.id}
         last={i === commentThreads.length - 1}
       />

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { selectCommentThread, hoverCommentThread } from 'redux/actions.js'
+import { selectCommentThread, hoverCommentThread,
+  deleteCommentThread } from 'redux/actions.js'
 import Truncate from 'react-truncate'
 import { FormattedMessage } from 'react-intl'
 import Icon from 'Icon.js'
@@ -27,12 +28,15 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const {threadId} = ownProps
+  const {threadId, cardId} = ownProps
   return {
     handleClick: () => dispatch(selectCommentThread(threadId)),
     handleMouseEnter: () => dispatch(hoverCommentThread(threadId)),
     handleMouseLeave: () => dispatch(hoverCommentThread(null)),
-    handleDeleteThread: () => {},
+    handleDeleteThread: e => {
+      dispatch(deleteCommentThread(threadId, cardId))
+      e.preventDefault()
+    },
   }
 }
 

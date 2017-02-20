@@ -172,6 +172,18 @@ export function createCommentThread(cardId, editorState) {
   }
 }
 
+export function deleteCommentThread(threadId, cardId) {
+  return async (dispatch) => {
+    await Orchard.prune(`comment_threads/${threadId}`)
+    dispatch(removeCommentThread(threadId, cardId))
+  }
+}
+
+export const REMOVE_COMMENT_THREAD = "REMOVE_COMMENT_THREAD"
+function removeCommentThread(threadId, cardId) {
+  return {type: REMOVE_COMMENT_THREAD, threadId, cardId}
+}
+
 export const OPEN_COMMENT_THREADS = "OPEN_COMMENT_THREADS"
 export function openCommentThreads(cardId) {
   return {type: OPEN_COMMENT_THREADS, cardId}

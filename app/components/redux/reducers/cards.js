@@ -9,6 +9,7 @@ import {
   APPLY_SELECTION,
   REPLACE_CARD,
   PARSE_ALL_CARDS,
+  REMOVE_COMMENT_THREAD,
 } from '../actions.js'
 
 let { forceSelection } = EditorState
@@ -52,6 +53,21 @@ function cardsById(state = getInitialEmptyCards(), action) {
           editorState: parseEditorStateFromPersistedCard(card),
         },
       }), {})
+
+    case REMOVE_COMMENT_THREAD:
+      let newCard = {
+        ...state[action.cardId],
+        commentThreads: state[action.cardId].commentThreads.filter(
+          x => x.id !== action.threadId
+        ),
+      }
+      return {
+        ...state,
+        [action.cardId]: {
+          ...newCard,
+          editorState: parseEditorStateFromPersistedCard(newCard),
+        },
+      }
 
     default: return state
   }

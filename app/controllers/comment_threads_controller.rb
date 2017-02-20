@@ -1,7 +1,7 @@
 class CommentThreadsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_card, only: [:create]
-  before_action :set_comment_thread, only: [:show]
+  before_action :set_comment_thread, only: [:show, :destroy]
 
   # authorize_actions_for CommentThread
 
@@ -18,6 +18,10 @@ class CommentThreadsController < ApplicationController
   end
 
   def show
+  end
+
+  def destroy
+    @comment_thread.destroy
   end
 
   private

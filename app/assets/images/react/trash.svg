@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="15px" viewBox="0 0 14 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Artboard-1-Copy" transform="translate(-860.000000, -440.000000)" stroke="#FFFFFF">
+            <g id="Group" transform="translate(861.000000, 441.000000)">
+                <polygon id="Stroke-141" points="10.0909091 12.7291667 1.36363636 12.7291667 1.36363636 1.89583333 10.0909091 1.89583333"></polygon>
+                <polygon id="Stroke-143" points="7.90909091 1.89583333 3.54545455 1.89583333 3.54545455 0.270833333 7.90909091 0.270833333"></polygon>
+                <path d="M0,1.89583333 L12,1.89583333" id="Stroke-144"></path>
+                <path d="M3.54545455,3.79166667 L3.54545455,10.2916667" id="Stroke-145"></path>
+                <path d="M5.72727273,3.79166667 L5.72727273,10.2916667" id="Stroke-146"></path>
+                <path d="M7.90909091,3.79166667 L7.90909091,10.2916667" id="Stroke-147"></path>
+            </g>
+        </g>
+    </g>
+</svg>

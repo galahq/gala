@@ -6,6 +6,7 @@ import {
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
   REPLACE_CARD,
+  REMOVE_COMMENT_THREAD,
   ADD_COMMENT,
 } from './actions.js'
 
@@ -94,6 +95,12 @@ function commentThreadsById(
             action.data.id,
           ],
         },
+      }
+
+    case REMOVE_COMMENT_THREAD:
+      return {
+        ...state,
+        [action.threadId]: undefined,
       }
 
     default: return state
