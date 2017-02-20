@@ -175,6 +175,7 @@ export function createCommentThread(cardId, editorState) {
 export function deleteCommentThread(threadId, cardId) {
   return async (dispatch) => {
     await Orchard.prune(`comment_threads/${threadId}`)
+    dispatch(selectCommentThread(null))
     dispatch(removeCommentThread(threadId, cardId))
   }
 }

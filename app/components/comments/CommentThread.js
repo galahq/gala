@@ -24,6 +24,8 @@ function mapStateToProps(state, ownProps) {
         defaultMessage="New comment..." />,
     },
     responses: comments.splice(1),
+    canBeDeleted: !firstComment.content &&
+      state.caseData.reader.id === thread.readerId,
   }
 }
 
@@ -33,15 +35,13 @@ function mapDispatchToProps(dispatch, ownProps) {
     handleClick: () => dispatch(selectCommentThread(threadId)),
     handleMouseEnter: () => dispatch(hoverCommentThread(threadId)),
     handleMouseLeave: () => dispatch(hoverCommentThread(null)),
-    handleDeleteThread: e => {
-      dispatch(deleteCommentThread(threadId, cardId))
-      e.preventDefault()
-    },
+    handleDeleteThread: () => dispatch(deleteCommentThread(threadId, cardId)),
   }
 }
 
 const CommentThread = ({lead, responses, threadId, hovered, selected, last,
-  handleClick, handleMouseEnter, handleMouseLeave, handleDeleteThread}) =>
+  handleClick, handleMouseEnter, handleMouseLeave, handleDeleteThread,
+  canBeDeleted}) =>
 <a style={styles.linkReset}>
   <li
     key={threadId}
@@ -82,7 +82,7 @@ const CommentThread = ({lead, responses, threadId, hovered, selected, last,
       })
     }
 
-    {lead.placeholder &&
+    {canBeDeleted &&
         <a>
           <Icon className="CommentThread__icon-button" filename="trash"
             onClick={handleDeleteThread}
