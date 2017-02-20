@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Link } from 'react-router'
 
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import TableOfContents from 'TableOfContents.js'
 import Billboard from 'Billboard.js'

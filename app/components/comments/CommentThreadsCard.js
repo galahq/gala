@@ -7,6 +7,8 @@ import {
   acceptSelection,
 } from 'redux/actions.js'
 
+import { FormattedMessage } from 'react-intl'
+
 import CommentThread from 'comments/CommentThread.js'
 import CommentsCard from 'comments/CommentsCard.js'
 import Icon from 'Icon.js'
@@ -36,10 +38,15 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
       <Icon filename="comments-close"
         style={{...styles.toolbarButton, cursor: 'pointer'}}
         onClick={closeCommentThreads} />
-      { commentThreads.length === 0
-        ? "No responses"
-        : `${commentThreads.length} response${commentThreads.length !== 1
-                                                ? "s" : ""}` }
+
+      <FormattedMessage
+        id="comments.nResponses"
+        defaultMessage={`{count, number} {count, plural,
+          one {response}
+          other {responses}
+        }`}
+        values={{count: commentThreads.length}} />
+
       <div style={styles.toolbarButton} />
     </div>
 
@@ -57,8 +64,15 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
       disabled={acceptingSelection && !selectionPending}
     >
       { !acceptingSelection
-        ? "Write a new response"
-        : ( !selectionPending ? "Select a few words" : "Respond here" ) }
+        ? <FormattedMessage id="comments.writeNew"
+          defaultMessage="Write a new response" />
+        : ( !selectionPending
+          ? <FormattedMessage id="comments.select"
+            defaultMessage="Select a few words" />
+          : <FormattedMessage id="comments.here"
+            defaultMessage="Respond here" />
+        )
+      }
     </button>
 
     {

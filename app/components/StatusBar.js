@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { toggleEditing, saveChanges } from 'redux/actions.js'
 
 function mapStateToProps(state) {
@@ -40,4 +40,4 @@ const StatusBar = ({editable, editing, edited, messages, toggleEditing,
 export default connect(
   mapStateToProps,
   {toggleEditing, saveChanges}
-)(injectIntl(StatusBar))
+)(StatusBar)

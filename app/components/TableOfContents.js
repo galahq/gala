@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import {EditableList} from 'EditableList.js'
 
 function mapStateToProps(state) {
@@ -40,4 +40,4 @@ class TableOfContents extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(TableOfContents))
+export default connect(mapStateToProps)(TableOfContents)

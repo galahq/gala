@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import BillboardTitle from 'BillboardTitle.js'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import TableOfContents from 'TableOfContents.js'
 import {EnrollForm} from 'EnrollForm.js'
 
@@ -45,4 +45,4 @@ class Sidebar extends React.Component {
 
 export default connect(
   (state) => ({ commentsOpen: !!state.ui.selectedCommentThread })
-)(injectIntl(Sidebar))
+)(Sidebar)

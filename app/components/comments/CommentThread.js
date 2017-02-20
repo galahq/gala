@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { selectCommentThread, hoverCommentThread } from 'redux/actions.js'
 import Truncate from 'react-truncate'
+import { FormattedMessage } from 'react-intl'
 
 function mapStateToProps(state, ownProps) {
   const thread = state.commentThreadsById[ownProps.threadId]
@@ -15,7 +16,9 @@ function mapStateToProps(state, ownProps) {
       author: firstComment.reader
         ? firstComment.reader.name
         : state.caseData.reader.name,
-      content: firstComment.content || "New comment...",
+      content: firstComment.content || <FormattedMessage
+        id="comments.placeholderContent"
+        defaultMessage="New comment..." />,
     },
     responses: comments.splice(1),
   }
@@ -58,7 +61,12 @@ const CommentThread = ({lead, responses, threadId, hovered, selected, last,
           </p>
         case 2:
           return <p key="2" style={styles.commentSnippet}>
-            {numOthers} other response{numOthers === 1 ? '' : 's'}
+            <FormattedMessage id="comments.otherComments"
+              defaultMessage={`{count, number} other {count, plural,
+                one {response}
+                other {responses}
+              }`}
+              values={{count: numOthers}} />
           </p>
         default: return null
       }

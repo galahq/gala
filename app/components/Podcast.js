@@ -2,11 +2,11 @@ import React from 'react'
 import {Trackable} from 'concerns/trackable.js'
 import Animate from 'react-animate'
 import Sidebar from 'Sidebar.js'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 import Statistics from 'Statistics.js'
 
-let PodcastPlayer = injectIntl(Animate.extend(class PodcastPlayer extends Trackable {
+let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
   eventName() { return "visit_podcast" }
 
   trackableArgs() { return {
@@ -129,14 +129,14 @@ let PodcastPlayer = injectIntl(Animate.extend(class PodcastPlayer extends Tracka
           onPause={this.setPaused.bind(this)}
         />
 
-        <div><EditableAttribute placeholder="Audio URL"
+      <div><EditableAttribute placeholder="Audio URL"
           uri={`podcasts/${id}:audio_url`}
           didSave={didSave}>{audioUrl}</EditableAttribute></div>
 
-      </div>
+    </div>
     )
   }
-}))
+})
 
 class Podcast extends React.Component {
   render() {

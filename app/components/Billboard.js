@@ -5,7 +5,7 @@ import { EditableText } from '@blueprintjs/core'
 import EditableAttribute from 'EditableAttribute.js'
 
 import BillboardTitle from 'BillboardTitle.js'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { updateCase } from 'redux/actions.js'
 
 function mapStateToProps(state) {
