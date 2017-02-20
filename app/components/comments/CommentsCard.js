@@ -30,7 +30,8 @@ const CommentsCard = ({threadId, comments, commentInProgress, intl,
           autoFocus
           value={commentInProgress}
           onChange={ e => changeCommentInProgress(threadId, e.target.value) } />
-        <button onClick={ () => createComment(threadId, commentInProgress) }>
+        <button type="button"
+          onClick={ () => createComment(threadId, commentInProgress) }>
           <FormattedMessage id="submit" defaultMessage="Submit" />
         </button>
       </div>
