@@ -33,7 +33,7 @@
     "comments.writeNew": "Write a new response",
     "comments.select": "Select a few words",
     "comments.here": "Respond here",
-    "comments.placeholderContent": "New comment...",
+    "comments.placeholderContent": "No comment",
     "comments.otherComments": "{count, number} other {count, plural, one {response} other {responses} }",
     "comments.write": "Write a reply...",
     "submit": "Submit"
@@ -70,7 +70,7 @@
     "comments.writeNew": "Écrivez une nouvelle réponse",
     "comments.select": "Sélectionnez quelques mots",
     "comments.here": "Répondez ici",
-    "comments.placeholderContent": "Nouvelle réponse...",
+    "comments.placeholderContent": "Sans commentaires",
     "comments.otherComments": "{count, number} {count, plural, one {autre résponse} other {autres résponses} }",
     "comments.write": "Écrivez quelque chose...",
     "submit": "Soumettez"

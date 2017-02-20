@@ -11,16 +11,17 @@ function mapStateToProps(state) {
     comments: state.commentThreadsById[threadId]
       .commentIds.map( id => state.commentsById[id] ),
     commentInProgress: state.ui.commentInProgress[threadId] || "",
+    userName: state.caseData.reader.name,
     threadId,
   }
 }
 
-const CommentsCard = ({threadId, comments, commentInProgress, intl,
+const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
                        changeCommentInProgress, createComment}) =>
   <aside className="CommentThread scrolling">
     { comments.map( comment => <Comment {...comment} /> ) }
     <form style={comments.length === 0 ? { marginTop: 0 } : {}}>
-      <label htmlFor="CommentSubmit">Cameron Bothner</label><br />
+      <label htmlFor="CommentSubmit">{userName}</label><br />
       <div id="CommentSubmit">
         <textarea
           placeholder={intl.formatMessage({

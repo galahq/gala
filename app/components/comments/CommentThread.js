@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { selectCommentThread, hoverCommentThread } from 'redux/actions.js'
 import Truncate from 'react-truncate'
 import { FormattedMessage } from 'react-intl'
+import Icon from 'Icon.js'
 
 function mapStateToProps(state, ownProps) {
   const thread = state.commentThreadsById[ownProps.threadId]
@@ -13,6 +14,7 @@ function mapStateToProps(state, ownProps) {
     hovered: ownProps.threadId === state.ui.hoveredCommentThread,
     selected: ownProps.threadId === state.ui.selectedCommentThread,
     lead: {
+      placeholder: !firstComment.content,
       author: firstComment.reader
         ? firstComment.reader.name
         : state.caseData.reader.name,
@@ -30,49 +32,60 @@ function mapDispatchToProps(dispatch, ownProps) {
     handleClick: () => dispatch(selectCommentThread(threadId)),
     handleMouseEnter: () => dispatch(hoverCommentThread(threadId)),
     handleMouseLeave: () => dispatch(hoverCommentThread(null)),
+    handleDeleteThread: () => {},
   }
 }
 
 const CommentThread = ({lead, responses, threadId, hovered, selected, last,
-  handleClick, handleMouseEnter, handleMouseLeave}) => <li
+  handleClick, handleMouseEnter, handleMouseLeave, handleDeleteThread}) =>
+<a style={styles.linkReset}>
+  <li
     key={threadId}
     style={styles.getCommentListItemStyle({last, selected, hovered})}
     onClick={handleClick}
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}
   >
-  <h4 style={styles.author}>{lead.author}</h4>
-  <p style={styles.commentSnippet}>
-    <Truncate lines={3}>{lead.content}</Truncate>
-  </p>
+    <h4 style={styles.author}>{lead.author}</h4>
+    <p style={styles.getCommentSnippetStyle({placeholder: lead.placeholder})}>
+      <Truncate lines={3}>{lead.content}</Truncate>
+    </p>
 
-  {
-    responses.map((r, i) => {
-      const numOthers = responses.length - 2
-      switch(i) {
-        case 0:
-        case 1:
-          return <p
-            key={i}
-            style={{...styles.commentSnippet, ...styles.oneLineSnippet}}
-          >
-            <span style={styles.initials}>{r.reader.initials}:</span>
-            <span>{r.content}</span>
-          </p>
-        case 2:
-          return <p key="2" style={styles.commentSnippet}>
-            <FormattedMessage id="comments.otherComments"
-              defaultMessage={`{count, number} other {count, plural,
-                one {response}
-                other {responses}
-              }`}
-              values={{count: numOthers}} />
-          </p>
-        default: return null
-      }
-    })
-  }
-</li>
+    {
+      responses.map((r, i) => {
+        const numOthers = responses.length - 2
+        switch(i) {
+          case 0:
+          case 1:
+            return <p
+              key={i}
+              style={{...styles.commentSnippet, ...styles.oneLineSnippet}}
+            >
+              <span style={styles.initials}>{r.reader.initials}:</span>
+              <span>{r.content}</span>
+            </p>
+          case 2:
+            return <p key="2" style={styles.commentSnippet}>
+              <FormattedMessage id="comments.otherComments"
+                defaultMessage={`{count, number} other {count, plural,
+                  one {response}
+                  other {responses}
+                }`}
+                values={{count: numOthers}} />
+            </p>
+          default: return null
+        }
+      })
+    }
+
+    {lead.placeholder &&
+        <a>
+          <Icon className="CommentThread__icon-button" filename="trash"
+            onClick={handleDeleteThread}
+            style={styles.deleteCommentThread} />
+        </a>}
+  </li>
+</a>
 
 export default connect(
   mapStateToProps,
@@ -80,11 +93,17 @@ export default connect(
 )(CommentThread)
 
 const styles = {
+  linkReset: {
+    color: 'white',
+    textDecoration: 'none',
+  },
+
   getCommentListItemStyle: ({last, selected, hovered}) => ({
     padding: '0.65em 0.5em 0.65em 1em',
     listStylePosition: 'inside',
     cursor: 'pointer',
     borderBottom: last || '1px solid #513992',
+    position: 'relative',
     ...(hovered ? {backgroundColor: '#6543c5'} : {}),
     ...(selected ? {backgroundColor: '#493092'} : {}),
   }),
@@ -100,11 +119,12 @@ const styles = {
     color: 'inherit',
   },
 
-  commentSnippet: {
+  getCommentSnippetStyle: ({placeholder}) => ({
     margin: '0 0 0 1em',
     fontWeight: 400,
     lineHeight: 1.4,
-  },
+    ...(placeholder && {opacity: 0.5}),
+  }),
 
   initials: {
     fontWeight: 600,
@@ -115,5 +135,13 @@ const styles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+
+  deleteCommentThread: {
+    position: 'absolute',
+    top: 22,
+    right: '0.5em',
+    width: 26,
+    height: 26,
   },
 }

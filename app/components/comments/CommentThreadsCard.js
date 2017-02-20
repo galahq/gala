@@ -35,9 +35,11 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
 
   return <div style={{...styles.commentsCard, ...positionalStyles}}>
     <div style={styles.header}>
-      <Icon filename="comments-close"
-        style={{...styles.toolbarButton, cursor: 'pointer'}}
-        onClick={closeCommentThreads} />
+      <a className="CommentThread__icon-button" onClick={closeCommentThreads}>
+        <Icon filename="comments-close"
+          style={{...styles.toolbarButton, cursor: 'pointer'}}
+          />
+      </a>
 
       <FormattedMessage
         id="comments.nResponses"

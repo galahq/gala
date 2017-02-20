@@ -3,10 +3,10 @@ class CommentThread < ApplicationRecord
   belongs_to :group
   belongs_to :card
   belongs_to :case
-  has_many :comments
+  has_many :comments, dependent: :restrict_with_error
 
   def visible_to_reader?(r)
-    comments.length > 0 || reader == r
+    locale == I18n.locale.to_s && (comments.length > 0 || reader == r)
   end
 
 end
