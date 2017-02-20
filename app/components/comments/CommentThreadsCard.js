@@ -88,7 +88,7 @@ const styles = {
     backgroundColor: "#7351D4",
     width: 267,
     position: 'absolute',
-    color: '#F8DF91',
+    color: 'white',
     fontFamily: 'tenso',
     fontWeight: 500,
     fontSize: '12pt',
