@@ -23,20 +23,24 @@ json.cards do
   end
 end
 
-json.comment_threads do
-  c.comment_threads.select { |x| x.visible_to_reader? current_reader }.each do |comment_thread|
-    json.set! comment_thread.id do
-      json.partial! comment_thread
-    end
-  end
-end
+if current_reader.enrollment_for_case(c)
 
-json.comments do
-  c.comments.each do |comment|
-    json.set! comment.id do
-      json.partial! comment
+  json.comment_threads do
+    c.comment_threads.select { |x| x.visible_to_reader? current_reader }.each do |comment_thread|
+      json.set! comment_thread.id do
+        json.partial! comment_thread
+      end
     end
   end
+
+  json.comments do
+    c.comments.each do |comment|
+      json.set! comment.id do
+        json.partial! comment
+      end
+    end
+  end
+
 end
 
 if false && current_user.has_cached_role?(:editor)
@@ -70,7 +74,7 @@ if reader_signed_in?
   json.reader do
     json.partial! current_reader
     json.can_update_case current_reader.can_update? c
-    json.enrollment current_reader.enrollments.where(case: c).first
+    json.enrollment current_reader.enrollment_for_case(c)
   end
 
   if current_reader.can_update? c
