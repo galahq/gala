@@ -9,6 +9,7 @@ import {
 
 import CommentThread from 'comments/CommentThread.js'
 import CommentsCard from 'comments/CommentsCard.js'
+import Icon from 'Icon.js'
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -32,10 +33,14 @@ const CommentThreadsCard = ({commentThreads, acceptingSelection,
 
   return <div style={{...styles.commentsCard, ...positionalStyles}}>
     <div style={styles.header}>
+      <Icon filename="comments-close"
+        style={{...styles.toolbarButton, cursor: 'pointer'}}
+        onClick={closeCommentThreads} />
       { commentThreads.length === 0
         ? "No responses"
         : `${commentThreads.length} response${commentThreads.length !== 1
                                                 ? "s" : ""}` }
+      <div style={styles.toolbarButton} />
     </div>
 
     <ol style={styles.commentList}>
@@ -97,17 +102,24 @@ const styles = {
 
   header: {
     backgroundColor: '#493092',
-    textAlign: 'center',
     textTransform: 'uppercase',
     fontSize: '10pt',
     letterSpacing: 0.6,
-    padding: '0.25em 0.25em 0 0.25em',
+    padding: '0.25em 0 0',
     borderBottom: '1px solid #351D7A',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 
   commentList: {
     margin: 0,
     padding: 0,
     minHeight: '1em',
+  },
+
+  toolbarButton: {
+    width: 11,
+    padding: '0 0.5em',
   },
 }
