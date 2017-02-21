@@ -54,6 +54,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
 
     <ol style={styles.commentList}>
       { commentThreads.map( (thread, i) => <CommentThread
+        key={thread.id}
         cardId={cardId}
         threadId={thread.id}
         last={i === commentThreads.length - 1}

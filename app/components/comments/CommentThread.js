@@ -39,22 +39,18 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 }
 
-const CommentThread = ({lead, responses, threadId, hovered, selected, last,
+const CommentThread = ({lead, responses, hovered, selected, last,
   handleClick, handleMouseEnter, handleMouseLeave, handleDeleteThread,
   canBeDeleted}) =>
 <a style={styles.linkReset}>
   <li
-    key={threadId}
     style={styles.getCommentListItemStyle({last, selected, hovered})}
     onClick={handleClick}
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}
   >
     <h4 style={styles.author}>{lead.author}</h4>
-    <p style={{
-      ...styles.getCommentSnippetStyle({placeholder: lead.placeholder}),
-      marginBottom: '0.5em',
-    }}>
+    <p style={styles.getCommentSnippetStyle({placeholder: lead.placeholder})}>
       <Truncate lines={3}>{lead.content}</Truncate>
     </p>
 

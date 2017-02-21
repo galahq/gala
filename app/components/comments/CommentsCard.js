@@ -19,7 +19,7 @@ function mapStateToProps(state) {
 const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
                        changeCommentInProgress, createComment}) =>
   <aside className="CommentThread scrolling">
-    { comments.map( comment => <Comment {...comment} /> ) }
+    { comments.map( comment => <Comment {...comment} key={comment.id} /> ) }
     <form style={comments.length === 0 ? { marginTop: 0 } : {}}>
       <label htmlFor="CommentSubmit">{userName}</label><br />
       <div id="CommentSubmit">
@@ -45,7 +45,7 @@ export default connect(
 )(injectIntl(CommentsCard))
 
 const Comment = ({id, reader, timestamp, content}) =>
-  <div className="Comment" key={id} >
+  <div className="Comment">
     <cite>{reader.name}</cite>
     <i>{timestamp}</i>
     <blockquote>{content}</blockquote>
