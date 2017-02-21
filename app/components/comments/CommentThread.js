@@ -51,7 +51,10 @@ const CommentThread = ({lead, responses, threadId, hovered, selected, last,
     onMouseLeave={handleMouseLeave}
   >
     <h4 style={styles.author}>{lead.author}</h4>
-    <p style={styles.getCommentSnippetStyle({placeholder: lead.placeholder})}>
+    <p style={{
+      ...styles.getCommentSnippetStyle({placeholder: lead.placeholder}),
+      marginBottom: '0.5em',
+    }}>
       <Truncate lines={3}>{lead.content}</Truncate>
     </p>
 
@@ -63,8 +66,10 @@ const CommentThread = ({lead, responses, threadId, hovered, selected, last,
           case 1:
             return <p
               key={i}
-              style={{...styles.commentSnippet, ...styles.oneLineSnippet}}
-            >
+              style={{
+                ...styles.getCommentSnippetStyle({}),
+                ...styles.oneLineSnippet,
+              }}>
               <span style={styles.initials}>{r.reader.initials}:</span>
               <span>{r.content}</span>
             </p>
