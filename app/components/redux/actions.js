@@ -215,7 +215,7 @@ export function changeCommentInProgress(threadId, content) {
 }
 
 export const ADD_COMMENT = "CREATE_COMMENT"
-function addComment(data) {
+export function addComment(data) {
   return { type: ADD_COMMENT, data }
 }
 
@@ -224,8 +224,7 @@ export function createComment(threadId, content) {
     Orchard.graft(
       `comment_threads/${threadId}/comments`,
       { comment: { content } },
-    ).then(newComment => {
-      dispatch(addComment(newComment))
+    ).then(() => {
       dispatch(changeCommentInProgress(threadId, ""))
     }).catch(error => {
       dispatch(displayToast({

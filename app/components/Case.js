@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import StatusBar from 'StatusBar.js'
-import { parseAllCards, registerToaster } from 'redux/actions.js'
+import { parseAllCards, registerToaster, addComment } from 'redux/actions.js'
 import { Toaster } from '@blueprintjs/core'
 
 function mapStateToProps(state) {
@@ -12,18 +12,36 @@ function mapStateToProps(state) {
 }
 
 class Case extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       saveMessage: "edit_instructions",
       caseData: window.caseData,
     }
+
+    this._subscribe = () => {
+      if (typeof App === 'undefined')  return
+
+      App.forum = App.cable.subscriptions  // eslint-disable-line
+        .create("ForumChannel", {
+          connected: () => {},
+          disconnected: () => {},
+          received: data => {
+            if (typeof data.comment !== 'undefined') {
+              this.props.addComment(JSON.parse(data.comment))
+            }
+          },
+        })
+    }
+
   }
 
   componentDidMount() {
     setTimeout( () => this.props.parseAllCards(), 1 )
 
     this.props.registerToaster(Toaster.create())
+
+    this._subscribe()
   }
 
   render() {
@@ -66,5 +84,5 @@ class Case extends React.Component {
 
 export default connect(
   mapStateToProps,
-  { parseAllCards, registerToaster },
+  { parseAllCards, registerToaster, addComment },
 )(Case)

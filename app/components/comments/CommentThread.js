@@ -70,7 +70,7 @@ const CommentThread = ({lead, responses, hovered, selected, last,
               <span>{r.content}</span>
             </p>
           case 2:
-            return <p key="2" style={styles.commentSnippet}>
+            return <p key="2" style={styles.getCommentSnippetStyle({})}>
               <FormattedMessage id="comments.otherComments"
                 defaultMessage={`{count, number} other {count, plural,
                   one {response}
