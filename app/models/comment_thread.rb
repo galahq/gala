@@ -1,4 +1,6 @@
 class CommentThread < ApplicationRecord
+  include Authority::Abilities
+
   belongs_to :reader
   belongs_to :group
   belongs_to :card

@@ -3,8 +3,6 @@ class CommentThreadsController < ApplicationController
   before_action :set_card, only: [:create]
   before_action :set_comment_thread, only: [:show, :destroy]
 
-  # authorize_actions_for CommentThread
-
   def create
     @comment_thread = @card.comment_threads.build(comment_thread_params)
     @comment_thread.reader = current_reader
@@ -21,6 +19,7 @@ class CommentThreadsController < ApplicationController
   end
 
   def destroy
+    authorize_action_for @comment_thread
     @comment_thread.destroy
   end
 
