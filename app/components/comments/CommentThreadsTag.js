@@ -7,7 +7,8 @@ import { openCommentThreads, acceptSelection } from 'redux/actions.js'
 function mapStateToProps(state, ownProps) {
   return {
     count: state.cardsById[ownProps.cardId].commentThreads
-      .reduce( (all, thread) => [...all, ...thread.commentIds], [] )
+      .map( e => state.commentThreadsById[e.id].commentIds )
+      .reduce( (a, e) => [...a, ...e], [] )
       .length,
   }
 }
