@@ -42,55 +42,57 @@ function mapDispatchToProps(dispatch, ownProps) {
 const CommentThread = ({lead, responses, hovered, selected, last,
   handleClick, handleMouseEnter, handleMouseLeave, handleDeleteThread,
   canBeDeleted}) =>
-<a style={styles.linkReset}>
-  <li
-    style={styles.getCommentListItemStyle({last, selected, hovered})}
-    onClick={handleClick}
-    onMouseEnter={handleMouseEnter}
-    onMouseLeave={handleMouseLeave}
-  >
-    <h4 style={styles.author}>{lead.author}</h4>
-    <p style={styles.getCommentSnippetStyle({placeholder: lead.placeholder})}>
-      <Truncate lines={3}>{lead.content}</Truncate>
-    </p>
+<div style={{position: 'relative'}}>
+  <a style={styles.linkReset}>
+    <li
+      style={styles.getCommentListItemStyle({last, selected, hovered})}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <h4 style={styles.author}>{lead.author}</h4>
+      <p style={styles.getCommentSnippetStyle({placeholder: lead.placeholder})}>
+        <Truncate lines={3}>{lead.content}</Truncate>
+      </p>
 
-    {
-      responses.map((r, i) => {
-        const numOthers = responses.length - 2
-        switch(i) {
-          case 0:
-          case 1:
-            return <p
-              key={i}
-              style={{
-                ...styles.getCommentSnippetStyle({}),
-                ...styles.oneLineSnippet,
-              }}>
-              <span style={styles.initials}>{r.reader.initials}:</span>
-              <span>{r.content}</span>
-            </p>
-          case 2:
-            return <p key="2" style={styles.getCommentSnippetStyle({})}>
-              <FormattedMessage id="comments.otherComments"
-                defaultMessage={`{count, number} other {count, plural,
-                  one {response}
-                  other {responses}
-                }`}
-                values={{count: numOthers}} />
-            </p>
-          default: return null
-        }
-      })
-    }
+      {
+        responses.map((r, i) => {
+          const numOthers = responses.length - 2
+          switch(i) {
+            case 0:
+            case 1:
+              return <p
+                key={i}
+                style={{
+                  ...styles.getCommentSnippetStyle({}),
+                  ...styles.oneLineSnippet,
+                }}>
+                <span style={styles.initials}>{r.reader.initials}:</span>
+                <span>{r.content}</span>
+              </p>
+            case 2:
+              return <p key="2" style={styles.getCommentSnippetStyle({})}>
+                <FormattedMessage id="comments.otherComments"
+                  defaultMessage={`{count, number} other {count, plural,
+                    one {response}
+                    other {responses}
+                  }`}
+                  values={{count: numOthers}} />
+              </p>
+            default: return null
+          }
+        })
+      }
 
-    {canBeDeleted &&
-        <a>
-          <Icon className="CommentThread__icon-button" filename="trash"
-            onClick={handleDeleteThread}
-            style={styles.deleteCommentThread} />
-        </a>}
-  </li>
-</a>
+    </li>
+  </a>
+  {canBeDeleted &&
+    <a>
+      <Icon className="CommentThread__icon-button" filename="trash"
+        onClick={handleDeleteThread}
+        style={styles.deleteCommentThread} />
+    </a>}
+</div>
 
 export default connect(
   mapStateToProps,
@@ -108,7 +110,6 @@ const styles = {
     listStylePosition: 'inside',
     cursor: 'pointer',
     borderBottom: last || '1px solid #513992',
-    position: 'relative',
     ...(hovered ? {backgroundColor: '#6543c5'} : {}),
     ...(selected ? {backgroundColor: '#493092'} : {}),
   }),
