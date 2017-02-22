@@ -6,27 +6,29 @@ import { openCommentThreads, acceptSelection } from 'redux/actions.js'
 
 function mapStateToProps(state, ownProps) {
   return {
-    commentThreads: state.cardsById[ownProps.cardId].commentThreads,
+    count: state.cardsById[ownProps.cardId].commentThreads
+      .reduce( (all, thread) => [...all, ...thread.commentIds], [] )
+      .length,
   }
 }
 
-const CommentThreadsTag = ({commentThreads, cardId, openCommentThreads,
+const CommentThreadsTag = ({count, cardId, openCommentThreads,
                             acceptSelection}) =>
   <div
     className="CommentThread__banner"
     onClick={() => {
       openCommentThreads(cardId)
-      commentThreads.length === 0 && acceptSelection()
+      count === 0 && acceptSelection()
     }}
   >
-    { commentThreads.length > 0
+    { count > 0
       ? <FormattedMessage
         id="comments.nResponses"
         defaultMessage={`{count, number} {count, plural,
           one {response}
           other {responses}
         }`}
-        values={{count: commentThreads.length}} />
+        values={{count}} />
       : <FormattedMessage id="comments.respond" defaultMessage="Respond" /> }
   </div>
 
