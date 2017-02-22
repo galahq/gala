@@ -23,7 +23,7 @@ json.cards do
   end
 end
 
-if current_reader.enrollment_for_case(c)
+if current_reader && current_reader.enrollment_for_case(c)
 
   json.comment_threads do
     c.comment_threads.select { |x| x.visible_to_reader? current_reader }.each do |comment_thread|
@@ -43,7 +43,7 @@ if current_reader.enrollment_for_case(c)
 
 end
 
-if false && current_user.has_cached_role?(:editor)
+if current_user.has_cached_role?(:editor)
   json.statistics do
     c.cards.each do |card|
         json.set! "cards/#{card.id}" do

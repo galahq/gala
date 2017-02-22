@@ -8,7 +8,8 @@ class Comment < ApplicationRecord
 
   validates :content, presence: :true
 
-  after_create_commit { CommentBroadcastJob.perform_later self }
+  after_create { CommentBroadcastJob.perform_now self }
+  after_create_commit { CommentThreadBroadcastJob.perform_later comment_thread }
 
   def timestamp
     I18n.l created_at, format: :long

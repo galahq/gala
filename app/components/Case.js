@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import StatusBar from 'StatusBar.js'
-import { parseAllCards, registerToaster, addComment } from 'redux/actions.js'
+import { parseAllCards, registerToaster, addComment,
+  addCommentThread } from 'redux/actions.js'
 import { Toaster } from '@blueprintjs/core'
 
 function mapStateToProps(state) {
@@ -27,9 +28,10 @@ class Case extends React.Component {
           connected: () => {},
           disconnected: () => {},
           received: data => {
-            if (typeof data.comment !== 'undefined') {
+            if (data.comment)
               this.props.addComment(JSON.parse(data.comment))
-            }
+            if (data.comment_thread)
+              this.props.addCommentThread(JSON.parse(data.comment_thread))
           },
         })
     }
@@ -84,5 +86,5 @@ class Case extends React.Component {
 
 export default connect(
   mapStateToProps,
-  { parseAllCards, registerToaster, addComment },
+  { parseAllCards, registerToaster, addComment, addCommentThread },
 )(Case)

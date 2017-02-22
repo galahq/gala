@@ -9,8 +9,9 @@ import {
 
 function edit(state, action) {
   if (typeof state === 'undefined') {
+    const reader = window.caseData.reader || {}
     return {
-      possible: window.caseData.reader.canUpdateCase,
+      possible: !!reader.canUpdateCase,
       inProgress: false,
       changed: false,
       unsavedChanges: {

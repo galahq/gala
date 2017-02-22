@@ -9,12 +9,15 @@ import {
   APPLY_SELECTION,
   REPLACE_CARD,
   PARSE_ALL_CARDS,
+  ADD_COMMENT_THREAD,
   REMOVE_COMMENT_THREAD,
 } from '../actions.js'
 
 let { forceSelection } = EditorState
 
 function cardsById(state = getInitialEmptyCards(), action) {
+  let newCard
+
   switch (action.type) {
     case UPDATE_CARD_CONTENTS:
       return {
@@ -54,8 +57,27 @@ function cardsById(state = getInitialEmptyCards(), action) {
         },
       }), {})
 
+    case ADD_COMMENT_THREAD:
+      const card = state[action.data.cardId]
+      if (card.commentThreads.find(x => x.id === action.data.id))  return state
+
+      newCard = {
+        ...card,
+        commentThreads: [
+          ...card.commentThreads,
+          action.data,
+        ].sort(sortCommentThreads),
+      }
+      return {
+        ...state,
+        [action.data.cardId]: {
+          ...newCard,
+          editorState: parseEditorStateFromPersistedCard(newCard),
+        },
+      }
+
     case REMOVE_COMMENT_THREAD:
-      let newCard = {
+      newCard = {
         ...state[action.cardId],
         commentThreads: state[action.cardId].commentThreads.filter(
           x => x.id !== action.threadId
@@ -77,6 +99,10 @@ export default cardsById
 
 
 
+function sortCommentThreads(a, b) {
+  if (a.blockIndex !== b.blockIndex)  return a.blockIndex > b.blockIndex
+  return a.start > b.start
+}
 
 function getInitialEmptyCards() {
   let state = {...window.caseData.cards}

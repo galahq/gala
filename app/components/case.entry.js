@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import thunkMiddleware from 'redux-thunk'
+import thunk from 'redux-thunk'
 
 import { Router, Route, IndexRoute, useRouterHistory, Redirect } from 'react-router'
 import { createHashHistory } from 'history'
@@ -22,7 +22,7 @@ import reducer from 'redux/reducers.js'
 let store = createStore(
   reducer,
   applyMiddleware(
-    thunkMiddleware,
+    thunk,
   )
 )
 

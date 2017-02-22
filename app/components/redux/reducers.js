@@ -5,7 +5,7 @@ import {
   UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
-  REPLACE_CARD,
+  ADD_COMMENT_THREAD,
   REMOVE_COMMENT_THREAD,
   ADD_COMMENT,
 } from './actions.js'
@@ -74,27 +74,10 @@ function commentThreadsById(
   action,
 ) {
   switch (action.type) {
-    case REPLACE_CARD:
-      const newCommentThreads = action.newCard.commentThreads.reduce(
-      (obj, el) => ({
-        ...obj,
-        [el.id]: el,
-      }), {})
+    case ADD_COMMENT_THREAD:
       return {
         ...state,
-        ...newCommentThreads,
-      }
-
-    case ADD_COMMENT:
-      return {
-        ...state,
-        [action.data.commentThreadId]: {
-          ...state[action.data.commentThreadId],
-          commentIds: [
-            ...state[action.data.commentThreadId].commentIds,
-            action.data.id,
-          ],
-        },
+        [action.data.id]: action.data,
       }
 
     case REMOVE_COMMENT_THREAD:

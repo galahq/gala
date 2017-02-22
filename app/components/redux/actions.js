@@ -167,9 +167,14 @@ export function createCommentThread(cardId, editorState) {
       commentThread: { blockIndex, start, length, originalHighlightText },
     })
 
-    dispatch(replaceCard(cardId, newCommentThread.card))
+    dispatch(addCommentThread(newCommentThread))
     dispatch(selectCommentThread(newCommentThread.id))
   }
+}
+
+export const ADD_COMMENT_THREAD = "ADD_COMMENT_THREAD"
+export function addCommentThread(data) {
+  return {type: ADD_COMMENT_THREAD, data}
 }
 
 export function deleteCommentThread(threadId, cardId) {
@@ -214,7 +219,7 @@ export function changeCommentInProgress(threadId, content) {
   return { type: CHANGE_COMMENT_IN_PROGRESS, threadId, content }
 }
 
-export const ADD_COMMENT = "CREATE_COMMENT"
+export const ADD_COMMENT = "ADD_COMMENT"
 export function addComment(data) {
   return { type: ADD_COMMENT, data }
 }
