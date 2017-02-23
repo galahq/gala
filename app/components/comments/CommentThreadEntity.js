@@ -6,19 +6,21 @@ function mapStateToProps(state, { contentState, children }) {
   let commentThreadId = getFirstThreadId(contentState, children[0])
   return {
     cardId: state.commentThreadsById[commentThreadId].cardId,
+    disabled: state.ui.acceptingSelection,
     commentThreadId,
   }
 }
 
 function mergeProps(
-  {cardId, commentThreadId},
+  {cardId, commentThreadId, disabled},
   {openCommentThreads, selectCommentThread},
   {children}
 ) {
   return {
     onClick: () => {
-      openCommentThreads(cardId) &&
-        selectCommentThread(parseInt(commentThreadId, 10))
+      disabled ||
+      ( openCommentThreads(cardId) &&
+        selectCommentThread(parseInt(commentThreadId, 10)) )
     },
     children: children.length > 0
       && React.cloneElement(children[0], {forceSelection: true}),
