@@ -34,51 +34,53 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
   }
 
   return <div style={{...styles.commentsCard, ...positionalStyles}}>
-    <div style={styles.header}>
-      <a className="CommentThread__icon-button" onClick={closeCommentThreads}>
-        <Icon filename="comments-close"
-          style={{...styles.toolbarButton, cursor: 'pointer'}}
-          />
-      </a>
+    <div className={`CommentThreads__window`}>
+      <div style={styles.header}>
+        <a className="CommentThread__icon-button" onClick={closeCommentThreads}>
+          <Icon filename="comments-close"
+            style={{...styles.toolbarButton, cursor: 'pointer'}}
+            />
+        </a>
 
-      <FormattedMessage
-        id="comments.nResponses"
-        defaultMessage={`{count, number} {count, plural,
-          one {response}
-          other {responses}
-        }`}
-        values={{count: commentThreads.length}} />
+        <FormattedMessage
+          id="comments.nResponses"
+          defaultMessage={`{count, number} {count, plural,
+            one {response}
+            other {responses}
+          }`}
+          values={{count: commentThreads.length}} />
 
-      <div style={styles.toolbarButton} />
-    </div>
+        <div style={styles.toolbarButton} />
+      </div>
 
-    <ol style={styles.commentList}>
-      { commentThreads.map( (thread, i) => <CommentThread
-        key={thread.id}
-        cardId={cardId}
-        threadId={thread.id}
-        last={i === commentThreads.length - 1}
-      />
-      )}
-    </ol>
+      <ol style={styles.commentList}>
+        { commentThreads.map( (thread, i) => <CommentThread
+          key={thread.id}
+          cardId={cardId}
+          threadId={thread.id}
+          last={i === commentThreads.length - 1}
+        />
+        )}
+      </ol>
 
-    <div className="CommentThreads__footer">
-      <button
-        onClick={acceptingSelection ? addCommentThread : acceptSelection}
-        className="CommentThreads__new-button"
-        disabled={acceptingSelection && !selectionPending}
-      >
-        { !acceptingSelection
-          ? <FormattedMessage id="comments.writeNew"
-            defaultMessage="Write a new response" />
-          : ( !selectionPending
-            ? <FormattedMessage id="comments.select"
-              defaultMessage="Select a few words" />
-            : <FormattedMessage id="comments.here"
-              defaultMessage="Respond here" />
-          )
-        }
-      </button>
+      <div className="CommentThreads__footer">
+        <button
+          onClick={acceptingSelection ? addCommentThread : acceptSelection}
+          className="CommentThreads__new-button"
+          disabled={acceptingSelection && !selectionPending}
+        >
+          { !acceptingSelection
+            ? <FormattedMessage id="comments.writeNew"
+              defaultMessage="Write a new response" />
+            : ( !selectionPending
+              ? <FormattedMessage id="comments.select"
+                defaultMessage="Select a few words" />
+              : <FormattedMessage id="comments.here"
+                defaultMessage="Respond here" />
+            )
+          }
+        </button>
+      </div>
     </div>
 
     {
