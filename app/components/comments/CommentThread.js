@@ -51,10 +51,7 @@ const CommentThread = ({lead, responses, hovered, selected, last,
       onMouseLeave={handleMouseLeave}
     >
       <h4 style={styles.author}>{lead.author}</h4>
-      <p style={styles.getCommentSnippetStyle({placeholder: lead.placeholder})}>
-        <Truncate lines={3}>{lead.content}</Truncate>
-      </p>
-
+      <LeadSnippet lead={lead} />
       {
         responses.map((r, i) => {
           const numOthers = responses.length - 2
@@ -93,6 +90,16 @@ const CommentThread = ({lead, responses, hovered, selected, last,
         style={styles.deleteCommentThread} />
     </a>}
 </div>
+
+// Truncate is slow so let's extend PureComponent
+class LeadSnippet extends React.PureComponent {
+  render() {
+    const {placeholder, content} = this.props.lead
+    return <p style={styles.getCommentSnippetStyle({placeholder: placeholder})}>
+      <Truncate lines={3}>{content}</Truncate>
+    </p>
+  }
+}
 
 export default connect(
   mapStateToProps,

@@ -7,7 +7,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Editor, RichUtils, SelectionState} from 'draft-js'
+import { Editor, EditorState, RichUtils, SelectionState} from 'draft-js'
 import { blockRenderMap, getStyleMap } from 'concerns/draftConfig.js'
 
 import EditorToolbar from 'EditorToolbar.js'
@@ -106,12 +106,44 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 class CardContents extends React.Component {
+  constructor(props) {
+    super(props)
+
+    // We have to be able to respond to props change that would change
+    // customStyleMap by "jiggling" each block of editorState to trigger a
+    // rerender. This internal state should exactly track props, plus jiggle.
+    this.state = { editorState: props.editorState }
+
+    this._shouldJiggle = (nextProps) => (
+      this.props.commentThreadsOpen !== nextProps.commentThreadsOpen ||
+      this.props.hoveredCommentThread !== nextProps.hoveredCommentThread ||
+      this.props.selectedCommentThread !== nextProps.selectedCommentThread
+    )
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let editorState = nextProps.editorState
+    if (this._shouldJiggle(nextProps)) {
+      const contentState = editorState.getCurrentContent()
+      const blockMap = contentState.getBlockMap()
+
+      const indented = blockMap.map(blk => blk.set('depth', blk.getDepth() + 1))
+      const outdented = indented.map(blk => blk.set('depth', blk.getDepth() - 1))
+      const outdentedContentState = contentState.set('blockMap', outdented)
+      editorState = EditorState.set(editorState, {
+        currentContent: outdentedContentState,
+      })
+    }
+    this.setState({editorState})
+  }
+
   render() {
-    let {id, solid, editable, editing, editorState, onChange,
+    let {id, solid, editable, editing, onChange,
       handleKeyCommand, onDelete, openedCitation, addCommentThread,
       commentThreadsOpen, commentsOpen, acceptingSelection,
       hoveredCommentThread, selectedCommentThread, readOnly,
       readerEnrolled} = this.props
+    let {editorState} = this.state
 
     let citationOpenWithinCard
     try {

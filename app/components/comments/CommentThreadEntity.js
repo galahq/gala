@@ -20,7 +20,8 @@ function mergeProps(
       openCommentThreads(cardId) &&
         selectCommentThread(parseInt(commentThreadId, 10))
     },
-    children,
+    children: children.length > 0
+      && React.cloneElement(children[0], {forceSelection: true}),
   }
 }
 
