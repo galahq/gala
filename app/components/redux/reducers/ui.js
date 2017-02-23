@@ -6,7 +6,7 @@ import {
   SELECT_COMMENT_THREAD,
   HOVER_COMMENT_THREAD,
   ACCEPT_SELECTION,
-  REPLACE_CARD,
+  ADD_COMMENT_THREAD,
   CHANGE_COMMENT_IN_PROGRESS,
   REGISTER_TOASTER,
   DISPLAY_TOAST,
@@ -34,7 +34,7 @@ export default function ui(state, action) {
     case OPEN_CITATION: return { ...state, openedCitation: action.data }
 
     case ACCEPT_SELECTION: return { ...state, acceptingSelection: true }
-    case REPLACE_CARD: return { ...state, acceptingSelection: false }
+    case ADD_COMMENT_THREAD: return { ...state, acceptingSelection: false }
 
     case OPEN_COMMENT_THREADS:
       return {
