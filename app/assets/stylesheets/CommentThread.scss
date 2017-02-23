@@ -177,6 +177,11 @@
   #Sidebar.has-comment-threads-open { margin-left: -15em; }
 }
 
+@media screen and (max-width: 768px) {
+  .Card.has-comment-threads-open.has-comments-open { flex-basis: 13.5em; }
+  .Card.has-comment-threads-open { flex-basis: 18em; }
+}
+
 @media screen and (max-width: $mobileCutoff) {
   #Sidebar.has-comment-threads-open { margin-left: 1em; }
   #Sidebar.has-comments-open { margin-left: 1em; }

@@ -35,6 +35,7 @@ const mapStateToProps = (state, ownProps) => {
     readOnly: !((state.edit.inProgress && !openedCitation.key)
       || acceptingSelection),
     commentsOpen: !!selectedCommentThread,
+    anyCommentThreadsOpen: !!state.ui.commentThreadsOpenForCard,
     openedCitation,
     acceptingSelection,
     hoveredCommentThread,
@@ -119,6 +120,15 @@ class CardContents extends React.Component {
       this.props.hoveredCommentThread !== nextProps.hoveredCommentThread ||
       this.props.selectedCommentThread !== nextProps.selectedCommentThread
     )
+
+    this._getClassNames = () => {
+      let n = []
+      n = [...n, this.props.solid ? 'Card' : 'nonCard']
+      if (this.props.anyCommentThreadsOpen)  n = [...n, "has-comment-threads-open"]
+      if (this.props.commentsOpen)  n = [...n, "has-comments-open"]
+      if (this.props.acceptingSelection)  n = [...n, "accepting-selection"]
+      return n.join(' ')
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -140,8 +150,7 @@ class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, onChange,
       handleKeyCommand, onDelete, openedCitation, addCommentThread,
-      commentThreadsOpen, commentsOpen, acceptingSelection,
-      hoveredCommentThread, selectedCommentThread, readOnly,
+      commentThreadsOpen, hoveredCommentThread, selectedCommentThread, readOnly,
       readerEnrolled} = this.props
     let {editorState} = this.state
 
@@ -157,11 +166,11 @@ class CardContents extends React.Component {
 
     return <div
       ref={el => this.cardRef = el}
-      className={`${solid ? 'Card' : 'nonCard'} ${commentsOpen ? "has-comments-open" : ""} ${acceptingSelection ? 'accepting-selection' : ''}`}
+      className={this._getClassNames()}
       style={{
         paddingTop: editing && '2em',
         zIndex: commentThreadsOpen && 300,
-        transition: "padding-top 0.1s, flex-basis 0.3s",
+        transition: "padding-top 0.1s, flex 0.3s",
       }}
     >
 
