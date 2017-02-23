@@ -129,7 +129,7 @@ class CardContents extends React.Component {
       style={{
         paddingTop: editing && '2em',
         zIndex: commentThreadsOpen && 300,
-        transition: "padding-top 0.1s",
+        transition: "padding-top 0.1s, flex-basis 0.3s",
       }}
     >
 

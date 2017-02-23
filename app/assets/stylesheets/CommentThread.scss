@@ -49,13 +49,6 @@
   &:hover {background-color: rgba(0,0,0,0.2);}
 }
 
-#Sidebar {
-  transition: margin-left 0.3s;
-}
-#Sidebar.has-comments-open {
-  margin-left: -10.5em;
-}
-
 
 .CommentThread {
   padding: 1.5em;
@@ -66,6 +59,16 @@
   left: 18.1em;
   width: 26em;
   box-shadow: 0 0.5em 1em rgba(0,0,0,0.3);
+
+  &__back {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    & > span {
+      width: 22px;
+      height: 22px;
+    }
+  }
 
   form {
     margin-top: 1em;
@@ -119,7 +122,7 @@
     font-weight: 400;
   }
 
-  &:not(:first-child) {
+  &:not(:first-of-type) {
     margin-top: 1em;
   }
 }
@@ -132,4 +135,59 @@
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+}
+
+
+
+#Sidebar { transition: margin-left 0.3s; }
+
+#Sidebar.has-comments-open { margin-left: 1em; }
+.CommentThread__back { display: none; }
+
+@media screen and (max-width: 2025px) {
+  #Sidebar.has-comments-open { margin-left: -10.5em; }
+}
+
+@media screen and (max-width: 1830px) {
+  #Sidebar.has-comments-open { margin-left: -25em; }
+}
+
+@media screen and (max-width: 1600px) {
+  .Card.has-comments-open { flex-basis: 27em; }
+  #Sidebar.has-comments-open { margin-left: -15em; }
+  aside.CommentThread { width: 26em; }
+}
+
+@media screen and (max-width: 1439px) {
+  aside.CommentThread { width: 21em; }
+}
+
+@media screen and (max-width: 1364px) {
+  aside.CommentThread { width: 16em; }
+}
+
+@media screen and (max-width: 1279px) {
+  aside.CommentThread { left: 0; width: 18em; }
+  .CommentThread__back { display: flex; }
+  #Sidebar.has-comment-threads-open { margin-left: -15em; }
+}
+
+@media screen and (max-width: 1024px) {
+  aside.CommentThread { left: 0; width: 18em; }
+  #Sidebar.has-comment-threads-open { margin-left: -15em; }
+}
+
+@media screen and (max-width: $mobileCutoff) {
+  #Sidebar.has-comment-threads-open { margin-left: 1em; }
+  #Sidebar.has-comments-open { margin-left: 1em; }
+  aside.CommentThread {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    position: fixed;
+    margin: 1em;
+    box-sizing: border-box;
+    width: calc(100% - 2em);
+    height: calc(100% - 2em);
+  }
 }

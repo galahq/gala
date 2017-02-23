@@ -17,8 +17,8 @@ export default function ui(state, action) {
     return {
       openedCitation: {},
       acceptingSelection: false,
-      commentThreadsOpenForCard: null,
-      selectedCommentThread: null,
+      commentThreadsOpenForCard: 151,
+      selectedCommentThread: 1,
       hoveredCommentThread: null,
       commentInProgress: {},
       toaster: null,

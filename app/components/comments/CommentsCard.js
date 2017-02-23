@@ -1,9 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { changeCommentInProgress, createComment } from 'redux/actions.js'
+import { changeCommentInProgress, createComment,
+  selectCommentThread } from 'redux/actions.js'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
+
+import Icon from 'Icon.js'
 
 function mapStateToProps(state) {
   const threadId = state.ui.selectedCommentThread
@@ -16,10 +19,26 @@ function mapStateToProps(state) {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    handleChange: threadId => e => dispatch(
+      changeCommentInProgress(threadId, e.target.value)),
+    handleSubmit: (threadId, comment) => () => dispatch(
+      createComment(threadId, comment)),
+    handleBack: () => dispatch(selectCommentThread(null)),
+  }
+}
+
 const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
-                       changeCommentInProgress, createComment}) =>
+                       handleChange, handleSubmit, handleBack}) =>
   <aside className="CommentThread scrolling">
-    { comments.map( comment => <Comment {...comment} key={comment.id} /> ) }
+    <a className="CommentThread__back">
+      <Icon className="CommentThread__icon-button" filename="back"
+        onClick={handleBack} />
+    </a>
+    <div>
+      { comments.map( comment => <Comment {...comment} key={comment.id} /> ) }
+    </div>
     <form style={comments.length === 0 ? { marginTop: 0 } : {}}>
       <label htmlFor="CommentSubmit">{userName}</label><br />
       <div id="CommentSubmit">
@@ -30,9 +49,9 @@ const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
           })}
           autoFocus
           value={commentInProgress}
-          onChange={ e => changeCommentInProgress(threadId, e.target.value) } />
+          onChange={ handleChange(threadId) } />
         <button type="button"
-          onClick={ () => createComment(threadId, commentInProgress) }>
+          onClick={ handleSubmit(threadId, commentInProgress) }>
           <FormattedMessage id="submit" defaultMessage="Submit" />
         </button>
       </div>
@@ -41,10 +60,10 @@ const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
 
 export default connect(
   mapStateToProps,
-  { changeCommentInProgress, createComment },
+  mapDispatchToProps,
 )(injectIntl(CommentsCard))
 
-const Comment = ({id, reader, timestamp, content}) =>
+const Comment = ({reader, timestamp, content}) =>
   <div className="Comment">
     <cite>{reader.name}</cite>
     <i>{timestamp}</i>

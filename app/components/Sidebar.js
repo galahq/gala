@@ -7,6 +7,16 @@ import TableOfContents from 'TableOfContents.js'
 import {EnrollForm} from 'EnrollForm.js'
 
 class Sidebar extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this._getClassNames = () => {
+      let n = []
+      if (this.props.commentThreadsOpen)  n = [...n, "has-comment-threads-open"]
+      if (this.props.commentsOpen)  n = [...n, "has-comments-open"]
+      return n.join(' ')
+    }
+  }
   renderTOC() {
     if (this.props.pageTitles) {
       return (
@@ -30,8 +40,7 @@ class Sidebar extends React.Component {
 
   render () {
     return (
-      <aside id="Sidebar" className={this.props.commentsOpen
-                                      ? "has-comments-open" : ""}>
+      <aside id="Sidebar" className={this._getClassNames()}>
         <Link to="/" className="backLink">
           <FormattedMessage id="case.backToOverview" />
         </Link>
@@ -44,5 +53,8 @@ class Sidebar extends React.Component {
 }
 
 export default connect(
-  (state) => ({ commentsOpen: !!state.ui.selectedCommentThread })
+  (state) => ({
+    commentThreadsOpen: !!state.ui.commentThreadsOpenForCard,
+    commentsOpen: !!state.ui.selectedCommentThread,
+  })
 )(Sidebar)
