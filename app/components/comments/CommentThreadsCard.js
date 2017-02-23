@@ -62,22 +62,24 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
       )}
     </ol>
 
-    <button
-      onClick={acceptingSelection ? addCommentThread : acceptSelection}
-      className="CommentThreads__new-button"
-      disabled={acceptingSelection && !selectionPending}
-    >
-      { !acceptingSelection
-        ? <FormattedMessage id="comments.writeNew"
-          defaultMessage="Write a new response" />
-        : ( !selectionPending
-          ? <FormattedMessage id="comments.select"
-            defaultMessage="Select a few words" />
-          : <FormattedMessage id="comments.here"
-            defaultMessage="Respond here" />
-        )
-      }
-    </button>
+    <div className="CommentThreads__footer">
+      <button
+        onClick={acceptingSelection ? addCommentThread : acceptSelection}
+        className="CommentThreads__new-button"
+        disabled={acceptingSelection && !selectionPending}
+      >
+        { !acceptingSelection
+          ? <FormattedMessage id="comments.writeNew"
+            defaultMessage="Write a new response" />
+          : ( !selectionPending
+            ? <FormattedMessage id="comments.select"
+              defaultMessage="Select a few words" />
+            : <FormattedMessage id="comments.here"
+              defaultMessage="Respond here" />
+          )
+        }
+      </button>
+    </div>
 
     {
       <Portal>
