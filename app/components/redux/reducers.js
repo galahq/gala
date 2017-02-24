@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import {
   UPDATE_CASE,
+  SET_READER_ENROLLMENT,
   UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
@@ -26,6 +27,15 @@ function caseData(state, action) {
       return {
         ...state,
         ...action.data,
+      }
+
+    case SET_READER_ENROLLMENT:
+      return {
+        ...state,
+        reader: {
+          ...state.reader,
+          enrollment: action.enrollment,
+        },
       }
 
     default: return state

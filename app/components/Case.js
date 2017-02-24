@@ -51,7 +51,6 @@ class Case extends React.Component {
     let { editing, pages } = this.props
 
     c.didSave = this.editing() ? this.didSave.bind(this) : null
-    c.enrolled = this.didSave.bind(this)
 
     return (
       <div id="Case">

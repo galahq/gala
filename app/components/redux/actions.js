@@ -97,6 +97,20 @@ export function updateCase(slug, data) {
   return {type: UPDATE_CASE, data}
 }
 
+export function enrollReader(readerId, caseSlug) {
+  return async (dispatch) => {
+    let enrollment = await Orchard.espalier(
+      `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
+    )
+    dispatch(setReaderEnrollment(enrollment))
+  }
+}
+
+export const SET_READER_ENROLLMENT = "SET_READER_ENROLLMENT"
+function setReaderEnrollment(enrollment) {
+  return {type: SET_READER_ENROLLMENT, enrollment}
+}
+
 // PAGE
 //
 export const UPDATE_PAGE = "UPDATE_PAGE"

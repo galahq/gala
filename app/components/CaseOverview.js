@@ -9,7 +9,7 @@ import TableOfContents from 'TableOfContents.js'
 import Billboard from 'Billboard.js'
 import {Editable, EditableAttribute} from 'Editable.js'
 import {EditableList} from 'EditableList.js'
-import {EnrollForm} from 'EnrollForm.js'
+import EnrollForm from 'EnrollForm.js'
 
 class Actions extends React.Component {
 
@@ -87,7 +87,7 @@ class Actions extends React.Component {
     if (this.props.signInForm !== undefined) {
       return <div className="dialog" dangerouslySetInnerHTML={{__html: this.props.signInForm}} />
     } else if (!this.props.reader.enrollment) {
-      return <EnrollForm enrolled={this.props.enrolled} readerId={this.props.reader.id} caseSlug={this.props.slug} />
+      return <EnrollForm />
     }
   }
 
@@ -170,4 +170,11 @@ const CaseOverview = (props) => {
   </div>
 }
 
-export default CaseOverview
+export default connect(
+  (state, ownProps) => ({
+    reader: {
+      ...ownProps.reader,
+      enrollment: state.caseData.reader.enrollment,
+    },
+  })
+)(CaseOverview)
