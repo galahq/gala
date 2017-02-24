@@ -49,6 +49,12 @@ const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
           })}
           autoFocus
           value={commentInProgress}
+          onKeyDown={ e => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault()
+              handleSubmit(threadId, commentInProgress)()
+            }
+          }}
           onChange={ handleChange(threadId) } />
         <button type="button"
           onClick={ handleSubmit(threadId, commentInProgress) }>
