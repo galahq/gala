@@ -182,7 +182,7 @@ const Background = ({visible, children}) =>
 const CallToAction = ({contents, websiteUrl, editing, onChange}) => <div>
   <EditableAttribute disabled={!editing} title="website" value={websiteUrl}
     onChange={onChange('websiteUrl')} />
-  {(contents || editing) && <p style={{margin: "0.25em 0 0 0"}}>
+  {(contents || editing) && <p style={{margin: "0.25em 0 0 0", lineHeight: 1}}>
     <EditableText disabled={!editing} multiline
       placeholder="Add call to action ›" value={contents}
       onChange={onChange('callToAction')} />
