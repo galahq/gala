@@ -1,6 +1,6 @@
 class CatalogController < ApplicationController
   def home
-    @cases = Case.where.not(cover_url: "", cover_url: nil)
+    @cases = Case.where.not(cover_url: "").where.not(cover_url: nil)
       .sort_by &:kicker
     @my_cases = current_reader.enrollments.order(updated_at: :desc).map(&:case) if reader_signed_in?
 
