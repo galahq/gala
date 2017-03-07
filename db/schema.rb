@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216193541) do
+ActiveRecord::Schema.define(version: 20170306195553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20170216193541) do
     t.hstore   "kicker_i18n"
     t.hstore   "dek_i18n"
     t.text     "photo_credit"
+    t.boolean  "commentable"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end

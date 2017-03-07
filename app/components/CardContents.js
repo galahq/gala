@@ -29,7 +29,7 @@ const mapStateToProps = (state, ownProps) => {
   const commentThreadsOpen = ownProps.id === state.ui.commentThreadsOpenForCard
 
   return {
-    readerEnrolled: !!state.caseData.reader.enrollment,
+    commentable: state.caseData.commentable && !!state.caseData.reader.enrollment,
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     readOnly: !((state.edit.inProgress && !openedCitation.key)
@@ -151,7 +151,7 @@ class CardContents extends React.Component {
     let {id, solid, editable, editing, onChange,
       handleKeyCommand, onDelete, openedCitation, addCommentThread,
       commentThreadsOpen, hoveredCommentThread, selectedCommentThread, readOnly,
-      readerEnrolled} = this.props
+      commentable} = this.props
     let {editorState} = this.state
 
     let citationOpenWithinCard
@@ -186,7 +186,7 @@ class CardContents extends React.Component {
         }}
       />
 
-      {readerEnrolled && solid && <CommentThreadsTag cardId={id} />}
+      {commentable && solid && <CommentThreadsTag cardId={id} />}
       { commentThreadsOpen && <CommentThreadsCard cardId={id}
         addCommentThread={addCommentThread} /> }
 

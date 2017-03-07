@@ -1,5 +1,5 @@
 json.key_format! camelize: :lower
-json.extract! c, *%i(slug published kicker title dek case_authors summary tags photo_credit other_available_locales)
+json.extract! c, *%i(slug published kicker title dek case_authors summary tags photo_credit other_available_locales commentable)
 json.base_cover_url c.cover_url
 json.small_cover_url ix_cover_image(c, :small)
 json.cover_url ix_cover_image(c, :billboard)
@@ -23,7 +23,7 @@ json.cards do
   end
 end
 
-if current_reader && current_reader.enrollment_for_case(c)
+if c.commentable && current_reader && current_reader.enrollment_for_case(c)
 
   json.comment_threads do
     c.comment_threads.select { |x| x.visible_to_reader? current_reader }.each do |comment_thread|
