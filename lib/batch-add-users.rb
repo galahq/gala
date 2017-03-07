@@ -68,7 +68,7 @@ csv.each do |row|
   puts "  reader.initials = reader.name.split(' ').map(&:first).join('')"
   puts "  reader.save"
   puts "end"
-  puts "readers << reader"
+  puts "readers << reader && nil"
 end
 
 if options[:group]
@@ -76,5 +76,5 @@ if options[:group]
 
   puts "readers.each do |r|"
   puts "  group.group_memberships.create reader: r"
-  puts "end"
+  puts "end && nil"
 end
