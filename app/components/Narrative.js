@@ -15,8 +15,7 @@ class Narrative extends React.Component {
   nextLink() {
     let nextChapterID = this.props.selectedPage + 2
     if (nextChapterID - 1 < this.props.pages.length) {
-      let edit = this.props.didSave === null ? "" : 'edit/'
-      return <Link className="nextLink" to={`/${edit}${nextChapterID}`}><I18n meaning="next" /> {this.props.pages[nextChapterID - 1].title}</Link>
+      return <Link className="nextLink" to={`/${nextChapterID}`}><I18n meaning="next" /> {this.props.pages[nextChapterID - 1].title}</Link>
     } else {
       return <footer><h2><I18n meaning="end" /></h2></footer>
     }
