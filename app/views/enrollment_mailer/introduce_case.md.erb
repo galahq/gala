@@ -8,4 +8,9 @@ You were just enrolled in a new Michigan Sustainability Case.
 
 <%= @case.summary %>
 
-[Read the case](<%= case_url(@reader.locale, @case.slug) %>) on the Michigan Sustainability Cases website.
+<% if @token %>
+[Create a password](<%= edit_password_url(@reader, reset_password_token: @token) %>) to read the case 
+<% else %>
+[Read the case](<%= case_url(@reader.locale, @case.slug) %>) 
+<% end %>
+on the Michigan Sustainability Cases website.
