@@ -1,4 +1,4 @@
-function statistics(state = window.caseData.statistics = {}, action) {
+function statistics(state = window.caseData.statistics || {}, action) {
   return state
 }
 
