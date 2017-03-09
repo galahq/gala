@@ -57,8 +57,15 @@ class CasesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_case
-      @case = Case.where(slug: params[:slug]).includes( :podcasts, :edgenotes, pages: [cards: [comment_threads: [:comments]]], enrollments: [:reader] )
-        .first
+      @case = Case.where(slug: params[:slug]).includes(
+        :podcasts,
+        :edgenotes,
+        pages: [:cards],
+        cards: [comment_threads: [:comments]],
+        comment_threads: [:comments],
+        comments: [:reader],
+        enrollments: [:reader]
+      ).first
     end
 
     # Only allow a trusted parameter "white list" through.

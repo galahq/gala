@@ -12,7 +12,7 @@ class Reader < ApplicationRecord
   has_many :comments
   has_many :group_memberships, dependent: :delete_all
   has_many :groups, through: :group_memberships
-  has_many :enrollments, dependent: :delete_all
+  has_many :enrollments, -> { includes(:case) }, dependent: :delete_all
   has_many :cases, through: :enrollments
 
   def self.from_omniauth(auth)
