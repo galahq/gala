@@ -202,7 +202,6 @@
   @include justify-content(flex-start);
   @media screen and (max-width: $mobileCutoff) {
     @include flex-flow(column wrap);
-    max-height: 20em;
     @include align-content(flex-start);
   }
 
@@ -222,9 +221,10 @@
     @media screen and (max-width: $mobileCutoff) {
       margin: 0.5rem;
       text-align: left;
-      width: 8em;
+      width: 10em;
       h2 a.catalog-dashboard__edit {
-        display: inline-block;
+        margin-left: 0.5em;
+        display: inline;
       }
     }
     @media screen and (max-width: 375px) { width: 7.25em; }
@@ -261,6 +261,7 @@
       margin: 0.6rem 0 0.5rem 0.5rem;
       color: $white !important;
       width: 10em;
+      @media screen and (max-width: $mobileCutoff) { width: 9em; }
       transition: transform .15s cubic-bezier(.33, .66, .66, 1);
       position: relative;
       cursor: default;
