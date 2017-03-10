@@ -1,7 +1,14 @@
 FactoryGirl.define do
+<<<<<<< HEAD
   factory :case_element do
     kase nil
     element nil
+=======
+  factory :notification do
+    reader nil
+    type 1
+    data ""
+>>>>>>> Creates notification model object on reply.
   end
 
 #############
