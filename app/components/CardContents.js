@@ -127,6 +127,7 @@ class CardContents extends React.Component {
       if (this.props.anyCommentThreadsOpen)  n = [...n, "has-comment-threads-open"]
       if (this.props.commentsOpen)  n = [...n, "has-comments-open"]
       if (this.props.acceptingSelection)  n = [...n, "accepting-selection"]
+      if (this.props.commentable)  n = [...n, "commentable"]
       return n.join(' ')
     }
   }

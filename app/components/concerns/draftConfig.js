@@ -18,7 +18,7 @@ const newBlockRenderMap = Immutable.Map({
 })
 export const blockRenderMap = DefaultDraftBlockRenderMap.merge(newBlockRenderMap)
 
-const styles = {
+export const styles = {
   smallCaps: {
     fontWeight: 'inherit',
     letterSpacing: 1,

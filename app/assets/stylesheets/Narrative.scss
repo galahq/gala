@@ -85,10 +85,11 @@ article {
   line-height: 19pt;
   background-color: $white;
   border-radius: 2pt;
-  padding: 0em 0.7em;
+  padding: 1.2em 2.4em;
   position: relative;
-  @media screen and (min-width: $mobileCutoff) {
-    padding: 1.2em 2.4em;
+  @media screen and (max-width: $mobileCutoff) {
+    padding: 0em 0.7em;
+    &.commentable { padding-top: 0.75em; }
   }
 
   ::selection {

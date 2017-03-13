@@ -27,13 +27,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
                             selectionPending, closeCommentThreads,
                             commentThreadSelected, acceptSelection,
                             addCommentThread}) => {
-  const positionalStyles = {
-    position: 'absolute',
-    top: 0 /* Height of header */,
-    right: -266 - 24,
-  }
-
-  return <div style={{...styles.commentsCard, ...positionalStyles}}>
+  return <div className="CommentThreads">
     <div className={`CommentThreads__window`}>
       <div style={styles.header}>
         <a className="CommentThread__icon-button" onClick={closeCommentThreads}>
@@ -109,17 +103,6 @@ const styles = {
     width: '100%',
     height: '100%',
     zIndex: 200,
-  },
-
-  commentsCard: {
-    backgroundColor: "#7351D4",
-    width: 267,
-    position: 'absolute',
-    color: 'white',
-    fontFamily: 'tenso',
-    fontWeight: 500,
-    fontSize: '12pt',
-    boxShadow: '0 0.5em 1em rgba(0,0,0,0.3)',
   },
 
   header: {

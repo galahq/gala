@@ -4,6 +4,20 @@
 @import '_tint_and_shade';
 @import 'Catalog';
 
+.CommentThreads {
+  position: absolute;
+  top: 0;
+  right: -290px;
+  background-color: #7351D4;
+  width: 267px;
+  position: absolute;
+  color: white;
+  font-family: 'tenso';
+  font-weight: 500;
+  font-size: 12pt;
+  box-shadow: 0 0.5em 1em rgba(0,0,0,0.3);
+}
+
 .CommentThreads__footer {
   border-top: 1px solid #351D7A;
   padding: 0.25em;
@@ -38,6 +52,7 @@
   @include banner;
   font-family: $sansFont;
   top: 0.8em;
+  @media screen and (max-width: $mobileCutoff) { top: 0.55em; }
   padding: 0 0.5rem 0 0.4rem;
   font-size: 70%;
   color: white;
@@ -109,16 +124,6 @@
   cite {
     display: block;
   }
-  i {
-    color: $purple;
-    font-size: 70%;
-    font-style: normal;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin: 2px 0 0 0;
-    display: block;
-    font-weight: 400;
-  }
   blockquote {
     margin: 0;
     padding: 0;
@@ -129,6 +134,37 @@
 
   &:not(:first-of-type) {
     margin-top: 1em;
+  }
+}
+.Comment i,
+.CommentThread__metadata__label {
+  color: $purple;
+  font-size: 70%;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin: 2px 0 0 0;
+  display: block;
+  font-weight: 400;
+  line-height: 1.0;
+}
+.CommentThread__metadata {
+  margin-bottom: 1em;
+  &__text {
+    font-family: $serifFont;
+    position: relative;
+    &::before {
+      content: "“";
+      color: black;
+      position: absolute;
+      left: -8px;
+    }
+    &::after {
+      content: "”";
+      color: black;
+      position: absolute;
+      right: -8px;
+    }
   }
 }
 
@@ -184,21 +220,36 @@
 }
 
 @media screen and (max-width: 768px) {
+  aside.CommentThread { left: 0; width: 16.5em; }
   .Card.has-comment-threads-open.has-comments-open { flex-basis: 13.5em; }
-  .Card.has-comment-threads-open { flex-basis: 18em; }
+  .Card.has-comment-threads-open { flex-basis: 17em; }
 }
 
 @media screen and (max-width: $mobileCutoff) {
   #Sidebar.has-comment-threads-open { margin-left: 1em; }
   #Sidebar.has-comments-open { margin-left: 1em; }
+
+  .Card.has-comment-threads-open.has-comments-open,
+  .Card.has-comment-threads-open {
+    flex-basis: 100%;
+  }
+
+  .CommentThreads {
+    top: inherit;
+    left: -1px;
+    right: -1px;
+    width: auto;
+    margin-top: 1em;
+  }
+  .CommentThreads__window {  }
+
   aside.CommentThread {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    position: fixed;
-    margin: 1em;
+    position: absolute;
     box-sizing: border-box;
-    width: calc(100% - 2em);
-    height: calc(100% - 2em);
+    width: calc(100vw - 1em);
+    height: 150vw;
   }
 }
