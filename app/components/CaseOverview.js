@@ -174,7 +174,7 @@ export default connect(
   (state, ownProps) => ({
     reader: {
       ...ownProps.reader,
-      enrollment: state.caseData.reader.enrollment,
+      enrollment: state.caseData.reader && state.caseData.reader.enrollment,
     },
   })
 )(CaseOverview)
