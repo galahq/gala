@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
 
 import { parseAllCards, registerToaster, addComment,
-  addCommentThread } from 'redux/actions.js'
+  addCommentThread, handleNotification } from 'redux/actions.js'
 
 import StatusBar from 'StatusBar.js'
 import CaseOverview from 'CaseOverview.js'
@@ -21,13 +21,18 @@ class Case extends React.Component {
 
       App.forum = App.cable.subscriptions  // eslint-disable-line
         .create("ForumChannel", {
-          connected: () => {},
-          disconnected: () => {},
           received: data => {
             if (data.comment)
               this.props.addComment(JSON.parse(data.comment))
             if (data.comment_thread)
               this.props.addCommentThread(JSON.parse(data.comment_thread))
+          },
+        })
+
+      App.readerNotification = App.cable.subscriptions  // eslint-disable-line
+        .create("ReaderNotificationsChannel", {
+          received: data => {
+            this.props.handleNotification(JSON.parse(data.notification))
           },
         })
     }
@@ -67,5 +72,6 @@ export default connect(
       state.caseData.slug
     ),
   }),
-  { parseAllCards, registerToaster, addComment, addCommentThread },
+  { parseAllCards, registerToaster, addComment, addCommentThread,
+    handleNotification },
 )(Case)

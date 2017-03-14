@@ -30,3 +30,5 @@ en:
     form:
       my_account: 'My Account'
       save: 'Update profile'
+  notifications:
+    replied_to_your_comment: "%{notifier} replied to your comment on “%{case_kicker}.”"

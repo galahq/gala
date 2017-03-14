@@ -195,6 +195,10 @@ transform: translateY(0); }
   transition-duration: 100ms;
   transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
 transition-delay: 50ms; }
+.pt-button-group {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+}
 .pt-toast .pt-button-group {
   -webkit-flex: 0 0 auto;
   flex: 0 0 auto;
@@ -230,7 +234,7 @@ color: #ffffff !important; }
 .pt-toast[class*="pt-intent-"] .pt-button::after {
 background: rgba(255, 255, 255, 0.3) !important; }
 .pt-toast.pt-intent-primary {
-  background-color: #137cbd;
+  background-color: #7351D4;
 color: #ffffff; }
 .pt-toast.pt-intent-success {
   background-color: #3ea046;
@@ -279,3 +283,31 @@ align-items: flex-end; }
 .pt-toast-container-bottom .pt-toast.pt-toast-leave-active ~ .pt-toast {
   -webkit-transform: translateY(55px);
 transform: translateY(55px); }
+
+.pt-button-group.pt-minimal .pt-button::after {
+    background: rgba(255, 255, 255, 0.15);
+}
+.pt-toast[class*="pt-intent-"] .pt-button::after {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+.pt-button-group .pt-button {
+    position: relative;
+    z-index: 4;
+}
+.pt-button-group.pt-minimal .pt-button::after {
+    margin: 5px;
+    background: rgba(16, 22, 26, 0.15);
+    width: 1px;
+    height: 20px;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    content: "";
+}
+.pt-button-group.pt-minimal > .pt-popover-target:last-child .pt-button,
+  .pt-button-group.pt-minimal > .pt-button:last-child {
+    margin-right: 0; }
+.pt-button-group.pt-minimal > .pt-popover-target:last-child .pt-button::after,
+    .pt-button-group.pt-minimal > .pt-button:last-child::after {
+      display: none; }

@@ -10,4 +10,33 @@ class Notification < ApplicationRecord
   ]
 
   serialize :data, Hash
+
+  after_create_commit { NotificationBroadcastJob.perform_now self }
+
+  def message
+    case category
+    when "reply_to_thread"
+      I18n.t "notifications.replied_to_your_comment", notifier: notifier.name, case_kicker: self.case.kicker
+    end
+  end
+
+  def notifier
+    Reader.find data[:notifier_id]
+  end
+
+  def comment_thread
+    CommentThread.find data[:comment_thread_id]
+  end
+
+  def case
+    Case.find data[:case_id]
+  end
+
+  def page
+    Page.find data[:page_id]
+  end
+
+  def card
+    Card.find data[:card_id]
+  end
 end

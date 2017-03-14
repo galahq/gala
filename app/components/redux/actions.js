@@ -307,3 +307,17 @@ export const DISPLAY_TOAST = "DISPLAY_TOAST"
 export function displayToast(options) {
   return {type: DISPLAY_TOAST, options}
 }
+
+export const HANDLE_NOTIFICATION = "HANDLE_NOTIFICATION"
+export function handleNotification(notification) {
+  return dispatch => {
+    dispatch(displayToast({
+      message: notification.message,
+      intent: Intent.PRIMARY,
+      action: {
+        href: `/cases/${notification.case.slug}#/${notification.page.position}`,
+        text: 'Read',
+      },
+    }))
+  }
+}
