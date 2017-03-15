@@ -27,14 +27,14 @@
   padding: 1rem 0
 
   .catalog-case
-    +flex(0, 0, 30em)
+    +flex(0, 0, 33em)
 
     @media screen and (max-width: $mobileCutoff)
       +flex(0, 0, 25em)
 
       font-size: 13px
 
-    height: 17rem !important
+    height: 18rem !important
 
     &:first-child
       margin-left: auto
@@ -71,14 +71,14 @@
   +justify-content(center)
 
   .catalog-case
-    +flex(0, 0, 15em)
+    +flex(0, 0, 18em)
 
-    height: 15em
+    height: 16em
 
     @media screen and (max-width: $mobileCutoff)
       +flex(1, 0, 15em)
 
-      height: 10em
+      height: 11em
 
     margin: 0 0.5rem 1rem 0.5rem
 
@@ -126,6 +126,9 @@
 
     &.dimmed
       box-shadow: 0 0 0 10em rgba(0, 0, 0, 0.5), inset 0 0 0 10em rgba(0, 0, 0, 0.5)
+
+    h4
+      padding-bottom: 0.8em
 
   &-unpublished
     cursor: default
@@ -212,6 +215,7 @@
   h1, h2, h3
     font-family: $sansFont
     margin: 0
+    color: $white
 
   h2
     font-weight: normal
