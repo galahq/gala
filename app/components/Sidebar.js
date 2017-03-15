@@ -29,13 +29,7 @@ const Sidebar = ({commentThreadsOpen, commentsOpen, readerEnrolled, slug,
       <FormattedMessage id="case.backToOverview" />
     </Link>
     <BillboardTitle minimal />
-  { pageTitles && <TableOfContents
-    slug={slug}
-    pageTitles={pageTitles}
-    selectedPage={selectedPage}
-    didSave={didSave}
-  />
-  }
+    <TableOfContents />
 
   { readerEnrolled || <div style={{paddingTop: '1em'}}>
     <EnrollForm />

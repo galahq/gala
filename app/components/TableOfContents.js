@@ -32,7 +32,8 @@ const TableOfContents = ({elements}) =>
     <h3 className="c-toc__header"><FormattedMessage id="case.toc" /></h3>
     <ol className="c-toc__list">
       { elements.map( (e, i) =>
-        <Link className="c-toc__link" to={e.href}>
+        <Link className="c-toc__link" activeClassName="c-toc__link--active"
+          to={e.href}>
           <li className="c-toc__item" key={e.href}>
             <div className="c-toc__item-data">
               <div className="c-toc__number">{i + 1}</div>

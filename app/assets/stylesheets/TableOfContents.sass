@@ -29,9 +29,11 @@
     display: block
     padding-left: 45px
 
-    &:hover
+    &--active,
+    &:hover, &:focus
       background-color: #29394A
       color: $white
+
 
   &__item
     border-top: 1px solid rgba($white, .2)
@@ -62,3 +64,21 @@
 
   &__title
     flex-grow: 1
+
+#Sidebar
+  .c-toc
+    &__header
+      margin: 1em 0 0.25em 0
+
+    &__link
+      padding-left: 40px
+
+    &__item-data
+      margin-left: -40px
+
+    &__number
+      flex: 0 0 40px
+
+    &__icon
+      flex: 0 0 33px
+      transform: scale(0.8)
