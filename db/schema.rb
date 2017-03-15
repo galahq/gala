@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170306195553) do
+ActiveRecord::Schema.define(version: 20170315154030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,17 @@ ActiveRecord::Schema.define(version: 20170306195553) do
     t.boolean  "solid",            default: true
     t.hstore   "raw_content_i18n"
     t.index ["page_id"], name: "index_cards_on_page_id", using: :btree
+  end
+
+  create_table "case_elements", force: :cascade do |t|
+    t.integer  "case_id"
+    t.string   "element_type"
+    t.integer  "element_id"
+    t.integer  "position"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["case_id"], name: "index_case_elements_on_case_id", using: :btree
+    t.index ["element_type", "element_id"], name: "index_case_elements_on_element_type_and_element_id", using: :btree
   end
 
   create_table "cases", force: :cascade do |t|
@@ -153,6 +164,17 @@ ActiveRecord::Schema.define(version: 20170306195553) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.boolean  "email_sent"
+    t.boolean  "read"
+    t.integer  "reader_id"
+    t.integer  "category"
+    t.jsonb    "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reader_id"], name: "index_notifications_on_reader_id", using: :btree
+  end
+
   create_table "pages", force: :cascade do |t|
     t.integer  "position"
     t.hstore   "title_i18n"
@@ -250,6 +272,7 @@ ActiveRecord::Schema.define(version: 20170306195553) do
 
   add_foreign_key "activities", "cases"
   add_foreign_key "cards", "pages"
+  add_foreign_key "case_elements", "cases"
   add_foreign_key "comment_threads", "cards"
   add_foreign_key "comment_threads", "cases"
   add_foreign_key "comment_threads", "groups"
@@ -261,6 +284,7 @@ ActiveRecord::Schema.define(version: 20170306195553) do
   add_foreign_key "enrollments", "readers"
   add_foreign_key "group_memberships", "groups"
   add_foreign_key "group_memberships", "readers"
+  add_foreign_key "notifications", "readers"
   add_foreign_key "pages", "cases"
   add_foreign_key "podcasts", "cases"
 end

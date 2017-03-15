@@ -8,14 +8,16 @@ class Case < ApplicationRecord
   resourcify
 
   has_many :edgenotes, dependent: :destroy
-  has_many :podcasts, -> { order position: :asc }, dependent: :destroy
-  has_many :activities, -> { order position: :asc }, dependent: :destroy
+  has_many :podcasts, dependent: :destroy
+  has_many :activities, dependent: :destroy
   has_many :comment_threads, dependent: :destroy
   has_many :comments, through: :comment_threads
   has_many :enrollments, dependent: :destroy
   has_many :readers, through: :enrollments
-  has_many :pages, -> { order position: :asc }, dependent: :destroy
+  has_many :pages, dependent: :destroy
   has_many :cards, through: :pages
+
+  has_many :case_elements, -> { order position: :asc }, dependent: :destroy
 
   scope :published, -> { where(published: true)  }
 

@@ -1,4 +1,8 @@
 FactoryGirl.define do
+  factory :case_element do
+    kase nil
+    element nil
+  end
 
 #############
 # Factories #

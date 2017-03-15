@@ -6,6 +6,7 @@ json.cover_url ix_cover_image(c, :billboard)
 json.translators translators_string c
 
 json.page_ids c.pages.map &:id
+json.case_elements c.case_elements.map &:element_details
 
 json.pages do
   c.pages.each do |page|
