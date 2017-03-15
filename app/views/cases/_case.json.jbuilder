@@ -64,11 +64,20 @@ json.edgenotes do
   end
 end
 
-json.podcasts c.podcasts do |podcast|
-  json.partial! podcast
+json.podcasts do
+  c.podcasts.each do |podcast|
+    json.set! podcast.id do
+      json.partial! podcast
+    end
+  end
 end
-json.activities c.activities do |activity|
-  json.partial! activity
+
+json.activities do
+  c.activities.each do |activity|
+    json.set! activity.id do
+      json.partial! activity
+    end
+  end
 end
 
 if reader_signed_in?

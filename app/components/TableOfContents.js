@@ -1,43 +1,48 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
-import {EditableList} from 'EditableList.js'
+import { Link } from 'react-router'
+
+import Icon from './Icon.js'
+
+function getElementDataFrom(state) {
+  return (uri, i) => {
+    const [model, id] = uri.split('/')
+    const element = state[`${model}ById`][id]
+
+    var typeIcon = element.iconSlug && <Icon filename={element.iconSlug} />
+
+    return {
+      href: `/${i + 1}`,
+      typeIcon,
+      model,
+      ...element,
+    }
+  }
+}
 
 function mapStateToProps(state) {
   return {
-    editing: state.edit.inProgress,
-    pageTitles: state.caseData.pageIds.map( id => state.pagesById[id].title ),
+    elements: state.caseData.caseElements.map(getElementDataFrom(state)),
   }
 }
 
-class TableOfContents extends React.Component {
-  renderChapterLinks() {
-    let titleList = this.props.pageTitles.map( (title, idx) => {
-      return(
-        <Link to={`${this.props.didSave !== null ? "/edit/" : ""}${idx + 1}`}>{title}</Link>
-      )
-    } )
-    return titleList
-  }
-
-  render() {
-    return(
-      <div id="TableOfContents">
-        <h4 className="list-head">
-          <FormattedMessage id="case.toc" />
-        </h4>
-        <EditableList
-          elements={this.renderChapterLinks()}
-          ordered={true}
-          selectedIndex={this.props.selectedPage}
-          selectedClass="focus"
-          uri={`cases/${this.props.slug}/pages`}
-          didSave={this.props.didSave}
-        />
-      </div>
-    )
-  }
-}
+const TableOfContents = ({elements}) =>
+  <nav className="c-toc">
+    <h3 className="c-toc__header"><FormattedMessage id="case.toc" /></h3>
+    <ol className="c-toc__list">
+      { elements.map( (e, i) =>
+        <Link className="c-toc__link" to={e.href}>
+          <li className="c-toc__item" key={e.href}>
+            <div className="c-toc__item-data">
+              <div className="c-toc__number">{i + 1}</div>
+              <div className="c-toc__title">{e.title}</div>
+              <div className="c-toc__icon">{e.typeIcon}</div>
+            </div>
+          </li>
+        </Link>
+      ) }
+    </ol>
+  </nav>
 
 export default connect(mapStateToProps)(TableOfContents)

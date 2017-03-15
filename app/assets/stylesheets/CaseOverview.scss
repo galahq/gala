@@ -28,7 +28,7 @@
   }
 
   .CaseOverviewRight {
-    @include flex($fg: 0, $fs: 1, $fb: 25em);
+    @include flex($fg: 0, $fs: 1, $fb: 20em);
 
     & > * { margin: 1em; }
     .Actions {

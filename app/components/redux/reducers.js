@@ -79,6 +79,14 @@ function pagesById(state = {...window.caseData.pages}, action) {
   }
 }
 
+function podcastsById(state = {...window.caseData.podcasts}) {
+  return state
+}
+
+function activitiesById(state = {...window.caseData.activities}) {
+  return state
+}
+
 function commentThreadsById(
   state = {...window.caseData.commentThreads},
   action,
@@ -117,6 +125,8 @@ export default combineReducers({
   caseData,
   edgenotesBySlug,
   pagesById,
+  podcastsById,
+  activitiesById,
   cardsById,
   commentThreadsById,
   commentsById,
