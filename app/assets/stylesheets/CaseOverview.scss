@@ -16,8 +16,10 @@
     margin: 1em;
 
     .Card.BillboardSnippet {
-      margin-top: 1.5em !important;
-      padding: 1em 2em;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-top: 4px solid $lightGreen;
+      padding: 0.75em 2em 1em 2em;
       @media screen and (max-width: $mobileCutoff) {
         padding: 1em;
       }
@@ -69,7 +71,7 @@
 .BillboardTitle {
   background-size: cover;
   background-position: center;
-  border-radius: 2pt;
+  border-radius: 2pt 2pt 0 0;
 
   padding: 1em 2em;
   padding-top: 10em;
