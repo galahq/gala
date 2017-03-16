@@ -20,6 +20,7 @@ function mapStateToProps(state, {match}) {
   const [nextModel, nextId] = next ? next.split('/') : []
 
   return {
+    reader: state.caseData.reader,
     editing: state.edit.inProgress,
     next: next && {
       title: state[`${nextModel}ById`][nextId].title,
@@ -30,14 +31,15 @@ function mapStateToProps(state, {match}) {
   }
 }
 
-const CaseElement = ({editing, model, id, next}) => {
+const CaseElement = ({reader, editing, model, id, next}) => {
+  if (!reader)  return <Redirect to="/" />
 
   var child
   switch (model) {
-    case undefined: return <Redirect to="/" />
     case 'pages': child = <Page id={id} />; break
     case 'podcasts': child = <Podcast id={id} />; break
     case 'activities': child = <div id={id} />; break
+    case undefined: return <Redirect to="/" />
   }
 
   return <div className={`window ${editing && 'editing'}`}>

@@ -19,10 +19,9 @@ const CaseOverview = ({editing, signInForm, reader}) => {
 }
 
 export default connect(
-  (state, ownProps) => ({
-    reader: {
-      ...ownProps.reader,
-      enrollment: state.caseData.reader && state.caseData.reader.enrollment,
-    },
+  state => ({
+    reader: state.caseData.reader,
+    signInForm: window.caseData.signInForm,
+    editing: state.edit.inProgress,
   })
 )(CaseOverview)

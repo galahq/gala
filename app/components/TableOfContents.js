@@ -24,11 +24,12 @@ function getElementDataFrom(state) {
 function mapStateToProps(state) {
   return {
     elements: state.caseData.caseElements.map(getElementDataFrom(state)),
+    disabled: !state.caseData.reader,
   }
 }
 
-const TableOfContents = ({elements}) =>
-  <nav className="c-toc">
+const TableOfContents = ({elements, disabled}) =>
+  <nav className={`c-toc ${disabled && "c-toc--disabled"}`}>
     <h3 className="c-toc__header"><FormattedMessage id="case.toc" /></h3>
     <ol className="c-toc__list">
       { elements.map( (e, i) =>
