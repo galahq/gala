@@ -45,7 +45,7 @@ class Case extends React.Component {
     return (
       <div id="Case">
         <StatusBar />
-        <Router basename={`/cases/${this.props.slug}`}>
+        <Router basename={this.props.basename}>
           <Switch>
             <Route path="/" exact component={CaseOverview} />
             <Route path="/:position" component={CaseElement} />
@@ -57,6 +57,11 @@ class Case extends React.Component {
 }
 
 export default connect(
-  (state) => ({slug: state.caseData.slug}),
+  (state) => ({
+    basename: location.pathname.replace(
+      RegExp(`${state.caseData.slug}.*`),
+      state.caseData.slug
+    ),
+  }),
   { parseAllCards, registerToaster, addComment, addCommentThread },
 )(Case)
