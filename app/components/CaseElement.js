@@ -24,7 +24,7 @@ function mapStateToProps(state, {match}) {
     editing: state.edit.inProgress,
     next: next && {
       title: state[`${nextModel}ById`][nextId].title,
-      position: next && (position + 2),
+      position: (position + 2),
     },
     id: parseInt(idString, 10),
     model,
