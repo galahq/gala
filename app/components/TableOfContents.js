@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 
 import Icon from './Icon.js'
 
@@ -46,4 +46,4 @@ const TableOfContents = ({elements}) =>
     </ol>
   </nav>
 
-export default connect(mapStateToProps)(TableOfContents)
+export default withRouter(connect(mapStateToProps)(TableOfContents))

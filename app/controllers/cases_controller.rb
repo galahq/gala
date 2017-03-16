@@ -57,7 +57,8 @@ class CasesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_case
-      @case = Case.where(slug: params[:slug]).includes(
+      slug = params[:slug] || params[:case_slug]
+      @case = Case.where(slug: slug).includes(
         :podcasts,
         :edgenotes,
         pages: [:cards],

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import BillboardTitle from 'BillboardTitle.js'
 import { FormattedMessage } from 'react-intl'
 import TableOfContents from 'TableOfContents.js'
@@ -14,8 +14,7 @@ function mapStateToProps(state) {
   }
 }
 
-const Sidebar = ({commentThreadsOpen, commentsOpen, readerEnrolled, slug,
-  pageTitles, selectedPage, didSave}) => {
+const Sidebar = ({commentThreadsOpen, commentsOpen, readerEnrolled}) => {
 
   const _getClassNames = () => {
     let n = []
@@ -39,4 +38,4 @@ const Sidebar = ({commentThreadsOpen, commentsOpen, readerEnrolled, slug,
 </aside>
 }
 
-export default connect(mapStateToProps)(Sidebar)
+export default withRouter(connect(mapStateToProps)(Sidebar))

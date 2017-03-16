@@ -148,7 +148,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
 
         <div className="credits" onClick={this.toggleCredits.bind(this)} >
           <h1>
-            <EditableText disabled={!editing} value={title} />
+            <EditableText disabled={!editing} multiline value={title} />
           </h1>
 
           {this.renderHosts()}

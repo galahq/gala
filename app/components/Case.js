@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { HashRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import { parseAllCards, registerToaster, addComment,
   addCommentThread } from 'redux/actions.js'
@@ -45,7 +45,7 @@ class Case extends React.Component {
     return (
       <div id="Case">
         <StatusBar />
-        <Router>
+        <Router basename={`/cases/${this.props.slug}`}>
           <Switch>
             <Route path="/" exact component={CaseOverview} />
             <Route path="/:position" component={CaseElement} />
@@ -57,6 +57,6 @@ class Case extends React.Component {
 }
 
 export default connect(
-  undefined,
+  (state) => ({slug: state.caseData.slug}),
   { parseAllCards, registerToaster, addComment, addCommentThread },
 )(Case)

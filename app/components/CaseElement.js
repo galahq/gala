@@ -31,12 +31,13 @@ function mapStateToProps(state, {match}) {
 }
 
 const CaseElement = ({editing, model, id, next}) => {
+
   var child
   switch (model) {
     case undefined: return <Redirect to="/" />
     case 'pages': child = <Page id={id} />; break
     case 'podcasts': child = <Podcast id={id} />; break
-    case 'activities': child = <ActivityOverview activityId={id} />; break
+    case 'activities': child = <div id={id} />; break
   }
 
   return <div className={`window ${editing && 'editing'}`}>
