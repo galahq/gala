@@ -5,7 +5,7 @@ import { Redirect, Link } from 'react-router-dom'
 import Sidebar from 'Sidebar.js'
 import Page from 'Page.js'
 import Podcast from 'Podcast.js'
-import ActivityOverview from 'TableOfContents.js'
+import Activity from 'Activity.js'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -31,27 +31,37 @@ function mapStateToProps(state, {match}) {
   }
 }
 
-const CaseElement = ({reader, editing, model, id, next}) => {
-  if (!reader)  return <Redirect to="/" />
+class CaseElement extends React.Component {
 
-  var child
-  switch (model) {
-    case 'pages': child = <Page id={id} />; break
-    case 'podcasts': child = <Podcast id={id} />; break
-    case 'activities': child = <div id={id} />; break
-    case undefined: return <Redirect to="/" />
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.position !== this.props.match.params.position)
+      window.scrollTo(0, 0)
   }
 
-  return <div className={`window ${editing && 'editing'}`}>
-    <Sidebar />
-    <main>
-      <a id="top" />
+  render() {
+    const {reader, editing, model, id, next} = this.props
+    if (!reader)  return <Redirect to="/" />
 
-      { child }
+    var child
+    switch (model) {
+      case 'pages': child = <Page id={id} />; break
+      case 'podcasts': child = <Podcast id={id} />; break
+      case 'activities': child = <Activity id={id} />; break
+      case undefined: return <Redirect to="/" />
+    }
 
-      <NextLink next={next} />
-    </main>
-  </div>
+    return <div className={`window ${editing && 'editing'}`}>
+      <Sidebar />
+      <main>
+        <a id="top" />
+
+        { child }
+
+        <NextLink next={next} />
+      </main>
+    </div>
+  }
+
 }
 
 export default connect(mapStateToProps)(CaseElement)
