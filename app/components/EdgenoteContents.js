@@ -1,15 +1,23 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import {Trackable} from 'concerns/trackable.js'
-import {Link} from 'react-router'
+import {Link} from 'react-router-dom'
 import {ScrollLock} from 'ScrollLock.js'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
+
+function mapStateToProps(state, {match}) {
+  return {
+    edgenote: state.edgenotesBySlug[match.params.edgenoteSlug],
+    caseSlug: state.caseData.slug,
+  }
+}
 
 class EdgenoteContents extends Trackable {
   eventName() { return "visit_edgenote" }
 
   trackableArgs() { return {
-    edgenote_slug: this.props.params.edgenoteID,
-    case_slug: this.state.caseSlug
+    edgenote_slug: this.props.edgenote.slug,
+    case_slug: this.props.caseSlug
   } }
 
   constructor() {
@@ -32,24 +40,18 @@ class EdgenoteContents extends Trackable {
   }
 
   returnLink() {
-    if (this.props.params.selectedPage) {
-      let edit = this.props.didSave !== null ? "/edit" : ""
-      return `${edit}/${this.props.params.selectedPage}`
-    } else {
-      return `/edgenotes`
-    }
+    return `/${this.props.match.params.position}`
   }
 
   render() {
-    let didSave = this.props.didSave && this.didSave.bind(this)
     return (
       <div className="EdgenoteContents">
         <Link to={this.returnLink()} className="dismiss EdgenoteContents-dismiss">
           &nbsp;
         </Link>
         <aside className="EdgenoteContents-window">
-          <EdgenoteDisplay didSave={didSave} {...this.props.edgenotes[this.props.params.edgenoteID]} />
-          <EdgenoteSidebar didSave={didSave} {...this.props.edgenotes[this.props.params.edgenoteID]} />
+          <EdgenoteDisplay didSave={null} {...this.props.edgenote} />
+          <EdgenoteSidebar didSave={null} {...this.props.edgenote} />
         </aside>
       </div>
     )
@@ -57,7 +59,7 @@ class EdgenoteContents extends Trackable {
 
 }
 
-export default ScrollLock(EdgenoteContents, ".EdgenoteContents-window")
+export default connect(mapStateToProps)(ScrollLock(EdgenoteContents, ".EdgenoteContents-window"))
 
 class EdgenoteDisplay extends React.Component {
 

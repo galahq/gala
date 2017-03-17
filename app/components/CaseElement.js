@@ -1,11 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Redirect, Link } from 'react-router-dom'
+import { Route, Redirect, Link } from 'react-router-dom'
 
 import Sidebar from 'Sidebar.js'
 import Page from 'Page.js'
 import Podcast from 'Podcast.js'
 import Activity from 'Activity.js'
+import EdgenoteContents from 'EdgenoteContents.js'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -57,6 +58,7 @@ class CaseElement extends React.Component {
 
         { child }
 
+        <Route path={`/:position/edgenotes/:edgenoteSlug`} component={EdgenoteContents} />
         <NextLink next={next} />
       </main>
     </div>

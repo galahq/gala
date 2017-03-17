@@ -48,7 +48,7 @@ class Case extends React.Component {
         <Router basename={this.props.basename}>
           <Switch>
             <Route path="/" exact component={CaseOverview} />
-            <Route path="/:position" component={CaseElement} />
+            <Route path="/:position/" component={CaseElement} />
           </Switch>
         </Router>
       </div>
