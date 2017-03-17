@@ -24,30 +24,34 @@ body
   line-height: $serifLeading
   height: 100%
 
-h1, h2, h3, h4, h5, h6
-  margin-left: 0
-
-h1, h2, h3, h4, h5, h6
+.o-heading
   font-family: $headlineFont
-  font-weight: 600
 
-h1
-  font-size: 1.5em
-  line-height: 1.1em
+  &-one
+    font-size: 1.5em
+    line-height: 1.1em
 
-h2
-  font-size: 1.2em
-  line-height: 1.1em
-  margin-bottom: 0.8em
+  &-two
+    font-size: 1.2em
+    line-height: 1.1em
+    margin-bottom: 0.8em
 
-h3
-  font-size: 1em
+  &-three
+    font-size: 1em
+    line-height: 1.35em
+    margin: 1em 0
 
-h5
-  font-style: italic
+  &-four
+    margin-bottom: 1.3em
 
-h6
-  font-size: 0.9em
+  &-five
+    font-style: italic
+
+  &-six
+    font-size: 0.9em
+
+p
+  margin-bottom: 1em
 
 ul, ol
   padding-left: 1em
