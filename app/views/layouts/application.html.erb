@@ -18,7 +18,7 @@
 
   <body>
     <header>
-      <%= link_to root_path, class: "logo" do %>
+      <%= link_to root_path, id: "logo" do %>
         <%= inline_svg 'msc-logo.svg' %>
       <% end %>
       <% if reader_signed_in? %>
