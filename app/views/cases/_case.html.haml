@@ -11,9 +11,9 @@
       .catalog-case-unpublished-banner
         =t '.forthcoming'
   .catalog-case-credits
-    %h3.o-catalog__kicker=c.kicker
-    %h2.o-catalog__case-title=c.title
-    %p.o-catalog__case-info{style: c.featured? ? "" : "display: none"}
+    %h3=c.kicker
+    %h2=c.title
+    %p{style: c.featured? ? "" : "display: none"}
       - unless c.dek.blank?
         = c.dek
       - else
