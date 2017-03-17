@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {Trackable} from 'concerns/trackable.js'
-import {Link} from 'react-router-dom'
 import {ScrollLock} from 'ScrollLock.js'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
 
@@ -12,24 +11,30 @@ function mapStateToProps(state, {match}) {
   }
 }
 
-class EdgenoteContents extends Trackable {
+class EdgenoteContents extends React.Component {
   eventName() { return "visit_edgenote" }
 
   trackableArgs() { return {
     edgenote_slug: this.props.edgenote.slug,
-    case_slug: this.props.caseSlug
+    case_slug: this.props.caseSlug,
   } }
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    this._handleDismiss = () => {
+      if (props.location.state && props.location.state.internalLink) {
+        props.history.goBack()
+      } else {
+        props.history.push(`/${props.match.params.position}`)
+      }
+    }
   }
 
   componentDidMount() {
-    super.componentDidMount()
     $(document).on('keydown', (e) => {
       if (e.which === 27) {
         $(document).off('keydown')
-        this.props.history.push(this.returnLink())
+        this._handleDismiss()
       }
     })
   }
@@ -39,16 +44,15 @@ class EdgenoteContents extends Trackable {
     this.parseContentsFromJSON(newData)
   }
 
-  returnLink() {
-    return `/${this.props.match.params.position}`
+  handleDismiss() {
   }
 
   render() {
     return (
       <div className="EdgenoteContents">
-        <Link to={this.returnLink()} className="dismiss EdgenoteContents-dismiss">
+        <a onClick={this._handleDismiss} className="dismiss EdgenoteContents-dismiss">
           &nbsp;
-        </Link>
+        </a>
         <aside className="EdgenoteContents-window">
           <EdgenoteDisplay didSave={null} {...this.props.edgenote} />
           <EdgenoteSidebar didSave={null} {...this.props.edgenote} />

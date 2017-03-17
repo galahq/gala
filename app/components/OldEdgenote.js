@@ -15,7 +15,12 @@ const mapStateToProps = (state, {match, slug}) => {
     selected: slug === state.ui.highlightedEdgenote,
     active: slug === state.ui.activeEdgenote,
     editing: state.edit.inProgress,
-    pathPrefix: match.url,
+    location: {
+      pathname: `${match.url || ''}/edgenotes/${slug}`,
+      state: {
+        internalLink: true,
+      },
+    },
   }
 }
 
@@ -39,7 +44,7 @@ class OldEdgenoteFigure extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.active && this.props.active) {
-      window.location.hash = `#${this.props.pathPrefix || ""}/edgenotes/${this.props.slug}`
+      this.props.history.push(this.props.location)
       setTimeout(() => {this.props.deactivate()}, 300)
     }
   }
@@ -52,13 +57,11 @@ class OldEdgenoteFigure extends React.Component {
   }
 
   renderEdgenote() {
-    let {selected, contents, slug, pathPrefix, editing, upgrade} = this.props
+    let {selected, contents, editing, upgrade} = this.props
     let {caption, format, statistics, thumbnailUrl, style} = contents
     let className = this.className()
 
-    const linkDestination = style === "v2" || editing
-      ? pathPrefix
-      : `${pathPrefix || ""}/edgenotes/${slug}`
+    const linkDestination = style === "v2" || editing ? {} : this.props.location
 
     return <Link
       to={linkDestination}
