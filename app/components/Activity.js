@@ -16,7 +16,7 @@ function mapStateToProps(state, {id}) {
   }
 }
 
-const Activity = ({title, pdfUrl, description, editing}) =>
+const Activity = ({title, pdfUrl, description, editing, iconSlug}) =>
   <article>
     <section className="Page-meta">
       <h2>{title}</h2>
@@ -37,7 +37,8 @@ const Activity = ({title, pdfUrl, description, editing}) =>
       <aside className="c-activity__files">
         <figure className="c-activity__file">
           <a href={pdfUrl}>
-            <Icon className="c-activity__file__icon" filename="file" />
+            <Icon className="c-activity__file__icon"
+              filename={iconSlug || 'activity-text'} />
             <figcaption className="c-activity__file__name">
               {pdfUrl.split('/').slice(-1)}
             </figcaption>
