@@ -69,9 +69,9 @@ class Actions extends React.Component {
             />
             <FormattedMessage id="overview.listen" />
           </h2>
-          <h4 className="list-head">
+          <h3 className="list-head">
             <FormattedMessage id="overview.relatedPodcast" />
-          </h4>
+          </h3>
           <EditableList
             elements={list}
             ordered={false}

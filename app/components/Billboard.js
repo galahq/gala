@@ -26,12 +26,12 @@ const Billboard = ({
       value={baseCoverUrl} style={{color: '#EBEAE4'}}
     />
     <div className="Card BillboardSnippet pt-light">
-      <h3>
+      <p className="o-dek">
         <EditableText multiline value={dek} disabled={!editing}
           placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
           onChange={value => updateCase(slug, {dek: value})}
         />
-      </h3>
+      </p>
       <p>
         <EditableText multiline value={summary} disabled={!editing}
           placeholder="Summarize the case in a short paragraph."
