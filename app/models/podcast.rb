@@ -2,7 +2,7 @@ class Podcast < ApplicationRecord
   include Authority::Abilities
 
   belongs_to :case
-  has_one :case_element, as: :element
+  has_one :case_element, as: :element, dependent: :destroy
 
   translates :title, :audio_url, :description, :credits
 

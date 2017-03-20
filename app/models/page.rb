@@ -2,7 +2,7 @@ class Page < ApplicationRecord
   include Authority::Abilities
 
   belongs_to :case
-  has_one :case_element, as: :element
+  has_one :case_element, as: :element, dependent: :destroy
 
   has_many :cards, -> { order position: :asc }, dependent: :destroy
   translates :title
