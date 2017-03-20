@@ -9,13 +9,14 @@ import { ItemTypes } from 'concerns/dndConfig.js'
 import TableOfContentsElement from 'TableOfContentsElement.js'
 
 
-const TableOfContents = ({elements, disabled, connectDropTarget}) =>
+const TableOfContents = ({elements, disabled, connectDropTarget, readOnly}) =>
   <nav className={`c-toc ${disabled && "c-toc--disabled"}`}>
     <h3 className="c-toc__header"><FormattedMessage id="case.toc" /></h3>
     { connectDropTarget(
       <ol className="c-toc__list">
         { elements.map((element) =>
-          <TableOfContentsElement element={element} key={element.id} />
+          <TableOfContentsElement element={element} key={element.id}
+          readOnly={readOnly}/>
         ) }
       </ol>
     ) }

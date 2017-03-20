@@ -28,7 +28,7 @@ const Sidebar = ({commentThreadsOpen, commentsOpen, readerEnrolled}) => {
       <FormattedMessage id="case.backToOverview" />
     </Link>
     <BillboardTitle minimal />
-    <TableOfContents />
+    <TableOfContents readOnly />
 
   { readerEnrolled || <div style={{paddingTop: '1em'}}>
     <EnrollForm />

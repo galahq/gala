@@ -23,24 +23,22 @@ function getElementDataFrom(state) {
 
 
 const TableOfContentsElement = ({position, element, connectDragSource,
-  connectDropTarget, isDragging}) =>
-  connectDragSource(connectDropTarget(
-    <div className="c-toc__draggable">
+  connectDropTarget, isDragging, editing}) =>
       <NavLink className="c-toc__link"
         activeClassName="c-toc__link--active"
         to={`/${position}`}
         style={{opacity: isDragging ? 0 : 1}}
       >
+        { connectDragSource(connectDropTarget(
         <li className="c-toc__item">
           <div className="c-toc__item-data">
-            <div className="c-toc__number">{position}</div>
+            <div className="c-toc__number">{editing ? ": : :" : position}</div>
             <div className="c-toc__title">{element.title}</div>
             <div className="c-toc__icon">{element.typeIcon}</div>
           </div>
         </li>
+        )) }
       </NavLink>
-    </div>
-  ))
 
 const DraggableTableOfContentsElement = DropTarget(
   ItemTypes.CASE_ELEMENT,
@@ -63,6 +61,9 @@ const DraggableTableOfContentsElement = DropTarget(
   DragSource(
     ItemTypes.CASE_ELEMENT,
     {
+      canDrag(props) {
+        return props.editing && !props.readOnly
+      },
       beginDrag(props) {
         return {
           id: props.id,
@@ -99,6 +100,7 @@ export default withRouter(
         const { caseElements } = state.caseData
         return { element, index: caseElements.findIndex(e => e.id === id) }
       },
+      editing: state.edit.inProgress,
     }),
     { updateCaseElement, persistCaseElementReordering },
   )(DraggableTableOfContentsElement)
