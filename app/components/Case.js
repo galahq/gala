@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import DocumentTitle from 'react-document-title'
 
 import { parseAllCards, registerToaster, addComment,
   addCommentThread } from 'redux/actions.js'
@@ -43,21 +44,24 @@ class Case extends React.Component {
 
   render() {
     return (
-      <div id="Case">
-        <StatusBar />
-        <Router basename={this.props.basename}>
-          <Switch>
-            <Route path="/" exact component={CaseOverview} />
-            <Route path="/:position/" component={CaseElement} />
-          </Switch>
-        </Router>
-      </div>
+      <DocumentTitle title={`${this.props.kicker} — Michigan Sustainability Cases`}>
+        <div id="Case">
+          <StatusBar />
+          <Router basename={this.props.basename}>
+            <Switch>
+              <Route path="/" exact component={CaseOverview} />
+              <Route path="/:position/" component={CaseElement} />
+            </Switch>
+          </Router>
+        </div>
+      </DocumentTitle>
     )
   }
 }
 
 export default connect(
   (state) => ({
+    kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),
       state.caseData.slug

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect, Link } from 'react-router-dom'
+import DocumentTitle from 'react-document-title'
 
 import Sidebar from 'Sidebar.js'
 import Page from 'Page.js'
@@ -21,6 +22,7 @@ function mapStateToProps(state, {match}) {
   const [nextModel, nextId] = next ? next.split('/') : []
 
   return {
+    kicker: state.caseData.kicker,
     reader: state.caseData.reader,
     editing: state.edit.inProgress,
     next: next && {
@@ -28,6 +30,7 @@ function mapStateToProps(state, {match}) {
       position: (position + 2),
     },
     id: parseInt(idString, 10),
+    title: state[`${model}ById`][idString].title,
     model,
   }
 }
@@ -40,7 +43,7 @@ class CaseElement extends React.Component {
   }
 
   render() {
-    const {reader, editing, model, id, next} = this.props
+    const {kicker, title, reader, editing, model, id, next} = this.props
     if (!reader)  return <Redirect to="/" />
 
     var child
@@ -56,7 +59,9 @@ class CaseElement extends React.Component {
       <main>
         <a id="top" />
 
-        { child }
+        <DocumentTitle title={`${kicker} — ${title} — Michigan Sustainability Cases`}>
+          { child }
+        </DocumentTitle>
 
         <Route path={`/:position/edgenotes/:edgenoteSlug`} component={EdgenoteContents} />
         <NextLink next={next} />
