@@ -16,26 +16,26 @@
   line-height: 1.2em
 
 .BillboardTitle
-  h3
-    font-size: 0.9em
-    text-transform: uppercase
-    letter-spacing: 1px
-    color: $white
-    font-family: $sansFont
-    line-height: 1.35
-    margin-bottom: 0.4em
   h2
     font-size: 1.5em
     color: $white
-    font-family: $headlineFont
     line-height: 1.1
     margin-bottom: 0.4em
+    span
+      display: block
+      font-size: 0.6em
+      text-transform: uppercase
+      letter-spacing: 1px
+      font-family: $sansFont
+      margin-bottom: 0.4em
   p
+    font-weight: 500
+    margin-top: 0.5em
     color: $white
     margin-bottom: 1.3em
     font-size: 0.97em
     line-height: 110%
-    font-family: $headlineFont
+    font-family: $sansFont
 
   &:first-child
     margin-top: -0.5em
@@ -124,9 +124,6 @@
   text-transform: uppercase
   font-weight: 500
   letter-spacing: 0.6px
-
-.catalog-case h6, .BillboardTitle h6
-  text-align: left
 
 .catalog-case
   +flexbox

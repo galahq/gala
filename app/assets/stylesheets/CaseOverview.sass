@@ -17,13 +17,6 @@
 
     margin: 1em
 
-    h1
-      font-size: 1.5em
-      color: $white
-      font-family: $headlineFont
-      line-height: 1.1
-      margin-bottom: 0.4em
-
     .Card.BillboardSnippet
       margin-top: 1.5em !important
       padding: 1em 2em
@@ -31,8 +24,12 @@
       @media screen and (max-width: $mobileCutoff)
         padding: 1em
 
-      h3
+      p.o-dek
         font-style: italic
+        font-family: $headlineFont
+        font-size: 1em
+        font-weight: 600
+        margin: 1em 0
 
   .CaseOverviewRight
     +flex($fg: 0, $fs: 1, $fb: 25em)
@@ -58,11 +55,16 @@
 
       h2
         color: $white
+        font-size: 1.2em
+        margin-top: 1em
 
         .ActionIcon
           float: left
-          margin-top: -5px
+          margin-top: -8px
           margin-right: 0.5em
+
+      h3
+        font-size: 1em
 
       & > div
         margin-top: 2em
@@ -78,19 +80,17 @@
   padding-top: 10em
 
   h1
+    font-size: 1.5em
     color: $white
-    margin: 0
-    width: 100%
     line-height: 1.1
-
-  h4
-    font-family: $sansFont
-    font-weight: 500
-    font-size: 1em
-    color: $white
-    width: 100%
-    margin-top: 0.5em
-    line-height: 1.1
+    margin-bottom: 0.4em
+    span
+      display: block
+      font-size: 0.6em
+      text-transform: uppercase
+      letter-spacing: 1px
+      font-family: $sansFont
+      margin-bottom: 0.6em
 
 .BillboardTitle,
 .PodcastPlayer .artwork,
