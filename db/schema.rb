@@ -21,10 +21,10 @@ ActiveRecord::Schema.define(version: 20170315190528) do
     t.hstore   "description_i18n"
     t.hstore   "pdf_url_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "position"
-    t.string   "icon_slug"
+    t.string   "icon_slug",        default: "activity-text"
     t.index ["case_id"], name: "index_activities_on_case_id", using: :btree
   end
 
