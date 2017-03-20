@@ -13,24 +13,25 @@ import { FormattedMessage } from 'react-intl'
 
 function mapStateToProps(state, {match}) {
   const position = parseInt(match.params.position, 10) - 1
-  const uri = state.caseData.caseElements[position]
-  if (!uri)  return {}
+  const element = state.caseData.caseElements[position]
+  if (!element)  return {}
 
-  const [model, idString] = uri.split('/')
+  const {elementType: model, elementId, elementStore} = element
 
-  const next = state.caseData.caseElements[position + 1]
-  const [nextModel, nextId] = next ? next.split('/') : []
+  const nextElement = state.caseData.caseElements[position + 1]
+  const {elementId: nextElementId, elementStore: nextElementStore} = nextElement
+    ? nextElement : {}
 
   return {
     kicker: state.caseData.kicker,
     reader: state.caseData.reader,
     editing: state.edit.inProgress,
-    next: next && {
-      title: state[`${nextModel}ById`][nextId].title,
+    next: nextElement && {
+      title: state[nextElementStore][nextElementId].title,
       position: (position + 2),
     },
-    id: parseInt(idString, 10),
-    title: state[`${model}ById`][idString].title,
+    title: state[elementStore][elementId].title,
+    id: elementId,
     model,
   }
 }
@@ -48,9 +49,9 @@ class CaseElement extends React.Component {
 
     var child
     switch (model) {
-      case 'pages': child = <Page id={id} />; break
-      case 'podcasts': child = <Podcast id={id} />; break
-      case 'activities': child = <Activity id={id} />; break
+      case 'Page': child = <Page id={id} />; break
+      case 'Podcast': child = <Podcast id={id} />; break
+      case 'Activity': child = <Activity id={id} />; break
       case undefined: return <Redirect to="/" />
     }
 
