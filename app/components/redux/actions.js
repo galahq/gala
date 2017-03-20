@@ -111,6 +111,25 @@ function setReaderEnrollment(enrollment) {
   return {type: SET_READER_ENROLLMENT, enrollment}
 }
 
+export const UPDATE_CASE_ELEMENT = "UPDATE_CASE_ELEMENT"
+export function updateCaseElement(id, index) {
+  return {type: UPDATE_CASE_ELEMENT, id, index}
+}
+
+export const UPDATE_CASE_ELEMENTS = "UPDATE_CASE_ELEMENTS"
+function updateCaseElements(caseData) {
+  return {type: UPDATE_CASE_ELEMENTS, data: caseData}
+}
+export function persistCaseElementReordering(id, index) {
+  return async dispatch => {
+    let caseElements = await Orchard.espalier(
+      `case_elements/${id}`,
+      { case_element: { position: index + 1 } }
+    )
+    dispatch(updateCaseElements({caseElements}))
+  }
+}
+
 // PAGE
 //
 export const UPDATE_PAGE = "UPDATE_PAGE"

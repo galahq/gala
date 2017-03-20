@@ -1,8 +1,12 @@
 import { combineReducers } from 'redux'
 
+import update from 'react/lib/update'
+
 import {
   UPDATE_CASE,
   SET_READER_ENROLLMENT,
+  UPDATE_CASE_ELEMENT,
+  UPDATE_CASE_ELEMENTS,
   UPDATE_PAGE,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
@@ -24,6 +28,7 @@ function caseData(state, action) {
   switch (action.type) {
 
     case UPDATE_CASE:
+    case UPDATE_CASE_ELEMENTS:
       return {
         ...state,
         ...action.data,
@@ -37,6 +42,18 @@ function caseData(state, action) {
           enrollment: action.enrollment,
         },
       }
+
+    case UPDATE_CASE_ELEMENT:
+      const originalIndex = state.caseElements.findIndex( x => x.id === action.id )
+
+      return update(state, {
+        caseElements: {
+          $splice: [
+            [originalIndex, 1],
+            [action.index, 0, state.caseElements[originalIndex]],
+          ],
+        },
+      })
 
     default: return state
 

@@ -1,50 +1,41 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { NavLink, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import HTML5Backend from 'react-dnd-html5-backend'
+import { DropTarget, DragDropContext } from 'react-dnd'
 
-import Icon from './Icon.js'
+import { ItemTypes } from 'concerns/dndConfig.js'
+import TableOfContentsElement from 'TableOfContentsElement.js'
 
-function getElementDataFrom(state) {
-  return (uri, i) => {
-    const [model, id] = uri.split('/')
-    const element = state[`${model}ById`][id]
 
-    var typeIcon = element.iconSlug && <Icon filename={element.iconSlug} />
-
-    return {
-      href: `/${i + 1}`,
-      typeIcon,
-      model,
-      ...element,
-    }
-  }
-}
-
-function mapStateToProps(state) {
-  return {
-    elements: state.caseData.caseElements.map(getElementDataFrom(state)),
-    disabled: !state.caseData.reader,
-  }
-}
-
-const TableOfContents = ({elements, disabled}) =>
+const TableOfContents = ({elements, disabled, connectDropTarget}) =>
   <nav className={`c-toc ${disabled && "c-toc--disabled"}`}>
     <h3 className="c-toc__header"><FormattedMessage id="case.toc" /></h3>
-    <ol className="c-toc__list">
-      { elements.map( (e, i) =>
-        <NavLink className="c-toc__link" activeClassName="c-toc__link--active"
-          to={e.href}>
-          <li className="c-toc__item" key={e.href}>
-            <div className="c-toc__item-data">
-              <div className="c-toc__number">{i + 1}</div>
-              <div className="c-toc__title">{e.title}</div>
-              <div className="c-toc__icon">{e.typeIcon}</div>
-            </div>
-          </li>
-        </NavLink>
-      ) }
-    </ol>
+    { connectDropTarget(
+      <ol className="c-toc__list">
+        { elements.map((element) =>
+          <TableOfContentsElement element={element} key={element.id} />
+        ) }
+      </ol>
+    ) }
   </nav>
 
-export default withRouter(connect(mapStateToProps)(TableOfContents))
+const DragDropTableOfContents = DragDropContext(HTML5Backend)(
+  DropTarget(
+    ItemTypes.CASE_ELEMENT,
+    { drop: () => {} },
+    connect => ({ connectDropTarget: connect.dropTarget() })
+  )(
+    TableOfContents
+  )
+)
+
+export default withRouter(
+  connect(
+    state => ({
+      elements: state.caseData.caseElements,
+      disabled: !state.caseData.reader,
+    })
+  )(DragDropTableOfContents)
+)
