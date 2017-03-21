@@ -29,7 +29,7 @@ const BillboardTitle = ({ editing, slug, kicker, title, photoCredit, caseAuthors
 
   return <div className="BillboardTitle" style={background}>
     <h1>
-      <span>
+      <span className="c-kicker">
         <EditableText value={kicker} disabled={!editing || minimal}
           placeholder="Snappy kicker"
           onChange={value => updateCase(slug, {kicker: value})}

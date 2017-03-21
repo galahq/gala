@@ -64,6 +64,32 @@ blockquote
   line-height: 1.5em
   padding: 0 1em 0 1em
 
+.o-button
+  background: $darkPurple
+  border: 1px solid $darkPurple
+  color: $white
+  font: 600 80% $sansFont
+  letter-spacing: 0.1em
+  margin-top: 0.5em
+  padding: 0.5em 1em
+  width: auto
+  -webkit-hyphens: none
+  hyphens: none
+  white-space: normal
+  text-transform: uppercase
+  &:hover,
+  &:focus
+    background: darken($darkPurple, 10%)
+    cursor: pointer
+    outline: none
+  &-onlight
+    background-color: $purple
+    border: 1px solid $purple
+    &:hover,
+    &:focus
+      background-color: $darkPurple
+
+
 h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
 em, strong
   -webkit-font-feature-settings: "kern", "liga"

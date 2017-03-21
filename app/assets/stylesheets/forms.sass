@@ -9,8 +9,7 @@ form
   .error_explanation, .field_with_errors label
     color: $red
 
-label,
-input[type="submit"]
+label
   font: 600 80% $sansFont
   text-transform: uppercase
   letter-spacing: 0.05em
@@ -51,26 +50,6 @@ select
   &:after
     content: '▾'
 
-button,
-input[type="submit"]
-  font: 600 80% $sansFont
-  letter-spacing: 0.1em
-  background-color: $purple
-  color: $yellow
-  border: 1px solid $purple
-  width: 100%
-  padding: 0.3em 0.5em
-  margin-top: 0.5em
-  -webkit-hyphens: none
-  hyphens: none
-  white-space: normal
-
-  &:hover,
-  &:focus
-    background-color: $darkPurple
-    cursor: pointer
-    outline: none
-
 .button--subtle input
   background-color: transparent !important
   color: lighten($purple, 10%)
@@ -86,7 +65,6 @@ input[type="checkbox"]
 .devise
   form
     width: 20em
-    margin: 0.5em 0 1em 0
 
     #error_explanation
       h2
