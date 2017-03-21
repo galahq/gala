@@ -16,7 +16,7 @@ function mapStateToProps(state, ownProps) {
 const CommentThreadsTag = ({count, cardId, openCommentThreads,
                             acceptSelection}) =>
   <div
-    className="CommentThread__banner"
+    className="CommentThreads__banner"
     onClick={() => {
       openCommentThreads(cardId)
       count === 0 && acceptSelection()
