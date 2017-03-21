@@ -10,6 +10,7 @@ module ReadersHelper
       button_to "Remove", reader_role_path(reader, role),
         remote: true,
         method: :delete,
+        form_class: "button--subtle button--subtle--reverse",
         data: { role_id: role.id }
     else
       button_to "Make #{role.name}", reader_roles_path(reader),

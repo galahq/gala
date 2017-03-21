@@ -51,12 +51,35 @@ select
     content: '▾'
 
 .button--subtle input
-  background-color: transparent !important
+  background: transparent
+  border: solid 1px lighten($purple, 10%)
   color: lighten($purple, 10%)
-
-  &:hover
+  font: 600 80% $sansFont
+  letter-spacing: 0.1em
+  margin-top: 0.5em
+  padding: 0.3em 0.5em
+  width: auto
+  -webkit-hyphens: none
+  hyphens: none
+  white-space: normal
+  text-transform: uppercase
+  transition: background-color 0.1s
+  &:hover,
+  &:focus
     color: lighten($purple, 20%)
     border-color: $purple
+    cursor: pointer
+    outline: none
+
+.button--subtle--reverse input
+  background: $purple
+  color: $white
+  border: $purple
+  padding: 0.6em 1.5em
+  &:hover,
+  &:focus
+    background: darken($purple, 5%)
+    color: white
 
 input[type="checkbox"]
   bottom: 1px
