@@ -43,7 +43,7 @@ class Page extends Trackable {
     return (
       <article>
         <section className="Page-meta">
-          <h2 key={`h2:${id}`}>
+          <h2 className="o-heading-two" key={`h2:${id}`}>
             <EditableText placeholder="Page title" value={title}
               multiline
               disabled={!editing}
@@ -90,4 +90,3 @@ export default connect(mapStateToProps, { updatePage })(Page)
   //})
 
 //}
-
