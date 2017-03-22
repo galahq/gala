@@ -23,7 +23,7 @@ function getElementDataFrom(state) {
 
 
 const TableOfContentsElement = ({position, element, connectDragSource,
-  connectDropTarget, isDragging, editing}) =>
+  connectDropTarget, isDragging, editing, readOnly}) =>
       <NavLink className="c-toc__link"
         activeClassName="c-toc__link--active"
         to={`/${position}`}
@@ -32,7 +32,9 @@ const TableOfContentsElement = ({position, element, connectDragSource,
         { connectDragSource(connectDropTarget(
         <li className="c-toc__item">
           <div className="c-toc__item-data">
-            <div className="c-toc__number">{editing ? ": : :" : position}</div>
+            <div className="c-toc__number">
+              {editing && !readOnly ? ": : :" : position}
+            </div>
             <div className="c-toc__title">{element.title}</div>
             <div className="c-toc__icon">{element.typeIcon}</div>
           </div>
