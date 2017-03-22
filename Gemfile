@@ -71,4 +71,6 @@ gem 'trasto'
 gem 'http_accept_language'
 gem 'i18n_generators'
 
+gem 'rack-canonical-host'
+
 ruby '2.3.1'
