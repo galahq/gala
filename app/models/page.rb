@@ -4,7 +4,7 @@ class Page < ApplicationRecord
   belongs_to :case
   has_one :case_element, as: :element, dependent: :destroy
 
-  has_many :cards, -> { order position: :asc }, dependent: :destroy
+  has_many :cards, -> { order position: :asc }, as: :element, dependent: :destroy
   translates :title
 
   include Trackable

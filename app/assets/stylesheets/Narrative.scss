@@ -134,6 +134,10 @@ article {
   }
 }
 
+.s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child {
+  margin-top: 0;
+}
+
 .nonCard {
   position: relative;
   a:not([data-edgenote]):hover {

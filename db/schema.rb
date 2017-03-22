@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170315190528) do
+ActiveRecord::Schema.define(version: 20170321164420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,11 @@ ActiveRecord::Schema.define(version: 20170315190528) do
     t.datetime "updated_at",                      null: false
     t.boolean  "solid",            default: true
     t.hstore   "raw_content_i18n"
+    t.string   "element_type"
+    t.integer  "element_id"
+    t.integer  "case_id"
+    t.index ["case_id"], name: "index_cards_on_case_id", using: :btree
+    t.index ["element_type", "element_id"], name: "index_cards_on_element_type_and_element_id", using: :btree
     t.index ["page_id"], name: "index_cards_on_page_id", using: :btree
   end
 
@@ -272,6 +277,7 @@ ActiveRecord::Schema.define(version: 20170315190528) do
   end
 
   add_foreign_key "activities", "cases"
+  add_foreign_key "cards", "cases"
   add_foreign_key "cards", "pages"
   add_foreign_key "case_elements", "cases"
   add_foreign_key "comment_threads", "cards"

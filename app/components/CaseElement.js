@@ -55,9 +55,9 @@ class CaseElement extends React.Component {
       case undefined: return <Redirect to="/" />
     }
 
-    return <div className={`window ${editing && 'editing'}`}>
+    return <div className={`window ${editing ? 'editing' : ""}`}>
       <Sidebar />
-      <main>
+      <main className={`s-CaseElement__${model}`}>
         <a id="top" />
 
         <DocumentTitle title={`${kicker} — ${title} — Michigan Sustainability Cases`}>

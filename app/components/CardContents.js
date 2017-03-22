@@ -29,7 +29,7 @@ const mapStateToProps = (state, ownProps) => {
   const commentThreadsOpen = ownProps.id === state.ui.commentThreadsOpenForCard
 
   return {
-    commentable: state.caseData.commentable && !!state.caseData.reader.enrollment,
+    commentable: !ownProps.nonNarrative && state.caseData.commentable && !!state.caseData.reader.enrollment,
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     readOnly: !((state.edit.inProgress && !openedCitation.key)
@@ -152,7 +152,7 @@ class CardContents extends React.Component {
     let {id, solid, editable, editing, onChange,
       handleKeyCommand, onDelete, openedCitation, addCommentThread,
       commentThreadsOpen, hoveredCommentThread, selectedCommentThread, readOnly,
-      commentable} = this.props
+      commentable, title} = this.props
     let {editorState} = this.state
 
     let citationOpenWithinCard
@@ -176,6 +176,7 @@ class CardContents extends React.Component {
     >
 
       {editing && <EditorToolbar cardId={id} />}
+      {title}
       <Editor ref={ed => this.editor = ed}
         readOnly={readOnly}
         customStyleMap={styleMap}

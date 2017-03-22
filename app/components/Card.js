@@ -74,7 +74,7 @@ class Card extends Trackable {
   render() {
     return (
       <section>
-        <CardContents id={this.props.id} didSave={this.props.didSave} />
+        <CardContents id={this.props.id} />
         <EdgenotesCard
           cardId={this.props.id}
         />

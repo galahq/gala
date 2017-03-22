@@ -2,12 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import {Trackable} from 'concerns/trackable.js'
 import Animate from 'react-animate'
-import Sidebar from 'Sidebar.js'
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
-import {EditableHTML} from 'Editable.js'
 import EditableAttribute from 'EditableAttribute.js'
 import Statistics from 'Statistics.js'
+import CardContents from 'CardContents.js'
 
 function mapStateToProps(state, {id}) {
   return {
@@ -19,20 +18,15 @@ function mapStateToProps(state, {id}) {
 
 class Podcast extends React.Component {
   render() {
-    let description = {__html: this.props.podcast.description}
     let {podcast, slug, editing} = this.props
-    let {id} = podcast
+    let {cardId} = podcast
 
     return (
       <div className="Podcast">
         <PodcastPlayer editing={editing} slug={slug} {...podcast} />
 
         <div className="PodcastInfo">
-          <EditableHTML uri={`podcasts/${id}:description`} placeholder="<!-- HTML podcast description -->">
-            <div className="Card"
-              dangerouslySetInnerHTML={description}
-            />
-          </EditableHTML>
+          <CardContents id={cardId} nonNarrative />
         </div>
       </div>
     )

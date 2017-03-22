@@ -1,11 +1,14 @@
 class Card < ApplicationRecord
   before_save :set_solidity_from_contents
+  before_save :set_case_from_element
 
   include Authority::Abilities
 
+  belongs_to :case
+
   has_many :comment_threads, -> { order(:block_index, :start) }
-  belongs_to :page
-  acts_as_list scope: :page
+  belongs_to :element, polymorphic: true
+  acts_as_list scope: [:element_id, :element_type]
 
   translates :content, :raw_content
 
@@ -18,8 +21,8 @@ class Card < ApplicationRecord
     { card_id: id }
   end
 
-  def case
-    page.case
+  def set_case_from_element
+    self.case = element.case if element_id
   end
 
   def set_solidity_from_contents

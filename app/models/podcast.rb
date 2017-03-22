@@ -3,6 +3,7 @@ class Podcast < ApplicationRecord
 
   belongs_to :case
   has_one :case_element, as: :element, dependent: :destroy
+  has_one :card, as: :element, dependent: :destroy
 
   translates :title, :audio_url, :description, :credits
 
