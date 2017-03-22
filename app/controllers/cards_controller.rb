@@ -17,8 +17,6 @@ class CardsController < ApplicationController
   end
 
   def update
-    @card.set_solidity_from_contents
-
     if @card.update(card_params)
       render @card
     else
