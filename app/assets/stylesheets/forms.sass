@@ -17,38 +17,39 @@ label
 .field em
   font: 400 80% $sansFont
 
-select,
-input[type="text"],
-input[type="date"],
-input[type="email"],
-input[type="password"],
-textarea
-  font: 80% $sansFont
-  color: inherit
-  border: 0.1em solid $darkPurple
-  width: calc(100% - 1em)
-  height: 1.8em
-  padding: 0.1em 0.5em
-  margin-bottom: 0.5em
-  width: 100%
+.edit_reader, .new_reader, .enrollments-section
+  select,
+  input[type="text"],
+  input[type="date"],
+  input[type="email"],
+  input[type="password"],
+  textarea
+    font: 80% $sansFont
+    color: inherit
+    border: 0.1em solid $darkPurple
+    width: calc(100% - 1em)
+    height: 1.8em
+    padding: 0.1em 0.5em
+    margin-bottom: 0.5em
+    width: 100%
 
-  &:disabled
-    background-color: mix(white, $white, 50%)
+    &:disabled
+      background-color: mix(white, $white, 50%)
 
-  &:focus
-    border-color: $purple
-    outline: none
+    &:focus
+      border-color: $purple
+      outline: none
 
-select
-  width: 100%
-  height: 2em
-  background: white
-  -moz-appearance: none
-  -webkit-appearance: none
-  border-radius: 0px
+  select
+    width: 100%
+    height: 2em
+    background: white
+    -moz-appearance: none
+    -webkit-appearance: none
+    border-radius: 0px
 
-  &:after
-    content: '▾'
+    &:after
+      content: '▾'
 
 .button--subtle
   background: transparent
