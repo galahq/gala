@@ -1,0 +1,156 @@
+@import _globals
+@import _flexbox
+@import _tint_and_shade
+
+@font-face
+  font-family: "aleo"
+  src: font-url("aleo-regular-webfont.woff") format("woff")
+
+body
+  overflow-x: hidden
+
+html, body, div#Case
+  height: 100%
+
+div#container
+  height: calc(100% - 70px - 1em)
+
+body
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  background-color: $umichBlue
+  margin: 0
+  font: $serifFontSize $sansFont
+  line-height: $serifLeading
+  height: 100%
+
+h1, h2, h3, h4, h5, h6
+  margin-left: 0
+
+h1, h2, h3, h4, h5, h6
+  font-family: $headlineFont
+  font-weight: 600
+
+h1
+  font-size: 1.5em
+  line-height: 1.0em
+
+h2
+  font-size: 1.2em
+
+h3
+  font-size: 1em
+
+h5
+  font-style: italic
+
+h6
+  font-size: 0.9em
+
+ul, ol
+  padding-left: 1em
+
+blockquote
+  font-size: 0.90em
+  line-height: 1.5em
+  padding: 0 1em 0 1em
+
+h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
+em, strong
+  -webkit-font-feature-settings: "kern", "liga"
+  font-feature-settings: "kern", "liga"
+
+strong
+  font-weight: inherit
+  letter-spacing: 1px
+  font-feature-settings: "smcp"
+  -webkit-font-feature-settings: "smcp"
+
+.loading-icon
+  +flex($fg: 0, $fs: 0)
+
+  +justify-content(center)
+
+  svg
+    -webkit-animation-name: spin
+    -webkit-animation-duration: 1000ms
+    -webkit-animation-iteration-count: infinite
+    -webkit-animation-timing-function: linear
+    -moz-animation-name: spin
+    -moz-animation-duration: 1000ms
+    -moz-animation-iteration-count: infinite
+    -moz-animation-timing-function: linear
+    -ms-animation-name: spin
+    -ms-animation-duration: 1000ms
+    -ms-animation-iteration-count: infinite
+    -ms-animation-timing-function: linear
+    animation-name: spin
+    animation-duration: 1000ms
+    animation-iteration-count: infinite
+    animation-timing-function: linear
+    transform-origin: 53% 53% 0px
+
+.loading-icon + .loading-icon
+  display: none
+
+@-ms-keyframes spin
+  from
+    -ms-transform: rotate(0deg)
+
+  to
+    -ms-transform: rotate(360deg)
+
+@-moz-keyframes spin
+  from
+    -moz-transform: rotate(0deg)
+
+  to
+    -moz-transform: rotate(360deg)
+
+@-webkit-keyframes spin
+  from
+    -webkit-transform: rotate(0deg)
+
+  to
+    -webkit-transform: rotate(360deg)
+
+@keyframes spin
+  from
+    transform: rotate(0deg)
+
+  to
+    transform: rotate(360deg)
+
+.dialog
+  background-color: $white
+  border: 0.5em solid $purple
+  padding: 1em
+  color: $darkPurple
+
+  h1, h2, h3, h4, h5, h6, p, a
+    font-size: 17px
+    font-family: $sansFont
+
+    &:first-child
+      margin-top: 0
+
+    &:last-child
+      margin-bottom: 0
+
+  h1, h2
+    text-transform: uppercase
+    letter-spacing: 0.03em
+
+a
+  cursor: pointer
+
+.disabled
+  pointer-events: none
+
+sup, sub
+  vertical-align: baseline
+  position: relative
+  top: -0.4em
+
+sub
+  top: 0.4em

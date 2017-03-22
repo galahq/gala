@@ -1,0 +1,51 @@
+@import _globals
+
+.admin-menu
+  a:hover
+    background-color: transparent
+    color: $lightGreen
+
+  &-first ul
+    margin: 0
+    background-color: tint($umichBlue, 10%)
+
+    li
+      display: inline-block
+      padding: 1em
+
+div.window.window-admin
+  justify-content: flex-start
+  padding-top: 0
+
+  nav
+    flex: 0 0 12em
+    background-color: tint($umichBlue, 15%)
+    height: auto
+
+    ul
+      list-style: none
+      margin: 0
+      padding: 1em 1em 1em 2em
+
+    li
+      padding: 1em
+
+  main
+    color: $white
+    padding: 1em 2em
+
+    thead
+      font-weight: 500
+
+    td
+      padding: 0.5em 1em
+
+.admin-case-slug
+  text-align: right
+
+tbody .admin-case-slug
+  font-size: 11pt !important
+  font-family: "fira-mono" !important
+
+.admin-case-date--forthcoming
+  opacity: 0.6
