@@ -22,7 +22,7 @@
       = f.email_field :email, tabindex: 3
 
     .actions
-      = f.submit t('.save')
+      = f.submit t('.save'), class: "o-button o-button-onlight"
 
     - if @reader.provider.blank?
       %p=link_to t('devise.registrations.edit.change_my_password'), edit_reader_registration_path

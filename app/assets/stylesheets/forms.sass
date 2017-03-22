@@ -50,7 +50,7 @@ select
   &:after
     content: '▾'
 
-.button--subtle input
+.button--subtle
   background: transparent
   border: solid 1px lighten($purple, 10%)
   color: lighten($purple, 10%)
@@ -71,15 +71,15 @@ select
     cursor: pointer
     outline: none
 
-.button--subtle--reverse input
-  background: $purple
-  color: $white
-  border: $purple
-  padding: 0.6em 1.5em
-  &:hover,
-  &:focus
-    background: darken($purple, 5%)
-    color: white
+  &--reverse
+    background: $purple
+    color: $white
+    border: $purple
+    padding: 0.6em 1.5em
+    &:hover,
+    &:focus
+      background: darken($purple, 5%)
+      color: white
 
 input[type="checkbox"]
   bottom: 1px
