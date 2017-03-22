@@ -5,7 +5,7 @@ class AddCardToPodcastAndActivity < ActiveRecord::Migration[5.0]
     reversible do |dir|
       dir.up do
         Card.where.not(page_id: nil).each do |card|
-          card.update element_id: card.page_id, element_type: "Page"
+          card.update_columns element_id: card.page_id, element_type: "Page"
         end
         Podcast.all.each do |podcast|
           podcast.create_card content_i18n: podcast.description_i18n
