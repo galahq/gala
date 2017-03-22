@@ -36,7 +36,7 @@ async function saveModel(endpoint, state) {
   let data
   switch (model) {
     case 'cases': {
-      let {published, kicker, title, dek, slug, photoCredit, summary,
+      const {published, kicker, title, dek, slug, photoCredit, summary,
         baseCoverUrl} = state.caseData
       data = {
         case: {
@@ -48,7 +48,7 @@ async function saveModel(endpoint, state) {
       break
 
     case 'cards': {
-      let {editorState} = state.cardsById[id]
+      const {editorState} = state.cardsById[id]
       data = {
         card: {
           rawContent:
@@ -99,7 +99,7 @@ export function updateCase(slug, data) {
 
 export function enrollReader(readerId, caseSlug) {
   return async (dispatch) => {
-    let enrollment = await Orchard.espalier(
+    const enrollment = await Orchard.espalier(
       `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
     )
     dispatch(setReaderEnrollment(enrollment))
@@ -122,7 +122,7 @@ function updateCaseElements(caseData) {
 }
 export function persistCaseElementReordering(id, index) {
   return async dispatch => {
-    let caseElements = await Orchard.espalier(
+    const caseElements = await Orchard.espalier(
       `case_elements/${id}`,
       { case_element: { position: index + 1 } }
     )
@@ -132,11 +132,61 @@ export function persistCaseElementReordering(id, index) {
 
 // PAGE
 //
+export const ADD_PAGE = "ADD_PAGE"
+function addPage(data) {
+  return {type: ADD_PAGE, data}
+}
+
+export function createPage(caseSlug) {
+  return async dispatch => {
+    const data = await Orchard.graft(
+      `cases/${caseSlug}/pages`,
+      {}
+    )
+    dispatch(addPage(data))
+  }
+}
+
 export const UPDATE_PAGE = "UPDATE_PAGE"
 export function updatePage(id, data) {
   setUnsaved()
   return {type: UPDATE_PAGE, id, data}
 }
+
+// PODCAST
+//
+export const ADD_PODCAST = "ADD_PODCAST"
+function addPodcast(data) {
+  return {type: ADD_PODCAST, data}
+}
+
+export function createPodcast(caseSlug) {
+  return async dispatch => {
+    const data = await Orchard.graft(
+      `cases/${caseSlug}/podcasts`,
+      {}
+    )
+    dispatch(addPodcast(data))
+  }
+}
+
+// ACTIVITY
+//
+export const ADD_ACTIVITY = "ADD_ACTIVITY"
+function addActivity(data) {
+  return {type: ADD_ACTIVITY, data}
+}
+
+export function createActivity(caseSlug) {
+  return async dispatch => {
+    const data = await Orchard.graft(
+      `cases/${caseSlug}/activities`,
+      {}
+    )
+    dispatch(addActivity(data))
+  }
+}
+
 
 // CARD
 //
@@ -196,7 +246,7 @@ export function createCommentThread(cardId, editorState) {
 
     const originalHighlightText = blocks[blockIndex].getText().slice(start, end)
 
-    let newCommentThread = await Orchard.graft(`cards/${cardId}/comment_threads`, {
+    const newCommentThread = await Orchard.graft(`cards/${cardId}/comment_threads`, {
       commentThread: { blockIndex, start, length, originalHighlightText },
     })
 

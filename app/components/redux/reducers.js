@@ -8,11 +8,16 @@ import {
   UPDATE_CASE_ELEMENT,
   UPDATE_CASE_ELEMENTS,
   UPDATE_PAGE,
+  UPDATE_PODCAST,
+  UPDATE_ACTIVITY,
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
   ADD_COMMENT_THREAD,
   REMOVE_COMMENT_THREAD,
   ADD_COMMENT,
+  ADD_PAGE,
+  ADD_PODCAST,
+  ADD_ACTIVITY,
 } from './actions.js'
 
 import cardsById from './reducers/cards.js'
@@ -55,6 +60,18 @@ function caseData(state, action) {
         },
       })
 
+    case ADD_PAGE:
+    case ADD_PODCAST:
+    case ADD_ACTIVITY:
+      const {caseElement} = action.data
+      return {
+        ...state,
+        caseElements: [
+          ...state.caseElements,
+          caseElement,
+        ],
+      }
+
     default: return state
 
   }
@@ -92,16 +109,57 @@ function pagesById(state = {...window.caseData.pages}, action) {
           ...action.data,
         },
       }
+
+    case ADD_PAGE:
+      return {
+        ...state,
+        [action.data.id]: action.data,
+      }
+
     default: return state
   }
 }
 
-function podcastsById(state = {...window.caseData.podcasts}) {
-  return state
+function podcastsById(state = {...window.caseData.podcasts}, action) {
+  switch (action.type) {
+    case UPDATE_PODCAST:
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          ...action.data,
+        },
+      }
+
+    case ADD_PODCAST:
+      return {
+        ...state,
+        [action.data.id]: action.data,
+      }
+
+    default: return state
+  }
 }
 
-function activitiesById(state = {...window.caseData.activities}) {
-  return state
+function activitiesById(state = {...window.caseData.activities}, action) {
+  switch (action.type) {
+    case UPDATE_ACTIVITY:
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          ...action.data,
+        },
+      }
+
+    case ADD_ACTIVITY:
+      return {
+        ...state,
+        [action.data.id]: action.data,
+      }
+
+    default: return state
+  }
 }
 
 function commentThreadsById(

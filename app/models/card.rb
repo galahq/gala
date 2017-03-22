@@ -9,6 +9,8 @@ class Card < ApplicationRecord
 
   translates :content, :raw_content
 
+  before_save :set_case_from_element
+
   include Trackable
   def event_name
     'read_card'
@@ -18,4 +20,8 @@ class Card < ApplicationRecord
     { card_id: id }
   end
 
+  private
+  def set_case_from_element
+    self.case = element.case if element
+  end
 end
