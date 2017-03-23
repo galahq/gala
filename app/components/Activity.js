@@ -2,10 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import Icon from 'Icon.js'
+import {EditableText} from '@blueprintjs/core'
 import EditableAttribute from 'EditableAttribute.js'
 import CardContents from 'CardContents.js'
 
 import { FormattedMessage } from 'react-intl'
+import { updateActivity } from 'redux/actions.js'
 
 function mapStateToProps(state, {id}) {
   const activity = state.activitiesById[id]
@@ -16,10 +18,16 @@ function mapStateToProps(state, {id}) {
   }
 }
 
-const Activity = ({title, pdfUrl, cardId, editing, iconSlug}) =>
+const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity}) =>
   <article>
     <section className="Page-meta">
-      <h2>{title}</h2>
+      <h2>
+        <EditableText placeholder="Activity title" value={title}
+          multiline
+          disabled={!editing}
+          onChange={value => updateActivity(id, { title: value })}
+        />
+      </h2>
     </section>
     <section>
       <CardContents id={cardId} nonNarrative title={
@@ -42,11 +50,15 @@ const Activity = ({title, pdfUrl, cardId, editing, iconSlug}) =>
       </aside>
     </section>
     <section className="c-activity__attributes pt-dark">
-      <EditableAttribute disabled={!editing} title="Icon Slug"
-        value={iconSlug} />
+      {
+        //<EditableAttribute disabled={!editing} title="Icon Slug"
+          //onChange={v => updateActivity(id, {iconSlug: v})}
+          //value={iconSlug} />
+      }
       <EditableAttribute disabled={!editing} title="Download URL"
+        onChange={v => updateActivity(id, {pdfUrl: v})}
         value={pdfUrl} />
     </section>
   </article>
 
-export default connect(mapStateToProps)(Activity)
+export default connect(mapStateToProps, {updateActivity})(Activity)

@@ -69,6 +69,33 @@ async function saveModel(endpoint, state) {
     }
       break
 
+    case 'podcasts': {
+      const {credits, title, artworkUrl, audioUrl,
+        photoCredit} = state.podcastsById[id]
+      data = {
+        podcast: {
+          credits: JSON.stringify(credits),
+          title,
+          artworkUrl,
+          audioUrl,
+          photoCredit,
+        },
+      }
+    }
+      break
+
+    case 'activities': {
+      const {title, pdfUrl, iconSlug} = state.activitiesById[id]
+      data = {
+        activity: {
+          title,
+          pdfUrl,
+          iconSlug,
+        },
+      }
+    }
+      break
+
     case 'edgenotes': {
       data = { edgenote: state.edgenotesBySlug[id] }
     }
@@ -184,6 +211,12 @@ export function createPodcast(caseSlug) {
   }
 }
 
+export const UPDATE_PODCAST = "UPDATE_PODCAST"
+export function updatePodcast(id, data) {
+  setUnsaved()
+  return {type: UPDATE_PODCAST, id, data}
+}
+
 // ACTIVITY
 //
 export const ADD_ACTIVITY = "ADD_ACTIVITY"
@@ -201,6 +234,11 @@ export function createActivity(caseSlug) {
   }
 }
 
+export const UPDATE_ACTIVITY = "UPDATE_ACTIVITY"
+export function updateActivity(id, data) {
+  setUnsaved()
+  return {type: UPDATE_ACTIVITY, id, data}
+}
 
 // CARD
 //

@@ -8,13 +8,13 @@ import EnrollForm from 'EnrollForm.js'
 const CaseOverview = ({editing, signInForm, reader}) => {
   return <div id="CaseOverview" className={`window ${editing && 'editing'}`}>
     <Billboard />
-      <aside className="CaseOverviewRight">
-        { signInForm !== undefined
-          ? <div className="dialog" dangerouslySetInnerHTML={{__html: signInForm}} />
-          : (!reader.enrollment ? <EnrollForm /> : null)
-        }
-        <TableOfContents />
-      </aside>
+    <aside className="CaseOverviewRight">
+      { signInForm !== undefined
+        ? <div className="dialog" dangerouslySetInnerHTML={{__html: signInForm}} />
+        : (!reader.enrollment ? <EnrollForm /> : null)
+      }
+      <TableOfContents />
+    </aside>
   </div>
 }
 

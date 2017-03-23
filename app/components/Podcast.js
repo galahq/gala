@@ -7,6 +7,7 @@ import { EditableText } from '@blueprintjs/core'
 import EditableAttribute from 'EditableAttribute.js'
 import Statistics from 'Statistics.js'
 import CardContents from 'CardContents.js'
+import { updatePodcast } from 'redux/actions.js'
 
 function mapStateToProps(state, {id}) {
   return {
@@ -18,12 +19,12 @@ function mapStateToProps(state, {id}) {
 
 class Podcast extends React.Component {
   render() {
-    let {podcast, slug, editing} = this.props
+    let {podcast, slug, editing, updatePodcast} = this.props
     let {cardId} = podcast
 
     return (
       <div className="Podcast">
-        <PodcastPlayer editing={editing} slug={slug} {...podcast} />
+        <PodcastPlayer {...{editing, slug, updatePodcast}} {...podcast} />
 
         <div className="PodcastInfo">
           <CardContents id={cardId} nonNarrative />
@@ -33,7 +34,7 @@ class Podcast extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(Podcast)
+export default connect(mapStateToProps, {updatePodcast})(Podcast)
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
   eventName() { return "visit_podcast" }
@@ -92,7 +93,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
   setPlaying() {
     this.setState({
       playing: true,
-      timeArrived: Date.now()
+      timeArrived: Date.now(),
     })
     if (this.state.creditsVisible) {
       this.hideCredits()
@@ -102,7 +103,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
     this.setState({
       playing: false,
       durationSoFar: this.timeSinceArrival(),
-      timeArrived: Date.now()
+      timeArrived: Date.now(),
     })
   }
 
@@ -125,24 +126,29 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
   }
 
   render() {
-    let {id, title, artworkUrl, audioUrl, photoCredit, didSave, statistics, editing} = this.props
+    let {id, title, artworkUrl, audioUrl, photoCredit, statistics, editing,
+      updatePodcast} = this.props
     return (
       <div className="PodcastPlayer" >
 
         <div className="artwork" style={{backgroundImage: `url(${artworkUrl})`}} >
           <EditableAttribute title="Artwork URL"
             value={artworkUrl}
+            onChange={v => updatePodcast(id, { artworkUrl: v})}
             disabled={!editing} />
 
           <cite className="o-bottom-right c-photo-credit">
             <EditableText disabled={!editing} multiline value={photoCredit}
+              onChange={v => updatePodcast(id, { photoCredit: v})}
               placeholder="Photo credit" />
           </cite>
         </div>
 
         <div className="credits" onClick={this.toggleCredits.bind(this)} >
           <h1>
-            <EditableText disabled={!editing} multiline value={title} />
+            <EditableText disabled={!editing} multiline value={title}
+              onChange={v => updatePodcast(id, { title: v})}
+            />
           </h1>
 
           {this.renderHosts()}
@@ -160,6 +166,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
 
       <div>
         <EditableAttribute disabled={!editing} title="Audio URL"
+          onChange={v => updatePodcast(id, { audioUrl: v})}
           value={audioUrl} />
       </div>
 

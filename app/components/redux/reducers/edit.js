@@ -4,6 +4,8 @@ import {
   UPDATE_CASE,
   UPDATE_CARD_CONTENTS,
   UPDATE_PAGE,
+  UPDATE_PODCAST,
+  UPDATE_ACTIVITY,
   UPDATE_EDGENOTE,
 } from '../actions.js'
 
@@ -62,6 +64,26 @@ function edit(state, action) {
         unsavedChanges: {
           ...state.unsavedChanges,
           [`pages/${action.id}`]: true,
+        },
+      }
+
+    case UPDATE_PODCAST:
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          [`podcasts/${action.id}`]: true,
+        },
+      }
+
+    case UPDATE_ACTIVITY:
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          [`activities/${action.id}`]: true,
         },
       }
 
