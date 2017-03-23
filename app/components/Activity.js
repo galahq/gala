@@ -18,7 +18,8 @@ function mapStateToProps(state, {id}) {
   }
 }
 
-const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity}) =>
+const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity,
+  deleteElement}) =>
   <article>
     <section className="Page-meta">
       <h2>
@@ -28,7 +29,13 @@ const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity}
           onChange={value => updateActivity(id, { title: value })}
         />
       </h2>
+        {editing && <button type="button"
+          onClick={deleteElement}
+          className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
+          Delete Podcast
+        </button>}
     </section>
+
     <section>
       <CardContents id={cardId} nonNarrative title={
         <h3 className="c-activity__instructions__title">
@@ -49,6 +56,7 @@ const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity}
         </figure>
       </aside>
     </section>
+
     <section className="c-activity__attributes pt-dark">
       {
         //<EditableAttribute disabled={!editing} title="Icon Slug"

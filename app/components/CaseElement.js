@@ -77,13 +77,11 @@ class CaseElement extends React.Component {
       <main className={`s-CaseElement__${model}`}>
         <a id="top" />
 
-        {editing && <button type="button"
-          onClick={() => {deleteElement(url, position) && history.push('/')} }
-          className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
-          Delete {model}
-        </button>}
         <DocumentTitle title={`${kicker} — ${title} — Michigan Sustainability Cases`}>
-          { child }
+          { React.cloneElement(child, {
+            deleteElement: () =>
+              {deleteElement(url, position) && history.push('/')},
+          } )}
         </DocumentTitle>
 
         <Route path={`/:position/edgenotes/:edgenoteSlug`} component={EdgenoteContents} />

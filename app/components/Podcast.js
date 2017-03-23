@@ -19,12 +19,14 @@ function mapStateToProps(state, {id}) {
 
 class Podcast extends React.Component {
   render() {
-    let {podcast, slug, editing, updatePodcast} = this.props
+    let {podcast, slug, editing, updatePodcast, deleteElement} = this.props
     let {cardId} = podcast
 
     return (
       <div className="Podcast">
-        <PodcastPlayer {...{editing, slug, updatePodcast}} {...podcast} />
+
+        <PodcastPlayer {...{editing, slug, updatePodcast, deleteElement}}
+          {...podcast} />
 
         <div className="PodcastInfo">
           <CardContents id={cardId} nonNarrative />
@@ -127,9 +129,14 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
 
   render() {
     let {id, title, artworkUrl, audioUrl, photoCredit, statistics, editing,
-      updatePodcast} = this.props
+      updatePodcast, deleteElement} = this.props
     return (
       <div className="PodcastPlayer" >
+        {editing && <button type="button"
+          onClick={deleteElement}
+          className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
+          Delete Podcast
+        </button>}
 
         <div className="artwork" style={{backgroundImage: `url(${artworkUrl})`}} >
           <EditableAttribute title="Artwork URL"

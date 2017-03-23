@@ -37,7 +37,8 @@ class Page extends Trackable {
   }
 
   render() {
-    let {id, title, position, cards, caseSlug, editing, updatePage} = this.props
+    let {id, title, position, cards, caseSlug, editing, updatePage,
+      deleteElement} = this.props
 
 
     return (
@@ -50,6 +51,11 @@ class Page extends Trackable {
               onChange={value => updatePage(id, { title: value })}
             />
           </h2>
+          {editing && <button type="button"
+            onClick={deleteElement}
+            className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
+            Delete Page
+          </button>}
         </section>
 
         { cards.map( (id, i) => [
