@@ -1,15 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, withRouter, matchPath } from 'react-router-dom'
 import BillboardTitle from 'BillboardTitle.js'
 import { FormattedMessage } from 'react-intl'
 import TableOfContents from 'TableOfContents.js'
 import EnrollForm from 'EnrollForm.js'
+import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
 
-function mapStateToProps(state) {
+function mapStateToProps(state, {location}) {
+  const {pathname} = location
+
   return {
-    commentThreadsOpen: !!state.ui.commentThreadsOpenForCard,
-    commentsOpen: !!state.ui.selectedCommentThread,
+    commentThreadsOpen: matchPath(pathname, commentThreadsOpen()),
+    commentsOpen: matchPath(pathname, commentsOpen()),
     readerEnrolled: !!state.caseData.reader.enrollment,
   }
 }

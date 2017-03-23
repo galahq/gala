@@ -58,14 +58,14 @@ export const styles = {
   },
 }
 
-export function getStyleMap({commentThreadsOpen, hoveredCommentThread,
+export function getStyleMap({theseCommentThreadsOpen, hoveredCommentThread,
                              selectedCommentThread}) {
   const hoveredCommentKey = `thread--${hoveredCommentThread}`
   const selectedCommentKey = `thread--${selectedCommentThread}`
   return {
     'BOLD': styles.smallCaps,
     'UNDERLINE': {},
-    'THREAD': commentThreadsOpen
+    'THREAD': theseCommentThreadsOpen
                 ? styles.lightPurpleUnderline
                 : styles.thinUnderline,
     [hoveredCommentKey]: styles.darkPurpleUnderline,

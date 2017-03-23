@@ -2,7 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
-import { openCommentThreads, acceptSelection } from 'redux/actions.js'
+import { acceptSelection } from 'redux/actions.js'
+
+import { Link } from 'react-router-dom'
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -13,12 +15,11 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-const CommentThreadsTag = ({count, cardId, openCommentThreads,
-                            acceptSelection}) =>
-  <div
+const CommentThreadsTag = ({match, count, cardId, acceptSelection}) =>
+  <Link
+    to={`${match.url}/cards/${cardId}/comments`} replace
     className="CommentThread__banner"
     onClick={() => {
-      openCommentThreads(cardId)
       count === 0 && acceptSelection()
     }}
   >
@@ -31,9 +32,9 @@ const CommentThreadsTag = ({count, cardId, openCommentThreads,
         }`}
         values={{count}} />
       : <FormattedMessage id="comments.respond" defaultMessage="Respond" /> }
-  </div>
+  </Link>
 
 export default connect(
   mapStateToProps,
-  {openCommentThreads, acceptSelection}
+  {acceptSelection}
 )(CommentThreadsTag)

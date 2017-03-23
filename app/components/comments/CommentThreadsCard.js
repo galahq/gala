@@ -13,20 +13,23 @@ import CommentThread from 'comments/CommentThread.js'
 import CommentsCard from 'comments/CommentsCard.js'
 import Icon from 'Icon.js'
 
-function mapStateToProps(state, ownProps) {
+import { Link, Route, matchPath } from 'react-router-dom'
+import { elementOpen, commentsOpen } from 'concerns/routes'
+
+function mapStateToProps(state, {cardId}) {
+
   return {
-    commentThreads: state.cardsById[ownProps.cardId].commentThreads,
+    commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
-    selectionPending: !state.cardsById[ownProps.cardId].editorState
+    selectionPending: !state.cardsById[cardId].editorState
       .getSelection().isCollapsed(),
-    commentThreadSelected: !!state.ui.selectedCommentThread,
   }
 }
 
 const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
-                            selectionPending, closeCommentThreads,
-                            commentThreadSelected, acceptSelection,
-                            addCommentThread}) => {
+                            selectionPending,
+                            acceptSelection,
+                            addCommentThread, location, match, history}) => {
   return <div className="CommentThreads">
     <div className={`CommentThreads__window`}>
       <div style={styles.header}>
@@ -52,6 +55,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
           key={thread.id}
           cardId={cardId}
           threadId={thread.id}
+          location={location} match={match} history={history}
           last={i === commentThreads.length - 1}
         />
         )}
@@ -79,11 +83,12 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
 
     {
       <Portal>
-        <div style={styles.backdrop} onClick={closeCommentThreads}/>
+        <Link to={matchPath(location.pathname, elementOpen()).url} replace
+          style={styles.backdrop} />
       </Portal>
     }
 
-    { commentThreadSelected && <CommentsCard /> }
+    <Route {...commentsOpen()} component={CommentsCard} />
   </div>
 
 }

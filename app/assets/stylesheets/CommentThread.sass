@@ -53,10 +53,14 @@
 
   padding: 0 0.5rem 0 0.4rem
   font-size: 70%
-  color: white
+  color: white !important
   background-color: $purple
   border-left: 0.35rem solid shade($purple, 30%)
   cursor: pointer
+
+  &:hover
+    background-color: $purple !important
+    text-decoration: none !important
 
 .CommentThread__icon-button
   display: flex

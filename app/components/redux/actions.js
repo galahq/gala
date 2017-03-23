@@ -303,7 +303,7 @@ export function createCommentThread(cardId, editorState) {
     })
 
     dispatch(addCommentThread(newCommentThread))
-    dispatch(selectCommentThread(newCommentThread.id))
+    return newCommentThread.id
   }
 }
 
