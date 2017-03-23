@@ -1,8 +1,8 @@
 import React from 'react'
 
 const LinkEntity = ({contentState, entityKey, children}) => {
-  let data = contentState.getEntity(entityKey).getData()
-  return <a {...data}>{children}</a>
+  let {href} = contentState.getEntity(entityKey).getData()
+  return <a href={href}>{children}</a>
 }
 
 export default LinkEntity
