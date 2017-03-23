@@ -11,16 +11,20 @@ import EdgenoteContents from 'EdgenoteContents.js'
 
 import { FormattedMessage } from 'react-intl'
 
+import {deleteElement} from 'redux/actions.js'
+
 function mapStateToProps(state, {match}) {
   const position = parseInt(match.params.position, 10) - 1
-  const element = state.caseData.caseElements[position]
-  if (!element)  return {}
+  const caseElement = state.caseData.caseElements[position]
+  if (!caseElement)  return {}
 
-  const {elementType: model, elementId, elementStore} = element
+  const {elementType: model, elementId, elementStore} = caseElement
 
   const nextElement = state.caseData.caseElements[position + 1]
   const {elementId: nextElementId, elementStore: nextElementStore} = nextElement
     ? nextElement : {}
+
+  const {title, url} = state[elementStore][elementId]
 
   return {
     kicker: state.caseData.kicker,
@@ -30,21 +34,34 @@ function mapStateToProps(state, {match}) {
       title: state[nextElementStore][nextElementId].title,
       position: (position + 2),
     },
-    title: state[elementStore][elementId].title,
     id: elementId,
+    url: url.substring(1),  // Because rails url_for helper returns /pages/:id
+    title,
     model,
+    position,
   }
 }
 
 class CaseElement extends React.Component {
+  constructor(props) {
+    super(props)
+    this._scrollToTop = () => window.scrollTo(0, 0)
+
+  }
+
+  componentDidMount() {
+    this._scrollToTop()
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.position !== this.props.match.params.position)
-      window.scrollTo(0, 0)
+      this._scrollToTop()
   }
 
   render() {
-    const {kicker, title, reader, editing, model, id, next} = this.props
+    const {kicker, title, reader, editing, model, id, next, url,
+      deleteElement, position, history} = this.props
+
     if (!reader)  return <Redirect to="/" />
 
     var child
@@ -60,6 +77,11 @@ class CaseElement extends React.Component {
       <main className={`s-CaseElement__${model}`}>
         <a id="top" />
 
+        {editing && <button type="button"
+          onClick={() => {deleteElement(url, position) && history.push('/')} }
+          className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
+          Delete {model}
+        </button>}
         <DocumentTitle title={`${kicker} — ${title} — Michigan Sustainability Cases`}>
           { child }
         </DocumentTitle>
@@ -72,7 +94,7 @@ class CaseElement extends React.Component {
 
 }
 
-export default connect(mapStateToProps)(CaseElement)
+export default connect(mapStateToProps, {deleteElement})(CaseElement)
 
 
 const NextLink = ({next}) => next

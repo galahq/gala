@@ -27,9 +27,9 @@ const TableOfContents = ({caseSlug, editing, elements, disabled,
     <h3 className="c-toc__header"><FormattedMessage id="case.toc" /></h3>
     { connectDropTarget(
       <ol className="c-toc__list">
-        { elements.map((element) =>
+        { elements.map((element, index) =>
           <TableOfContentsElement element={element} key={element.id}
-          readOnly={readOnly}/>
+            position={index + 1} readOnly={readOnly}/>
         ) }
         { editing && <div className="c-toc__actions pt-control-group">
           <button type="button" className="pt-button pt-icon-add pt-minimal"

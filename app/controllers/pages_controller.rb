@@ -24,9 +24,7 @@ class PagesController < ApplicationController
   end
 
   def destroy
-    @case = @page.case
     @page.destroy
-    render partial: 'cases/case', locals: {c: @case}
   end
 
   private

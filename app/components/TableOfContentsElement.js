@@ -95,8 +95,9 @@ const DraggableTableOfContentsElement = DropTarget(
 
 export default withRouter(
   connect(
-    (state, {element}) => ({
+    (state, {element, position}) => ({
       ...element,
+      position,
       element: getElementDataFrom(state)(element),
       findElement: (id) => {
         const { caseElements } = state.caseData

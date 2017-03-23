@@ -13,6 +13,7 @@ import {
   CREATE_EDGENOTE,
   UPDATE_EDGENOTE,
   ADD_COMMENT_THREAD,
+  REMOVE_ELEMENT,
   REMOVE_COMMENT_THREAD,
   ADD_COMMENT,
   ADD_PAGE,
@@ -69,6 +70,15 @@ function caseData(state, action) {
         caseElements: [
           ...state.caseElements,
           caseElement,
+        ],
+      }
+
+    case REMOVE_ELEMENT:
+      return {
+        ...state,
+        caseElements: [
+          ...state.caseElements.slice(0, action.position),
+          ...state.caseElements.slice(action.position + 1),
         ],
       }
 

@@ -130,6 +130,20 @@ export function persistCaseElementReordering(id, index) {
   }
 }
 
+export const REMOVE_ELEMENT = "REMOVE_ELEMENT"
+function removeElement(position) {
+  return {type: REMOVE_ELEMENT, position}
+}
+
+export function deleteElement(elementUrl, position) {
+  return async dispatch => {
+    if (window.confirm("Are you sure you want to delete this element? This action cannot be undone.")) {
+      await Orchard.prune(`${elementUrl}`)
+      dispatch(removeElement(position))
+    }
+  }
+}
+
 // PAGE
 //
 export const ADD_PAGE = "ADD_PAGE"

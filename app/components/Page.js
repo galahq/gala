@@ -50,7 +50,6 @@ class Page extends Trackable {
               onChange={value => updatePage(id, { title: value })}
             />
           </h2>
-          { editing && <a className="Page-delete-option">Delete page</a> }
         </section>
 
         { cards.map( (id, i) => [
