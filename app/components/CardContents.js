@@ -127,6 +127,7 @@ class CardContents extends React.Component {
     this.state = { editorState: props.editorState }
 
     this._shouldJiggle = (nextProps) => (
+      this.props.commentable !== nextProps.commentable ||
       this.props.theseCommentThreadsOpen !== nextProps.theseCommentThreadsOpen ||
       this.props.hoveredCommentThread !== nextProps.hoveredCommentThread ||
       this.props.selectedCommentThread !== nextProps.selectedCommentThread
@@ -173,8 +174,8 @@ class CardContents extends React.Component {
       citationOpenWithinCard = false
     }
 
-    const styleMap = getStyleMap({theseCommentThreadsOpen, hoveredCommentThread,
-      selectedCommentThread})
+    const styleMap = getStyleMap({commentable, theseCommentThreadsOpen,
+      hoveredCommentThread, selectedCommentThread})
 
     return <div
       ref={el => this.cardRef = el}

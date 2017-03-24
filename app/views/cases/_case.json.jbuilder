@@ -26,7 +26,7 @@ json.cards do
   end
 end
 
-if c.commentable && current_reader && current_reader.enrollment_for_case(c)
+if c.commentable && current_reader
 
   json.comment_threads do
     c.comment_threads.select { |x| x.visible_to_reader? current_reader }.each do |comment_thread|
