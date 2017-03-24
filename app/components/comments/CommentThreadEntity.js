@@ -1,11 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { openCommentThreads, selectCommentThread } from 'redux/actions.js'
+import { withRouter } from 'react-router-dom'
 
 function mapStateToProps(state, { contentState, children }) {
   let commentThreadId = getFirstThreadId(contentState, children[0])
+  let commentThread = state.commentThreadsById[commentThreadId]
   return {
-    cardId: state.commentThreadsById[commentThreadId].cardId,
+    cardId: commentThread && commentThread.cardId,
     disabled: state.ui.acceptingSelection,
     commentThreadId,
   }
@@ -13,14 +15,13 @@ function mapStateToProps(state, { contentState, children }) {
 
 function mergeProps(
   {cardId, commentThreadId, disabled},
-  {openCommentThreads, selectCommentThread},
-  {children}
+  {},
+  {children, history, match}
 ) {
   return {
     onClick: () => {
-      disabled ||
-      ( openCommentThreads(cardId) &&
-        selectCommentThread(parseInt(commentThreadId, 10)) )
+      !cardId || disabled ||
+        (history.replace(`${match.url}/cards/${cardId}/comments/${commentThreadId}`))
     },
     children: children.length > 0
       && React.cloneElement(children[0], {forceSelection: true}),
@@ -33,11 +34,11 @@ const CommentThreadEntity = ({ onClick, children }) => {
   </span>
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
-  { openCommentThreads, selectCommentThread },
+  {},
   mergeProps,
-)(CommentThreadEntity)
+)(CommentThreadEntity))
 
 function getFirstThreadId(contentState, leaf) {
   const styles = contentState.getBlockForKey(leaf.props.blockKey)

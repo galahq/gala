@@ -19,10 +19,10 @@ class ActivitiesController < ApplicationController
 
   # POST /activities
   def create
-    @activity = @case.activities.build(title: "New activity")
+    @activity = Activity.create_as_element @case, title: "New activity"
 
-    if @activity.save
-      render partial: 'cases/case', locals: {c: @case}
+    if @activity.persisted?
+      render @activity
     else
       render json: @activity.errors, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class ActivitiesController < ApplicationController
   # PATCH/PUT /activities/1
   def update
     if @activity.update(activity_params)
-      render partial: 'cases/case', locals: {c: @activity.case}
+      render @activity
     else
       render json: @activity.errors, status: :unprocessable_entity
     end

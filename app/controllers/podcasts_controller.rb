@@ -17,10 +17,10 @@ class PodcastsController < ApplicationController
 
   # POST /podcasts
   def create
-    @podcast = @case.podcasts.build(title: "New podcast")
+    @podcast = Podcast.create_as_element @case, title: "New podcast"
 
-    if @podcast.save
-      render partial: 'cases/case', locals: {c: @case}
+    if @podcast.persisted?
+      render @podcast
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class PodcastsController < ApplicationController
   # PATCH/PUT /podcasts/1
   def update
     if @podcast.update(podcast_params)
-      render partial: 'cases/case', locals: {c: @podcast.case}
+      render @podcast
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end

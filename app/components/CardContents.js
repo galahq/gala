@@ -22,25 +22,32 @@ import {
   createCommentThread,
 } from 'redux/actions.js'
 
-const mapStateToProps = (state, ownProps) => {
-  const { solid, statistics, editorState } = state.cardsById[ownProps.id]
-  const { openedCitation, hoveredCommentThread, selectedCommentThread,
-    acceptingSelection } = state.ui
-  const commentThreadsOpen = ownProps.id === state.ui.commentThreadsOpenForCard
+import { Route, withRouter, matchPath } from 'react-router-dom'
+import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
+
+const mapStateToProps = (state, {id, location, nonNarrative}) => {
+  const { solid, statistics, editorState } = state.cardsById[id]
+  const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
+
+  const {pathname} = location
+  const theseCommentThreadsOpen = matchPath(pathname, commentThreadsOpen(id))
+  const anyCommentThreadsOpen = matchPath(pathname, commentThreadsOpen())
+  const anyCommentsOpen = matchPath(pathname, commentsOpen())
+  const selectedCommentThread = anyCommentsOpen && anyCommentsOpen.params.commentThreadId
 
   return {
-    commentable: state.caseData.commentable && !!state.caseData.reader.enrollment,
+    commentable: !nonNarrative && state.caseData.commentable && !!state.caseData.reader.enrollment,
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     readOnly: !((state.edit.inProgress && !openedCitation.key)
       || acceptingSelection),
-    commentsOpen: !!selectedCommentThread,
-    anyCommentThreadsOpen: !!state.ui.commentThreadsOpenForCard,
+    anyCommentsOpen,
     openedCitation,
     acceptingSelection,
     hoveredCommentThread,
     selectedCommentThread,
-    commentThreadsOpen,
+    theseCommentThreadsOpen,
+    anyCommentThreadsOpen,
     solid,
     statistics,
     editorState,
@@ -84,6 +91,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const { editable, editorState } = stateProps
   const { onChangeContents, onMakeSelectionForComment,
     createCommentThread } = dispatchProps
+  const { history, location } = ownProps
 
   const onChange = editable ? onChangeContents : onMakeSelectionForComment
 
@@ -98,9 +106,12 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       return newState ? onChange(newState) && 'handled' : 'not-handled'
     },
 
-    addCommentThread: () => {
+    addCommentThread: async () => {
       if (!editable && !editorState.getSelection().isCollapsed()) {
-        createCommentThread(ownProps.id, editorState)
+        const threadId = await createCommentThread(ownProps.id, editorState)
+        history.replace(
+          `${matchPath(location.pathname, commentThreadsOpen()).url}/${threadId}`
+        )
       }
     },
   }
@@ -116,7 +127,8 @@ class CardContents extends React.Component {
     this.state = { editorState: props.editorState }
 
     this._shouldJiggle = (nextProps) => (
-      this.props.commentThreadsOpen !== nextProps.commentThreadsOpen ||
+      this.props.commentable !== nextProps.commentable ||
+      this.props.theseCommentThreadsOpen !== nextProps.theseCommentThreadsOpen ||
       this.props.hoveredCommentThread !== nextProps.hoveredCommentThread ||
       this.props.selectedCommentThread !== nextProps.selectedCommentThread
     )
@@ -125,7 +137,7 @@ class CardContents extends React.Component {
       let n = []
       n = [...n, this.props.solid ? 'Card' : 'nonCard']
       if (this.props.anyCommentThreadsOpen)  n = [...n, "has-comment-threads-open"]
-      if (this.props.commentsOpen)  n = [...n, "has-comments-open"]
+      if (this.props.anyCommentsOpen)  n = [...n, "has-comments-open"]
       if (this.props.acceptingSelection)  n = [...n, "accepting-selection"]
       if (this.props.commentable)  n = [...n, "commentable"]
       return n.join(' ')
@@ -151,8 +163,8 @@ class CardContents extends React.Component {
   render() {
     let {id, solid, editable, editing, onChange,
       handleKeyCommand, onDelete, openedCitation, addCommentThread,
-      commentThreadsOpen, hoveredCommentThread, selectedCommentThread, readOnly,
-      commentable} = this.props
+      theseCommentThreadsOpen, hoveredCommentThread, selectedCommentThread, readOnly,
+      commentable, title, match} = this.props
     let {editorState} = this.state
 
     let citationOpenWithinCard
@@ -162,20 +174,21 @@ class CardContents extends React.Component {
       citationOpenWithinCard = false
     }
 
-    const styleMap = getStyleMap({commentThreadsOpen, hoveredCommentThread,
-      selectedCommentThread})
+    const styleMap = getStyleMap({commentable, theseCommentThreadsOpen,
+      hoveredCommentThread, selectedCommentThread})
 
     return <div
       ref={el => this.cardRef = el}
       className={this._getClassNames()}
       style={{
         paddingTop: editing && '2em',
-        zIndex: commentThreadsOpen && 300,
+        zIndex: theseCommentThreadsOpen && 300,
         transition: "padding-top 0.1s, flex 0.3s",
       }}
     >
 
       {editing && <EditorToolbar cardId={id} />}
+      {title}
       <Editor ref={ed => this.editor = ed}
         readOnly={readOnly}
         customStyleMap={styleMap}
@@ -187,9 +200,12 @@ class CardContents extends React.Component {
         }}
       />
 
-      {commentable && solid && <CommentThreadsTag cardId={id} />}
-      { commentThreadsOpen && <CommentThreadsCard cardId={id}
-        addCommentThread={addCommentThread} /> }
+      {commentable && solid && <CommentThreadsTag cardId={id} match={match} />}
+
+      <Route {...commentThreadsOpen(id)} render={
+        (routeProps) => <CommentThreadsCard {...routeProps} cardId={id}
+        addCommentThread={addCommentThread} />
+      } />
 
       {
         citationOpenWithinCard && <CitationTooltip cardId={id}
@@ -203,11 +219,11 @@ class CardContents extends React.Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps
-)(CardContents)
+)(CardContents))
 
 function citationInsideThisCard(card, citation) {
   if (!card || !citation)  return false

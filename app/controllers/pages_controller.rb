@@ -6,9 +6,9 @@ class PagesController < ApplicationController
   authorize_actions_for Page
 
   def create
-    @page = @case.pages.build(title: "New page")
+    @page = Page.create_as_element @case, title: "New page"
 
-    if @page.save
+    if @page.persisted?
       render @page
     else
       render json: @page.errors, status: :unprocessable_entity
@@ -24,9 +24,7 @@ class PagesController < ApplicationController
   end
 
   def destroy
-    @case = @page.case
     @page.destroy
-    render partial: 'cases/case', locals: {c: @case}
   end
 
   private

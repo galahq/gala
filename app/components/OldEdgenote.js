@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Link} from 'react-router'
-import {Orchard} from 'concerns/orchard.js'
+import { Link, withRouter } from 'react-router-dom'
 import Statistics from 'Statistics.js'
 import {
   activateEdgenote,
@@ -10,12 +9,18 @@ import {
 
 const CONFIRMATION = "Are you sure you want to upgrade this edgenote to the new style? This cannot be undone. Note: it will not be displayed differently until all edgenotes for this card have been converted."
 
-const mapStateToProps = (state, {slug}) => {
+const mapStateToProps = (state, {match, slug}) => {
   return {
     contents: state.edgenotesBySlug[slug],
     selected: slug === state.ui.highlightedEdgenote,
     active: slug === state.ui.activeEdgenote,
     editing: state.edit.inProgress,
+    location: {
+      pathname: `${match.url || ''}/edgenotes/${slug}`,
+      state: {
+        internalLink: true,
+      },
+    },
   }
 }
 
@@ -39,13 +44,9 @@ class OldEdgenoteFigure extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.active && this.props.active) {
-      window.location.hash = `#${this.props.pathPrefix || ""}/edgenotes/${this.props.slug}`
+      this.props.history.push(this.props.location)
       setTimeout(() => {this.props.deactivate()}, 300)
     }
-  }
-
-  createEdgenote() {
-    Orchard.graft(`cases/${this.props.caseSlug}/edgenotes`, {slug: this.props.slug}).then(this.parseContentsFromJSON.bind(this))
   }
 
   className() {
@@ -56,13 +57,11 @@ class OldEdgenoteFigure extends React.Component {
   }
 
   renderEdgenote() {
-    let {selected, contents, slug, pathPrefix, editing, upgrade} = this.props
+    let {selected, contents, editing, upgrade} = this.props
     let {caption, format, statistics, thumbnailUrl, style} = contents
     let className = this.className()
 
-    const linkDestination = style === "v2" || editing
-      ? pathPrefix
-      : `${pathPrefix || ""}/edgenotes/${slug}`
+    const linkDestination = style === "v2" || editing ? {} : this.props.location
 
     return <Link
       to={linkDestination}
@@ -91,5 +90,4 @@ class OldEdgenoteFigure extends React.Component {
   }
 }
 
-const OldEdgenote = connect(mapStateToProps, mapDispatchToProps)(OldEdgenoteFigure)
-export default OldEdgenote
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(OldEdgenoteFigure))

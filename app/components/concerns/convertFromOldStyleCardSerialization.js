@@ -24,32 +24,36 @@ function convertFromOldStyleCardSerialization(content) {
    * <a title=":citeInnerText" target=":citeAnchorHref" href=`${CitationPrefix}`></a>
    */
 
-  let transformedContent = reencodeEdgenotes( reencodeCitations( content ) )
+  const transformedContent = reencodeEdgenotes( reencodeCitations( content ) )
 
-  let blocksFromHTML = convertFromHTML(transformedContent)
+  const blocksFromHTML = convertFromHTML(transformedContent)
   var convertedRawContent = convertToRaw(ContentState.createFromBlockArray(
     blocksFromHTML.contentBlocks,
     blocksFromHTML.entityMap
   ))
 
   Object.keys(convertedRawContent.entityMap).forEach((key) => {
-    let entity = convertedRawContent.entityMap[`${key}`]
-    let {url, title, target} = entity.data
+    const entity = convertedRawContent.entityMap[`${key}`]
+    const {url, title, target} = entity.data
 
+    let convertedEntity
     if ( url.startsWith(EdgenotePrefix) ) {
-      convertedRawContent.entityMap[`${key}`] = {
+      convertedEntity = {
         type: "EDGENOTE",
         mutability: "MUTABLE",
-        data: { slug: url.match(RegExp(EdgenotePrefix + '(.+)'))[1] }
+        data: { slug: url.match(RegExp(EdgenotePrefix + '(.+)'))[1] },
       }
     } else if ( url.startsWith(CitationPrefix) ) {
-      convertedRawContent.entityMap[`${key}`] = {
+      convertedEntity = {
         type: "CITATION",
         mutability: 'IMMUTABLE',
-        data: { href: target, contents: title }
+        data: { href: target, contents: title },
       }
+    } else {
+      convertedEntity = entity
     }
 
+    convertedRawContent.entityMap[`${key}`] = convertedEntity
   })
 
   return convertedRawContent

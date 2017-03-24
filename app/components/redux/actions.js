@@ -36,7 +36,7 @@ async function saveModel(endpoint, state) {
   let data
   switch (model) {
     case 'cases': {
-      let {published, kicker, title, dek, slug, photoCredit, summary,
+      const {published, kicker, title, dek, slug, photoCredit, summary,
         baseCoverUrl} = state.caseData
       data = {
         case: {
@@ -48,7 +48,7 @@ async function saveModel(endpoint, state) {
       break
 
     case 'cards': {
-      let {editorState} = state.cardsById[id]
+      const {editorState} = state.cardsById[id]
       data = {
         card: {
           rawContent:
@@ -64,6 +64,33 @@ async function saveModel(endpoint, state) {
         page: {
           title,
           position,
+        },
+      }
+    }
+      break
+
+    case 'podcasts': {
+      const {credits, title, artworkUrl, audioUrl,
+        photoCredit} = state.podcastsById[id]
+      data = {
+        podcast: {
+          credits: JSON.stringify(credits),
+          title,
+          artworkUrl,
+          audioUrl,
+          photoCredit,
+        },
+      }
+    }
+      break
+
+    case 'activities': {
+      const {title, pdfUrl, iconSlug} = state.activitiesById[id]
+      data = {
+        activity: {
+          title,
+          pdfUrl,
+          iconSlug,
         },
       }
     }
@@ -99,7 +126,7 @@ export function updateCase(slug, data) {
 
 export function enrollReader(readerId, caseSlug) {
   return async (dispatch) => {
-    let enrollment = await Orchard.espalier(
+    const enrollment = await Orchard.espalier(
       `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
     )
     dispatch(setReaderEnrollment(enrollment))
@@ -111,12 +138,106 @@ function setReaderEnrollment(enrollment) {
   return {type: SET_READER_ENROLLMENT, enrollment}
 }
 
+export const UPDATE_CASE_ELEMENT = "UPDATE_CASE_ELEMENT"
+export function updateCaseElement(id, index) {
+  return {type: UPDATE_CASE_ELEMENT, id, index}
+}
+
+export const UPDATE_CASE_ELEMENTS = "UPDATE_CASE_ELEMENTS"
+function updateCaseElements(caseData) {
+  return {type: UPDATE_CASE_ELEMENTS, data: caseData}
+}
+export function persistCaseElementReordering(id, index) {
+  return async dispatch => {
+    const caseElements = await Orchard.espalier(
+      `case_elements/${id}`,
+      { case_element: { position: index + 1 } }
+    )
+    dispatch(updateCaseElements({caseElements}))
+  }
+}
+
+export const REMOVE_ELEMENT = "REMOVE_ELEMENT"
+function removeElement(position) {
+  return {type: REMOVE_ELEMENT, position}
+}
+
+export function deleteElement(elementUrl, position) {
+  return async dispatch => {
+    if (window.confirm("Are you sure you want to delete this element? This action cannot be undone.")) {
+      await Orchard.prune(`${elementUrl}`)
+      dispatch(removeElement(position))
+    }
+  }
+}
+
 // PAGE
 //
+export const ADD_PAGE = "ADD_PAGE"
+function addPage(data) {
+  return {type: ADD_PAGE, data}
+}
+
+export function createPage(caseSlug) {
+  return async dispatch => {
+    const data = await Orchard.graft(
+      `cases/${caseSlug}/pages`,
+      {}
+    )
+    dispatch(addPage(data))
+  }
+}
+
 export const UPDATE_PAGE = "UPDATE_PAGE"
 export function updatePage(id, data) {
   setUnsaved()
   return {type: UPDATE_PAGE, id, data}
+}
+
+// PODCAST
+//
+export const ADD_PODCAST = "ADD_PODCAST"
+function addPodcast(data) {
+  return {type: ADD_PODCAST, data}
+}
+
+export function createPodcast(caseSlug) {
+  return async dispatch => {
+    const data = await Orchard.graft(
+      `cases/${caseSlug}/podcasts`,
+      {}
+    )
+    dispatch(addPodcast(data))
+  }
+}
+
+export const UPDATE_PODCAST = "UPDATE_PODCAST"
+export function updatePodcast(id, data) {
+  setUnsaved()
+  return {type: UPDATE_PODCAST, id, data}
+}
+
+// ACTIVITY
+//
+export const ADD_ACTIVITY = "ADD_ACTIVITY"
+function addActivity(data) {
+  return {type: ADD_ACTIVITY, data}
+}
+
+export function createActivity(caseSlug) {
+  return async dispatch => {
+    const data = await Orchard.graft(
+      `cases/${caseSlug}/activities`,
+      {}
+    )
+    dispatch(addActivity(data))
+  }
+}
+
+export const UPDATE_ACTIVITY = "UPDATE_ACTIVITY"
+export function updateActivity(id, data) {
+  setUnsaved()
+  return {type: UPDATE_ACTIVITY, id, data}
 }
 
 // CARD
@@ -177,12 +298,12 @@ export function createCommentThread(cardId, editorState) {
 
     const originalHighlightText = blocks[blockIndex].getText().slice(start, end)
 
-    let newCommentThread = await Orchard.graft(`cards/${cardId}/comment_threads`, {
+    const newCommentThread = await Orchard.graft(`cards/${cardId}/comment_threads`, {
       commentThread: { blockIndex, start, length, originalHighlightText },
     })
 
     dispatch(addCommentThread(newCommentThread))
-    dispatch(selectCommentThread(newCommentThread.id))
+    return newCommentThread.id
   }
 }
 
@@ -194,7 +315,6 @@ export function addCommentThread(data) {
 export function deleteCommentThread(threadId, cardId) {
   return async (dispatch) => {
     await Orchard.prune(`comment_threads/${threadId}`)
-    dispatch(selectCommentThread(null))
     dispatch(removeCommentThread(threadId, cardId))
   }
 }
@@ -204,26 +324,9 @@ function removeCommentThread(threadId, cardId) {
   return {type: REMOVE_COMMENT_THREAD, threadId, cardId}
 }
 
-export const OPEN_COMMENT_THREADS = "OPEN_COMMENT_THREADS"
-export function openCommentThreads(cardId) {
-  return {type: OPEN_COMMENT_THREADS, cardId}
-}
-
-export const SELECT_COMMENT_THREAD = "SELECT_COMMENT_THREAD"
-export function selectCommentThread(id) {
-  return {type: SELECT_COMMENT_THREAD, id}
-}
-
 export const HOVER_COMMENT_THREAD = "HOVER_COMMENT_THREAD"
 export function hoverCommentThread(id) {
   return {type: HOVER_COMMENT_THREAD, id}
-}
-
-export function closeCommentThreads() {
-  return dispatch => {
-    dispatch(openCommentThreads(null))
-    dispatch(selectCommentThread(null))
-  }
 }
 
 // COMMENT
@@ -287,4 +390,18 @@ export function registerToaster(toaster) {
 export const DISPLAY_TOAST = "DISPLAY_TOAST"
 export function displayToast(options) {
   return {type: DISPLAY_TOAST, options}
+}
+
+export const HANDLE_NOTIFICATION = "HANDLE_NOTIFICATION"
+export function handleNotification(notification) {
+  return dispatch => {
+    dispatch(displayToast({
+      message: notification.message,
+      intent: Intent.PRIMARY,
+      action: {
+        href: `/cases/${notification.case.slug}#/${notification.page.position}`,
+        text: 'Read',
+      },
+    }))
+  }
 }

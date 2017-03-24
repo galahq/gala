@@ -6,6 +6,9 @@ json.cover_url ix_cover_image(c, :billboard)
 json.translators translators_string c
 
 json.page_ids c.pages.map &:id
+json.case_elements c.case_elements do |case_element|
+  json.partial! case_element
+end
 
 json.pages do
   c.pages.each do |page|
@@ -23,7 +26,7 @@ json.cards do
   end
 end
 
-if c.commentable && current_reader && current_reader.enrollment_for_case(c)
+if c.commentable && current_reader
 
   json.comment_threads do
     c.comment_threads.select { |x| x.visible_to_reader? current_reader }.each do |comment_thread|
@@ -63,11 +66,20 @@ json.edgenotes do
   end
 end
 
-json.podcasts c.podcasts do |podcast|
-  json.partial! podcast
+json.podcasts do
+  c.podcasts.each do |podcast|
+    json.set! podcast.id do
+      json.partial! podcast
+    end
+  end
 end
-json.activities c.activities do |activity|
-  json.partial! activity
+
+json.activities do
+  c.activities.each do |activity|
+    json.set! activity.id do
+      json.partial! activity
+    end
+  end
 end
 
 if reader_signed_in?

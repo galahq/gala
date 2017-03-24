@@ -18,8 +18,10 @@
     margin: 1em
 
     .Card.BillboardSnippet
-      margin-top: 1.5em !important
-      padding: 1em 2em
+      border-top-left-radius: 0
+      border-top-right-radius: 0
+      border-top: 4px solid $lightGreen
+      padding: 0.75em 2em 1em 2em
 
       @media screen and (max-width: $mobileCutoff)
         padding: 1em
@@ -33,7 +35,6 @@
 
   .CaseOverviewRight
     +flex($fg: 0, $fs: 1, $fb: 25em)
-
     & > *
       margin: 1em
 

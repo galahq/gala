@@ -1,0 +1,105 @@
+@import _globals
+
+.c-toc
+  background-color: #1D2936
+  border-top: 4px solid $lightGreen
+  border-radius: 2pt
+  color: $white
+  display: flex
+  flex-direction: column
+  align-items: center
+
+  &__header
+    font-family: $sansFont
+    font-size: 13px
+    text-transform: uppercase
+    letter-spacing: 0.7px
+    margin: 1.5em 0 0.5em 0
+
+  &__list
+    list-style: none
+    font-size: 15px
+    line-height: 1.2
+    margin: 0
+    margin-bottom: 1em
+    padding: 0
+
+  &__link
+    color: $white
+    display: block
+    padding-left: 45px
+
+    &--active,
+    &:hover, &:focus
+      background-color: #29394A
+      color: $white
+
+
+  &__item
+    border-top: 1px solid rgba($white, .2)
+
+  &__item-data
+    margin-left: -45px
+    padding: 9px 0
+    display: flex
+    align-items: center
+    min-height: 22px
+
+  &__link:first-child &__item
+    border-top: none
+
+  &__number,
+  &__icon
+    flex: 0 0 45px
+    display: flex
+    justify-content: center
+    align-items: center
+    font-weight: 800
+
+    & > span
+      display: flex
+
+    & svg
+      height: 22px
+      g
+        fill: $white
+
+  &__icon
+    padding-right: 0.5em
+
+  &__title
+    flex-grow: 1
+
+  &__actions
+    padding: 12px 12px 0 12px
+
+#Sidebar
+  .c-toc
+    margin-top: 1em
+
+    &__header
+      margin: 1em 0 0.25em 0
+
+    &__link
+      padding-left: 40px
+
+    &__item-data
+      margin-left: -40px
+
+    &__number
+      flex: 0 0 40px
+
+    &__icon
+      flex: 0 0 33px
+      transform: scale(0.8)
+
+.c-toc--disabled
+  .c-toc
+    &__link
+      cursor: default
+      &:hover
+        background-color: transparent
+
+    &__item-data
+      opacity: 0.6
+

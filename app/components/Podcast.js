@@ -1,17 +1,49 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import {Trackable} from 'concerns/trackable.js'
 import Animate from 'react-animate'
-import Sidebar from 'Sidebar.js'
 import { FormattedMessage } from 'react-intl'
-import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
+import { EditableText } from '@blueprintjs/core'
+import EditableAttribute from 'EditableAttribute.js'
 import Statistics from 'Statistics.js'
+import CardContents from 'CardContents.js'
+import { updatePodcast } from 'redux/actions.js'
+
+function mapStateToProps(state, {id}) {
+  return {
+    podcast: state.podcastsById[id],
+    editing: state.edit.inProgress,
+    slug: state.caseData.slug,
+  }
+}
+
+class Podcast extends React.Component {
+  render() {
+    let {podcast, slug, editing, updatePodcast, deleteElement} = this.props
+    let {cardId} = podcast
+
+    return (
+      <div className="Podcast">
+
+        <PodcastPlayer {...{editing, slug, updatePodcast, deleteElement}}
+          {...podcast} />
+
+        <div className="PodcastInfo">
+          <CardContents id={cardId} nonNarrative />
+        </div>
+      </div>
+    )
+  }
+}
+
+export default connect(mapStateToProps, {updatePodcast})(Podcast)
 
 let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
   eventName() { return "visit_podcast" }
 
   trackableArgs() { return {
     case_slug: this.props.slug,
-    podcast_id: this.props.id
+    podcast_id: this.props.id,
   } }
 
   newPropsAreDifferent(nextProps) {
@@ -22,7 +54,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
     super()
     this.state = {
       playing: false,
-      creditsVisible: true
+      creditsVisible: true,
     }
   }
 
@@ -40,30 +72,30 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
     window.removeEventListener("beforeunload", this.log)
   }
 
-  showCredits() {
-    this[Animate['@animate']](
-      'podcast-hosts-fade', { maxHeight: 0 }, { maxHeight: 1000 }, 200,
-      {onComplete: () => {this.setState({creditsVisible: true})}}
-    )
-  }
-  hideCredits() {
-    this[Animate['@animate']](
-      'podcast-hosts-fade', { maxHeight: 1000 }, { maxHeight: 0 }, 200,
-      {onComplete: () => {this.setState({creditsVisible: false})}}
-    )
-  }
+  //showCredits() {
+    //this[Animate['@animate']](
+      //'podcast-hosts-fade', { maxHeight: 0 }, { maxHeight: 1000 }, 200,
+      //{onComplete: () => {this.setState({creditsVisible: true})}}
+    //)
+  //}
+  //hideCredits() {
+    //this[Animate['@animate']](
+      //'podcast-hosts-fade', { maxHeight: 1000 }, { maxHeight: 0 }, 200,
+      //{onComplete: () => {this.setState({creditsVisible: false})}}
+    //)
+  //}
   toggleCredits() {
-    if (this.state.playing && this.state.creditsVisible) {
-      this.hideCredits()
-    } else if (!this.state.creditsVisible) {
-      this.showCredits()
-    }
+    //if (this.state.playing && this.state.creditsVisible) {
+      //this.hideCredits()
+    //} else if (!this.state.creditsVisible) {
+      //this.showCredits()
+    //}
   }
 
   setPlaying() {
     this.setState({
       playing: true,
-      timeArrived: Date.now()
+      timeArrived: Date.now(),
     })
     if (this.state.creditsVisible) {
       this.hideCredits()
@@ -73,7 +105,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
     this.setState({
       playing: false,
       durationSoFar: this.timeSinceArrival(),
-      timeArrived: Date.now()
+      timeArrived: Date.now(),
     })
   }
 
@@ -96,24 +128,34 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
   }
 
   render() {
-    let {id, title, artworkUrl, audioUrl, photoCredit, didSave, statistics} = this.props
+    let {id, title, artworkUrl, audioUrl, photoCredit, statistics, editing,
+      updatePodcast, deleteElement} = this.props
     return (
       <div className="PodcastPlayer" >
+        {editing && <button type="button"
+          onClick={deleteElement}
+          className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
+          Delete Podcast
+        </button>}
 
         <div className="artwork" style={{backgroundImage: `url(${artworkUrl})`}} >
-          <EditableAttribute placeholder="Artwork URL"
-            uri={`podcasts/${id}:artwork_url`}
-            didSave={didSave}>{artworkUrl}</EditableAttribute>
+          <EditableAttribute title="Artwork URL"
+            value={artworkUrl}
+            onChange={v => updatePodcast(id, { artworkUrl: v})}
+            disabled={!editing} />
 
-          <Editable placeholder="Photo credit" uri={`podcasts/${id}:photo_credit`} didSave={didSave}>
-            <cite className="o-bottom-right c-photo-credit">{photoCredit}</cite>
-          </Editable>
+          <cite className="o-bottom-right c-photo-credit">
+            <EditableText disabled={!editing} multiline value={photoCredit}
+              onChange={v => updatePodcast(id, { photoCredit: v})}
+              placeholder="Photo credit" />
+          </cite>
         </div>
 
         <div className="credits" onClick={this.toggleCredits.bind(this)} >
           <h2 className="o-heading o-heading-two">
-            <Editable uri={`podcasts/${id}:title`} didSave={didSave}><span>{title}</span></Editable>
-            { this.state.creditsVisible ? "" : " ▸" }
+            <EditableText disabled={!editing} multiline value={title}
+              onChange={v => updatePodcast(id, { title: v})}
+            />
           </h2>
 
           {this.renderHosts()}
@@ -129,75 +171,13 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
           onPause={this.setPaused.bind(this)}
         />
 
-      <div><EditableAttribute placeholder="Audio URL"
-          uri={`podcasts/${id}:audio_url`}
-          didSave={didSave}>{audioUrl}</EditableAttribute></div>
+      <div>
+        <EditableAttribute disabled={!editing} title="Audio URL"
+          onChange={v => updatePodcast(id, { audioUrl: v})}
+          value={audioUrl} />
+      </div>
 
     </div>
     )
   }
 })
-
-class Podcast extends React.Component {
-  render() {
-    let description = {__html: this.props.podcast.description}
-    let {podcast, didSave, slug} = this.props
-    let {id} = podcast
-
-    return (
-      <div className="Podcast">
-        <PodcastPlayer slug={slug} didSave={didSave} {...podcast} />
-
-        <div className="PodcastInfo">
-          <EditableHTML uri={`podcasts/${id}:description`} placeholder="<!-- HTML podcast description -->" didSave={didSave}>
-            <div className="Card"
-              dangerouslySetInnerHTML={description}
-            />
-          </EditableHTML>
-        </div>
-      </div>
-    )
-  }
-}
-
-export class PodcastOverview extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      pod: {}
-    }
-  }
-
-  componentDidMount() {
-    let pod = this.props.podcasts.find( (p) => {return p.position === parseInt(this.props.params.podcastID)} )
-    this.setState ({
-      pod: pod
-    })
-  }
-
-  podcast() {
-    return this.props.podcasts.find( (p) => (p.position === parseInt(this.props.params.podcastID)) ) || {}
-  }
-
-  prepareSave() {
-    this.props.handleEdit
-  }
-
-  render () {
-    let {pages, didSave, slug} = this.props
-
-    return (
-      <div id="PodcastOverview" className={ `window ${this.props.didSave !== null ? 'editing' : ''}` }>
-
-        <Sidebar
-          pageTitles={pages.map( (p) => { return p.title } )}
-          selectedPage={null}
-          {...this.props}
-        />
-
-        <Podcast slug={slug} didSave={didSave} podcast={this.podcast()} />
-
-      </div>
-    )
-  }
-}

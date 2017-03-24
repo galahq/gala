@@ -12,24 +12,16 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-const EdgenotesCard = ({edgenoteSlugs, oldStyle, caseSlug, selectedPage}) => {
+const EdgenotesCard = ({edgenoteSlugs, oldStyle}) => {
   const AnEdgenote = oldStyle ? OldEdgenote : Edgenote
 
   if (edgenoteSlugs.length > 0) {
     return <aside
-      className={oldStyle ? "edgenotes" : 'c-edgenotes-card pt-dark'}
-      children={ edgenoteSlugs.map(
-        (slug) => {
-          return <AnEdgenote
-            slug={slug}
-            caseSlug={caseSlug}
-            pathPrefix={`${selectedPage}`}
-            key={`${slug}`}
-            didSave={null}
-          />
-        })
-      }
-    />
+      className={oldStyle ? "edgenotes" : 'c-edgenotes-card pt-dark'}>
+      { edgenoteSlugs.map(
+        (slug) => <AnEdgenote key={`${slug}`} slug={slug} />
+      ) }
+  </aside>
   } else {
     return null
   }

@@ -11,6 +11,8 @@ import {
   PARSE_ALL_CARDS,
   ADD_COMMENT_THREAD,
   REMOVE_COMMENT_THREAD,
+  ADD_PODCAST,
+  ADD_ACTIVITY,
 } from '../actions.js'
 
 let { forceSelection } = EditorState
@@ -88,6 +90,16 @@ function cardsById(state = getInitialEmptyCards(), action) {
         [action.cardId]: {
           ...newCard,
           editorState: parseEditorStateFromPersistedCard(newCard),
+        },
+      }
+
+    case ADD_PODCAST:
+    case ADD_ACTIVITY:
+      return {
+        ...state,
+        [action.data.cardId]: {
+          solid: true,
+          editorState: EditorState.createEmpty(),
         },
       }
 

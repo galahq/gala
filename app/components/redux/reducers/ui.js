@@ -2,8 +2,6 @@ import {
   HIGHLIGHT_EDGENOTE,
   ACTIVATE_EDGENOTE,
   OPEN_CITATION,
-  OPEN_COMMENT_THREADS,
-  SELECT_COMMENT_THREAD,
   HOVER_COMMENT_THREAD,
   ACCEPT_SELECTION,
   ADD_COMMENT_THREAD,
@@ -17,8 +15,6 @@ export default function ui(state, action) {
     return {
       openedCitation: {},
       acceptingSelection: false,
-      commentThreadsOpenForCard: null,
-      selectedCommentThread: null,
       hoveredCommentThread: null,
       commentInProgress: {},
       toaster: null,
@@ -35,16 +31,6 @@ export default function ui(state, action) {
 
     case ACCEPT_SELECTION: return { ...state, acceptingSelection: true }
     case ADD_COMMENT_THREAD: return { ...state, acceptingSelection: false }
-
-    case OPEN_COMMENT_THREADS:
-      return {
-        ...state,
-        commentThreadsOpenForCard: action.cardId,
-        acceptingSelection: false,
-      }
-
-    case SELECT_COMMENT_THREAD:
-      return { ...state, selectedCommentThread: action.id }
 
     case HOVER_COMMENT_THREAD:
       return { ...state, hoveredCommentThread: action.id }

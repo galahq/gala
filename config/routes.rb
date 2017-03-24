@@ -13,10 +13,13 @@ Rails.application.routes.draw do
       resources :comments, shallow: true
     end
     resources :cases, except: %i(index create edit), param: :slug do
+      resources :case_elements, shallow: true, only: %i(update)
       resources :activities, shallow: true
       resources :podcasts, shallow: true
       resources :pages, only: %i(create)
       resources :edgenotes, shallow: true, param: :slug
+
+      get '*react_router_location', to: 'cases#show'
     end
     resources :pages, only: %i(update destroy) do
       resources :cards, only: %i(create)

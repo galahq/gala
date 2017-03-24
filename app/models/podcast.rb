@@ -2,9 +2,13 @@ class Podcast < ApplicationRecord
   include Authority::Abilities
 
   belongs_to :case
-  acts_as_list scope: :case
+  has_one :card, as: :element, dependent: :destroy
+
+  include Element
 
   translates :title, :audio_url, :description, :credits
+
+  after_create_commit -> { create_card }
 
   def credits_list=(credits_list)
     self.credits = credits_list.is_a?(CreditsList) ? credits_list.attributes.to_yaml : credits_list.to_yaml

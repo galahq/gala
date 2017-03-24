@@ -5,15 +5,17 @@ import { selectCommentThread, hoverCommentThread,
 import Truncate from 'react-truncate'
 import { FormattedMessage } from 'react-intl'
 import Icon from 'Icon.js'
+import { Link, matchPath } from 'react-router-dom'
+import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
 
-function mapStateToProps(state, ownProps) {
-  const thread = state.commentThreadsById[ownProps.threadId]
+function mapStateToProps(state, {threadId, location}) {
+  const thread = state.commentThreadsById[threadId]
   const comments = thread.commentIds.map( x => state.commentsById[x] )
   const firstComment = comments.length > 0 ? comments[0] : {}
 
   return {
-    hovered: ownProps.threadId === state.ui.hoveredCommentThread,
-    selected: ownProps.threadId === state.ui.selectedCommentThread,
+    hovered: threadId === state.ui.hoveredCommentThread,
+    selected: matchPath(location.pathname, commentsOpen(threadId)),
     lead: {
       placeholder: !firstComment.content,
       author: firstComment.reader
@@ -30,23 +32,27 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const {threadId, cardId} = ownProps
+  const {threadId, cardId, history, location} = ownProps
   return {
-    handleClick: () => dispatch(selectCommentThread(threadId)),
     handleMouseEnter: () => dispatch(hoverCommentThread(threadId)),
     handleMouseLeave: () => dispatch(hoverCommentThread(null)),
-    handleDeleteThread: () => dispatch(deleteCommentThread(threadId, cardId)),
+    handleDeleteThread: () => {
+      dispatch(deleteCommentThread(threadId, cardId))
+
+      const commentsMatch = matchPath(location.pathname, commentsOpen())
+      if (commentsMatch && threadId === parseInt(commentsMatch.params.commentThreadId, 10))
+        history.replace(matchPath(location.pathname, commentThreadsOpen()).url)
+    },
   }
 }
 
 const CommentThread = ({lead, responses, hovered, selected, last,
-  handleClick, handleMouseEnter, handleMouseLeave, handleDeleteThread,
+  match, threadId, handleMouseEnter, handleMouseLeave, handleDeleteThread,
   canBeDeleted}) =>
 <div style={{position: 'relative'}}>
-  <a style={styles.linkReset}>
+  <Link to={`${match.url}/${threadId}`} replace style={styles.linkReset}>
     <li
       style={styles.getCommentListItemStyle({last, selected, hovered})}
-      onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -82,7 +88,7 @@ const CommentThread = ({lead, responses, hovered, selected, last,
       }
 
     </li>
-  </a>
+  </Link>
   {canBeDeleted &&
     <a>
       <Icon className="CommentThread__icon-button" filename="trash"

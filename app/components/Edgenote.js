@@ -11,6 +11,28 @@ import {
   updateEdgenote,
 } from 'redux/actions.js'
 
+const mapStateToProps = (state, {slug}) => {
+  return {
+    editing: state.edit.inProgress,
+    selected: slug === state.ui.highlightedEdgenote,
+    active: slug === state.ui.activeEdgenote,
+    contents: state.edgenotesBySlug[slug],
+  }
+}
+
+const mapDispatchToProps = (dispatch, {slug}) => {
+  return {
+    activate: () => dispatch(activateEdgenote(slug)),
+    deactivate: () => dispatch(activateEdgenote(null)),
+    onMouseOver: () => dispatch(highlightEdgenote(slug)),
+    onMouseOut: () => dispatch(highlightEdgenote(null)),
+    onChange: attr => value => dispatch(updateEdgenote(
+      slug,
+      {[attr]: value},
+    )),
+  }
+}
+
 class EdgenoteFigure extends React.Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.active && this.props.active) {
@@ -87,28 +109,6 @@ class EdgenoteFigure extends React.Component {
 
       </ConditionalLink>
     </figure>
-  }
-}
-
-const mapStateToProps = (state, {slug}) => {
-  return {
-    editing: state.edit.inProgress,
-    selected: slug === state.ui.highlightedEdgenote,
-    active: slug === state.ui.activeEdgenote,
-    contents: state.edgenotesBySlug[slug],
-  }
-}
-
-const mapDispatchToProps = (dispatch, {slug}) => {
-  return {
-    activate: () => dispatch(activateEdgenote(slug)),
-    deactivate: () => dispatch(activateEdgenote(null)),
-    onMouseOver: () => dispatch(highlightEdgenote(slug)),
-    onMouseOut: () => dispatch(highlightEdgenote(null)),
-    onChange: attr => value => dispatch(updateEdgenote(
-      slug,
-      {[attr]: value},
-    )),
   }
 }
 
