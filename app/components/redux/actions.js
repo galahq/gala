@@ -315,7 +315,6 @@ export function addCommentThread(data) {
 export function deleteCommentThread(threadId, cardId) {
   return async (dispatch) => {
     await Orchard.prune(`comment_threads/${threadId}`)
-    dispatch(selectCommentThread(null))
     dispatch(removeCommentThread(threadId, cardId))
   }
 }
@@ -325,26 +324,9 @@ function removeCommentThread(threadId, cardId) {
   return {type: REMOVE_COMMENT_THREAD, threadId, cardId}
 }
 
-export const OPEN_COMMENT_THREADS = "OPEN_COMMENT_THREADS"
-export function openCommentThreads(cardId) {
-  return {type: OPEN_COMMENT_THREADS, cardId}
-}
-
-export const SELECT_COMMENT_THREAD = "SELECT_COMMENT_THREAD"
-export function selectCommentThread(id) {
-  return {type: SELECT_COMMENT_THREAD, id}
-}
-
 export const HOVER_COMMENT_THREAD = "HOVER_COMMENT_THREAD"
 export function hoverCommentThread(id) {
   return {type: HOVER_COMMENT_THREAD, id}
-}
-
-export function closeCommentThreads() {
-  return dispatch => {
-    dispatch(openCommentThreads(null))
-    dispatch(selectCommentThread(null))
-  }
 }
 
 // COMMENT
