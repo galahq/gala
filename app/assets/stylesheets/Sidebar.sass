@@ -10,6 +10,17 @@
 
   margin: 0em 1em
 
+  a
+    color: lighten($umichMaize, 20%)
+    transition: 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+    transition-property: color, background-color
+
+  li.focus a,
+  a:hover
+    background-color: $lightGreen
+    color: $darkBlue
+    text-decoration: none
+
   .BillboardTitle
     padding: 1em 1em
     padding-top: 5.3em
@@ -33,17 +44,6 @@
 
     li
       margin: 0.3em 0
-
-a
-  color: lighten($umichMaize, 20%)
-  text-decoration: none !important
-  transition: 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-  transition-property: color, background-color
-
-#TableOfContents li.focus a,
-a:hover
-  background-color: $lightGreen
-  color: $darkBlue
 
 .list-head
   display: block
