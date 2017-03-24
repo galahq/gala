@@ -24,7 +24,7 @@ const mapDispatchToProps = { createPage, createPodcast, createActivity }
 const TableOfContents = ({caseSlug, editing, elements, disabled,
   connectDropTarget, readOnly, createPage, createPodcast, createActivity}) =>
   <nav className={`c-toc ${disabled && "c-toc--disabled"}`}>
-    <h3 className="c-toc__header"><FormattedMessage id="case.toc" /></h3>
+    <h2 className="o-heading o-heading-two"><FormattedMessage id="case.toc" /></h2>
     { connectDropTarget(
       <ol className="c-toc__list">
         { elements.map((element, index) =>
