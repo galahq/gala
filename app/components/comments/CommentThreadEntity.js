@@ -4,8 +4,9 @@ import { openCommentThreads, selectCommentThread } from 'redux/actions.js'
 
 function mapStateToProps(state, { contentState, children }) {
   let commentThreadId = getFirstThreadId(contentState, children[0])
+  let commentThread = state.commentThreadsById[commentThreadId]
   return {
-    cardId: state.commentThreadsById[commentThreadId].cardId,
+    cardId: commentThread && commentThread.cardId,
     disabled: state.ui.acceptingSelection,
     commentThreadId,
   }
@@ -18,7 +19,7 @@ function mergeProps(
 ) {
   return {
     onClick: () => {
-      disabled ||
+      !cardId || disabled ||
       ( openCommentThreads(cardId) &&
         selectCommentThread(parseInt(commentThreadId, 10)) )
     },
