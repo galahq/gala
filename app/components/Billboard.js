@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { EditableText, Button } from '@blueprintjs/core'
+import { EditableText } from '@blueprintjs/core'
 import EditableAttribute from 'EditableAttribute.js'
 
 import BillboardTitle from 'BillboardTitle.js'
@@ -40,7 +40,6 @@ const Billboard = ({
       </p>
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>
-    <Button iconName="refresh" text="Refresh" />
   </section>
 
 export default connect(

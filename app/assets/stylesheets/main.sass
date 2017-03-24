@@ -20,7 +20,7 @@ body
   -moz-font-smoothing: antialiased
   background-color: $umichBlue
   margin: 0
-  font: $serifFontSize $sansFont
+  font: 100% $sansFont
   line-height: $serifLeading
   height: 100%
 
@@ -66,9 +66,9 @@ blockquote
   padding: 0 1em 0 1em
 
 .o-button
-  background: $darkPurple
+  background: $purple
   border: 0
-  color: $white
+  color: white
   font: 600 80% $sansFont
   letter-spacing: 0.1em
   margin-top: 0.5em
@@ -81,16 +81,9 @@ blockquote
   transition: background-color 0.1s
   &:hover,
   &:focus
-    background: darken($darkPurple, 10%)
+    background: $darkPurple
     cursor: pointer
     outline: none
-  &-onlight
-    background-color: $purple
-    color: white
-    &:hover,
-    &:focus
-      background-color: $darkPurple
-
 
 h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
 em, strong
@@ -181,6 +174,10 @@ strong
 
 a
   cursor: pointer
+  &:hover
+    text-decoration: initial
+p a:hover
+  text-decoration: underline
 
 .disabled
   pointer-events: none

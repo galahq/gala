@@ -48,7 +48,7 @@
           color: mix($darkBlue, $white, 40%)
 
       ul
-        color: lighten($umichMaize, 20%)
+        color: $yellow
         list-style-type: circle
         margin: 0.5em 0
         padding-left: 1.5em
@@ -76,7 +76,7 @@
         margin-top: 1em
 
       a
-        color: lighten($umichMaize, 20%)
+        color: $yellow
         transition: 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
         transition-property: color, background-color
 
@@ -156,3 +156,9 @@
 
   p
     margin: 0.5em 0
+
+  .o-button
+    background-color: $darkPurple
+    &:hover,
+    &:focus
+      background-color: darken($darkPurple, 10%)

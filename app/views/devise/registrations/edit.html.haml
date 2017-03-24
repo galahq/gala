@@ -26,11 +26,10 @@
       = f.password_field :current_password, autocomplete: "off"
 
     .actions
-      = f.submit t '.save'
+      = f.submit t('.save'), class: "o-button"
 
 -#.dialog.devise
   -#%h2= t'.cancel_my_account'
 
   -#%p Unhappy?
   -#= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
-

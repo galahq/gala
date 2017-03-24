@@ -21,9 +21,19 @@
   &__footer
     border-top: 1px solid #351D7A
     padding: 0.25em
-  &__new-button
+  &__new-button.o-button
     width: 100% !important
-    margin-top: 0 !important
+    background-color: $darkPurple
+    margin: 0
+    padding: 0.5em
+    border-width: 0
+    font-size: 11pt
+    letter-spacing: 0.4px
+    font-weight: 500
+    color: white
+    &:hover,
+    &:focus
+      background-color: darken($darkPurple, 10%)
     &:disabled
       cursor: initial
       background-color: transparent
@@ -87,12 +97,15 @@
         height: 4em
         margin: 0
         padding: 0.5em
+        flex: 1
+        font-family: $sansFont
 
         &::-webkit-input-placeholder
           color: $purple
 
         &:focus
           box-shadow: 0 0 0 1px #137cbd, 0 0 0 3px rgba(19, 124, 189, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.2)
+          outline: none
 
   &__metadata
     margin-bottom: 1em

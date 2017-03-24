@@ -61,9 +61,10 @@ header
       display: block
       background-color: transparent
       padding: 0.5em 2em 0.5em 1em
+      color: $yellow
 
     li a:hover
-      color: lighten($umichMaize, 20%)
+      color: $yellow
 
   .dropdown-caret
     position: absolute
@@ -87,6 +88,12 @@ header
 
 #reader-sign-in
   padding-top: 0.5rem
+
+  a
+    color: $yellow
+    &:hover
+      background-color: $lightGreen
+      color: $black
 
 .dropdown-caret
   display: inline-block
