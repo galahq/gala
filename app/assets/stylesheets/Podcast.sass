@@ -17,73 +17,70 @@ $threeColumnCutoff: 930px
 
   position: relative
 
-.PodcastPlayer
-  min-width: 20em
-  flex: 0 2 30em
+  &Info
+    margin: 0 1em
+    flex: 0 1 45em
 
-  @media screen and (max-width: $threeColumnCutoff)
-    margin: 1em
-    flex-grow: 1
+  &Player
+    min-width: 20.3em
+    flex: 0 2 30em
 
-  .artwork
-    height: 12em
-    background-size: cover
-    background-position: center
-    border-radius: 2pt 2pt 0 0
+    @media screen and (max-width: $threeColumnCutoff)
+      margin: 1em
+      flex-grow: 1
 
-  .credits
-    padding: 1em
-    border-top: 4px solid $lightGreen
-    background-color: $black
-    border-radius: 0 0 2pt 2pt
-    margin-bottom: 1em
-    color: $white
+    .artwork
+      height: 12em
+      background-size: cover
+      background-position: center
+      border-radius: 2pt 2pt 0 0
 
-    h2
-      margin: 0
-      font-size: 1.5em
+    .credits
+      padding: 1em
+      border-top: 4px solid $lightGreen
+      background-color: $black
+      border-radius: 0 0 2pt 2pt
+      margin-bottom: 1em
+      color: $white
 
-    & > div
-      overflow: hidden
+      & > div
+        overflow: hidden
 
-    dl
-      margin: 0
-      padding-top: 0.5em
-
-      dt, dd
-        display: inline
+      dl
         margin: 0
+        padding-top: 0.5em
 
-      dd:after
-        content: ''
-        display: block
-        margin-bottom: 0.25em
+        dt, dd
+          display: inline
+          margin: 0
 
-      dt
-        font-weight: 600
+        dd:after
+          content: ''
+          display: block
+          margin-bottom: 0.25em
 
-      dt:after
-        content: ": "
+        dt
+          font-weight: 600
 
-  audio
-    width: 100%
-    border-bottom: 4px solid $lightGreen
-    border-radius: 2pt
+        dt:after
+          content: ": "
 
-    &::-webkit-media-controls
-      &-play-button,
-      &-mute-button,
-      &-seek-back-button,
-      &-rewind-button,
-      &-timeline
-        cursor: pointer
+    audio
+      width: 100%
+      border-bottom: 4px solid $lightGreen
+      border-radius: 2pt
 
-  flex: 0 1 45em
-  margin: 0 1em
+      &::-webkit-media-controls
+        &-play-button,
+        &-mute-button,
+        &-seek-back-button,
+        &-rewind-button,
+        &-timeline
+          cursor: pointer
 
-  p
-    @media screen and (max-width: $mobileCutoff)
-      padding: 0.5em 0
+    p
+      @media screen and (max-width: $mobileCutoff)
+        padding: 0.5em 0
 
-  @media screen and (max-width: $threeColumnCutoff)
-    flex-grow: 1
+    @media screen and (max-width: $threeColumnCutoff)
+      flex-grow: 1
