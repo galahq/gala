@@ -71,8 +71,8 @@ export class Dashboard extends React.Component {
     return (
       <div className="catalog-dashboard">
         <div className="catalog-dashboard__reader">
-          <h1 className="o-heading o-heading-one">Hello, {initials}</h1>
-          <h2 className="o-heading o-heading-two">
+          <h1>Hello, {initials}</h1>
+          <h2>
             <I18n meaning="my_cases" />
             <a
               className="catalog-dashboard__edit"

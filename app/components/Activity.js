@@ -22,7 +22,7 @@ const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity,
   deleteElement}) =>
   <article>
     <section className="Page-meta">
-      <h1 className="o-heading o-heading-one">
+      <h1>
         <EditableText placeholder="Activity title" value={title}
           multiline
           disabled={!editing}
