@@ -18,7 +18,7 @@ function mapStateToProps(state, ownProps) {
 const CommentThreadsTag = ({match, count, cardId, acceptSelection}) =>
   <Link
     to={`${match.url}/cards/${cardId}/comments`} replace
-    className="CommentThread__banner"
+    className="CommentThreads__banner"
     onClick={() => {
       count === 0 && acceptSelection()
     }}

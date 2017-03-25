@@ -39,27 +39,18 @@
       background-color: transparent
   &__banner
     +banner
-
     font-family: $sansFont
     top: 0.8em
-
     @media screen and (max-width: $mobileCutoff)
       top: 0.55em
-
     padding: 0 0.5rem 0 0.4rem
     font-size: 70%
-    color: white
+    color: white !important
     background-color: $purple
     border-left: 0.35rem solid shade($purple, 30%)
     cursor: pointer
-
-.CommentThread__icon-button
-  display: flex
-  justify-content: center
-  align-items: center
-
-  &:hover
-    background-color: rgba(0, 0, 0, 0.2)
+    &:hover
+      background-color: $purple !important
 
 .CommentThread
   padding: 1.5em
@@ -84,6 +75,14 @@
     margin-left: 1em
     @media screen and (max-width: 768px)
       font-size: 0.7em !important
+
+  &__icon-button
+    display: flex
+    justify-content: center
+    align-items: center
+
+    &:hover
+      background-color: rgba(0, 0, 0, 0.2)
 
   form
     margin-top: 1em

@@ -26,7 +26,7 @@
       @media screen and (max-width: $mobileCutoff)
         padding: 1em
 
-      p.o-dek
+      p.c-BillboardSnippet__dek
         font-style: italic
         font-family: $headlineFont
         font-size: 1em
@@ -38,59 +38,10 @@
     & > *
       margin: 1em
 
-    .Actions
-      background-color: rgba(darken($black, 10%), 0.6)
-      border-radius: 2pt
-      height: 100%
-      padding: 1em
-
-      &.disabled
-        ul, ol, a
-          color: mix($darkBlue, $white, 40%)
-
-      ul
-        color: $yellow
-        list-style-type: circle
-        margin: 0.5em 0
-        padding-left: 1.5em
-
-      h2
-        font-size: 1.2em
-        line-height: 1.1em
-        margin-bottom: 0.8em
-        font-family: $headlineFont
-        color: $white
-        margin-top: 1em
-
-        .ActionIcon
-          float: left
-          margin-top: -8px
-          margin-right: 0.5em
-
-      h3
-        font-size: 1em
-
-      & > div
-        margin-top: 2em
-
-      & > div:first-child
-        margin-top: 1em
-
-      a
-        color: $yellow
-        transition: 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-        transition-property: color, background-color
-
-      li.focus a,
-      a:hover
-        background-color: $lightGreen
-        color: $darkBlue
-        text-decoration: none
-
 .BillboardTitle
   background-size: cover
   background-position: center
-  border-radius: 2pt
+  border-radius: 2pt 2pt 0 0
   padding: 1em 2em
   padding-top: 10em
 

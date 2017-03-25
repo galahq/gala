@@ -15,7 +15,7 @@
     #dashboard-app
 
   - unless @featured.empty?
-    %h1.o-catalog__heading=t '.featured_cases'
+    %h1.c-catalog__heading=t '.featured_cases'
     .carousel
       .catalog-cases-featured
         - @featured.each do |c|
@@ -24,7 +24,7 @@
       .carousel-button.carousel-button-right ›
 
   - unless @index.empty?
-    %h1.o-catalog__heading=t '.case_index'
+    %h1.c-catalog__heading=t '.case_index'
     .catalog-cases-index
       - @index.each do |c|
         = render partial: 'cases/case', locals: {c: c}
