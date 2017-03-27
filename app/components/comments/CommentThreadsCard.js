@@ -16,28 +16,30 @@ import Icon from 'Icon.js'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'concerns/routes'
 
-function mapStateToProps(state, {cardId}) {
+function mapStateToProps(state, {cardId, location}) {
 
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
     selectionPending: !state.cardsById[cardId].editorState
       .getSelection().isCollapsed(),
+    closeCommentThreadsPath: matchPath(location.pathname, elementOpen()).url,
   }
 }
 
 const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
                             selectionPending,
-                            acceptSelection,
+                            acceptSelection, closeCommentThreadsPath,
                             addCommentThread, location, match, history}) => {
   return <div className="CommentThreads">
     <div className={`CommentThreads__window`}>
       <div style={styles.header}>
-        <a className="CommentThread__icon-button" onClick={closeCommentThreads}>
+        <Link to={closeCommentThreadsPath} replace
+          className="CommentThread__icon-button">
           <Icon filename="comments-close"
             style={{...styles.toolbarButton, cursor: 'pointer'}}
-            />
-        </a>
+          />
+        </Link>
 
         <FormattedMessage
           id="comments.nResponses"
@@ -83,7 +85,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
 
     {
       <Portal>
-        <Link to={matchPath(location.pathname, elementOpen()).url} replace
+        <Link to={closeCommentThreadsPath} replace
           style={styles.backdrop} />
       </Portal>
     }
