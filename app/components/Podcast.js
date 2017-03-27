@@ -131,23 +131,22 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
     let {id, title, artworkUrl, audioUrl, photoCredit, statistics, editing,
       updatePodcast, deleteElement} = this.props
     return (
-      <div className="PodcastPlayer" >
+      <div className="PodcastPlayer pt-dark" >
         {editing && <button type="button"
           onClick={deleteElement}
           className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
           Delete Podcast
         </button>}
 
+      <EditableAttribute title="Artwork URL"
+        value={artworkUrl}
+        onChange={v => updatePodcast(id, { artworkUrl: v})}
+        disabled={!editing} />
         <div className="artwork" style={{backgroundImage: `url(${artworkUrl})`}} >
-          <EditableAttribute title="Artwork URL"
-            value={artworkUrl}
-            onChange={v => updatePodcast(id, { artworkUrl: v})}
-            disabled={!editing} />
-
           <cite className="o-bottom-right c-photo-credit">
             <EditableText disabled={!editing} multiline value={photoCredit}
               onChange={v => updatePodcast(id, { photoCredit: v})}
-              placeholder="Photo credit" />
+              placeholder={editing ? "Photo credit" : ""} />
           </cite>
         </div>
 
