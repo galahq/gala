@@ -31,7 +31,7 @@ const TableOfContents = ({caseSlug, editing, elements, disabled,
           <TableOfContentsElement element={element} key={element.id}
             position={index + 1} readOnly={readOnly}/>
         ) }
-        { editing && !readOnly && <div className="c-toc__actions pt-button-group">
+        { editing && !readOnly && <div className="c-toc__actions pt-button-group pt-fill">
           <button type="button" className="pt-button pt-icon-add"
             onClick={() => createPage(caseSlug)}>
             Page
