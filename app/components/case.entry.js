@@ -7,6 +7,9 @@ import thunk from 'redux-thunk'
 
 import { addLocaleData, IntlProvider } from 'react-intl'
 
+import { FocusStyleManager } from '@blueprintjs/core'
+FocusStyleManager.onlyShowFocusOnTabs()
+
 import Case from 'Case.js'
 
 import reducer from 'redux/reducers.js'
