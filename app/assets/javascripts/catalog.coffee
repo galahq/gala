@@ -5,13 +5,13 @@
 $(document).on 'ready turbolinks:load', ->
   $(".catalog-cases-index a.catalog-case").on 'mouseenter focus', (e) ->
     box = $(e.currentTarget)
-    authors = box.find('p')
+    authors = box.find('h4')
     box.find('.catalog-case-credits').addClass('dimmed')
     authors.slideDown duration: 200, easing: 'easeOutExpo'
 
   $(".catalog-cases-index a.catalog-case").on 'mouseleave blur', (e) ->
     box = $(e.currentTarget)
-    authors = box.find('p')
+    authors = box.find('h4')
     box.find('.catalog-case-credits').removeClass('dimmed')
     authors.slideUp duration: 200, easing: 'easeOutExpo'
 
@@ -79,3 +79,5 @@ $(document).on 'ready turbolinks:load', ->
 
   $('.carousel').on 'swiperight', () -> carouselRight()
   $('.carousel').on 'swiperight', () -> carouselLeft()
+
+

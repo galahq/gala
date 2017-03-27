@@ -15,19 +15,9 @@ article
     h1, h2, h3, h4, h5, h6
       color: $white
       margin: 20px 20px 0 20px
-      font-family: $headlineFont
 
       @media screen and (min-width: $mobileCutoff)
         margin: 20px 30px 5px 30px
-
-    h1
-      font-size: 1.3em
-      line-height: 1.1em
-      
-    h2
-      font-size: 1.1em
-      line-height: 1em
-      margin-top: 10px
 
     blockquote
       margin: 10px 10px 0 10px
@@ -35,10 +25,10 @@ article
     .Card
       height: 100%
 
-      +flex($fg: 0, $fs: 1, $fb: 40.8em)
+      +flex($fg: 0, $fs: 1, $fb: 36em)
 
       @media screen and (max-width: 1440px)
-        +flex($fg: 0, $fs: 1, $fb: 31.8em)
+        +flex($fg: 0, $fs: 1, $fb: 27em)
 
       margin: 9px
 
@@ -88,9 +78,6 @@ article
   border-radius: 2pt
   padding: 1.2em 2.4em
   position: relative
-
-  p
-    margin: 1em 0
 
   @media screen and (max-width: $mobileCutoff)
     padding: 0em 0.7em
@@ -161,7 +148,6 @@ article
 .Card-create
   font-family: $sansFont
   margin-left: 2em
-  color: $yellow
 
   &:hover
     background-color: transparent
@@ -219,6 +205,15 @@ footer h2
     opacity: 0
     pointer-events: none
 
+    & a
+      text-decoration: underline
+
   &.citation-visible cite
     opacity: 100
     pointer-events: initial
+
+.window main
+  position: relative
+
+.c-delete-element
+  width: auto

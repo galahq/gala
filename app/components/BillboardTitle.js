@@ -27,14 +27,15 @@ const BillboardTitle = ({ editing, slug, kicker, title, photoCredit, caseAuthors
     `,
   }
 
-  return <div className="BillboardTitle pt-dark" style={background}>
+  return <div className="BillboardTitle" style={background}>
+    <h6>
+      <EditableText value={kicker} disabled={!editing || minimal}
+        placeholder="Snappy kicker"
+        onChange={value => updateCase(slug, {kicker: value})}
+      />
+    </h6>
+
     <h1>
-      <span className="c-kicker">
-        <EditableText value={kicker} disabled={!editing || minimal}
-          placeholder="Snappy kicker"
-          onChange={value => updateCase(slug, {kicker: value})}
-        />
-      </span>
       <EditableText multiline value={title} disabled={!editing || minimal}
         placeholder="What is the central question of the case?"
         onChange={value => updateCase(slug, {title: value})}
@@ -42,11 +43,11 @@ const BillboardTitle = ({ editing, slug, kicker, title, photoCredit, caseAuthors
     </h1>
 
     { !minimal && caseAuthors !== "" &&
-      <p>
+      <h4>
         { caseAuthors }
         <br />
         { translators !== "" && <em>{ translators }</em> }
-      </p>
+      </h4>
       }
 
       <cite className="o-bottom-right c-photo-credit">

@@ -69,7 +69,7 @@ const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
             }
           }}
           onChange={ handleChange(threadId) } />
-        <button type="button" className="o-button CommentThread__submit-button"
+        <button type="button"
           onClick={ handleSubmit(threadId, commentInProgress) }>
           <FormattedMessage id="submit" defaultMessage="Submit" />
         </button>

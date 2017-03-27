@@ -5,37 +5,18 @@
 .catalog-cases
   width: 100%
 
-.c-catalog__heading
+.catalog-cases h6,
+.BillboardTitle h6
   color: $white
   text-align: center
   margin: 1em 0 0.5em 0
   font-family: $sansFont
   text-transform: uppercase
   letter-spacing: 1px
-  font-size: 0.9em
   line-height: 1.2em
 
-.BillboardTitle
-  h2
-    font-size: 1.5em
-    color: $white
-    line-height: 1.1
-    margin-bottom: 0.35em
-    span.c-kicker
-      display: block
-      font-size: 0.6em
-      text-transform: uppercase
-      letter-spacing: 1px
-      font-family: $sansFont
-      margin-bottom: 0.6em
-  p
-    font-weight: 500
-    margin-top: 0.5em
-    color: $white
-    margin-bottom: 1.3em
-    font-size: 1em
-    line-height: 110%
-    font-family: $sansFont
+  &:first-child
+    margin-top: -0.5em
 
 .catalog-cases-featured
   +flexbox
@@ -46,13 +27,18 @@
   padding: 1rem 0
 
   .catalog-case
-    +flex(0, 0, 33em)
+    +flex(0, 0, 30em)
+
     @media screen and (max-width: $mobileCutoff)
-      +flex(0, 0, 28em)
+      +flex(0, 0, 25em)
+
       font-size: 13px
-    height: 18rem !important
+
+    height: 17rem !important
+
     &:first-child
       margin-left: auto
+
     &:last-child
       margin-right: auto
 
@@ -85,22 +71,23 @@
   +justify-content(center)
 
   .catalog-case
-    +flex(0, 0, 18em)
-    height: 16em
+    +flex(0, 0, 15em)
+
+    height: 15em
+
     @media screen and (max-width: $mobileCutoff)
       +flex(1, 0, 15em)
-      height: 11em
+
+      height: 10em
+
     margin: 0 0.5rem 1rem 0.5rem
 
-    h2
-      font-size: 1.3em
+    h1
       margin-bottom: 1em
-      margin-bottom: 1.1em
-      span.c-kicker
-        font-size: 0.7em
-        margin-bottom: 0.45em
+      font-size: 130%
+      line-height: 1.1em
 
-    p
+    h4
       margin-top: -1em
 
 =banner
@@ -117,6 +104,9 @@
   text-transform: uppercase
   font-weight: 500
   letter-spacing: 0.6px
+
+.catalog-case h6, .BillboardTitle h6
+  text-align: left
 
 .catalog-case
   +flexbox
@@ -177,12 +167,10 @@
     +flex-flow(row wrap)
 
   margin: auto
-  max-width: 53em
+  max-width: 50em
 
   &-message
     +flex(0 1 33em)
-    p
-      margin-top: 1em
 
     @media screen and (min-width: $mobileCutoff)
       h1, p, a
@@ -224,15 +212,9 @@
   h1, h2, h3
     font-family: $sansFont
     margin: 0
-    color: $white
-  h1
-    font-size: 1.5em
-    line-height: 1.1em
+
   h2
     font-weight: normal
-    font-size: 1.2em
-    line-height: 1.1em
-    margin-bottom: 0.8em
 
   &__reader
     text-align: right
@@ -258,7 +240,7 @@
   &__edit
     display: block
     margin-top: 0.1em
-    opacity: 0.5
+    opacity: .5
     font-size: 90%
     color: $white
 

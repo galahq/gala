@@ -17,76 +17,73 @@ $threeColumnCutoff: 930px
 
   position: relative
 
-  &Info
-    margin: 0 1em
-    flex: 0 1 45em
+.PodcastPlayer
+  min-width: 20em
+  flex: 0 2 30em
 
-  &Player
-    min-width: 20.3em
-    flex: 0 2 30em
+  @media screen and (max-width: $threeColumnCutoff)
+    margin: 1em
+    flex-grow: 1
 
-    @media screen and (max-width: $threeColumnCutoff)
-      margin: 1em
-      flex-grow: 1
+  .artwork
+    height: 12em
+    background-size: cover
+    background-position: center
+    border-radius: 2pt 2pt 0 0
+
+  .credits
+    padding: 1em
+    border-top: 4px solid $lightGreen
+    background-color: $black
+    border-radius: 0 0 2pt 2pt
+    margin-bottom: 1em
+    color: $white
 
     h1
-      color: $white
-      font-family: $headlineFont
-      font-size: 1.3em
-      line-height: 1.1em
+      margin: 0
 
-    .artwork
-      height: 12em
-      background-size: cover
-      background-position: center
-      border-radius: 2pt 2pt 0 0
+    & > div
+      overflow: hidden
 
-    .credits
-      padding: 1em
-      border-top: 4px solid $lightGreen
-      background-color: $black
-      border-radius: 0 0 2pt 2pt
-      margin-bottom: 1em
-      color: $white
+    dl
+      margin: 0
+      padding-top: 0.5em
 
-      & > div
-        overflow: hidden
-
-      dl
+      dt, dd
+        display: inline
         margin: 0
-        padding-top: 0.5em
 
-        dt, dd
-          display: inline
-          margin: 0
+      dd:after
+        content: ''
+        display: block
+        margin-bottom: 0.25em
 
-        dd:after
-          content: ''
-          display: block
-          margin-bottom: 0.25em
+      dt
+        font-weight: 600
 
-        dt
-          font-weight: 600
+      dt:after
+        content: ": "
 
-        dt:after
-          content: ": "
+  audio
+    width: 100%
+    border-bottom: 4px solid $lightGreen
+    border-radius: 2pt
 
-    audio
-      width: 100%
-      border-bottom: 4px solid $lightGreen
-      border-radius: 2pt
+    &::-webkit-media-controls
+      &-play-button,
+      &-mute-button,
+      &-seek-back-button,
+      &-rewind-button,
+      &-timeline
+        cursor: pointer
 
-      &::-webkit-media-controls
-        &-play-button,
-        &-mute-button,
-        &-seek-back-button,
-        &-rewind-button,
-        &-timeline
-          cursor: pointer
+.PodcastInfo
+  flex: 0 1 45em
+  margin: 0 1em
 
-    p
-      @media screen and (max-width: $mobileCutoff)
-        padding: 0.5em 0
+  p
+    @media screen and (max-width: $mobileCutoff)
+      padding: 0.5em 0
 
-    @media screen and (max-width: $threeColumnCutoff)
-      flex-grow: 1
+  @media screen and (max-width: $threeColumnCutoff)
+    flex-grow: 1

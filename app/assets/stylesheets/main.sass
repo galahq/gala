@@ -20,44 +20,40 @@ body
   -moz-osx-font-smoothing: grayscale
   background-color: $umichBlue
   margin: 0
-  font: 100% $sansFont
-  line-height: 143%
+  font: $serifFontSize $sansFont
+  line-height: $serifLeading
   height: 100%
 
-h1, h2
-  font-family: $headlineFont
+h1, h2, h3, h4, h5, h6
+  margin-left: 0
 
-p
-  margin-bottom: 1em
+h1, h2, h3, h4, h5, h6
+  font-family: $headlineFont
+  font-weight: 600
+
+h1
+  font-size: 1.5em
+  line-height: 1.0em
+
+h2
+  font-size: 1.2em
+
+h3
+  font-size: 1em
+
+h5
+  font-style: italic
+
+h6
+  font-size: 0.9em
 
 ul, ol
   padding-left: 1em
 
 blockquote
-  font-size: 0.9em
+  font-size: 0.90em
   line-height: 1.5em
   padding: 0 1em 0 1em
-
-.o-button
-  background: $purple
-  border: 0
-  color: white
-  font: 600 80% $sansFont
-  letter-spacing: 0.1em
-  margin-top: 0.5em
-  padding: 0.5em 1em
-  width: auto
-  -webkit-hyphens: none
-  hyphens: none
-  white-space: normal
-  text-transform: uppercase
-  transition: background-color 0.1s
-
-  &:hover,
-  &:focus
-    background: $darkPurple
-    cursor: pointer
-    outline: none
 
 h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
 em, strong
@@ -144,15 +140,9 @@ strong
   h1, h2
     text-transform: uppercase
     letter-spacing: 0.03em
-    color: $darkPurple
 
 a
   cursor: pointer
-  &:hover
-    text-decoration: initial
-    
-p a:hover
-  text-decoration: underline
 
 .disabled
   pointer-events: none
