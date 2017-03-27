@@ -11,6 +11,11 @@
   a
     color: $white
 
+    &.c-toc__link:hover,
+    &.c-toc__link:focus
+      background-color: #29394A
+      color: $white
+
   &__header
     color: $white
     font-family: $sansFont
@@ -32,14 +37,9 @@
     display: block
     padding-left: 45px
 
-    &--active,
-    &:hover, &:focus
+    &--active
       background-color: #29394A
       color: $white
-
-  a.c-toc__link:hover
-    background-color: #29394A
-    color: $white
 
   &__item
     border-top: 1px solid rgba($white, .2)
@@ -100,11 +100,10 @@
       transform: scale(0.8)
 
 .c-toc--disabled
-  .c-toc
-    &__link
-      cursor: default
-      &:hover
-        background-color: transparent
+  a.c-toc__link
+    cursor: default
+    &:hover
+      background-color: transparent
 
-    &__item-data
-      opacity: 0.6
+  .c-toc__item-data
+    opacity: 0.6
