@@ -19,13 +19,13 @@ html {
   font-family: "Icons16";
   font-style: normal;
   font-weight: normal;
-  src: url("icons-16.eot?#iefix") format("embedded-opentype"), url("icons-16.woff") format("woff"), url("icons-16.ttf") format("truetype"); }
+  src: font-url("icons-16.eot?#iefix") format("embedded-opentype"), font-url("icons-16.woff") format("woff"), font-url("icons-16.ttf") format("truetype"); }
 
 @font-face {
   font-family: "Icons20";
   font-style: normal;
   font-weight: normal;
-  src: url("icons-20.eot?#iefix") format("embedded-opentype"), url("icons-20.woff") format("woff"), url("icons-20.ttf") format("truetype"); }
+  src: font-url("icons-20.eot?#iefix") format("embedded-opentype"), font-url("icons-20.woff") format("woff"), font-url("icons-20.ttf") format("truetype"); }
 
 hr {
   margin: 20px 0;
