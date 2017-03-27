@@ -18,8 +18,8 @@
 
   <body>
     <header>
-      <%= link_to root_path do %>
-        <h1 id="logo"><%= inline_svg 'msc-logo.svg' %></h1>
+      <%= link_to root_path, id: "logo" do %>
+        <%= inline_svg 'msc-logo.svg' %>
       <% end %>
       <% if reader_signed_in? %>
         <div id="reader-menu">

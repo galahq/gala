@@ -44,13 +44,13 @@ class Page extends Trackable {
     return (
       <article>
         <section className="Page-meta">
-          <h2 key={`h2:${id}`}>
+          <h1 className="pt-dark" key={`h2:${id}`}>
             <EditableText placeholder="Page title" value={title}
               multiline
               disabled={!editing}
               onChange={value => updatePage(id, { title: value })}
             />
-          </h2>
+          </h1>
           {editing && <button type="button"
             onClick={deleteElement}
             className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
@@ -95,4 +95,3 @@ export default connect(mapStateToProps, { updatePage })(Page)
   //})
 
 //}
-

@@ -13,19 +13,9 @@
 
   - else
     #dashboard-app
-      .catalog-dashboard
-        .catalog-dashboard__reader
-          %h1=t '.greeting', initials: current_reader.initials
-          %h2=t '.my_cases'
-        .catalog-dashboard__my-cases--empty__case
-          %img{src: "https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&w=300&h=300&fit=crop&crop=focalpoint&fp-x=.535&fp-y=.6&fp-z=2.5&mono=493092"}
-          %strong=t '.study_a_case'
-        .catalog-dashboard__my-cases--empty__intro
-          :markdown
-            #{t '.my_cases_placeholder'}
 
   - unless @featured.empty?
-    %h6=t '.featured_cases'
+    %h1.c-catalog__heading=t '.featured_cases'
     .carousel
       .catalog-cases-featured
         - @featured.each do |c|
@@ -34,7 +24,7 @@
       .carousel-button.carousel-button-right ›
 
   - unless @index.empty?
-    %h6=t '.case_index'
+    %h1.c-catalog__heading=t '.case_index'
     .catalog-cases-index
       - @index.each do |c|
         = render partial: 'cases/case', locals: {c: c}

@@ -13,7 +13,7 @@ const EnrollForm = ({caseSlug, readerId, enrollReader}) =>
   <div className="CaseOverview--enroll-form">
     <h2>Enroll in this case</h2>
     <p>If this case catches your eye, enroll for easy access from “My Cases.”</p>
-    <button onClick={() => enrollReader(readerId, caseSlug)} >Enroll</button>
+    <button className="o-button" onClick={() => enrollReader(readerId, caseSlug)} >Enroll</button>
   </div>
 
 export default connect(mapStateToProps, {enrollReader})(EnrollForm)

@@ -10,14 +10,14 @@ header
   & > a:hover
     background-color: inherit
 
-  h1
+  #logo
     margin: 0pt 1pt
 
     svg
-      width: 15em
+      width: 22.5em
 
       @media screen and (max-width: $mobileCutoff)
-        width: 12em
+        width: 18em
 
     background-repeat: no-repeat
 
@@ -61,9 +61,10 @@ header
       display: block
       background-color: transparent
       padding: 0.5em 2em 0.5em 1em
+      color: $yellow
 
     li a:hover
-      color: lighten($umichMaize, 20%)
+      color: $yellow
 
   .dropdown-caret
     position: absolute
@@ -79,14 +80,20 @@ header
   background: $darkBlue
   background-size: cover
   display: inline-block
-  width: 2.2rem
-  height: 1.8rem
-  border-radius: 4rem
-  padding-top: 0.4rem
+  width: 2.5rem
+  height: 2.5rem
+  border-radius: 5rem
+  padding-top: 0.5em
   text-align: center
 
 #reader-sign-in
   padding-top: 0.5rem
+
+  a
+    color: $yellow
+    &:hover
+      background-color: $lightGreen
+      color: $black
 
 .dropdown-caret
   display: inline-block

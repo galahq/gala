@@ -16,6 +16,12 @@ section.enrollments-section
     color: inherit
     text-decoration: underline
 
+  h2
+    font-family: $headlineFont
+    color: $white
+    font-size: 1.2em
+    margin: 1rem 0
+
   form
     color: tint($umichBlue, 80%)
     width: 14em
@@ -23,7 +29,7 @@ section.enrollments-section
 
     input
       background-color: tint($umichBlue, 40%)
-      border-color: tint($umichBlue, 80%)
+      border-color: tint($umichBlue, 80%) !important
       &:focus
         border-color: tint($umichBlue, 80%)
 
@@ -163,3 +169,7 @@ section.enrollments-section
 
   h4, p
     margin: 0
+    color: $white
+
+  h4
+    font-size: 1em

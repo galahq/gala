@@ -22,13 +22,13 @@ const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity,
   deleteElement}) =>
   <article>
     <section className="Page-meta">
-      <h2>
+      <h1>
         <EditableText placeholder="Activity title" value={title}
           multiline
           disabled={!editing}
           onChange={value => updateActivity(id, { title: value })}
         />
-      </h2>
+      </h1>
         {editing && <button type="button"
           onClick={deleteElement}
           className="c-delete-element pt-button pt-intent-danger pt-icon-trash">

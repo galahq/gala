@@ -4,71 +4,56 @@
 @import _tint_and_shade
 @import Catalog
 
+.Card.accepting-selection ::selection
+  background-color: #bfaeec
+
 .CommentThreads
   position: absolute
   top: 0
   right: -290px
   background-color: #7351D4
   width: 267px
-  position: absolute
   color: white
-  font-family: 'tenso'
+  font-family: $sansFont
   font-weight: 500
   font-size: 12pt
   box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3)
 
-.CommentThreads__footer
-  border-top: 1px solid #351D7A
-  padding: 0.25em
+  &__footer
+    border-top: 1px solid #351D7A
+    padding: 0.25em
 
-.CommentThreads__new-button
-  margin: 0
-  padding: 0.5em
-  background-color: #493092
-  border-width: 0
-  font-size: 11pt
-  letter-spacing: 0.4px
-  font-weight: 500
-  transition: background-color 0.1s
-  color: white
-
-  &:hover
-    background-color: darken(#493092, 5%)
-
-  &:disabled
-    cursor: initial
-    background-color: transparent
-
-.Card.accepting-selection ::selection
-  background-color: #bfaeec
-
-.CommentThread__banner
-  +banner
-
-  font-family: $sansFont
-  top: 0.8em
-
-  @media screen and (max-width: $mobileCutoff)
-    top: 0.55em
-
-  padding: 0 0.5rem 0 0.4rem
-  font-size: 70%
-  color: white !important
-  background-color: $purple
-  border-left: 0.35rem solid shade($purple, 30%)
-  cursor: pointer
-
-  &:hover
-    background-color: $purple !important
-    text-decoration: none !important
-
-.CommentThread__icon-button
-  display: flex
-  justify-content: center
-  align-items: center
-
-  &:hover
-    background-color: rgba(0, 0, 0, 0.2)
+  &__new-button.o-button
+    width: 100% !important
+    background-color: $darkPurple
+    margin: 0
+    padding: 0.5em
+    border-width: 0
+    font-size: 11pt
+    letter-spacing: 0.4px
+    font-weight: 500
+    color: white
+    &:hover,
+    &:focus
+      background-color: darken($darkPurple, 10%)
+    &:disabled
+      cursor: initial
+      background-color: transparent
+      
+  &__banner
+    +banner
+    font-family: $sansFont
+    top: 0.8em
+    @media screen and (max-width: $mobileCutoff)
+      top: 0.55em
+    padding: 0 0.5rem 0 0.4rem
+    font-size: 70%
+    color: white !important
+    background-color: $purple
+    border-left: 0.35rem solid shade($purple, 30%)
+    cursor: pointer
+    &:hover
+      background-color: $purple !important
 
 .CommentThread
   padding: 1.5em
@@ -77,7 +62,7 @@
   position: absolute
   top: 0
   left: 18.1em
-  width: 26em
+  width: 30em
   box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3)
 
   &__back
@@ -89,6 +74,19 @@
       width: 22px
       height: 22px
 
+  &__submit-button
+    margin-left: 1em
+    @media screen and (max-width: 768px)
+      font-size: 0.7em !important
+
+  &__icon-button
+    display: flex
+    justify-content: center
+    align-items: center
+
+    &:hover
+      background-color: rgba(0, 0, 0, 0.2)
+
   form
     margin-top: 1em
 
@@ -98,22 +96,37 @@
       margin-bottom: 0.15em
 
       textarea
-        flex: 5
-        height: 3em
+        height: 4em
         margin: 0
         padding: 0.5em
+        flex: 1
+        font-family: $sansFont
 
         &::-webkit-input-placeholder
           color: $purple
 
         &:focus
           box-shadow: 0 0 0 1px #137cbd, 0 0 0 3px rgba(19, 124, 189, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.2)
+          outline: none
 
-      button
-        flex: 1
-        margin: 0 0 0 1em
-        letter-spacing: 0.7px
-        color: white
+  &__metadata
+    margin-bottom: 1em
+
+    &__text
+      font-family: $serifFont
+      position: relative
+
+      &::before
+        content: "“"
+        color: black
+        position: absolute
+        left: -8px
+
+      &::after
+        content: "”"
+        color: black
+        position: absolute
+        right: -8px
 
 .Comment
   color: shade($purple, 40%)
@@ -125,6 +138,7 @@
   blockquote
     margin: 0
     padding: 0
+    border: 0
     line-height: 1.4
     font-weight: 400
     white-space: pre-wrap
@@ -143,25 +157,6 @@
   display: block
   font-weight: 400
   line-height: 1.0
-
-.CommentThread__metadata
-  margin-bottom: 1em
-
-  &__text
-    font-family: $serifFont
-    position: relative
-
-    &::before
-      content: "“"
-      color: black
-      position: absolute
-      left: -8px
-
-    &::after
-      content: "”"
-      color: black
-      position: absolute
-      right: -8px
 
 .Comment cite,
 .CommentThread form label
@@ -191,26 +186,26 @@
 
 @media screen and (max-width: 1600px)
   .Card.has-comments-open
-    flex-basis: 27em
+    flex-basis: 31.8em
 
   #Sidebar.has-comments-open
     margin-left: -15em
 
   aside.CommentThread
-    width: 26em
+    width: 30em
 
 @media screen and (max-width: 1439px)
   aside.CommentThread
-    width: 21em
+    width: 25em
 
 @media screen and (max-width: 1364px)
   aside.CommentThread
-    width: 16em
+    width: 20em
 
 @media screen and (max-width: 1279px)
   aside.CommentThread
     left: 0
-    width: 18em
+    width: 22em
 
   .CommentThread__back
     display: flex
@@ -224,21 +219,30 @@
 @media screen and (max-width: 1024px)
   aside.CommentThread
     left: 0
-    width: 18em
+    width: 17.5em
 
   #Sidebar.has-comment-threads-open
     margin-left: -15em
 
+  .Card.has-comment-threads-open
+    flex-basis: 23em
+
 @media screen and (max-width: 768px)
   aside.CommentThread
     left: 0
-    width: 16.5em
-
-  .Card.has-comment-threads-open.has-comments-open
-    flex-basis: 13.5em
+    width: 14.5em
 
   .Card.has-comment-threads-open
-    flex-basis: 17em
+    flex-basis: 13em
+
+  .CommentThreads
+    width: 14.5em
+    right: -246px
+
+  #Sidebar
+    flex-basis: 8rem !important
+    &.has-comment-threads-open
+      margin-left: -13em
 
 @media screen and (max-width: $mobileCutoff)
   #Sidebar.has-comment-threads-open
@@ -267,4 +271,3 @@
     position: absolute
     box-sizing: border-box
     width: calc(100vw - 1em)
-    height: 150vw
