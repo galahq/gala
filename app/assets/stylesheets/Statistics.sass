@@ -7,7 +7,6 @@
   letter-spacing: 0.25px
   display: flex
   align-items: center
-  margin: 0 !important
 
 .c-statistics__icon
   margin-left: .7em
@@ -31,7 +30,7 @@
 .s-edgenote
   .o-bottom-right
     bottom: 0.2rem
-  @include recolor-statistics($yellow)
+  @include recolor-statistics(lighten($umichMaize, 20%))
 
 .PodcastPlayer
   @include recolor-statistics($white)

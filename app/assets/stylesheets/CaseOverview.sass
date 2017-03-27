@@ -26,17 +26,44 @@
       @media screen and (max-width: $mobileCutoff)
         padding: 1em
 
-      p.c-BillboardSnippet__dek
+      h3
         font-style: italic
-        font-family: $headlineFont
-        font-size: 1em
-        font-weight: 600
-        margin: 1em 0
 
   .CaseOverviewRight
     +flex($fg: 0, $fs: 1, $fb: 20em)
+
     & > *
       margin: 1em
+
+    .Actions
+      background-color: rgba(darken($black, 10%), 0.6)
+      border-radius: 2pt
+      height: 100%
+      padding: 1em
+
+      &.disabled
+        ul, ol, a
+          color: mix($darkBlue, $white, 40%)
+
+      ul
+        color: lighten($umichMaize, 20%)
+        list-style-type: circle
+        margin: 0.5em 0
+        padding-left: 1.5em
+
+      h2
+        color: $white
+
+        .ActionIcon
+          float: left
+          margin-top: -5px
+          margin-right: 0.5em
+
+      & > div
+        margin-top: 2em
+
+      & > div:first-child
+        margin-top: 1em
 
 .BillboardTitle
   background-size: cover
@@ -46,17 +73,18 @@
   padding-top: 10em
 
   h1
-    font-size: 1.5em
     color: $white
+    margin: 0
+    width: 100%
     line-height: 1.1
-    margin-bottom: 0.4em
-    span.c-kicker
-      display: block
-      font-size: 0.6em
-      text-transform: uppercase
-      letter-spacing: 1px
-      font-family: $sansFont
-      margin-bottom: 0.6em
+
+  h4
+    font-family: $sansFont
+    font-weight: 500
+    color: $white
+    width: 100%
+    margin-top: 0.5em
+    line-height: 1.1
 
 .BillboardTitle,
 .PodcastPlayer .artwork,
@@ -98,19 +126,20 @@
   border-bottom: 5px solid $darkPurple
   background-color: $purple
   color: $white
-  padding: 1.1em
+  padding: 1em
 
   h2
     font-family: $sansFont
-    color: $white
-    font-size: 1.2em
     margin: 0
 
   p
-    margin: 0.5em 0
+    margin: 0.35em 0
 
-  .o-button
+  button
     background-color: $darkPurple
-    &:hover,
-    &:focus
+    color: $white
+    padding: 0.5em 1em
+    width: auto
+
+    &:hover
       background-color: darken($darkPurple, 10%)

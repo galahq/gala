@@ -64,7 +64,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
       <div className="CommentThreads__footer">
         <button
           onClick={acceptingSelection ? addCommentThread : acceptSelection}
-          className="o-button CommentThreads__new-button"
+          className="CommentThreads__new-button"
           disabled={acceptingSelection && !selectionPending}
         >
           { !acceptingSelection
