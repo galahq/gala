@@ -23,7 +23,7 @@ class Comment < ApplicationRecord
       comment_thread_id: comment_thread.id,
       card_id: comment_thread.card.id,
       case_id: comment_thread.card.case.id,
-      page_id: comment_thread.card.page.id,
+      page_id: comment_thread.card.element.id,
     }
 
     (comment_thread.collocutors - [reader]).each do |r|

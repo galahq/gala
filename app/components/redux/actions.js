@@ -399,7 +399,7 @@ export function handleNotification(notification) {
       message: notification.message,
       intent: Intent.PRIMARY,
       action: {
-        href: `/cases/${notification.case.slug}#/${notification.page.position}`,
+        href: `/cases/${notification.case.slug}/${notification.element.position}/cards/${notification.cardId}/comments/${notification.commentThreadId}`,
         text: 'Read',
       },
     }))

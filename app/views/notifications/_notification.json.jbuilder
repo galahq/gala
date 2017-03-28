@@ -7,8 +7,10 @@ when "reply_to_thread"
   json.case do
     json.(notification.case, :slug, :kicker )
   end
-  json.page do
-    json.(notification.page, :id, :position)
+  json.element do
+    json.(notification.page.case_element, :position)
   end
+  json.card_id notification.data[:card_id]
+  json.comment_thread_id notification.data[:comment_thread_id]
 end
-json.(notification, :id, :data, :message)
+json.(notification, :id, :message)
