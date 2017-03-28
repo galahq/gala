@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Portal } from '@blueprintjs/core'
 
 import {
-  closeCommentThreads,
   acceptSelection,
 } from 'redux/actions.js'
 
@@ -35,6 +34,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
     <div className={`CommentThreads__window`}>
       <div style={styles.header}>
         <Link to={closeCommentThreadsPath} replace
+          onClick={() => acceptSelection(false)}
           className="CommentThread__icon-button">
           <Icon filename="comments-close"
             style={{...styles.toolbarButton, cursor: 'pointer'}}
@@ -86,6 +86,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
     {
       <Portal>
         <Link to={closeCommentThreadsPath} replace
+          onClick={() => acceptSelection(false)}
           style={styles.backdrop} />
       </Portal>
     }
@@ -97,7 +98,7 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
 
 export default connect(
   mapStateToProps,
-  {closeCommentThreads, acceptSelection},
+  {acceptSelection},
 )(CommentThreadsCard)
 
 

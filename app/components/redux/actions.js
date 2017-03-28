@@ -266,9 +266,9 @@ export function openCitation(key, labelRef) {
 // SELECTION
 //
 export const ACCEPT_SELECTION = "ACCEPT_SELECTION"
-export function acceptSelection() {
+export function acceptSelection(enabled = true) {
   clearSelection()
-  return {type: ACCEPT_SELECTION}
+  return {type: ACCEPT_SELECTION, enabled}
 }
 function clearSelection() {
   if ( document.selection  ) {

@@ -29,7 +29,7 @@ export default function ui(state, action) {
 
     case OPEN_CITATION: return { ...state, openedCitation: action.data }
 
-    case ACCEPT_SELECTION: return { ...state, acceptingSelection: true }
+    case ACCEPT_SELECTION: return { ...state, acceptingSelection: action.enabled }
     case ADD_COMMENT_THREAD: return { ...state, acceptingSelection: false }
 
     case HOVER_COMMENT_THREAD:
