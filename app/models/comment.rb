@@ -13,7 +13,7 @@ class Comment < ApplicationRecord
   after_create_commit :send_notifications_of_reply
 
   def timestamp
-    I18n.l created_at, format: :long
+    I18n.l created_at.in_time_zone("America/Detroit"), format: :long
   end
 
   private
