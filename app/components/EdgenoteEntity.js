@@ -1,15 +1,18 @@
 import React from 'react'  // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
+import { Route, withRouter, matchPath } from 'react-router-dom'
+import { commentThreadsOpen } from 'concerns/routes'
 
 import { highlightEdgenote, activateEdgenote } from 'redux/actions.js'
 
-const mapStateToProps = (state, ownProps) => {
-  let {slug} = ownProps.contentState.getEntity(ownProps.entityKey).getData()
+const mapStateToProps = (state, {location, contentState, entityKey,
+  children}) => {
+  let {slug} = contentState.getEntity(entityKey).getData()
   return {
     editable: state.editable,
-    children: ownProps.children,
-    commentThreadsOpen: !!state.ui.commentThreadsOpenForCard,
+    commentThreadsOpen: !!matchPath(location.pathname, commentThreadsOpen()),
     slug,
+    children,
   }
 }
 
@@ -54,4 +57,4 @@ const EdgenoteEntity = connect(
   mergeProps,
 )(EdgenoteSpan)
 
-export default EdgenoteEntity
+export default withRouter(EdgenoteEntity)
