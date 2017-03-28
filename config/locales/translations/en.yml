@@ -96,6 +96,9 @@ en:
         uid: UID  #g
         initials: Initials
   devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: "Sign up for a free account"
     sessions:
       destroy: Sign out
     registrations:

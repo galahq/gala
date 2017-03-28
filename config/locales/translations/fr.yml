@@ -101,6 +101,9 @@ fr:
         reset_password_token: 
         unlock_token: 
   devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: "Inscription gratuite"
     sessions:
       destroy: Déconnexion
     registrations:

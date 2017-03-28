@@ -17,39 +17,30 @@ label
 .field em
   font: 400 80% $sansFont
 
-.edit_reader, .new_reader, .enrollments-section
+select, input, textarea, button
+  font-family: $sansFont
+
+.edit_reader, .new_reader
+  label
+    margin: 0
+
   select,
   input[type="text"],
   input[type="date"],
   input[type="email"],
   input[type="password"],
   textarea
-    font: 80% $sansFont
-    color: inherit
-    border: 0.1em solid $darkPurple
-    width: calc(100% - 1em)
-    height: 1.8em
     padding: 0.1em 0.5em
     margin-bottom: 0.5em
-    width: 100%
 
-    &:disabled
-      background-color: mix(white, $white, 50%)
+  .pt-checkbox
+    margin: 5px 0 0 0
 
-    &:focus
-      border-color: $purple
-      outline: none
+  .pt-control
+    text-transform: uppercase
 
-  select
-    width: 100%
-    height: 2em
-    background: white
-    -moz-appearance: none
-    -webkit-appearance: none
-    border-radius: 0px
-
-    &:after
-      content: '▾'
+  .actions
+    margin-bottom: 0.5em
 
 .button--subtle
   background: transparent
@@ -101,13 +92,9 @@ input[type="checkbox"]
   width: 30em
 
 .field-reader-name
-  float: left
-  width: 70%
-
+  width: 15em
 .field-reader-initials
-  float: right
-  margin-left: 0.5em
-  width: 25%
+  width: 5em
 
 form + ul
   list-style: none

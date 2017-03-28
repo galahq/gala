@@ -102,6 +102,9 @@ ja:
         unlock_token: 
         locale: 言語
   devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: "無料で申し込む"
     sessions:
       destroy: ログアウト
     registrations:

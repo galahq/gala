@@ -9,24 +9,22 @@
         Currently waiting confirmation for:
         = resource.unconfirmed_email
 
-    .field
-      = f.label :password
-      %br
-      = f.password_field :password, autocomplete: "off"
+    = f.label :password, class: "pt-label" do
+      = t 'activerecord.attributes.user.password'
+      = f.password_field :password, class: "pt-input pt-fill", autocomplete: "off"
 
-    .field
-      = f.label :password_confirmation
-      %br
-      = f.password_field :password_confirmation, autocomplete: "off"
+    = f.label :password_confirmation, class: "pt-label" do
+      = t 'activerecord.attributes.user.password_confirmation'
+      = f.password_field :password_confirmation, class: "pt-input pt-fill", autocomplete: "off"
 
-    .field
-      = f.label :current_password
-      %em= t '.to_confirm_your_changes'
+    = f.label :current_password, class: "pt-label" do
+      = t 'activerecord.attributes.user.current_password'
       %br
-      = f.password_field :current_password, autocomplete: "off"
+      %span.pt-text-muted= t '.to_confirm_your_changes'
+      = f.password_field :current_password, class: "pt-input pt-fill", autocomplete: "off"
 
     .actions
-      = f.submit t('.save'), class: "o-button"
+      = f.submit t('.save'), class: "o-button pt-button pt-intent-primary"
 
 -#.dialog.devise
   -#%h2= t'.cancel_my_account'

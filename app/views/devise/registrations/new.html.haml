@@ -4,39 +4,35 @@
   = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
     = devise_error_messages!
 
-    .field.field-reader-name
-      = f.label :name
-      %br
-      = f.text_field :name, autofocus: true, tabindex: 1
+    .pt-control-group.pt-fill
+      = f.label :name, class: "pt-label" do
+        = t 'activerecord.attributes.reader.name'
+        = f.text_field :name, class: "pt-input pt-fill", autofocus: true, tabindex: 1
+      = f.label :initials, class: "pt-label pt-fixed" do
+        = t 'activerecord.attributes.reader.initials'
+        = f.text_field :initials, class: "pt-input field-reader-initials", tabindex: 6
 
-    .field.field-reader-initials
-      = f.label :initials
-      %br
-      = f.text_field :initials, tabindex: 10
+    = f.label :locale, class: "pt-label" do
+      = t 'activerecord.attributes.reader.locale'
+      .pt-select
+        = f.select :locale, options_for_select(locale_names, I18n.locale), {}, tabindex: 2
 
-    .field
-      = f.label :locale
-      %br
-      = f.select :locale, options_for_select(locale_names, I18n.locale), tabindex: 2
+    = f.label :email, class: "pt-label" do
+      = t 'activerecord.attributes.user.email'
+      = f.email_field :email, class: "pt-input pt-fill", tabindex: 3
 
-    .field
-      = f.label :email
-      %br
-      = f.email_field :email, tabindex: 3
-
-    .field
-      = f.label :password
+    = f.label :password, class: "pt-label" do
+      = t 'activrecord.attributes.user.password'
       - if @minimum_password_length
-        %em= t '.minimum_characters', count: @minimum_password_length
-      %br
-      = f.password_field :password, autocomplete: "off", tabindex: 4
+        %br
+        %span.pt-text-muted= t '.minimum_characters', count: @minimum_password_length
+      = f.password_field :password, class: "pt-input pt-fill", autocomplete: "off", tabindex: 4
 
-    .field
-      = f.label :password_confirmation
-      %br
-      = f.password_field :password_confirmation, autocomplete: "off", tabindex: 5
+    = f.label :password_confirmation, class: "pt-label" do
+      = t 'activrecord.attributes.user.password_confirmation'
+      = f.password_field :password_confirmation, class: "pt-input pt-fill", autocomplete: "off", tabindex: 5
 
     .actions
-      = f.submit t('.sign_up'),class: "o-button"
+      = f.submit t('.sign_up'), class: "o-button pt-button pt-intent-primary", tabindex: 7
 
   = render "devise/shared/links"

@@ -1,28 +1,25 @@
-.dialog
+.dialog.devise
   %h2= t '.my_account'
   = form_for @reader do |f|
-    .field.field-reader-name
-      = f.label :name
-      %br
-      = f.text_field :name, autofocus: true, tabindex: 1
+    .pt-control-group.pt-fill
+      = f.label :name, class: "pt-label" do
+        = t 'activerecord.attributes.reader.name'
+        = f.text_field :name, class: "pt-input pt-fill", autofocus: true, tabindex: 1
+      = f.label :initials, class: "pt-label pt-fixed" do
+        = t 'activerecord.attributes.reader.initials'
+        = f.text_field :initials, class: "pt-input field-reader-initials", tabindex: 10
 
-    .field.field-reader-initials
-      = f.label :initials
-      %br
-      = f.text_field :initials, tabindex: 10
+    = f.label :locale, class: "pt-label" do
+      = t 'activerecord.attributes.reader.locale'
+      .pt-select
+        = f.select :locale, options_for_select(locale_names, I18n.locale), {}, tabindex: 2
 
-    .field
-      = f.label :locale
-      %br
-      = f.select :locale, options_for_select(locale_names, I18n.locale), tabindex: 2
-
-    .field
-      = f.label :email
-      %br
-      = f.email_field :email, tabindex: 3
+    = f.label :email, class: "pt-label" do
+      = t 'activerecord.attributes.user.email'
+      = f.email_field :email, class: "pt-input pt-fill", tabindex: 3
 
     .actions
-      = f.submit t('.save'), class: "o-button"
+      = f.submit t('.save'), class: "o-button pt-button pt-intent-primary"
 
     - if @reader.provider.blank?
       %p=link_to t('devise.registrations.edit.change_my_password'), edit_reader_registration_path

@@ -1,15 +1,15 @@
-<h2>Forgot your password?</h2>
+<h2><%= t 'devise.passwords.new.forgot_your_password' %></h2>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
   <%= devise_error_messages! %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
-  </div>
+  <%= f.label :email do%>
+    <%= t "activerecord.attributes.user.email" %>
+    <%= f.email_field :email, class: "pt-input pt-fill", autofocus: true, spellcheck: false %>
+  <% end %>
 
   <div class="actions">
-    <%= f.submit "Send me reset password instructions", :class => "o-button" %>
+    <%= f.submit t('devise.passwords.new.send_me_reset_password_instructions'), :class => "o-button o-button-multiline pt-button pt-intent-primary" %>
   </div>
 <% end %>
 
