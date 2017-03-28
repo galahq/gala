@@ -9,7 +9,7 @@ const mapStateToProps = (state, {location, contentState, entityKey,
   children}) => {
   let {slug} = contentState.getEntity(entityKey).getData()
   return {
-    editable: state.editable,
+    editing: state.edit.inProgress,
     commentThreadsOpen: !!matchPath(location.pathname, commentThreadsOpen()),
     slug,
     children,
@@ -39,15 +39,15 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-const EdgenoteSpan = ({editable, onMouseOver, onMouseOut, onClick,
-                      children, commentThreadsOpen}) => {
+const EdgenoteSpan = ({editing, onMouseOver, onMouseOut, onClick,
+                      children, commentThreadsOpen, location}) => {
   return <a
     className={`c-edgenote-entity${commentThreadsOpen ? "--inactive" : ""}`}
     onMouseOver={onMouseOver}
     onMouseOut={onMouseOut}
-    onClick={editable ? null : onClick}
+    onClick={editing ? () => {} : onClick}
   >
-    {children}
+    {children.map(child => React.cloneElement(child, {forceSelection: true, location}))}
   </a>
 }
 
