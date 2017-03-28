@@ -57,6 +57,7 @@ const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
       <label htmlFor="CommentSubmit">{userName}</label><br />
       <div id="CommentSubmit">
         <textarea
+          className="pt-input"
           placeholder={intl.formatMessage({
             id: 'comments.write',
             defaultMessage: "Write a reply...",
@@ -69,7 +70,7 @@ const CommentsCard = ({threadId, comments, commentInProgress, intl, userName,
             }
           }}
           onChange={ handleChange(threadId) } />
-        <button type="button" className="o-button CommentThread__submit-button"
+        <button type="button" className="pt-button pt-intent-primary CommentThread__submit-button"
           onClick={ handleSubmit(threadId, commentInProgress) }>
           <FormattedMessage id="submit" defaultMessage="Submit" />
         </button>

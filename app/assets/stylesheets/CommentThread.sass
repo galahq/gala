@@ -39,7 +39,7 @@
     &:disabled
       cursor: initial
       background-color: transparent
-      
+
   &__banner
     +banner
     font-family: $sansFont
@@ -74,7 +74,7 @@
       width: 22px
       height: 22px
 
-  &__submit-button
+  &__submit-button.pt-button
     margin-left: 1em
     @media screen and (max-width: 768px)
       font-size: 0.7em !important
@@ -104,10 +104,6 @@
 
         &::-webkit-input-placeholder
           color: $purple
-
-        &:focus
-          box-shadow: 0 0 0 1px #137cbd, 0 0 0 3px rgba(19, 124, 189, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.2)
-          outline: none
 
   &__metadata
     margin-bottom: 1em
