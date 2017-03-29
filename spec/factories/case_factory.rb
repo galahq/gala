@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :case do
     sequence(:slug) { |n| "#{Faker::Internet.slug(nil, '-')}#{n}" }
+    commentable true
 
     trait :in_catalog do
       kicker { Faker::Hipster.words(2).join " " }

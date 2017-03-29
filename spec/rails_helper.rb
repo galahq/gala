@@ -10,8 +10,14 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/rspec'
 
+Capybara.server = :puma
+
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    args: ["--window-size=1024,768"]
+  )
 end
 Capybara.default_driver = :chrome
 
@@ -51,6 +57,10 @@ RSpec.configure do |config|
         DatabaseCleaner.clean
       end
     end
+  end
+
+  config.after(:each) do |example|
+    puts page.driver.browser.manage.logs.get("browser")  if example.exception
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests

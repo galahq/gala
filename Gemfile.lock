@@ -78,7 +78,6 @@ GEM
       xpath (~> 2.0)
     childprocess (0.6.3)
       ffi (~> 1.0, >= 1.0.11)
-    cliver (0.3.2)
     coderay (1.1.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -222,10 +221,6 @@ GEM
     orm_adapter (0.5.0)
     pg (0.18.4)
     pkg-config (1.1.7)
-    poltergeist (1.14.0)
-      capybara (~> 2.1)
-      cliver (~> 0.3.1)
-      websocket-driver (>= 0.2.0)
     postmark (1.8.1)
       json
       rake
@@ -397,7 +392,6 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-lti
   pg (~> 0.18)
-  poltergeist
   postmark-rails
   puma (~> 3.0)
   rack-canonical-host
