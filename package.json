@@ -26,6 +26,7 @@
     "draft-js": "^0.10.0",
     "file-loader": "^0.8.5",
     "history": "^1.17.0",
+    "intl": "^1.2.5",
     "json-loader": "^0.5.4",
     "node-sass": "^3.4.2",
     "raw-loader": "^0.5.1",

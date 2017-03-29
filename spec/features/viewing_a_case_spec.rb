@@ -5,23 +5,24 @@ feature 'Viewing a case' do
 
   context 'as a normal user' do
     context 'a published case' do
-      let!(:published_case) { create :case, :featured, :published}
+      let!(:published_case) do
+        create :case_with_elements, :published
+      end
+
       before { login_as user }
 
       scenario 'is accessible' do
         click_link published_case.title
-        expect(page).to have_content 'Table of Contents'
+        expect(page).to have_content published_case.pages.first.title
 
         click_link published_case.pages.first.title
         expect(all('.Card').count).to eq published_case.pages.first.cards.count
-
-        click_link "Next:"
-        expect(all('.Card').count).to eq published_case.pages.second.cards.count
+        expect(page).to have_selector '.DraftEditor-root'
       end
     end
 
     context 'a forthcoming case' do
-      let!(:forthcoming_case) { create :case, :featured }
+      let!(:forthcoming_case) { create :case, :in_catalog }
       before { login_as user }
 
       scenario 'is not accessible' do
@@ -41,13 +42,15 @@ feature 'Viewing a case' do
       before { login_as enrollment.reader }
 
       scenario 'is accessible' do
-        click_link forthcoming_case.title
-        expect(page).to have_content 'Table of Contents'
+        expect(find('.catalog-dashboard')).to have_link forthcoming_case.kicker
+        click_link forthcoming_case.kicker
+        save_screenshot
+        expect(page).to have_content forthcoming_case.pages.first.title
       end
     end
 
     context 'a different forthcoming case' do
-      let!(:another_forthcoming_case) { create :case }
+      let!(:another_forthcoming_case) { create :case_with_elements }
       before { login_as enrollment.reader }
 
       scenario 'is not accessible' do

@@ -9,4 +9,8 @@ class Activity < ApplicationRecord
   translates :title, :description, :pdf_url
 
   after_create_commit -> { create_card }
+
+  def cards
+    [card]
+  end
 end

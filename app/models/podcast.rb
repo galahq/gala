@@ -10,6 +10,10 @@ class Podcast < ApplicationRecord
 
   after_create_commit -> { create_card }
 
+  def cards
+    [card]
+  end
+
   def credits_list=(credits_list)
     self.credits = credits_list.is_a?(CreditsList) ? credits_list.attributes.to_yaml : credits_list.to_yaml
   end
