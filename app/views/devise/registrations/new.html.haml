@@ -22,14 +22,14 @@
       = f.email_field :email, class: "pt-input pt-fill", tabindex: 3
 
     = f.label :password, class: "pt-label" do
-      = t 'activrecord.attributes.user.password'
+      = t 'activerecord.attributes.user.password'
       - if @minimum_password_length
         %br
         %span.pt-text-muted= t '.minimum_characters', count: @minimum_password_length
       = f.password_field :password, class: "pt-input pt-fill", autocomplete: "off", tabindex: 4
 
     = f.label :password_confirmation, class: "pt-label" do
-      = t 'activrecord.attributes.user.password_confirmation'
+      = t 'activerecord.attributes.user.password_confirmation'
       = f.password_field :password_confirmation, class: "pt-input pt-fill", autocomplete: "off", tabindex: 5
 
     .actions

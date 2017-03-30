@@ -5,8 +5,6 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 
-import { addLocaleData, IntlProvider } from 'react-intl'
-
 import { FocusStyleManager } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
@@ -20,6 +18,9 @@ let store = createStore(
     thunk,
   )
 )
+
+import { addLocaleData, IntlProvider } from 'react-intl'
+if (!global.Intl) { global.Intl = require('intl') }
 
 import en from 'react-intl/locale-data/en'
 import fr from 'react-intl/locale-data/fr'

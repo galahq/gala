@@ -1,0 +1,13 @@
+dependencies:
+  override:
+    - yarn
+    - bundle install
+compile:
+  override:
+    - npm run webpack:deploy
+test:
+  override:
+    - xvfb-run -a bundle exec rspec:
+        parallel: true
+        files:
+          - spec/**/*_spec.rb

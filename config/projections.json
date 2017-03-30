@@ -18,5 +18,16 @@
       "export default {camelcase|capitalize|dot}"
     ],
     "related": "app/assets/stylesheets/{camelcase|capitalize}.css.scss"
+  },
+  "spec/factories/*_factory.rb": {
+    "command": "factory",
+    "template": [
+      "FactoryGirl.define do",
+      "  factory :{} do",
+      "",
+      "  end",
+      "end"
+    ],
+    "related": "app/models/{}.rb"
   }
 }
