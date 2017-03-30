@@ -55,18 +55,28 @@ RSpec.configure do |config|
     begin
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.clean_with(:truncation)
-
-      begin
-        DatabaseCleaner.start
-        FactoryGirl.lint
-      ensure
-        DatabaseCleaner.clean
-      end
+      FactoryGirl.lint
     end
+  end
+
+config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, type: :feature) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
   end
 
   config.after(:each) do |example|
     puts page.driver.browser.manage.logs.get("browser")  if example.exception
+  end
+
+  config.append_after(:each) do
+    DatabaseCleaner.clean
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
