@@ -27,4 +27,27 @@ RSpec.describe Case, type: :model do
     expect(subject).to_not be_valid
   end
 
+  context "in translation" do
+
+    after :each do
+      I18n.locale = :en
+    end
+
+    it "keeps both languages’ details" do
+      subject.title = "Something"
+      I18n.locale = :fr
+      subject.title = "Quelque chose"
+      I18n.locale = :en
+      expect(subject.title).to eq "Something"
+    end
+
+    it "knows what other languages it’s available in" do
+      subject.title = "Something"
+      I18n.locale = :fr
+      subject.title = "Quelque chose"
+      expect(subject.other_available_locales).to eq %w(en)
+    end
+
+  end
+
 end
