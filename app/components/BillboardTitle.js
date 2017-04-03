@@ -30,7 +30,7 @@ const BillboardTitle = ({ editing, slug, kicker, title, photoCredit, caseAuthors
   return <div className="BillboardTitle pt-dark" style={background}>
     <h1>
       <span className="c-kicker">
-        <EditableText value={kicker} disabled={!editing || minimal}
+        <EditableText multiline value={kicker} disabled={!editing || minimal}
           placeholder="Snappy kicker"
           onChange={value => updateCase(slug, {kicker: value})}
         />
