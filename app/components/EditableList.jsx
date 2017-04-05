@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import { connect } from 'react-redux'
-import {I18n} from 'I18n.js'
-import {Orchard} from 'concerns/orchard.js'
+import {I18n} from 'I18n'
+import {Orchard} from 'concerns/orchard'
 
 function mapStateToProps(state) {
   return {

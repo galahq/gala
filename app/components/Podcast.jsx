@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Trackable} from 'concerns/trackable.js'
+import {Trackable} from 'concerns/trackable'
 import Animate from 'react-animate'
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
-import EditableAttribute from 'EditableAttribute.js'
-import Statistics from 'Statistics.js'
-import CardContents from 'CardContents.js'
-import { updatePodcast } from 'redux/actions.js'
+import EditableAttribute from 'EditableAttribute'
+import Statistics from 'Statistics'
+import CardContents from 'CardContents'
+import { updatePodcast } from 'redux/actions'
 
 function mapStateToProps(state, {id}) {
   return {

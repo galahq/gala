@@ -1,7 +1,7 @@
 import React from 'react'  // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 
-import { openCitation } from 'redux/actions.js'
+import { openCitation } from 'redux/actions'
 
 const mapStateToProps = (state, ownProps) => {
   const citation = state.ui.openedCitation

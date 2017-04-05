@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { selectCommentThread, hoverCommentThread,
-  deleteCommentThread } from 'redux/actions.js'
+  deleteCommentThread } from 'redux/actions'
 import Truncate from 'react-truncate'
 import { FormattedMessage } from 'react-intl'
-import Icon from 'Icon.js'
+import Icon from 'Icon'
 import { Link, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
 

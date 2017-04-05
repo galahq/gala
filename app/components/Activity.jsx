@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import Icon from 'Icon.js'
+import Icon from 'Icon'
 import {EditableText} from '@blueprintjs/core'
-import EditableAttribute from 'EditableAttribute.js'
-import CardContents from 'CardContents.js'
+import EditableAttribute from 'EditableAttribute'
+import CardContents from 'CardContents'
 
 import { FormattedMessage } from 'react-intl'
-import { updateActivity } from 'redux/actions.js'
+import { updateActivity } from 'redux/actions'
 
 function mapStateToProps(state, {id}) {
   const activity = state.activitiesById[id]

@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Trackable} from 'concerns/trackable.js'
-import {ScrollLock} from 'ScrollLock.js'
-import {Editable, EditableHTML, EditableAttribute} from 'Editable.js'
+import {Trackable} from 'concerns/trackable'
+import {ScrollLock} from 'ScrollLock'
+import {Editable, EditableHTML, EditableAttribute} from 'Editable'
 
 function mapStateToProps(state, {match}) {
   return {

@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
-import Statistics from 'Statistics.js'
+import Statistics from 'Statistics'
 import {
   activateEdgenote,
   updateEdgenote,
-} from 'redux/actions.js'
+} from 'redux/actions'
 
 const CONFIRMATION = "Are you sure you want to upgrade this edgenote to the new style? This cannot be undone. Note: it will not be displayed differently until all edgenotes for this card have been converted."
 

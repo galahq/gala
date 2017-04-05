@@ -1,4 +1,4 @@
-import { 
+import {
   CLEAR_UNSAVED,
   TOGGLE_EDITING,
   UPDATE_CASE,
@@ -7,7 +7,7 @@ import {
   UPDATE_PODCAST,
   UPDATE_ACTIVITY,
   UPDATE_EDGENOTE,
-} from '../actions.js'
+} from '../actions'
 
 function edit(state, action) {
   if (typeof state === 'undefined') {

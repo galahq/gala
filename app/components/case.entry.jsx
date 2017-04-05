@@ -8,9 +8,9 @@ import thunk from 'redux-thunk'
 import { FocusStyleManager } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
-import Case from 'Case.js'
+import Case from 'Case'
 
-import reducer from 'redux/reducers.js'
+import reducer from 'redux/reducers'
 
 let store = createStore(
   reducer,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { enrollReader } from 'redux/actions.js'
+import { enrollReader } from 'redux/actions'
 
 function mapStateToProps(state) {
   return {

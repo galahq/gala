@@ -19,12 +19,12 @@ import {
   ADD_PAGE,
   ADD_PODCAST,
   ADD_ACTIVITY,
-} from './actions.js'
+} from './actions'
 
-import cardsById from './reducers/cards.js'
-import edit from './reducers/edit.js'
-import statistics from './reducers/statistics.js'
-import ui from './reducers/ui.js'
+import cardsById from './reducers/cards'
+import edit from './reducers/edit'
+import statistics from './reducers/statistics'
+import ui from './reducers/ui'
 
 function caseData(state, action) {
   if (typeof state === 'undefined') {

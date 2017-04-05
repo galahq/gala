@@ -4,13 +4,13 @@ import { Portal } from '@blueprintjs/core'
 
 import {
   acceptSelection,
-} from 'redux/actions.js'
+} from 'redux/actions'
 
 import { FormattedMessage } from 'react-intl'
 
-import CommentThread from 'comments/CommentThread.js'
-import CommentsCard from 'comments/CommentsCard.js'
-import Icon from 'Icon.js'
+import CommentThread from 'comments/CommentThread'
+import CommentsCard from 'comments/CommentsCard'
+import Icon from 'Icon'
 
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'concerns/routes'

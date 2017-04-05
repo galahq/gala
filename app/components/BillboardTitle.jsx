@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { EditableText } from '@blueprintjs/core'
 
-import { updateCase } from 'redux/actions.js'
+import { updateCase } from 'redux/actions'
 
 function mapStateToProps(state) {
   let { edit, caseData } = state

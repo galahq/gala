@@ -8,7 +8,7 @@ import {
   CHANGE_COMMENT_IN_PROGRESS,
   REGISTER_TOASTER,
   DISPLAY_TOAST,
-} from '../actions.js'
+} from '../actions'
 
 export default function ui(state, action) {
   if (typeof state === 'undefined') {

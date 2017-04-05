@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter, matchPath } from 'react-router-dom'
-import BillboardTitle from 'BillboardTitle.js'
+import BillboardTitle from 'BillboardTitle'
 import { FormattedMessage } from 'react-intl'
-import TableOfContents from 'TableOfContents.js'
-import EnrollForm from 'EnrollForm.js'
+import TableOfContents from 'TableOfContents'
+import EnrollForm from 'EnrollForm'
 import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
 
 function mapStateToProps(state, {location}) {

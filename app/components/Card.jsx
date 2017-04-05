@@ -1,10 +1,10 @@
 import React from 'react'
 import {findDOMNode} from 'react-dom'
 
-import {Trackable} from 'concerns/trackable.js'
+import {Trackable} from 'concerns/trackable'
 
-import EdgenotesCard from 'EdgenotesCard.js'
-import CardContents from 'CardContents.js'
+import EdgenotesCard from 'EdgenotesCard'
+import CardContents from 'CardContents'
 
 class Card extends Trackable {
   eventName() { return "read_card" }

@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import { DragSource, DropTarget } from 'react-dnd'
 import { NavLink, withRouter } from 'react-router-dom'
 
-import { ItemTypes } from 'concerns/dndConfig.js'
-import Icon from 'Icon.js'
+import { ItemTypes } from 'concerns/dndConfig'
+import Icon from 'Icon'
 
 import {
   updateCaseElement,
   persistCaseElementReordering,
-} from 'redux/actions.js'
+} from 'redux/actions'
 
 
 function getElementDataFrom(state) {

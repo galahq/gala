@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 
-import {Orchard} from 'concerns/orchard.js'
+import {Orchard} from 'concerns/orchard'
 
 export class Editable extends React.Component {
   editable() { return this.props.didSave !== null }

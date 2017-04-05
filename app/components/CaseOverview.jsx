@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import TableOfContents from 'TableOfContents.js'
-import Billboard from 'Billboard.js'
-import EnrollForm from 'EnrollForm.js'
+import TableOfContents from 'TableOfContents'
+import Billboard from 'Billboard'
+import EnrollForm from 'EnrollForm'
 
 const CaseOverview = ({editing, signInForm, reader}) => {
   return <div id="CaseOverview" className={`window ${editing && 'editing'}`}>

@@ -8,19 +8,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Editor, EditorState, RichUtils, SelectionState} from 'draft-js'
-import { blockRenderMap, getStyleMap } from 'concerns/draftConfig.js'
+import { blockRenderMap, getStyleMap } from 'concerns/draftConfig'
 
-import EditorToolbar from 'EditorToolbar.js'
-import Statistics from 'Statistics.js'
-import CitationTooltip from 'CitationTooltip.js'
-import CommentThreadsTag from 'comments/CommentThreadsTag.js'
-import CommentThreadsCard from 'comments/CommentThreadsCard.js'
+import EditorToolbar from 'EditorToolbar'
+import Statistics from 'Statistics'
+import CitationTooltip from 'CitationTooltip'
+import CommentThreadsTag from 'comments/CommentThreadsTag'
+import CommentThreadsCard from 'comments/CommentThreadsCard'
 
 import {
   updateCardContents,
   applySelection,
   createCommentThread,
-} from 'redux/actions.js'
+} from 'redux/actions'
 
 import { Route, withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'concerns/routes'

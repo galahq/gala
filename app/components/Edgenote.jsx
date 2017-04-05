@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
 import YoutubePlayer from 'react-youtube-player'
 import { EditableText } from '@blueprintjs/core'
-import EditableAttribute from 'EditableAttribute.js'
+import EditableAttribute from 'EditableAttribute'
 
 import {
   highlightEdgenote,
   activateEdgenote,
   updateEdgenote,
-} from 'redux/actions.js'
+} from 'redux/actions'
 
 const mapStateToProps = (state, {slug}) => {
   return {
@@ -146,7 +146,7 @@ const Image = ({src, callToAction, active, activate, deactivate, editing,
       onUnzoom={deactivate}
       defaultStyles={{overlay: {backgroundColor: '#1D2934'}}}
       image={imageProps}
-      zoomImage={{src}} /> 
+      zoomImage={{src}} />
 
   return <div>
     { src && imageComponent}

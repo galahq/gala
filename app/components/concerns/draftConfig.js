@@ -7,10 +7,10 @@ import {
 } from 'draft-js'
 import Immutable from 'immutable'
 
-import EdgenoteEntity from 'EdgenoteEntity.js'
-import CitationEntity from 'CitationEntity.js'
-import LinkEntity from 'LinkEntity.js'
-import CommentThreadEntity from '../comments/CommentThreadEntity.js'
+import EdgenoteEntity from 'EdgenoteEntity'
+import CitationEntity from 'CitationEntity'
+import LinkEntity from 'LinkEntity'
+import CommentThreadEntity from 'comments/CommentThreadEntity'
 
 const newBlockRenderMap = Immutable.Map({
   'unstyled': {

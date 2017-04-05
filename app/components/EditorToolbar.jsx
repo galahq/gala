@@ -6,10 +6,10 @@ import {
   RichUtils,
 } from 'draft-js'
 
-import { addEntity } from 'concerns/draftConfig.js'
-import { Orchard } from 'concerns/orchard.js'
+import { addEntity } from 'concerns/draftConfig'
+import { Orchard } from 'concerns/orchard'
 
-import { updateCardContents, createEdgenote } from 'redux/actions.js'
+import { updateCardContents, createEdgenote } from 'redux/actions'
 
 function mapStateToProps(state, ownProps) {
   return {

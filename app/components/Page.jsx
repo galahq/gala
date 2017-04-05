@@ -2,11 +2,11 @@ import React from 'react'
 import { connect  } from 'react-redux'
 import {EditableText} from '@blueprintjs/core'
 
-import {Trackable} from 'concerns/trackable.js'
-import {Orchard} from 'concerns/orchard.js'
-import { updatePage } from 'redux/actions.js'
+import {Trackable} from 'concerns/trackable'
+import {Orchard} from 'concerns/orchard'
+import { updatePage } from 'redux/actions'
 
-import Card from 'Card.js'
+import Card from 'Card'
 
 function mapStateToProps(state, {id}) {
   return {

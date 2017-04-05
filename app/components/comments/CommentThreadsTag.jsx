@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
-import { acceptSelection } from 'redux/actions.js'
+import { acceptSelection } from 'redux/actions'
 
 import { Link } from 'react-router-dom'
 

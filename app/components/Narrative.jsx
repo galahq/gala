@@ -1,8 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router'
 
-import {I18n} from 'I18n.js'
-import Page from 'Page.js'
+import {I18n} from 'I18n'
+import Page from 'Page'
 
 class Narrative extends React.Component {
   componentDidUpdate(prevProps) {

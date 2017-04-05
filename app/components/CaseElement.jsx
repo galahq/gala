@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import { Route, Redirect, Link } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
 
-import Sidebar from 'Sidebar.js'
-import Page from 'Page.js'
-import Podcast from 'Podcast.js'
-import Activity from 'Activity.js'
-import EdgenoteContents from 'EdgenoteContents.js'
+import Sidebar from 'Sidebar'
+import Page from 'Page'
+import Podcast from 'Podcast'
+import Activity from 'Activity'
+import EdgenoteContents from 'EdgenoteContents'
 
 import { FormattedMessage } from 'react-intl'
 

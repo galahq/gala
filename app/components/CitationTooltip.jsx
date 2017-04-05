@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { EditorState } from 'draft-js'
 
-import { updateCardContents, openCitation } from 'redux/actions.js'
+import { updateCardContents, openCitation } from 'redux/actions'
 
 function mapStateToProps(state, ownProps) {
   let { editorState } = state.cardsById[ownProps.cardId]

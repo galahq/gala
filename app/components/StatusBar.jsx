@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { toggleEditing, saveChanges } from 'redux/actions.js'
+import { toggleEditing, saveChanges } from 'redux/actions'
 
 function mapStateToProps(state) {
   let {edit, caseData} = state

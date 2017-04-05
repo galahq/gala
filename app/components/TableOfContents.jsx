@@ -5,10 +5,10 @@ import { withRouter } from 'react-router-dom'
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DropTarget, DragDropContext } from 'react-dnd'
 
-import { createPage, createPodcast, createActivity } from 'redux/actions.js'
+import { createPage, createPodcast, createActivity } from 'redux/actions'
 
-import { ItemTypes } from 'concerns/dndConfig.js'
-import TableOfContentsElement from 'TableOfContentsElement.js'
+import { ItemTypes } from 'concerns/dndConfig'
+import TableOfContentsElement from 'TableOfContentsElement'
 
 function mapStateToProps(state) {
   return {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Route, withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'concerns/routes'
 
-import { highlightEdgenote, activateEdgenote } from 'redux/actions.js'
+import { highlightEdgenote, activateEdgenote } from 'redux/actions'
 
 const mapStateToProps = (state, {location, contentState, entityKey,
   children}) => {

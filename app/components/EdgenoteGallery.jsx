@@ -1,7 +1,7 @@
 import React from 'react'
-import Sidebar from 'Sidebar.js'
-import OldEdgenote from 'OldEdgenote.js'
-import { I18n } from "I18n.js"
+import Sidebar from 'Sidebar'
+import OldEdgenote from 'OldEdgenote'
+import { I18n } from "I18n"
 
 class EdgenoteGallery extends React.Component {
 

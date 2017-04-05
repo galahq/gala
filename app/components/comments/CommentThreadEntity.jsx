@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { openCommentThreads, selectCommentThread } from 'redux/actions.js'
+import { openCommentThreads, selectCommentThread } from 'redux/actions'
 import { withRouter } from 'react-router-dom'
 
 function mapStateToProps(state, { contentState, children }) {

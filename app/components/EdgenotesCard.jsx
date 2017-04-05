@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { convertToRaw } from 'draft-js'
-import OldEdgenote from 'OldEdgenote.js'
-import {Edgenote} from 'Edgenote.js'
+import OldEdgenote from 'OldEdgenote'
+import {Edgenote} from 'Edgenote'
 
 function mapStateToProps(state, ownProps) {
   let edgenoteSlugs = getEdgenoteSlugs(state.cardsById[ownProps.cardId].editorState)

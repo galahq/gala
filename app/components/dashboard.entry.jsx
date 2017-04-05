@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { Dashboard } from 'dashboard/Dashboard.js'
+import { Dashboard } from 'dashboard/Dashboard'
 
 render((
   <Dashboard {...window.reader} />

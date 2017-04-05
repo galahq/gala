@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Icon from 'Icon.js'
+import Icon from 'Icon'
 
 function mapStateToProps(state, ownProps) {
   let { uri } = ownProps

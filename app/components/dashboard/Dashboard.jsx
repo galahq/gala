@@ -1,7 +1,7 @@
 import React from 'react'
-import { I18n } from 'I18n.js'
-import { DashboardCase } from 'dashboard/DashboardCase.js'
-import {Orchard} from 'concerns/orchard.js'
+import { I18n } from 'I18n'
+import { DashboardCase } from 'dashboard/DashboardCase'
+import {Orchard} from 'concerns/orchard'
 
 export class Dashboard extends React.Component {
 

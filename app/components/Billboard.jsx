@@ -2,11 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { EditableText } from '@blueprintjs/core'
-import EditableAttribute from 'EditableAttribute.js'
+import EditableAttribute from 'EditableAttribute'
 
-import BillboardTitle from 'BillboardTitle.js'
+import BillboardTitle from 'BillboardTitle'
 import { FormattedMessage } from 'react-intl'
-import { updateCase } from 'redux/actions.js'
+import { updateCase } from 'redux/actions'
 
 function mapStateToProps(state) {
   let { edit, caseData } = state

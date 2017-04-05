@@ -1,16 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { changeCommentInProgress, createComment} from 'redux/actions.js'
+import { changeCommentInProgress, createComment} from 'redux/actions'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import { styles } from 'concerns/draftConfig.js'
+import { styles } from 'concerns/draftConfig'
 
 import { Link, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'concerns/routes'
 
-import Icon from 'Icon.js'
+import Icon from 'Icon'
 
 function mapStateToProps(state, {match}) {
   const threadId = match.params.commentThreadId

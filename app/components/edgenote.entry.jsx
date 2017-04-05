@@ -3,8 +3,8 @@ import { render } from 'react-dom'
 import { Router, Route, useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history'
 
-import {Card} from 'Narrative.js'
-import EdgenoteContents from 'EdgenoteContents.js'
+import {Card} from 'Narrative'
+import EdgenoteContents from 'EdgenoteContents'
 
 import '../assets/stylesheets/Edgenote.scss'
 import '../assets/stylesheets/EdgenoteContents.css.scss'
