@@ -31,7 +31,8 @@ const Activity = ({id, title, pdfUrl, cardId, editing, iconSlug, updateActivity,
       </h1>
         {editing && <button type="button"
           onClick={deleteElement}
-          className="c-delete-element pt-button pt-intent-danger pt-icon-trash">
+          className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
+        >
           Delete Podcast
         </button>}
     </section>

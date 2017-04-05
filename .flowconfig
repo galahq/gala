@@ -1,0 +1,20 @@
+[ignore]
+
+[include]
+
+[libs]
+./node_modules/fbjs/flow/lib
+
+[options]
+module.system.node.resolve_dirname=node_modules
+module.system.node.resolve_dirname=components
+module.system.node.resolve_dirname=react
+module.use_strict=true
+module.name_mapper='.*\(.css\)' -> 'CSSModule'
+module.file_ext=.js
+module.file_ext=.json
+module.file_ext=.css
+
+esproposal.class_static_fields=enable
+suppress_type=$FlowIssue
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(2[0-8]\\|1[0-9]\\|[0-9]\\).[0-9]\\)? *\\).*\n
