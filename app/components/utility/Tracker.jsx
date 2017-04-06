@@ -34,17 +34,18 @@ class BaseTracker extends React.Component {
 
   _stopTimer (): void {
     window.removeEventListener('beforeunload', this._stopTimer)
-    if (this.props.timerState !== 'STOPPED') this._log(this.state)
+    const duration = this._timeSinceArrival(this.state)
+    if (duration > 0) this._log(duration)
     this.setState({ durationSoFar: 0 })
   }
 
-  _log (state?: TrackerState = this.state): void {
+  _log (duration: number): void {
     (window.ahoy: Ahoy).track(
       this.props.targetParameters.name,
       {
         ...this.props.targetParameters,
         caseSlug: this.props.caseSlug,
-        duration: this._timeSinceArrival(state),
+        duration,
       }
     )
   }
@@ -177,7 +178,7 @@ export class OnScreenTracker extends React.Component {
     window.addEventListener('scroll', this._setNeedsCheckVisibility)
     window.addEventListener('visibilitychange', this._checkVisibility)
 
-    this.setState({ interval: setInterval(this._maybeCheckVisibility, 1000) })
+    this.setState({ interval: setInterval(this._maybeCheckVisibility, 500) })
 
     this._setNeedsCheckVisibility()
   }

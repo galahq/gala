@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :page do
     transient do
-      card_count 3
+      card_count 5
     end
 
     title { Faker::Hipster.sentence }
