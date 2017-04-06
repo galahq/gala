@@ -1,4 +1,4 @@
-import { Orchard } from 'concerns/orchard.js'
+import { Orchard } from 'concerns/orchard'
 import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 

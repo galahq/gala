@@ -1,8 +1,8 @@
 import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization
   from 'concerns/convertFromOldStyleCardSerialization.js'
-import { addCommentThreads } from 'concerns/commentThreads.js'
-import { decorator } from 'concerns/draftConfig.js'
+import { addCommentThreads } from 'concerns/commentThreads'
+import { decorator } from 'concerns/draftConfig'
 
 import {
   UPDATE_CARD_CONTENTS,
@@ -13,7 +13,7 @@ import {
   REMOVE_COMMENT_THREAD,
   ADD_PODCAST,
   ADD_ACTIVITY,
-} from '../actions.js'
+} from '../actions'
 
 let { forceSelection } = EditorState
 

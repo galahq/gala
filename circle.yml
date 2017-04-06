@@ -7,7 +7,7 @@ compile:
     - npm run webpack:deploy
 test:
   override:
-    - xvfb-run -a bundle exec rspec:
+    - xvfb-run -a bundle exec rspec -r rspec_junit_formatter --format progress --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml:
         parallel: true
         files:
           - spec/**/*_spec.rb

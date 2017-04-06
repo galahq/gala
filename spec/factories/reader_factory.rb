@@ -9,5 +9,17 @@ FactoryGirl.define do
     trait :francophone do
       locale "fr"
     end
+
+    trait :editor do
+      after :create do |this|
+        this.add_role :editor
+      end
+    end
+
+    trait :invisible do
+      after :create do |this|
+        this.add_role :invisible
+      end
+    end
   end
 end

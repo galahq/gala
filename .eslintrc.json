@@ -1,0 +1,59 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "standard"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jquery": true
+  },
+  "settings": {
+    "ecmascript": 6,
+    "jsx": true,
+    "import/ignore": "node_modules/",
+    "import/resolver": {
+      "webpack": {
+        "config": "config/webpack.config.js"
+      }
+    }
+  },
+  "plugins": [
+    "import",
+    "react",
+    "jsx-a11y"
+  ],
+  "rules": {
+    "no-undef": 0,
+    "comma-dangle": [2, "always-multiline"],
+    "object-shorthand": [2, "always"],
+    "no-shadow": 0,
+    "no-duplicate-imports": 0,
+    "no-confusing-arrow": 0,
+    "react/prefer-es6-class": 2,
+    "react/prefer-stateless-function": 2,
+    "react/jsx-handler-names": 2,
+    "react/jsx-indent": [2, 2],
+    "react/jsx-indent-props": [2, 2],
+    "react/jsx-key": 2,
+    "react/jsx-max-props-per-line": [2, { "maximum": 1, "when": "multiline" }],
+    "react/jsx-no-bind": [2, {"ignoreRefs": true, "allowArrowFunctions": true}],
+    "react/jsx-no-target-blank": 2,
+    "react/jsx-pascal-case": 2,
+    "react/jsx-sort-props": [2, {
+      "callbacksLast": true,
+      "shorthandFirst": true,
+      "noSortAlphabetically": true
+    }],
+    "react/jsx-tag-spacing": [2, {
+      "closingSlash": "never",
+      "beforeSelfClosing": "always",
+      "afterOpening": "never"
+    }],
+    "no-use-before-define": 0,
+    "react/prop-types": 0
+  }
+}

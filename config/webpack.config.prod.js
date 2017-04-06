@@ -5,10 +5,10 @@ module.exports = {
   devtool: 'eval',
 
   entry: {
-    "case": ['babel-polyfill', 'whatwg-fetch', 'case.entry.js'],
-    //edgenote: ['whatwg-fetch', 'edgenote.entry.js'],
-    enrollments: ['babel-polyfill', 'whatwg-fetch', 'enrollments.entry.js'],
-    dashboard: ['babel-polyfill', 'whatwg-fetch', 'dashboard.entry.js'],
+    "case": ['babel-polyfill', 'whatwg-fetch', 'case.entry.jsx'],
+    //edgenote: ['whatwg-fetch', 'edgenote.entry.jsx'],
+    enrollments: ['babel-polyfill', 'whatwg-fetch', 'enrollments.entry.jsx'],
+    dashboard: ['babel-polyfill', 'whatwg-fetch', 'dashboard.entry.jsx'],
   },
 
   output: {
