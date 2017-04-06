@@ -29,7 +29,7 @@ function mergeProps(
 }
 
 const CommentThreadEntity = ({ onClick, children }) => {
-  return <span onClick={onClick}>
+  return <span className="c-comment-thread-entity" onClick={onClick}>
     {children}
   </span>
 }

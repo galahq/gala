@@ -23,7 +23,60 @@ feature 'Leaving a comment' do
     click_button "Submit"
     expect(page).to have_content "Test comment"
     expect(find("textarea").value).to be_blank
-    save_screenshot
+  end
 
+  context 'in response to another comment' do
+    let!(:other_reader) do
+      other_reader = create :reader
+    end
+
+    let!(:comment_thread) do
+      first_card = enrollment.case.pages.first.cards.first
+      first_letter = first_card.paragraphs[0][0]
+      comment_thread = first_card.comment_threads.create(
+        id: 4444,
+        start: 0,
+        length: 1,
+        block_index: 0,
+        original_highlight_text: first_letter,
+        reader: other_reader,
+        locale: I18n.locale
+      )
+    end
+
+    let!(:comment) do
+      comment_thread.comments.create(
+        content: "Test comment",
+        reader: other_reader,
+      )
+    end
+
+    it 'is possible' do
+      kase = enrollment.case
+      visit case_path 'en', enrollment.case
+      click_link kase.pages.first.title
+
+      comment_entity = find '.c-comment-thread-entity'
+      comment_entity.click
+      expect(page).to have_content comment.content
+
+      fill_in placeholder: "Write a reply...", with: "Test reply"
+      click_button "Submit"
+      expect(page).to have_content "Test reply"
+      expect(find("textarea").value).to be_blank
+    end
+
+    it 'displays a toast to the other comment’s author' do
+      comment_thread.comments.create(
+        content: "Test reply",
+        reader: enrollment.reader
+      )
+      visit case_path('en', enrollment.case) + '/1'
+      comment_thread.comments.create(
+        content: "Should trigger toast",
+        reader: other_reader
+      )
+      expect(page).to have_content "replied to your comment"
+    end
   end
 end

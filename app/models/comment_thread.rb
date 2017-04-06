@@ -6,8 +6,10 @@ class CommentThread < ApplicationRecord
   belongs_to :card
   belongs_to :case
   has_many :comments, dependent: :restrict_with_error
-  has_many :collocutors, -> { distinct }, through: :comments, source: :reader
 
+  def collocutors
+    comments.map(&:reader).uniq
+  end
   def visible_to_reader?(r)
     locale == I18n.locale.to_s && (comments.length > 0 || reader == r)
   end

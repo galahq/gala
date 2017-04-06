@@ -11,6 +11,10 @@ class Card < ApplicationRecord
 
   before_save :set_case_from_element
 
+  def paragraphs
+    JSON.parse(raw_content)["blocks"].map{ |x| x["text"] }
+  end
+
   include Trackable
   def event_name
     'read_card'
