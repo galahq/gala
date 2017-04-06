@@ -6,7 +6,7 @@ function mapStateToProps(state, ownProps) {
   let { uri } = ownProps
   let {uniques, views, averageTime, updatedAt} = state.statistics[uri] || {}
   return {
-    visible: !!uniques,
+    visible: uniques != null,
     uniques,
     views,
     averageTime,
@@ -23,14 +23,14 @@ class Statistics extends React.Component {
     return <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
 
       <Icon filename="ahoy-uniques" className='c-statistics__icon' />
-      {uniques}
+      <span className="c-statistics__uniques">{uniques}</span>
 
       <Icon filename="ahoy-views" className='c-statistics__icon' />
-      {views}
+      <span className="c-statistics__views">{views}</span>
 
       <Icon filename="ahoy-duration"
         className='c-statistics__icon c-statistics__icon--less-space' />
-      {averageTime}
+      <span className="c-statistics__average-time">{averageTime}</span>
 
     </p>
   }
