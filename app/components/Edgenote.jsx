@@ -72,7 +72,7 @@ class EdgenoteFigure extends React.Component {
       : () => null
 
     return <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
-      <ConditionalLink target="_blank" href={websiteUrl}>
+      <ConditionalLink onClick={activate}>
 
         { !!pullQuote || !!imageUrl || !!audioUrl ||
           <YouTube
