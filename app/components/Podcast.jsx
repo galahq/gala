@@ -1,13 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Trackable} from 'concerns/trackable'
-import Animate from 'react-animate'
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 import EditableAttribute from 'EditableAttribute'
 import Statistics from 'Statistics'
 import CardContents from 'CardContents'
 import { updatePodcast } from 'redux/actions'
+import Tracker from 'utility/Tracker'
 
 function mapStateToProps(state, {id}) {
   return {
@@ -38,74 +37,22 @@ class Podcast extends React.Component {
 
 export default connect(mapStateToProps, {updatePodcast})(Podcast)
 
-let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
-  eventName() { return "visit_podcast" }
-
-  trackableArgs() { return {
-    case_slug: this.props.slug,
-    podcast_id: this.props.id,
-  } }
-
-  newPropsAreDifferent(nextProps) {
-    this.props.id !== nextProps.id
-  }
-
+let PodcastPlayer = class PodcastPlayer extends React.Component {
   constructor() {
     super()
     this.state = {
       playing: false,
-      creditsVisible: true,
     }
-  }
-
-  componentDidMount() {
-    // Not calling super---overriding timer cues.
-    window.addEventListener("beforeunload", this.log)
-  }
-
-  visibilityChange() {
-    // Not calling super---overriding timer cues.
-  }
-
-  componentWillUnmount() {
-    this.log()
-    window.removeEventListener("beforeunload", this.log)
-  }
-
-  //showCredits() {
-    //this[Animate['@animate']](
-      //'podcast-hosts-fade', { maxHeight: 0 }, { maxHeight: 1000 }, 200,
-      //{onComplete: () => {this.setState({creditsVisible: true})}}
-    //)
-  //}
-  //hideCredits() {
-    //this[Animate['@animate']](
-      //'podcast-hosts-fade', { maxHeight: 1000 }, { maxHeight: 0 }, 200,
-      //{onComplete: () => {this.setState({creditsVisible: false})}}
-    //)
-  //}
-  toggleCredits() {
-    //if (this.state.playing && this.state.creditsVisible) {
-      //this.hideCredits()
-    //} else if (!this.state.creditsVisible) {
-      //this.showCredits()
-    //}
   }
 
   setPlaying() {
     this.setState({
       playing: true,
-      timeArrived: Date.now(),
     })
-    if (this.state.creditsVisible) {
-      this.hideCredits()
-    }
   }
   setPaused() {
     this.setState({
       playing: false,
-      durationSoFar: this.timeSinceArrival(),
-      timeArrived: Date.now(),
     })
   }
 
@@ -117,7 +64,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
       return [<dt>{guest.name}</dt>, <dd>{guest.title}</dd>]
     })
 
-    return <div style={this[Animate['@getAnimatedStyle']]('podcast-hosts-fade')}>
+    return <div>
       <dl>{guestList}</dl>
       <em>
         <FormattedMessage id="podcast.hosts" values={{count: hosts.length}} />
@@ -150,7 +97,7 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
           </cite>
         </div>
 
-        <div className="credits" onClick={this.toggleCredits.bind(this)} >
+        <div className="credits">
           <h1>
             <EditableText disabled={!editing} multiline value={title}
               onChange={v => updatePodcast(id, { title: v})}
@@ -170,6 +117,15 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
           onPause={this.setPaused.bind(this)}
         />
 
+        <Tracker
+          timerState={this.state.playing ? 'RUNNING' : 'PAUSED'}
+          targetKey={`podcast/${id}`}
+          targetParameters={{
+            name: 'visit_podcast',
+            podcast_id: id,
+          }}
+        />
+
       <div>
         <EditableAttribute disabled={!editing} title="Audio URL"
           onChange={v => updatePodcast(id, { audioUrl: v})}
@@ -179,4 +135,4 @@ let PodcastPlayer = Animate.extend(class PodcastPlayer extends Trackable {
     </div>
     )
   }
-})
+}

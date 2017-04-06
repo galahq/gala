@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Trackable} from 'concerns/trackable'
 import {ScrollLock} from 'ScrollLock'
 import {Editable, EditableHTML, EditableAttribute} from 'Editable'
+import Tracker from 'utility/Tracker'
 
 function mapStateToProps(state, {match}) {
   return {
@@ -56,6 +56,14 @@ class EdgenoteContents extends React.Component {
         <aside className="EdgenoteContents-window">
           <EdgenoteDisplay didSave={null} {...this.props.edgenote} />
           <EdgenoteSidebar didSave={null} {...this.props.edgenote} />
+          <Tracker
+            timerState={active ? 'RUNNING' : 'STOPPED'}
+            targetKey={`edgenotes/${slug}`}
+            targetParameters={{
+              name: 'visit_edgenote',
+              edgenoteSlug: this.props.edgenote.slug,
+            }}
+          />
         </aside>
       </div>
     )

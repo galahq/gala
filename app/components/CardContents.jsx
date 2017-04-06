@@ -15,6 +15,7 @@ import Statistics from 'Statistics'
 import CitationTooltip from 'CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
 import CommentThreadsCard from 'comments/CommentThreadsCard'
+import { OnScreenTracker } from 'utility/Tracker'
 
 import {
   updateCardContents,
@@ -215,6 +216,14 @@ class CardContents extends React.Component {
       }
 
       { solid && !editable && <Statistics uri={`cards::${id}`} /> }
+
+      <OnScreenTracker
+        targetKey={`cards/${id}`}
+        targetParameters={{
+          name: 'read_card',
+          card_id: id,
+        }}
+      />
     </div>
   }
 }

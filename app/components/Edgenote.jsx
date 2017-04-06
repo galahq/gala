@@ -15,7 +15,6 @@ import {
 
 const mapStateToProps = (state, {slug}) => {
   return {
-    caseSlug: state.caseData.slug,
     editing: state.edit.inProgress,
     selected: slug === state.ui.highlightedEdgenote,
     active: slug === state.ui.activeEdgenote,
@@ -48,7 +47,7 @@ class EdgenoteFigure extends React.Component {
 
   render () {
     const {
-      caseSlug, contents, selected, active, activate, deactivate, onMouseOver,
+      contents, selected, active, activate, deactivate, onMouseOver,
       onMouseOut, editing, onChange,
     } = this.props
     if (!contents) return null
@@ -141,7 +140,6 @@ class EdgenoteFigure extends React.Component {
         targetParameters={{
           name: 'visit_edgenote',
           edgenoteSlug: slug,
-          caseSlug,
         }}
       />
     </figure>

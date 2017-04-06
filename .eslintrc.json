@@ -27,6 +27,7 @@
     "jsx-a11y"
   ],
   "rules": {
+    "no-undef": 0,
     "comma-dangle": [2, "always-multiline"],
     "object-shorthand": [2, "always"],
     "no-shadow": 0,
