@@ -12,13 +12,17 @@ feature 'Tracking a reader' do
       visit "#{case_path 'en', kase}/1"
       sleep 1
       visit root_path
+      sleep 1
       expect(kase.pages.first.cards.first.views).to eq 1
       expect(kase.pages.first.cards.first.uniques).to eq 1
+      expect(kase.pages.first.cards.last.views).to eq 0
       visit "#{case_path 'en', kase}/1"
       sleep 1
       visit root_path
+      sleep 1
       expect(kase.pages.first.cards.first.views).to eq 2
       expect(kase.pages.first.cards.first.uniques).to eq 1
+      expect(kase.pages.first.cards.last.views).to eq 0
     end
   end
 
