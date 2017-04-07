@@ -1,9 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { openCommentThreads, selectCommentThread } from 'redux/actions'
 import { withRouter } from 'react-router-dom'
 
-function mapStateToProps(state, { contentState, children }) {
+import typeof { ContentState, DraftEditorLeaf } from 'draft-js'
+import type { State } from 'redux/state'
+
+function mapStateToProps (state: State, { contentState, children }) {
   let commentThreadId = getFirstThreadId(contentState, children[0])
   let commentThread = state.commentThreadsById[commentThreadId]
   return {
@@ -13,18 +15,18 @@ function mapStateToProps(state, { contentState, children }) {
   }
 }
 
-function mergeProps(
-  {cardId, commentThreadId, disabled},
+function mergeProps (
+  { cardId, commentThreadId, disabled },
   {},
-  {children, history, match}
+  { children, history, match }
 ) {
   return {
     onClick: () => {
       !cardId || disabled ||
         (history.replace(`${match.url}/cards/${cardId}/comments/${commentThreadId}`))
     },
-    children: children.length > 0
-      && React.cloneElement(children[0], {forceSelection: true}),
+    children: children.length > 0 &&
+      React.cloneElement(children[0], { forceSelection: true }),
   }
 }
 
@@ -40,7 +42,7 @@ export default withRouter(connect(
   mergeProps,
 )(CommentThreadEntity))
 
-function getFirstThreadId(contentState, leaf) {
+function getFirstThreadId (contentState: ContentState, leaf: DraftEditorLeaf) {
   const styles = contentState.getBlockForKey(leaf.props.blockKey)
     .getInlineStyleAt(leaf.props.start)
   const ids = styles.map(s => s.match(/thread--([0-9]+)/))

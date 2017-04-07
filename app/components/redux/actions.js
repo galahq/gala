@@ -1,46 +1,106 @@
-import { Orchard } from 'concerns/orchard'
+// @flow
+import { Orchard } from 'shared/orchard'
 import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 
-// GENERAL
-//
-export const TOGGLE_EDITING = "TOGGLE_EDITING"
-export function toggleEditing() {
-  return {type: TOGGLE_EDITING}
+import type { EditorState, SelectionState } from 'draft-js'
+
+import type {
+  State,
+  CaseDataState,
+  CaseElement,
+  Card,
+  Page,
+  Podcast,
+  Activity,
+  Comment,
+  CommentThread,
+  Edgenote,
+  Notification,
+} from 'redux/state'
+
+export type Action =
+  ToggleEditingAction |
+  ClearUnsavedAction |
+  UpdateCaseAction |
+  SetReaderEnrollmentAction |
+  UpdateCaseElementAction |
+  UpdateCaseElementsAction |
+  RemoveElementAction |
+  AddPageAction |
+  UpdatePageAction |
+  AddPodcastAction |
+  UpdatePodcastAction |
+  AddActivityAction |
+  UpdateActivityAction |
+  ParseAllCardsAction |
+  UpdateCardContentsAction |
+  ReplaceCardAction |
+  OpenCitationAction |
+  AcceptSelectionAction |
+  ApplySelectionAction |
+  AddCommentThreadAction |
+  RemoveCommentThreadAction |
+  HoverCommentThreadAction |
+  ChangeCommentInProgressAction |
+  AddCommentAction |
+  CreateEdgenoteAction |
+  UpdateEdgenoteAction |
+  HighlightEdgenoteAction |
+  ActivateEdgenoteAction |
+  RegisterToasterAction |
+  DisplayToastAction
+
+type GetState = () => State
+type PromiseAction = Promise<Action>
+type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
+type Dispatch = (action: Action | ThunkAction | PromiseAction | Array<Action>) => any
+
+// API
+
+export type ToggleEditingAction = { type: 'TOGGLE_EDITING' };
+export function toggleEditing (): ToggleEditingAction {
+  return { type: 'TOGGLE_EDITING' }
 }
 
-export function saveChanges() {
-  return (dispatch, getState) => {
-    const state = {...getState()}
+export function saveChanges (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
 
     dispatch(clearUnsaved())
     dispatch(displayToast({
-      message: "Saved successfully",
+      message: 'Saved successfully',
       intent: Intent.SUCCESS,
     }))
     window.onbeforeunload = null
 
     Object.keys(state.edit.unsavedChanges).forEach(
-      endpoint => {
+      (endpoint) => {
         saveModel(
           endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
           state)
-      }
+      },
     )
   }
 }
 
-async function saveModel(endpoint, state) {
+async function saveModel (endpoint: string, state: State): Promise<Object> {
   const [model, id] = endpoint.split('/')
 
   let data
   switch (model) {
     case 'cases': {
-      const {published, kicker, title, dek, slug, photoCredit, summary,
-        baseCoverUrl} = state.caseData
+      const { published, kicker, title, dek, slug, photoCredit, summary,
+        baseCoverUrl } = state.caseData
       data = {
         case: {
-          published, kicker, title, dek, slug, photoCredit, summary,
+          published,
+          kicker,
+          title,
+          dek,
+          slug,
+          photoCredit,
+          summary,
           coverUrl: baseCoverUrl,
         },
       }
@@ -48,7 +108,7 @@ async function saveModel(endpoint, state) {
       break
 
     case 'cards': {
-      const {editorState} = state.cardsById[id]
+      const { editorState } = state.cardsById[id]
       data = {
         card: {
           rawContent:
@@ -70,8 +130,8 @@ async function saveModel(endpoint, state) {
       break
 
     case 'podcasts': {
-      const {credits, title, artworkUrl, audioUrl,
-        photoCredit} = state.podcastsById[id]
+      const { credits, title, artworkUrl, audioUrl,
+        photoCredit } = state.podcastsById[id]
       data = {
         podcast: {
           credits: JSON.stringify(credits),
@@ -85,7 +145,7 @@ async function saveModel(endpoint, state) {
       break
 
     case 'activities': {
-      const {title, pdfUrl, iconSlug} = state.activitiesById[id]
+      const { title, pdfUrl, iconSlug } = state.activitiesById[id]
       data = {
         activity: {
           title,
@@ -96,36 +156,41 @@ async function saveModel(endpoint, state) {
     }
       break
 
-    case 'edgenotes': {
+    case 'edgenotes':
       data = { edgenote: state.edgenotesBySlug[id] }
-    }
+
       break
 
     default:
-      throw "Bad model."
+      throw Error('Bad model.')
   }
 
   return await Orchard.espalier(endpoint, data)
 }
 
-const setUnsaved = () => window.onbeforeunload = () =>
-  "You have unsaved changes. Are you sure you want to leave?"
+const setUnsaved = () => {
+  window.onbeforeunload = () => 'You have unsaved changes. Are you sure you ' +
+  'want to leave?'
+}
 
-export const CLEAR_UNSAVED = "CLEAR_UNSAVED"
-function clearUnsaved() {
-  return { type: CLEAR_UNSAVED }
+export type ClearUnsavedAction = { type: 'CLEAR_UNSAVED' }
+function clearUnsaved (): ClearUnsavedAction {
+  return { type: 'CLEAR_UNSAVED' }
 }
 
 // CASE
 //
-export const UPDATE_CASE = "UPDATE_CASE"
-export function updateCase(slug, data) {
+export type UpdateCaseAction = { type: 'UPDATE_CASE', data: CaseDataState }
+export function updateCase (
+  slug: string,
+  data: $Subtype<CaseDataState>
+): UpdateCaseAction {
   setUnsaved()
-  return {type: UPDATE_CASE, data}
+  return { type: 'UPDATE_CASE', data }
 }
 
-export function enrollReader(readerId, caseSlug) {
-  return async (dispatch) => {
+export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
+  return async (dispatch: Dispatch) => {
     const enrollment = await Orchard.espalier(
       `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
     )
@@ -133,38 +198,59 @@ export function enrollReader(readerId, caseSlug) {
   }
 }
 
-export const SET_READER_ENROLLMENT = "SET_READER_ENROLLMENT"
-function setReaderEnrollment(enrollment) {
-  return {type: SET_READER_ENROLLMENT, enrollment}
+export type SetReaderEnrollmentAction = {
+  type: 'SET_READER_ENROLLMENT',
+  enrollment: boolean,
+}
+function setReaderEnrollment (enrollment: boolean): SetReaderEnrollmentAction {
+  return { type: 'SET_READER_ENROLLMENT', enrollment }
 }
 
-export const UPDATE_CASE_ELEMENT = "UPDATE_CASE_ELEMENT"
-export function updateCaseElement(id, index) {
-  return {type: UPDATE_CASE_ELEMENT, id, index}
+export type UpdateCaseElementAction = {
+  type: 'UPDATE_CASE_ELEMENT',
+  id: number,
+  index: number,
+}
+export function updateCaseElement (
+  id: number,
+  index: number,
+): UpdateCaseElementAction {
+  return { type: 'UPDATE_CASE_ELEMENT', id, index }
 }
 
-export const UPDATE_CASE_ELEMENTS = "UPDATE_CASE_ELEMENTS"
-function updateCaseElements(caseData) {
-  return {type: UPDATE_CASE_ELEMENTS, data: caseData}
+export type UpdateCaseElementsAction = {
+  type: 'UPDATE_CASE_ELEMENTS',
+  data: { caseElements: CaseElement[] },
 }
-export function persistCaseElementReordering(id, index) {
-  return async dispatch => {
-    const caseElements = await Orchard.espalier(
+function updateCaseElements (
+  data: {caseElements: CaseElement[]}
+): UpdateCaseElementsAction {
+  return { type: 'UPDATE_CASE_ELEMENTS', data }
+}
+export function persistCaseElementReordering (
+  id: string,
+  index: number,
+): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const caseElements = (await Orchard.espalier(
       `case_elements/${id}`,
-      { case_element: { position: index + 1 } }
-    )
-    dispatch(updateCaseElements({caseElements}))
+      { case_element: { position: index + 1 }}
+    ): CaseElement[])
+    dispatch(updateCaseElements({ caseElements }))
   }
 }
 
-export const REMOVE_ELEMENT = "REMOVE_ELEMENT"
-function removeElement(position) {
-  return {type: REMOVE_ELEMENT, position}
+export type RemoveElementAction = { type: 'REMOVE_ELEMENT', position: number }
+function removeElement (position): RemoveElementAction {
+  return { type: 'REMOVE_ELEMENT', position }
 }
 
-export function deleteElement(elementUrl, position) {
-  return async dispatch => {
-    if (window.confirm("Are you sure you want to delete this element? This action cannot be undone.")) {
+export function deleteElement (
+  elementUrl: string,
+  position: number
+): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    if (window.confirm('Are you sure you want to delete this element? This action cannot be undone.')) {
       await Orchard.prune(`${elementUrl}`)
       dispatch(removeElement(position))
     }
@@ -173,14 +259,14 @@ export function deleteElement(elementUrl, position) {
 
 // PAGE
 //
-export const ADD_PAGE = "ADD_PAGE"
-function addPage(data) {
-  return {type: ADD_PAGE, data}
+export type AddPageAction = { type: 'ADD_PAGE', data: Page }
+function addPage (data: Page): AddPageAction {
+  return { type: 'ADD_PAGE', data }
 }
 
-export function createPage(caseSlug) {
-  return async dispatch => {
-    const data = await Orchard.graft(
+export function createPage (caseSlug: string): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const data: Page = await Orchard.graft(
       `cases/${caseSlug}/pages`,
       {}
     )
@@ -188,105 +274,154 @@ export function createPage(caseSlug) {
   }
 }
 
-export const UPDATE_PAGE = "UPDATE_PAGE"
-export function updatePage(id, data) {
+export type UpdatePageAction = { type: 'UPDATE_PAGE', id: string, data: Object }
+export function updatePage (id: string, data: Object): UpdatePageAction {
   setUnsaved()
-  return {type: UPDATE_PAGE, id, data}
+  return { type: 'UPDATE_PAGE', id, data }
 }
 
 // PODCAST
 //
-export const ADD_PODCAST = "ADD_PODCAST"
-function addPodcast(data) {
-  return {type: ADD_PODCAST, data}
+export type AddPodcastAction = { type: 'ADD_PODCAST', data: Podcast }
+function addPodcast (data: Podcast): AddPodcastAction {
+  return { type: 'ADD_PODCAST', data }
 }
 
-export function createPodcast(caseSlug) {
-  return async dispatch => {
-    const data = await Orchard.graft(
+export function createPodcast (caseSlug: string) {
+  return async (dispatch: Dispatch) => {
+    const data = (await Orchard.graft(
       `cases/${caseSlug}/podcasts`,
       {}
-    )
+    ): Podcast)
     dispatch(addPodcast(data))
   }
 }
 
-export const UPDATE_PODCAST = "UPDATE_PODCAST"
-export function updatePodcast(id, data) {
+export type UpdatePodcastAction = {
+  type: 'UPDATE_PODCAST',
+  id: string,
+  data: Object,
+}
+export function updatePodcast (id: string, data: Object): UpdatePodcastAction {
   setUnsaved()
-  return {type: UPDATE_PODCAST, id, data}
+  return { type: 'UPDATE_PODCAST', id, data }
 }
 
 // ACTIVITY
 //
-export const ADD_ACTIVITY = "ADD_ACTIVITY"
-function addActivity(data) {
-  return {type: ADD_ACTIVITY, data}
+export type AddActivityAction = { type: 'ADD_ACTIVITY', data: Activity }
+function addActivity (data: Activity): AddActivityAction {
+  return { type: 'ADD_ACTIVITY', data }
 }
 
-export function createActivity(caseSlug) {
-  return async dispatch => {
-    const data = await Orchard.graft(
+export function createActivity (caseSlug: string) {
+  return async (dispatch: Dispatch) => {
+    const data = (await Orchard.graft(
       `cases/${caseSlug}/activities`,
       {}
-    )
+    ): Activity)
     dispatch(addActivity(data))
   }
 }
 
-export const UPDATE_ACTIVITY = "UPDATE_ACTIVITY"
-export function updateActivity(id, data) {
+export type UpdateActivityAction = {
+  type: 'UPDATE_ACTIVITY',
+  id: string,
+  data: Object
+}
+export function updateActivity (
+  id: string,
+  data: Object
+): UpdateActivityAction {
   setUnsaved()
-  return {type: UPDATE_ACTIVITY, id, data}
+  return { type: 'UPDATE_ACTIVITY', id, data }
 }
 
 // CARD
 //
-export const PARSE_ALL_CARDS = "PARSE_ALL_CARDS"
-export function parseAllCards() {
-  return { type: PARSE_ALL_CARDS }
+export type ParseAllCardsAction = { type: 'PARSE_ALL_CARDS' }
+export function parseAllCards (): ParseAllCardsAction {
+  return { type: 'PARSE_ALL_CARDS' }
 }
 
-export const UPDATE_CARD_CONTENTS = "UPDATE_CARD_CONTENTS"
-export function updateCardContents(id, editorState) {
+export type UpdateCardContentsAction = {
+  type: 'UPDATE_CARD_CONTENTS',
+  id: string,
+  editorState: EditorState,
+}
+export function updateCardContents (
+  id: string,
+  editorState: EditorState,
+): UpdateCardContentsAction {
   setUnsaved()
-  return {type: UPDATE_CARD_CONTENTS, id, editorState}
+  return { type: 'UPDATE_CARD_CONTENTS', id, editorState }
 }
 
-export const REPLACE_CARD = "REPLACE_CARD"
-export function replaceCard(cardId, newCard) {
-  return { type: REPLACE_CARD, cardId, newCard }
+export type ReplaceCardAction = {
+  type: 'REPLACE_CARD',
+  cardId: string,
+  newCard: Card,
+}
+export function replaceCard (cardId: string, newCard: Card): ReplaceCardAction {
+  return { type: 'REPLACE_CARD', cardId, newCard }
 }
 
-export const OPEN_CITATION = "OPEN_CITATION"
-export function openCitation(key, labelRef) {
-  return {type: OPEN_CITATION, data: {key, labelRef}}
+export type OpenCitationAction = {
+  type: 'OPEN_CITATION',
+  data: {
+    key: string,
+    labelRef: HTMLElement,
+  },
+}
+export function openCitation (
+  key: string,
+  labelRef: HTMLElement
+): OpenCitationAction {
+  return { type: 'OPEN_CITATION', data: { key, labelRef }}
 }
 
 // SELECTION
 //
-export const ACCEPT_SELECTION = "ACCEPT_SELECTION"
-export function acceptSelection(enabled = true) {
-  clearSelection()
-  return {type: ACCEPT_SELECTION, enabled}
+export type AcceptSelectionAction = {
+  type: 'ACCEPT_SELECTION',
+  enabled: boolean,
 }
-function clearSelection() {
-  if ( document.selection  ) {
-    document.selection.empty();
-  } else if ( window.getSelection  ) {
-    window.getSelection().removeAllRanges();
+
+export function acceptSelection (
+  enabled: boolean = true
+): AcceptSelectionAction {
+  clearSelection()
+  return { type: 'ACCEPT_SELECTION', enabled }
+}
+
+type OldDocument = { selection: { empty: () => void } }
+function clearSelection (): void {
+  if (document.selection) {
+    ((document: any): OldDocument).selection.empty()
+  } else if (window.getSelection) {
+    window.getSelection().removeAllRanges()
   }
 }
 
-export const APPLY_SELECTION = "APPLY_SELECTION"
-export function applySelection(cardId, selectionState) {
-  return { type: APPLY_SELECTION, cardId, selectionState }
+export type ApplySelectionAction = {
+  type: 'APPLY_SELECTION',
+  cardId: string,
+  selectionState: SelectionState,
+}
+export function applySelection (
+  cardId: string,
+  selectionState: SelectionState,
+): ApplySelectionAction {
+  return { type: 'APPLY_SELECTION', cardId, selectionState }
 }
 
 // COMMENT THREAD
 //
-export function createCommentThread(cardId, editorState) {
-  return async (dispatch) => {
+export function createCommentThread (
+  cardId: string,
+  editorState: EditorState,
+): ThunkAction {
+  return async (dispatch: Dispatch) => {
     const selection = editorState.getSelection()
     const start = selection.getStartOffset()
     const end = selection.getEndOffset()
@@ -307,47 +442,70 @@ export function createCommentThread(cardId, editorState) {
   }
 }
 
-export const ADD_COMMENT_THREAD = "ADD_COMMENT_THREAD"
-export function addCommentThread(data) {
-  return {type: ADD_COMMENT_THREAD, data}
+export type AddCommentThreadAction = {
+  type: 'ADD_COMMENT_THREAD',
+  data: CommentThread,
+}
+export function addCommentThread (data: CommentThread): AddCommentThreadAction {
+  return { type: 'ADD_COMMENT_THREAD', data }
 }
 
-export function deleteCommentThread(threadId, cardId) {
-  return async (dispatch) => {
+export function deleteCommentThread (
+  threadId: string,
+  cardId: string
+): ThunkAction {
+  return async (dispatch: Dispatch) => {
     await Orchard.prune(`comment_threads/${threadId}`)
     dispatch(removeCommentThread(threadId, cardId))
   }
 }
 
-export const REMOVE_COMMENT_THREAD = "REMOVE_COMMENT_THREAD"
-function removeCommentThread(threadId, cardId) {
-  return {type: REMOVE_COMMENT_THREAD, threadId, cardId}
+export type RemoveCommentThreadAction = {
+  type: 'REMOVE_COMMENT_THREAD',
+  threadId: string,
+  cardId: string,
+}
+function removeCommentThread (
+  threadId: string,
+  cardId: string
+): RemoveCommentThreadAction {
+  return { type: 'REMOVE_COMMENT_THREAD', threadId, cardId }
 }
 
-export const HOVER_COMMENT_THREAD = "HOVER_COMMENT_THREAD"
-export function hoverCommentThread(id) {
-  return {type: HOVER_COMMENT_THREAD, id}
+export type HoverCommentThreadAction = {
+  type: 'HOVER_COMMENT_THREAD',
+  id: string,
+}
+export function hoverCommentThread (id: string): HoverCommentThreadAction {
+  return { type: 'HOVER_COMMENT_THREAD', id }
 }
 
 // COMMENT
 //
-export const CHANGE_COMMENT_IN_PROGRESS = "CHANGE_COMMENT_IN_PROGRESS"
-export function changeCommentInProgress(threadId, content) {
-  return { type: CHANGE_COMMENT_IN_PROGRESS, threadId, content }
+export type ChangeCommentInProgressAction = {
+  type: 'CHANGE_COMMENT_IN_PROGRESS',
+  threadId: string,
+  content: string,
+}
+export function changeCommentInProgress (
+  threadId: string,
+  content: string
+): ChangeCommentInProgressAction {
+  return { type: 'CHANGE_COMMENT_IN_PROGRESS', threadId, content }
 }
 
-export const ADD_COMMENT = "ADD_COMMENT"
-export function addComment(data) {
-  return { type: ADD_COMMENT, data }
+export type AddCommentAction = { type: 'ADD_COMMENT', data: Comment }
+export function addComment (data: Comment): AddCommentAction {
+  return { type: 'ADD_COMMENT', data }
 }
 
-export function createComment(threadId, content) {
-  return dispatch => {
+export function createComment (threadId: string, content: string): ThunkAction {
+  return (dispatch: Dispatch) => {
     Orchard.graft(
       `comment_threads/${threadId}/comments`,
-      { comment: { content } },
+      { comment: { content }},
     ).then(() => {
-      dispatch(changeCommentInProgress(threadId, ""))
+      dispatch(changeCommentInProgress(threadId, ''))
     }).catch(error => {
       dispatch(displayToast({
         message: `Error saving: ${error.message}`,
@@ -357,44 +515,63 @@ export function createComment(threadId, content) {
   }
 }
 
-
 // EDGENOTE
 //
-export const CREATE_EDGENOTE = "CREATE_EDGENOTE"
-export function createEdgenote(slug, data) {
-  return {type: CREATE_EDGENOTE, slug, data}
+export type CreateEdgenoteAction = {
+  type: 'CREATE_EDGENOTE',
+  slug: string,
+  data: Edgenote,
+}
+export function createEdgenote (
+  slug: string,
+  data: Edgenote
+): CreateEdgenoteAction {
+  return { type: 'CREATE_EDGENOTE', slug, data }
 }
 
-export const UPDATE_EDGENOTE = "UPDATE_EDGENOTE"
-export function updateEdgenote(slug, data) {
+export type UpdateEdgenoteAction = {
+  type: 'UPDATE_EDGENOTE',
+  slug: string,
+  data: Object,
+}
+export function updateEdgenote (
+  slug: string,
+  data: Object
+): UpdateEdgenoteAction {
   setUnsaved()
-  return {type: UPDATE_EDGENOTE, slug, data}
+  return { type: 'UPDATE_EDGENOTE', slug, data }
 }
 
-export const HIGHLIGHT_EDGENOTE = "HIGHLIGHT_EDGENOTE"
-export function highlightEdgenote(slug) {
-  return {type: HIGHLIGHT_EDGENOTE, slug}
+export type HighlightEdgenoteAction = {
+  type: 'HIGHLIGHT_EDGENOTE',
+  slug: string,
+}
+export function highlightEdgenote (slug: string): HighlightEdgenoteAction {
+  return { type: 'HIGHLIGHT_EDGENOTE', slug }
 }
 
-export const ACTIVATE_EDGENOTE = "ACTIVATE_EDGENOTE"
-export function activateEdgenote(slug) {
-  return {type: ACTIVATE_EDGENOTE, slug}
+export type ActivateEdgenoteAction = { type: 'ACTIVATE_EDGENOTE', slug: string }
+export function activateEdgenote (slug: string): ActivateEdgenoteAction {
+  return { type: 'ACTIVATE_EDGENOTE', slug }
 }
 
 // TOASTS
 //
-export const REGISTER_TOASTER = "REGISTER_TOASTER"
-export function registerToaster(toaster) {
-  return {type: REGISTER_TOASTER, toaster}
+export type RegisterToasterAction = { type: 'REGISTER_TOASTER', toaster: any }
+export function registerToaster (toaster: any): RegisterToasterAction {
+  return { type: 'REGISTER_TOASTER', toaster }
 }
-export const DISPLAY_TOAST = "DISPLAY_TOAST"
-export function displayToast(options) {
-  return {type: DISPLAY_TOAST, options}
+export type DisplayToastAction = { type: 'DISPLAY_TOAST', options: Object }
+export function displayToast (options: Object): DisplayToastAction {
+  return { type: 'DISPLAY_TOAST', options }
 }
 
-export const HANDLE_NOTIFICATION = "HANDLE_NOTIFICATION"
-export function handleNotification(notification) {
-  return dispatch => {
+export type HandleNotificationAction = {
+  type: 'HANDLE_NOTIFICATION',
+  notification: Notification
+}
+export function handleNotification (notification: Notification): ThunkAction {
+  return (dispatch: Dispatch) => {
     dispatch(displayToast({
       message: notification.message,
       intent: Intent.PRIMARY,

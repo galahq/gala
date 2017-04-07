@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
@@ -6,55 +6,54 @@ import DocumentTitle from 'react-document-title'
 import { parseAllCards, registerToaster, addComment,
   addCommentThread, handleNotification } from 'redux/actions.js'
 
-import StatusBar from 'StatusBar'
-import CaseOverview from 'CaseOverview'
-import CaseElement from 'CaseElement'
+import StatusBar from 'overview/StatusBar'
+import CaseOverview from 'overview/CaseOverview'
+import CaseElement from 'elements/CaseElement'
 
 import { Toaster } from '@blueprintjs/core'
 
+import type { State } from 'redux/state'
+
 class Case extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this._subscribe = () => {
-      if (typeof App === 'undefined')  return
+      if (typeof App === 'undefined') return
 
       App.forum = App.cable.subscriptions  // eslint-disable-line
-        .create("ForumChannel", {
+        .create('ForumChannel', {
           received: data => {
-            if (data.comment)
-              this.props.addComment(JSON.parse(data.comment))
-            if (data.comment_thread)
-              this.props.addCommentThread(JSON.parse(data.comment_thread))
+            if (data.comment) { this.props.addComment(JSON.parse(data.comment)) }
+            if (data.comment_thread) { this.props.addCommentThread(JSON.parse(data.comment_thread)) }
           },
         })
 
       App.readerNotification = App.cable.subscriptions  // eslint-disable-line
-        .create("ReaderNotificationsChannel", {
+        .create('ReaderNotificationsChannel', {
           received: data => {
             this.props.handleNotification(JSON.parse(data.notification))
           },
         })
     }
-
   }
 
-  componentDidMount() {
-    setTimeout( () => this.props.parseAllCards(), 1 )
+  componentDidMount () {
+    setTimeout(() => this.props.parseAllCards(), 1)
 
     this.props.registerToaster(Toaster.create())
 
     this._subscribe()
   }
 
-  render() {
+  render () {
     return (
       <DocumentTitle title={`${this.props.kicker} — Michigan Sustainability Cases`}>
         <div id="Case">
           <StatusBar />
           <Router basename={this.props.basename}>
             <Switch>
-              <Route path="/" exact component={CaseOverview} />
+              <Route exact path="/" component={CaseOverview} />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
           </Router>
@@ -65,13 +64,18 @@ class Case extends React.Component {
 }
 
 export default connect(
-  (state) => ({
+  (state: State) => ({
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),
       state.caseData.slug
     ),
   }),
-  { parseAllCards, registerToaster, addComment, addCommentThread,
-    handleNotification },
+  {
+    parseAllCards,
+    registerToaster,
+    addComment,
+    addCommentThread,
+    handleNotification,
+  },
 )(Case)

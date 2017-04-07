@@ -10,13 +10,14 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
-import Icon from 'Icon'
+import Icon from 'utility/Icon'
 
 import { Link, Route, matchPath } from 'react-router-dom'
-import { elementOpen, commentsOpen } from 'concerns/routes'
+import { elementOpen, commentsOpen } from 'shared/routes'
 
-function mapStateToProps(state, {cardId, location}) {
+import type { State } from 'redux/state'
 
+function mapStateToProps (state: State, { cardId, location }) {
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
@@ -26,18 +27,21 @@ function mapStateToProps(state, {cardId, location}) {
   }
 }
 
-const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
+const CommentThreadsCard = ({ cardId, commentThreads, acceptingSelection,
                             selectionPending,
                             acceptSelection, closeCommentThreadsPath,
-                            addCommentThread, location, match, history}) => {
+                            addCommentThread, location, match, history }) => {
   return <div className="CommentThreads">
     <div className={`CommentThreads__window`}>
       <div style={styles.header}>
-        <Link to={closeCommentThreadsPath} replace
+        <Link
+          replace
+          to={closeCommentThreadsPath}
+          className="CommentThread__icon-button"
           onClick={() => acceptSelection(false)}
-          className="CommentThread__icon-button">
+        >
           <Icon filename="comments-close"
-            style={{...styles.toolbarButton, cursor: 'pointer'}}
+            style={{ ...styles.toolbarButton, cursor: 'pointer' }}
           />
         </Link>
 
@@ -47,17 +51,19 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
             one {response}
             other {responses}
           }`}
-          values={{count: commentThreads.length}} />
+          values={{ count: commentThreads.length }} />
 
         <div style={styles.toolbarButton} />
       </div>
 
       <ol style={styles.commentList}>
-        { commentThreads.map( (thread, i) => <CommentThread
-          key={thread.id}
+        { commentThreads.map((thread, i) => <CommentThread
+          key={`${thread.id}`}
           cardId={cardId}
           threadId={thread.id}
-          location={location} match={match} history={history}
+          location={location}
+          match={match}
+          history={history}
           last={i === commentThreads.length - 1}
         />
         )}
@@ -65,18 +71,24 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
 
       <div className="CommentThreads__footer">
         <button
-          onClick={acceptingSelection ? addCommentThread : acceptSelection}
           className="o-button CommentThreads__new-button"
           disabled={acceptingSelection && !selectionPending}
+          onClick={acceptingSelection ? addCommentThread : acceptSelection}
         >
           { !acceptingSelection
-            ? <FormattedMessage id="comments.writeNew"
-              defaultMessage="Write a new response" />
-            : ( !selectionPending
-              ? <FormattedMessage id="comments.select"
-                defaultMessage="Select a few words" />
-              : <FormattedMessage id="comments.here"
-                defaultMessage="Respond here" />
+            ? <FormattedMessage
+              id="comments.writeNew"
+              defaultMessage="Write a new response"
+            />
+            : (!selectionPending
+              ? <FormattedMessage
+                id="comments.select"
+                defaultMessage="Select a few words"
+              />
+              : <FormattedMessage
+                id="comments.here"
+                defaultMessage="Respond here"
+              />
             )
           }
         </button>
@@ -85,22 +97,23 @@ const CommentThreadsCard = ({cardId, commentThreads, acceptingSelection,
 
     {
       <Portal>
-        <Link to={closeCommentThreadsPath} replace
+        <Link
+          replace
+          to={closeCommentThreadsPath}
+          style={styles.backdrop}
           onClick={() => acceptSelection(false)}
-          style={styles.backdrop} />
+        />
       </Portal>
     }
 
     <Route {...commentsOpen()} component={CommentsCard} />
   </div>
-
 }
 
 export default connect(
   mapStateToProps,
-  {acceptSelection},
+  { acceptSelection },
 )(CommentThreadsCard)
-
 
 const styles = {
   backdrop: {
