@@ -13,10 +13,10 @@ const EditableAttribute = ({
   title,
   value,
   onChange,
-  style = {}
+  style = {},
 }: Props) => {
   if (disabled) return null
-  return <div style={{...styles.container, ...style}}>
+  return <div style={{ ...styles.container, ...style }}>
     { value && value.length > 0 && <label style={styles.label}>{title}</label> }
     <EditableText
       placeholder={`Add ${title}...`}

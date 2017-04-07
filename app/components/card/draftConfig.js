@@ -27,11 +27,11 @@ export const styles = {
   },
 
   thinUnderline: {
-    background: "linear-gradient(rgba(115,81,212, 1),rgba(115,81,212, 1))",
-    backgroundSize: "1px 1px",
-    backgroundRepeat: "repeat-x",
-    backgroundPosition: "0 93%",
-    textShadow: "0.03em 0 #EBEAE4, -0.03em 0 #EBEAE4, 0 0.03em #EBEAE4, 0 -0.03em #EBEAE4, 0.06em 0 #EBEAE4, -0.06em 0 #EBEAE4, 0.09em 0 #EBEAE4, -0.09em 0 #EBEAE4, 0.12em 0 #EBEAE4, -0.12em 0 #EBEAE4, 0.15em 0 #EBEAE4, -0.15em 0 #EBEAE4",
+    background: 'linear-gradient(rgba(115,81,212, 1),rgba(115,81,212, 1))',
+    backgroundSize: '1px 1px',
+    backgroundRepeat: 'repeat-x',
+    backgroundPosition: '0 93%',
+    textShadow: '0.03em 0 #EBEAE4, -0.03em 0 #EBEAE4, 0 0.03em #EBEAE4, 0 -0.03em #EBEAE4, 0.06em 0 #EBEAE4, -0.06em 0 #EBEAE4, 0.09em 0 #EBEAE4, -0.09em 0 #EBEAE4, 0.12em 0 #EBEAE4, -0.12em 0 #EBEAE4, 0.15em 0 #EBEAE4, -0.15em 0 #EBEAE4',
     cursor: 'pointer',
   },
 
@@ -50,16 +50,16 @@ export const styles = {
   },
 
   purpleHighlight: {
-    backgroundColor: "#7351D4",
-    borderBottom: "1px solid #493092",
-    boxShadow: "inset 0 -0.35em 0 #493092",
+    backgroundColor: '#7351D4',
+    borderBottom: '1px solid #493092',
+    boxShadow: 'inset 0 -0.35em 0 #493092',
     textShadow: 'none',
-    color: "white",
+    color: 'white',
   },
 }
 
-export function getStyleMap({commentable, theseCommentThreadsOpen,
-  hoveredCommentThread, selectedCommentThread}) {
+export function getStyleMap ({ commentable, theseCommentThreadsOpen,
+  hoveredCommentThread, selectedCommentThread }) {
   const hoveredCommentKey = `thread--${hoveredCommentThread}`
   const selectedCommentKey = `thread--${selectedCommentThread}`
   const threadStyle = { 'THREAD': theseCommentThreadsOpen
@@ -76,11 +76,11 @@ export function getStyleMap({commentable, theseCommentThreadsOpen,
   }
 }
 
-function getFindEntityFunction(type) {
+function getFindEntityFunction (type) {
   return (contentBlock, callback, contentState) => {
     contentBlock.findEntityRanges(
       (character) => {
-        const entityKey = character.getEntity();
+        const entityKey = character.getEntity()
         return (
           entityKey !== null &&
             contentState.getEntity(entityKey).getType() === type
@@ -91,8 +91,8 @@ function getFindEntityFunction(type) {
   }
 }
 
-function findCommentThreadEntity(contentBlock, cb) {
-  contentBlock.findStyleRanges(character => character.hasStyle("THREAD"), cb)
+function findCommentThreadEntity (contentBlock, cb) {
+  contentBlock.findStyleRanges(character => character.hasStyle('THREAD'), cb)
 }
 
 export const decorator = new CompositeDecorator([
@@ -117,7 +117,7 @@ export const decorator = new CompositeDecorator([
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
 // which gives a grey background.
-export function addShadowSelection(editorState) {
+export function addShadowSelection (editorState) {
   if (!editorState.getSelection().isCollapsed()) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -125,7 +125,7 @@ export function addShadowSelection(editorState) {
   }
 }
 
-export function removeShadowSelection(editorState) {
+export function removeShadowSelection (editorState) {
   if (editorState.getCurrentInlineStyle().has('SELECTION')) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -133,8 +133,7 @@ export function removeShadowSelection(editorState) {
   }
 }
 
-
-export function addEntity({type, mutability, data},
+export function addEntity ({ type, mutability, data },
                           editorState,
                           selection = editorState.getSelection(),
                           contentState = editorState.getCurrentContent(),

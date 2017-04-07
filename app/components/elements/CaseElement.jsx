@@ -7,7 +7,7 @@ import Sidebar from './Sidebar'
 import Page from './Page'
 import Podcast from './Podcast'
 import Activity from './Activity'
-import EdgenoteContents from 'edgenotes/EdgenoteContents'
+import EdgenoteContents from 'deprecated/EdgenoteContents'
 
 import { FormattedMessage } from 'react-intl'
 

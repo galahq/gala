@@ -3,7 +3,7 @@ var strings = (require('locales.json'): { [string]: { [string]: string }})
 
 export class I18n extends React.Component {
   props: { meaning: string }
-  
+
   t (key: string) {
     let locale = (window.i18n.locale: string)
     let minimalLocale = locale.split('-')[0]

@@ -7,7 +7,7 @@ export class Dashboard extends React.Component {
   constructor (props) {
     super(props)
     this.state = { editing: false, cases: this.props.cases }
-    this.setEditing = this.setEditing.bind(this)
+    this.handleSetEditing = this.handleSetEditing.bind(this)
     this.deleteEnrollmentFor = this.deleteEnrollmentFor.bind(this)
   }
 
@@ -20,7 +20,7 @@ export class Dashboard extends React.Component {
     }
   }
 
-  setEditing () {
+  handleSetEditing () {
     if (this.state.editing) {
       this.setState({ editing: false })
     } else {
@@ -40,7 +40,7 @@ export class Dashboard extends React.Component {
             <I18n meaning="my_cases" />
             <a
               className="catalog-dashboard__edit"
-              onClick={this.setEditing}
+              onClick={this.handleSetEditing}
             >
               { editing ? 'Done' : 'Edit' }
               <span dangerouslySetInnerHTML={{ __html: require(`../../assets/images/react/dashboard-${editing ? 'done' : 'edit'}.svg`) }} />

@@ -35,7 +35,7 @@ class EditorToolbar extends React.Component {
   constructor (props) {
     super(props)
 
-    let {updateEditorState} = this.props
+    let { updateEditorState } = this.props
 
     // These must call this.props.editorState individually to keep from
     // capturing editorState as it exists when EditorToolbar is constructed.
@@ -46,12 +46,12 @@ class EditorToolbar extends React.Component {
     this.toggleBlock = (type) =>
       () => updateEditorState(RichUtils.toggleBlockType(this.props.editorState, type))
 
-    this.addCitation = this.addCitation.bind(this)
-    this.addEdgenote = this.addEdgenote.bind(this)
+    this.handleAddCitation = this.handleAddCitation.bind(this)
+    this.handleAddEdgenote = this.handleAddEdgenote.bind(this)
   }
 
-  addCitation () {
-    let {editorState, updateEditorState} = this.props
+  handleAddCitation () {
+    let { editorState, updateEditorState } = this.props
     let selection = editorState.getSelection()
 
     const collapsedSelection = selection.merge({
@@ -70,11 +70,11 @@ class EditorToolbar extends React.Component {
       focusOffset: collapsedSelection.focusOffset + 1,
     })
 
-    updateEditorState(addEntity({type: 'CITATION', mutability: 'IMMUTABLE', data: {}},
+    updateEditorState(addEntity({ type: 'CITATION', mutability: 'IMMUTABLE', data: {}},
                        editorState, circleSelection, contentStateWithCircle))
   }
 
-  addEdgenote () {
+  handleAddEdgenote () {
     let {
       caseSlug,
       editorState,
@@ -87,14 +87,14 @@ class EditorToolbar extends React.Component {
     if (slug.length === '') return
 
     const addHighlight = () => updateEditorState(
-      addEntity({type: 'EDGENOTE', mutability: 'MUTABLE', data: {slug}},
+      addEntity({ type: 'EDGENOTE', mutability: 'MUTABLE', data: { slug }},
                 editorState)
     )
 
     if (edgenoteExists(slug)) {
       addHighlight()
     } else {
-      Orchard.graft(`cases/${caseSlug}/edgenotes`, {slug}).then(
+      Orchard.graft(`cases/${caseSlug}/edgenotes`, { slug }).then(
         data => {
           createEdgenoteRecord(slug, data)
           addHighlight()
@@ -105,22 +105,40 @@ class EditorToolbar extends React.Component {
 
   render () {
     return <div className="c-editor-toolbar" style={styles.bar}>
-      <EditorToolbarButton onClick={this.toggleInline('BOLD')} icon={require('toolbar-small-caps.svg')} />
-      <EditorToolbarButton onClick={this.toggleInline('ITALIC')} icon={require(`toolbar-italic.svg`)} />
-      <EditorToolbarButton onClick={this.toggleBlock('ordered-list-item')} icon={require(`toolbar-ol.svg`)} />
-      <EditorToolbarButton onClick={this.toggleBlock('unordered-list-item')} icon={require(`toolbar-ul.svg`)} />
-      <EditorToolbarButton onClick={this.addEdgenote} icon={require(`toolbar-edgenote.svg`)} />
-      <EditorToolbarButton onClick={this.addCitation} icon={require(`toolbar-citation.svg`)} />
+      <EditorToolbarButton
+        icon={require('toolbar-small-caps.svg')}
+        onClick={this.toggleInline('BOLD')}
+      />
+      <EditorToolbarButton
+        icon={require(`toolbar-italic.svg`)}
+        onClick={this.toggleInline('ITALIC')}
+      />
+      <EditorToolbarButton
+        icon={require(`toolbar-ol.svg`)}
+        onClick={this.toggleBlock('ordered-list-item')}
+      />
+      <EditorToolbarButton
+        icon={require(`toolbar-ul.svg`)}
+        onClick={this.toggleBlock('unordered-list-item')}
+      />
+      <EditorToolbarButton
+        icon={require(`toolbar-edgenote.svg`)}
+        onClick={this.handleAddEdgenote}
+      />
+      <EditorToolbarButton
+        icon={require(`toolbar-citation.svg`)}
+        onClick={this.handleAddCitation}
+      />
     </div>
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditorToolbar)
 
-const EditorToolbarButton = ({icon, onClick}) => <a
+const EditorToolbarButton = ({ icon, onClick }) => <a
+  dangerouslySetInnerHTML={{ __html: icon }}
   onMouseDown={e => e.preventDefault()}
   onClick={onClick}
-  dangerouslySetInnerHTML={{__html: icon}}
 />
 
 const styles = {

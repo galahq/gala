@@ -6,9 +6,9 @@ import { toggleEditing, saveChanges } from 'redux/actions'
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State) {
-  let {edit, caseData} = state
-  let {inProgress} = edit
-  let {published} = caseData
+  let { edit, caseData } = state
+  let { inProgress } = edit
+  let { published } = caseData
   return {
     editable: edit.possible,
     editing: inProgress,
@@ -67,5 +67,5 @@ function StatusBar ({
 
 export default connect(
   mapStateToProps,
-  {toggleEditing, saveChanges}
+  { toggleEditing, saveChanges }
 )(StatusBar)

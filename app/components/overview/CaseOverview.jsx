@@ -7,14 +7,14 @@ import EnrollForm from './EnrollForm'
 
 import type { State } from 'redux/state'
 
-const CaseOverview = ({editing, signInForm, reader}) => {
+const CaseOverview = ({ editing, signInForm, reader }) => {
   return <div id="CaseOverview" className={`window ${editing && 'editing'}`}>
     <Billboard />
     <aside className="CaseOverviewRight">
       { signInForm != null
         ? <div
           className="dialog"
-          dangerouslySetInnerHTML={{__html: signInForm}}
+          dangerouslySetInnerHTML={{ __html: signInForm }}
         />
         : (!reader.enrollment ? <EnrollForm /> : null)
       }

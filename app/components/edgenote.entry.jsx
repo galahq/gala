@@ -14,18 +14,16 @@ const appHistory = useRouterHistory(createHashHistory)({ queryKey: false })
 window.galaHostname = '//www.learnmsc.org'
 window.i18n = { locale: 'en' }
 
-class EmbeddedCard extends React.Component {
-  render () {
-    return <div>
-      <Card
-        didSave={null}
-        solid={true}
-        selectedPage={false}
-        {...this.props.route}
-      />
-      {this.props.children && React.cloneElement(this.props.children, { didSave: null })}
-    </div>
-  }
+const EmbeddedCard = () => {
+  return <div>
+    <Card
+      didSave={null}
+      solid={true}
+      selectedPage={false}
+      {...this.props.route}
+    />
+    {this.props.children && React.cloneElement(this.props.children, { didSave: null })}
+  </div>
 }
 
 $('.gala-embedded-card').each((i, reactTarget) => {

@@ -14,7 +14,7 @@ function mapStateToProps ({ caseData }: State) {
   }
 }
 
-const EnrollForm = ({caseSlug, readerId, enrollReader}) => (
+const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   <div className="CaseOverview--enroll-form">
     <h2>Enroll in this case</h2>
     <p>If this case catches your eye, enroll for easy access from “My Cases.”</p>
@@ -22,4 +22,4 @@ const EnrollForm = ({caseSlug, readerId, enrollReader}) => (
   </div>
 )
 
-export default connect(mapStateToProps, {enrollReader})(EnrollForm)
+export default connect(mapStateToProps, { enrollReader })(EnrollForm)

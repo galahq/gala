@@ -23,9 +23,7 @@ const Page = (props) => {
   let {
     id,
     title,
-    position,
     cards,
-    caseSlug,
     editing,
     updatePage,
     deleteElement,
@@ -73,7 +71,11 @@ const Page = (props) => {
 }
 
 class CreateCardLink extends React.Component {
-  createCard () {
+  constructor (props) {
+    super(props)
+    this.handleCreateCard = this.handleCreateCard.bind(this)
+  }
+  handleCreateCard () {
     // TODO: This should really be in a redux thun
     let { pageId, i } = this.props
     Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 })
@@ -81,7 +83,7 @@ class CreateCardLink extends React.Component {
   }
 
   render () {
-    return <a onClick={this.createCard.bind(this)} className="Card-create">
+    return <a className="Card-create" onClick={this.handleCreateCard}>
       Create card
     </a>
   }

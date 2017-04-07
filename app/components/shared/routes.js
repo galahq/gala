@@ -1,11 +1,11 @@
-export function elementOpen(position = ":position") {
+export function elementOpen (position = ':position') {
   return { path: `/${position}` }
 }
 
-export function commentThreadsOpen(cardId = ":cardId") {
+export function commentThreadsOpen (cardId = ':cardId') {
   return { path: `/:position/cards/${cardId}/comments` }
 }
 
-export function commentsOpen(commentThreadId = ":commentThreadId") {
+export function commentsOpen (commentThreadId = ':commentThreadId') {
   return { path: `/:position/cards/:cardId/comments/${commentThreadId}` }
 }

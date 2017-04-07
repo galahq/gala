@@ -11,42 +11,40 @@ import {
   persistCaseElementReordering,
 } from 'redux/actions'
 
-
-function getElementDataFrom(state) {
-  return ({elementStore: store, elementId: id}) => {
-    const {title, iconSlug} = state[store][id]
+function getElementDataFrom (state) {
+  return ({ elementStore: store, elementId: id }) => {
+    const { title, iconSlug } = state[store][id]
     const typeIcon = iconSlug && <Icon filename={iconSlug} />
 
     return { title, typeIcon }
   }
 }
 
-
-const TableOfContentsElement = ({position, element, connectDragSource,
-  connectDropTarget, isDragging, editing, readOnly}) =>
-      <NavLink className="c-toc__link"
-        activeClassName="c-toc__link--active"
-        to={`/${position}`}
-        style={{opacity: isDragging ? 0 : 1}}
+const TableOfContentsElement = ({ position, element, connectDragSource,
+  connectDropTarget, isDragging, editing, readOnly }) =>
+    <NavLink className="c-toc__link"
+      activeClassName="c-toc__link--active"
+      to={`/${position}`}
+      style={{ opacity: isDragging ? 0 : 1 }}
       >
-        { connectDragSource(connectDropTarget(
+      { connectDragSource(connectDropTarget(
         <li className="c-toc__item">
           <div className="c-toc__item-data">
             <div className="c-toc__number">
-              {editing && !readOnly ? ": : :" : position}
+              {editing && !readOnly ? ': : :' : position}
             </div>
             <div className="c-toc__title">{element.title}</div>
             <div className="c-toc__icon">{element.typeIcon}</div>
           </div>
         </li>
         )) }
-      </NavLink>
+    </NavLink>
 
 const DraggableTableOfContentsElement = DropTarget(
   ItemTypes.CASE_ELEMENT,
   {
-    canDrop() { return false },
-    hover(props, monitor) {
+    canDrop () { return false },
+    hover (props, monitor) {
       const { id: draggedId } = monitor.getItem()
       const { id: overId } = props
 
@@ -63,16 +61,16 @@ const DraggableTableOfContentsElement = DropTarget(
   DragSource(
     ItemTypes.CASE_ELEMENT,
     {
-      canDrag(props) {
+      canDrag (props) {
         return props.editing && !props.readOnly
       },
-      beginDrag(props) {
+      beginDrag (props) {
         return {
           id: props.id,
           originalIndex: props.findElement(props.id).index,
         }
       },
-      endDrag(props, monitor) {
+      endDrag (props, monitor) {
         const { id: droppedId, originalIndex } = monitor.getItem()
         const { index: droppedIndex } = props.findElement(droppedId)
         const didDrop = monitor.didDrop()
@@ -95,7 +93,7 @@ const DraggableTableOfContentsElement = DropTarget(
 
 export default withRouter(
   connect(
-    (state, {element, position}) => ({
+    (state, { element, position }) => ({
       ...element,
       position,
       element: getElementDataFrom(state)(element),

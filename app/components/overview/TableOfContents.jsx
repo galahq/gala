@@ -37,20 +37,33 @@ const TableOfContents = ({
     { connectDropTarget(
       <ol className="c-toc__list">
         { elements.map((element, index) =>
-          <TableOfContentsElement element={element} key={element.id}
-            position={index + 1} readOnly={readOnly} />
+          <TableOfContentsElement
+            element={element}
+            key={element.id}
+            position={index + 1}
+            readOnly={readOnly}
+          />
         ) }
         { editing && !readOnly && <div className="c-toc__actions pt-button-group pt-fill">
-          <button type="button" className="pt-button pt-icon-add"
-            onClick={() => createPage(caseSlug)}>
+          <button
+            type="button"
+            className="pt-button pt-icon-add"
+            onClick={() => createPage(caseSlug)}
+          >
             Page
           </button>
-          <button type="button" className="pt-button pt-icon-add"
-            onClick={() => createPodcast(caseSlug)}>
+          <button
+            type="button"
+            className="pt-button pt-icon-add"
+            onClick={() => createPodcast(caseSlug)}
+          >
             Podcast
           </button>
-          <button type="button" className="pt-button pt-icon-add"
-            onClick={() => createActivity(caseSlug)}>
+          <button
+            type="button"
+            className="pt-button pt-icon-add"
+            onClick={() => createActivity(caseSlug)}
+          >
             Activity
           </button>
         </div> }

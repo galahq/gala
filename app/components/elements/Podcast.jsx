@@ -44,17 +44,19 @@ export default connect(mapStateToProps, { updatePodcast })(Podcast)
 class PodcastPlayer extends React.Component {
   constructor () {
     super()
+    this.handlePlay = this.handlePlay.bind(this)
+    this.handlePause = this.handlePause.bind(this)
     this.state = {
       playing: false,
     }
   }
 
-  setPlaying () {
+  handlePlay () {
     this.setState({
       playing: true,
     })
   }
-  setPaused () {
+  handlePause () {
     this.setState({
       playing: false,
     })
@@ -134,8 +136,8 @@ class PodcastPlayer extends React.Component {
           src={audioUrl}
           controls="controls"
           preload="auto"
-          onPlay={this.setPlaying.bind(this)}
-          onPause={this.setPaused.bind(this)}
+          onPlay={this.handlePlay}
+          onPause={this.handlePause}
         />
 
         <Tracker

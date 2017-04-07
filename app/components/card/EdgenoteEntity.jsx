@@ -1,6 +1,6 @@
 import React from 'react'  // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
-import { Route, withRouter, matchPath } from 'react-router-dom'
+import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
 
 import { highlightEdgenote, activateEdgenote } from 'redux/actions'

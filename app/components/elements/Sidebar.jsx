@@ -7,8 +7,8 @@ import TableOfContents from 'overview/TableOfContents'
 import EnrollForm from 'overview/EnrollForm'
 import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 
-function mapStateToProps(state, {location}) {
-  const {pathname} = location
+function mapStateToProps (state, { location }) {
+  const { pathname } = location
 
   return {
     commentThreadsOpen: matchPath(pathname, commentThreadsOpen()),
@@ -17,12 +17,11 @@ function mapStateToProps(state, {location}) {
   }
 }
 
-const Sidebar = ({commentThreadsOpen, commentsOpen, readerEnrolled}) => {
-
+const Sidebar = ({ commentThreadsOpen, commentsOpen, readerEnrolled }) => {
   const _getClassNames = () => {
     let n = []
-    if (commentThreadsOpen)  n = [...n, "has-comment-threads-open"]
-    if (commentsOpen)  n = [...n, "has-comments-open"]
+    if (commentThreadsOpen) n = [...n, 'has-comment-threads-open']
+    if (commentsOpen) n = [...n, 'has-comments-open']
     return n.join(' ')
   }
 
@@ -33,12 +32,12 @@ const Sidebar = ({commentThreadsOpen, commentsOpen, readerEnrolled}) => {
     <BillboardTitle minimal />
     <TableOfContents readOnly />
 
-  { readerEnrolled || <div style={{paddingTop: '1em'}}>
-    <EnrollForm />
-  </div>
+    { readerEnrolled || <div style={{ paddingTop: '1em' }}>
+      <EnrollForm />
+    </div>
   }
 
-</aside>
+  </aside>
 }
 
 export default withRouter(connect(mapStateToProps)(Sidebar))
