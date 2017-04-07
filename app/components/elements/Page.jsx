@@ -5,7 +5,8 @@ import { EditableText } from '@blueprintjs/core'
 import { Orchard } from 'shared/orchard'
 import { updatePage } from 'redux/actions'
 
-import Card from 'cards/Card'
+import Edgenotes from 'edgenotes'
+import Card from 'card'
 
 import type { State } from 'redux/state'
 
@@ -35,9 +36,9 @@ const Page = (props) => {
       <section className="Page-meta">
         <h1 className="pt-dark" key={`h2:${id}`}>
           <EditableText
+            multiline
             placeholder="Page title"
             value={title}
-            multiline
             disabled={!editing}
             onChange={(value: string) => updatePage(id, { title: value })}
           />
@@ -57,12 +58,10 @@ const Page = (props) => {
           i={i}
           key={`create-${i}`}
         />,
-        <Card
-          id={cardId}
-          key={cardId}
-          selectedPage={position}
-          caseSlug={caseSlug}
-        />,
+        <section key={cardId}>
+          <Card id={cardId} />
+          <Edgenotes cardId={cardId} />
+        </section>,
       ]) }
 
       { props.editing && <CreateCardLink

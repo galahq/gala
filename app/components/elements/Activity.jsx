@@ -8,7 +8,7 @@ import { EditableText } from '@blueprintjs/core'
 
 import Icon from 'utility/Icon'
 import EditableAttribute from 'utility/EditableAttribute'
-import CardContents from 'cards/CardContents'
+import Card from 'card'
 
 import { updateActivity } from 'redux/actions'
 
@@ -55,7 +55,7 @@ const Activity = ({
     </section>
 
     <section>
-      <CardContents
+      <Card
         nonNarrative
         id={cardId}
         title={

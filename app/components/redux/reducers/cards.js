@@ -1,9 +1,9 @@
 // @flow
 import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization
-  from 'cards/convertFromOldStyleCardSerialization'
+  from 'card/convertFromOldStyleCardSerialization'
 import { addCommentThreads } from 'comments/commentThreads'
-import { decorator } from 'cards/draftConfig'
+import { decorator } from 'card/draftConfig'
 
 import type { CardsState, Card, CommentThread } from 'redux/state'
 import type {

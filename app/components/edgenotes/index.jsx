@@ -16,7 +16,7 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   }
 }
 
-const EdgenotesCard = ({edgenoteSlugs, oldStyle}) => {
+const EdgenotesCard = ({ edgenoteSlugs, oldStyle }) => {
   const AnEdgenote = oldStyle ? OldEdgenote : Edgenote
 
   if (edgenoteSlugs.length > 0) {

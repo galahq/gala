@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 import EditableAttribute from 'utility/EditableAttribute'
 import Statistics from 'utility/Statistics'
-import CardContents from 'cards/CardContents'
+import Card from 'card'
 import { updatePodcast } from 'redux/actions'
 import Tracker from 'utility/Tracker'
 
@@ -33,7 +33,7 @@ function Podcast ({ podcast, slug, editing, updatePodcast, deleteElement }) {
       />
 
       <div className="PodcastInfo">
-        <CardContents nonNarrative id={cardId} />
+        <Card nonNarrative id={cardId} />
       </div>
     </div>
   )

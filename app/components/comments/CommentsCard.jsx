@@ -5,7 +5,7 @@ import { changeCommentInProgress, createComment } from 'redux/actions'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import { styles } from 'cards/draftConfig'
+import { styles } from 'card/draftConfig'
 
 import { Link, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
