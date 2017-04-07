@@ -54,10 +54,10 @@ function Page (props) {
         />,
       ]) }
 
-      <CreateCardLink
+      { props.editing && <CreateCardLink
         pageId={id}
         key={`create-last`}
-      />
+      /> }
     </article>
   )
 }
