@@ -1,5 +1,5 @@
 // @flow
-import { Orchard } from 'concerns/orchard'
+import { Orchard } from 'shared/orchard'
 import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 

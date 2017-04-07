@@ -10,10 +10,10 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
-import Icon from 'Icon'
+import Icon from 'utility/Icon'
 
 import { Link, Route, matchPath } from 'react-router-dom'
-import { elementOpen, commentsOpen } from 'concerns/routes'
+import { elementOpen, commentsOpen } from 'shared/routes'
 
 import type { State } from 'redux/state'
 

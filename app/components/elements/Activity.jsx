@@ -6,9 +6,9 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
-import Icon from 'Icon'
-import EditableAttribute from 'EditableAttribute'
-import CardContents from 'CardContents'
+import Icon from 'utility/Icon'
+import EditableAttribute from 'utility/EditableAttribute'
+import CardContents from 'cards/CardContents'
 
 import { updateActivity } from 'redux/actions'
 

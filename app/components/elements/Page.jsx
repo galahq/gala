@@ -2,10 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { EditableText } from '@blueprintjs/core'
 
-import { Orchard } from 'concerns/orchard'
+import { Orchard } from 'shared/orchard'
 import { updatePage } from 'redux/actions'
 
-import Card from 'Card'
+import Card from 'cards/Card'
 
 import type { State } from 'redux/state'
 

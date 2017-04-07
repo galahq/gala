@@ -3,11 +3,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Editor, EditorState, RichUtils, SelectionState } from 'draft-js'
-import { blockRenderMap, getStyleMap } from 'concerns/draftConfig'
+import { blockRenderMap, getStyleMap } from './draftConfig'
 
-import EditorToolbar from 'EditorToolbar'
-import Statistics from 'Statistics'
-import CitationTooltip from 'CitationTooltip'
+import EditorToolbar from './EditorToolbar'
+import Statistics from 'utility/Statistics'
+import CitationTooltip from './CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
 import CommentThreadsCard from 'comments/CommentThreadsCard'
 import { OnScreenTracker } from 'utility/Tracker'
@@ -19,7 +19,7 @@ import {
 } from 'redux/actions'
 
 import { Route, withRouter, matchPath } from 'react-router-dom'
-import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
+import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 
 import type { Location } from 'react-router-dom'
 

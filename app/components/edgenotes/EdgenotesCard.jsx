@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { convertToRaw } from 'draft-js'
-import OldEdgenote from 'OldEdgenote'
-import { Edgenote } from 'Edgenote'
+import OldEdgenote from 'deprecated/OldEdgenote'
+import { Edgenote } from 'edgenotes/Edgenote'
 
 import typeof { EditorState } from 'draft-js'
 import type { State } from 'redux/state'

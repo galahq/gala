@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
-import Statistics from 'Statistics'
+import Statistics from 'utility/Statistics'
 import {
   activateEdgenote,
   updateEdgenote,
@@ -76,7 +76,7 @@ class OldEdgenoteFigure extends React.Component {
         </div>
         <div
           className={`edgenote-icon edgenote-icon-${format}`}
-          dangerouslySetInnerHTML={{__html: require(`../assets/images/react/edgenote-${format}.svg`)}}
+          dangerouslySetInnerHTML={{__html: require(`../../assets/images/react/edgenote-${format}.svg`)}}
         />
         <figcaption className={ selected ? "focus" : "" } dangerouslySetInnerHTML={{__html: caption}} />
         {editing && style === 'v1' && <button onClick={upgrade}>Upgrade</button>}

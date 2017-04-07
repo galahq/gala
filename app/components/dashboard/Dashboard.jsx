@@ -1,37 +1,36 @@
 import React from 'react'
-import { I18n } from 'I18n'
+import { I18n } from 'utility/I18n'
 import { DashboardCase } from 'dashboard/DashboardCase'
-import {Orchard} from 'concerns/orchard'
+import { Orchard } from 'shared/orchard'
 
 export class Dashboard extends React.Component {
-
-  constructor(props) {
+  constructor (props) {
     super(props)
-    this.state = {editing: false, cases: this.props.cases}
+    this.state = { editing: false, cases: this.props.cases }
     this.setEditing = this.setEditing.bind(this)
     this.deleteEnrollmentFor = this.deleteEnrollmentFor.bind(this)
   }
 
-  deleteEnrollmentFor(kase) {
-    if (kase.published || this.props.roles.editor
-        || window.confirm("Are you sure you want to unenroll in this case? Because it is a beta release, you will not be able to reenroll.")) {
+  deleteEnrollmentFor (kase) {
+    if (kase.published || this.props.roles.editor ||
+        window.confirm('Are you sure you want to unenroll in this case? Because it is a beta release, you will not be able to reenroll.')) {
       Orchard.prune(`admin/enrollments/${kase.enrollmentId}`).then(() => {
         window.location.reload()
       })
     }
   }
 
-  setEditing() {
+  setEditing () {
     if (this.state.editing) {
-      this.setState({editing: false})
+      this.setState({ editing: false })
     } else {
-      this.setState({editing: true})
+      this.setState({ editing: true })
     }
   }
 
-  render() {
-    let {initials} = this.props
-    let {editing} = this.state
+  render () {
+    let { initials } = this.props
+    let { editing } = this.state
     return (
       <div className="catalog-dashboard">
 
@@ -43,8 +42,8 @@ export class Dashboard extends React.Component {
               className="catalog-dashboard__edit"
               onClick={this.setEditing}
             >
-              { editing ? "Done" : "Edit" }
-              <span dangerouslySetInnerHTML={{__html: require(`../../assets/images/react/dashboard-${editing ? 'done' : 'edit'}.svg`)}} />
+              { editing ? 'Done' : 'Edit' }
+              <span dangerouslySetInnerHTML={{ __html: require(`../../assets/images/react/dashboard-${editing ? 'done' : 'edit'}.svg`) }} />
             </a>
           </h2>
         </div>
@@ -82,5 +81,4 @@ export class Dashboard extends React.Component {
       </div>
     )
   }
-
 }

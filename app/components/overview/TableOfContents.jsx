@@ -7,8 +7,8 @@ import { DropTarget, DragDropContext } from 'react-dnd'
 
 import { createPage, createPodcast, createActivity } from 'redux/actions'
 
-import { ItemTypes } from 'concerns/dndConfig'
-import TableOfContentsElement from 'TableOfContentsElement'
+import { ItemTypes } from 'shared/dndConfig'
+import TableOfContentsElement from './TableOfContentsElement'
 
 import type { State } from 'redux/state'
 

@@ -5,7 +5,7 @@ import YoutubePlayer from 'react-youtube-player'
 import { EditableText } from '@blueprintjs/core'
 
 import Tracker from 'utility/Tracker'
-import EditableAttribute from 'EditableAttribute'
+import EditableAttribute from 'utility/EditableAttribute'
 
 import {
   highlightEdgenote,

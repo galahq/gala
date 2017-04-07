@@ -1,6 +1,6 @@
 import React from 'react'
 import { DropTarget } from 'react-dnd'
-import { Orchard } from 'concerns/orchard'
+import { Orchard } from 'shared/orchard'
 
 let CaseEnrollmentTarget = {
   drop(props, monitor) {

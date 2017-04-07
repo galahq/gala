@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import TableOfContents from 'TableOfContents'
-import Billboard from 'Billboard'
-import EnrollForm from 'EnrollForm'
+import TableOfContents from './TableOfContents'
+import Billboard from './Billboard'
+import EnrollForm from './EnrollForm'
 
 import type { State } from 'redux/state'
 

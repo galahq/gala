@@ -1,7 +1,7 @@
 import React from 'react'
 
-import EdgenotesCard from 'EdgenotesCard'
-import CardContents from 'CardContents'
+import EdgenotesCard from 'edgenotes/EdgenotesCard'
+import CardContents from 'cards/CardContents'
 
 const Card = ({ id }: { id: string }) => (
   <section>

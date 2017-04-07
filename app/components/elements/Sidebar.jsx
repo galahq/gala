@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter, matchPath } from 'react-router-dom'
-import BillboardTitle from 'BillboardTitle'
+import BillboardTitle from 'overview/BillboardTitle'
 import { FormattedMessage } from 'react-intl'
-import TableOfContents from 'TableOfContents'
-import EnrollForm from 'EnrollForm'
-import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
+import TableOfContents from 'overview/TableOfContents'
+import EnrollForm from 'overview/EnrollForm'
+import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 
 function mapStateToProps(state, {location}) {
   const {pathname} = location

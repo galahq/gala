@@ -6,8 +6,8 @@ import {
   RichUtils,
 } from 'draft-js'
 
-import { addEntity } from 'concerns/draftConfig'
-import { Orchard } from 'concerns/orchard'
+import { addEntity } from './draftConfig'
+import { Orchard } from 'shared/orchard'
 
 import { updateCardContents, createEdgenote } from 'redux/actions'
 

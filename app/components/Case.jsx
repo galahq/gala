@@ -6,9 +6,9 @@ import DocumentTitle from 'react-document-title'
 import { parseAllCards, registerToaster, addComment,
   addCommentThread, handleNotification } from 'redux/actions.js'
 
-import StatusBar from 'StatusBar'
-import CaseOverview from 'CaseOverview'
-import CaseElement from 'CaseElement'
+import StatusBar from 'overview/StatusBar'
+import CaseOverview from 'overview/CaseOverview'
+import CaseElement from 'elements/CaseElement'
 
 import { Toaster } from '@blueprintjs/core'
 

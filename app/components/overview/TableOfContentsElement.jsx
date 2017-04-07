@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { DragSource, DropTarget } from 'react-dnd'
 import { NavLink, withRouter } from 'react-router-dom'
 
-import { ItemTypes } from 'concerns/dndConfig'
-import Icon from 'Icon'
+import { ItemTypes } from 'shared/dndConfig'
+import Icon from 'utility/Icon'
 
 import {
   updateCaseElement,

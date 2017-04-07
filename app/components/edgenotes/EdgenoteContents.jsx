@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { ScrollLock } from 'ScrollLock'
+import { ScrollLock } from 'deprecated/ScrollLock'
 import Tracker from 'utility/Tracker'
 
 function mapStateToProps (state, { match }) {
@@ -68,7 +68,7 @@ class EdgenoteDisplay extends React.Component {
     >
       <div
         className="linkOverlay"
-        dangerouslySetInnerHTML={{ __html: require(`../assets/images/react/link.svg`) }}
+        dangerouslySetInnerHTML={{ __html: require(`../../assets/images/react/link.svg`) }}
       />
       <img
         src={`${this.props.imageUrl}${
@@ -113,7 +113,7 @@ class EdgenoteSidebar extends React.Component {
       return (
         <div
           className={`edgenote-icon edgenote-icon-${format}`}
-          dangerouslySetInnerHTML={{ __html: require(`../assets/images/react/edgenote-${format}.svg`) }}
+          dangerouslySetInnerHTML={{ __html: require(`../../assets/images/react/edgenote-${format}.svg`) }}
         />
       )
     }

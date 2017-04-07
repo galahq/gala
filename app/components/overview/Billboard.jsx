@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
-import EditableAttribute from 'EditableAttribute'
-import BillboardTitle from 'BillboardTitle'
+import EditableAttribute from 'utility/EditableAttribute'
+import BillboardTitle from './BillboardTitle'
 
 import { updateCase } from 'redux/actions'
 
@@ -94,7 +94,7 @@ function FlagLink ({ slug, lx }: FlagLinkProps) {
     <a href={`/${lx}/cases/${slug}`}>
       <span
         className="flag-links__icon"
-        dangerouslySetInnerHTML={{ __html: require(`../assets/images/react/flag-${lx}.svg`) }} // eslint-disable-line
+        dangerouslySetInnerHTML={{ __html: require(`../../assets/images/react/flag-${lx}.svg`) }} // eslint-disable-line
       />
       &nbsp;
       <FormattedMessage id={lx} />
