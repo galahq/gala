@@ -54,5 +54,19 @@
     "webpack": "^1.12.9",
     "whatwg-fetch": "^1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "babel-eslint": "^7.2.1",
+    "babel-preset-flow": "^6.23.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-config-standard-react": "^4.3.0",
+    "eslint-import-resolver-webpack": "^0.8.1",
+    "eslint-plugin-flowtype": "^2.30.4",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-standard": "^2.1.1",
+    "flow-bin": "^0.38.0"
+  }
 }

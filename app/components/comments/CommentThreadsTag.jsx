@@ -6,18 +6,22 @@ import { acceptSelection } from 'redux/actions'
 
 import { Link } from 'react-router-dom'
 
-function mapStateToProps(state, ownProps) {
+import type { State } from 'redux/state'
+
+type OwnProps = { cardId: string }
+function mapStateToProps (state: State, ownProps: OwnProps) {
   return {
     count: state.cardsById[ownProps.cardId].commentThreads
-      .map( e => state.commentThreadsById[e.id].commentIds )
-      .reduce( (a, e) => [...a, ...e], [] )
+      .map(e => state.commentThreadsById[e.id].commentIds)
+      .reduce((a, e) => [...a, ...e], [])
       .length,
   }
 }
 
-const CommentThreadsTag = ({match, count, cardId, acceptSelection}) =>
+const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) =>
   <Link
-    to={`${match.url}/cards/${cardId}/comments`} replace
+    replace
+    to={`${match.url}/cards/${cardId}/comments`}
     className="CommentThreads__banner"
     onClick={() => {
       count === 0 && acceptSelection()
@@ -30,11 +34,11 @@ const CommentThreadsTag = ({match, count, cardId, acceptSelection}) =>
           one {response}
           other {responses}
         }`}
-        values={{count}} />
+        values={{ count }} />
       : <FormattedMessage id="comments.respond" defaultMessage="Respond" /> }
   </Link>
 
 export default connect(
   mapStateToProps,
-  {acceptSelection}
+  { acceptSelection }
 )(CommentThreadsTag)

@@ -1,27 +1,39 @@
+// @flow
 import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization
-  from 'concerns/convertFromOldStyleCardSerialization.js'
+  from 'concerns/convertFromOldStyleCardSerialization'
 import { addCommentThreads } from 'concerns/commentThreads'
 import { decorator } from 'concerns/draftConfig'
 
-import {
-  UPDATE_CARD_CONTENTS,
-  APPLY_SELECTION,
-  REPLACE_CARD,
-  PARSE_ALL_CARDS,
-  ADD_COMMENT_THREAD,
-  REMOVE_COMMENT_THREAD,
-  ADD_PODCAST,
-  ADD_ACTIVITY,
-} from '../actions'
+import type { CardsState, Card, CommentThread } from 'redux/state'
+import type {
+  UpdateCardContentsAction,
+  ApplySelectionAction,
+  ReplaceCardAction,
+  ParseAllCardsAction,
+  AddCommentThreadAction,
+  RemoveCommentThreadAction,
+  AddPodcastAction,
+  AddActivityAction,
+} from 'redux/actions'
 
-let { forceSelection } = EditorState
+const { forceSelection } = EditorState
 
-function cardsById(state = getInitialEmptyCards(), action) {
-  let newCard
+type Action = UpdateCardContentsAction
+  | ApplySelectionAction
+  | ReplaceCardAction
+  | ParseAllCardsAction
+  | AddCommentThreadAction
+  | RemoveCommentThreadAction
+  | AddPodcastAction
+  | AddActivityAction
 
+function cardsById (
+  state: CardsState = getInitialEmptyCards(),
+  action: Action,
+): CardsState {
   switch (action.type) {
-    case UPDATE_CARD_CONTENTS:
+    case 'UPDATE_CARD_CONTENTS':
       return {
         ...state,
         [action.id]: {
@@ -30,8 +42,8 @@ function cardsById(state = getInitialEmptyCards(), action) {
         },
       }
 
-    case APPLY_SELECTION:
-      let editorState = state[action.cardId].editorState
+    case 'APPLY_SELECTION': {
+      const editorState = state[action.cardId].editorState
 
       return {
         ...state,
@@ -40,8 +52,9 @@ function cardsById(state = getInitialEmptyCards(), action) {
           editorState: forceSelection(editorState, action.selectionState),
         },
       }
+    }
 
-    case REPLACE_CARD:
+    case 'REPLACE_CARD':
       return {
         ...state,
         [action.cardId]: {
@@ -50,8 +63,8 @@ function cardsById(state = getInitialEmptyCards(), action) {
         },
       }
 
-    case PARSE_ALL_CARDS:
-      return Object.values(state).reduce( (all, card) => ({
+    case 'PARSE_ALL_CARDS':
+      return Object.keys(state).map(key => state[key]).reduce((all, card) => ({
         ...all,
         [card.id]: {
           ...card,
@@ -59,30 +72,33 @@ function cardsById(state = getInitialEmptyCards(), action) {
         },
       }), {})
 
-    case ADD_COMMENT_THREAD:
-      const card = state[action.data.cardId]
-      if (card.commentThreads.find(x => x.id === action.data.id))  return state
+    case 'ADD_COMMENT_THREAD': {
+      const { data } = action
+      const card = state[data.cardId]
+      if (card.commentThreads.find(x => x.id === data.id)) return state
 
-      newCard = {
+      const newCard = {
         ...card,
         commentThreads: [
           ...card.commentThreads,
-          action.data,
+          data,
         ].sort(sortCommentThreads),
       }
       return {
         ...state,
-        [action.data.cardId]: {
+        [data.cardId]: {
           ...newCard,
           editorState: parseEditorStateFromPersistedCard(newCard),
         },
       }
+    }
 
-    case REMOVE_COMMENT_THREAD:
-      newCard = {
-        ...state[action.cardId],
-        commentThreads: state[action.cardId].commentThreads.filter(
-          x => x.id !== action.threadId
+    case 'REMOVE_COMMENT_THREAD': {
+      const { cardId, threadId } = action
+      const newCard = {
+        ...state[cardId],
+        commentThreads: state[cardId].commentThreads.filter(
+          x => x.id !== threadId,
         ),
       }
       return {
@@ -92,9 +108,10 @@ function cardsById(state = getInitialEmptyCards(), action) {
           editorState: parseEditorStateFromPersistedCard(newCard),
         },
       }
+    }
 
-    case ADD_PODCAST:
-    case ADD_ACTIVITY:
+    case 'ADD_PODCAST':
+    case 'ADD_ACTIVITY':
       return {
         ...state,
         [action.data.cardId]: {
@@ -109,24 +126,26 @@ function cardsById(state = getInitialEmptyCards(), action) {
 
 export default cardsById
 
-
-
-function sortCommentThreads(a, b) {
-  if (a.blockIndex !== b.blockIndex)  return a.blockIndex > b.blockIndex
-  return a.start > b.start
+function sortCommentThreads (a: CommentThread, b: CommentThread): number {
+  if (a.blockIndex !== b.blockIndex) return a.blockIndex - b.blockIndex
+  return a.start - b.start
 }
 
-function getInitialEmptyCards() {
-  let state = {...window.caseData.cards}
+function getInitialEmptyCards (): CardsState {
+  const state = ({ ...window.caseData.cards }: CardsState)
 
-  Object.values(state).forEach( card => {
-    state[card.id].editorState = EditorState.createEmpty()
-  } )
-
-  return state
+  return Object.keys(state).map(key => state[key]).reduce((all, card) => {
+    return {
+      ...all,
+      [card.id]: {
+        ...card,
+        editorState: EditorState.createEmpty(),
+      },
+    }
+  }, {})
 }
 
-function parseEditorStateFromPersistedCard(card) {
+function parseEditorStateFromPersistedCard (card: Card) {
   const content = card.rawContent
     ? JSON.parse(card.rawContent)
     : convertFromOldStyleCardSerialization(card.content)

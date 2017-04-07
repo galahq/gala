@@ -1,16 +1,26 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { selectCommentThread, hoverCommentThread,
-  deleteCommentThread } from 'redux/actions'
+import { hoverCommentThread, deleteCommentThread } from 'redux/actions'
 import Truncate from 'react-truncate'
 import { FormattedMessage } from 'react-intl'
 import Icon from 'Icon'
 import { Link, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
 
-function mapStateToProps(state, {threadId, location}) {
+import type { Location, RouterHistory } from 'react-router-dom'
+import type { State } from 'redux/state'
+
+type OwnProps = {
+  threadId: string,
+  location: Location,
+  cardId: string,
+  history: RouterHistory,
+  last: boolean,
+}
+
+function mapStateToProps (state: State, { threadId, location }: OwnProps) {
   const thread = state.commentThreadsById[threadId]
-  const comments = thread.commentIds.map( x => state.commentsById[x] )
+  const comments = thread.commentIds.map(x => state.commentsById[x])
   const firstComment = comments.length > 0 ? comments[0] : {}
 
   return {
@@ -31,8 +41,8 @@ function mapStateToProps(state, {threadId, location}) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
-  const {threadId, cardId, history, location} = ownProps
+function mapDispatchToProps (dispatch, ownProps: OwnProps) {
+  const { threadId, cardId, history, location } = ownProps
   return {
     handleMouseEnter: () => dispatch(hoverCommentThread(threadId)),
     handleMouseLeave: () => dispatch(hoverCommentThread(null)),
@@ -40,28 +50,29 @@ function mapDispatchToProps(dispatch, ownProps) {
       dispatch(deleteCommentThread(threadId, cardId))
 
       const commentsMatch = matchPath(location.pathname, commentsOpen())
-      if (commentsMatch && threadId === parseInt(commentsMatch.params.commentThreadId, 10))
+      if (commentsMatch && threadId === commentsMatch.params.commentThreadId) {
         history.replace(matchPath(location.pathname, commentThreadsOpen()).url)
+      }
     },
   }
 }
 
-const CommentThread = ({lead, responses, hovered, selected, last,
+const CommentThread = ({ lead, responses, hovered, selected, last,
   match, threadId, handleMouseEnter, handleMouseLeave, handleDeleteThread,
-  canBeDeleted}) =>
-<div style={{position: 'relative'}}>
-  <Link to={`${match.url}/${threadId}`} replace style={styles.linkReset}>
-    <li
-      style={styles.getCommentListItemStyle({last, selected, hovered})}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <h4 style={styles.author}>{lead.author}</h4>
-      <LeadSnippet lead={lead} />
-      {
+  canBeDeleted }) =>
+    <div style={{ position: 'relative' }}>
+      <Link replace to={`${match.url}/${threadId}`} style={styles.linkReset}>
+        <li
+          style={styles.getCommentListItemStyle({ last, selected, hovered })}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <h4 style={styles.author}>{lead.author}</h4>
+          <LeadSnippet lead={lead} />
+          {
         responses.map((r, i) => {
           const numOthers = responses.length - 2
-          switch(i) {
+          switch (i) {
             case 0:
             case 1:
               return <p
@@ -80,28 +91,31 @@ const CommentThread = ({lead, responses, hovered, selected, last,
                     one {response}
                     other {responses}
                   }`}
-                  values={{count: numOthers}} />
+                  values={{ count: numOthers }} />
               </p>
             default: return null
           }
         })
       }
 
-    </li>
-  </Link>
-  {canBeDeleted &&
-    <a>
-      <Icon className="CommentThread__icon-button" filename="trash"
-        onClick={handleDeleteThread}
-        style={styles.deleteCommentThread} />
-    </a>}
-</div>
+        </li>
+      </Link>
+      {canBeDeleted &&
+      <a>
+        <Icon
+          className="CommentThread__icon-button"
+          filename="trash"
+          style={styles.deleteCommentThread}
+          onClick={handleDeleteThread}
+        />
+      </a>}
+    </div>
 
 // Truncate is slow so let's extend PureComponent
 class LeadSnippet extends React.PureComponent {
-  render() {
-    const {placeholder, content} = this.props.lead
-    return <p style={styles.getCommentSnippetStyle({placeholder: placeholder})}>
+  render () {
+    const { placeholder, content } = this.props.lead
+    return <p style={styles.getCommentSnippetStyle({ placeholder })}>
       <Truncate lines={3}>{content}</Truncate>
     </p>
   }
@@ -112,19 +126,21 @@ export default connect(
   mapDispatchToProps,
 )(CommentThread)
 
+type Flags = { [string]: boolean }
+
 const styles = {
   linkReset: {
     color: 'white',
     textDecoration: 'none',
   },
 
-  getCommentListItemStyle: ({last, selected, hovered}) => ({
+  getCommentListItemStyle: ({ last, selected, hovered }: Flags) => ({
     padding: '0.65em 0.5em 0.65em 1em',
     listStylePosition: 'inside',
     cursor: 'pointer',
     borderBottom: last || '1px solid #513992',
-    ...(hovered ? {backgroundColor: '#6543c5'} : {}),
-    ...(selected ? {backgroundColor: '#493092'} : {}),
+    ...(hovered ? { backgroundColor: '#6543c5' } : {}),
+    ...(selected ? { backgroundColor: '#493092' } : {}),
   }),
 
   author: {
@@ -138,11 +154,11 @@ const styles = {
     color: 'inherit',
   },
 
-  getCommentSnippetStyle: ({placeholder}) => ({
+  getCommentSnippetStyle: ({ placeholder }: Flags) => ({
     margin: '0 0 0 1em',
     fontWeight: 400,
     lineHeight: 1.4,
-    ...(placeholder && {opacity: 0.5}),
+    ...(placeholder && { opacity: 0.5 }),
   }),
 
   initials: {

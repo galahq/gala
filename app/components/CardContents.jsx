@@ -1,13 +1,8 @@
-//
-// Someday when Trackable has been refactored to use redux, I want this
-// component to be merged with Card as the only redux powered card component,
-// allowing EditableCard to be renamed CardContents
-//
-
+// @flow
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Editor, EditorState, RichUtils, SelectionState} from 'draft-js'
+import { Editor, EditorState, RichUtils, SelectionState } from 'draft-js'
 import { blockRenderMap, getStyleMap } from 'concerns/draftConfig'
 
 import EditorToolbar from 'EditorToolbar'
@@ -26,22 +21,36 @@ import {
 import { Route, withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'concerns/routes'
 
-const mapStateToProps = (state, {id, location, nonNarrative}) => {
+import type { Location } from 'react-router-dom'
+
+import type { State } from 'redux/state'
+
+type OwnProps = {
+  id: string,
+  location: Location,
+  nonNarrative: boolean,
+}
+
+function mapStateToProps (
+  state: State,
+  { id, location, nonNarrative }: OwnProps,
+) {
   const { solid, statistics, editorState } = state.cardsById[id]
   const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
 
-  const {pathname} = location
+  const { pathname } = location
   const theseCommentThreadsOpen = matchPath(pathname, commentThreadsOpen(id))
   const anyCommentThreadsOpen = matchPath(pathname, commentThreadsOpen())
   const anyCommentsOpen = matchPath(pathname, commentsOpen())
   const selectedCommentThread = anyCommentsOpen && anyCommentsOpen.params.commentThreadId
 
   return {
-    commentable: !nonNarrative && state.caseData.commentable && !!state.caseData.reader.enrollment,
+    commentable: !nonNarrative && state.caseData.commentable &&
+      !!state.caseData.reader.enrollment,
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
-    readOnly: !((state.edit.inProgress && !openedCitation.key)
-      || acceptingSelection),
+    readOnly: !((state.edit.inProgress && !openedCitation.key) ||
+      acceptingSelection),
     anyCommentsOpen,
     openedCitation,
     acceptingSelection,
@@ -55,40 +64,29 @@ const mapStateToProps = (state, {id, location, nonNarrative}) => {
   }
 }
 
-  //deleteCard() {
-    //let confirmation = window.confirm("\
-//Are you sure you want to delete this card and its contents?\n\n\
-//Edgenotes attached to it will not be deleted, although they will be detached.\n\n\
-//This action cannot be undone.")
-    //if (!confirmation) { return }
-
-    //Orchard.prune(`cards/${this.props.id}`).then((response) => {
-      //this.props.didSave(response, false, 'deleted')
-    //})
-  //}
-const mapDispatchToProps = (dispatch, ownProps) => {
+function mapDispatchToProps (dispatch: *, ownProps: OwnProps) {
   return {
+    onChangeContents: (eS: EditorState) =>
+      dispatch(updateCardContents(ownProps.id, eS)),
 
-    onChangeContents: eS => dispatch(updateCardContents(ownProps.id, eS)),
-
-    onMakeSelectionForComment: (editorState) => {
-      const selection = editorState.getSelection()
-      if (!selection.getHasFocus())  return
+    onMakeSelectionForComment: (eS: EditorState) => {
+      const selection = eS.getSelection()
+      if (!selection.getHasFocus()) return
       const selectionState = (
-        selection.isCollapsed()
-          || selection.getStartKey() !== selection.getEndKey()
+        selection.isCollapsed() ||
+          selection.getStartKey() !== selection.getEndKey()
       ) ? SelectionState.createEmpty(selection.getAnchorKey())
         : selection
       dispatch(applySelection(ownProps.id, selectionState))
     },
 
-    createCommentThread: (cardId, editorState) =>
-      dispatch(createCommentThread(cardId, editorState)),
+    createCommentThread: (cardId: string, eS: EditorState) =>
+      dispatch(createCommentThread(cardId, eS)),
 
   }
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
+function mergeProps (stateProps, dispatchProps, ownProps) {
   const { editable, editorState } = stateProps
   const { onChangeContents, onMakeSelectionForComment,
     createCommentThread } = dispatchProps
@@ -119,7 +117,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 class CardContents extends React.Component {
-  constructor(props) {
+  constructor (props: *) {
     super(props)
 
     // We have to be able to respond to props change that would change
@@ -137,15 +135,15 @@ class CardContents extends React.Component {
     this._getClassNames = () => {
       let n = []
       n = [...n, this.props.solid ? 'Card' : 'nonCard']
-      if (this.props.anyCommentThreadsOpen)  n = [...n, "has-comment-threads-open"]
-      if (this.props.anyCommentsOpen)  n = [...n, "has-comments-open"]
-      if (this.props.acceptingSelection)  n = [...n, "accepting-selection"]
-      if (this.props.commentable)  n = [...n, "commentable"]
+      if (this.props.anyCommentThreadsOpen) n = [...n, 'has-comment-threads-open']
+      if (this.props.anyCommentsOpen) n = [...n, 'has-comments-open']
+      if (this.props.acceptingSelection) n = [...n, 'accepting-selection']
+      if (this.props.commentable) n = [...n, 'commentable']
       return n.join(' ')
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     let editorState = nextProps.editorState
     if (this._shouldJiggle(nextProps)) {
       const contentState = editorState.getCurrentContent()
@@ -158,39 +156,41 @@ class CardContents extends React.Component {
         currentContent: outdentedContentState,
       })
     }
-    this.setState({editorState})
+    this.setState({ editorState })
   }
 
-  render() {
-    let {id, solid, editable, editing, onChange,
-      handleKeyCommand, onDelete, openedCitation, addCommentThread,
+  render () {
+    let { id, solid, editable, editing, onChange,
+      handleKeyCommand, openedCitation, addCommentThread,
       theseCommentThreadsOpen, hoveredCommentThread, selectedCommentThread, readOnly,
-      commentable, title, match} = this.props
-    let {editorState} = this.state
+      commentable, title, match } = this.props
+    let { editorState } = this.state
 
     let citationOpenWithinCard
     try {
       citationOpenWithinCard = citationInsideThisCard(this.cardRef, openedCitation.labelRef)
-    } catch(e) {
+    } catch (e) {
       citationOpenWithinCard = false
     }
 
-    const styleMap = getStyleMap({commentable, theseCommentThreadsOpen,
-      hoveredCommentThread, selectedCommentThread})
+    const styleMap = getStyleMap({ commentable,
+      theseCommentThreadsOpen,
+      hoveredCommentThread,
+      selectedCommentThread })
 
     return <div
-      ref={el => this.cardRef = el}
+      ref={(el: HTMLElement) => (this.cardRef = el)}
       className={this._getClassNames()}
       style={{
         paddingTop: editing && '2em',
         zIndex: theseCommentThreadsOpen && 300,
-        transition: "padding-top 0.1s, flex 0.3s",
+        transition: 'padding-top 0.1s, flex 0.3s',
       }}
     >
 
       {editing && <EditorToolbar cardId={id} />}
       {title}
-      <Editor ref={ed => this.editor = ed}
+      <Editor ref={(ed: HTMLElement) => (this.editor = ed)}
         readOnly={readOnly}
         customStyleMap={styleMap}
         onChange={eS => onChange(eS)}
@@ -203,15 +203,21 @@ class CardContents extends React.Component {
 
       {commentable && solid && <CommentThreadsTag cardId={id} match={match} />}
 
-      <Route {...commentThreadsOpen(id)} render={
-        (routeProps) => <CommentThreadsCard {...routeProps} cardId={id}
-        addCommentThread={addCommentThread} />
-      } />
+      <Route
+        {...commentThreadsOpen(id)}
+        render={
+          (routeProps) => <CommentThreadsCard
+            {...routeProps}
+            cardId={id}
+            addCommentThread={addCommentThread}
+          />
+        }
+      />
 
       {
         citationOpenWithinCard && <CitationTooltip cardId={id}
           cardWidth={this.cardRef.clientWidth}
-          {...{openedCitation, editable }}
+          {...{ openedCitation, editable }}
         />
       }
 
@@ -234,8 +240,8 @@ export default withRouter(connect(
   mergeProps
 )(CardContents))
 
-function citationInsideThisCard(card, citation) {
-  if (!card || !citation)  return false
+function citationInsideThisCard (card, citation) {
+  if (!card || !citation) return false
   if (card === citation) return true
   return citationInsideThisCard(card, citation.parentElement)
 }

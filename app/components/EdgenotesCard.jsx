@@ -2,12 +2,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { convertToRaw } from 'draft-js'
 import OldEdgenote from 'OldEdgenote'
-import {Edgenote} from 'Edgenote'
+import { Edgenote } from 'Edgenote'
 
-function mapStateToProps(state, ownProps) {
+import typeof { EditorState } from 'draft-js'
+import type { State } from 'redux/state'
+
+type OwnProps = { cardId: string }
+function mapStateToProps (state: State, ownProps: OwnProps) {
   let edgenoteSlugs = getEdgenoteSlugs(state.cardsById[ownProps.cardId].editorState)
   return {
-    oldStyle: edgenoteSlugs.some( x => state.edgenotesBySlug[x].style === 'v1' ),
+    oldStyle: edgenoteSlugs.some(x => state.edgenotesBySlug[x].style === 'v1'),
     edgenoteSlugs,
   }
 }
@@ -17,11 +21,11 @@ const EdgenotesCard = ({edgenoteSlugs, oldStyle}) => {
 
   if (edgenoteSlugs.length > 0) {
     return <aside
-      className={oldStyle ? "edgenotes" : 'c-edgenotes-card pt-dark'}>
+      className={oldStyle ? 'edgenotes' : 'c-edgenotes-card pt-dark'}>
       { edgenoteSlugs.map(
         (slug) => <AnEdgenote key={`${slug}`} slug={slug} />
       ) }
-  </aside>
+    </aside>
   } else {
     return null
   }
@@ -29,10 +33,9 @@ const EdgenotesCard = ({edgenoteSlugs, oldStyle}) => {
 
 export default connect(mapStateToProps)(EdgenotesCard)
 
-
-function getEdgenoteSlugs(editorState) {
+function getEdgenoteSlugs (editorState: EditorState): string[] {
   const rawContent = convertToRaw(editorState.getCurrentContent())
   return Object.values(rawContent.entityMap)
-    .filter( entity => entity.type === "EDGENOTE" )
-    .map( entity => entity.data.slug )
+    .filter(entity => entity.type === 'EDGENOTE')
+    .map(entity => entity.data.slug)
 }

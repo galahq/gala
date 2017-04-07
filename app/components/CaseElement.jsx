@@ -11,20 +11,21 @@ import EdgenoteContents from 'EdgenoteContents'
 
 import { FormattedMessage } from 'react-intl'
 
-import {deleteElement} from 'redux/actions.js'
+import { deleteElement } from 'redux/actions.js'
 
-function mapStateToProps(state, {match}) {
+import type { State } from 'redux/state'
+
+function mapStateToProps (state: State, { match }) {
   const position = parseInt(match.params.position, 10) - 1
   const caseElement = state.caseData.caseElements[position]
-  if (!caseElement)  return {}
+  if (!caseElement) return {}
 
-  const {elementType: model, elementId, elementStore} = caseElement
+  const { elementType: model, elementId, elementStore } = caseElement
 
   const nextElement = state.caseData.caseElements[position + 1]
-  const {elementId: nextElementId, elementStore: nextElementStore} = nextElement
-    ? nextElement : {}
+  const { elementId: nextElementId, elementStore: nextElementStore } = nextElement || {}
 
-  const {title, url} = state[elementStore][elementId]
+  const { title, url } = state[elementStore][elementId]
 
   return {
     kicker: state.caseData.kicker,
@@ -43,26 +44,24 @@ function mapStateToProps(state, {match}) {
 }
 
 class CaseElement extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this._scrollToTop = () => window.scrollTo(0, 0)
-
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._scrollToTop()
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.params.position !== this.props.match.params.position)
-      this._scrollToTop()
+  componentDidUpdate (prevProps) {
+    if (prevProps.match.params.position !== this.props.match.params.position) { this._scrollToTop() }
   }
 
-  render() {
-    const {kicker, title, reader, editing, model, id, next, url,
-      deleteElement, position, history} = this.props
+  render () {
+    const { kicker, title, reader, editing, model, id, next, url,
+      deleteElement, position, history } = this.props
 
-    if (!reader)  return <Redirect to="/" />
+    if (!reader) return <Redirect to="/" />
 
     var child
     switch (model) {
@@ -72,16 +71,13 @@ class CaseElement extends React.Component {
       case undefined: return <Redirect to="/" />
     }
 
-    return <div className={`window ${editing ? 'editing' : ""}`}>
+    return <div className={`window ${editing ? 'editing' : ''}`}>
       <Sidebar />
-      <main className={`s-CaseElement__${model}`}>
-        <a id="top" />
-
+      <main id="top" className={`s-CaseElement__${model}`}>
         <DocumentTitle title={`${kicker} — ${title} — Michigan Sustainability Cases`}>
           { React.cloneElement(child, {
-            deleteElement: () =>
-              {deleteElement(url, position) && history.push('/')},
-          } )}
+            deleteElement: () => { deleteElement(url, position) && history.push('/') },
+          })}
         </DocumentTitle>
 
         <Route path={`/:position/edgenotes/:edgenoteSlug`} component={EdgenoteContents} />
@@ -89,13 +85,11 @@ class CaseElement extends React.Component {
       </main>
     </div>
   }
-
 }
 
-export default connect(mapStateToProps, {deleteElement})(CaseElement)
+export default connect(mapStateToProps, { deleteElement })(CaseElement)
 
-
-const NextLink = ({next}) => next
+const NextLink = ({ next }) => next
   ? <Link className="nextLink" to={`/${next.position}`}>
     <FormattedMessage id="case.next" />
     {next.title}

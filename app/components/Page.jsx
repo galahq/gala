@@ -1,13 +1,16 @@
 import React from 'react'
-import { connect  } from 'react-redux'
-import {EditableText} from '@blueprintjs/core'
+import { connect } from 'react-redux'
+import { EditableText } from '@blueprintjs/core'
 
-import {Orchard} from 'concerns/orchard'
+import { Orchard } from 'concerns/orchard'
 import { updatePage } from 'redux/actions'
 
 import Card from 'Card'
 
-function mapStateToProps(state, {id}) {
+import type { State } from 'redux/state'
+
+type OwnProps = { id: string }
+function mapStateToProps (state: State, { id }: OwnProps) {
   return {
     caseSlug: state.caseData.slug,
     editing: state.edit.inProgress,
@@ -15,9 +18,17 @@ function mapStateToProps(state, {id}) {
   }
 }
 
-function Page (props) {
-  let {id, title, position, cards, caseSlug, editing, updatePage,
-    deleteElement} = props
+const Page = (props) => {
+  let {
+    id,
+    title,
+    position,
+    cards,
+    caseSlug,
+    editing,
+    updatePage,
+    deleteElement,
+  } = props
 
   return (
     <article>
@@ -28,7 +39,7 @@ function Page (props) {
             value={title}
             multiline
             disabled={!editing}
-            onChange={value => updatePage(id, { title: value })}
+            onChange={(value: string) => updatePage(id, { title: value })}
           />
         </h1>
         {editing && <button
@@ -63,28 +74,18 @@ function Page (props) {
 }
 
 class CreateCardLink extends React.Component {
-  createCard() {
+  createCard () {
+    // TODO: This should really be in a redux thun
     let { pageId, i } = this.props
-    Orchard.graft(`pages/${pageId}/cards`, {position: i + 1})
+    Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 })
       .then(setTimeout(() => location.reload(), 50))
   }
 
-  render() {
-    return <a onClick={this.createCard.bind(this)} className="Card-create">Create card</a>
+  render () {
+    return <a onClick={this.createCard.bind(this)} className="Card-create">
+      Create card
+    </a>
   }
 }
 
 export default connect(mapStateToProps, { updatePage })(Page)
-
-//deletePage() {
-  //let confirmation = window.confirm("\
-//Are you sure you want to delete this page and all of its cards?\n\n\
-//Edgenotes attached to cards on this page will not be deleted.\n\n\
-//This action cannot be undone.")
-  //if (!confirmation) { return }
-
-  //Orchard.prune(`pages/${this.props.page.id}`).then((response) => {
-    ////this.props.didSave(response, true, 'deleted')
-  //})
-
-//}

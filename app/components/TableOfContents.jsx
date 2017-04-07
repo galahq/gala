@@ -10,7 +10,9 @@ import { createPage, createPodcast, createActivity } from 'redux/actions'
 import { ItemTypes } from 'concerns/dndConfig'
 import TableOfContentsElement from 'TableOfContentsElement'
 
-function mapStateToProps(state) {
+import type { State } from 'redux/state'
+
+function mapStateToProps (state: State) {
   return {
     caseSlug: state.caseData.slug,
     elements: state.caseData.caseElements,
@@ -19,17 +21,24 @@ function mapStateToProps(state) {
   }
 }
 
-const mapDispatchToProps = { createPage, createPodcast, createActivity }
-
-const TableOfContents = ({caseSlug, editing, elements, disabled,
-  connectDropTarget, readOnly, createPage, createPodcast, createActivity}) =>
-  <nav className={`c-toc pt-dark ${disabled && "c-toc--disabled"}`}>
+const TableOfContents = ({
+  caseSlug,
+  editing,
+  elements,
+  disabled,
+  connectDropTarget,
+  readOnly,
+  createPage,
+  createPodcast,
+  createActivity,
+}) =>
+  <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
     <h2 className="c-toc__header"><FormattedMessage id="case.toc" /></h2>
     { connectDropTarget(
       <ol className="c-toc__list">
         { elements.map((element, index) =>
           <TableOfContentsElement element={element} key={element.id}
-            position={index + 1} readOnly={readOnly}/>
+            position={index + 1} readOnly={readOnly} />
         ) }
         { editing && !readOnly && <div className="c-toc__actions pt-button-group pt-fill">
           <button type="button" className="pt-button pt-icon-add"
@@ -60,5 +69,8 @@ const DragDropTableOfContents = DragDropContext(HTML5Backend)(
 )
 
 export default withRouter(
-  connect( mapStateToProps, mapDispatchToProps)(DragDropTableOfContents)
+  connect(
+    mapStateToProps,
+    { createPage, createPodcast, createActivity }
+  )(DragDropTableOfContents)
 )

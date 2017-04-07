@@ -1,8 +1,22 @@
 import React from 'react'
 import { EditableText } from '@blueprintjs/core'
 
-const EditableAttribute = ({disabled, title, value, onChange, style={}}) =>
-  disabled ? null : <div style={{...styles.container, ...style}}>
+type Props = {
+  disabled: boolean,
+  title: string,
+  value: string,
+  onChange: (string) => void,
+  style?: Object,
+}
+const EditableAttribute = ({
+  disabled,
+  title,
+  value,
+  onChange,
+  style = {}
+}: Props) => {
+  if (disabled) return null
+  return <div style={{...styles.container, ...style}}>
     { value && value.length > 0 && <label style={styles.label}>{title}</label> }
     <EditableText
       placeholder={`Add ${title}...`}
@@ -10,9 +24,9 @@ const EditableAttribute = ({disabled, title, value, onChange, style={}}) =>
       onChange={onChange}
     />
   </div>
+}
 
 export default EditableAttribute
-
 
 const styles = {
   container: {

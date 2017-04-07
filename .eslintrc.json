@@ -13,13 +13,7 @@
   },
   "settings": {
     "ecmascript": 6,
-    "jsx": true,
-    "import/ignore": "node_modules/",
-    "import/resolver": {
-      "webpack": {
-        "config": "config/webpack.config.js"
-      }
-    }
+    "jsx": true
   },
   "plugins": [
     "import",
@@ -30,6 +24,7 @@
     "no-undef": 0,
     "comma-dangle": [2, "always-multiline"],
     "object-shorthand": [2, "always"],
+    "object-curly-spacing": [2, "always", { "objectsInObjects": false }],
     "no-shadow": 0,
     "no-duplicate-imports": 0,
     "no-confusing-arrow": 0,

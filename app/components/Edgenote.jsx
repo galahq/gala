@@ -13,7 +13,10 @@ import {
   updateEdgenote,
 } from 'redux/actions'
 
-const mapStateToProps = (state, {slug}) => {
+import type { State } from 'redux/state'
+
+type OwnProps = { slug: string }
+function mapStateToProps (state: State, { slug }: OwnProps) {
   return {
     editing: state.edit.inProgress,
     selected: slug === state.ui.highlightedEdgenote,
@@ -22,7 +25,7 @@ const mapStateToProps = (state, {slug}) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, {slug}) => {
+function mapDispatchToProps (dispatch: *, { slug }: OwnProps) {
   return {
     activate: () => dispatch(activateEdgenote(slug)),
     deactivate: () => dispatch(activateEdgenote(null)),
@@ -30,7 +33,7 @@ const mapDispatchToProps = (dispatch, {slug}) => {
     onMouseOut: () => dispatch(highlightEdgenote(null)),
     onChange: attr => value => dispatch(updateEdgenote(
       slug,
-      {[attr]: value},
+      { [attr]: value },
     )),
   }
 }
@@ -120,7 +123,7 @@ class EdgenoteFigure extends React.Component {
         <Caption
           contents={caption}
           {...reduxProps}
-          {...(pullQuote ? {selected: false} : {})}
+          {...(pullQuote ? { selected: false } : {})}
           onChange={onChange('caption')}
         />
         { !!youtubeSlug || !!audioUrl ||
@@ -151,8 +154,8 @@ export const Edgenote = connect(
   mapDispatchToProps,
 )(EdgenoteFigure)
 
-const YouTube = ({slug, active, activate, deactivate, editing,
-                 onChange}) => <div>
+const YouTube = ({ slug, active, activate, deactivate, editing,
+                 onChange }) => <div>
                    { slug && <YoutubePlayer
                      videoId={slug}
                      playbackState={active ? 'playing' : 'paused'}
@@ -170,17 +173,17 @@ const YouTube = ({slug, active, activate, deactivate, editing,
                    />
                  </div>
 
-const Image = ({src, callToAction, active, activate, deactivate, editing,
-               onChange}) => {
+const Image = ({ src, callToAction, active, activate, deactivate, editing,
+               onChange }) => {
   let imageProps = {
-    style: {width: '100%', minHeight: '3em', display: 'block'},
+    style: { width: '100%', minHeight: '3em', display: 'block' },
     src: `${src}?w=640`,
   }
   let imageComponent = callToAction ? <img {...imageProps} /> : <ImageZoom
     isZoomed={active}
-    defaultStyles={{overlay: {backgroundColor: '#1D2934'}}}
+    defaultStyles={{ overlay: { backgroundColor: '#1D2934' }}}
     image={imageProps}
-    zoomImage={{src}}
+    zoomImage={{ src }}
     onZoom={activate}
     onUnzoom={deactivate}
   />
@@ -204,12 +207,12 @@ class AudioPlayer extends React.Component {
   }
 
   render () {
-    let {src, editing, onChange} = this.props
+    let { src, editing, onChange } = this.props
     return <div>
       { src && <audio
         controls
         ref={c => { this.audioPlayer = c }}
-        style={{width: '100%', borderRadius: 2, borderBottom: `4px solid ${lightGreen}`}}
+        style={{ width: '100%', borderRadius: 2, borderBottom: `4px solid ${lightGreen}` }}
         src={src} />}
       <EditableAttribute
         disabled={!editing}
@@ -221,17 +224,17 @@ class AudioPlayer extends React.Component {
   }
 }
 
-const Background = ({visible, children}) =>
+const Background = ({ visible, children }) =>
   <div style={visible ? backgroundedStyle : {}}>{children}</div>
 
-const CallToAction = ({contents, websiteUrl, editing, onChange}) => <div>
+const CallToAction = ({ contents, websiteUrl, editing, onChange }) => <div>
   <EditableAttribute
     disabled={!editing}
     title="website"
     value={websiteUrl}
     onChange={onChange('websiteUrl')}
   />
-  {(contents || editing) && <p style={{margin: '0.25em 0 0 0', lineHeight: 1}}>
+  {(contents || editing) && <p style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>
     <EditableText
       multiline
       disabled={!editing}
@@ -242,8 +245,8 @@ const CallToAction = ({contents, websiteUrl, editing, onChange}) => <div>
   </p> }
 </div>
 
-const Caption = ({contents, selected, editing, onChange}) => contents || editing
-  ? <div style={{margin: '0.25em 0 0 0'}}>
+const Caption = ({ contents, selected, editing, onChange }) => contents || editing
+  ? <div style={{ margin: '0.25em 0 0 0' }}>
     <figcaption
       className={selected && 'edge--highlighted'}
       style={{ fontSize: '110%', lineHeight: 1.1 }}
@@ -259,7 +262,7 @@ const Caption = ({contents, selected, editing, onChange}) => contents || editing
   </div>
   : null
 
-const PullQuote = ({contents, selected, editing, onChange}) =>
+const PullQuote = ({ contents, selected, editing, onChange }) =>
   contents || editing ? <blockquote
     className={selected && 'edge--highlighted'}
     style={{
@@ -279,7 +282,7 @@ const PullQuote = ({contents, selected, editing, onChange}) =>
   </blockquote>
   : null
 
-const Attribution = ({name, editing, onChange}) => name || editing ? <cite
+const Attribution = ({ name, editing, onChange }) => name || editing ? <cite
   style={{
     textAlign: 'right',
     display: 'block',

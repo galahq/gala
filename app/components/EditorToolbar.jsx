@@ -11,23 +11,28 @@ import { Orchard } from 'concerns/orchard'
 
 import { updateCardContents, createEdgenote } from 'redux/actions'
 
-function mapStateToProps(state, ownProps) {
+import type { State, Edgenote } from 'redux/state'
+
+type OwnProps = { cardId: string}
+function mapStateToProps (state: State, ownProps: OwnProps) {
   return {
     caseSlug: state.caseData.slug,
     editorState: state.cardsById[ownProps.cardId].editorState,
-    edgenoteExists: slug => !!state.edgenotesBySlug[slug],
+    edgenoteExists: (slug: string) => !!state.edgenotesBySlug[slug],
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps (dispatch: *, ownProps: OwnProps) {
   return {
-    updateEditorState: eS => dispatch(updateCardContents(ownProps.cardId, eS)),
-    createEdgenoteRecord: (slug, data) => dispatch(createEdgenote(slug, data)),
+    updateEditorState: (eS: EditorState) =>
+      dispatch(updateCardContents(ownProps.cardId, eS)),
+    createEdgenoteRecord: (slug: string, data: Edgenote) =>
+      dispatch(createEdgenote(slug, data)),
   }
 }
 
 class EditorToolbar extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     let {updateEditorState} = this.props
@@ -45,7 +50,7 @@ class EditorToolbar extends React.Component {
     this.addEdgenote = this.addEdgenote.bind(this)
   }
 
-  addCitation() {
+  addCitation () {
     let {editorState, updateEditorState} = this.props
     let selection = editorState.getSelection()
 
@@ -57,7 +62,7 @@ class EditorToolbar extends React.Component {
     const contentStateWithCircle = Modifier.insertText(
       editorState.getCurrentContent(),
       collapsedSelection,
-      "°",
+      '°',
     )
 
     const circleSelection = collapsedSelection.merge({
@@ -66,10 +71,10 @@ class EditorToolbar extends React.Component {
     })
 
     updateEditorState(addEntity({type: 'CITATION', mutability: 'IMMUTABLE', data: {}},
-                       editorState, circleSelection, contentStateWithCircle ))
+                       editorState, circleSelection, contentStateWithCircle))
   }
 
-  addEdgenote() {
+  addEdgenote () {
     let {
       caseSlug,
       editorState,
@@ -79,7 +84,7 @@ class EditorToolbar extends React.Component {
     } = this.props
 
     const slug = prompt('Slug?')
-    if (slug.length === "")  return
+    if (slug.length === '') return
 
     const addHighlight = () => updateEditorState(
       addEntity({type: 'EDGENOTE', mutability: 'MUTABLE', data: {slug}},
@@ -96,12 +101,11 @@ class EditorToolbar extends React.Component {
         }
       )
     }
-
   }
 
-  render() {
+  render () {
     return <div className="c-editor-toolbar" style={styles.bar}>
-      <EditorToolbarButton onClick={this.toggleInline('BOLD')} icon={require("toolbar-small-caps.svg")} />
+      <EditorToolbarButton onClick={this.toggleInline('BOLD')} icon={require('toolbar-small-caps.svg')} />
       <EditorToolbarButton onClick={this.toggleInline('ITALIC')} icon={require(`toolbar-italic.svg`)} />
       <EditorToolbarButton onClick={this.toggleBlock('ordered-list-item')} icon={require(`toolbar-ol.svg`)} />
       <EditorToolbarButton onClick={this.toggleBlock('unordered-list-item')} icon={require(`toolbar-ul.svg`)} />
@@ -113,13 +117,11 @@ class EditorToolbar extends React.Component {
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditorToolbar)
 
-
 const EditorToolbarButton = ({icon, onClick}) => <a
   onMouseDown={e => e.preventDefault()}
   onClick={onClick}
   dangerouslySetInnerHTML={{__html: icon}}
 />
-
 
 const styles = {
   bar: {
@@ -127,8 +129,8 @@ const styles = {
     top: 0,
     left: 0,
     width: '100%',
-    backgroundColor: "#D6D4CA",
-    borderBottom: "1px solid #BFBDAF",
+    backgroundColor: '#D6D4CA',
+    borderBottom: '1px solid #BFBDAF',
     borderRadius: '2px 2px 0 0',
     padding: '0.3em 0.75em 0 0.75em',
     boxSizing: 'border-box',

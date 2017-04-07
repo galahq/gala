@@ -3,6 +3,8 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
 
+import type { State } from 'redux/state'
+
 declare class Ahoy {
   track(name: string, properties: Object): void
 }
@@ -110,7 +112,7 @@ class BaseTracker extends React.Component {
 }
 
 const Tracker = connect(
-  state => ({ caseSlug: state.caseData.slug })
+  (state: State) => ({ caseSlug: state.caseData.slug })
 )(BaseTracker)
 export default Tracker
 
