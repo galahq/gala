@@ -47,7 +47,9 @@ if c.commentable && current_reader
 end
 
 if current_user.has_cached_role?(:editor)
-  json.statistics {}
+  json.statistics do
+    json.keep true
+  end
 else
   json.statistics false
 end

@@ -29,8 +29,8 @@ type Props = { visible: false } |
 class Statistics extends React.Component {
   props: Props
 
-  _maybeFetchStatistics (statistics, uri) {
-    if (!statistics) {
+  _maybeFetchStatistics ({ visible, statistics, uri }: Props = this.props) {
+    if (visible && !statistics) {
       this.props.loadStatistics(uri)
     }
   }
@@ -39,11 +39,11 @@ class Statistics extends React.Component {
     super(props)
     this._maybeFetchStatistics = this._maybeFetchStatistics.bind(this)
 
-    this._maybeFetchStatistics(props.statistics, props.uri)
+    this._maybeFetchStatistics()
   }
 
-  componentWillReceiveProps ({ statistics, uri }) {
-    this._maybeFetchStatistics(statistics, uri)
+  componentWillReceiveProps (nextProps) {
+    this._maybeFetchStatistics(nextProps)
   }
 
   render () {
