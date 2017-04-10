@@ -130,8 +130,6 @@ class PodcastPlayer extends React.Component {
           {this.renderHosts()}
         </div>
 
-        <Statistics uri={`podcasts/${id}`} inline={true} />
-
         <audio
           src={audioUrl}
           controls="controls"
@@ -139,6 +137,8 @@ class PodcastPlayer extends React.Component {
           onPlay={this.handlePlay}
           onPause={this.handlePause}
         />
+
+        <Statistics uri={`podcasts/${id}`} inline={true} />
 
         <Tracker
           timerState={this.state.playing ? 'RUNNING' : 'PAUSED'}
