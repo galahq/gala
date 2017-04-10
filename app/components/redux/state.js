@@ -74,13 +74,8 @@ export type PodcastsState = {
   +[podcastId: string]: Podcast,
 }
 
-export type StatisticsState = {
-  +[trackableUri: string]: {
-    +averageTime: string,
-    +uniques: number,
-    +views: number,
-    +updatedAt: number,
-  },
+export type StatisticsState = false | {
+  +[trackableUri: string]: Statistics,
 }
 
 export type UIState = {
@@ -235,4 +230,13 @@ export type Reader = {
     +editor: boolean,
     +invisible: boolean,
   },
+}
+
+export type Statistics = { +loaded: true } & StatisticsData | { +loaded: false }
+
+export type StatisticsData = {
+  +averageTime: string,
+  +uniques: number,
+  +views: number,
+  +updatedAt: number,
 }

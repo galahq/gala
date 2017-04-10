@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     end
     resources :cards, only: %i(update destroy) do
       resources :comment_threads, only: %i(create)
+      resource :statistics, only: %i(show)
     end
 
     devise_for :readers, skip: :omniauth_callbacks, controllers: {

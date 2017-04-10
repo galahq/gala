@@ -130,7 +130,7 @@ class PodcastPlayer extends React.Component {
           {this.renderHosts()}
         </div>
 
-        <Statistics statistics={statistics} inline={true} />
+        <Statistics uri={`podcasts/${id}`} inline={true} />
 
         <audio
           src={audioUrl}

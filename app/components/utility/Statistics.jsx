@@ -1,38 +1,78 @@
 import React from 'react'
 import { connect } from 'react-redux'
+
+import { loadStatistics } from 'redux/actions'
+
 import Icon from './Icon'
 
-import type { State } from 'redux/state'
+import type { State, Statistics as StatisticsType } from 'redux/state'
 
 type OwnProps = { uri: string, inline: boolean }
 function mapStateToProps (state: State, ownProps: OwnProps) {
+  if (!state.statistics) return { visible: false }
+
   let { uri } = ownProps
-  let { uniques, views, averageTime, updatedAt } = state.statistics[uri] || {}
+  let statistics = state.statistics[uri]
   return {
-    visible: uniques != null,
-    uniques,
-    views,
-    averageTime,
-    updatedAt,
+    visible: true,
+    statistics
   }
 }
 
-const Statistics = ({ visible, uniques, views, averageTime, inline }) => {
-  if (!visible) return null
+type Props = { visible: false } |
+  OwnProps & {
+    visible: true,
+    statistics: StatisticsType,
+    loadStatistics: () => void
+  }
 
-  return <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
-    <Icon filename="ahoy-uniques" className='c-statistics__icon' />
-    <span className="c-statistics__uniques">{uniques}</span>
+class Statistics extends React.Component {
+  props: Props
 
-    <Icon filename="ahoy-views" className='c-statistics__icon' />
-    <span className="c-statistics__views">{views}</span>
+  _maybeFetchStatistics (statistics, uri) {
+    if (!statistics) {
+      this.props.loadStatistics(uri)
+    }
+  }
 
-    <Icon
-      filename="ahoy-duration"
-      className='c-statistics__icon c-statistics__icon--less-space'
-    />
-    <span className="c-statistics__average-time">{averageTime}</span>
-  </p>
+  constructor (props) {
+    super(props)
+    this._maybeFetchStatistics = this._maybeFetchStatistics.bind(this)
+
+    this._maybeFetchStatistics(props.statistics, props.uri)
+  }
+
+  componentWillReceiveProps ({ statistics, uri }) {
+    this._maybeFetchStatistics(statistics, uri)
+  }
+
+  render () {
+    const { visible, inline, statistics } = this.props
+    if (!visible) return null
+
+    if (!statistics || (statistics && statistics.loaded === false)) {
+      return (
+        <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics pt-skeleton`}>
+          Loading...
+        </p>
+      )
+    }
+
+    const { uniques, views, averageTime } = statistics
+    return <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
+      <Icon filename="ahoy-uniques" className='c-statistics__icon' />
+      <span className="c-statistics__uniques">{uniques}</span>
+
+      <Icon filename="ahoy-views" className='c-statistics__icon' />
+      <span className="c-statistics__views">{views}</span>
+
+      <Icon
+        filename="ahoy-duration"
+        className='c-statistics__icon c-statistics__icon--less-space'
+      />
+      <span className="c-statistics__average-time">{averageTime}</span>
+    </p>
+  }
 }
 
-export default connect(mapStateToProps)(Statistics)
+export default connect(mapStateToProps, { loadStatistics })(Statistics)

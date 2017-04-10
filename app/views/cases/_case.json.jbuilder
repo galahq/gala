@@ -47,13 +47,7 @@ if c.commentable && current_reader
 end
 
 if current_user.has_cached_role?(:editor)
-  json.statistics do
-    c.cards.each do |card|
-        json.set! "cards/#{card.id}" do
-          json.partial! "trackable/statistics", locals: { trackable: card }
-        end
-    end
-  end
+  json.statistics {}
 else
   json.statistics false
 end

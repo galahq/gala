@@ -17,6 +17,7 @@ import type {
   CommentThread,
   Edgenote,
   Notification,
+  StatisticsData,
 } from 'redux/state'
 
 export type Action =
@@ -49,6 +50,7 @@ export type Action =
   HighlightEdgenoteAction |
   ActivateEdgenoteAction |
   RegisterToasterAction |
+  SetStatisticsAction |
   DisplayToastAction
 
 type GetState = () => State
@@ -194,7 +196,7 @@ export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
     const enrollment = await Orchard.espalier(
       `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
     )
-    dispatch(setReaderEnrollment(enrollment))
+    dispatch(setReaderEnrollment(!!enrollment))
   }
 }
 
@@ -553,6 +555,27 @@ export function highlightEdgenote (slug: string): HighlightEdgenoteAction {
 export type ActivateEdgenoteAction = { type: 'ACTIVATE_EDGENOTE', slug: string }
 export function activateEdgenote (slug: string): ActivateEdgenoteAction {
   return { type: 'ACTIVATE_EDGENOTE', slug }
+}
+
+// STATISTICS
+//
+export type SetStatisticsAction = {
+  type: 'SET_STATISTICS',
+  uri: string,
+  data: StatisticsData,
+}
+function setStatistics (
+  uri: string,
+  data: StatisticsData
+): SetStatisticsAction {
+  return { type: 'SET_STATISTICS', uri, data }
+}
+
+export function loadStatistics (uri: string): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const data = (await Orchard.harvest(`${uri}/statistics`): StatisticsData)
+    dispatch(setStatistics(uri, data))
+  }
 }
 
 // TOASTS
