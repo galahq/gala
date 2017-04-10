@@ -4,6 +4,7 @@ import ImageZoom from 'react-medium-image-zoom'
 import YoutubePlayer from 'react-youtube-player'
 import { EditableText } from '@blueprintjs/core'
 
+import Statistics from 'utility/Statistics'
 import Tracker from 'utility/Tracker'
 import EditableAttribute from 'utility/EditableAttribute'
 
@@ -75,6 +76,7 @@ class EdgenoteFigure extends React.Component {
       : () => null
 
     return <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
+      <Statistics inline uri={`edgenotes/${slug}`} />
       <ConditionalLink onClick={activate}>
 
         { !!pullQuote || !!imageUrl || !!audioUrl ||

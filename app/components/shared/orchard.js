@@ -27,7 +27,7 @@ export class Orchard {
   }
 
   // Train a fruit tree to grow into a desired figure.
-  static espalier (endpoint: string, params: Object): Promise<Object> {
+  static espalier (endpoint: string, params: ?Object): Promise<Object> {
     let body = JSON.stringify(params)
     let r = new Request(
       `/${window.i18n.locale}/${endpoint}.json`, {

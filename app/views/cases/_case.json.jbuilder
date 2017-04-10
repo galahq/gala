@@ -48,11 +48,7 @@ end
 
 if current_user.has_cached_role?(:editor)
   json.statistics do
-    c.cards.each do |card|
-        json.set! "cards/#{card.id}" do
-          json.partial! "trackable/statistics", locals: { trackable: card }
-        end
-    end
+    json.keep true
   end
 else
   json.statistics false

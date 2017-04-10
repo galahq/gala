@@ -57,7 +57,7 @@ class OldEdgenoteFigure extends React.Component {
   }
 
   renderEdgenote() {
-    let {selected, contents, editing, upgrade} = this.props
+    let {slug, selected, contents, editing, upgrade} = this.props
     let {caption, format, statistics, thumbnailUrl, style} = contents
     let className = this.className()
 
@@ -70,7 +70,7 @@ class OldEdgenoteFigure extends React.Component {
       onMouseOut={() => {this.setState({hovering: false})}}
     >
       <div className="c-edgenote s-edgenote">
-        <Statistics statistics={statistics} inline={true} />
+        <Statistics uri={`edgenotes/${slug}`} inline={true} />
         <div className="c-edgenote__cover">
           <img src={`${thumbnailUrl}?w=640`} />
         </div>

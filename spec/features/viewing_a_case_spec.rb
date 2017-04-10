@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 feature 'Viewing a case' do
-  let(:user) { create :reader }
-
   context 'as a normal user' do
+    let(:user) { create :reader }
+
     context 'a published case' do
       let!(:published_case) do
         create :case_with_elements, :published
@@ -18,6 +18,12 @@ feature 'Viewing a case' do
         click_link published_case.pages.first.title
         expect(all('.Card').count).to eq published_case.pages.first.cards.count
         expect(page).to have_selector '.DraftEditor-root'
+      end
+
+      scenario 'does not have visible statistics' do
+        click_link published_case.title
+        click_link published_case.pages.first.title
+        expect(page).not_to have_selector '.c-statistics'
       end
     end
 
@@ -57,6 +63,19 @@ feature 'Viewing a case' do
         click_link another_forthcoming_case.title
         expect(current_path).to eq root_path
       end
+    end
+  end
+
+  context 'as an editor' do
+    let(:user) { create :reader, :editor }
+    let!(:any_case) { create :case_with_elements, :in_catalog }
+
+    before { login_as user }
+
+    scenario 'statistics are visible' do
+      click_link any_case.kicker
+      click_link any_case.pages.first.title
+      expect(page).to have_selector '.c-statistics'
     end
   end
 

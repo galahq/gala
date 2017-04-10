@@ -1,13 +1,17 @@
 import type { StatisticsState } from 'redux/state'
-import type { Action } from 'redux/actions'
+import type { SetStatisticsAction } from 'redux/actions'
 
 export default function statistics (
-  state: ?StatisticsState,
-  action: Action,
+  state: StatisticsState = window.caseData.statistics,
+  action: SetStatisticsAction,
 ): StatisticsState {
-  if (typeof state === 'undefined') {
-    return (window.caseData.statistics: StatisticsState) || {}
-  }
+  switch (action.type) {
+    case 'SET_STATISTICS':
+      return {
+        ...state,
+        [action.uri]: action.data,
+      }
 
-  return state
+    default: return state
+  }
 }

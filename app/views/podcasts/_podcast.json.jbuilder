@@ -7,4 +7,3 @@ json.icon_slug "toc-podcast"
 json.case_element do
   json.partial! podcast.case_element
 end
-json.partial! 'trackable/statistics', locals: {trackable: podcast}

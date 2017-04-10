@@ -15,9 +15,13 @@ Rails.application.routes.draw do
     resources :cases, except: %i(index create edit), param: :slug do
       resources :case_elements, shallow: true, only: %i(update)
       resources :activities, shallow: true
-      resources :podcasts, shallow: true
+      resources :podcasts, shallow: true do
+        resource :statistics, only: %i(show)
+      end
       resources :pages, only: %i(create)
-      resources :edgenotes, shallow: true, param: :slug
+      resources :edgenotes, shallow: true, param: :slug do
+        resource :statistics, only: %i(show)
+      end
 
       get '*react_router_location', to: 'cases#show'
     end
@@ -26,6 +30,7 @@ Rails.application.routes.draw do
     end
     resources :cards, only: %i(update destroy) do
       resources :comment_threads, only: %i(create)
+      resource :statistics, only: %i(show)
     end
 
     devise_for :readers, skip: :omniauth_callbacks, controllers: {

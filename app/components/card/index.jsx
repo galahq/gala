@@ -221,7 +221,7 @@ class CardContents extends React.Component {
         />
       }
 
-      { solid && !editable && <Statistics uri={`cards::${id}`} /> }
+      { solid && !editable && <Statistics uri={`cards/${id}`} /> }
 
       <OnScreenTracker
         targetKey={`cards/${id}`}
