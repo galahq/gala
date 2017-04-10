@@ -10,8 +10,8 @@ class StatisticsController < ApplicationController
 
   private
   def set_trackable
-    @trackable = Card.find(params[:card_id])
-    @trackable ||= Podcast.find(params[:podcast_id])
-    @trackable ||= Edgenote.find(params[:edgenote_id])
+    @trackable = params[:card_id] && Card.find(params[:card_id])
+    @trackable ||= params[:podcast_id] && Podcast.find(params[:podcast_id])
+    @trackable ||= params[:edgenote_slug] && Edgenote.find_by_slug(params[:edgenote_slug])
   end
 end

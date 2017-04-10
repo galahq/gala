@@ -17,7 +17,9 @@ Rails.application.routes.draw do
       resources :activities, shallow: true
       resources :podcasts, shallow: true
       resources :pages, only: %i(create)
-      resources :edgenotes, shallow: true, param: :slug
+      resources :edgenotes, shallow: true, param: :slug do
+        resource :statistics, only: %i(show)
+      end
 
       get '*react_router_location', to: 'cases#show'
     end

@@ -61,10 +61,9 @@ class CasesController < ApplicationController
       @case = Case.where(slug: slug).includes(
         :podcasts,
         :edgenotes,
-        pages: [:cards],
-        cards: [comment_threads: [:comments]],
-        comment_threads: [:comments],
-        comments: [:reader],
+        activities: [:case_element, :card],
+        pages: [:case_element, :cards],
+        cards: [comment_threads: [:reader, comments: [:reader]]],
         enrollments: [:reader]
       ).first
     end
