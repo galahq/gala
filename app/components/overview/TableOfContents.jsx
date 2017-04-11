@@ -21,69 +21,69 @@ function mapStateToProps (state: State) {
   }
 }
 
-const TableOfContents = ({
-  caseSlug,
-  editing,
-  elements,
-  disabled,
-  connectDropTarget,
-  readOnly,
-  createPage,
-  createPodcast,
-  createActivity,
-}) =>
+const TableOfContents = (
+  {
+    caseSlug,
+    editing,
+    elements,
+    disabled,
+    connectDropTarget,
+    readOnly,
+    createPage,
+    createPodcast,
+    createActivity,
+  },
+) => (
   <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
     <h2 className="c-toc__header"><FormattedMessage id="case.toc" /></h2>
-    { connectDropTarget(
+    {connectDropTarget(
       <ol className="c-toc__list">
-        { elements.map((element, index) =>
+        {elements.map((element, index) => (
           <TableOfContentsElement
             element={element}
             key={element.id}
             position={index + 1}
             readOnly={readOnly}
           />
-        ) }
-        { editing && !readOnly && <div className="c-toc__actions pt-button-group pt-fill">
-          <button
-            type="button"
-            className="pt-button pt-icon-add"
-            onClick={() => createPage(caseSlug)}
-          >
-            Page
-          </button>
-          <button
-            type="button"
-            className="pt-button pt-icon-add"
-            onClick={() => createPodcast(caseSlug)}
-          >
-            Podcast
-          </button>
-          <button
-            type="button"
-            className="pt-button pt-icon-add"
-            onClick={() => createActivity(caseSlug)}
-          >
-            Activity
-          </button>
-        </div> }
-      </ol>
-    ) }
+        ))}
+        {editing &&
+          !readOnly &&
+          <div className="c-toc__actions pt-button-group pt-fill">
+            <button
+              type="button"
+              className="pt-button pt-icon-add"
+              onClick={() => createPage(caseSlug)}
+            >
+              Page
+            </button>
+            <button
+              type="button"
+              className="pt-button pt-icon-add"
+              onClick={() => createPodcast(caseSlug)}
+            >
+              Podcast
+            </button>
+            <button
+              type="button"
+              className="pt-button pt-icon-add"
+              onClick={() => createActivity(caseSlug)}
+            >
+              Activity
+            </button>
+          </div>}
+      </ol>,
+    )}
   </nav>
+)
 
 const DragDropTableOfContents = DragDropContext(HTML5Backend)(
-  DropTarget(
-    ItemTypes.CASE_ELEMENT,
-    { drop: () => {} },
-    connect => ({ connectDropTarget: connect.dropTarget() })
-  )(
-    TableOfContents
-  )
+  DropTarget(ItemTypes.CASE_ELEMENT, { drop: () => {} }, connect => ({
+    connectDropTarget: connect.dropTarget(),
+  }))(TableOfContents),
 )
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    { createPage, createPodcast, createActivity }
-  )(DragDropTableOfContents)
+  connect(mapStateToProps, { createPage, createPodcast, createActivity })(
+    DragDropTableOfContents,
+  ),
 )

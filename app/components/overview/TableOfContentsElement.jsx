@@ -6,10 +6,7 @@ import { NavLink, withRouter } from 'react-router-dom'
 import { ItemTypes } from 'shared/dndConfig'
 import Icon from 'utility/Icon'
 
-import {
-  updateCaseElement,
-  persistCaseElementReordering,
-} from 'redux/actions'
+import { updateCaseElement, persistCaseElementReordering } from 'redux/actions'
 
 function getElementDataFrom (state) {
   return ({ elementStore: store, elementId: id }) => {
@@ -20,14 +17,25 @@ function getElementDataFrom (state) {
   }
 }
 
-const TableOfContentsElement = ({ position, element, connectDragSource,
-  connectDropTarget, isDragging, editing, readOnly }) =>
-    <NavLink className="c-toc__link"
-      activeClassName="c-toc__link--active"
-      to={`/${position}`}
-      style={{ opacity: isDragging ? 0 : 1 }}
-      >
-      { connectDragSource(connectDropTarget(
+const TableOfContentsElement = (
+  {
+    position,
+    element,
+    connectDragSource,
+    connectDropTarget,
+    isDragging,
+    editing,
+    readOnly,
+  },
+) => (
+  <NavLink
+    className="c-toc__link"
+    activeClassName="c-toc__link--active"
+    to={`/${position}`}
+    style={{ opacity: isDragging ? 0 : 1 }}
+  >
+    {connectDragSource(
+      connectDropTarget(
         <li className="c-toc__item">
           <div className="c-toc__item-data">
             <div className="c-toc__number">
@@ -36,14 +44,18 @@ const TableOfContentsElement = ({ position, element, connectDragSource,
             <div className="c-toc__title">{element.title}</div>
             <div className="c-toc__icon">{element.typeIcon}</div>
           </div>
-        </li>
-        )) }
-    </NavLink>
+        </li>,
+      ),
+    )}
+  </NavLink>
+)
 
 const DraggableTableOfContentsElement = DropTarget(
   ItemTypes.CASE_ELEMENT,
   {
-    canDrop () { return false },
+    canDrop () {
+      return false
+    },
     hover (props, monitor) {
       const { id: draggedId } = monitor.getItem()
       const { id: overId } = props
@@ -56,7 +68,7 @@ const DraggableTableOfContentsElement = DropTarget(
   },
   connect => ({
     connectDropTarget: connect.dropTarget(),
-  })
+  }),
 )(
   DragSource(
     ItemTypes.CASE_ELEMENT,
@@ -85,10 +97,8 @@ const DraggableTableOfContentsElement = DropTarget(
     (connect, monitor) => ({
       connectDragSource: connect.dragSource(),
       isDragging: monitor.isDragging(),
-    })
-  )(
-    TableOfContentsElement
-  )
+    }),
+  )(TableOfContentsElement),
 )
 
 export default withRouter(
@@ -97,12 +107,12 @@ export default withRouter(
       ...element,
       position,
       element: getElementDataFrom(state)(element),
-      findElement: (id) => {
+      findElement: id => {
         const { caseElements } = state.caseData
         return { element, index: caseElements.findIndex(e => e.id === id) }
       },
       editing: state.edit.inProgress,
     }),
     { updateCaseElement, persistCaseElementReordering },
-  )(DraggableTableOfContentsElement)
+  )(DraggableTableOfContentsElement),
 )

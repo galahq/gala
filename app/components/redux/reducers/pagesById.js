@@ -21,6 +21,7 @@ export default function pagesById (
         [action.data.id]: action.data,
       }
 
-    default: return state
+    default:
+      return state
   }
 }

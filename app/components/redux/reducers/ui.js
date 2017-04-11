@@ -11,20 +11,18 @@ import type {
   DisplayToastAction,
 } from 'redux/actions'
 
-type Action = HighlightEdgenoteAction |
-  ActivateEdgenoteAction |
-  OpenCitationAction |
-  HoverCommentThreadAction |
-  AcceptSelectionAction |
-  AddCommentThreadAction |
-  ChangeCommentInProgressAction |
-  RegisterToasterAction |
-  DisplayToastAction
+type Action =
+  | HighlightEdgenoteAction
+  | ActivateEdgenoteAction
+  | OpenCitationAction
+  | HoverCommentThreadAction
+  | AcceptSelectionAction
+  | AddCommentThreadAction
+  | ChangeCommentInProgressAction
+  | RegisterToasterAction
+  | DisplayToastAction
 
-export default function ui (
-  state: ?UIState,
-  action: Action,
-): UIState {
+export default function ui (state: ?UIState, action: Action): UIState {
   if (typeof state === 'undefined') {
     return {
       openedCitation: {},
@@ -39,12 +37,16 @@ export default function ui (
     case 'HIGHLIGHT_EDGENOTE':
       return { ...state, highlightedEdgenote: action.slug }
 
-    case 'ACTIVATE_EDGENOTE': return { ...state, activeEdgenote: action.slug }
+    case 'ACTIVATE_EDGENOTE':
+      return { ...state, activeEdgenote: action.slug }
 
-    case 'OPEN_CITATION': return { ...state, openedCitation: action.data }
+    case 'OPEN_CITATION':
+      return { ...state, openedCitation: action.data }
 
-    case 'ACCEPT_SELECTION': return { ...state, acceptingSelection: action.enabled }
-    case 'ADD_COMMENT_THREAD': return { ...state, acceptingSelection: false }
+    case 'ACCEPT_SELECTION':
+      return { ...state, acceptingSelection: action.enabled }
+    case 'ADD_COMMENT_THREAD':
+      return { ...state, acceptingSelection: false }
 
     case 'HOVER_COMMENT_THREAD':
       return { ...state, hoveredCommentThread: action.id }
@@ -68,6 +70,7 @@ export default function ui (
       state.toaster.show(action.options)
       return state
 
-    default: return state
+    default:
+      return state
   }
 }

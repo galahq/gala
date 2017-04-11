@@ -39,7 +39,6 @@ export type CaseDataState = {
   +reader: ?Reader,
   +slug: string,
   +smallCoverUrl: string,
-  +statistics: any,  // TODO
   +summary: string,
   +title: string,
   +translators: string,
@@ -74,9 +73,11 @@ export type PodcastsState = {
   +[podcastId: string]: Podcast,
 }
 
-export type StatisticsState = false | {
-  +[trackableUri: string]: Statistics,
-}
+export type StatisticsState =
+  | false
+  | {
+      +[trackableUri: string]: Statistics,
+    }
 
 export type UIState = {
   +acceptingSelection: boolean,
@@ -161,7 +162,7 @@ export type Edgenote = {
   +photoCredit: string,
   +pullQuote: string,
   +slug: string,
-  +style: "v1" | "v2",
+  +style: 'v1' | 'v2',
   +thumbnailUrl: string,
   +uniques: number,
   +views: number,
@@ -186,7 +187,8 @@ export type ReplyToThreadNotification = {
   +commentThreadId: number,
 }
 
-export type Notification = { id: number, message: string }
+export type Notification =
+  & { id: number, message: string }
   & ReplyToThreadNotification
 
 export type Page = {
@@ -232,7 +234,9 @@ export type Reader = {
   },
 }
 
-export type Statistics = { +loaded: true } & StatisticsData | { +loaded: false }
+export type Statistics =
+  | ({ +loaded: true } & StatisticsData)
+  | { +loaded: false }
 
 export type StatisticsData = {
   +averageTime: string,

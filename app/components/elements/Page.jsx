@@ -19,7 +19,7 @@ function mapStateToProps (state: State, { id }: OwnProps) {
   }
 }
 
-const Page = (props) => {
+const Page = props => {
   let {
     id,
     title,
@@ -41,31 +41,26 @@ const Page = (props) => {
             onChange={(value: string) => updatePage(id, { title: value })}
           />
         </h1>
-        {editing && <button
-          type="button"
-          className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
-          onClick={deleteElement}
-        >
-          Delete Page
-        </button>}
+        {editing &&
+          <button
+            type="button"
+            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
+            onClick={deleteElement}
+          >
+            Delete Page
+          </button>}
       </section>
 
-      { cards.map((cardId, i) => [
-        props.editing && <CreateCardLink
-          pageId={id}
-          i={i}
-          key={`create-${i}`}
-        />,
+      {cards.map((cardId, i) => [
+        props.editing &&
+          <CreateCardLink pageId={id} i={i} key={`create-${i}`} />,
         <section key={cardId}>
           <Card id={cardId} />
           <Edgenotes cardId={cardId} />
         </section>,
-      ]) }
+      ])}
 
-      { props.editing && <CreateCardLink
-        pageId={id}
-        key={`create-last`}
-      /> }
+      {props.editing && <CreateCardLink pageId={id} key={`create-last`} />}
     </article>
   )
 }
@@ -78,14 +73,17 @@ class CreateCardLink extends React.Component {
   handleCreateCard () {
     // TODO: This should really be in a redux thun
     let { pageId, i } = this.props
-    Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 })
-      .then(setTimeout(() => location.reload(), 50))
+    Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 }).then(
+      setTimeout(() => location.reload(), 50),
+    )
   }
 
   render () {
-    return <a className="Card-create" onClick={this.handleCreateCard}>
-      Create card
-    </a>
+    return (
+      <a className="Card-create" onClick={this.handleCreateCard}>
+        Create card
+      </a>
+    )
   }
 }
 

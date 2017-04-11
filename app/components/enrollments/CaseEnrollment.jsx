@@ -3,38 +3,48 @@ import { DropTarget } from 'react-dnd'
 import { Orchard } from 'shared/orchard'
 
 let CaseEnrollmentTarget = {
-  drop(props, monitor) {
+  drop (props, monitor) {
     let item = monitor.getItem()
-    let shouldEmail = window.prompt(`Would you like to send email notifications to ${item.readers.length} ${item.readers.length === 1 ? 'person' : 'people'}? If so, type "send".`) === "send"
-    Orchard.espalier(`admin/cases/${props.caseSlug}/readers/${item.readers}/enrollments/upsert`, {status: props.type, send_emails: shouldEmail})
-      .then((r) => {
-        props.updateEnrollments(props.caseSlug, r)
-      })
-  }
+    let shouldEmail = window.prompt(
+      `Would you like to send email notifications to ${item.readers.length} ${item.readers.length === 1 ? 'person' : 'people'}? If so, type "send".`,
+    ) === 'send'
+    Orchard.espalier(
+      `admin/cases/${props.caseSlug}/readers/${item.readers}/enrollments/upsert`,
+      { status: props.type, send_emails: shouldEmail },
+    ).then(r => {
+      props.updateEnrollments(props.caseSlug, r)
+    })
+  },
 }
 
 let collect = (connect, monitor) => {
   return {
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver(),
   }
 }
 
 class CaseEnrollmentTag extends React.Component {
-  pluralize() {
-    let {enrollments, type} = this.props
+  pluralize () {
+    let { enrollments, type } = this.props
     let num = enrollments[type].length
-    return `${num} ${type}${num === 1 ? "" : "s"}`
+    return `${num} ${type}${num === 1 ? '' : 's'}`
   }
 
-  render() {
-    let {connectDropTarget, isOver} = this.props
+  render () {
+    let { connectDropTarget, isOver } = this.props
     return connectDropTarget(
-      <div className={`enrollments-case-status-drop${isOver ? " enrollments-case-status-drop-over" : ""}`}>
+      <div
+        className={
+          `enrollments-case-status-drop${isOver ? ' enrollments-case-status-drop-over' : ''}`
+        }
+      >
         {this.pluralize()}
-      </div>
+      </div>,
     )
   }
 }
 
-export let CaseEnrollment = DropTarget('reader', CaseEnrollmentTarget, collect)(CaseEnrollmentTag)
+export let CaseEnrollment = DropTarget('reader', CaseEnrollmentTarget, collect)(
+  CaseEnrollmentTag,
+)

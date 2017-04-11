@@ -3,6 +3,7 @@
   "extends": [
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
+    "plugin:flowtype/recommended",
     "standard"
   ],
   "env": {
@@ -16,11 +17,15 @@
     "jsx": true
   },
   "plugins": [
+    "babel",
     "import",
     "react",
-    "jsx-a11y"
+    "jsx-a11y",
+    "flowtype"
   ],
   "rules": {
+    "babel/semi": [2, "never"],
+    "flowtype/semi": [2, "never"],
     "valid-typeof": 0,
     "no-undef": 0,
     "comma-dangle": [2, "always-multiline"],

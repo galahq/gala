@@ -15,31 +15,32 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   let statistics = state.statistics[uri]
   return {
     visible: true,
-    statistics
+    statistics,
   }
 }
 
-type Props = { visible: false } |
-  OwnProps & {
+type Props =
+  | { visible: false }
+  | (OwnProps & {
     visible: true,
     statistics: StatisticsType,
-    loadStatistics: () => void
-  }
+    loadStatistics: () => void,
+  })
 
 class Statistics extends React.Component {
   props: Props
 
-  _maybeFetchStatistics ({ visible, statistics, uri }: Props = this.props) {
+  _maybeFetchStatistics ({ visible, statistics, uri }: Props) {
     if (visible && !statistics) {
       this.props.loadStatistics(uri)
     }
   }
 
-  constructor (props) {
+  constructor (props: Props) {
     super(props)
     this._maybeFetchStatistics = this._maybeFetchStatistics.bind(this)
 
-    this._maybeFetchStatistics()
+    this._maybeFetchStatistics(props)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -52,26 +53,32 @@ class Statistics extends React.Component {
 
     if (!statistics || (statistics && statistics.loaded === false)) {
       return (
-        <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics pt-skeleton`}>
+        <p
+          className={
+            `o-${inline ? 'tag' : 'bottom-right'} c-statistics pt-skeleton`
+          }
+        >
           Loading...
         </p>
       )
     }
 
     const { uniques, views, averageTime } = statistics
-    return <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
-      <Icon filename="ahoy-uniques" className='c-statistics__icon' />
-      <span className="c-statistics__uniques">{uniques}</span>
+    return (
+      <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
+        <Icon filename="ahoy-uniques" className="c-statistics__icon" />
+        <span className="c-statistics__uniques">{uniques}</span>
 
-      <Icon filename="ahoy-views" className='c-statistics__icon' />
-      <span className="c-statistics__views">{views}</span>
+        <Icon filename="ahoy-views" className="c-statistics__icon" />
+        <span className="c-statistics__views">{views}</span>
 
-      <Icon
-        filename="ahoy-duration"
-        className='c-statistics__icon c-statistics__icon--less-space'
-      />
-      <span className="c-statistics__average-time">{averageTime}</span>
-    </p>
+        <Icon
+          filename="ahoy-duration"
+          className="c-statistics__icon c-statistics__icon--less-space"
+        />
+        <span className="c-statistics__average-time">{averageTime}</span>
+      </p>
+    )
   }
 }
 

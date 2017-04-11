@@ -2,9 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Portal } from '@blueprintjs/core'
 
-import {
-  acceptSelection,
-} from 'redux/actions'
+import { acceptSelection } from 'redux/actions'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -22,98 +20,113 @@ function mapStateToProps (state: State, { cardId, location }) {
     commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
     selectionPending: !state.cardsById[cardId].editorState
-      .getSelection().isCollapsed(),
+      .getSelection()
+      .isCollapsed(),
     closeCommentThreadsPath: matchPath(location.pathname, elementOpen()).url,
   }
 }
 
-const CommentThreadsCard = ({ cardId, commentThreads, acceptingSelection,
-                            selectionPending,
-                            acceptSelection, closeCommentThreadsPath,
-                            addCommentThread, location, match, history }) => {
-  return <div className="CommentThreads">
-    <div className={`CommentThreads__window`}>
-      <div style={styles.header}>
-        <Link
-          replace
-          to={closeCommentThreadsPath}
-          className="CommentThread__icon-button"
-          onClick={() => acceptSelection(false)}
-        >
-          <Icon filename="comments-close"
-            style={{ ...styles.toolbarButton, cursor: 'pointer' }}
-          />
-        </Link>
+const CommentThreadsCard = (
+  {
+    cardId,
+    commentThreads,
+    acceptingSelection,
+    selectionPending,
+    acceptSelection,
+    closeCommentThreadsPath,
+    addCommentThread,
+    location,
+    match,
+    history,
+  },
+) => {
+  return (
+    <div className="CommentThreads">
+      <div className={`CommentThreads__window`}>
+        <div style={styles.header}>
+          <Link
+            replace
+            to={closeCommentThreadsPath}
+            className="CommentThread__icon-button"
+            onClick={() => acceptSelection(false)}
+          >
+            <Icon
+              filename="comments-close"
+              style={{ ...styles.toolbarButton, cursor: 'pointer' }}
+            />
+          </Link>
 
-        <FormattedMessage
-          id="comments.nResponses"
-          defaultMessage={`{count, number} {count, plural,
+          <FormattedMessage
+            id="comments.nResponses"
+            defaultMessage={
+              `{count, number} {count, plural,
             one {response}
             other {responses}
-          }`}
-          values={{ count: commentThreads.length }} />
+          }`
+            }
+            values={{ count: commentThreads.length }}
+          />
 
-        <div style={styles.toolbarButton} />
-      </div>
+          <div style={styles.toolbarButton} />
+        </div>
 
-      <ol style={styles.commentList}>
-        { commentThreads.map((thread, i) => <CommentThread
-          key={`${thread.id}`}
-          cardId={cardId}
-          threadId={thread.id}
-          location={location}
-          match={match}
-          history={history}
-          last={i === commentThreads.length - 1}
-        />
-        )}
-      </ol>
-
-      <div className="CommentThreads__footer">
-        <button
-          className="o-button CommentThreads__new-button"
-          disabled={acceptingSelection && !selectionPending}
-          onClick={acceptingSelection ? addCommentThread : acceptSelection}
-        >
-          { !acceptingSelection
-            ? <FormattedMessage
-              id="comments.writeNew"
-              defaultMessage="Write a new response"
+        <ol style={styles.commentList}>
+          {commentThreads.map((thread, i) => (
+            <CommentThread
+              key={`${thread.id}`}
+              cardId={cardId}
+              threadId={thread.id}
+              location={location}
+              match={match}
+              history={history}
+              last={i === commentThreads.length - 1}
             />
-            : (!selectionPending
+          ))}
+        </ol>
+
+        <div className="CommentThreads__footer">
+          <button
+            className="o-button CommentThreads__new-button"
+            disabled={acceptingSelection && !selectionPending}
+            onClick={acceptingSelection ? addCommentThread : acceptSelection}
+          >
+            {!acceptingSelection
               ? <FormattedMessage
-                id="comments.select"
-                defaultMessage="Select a few words"
-              />
-              : <FormattedMessage
-                id="comments.here"
-                defaultMessage="Respond here"
-              />
-            )
-          }
-        </button>
+                id="comments.writeNew"
+                defaultMessage="Write a new response"
+                />
+              : !selectionPending
+                  ? <FormattedMessage
+                    id="comments.select"
+                    defaultMessage="Select a few words"
+                    />
+                  : <FormattedMessage
+                    id="comments.here"
+                    defaultMessage="Respond here"
+                    />}
+          </button>
+        </div>
       </div>
+
+      {
+        <Portal>
+          <Link
+            replace
+            to={closeCommentThreadsPath}
+            style={styles.backdrop}
+            onClick={() => acceptSelection(false)}
+          />
+        </Portal>
+      }
+
+      <Route {...commentsOpen()} component={CommentsCard} />
     </div>
-
-    {
-      <Portal>
-        <Link
-          replace
-          to={closeCommentThreadsPath}
-          style={styles.backdrop}
-          onClick={() => acceptSelection(false)}
-        />
-      </Portal>
-    }
-
-    <Route {...commentsOpen()} component={CommentsCard} />
-  </div>
+  )
 }
 
-export default connect(
-  mapStateToProps,
-  { acceptSelection },
-)(CommentThreadsCard)
+export default connect(mapStateToProps, { acceptSelection })(
+  CommentThreadsCard,
+)
 
 const styles = {
   backdrop: {

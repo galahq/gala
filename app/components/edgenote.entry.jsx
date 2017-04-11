@@ -15,21 +15,32 @@ window.galaHostname = '//www.learnmsc.org'
 window.i18n = { locale: 'en' }
 
 const EmbeddedCard = () => {
-  return <div>
-    <Card
-      didSave={null}
-      solid={true}
-      selectedPage={false}
-      {...this.props.route}
-    />
-    {this.props.children && React.cloneElement(this.props.children, { didSave: null })}
-  </div>
+  return (
+    <div>
+      <Card
+        didSave={null}
+        solid={true}
+        selectedPage={false}
+        {...this.props.route}
+      />
+      {this.props.children &&
+        React.cloneElement(this.props.children, { didSave: null })}
+    </div>
+  )
 }
 
 $('.gala-embedded-card').each((i, reactTarget) => {
-  render(<Router history={appHistory}>
-    <Route path="/(edgenotes)" card={{ content: $(reactTarget).html() }} component={EmbeddedCard} i={i}>
-      <Route path="/:selectedPage/:edgenoteID" component={EdgenoteContents} />
-    </Route>
-  </Router>, $(reactTarget)[0])
+  render(
+    <Router history={appHistory}>
+      <Route
+        path="/(edgenotes)"
+        card={{ content: $(reactTarget).html() }}
+        component={EmbeddedCard}
+        i={i}
+      >
+        <Route path="/:selectedPage/:edgenoteID" component={EdgenoteContents} />
+      </Route>
+    </Router>,
+    $(reactTarget)[0],
+  )
 })

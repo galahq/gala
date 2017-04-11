@@ -6,14 +6,14 @@ import { connect } from 'react-redux'
 import type { State } from 'redux/state'
 
 declare class Ahoy {
-  track(name: string, properties: Object): void
+  track(name: string, properties: Object): void,
 }
 
-type TimerState = "STOPPED" | "RUNNING" | "PAUSED"
+type TimerState = 'STOPPED' | 'RUNNING' | 'PAUSED'
 type TrackerProps = {|
   caseSlug: string,
   targetKey: string,
-  targetParameters: $Supertype<{name: string}>,
+  targetParameters: $Supertype<{ name: string }>,
   timerState: TimerState,
 |}
 type TrackerState = {
@@ -42,19 +42,16 @@ class BaseTracker extends React.Component {
   }
 
   _log (duration: number): void {
-    (window.ahoy: Ahoy).track(
-      this.props.targetParameters.name,
-      {
-        ...this.props.targetParameters,
-        caseSlug: this.props.caseSlug,
-        duration,
-      }
-    )
+    (window.ahoy: Ahoy).track(this.props.targetParameters.name, {
+      ...this.props.targetParameters,
+      caseSlug: this.props.caseSlug,
+      duration,
+    })
   }
 
   _timeSinceArrival (state: TrackerState): number {
     const thisSegment = this.props.timerState === 'RUNNING'
-      ? (Date.now() - state.timeArrived)
+      ? Date.now() - state.timeArrived
       : 0
     return state.durationSoFar + thisSegment
   }
@@ -76,8 +73,10 @@ class BaseTracker extends React.Component {
   }
 
   componentWillReceiveProps (nextProps: TrackerProps) {
-    if (this.props.timerState === nextProps.timerState &&
-      this.props.targetKey === this.props.targetKey) {
+    if (
+      this.props.timerState === nextProps.timerState &&
+      this.props.targetKey === this.props.targetKey
+    ) {
       return
     }
 
@@ -111,16 +110,16 @@ class BaseTracker extends React.Component {
   }
 }
 
-const Tracker = connect(
-  (state: State) => ({ caseSlug: state.caseData.slug })
-)(BaseTracker)
+const Tracker = connect((state: State) => ({ caseSlug: state.caseData.slug }))(
+  BaseTracker,
+)
 export default Tracker
 
 // Specializations
 //
 type OnScreenTrackerProps = {|
   targetKey: string,
-  targetParameters: $Supertype<{name: string}>,
+  targetParameters: $Supertype<{ name: string }>,
 |}
 
 type OnScreenTrackerState = {
@@ -143,7 +142,7 @@ export class OnScreenTracker extends React.Component {
     const rectangle = self.getBoundingClientRect()
     const viewHeight = Math.max(
       document.documentElement.clientHeight,
-      window.innerHeight
+      window.innerHeight,
     )
 
     const above = rectangle.bottom - threshold < 0
@@ -153,11 +152,16 @@ export class OnScreenTracker extends React.Component {
   }
 
   _checkVisibility (): void {
-    this.setState({ isVisible: this._isVisible(), needsVisibilityCheck: false })
+    this.setState({
+      isVisible: this._isVisible(),
+      needsVisibilityCheck: false,
+    })
   }
 
   _maybeCheckVisibility (): void {
-    if (this.state.needsVisibilityCheck) { this._checkVisibility() }
+    if (this.state.needsVisibilityCheck) {
+      this._checkVisibility()
+    }
   }
 
   _setNeedsCheckVisibility (): void {
@@ -192,9 +196,11 @@ export class OnScreenTracker extends React.Component {
   }
 
   render () {
-    return <Tracker
-      timerState={this.state.isVisible ? 'RUNNING' : 'PAUSED'}
-      {...this.props}
-    />
+    return (
+      <Tracker
+        timerState={this.state.isVisible ? 'RUNNING' : 'PAUSED'}
+        {...this.props}
+      />
+    )
   }
 }

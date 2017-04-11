@@ -3,8 +3,13 @@ import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
 
-import { parseAllCards, registerToaster, addComment,
-  addCommentThread, handleNotification } from 'redux/actions.js'
+import {
+  parseAllCards,
+  registerToaster,
+  addComment,
+  addCommentThread,
+  handleNotification,
+} from 'redux/actions.js'
 
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
@@ -21,20 +26,25 @@ class Case extends React.Component {
     this._subscribe = () => {
       if (typeof App === 'undefined') return
 
-      App.forum = App.cable.subscriptions  // eslint-disable-line
-        .create('ForumChannel', {
-          received: data => {
-            if (data.comment) { this.props.addComment(JSON.parse(data.comment)) }
-            if (data.comment_thread) { this.props.addCommentThread(JSON.parse(data.comment_thread)) }
-          },
-        })
+      App.forum = App.cable.subscriptions.create('ForumChannel', { // eslint-disable-line
+        received: data => {
+          if (data.comment) {
+            this.props.addComment(JSON.parse(data.comment))
+          }
+          if (data.comment_thread) {
+            this.props.addCommentThread(JSON.parse(data.comment_thread))
+          }
+        },
+      })
 
-      App.readerNotification = App.cable.subscriptions  // eslint-disable-line
-        .create('ReaderNotificationsChannel', {
+      App.readerNotification = App.cable.subscriptions.create( // eslint-disable-line
+        'ReaderNotificationsChannel',
+        {
           received: data => {
             this.props.handleNotification(JSON.parse(data.notification))
           },
-        })
+        },
+      )
     }
   }
 
@@ -48,7 +58,9 @@ class Case extends React.Component {
 
   render () {
     return (
-      <DocumentTitle title={`${this.props.kicker} — Michigan Sustainability Cases`}>
+      <DocumentTitle
+        title={`${this.props.kicker} — Michigan Sustainability Cases`}
+      >
         <div id="Case">
           <StatusBar />
           <Router basename={this.props.basename}>
@@ -68,7 +80,7 @@ export default connect(
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),
-      state.caseData.slug
+      state.caseData.slug,
     ),
   }),
   {

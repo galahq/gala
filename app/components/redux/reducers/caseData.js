@@ -14,7 +14,8 @@ import type {
 
 import type { CaseDataState } from 'redux/state'
 
-type Action = UpdateCaseAction
+type Action =
+  | UpdateCaseAction
   | SetReaderEnrollmentAction
   | UpdateCaseElementAction
   | UpdateCaseElementsAction
@@ -46,7 +47,7 @@ export default function caseData (
 
     case 'UPDATE_CASE_ELEMENT': {
       const { id } = action
-      const originalIndex = state.caseElements.findIndex(x => (x.id === id))
+      const originalIndex = state.caseElements.findIndex(x => x.id === id)
 
       return update(state, {
         caseElements: {
@@ -64,10 +65,7 @@ export default function caseData (
       const { caseElement } = action.data
       return {
         ...state,
-        caseElements: [
-          ...state.caseElements,
-          caseElement,
-        ],
+        caseElements: [...state.caseElements, caseElement],
       }
     }
 
@@ -80,6 +78,7 @@ export default function caseData (
         ],
       }
 
-    default: return state
+    default:
+      return state
   }
 }

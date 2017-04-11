@@ -42,10 +42,12 @@ function mapStateToProps (
   const theseCommentThreadsOpen = matchPath(pathname, commentThreadsOpen(id))
   const anyCommentThreadsOpen = matchPath(pathname, commentThreadsOpen())
   const anyCommentsOpen = matchPath(pathname, commentsOpen())
-  const selectedCommentThread = anyCommentsOpen && anyCommentsOpen.params.commentThreadId
+  const selectedCommentThread = anyCommentsOpen &&
+    anyCommentsOpen.params.commentThreadId
 
   return {
-    commentable: !nonNarrative && state.caseData.commentable &&
+    commentable: !nonNarrative &&
+      state.caseData.commentable &&
       !!state.caseData.reader.enrollment,
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
@@ -72,24 +74,25 @@ function mapDispatchToProps (dispatch: *, ownProps: OwnProps) {
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-      const selectionState = (
-        selection.isCollapsed() ||
-          selection.getStartKey() !== selection.getEndKey()
-      ) ? SelectionState.createEmpty(selection.getAnchorKey())
+      const selectionState = selection.isCollapsed() ||
+        selection.getStartKey() !== selection.getEndKey()
+        ? SelectionState.createEmpty(selection.getAnchorKey())
         : selection
       dispatch(applySelection(ownProps.id, selectionState))
     },
 
     createCommentThread: (cardId: string, eS: EditorState) =>
       dispatch(createCommentThread(cardId, eS)),
-
   }
 }
 
 function mergeProps (stateProps, dispatchProps, ownProps) {
   const { editable, editorState } = stateProps
-  const { onChangeContents, onMakeSelectionForComment,
-    createCommentThread } = dispatchProps
+  const {
+    onChangeContents,
+    onMakeSelectionForComment,
+    createCommentThread,
+  } = dispatchProps
   const { history, location } = ownProps
 
   const onChange = editable ? onChangeContents : onMakeSelectionForComment
@@ -109,7 +112,7 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
       if (!editable && !editorState.getSelection().isCollapsed()) {
         const threadId = await createCommentThread(ownProps.id, editorState)
         history.replace(
-          `${matchPath(location.pathname, commentThreadsOpen()).url}/${threadId}`
+          `${matchPath(location.pathname, commentThreadsOpen()).url}/${threadId}`,
         )
       }
     },
@@ -125,17 +128,17 @@ class CardContents extends React.Component {
     // rerender. This internal state should exactly track props, plus jiggle.
     this.state = { editorState: props.editorState }
 
-    this._shouldJiggle = (nextProps) => (
+    this._shouldJiggle = nextProps =>
       this.props.commentable !== nextProps.commentable ||
-      this.props.theseCommentThreadsOpen !== nextProps.theseCommentThreadsOpen ||
+      this.props.theseCommentThreadsOpen !==
+        nextProps.theseCommentThreadsOpen ||
       this.props.hoveredCommentThread !== nextProps.hoveredCommentThread ||
       this.props.selectedCommentThread !== nextProps.selectedCommentThread
-    )
 
     this._getClassNames = () => {
       let n = []
       n = [...n, this.props.solid ? 'Card' : 'nonCard']
-      if (this.props.anyCommentThreadsOpen) n = [...n, 'has-comment-threads-open']
+      if (this.props.anyCommentThreadsOpen) { n = [...n, 'has-comment-threads-open'] }
       if (this.props.anyCommentsOpen) n = [...n, 'has-comments-open']
       if (this.props.acceptingSelection) n = [...n, 'accepting-selection']
       if (this.props.commentable) n = [...n, 'commentable']
@@ -149,8 +152,10 @@ class CardContents extends React.Component {
       const contentState = editorState.getCurrentContent()
       const blockMap = contentState.getBlockMap()
 
-      const indented = blockMap.map(blk => blk.set('depth', blk.getDepth() + 1))
-      const outdented = indented.map(blk => blk.set('depth', blk.getDepth() - 1))
+      const indented = blockMap.map(blk =>
+        blk.set('depth', blk.getDepth() + 1))
+      const outdented = indented.map(blk =>
+        blk.set('depth', blk.getDepth() - 1))
       const outdentedContentState = contentState.set('blockMap', outdented)
       editorState = EditorState.set(editorState, {
         currentContent: outdentedContentState,
@@ -160,85 +165,106 @@ class CardContents extends React.Component {
   }
 
   render () {
-    let { id, solid, editable, editing, onChange,
-      handleKeyCommand, openedCitation, addCommentThread,
-      theseCommentThreadsOpen, hoveredCommentThread, selectedCommentThread, readOnly,
-      commentable, title, match } = this.props
+    let {
+      id,
+      solid,
+      editable,
+      editing,
+      onChange,
+      handleKeyCommand,
+      openedCitation,
+      addCommentThread,
+      theseCommentThreadsOpen,
+      hoveredCommentThread,
+      selectedCommentThread,
+      readOnly,
+      commentable,
+      title,
+      match,
+    } = this.props
     let { editorState } = this.state
 
     let citationOpenWithinCard
     try {
-      citationOpenWithinCard = citationInsideThisCard(this.cardRef, openedCitation.labelRef)
+      citationOpenWithinCard = citationInsideThisCard(
+        this.cardRef,
+        openedCitation.labelRef,
+      )
     } catch (e) {
       citationOpenWithinCard = false
     }
 
-    const styleMap = getStyleMap({ commentable,
+    const styleMap = getStyleMap({
+      commentable,
       theseCommentThreadsOpen,
       hoveredCommentThread,
-      selectedCommentThread })
+      selectedCommentThread,
+    })
 
-    return <div
-      ref={(el: HTMLElement) => (this.cardRef = el)}
-      className={this._getClassNames()}
-      style={{
-        paddingTop: editing && '2em',
-        zIndex: theseCommentThreadsOpen && 300,
-        transition: 'padding-top 0.1s, flex 0.3s',
-      }}
-    >
-
-      {editing && <EditorToolbar cardId={id} />}
-      {title}
-      <Editor ref={(ed: HTMLElement) => (this.editor = ed)}
-        readOnly={readOnly}
-        customStyleMap={styleMap}
-        onChange={eS => onChange(eS)}
-        {...{
-          blockRenderMap,
-          editorState,
-          handleKeyCommand,
+    return (
+      <div
+        ref={(el: HTMLElement) => this.cardRef = el}
+        className={this._getClassNames()}
+        style={{
+          paddingTop: editing && '2em',
+          zIndex: theseCommentThreadsOpen && 300,
+          transition: 'padding-top 0.1s, flex 0.3s',
         }}
-      />
+      >
 
-      {commentable && solid && <CommentThreadsTag cardId={id} match={match} />}
-
-      <Route
-        {...commentThreadsOpen(id)}
-        render={
-          (routeProps) => <CommentThreadsCard
-            {...routeProps}
-            cardId={id}
-            addCommentThread={addCommentThread}
-          />
-        }
-      />
-
-      {
-        citationOpenWithinCard && <CitationTooltip cardId={id}
-          cardWidth={this.cardRef.clientWidth}
-          {...{ openedCitation, editable }}
+        {editing && <EditorToolbar cardId={id} />}
+        {title}
+        <Editor
+          ref={(ed: HTMLElement) => this.editor = ed}
+          readOnly={readOnly}
+          customStyleMap={styleMap}
+          onChange={eS => onChange(eS)}
+          {...{
+            blockRenderMap,
+            editorState,
+            handleKeyCommand,
+          }}
         />
-      }
 
-      { solid && !editable && <Statistics uri={`cards/${id}`} /> }
+        {commentable &&
+          solid &&
+          <CommentThreadsTag cardId={id} match={match} />}
 
-      <OnScreenTracker
-        targetKey={`cards/${id}`}
-        targetParameters={{
-          name: 'read_card',
-          card_id: id,
-        }}
-      />
-    </div>
+        <Route
+          {...commentThreadsOpen(id)}
+          render={routeProps => (
+            <CommentThreadsCard
+              {...routeProps}
+              cardId={id}
+              addCommentThread={addCommentThread}
+            />
+          )}
+        />
+
+        {citationOpenWithinCard &&
+          <CitationTooltip
+            cardId={id}
+            cardWidth={this.cardRef.clientWidth}
+            {...{ openedCitation, editable }}
+          />}
+
+        {solid && !editable && <Statistics uri={`cards/${id}`} />}
+
+        <OnScreenTracker
+          targetKey={`cards/${id}`}
+          targetParameters={{
+            name: 'read_card',
+            card_id: id,
+          }}
+        />
+      </div>
+    )
   }
 }
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  mergeProps
-)(CardContents))
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(CardContents),
+)
 
 function citationInsideThisCard (card, citation) {
   if (!card || !citation) return false

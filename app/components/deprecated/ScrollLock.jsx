@@ -22,58 +22,59 @@ var removeScrollEventListener = function (elem, handler) {
   elem.removeEventListener('wheel', handler, false)
 }
 
-export var ScrollLock = ComposedComponent => class extends React.Component {
+export var ScrollLock = ComposedComponent =>
+  class extends React.Component {
+    constructor (props) {
+      super(props)
+    }
 
-  constructor(props) {
-    super(props)
-  }
+    componentDidMount () {
+      this.scrollLock()
+    }
 
-  componentDidMount() {
-    this.scrollLock()
-  }
+    componentDidUpdate () {
+      this.scrollLock()
+    }
 
-  componentDidUpdate() {
-    this.scrollLock()
-  }
+    componentWillUnmount () {
+      this.scrollRelease()
+    }
 
-  componentWillUnmount() {
-    this.scrollRelease()
-  }
+    scrollLock () {
+      var elem = ReactDOM.findDOMNode(this)
+      if (elem) {
+        addScrollEventListener(elem, this.onScrollHandler)
+      }
+    }
 
-  scrollLock() {
-    var elem = ReactDOM.findDOMNode(this)
-    if (elem) {
-      addScrollEventListener(elem, this.onScrollHandler)
+    scrollRelease () {
+      var elem = ReactDOM.findDOMNode(this)
+      if (elem) {
+        removeScrollEventListener(elem, this.onScrollHandler)
+      }
+    }
+
+    onScrollHandler (e) {
+      var elem = $(e.srcElement).closest('.scrolling')[0]
+      if (elem === undefined) {
+        return cancelScrollEvent(e)
+      }
+      var scrollTop = elem.scrollTop
+      var scrollHeight = elem.scrollHeight
+      var height = elem.clientHeight
+      var wheelDelta = e.deltaY
+      var isDeltaPositive = wheelDelta > 0
+
+      if (isDeltaPositive && wheelDelta > scrollHeight - height - scrollTop) {
+        elem.scrollTop = scrollHeight
+        return cancelScrollEvent(e)
+      } else if (!isDeltaPositive && -wheelDelta > scrollTop) {
+        elem.scrollTop = 0
+        return cancelScrollEvent(e)
+      }
+    }
+
+    render () {
+      return <ComposedComponent {...this.props} />
     }
   }
-
-  scrollRelease() {
-    var elem = ReactDOM.findDOMNode(this)
-    if (elem) {
-      removeScrollEventListener(elem, this.onScrollHandler)
-    }
-  }
-
-  onScrollHandler(e) {
-    var elem = $(e.srcElement).closest('.scrolling')[0]
-    if (elem === undefined) { return cancelScrollEvent(e); }
-    var scrollTop = elem.scrollTop;
-    var scrollHeight = elem.scrollHeight;
-    var height = elem.clientHeight;
-    var wheelDelta = e.deltaY;
-    var isDeltaPositive = wheelDelta > 0;
-
-    if (isDeltaPositive && wheelDelta > scrollHeight - height - scrollTop) {
-      elem.scrollTop = scrollHeight;
-      return cancelScrollEvent(e);
-    }
-    else if (!isDeltaPositive && -wheelDelta > scrollTop) {
-      elem.scrollTop = 0;
-      return cancelScrollEvent(e);
-    }
-  }
-
-  render() {
-    return <ComposedComponent {...this.props} />;
-  }
-}

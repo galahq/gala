@@ -13,11 +13,13 @@ import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
 
 const newBlockRenderMap = Immutable.Map({
-  'unstyled': {
+  unstyled: {
     element: 'p',
   },
 })
-export const blockRenderMap = DefaultDraftBlockRenderMap.merge(newBlockRenderMap)
+export const blockRenderMap = DefaultDraftBlockRenderMap.merge(
+  newBlockRenderMap,
+)
 
 export const styles = {
   smallCaps: {
@@ -58,18 +60,25 @@ export const styles = {
   },
 }
 
-export function getStyleMap ({ commentable, theseCommentThreadsOpen,
-  hoveredCommentThread, selectedCommentThread }) {
+export function getStyleMap (
+  {
+    commentable,
+    theseCommentThreadsOpen,
+    hoveredCommentThread,
+    selectedCommentThread,
+  },
+) {
   const hoveredCommentKey = `thread--${hoveredCommentThread}`
   const selectedCommentKey = `thread--${selectedCommentThread}`
-  const threadStyle = { 'THREAD': theseCommentThreadsOpen
-    ? styles.lightPurpleUnderline
-    : styles.thinUnderline,
+  const threadStyle = {
+    THREAD: theseCommentThreadsOpen
+      ? styles.lightPurpleUnderline
+      : styles.thinUnderline,
   }
 
   return {
-    'BOLD': styles.smallCaps,
-    'UNDERLINE': {},
+    BOLD: styles.smallCaps,
+    UNDERLINE: {},
     ...(commentable ? threadStyle : {}),
     [hoveredCommentKey]: styles.darkPurpleUnderline,
     [selectedCommentKey]: styles.purpleHighlight,
@@ -79,14 +88,12 @@ export function getStyleMap ({ commentable, theseCommentThreadsOpen,
 function getFindEntityFunction (type) {
   return (contentBlock, callback, contentState) => {
     contentBlock.findEntityRanges(
-      (character) => {
+      character => {
         const entityKey = character.getEntity()
-        return (
-          entityKey !== null &&
-            contentState.getEntity(entityKey).getType() === type
-        )
+        return entityKey !== null &&
+          contentState.getEntity(entityKey).getType() === type
       },
-      callback
+      callback,
     )
   }
 }
@@ -133,14 +140,27 @@ export function removeShadowSelection (editorState) {
   }
 }
 
-export function addEntity ({ type, mutability, data },
-                          editorState,
-                          selection = editorState.getSelection(),
-                          contentState = editorState.getCurrentContent(),
-                         ) {
-  const contentStateWithEntity = contentState.createEntity(type, mutability, data)
+export function addEntity (
+  { type, mutability, data },
+  editorState,
+  selection = editorState.getSelection(),
+  contentState = editorState.getCurrentContent(),
+) {
+  const contentStateWithEntity = contentState.createEntity(
+    type,
+    mutability,
+    data,
+  )
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-  const contentStateWithEntityApplied = Modifier.applyEntity(contentStateWithEntity, selection, entityKey)
-  const editorStateWithEntity = EditorState.push(editorState, contentStateWithEntityApplied, 'apply-entity')
+  const contentStateWithEntityApplied = Modifier.applyEntity(
+    contentStateWithEntity,
+    selection,
+    entityKey,
+  )
+  const editorStateWithEntity = EditorState.push(
+    editorState,
+    contentStateWithEntityApplied,
+    'apply-entity',
+  )
   return editorStateWithEntity
 }

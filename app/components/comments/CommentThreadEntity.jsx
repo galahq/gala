@@ -17,13 +17,16 @@ function mapStateToProps (state: State, { contentState, children }) {
 
 function mergeProps (
   { cardId, commentThreadId, disabled },
-  {},
-  { children, history, match }
+  _,
+  { children, history, match },
 ) {
   return {
     onClick: () => {
-      !cardId || disabled ||
-        (history.replace(`${match.url}/cards/${cardId}/comments/${commentThreadId}`))
+      !cardId ||
+        disabled ||
+        history.replace(
+          `${match.url}/cards/${cardId}/comments/${commentThreadId}`,
+        )
     },
     children: children.length > 0 &&
       React.cloneElement(children[0], { forceSelection: true }),
@@ -31,21 +34,23 @@ function mergeProps (
 }
 
 const CommentThreadEntity = ({ onClick, children }) => {
-  return <span className="c-comment-thread-entity" onClick={onClick}>
-    {children}
-  </span>
+  return (
+    <span className="c-comment-thread-entity" onClick={onClick}>
+      {children}
+    </span>
+  )
 }
 
-export default withRouter(connect(
-  mapStateToProps,
-  {},
-  mergeProps,
-)(CommentThreadEntity))
+export default withRouter(
+  connect(mapStateToProps, {}, mergeProps)(CommentThreadEntity),
+)
 
 function getFirstThreadId (contentState: ContentState, leaf: DraftEditorLeaf) {
-  const styles = contentState.getBlockForKey(leaf.props.blockKey)
+  const styles = contentState
+    .getBlockForKey(leaf.props.blockKey)
     .getInlineStyleAt(leaf.props.start)
-  const ids = styles.map(s => s.match(/thread--([0-9]+)/))
+  const ids = styles
+    .map(s => s.match(/thread--([0-9]+)/))
     .filter(s => s && s[1])
     .map(s => s[1])
   return ids.count() > 0 ? ids.toJS()[0] : null

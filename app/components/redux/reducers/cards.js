@@ -19,7 +19,8 @@ import type {
 
 const { forceSelection } = EditorState
 
-type Action = UpdateCardContentsAction
+type Action =
+  | UpdateCardContentsAction
   | ApplySelectionAction
   | ReplaceCardAction
   | ParseAllCardsAction
@@ -79,10 +80,7 @@ function cardsById (
 
       const newCard = {
         ...card,
-        commentThreads: [
-          ...card.commentThreads,
-          data,
-        ].sort(sortCommentThreads),
+        commentThreads: [...card.commentThreads, data].sort(sortCommentThreads),
       }
       return {
         ...state,
@@ -120,7 +118,8 @@ function cardsById (
         },
       }
 
-    default: return state
+    default:
+      return state
   }
 }
 

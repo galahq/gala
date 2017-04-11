@@ -6,7 +6,9 @@ import type {
 } from 'redux/actions'
 
 export default function commentThreadsById (
-  state: CommentThreadsState = ({ ...window.caseData.commentThreads }: CommentThreadsState),
+  state: CommentThreadsState = ({
+    ...window.caseData.commentThreads,
+  }: CommentThreadsState),
   action: AddCommentThreadAction | RemoveCommentThreadAction,
 ): CommentThreadsState {
   switch (action.type) {
@@ -22,6 +24,7 @@ export default function commentThreadsById (
         [action.threadId]: undefined,
       }
 
-    default: return state
+    default:
+      return state
   }
 }

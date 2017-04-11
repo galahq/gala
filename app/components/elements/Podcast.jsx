@@ -63,7 +63,9 @@ class PodcastPlayer extends React.Component {
   }
 
   renderHosts () {
-    if (!this.props.credits) { return }
+    if (!this.props.credits) {
+      return
+    }
 
     let { guests, hosts, hosts_string: hostsString } = this.props.credits
     let guestList = guests.map((guest, i) => {
@@ -73,28 +75,43 @@ class PodcastPlayer extends React.Component {
       ]
     })
 
-    return <div>
-      <dl>{guestList}</dl>
-      <em>
-        <FormattedMessage id="podcast.hosts" values={{ count: hosts.length }} />
-        {' '}
-        {hostsString}
-      </em>
-    </div>
+    return (
+      <div>
+        <dl>{guestList}</dl>
+        <em>
+          <FormattedMessage
+            id="podcast.hosts"
+            values={{ count: hosts.length }}
+          />
+          {' '}
+          {hostsString}
+        </em>
+      </div>
+    )
   }
 
   render () {
-    let { id, title, artworkUrl, audioUrl, photoCredit, statistics, editing,
-      updatePodcast, deleteElement } = this.props
+    let {
+      id,
+      title,
+      artworkUrl,
+      audioUrl,
+      photoCredit,
+      statistics,
+      editing,
+      updatePodcast,
+      deleteElement,
+    } = this.props
     return (
-      <div className="PodcastPlayer pt-dark" >
-        {editing && <button
-          type="button"
-          className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
-          onClick={deleteElement}
-        >
-          Delete Podcast
-        </button>}
+      <div className="PodcastPlayer pt-dark">
+        {editing &&
+          <button
+            type="button"
+            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
+            onClick={deleteElement}
+          >
+            Delete Podcast
+          </button>}
 
         <EditableAttribute
           title="Artwork URL"

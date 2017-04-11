@@ -21,46 +21,48 @@ import type {
 } from 'redux/state'
 
 export type Action =
-  ToggleEditingAction |
-  ClearUnsavedAction |
-  UpdateCaseAction |
-  SetReaderEnrollmentAction |
-  UpdateCaseElementAction |
-  UpdateCaseElementsAction |
-  RemoveElementAction |
-  AddPageAction |
-  UpdatePageAction |
-  AddPodcastAction |
-  UpdatePodcastAction |
-  AddActivityAction |
-  UpdateActivityAction |
-  ParseAllCardsAction |
-  UpdateCardContentsAction |
-  ReplaceCardAction |
-  OpenCitationAction |
-  AcceptSelectionAction |
-  ApplySelectionAction |
-  AddCommentThreadAction |
-  RemoveCommentThreadAction |
-  HoverCommentThreadAction |
-  ChangeCommentInProgressAction |
-  AddCommentAction |
-  CreateEdgenoteAction |
-  UpdateEdgenoteAction |
-  HighlightEdgenoteAction |
-  ActivateEdgenoteAction |
-  RegisterToasterAction |
-  SetStatisticsAction |
-  DisplayToastAction
+  | ToggleEditingAction
+  | ClearUnsavedAction
+  | UpdateCaseAction
+  | SetReaderEnrollmentAction
+  | UpdateCaseElementAction
+  | UpdateCaseElementsAction
+  | RemoveElementAction
+  | AddPageAction
+  | UpdatePageAction
+  | AddPodcastAction
+  | UpdatePodcastAction
+  | AddActivityAction
+  | UpdateActivityAction
+  | ParseAllCardsAction
+  | UpdateCardContentsAction
+  | ReplaceCardAction
+  | OpenCitationAction
+  | AcceptSelectionAction
+  | ApplySelectionAction
+  | AddCommentThreadAction
+  | RemoveCommentThreadAction
+  | HoverCommentThreadAction
+  | ChangeCommentInProgressAction
+  | AddCommentAction
+  | CreateEdgenoteAction
+  | UpdateEdgenoteAction
+  | HighlightEdgenoteAction
+  | ActivateEdgenoteAction
+  | RegisterToasterAction
+  | SetStatisticsAction
+  | DisplayToastAction
 
 type GetState = () => State
 type PromiseAction = Promise<Action>
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
-type Dispatch = (action: Action | ThunkAction | PromiseAction | Array<Action>) => any
+type Dispatch = (
+  action: Action | ThunkAction | PromiseAction | Array<Action>,
+) => any
 
 // API
 
-export type ToggleEditingAction = { type: 'TOGGLE_EDITING' };
+export type ToggleEditingAction = { type: 'TOGGLE_EDITING' }
 export function toggleEditing (): ToggleEditingAction {
   return { type: 'TOGGLE_EDITING' }
 }
@@ -70,19 +72,20 @@ export function saveChanges (): ThunkAction {
     const state = getState()
 
     dispatch(clearUnsaved())
-    dispatch(displayToast({
-      message: 'Saved successfully',
-      intent: Intent.SUCCESS,
-    }))
+    dispatch(
+      displayToast({
+        message: 'Saved successfully',
+        intent: Intent.SUCCESS,
+      }),
+    )
     window.onbeforeunload = null
 
-    Object.keys(state.edit.unsavedChanges).forEach(
-      (endpoint) => {
-        saveModel(
-          endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
-          state)
-      },
-    )
+    Object.keys(state.edit.unsavedChanges).forEach(endpoint => {
+      saveModel(
+        endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
+        state,
+      )
+    })
   }
 }
 
@@ -92,8 +95,16 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
   let data
   switch (model) {
     case 'cases': {
-      const { published, kicker, title, dek, slug, photoCredit, summary,
-        baseCoverUrl } = state.caseData
+      const {
+        published,
+        kicker,
+        title,
+        dek,
+        slug,
+        photoCredit,
+        summary,
+        baseCoverUrl,
+      } = state.caseData
       data = {
         case: {
           published,
@@ -113,8 +124,9 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
       const { editorState } = state.cardsById[id]
       data = {
         card: {
-          rawContent:
-            JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+          rawContent: JSON.stringify(
+            convertToRaw(editorState.getCurrentContent()),
+          ),
         },
       }
     }
@@ -132,8 +144,13 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
       break
 
     case 'podcasts': {
-      const { credits, title, artworkUrl, audioUrl,
-        photoCredit } = state.podcastsById[id]
+      const {
+        credits,
+        title,
+        artworkUrl,
+        audioUrl,
+        photoCredit,
+      } = state.podcastsById[id]
       data = {
         podcast: {
           credits: JSON.stringify(credits),
@@ -171,8 +188,8 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
 }
 
 const setUnsaved = () => {
-  window.onbeforeunload = () => 'You have unsaved changes. Are you sure you ' +
-  'want to leave?'
+  window.onbeforeunload = () =>
+    'You have unsaved changes. Are you sure you ' + 'want to leave?'
 }
 
 export type ClearUnsavedAction = { type: 'CLEAR_UNSAVED' }
@@ -185,7 +202,7 @@ function clearUnsaved (): ClearUnsavedAction {
 export type UpdateCaseAction = { type: 'UPDATE_CASE', data: CaseDataState }
 export function updateCase (
   slug: string,
-  data: $Subtype<CaseDataState>
+  data: $Subtype<CaseDataState>,
 ): UpdateCaseAction {
   setUnsaved()
   return { type: 'UPDATE_CASE', data }
@@ -194,7 +211,7 @@ export function updateCase (
 export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
     const enrollment = await Orchard.espalier(
-      `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
+      `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`,
     )
     dispatch(setReaderEnrollment(!!enrollment))
   }
@@ -225,7 +242,7 @@ export type UpdateCaseElementsAction = {
   data: { caseElements: CaseElement[] },
 }
 function updateCaseElements (
-  data: {caseElements: CaseElement[]}
+  data: { caseElements: CaseElement[] },
 ): UpdateCaseElementsAction {
   return { type: 'UPDATE_CASE_ELEMENTS', data }
 }
@@ -234,10 +251,9 @@ export function persistCaseElementReordering (
   index: number,
 ): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const caseElements = (await Orchard.espalier(
-      `case_elements/${id}`,
-      { case_element: { position: index + 1 }}
-    ): CaseElement[])
+    const caseElements = (await Orchard.espalier(`case_elements/${id}`, {
+      case_element: { position: index + 1 },
+    }): CaseElement[])
     dispatch(updateCaseElements({ caseElements }))
   }
 }
@@ -249,10 +265,14 @@ function removeElement (position): RemoveElementAction {
 
 export function deleteElement (
   elementUrl: string,
-  position: number
+  position: number,
 ): ThunkAction {
   return async (dispatch: Dispatch) => {
-    if (window.confirm('Are you sure you want to delete this element? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        'Are you sure you want to delete this element? This action cannot be undone.',
+      )
+    ) {
       await Orchard.prune(`${elementUrl}`)
       dispatch(removeElement(position))
     }
@@ -268,15 +288,16 @@ function addPage (data: Page): AddPageAction {
 
 export function createPage (caseSlug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const data: Page = await Orchard.graft(
-      `cases/${caseSlug}/pages`,
-      {}
-    )
+    const data: Page = await Orchard.graft(`cases/${caseSlug}/pages`, {})
     dispatch(addPage(data))
   }
 }
 
-export type UpdatePageAction = { type: 'UPDATE_PAGE', id: string, data: Object }
+export type UpdatePageAction = {
+  type: 'UPDATE_PAGE',
+  id: string,
+  data: Object,
+}
 export function updatePage (id: string, data: Object): UpdatePageAction {
   setUnsaved()
   return { type: 'UPDATE_PAGE', id, data }
@@ -291,10 +312,8 @@ function addPodcast (data: Podcast): AddPodcastAction {
 
 export function createPodcast (caseSlug: string) {
   return async (dispatch: Dispatch) => {
-    const data = (await Orchard.graft(
-      `cases/${caseSlug}/podcasts`,
-      {}
-    ): Podcast)
+    const data = (await Orchard.graft(`cases/${caseSlug}/podcasts`, {
+    }): Podcast)
     dispatch(addPodcast(data))
   }
 }
@@ -318,10 +337,8 @@ function addActivity (data: Activity): AddActivityAction {
 
 export function createActivity (caseSlug: string) {
   return async (dispatch: Dispatch) => {
-    const data = (await Orchard.graft(
-      `cases/${caseSlug}/activities`,
-      {}
-    ): Activity)
+    const data = (await Orchard.graft(`cases/${caseSlug}/activities`, {
+    }): Activity)
     dispatch(addActivity(data))
   }
 }
@@ -329,12 +346,9 @@ export function createActivity (caseSlug: string) {
 export type UpdateActivityAction = {
   type: 'UPDATE_ACTIVITY',
   id: string,
-  data: Object
+  data: Object,
 }
-export function updateActivity (
-  id: string,
-  data: Object
-): UpdateActivityAction {
+export function updateActivity (id: string, data: Object): UpdateActivityAction {
   setUnsaved()
   return { type: 'UPDATE_ACTIVITY', id, data }
 }
@@ -377,7 +391,7 @@ export type OpenCitationAction = {
 }
 export function openCitation (
   key: string,
-  labelRef: HTMLElement
+  labelRef: HTMLElement,
 ): OpenCitationAction {
   return { type: 'OPEN_CITATION', data: { key, labelRef }}
 }
@@ -390,7 +404,7 @@ export type AcceptSelectionAction = {
 }
 
 export function acceptSelection (
-  enabled: boolean = true
+  enabled: boolean = true,
 ): AcceptSelectionAction {
   clearSelection()
   return { type: 'ACCEPT_SELECTION', enabled }
@@ -433,11 +447,16 @@ export function createCommentThread (
     const blockKey = selection.getStartKey()
     const blockIndex = blocks.findIndex(b => b.getKey() === blockKey)
 
-    const originalHighlightText = blocks[blockIndex].getText().slice(start, end)
+    const originalHighlightText = blocks[blockIndex]
+      .getText()
+      .slice(start, end)
 
-    const newCommentThread = await Orchard.graft(`cards/${cardId}/comment_threads`, {
-      commentThread: { blockIndex, start, length, originalHighlightText },
-    })
+    const newCommentThread = await Orchard.graft(
+      `cards/${cardId}/comment_threads`,
+      {
+        commentThread: { blockIndex, start, length, originalHighlightText },
+      },
+    )
 
     dispatch(addCommentThread(newCommentThread))
     return newCommentThread.id
@@ -454,7 +473,7 @@ export function addCommentThread (data: CommentThread): AddCommentThreadAction {
 
 export function deleteCommentThread (
   threadId: string,
-  cardId: string
+  cardId: string,
 ): ThunkAction {
   return async (dispatch: Dispatch) => {
     await Orchard.prune(`comment_threads/${threadId}`)
@@ -469,7 +488,7 @@ export type RemoveCommentThreadAction = {
 }
 function removeCommentThread (
   threadId: string,
-  cardId: string
+  cardId: string,
 ): RemoveCommentThreadAction {
   return { type: 'REMOVE_COMMENT_THREAD', threadId, cardId }
 }
@@ -491,7 +510,7 @@ export type ChangeCommentInProgressAction = {
 }
 export function changeCommentInProgress (
   threadId: string,
-  content: string
+  content: string,
 ): ChangeCommentInProgressAction {
   return { type: 'CHANGE_COMMENT_IN_PROGRESS', threadId, content }
 }
@@ -503,17 +522,20 @@ export function addComment (data: Comment): AddCommentAction {
 
 export function createComment (threadId: string, content: string): ThunkAction {
   return (dispatch: Dispatch) => {
-    Orchard.graft(
-      `comment_threads/${threadId}/comments`,
-      { comment: { content }},
-    ).then(() => {
-      dispatch(changeCommentInProgress(threadId, ''))
-    }).catch(error => {
-      dispatch(displayToast({
-        message: `Error saving: ${error.message}`,
-        intent: Intent.WARNING,
-      }))
+    Orchard.graft(`comment_threads/${threadId}/comments`, {
+      comment: { content },
     })
+      .then(() => {
+        dispatch(changeCommentInProgress(threadId, ''))
+      })
+      .catch(error => {
+        dispatch(
+          displayToast({
+            message: `Error saving: ${error.message}`,
+            intent: Intent.WARNING,
+          }),
+        )
+      })
   }
 }
 
@@ -526,7 +548,7 @@ export type CreateEdgenoteAction = {
 }
 export function createEdgenote (
   slug: string,
-  data: Edgenote
+  data: Edgenote,
 ): CreateEdgenoteAction {
   return { type: 'CREATE_EDGENOTE', slug, data }
 }
@@ -538,7 +560,7 @@ export type UpdateEdgenoteAction = {
 }
 export function updateEdgenote (
   slug: string,
-  data: Object
+  data: Object,
 ): UpdateEdgenoteAction {
   setUnsaved()
   return { type: 'UPDATE_EDGENOTE', slug, data }
@@ -552,7 +574,10 @@ export function highlightEdgenote (slug: string): HighlightEdgenoteAction {
   return { type: 'HIGHLIGHT_EDGENOTE', slug }
 }
 
-export type ActivateEdgenoteAction = { type: 'ACTIVATE_EDGENOTE', slug: string }
+export type ActivateEdgenoteAction = {
+  type: 'ACTIVATE_EDGENOTE',
+  slug: string,
+}
 export function activateEdgenote (slug: string): ActivateEdgenoteAction {
   return { type: 'ACTIVATE_EDGENOTE', slug }
 }
@@ -564,10 +589,7 @@ export type SetStatisticsAction = {
   uri: string,
   data: StatisticsData,
 }
-function setStatistics (
-  uri: string,
-  data: StatisticsData
-): SetStatisticsAction {
+function setStatistics (uri: string, data: StatisticsData): SetStatisticsAction {
   return { type: 'SET_STATISTICS', uri, data }
 }
 
@@ -591,17 +613,19 @@ export function displayToast (options: Object): DisplayToastAction {
 
 export type HandleNotificationAction = {
   type: 'HANDLE_NOTIFICATION',
-  notification: Notification
+  notification: Notification,
 }
 export function handleNotification (notification: Notification): ThunkAction {
   return (dispatch: Dispatch) => {
-    dispatch(displayToast({
-      message: notification.message,
-      intent: Intent.PRIMARY,
-      action: {
-        href: `/cases/${notification.case.slug}/${notification.element.position}/cards/${notification.cardId}/comments/${notification.commentThreadId}`,
-        text: 'Read',
-      },
-    }))
+    dispatch(
+      displayToast({
+        message: notification.message,
+        intent: Intent.PRIMARY,
+        action: {
+          href: `/cases/${notification.case.slug}/${notification.element.position}/cards/${notification.cardId}/comments/${notification.commentThreadId}`,
+          text: 'Read',
+        },
+      }),
+    )
   }
 }

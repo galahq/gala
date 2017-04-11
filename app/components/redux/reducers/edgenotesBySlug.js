@@ -22,6 +22,7 @@ export default function edgenotesBySlug (
         },
       }
 
-    default: return state
+    default:
+      return state
   }
 }

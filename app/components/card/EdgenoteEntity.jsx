@@ -1,4 +1,4 @@
-import React from 'react'  // eslint-disable-line no-unused-vars
+import React from 'react' // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
@@ -9,7 +9,7 @@ import type { State } from 'redux/state'
 
 function mapStateToProps (
   state: State,
-  { location, contentState, entityKey, children }
+  { location, contentState, entityKey, children },
 ) {
   let { slug } = contentState.getEntity(entityKey).getData()
   return {
@@ -34,41 +34,39 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     ...ownProps,
     ...stateProps,
     ...dispatchProps,
-    onClick: stateProps.commentThreadsOpen
-      ? () => {}
-      : dispatchProps.onClick,
+    onClick: stateProps.commentThreadsOpen ? () => {} : dispatchProps.onClick,
     onMouseOver: stateProps.commentThreadsOpen
       ? () => {}
       : dispatchProps.onMouseOver,
   }
 }
 
-const EdgenoteSpan = ({
-  editing,
-  onMouseOver,
-  onMouseOut,
-  onClick,
-  children,
-  commentThreadsOpen,
-  location,
-}) => {
-  return <a
-    className={`c-edgenote-entity${commentThreadsOpen ? '--inactive' : ''}`}
-    onMouseOver={onMouseOver}
-    onMouseOut={onMouseOut}
-    onClick={editing ? () => {} : onClick}
-  >
-    {children.map(child => React.cloneElement(
-      child,
-      { forceSelection: true, location }
-    ))}
-  </a>
+const EdgenoteSpan = (
+  {
+    editing,
+    onMouseOver,
+    onMouseOut,
+    onClick,
+    children,
+    commentThreadsOpen,
+    location,
+  },
+) => {
+  return (
+    <a
+      className={`c-edgenote-entity${commentThreadsOpen ? '--inactive' : ''}`}
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}
+      onClick={editing ? () => {} : onClick}
+    >
+      {children.map(child =>
+        React.cloneElement(child, { forceSelection: true, location }))}
+    </a>
+  )
 }
 
-const EdgenoteEntity = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  mergeProps,
-)(EdgenoteSpan)
+const EdgenoteEntity = connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  EdgenoteSpan,
+)
 
 export default withRouter(EdgenoteEntity)

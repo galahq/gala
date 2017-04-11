@@ -8,22 +8,26 @@ type Props = {
   onChange: (string) => void,
   style?: Object,
 }
-const EditableAttribute = ({
-  disabled,
-  title,
-  value,
-  onChange,
-  style = {},
-}: Props) => {
+const EditableAttribute = (
+  {
+    disabled,
+    title,
+    value,
+    onChange,
+    style = {},
+  }: Props,
+) => {
   if (disabled) return null
-  return <div style={{ ...styles.container, ...style }}>
-    { value && value.length > 0 && <label style={styles.label}>{title}</label> }
-    <EditableText
-      placeholder={`Add ${title}...`}
-      value={value}
-      onChange={onChange}
-    />
-  </div>
+  return (
+    <div style={{ ...styles.container, ...style }}>
+      {value && value.length > 0 && <label style={styles.label}>{title}</label>}
+      <EditableText
+        placeholder={`Add ${title}...`}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  )
 }
 
 export default EditableAttribute

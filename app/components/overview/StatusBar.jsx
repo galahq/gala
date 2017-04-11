@@ -16,56 +16,50 @@ function mapStateToProps (state: State) {
     messages: {
       instructions: inProgress
         ? 'statusBar.editInstructions'
-        : (published ? '' : 'statusBar.betaNotification'),
+        : published ? '' : 'statusBar.betaNotification',
       editToggle: inProgress ? 'statusBar.endEdit' : 'statusBar.beginEdit',
       save: 'statusBar.save',
     },
   }
 }
 
-function StatusBar ({
-  editable,
-  editing,
-  edited,
-  messages,
-  toggleEditing,
-  saveChanges,
-}) {
+function StatusBar (
+  {
+    editable,
+    editing,
+    edited,
+    messages,
+    toggleEditing,
+    saveChanges,
+  },
+) {
   return (
     <div
       className={
         (messages.instructions || editable) &&
-        `flash flash-${editing ? 'editing' : 'info'}`
+          `flash flash-${editing ? 'editing' : 'info'}`
       }
     >
-      {
-        messages.instructions && <FormattedMessage id={messages.instructions} />
-      }
-      {
-        (editable || edited) && <span>
-          { messages.instructions && <span>&ensp;&mdash;&ensp;</span> }
-          {
-            editable && <a onClick={toggleEditing}>
-              {
-                messages.editToggle && <FormattedMessage id={messages.editToggle} />
-              }
-            </a>
-          }
-          {
-            edited && [
-              <span key="1">&ensp;</span>,
-              <a key="2" onClick={saveChanges}>
-                { messages.save && <FormattedMessage id={messages.save} /> }
-              </a>,
-            ]
-          }
-        </span>
-      }
+      {messages.instructions && <FormattedMessage id={messages.instructions} />}
+      {(editable || edited) &&
+        <span>
+          {messages.instructions && <span> — </span>}
+          {editable &&
+            <a onClick={toggleEditing}>
+              {messages.editToggle &&
+                <FormattedMessage id={messages.editToggle} />}
+            </a>}
+          {edited && [
+            <span key="1"> </span>,
+            <a key="2" onClick={saveChanges}>
+              {messages.save && <FormattedMessage id={messages.save} />}
+            </a>,
+          ]}
+        </span>}
     </div>
   )
 }
 
-export default connect(
-  mapStateToProps,
-  { toggleEditing, saveChanges }
-)(StatusBar)
+export default connect(mapStateToProps, { toggleEditing, saveChanges })(
+  StatusBar,
+)

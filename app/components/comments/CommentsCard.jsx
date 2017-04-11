@@ -14,7 +14,7 @@ import Icon from 'utility/Icon'
 
 import type { State, Reader } from 'redux/state'
 
-type OwnProps = { match: { params: { commentThreadId: string }}}
+type OwnProps = { match: { params: { commentThreadId: string } } }
 function mapStateToProps (state: State, { match }: OwnProps) {
   const threadId = match.params.commentThreadId
   const thread = state.commentThreadsById[threadId]
@@ -29,24 +29,26 @@ function mapStateToProps (state: State, { match }: OwnProps) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    handleChange: threadId => e => dispatch(
-      changeCommentInProgress(threadId, e.target.value)),
-    handleSubmit: (threadId, comment) => () => dispatch(
-      createComment(threadId, comment)),
+    handleChange: threadId =>
+      e => dispatch(changeCommentInProgress(threadId, e.target.value)),
+    handleSubmit: (threadId, comment) =>
+      () => dispatch(createComment(threadId, comment)),
   }
 }
 
-const CommentsCard = ({
-  threadId,
-  comments,
-  commentInProgress,
-  intl,
-  userName,
-  originalHighlightText,
-  handleChange,
-  handleSubmit,
-  location,
-}) => (
+const CommentsCard = (
+  {
+    threadId,
+    comments,
+    commentInProgress,
+    intl,
+    userName,
+    originalHighlightText,
+    handleChange,
+    handleSubmit,
+    location,
+  },
+) => (
   <aside className="CommentThread scrolling">
     <Link
       replace
@@ -67,7 +69,7 @@ const CommentsCard = ({
     </div>
 
     <div style={{ flex: 1, overflow: 'scroll' }}>
-      { comments.map(comment => <Comment {...comment} key={comment.id} />) }
+      {comments.map(comment => <Comment {...comment} key={comment.id} />)}
     </div>
 
     <form style={comments.length === 0 ? { marginTop: 0 } : {}}>
@@ -80,18 +82,18 @@ const CommentsCard = ({
             defaultMessage: 'Write a reply...',
           })}
           value={commentInProgress}
-          onKeyDown={ e => {
+          onKeyDown={e => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
               handleSubmit(threadId, commentInProgress)()
             }
           }}
-          onChange={ handleChange(threadId) }
+          onChange={handleChange(threadId)}
         />
         <button
           type="button"
           className="pt-button pt-intent-primary CommentThread__submit-button"
-          onClick={ handleSubmit(threadId, commentInProgress) }
+          onClick={handleSubmit(threadId, commentInProgress)}
         >
           <FormattedMessage id="submit" defaultMessage="Submit" />
         </button>
@@ -100,15 +102,15 @@ const CommentsCard = ({
   </aside>
 )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(injectIntl(CommentsCard))
+export default connect(mapStateToProps, mapDispatchToProps)(
+  injectIntl(CommentsCard),
+)
 
-type CommentProps = { reader: Reader, timestamp: string, content: string}
-const Comment = ({ reader, timestamp, content }: CommentProps) =>
+type CommentProps = { reader: Reader, timestamp: string, content: string }
+const Comment = ({ reader, timestamp, content }: CommentProps) => (
   <div className="Comment">
     <cite>{reader.name}</cite>
     <i>{timestamp}</i>
     <blockquote>{content}</blockquote>
   </div>
+)
