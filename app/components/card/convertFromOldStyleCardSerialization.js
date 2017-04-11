@@ -1,10 +1,6 @@
 // @flow
 
-import {
-  ContentState,
-  convertFromHTML,
-  convertToRaw,
-} from 'draft-js'
+import { ContentState, convertFromHTML, convertToRaw } from 'draft-js'
 
 import typeof { DraftRawContentState } from 'draft-js'
 
@@ -13,7 +9,7 @@ const EdgenotePrefix = UrlPrefix + 'edgenote/'
 const CitationPrefix = UrlPrefix + 'citation'
 
 function convertFromOldStyleCardSerialization (
-  content: string
+  content: string,
 ): DraftRawContentState {
   /* convertFromOldStyleCardSerialization
    *
@@ -33,12 +29,14 @@ function convertFromOldStyleCardSerialization (
   const transformedContent = reencodeEdgenotes(reencodeCitations(content))
 
   const blocksFromHTML = convertFromHTML(transformedContent)
-  var convertedRawContent = convertToRaw(ContentState.createFromBlockArray(
-    blocksFromHTML.contentBlocks,
-    blocksFromHTML.entityMap
-  ))
+  var convertedRawContent = convertToRaw(
+    ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap,
+    ),
+  )
 
-  Object.keys(convertedRawContent.entityMap).forEach((key) => {
+  Object.keys(convertedRawContent.entityMap).forEach(key => {
     const entity = convertedRawContent.entityMap[`${key}`]
     const { url, title, target } = entity.data
 
@@ -67,15 +65,12 @@ function convertFromOldStyleCardSerialization (
 export default convertFromOldStyleCardSerialization
 
 function reencodeEdgenotes (content) {
-  return content.replace(
-    /data-edgenote="/g,
-    `href="${EdgenotePrefix}`
-  )
+  return content.replace(/data-edgenote="/g, `href="${EdgenotePrefix}`)
 }
 
 function reencodeCitations (content: string): string {
   return content.replace(
     /<cite>(.*?href="(.*?)".*?>(.*?)<\/a>.*?|([^<]*?))<\/cite>/g,
-    `<a title="$3$4" target="$2" href="${CitationPrefix}">◦</a>`
+    `<a title="$3$4" target="$2" href="${CitationPrefix}">◦</a>`,
   )
 }

@@ -24,6 +24,7 @@ export default function activitiesById (
         [action.data.id]: action.data,
       }
 
-    default: return state
+    default:
+      return state
   }
 }

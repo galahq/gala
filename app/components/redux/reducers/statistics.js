@@ -12,6 +12,7 @@ export default function statistics (
         [action.uri]: action.data,
       }
 
-    default: return state
+    default:
+      return state
   }
 }

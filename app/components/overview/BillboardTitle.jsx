@@ -10,7 +10,13 @@ import type { State } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
-    slug, kicker, title, photoCredit, caseAuthors, translators, coverUrl,
+    slug,
+    kicker,
+    title,
+    photoCredit,
+    caseAuthors,
+    translators,
+    coverUrl,
   } = caseData
 
   return {
@@ -25,19 +31,22 @@ function mapStateToProps ({ edit, caseData }: State) {
   }
 }
 
-const BillboardTitle = ({
-  editing,
-  slug,
-  kicker,
-  title,
-  photoCredit,
-  caseAuthors,
-  translators,
-  coverUrl,
-  updateCase,
-  minimal,
-}) => {
-  const background = { backgroundImage: `
+const BillboardTitle = (
+  {
+    editing,
+    slug,
+    kicker,
+    title,
+    photoCredit,
+    caseAuthors,
+    translators,
+    coverUrl,
+    updateCase,
+    minimal,
+  },
+) => {
+  const background = {
+    backgroundImage: `
       linear-gradient(rgba(0,0,0,0.0), rgba(0,0,0,0.5)),
       url(${coverUrl})
     `,
@@ -63,29 +72,25 @@ const BillboardTitle = ({
         />
       </h1>
 
-      { !minimal && caseAuthors !== '' &&
+      {!minimal &&
+        caseAuthors !== '' &&
         <p>
-          { caseAuthors }
+          {caseAuthors}
           <br />
-          { translators !== '' && <em>{ translators }</em> }
-        </p>
-      }
+          {translators !== '' && <em>{translators}</em>}
+        </p>}
 
       <cite className="o-bottom-right c-photo-credit">
-        {
-          minimal || <EditableText
+        {minimal ||
+          <EditableText
             value={photoCredit}
             disabled={!editing}
             placeholder={!!editing && 'Photo credit'}
             onChange={value => updateCase(slug, { photoCredit: value })}
-          />
-        }
+          />}
       </cite>
     </div>
   )
 }
 
-export default connect(
-  mapStateToProps,
-  { updateCase },
-)(BillboardTitle)
+export default connect(mapStateToProps, { updateCase })(BillboardTitle)

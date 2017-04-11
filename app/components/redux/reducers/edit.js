@@ -11,19 +11,17 @@ import type {
   UpdateEdgenoteAction,
 } from 'redux/actions'
 
-type Action = ClearUnsavedAction |
-  ToggleEditingAction |
-  UpdateCaseAction |
-  UpdateCardContentsAction |
-  UpdatePageAction |
-  UpdatePodcastAction |
-  UpdateActivityAction |
-  UpdateEdgenoteAction
+type Action =
+  | ClearUnsavedAction
+  | ToggleEditingAction
+  | UpdateCaseAction
+  | UpdateCardContentsAction
+  | UpdatePageAction
+  | UpdatePodcastAction
+  | UpdateActivityAction
+  | UpdateEdgenoteAction
 
-function edit (
-  state: ?EditState,
-  action: Action,
-): EditState {
+function edit (state: ?EditState, action: Action): EditState {
   if (state == null) {
     const reader = (window.caseData.reader: Reader) || {}
     return {
@@ -111,7 +109,8 @@ function edit (
         },
       }
 
-    default: return state
+    default:
+      return state
   }
 }
 

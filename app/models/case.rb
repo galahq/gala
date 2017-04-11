@@ -50,10 +50,10 @@ class Case < ApplicationRecord
   end
 
   def translator_names
-    JSON.parse translators
+    JSON.parse self.translators
   end
   def translator_names=(t)
-    translators = t.to_json
+    self.translators = t.to_json
   end
 
   def readers_by_enrollment_status

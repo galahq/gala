@@ -1,4 +1,4 @@
-import React from 'react'  // eslint-disable-line no-unused-vars
+import React from 'react' // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 
 import { openCitation } from 'redux/actions'
@@ -15,7 +15,7 @@ function mapStateToProps (state: State, ownProps) {
 
 function mapDispatchToProps (dispatch, ownProps) {
   return {
-    open: (labelRef) => dispatch(openCitation(ownProps.entityKey, labelRef)),
+    open: labelRef => dispatch(openCitation(ownProps.entityKey, labelRef)),
     close: () => dispatch(openCitation(null)),
   }
 }
@@ -26,13 +26,17 @@ class CitationSpan extends React.Component {
 
     let citationLabel = !editable && isOpen ? '×' : '◦'
     let toggle = isOpen ? close : () => open(this.label)
-    return <span style={styles.label} onClick={toggle}>
-      <sup ref={(e: HTMLElement) => (this.label = e)}>{citationLabel}</sup>
-    </span>
+    return (
+      <span style={styles.label} onClick={toggle}>
+        <sup ref={(e: HTMLElement) => this.label = e}>{citationLabel}</sup>
+      </span>
+    )
   }
 }
 
-const CitationEntity = connect(mapStateToProps, mapDispatchToProps)(CitationSpan)
+const CitationEntity = connect(mapStateToProps, mapDispatchToProps)(
+  CitationSpan,
+)
 
 export default CitationEntity
 

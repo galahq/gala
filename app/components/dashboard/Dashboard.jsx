@@ -12,8 +12,13 @@ export class Dashboard extends React.Component {
   }
 
   deleteEnrollmentFor (kase) {
-    if (kase.published || this.props.roles.editor ||
-        window.confirm('Are you sure you want to unenroll in this case? Because it is a beta release, you will not be able to reenroll.')) {
+    if (
+      kase.published ||
+      this.props.roles.editor ||
+      window.confirm(
+        'Are you sure you want to unenroll in this case? Because it is a beta release, you will not be able to reenroll.',
+      )
+    ) {
       Orchard.prune(`admin/enrollments/${kase.enrollmentId}`).then(() => {
         window.location.reload()
       })
@@ -42,26 +47,32 @@ export class Dashboard extends React.Component {
               className="catalog-dashboard__edit"
               onClick={this.handleSetEditing}
             >
-              { editing ? 'Done' : 'Edit' }
-              <span dangerouslySetInnerHTML={{ __html: require(`../../assets/images/react/dashboard-${editing ? 'done' : 'edit'}.svg`) }} />
+              {editing ? 'Done' : 'Edit'}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: require(`../../assets/images/react/dashboard-${editing ? 'done' : 'edit'}.svg`),
+                }}
+              />
             </a>
           </h2>
         </div>
 
-        { this.state.cases.length > 0
-
+        {this.state.cases.length > 0
           ? <div className="catalog-dashboard__my-cases">
-            {
-              this.state.cases.map((kase) => <DashboardCase key={kase.slug}
+            {this.state.cases.map(kase => (
+              <DashboardCase
+                key={kase.slug}
                 editing={this.state.editing}
                 deleteEnrollmentFor={this.deleteEnrollmentFor}
-                case={kase} />)
-            }
+                case={kase}
+                />
+              ))}
           </div>
-
           : <div>
             <div className="catalog-dashboard__my-cases--empty__case">
-              <img src="https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&w=300&h=300&fit=crop&crop=focalpoint&fp-x=.535&fp-y=.6&fp-z=2.5&mono=493092" />
+              <img
+                src="https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&amp;w=300&amp;h=300&amp;fit=crop&amp;crop=focalpoint&amp;fp-x=.535&amp;fp-y=.6&amp;fp-z=2.5&amp;mono=493092"
+                />
               <strong><I18n meaning="study_a_case" /></strong>
             </div>
 
@@ -69,14 +80,19 @@ export class Dashboard extends React.Component {
               <h3>Choose for yourself</h3>
 
               <ul>
-                <li>Meet different stakeholders and dive deep with a multimodal narrative.</li>
-                <li>Shortcut experience by putting principles into practice.</li>
+                <li>
+                    Meet different stakeholders and dive deep with a multimodal narrative.
+                  </li>
+                <li>
+                    Shortcut experience by putting principles into practice.
+                  </li>
               </ul>
 
-              <p>Cases you select from the index below will be presented here for easy access.</p>
+              <p>
+                  Cases you select from the index below will be presented here for easy access.
+                </p>
             </div>
-          </div>
-        }
+          </div>}
 
       </div>
     )

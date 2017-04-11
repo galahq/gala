@@ -25,19 +25,21 @@ const Sidebar = ({ commentThreadsOpen, commentsOpen, readerEnrolled }) => {
     return n.join(' ')
   }
 
-  return <aside id="Sidebar" className={_getClassNames()}>
-    <Link to="/" className="backLink">
-      <FormattedMessage id="case.backToOverview" />
-    </Link>
-    <BillboardTitle minimal />
-    <TableOfContents readOnly />
+  return (
+    <aside id="Sidebar" className={_getClassNames()}>
+      <Link to="/" className="backLink">
+        <FormattedMessage id="case.backToOverview" />
+      </Link>
+      <BillboardTitle minimal />
+      <TableOfContents readOnly />
 
-    { readerEnrolled || <div style={{ paddingTop: '1em' }}>
-      <EnrollForm />
-    </div>
-  }
+      {readerEnrolled ||
+        <div style={{ paddingTop: '1em' }}>
+          <EnrollForm />
+        </div>}
 
-  </aside>
+    </aside>
+  )
 }
 
 export default withRouter(connect(mapStateToProps)(Sidebar))

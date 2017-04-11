@@ -9,7 +9,9 @@ import type { State } from 'redux/state'
 
 type OwnProps = { cardId: string }
 function mapStateToProps (state: State, ownProps: OwnProps) {
-  let edgenoteSlugs = getEdgenoteSlugs(state.cardsById[ownProps.cardId].editorState)
+  let edgenoteSlugs = getEdgenoteSlugs(
+    state.cardsById[ownProps.cardId].editorState,
+  )
   return {
     oldStyle: edgenoteSlugs.some(x => state.edgenotesBySlug[x].style === 'v1'),
     edgenoteSlugs,
@@ -20,12 +22,11 @@ const EdgenotesCard = ({ edgenoteSlugs, oldStyle }) => {
   const AnEdgenote = oldStyle ? OldEdgenote : Edgenote
 
   if (edgenoteSlugs.length > 0) {
-    return <aside
-      className={oldStyle ? 'edgenotes' : 'c-edgenotes-card pt-dark'}>
-      { edgenoteSlugs.map(
-        (slug) => <AnEdgenote key={`${slug}`} slug={slug} />
-      ) }
-    </aside>
+    return (
+      <aside className={oldStyle ? 'edgenotes' : 'c-edgenotes-card pt-dark'}>
+        {edgenoteSlugs.map(slug => <AnEdgenote key={`${slug}`} slug={slug} />)}
+      </aside>
+    )
   } else {
     return null
   }

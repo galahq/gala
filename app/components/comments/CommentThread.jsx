@@ -31,9 +31,11 @@ function mapStateToProps (state: State, { threadId, location }: OwnProps) {
       author: firstComment.reader
         ? firstComment.reader.name
         : state.caseData.reader.name,
-      content: firstComment.content || <FormattedMessage
-        id="comments.placeholderContent"
-        defaultMessage="New comment..." />,
+      content: firstComment.content ||
+        <FormattedMessage
+          id="comments.placeholderContent"
+          defaultMessage="New comment..."
+        />,
     },
     responses: comments.splice(1),
     canBeDeleted: !firstComment.content &&
@@ -57,50 +59,70 @@ function mapDispatchToProps (dispatch, ownProps: OwnProps) {
   }
 }
 
-const CommentThread = ({ lead, responses, hovered, selected, last,
-  match, threadId, handleMouseEnter, handleMouseLeave, handleDeleteThread,
-  canBeDeleted }) =>
-    <div style={{ position: 'relative' }}>
-      <Link replace to={`${match.url}/${threadId}`} style={styles.linkReset}>
-        <li
-          style={styles.getCommentListItemStyle({ last, selected, hovered })}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <h4 style={styles.author}>{lead.author}</h4>
-          <LeadSnippet lead={lead} />
-          {
-        responses.map((r, i) => {
+const CommentThread = (
+  {
+    lead,
+    responses,
+    hovered,
+    selected,
+    last,
+    match,
+    threadId,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleDeleteThread,
+    canBeDeleted,
+  },
+) => (
+  <div style={{ position: 'relative' }}>
+    <Link replace to={`${match.url}/${threadId}`} style={styles.linkReset}>
+      <li
+        style={styles.getCommentListItemStyle({ last, selected, hovered })}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <h4 style={styles.author}>{lead.author}</h4>
+        <LeadSnippet lead={lead} />
+        {responses.map((r, i) => {
           const numOthers = responses.length - 2
           switch (i) {
             case 0:
             case 1:
-              return <p
-                key={i}
-                style={{
-                  ...styles.getCommentSnippetStyle({}),
-                  ...styles.oneLineSnippet,
-                }}>
-                <span style={styles.initials}>{r.reader.initials}:</span>
-                <span>{r.content}</span>
-              </p>
+              return (
+                <p
+                  key={i}
+                  style={{
+                    ...styles.getCommentSnippetStyle({}),
+                    ...styles.oneLineSnippet,
+                  }}
+                >
+                  <span style={styles.initials}>{r.reader.initials}:</span>
+                  <span>{r.content}</span>
+                </p>
+              )
             case 2:
-              return <p key="2" style={styles.getCommentSnippetStyle({})}>
-                <FormattedMessage id="comments.otherComments"
-                  defaultMessage={`{count, number} other {count, plural,
+              return (
+                <p key="2" style={styles.getCommentSnippetStyle({})}>
+                  <FormattedMessage
+                    id="comments.otherComments"
+                    defaultMessage={
+                      `{count, number} other {count, plural,
                     one {response}
                     other {responses}
-                  }`}
-                  values={{ count: numOthers }} />
-              </p>
-            default: return null
+                  }`
+                    }
+                    values={{ count: numOthers }}
+                  />
+                </p>
+              )
+            default:
+              return null
           }
-        })
-      }
+        })}
 
-        </li>
-      </Link>
-      {canBeDeleted &&
+      </li>
+    </Link>
+    {canBeDeleted &&
       <a>
         <Icon
           className="CommentThread__icon-button"
@@ -109,22 +131,22 @@ const CommentThread = ({ lead, responses, hovered, selected, last,
           onClick={handleDeleteThread}
         />
       </a>}
-    </div>
+  </div>
+)
 
 // Truncate is slow so let's extend PureComponent
 class LeadSnippet extends React.PureComponent {
   render () {
     const { placeholder, content } = this.props.lead
-    return <p style={styles.getCommentSnippetStyle({ placeholder })}>
-      <Truncate lines={3}>{content}</Truncate>
-    </p>
+    return (
+      <p style={styles.getCommentSnippetStyle({ placeholder })}>
+        <Truncate lines={3}>{content}</Truncate>
+      </p>
+    )
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CommentThread)
+export default connect(mapStateToProps, mapDispatchToProps)(CommentThread)
 
 type Flags = { [string]: boolean }
 

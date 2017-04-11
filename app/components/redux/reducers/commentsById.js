@@ -13,6 +13,7 @@ export default function commentsById (
         [action.data.id]: action.data,
       }
 
-    default: return state
+    default:
+      return state
   }
 }

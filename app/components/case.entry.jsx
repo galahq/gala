@@ -18,22 +18,19 @@ import Case from 'Case'
 
 import reducer from 'redux/reducers'
 
-import messages from 'locales.json'  // eslint-disable-line
+import messages from 'locales.json'; // eslint-disable-line
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
-const store = createStore(
-  reducer,
-  applyMiddleware(
-    thunk,
-  ),
-)
+const store = createStore(reducer, applyMiddleware(thunk))
 
-if (!global.Intl) { global.Intl = require('intl') }  // eslint-disable-line
+if (!global.Intl) {
+  global.Intl = require('intl')
+} // eslint-disable-line
 
 addLocaleData([...en, ...fr, ...ja, ...zh, ...am])
 
-const { locale } = (window.i18n: {locale: string})
+const { locale } = (window.i18n: { locale: string })
 
 render(
   <Provider store={store}>

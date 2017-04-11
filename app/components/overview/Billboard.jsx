@@ -25,15 +25,17 @@ function mapStateToProps (state: State) {
   }
 }
 
-const Billboard = ({
-  editing,
-  slug,
-  dek,
-  summary,
-  baseCoverUrl,
-  updateCase,
-  otherAvailableLocales,
-}) => (
+const Billboard = (
+  {
+    editing,
+    slug,
+    dek,
+    summary,
+    baseCoverUrl,
+    updateCase,
+    otherAvailableLocales,
+  },
+) => (
   <section className="Billboard">
     <BillboardTitle />
     <EditableAttribute
@@ -67,18 +69,13 @@ const Billboard = ({
   </section>
 )
 
-export default connect(
-  mapStateToProps,
-  { updateCase },
-)(
-  Billboard,
-)
+export default connect(mapStateToProps, { updateCase })(Billboard)
 
 type FlagLinksProps = { slug: string, languages: string[] }
 function FlagLinks ({ slug, languages }: FlagLinksProps) {
   if (languages.length > 0) {
     return (
-      <div className="flag-links" >
+      <div className="flag-links">
         <FormattedMessage id="overview.otherLanguages" />
         <br />
         {languages.map(lx => <FlagLink key={lx} lx={lx} slug={slug} />)}
@@ -94,7 +91,9 @@ function FlagLink ({ slug, lx }: FlagLinkProps) {
     <a href={`/${lx}/cases/${slug}`}>
       <span
         className="flag-links__icon"
-        dangerouslySetInnerHTML={{ __html: require(`../../assets/images/react/flag-${lx}.svg`) }} // eslint-disable-line
+        dangerouslySetInnerHTML={{
+          __html: require(`../../assets/images/react/flag-${lx}.svg`),
+        }} // eslint-disable-line
       />
       &nbsp;
       <FormattedMessage id={lx} />
