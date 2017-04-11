@@ -1,27 +1,27 @@
 // @flow
 
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { FormattedMessage } from 'react-intl';
-import { EditableText } from '@blueprintjs/core';
+import { FormattedMessage } from 'react-intl'
+import { EditableText } from '@blueprintjs/core'
 
-import Icon from 'utility/Icon';
-import EditableAttribute from 'utility/EditableAttribute';
-import Card from 'card';
+import Icon from 'utility/Icon'
+import EditableAttribute from 'utility/EditableAttribute'
+import Card from 'card'
 
-import { updateActivity } from 'redux/actions';
+import { updateActivity } from 'redux/actions'
 
-import type { State } from 'redux/state';
+import type { State } from 'redux/state'
 
-type OwnProps = { id: number };
-function mapStateToProps(state: State, { id }: OwnProps) {
-  const activity = state.activitiesById[id];
+type OwnProps = { id: number }
+function mapStateToProps (state: State, { id }: OwnProps) {
+  const activity = state.activitiesById[id]
 
   return {
     editing: state.edit.inProgress,
     ...activity,
-  };
+  }
 }
 
 const Activity = (
@@ -86,9 +86,6 @@ const Activity = (
     </section>
 
     <section className="c-activity__attributes pt-dark">
-      {// <EditableAttribute disabled={!editing} title="Icon Slug"
-      // onChange={v => updateActivity(id, {iconSlug: v})}
-      // value={iconSlug} />}
       <EditableAttribute
         disabled={!editing}
         title="Download URL"
@@ -97,6 +94,6 @@ const Activity = (
       />
     </section>
   </article>
-);
+)
 
-export default connect(mapStateToProps, { updateActivity })(Activity);
+export default connect(mapStateToProps, { updateActivity })(Activity)
