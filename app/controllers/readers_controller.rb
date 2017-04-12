@@ -25,6 +25,7 @@ class ReadersController < ApplicationController
 
   # GET /readers/1/edit
   def edit
+    authorize_action_for @reader
   end
 
   # POST /readers
@@ -46,6 +47,7 @@ class ReadersController < ApplicationController
   # PATCH/PUT /readers/1
   # PATCH/PUT /readers/1.json
   def update
+    authorize_action_for @reader
     respond_to do |format|
       if @reader.update(reader_params)
         format.html { redirect_to edit_reader_path(@reader), notice: 'Reader was successfully updated.' }
