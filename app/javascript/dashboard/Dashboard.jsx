@@ -68,7 +68,7 @@ export class Dashboard extends React.Component {
                 />
               ))}
           </div>
-          : <div>
+          : <div className="catalog-dashboard__my-cases--empty">
             <div className="catalog-dashboard__my-cases--empty__case">
               <img
                 src="https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&amp;w=300&amp;h=300&amp;fit=crop&amp;crop=focalpoint&amp;fp-x=.535&amp;fp-y=.6&amp;fp-z=2.5&amp;mono=493092"
