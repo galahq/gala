@@ -1,6 +1,6 @@
 class Reader < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-         :trackable, :validatable, :omniauthable, omniauth_providers: [:google, :lti]
+         :trackable, :validatable, :confirmable, :omniauthable, omniauth_providers: [:google, :lti]
   before_save :ensure_authentication_token
 
   include Authority::UserAbilities
