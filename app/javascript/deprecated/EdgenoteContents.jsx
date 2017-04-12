@@ -66,7 +66,7 @@ class EdgenoteDisplay extends React.Component {
         <div
           className="linkOverlay"
           dangerouslySetInnerHTML={{
-            __html: require(`../../assets/images/react/link.svg`),
+            __html: require(`images/link.svg`),
           }}
         />
         <img
@@ -151,7 +151,7 @@ class EdgenoteSidebar extends React.Component {
         <div
           className={`edgenote-icon edgenote-icon-${format}`}
           dangerouslySetInnerHTML={{
-            __html: require(`../../assets/images/react/edgenote-${format}.svg`),
+            __html: require(`images/edgenote-${format}.svg`),
           }}
         />
       )

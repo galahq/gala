@@ -83,7 +83,7 @@ class OldEdgenoteFigure extends React.Component {
           <div
             className={`edgenote-icon edgenote-icon-${format}`}
             dangerouslySetInnerHTML={{
-              __html: require(`../../assets/images/react/edgenote-${format}.svg`),
+              __html: require(`images/edgenote-${format}.svg`),
             }}
           />
           <figcaption

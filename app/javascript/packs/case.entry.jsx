@@ -1,6 +1,8 @@
 // @flow
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
+
+import { AppContainer } from 'react-hot-loader'
 
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
@@ -18,7 +20,7 @@ import Case from 'Case'
 
 import reducer from 'redux/reducers'
 
-import messages from 'locales.json'; // eslint-disable-line
+import messages from '../../../config/locales/react.json'; // eslint-disable-line
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
@@ -32,11 +34,23 @@ addLocaleData([...en, ...fr, ...ja, ...zh, ...am])
 
 const { locale } = (window.i18n: { locale: string })
 
-render(
-  <Provider store={store}>
-    <IntlProvider locale={locale} messages={messages[locale]}>
-      <Case />
-    </IntlProvider>
-  </Provider>,
-  document.getElementById('container'),
-)
+const render = (Component: React$Component) => {
+  ReactDOM.render(
+    <AppContainer>
+      <Provider store={store}>
+        <IntlProvider locale={locale} messages={messages[locale]}>
+          <Component />
+        </IntlProvider>
+      </Provider>
+    </AppContainer>,
+    document.getElementById('container')
+  )
+}
+
+render(Case)
+
+if (module.hot) {
+  module.hot.accept('Case', () => {
+    render(Case)
+  })
+}

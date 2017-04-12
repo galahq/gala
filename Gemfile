@@ -7,6 +7,7 @@ gem 'puma', '~> 3.0'
 
 gem 'haml'
 gem 'sass-rails', '~> 5.0'
+gem 'webpacker', git: 'https://github.com/rails/webpacker'
 gem 'bourbon'
 gem 'redcarpet'
 gem 'uglifier', '>= 1.3.0'
@@ -39,6 +40,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'foreman'
   gem 'listen', '~> 3.1.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

@@ -7,7 +7,7 @@
 
 [options]
 module.system.node.resolve_dirname=node_modules
-module.system.node.resolve_dirname=components
+module.system.node.resolve_dirname=javascript
 module.system.node.resolve_dirname=react
 module.use_strict=true
 module.name_mapper='.*\(.css\)' -> 'CSSModule'
