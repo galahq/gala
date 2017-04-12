@@ -116,27 +116,27 @@ class EditorToolbar extends React.Component {
     return (
       <div className="c-editor-toolbar" style={styles.bar}>
         <EditorToolbarButton
-          icon={require('toolbar-small-caps.svg')}
+          icon={require('images/toolbar-small-caps.svg')}
           onClick={this.toggleInline('BOLD')}
         />
         <EditorToolbarButton
-          icon={require(`toolbar-italic.svg`)}
+          icon={require(`images/toolbar-italic.svg`)}
           onClick={this.toggleInline('ITALIC')}
         />
         <EditorToolbarButton
-          icon={require(`toolbar-ol.svg`)}
+          icon={require(`images/toolbar-ol.svg`)}
           onClick={this.toggleBlock('ordered-list-item')}
         />
         <EditorToolbarButton
-          icon={require(`toolbar-ul.svg`)}
+          icon={require(`images/toolbar-ul.svg`)}
           onClick={this.toggleBlock('unordered-list-item')}
         />
         <EditorToolbarButton
-          icon={require(`toolbar-edgenote.svg`)}
+          icon={require(`images/toolbar-edgenote.svg`)}
           onClick={this.handleAddEdgenote}
         />
         <EditorToolbarButton
-          icon={require(`toolbar-citation.svg`)}
+          icon={require(`images/toolbar-citation.svg`)}
           onClick={this.handleAddCitation}
         />
       </div>

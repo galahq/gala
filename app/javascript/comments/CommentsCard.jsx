@@ -47,7 +47,7 @@ const CommentsCard = (
     handleChange,
     handleSubmit,
     location,
-  },
+  }
 ) => (
   <aside className="CommentThread scrolling">
     <Link
@@ -103,7 +103,7 @@ const CommentsCard = (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  injectIntl(CommentsCard),
+  injectIntl(CommentsCard)
 )
 
 type CommentProps = { reader: Reader, timestamp: string, content: string }

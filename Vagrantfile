@@ -10,6 +10,7 @@ Vagrant.configure(2) do |config|
   # needed because the default synced_folder method is way too slow
   config.vm.synced_folder ".", "/vagrant", type: "nfs", fsnotify: true, exclude: ["node_modules"]
   config.vm.network "forwarded_port", guest: 3000, host: 3000
+  config.vm.network "forwarded_port", guest: 3001, host: 3001
 
   config.vm.provision "shell", inline: <<-SHELL
     set -xe

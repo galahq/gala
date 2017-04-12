@@ -1,10 +1,13 @@
+machine:
+  node:
+    version: 6.4.0
 dependencies:
   override:
     - yarn
     - bundle install
 compile:
   override:
-    - npm run webpack:deploy
+    - RAILS_ENV=test rails webpacker:compile
 test:
   override:
     - xvfb-run -a bundle exec rspec -r rspec_junit_formatter --format progress --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml:

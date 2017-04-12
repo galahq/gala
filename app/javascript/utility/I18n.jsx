@@ -1,5 +1,7 @@
 import React from 'react'
-var strings = (require('locales.json'): { [string]: { [string]: string } })
+var strings = (require('../../../config/locales/react.json'): {
+  [string]: { [string]: string },
+})
 
 export class I18n extends React.Component {
   props: { meaning: string }

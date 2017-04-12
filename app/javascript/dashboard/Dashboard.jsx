@@ -16,7 +16,7 @@ export class Dashboard extends React.Component {
       kase.published ||
       this.props.roles.editor ||
       window.confirm(
-        'Are you sure you want to unenroll in this case? Because it is a beta release, you will not be able to reenroll.',
+        'Are you sure you want to unenroll in this case? Because it is a beta release, you will not be able to reenroll.'
       )
     ) {
       Orchard.prune(`admin/enrollments/${kase.enrollmentId}`).then(() => {
@@ -50,7 +50,7 @@ export class Dashboard extends React.Component {
               {editing ? 'Done' : 'Edit'}
               <span
                 dangerouslySetInnerHTML={{
-                  __html: require(`../../assets/images/react/dashboard-${editing ? 'done' : 'edit'}.svg`),
+                  __html: require(`images/dashboard-${editing ? 'done' : 'edit'}.svg`),
                 }}
               />
             </a>

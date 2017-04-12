@@ -33,4 +33,4 @@
   :javascript
     window.reader = #{render partial: "readers/reader", formats: [:json], locals: {reader: current_reader}}
 
-  = javascript_include_tag "react/dashboard.bundle"
+  = javascript_pack_tag "dashboard"

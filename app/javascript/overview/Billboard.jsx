@@ -92,7 +92,7 @@ function FlagLink ({ slug, lx }: FlagLinkProps) {
       <span
         className="flag-links__icon"
         dangerouslySetInnerHTML={{
-          __html: require(`../../assets/images/react/flag-${lx}.svg`),
+          __html: require(`images/flag-${lx}.svg`),
         }} // eslint-disable-line
       />
       &nbsp;

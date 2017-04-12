@@ -22,3 +22,5 @@
 node_modules/
 
 app/assets/javascripts/react
+/public/packs
+/node_modules

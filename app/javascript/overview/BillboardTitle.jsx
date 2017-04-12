@@ -43,7 +43,7 @@ const BillboardTitle = (
     coverUrl,
     updateCase,
     minimal,
-  },
+  }
 ) => {
   const background = {
     backgroundImage: `

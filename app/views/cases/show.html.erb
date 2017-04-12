@@ -4,4 +4,4 @@
   window.caseData = <%= raw render partial: "case", formats: [:json], locals: {c: @case} %>
 <% end %>
 
-<%=javascript_include_tag "react/case.bundle"%>
+<%=javascript_pack_tag "case"%>

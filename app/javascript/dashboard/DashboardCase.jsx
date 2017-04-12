@@ -6,7 +6,9 @@ export class DashboardCase extends React.Component {
       return (
         <a
           className="catalog-dashboard__my-cases__case__delete"
-          dangerouslySetInnerHTML={{ __html: require('dashboard-delete.svg') }}
+          dangerouslySetInnerHTML={{
+            __html: require('images/dashboard-delete.svg'),
+          }}
           onClick={() => {
             this.props.deleteEnrollmentFor(this.props.case)
           }}
