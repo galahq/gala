@@ -1,13 +1,13 @@
 class Reader < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-         :trackable, :validatable, :confirmable, :omniauthable, omniauth_providers: [:google, :lti]
-  before_save :ensure_authentication_token
+         :trackable, :validatable, :confirmable
 
   include Authority::UserAbilities
   include Authority::Abilities
 
   rolify
 
+  has_many :authentication_strategies, dependent: :delete_all
   has_many :comment_threads
   has_many :comments
   has_many :group_memberships, dependent: :delete_all
@@ -16,12 +16,19 @@ class Reader < ApplicationRecord
   has_many :cases, through: :enrollments
 
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |reader|
-      reader.email = auth.info.email
+    info = auth.info
+    email = info.email
+
+    where(email: email).first_or_create do |reader|
+      name = info.name
+
+      reader.email = email
       reader.password = Devise.friendly_token[0,20]
-      reader.name = auth.info.name
-      reader.initials = auth.info.name.split(" ").map(&:first).join
-      reader.image_url = auth.info.image
+      reader.name = name
+      reader.initials = name.split(" ").map(&:first).join
+      reader.image_url = info.image
+
+      reader.confirmed_at = Time.zone.now
     end
   end
 
