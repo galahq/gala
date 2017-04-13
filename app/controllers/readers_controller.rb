@@ -50,6 +50,7 @@ class ReadersController < ApplicationController
     authorize_action_for @reader
     respond_to do |format|
       if @reader.update(reader_params)
+        bypass_sign_in @reader if reader_params.has_key? :password
         format.html { redirect_to edit_reader_path(@reader), notice: 'Reader was successfully updated.' }
         format.json { render :show, status: :ok, location: @reader }
       else
@@ -77,6 +78,13 @@ class ReadersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reader_params
-      params.require(:reader).permit(:name, :initials, :email, :locale)
+      unless defined? @reader_can_set_password
+        @reader_can_set_password = @reader && !@reader.created_password
+      end
+
+      permitted = %i(name initials email locale)
+      permitted << :password if @reader_can_set_password
+
+      params.require(:reader).permit(*permitted)
     end
 end

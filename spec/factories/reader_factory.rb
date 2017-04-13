@@ -5,6 +5,7 @@ FactoryGirl.define do
     email { Faker::Internet.email }
     password "secret"
     locale "en"
+    confirmed_at { Time.zone.now }
 
     trait :francophone do
       locale "fr"
