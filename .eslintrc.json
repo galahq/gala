@@ -41,6 +41,7 @@
     "no-shadow": 0,
     "no-duplicate-imports": 0,
     "no-confusing-arrow": 0,
+    "react/jsx-closing-bracket-location": [1, "line-aligned"],
     "react/prefer-es6-class": 2,
     "react/prefer-stateless-function": 2,
     "react/jsx-handler-names": 2,
