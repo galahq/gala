@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321164420) do
+ActiveRecord::Schema.define(version: 20170412175954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,15 @@ ActiveRecord::Schema.define(version: 20170321164420) do
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time", using: :btree
     t.index ["user_id", "name"], name: "index_ahoy_events_on_user_id_and_name", using: :btree
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name", using: :btree
+  end
+
+  create_table "authentication_strategies", force: :cascade do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.integer  "reader_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reader_id"], name: "index_authentication_strategies_on_reader_id", using: :btree
   end
 
   create_table "cards", force: :cascade do |t|
@@ -207,24 +216,26 @@ ActiveRecord::Schema.define(version: 20170321164420) do
   create_table "readers", force: :cascade do |t|
     t.text     "name"
     t.text     "image_url"
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",   null: false
+    t.string   "encrypted_password",     default: ""
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.string   "provider"
-    t.string   "uid"
-    t.text     "authentication_token"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.text     "initials"
     t.text     "locale"
-    t.index ["authentication_token"], name: "index_readers_on_authentication_token", unique: true, using: :btree
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "unconfirmed_email"
+    t.boolean  "created_password",       default: true
+    t.index ["confirmation_token"], name: "index_readers_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_readers_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_readers_on_reset_password_token", unique: true, using: :btree
   end

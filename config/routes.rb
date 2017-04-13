@@ -65,8 +65,8 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :readers, only: :omniauth_callbacks, controllers: {
-    omniauth_callbacks: 'readers/omniauth_callbacks',
+  devise_for :authentication_strategies, only: :omniauth_callbacks, controllers: {
+    omniauth_callbacks: 'authentication_strategies/omniauth_callbacks',
   }
   root to: "catalog#home"
 end

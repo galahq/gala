@@ -6,6 +6,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'devise'
 
 require 'capybara/rails'
 require 'capybara/rspec'
@@ -50,8 +51,12 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
+  config.include Devise::Test::ControllerHelpers, :type => :controller
 
   config.before(:suite) do
+    `bin/webpack`
+    Webpacker::Manifest.load
+
     begin
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.clean_with(:truncation)
@@ -59,7 +64,7 @@ RSpec.configure do |config|
     end
   end
 
-config.before(:each) do
+  config.before(:each) do
     DatabaseCleaner.strategy = :transaction
   end
 
@@ -72,7 +77,9 @@ config.before(:each) do
   end
 
   config.after(:each) do |example|
-    puts page.driver.browser.manage.logs.get("browser")  if example.exception
+    if defined?(page) && example.exception
+      puts page.driver.browser.manage.logs.get("browser")
+    end
   end
 
   config.append_after(:each) do

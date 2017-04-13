@@ -1,0 +1,24 @@
+%h2= t('devise.sessions.new.sign_in')
+
+= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+
+  = f.label :email do
+    = t "activerecord.attributes.user.email"
+    = f.email_field :email, class: "pt-input pt-fill", autofocus: true, spellcheck: false
+
+  = f.label :password do
+    = t "activerecord.attributes.user.password"
+    = f.password_field :password, class: "pt-input pt-fill", autocomplete: "off"
+
+  - if devise_mapping.rememberable?
+    = f.label :remember_me, class: "field pt-control pt-checkbox" do
+      = t "activerecord.attributes.user.remember_me"
+      = f.check_box :remember_me
+      %span.pt-control-indicator
+
+  = f.submit t('devise.sessions.new.sign_in'), class: "o-button pt-button pt-intent-primary"
+  %a.o-button.pt-button.pt-icon-log-in.oauth-icon-google{role: 'button',
+    tabindex: '0', href: omniauth_authorize_path('authentication_strategy', 'google')}
+    = t('devise.shared.links.sign_in_with_provider', provider: 'google')
+
+= render "devise/shared/links"
