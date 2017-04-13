@@ -21,7 +21,7 @@ class Reader < ApplicationRecord
     info = auth.info
     email = info.email
 
-    where(email: email).first_or_create do |reader|
+    where(email: email).first_or_create! do |reader|
       name = info.name
 
       reader.email = email

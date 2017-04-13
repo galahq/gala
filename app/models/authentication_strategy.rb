@@ -6,7 +6,7 @@ class AuthenticationStrategy < ApplicationRecord
   validates :reader, presence: true
 
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |strategy|
+    where(provider: auth.provider, uid: auth.uid).first_or_create! do |strategy|
       strategy.reader = Reader.from_omniauth(auth)
     end
   end
