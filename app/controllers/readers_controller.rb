@@ -25,6 +25,7 @@ class ReadersController < ApplicationController
 
   # GET /readers/1/edit
   def edit
+    authorize_action_for @reader
   end
 
   # POST /readers
@@ -46,8 +47,7 @@ class ReadersController < ApplicationController
   # PATCH/PUT /readers/1
   # PATCH/PUT /readers/1.json
   def update
-    puts @reader
-    puts params
+    authorize_action_for @reader
     respond_to do |format|
       if @reader.update(reader_params)
         bypass_sign_in @reader if reader_params.has_key? :password
