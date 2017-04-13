@@ -15,6 +15,8 @@ class Reader < ApplicationRecord
   has_many :enrollments, -> { includes(:case) }, dependent: :delete_all
   has_many :cases, through: :enrollments
 
+  before_update :set_created_password, if: :encrypted_password_changed?
+
   def self.from_omniauth(auth)
     info = auth.info
     email = info.email
@@ -24,6 +26,7 @@ class Reader < ApplicationRecord
 
       reader.email = email
       reader.password = Devise.friendly_token[0,20]
+      reader.created_password = false
       reader.name = name
       reader.initials = name.split(" ").map(&:first).join
       reader.image_url = info.image
@@ -58,11 +61,12 @@ class Reader < ApplicationRecord
     "#{name} <#{email}>"
   end
 
+  def providers
+    authentication_strategies.pluck :provider
+  end
+
   private
-  def generate_authentication_token
-    loop do
-      token = Devise.friendly_token
-      break token unless Reader.where(authentication_token: token).first
-    end
+  def set_created_password
+    self.created_password = true
   end
 end
