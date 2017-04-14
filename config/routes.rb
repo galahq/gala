@@ -65,6 +65,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace 'authentication_strategies' do
+    namespace 'config' do
+      get :lti
+    end
+  end
+
   devise_for :authentication_strategies, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'authentication_strategies/omniauth_callbacks',
   }
