@@ -208,6 +208,7 @@
   background-color: $purple
   color: $white
   padding: 0.5em 0
+  flex-wrap: wrap
 
   a:hover
     background-color: transparent
@@ -218,8 +219,29 @@
   +justify-content(flex-start)
 
   @media screen and (max-width: $mobileCutoff)
-    +flex-flow(column wrap)
+    display: block
 
+  &--empty
+    @media screen and (max-width: 713px)
+      display: block
+
+    .catalog-dashboard__reader
+      text-align: right
+      margin: 0.5rem 1rem 0.4rem 4.4rem
+      order: 1
+
+      +flex(0 0 auto)
+
+      @media screen and (max-width: 713px)
+        margin: 0.5rem
+        text-align: left
+        width: 10em
+        margin-left: 4.5rem
+
+      @media screen and (max-width: $mobileCutoff)
+        margin-left: 1rem
+
+  @media screen and (max-width: $mobileCutoff)
     +align-content(flex-start)
 
   h1, h2, h3
@@ -238,16 +260,21 @@
   &__reader
     text-align: right
     margin: 0.5rem 1rem 0.4rem 4.4rem
+    order: 1
 
     +flex(0 0 auto)
 
-    @media screen and (max-width: $mobileCutoff)
+    @media screen and (max-width: 713px)
       margin: 0.5rem
+      width: 7em
+      margin-left: 4.5rem
+
+    @media screen and (max-width: $mobileCutoff)
+      margin-left: 1rem
       text-align: left
-      width: 10em
 
       h2 a.catalog-dashboard__edit
-        margin-left: 0.5em
+        margin-left: 0
         display: inline
 
     @media screen and (max-width: 375px)
@@ -277,6 +304,13 @@
     +flex-flow(row wrap)
 
     +justify-content(flex-start)
+
+    flex: 1 1 10em
+
+    order: 2
+
+    @media screen and (max-width: $mobileCutoff)
+      margin-left: 0.6em
 
     &__case
       +flexbox
@@ -326,38 +360,55 @@
           box-shadow: 0 0 3em rgba(255, 255, 255, 0.3)
 
   &__my-cases--empty
-    @extend .catalog-dashboard__my-cases
-
-    +flex-flow(row)
-
     &__case
       @extend .catalog-dashboard__my-cases__case
-
       pointer-events: none
       color: $darkPurple !important
+      order: 2
+
+      @media screen and (max-width: 713px)
+        margin-right: 3rem
+        margin-left: 1rem
+        float: right
+        order: 1
 
       @media screen and (max-width: $mobileCutoff)
-        width: 7em
+        margin-right: 0.5rem
 
     &__intro
-      +flex(1 3 20em)
+      +flex(1 0 20em)
 
-      margin: 0.27rem 0.5rem 0.27rem 0
+      margin: 0.6rem 4rem 0.27rem 0
       hyphens: auto
       -webkit-hyphens: auto
+      order: 3
+
+      h2
+        font-size: 1em
+        text-transform: uppercase
+        font-weight: 600
+        letter-spacing: 0.04em
+        margin-bottom: 0.5em
+
+      @media screen and (max-width: 713px)
+        margin-left: 4.5rem
+        h2
+          margin-top: 0.5em
 
       @media screen and (max-width: $mobileCutoff)
-        +flex(1 3 12em)
-
-        width: 60%
-        margin: 0.5rem
+        margin-left: 1rem
+        margin-right: 1rem
 
       ul, p
-        margin: 0.25em 0
+        margin: 0.3em 0
         list-style: none
+        @media screen and (max-width: 713px)
+          line-height: 1.3em
 
         & > li
           text-indent: -1em
+          @media screen and (max-width: 713px)
+            margin-bottom: 0.25em
 
         li:before
           text-indent: -1em
