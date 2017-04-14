@@ -322,8 +322,11 @@
       color: $white !important
       width: 10em
 
-      @media screen and (max-width: $mobileCutoff)
-        width: 9em
+      @media screen and (max-width: 465px)
+        width: 8.6em
+
+      @media screen and (max-width: 400px) and (min-width: 361px)
+        width: 7.7em
 
       transition: transform 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
       position: relative
@@ -343,6 +346,12 @@
         height: 8em
         transition: box-shadow 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
         box-shadow: 0 0 3em rgba(255, 255, 255, 0)
+        @media screen and (max-width: 465px)
+          width: 7.8em
+          height: 7.8em
+        @media screen and (max-width: 400px) and (min-width: 361px)
+          width: 7.2em
+          height: 7.2em
 
       strong
         text-transform: uppercase
