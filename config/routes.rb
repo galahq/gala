@@ -71,6 +71,11 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace 'catalog' do
+    get :home
+    match :content_items, via: [:get, :post]
+  end
+
   devise_for :authentication_strategies, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'authentication_strategies/omniauth_callbacks',
   }

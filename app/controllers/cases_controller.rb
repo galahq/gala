@@ -16,7 +16,7 @@ class CasesController < ApplicationController
     authenticate_reader! unless @case.published
     authorize_action_for @case
 
-    render layout: 'application'
+    render layout: 'with_header'
   end
 
   def new
