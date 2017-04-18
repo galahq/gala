@@ -1,16 +1,5 @@
-.catalog-cases
-  .catalog-cases-index
-    - @cases.each do |kase|
+#content-items-app{data: {return_data: @data,
+  return_url: @return_url,
+  items: render(template: 'catalog/content_items', formats: [:json])}}
 
-      - background = "background-image:linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(#{ix_cover_image kase, :featured})"
-
-      = link_to "#", class: 'BillboardTitle catalog-case catalog-content-item', style: background do
-        .catalog-case-credits
-          %h2
-            %span.c-kicker= kase.kicker
-            = kase.title
-          %p{style: "display: none"}
-            - unless kase.dek.blank?
-              = kase.dek
-            - else
-              = kase.case_authors
+= javascript_pack_tag 'content_items'

@@ -244,18 +244,18 @@ Devise.setup do |config|
   config.omniauth :facebook, ENV["FACEBOOK_CLIENT_ID"], ENV["FACEBOOK_CLIENT_SECRET"]
   config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"], {name: "google"}
   config.omniauth :lti, oauth_credentials: {test: "secret"}
-  
-  # unless Rails.env.production?
-  #   OmniAuth.config.test_mode = true
-  #   OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new({
-  #     provider: 'google',
-  #     uid: '123456',
-  #     info: {
-  #       email: 'test@gmail.com',
-  #       name: 'Test User',
-  #     }
-  #   })
-  # end
+
+  if Rails.env.test?
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new({
+      provider: 'google',
+      uid: '123456',
+      info: {
+        email: 'test@gmail.com',
+        name: 'Test User',
+      }
+    })
+  end
 
 
   # ==> Warden configuration

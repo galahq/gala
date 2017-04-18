@@ -12,8 +12,10 @@ class CatalogController < ApplicationController
 
   # LTI Assignment Selection wants to POST a ContentItemSelectionRequest
   def content_items
-    @cases = Case.where(published: true).sort_by &:kicker
+    I18n.locale = params[:launch_presentation_locale]
+    @items = Case.where(published: true).sort_by(&:kicker)
     @return_url = params[:content_item_return_url]
+    @data = params[:data]
     render layout: "embed"
   end
 end
