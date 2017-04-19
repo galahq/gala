@@ -1,8 +1,7 @@
 import React from 'react'
 import { DragSource } from 'react-dnd'
 
-export function ReaderIcon () {
-  let { initials, imageUrl } = this.props
+export function ReaderIcon ({ initials, imageUrl }) {
   return (
     <div id="reader-icon" style={{ backgroundImage: `url(${imageUrl})` }}>
       {imageUrl === null ? initials : ''}
@@ -52,7 +51,7 @@ class ReaderTag extends React.Component {
             <div className="enrollments-reader-plus">+</div>
           </span>
         </div>
-      </li>,
+      </li>
     )
   }
 }

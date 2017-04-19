@@ -29,10 +29,10 @@ class ReadersList extends React.Component {
   }
 }
 
-function GroupsList () {
+function GroupsList ({ groups }) {
   return (
     <ul>
-      {this.props.groups.map(group => {
+      {groups.map(group => {
         return <Group key={group.id} group={group} />
       })}
     </ul>
@@ -54,19 +54,18 @@ class Tab extends React.Component {
           changeTab(name)
         },
       },
-      name,
+      name
     )
   }
 }
 
-function SelectedReadersBucket () {
-  let { selectedReaders } = this.props
+function SelectedReadersBucket ({ selectedReaders, handleClearSelection }) {
   if (selectedReaders.length > 0) {
     return (
       <div className="enrollments-section-readers-bucket">
         <h3>
           <span>Selected Readers</span>
-          <a onClick={this.props.handleClearSelection}>Clear</a>
+          <a onClick={handleClearSelection}>Clear</a>
         </h3>
         <SelectedReaders selectedReaders={selectedReaders} />
       </div>
@@ -160,7 +159,6 @@ export class ReadersSection extends React.Component {
         <Filter
           filterString={filterString}
           model={model}
-          selectReader={this.selectReader}
           onChange={this.handleChangeFilter}
           onSubmit={this.handleSubmit}
         />

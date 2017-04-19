@@ -1,9 +1,8 @@
 import React from 'react'
 
-export function Filter () {
-  let { model, filterString, onChange } = this.props
+export function Filter ({ model, filterString, onSubmit, onChange }) {
   return (
-    <form onSubmit={this.props.onSubmit}>
+    <form onSubmit={onSubmit}>
       <label htmlFor={`filter-${model}`}>Filter {model}:</label>
       <input
         id={`filter-${model}`}
