@@ -13,6 +13,7 @@
   <blti:description>Description of MSC</blti:description>
   <blti:launch_url><%= authentication_strategy_lti_omniauth_callback_url %></blti:launch_url>
   <blti:extensions platform="canvas.instructure.com">
+    <lticm:property name="oauth_compliant">true</lticm:property>
     <lticm:property name="privacy_level">public</lticm:property>
     <lticm:property name="domain">www.learnmsc.org</lticm:property>
     <lticm:options name="course_navigation">

@@ -12,7 +12,6 @@ function contentItemSelectionMessageData (
   returnData: string,
   itemUrl: string
 ): { [string]: string } {
-  const ltiOmniauthCallback = `${location.origin}/authentication_strategies/auth/lti/callback`
   return {
     lti_message_type: 'ContentItemSelection',
     lti_version: 'LTI-1p0',
@@ -22,15 +21,10 @@ function contentItemSelectionMessageData (
       '@graph': [
         {
           '@type': 'LtiLinkItem',
-          url: ltiOmniauthCallback,
+          url: itemUrl,
           mediaType: 'application/vnd.ims.lti.v1.ltilink',
-          title: itemUrl,
-          text: itemUrl,
           placementAdvice: {
             presentationDocumentTarget: 'window',
-          },
-          custom: {
-            redirect: itemUrl,
           },
         },
       ],
