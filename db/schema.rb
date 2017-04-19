@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170412175954) do
+ActiveRecord::Schema.define(version: 20170419172037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,8 @@ ActiveRecord::Schema.define(version: 20170412175954) do
     t.hstore   "name_i18n"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "context_id"
+    t.index ["context_id"], name: "index_groups_on_context_id", using: :btree
   end
 
   create_table "notifications", force: :cascade do |t|
