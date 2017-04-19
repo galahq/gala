@@ -59,4 +59,10 @@ Rails.application.configure do
     Bullet.console = true
   end
 
+  if ENV["LOCALHOST_SSL"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
+
 end

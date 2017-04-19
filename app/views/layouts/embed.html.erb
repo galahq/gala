@@ -1,0 +1,11 @@
+<header style="justify-content: center">
+  <%= link_to root_path, id: "logo" do %>
+    <%= inline_svg 'msc-logo.svg' %>
+  <% end %>
+</header>
+
+<div class="window">
+  <%= yield %>
+</div>
+
+<% parent_layout 'application' %>

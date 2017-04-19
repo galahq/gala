@@ -24,3 +24,6 @@ node_modules/
 app/assets/javascripts/react
 /public/packs
 /node_modules
+
+localhost.crt
+localhost.key

@@ -64,6 +64,7 @@ GEM
     arel (7.1.1)
     authority (3.2.0)
       activesupport (>= 3.0.0)
+    awesome_print (1.7.0)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -376,6 +377,7 @@ DEPENDENCIES
   acts_as_list
   ahoy_matey
   authority
+  awesome_print
   bourbon
   bullet
   byebug

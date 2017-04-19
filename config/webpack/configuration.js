@@ -13,8 +13,13 @@ const paths = safeLoad(readFileSync(join(configPath, 'paths.yml'), 'utf8'))[
 const devServer = safeLoad(
   readFileSync(join(configPath, 'development.server.yml'), 'utf8')
 )[env.NODE_ENV]
+
+const devPublicPath = env.LOCALHOST_SSL
+  ? `https://localhost:${devServer.port}/`
+  : `http://${devServer.host}:${devServer.port}/`
+
 const publicPath = env.NODE_ENV !== 'production' && devServer.enabled
-  ? `http://${devServer.host}:${devServer.port}/`
+  ? devPublicPath
   : `/${paths.entry}/`
 
 const devServerEntries = env.NODE_ENV !== 'production' && devServer.enabled

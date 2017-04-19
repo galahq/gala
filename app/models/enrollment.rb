@@ -6,11 +6,19 @@ class Enrollment < ApplicationRecord
 
   enum status: %i(student instructor treatment)
 
-  def upsert
-    enrollment = Self.find_or_initialize_by( case_id: case_id, reader_id: reader_id )
+  def self.upsert case_id:, reader_id:, status: student
+    enrollment = find_or_initialize_by( case_id: case_id, reader_id: reader_id )
     enrollment.status = status
-    enrollment.save! unless enrollment.persisted?
+    enrollment.save! if enrollment.changed?
     enrollment
+  end
+
+  def self.status_from_lti_role ext_roles
+    if ext_roles.match 'urn:lti:role:ims/lis/Instructor'
+      :instructor
+    else
+      :student
+    end
   end
 
   def as_json(options = {})

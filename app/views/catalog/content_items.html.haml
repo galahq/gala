@@ -1,0 +1,5 @@
+#content-items-app{data: {return_data: @data,
+  return_url: @return_url,
+  items: render(template: 'catalog/content_items', formats: [:json])}}
+
+= javascript_pack_tag 'content_items'
