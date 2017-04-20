@@ -26,7 +26,8 @@ class Case extends React.Component {
     this._subscribe = () => {
       if (typeof App === 'undefined') return
 
-      App.forum = App.cable.subscriptions.create('ForumChannel', { // eslint-disable-line
+      // eslint-disable-next-line
+      App.forum = App.cable.subscriptions.create('ForumChannel', {
         received: data => {
           if (data.comment) {
             this.props.addComment(JSON.parse(data.comment))
@@ -37,13 +38,14 @@ class Case extends React.Component {
         },
       })
 
-      App.readerNotification = App.cable.subscriptions.create( // eslint-disable-line
+      // eslint-disable-next-line
+      App.readerNotification = App.cable.subscriptions.create(
         'ReaderNotificationsChannel',
         {
           received: data => {
             this.props.handleNotification(JSON.parse(data.notification))
           },
-        },
+        }
       )
     }
   }
@@ -80,7 +82,7 @@ export default connect(
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),
-      state.caseData.slug,
+      state.caseData.slug
     ),
   }),
   {
@@ -89,5 +91,5 @@ export default connect(
     addComment,
     addCommentThread,
     handleNotification,
-  },
+  }
 )(Case)
