@@ -29,7 +29,7 @@ class Reader < ApplicationRecord
       reader.created_password = false
       reader.name = name
       reader.initials = name.split(" ").map(&:first).join
-      reader.image_url = info.image
+      reader.image_url = info.image unless auth.provider == :lti
 
       reader.confirmed_at = Time.zone.now
     end
@@ -38,10 +38,11 @@ class Reader < ApplicationRecord
   def self.new_with_session(params, session)
     super.tap do |reader|
       if data = session["devise.google_data"]
-        reader.name = data["info"]["name"]
-        reader.initials = data["info"]["name"].split(" ").map(&:first).join
-        reader.email = data["info"]["email"]
-        reader.image_url = data["info"]["image_url"]
+        info = data["info"]
+        reader.name = info["name"]
+        reader.initials = reader.name.split(" ").map(&:first).join
+        reader.email = info["email"]
+        reader.image_url = info["image_url"]
       end
     end
   end
