@@ -4,6 +4,13 @@ module ApplicationHelper
     self.output_buffer = render(file: "layouts/#{layout}")
   end
 
+  # Helpers for content_for blocks in view layouts
+  %i(headline background_image_url email_footer).each do |key|
+    ApplicationHelper.send(:define_method, key) do |val|
+      content_for(key) { val }
+    end
+  end
+
   def current_user
     current_reader || AnonymousUser.new
   end
@@ -23,4 +30,21 @@ module ApplicationHelper
       [I18n.t('name', locale: l), l]
     end
   end
+
+  def one_liner text
+    # Removes newlines
+    text.gsub(/\n/, '')
+  end
+
+  def md_button_to text, href
+    raw <<-MD
+<span class="o-button">[#{text}](#{href})</span>
+MD
+  end
+
+  def markdown md
+    redcarpet = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+    redcarpet.render md
+  end
+
 end

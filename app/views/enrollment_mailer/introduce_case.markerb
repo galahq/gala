@@ -1,0 +1,21 @@
+<% headline one_liner @case.title %>
+<% background_image_url ix_cover_image @case, :email %>
+
+Hello <%= @reader.initials %>,
+
+You were just enrolled in a new Michigan Sustainability Case.
+
+**<%= one_liner @case.kicker.titlecase %> — <%= one_liner @case.title %>**
+
+*<%= one_liner @case.dek %>*
+
+<% if @token %>
+[Create a password](<%= edit_password_url(@reader, reset_password_token: @token) %>) to read the case on the Michigan Sustainability Cases website.
+<% else %>
+<%= md_button_to "Read the case", case_url(@reader.locale, @case.slug) %>
+<% end %>
+
+<% email_footer <<-FOOTER
+You are receiving this email because you are enrolled in a course that includes one or more [Michigan Sustainability Cases](http://www.teachmsc.org) as part of the curriculum. If this sounds wrong, send us an email at [msc-contact@umich.edu](mailto://msc-contact@umich.edu).
+FOOTER
+%>
