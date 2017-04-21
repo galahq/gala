@@ -36,6 +36,12 @@ module ApplicationHelper
     text.gsub(/\n/, '')
   end
 
+  def md_button_to text, href
+    raw <<-MD
+<span class="o-button">[#{text}](#{href})</span>
+MD
+  end
+
   def markdown md
     redcarpet = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
     redcarpet.render md

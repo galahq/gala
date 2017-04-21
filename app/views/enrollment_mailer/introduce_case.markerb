@@ -12,7 +12,7 @@ You were just enrolled in a new Michigan Sustainability Case.
 <% if @token %>
 [Create a password](<%= edit_password_url(@reader, reset_password_token: @token) %>) to read the case on the Michigan Sustainability Cases website.
 <% else %>
-[<span class="o-button">Read the case</span>](<%= case_url(@reader.locale, @case.slug) %>)
+<%= md_button_to "Read the case", case_url(@reader.locale, @case.slug) %>
 <% end %>
 
 <% email_footer <<-FOOTER
