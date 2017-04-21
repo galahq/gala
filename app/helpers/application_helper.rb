@@ -30,4 +30,10 @@ module ApplicationHelper
       [I18n.t('name', locale: l), l]
     end
   end
+
+  def one_liner text
+    # Removes newlines
+    text.gsub(/\n/, '')
+  end
+
 end

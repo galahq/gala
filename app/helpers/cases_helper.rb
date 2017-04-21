@@ -16,6 +16,8 @@ module CasesHelper
               %w(w=1100 h=600)
             when :billboard
               %w(w=1280 h=540)
+            when :email
+              %w(w=470 h=95)
             end || []
     return "#{c.cover_url}?#{opts.join '&'}"
   end
