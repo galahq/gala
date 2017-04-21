@@ -1,13 +1,116 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style>
-      /* Email styles need to be inline */
-    </style>
-  </head>
+<html style="margin:0; padding: 0;">
 
-  <body>
-    <%= yield %>
-  </body>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style>
+    .c-message__detail p {
+      line-height: 1.3em;
+    }
+
+    .c-message__main {
+      font-size: 1.6em;
+      color: #493092;
+      font-style: italic;
+      margin: 1.5em;
+    }
+
+    a {
+      color: #326a9e;
+    }
+
+    .o-button {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      margin: 1.5em 2em;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      padding: 3px 10px;
+      vertical-align: middle;
+      min-width: 30px;
+      min-height: 30px;
+      line-height: 30px;
+      background: linear-gradient(to bottom, rgba(253,253,250,0.1), rgba(253,253,250,0)) left no-repeat,center no-repeat #7351D4;
+      box-shadow: inset 0 0 0 1px rgba(16,22,26,0.4), inset 0 -1px 0 rgba(16,22,26,0.2);
+      color: #FDFDFA;
+      font-weight: 600;
+    }
+
+    .o-button:hover {
+      background: linear-gradient(to bottom, #7155c2, #6344bc) left no-repeat,center no-repeat #6344BC;
+    }
+
+    .c-logo--show {
+      height: 100% !important;
+      width: 100% !important;
+    }
+
+    .c-logo--noshow {
+      display: none;
+    }
+  </style>
+
+
+</head>
+
+<body style="margin: 0">
+  <table style='
+    background-color: #f9f8f5;
+    margin: 0;
+    border-spacing: 0;
+    width: 100%;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    color: #262626;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+  '>
+    <tbody>
+       <tr>
+          <td style="box-sizing:border-box;font-size:14px;margin:0;vertical-align:top" valign="top"></td>
+          <td style="text-align: center;">
+            <img class="c-logo--show" width="0" height="0" src="https://msc-gala.s3.amazonaws.com/msclogo_onwhite.svg">
+            <img class="c-logo--noshow" style="width: 350px; height: 27px"  src="https://msc-gala.s3.amazonaws.com/msclogo_onwhite.png">
+          </td>
+          <td style="box-sizing:border-box;font-size:14px;margin:0;vertical-align:top" valign="top"></td>
+       </tr>
+       <tr>
+          <td style="box-sizing: border-box; font-size: 14px; margin: 0; vertical-align: top;"></td>
+          <td style="padding: 0 1em;">
+             <table style="max-width: 510px;width:100%;background-color: white;margin: 2em auto;border-radius: 4px;border-spacing: 0;box-shadow: 0 0.5em 1em #e7e6e3;">
+                <tbody>
+                   <tr style="background: #07345d;
+                   <% if content_for? :background_image_url %>
+                     background-size: cover;
+                     background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.498039)), url(<%= content_for :background_image_url %>);
+                   <% end %>
+                   width: 100%;border-bottom: 4px solid #7351D4;">
+                      <td style="padding: 1em 0;border-top-left-radius: 4px;border-top-right-radius: 4px;text-align: center;border-bottom: 4px solid #9471f7; ">
+                        <% if content_for? :headline %>
+                         <h3 style="color: white; font-weight: 600; margin: 1em 0">
+                           <%= content_for :headline %>
+                         </h3>
+                        <% end %>
+                      </td>
+                   </tr>
+                   <tr>
+                      <td class="c-message__detail" style="padding: 1.5em 2em">
+                         <%= yield %>
+                      </td>
+                   </tr>
+                </tbody>
+             </table>
+          </td>
+       </tr>
+        <tr>
+          <td style="box-sizing:border-box;font-size:14px;margin:0;vertical-align:top" valign="top"></td>
+          <td style="width: 500px; margin: 0 auto; text-align: center; font-size: 0.8em; color: #828c9a">
+             You are receiving this email from <a style="color: #828c9a" href="https://www.learnmsc.org/">Michigan Sustainability Cases</a>. <br>If you have questions, please email <a style="color: #828c9a" href="mailto://msc-contact@umich.edu">msc-contact@umich.edu</a>.
+          </td>
+          <td style="box-sizing:border-box;font-size:14px;margin:0;vertical-align:top" valign="top"></td>
+       </tr>
+    </tbody>
+  </table>
+</body>
 </html>
