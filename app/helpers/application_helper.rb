@@ -4,6 +4,13 @@ module ApplicationHelper
     self.output_buffer = render(file: "layouts/#{layout}")
   end
 
+  # Helpers for content_for blocks in view layouts
+  %i(headline background_image_url).each do |key|
+    ApplicationHelper.send(:define_method, key) do |val|
+      content_for(key) { val }
+    end
+  end
+
   def current_user
     current_reader || AnonymousUser.new
   end
