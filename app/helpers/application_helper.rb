@@ -5,7 +5,7 @@ module ApplicationHelper
   end
 
   # Helpers for content_for blocks in view layouts
-  %i(headline background_image_url).each do |key|
+  %i(headline background_image_url email_footer).each do |key|
     ApplicationHelper.send(:define_method, key) do |val|
       content_for(key) { val }
     end
@@ -34,6 +34,11 @@ module ApplicationHelper
   def one_liner text
     # Removes newlines
     text.gsub(/\n/, '')
+  end
+
+  def markdown md
+    redcarpet = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+    redcarpet.render md
   end
 
 end

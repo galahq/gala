@@ -106,7 +106,11 @@
         <tr>
           <td style="box-sizing:border-box;font-size:14px;margin:0;vertical-align:top" valign="top"></td>
           <td style="width: 500px; margin: 0 auto; text-align: center; font-size: 0.8em; color: #828c9a">
-             You are receiving this email from <a style="color: #828c9a" href="https://www.learnmsc.org/">Michigan Sustainability Cases</a>. <br>If you have questions, please email <a style="color: #828c9a" href="mailto://msc-contact@umich.edu">msc-contact@umich.edu</a>.
+             <% if content_for? :email_footer %>
+              <%= raw markdown content_for :email_footer %>
+             <% else %>
+               You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learnmsc.org/">Michigan Sustainability Cases</a>.
+             <% end %>
           </td>
           <td style="box-sizing:border-box;font-size:14px;margin:0;vertical-align:top" valign="top"></td>
        </tr>
