@@ -1,4 +1,5 @@
-// @flow
+/* @flow */
+
 import type { EditorState } from 'draft-js'
 
 // Redux state
@@ -13,6 +14,8 @@ export type State = {
   +pagesById: PagesState,
   +podcastsById: PodcastsState,
   +statistics: StatisticsState,
+  +quiz: QuizState,
+  needsPreTest: boolean,
   +ui: UIState,
 }
 
@@ -71,6 +74,11 @@ export type PagesState = {
 
 export type PodcastsState = {
   +[podcastId: string]: Podcast,
+}
+
+export type QuizState = {
+  needsPreTest: boolean,
+  questions: Question[],
 }
 
 export type StatisticsState =
@@ -187,9 +195,10 @@ export type ReplyToThreadNotification = {
   +commentThreadId: number,
 }
 
-export type Notification =
-  & { id: number, message: string }
-  & ReplyToThreadNotification
+export type Notification = {
+  id: number,
+  message: string,
+} & ReplyToThreadNotification
 
 export type Page = {
   +cards: number[],
@@ -219,6 +228,12 @@ export type PodcastCreditList = {
   +guests: { +name: string, +title: string }[],
   +hosts: string[],
   +hosts_string: string,
+}
+
+export type Question = {
+  id: string,
+  content: string,
+  options: string[],
 }
 
 export type Reader = {

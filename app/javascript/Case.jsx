@@ -14,6 +14,7 @@ import {
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
 import CaseElement from 'elements/CaseElement'
+import PreTest from 'quiz/PreTest'
 
 import { Toaster } from '@blueprintjs/core'
 
@@ -68,6 +69,12 @@ class Case extends React.Component {
           <Router basename={this.props.basename}>
             <Switch>
               <Route exact path="/" component={CaseOverview} />
+              {this.props.needsPretest &&
+                <Route
+                  path="/*"
+                  children={routeProps =>
+                    routeProps.match && <PreTest {...routeProps} />}
+                />}
               <Route path="/:position/" component={CaseElement} />
             </Switch>
           </Router>
@@ -79,6 +86,7 @@ class Case extends React.Component {
 
 export default connect(
   (state: State) => ({
+    needsPretest: state.quiz.needsPreTest,
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),

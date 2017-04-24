@@ -1,3 +1,5 @@
+/* @flow */
+
 import type { UIState } from 'redux/state'
 import type {
   HighlightEdgenoteAction,
@@ -23,11 +25,13 @@ type Action =
   | DisplayToastAction
 
 export default function ui (state: ?UIState, action: Action): UIState {
-  if (typeof state === 'undefined') {
+  if (state == null) {
     return {
       openedCitation: {},
-      acceptingSelection: false,
+      activeEdgenote: null,
+      highlightedEdgenote: null,
       hoveredCommentThread: null,
+      acceptingSelection: false,
       commentInProgress: {},
       toaster: null,
     }

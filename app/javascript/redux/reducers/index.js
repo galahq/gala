@@ -1,4 +1,5 @@
-// @flow
+/* @flow */
+
 import { combineReducers } from 'redux'
 
 import caseData from './caseData'
@@ -9,6 +10,7 @@ import activitiesById from './activitiesById'
 import commentThreadsById from './commentThreadsById'
 import commentsById from './commentsById'
 import cardsById from './cards'
+import quiz from './quiz'
 import edit from './edit'
 import statistics from './statistics'
 import ui from './ui'
@@ -23,6 +25,7 @@ const reducer = combineReducers({
   commentThreadsById,
   commentsById,
   statistics,
+  quiz,
   edit,
   ui,
 })

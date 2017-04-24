@@ -63,6 +63,12 @@
       "afterOpening": "never"
     }],
     "no-use-before-define": 0,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "flowtype/require-valid-file-annotation": [
+      2,
+      "always", {
+        "annotationStyle": "block"
+      }
+    ]
   }
 }

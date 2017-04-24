@@ -1,3 +1,8 @@
+/**
+ * @providesModule CaseOverview
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -16,7 +21,7 @@ const CaseOverview = ({ editing, signInForm, reader }) => {
           ? <div
             className="dialog"
             dangerouslySetInnerHTML={{ __html: signInForm }}
-            />
+          />
           : !reader.enrollment ? <EnrollForm /> : null}
         <TableOfContents />
       </aside>
