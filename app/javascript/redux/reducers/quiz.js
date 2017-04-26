@@ -5,8 +5,12 @@
 
 import type { QuizState } from 'redux/state'
 
-export default function quiz (
-  state: QuizState = (window.caseData.quiz: QuizState)
-) {
+const getInitialQuizState = (): QuizState =>
+  (window.caseData.quiz: QuizState) || {
+    needsPretest: false,
+    questions: [],
+  }
+
+export default function quiz (state: QuizState = getInitialQuizState()) {
   return state
 }

@@ -64,21 +64,19 @@ class Case extends React.Component {
   }
 
   render () {
+    const { kicker, basename, shouldShowPretest } = this.props
     return (
-      <DocumentTitle
-        title={`${this.props.kicker} — Michigan Sustainability Cases`}
-      >
+      <DocumentTitle title={`${kicker} — Michigan Sustainability Cases`}>
         <div id="Case">
           <StatusBar />
-          <Router basename={this.props.basename}>
+          <Router basename={basename}>
             <Switch>
               <Route exact path="/" component={CaseOverview} />
-              {this.props.needsPretest &&
-                <Route
-                  path="/*"
-                  children={routeProps =>
-                    routeProps.match && <PreTest {...routeProps} />}
-                />}
+              <Route
+                path={shouldShowPretest ? '/*' : 'never match'}
+                children={routeProps =>
+                  routeProps.match && <PreTest {...routeProps} />}
+              />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
           </Router>
@@ -90,7 +88,8 @@ class Case extends React.Component {
 
 export default connect(
   (state: State) => ({
-    needsPretest: state.quiz.needsPretest,
+    shouldShowPretest: state.quiz.needsPretest &&
+      state.quiz.questions.length > 0,
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),

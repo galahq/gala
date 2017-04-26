@@ -10,8 +10,8 @@ class Quiz < ApplicationRecord
       .where(id: Question.requiring_response_from(reader).select(:quiz_id))
   end
 
-  def requires_response_from? reader
-    questions.requiring_response_from(reader).any?
+  def requires_response_from? reader, in_group:
+    questions.requiring_response_from(reader, in_group: in_group).any?
   end
 
 end

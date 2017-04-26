@@ -86,10 +86,11 @@ if reader_signed_in?
   end
 
   json.quiz do
-    json.needs_pretest @group.deployment_for_case(@case).needs_pretest
-    if @quiz.requires_response_from? current_reader
+    quiz = @deployment.quiz
+    json.needs_pretest @deployment.needs_pretest?
+    if quiz && quiz.requires_response_from?(current_reader, in_group: @group)
       json.questions do
-        json.array! @quiz.questions, :id, :content, :options
+        json.array! quiz.questions, :id, :content, :options
       end
     else
     end

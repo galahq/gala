@@ -19,9 +19,9 @@ class CasesController < ApplicationController
     # Eventually we'll allow the user to choose from which group's perspective
     # they'll read the case, and then @group will come from params and quiz will
     # come from group
-    @group = current_reader.groups.joins(:deployments).where(deployments: {quiz: @case.quizzes.requiring_response_from(current_reader).first}).first
+    @group = current_user.groups.first
 
-    @quiz = @group.deployment_for_case(@case).quiz
+    @deployment = @group.deployment_for_case(@case)
 
     render layout: 'with_header'
   end

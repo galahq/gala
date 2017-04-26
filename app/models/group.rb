@@ -16,6 +16,6 @@ class Group < ApplicationRecord
   end
 
   def deployment_for_case kase
-    deployments.find_by(case: kase)
+    deployments.find_by(case: kase) || GenericDeployment.new
   end
 end
