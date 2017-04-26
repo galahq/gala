@@ -15,7 +15,6 @@ export type State = {
   +podcastsById: PodcastsState,
   +statistics: StatisticsState,
   +quiz: QuizState,
-  needsPreTest: boolean,
   +ui: UIState,
 }
 
@@ -77,8 +76,8 @@ export type PodcastsState = {
 }
 
 export type QuizState = {
-  needsPreTest: boolean,
-  questions: Question[],
+  +needsPretest: boolean,
+  +questions: Question[],
 }
 
 export type StatisticsState =

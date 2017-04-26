@@ -1,3 +1,7 @@
+/**
+ * @providesModule Case
+ * @flow
+ */
 import React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
@@ -86,7 +90,7 @@ class Case extends React.Component {
 
 export default connect(
   (state: State) => ({
-    needsPretest: state.quiz.needsPreTest,
+    needsPretest: state.quiz.needsPretest,
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),

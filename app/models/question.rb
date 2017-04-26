@@ -6,6 +6,10 @@ class Question < ApplicationRecord
 
   validates :content_i18n, presence: true
 
+  def self.requiring_response_from reader
+    where.not(id: Answer.by_reader(reader).select(:question_id))
+  end
+
   def multiple_choice?
     question_type == :multiple_choice
   end

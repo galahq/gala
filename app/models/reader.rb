@@ -7,12 +7,13 @@ class Reader < ApplicationRecord
 
   rolify
 
-  has_many :authentication_strategies, dependent: :delete_all
-  has_many :comment_threads
-  has_many :comments
-  has_many :group_memberships, dependent: :delete_all
+  has_many :authentication_strategies, dependent: :destroy
+  has_many :comment_threads, dependent: :nullify
+  has_many :comments, dependent: :nullify
+  has_many :group_memberships, dependent: :destroy
   has_many :groups, through: :group_memberships
-  has_many :enrollments, -> { includes(:case) }, dependent: :delete_all
+  has_many :deployments, through: :groups
+  has_many :enrollments, -> { includes(:case) }, dependent: :destroy
   has_many :cases, through: :enrollments
   has_many :answers, dependent: :destroy
   has_many :quizzes, through: :answers

@@ -3,6 +3,8 @@ class Answer < ApplicationRecord
   belongs_to :quiz
   belongs_to :reader
 
+  scope :by_reader, -> (reader) { where reader: reader }
+
   before_save :cache_correctness
 
   private

@@ -16,6 +16,13 @@ class CasesController < ApplicationController
     authenticate_reader! unless @case.published
     authorize_action_for @case
 
+    # Eventually we'll allow the user to choose from which group's perspective
+    # they'll read the case, and then @group will come from params and quiz will
+    # come from group
+    @group = current_reader.groups.joins(:deployments).where(deployments: {quiz: @case.quizzes.requiring_response_from(current_reader).first}).first
+
+    @quiz = @group.deployment_for_case(@case).quiz
+
     render layout: 'with_header'
   end
 

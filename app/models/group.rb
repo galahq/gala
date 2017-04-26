@@ -1,7 +1,8 @@
 class Group < ApplicationRecord
-  has_many :comment_threads, dependent: :delete_all
-  has_many :group_memberships, dependent: :delete_all
+  has_many :comment_threads, dependent: :destroy
+  has_many :group_memberships, dependent: :destroy
   has_many :readers, through: :group_memberships
+  has_many :deployments, dependent: :destroy
 
   translates :name
 
@@ -12,5 +13,9 @@ class Group < ApplicationRecord
     group.name = name
     group.save! if group.changed?
     group
+  end
+
+  def deployment_for_case kase
+    deployments.find_by(case: kase)
   end
 end
