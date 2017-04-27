@@ -1,3 +1,4 @@
+# Mock public API in GlobalGroup
 class Group < ApplicationRecord
   has_many :comment_threads, dependent: :destroy
   has_many :group_memberships, dependent: :destroy

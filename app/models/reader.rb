@@ -1,3 +1,4 @@
+# Mock public API in AnonymousReader
 class Reader < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
          :trackable, :validatable, :confirmable

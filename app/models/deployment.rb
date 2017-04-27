@@ -1,3 +1,4 @@
+# Mock public API in GenericDeployment
 class Deployment < ApplicationRecord
   belongs_to :case
   belongs_to :group
@@ -5,5 +6,9 @@ class Deployment < ApplicationRecord
 
   def needs_pretest?
     answers_needed > 1
+  end
+
+  def reader_needs_pretest? reader
+    answers_needed - quiz.number_of_responses_from(reader) > 1
   end
 end

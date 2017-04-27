@@ -14,4 +14,9 @@ class Quiz < ApplicationRecord
     questions.requiring_response_from(reader, in_group: in_group).any?
   end
 
+  def number_of_responses_from reader
+    answers.merge(reader.answers).group(:question_id).count(:question_id)
+      .values.min || 0
+  end
+
 end
