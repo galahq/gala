@@ -17,17 +17,15 @@ import type { Question as QuestionT } from 'redux/state'
 import type { QuizProviderProps } from './Quiz'
 
 type Props = RouteProps & QuizProviderProps
-const PreTest = (props: Props) => {
-  const {
-    answers,
-    canSubmit,
-    handleChange,
-    handleSubmit,
-    history,
-    match,
-    questions,
-  } = props
-
+const PreTest = ({
+  answers,
+  canSubmit,
+  handleChange,
+  handleSubmit,
+  history,
+  match,
+  questions,
+}: Props) => {
   return (
     <div style={{ height: '100%' }}>
       <Route component={CaseOverview} />
@@ -64,7 +62,6 @@ const PreTest = (props: Props) => {
               isDisabled={canSubmit}
               content="Please answer all the questions (I18n)"
               position={Position.TOP}
-              tooltipClassName="pt-dark"
             >
               <Button
                 disabled={!canSubmit}

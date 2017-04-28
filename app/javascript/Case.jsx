@@ -19,6 +19,7 @@ import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
 import CaseElement from 'elements/CaseElement'
 import PreTest from 'quiz/PreTest'
+import PostTest from 'quiz/PostTest'
 
 import { Toaster } from '@blueprintjs/core'
 
@@ -64,7 +65,7 @@ class Case extends React.Component {
   }
 
   render () {
-    const { kicker, basename, shouldShowPretest } = this.props
+    const { kicker, basename, needsPretest, needsPosttest } = this.props
     return (
       <DocumentTitle title={`${kicker} — Michigan Sustainability Cases`}>
         <div id="Case">
@@ -72,9 +73,10 @@ class Case extends React.Component {
           <Router basename={basename}>
             <Switch>
               <Route exact path="/" component={CaseOverview} />
+              <Route path={needsPretest ? '/*' : 'miss'} component={PreTest} />
               <Route
-                path={shouldShowPretest ? '/*' : 'never match'}
-                component={PreTest}
+                path={needsPosttest ? '/quiz/' : 'miss'}
+                component={PostTest}
               />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
@@ -87,8 +89,8 @@ class Case extends React.Component {
 
 export default connect(
   (state: State) => ({
-    shouldShowPretest: state.quiz.needsPretest &&
-      state.quiz.questions.length > 0,
+    needsPretest: state.quiz.needsPretest,
+    needsPosttest: state.quiz.needsPosttest,
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),

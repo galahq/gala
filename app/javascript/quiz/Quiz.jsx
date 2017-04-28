@@ -11,8 +11,8 @@ import { submitQuiz } from 'redux/actions'
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State) {
-  if (state.quiz.needsPretest !== true) {
-    throw new Error('trying to show pretest when not needed')
+  if (!state.quiz.needsPretest && !state.quiz.needsPosttest) {
+    throw new Error('trying to present quiz when not needed')
   }
 
   const { id, questions } = state.quiz
@@ -37,7 +37,7 @@ type QuizDelegateProps = {
   handleSubmit: (e: SyntheticMouseEvent) => void,
 }
 
-export type QuizProviderProps = QuizProps & QuizState & QuizDelegateProps
+export type QuizProviderProps = QuizDelegateProps & QuizProps & QuizState
 
 export function providesQuiz (
   QuizPresenter: <P: { [string]: any }>(props: P) => ?React$Element<any>
