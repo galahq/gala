@@ -16,11 +16,7 @@ class CasesController < ApplicationController
     authenticate_reader! unless @case.published
     authorize_action_for @case
 
-    # Eventually we'll allow the user to choose from which group's perspective
-    # they'll read the case, and then @group will come from params and quiz will
-    # come from group
-    @group = current_user.groups.first
-
+    @group = Group.active_for_session session
     @deployment = @group.deployment_for_case(@case)
 
     render layout: 'with_header'

@@ -75,10 +75,17 @@ export type PodcastsState = {
   +[podcastId: string]: Podcast,
 }
 
-export type QuizState = {
-  +needsPretest: boolean,
-  +questions: Question[],
+export type QuizNecessity<Pre: boolean, Post: boolean> = {
+  +needsPretest: Pre,
+  +needsPosttest: Post,
 }
+
+export type QuizState =
+  | QuizNecessity<false, false>
+  | (QuizNecessity<boolean, boolean> & {
+    +id: number,
+    +questions: Question[],
+  })
 
 export type StatisticsState =
   | false

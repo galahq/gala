@@ -16,6 +16,10 @@ class Group < ApplicationRecord
     group
   end
 
+  def self.active_for_session s
+    find_by_id(s[:active_group_id]) || GlobalGroup.new
+  end
+
   def deployment_for_case kase
     deployments.find_by(case: kase) || GenericDeployment.new
   end

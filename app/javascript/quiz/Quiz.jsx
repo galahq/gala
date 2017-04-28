@@ -6,17 +6,30 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import { submitQuiz } from 'redux/actions'
+
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State) {
+  if (state.quiz.needsPretest !== true) {
+    throw new Error('trying to show pretest when not needed')
+  }
+
+  const { id, questions } = state.quiz
   return {
-    questions: state.quiz.questions,
+    id,
+    questions,
   }
 }
 
 import type { Question } from 'redux/state'
 
-type QuizProps = { questions: Question[], answers: QuizState }
+type QuizProps = {
+  id: number,
+  questions: Question[],
+  submitQuiz: typeof submitQuiz,
+  answers: QuizState,
+}
 type QuizState = { [questionId: string]: string }
 type QuizDelegateProps = {
   canSubmit: boolean,
@@ -48,7 +61,9 @@ export function providesQuiz (
         }))
       }
 
-      this._handleSubmit = () => {}
+      this._handleSubmit = () => {
+        this.props.submitQuiz(this.props.id, this.state)
+      }
     }
 
     render () {
@@ -67,5 +82,5 @@ export function providesQuiz (
     }
   }
 
-  return connect(mapStateToProps)(QuizProvider)
+  return connect(mapStateToProps, { submitQuiz })(QuizProvider)
 }
