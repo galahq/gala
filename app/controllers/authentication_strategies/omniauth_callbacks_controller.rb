@@ -1,8 +1,6 @@
 class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :set_authentication_strategy, except: [:failure]
   before_action :set_reader, except: [:failure]
-  before_action :set_case, only: [:lti]
-  before_action :set_group, only: [:lti]
 
   def google
     if @authentication_strategy.persisted?
@@ -15,9 +13,16 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def lti
     if @authentication_strategy.persisted?
+      set_case
+      set_group
+      
       sign_in @reader
+
       add_reader_to_group
+      session[:active_group_id] = @group.id
+
       enroll_reader_in_case if @case
+
       redirect_to redirect_url
     else
       session["devise.lti_data"] = request.env["omniauth.auth"]
@@ -28,6 +33,7 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
   def failure
     redirect_to root_path
   end
+
 
   private
   def set_authentication_strategy
