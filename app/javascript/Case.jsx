@@ -74,8 +74,7 @@ class Case extends React.Component {
               <Route exact path="/" component={CaseOverview} />
               <Route
                 path={shouldShowPretest ? '/*' : 'never match'}
-                children={routeProps =>
-                  routeProps.match && <PreTest {...routeProps} />}
+                component={PreTest}
               />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
