@@ -119,6 +119,7 @@ export type Activity = {
   +pdfUrl: string,
   +position: number,
   +title: string,
+  +url: string,
 }
 
 export type Card = {
@@ -217,6 +218,7 @@ export type Page = {
   +id: number,
   +position: number,
   +title: string,
+  +url: string,
 }
 
 export type Podcast = {
@@ -232,6 +234,7 @@ export type Podcast = {
   +position: number,
   +title: string,
   +uniques: number,
+  +url: string,
   +views: number,
 }
 

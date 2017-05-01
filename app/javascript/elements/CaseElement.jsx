@@ -1,3 +1,7 @@
+/**
+ * @providesModule CaseElement
+ * @flow
+ */
 import React from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect, Link } from 'react-router-dom'
@@ -34,10 +38,12 @@ function mapStateToProps (state: State, { match }) {
     kicker: state.caseData.kicker,
     reader: state.caseData.reader,
     editing: state.edit.inProgress,
-    next: nextElement && {
-      title: state[nextElementStore][nextElementId].title,
-      position: position + 2,
-    },
+    next: nextElement
+      ? {
+        title: state[nextElementStore][nextElementId].title,
+        position: `${position + 2}`,
+      }
+      : null,
     id: elementId,
     url: url.substring(1), // Because rails url_for helper returns /pages/:id
     title,
@@ -47,6 +53,8 @@ function mapStateToProps (state: State, { match }) {
 }
 
 class CaseElement extends React.Component {
+  _scrollToTop: () => void
+
   constructor (props) {
     super(props)
     this._scrollToTop = () => window.scrollTo(0, 0)
@@ -90,7 +98,7 @@ class CaseElement extends React.Component {
       case 'Activity':
         child = <Activity id={id} />
         break
-      case undefined:
+      default:
         return <Redirect to="/" />
     }
 
@@ -112,7 +120,7 @@ class CaseElement extends React.Component {
             path={`/:position/edgenotes/:edgenoteSlug`}
             component={EdgenoteContents}
           />
-          <NextLink next={next} />
+          <ConditionalNextLink next={next} />
         </main>
       </div>
     )
@@ -121,12 +129,28 @@ class CaseElement extends React.Component {
 
 export default connect(mapStateToProps, { deleteElement })(CaseElement)
 
-const NextLink = ({ next }) =>
-  next
+type NextProps = ?{ title: string, position: string }
+
+const NextLink = ({ next }: { next: NextProps }) =>
+  (next
     ? <Link className="nextLink" to={`/${next.position}`}>
       <FormattedMessage id="case.next" />
       {next.title}
     </Link>
     : <footer>
       <h2><FormattedMessage id="case.end" /></h2>
-    </footer>
+    </footer>)
+
+const ConditionalNextLink = connect(
+  (state: State, ownProps: { next: NextProps }) => {
+    const postTestNext = state.quiz.needsPosttest
+      ? {
+        title: 'Check your understanding',
+        position: 'quiz',
+      }
+      : null
+    return {
+      next: ownProps.next || postTestNext,
+    }
+  }
+)(NextLink)

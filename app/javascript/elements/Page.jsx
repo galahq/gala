@@ -1,3 +1,7 @@
+/**
+ * @providesModule Page
+ * @flow
+ */
 import React from 'react'
 import { connect } from 'react-redux'
 import { EditableText } from '@blueprintjs/core'
@@ -20,14 +24,7 @@ function mapStateToProps (state: State, { id }: OwnProps) {
 }
 
 const Page = props => {
-  let {
-    id,
-    title,
-    cards,
-    editing,
-    updatePage,
-    deleteElement,
-  } = props
+  let { id, title, cards, editing, updatePage, deleteElement } = props
 
   return (
     <article>
@@ -74,7 +71,7 @@ class CreateCardLink extends React.Component {
     // TODO: This should really be in a redux thun
     let { pageId, i } = this.props
     Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 }).then(
-      setTimeout(() => location.reload(), 50),
+      setTimeout(() => location.reload(), 50)
     )
   }
 
