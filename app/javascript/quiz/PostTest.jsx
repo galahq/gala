@@ -29,12 +29,16 @@ const PostTest = ({
         <h1
           style={{ color: 'white', fontSize: '1.3em', margin: '1em 0 0.75em' }}
         >
-          Check your understanding (I18n)
+          Post-case quiz
         </h1>
         <div
-          className="pt-card pt-dar"
+          className="pt-card"
           style={{ backgroundColor: '#EBEAE4', maxWidth: '35em' }}
         >
+          <div className="pt-callout" style={{ marginBottom: '1em' }}>
+            <h5>Check your understanding</h5>
+            After you have engaged with all elements of the case, please take this post-test to check your understanding.
+          </div>
           {questions.map((q: QuestionT) => (
             <Question
               selectedAnswer={answers[q.id]}

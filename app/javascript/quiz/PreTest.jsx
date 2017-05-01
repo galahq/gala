@@ -40,8 +40,8 @@ const PreTest = ({
       >
         <div className="pt-dialog-body">
           <p>
-            Please answer the following questions to demonstrate your current level
-            of knowledge. (I18n)
+            Please answer the following questions to demonstrate your current
+            level of knowledge. (I18n)
           </p>
 
           <div className="pt-card">

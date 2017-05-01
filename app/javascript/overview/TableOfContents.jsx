@@ -10,6 +10,8 @@ import { createPage, createPodcast, createActivity } from 'redux/actions'
 import { ItemTypes } from 'shared/dndConfig'
 import TableOfContentsElement from './TableOfContentsElement'
 
+import PostTestLink from 'quiz/PostTestLink'
+
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State) {
@@ -18,22 +20,22 @@ function mapStateToProps (state: State) {
     elements: state.caseData.caseElements,
     disabled: !state.caseData.reader,
     editing: state.edit.inProgress,
+    needsPosttest: state.quiz.needsPosttest,
   }
 }
 
-const TableOfContents = (
-  {
-    caseSlug,
-    editing,
-    elements,
-    disabled,
-    connectDropTarget,
-    readOnly,
-    createPage,
-    createPodcast,
-    createActivity,
-  },
-) => (
+const TableOfContents = ({
+  caseSlug,
+  editing,
+  elements,
+  disabled,
+  connectDropTarget,
+  readOnly,
+  createPage,
+  createPodcast,
+  createActivity,
+  needsPosttest,
+}) => (
   <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
     <h2 className="c-toc__header"><FormattedMessage id="case.toc" /></h2>
     {connectDropTarget(
@@ -71,19 +73,20 @@ const TableOfContents = (
               Activity
             </button>
           </div>}
-      </ol>,
+      </ol>
     )}
+    {needsPosttest && <PostTestLink />}
   </nav>
 )
 
 const DragDropTableOfContents = DragDropContext(HTML5Backend)(
   DropTarget(ItemTypes.CASE_ELEMENT, { drop: () => {} }, connect => ({
     connectDropTarget: connect.dropTarget(),
-  }))(TableOfContents),
+  }))(TableOfContents)
 )
 
 export default withRouter(
   connect(mapStateToProps, { createPage, createPodcast, createActivity })(
-    DragDropTableOfContents,
-  ),
+    DragDropTableOfContents
+  )
 )

@@ -109,6 +109,8 @@ export type UIState = {
 }
 
 // Model Objects
+export type Element = Activity | Page | Podcast
+
 export type Activity = {
   +cardId: number,
   +caseElement: CaseElement,
@@ -131,12 +133,14 @@ export type Card = {
 
 export type CaseElement = {
   +caseId: number,
-  +elementId: number,
-  +elementStore: string,
+  +elementId: string,
+  +elementStore: CaseElementStore,
   +elementType: string,
   +id: string,
   +position: number,
 }
+
+export type CaseElementStore = 'pagesById' | 'podcastsById' | 'activitiesById'
 
 export type Comment = {
   +commentThreadId: number,
@@ -209,6 +213,7 @@ export type Notification = {
 export type Page = {
   +cards: number[],
   +caseElement: CaseElement,
+  +iconSlug: void,
   +id: number,
   +position: number,
   +title: string,
