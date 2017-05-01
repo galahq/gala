@@ -21,6 +21,18 @@ class Enrollment < ApplicationRecord
     end
   end
 
+  # Ratio of elements used to total number of elements: a measurement of how
+  # thoroughly a student has engaged with the case.
+  def case_completion
+    elements_used = self.case.events.where(name: 'visit_element')
+      .merge(self.reader.events)
+      .distinct
+      .pluck("ahoy_events.properties ->> 'element_id'",
+             "ahoy_events.properties ->> 'element_type'")
+      .count
+    elements_used.to_f / self.case.case_elements.count
+  end
+
   def as_json(options = {})
     super(options.merge({include: [reader: { only: %i(id image_url initials name) }]}))
   end

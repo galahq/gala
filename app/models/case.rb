@@ -43,6 +43,10 @@ class Case < ApplicationRecord
     authors.to_sentence
   end
 
+  def events
+    Ahoy::Event.for_case self
+  end
+
   def other_available_locales
     locales_for_reading_column(:title) - [I18n.locale.to_s]
   end

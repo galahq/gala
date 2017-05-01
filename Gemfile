@@ -68,7 +68,7 @@ gem 'rolify'
 
 gem 'postmark-rails'
 
-gem 'ahoy_matey'
+gem 'ahoy_matey', github: 'cbothner/ahoy'
 gem 'groupdate'
 
 gem 'trasto'

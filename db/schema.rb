@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170426200309) do
+ActiveRecord::Schema.define(version: 20170501221658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20170426200309) do
     t.string   "name"
     t.jsonb    "properties"
     t.datetime "time"
+    t.index "properties jsonb_path_ops", name: "index_ahoy_events_on_properties_jsonb_path_ops", using: :gin
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time", using: :btree
     t.index ["user_id", "name"], name: "index_ahoy_events_on_user_id_and_name", using: :btree
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name", using: :btree
@@ -45,8 +46,9 @@ ActiveRecord::Schema.define(version: 20170426200309) do
     t.integer  "reader_id"
     t.string   "content"
     t.boolean  "correct"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.decimal  "case_completion"
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
     t.index ["quiz_id"], name: "index_answers_on_quiz_id", using: :btree
     t.index ["reader_id"], name: "index_answers_on_reader_id", using: :btree

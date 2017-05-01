@@ -1,4 +1,8 @@
-// @flow
+/**
+ * @providesModule Tracker
+ * @flow
+ */
+
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
@@ -42,7 +46,7 @@ class BaseTracker extends React.Component {
   }
 
   _log (duration: number): void {
-    (window.ahoy: Ahoy).track(this.props.targetParameters.name, {
+    ;(window.ahoy: Ahoy).track(this.props.targetParameters.name, {
       ...this.props.targetParameters,
       caseSlug: this.props.caseSlug,
       duration,
@@ -75,12 +79,12 @@ class BaseTracker extends React.Component {
   componentWillReceiveProps (nextProps: TrackerProps) {
     if (
       this.props.timerState === nextProps.timerState &&
-      this.props.targetKey === this.props.targetKey
+      this.props.targetKey === nextProps.targetKey
     ) {
       return
     }
 
-    if (this.props.targetKey !== this.props.targetKey) {
+    if (this.props.targetKey !== nextProps.targetKey) {
       this._stopTimer()
       this._startTimer()
       return
@@ -111,7 +115,7 @@ class BaseTracker extends React.Component {
 }
 
 const Tracker = connect((state: State) => ({ caseSlug: state.caseData.slug }))(
-  BaseTracker,
+  BaseTracker
 )
 export default Tracker
 
@@ -142,7 +146,7 @@ export class OnScreenTracker extends React.Component {
     const rectangle = self.getBoundingClientRect()
     const viewHeight = Math.max(
       document.documentElement.clientHeight,
-      window.innerHeight,
+      window.innerHeight
     )
 
     const above = rectangle.bottom - threshold < 0

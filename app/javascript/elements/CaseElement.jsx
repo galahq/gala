@@ -13,6 +13,8 @@ import Podcast from './Podcast'
 import Activity from './Activity'
 import EdgenoteContents from 'deprecated/EdgenoteContents'
 
+import { OnScreenTracker } from 'utility/Tracker'
+
 import { FormattedMessage } from 'react-intl'
 
 import { deleteElement } from 'redux/actions.js'
@@ -122,6 +124,15 @@ class CaseElement extends React.Component {
           />
           <ConditionalNextLink next={next} />
         </main>
+
+        <OnScreenTracker
+          targetKey={url}
+          targetParameters={{
+            name: 'visit_element',
+            element_type: model,
+            element_id: id,
+          }}
+        />
       </div>
     )
   }

@@ -18,6 +18,7 @@ class Reader < ApplicationRecord
   has_many :cases, through: :enrollments
   has_many :answers, dependent: :destroy
   has_many :quizzes, through: :answers
+  has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id'
 
   before_update :set_created_password, if: :encrypted_password_changed?
 

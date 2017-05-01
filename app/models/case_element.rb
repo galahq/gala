@@ -6,4 +6,13 @@ class CaseElement < ApplicationRecord
   def element_details
     "#{element_type.tableize}/#{element_id}"
   end
+
+  include Trackable
+  def event_name
+    'visit_element'
+  end
+
+  def event_properties
+    {case_slug: this.case.slug, element_type: element_type, element_id: element_id}
+  end
 end
