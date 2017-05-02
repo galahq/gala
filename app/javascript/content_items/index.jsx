@@ -41,18 +41,16 @@ const ContentItems = ({ items, returnUrl, returnData }: ContentItemsProps) => {
 export default ContentItems
 
 type ContentItemProps = ContentItem & {|
-  handleChooseContentItem: (string) => void,
+  handleChooseContentItem: string => void,
 |}
-const ContentItemLink = (
-  {
-    kicker,
-    title,
-    dek,
-    coverUrl,
-    url,
-    handleChooseContentItem,
-  }: ContentItemProps
-) => {
+const ContentItemLink = ({
+  kicker,
+  title,
+  dek,
+  coverUrl,
+  url,
+  handleChooseContentItem,
+}: ContentItemProps) => {
   const handleClick = handleChooseContentItem.bind(undefined, url)
   return (
     <a
