@@ -1,3 +1,7 @@
+/**
+ * @providesModule Edgenote
+ * @flow
+ */
 import React from 'react' // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
@@ -84,7 +88,7 @@ class EdgenoteFigure extends React.Component {
       attribution,
     } = contents
 
-    const isALink = !youtubeSlug && !audioUrl && callToAction && !editing
+    const isALink = !youtubeSlug && !audioUrl && !!callToAction && !editing
 
     const ConditionalLink = isALink ? 'a' : 'div'
     const conditionalHoverCallbacks = isALink
@@ -174,6 +178,7 @@ class EdgenoteFigure extends React.Component {
             name: 'visit_edgenote',
             edgenoteSlug: slug,
           }}
+          instantaneous={isALink}
         />
       </figure>
     )
@@ -305,7 +310,7 @@ const CallToAction = ({ contents, websiteUrl, editing, onChange }) => (
 )
 
 const Caption = ({ contents, selected, editing, onChange }) =>
-  (contents || editing
+  contents || editing
     ? <div style={{ margin: '0.25em 0 0 0' }}>
       <figcaption
         className={selected && 'edge--highlighted'}
@@ -320,10 +325,10 @@ const Caption = ({ contents, selected, editing, onChange }) =>
         />
       </figcaption>
     </div>
-    : null)
+    : null
 
 const PullQuote = ({ contents, selected, editing, onChange }) =>
-  (contents || editing
+  contents || editing
     ? <blockquote
       className={selected && 'edge--highlighted'}
       style={{
@@ -341,10 +346,10 @@ const PullQuote = ({ contents, selected, editing, onChange }) =>
         onChange={onChange}
       />
     </blockquote>
-    : null)
+    : null
 
 const Attribution = ({ name, editing, onChange }) =>
-  (name || editing
+  name || editing
     ? <cite
       style={{
         textAlign: 'right',
@@ -362,7 +367,7 @@ const Attribution = ({ name, editing, onChange }) =>
         onChange={onChange}
       />
     </cite>
-    : null)
+    : null
 
 const backgroundedStyle = {
   backgroundColor: '#49647D',

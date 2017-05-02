@@ -14,12 +14,13 @@ declare class Ahoy {
 }
 
 type TimerState = 'STOPPED' | 'RUNNING' | 'PAUSED'
-type TrackerProps = {|
-  caseSlug: string,
+type TrackerProps = {
+  caseSlug?: string,
   targetKey: string,
   targetParameters: $Supertype<{ name: string }>,
   timerState: TimerState,
-|}
+  instantaneous?: boolean,
+}
 type TrackerState = {
   durationSoFar: number,
   timeArrived: number,
@@ -28,32 +29,42 @@ type TrackerState = {
 class BaseTracker extends React.Component {
   props: TrackerProps
   state: TrackerState
+  _startTimer: () => void
+  _pauseTimer: () => void
+  _stopTimer: () => void
+  _log: number => void
+  _timeSinceArrival: TrackerState => number
 
-  _startTimer (): void {
+  _startTimer () {
     this.setState({ timeArrived: Date.now() })
     window.addEventListener('beforeunload', this._stopTimer)
   }
 
-  _pauseTimer (): void {
+  _pauseTimer () {
     this.setState({ durationSoFar: this._timeSinceArrival(this.state) })
   }
 
-  _stopTimer (): void {
+  _stopTimer () {
     window.removeEventListener('beforeunload', this._stopTimer)
     const duration = this._timeSinceArrival(this.state)
     if (duration > 0) this._log(duration)
     this.setState({ durationSoFar: 0 })
   }
 
-  _log (duration: number): void {
-    ;(window.ahoy: Ahoy).track(this.props.targetParameters.name, {
-      ...this.props.targetParameters,
-      caseSlug: this.props.caseSlug,
-      duration,
-    })
+  _log (duration: number) {
+    const { targetParameters, caseSlug, instantaneous } = this.props
+
+    const loggedDuration = instantaneous ? 3000 : duration
+    if (loggedDuration >= 3000) {
+      ;(window.ahoy: Ahoy).track(targetParameters.name, {
+        ...targetParameters,
+        caseSlug,
+        duration: loggedDuration,
+      })
+    }
   }
 
-  _timeSinceArrival (state: TrackerState): number {
+  _timeSinceArrival (state: TrackerState) {
     const thisSegment = this.props.timerState === 'RUNNING'
       ? Date.now() - state.timeArrived
       : 0
@@ -135,11 +146,15 @@ type OnScreenTrackerState = {
 export class OnScreenTracker extends React.Component {
   props: OnScreenTrackerProps
   state: OnScreenTrackerState
+  _isVisible: () => boolean
+  _checkVisibility: () => void
+  _maybeCheckVisibility: () => void
+  _setNeedsCheckVisibility: () => void
 
-  _isVisible (): boolean {
+  _isVisible () {
     if (document.hidden) return false
 
-    const self = findDOMNode(this)
+    const self = (findDOMNode(this): ?HTMLElement)
     if (self == null) return false
 
     const threshold = 100
@@ -155,20 +170,20 @@ export class OnScreenTracker extends React.Component {
     return !above && !below
   }
 
-  _checkVisibility (): void {
+  _checkVisibility () {
     this.setState({
       isVisible: this._isVisible(),
       needsVisibilityCheck: false,
     })
   }
 
-  _maybeCheckVisibility (): void {
+  _maybeCheckVisibility () {
     if (this.state.needsVisibilityCheck) {
       this._checkVisibility()
     }
   }
 
-  _setNeedsCheckVisibility (): void {
+  _setNeedsCheckVisibility () {
     this.setState({ needsVisibilityCheck: true })
   }
 
