@@ -5,6 +5,8 @@ class Quiz < ApplicationRecord
   belongs_to :case
   belongs_to :template, class_name: "Quiz"
 
+  scope :recommended, -> { where template: nil }
+
   def self.requiring_response_from reader
     where(id: reader.deployments.select(:quiz_id))
       .where(id: Question.requiring_response_from(reader).select(:quiz_id))

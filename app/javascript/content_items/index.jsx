@@ -1,28 +1,32 @@
-// @flow
+/**
+ * @providesModule ContentItems
+ * @flow
+ */
 
 import React from 'react'
-import { chooseContentItem } from 'shared/lti'
+import { submitForm } from 'shared/lti'
 
-type ContentItem = {|
+type ContentItem = {
+  slug: string,
   kicker: string,
   title: string,
   dek: string,
   coverUrl: string,
-  url: string,
-|}
+}
 
-type ContentItemsProps = {|
+type ContentItemsProps = {
   items: ContentItem[],
-  returnUrl: string,
-  returnData: string,
-|}
+  groupId: string,
+}
 
-const ContentItems = ({ items, returnUrl, returnData }: ContentItemsProps) => {
-  const handleChooseContentItem = chooseContentItem.bind(
-    undefined,
-    returnUrl,
-    returnData
-  )
+function createDeployment (groupId: string, caseSlug: string) {
+  submitForm(`/groups/${groupId}/deployments`, {
+    case_slug: caseSlug,
+  })
+}
+
+const ContentItems = ({ items, groupId }: ContentItemsProps) => {
+  const handleSelectContentItem = createDeployment.bind(undefined, groupId)
   return (
     <div className="catalog-cases">
       <div className="catalog-cases-index">
@@ -30,7 +34,7 @@ const ContentItems = ({ items, returnUrl, returnData }: ContentItemsProps) => {
           <ContentItemLink
             key={i}
             {...item}
-            handleChooseContentItem={handleChooseContentItem}
+            handleSelectContentItem={handleSelectContentItem}
           />
         ))}
       </div>
@@ -40,18 +44,19 @@ const ContentItems = ({ items, returnUrl, returnData }: ContentItemsProps) => {
 
 export default ContentItems
 
-type ContentItemProps = ContentItem & {|
-  handleChooseContentItem: string => void,
-|}
+type ContentItemProps = ContentItem & {
+  handleSelectContentItem: string => void,
+}
+
 const ContentItemLink = ({
+  slug,
   kicker,
   title,
   dek,
   coverUrl,
-  url,
-  handleChooseContentItem,
+  handleSelectContentItem,
 }: ContentItemProps) => {
-  const handleClick = handleChooseContentItem.bind(undefined, url)
+  const handleClick = handleSelectContentItem.bind(undefined, slug)
   return (
     <a
       tabIndex="0"

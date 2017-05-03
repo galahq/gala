@@ -24,7 +24,6 @@ class ApplicationController < ActionController::Base
   include Omniauth::Lti::Context
   def validate_lti_request!
     redirect_to root_path unless lti_request_valid?
-    return !performed?
   end
 
   def lti_request_valid?

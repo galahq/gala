@@ -15,7 +15,7 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
     if @authentication_strategy.persisted?
       set_case
       set_group
-      
+
       sign_in @reader
 
       add_reader_to_group

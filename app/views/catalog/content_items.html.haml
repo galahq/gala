@@ -1,5 +1,4 @@
-#content-items-app{data: {return_data: @data,
-  return_url: @return_url,
+#content-items-app{data: {group_id: @group.id,
   items: render(template: 'catalog/content_items', formats: [:json])}}
 
 = javascript_pack_tag 'content_items'
