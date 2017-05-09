@@ -16,7 +16,6 @@ class CasesController < ApplicationController
     authenticate_reader! unless @case.published
     authorize_action_for @case
 
-    session[:active_group_id] = current_reader.groups.first.id
     @group = Group.active_for_session session
     @deployment = @group.deployment_for_case(@case)
 

@@ -18,6 +18,7 @@ type Props = {
   withPosttest: boolean,
   onTogglePretest: () => void,
   onDeselect: () => void,
+  onSubmit: () => void,
 }
 
 const Toolbar = ({
@@ -26,6 +27,7 @@ const Toolbar = ({
   withPosttest,
   onTogglePretest,
   onDeselect,
+  onSubmit,
 }: Props) => {
   const { coverUrl, kicker } = caseData
   return (
@@ -52,6 +54,7 @@ const Toolbar = ({
         <button
           className="pt-button pt-intent-success"
           style={{ marginLeft: 10 }}
+          onClick={onSubmit}
         >
           Deploy
         </button>

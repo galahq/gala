@@ -28,7 +28,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
       customQuestions.set(i, customQuestions.get(i).set('content', content))
     )
 
-  const handleEditQuestionOptions = (i: number, options: List<Question>) =>
+  const handleEditQuestionOptions = (i: number, options: List<string>) =>
     onChange(
       customQuestions.set(i, customQuestions.get(i).set('options', options))
     )
@@ -56,7 +56,10 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
     onChange(
       customQuestions.set(
         questionIx,
-        customQuestions.get(questionIx).set('answer', answer)
+        customQuestions
+          .get(questionIx)
+          .set('answer', answer)
+          .set('hasError', false)
       )
     )
 
@@ -71,6 +74,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
 
             <QuestionInputGroup
               autoFocus
+              intent={question.hasError() && Intent.WARNING}
               value={content}
               placeholder="Question text"
               type="text"

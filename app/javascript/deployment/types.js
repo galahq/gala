@@ -5,21 +5,33 @@
 import { Record, List } from 'immutable'
 
 export class Question
-  extends Record({ content: '', options: List(), answer: '' }, 'Question') {
+  extends Record(
+    { content: '', options: List(), answer: '', hasError: false },
+    'Question'
+  ) {
+  getContent: () => string
   getContent () {
     return this.get('content')
   }
 
+  getOptions: () => List<string>
   getOptions () {
     return this.get('options')
   }
 
+  getOption: (i: number) => string
   getOption (i: number) {
     return this.getOptions().get(i)
   }
 
+  getAnswer: () => string
   getAnswer () {
     return this.get('answer')
+  }
+
+  hasError: () => boolean
+  hasError () {
+    return this.get('hasError')
   }
 }
 
