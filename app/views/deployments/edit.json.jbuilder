@@ -21,5 +21,9 @@ if @deployment.quiz
 end
 
 json.recommended_quizzes do
-  json.array! @deployment.case.quizzes.recommended, partial: 'quizzes/quiz', as: :quiz
+  @deployment.case.quizzes.recommended.each do |quiz|
+    json.set! quiz.id do
+      json.partial! quiz
+    end
+  end
 end

@@ -66,6 +66,7 @@ declare module '@blueprintjs/core' {
   declare export type IActionProps = {
     disabled?: boolean,
     text?: string,
+    iconName?: string,
   } & IIntentProps
 
   declare export type IIntentProps = {

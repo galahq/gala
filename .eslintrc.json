@@ -69,6 +69,7 @@
       "always", {
         "annotationStyle": "block"
       }
-    ]
+    ],
+    "jsx-a11y/no-autofocus": 0
   }
 }

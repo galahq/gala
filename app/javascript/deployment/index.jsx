@@ -4,76 +4,106 @@
  */
 
 import React from 'react'
-import styled from 'styled-components'
+import { Map, List } from 'immutable'
 
+import QuizSelector from './QuizSelector'
+import QuizDetails from './QuizDetails'
 import Toolbar from './Toolbar'
 
-import { NonIdealState } from '@blueprintjs/core'
-
-import type { Quiz, Question } from './types'
+import { Question } from './types'
+import type { ID, Quiz } from './types'
 
 type Props = {
   caseData: Object,
   group: {
     name: string,
   },
-  recommendedQuizzes: Quiz[],
+  recommendedQuizzes: { [id: ID]: Quiz },
 }
 
-const Deployment = ({ caseData, recommendedQuizzes }: Props) => {
-  return (
-    <div className="pt-dark" style={{ padding: '0 12px' }}>
-      <div className="pt-callout pt-icon-help" style={{ lineHeight: 1.2 }}>
-        <h5>Assessment options</h5>
-        This is just placeholder text which will tell professors that they can administer a comprehension quiz at the end of the case, and pair it with an identical pretest. Choose a base assessment from below.
+type State = {
+  selectedQuizId: ?ID,
+  customQuestions: Map<ID, List<Question>>,
+  answersNeeded: 1 | 2,
+}
+
+class Deployment extends React.Component {
+  props: Props
+  state: State = {
+    selectedQuizId: null,
+    customQuestions: Map(),
+    answersNeeded: 2,
+  }
+
+  _needsPretest: () => boolean
+  _needsPosttest: () => boolean
+
+  handleSelectQuiz: (quizId: ?ID) => void
+  handleTogglePretest: () => void
+
+  _needsPretest () {
+    return this.state.selectedQuizId != null && this.state.answersNeeded === 2
+  }
+  _needsPosttest () {
+    return this.state.selectedQuizId != null
+  }
+
+  handleSelectQuiz (quizId: ?ID) {
+    this.setState({ selectedQuizId: quizId })
+  }
+
+  handleTogglePretest () {
+    this.setState((state: State) => ({
+      ...state,
+      answersNeeded: state.answersNeeded === 1 ? 2 : 1,
+    }))
+  }
+
+  handleChangeCustomQuestions (quizId: ID, customQuestions: List<Question>) {
+    this.setState((state: State) => ({
+      ...state,
+      customQuestions: state.customQuestions.set(quizId, customQuestions),
+    }))
+  }
+
+  constructor (props: Props) {
+    super(props)
+
+    this._needsPretest = this._needsPretest.bind(this)
+    this._needsPosttest = this._needsPosttest.bind(this)
+    this.handleSelectQuiz = this.handleSelectQuiz.bind(this)
+    this.handleTogglePretest = this.handleTogglePretest.bind(this)
+  }
+
+  render () {
+    const { caseData, recommendedQuizzes } = this.props
+    const { selectedQuizId, customQuestions } = this.state
+    return (
+      <div className="pt-dark" style={{ padding: '0 12px' }}>
+        {selectedQuizId == null
+          ? <QuizSelector
+            recommendedQuizzes={recommendedQuizzes}
+            onSelect={this.handleSelectQuiz}
+          />
+          : <QuizDetails
+            quiz={recommendedQuizzes[selectedQuizId]}
+            customQuestions={customQuestions.get(selectedQuizId)}
+            onChangeCustomQuestions={(newCustomQuestions: List<Question>) =>
+                this.handleChangeCustomQuestions(
+                  selectedQuizId,
+                  newCustomQuestions
+                )}
+          />}
+        <Toolbar
+          withPretest={this._needsPretest()}
+          withPosttest={this._needsPosttest()}
+          caseData={caseData}
+          onTogglePretest={this.handleTogglePretest}
+          onDeselect={() => this.handleSelectQuiz(null)}
+        />
       </div>
-      <TwoColumns>
-        {recommendedQuizzes.map((quiz: Quiz, i: number) => (
-          <QuizCard key={i} {...quiz} />
-        ))}
-        <QuizCard questions={[]} />
-      </TwoColumns>
-      <Toolbar withPretest withPosttest caseData={caseData} />
-    </div>
-  )
+    )
+  }
 }
 
 export default Deployment
-
-const TwoColumns = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-
-  & > * {
-    flex: 0 1 calc(50% - 0.5em);
-    margin: 1em 0;
-
-    &:nth-child(even) { margin-left: 0.5em; }
-    &:nth-child(odd) { margin-right: 0.5em; }
-  }
-`
-
-const QuizCard = ({ questions }: Quiz) => (
-  <div
-    className="pt-card pt-elevation-1 pt-interactive"
-    style={{ backgroundColor: '#446583AA' }}
-  >
-    {questions.length > 0
-      ? <ol>
-        {questions.map((question: Question, i: number) => (
-          <li key={i}>
-            {question.content}
-            <QuestionType
-              className={`pt-icon-standard pt-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
-            />
-          </li>
-          ))}
-      </ol>
-      : <NonIdealState title="Custom Assessment" visual="properties" />}
-  </div>
-)
-
-const QuestionType = styled.span`
-  margin-left: 0.5em;
-  color: #FFFFFF99;
-`

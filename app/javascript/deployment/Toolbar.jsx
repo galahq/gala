@@ -6,6 +6,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { Button } from '@blueprintjs/core'
+
 type Props = {
   caseData: {
     kicker: string,
@@ -14,9 +16,17 @@ type Props = {
   },
   withPretest: boolean,
   withPosttest: boolean,
+  onTogglePretest: () => void,
+  onDeselect: () => void,
 }
 
-const Toolbar = ({ caseData, withPretest, withPosttest }: Props) => {
+const Toolbar = ({
+  caseData,
+  withPretest,
+  withPosttest,
+  onTogglePretest,
+  onDeselect,
+}: Props) => {
   const { coverUrl, kicker } = caseData
   return (
     <BottomFixedToolbar className="pt-navbar">
@@ -25,8 +35,20 @@ const Toolbar = ({ caseData, withPretest, withPosttest }: Props) => {
         <div className="pt-navbar-heading">{kicker}</div>
       </div>
       <div className="pt-navbar-group pt-align-right">
-        <Switch checked label="Pre/post comparison" />
-        <Switch checked label="Quiz active" />
+        <Switch
+          checked={withPretest}
+          yes="With pre/post comparison"
+          no="No pre-test"
+          disabled={!withPosttest}
+          onClick={onTogglePretest}
+        />
+        <Switch
+          checked={withPosttest}
+          yes="With quiz"
+          no="No quiz"
+          disabled={!withPosttest}
+          onClick={onDeselect}
+        />
         <button
           className="pt-button pt-intent-success"
           style={{ marginLeft: 10 }}
@@ -40,17 +62,28 @@ const Toolbar = ({ caseData, withPretest, withPosttest }: Props) => {
 
 export default Toolbar
 
+type SwitchParams = {
+  checked: boolean,
+  yes: string,
+  no: string,
+  disabled?: boolean,
+  onClick: () => void,
+}
 const Switch = ({
   checked,
-  label,
+  yes,
+  no,
+  onClick,
   disabled = false,
-}: { checked: boolean, label: string, disabled?: boolean }) => (
-  <button
-    className={`pt-button pt-minimal pt-icon-${checked ? 'tick' : 'cross'}`}
+}: SwitchParams) => (
+  <Button
+    className="pt-minimal"
+    iconName={checked ? 'tick' : 'cross'}
     disabled={disabled}
+    onClick={onClick}
   >
-    {label}
-  </button>
+    {checked ? yes : no}
+  </Button>
 )
 
 const BottomFixedToolbar = styled.nav`
@@ -58,6 +91,7 @@ const BottomFixedToolbar = styled.nav`
   bottom: 12px;
   width: calc(100% - 24px);
   left: 12px;
+  z-index: 20;
 `
 
 const CaseIcon = styled.img`
