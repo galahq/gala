@@ -23,8 +23,7 @@ class DeploymentsController < ApplicationController
   end
 
   def update
-    @selection_params = session[:content_item_selection_params]
-    puts @selection_params
+    clear_content_item_selection_params
     customizer = CustomizeDeploymentService.new @deployment
 
     result = customizer.customize deployment_params
@@ -43,6 +42,10 @@ class DeploymentsController < ApplicationController
   def ensure_content_item_selection_params_set!
     redirect_to root_url unless session[:content_item_selection_params]
     @selection_params = session[:content_item_selection_params]
+  end
+
+  def clear_content_item_selection_params
+    session[:content_item_selection_params] = nil
   end
 
   def deployment_params
