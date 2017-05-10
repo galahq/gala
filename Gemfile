@@ -62,14 +62,14 @@ gem 'devise', '~> 4.1'
 gem 'devise-i18n'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
-gem 'ims-lti', '1.1.13'
-gem 'omniauth-lti'
+gem 'ims-lti'
+gem 'omniauth-lti', github: 'cbothner/omniauth-lti'
 gem 'authority'
 gem 'rolify'
 
 gem 'postmark-rails'
 
-gem 'ahoy_matey', github: 'cbothner/ahoy'
+gem 'ahoy_matey', github: 'ankane/ahoy'
 gem 'groupdate'
 
 gem 'trasto'
