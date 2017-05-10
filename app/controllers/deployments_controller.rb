@@ -23,6 +23,16 @@ class DeploymentsController < ApplicationController
   end
 
   def update
+    @selection_params = session[:content_item_selection_params]
+    puts @selection_params
+    customizer = CustomizeDeploymentService.new @deployment
+
+    result = customizer.customize deployment_params
+    if result.errors.empty?
+      render
+    else
+      render json: result.errors, status: :unprocessable_entity
+    end
   end
 
   private
@@ -33,5 +43,12 @@ class DeploymentsController < ApplicationController
   def ensure_content_item_selection_params_set!
     redirect_to root_url unless session[:content_item_selection_params]
     @selection_params = session[:content_item_selection_params]
+  end
+
+  def deployment_params
+    params.require(:deployment).permit(:answers_needed, :template_id,
+      custom_questions: [:content, :correct_answer, options: []])
+      .to_h
+      .symbolize_keys
   end
 end

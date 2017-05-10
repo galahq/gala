@@ -11,16 +11,20 @@ import QuizDetails from './QuizDetails'
 import Toolbar from './Toolbar'
 
 import { Position, Intent, Toaster } from '@blueprintjs/core'
+import type { IntentType } from '@blueprintjs/core'
+
+import { Orchard } from 'shared/orchard'
+import { chooseContentItem } from 'shared/lti'
 
 import { Question } from './types'
 import type { ID, Quiz } from './types'
 
 type Props = {
-  caseData: Object,
-  group: {
-    name: string,
-  },
+  id: string,
+  caseData: $Supertype<{ callbackUrl: string }>,
   recommendedQuizzes: { [id: ID]: Quiz },
+  returnUrl?: string,
+  returnData?: string,
 }
 
 type State = {
@@ -42,6 +46,7 @@ class Deployment extends React.Component {
   _needsPretest: () => boolean
   _needsPosttest: () => boolean
   _valid: () => boolean
+  _displayToast: (string, ?IntentType) => void
 
   handleSelectQuiz: (quizId: ?ID) => void
   handleTogglePretest: () => void
@@ -58,13 +63,13 @@ class Deployment extends React.Component {
     const state = this.state
     const { selectedQuizId, customQuestions } = state
 
-    if (selectedQuizId == null) return false
+    if (selectedQuizId == null) return true
     const validatedState = {
       ...state,
       customQuestions: customQuestions.set(
         selectedQuizId,
         customQuestions
-          .get(selectedQuizId)
+          .get(selectedQuizId, List())
           .map((question: Question) =>
             question.set(
               'hasError',
@@ -80,6 +85,13 @@ class Deployment extends React.Component {
     return !validatedState.customQuestions
       .get(selectedQuizId)
       .some((question: Question) => question.hasError())
+  }
+
+  _displayToast (error: string, intent: IntentType = Intent.WARNING) {
+    this.toaster.show({
+      message: error,
+      intent,
+    })
   }
 
   handleSelectQuiz (quizId: ?ID) {
@@ -102,12 +114,31 @@ class Deployment extends React.Component {
 
   handleSubmit () {
     if (this._valid()) {
-      // submit
-    } else {
-      this.toaster.show({
-        message: 'Please choose correct answers for all multiple choice questions.',
-        intent: Intent.WARNING,
+      Orchard.espalier(`deployments/${this.props.id}`, {
+        deployment: {
+          answersNeeded: this._needsPosttest() ? this.state.answersNeeded : 0,
+          templateId: this.state.selectedQuizId,
+          customQuestions: this.state.selectedQuizId != null
+            ? this.state.customQuestions.get(this.state.selectedQuizId)
+            : [],
+        },
       })
+        .then(() => {
+          const { returnUrl, returnData, caseData } = this.props
+          if (returnUrl != null && returnData != null) {
+            chooseContentItem(returnUrl, returnData, caseData.callbackUrl)
+          } else {
+            this._displayToast(
+              'Deployment successfully updated.',
+              Intent.SUCCESS
+            )
+          }
+        })
+        .catch((e: Error) => this._displayToast(e.message))
+    } else {
+      this._displayToast(
+        'Please choose correct answers for all multiple choice questions.'
+      )
     }
   }
 
@@ -119,6 +150,7 @@ class Deployment extends React.Component {
     this._needsPretest = this._needsPretest.bind(this)
     this._needsPosttest = this._needsPosttest.bind(this)
     this._valid = this._valid.bind(this)
+    this._displayToast = this._displayToast.bind(this)
     this.handleSelectQuiz = this.handleSelectQuiz.bind(this)
     this.handleTogglePretest = this.handleTogglePretest.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)

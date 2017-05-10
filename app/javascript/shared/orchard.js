@@ -8,7 +8,7 @@ export class Orchard {
       `${window.galaHostname || ''}/${window.i18n.locale}/${endpoint}.json`,
       { credentials: 'same-origin' }
     )
-    return fetch(r).then(response => response.json())
+    return fetch(r).then(this._handleResponse)
   }
 
   static graft (endpoint: string, params: Object): Promise<any> {
@@ -37,7 +37,7 @@ export class Orchard {
         'Content-Type': 'application/json',
       }),
     })
-    return fetch(r).then(response => response.json())
+    return fetch(r).then(this._handleResponse)
   }
 
   static prune (endpoint: string): Promise<Response> {
@@ -52,7 +52,7 @@ export class Orchard {
   static _handleResponse (response: Response): Promise<any> {
     if (response.ok) {
       return response.json()
-    } else if (response.bodyUsed) {
+    } else {
       return response.json().then((r: Object) => {
         const errorMessagePairs = Object.entries(r)
 
@@ -75,8 +75,6 @@ export class Orchard {
 
         throw Error(errorMessages)
       })
-    } else {
-      throw Error(`${response.status} ${response.statusText}`)
     }
   }
 }

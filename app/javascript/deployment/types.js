@@ -6,7 +6,7 @@ import { Record, List } from 'immutable'
 
 export class Question
   extends Record(
-    { content: '', options: List(), answer: '', hasError: false },
+    { content: '', options: List(), correctAnswer: '', hasError: false },
     'Question'
   ) {
   getContent: () => string
@@ -26,7 +26,7 @@ export class Question
 
   getAnswer: () => string
   getAnswer () {
-    return this.get('answer')
+    return this.get('correctAnswer')
   }
 
   hasError: () => boolean

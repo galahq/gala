@@ -1,17 +1,16 @@
 json.key_format! camelize: :lower
 
-if @selection_params
-  json.return_url @selection_params[:return_url]
-  json.return_data @selection_params[:return_data]
-end
+json.id @deployment.id
 
-json.group do
-  json.extract! @deployment.group, :name
+if @selection_params
+  json.return_url @selection_params["return_url"]
+  json.return_data @selection_params["return_data"]
 end
 
 json.case_data do
   json.extract! @deployment.case, :kicker, :title
   json.cover_url ix_cover_image(@deployment.case, :square)
+  json.callback_url authentication_strategy_lti_omniauth_callback_url case_slug: @deployment.case.slug
 end
 
 if @deployment.quiz

@@ -58,7 +58,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
         questionIx,
         customQuestions
           .get(questionIx)
-          .set('answer', answer)
+          .set('correctAnswer', answer)
           .set('hasError', false)
       )
     )
