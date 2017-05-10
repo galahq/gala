@@ -2,7 +2,7 @@
 class Deployment < ApplicationRecord
   belongs_to :case
   belongs_to :group
-  belongs_to :quiz, -> { includes :questions }
+  belongs_to :quiz
 
   validates :quiz, presence: true, if: -> { answers_needed > 0 }
 

@@ -35,7 +35,7 @@ class CustomizeDeploymentService
 
   def create_questions custom_questions
     custom_questions.each do |question|
-      @deployment.quiz.questions.create! question
+      @deployment.quiz.custom_questions.create! question
     end
   end
 
