@@ -19,7 +19,7 @@ type Props = {
   onChangeCustomQuestions: List<Question> => void,
 }
 const QuizDetails = ({
-  quiz,
+  quiz = { id: 'new', questions: [] },
   customQuestions = List(),
   onChangeCustomQuestions,
 }: Props) => (
@@ -33,7 +33,7 @@ const QuizDetails = ({
   >
     <CardTitle>Quiz details</CardTitle>
     <ol>
-      <SectionTitle>Base questions</SectionTitle>
+      {quiz.questions.length > 0 && <SectionTitle>Base questions</SectionTitle>}
       {quiz.questions.map((question: Question, i: number) => (
         <li key={i}>
           {question.content}

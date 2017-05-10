@@ -114,12 +114,13 @@ class Deployment extends React.Component {
 
   handleSubmit () {
     if (this._valid()) {
+      const { answersNeeded, selectedQuizId, customQuestions } = this.state
       Orchard.espalier(`deployments/${this.props.id}`, {
         deployment: {
-          answersNeeded: this._needsPosttest() ? this.state.answersNeeded : 0,
-          templateId: this.state.selectedQuizId,
-          customQuestions: this.state.selectedQuizId != null
-            ? this.state.customQuestions.get(this.state.selectedQuizId)
+          answersNeeded: this._needsPosttest() ? answersNeeded : 0,
+          templateId: selectedQuizId === 'new' ? null : selectedQuizId,
+          customQuestions: selectedQuizId != null
+            ? customQuestions.get(selectedQuizId)
             : [],
         },
       })
