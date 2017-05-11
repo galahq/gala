@@ -46,7 +46,7 @@ class Deployment extends React.Component {
   _needsPretest: () => boolean
   _needsPosttest: () => boolean
   _valid: () => boolean
-  _displayToast: (string, ?IntentType) => void
+  _displayToast: (error: string, intent: ?IntentType) => void
 
   handleSelectQuiz: (quizId: ?ID) => void
   handleTogglePretest: () => void
@@ -77,8 +77,7 @@ class Deployment extends React.Component {
                 !question
                   .getOptions()
                   .some((option: string) => option === question.getAnswer())
-            )
-          )
+            ))
       ),
     }
     this.setState(validatedState)
@@ -175,6 +174,7 @@ class Deployment extends React.Component {
                   selectedQuizId,
                   newCustomQuestions
                 )}
+            onDeselect={() => this.handleSelectQuiz(null)}
           />}
         <Toolbar
           withPretest={this._needsPretest()}

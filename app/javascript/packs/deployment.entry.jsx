@@ -13,6 +13,8 @@ FocusStyleManager.onlyShowFocusOnTabs()
 
 const container = document.getElementById('deployment-app')
 
+delete AppContainer.prototype.unstable_handleError
+
 const render = Component => {
   ReactDOM.render(
     <AppContainer>

@@ -16,21 +16,21 @@ import type { Quiz } from './types'
 type Props = {
   quiz: Quiz,
   customQuestions: List<Question>,
-  onChangeCustomQuestions: List<Question> => void,
+  onChangeCustomQuestions: (List<Question>) => void,
+  onDeselect: () => void,
 }
-const QuizDetails = ({
-  quiz = { id: 'new', questions: [] },
-  customQuestions = List(),
-  onChangeCustomQuestions,
-}: Props) => (
-  <div
-    className="pt-card"
-    style={{
-      backgroundColor: '#446583',
-      overflow: 'scroll',
-      height: 'calc(100vh - 164px)',
-    }}
-  >
+const QuizDetails = (
+  {
+    quiz = { id: 'new', questions: [] },
+    customQuestions = List(),
+    onChangeCustomQuestions,
+    onDeselect,
+  }: Props
+) => (
+  <DetailsCard className="pt-card">
+    <CloseLink onClick={onDeselect}>
+      <span className="pt-icon-standard pt-icon-cross" />
+    </CloseLink>
     <CardTitle>Quiz details</CardTitle>
     <ol>
       {quiz.questions.length > 0 && <SectionTitle>Base questions</SectionTitle>}
@@ -52,10 +52,17 @@ const QuizDetails = ({
         onChange={onChangeCustomQuestions}
       />
     </ol>
-  </div>
+  </DetailsCard>
 )
 
 export default QuizDetails
+
+const DetailsCard = styled.div`
+  background-color: #446583;
+  overflow: scroll;
+  height: 'calc(100vh - 164px)'l
+  position: relative;
+`
 
 const CardTitle = styled.h1`
   font-family: 'tenso';
@@ -84,5 +91,16 @@ const OptionsList = styled.ul`
       content: '—';
       margin: 0 0.5em;
     }
+  }
+`
+
+const CloseLink = styled.a`
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  color: #c3cbcd !important;
+
+  &:hover {
+    color: white !important;
   }
 `

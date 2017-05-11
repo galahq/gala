@@ -19,6 +19,7 @@ if @deployment.quiz
   end
 end
 
+json.recommended_quizzes Hash.new
 json.recommended_quizzes do
   @deployment.case.quizzes.recommended.each do |quiz|
     json.set! quiz.id do
