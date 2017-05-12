@@ -4,8 +4,14 @@ class CustomizeDeploymentService
     @deployment = deployment
   end
 
-  def customize answers_needed: 0, template_id: nil, custom_questions: []
-    return @deployment if answers_needed == 0
+  def customize answers_needed: 0, template_id: nil, custom_questions: [],
+    author_id: nil, lti_uid: nil
+
+    if answers_needed == 0
+      @deployment.answers_needed = 0
+      @deployment.save
+      return @deployment
+    end
 
     begin
       ActiveRecord::Base.transaction do
@@ -16,6 +22,7 @@ class CustomizeDeploymentService
         else
           @deployment.quiz = create_quiz_from_template template_id
           create_questions custom_questions
+          set_quiz_author author_id, lti_uid
         end
 
         @deployment.save!
@@ -29,6 +36,14 @@ class CustomizeDeploymentService
   end
 
   private
+  def set_quiz_author author_id, lti_uid
+    if author_id
+      @deployment.quiz.update author_id: author_id, lti_uid: nil
+    else
+      @deployment.quiz.update author_id: nil, lti_uid: lti_uid
+    end
+  end
+
   def create_quiz_from_template template_id
     Quiz.create! case: @deployment.case, template_id: template_id, customized: true
   end

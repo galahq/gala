@@ -60,7 +60,7 @@ export default QuizDetails
 const DetailsCard = styled.div`
   background-color: #446583;
   overflow: scroll;
-  height: 'calc(100vh - 164px)'l
+  height: calc(100vh - 164px);
   position: relative;
 `
 

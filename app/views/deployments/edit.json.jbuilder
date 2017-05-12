@@ -21,7 +21,7 @@ end
 
 json.recommended_quizzes Hash.new
 json.recommended_quizzes do
-  @deployment.case.quizzes.recommended.each do |quiz|
+  @recommended_quizzes.each do |quiz|
     json.set! quiz.id do
       json.partial! quiz
     end

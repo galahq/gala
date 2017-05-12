@@ -1,5 +1,6 @@
 class CatalogController < ApplicationController
   before_action :validate_lti_request!, only: [:content_items]
+
   def home
     @cases = Case.where.not(cover_url: "").where.not(cover_url: nil)
       .sort_by &:kicker
@@ -13,24 +14,19 @@ class CatalogController < ApplicationController
 
   # LTI Assignment Selection wants to POST a ContentItemSelectionRequest
   def content_items
-    I18n.locale = params[:launch_presentation_locale]
+    linker = LmsLinkerService.new(params)
 
-    set_group
+    sign_in linker.reader if linker.reader
+    linker.add_reader_to_group
 
-    session[:content_item_selection_params] = {return_url:
-    params[:content_item_return_url], return_data: params[:data]}
+    @group = linker.group
+    session[:active_group_id] = @group.id
+
+    session[:content_item_selection_params] = {lti_uid: params[:user_id],
+      return_url: params[:content_item_return_url],
+      return_data: params[:data]}
 
     @items = Case.where(published: true).sort_by(&:kicker)
     render layout: "embed"
-  end
-
-  private
-
-  def set_group
-    begin
-      @group = Group.upsert context_id: params[:context_id], name: params[:context_title]
-    rescue
-      retry
-    end
   end
 end

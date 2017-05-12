@@ -3,12 +3,24 @@ class Quiz < ApplicationRecord
   has_many :custom_questions, class_name: 'Question', dependent: :destroy
   belongs_to :case
   belongs_to :template, class_name: "Quiz"
+  belongs_to :author, class_name: 'Reader'
 
-  scope :recommended, -> { where template: nil }
+  scope :recommended, -> { where author_id: nil, lti_uid: nil }
 
   def self.requiring_response_from reader
     where(id: reader.deployments.select(:quiz_id))
       .where(id: Question.requiring_response_from(reader).select(:quiz_id))
+  end
+
+  def self.authored_by reader: nil, lti_uid: nil
+    if reader
+      where 'author_id = :reader_id OR (lti_uid = :lti_uid AND lti_uid IS NOT NULL)',
+        reader_id: reader.id, lti_uid: reader.lti_uid
+    elsif lti_uid
+      where lti_uid: lti_uid
+    else
+      []
+    end
   end
 
   def questions

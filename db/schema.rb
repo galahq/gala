@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170501221658) do
+ActiveRecord::Schema.define(version: 20170511212540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20170501221658) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["reader_id"], name: "index_authentication_strategies_on_reader_id", using: :btree
+    t.index ["uid"], name: "index_authentication_strategies_on_uid", where: "((provider)::text = 'lti'::text)", using: :btree
   end
 
   create_table "cards", force: :cascade do |t|
@@ -258,7 +259,11 @@ ActiveRecord::Schema.define(version: 20170501221658) do
     t.boolean  "customized"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "author_id"
+    t.string   "lti_uid"
+    t.index ["author_id"], name: "index_quizzes_on_author_id", using: :btree
     t.index ["case_id"], name: "index_quizzes_on_case_id", using: :btree
+    t.index ["lti_uid"], name: "index_quizzes_on_lti_uid", using: :btree
     t.index ["template_id"], name: "index_quizzes_on_template_id", using: :btree
   end
 

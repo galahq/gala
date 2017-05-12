@@ -5,7 +5,8 @@ class Question < ApplicationRecord
   translates :content
 
   validates :content_i18n, presence: true
-  validates :correct_answer, inclusion: { in: ->(question) { question.options } }
+  validates :correct_answer, inclusion: { in: ->(question) { question.options } },
+    if: ->(question) { question.options.length > 0}
 
   def self.requiring_response_from reader, in_group:
     # where.not(id: Answer.by_reader(reader).select(:question_id))
