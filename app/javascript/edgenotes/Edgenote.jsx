@@ -32,8 +32,17 @@ function mapDispatchToProps (dispatch: *, { slug }: OwnProps) {
     deactivate: () => dispatch(activateEdgenote(null)),
     onMouseOver: () => dispatch(highlightEdgenote(slug)),
     onMouseOut: () => dispatch(highlightEdgenote(null)),
-    onChange: attr =>
-      value => dispatch(updateEdgenote(slug, { [attr]: value })),
+    onChange: attr => value =>
+      dispatch(updateEdgenote(slug, { [attr]: value })),
+  }
+}
+
+function mergeProps (stateProps, dispatchProps, ownProps) {
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    activate: stateProps.editing ? () => {} : dispatchProps.activate,
   }
 }
 
@@ -42,12 +51,9 @@ class EdgenoteFigure extends React.Component {
     if (!prevProps.active && this.props.active) {
       if (this.props.contents.callToAction && this.props.contents.websiteUrl) {
         window.open(this.props.contents.websiteUrl, '_blank')
-        setTimeout(
-          () => {
-            this.props.deactivate()
-          },
-          300,
-        )
+        setTimeout(() => {
+          this.props.deactivate()
+        }, 300)
       }
     }
   }
@@ -147,7 +153,7 @@ class EdgenoteFigure extends React.Component {
           <Caption
             contents={caption}
             {...reduxProps}
-            {...pullQuote ? { selected: false } : {}}
+            {...(pullQuote ? { selected: false } : {})}
             onChange={onChange('caption')}
           />
           {!!youtubeSlug ||
@@ -174,20 +180,13 @@ class EdgenoteFigure extends React.Component {
   }
 }
 
-export const Edgenote = connect(mapStateToProps, mapDispatchToProps)(
-  EdgenoteFigure,
-)
+export const Edgenote = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
+)(EdgenoteFigure)
 
-const YouTube = (
-  {
-    slug,
-    active,
-    activate,
-    deactivate,
-    editing,
-    onChange,
-  },
-) => (
+const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) => (
   <div>
     {slug &&
       <YoutubePlayer
@@ -208,17 +207,15 @@ const YouTube = (
   </div>
 )
 
-const Image = (
-  {
-    src,
-    callToAction,
-    active,
-    activate,
-    deactivate,
-    editing,
-    onChange,
-  },
-) => {
+const Image = ({
+  src,
+  callToAction,
+  active,
+  activate,
+  deactivate,
+  editing,
+  onChange,
+}) => {
   let imageProps = {
     style: { width: '100%', minHeight: '3em', display: 'block' },
     src: `${src}?w=640`,
@@ -232,7 +229,7 @@ const Image = (
       zoomImage={{ src }}
       onZoom={activate}
       onUnzoom={deactivate}
-      />
+    />
 
   return (
     <div>
@@ -308,25 +305,25 @@ const CallToAction = ({ contents, websiteUrl, editing, onChange }) => (
 )
 
 const Caption = ({ contents, selected, editing, onChange }) =>
-  contents || editing
+  (contents || editing
     ? <div style={{ margin: '0.25em 0 0 0' }}>
       <figcaption
         className={selected && 'edge--highlighted'}
         style={{ fontSize: '110%', lineHeight: 1.1 }}
-        >
+      >
         <EditableText
           multiline
           placeholder="Add caption..."
           value={contents}
           disabled={!editing}
           onChange={onChange}
-          />
+        />
       </figcaption>
     </div>
-    : null
+    : null)
 
 const PullQuote = ({ contents, selected, editing, onChange }) =>
-  contents || editing
+  (contents || editing
     ? <blockquote
       className={selected && 'edge--highlighted'}
       style={{
@@ -335,19 +332,19 @@ const PullQuote = ({ contents, selected, editing, onChange }) =>
         margin: '0 0 0.5em 0',
         padding: '0',
       }}
-      >
+    >
       <EditableText
         multiline
         placeholder="“Add quotation...”"
         value={contents}
         disabled={!editing}
         onChange={onChange}
-        />
+      />
     </blockquote>
-    : null
+    : null)
 
 const Attribution = ({ name, editing, onChange }) =>
-  name || editing
+  (name || editing
     ? <cite
       style={{
         textAlign: 'right',
@@ -356,16 +353,16 @@ const Attribution = ({ name, editing, onChange }) =>
         margin: '0.5em 0 0.25em 0',
         lineHeight: 1,
       }}
-      >
+    >
       <EditableText
         multiline
         placeholder="— Attribution"
         value={name}
         disabled={!editing}
         onChange={onChange}
-        />
+      />
     </cite>
-    : null
+    : null)
 
 const backgroundedStyle = {
   backgroundColor: '#49647D',
