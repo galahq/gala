@@ -4,11 +4,30 @@
 
 import { Record, List } from 'immutable'
 
+export type QuestionSpec = {
+  id: ?number,
+  content: string,
+  options: List<string>,
+  correctAnswer: string,
+  hasError: boolean,
+}
+
 export class Question
   extends Record(
-    { content: '', options: List(), correctAnswer: '', hasError: false },
+    ({
+      id: null,
+      content: '',
+      options: List(),
+      correctAnswer: '',
+      hasError: false,
+    }: QuestionSpec),
     'Question'
   ) {
+  getId: () => ID
+  getId () {
+    return this.get('id')
+  }
+
   getContent: () => string
   getContent () {
     return this.get('content')
@@ -40,4 +59,6 @@ export type ID = number | 'new'
 export type Quiz = {
   id: ID,
   questions: Question[],
+  customQuestions: Question[],
+  customized: boolean,
 }

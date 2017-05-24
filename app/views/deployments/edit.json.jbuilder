@@ -14,16 +14,21 @@ json.case_data do
 end
 
 if @deployment.quiz
-  json.quiz do
-    json.partial! @deployment.quiz
-  end
+  json.selected_quiz_id @deployment.quiz.id
 end
 
-json.recommended_quizzes Hash.new
-json.recommended_quizzes do
-  @recommended_quizzes.each do |quiz|
-    json.set! quiz.id do
-      json.partial! quiz
+if @recommended_quizzes
+  json.recommended_quizzes Hash.new
+  json.recommended_quizzes do
+    @recommended_quizzes.each do |quiz|
+      json.set! quiz.id do
+        json.extract! quiz, :id
+
+        if current_reader == quiz.author || current_reader.lti_uid == quiz.lti_uid
+          json.questions (quiz.template.try(:question) || []), partial: 'questions/question', as: :question
+          json.custom_questions quiz.custom_questions, partial: 'questions/question', as: :question
+        end
+      end
     end
   end
 end

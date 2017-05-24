@@ -10,19 +10,25 @@ import QuizSelector from './QuizSelector'
 import QuizDetails from './QuizDetails'
 import Toolbar from './Toolbar'
 
-import { Position, Intent, Toaster } from '@blueprintjs/core'
+import { Intent, Toaster } from '@blueprintjs/core'
 import type { IntentType } from '@blueprintjs/core'
 
 import { Orchard } from 'shared/orchard'
 import { chooseContentItem } from 'shared/lti'
 
 import { Question } from './types'
-import type { ID, Quiz } from './types'
+import type { ID, Quiz, QuestionSpec } from './types'
 
 type Props = {
   id: string,
-  caseData: $Supertype<{ callbackUrl: string }>,
-  recommendedQuizzes: { [id: ID]: Quiz },
+  caseData: {
+    kicker: string,
+    title: string,
+    coverUrl: string,
+    callbackUrl: string,
+  },
+  selectedQuizId: ?ID,
+  recommendedQuizzes: { [id: string]: Quiz },
   returnUrl?: string,
   returnData?: string,
 }
@@ -35,12 +41,7 @@ type State = {
 
 class Deployment extends React.Component {
   props: Props
-  state: State = {
-    selectedQuizId: null,
-    customQuestions: Map(),
-    answersNeeded: 2,
-  }
-
+  state: State
   toaster: Toaster
 
   _needsPretest: () => boolean
@@ -77,7 +78,8 @@ class Deployment extends React.Component {
                 !question
                   .getOptions()
                   .some((option: string) => option === question.getAnswer())
-            ))
+            )
+          )
       ),
     }
     this.setState(validatedState)
@@ -117,19 +119,19 @@ class Deployment extends React.Component {
       Orchard.espalier(`deployments/${this.props.id}`, {
         deployment: {
           answersNeeded: this._needsPosttest() ? answersNeeded : 0,
-          templateId: selectedQuizId === 'new' ? null : selectedQuizId,
+          quizId: selectedQuizId === 'new' ? null : selectedQuizId,
           customQuestions: selectedQuizId != null
             ? customQuestions.get(selectedQuizId)
             : [],
         },
       })
-        .then(() => {
+        .then((data: Props) => {
           const { returnUrl, returnData, caseData } = this.props
           if (returnUrl != null && returnData != null) {
             chooseContentItem(returnUrl, returnData, caseData.callbackUrl)
           } else {
             this._displayToast(
-              'Deployment successfully updated.',
+              'Deployment successfully updated; get the user off this page or refresh.',
               Intent.SUCCESS
             )
           }
@@ -144,6 +146,22 @@ class Deployment extends React.Component {
 
   constructor (props: Props) {
     super(props)
+
+    const customQuestions = Object.keys(
+      props.recommendedQuizzes
+    ).map((key: string) => {
+      const quiz = props.recommendedQuizzes[key]
+      const questions = quiz.customQuestions.map(question => {
+        const q = new Question(question)
+        return q.set('options', List(q.getOptions()))
+      })
+      return [quiz.id, new List(questions)]
+    })
+    this.state = {
+      selectedQuizId: props.selectedQuizId,
+      customQuestions: new Map(customQuestions),
+      answersNeeded: 2,
+    }
 
     this.toaster = Toaster.create()
 
@@ -167,7 +185,7 @@ class Deployment extends React.Component {
             onSelect={this.handleSelectQuiz}
           />
           : <QuizDetails
-            quiz={recommendedQuizzes[selectedQuizId]}
+            quiz={recommendedQuizzes[`${selectedQuizId}`]}
             customQuestions={customQuestions.get(selectedQuizId)}
             onChangeCustomQuestions={(newCustomQuestions: List<Question>) =>
                 this.handleChangeCustomQuestions(

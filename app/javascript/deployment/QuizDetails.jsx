@@ -21,7 +21,7 @@ type Props = {
 }
 const QuizDetails = (
   {
-    quiz = { id: 'new', questions: [] },
+    quiz = { id: 'new', questions: [], customQuestions: [], customized: true },
     customQuestions = List(),
     onChangeCustomQuestions,
     onDeselect,

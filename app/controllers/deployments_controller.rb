@@ -26,10 +26,10 @@ class DeploymentsController < ApplicationController
   end
 
   def update
-    customizer = CustomizeDeploymentService.new @deployment
-
     author_id = current_reader.try :id
-    result = customizer.customize **deployment_params, lti_uid: lti_uid, author_id: author_id
+    customizer = CustomizeDeploymentService.new @deployment, author_id, lti_uid
+
+    result = customizer.customize **deployment_params
 
     if result.errors.empty?
       render
@@ -67,8 +67,8 @@ class DeploymentsController < ApplicationController
   end
 
   def deployment_params
-    params.require(:deployment).permit(:answers_needed, :template_id,
-      custom_questions: [:content, :correct_answer, options: []])
+    params.require(:deployment).permit(:answers_needed, :quiz_id,
+      custom_questions: [:id, :content, :correct_answer, options: []])
       .to_h
       .symbolize_keys
   end

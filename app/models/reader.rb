@@ -64,6 +64,9 @@ class Reader < ApplicationRecord
     enrollments.find { |e| e.case.id == c.id }
   end
 
+  def has_quiz? quiz
+    (quiz.lti_uid && quiz.lti_uid == lti_uid) || (quiz.author_id && quiz.author_id == id)
+  end
 
   def name_and_email
     "#{name} <#{email}>"
@@ -74,7 +77,7 @@ class Reader < ApplicationRecord
   end
 
   def lti_uid
-    authentication_strategies.where(provider: 'lti').pluck :uid
+    @lti_uid ||= authentication_strategies.where(provider: 'lti').pluck :uid
   end
 
   private

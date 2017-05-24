@@ -11,11 +11,11 @@ import QuizCard from './QuizCard'
 import type { ID, Quiz } from './types'
 
 type Props = {
-  recommendedQuizzes: { [id: ID]: Quiz },
-  onSelect: ?ID => void,
+  recommendedQuizzes: { [id: string]: Quiz },
+  onSelect: (?ID) => void,
 }
 const QuizSelector = ({ recommendedQuizzes, onSelect }: Props) => (
-  <div>
+  <Container>
     <div className="pt-callout pt-icon-help" style={{ lineHeight: 1.2 }}>
       <h5>Assessment options</h5>
       This is just placeholder text which will tell professors that they can administer a comprehension quiz at the end of the case, and pair it with an identical pretest. Choose a base assessment from below.
@@ -24,12 +24,16 @@ const QuizSelector = ({ recommendedQuizzes, onSelect }: Props) => (
       {Object.keys(recommendedQuizzes).map((id: string, i: number) => (
         <QuizCard key={id} {...recommendedQuizzes[id]} onClick={onSelect} />
       ))}
-      <QuizCard id="new" questions={[]} onClick={onSelect} />
+      <QuizCard id="new" questions={[]} customized={true} onClick={onSelect} />
     </TwoColumns>
-  </div>
+  </Container>
 )
 
 export default QuizSelector
+
+const Container = styled.div`
+  padding-bottom: 60px;
+`
 
 const TwoColumns = styled.div`
   display: flex;
@@ -41,5 +45,6 @@ const TwoColumns = styled.div`
 
     &:nth-child(even) { margin-left: 0.5em; }
     &:nth-child(odd) { margin-right: 0.5em; }
+    &:nth-child(n+3) { margin-top: 0 }
   }
 `

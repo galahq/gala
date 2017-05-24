@@ -28,7 +28,9 @@ const QuizCard = ({ id, questions, onClick }: Params) => (
           <li key={i}>
             {question.content}
             <QuestionType
-              className={`pt-icon-standard pt-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
+              className={
+                  `pt-icon-standard pt-icon-${question.options.length > 0 ? 'properties' : 'comment'}`
+                }
             />
           </li>
           ))}
