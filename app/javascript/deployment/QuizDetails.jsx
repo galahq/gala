@@ -5,28 +5,24 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { List } from 'immutable'
 
 import QuizCustomizer from './QuizCustomizer'
 import { QuestionType } from './QuizCard'
 
-import { Question } from './types'
-import type { Quiz } from './types'
+import type { Question, Quiz } from './types'
 
 type Props = {
   quiz: Quiz,
-  customQuestions: List<Question>,
-  onChangeCustomQuestions: (List<Question>) => void,
+  customQuestions: Question[],
+  onChangeCustomQuestions: (Question[]) => void,
   onDeselect: () => void,
 }
-const QuizDetails = (
-  {
-    quiz = { id: 'new', questions: [], customQuestions: [], customized: true },
-    customQuestions = List(),
-    onChangeCustomQuestions,
-    onDeselect,
-  }: Props
-) => (
+const QuizDetails = ({
+  quiz = { id: 'new', questions: [], customQuestions: [], customized: true },
+  customQuestions = [],
+  onChangeCustomQuestions,
+  onDeselect,
+}: Props) => (
   <DetailsCard className="pt-card">
     <CloseLink onClick={onDeselect}>
       <span className="pt-icon-standard pt-icon-cross" />
@@ -69,7 +65,7 @@ const CardTitle = styled.h1`
   font-size: 17px;
 `
 
-const SectionTitle = styled.label`
+export const SectionTitle = styled.label`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 600;

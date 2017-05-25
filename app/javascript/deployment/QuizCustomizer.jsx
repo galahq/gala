@@ -5,41 +5,49 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { List } from 'immutable'
+import { append, update, remove } from 'ramda'
 
 import { Button, Intent, InputGroup, Radio } from '@blueprintjs/core'
 
-import { Question } from './types'
+import type { Question } from './types'
 
 import { hotkeyDispatch } from 'shared/keyboard'
 
 type Props = {
-  customQuestions: List<Question>,
-  onChange: List<Question> => void,
+  customQuestions: Question[],
+  onChange: (Question[]) => void,
 }
 const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
-  const handleAddQuestion = () => onChange(customQuestions.push(new Question()))
+  const handleAddQuestion = () =>
+    onChange(
+      append(
+        {
+          id: null,
+          content: '',
+          options: [],
+          correctAnswer: '',
+          hasError: false,
+        },
+        customQuestions
+      )
+    )
 
   const handleRemoveQuestion = (i: number) =>
-    onChange(customQuestions.delete(i))
+    onChange(remove(i, 1, customQuestions))
 
   const handleEditQuestionContent = (i: number, content: string) =>
-    onChange(
-      customQuestions.set(i, customQuestions.get(i).set('content', content))
-    )
+    onChange(update(i, { ...customQuestions[i], content }, customQuestions))
 
-  const handleEditQuestionOptions = (i: number, options: List<string>) =>
-    onChange(
-      customQuestions.set(i, customQuestions.get(i).set('options', options))
-    )
+  const handleEditQuestionOptions = (i: number, options: string[]) =>
+    onChange(update(i, { ...customQuestions[i], options }, customQuestions))
 
   const handleAddQuestionOption = (i: number) =>
-    handleEditQuestionOptions(i, customQuestions.get(i).getOptions().push(''))
+    handleEditQuestionOptions(i, append('', customQuestions[i].options))
 
   const handleRemoveQuestionOption = (questionIx: number, optionIx: number) =>
     handleEditQuestionOptions(
       questionIx,
-      customQuestions.get(questionIx).getOptions().delete(optionIx)
+      remove(optionIx, 1, customQuestions[questionIx].options)
     )
 
   const handleEditQuestionOption = (
@@ -49,36 +57,32 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
   ) =>
     handleEditQuestionOptions(
       questionIx,
-      customQuestions.get(questionIx).getOptions().set(optionIx, content)
+      update(optionIx, content, customQuestions[questionIx].options)
     )
 
-  const handleEditQuestionAnswer = (questionIx: number, answer: string) =>
+  const handleEditQuestionAnswer = (i: number, correctAnswer: string) =>
     onChange(
-      customQuestions.set(
-        questionIx,
+      update(
+        i,
+        { ...customQuestions[i], hasError: false, correctAnswer },
         customQuestions
-          .get(questionIx)
-          .set('correctAnswer', answer)
-          .set('hasError', false)
       )
     )
 
   return (
     <div>
       {customQuestions.map((question: Question, questionIx: number) => {
-        const content: string = question.getContent()
-        const options: List<string> = question.getOptions()
-        const answer: string = question.getAnswer()
+        const { content, options, correctAnswer } = question
         return (
           <PaddedItem key={questionIx}>
 
             <QuestionInputGroup
               autoFocus
-              intent={question.hasError() && Intent.WARNING}
+              intent={question.hasError && Intent.WARNING}
               value={content}
               placeholder="Question text"
               type="text"
-              leftIconName={options.size > 0 ? 'properties' : 'comment'}
+              leftIconName={options.length > 0 ? 'properties' : 'comment'}
               rightElement={
                 content
                   ? <Button
@@ -109,7 +113,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
               <div className="pt-control-group pt-fill" key={optionIx}>
                 <GroupedRadio
                   value={option}
-                  checked={option !== '' && option === answer}
+                  checked={option !== '' && option === correctAnswer}
                   className="pt-fixed"
                   onChange={(e: SyntheticInputEvent) => {
                     if (e.target.checked) {
@@ -157,7 +161,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
         )
       })}
       <FlushButton
-        alone={customQuestions.size === 0}
+        alone={customQuestions.length === 0}
         iconName="add"
         onClick={handleAddQuestion}
       >

@@ -12,7 +12,7 @@ declare module '@blueprintjs/core' {
   declare export type DANGER = "DANGER"
   declare export type IntentType = PRIMARY | SUCCESS | WARNING | DANGER
 
-  declare export class Intent {
+  declare export interface Intent {
     static PRIMARY: PRIMARY;
     static SUCCESS: SUCCESS;
     static WARNING: WARNING;
@@ -45,7 +45,7 @@ declare module '@blueprintjs/core' {
     | LEFT
     | LEFT_TOP
 
-  declare export class Position {
+  declare export interface Position {
     static TOP_LEFT: TOP_LEFT;
     static TOP: TOP;
     static TOP_RIGHT: TOP_RIGHT;
@@ -82,27 +82,27 @@ declare module '@blueprintjs/core' {
   //
   // Components
   //
-  declare export class Button extends React$Component {
+  declare export interface Button extends React$Component {
     props: {
       active?: boolean,
     } & IActionProps
   }
 
-  declare export class Dialog extends React$Component {
+  declare export interface Dialog extends React$Component {
     props: {
       isOpen: boolean,
       title: string | React$Component<*,*,*>,
     }
   }
 
-  declare export class Tooltip extends React$Component {
+  declare export interface Tooltip extends React$Component {
     props: {
       isDisabled?: boolean,
       content: string,
     } & IIntentProps
   }
 
-  declare export class RadioGroup extends React$Component {
+  declare export interface RadioGroup extends React$Component {
     props: {
       disabled?: boolean,
       label?: string,

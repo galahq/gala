@@ -25,8 +25,11 @@ if @recommended_quizzes
         json.extract! quiz, :id
 
         if current_reader == quiz.author || current_reader.lti_uid == quiz.lti_uid
-          json.questions (quiz.template.try(:question) || []), partial: 'questions/question', as: :question
+          json.questions (quiz.template.try(:questions) || []), partial: 'questions/question', as: :question
           json.custom_questions quiz.custom_questions, partial: 'questions/question', as: :question
+        else
+          json.questions quiz.questions, partial: 'questions/question', as: :question
+          json.custom_questions []
         end
       end
     end

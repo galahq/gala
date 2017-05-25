@@ -41,6 +41,7 @@
     "postcss-smart-import": "^0.6.11",
     "precss": "^1.4.0",
     "rails-erb-loader": "^5.0.0",
+    "ramda": "^0.23.0",
     "raw-loader": "^0.5.1",
     "react": "^15.4.0",
     "react-addons-css-transition-group": "^15.4.2",

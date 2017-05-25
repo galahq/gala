@@ -8,13 +8,18 @@ import styled from 'styled-components'
 
 import QuizCard from './QuizCard'
 
-import type { ID, Quiz } from './types'
+import type { ID, Quiz, Question } from './types'
 
 type Props = {
   recommendedQuizzes: { [id: string]: Quiz },
+  customQuestions: { [id: string]: Question[] },
   onSelect: (?ID) => void,
 }
-const QuizSelector = ({ recommendedQuizzes, onSelect }: Props) => (
+const QuizSelector = ({
+  recommendedQuizzes,
+  customQuestions,
+  onSelect,
+}: Props) => (
   <Container>
     <div className="pt-callout pt-icon-help" style={{ lineHeight: 1.2 }}>
       <h5>Assessment options</h5>
@@ -22,9 +27,20 @@ const QuizSelector = ({ recommendedQuizzes, onSelect }: Props) => (
     </div>
     <TwoColumns>
       {Object.keys(recommendedQuizzes).map((id: string, i: number) => (
-        <QuizCard key={id} {...recommendedQuizzes[id]} onClick={onSelect} />
+        <QuizCard
+          key={id}
+          {...recommendedQuizzes[id]}
+          customQuestions={customQuestions[id]}
+          onClick={onSelect}
+        />
       ))}
-      <QuizCard id="new" questions={[]} customized={true} onClick={onSelect} />
+      <QuizCard
+        id="new"
+        questions={[]}
+        customQuestions={[]}
+        customized={true}
+        onClick={onSelect}
+      />
     </TwoColumns>
   </Container>
 )

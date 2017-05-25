@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import { Map, List } from 'immutable'
+import { map } from 'ramda'
 
 import QuizSelector from './QuizSelector'
 import QuizDetails from './QuizDetails'
@@ -16,8 +16,7 @@ import type { IntentType } from '@blueprintjs/core'
 import { Orchard } from 'shared/orchard'
 import { chooseContentItem } from 'shared/lti'
 
-import { Question } from './types'
-import type { ID, Quiz, QuestionSpec } from './types'
+import type { ID, Quiz, Question } from './types'
 
 type Props = {
   id: string,
@@ -35,85 +34,76 @@ type Props = {
 
 type State = {
   selectedQuizId: ?ID,
-  customQuestions: Map<ID, List<Question>>,
+  customQuestions: { [id: string]: Question[] },
   answersNeeded: 1 | 2,
 }
+
+const questionHasError = (question: Question) =>
+  question.options.size !== 0 &&
+  !question.options.some((option: string) => option === question.correctAnswer)
+
+const validated = map((question: Question) => ({
+  ...question,
+  hasError: questionHasError(question),
+}))
 
 class Deployment extends React.Component {
   props: Props
   state: State
   toaster: Toaster
 
-  _needsPretest: () => boolean
-  _needsPosttest: () => boolean
-  _valid: () => boolean
-  _displayToast: (error: string, intent: ?IntentType) => void
-
-  handleSelectQuiz: (quizId: ?ID) => void
-  handleTogglePretest: () => void
-  handleSubmit: () => void
-
-  _needsPretest () {
+  _needsPretest = () => {
     return this.state.selectedQuizId != null && this.state.answersNeeded === 2
   }
-  _needsPosttest () {
+  _needsPosttest = () => {
     return this.state.selectedQuizId != null
   }
 
-  _valid () {
+  _valid = () => {
     const state = this.state
     const { selectedQuizId, customQuestions } = state
 
     if (selectedQuizId == null) return true
+
     const validatedState = {
       ...state,
-      customQuestions: customQuestions.set(
-        selectedQuizId,
-        customQuestions
-          .get(selectedQuizId, List())
-          .map((question: Question) =>
-            question.set(
-              'hasError',
-              question.getOptions().size !== 0 &&
-                !question
-                  .getOptions()
-                  .some((option: string) => option === question.getAnswer())
-            )
-          )
-      ),
+      customQuestions: {
+        ...customQuestions,
+        [`${selectedQuizId}`]: validated(customQuestions[`${selectedQuizId}`]),
+      },
     }
     this.setState(validatedState)
-    return !validatedState.customQuestions
-      .get(selectedQuizId)
-      .some((question: Question) => question.hasError())
+    return !validatedState.customQuestions[`${selectedQuizId}`].some(
+      (question: Question) => question.hasError
+    )
   }
 
-  _displayToast (error: string, intent: IntentType = Intent.WARNING) {
+  _displayToast = (error: string, intent: IntentType = Intent.WARNING) => {
     this.toaster.show({
       message: error,
       intent,
     })
   }
 
-  handleSelectQuiz (quizId: ?ID) {
+  handleSelectQuiz = (quizId: ?ID) => {
     this.setState({ selectedQuizId: quizId })
   }
 
-  handleTogglePretest () {
+  handleTogglePretest = () => {
     this.setState((state: State) => ({
       ...state,
       answersNeeded: state.answersNeeded === 1 ? 2 : 1,
     }))
   }
 
-  handleChangeCustomQuestions (quizId: ID, customQuestions: List<Question>) {
+  handleChangeCustomQuestions = (quizId: ID, customQuestions: Question[]) => {
     this.setState((state: State) => ({
       ...state,
-      customQuestions: state.customQuestions.set(quizId, customQuestions),
+      customQuestions: { ...state.customQuestions, [quizId]: customQuestions },
     }))
   }
 
-  handleSubmit () {
+  handleSubmit = () => {
     if (this._valid()) {
       const { answersNeeded, selectedQuizId, customQuestions } = this.state
       Orchard.espalier(`deployments/${this.props.id}`, {
@@ -121,7 +111,7 @@ class Deployment extends React.Component {
           answersNeeded: this._needsPosttest() ? answersNeeded : 0,
           quizId: selectedQuizId === 'new' ? null : selectedQuizId,
           customQuestions: selectedQuizId != null
-            ? customQuestions.get(selectedQuizId)
+            ? customQuestions[selectedQuizId]
             : [],
         },
       })
@@ -147,31 +137,17 @@ class Deployment extends React.Component {
   constructor (props: Props) {
     super(props)
 
-    const customQuestions = Object.keys(
+    const customQuestions = map(
+      (quiz: Quiz) => quiz.customQuestions,
       props.recommendedQuizzes
-    ).map((key: string) => {
-      const quiz = props.recommendedQuizzes[key]
-      const questions = quiz.customQuestions.map(question => {
-        const q = new Question(question)
-        return q.set('options', List(q.getOptions()))
-      })
-      return [quiz.id, new List(questions)]
-    })
+    )
     this.state = {
       selectedQuizId: props.selectedQuizId,
-      customQuestions: new Map(customQuestions),
       answersNeeded: 2,
+      customQuestions,
     }
 
     this.toaster = Toaster.create()
-
-    this._needsPretest = this._needsPretest.bind(this)
-    this._needsPosttest = this._needsPosttest.bind(this)
-    this._valid = this._valid.bind(this)
-    this._displayToast = this._displayToast.bind(this)
-    this.handleSelectQuiz = this.handleSelectQuiz.bind(this)
-    this.handleTogglePretest = this.handleTogglePretest.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   render () {
@@ -182,12 +158,13 @@ class Deployment extends React.Component {
         {selectedQuizId == null
           ? <QuizSelector
             recommendedQuizzes={recommendedQuizzes}
+            customQuestions={customQuestions}
             onSelect={this.handleSelectQuiz}
           />
           : <QuizDetails
             quiz={recommendedQuizzes[`${selectedQuizId}`]}
-            customQuestions={customQuestions.get(selectedQuizId)}
-            onChangeCustomQuestions={(newCustomQuestions: List<Question>) =>
+            customQuestions={customQuestions[selectedQuizId]}
+            onChangeCustomQuestions={(newCustomQuestions: Question[]) =>
                 this.handleChangeCustomQuestions(
                   selectedQuizId,
                   newCustomQuestions
