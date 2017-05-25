@@ -39,7 +39,7 @@ type State = {
 }
 
 const questionHasError = (question: Question) =>
-  question.options.size !== 0 &&
+  question.options.length !== 0 &&
   !question.options.some((option: string) => option === question.correctAnswer)
 
 const validated = map((question: Question) => ({

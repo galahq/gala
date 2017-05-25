@@ -17,19 +17,16 @@ class CustomizeDeploymentService
       ActiveRecord::Base.transaction do
         @deployment.answers_needed = answers_needed
 
-        if quiz_id
-          @deployment.quiz = find_quiz quiz_id
-          delete_questions_not_included_in custom_questions.map{ |q| q['id'] }
-          upsert_questions custom_questions
-          set_quiz_author
-        else
-          @deployment.quiz = nil
-        end
+        @deployment.quiz = find_quiz quiz_id
+        delete_questions_not_included_in custom_questions.map{ |q| q['id'] }
+        upsert_questions custom_questions
+        set_quiz_author
 
         @deployment.save!
 
       end
     rescue ActiveRecord::RecordInvalid => invalid
+      byebug
       return invalid.record
     end
 
@@ -42,8 +39,8 @@ class CustomizeDeploymentService
   end
 
   def find_quiz quiz_id
-    quiz = Quiz.find quiz_id
-    if @author_identifier.author.has_quiz? quiz
+    quiz = Quiz.where(id: quiz_id).try(:first)
+    if quiz && @author_identifier.author.has_quiz?(quiz)
       quiz
     else
       create_quiz_from_template quiz_id
