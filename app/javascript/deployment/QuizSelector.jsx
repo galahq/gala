@@ -23,7 +23,13 @@ const QuizSelector = ({
   <Container>
     <div className="pt-callout pt-icon-help" style={{ lineHeight: 1.2 }}>
       <h5>Assessment options</h5>
-      This is just placeholder text which will tell professors that they can administer a comprehension quiz at the end of the case, and pair it with an identical pretest. Choose a base assessment from below.
+      See how well your students are learning. You can administer a
+      comprehension quiz at the end of the case, and optionally pair it with an
+      identical pretest.
+      {' '}
+      {Object.keys(recommendedQuizzes).length > 0
+        ? 'Choose a base assessment from below, or start from scratch and design your own quiz.'
+        : 'Think of a few multiple choice or short answer questions and they will be presented to your students before and after the case materials.'}
     </div>
     <TwoColumns>
       {Object.keys(recommendedQuizzes).map((id: string, i: number) => (
