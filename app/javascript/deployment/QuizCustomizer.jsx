@@ -174,7 +174,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
 export default QuizCustomizer
 
 const FlushButton = styled(Button)`
-  margin-top: ${({ alone }) => (alone ? '0.5em' : '0')};
+  margin-top: ${({ alone }: { alone: boolean }) => (alone ? '0.5em' : '0')};
   margin-left: -17px;
 `
 

@@ -63,17 +63,36 @@ declare module '@blueprintjs/core' {
   //
   // Interfaces
   //
-  declare export type IActionProps = {
+  declare export interface IProps {
+    className?: string,
+  }
+
+  declare export interface IActionProps {
     disabled?: boolean,
     text?: string,
     iconName?: string,
-  } & IIntentProps
+  }
 
-  declare export type IIntentProps = {
+  declare export interface IControlledProps {
+    defaultValue?: string,
+    onChange?: SyntheticInputEvent => void,
+    value?: string,
+  }
+
+  declare export interface IControlProps {
+    checked?: boolean,
+    defaultChecked?: boolean,
+    disabled?: boolean,
+    inputRef?: HTMLInputElement => any,
+    label?: string,
+    onChange?: SyntheticInputEvent => void,
+  }
+
+  declare export interface IIntentProps {
     intent?: IntentType,
   }
 
-  declare export type IOptionProps = {
+  declare export interface IOptionProps {
     disabled?: boolean,
     label?: string,
     value?: string,
@@ -82,27 +101,74 @@ declare module '@blueprintjs/core' {
   //
   // Components
   //
-  declare export interface Button extends React$Component {
+  declare export interface Button extends React$Component<*, *, *> {
     props: {
       active?: boolean,
     } & IActionProps
   }
 
-  declare export interface Dialog extends React$Component {
+  declare export interface Dialog extends React$Component<*, *, *> {
     props: {
       isOpen: boolean,
-      title: string | React$Component<*,*,*>,
+      title: string | React$Element<*>,
     }
   }
 
-  declare export interface Tooltip extends React$Component {
+  declare export interface InputGroup extends React$Component<*, *, *> {
+    props: {
+      disabled?: boolean,
+      intent?: IntentType,
+      leftIconName?: string,
+      placeholder?: string,
+      rightElement?: React$Element<*>,
+      type?: string,
+    } & IProps & IControlledProps
+  }
+
+  declare export interface NonIdealState extends React$Component<*, *, *> {
+    props: {
+      action?: React$Element<*>,
+      description?: string | React$Element<*>,
+      title?: string,
+      visual?: string | React$Element<*>,
+    } & IProps
+  }
+
+  declare export interface Radio extends React$Component<*, *, *> {
+    props: IControlProps & IProps
+  }
+
+  declare export type Toast = {
+    message: string,
+    onDismiss?: (didTimoutExpire: boolean) => void,
+    timeout?: number,
+  } & IActionProps & IProps & IIntentProps
+
+  declare export interface Toaster extends React$Component<*, *, *> {
+    static create (
+      props: ?({
+        autoFocus?: boolean,
+        canEscapeKeyClear?: boolean,
+        inline?: boolean,
+        position?: Position,
+      } & IProps),
+      container: ?HTMLElement
+    ): Toaster,
+    show (props: Toast): string,
+    update (key: string, props: Toast): void,
+    dismiss (key: string): void,
+    clear (): void,
+    getToasts (): Toast[],
+  }
+
+  declare export interface Tooltip extends React$Component<*, *, *> {
     props: {
       isDisabled?: boolean,
       content: string,
     } & IIntentProps
   }
 
-  declare export interface RadioGroup extends React$Component {
+  declare export interface RadioGroup extends React$Component<*, *, *> {
     props: {
       disabled?: boolean,
       label?: string,

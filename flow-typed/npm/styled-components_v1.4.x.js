@@ -17,7 +17,7 @@ type $npm$styledComponents$ThemeProviderProps = {
   theme: ((outerTheme: $npm$styledComponents$Theme) => void) | $npm$styledComponents$Theme
 };
 type $npm$styledComponents$Component =
-  | React$Component<*, *, *>
+  | $Supertype<React$Component<*, *, *>>
   | (props: *) => React$Element<*>;
 
 class Npm$StyledComponents$ThemeProvider extends React$Component {

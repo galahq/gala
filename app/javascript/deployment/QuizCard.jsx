@@ -44,18 +44,19 @@ const Questions = ({
   questions: QuestionT[],
   sectionTitle?: string,
 }) =>
-  questions.length > 0 &&
-  <div>
-    <SectionTitle>{sectionTitle}</SectionTitle>
-    {questions.map((question: QuestionT, i: number) => (
-      <li key={i}>
-        {question.content}
-        <QuestionType
-          className={`pt-icon-standard pt-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
-        />
-      </li>
-    ))}
-  </div>
+  questions.length > 0
+    ? <div>
+      <SectionTitle>{sectionTitle}</SectionTitle>
+      {questions.map((question: QuestionT, i: number) => (
+        <li key={i}>
+          {question.content}
+          <QuestionType
+            className={`pt-icon-standard pt-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
+          />
+        </li>
+        ))}
+    </div>
+    : null
 
 export const QuestionType = styled.span`
   margin-left: 0.5em;

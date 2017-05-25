@@ -111,7 +111,7 @@ class Deployment extends React.Component {
           answersNeeded: this._needsPosttest() ? answersNeeded : 0,
           quizId: selectedQuizId === 'new' ? null : selectedQuizId,
           customQuestions: selectedQuizId != null
-            ? customQuestions[selectedQuizId]
+            ? customQuestions[`${selectedQuizId}`]
             : [],
         },
       })
@@ -163,7 +163,7 @@ class Deployment extends React.Component {
           />
           : <QuizDetails
             quiz={recommendedQuizzes[`${selectedQuizId}`]}
-            customQuestions={customQuestions[selectedQuizId]}
+            customQuestions={customQuestions[`${selectedQuizId}`]}
             onChangeCustomQuestions={(newCustomQuestions: Question[]) =>
                 this.handleChangeCustomQuestions(
                   selectedQuizId,
