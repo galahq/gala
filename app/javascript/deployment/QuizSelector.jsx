@@ -37,7 +37,7 @@ const QuizSelector = ({
       <QuizCard
         id="new"
         questions={[]}
-        customQuestions={[]}
+        customQuestions={customQuestions['new'] || []}
         customized={true}
         onClick={onSelect}
       />
