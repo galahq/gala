@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import QuizCustomizer from './QuizCustomizer'
 import { QuestionType } from './QuizCard'
@@ -37,7 +37,11 @@ const QuizDetails = ({
             ? <QuestionType className="pt-icon-standard pt-icon-comment" />
             : <OptionsList>
               {question.options.map((option: string, i: number) => (
-                <li key={i}>{option}</li>
+                <li key={i}>
+                  <Option correct={question.correctAnswer === option}>
+                    {option}
+                  </Option>
+                </li>
                 ))}
             </OptionsList>}
         </li>
@@ -88,6 +92,13 @@ const OptionsList = styled.ul`
       margin: 0 0.5em;
     }
   }
+`
+
+const Option = styled.span`
+  ${({ correct }: { correct: boolean }) => correct && css`
+    color: #6ACB72;
+    font-weight: bold;
+  `}
 `
 
 const CloseLink = styled.a`
