@@ -45,4 +45,8 @@ class ApplicationController < ActionController::Base
     path ||= signed_in_root_path(resource_or_scope)
   end
 
+  def authority_forbidden(error)
+    render file: Rails.root.join('public', '403.html'), status: 403, layout: false
+  end
+
 end

@@ -10,14 +10,14 @@ feature 'Tracking a reader' do
 
     scenario 'records when they view a card' do
       visit "#{case_path 'en', kase}/1"
-      sleep 1
+      sleep 4
       visit root_path
       sleep 1
       expect(kase.pages.first.cards.first.views).to eq 1
       expect(kase.pages.first.cards.first.uniques).to eq 1
       expect(kase.pages.first.cards.last.views).to eq 0
       visit "#{case_path 'en', kase}/1"
-      sleep 1
+      sleep 4
       visit root_path
       sleep 1
       expect(kase.pages.first.cards.first.views).to eq 2
@@ -33,7 +33,7 @@ feature 'Tracking a reader' do
 
     scenario 'does not record when they view a card' do
       visit "#{case_path 'en', kase}/1"
-      sleep 1
+      sleep 4
       visit root_path
       expect(kase.pages.first.cards.first.views).to eq 0
       expect(kase.pages.first.cards.first.uniques).to eq 0

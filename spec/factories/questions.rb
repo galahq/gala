@@ -1,9 +1,14 @@
 FactoryGirl.define do
   factory :question do
-    association :quiz
-    answers nil
-    content ""
-    correct_answer "MyText"
+    content { Faker::Lorem.question }
+    correct_answer ""
     options []
+
+    trait :multiple_choice do
+      options { Faker::Lorem.sentences(4) }
+      after :build do |this|
+        this.correct_answer = this.options.sample
+      end
+    end
   end
 end

@@ -21,11 +21,15 @@ class DeploymentsController < ApplicationController
   end
 
   def edit
+    authorize_action_for @deployment, selection_params: session[:content_item_selection_params]
+
     set_selection_params
     set_recommended_quizzes
   end
 
   def update
+    authorize_action_for @deployment, selection_params: session[:content_item_selection_params]
+
     author_id = current_reader.try :id
     customizer = CustomizeDeploymentService.new @deployment, author_id, lti_uid
 

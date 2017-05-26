@@ -1,5 +1,7 @@
 # Mock public API in GenericDeployment
 class Deployment < ApplicationRecord
+  include Authority::Abilities
+  
   belongs_to :case
   belongs_to :group
   belongs_to :quiz

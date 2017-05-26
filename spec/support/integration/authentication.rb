@@ -8,6 +8,12 @@ module Orchard
           fill_in 'reader[password]', with: 'secret'
           click_button 'Sign in'
         end
+
+        def logout
+          visit root_path
+          find('#reader-icon').click
+          click_link 'Sign out'
+        end
       end
     end
   end

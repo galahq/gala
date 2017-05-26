@@ -15,9 +15,8 @@ import type { ID, Quiz, Question as QuestionT } from './types'
 
 type Params = Quiz & { onClick: (quizId: ID) => void }
 const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
-  <div
+  <Link
     className="pt-card pt-elevation-1 pt-interactive"
-    style={{ backgroundColor: '#446583AA' }}
     tabIndex="0"
     role="button"
     onClick={() => onClick(id)}
@@ -32,7 +31,7 @@ const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
         />
       </ol>
       : <NonIdealState title="Custom Assessment" visual="edit" />}
-  </div>
+  </Link>
 )
 
 export default QuizCard
@@ -57,6 +56,15 @@ const Questions = ({
         ))}
     </div>
     : null
+
+export const Link = styled.a`
+  color: white !important;
+  background-color: #446583AA;
+
+  & .pt-non-ideal-state-icon .pt-icon {
+    color: rgba(191, 204, 214, 0.5) !important
+  }
+`
 
 export const QuestionType = styled.span`
   margin-left: 0.5em;

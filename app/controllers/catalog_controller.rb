@@ -22,11 +22,19 @@ class CatalogController < ApplicationController
     @group = linker.group
     session[:active_group_id] = @group.id
 
-    session[:content_item_selection_params] = {lti_uid: params[:user_id],
-      return_url: params[:content_item_return_url],
-      return_data: params[:data]}
+    save_selection_params_to_session
 
     @items = Case.where(published: true).sort_by(&:kicker)
     render layout: "embed"
+  end
+
+  private
+  def save_selection_params_to_session
+    session[:content_item_selection_params] = {
+      lti_uid: params[:user_id],
+      return_url: params[:content_item_return_url],
+      return_data: params[:data],
+      context_id: params[:context_id]
+    }
   end
 end
