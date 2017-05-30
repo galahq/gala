@@ -13,7 +13,7 @@ import Podcast from './Podcast'
 import Activity from './Activity'
 import EdgenoteContents from 'deprecated/EdgenoteContents'
 
-import { OnScreenTracker } from 'utility/Tracker'
+import Tracker from 'utility/Tracker'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -125,7 +125,8 @@ class CaseElement extends React.Component {
           <ConditionalNextLink next={next} />
         </main>
 
-        <OnScreenTracker
+        <Tracker
+          timerState="RUNNING"
           targetKey={url}
           targetParameters={{
             name: 'visit_element',
@@ -143,14 +144,14 @@ export default connect(mapStateToProps, { deleteElement })(CaseElement)
 type NextProps = ?{ title: string, position: string }
 
 const NextLink = ({ next }: { next: NextProps }) =>
-  (next
+  next
     ? <Link className="nextLink" to={`/${next.position}`}>
       <FormattedMessage id="case.next" />
       {next.title}
     </Link>
     : <footer>
       <h2><FormattedMessage id="case.end" /></h2>
-    </footer>)
+    </footer>
 
 const ConditionalNextLink = connect(
   (state: State, ownProps: { next: NextProps }) => {
