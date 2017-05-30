@@ -13,8 +13,8 @@ export type State = {
   +edit: EditState,
   +pagesById: PagesState,
   +podcastsById: PodcastsState,
-  +statistics: StatisticsState,
   +quiz: QuizState,
+  +statistics: StatisticsState,
   +ui: UIState,
 }
 
@@ -253,7 +253,9 @@ export type Question = {
 export type Reader = {
   +canUpdateCase: boolean,
   +email: string,
-  +enrollment: boolean,
+  +enrollment: {
+    +status: 'student' | 'instructor' | 'treatment',
+  },
   +id: number,
   +initials: string,
   +name: string,

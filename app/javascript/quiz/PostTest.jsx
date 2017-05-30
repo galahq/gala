@@ -18,8 +18,8 @@ type Props = QuizProviderProps
 const PostTest = ({
   answers,
   canSubmit,
-  handleChange,
-  handleSubmit,
+  onChange,
+  onSubmit,
   questions,
 }: Props) => {
   return (
@@ -44,19 +44,19 @@ const PostTest = ({
               selectedAnswer={answers[q.id]}
               key={q.id}
               {...q}
-              handleChange={(e: SyntheticInputEvent) => handleChange(q.id, e)}
+              onChange={(e: SyntheticInputEvent) => onChange(q.id, e)}
             />
           ))}
           <Tooltip
             isDisabled={canSubmit}
-            content="Please answer all the questions (I18n)"
+            content="Please answer all the questions"
             position={Position.TOP}
           >
             <Button
               disabled={!canSubmit}
               intent={Intent.PRIMARY}
               text="Submit"
-              onClick={handleSubmit}
+              onClick={onSubmit}
             />
           </Tooltip>
         </div>

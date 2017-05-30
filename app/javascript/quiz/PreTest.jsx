@@ -20,8 +20,8 @@ type Props = RouteProps & QuizProviderProps
 const PreTest = ({
   answers,
   canSubmit,
-  handleChange,
-  handleSubmit,
+  onChange,
+  onSubmit,
   history,
   match,
   questions,
@@ -32,7 +32,7 @@ const PreTest = ({
       <Dialog
         className="pt-dark"
         isOpen={!!match}
-        title="Before you get started (I18n)"
+        title="Before you get started"
         style={{ top: '10%' }}
         onClose={() => {
           history.replace('/')
@@ -50,7 +50,7 @@ const PreTest = ({
                 selectedAnswer={answers[q.id]}
                 key={q.id}
                 {...q}
-                handleChange={(e: SyntheticInputEvent) => handleChange(q.id, e)}
+                onChange={(e: SyntheticInputEvent) => onChange(q.id, e)}
               />
             ))}
           </div>
@@ -60,14 +60,10 @@ const PreTest = ({
           <div className="pt-dialog-footer-actions">
             <Tooltip
               isDisabled={canSubmit}
-              content="Please answer all the questions (I18n)"
+              content="Please answer all the questions"
               position={Position.TOP}
             >
-              <Button
-                disabled={!canSubmit}
-                text="Submit"
-                onClick={handleSubmit}
-              />
+              <Button disabled={!canSubmit} text="Submit" onClick={onSubmit} />
             </Tooltip>
           </div>
         </div>

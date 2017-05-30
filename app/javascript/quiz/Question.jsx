@@ -12,22 +12,22 @@ import type { Question as QuestionT } from 'redux/state'
 
 type Props = QuestionT & {
   selectedAnswer: string,
-  handleChange: (e: SyntheticInputEvent) => void,
+  onChange: (e: SyntheticInputEvent) => void,
 }
 const Question = ({
   id,
   content,
-  handleChange,
+  onChange,
   selectedAnswer,
   options = [],
 }: Props) =>
-  (options.length > 0
+  options.length > 0
     ? <div style={{ marginBottom: 15 }}>
       <RadioGroup
         label={content}
         options={options.map(toRadioProps)}
         selectedValue={selectedAnswer}
-        onChange={handleChange}
+        onChange={onChange}
       />
     </div>
     : <label className="pt-label" htmlFor={id}>
@@ -36,9 +36,9 @@ const Question = ({
         name={id}
         className="pt-input pt-fill"
         dir="auto"
-        onChange={handleChange}
+        onChange={onChange}
       />
-    </label>)
+    </label>
 
 export default Question
 
