@@ -5,19 +5,15 @@ import ReactDOM from 'react-dom'
 
 import ContentItems from 'content_items'
 
-function render (Component: React$Component) {
-  const container = document.getElementById('content-items-app')
+const container = document.getElementById('content-items-app')
 
-  if (container == null) return
-
+if (container != null) {
   ReactDOM.render(
-    <Component
+    <ContentItems
       items={JSON.parse(container.getAttribute('data-items'))}
-      returnUrl={container.getAttribute('data-return-url')}
-      returnData={container.getAttribute('data-return-data')}
+      groupId={container.getAttribute('data-group-id')}
+      returnParams={JSON.parse(container.getAttribute('data-return-params'))}
     />,
     container
   )
 }
-
-render(ContentItems)

@@ -85,6 +85,19 @@ if reader_signed_in?
     json.enrollment current_reader.enrollment_for_case(c)
   end
 
+  json.quiz do
+    quiz = @deployment.quiz
+    json.needs_pretest @deployment.reader_needs_pretest? current_reader
+    json.needs_posttest @deployment.reader_needs_posttest? current_reader
+    if quiz && quiz.requires_response_from?(current_reader, in_group: @group)
+      json.id quiz.id
+      json.questions do
+        json.array! quiz.questions, :id, :content, :options
+      end
+    else
+    end
+  end
+
   if current_reader.can_update? c
     json.enrollments do
       Enrollment.statuses.each do |status, num|

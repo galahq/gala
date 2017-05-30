@@ -23,3 +23,112 @@ main
 
 main#EdgenoteGallery
   flex: 0 1 104rem
+
+header
+  background-color: $umichBlue
+  padding: 1em
+  display: flex
+  justify-content: space-between
+
+  & > a:hover
+    background-color: inherit
+
+  #logo
+    margin: 0pt 1pt
+
+    svg
+      width: 22.5em
+
+      @media screen and (max-width: $mobileCutoff)
+        width: 18em
+
+    background-repeat: no-repeat
+
+    span
+      display: none
+
+  #reader-menu
+    cursor: pointer
+
+    .dismiss
+      z-index: 40
+
+    #reader-icon
+      position: absolute
+      z-index: 50
+      right: 3em
+
+  ul#reader-menu-dropdown
+    background-color: $purple
+    position: absolute
+    z-index: 50
+    min-width: 10em
+    top: -1em
+    right: -1em
+    margin: 0
+    padding: 5.3em 0 0 1.5em
+    list-style: none
+    box-shadow: 0 0 7em -1em $black
+
+    li
+      border-top: 1px solid $darkPurple
+      text-align: right
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.05em
+
+    li:hover
+      background-color: $darkPurple
+
+    a
+      display: block
+      background-color: transparent
+      padding: 0.5em 2em 0.5em 1em
+      color: $yellow
+
+    li a:hover
+      color: $yellow
+
+  .dropdown-caret
+    position: absolute
+    top: 2.1em
+    right: 1.4em
+    z-index: 100
+
+#reader-icon
+  font-size: 90%
+  text-transform: uppercase
+  border: 2px solid $white
+  color: $white
+  background: $darkBlue
+  background-size: cover
+  display: inline-block
+  width: 2.5rem
+  height: 2.5rem
+  border-radius: 5rem
+  padding-top: 0.5em
+  text-align: center
+
+#reader-sign-in
+  padding-top: 0.5rem
+
+  a
+    color: $yellow
+    &:hover
+      background-color: $lightGreen
+      color: $black
+
+.dropdown-caret
+  display: inline-block
+  width: 0
+  height: 0
+  vertical-align: -2px
+  content: ""
+  border: 4px solid $white
+  border-right-color: transparent
+  border-bottom-color: transparent
+  border-left-color: transparent
+  margin-left: 0.3em
+
+.hidden
+  display: none

@@ -1,7 +1,9 @@
+# Mock public API in GlobalGroup
 class Group < ApplicationRecord
-  has_many :comment_threads, dependent: :delete_all
-  has_many :group_memberships, dependent: :delete_all
+  has_many :comment_threads, dependent: :destroy
+  has_many :group_memberships, dependent: :destroy
   has_many :readers, through: :group_memberships
+  has_many :deployments, dependent: :destroy
 
   translates :name
 
@@ -12,5 +14,13 @@ class Group < ApplicationRecord
     group.name = name
     group.save! if group.changed?
     group
+  end
+
+  def self.active_for_session s
+    find_by_id(s[:active_group_id]) || GlobalGroup.new
+  end
+
+  def deployment_for_case kase
+    deployments.find_by(case: kase) || GenericDeployment.new
   end
 end

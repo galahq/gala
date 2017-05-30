@@ -16,6 +16,9 @@ class CasesController < ApplicationController
     authenticate_reader! unless @case.published
     authorize_action_for @case
 
+    @group = Group.active_for_session session
+    @deployment = @group.deployment_for_case(@case)
+
     render layout: 'with_header'
   end
 

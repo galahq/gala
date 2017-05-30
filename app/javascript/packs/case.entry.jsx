@@ -20,7 +20,7 @@ import Case from 'Case'
 
 import reducer from 'redux/reducers'
 
-import messages from '../../../config/locales/react.json'; // eslint-disable-line
+import messages from '../../../config/locales/react.json' // eslint-disable-line
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
@@ -33,6 +33,8 @@ if (!global.Intl) {
 addLocaleData([...en, ...fr, ...ja, ...zh, ...am])
 
 const { locale } = (window.i18n: { locale: string })
+
+delete AppContainer.prototype.unstable_handleError
 
 const render = (Component: React$Component) => {
   ReactDOM.render(

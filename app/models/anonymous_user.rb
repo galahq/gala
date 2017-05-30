@@ -10,4 +10,8 @@ class AnonymousUser
     nil
   end
 
+  def groups
+    [GlobalGroup.new]
+  end
+
 end

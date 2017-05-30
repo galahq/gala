@@ -1,8 +1,6 @@
 class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :set_authentication_strategy, except: [:failure]
   before_action :set_reader, except: [:failure]
-  before_action :set_case, only: [:lti]
-  before_action :set_group, only: [:lti]
 
   def google
     if @authentication_strategy.persisted?
@@ -15,9 +13,16 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def lti
     if @authentication_strategy.persisted?
+      set_case
+
       sign_in @reader
-      add_reader_to_group
-      enroll_reader_in_case if @case
+
+      linker = LmsLinkerService.new params
+      linker.add_reader_to_group
+      session[:active_group_id] = linker.group.id
+
+      linker.enroll_reader_in_case @case if @case
+
       redirect_to redirect_url
     else
       session["devise.lti_data"] = request.env["omniauth.auth"]
@@ -28,6 +33,7 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
   def failure
     redirect_to root_path
   end
+
 
   private
   def set_authentication_strategy
@@ -40,26 +46,6 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def set_case
     @case = Case.find_by_slug params[:case_slug]
-  end
-
-  def set_group
-    begin
-      @group = Group.upsert context_id: params[:context_id], name: params[:context_title]
-    rescue
-      retry
-    end
-  end
-
-  def add_reader_to_group
-    unless @reader.group_memberships.exists? group: @group
-      @reader.group_memberships.create group: @group
-    end
-  end
-
-  def enroll_reader_in_case
-    Enrollment.upsert reader_id: @reader.id,
-      case_id: @case.id,
-      status: Enrollment.status_from_lti_role(params[:ext_roles])
   end
 
   def redirect_url

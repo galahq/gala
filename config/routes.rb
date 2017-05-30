@@ -40,6 +40,16 @@ Rails.application.routes.draw do
 
     resources :readers, only: %i(show edit update)
 
+    resources :quizzes, only: %i(create update) do
+      member do
+        post :submit
+      end
+    end
+
+    resources :groups, only: [] do
+      resources :deployments, shallow: true, only: %i(create edit update)
+    end
+
     scope 'admin' do
 
       resources :readers, except: %i(show edit update) do

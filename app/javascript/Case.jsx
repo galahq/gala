@@ -1,3 +1,7 @@
+/**
+ * @providesModule Case
+ * @flow
+ */
 import React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
@@ -14,6 +18,8 @@ import {
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
 import CaseElement from 'elements/CaseElement'
+import PreTest from 'quiz/PreTest'
+import PostTest from 'quiz/PostTest'
 
 import { Toaster } from '@blueprintjs/core'
 
@@ -26,7 +32,8 @@ class Case extends React.Component {
     this._subscribe = () => {
       if (typeof App === 'undefined') return
 
-      App.forum = App.cable.subscriptions.create('ForumChannel', { // eslint-disable-line
+      // eslint-disable-next-line
+      App.forum = App.cable.subscriptions.create('ForumChannel', {
         received: data => {
           if (data.comment) {
             this.props.addComment(JSON.parse(data.comment))
@@ -37,13 +44,14 @@ class Case extends React.Component {
         },
       })
 
-      App.readerNotification = App.cable.subscriptions.create( // eslint-disable-line
+      // eslint-disable-next-line
+      App.readerNotification = App.cable.subscriptions.create(
         'ReaderNotificationsChannel',
         {
           received: data => {
             this.props.handleNotification(JSON.parse(data.notification))
           },
-        },
+        }
       )
     }
   }
@@ -57,15 +65,19 @@ class Case extends React.Component {
   }
 
   render () {
+    const { kicker, basename, needsPretest, needsPosttest } = this.props
     return (
-      <DocumentTitle
-        title={`${this.props.kicker} — Michigan Sustainability Cases`}
-      >
+      <DocumentTitle title={`${kicker} — Michigan Sustainability Cases`}>
         <div id="Case">
           <StatusBar />
-          <Router basename={this.props.basename}>
+          <Router basename={basename}>
             <Switch>
               <Route exact path="/" component={CaseOverview} />
+              <Route path={needsPretest ? '/*' : 'miss'} component={PreTest} />
+              <Route
+                path={needsPosttest ? '/quiz/' : 'miss'}
+                component={PostTest}
+              />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
           </Router>
@@ -77,10 +89,12 @@ class Case extends React.Component {
 
 export default connect(
   (state: State) => ({
+    needsPretest: state.quiz.needsPretest,
+    needsPosttest: state.quiz.needsPosttest,
     kicker: state.caseData.kicker,
     basename: location.pathname.replace(
       RegExp(`${state.caseData.slug}.*`),
-      state.caseData.slug,
+      state.caseData.slug
     ),
   }),
   {
@@ -89,5 +103,5 @@ export default connect(
     addComment,
     addCommentThread,
     handleNotification,
-  },
+  }
 )(Case)

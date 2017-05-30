@@ -21,12 +21,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def authenticate_reader_from_token!
-    reader_email = params[:reader_email].presence
-    reader = reader_email && Reader.find_by_email(reader_email)
-    if reader && Devise.secure_compare(reader.authentication_token, params[:reader_token])
-      sign_in reader, store: false
-    end
+  include Omniauth::Lti::Context
+  def validate_lti_request!
+    redirect_to root_path unless lti_request_valid?
+  end
+
+  def lti_request_valid?
+    provider = IMS::LTI::ToolProvider.new(ENV['LTI_KEY'], ENV['LTI_SECRET'], request.request_parameters)
+    provider.valid_request? request
   end
 
   def current_user
@@ -41,6 +43,10 @@ class ApplicationController < ActionController::Base
     path = request.env['omniauth.origin']
     path ||= stored_location_for(resource_or_scope)
     path ||= signed_in_root_path(resource_or_scope)
+  end
+
+  def authority_forbidden(error)
+    render file: Rails.root.join('public', '403.html'), status: 403, layout: false
   end
 
 end

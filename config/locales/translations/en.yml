@@ -95,6 +95,19 @@ en:
         reset_password_token: Reset password token  #g
         uid: UID  #g
         initials: Initials
+
+      question:
+        content: Content
+        options: Options
+        correct_answer: Correct answer
+
+    errors:
+      models:
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "is not included in the list of possible answers"
+
   devise:
     shared:
       links:

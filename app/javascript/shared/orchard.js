@@ -1,14 +1,17 @@
-// @flow
+/**
+ * @providesModule Orchard
+ * @flow
+ */
 export class Orchard {
-  static harvest (endpoint: string): Promise<Object> {
+  static harvest (endpoint: string): Promise<any> {
     let r = new Request(
       `${window.galaHostname || ''}/${window.i18n.locale}/${endpoint}.json`,
-      { credentials: 'same-origin' },
+      { credentials: 'same-origin' }
     )
-    return fetch(r).then(response => response.json())
+    return fetch(r).then(this._handleResponse)
   }
 
-  static graft (endpoint: string, params: Object): Promise<Object> {
+  static graft (endpoint: string, params: Object): Promise<any> {
     let body = JSON.stringify(params)
     let r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
       credentials: 'same-origin',
@@ -23,7 +26,7 @@ export class Orchard {
   }
 
   // Train a fruit tree to grow into a desired figure.
-  static espalier (endpoint: string, params: ?Object): Promise<Object> {
+  static espalier (endpoint: string, params: ?Object): Promise<any> {
     let body = JSON.stringify(params)
     let r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
       credentials: 'same-origin',
@@ -34,7 +37,7 @@ export class Orchard {
         'Content-Type': 'application/json',
       }),
     })
-    return fetch(r).then(response => response.json())
+    return fetch(r).then(this._handleResponse)
   }
 
   static prune (endpoint: string): Promise<Response> {
@@ -46,38 +49,32 @@ export class Orchard {
     return fetch(r)
   }
 
-  static _handleResponse (response: Response): Promise<Object> {
+  static _handleResponse (response: Response): Promise<any> {
     if (response.ok) {
       return response.json()
-    } else if (response.bodyUsed) {
+    } else {
       return response.json().then((r: Object) => {
         const errorMessagePairs = Object.entries(r)
 
         const errorMessages = errorMessagePairs
-          .reduce(
-            (all, fieldErrs) => {
-              const [field, errors] = fieldErrs
+          .reduce((all, fieldErrs) => {
+            const [field, errors] = fieldErrs
 
-              if (errors != null && Array.isArray(errors)) {
-                return [
-                  ...all,
-                  ...errors.map(
-                    err =>
-                      `${field} ${typeof err === 'string' ? err : 'error'}`,
-                  ),
-                ]
-              }
+            if (errors != null && Array.isArray(errors)) {
+              return [
+                ...all,
+                ...errors.map(
+                  err => `${field} ${typeof err === 'string' ? err : 'error'}`
+                ),
+              ]
+            }
 
-              return [...all, `${field}: error`]
-            },
-            [],
-          )
+            return [...all, `${field}: error`]
+          }, [])
           .join('\n')
 
         throw Error(errorMessages)
       })
-    } else {
-      throw Error(`${response.status} ${response.statusText}`)
     }
   }
 }

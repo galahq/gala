@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170419172037) do
+ActiveRecord::Schema.define(version: 20170511212540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,9 +34,24 @@ ActiveRecord::Schema.define(version: 20170419172037) do
     t.string   "name"
     t.jsonb    "properties"
     t.datetime "time"
+    t.index "properties jsonb_path_ops", name: "index_ahoy_events_on_properties_jsonb_path_ops", using: :gin
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time", using: :btree
     t.index ["user_id", "name"], name: "index_ahoy_events_on_user_id_and_name", using: :btree
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name", using: :btree
+  end
+
+  create_table "answers", force: :cascade do |t|
+    t.integer  "question_id"
+    t.integer  "quiz_id"
+    t.integer  "reader_id"
+    t.string   "content"
+    t.boolean  "correct"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.decimal  "case_completion"
+    t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
+    t.index ["quiz_id"], name: "index_answers_on_quiz_id", using: :btree
+    t.index ["reader_id"], name: "index_answers_on_reader_id", using: :btree
   end
 
   create_table "authentication_strategies", force: :cascade do |t|
@@ -46,6 +61,7 @@ ActiveRecord::Schema.define(version: 20170419172037) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["reader_id"], name: "index_authentication_strategies_on_reader_id", using: :btree
+    t.index ["uid"], name: "index_authentication_strategies_on_uid", where: "((provider)::text = 'lti'::text)", using: :btree
   end
 
   create_table "cards", force: :cascade do |t|
@@ -125,6 +141,18 @@ ActiveRecord::Schema.define(version: 20170419172037) do
     t.integer  "position"
     t.index ["comment_thread_id"], name: "index_comments_on_comment_thread_id", using: :btree
     t.index ["reader_id"], name: "index_comments_on_reader_id", using: :btree
+  end
+
+  create_table "deployments", force: :cascade do |t|
+    t.integer  "case_id"
+    t.integer  "group_id"
+    t.integer  "quiz_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "answers_needed", default: 1
+    t.index ["case_id"], name: "index_deployments_on_case_id", using: :btree
+    t.index ["group_id"], name: "index_deployments_on_group_id", using: :btree
+    t.index ["quiz_id"], name: "index_deployments_on_quiz_id", using: :btree
   end
 
   create_table "edgenotes", force: :cascade do |t|
@@ -215,6 +243,30 @@ ActiveRecord::Schema.define(version: 20170419172037) do
     t.index ["case_id"], name: "index_podcasts_on_case_id", using: :btree
   end
 
+  create_table "questions", force: :cascade do |t|
+    t.integer  "quiz_id"
+    t.hstore   "content_i18n"
+    t.text     "correct_answer"
+    t.string   "options",        default: [],              array: true
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.index ["quiz_id"], name: "index_questions_on_quiz_id", using: :btree
+  end
+
+  create_table "quizzes", force: :cascade do |t|
+    t.integer  "case_id"
+    t.integer  "template_id"
+    t.boolean  "customized"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "author_id"
+    t.string   "lti_uid"
+    t.index ["author_id"], name: "index_quizzes_on_author_id", using: :btree
+    t.index ["case_id"], name: "index_quizzes_on_case_id", using: :btree
+    t.index ["lti_uid"], name: "index_quizzes_on_lti_uid", using: :btree
+    t.index ["template_id"], name: "index_quizzes_on_template_id", using: :btree
+  end
+
   create_table "readers", force: :cascade do |t|
     t.text     "name"
     t.text     "image_url"
@@ -290,6 +342,9 @@ ActiveRecord::Schema.define(version: 20170419172037) do
   end
 
   add_foreign_key "activities", "cases"
+  add_foreign_key "answers", "questions"
+  add_foreign_key "answers", "quizzes"
+  add_foreign_key "answers", "readers"
   add_foreign_key "cards", "cases"
   add_foreign_key "cards", "pages"
   add_foreign_key "case_elements", "cases"
@@ -299,6 +354,9 @@ ActiveRecord::Schema.define(version: 20170419172037) do
   add_foreign_key "comment_threads", "readers"
   add_foreign_key "comments", "comment_threads"
   add_foreign_key "comments", "readers"
+  add_foreign_key "deployments", "cases"
+  add_foreign_key "deployments", "groups"
+  add_foreign_key "deployments", "quizzes"
   add_foreign_key "edgenotes", "cards"
   add_foreign_key "enrollments", "cases"
   add_foreign_key "enrollments", "readers"
@@ -307,4 +365,6 @@ ActiveRecord::Schema.define(version: 20170419172037) do
   add_foreign_key "notifications", "readers"
   add_foreign_key "pages", "cases"
   add_foreign_key "podcasts", "cases"
+  add_foreign_key "questions", "quizzes"
+  add_foreign_key "quizzes", "cases"
 end

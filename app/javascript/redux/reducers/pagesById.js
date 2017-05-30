@@ -1,9 +1,11 @@
+/* @flow */
+
 import type { PagesState } from 'redux/state'
 import type { UpdatePageAction, AddPageAction } from 'redux/actions'
 
 export default function pagesById (
   state: PagesState = ({ ...window.caseData.pages }: PagesState),
-  action: UpdatePageAction | AddPageAction,
+  action: UpdatePageAction | AddPageAction
 ): PagesState {
   switch (action.type) {
     case 'UPDATE_PAGE':

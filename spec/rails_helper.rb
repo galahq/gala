@@ -28,6 +28,9 @@ class Ahoy::Store < Ahoy::Stores::ActiveRecordTokenStore
   end
 end
 
+OmniAuth.config.test_mode = true
+OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new Faker::Omniauth.google
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -54,9 +57,6 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, :type => :controller
 
   config.before(:suite) do
-    `bin/webpack`
-    Webpacker::Manifest.load
-
     begin
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.clean_with(:truncation)
@@ -78,6 +78,7 @@ RSpec.configure do |config|
 
   config.after(:each) do |example|
     if defined?(page) && example.exception
+      save_screenshot
       puts page.driver.browser.manage.logs.get("browser")
     end
   end

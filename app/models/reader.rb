@@ -1,3 +1,4 @@
+# Mock public API in AnonymousReader
 class Reader < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
          :trackable, :validatable, :confirmable
@@ -7,13 +8,17 @@ class Reader < ApplicationRecord
 
   rolify
 
-  has_many :authentication_strategies, dependent: :delete_all
-  has_many :comment_threads
-  has_many :comments
-  has_many :group_memberships, dependent: :delete_all
+  has_many :authentication_strategies, dependent: :destroy
+  has_many :comment_threads, dependent: :nullify
+  has_many :comments, dependent: :nullify
+  has_many :group_memberships, dependent: :destroy
   has_many :groups, through: :group_memberships
-  has_many :enrollments, -> { includes(:case) }, dependent: :delete_all
+  has_many :deployments, through: :groups
+  has_many :enrollments, -> { includes(:case) }, dependent: :destroy
   has_many :cases, through: :enrollments
+  has_many :answers, dependent: :destroy
+  has_many :quizzes, through: :answers
+  has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id'
 
   before_update :set_created_password, if: :encrypted_password_changed?
 
@@ -22,14 +27,16 @@ class Reader < ApplicationRecord
     email = info.email
 
     where(email: email).first_or_create! do |reader|
-      name = info.name
+      name = info.first_name != '' && "#{info.first_name} #{info.last_name}"
+      name ||= info.name
 
       reader.email = email
       reader.password = Devise.friendly_token[0,20]
       reader.created_password = false
       reader.name = name
       reader.initials = name.split(" ").map(&:first).join
-      reader.image_url = info.image unless auth.provider == :lti
+      reader.image_url = info.image unless auth.provider == 'lti'
+      reader.locale = auth.extra.raw_info.try :[], :launch_presentation_locale
 
       reader.confirmed_at = Time.zone.now
     end
@@ -57,6 +64,9 @@ class Reader < ApplicationRecord
     enrollments.find { |e| e.case.id == c.id }
   end
 
+  def has_quiz? quiz
+    (quiz.lti_uid && quiz.lti_uid == lti_uid) || (quiz.author_id && quiz.author_id == id)
+  end
 
   def name_and_email
     "#{name} <#{email}>"
@@ -64,6 +74,10 @@ class Reader < ApplicationRecord
 
   def providers
     authentication_strategies.pluck :provider
+  end
+
+  def lti_uid
+    @lti_uid ||= authentication_strategies.where(provider: 'lti').pluck :uid
   end
 
   private

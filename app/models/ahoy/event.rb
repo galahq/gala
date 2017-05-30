@@ -9,5 +9,8 @@ module Ahoy
 
     scope :interesting, -> { joins(:user).where "readers.id NOT IN (SELECT reader_id FROM readers_roles JOIN roles ON role_id = roles.id WHERE roles.name = 'invisible')" }
 
+    def self.for_case kase
+      where_properties case_slug: kase.slug
+    end
   end
 end

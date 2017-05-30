@@ -1,4 +1,5 @@
-// @flow
+/* @flow */
+
 import type { EditorState } from 'draft-js'
 
 // Redux state
@@ -12,6 +13,7 @@ export type State = {
   +edit: EditState,
   +pagesById: PagesState,
   +podcastsById: PodcastsState,
+  +quiz: QuizState,
   +statistics: StatisticsState,
   +ui: UIState,
 }
@@ -73,6 +75,18 @@ export type PodcastsState = {
   +[podcastId: string]: Podcast,
 }
 
+export type QuizNecessity<Pre: boolean, Post: boolean> = {
+  +needsPretest: Pre,
+  +needsPosttest: Post,
+}
+
+export type QuizState =
+  | QuizNecessity<false, false>
+  | (QuizNecessity<boolean, boolean> & {
+    +id: number,
+    +questions: Question[],
+  })
+
 export type StatisticsState =
   | false
   | {
@@ -95,6 +109,8 @@ export type UIState = {
 }
 
 // Model Objects
+export type Element = Activity | Page | Podcast
+
 export type Activity = {
   +cardId: number,
   +caseElement: CaseElement,
@@ -103,6 +119,7 @@ export type Activity = {
   +pdfUrl: string,
   +position: number,
   +title: string,
+  +url: string,
 }
 
 export type Card = {
@@ -117,12 +134,14 @@ export type Card = {
 
 export type CaseElement = {
   +caseId: number,
-  +elementId: number,
-  +elementStore: string,
+  +elementId: string,
+  +elementStore: CaseElementStore,
   +elementType: string,
   +id: string,
   +position: number,
 }
+
+export type CaseElementStore = 'pagesById' | 'podcastsById' | 'activitiesById'
 
 export type Comment = {
   +commentThreadId: number,
@@ -187,16 +206,19 @@ export type ReplyToThreadNotification = {
   +commentThreadId: number,
 }
 
-export type Notification =
-  & { id: number, message: string }
-  & ReplyToThreadNotification
+export type Notification = {
+  id: number,
+  message: string,
+} & ReplyToThreadNotification
 
 export type Page = {
   +cards: number[],
   +caseElement: CaseElement,
+  +iconSlug: void,
   +id: number,
   +position: number,
   +title: string,
+  +url: string,
 }
 
 export type Podcast = {
@@ -212,6 +234,7 @@ export type Podcast = {
   +position: number,
   +title: string,
   +uniques: number,
+  +url: string,
   +views: number,
 }
 
@@ -221,10 +244,18 @@ export type PodcastCreditList = {
   +hosts_string: string,
 }
 
+export type Question = {
+  id: string,
+  content: string,
+  options: string[],
+}
+
 export type Reader = {
   +canUpdateCase: boolean,
   +email: string,
-  +enrollment: boolean,
+  +enrollment: {
+    +status: 'student' | 'instructor' | 'treatment',
+  },
   +id: number,
   +initials: string,
   +name: string,

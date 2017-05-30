@@ -29,6 +29,7 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'pry'
 
   gem 'rspec-rails', '~> 3.5'
   gem 'factory_girl_rails'
@@ -62,13 +63,14 @@ gem 'devise', '~> 4.1'
 gem 'devise-i18n'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-lti'
+gem 'ims-lti'
+gem 'omniauth-lti', github: 'cbothner/omniauth-lti'
 gem 'authority'
 gem 'rolify'
 
 gem 'postmark-rails'
 
-gem 'ahoy_matey'
+gem 'ahoy_matey', github: 'ankane/ahoy'
 gem 'groupdate'
 
 gem 'trasto'

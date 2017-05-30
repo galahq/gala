@@ -1,4 +1,6 @@
-// @flow
+/**
+ * @flow
+ */
 
 export function chooseContentItem (
   returnUrl: string,
@@ -34,7 +36,7 @@ function contentItemSelectionMessageData (
 
 // Form Submission
 
-function submitForm (action: string, data: { [string]: string }): void {
+export function submitForm (action: string, data: { [string]: string }): void {
   const form = document.createElement('form')
   form.action = action
   form.method = 'POST'

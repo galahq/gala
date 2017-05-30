@@ -17,6 +17,8 @@ class Case < ApplicationRecord
   has_many :pages, dependent: :destroy
   has_many :podcasts, dependent: :destroy
   has_many :readers, through: :enrollments
+  has_many :deployments, dependent: :destroy
+  has_many :quizzes, dependent: :destroy
 
   scope :published, -> { where(published: true)  }
 
@@ -39,6 +41,10 @@ class Case < ApplicationRecord
 
   def case_authors
     authors.to_sentence
+  end
+
+  def events
+    Ahoy::Event.for_case self
   end
 
   def other_available_locales
