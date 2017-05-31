@@ -8,6 +8,7 @@ class Podcast < ApplicationRecord
 
   include Element
 
+  include Mobility
   translates :title, :audio_url, :description, :credits
 
   after_create_commit -> { create_card }

@@ -10,21 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705165135) do
+ActiveRecord::Schema.define(version: 20170706155100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "activities", force: :cascade do |t|
-    t.hstore   "title_i18n"
-    t.hstore   "description_i18n"
-    t.hstore   "pdf_url_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.integer  "position"
-    t.string   "icon_slug",        default: "activity-text"
+    t.string   "icon_slug",   default: "activity-text"
+    t.jsonb    "title",       default: ""
+    t.jsonb    "description", default: ""
+    t.jsonb    "pdf_url",     default: ""
     t.index ["case_id"], name: "index_activities_on_case_id", using: :btree
   end
 
@@ -66,15 +65,15 @@ ActiveRecord::Schema.define(version: 20170705165135) do
 
   create_table "cards", force: :cascade do |t|
     t.integer  "position"
-    t.hstore   "content_i18n"
     t.integer  "page_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "solid",            default: true
-    t.hstore   "raw_content_i18n"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "solid",        default: true
     t.string   "element_type"
     t.integer  "element_id"
     t.integer  "case_id"
+    t.jsonb    "content",      default: ""
+    t.jsonb    "raw_content",  default: ""
     t.index ["case_id"], name: "index_cards_on_case_id", using: :btree
     t.index ["element_type", "element_id"], name: "index_cards_on_element_type_and_element_id", using: :btree
     t.index ["page_id"], name: "index_cards_on_page_id", using: :btree
@@ -93,23 +92,23 @@ ActiveRecord::Schema.define(version: 20170705165135) do
 
   create_table "cases", force: :cascade do |t|
     t.boolean  "published",        default: false
-    t.hstore   "title_i18n"
-    t.text     "slug",                                    null: false
-    t.string   "authors",          default: [],                        array: true
-    t.hstore   "summary_i18n"
-    t.text     "tags",             default: [],                        array: true
-    t.hstore   "narrative_i18n"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.text     "slug",                             null: false
+    t.string   "authors",          default: [],                 array: true
+    t.text     "tags",             default: [],                 array: true
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "cover_url"
     t.date     "publication_date"
-    t.integer  "catalog_position", default: 0,            null: false
+    t.integer  "catalog_position", default: 0,     null: false
     t.text     "short_title"
-    t.hstore   "translators_i18n", default: {"en"=>"[]"}, null: false
-    t.hstore   "kicker_i18n"
-    t.hstore   "dek_i18n"
     t.text     "photo_credit"
     t.boolean  "commentable"
+    t.jsonb    "title",            default: ""
+    t.jsonb    "summary",          default: ""
+    t.jsonb    "narrative",        default: ""
+    t.jsonb    "translators",      default: ""
+    t.jsonb    "kicker",           default: ""
+    t.jsonb    "dek",              default: ""
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
@@ -133,12 +132,12 @@ ActiveRecord::Schema.define(version: 20170705165135) do
   end
 
   create_table "comments", force: :cascade do |t|
-    t.hstore   "content_i18n"
     t.integer  "reader_id"
     t.integer  "comment_thread_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "position"
+    t.jsonb    "content",           default: ""
     t.index ["comment_thread_id"], name: "index_comments_on_comment_thread_id", using: :btree
     t.index ["reader_id"], name: "index_comments_on_reader_id", using: :btree
   end
@@ -156,27 +155,27 @@ ActiveRecord::Schema.define(version: 20170705165135) do
   end
 
   create_table "edgenotes", force: :cascade do |t|
-    t.hstore   "caption_i18n"
     t.string   "format"
     t.string   "thumbnail_url"
-    t.hstore   "content_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.text     "slug",                            null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.text     "slug",                        null: false
     t.integer  "card_id"
-    t.hstore   "instructions_i18n"
-    t.hstore   "image_url_i18n"
-    t.hstore   "website_url_i18n"
-    t.hstore   "embed_code_i18n"
-    t.hstore   "photo_credit_i18n"
-    t.hstore   "pdf_url_i18n"
-    t.integer  "style",               default: 0
-    t.hstore   "pull_quote_i18n"
-    t.hstore   "attribution_i18n"
-    t.hstore   "call_to_action_i18n"
-    t.hstore   "audio_url_i18n"
-    t.hstore   "youtube_slug_i18n"
+    t.integer  "style",          default: 0
+    t.jsonb    "caption",        default: ""
+    t.jsonb    "content",        default: ""
+    t.jsonb    "instructions",   default: ""
+    t.jsonb    "image_url",      default: ""
+    t.jsonb    "website_url",    default: ""
+    t.jsonb    "embed_code",     default: ""
+    t.jsonb    "photo_credit",   default: ""
+    t.jsonb    "pdf_url",        default: ""
+    t.jsonb    "pull_quote",     default: ""
+    t.jsonb    "attribution",    default: ""
+    t.jsonb    "call_to_action", default: ""
+    t.jsonb    "audio_url",      default: ""
+    t.jsonb    "youtube_slug",   default: ""
     t.index ["card_id"], name: "index_edgenotes_on_card_id", using: :btree
     t.index ["case_id"], name: "index_edgenotes_on_case_id", using: :btree
     t.index ["slug"], name: "index_edgenotes_on_slug", unique: true, using: :btree
@@ -202,43 +201,43 @@ ActiveRecord::Schema.define(version: 20170705165135) do
   end
 
   create_table "groups", force: :cascade do |t|
-    t.hstore   "name_i18n"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.string   "context_id"
+    t.jsonb    "name",       default: ""
     t.index ["context_id"], name: "index_groups_on_context_id", using: :btree
   end
 
   create_table "pages", force: :cascade do |t|
     t.integer  "position"
-    t.hstore   "title_i18n"
     t.integer  "case_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.jsonb    "title",      default: ""
     t.index ["case_id"], name: "index_pages_on_case_id", using: :btree
   end
 
   create_table "podcasts", force: :cascade do |t|
-    t.hstore   "title_i18n"
-    t.hstore   "audio_url_i18n"
-    t.hstore   "description_i18n"
     t.integer  "case_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.integer  "position"
     t.string   "artwork_url"
-    t.hstore   "credits_i18n"
     t.text     "photo_credit"
+    t.jsonb    "title",        default: ""
+    t.jsonb    "audio_url",    default: ""
+    t.jsonb    "description",  default: ""
+    t.jsonb    "credits",      default: ""
     t.index ["case_id"], name: "index_podcasts_on_case_id", using: :btree
   end
 
   create_table "questions", force: :cascade do |t|
     t.integer  "quiz_id"
-    t.hstore   "content_i18n"
     t.text     "correct_answer"
     t.string   "options",        default: [],              array: true
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.jsonb    "content",        default: ""
     t.index ["quiz_id"], name: "index_questions_on_quiz_id", using: :btree
   end
 

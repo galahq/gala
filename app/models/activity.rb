@@ -8,6 +8,7 @@ class Activity < ApplicationRecord
 
   include Element
 
+  include Mobility
   translates :title, :description, :pdf_url
 
   after_create_commit -> { create_card }

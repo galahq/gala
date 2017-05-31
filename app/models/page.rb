@@ -9,5 +9,7 @@ class Page < ApplicationRecord
 
   has_many :cards, -> { order position: :asc }, as: :element,
                                                 dependent: :destroy
+
+  include Mobility
   translates :title
 end

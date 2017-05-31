@@ -71,7 +71,7 @@ gem 'rolify'
 gem 'ahoy_matey', github: 'ankane/ahoy'
 gem 'groupdate'
 
-gem 'trasto'
+gem 'mobility'
 gem 'http_accept_language'
 gem 'i18n_generators'
 

@@ -7,6 +7,7 @@ class Group < ApplicationRecord
   has_many :readers, through: :group_memberships
   has_many :deployments, dependent: :destroy
 
+  include Mobility
   translates :name
 
   validates :context_id, uniqueness: true, if: -> () { context_id.present? }

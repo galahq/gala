@@ -4,6 +4,7 @@ class Question < ApplicationRecord
   has_many :answers
   belongs_to :quiz
 
+  include Mobility
   translates :content
 
   validates :content_i18n, presence: true
