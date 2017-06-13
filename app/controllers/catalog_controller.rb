@@ -24,7 +24,7 @@ class CatalogController < ApplicationController
 
     save_selection_params_to_session
 
-    @items = Case.where(published: true).sort_by(&:kicker)
+    @items = Case.all.sort_by(&:kicker)
     render layout: "embed"
   end
 

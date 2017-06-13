@@ -12,6 +12,7 @@ type ContentItem = {
   title: string,
   dek: string,
   coverUrl: string,
+  published: boolean,
 }
 
 type ContentItemsProps = {
@@ -54,6 +55,7 @@ const ContentItemLink = ({
   title,
   dek,
   coverUrl,
+  published,
   handleSelectContentItem,
 }: ContentItemProps) => {
   const handleClick = handleSelectContentItem.bind(undefined, slug)
@@ -68,6 +70,10 @@ const ContentItemLink = ({
       }}
       onClick={handleClick}
     >
+      {published ||
+        <div className="catalog-case-unpublished-banner">
+          Forthcoming
+        </div>}
       <div className="catalog-case-credits">
         <h2>
           <span className="c-kicker">{kicker}</span>
