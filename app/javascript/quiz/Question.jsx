@@ -22,7 +22,7 @@ const Question = ({
   options = [],
 }: Props) =>
   options.length > 0
-    ? <div style={{ marginBottom: 15 }}>
+    ? <div style={{ marginBottom: 25 }}>
       <RadioGroup
         label={content}
         options={options.map(toRadioProps)}

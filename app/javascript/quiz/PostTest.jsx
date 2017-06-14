@@ -33,7 +33,7 @@ const PostTest = ({
         </h1>
         <div
           className="pt-card"
-          style={{ backgroundColor: '#EBEAE4', maxWidth: '35em' }}
+          style={{ backgroundColor: '#EBEAE4', maxWidth: '45em' }}
         >
           <div className="pt-callout" style={{ marginBottom: '1em' }}>
             <h5>Check your understanding</h5>
