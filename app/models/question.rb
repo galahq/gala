@@ -10,7 +10,7 @@ class Question < ApplicationRecord
 
   def self.requiring_response_from reader, in_group:
     # where.not(id: Answer.by_reader(reader).select(:question_id))
-    where <<~SQL, reader_id: reader.id, group_id: in_group.id
+    joins(:quiz).where <<~SQL, reader_id: reader.id, group_id: in_group.id
       (
         SELECT COUNT(answers.id) FROM answers
         WHERE answers.question_id = questions.id
@@ -18,7 +18,7 @@ class Question < ApplicationRecord
       ) < (
         SELECT deployments.answers_needed FROM deployments
         WHERE deployments.group_id = :group_id
-          AND deployments.quiz_id = questions.quiz_id
+          AND deployments.case_id = quizzes.case_id
       )
     SQL
   end
