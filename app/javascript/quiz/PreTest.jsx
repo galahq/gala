@@ -33,7 +33,7 @@ const PreTest = ({
         className="pt-dark"
         isOpen={!!match}
         title="Before you get started"
-        style={{ top: '10%' }}
+        style={{ top: '10%', width: 800 }}
         onClose={() => {
           history.replace('/')
         }}
@@ -41,7 +41,7 @@ const PreTest = ({
         <div className="pt-dialog-body">
           <p>
             Please answer the following questions to demonstrate your current
-            level of knowledge. (I18n)
+            level of knowledge.
           </p>
 
           <div className="pt-card">
