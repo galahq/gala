@@ -73,6 +73,13 @@ declare module '@blueprintjs/core' {
     iconName?: string,
   }
 
+  declare export interface IBackdropProps {
+    backdropClassName?: string,
+    backdropProps?: HTMLDivElement,
+    canOutsideClickClose?: boolean,
+    hasBackdrop?: boolean,
+  }
+
   declare export interface IControlledProps {
     defaultValue?: string,
     onChange?: SyntheticInputEvent => void,
@@ -98,6 +105,16 @@ declare module '@blueprintjs/core' {
     value?: string,
   }
 
+  declare export interface IOverlayableProps {
+    autoFocus?: boolean,
+    canEscapeKeyClose?: boolean,
+    enforceFocus?: boolean,
+    inline?: boolean,
+    lazy?: boolean,
+    onClose?: SyntheticEvent => void,
+    transitionDuration?: number,
+  }
+
   //
   // Components
   //
@@ -109,9 +126,12 @@ declare module '@blueprintjs/core' {
 
   declare export interface Dialog extends React$Component<*, *, *> {
     props: {
+      iconName?: string,
+      isCloseButtonShown?: boolean,
       isOpen: boolean,
+      style: Object,
       title: string | React$Element<*>,
-    }
+    } & IProps & IBackdropProps & IOverlayableProps
   }
 
   declare export interface InputGroup extends React$Component<*, *, *> {

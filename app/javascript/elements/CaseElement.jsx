@@ -9,7 +9,7 @@ import DocumentTitle from 'react-document-title'
 
 import Sidebar from './Sidebar'
 import Page from './Page'
-import Podcast from './Podcast'
+import Podcast from 'podcast'
 import Activity from './Activity'
 import EdgenoteContents from 'deprecated/EdgenoteContents'
 

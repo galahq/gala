@@ -4,15 +4,18 @@
  */
 import React from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+
 import { EditableText } from '@blueprintjs/core'
+
+import { updatePodcast } from 'redux/actions'
+
+import CreditsList from './CreditsList'
 import EditableAttribute from 'utility/EditableAttribute'
 import Statistics from 'utility/Statistics'
 import Card from 'card'
-import { updatePodcast } from 'redux/actions'
 import Tracker from 'utility/Tracker'
 
-import { State } from 'redux/state'
+import type { State } from 'redux/state'
 
 function mapStateToProps (state: State, { id }: { id: string }) {
   return {
@@ -66,34 +69,6 @@ class PodcastPlayer extends React.Component {
     })
   }
 
-  renderHosts () {
-    if (!this.props.credits) {
-      return
-    }
-
-    let { guests, hosts, hosts_string: hostsString } = this.props.credits
-    let guestList = guests.map((guest, i) => {
-      return [
-        <dt key={`name${i}`}>{guest.name}</dt>,
-        <dd key={`title${i}`}>{guest.title}</dd>,
-      ]
-    })
-
-    return (
-      <div>
-        <dl>{guestList}</dl>
-        <em>
-          <FormattedMessage
-            id="podcast.hosts"
-            values={{ count: hosts.length }}
-          />
-          {' '}
-          {hostsString}
-        </em>
-      </div>
-    )
-  }
-
   render () {
     let {
       id,
@@ -101,6 +76,7 @@ class PodcastPlayer extends React.Component {
       artworkUrl,
       audioUrl,
       photoCredit,
+      credits,
       statistics,
       editing,
       updatePodcast,
@@ -148,7 +124,11 @@ class PodcastPlayer extends React.Component {
             />
           </h1>
 
-          {this.renderHosts()}
+          <CreditsList
+            canEdit={editing}
+            credits={credits}
+            onChange={v => updatePodcast(id, { credits: v })}
+          />
         </div>
 
         <audio

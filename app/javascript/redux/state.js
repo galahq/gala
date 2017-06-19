@@ -83,9 +83,9 @@ export type QuizNecessity<Pre: boolean, Post: boolean> = {
 export type QuizState =
   | QuizNecessity<false, false>
   | (QuizNecessity<boolean, boolean> & {
-    +id: number,
-    +questions: Question[],
-  })
+      +id: number,
+      +questions: Question[],
+    })
 
 export type StatisticsState =
   | false
@@ -239,10 +239,12 @@ export type Podcast = {
 }
 
 export type PodcastCreditList = {
-  +guests: { +name: string, +title: string }[],
+  +guests: PodcastGuest[],
   +hosts: string[],
   +hosts_string: string,
 }
+
+export type PodcastGuest = { name: string, title: string }
 
 export type Question = {
   id: string,
