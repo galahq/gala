@@ -107,7 +107,7 @@ const SortableList = (props: Props<*>) =>
     {...props}
     useDragHandle={true}
     transitionDuration={100}
-    helperClass="sortable-helper"
+    helperClass="sortable-helper pt-dark"
     onSortEnd={({ oldIndex, newIndex }) =>
       props.onChange(arrayMove(props.items, oldIndex, newIndex))}
   />
