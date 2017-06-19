@@ -52,6 +52,8 @@ class PodcastsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def podcast_params
-      params.require(:podcast).permit(:title, :audio_url, :description, :case_id, :artwork_url, :photo_credit)
+      params.require(:podcast).permit(:title, :audio_url, :description,
+      :case_id, :artwork_url, :photo_credit,
+      credits_list: [hosts: [], guests: [:name, :title]])
     end
 end

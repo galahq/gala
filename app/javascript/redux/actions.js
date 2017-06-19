@@ -6,6 +6,7 @@ import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 
 import type { EditorState, SelectionState } from 'draft-js'
+import type { Toast } from '@blueprintjs/core'
 
 import type {
   State,
@@ -152,7 +153,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
     case 'podcasts':
       {
         const {
-          credits,
+          creditsList,
           title,
           artworkUrl,
           audioUrl,
@@ -160,7 +161,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
         } = state.podcastsById[id]
         data = {
           podcast: {
-            credits: JSON.stringify(credits),
+            creditsList,
             title,
             artworkUrl,
             audioUrl,
@@ -249,9 +250,9 @@ export type UpdateCaseElementsAction = {
   type: 'UPDATE_CASE_ELEMENTS',
   data: { caseElements: CaseElement[] },
 }
-function updateCaseElements (
-  data: { caseElements: CaseElement[] }
-): UpdateCaseElementsAction {
+function updateCaseElements (data: {
+  caseElements: CaseElement[],
+}): UpdateCaseElementsAction {
   return { type: 'UPDATE_CASE_ELEMENTS', data }
 }
 export function persistCaseElementReordering (
@@ -647,8 +648,8 @@ export type RegisterToasterAction = { type: 'REGISTER_TOASTER', toaster: any }
 export function registerToaster (toaster: any): RegisterToasterAction {
   return { type: 'REGISTER_TOASTER', toaster }
 }
-export type DisplayToastAction = { type: 'DISPLAY_TOAST', options: Object }
-export function displayToast (options: Object): DisplayToastAction {
+export type DisplayToastAction = { type: 'DISPLAY_TOAST', options: Toast }
+export function displayToast (options: Toast): DisplayToastAction {
   return { type: 'DISPLAY_TOAST', options }
 }
 
@@ -663,7 +664,8 @@ export function handleNotification (notification: Notification): ThunkAction {
         message: notification.message,
         intent: Intent.PRIMARY,
         action: {
-          href: `/cases/${notification.case.slug}/${notification.element.position}/cards/${notification.cardId}/comments/${notification.commentThreadId}`,
+          href: `/cases/${notification.case.slug}/${notification.element
+            .position}/cards/${notification.cardId}/comments/${notification.commentThreadId}`,
           text: 'Read',
         },
       })

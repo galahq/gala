@@ -4,15 +4,18 @@
  */
 import React from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+
 import { EditableText } from '@blueprintjs/core'
+
+import { updatePodcast } from 'redux/actions'
+
+import CreditsList from './CreditsList'
 import EditableAttribute from 'utility/EditableAttribute'
 import Statistics from 'utility/Statistics'
 import Card from 'card'
-import { updatePodcast } from 'redux/actions'
 import Tracker from 'utility/Tracker'
 
-import { State } from 'redux/state'
+import type { State } from 'redux/state'
 
 function mapStateToProps (state: State, { id }: { id: string }) {
   return {
@@ -46,52 +49,19 @@ function Podcast ({ podcast, slug, editing, updatePodcast, deleteElement }) {
 export default connect(mapStateToProps, { updatePodcast })(Podcast)
 
 class PodcastPlayer extends React.Component {
-  constructor () {
-    super()
-    this.handlePlay = this.handlePlay.bind(this)
-    this.handlePause = this.handlePause.bind(this)
-    this.state = {
-      playing: false,
-    }
+  state = {
+    playing: false,
   }
 
-  handlePlay () {
+  handlePlay = () => {
     this.setState({
       playing: true,
     })
   }
-  handlePause () {
+  handlePause = () => {
     this.setState({
       playing: false,
     })
-  }
-
-  renderHosts () {
-    if (!this.props.credits) {
-      return
-    }
-
-    let { guests, hosts, hosts_string: hostsString } = this.props.credits
-    let guestList = guests.map((guest, i) => {
-      return [
-        <dt key={`name${i}`}>{guest.name}</dt>,
-        <dd key={`title${i}`}>{guest.title}</dd>,
-      ]
-    })
-
-    return (
-      <div>
-        <dl>{guestList}</dl>
-        <em>
-          <FormattedMessage
-            id="podcast.hosts"
-            values={{ count: hosts.length }}
-          />
-          {' '}
-          {hostsString}
-        </em>
-      </div>
-    )
   }
 
   render () {
@@ -101,7 +71,7 @@ class PodcastPlayer extends React.Component {
       artworkUrl,
       audioUrl,
       photoCredit,
-      statistics,
+      creditsList,
       editing,
       updatePodcast,
       deleteElement,
@@ -148,7 +118,11 @@ class PodcastPlayer extends React.Component {
             />
           </h1>
 
-          {this.renderHosts()}
+          <CreditsList
+            canEdit={editing}
+            credits={creditsList}
+            onChange={v => updatePodcast(id, { creditsList: v })}
+          />
         </div>
 
         <audio
