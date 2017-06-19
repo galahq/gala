@@ -227,7 +227,7 @@ export type Podcast = {
   +averageTime: string,
   +cardId: number,
   +caseElement: CaseElement,
-  +credits: PodcastCreditList,
+  +creditsList: PodcastCreditList,
   +iconSlug: string,
   +id: number,
   +photoCredit: string,

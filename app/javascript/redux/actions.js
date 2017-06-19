@@ -153,7 +153,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
     case 'podcasts':
       {
         const {
-          credits,
+          creditsList,
           title,
           artworkUrl,
           audioUrl,
@@ -161,7 +161,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
         } = state.podcastsById[id]
         data = {
           podcast: {
-            credits: JSON.stringify(credits),
+            creditsList,
             title,
             artworkUrl,
             audioUrl,

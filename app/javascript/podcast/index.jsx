@@ -49,21 +49,16 @@ function Podcast ({ podcast, slug, editing, updatePodcast, deleteElement }) {
 export default connect(mapStateToProps, { updatePodcast })(Podcast)
 
 class PodcastPlayer extends React.Component {
-  constructor () {
-    super()
-    this.handlePlay = this.handlePlay.bind(this)
-    this.handlePause = this.handlePause.bind(this)
-    this.state = {
-      playing: false,
-    }
+  state = {
+    playing: false,
   }
 
-  handlePlay () {
+  handlePlay = () => {
     this.setState({
       playing: true,
     })
   }
-  handlePause () {
+  handlePause = () => {
     this.setState({
       playing: false,
     })
@@ -76,8 +71,7 @@ class PodcastPlayer extends React.Component {
       artworkUrl,
       audioUrl,
       photoCredit,
-      credits,
-      statistics,
+      creditsList,
       editing,
       updatePodcast,
       deleteElement,
@@ -126,8 +120,8 @@ class PodcastPlayer extends React.Component {
 
           <CreditsList
             canEdit={editing}
-            credits={credits}
-            onChange={v => updatePodcast(id, { credits: v })}
+            credits={creditsList}
+            onChange={v => updatePodcast(id, { creditsList: v })}
           />
         </div>
 
