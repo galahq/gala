@@ -24,18 +24,16 @@ function mapStateToProps (state: State, { id }: OwnProps) {
   }
 }
 
-const Activity = (
-  {
-    id,
-    title,
-    pdfUrl,
-    cardId,
-    editing,
-    iconSlug = 'activity-text',
-    updateActivity,
-    deleteElement,
-  },
-) => (
+const Activity = ({
+  id,
+  title,
+  pdfUrl,
+  cardId,
+  editing,
+  iconSlug = 'activity-text',
+  updateActivity,
+  deleteElement,
+}) =>
   <article>
     <section className="Page-meta">
       <h1>
@@ -94,6 +92,5 @@ const Activity = (
       />
     </section>
   </article>
-)
 
 export default connect(mapStateToProps, { updateActivity })(Activity)

@@ -60,7 +60,7 @@ export type Action =
 type GetState = () => State
 type PromiseAction = Promise<Action>
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
-type Dispatch = (
+export type Dispatch = (
   action: Action | ThunkAction | PromiseAction | Array<Action>
 ) => void
 

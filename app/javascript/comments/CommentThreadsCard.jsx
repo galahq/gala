@@ -1,3 +1,8 @@
+/**
+ * @providesModule CommentThreadsCard
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { Portal } from '@blueprintjs/core'
@@ -26,20 +31,18 @@ function mapStateToProps (state: State, { cardId, location }) {
   }
 }
 
-const CommentThreadsCard = (
-  {
-    cardId,
-    commentThreads,
-    acceptingSelection,
-    selectionPending,
-    acceptSelection,
-    closeCommentThreadsPath,
-    addCommentThread,
-    location,
-    match,
-    history,
-  },
-) => {
+const CommentThreadsCard = ({
+  cardId,
+  commentThreads,
+  acceptingSelection,
+  selectionPending,
+  acceptSelection,
+  closeCommentThreadsPath,
+  addCommentThread,
+  location,
+  match,
+  history,
+}) => {
   return (
     <div className="CommentThreads">
       <div className={`CommentThreads__window`}>
@@ -58,12 +61,10 @@ const CommentThreadsCard = (
 
           <FormattedMessage
             id="comments.nResponses"
-            defaultMessage={
-              `{count, number} {count, plural,
+            defaultMessage={`{count, number} {count, plural,
             one {response}
             other {responses}
-          }`
-            }
+          }`}
             values={{ count: commentThreads.length }}
           />
 
@@ -71,7 +72,7 @@ const CommentThreadsCard = (
         </div>
 
         <ol style={styles.commentList}>
-          {commentThreads.map((thread, i) => (
+          {commentThreads.map((thread, i) =>
             <CommentThread
               key={`${thread.id}`}
               cardId={cardId}
@@ -81,7 +82,7 @@ const CommentThreadsCard = (
               history={history}
               last={i === commentThreads.length - 1}
             />
-          ))}
+          )}
         </ol>
 
         <div className="CommentThreads__footer">
@@ -94,16 +95,16 @@ const CommentThreadsCard = (
               ? <FormattedMessage
                 id="comments.writeNew"
                 defaultMessage="Write a new response"
-                />
+              />
               : !selectionPending
-                  ? <FormattedMessage
-                    id="comments.select"
-                    defaultMessage="Select a few words"
-                    />
-                  : <FormattedMessage
-                    id="comments.here"
-                    defaultMessage="Respond here"
-                    />}
+                ? <FormattedMessage
+                  id="comments.select"
+                  defaultMessage="Select a few words"
+                />
+                : <FormattedMessage
+                  id="comments.here"
+                  defaultMessage="Respond here"
+                />}
           </button>
         </div>
       </div>
@@ -124,9 +125,7 @@ const CommentThreadsCard = (
   )
 }
 
-export default connect(mapStateToProps, { acceptSelection })(
-  CommentThreadsCard,
-)
+export default connect(mapStateToProps, { acceptSelection })(CommentThreadsCard)
 
 const styles = {
   backdrop: {

@@ -1,3 +1,8 @@
+/**
+ * @providesModule EditorToolbar
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { EditorState, Modifier, RichUtils } from 'draft-js'
@@ -36,17 +41,13 @@ class EditorToolbar extends React.Component {
     // These must call this.props.editorState individually to keep from
     // capturing editorState as it exists when EditorToolbar is constructed.
     //
-    this.toggleInline = style =>
-      () =>
-        updateEditorState(
-          RichUtils.toggleInlineStyle(this.props.editorState, style),
-        )
+    this.toggleInline = style => () =>
+      updateEditorState(
+        RichUtils.toggleInlineStyle(this.props.editorState, style)
+      )
 
-    this.toggleBlock = type =>
-      () =>
-        updateEditorState(
-          RichUtils.toggleBlockType(this.props.editorState, type),
-        )
+    this.toggleBlock = type => () =>
+      updateEditorState(RichUtils.toggleBlockType(this.props.editorState, type))
 
     this.handleAddCitation = this.handleAddCitation.bind(this)
     this.handleAddEdgenote = this.handleAddEdgenote.bind(this)
@@ -64,7 +65,7 @@ class EditorToolbar extends React.Component {
     const contentStateWithCircle = Modifier.insertText(
       editorState.getCurrentContent(),
       collapsedSelection,
-      '°',
+      '°'
     )
 
     const circleSelection = collapsedSelection.merge({
@@ -77,8 +78,8 @@ class EditorToolbar extends React.Component {
         { type: 'CITATION', mutability: 'IMMUTABLE', data: {}},
         editorState,
         circleSelection,
-        contentStateWithCircle,
-      ),
+        contentStateWithCircle
+      )
     )
   }
 
@@ -98,8 +99,8 @@ class EditorToolbar extends React.Component {
       updateEditorState(
         addEntity(
           { type: 'EDGENOTE', mutability: 'MUTABLE', data: { slug }},
-          editorState,
-        ),
+          editorState
+        )
       )
 
     if (edgenoteExists(slug)) {
@@ -146,13 +147,12 @@ class EditorToolbar extends React.Component {
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditorToolbar)
 
-const EditorToolbarButton = ({ icon, onClick }) => (
+const EditorToolbarButton = ({ icon, onClick }) =>
   <a
     dangerouslySetInnerHTML={{ __html: icon }}
     onMouseDown={e => e.preventDefault()}
     onClick={onClick}
   />
-)
 
 const styles = {
   bar: {

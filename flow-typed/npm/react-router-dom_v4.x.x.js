@@ -80,13 +80,15 @@ declare module 'react-router-dom' {
   }
 
   declare export type Match = {
-    params: Object,
+    params: { [key: string]: ?string },
     isExact: boolean,
     path: string,
     url: string,
   }
 
-  declare export type ContextRouter = RouterHistory & {
+  declare export type ContextRouter = {
+    history: RouterHistory,
+    location: Location,
     match: Match,
   }
 
@@ -95,12 +97,6 @@ declare module 'react-router-dom' {
 
   declare type StaticRouterContext = {
     url?: string,
-  }
-
-  declare export type RouteProps = {
-    match: Match,
-    location: Location,
-    history: RouterHistory,
   }
 
   declare export class StaticRouter extends React$Component {
@@ -146,8 +142,8 @@ declare module 'react-router-dom' {
   declare export class Route extends React$Component {
     props: {
       component?: ReactClass<*>,
-      render?: (router: RouteProps) => React$Element<*>,
-      children?: (router: RouteProps) => React$Element<*>,
+      render?: (router: ContextRouter) => React$Element<*>,
+      children?: (router: ContextRouter) => React$Element<*>,
       path?: string,
       exact?: bool,
       strict?: bool,
@@ -165,8 +161,9 @@ declare module 'react-router-dom' {
   declare export function withRouter<P, S>(Component: ClassComponent<void, P, S> | FunctionComponent<P>): ClassComponent<void, $Diff<P, ContextRouter>, S>;
 
   declare type MatchPathOptions = {
+    path: string,
     exact?: boolean,
     strict?: boolean,
   }
-  declare export function matchPath(pathname: string, path: string, options?: MatchPathOptions): null | Match
+  declare export function matchPath(pathname: string, options: MatchPathOptions): null | Match
 }

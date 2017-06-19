@@ -1,3 +1,8 @@
+/**
+ * @providesModule CitationTooltip
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { EditorState } from 'draft-js'
@@ -28,25 +33,23 @@ function mapDispatchToProps (dispatch: *, ownProps: OwnProps) {
   }
 }
 
-const CitationTooltip = (
-  {
-    openedCitation,
-    editable,
-    editorState,
-    href,
-    contents,
-    onChange,
-    onCloseCitation,
-    cardWidth,
-  },
-) => {
+const CitationTooltip = ({
+  openedCitation,
+  editable,
+  editorState,
+  href,
+  contents,
+  onChange,
+  onCloseCitation,
+  cardWidth,
+}) => {
   let label = openedCitation.labelRef
   let top = label.offsetTop
 
   let horizontalCenter = label.offsetLeft - tooltipWidth / 2
   let left = Math.min(
     cardWidth - tooltipWidth - 21,
-    Math.max(horizontalCenter, 7),
+    Math.max(horizontalCenter, 7)
   )
 
   let positionalStyles = {
@@ -58,21 +61,20 @@ const CitationTooltip = (
 
   let closeCitation = editable ? null : close
 
-  let updateCitation = attr =>
-    e => {
-      const contentState = editorState.getCurrentContent()
-      /* let newContentState = */ contentState.mergeEntityData(
-        openedCitation.key,
-        { [attr]: e.currentTarget.value },
-      )
-      // When eventually the Entity API is rejiggered so entities are inside of
-      // ContentState, then we’ll have to push newcontentState. For now,
-      // mergeEntityData is mutating editorState, so we just dispatch the object
-      // itself.
-      //
-      // onChange(EditorState.push(editorState, newContentState, 'apply-entity'))
-      onChange(editorState)
-    }
+  let updateCitation = attr => e => {
+    const contentState = editorState.getCurrentContent()
+    /* let newContentState = */ contentState.mergeEntityData(
+      openedCitation.key,
+      { [attr]: e.currentTarget.value }
+    )
+    // When eventually the Entity API is rejiggered so entities are inside of
+    // ContentState, then we’ll have to push newcontentState. For now,
+    // mergeEntityData is mutating editorState, so we just dispatch the object
+    // itself.
+    //
+    // onChange(EditorState.push(editorState, newContentState, 'apply-entity'))
+    onChange(editorState)
+  }
 
   return (
     <cite
@@ -86,18 +88,18 @@ const CitationTooltip = (
             value={contents}
             placeholder="Citation text"
             onChange={updateCitation('contents')}
-            />
+          />
           <input
             style={styles.field}
             value={href}
             placeholder="Resource URL"
             onChange={updateCitation('href')}
-            />
+          />
           <button
             type="button"
             style={styles.button}
             onClick={onCloseCitation}
-            >
+          >
               Close
             </button>
         </form>
