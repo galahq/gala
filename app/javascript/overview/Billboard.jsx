@@ -1,4 +1,8 @@
-// @flow
+/**
+ * @providesModule Billboard
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -25,17 +29,25 @@ function mapStateToProps (state: State) {
   }
 }
 
-const Billboard = (
-  {
-    editing,
-    slug,
-    dek,
-    summary,
-    baseCoverUrl,
-    updateCase,
-    otherAvailableLocales,
-  },
-) => (
+type Props = {
+  editing: boolean,
+  slug: string,
+  dek: string,
+  summary: string,
+  baseCoverUrl: string,
+  updateCase: typeof updateCase,
+  otherAvailableLocales: string[],
+}
+
+const Billboard = ({
+  editing,
+  slug,
+  dek,
+  summary,
+  baseCoverUrl,
+  updateCase,
+  otherAvailableLocales,
+}: Props) =>
   <section className="Billboard">
     <BillboardTitle />
     <EditableAttribute
@@ -52,7 +64,9 @@ const Billboard = (
           value={dek}
           disabled={!editing}
           placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
-          onChange={value => updateCase(slug, { dek: value })}
+          onChange={value => {
+            updateCase(slug, { dek: value })
+          }}
         />
       </p>
       <p>
@@ -67,7 +81,6 @@ const Billboard = (
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>
   </section>
-)
 
 export default connect(mapStateToProps, { updateCase })(Billboard)
 

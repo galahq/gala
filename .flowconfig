@@ -1,25 +1,24 @@
 [ignore]
+./node_modules
 .*/node_modules/styled-components/.*
 
 [include]
 ./node_modules/immutable
+./node_modules/fbjs/flow/lib
+./node_modules/draft-js
 
 [libs]
-./node_modules/fbjs/flow/lib
 
 [options]
 module.system.node.resolve_dirname=node_modules
 module.system.node.resolve_dirname=app/javascript
 module.use_strict=true
 module.ignore_non_literal_requires=true
-module.name_mapper='.*\(.css\)' -> 'CSSModule'
-module.file_ext=.js
-module.file_ext=.jsx
-module.file_ext=.json
-module.file_ext=.css
 
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable
+munge_underscores=true
+
 suppress_type=$FlowIssue
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(2[0-8]\\|1[0-9]\\|[0-9]\\).[0-9]\\)? *\\).*\n

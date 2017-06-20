@@ -6,7 +6,7 @@ import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 
 import type { EditorState, SelectionState } from 'draft-js'
-import type { Toast } from '@blueprintjs/core'
+import type { Toaster, Toast } from '@blueprintjs/core'
 
 import type {
   State,
@@ -54,6 +54,7 @@ export type Action =
   | HighlightEdgenoteAction
   | ActivateEdgenoteAction
   | RegisterToasterAction
+  | RecordQuizSubmissionAction
   | SetStatisticsAction
   | DisplayToastAction
 
@@ -208,10 +209,13 @@ function clearUnsaved (): ClearUnsavedAction {
 
 // CASE
 //
-export type UpdateCaseAction = { type: 'UPDATE_CASE', data: CaseDataState }
+export type UpdateCaseAction = {
+  type: 'UPDATE_CASE',
+  data: $Shape<CaseDataState>,
+}
 export function updateCase (
   slug: string,
-  data: $Subtype<CaseDataState>
+  data: $Shape<CaseDataState>
 ): UpdateCaseAction {
   setUnsaved()
   return { type: 'UPDATE_CASE', data }
@@ -305,9 +309,9 @@ export function createPage (caseSlug: string): ThunkAction {
 export type UpdatePageAction = {
   type: 'UPDATE_PAGE',
   id: string,
-  data: Object,
+  data: $Shape<Page>,
 }
-export function updatePage (id: string, data: Object): UpdatePageAction {
+export function updatePage (id: string, data: $Shape<Page>): UpdatePageAction {
   setUnsaved()
   return { type: 'UPDATE_PAGE', id, data }
 }
@@ -332,9 +336,12 @@ export function createPodcast (caseSlug: string) {
 export type UpdatePodcastAction = {
   type: 'UPDATE_PODCAST',
   id: string,
-  data: Object,
+  data: $Shape<Podcast>,
 }
-export function updatePodcast (id: string, data: Object): UpdatePodcastAction {
+export function updatePodcast (
+  id: string,
+  data: $Shape<Podcast>
+): UpdatePodcastAction {
   setUnsaved()
   return { type: 'UPDATE_PODCAST', id, data }
 }
@@ -359,9 +366,12 @@ export function createActivity (caseSlug: string) {
 export type UpdateActivityAction = {
   type: 'UPDATE_ACTIVITY',
   id: string,
-  data: Object,
+  data: $Shape<Activity>,
 }
-export function updateActivity (id: string, data: Object): UpdateActivityAction {
+export function updateActivity (
+  id: string,
+  data: $Shape<Activity>
+): UpdateActivityAction {
   setUnsaved()
   return { type: 'UPDATE_ACTIVITY', id, data }
 }
@@ -397,16 +407,23 @@ export function replaceCard (cardId: string, newCard: Card): ReplaceCardAction {
 
 export type OpenCitationAction = {
   type: 'OPEN_CITATION',
-  data: {
-    key: string,
-    labelRef: HTMLElement,
-  },
+  data: | {| key: null |}
+    | {|
+        key: string,
+        labelRef: HTMLElement,
+      |},
 }
 export function openCitation (
-  key: string,
-  labelRef: HTMLElement
+  key: string | null,
+  labelRef?: HTMLElement
 ): OpenCitationAction {
-  return { type: 'OPEN_CITATION', data: { key, labelRef }}
+  if (key != null && labelRef != null) {
+    return { type: 'OPEN_CITATION', data: { key, labelRef }}
+  } else if (key == null) {
+    return { type: 'OPEN_CITATION', data: { key }}
+  } else {
+    throw new Error('Should never happen')
+  }
 }
 
 // SELECTION
@@ -539,7 +556,7 @@ export function createComment (threadId: string, content: string): ThunkAction {
       .then(() => {
         dispatch(changeCommentInProgress(threadId, ''))
       })
-      .catch(error => {
+      .catch((error: Error) => {
         dispatch(
           displayToast({
             message: `Error saving: ${error.message}`,
@@ -567,11 +584,11 @@ export function createEdgenote (
 export type UpdateEdgenoteAction = {
   type: 'UPDATE_EDGENOTE',
   slug: string,
-  data: Object,
+  data: $Shape<Edgenote>,
 }
 export function updateEdgenote (
   slug: string,
-  data: Object
+  data: $Shape<Edgenote>
 ): UpdateEdgenoteAction {
   setUnsaved()
   return { type: 'UPDATE_EDGENOTE', slug, data }
@@ -645,7 +662,7 @@ export function loadStatistics (uri: string): ThunkAction {
 // TOASTS
 //
 export type RegisterToasterAction = { type: 'REGISTER_TOASTER', toaster: any }
-export function registerToaster (toaster: any): RegisterToasterAction {
+export function registerToaster (toaster: Toaster): RegisterToasterAction {
   return { type: 'REGISTER_TOASTER', toaster }
 }
 export type DisplayToastAction = { type: 'DISPLAY_TOAST', options: Toast }

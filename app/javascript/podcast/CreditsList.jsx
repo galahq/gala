@@ -17,7 +17,7 @@ class CreditsList extends React.Component {
   props: {
     canEdit: boolean,
     credits: PodcastCreditList,
-    onChange: PodcastCreditList => void,
+    onChange: PodcastCreditList => any,
   }
   state = { editing: false }
 

@@ -2,6 +2,13 @@
  * @providesModule Orchard
  * @flow
  */
+
+import { append, keys } from 'ramda'
+
+type ErrorResponse = {
+  [string]: string[],
+}
+
 export class Orchard {
   static harvest (endpoint: string): Promise<any> {
     let r = new Request(
@@ -53,23 +60,26 @@ export class Orchard {
     if (response.ok) {
       return response.json()
     } else {
-      return response.json().then((r: Object) => {
-        const errorMessagePairs = Object.entries(r)
+      return response.json().then((errorResponse: ErrorResponse) => {
+        const errorFieldNames = keys(errorResponse)
 
-        const errorMessages = errorMessagePairs
-          .reduce((all, fieldErrs) => {
-            const [field, errors] = fieldErrs
+        const errorMessages = errorFieldNames
+          .reduce((all: string[], fieldName: string) => {
+            const fieldErrors = errorResponse[fieldName]
 
-            if (errors != null && Array.isArray(errors)) {
-              return [
-                ...all,
-                ...errors.map(
-                  err => `${field} ${typeof err === 'string' ? err : 'error'}`
-                ),
-              ]
+            if (fieldErrors != null && Array.isArray(fieldErrors)) {
+              return append(
+                fieldErrors
+                  .map(
+                    err =>
+                      `${fieldName} ${typeof err === 'string' ? err : 'error'}`
+                  )
+                  .join('\n'),
+                all
+              )
             }
 
-            return [...all, `${field}: error`]
+            return [...all, `${fieldName}: error`]
           }, [])
           .join('\n')
 

@@ -26,7 +26,7 @@ type Action =
 
 export default function caseData (
   state: CaseDataState = ({ ...window.caseData }: CaseDataState),
-  action: Action,
+  action: Action
 ): CaseDataState {
   switch (action.type) {
     case 'UPDATE_CASE':
@@ -41,7 +41,7 @@ export default function caseData (
         ...state,
         reader: {
           ...state.reader,
-          enrollment: action.enrollment,
+          enrollment: action.enrollment ? { status: 'student' } : null,
         },
       }
 

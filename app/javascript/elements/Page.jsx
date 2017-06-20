@@ -2,6 +2,7 @@
  * @providesModule Page
  * @flow
  */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { EditableText } from '@blueprintjs/core'
@@ -12,18 +13,22 @@ import { updatePage } from 'redux/actions'
 import Edgenotes from 'edgenotes'
 import Card from 'card'
 
-import type { State } from 'redux/state'
+import type { State, Page as PageT } from 'redux/state'
 
-type OwnProps = { id: string }
+type OwnProps = { id: string, deleteElement: () => void }
 function mapStateToProps (state: State, { id }: OwnProps) {
   return {
-    caseSlug: state.caseData.slug,
     editing: state.edit.inProgress,
     ...state.pagesById[id],
   }
 }
 
-const Page = props => {
+type Props = OwnProps &
+  PageT & {
+    editing: boolean,
+    updatePage: (id: string, data: $Shape<PageT>) => mixed,
+  }
+const Page = (props: Props) => {
   let { id, title, cards, editing, updatePage, deleteElement } = props
 
   return (
@@ -63,14 +68,15 @@ const Page = props => {
 }
 
 class CreateCardLink extends React.Component {
-  constructor (props) {
-    super(props)
-    this.handleCreateCard = this.handleCreateCard.bind(this)
+  props: {
+    pageId: string,
+    i?: number,
   }
-  handleCreateCard () {
+
+  handleCreateCard = () => {
     // TODO: This should really be in a redux thun
     let { pageId, i } = this.props
-    Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 }).then(
+    Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 }).then(() =>
       setTimeout(() => location.reload(), 50)
     )
   }

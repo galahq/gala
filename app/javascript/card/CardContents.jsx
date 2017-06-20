@@ -4,11 +4,12 @@
  */
 
 import React, { Component } from 'react'
-import { blockRenderMap, getStyleMap } from './draftConfig'
+import { append } from 'ramda'
 
 import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
+import { blockRenderMap, getStyleMap } from './draftConfig'
 
 import EditorToolbar from './EditorToolbar'
 import Statistics from 'utility/Statistics'
@@ -61,14 +62,14 @@ class CardContents extends Component {
     this.props.selectedCommentThread !== nextProps.selectedCommentThread
 
   _getClassNames = () => {
-    let n = []
-    n = [...n, this.props.solid ? 'Card' : 'nonCard']
+    let n: string[] = []
+    n = append(this.props.solid ? 'Card' : 'nonCard', n)
     if (this.props.anyCommentThreadsOpen) {
-      n = [...n, 'has-comment-threads-open']
+      n = append('has-comment-threads-open', n)
     }
-    if (this.props.anyCommentsOpen) n = [...n, 'has-comments-open']
-    if (this.props.acceptingSelection) n = [...n, 'accepting-selection']
-    if (this.props.commentable) n = [...n, 'commentable']
+    if (this.props.anyCommentsOpen) n = append('has-comments-open', n)
+    if (this.props.acceptingSelection) n = append('accepting-selection', n)
+    if (this.props.commentable) n = append('commentable', n)
     return n.join(' ')
   }
 

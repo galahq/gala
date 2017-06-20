@@ -20,11 +20,15 @@ declare module 'draft-js' {
 
   declare export class ContentState {
     getBlockMap(): ContentBlock[],
+    getBlocksAsArray(): ContentBlock[],
+    getEntity(string): DraftEntity,
     set(string, mixed): ContentState,
   }
 
   declare export class ContentBlock {
     getDepth(): number,
+    getKey(): string,
+    getText(): string,
     set(string, mixed): ContentBlock,
   }
 
@@ -35,6 +39,10 @@ declare module 'draft-js' {
     ) => List<?string>,
     getComponentForKey: (key: string) => Function,
     getPropsForKey: (key: string) => ?Object,
+  }
+
+  declare export class DraftEntity {
+    getData(): Object,
   }
 
   declare export class Editor<D, P, S> extends React$Component<D, P, S> {}
