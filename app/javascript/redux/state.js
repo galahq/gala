@@ -1,4 +1,6 @@
-/* @flow */
+/**
+ * @flow
+ */
 
 import type { EditorState } from 'draft-js'
 
@@ -83,7 +85,7 @@ export type QuizNecessity<Pre: boolean, Post: boolean> = {
 export type QuizState =
   | QuizNecessity<false, false>
   | (QuizNecessity<boolean, boolean> & {
-      id: number,
+      id: string,
       questions: Question[],
     })
 
@@ -116,7 +118,7 @@ export type Activity = {
   cardId: number,
   caseElement: CaseElement,
   iconSlug: string,
-  id: number,
+  id: string,
   pdfUrl: string,
   position: number,
   title: string,
@@ -134,7 +136,7 @@ export type Card = {
 }
 
 export type CaseElement = {
-  caseId: number,
+  caseId: string,
   elementId: string,
   elementStore: CaseElementStore,
   elementType: string,
@@ -147,9 +149,9 @@ export type CaseElementStore = 'pagesById' | 'podcastsById' | 'activitiesById'
 export type Comment = {
   commentThreadId: number,
   content: string,
-  id: number,
+  id: string,
   reader: {
-    id: number,
+    id: string,
     initials: string,
     name: string,
   },
@@ -192,7 +194,8 @@ export type Edgenote = {
 
 export type ReplyToThreadNotification = {
   notifier: {
-    id: number,
+    // instance of Reader
+    id: string,
     name: string,
     initials: string,
   },
@@ -203,20 +206,20 @@ export type ReplyToThreadNotification = {
   element: {
     position: number,
   },
-  cardId: number,
+  cardId: string,
   commentThreadId: number,
 }
 
 export type Notification = {
-  id: number,
+  id: string,
   message: string,
 } & ReplyToThreadNotification
 
 export type Page = {
-  cards: number[],
+  cards: string[],
   caseElement: CaseElement,
   iconSlug: void,
-  id: number,
+  id: string,
   position: number,
   title: string,
   url: string,
@@ -230,7 +233,7 @@ export type Podcast = {
   caseElement: CaseElement,
   creditsList: PodcastCreditList,
   iconSlug: string,
-  id: number,
+  id: string,
   photoCredit: string,
   position: number,
   title: string,
@@ -259,7 +262,7 @@ export type Reader = {
   enrollment: ?{
     status: 'student' | 'instructor' | 'treatment',
   },
-  id: number,
+  id: string,
   initials: string,
   name: string,
   roles: {
