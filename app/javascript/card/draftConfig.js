@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 import {
   CompositeDecorator,
   DefaultDraftBlockRenderMap,
@@ -5,20 +9,23 @@ import {
   Modifier,
   EditorState,
 } from 'draft-js'
-import Immutable from 'immutable'
+import { Map } from 'immutable'
 
 import EdgenoteEntity from './EdgenoteEntity'
 import CitationEntity from './CitationEntity'
 import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
 
-const newBlockRenderMap = Immutable.Map({
+import type { ContentState, SelectionState } from 'draft-js'
+import type { Match } from 'react-router-dom'
+
+const newBlockRenderMap = Map({
   unstyled: {
     element: 'p',
   },
 })
 export const blockRenderMap = DefaultDraftBlockRenderMap.merge(
-  newBlockRenderMap,
+  newBlockRenderMap
 )
 
 export const styles = {
@@ -33,7 +40,8 @@ export const styles = {
     backgroundSize: '1px 1px',
     backgroundRepeat: 'repeat-x',
     backgroundPosition: '0 93%',
-    textShadow: '0.03em 0 #EBEAE4, -0.03em 0 #EBEAE4, 0 0.03em #EBEAE4, 0 -0.03em #EBEAE4, 0.06em 0 #EBEAE4, -0.06em 0 #EBEAE4, 0.09em 0 #EBEAE4, -0.09em 0 #EBEAE4, 0.12em 0 #EBEAE4, -0.12em 0 #EBEAE4, 0.15em 0 #EBEAE4, -0.15em 0 #EBEAE4',
+    textShadow:
+      '0.03em 0 #EBEAE4, -0.03em 0 #EBEAE4, 0 0.03em #EBEAE4, 0 -0.03em #EBEAE4, 0.06em 0 #EBEAE4, -0.06em 0 #EBEAE4, 0.09em 0 #EBEAE4, -0.09em 0 #EBEAE4, 0.12em 0 #EBEAE4, -0.12em 0 #EBEAE4, 0.15em 0 #EBEAE4, -0.15em 0 #EBEAE4',
     cursor: 'pointer',
   },
 
@@ -60,16 +68,20 @@ export const styles = {
   },
 }
 
-export function getStyleMap (
-  {
-    commentable,
-    theseCommentThreadsOpen,
-    hoveredCommentThread,
-    selectedCommentThread,
-  },
-) {
-  const hoveredCommentKey = `thread--${hoveredCommentThread}`
-  const selectedCommentKey = `thread--${selectedCommentThread}`
+type StyleMapArgs = {
+  commentable: boolean,
+  theseCommentThreadsOpen: ?Match,
+  hoveredCommentThread: string | null,
+  selectedCommentThread: string | null,
+}
+export function getStyleMap ({
+  commentable,
+  theseCommentThreadsOpen,
+  hoveredCommentThread,
+  selectedCommentThread,
+}: StyleMapArgs) {
+  const hoveredCommentKey = `thread--${hoveredCommentThread || 'null'}`
+  const selectedCommentKey = `thread--${selectedCommentThread || 'null'}`
   const threadStyle = {
     THREAD: theseCommentThreadsOpen
       ? styles.lightPurpleUnderline
@@ -87,14 +99,13 @@ export function getStyleMap (
 
 function getFindEntityFunction (type) {
   return (contentBlock, callback, contentState) => {
-    contentBlock.findEntityRanges(
-      character => {
-        const entityKey = character.getEntity()
-        return entityKey !== null &&
-          contentState.getEntity(entityKey).getType() === type
-      },
-      callback,
-    )
+    contentBlock.findEntityRanges(character => {
+      const entityKey = character.getEntity()
+      return (
+        entityKey !== null &&
+        contentState.getEntity(entityKey).getType() === type
+      )
+    }, callback)
   }
 }
 
@@ -124,7 +135,7 @@ export const decorator = new CompositeDecorator([
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
 // which gives a grey background.
-export function addShadowSelection (editorState) {
+export function addShadowSelection (editorState: EditorState): EditorState {
   if (!editorState.getSelection().isCollapsed()) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -132,7 +143,7 @@ export function addShadowSelection (editorState) {
   }
 }
 
-export function removeShadowSelection (editorState) {
+export function removeShadowSelection (editorState: EditorState): EditorState {
   if (editorState.getCurrentInlineStyle().has('SELECTION')) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -141,26 +152,30 @@ export function removeShadowSelection (editorState) {
 }
 
 export function addEntity (
-  { type, mutability, data },
-  editorState,
-  selection = editorState.getSelection(),
-  contentState = editorState.getCurrentContent(),
+  {
+    type,
+    mutability,
+    data,
+  }: { type: string, mutability: string, data: Object },
+  editorState: EditorState,
+  selection: SelectionState = editorState.getSelection(),
+  contentState: ContentState = editorState.getCurrentContent()
 ) {
   const contentStateWithEntity = contentState.createEntity(
     type,
     mutability,
-    data,
+    data
   )
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
   const contentStateWithEntityApplied = Modifier.applyEntity(
     contentStateWithEntity,
     selection,
-    entityKey,
+    entityKey
   )
   const editorStateWithEntity = EditorState.push(
     editorState,
     contentStateWithEntityApplied,
-    'apply-entity',
+    'apply-entity'
   )
   return editorStateWithEntity
 }

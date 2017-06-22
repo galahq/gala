@@ -64,7 +64,7 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
-    "styled-components": "^1.4.5",
+    "styled-components": "^2.1.0",
     "url-loader": "^0.5.7",
     "webpack": "^2.3.3",
     "webpack-manifest-plugin": "^1.1.0",
@@ -85,7 +85,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^2.1.1",
-    "flow-bin": "0.38",
+    "flow-bin": "^0.48.0",
     "flow-inspect": "^1.0.1",
     "webpack-dev-server": "^2.4.2"
   }

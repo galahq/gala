@@ -7,6 +7,8 @@ export default function statistics (
   state: StatisticsState = window.caseData.statistics,
   action: SetStatisticsAction
 ): StatisticsState {
+  if (!state) return false
+
   switch (action.type) {
     case 'SET_STATISTICS':
       return {

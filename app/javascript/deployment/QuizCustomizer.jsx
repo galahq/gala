@@ -109,7 +109,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                 handleEditQuestionContent(questionIx, e.target.value)}
             />
 
-            {options.map((option: string, optionIx: number) => (
+            {options.map((option: string, optionIx: number) =>
               <div className="pt-control-group pt-fill" key={optionIx}>
                 <GroupedRadio
                   value={option}
@@ -155,7 +155,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                     )}
                 />
               </div>
-            ))}
+            )}
 
           </PaddedItem>
         )

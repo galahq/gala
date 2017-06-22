@@ -191,7 +191,7 @@ export const Edgenote = connect(
   mergeProps
 )(EdgenoteFigure)
 
-const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) => (
+const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) =>
   <div>
     {slug &&
       <YoutubePlayer
@@ -210,7 +210,6 @@ const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) => (
       onChange={onChange}
     />
   </div>
-)
 
 const Image = ({
   src,
@@ -250,6 +249,8 @@ const Image = ({
 }
 
 class AudioPlayer extends React.Component {
+  audioPlayer: HTMLAudioElement
+
   componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {
       this.audioPlayer && this.audioPlayer.play()
@@ -284,11 +285,10 @@ class AudioPlayer extends React.Component {
   }
 }
 
-const Background = ({ visible, children }) => (
+const Background = ({ visible, children }) =>
   <div style={visible ? backgroundedStyle : {}}>{children}</div>
-)
 
-const CallToAction = ({ contents, websiteUrl, editing, onChange }) => (
+const CallToAction = ({ contents, websiteUrl, editing, onChange }) =>
   <div>
     <EditableAttribute
       disabled={!editing}
@@ -307,7 +307,6 @@ const CallToAction = ({ contents, websiteUrl, editing, onChange }) => (
         />
       </p>}
   </div>
-)
 
 const Caption = ({ contents, selected, editing, onChange }) =>
   contents || editing

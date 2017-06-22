@@ -1,3 +1,7 @@
+/**
+ * @providesModule Statistics
+ * @flow
+ */
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -20,26 +24,24 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
 }
 
 type Props =
-  | { visible: false }
+  | (OwnProps & { visible: false, statistics: null })
   | (OwnProps & {
-    visible: true,
-    statistics: StatisticsType,
-    loadStatistics: () => void,
-  })
+      visible: true,
+      statistics: StatisticsType,
+      loadStatistics: string => void,
+    })
 
 class Statistics extends React.Component {
   props: Props
 
-  _maybeFetchStatistics ({ visible, statistics, uri }: Props) {
-    if (visible && !statistics) {
-      this.props.loadStatistics(uri)
+  _maybeFetchStatistics = (props: Props) => {
+    if (props.visible && !props.statistics) {
+      props.loadStatistics(props.uri)
     }
   }
 
   constructor (props: Props) {
     super(props)
-    this._maybeFetchStatistics = this._maybeFetchStatistics.bind(this)
-
     this._maybeFetchStatistics(props)
   }
 
@@ -49,14 +51,15 @@ class Statistics extends React.Component {
 
   render () {
     const { visible, inline, statistics } = this.props
+
     if (!visible) return null
 
     if (!statistics || (statistics && statistics.loaded === false)) {
       return (
         <p
-          className={
-            `o-${inline ? 'tag' : 'bottom-right'} c-statistics pt-skeleton`
-          }
+          className={`o-${inline
+            ? 'tag'
+            : 'bottom-right'} c-statistics pt-skeleton`}
         >
           Loading...
         </p>

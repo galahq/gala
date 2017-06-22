@@ -154,11 +154,13 @@ export class OnScreenTracker extends React.Component {
   _isVisible () {
     if (document.hidden) return false
 
-    const self = (findDOMNode(this): ?HTMLElement)
-    if (self == null) return false
+    const self = findDOMNode(this)
+    if (self == null || self instanceof Text) return false
 
-    const threshold = 100
     const rectangle = self.getBoundingClientRect()
+    const threshold = 100
+
+    if (document.documentElement == null) return false
     const viewHeight = Math.max(
       document.documentElement.clientHeight,
       window.innerHeight

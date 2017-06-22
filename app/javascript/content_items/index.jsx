@@ -31,13 +31,13 @@ const ContentItems = ({ items, groupId }: ContentItemsProps) => {
   return (
     <div className="catalog-cases">
       <div className="catalog-cases-index">
-        {items.map((item: ContentItem, i: number) => (
+        {items.map((item: ContentItem, i: number) =>
           <ContentItemLink
             key={i}
             {...item}
             handleSelectContentItem={handleSelectContentItem}
           />
-        ))}
+        )}
       </div>
     </div>
   )

@@ -1,7 +1,3 @@
-/**
- * @providesModule EdgenoteContents
- * @flow
- */
 import React from 'react'
 import { connect } from 'react-redux'
 import { ScrollLock } from 'deprecated/ScrollLock'
@@ -74,7 +70,9 @@ class EdgenoteDisplay extends React.Component {
           }}
         />
         <img
-          src={`${this.props.imageUrl}${this.props.format !== 'video' ? '?w=700&htn=3&con=-40&mono=1E2934' : ''}`}
+          src={`${this.props.imageUrl}${this.props.format !== 'video'
+            ? '?w=700&htn=3&con=-40&mono=1E2934'
+            : ''}`}
         />
       </a>
     )
@@ -109,7 +107,8 @@ class EdgenoteDisplay extends React.Component {
   renderPDF () {
     return (
       <iframe
-        src={`http://docs.google.com/gview?url=${this.props.pdfUrl}&embedded=true`}
+        src={`http://docs.google.com/gview?url=${this.props
+          .pdfUrl}&embedded=true`}
         style={{ height: '100%', width: '100%' }}
         frameBorder="0"
       />

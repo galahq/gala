@@ -1,3 +1,8 @@
+/**
+ * @providesModule CommentThreadsTag
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
@@ -17,7 +22,7 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   }
 }
 
-const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) => (
+const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) =>
   <Link
     replace
     to={`${match.url}/cards/${cardId}/comments`}
@@ -29,14 +34,11 @@ const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) => (
     {count > 0
       ? <FormattedMessage
         id="comments.nResponses"
-        defaultMessage={
-            `{count, number} {count, plural, one {response} other
-        {responses} }`
-          }
+        defaultMessage={`{count, number} {count, plural, one {response} other
+        {responses} }`}
         values={{ count }}
-        />
+      />
       : <FormattedMessage id="comments.respond" defaultMessage="Respond" />}
   </Link>
-)
 
 export default connect(mapStateToProps, { acceptSelection })(CommentThreadsTag)

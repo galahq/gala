@@ -15,7 +15,7 @@ import Statistics from 'utility/Statistics'
 import Card from 'card'
 import Tracker from 'utility/Tracker'
 
-import type { State } from 'redux/state'
+import type { State, Podcast as PodcastT } from 'redux/state'
 
 function mapStateToProps (state: State, { id }: { id: string }) {
   return {
@@ -25,7 +25,20 @@ function mapStateToProps (state: State, { id }: { id: string }) {
   }
 }
 
-function Podcast ({ podcast, slug, editing, updatePodcast, deleteElement }) {
+type Props = {
+  podcast: PodcastT,
+  slug: string,
+  editing: boolean,
+  updatePodcast: typeof updatePodcast,
+  deleteElement: () => void,
+}
+function Podcast ({
+  podcast,
+  slug,
+  editing,
+  updatePodcast,
+  deleteElement,
+}: Props) {
   let { cardId } = podcast
 
   return (
@@ -91,7 +104,7 @@ class PodcastPlayer extends React.Component {
           title="Artwork URL"
           value={artworkUrl}
           disabled={!editing}
-          onChange={v => updatePodcast(id, { artworkUrl: v })}
+          onChange={v => updatePodcast(`${id}`, { artworkUrl: v })}
         />
         <div
           className="artwork"
@@ -103,7 +116,7 @@ class PodcastPlayer extends React.Component {
               disabled={!editing}
               value={photoCredit}
               placeholder={editing ? 'Photo credit' : ''}
-              onChange={v => updatePodcast(id, { photoCredit: v })}
+              onChange={v => updatePodcast(`${id}`, { photoCredit: v })}
             />
           </cite>
         </div>
@@ -114,14 +127,14 @@ class PodcastPlayer extends React.Component {
               multiline
               disabled={!editing}
               value={title}
-              onChange={v => updatePodcast(id, { title: v })}
+              onChange={v => updatePodcast(`${id}`, { title: v })}
             />
           </h1>
 
           <CreditsList
             canEdit={editing}
             credits={creditsList}
-            onChange={v => updatePodcast(id, { creditsList: v })}
+            onChange={v => updatePodcast(`${id}`, { creditsList: v })}
           />
         </div>
 
@@ -149,7 +162,7 @@ class PodcastPlayer extends React.Component {
             disabled={!editing}
             title="Audio URL"
             value={audioUrl}
-            onChange={v => updatePodcast(id, { audioUrl: v })}
+            onChange={v => updatePodcast(`${id}`, { audioUrl: v })}
           />
         </div>
 

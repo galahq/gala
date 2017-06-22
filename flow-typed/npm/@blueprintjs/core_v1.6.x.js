@@ -82,7 +82,7 @@ declare module '@blueprintjs/core' {
 
   declare export interface IControlledProps {
     defaultValue?: string,
-    onChange?: SyntheticInputEvent => void,
+    onChange?: SyntheticInputEvent => any,
     value?: string,
   }
 
@@ -92,7 +92,7 @@ declare module '@blueprintjs/core' {
     disabled?: boolean,
     inputRef?: HTMLInputElement => any,
     label?: string,
-    onChange?: SyntheticInputEvent => void,
+    onChange?: SyntheticInputEvent => any,
   }
 
   declare export interface IIntentProps {
@@ -111,7 +111,7 @@ declare module '@blueprintjs/core' {
     enforceFocus?: boolean,
     inline?: boolean,
     lazy?: boolean,
-    onClose?: SyntheticEvent => void,
+    onClose?: SyntheticEvent => any,
     transitionDuration?: number,
   }
 
@@ -122,6 +122,27 @@ declare module '@blueprintjs/core' {
     props: {
       active?: boolean,
     } & IActionProps
+  }
+
+  declare export interface EditableText extends React$Component<*, *, *> {
+    props: {
+      confirmOnEnterKey?: boolean,
+      defaultValue?: string,
+      disabled?: boolean,
+      isEditing?: boolean,
+      maxLength?: number,
+      maxLines?: number,
+      minLines?: number,
+      minWidth?: number,
+      multiline?: boolean,
+      onCancel?: string => any,
+      onChange?: string => any,
+      onConfirm?: string => any,
+      onEdit?: () => any,
+      placeholder?: string,
+      selectAllOnFocus?: boolean,
+      value?: string,
+    } & IProps & IIntentProps
   }
 
   declare export interface Dialog extends React$Component<*, *, *> {
@@ -154,13 +175,28 @@ declare module '@blueprintjs/core' {
     } & IProps
   }
 
+  declare export interface Portal extends React$Component<*, *, *> {
+
+  }
+
   declare export interface Radio extends React$Component<*, *, *> {
     props: IControlProps & IProps
   }
 
+  declare export interface RadioGroup extends React$Component<*, *, *> {
+    props: {
+      disabled?: boolean,
+      label?: string,
+      name?: string,
+      onChange: (event: SyntheticInputEvent) => any,
+      options?: IOptionProps[],
+      selectedValue?: string,
+    }
+  }
+
   declare export type Toast = {
     message: string,
-    onDismiss?: (didTimoutExpire: boolean) => void,
+    onDismiss?: (didTimoutExpire: boolean) => any,
     timeout?: number,
   } & IActionProps & IProps & IIntentProps
 
@@ -186,17 +222,6 @@ declare module '@blueprintjs/core' {
       isDisabled?: boolean,
       content: string,
     } & IIntentProps
-  }
-
-  declare export interface RadioGroup extends React$Component<*, *, *> {
-    props: {
-      disabled?: boolean,
-      label?: string,
-      name?: string,
-      onChange: (event: SyntheticInputEvent) => void,
-      options?: IOptionProps[],
-      selectedValue?: string,
-    }
   }
 
 }

@@ -1,16 +1,15 @@
-// @flow
+/**
+ * @providesModule convertFromOldStyleCardSerialization
+ * @flow
+ */
 
 import { ContentState, convertFromHTML, convertToRaw } from 'draft-js'
-
-import typeof { DraftRawContentState } from 'draft-js'
 
 const UrlPrefix = 'http://learnmsc.org///'
 const EdgenotePrefix = UrlPrefix + 'edgenote/'
 const CitationPrefix = UrlPrefix + 'citation'
 
-function convertFromOldStyleCardSerialization (
-  content: string,
-): DraftRawContentState {
+function convertFromOldStyleCardSerialization (content: string): ?Object {
   /* convertFromOldStyleCardSerialization
    *
    * If there is no RawDraftContentState persisted, we need to try to
@@ -29,11 +28,13 @@ function convertFromOldStyleCardSerialization (
   const transformedContent = reencodeEdgenotes(reencodeCitations(content))
 
   const blocksFromHTML = convertFromHTML(transformedContent)
+  if (blocksFromHTML == null) return
+
   var convertedRawContent = convertToRaw(
     ContentState.createFromBlockArray(
       blocksFromHTML.contentBlocks,
-      blocksFromHTML.entityMap,
-    ),
+      blocksFromHTML.entityMap
+    )
   )
 
   Object.keys(convertedRawContent.entityMap).forEach(key => {
@@ -71,6 +72,6 @@ function reencodeEdgenotes (content) {
 function reencodeCitations (content: string): string {
   return content.replace(
     /<cite>(.*?href="(.*?)".*?>(.*?)<\/a>.*?|([^<]*?))<\/cite>/g,
-    `<a title="$3$4" target="$2" href="${CitationPrefix}">◦</a>`,
+    `<a title="$3$4" target="$2" href="${CitationPrefix}">◦</a>`
   )
 }

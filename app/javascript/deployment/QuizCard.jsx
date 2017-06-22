@@ -14,7 +14,7 @@ import { SectionTitle } from './QuizDetails'
 import type { ID, Quiz, Question as QuestionT } from './types'
 
 type Params = Quiz & { onClick: (quizId: ID) => void }
-const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
+const QuizCard = ({ id, questions, customQuestions, onClick }: Params) =>
   <Link
     className="pt-card pt-elevation-1 pt-interactive"
     tabIndex="0"
@@ -32,7 +32,6 @@ const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
       </ol>
       : <NonIdealState title="Custom Assessment" visual="edit" />}
   </Link>
-)
 
 export default QuizCard
 
@@ -46,14 +45,16 @@ const Questions = ({
   questions.length > 0
     ? <div>
       <SectionTitle>{sectionTitle}</SectionTitle>
-      {questions.map((question: QuestionT, i: number) => (
+      {questions.map((question: QuestionT, i: number) =>
         <li key={i}>
           {question.content}
           <QuestionType
-            className={`pt-icon-standard pt-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
+            className={`pt-icon-standard pt-icon-${question.options.length > 0
+                ? 'properties'
+                : 'comment'}`}
           />
         </li>
-        ))}
+        )}
     </div>
     : null
 

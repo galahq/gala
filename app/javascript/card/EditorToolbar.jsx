@@ -1,3 +1,8 @@
+/**
+ * @providesModule EditorToolbar
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { EditorState, Modifier, RichUtils } from 'draft-js'
@@ -7,6 +12,7 @@ import { Orchard } from 'shared/orchard'
 
 import { updateCardContents, createEdgenote } from 'redux/actions'
 
+import type { Dispatch } from 'redux/actions'
 import type { State, Edgenote } from 'redux/state'
 
 type OwnProps = { cardId: string }
@@ -18,7 +24,7 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   }
 }
 
-function mapDispatchToProps (dispatch: *, ownProps: OwnProps) {
+function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
   return {
     updateEditorState: (eS: EditorState) =>
       dispatch(updateCardContents(ownProps.cardId, eS)),
@@ -28,31 +34,20 @@ function mapDispatchToProps (dispatch: *, ownProps: OwnProps) {
 }
 
 class EditorToolbar extends React.Component {
-  constructor (props) {
-    super(props)
+  // These must call this.props.editorState individually to keep from
+  // capturing editorState as it exists when EditorToolbar is constructed.
+  //
+  toggleInline = style => () =>
+    this.props.updateEditorState(
+      RichUtils.toggleInlineStyle(this.props.editorState, style)
+    )
 
-    let { updateEditorState } = this.props
+  toggleBlock = type => () =>
+    this.props.updateEditorState(
+      RichUtils.toggleBlockType(this.props.editorState, type)
+    )
 
-    // These must call this.props.editorState individually to keep from
-    // capturing editorState as it exists when EditorToolbar is constructed.
-    //
-    this.toggleInline = style =>
-      () =>
-        updateEditorState(
-          RichUtils.toggleInlineStyle(this.props.editorState, style),
-        )
-
-    this.toggleBlock = type =>
-      () =>
-        updateEditorState(
-          RichUtils.toggleBlockType(this.props.editorState, type),
-        )
-
-    this.handleAddCitation = this.handleAddCitation.bind(this)
-    this.handleAddEdgenote = this.handleAddEdgenote.bind(this)
-  }
-
-  handleAddCitation () {
+  handleAddCitation = () => {
     let { editorState, updateEditorState } = this.props
     let selection = editorState.getSelection()
 
@@ -64,7 +59,7 @@ class EditorToolbar extends React.Component {
     const contentStateWithCircle = Modifier.insertText(
       editorState.getCurrentContent(),
       collapsedSelection,
-      '°',
+      '°'
     )
 
     const circleSelection = collapsedSelection.merge({
@@ -77,12 +72,12 @@ class EditorToolbar extends React.Component {
         { type: 'CITATION', mutability: 'IMMUTABLE', data: {}},
         editorState,
         circleSelection,
-        contentStateWithCircle,
-      ),
+        contentStateWithCircle
+      )
     )
   }
 
-  handleAddEdgenote () {
+  handleAddEdgenote = () => {
     let {
       caseSlug,
       editorState,
@@ -98,14 +93,16 @@ class EditorToolbar extends React.Component {
       updateEditorState(
         addEntity(
           { type: 'EDGENOTE', mutability: 'MUTABLE', data: { slug }},
-          editorState,
-        ),
+          editorState
+        )
       )
 
     if (edgenoteExists(slug)) {
       addHighlight()
     } else {
-      Orchard.graft(`cases/${caseSlug}/edgenotes`, { slug }).then(data => {
+      Orchard.graft(`cases/${caseSlug}/edgenotes`, {
+        slug,
+      }).then((data: Edgenote) => {
         createEdgenoteRecord(slug, data)
         addHighlight()
       })
@@ -120,23 +117,23 @@ class EditorToolbar extends React.Component {
           onClick={this.toggleInline('BOLD')}
         />
         <EditorToolbarButton
-          icon={require(`images/toolbar-italic.svg`)}
+          icon={require('images/toolbar-italic.svg')}
           onClick={this.toggleInline('ITALIC')}
         />
         <EditorToolbarButton
-          icon={require(`images/toolbar-ol.svg`)}
+          icon={require('images/toolbar-ol.svg')}
           onClick={this.toggleBlock('ordered-list-item')}
         />
         <EditorToolbarButton
-          icon={require(`images/toolbar-ul.svg`)}
+          icon={require('images/toolbar-ul.svg')}
           onClick={this.toggleBlock('unordered-list-item')}
         />
         <EditorToolbarButton
-          icon={require(`images/toolbar-edgenote.svg`)}
+          icon={require('images/toolbar-edgenote.svg')}
           onClick={this.handleAddEdgenote}
         />
         <EditorToolbarButton
-          icon={require(`images/toolbar-citation.svg`)}
+          icon={require('images/toolbar-citation.svg')}
           onClick={this.handleAddCitation}
         />
       </div>
@@ -146,13 +143,12 @@ class EditorToolbar extends React.Component {
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditorToolbar)
 
-const EditorToolbarButton = ({ icon, onClick }) => (
+const EditorToolbarButton = ({ icon, onClick }) =>
   <a
     dangerouslySetInnerHTML={{ __html: icon }}
-    onMouseDown={e => e.preventDefault()}
+    onMouseDown={(e: SyntheticMouseEvent) => e.preventDefault()}
     onClick={onClick}
   />
-)
 
 const styles = {
   bar: {

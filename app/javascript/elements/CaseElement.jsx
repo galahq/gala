@@ -29,10 +29,8 @@ function mapStateToProps (state: State, { match }) {
   const { elementType: model, elementId, elementStore } = caseElement
 
   const nextElement = state.caseData.caseElements[position + 1]
-  const {
-    elementId: nextElementId,
-    elementStore: nextElementStore,
-  } = nextElement || {}
+  const { elementId: nextElementId, elementStore: nextElementStore } =
+    nextElement || {}
 
   const { title, url } = state[elementStore][elementId]
 
@@ -82,26 +80,18 @@ class CaseElement extends React.Component {
       id,
       next,
       url,
-      deleteElement,
       position,
       history,
     } = this.props
 
-    if (!reader) return <Redirect to="/" />
+    const redirectToOverview = <Redirect to="/" />
 
-    var child
-    switch (model) {
-      case 'Page':
-        child = <Page id={id} />
-        break
-      case 'Podcast':
-        child = <Podcast id={id} />
-        break
-      case 'Activity':
-        child = <Activity id={id} />
-        break
-      default:
-        return <Redirect to="/" />
+    if (!reader) return redirectToOverview
+
+    const models = { Page, Podcast, Activity }
+    const Child = models[model]
+    const deleteElement = () => {
+      this.props.deleteElement(url, position) && history.push('/')
     }
 
     return (
@@ -111,11 +101,9 @@ class CaseElement extends React.Component {
           <DocumentTitle
             title={`${kicker} — ${title} — Michigan Sustainability Cases`}
           >
-            {React.cloneElement(child, {
-              deleteElement: () => {
-                deleteElement(url, position) && history.push('/')
-              },
-            })}
+            {Child
+              ? <Child id={id} deleteElement={deleteElement} />
+              : redirectToOverview}
           </DocumentTitle>
 
           <Route

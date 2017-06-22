@@ -1,4 +1,8 @@
-// @flow
+/**
+ * @providesModule BillboardTitle
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -31,20 +35,18 @@ function mapStateToProps ({ edit, caseData }: State) {
   }
 }
 
-const BillboardTitle = (
-  {
-    editing,
-    slug,
-    kicker,
-    title,
-    photoCredit,
-    caseAuthors,
-    translators,
-    coverUrl,
-    updateCase,
-    minimal,
-  }
-) => {
+const BillboardTitle = ({
+  editing,
+  slug,
+  kicker,
+  title,
+  photoCredit,
+  caseAuthors,
+  translators,
+  coverUrl,
+  updateCase,
+  minimal,
+}) => {
   const background = {
     backgroundImage: `
       linear-gradient(rgba(0,0,0,0.0), rgba(0,0,0,0.5)),
@@ -85,7 +87,7 @@ const BillboardTitle = (
           <EditableText
             value={photoCredit}
             disabled={!editing}
-            placeholder={!!editing && 'Photo credit'}
+            placeholder={editing ? 'Photo credit' : ''}
             onChange={value => updateCase(slug, { photoCredit: value })}
           />}
       </cite>

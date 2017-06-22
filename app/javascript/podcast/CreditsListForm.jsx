@@ -6,7 +6,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { compose, isEmpty, flatten, map, none, values } from 'ramda'
+import { compose, isEmpty, map, none, values, flatten } from 'ramda'
 
 import { Button, Dialog, Intent } from '@blueprintjs/core'
 
@@ -107,9 +107,11 @@ class CreditsListForm extends React.Component {
 
 export default connect(undefined, { displayToast })(CreditsListForm)
 
-const allValues = compose(flatten, map(values))
+const listValues = map(values)
 const isCompact = none(isEmpty)
-const areObjectsCompact = compose(isCompact, allValues)
+
+// $FlowFixMe
+const areObjectsCompact = compose(isCompact, flatten, listValues)
 
 function formStateClean ({ guests, hosts }: CreditsListFormState): boolean {
   return areObjectsCompact(guests) && isCompact(hosts)

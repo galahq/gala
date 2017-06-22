@@ -1,3 +1,8 @@
+/**
+ * @providesModule EditableAttribute
+ * @flow
+ */
+
 import React from 'react'
 import { EditableText } from '@blueprintjs/core'
 
@@ -5,18 +10,16 @@ type Props = {
   disabled: boolean,
   title: string,
   value: string,
-  onChange: (string) => void,
+  onChange: string => any,
   style?: Object,
 }
-const EditableAttribute = (
-  {
-    disabled,
-    title,
-    value,
-    onChange,
-    style = {},
-  }: Props,
-) => {
+const EditableAttribute = ({
+  disabled,
+  title,
+  value,
+  onChange,
+  style = {},
+}: Props) => {
   if (disabled) return null
   return (
     <div style={{ ...styles.container, ...style }}>

@@ -1,4 +1,14 @@
-export function addCommentThreads (content, { commentThreads = [] }) {
+/**
+ * @flow
+ */
+
+import type { RawDraftContentState } from 'draft-js'
+import type { CommentThread } from 'redux/state'
+
+export function addCommentThreads (
+  content: RawDraftContentState,
+  { commentThreads = [] }: { commentThreads: CommentThread[] }
+) {
   let newContent = { ...content }
 
   commentThreads.forEach(thread => {
