@@ -1,6 +1,3 @@
-// flow-typed signature: 888cc6e71f3eb1ee877c67669aef869b
-// flow-typed version: b2ad6292df/styled-components_v1.4.x/flow_>=v0.25.x
-
 // @flow
 
 type $npm$styledComponents$Interpolation = ((executionContext: Object) => string) | string | number;
@@ -17,11 +14,26 @@ type $npm$styledComponents$ThemeProviderProps = {
   theme: $npm$styledComponents$Theme | ((outerTheme: $npm$styledComponents$Theme) => void)
 };
 type $npm$styledComponents$Component =
-  | React$Component<*, *, *>
+  | ReactClass<*>
   | (props: *) => React$Element<*>;
 
 class Npm$StyledComponents$ThemeProvider extends React$Component {
   props: $npm$styledComponents$ThemeProviderProps;
+}
+
+type $npm$styledComponents$StyleSheetManagerProps = {
+  sheet: mixed
+}
+
+class Npm$StyledComponents$StyleSheetManager extends React$Component {
+  props: $npm$styledComponents$StyleSheetManagerProps;
+}
+
+class Npm$StyledComponents$ServerStyleSheet {
+  instance: StyleSheet
+  collectStyles: (children: any) => React$Element<*>
+  getStyleTags: () => string
+  getStyleElement: () => React$Element<*>
 }
 
 declare module 'styled-components' {
@@ -39,6 +51,8 @@ declare module 'styled-components' {
     css: (strings: Array<string>, ...interpolations: Array<Interpolation>) => Array<Interpolation>,
     keyframes: (strings: Array<string>, ...interpolations: Array<Interpolation>) => string,
     withTheme: (component: Component) => React$Component<*, ThemeProviderProps, *>,
+    ServerStyleSheet: typeof Npm$StyledComponents$ServerStyleSheet,
+    StyleSheetManager: typeof Npm$StyledComponents$StyleSheetManager,
     ThemeProvider: typeof Npm$StyledComponents$ThemeProvider,
     (baseComponent: Component): StyledComponent,
     a: StyledComponent,

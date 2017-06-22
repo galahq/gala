@@ -9,16 +9,17 @@ import {
   Modifier,
   EditorState,
 } from 'draft-js'
-import Immutable from 'immutable'
+import { Map } from 'immutable'
 
 import EdgenoteEntity from './EdgenoteEntity'
 import CitationEntity from './CitationEntity'
 import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
 
+import type { ContentState, SelectionState } from 'draft-js'
 import type { Match } from 'react-router-dom'
 
-const newBlockRenderMap = Immutable.Map({
+const newBlockRenderMap = Map({
   unstyled: {
     element: 'p',
   },
@@ -151,10 +152,14 @@ export function removeShadowSelection (editorState: EditorState): EditorState {
 }
 
 export function addEntity (
-  { type, mutability, data },
-  editorState,
-  selection = editorState.getSelection(),
-  contentState = editorState.getCurrentContent()
+  {
+    type,
+    mutability,
+    data,
+  }: { type: string, mutability: string, data: Object },
+  editorState: EditorState,
+  selection: SelectionState = editorState.getSelection(),
+  contentState: ContentState = editorState.getCurrentContent()
 ) {
   const contentStateWithEntity = contentState.createEntity(
     type,

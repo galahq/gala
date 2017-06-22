@@ -18,16 +18,25 @@ import Icon from 'utility/Icon'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
 
+import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'redux/state'
 
-function mapStateToProps (state: State, { cardId, location }) {
+type OwnProps = ContextRouter & {
+  cardId: string,
+}
+function mapStateToProps (state: State, { cardId, location }: OwnProps) {
+  const params = matchPath(location.pathname, elementOpen())
+  if (params == null) {
+    throw new Error('CommentThreadsCard should not be mounted at this route.')
+  }
+
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
     selectionPending: !state.cardsById[cardId].editorState
       .getSelection()
       .isCollapsed(),
-    closeCommentThreadsPath: matchPath(location.pathname, elementOpen()).url,
+    closeCommentThreadsPath: params.url,
   }
 }
 

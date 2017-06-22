@@ -99,6 +99,13 @@ declare module 'react-router-dom' {
     url?: string,
   }
 
+  declare export type RouteProps = {
+    match: Match,
+    location: Location,
+    history: RouterHistory,
+  }
+
+
   declare export class StaticRouter extends React$Component {
     props: {
       basename?: string,
@@ -142,8 +149,8 @@ declare module 'react-router-dom' {
   declare export class Route extends React$Component {
     props: {
       component?: ReactClass<*>,
-      render?: (router: ContextRouter) => React$Element<*>,
-      children?: (router: ContextRouter) => React$Element<*>,
+      render?: (router: RouteProps) => React$Element<*>,
+      children?: (router: RouteProps) => React$Element<*>,
       path?: string,
       exact?: bool,
       strict?: bool,

@@ -5,15 +5,11 @@
 
 import { ContentState, convertFromHTML, convertToRaw } from 'draft-js'
 
-import type { DraftRawContentState } from 'draft-js'
-
 const UrlPrefix = 'http://learnmsc.org///'
 const EdgenotePrefix = UrlPrefix + 'edgenote/'
 const CitationPrefix = UrlPrefix + 'citation'
 
-function convertFromOldStyleCardSerialization (
-  content: string
-): DraftRawContentState {
+function convertFromOldStyleCardSerialization (content: string): ?Object {
   /* convertFromOldStyleCardSerialization
    *
    * If there is no RawDraftContentState persisted, we need to try to
@@ -32,6 +28,8 @@ function convertFromOldStyleCardSerialization (
   const transformedContent = reencodeEdgenotes(reencodeCitations(content))
 
   const blocksFromHTML = convertFromHTML(transformedContent)
+  if (blocksFromHTML == null) return
+
   var convertedRawContent = convertToRaw(
     ContentState.createFromBlockArray(
       blocksFromHTML.contentBlocks,

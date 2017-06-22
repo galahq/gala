@@ -596,17 +596,19 @@ export function updateEdgenote (
 
 export type HighlightEdgenoteAction = {
   type: 'HIGHLIGHT_EDGENOTE',
-  slug: string,
+  slug: string | null,
 }
-export function highlightEdgenote (slug: string): HighlightEdgenoteAction {
+export function highlightEdgenote (
+  slug: string | null
+): HighlightEdgenoteAction {
   return { type: 'HIGHLIGHT_EDGENOTE', slug }
 }
 
 export type ActivateEdgenoteAction = {
   type: 'ACTIVATE_EDGENOTE',
-  slug: string,
+  slug: string | null,
 }
-export function activateEdgenote (slug: string): ActivateEdgenoteAction {
+export function activateEdgenote (slug: string | null): ActivateEdgenoteAction {
   return { type: 'ACTIVATE_EDGENOTE', slug }
 }
 

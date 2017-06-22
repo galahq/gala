@@ -1,4 +1,7 @@
-// @flow
+/**
+ * @providesModule Activity
+ * @flow
+ */
 
 import React from 'react'
 import { connect } from 'react-redux'
@@ -16,7 +19,7 @@ import type { State } from 'redux/state'
 
 type OwnProps = { id: number }
 function mapStateToProps (state: State, { id }: OwnProps) {
-  const activity = state.activitiesById[id]
+  const activity = state.activitiesById[`${id}`]
 
   return {
     editing: state.edit.inProgress,

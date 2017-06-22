@@ -45,7 +45,7 @@ type Props = CardProps &
     theseCommentThreadsOpen: ?Match,
   }
 
-class CardContents extends Component {
+class CardContents extends Component<*, *, *> {
   props: Props
 
   // We have to be able to respond to props change that would change

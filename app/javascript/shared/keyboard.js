@@ -2,18 +2,20 @@
  * @flow
  */
 
-export function acceptKeyboardClick (func: () => mixed): KeyboardEvent => mixed {
-  return (event: KeyboardEvent) => {
+export function acceptKeyboardClick (
+  func: SyntheticEvent => mixed
+): SyntheticKeyboardEvent => mixed {
+  return (event: SyntheticKeyboardEvent) => {
     event.preventDefault()
-    if (event.key === 'Enter' || event.key === ' ') func()
+    if (event.key === 'Enter' || event.key === ' ') func(event)
   }
 }
 
 export function hotkeyDispatch (
   keys: { [keyName: string]: () => mixed },
-  defaultFunc: ?() => mixed = null
-): KeyboardEvent => mixed {
-  return (event: KeyboardEvent) => {
+  defaultFunc: ?(SyntheticEvent) => mixed = null
+): SyntheticKeyboardEvent => mixed {
+  return (event: SyntheticKeyboardEvent) => {
     if (keys.hasOwnProperty(event.key)) {
       const shouldContinue = keys[event.key]()
       shouldContinue || event.preventDefault()

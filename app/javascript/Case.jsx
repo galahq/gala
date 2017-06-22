@@ -26,34 +26,30 @@ import { Toaster } from '@blueprintjs/core'
 import type { State } from 'redux/state'
 
 class Case extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this._subscribe = () => {
-      if (typeof App === 'undefined') return
-
-      // eslint-disable-next-line
-      App.forum = App.cable.subscriptions.create('ForumChannel', {
-        received: data => {
-          if (data.comment) {
-            this.props.addComment(JSON.parse(data.comment))
-          }
-          if (data.comment_thread) {
-            this.props.addCommentThread(JSON.parse(data.comment_thread))
-          }
-        },
-      })
-
-      // eslint-disable-next-line
-      App.readerNotification = App.cable.subscriptions.create(
-        'ReaderNotificationsChannel',
-        {
-          received: data => {
-            this.props.handleNotification(JSON.parse(data.notification))
-          },
+  _subscribe = () => {
+    // $FlowFixMe
+    if (typeof App === 'undefined') return
+    // eslint-disable-next-line
+    App.forum = App.cable.subscriptions.create('ForumChannel', {
+      received: data => {
+        if (data.comment) {
+          this.props.addComment(JSON.parse(data.comment))
         }
-      )
-    }
+        if (data.comment_thread) {
+          this.props.addCommentThread(JSON.parse(data.comment_thread))
+        }
+      },
+    })
+
+    // eslint-disable-next-line
+    App.readerNotification = App.cable.subscriptions.create(
+      'ReaderNotificationsChannel',
+      {
+        received: data => {
+          this.props.handleNotification(JSON.parse(data.notification))
+        },
+      }
+    )
   }
 
   componentDidMount () {

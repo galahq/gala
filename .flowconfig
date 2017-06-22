@@ -1,11 +1,10 @@
 [ignore]
-./node_modules
+.*/node_modules/draft-js/.*
 .*/node_modules/styled-components/.*
 
 [include]
 ./node_modules/immutable
 ./node_modules/fbjs/flow/lib
-./node_modules/draft-js
 
 [libs]
 

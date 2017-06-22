@@ -18,7 +18,10 @@ function mapStateToProps (state: State) {
   const { id, questions } = state.quiz
   const { reader } = state.caseData
   return {
-    isInstructor: !!reader && reader.enrollment.status === 'instructor',
+    isInstructor:
+      !!reader &&
+        !!reader.enrollment &&
+        reader.enrollment.status === 'instructor',
     id,
     questions,
   }

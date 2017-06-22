@@ -101,10 +101,11 @@ export type UIState = {
   },
   highlightedEdgenote: ?string,
   hoveredCommentThread: ?string,
-  openedCitation: {
-    key?: string,
-    labelRef?: any,
-  },
+  openedCitation: | {| key: null |}
+    | {|
+        key: string,
+        labelRef: HTMLElement,
+      |},
   toaster: any,
 }
 

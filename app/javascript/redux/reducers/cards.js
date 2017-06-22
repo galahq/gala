@@ -1,9 +1,14 @@
-// @flow
+/**
+ * @providesModule cardsById
+ * @flow
+ */
+
 import { EditorState, convertFromRaw } from 'draft-js'
-import convertFromOldStyleCardSerialization
-  from 'card/convertFromOldStyleCardSerialization'
+import convertFromOldStyleCardSerialization from 'card/convertFromOldStyleCardSerialization'
 import { addCommentThreads } from 'comments/commentThreads'
 import { decorator } from 'card/draftConfig'
+
+import type { RawDraftContentState } from 'draft-js'
 
 import type { CardsState, Card, CommentThread } from 'redux/state'
 import type {
@@ -31,7 +36,7 @@ type Action =
 
 function cardsById (
   state: CardsState = getInitialEmptyCards(),
-  action: Action,
+  action: Action
 ): CardsState {
   switch (action.type) {
     case 'UPDATE_CARD_CONTENTS':
@@ -65,13 +70,16 @@ function cardsById (
       }
 
     case 'PARSE_ALL_CARDS':
-      return Object.keys(state).map(key => state[key]).reduce((all, card) => ({
-        ...all,
-        [card.id]: {
-          ...card,
-          editorState: parseEditorStateFromPersistedCard(card),
-        },
-      }), {})
+      return Object.keys(state).map(key => state[key]).reduce(
+        (all, card) => ({
+          ...all,
+          [card.id]: {
+            ...card,
+            editorState: parseEditorStateFromPersistedCard(card),
+          },
+        }),
+        {}
+      )
 
     case 'ADD_COMMENT_THREAD': {
       const { data } = action
@@ -96,7 +104,7 @@ function cardsById (
       const newCard = {
         ...state[cardId],
         commentThreads: state[cardId].commentThreads.filter(
-          x => x.id !== threadId,
+          x => x.id !== threadId
         ),
       }
       return {
@@ -146,8 +154,9 @@ function getInitialEmptyCards (): CardsState {
 
 function parseEditorStateFromPersistedCard (card: Card) {
   const content = card.rawContent
-    ? JSON.parse(card.rawContent)
+    ? (JSON.parse(card.rawContent): RawDraftContentState)
     : convertFromOldStyleCardSerialization(card.content)
+  if (content == null) return EditorState.createEmpty()
 
   const contentWithCommentThreads = addCommentThreads(content, card)
 
