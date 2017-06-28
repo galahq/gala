@@ -16,6 +16,8 @@ You were just enrolled in a new Michigan Sustainability Case.
 <% end %>
 
 <% email_footer <<-FOOTER
-You are receiving this email because you are enrolled in a course that includes one or more [Michigan Sustainability Cases](http://www.teachmsc.org) as part of the curriculum. If this sounds wrong, send us an email at [msc-contact@umich.edu](mailto://msc-contact@umich.edu).
+You are receiving this email because you are enrolled in a course that includes
+one or more [Michigan Sustainability Cases](http://www.teachmsc.org) as part of
+the curriculum. If this sounds wrong, send us an email at hello@learnmsc.org.
 FOOTER
 %>

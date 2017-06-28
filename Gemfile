@@ -68,8 +68,6 @@ gem 'omniauth-lti', github: 'cbothner/omniauth-lti'
 gem 'authority'
 gem 'rolify'
 
-gem 'postmark-rails'
-
 gem 'ahoy_matey', github: 'ankane/ahoy'
 gem 'groupdate'
 
