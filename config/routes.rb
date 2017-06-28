@@ -41,9 +41,7 @@ Rails.application.routes.draw do
     resources :readers, only: %i(show edit update)
 
     resources :quizzes, only: %i(create update) do
-      member do
-        post :submit
-      end
+      resources :submissions, only: %i(create)
     end
 
     resources :groups, only: [] do

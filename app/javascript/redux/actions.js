@@ -626,7 +626,7 @@ export function submitQuiz (
       })),
     }
     const necessity = (await Orchard.graft(
-      `quizzes/${id}/submit`,
+      `quizzes/${id}/submissions`,
       params
     ): QuizNecessity<boolean, boolean>)
     dispatch(recordQuizSubmission(necessity))
