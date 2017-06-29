@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ReaderAuthorizer < ApplicationAuthorizer
-  def updatable_by? reader
+  def updatable_by?(reader)
     resource == reader || super
   end
 end

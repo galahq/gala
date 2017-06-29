@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class DeploymentAuthorizer < ApplicationAuthorizer
-  def updatable_by? reader, selection_params: nil
+  def updatable_by?(reader, selection_params: nil)
     if selection_params
       return true if selection_params['context_id'] == resource.group.context_id
     end

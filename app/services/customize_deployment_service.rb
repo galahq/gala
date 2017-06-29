@@ -1,12 +1,12 @@
-class CustomizeDeploymentService
+# frozen_string_literal: true
 
-  def initialize deployment, author_id, lti_uid
+class CustomizeDeploymentService
+  def initialize(deployment, author_id, lti_uid)
     @deployment = deployment
     @author_identifier = AuthorIdentifier.new author_id, lti_uid
   end
 
-  def customize answers_needed: 0, quiz_id: nil, custom_questions: []
-
+  def customize(answers_needed: 0, quiz_id: nil, custom_questions: [])
     if answers_needed == 0
       @deployment.answers_needed = 0
       @deployment.save
@@ -18,12 +18,11 @@ class CustomizeDeploymentService
         @deployment.answers_needed = answers_needed
 
         @deployment.quiz = find_quiz quiz_id
-        delete_questions_not_included_in custom_questions.map{ |q| q['id'] }
+        delete_questions_not_included_in custom_questions.map { |q| q['id'] }
         upsert_questions custom_questions
         set_quiz_author
 
         @deployment.save!
-
       end
     rescue ActiveRecord::RecordInvalid => invalid
       byebug
@@ -34,11 +33,12 @@ class CustomizeDeploymentService
   end
 
   private
+
   def set_quiz_author
     @deployment.quiz.update @author_identifier.quiz_attributes
   end
 
-  def find_quiz quiz_id
+  def find_quiz(quiz_id)
     quiz = Quiz.where(id: quiz_id).try(:first)
     if quiz && @author_identifier.author.has_quiz?(quiz)
       quiz
@@ -47,17 +47,17 @@ class CustomizeDeploymentService
     end
   end
 
-  def create_quiz_from_template template_id
+  def create_quiz_from_template(template_id)
     Quiz.create! case: @deployment.case, template_id: template_id, customized: true
   end
 
-  def delete_questions_not_included_in question_ids
+  def delete_questions_not_included_in(question_ids)
     @deployment.quiz.custom_questions.each do |question|
       question.destroy unless question_ids.include? question.id
     end
   end
 
-  def upsert_questions custom_questions
+  def upsert_questions(custom_questions)
     custom_questions.each do |question|
       if question['id']
         Question.find(question['id']).update! question
@@ -70,8 +70,9 @@ class CustomizeDeploymentService
   class AuthorIdentifier
     attr_accessor :author_id, :lti_uid
 
-    def initialize author_id, lti_uid
-      @author_id, @lti_uid = author_id, lti_uid
+    def initialize(author_id, lti_uid)
+      @author_id = author_id
+      @lti_uid = lti_uid
     end
 
     def author
@@ -80,12 +81,10 @@ class CustomizeDeploymentService
 
     def quiz_attributes
       if @author_id
-        {'author_id' => @author_id, 'lti_uid' => nil}
+        { 'author_id' => @author_id, 'lti_uid' => nil }
       else
-        {'author_id' => nil, 'lti_uid' => @lti_uid}
+        { 'author_id' => nil, 'lti_uid' => @lti_uid }
       end
     end
-
   end
-
 end

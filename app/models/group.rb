@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Mock public API in GlobalGroup
 class Group < ApplicationRecord
   has_many :comment_threads, dependent: :destroy
@@ -9,18 +11,18 @@ class Group < ApplicationRecord
 
   validates :context_id, uniqueness: true, if: -> () { context_id.present? }
 
-  def self.upsert context_id:, name:
+  def self.upsert(context_id:, name:)
     group = find_or_initialize_by context_id: context_id
     group.name = name
     group.save! if group.changed?
     group
   end
 
-  def self.active_for_session s
+  def self.active_for_session(s)
     find_by_id(s[:active_group_id]) || GlobalGroup.new
   end
 
-  def deployment_for_case kase
+  def deployment_for_case(kase)
     deployments.find_by(case: kase) || GenericDeployment.new
   end
 end

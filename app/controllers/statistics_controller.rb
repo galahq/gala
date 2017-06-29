@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatisticsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_trackable
@@ -9,6 +11,7 @@ class StatisticsController < ApplicationController
   end
 
   private
+
   def set_trackable
     @trackable = params[:card_id] && Card.find(params[:card_id])
     @trackable ||= params[:podcast_id] && Podcast.find(params[:podcast_id])

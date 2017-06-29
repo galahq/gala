@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Notification < ApplicationRecord
   belongs_to :reader
 
@@ -6,7 +8,7 @@ class Notification < ApplicationRecord
     # a comment.
     #
     # data: { :notifier_id, :comment_thread_id, :case_id, :page_id, :card_id }
-    :reply_to_thread,
+    :reply_to_thread
   ]
 
   serialize :data, Hash
@@ -15,8 +17,8 @@ class Notification < ApplicationRecord
 
   def message
     case category
-    when "reply_to_thread"
-      I18n.t "notifications.replied_to_your_comment", notifier: notifier.name, case_kicker: self.case.kicker
+    when 'reply_to_thread'
+      I18n.t 'notifications.replied_to_your_comment', notifier: notifier.name, case_kicker: self.case.kicker
     end
   end
 

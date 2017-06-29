@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Mock public API in AnonymousReader
 class Reader < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
@@ -31,10 +33,10 @@ class Reader < ApplicationRecord
       name ||= info.name
 
       reader.email = email
-      reader.password = Devise.friendly_token[0,20]
+      reader.password = Devise.friendly_token[0, 20]
       reader.created_password = false
       reader.name = name
-      reader.initials = name.split(" ").map(&:first).join
+      reader.initials = name.split(' ').map(&:first).join
       reader.image_url = info.image unless auth.provider == 'lti'
       reader.locale = auth.extra.raw_info.try :[], :launch_presentation_locale
 
@@ -44,12 +46,12 @@ class Reader < ApplicationRecord
 
   def self.new_with_session(params, session)
     super.tap do |reader|
-      if data = session["devise.google_data"]
-        info = data["info"]
-        reader.name = info["name"]
-        reader.initials = reader.name.split(" ").map(&:first).join
-        reader.email = info["email"]
-        reader.image_url = info["image_url"]
+      if data = session['devise.google_data']
+        info = data['info']
+        reader.name = info['name']
+        reader.initials = reader.name.split(' ').map(&:first).join
+        reader.email = info['email']
+        reader.image_url = info['image_url']
       end
     end
   end
@@ -64,7 +66,7 @@ class Reader < ApplicationRecord
     enrollments.find { |e| e.case.id == c.id }
   end
 
-  def has_quiz? quiz
+  def has_quiz?(quiz)
     (quiz.lti_uid && quiz.lti_uid == lti_uid) || (quiz.author_id && quiz.author_id == id)
   end
 
@@ -81,6 +83,7 @@ class Reader < ApplicationRecord
   end
 
   private
+
   def set_created_password
     self.created_password = true
   end

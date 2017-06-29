@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Trackable
   extend ActiveSupport::Concern
 
@@ -31,11 +33,10 @@ module Trackable
   end
 
   private
+
   def events
     Ahoy::Event.interesting
-      .where(name: event_name)
-      .where_properties(event_properties)
+               .where(name: event_name)
+               .where_properties(event_properties)
   end
-
-
 end

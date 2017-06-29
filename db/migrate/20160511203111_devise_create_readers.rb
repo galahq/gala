@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DeviseCreateReaders < ActiveRecord::Migration[5.0]
   def change
     create_table :readers do |t|
@@ -5,8 +7,8 @@ class DeviseCreateReaders < ActiveRecord::Migration[5.0]
       t.text :image_url
 
       ## Database authenticatable
-      t.string :email,              null: false, default: ""
-      t.string :encrypted_password, null: false, default: ""
+      t.string :email,              null: false, default: ''
+      t.string :encrypted_password, null: false, default: ''
 
       ## Recoverable
       t.string   :reset_password_token

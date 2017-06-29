@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCases < ActiveRecord::Migration[5.0]
   def change
     enable_extension 'hstore'

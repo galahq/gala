@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class Case < ApplicationRecord
   include Authority::Abilities
   include Comparable
 
   translates :kicker, :title, :dek, :summary, :narrative, :translators
-  enum catalog_position: %i(in_index featured)
+  enum catalog_position: %i[in_index featured]
 
   resourcify
 
@@ -20,7 +22,7 @@ class Case < ApplicationRecord
   has_many :deployments, dependent: :destroy
   has_many :quizzes, dependent: :destroy
 
-  scope :published, -> { where(published: true)  }
+  scope :published, -> { where(published: true) }
 
   validates :slug, presence: true, uniqueness: true
   validates_format_of :slug, with: /\A[a-z0-9-]+\Z/
@@ -29,7 +31,7 @@ class Case < ApplicationRecord
   def <=>(anOther)
     if published ^ anOther.try(:published)
       return published ? 1 : -1
-    elsif publication_date == nil || anOther.publication_date == nil
+    elsif publication_date.nil? || anOther.publication_date.nil?
       return publication_date.nil? ? -1 : 1
     end
     publication_date <=> anOther.publication_date
@@ -56,14 +58,15 @@ class Case < ApplicationRecord
   end
 
   def translator_names
-    JSON.parse self.translators
+    JSON.parse translators
   end
+
   def translator_names=(t)
     self.translators = t.to_json
   end
 
   def readers_by_enrollment_status
-    hash = Hash.new
+    hash = {}
     Enrollment.statuses.each do |type, _|
       hash[type] = enrollments.select(&:"#{type}?")
     end
@@ -77,5 +80,4 @@ class Case < ApplicationRecord
   def comments
     comment_threads.flat_map(&:comments)
   end
-
 end

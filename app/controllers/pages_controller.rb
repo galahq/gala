@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class PagesController < ApplicationController
-  before_action :authenticate_reader!, only: %i(create update destroy)
+  before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_case, only: [:create]
-  before_action :set_page, only: [:update, :destroy]
+  before_action :set_page, only: %i[update destroy]
 
   authorize_actions_for Page
 
   def create
-    @page = Page.create_as_element @case, title: "New page"
+    @page = Page.create_as_element @case, title: 'New page'
 
     if @page.persisted?
       render @page
@@ -28,6 +30,7 @@ class PagesController < ApplicationController
   end
 
   private
+
   def set_case
     @case = Case.find_by_slug params[:case_slug]
   end

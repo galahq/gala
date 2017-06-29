@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Question < ApplicationRecord
   has_many :answers
   belongs_to :quiz
@@ -6,9 +8,9 @@ class Question < ApplicationRecord
 
   validates :content_i18n, presence: true
   validates :correct_answer, inclusion: { in: ->(question) { question.options } },
-    if: ->(question) { question.options.length > 0}
+                             if: ->(question) { !question.options.empty? }
 
-  def self.requiring_response_from reader, in_group:
+  def self.requiring_response_from(reader, in_group:)
     # where.not(id: Answer.by_reader(reader).select(:question_id))
     joins(:quiz).where <<~SQL, reader_id: reader.id, group_id: in_group.id
       (
@@ -32,6 +34,7 @@ class Question < ApplicationRecord
   end
 
   private
+
   def question_type
     options.empty? ? :open_ended : :multiple_choice
   end

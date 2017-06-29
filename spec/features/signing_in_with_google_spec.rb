@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Signing in with Google' do
   before { visit root_path }
 
   context 'without a password' do
-
     scenario 'is possible' do
       # Omniauth test mode will return { name: 'Test User', email: 'test@gmail.com'}
       find('.oauth-icon-google').click
@@ -25,6 +26,5 @@ feature 'Signing in with Google' do
       click_button 'Sign in'
       expect(page).to have_content 'Hello'
     end
-
   end
 end

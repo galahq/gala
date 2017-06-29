@@ -1,4 +1,6 @@
-ccc = Case.find_by_slug "indonesia-conservation"
+# frozen_string_literal: true
+
+ccc = Case.find_by_slug 'indonesia-conservation'
 I18n.locale = :en
 edgenote902 = ccc.edgenotes.build
 edgenote902.caption = 'Laure Katz, CV'

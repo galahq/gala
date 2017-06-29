@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 class EnrollmentsController < ApplicationController
-  layout "admin"
+  layout 'admin'
   helper CasesHelper
 
   before_action :authenticate_reader!
   authorize_actions_for Enrollment
-  authority_actions :upsert => 'update'
+  authority_actions upsert: 'update'
 
   # GET /enrollments
   def index
     @cases = Case.all.sort_by(&:kicker)
-    @readers = Reader.all.includes(:cases, enrollments: [:case, :reader]).order(:name)
+    @readers = Reader.all.includes(:cases, enrollments: %i[case reader]).order(:name)
   end
 
   def upsert
@@ -22,15 +24,14 @@ class EnrollmentsController < ApplicationController
           @enrollment = Enrollment.find_or_initialize_by case_id: kase.id, reader_id: reader_id
           @enrollment.status = params[:status]
           authorize_action_for @enrollment
-          EnrollmentMailer.introduce_case(@enrollment).deliver  if params[:send_emails]
+          EnrollmentMailer.introduce_case(@enrollment).deliver if params[:send_emails]
           @enrollment.save!
         end
       end
-      render partial: 'cases/case', locals: {c: kase}
+      render partial: 'cases/case', locals: { c: kase }
     rescue ActiveRecord::RecordInvalid => invalid
       render status: :unprocessable_entity
     end
-
   end
 
   # DELETE /enrollments/1
@@ -39,5 +40,4 @@ class EnrollmentsController < ApplicationController
     authorize_action_for @enrollment
     @enrollment.destroy
   end
-
 end

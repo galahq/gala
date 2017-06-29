@@ -1,6 +1,7 @@
-class LmsLinkerService
+# frozen_string_literal: true
 
-  def initialize launch_params
+class LmsLinkerService
+  def initialize(launch_params)
     @launch_params = launch_params
   end
 
@@ -21,24 +22,22 @@ class LmsLinkerService
   end
 
   def group
-    begin
-      @group ||= Group.upsert context_id: @launch_params[:context_id],
-        name: @launch_params[:context_title]
-    rescue
-      # If two readers from the same class hit the launch url at the same time
-      retry
-    end
+    @group ||= Group.upsert context_id: @launch_params[:context_id],
+                            name: @launch_params[:context_title]
+  rescue
+    # If two readers from the same class hit the launch url at the same time
+    retry
   end
 
   def add_reader_to_group
     return unless reader
 
-    unless reader.group_memberships.exists? group: self.group
-      reader.group_memberships.create group: self.group
+    unless reader.group_memberships.exists? group: group
+      reader.group_memberships.create group: group
     end
   end
 
-  def enroll_reader_in_case kase
+  def enroll_reader_in_case(kase)
     if reader
       Enrollment.upsert reader_id: reader.id, case_id: kase.id, status: status
     end

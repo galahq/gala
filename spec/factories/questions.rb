@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   factory :question do
     content { Faker::Lorem.question }
-    correct_answer ""
+    correct_answer ''
     options []
 
     trait :multiple_choice do

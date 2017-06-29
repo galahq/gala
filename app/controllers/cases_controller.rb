@@ -1,8 +1,10 @@
-class CasesController < ApplicationController
-  before_action :authenticate_reader!, except: %i(show)
-  before_action :set_case, only: [:show, :edit, :update, :destroy]
+# frozen_string_literal: true
 
-  authorize_actions_for Case, except: %i(show)
+class CasesController < ApplicationController
+  before_action :authenticate_reader!, except: %i[show]
+  before_action :set_case, only: %i[show edit update destroy]
+
+  authorize_actions_for Case, except: %i[show]
 
   layout 'admin'
 
@@ -30,11 +32,11 @@ class CasesController < ApplicationController
   def create
     @case = Case.new(case_params)
     @case.kicker ||= @case.slug.split('-').join(' ').titlecase
-    @case.title ||= ""
+    @case.title ||= ''
 
     respond_to do |format|
       if @case.save
-        format.html { redirect_to case_path(@case, anchor: "/edit") }
+        format.html { redirect_to case_path(@case, anchor: '/edit') }
         format.json { render json: @case, status: :created, location: @case }
       else
         format.html { render :new }
@@ -58,23 +60,24 @@ class CasesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_case
-      slug = params[:slug] || params[:case_slug]
-      @case = Case.where(slug: slug).includes(
-        :podcasts,
-        :edgenotes,
-        activities: [:case_element, :card],
-        pages: [:case_element, :cards],
-        cards: [comment_threads: [:reader, comments: [:reader]]],
-        enrollments: [:reader]
-      ).first
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def case_params
-      params.require(:case).permit(:published, :kicker, :title, :dek, :slug,
-                                   :authors, :translators, :photo_credit,
-                                   :summary, :tags, :cover_url)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_case
+    slug = params[:slug] || params[:case_slug]
+    @case = Case.where(slug: slug).includes(
+      :podcasts,
+      :edgenotes,
+      activities: %i[case_element card],
+      pages: %i[case_element cards],
+      cards: [comment_threads: [:reader, comments: [:reader]]],
+      enrollments: [:reader]
+    ).first
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def case_params
+    params.require(:case).permit(:published, :kicker, :title, :dek, :slug,
+                                 :authors, :translators, :photo_credit,
+                                 :summary, :tags, :cover_url)
+  end
 end

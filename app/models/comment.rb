@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Comment < ApplicationRecord
   belongs_to :reader
   belongs_to :comment_thread
@@ -23,8 +25,7 @@ class Comment < ApplicationRecord
       comment_thread_id: comment_thread.id,
       card_id: comment_thread.card.id,
       case_id: comment_thread.card.case.id,
-      page_id: comment_thread.card.element.id
-    }
+      page_id: comment_thread.card.element.id }
   end
 
   def send_notifications_of_reply

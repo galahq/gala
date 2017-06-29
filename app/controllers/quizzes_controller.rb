@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuizzesController < ApplicationController
   # before_action :authenticate_reader!
   before_action :set_quiz, except: [:create]
@@ -19,6 +21,7 @@ class QuizzesController < ApplicationController
   end
 
   private
+
   def set_quiz
     @quiz = Quiz.find_by_id params[:id]
   end

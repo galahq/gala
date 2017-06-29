@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Leaving a comment' do
@@ -11,18 +13,18 @@ feature 'Leaving a comment' do
 
     first_page = kase.pages.first
     click_link first_page.title
-    expect(page).to have_link "Respond"
-    click_link "Respond", match: :first
+    expect(page).to have_link 'Respond'
+    click_link 'Respond', match: :first
 
     first_paragraph = find '.DraftEditor-root p', match: :first
     first_paragraph.double_click
-    click_button "Respond here"
-    expect(page).to have_selector "textarea"
+    click_button 'Respond here'
+    expect(page).to have_selector 'textarea'
 
-    fill_in placeholder: "Write a reply...", with: "Test comment"
-    click_button "Submit"
-    expect(page).to have_content "Test comment"
-    expect(find("textarea").value).to be_blank
+    fill_in placeholder: 'Write a reply...', with: 'Test comment'
+    click_button 'Submit'
+    expect(page).to have_content 'Test comment'
+    expect(find('textarea').value).to be_blank
   end
 
   context 'in response to another comment' do
@@ -46,8 +48,8 @@ feature 'Leaving a comment' do
 
     let!(:comment) do
       comment_thread.comments.create(
-        content: "Test comment",
-        reader: other_reader,
+        content: 'Test comment',
+        reader: other_reader
       )
     end
 
@@ -60,23 +62,23 @@ feature 'Leaving a comment' do
       comment_entity.click
       expect(page).to have_content comment.content
 
-      fill_in placeholder: "Write a reply...", with: "Test reply"
-      click_button "Submit"
-      expect(page).to have_content "Test reply"
-      expect(find("textarea").value).to be_blank
+      fill_in placeholder: 'Write a reply...', with: 'Test reply'
+      click_button 'Submit'
+      expect(page).to have_content 'Test reply'
+      expect(find('textarea').value).to be_blank
     end
 
     it 'displays a toast to the other comment’s author' do
       comment_thread.comments.create(
-        content: "Test reply",
+        content: 'Test reply',
         reader: enrollment.reader
       )
       visit case_path('en', enrollment.case) + '/1'
       comment_thread.comments.create(
-        content: "Should trigger toast",
+        content: 'Should trigger toast',
         reader: other_reader
       )
-      expect(page).to have_content "replied to your comment"
+      expect(page).to have_content 'replied to your comment'
     end
   end
 end

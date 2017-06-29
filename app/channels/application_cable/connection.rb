@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
@@ -8,6 +10,7 @@ module ApplicationCable
     end
 
     private
+
     def find_verified_reader
       if verified_user = env['warden'].user
         verified_user

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Viewing a case' do
@@ -37,11 +39,10 @@ feature 'Viewing a case' do
         expect(current_path).to eq root_path
       end
     end
-
   end
 
   context 'as a normal user enrolled in a forthcoming case' do
-    let(:enrollment) { create :enrollment}
+    let(:enrollment) { create :enrollment }
 
     context 'that case' do
       let(:forthcoming_case) { enrollment.case }
@@ -78,5 +79,4 @@ feature 'Viewing a case' do
       expect(page).to have_selector '.c-statistics'
     end
   end
-
 end

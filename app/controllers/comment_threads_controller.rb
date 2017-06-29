@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class CommentThreadsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_card, only: [:create]
-  before_action :set_comment_thread, only: [:show, :destroy]
+  before_action :set_comment_thread, only: %i[show destroy]
 
   def create
     @comment_thread = @card.comment_threads.build(comment_thread_params)
@@ -15,8 +17,7 @@ class CommentThreadsController < ApplicationController
     end
   end
 
-  def show
-  end
+  def show; end
 
   def destroy
     authorize_action_for @comment_thread
@@ -24,15 +25,16 @@ class CommentThreadsController < ApplicationController
   end
 
   private
+
   def set_comment_thread
     @comment_thread = CommentThread.find params[:id]
   end
+
   def set_card
     @card = Card.find params[:card_id]
   end
 
   def comment_thread_params
-    params.require(:comment_thread).permit(*%i(start length block_index
-                                              original_highlight_text))
+    params.require(:comment_thread).permit(:start, :length, :block_index, :original_highlight_text)
   end
 end

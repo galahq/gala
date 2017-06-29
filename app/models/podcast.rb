@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Podcast < ApplicationRecord
   include Authority::Abilities
 
@@ -19,7 +21,7 @@ class Podcast < ApplicationRecord
   end
 
   def credits_list
-    self.credits ? CreditsList.new(YAML.load self.credits) : CreditsList.new
+    credits ? CreditsList.new(YAML.load(credits)) : CreditsList.new
   end
 
   include Trackable
@@ -28,6 +30,6 @@ class Podcast < ApplicationRecord
   end
 
   def event_properties
-    {podcast_id: id}
+    { podcast_id: id }
   end
 end

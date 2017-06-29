@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class DeploymentsController < ApplicationController
-  before_action :set_deployment, only: [:edit, :update]
+  before_action :set_deployment, only: %i[edit update]
   before_action :ensure_content_item_selection_params_set!, only: [:create]
   after_action :clear_content_item_selection_params, only: [:update]
 
@@ -13,11 +15,7 @@ class DeploymentsController < ApplicationController
       d.answers_needed = 0
     end
 
-    if @deployment.save
-      redirect_to edit_deployment_path @deployment
-    else
-      # Something...
-    end
+    redirect_to edit_deployment_path @deployment if @deployment.save
   end
 
   def edit
@@ -43,6 +41,7 @@ class DeploymentsController < ApplicationController
   end
 
   private
+
   def set_deployment
     @deployment = Deployment.find params[:id]
   end
@@ -52,7 +51,11 @@ class DeploymentsController < ApplicationController
   end
 
   def set_recommended_quizzes
-    reader = current_reader rescue nil
+    reader = begin
+               current_reader
+             rescue
+               nil
+             end
     custom_quizzes = @deployment.case.quizzes.authored_by reader: reader, lti_uid: lti_uid
     @recommended_quizzes = [] + @deployment.case.quizzes.recommended + custom_quizzes
   end
@@ -72,8 +75,8 @@ class DeploymentsController < ApplicationController
 
   def deployment_params
     params.require(:deployment).permit(:answers_needed, :quiz_id,
-      custom_questions: [:id, :content, :correct_answer, options: []])
-      .to_h
-      .symbolize_keys
+                                       custom_questions: [:id, :content, :correct_answer, options: []])
+          .to_h
+          .symbolize_keys
   end
 end

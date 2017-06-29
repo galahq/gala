@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Element
   extend ActiveSupport::Concern
 
@@ -6,10 +8,10 @@ module Element
   end
 
   module ClassMethods
-    def create_as_element kase, params
+    def create_as_element(kase, params)
       instance = new(params)
       instance.case = kase
-      kase.case_elements.create(element: instance)  if instance.save
+      kase.case_elements.create(element: instance) if instance.save
       instance
     end
   end
