@@ -18,20 +18,6 @@ class QuizzesController < ApplicationController
     end
   end
 
-  # Accept a submission of answers
-  def submit
-    @deployment = Group.active_for_session(session)
-      .deployment_for_case(@quiz.case)
-
-    completion = current_reader.enrollment_for_case(@quiz.case)
-      .case_completion
-
-    answers = answer_params
-    if Answer.create_all answers, quiz_id: @quiz.id, reader_id: current_reader.id, case_completion: completion
-      render status: :created
-    end
-  end
-
   private
   def set_quiz
     @quiz = Quiz.find_by_id params[:id]
@@ -39,11 +25,5 @@ class QuizzesController < ApplicationController
 
   def quiz_params
     params.require(:quiz).permit(:template_id, answers: [:content])
-  end
-
-  def answer_params
-    params.require(:answers).map do |answer|
-      answer.permit(:question_id, :content)
-    end
   end
 end
