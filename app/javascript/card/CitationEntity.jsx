@@ -28,14 +28,16 @@ class CitationSpan extends React.Component {
     let toggle = isOpen ? close : () => open(this.label)
     return (
       <span style={styles.label} onClick={toggle}>
-        <sup ref={(e: HTMLElement) => this.label = e}>{citationLabel}</sup>
+        <sup ref={(e: HTMLElement) => (this.label = e)}>
+          {citationLabel}
+        </sup>
       </span>
     )
   }
 }
 
 const CitationEntity = connect(mapStateToProps, mapDispatchToProps)(
-  CitationSpan,
+  CitationSpan
 )
 
 export default CitationEntity

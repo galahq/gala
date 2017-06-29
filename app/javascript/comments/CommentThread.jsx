@@ -31,15 +31,16 @@ function mapStateToProps (state: State, { threadId, location }: OwnProps) {
       author: firstComment.reader
         ? firstComment.reader.name
         : state.caseData.reader.name,
-      content: firstComment.content ||
+      content:
+        firstComment.content ||
         <FormattedMessage
           id="comments.placeholderContent"
           defaultMessage="New comment..."
         />,
     },
     responses: comments.splice(1),
-    canBeDeleted: !firstComment.content &&
-      state.caseData.reader.id === thread.readerId,
+    canBeDeleted:
+      !firstComment.content && state.caseData.reader.id === thread.readerId,
   }
 }
 
@@ -59,21 +60,19 @@ function mapDispatchToProps (dispatch, ownProps: OwnProps) {
   }
 }
 
-const CommentThread = (
-  {
-    lead,
-    responses,
-    hovered,
-    selected,
-    last,
-    match,
-    threadId,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleDeleteThread,
-    canBeDeleted,
-  },
-) => (
+const CommentThread = ({
+  lead,
+  responses,
+  hovered,
+  selected,
+  last,
+  match,
+  threadId,
+  handleMouseEnter,
+  handleMouseLeave,
+  handleDeleteThread,
+  canBeDeleted,
+}) =>
   <div style={{ position: 'relative' }}>
     <Link replace to={`${match.url}/${threadId}`} style={styles.linkReset}>
       <li
@@ -81,7 +80,9 @@ const CommentThread = (
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <h4 style={styles.author}>{lead.author}</h4>
+        <h4 style={styles.author}>
+          {lead.author}
+        </h4>
         <LeadSnippet lead={lead} />
         {responses.map((r, i) => {
           const numOthers = responses.length - 2
@@ -96,8 +97,12 @@ const CommentThread = (
                     ...styles.oneLineSnippet,
                   }}
                 >
-                  <span style={styles.initials}>{r.reader.initials}:</span>
-                  <span>{r.content}</span>
+                  <span style={styles.initials}>
+                    {r.reader.initials}:
+                  </span>
+                  <span>
+                    {r.content}
+                  </span>
                 </p>
               )
             case 2:
@@ -105,12 +110,10 @@ const CommentThread = (
                 <p key="2" style={styles.getCommentSnippetStyle({})}>
                   <FormattedMessage
                     id="comments.otherComments"
-                    defaultMessage={
-                      `{count, number} other {count, plural,
+                    defaultMessage={`{count, number} other {count, plural,
                     one {response}
                     other {responses}
-                  }`
-                    }
+                  }`}
                     values={{ count: numOthers }}
                   />
                 </p>
@@ -119,7 +122,6 @@ const CommentThread = (
               return null
           }
         })}
-
       </li>
     </Link>
     {canBeDeleted &&
@@ -132,7 +134,6 @@ const CommentThread = (
         />
       </a>}
   </div>
-)
 
 // Truncate is slow so let's extend PureComponent
 class LeadSnippet extends React.PureComponent {
@@ -140,7 +141,9 @@ class LeadSnippet extends React.PureComponent {
     const { placeholder, content } = this.props.lead
     return (
       <p style={styles.getCommentSnippetStyle({ placeholder })}>
-        <Truncate lines={3}>{content}</Truncate>
+        <Truncate lines={3}>
+          {content}
+        </Truncate>
       </p>
     )
   }

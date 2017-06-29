@@ -72,7 +72,6 @@ class CreditsListForm extends React.Component {
         onClose={this.handleCancel}
       >
         <div className="pt-dialog-body">
-
           <SectionTitle>Guests</SectionTitle>
           <SortableList
             items={guests}
@@ -88,7 +87,6 @@ class CreditsListForm extends React.Component {
             render={HostInput}
             onChange={this.handleChangeHosts}
           />
-
         </div>
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">

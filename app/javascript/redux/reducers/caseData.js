@@ -1,4 +1,8 @@
-// @flow
+/**
+ * @providesModule caseData
+ * @flow
+ */
+
 import update from 'react/lib/update'
 
 import type {

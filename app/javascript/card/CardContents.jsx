@@ -133,7 +133,6 @@ class CardContents extends Component<*, *, *> {
           transition: 'padding-top 0.1s, flex 0.3s',
         }}
       >
-
         {editing && <EditorToolbar cardId={id} />}
         {title}
         <Editor

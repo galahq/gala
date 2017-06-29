@@ -27,7 +27,7 @@ class SelectedReadersTag extends React.Component {
         {selectedReaders.map(reader => {
           return <ReaderIcon key={`${reader.id}-selected`} {...reader} />
         })}
-      </div>,
+      </div>
     )
   }
 }
@@ -35,5 +35,5 @@ class SelectedReadersTag extends React.Component {
 export let SelectedReaders = DragSource(
   'reader',
   selectedReadersSource,
-  collect,
+  collect
 )(SelectedReadersTag)

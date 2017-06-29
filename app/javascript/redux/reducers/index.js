@@ -1,4 +1,7 @@
-/* @flow */
+/**
+ * @providesModule reducer
+ * @flow
+ */
 
 import { combineReducers } from 'redux'
 

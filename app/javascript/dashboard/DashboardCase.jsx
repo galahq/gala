@@ -27,7 +27,9 @@ export class DashboardCase extends React.Component {
           href={editing ? '#' : `/cases/${slug}`}
         >
           <img src={squareCoverUrl} />
-          <strong>{kicker}</strong>
+          <strong>
+            {kicker}
+          </strong>
         </a>
         {this.renderDeleteButton()}
       </div>

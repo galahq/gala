@@ -37,7 +37,6 @@ const Sidebar = ({ commentThreadsOpen, commentsOpen, readerEnrolled }) => {
         <div style={{ paddingTop: '1em' }}>
           <EnrollForm />
         </div>}
-
     </aside>
   )
 }

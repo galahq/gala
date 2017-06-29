@@ -43,7 +43,6 @@ function Podcast ({
 
   return (
     <div className="Podcast">
-
       <PodcastPlayer
         editing={editing}
         slug={slug}
@@ -165,7 +164,6 @@ class PodcastPlayer extends React.Component {
             onChange={v => updatePodcast(`${id}`, { audioUrl: v })}
           />
         </div>
-
       </div>
     )
   }

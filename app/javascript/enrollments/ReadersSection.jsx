@@ -149,7 +149,6 @@ export class ReadersSection extends React.Component {
     let { model, filterString } = this.state
     return (
       <section className="enrollments-section enrollments-section-readers">
-
         <h2>
           <Tab name="readers" selectedTab={model} changeTab={this.changeTab} />
           &nbsp;•&nbsp;

@@ -113,9 +113,8 @@ class Deployment extends React.Component {
         deployment: {
           answersNeeded: this._needsPosttest() ? answersNeeded : 0,
           quizId: selectedQuizId === 'new' ? null : selectedQuizId,
-          customQuestions: selectedQuizId != null
-            ? customQuestions[`${selectedQuizId}`]
-            : [],
+          customQuestions:
+            selectedQuizId != null ? customQuestions[`${selectedQuizId}`] : [],
         },
       })
         .then((data: Props) => {

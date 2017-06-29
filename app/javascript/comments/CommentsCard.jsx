@@ -29,26 +29,24 @@ function mapStateToProps (state: State, { match }: OwnProps) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    handleChange: threadId =>
-      e => dispatch(changeCommentInProgress(threadId, e.target.value)),
-    handleSubmit: (threadId, comment) =>
-      () => dispatch(createComment(threadId, comment)),
+    handleChange: threadId => e =>
+      dispatch(changeCommentInProgress(threadId, e.target.value)),
+    handleSubmit: (threadId, comment) => () =>
+      dispatch(createComment(threadId, comment)),
   }
 }
 
-const CommentsCard = (
-  {
-    threadId,
-    comments,
-    commentInProgress,
-    intl,
-    userName,
-    originalHighlightText,
-    handleChange,
-    handleSubmit,
-    location,
-  }
-) => (
+const CommentsCard = ({
+  threadId,
+  comments,
+  commentInProgress,
+  intl,
+  userName,
+  originalHighlightText,
+  handleChange,
+  handleSubmit,
+  location,
+}) =>
   <aside className="CommentThread scrolling">
     <Link
       replace
@@ -73,7 +71,10 @@ const CommentsCard = (
     </div>
 
     <form style={comments.length === 0 ? { marginTop: 0 } : {}}>
-      <label htmlFor="CommentSubmit">{userName}</label><br />
+      <label htmlFor="CommentSubmit">
+        {userName}
+      </label>
+      <br />
       <div id="CommentSubmit">
         <textarea
           className="pt-input"
@@ -100,17 +101,21 @@ const CommentsCard = (
       </div>
     </form>
   </aside>
-)
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   injectIntl(CommentsCard)
 )
 
 type CommentProps = { reader: Reader, timestamp: string, content: string }
-const Comment = ({ reader, timestamp, content }: CommentProps) => (
+const Comment = ({ reader, timestamp, content }: CommentProps) =>
   <div className="Comment">
-    <cite>{reader.name}</cite>
-    <i>{timestamp}</i>
-    <blockquote>{content}</blockquote>
+    <cite>
+      {reader.name}
+    </cite>
+    <i>
+      {timestamp}
+    </i>
+    <blockquote>
+      {content}
+    </blockquote>
   </div>
-)

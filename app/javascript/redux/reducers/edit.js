@@ -1,4 +1,8 @@
-// @flow
+/**
+ * @providesModule edit
+ * @flow
+ */
+
 import type { EditState, Reader } from 'redux/state'
 import type {
   ClearUnsavedAction,

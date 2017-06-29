@@ -65,9 +65,8 @@ class BaseTracker extends React.Component {
   }
 
   _timeSinceArrival (state: TrackerState) {
-    const thisSegment = this.props.timerState === 'RUNNING'
-      ? Date.now() - state.timeArrived
-      : 0
+    const thisSegment =
+      this.props.timerState === 'RUNNING' ? Date.now() - state.timeArrived : 0
     return state.durationSoFar + thisSegment
   }
 

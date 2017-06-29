@@ -22,7 +22,7 @@ const QuizDetails = ({
   customQuestions = [],
   onChangeCustomQuestions,
   onDeselect,
-}: Props) => (
+}: Props) =>
   <DetailsCard className="pt-card">
     <CloseLink onClick={onDeselect}>
       <span className="pt-icon-standard pt-icon-cross" />
@@ -30,22 +30,22 @@ const QuizDetails = ({
     <CardTitle>Quiz details</CardTitle>
     <ol>
       {quiz.questions.length > 0 && <SectionTitle>Base questions</SectionTitle>}
-      {quiz.questions.map((question: Question, i: number) => (
+      {quiz.questions.map((question: Question, i: number) =>
         <li key={i}>
           {question.content}
           {question.options.length === 0
             ? <QuestionType className="pt-icon-standard pt-icon-comment" />
             : <OptionsList>
-              {question.options.map((option: string, i: number) => (
+              {question.options.map((option: string, i: number) =>
                 <li key={i}>
                   <Option correct={question.correctAnswer === option}>
                     {option}
                   </Option>
                 </li>
-                ))}
+                )}
             </OptionsList>}
         </li>
-      ))}
+      )}
       <SectionTitle>Custom questions</SectionTitle>
       <QuizCustomizer
         customQuestions={customQuestions}
@@ -53,7 +53,6 @@ const QuizDetails = ({
       />
     </ol>
   </DetailsCard>
-)
 
 export default QuizDetails
 
@@ -95,10 +94,12 @@ const OptionsList = styled.ul`
 `
 
 const Option = styled.span`
-  ${({ correct }: { correct: boolean }) => correct && css`
+  ${({ correct }: { correct: boolean }) =>
+    correct &&
+    css`
     color: #6ACB72;
     font-weight: bold;
-  `}
+  `};
 `
 
 const CloseLink = styled.a`

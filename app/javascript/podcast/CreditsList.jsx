@@ -50,8 +50,12 @@ class CreditsList extends React.Component {
         <dl>
           {guests.map(guest => {
             return [
-              <dt key={`name:${guest.name}`}>{guest.name}</dt>,
-              <dd key={`title:${guest.title}`}>{guest.title}</dd>,
+              <dt key={`name:${guest.name}`}>
+                {guest.name}
+              </dt>,
+              <dd key={`title:${guest.title}`}>
+                {guest.title}
+              </dd>,
             ]
           })}
         </dl>
@@ -59,8 +63,7 @@ class CreditsList extends React.Component {
           <FormattedMessage
             id="podcast.hosts"
             values={{ count: hosts.length }}
-          />
-          {' '}
+          />{' '}
           {hostsString}
         </em>
         <CreditsListForm

@@ -1,4 +1,7 @@
-/* @flow */
+/**
+ * @providesModule ui
+ * @flow
+ */
 
 import type { UIState } from 'redux/state'
 import type {

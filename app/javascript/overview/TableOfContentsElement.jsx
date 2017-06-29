@@ -17,17 +17,15 @@ function getElementDataFrom (state) {
   }
 }
 
-const TableOfContentsElement = (
-  {
-    position,
-    element,
-    connectDragSource,
-    connectDropTarget,
-    isDragging,
-    editing,
-    readOnly,
-  },
-) => (
+const TableOfContentsElement = ({
+  position,
+  element,
+  connectDragSource,
+  connectDropTarget,
+  isDragging,
+  editing,
+  readOnly,
+}) =>
   <NavLink
     className="c-toc__link"
     activeClassName="c-toc__link--active"
@@ -41,14 +39,17 @@ const TableOfContentsElement = (
             <div className="c-toc__number">
               {editing && !readOnly ? ': : :' : position}
             </div>
-            <div className="c-toc__title">{element.title}</div>
-            <div className="c-toc__icon">{element.typeIcon}</div>
+            <div className="c-toc__title">
+              {element.title}
+            </div>
+            <div className="c-toc__icon">
+              {element.typeIcon}
+            </div>
           </div>
-        </li>,
-      ),
+        </li>
+      )
     )}
   </NavLink>
-)
 
 const DraggableTableOfContentsElement = DropTarget(
   ItemTypes.CASE_ELEMENT,
@@ -68,7 +69,7 @@ const DraggableTableOfContentsElement = DropTarget(
   },
   connect => ({
     connectDropTarget: connect.dropTarget(),
-  }),
+  })
 )(
   DragSource(
     ItemTypes.CASE_ELEMENT,
@@ -97,8 +98,8 @@ const DraggableTableOfContentsElement = DropTarget(
     (connect, monitor) => ({
       connectDragSource: connect.dragSource(),
       isDragging: monitor.isDragging(),
-    }),
-  )(TableOfContentsElement),
+    })
+  )(TableOfContentsElement)
 )
 
 export default withRouter(
@@ -113,6 +114,6 @@ export default withRouter(
       },
       editing: state.edit.inProgress,
     }),
-    { updateCaseElement, persistCaseElementReordering },
-  )(DraggableTableOfContentsElement),
+    { updateCaseElement, persistCaseElementReordering }
+  )(DraggableTableOfContentsElement)
 )

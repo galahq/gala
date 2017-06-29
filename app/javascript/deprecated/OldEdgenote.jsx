@@ -4,7 +4,8 @@ import { Link, withRouter } from 'react-router-dom'
 import Statistics from 'utility/Statistics'
 import { activateEdgenote, updateEdgenote } from 'redux/actions'
 
-const CONFIRMATION = 'Are you sure you want to upgrade this edgenote to the new style? This cannot be undone. Note: it will not be displayed differently until all edgenotes for this card have been converted.'
+const CONFIRMATION =
+  'Are you sure you want to upgrade this edgenote to the new style? This cannot be undone. Note: it will not be displayed differently until all edgenotes for this card have been converted.'
 
 const mapStateToProps = (state, { match, slug }) => {
   return {
@@ -41,12 +42,9 @@ class OldEdgenoteFigure extends React.Component {
   componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {
       this.props.history.push(this.props.location)
-      setTimeout(
-        () => {
-          this.props.deactivate()
-        },
-        300,
-      )
+      setTimeout(() => {
+        this.props.deactivate()
+      }, 300)
     }
   }
 
@@ -60,9 +58,7 @@ class OldEdgenoteFigure extends React.Component {
     let { caption, format, statistics, thumbnailUrl, style } = contents
     let className = this.className()
 
-    const linkDestination = style === 'v2' || editing
-      ? {}
-      : this.props.location
+    const linkDestination = style === 'v2' || editing ? {} : this.props.location
 
     return (
       <Link
@@ -105,5 +101,5 @@ class OldEdgenoteFigure extends React.Component {
 }
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(OldEdgenoteFigure),
+  connect(mapStateToProps, mapDispatchToProps)(OldEdgenoteFigure)
 )
