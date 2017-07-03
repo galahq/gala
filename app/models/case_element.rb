@@ -15,6 +15,8 @@ class CaseElement < ApplicationRecord
   end
 
   def event_properties
-    { case_slug: this.case.slug, element_type: element_type, element_id: element_id }
+    { case_slug: this.case.slug,
+      element_type: element_type,
+      element_id: element_id }
   end
 end

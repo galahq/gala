@@ -17,11 +17,19 @@ class Podcast < ApplicationRecord
   end
 
   def credits_list=(credits_list)
-    self.credits = credits_list.is_a?(CreditsList) ? credits_list.attributes.to_yaml : credits_list.to_yaml
+    self.credits = if credits_list.is_a?(CreditsList)
+                     credits_list.attributes.to_yaml
+                   else
+                     credits_list.to_yaml
+                   end
   end
 
   def credits_list
-    credits ? CreditsList.new(YAML.load(credits)) : CreditsList.new
+    if credits
+      CreditsList.new(YAML.load(credits))
+    else
+      CreditsList.new
+    end
   end
 
   include Trackable

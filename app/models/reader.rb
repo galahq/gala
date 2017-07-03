@@ -46,7 +46,8 @@ class Reader < ApplicationRecord
 
   def self.new_with_session(params, session)
     super.tap do |reader|
-      if data = session['devise.google_data']
+      data = session['devise.google_data']
+      if data
         info = data['info']
         reader.name = info['name']
         reader.initials = reader.name.split(' ').map(&:first).join
@@ -57,17 +58,17 @@ class Reader < ApplicationRecord
   end
 
   def ensure_authentication_token
-    if authentication_token.blank?
-      self.authentication_token = generate_authentication_token
-    end
+    return unless authentication_token.blank?
+    self.authentication_token = generate_authentication_token
   end
 
   def enrollment_for_case(c)
     enrollments.find { |e| e.case.id == c.id }
   end
 
-  def has_quiz?(quiz)
-    (quiz.lti_uid && quiz.lti_uid == lti_uid) || (quiz.author_id && quiz.author_id == id)
+  def quiz?(quiz)
+    (quiz.lti_uid && quiz.lti_uid == lti_uid) ||
+      (quiz.author_id && quiz.author_id == id)
   end
 
   def name_and_email

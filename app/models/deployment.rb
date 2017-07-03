@@ -8,7 +8,7 @@ class Deployment < ApplicationRecord
   belongs_to :group
   belongs_to :quiz
 
-  validates :quiz, presence: true, if: -> { answers_needed > 0 }
+  validates :quiz, presence: true, if: -> { answers_needed.positive? }
 
   def pretest_assigned?
     answers_needed >= 2

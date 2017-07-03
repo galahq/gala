@@ -7,7 +7,7 @@ class CustomizeDeploymentService
   end
 
   def customize(answers_needed: 0, quiz_id: nil, custom_questions: [])
-    if answers_needed == 0
+    if answers_needed.zero?
       @deployment.answers_needed = 0
       @deployment.save
       return @deployment
@@ -18,14 +18,13 @@ class CustomizeDeploymentService
         @deployment.answers_needed = answers_needed
 
         @deployment.quiz = find_quiz quiz_id
-        delete_questions_not_included_in custom_questions.map { |q| q['id'] }
+        delete_questions_not_included_in(custom_questions.map { |q| q['id'] })
         upsert_questions custom_questions
         set_quiz_author
 
         @deployment.save!
       end
     rescue ActiveRecord::RecordInvalid => invalid
-      byebug
       return invalid.record
     end
 
@@ -40,7 +39,7 @@ class CustomizeDeploymentService
 
   def find_quiz(quiz_id)
     quiz = Quiz.where(id: quiz_id).try(:first)
-    if quiz && @author_identifier.author.has_quiz?(quiz)
+    if quiz && @author_identifier.author.quiz?(quiz)
       quiz
     else
       create_quiz_from_template quiz_id
@@ -48,7 +47,9 @@ class CustomizeDeploymentService
   end
 
   def create_quiz_from_template(template_id)
-    Quiz.create! case: @deployment.case, template_id: template_id, customized: true
+    Quiz.create! case: @deployment.case,
+                 template_id: template_id,
+                 customized: true
   end
 
   def delete_questions_not_included_in(question_ids)

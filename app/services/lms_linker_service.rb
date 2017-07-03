@@ -6,7 +6,9 @@ class LmsLinkerService
   end
 
   def authentication_strategy
-    @authentication_strategy ||= AuthenticationStrategy.find_by provider: 'lti', uid: @launch_params[:user_id]
+    @authentication_strategy ||= AuthenticationStrategy
+                                 .find_by provider: 'lti',
+                                          uid: @launch_params[:user_id]
   end
 
   def reader
@@ -14,7 +16,7 @@ class LmsLinkerService
   end
 
   def status
-    if @launch_params[:ext_roles].match 'urn:lti:role:ims/lis/Instructor'
+    if @launch_params[:ext_roles] =~ 'urn:lti:role:ims/lis/Instructor'
       :instructor
     else
       :student
@@ -31,15 +33,12 @@ class LmsLinkerService
 
   def add_reader_to_group
     return unless reader
-
-    unless reader.group_memberships.exists? group: group
-      reader.group_memberships.create group: group
-    end
+    return if reader.group_memberships.exists? group: group
+    reader.group_memberships.create group: group
   end
 
   def enroll_reader_in_case(kase)
-    if reader
-      Enrollment.upsert reader_id: reader.id, case_id: kase.id, status: status
-    end
+    return unless reader
+    Enrollment.upsert reader_id: reader.id, case_id: kase.id, status: status
   end
 end

@@ -28,13 +28,11 @@ class Case < ApplicationRecord
   validates_format_of :slug, with: /\A[a-z0-9-]+\Z/
   validates :publication_date, presence: true, if: :published?
 
-  def <=>(anOther)
-    if published ^ anOther.try(:published)
-      return published ? 1 : -1
-    elsif publication_date.nil? || anOther.publication_date.nil?
-      return publication_date.nil? ? -1 : 1
-    end
-    publication_date <=> anOther.publication_date
+  def <=>(other)
+    return published ? 1 : -1 if published ^ other.try(:published)
+    return publication_date.nil? ? -1 : 1 if publication_date.nil? ||
+                                             other.publication_date.nil?
+    publication_date <=> other.publication_date
   end
 
   def to_param
@@ -51,10 +49,6 @@ class Case < ApplicationRecord
 
   def other_available_locales
     locales_for_reading_column(:title) - [I18n.locale.to_s]
-  end
-
-  def has_translators?
-    locales_for_reading_column(:translators).include? I18n.locale
   end
 
   def translator_names

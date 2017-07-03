@@ -28,6 +28,8 @@ class Enrollment < ApplicationRecord
   end
 
   def as_json(options = {})
-    super(options.merge(include: [reader: { only: %i[id image_url initials name] }]))
+    super(options.merge(include: [reader: {
+                          only: %i[id image_url initials name]
+                        }]))
   end
 end

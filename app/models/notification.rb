@@ -18,7 +18,9 @@ class Notification < ApplicationRecord
   def message
     case category
     when 'reply_to_thread'
-      I18n.t 'notifications.replied_to_your_comment', notifier: notifier.name, case_kicker: self.case.kicker
+      I18n.t 'notifications.replied_to_your_comment',
+             notifier: notifier.name,
+             case_kicker: self.case.kicker
     end
   end
 

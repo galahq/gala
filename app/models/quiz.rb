@@ -16,8 +16,10 @@ class Quiz < ApplicationRecord
 
   def self.authored_by(reader: nil, lti_uid: nil)
     if reader
-      where 'author_id = :reader_id OR (lti_uid = :lti_uid AND lti_uid IS NOT NULL)',
-            reader_id: reader.id, lti_uid: reader.lti_uid
+      where <<~SQL, reader_id: reader.id, lti_uid: reader.lti_uid
+        author_id = :reader_id OR (lti_uid = :lti_uid AND lti_uid IS NOT NULL)
+        SQL
+
     elsif lti_uid
       where lti_uid: lti_uid
     else
@@ -29,14 +31,16 @@ class Quiz < ApplicationRecord
     Question.where <<~SQL
       questions.quiz_id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
-            SELECT id, template_id FROM quizzes WHERE id = #{id}
+            SELECT id, template_id
+              FROM quizzes
+             WHERE id = #{id}
           UNION ALL
             SELECT quizzes.id, quizzes.template_id
-            FROM template_quizzes, quizzes
-            WHERE quizzes.id = template_quizzes.template_id
+              FROM template_quizzes, quizzes
+             WHERE quizzes.id = template_quizzes.template_id
         )
         SELECT id
-        FROM template_quizzes
+          FROM template_quizzes
       )
     SQL
   end
