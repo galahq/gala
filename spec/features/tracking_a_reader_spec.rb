@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Tracking a reader' do
@@ -39,5 +41,4 @@ feature 'Tracking a reader' do
       expect(kase.pages.first.cards.first.uniques).to eq 0
     end
   end
-
 end

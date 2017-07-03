@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class Readers::SessionsController < Devise::SessionsController
-# before_action :configure_sign_in_params, only: [:create]
+  # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
   # def new
@@ -19,7 +21,7 @@ class Readers::SessionsController < Devise::SessionsController
 
   protected
 
-  def after_sign_in_path_for(resource)
+  def after_sign_in_path_for(_resource)
     stored_location_for(:user) || root_path
   end
 

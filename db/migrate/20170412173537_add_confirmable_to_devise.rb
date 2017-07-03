@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddConfirmableToDevise < ActiveRecord::Migration[5.0]
   def up
     add_column :readers, :confirmation_token, :string
@@ -7,7 +9,7 @@ class AddConfirmableToDevise < ActiveRecord::Migration[5.0]
     add_index :readers, :confirmation_token, unique: true
     # To avoid a short time window between running the migration and updating all existing
     # readers as confirmed, do the following
-    execute("UPDATE readers SET confirmed_at = NOW()")
+    execute('UPDATE readers SET confirmed_at = NOW()')
   end
 
   def down

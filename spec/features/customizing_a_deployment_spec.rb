@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Customizing a deployment' do
@@ -25,7 +27,7 @@ feature 'Customizing a deployment' do
 
   context 'as an instructor' do
     let(:enrollment) { create :enrollment, status: :instructor }
-    let(:deployment) { create :deployment, case: enrollment.case}
+    let(:deployment) { create :deployment, case: enrollment.case }
     before { login_as enrollment.reader }
 
     scenario 'it is possible to create and edit a new quiz' do

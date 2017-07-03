@@ -9,7 +9,7 @@ import type { State } from 'redux/state'
 
 function mapStateToProps (
   state: State,
-  { location, contentState, entityKey, children },
+  { location, contentState, entityKey, children }
 ) {
   let { slug } = contentState.getEntity(entityKey).getData()
   return {
@@ -41,17 +41,15 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-const EdgenoteSpan = (
-  {
-    editing,
-    onMouseOver,
-    onMouseOut,
-    onClick,
-    children,
-    commentThreadsOpen,
-    location,
-  },
-) => {
+const EdgenoteSpan = ({
+  editing,
+  onMouseOver,
+  onMouseOut,
+  onClick,
+  children,
+  commentThreadsOpen,
+  location,
+}) => {
   return (
     <a
       className={`c-edgenote-entity${commentThreadsOpen ? '--inactive' : ''}`}
@@ -60,13 +58,14 @@ const EdgenoteSpan = (
       onClick={editing ? () => {} : onClick}
     >
       {children.map(child =>
-        React.cloneElement(child, { forceSelection: true, location }))}
+        React.cloneElement(child, { forceSelection: true, location })
+      )}
     </a>
   )
 }
 
 const EdgenoteEntity = connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-  EdgenoteSpan,
+  EdgenoteSpan
 )
 
 export default withRouter(EdgenoteEntity)

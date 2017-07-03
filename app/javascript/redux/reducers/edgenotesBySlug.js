@@ -1,10 +1,14 @@
-// @flow
+/**
+ * @providesModule edgenotesBySlug
+ * @flow
+ */
+
 import type { EdgenotesState } from 'redux/state'
 import type { CreateEdgenoteAction, UpdateEdgenoteAction } from 'redux/actions'
 
 export default function edgenotesBySlug (
   state: EdgenotesState = ({ ...window.caseData.edgenotes }: EdgenotesState),
-  action: CreateEdgenoteAction | UpdateEdgenoteAction,
+  action: CreateEdgenoteAction | UpdateEdgenoteAction
 ): EdgenotesState {
   switch (action.type) {
     case 'CREATE_EDGENOTE':

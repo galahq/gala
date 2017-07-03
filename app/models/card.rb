@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Card < ApplicationRecord
   include Authority::Abilities
 
@@ -5,14 +7,14 @@ class Card < ApplicationRecord
 
   has_many :comment_threads, -> { order(:block_index, :start) }
   belongs_to :element, polymorphic: true
-  acts_as_list scope: [:element_id, :element_type]
+  acts_as_list scope: %i[element_id element_type]
 
   translates :content, :raw_content
 
   before_save :set_case_from_element
 
   def paragraphs
-    JSON.parse(raw_content)["blocks"].map{ |x| x["text"] }
+    JSON.parse(raw_content)['blocks'].map { |x| x['text'] }
   end
 
   include Trackable
@@ -25,6 +27,7 @@ class Card < ApplicationRecord
   end
 
   private
+
   def set_case_from_element
     self.case = element.case if element
   end

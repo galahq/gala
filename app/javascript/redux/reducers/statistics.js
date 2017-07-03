@@ -1,4 +1,7 @@
-/* @flow */
+/**
+ * @providesModule statistics
+ * @flow
+ */
 
 import type { StatisticsState } from 'redux/state'
 import type { SetStatisticsAction } from 'redux/actions'

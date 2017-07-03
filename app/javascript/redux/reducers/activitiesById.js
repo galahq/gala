@@ -1,4 +1,8 @@
-// @flow
+/**
+ * @providesModule activitiesById
+ * @flow
+ */
+
 import type { ActivitiesState } from 'redux/state'
 import type { UpdateActivityAction, AddActivityAction } from 'redux/actions'
 
@@ -6,7 +10,7 @@ type Action = UpdateActivityAction | AddActivityAction
 
 export default function activitiesById (
   state: ActivitiesState = ({ ...window.caseData.activities }: ActivitiesState),
-  action: Action,
+  action: Action
 ): ActivitiesState {
   switch (action.type) {
     case 'UPDATE_ACTIVITY':

@@ -104,8 +104,7 @@ const CitationTooltip = ({
             </button>
         </form>
         : <span>
-          {contents}
-          {' '}
+          {contents}{' '}
           {href &&
           <a href={href} target="_blank" rel="noopener noreferrer">
                 Read&nbsp;more&nbsp;›

@@ -18,17 +18,18 @@ function mapStateToProps (state: State, { contentState, children }) {
 function mergeProps (
   { cardId, commentThreadId, disabled },
   _,
-  { children, history, match },
+  { children, history, match }
 ) {
   return {
     onClick: () => {
       !cardId ||
         disabled ||
         history.replace(
-          `${match.url}/cards/${cardId}/comments/${commentThreadId}`,
+          `${match.url}/cards/${cardId}/comments/${commentThreadId}`
         )
     },
-    children: children.length > 0 &&
+    children:
+      children.length > 0 &&
       React.cloneElement(children[0], { forceSelection: true }),
   }
 }
@@ -42,7 +43,7 @@ const CommentThreadEntity = ({ onClick, children }) => {
 }
 
 export default withRouter(
-  connect(mapStateToProps, {}, mergeProps)(CommentThreadEntity),
+  connect(mapStateToProps, {}, mergeProps)(CommentThreadEntity)
 )
 
 function getFirstThreadId (contentState: ContentState, leaf: DraftEditorLeaf) {

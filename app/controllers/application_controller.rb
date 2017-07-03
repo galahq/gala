@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
-  before_action :store_current_location, :unless => :devise_controller?
+  before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
 
   def default_url_options(options = {})
@@ -45,8 +47,7 @@ class ApplicationController < ActionController::Base
     path ||= signed_in_root_path(resource_or_scope)
   end
 
-  def authority_forbidden(error)
+  def authority_forbidden(_error)
     render file: Rails.root.join('public', '403.html'), status: 403, layout: false
   end
-
 end

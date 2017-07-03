@@ -40,26 +40,28 @@ export class Dashboard extends React.Component {
 
     return (
       <div
-        className={
-          `catalog-dashboard ${hasCases ? '' : 'catalog-dashboard--empty'}`
-        }
+        className={`catalog-dashboard ${hasCases
+          ? ''
+          : 'catalog-dashboard--empty'}`}
       >
-
         {!hasCases &&
           <div className="catalog-dashboard__my-cases--empty__case">
             <div>
-              <img
-                src="https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&amp;w=300&amp;h=300&amp;fit=crop&amp;crop=focalpoint&amp;fp-x=.535&amp;fp-y=.6&amp;fp-z=2.5&amp;mono=493092"
-              />
-              <strong><I18n meaning="study_a_case" /></strong>
+              <img src="https://images.unsplash.com/photo-1429704658776-3d38c9990511?ixlib=rb-0.3.5&amp;w=300&amp;h=300&amp;fit=crop&amp;crop=focalpoint&amp;fp-x=.535&amp;fp-y=.6&amp;fp-z=2.5&amp;mono=493092" />
+              <strong>
+                <I18n meaning="study_a_case" />
+              </strong>
             </div>
           </div>}
 
         <div className="catalog-dashboard__reader">
-          <h1>Hello, {initials}</h1>
+          <h1>
+            Hello, {initials}
+          </h1>
           {hasCases &&
             <h2>
-              <I18n meaning="my_cases" /><br />
+              <I18n meaning="my_cases" />
+              <br />
               <a
                 className="catalog-dashboard__edit"
                 onClick={this.handleSetEditing}
@@ -67,7 +69,9 @@ export class Dashboard extends React.Component {
                 {editing ? 'Done' : 'Edit'}
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: require(`images/dashboard-${editing ? 'done' : 'edit'}.svg`),
+                    __html: require(`images/dashboard-${editing
+                      ? 'done'
+                      : 'edit'}.svg`),
                   }}
                 />
               </a>
@@ -76,21 +80,22 @@ export class Dashboard extends React.Component {
 
         {this.state.cases.length > 0
           ? <div className="catalog-dashboard__my-cases">
-            {this.state.cases.map(kase => (
+            {this.state.cases.map(kase =>
               <DashboardCase
                 key={kase.slug}
                 editing={this.state.editing}
                 deleteEnrollmentFor={this.deleteEnrollmentFor}
                 case={kase}
               />
-              ))}
+              )}
           </div>
           : <div className="catalog-dashboard__my-cases--empty__intro">
             <h2>Choose for yourself</h2>
 
             <ul>
               <li>
-                  Meet different stakeholders and dive deep with a multimodal narrative.
+                  Meet different stakeholders and dive deep with a multimodal
+                  narrative.
                 </li>
               <li>
                   Shortcut experience by putting principles into practice.
@@ -98,10 +103,10 @@ export class Dashboard extends React.Component {
             </ul>
 
             <p>
-                Cases you select from the index below will be presented here for easy access.
+                Cases you select from the index below will be presented here for
+                easy access.
               </p>
           </div>}
-
       </div>
     )
   }

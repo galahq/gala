@@ -23,21 +23,19 @@ function mapStateToProps (state: State) {
   }
 }
 
-function StatusBar (
-  {
-    editable,
-    editing,
-    edited,
-    messages,
-    toggleEditing,
-    saveChanges,
-  },
-) {
+function StatusBar ({
+  editable,
+  editing,
+  edited,
+  messages,
+  toggleEditing,
+  saveChanges,
+}) {
   return (
     <div
       className={
         (messages.instructions || editable) &&
-          `flash flash-${editing ? 'editing' : 'info'}`
+        `flash flash-${editing ? 'editing' : 'info'}`
       }
     >
       {messages.instructions && <FormattedMessage id={messages.instructions} />}
@@ -61,5 +59,5 @@ function StatusBar (
 }
 
 export default connect(mapStateToProps, { toggleEditing, saveChanges })(
-  StatusBar,
+  StatusBar
 )

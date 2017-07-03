@@ -79,7 +79,10 @@ const BillboardTitle = ({
         <p>
           {caseAuthors}
           <br />
-          {translators !== '' && <em>{translators}</em>}
+          {translators !== '' &&
+            <em>
+              {translators}
+            </em>}
         </p>}
 
       <cite className="o-bottom-right c-photo-credit">

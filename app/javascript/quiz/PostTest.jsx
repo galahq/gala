@@ -37,16 +37,17 @@ const PostTest = ({
         >
           <div className="pt-callout" style={{ marginBottom: '1em' }}>
             <h5>Check your understanding</h5>
-            After you have engaged with all elements of the case, please take this post-test to check your understanding.
+            After you have engaged with all elements of the case, please take
+            this post-test to check your understanding.
           </div>
-          {questions.map((q: QuestionT) => (
+          {questions.map((q: QuestionT) =>
             <Question
               selectedAnswer={answers[q.id]}
               key={q.id}
               {...q}
               onChange={(e: SyntheticInputEvent) => onChange(q.id, e)}
             />
-          ))}
+          )}
           <Tooltip
             isDisabled={canSubmit}
             content="Please answer all the questions"

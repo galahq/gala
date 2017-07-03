@@ -100,15 +100,15 @@ class EdgenoteFigure extends React.Component {
 
     const reduxProps = { active, activate, deactivate, editing, selected }
 
-    const Or = editing && !youtubeSlug && !pullQuote && !audioUrl && !imageUrl
-      ? () => <label>or</label>
-      : () => null
+    const Or =
+      editing && !youtubeSlug && !pullQuote && !audioUrl && !imageUrl
+        ? () => <label>or</label>
+        : () => null
 
     return (
       <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
         <Statistics inline uri={`edgenotes/${slug}`} />
         <ConditionalLink onClick={activate}>
-
           {!!pullQuote ||
             !!imageUrl ||
             !!audioUrl ||
@@ -168,7 +168,6 @@ class EdgenoteFigure extends React.Component {
               {...reduxProps}
               onChange={onChange}
             />}
-
         </ConditionalLink>
 
         <Tracker
@@ -286,7 +285,9 @@ class AudioPlayer extends React.Component {
 }
 
 const Background = ({ visible, children }) =>
-  <div style={visible ? backgroundedStyle : {}}>{children}</div>
+  <div style={visible ? backgroundedStyle : {}}>
+    {children}
+  </div>
 
 const CallToAction = ({ contents, websiteUrl, editing, onChange }) =>
   <div>

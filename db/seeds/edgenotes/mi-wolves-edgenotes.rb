@@ -1,4 +1,6 @@
-ccc = Case.find_by_slug "mi-wolves"
+# frozen_string_literal: true
+
+ccc = Case.find_by_slug 'mi-wolves'
 I18n.locale = :en
 edgenote502 = ccc.edgenotes.build
 edgenote502.caption = 'For several short perspectives on the wolves in northern Michigan, see &#8220;Michigan’s Wolf Hunt: A Heated Debate.&#8221;'

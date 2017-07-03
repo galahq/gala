@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ActivitiesController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_activity, only: [:show, :update, :destroy]
+  before_action :set_activity, only: %i[show update destroy]
   before_action :set_case, only: [:create]
 
   authorize_actions_for Activity
@@ -19,7 +21,7 @@ class ActivitiesController < ApplicationController
 
   # POST /activities
   def create
-    @activity = Activity.create_as_element @case, title: "New activity"
+    @activity = Activity.create_as_element @case, title: 'New activity'
 
     if @activity.persisted?
       render @activity
@@ -43,17 +45,18 @@ class ActivitiesController < ApplicationController
   end
 
   private
-    def set_case
-      @case = Case.find_by_slug params[:case_slug]
-    end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_activity
-      @activity = Activity.find(params[:id])
-    end
+  def set_case
+    @case = Case.find_by_slug params[:case_slug]
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def activity_params
-      params.require(:activity).permit(:title, :description, :pdf_url, :case_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_activity
+    @activity = Activity.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def activity_params
+    params.require(:activity).permit(:title, :description, :pdf_url, :case_id)
+  end
 end

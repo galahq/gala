@@ -5,5 +5,5 @@ import { Dashboard } from 'dashboard/Dashboard'
 
 render(
   <Dashboard {...window.reader} />,
-  document.getElementById('dashboard-app'),
+  document.getElementById('dashboard-app')
 )

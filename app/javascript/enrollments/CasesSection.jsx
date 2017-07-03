@@ -11,15 +11,23 @@ class CaseRow extends React.Component {
 
   renderEnrolledReaders (type) {
     let readerTags = this.props.case.enrollments[type].map(enrollment => {
-      return <li key={enrollment.reader.id}>{enrollment.reader.name}</li>
+      return (
+        <li key={enrollment.reader.id}>
+          {enrollment.reader.name}
+        </li>
+      )
     })
     return (
       <div
         key={`enrollments-case-enrolled-readers-${type}`}
         className="enrollments-case-enrolled-readers"
       >
-        <h5>{type}s</h5>
-        <ul>{readerTags}</ul>
+        <h5>
+          {type}s
+        </h5>
+        <ul>
+          {readerTags}
+        </ul>
       </div>
     )
   }
@@ -32,8 +40,12 @@ class CaseRow extends React.Component {
           <td colSpan="4">
             <div className="enrollments-details">
               <div className="BillboardTitle">
-                <h1>{title}</h1>
-                <h4>{caseAuthors}</h4>
+                <h1>
+                  {title}
+                </h1>
+                <h4>
+                  {caseAuthors}
+                </h4>
               </div>
               {['student', 'treatment', 'instructor'].map(type => {
                 return this.renderEnrolledReaders(type)
@@ -57,7 +69,9 @@ class CaseRow extends React.Component {
             this.setState({ showingDetails: !this.state.showingDetails })
           }}
         >
-          <td><img src={smallCoverUrl} /></td>
+          <td>
+            <img src={smallCoverUrl} />
+          </td>
           <td className="enrollments-case-kicker">
             {kicker}
           </td>
@@ -97,7 +111,11 @@ class CasesTable extends React.Component {
     if (cases.length > 0) {
       return [
         <thead key={`${sectionName}-head`}>
-          <tr><td colSpan="4">{sectionName}</td></tr>
+          <tr>
+            <td colSpan="4">
+              {sectionName}
+            </td>
+          </tr>
         </thead>,
         this.renderCases(cases),
       ]

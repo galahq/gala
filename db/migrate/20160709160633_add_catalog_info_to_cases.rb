@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCatalogInfoToCases < ActiveRecord::Migration[5.0]
   def change
     add_column :cases, :publication_date, :date

@@ -1,4 +1,7 @@
-/* @flow */
+/**
+ * @providesModule pagesById
+ * @flow
+ */
 
 import type { PagesState } from 'redux/state'
 import type { UpdatePageAction, AddPageAction } from 'redux/actions'

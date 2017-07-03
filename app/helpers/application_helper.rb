@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def parent_layout(layout)
     @view_flow.set(:layout, output_buffer)
@@ -5,7 +7,7 @@ module ApplicationHelper
   end
 
   # Helpers for content_for blocks in view layouts
-  %i(headline background_image_url email_footer).each do |key|
+  %i[headline background_image_url email_footer].each do |key|
     ApplicationHelper.send(:define_method, key) do |val|
       content_for(key) { val }
     end
@@ -18,9 +20,11 @@ module ApplicationHelper
   def devise_mapping
     Devise.mappings[:reader]
   end
+
   def resource_name
     devise_mapping.name
   end
+
   def resource_class
     devise_mapping.to
   end
@@ -31,20 +35,19 @@ module ApplicationHelper
     end
   end
 
-  def one_liner text
+  def one_liner(text)
     # Removes newlines
-    text.gsub(/\n/, '')
+    text.delete("\n")
   end
 
-  def md_button_to text, href
-    raw <<-MD
-<span class="o-button">[#{text}](#{href})</span>
+  def md_button_to(text, href)
+    raw <<~MD
+      <span class="o-button">[#{text}](#{href})</span>
 MD
   end
 
-  def markdown md
+  def markdown(md)
     redcarpet = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
     redcarpet.render md
   end
-
 end

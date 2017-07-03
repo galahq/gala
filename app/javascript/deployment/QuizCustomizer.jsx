@@ -75,7 +75,6 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
         const { content, options, correctAnswer } = question
         return (
           <PaddedItem key={questionIx}>
-
             <QuestionInputGroup
               autoFocus
               intent={question.hasError && Intent.WARNING}
@@ -156,7 +155,6 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                 />
               </div>
             )}
-
           </PaddedItem>
         )
       })}

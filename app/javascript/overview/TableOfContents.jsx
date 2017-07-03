@@ -35,19 +35,21 @@ const TableOfContents = ({
   createPodcast,
   createActivity,
   needsPosttest,
-}) => (
+}) =>
   <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
-    <h2 className="c-toc__header"><FormattedMessage id="case.toc" /></h2>
+    <h2 className="c-toc__header">
+      <FormattedMessage id="case.toc" />
+    </h2>
     {connectDropTarget(
       <ol className="c-toc__list">
-        {elements.map((element, index) => (
+        {elements.map((element, index) =>
           <TableOfContentsElement
             element={element}
             key={element.id}
             position={index + 1}
             readOnly={readOnly}
           />
-        ))}
+        )}
         {editing &&
           !readOnly &&
           <div className="c-toc__actions pt-button-group pt-fill">
@@ -77,7 +79,6 @@ const TableOfContents = ({
     )}
     {needsPosttest && <PostTestLink />}
   </nav>
-)
 
 const DragDropTableOfContents = DragDropContext(HTML5Backend)(
   DropTarget(ItemTypes.CASE_ELEMENT, { drop: () => {} }, connect => ({

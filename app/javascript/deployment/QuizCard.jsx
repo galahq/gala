@@ -44,7 +44,9 @@ const Questions = ({
 }) =>
   questions.length > 0
     ? <div>
-      <SectionTitle>{sectionTitle}</SectionTitle>
+      <SectionTitle>
+        {sectionTitle}
+      </SectionTitle>
       {questions.map((question: QuestionT, i: number) =>
         <li key={i}>
           {question.content}
@@ -63,7 +65,7 @@ export const Link = styled.a`
   background-color: #446583AA;
 
   & .pt-non-ideal-state-icon .pt-icon {
-    color: rgba(191, 204, 214, 0.5) !important
+    color: rgba(191, 204, 214, 0.5) !important;
   }
 `
 

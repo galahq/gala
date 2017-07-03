@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CaseElement < ApplicationRecord
   belongs_to :case
   belongs_to :element, polymorphic: true
@@ -13,6 +15,8 @@ class CaseElement < ApplicationRecord
   end
 
   def event_properties
-    {case_slug: this.case.slug, element_type: element_type, element_id: element_id}
+    { case_slug: this.case.slug,
+      element_type: element_type,
+      element_id: element_id }
   end
 end

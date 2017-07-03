@@ -54,8 +54,8 @@ function mapStateToProps (
   return {
     commentable:
       !nonNarrative &&
-        state.caseData.commentable &&
-        !!(state.caseData.reader && state.caseData.reader.enrollment),
+      state.caseData.commentable &&
+      !!(state.caseData.reader && state.caseData.reader.enrollment),
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     readOnly: !(
@@ -82,10 +82,11 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-      const selectionState = selection.isCollapsed() ||
+      const selectionState =
+        selection.isCollapsed() ||
         selection.getStartKey() !== selection.getEndKey()
-        ? SelectionState.createEmpty(selection.getAnchorKey())
-        : selection
+          ? SelectionState.createEmpty(selection.getAnchorKey())
+          : selection
       dispatch(applySelection(ownProps.id, selectionState))
     },
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCaseToCard < ActiveRecord::Migration[5.0]
   def change
     add_reference :cards, :case, foreign_key: true
@@ -9,7 +11,6 @@ class AddCaseToCard < ActiveRecord::Migration[5.0]
         end
       end
       dir.down do
-
       end
     end
   end

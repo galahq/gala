@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class EdgenotesController < ApplicationController
-  before_action :set_edgenote, only: [:show, :update, :destroy]
+  before_action :set_edgenote, only: %i[show update destroy]
   before_action :set_case, only: [:create]
   before_action :set_cors_headers, only: [:show]
 
-  authorize_actions_for Edgenote, except: %i(show)
+  authorize_actions_for Edgenote, except: %i[show]
 
   # GET /edgenotes
   def index
@@ -13,8 +15,7 @@ class EdgenotesController < ApplicationController
   end
 
   # GET /edgenotes/1
-  def show
-  end
+  def show; end
 
   # POST /edgenotes
   def create
@@ -25,7 +26,7 @@ class EdgenotesController < ApplicationController
     )
 
     if @edgenote.save
-      render partial: 'edgenote', locals: {edgenote: @edgenote}
+      render partial: 'edgenote', locals: { edgenote: @edgenote }
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -34,7 +35,7 @@ class EdgenotesController < ApplicationController
   # PATCH/PUT /edgenotes/1
   def update
     if @edgenote.update(edgenote_params)
-      render partial: 'edgenote', locals: {edgenote: @edgenote}
+      render partial: 'edgenote', locals: { edgenote: @edgenote }
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -46,31 +47,33 @@ class EdgenotesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_edgenote
-      @edgenote = Edgenote.where(slug: params[:slug]).includes( case: [:podcasts, :edgenotes, pages:[:cards], enrollments: [:reader]] )
-        .first
-    end
 
-    def set_case
-      @case = Case.where(slug: params[:case_slug])
-        .first
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_edgenote
+    @edgenote = Edgenote.where(slug: params[:slug])
+                        .includes(case: [:podcasts, :edgenotes, pages: [:cards], enrollments: [:reader]])
+                        .first
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def edgenote_params
-      params.require(:edgenote).permit(*%i(
-        caption format thumbnail_url content embed_code website_url image_url
-        pdf_url instructions photo_credit slug style pull_quote attribution
-        call_to_action audio_url youtube_slug statistics
-      ))
+  def set_case
+    @case = Case.where(slug: params[:case_slug])
+                .first
+  end
 
-    end
+  # Only allow a trusted parameter "white list" through.
+  def edgenote_params
+    params.require(:edgenote).permit(:caption, :format, :thumbnail_url,
+                                     :content, :embed_code, :website_url,
+                                     :image_url, :pdf_url, :instructions,
+                                     :photo_credit, :slug, :style, :pull_quote,
+                                     :attribution, :call_to_action,
+                                     :audio_url, :youtube_slug, :statistics)
+  end
 
-    def set_cors_headers
-      headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
-      headers['Access-Control-Request-Method'] = '*'
-      headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    end
+  def set_cors_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+    headers['Access-Control-Request-Method'] = '*'
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  end
 end

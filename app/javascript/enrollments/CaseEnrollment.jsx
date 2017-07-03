@@ -5,12 +5,16 @@ import { Orchard } from 'shared/orchard'
 let CaseEnrollmentTarget = {
   drop (props, monitor) {
     let item = monitor.getItem()
-    let shouldEmail = window.prompt(
-      `Would you like to send email notifications to ${item.readers.length} ${item.readers.length === 1 ? 'person' : 'people'}? If so, type "send".`,
-    ) === 'send'
+    let shouldEmail =
+      window.prompt(
+        `Would you like to send email notifications to ${item.readers
+          .length} ${item.readers.length === 1
+          ? 'person'
+          : 'people'}? If so, type "send".`
+      ) === 'send'
     Orchard.espalier(
       `admin/cases/${props.caseSlug}/readers/${item.readers}/enrollments/upsert`,
-      { status: props.type, send_emails: shouldEmail },
+      { status: props.type, send_emails: shouldEmail }
     ).then(r => {
       props.updateEnrollments(props.caseSlug, r)
     })
@@ -35,16 +39,16 @@ class CaseEnrollmentTag extends React.Component {
     let { connectDropTarget, isOver } = this.props
     return connectDropTarget(
       <div
-        className={
-          `enrollments-case-status-drop${isOver ? ' enrollments-case-status-drop-over' : ''}`
-        }
+        className={`enrollments-case-status-drop${isOver
+          ? ' enrollments-case-status-drop-over'
+          : ''}`}
       >
         {this.pluralize()}
-      </div>,
+      </div>
     )
   }
 }
 
 export let CaseEnrollment = DropTarget('reader', CaseEnrollmentTarget, collect)(
-  CaseEnrollmentTag,
+  CaseEnrollmentTag
 )

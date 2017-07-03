@@ -1,6 +1,8 @@
-Dir["./db/seeds/*.rb"].each {|file| require file }
+# frozen_string_literal: true
 
-%i( editor )
+Dir['./db/seeds/*.rb'].each { |file| require file }
+
+%i[editor]
   .each do |role|
   Role.create! name: role
 end

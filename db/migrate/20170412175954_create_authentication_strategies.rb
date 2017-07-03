@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class CreateAuthenticationStrategies < ActiveRecord::Migration[5.0]
   def up
     create_table :authentication_strategies do |t|
-      t.string   "provider"
-      t.string   "uid"
+      t.string   'provider'
+      t.string   'uid'
       t.references :reader
       t.timestamps
     end
@@ -22,7 +24,7 @@ class CreateAuthenticationStrategies < ActiveRecord::Migration[5.0]
     add_column :readers, :provider, :string
     add_column :readers, :uid, :string
     add_column :readers, :authentication_token, :string
-    change_column_null(:readers, :encrypted_password, false, Devise.friendly_token[0,20])
+    change_column_null(:readers, :encrypted_password, false, Devise.friendly_token[0, 20])
 
     AuthenticationStrategy.all.each do |auth|
       auth.reader.update provider: auth.provider, uid: auth.uid

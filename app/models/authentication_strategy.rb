@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class AuthenticationStrategy < ApplicationRecord
-  devise :omniauthable, omniauth_providers: [:google, :lti]
+  devise :omniauthable, omniauth_providers: %i[google lti]
 
   belongs_to :reader
 
@@ -10,5 +12,4 @@ class AuthenticationStrategy < ApplicationRecord
       strategy.reader = Reader.from_omniauth(auth)
     end
   end
-
 end

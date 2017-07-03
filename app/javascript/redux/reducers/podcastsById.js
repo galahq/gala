@@ -1,4 +1,7 @@
-/* @flow */
+/**
+ * @providesModule podcastsById
+ * @flow
+ */
 
 import type { PodcastsState } from 'redux/state'
 import type { UpdatePodcastAction, AddPodcastAction } from 'redux/actions'

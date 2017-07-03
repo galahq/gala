@@ -45,14 +45,14 @@ const PreTest = ({
           </p>
 
           <div className="pt-card">
-            {questions.map((q: QuestionT) => (
+            {questions.map((q: QuestionT) =>
               <Question
                 selectedAnswer={answers[q.id]}
                 key={q.id}
                 {...q}
                 onChange={(e: SyntheticInputEvent) => onChange(q.id, e)}
               />
-            ))}
+            )}
           </div>
         </div>
 

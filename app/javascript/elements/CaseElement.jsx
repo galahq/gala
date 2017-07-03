@@ -138,7 +138,9 @@ const NextLink = ({ next }: { next: NextProps }) =>
       {next.title}
     </Link>
     : <footer>
-      <h2><FormattedMessage id="case.end" /></h2>
+      <h2>
+        <FormattedMessage id="case.end" />
+      </h2>
     </footer>
 
 const ConditionalNextLink = connect(

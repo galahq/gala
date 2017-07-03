@@ -1,4 +1,8 @@
-// @flow
+/**
+ * @providesModule commentThreadsById
+ * @flow
+ */
+
 import type { CommentThreadsState } from 'redux/state'
 import type {
   AddCommentThreadAction,
@@ -9,7 +13,7 @@ export default function commentThreadsById (
   state: CommentThreadsState = ({
     ...window.caseData.commentThreads,
   }: CommentThreadsState),
-  action: AddCommentThreadAction | RemoveCommentThreadAction,
+  action: AddCommentThreadAction | RemoveCommentThreadAction
 ): CommentThreadsState {
   switch (action.type) {
     case 'ADD_COMMENT_THREAD':

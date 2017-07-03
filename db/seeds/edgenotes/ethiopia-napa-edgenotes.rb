@@ -1,4 +1,6 @@
-ccc = Case.find_by_slug "ethiopia-napa"
+# frozen_string_literal: true
+
+ccc = Case.find_by_slug 'ethiopia-napa'
 I18n.locale = :en
 edgenote614 = ccc.edgenotes.build
 edgenote614.caption = 'Decision-Maker: Mr. Kidane Asefa'

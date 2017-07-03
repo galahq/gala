@@ -71,12 +71,12 @@ const ContentItemLink = ({
       onClick={handleClick}
     >
       {published ||
-        <div className="catalog-case-unpublished-banner">
-          Forthcoming
-        </div>}
+        <div className="catalog-case-unpublished-banner">Forthcoming</div>}
       <div className="catalog-case-credits">
         <h2>
-          <span className="c-kicker">{kicker}</span>
+          <span className="c-kicker">
+            {kicker}
+          </span>
           {title}
         </h2>
         <p style={{ display: 'none' }}>

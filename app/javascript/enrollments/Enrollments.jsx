@@ -40,7 +40,7 @@ class Enrollments extends React.Component {
     this.setState(
       update(this.state, {
         cases: { $splice: [[i, 1, newCase]] },
-      }),
+      })
     )
   }
 

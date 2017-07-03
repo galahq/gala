@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class PodcastsController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_podcast, only: [:show, :update, :destroy]
+  before_action :set_podcast, only: %i[show update destroy]
   before_action :set_case, only: [:create]
 
   authorize_actions_for Podcast
@@ -12,12 +14,11 @@ class PodcastsController < ApplicationController
   end
 
   # GET /podcasts/1
-  def show
-  end
+  def show; end
 
   # POST /podcasts
   def create
-    @podcast = Podcast.create_as_element @case, title: "New podcast"
+    @podcast = Podcast.create_as_element @case, title: 'New podcast'
 
     if @podcast.persisted?
       render @podcast
@@ -41,19 +42,20 @@ class PodcastsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_podcast
-      @podcast = Podcast.find(params[:id])
-    end
 
-    def set_case
-      @case = Case.find_by_slug(params[:case_slug])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_podcast
+    @podcast = Podcast.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def podcast_params
-      params.require(:podcast).permit(:title, :audio_url, :description,
-      :case_id, :artwork_url, :photo_credit,
-      credits_list: [hosts: [], guests: [:name, :title]])
-    end
+  def set_case
+    @case = Case.find_by_slug(params[:case_slug])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def podcast_params
+    params.require(:podcast).permit(:title, :audio_url, :description,
+                                    :case_id, :artwork_url, :photo_credit,
+                                    credits_list: [hosts: [], guests: %i[name title]])
+  end
 end

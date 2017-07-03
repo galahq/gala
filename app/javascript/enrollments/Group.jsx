@@ -8,9 +8,11 @@ export class GroupListItem extends React.Component {
 
     return connectDragSource(
       <li className="enrollments-group">
-        <h4>{name}</h4>
+        <h4>
+          {name}
+        </h4>
         <p>{`${readers.length} Readers`}</p>
-      </li>,
+      </li>
     )
   }
 }

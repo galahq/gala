@@ -1,22 +1,24 @@
+# frozen_string_literal: true
+
 class ReadersController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_reader, only: [:show, :edit, :update, :destroy]
-  layout "window"
+  before_action :set_reader, only: %i[show edit update destroy]
+  layout 'window'
 
-  authorize_actions_for Case, except: [:show, :edit, :update]
+  authorize_actions_for Case, except: %i[show edit update]
 
   # GET /readers
   # GET /readers.json
   def index
-    @readers = Reader.all.order(:name).preload(:roles).includes(:cases, enrollments: [:case])
+    @readers = Reader.all.order(:name).preload(:roles)
+                     .includes(:cases, enrollments: [:case])
 
     render layout: 'admin'
   end
 
   # GET /readers/1
   # GET /readers/1.json
-  def show
-  end
+  def show; end
 
   # GET /readers/new
   def new
@@ -50,7 +52,7 @@ class ReadersController < ApplicationController
     authorize_action_for @reader
     respond_to do |format|
       if @reader.update(reader_params)
-        bypass_sign_in @reader if reader_params.has_key? :password
+        bypass_sign_in @reader if reader_params.key? :password
         format.html { redirect_to edit_reader_path(@reader), notice: 'Reader was successfully updated.' }
         format.json { render :show, status: :ok, location: @reader }
       else
@@ -71,20 +73,21 @@ class ReadersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_reader
-      @reader = Reader.find(params[:id])
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_reader
+    @reader = Reader.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def reader_params
+    unless defined? @reader_can_set_password
+      @reader_can_set_password = @reader && !@reader.created_password
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def reader_params
-      unless defined? @reader_can_set_password
-        @reader_can_set_password = @reader && !@reader.created_password
-      end
+    permitted = %i[name initials email locale]
+    permitted << :password if @reader_can_set_password
 
-      permitted = %i(name initials email locale)
-      permitted << :password if @reader_can_set_password
-
-      params.require(:reader).permit(*permitted)
-    end
+    params.require(:reader).permit(*permitted)
+  end
 end

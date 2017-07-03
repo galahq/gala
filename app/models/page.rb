@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Page < ApplicationRecord
   include Authority::Abilities
 
@@ -5,6 +7,7 @@ class Page < ApplicationRecord
 
   include Element
 
-  has_many :cards, -> { order position: :asc }, as: :element, dependent: :destroy
+  has_many :cards, -> { order position: :asc }, as: :element,
+                                                dependent: :destroy
   translates :title
 end

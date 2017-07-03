@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -36,7 +38,7 @@ Rails.application.configure do
 
   # Action Cable endpoint configuration
   config.action_cable.url = 'wss://www.learnmsc.org/cable'
-  config.action_cable.allowed_request_origins = [ 'http://www.learnmsc.org', 'https://www.learnmsc.org' ]
+  config.action_cable.allowed_request_origins = ['http://www.learnmsc.org', 'https://www.learnmsc.org']
 
   # Don't mount Action Cable in the main server process.
   # config.action_cable.mount_path = nil
@@ -49,18 +51,17 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   config.cache_store = :dalli_store,
-    (ENV["MEMCACHIER_SERVERS"] || "").split(","),
-    {:username => ENV["MEMCACHIER_USERNAME"],
-     :password => ENV["MEMCACHIER_PASSWORD"],
-     :failover => true,
-     :socket_timeout => 1.5,
-     :socket_failure_delay => 0.2,
-     :down_retry_delay => 60
-  }
+                       (ENV['MEMCACHIER_SERVERS'] || '').split(','),
+                       { username: ENV['MEMCACHIER_USERNAME'],
+                         password: ENV['MEMCACHIER_PASSWORD'],
+                         failover: true,
+                         socket_timeout: 1.5,
+                         socket_failure_delay: 0.2,
+                         down_retry_delay: 60 }
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
@@ -73,12 +74,12 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'www.learnmsc.org' }
   config.action_mailer.smtp_settings = {
-    :address => 'email-smtp.us-west-2.amazonaws.com',
-    :port => 587,
-    :user_name => ENV['SES_SMTP_USERNAME'],
-    :password => ENV['SES_SMTP_PASSWORD'],
-    :authentication => :login,
-    :enable_starttls_auto => true
+    address: 'email-smtp.us-west-2.amazonaws.com',
+    port: 587,
+    user_name: ENV['SES_SMTP_USERNAME'],
+    password: ENV['SES_SMTP_PASSWORD'],
+    authentication: :login,
+    enable_starttls_auto: true
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
@@ -95,7 +96,7 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)

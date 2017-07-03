@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAuthorRelationsToQuizzes < ActiveRecord::Migration[5.0]
   def change
     add_column :quizzes, :author_id, :integer

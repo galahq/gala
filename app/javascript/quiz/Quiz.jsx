@@ -20,8 +20,8 @@ function mapStateToProps (state: State) {
   return {
     isInstructor:
       !!reader &&
-        !!reader.enrollment &&
-        reader.enrollment.status === 'instructor',
+      !!reader.enrollment &&
+      reader.enrollment.status === 'instructor',
     id,
     questions,
   }

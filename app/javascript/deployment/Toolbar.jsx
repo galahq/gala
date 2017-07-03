@@ -21,22 +21,22 @@ type Props = {
   onSubmit: () => void,
 }
 
-const Toolbar = (
-  {
-    caseData,
-    withPretest,
-    withPosttest,
-    onTogglePretest,
-    onDeselect,
-    onSubmit,
-  }: Props
-) => {
+const Toolbar = ({
+  caseData,
+  withPretest,
+  withPosttest,
+  onTogglePretest,
+  onDeselect,
+  onSubmit,
+}: Props) => {
   const { coverUrl, kicker } = caseData
   return (
     <BottomFixedToolbar className="pt-navbar">
       <div className="pt-navbar-group pt-align-left">
         <CaseIcon src={coverUrl} />
-        <div className="pt-navbar-heading">{kicker}</div>
+        <div className="pt-navbar-heading">
+          {kicker}
+        </div>
       </div>
       <div className="pt-navbar-group pt-align-right">
         <Switch
@@ -74,15 +74,13 @@ type SwitchParams = {
   disabled?: boolean,
   onClick: () => void,
 }
-const Switch = (
-  {
-    checked,
-    yes,
-    no,
-    onClick,
-    disabled = false,
-  }: SwitchParams
-) => (
+const Switch = ({
+  checked,
+  yes,
+  no,
+  onClick,
+  disabled = false,
+}: SwitchParams) =>
   <Button
     className="pt-minimal"
     iconName={checked ? 'tick' : 'cross'}
@@ -91,7 +89,6 @@ const Switch = (
   >
     {checked ? yes : no}
   </Button>
-)
 
 const BottomFixedToolbar = styled.nav`
   position: fixed;
