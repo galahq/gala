@@ -16,7 +16,7 @@ class LmsLinkerService
   end
 
   def status
-    if @launch_params[:ext_roles] =~ 'urn:lti:role:ims/lis/Instructor'
+    if @launch_params[:ext_roles] =~ %r{urn:lti:role:ims/lis/Instructor}
       :instructor
     else
       :student
