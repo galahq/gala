@@ -1,4 +1,5 @@
-<%= sanitize yield, tags: [] %>
+<% if content_for? :headline %># <%= content_for :headline %>
+<% end %><%= sanitize yield, tags: [] %>
 
 --
 <% if content_for? :email_footer %>
