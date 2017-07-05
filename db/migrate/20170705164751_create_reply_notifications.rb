@@ -6,6 +6,7 @@ class CreateReplyNotifications < ActiveRecord::Migration[5.0]
       t.references :reader
 
       t.integer :notifier_id
+      t.integer :comment_id
       t.integer :comment_thread_id
       t.integer :case_id
       t.integer :page_id

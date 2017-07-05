@@ -2,7 +2,9 @@
 
 class ApplicationMailer < ActionMailer::Base
   helper :application
-  default from: 'Michigan Sustainability Cases <hello@learnmsc.org>'
+
+  FROM_ADDRESS = 'hello@learnmsc.org'
+  default from: "Michigan Sustainability Cases <#{FROM_ADDRESS}>"
 
   layout 'mailer'
 end

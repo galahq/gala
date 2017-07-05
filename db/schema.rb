@@ -293,6 +293,7 @@ ActiveRecord::Schema.define(version: 20170705165135) do
   create_table "reply_notifications", force: :cascade do |t|
     t.integer "reader_id"
     t.integer "notifier_id"
+    t.integer "comment_id"
     t.integer "comment_thread_id"
     t.integer "case_id"
     t.integer "page_id"
