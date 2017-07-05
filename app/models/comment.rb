@@ -20,18 +20,16 @@ class Comment < ApplicationRecord
 
   private
 
-  def notification_data
-    { notifier_id: reader.id,
-      comment_thread_id: comment_thread.id,
-      card_id: comment_thread.card.id,
-      case_id: comment_thread.card.case.id,
-      page_id: comment_thread.card.element.id }
-  end
-
   def send_notifications_of_reply
-    (comment_thread.collocutors - [reader]).each do |r|
-      Notification.create reader: r, category: :reply_to_thread,
-                          data: notification_data
+    card = comment_thread.card
+    comment_thread.collocutors.each do |other_reader|
+      next if other_reader == reader
+      ReplyNotification.create reader: other_reader,
+                               notifier: reader,
+                               comment_thread: comment_thread,
+                               card: card,
+                               case: card.case,
+                               page: card.element
     end
   end
 end

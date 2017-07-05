@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705153826) do
+ActiveRecord::Schema.define(version: 20170705165135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -209,17 +209,6 @@ ActiveRecord::Schema.define(version: 20170705153826) do
     t.index ["context_id"], name: "index_groups_on_context_id", using: :btree
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.boolean  "email_sent"
-    t.boolean  "read"
-    t.integer  "reader_id"
-    t.integer  "category"
-    t.jsonb    "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["reader_id"], name: "index_notifications_on_reader_id", using: :btree
-  end
-
   create_table "pages", force: :cascade do |t|
     t.integer  "position"
     t.hstore   "title_i18n"
@@ -301,6 +290,16 @@ ActiveRecord::Schema.define(version: 20170705153826) do
     t.index ["reader_id", "role_id"], name: "index_readers_roles_on_reader_id_and_role_id", using: :btree
   end
 
+  create_table "reply_notifications", force: :cascade do |t|
+    t.integer "reader_id"
+    t.integer "notifier_id"
+    t.integer "comment_thread_id"
+    t.integer "case_id"
+    t.integer "page_id"
+    t.integer "card_id"
+    t.index ["reader_id"], name: "index_reply_notifications_on_reader_id", using: :btree
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.string   "resource_type"
@@ -363,7 +362,6 @@ ActiveRecord::Schema.define(version: 20170705153826) do
   add_foreign_key "enrollments", "readers"
   add_foreign_key "group_memberships", "groups"
   add_foreign_key "group_memberships", "readers"
-  add_foreign_key "notifications", "readers"
   add_foreign_key "pages", "cases"
   add_foreign_key "podcasts", "cases"
   add_foreign_key "questions", "quizzes"
