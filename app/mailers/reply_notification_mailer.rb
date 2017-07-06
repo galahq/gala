@@ -6,8 +6,10 @@ class ReplyNotificationMailer < ApplicationMailer
 
   def notify(notification)
     @notification = notification
+    reader = @notification.reader
+    return unless reader.send_reply_notifications
 
-    mail(to: @notification.reader.name_and_email,
+    mail(to: reader.name_and_email,
          from: from_header,
          subject: subject_header) do |format|
       format.text
