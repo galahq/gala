@@ -64,6 +64,7 @@ feature 'Leaving a comment' do
 
       fill_in placeholder: 'Write a reply...', with: 'Test reply'
       click_button 'Submit'
+      sleep 1
       expect(page).to have_content 'Test reply'
       expect(find('textarea').value).to be_blank
     end
@@ -79,6 +80,28 @@ feature 'Leaving a comment' do
         reader: other_reader
       )
       expect(page).to have_content 'replied to your comment'
+    end
+
+    it 'sends an email to the other comment’s author' do
+      comment_thread.comments.create content: 'Test reply',
+                                     reader: enrollment.reader
+      email = ActionMailer::Base.deliveries.last
+
+      expect(email.to.first).to eq other_reader.email
+      expect(email.text_part.body.to_s).to match 'Test reply'
+      expect(email.html_part.body.to_s).to match 'Test reply'
+    end
+
+    it 'doesn’t send an email notification if the other author has ' \
+       'notifications turned off' do
+      ActionMailer::Base.deliveries.clear
+      other_reader.update send_reply_notifications: false
+
+      comment_thread.comments.create content: 'Test reply',
+                                     reader: enrollment.reader
+      email = ActionMailer::Base.deliveries.last
+
+      expect(email).to be_nil
     end
   end
 end
