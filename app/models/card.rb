@@ -10,7 +10,7 @@ class Card < ApplicationRecord
   acts_as_list scope: %i[element_id element_type]
 
   include Mobility
-  translates :content, :raw_content
+  translates :content, :raw_content, fallbacks: true
 
   before_save :set_case_from_element
 

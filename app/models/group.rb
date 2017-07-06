@@ -8,7 +8,7 @@ class Group < ApplicationRecord
   has_many :deployments, dependent: :destroy
 
   include Mobility
-  translates :name
+  translates :name, fallbacks: true
 
   validates :context_id, uniqueness: true, if: -> () { context_id.present? }
 

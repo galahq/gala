@@ -5,7 +5,7 @@ class Question < ApplicationRecord
   belongs_to :quiz
 
   include Mobility
-  translates :content
+  translates :content, fallbacks: true
 
   validates :content_i18n, presence: true
   validates :correct_answer, inclusion: { in: ->(question) { question.options } },

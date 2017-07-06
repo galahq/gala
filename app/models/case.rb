@@ -5,7 +5,7 @@ class Case < ApplicationRecord
   include Comparable
 
   include Mobility
-  translates :kicker, :title, :dek, :summary, :narrative, :translators
+  translates :kicker, :title, :dek, :summary, :narrative, :translators, fallbacks: true
   enum catalog_position: %i[in_index featured]
 
   resourcify
@@ -53,11 +53,11 @@ class Case < ApplicationRecord
   end
 
   def translator_names
-    JSON.parse translators
+    translators || []
   end
 
-  def translator_names=(t)
-    self.translators = t
+  def translator_names=(new_names)
+    self.translators = new_names
   end
 
   def readers_by_enrollment_status

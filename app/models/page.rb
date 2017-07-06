@@ -11,5 +11,5 @@ class Page < ApplicationRecord
                                                 dependent: :destroy
 
   include Mobility
-  translates :title
+  translates :title, fallbacks: true
 end

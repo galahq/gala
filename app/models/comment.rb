@@ -5,7 +5,7 @@ class Comment < ApplicationRecord
   belongs_to :comment_thread
 
   include Mobility
-  translates :content
+  translates :content, fallbacks: true
 
   default_scope { order :created_at }
 
