@@ -6,7 +6,6 @@ class CommentThread < ApplicationRecord
   belongs_to :reader
   belongs_to :group
   belongs_to :card
-  belongs_to :case
   has_many :comments, dependent: :restrict_with_error
 
   def collocutors

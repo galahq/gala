@@ -16,7 +16,7 @@ select, input, textarea, button
   font-family: $sansFont
 
 .edit_reader, .new_reader
-  label
+  label:not(.notification)
     font: 600 80% $sansFont
     text-transform: uppercase
     letter-spacing: 0.05em
@@ -34,7 +34,7 @@ select, input, textarea, button
   .pt-checkbox
     margin: 5px 0 0 0
 
-  .pt-control
+  .pt-control:not(.notification)
     text-transform: uppercase
 
   .actions

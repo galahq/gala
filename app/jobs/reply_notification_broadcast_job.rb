@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NotificationBroadcastJob < ActiveJob::Base
+class ReplyNotificationBroadcastJob < ActiveJob::Base
   queue_as :default
 
   def perform(notification)
@@ -12,7 +12,6 @@ class NotificationBroadcastJob < ActiveJob::Base
   private
 
   def render_notification(notification)
-    ApplicationController.renderer.render partial: 'notifications/notification',
-                                          locals: { notification: notification }
+    ApplicationController.renderer.render notification
   end
 end

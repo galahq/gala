@@ -95,6 +95,7 @@ en:
         reset_password_token: Reset password token  #g
         uid: UID  #g
         initials: Initials
+        send_reply_notifications: Notify me when someone replies to a comment I wrote
 
       question:
         content: Content
