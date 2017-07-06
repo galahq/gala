@@ -6,7 +6,7 @@ class Comment < ApplicationRecord
 
   translates :content
 
-  acts_as_list scope: :comment_thread
+  default_scope { order :created_at }
 
   validates :content, presence: :true
 
