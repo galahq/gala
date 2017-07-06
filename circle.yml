@@ -5,9 +5,6 @@ dependencies:
   override:
     - yarn
     - bundle install
-compile:
-  override:
-    - RAILS_ENV=test rails webpacker:compile
 test:
   override:
     - bundle exec rspec -r rspec_junit_formatter --format progress --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml:
