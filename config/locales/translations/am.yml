@@ -20,13 +20,13 @@ am:
     attributes:
       activity:
         case: :activerecord.models.case  #g
-        description_i18n: መግለጫ i18n  #g
-        pdf_url_i18n: Pdf ዩአርኤል i18n  #g
+        description: መግለጫ   #g
+        pdf_url: Pdf ዩአርኤል   #g
         position: የስራ መደቡ  #g
-        title_i18n: ርዕስ i18n  #g
+        title: ርዕስ   #g
 
       card:
-        content_i18n: የይዘት i18n  #g
+        content: የይዘት   #g
         page: :activerecord.models.page  #g
         position: የስራ መደቡ  #g
         solid: ጠንካራ  #g
@@ -41,7 +41,7 @@ am:
         cover_url: የሽፋን ዩአርኤል  #g
         edgenotes: Edgenotes  #g
         enrollments: የመመዝገቢያ  #g
-        narrative_i18n: የትረካ i18n  #g
+        narrative: የትረካ   #g
         pages: ገጾች  #g
         podcasts: ፖድካስቶች  #g
         publication_date: የታተመበት ቀን  #g
@@ -49,14 +49,14 @@ am:
         readers: አንባቢዎች  #g
         short_title: አጭር ርዕስ  #g
         slug: የቅጠል ትል  #g
-        summary_i18n: ማጠቃለያ i18n  #g
+        summary: ማጠቃለያ   #g
         tags: መለያዎች  #g
-        title_i18n: ርዕስ i18n  #g
+        title: ርዕስ   #g
         translators: ተርጓሚዎች  #g
 
       comment:
         comment_thread: :activerecord.models.comment_thread  #g
-        content_i18n: የይዘት i18n  #g
+        content: የይዘት   #g
         reader: :activerecord.models.reader  #g
 
       comment_thread:
@@ -65,10 +65,10 @@ am:
         group: :activerecord.models.group  #g
 
       edgenote:
-        caption_i18n: የመግለጫ i18n  #g
+        caption: የመግለጫ   #g
         card: :activerecord.models.card  #g
         case: :activerecord.models.case  #g
-        content_i18n: የይዘት i18n  #g
+        content: የይዘት   #g
         format: ቅርጸት  #g
         slug: የቅጠል ትል  #g
         thumbnail_url: ድንክዬ ዩ አር ኤል  #g
@@ -80,7 +80,7 @@ am:
       group:
         comment_threads: የአስተያየት ተከታታዮች  #g
         group_memberships: ቡድን አባልነት  #g
-        name_i18n: ስም i18n  #g
+        name: ስም   #g
         readers: አንባቢዎች  #g
 
       group_membership:
@@ -99,16 +99,16 @@ am:
         cards: ካርዶች  #g
         case: :activerecord.models.case  #g
         position: የስራ መደቡ  #g
-        title_i18n: ርዕስ i18n  #g
+        title: ርዕስ   #g
 
       podcast:
         artwork_url: የስነ ጥበብ ዩአርኤል  #g
-        audio_url_i18n: የተሰሚ ዩአርኤል i18n  #g
+        audio_url: የተሰሚ ዩአርኤል   #g
         case: :activerecord.models.case  #g
-        credits_i18n: ምስጋናዎች i18n  #g
-        description_i18n: መግለጫ i18n  #g
+        credits: ምስጋናዎች   #g
+        description: መግለጫ   #g
         position: የስራ መደቡ  #g
-        title_i18n: ርዕስ i18n  #g
+        title: ርዕስ   #g
 
       reader:
         authentication_token: የማረጋገጫ ማስመሰያ  #g
