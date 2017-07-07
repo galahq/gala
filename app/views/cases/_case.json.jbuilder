@@ -4,7 +4,7 @@ json.key_format! camelize: :lower
 
 json.extract! c, :slug, :published, :kicker, :title, :dek, :case_authors,
               :summary, :tags, :photo_credit, :other_available_locales,
-              :commentable
+              :commentable, :learning_objectives, :audience
 
 json.base_cover_url c.cover_url
 json.small_cover_url ix_cover_image(c, :small)
