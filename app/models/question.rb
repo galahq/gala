@@ -4,9 +4,10 @@ class Question < ApplicationRecord
   has_many :answers
   belongs_to :quiz
 
-  translates :content
+  include Mobility
+  translates :content, fallbacks: true
 
-  validates :content_i18n, presence: true
+  validates :content, presence: true
   validates :correct_answer, inclusion: { in: ->(question) { question.options } },
                              if: ->(question) { !question.options.empty? }
 

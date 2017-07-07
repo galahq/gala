@@ -8,7 +8,8 @@ class Activity < ApplicationRecord
 
   include Element
 
-  translates :title, :description, :pdf_url
+  include Mobility
+  translates :title, :description, :pdf_url, fallbacks: true
 
   after_create_commit -> { create_card }
 

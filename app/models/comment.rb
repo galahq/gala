@@ -4,7 +4,8 @@ class Comment < ApplicationRecord
   belongs_to :reader
   belongs_to :comment_thread
 
-  translates :content
+  include Mobility
+  translates :content, fallbacks: true
 
   default_scope { order :created_at }
 

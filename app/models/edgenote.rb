@@ -6,9 +6,10 @@ class Edgenote < ApplicationRecord
   belongs_to :case
   belongs_to :card
 
+  include Mobility
   translates :caption, :content, :instructions, :image_url, :website_url,
              :embed_code, :photo_credit, :pdf_url, :pull_quote, :attribution,
-             :call_to_action, :audio_url, :youtube_slug
+             :call_to_action, :audio_url, :youtube_slug, fallbacks: true
 
   validates :format, inclusion: { in: %w[aside audio graphic link photo quote
                                          report video] }

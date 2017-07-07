@@ -9,7 +9,8 @@ class Card < ApplicationRecord
   belongs_to :element, polymorphic: true
   acts_as_list scope: %i[element_id element_type]
 
-  translates :content, :raw_content
+  include Mobility
+  translates :content, :raw_content, fallbacks: true
 
   before_save :set_case_from_element
 

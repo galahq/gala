@@ -15,9 +15,9 @@ fr:
     attributes:
       activity:
         case: :activerecord.models.case  #g
-        description_i18n: Description de i18n  #g
-        pdf_url_i18n: Pdf url i18n  #g
-        title_i18n: Titre i18n  #g
+        description: Description de   #g
+        pdf_url: Pdf url   #g
+        title: Titre   #g
 
       case:
         activities: Activités  #g
@@ -27,18 +27,18 @@ fr:
         cover_url: Cover url  #g
         edgenotes: Edgenotes  #g
         enrollments: inscriptions  #g
-        narrative_i18n: i18n narrative  #g
+        narrative:  narrative  #g
         podcasts: Podcasts  #g
         published: Publié  #g
         readers: Les lecteurs  #g
         slug: Limace  #g
-        summary_i18n: Résumé i18n  #g
+        summary: Résumé   #g
         tags: Mots clés  #g
-        title_i18n: Titre i18n  #g
+        title: Titre   #g
 
       comment:
         comment_thread: :activerecord.models.comment_thread  #g
-        content_i18n: i18n Content  #g
+        content:  Content  #g
         reader: :activerecord.models.reader  #g
 
       comment_thread:
@@ -47,9 +47,9 @@ fr:
         group: :activerecord.models.group  #g
 
       edgenote:
-        caption_i18n: Légende i18n  #g
+        caption: Légende   #g
         case: :activerecord.models.case  #g
-        content_i18n: i18n Content  #g
+        content:  Content  #g
         format: Format  #g
         slug: Limace  #g
         thumbnail_url: url Thumbnail  #g
@@ -61,7 +61,7 @@ fr:
       group:
         comment_threads: Commentaire fils  #g
         group_memberships: Les appartenances aux groupes  #g
-        name_i18n: Nom i18n  #g
+        name: Nom   #g
         readers: Les lecteurs  #g
 
       group_membership:
@@ -69,10 +69,10 @@ fr:
         reader: :activerecord.models.reader  #g
 
       podcast:
-        audio_url_i18n: url Audio i18n  #g
+        audio_url: url Audio   #g
         case: :activerecord.models.case  #g
-        description_i18n: Description de i18n  #g
-        title_i18n: Titre i18n  #g
+        description: Description de   #g
+        title: Titre   #g
 
       reader:
         authentication_token: Le jeton d'authentification  #g

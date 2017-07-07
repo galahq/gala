@@ -4,7 +4,8 @@ class Case < ApplicationRecord
   include Authority::Abilities
   include Comparable
 
-  translates :kicker, :title, :dek, :summary, :narrative, :translators
+  include Mobility
+  translates :kicker, :title, :dek, :summary, :narrative, :translators, fallbacks: true
   enum catalog_position: %i[in_index featured]
 
   resourcify
@@ -48,15 +49,11 @@ class Case < ApplicationRecord
   end
 
   def other_available_locales
-    locales_for_reading_column(:title) - [I18n.locale.to_s]
+    read_attribute(:title).keys - [I18n.locale.to_s]
   end
 
-  def translator_names
-    JSON.parse translators
-  end
-
-  def translator_names=(t)
-    self.translators = t.to_json
+  def translators
+    super || []
   end
 
   def readers_by_enrollment_status

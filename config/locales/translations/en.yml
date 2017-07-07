@@ -15,9 +15,9 @@ en:
     attributes:
       activity:
         case: :activerecord.models.case  #g
-        description_i18n: Description  #g
-        pdf_url_i18n: PDF URL  #g
-        title_i18n: Title  #g
+        description: Description  #g
+        pdf_url: PDF URL  #g
+        title: Title  #g
 
       case:
         activities: Activities  #g
@@ -27,18 +27,18 @@ en:
         cover_url: Cover URL  #g
         edgenotes: Edgenotes  #g
         enrollments: Enrollments  #g
-        narrative_i18n: Narrative #g
+        narrative: Narrative #g
         podcasts: Podcasts  #g
         published: Published  #g
         readers: Readers  #g
         slug: Slug  #g
-        summary_i18n: Summary #g
+        summary: Summary #g
         tags: Tags  #g
-        title_i18n: Title #g
+        title: Title #g
 
       comment:
         comment_thread: :activerecord.models.comment_thread  #g
-        content_i18n: Content #g
+        content: Content #g
         reader: :activerecord.models.reader  #g
 
       comment_thread:
@@ -47,9 +47,9 @@ en:
         group: :activerecord.models.group  #g
 
       edgenote:
-        caption_i18n: Caption #g
+        caption: Caption #g
         case: :activerecord.models.case  #g
-        content_i18n: Content #g
+        content: Content #g
         format: Format  #g
         slug: Slug  #g
         thumbnail_url: Thumbnail URL  #g
@@ -61,7 +61,7 @@ en:
       group:
         comment_threads: Comment threads  #g
         group_memberships: Group memberships  #g
-        name_i18n: Name #g
+        name: Name #g
         readers: Readers  #g
 
       group_membership:
@@ -69,10 +69,10 @@ en:
         reader: :activerecord.models.reader  #g
 
       podcast:
-        audio_url_i18n: Audio URL #g
+        audio_url: Audio URL #g
         case: :activerecord.models.case  #g
-        description_i18n: Description #g
-        title_i18n: Title #g
+        description: Description #g
+        title: Title #g
 
       reader:
         authentication_token: Authentication token  #g
