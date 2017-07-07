@@ -24,4 +24,8 @@ class Edgenote < ApplicationRecord
   def event_properties
     { edgenote_slug: slug }
   end
+
+  def to_param
+    slug
+  end
 end
