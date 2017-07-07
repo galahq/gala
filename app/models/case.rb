@@ -52,12 +52,8 @@ class Case < ApplicationRecord
     read_attribute(:title).keys - [I18n.locale.to_s]
   end
 
-  def translator_names
-    translators || []
-  end
-
-  def translator_names=(new_names)
-    self.translators = new_names
+  def translators
+    super || []
   end
 
   def readers_by_enrollment_status

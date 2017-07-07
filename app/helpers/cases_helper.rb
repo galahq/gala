@@ -2,9 +2,9 @@
 
 module CasesHelper
   def translators_string(c)
-    return '' if c.translator_names.empty?
-    number = c.translator_names.count == 1 ? 'one' : 'many'
-    "#{t ".translator.#{number}"}: #{c.translator_names.to_sentence}"
+    return '' if c.translators.empty?
+    number = c.translators.count == 1 ? 'one' : 'many'
+    "#{t ".translator.#{number}"}: #{c.translators.to_sentence}"
   end
 
   def ix_cover_image(c, size)
