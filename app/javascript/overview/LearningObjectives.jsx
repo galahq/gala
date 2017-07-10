@@ -44,7 +44,7 @@ export default LearningObjectives
 
 const Label = styled.h3`
   font-family: 'tenso';
-  font-size: 1em;
+  font-size: 0.95em;
   font-weight: 500;
 `
 

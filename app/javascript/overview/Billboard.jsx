@@ -10,6 +10,7 @@ import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
 import EditableAttribute from 'utility/EditableAttribute'
+import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
 import LearningObjectives from './LearningObjectives'
 
@@ -81,15 +82,17 @@ const Billboard = ({
         />
       </p>
 
-      <p>
-        <EditableText
-          multiline
-          value={summary}
-          disabled={!editing}
-          placeholder="Summarize the case in a short paragraph."
-          onChange={value => updateCase(slug, { summary: value })}
-        />
-      </p>
+      <Less>
+        <p style={{ margin: 0 }}>
+          <EditableText
+            multiline
+            value={summary}
+            disabled={!editing}
+            placeholder="Summarize the case in a short paragraph."
+            onChange={value => updateCase(slug, { summary: value })}
+          />
+        </p>
+      </Less>
 
       {(learningObjectives || editing) &&
         <LearningObjectives
