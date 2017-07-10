@@ -12,7 +12,7 @@ import { Button, Dialog, Intent } from '@blueprintjs/core'
 
 import { displayToast } from 'redux/actions'
 
-import SortableList from 'utility/SortableList'
+import SortableList, { createSortableInput } from 'utility/SortableList'
 
 import type { Toast } from '@blueprintjs/core'
 import type { PodcastCreditList } from 'redux/state'
@@ -74,6 +74,7 @@ class CreditsListForm extends React.Component {
         <div className="pt-dialog-body">
           <SectionTitle>Guests</SectionTitle>
           <SortableList
+            dark
             items={guests}
             newItem={{ name: '', title: '' }}
             render={GuestInput}
@@ -82,6 +83,7 @@ class CreditsListForm extends React.Component {
 
           <SectionTitle>Hosts</SectionTitle>
           <SortableList
+            dark
             items={hosts}
             newItem=""
             render={HostInput}
@@ -115,15 +117,7 @@ function formStateClean ({ guests, hosts }: CreditsListFormState): boolean {
   return areObjectsCompact(guests) && isCompact(hosts)
 }
 
-type HostInputProps = { item: string, onChangeItem: string => void }
-const HostInput = ({ item, onChangeItem }: HostInputProps) =>
-  <input
-    className="pt-input"
-    type="text"
-    placeholder="Host name"
-    value={item}
-    onChange={(e: SyntheticInputEvent) => onChangeItem(e.target.value)}
-  />
+const HostInput = createSortableInput({ placeholder: 'Host name' })
 
 type GuestInputProps = { item: Guest, onChangeItem: Guest => void }
 const GuestInput = ({ item, onChangeItem }: GuestInputProps) =>
