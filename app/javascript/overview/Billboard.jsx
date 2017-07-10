@@ -91,8 +91,9 @@ const Billboard = ({
         />
       </p>
 
-      {learningObjectives &&
+      {(learningObjectives || editing) &&
         <LearningObjectives
+          disabled={!editing}
           learningObjectives={learningObjectives}
           onChange={value => updateCase(slug, { learningObjectives: value })}
         />}
