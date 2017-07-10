@@ -29,6 +29,7 @@ export type CardsState = {
 }
 
 export type CaseDataState = {
+  audience: string,
   baseCoverUrl: string,
   caseAuthors: string,
   caseElements: CaseElement[],
@@ -36,6 +37,7 @@ export type CaseDataState = {
   coverUrl: string,
   dek: string,
   kicker: string,
+  learningObjectives: string[],
   otherAvailableLocales: string[],
   pageIds: number[],
   photoCredit: string,

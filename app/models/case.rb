@@ -5,7 +5,9 @@ class Case < ApplicationRecord
   include Comparable
 
   include Mobility
-  translates :kicker, :title, :dek, :summary, :narrative, :translators, fallbacks: true
+  translates :kicker, :title, :dek, :summary, :narrative, :translators,
+             :learning_objectives, :audience, :classroom_timeline,
+             fallbacks: true
   enum catalog_position: %i[in_index featured]
 
   resourcify

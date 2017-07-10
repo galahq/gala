@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170706155100) do
+ActiveRecord::Schema.define(version: 20170707160226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,24 +91,27 @@ ActiveRecord::Schema.define(version: 20170706155100) do
   end
 
   create_table "cases", force: :cascade do |t|
-    t.boolean  "published",        default: false
-    t.text     "slug",                             null: false
-    t.string   "authors",          default: [],                 array: true
-    t.text     "tags",             default: [],                 array: true
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.boolean  "published",           default: false
+    t.text     "slug",                                null: false
+    t.string   "authors",             default: [],                 array: true
+    t.text     "tags",                default: [],                 array: true
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.string   "cover_url"
     t.date     "publication_date"
-    t.integer  "catalog_position", default: 0,     null: false
+    t.integer  "catalog_position",    default: 0,     null: false
     t.text     "short_title"
     t.text     "photo_credit"
     t.boolean  "commentable"
-    t.jsonb    "title",            default: ""
-    t.jsonb    "summary",          default: ""
-    t.jsonb    "narrative",        default: ""
-    t.jsonb    "translators",      default: ""
-    t.jsonb    "kicker",           default: ""
-    t.jsonb    "dek",              default: ""
+    t.jsonb    "title",               default: ""
+    t.jsonb    "summary",             default: ""
+    t.jsonb    "narrative",           default: ""
+    t.jsonb    "translators",         default: ""
+    t.jsonb    "kicker",              default: ""
+    t.jsonb    "dek",                 default: ""
+    t.jsonb    "learning_objectives"
+    t.jsonb    "audience"
+    t.jsonb    "classroom_timeline"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end

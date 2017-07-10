@@ -111,6 +111,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
           photoCredit,
           summary,
           baseCoverUrl,
+          learningObjectives,
         } = state.caseData
         data = {
           case: {
@@ -121,6 +122,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
             slug,
             photoCredit,
             summary,
+            learningObjectives,
             coverUrl: baseCoverUrl,
           },
         }

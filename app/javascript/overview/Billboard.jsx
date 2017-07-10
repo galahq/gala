@@ -10,7 +10,9 @@ import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
 import EditableAttribute from 'utility/EditableAttribute'
+import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
+import LearningObjectives from './LearningObjectives'
 
 import { updateCase } from 'redux/actions'
 
@@ -18,7 +20,14 @@ import type { State } from 'redux/state'
 
 function mapStateToProps (state: State) {
   const { edit, caseData } = state
-  const { slug, dek, summary, baseCoverUrl, otherAvailableLocales } = caseData
+  const {
+    slug,
+    dek,
+    summary,
+    baseCoverUrl,
+    otherAvailableLocales,
+    learningObjectives,
+  } = caseData
   return {
     editing: edit.inProgress,
     slug,
@@ -26,6 +35,7 @@ function mapStateToProps (state: State) {
     summary,
     baseCoverUrl,
     otherAvailableLocales,
+    learningObjectives,
   }
 }
 
@@ -37,6 +47,7 @@ type Props = {
   baseCoverUrl: string,
   updateCase: typeof updateCase,
   otherAvailableLocales: string[],
+  learningObjectives: string[],
 }
 
 const Billboard = ({
@@ -47,6 +58,7 @@ const Billboard = ({
   baseCoverUrl,
   updateCase,
   otherAvailableLocales,
+  learningObjectives,
 }: Props) =>
   <section className="Billboard">
     <BillboardTitle />
@@ -69,15 +81,26 @@ const Billboard = ({
           }}
         />
       </p>
-      <p>
-        <EditableText
-          multiline
-          value={summary}
+
+      <Less startOpen={!learningObjectives}>
+        <p style={{ margin: 0 }}>
+          <EditableText
+            multiline
+            value={summary}
+            disabled={!editing}
+            placeholder="Summarize the case in a short paragraph."
+            onChange={value => updateCase(slug, { summary: value })}
+          />
+        </p>
+      </Less>
+
+      {(learningObjectives || editing) &&
+        <LearningObjectives
           disabled={!editing}
-          placeholder="Summarize the case in a short paragraph."
-          onChange={value => updateCase(slug, { summary: value })}
-        />
-      </p>
+          learningObjectives={learningObjectives}
+          onChange={value => updateCase(slug, { learningObjectives: value })}
+        />}
+
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>
   </section>
@@ -106,7 +129,7 @@ function FlagLink ({ slug, lx }: FlagLinkProps) {
         className="flag-links__icon"
         dangerouslySetInnerHTML={{
           __html: require(`images/flag-${lx}.svg`),
-        }} // eslint-disable-line
+        }}
       />
       &nbsp;
       <FormattedMessage id={lx} />

@@ -50,4 +50,20 @@ MD
     redcarpet = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
     redcarpet.render md
   end
+
+  # Generates normalized objects where each element is keyed by its id.
+  #
+  # @param json the configuration object for a jbuilder template
+  # @param collections [Hash<Symbol, Enumerable<#to_param>>] a hash where values are the collections to be normalized and keys are the property names to assign the normalized objects to
+  def by_id(json, collections)
+    collections.each do |key, collection|
+      json.set! key do
+        collection.each do |element|
+          json.set! element.to_param do
+            json.partial! element
+          end
+        end
+      end
+    end
+  end
 end

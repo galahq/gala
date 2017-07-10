@@ -107,9 +107,21 @@ const SortableList = (props: Props<*>) =>
     {...props}
     useDragHandle={true}
     transitionDuration={100}
-    helperClass="sortable-helper pt-dark"
+    helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
     onSortEnd={({ oldIndex, newIndex }) =>
       props.onChange(arrayMove(props.items, oldIndex, newIndex))}
   />
 
 export default SortableList
+
+export function createSortableInput (props: Object = {}) {
+  const SortableInput = ({ item, onChangeItem }: ChildProps<string>) =>
+    <input
+      className="pt-input"
+      type="text"
+      {...props}
+      value={item}
+      onChange={(e: SyntheticInputEvent) => onChangeItem(e.target.value)}
+    />
+  return SortableInput
+}
