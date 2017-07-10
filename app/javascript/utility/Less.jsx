@@ -15,19 +15,23 @@ class Less extends Component {
   static defaultProps = {
     height: '10em',
     prompt: 'Read more',
+    startOpen: false,
   }
   props: {
     children: React$Element<*>,
     height: string,
     prompt: string,
+    startOpen: boolean,
   }
-  state = { open: false }
+  state = { open: this.props.startOpen }
 
   _innerContainer: HTMLElement
-  _getHeight = () =>
-    this.state.open
-      ? `${this._innerContainer.children[0].offsetHeight}px`
+  _getHeight = () => {
+    const node = this._innerContainer && this._innerContainer.children[0]
+    return this.state.open
+      ? node ? `${node.offsetHeight}px` : 'auto'
       : this.props.height
+  }
 
   handleToggle = () => {
     this.setState(({ open }: { open: boolean }) => ({ open: !open }))
