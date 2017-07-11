@@ -82,7 +82,10 @@ const Billboard = ({
         />
       </p>
 
-      <Less startOpen={!learningObjectives}>
+      <Less
+        startOpen={!learningObjectives}
+        disabled={!learningObjectives || editing}
+      >
         <p style={{ margin: 0 }}>
           <EditableText
             multiline

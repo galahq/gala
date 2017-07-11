@@ -16,12 +16,14 @@ class Less extends Component {
     height: '10em',
     prompt: 'Read more',
     startOpen: false,
+    disabled: false,
   }
   props: {
     children: React$Element<*>,
     height: string,
     prompt: string,
     startOpen: boolean,
+    disabled: boolean,
   }
   state = { open: this.props.startOpen }
 
@@ -33,32 +35,36 @@ class Less extends Component {
       : this.props.height
   }
 
-  handleToggle = () => {
-    this.setState(({ open }: { open: boolean }) => ({ open: !open }))
+  handleOpen = () => {
+    this.setState({ open: true })
   }
 
   render () {
-    const { prompt, children } = this.props
+    const { prompt, children, disabled } = this.props
     const { open } = this.state
     return (
       <OuterContainer>
-        <InnerContainer
-          open={open}
-          height={this._getHeight()}
-          innerRef={(ref: HTMLElement) => (this._innerContainer = ref)}
-          onClick={this.handleToggle}
-        >
-          {children}
-        </InnerContainer>
-        {open ||
-          <ReadMoreLink
-            role="button"
-            tabIndex="0"
-            onClick={this.handleToggle}
-            onKeyPress={acceptKeyboardClick(() => this.handleToggle())}
-          >
-            {prompt}
-          </ReadMoreLink>}
+        {disabled
+          ? children
+          : <div>
+            <InnerContainer
+              open={open}
+              height={this._getHeight()}
+              innerRef={(ref: HTMLElement) => (this._innerContainer = ref)}
+              onClick={this.handleOpen}
+            >
+              {children}
+            </InnerContainer>
+            {open ||
+            <ReadMoreLink
+              role="button"
+              tabIndex="0"
+              onClick={this.handleOpen}
+              onKeyPress={acceptKeyboardClick(() => this.handleOpen())}
+            >
+              {prompt}
+            </ReadMoreLink>}
+          </div>}
       </OuterContainer>
     )
   }
