@@ -21,9 +21,8 @@ import { addLocaleData, IntlProvider } from 'react-intl'
 import Case from 'Case'
 import ErrorBoundary from 'utility/ErrorBoundary'
 
-import reducer from 'redux/reducers'
-
 import messages from '../../../config/locales/react.json' // eslint-disable-line
+import reducer from 'redux/reducers'
 
 FocusStyleManager.onlyShowFocusOnTabs()
 

@@ -1,0 +1,126 @@
+/**
+ * @flow
+ */
+
+// Names of the two caches used in this version of the service worker.
+// Change to v2, etc. when you update any of the local resources, which will
+// in turn trigger the install event again.
+const PRECACHE = 'precache-v1'
+const RUNTIME = 'runtime'
+
+// A list of local resources we always want to be cached.
+const PRECACHE_URLS = [
+  './',
+  '<%= asset_path "application.css" %>',
+  '<%= asset_path "application.js" %>',
+  '<%= asset_pack_path "case.js" %>',
+]
+
+// The install handler takes care of precaching the resources we always need.
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches
+      .open(PRECACHE)
+      .then(cache =>
+        cache.addAll(
+          PRECACHE_URLS.map(
+            url => new Request(url, { credentials: 'same-origin' })
+          )
+        )
+      )
+      .then(self.skipWaiting())
+  )
+})
+
+// The activate handler takes care of cleaning up old caches.
+self.addEventListener('activate', event => {
+  const currentCaches = [PRECACHE, RUNTIME]
+  event.waitUntil(
+    caches
+      .keys()
+      .then(cacheNames => {
+        return cacheNames.filter(
+          cacheName => !currentCaches.includes(cacheName)
+        )
+      })
+      .then(cachesToDelete => {
+        return Promise.all(
+          cachesToDelete.map(cacheToDelete => {
+            return caches.delete(cacheToDelete)
+          })
+        )
+      })
+      .then(() => self.clients.claim())
+  )
+})
+
+// The fetch handler serves responses for same-origin resources from a cache.
+// If no response is found, it populates the runtime cache with the response
+// from the network before returning it to the page.
+self.addEventListener('fetch', event => {
+  // Return the same response for any non-json formatted sub-case level request
+  if (requestingReactRouterUrl(event.request)) {
+    event.respondWith(caches.match(caseResourceUrl(event.request.url)))
+    return
+  }
+
+  if (shouldCache(event.request)) {
+    event.respondWith(
+      caches.match(event.request).then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse
+        }
+
+        return caches.open(RUNTIME).then(cache => {
+          const { request } = event
+          const includeCreds = request.url.startsWith(self.location.origin)
+          return fetch(
+            request,
+            includeCreds ? { credentials: 'include' } : {}
+          ).then(response => {
+            // Put a copy of the response in the runtime cache.
+            return cache.put(event.request, response.clone()).then(() => {
+              return response
+            })
+          })
+        })
+      })
+    )
+  }
+})
+
+/*
+ * Return true if the request URL is an artefact of React Router’s
+ * BrowserHistory, and should actually receive the base case resource response
+ */
+function requestingReactRouterUrl ({ url } /*: Request */) {
+  return (
+    url.startsWith(self.location.origin) &&
+    // Something after the second slash after “cases”
+    url.match(/^.*cases\/[^/]+\/.+/) &&
+    !url.endsWith('.json')
+  )
+}
+
+/*
+ * Trims a React Router suffixed URL to the location of its base case resource.
+ */
+function caseResourceUrl (url /*: string */) {
+  // Everything from the beginning to the second slash after “cases”
+  return url.match(/^.*cases\/[^/]+\//)[0]
+}
+
+const blacklistedStrings = ['statistics', 'ahoy/events']
+
+const cacheableOrigins = [
+  self.location.origin,
+  'https://use.typekit.net/',
+  'https://msc-gala.imgix.net/',
+]
+
+function shouldCache (request /*: Request */) {
+  const { url } = request
+  if (blacklistedStrings.some(string => url.match(string))) return false
+  if (cacheableOrigins.some(origin => url.startsWith(origin))) return true
+  return false
+}
