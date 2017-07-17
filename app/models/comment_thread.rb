@@ -5,7 +5,7 @@ class CommentThread < ApplicationRecord
 
   belongs_to :reader
   belongs_to :forum
-  belongs_to :card
+  belongs_to :card, touch: true
   has_many :comments, dependent: :restrict_with_error
 
   def collocutors

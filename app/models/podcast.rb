@@ -3,7 +3,7 @@
 class Podcast < ApplicationRecord
   include Authority::Abilities
 
-  belongs_to :case
+  belongs_to :case, touch: true
   has_one :card, as: :element, dependent: :destroy
 
   include Element
