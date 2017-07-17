@@ -1,0 +1,17 @@
+{
+  "name": "<%= @case.kicker %>",
+  "short_name": "<%= @case.kicker %>",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#02284b",
+  "theme_color": "#02284b",
+  "description": "<%= @case.title %>",
+  "icons": [{
+    "src": "<%= raw ix_cover_image(@case, :small) %>",
+    "sizes": "200x200"
+  },
+  {
+    "src": "<%= raw ix_cover_image(@case, :square) %>",
+    "sizes": "600x600"
+  }]
+}
