@@ -23,7 +23,7 @@ module MagicLink
 
   def after_linking_redirect_path
     if reader_signed_in?
-      case_path @linker.kase if @linker
+      case_path @linker.kase, trailing_slash: true if @linker
     else
       new_reader_registration_path
     end

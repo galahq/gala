@@ -38,7 +38,7 @@ class CasesController < ApplicationController
 
     respond_to do |format|
       if @case.save
-        format.html { redirect_to case_path(@case, anchor: '/edit') }
+        format.html { redirect_to case_path @case, trailing_slash: true }
         format.json { render json: @case, status: :created, location: @case }
       else
         format.html { render :new }

@@ -2,7 +2,7 @@
 - classes = "BillboardTitle catalog-case #{"catalog-case-unpublished" unless c.published} #{'catalog-case-accessible' if accessible}"
 - size = c.featured? ? :featured : :square
 - background = "background-image:linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(#{ix_cover_image c, size})"
-=link_to (accessible ? c : '#'), class: classes, style: background do
+=link_to (accessible ? case_path(c, trailing_slash: true) : '#'), class: classes, style: background do
   - if !c.published
     - if current_user.can_read?(c) && !current_user.can_update?(c)
       .catalog-case-preview-banner
