@@ -66,7 +66,7 @@ export class Dashboard extends React.Component {
                 className="catalog-dashboard__edit"
                 onClick={this.handleSetEditing}
               >
-                {editing ? 'Done' : 'Edit'}
+                {editing ? 'Done' : 'Edit'}{' '}
                 <span
                   dangerouslySetInnerHTML={{
                     __html: require(`images/dashboard-${editing

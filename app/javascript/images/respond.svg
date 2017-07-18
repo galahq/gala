@@ -1,16 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.5.1 (25234) - http://www.bohemiancoding.com/sketch -->
-    <title>respond</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="respond" sketch:type="MSArtboardGroup" stroke="#EBEAE4" stroke-linejoin="round">
-            <g id="Stroke-122-+-Stroke-123-+-Stroke-124" sketch:type="MSLayerGroup" transform="translate(1.125000, 2.625000)">
-                <path d="M27.1640625,11.1026795 C27.1640625,17.196242 21.13125,22.1360148 13.6875,22.1360148 C12.0257812,22.1360148 10.4355469,21.8913784 8.96601563,21.4409182 L1.22109375,25.0587136 L4.25390625,18.9827932 C1.7578125,16.979833 0.2109375,14.1900375 0.2109375,11.1026795 C0.2109375,5.00676477 6.24375,0.0669920455 13.6875,0.0669920455 C21.13125,0.0669920455 27.1640625,5.00676477 27.1640625,11.1026795 L27.1640625,11.1026795 Z" id="Stroke-122" sketch:type="MSShapeGroup"></path>
-                <path d="M10.7578125,9.03409091 C10.7578125,7.08523295 12.3316406,5.43276136 14.2734375,5.43276136 C16.2140625,5.43276136 17.7890625,6.97585227 17.7890625,8.92471023 C17.7890625,10.8735682 16.2140625,12.4166591 14.2734375,12.4166591 L14.2734375,13.8856534" id="Stroke-123" stroke-linecap="round" sketch:type="MSShapeGroup"></path>
-                <path d="M14.859375,16.5331364 C14.859375,16.85775 14.596875,17.1212045 14.2734375,17.1212045 C13.95,17.1212045 13.6875,16.85775 13.6875,16.5331364 C13.6875,16.2085227 13.95,15.9450682 14.2734375,15.9450682 C14.596875,15.9450682 14.859375,16.2085227 14.859375,16.5331364 L14.859375,16.5331364 Z" id="Stroke-124" stroke-width="0.5" fill="#EBEAE4" sketch:type="MSShapeGroup"></path>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><g stroke="#EBEAE4" stroke-linejoin="round" fill="none" fill-rule="evenodd"><path d="M28.29 13.728c0 6.093-6.034 11.033-13.477 11.033a16.13 16.13 0 0 1-4.722-.695l-7.745 3.618 3.033-6.076c-2.496-2.003-4.043-4.793-4.043-7.88 0-6.096 6.033-11.036 13.476-11.036 7.444 0 13.477 4.94 13.477 11.036z"/><path d="M11.883 11.66c0-1.95 1.574-3.602 3.515-3.602a3.492 3.492 0 0 1 3.516 3.492 3.492 3.492 0 0 1-3.516 3.492v1.469" stroke-linecap="round"/><path d="M15.984 19.158a.587.587 0 0 1-.586.588.587.587 0 0 1 0-1.176c.324 0 .586.264.586.588z" stroke-width=".5" fill="#EBEAE4"/></g></svg>
