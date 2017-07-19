@@ -21,9 +21,9 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
       linker = LmsLinkerService.new params
       linker.add_reader_to_group
-      session[:active_group_id] = linker.group.id
 
       linker.enroll_reader_in_case @case if @case
+      session[:active_group_id] = linker.group.id if @case
 
       redirect_to redirect_url
     else
