@@ -6,6 +6,8 @@ class Enrollment < ApplicationRecord
   belongs_to :reader
   belongs_to :case
 
+  belongs_to :active_group, class_name: 'Group'
+
   enum status: %i[student instructor treatment]
 
   def self.upsert(case_id:, reader_id:, status: :student)

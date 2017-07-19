@@ -19,8 +19,10 @@ class Group < ApplicationRecord
     group
   end
 
-  def self.active_for_session(s)
-    find_by_id(s[:active_group_id]) || GlobalGroup.new
+  # Return the group referenced in the session cookie. Also, remove that
+  # reference from the session
+  def self.get_from_session!(s)
+    find_by_id(s.delete(:active_group_id)) || GlobalGroup.new
   end
 
   def deployment_for_case(kase)
