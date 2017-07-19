@@ -26,4 +26,8 @@ class Group < ApplicationRecord
   def deployment_for_case(kase)
     deployments.find_by(case: kase) || GenericDeployment.new
   end
+
+  def active?
+    true
+  end
 end

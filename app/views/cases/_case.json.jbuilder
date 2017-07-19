@@ -43,6 +43,11 @@ if reader_signed_in?
     json.partial! current_reader
     json.can_update_case current_reader.can_update? c
     json.enrollment current_reader.enrollment_for_case(c)
+    if @group.active?
+      json.active_group do
+        json.extract! @group, :id, :name
+      end
+    end
   end
 
   json.quiz do

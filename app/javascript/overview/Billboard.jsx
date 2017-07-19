@@ -12,6 +12,7 @@ import { EditableText } from '@blueprintjs/core'
 import EditableAttribute from 'utility/EditableAttribute'
 import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
+import GroupChooser from './GroupChooser'
 import LearningObjectives from './LearningObjectives'
 
 import { updateCase } from 'redux/actions'
@@ -62,6 +63,7 @@ const Billboard = ({
 }: Props) =>
   <section className="Billboard">
     <BillboardTitle />
+    <GroupChooser />
     <EditableAttribute
       disabled={!editing}
       title="Base cover image URL"
