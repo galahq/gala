@@ -18,8 +18,7 @@ class CasesController < ApplicationController
     authenticate_reader! unless @case.published
     authorize_action_for @case
 
-    @group = Group.active_for_session session
-    @deployment = @group.deployment_for_case(@case)
+    set_group_and_deployment
 
     render layout: 'with_header'
   end
@@ -72,6 +71,12 @@ class CasesController < ApplicationController
       cards: [comment_threads: [:reader, comments: [:reader]]],
       enrollments: [:reader]
     ).first
+  end
+
+  def set_group_and_deployment
+    @enrollment = current_reader.enrollment_for_case @case
+    @group = @enrollment.try(:active_group) || GlobalGroup.new
+    @deployment = @group.deployment_for_case @case
   end
 
   # Only allow a trusted parameter "white list" through.

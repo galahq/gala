@@ -6,10 +6,13 @@ class Enrollment < ApplicationRecord
   belongs_to :reader
   belongs_to :case
 
+  belongs_to :active_group, class_name: 'Group'
+
   enum status: %i[student instructor treatment]
 
-  def self.upsert(case_id:, reader_id:, status: :student)
+  def self.upsert(case_id:, reader_id:, active_group_id: nil, status: :student)
     enrollment = find_or_initialize_by(case_id: case_id, reader_id: reader_id)
+    enrollment.active_group_id = active_group_id
     enrollment.status = status
     enrollment.save! if enrollment.changed?
     enrollment

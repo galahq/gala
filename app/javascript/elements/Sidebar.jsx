@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter, matchPath } from 'react-router-dom'
 import BillboardTitle from 'overview/BillboardTitle'
+import GroupChooser from 'overview/GroupChooser'
 import { FormattedMessage } from 'react-intl'
 import TableOfContents from 'overview/TableOfContents'
 import EnrollForm from 'overview/EnrollForm'
@@ -31,6 +32,7 @@ const Sidebar = ({ commentThreadsOpen, commentsOpen, readerEnrolled }) => {
         <FormattedMessage id="case.backToOverview" />
       </Link>
       <BillboardTitle minimal />
+      <GroupChooser rounded />
       <TableOfContents readOnly />
 
       {readerEnrolled ||

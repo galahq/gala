@@ -194,6 +194,10 @@ export type Edgenote = {
   youtubeSlug: string,
 }
 
+export type Group = {
+  name: string,
+}
+
 export type ReplyToThreadNotification = {
   notifier: {
     // instance of Reader
@@ -259,6 +263,7 @@ export type Question = {
 }
 
 export type Reader = {
+  activeGroup: ?Group,
   canUpdateCase: boolean,
   email: string,
   enrollment: ?{
