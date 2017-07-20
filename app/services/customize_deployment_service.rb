@@ -7,49 +7,51 @@ class CustomizeDeploymentService
   end
 
   def customize(answers_needed: 0, quiz_id: nil, custom_questions: [])
-    if answers_needed.zero?
-      @deployment.answers_needed = 0
-      @deployment.save
-      return @deployment
+    ActiveRecord::Base.transaction do
+      @deployment.answers_needed = answers_needed
+      return @deployment.tap(&:save!) if answers_needed.zero?
+
+      # There will be a quiz administered
+      @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
+      return @deployment.tap(&:save!) if custom_questions.empty?
+
+      # The quiz has custom questions
+      customize_quiz custom_questions
+      @deployment.tap(&:save!)
     end
-
-    begin
-      ActiveRecord::Base.transaction do
-        @deployment.answers_needed = answers_needed
-
-        @deployment.quiz = find_quiz quiz_id
-        delete_questions_not_included_in(custom_questions.map { |q| q['id'] })
-        upsert_questions custom_questions
-        set_quiz_author
-
-        @deployment.save!
-      end
-    rescue ActiveRecord::RecordInvalid => invalid
-      return invalid.record
-    end
-
-    @deployment
+  rescue ActiveRecord::RecordInvalid => invalid
+    return invalid.record
   end
 
   private
 
-  def set_quiz_author
-    @deployment.quiz.update @author_identifier.quiz_attributes
+  def get_quiz(quiz_id, with_customizations:)
+    quiz = Quiz.where(id: quiz_id).try(:first)
+    return quiz if should_use_existing_quiz quiz, with_customizations
+
+    create_quiz_from_template quiz_id
   end
 
-  def find_quiz(quiz_id)
-    quiz = Quiz.where(id: quiz_id).try(:first)
-    if quiz && @author_identifier.author.quiz?(quiz)
-      quiz
-    else
-      create_quiz_from_template quiz_id
-    end
+  def should_use_existing_quiz(quiz, with_customizations)
+    return false unless quiz # Can’t use existing if there isn’t one
+    return true if @author_identifier.author.quiz? quiz # Can mutate their own
+    with_customizations.empty? # Copy on write (only copy if needed)
   end
 
   def create_quiz_from_template(template_id)
     Quiz.create! case: @deployment.case,
                  template_id: template_id,
                  customized: true
+  end
+
+  def customize_quiz(custom_questions)
+    delete_questions_not_included_in(custom_questions.map { |q| q['id'] })
+    upsert_questions custom_questions
+    set_quiz_author
+  end
+
+  def set_quiz_author
+    @deployment.quiz.update @author_identifier.quiz_attributes
   end
 
   def delete_questions_not_included_in(question_ids)
