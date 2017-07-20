@@ -24,6 +24,7 @@ class Deployment < ApplicationRecord
   end
 
   def reader_needs_posttest?(reader)
+    return false unless quiz
     answers_needed - quiz.number_of_responses_from(reader) >= 1
   end
 end

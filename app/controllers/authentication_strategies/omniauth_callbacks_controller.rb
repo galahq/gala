@@ -23,7 +23,6 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
       linker.add_reader_to_group
 
       linker.enroll_reader_in_case @case if @case
-      session[:active_group_id] = linker.group.id if @case
 
       redirect_to redirect_url
     else

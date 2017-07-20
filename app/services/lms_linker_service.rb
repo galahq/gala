@@ -39,6 +39,9 @@ class LmsLinkerService
 
   def enroll_reader_in_case(kase)
     return unless reader
-    Enrollment.upsert reader_id: reader.id, case_id: kase.id, status: status
+    Enrollment.upsert reader_id: reader.id,
+                      case_id: kase.id,
+                      active_group_id: group.id,
+                      status: status
   end
 end

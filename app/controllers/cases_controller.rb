@@ -18,7 +18,8 @@ class CasesController < ApplicationController
     authenticate_reader! unless @case.published
     authorize_action_for @case
 
-    set_group
+    enrollment = @case.enrollments.find_by(reader: current_reader)
+    @group = enrollment.active_group || GlobalGroup.new
     @deployment = @group.deployment_for_case(@case)
 
     render layout: 'with_header'
@@ -72,16 +73,6 @@ class CasesController < ApplicationController
       cards: [comment_threads: [:reader, comments: [:reader]]],
       enrollments: [:reader]
     ).first
-  end
-
-  def set_group
-    enrollment = @case.enrollments.find_by(reader: current_reader)
-    @group = enrollment.try(:active_group)
-    return @group if @group || !enrollment
-
-    @group = Group.get_from_session! session
-    enrollment.update active_group_id: @group.id
-    @group
   end
 
   # Only allow a trusted parameter "white list" through.
