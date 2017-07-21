@@ -20,7 +20,7 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
       linker = LinkerService.new LinkerService::LTIStrategy.new params
       linker.call
 
-      redirect_to redirect_url
+      redirect_to linker.kase || root_path
     else
       session['devise.lti_data'] = request.env['omniauth.auth']
       render 'devise/registrations/new', layout: 'window'
@@ -39,13 +39,5 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def set_reader
     @reader = @authentication_strategy.reader
-  end
-
-  def redirect_url
-    if @case
-      case_url @case
-    else
-      root_path
-    end
   end
 end
