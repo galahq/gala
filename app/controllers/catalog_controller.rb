@@ -20,13 +20,12 @@ class CatalogController < ApplicationController
 
   # LTI Assignment Selection wants to POST a ContentItemSelectionRequest
   def content_items
-    linker = LmsLinkerService.new(params)
+    linker = LinkerService.new LinkerService::LTIStrategy.new params
 
     sign_in linker.reader if linker.reader
-    linker.add_reader_to_group
-
     @group = linker.group
-    session[:active_group_id] = @group.id
+
+    linker.call
 
     save_selection_params_to_session
 

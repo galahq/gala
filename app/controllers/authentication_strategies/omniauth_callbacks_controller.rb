@@ -15,14 +15,10 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def lti
     if @authentication_strategy.persisted?
-      set_case
-
       sign_in @reader
 
-      linker = LmsLinkerService.new params
-      linker.add_reader_to_group
-
-      linker.enroll_reader_in_case @case if @case
+      linker = LinkerService.new LinkerService::LTIStrategy.new params
+      linker.call
 
       redirect_to redirect_url
     else
@@ -43,10 +39,6 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def set_reader
     @reader = @authentication_strategy.reader
-  end
-
-  def set_case
-    @case = Case.find_by_slug params[:case_slug]
   end
 
   def redirect_url
