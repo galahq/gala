@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Readers::ConfirmationsController < Devise::ConfirmationsController
   # GET /resource/confirmation/new
   # def new
@@ -14,7 +16,7 @@ class Readers::ConfirmationsController < Devise::ConfirmationsController
   #   super
   # end
 
-  # protected
+  protected
 
   # The path used after resending confirmation instructions.
   # def after_resending_confirmation_instructions_path_for(resource_name)
@@ -23,7 +25,8 @@ class Readers::ConfirmationsController < Devise::ConfirmationsController
 
   # The path used after confirmation.
   def after_confirmation_path_for(resource_name, resource)
-    # TODO: To the enrolled case if there is one
+    magic_linked_case = reader.enrollments.first.try(:case)
+    return case_path magic_linked_case if magic_linked_case
     super(resource_name, resource)
   end
 end

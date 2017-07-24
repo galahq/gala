@@ -1,7 +1,7 @@
 <div id="container"></div>
 
 <%=javascript_tag do %>
-  window.caseData = <%= raw render partial: "case", formats: [:json], locals: {c: @case} %>
+  window.caseData = <%= raw render partial: "show", formats: [:json], locals: {c: @case} %>
 <% end %>
 
 <%=javascript_pack_tag "case"%>

@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  include MagicLink
+
   before_action :set_authentication_strategy, except: [:failure]
   before_action :set_reader, except: [:failure]
 
   def google
     if @authentication_strategy.persisted?
-      sign_in_and_redirect @reader, event: :authentication
+      sign_in @reader
+      link_reader if following_magic_link?
+      redirect_to after_linking_redirect_path || root_path
     else
       session['devise.google_data'] = request.env['omniauth.auth'].except(:extra)
       render 'devise/registrations/new', layout: 'window'

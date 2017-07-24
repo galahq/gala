@@ -77,4 +77,28 @@ class LinkerService
                                             uid: @launch_params[:user_id]
     end
   end
+
+  # Get the deployment information from an id stored in the session. This
+  # strategy assumes the deployment has been created in advance and that a user
+  # is already signed in.
+  class SessionStrategy
+    def initialize(session, reader)
+      @reader = reader
+      @deployment = Deployment.find session.delete MagicLink::SESSION_KEY
+    end
+
+    attr_accessor :reader
+
+    def kase
+      @deployment.case
+    end
+
+    def group
+      @deployment.group
+    end
+
+    def status
+      :student
+    end
+  end
 end

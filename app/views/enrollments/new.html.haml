@@ -1,0 +1,7 @@
+#billboard-app{ data: { case_data: render(template: 'cases/_case',
+                                          formats: [:json],
+                                          locals: { c: @deployment.case }),
+                      group_data: @deployment.group.slice(:name).to_json,
+                      deployment_id: @deployment.id } }
+
+= javascript_pack_tag 'billboard'

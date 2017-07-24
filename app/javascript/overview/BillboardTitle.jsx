@@ -10,7 +10,7 @@ import { EditableText } from '@blueprintjs/core'
 
 import { updateCase } from 'redux/actions'
 
-import type { State } from 'redux/state'
+import type { State, CaseDataState } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
@@ -35,7 +35,19 @@ function mapStateToProps ({ edit, caseData }: State) {
   }
 }
 
-const BillboardTitle = ({
+type Props = {
+  editing: boolean,
+  slug: string,
+  kicker: string,
+  title: string,
+  photoCredit: string,
+  caseAuthors: string,
+  translators: string,
+  coverUrl: string,
+  updateCase: (string, $Shape<CaseDataState>) => void,
+  minimal: boolean,
+}
+export const UnconnectedBillboardTitle = ({
   editing,
   slug,
   kicker,
@@ -46,7 +58,7 @@ const BillboardTitle = ({
   coverUrl,
   updateCase,
   minimal,
-}) => {
+}: Props) => {
   const background = {
     backgroundImage: `
       linear-gradient(rgba(0,0,0,0.0), rgba(0,0,0,0.5)),
@@ -98,4 +110,6 @@ const BillboardTitle = ({
   )
 }
 
-export default connect(mapStateToProps, { updateCase })(BillboardTitle)
+export default connect(mapStateToProps, { updateCase })(
+  UnconnectedBillboardTitle
+)

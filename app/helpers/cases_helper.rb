@@ -8,6 +8,7 @@ module CasesHelper
   end
 
   def ix_cover_image(c, size)
+    return '' unless c.cover_url
     opts = %w[fit=crop crop=faces,entropy]
     opts += case size
             when :small

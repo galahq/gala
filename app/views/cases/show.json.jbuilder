@@ -1,1 +1,3 @@
-json.partial! "case", c: @case
+# frozen_string_literal: true
+
+json.partial! 'show', c: @case

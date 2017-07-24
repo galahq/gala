@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Readers::RegistrationsController < Devise::RegistrationsController
+  include MagicLink
   before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
@@ -12,9 +13,11 @@ class Readers::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super do
+      link_reader if following_magic_link?
+    end
+  end
 
   # GET /resource/edit
   # def edit

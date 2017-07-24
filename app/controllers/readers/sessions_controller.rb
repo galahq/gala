@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Readers::SessionsController < Devise::SessionsController
+  include MagicLink
   # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
@@ -9,10 +10,11 @@ class Readers::SessionsController < Devise::SessionsController
   # end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  #   redirect_to stored_location_for(:user) || root_path
-  # end
+  def create
+    super do
+      link_reader if following_magic_link?
+    end
+  end
 
   # DELETE /resource/sign_out
   # def destroy
@@ -22,7 +24,7 @@ class Readers::SessionsController < Devise::SessionsController
   protected
 
   def after_sign_in_path_for(_resource)
-    stored_location_for(:user) || root_path
+    after_linking_redirect_path || stored_location_for(:user) || root_path
   end
 
   # If you have extra params to permit, append them to the sanitizer.
