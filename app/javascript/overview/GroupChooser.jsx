@@ -7,7 +7,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import type { State } from 'redux/state'
+import type { State, Group } from 'redux/state'
 
 type OwnProps = { rounded: boolean }
 function mapStateToProps ({ caseData }: State, { rounded }: OwnProps) {
@@ -15,7 +15,8 @@ function mapStateToProps ({ caseData }: State, { rounded }: OwnProps) {
   return { rounded, activeGroup: reader && reader.activeGroup }
 }
 
-const GroupChooser = ({ activeGroup, rounded }) =>
+type Props = { activeGroup: ?Group, rounded: boolean }
+export const UnconnectedGroupChooser = ({ activeGroup, rounded }: Props) =>
   <Bar empty={!activeGroup} rounded={rounded}>
     {activeGroup &&
       <GroupName>
@@ -23,13 +24,14 @@ const GroupChooser = ({ activeGroup, rounded }) =>
       </GroupName>}
   </Bar>
 
-export default connect(mapStateToProps)(GroupChooser)
+export default connect(mapStateToProps)(UnconnectedGroupChooser)
 
 const Bar = styled.div`
   background-color: #373566;
   font-size: 10pt;
   line-height: 1.2;
   text-align: center;
+  width: 100%;
   padding: ${({ empty }) => (empty ? '0' : '5px')};
   border-bottom-width: 4px;
   border-bottom-style: solid;

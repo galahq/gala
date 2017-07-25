@@ -7,6 +7,8 @@ FactoryGirl.define do
 
     answers_needed 0
 
+    key { SecureRandom.urlsafe_base64 }
+
     trait :with_quiz do
       answers_needed 1
       after :build do |this|

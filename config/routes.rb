@@ -50,6 +50,8 @@ Rails.application.routes.draw do
       resources :deployments, shallow: true, only: %i[create edit update]
     end
 
+    resources :enrollments, only: %i[new create]
+
     scope 'admin' do
       resources :readers, except: %i[show edit update] do
         resources :roles, only: %i[create destroy]
@@ -69,7 +71,7 @@ Rails.application.routes.draw do
       end
 
       resources :groups
-      resources :enrollments, only: [:destroy]
+      resources :enrollments, only: %i[destroy]
     end
   end
 

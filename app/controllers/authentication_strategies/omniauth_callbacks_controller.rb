@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  include MagicLink
+
   before_action :set_authentication_strategy, except: [:failure]
   before_action :set_reader, except: [:failure]
 
   def google
     if @authentication_strategy.persisted?
-      sign_in_and_redirect @reader, event: :authentication
+      sign_in @reader
+      link_reader if following_magic_link?
+      redirect_to after_linking_redirect_path || root_path
     else
       session['devise.google_data'] = request.env['omniauth.auth'].except(:extra)
       render 'devise/registrations/new', layout: 'window'
@@ -15,16 +19,12 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def lti
     if @authentication_strategy.persisted?
-      set_case
-
       sign_in @reader
 
-      linker = LmsLinkerService.new params
-      linker.add_reader_to_group
+      linker = LinkerService.new LinkerService::LTIStrategy.new params
+      linker.call
 
-      linker.enroll_reader_in_case @case if @case
-
-      redirect_to redirect_url
+      redirect_to linker.kase || root_path
     else
       session['devise.lti_data'] = request.env['omniauth.auth']
       render 'devise/registrations/new', layout: 'window'
@@ -43,17 +43,5 @@ class AuthenticationStrategies::OmniauthCallbacksController < Devise::OmniauthCa
 
   def set_reader
     @reader = @authentication_strategy.reader
-  end
-
-  def set_case
-    @case = Case.find_by_slug params[:case_slug]
-  end
-
-  def redirect_url
-    if @case
-      case_url @case
-    else
-      root_path
-    end
   end
 end

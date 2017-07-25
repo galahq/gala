@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class EnrollmentsController < ApplicationController
-  layout 'admin'
   helper CasesHelper
 
-  before_action :authenticate_reader!
-  authorize_actions_for Enrollment
+  before_action :authenticate_reader!, except: %i[new create]
+  authorize_actions_for Enrollment, except: %i[new create]
   authority_actions upsert: 'update'
 
   # GET /enrollments
@@ -13,6 +12,32 @@ class EnrollmentsController < ApplicationController
     @cases = Case.all.sort_by(&:kicker)
     @readers = Reader.all.includes(:cases, enrollments: %i[case reader])
                      .order(:name)
+
+    render layout: 'admin'
+  end
+
+  # Landing for “Magic Link”
+  # GET /enrollments/new?key=ABCDEF
+  def new
+    @deployment = Deployment.includes(
+      case: [:podcasts,
+             :edgenotes,
+             activities: %i[case_element card],
+             pages: %i[case_element cards]]
+    ).find_by_key params['key']
+
+    if @deployment
+      render layout: 'window'
+    else
+      head :not_found
+    end
+  end
+
+  include MagicLink
+  def create
+    save_deployment_in_session
+    link_reader
+    redirect_to after_linking_redirect_path
   end
 
   def upsert

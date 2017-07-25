@@ -15,6 +15,7 @@ class Deployment < ApplicationRecord
   end
 
   def reader_needs_pretest?(reader)
+    return false unless quiz
     return false if reader.enrollment_for_case(self.case).instructor?
     answers_needed - quiz.number_of_responses_from(reader) >= 2
   end

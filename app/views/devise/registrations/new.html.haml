@@ -32,7 +32,9 @@
       = t 'activerecord.attributes.user.password_confirmation'
       = f.password_field :password_confirmation, class: "pt-input pt-fill", autocomplete: "off", tabindex: 5
 
-    .actions
-      = f.submit t('.sign_up'), class: "o-button pt-button pt-intent-primary", tabindex: 7
+    = f.submit t('.sign_up'), class: "o-button pt-button pt-intent-primary", tabindex: 7
+    %a.o-button.pt-button.pt-icon-log-in.oauth-icon-google{role: 'button',
+      tabindex: '0', href: omniauth_authorize_path('authentication_strategy', 'google')}
+      = t('devise.shared.links.sign_in_with_provider', provider: 'google')
 
   = render "devise/shared/links"
