@@ -84,7 +84,7 @@ class LinkerService
   class SessionStrategy
     def initialize(session, reader)
       @reader = reader
-      @deployment = Deployment.find session.delete MagicLink::SESSION_KEY
+      @deployment = Deployment.find_by_key session.delete MagicLink::SESSION_KEY
     end
 
     attr_accessor :reader

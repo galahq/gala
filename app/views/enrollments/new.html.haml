@@ -2,6 +2,6 @@
                                           formats: [:json],
                                           locals: { c: @deployment.case }),
                       group_data: @deployment.group.slice(:name).to_json,
-                      deployment_id: @deployment.id } }
+                      deployment_key: @deployment.key } }
 
 = javascript_pack_tag 'billboard'

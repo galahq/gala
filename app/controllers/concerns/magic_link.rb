@@ -3,12 +3,12 @@
 # Controller methods to handle linking a user to a deployment specified by a
 # magic link.
 module MagicLink
-  SESSION_KEY = 'deployment_id'
+  SESSION_KEY = 'deployment_key'
 
   private
 
   def save_deployment_in_session
-    hash = { SESSION_KEY => params[:deployment_id] }
+    hash = { SESSION_KEY => params[:deployment_key] }
     session.update hash
   end
 
