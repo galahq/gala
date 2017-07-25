@@ -26,7 +26,11 @@ class EnrollmentsController < ApplicationController
              pages: %i[case_element cards]]
     ).find_by_key params['key']
 
-    render layout: 'window'
+    if @deployment
+      render layout: 'window'
+    else
+      head :not_found
+    end
   end
 
   include MagicLink
