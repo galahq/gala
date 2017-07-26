@@ -74,7 +74,7 @@ class CasesController < ApplicationController
   end
 
   def set_group_and_deployment
-    @enrollment = current_reader.enrollment_for_case @case
+    @enrollment = current_user.enrollment_for_case @case
     @group = @enrollment.try(:active_group) || GlobalGroup.new
     @deployment = @group.deployment_for_case @case
   end

@@ -3,6 +3,15 @@
 require 'rails_helper'
 
 feature 'Viewing a case' do
+  context 'while not logged in' do
+    let!(:kase) { create :case_with_elements, :published}
+
+    scenario 'is possible' do
+      visit root_path
+      click_link kase.title
+      expect(page).to have_content kase.pages.first.title
+    end
+  end
   context 'as a normal user' do
     let(:user) { create :reader }
 
