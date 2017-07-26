@@ -25,7 +25,7 @@ class Readers::ConfirmationsController < Devise::ConfirmationsController
 
   # The path used after confirmation.
   def after_confirmation_path_for(resource_name, resource)
-    magic_linked_case = reader.enrollments.first.try(:case)
+    magic_linked_case = resource.try(:enrollments).try(:first).try(:case)
     return case_path magic_linked_case if magic_linked_case
     super(resource_name, resource)
   end

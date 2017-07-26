@@ -37,7 +37,8 @@ Rails.application.routes.draw do
 
     devise_for :readers, skip: :omniauth_callbacks, controllers: {
       sessions: 'readers/sessions',
-      registrations: 'readers/registrations'
+      registrations: 'readers/registrations',
+      confirmations: 'readers/confirmations'
     }
 
     resources :readers, only: %i[show edit update]

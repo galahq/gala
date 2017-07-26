@@ -17,7 +17,7 @@ module MagicLink
   end
 
   def link_reader
-    link_reader! if reader_signed_in?
+    link_reader! current_reader if reader_signed_in?
   end
 
   def after_linking_redirect_path
@@ -28,8 +28,8 @@ module MagicLink
     end
   end
 
-  def link_reader!
-    strategy = LinkerService::SessionStrategy.new session, current_reader
+  def link_reader!(reader)
+    strategy = LinkerService::SessionStrategy.new session, reader
     @linker = LinkerService.new strategy
     @linker.call
   end
