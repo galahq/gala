@@ -14,8 +14,8 @@ class Readers::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    super do
-      link_reader if following_magic_link?
+    super do |reader|
+      link_reader! reader if following_magic_link?
     end
   end
 

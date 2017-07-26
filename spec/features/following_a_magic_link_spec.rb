@@ -35,6 +35,7 @@ feature 'Following a magic link' do
     fill_in 'Password', with: reader.password, match: :first
     fill_in 'Password confirmation', with: reader.password
     click_button 'Sign up'
+    Capybara.reset_sessions!
     saved_reader = Reader.find_by_email reader.email
     visit reader_confirmation_path confirmation_token: saved_reader.confirmation_token
     fill_in 'Email', with: reader.email
