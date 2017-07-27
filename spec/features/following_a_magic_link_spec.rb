@@ -24,6 +24,22 @@ feature 'Following a magic link' do
       expect(page).to have_content deployment.group.name
       expect(page).not_to have_content 'Enroll in this case'
     end
+
+    scenario 'and a previous enrollment' do
+      login_as reader
+      Enrollment.create reader: reader,
+                        case: kase,
+                        active_group_id: nil,
+                        status: :instructor
+      quiz_deployment = create :deployment, :with_pretest, case: kase
+      visit new_enrollment_path key: quiz_deployment.key
+      click_button 'Let’s get started!'
+      expect(page).to have_content quiz_deployment.group.name
+      expect(page).not_to have_content 'Enroll in this case'
+      click_link 'Check your understanding'
+      save_screenshot
+      expect(page).to have_content 'Post-case quiz'
+    end
   end
 
   scenario 'creating an account' do

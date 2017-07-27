@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Handle the linking of a user to a case deployment: create the reader’s case
-# enrollment and group membership
+# Handle the linking of a user to a case deployment: create the reader’s
+# case enrollment and group membership
 class LinkerService
   attr_reader :strategy
   delegate :reader, :kase, :group, :status, to: :strategy
@@ -64,8 +64,6 @@ class LinkerService
     def status
       if @launch_params[:ext_roles] =~ %r{urn:lti:role:ims/lis/Instructor}
         :instructor
-      else
-        :student
       end
     end
 
@@ -98,7 +96,7 @@ class LinkerService
     end
 
     def status
-      :student
+      nil
     end
   end
 end

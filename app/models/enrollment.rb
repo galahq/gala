@@ -13,7 +13,7 @@ class Enrollment < ApplicationRecord
   def self.upsert(case_id:, reader_id:, active_group_id: nil, status: :student)
     enrollment = find_or_initialize_by(case_id: case_id, reader_id: reader_id)
     enrollment.active_group_id = active_group_id
-    enrollment.status = status
+    enrollment.status = status if status
     enrollment.save! if enrollment.changed?
     enrollment
   end

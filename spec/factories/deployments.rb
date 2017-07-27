@@ -17,6 +17,7 @@ FactoryGirl.define do
     end
 
     trait :with_pretest do
+      with_quiz
       answers_needed 2
     end
   end
