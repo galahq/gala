@@ -120,7 +120,8 @@ const cacheableOrigins = [
 ]
 
 function shouldCache (request /*: Request */) {
-  const { url } = request
+  const { url, method } = request
+  if (method != 'GET') return false
   if (blacklistedStrings.some(string => url.match(string))) return false
   if (cacheableOrigins.some(origin => url.startsWith(origin))) return true
   return false
