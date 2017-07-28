@@ -99,7 +99,9 @@ export type UIState = {
   highlightedEdgenote: ?string,
   hoveredCommentThread: ?string,
   mostRecentCommentThreads: ?(string[]),
+  offline: boolean,
   openedCitation: Citation,
+  timestamp: Date,
   toaster: any,
 }
 

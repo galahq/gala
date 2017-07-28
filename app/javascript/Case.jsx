@@ -18,14 +18,13 @@ import {
 } from 'redux/actions.js'
 
 import asyncComponent from 'utility/asyncComponent'
+import ServiceWorkerCompanion from 'utility/ServiceWorkerCompanion'
 
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
 
 // import { Toaster } from '@blueprintjs/core'
 import hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet from 'shared/badTerribleAwfulCode'
-
-import { registerServiceWorker } from 'shared/serviceWorkerCompanion'
 
 import type { State } from 'redux/state'
 
@@ -44,7 +43,6 @@ const Conversation = asyncComponent(() =>
 
 function mapStateToProps ({ quiz, caseData }: State) {
   return {
-    hasReader: !!caseData.reader,
     needsPretest: quiz.needsPretest,
     hasQuiz: !!quiz.questions && quiz.questions.length > 0,
     caseSlug: caseData.slug,
@@ -118,8 +116,6 @@ class Case extends React.Component<{
     )
 
     this._subscribe()
-
-    if (this.props.hasReader) registerServiceWorker(this.props.caseSlug)
   }
 
   render () {
@@ -128,6 +124,7 @@ class Case extends React.Component<{
       <DocumentTitle title={`${kicker} — Gala`}>
         <Router basename={basename}>
           <div id="Case">
+            <ServiceWorkerCompanion />
             <StatusBar />
             <Switch>
               <Route exact path="/" component={CaseOverview} />

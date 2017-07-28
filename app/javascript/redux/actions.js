@@ -76,6 +76,8 @@ export type Action =
   | SetCommentThreadsByIdAction
   | SetCommunitiesAction
   | SetMostRecentCommentThreadsAction
+  | GoOfflineAction
+  | GoOnlineAction
 
 type GetState = () => State
 type PromiseAction = Promise<Action>
@@ -998,4 +1000,14 @@ export function handleNotification (notification: Notification): ThunkAction {
       })
     )
   }
+}
+
+export type GoOnlineAction = { type: 'GO_ONLINE' }
+export function goOnline (): GoOnlineAction {
+  return { type: 'GO_ONLINE' }
+}
+
+export type GoOfflineAction = { type: 'GO_OFFLINE' }
+export function goOffline (): GoOfflineAction {
+  return { type: 'GO_OFFLINE' }
 }

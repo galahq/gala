@@ -2,6 +2,8 @@
 
 json.key_format! camelize: :lower
 
+json.timestamp Time.zone.now.getutc
+
 json.cache! [c, I18n.locale] do
   json.partial! 'case', c: c
 

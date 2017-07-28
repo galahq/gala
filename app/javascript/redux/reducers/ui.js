@@ -18,6 +18,8 @@ import type {
   ChangeCommentInProgressAction,
   RegisterToasterAction,
   DisplayToastAction,
+  GoOnlineAction,
+  GoOfflineAction,
 } from 'redux/actions'
 
 type Action =
@@ -32,6 +34,8 @@ type Action =
   | ChangeCommentInProgressAction
   | RegisterToasterAction
   | DisplayToastAction
+  | GoOnlineAction
+  | GoOfflineAction
 
 export default function ui (state: ?UIState, action: Action): UIState {
   if (state == null) {
@@ -42,6 +46,8 @@ export default function ui (state: ?UIState, action: Action): UIState {
       hoveredCommentThread: null,
       acceptingSelection: false,
       commentInProgress: {},
+      offline: !navigator.onLine,
+      timestamp: new Date(window.caseData.timestamp),
       toaster: null,
       mostRecentCommentThreads: [],
     }
@@ -107,6 +113,12 @@ export default function ui (state: ?UIState, action: Action): UIState {
     case 'DISPLAY_TOAST':
       state.toaster.show(action.options)
       return state
+
+    case 'GO_ONLINE':
+      return { ...state, offline: false }
+
+    case 'GO_OFFLINE':
+      return { ...state, offline: true }
 
     default:
       return state
