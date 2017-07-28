@@ -68,6 +68,8 @@
     "statusBar.unpublishCase": "Unpublish this case",
     "statusBar.featureCase": "Feature this case",
     "statusBar.unfeatureCase": "Remove from featured cases",
+    "statusBar.offline": "Offline mode",
+    "statusBar.unsavedChanges": "You have unsaved changes",
 
     "podcast.hosts": "with {count, plural, one {host} other {hosts}}",
 

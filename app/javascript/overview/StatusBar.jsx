@@ -20,12 +20,13 @@ import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
-  let { edit, caseData } = state
+  let { edit, caseData, ui } = state
   let { inProgress } = edit
   let { commentable, publishedAt, featuredAt, reader } = caseData
   let { pathname } = location
+  let { offline } = ui
   return {
-    editable: edit.possible,
+    editable: edit.possible && !offline,
     editing: inProgress,
     edited: edit.changed,
     published: !!publishedAt,
@@ -34,6 +35,7 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
     pathname,
     history,
     reader,
+    offline,
   }
 }
 
@@ -44,6 +46,7 @@ function StatusBar ({
   edited,
   published,
   featured,
+  offline,
   toggleEditing,
   togglePublished,
   toggleFeatured,
@@ -82,6 +85,7 @@ function StatusBar ({
       editing
         ? { message: 'statusBar.editInstructions' }
         : !published ? { message: 'statusBar.betaNotification' } : null,
+      offline ? { message: 'statusBar.offline' } : null,
     ],
     [
       editable
@@ -91,8 +95,10 @@ function StatusBar ({
           submenu: [
             editing || edited
               ? {
-                disabled: !edited,
-                message: 'statusBar.save',
+                disabled: !edited || offline,
+                message: offline
+                  ? 'statusBar.unsavedChanges'
+                  : 'statusBar.save',
                 iconName: 'floppy-disk',
                 onClick: saveChanges,
               }
