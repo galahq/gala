@@ -58,7 +58,7 @@ export function providesQuiz (
 
       return questions.map(x => x.id).every(x => {
         const answer = this.state[x]
-        return answer && answer.length > 0
+        return answer && answer.trim().length > 0
       })
     }
 
