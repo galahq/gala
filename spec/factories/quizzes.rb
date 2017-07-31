@@ -8,8 +8,8 @@ FactoryGirl.define do
     customized false
 
     after :create do |this|
-      this.questions.create attributes_for(:question, :multiple_choice, quiz_id: this.id)
-      this.questions.create attributes_for(:question, quiz_id: this.id)
+      create :question, :multiple_choice, quiz_id: this.id
+      create :question, quiz_id: this.id
     end
   end
 end
