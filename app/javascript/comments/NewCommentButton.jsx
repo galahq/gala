@@ -28,6 +28,7 @@ function mapStateToProps (state: State, { cardId }: OwnProps) {
     acceptingSelection: state.ui.acceptingSelection,
     selectionPending: !editorState.getSelection().isCollapsed(),
     selectionNotUnique: selectionNotUnique(editorState),
+    offline: state.ui.offline,
   }
 }
 
@@ -37,6 +38,7 @@ type Props = {
   selectionNotUnique: boolean,
   addCommentThread: () => Promise<void>,
   acceptSelection: typeof acceptSelection,
+  offline: boolean,
 }
 
 const NewCommentButton = ({
@@ -45,6 +47,7 @@ const NewCommentButton = ({
   selectionNotUnique,
   addCommentThread,
   acceptSelection,
+  offline,
 }: Props) => (
   <Container>
     <FlexTooltip
@@ -67,7 +70,9 @@ const NewCommentButton = ({
             : !selectionPending ? 'text-highlight' : 'manually-entered-data'
         }
         disabled={
-          (acceptingSelection && !selectionPending) || selectionNotUnique
+          offline ||
+          selectionNotUnique ||
+          (acceptingSelection && !selectionPending)
         }
         onClick={acceptingSelection ? addCommentThread : acceptSelection}
       >
