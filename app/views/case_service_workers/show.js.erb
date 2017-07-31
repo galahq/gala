@@ -44,6 +44,11 @@ self.addEventListener('activate', event => {
         )
       })
       .then(cachesToDelete => {
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage('CACHE_STALE')
+          })
+        })
         return Promise.all(
           cachesToDelete.map(cacheToDelete => {
             return caches.delete(cacheToDelete)
@@ -116,7 +121,7 @@ const cacheableOrigins = [
   self.location.origin,
   'https://use.typekit.net/',
   'https://msc-gala.imgix.net/',
-  'https://www.youtube.com/'
+  'https://www.youtube.com/',
 ]
 
 function shouldCache (request /*: Request */) {

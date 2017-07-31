@@ -224,7 +224,6 @@ declare module '@blueprintjs/core' {
       shouldDismissPopover?: boolean,
       submenu?: Array<$PropertyType<MenuItem, 'props'>>,
       submenuViewportMargin?: { left?: number, right?: number },
-      text: string,
       useSmartPositioning?: boolean,
     } & IProps &
       IActionProps &
