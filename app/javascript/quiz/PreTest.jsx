@@ -33,7 +33,7 @@ const PreTest = ({
         className="pt-dark"
         isOpen={!!match}
         title="Before you get started"
-        style={{ top: '10%', width: 800 }}
+        style={{ top: '10%', width: '100%', maxWidth: 800 }}
         onClose={() => {
           history.replace('/')
         }}
