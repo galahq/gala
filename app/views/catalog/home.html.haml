@@ -7,7 +7,7 @@
           %h1=t '.redefining_sustainability_education'
           %p
             =t '.intro_paragraph'
-          %p=link_to "#{t('.learn_more')} ▸", "//www.teachmsc.org"
+          %p=link_to "#{t('.learn_more')} ▸", "http://www.teachmsc.org"
         .catalog-welcome-sign-in
           = render partial: 'devise/sessions/sign_in', locals: {resource: Reader.new}
 
