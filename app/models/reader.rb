@@ -11,15 +11,26 @@ class Reader < ApplicationRecord
   rolify
 
   has_many :authentication_strategies, dependent: :destroy
+
+  has_many :cases, through: :enrollments
+  has_many :enrollments, -> { includes(:case) }, dependent: :destroy
+
+  has_many :deployments, through: :groups
+  has_many :groups, through: :group_memberships
+  has_many :group_memberships, dependent: :destroy
+
+  has_many :quizzes, through: :answers
+  has_many :answers, dependent: :destroy
+
+  has_many :invited_communities, -> { includes(:forum) },
+           through: :invitations, source: :community
+  has_many :invitations, dependent: :destroy
+
+  has_many :group_communities, -> { includes(:forum) },
+           through: :groups, source: :community
   has_many :comment_threads, dependent: :nullify
   has_many :comments, dependent: :nullify
-  has_many :group_memberships, dependent: :destroy
-  has_many :groups, through: :group_memberships
-  has_many :deployments, through: :groups
-  has_many :enrollments, -> { includes(:case) }, dependent: :destroy
-  has_many :cases, through: :enrollments
-  has_many :answers, dependent: :destroy
-  has_many :quizzes, through: :answers
+
   has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id'
 
   before_update :set_created_password, if: :encrypted_password_changed?
@@ -55,6 +66,10 @@ class Reader < ApplicationRecord
         reader.image_url = info['image_url']
       end
     end
+  end
+
+  def communities
+    invited_communities | group_communities | [GlobalCommunity.instance]
   end
 
   def ensure_authentication_token

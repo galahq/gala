@@ -4,7 +4,7 @@ class CommentThread < ApplicationRecord
   include Authority::Abilities
 
   belongs_to :reader
-  belongs_to :group
+  belongs_to :forum
   belongs_to :card
   has_many :comments, dependent: :restrict_with_error
 
