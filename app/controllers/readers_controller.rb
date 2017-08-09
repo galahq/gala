@@ -53,7 +53,7 @@ class ReadersController < ApplicationController
     respond_to do |format|
       if @reader.update(reader_params)
         bypass_sign_in @reader if reader_params.key? :password
-        format.html { redirect_to edit_reader_path(@reader), notice: 'Reader was successfully updated.' }
+        format.html { redirect_to profile_path, notice: 'Reader was successfully updated.' }
         format.json { render :show, status: :ok, location: @reader }
       else
         format.html { render :edit }
@@ -76,7 +76,11 @@ class ReadersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_reader
-    @reader = Reader.find(params[:id])
+    @reader = if params[:id].blank?
+                current_reader
+              else
+                Reader.find(params[:id])
+              end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
