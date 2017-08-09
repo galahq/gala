@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170809151238) do
+ActiveRecord::Schema.define(version: 20170809171600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -314,6 +314,8 @@ ActiveRecord::Schema.define(version: 20170809151238) do
     t.string   "unconfirmed_email"
     t.boolean  "created_password",         default: true
     t.boolean  "send_reply_notifications", default: true
+    t.integer  "active_community_id"
+    t.index ["active_community_id"], name: "index_readers_on_active_community_id", using: :btree
     t.index ["confirmation_token"], name: "index_readers_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_readers_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_readers_on_reset_password_token", unique: true, using: :btree
@@ -407,4 +409,5 @@ ActiveRecord::Schema.define(version: 20170809151238) do
   add_foreign_key "podcasts", "cases"
   add_foreign_key "questions", "quizzes"
   add_foreign_key "quizzes", "cases"
+  add_foreign_key "readers", "communities", column: "active_community_id"
 end

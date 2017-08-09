@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 
 import { UnconnectedBillboardTitle } from 'overview/BillboardTitle'
-import { UnconnectedGroupChooser } from 'overview/GroupChooser'
+import { UnconnectedCommunityChooser } from 'overview/CommunityChooser'
 
 const container = document.getElementById('billboard-app')
 
@@ -35,7 +35,7 @@ if (container != null) {
   ReactDOM.render(
     <Column>
       <UnconnectedBillboardTitle updateCase={() => {}} {...caseData} />
-      <UnconnectedGroupChooser rounded activeGroup={groupData} />
+      <UnconnectedCommunityChooser rounded activeCommunity={groupData} />
 
       <form action="/enrollments" method="POST">
         <input type="hidden" name="deployment_key" value={deploymentKey} />

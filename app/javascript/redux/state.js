@@ -200,7 +200,8 @@ export type Edgenote = {
   youtubeSlug: string,
 }
 
-export type Group = {
+export type Community = {
+  id: string | null,
   name: string,
 }
 
@@ -269,7 +270,7 @@ export type Question = {
 }
 
 export type Reader = {
-  activeGroup: ?Group,
+  activeCommunity: ?Community,
   canUpdateCase: boolean,
   email: string,
   enrollment: ?{

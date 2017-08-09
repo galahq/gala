@@ -68,6 +68,11 @@ class Reader < ApplicationRecord
     end
   end
 
+  def active_community
+    return GlobalCommunity.instance if active_community_id.nil?
+    Community.find(active_community_id)
+  end
+
   def communities
     invited_communities | group_communities | [GlobalCommunity.instance]
   end
