@@ -2,7 +2,7 @@
 
 class Comment < ApplicationRecord
   belongs_to :reader
-  belongs_to :comment_thread
+  belongs_to :comment_thread, counter_cache: true
 
   include Mobility
   translates :content, fallbacks: true

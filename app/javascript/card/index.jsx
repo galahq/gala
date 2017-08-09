@@ -41,7 +41,7 @@ function mapStateToProps (
   state: State,
   { id, location, nonNarrative }: OwnProps
 ) {
-  const { solid, editorState } = state.cardsById[id]
+  const { solid, editorState, commentThreads } = state.cardsById[id]
   const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
 
   const { pathname } = location
@@ -53,6 +53,7 @@ function mapStateToProps (
 
   return {
     commentable:
+      commentThreads != null &&
       !nonNarrative &&
       state.caseData.commentable &&
       !!(state.caseData.reader && state.caseData.reader.enrollment),

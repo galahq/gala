@@ -7,4 +7,6 @@ class Community < ApplicationRecord
 
   include Mobility
   translates :name
+
+  delegate :comment_threads, to: :forum
 end

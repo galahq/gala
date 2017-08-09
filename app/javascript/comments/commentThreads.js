@@ -3,13 +3,12 @@
  */
 
 import type { RawDraftContentState } from 'draft-js'
-import type { CommentThread } from 'redux/state'
+import type { Card } from 'redux/state'
 
-export function addCommentThreads (
-  content: RawDraftContentState,
-  { commentThreads = [] }: { commentThreads: CommentThread[] }
-) {
+export function addCommentThreads (content: RawDraftContentState, card: Card) {
   let newContent = { ...content }
+
+  const commentThreads = card.commentThreads || []
 
   commentThreads.forEach(thread => {
     const { id, blockIndex, length } = thread

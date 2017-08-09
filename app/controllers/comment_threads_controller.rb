@@ -2,8 +2,15 @@
 
 class CommentThreadsController < ApplicationController
   before_action :authenticate_reader!
+  before_action :set_case, only: [:index]
   before_action :set_card, only: [:create]
   before_action :set_comment_thread, only: %i[show destroy]
+
+  def index
+    @comment_threads = @case.comment_threads
+                            .includes(comments: [:reader])
+                            .visible_to_reader?(current_reader)
+  end
 
   def create
     @comment_thread = @card.comment_threads.build(comment_thread_params)
@@ -28,6 +35,10 @@ class CommentThreadsController < ApplicationController
 
   def set_comment_thread
     @comment_thread = CommentThread.find params[:id]
+  end
+
+  def set_case
+    @case = Case.find_by_slug params[:case_slug]
   end
 
   def set_card

@@ -1,7 +1,11 @@
-json.key_format! camelize: :lower
-json.extract! card, *%i(id position solid raw_content)
-json.content card.content || ""
+# frozen_string_literal: true
 
-json.comment_threads card.comment_threads.select { |x| x.visible_to_reader? current_reader } do |comment_thread|
-  json.partial! comment_thread
+json.key_format! camelize: :lower
+json.extract! card, :id, :position, :solid, :raw_content
+json.content card.content || ''
+
+if @comment_threads
+  json.comment_threads @comment_threads.where(card: card) do |comment_thread|
+    json.partial! comment_thread
+  end
 end

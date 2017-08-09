@@ -14,11 +14,17 @@ import { Link } from 'react-router-dom'
 import type { State } from 'redux/state'
 
 type OwnProps = { cardId: string }
-function mapStateToProps (state: State, ownProps: OwnProps) {
+function mapStateToProps (
+  { cardsById, commentThreadsById }: State,
+  { cardId }: OwnProps
+) {
+  const { commentThreads } = cardsById[cardId]
+  if (commentThreads == null) return { count: 0 }
+
   return {
-    count: state.cardsById[ownProps.cardId].commentThreads
-      .map(e => state.commentThreadsById[e.id].commentIds)
-      .reduce((a, e) => [...a, ...e], []).length,
+    count: commentThreads
+      .map(e => commentThreadsById[e.id].commentsCount)
+      .reduce((a, e) => a + e, 0),
   }
 }
 

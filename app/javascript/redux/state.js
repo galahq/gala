@@ -133,7 +133,7 @@ export type Byline = {
 }
 
 export type Card = {
-  commentThreads: CommentThread[],
+  commentThreads: ?(CommentThread[]),
   content: string,
   editorState: EditorState,
   id: string,
@@ -169,6 +169,7 @@ export type CommentThread = {
   blockIndex: number,
   cardId: string,
   commentIds: number[],
+  commentsCount: number,
   id: string,
   length: number,
   originalHighlightText: string,

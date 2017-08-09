@@ -84,11 +84,13 @@ function cardsById (
     case 'ADD_COMMENT_THREAD': {
       const { data } = action
       const card = state[data.cardId]
-      if (card.commentThreads.find(x => x.id === data.id)) return state
+      const commentThreads = card.commentThreads || []
+
+      if (commentThreads.find(x => x.id === data.id)) return state
 
       const newCard = {
         ...card,
-        commentThreads: [...card.commentThreads, data].sort(sortCommentThreads),
+        commentThreads: [...commentThreads, data].sort(sortCommentThreads),
       }
       return {
         ...state,
@@ -101,11 +103,10 @@ function cardsById (
 
     case 'REMOVE_COMMENT_THREAD': {
       const { cardId, threadId } = action
+      const commentThreads = state[cardId].commentThreads || []
       const newCard = {
         ...state[cardId],
-        commentThreads: state[cardId].commentThreads.filter(
-          x => x.id !== threadId
-        ),
+        commentThreads: commentThreads.filter(x => x.id !== threadId),
       }
       return {
         ...state,

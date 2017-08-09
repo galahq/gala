@@ -63,10 +63,10 @@ class Case < ApplicationRecord
   end
 
   def comment_threads
-    cards.flat_map(&:comment_threads).uniq
+    CommentThread.where(card: cards)
   end
 
   def comments
-    comment_threads.flat_map(&:comments)
+    Comment.where(comment_thread: comment_threads)
   end
 end

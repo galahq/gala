@@ -12,7 +12,10 @@ class CommentThread < ApplicationRecord
     comments.map(&:reader).uniq
   end
 
-  def visible_to_reader?(r)
-    locale == I18n.locale.to_s && (!comments.empty? || reader == r)
+  def self.visible_to_reader?(r)
+    where(locale: I18n.locale.to_s)
+      .where('comment_threads.comments_count > 0 OR
+      comment_threads.reader_id = ?',
+             r.id)
   end
 end

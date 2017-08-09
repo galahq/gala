@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(version: 20170809151238) do
     t.integer  "card_id"
     t.integer  "reader_id"
     t.integer  "forum_id"
+    t.integer  "comments_count"
     t.index ["card_id"], name: "index_comment_threads_on_card_id", using: :btree
     t.index ["case_id"], name: "index_comment_threads_on_case_id", using: :btree
     t.index ["forum_id"], name: "index_comment_threads_on_forum_id", using: :btree
