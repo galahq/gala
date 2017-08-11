@@ -4,13 +4,16 @@
  */
 
 import type { CommentsState } from 'redux/state'
-import type { AddCommentAction } from 'redux/actions'
+import type { SetCommentsByIdAction, AddCommentAction } from 'redux/actions'
 
 export default function commentsById (
   state: CommentsState = ({ ...window.caseData.comments }: CommentsState),
-  action: AddCommentAction
+  action: SetCommentsByIdAction | AddCommentAction
 ): CommentsState {
   switch (action.type) {
+    case 'SET_COMMENTS_BY_ID':
+      return action.commentsById
+
     case 'ADD_COMMENT':
       return {
         ...state,

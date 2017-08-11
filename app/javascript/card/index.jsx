@@ -41,7 +41,9 @@ function mapStateToProps (
   state: State,
   { id, location, nonNarrative }: OwnProps
 ) {
-  const { solid, editorState, commentThreads } = state.cardsById[id]
+  const { solid, commentThreads } = state.cardsById[id]
+  const editorState =
+    state.cardsById[id].editorState || EditorState.createEmpty()
   const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
 
   const { pathname } = location

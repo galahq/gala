@@ -15,6 +15,7 @@ import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
 import Icon from 'utility/Icon'
 
+import { EditorState } from 'draft-js'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
 
@@ -30,12 +31,13 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
     throw new Error('CommentThreadsCard should not be mounted at this route.')
   }
 
+  const editorState =
+    state.cardsById[cardId].editorState || EditorState.createEmpty()
+
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
-    selectionPending: !state.cardsById[cardId].editorState
-      .getSelection()
-      .isCollapsed(),
+    selectionPending: editorState.getSelection().isCollapsed(),
     closeCommentThreadsPath: params.url,
   }
 }

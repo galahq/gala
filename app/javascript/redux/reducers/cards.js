@@ -12,6 +12,7 @@ import type { RawDraftContentState } from 'draft-js'
 
 import type { CardsState, Card, CommentThread } from 'redux/state'
 import type {
+  SetCardsAction,
   UpdateCardContentsAction,
   ApplySelectionAction,
   ReplaceCardAction,
@@ -25,6 +26,7 @@ import type {
 const { forceSelection } = EditorState
 
 type Action =
+  | SetCardsAction
   | UpdateCardContentsAction
   | ApplySelectionAction
   | ReplaceCardAction
@@ -35,10 +37,16 @@ type Action =
   | AddActivityAction
 
 function cardsById (
-  state: CardsState = getInitialEmptyCards(),
+  state: CardsState = ({ ...window.caseData.cards }: CardsState),
   action: Action
 ): CardsState {
   switch (action.type) {
+    case 'SET_CARDS':
+      return {
+        ...state,
+        ...action.cards,
+      }
+
     case 'UPDATE_CARD_CONTENTS':
       return {
         ...state,
@@ -49,7 +57,8 @@ function cardsById (
       }
 
     case 'APPLY_SELECTION': {
-      const editorState = state[action.cardId].editorState
+      const editorState =
+        state[action.cardId].editorState || EditorState.createEmpty()
 
       return {
         ...state,
@@ -137,20 +146,6 @@ export default cardsById
 function sortCommentThreads (a: CommentThread, b: CommentThread): number {
   if (a.blockIndex !== b.blockIndex) return a.blockIndex - b.blockIndex
   return a.start - b.start
-}
-
-function getInitialEmptyCards (): CardsState {
-  const state = ({ ...window.caseData.cards }: CardsState)
-
-  return Object.keys(state).map(key => state[key]).reduce((all, card) => {
-    return {
-      ...all,
-      [card.id]: {
-        ...card,
-        editorState: EditorState.createEmpty(),
-      },
-    }
-  }, {})
 }
 
 function parseEditorStateFromPersistedCard (card: Card) {

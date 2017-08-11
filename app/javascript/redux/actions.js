@@ -6,7 +6,8 @@ import { Orchard } from 'shared/orchard'
 import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 
-import type { EditorState, SelectionState } from 'draft-js'
+import { EditorState } from 'draft-js'
+import type { SelectionState } from 'draft-js'
 import type { Toaster, Toast } from '@blueprintjs/core'
 
 import type {
@@ -14,11 +15,14 @@ import type {
   CaseDataState,
   CaseElement,
   Card,
+  CardsState,
   Page,
   Podcast,
   Activity,
   Comment,
+  CommentsState,
   CommentThread,
+  CommentThreadsState,
   Edgenote,
   QuizNecessity,
   Notification,
@@ -58,6 +62,9 @@ export type Action =
   | RecordQuizSubmissionAction
   | SetStatisticsAction
   | DisplayToastAction
+  | SetCardsAction
+  | SetCommentsByIdAction
+  | SetCommentThreadsByIdAction
 
 type GetState = () => State
 type PromiseAction = Promise<Action>
@@ -135,7 +142,8 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
 
     case 'cards':
       {
-        const { editorState } = state.cardsById[id]
+        const editorState =
+          state.cardsById[id].editorState || EditorState.createEmpty()
         data = {
           card: {
             rawContent: JSON.stringify(
@@ -385,6 +393,11 @@ export function updateActivity (
 
 // CARD
 //
+export type SetCardsAction = { type: 'SET_CARDS', cards: CardsState }
+export function setCards (cards: CardsState): SetCardsAction {
+  return { type: 'SET_CARDS', cards }
+}
+
 export type ParseAllCardsAction = { type: 'PARSE_ALL_CARDS' }
 export function parseAllCards (): ParseAllCardsAction {
   return { type: 'PARSE_ALL_CARDS' }
@@ -470,6 +483,28 @@ export function applySelection (
 
 // COMMENT THREAD
 //
+export function fetchCommentThreads (slug: string): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const { commentThreads, comments, cards } = await Orchard.harvest(
+      `cases/${slug}/comment_threads`
+    )
+    dispatch(setCommentsById(comments))
+    dispatch(setCommentThreadsById(commentThreads))
+    dispatch(setCards(cards))
+    dispatch(parseAllCards())
+  }
+}
+
+export type SetCommentThreadsByIdAction = {
+  type: 'SET_COMMENT_THREADS_BY_ID',
+  commentThreadsById: CommentThreadsState,
+}
+export function setCommentThreadsById (
+  commentThreadsById: CommentThreadsState
+): SetCommentThreadsByIdAction {
+  return { type: 'SET_COMMENT_THREADS_BY_ID', commentThreadsById }
+}
+
 export function createCommentThread (
   cardId: string,
   editorState: EditorState
@@ -538,6 +573,16 @@ export function hoverCommentThread (id: string): HoverCommentThreadAction {
 
 // COMMENT
 //
+export type SetCommentsByIdAction = {
+  type: 'SET_COMMENTS_BY_ID',
+  commentsById: CommentsState,
+}
+export function setCommentsById (
+  commentsById: CommentsState
+): SetCommentsByIdAction {
+  return { type: 'SET_COMMENTS_BY_ID', commentsById }
+}
+
 export type ChangeCommentInProgressAction = {
   type: 'CHANGE_COMMENT_IN_PROGRESS',
   threadId: string,

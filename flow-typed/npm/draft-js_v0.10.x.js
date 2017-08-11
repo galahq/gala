@@ -11,8 +11,12 @@ declare module 'draft-js' {
     entityMap: { [string]: DraftEntity },
   }
 
-  declare export function convertFromRaw(RawDraftContentState): ContentState
-  declare export function convertToRaw(ContentState): RawDraftContentState
+  declare export function convertFromRaw(
+    rawState: RawDraftContentState
+  ): ContentState
+  declare export function convertToRaw(
+    contentState: ContentState
+  ): RawDraftContentState
 
   declare export class CharacterMetadata {
     getEntity(): string,
@@ -100,7 +104,14 @@ declare module 'draft-js' {
     static insertText(ContentState, SelectionState, string): ContentState,
   }
 
-  declare export type RawDraftContentState = Object
+  declare export type RawDraftContentState = {
+    entityMap: {
+      [string]: {
+        type: string,
+        data: Object,
+      },
+    },
+  }
 
   declare export class RichUtils {
     static handleKeyCommand(

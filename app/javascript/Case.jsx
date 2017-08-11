@@ -10,6 +10,7 @@ import DocumentTitle from 'react-document-title'
 
 import {
   parseAllCards,
+  fetchCommentThreads,
   registerToaster,
   addComment,
   addCommentThread,
@@ -54,9 +55,18 @@ class Case extends React.Component {
   }
 
   componentDidMount () {
-    setTimeout(() => this.props.parseAllCards(), 1)
+    const {
+      parseAllCards,
+      commentable,
+      caseSlug,
+      fetchCommentThreads,
+      registerToaster,
+    } = this.props
 
-    this.props.registerToaster(Toaster.create())
+    parseAllCards()
+    if (commentable) fetchCommentThreads(caseSlug)
+
+    registerToaster(Toaster.create())
 
     this._subscribe()
   }
@@ -85,17 +95,20 @@ class Case extends React.Component {
 }
 
 export default connect(
-  (state: State) => ({
-    needsPretest: state.quiz.needsPretest,
-    needsPosttest: state.quiz.needsPosttest,
-    kicker: state.caseData.kicker,
+  ({ quiz, caseData }: State) => ({
+    needsPretest: quiz.needsPretest,
+    needsPosttest: quiz.needsPosttest,
+    caseSlug: caseData.slug,
+    kicker: caseData.kicker,
+    commentable: caseData.commentable,
     basename: location.pathname.replace(
-      RegExp(`${state.caseData.slug}.*`),
-      state.caseData.slug
+      RegExp(`${caseData.slug}.*`),
+      caseData.slug
     ),
   }),
   {
     parseAllCards,
+    fetchCommentThreads,
     registerToaster,
     addComment,
     addCommentThread,
