@@ -10,6 +10,7 @@ class CommentThreadsController < ApplicationController
     @comment_threads = @case.comment_threads
                             .includes(comments: [:reader])
                             .visible_to_reader?(current_reader)
+                            .order(:block_index, :start)
   end
 
   def create
