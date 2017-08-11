@@ -57,14 +57,14 @@ class Case extends React.Component {
   componentDidMount () {
     const {
       parseAllCards,
-      commentable,
+      loadComments,
       caseSlug,
       fetchCommentThreads,
       registerToaster,
     } = this.props
 
     parseAllCards()
-    if (commentable) fetchCommentThreads(caseSlug)
+    if (loadComments) fetchCommentThreads(caseSlug)
 
     registerToaster(Toaster.create())
 
@@ -100,7 +100,8 @@ export default connect(
     needsPosttest: quiz.needsPosttest,
     caseSlug: caseData.slug,
     kicker: caseData.kicker,
-    commentable: caseData.commentable,
+    loadComments:
+      caseData.commentable && caseData.reader && caseData.reader.enrollment,
     basename: location.pathname.replace(
       RegExp(`${caseData.slug}.*`),
       caseData.slug

@@ -12,7 +12,10 @@ import type { State, Community } from 'redux/state'
 type OwnProps = { rounded: boolean }
 function mapStateToProps ({ caseData }: State, { rounded }: OwnProps) {
   const { reader } = caseData
-  return { rounded, activeCommunity: reader && reader.activeCommunity }
+  return {
+    rounded,
+    activeCommunity: reader && reader.enrollment && reader.activeCommunity,
+  }
 }
 
 type Props = { activeCommunity: ?Community, rounded: boolean }
