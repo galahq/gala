@@ -242,6 +242,7 @@ export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
       `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
     )
     dispatch(setReaderEnrollment(!!enrollment))
+    dispatch(fetchCommentThreads(caseSlug))
   }
 }
 
