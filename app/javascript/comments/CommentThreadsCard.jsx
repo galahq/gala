@@ -54,6 +54,8 @@ const CommentThreadsCard = ({
   match,
   history,
 }) => {
+  if (commentThreads == null) return null
+
   return (
     <div className="CommentThreads">
       <div className={`CommentThreads__window`}>
