@@ -33,7 +33,10 @@ function mapStateToProps ({ edit, caseData }: State) {
     title,
     photoCredit,
     coverUrl,
-    byline: { authors, translators, authorsString, translatorsString },
+    authors,
+    translators,
+    authorsString,
+    translatorsString,
     editing: edit.inProgress,
   }
 }
@@ -44,18 +47,21 @@ type Props = {
   kicker: string,
   title: string,
   photoCredit: string,
-  byline: Byline,
   coverUrl: string,
   updateCase: (string, $Shape<CaseDataState>) => void,
   minimal: boolean,
-}
+} & Byline
+
 export const UnconnectedBillboardTitle = ({
   editing,
   slug,
   kicker,
   title,
   photoCredit,
-  byline,
+  authors,
+  translators,
+  authorsString,
+  translatorsString,
   coverUrl,
   updateCase,
   minimal,
@@ -90,7 +96,12 @@ export const UnconnectedBillboardTitle = ({
       {!minimal &&
         <AuthorsList
           canEdit={editing}
-          byline={byline}
+          byline={{
+            authors,
+            translators,
+            authorsString,
+            translatorsString,
+          }}
           onChange={(value: Byline) => updateCase(slug, value)}
         />}
 

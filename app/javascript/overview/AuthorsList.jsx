@@ -54,11 +54,12 @@ class AuthorsList extends React.Component {
               {translatorsString}
             </em>}
         </p>
-        <AuthorsListForm
-          byline={byline}
-          editing={this.state.editing}
-          onFinishEditing={this.handleFinishEditing}
-        />
+        {canEdit &&
+          <AuthorsListForm
+            byline={byline}
+            editing={this.state.editing}
+            onFinishEditing={this.handleFinishEditing}
+          />}
       </div>
     )
   }
