@@ -6,11 +6,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { compose, isEmpty, map, none, values, flatten } from 'ramda'
 
 import { Button, Dialog, Intent } from '@blueprintjs/core'
 
 import { displayToast } from 'redux/actions'
+import { isCompact, areObjectsCompact } from 'shared/functions'
 
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
@@ -106,12 +106,6 @@ class CreditsListForm extends React.Component {
 }
 
 export default connect(undefined, { displayToast })(CreditsListForm)
-
-const listValues = map(values)
-const isCompact = none(isEmpty)
-
-// $FlowFixMe
-const areObjectsCompact = compose(isCompact, flatten, listValues)
 
 function formStateClean ({ guests, hosts }: CreditsListFormState): boolean {
   return areObjectsCompact(guests) && isCompact(hosts)

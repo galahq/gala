@@ -31,7 +31,6 @@ export type CardsState = {
 export type CaseDataState = {
   audience: string,
   baseCoverUrl: string,
-  caseAuthors: string,
   caseElements: CaseElement[],
   commentable: boolean,
   coverUrl: string,
@@ -47,8 +46,7 @@ export type CaseDataState = {
   smallCoverUrl: string,
   summary: string,
   title: string,
-  translators: string,
-}
+} & Byline
 
 export type CommentThreadsState = {
   [commentThreadId: string]: CommentThread,
@@ -125,6 +123,13 @@ export type Activity = {
   position: number,
   title: string,
   url: string,
+}
+
+export type Byline = {
+  authors: string[],
+  authorsString: string,
+  translators: string[],
+  translatorsString: string,
 }
 
 export type Card = {

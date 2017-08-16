@@ -10,7 +10,9 @@ import { EditableText } from '@blueprintjs/core'
 
 import { updateCase } from 'redux/actions'
 
-import type { State, CaseDataState } from 'redux/state'
+import AuthorsList from './AuthorsList'
+
+import type { State, CaseDataState, Byline } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
@@ -18,8 +20,10 @@ function mapStateToProps ({ edit, caseData }: State) {
     kicker,
     title,
     photoCredit,
-    caseAuthors,
+    authors,
+    authorsString,
     translators,
+    translatorsString,
     coverUrl,
   } = caseData
 
@@ -28,9 +32,11 @@ function mapStateToProps ({ edit, caseData }: State) {
     kicker,
     title,
     photoCredit,
-    caseAuthors,
-    translators,
     coverUrl,
+    authors,
+    translators,
+    authorsString,
+    translatorsString,
     editing: edit.inProgress,
   }
 }
@@ -41,20 +47,21 @@ type Props = {
   kicker: string,
   title: string,
   photoCredit: string,
-  caseAuthors: string,
-  translators: string,
   coverUrl: string,
   updateCase: (string, $Shape<CaseDataState>) => void,
   minimal: boolean,
-}
+} & Byline
+
 export const UnconnectedBillboardTitle = ({
   editing,
   slug,
   kicker,
   title,
   photoCredit,
-  caseAuthors,
+  authors,
   translators,
+  authorsString,
+  translatorsString,
   coverUrl,
   updateCase,
   minimal,
@@ -87,15 +94,16 @@ export const UnconnectedBillboardTitle = ({
       </h1>
 
       {!minimal &&
-        caseAuthors !== '' &&
-        <p>
-          {caseAuthors}
-          <br />
-          {translators !== '' &&
-            <em>
-              {translators}
-            </em>}
-        </p>}
+        <AuthorsList
+          canEdit={editing}
+          byline={{
+            authors,
+            translators,
+            authorsString,
+            translatorsString,
+          }}
+          onChange={(value: Byline) => updateCase(slug, value)}
+        />}
 
       <cite className="o-bottom-right c-photo-credit">
         {minimal ||
