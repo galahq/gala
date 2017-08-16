@@ -42,10 +42,6 @@ class Case < ApplicationRecord
     slug
   end
 
-  def case_authors
-    authors.to_sentence
-  end
-
   def events
     Ahoy::Event.for_case self
   end

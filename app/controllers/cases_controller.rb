@@ -82,8 +82,8 @@ class CasesController < ApplicationController
   # Only allow a trusted parameter "white list" through.
   def case_params
     params.require(:case).permit(
-      :published, :kicker, :title, :dek, :slug, :translators, :photo_credit,
-      :summary, :tags, :cover_url, authors: [], learning_objectives: []
+      :published, :kicker, :title, :dek, :slug, :photo_credit,
+      :summary, :tags, :cover_url, authors: [], translators: [], learning_objectives: []
     )
   end
 end
