@@ -44,7 +44,7 @@ class CreditsList extends React.Component {
         tabIndex="0"
         role="button"
         style={{ cursor: canEdit ? 'pointer' : 'auto' }}
-        onKeyPress={acceptKeyboardClick(this.handleStartEditing)}
+        onKeyPress={acceptKeyboardClick}
         onClick={this.handleStartEditing}
       >
         <dl>
