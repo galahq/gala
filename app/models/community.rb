@@ -2,11 +2,19 @@
 
 class Community < ApplicationRecord
   belongs_to :group
-  has_one :forum
-  has_and_belongs_to_many :readers
+  has_many :invitiations
+  has_many :forums # One forum for each case the community is discussing
 
   include Mobility
   translates :name
 
   delegate :comment_threads, to: :forum
+
+  def self.active_for_case(case_id)
+    joins(:forums).where(forums: { case_id: case_id })
+  end
+
+  def global?
+    group.nil?
+  end
 end

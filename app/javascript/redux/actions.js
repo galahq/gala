@@ -23,6 +23,7 @@ import type {
   CommentsState,
   CommentThread,
   CommentThreadsState,
+  Community,
   Edgenote,
   QuizNecessity,
   Notification,
@@ -65,6 +66,7 @@ export type Action =
   | SetCardsAction
   | SetCommentsByIdAction
   | SetCommentThreadsByIdAction
+  | SetCommunitiesAction
 
 type GetState = () => State
 type PromiseAction = Promise<Action>
@@ -480,6 +482,23 @@ export function applySelection (
   selectionState: SelectionState
 ): ApplySelectionAction {
   return { type: 'APPLY_SELECTION', cardId, selectionState }
+}
+
+// COMMUNITY
+//
+export function fetchCommunities (slug: string): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const { communities } = await Orchard.harvest(`cases/${slug}/communities`)
+    dispatch(setCommunities(communities))
+  }
+}
+
+export type SetCommunitiesAction = {
+  type: 'SET_COMMUNITIES',
+  communities: Community[],
+}
+export function setCommunities (communities: Community[]): SetCommunitiesAction {
+  return { type: 'SET_COMMUNITIES', communities }
 }
 
 // COMMENT THREAD

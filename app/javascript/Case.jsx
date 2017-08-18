@@ -11,6 +11,7 @@ import DocumentTitle from 'react-document-title'
 import {
   parseAllCards,
   fetchCommentThreads,
+  fetchCommunities,
   registerToaster,
   addComment,
   addCommentThread,
@@ -60,11 +61,16 @@ class Case extends React.Component {
       loadComments,
       caseSlug,
       fetchCommentThreads,
+      fetchCommunities,
       registerToaster,
     } = this.props
 
     parseAllCards()
-    if (loadComments) fetchCommentThreads(caseSlug)
+
+    if (loadComments) {
+      fetchCommentThreads(caseSlug)
+      fetchCommunities(caseSlug)
+    }
 
     registerToaster(Toaster.create())
 
@@ -110,6 +116,7 @@ export default connect(
   {
     parseAllCards,
     fetchCommentThreads,
+    fetchCommunities,
     registerToaster,
     addComment,
     addCommentThread,

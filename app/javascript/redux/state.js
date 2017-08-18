@@ -5,20 +5,7 @@
 import type { EditorState } from 'draft-js'
 
 // Redux state
-export type State = {
-  activitiesById: ActivitiesState,
-  cardsById: CardsState,
-  caseData: CaseDataState,
-  commentThreadsById: CommentThreadsState,
-  commentsById: CommentsState,
-  edgenotesBySlug: EdgenotesState,
-  edit: EditState,
-  pagesById: PagesState,
-  podcastsById: PodcastsState,
-  quiz: QuizState,
-  statistics: StatisticsState,
-  ui: UIState,
-}
+export type { State } from 'redux/reducers'
 
 export type ActivitiesState = {
   [activityId: string]: Activity,
@@ -203,6 +190,8 @@ export type Edgenote = {
 export type Community = {
   id: string | null,
   name: string,
+  active: boolean,
+  global: boolean,
 }
 
 export type ReplyToThreadNotification = {

@@ -22,12 +22,10 @@ class Reader < ApplicationRecord
   has_many :quizzes, through: :answers
   has_many :answers, dependent: :destroy
 
-  has_many :invited_communities, -> { includes(:forum) },
-           through: :invitations, source: :community
+  has_many :invited_communities, through: :invitations, source: :community
   has_many :invitations, dependent: :destroy
 
-  has_many :group_communities, -> { includes(:forum) },
-           through: :groups, source: :community
+  has_many :group_communities, through: :groups, source: :community
   has_many :comment_threads, dependent: :nullify
   has_many :comments, dependent: :nullify
 
@@ -74,7 +72,7 @@ class Reader < ApplicationRecord
   end
 
   def communities
-    invited_communities | group_communities | [GlobalCommunity.instance]
+    Community.where id: (invited_communities | group_communities)
   end
 
   def ensure_authentication_token

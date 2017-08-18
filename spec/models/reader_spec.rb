@@ -24,7 +24,6 @@ RSpec.describe Reader, type: :model do
     subject.groups << group
 
     expect(subject.communities).to include(invited_community,
-                                           group.community,
-                                           GlobalCommunity.instance)
+                                           group.community)
   end
 end

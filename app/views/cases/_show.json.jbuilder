@@ -17,10 +17,6 @@ if reader_signed_in?
     json.partial! current_reader
     json.can_update_case current_reader.can_update? c
     json.enrollment @enrollment
-
-    json.active_community do
-      json.extract!(current_reader.active_community, :id, :name)
-    end
   end
 
   json.quiz do

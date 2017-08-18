@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         resource :statistics, only: %i[show]
       end
       resources :comment_threads, only: %i[index]
+      resources :communities, only: %i[index]
 
       get '*react_router_location', to: 'cases#show'
     end

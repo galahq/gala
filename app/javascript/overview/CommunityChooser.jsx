@@ -14,17 +14,22 @@ import { acceptKeyboardClick } from 'shared/keyboard'
 import type { State, Community } from 'redux/state'
 
 type OwnProps = { rounded: boolean }
-function mapStateToProps ({ caseData }: State, { rounded }: OwnProps) {
-  const { reader } = caseData
+function mapStateToProps ({ communities }: State, { rounded }: OwnProps) {
   return {
     rounded,
-    activeCommunity: reader && reader.enrollment && reader.activeCommunity,
+    communities,
+    activeCommunity: communities.find(community => community.active),
   }
 }
 
-type Props = { activeCommunity: ?Community, rounded: boolean }
+type Props = {
+  activeCommunity: ?Community,
+  communities: Community[],
+  rounded: boolean,
+}
 export const UnconnectedCommunityChooser = ({
   activeCommunity,
+  communities,
   rounded,
 }: Props) =>
   <Bar empty={!activeCommunity} rounded={rounded}>
@@ -40,20 +45,16 @@ export const UnconnectedCommunityChooser = ({
               You’ll see the discussion taking place in the community you
               choose.
             </Instructions>
-
-            <MenuItem
-              iconName="globe"
-              className="pt-active pt-intent-primary"
-              text="Global Community"
-              onClick={() => {}}
-              onKeyPress={acceptKeyboardClick}
-            />
-            <MenuItem
-              iconName="social-media"
-              text="Invited Community"
-              onClick={() => {}}
-              onKeyPress={acceptKeyboardClick}
-            />
+            {communities.map(c =>
+              <MenuItem
+                key={c.id || 'null'}
+                iconName={c.global ? 'globe' : 'social-media'}
+                className={c.active ? 'pt-active pt-intent-primary' : ''}
+                text={c.name}
+                onClick={() => {}}
+                onKeyPress={acceptKeyboardClick}
+              />
+            )}
           </CommunityMenu>
         }
       >
