@@ -493,6 +493,16 @@ export function fetchCommunities (slug: string): ThunkAction {
   }
 }
 
+export function updateActiveCommunity (
+  slug: string,
+  id: string | null
+): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    await Orchard.espalier(`profile`, { reader: { activeCommunityId: id }})
+    dispatch(fetchCommunities(slug))
+  }
+}
+
 export type SetCommunitiesAction = {
   type: 'SET_COMMUNITIES',
   communities: Community[],

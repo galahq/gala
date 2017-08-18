@@ -64,7 +64,8 @@ class ReadersController < ApplicationController
       @reader_can_set_password = @reader && !@reader.created_password
     end
 
-    permitted = %i[name initials email locale send_reply_notifications]
+    permitted = %i[name initials email locale send_reply_notifications
+                   active_community_id]
     permitted << :password if @reader_can_set_password
 
     params.require(:reader).permit(*permitted)

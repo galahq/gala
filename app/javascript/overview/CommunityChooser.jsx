@@ -10,14 +10,19 @@ import styled from 'styled-components'
 import { Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
+import { updateActiveCommunity } from 'redux/actions'
 
 import type { State, Community } from 'redux/state'
 
 type OwnProps = { rounded: boolean }
-function mapStateToProps ({ communities }: State, { rounded }: OwnProps) {
+function mapStateToProps (
+  { caseData, communities }: State,
+  { rounded }: OwnProps
+) {
   return {
     rounded,
     communities,
+    caseSlug: caseData.slug,
     activeCommunity: communities.find(community => community.active),
   }
 }
@@ -26,11 +31,15 @@ type Props = {
   activeCommunity: ?Community,
   communities: Community[],
   rounded: boolean,
+  caseSlug?: string,
+  updateActiveCommunity?: typeof updateActiveCommunity,
 }
 export const UnconnectedCommunityChooser = ({
   activeCommunity,
   communities,
   rounded,
+  caseSlug,
+  updateActiveCommunity,
 }: Props) =>
   <Bar empty={!activeCommunity} rounded={rounded}>
     {activeCommunity &&
@@ -51,7 +60,11 @@ export const UnconnectedCommunityChooser = ({
                 iconName={c.global ? 'globe' : 'social-media'}
                 className={c.active ? 'pt-active pt-intent-primary' : ''}
                 text={c.name}
-                onClick={() => {}}
+                onClick={() => {
+                  updateActiveCommunity &&
+                    caseSlug &&
+                    updateActiveCommunity(caseSlug, c.id)
+                }}
                 onKeyPress={acceptKeyboardClick}
               />
             )}
@@ -64,7 +77,9 @@ export const UnconnectedCommunityChooser = ({
       </Popover>}
   </Bar>
 
-export default connect(mapStateToProps)(UnconnectedCommunityChooser)
+export default connect(mapStateToProps, { updateActiveCommunity })(
+  UnconnectedCommunityChooser
+)
 
 const Bar = styled.div`
   background-color: #373566;
