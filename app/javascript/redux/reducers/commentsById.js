@@ -12,7 +12,7 @@ export default function commentsById (
 ): CommentsState {
   switch (action.type) {
     case 'SET_COMMENTS_BY_ID':
-      return action.commentsById
+      return action.commentsById || {}
 
     case 'ADD_COMMENT':
       return {

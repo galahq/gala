@@ -9,6 +9,7 @@ import { AppContainer } from 'react-hot-loader'
 
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
+import { enableBatching } from 'redux-batched-actions'
 import thunk from 'redux-thunk'
 
 import { FocusStyleManager } from '@blueprintjs/core'
@@ -27,7 +28,7 @@ import messages from '../../../config/locales/react.json' // eslint-disable-line
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
-const store = createStore(reducer, applyMiddleware(thunk))
+const store = createStore(enableBatching(reducer), applyMiddleware(thunk))
 
 if (!global.Intl) {
   global.Intl = require('intl')

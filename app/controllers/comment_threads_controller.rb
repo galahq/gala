@@ -7,10 +7,13 @@ class CommentThreadsController < ApplicationController
   before_action :set_comment_thread, only: %i[show destroy]
 
   def index
-    @comment_threads = @case.comment_threads
-                            .includes(comments: [:reader])
-                            .visible_to_reader?(current_reader)
-                            .order(:block_index, :start)
+    @comment_threads = current_reader
+                       .active_community
+                       .forums
+                       .find_by(case: @case)
+                       .comment_threads
+                       .visible_to_reader?(current_reader)
+                       .order(:block_index, :start)
   end
 
   def create

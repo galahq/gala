@@ -23,7 +23,7 @@ export default function commentThreadsById (
 ): CommentThreadsState {
   switch (action.type) {
     case 'SET_COMMENT_THREADS_BY_ID':
-      return action.commentThreadsById
+      return action.commentThreadsById || {}
 
     case 'ADD_COMMENT_THREAD':
       return {

@@ -2,6 +2,8 @@
  * @flow
  */
 
+import { batchActions } from 'redux-batched-actions'
+
 import { Orchard } from 'shared/orchard'
 import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
@@ -500,6 +502,7 @@ export function updateActiveCommunity (
   return async (dispatch: Dispatch) => {
     await Orchard.espalier(`profile`, { reader: { activeCommunityId: id }})
     dispatch(fetchCommunities(slug))
+    dispatch(fetchCommentThreads(slug))
   }
 }
 
@@ -518,9 +521,13 @@ export function fetchCommentThreads (slug: string): ThunkAction {
     const { commentThreads, comments, cards } = await Orchard.harvest(
       `cases/${slug}/comment_threads`
     )
-    dispatch(setCommentsById(comments))
-    dispatch(setCommentThreadsById(commentThreads))
-    dispatch(setCards(cards))
+    dispatch(
+      batchActions([
+        setCommentsById(comments),
+        setCommentThreadsById(commentThreads),
+        setCards(cards),
+      ])
+    )
     dispatch(parseAllCards())
   }
 }
