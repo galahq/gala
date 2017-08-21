@@ -29,7 +29,11 @@ class CommentThreadsController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    current_reader.update active_community_id: @comment_thread.forum
+                                                              .community.id
+    redirect_to inline_comment_thread_url @comment_thread
+  end
 
   def destroy
     authorize_action_for @comment_thread
@@ -56,5 +60,11 @@ class CommentThreadsController < ApplicationController
 
   def comment_thread_params
     params.require(:comment_thread).permit(:start, :length, :block_index, :original_highlight_text)
+  end
+
+  def inline_comment_thread_url(comment_thread)
+    "#{case_url(I18n.locale, comment_thread.card.case.slug)}" \
+      "/#{comment_thread.card.element.case_element.position}" \
+      "/cards/#{comment_thread.card_id}/comments/#{comment_thread.id}"
   end
 end
