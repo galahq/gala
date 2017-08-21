@@ -37,7 +37,7 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
-    selectionPending: editorState.getSelection().isCollapsed(),
+    selectionPending: !editorState.getSelection().isCollapsed(),
     closeCommentThreadsPath: params.url,
   }
 }
