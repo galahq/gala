@@ -7,20 +7,22 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
+import { Popover, Menu, MenuItem, Position, Icon } from '@blueprintjs/core'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
 import { updateActiveCommunity } from 'redux/actions'
 
 import type { State, Community } from 'redux/state'
 
-type OwnProps = { rounded: boolean }
+type OwnProps = { rounded: boolean, white: boolean, disabled: boolean }
 function mapStateToProps (
   { caseData, communities }: State,
-  { rounded }: OwnProps
+  { rounded, white, disabled }: OwnProps
 ) {
   return {
     rounded,
+    white,
+    disabled,
     communities,
     caseSlug: caseData.slug,
     activeCommunity: communities.find(community => community.active),
@@ -31,6 +33,8 @@ type Props = {
   activeCommunity: ?Community,
   communities: Community[],
   rounded: boolean,
+  white: boolean,
+  disabled: boolean,
   caseSlug?: string,
   updateActiveCommunity?: typeof updateActiveCommunity,
 }
@@ -38,10 +42,17 @@ export const UnconnectedCommunityChooser = ({
   activeCommunity,
   communities,
   rounded,
+  white,
+  disabled,
   caseSlug,
   updateActiveCommunity,
 }: Props) =>
-  <Bar empty={!activeCommunity} rounded={rounded}>
+  <Bar
+    empty={!activeCommunity}
+    rounded={rounded}
+    white={white}
+    disabled={disabled}
+  >
     {activeCommunity &&
       <Popover
         position={rounded ? Position.BOTTOM_LEFT : Position.BOTTOM}
@@ -71,8 +82,16 @@ export const UnconnectedCommunityChooser = ({
           </CommunityMenu>
         }
       >
-        <CommunityName onClick={acceptKeyboardClick}>
-          <span>{activeCommunity.name}</span> ▾
+        <CommunityName white={white} onClick={acceptKeyboardClick}>
+          <span>
+            <span
+              className={`pt-icon pt-icon-${activeCommunity.global
+                ? 'globe'
+                : 'social-media'}`}
+            />&#8196;
+            {activeCommunity.name}
+          </span>
+          {disabled ? '' : ' ▾'}
         </CommunityName>
       </Popover>}
   </Bar>
@@ -82,7 +101,7 @@ export default connect(mapStateToProps, { updateActiveCommunity })(
 )
 
 const Bar = styled.div`
-  background-color: #373566;
+  background-color: ${({ white }) => (white ? '#EBEAE4' : '#373566')};
   font-size: 10pt;
   line-height: 1.2;
   text-align: center;
@@ -91,7 +110,9 @@ const Bar = styled.div`
   border-bottom-width: 4px;
   border-bottom-style: solid;
   border-bottom-color: ${({ empty }) => (empty ? '#6acb72' : '#8764ea')};
-  border-radius: ${({ rounded }) => (rounded ? '0 0 2pt 2pt' : '0')};
+  border-radius: ${({ rounded, white }) =>
+    white ? '2pt' : rounded ? '0 0 2pt 2pt' : '0'};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `
 
 const CommunityMenu = styled(Menu)`
@@ -110,8 +131,9 @@ const CommunityName = styled.a.attrs({
   href: '#',
 })`
   font-weight: bold;
-  color: #d4c5ff !important;
   display: inline-block;
+
+  color: ${({ white }) => (white ? '#373566' : '#d4c5ff')} !important;
 
   &:focus,
   &:hover {

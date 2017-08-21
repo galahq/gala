@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 import { Portal } from '@blueprintjs/core'
 
 import { acceptSelection } from 'redux/actions'
@@ -13,6 +14,7 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
+import CommunityChooser from 'overview/CommunityChooser'
 import Icon from 'utility/Icon'
 
 import { EditorState } from 'draft-js'
@@ -58,7 +60,7 @@ const CommentThreadsCard = ({
 
   return (
     <div className="CommentThreads">
-      <div className={`CommentThreads__window`}>
+      <CommentThreadsWindow>
         <div style={styles.header}>
           <Link
             replace
@@ -120,7 +122,13 @@ const CommentThreadsCard = ({
                 />}
           </button>
         </div>
-      </div>
+      </CommentThreadsWindow>
+
+      {acceptingSelection &&
+        selectionPending &&
+        <ChooserWindow>
+          <CommunityChooser white disabled />
+        </ChooserWindow>}
 
       {
         <Portal>
@@ -174,3 +182,14 @@ const styles = {
     padding: '0 0.5em',
   },
 }
+
+const CommentThreadsWindow = styled.div`
+  background-color: #7351d4;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
+  color: white;
+`
+
+const ChooserWindow = styled.div`
+  margin-top: 1em;
+  border-radius: 2pt;
+`
