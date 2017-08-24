@@ -12,11 +12,17 @@ class Group < ApplicationRecord
 
   validates :context_id, uniqueness: true, if: -> () { context_id.present? }
 
+  after_create :create_associated_community
+
   def self.upsert(context_id:, name:)
     group = find_or_initialize_by context_id: context_id
     group.name = name
     group.save! if group.changed?
     group
+  end
+
+  def create_associated_community
+    create_community(name: name)
   end
 
   def deployment_for_case(kase)

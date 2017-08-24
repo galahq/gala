@@ -4,6 +4,7 @@ require 'rails_helper'
 
 feature 'Leaving a comment' do
   let (:enrollment) { create :enrollment }
+  let (:forum) { enrollment.case.forums.find_by community: nil }
 
   before { login_as enrollment.reader }
 
@@ -42,7 +43,8 @@ feature 'Leaving a comment' do
         block_index: 0,
         original_highlight_text: first_letter,
         reader: other_reader,
-        locale: I18n.locale
+        locale: I18n.locale,
+        forum: forum
       )
     end
 

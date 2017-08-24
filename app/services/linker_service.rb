@@ -41,6 +41,7 @@ class LinkerService
   class LTIStrategy
     def initialize(launch_params)
       @launch_params = launch_params
+      ensure_deployment_exists
     end
 
     def reader
@@ -73,6 +74,11 @@ class LinkerService
       @authentication_strategy ||= AuthenticationStrategy
                                    .find_by provider: 'lti',
                                             uid: @launch_params[:user_id]
+    end
+
+    def ensure_deployment_exists
+      return unless group.deployments.exists? case: kase
+      group.deployments.create case: kase
     end
   end
 

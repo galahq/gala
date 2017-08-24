@@ -19,6 +19,7 @@ class Case < ApplicationRecord
   has_many :comments, through: :comment_threads
   has_many :edgenotes, dependent: :destroy
   has_many :enrollments, dependent: :destroy
+  has_many :forums, dependent: :destroy
   has_many :pages, dependent: :destroy
   has_many :podcasts, dependent: :destroy
   has_many :readers, through: :enrollments
@@ -31,11 +32,17 @@ class Case < ApplicationRecord
   validates_format_of :slug, with: /\A[a-z0-9-]+\Z/
   validates :publication_date, presence: true, if: :published?
 
+  after_create :create_forum_for_global_community
+
   def <=>(other)
     return published ? 1 : -1 if published ^ other.try(:published)
     return publication_date.nil? ? -1 : 1 if publication_date.nil? ||
                                              other.publication_date.nil?
     publication_date <=> other.publication_date
+  end
+
+  def create_forum_for_global_community
+    Forum.create case: self
   end
 
   def to_param

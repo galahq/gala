@@ -10,6 +10,12 @@ class Deployment < ApplicationRecord
 
   validates :quiz, presence: true, if: -> { answers_needed.positive? }
 
+  after_create :create_forum
+
+  def create_forum
+    group.community.forums.create case: self.case
+  end
+
   def pretest_assigned?
     answers_needed >= 2
   end
