@@ -503,6 +503,7 @@ export function updateActiveCommunity (
     await Orchard.espalier(`profile`, { reader: { activeCommunityId: id }})
     dispatch(fetchCommunities(slug))
     dispatch(fetchCommentThreads(slug))
+    dispatch(resubscribeToActiveForumChannel(slug))
   }
 }
 
@@ -512,6 +513,37 @@ export type SetCommunitiesAction = {
 }
 export function setCommunities (communities: Community[]): SetCommunitiesAction {
   return { type: 'SET_COMMUNITIES', communities }
+}
+
+export function subscribeToActiveForumChannel (slug: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    App.forum = App.cable.subscriptions.create(
+      {
+        channel: 'ForumChannel',
+        case_slug: slug,
+        timestamp: Date.now(), // Timestamp needed for cachebusting
+      },
+      {
+        received: data => {
+          if (data.comment) {
+            dispatch(addComment(JSON.parse(data.comment)))
+          }
+          if (data.comment_thread) {
+            dispatch(addCommentThread(JSON.parse(data.comment_thread)))
+          }
+        },
+      }
+    )
+  }
+}
+
+export function resubscribeToActiveForumChannel (slug: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    if (App.forum == null) return
+    App.forum.unsubscribe()
+    delete App.forum
+    dispatch(subscribeToActiveForumChannel(slug))
+  }
 }
 
 // COMMENT THREAD

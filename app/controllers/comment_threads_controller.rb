@@ -14,6 +14,7 @@ class CommentThreadsController < ApplicationController
                        .comment_threads
                        .visible_to_reader?(current_reader)
                        .order(:block_index, :start)
+                       .includes(comments: [:reader])
   end
 
   def create
@@ -55,7 +56,7 @@ class CommentThreadsController < ApplicationController
   end
 
   def active_forum
-    Forum.find_by case: @card.case, community: current_reader.active_community
+    current_reader.active_community.forums.find_by case: @card.case
   end
 
   def comment_thread_params

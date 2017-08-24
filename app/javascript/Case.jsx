@@ -13,8 +13,7 @@ import {
   fetchCommentThreads,
   fetchCommunities,
   registerToaster,
-  addComment,
-  addCommentThread,
+  subscribeToActiveForumChannel,
   handleNotification,
 } from 'redux/actions.js'
 
@@ -30,29 +29,23 @@ import type { State } from 'redux/state'
 
 class Case extends React.Component {
   _subscribe = () => {
-    // $FlowFixMe
-    if (typeof App === 'undefined') return
-    // eslint-disable-next-line
-    App.forum = App.cable.subscriptions.create('ForumChannel', {
-      received: data => {
-        if (data.comment) {
-          this.props.addComment(JSON.parse(data.comment))
-        }
-        if (data.comment_thread) {
-          this.props.addCommentThread(JSON.parse(data.comment_thread))
-        }
-      },
-    })
+    const {
+      handleNotification,
+      subscribeToActiveForumChannel,
+      caseSlug,
+    } = this.props
 
-    // eslint-disable-next-line
+    if (typeof App === 'undefined') return
     App.readerNotification = App.cable.subscriptions.create(
       'ReaderNotificationsChannel',
       {
         received: data => {
-          this.props.handleNotification(JSON.parse(data.notification))
+          handleNotification(JSON.parse(data.notification))
         },
       }
     )
+
+    subscribeToActiveForumChannel(caseSlug)
   }
 
   componentDidMount () {
@@ -118,8 +111,7 @@ export default connect(
     fetchCommentThreads,
     fetchCommunities,
     registerToaster,
-    addComment,
-    addCommentThread,
+    subscribeToActiveForumChannel,
     handleNotification,
   }
 )(Case)
