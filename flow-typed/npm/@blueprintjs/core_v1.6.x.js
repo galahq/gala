@@ -71,6 +71,7 @@ declare module '@blueprintjs/core' {
     disabled?: boolean,
     text?: string,
     iconName?: string,
+    onClick?: SyntheticEvent => any,
   }
 
   declare export interface IBackdropProps {
@@ -97,6 +98,11 @@ declare module '@blueprintjs/core' {
 
   declare export interface IIntentProps {
     intent?: IntentType,
+  }
+
+  declare export interface ILinkProps {
+    href?: string,
+    target?: '_self' | '_blank' | '_parent' | '_top',
   }
 
   declare export interface IOptionProps {
@@ -195,10 +201,12 @@ declare module '@blueprintjs/core' {
   }
 
   declare export type Toast = {
+    action: IActionProps & ILinkProps,
     message: string,
     onDismiss?: (didTimoutExpire: boolean) => any,
+    iconName?: string,
     timeout?: number,
-  } & IActionProps & IProps & IIntentProps
+  } & IProps & IIntentProps
 
   declare export interface Toaster extends React$Component<*, *, *> {
     static create (

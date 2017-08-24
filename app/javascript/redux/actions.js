@@ -75,7 +75,7 @@ type PromiseAction = Promise<Action>
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
 export type Dispatch = (
   action: Action | ThunkAction | PromiseAction | Array<Action>
-) => void
+) => Promise<any>
 
 // API
 
@@ -799,13 +799,26 @@ export type HandleNotificationAction = {
 }
 export function handleNotification (notification: Notification): ThunkAction {
   return (dispatch: Dispatch) => {
+    const {
+      message,
+      case: kase,
+      element,
+      cardId,
+      commentThreadId,
+      community,
+    } = notification
     dispatch(
       displayToast({
-        message: notification.message,
+        message,
         intent: Intent.PRIMARY,
         action: {
-          href: `/cases/${notification.case.slug}/${notification.element
-            .position}/cards/${notification.cardId}/comments/${notification.commentThreadId}`,
+          onClick: _ => {
+            dispatch(
+              updateActiveCommunity(kase.slug, community.id)
+            ).then(() => {
+              window.location = `/cases/${kase.slug}/${element.position}/cards/${cardId}/comments/${commentThreadId}`
+            })
+          },
           text: 'Read',
         },
       })

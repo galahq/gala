@@ -201,6 +201,10 @@ export type ReplyToThreadNotification = {
     name: string,
     initials: string,
   },
+  community: {
+    id: string,
+    name: string,
+  },
   case: {
     slug: string,
     kicker: string,
