@@ -1,6 +1,6 @@
 .dialog.devise
   %h2= t '.my_account'
-  = form_for @reader do |f|
+  = form_for @reader, url: :profile do |f|
     .pt-control-group.pt-fill
       = f.label :name, class: "pt-label" do
         = t 'activerecord.attributes.reader.name'
@@ -33,7 +33,7 @@
     %p=link_to t('devise.registrations.edit.change_my_password'), edit_reader_registration_path
   - else
     %h2= t '.create_a_password'
-    = form_for @reader do |f|
+    = form_for @reader, url: :profile do |f|
       %p.pt-text-muted= t '.you_have_not_created_a_password', provider: @reader.providers.first.capitalize
       = f.label :password, class: 'pt-label' do
         = t 'activerecord.attributes.user.password'

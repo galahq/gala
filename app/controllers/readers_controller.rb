@@ -2,10 +2,10 @@
 
 class ReadersController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_reader, only: %i[show edit update destroy]
+  before_action :set_reader, only: %i[edit update destroy]
   layout 'window'
 
-  authorize_actions_for Case, except: %i[show edit update]
+  authorize_actions_for Case, except: %i[edit update]
 
   # GET /readers
   # GET /readers.json
@@ -16,34 +16,9 @@ class ReadersController < ApplicationController
     render layout: 'admin'
   end
 
-  # GET /readers/1
-  # GET /readers/1.json
-  def show; end
-
-  # GET /readers/new
-  def new
-    @reader = Reader.new
-  end
-
   # GET /readers/1/edit
   def edit
     authorize_action_for @reader
-  end
-
-  # POST /readers
-  # POST /readers.json
-  def create
-    @reader = Reader.new(reader_params)
-
-    respond_to do |format|
-      if @reader.save
-        format.html { redirect_to @reader, notice: 'Reader was successfully created.' }
-        format.json { render :show, status: :created, location: @reader }
-      else
-        format.html { render :new }
-        format.json { render json: @reader.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   # PATCH/PUT /readers/1
@@ -53,7 +28,7 @@ class ReadersController < ApplicationController
     respond_to do |format|
       if @reader.update(reader_params)
         bypass_sign_in @reader if reader_params.key? :password
-        format.html { redirect_to profile_path, notice: 'Reader was successfully updated.' }
+        format.html { redirect_to edit_profile_path, notice: 'Reader was successfully updated.' }
         format.json { render :show, status: :ok, location: @reader }
       else
         format.html { render :edit }
