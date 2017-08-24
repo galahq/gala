@@ -41,7 +41,7 @@ Rails.application.routes.draw do
       confirmations: 'readers/confirmations'
     }
 
-    resources :readers, only: %i[show edit update]
+    resource :profile, controller: :readers, only: %i[edit update]
 
     resources :quizzes, only: %i[create update] do
       resources :submissions, only: %i[create]

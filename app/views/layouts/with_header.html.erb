@@ -6,7 +6,7 @@
     <div id="reader-menu">
       <div id="reader-menu-dismiss" class="hidden dismiss menu-dismiss"></div>
       <ul id="reader-menu-dropdown" class="hidden">
-        <li><%=link_to t('readers.form.my_account'), edit_reader_path(current_reader) %></li>
+        <li><%=link_to t('readers.form.my_account'), edit_profile_path %></li>
         <li><%=link_to t('devise.sessions.destroy'), destroy_reader_session_path, method: :delete %></li>
       </ul>
       <div id="reader-icon"<%= raw " style=\"background-image: url('#{current_reader.image_url}')\"" unless current_reader.image_url.blank? %>>
