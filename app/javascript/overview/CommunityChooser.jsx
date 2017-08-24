@@ -31,7 +31,7 @@ function mapStateToProps (
 
 type Props = {
   activeCommunity: ?Community,
-  communities: Community[],
+  communities: ?(Community[]),
   rounded: boolean,
   white: boolean,
   disabled: boolean,
@@ -65,7 +65,7 @@ export const UnconnectedCommunityChooser = ({
               You’ll see the discussion taking place in the community you
               choose.
             </Instructions>
-            {communities.map(c =>
+            {(communities || []).map(c =>
               <MenuItem
                 key={c.id || 'null'}
                 iconName={c.global ? 'globe' : 'social-media'}

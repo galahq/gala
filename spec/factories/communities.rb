@@ -4,6 +4,5 @@ FactoryGirl.define do
   factory :community do
     name ''
     group nil
-    forum
   end
 end
