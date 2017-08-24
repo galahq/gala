@@ -60,7 +60,7 @@ class Less extends Component {
               role="button"
               tabIndex="0"
               onClick={this.handleOpen}
-              onKeyPress={acceptKeyboardClick(() => this.handleOpen())}
+              onKeyPress={acceptKeyboardClick}
             >
               {prompt}
             </ReadMoreLink>}

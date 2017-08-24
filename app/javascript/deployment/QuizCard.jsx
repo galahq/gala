@@ -20,7 +20,7 @@ const QuizCard = ({ id, questions, customQuestions, onClick }: Params) =>
     tabIndex="0"
     role="button"
     onClick={() => onClick(id)}
-    onKeyPress={acceptKeyboardClick(() => onClick(id))}
+    onKeyPress={acceptKeyboardClick}
   >
     {questions.length > 0 || customQuestions.length > 0
       ? <ol>
