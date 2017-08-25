@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :community do
-    name ''
+    name { "House #{Faker::GameOfThrones.house}" }
     group nil
   end
 end
