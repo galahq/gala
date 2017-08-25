@@ -6,7 +6,7 @@ feature 'Leaving a comment' do
   let!(:enrollment) { create :enrollment }
   let!(:global_forum) { enrollment.case.forums.find_by community: nil }
   let!(:private_forum) do
-    private_forum = create :forum, case: enrollment.case
+    private_forum = create :forum, :with_community, case: enrollment.case
     enrollment.reader.invitations.create community: private_forum.community
   end
 
