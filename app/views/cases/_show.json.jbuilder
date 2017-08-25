@@ -17,6 +17,9 @@ if reader_signed_in?
     json.partial! current_reader
     json.can_update_case current_reader.can_update? c
     json.enrollment @enrollment
+    json.active_community do
+      json.partial! current_reader.active_community
+    end
   end
 
   json.quiz do

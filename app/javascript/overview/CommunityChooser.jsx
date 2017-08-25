@@ -7,7 +7,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { Popover, Menu, MenuItem, Position, Icon } from '@blueprintjs/core'
+import {
+  Popover,
+  Menu,
+  MenuItem,
+  Position,
+  Tooltip,
+  Intent,
+} from '@blueprintjs/core'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
 import { updateActiveCommunity } from 'redux/actions'
@@ -19,13 +26,14 @@ function mapStateToProps (
   { caseData, communities }: State,
   { rounded, white, disabled }: OwnProps
 ) {
+  const { reader, slug: caseSlug } = caseData
   return {
     rounded,
     white,
-    disabled,
     communities,
-    caseSlug: caseData.slug,
-    activeCommunity: communities.find(community => community.active),
+    caseSlug,
+    disabled,
+    activeCommunity: reader && reader.enrollment && reader.activeCommunity,
   }
 }
 
@@ -46,55 +54,69 @@ export const UnconnectedCommunityChooser = ({
   disabled,
   caseSlug,
   updateActiveCommunity,
-}: Props) =>
-  <Bar
-    empty={!activeCommunity}
-    rounded={rounded}
-    white={white}
-    disabled={disabled}
-  >
-    {activeCommunity &&
-      <Popover
-        position={rounded ? Position.BOTTOM_LEFT : Position.BOTTOM}
-        content={
-          <CommunityMenu>
-            <li className="pt-menu-header">
-              <h6>Choose a community</h6>
-            </li>
-            <Instructions>
-              You’ll see the discussion taking place in the community you
-              choose.
-            </Instructions>
-            {(communities || []).map(c =>
-              <MenuItem
-                key={c.id || 'null'}
-                iconName={c.global ? 'globe' : 'social-media'}
-                className={c.active ? 'pt-active pt-intent-primary' : ''}
-                text={c.name}
-                onClick={() => {
-                  updateActiveCommunity &&
-                    caseSlug &&
-                    updateActiveCommunity(caseSlug, c.id)
-                }}
-                onKeyPress={acceptKeyboardClick}
-              />
-            )}
-          </CommunityMenu>
-        }
-      >
-        <CommunityName white={white} onClick={acceptKeyboardClick}>
-          <span>
-            <span
-              className={`pt-icon pt-icon-${activeCommunity.global
-                ? 'globe'
-                : 'social-media'}`}
-            />&#8196;
-            {activeCommunity.name}
-          </span>
-          {disabled ? '' : ' ▾'}
-        </CommunityName>
-      </Popover>}
-  </Bar>
+}: Props) => {
+  const activeCommunityPresent = (communities || [])
+    .some(x => activeCommunity && x.id === activeCommunity.id)
+  const anyCommunitiesPresent = communities && communities.length > 0
+  return (
+    <Bar
+      empty={!activeCommunity}
+      rounded={rounded}
+      white={white}
+      disabled={disabled}
+    >
+      {activeCommunity &&
+        <Popover
+          position={rounded ? Position.BOTTOM_LEFT : Position.BOTTOM}
+          isDisabled={!anyCommunitiesPresent}
+          content={
+            <CommunityMenu>
+              <li className="pt-menu-header">
+                <h6>Choose a community</h6>
+              </li>
+              <Instructions>
+                You’ll see the discussion taking place in the community you
+                choose.
+              </Instructions>
+              {(communities || []).map(c =>
+                <MenuItem
+                  key={c.id || 'null'}
+                  iconName={c.global ? 'globe' : 'social-media'}
+                  className={c.active ? 'pt-active pt-intent-primary' : ''}
+                  text={c.name}
+                  onClick={() => {
+                    updateActiveCommunity &&
+                      caseSlug &&
+                      updateActiveCommunity(caseSlug, c.id)
+                  }}
+                  onKeyPress={acceptKeyboardClick}
+                />
+              )}
+            </CommunityMenu>
+          }
+        >
+          <CommunityName white={white} onClick={acceptKeyboardClick}>
+            <Tooltip
+              isDisabled={activeCommunityPresent}
+              content="Your active community is not discussing this case"
+              intent={Intent.DANGER}
+              position={rounded ? Position.TOP_LEFT : Position.TOP}
+            >
+              <span>
+                <span
+                  className={`pt-icon pt-icon-${activeCommunityPresent
+                    ? activeCommunity.global ? 'globe' : 'social-media'
+                    : 'cross'}`}
+                />&#8196;
+                {activeCommunity.name}
+              </span>
+            </Tooltip>
+            {disabled || !anyCommunitiesPresent ? '' : ' ▾'}
+          </CommunityName>
+        </Popover>}
+    </Bar>
+  )
+}
 
 export default connect(mapStateToProps, { updateActiveCommunity })(
   UnconnectedCommunityChooser
