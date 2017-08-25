@@ -332,6 +332,8 @@ GEM
     shellany (0.0.1)
     slop (3.6.0)
     spring (1.7.2)
+    spring-commands-rspec (1.0.4)
+      spring (>= 0.9.1)
     spring-watcher-listen (2.0.0)
       listen (>= 2.7, < 4.0)
       spring (~> 1.2)
@@ -422,6 +424,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   selenium-webdriver
   spring
+  spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
   table_print
   tzinfo-data
