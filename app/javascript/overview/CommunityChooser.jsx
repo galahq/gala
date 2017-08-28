@@ -95,7 +95,11 @@ export const UnconnectedCommunityChooser = ({
             </CommunityMenu>
           }
         >
-          <CommunityName white={white} onClick={acceptKeyboardClick}>
+          <CommunityName
+            white={white}
+            disabled={!anyCommunitiesPresent}
+            onClick={acceptKeyboardClick}
+          >
             <Tooltip
               isDisabled={activeCommunityPresent}
               content="Your active community is not discussing this case"
@@ -160,10 +164,10 @@ const CommunityName = styled.a.attrs({
   &:focus,
   &:hover {
     outline: none;
-    color: white !important;
+    color: ${({ disabled }) => (disabled ? 'inhert' : 'white !important')};
 
     & > span {
-      text-decoration: underline;
+      text-decoration: ${({ disabled }) => (disabled ? '' : 'underline')};
     }
   }
 `
