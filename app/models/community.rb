@@ -2,7 +2,7 @@
 
 class Community < ApplicationRecord
   belongs_to :group
-  has_many :invitiations
+  has_many :invitations
   has_many :forums # One forum for each case the community is discussing
 
   include Mobility

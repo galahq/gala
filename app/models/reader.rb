@@ -72,7 +72,22 @@ class Reader < ApplicationRecord
   end
 
   def communities
-    Community.where id: (invited_communities | group_communities)
+    query = Community
+            .distinct
+            .joins(<<~SQL)
+              LEFT JOIN "invitations"
+              ON "communities"."id" = "invitations"."community_id"
+            SQL
+            .joins(<<~SQL)
+              LEFT JOIN "groups"
+              ON "communities"."group_id" = "groups"."id"
+                LEFT JOIN "group_memberships"
+                ON "groups"."id" = "group_memberships"."group_id"
+            SQL
+
+    query.where("invitations.reader_id = #{id}").or(
+      query.where("group_memberships.reader_id = #{id}")
+    )
   end
 
   def ensure_authentication_token
