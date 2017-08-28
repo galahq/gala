@@ -122,7 +122,6 @@ function mergeProps (stateProps, dispatchProps, ownProps: OwnProps) {
 
     addCommentThread: async () => {
       if (!editable && !editorState.getSelection().isCollapsed()) {
-        // $FlowFixMe
         const threadId: string = await createCommentThread(
           ownProps.id,
           editorState
