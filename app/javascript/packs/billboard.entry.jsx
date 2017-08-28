@@ -35,7 +35,12 @@ if (container != null) {
   ReactDOM.render(
     <Column>
       <UnconnectedBillboardTitle updateCase={() => {}} {...caseData} />
-      <UnconnectedCommunityChooser rounded activeCommunity={groupData} />
+      <UnconnectedCommunityChooser
+        rounded
+        disabled
+        activeCommunity={groupData}
+        communities={[{ groupData }]}
+      />
 
       <form action="/enrollments" method="POST">
         <input type="hidden" name="deployment_key" value={deploymentKey} />
