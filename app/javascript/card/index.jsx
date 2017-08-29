@@ -41,7 +41,9 @@ function mapStateToProps (
   state: State,
   { id, location, nonNarrative }: OwnProps
 ) {
-  const { solid, editorState } = state.cardsById[id]
+  const { solid, commentThreads } = state.cardsById[id]
+  const editorState =
+    state.cardsById[id].editorState || EditorState.createEmpty()
   const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
 
   const { pathname } = location
@@ -53,6 +55,7 @@ function mapStateToProps (
 
   return {
     commentable:
+      commentThreads != null &&
       !nonNarrative &&
       state.caseData.commentable &&
       !!(state.caseData.reader && state.caseData.reader.enrollment),
@@ -119,7 +122,6 @@ function mergeProps (stateProps, dispatchProps, ownProps: OwnProps) {
 
     addCommentThread: async () => {
       if (!editable && !editorState.getSelection().isCollapsed()) {
-        // $FlowFixMe
         const threadId: string = await createCommentThread(
           ownProps.id,
           editorState

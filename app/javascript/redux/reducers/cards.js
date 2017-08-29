@@ -12,6 +12,7 @@ import type { RawDraftContentState } from 'draft-js'
 
 import type { CardsState, Card, CommentThread } from 'redux/state'
 import type {
+  SetCardsAction,
   UpdateCardContentsAction,
   ApplySelectionAction,
   ReplaceCardAction,
@@ -25,6 +26,7 @@ import type {
 const { forceSelection } = EditorState
 
 type Action =
+  | SetCardsAction
   | UpdateCardContentsAction
   | ApplySelectionAction
   | ReplaceCardAction
@@ -35,10 +37,16 @@ type Action =
   | AddActivityAction
 
 function cardsById (
-  state: CardsState = getInitialEmptyCards(),
+  state: CardsState = ({ ...window.caseData.cards }: CardsState),
   action: Action
 ): CardsState {
   switch (action.type) {
+    case 'SET_CARDS':
+      return {
+        ...state,
+        ...action.cards,
+      }
+
     case 'UPDATE_CARD_CONTENTS':
       return {
         ...state,
@@ -49,7 +57,8 @@ function cardsById (
       }
 
     case 'APPLY_SELECTION': {
-      const editorState = state[action.cardId].editorState
+      const editorState =
+        state[action.cardId].editorState || EditorState.createEmpty()
 
       return {
         ...state,
@@ -84,11 +93,13 @@ function cardsById (
     case 'ADD_COMMENT_THREAD': {
       const { data } = action
       const card = state[data.cardId]
-      if (card.commentThreads.find(x => x.id === data.id)) return state
+      const commentThreads = card.commentThreads || []
+
+      if (commentThreads.find(x => x.id === data.id)) return state
 
       const newCard = {
         ...card,
-        commentThreads: [...card.commentThreads, data].sort(sortCommentThreads),
+        commentThreads: [...commentThreads, data].sort(sortCommentThreads),
       }
       return {
         ...state,
@@ -101,11 +112,10 @@ function cardsById (
 
     case 'REMOVE_COMMENT_THREAD': {
       const { cardId, threadId } = action
+      const commentThreads = state[cardId].commentThreads || []
       const newCard = {
         ...state[cardId],
-        commentThreads: state[cardId].commentThreads.filter(
-          x => x.id !== threadId
-        ),
+        commentThreads: commentThreads.filter(x => x.id !== threadId),
       }
       return {
         ...state,
@@ -136,20 +146,6 @@ export default cardsById
 function sortCommentThreads (a: CommentThread, b: CommentThread): number {
   if (a.blockIndex !== b.blockIndex) return a.blockIndex - b.blockIndex
   return a.start - b.start
-}
-
-function getInitialEmptyCards (): CardsState {
-  const state = ({ ...window.caseData.cards }: CardsState)
-
-  return Object.keys(state).map(key => state[key]).reduce((all, card) => {
-    return {
-      ...all,
-      [card.id]: {
-        ...card,
-        editorState: EditorState.createEmpty(),
-      },
-    }
-  }, {})
 }
 
 function parseEditorStateFromPersistedCard (card: Card) {

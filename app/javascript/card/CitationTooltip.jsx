@@ -16,8 +16,9 @@ type OwnProps = {
   openedCitation: { key: string, labelRef: any },
 }
 function mapStateToProps (state: State, ownProps: OwnProps) {
-  let { editorState } = state.cardsById[ownProps.cardId]
-  let { href, contents } = editorState
+  const editorState =
+    state.cardsById[ownProps.cardId].editorState || EditorState.createEmpty()
+  const { href, contents } = editorState
     .getCurrentContent()
     .getEntity(ownProps.openedCitation.key)
     .getData()

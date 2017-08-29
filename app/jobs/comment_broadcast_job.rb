@@ -4,8 +4,8 @@ class CommentBroadcastJob < ActiveJob::Base
   queue_as :default
 
   def perform(comment)
-    ActionCable.server.broadcast 'forum_channel',
-                                 comment: render_comment(comment)
+    ForumChannel.broadcast_to comment.forum,
+                              comment: render_comment(comment)
   end
 
   private

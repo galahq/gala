@@ -4,7 +4,7 @@ require 'rails_helper'
 
 feature 'Viewing a case' do
   context 'while not logged in' do
-    let!(:kase) { create :case_with_elements, :published}
+    let!(:kase) { create :case_with_elements, :published }
 
     scenario 'is possible' do
       visit root_path
@@ -35,6 +35,25 @@ feature 'Viewing a case' do
         click_link published_case.title
         click_link published_case.pages.first.title
         expect(page).not_to have_selector '.c-statistics'
+      end
+
+      context 'without a forum for your active community' do
+        scenario 'the community chooser displays the community as inactive' do
+          invited_community = create :community
+          user.invitations.create community: invited_community
+          user.update active_community_id: invited_community.id
+
+          visit case_path('en', published_case)
+          click_button 'Enroll'
+          expect(page).to have_content "#{invited_community.name} ▾"
+          find_link(invited_community.name).hover
+          expect(find_link(invited_community.name)).to have_selector '.pt-icon-cross'
+
+          click_link(published_case.pages.first.title)
+          click_link(invited_community.name)
+          find('.pt-menu-item', text: GlobalCommunity.instance.name).click
+          expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
+        end
       end
     end
 

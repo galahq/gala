@@ -10,9 +10,10 @@ import DocumentTitle from 'react-document-title'
 
 import {
   parseAllCards,
+  fetchCommentThreads,
+  fetchCommunities,
   registerToaster,
-  addComment,
-  addCommentThread,
+  subscribeToActiveForumChannel,
   handleNotification,
 } from 'redux/actions.js'
 
@@ -28,35 +29,43 @@ import type { State } from 'redux/state'
 
 class Case extends React.Component {
   _subscribe = () => {
-    // $FlowFixMe
-    if (typeof App === 'undefined') return
-    // eslint-disable-next-line
-    App.forum = App.cable.subscriptions.create('ForumChannel', {
-      received: data => {
-        if (data.comment) {
-          this.props.addComment(JSON.parse(data.comment))
-        }
-        if (data.comment_thread) {
-          this.props.addCommentThread(JSON.parse(data.comment_thread))
-        }
-      },
-    })
+    const {
+      handleNotification,
+      subscribeToActiveForumChannel,
+      caseSlug,
+    } = this.props
 
-    // eslint-disable-next-line
+    if (typeof App === 'undefined') return
     App.readerNotification = App.cable.subscriptions.create(
       'ReaderNotificationsChannel',
       {
         received: data => {
-          this.props.handleNotification(JSON.parse(data.notification))
+          handleNotification(JSON.parse(data.notification))
         },
       }
     )
+
+    subscribeToActiveForumChannel(caseSlug)
   }
 
   componentDidMount () {
-    setTimeout(() => this.props.parseAllCards(), 1)
+    const {
+      parseAllCards,
+      loadComments,
+      caseSlug,
+      fetchCommentThreads,
+      fetchCommunities,
+      registerToaster,
+    } = this.props
 
-    this.props.registerToaster(Toaster.create())
+    parseAllCards()
+
+    if (loadComments) {
+      fetchCommentThreads(caseSlug)
+      fetchCommunities(caseSlug)
+    }
+
+    registerToaster(Toaster.create())
 
     this._subscribe()
   }
@@ -85,20 +94,24 @@ class Case extends React.Component {
 }
 
 export default connect(
-  (state: State) => ({
-    needsPretest: state.quiz.needsPretest,
-    needsPosttest: state.quiz.needsPosttest,
-    kicker: state.caseData.kicker,
+  ({ quiz, caseData }: State) => ({
+    needsPretest: quiz.needsPretest,
+    needsPosttest: quiz.needsPosttest,
+    caseSlug: caseData.slug,
+    kicker: caseData.kicker,
+    loadComments:
+      caseData.commentable && caseData.reader && caseData.reader.enrollment,
     basename: location.pathname.replace(
-      RegExp(`${state.caseData.slug}.*`),
-      state.caseData.slug
+      RegExp(`${caseData.slug}.*`),
+      caseData.slug
     ),
   }),
   {
     parseAllCards,
+    fetchCommentThreads,
+    fetchCommunities,
     registerToaster,
-    addComment,
-    addCommentThread,
+    subscribeToActiveForumChannel,
     handleNotification,
   }
 )(Case)

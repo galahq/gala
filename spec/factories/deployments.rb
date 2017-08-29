@@ -20,5 +20,10 @@ FactoryGirl.define do
       with_quiz
       answers_needed 2
     end
+
+    after :create do |this|
+      community = this.group.create_community name: this.group.name
+      community.forums.create case: this.case
+    end
   end
 end

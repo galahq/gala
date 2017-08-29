@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170721144836) do
+ActiveRecord::Schema.define(version: 20170809171600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,7 +118,6 @@ ActiveRecord::Schema.define(version: 20170721144836) do
 
   create_table "comment_threads", force: :cascade do |t|
     t.integer  "case_id"
-    t.integer  "group_id"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.integer  "start"
@@ -128,9 +127,11 @@ ActiveRecord::Schema.define(version: 20170721144836) do
     t.string   "locale"
     t.integer  "card_id"
     t.integer  "reader_id"
+    t.integer  "forum_id"
+    t.integer  "comments_count"
     t.index ["card_id"], name: "index_comment_threads_on_card_id", using: :btree
     t.index ["case_id"], name: "index_comment_threads_on_case_id", using: :btree
-    t.index ["group_id"], name: "index_comment_threads_on_group_id", using: :btree
+    t.index ["forum_id"], name: "index_comment_threads_on_forum_id", using: :btree
     t.index ["reader_id"], name: "index_comment_threads_on_reader_id", using: :btree
   end
 
@@ -143,6 +144,14 @@ ActiveRecord::Schema.define(version: 20170721144836) do
     t.jsonb    "content",           default: ""
     t.index ["comment_thread_id"], name: "index_comments_on_comment_thread_id", using: :btree
     t.index ["reader_id"], name: "index_comments_on_reader_id", using: :btree
+  end
+
+  create_table "communities", force: :cascade do |t|
+    t.jsonb    "name"
+    t.integer  "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_communities_on_group_id", using: :btree
   end
 
   create_table "deployments", force: :cascade do |t|
@@ -197,6 +206,15 @@ ActiveRecord::Schema.define(version: 20170721144836) do
     t.index ["reader_id"], name: "index_enrollments_on_reader_id", using: :btree
   end
 
+  create_table "forums", force: :cascade do |t|
+    t.integer  "case_id"
+    t.integer  "community_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["case_id"], name: "index_forums_on_case_id", using: :btree
+    t.index ["community_id"], name: "index_forums_on_community_id", using: :btree
+  end
+
   create_table "group_memberships", force: :cascade do |t|
     t.integer  "reader_id"
     t.integer  "group_id"
@@ -212,6 +230,18 @@ ActiveRecord::Schema.define(version: 20170721144836) do
     t.string   "context_id"
     t.jsonb    "name",       default: ""
     t.index ["context_id"], name: "index_groups_on_context_id", using: :btree
+  end
+
+  create_table "invitations", force: :cascade do |t|
+    t.integer  "reader_id"
+    t.integer  "community_id"
+    t.integer  "inviter_id"
+    t.datetime "accepted_at"
+    t.datetime "rescinded_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["community_id"], name: "index_invitations_on_community_id", using: :btree
+    t.index ["reader_id"], name: "index_invitations_on_reader_id", using: :btree
   end
 
   create_table "pages", force: :cascade do |t|
@@ -284,6 +314,8 @@ ActiveRecord::Schema.define(version: 20170721144836) do
     t.string   "unconfirmed_email"
     t.boolean  "created_password",         default: true
     t.boolean  "send_reply_notifications", default: true
+    t.integer  "active_community_id"
+    t.index ["active_community_id"], name: "index_readers_on_active_community_id", using: :btree
     t.index ["confirmation_token"], name: "index_readers_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_readers_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_readers_on_reset_password_token", unique: true, using: :btree
@@ -356,20 +388,26 @@ ActiveRecord::Schema.define(version: 20170721144836) do
   add_foreign_key "case_elements", "cases"
   add_foreign_key "comment_threads", "cards"
   add_foreign_key "comment_threads", "cases"
-  add_foreign_key "comment_threads", "groups"
+  add_foreign_key "comment_threads", "forums"
   add_foreign_key "comment_threads", "readers"
   add_foreign_key "comments", "comment_threads"
   add_foreign_key "comments", "readers"
+  add_foreign_key "communities", "groups"
   add_foreign_key "deployments", "cases"
   add_foreign_key "deployments", "groups"
   add_foreign_key "deployments", "quizzes"
   add_foreign_key "edgenotes", "cards"
   add_foreign_key "enrollments", "cases"
   add_foreign_key "enrollments", "readers"
+  add_foreign_key "forums", "cases"
+  add_foreign_key "forums", "communities"
   add_foreign_key "group_memberships", "groups"
   add_foreign_key "group_memberships", "readers"
+  add_foreign_key "invitations", "communities"
+  add_foreign_key "invitations", "readers"
   add_foreign_key "pages", "cases"
   add_foreign_key "podcasts", "cases"
   add_foreign_key "questions", "quizzes"
   add_foreign_key "quizzes", "cases"
+  add_foreign_key "readers", "communities", column: "active_community_id"
 end

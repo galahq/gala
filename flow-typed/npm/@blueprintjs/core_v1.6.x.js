@@ -2,35 +2,34 @@
 // flow-typed version: <<STUB>>/@blueprintjs/core_v^1.6.0/flow_v0.43.1
 
 declare module '@blueprintjs/core' {
-
   //
   // Constants
   //
-  declare export type PRIMARY = "PRIMARY"
-  declare export type SUCCESS = "SUCCESS"
-  declare export type WARNING = "WARNING"
-  declare export type DANGER = "DANGER"
+  declare export type PRIMARY = 'PRIMARY'
+  declare export type SUCCESS = 'SUCCESS'
+  declare export type WARNING = 'WARNING'
+  declare export type DANGER = 'DANGER'
   declare export type IntentType = PRIMARY | SUCCESS | WARNING | DANGER
 
   declare export interface Intent {
-    static PRIMARY: PRIMARY;
-    static SUCCESS: SUCCESS;
-    static WARNING: WARNING;
-    static DANGER: DANGER;
+    static PRIMARY: PRIMARY,
+    static SUCCESS: SUCCESS,
+    static WARNING: WARNING,
+    static DANGER: DANGER,
   }
 
-  declare export type TOP_LEFT = "TOP_LEFT"
-  declare export type TOP = "TOP"
-  declare export type TOP_RIGHT = "TOP_RIGHT"
-  declare export type RIGHT_TOP = "RIGHT_TOP"
-  declare export type RIGHT = "RIGHT"
-  declare export type RIGHT_BOTTOM = "RIGHT_BOTTOM"
-  declare export type BOTTOM_RIGHT = "BOTTOM_RIGHT"
-  declare export type BOTTOM = "BOTTOM"
-  declare export type BOTTOM_LEFT = "BOTTOM_LEFT"
-  declare export type LEFT_BOTTOM = "LEFT_BOTTOM"
-  declare export type LEFT = "LEFT"
-  declare export type LEFT_TOP = "LEFT_TOP"
+  declare export type TOP_LEFT = 'TOP_LEFT'
+  declare export type TOP = 'TOP'
+  declare export type TOP_RIGHT = 'TOP_RIGHT'
+  declare export type RIGHT_TOP = 'RIGHT_TOP'
+  declare export type RIGHT = 'RIGHT'
+  declare export type RIGHT_BOTTOM = 'RIGHT_BOTTOM'
+  declare export type BOTTOM_RIGHT = 'BOTTOM_RIGHT'
+  declare export type BOTTOM = 'BOTTOM'
+  declare export type BOTTOM_LEFT = 'BOTTOM_LEFT'
+  declare export type LEFT_BOTTOM = 'LEFT_BOTTOM'
+  declare export type LEFT = 'LEFT'
+  declare export type LEFT_TOP = 'LEFT_TOP'
   declare export type PositionType =
     | TOP_LEFT
     | TOP
@@ -46,18 +45,35 @@ declare module '@blueprintjs/core' {
     | LEFT_TOP
 
   declare export interface Position {
-    static TOP_LEFT: TOP_LEFT;
-    static TOP: TOP;
-    static TOP_RIGHT: TOP_RIGHT;
-    static RIGHT_TOP: RIGHT_TOP;
-    static RIGHT: RIGHT;
-    static RIGHT_BOTTOM: RIGHT_BOTTOM;
-    static BOTTOM_RIGHT: BOTTOM_RIGHT;
-    static BOTTOM: BOTTOM;
-    static BOTTOM_LEFT: BOTTOM_LEFT;
-    static LEFT_BOTTOM: LEFT_BOTTOM;
-    static LEFT: LEFT;
-    static LEFT_TOP: LEFT_TOP;
+    static TOP_LEFT: TOP_LEFT,
+    static TOP: TOP,
+    static TOP_RIGHT: TOP_RIGHT,
+    static RIGHT_TOP: RIGHT_TOP,
+    static RIGHT: RIGHT,
+    static RIGHT_BOTTOM: RIGHT_BOTTOM,
+    static BOTTOM_RIGHT: BOTTOM_RIGHT,
+    static BOTTOM: BOTTOM,
+    static BOTTOM_LEFT: BOTTOM_LEFT,
+    static LEFT_BOTTOM: LEFT_BOTTOM,
+    static LEFT: LEFT,
+    static LEFT_TOP: LEFT_TOP,
+  }
+
+  declare export type CLICK = 'CLICK'
+  declare export type CLICK_TARGET_ONLY = 'CLICK_TARGET_ONLY'
+  declare export type HOVER = 'HOVER'
+  declare export type HOVER_TARGET_ONLY = 'HOVER_TARGET_ONLY'
+  declare export type PopoverInteractionKindType =
+    | CLICK
+    | CLICK_TARGET_ONLY
+    | HOVER
+    | HOVER_TARGET_ONLY
+
+  declare export interface PopoverInteractionKind {
+    static CLICK: CLICK,
+    static CLICK_TARGET_ONLY: CLICK_TARGET_ONLY,
+    static HOVER: HOVER,
+    static HOVER_TARGET_ONLY: HOVER_TARGET_ONLY,
   }
 
   //
@@ -71,6 +87,7 @@ declare module '@blueprintjs/core' {
     disabled?: boolean,
     text?: string,
     iconName?: string,
+    onClick?: SyntheticEvent => any,
   }
 
   declare export interface IBackdropProps {
@@ -99,6 +116,11 @@ declare module '@blueprintjs/core' {
     intent?: IntentType,
   }
 
+  declare export interface ILinkProps {
+    href?: string,
+    target?: '_self' | '_blank' | '_parent' | '_top',
+  }
+
   declare export interface IOptionProps {
     disabled?: boolean,
     label?: string,
@@ -121,7 +143,7 @@ declare module '@blueprintjs/core' {
   declare export interface Button extends React$Component<*, *, *> {
     props: {
       active?: boolean,
-    } & IActionProps
+    } & IActionProps,
   }
 
   declare export interface EditableText extends React$Component<*, *, *> {
@@ -142,7 +164,8 @@ declare module '@blueprintjs/core' {
       placeholder?: string,
       selectAllOnFocus?: boolean,
       value?: string,
-    } & IProps & IIntentProps
+    } & IProps &
+      IIntentProps,
   }
 
   declare export interface Dialog extends React$Component<*, *, *> {
@@ -152,7 +175,9 @@ declare module '@blueprintjs/core' {
       isOpen: boolean,
       style: Object,
       title: string | React$Element<*>,
-    } & IProps & IBackdropProps & IOverlayableProps
+    } & IProps &
+      IBackdropProps &
+      IOverlayableProps,
   }
 
   declare export interface InputGroup extends React$Component<*, *, *> {
@@ -163,7 +188,25 @@ declare module '@blueprintjs/core' {
       placeholder?: string,
       rightElement?: React$Element<*>,
       type?: string,
-    } & IProps & IControlledProps
+    } & IProps &
+      IControlledProps,
+  }
+
+  declare export interface Menu extends React$Component<*, *, *> {
+    props: { ulRef: (ref: HTMLUListElement) => any } & IProps,
+  }
+
+  declare export interface MenuItem extends React$Component<*, *, *> {
+    props: {
+      label?: string | React$Element<*>,
+      shouldDismissPopover?: boolean,
+      submenu?: Array<$PropertyType<MenuItem, 'props'>>,
+      submenuViewportMargin?: { left?: number, right?: number },
+      text: string,
+      useSmartPositioning?: boolean,
+    } & IProps &
+      IActionProps &
+      ILinkProps,
   }
 
   declare export interface NonIdealState extends React$Component<*, *, *> {
@@ -172,15 +215,40 @@ declare module '@blueprintjs/core' {
       description?: string | React$Element<*>,
       title?: string,
       visual?: string | React$Element<*>,
-    } & IProps
+    } & IProps,
   }
 
-  declare export interface Portal extends React$Component<*, *, *> {
-
+  declare export interface Popover extends React$Component<*, *, *> {
+    props: {
+      backdropProps?: HTMLDivElement,
+      content?: string | React$Element<*>,
+      defaultIsOpen?: boolean,
+      hoverCloseDelay?: number,
+      hoverOpenDelay?: number,
+      inheritDarkTheme?: boolean,
+      interactionKind?: PopoverInteractionKindType,
+      isDisabled?: boolean,
+      isModal?: boolean,
+      isOpen?: boolean,
+      onInteraction?: (nextOpenState: boolean) => void,
+      popoverClassName?: string,
+      popoverDidOpen?: () => void,
+      popoverWillClose?: () => void,
+      popoverWillOpen?: () => void,
+      portalClassName?: string,
+      position?: PositionType,
+      rootElementTag?: string,
+      target?: string | React$Element<*>,
+      tetherOptions?: Object,
+      useSmartArrowPositioning?: boolean,
+    } & IOverlayableProps &
+      IProps,
   }
+
+  declare export interface Portal extends React$Component<*, *, *> {}
 
   declare export interface Radio extends React$Component<*, *, *> {
-    props: IControlProps & IProps
+    props: IControlProps & IProps,
   }
 
   declare export interface RadioGroup extends React$Component<*, *, *> {
@@ -191,17 +259,20 @@ declare module '@blueprintjs/core' {
       onChange: (event: SyntheticInputEvent) => any,
       options?: IOptionProps[],
       selectedValue?: string,
-    }
+    },
   }
 
   declare export type Toast = {
+    action?: IActionProps & ILinkProps,
     message: string,
     onDismiss?: (didTimoutExpire: boolean) => any,
+    iconName?: string,
     timeout?: number,
-  } & IActionProps & IProps & IIntentProps
+  } & IProps &
+    IIntentProps
 
   declare export interface Toaster extends React$Component<*, *, *> {
-    static create (
+    static create(
       props: ?({
         autoFocus?: boolean,
         canEscapeKeyClear?: boolean,
@@ -210,18 +281,17 @@ declare module '@blueprintjs/core' {
       } & IProps),
       container: ?HTMLElement
     ): Toaster,
-    show (props: Toast): string,
-    update (key: string, props: Toast): void,
-    dismiss (key: string): void,
-    clear (): void,
-    getToasts (): Toast[],
+    show(props: Toast): string,
+    update(key: string, props: Toast): void,
+    dismiss(key: string): void,
+    clear(): void,
+    getToasts(): Toast[],
   }
 
   declare export interface Tooltip extends React$Component<*, *, *> {
     props: {
       isDisabled?: boolean,
       content: string,
-    } & IIntentProps
+    } & IIntentProps,
   }
-
 }

@@ -5,20 +5,7 @@
 import type { EditorState } from 'draft-js'
 
 // Redux state
-export type State = {
-  activitiesById: ActivitiesState,
-  cardsById: CardsState,
-  caseData: CaseDataState,
-  commentThreadsById: CommentThreadsState,
-  commentsById: CommentsState,
-  edgenotesBySlug: EdgenotesState,
-  edit: EditState,
-  pagesById: PagesState,
-  podcastsById: PodcastsState,
-  quiz: QuizState,
-  statistics: StatisticsState,
-  ui: UIState,
-}
+export type { State } from 'redux/reducers'
 
 export type ActivitiesState = {
   [activityId: string]: Activity,
@@ -133,9 +120,9 @@ export type Byline = {
 }
 
 export type Card = {
-  commentThreads: CommentThread[],
+  commentThreads: ?(CommentThread[]),
   content: string,
-  editorState: EditorState,
+  editorState: ?EditorState,
   id: string,
   position: number,
   rawContent: string,
@@ -169,6 +156,7 @@ export type CommentThread = {
   blockIndex: number,
   cardId: string,
   commentIds: number[],
+  commentsCount: number,
   id: string,
   length: number,
   originalHighlightText: string,
@@ -199,8 +187,11 @@ export type Edgenote = {
   youtubeSlug: string,
 }
 
-export type Group = {
+export type Community = {
+  id: string | null,
   name: string,
+  active: boolean,
+  global: boolean,
 }
 
 export type ReplyToThreadNotification = {
@@ -209,6 +200,10 @@ export type ReplyToThreadNotification = {
     id: string,
     name: string,
     initials: string,
+  },
+  community: {
+    id: string,
+    name: string,
   },
   case: {
     slug: string,
@@ -268,7 +263,7 @@ export type Question = {
 }
 
 export type Reader = {
-  activeGroup: ?Group,
+  activeCommunity: ?Community,
   canUpdateCase: boolean,
   email: string,
   enrollment: ?{

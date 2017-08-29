@@ -14,6 +14,7 @@ import type {
   AddPageAction,
   AddPodcastAction,
   AddActivityAction,
+  SetCommunitiesAction,
 } from 'redux/actions'
 
 import type { CaseDataState } from 'redux/state'
@@ -27,6 +28,7 @@ type Action =
   | AddPageAction
   | AddPodcastAction
   | AddActivityAction
+  | SetCommunitiesAction
 
 export default function caseData (
   state: CaseDataState = ({ ...window.caseData }: CaseDataState),
@@ -80,6 +82,17 @@ export default function caseData (
           ...state.caseElements.slice(0, action.position),
           ...state.caseElements.slice(action.position + 1),
         ],
+      }
+
+    case 'SET_COMMUNITIES':
+      return {
+        ...state,
+        reader: {
+          ...state.reader,
+          activeCommunity:
+            action.communities.find(x => x.active) ||
+            (state.reader && state.reader.activeCommunity),
+        },
       }
 
     default:

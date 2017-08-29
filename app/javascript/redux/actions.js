@@ -2,11 +2,14 @@
  * @flow
  */
 
+import { batchActions } from 'redux-batched-actions'
+
 import { Orchard } from 'shared/orchard'
 import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 
-import type { EditorState, SelectionState } from 'draft-js'
+import { EditorState } from 'draft-js'
+import type { SelectionState } from 'draft-js'
 import type { Toaster, Toast } from '@blueprintjs/core'
 
 import type {
@@ -14,11 +17,15 @@ import type {
   CaseDataState,
   CaseElement,
   Card,
+  CardsState,
   Page,
   Podcast,
   Activity,
   Comment,
+  CommentsState,
   CommentThread,
+  CommentThreadsState,
+  Community,
   Edgenote,
   QuizNecessity,
   Notification,
@@ -58,13 +65,17 @@ export type Action =
   | RecordQuizSubmissionAction
   | SetStatisticsAction
   | DisplayToastAction
+  | SetCardsAction
+  | SetCommentsByIdAction
+  | SetCommentThreadsByIdAction
+  | SetCommunitiesAction
 
 type GetState = () => State
 type PromiseAction = Promise<Action>
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
 export type Dispatch = (
   action: Action | ThunkAction | PromiseAction | Array<Action>
-) => void
+) => Promise<any>
 
 // API
 
@@ -135,7 +146,8 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
 
     case 'cards':
       {
-        const { editorState } = state.cardsById[id]
+        const editorState =
+          state.cardsById[id].editorState || EditorState.createEmpty()
         data = {
           card: {
             rawContent: JSON.stringify(
@@ -234,6 +246,8 @@ export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
       `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
     )
     dispatch(setReaderEnrollment(!!enrollment))
+    dispatch(fetchCommunities(caseSlug))
+    dispatch(fetchCommentThreads(caseSlug))
   }
 }
 
@@ -385,6 +399,11 @@ export function updateActivity (
 
 // CARD
 //
+export type SetCardsAction = { type: 'SET_CARDS', cards: CardsState }
+export function setCards (cards: CardsState): SetCardsAction {
+  return { type: 'SET_CARDS', cards }
+}
+
 export type ParseAllCardsAction = { type: 'PARSE_ALL_CARDS' }
 export function parseAllCards (): ParseAllCardsAction {
   return { type: 'PARSE_ALL_CARDS' }
@@ -468,8 +487,94 @@ export function applySelection (
   return { type: 'APPLY_SELECTION', cardId, selectionState }
 }
 
+// COMMUNITY
+//
+export function fetchCommunities (slug: string): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const { communities } = await Orchard.harvest(`cases/${slug}/communities`)
+    dispatch(setCommunities(communities))
+  }
+}
+
+export function updateActiveCommunity (
+  slug: string,
+  id: string | null
+): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    await Orchard.espalier(`profile`, { reader: { activeCommunityId: id }})
+    dispatch(fetchCommunities(slug))
+    dispatch(fetchCommentThreads(slug))
+    dispatch(resubscribeToActiveForumChannel(slug))
+  }
+}
+
+export type SetCommunitiesAction = {
+  type: 'SET_COMMUNITIES',
+  communities: Community[],
+}
+export function setCommunities (communities: Community[]): SetCommunitiesAction {
+  return { type: 'SET_COMMUNITIES', communities }
+}
+
+export function subscribeToActiveForumChannel (slug: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    App.forum = App.cable.subscriptions.create(
+      {
+        channel: 'ForumChannel',
+        case_slug: slug,
+        timestamp: Date.now(), // Timestamp needed for cachebusting
+      },
+      {
+        received: data => {
+          if (data.comment) {
+            dispatch(addComment(JSON.parse(data.comment)))
+          }
+          if (data.comment_thread) {
+            dispatch(addCommentThread(JSON.parse(data.comment_thread)))
+          }
+        },
+      }
+    )
+  }
+}
+
+export function resubscribeToActiveForumChannel (slug: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    if (App.forum == null) return
+    App.forum.unsubscribe()
+    delete App.forum
+    dispatch(subscribeToActiveForumChannel(slug))
+  }
+}
+
 // COMMENT THREAD
 //
+export function fetchCommentThreads (slug: string): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const { commentThreads, comments, cards } = await Orchard.harvest(
+      `cases/${slug}/comment_threads`
+    )
+    dispatch(
+      batchActions([
+        setCommentsById(comments),
+        setCommentThreadsById(commentThreads),
+        setCards(cards),
+      ])
+    )
+    dispatch(parseAllCards())
+  }
+}
+
+export type SetCommentThreadsByIdAction = {
+  type: 'SET_COMMENT_THREADS_BY_ID',
+  commentThreadsById: CommentThreadsState,
+}
+export function setCommentThreadsById (
+  commentThreadsById: CommentThreadsState
+): SetCommentThreadsByIdAction {
+  return { type: 'SET_COMMENT_THREADS_BY_ID', commentThreadsById }
+}
+
 export function createCommentThread (
   cardId: string,
   editorState: EditorState
@@ -538,6 +643,16 @@ export function hoverCommentThread (id: string): HoverCommentThreadAction {
 
 // COMMENT
 //
+export type SetCommentsByIdAction = {
+  type: 'SET_COMMENTS_BY_ID',
+  commentsById: CommentsState,
+}
+export function setCommentsById (
+  commentsById: CommentsState
+): SetCommentsByIdAction {
+  return { type: 'SET_COMMENTS_BY_ID', commentsById }
+}
+
 export type ChangeCommentInProgressAction = {
   type: 'CHANGE_COMMENT_IN_PROGRESS',
   threadId: string,
@@ -685,13 +800,26 @@ export type HandleNotificationAction = {
 }
 export function handleNotification (notification: Notification): ThunkAction {
   return (dispatch: Dispatch) => {
+    const {
+      message,
+      case: kase,
+      element,
+      cardId,
+      commentThreadId,
+      community,
+    } = notification
     dispatch(
       displayToast({
-        message: notification.message,
+        message,
         intent: Intent.PRIMARY,
         action: {
-          href: `/cases/${notification.case.slug}/${notification.element
-            .position}/cards/${notification.cardId}/comments/${notification.commentThreadId}`,
+          onClick: _ => {
+            dispatch(
+              updateActiveCommunity(kase.slug, community.id)
+            ).then(() => {
+              window.location = `/cases/${kase.slug}/${element.position}/cards/${cardId}/comments/${commentThreadId}`
+            })
+          },
           text: 'Read',
         },
       })

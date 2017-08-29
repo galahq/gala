@@ -40,7 +40,7 @@ type QuizState = { [questionId: string]: string }
 type QuizDelegateProps = {
   canSubmit: boolean,
   onChange: (questionId: string, e: SyntheticInputEvent) => void,
-  onSubmit: (e: SyntheticMouseEvent) => void,
+  onSubmit: (e: SyntheticEvent) => void,
 }
 
 export type QuizProviderProps = QuizDelegateProps & QuizProps & QuizState

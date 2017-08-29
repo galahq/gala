@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 import { Portal } from '@blueprintjs/core'
 
 import { acceptSelection } from 'redux/actions'
@@ -13,8 +14,10 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
+import CommunityChooser from 'overview/CommunityChooser'
 import Icon from 'utility/Icon'
 
+import { EditorState } from 'draft-js'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
 
@@ -30,12 +33,13 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
     throw new Error('CommentThreadsCard should not be mounted at this route.')
   }
 
+  const editorState =
+    state.cardsById[cardId].editorState || EditorState.createEmpty()
+
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
     acceptingSelection: state.ui.acceptingSelection,
-    selectionPending: !state.cardsById[cardId].editorState
-      .getSelection()
-      .isCollapsed(),
+    selectionPending: !editorState.getSelection().isCollapsed(),
     closeCommentThreadsPath: params.url,
   }
 }
@@ -52,9 +56,11 @@ const CommentThreadsCard = ({
   match,
   history,
 }) => {
+  if (commentThreads == null) return null
+
   return (
     <div className="CommentThreads">
-      <div className={`CommentThreads__window`}>
+      <CommentThreadsWindow>
         <div style={styles.header}>
           <Link
             replace
@@ -116,7 +122,13 @@ const CommentThreadsCard = ({
                 />}
           </button>
         </div>
-      </div>
+      </CommentThreadsWindow>
+
+      {acceptingSelection &&
+        selectionPending &&
+        <ChooserWindow>
+          <CommunityChooser white disabled />
+        </ChooserWindow>}
 
       {
         <Portal>
@@ -170,3 +182,14 @@ const styles = {
     padding: '0 0.5em',
   },
 }
+
+const CommentThreadsWindow = styled.div`
+  background-color: #7351d4;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
+  color: white;
+`
+
+const ChooserWindow = styled.div`
+  margin-top: 1em;
+  border-radius: 2pt;
+`

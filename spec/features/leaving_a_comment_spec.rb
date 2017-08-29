@@ -3,7 +3,12 @@
 require 'rails_helper'
 
 feature 'Leaving a comment' do
-  let (:enrollment) { create :enrollment }
+  let!(:enrollment) { create :enrollment }
+  let!(:global_forum) { enrollment.case.forums.find_by community: nil }
+  let!(:private_forum) do
+    private_forum = create :forum, :with_community, case: enrollment.case
+    enrollment.reader.invitations.create community: private_forum.community
+  end
 
   before { login_as enrollment.reader }
 
@@ -27,25 +32,53 @@ feature 'Leaving a comment' do
     expect(find('textarea').value).to be_blank
   end
 
+  let!(:other_reader) { create :reader }
+
+  let!(:comment_thread) do
+    first_card = enrollment.case.pages.first.cards.first
+    first_letter = first_card.paragraphs[0][0]
+    first_card.comment_threads.create(
+      start: 0,
+      length: 1,
+      block_index: 0,
+      original_highlight_text: first_letter,
+      reader: other_reader,
+      locale: I18n.locale,
+      forum: global_forum
+    )
+  end
+
+  scenario 'makes it show up for other people looking at the same forum' do
+    enrollment.reader.update(active_community_id: nil)
+    visit case_path('en', enrollment.case) + '/1'
+    expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
+    comment_thread.comments.create(
+      content: 'Test comment',
+      reader: other_reader
+    )
+    expect(first('.CommentThreads__banner')).to have_content '1 RESPONSE'
+
+    click_link GlobalCommunity.instance.name
+    expect(page).to have_content private_forum.community.name
+    find('.pt-menu-item', text: private_forum.community.name).click
+    expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
+    comment_thread.comments.create(
+      content: 'Test comment',
+      reader: other_reader
+    )
+    expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
+
+    click_link private_forum.community.name
+    find('.pt-menu-item', text: GlobalCommunity.instance.name).click
+    expect(first('.CommentThreads__banner')).to have_content '2 RESPONSES'
+    comment_thread.comments.create(
+      content: 'Test comment',
+      reader: other_reader
+    )
+    expect(first('.CommentThreads__banner')).to have_content '3 RESPONSES'
+  end
+
   context 'in response to another comment' do
-    let!(:other_reader) do
-      other_reader = create :reader
-    end
-
-    let!(:comment_thread) do
-      first_card = enrollment.case.pages.first.cards.first
-      first_letter = first_card.paragraphs[0][0]
-      comment_thread = first_card.comment_threads.create(
-        id: 4444,
-        start: 0,
-        length: 1,
-        block_index: 0,
-        original_highlight_text: first_letter,
-        reader: other_reader,
-        locale: I18n.locale
-      )
-    end
-
     let!(:comment) do
       comment_thread.comments.create(
         content: 'Test comment',
@@ -82,7 +115,9 @@ feature 'Leaving a comment' do
       expect(page).to have_content 'replied to your comment'
     end
 
-    it 'sends an email to the other comment’s author' do
+    it 'sends an email to the other comment’s author with a link that works ' \
+       'even when it the reader is in a different active community' do
+      enrollment.reader.update(active_community_id: private_forum.community.id)
       comment_thread.comments.create content: 'Test reply',
                                      reader: enrollment.reader
       email = ActionMailer::Base.deliveries.last
@@ -90,6 +125,10 @@ feature 'Leaving a comment' do
       expect(email.to.first).to eq other_reader.email
       expect(email.text_part.body.to_s).to match 'Test reply'
       expect(email.html_part.body.to_s).to match 'Test reply'
+
+      link = email.text_part.body.match(%r{Reply online.+//[^/]+(/.+)\)})[1]
+      visit link
+      expect(page).to have_content 'Test reply'
     end
 
     it 'doesn’t send an email notification if the other author has ' \
