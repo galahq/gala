@@ -5,7 +5,6 @@
 
 import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization from 'card/convertFromOldStyleCardSerialization'
-import { addCommentThreads } from 'comments/commentThreads'
 import { decorator } from 'card/draftConfig'
 
 import type { RawDraftContentState } from 'draft-js'
@@ -158,4 +157,29 @@ function parseEditorStateFromPersistedCard (card: Card) {
   const contentState = convertFromRaw(contentWithCommentThreads)
 
   return EditorState.createWithContent(contentState, decorator)
+}
+
+function addCommentThreads (content: RawDraftContentState, card: Card) {
+  let newContent = { ...content }
+
+  const commentThreads = card.commentThreads || []
+
+  commentThreads.forEach(thread => {
+    const { id, blockIndex, length } = thread
+    const offset = thread.start
+    const key = `thread--${id}`
+
+    newContent.blocks[blockIndex].inlineStyleRanges.push({
+      length,
+      offset,
+      style: 'THREAD',
+    })
+    newContent.blocks[blockIndex].inlineStyleRanges.push({
+      length,
+      offset,
+      style: key,
+    })
+  })
+
+  return newContent
 }
