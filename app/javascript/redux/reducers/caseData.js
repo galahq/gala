@@ -15,6 +15,7 @@ import type {
   AddPodcastAction,
   AddActivityAction,
   SetCommunitiesAction,
+  ToggleEditingAction,
 } from 'redux/actions'
 
 import type { CaseDataState } from 'redux/state'
@@ -29,6 +30,7 @@ type Action =
   | AddPodcastAction
   | AddActivityAction
   | SetCommunitiesAction
+  | ToggleEditingAction
 
 export default function caseData (
   state: CaseDataState = ({ ...window.caseData }: CaseDataState),
@@ -94,6 +96,9 @@ export default function caseData (
             (state.reader && state.reader.activeCommunity),
         },
       }
+
+    case 'TOGGLE_EDITING':
+      return { ...state, commentable: false }
 
     default:
       return state
