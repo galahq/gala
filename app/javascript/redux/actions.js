@@ -500,7 +500,16 @@ export function updateActiveCommunity (
   slug: string,
   id: string | null
 ): ThunkAction {
-  return async (dispatch: Dispatch) => {
+  return async (dispatch: Dispatch, getState: () => State) => {
+    if (getState().edit.changed) {
+      if (
+        !window.confirm(
+          'Changing the active community while you have unsaved changes will reset all cards resulting in the loss of your changes. Continue?'
+        )
+      ) {
+        return
+      }
+    }
     await Orchard.espalier(`profile`, { reader: { activeCommunityId: id }})
     dispatch(fetchCommunities(slug))
     dispatch(fetchCommentThreads(slug))
