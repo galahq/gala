@@ -43,6 +43,59 @@ class CardsController < ApplicationController
   end
 
   def card_params
-    params.require(:card).permit(:position, :raw_content, :solid)
+    Sv.hash_of.(
+      position: Sv.scalar,
+      solid: Sv.scalar,
+      raw_content: raw_draft_content_state
+    ).(params.require(:card))
+  end
+
+  def raw_draft_content_state
+    camelize.(
+      Sv.struct_of.(
+        blocks: Sv.array_of.(
+          Sv.hash_of.(
+            key: Sv.scalar,
+            type: Sv.scalar,
+            text: Sv.scalar,
+            depth: Sv.scalar,
+            data: Sv.anything,
+            inlineStyleRanges: Sv.array_of.(
+              Sv.struct_of.(
+                style: Sv.one_of.(%w[BOLD ITALIC]),
+                offset: Sv.scalar,
+                length: Sv.scalar
+              )
+            ),
+            entityRanges: Sv.array_of.(
+              Sv.struct_of.(
+                key: Sv.scalar,
+                offset: Sv.scalar,
+                length: Sv.scalar
+              )
+            )
+          )
+        ),
+        entityMap: Sv.map_of.(
+          Sv.struct_of.(
+            type: Sv.scalar,
+            mutability: Sv.scalar,
+            data: Sv.anything
+          )
+        )
+      )
+    )
+  end
+
+  # We have to send this over the wire stringified to prevent the keys from
+  # being made snake_case
+  def camelize
+    ->(fn, hash) {
+      unless hash.is_a?(Hash) || hash.is_a?(ActionController::Parameters)
+        return nil
+      end
+
+      fn.call(hash.permit!.to_h.deep_transform_keys! { |x| x.camelize(:lower) })
+    }.curry
   end
 end
