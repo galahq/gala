@@ -15,7 +15,9 @@ class Card < ApplicationRecord
   before_save :set_case_from_element
 
   def paragraphs
-    JSON.parse(raw_content)['blocks'].map { |x| x['text'] }
+    raw_content['blocks'].map { |x| x['text'] }
+  rescue
+    []
   end
 
   include Trackable
