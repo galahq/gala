@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
-import { toggleEditing, saveChanges } from 'redux/actions'
+import { toggleEditing, saveChanges, togglePublished } from 'redux/actions'
 
 import type { State } from 'redux/state'
 
@@ -32,6 +32,7 @@ function StatusBar ({
   edited,
   published,
   toggleEditing,
+  togglePublished,
   saveChanges,
 }) {
   const elements: Array<?BarElement> = [
@@ -47,6 +48,14 @@ function StatusBar ({
 
     // Save changes
     edited ? { message: 'save', onClick: saveChanges } : null,
+
+    // Publish the case
+    editable && !editing && !edited
+      ? {
+        message: published ? 'unpublishCase' : 'publishCase',
+        onClick: togglePublished,
+      }
+      : null,
   ]
 
   if (!elements.some(x => x)) return null
@@ -74,9 +83,11 @@ function StatusBar ({
   )
 }
 
-export default connect(mapStateToProps, { toggleEditing, saveChanges })(
-  StatusBar
-)
+export default connect(mapStateToProps, {
+  toggleEditing,
+  saveChanges,
+  togglePublished,
+})(StatusBar)
 
 const Bar = styled.div`
   width: 100%;
