@@ -15,6 +15,7 @@ import { FormattedMessage } from 'react-intl'
 import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
 import CommunityChooser from 'overview/CommunityChooser'
+import NewCommentButton from 'comments/NewCommentButton'
 import Icon from 'utility/Icon'
 
 import { EditorState } from 'draft-js'
@@ -26,6 +27,7 @@ import type { State } from 'redux/state'
 
 type OwnProps = ContextRouter & {
   cardId: string,
+  addCommentThread: () => Promise<void>,
 }
 function mapStateToProps (state: State, { cardId, location }: OwnProps) {
   const params = matchPath(location.pathname, elementOpen())
@@ -87,7 +89,7 @@ const CommentThreadsCard = ({
         </div>
 
         <ol style={styles.commentList}>
-          {commentThreads.map((thread, i) =>
+          {commentThreads.map((thread, i) => (
             <CommentThread
               key={`${thread.id}`}
               cardId={cardId}
@@ -97,38 +99,25 @@ const CommentThreadsCard = ({
               history={history}
               last={i === commentThreads.length - 1}
             />
-          )}
+          ))}
         </ol>
 
         <div className="CommentThreads__footer">
-          <button
-            className="o-button CommentThreads__new-button"
-            disabled={acceptingSelection && !selectionPending}
-            onClick={acceptingSelection ? addCommentThread : acceptSelection}
-          >
-            {!acceptingSelection
-              ? <FormattedMessage
-                id="comments.writeNew"
-                defaultMessage="Write a new response"
-              />
-              : !selectionPending
-                ? <FormattedMessage
-                  id="comments.select"
-                  defaultMessage="Select a few words"
-                />
-                : <FormattedMessage
-                  id="comments.here"
-                  defaultMessage="Respond here"
-                />}
-          </button>
+          <NewCommentButton
+            acceptingSelection={acceptingSelection}
+            selectionPending={selectionPending}
+            addCommentThread={addCommentThread}
+            acceptSelection={acceptSelection}
+          />
         </div>
       </CommentThreadsWindow>
 
       {acceptingSelection &&
-        selectionPending &&
+      selectionPending && (
         <ChooserWindow>
           <CommunityChooser white disabled />
-        </ChooserWindow>}
+        </ChooserWindow>
+      )}
 
       {
         <Portal>
