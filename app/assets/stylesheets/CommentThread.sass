@@ -19,6 +19,10 @@
   &__footer
     border-top: 1px solid #351D7A
     padding: 0.25em
+    display: flex
+
+    & > *
+      flex-grow: 1
 
     & .CommentThreads__new-button.o-button
       width: 100% !important
@@ -51,6 +55,18 @@
     cursor: pointer
     &:hover
       background-color: $purple !important
+
+.NewCommentButton__CommunityChooser
+  & .pt-transition-container
+    z-index: 300
+
+  & .pt-popover-arrow-fill
+    fill: $white
+
+  & .pt-popover-content
+    padding: 0
+    background-color: $white
+
 
 .CommentThread
   padding: 1.5em

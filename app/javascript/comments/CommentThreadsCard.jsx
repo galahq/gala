@@ -14,11 +14,9 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
-import CommunityChooser from 'overview/CommunityChooser'
 import NewCommentButton from 'comments/NewCommentButton'
 import Icon from 'utility/Icon'
 
-import { EditorState } from 'draft-js'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
 
@@ -35,13 +33,8 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
     throw new Error('CommentThreadsCard should not be mounted at this route.')
   }
 
-  const editorState =
-    state.cardsById[cardId].editorState || EditorState.createEmpty()
-
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
-    acceptingSelection: state.ui.acceptingSelection,
-    selectionPending: !editorState.getSelection().isCollapsed(),
     closeCommentThreadsPath: params.url,
   }
 }
@@ -49,8 +42,6 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
 const CommentThreadsCard = ({
   cardId,
   commentThreads,
-  acceptingSelection,
-  selectionPending,
   acceptSelection,
   closeCommentThreadsPath,
   addCommentThread,
@@ -104,20 +95,11 @@ const CommentThreadsCard = ({
 
         <div className="CommentThreads__footer">
           <NewCommentButton
-            acceptingSelection={acceptingSelection}
-            selectionPending={selectionPending}
+            cardId={cardId}
             addCommentThread={addCommentThread}
-            acceptSelection={acceptSelection}
           />
         </div>
       </CommentThreadsWindow>
-
-      {acceptingSelection &&
-      selectionPending && (
-        <ChooserWindow>
-          <CommunityChooser white disabled />
-        </ChooserWindow>
-      )}
 
       {
         <Portal>
@@ -176,9 +158,4 @@ const CommentThreadsWindow = styled.div`
   background-color: #7351d4;
   box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
   color: white;
-`
-
-const ChooserWindow = styled.div`
-  margin-top: 1em;
-  border-radius: 2pt;
 `
