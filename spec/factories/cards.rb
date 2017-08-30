@@ -21,7 +21,7 @@ FactoryGirl.define do
       {
         entityMap: {},
         blocks: blocks
-      }.to_json
+      }
     end
   end
 end

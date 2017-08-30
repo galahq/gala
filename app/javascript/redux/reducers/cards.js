@@ -149,9 +149,8 @@ function sortCommentThreads (a: CommentThread, b: CommentThread): number {
 }
 
 function parseEditorStateFromPersistedCard (card: Card) {
-  const content = card.rawContent
-    ? (JSON.parse(card.rawContent): RawDraftContentState)
-    : convertFromOldStyleCardSerialization(card.content)
+  const content =
+    card.rawContent || convertFromOldStyleCardSerialization(card.content)
   if (content == null) return EditorState.createEmpty()
 
   const contentWithCommentThreads = addCommentThreads(content, card)

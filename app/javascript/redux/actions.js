@@ -150,9 +150,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
           state.cardsById[id].editorState || EditorState.createEmpty()
         data = {
           card: {
-            rawContent: JSON.stringify(
-              convertToRaw(editorState.getCurrentContent())
-            ),
+            rawContent: convertToRaw(editorState.getCurrentContent()),
           },
         }
       }
