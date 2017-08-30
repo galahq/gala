@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { EditorState } from 'draft-js'
+import type { EditorState, RawDraftContentState } from 'draft-js'
 
 // Redux state
 export type { State } from 'redux/reducers'
@@ -125,7 +125,7 @@ export type Card = {
   editorState: ?EditorState,
   id: string,
   position: number,
-  rawContent: string,
+  rawContent: ?RawDraftContentState,
   solid: boolean,
 }
 

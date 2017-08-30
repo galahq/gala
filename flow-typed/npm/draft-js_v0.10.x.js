@@ -105,6 +105,19 @@ declare module 'draft-js' {
   }
 
   declare export type RawDraftContentState = {
+    blocks: $Array<{
+      key: string,
+      type: string,
+      text: string,
+      depth: number,
+      data: Object,
+      inlineStyleRanges: $Array<{
+        style: string,
+        offset: number,
+        length: number,
+      }>,
+      entityRanges: $Array<{ key: string, offset: number, length: number }>,
+    }>,
     entityMap: {
       [string]: {
         type: string,
