@@ -1,5 +1,11 @@
+/**
+ * @providesModule CommentsCard
+ * @flow
+ */
+
 import React from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 import { changeCommentInProgress, createComment } from 'redux/actions'
 
@@ -23,6 +29,7 @@ function mapStateToProps (state: State, { match }: OwnProps) {
     originalHighlightText: thread.originalHighlightText,
     commentInProgress: state.ui.commentInProgress[threadId] || '',
     userName: state.caseData.reader.name,
+    threadDetached: thread.start == null || thread.blockIndex == null,
     threadId,
   }
 }
@@ -43,10 +50,11 @@ const CommentsCard = ({
   intl,
   userName,
   originalHighlightText,
+  threadDetached,
   handleChange,
   handleSubmit,
   location,
-}) =>
+}) => (
   <aside className="CommentThread scrolling">
     <Link
       replace
@@ -55,6 +63,15 @@ const CommentsCard = ({
     >
       <Icon className="CommentThread__icon-button" filename="back" />
     </Link>
+
+    {threadDetached && (
+      <Callout>
+        <FormattedMessage
+          id="comment.textChanged"
+          defaultMessage="The text being discussed has changed since this conversation started."
+        />
+      </Callout>
+    )}
 
     <div className="CommentThread__metadata">
       <div className="CommentThread__metadata__label">Comments on</div>
@@ -71,9 +88,7 @@ const CommentsCard = ({
     </div>
 
     <form style={comments.length === 0 ? { marginTop: 0 } : {}}>
-      <label htmlFor="CommentSubmit">
-        {userName}
-      </label>
+      <label htmlFor="CommentSubmit">{userName}</label>
       <br />
       <div id="CommentSubmit">
         <textarea
@@ -101,21 +116,23 @@ const CommentsCard = ({
       </div>
     </form>
   </aside>
+)
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   injectIntl(CommentsCard)
 )
 
 type CommentProps = { reader: Reader, timestamp: string, content: string }
-const Comment = ({ reader, timestamp, content }: CommentProps) =>
+const Comment = ({ reader, timestamp, content }: CommentProps) => (
   <div className="Comment">
-    <cite>
-      {reader.name}
-    </cite>
-    <i>
-      {timestamp}
-    </i>
-    <blockquote>
-      {content}
-    </blockquote>
+    <cite>{reader.name}</cite>
+    <i>{timestamp}</i>
+    <blockquote>{content}</blockquote>
   </div>
+)
+
+const Callout = styled.div.attrs({ className: 'pt-callout pt-icon-error' })`
+  line-height: 1.3;
+  font-weight: 400;
+  margin-bottom: 1em;
+`

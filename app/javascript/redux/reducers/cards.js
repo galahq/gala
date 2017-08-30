@@ -78,16 +78,18 @@ function cardsById (
       }
 
     case 'PARSE_ALL_CARDS':
-      return Object.keys(state).map(key => state[key]).reduce(
-        (all, card) => ({
-          ...all,
-          [card.id]: {
-            ...card,
-            editorState: parseEditorStateFromPersistedCard(card),
-          },
-        }),
-        {}
-      )
+      return Object.keys(state)
+        .map(key => state[key])
+        .reduce(
+          (all, card) => ({
+            ...all,
+            [card.id]: {
+              ...card,
+              editorState: parseEditorStateFromPersistedCard(card),
+            },
+          }),
+          {}
+        )
 
     case 'ADD_COMMENT_THREAD': {
       const { data } = action
@@ -165,8 +167,9 @@ function addCommentThreads (content: RawDraftContentState, card: Card) {
   const commentThreads = card.commentThreads || []
 
   commentThreads.forEach(thread => {
-    const { id, blockIndex, length } = thread
-    const offset = thread.start
+    const { id, blockIndex, length, start: offset } = thread
+    if (offset == null || blockIndex == null) return
+
     const key = `thread--${id}`
 
     newContent.blocks[blockIndex].inlineStyleRanges.push({
