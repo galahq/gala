@@ -22,6 +22,7 @@ gem 'dalli'
 gem 'redis', '~> 3.0'
 
 gem 'newrelic_rpm'
+gem 'scout_apm'
 
 group :test do
   gem 'database_cleaner'
