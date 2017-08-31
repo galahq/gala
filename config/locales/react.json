@@ -24,19 +24,24 @@
     "statusBar.save": "Save",
     "podcast.hosts": "with {count, plural, one {host} other {hosts}}",
     "create": "Create",
-    "overview.otherLanguages": "This case is also available in these languages: ",
+    "overview.otherLanguages":
+      "This case is also available in these languages: ",
     "en": "English",
     "fr": "French",
     "ja": "Japanese",
     "am": "Amharic",
     "comments.respond": "Respond",
-    "comments.nResponses": "{count, number} {count, plural, one {response} other {responses}}",
+    "comments.nResponses":
+      "{count, number} {count, plural, one {response} other {responses}}",
     "comments.writeNew": "Write a new response",
     "comments.select": "Select a few words",
     "comments.here": "Respond here",
     "comments.placeholderContent": "No comment",
-    "comments.otherComments": "{count, number} other {count, plural, one {response} other {responses} }",
+    "comments.otherComments":
+      "{count, number} other {count, plural, one {response} other {responses} }",
     "comments.write": "Write a reply...",
+    "comments.selectionNotUnique":
+      "Please make a longer selection so that your text is unique on this card.",
     "submit": "Submit"
   },
 
@@ -58,21 +63,26 @@
     "statusBar.betaNotification": "Ce cas d’étude n’a pas été publié",
     "statusBar.beginEdit": "Modifiez ce cas",
     "statusBar.endEdit": "Finissez de modifier ce cas",
-    "statusBar.editInstructions": "Pour modifiez ce cas, il suffit de changer le texte",
+    "statusBar.editInstructions":
+      "Pour modifiez ce cas, il suffit de changer le texte",
     "statusBar.save": "Enregistrez",
-    "podcast.hosts": "avec {count, plural, one {animateur/-trics} other {animateurs/-trices}}",
-    "overview.otherLanguages": "Ce cas d’étude est aussi disponible dans ces langues-ci :",
+    "podcast.hosts":
+      "avec {count, plural, one {animateur/-trics} other {animateurs/-trices}}",
+    "overview.otherLanguages":
+      "Ce cas d’étude est aussi disponible dans ces langues-ci :",
     "en": "Anglais",
     "fr": "Français",
     "ja": "Japonais",
     "am": "Amharic",
     "comments.respond": "Répondez",
-    "comments.nResponses": "{count, number} {count, plural, one {réponse} other {résponses}}",
+    "comments.nResponses":
+      "{count, number} {count, plural, one {réponse} other {résponses}}",
     "comments.writeNew": "Écrivez une nouvelle réponse",
     "comments.select": "Sélectionnez quelques mots",
     "comments.here": "Répondez ici",
     "comments.placeholderContent": "Sans commentaires",
-    "comments.otherComments": "{count, number} {count, plural, one {autre résponse} other {autres résponses} }",
+    "comments.otherComments":
+      "{count, number} {count, plural, one {autre résponse} other {autres résponses} }",
     "comments.write": "Écrivez quelque chose...",
     "submit": "Soumettez"
   },
