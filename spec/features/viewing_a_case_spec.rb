@@ -79,7 +79,6 @@ feature 'Viewing a case' do
       scenario 'is accessible' do
         expect(find('.catalog-dashboard')).to have_link forthcoming_case.kicker
         click_link forthcoming_case.kicker
-        save_screenshot
         expect(page).to have_content forthcoming_case.pages.first.title
       end
     end

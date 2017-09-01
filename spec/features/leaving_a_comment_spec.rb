@@ -29,7 +29,6 @@ feature 'Leaving a comment' do
 
     first_paragraph = find('.DraftEditor-root p', match: :first)
     first_paragraph.double_click
-    save_screenshot
     click_button 'Respond here'
     expect(page).to have_selector 'textarea'
 
