@@ -10,7 +10,7 @@ function mapStateToProps (state: State, { contentState, children }) {
   let commentThread = state.commentThreadsById[commentThreadId]
   return {
     cardId: commentThread && commentThread.cardId,
-    disabled: state.ui.acceptingSelection,
+    disabled: state.ui.acceptingSelection || !state.caseData.commentable,
     commentThreadId,
   }
 }
