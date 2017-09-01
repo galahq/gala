@@ -1,10 +1,8 @@
 machine:
   node:
     version: 7.7.4
-dependencies:
-  override:
-    - yarn
-    - bundle install
+  ruby:
+    version: 2.3.1
 test:
   override:
     - bundle exec rspec -r rspec_junit_formatter --format progress --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml:

@@ -30,6 +30,10 @@ Capybara.register_driver :headless_chrome do |app|
 end
 Capybara.default_driver = :headless_chrome
 
+Capybara.configure do |config|
+  config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']
+end
+
 class Ahoy::Store < Ahoy::Stores::ActiveRecordTokenStore
   def exclude?
     false
@@ -85,7 +89,7 @@ RSpec.configure do |config|
 
   config.after(:each) do |example|
     if defined?(page) && example.exception
-      save_screenshot ENV['CIRCLE_ARTIFACTS']
+      save_screenshot
       puts page.driver.browser.manage.logs.get('browser')
     end
   end

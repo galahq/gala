@@ -14,6 +14,10 @@ feature 'Leaving a comment' do
 
   scenario 'is possible with a unique selection' do
     kase = enrollment.case
+    card = kase.pages.first.cards.first
+    card.raw_content['blocks'][0]['text'].delete! ' '
+    card.save
+
     visit case_path 'en', kase
 
     first_page = kase.pages.first
@@ -23,10 +27,12 @@ feature 'Leaving a comment' do
 
     first_paragraph = find('.DraftEditor-root p', match: :first)
     first_paragraph.double_click
+    save_screenshot
     page.driver.browser.action
-        .key_down(:shift).key_down(:alt)
-        .send_keys(first_paragraph.native, [:arrow_right] * 20)
+        .key_down(:shift)
+        .send_keys(first_paragraph.native, [:arrow_right] * 50)
         .perform
+    save_screenshot
     click_button 'Respond here'
     expect(page).to have_selector 'textarea'
 

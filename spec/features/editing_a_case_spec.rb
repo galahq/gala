@@ -55,7 +55,8 @@ feature 'Editing a case' do
 
         page.driver.browser.navigate.refresh
         entity = find('span.c-comment-thread-entity', match: :first)
-        expect(entity.text).to eq comment_thread.original_highlight_text
+        expect(entity.text.strip)
+          .to eq comment_thread.original_highlight_text.strip
       end
     end
   end
