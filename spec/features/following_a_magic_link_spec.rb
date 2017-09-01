@@ -37,7 +37,6 @@ feature 'Following a magic link' do
       expect(page).to have_content quiz_deployment.group.name
       expect(page).not_to have_content 'Enroll in this case'
       click_link 'Check your understanding'
-      save_screenshot
       expect(page).to have_content 'Post-case quiz'
     end
   end
