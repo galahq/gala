@@ -5,7 +5,6 @@
 
 import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization from 'card/convertFromOldStyleCardSerialization'
-import { addCommentThreads } from 'comments/commentThreads'
 import { decorator } from 'card/draftConfig'
 
 import type { RawDraftContentState } from 'draft-js'
@@ -79,16 +78,21 @@ function cardsById (
       }
 
     case 'PARSE_ALL_CARDS':
-      return Object.keys(state).map(key => state[key]).reduce(
-        (all, card) => ({
-          ...all,
-          [card.id]: {
-            ...card,
-            editorState: parseEditorStateFromPersistedCard(card),
-          },
-        }),
-        {}
-      )
+      return Object.keys(state)
+        .map(key => state[key])
+        .reduce(
+          (all, card) => ({
+            ...all,
+            [card.id]: {
+              ...card,
+              commentThreads:
+                card.commentThreads &&
+                card.commentThreads.sort(sortCommentThreads),
+              editorState: parseEditorStateFromPersistedCard(card),
+            },
+          }),
+          {}
+        )
 
     case 'ADD_COMMENT_THREAD': {
       const { data } = action
@@ -144,6 +148,10 @@ function cardsById (
 export default cardsById
 
 function sortCommentThreads (a: CommentThread, b: CommentThread): number {
+  // Always sort detached threads last
+  if (a.start == null) return 1
+  if (b.start == null) return -1
+
   if (a.blockIndex !== b.blockIndex) return a.blockIndex - b.blockIndex
   return a.start - b.start
 }
@@ -158,4 +166,30 @@ function parseEditorStateFromPersistedCard (card: Card) {
   const contentState = convertFromRaw(contentWithCommentThreads)
 
   return EditorState.createWithContent(contentState, decorator)
+}
+
+function addCommentThreads (content: RawDraftContentState, card: Card) {
+  let newContent = { ...content }
+
+  const commentThreads = card.commentThreads || []
+
+  commentThreads.forEach(thread => {
+    const { id, blockIndex, length, start: offset } = thread
+    if (offset == null || blockIndex == null) return
+
+    const key = `thread--${id}`
+
+    newContent.blocks[blockIndex].inlineStyleRanges.push({
+      length,
+      offset,
+      style: 'THREAD',
+    })
+    newContent.blocks[blockIndex].inlineStyleRanges.push({
+      length,
+      offset,
+      style: key,
+    })
+  })
+
+  return newContent
 }

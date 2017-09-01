@@ -9,7 +9,9 @@ FactoryGirl.define do
     title { Faker::Hipster.sentence }
 
     after :create do |this, ev|
-      this.cards = create_list :card, ev.card_count
+      ev.card_count.times do
+        this.cards << create(:card)
+      end
     end
   end
 end

@@ -12,8 +12,12 @@ feature 'Leaving a comment' do
 
   before { login_as enrollment.reader }
 
-  scenario 'is possible' do
+  scenario 'is possible with a unique selection' do
     kase = enrollment.case
+    card = kase.pages.first.cards.first
+    card.raw_content['blocks'][0]['text'].delete! ' '
+    card.save
+
     visit case_path 'en', kase
 
     first_page = kase.pages.first
@@ -21,8 +25,14 @@ feature 'Leaving a comment' do
     expect(page).to have_link 'Respond'
     click_link 'Respond', match: :first
 
-    first_paragraph = find '.DraftEditor-root p', match: :first
+    first_paragraph = find('.DraftEditor-root p', match: :first)
     first_paragraph.double_click
+    save_screenshot
+    page.driver.browser.action
+        .key_down(:shift)
+        .send_keys(first_paragraph.native, [:arrow_right] * 50)
+        .perform
+    save_screenshot
     click_button 'Respond here'
     expect(page).to have_selector 'textarea'
 
@@ -30,6 +40,20 @@ feature 'Leaving a comment' do
     click_button 'Submit'
     expect(page).to have_content 'Test comment'
     expect(find('textarea').value).to be_blank
+  end
+
+  scenario 'is not possible with a non-unique selection' do
+    card = enrollment.case.pages.first.cards.first
+    card.raw_content['blocks'] = [card.raw_content['blocks'][0]
+                                      .merge(text: 'apple ' * 50)]
+    card.save
+
+    visit case_path('en', enrollment.case) + '/1'
+    click_link 'Respond', match: :first
+    first_paragraph = find('.DraftEditor-root p', match: :first)
+    first_paragraph.double_click
+
+    expect(page).to have_content 'Please select a few more words.'
   end
 
   let!(:other_reader) { create :reader }
@@ -52,6 +76,7 @@ feature 'Leaving a comment' do
     enrollment.reader.update(active_community_id: nil)
     visit case_path('en', enrollment.case) + '/1'
     expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
+    sleep(1)
     comment_thread.comments.create(
       content: 'Test comment',
       reader: other_reader
@@ -71,6 +96,7 @@ feature 'Leaving a comment' do
     click_link private_forum.community.name
     find('.pt-menu-item', text: GlobalCommunity.instance.name).click
     expect(first('.CommentThreads__banner')).to have_content '2 RESPONSES'
+    sleep(1)
     comment_thread.comments.create(
       content: 'Test comment',
       reader: other_reader

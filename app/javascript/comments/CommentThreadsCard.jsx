@@ -14,10 +14,9 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
-import CommunityChooser from 'overview/CommunityChooser'
+import NewCommentButton from 'comments/NewCommentButton'
 import Icon from 'utility/Icon'
 
-import { EditorState } from 'draft-js'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
 
@@ -26,6 +25,7 @@ import type { State } from 'redux/state'
 
 type OwnProps = ContextRouter & {
   cardId: string,
+  addCommentThread: () => Promise<void>,
 }
 function mapStateToProps (state: State, { cardId, location }: OwnProps) {
   const params = matchPath(location.pathname, elementOpen())
@@ -33,13 +33,8 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
     throw new Error('CommentThreadsCard should not be mounted at this route.')
   }
 
-  const editorState =
-    state.cardsById[cardId].editorState || EditorState.createEmpty()
-
   return {
     commentThreads: state.cardsById[cardId].commentThreads,
-    acceptingSelection: state.ui.acceptingSelection,
-    selectionPending: !editorState.getSelection().isCollapsed(),
     closeCommentThreadsPath: params.url,
   }
 }
@@ -47,8 +42,6 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
 const CommentThreadsCard = ({
   cardId,
   commentThreads,
-  acceptingSelection,
-  selectionPending,
   acceptSelection,
   closeCommentThreadsPath,
   addCommentThread,
@@ -87,7 +80,7 @@ const CommentThreadsCard = ({
         </div>
 
         <ol style={styles.commentList}>
-          {commentThreads.map((thread, i) =>
+          {commentThreads.map((thread, i) => (
             <CommentThread
               key={`${thread.id}`}
               cardId={cardId}
@@ -97,38 +90,16 @@ const CommentThreadsCard = ({
               history={history}
               last={i === commentThreads.length - 1}
             />
-          )}
+          ))}
         </ol>
 
         <div className="CommentThreads__footer">
-          <button
-            className="o-button CommentThreads__new-button"
-            disabled={acceptingSelection && !selectionPending}
-            onClick={acceptingSelection ? addCommentThread : acceptSelection}
-          >
-            {!acceptingSelection
-              ? <FormattedMessage
-                id="comments.writeNew"
-                defaultMessage="Write a new response"
-              />
-              : !selectionPending
-                ? <FormattedMessage
-                  id="comments.select"
-                  defaultMessage="Select a few words"
-                />
-                : <FormattedMessage
-                  id="comments.here"
-                  defaultMessage="Respond here"
-                />}
-          </button>
+          <NewCommentButton
+            cardId={cardId}
+            addCommentThread={addCommentThread}
+          />
         </div>
       </CommentThreadsWindow>
-
-      {acceptingSelection &&
-        selectionPending &&
-        <ChooserWindow>
-          <CommunityChooser white disabled />
-        </ChooserWindow>}
 
       {
         <Portal>
@@ -187,9 +158,4 @@ const CommentThreadsWindow = styled.div`
   background-color: #7351d4;
   box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
   color: white;
-`
-
-const ChooserWindow = styled.div`
-  margin-top: 1em;
-  border-radius: 2pt;
 `

@@ -290,8 +290,23 @@ declare module '@blueprintjs/core' {
 
   declare export interface Tooltip extends React$Component<*, *, *> {
     props: {
+      content: string | React$Element<*>,
+      defaultIsOpen?: boolean,
+      hoverCloseDelay?: number,
+      hoverOpenDelay?: number,
+      inheritDarkTheme?: boolean,
+      inline?: boolean,
       isDisabled?: boolean,
-      content: string,
+      isOpen?: boolean,
+      onInteraction?: (nextOpenState: boolean) => void,
+      openOnTargetFocus?: boolean,
+      portalClassName?: string,
+      position?: PositionType,
+      rootElementTag?: string,
+      tooltipClassName?: string,
+      transitionDuration?: number,
+      useSmartArrowPositioning?: boolean,
+      useSmartPositioning?: boolean,
     } & IIntentProps,
   }
 }

@@ -8,6 +8,8 @@ import { Orchard } from 'shared/orchard'
 import { convertToRaw } from 'draft-js'
 import { Intent } from '@blueprintjs/core'
 
+import { getSelectionText } from 'shared/draftHelpers'
+
 import { EditorState } from 'draft-js'
 import type { SelectionState } from 'draft-js'
 import type { Toaster, Toast } from '@blueprintjs/core'
@@ -587,22 +589,11 @@ export function createCommentThread (
   editorState: EditorState
 ): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const selection = editorState.getSelection()
-    const start = selection.getStartOffset()
-    const end = selection.getEndOffset()
-    const length = end - start
-
-    const blocks = editorState.getCurrentContent().getBlocksAsArray()
-    const blockKey = selection.getStartKey()
-    const blockIndex = blocks.findIndex(b => b.getKey() === blockKey)
-
-    const originalHighlightText = blocks[blockIndex].getText().slice(start, end)
+    const originalHighlightText = getSelectionText(editorState)
 
     const newCommentThread = (await Orchard.graft(
       `cards/${cardId}/comment_threads`,
-      {
-        commentThread: { blockIndex, start, length, originalHighlightText },
-      }
+      { commentThread: { originalHighlightText }}
     ): CommentThread)
 
     dispatch(addCommentThread(newCommentThread))
