@@ -47,7 +47,7 @@ feature 'Leaving a comment' do
     first_paragraph = find('.DraftEditor-root p', match: :first)
     first_paragraph.double_click
 
-    expect(page).to have_content 'Please make a longer selection'
+    expect(page).to have_content 'Please select a few more words.'
   end
 
   let!(:other_reader) { create :reader }

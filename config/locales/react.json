@@ -41,7 +41,7 @@
       "{count, number} other {count, plural, one {response} other {responses} }",
     "comments.write": "Write a reply...",
     "comments.selectionNotUnique":
-      "Please make a longer selection so that your text is unique on this card.",
+      "This selection appears more than once. Please select a few more words.",
     "submit": "Submit"
   },
 
