@@ -85,6 +85,9 @@ function cardsById (
             ...all,
             [card.id]: {
               ...card,
+              commentThreads:
+                card.commentThreads &&
+                card.commentThreads.sort(sortCommentThreads),
               editorState: parseEditorStateFromPersistedCard(card),
             },
           }),
@@ -145,6 +148,10 @@ function cardsById (
 export default cardsById
 
 function sortCommentThreads (a: CommentThread, b: CommentThread): number {
+  // Always sort detached threads last
+  if (a.start == null) return 1
+  if (b.start == null) return -1
+
   if (a.blockIndex !== b.blockIndex) return a.blockIndex - b.blockIndex
   return a.start - b.start
 }
