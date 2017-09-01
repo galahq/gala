@@ -23,8 +23,8 @@
             %img.admin-case-cover-thumbnail{src: ix_cover_image(kase, :small)}
           %td=kase.kicker.upcase
           %td=kase.catalog_position.humanize.titlecase
-          %td{class: "admin-case-date#{kase.publication_date.nil? ? '--forthcoming' : '--published'}"}
-            =kase.publication_date || "Forthcoming"
+          %td{class: "admin-case-date#{kase.published_at.nil? ? '--forthcoming' : '--published'}"}
+            =kase.published_at || "Forthcoming"
           -#%td
           %td
             = button_to "Edit Case", case_path(kase, anchor: "/edit"),

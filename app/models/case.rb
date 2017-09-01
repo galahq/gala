@@ -37,9 +37,9 @@ class Case < ApplicationRecord
 
   def <=>(other)
     return published ? 1 : -1 if published ^ other.try(:published)
-    return publication_date.nil? ? -1 : 1 if publication_date.nil? ||
-                                             other.publication_date.nil?
-    publication_date <=> other.publication_date
+    return published_at.nil? ? -1 : 1 if published_at.nil? ||
+                                         other.published_at.nil?
+    published_at <=> other.published_at
   end
 
   def create_forum_for_global_community
