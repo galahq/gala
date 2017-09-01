@@ -85,7 +85,7 @@ RSpec.configure do |config|
 
   config.after(:each) do |example|
     if defined?(page) && example.exception
-      save_screenshot
+      save_screenshot ENV['CIRCLE_ARTIFACTS']
       puts page.driver.browser.manage.logs.get('browser')
     end
   end

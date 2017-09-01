@@ -70,6 +70,7 @@ feature 'Leaving a comment' do
     enrollment.reader.update(active_community_id: nil)
     visit case_path('en', enrollment.case) + '/1'
     expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
+    sleep(1)
     comment_thread.comments.create(
       content: 'Test comment',
       reader: other_reader
@@ -89,6 +90,7 @@ feature 'Leaving a comment' do
     click_link private_forum.community.name
     find('.pt-menu-item', text: GlobalCommunity.instance.name).click
     expect(first('.CommentThreads__banner')).to have_content '2 RESPONSES'
+    sleep(1)
     comment_thread.comments.create(
       content: 'Test comment',
       reader: other_reader
