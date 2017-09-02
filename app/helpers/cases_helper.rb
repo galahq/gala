@@ -21,6 +21,8 @@ module CasesHelper
               %w[w=1280 h=540]
             when :email
               %w[w=470 h=95]
+            when :open_graph
+              %w[w=1200 h=675]
             end || []
     "#{c.cover_url}?#{opts.join '&'}"
   end

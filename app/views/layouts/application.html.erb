@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
   <head>
     <title>Michigan Sustainability Cases</title>
     <%= favicon_link_tag 'https://msc-gala.imgix.net/favicon_gala.png' %>
@@ -15,6 +15,8 @@
 
     <script src="https://use.typekit.net/adn1xoi.js"></script>
     <script>try{Typekit.load({ async: true  });}catch(e){}</script>
+    <meta property="og:site_name" content="Gala" />
+    <% if content_for? :head %><%= content_for :head %><% end %>
   </head>
 
   <body>
