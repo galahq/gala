@@ -51,7 +51,10 @@ MD
     redcarpet.render md
   end
 
-  # Generates normalized objects where each element is keyed by its id.
+  # Generates normalized objects where each element is keyed by its id. Because
+  # partial lookup is expensive and jbuilder is slow, we’re caching each
+  # element. Make sure that the elements are touched by their descendents, if
+  # necessary.
   #
   # @param json the configuration object for a jbuilder template
   # @param collections [Hash<Symbol, Enumerable<#to_param>>] a hash where values are the collections to be normalized and keys are the property names to assign the normalized objects to
@@ -60,7 +63,9 @@ MD
       json.set! key do
         collection.each do |element|
           json.set! element.to_param do
-            json.partial! element
+            json.cache! element do
+              json.partial! element
+            end
           end
         end
       end
