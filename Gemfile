@@ -21,6 +21,8 @@ gem 'webpacker', git: 'https://github.com/rails/webpacker'
 gem 'dalli'
 gem 'redis', '~> 3.0'
 
+gem 'lograge'
+gem 'awesome_print'
 gem 'newrelic_rpm'
 gem 'scout_apm'
 
@@ -47,7 +49,6 @@ group :development do
   gem 'foreman'
   gem 'listen', '~> 3.1.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'awesome_print'
   gem 'bullet'
   gem 'letter_opener'
   gem 'spring'
