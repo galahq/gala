@@ -2,7 +2,7 @@
 
 class CaseElement < ApplicationRecord
   belongs_to :case
-  belongs_to :element, polymorphic: true
+  belongs_to :element, polymorphic: true, touch: true
   acts_as_list scope: :case
 
   def element_details

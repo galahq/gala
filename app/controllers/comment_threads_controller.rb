@@ -7,14 +7,14 @@ class CommentThreadsController < ApplicationController
   before_action :set_comment_thread, only: %i[show destroy]
 
   def index
-    forum = current_reader.active_community.forums.find_by(case: @case)
-    @comment_threads = if forum.nil?
+    @forum = current_reader.active_community.forums.find_by(case: @case)
+    @comment_threads = if @forum.nil?
                          []
                        else
-                         forum.comment_threads
-                              .visible_to_reader?(current_reader)
-                              .order(:block_index, :start)
-                              .includes(:card, comments: [:reader])
+                         @forum.comment_threads
+                               .visible_to_reader?(current_reader)
+                               .order(:block_index, :start)
+                               .includes(:card, comments: [:reader])
                        end
   end
 

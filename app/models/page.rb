@@ -3,7 +3,7 @@
 class Page < ApplicationRecord
   include Authority::Abilities
 
-  belongs_to :case
+  belongs_to :case, touch: true
 
   include Element
 
