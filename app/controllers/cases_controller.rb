@@ -46,6 +46,8 @@ class CasesController < ApplicationController
 
   # PATCH/PUT /cases/1
   def update
+    set_group_and_deployment
+
     if @case.update(case_params)
       render :show, status: :ok, location: @case
     else
