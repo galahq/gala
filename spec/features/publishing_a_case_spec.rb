@@ -9,14 +9,18 @@ feature 'Publishing a case' do
   scenario 'works' do
     login_as reader
     visit case_path('en', kase)
-    find('a', text: 'Publish this case').click
 
-    accept_confirm 'Are you sure you want to change the publication status?'
+    accept_confirm 'Are you sure you want to change the publication status?' do
+      find('a', text: 'Publish this case').click
+    end
+    sleep(1)
     page.driver.browser.navigate.refresh
     expect(page).to have_content 'Unpublish this case'
 
-    find('a', text: 'Unpublish this case').click
-    accept_confirm 'Are you sure you want to change the publication status?'
+    accept_confirm 'Are you sure you want to change the publication status?' do
+      find('a', text: 'Unpublish this case').click
+    end
+    sleep(1)
     page.driver.browser.navigate.refresh
     expect(page).to have_content 'Publish this case'
   end
