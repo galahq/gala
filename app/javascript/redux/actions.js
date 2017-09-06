@@ -451,16 +451,22 @@ function removeCard (id: string): RemoveCardAction {
 
 export function deleteCard (id: string) {
   return async (dispatch: Dispatch) => {
-    try {
-      await Orchard.prune(`cards/${id}`)
-      dispatch(removeCard(id))
-    } catch (error) {
-      dispatch(
-        displayToast({
-          message: `Error saving: ${error.message}`,
-          intent: Intent.WARNING,
-        })
+    if (
+      window.confirm(
+        'Are you sure you want to delete this card and its associated comments?'
       )
+    ) {
+      try {
+        await Orchard.prune(`cards/${id}`)
+        dispatch(removeCard(id))
+      } catch (error) {
+        dispatch(
+          displayToast({
+            message: `Error saving: ${error.message}`,
+            intent: Intent.WARNING,
+          })
+        )
+      }
     }
   }
 }
