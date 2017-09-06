@@ -16,7 +16,6 @@ import type { State, CaseDataState, Byline } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
-    slug,
     kicker,
     title,
     photoCredit,
@@ -28,7 +27,6 @@ function mapStateToProps ({ edit, caseData }: State) {
   } = caseData
 
   return {
-    slug,
     kicker,
     title,
     photoCredit,
@@ -43,7 +41,6 @@ function mapStateToProps ({ edit, caseData }: State) {
 
 type Props = {
   editing: boolean,
-  slug: string,
   kicker: string,
   title: string,
   photoCredit: string,
@@ -54,7 +51,6 @@ type Props = {
 
 export const UnconnectedBillboardTitle = ({
   editing,
-  slug,
   kicker,
   title,
   photoCredit,
@@ -81,7 +77,7 @@ export const UnconnectedBillboardTitle = ({
             value={kicker}
             disabled={!editing || minimal}
             placeholder="Snappy kicker"
-            onChange={value => updateCase(slug, { kicker: value })}
+            onChange={value => updateCase({ kicker: value })}
           />
         </span>
         <EditableText
@@ -89,7 +85,7 @@ export const UnconnectedBillboardTitle = ({
           value={title}
           disabled={!editing || minimal}
           placeholder="What is the central question of the case?"
-          onChange={value => updateCase(slug, { title: value })}
+          onChange={value => updateCase({ title: value })}
         />
       </h1>
 
@@ -102,7 +98,7 @@ export const UnconnectedBillboardTitle = ({
             authorsString,
             translatorsString,
           }}
-          onChange={(value: Byline) => updateCase(slug, value)}
+          onChange={(value: Byline) => updateCase(value)}
         />}
 
       <cite className="o-bottom-right c-photo-credit">
@@ -111,7 +107,7 @@ export const UnconnectedBillboardTitle = ({
             value={photoCredit}
             disabled={!editing}
             placeholder={editing ? 'Photo credit' : ''}
-            onChange={value => updateCase(slug, { photoCredit: value })}
+            onChange={value => updateCase({ photoCredit: value })}
           />}
       </cite>
     </div>
