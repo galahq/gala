@@ -69,7 +69,7 @@ const Billboard = ({
       title="Base cover image URL"
       value={baseCoverUrl}
       style={{ color: '#EBEAE4' }}
-      onChange={v => updateCase(slug, { baseCoverUrl: v, coverUrl: v })}
+      onChange={v => updateCase({ baseCoverUrl: v, coverUrl: v })}
     />
     <div className="Card BillboardSnippet pt-light">
       <p className="c-BillboardSnippet__dek">
@@ -79,7 +79,7 @@ const Billboard = ({
           disabled={!editing}
           placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
           onChange={value => {
-            updateCase(slug, { dek: value })
+            updateCase({ dek: value })
           }}
         />
       </p>
@@ -94,7 +94,7 @@ const Billboard = ({
             value={summary}
             disabled={!editing}
             placeholder="Summarize the case in a short paragraph."
-            onChange={value => updateCase(slug, { summary: value })}
+            onChange={value => updateCase({ summary: value })}
           />
         </p>
       </Less>
@@ -103,7 +103,7 @@ const Billboard = ({
         <LearningObjectives
           disabled={!editing}
           learningObjectives={learningObjectives}
-          onChange={value => updateCase(slug, { learningObjectives: value })}
+          onChange={value => updateCase({ learningObjectives: value })}
         />}
 
       <FlagLinks languages={otherAvailableLocales} slug={slug} />

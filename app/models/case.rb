@@ -10,6 +10,8 @@ class Case < ApplicationRecord
              fallbacks: true
   enum catalog_position: %i[in_index featured]
 
+  time_for_a_boolean :published
+
   resourcify
 
   has_many :activities, dependent: :destroy
@@ -26,19 +28,18 @@ class Case < ApplicationRecord
   has_many :deployments, dependent: :destroy
   has_many :quizzes, dependent: :destroy
 
-  scope :published, -> { where(published: true) }
+  scope :published, -> { where.not(published_on: nil) }
 
   validates :slug, presence: true, uniqueness: true
   validates_format_of :slug, with: /\A[a-z0-9-]+\Z/
-  validates :publication_date, presence: true, if: :published?
 
   after_create :create_forum_for_global_community
 
   def <=>(other)
     return published ? 1 : -1 if published ^ other.try(:published)
-    return publication_date.nil? ? -1 : 1 if publication_date.nil? ||
-                                             other.publication_date.nil?
-    publication_date <=> other.publication_date
+    return published_at.nil? ? -1 : 1 if published_at.nil? ||
+                                         other.published_at.nil?
+    published_at <=> other.published_at
   end
 
   def create_forum_for_global_community

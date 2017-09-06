@@ -86,4 +86,6 @@ gem 'mobility'
 
 gem 'rack-canonical-host'
 
+gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'
+
 ruby '2.3.1'

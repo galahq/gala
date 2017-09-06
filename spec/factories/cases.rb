@@ -16,8 +16,7 @@ FactoryGirl.define do
     end
 
     trait :published do
-      published true
-      publication_date { Time.zone.now }
+      published_at { Time.zone.now }
     end
 
     factory :case_with_elements do

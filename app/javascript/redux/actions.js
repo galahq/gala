@@ -232,12 +232,21 @@ export type UpdateCaseAction = {
   type: 'UPDATE_CASE',
   data: $Shape<CaseDataState>,
 }
-export function updateCase (
-  slug: string,
-  data: $Shape<CaseDataState>
-): UpdateCaseAction {
+export function updateCase (data: $Shape<CaseDataState>): UpdateCaseAction {
   setUnsaved()
   return { type: 'UPDATE_CASE', data }
+}
+
+export function togglePublished (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    if (
+      window.confirm('Are you sure you want to change the publication status?')
+    ) {
+      dispatch(updateCase({ published: !state.caseData.published }))
+      dispatch(saveChanges())
+    }
+  }
 }
 
 export function enrollReader (readerId: string, caseSlug: string): ThunkAction {

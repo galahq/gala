@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170830013418) do
+ActiveRecord::Schema.define(version: 20170830201129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,15 +91,13 @@ ActiveRecord::Schema.define(version: 20170830013418) do
   end
 
   create_table "cases", force: :cascade do |t|
-    t.boolean  "published",           default: false
-    t.text     "slug",                                null: false
-    t.string   "authors",             default: [],                 array: true
-    t.text     "tags",                default: [],                 array: true
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.text     "slug",                             null: false
+    t.string   "authors",             default: [],              array: true
+    t.text     "tags",                default: [],              array: true
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "cover_url"
-    t.date     "publication_date"
-    t.integer  "catalog_position",    default: 0,     null: false
+    t.integer  "catalog_position",    default: 0,  null: false
     t.text     "short_title"
     t.text     "photo_credit"
     t.boolean  "commentable"
@@ -112,6 +110,7 @@ ActiveRecord::Schema.define(version: 20170830013418) do
     t.jsonb    "learning_objectives"
     t.jsonb    "audience"
     t.jsonb    "classroom_timeline"
+    t.datetime "published_at"
     t.index ["slug"], name: "index_cases_on_slug", unique: true, using: :btree
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
