@@ -4,6 +4,7 @@
  */
 
 import React, { Component } from 'react'
+import styled from 'styled-components'
 import { append } from 'ramda'
 
 import { Editor, EditorState } from 'draft-js'
@@ -34,6 +35,7 @@ type Props = CardProps &
     editing: boolean,
     editorState: EditorState,
     handleKeyCommand: string => string | void,
+    handleDeleteCard: () => void,
     hoveredCommentThread: string | null,
     onChange: EditorState => void,
     onChangeContents: EditorState => void,
@@ -99,6 +101,7 @@ class CardContents extends Component<*, *, *> {
       editing,
       onChange,
       handleKeyCommand,
+      handleDeleteCard,
       openedCitation,
       addCommentThread,
       theseCommentThreadsOpen,
@@ -167,6 +170,8 @@ class CardContents extends Component<*, *, *> {
             {...{ openedCitation, editable }}
           />}
 
+        {editable && <DeleteCardButton id={id} onClick={handleDeleteCard} />}
+
         {solid && !editable && <Statistics uri={`cards/${id}`} />}
 
         <OnScreenTracker
@@ -188,3 +193,18 @@ function citationInsideThisCard (card: ?Element, citation: ?Element): boolean {
   if (card === citation) return true
   return citationInsideThisCard(card, citation.parentElement)
 }
+
+const DeleteCardButton = styled.button.attrs({
+  className: 'pt-button pt-minimal pt-icon-trash pt-intent-danger',
+})`
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  transition: opacity ease-out 0.3s;
+  opacity: 0;
+
+  .Card:hover & {
+    opacity: 1;
+  }
+`
