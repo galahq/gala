@@ -7,6 +7,8 @@ import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization from 'card/convertFromOldStyleCardSerialization'
 import { decorator } from 'card/draftConfig'
 
+import { omit } from 'ramda'
+
 import type { RawDraftContentState } from 'draft-js'
 
 import type { CardsState, Card, CommentThread } from 'redux/state'
@@ -15,6 +17,7 @@ import type {
   UpdateCardContentsAction,
   ApplySelectionAction,
   ReplaceCardAction,
+  RemoveCardAction,
   ParseAllCardsAction,
   AddCommentThreadAction,
   RemoveCommentThreadAction,
@@ -29,6 +32,7 @@ type Action =
   | UpdateCardContentsAction
   | ApplySelectionAction
   | ReplaceCardAction
+  | RemoveCardAction
   | ParseAllCardsAction
   | AddCommentThreadAction
   | RemoveCommentThreadAction
@@ -77,22 +81,23 @@ function cardsById (
         },
       }
 
+    case 'REMOVE_CARD':
+      return omit([action.id], state)
+
     case 'PARSE_ALL_CARDS':
-      return Object.keys(state)
-        .map(key => state[key])
-        .reduce(
-          (all, card) => ({
-            ...all,
-            [card.id]: {
-              ...card,
-              commentThreads:
-                card.commentThreads &&
-                card.commentThreads.sort(sortCommentThreads),
-              editorState: parseEditorStateFromPersistedCard(card),
-            },
-          }),
-          {}
-        )
+      return Object.keys(state).map(key => state[key]).reduce(
+        (all, card) => ({
+          ...all,
+          [card.id]: {
+            ...card,
+            commentThreads:
+              card.commentThreads &&
+              card.commentThreads.sort(sortCommentThreads),
+            editorState: parseEditorStateFromPersistedCard(card),
+          },
+        }),
+        {}
+      )
 
     case 'ADD_COMMENT_THREAD': {
       const { data } = action

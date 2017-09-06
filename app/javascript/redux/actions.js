@@ -51,6 +51,7 @@ export type Action =
   | ParseAllCardsAction
   | UpdateCardContentsAction
   | ReplaceCardAction
+  | RemoveCardAction
   | OpenCitationAction
   | AcceptSelectionAction
   | ApplySelectionAction
@@ -438,6 +439,30 @@ export type ReplaceCardAction = {
 }
 export function replaceCard (cardId: string, newCard: Card): ReplaceCardAction {
   return { type: 'REPLACE_CARD', cardId, newCard }
+}
+
+export type RemoveCardAction = {
+  type: 'REMOVE_CARD',
+  id: string,
+}
+function removeCard (id: string): RemoveCardAction {
+  return { type: 'REMOVE_CARD', id }
+}
+
+export function deleteCard (id: string) {
+  return async (dispatch: Dispatch) => {
+    try {
+      await Orchard.prune(`cards/${id}`)
+      dispatch(removeCard(id))
+    } catch (error) {
+      dispatch(
+        displayToast({
+          message: `Error saving: ${error.message}`,
+          intent: Intent.WARNING,
+        })
+      )
+    }
+  }
 }
 
 export type OpenCitationAction = {

@@ -3,12 +3,18 @@
  * @flow
  */
 
+import { map, without } from 'ramda'
+
 import type { PagesState } from 'redux/state'
-import type { UpdatePageAction, AddPageAction } from 'redux/actions'
+import type {
+  UpdatePageAction,
+  AddPageAction,
+  RemoveCardAction,
+} from 'redux/actions'
 
 export default function pagesById (
   state: PagesState = ({ ...window.caseData.pages }: PagesState),
-  action: UpdatePageAction | AddPageAction
+  action: UpdatePageAction | AddPageAction | RemoveCardAction
 ): PagesState {
   switch (action.type) {
     case 'UPDATE_PAGE':
@@ -25,6 +31,10 @@ export default function pagesById (
         ...state,
         [action.data.id]: action.data,
       }
+
+    case 'REMOVE_CARD':
+      const { id } = action
+      return map(page => ({ ...page, cards: without([id], page.cards) }), state)
 
     default:
       return state
