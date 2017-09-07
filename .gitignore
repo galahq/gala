@@ -27,3 +27,6 @@ app/assets/javascripts/react
 
 localhost.crt
 localhost.key
+/public/packs
+/public/packs-test
+/node_modules

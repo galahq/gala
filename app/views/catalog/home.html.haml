@@ -31,6 +31,6 @@
 
 - if reader_signed_in?
   :javascript
-    window.reader = #{render partial: "readers/reader", formats: [:json], locals: {reader: current_reader}}
+    window.reader = #{render(partial: "readers/reader", formats: [:json], locals: {reader: current_reader}).html_safe}
 
   = javascript_pack_tag "dashboard"
