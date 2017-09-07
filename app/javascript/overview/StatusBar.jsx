@@ -44,8 +44,8 @@ function StatusBar ({
     [
       pathname === '/'
         ? {
-          message: 'case.backToCatalog',
-          iconName: 'double-chevron-left',
+          message: 'catalog',
+          iconName: 'home',
           onClick: () => (window.location = '/'),
         }
         : {

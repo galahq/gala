@@ -2,10 +2,10 @@
   "en": {
     "my_cases": "My Cases",
     "study_a_case": "Study a case",
+    "catalog": "Catalog",
     "summary": "Case Summary",
     "case.toc": "Table of Contents",
-    "case.backToOverview": "Back to overview",
-    "case.backToCatalog": "Back to catalog",
+    "case.backToOverview": "Overview",
     "overview.read": "Read",
     "overview.listen": "Listen",
     "overview.relatedPodcast": "Related podcast",
