@@ -74,9 +74,9 @@ class Case extends React.Component {
     const { kicker, basename, needsPretest, needsPosttest } = this.props
     return (
       <DocumentTitle title={`${kicker} — Michigan Sustainability Cases`}>
-        <div id="Case">
-          <StatusBar />
-          <Router basename={basename}>
+        <Router basename={basename}>
+          <div id="Case">
+            <StatusBar />
             <Switch>
               <Route exact path="/" component={CaseOverview} />
               <Route path={needsPretest ? '/*' : 'miss'} component={PreTest} />
@@ -86,8 +86,8 @@ class Case extends React.Component {
               />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
-          </Router>
-        </div>
+          </div>
+        </Router>
       </DocumentTitle>
     )
   }

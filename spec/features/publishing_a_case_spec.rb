@@ -11,17 +11,19 @@ feature 'Publishing a case' do
     visit case_path('en', kase)
 
     accept_confirm 'Are you sure you want to change the publication status?' do
-      find('a', text: 'Publish this case').click
+      click_button 'Options'
+      click_link 'Publish this case'
     end
     sleep(1)
     page.driver.browser.navigate.refresh
-    expect(page).to have_content 'Unpublish this case'
+    expect(page).not_to have_content 'This case is not yet published'
 
     accept_confirm 'Are you sure you want to change the publication status?' do
-      find('a', text: 'Unpublish this case').click
+      click_button 'Options'
+      click_link 'Unpublish this case'
     end
     sleep(1)
     page.driver.browser.navigate.refresh
-    expect(page).to have_content 'Publish this case'
+    expect(page).to have_content 'This case is not yet published'
   end
 end

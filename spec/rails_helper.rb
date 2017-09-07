@@ -28,7 +28,7 @@ Capybara.register_driver :headless_chrome do |app|
                                  browser: :chrome,
                                  desired_capabilities: capabilities
 end
-Capybara.default_driver = :headless_chrome
+Capybara.default_driver = ENV['NOT_HEADLESS'] ? :chrome : :headless_chrome
 
 Capybara.configure do |config|
   config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']

@@ -1,9 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link, withRouter, matchPath } from 'react-router-dom'
+import { withRouter, matchPath } from 'react-router-dom'
 import BillboardTitle from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
-import { FormattedMessage } from 'react-intl'
 import TableOfContents from 'overview/TableOfContents'
 import EnrollForm from 'overview/EnrollForm'
 import { commentThreadsOpen, commentsOpen } from 'shared/routes'
@@ -28,17 +27,15 @@ const Sidebar = ({ commentThreadsOpen, commentsOpen, readerEnrolled }) => {
 
   return (
     <aside id="Sidebar" className={_getClassNames()}>
-      <Link to="/" className="backLink">
-        <FormattedMessage id="case.backToOverview" />
-      </Link>
       <BillboardTitle minimal />
       <CommunityChooser rounded />
       <TableOfContents readOnly />
 
-      {readerEnrolled ||
+      {readerEnrolled || (
         <div style={{ paddingTop: '1em' }}>
           <EnrollForm />
-        </div>}
+        </div>
+      )}
     </aside>
   )
 }

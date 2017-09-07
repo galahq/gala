@@ -1213,10 +1213,10 @@ declare module ramda {
   declare function objOf<T>(key: string, val: T): { [key: string]: T }
 
   declare function omit<T: Object>(
-    keys: Array<$Keys<T>>,
+    keys: Array<string>,
     ...rest: Array<void>
   ): (val: T) => Object
-  declare function omit<T: Object>(keys: Array<$Keys<T>>, val: T): Object
+  declare function omit<T: Object>(keys: Array<string>, val: T): Object
 
   // TODO over
 

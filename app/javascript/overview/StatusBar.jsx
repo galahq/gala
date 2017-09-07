@@ -5,26 +5,29 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 
-import { FormattedMessage } from 'react-intl'
 import { toggleEditing, saveChanges, togglePublished } from 'redux/actions'
 
+import Toolbar from 'utility/Toolbar'
+
+import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'redux/state'
 
-function mapStateToProps (state: State) {
+function mapStateToProps (state: State, { location, history }: ContextRouter) {
   let { edit, caseData } = state
   let { inProgress } = edit
   let { published } = caseData
+  let { pathname } = location
   return {
     editable: edit.possible,
     editing: inProgress,
     edited: edit.changed,
     published,
+    pathname,
+    history,
   }
 }
-
-type BarElement = { message: string, onClick?: () => any }
 
 function StatusBar ({
   editable,
@@ -34,79 +37,68 @@ function StatusBar ({
   toggleEditing,
   togglePublished,
   saveChanges,
+  pathname,
+  history,
 }) {
-  const elements: Array<?BarElement> = [
-    // Instructions
-    editing
-      ? { message: 'editInstructions' }
-      : !published ? { message: 'betaNotification' } : null,
-
-    // Edit toggle
-    editable || editing
-      ? { message: editing ? 'endEdit' : 'beginEdit', onClick: toggleEditing }
-      : null,
-
-    // Save changes
-    edited ? { message: 'save', onClick: saveChanges } : null,
-
-    // Publish the case
-    editable && !editing && !edited
-      ? {
-        message: published ? 'unpublishCase' : 'publishCase',
-        onClick: togglePublished,
-      }
-      : null,
+  const groups = [
+    [
+      pathname === '/'
+        ? {
+          message: 'catalog',
+          iconName: 'home',
+          onClick: () => (window.location = '/'),
+        }
+        : {
+          message: 'case.backToOverview',
+          iconName: 'arrow-left',
+          onClick: () => history.push('/'),
+        },
+    ],
+    [
+      editing
+        ? { message: 'statusBar.editInstructions' }
+        : !published ? { message: 'statusBar.betaNotification' } : null,
+    ],
+    [
+      editable
+        ? {
+          message: 'statusBar.options',
+          iconName: 'cog',
+          submenu: [
+            editing || edited
+                ? {
+                  disabled: !edited,
+                  message: 'statusBar.save',
+                  iconName: 'floppy-disk',
+                  onClick: saveChanges,
+                }
+                : {
+                  message: published
+                      ? 'statusBar.unpublishCase'
+                      : 'statusBar.publishCase',
+                  iconName: published ? 'lock' : 'upload',
+                  onClick: togglePublished,
+                },
+            {
+              message: editing ? 'statusBar.endEdit' : 'statusBar.beginEdit',
+              iconName: editing ? 'cross' : 'edit',
+              onClick: toggleEditing,
+            },
+          ],
+        }
+        : null,
+    ],
   ]
 
-  if (!elements.some(x => x)) return null
+  if (!groups.some(x => x)) return null
 
-  const StatusBarElement = ({ message, onClick }: BarElement) => {
-    const Tag = onClick ? 'a' : 'span'
-    return (
-      <Tag onClick={onClick}>
-        <FormattedMessage id={`statusBar.${message}`} />
-      </Tag>
-    )
-  }
-
-  return (
-    <Bar editing={editing}>
-      {elements
-        .reduce((array, element) => {
-          if (element == null) return array
-          array.push(<StatusBarElement key={element.message} {...element} />)
-          array.push(<span key={`${element.message}:after`}> — </span>)
-          return array
-        }, [])
-        .slice(0, -1)}
-    </Bar>
-  )
+  return <Toolbar groups={groups} light={editing} />
 }
 
-export default connect(mapStateToProps, {
-  toggleEditing,
-  saveChanges,
-  togglePublished,
-})(StatusBar)
-
-const Bar = styled.div`
-  width: 100%;
-  padding: 0.2em;
-
-  color: ${({ editing }) => (editing ? '#262626' : '#ebeae4')};
-  background-color: ${({ editing }) => (editing ? '#EBEAE4' : '#1d3f5e')};
-  border-bottom: 2px solid ${({ editing }) =>
-      editing ? '#c0bca9' : '#193c5b'};
-
-  font: 90% 'tenso';
-  text-transform: uppercase;
-  text-align: center;
-  letter-spacing: 0.05em;
-  text-transform: initial;
-  letter-spacing: 0em;
-
-  & a {
-    color: inherit;
-    text-decoration: underline;
-  }
-`
+export default withRouter(
+  connect(mapStateToProps, {
+    toggleEditing,
+    saveChanges,
+    togglePublished,
+  })(StatusBar)
+)
