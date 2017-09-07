@@ -42,7 +42,7 @@ feature 'Editing a case' do
       scenario 'does not cause the comment thread to shift' do
         visit case_path('en', kase)
         click_button 'Enroll'
-        find('a.c-toc__link', match: :first).click
+        visit case_path('en', kase) + '/1'
         expect(page).to have_content 'RESPOND'
 
         click_button 'Options'

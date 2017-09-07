@@ -9,8 +9,12 @@
   },
   "author": "Cameron L Bothner",
   "license": "MIT",
+  "engines": {
+    "yarn": "0.27.x"
+  },
   "dependencies": {
     "@blueprintjs/core": "^1.6.0",
+    "@rails/webpacker": "^3.0.1",
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
@@ -19,7 +23,7 @@
     "babel-polyfill": "^6.16.0",
     "babel-preset-env": "^1.3.3",
     "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-stage-3": "^6.22.0",
     "coffee-loader": "^0.7.3",
     "coffee-script": "^1.12.5",
@@ -34,22 +38,24 @@
     "intl": "^1.2.5",
     "js-yaml": "^3.8.3",
     "json-loader": "^0.5.4",
+    "loader-utils": "1.1.0",
     "node-sass": "^4.5.2",
     "path-complete-extname": "^0.1.0",
     "path-to-regexp": "^1.7.0",
     "postcss-loader": "^1.3.3",
     "postcss-smart-import": "^0.6.11",
     "precss": "^1.4.0",
+    "prop-types": "^15.5.10",
     "rails-erb-loader": "^5.0.0",
     "ramda": "^0.23.0",
     "raw-loader": "^0.5.1",
-    "react": "^15.4.0",
+    "react": "^15.6.1",
     "react-addons-css-transition-group": "^15.4.2",
     "react-animate": "^3.0.0",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",
     "react-document-title": "^2.0.2",
-    "react-dom": "^15.4.0",
+    "react-dom": "^15.6.1",
     "react-google-analytics": "^0.2.0",
     "react-hot-loader": "next",
     "react-intl": "^2.2.3",
@@ -67,7 +73,7 @@
     "style-loader": "^0.16.1",
     "styled-components": "^2.1.0",
     "url-loader": "^0.5.7",
-    "webpack": "^2.3.3",
+    "webpack": "^3.5.6",
     "webpack-manifest-plugin": "^1.1.0",
     "webpack-merge": "^4.1.0",
     "whatwg-fetch": "^1.0.0"
@@ -88,6 +94,6 @@
     "eslint-plugin-standard": "^2.1.1",
     "flow-bin": "^0.48.0",
     "flow-inspect": "^1.0.1",
-    "webpack-dev-server": "^2.4.2"
+    "webpack-dev-server": "^2.7.1"
   }
 }

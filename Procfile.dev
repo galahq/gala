@@ -1,2 +1,2 @@
-web: [ -z "$LOCALHOST_SSL" ] && bin/rails s -p3000 -b0.0.0.0 || bundle exec puma -b 'ssl://0.0.0.0:3000?key=/vagrant/localhost.key&cert=/vagrant/localhost.crt'
+web: [ -z "$LOCALHOST_SSL" ] && bin/rails s -p 3000 -b 0.0.0.0 || bundle exec puma -b 'ssl://0.0.0.0:3000?key=/vagrant/localhost.key&cert=/vagrant/localhost.crt'
 webpack: bin/webpack-dev-server

@@ -3,6 +3,10 @@ machine:
     version: 7.7.4
   ruby:
     version: 2.3.1
+dependencies:
+  override:
+    - yarn install
+    - bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
 test:
   override:
     - bundle exec rspec -r rspec_junit_formatter --format progress --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml:

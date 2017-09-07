@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
-gem 'rails', '>= 5.0.0', '< 5.1'
+gem 'rails', '>= 5.1.0', '< 5.2'
 
 gem 'haml'
 gem 'inline_svg'
@@ -19,7 +19,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'webpacker', git: 'https://github.com/rails/webpacker'
 
 gem 'bourbon'
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails'
 gem 'jquery-rails'
 
 gem 'connection_pool'
@@ -74,10 +74,10 @@ gem 'devise-i18n'
 gem 'ims-lti'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-lti', github: 'cbothner/omniauth-lti'
+gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'rolify'
 
-gem 'ahoy_matey', github: 'ankane/ahoy'
+gem 'ahoy_matey', git: 'https://github.com/ankane/ahoy'
 gem 'groupdate'
 
 gem 'http_accept_language'

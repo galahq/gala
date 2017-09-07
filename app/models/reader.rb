@@ -12,18 +12,18 @@ class Reader < ApplicationRecord
 
   has_many :authentication_strategies, dependent: :destroy
 
-  has_many :cases, through: :enrollments
   has_many :enrollments, -> { includes(:case) }, dependent: :destroy
+  has_many :cases, through: :enrollments
 
-  has_many :deployments, through: :groups
-  has_many :groups, through: :group_memberships
   has_many :group_memberships, dependent: :destroy
+  has_many :groups, through: :group_memberships
+  has_many :deployments, through: :groups
 
-  has_many :quizzes, through: :answers
   has_many :answers, dependent: :destroy
+  has_many :quizzes, through: :answers
 
-  has_many :invited_communities, through: :invitations, source: :community
   has_many :invitations, dependent: :destroy
+  has_many :invited_communities, through: :invitations, source: :community
 
   has_many :group_communities, through: :groups, source: :community
   has_many :comment_threads, dependent: :nullify
