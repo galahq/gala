@@ -11,14 +11,17 @@ feature 'Editing a case' do
   context 'changing a card' do
     scenario 'is possible' do
       visit case_path('en', kase) + '/1'
-      find('a', text: 'Edit this case').click
+      # It gets confused the first time the menu mounts >.<
+      3.times { click_button 'Options' }
+      click_link 'Edit this case'
       expect(page).to have_content 'To edit this case, just change the text'
 
       first_paragraph = find('.DraftEditor-root p', match: :first)
       first_paragraph.click
       page.driver.browser.action
           .send_keys('Adding a test sentence for testing.').perform
-      find('a', text: 'Save').click
+      click_button 'Options'
+      click_link 'Save'
 
       page.driver.browser.navigate.refresh
       expect(page).to have_content 'Adding a test sentence for testing.'
@@ -42,7 +45,8 @@ feature 'Editing a case' do
         find('a.c-toc__link', match: :first).click
         expect(page).to have_content 'RESPOND'
 
-        find('a', text: 'Edit this case').click
+        click_button 'Options'
+        click_link 'Edit this case'
         expect(page).to have_content 'To edit this case, just change the text'
 
         first_paragraph = find('.DraftEditor-root p', match: :first).native
@@ -51,7 +55,8 @@ feature 'Editing a case' do
             .click
             .send_keys('Adding a test sentence for testing.')
             .perform
-        find('a', text: 'Save').click
+        click_button 'Options'
+        click_link 'Save'
 
         page.driver.browser.navigate.refresh
         entity = find('span.c-comment-thread-entity', match: :first)

@@ -54,6 +54,7 @@ const Toolbar = ({ light, groups, intl }: Props) => {
                       element.submenu.map((item, k) => (
                         <MenuItem
                           key={k}
+                          href="#"
                           text={t(item.message) || ''}
                           {...pass(item)}
                         />
