@@ -4,16 +4,12 @@ class EnrollmentsController < ApplicationController
   helper CasesHelper
 
   before_action :authenticate_reader!, except: %i[new create]
-  authorize_actions_for Enrollment, except: %i[new create]
+  authorize_actions_for Enrollment, except: %i[index new create]
   authority_actions upsert: 'update'
 
   # GET /enrollments
   def index
-    @cases = Case.all.sort_by(&:kicker)
-    @readers = Reader.all.includes(:cases, enrollments: %i[case reader])
-                     .order(:name)
-
-    render layout: 'admin'
+    @enrollments = current_reader.enrollments
   end
 
   # Landing for “Magic Link”

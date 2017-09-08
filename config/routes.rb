@@ -53,14 +53,11 @@ Rails.application.routes.draw do
       resources :deployments, shallow: true, only: %i[create edit update]
     end
 
-    resources :enrollments, only: %i[new create]
+    resources :enrollments, only: %i[index new create]
 
     scope 'admin' do
       resources :readers, except: %i[show edit update] do
         resources :roles, only: %i[create destroy]
-        collection do
-          resources :enrollments, only: %i[index]
-        end
       end
 
       resources :cases, only: %i[create edit], param: :slug do

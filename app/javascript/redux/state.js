@@ -189,6 +189,12 @@ export type Edgenote = {
   youtubeSlug: string,
 }
 
+export type Enrollment = {
+  id: string,
+  status: 'student' | 'instructor' | 'treatment',
+  caseSlug: string,
+}
+
 export type Community = {
   id: string | null,
   name: string,
