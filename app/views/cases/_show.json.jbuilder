@@ -2,7 +2,16 @@
 
 json.key_format! camelize: :lower
 
-json.partial! 'case', c: c
+json.cache! c do
+  json.partial! 'case', c: c
+end
+
+by_id json,
+      pages: c.pages,
+      cards: c.cards,
+      edgenotes: c.edgenotes,
+      podcasts: c.podcasts,
+      activities: c.activities
 
 if reader_signed_in?
   if current_user.has_cached_role?(:editor)

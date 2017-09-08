@@ -10,7 +10,7 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all
+    @cases = Case.all.includes(:case_elements)
   end
 
   # GET /cases/1
