@@ -9,10 +9,9 @@ class CardsController < ApplicationController
 
   def create
     @card = @page.cards.build(card_params)
-    @card.content ||= ''
 
     if @card.save
-      render partial: 'cases/case', locals: { c: @card.case }
+      render @card
     else
       render json: @card.errors, status: :unprocessable_entity
     end
@@ -27,9 +26,8 @@ class CardsController < ApplicationController
   end
 
   def destroy
-    @case = @card.case
     @card.destroy
-    render partial: 'cases/case', locals: { c: @case }
+    head :no_content
   end
 
   private
