@@ -4,11 +4,11 @@
  */
 
 import React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { EditableText } from '@blueprintjs/core'
+import { Button, EditableText } from '@blueprintjs/core'
 
-import { Orchard } from 'shared/orchard'
-import { updatePage } from 'redux/actions'
+import { updatePage, createCard } from 'redux/actions'
 
 import Edgenotes from 'edgenotes'
 import Card from 'card'
@@ -26,13 +26,22 @@ function mapStateToProps (state: State, { id }: OwnProps) {
 type Props = OwnProps &
   PageT & {
     editing: boolean,
-    updatePage: (id: string, data: $Shape<PageT>) => mixed,
+    updatePage: typeof updatePage,
+    createCard: typeof createCard,
   }
 const Page = (props: Props) => {
-  let { id, title, cards, editing, updatePage, deleteElement } = props
+  let {
+    id,
+    title,
+    cards,
+    editing,
+    updatePage,
+    deleteElement,
+    createCard,
+  } = props
 
   return (
-    <article>
+    <article className="pt-dark">
       <section className="Page-meta">
         <h1 className="pt-dark" key={`h2:${id}`}>
           <EditableText
@@ -55,14 +64,24 @@ const Page = (props: Props) => {
 
       {cards.map((cardId, i) => [
         props.editing &&
-          <CreateCardLink pageId={id} i={i} key={`create-${i}`} />,
+          <CreateCardLink
+            pageId={id}
+            i={i}
+            key={`create-${i}`}
+            createCard={createCard}
+          />,
         <section key={cardId}>
           <Card id={cardId} />
           <Edgenotes cardId={cardId} />
         </section>,
       ])}
 
-      {props.editing && <CreateCardLink pageId={id} key={`create-last`} />}
+      {props.editing &&
+        <CreateCardLink
+          pageId={id}
+          key={`create-last`}
+          createCard={createCard}
+        />}
     </article>
   )
 }
@@ -71,23 +90,29 @@ class CreateCardLink extends React.Component {
   props: {
     pageId: string,
     i?: number,
+    createCard: typeof createCard,
   }
 
   handleCreateCard = () => {
-    // TODO: This should really be in a redux thun
-    let { pageId, i } = this.props
-    Orchard.graft(`pages/${pageId}/cards`, { position: i + 1 }).then(() =>
-      setTimeout(() => location.reload(), 50)
-    )
+    this.props.createCard(this.props.pageId, this.props.i)
   }
 
   render () {
-    return (
-      <a className="Card-create" onClick={this.handleCreateCard}>
-        Create card
-      </a>
-    )
+    return <AddCardButton text="Add card" onClick={this.handleCreateCard} />
   }
 }
 
-export default connect(mapStateToProps, { updatePage })(Page)
+export default connect(mapStateToProps, { updatePage, createCard })(Page)
+
+const AddCardButton = styled(Button).attrs({
+  className: 'pt-minimal',
+  iconName: 'add',
+})`
+  margin-left: 1.5em;
+  opacity: 0.5;
+  transition: opacity ease-out 0.1s;
+
+  &:hover {
+    opacity: 1;
+  }
+`

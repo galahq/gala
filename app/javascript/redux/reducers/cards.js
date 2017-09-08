@@ -17,6 +17,7 @@ import type {
   UpdateCardContentsAction,
   ApplySelectionAction,
   ReplaceCardAction,
+  AddCardAction,
   RemoveCardAction,
   ParseAllCardsAction,
   AddCommentThreadAction,
@@ -32,6 +33,7 @@ type Action =
   | UpdateCardContentsAction
   | ApplySelectionAction
   | ReplaceCardAction
+  | AddCardAction
   | RemoveCardAction
   | ParseAllCardsAction
   | AddCommentThreadAction
@@ -83,6 +85,12 @@ function cardsById (
 
     case 'REMOVE_CARD':
       return omit([action.id], state)
+
+    case 'ADD_CARD':
+      return {
+        ...state,
+        [action.data.id]: action.data,
+      }
 
     case 'PARSE_ALL_CARDS':
       return Object.keys(state).map(key => state[key]).reduce(

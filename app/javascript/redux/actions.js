@@ -52,6 +52,7 @@ export type Action =
   | UpdateCardContentsAction
   | ReplaceCardAction
   | RemoveCardAction
+  | AddCardAction
   | OpenCitationAction
   | AcceptSelectionAction
   | ApplySelectionAction
@@ -468,6 +469,24 @@ export function deleteCard (id: string) {
         )
       }
     }
+  }
+}
+
+export type AddCardAction = {
+  type: 'ADD_CARD',
+  pageId: string,
+  data: Card,
+}
+function addCard (pageId: string, data: Card): AddCardAction {
+  return { type: 'ADD_CARD', pageId, data }
+}
+
+export function createCard (pageId: string, position: ?number): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const data: Card = await Orchard.graft(`pages/${pageId}/cards`, {
+      card: { solid: true, position },
+    })
+    dispatch(addCard(pageId, data))
   }
 }
 
