@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     resources :comment_threads, only: %i[show] do
       resources :comments, shallow: true
     end
-    resources :cases, except: %i[index create edit], param: :slug do
+    resources :cases, except: %i[create edit], param: :slug do
       resources :case_elements, shallow: true, only: %i[update]
       resources :activities, shallow: true
       resources :podcasts, shallow: true do
@@ -63,7 +63,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :cases, only: %i[index create edit], param: :slug do
+      resources :cases, only: %i[create edit], param: :slug do
         resources :readers, only: %i[destroy] do
           resources :enrollments, only: [] do
             collection do
