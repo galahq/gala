@@ -118,7 +118,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
     case 'cases':
       {
         const {
-          published,
+          publishedAt,
           kicker,
           title,
           dek,
@@ -132,7 +132,6 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
         } = state.caseData
         data = {
           case: {
-            published,
             kicker,
             title,
             dek,
@@ -142,6 +141,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
             learningObjectives,
             authors,
             translators,
+            published: !!publishedAt,
             coverUrl: baseCoverUrl,
           },
         }
@@ -245,7 +245,11 @@ export function togglePublished (): ThunkAction {
     if (
       window.confirm('Are you sure you want to change the publication status?')
     ) {
-      dispatch(updateCase({ published: !state.caseData.published }))
+      dispatch(
+        updateCase({
+          publishedAt: state.caseData.publishedAt ? null : new Date(),
+        })
+      )
       dispatch(saveChanges())
     }
   }

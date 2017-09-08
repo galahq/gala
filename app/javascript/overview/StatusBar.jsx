@@ -17,13 +17,13 @@ import type { State } from 'redux/state'
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
   let { edit, caseData } = state
   let { inProgress } = edit
-  let { published } = caseData
+  let { publishedAt } = caseData
   let { pathname } = location
   return {
     editable: edit.possible,
     editing: inProgress,
     edited: edit.changed,
-    published,
+    published: !!publishedAt,
     pathname,
     history,
   }
