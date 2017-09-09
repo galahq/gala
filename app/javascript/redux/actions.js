@@ -49,10 +49,10 @@ export type Action =
   | AddActivityAction
   | UpdateActivityAction
   | ParseAllCardsAction
+  | AddCardAction
   | UpdateCardContentsAction
   | ReplaceCardAction
   | RemoveCardAction
-  | AddCardAction
   | OpenCitationAction
   | AcceptSelectionAction
   | ApplySelectionAction
@@ -420,6 +420,24 @@ export function parseAllCards (): ParseAllCardsAction {
   return { type: 'PARSE_ALL_CARDS' }
 }
 
+export type AddCardAction = {
+  type: 'ADD_CARD',
+  pageId: string,
+  data: Card,
+}
+function addCard (pageId: string, data: Card): AddCardAction {
+  return { type: 'ADD_CARD', pageId, data }
+}
+
+export function createCard (pageId: string, position: ?number): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const data: Card = await Orchard.graft(`pages/${pageId}/cards`, {
+      card: { solid: true, position },
+    })
+    dispatch(addCard(pageId, data))
+  }
+}
+
 export type UpdateCardContentsAction = {
   type: 'UPDATE_CARD_CONTENTS',
   id: string,
@@ -469,24 +487,6 @@ export function deleteCard (id: string) {
         )
       }
     }
-  }
-}
-
-export type AddCardAction = {
-  type: 'ADD_CARD',
-  pageId: string,
-  data: Card,
-}
-function addCard (pageId: string, data: Card): AddCardAction {
-  return { type: 'ADD_CARD', pageId, data }
-}
-
-export function createCard (pageId: string, position: ?number): ThunkAction {
-  return async (dispatch: Dispatch) => {
-    const data: Card = await Orchard.graft(`pages/${pageId}/cards`, {
-      card: { solid: true, position },
-    })
-    dispatch(addCard(pageId, data))
   }
 }
 
