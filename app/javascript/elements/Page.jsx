@@ -94,7 +94,7 @@ class CreateCardLink extends React.Component {
   }
 
   handleCreateCard = () => {
-    this.props.createCard(this.props.pageId, this.props.i)
+    this.props.createCard(this.props.pageId, this.props.i + 1)
   }
 
   render () {
