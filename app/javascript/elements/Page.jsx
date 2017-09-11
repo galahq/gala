@@ -41,7 +41,7 @@ const Page = (props: Props) => {
   } = props
 
   return (
-    <article className="pt-dark">
+    <article>
       <section className="Page-meta">
         <h1 className="pt-dark" key={`h2:${id}`}>
           <EditableText
@@ -98,7 +98,11 @@ class CreateCardLink extends React.Component {
   }
 
   render () {
-    return <AddCardButton text="Add card" onClick={this.handleCreateCard} />
+    return (
+      <div className="pt-dark">
+        <AddCardButton text="Add card" onClick={this.handleCreateCard} />
+      </div>
+    )
   }
 }
 
