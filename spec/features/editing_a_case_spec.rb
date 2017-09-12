@@ -87,11 +87,12 @@ feature 'Editing a case' do
 
       click_button 'Options'
       click_link 'Edit this case'
-      find('.Card', match: :first).hover
-      within('.Card', match: :first) do
-        find('.pt-icon-trash').click
+      accept_confirm 'Are you sure you want to delete this card and its associated comments?' do
+        find('.Card', match: :first).hover
+        within('.Card', match: :first) do
+          find('.pt-icon-trash').click
+        end
       end
-      accept_confirm 'Are you sure you want to delete this card and its associated comments?'
       sleep(1)
       page.driver.browser.navigate.refresh
       expect(page).to have_selector('.Card', count: 4)
