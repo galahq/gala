@@ -28,6 +28,10 @@ Rails.application.routes.draw do
       resources :communities, only: %i[index]
 
       get '*react_router_location', to: 'cases#show'
+
+      collection do
+        resources :features, only: %i[index create update destroy]
+      end
     end
     resources :pages, only: %i[update destroy] do
       resources :cards, only: %i[create]

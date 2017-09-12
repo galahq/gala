@@ -122,7 +122,7 @@ export type Case = {
   learningObjectives: string[],
   otherAvailableLocales: string[],
   photoCredit: string,
-  published: boolean,
+  publishedAt: ?Date,
   reader: ?Reader,
   slug: string,
   smallCoverUrl: string,
