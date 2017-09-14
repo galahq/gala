@@ -21,11 +21,20 @@
   <% end %>
 </header>
 
-<% if flash[:notice] %>
-  <div class="flash flash-notice"><%= flash[:notice] %></div>
-<% end %>
-<% if flash[:alert] %>
-  <div class="flash flash-alert"><%= flash[:alert] %></div>
+<% if flash[:notice] || flash[:alert] %>
+  <% if flash[:notice] %>
+    <div class="flash flash-notice"><%= flash[:notice] %></div>
+  <% end %>
+  <% if flash[:alert] %>
+    <div class="flash flash-alert"><%= flash[:alert] %></div>
+  <% end %>
+  <script type="text/javascript">
+  setTimeout(
+    function(){
+      var nodes = document.querySelectorAll('.flash:not(.flash-hidden)')
+      for (var node of nodes) { node.classList.add('flash-hidden') }
+    },4000)
+  </script>
 <% end %>
 
 <%= yield %>

@@ -18,7 +18,7 @@ div#container
 body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  background-color: $umichBlue
+  background-color: tint($umichBlue, 20%)
   margin: 0
   font: 100% $sansFont
   line-height: 143%
@@ -152,6 +152,14 @@ strong
   to
     transform: rotate(360deg)
 
+.devise-links li
+  line-height: 1.1
+  
+  &:not(:last-child)
+    margin-bottom: 0.25em
+  a
+    font-size: 15px
+
 .dialog
   background-color: $white
   border: 0.5em solid $purple
@@ -198,5 +206,5 @@ sub
 
 .wf-loading h1,
 .wf-loading h2,
-.wf-loading p 
+.wf-loading p
   visibility: hidden

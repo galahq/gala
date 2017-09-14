@@ -83,7 +83,9 @@ export class Orchard {
           }, [])
           .join('\n')
 
-        throw Error(errorMessages)
+        var e = Error(errorMessages)
+        e.name = 'OrchardError'
+        throw e
       })
     }
   }

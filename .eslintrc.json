@@ -16,25 +16,22 @@
     "ecmascript": 6,
     "jsx": true
   },
-  "plugins": [
-    "babel",
-    "import",
-    "react",
-    "jsx-a11y",
-    "flowtype"
-  ],
+  "plugins": ["babel", "import", "react", "jsx-a11y", "flowtype"],
   "rules": {
     "babel/semi": [2, "never"],
     "flowtype/semi": [2, "never"],
     "valid-typeof": 0,
     "no-undef": 0,
-    "comma-dangle": [2, {
+    "comma-dangle": [
+      2,
+      {
         "arrays": "always-multiline",
         "objects": "always-multiline",
         "imports": "always-multiline",
         "exports": "always-multiline",
         "functions": "never"
-    }],
+      }
+    ],
     "object-shorthand": [2, "always"],
     "object-curly-spacing": [2, "always", { "objectsInObjects": false }],
     "standard/object-curly-even-spacing": 0,
@@ -49,24 +46,34 @@
     "react/jsx-indent-props": [2, 2],
     "react/jsx-key": 2,
     "react/jsx-max-props-per-line": [2, { "maximum": 1, "when": "multiline" }],
-    "react/jsx-no-bind": [2, {"ignoreRefs": true, "allowArrowFunctions": true}],
+    "react/jsx-no-bind": [
+      2,
+      { "ignoreRefs": true, "allowArrowFunctions": true }
+    ],
     "react/jsx-no-target-blank": 2,
     "react/jsx-pascal-case": 2,
-    "react/jsx-sort-props": [2, {
-      "callbacksLast": true,
-      "shorthandFirst": true,
-      "noSortAlphabetically": true
-    }],
-    "react/jsx-tag-spacing": [2, {
-      "closingSlash": "never",
-      "beforeSelfClosing": "always",
-      "afterOpening": "never"
-    }],
+    "react/jsx-sort-props": [
+      2,
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "noSortAlphabetically": true
+      }
+    ],
+    "react/jsx-tag-spacing": [
+      2,
+      {
+        "closingSlash": "never",
+        "beforeSelfClosing": "always",
+        "afterOpening": "never"
+      }
+    ],
     "no-use-before-define": 0,
     "react/prop-types": 0,
     "flowtype/require-valid-file-annotation": [
       2,
-      "always", {
+      "always",
+      {
         "annotationStyle": "block"
       }
     ],

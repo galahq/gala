@@ -4,6 +4,8 @@ class Readers::SessionsController < Devise::SessionsController
   include MagicLink
   # before_action :configure_sign_in_params, only: [:create]
 
+  respond_to :html, :json, '*/*'
+
   # GET /resource/sign_in
   # def new
   #   super
