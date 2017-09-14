@@ -2,7 +2,7 @@
 
 class ReadersController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_reader, only: %i[edit update destroy]
+  before_action :set_reader, only: %i[show edit update destroy]
   layout 'window'
 
   authorize_actions_for Case, except: %i[edit update]
@@ -15,6 +15,8 @@ class ReadersController < ApplicationController
 
     render layout: 'admin'
   end
+
+  def show; end
 
   # GET /readers/1/edit
   def edit

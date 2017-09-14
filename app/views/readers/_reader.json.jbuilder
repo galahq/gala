@@ -5,8 +5,6 @@ json.roles do
     json.set! role.name, reader.roles.include?(role)
   end
 end
-json.cases reader.enrollments do |e|
-  json.(e.case, *%i(slug kicker published))
-  json.square_cover_url ix_cover_image(e.case, :square)
-  json.enrollment_id e.id
+json.active_community do
+  json.partial! current_reader.active_community
 end
