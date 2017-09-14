@@ -21,20 +21,23 @@ import Icon from 'utility/Icon'
 import type { State, Reader } from 'redux/state'
 
 type OwnProps = { match: { params: { commentThreadId: string } } }
-function mapStateToProps (state: State, { match }: OwnProps) {
+function mapStateToProps (
+  { commentThreadsById, commentsById, ui, caseData }: State,
+  { match }: OwnProps
+) {
   const threadId = match.params.commentThreadId
-  const thread = state.commentThreadsById[threadId]
+  const thread = commentThreadsById[threadId]
   return {
-    comments: thread.commentIds.map(id => state.commentsById[id]),
+    comments: thread.commentIds.map(id => commentsById[id]),
     originalHighlightText: thread.originalHighlightText,
-    commentInProgress: state.ui.commentInProgress[threadId] || '',
-    userName: state.caseData.reader.name,
+    commentInProgress: ui.commentInProgress[threadId] || '',
+    userName: caseData.reader ? caseData.reader.name : '',
     threadDetached: thread.start == null || thread.blockIndex == null,
     threadId,
   }
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch) {
   return {
     handleChange: threadId => e =>
       dispatch(changeCommentInProgress(threadId, e.target.value)),
@@ -58,7 +61,7 @@ const CommentsCard = ({
   <aside className="CommentThread scrolling">
     <Link
       replace
-      to={matchPath(location.pathname, commentThreadsOpen()).url}
+      to={(matchPath(location.pathname, commentThreadsOpen()) || {}).url}
       className="CommentThread__back"
     >
       <Icon className="CommentThread__icon-button" filename="back" />

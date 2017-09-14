@@ -19,7 +19,8 @@ type OwnProps = { cardId: string }
 function mapStateToProps (state: State, ownProps: OwnProps) {
   return {
     caseSlug: state.caseData.slug,
-    editorState: state.cardsById[ownProps.cardId].editorState,
+    editorState:
+      state.cardsById[ownProps.cardId].editorState || EditorState.createEmpty(),
     edgenoteExists: (slug: string) => !!state.edgenotesBySlug[slug],
   }
 }
@@ -143,12 +144,13 @@ class EditorToolbar extends React.Component {
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditorToolbar)
 
-const EditorToolbarButton = ({ icon, onClick }) =>
+const EditorToolbarButton = ({ icon, onClick }) => (
   <a
     dangerouslySetInnerHTML={{ __html: icon }}
     onMouseDown={(e: SyntheticMouseEvent) => e.preventDefault()}
     onClick={onClick}
   />
+)
 
 const styles = {
   bar: {

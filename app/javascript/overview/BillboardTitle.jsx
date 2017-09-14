@@ -45,7 +45,7 @@ type Props = {
   title: string,
   photoCredit: string,
   coverUrl: string,
-  updateCase: (string, $Shape<CaseDataState>) => void,
+  updateCase: ($Shape<CaseDataState>) => void,
   minimal: boolean,
 } & Byline
 
@@ -89,7 +89,7 @@ export const UnconnectedBillboardTitle = ({
         />
       </h1>
 
-      {!minimal &&
+      {!minimal && (
         <AuthorsList
           canEdit={editing}
           byline={{
@@ -99,16 +99,18 @@ export const UnconnectedBillboardTitle = ({
             translatorsString,
           }}
           onChange={(value: Byline) => updateCase(value)}
-        />}
+        />
+      )}
 
       <cite className="o-bottom-right c-photo-credit">
-        {minimal ||
+        {minimal || (
           <EditableText
             value={photoCredit}
             disabled={!editing}
             placeholder={editing ? 'Photo credit' : ''}
             onChange={value => updateCase({ photoCredit: value })}
-          />}
+          />
+        )}
       </cite>
     </div>
   )

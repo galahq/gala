@@ -15,7 +15,7 @@ export type CardsState = {
   [cardSlug: string]: Card,
 }
 
-export type CaseDataState = Case
+export type CaseDataState = Case & { reader?: ReaderState }
 
 export type CommentThreadsState = {
   [commentThreadId: string]: CommentThread,
@@ -57,6 +57,13 @@ export type QuizState =
       id: string,
       questions: Question[],
     })
+
+export type ReaderState = {
+  canUpdateCase: boolean,
+  enrollment: ?{
+    status: 'student' | 'instructor' | 'treatment',
+  },
+} & Reader
 
 export type StatisticsState =
   | false
@@ -123,7 +130,6 @@ export type Case = {
   otherAvailableLocales: string[],
   photoCredit: string,
   publishedAt: ?Date,
-  reader: ?Reader,
   slug: string,
   smallCoverUrl: string,
   summary: string,
@@ -157,7 +163,7 @@ export type Comment = {
 export type CommentThread = {
   blockIndex: number,
   cardId: string,
-  commentIds: number[],
+  commentIds: string[],
   commentsCount: number,
   id: string,
   length: number,
@@ -272,12 +278,9 @@ export type Question = {
 
 export type Reader = {
   activeCommunity: ?Community,
-  canUpdateCase: boolean,
   email: string,
-  enrollment: ?{
-    status: 'student' | 'instructor' | 'treatment',
-  },
   id: string,
+  imageUrl: ?string,
   initials: string,
   name: string,
   roles: {
