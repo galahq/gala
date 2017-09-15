@@ -5,7 +5,7 @@ class ReadersController < ApplicationController
   before_action :set_reader, only: %i[show edit update destroy]
   layout 'window'
 
-  authorize_actions_for Case, except: %i[edit update]
+  authorize_actions_for Case, only: %i[index destroy]
 
   # GET /readers
   # GET /readers.json

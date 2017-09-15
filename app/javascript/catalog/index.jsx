@@ -20,7 +20,7 @@ import type { Case, Enrollment, Reader } from 'redux/state'
 
 class Catalog extends Component {
   state = {
-    reader: ({ loading: true }: ?Reader | { loading: true }),
+    reader: ({ loading: true }: ?Reader | {| loading: true |}),
     cases: ({}: { [string]: Case }),
     enrollments: ([]: Enrollment[]),
     features: ([]: string[]),
@@ -72,16 +72,27 @@ class Catalog extends Component {
               onDeleteEnrollment={this.handleDeleteEnrollment}
             />
             <Main>
-              <Features readerIsEditor featuredCases={this._featuredCases()} />
+              <Features
+                readerIsEditor={this._readerIsEditor()}
+                featuredCases={this._featuredCases()}
+              />
               <CatalogSection>
                 <SectionTitle>All cases</SectionTitle>
-                <CaseList readerIsEditor cases={this._allOtherCases()} />
+                <CaseList
+                  readerIsEditor={this._readerIsEditor()}
+                  cases={this._allOtherCases()}
+                />
               </CatalogSection>
             </Main>
           </Window>
         </MaxWidthContainer>
       </div>
     )
+  }
+
+  _readerIsEditor = () => {
+    const { reader } = this.state
+    return !!reader && !!reader.roles && reader.roles.editor
   }
 
   _enrolledCases = () =>

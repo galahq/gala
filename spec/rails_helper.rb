@@ -70,8 +70,8 @@ RSpec.configure do |config|
   config.before(:suite) do
     begin
       DatabaseCleaner.strategy = :transaction
-      DatabaseCleaner.clean_with(:truncation)
       FactoryGirl.lint
+      DatabaseCleaner.clean_with(:truncation)
     end
   end
 
@@ -90,7 +90,8 @@ RSpec.configure do |config|
   config.after(:each) do |example|
     if defined?(page) && example.exception
       save_screenshot
-      puts page.driver.browser.manage.logs.get('browser')
+      Rails.logger.info page.driver.browser.manage.logs.get('browser')
+                            .map(&:as_json).awesome_inspect
     end
   end
 

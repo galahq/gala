@@ -7,9 +7,8 @@ feature 'Signing in with Google' do
 
   context 'without a password' do
     scenario 'is possible' do
-      # Omniauth test mode will return { name: 'Test User', email: 'test@gmail.com'}
       find('.oauth-icon-google').click
-      expect(page).to have_content 'Hello'
+      expect(page).to have_content 'ENROLLED CASES'
     end
 
     scenario 'user can create a password' do
@@ -24,7 +23,7 @@ feature 'Signing in with Google' do
       fill_in 'Email', with: Reader.take.email
       fill_in 'Password', with: 'new password'
       click_button 'Sign in'
-      expect(page).to have_content 'Hello'
+      expect(page).to have_content 'ENROLLED CASES'
     end
   end
 end

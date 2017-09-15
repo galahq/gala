@@ -13,7 +13,7 @@ import { IntlProvider } from 'react-intl'
 
 import { FocusStyleManager } from '@blueprintjs/core'
 
-import Catalog from 'Catalog'
+import Catalog from 'catalog'
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
