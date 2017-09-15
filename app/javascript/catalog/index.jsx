@@ -40,9 +40,11 @@ class Catalog extends Component {
       return
     }
 
-    this.setState({
-      enrollments: this.state.enrollments.filter(e => e.caseSlug !== slug),
-    })
+    Orchard.prune(`cases/${slug}/enrollment`).then(() =>
+      this.setState({
+        enrollments: this.state.enrollments.filter(e => e.caseSlug !== slug),
+      })
+    )
   }
 
   componentDidMount () {

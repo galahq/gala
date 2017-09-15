@@ -27,6 +27,8 @@ Rails.application.routes.draw do
       resources :comment_threads, only: %i[index]
       resources :communities, only: %i[index]
 
+      resource :enrollment, only: %i[destroy]
+
       get '*react_router_location', to: 'cases#show'
 
       collection do

@@ -59,7 +59,10 @@ class EnrollmentsController < ApplicationController
 
   # DELETE /enrollments/1
   def destroy
-    @enrollment = Enrollment.find(params[:id])
+    kase = Case.find_by_slug params[:case_slug]
+    @enrollment = Enrollment.find_by case: kase, reader: current_reader
+    head :no_content && return unless @enrollment
+
     authorize_action_for @enrollment
     @enrollment.destroy
   end
