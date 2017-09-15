@@ -45,3 +45,48 @@ export const CaseLinkRow = styled(CaseRow.withComponent('a'))`
     color: #ebeae4;
   }
 `
+
+type ElementProps = {
+  image?: ?string,
+  className?: ?string,
+  text: string,
+  href?: ?string,
+  rightElement?: *,
+}
+export const Element = ({
+  image,
+  text,
+  href,
+  rightElement,
+  className,
+}: ElementProps) => {
+  const ElementContainer = href == null ? CaseRow : CaseLinkRow
+  return (
+    <ElementContainer href={href} className={className}>
+      <ElementImage src={image} />
+      <ElementText>{text}</ElementText>
+      {rightElement}
+    </ElementContainer>
+  )
+}
+
+export const ElementImage = styled.div.attrs({ role: 'presentation' })`
+  width: 36px;
+  height: 36px;
+  border-radius: 2px;
+  background-image: ${({ src }) => `url(${src})`};
+  background-size: cover;
+  background-position: center;
+`
+export const ElementText = styled.span`
+  color: #ebeae4;
+  flex: 1;
+  margin: 0 14px;
+  line-height: 1.1;
+`
+export const NotificationBadge = styled.span`
+  height: 20px;
+  color: #c1aef8;
+  font-size: 13px;
+  letter-spacing: 0.5;
+`

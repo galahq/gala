@@ -26,6 +26,25 @@ class Catalog extends Component {
     features: ([]: string[]),
   }
 
+  handleDeleteEnrollment = (
+    slug: string,
+    options: { displayBetaWarning?: boolean } = {}
+  ) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to unenroll in this case?${options.displayBetaWarning
+          ? '\n\nBecause this case is not published, you will need another invitation to reenroll.'
+          : ''}`
+      )
+    ) {
+      return
+    }
+
+    this.setState({
+      enrollments: this.state.enrollments.filter(e => e.caseSlug !== slug),
+    })
+  }
+
   componentDidMount () {
     Orchard.harvest('profile')
       .then(reader => this.setState({ reader }))
@@ -48,6 +67,7 @@ class Catalog extends Component {
             <Sidebar
               reader={this.state.reader}
               enrolledCases={this._enrolledCases()}
+              onDeleteEnrollment={this.handleDeleteEnrollment}
             />
             <Main>
               <Features readerIsEditor featuredCases={this._featuredCases()} />

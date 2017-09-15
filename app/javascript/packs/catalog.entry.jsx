@@ -9,9 +9,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import { AppContainer } from 'react-hot-loader'
-import { addLocaleData, IntlProvider } from 'react-intl'
+import { IntlProvider } from 'react-intl'
+
+import { FocusStyleManager } from '@blueprintjs/core'
 
 import Catalog from 'Catalog'
+
+FocusStyleManager.onlyShowFocusOnTabs()
 
 const { locale } = (window.i18n: { locale: string })
 import messages from '../../../config/locales/react.json' // eslint-disable-line
