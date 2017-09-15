@@ -5,7 +5,8 @@ class Card < ApplicationRecord
 
   belongs_to :case
 
-  has_many :comment_threads, -> { order(:block_index, :start) }
+  has_many :comment_threads, -> { order(:block_index, :start) },
+           dependent: :destroy
   belongs_to :element, polymorphic: true, touch: true
   acts_as_list scope: %i[element_id element_type]
 

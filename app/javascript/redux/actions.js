@@ -49,8 +49,10 @@ export type Action =
   | AddActivityAction
   | UpdateActivityAction
   | ParseAllCardsAction
+  | AddCardAction
   | UpdateCardContentsAction
   | ReplaceCardAction
+  | RemoveCardAction
   | OpenCitationAction
   | AcceptSelectionAction
   | ApplySelectionAction
@@ -418,6 +420,24 @@ export function parseAllCards (): ParseAllCardsAction {
   return { type: 'PARSE_ALL_CARDS' }
 }
 
+export type AddCardAction = {
+  type: 'ADD_CARD',
+  pageId: string,
+  data: Card,
+}
+function addCard (pageId: string, data: Card): AddCardAction {
+  return { type: 'ADD_CARD', pageId, data }
+}
+
+export function createCard (pageId: string, position: ?number): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    const data: Card = await Orchard.graft(`pages/${pageId}/cards`, {
+      card: { solid: true, position },
+    })
+    dispatch(addCard(pageId, data))
+  }
+}
+
 export type UpdateCardContentsAction = {
   type: 'UPDATE_CARD_CONTENTS',
   id: string,
@@ -438,6 +458,36 @@ export type ReplaceCardAction = {
 }
 export function replaceCard (cardId: string, newCard: Card): ReplaceCardAction {
   return { type: 'REPLACE_CARD', cardId, newCard }
+}
+
+export type RemoveCardAction = {
+  type: 'REMOVE_CARD',
+  id: string,
+}
+function removeCard (id: string): RemoveCardAction {
+  return { type: 'REMOVE_CARD', id }
+}
+
+export function deleteCard (id: string) {
+  return async (dispatch: Dispatch) => {
+    if (
+      window.confirm(
+        'Are you sure you want to delete this card and its associated comments?'
+      )
+    ) {
+      try {
+        await Orchard.prune(`cards/${id}`)
+        dispatch(removeCard(id))
+      } catch (error) {
+        dispatch(
+          displayToast({
+            message: `Error saving: ${error.message}`,
+            intent: Intent.WARNING,
+          })
+        )
+      }
+    }
+  }
 }
 
 export type OpenCitationAction = {

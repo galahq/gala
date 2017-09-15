@@ -8,6 +8,20 @@ feature 'Editing a case' do
 
   before { login_as reader }
 
+  context 'adding a card' do
+    scenario 'is possible' do
+      visit case_path('en', kase) + '/1'
+      expect(page).to have_selector('.Card', count: 5)
+
+      click_button 'Options'
+      click_link 'Edit this case'
+      click_button('Add card', match: :first)
+      sleep(1)
+      page.driver.browser.navigate.refresh
+      expect(page).to have_selector('.Card', count: 6)
+    end
+  end
+
   context 'changing a card' do
     scenario 'is possible' do
       visit case_path('en', kase) + '/1'
@@ -63,6 +77,25 @@ feature 'Editing a case' do
         expect(entity.text.strip)
           .to eq comment_thread.original_highlight_text.strip
       end
+    end
+  end
+
+  context 'removing a card' do
+    scenario 'is possible' do
+      visit case_path('en', kase) + '/1'
+      expect(page).to have_selector('.Card', count: 5)
+
+      click_button 'Options'
+      click_link 'Edit this case'
+      accept_confirm 'Are you sure you want to delete this card and its associated comments?' do
+        find('.Card', match: :first).hover
+        within('.Card', match: :first) do
+          find('.pt-icon-trash').click
+        end
+      end
+      sleep(1)
+      page.driver.browser.navigate.refresh
+      expect(page).to have_selector('.Card', count: 4)
     end
   end
 end

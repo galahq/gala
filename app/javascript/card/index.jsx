@@ -13,6 +13,7 @@ import {
   updateCardContents,
   applySelection,
   createCommentThread,
+  deleteCard,
 } from 'redux/actions'
 
 import { withRouter, matchPath } from 'react-router-dom'
@@ -77,10 +78,9 @@ function mapStateToProps (
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
+function mapDispatchToProps (dispatch: Dispatch, { id }: OwnProps) {
   return {
-    onChangeContents: (eS: EditorState) =>
-      dispatch(updateCardContents(ownProps.id, eS)),
+    onChangeContents: (eS: EditorState) => dispatch(updateCardContents(id, eS)),
 
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
@@ -90,11 +90,13 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
         selection.getStartKey() !== selection.getEndKey()
           ? SelectionState.createEmpty(selection.getAnchorKey())
           : selection
-      dispatch(applySelection(ownProps.id, selectionState))
+      dispatch(applySelection(id, selectionState))
     },
 
     createCommentThread: (cardId: string, eS: EditorState) =>
       dispatch(createCommentThread(cardId, eS)),
+
+    handleDeleteCard: () => dispatch(deleteCard(id)),
   }
 }
 
