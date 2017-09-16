@@ -44,7 +44,11 @@ export default Sidebar
 
 const Container = styled.aside`
   width: 18em;
-  margin: 0 0.5em;
+  @media (max-width: 700px) {
+    width: 100%;
+  }
+
+  margin: 0 0.5em 2em;
 `
 
 const IdentigradientElement = styled(Element)`

@@ -45,6 +45,17 @@ const Grid = styled.ul`
   grid-gap: 10px;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 300px minmax(230px, 1fr);
+
+  @media (max-width: 1150px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 200px) repeat(2, minmax(150px, 1fr));
+  }
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, minmax(250px, 2fr))
+      repeat(4, minmax(150px, 1fr));
+  }
 `
 
 const CaseBlock = ({
@@ -93,7 +104,9 @@ const Dek = styled.p`
 const Box = styled.li`
   display: block;
   &:nth-child(-n + 2) {
-    grid-column-end: span 2;
+    @media (min-width: 800px) {
+      grid-column-end: span 2;
+    }
 
     ${Title} {
       font-size: 1.5em;
