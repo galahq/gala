@@ -5,7 +5,7 @@
 
 import React from 'react'
 import { injectIntl } from 'react-intl'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { omit } from 'ramda'
 
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
@@ -33,8 +33,9 @@ type Props = {
   light?: boolean,
   groups: [BarGroup, BarGroup, BarGroup],
   intl: any,
+  canBeIconsOnly: boolean,
 }
-const Toolbar = ({ light, groups, intl }: Props) => {
+const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
   if (!groups.some(group => group.some(element => element))) return null
 
   const t = (id: ?string) => (id ? intl.formatMessage({ id }) : null)
@@ -43,7 +44,7 @@ const Toolbar = ({ light, groups, intl }: Props) => {
     <Bar light={light}>
       <MaxWidthFlexContainer>
         {groups.map((group, i) => (
-          <Group key={i}>
+          <Group key={i} canBeIconsOnly={canBeIconsOnly}>
             {group.map((element, j) => {
               if (element == null) return null
 
@@ -117,16 +118,21 @@ const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
   flex: 1;
   white-space: nowrap;
 
-  @media screen and (max-width: 513px) {
-    & .pt-button {
-      &:before {
-        margin-right: 0;
-      }
-      span {
-        display: none;
-      }
-    }
-  }
+  ${({ canBeIconsOnly }) =>
+    canBeIconsOnly
+      ? css`
+          @media screen and (max-width: 513px) {
+            & .pt-button {
+              &:before {
+                margin-right: 0;
+              }
+              span {
+                display: none;
+              }
+            }
+          }
+        `
+      : ''};
 `
 const Item = styled(Button).attrs({ className: 'pt-minimal' })``
 

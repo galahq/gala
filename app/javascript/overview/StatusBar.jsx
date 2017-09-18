@@ -92,7 +92,7 @@ function StatusBar ({
 
   if (!groups.some(x => x)) return null
 
-  return <Toolbar groups={groups} light={editing} />
+  return <Toolbar canBeIconsOnly groups={groups} light={editing} />
 }
 
 export default withRouter(
