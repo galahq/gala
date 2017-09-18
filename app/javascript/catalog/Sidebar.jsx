@@ -6,10 +6,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { identigradient } from 'shared/identigradient'
 import { Element, ElementImage } from 'catalog/shared'
 import Enrollments from 'catalog/Enrollments'
 import SignInForm from 'utility/SignInForm'
+import { identiconStyle } from 'shared/Identicon'
 
 import type { Case, Reader } from 'redux/state'
 import type Catalog from 'catalog'
@@ -53,16 +53,6 @@ const Container = styled.aside`
 
 const IdentigradientElement = styled(Element)`
   & > ${ElementImage} {
-    background: ${({ image, hashKey }) =>
-      image ? '' : identigradient(hashKey)};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  & > ${ElementImage}::after {
-    content: ${({ text, image }) => (image ? '' : `'${text[0]}'`)};
-    font-weight: 600;
-    color: #ebeae4;
+    ${identiconStyle};
   }
 `
