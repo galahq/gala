@@ -13,12 +13,12 @@ feature 'Signing in with Google' do
 
     scenario 'user can create a password' do
       find('.oauth-icon-google').click
-      find('#reader-icon').click
-      click_link 'My Account'
+      find('[aria-label="Account options"]').click
+      click_link 'My account'
       fill_in 'Password', with: 'new password'
       click_button 'Create a password'
 
-      find('#reader-icon').click
+      find('[aria-label="Account options"]').click
       click_link 'Sign out'
       fill_in 'Email', with: Reader.take.email
       fill_in 'Password', with: 'new password'
