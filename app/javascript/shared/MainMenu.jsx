@@ -16,6 +16,7 @@ import {
 
 import Identicon from 'shared/Identicon'
 import { Orchard } from 'shared/orchard'
+import { acceptKeyboardClick } from 'shared/keyboard'
 
 import type { Reader } from 'redux/state'
 
@@ -33,6 +34,7 @@ class MainMenu extends React.Component {
             <MenuItem
               text="Sign out"
               iconName="log-out"
+              href="#"
               onClick={() =>
                 Orchard.prune('readers/sign_out').then(
                   () => (window.location = '/')
@@ -41,7 +43,7 @@ class MainMenu extends React.Component {
           </Menu>
         }
       >
-        <Row>
+        <Row aria-label="Account options">
           <Identicon reader={reader} />
           <CaretDown />
         </Row>
@@ -65,7 +67,12 @@ const CaretDown = styled.span.attrs({
   margin-left: 8px;
   color: rgba(255, 255, 255, 0.5);
 `
-const Row = styled.div`
+const Row = styled.div.attrs({
+  role: 'button',
+  tabIndex: '0',
+  onKeyPress: () => acceptKeyboardClick,
+})`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `
