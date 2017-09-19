@@ -55,14 +55,17 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                   content={
                     <StyledMenu>
                       {element.submenu &&
-                        element.submenu.map((item, k) => (
-                          <MenuItem
-                            key={k}
-                            href="#"
-                            text={t(item.message) || ''}
-                            {...pass(item)}
-                          />
-                        ))}
+                        element.submenu.map(
+                          (item, k) =>
+                            item && (
+                              <MenuItem
+                                key={k}
+                                href="#"
+                                text={t(item.message) || ''}
+                                {...pass(item)}
+                              />
+                            )
+                        )}
                     </StyledMenu>
                   }
                 >

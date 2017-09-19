@@ -7,7 +7,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import { toggleEditing, saveChanges, togglePublished } from 'redux/actions'
+import {
+  toggleEditing,
+  saveChanges,
+  togglePublished,
+  toggleFeatured,
+} from 'redux/actions'
 
 import Toolbar from 'utility/Toolbar'
 
@@ -17,13 +22,14 @@ import type { State } from 'redux/state'
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
   let { edit, caseData } = state
   let { inProgress } = edit
-  let { publishedAt } = caseData
+  let { publishedAt, featuredAt } = caseData
   let { pathname } = location
   return {
     editable: edit.possible,
     editing: inProgress,
     edited: edit.changed,
     published: !!publishedAt,
+    featured: !!featuredAt,
     pathname,
     history,
   }
@@ -34,8 +40,10 @@ function StatusBar ({
   editing,
   edited,
   published,
+  featured,
   toggleEditing,
   togglePublished,
+  toggleFeatured,
   saveChanges,
   pathname,
   history,
@@ -79,6 +87,15 @@ function StatusBar ({
                   iconName: published ? 'lock' : 'upload',
                   onClick: togglePublished,
                 },
+            published && !edited
+                ? {
+                  message: featured
+                      ? 'statusBar.unfeatureCase'
+                      : 'statusBar.featureCase',
+                  iconName: featured ? 'star-empty' : 'star',
+                  onClick: toggleFeatured,
+                }
+                : null,
             {
               message: editing ? 'statusBar.endEdit' : 'statusBar.beginEdit',
               iconName: editing ? 'cross' : 'edit',
@@ -100,5 +117,6 @@ export default withRouter(
     toggleEditing,
     saveChanges,
     togglePublished,
+    toggleFeatured,
   })(StatusBar)
 )

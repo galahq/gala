@@ -125,6 +125,7 @@ export type Case = {
   commentable: boolean,
   coverUrl: string,
   dek: string,
+  featuredAt: ?Date,
   kicker: string,
   learningObjectives: string[],
   otherAvailableLocales: string[],
