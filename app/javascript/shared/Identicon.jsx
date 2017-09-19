@@ -19,7 +19,7 @@ export const identiconStyle = ({
   hashKey: string,
   text: string,
 }) => css`
-  background: ${({ image, hashKey }) =>
+  background-image: ${({ image, hashKey }) =>
     image ? `url(${image})` : identigradient(hashKey)};
   display: flex;
   align-items: center;
