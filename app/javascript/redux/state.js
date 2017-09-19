@@ -15,25 +15,7 @@ export type CardsState = {
   [cardSlug: string]: Card,
 }
 
-export type CaseDataState = {
-  audience: string,
-  baseCoverUrl: string,
-  caseElements: CaseElement[],
-  commentable: boolean,
-  coverUrl: string,
-  dek: string,
-  kicker: string,
-  learningObjectives: string[],
-  otherAvailableLocales: string[],
-  pageIds: number[],
-  photoCredit: string,
-  published: boolean,
-  reader: ?Reader,
-  slug: string,
-  smallCoverUrl: string,
-  summary: string,
-  title: string,
-} & Byline
+export type CaseDataState = Case & { reader?: ReaderState }
 
 export type CommentThreadsState = {
   [commentThreadId: string]: CommentThread,
@@ -75,6 +57,13 @@ export type QuizState =
       id: string,
       questions: Question[],
     })
+
+export type ReaderState = {
+  canUpdateCase: boolean,
+  enrollment: ?{
+    status: 'student' | 'instructor' | 'treatment',
+  },
+} & Reader
 
 export type StatisticsState =
   | false
@@ -129,6 +118,26 @@ export type Card = {
   solid: boolean,
 }
 
+export type Case = {
+  audience: string,
+  baseCoverUrl: string,
+  caseElements: CaseElement[],
+  commentable: boolean,
+  coverUrl: string,
+  dek: string,
+  featuredAt: ?Date,
+  kicker: string,
+  learningObjectives: string[],
+  otherAvailableLocales: string[],
+  photoCredit: string,
+  publishedAt: ?Date,
+  slug: string,
+  smallCoverUrl: string,
+  summary: string,
+  title: string,
+  url: string,
+} & Byline
+
 export type CaseElement = {
   caseId: string,
   elementId: string,
@@ -155,7 +164,7 @@ export type Comment = {
 export type CommentThread = {
   blockIndex: number,
   cardId: string,
-  commentIds: number[],
+  commentIds: string[],
   commentsCount: number,
   id: string,
   length: number,
@@ -185,6 +194,12 @@ export type Edgenote = {
   views: number,
   websiteUrl: string,
   youtubeSlug: string,
+}
+
+export type Enrollment = {
+  id: string,
+  status: 'student' | 'instructor' | 'treatment',
+  caseSlug: string,
 }
 
 export type Community = {
@@ -264,12 +279,9 @@ export type Question = {
 
 export type Reader = {
   activeCommunity: ?Community,
-  canUpdateCase: boolean,
   email: string,
-  enrollment: ?{
-    status: 'student' | 'instructor' | 'treatment',
-  },
   id: string,
+  imageUrl: ?string,
   initials: string,
   name: string,
   roles: {

@@ -8,9 +8,9 @@ class Case < ApplicationRecord
   translates :kicker, :title, :dek, :summary, :narrative, :translators,
              :learning_objectives, :audience, :classroom_timeline,
              fallbacks: true
-  enum catalog_position: %i[in_index featured]
 
   time_for_a_boolean :published
+  time_for_a_boolean :featured
 
   resourcify
 

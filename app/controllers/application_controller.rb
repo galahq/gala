@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def store_current_location
-    store_location_for(:user, request.url)
+    store_location_for(:user, request.url) if request.format == :html
   end
 
   def after_sign_in_path_for(resource_or_scope)

@@ -99,7 +99,6 @@ export function saveChanges (): ThunkAction {
         intent: Intent.SUCCESS,
       })
     )
-    window.onbeforeunload = null
 
     Object.keys(state.edit.unsavedChanges).forEach(endpoint => {
       saveModel(
@@ -118,7 +117,6 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
     case 'cases':
       {
         const {
-          published,
           kicker,
           title,
           dek,
@@ -132,7 +130,6 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
         } = state.caseData
         data = {
           case: {
-            published,
             kicker,
             title,
             dek,
@@ -225,6 +222,7 @@ const setUnsaved = () => {
 
 export type ClearUnsavedAction = { type: 'CLEAR_UNSAVED' }
 function clearUnsaved (): ClearUnsavedAction {
+  window.onbeforeunload = null
   return { type: 'CLEAR_UNSAVED' }
 }
 
@@ -241,12 +239,40 @@ export function updateCase (data: $Shape<CaseDataState>): UpdateCaseAction {
 
 export function togglePublished (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
-    const state = getState()
+    const { caseData } = getState()
+    const { slug, publishedAt } = caseData
     if (
       window.confirm('Are you sure you want to change the publication status?')
     ) {
-      dispatch(updateCase({ published: !state.caseData.published }))
-      dispatch(saveChanges())
+      Orchard.espalier(`cases/${slug}`, {
+        case: { published: !publishedAt },
+      }).then(() => {
+        dispatch(
+          updateCase({
+            publishedAt: publishedAt ? null : new Date(),
+          })
+        )
+        dispatch(clearUnsaved())
+      })
+    }
+  }
+}
+
+export function toggleFeatured (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const { caseData } = getState()
+    const { slug, featuredAt } = caseData
+    if (
+      window.confirm(
+        `Are you sure you want to ${featuredAt ? 'un' : ''}feature this case?`
+      )
+    ) {
+      Orchard.espalier(`cases/${slug}`, {
+        case: { featured: !featuredAt },
+      }).then(() => {
+        dispatch(updateCase({ featuredAt: featuredAt ? null : new Date() }))
+        dispatch(clearUnsaved())
+      })
     }
   }
 }

@@ -3,7 +3,7 @@
  * @flow
  */
 
-import type { EditState, Reader } from 'redux/state'
+import type { EditState, ReaderState } from 'redux/state'
 import type {
   ClearUnsavedAction,
   ToggleEditingAction,
@@ -27,7 +27,7 @@ type Action =
 
 function edit (state: ?EditState, action: Action): EditState {
   if (state == null) {
-    const reader = (window.caseData.reader: Reader) || {}
+    const reader = (window.caseData.reader: ReaderState) || {}
     return {
       possible: !!reader.canUpdateCase,
       inProgress: false,

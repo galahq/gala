@@ -4,16 +4,12 @@ class EnrollmentsController < ApplicationController
   helper CasesHelper
 
   before_action :authenticate_reader!, except: %i[new create]
-  authorize_actions_for Enrollment, except: %i[new create]
+  authorize_actions_for Enrollment, except: %i[index new create]
   authority_actions upsert: 'update'
 
   # GET /enrollments
   def index
-    @cases = Case.all.sort_by(&:kicker)
-    @readers = Reader.all.includes(:cases, enrollments: %i[case reader])
-                     .order(:name)
-
-    render layout: 'admin'
+    @enrollments = current_reader.enrollments
   end
 
   # Landing for “Magic Link”
@@ -63,7 +59,10 @@ class EnrollmentsController < ApplicationController
 
   # DELETE /enrollments/1
   def destroy
-    @enrollment = Enrollment.find(params[:id])
+    kase = Case.find_by_slug params[:case_slug]
+    @enrollment = Enrollment.find_by case: kase, reader: current_reader
+    head :no_content && return unless @enrollment
+
     authorize_action_for @enrollment
     @enrollment.destroy
   end

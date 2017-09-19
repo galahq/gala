@@ -86,16 +86,17 @@ export default function caseData (
         ],
       }
 
-    case 'SET_COMMUNITIES':
+    case 'SET_COMMUNITIES': {
       return {
         ...state,
         reader: {
           ...state.reader,
           activeCommunity:
             action.communities.find(x => x.active) ||
-            (state.reader && state.reader.activeCommunity),
+            (state.reader ? state.reader.activeCommunity : null),
         },
       }
+    }
 
     case 'TOGGLE_EDITING':
       return { ...state, commentable: false }

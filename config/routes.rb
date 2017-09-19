@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     resources :comment_threads, only: %i[show] do
       resources :comments, shallow: true
     end
-    resources :cases, except: %i[index create edit], param: :slug do
+    resources :cases, except: %i[create edit], param: :slug do
       resources :case_elements, shallow: true, only: %i[update]
       resources :activities, shallow: true
       resources :podcasts, shallow: true do
@@ -27,7 +27,13 @@ Rails.application.routes.draw do
       resources :comment_threads, only: %i[index]
       resources :communities, only: %i[index]
 
+      resource :enrollment, only: %i[destroy]
+
       get '*react_router_location', to: 'cases#show'
+
+      collection do
+        resources :features, only: %i[index create update destroy]
+      end
     end
     resources :pages, only: %i[update destroy] do
       resources :cards, only: %i[create]
@@ -43,7 +49,7 @@ Rails.application.routes.draw do
       confirmations: 'readers/confirmations'
     }
 
-    resource :profile, controller: :readers, only: %i[edit update]
+    resource :profile, controller: :readers, only: %i[show edit update]
 
     resources :quizzes, only: %i[create update] do
       resources :submissions, only: %i[create]
@@ -53,17 +59,14 @@ Rails.application.routes.draw do
       resources :deployments, shallow: true, only: %i[create edit update]
     end
 
-    resources :enrollments, only: %i[new create]
+    resources :enrollments, only: %i[index new create]
 
     scope 'admin' do
       resources :readers, except: %i[show edit update] do
         resources :roles, only: %i[create destroy]
-        collection do
-          resources :enrollments, only: %i[index]
-        end
       end
 
-      resources :cases, only: %i[index create edit], param: :slug do
+      resources :cases, only: %i[create edit], param: :slug do
         resources :readers, only: %i[destroy] do
           resources :enrollments, only: [] do
             collection do

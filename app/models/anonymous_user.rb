@@ -12,6 +12,10 @@ class AnonymousUser
     nil
   end
 
+  def enrollments
+    Enrollment.none
+  end
+
   def groups
     [GlobalGroup.new]
   end

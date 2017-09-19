@@ -99,8 +99,11 @@ export default connect(
     needsPosttest: quiz.needsPosttest,
     caseSlug: caseData.slug,
     kicker: caseData.kicker,
-    loadComments:
-      caseData.commentable && caseData.reader && caseData.reader.enrollment,
+    loadComments: !!(
+      caseData.commentable &&
+      caseData.reader &&
+      caseData.reader.enrollment
+    ),
     basename: location.pathname.replace(
       RegExp(`${caseData.slug}.*`),
       caseData.slug

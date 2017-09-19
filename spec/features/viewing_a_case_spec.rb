@@ -62,9 +62,9 @@ feature 'Viewing a case' do
       before { login_as user }
 
       scenario 'is not accessible' do
-        expect(page).to have_css '.catalog-case-unpublished-banner'
-        click_link forthcoming_case.title
-        expect(current_path).to eq root_path
+        expect(page).to have_content 'FORTHCOMING'
+        expect(page).to have_content forthcoming_case.title
+        expect(page).not_to have_link forthcoming_case.title
       end
     end
   end
@@ -77,19 +77,9 @@ feature 'Viewing a case' do
       before { login_as enrollment.reader }
 
       scenario 'is accessible' do
-        expect(find('.catalog-dashboard')).to have_link forthcoming_case.kicker
+        expect(find('aside')).to have_link forthcoming_case.kicker
         click_link forthcoming_case.kicker
         expect(page).to have_content forthcoming_case.pages.first.title
-      end
-    end
-
-    context 'a different forthcoming case' do
-      let!(:another_forthcoming_case) { create :case_with_elements }
-      before { login_as enrollment.reader }
-
-      scenario 'is not accessible' do
-        click_link another_forthcoming_case.title
-        expect(current_path).to eq root_path
       end
     end
   end

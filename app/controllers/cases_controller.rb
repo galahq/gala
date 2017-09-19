@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 class CasesController < ApplicationController
-  before_action :authenticate_reader!, except: %i[show]
+  before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
 
-  authorize_actions_for Case, except: %i[show]
+  authorize_actions_for Case, except: %i[index show]
 
   layout 'admin'
 
   # GET /cases
   def index
-    @cases = Case.all.order(:slug).includes(enrollments: [:reader])
+    @cases = Case.all.includes(:case_elements)
   end
 
   # GET /cases/1
@@ -84,7 +84,7 @@ class CasesController < ApplicationController
   # Only allow a trusted parameter "white list" through.
   def case_params
     params.require(:case).permit(
-      :published, :kicker, :title, :dek, :slug, :photo_credit,
+      :published, :featured, :kicker, :title, :dek, :slug, :photo_credit,
       :summary, :tags, :cover_url, authors: [], translators: [], learning_objectives: []
     )
   end
