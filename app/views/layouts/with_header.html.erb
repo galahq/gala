@@ -10,7 +10,7 @@
     undefined;
     <% end %>
   <% end %>
-  <%= javascript_pack_tag 'main-menu' %>
+  <%= javascript_pack_tag 'main-menu', async: true %>
 </header>
 
 <% if flash[:notice] || flash[:alert] %>
