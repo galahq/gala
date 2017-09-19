@@ -4,6 +4,14 @@
     "study_a_case": "Study a case",
     "catalog": "Catalog",
     "catalog.proposeACase": "Propose a case",
+    "catalog.featuredCases": "Featured cases",
+    "catalog.unenrollConfirmation":
+      "Are you sure you want to unenroll in this case?",
+    "catalog.unenrollBetaWarning":
+      "Because this case is not published, you will need another invitation to reenroll.",
+    "catalog.enrolledCases": "Enrolled cases",
+    "catalog.editEnrolled": "Edit enrolled cases",
+    "catalog.unenroll": "Unenroll from this case",
     "summary": "Case Summary",
     "case.toc": "Table of Contents",
     "case.backToOverview": "Overview",
@@ -16,6 +24,7 @@
     "overview.respond": "Respond",
     "overview.giveFeedback": "Give us your feedback about this case.",
     "overview.learningObjectives": "Learning objectives",
+    "case.forthcoming": "Forthcoming",
     "case.next": "Next: ",
     "open-in-new-tab": "Open in a new tab.",
     "case.end": "End",
@@ -47,7 +56,8 @@
     "comments.write": "Write a reply...",
     "comments.selectionNotUnique":
       "This selection appears more than once. Please select a few more words.",
-    "submit": "Submit"
+    "submit": "Submit",
+    "finishEditing": "Finish editing"
   },
 
   "fr": {

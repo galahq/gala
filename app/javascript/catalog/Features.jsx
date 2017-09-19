@@ -5,6 +5,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
+import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
@@ -13,7 +14,12 @@ import type { Case } from 'redux/state'
 type Props = { featuredCases: Case[], readerIsEditor: boolean }
 const Featured = ({ featuredCases, readerIsEditor }: Props) => (
   <CatalogSection solid>
-    <SectionTitle>Featured cases</SectionTitle>
+    <SectionTitle>
+      <FormattedMessage
+        id="catalog.featuredCases"
+        defaultMessage="Featured cases"
+      />
+    </SectionTitle>
     <Grid>
       {featuredCases.map(
         (

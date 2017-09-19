@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { Button, Intent } from '@blueprintjs/core'
 
@@ -15,6 +16,7 @@ import type Catalog from 'catalog'
 
 type Props = {
   enrolledCases: Case[],
+  intl: any,
   onDeleteEnrollment: $PropertyType<Catalog, 'handleDeleteEnrollment'>,
 }
 class Enrollments extends Component {
@@ -29,12 +31,30 @@ class Enrollments extends Component {
 
   render () {
     const { editing } = this.state
+    const { intl } = this.props
     return (
       <div>
         <CaseRow baseline>
-          <SidebarSectionTitle>Enrolled cases</SidebarSectionTitle>
+          <SidebarSectionTitle>
+            <FormattedMessage
+              id="catalog.enrolledCases"
+              defaultMessage="Enrolled cases"
+            />
+          </SidebarSectionTitle>
           <SidebarButton
-            aria-label={editing ? 'Finish editing' : 'Edit enrolled cases'}
+            aria-label={
+              editing ? (
+                intl.formatMessage({
+                  id: 'finishEditing',
+                  defaultMessage: 'Finish editing',
+                })
+              ) : (
+                intl.formatMessage({
+                  id: 'catalog.editEnrolled',
+                  defaultMessage: 'Edit enrolled cases',
+                })
+              )
+            }
             iconName={editing ? 'tick' : 'cog'}
             onClick={this.handleToggleEditing}
           />
@@ -52,7 +72,10 @@ class Enrollments extends Component {
                       editing && (
                         <SidebarButton
                           intent={Intent.DANGER}
-                          aria-label="Unenroll from this case"
+                          aria-label={intl.formatMessage({
+                            id: 'catalog.unenroll',
+                            defaultMessage: 'Unenroll from this case',
+                          })}
                           iconName="cross"
                           onClick={() =>
                             this.props.onDeleteEnrollment(slug, {
@@ -71,7 +94,7 @@ class Enrollments extends Component {
   }
 }
 
-export default Enrollments
+export default injectIntl(Enrollments)
 
 const SidebarSectionTitle = SectionTitle.extend`margin: 24px 0.5em 2px 0;`
 const SidebarButton = styled(Button).attrs({ className: 'pt-minimal' })`

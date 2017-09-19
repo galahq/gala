@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { values, omit } from 'ramda'
+import { injectIntl } from 'react-intl'
 
 import { Orchard } from 'shared/orchard'
 
@@ -19,6 +20,7 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 import type { Case, Enrollment, Reader } from 'redux/state'
 
 class Catalog extends Component {
+  props: { intl: any }
   state = {
     reader: ({ loading: true }: ?Reader | {| loading: true |}),
     cases: ({}: { [string]: Case }),
@@ -30,10 +32,18 @@ class Catalog extends Component {
     slug: string,
     options: { displayBetaWarning?: boolean } = {}
   ) => {
+    const { intl } = this.props
     if (
       !window.confirm(
-        `Are you sure you want to unenroll in this case?${options.displayBetaWarning
-          ? '\n\nBecause this case is not published, you will need another invitation to reenroll.'
+        `${intl.formatMessage({
+          id: 'catalog.unenrollConfirmation',
+          defaultMessage: 'Are you sure you want to unenroll in this case?',
+        })}${options.displayBetaWarning
+          ? `\n\n${intl.formatMessage({
+            id: 'catalog.unenrollBetaWarning',
+            defaultMessage:
+                'Because this case is not published, you will need another invitation to reenroll.',
+          })}`
           : ''}`
       )
     ) {
@@ -96,9 +106,12 @@ class Catalog extends Component {
   }
 
   _enrolledCases = () =>
-    this.state.enrollments.map(e => this.state.cases[e.caseSlug])
+    this.state.enrollments
+      .map(e => this.state.cases[e.caseSlug])
+      .filter(x => !!x)
 
-  _featuredCases = () => this.state.features.map(slug => this.state.cases[slug])
+  _featuredCases = () =>
+    this.state.features.map(slug => this.state.cases[slug]).filter(x => !!x)
 
   _allOtherCases = () =>
     values(
@@ -109,7 +122,7 @@ class Catalog extends Component {
     ).sort((a, b) => a.kicker.localeCompare(b.kicker))
 }
 
-export default Catalog
+export default injectIntl(Catalog)
 
 const Window = styled.div`
   min-height: 100%;

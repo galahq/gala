@@ -5,6 +5,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
+import { FormattedMessage } from 'react-intl'
 
 import { CaseRow, CaseLinkRow } from 'catalog/shared'
 
@@ -61,4 +62,8 @@ const ForthcomingTag = styled.span.attrs({
   margin-left: 0.5em;
   font-weight: 500;
 `
-const Forthcoming = () => <ForthcomingTag>Forthcoming</ForthcomingTag>
+const Forthcoming = () => (
+  <ForthcomingTag>
+    <FormattedMessage id="case.forthcoming" defaultMessage="Forthcoming" />
+  </ForthcomingTag>
+)
