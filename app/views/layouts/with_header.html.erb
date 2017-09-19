@@ -2,23 +2,15 @@
   <%= link_to root_path, id: "logo" do %>
     <%= inline_svg 'msc-logo.svg' %>
   <% end %>
-  <% if reader_signed_in? %>
-    <div id="reader-menu">
-      <div id="reader-menu-dismiss" class="hidden dismiss menu-dismiss"></div>
-      <ul id="reader-menu-dropdown" class="hidden">
-        <li><%=link_to t('readers.form.my_account'), edit_profile_path %></li>
-        <li><%=link_to t('devise.sessions.destroy'), destroy_reader_session_path, method: :delete %></li>
-      </ul>
-      <div id="reader-icon"<%= raw " style=\"background-image: url('#{current_reader.image_url}')\"" unless current_reader.image_url.blank? %>>
-        <%= current_reader.initials if current_reader.image_url.blank? %>
-      </div>
-      <span class="dropdown-caret"></span>
-    </div>
-  <% else %>
-    <div id="reader-sign-in">
-      <%=link_to t('devise.sessions.new.sign_in'), new_reader_session_path %>
-    </div>
+  <div id="main-menu-app" class="pt-dark"></div>
+  <%= javascript_tag do %>
+    window.reader = <% if reader_signed_in? %>
+    <%= raw render partial: "readers/reader", formats: [:json], locals: {reader: current_reader}%>
+    <% else %>
+    undefined;
+    <% end %>
   <% end %>
+  <%= javascript_pack_tag 'main-menu' %>
 </header>
 
 <% if flash[:notice] || flash[:alert] %>

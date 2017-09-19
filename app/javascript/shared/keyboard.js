@@ -5,7 +5,7 @@
 export function acceptKeyboardClick (event: SyntheticKeyboardEvent) {
   event.preventDefault()
   // $FlowFixMe
-  if (event.key === 'Enter' || event.key === ' ') event.target.click()
+  if (event.key === 'Enter' || event.key === ' ') event.currentTarget.click()
 }
 
 export function hotkeyDispatch (
