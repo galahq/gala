@@ -16,8 +16,7 @@ feature 'Unenrolling from a case' do
     end
     page.driver.browser.navigate.refresh
 
-    find('[aria-label="Edit enrolled cases"]').click
-    expect(page).not_to have_selector '[aria-label="Unenroll from this case"]'
+    expect(page).not_to have_css '[aria-label="Edit enrolled cases"]'
   end
 
   scenario 'displays an extra warning if the case is not published' do
@@ -31,7 +30,6 @@ feature 'Unenrolling from a case' do
     end
     page.driver.browser.navigate.refresh
 
-    find('[aria-label="Edit enrolled cases"]').click
-    expect(page).not_to have_selector '[aria-label="Unenroll from this case"]'
+    expect(page).not_to have_css '[aria-label="Edit enrolled cases"]'
   end
 end

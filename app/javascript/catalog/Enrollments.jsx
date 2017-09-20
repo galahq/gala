@@ -31,8 +31,8 @@ class Enrollments extends Component {
 
   render () {
     const { editing } = this.state
-    const { intl } = this.props
-    return (
+    const { intl, enrolledCases, onDeleteEnrollment } = this.props
+    return enrolledCases.length > 0 ? (
       <div>
         <CaseRow baseline>
           <SidebarSectionTitle>
@@ -60,7 +60,7 @@ class Enrollments extends Component {
           />
         </CaseRow>
         <UnstyledUL>
-          {this.props.enrolledCases.map(
+          {enrolledCases.map(
             ({ slug, smallCoverUrl, kicker, url, publishedAt } = {}) =>
               slug && (
                 <UnstyledLI key={slug}>
@@ -78,7 +78,7 @@ class Enrollments extends Component {
                           })}
                           iconName="cross"
                           onClick={() =>
-                            this.props.onDeleteEnrollment(slug, {
+                            onDeleteEnrollment(slug, {
                               displayBetaWarning: !publishedAt,
                             })}
                         />
@@ -90,6 +90,39 @@ class Enrollments extends Component {
           )}
         </UnstyledUL>
       </div>
+    ) : (
+      <Callout>
+        <h5>
+          <FormattedMessage
+            id="catalog.chooseForYourself"
+            defaultMessage="Choose for yourself"
+          />
+        </h5>
+        <ul>
+          <li>
+            <FormattedMessage
+              id="catalog.meetStakeholders"
+              defaultMessage="Meet different stakeholders and dive deep with a multimodal narrative."
+            />
+          </li>
+          <li>
+            <FormattedMessage
+              id="catalog.shortcutExperience"
+              defaultMessage="Shortcut experience by putting principles into practice."
+            />
+          </li>
+          <li>
+            <FormattedMessage
+              id="catalog.joinConversation"
+              defaultMessage="Join the conversation by asking questions and paying your learning forward."
+            />
+          </li>
+        </ul>
+        <FormattedMessage
+          id="catalog.enrollmentsInstruction"
+          defaultMessage="Cases you enroll in will be presented here for easy access."
+        />
+      </Callout>
     )
   }
 }
@@ -109,4 +142,8 @@ const UnstyledLI = styled.li`
   display: block;
   margin: 0;
   padding: 0;
+`
+const Callout = styled.div.attrs({ className: 'pt-callout' })`
+  margin-top: 1.5em;
+  line-height: 1.4;
 `
