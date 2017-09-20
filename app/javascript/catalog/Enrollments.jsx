@@ -12,9 +12,10 @@ import { Button, Intent } from '@blueprintjs/core'
 import { SectionTitle, CaseRow, Element } from 'catalog/shared'
 
 import type { Case } from 'redux/state'
-import type Catalog from 'catalog'
+import type Catalog, { Loading } from 'catalog'
 
 type Props = {
+  loading: Loading,
   enrolledCases: Case[],
   intl: any,
   onDeleteEnrollment: $PropertyType<Catalog, 'handleDeleteEnrollment'>,
@@ -32,7 +33,7 @@ class Enrollments extends Component {
   render () {
     const { editing } = this.state
     const { intl, enrolledCases, onDeleteEnrollment } = this.props
-    return enrolledCases.length > 0 ? (
+    return this.props.loading.cases ? null : enrolledCases.length > 0 ? (
       <div>
         <CaseRow baseline>
           <SidebarSectionTitle>
@@ -43,17 +44,15 @@ class Enrollments extends Component {
           </SidebarSectionTitle>
           <SidebarButton
             aria-label={
-              editing ? (
-                intl.formatMessage({
+              editing
+                ? intl.formatMessage({
                   id: 'finishEditing',
                   defaultMessage: 'Finish editing',
                 })
-              ) : (
-                intl.formatMessage({
+                : intl.formatMessage({
                   id: 'catalog.editEnrolled',
                   defaultMessage: 'Edit enrolled cases',
                 })
-              )
             }
             iconName={editing ? 'tick' : 'cog'}
             onClick={this.handleToggleEditing}

@@ -19,10 +19,14 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 
 import type { Case, Enrollment, Reader } from 'redux/state'
 
+export type Loading = { reader: boolean, cases: boolean }
+
 class Catalog extends Component {
   props: { intl: any }
   state = {
-    reader: ({ loading: true }: ?Reader | {| loading: true |}),
+    loading: { reader: true, cases: true },
+
+    reader: (null: ?Reader),
     cases: ({}: { [string]: Case }),
     enrollments: ([]: Enrollment[]),
     features: ([]: string[]),
@@ -61,7 +65,17 @@ class Catalog extends Component {
     Orchard.harvest('profile')
       .then(reader => this.setState({ reader }))
       .catch(e => e.name === 'OrchardError' && this.setState({ reader: null }))
-    Orchard.harvest('cases').then(cases => this.setState({ cases }))
+      .then(() =>
+        this.setState(({ loading }) => ({
+          loading: { ...loading, reader: false },
+        }))
+      )
+    Orchard.harvest('cases').then(cases =>
+      this.setState(({ loading }) => ({
+        cases,
+        loading: { ...loading, cases: false },
+      }))
+    )
     Orchard.harvest('cases/features').then(({ features }) =>
       this.setState({ features })
     )
@@ -77,6 +91,7 @@ class Catalog extends Component {
         <MaxWidthContainer>
           <Window>
             <Sidebar
+              loading={this.state.loading}
               reader={this.state.reader}
               enrolledCases={this._enrolledCases()}
               onDeleteEnrollment={this.handleDeleteEnrollment}
