@@ -8,7 +8,7 @@ feature 'Signing in with Google' do
   context 'without a password' do
     scenario 'is possible' do
       find('.oauth-icon-google').click
-      expect(page).to have_content 'ENROLLED CASES'
+      expect(page).to have_content 'Cases you enroll in'
     end
 
     scenario 'user can create a password' do
@@ -23,7 +23,7 @@ feature 'Signing in with Google' do
       fill_in 'Email', with: Reader.take.email
       fill_in 'Password', with: 'new password'
       click_button 'Sign in'
-      expect(page).to have_content 'ENROLLED CASES'
+      expect(page).to have_content 'Cases you enroll in'
     end
   end
 end
