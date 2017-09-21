@@ -10,7 +10,6 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    sleep 3
     @cases = Case.all.includes(:case_elements)
   end
 
