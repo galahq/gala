@@ -10,6 +10,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle, CaseRow, Element } from 'catalog/shared'
+import Instruction from 'catalog/Instruction'
 
 import type { Case } from 'redux/state'
 import type Catalog, { Loading } from 'catalog'
@@ -90,38 +91,7 @@ class Enrollments extends Component {
         </UnstyledUL>
       </div>
     ) : (
-      <Callout>
-        <h5>
-          <FormattedMessage
-            id="catalog.chooseForYourself"
-            defaultMessage="Choose for yourself"
-          />
-        </h5>
-        <ul>
-          <li>
-            <FormattedMessage
-              id="catalog.meetStakeholders"
-              defaultMessage="Meet different stakeholders and dive deep with a multimodal narrative."
-            />
-          </li>
-          <li>
-            <FormattedMessage
-              id="catalog.shortcutExperience"
-              defaultMessage="Shortcut experience by putting principles into practice."
-            />
-          </li>
-          <li>
-            <FormattedMessage
-              id="catalog.joinConversation"
-              defaultMessage="Join the conversation by asking questions and paying your learning forward."
-            />
-          </li>
-        </ul>
-        <FormattedMessage
-          id="catalog.enrollmentsInstruction"
-          defaultMessage="Cases you enroll in will be presented here for easy access."
-        />
-      </Callout>
+      <Instruction />
     )
   }
 }
@@ -141,8 +111,4 @@ const UnstyledLI = styled.li`
   display: block;
   margin: 0;
   padding: 0;
-`
-const Callout = styled.div.attrs({ className: 'pt-callout' })`
-  margin-top: 1.5em;
-  line-height: 1.4;
 `
