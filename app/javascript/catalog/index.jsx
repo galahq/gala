@@ -87,7 +87,7 @@ class Catalog extends Component {
                 readerIsEditor={this._readerIsEditor()}
                 featuredCases={this._featuredCases()}
               />
-              <MapView />
+              <MapView cases={this.state.cases} />
               <CatalogSection>
                 <SectionTitle>All cases</SectionTitle>
                 <CaseList

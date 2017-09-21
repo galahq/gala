@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
+import { values } from 'ramda'
 
 import Dimensions from 'react-dimensions'
 import ReactMapGL, { Marker } from 'react-map-gl'
@@ -13,7 +14,17 @@ import ReactMapGL, { Marker } from 'react-map-gl'
 import { SectionTitle } from 'catalog/shared'
 import Pin from 'catalog/Pin'
 
+import type { Case } from 'redux/state'
+
+type OwnProps = {
+  cases: { [string]: Case },
+}
+type Props = OwnProps & {
+  containerWidth: number,
+  containerHeight: number,
+}
 class MapView extends Component {
+  props: Props
   state = {
     viewport: {
       latitude: 18.666477929311778,
@@ -36,6 +47,7 @@ class MapView extends Component {
   handleClickPin = (caseSlug: string) => this.setState({ openPin: caseSlug })
 
   render () {
+    const { cases } = this.props
     const { viewport, acceptingScroll, openPin } = this.state
     const { latitude, longitude, zoom } = viewport
     return (
@@ -50,18 +62,24 @@ class MapView extends Component {
         onClick={this.handleClickMap}
         onViewportChange={this.handleViewportChange}
       >
-        <Marker
-          latitude={42.276116}
-          longitude={-83.801716}
-          offsetLeft={-3}
-          offsetTop={-11}
-        >
-          <Pin
-            key="dioxane-plume"
-            isOpen={openPin === 'dioxane-plume'}
-            onClick={this.handleClickPin}
-          />
-        </Marker>
+        {values(cases).map(
+          kase =>
+            kase.latitude && kase.longitude ? (
+              <Marker
+                latitude={kase.latitude}
+                longitude={kase.longitude}
+                offsetLeft={-3}
+                offsetTop={-11}
+              >
+                <Pin
+                  key={kase.slug}
+                  kase={kase}
+                  isOpen={openPin === kase.slug}
+                  onClick={this.handleClickPin}
+                />
+              </Marker>
+            ) : null
+        )}
       </ReactMapGL>
     )
   }
@@ -69,7 +87,7 @@ class MapView extends Component {
 
 const AutosizedMapView = Dimensions()(MapView)
 
-const WrappedMapView = (props: $PropertyType<MapView, 'props'>) => (
+const WrappedMapView = (props: OwnProps) => (
   <Container>
     <AutosizedMapView {...props} />
     <PositionedSectionTitle>
