@@ -4,6 +4,7 @@ json.key_format! camelize: :lower
 
 json.extract! c, :slug, :published_at, :kicker, :title, :dek, :authors,
               :translators, :summary, :tags, :photo_credit,
+              :latitude, :longitude, :zoom,
               :other_available_locales, :commentable, :learning_objectives,
               :audience, :featured_at
 

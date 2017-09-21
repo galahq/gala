@@ -127,7 +127,9 @@ export type Case = {
   dek: string,
   featuredAt: ?Date,
   kicker: string,
+  latitude: ?number,
   learningObjectives: string[],
+  longitude: ?number,
   otherAvailableLocales: string[],
   photoCredit: string,
   publishedAt: ?Date,
@@ -136,6 +138,7 @@ export type Case = {
   summary: string,
   title: string,
   url: string,
+  zoom: ?number,
 } & Byline
 
 export type CaseElement = {
