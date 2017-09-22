@@ -87,7 +87,18 @@ class Catalog extends Component {
                 readerIsEditor={this._readerIsEditor()}
                 featuredCases={this._featuredCases()}
               />
-              <MapView cases={this.state.cases} />
+              <MapView
+                cases={this.state.cases}
+                title={{
+                  id: 'catalog.locations',
+                  defaultMessage: 'Site locations',
+                }}
+                startingViewport={{
+                  latitude: 18.666477929311778,
+                  longitude: 27.609235818471717,
+                  zoom: 1.1606345336768273,
+                }}
+              />
               <CatalogSection>
                 <SectionTitle>All cases</SectionTitle>
                 <CaseList
