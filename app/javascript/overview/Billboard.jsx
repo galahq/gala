@@ -14,10 +14,11 @@ import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
 import CommunityChooser from './CommunityChooser'
 import LearningObjectives from './LearningObjectives'
+import MapView from 'catalog/MapView'
 
 import { updateCase } from 'redux/actions'
 
-import type { State } from 'redux/state'
+import type { State, Case } from 'redux/state'
 
 function mapStateToProps (state: State) {
   const { edit, caseData } = state
@@ -37,6 +38,7 @@ function mapStateToProps (state: State) {
     baseCoverUrl,
     otherAvailableLocales,
     learningObjectives,
+    caseData,
   }
 }
 
@@ -49,6 +51,7 @@ type Props = {
   updateCase: typeof updateCase,
   otherAvailableLocales: string[],
   learningObjectives: string[],
+  caseData: Case,
 }
 
 const Billboard = ({
@@ -60,7 +63,8 @@ const Billboard = ({
   updateCase,
   otherAvailableLocales,
   learningObjectives,
-}: Props) =>
+  caseData,
+}: Props) => (
   <section className="Billboard">
     <BillboardTitle />
     <CommunityChooser />
@@ -84,10 +88,7 @@ const Billboard = ({
         />
       </p>
 
-      <Less
-        startOpen={!learningObjectives}
-        disabled={!learningObjectives || editing}
-      >
+      <Less startOpen={false} disabled={editing}>
         <p style={{ margin: 0 }}>
           <EditableText
             multiline
@@ -99,16 +100,28 @@ const Billboard = ({
         </p>
       </Less>
 
-      {(learningObjectives || editing) &&
-        <LearningObjectives
-          disabled={!editing}
-          learningObjectives={learningObjectives}
-          onChange={value => updateCase({ learningObjectives: value })}
-        />}
+      {(learningObjectives || editing) && (
+      <LearningObjectives
+        disabled={!editing}
+        learningObjectives={learningObjectives}
+        onChange={value => updateCase({ learningObjectives: value })}
+      />
+        )}
 
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>
+    <MapView
+      cases={{ [slug]: caseData }}
+      height={300}
+      startingViewport={{
+        latitude: caseData.latitude || 0,
+        longitude: caseData.longitude || 0,
+        zoom: caseData.zoom || 9,
+      }}
+      title={{ id: 'overview.location', defaultMessage: 'Case Location' }}
+    />
   </section>
+)
 
 export default connect(mapStateToProps, { updateCase })(Billboard)
 

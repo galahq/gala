@@ -18,6 +18,9 @@ import type { Case } from 'redux/state'
 
 type OwnProps = {
   cases: { [string]: Case },
+  startingViewport: { latitude: number, longitude: number, zoom: number },
+  title: { id: string, defaultMessage: string },
+  height?: number,
 }
 type Props = OwnProps & {
   containerWidth: number,
@@ -26,11 +29,7 @@ type Props = OwnProps & {
 class MapView extends Component {
   props: Props
   state = {
-    viewport: {
-      latitude: 18.666477929311778,
-      longitude: 27.609235818471717,
-      zoom: 1.1606345336768273,
-    },
+    viewport: this.props.startingViewport,
     acceptingScroll: false,
     openPin: '',
   }
@@ -88,13 +87,10 @@ class MapView extends Component {
 const AutosizedMapView = Dimensions()(MapView)
 
 const WrappedMapView = (props: OwnProps) => (
-  <Container>
+  <Container height={props.height}>
     <AutosizedMapView {...props} />
     <PositionedSectionTitle>
-      <FormattedMessage
-        id="catalog.locations"
-        defaultMessage="Site Locations"
-      />
+      <FormattedMessage {...props.title} />
     </PositionedSectionTitle>
   </Container>
 )
@@ -102,7 +98,7 @@ export default WrappedMapView
 
 const Container = styled.section`
   margin: 0 -3em;
-  height: 550px;
+  height: ${({ height }) => height || 550}px;
   position: relative;
 
   &:after {
