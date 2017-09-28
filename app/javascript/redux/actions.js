@@ -127,6 +127,9 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
           learningObjectives,
           authors,
           translators,
+          latitude,
+          longitude,
+          zoom,
         } = state.caseData
         data = {
           case: {
@@ -139,6 +142,9 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
             learningObjectives,
             authors,
             translators,
+            latitude,
+            longitude,
+            zoom,
             coverUrl: baseCoverUrl,
           },
         }

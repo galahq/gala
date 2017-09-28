@@ -10,7 +10,7 @@
   "author": "Cameron L Bothner",
   "license": "MIT",
   "engines": {
-    "yarn": "0.27.x"
+    "yarn": "1.1.x"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.6.0",

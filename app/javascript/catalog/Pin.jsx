@@ -13,37 +13,44 @@ import type { Case } from 'redux/state'
 
 class Pin extends Component {
   props: {
-    isOpen: boolean,
-    kase: Case,
-    onClick: string => void,
+    className?: string,
+    isOpen?: boolean,
+    kase?: Case,
+    onClick?: string => void,
   }
 
-  handleClick = () =>
-    this.props.onClick(this.props.isOpen ? '' : this.props.kase.slug)
+  handleClick = () => {
+    const { onClick, kase, isOpen } = this.props
+    if (onClick && kase) onClick(isOpen ? '' : kase.slug)
+  }
 
   render () {
-    const { kase, isOpen } = this.props
+    const { kase, isOpen, className } = this.props
     return (
-      <div>
+      <div className={className}>
         <Tooltip
-          isOpen={isOpen}
+          isOpen={isOpen || false}
           content={
-            <TooltipElement
-              image={kase.smallCoverUrl}
-              text={kase.kicker}
-              rightElement={
-                !!kase.publishedAt && (
-                  <AnchorButton
-                    iconName="circle-arrow-right"
-                    className="pt-minimal"
-                    href={kase.url}
-                  />
-                )
-              }
-            />
+            kase ? (
+              <TooltipElement
+                image={kase.smallCoverUrl}
+                text={kase.kicker}
+                rightElement={
+                  !!kase.publishedAt && (
+                    <AnchorButton
+                      iconName="circle-arrow-right"
+                      className="pt-minimal"
+                      href={kase.url}
+                    />
+                  )
+                }
+              />
+            ) : (
+              ''
+            )
           }
         >
-          <PinIcon onClick={this.handleClick} />
+          <PinIcon interactive={!!kase} onClick={this.handleClick} />
         </Tooltip>
       </div>
     )
@@ -57,5 +64,5 @@ const TooltipElement = styled(Element).attrs({
 const PinIcon = styled.span.attrs({
   dangerouslySetInnerHTML: { __html: require('images/pin.svg') },
 })`
-  cursor: pointer;
+  cursor: ${({ interactive }) => (interactive ? 'pointer' : 'normal')};
 `
