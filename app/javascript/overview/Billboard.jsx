@@ -111,7 +111,7 @@ const Billboard = ({
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>
     <MapView
-      cases={{ [slug]: caseData }}
+      cases={[caseData]}
       editing={editing}
       height={300}
       startingViewport={{

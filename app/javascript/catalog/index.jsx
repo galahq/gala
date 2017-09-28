@@ -88,7 +88,7 @@ class Catalog extends Component {
                 featuredCases={this._featuredCases()}
               />
               <MapView
-                cases={this.state.cases}
+                cases={values(this.state.cases).filter(x => !!x.publishedAt)}
                 title={{
                   id: 'catalog.locations',
                   defaultMessage: 'Site locations',
