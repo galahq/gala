@@ -5,29 +5,30 @@
 
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { values } from 'ramda'
 
 import Dimensions from 'react-dimensions'
 import ReactMapGL, { Marker } from 'react-map-gl'
+import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle } from 'catalog/shared'
 import Pin from 'catalog/Pin'
 
-import type { Case } from 'redux/state'
+import type { Case, Viewport } from 'redux/state'
 
 type OwnProps = {
   cases: { [string]: Case },
-  startingViewport: { latitude: number, longitude: number, zoom: number },
-  title: { id: string, defaultMessage: string },
+  editing?: boolean,
   height?: number,
+  intl: any,
+  startingViewport: Viewport,
+  title: { id: string, defaultMessage: string },
+  onChangeViewport?: Viewport => any,
 }
-type Props = OwnProps & {
-  containerWidth: number,
-  containerHeight: number,
-}
-class MapView extends Component {
-  props: Props
+
+class MapViewController extends Component {
+  props: OwnProps
   state = {
     viewport: this.props.startingViewport,
     acceptingScroll: false,
@@ -41,63 +42,84 @@ class MapView extends Component {
     this.setState({ openPin: '' })
   }
 
-  handleViewportChange = viewport => this.setState({ viewport })
+  handleChangeViewport = (viewport: Viewport) => this.setState({ viewport })
 
   handleClickPin = (caseSlug: string) => this.setState({ openPin: caseSlug })
 
+  handleZoomOut = () =>
+    this.setState(({ viewport }) => ({
+      viewport: { ...viewport, zoom: viewport.zoom - 1 },
+    }))
+  handleZoomIn = () =>
+    this.setState(({ viewport }) => ({
+      viewport: { ...viewport, zoom: viewport.zoom + 1 },
+    }))
+
+  handleReset = () => this.setState({ viewport: this.props.startingViewport })
+
+  handleSave = () =>
+    this.props.onChangeViewport &&
+    this.props.onChangeViewport(this.state.viewport)
+
   render () {
-    const { cases } = this.props
-    const { viewport, acceptingScroll, openPin } = this.state
-    const { latitude, longitude, zoom } = viewport
+    const { height, cases, title, editing, intl } = this.props
     return (
-      <ReactMapGL
-        mapStyle="mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14"
-        width={this.props.containerWidth}
-        height={this.props.containerHeight}
-        latitude={latitude}
-        longitude={longitude}
-        zoom={zoom}
-        scrollZoom={acceptingScroll}
-        onClick={this.handleClickMap}
-        onViewportChange={this.handleViewportChange}
-      >
-        {values(cases).map(
-          kase =>
-            kase.latitude && kase.longitude ? (
-              <Marker
-                latitude={kase.latitude}
-                longitude={kase.longitude}
-                offsetLeft={-3}
-                offsetTop={-11}
-              >
-                <Pin
-                  key={kase.slug}
-                  kase={kase}
-                  isOpen={openPin === kase.slug}
-                  onClick={this.handleClickPin}
-                />
-              </Marker>
-            ) : null
-        )}
-      </ReactMapGL>
+      <Container height={height}>
+        <AutosizedMapView
+          {...this.state}
+          cases={editing ? {} : cases}
+          onClickMap={this.handleClickMap}
+          onClickPin={this.handleClickPin}
+          onChangeViewport={this.handleChangeViewport}
+        />
+        <PositionedSectionTitle>
+          <FormattedMessage {...title} />
+        </PositionedSectionTitle>
+        {editing && [
+          <PositionedPin key="pin" />,
+          <PositionedButtons key="buttons">
+            <PaddedButton
+              text={intl.formatMessage({
+                id: 'map.reset',
+                defaultMessage: 'Reset',
+              })}
+              onClick={this.handleReset}
+            />
+            <PaddedButton
+              aria-label={intl.formatMessage({
+                id: 'map.zoomOut',
+                defaultMessage: 'Zoom out',
+              })}
+              iconName="zoom-out"
+              onClick={this.handleZoomOut}
+            />
+            <PaddedButton
+              aria-label={intl.formatMessage({
+                id: 'map.zoomIn',
+                defaultMessage: 'Zoom in',
+              })}
+              iconName="zoom-in"
+              onClick={this.handleZoomIn}
+            />
+            <PaddedButton
+              intent={Intent.SUCCESS}
+              text={intl.formatMessage({
+                id: 'map.set',
+                defaultMessage: 'Set',
+              })}
+              onClick={this.handleSave}
+            />
+          </PositionedButtons>,
+        ]}
+      </Container>
     )
   }
 }
 
-const AutosizedMapView = Dimensions()(MapView)
-
-const WrappedMapView = (props: OwnProps) => (
-  <Container height={props.height}>
-    <AutosizedMapView {...props} />
-    <PositionedSectionTitle>
-      <FormattedMessage {...props.title} />
-    </PositionedSectionTitle>
-  </Container>
-)
-export default WrappedMapView
+export default injectIntl(MapViewController)
 
 const Container = styled.section`
-  margin: 0 -3em;
+  margin: 0 -2em;
   height: ${({ height }) => height || 550}px;
   position: relative;
 
@@ -138,3 +160,77 @@ const PositionedSectionTitle = styled(SectionTitle)`
   left: 58px;
   z-index: 1;
 `
+const PositionedButtons = styled.div.attrs({ className: 'pt-dark' })`
+  position: absolute;
+  top: 40px;
+  right: 58px;
+  z-index: 1;
+`
+const PaddedButton = styled(Button)`margin-left: 0.5em;`
+const PositionedPin = styled(Pin)`
+  position: absolute;
+  top: calc(50% - 11px);
+  left: calc(50% - 3px);
+  z-index: 1;
+  pointer-events: none;
+`
+
+type MapViewProps = {
+  acceptingScroll: boolean,
+  cases: { [string]: Case },
+  containerHeight: number,
+  containerWidth: number,
+  openPin: string,
+  viewport: Viewport,
+  onClickMap: () => void,
+  onClickPin: string => void,
+  onChangeViewport: Viewport => void,
+}
+const MapView = ({
+  acceptingScroll,
+  cases,
+  containerHeight,
+  containerWidth,
+  openPin,
+  viewport,
+  onClickMap,
+  onClickPin,
+  onChangeViewport,
+}: MapViewProps) => {
+  const { latitude, longitude, zoom } = viewport
+  return (
+    <ReactMapGL
+      mapStyle="mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14"
+      width={containerWidth}
+      height={containerHeight}
+      latitude={latitude}
+      longitude={longitude}
+      zoom={zoom}
+      scrollZoom={acceptingScroll}
+      onClick={onClickMap}
+      onChangeViewport={onChangeViewport}
+    >
+      {values(cases).map(
+        kase =>
+          kase.latitude && kase.longitude ? (
+            <Marker
+              key={kase.slug}
+              latitude={kase.latitude}
+              longitude={kase.longitude}
+              offsetLeft={-3}
+              offsetTop={-11}
+            >
+              <Pin
+                key={kase.slug}
+                kase={values(cases).length > 1 ? kase : undefined}
+                isOpen={openPin === kase.slug}
+                onClick={onClickPin}
+              />
+            </Marker>
+          ) : null
+      )}
+    </ReactMapGL>
+  )
+}
+
+const AutosizedMapView = Dimensions()(MapView)

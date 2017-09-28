@@ -301,3 +301,5 @@ export type StatisticsData = {
   views: number,
   updatedAt: number,
 }
+
+export type Viewport = { latitude: number, longitude: number, zoom: number }

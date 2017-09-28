@@ -18,7 +18,7 @@ import MapView from 'catalog/MapView'
 
 import { updateCase } from 'redux/actions'
 
-import type { State, Case } from 'redux/state'
+import type { State, Case, Viewport } from 'redux/state'
 
 function mapStateToProps (state: State) {
   const { edit, caseData } = state
@@ -112,13 +112,15 @@ const Billboard = ({
     </div>
     <MapView
       cases={{ [slug]: caseData }}
+      editing={editing}
       height={300}
       startingViewport={{
         latitude: caseData.latitude || 0,
         longitude: caseData.longitude || 0,
-        zoom: caseData.zoom || 9,
+        zoom: caseData.zoom || 1,
       }}
       title={{ id: 'overview.location', defaultMessage: 'Case Location' }}
+      onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
     />
   </section>
 )

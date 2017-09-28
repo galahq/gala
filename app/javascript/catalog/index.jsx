@@ -94,8 +94,8 @@ class Catalog extends Component {
                   defaultMessage: 'Site locations',
                 }}
                 startingViewport={{
-                  latitude: 18.666477929311778,
-                  longitude: 27.609235818471717,
+                  latitude: 17.770231041567445,
+                  longitude: 16.286555860170893,
                   zoom: 1.1606345336768273,
                 }}
               />
