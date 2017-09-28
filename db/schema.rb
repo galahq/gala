@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170908211738) do
+ActiveRecord::Schema.define(version: 20170921172025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,6 +111,9 @@ ActiveRecord::Schema.define(version: 20170908211738) do
     t.jsonb "classroom_timeline"
     t.datetime "published_at"
     t.datetime "featured_at"
+    t.float "latitude"
+    t.float "longitude"
+    t.float "zoom"
     t.index ["slug"], name: "index_cases_on_slug", unique: true
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end

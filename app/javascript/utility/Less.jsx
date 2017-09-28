@@ -44,9 +44,10 @@ class Less extends Component {
     const { open } = this.state
     return (
       <OuterContainer>
-        {disabled
-          ? children
-          : <div>
+        {disabled ? (
+          children
+        ) : (
+          <div>
             <InnerContainer
               open={open}
               height={this._getHeight()}
@@ -55,16 +56,18 @@ class Less extends Component {
             >
               {children}
             </InnerContainer>
-            {open ||
-            <ReadMoreLink
-              role="button"
-              tabIndex="0"
-              onClick={this.handleOpen}
-              onKeyPress={acceptKeyboardClick}
-            >
-              {prompt}
-            </ReadMoreLink>}
-          </div>}
+            {open || (
+              <ReadMoreLink
+                role="button"
+                tabIndex="0"
+                onClick={this.handleOpen}
+                onKeyPress={acceptKeyboardClick}
+              >
+                {prompt}
+              </ReadMoreLink>
+            )}
+          </div>
+        )}
       </OuterContainer>
     )
   }
@@ -96,7 +99,7 @@ const InnerContainer = styled.div`
     bottom: 0px;
     height: ${({ open }: InnerContainerProps) => (open ? '0' : '30%')};
     width: 100%;
-    background: linear-gradient(transparent, gray);
+    background: linear-gradient(rgba(128, 128, 128, 0), rgba(128, 128, 128, 1));
     transition: background 0.2s ease-out;
   }
 `
