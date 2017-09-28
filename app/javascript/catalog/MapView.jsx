@@ -66,7 +66,7 @@ class MapViewController extends Component {
       <Container height={height}>
         <AutosizedMapView
           {...this.state}
-          cases={editing ? {} : cases}
+          cases={editing ? [] : cases}
           onClickMap={this.handleClickMap}
           onClickPin={this.handleClickPin}
           onChangeViewport={this.handleChangeViewport}
