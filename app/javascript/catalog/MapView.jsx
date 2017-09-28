@@ -6,7 +6,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { values } from 'ramda'
 
 import Dimensions from 'react-dimensions'
 import ReactMapGL, { Marker } from 'react-map-gl'
@@ -177,7 +176,7 @@ const PositionedPin = styled(Pin)`
 
 type MapViewProps = {
   acceptingScroll: boolean,
-  cases: { [string]: Case },
+  cases: Case[],
   containerHeight: number,
   containerWidth: number,
   openPin: string,
@@ -210,7 +209,7 @@ const MapView = ({
       onClick={onClickMap}
       onChangeViewport={onChangeViewport}
     >
-      {values(cases).map(
+      {cases.map(
         kase =>
           kase.latitude && kase.longitude ? (
             <Marker
@@ -222,7 +221,7 @@ const MapView = ({
             >
               <Pin
                 key={kase.slug}
-                kase={values(cases).length > 1 ? kase : undefined}
+                kase={cases.length > 1 ? kase : undefined}
                 isOpen={openPin === kase.slug}
                 onClick={onClickPin}
               />
