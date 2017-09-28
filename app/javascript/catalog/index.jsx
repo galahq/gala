@@ -13,6 +13,7 @@ import { Orchard } from 'shared/orchard'
 import CatalogToolbar from 'catalog/CatalogToolbar'
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
+import MapView from 'catalog/MapView'
 import CaseList from 'catalog/CaseList'
 import { MaxWidthContainer } from 'utility/styledComponents'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
@@ -86,6 +87,18 @@ class Catalog extends Component {
                 readerIsEditor={this._readerIsEditor()}
                 featuredCases={this._featuredCases()}
               />
+              <MapView
+                cases={values(this.state.cases).filter(x => !!x.publishedAt)}
+                title={{
+                  id: 'catalog.locations',
+                  defaultMessage: 'Site locations',
+                }}
+                startingViewport={{
+                  latitude: 17.770231041567445,
+                  longitude: 16.286555860170893,
+                  zoom: 1.1606345336768273,
+                }}
+              />
               <CatalogSection>
                 <SectionTitle>All cases</SectionTitle>
                 <CaseList
@@ -136,8 +149,8 @@ const Window = styled.div`
 const Main = styled.main`
   flex: 1;
   margin: 0 0.5em;
-
-  & ${CatalogSection}:not(:first-child) {
-    margin-top: 22px;
+  max-width: calc(100% - 20em);
+  @media (max-width: 700px) {
+    max-width: 100%;
   }
 `
