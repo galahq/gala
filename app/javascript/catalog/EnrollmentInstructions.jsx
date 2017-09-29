@@ -1,5 +1,5 @@
 /**
- * @providesModule Instruction
+ * @providesModule EnrollmentInstructions
  * @flow
  */
 
@@ -7,8 +7,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const Instruction = () => (
-  <InstructionContainer>
+const EnrollmentInstructions = () => (
+  <Container>
     <h5>
       <FormattedMessage
         id="catalog.chooseForYourself"
@@ -39,12 +39,12 @@ const Instruction = () => (
       id="catalog.enrollmentsInstruction"
       defaultMessage="Cases you enroll in will be presented here for easy access."
     />
-  </InstructionContainer>
+  </Container>
 )
 
-export default injectIntl(Instruction)
+export default injectIntl(EnrollmentInstructions)
 
-const InstructionContainer = styled.div.attrs({ className: 'pt-callout' })`
+const Container = styled.div.attrs({ className: 'pt-callout' })`
   margin-top: 1.5em;
   line-height: 1.4;
 `

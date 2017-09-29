@@ -10,7 +10,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle, CaseRow, Element } from 'catalog/shared'
-import Instruction from 'catalog/Instruction'
+import EnrollmentInstructions from 'catalog/EnrollmentInstructions'
 
 import type { Case } from 'redux/state'
 import type Catalog, { Loading } from 'catalog'
@@ -33,8 +33,8 @@ class Enrollments extends Component {
 
   render () {
     const { editing } = this.state
-    const { intl, enrolledCases, onDeleteEnrollment } = this.props
-    return this.props.loading.cases ? null : enrolledCases.length > 0 ? (
+    const { intl, enrolledCases, onDeleteEnrollment, loading } = this.props
+    return loading.cases ? null : enrolledCases.length > 0 ? (
       <div>
         <CaseRow baseline>
           <SidebarSectionTitle>
@@ -91,7 +91,7 @@ class Enrollments extends Component {
         </UnstyledUL>
       </div>
     ) : (
-      <Instruction />
+      <EnrollmentInstructions />
     )
   }
 }
