@@ -4,6 +4,15 @@ json.key_format! camelize: :lower
 
 json.cache! c do
   json.partial! 'case', c: c
+
+  json.extract! c, :summary, :other_available_locales, :commentable,
+                :learning_objectives, :audience
+
+  json.case_elements c.case_elements do |case_element|
+    json.cache! case_element do
+      json.partial! case_element
+    end
+  end
 end
 
 by_id json,

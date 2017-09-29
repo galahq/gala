@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12" height="12" viewBox="0 0 12 12">
+  <defs>
+    <circle id="pin-a" cx="6" cy="6" r="6"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use fill="#68CC70" xlink:href="#pin-a"/>
+    <circle cx="6" cy="6" r="4" stroke="#00274D" stroke-width="4"/>
+    <circle cx="6" cy="6" r="5" stroke="#68CC70" stroke-width="2"/>
+  </g>
+</svg>
