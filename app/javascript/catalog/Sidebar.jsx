@@ -12,18 +12,24 @@ import SignInForm from 'utility/SignInForm'
 import { identiconStyle } from 'shared/Identicon'
 
 import type { Case, Reader } from 'redux/state'
-import type Catalog from 'catalog'
+import type Catalog, { Loading } from 'catalog'
 
 type Props = {
-  reader: ?Reader | { loading: true },
+  loading: Loading,
+  reader: ?Reader,
   enrolledCases: Case[],
   onDeleteEnrollment: $PropertyType<Catalog, 'handleDeleteEnrollment'>,
 }
-const Sidebar = ({ reader, enrolledCases, onDeleteEnrollment }: Props) => (
+const Sidebar = ({
+  loading,
+  reader,
+  enrolledCases,
+  onDeleteEnrollment,
+}: Props) => (
   <Container>
-    {reader == null ? (
+    {loading.reader ? null : reader == null ? (
       <SignInForm />
-    ) : reader.loading ? null : (
+    ) : (
       <div className="pt-dark">
         <IdentigradientElement
           image={reader.imageUrl}
@@ -32,6 +38,7 @@ const Sidebar = ({ reader, enrolledCases, onDeleteEnrollment }: Props) => (
           hashKey={reader.email}
         />
         <Enrollments
+          loading={loading}
           enrolledCases={enrolledCases}
           onDeleteEnrollment={onDeleteEnrollment}
         />
