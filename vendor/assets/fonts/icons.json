@@ -401,7 +401,7 @@
   {
     "name": "Tick",
     "className": "pt-icon-tick",
-    "tags": "tick mark, sign, ok, approved, success",
+    "tags": "mark, sign, ok, approved, success",
     "group": "action",
     "content": "\\2713"
   },
@@ -1773,7 +1773,7 @@
   {
     "name": "Small tick",
     "className": "pt-icon-small-tick",
-    "tags": "tick mark, sign, ok, approved, success",
+    "tags": "mark, sign, ok, approved, success",
     "group": "action",
     "content": "\\e6d8"
   },
@@ -2592,7 +2592,7 @@
   {
     "name": "Dashboard",
     "className": "pt-icon-dashboard",
-    "tags": "panel, control",
+    "tags": "panel, control, gauge, instrument, meter",
     "group": "interface",
     "content": "\\e751"
   },
@@ -2690,7 +2690,7 @@
   {
     "name": "Endorsed",
     "className": "pt-icon-endorsed",
-    "tags": "tick mark, sign, ok, approved, success",
+    "tags": "tick, mark, sign, ok, approved, success",
     "group": "action",
     "content": "\\e75f"
   },
@@ -2707,5 +2707,222 @@
     "tags": "person, human, male, female, character, customer, individual, social",
     "group": "interface",
     "content": "\\e761"
+  },
+  {
+    "name": "Menu",
+    "className": "pt-icon-menu",
+    "tags": "navigation, lines, list",
+    "group": "interface",
+    "content": "\\e762"
+  },
+  {
+    "name": "Collapse all",
+    "className": "pt-icon-collapse-all",
+    "tags": "arrows, chevron, reduce",
+    "group": "interface",
+    "content": "\\e763"
+  },
+  {
+    "name": "Expand all",
+    "className": "pt-icon-expand-all",
+    "tags": "arrows, chevron, enlarge",
+    "group": "interface",
+    "content": "\\e764"
+  },
+  {
+    "name": "Intersection",
+    "className": "pt-icon-intersection",
+    "tags": "circles, combine, cross",
+    "group": "action",
+    "content": "\\e765"
+  },
+  {
+    "name": "Blocked person",
+    "className": "pt-icon-blocked-person",
+    "tags": "person, human, male, female, character, customer, individual, social, banned, prohibited",
+    "group": "interface",
+    "content": "\\e768"
+  },
+  {
+    "name": "Slash",
+    "className": "pt-icon-slash",
+    "tags": "divide, separate",
+    "group": "action",
+    "content": "\\e769"
+  },
+  {
+    "name": "Percentage",
+    "className": "pt-icon-percentage",
+    "tags": "modulo, modulus",
+    "group": "action",
+    "content": "\\e76a"
+  },
+  {
+    "name": "Satellite",
+    "className": "pt-icon-satellite",
+    "tags": "communication, space",
+    "group": "miscellaneous",
+    "content": "\\e76b"
+  },
+  {
+    "name": "Paragraph",
+    "className": "pt-icon-paragraph",
+    "tags": "text, chapter, division, part",
+    "group": "editor",
+    "content": "\\e76c"
+  },
+  {
+    "name": "Bank account",
+    "className": "pt-icon-bank-account",
+    "tags": "money, finance, funds",
+    "group": "miscellaneous",
+    "content": "\\e76f"
+  },
+  {
+    "name": "Cell tower",
+    "className": "pt-icon-cell-tower",
+    "tags": "signal, communication, radio, mast",
+    "group": "miscellaneous",
+    "content": "\\e770"
+  },
+  {
+    "name": "ID number",
+    "className": "pt-icon-id-number",
+    "tags": "identification, person, document",
+    "group": "miscellaneous",
+    "content": "\\e771"
+  },
+  {
+    "name": "IP address",
+    "className": "pt-icon-ip-address",
+    "tags": "internet, protocol, number, id, network",
+    "group": "miscellaneous",
+    "content": "\\e772"
+  },
+  {
+    "name": "Eraser",
+    "className": "pt-icon-eraser",
+    "tags": "delete, remove",
+    "group": "editor",
+    "content": "\\e773"
+  },
+  {
+    "name": "Issue",
+    "className": "pt-icon-issue",
+    "tags": "circle, notification, failure, circle, exclamation mark, sign, problem",
+    "group": "interface",
+    "content": "\\e774"
+  },
+  {
+    "name": "Issue: new",
+    "className": "pt-icon-issue-new",
+    "tags": "circle, notification, failure, circle, exclamation mark, sign, problem",
+    "group": "interface",
+    "content": "\\e775"
+  },
+  {
+    "name": "Issue: closed",
+    "className": "pt-icon-issue-closed",
+    "tags": "circle, notification, failure, circle, exclamation mark, sign, problem",
+    "group": "interface",
+    "content": "\\e776"
+  },
+  {
+    "name": "Panel: stats",
+    "className": "pt-icon-panel-stats",
+    "tags": "sidebar, layout, list",
+    "group": "table",
+    "content": "\\e777"
+  },
+  {
+    "name": "Panel: table",
+    "className": "pt-icon-panel-table",
+    "tags": "sidebar, layout, spreadsheet",
+    "group": "table",
+    "content": "\\e778"
+  },
+  {
+    "name": "Tick circle",
+    "className": "pt-icon-tick-circle",
+    "tags": "mark, sign, ok, approved, success",
+    "group": "action",
+    "content": "\\e779"
+  },
+  {
+    "name": "Prescription",
+    "className": "pt-icon-prescription",
+    "tags": "instruction, direction, medicine, drug, medication, mixture",
+    "group": "miscellaneous",
+    "content": "\\e78a"
+  },
+  {
+    "name": "Prescription: new",
+    "className": "pt-icon-new-prescription",
+    "tags": "instruction, direction, medicine, drug, medication, mixture",
+    "group": "miscellaneous",
+    "content": "\\e78b"
+  },
+  {
+    "name": "Filter: keep",
+    "className": "pt-icon-filter-keep",
+    "tags": "filtering, funnel, tube, pipe, retain, stay",
+    "group": "action",
+    "content": "\\e78c"
+  },
+  {
+    "name": "Filter: remove",
+    "className": "pt-icon-filter-remove",
+    "tags": "filtering, funnel, tube, pipe, delete, detach, discard, dismiss",
+    "group": "action",
+    "content": "\\e78d"
+  },
+  {
+    "name": "Key",
+    "className": "pt-icon-key",
+    "tags": "lock, unlock, open, security, password, access",
+    "group": "interface",
+    "content": "\\e78e"
+  },
+  {
+    "name": "Feed: subscribed",
+    "className": "pt-icon-feed-subscribed",
+    "tags": "rss, feed, tick, check",
+    "group": "interface",
+    "content": "\\e78f"
+  },
+  {
+    "name": "Widget: button",
+    "className": "pt-icon-widget-button",
+    "tags": "element, click, press",
+    "group": "interface",
+    "content": "\\e790"
+  },
+  {
+    "name": "Widget: header",
+    "className": "pt-icon-widget-header",
+    "tags": "element, layout, top",
+    "group": "interface",
+    "content": "\\e791"
+  },
+  {
+    "name": "Widget: footer",
+    "className": "pt-icon-widget-footer",
+    "tags": "element, layout, bottom",
+    "group": "interface",
+    "content": "\\e792"
+  },
+  {
+    "name": "Header: one",
+    "className": "pt-icon-header-one",
+    "tags": "paragraph styling, formatting",
+    "group": "editor",
+    "content": "\\e793"
+  },
+  {
+    "name": "Header: two",
+    "className": "pt-icon-header-two",
+    "tags": "paragraph styling, formatting",
+    "group": "editor",
+    "content": "\\e794"
   }
 ]
