@@ -27,7 +27,7 @@ feature 'Leaving a comment' do
     expect(page).to have_link 'Respond'
     click_link 'Respond', match: :first
 
-    first_paragraph = find('.DraftEditor-root p', match: :first)
+    first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
     click_button 'Respond here'
     expect(page).to have_selector 'textarea'
@@ -46,7 +46,7 @@ feature 'Leaving a comment' do
 
     visit case_path('en', enrollment.case) + '/1'
     click_link 'Respond', match: :first
-    first_paragraph = find('.DraftEditor-root p', match: :first)
+    first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
 
     expect(page).to have_content 'Please select a few more words.'
