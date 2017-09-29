@@ -1,4 +1,9 @@
-import React from 'react'
+/**
+ * @providesModule TableOfContentsElement
+ * @flow
+ */
+
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { DragSource, DropTarget } from 'react-dnd'
 import { NavLink, withRouter } from 'react-router-dom'
@@ -17,39 +22,42 @@ function getElementDataFrom (state) {
   }
 }
 
-const TableOfContentsElement = ({
-  position,
-  element,
-  connectDragSource,
-  connectDropTarget,
-  isDragging,
-  editing,
-  readOnly,
-}) =>
-  <NavLink
-    className="c-toc__link"
-    activeClassName="c-toc__link--active"
-    to={`/${position}`}
-    style={{ opacity: isDragging ? 0 : 1 }}
-  >
-    {connectDragSource(
-      connectDropTarget(
-        <li className="c-toc__item">
-          <div className="c-toc__item-data">
-            <div className="c-toc__number">
-              {editing && !readOnly ? ': : :' : position}
-            </div>
-            <div className="c-toc__title">
-              {element.title}
-            </div>
-            <div className="c-toc__icon">
-              {element.typeIcon}
-            </div>
-          </div>
-        </li>
-      )
-    )}
-  </NavLink>
+// eslint-disable-next-line react/prefer-stateless-function
+class TableOfContentsElement extends Component {
+  render () {
+    const {
+      position,
+      element,
+      connectDragSource,
+      connectDropTarget,
+      isDragging,
+      editing,
+      readOnly,
+    } = this.props
+    return (
+      <NavLink
+        className="c-toc__link"
+        activeClassName="c-toc__link--active"
+        to={`/${position}`}
+        style={{ opacity: isDragging ? 0 : 1 }}
+      >
+        {connectDragSource(
+          connectDropTarget(
+            <li className="c-toc__item">
+              <div className="c-toc__item-data">
+                <div className="c-toc__number">
+                  {editing && !readOnly ? ': : :' : position}
+                </div>
+                <div className="c-toc__title">{element.title}</div>
+                <div className="c-toc__icon">{element.typeIcon}</div>
+              </div>
+            </li>
+          )
+        )}
+      </NavLink>
+    )
+  }
+}
 
 const DraggableTableOfContentsElement = DropTarget(
   ItemTypes.CASE_ELEMENT,

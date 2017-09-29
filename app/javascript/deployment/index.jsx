@@ -11,6 +11,8 @@ import QuizDetails from './QuizDetails'
 import Toolbar from './Toolbar'
 
 import { Intent, Toaster } from '@blueprintjs/core'
+import hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet from 'shared/badTerribleAwfulCode'
+
 import type { IntentType } from '@blueprintjs/core'
 
 import { Orchard } from 'shared/orchard'
@@ -149,7 +151,10 @@ class Deployment extends React.Component {
       customQuestions,
     }
 
-    this.toaster = Toaster.create()
+    // this.toaster = Toaster.create()
+    hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet(
+      toaster => (this.toaster = toaster)
+    )
   }
 
   render () {
@@ -157,22 +162,24 @@ class Deployment extends React.Component {
     const { selectedQuizId, customQuestions } = this.state
     return (
       <div className="pt-dark" style={{ padding: '0 12px' }}>
-        {selectedQuizId == null
-          ? <QuizSelector
+        {selectedQuizId == null ? (
+          <QuizSelector
             recommendedQuizzes={recommendedQuizzes}
             customQuestions={customQuestions}
             onSelect={this.handleSelectQuiz}
           />
-          : <QuizDetails
+        ) : (
+          <QuizDetails
             quiz={recommendedQuizzes[`${selectedQuizId}`]}
             customQuestions={customQuestions[`${selectedQuizId}`]}
             onChangeCustomQuestions={(newCustomQuestions: Question[]) =>
-                this.handleChangeCustomQuestions(
-                  selectedQuizId,
-                  newCustomQuestions
-                )}
+              this.handleChangeCustomQuestions(
+                selectedQuizId,
+                newCustomQuestions
+              )}
             onDeselect={() => this.handleSelectQuiz(null)}
-          />}
+          />
+        )}
         <Toolbar
           withPretest={this._needsPretest()}
           withPosttest={this._needsPosttest()}

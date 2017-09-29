@@ -23,7 +23,8 @@ import CaseElement from 'elements/CaseElement'
 import PreTest from 'quiz/PreTest'
 import PostTest from 'quiz/PostTest'
 
-import { Toaster } from '@blueprintjs/core'
+// import { Toaster } from '@blueprintjs/core'
+import hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet from 'shared/badTerribleAwfulCode'
 
 import type { State } from 'redux/state'
 
@@ -65,7 +66,10 @@ class Case extends React.Component {
       fetchCommunities(caseSlug)
     }
 
-    registerToaster(Toaster.create())
+    // registerToaster(Toaster.create())
+    hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet(
+      toaster => registerToaster(toaster)
+    )
 
     this._subscribe()
   }

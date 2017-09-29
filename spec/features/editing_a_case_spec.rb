@@ -30,7 +30,7 @@ feature 'Editing a case' do
       click_link 'Edit this case'
       expect(page).to have_content 'To edit this case, just change the text'
 
-      first_paragraph = find('.DraftEditor-root p', match: :first)
+      first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
       first_paragraph.click
       page.driver.browser.action
           .send_keys('Adding a test sentence for testing.').perform
@@ -63,7 +63,8 @@ feature 'Editing a case' do
         click_link 'Edit this case'
         expect(page).to have_content 'To edit this case, just change the text'
 
-        first_paragraph = find('.DraftEditor-root p', match: :first).native
+        first_paragraph = find('.DraftEditor-root div[data-block]',
+                               match: :first).native
         page.driver.browser.action
             .move_to(first_paragraph, 0, 10)
             .click

@@ -21,7 +21,7 @@ import type { Match } from 'react-router-dom'
 
 const newBlockRenderMap = Map({
   unstyled: {
-    element: 'p',
+    element: 'div',
   },
 })
 export const blockRenderMap = DefaultDraftBlockRenderMap.merge(

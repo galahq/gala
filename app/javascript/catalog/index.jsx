@@ -147,7 +147,9 @@ class Catalog extends Component {
         this.state.enrollments.map(e => e.caseSlug).concat(this.state.features),
         this.state.cases
       )
-    ).sort((a, b) => a.kicker.localeCompare(b.kicker))
+    )
+      .filter(x => !!x.kicker)
+      .sort((a, b) => a.kicker.localeCompare(b.kicker))
 }
 
 export default injectIntl(Catalog)

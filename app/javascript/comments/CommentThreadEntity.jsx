@@ -1,12 +1,16 @@
+/**
+ * @providesModule CommentThreadEntity
+ * @flow
+ */
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import typeof { ContentState, DraftEditorLeaf } from 'draft-js'
+import type DraftEditorLeaf from 'draft-js/lib/DraftEditorLeaf.react'
 import type { State } from 'redux/state'
 
-function mapStateToProps (state: State, { contentState, children }) {
-  let commentThreadId = getFirstThreadId(contentState, children[0])
+function mapStateToProps (state: State, { children }) {
+  let commentThreadId = getFirstThreadId(children[0]) || ''
   let commentThread = state.commentThreadsById[commentThreadId]
   return {
     cardId: commentThread && commentThread.cardId,
@@ -46,10 +50,8 @@ export default withRouter(
   connect(mapStateToProps, {}, mergeProps)(CommentThreadEntity)
 )
 
-function getFirstThreadId (contentState: ContentState, leaf: DraftEditorLeaf) {
-  const styles = contentState
-    .getBlockForKey(leaf.props.blockKey)
-    .getInlineStyleAt(leaf.props.start)
+function getFirstThreadId (leaf: DraftEditorLeaf): ?string {
+  const styles = leaf.props.block.getInlineStyleAt(leaf.props.start)
   const ids = styles
     .map(s => s.match(/thread--([0-9]+)/))
     .filter(s => s && s[1])
