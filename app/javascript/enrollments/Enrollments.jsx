@@ -4,7 +4,7 @@ import { CasesSection } from './CasesSection'
 import { Orchard } from 'shared/orchard'
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
-import update from 'react/lib/update'
+import update from 'immutability-helper'
 
 class Enrollments extends React.Component {
   constructor () {

@@ -174,62 +174,67 @@ const PositionedPin = styled(Pin)`
   pointer-events: none;
 `
 
-type MapViewProps = {
-  acceptingScroll: boolean,
-  cases: Case[],
-  containerHeight: number,
-  containerWidth: number,
-  openPin: string,
-  viewport: Viewport,
-  onClickMap: () => void,
-  onClickPin: string => void,
-  onChangeViewport: Viewport => void,
-}
-const MapView = ({
-  acceptingScroll,
-  cases,
-  containerHeight,
-  containerWidth,
-  openPin,
-  viewport,
-  onClickMap,
-  onClickPin,
-  onChangeViewport,
-}: MapViewProps) => {
-  const { latitude, longitude, zoom } = viewport
-  return (
-    <ReactMapGL
-      mapStyle="mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14"
-      width={containerWidth}
-      height={containerHeight}
-      latitude={latitude}
-      longitude={longitude}
-      zoom={zoom}
-      scrollZoom={acceptingScroll}
-      onClick={onClickMap}
-      onChangeViewport={onChangeViewport}
-    >
-      {cases.map(
-        kase =>
-          kase.latitude && kase.longitude ? (
-            <Marker
-              key={kase.slug}
-              latitude={kase.latitude}
-              longitude={kase.longitude}
-              offsetLeft={-3}
-              offsetTop={-11}
-            >
-              <Pin
+// eslint-disable-next-line react/prefer-stateless-function
+class MapView extends Component {
+  props: {
+    acceptingScroll: boolean,
+    cases: Case[],
+    containerHeight: number,
+    containerWidth: number,
+    openPin: string,
+    viewport: Viewport,
+    onClickMap: () => void,
+    onClickPin: string => void,
+    onChangeViewport: Viewport => void,
+  }
+
+  render () {
+    const {
+      acceptingScroll,
+      cases,
+      containerHeight,
+      containerWidth,
+      openPin,
+      viewport,
+      onClickMap,
+      onClickPin,
+      onChangeViewport,
+    } = this.props
+    const { latitude, longitude, zoom } = viewport
+    return (
+      <ReactMapGL
+        mapStyle="mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14"
+        width={containerWidth}
+        height={containerHeight}
+        latitude={latitude}
+        longitude={longitude}
+        zoom={zoom}
+        scrollZoom={acceptingScroll}
+        onClick={onClickMap}
+        onChangeViewport={onChangeViewport}
+      >
+        {cases.map(
+          kase =>
+            kase.latitude && kase.longitude ? (
+              <Marker
                 key={kase.slug}
-                kase={cases.length > 1 ? kase : undefined}
-                isOpen={openPin === kase.slug}
-                onClick={onClickPin}
-              />
-            </Marker>
-          ) : null
-      )}
-    </ReactMapGL>
-  )
+                latitude={kase.latitude}
+                longitude={kase.longitude}
+                offsetLeft={-3}
+                offsetTop={-11}
+              >
+                <Pin
+                  key={kase.slug}
+                  kase={cases.length > 1 ? kase : undefined}
+                  isOpen={openPin === kase.slug}
+                  onClick={onClickPin}
+                />
+              </Marker>
+            ) : null
+        )}
+      </ReactMapGL>
+    )
+  }
 }
 
 const AutosizedMapView = Dimensions()(MapView)

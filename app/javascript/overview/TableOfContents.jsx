@@ -1,4 +1,9 @@
-import React from 'react'
+/**
+ * @providesModule TableOfContents
+ * @flow
+ */
+
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { withRouter } from 'react-router-dom'
@@ -24,61 +29,69 @@ function mapStateToProps (state: State) {
   }
 }
 
-const TableOfContents = ({
-  caseSlug,
-  editing,
-  elements,
-  disabled,
-  connectDropTarget,
-  readOnly,
-  createPage,
-  createPodcast,
-  createActivity,
-  needsPosttest,
-}) =>
-  <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
-    <h2 className="c-toc__header">
-      <FormattedMessage id="case.toc" />
-    </h2>
-    {connectDropTarget(
-      <ol className="c-toc__list">
-        {elements.map((element, index) =>
-          <TableOfContentsElement
-            element={element}
-            key={element.id}
-            position={index + 1}
-            readOnly={readOnly}
-          />
+// eslint-disable-next-line react/prefer-stateless-function
+class TableOfContents extends Component {
+  render () {
+    const {
+      caseSlug,
+      editing,
+      elements,
+      disabled,
+      connectDropTarget,
+      readOnly,
+      createPage,
+      createPodcast,
+      createActivity,
+      needsPosttest,
+    } = this.props
+    return (
+      <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
+        <h2 className="c-toc__header">
+          <FormattedMessage id="case.toc" />
+        </h2>
+        {connectDropTarget(
+          <ol className="c-toc__list">
+            {elements.map((element, index) => (
+              <TableOfContentsElement
+                element={element}
+                key={element.id}
+                position={index + 1}
+                readOnly={readOnly}
+              />
+            ))}
+            {editing &&
+              !readOnly && (
+                <div className="c-toc__actions pt-button-group pt-fill">
+                  <button
+                    type="button"
+                    className="pt-button pt-icon-add"
+                    onClick={() => createPage(caseSlug)}
+                  >
+                    Page
+                  </button>
+                  <button
+                    type="button"
+                    className="pt-button pt-icon-add"
+                    onClick={() => createPodcast(caseSlug)}
+                  >
+                    Podcast
+                  </button>
+                  <button
+                    type="button"
+                    className="pt-button pt-icon-add"
+                    onClick={() => createActivity(caseSlug)}
+                  >
+                    Activity
+                  </button>
+                </div>
+              )}
+          </ol>
         )}
-        {editing &&
-          !readOnly &&
-          <div className="c-toc__actions pt-button-group pt-fill">
-            <button
-              type="button"
-              className="pt-button pt-icon-add"
-              onClick={() => createPage(caseSlug)}
-            >
-              Page
-            </button>
-            <button
-              type="button"
-              className="pt-button pt-icon-add"
-              onClick={() => createPodcast(caseSlug)}
-            >
-              Podcast
-            </button>
-            <button
-              type="button"
-              className="pt-button pt-icon-add"
-              onClick={() => createActivity(caseSlug)}
-            >
-              Activity
-            </button>
-          </div>}
-      </ol>
-    )}
-    {needsPosttest && <PostTestLink />}
-  </nav>
+        {needsPosttest && <PostTestLink />}
+      </nav>
+    )
+  }
+}
 
 const DragDropTableOfContents = DragDropContext(HTML5Backend)(
   DropTarget(ItemTypes.CASE_ELEMENT, { drop: () => {} }, connect => ({

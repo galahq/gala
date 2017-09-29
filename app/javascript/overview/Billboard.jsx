@@ -76,7 +76,7 @@ const Billboard = ({
       onChange={v => updateCase({ baseCoverUrl: v, coverUrl: v })}
     />
     <div className="Card BillboardSnippet pt-light">
-      <p className="c-BillboardSnippet__dek">
+      <h3 className="c-BillboardSnippet__dek">
         <EditableText
           multiline
           value={dek}
@@ -86,10 +86,10 @@ const Billboard = ({
             updateCase({ dek: value })
           }}
         />
-      </p>
+      </h3>
 
       <Less startOpen={false} disabled={editing}>
-        <p style={{ margin: 0 }}>
+        <div style={{ margin: 0 }}>
           <EditableText
             multiline
             value={summary}
@@ -97,7 +97,7 @@ const Billboard = ({
             placeholder="Summarize the case in a short paragraph."
             onChange={value => updateCase({ summary: value })}
           />
-        </p>
+        </div>
       </Less>
 
       {(learningObjectives || editing) && (
