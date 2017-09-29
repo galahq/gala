@@ -3,8 +3,8 @@
 
 
 "@blueprintjs/core@^1.6.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-1.8.0.tgz#79750b3acc64355a1f23b61e739af1a7ec3f8512"
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-1.29.0.tgz#73d0bb4ca6d1618746fda3509cee5256a7611e6b"
   dependencies:
     "@types/dom4" "^1.5.20"
     "@types/tether" "^1.1.27"
