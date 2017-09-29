@@ -2,7 +2,8 @@
  * @providesModule Edgenote
  * @flow
  */
-import React from 'react' // eslint-disable-line no-unused-vars
+
+import React from 'react'
 import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
 import YoutubePlayer from 'react-youtube-player'
@@ -111,48 +112,52 @@ class EdgenoteFigure extends React.Component {
         <ConditionalLink onClick={activate}>
           {!!pullQuote ||
             !!imageUrl ||
-            !!audioUrl ||
-            <YouTube
-              slug={youtubeSlug}
-              onChange={onChange('youtubeSlug')}
-              {...reduxProps}
-            />}
+            !!audioUrl || (
+              <YouTube
+                slug={youtubeSlug}
+                onChange={onChange('youtubeSlug')}
+                {...reduxProps}
+              />
+            )}
 
           <Or />
 
           {!!youtubeSlug ||
-            !!imageUrl ||
-            <Background visible={!!audioUrl}>
-              <PullQuote
-                contents={pullQuote}
-                {...reduxProps}
-                onChange={onChange('pullQuote')}
-              />
-              <Attribution
-                name={attribution}
-                {...reduxProps}
-                onChange={onChange('attribution')}
-              />
-            </Background>}
+            !!imageUrl || (
+              <Background visible={!!audioUrl}>
+                <PullQuote
+                  contents={pullQuote}
+                  {...reduxProps}
+                  onChange={onChange('pullQuote')}
+                />
+                <Attribution
+                  name={attribution}
+                  {...reduxProps}
+                  onChange={onChange('attribution')}
+                />
+              </Background>
+            )}
           {!!youtubeSlug ||
-            !!imageUrl ||
-            <AudioPlayer
-              src={audioUrl}
-              {...reduxProps}
-              onChange={onChange('audioUrl')}
-            />}
+            !!imageUrl || (
+              <AudioPlayer
+                src={audioUrl}
+                {...reduxProps}
+                onChange={onChange('audioUrl')}
+              />
+            )}
 
           <Or />
 
           {!!youtubeSlug ||
             !!pullQuote ||
-            !!audioUrl ||
-            <Image
-              src={imageUrl}
-              callToAction={callToAction}
-              {...reduxProps}
-              onChange={onChange('imageUrl')}
-            />}
+            !!audioUrl || (
+              <Image
+                src={imageUrl}
+                callToAction={callToAction}
+                {...reduxProps}
+                onChange={onChange('imageUrl')}
+              />
+            )}
 
           <Caption
             contents={caption}
@@ -161,13 +166,14 @@ class EdgenoteFigure extends React.Component {
             onChange={onChange('caption')}
           />
           {!!youtubeSlug ||
-            !!audioUrl ||
-            <CallToAction
-              websiteUrl={websiteUrl}
-              contents={callToAction}
-              {...reduxProps}
-              onChange={onChange}
-            />}
+            !!audioUrl || (
+              <CallToAction
+                websiteUrl={websiteUrl}
+                contents={callToAction}
+                {...reduxProps}
+                onChange={onChange}
+              />
+            )}
         </ConditionalLink>
 
         <Tracker
@@ -190,9 +196,9 @@ export const Edgenote = connect(
   mergeProps
 )(EdgenoteFigure)
 
-const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) =>
+const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) => (
   <div>
-    {slug &&
+    {slug && (
       <YoutubePlayer
         videoId={slug}
         playbackState={active ? 'playing' : 'paused'}
@@ -201,7 +207,8 @@ const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) =>
         }}
         onPlay={activate}
         onPause={deactivate}
-      />}
+      />
+    )}
     <EditableAttribute
       disabled={!editing}
       title="YouTube slug"
@@ -209,6 +216,7 @@ const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) =>
       onChange={onChange}
     />
   </div>
+)
 
 const Image = ({
   src,
@@ -223,9 +231,10 @@ const Image = ({
     style: { width: '100%', minHeight: '3em', display: 'block' },
     src: `${src}?w=640`,
   }
-  let imageComponent = callToAction
-    ? <img {...imageProps} />
-    : <ImageZoom
+  let imageComponent = callToAction ? (
+    <img {...imageProps} />
+  ) : (
+    <ImageZoom
       isZoomed={active}
       defaultStyles={{ overlay: { backgroundColor: '#1D2934' }}}
       image={imageProps}
@@ -233,6 +242,7 @@ const Image = ({
       onZoom={activate}
       onUnzoom={deactivate}
     />
+  )
 
   return (
     <div>
@@ -260,7 +270,7 @@ class AudioPlayer extends React.Component {
     let { src, editing, onChange } = this.props
     return (
       <div>
-        {src &&
+        {src && (
           <audio
             controls
             ref={c => {
@@ -272,7 +282,8 @@ class AudioPlayer extends React.Component {
               borderBottom: `4px solid ${lightGreen}`,
             }}
             src={src}
-          />}
+          />
+        )}
         <EditableAttribute
           disabled={!editing}
           title="audio url"
@@ -284,12 +295,11 @@ class AudioPlayer extends React.Component {
   }
 }
 
-const Background = ({ visible, children }) =>
-  <div style={visible ? backgroundedStyle : {}}>
-    {children}
-  </div>
+const Background = ({ visible, children }) => (
+  <div style={visible ? backgroundedStyle : {}}>{children}</div>
+)
 
-const CallToAction = ({ contents, websiteUrl, editing, onChange }) =>
+const CallToAction = ({ contents, websiteUrl, editing, onChange }) => (
   <div>
     <EditableAttribute
       disabled={!editing}
@@ -297,23 +307,25 @@ const CallToAction = ({ contents, websiteUrl, editing, onChange }) =>
       value={websiteUrl}
       onChange={onChange('websiteUrl')}
     />
-    {(contents || editing) &&
-      <p style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>
-        <EditableText
-          multiline
-          disabled={!editing}
-          placeholder="Add call to action ›"
-          value={contents}
-          onChange={onChange('callToAction')}
-        />
-      </p>}
+    {(contents || editing) && (
+    <div style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>
+      <EditableText
+        multiline
+        disabled={!editing}
+        placeholder="Add call to action ›"
+        value={contents}
+        onChange={onChange('callToAction')}
+      />
+    </div>
+      )}
   </div>
+)
 
 const Caption = ({ contents, selected, editing, onChange }) =>
-  contents || editing
-    ? <div style={{ margin: '0.25em 0 0 0' }}>
+  contents || editing ? (
+    <div style={{ margin: '0.25em 0 0 0' }}>
       <figcaption
-        className={selected && 'edge--highlighted'}
+        className={selected ? 'edge--highlighted' : ''}
         style={{ fontSize: '110%', lineHeight: 1.1 }}
       >
         <EditableText
@@ -325,12 +337,12 @@ const Caption = ({ contents, selected, editing, onChange }) =>
         />
       </figcaption>
     </div>
-    : null
+  ) : null
 
 const PullQuote = ({ contents, selected, editing, onChange }) =>
-  contents || editing
-    ? <blockquote
-      className={selected && 'edge--highlighted'}
+  contents || editing ? (
+    <blockquote
+      className={selected ? 'edge--highlighted' : ''}
       style={{
         fontSize: '140%',
         lineHeight: 1.3,
@@ -346,11 +358,11 @@ const PullQuote = ({ contents, selected, editing, onChange }) =>
         onChange={onChange}
       />
     </blockquote>
-    : null
+  ) : null
 
 const Attribution = ({ name, editing, onChange }) =>
-  name || editing
-    ? <cite
+  name || editing ? (
+    <cite
       style={{
         textAlign: 'right',
         display: 'block',
@@ -367,7 +379,7 @@ const Attribution = ({ name, editing, onChange }) =>
         onChange={onChange}
       />
     </cite>
-    : null
+  ) : null
 
 const backgroundedStyle = {
   backgroundColor: '#49647D',
