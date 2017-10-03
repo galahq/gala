@@ -6,7 +6,7 @@ FactoryGirl.define do
     commentable true
 
     trait :in_catalog do
-      kicker { Faker::Hipster.words(2).join ' ' }
+      kicker { Faker::Hipster.words(2).join(' ').titlecase }
       title { Faker::Hipster.sentence }
       dek { Faker::Hipster.sentence }
       cover_url do

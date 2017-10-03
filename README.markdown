@@ -4,14 +4,11 @@ Gala is the students’ interface for learning from Michigan Sustainability Case
 
 ## Install
 
-We’re using Vagrant, which lets developers spin up virtual machines with all the
-right configuration to develop Gala. Install Vagrant (>= 1.8.7 recommended, so you
-can `vagrant plugin install vagrant-fsnotify`), and then
+We’re using docker, which lets developers spin up virtual machines with all the
+right configuration to develop Gala. Install [docker](https://www.docker.com),
+then clone this repo and run `bin/setup`
 
-1. `vagrant up`
-2. In one terminal window or tmux pane: `vagrant ssh -c 'cd /vagrant && foreman start'`.
-6. In another, `vagrant fsnotify`
-6. Browse to http://localhost:3000/
+To update your setup after pulling, run `bin/update`
 
 ## https://localhost
 
