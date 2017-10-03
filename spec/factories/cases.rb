@@ -6,9 +6,17 @@ FactoryGirl.define do
     commentable true
 
     trait :in_catalog do
-      kicker { Faker::Hipster.words(2).join ' ' }
+      kicker { Faker::Hipster.words(2).join(' ').titlecase }
       title { Faker::Hipster.sentence }
-      cover_url 'https://lorempixel.com/100/100/'
+      dek { Faker::Hipster.sentence }
+      cover_url do
+        url = 'https://source.unsplash.com/random'
+        begin
+          Net::HTTP.get_response(URI(url))['location']
+        rescue
+          url
+        end
+      end
     end
 
     trait :featured do
@@ -16,7 +24,10 @@ FactoryGirl.define do
     end
 
     trait :published do
-      published_at { Time.zone.now }
+      published_at { rand(30).minutes.ago }
+      latitude { rand(140) - 70 }
+      longitude { rand(360) - 180 }
+      zoom { rand 10 }
     end
 
     factory :case_with_elements do

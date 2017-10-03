@@ -24,7 +24,8 @@ module CasesHelper
             when :open_graph
               %w[w=1200 h=675]
             end || []
-    "#{c.cover_url}?#{opts.join '&'}"
+    has_query = c.cover_url.include? '?'
+    "#{c.cover_url}#{has_query ? '&' : '?'}#{opts.join '&'}"
   end
 
   def cases_as_json(cases)
