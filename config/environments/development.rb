@@ -3,7 +3,7 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.web_console.whitelisted_ips = '10.0.2.2'
+  config.web_console.whitelisted_ips = '172.16.0.0/12'
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -68,4 +68,26 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
+
+  OmniAuth.config.test_mode = true
+  auth_hash = { provider: 'google_oauth2', uid: '1234567890',
+                info: {
+                  name: 'Developer Admin',
+                  email: 'dev@learnmsc.org',
+                  first_name: 'Developer',
+                  last_name: 'Admin'
+                },
+                extra: {
+                  raw_info: {
+                    sub: '123456789',
+                    email: 'dev@learnmsc.org',
+                    email_verified: true,
+                    name: 'Developer Admin',
+                    given_name: 'Developer',
+                    family_name: 'Admin',
+                    locale: 'en'
+                  }
+                } }
+  DEV_MOCK_AUTH_HASH = OmniAuth::AuthHash.new auth_hash
+  OmniAuth.config.mock_auth[:google] = DEV_MOCK_AUTH_HASH
 end

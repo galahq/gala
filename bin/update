@@ -15,15 +15,13 @@ chdir APP_ROOT do
   # Add necessary update steps to this file.
 
   puts '== Installing dependencies =='
-  system! 'gem install bundler --conservative'
-  system('bundle check') || system!('bundle install')
+  system! 'docker-compose run web bin/bundle check || \
+           docker-compose run web bin/bundle install'
+  system! 'docker-compose run web yarn'
 
   puts "\n== Updating database =="
-  system! 'bin/rails db:migrate'
+  system! 'docker-compose run web rails db:migrate'
 
   puts "\n== Removing old logs and tempfiles =="
-  system! 'bin/rails log:clear tmp:clear'
-
-  puts "\n== Restarting application server =="
-  system! 'bin/rails restart'
+  system! 'docker-compose run web rails log:clear tmp:clear'
 end

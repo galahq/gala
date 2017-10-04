@@ -1,8 +1,0 @@
-{
-  "plugins": {
-    "node": {},
-    "webpack": {
-      "configPath": "./config/webpack.config.js"
-    }
-  }
-}

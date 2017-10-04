@@ -1,0 +1,21 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.6
+    logging:
+      driver: none
+  web:
+    build: .
+    image: gala
+    command: foreman start -t 10
+    tty: true
+    stop_signal: SIGINT
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - db

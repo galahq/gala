@@ -1,0 +1,11 @@
+https://www.learnmsc.org/
+https://www.learnmsc.org/en/profile.json
+https://www.learnmsc.org/en/cases.json
+https://www.learnmsc.org/en/cases/features.json
+https://www.learnmsc.org/en/enrollments.json
+https://www.learnmsc.org/en/cases/ethiopia-napa
+https://www.learnmsc.org/en/cases/indonesia-conservation
+https://www.learnmsc.org/en/cases/dioxane-plume
+https://www.learnmsc.org/en/cases/maple-river-dam
+https://www.learnmsc.org/en/cases/ewaste-in-ghana
+https://www.learnmsc.org/en/cases/tesla-powerwall
