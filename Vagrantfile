@@ -73,7 +73,7 @@ Vagrant.configure(2) do |config|
       su ubuntu -c 'echo "*:*:*:ubuntu:ubuntu" > ~/.pgpass && chmod 0600 ~/.pgpass'
 
       su ubuntu -c "bundle install"
-      su ubuntu -c "bundle exec rake db:create"
+      su ubuntu -c "bundle exec rake db:setup"
 
       su ubuntu -c "yarn"
 
