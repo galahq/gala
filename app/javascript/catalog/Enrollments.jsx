@@ -101,6 +101,7 @@ export default injectIntl(Enrollments)
 const SidebarSectionTitle = SectionTitle.extend`margin: 24px 0.5em 2px 0;`
 const SidebarButton = styled(Button).attrs({ className: 'pt-minimal' })`
   margin-right:-10px;
+  z-index: 1;
 `
 
 const UnstyledUL = styled.ul`
