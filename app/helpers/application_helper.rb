@@ -63,7 +63,7 @@ MD
       json.set! key do
         collection.each do |element|
           json.set! element.to_param do
-            json.cache! element do
+            json.cache! [element, I18n.locale] do
               json.partial! element
             end
           end
