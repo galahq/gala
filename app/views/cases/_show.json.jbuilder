@@ -2,7 +2,7 @@
 
 json.key_format! camelize: :lower
 
-json.cache! c do
+json.cache! [c, I18n.locale] do
   json.partial! 'case', c: c
 
   json.extract! c, :summary, :other_available_locales, :commentable,
