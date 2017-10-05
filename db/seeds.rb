@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-Dir['./db/seeds/*.rb'].each { |file| require file }
-
-%i[editor]
-  .each do |role|
-  Role.create! name: role
-end
-
 I18n.locale = :en
+
+auth = AuthenticationStrategy.from_omniauth DEV_MOCK_AUTH_HASH
+reader = auth.reader
+
+reader.add_role :editor
+reader.add_role :invisible
+
+10.times { FactoryGirl.create :case_with_elements, :published }
