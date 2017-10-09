@@ -51,8 +51,8 @@ Rails.application.routes.draw do
 
     resource :profile, controller: :readers, only: %i[show edit update]
 
-    resources :quizzes, only: %i[create update] do
-      resources :submissions, only: %i[create]
+    resources :quizzes, only: %i[create update show] do
+      resources :submissions, only: %i[index create]
     end
 
     resources :groups, only: [] do

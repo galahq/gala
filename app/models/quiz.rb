@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Quiz < ApplicationRecord
+  include Authority::Abilities
+
   has_many :deployments, dependent: :nullify
   has_many :custom_questions, class_name: 'Question', dependent: :destroy
   belongs_to :case

@@ -11,17 +11,14 @@ import { submitQuiz } from 'redux/actions'
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State) {
-  if (!state.quiz.needsPretest && !state.quiz.needsPosttest) {
-    throw new Error('trying to present quiz when not needed')
-  }
-
-  const { id, questions } = state.quiz
+  const { id, questions, needsPretest, needsPosttest } = state.quiz
   const { reader } = state.caseData
   return {
     isInstructor:
       !!reader &&
       !!reader.enrollment &&
       reader.enrollment.status === 'instructor',
+    submissionNeeded: needsPretest || needsPosttest,
     id,
     questions,
   }
@@ -32,6 +29,7 @@ import type { Question } from 'redux/state'
 type QuizProps = {
   id: number,
   questions: Question[],
+  submissionNeeded: boolean,
   submitQuiz: typeof submitQuiz,
   answers: QuizState,
   isInstructor: boolean,
@@ -40,7 +38,7 @@ type QuizState = { [questionId: string]: string }
 type QuizDelegateProps = {
   canSubmit: boolean,
   onChange: (questionId: string, e: SyntheticInputEvent) => void,
-  onSubmit: (e: SyntheticEvent) => void,
+  onSubmit: (e: SyntheticEvent) => Promise<any>,
 }
 
 export type QuizProviderProps = QuizDelegateProps & QuizProps & QuizState
@@ -53,7 +51,8 @@ export function providesQuiz (
     state: QuizState = {}
 
     _canSubmit = () => {
-      const { isInstructor, questions } = this.props
+      const { submissionNeeded, isInstructor, questions } = this.props
+      if (!submissionNeeded) return false
       if (isInstructor) return false
 
       return questions.map(x => x.id).every(x => {
@@ -71,7 +70,7 @@ export function providesQuiz (
     }
 
     handleSubmit = () => {
-      this.props.submitQuiz(this.props.id, this.state)
+      return this.props.submitQuiz(this.props.id, this.state)
     }
 
     render () {
