@@ -41,7 +41,7 @@ if reader_signed_in?
     quiz = @deployment.quiz
     json.needs_pretest @deployment.reader_needs_pretest? current_reader
     json.needs_posttest @deployment.reader_needs_posttest? current_reader
-    if quiz && quiz.requires_response_from?(current_reader, in_group: @group)
+    if quiz
       json.id quiz.id
       json.questions do
         json.array! quiz.questions, :id, :content, :options

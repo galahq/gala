@@ -42,10 +42,11 @@ type State = {
 
 const questionHasError = (question: Question) =>
   !question.content ||
-  (question.options.length !== 0 &&
-    !question.options.some(
-      (option: string) => option === question.correctAnswer
-    ))
+  (question.options.length === 0
+    ? question.correctAnswer === '' || question.correctAnswer == null
+    : !question.options.some(
+        (option: string) => option === question.correctAnswer
+      ))
 
 const validated = map((question: Question) => ({
   ...question,
@@ -133,7 +134,7 @@ class Deployment extends React.Component {
         .catch((e: Error) => this._displayToast(e.message))
     } else {
       this._displayToast(
-        'Please ensure that there are no blank questions and that you have chosen correct answers for all multiple choice questions.'
+        'Please ensure that there are no blank questions and that you have chosen correct answers for all questions.'
       )
     }
   }

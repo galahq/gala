@@ -122,6 +122,7 @@ declare module '@blueprintjs/core' {
   }
 
   declare export interface IOptionProps {
+    className?: string,
     disabled?: boolean,
     label?: string,
     value?: string,

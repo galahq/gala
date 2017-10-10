@@ -75,7 +75,7 @@ class Case extends React.Component {
   }
 
   render () {
-    const { kicker, basename, needsPretest, needsPosttest } = this.props
+    const { kicker, basename, needsPretest, hasQuiz } = this.props
     return (
       <DocumentTitle title={`${kicker} — Michigan Sustainability Cases`}>
         <Router basename={basename}>
@@ -84,10 +84,7 @@ class Case extends React.Component {
             <Switch>
               <Route exact path="/" component={CaseOverview} />
               <Route path={needsPretest ? '/*' : 'miss'} component={PreTest} />
-              <Route
-                path={needsPosttest ? '/quiz/' : 'miss'}
-                component={PostTest}
-              />
+              <Route path={hasQuiz ? '/quiz/' : 'miss'} component={PostTest} />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
           </div>
@@ -100,7 +97,7 @@ class Case extends React.Component {
 export default connect(
   ({ quiz, caseData }: State) => ({
     needsPretest: quiz.needsPretest,
-    needsPosttest: quiz.needsPosttest,
+    hasQuiz: !!quiz.questions,
     caseSlug: caseData.slug,
     kicker: caseData.kicker,
     loadComments: !!(

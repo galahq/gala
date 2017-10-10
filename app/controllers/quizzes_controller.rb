@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 class QuizzesController < ApplicationController
-  # before_action :authenticate_reader!
+  before_action :authenticate_reader!
   before_action :set_quiz, except: [:create]
+  authorize_actions_for Quiz, except: [:show]
+
+  def show
+    authorize_action_for @quiz
+  end
 
   def create
     if @quiz.create quiz_params

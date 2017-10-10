@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import styled from 'styled-components'
 
 import { RadioGroup } from '@blueprintjs/core'
 import type { IOptionProps } from '@blueprintjs/core'
@@ -12,6 +13,7 @@ import type { Question as QuestionT } from 'redux/state'
 
 type Props = QuestionT & {
   selectedAnswer: string,
+  correctAnswer?: string,
   onChange: (e: SyntheticInputEvent) => void,
 }
 const Question = ({
@@ -19,29 +21,52 @@ const Question = ({
   content,
   onChange,
   selectedAnswer,
+  correctAnswer,
   options = [],
 }: Props) =>
-  options.length > 0
-    ? <div style={{ marginBottom: 25 }}>
-      <RadioGroup
+  options.length > 0 ? (
+    <div style={{ marginBottom: 25 }}>
+      <StyledRadioGroup
         label={content}
-        options={options.map(toRadioProps)}
+        options={options.map(o => toRadioProps(o, correctAnswer))}
         selectedValue={selectedAnswer}
         onChange={onChange}
       />
     </div>
-    : <label className="pt-label" htmlFor={id}>
+  ) : (
+    <label className="pt-label" htmlFor={id}>
       {content}
       <textarea
         name={id}
         className="pt-input pt-fill"
         dir="auto"
+        disabled={!!correctAnswer}
+        value={selectedAnswer}
         onChange={onChange}
       />
+      {!!correctAnswer && <CorrectAnswer>{correctAnswer}</CorrectAnswer>}
     </label>
+  )
 
 export default Question
 
-function toRadioProps (option: string): IOptionProps {
-  return { disabled: false, label: option, value: option }
+function toRadioProps (option: string, correctAnswer: ?string): IOptionProps {
+  return {
+    className: option === correctAnswer ? 'pt-intent-success' : '',
+    disabled: !!correctAnswer,
+    label: option,
+    value: option,
+  }
 }
+
+const StyledRadioGroup = styled(RadioGroup)`
+  & label.pt-intent-success {
+    color: #348a3b;
+    font-weight: 600;
+  }
+`
+
+const CorrectAnswer = styled.p`
+  color: #348a3b;
+  font-weight: 600;
+`
