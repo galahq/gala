@@ -83,21 +83,23 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
               type="text"
               leftIconName={options.length > 0 ? 'properties' : 'comment'}
               rightElement={
-                content
-                  ? <Button
+                content ? (
+                  <Button
                     className="pt-minimal"
                     iconName="add"
                     onClick={() => handleAddQuestionOption(questionIx)}
                   >
-                      Add option
-                    </Button>
-                  : <Button
+                    Add option
+                  </Button>
+                ) : (
+                  <Button
                     className="pt-minimal"
                     iconName="delete"
                     onClick={() => handleRemoveQuestion(questionIx)}
                   >
-                      Delete question
-                    </Button>
+                    Delete question
+                  </Button>
+                )
               }
               onKeyDown={hotkeyDispatch({
                 Enter: () => {
@@ -108,52 +110,60 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                 handleEditQuestionContent(questionIx, e.target.value)}
             />
 
-            {options.map((option: string, optionIx: number) =>
-              <div className="pt-control-group pt-fill" key={optionIx}>
-                <GroupedRadio
-                  value={option}
-                  checked={option !== '' && option === correctAnswer}
-                  className="pt-fixed"
-                  onChange={(e: SyntheticInputEvent) => {
-                    if (e.target.checked) {
-                      handleEditQuestionAnswer(questionIx, option)
-                    }
-                  }}
-                />
-                <InputGroup
-                  autoFocus
-                  value={option}
-                  placeholder="Option text"
-                  type="text"
-                  rightElement={
-                    <Button
-                      intent={Intent.DANGER}
-                      className="pt-minimal"
-                      iconName="delete"
-                      onClick={() =>
-                        handleRemoveQuestionOption(questionIx, optionIx)}
-                    />
-                  }
-                  onKeyDown={hotkeyDispatch({
-                    Enter: () => {
-                      if (option) handleAddQuestionOption(questionIx)
-                    },
-                    Backspace: () => {
-                      if (option === '') {
-                        handleRemoveQuestionOption(questionIx, optionIx)
-                      } else {
-                        return true
+            {options.length > 0 ? (
+              options.map((option: string, optionIx: number) => (
+                <div className="pt-control-group pt-fill" key={optionIx}>
+                  <GroupedRadio
+                    value={option}
+                    checked={option !== '' && option === correctAnswer}
+                    className="pt-fixed"
+                    onChange={(e: SyntheticInputEvent) => {
+                      if (e.target.checked) {
+                        handleEditQuestionAnswer(questionIx, option)
                       }
-                    },
-                  })}
-                  onChange={(e: SyntheticInputEvent) =>
-                    handleEditQuestionOption(
-                      questionIx,
-                      optionIx,
-                      e.target.value
-                    )}
-                />
-              </div>
+                    }}
+                  />
+                  <InputGroup
+                    autoFocus
+                    value={option}
+                    placeholder="Option text"
+                    type="text"
+                    rightElement={
+                      <Button
+                        intent={Intent.DANGER}
+                        className="pt-minimal"
+                        iconName="delete"
+                        onClick={() =>
+                          handleRemoveQuestionOption(questionIx, optionIx)}
+                      />
+                    }
+                    onKeyDown={hotkeyDispatch({
+                      Enter: () => {
+                        if (option) handleAddQuestionOption(questionIx)
+                      },
+                      Backspace: () => {
+                        if (option === '') {
+                          handleRemoveQuestionOption(questionIx, optionIx)
+                        } else {
+                          return true
+                        }
+                      },
+                    })}
+                    onChange={(e: SyntheticInputEvent) =>
+                      handleEditQuestionOption(
+                        questionIx,
+                        optionIx,
+                        e.target.value
+                      )}
+                  />
+                </div>
+              ))
+            ) : (
+              <RubricTextArea
+                value={correctAnswer}
+                onChange={e =>
+                  handleEditQuestionAnswer(questionIx, e.currentTarget.value)}
+              />
             )}
           </PaddedItem>
         )
@@ -194,9 +204,10 @@ const GroupedRadio = styled(Radio)`
   outline: none;
   border: none;
   border-radius: 3px;
-  box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4);
+  box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.3),
+    inset 0 1px 1px rgba(16, 22, 26, 0.4);
   background: rgba(35, 53, 67);
-  color: #EBEAE4;
+  color: #ebeae4;
   height: 30px;
   padding: 15px;
   margin: 0;
@@ -209,4 +220,12 @@ const GroupedRadio = styled(Radio)`
   & > .pt-control-indicator {
     margin: 7px;
   }
+`
+
+const RubricTextArea = styled.textarea.attrs({
+  className: 'pt-input pt-fill',
+  placeholder:
+    'Enter a sample answer, or click “Add option” to make this question multiple choice...',
+})`
+  opacity: ${({ value }) => (value == null || value === '' ? 0.5 : 1)};
 `
