@@ -25,7 +25,7 @@ function mapStateToProps (state: State) {
     elements: state.caseData.caseElements,
     disabled: !state.caseData.reader,
     editing: state.edit.inProgress,
-    needsPosttest: state.quiz.needsPosttest,
+    hasQuiz: !!state.quiz.questions,
   }
 }
 
@@ -42,7 +42,7 @@ class TableOfContents extends Component {
       createPage,
       createPodcast,
       createActivity,
-      needsPosttest,
+      hasQuiz,
     } = this.props
     return (
       <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
@@ -87,7 +87,7 @@ class TableOfContents extends Component {
               )}
           </ol>
         )}
-        {needsPosttest && <PostTestLink />}
+        {hasQuiz && <PostTestLink />}
       </nav>
     )
   }

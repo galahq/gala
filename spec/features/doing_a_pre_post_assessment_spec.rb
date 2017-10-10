@@ -24,6 +24,6 @@ feature 'Doing a pre-/post-assessment' do
       .click
     fill_in deployment.quiz.questions.second.content, with: 'Test'
     click_button 'Submit'
-    expect(page).to have_content kase.dek
+    expect(page).to have_content 'Thank you for your submission.'
   end
 end

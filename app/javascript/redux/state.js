@@ -51,12 +51,10 @@ export type QuizNecessity<Pre: boolean, Post: boolean> = {
   needsPosttest: Post,
 }
 
-export type QuizState =
-  | QuizNecessity<false, false>
-  | (QuizNecessity<boolean, boolean> & {
-      id: string,
-      questions: Question[],
-    })
+export type QuizState = QuizNecessity<boolean, boolean> & {
+  id?: string,
+  questions?: Question[],
+}
 
 export type ReaderState = {
   canUpdateCase: boolean,
@@ -278,6 +276,7 @@ export type Question = {
   id: string,
   content: string,
   options: string[],
+  correctAnswer?: string,
 }
 
 export type Reader = {
