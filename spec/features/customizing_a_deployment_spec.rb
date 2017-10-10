@@ -49,7 +49,10 @@ feature 'Customizing a deployment' do
       click_button 'Add question'
       click_button 'Deploy'
       expect(page).to have_content 'Please'
-      all('.pt-input').last.set('Why is it that color?')
+      all('input.pt-input').last.set('Why is it that color?')
+      click_button 'Deploy'
+      expect(page).to have_content 'Please'
+      find('textarea').set 'Because it is.'
       click_button 'Deploy'
       expect(page).to have_content 'Deployment successfully updated'
     end

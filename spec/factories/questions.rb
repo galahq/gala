@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :question do
     content { Faker::Lorem.question }
-    correct_answer ''
+    correct_answer { Faker::Lorem.sentence }
     options []
 
     trait :multiple_choice do
