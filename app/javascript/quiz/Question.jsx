@@ -68,5 +68,8 @@ const StyledRadioGroup = styled(RadioGroup)`
 
 const CorrectAnswer = styled.p`
   color: #348a3b;
-  font-weight: 600;
+  font-weight: 500;
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.3;
 `

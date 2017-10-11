@@ -9,7 +9,7 @@ export class AccessibleAlert extends Component {
   state = { style: { display: 'none' }}
 
   componentDidMount () {
-    setInterval(() => this.setState({ style: { display: 'initial' }}), 10)
+    setInterval(() => this.setState({ style: { display: 'initial' }}), 1)
   }
 
   render () {
