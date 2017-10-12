@@ -6243,9 +6243,9 @@ react-map-gl@^3.0.4:
     prop-types "^15.5.7"
     viewport-mercator-project "^4.0.1"
 
-react-medium-image-zoom@^2.0.0:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/react-medium-image-zoom/-/react-medium-image-zoom-2.0.3.tgz#0ca7073200530458aef8b92a661f14ac245b0f79"
+react-medium-image-zoom@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-medium-image-zoom/-/react-medium-image-zoom-3.0.0.tgz#a7759ce914b375fe0df86665a8ae61a654d962a0"
 
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"
