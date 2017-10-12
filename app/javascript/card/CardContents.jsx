@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import { append } from 'ramda'
 
@@ -23,39 +23,38 @@ import type { ContextRouter, Match } from 'react-router-dom'
 
 import type { CardProps } from 'card'
 
-type Props = CardProps &
-  ContextRouter & {
-    acceptingSelection: boolean,
-    addCommentThread: () => Promise<void>,
-    anyCommentThreadsOpen: ?Match,
-    anyCommentsOpen: ?Match,
-    commentable: boolean,
-    createCommentThread: (cardId: string, eS: EditorState) => void,
-    editable: boolean,
-    editing: boolean,
-    editorState: EditorState,
-    handleKeyCommand: string => string | void,
-    handleDeleteCard: () => void,
-    hoveredCommentThread: string | null,
-    onChange: EditorState => void,
-    onChangeContents: EditorState => void,
-    onMakeSelectionForComment: EditorState => void,
-    openedCitation: { +key?: string, +labelRef?: any },
-    readOnly: boolean,
-    selectedCommentThread: string | null,
-    solid: boolean,
-    theseCommentThreadsOpen: ?Match,
-  }
+type Props = {
+  acceptingSelection: boolean,
+  addCommentThread: () => Promise<void>,
+  anyCommentThreadsOpen: ?Match,
+  anyCommentsOpen: ?Match,
+  commentable: boolean,
+  createCommentThread: (cardId: string, eS: EditorState) => any,
+  editable: boolean,
+  editing: boolean,
+  editorState: EditorState,
+  handleKeyCommand: string => any,
+  handleDeleteCard: () => any,
+  hoveredCommentThread: string | null,
+  onChange: EditorState => any,
+  onChangeContents: EditorState => any,
+  onMakeSelectionForComment: EditorState => any,
+  openedCitation: { +key?: string, +labelRef?: any },
+  readOnly: boolean,
+  selectedCommentThread: string | null,
+  solid: boolean,
+  theseCommentThreadsOpen: ?Match,
+  ...CardProps,
+  ...ContextRouter,
+}
 
-class CardContents extends Component<*, *, *> {
-  props: Props
-
+class CardContents extends React.Component<Props, *> {
   // We have to be able to respond to props change that would change
   // customStyleMap by "jiggling" each block of editorState to trigger a
   // rerender. This internal state should exactly track props, plus jiggle.
   state = { editorState: this.props.editorState }
 
-  cardRef: HTMLElement
+  cardRef: ?HTMLElement
 
   _shouldJiggle = (nextProps: Props) =>
     this.props.commentable !== nextProps.commentable ||
@@ -128,7 +127,7 @@ class CardContents extends Component<*, *, *> {
 
     return (
       <div
-        ref={(el: HTMLElement) => (this.cardRef = el)}
+        ref={el => (this.cardRef = el)}
         className={this._getClassNames()}
         style={{
           paddingTop: editing && '2em',
@@ -150,25 +149,26 @@ class CardContents extends Component<*, *, *> {
         />
 
         {commentable &&
-          solid &&
-          <CommentThreadsTag cardId={id} match={match} />}
+          solid && <CommentThreadsTag cardId={id} match={match} />}
 
         <Route
           {...commentThreadsOpen(id)}
-          render={routeProps =>
+          render={routeProps => (
             <CommentThreadsCard
               {...routeProps}
               cardId={id}
               addCommentThread={addCommentThread}
-            />}
+            />
+          )}
         />
 
-        {citationOpenWithinCard &&
+        {citationOpenWithinCard && (
           <CitationTooltip
             cardId={id}
-            cardWidth={this.cardRef.clientWidth}
+            cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
             {...{ openedCitation, editable }}
-          />}
+          />
+        )}
 
         {editable && <DeleteCardButton id={id} onClick={handleDeleteCard} />}
 

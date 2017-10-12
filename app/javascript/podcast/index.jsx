@@ -2,7 +2,7 @@
  * @providesModule Podcast
  * @flow
  */
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { EditableText } from '@blueprintjs/core'
@@ -60,7 +60,7 @@ function Podcast ({
 
 export default connect(mapStateToProps, { updatePodcast })(Podcast)
 
-class PodcastPlayer extends React.Component {
+class PodcastPlayer extends React.Component<*, { playing: boolean }> {
   state = {
     playing: false,
   }
@@ -90,14 +90,15 @@ class PodcastPlayer extends React.Component {
     } = this.props
     return (
       <div className="PodcastPlayer pt-dark">
-        {editing &&
+        {editing && (
           <button
             type="button"
             className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
             onClick={deleteElement}
           >
             Delete Podcast
-          </button>}
+          </button>
+        )}
 
         <EditableAttribute
           title="Artwork URL"

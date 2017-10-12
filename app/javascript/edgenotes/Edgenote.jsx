@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
 import YoutubePlayer from 'react-youtube-player'
@@ -51,7 +51,7 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
   }
 }
 
-class EdgenoteFigure extends React.Component {
+class EdgenoteFigure extends React.Component<*> {
   componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {
       if (this.props.contents.callToAction && this.props.contents.websiteUrl) {
@@ -257,8 +257,8 @@ const Image = ({
   )
 }
 
-class AudioPlayer extends React.Component {
-  audioPlayer: HTMLAudioElement
+class AudioPlayer extends React.Component<*> {
+  audioPlayer: ?HTMLAudioElement
 
   componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {

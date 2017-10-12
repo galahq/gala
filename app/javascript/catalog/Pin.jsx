@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
 import { Element } from 'catalog/shared'
@@ -11,14 +11,12 @@ import { AnchorButton, Tooltip } from '@blueprintjs/core'
 
 import type { Case } from 'redux/state'
 
-class Pin extends Component {
-  props: {
-    className?: string,
-    isOpen?: boolean,
-    kase?: Case,
-    onClick?: string => void,
-  }
-
+class Pin extends React.Component<{
+  className?: string,
+  isOpen?: boolean,
+  kase?: Case,
+  onClick?: string => void,
+}> {
   handleClick = () => {
     const { onClick, kase, isOpen } = this.props
     if (onClick && kase) onClick(isOpen ? '' : kase.slug)

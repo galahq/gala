@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { EditorState, Modifier, RichUtils } from 'draft-js'
 
@@ -34,7 +34,13 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
   }
 }
 
-class EditorToolbar extends React.Component {
+class EditorToolbar extends React.Component<{
+  caseSlug: string,
+  editorState: EditorState,
+  edgenoteExists: string => boolean,
+  updateEditorState: EditorState => Promise<any>,
+  createEdgenoteRecord: (string, Edgenote) => Promise<any>,
+}> {
   // These must call this.props.editorState individually to keep from
   // capturing editorState as it exists when EditorToolbar is constructed.
   //
@@ -147,7 +153,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(EditorToolbar)
 const EditorToolbarButton = ({ icon, onClick }) => (
   <a
     dangerouslySetInnerHTML={{ __html: icon }}
-    onMouseDown={(e: SyntheticMouseEvent) => e.preventDefault()}
+    onMouseDown={(e: SyntheticMouseEvent<*>) => e.preventDefault()}
     onClick={onClick}
   />
 )

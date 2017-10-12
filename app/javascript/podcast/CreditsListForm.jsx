@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -25,10 +25,7 @@ type Props = {
   onFinishEditing: (?CreditsListFormState) => void,
 }
 export type CreditsListFormState = { guests: Guest[], hosts: string[] }
-class CreditsListForm extends React.Component {
-  props: Props
-  state: CreditsListFormState
-
+class CreditsListForm extends React.Component<Props, CreditsListFormState> {
   constructor (props: Props) {
     super(props)
 
@@ -44,11 +41,11 @@ class CreditsListForm extends React.Component {
     this.setState({ guests })
   }
 
-  handleCancel = (e: SyntheticEvent) => {
+  handleCancel = () => {
     this.props.onFinishEditing(null)
   }
 
-  handleDone = (e: SyntheticEvent) => {
+  handleDone = () => {
     if (formStateClean(this.state)) {
       this.props.onFinishEditing(this.state)
     } else {
@@ -114,14 +111,14 @@ function formStateClean ({ guests, hosts }: CreditsListFormState): boolean {
 const HostInput = createSortableInput({ placeholder: 'Host name' })
 
 type GuestInputProps = { item: Guest, onChangeItem: Guest => void }
-const GuestInput = ({ item, onChangeItem }: GuestInputProps) =>
+const GuestInput = ({ item, onChangeItem }: GuestInputProps) => (
   <span style={{ display: 'flex' }}>
     <input
       className="pt-input"
       type="text"
       placeholder="Guest name"
       value={item.name}
-      onChange={(e: SyntheticInputEvent) => {
+      onChange={(e: SyntheticInputEvent<*>) => {
         onChangeItem({ ...item, name: e.target.value })
       }}
     />
@@ -132,11 +129,12 @@ const GuestInput = ({ item, onChangeItem }: GuestInputProps) =>
       type="text"
       placeholder="Guest title"
       value={item.title}
-      onChange={(e: SyntheticInputEvent) => {
+      onChange={(e: SyntheticInputEvent<*>) => {
         onChangeItem({ ...item, title: e.target.value })
       }}
     />
   </span>
+)
 
 const SectionTitle = styled.h5`
   &:not(:first-child) {

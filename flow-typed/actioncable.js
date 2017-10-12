@@ -8,8 +8,8 @@ declare class ActionCable$Consumer {
 }
 
 declare class ActionCable$Subscription {
-  perform(action: string, data: object): boolean,
-  send(data: object): boolean,
+  perform(action: string, data: Object): boolean,
+  send(data: Object): boolean,
   unsubscribe(): void,
 
   identifier: string,  // Stringified JSON params

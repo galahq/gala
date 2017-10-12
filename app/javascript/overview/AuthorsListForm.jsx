@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -25,10 +25,7 @@ type Props = {
 }
 export type AuthorsListFormState = { authors: string[], translators: string[] }
 
-class AuthorsListForm extends React.Component {
-  props: Props
-  state: AuthorsListFormState
-
+class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
   constructor (props: Props) {
     super(props)
 

@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -26,8 +26,7 @@ type OwnProps = {
   onChangeViewport?: Viewport => any,
 }
 
-class MapViewController extends Component {
-  props: OwnProps
+class MapViewController extends React.Component<OwnProps, *> {
   state = {
     viewport: this.props.startingViewport,
     acceptingScroll: false,
@@ -175,19 +174,17 @@ const PositionedPin = styled(Pin)`
 `
 
 // eslint-disable-next-line react/prefer-stateless-function
-class MapView extends Component {
-  props: {
-    acceptingScroll: boolean,
-    cases: Case[],
-    containerHeight: number,
-    containerWidth: number,
-    openPin: string,
-    viewport: Viewport,
-    onClickMap: () => void,
-    onClickPin: string => void,
-    onChangeViewport: Viewport => void,
-  }
-
+class MapView extends React.Component<{
+  acceptingScroll: boolean,
+  cases: Case[],
+  containerHeight: number,
+  containerWidth: number,
+  openPin: string,
+  viewport: Viewport,
+  onClickMap: () => void,
+  onClickPin: string => void,
+  onChangeViewport: Viewport => void,
+}> {
   render () {
     const {
       acceptingScroll,

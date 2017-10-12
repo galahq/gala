@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
 import { Button, Tooltip, Position, Intent } from '@blueprintjs/core'
@@ -31,14 +31,19 @@ type Submission = {
 }
 
 type Props = QuizProviderProps
-class PostTest extends Component {
-  props: Props
+class PostTest extends React.Component<
+  Props,
+  {
+    selectedAnswers: string[],
+    correctAnswers: string[],
+  }
+> {
   state = {
-    selectedAnswers: ([]: string[]),
-    correctAnswers: ([]: string[]),
+    selectedAnswers: [],
+    correctAnswers: [],
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e: ?SyntheticEvent<*>) => {
     this.props.onSubmit(e).then(this._loadCorrectAnswers)
   }
 
@@ -99,7 +104,7 @@ class PostTest extends Component {
                 correctAnswer={correctAnswers[i]}
                 key={q.id}
                 {...q}
-                onChange={(e: SyntheticInputEvent) => onChange(q.id, e)}
+                onChange={(e: SyntheticInputEvent<*>) => onChange(q.id, e)}
               />
             ))}
             <Tooltip

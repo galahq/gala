@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { submitQuiz } from 'redux/actions'
@@ -37,17 +37,19 @@ type QuizProps = {
 type QuizState = { [questionId: string]: string }
 type QuizDelegateProps = {
   canSubmit: boolean,
-  onChange: (questionId: string, e: SyntheticInputEvent) => void,
-  onSubmit: (e: SyntheticEvent) => Promise<any>,
+  onChange: (questionId: string, e: SyntheticInputEvent<*>) => void,
+  onSubmit: (e: ?SyntheticEvent<*>) => Promise<any>,
 }
 
 export type QuizProviderProps = QuizDelegateProps & QuizProps & QuizState
 
-export function providesQuiz (
-  QuizPresenter: <P: { [string]: any }>(props: P) => ?React$Element<any>
+export function providesQuiz<P: {}> (
+  QuizPresenter: React$ComponentType<{|
+    ...QuizProviderProps,
+    ...P,
+  |}>
 ) {
-  class QuizProvider extends React.Component {
-    props: QuizProps
+  class QuizProvider extends React.Component<*, QuizState> {
     state: QuizState = {}
 
     _canSubmit = () => {
@@ -61,7 +63,7 @@ export function providesQuiz (
       })
     }
 
-    handleChange = (questionId: string, e: SyntheticInputEvent) => {
+    handleChange = (questionId: string, e: SyntheticInputEvent<*>) => {
       const value = e.target.value
       this.setState((state: QuizState) => ({
         ...state,
