@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
@@ -28,7 +28,38 @@ import hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet from 
 
 import type { State } from 'redux/state'
 
-class Case extends React.Component {
+function mapStateToProps ({ quiz, caseData }: State) {
+  return {
+    needsPretest: quiz.needsPretest,
+    hasQuiz: !!quiz.questions && quiz.questions.length > 0,
+    caseSlug: caseData.slug,
+    kicker: caseData.kicker,
+    loadComments: !!(
+      caseData.commentable &&
+      caseData.reader &&
+      caseData.reader.enrollment
+    ),
+    basename: location.pathname.replace(
+      RegExp(`${caseData.slug}.*`),
+      caseData.slug
+    ),
+  }
+}
+
+class Case extends React.Component<{
+  needsPretest: boolean,
+  hasQuiz: boolean,
+  caseSlug: string,
+  kicker: string,
+  loadComments: boolean,
+  basename: string,
+  parseAllCards: typeof parseAllCards,
+  fetchCommentThreads: typeof fetchCommentThreads,
+  fetchCommunities: typeof fetchCommunities,
+  registerToaster: typeof registerToaster,
+  subscribeToActiveForumChannel: typeof subscribeToActiveForumChannel,
+  handleNotification: typeof handleNotification,
+}> {
   _subscribe = () => {
     const {
       handleNotification,
@@ -94,28 +125,11 @@ class Case extends React.Component {
   }
 }
 
-export default connect(
-  ({ quiz, caseData }: State) => ({
-    needsPretest: quiz.needsPretest,
-    hasQuiz: !!quiz.questions && quiz.questions.length > 0,
-    caseSlug: caseData.slug,
-    kicker: caseData.kicker,
-    loadComments: !!(
-      caseData.commentable &&
-      caseData.reader &&
-      caseData.reader.enrollment
-    ),
-    basename: location.pathname.replace(
-      RegExp(`${caseData.slug}.*`),
-      caseData.slug
-    ),
-  }),
-  {
-    parseAllCards,
-    fetchCommentThreads,
-    fetchCommunities,
-    registerToaster,
-    subscribeToActiveForumChannel,
-    handleNotification,
-  }
-)(Case)
+export default connect(mapStateToProps, {
+  parseAllCards,
+  fetchCommentThreads,
+  fetchCommunities,
+  registerToaster,
+  subscribeToActiveForumChannel,
+  handleNotification,
+})(Case)

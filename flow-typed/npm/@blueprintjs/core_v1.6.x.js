@@ -1,6 +1,8 @@
 // flow-typed signature: b1b677fe36048ce994b3d3910c5a6a4e
 // flow-typed version: <<STUB>>/@blueprintjs/core_v^1.6.0/flow_v0.43.1
 
+import * as React from 'react'
+
 declare module '@blueprintjs/core' {
   //
   // Constants
@@ -9,7 +11,12 @@ declare module '@blueprintjs/core' {
   declare export type SUCCESS = 'SUCCESS'
   declare export type WARNING = 'WARNING'
   declare export type DANGER = 'DANGER'
-  declare export type IntentType = PRIMARY | SUCCESS | WARNING | DANGER
+  declare export type IntentType =
+    | PRIMARY
+    | SUCCESS
+    | WARNING
+    | DANGER
+    | typeof undefined
 
   declare export interface Intent {
     static PRIMARY: PRIMARY,
@@ -87,7 +94,7 @@ declare module '@blueprintjs/core' {
     disabled?: boolean,
     text?: string,
     iconName?: string,
-    onClick?: SyntheticEvent => any,
+    onClick?: (SyntheticEvent<*>) => any,
   }
 
   declare export interface IBackdropProps {
@@ -99,7 +106,7 @@ declare module '@blueprintjs/core' {
 
   declare export interface IControlledProps {
     defaultValue?: string,
-    onChange?: SyntheticInputEvent => any,
+    onChange?: (SyntheticInputEvent<*>) => any,
     value?: string,
   }
 
@@ -109,7 +116,7 @@ declare module '@blueprintjs/core' {
     disabled?: boolean,
     inputRef?: HTMLInputElement => any,
     label?: string,
-    onChange?: SyntheticInputEvent => any,
+    onChange?: (SyntheticInputEvent<*>) => any,
   }
 
   declare export interface IIntentProps {
@@ -134,21 +141,27 @@ declare module '@blueprintjs/core' {
     enforceFocus?: boolean,
     inline?: boolean,
     lazy?: boolean,
-    onClose?: SyntheticEvent => any,
+    onClose?: (SyntheticEvent<*>) => any,
     transitionDuration?: number,
   }
 
   //
   // Components
   //
-  declare export interface Button extends React$Component<*, *, *> {
-    props: {
+  declare export class AnchorButton extends React.Component<
+    {
       active?: boolean,
-    } & IActionProps,
-  }
+    } & IActionProps
+  > {}
 
-  declare export interface EditableText extends React$Component<*, *, *> {
-    props: {
+  declare export class Button extends React.Component<
+    {
+      active?: boolean,
+    } & IActionProps
+  > {}
+
+  declare export class EditableText extends React.Component<
+    {
       confirmOnEnterKey?: boolean,
       defaultValue?: string,
       disabled?: boolean,
@@ -166,40 +179,40 @@ declare module '@blueprintjs/core' {
       selectAllOnFocus?: boolean,
       value?: string,
     } & IProps &
-      IIntentProps,
-  }
+      IIntentProps
+  > {}
 
-  declare export interface Dialog extends React$Component<*, *, *> {
-    props: {
+  declare export class Dialog extends React.Component<
+    {
       iconName?: string,
       isCloseButtonShown?: boolean,
       isOpen: boolean,
       style: Object,
-      title: string | React$Element<*>,
+      title: React.Node,
     } & IProps &
       IBackdropProps &
-      IOverlayableProps,
-  }
+      IOverlayableProps
+  > {}
 
-  declare export interface InputGroup extends React$Component<*, *, *> {
-    props: {
+  declare export class InputGroup extends React.Component<
+    {
       disabled?: boolean,
       intent?: IntentType,
       leftIconName?: string,
       placeholder?: string,
-      rightElement?: React$Element<*>,
+      rightElement?: React.Node,
       type?: string,
     } & IProps &
-      IControlledProps,
-  }
+      IControlledProps
+  > {}
 
-  declare export interface Menu extends React$Component<*, *, *> {
-    props: { ulRef: (ref: HTMLUListElement) => any } & IProps,
-  }
+  declare export class Menu extends React.Component<
+    { ulRef?: (ref: HTMLUListElement) => any } & IProps
+  > {}
 
-  declare export interface MenuItem extends React$Component<*, *, *> {
-    props: {
-      label?: string | React$Element<*>,
+  declare export class MenuItem extends React.Component<
+    {
+      label?: React.Node,
       shouldDismissPopover?: boolean,
       submenu?: Array<$PropertyType<MenuItem, 'props'>>,
       submenuViewportMargin?: { left?: number, right?: number },
@@ -207,22 +220,22 @@ declare module '@blueprintjs/core' {
       useSmartPositioning?: boolean,
     } & IProps &
       IActionProps &
-      ILinkProps,
-  }
+      ILinkProps
+  > {}
 
-  declare export interface NonIdealState extends React$Component<*, *, *> {
-    props: {
-      action?: React$Element<*>,
-      description?: string | React$Element<*>,
+  declare export class NonIdealState extends React.Component<
+    {
+      action?: React.Node,
+      description?: React.Node,
       title?: string,
-      visual?: string | React$Element<*>,
-    } & IProps,
-  }
+      visual?: React.Node,
+    } & IProps
+  > {}
 
-  declare export interface Popover extends React$Component<*, *, *> {
-    props: {
+  declare export class Popover extends React.Component<
+    {
       backdropProps?: HTMLDivElement,
-      content?: string | React$Element<*>,
+      content?: React.Node,
       defaultIsOpen?: boolean,
       hoverCloseDelay?: number,
       hoverOpenDelay?: number,
@@ -239,29 +252,25 @@ declare module '@blueprintjs/core' {
       portalClassName?: string,
       position?: PositionType,
       rootElementTag?: string,
-      target?: string | React$Element<*>,
+      target?: React.Node,
       tetherOptions?: Object,
       useSmartArrowPositioning?: boolean,
     } & IOverlayableProps &
-      IProps,
-  }
+      IProps
+  > {}
 
-  declare export interface Portal extends React$Component<*, *, *> {}
+  declare export class Portal extends React.Component<{}> {}
 
-  declare export interface Radio extends React$Component<*, *, *> {
-    props: IControlProps & IProps,
-  }
+  declare export class Radio extends React.Component<IControlProps & IProps> {}
 
-  declare export interface RadioGroup extends React$Component<*, *, *> {
-    props: {
-      disabled?: boolean,
-      label?: string,
-      name?: string,
-      onChange: (event: SyntheticInputEvent) => any,
-      options?: IOptionProps[],
-      selectedValue?: string,
-    },
-  }
+  declare export class RadioGroup extends React.Component<{
+    disabled?: boolean,
+    label?: string,
+    name?: string,
+    onChange: (SyntheticInputEvent<*>) => any,
+    options?: IOptionProps[],
+    selectedValue?: string,
+  }> {}
 
   declare export type Toast = {
     action?: IActionProps & ILinkProps,
@@ -272,7 +281,7 @@ declare module '@blueprintjs/core' {
   } & IProps &
     IIntentProps
 
-  declare export interface Toaster extends React$Component<*, *, *> {
+  declare export class Toaster extends React.Component<{}> {
     static create(
       props: ?({
         autoFocus?: boolean,
@@ -289,9 +298,9 @@ declare module '@blueprintjs/core' {
     getToasts(): Toast[],
   }
 
-  declare export interface Tooltip extends React$Component<*, *, *> {
-    props: {
-      content: string | React$Element<*>,
+  declare export class Tooltip extends React.Component<
+    {
+      content: React.Node,
       defaultIsOpen?: boolean,
       hoverCloseDelay?: number,
       hoverOpenDelay?: number,
@@ -308,6 +317,6 @@ declare module '@blueprintjs/core' {
       transitionDuration?: number,
       useSmartArrowPositioning?: boolean,
       useSmartPositioning?: boolean,
-    } & IIntentProps,
-  }
+    } & IIntentProps
+  > {}
 }

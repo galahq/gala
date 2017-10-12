@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import { values, omit } from 'ramda'
 import { injectIntl } from 'react-intl'
@@ -22,8 +22,7 @@ import type { Case, Enrollment, Reader } from 'redux/state'
 
 export type Loading = { reader: boolean, cases: boolean }
 
-class Catalog extends Component {
-  props: { intl: any }
+class Catalog extends React.Component<{ intl: any }, *> {
   state = {
     loading: { reader: true, cases: true },
 

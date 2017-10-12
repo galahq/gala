@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { withRouter } from 'react-router-dom'
@@ -30,7 +30,7 @@ function mapStateToProps ({ caseData, edit, quiz }: State) {
 }
 
 // eslint-disable-next-line react/prefer-stateless-function
-class TableOfContents extends Component {
+class TableOfContents extends React.Component<*> {
   render () {
     const {
       caseSlug,

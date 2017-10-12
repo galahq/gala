@@ -9,7 +9,7 @@ import { decorator } from 'card/draftConfig'
 
 import { omit } from 'ramda'
 
-import type { RawDraftContentState } from 'draft-js'
+import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
 import type { CardsState, Card, CommentThread } from 'redux/state'
 import type {
@@ -93,19 +93,21 @@ function cardsById (
       }
 
     case 'PARSE_ALL_CARDS':
-      return Object.keys(state).map(key => state[key]).reduce(
-        (all, card) => ({
-          ...all,
-          [card.id]: {
-            ...card,
-            commentThreads:
-              card.commentThreads &&
-              card.commentThreads.sort(sortCommentThreads),
-            editorState: parseEditorStateFromPersistedCard(card),
-          },
-        }),
-        {}
-      )
+      return Object.keys(state)
+        .map(key => state[key])
+        .reduce(
+          (all, card) => ({
+            ...all,
+            [card.id]: {
+              ...card,
+              commentThreads:
+                card.commentThreads &&
+                card.commentThreads.sort(sortCommentThreads),
+              editorState: parseEditorStateFromPersistedCard(card),
+            },
+          }),
+          {}
+        )
 
     case 'ADD_COMMENT_THREAD': {
       const { data } = action
@@ -192,16 +194,19 @@ function addCommentThreads (content: RawDraftContentState, card: Card) {
 
     const key = `thread--${id}`
 
-    newContent.blocks[blockIndex].inlineStyleRanges.push({
-      length,
-      offset,
-      style: 'THREAD',
-    })
-    newContent.blocks[blockIndex].inlineStyleRanges.push({
-      length,
-      offset,
-      style: key,
-    })
+    const inlineStyleRanges = newContent.blocks[blockIndex].inlineStyleRanges
+    inlineStyleRanges &&
+      inlineStyleRanges.push({
+        length,
+        offset,
+        style: 'THREAD',
+      })
+    inlineStyleRanges &&
+      inlineStyleRanges.push({
+        length,
+        offset,
+        style: key,
+      })
   })
 
   return newContent

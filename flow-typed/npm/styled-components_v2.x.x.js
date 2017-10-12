@@ -1,7 +1,7 @@
 // @flow
 
 type $npm$styledComponents$Interpolation =
-  | ((executionContext: Object) => string)
+  | (<C: {}>(executionContext: C) => string)
   | string
   | number
 type $npm$styledComponents$NameGenerator = (hash: number) => string
@@ -10,77 +10,123 @@ type $npm$styledComponents$TaggedTemplateLiteral<R> = {|
   (Array<string>, $npm$styledComponents$Interpolation): R,
 |}
 
-type $npm$styledComponents$ReactComponentFunctional<
-  Props: {}
-> = Props => React$Element<*>
-type $npm$styledComponents$ReactComponentClass<Props, DefaultProps = *> = Class<
-  React$Component<DefaultProps, Props, *>
->
+// ---- FUNCTIONAL COMPONENT DEFINITIONS ----
+type $npm$styledComponents$ReactComponentFunctional<Props, DefaultProps = *> = {
+  defaultProps: DefaultProps,
+} & $npm$styledComponents$ReactComponentFunctionalUndefinedDefaultProps<Props>
 
-type $npm$styledComponents$ReactComponentUnion<Props> =
-  | $npm$styledComponents$ReactComponentFunctional<Props>
-  | $npm$styledComponents$ReactComponentClass<Props>
+type $npm$styledComponents$ReactComponentFunctionalUndefinedDefaultProps<
+  Props
+> = React$StatelessFunctionalComponent<Props>
+
+// ---- CLASS COMPONENT DEFINITIONS ----
+class $npm$styledComponents$ReactComponent<
+  Props,
+  DefaultProps
+> extends React$Component<Props> {
+  static defaultProps: DefaultProps
+}
+type $npm$styledComponents$ReactComponentClass<Props, DefaultProps = *> = Class<$npm$styledComponents$ReactComponent<Props, DefaultProps>>
+type $npm$styledComponents$ReactComponentClassUndefinedDefaultProps<
+  Props
+> = Class<React$Component<Props, *>>
+
+// ---- COMPONENT FUNCTIONS INPUT (UNION) & OUTPUT (INTERSECTION) ----
+type $npm$styledComponents$ReactComponentUnion<
+  Props
+> = $npm$styledComponents$ReactComponentUnionWithDefaultProps<Props, *>
+
+type $npm$styledComponents$ReactComponentUnionWithDefaultProps<
+  Props,
+  DefaultProps
+> =
+  | $npm$styledComponents$ReactComponentFunctional<Props, DefaultProps>
+  | $npm$styledComponents$ReactComponentFunctionalUndefinedDefaultProps<Props>
+  | $npm$styledComponents$ReactComponentClass<Props, DefaultProps>
+  | $npm$styledComponents$ReactComponentClassUndefinedDefaultProps<Props>
 
 type $npm$styledComponents$ReactComponentIntersection<
   Props,
   DefaultProps = *
-> = $npm$styledComponents$ReactComponentFunctional<Props> &
+> = $npm$styledComponents$ReactComponentFunctional<Props, DefaultProps> &
   $npm$styledComponents$ReactComponentClass<Props, DefaultProps>
 
-type $npm$styledComponents$ReactComponentStyledStaticPropsWithComponent<
-  ComponentList
-> = <
+// ---- WITHCOMPONENT ----
+type $npm$styledComponents$ReactComponentStyledWithComponent<ComponentList> = <
   Props,
   DefaultProps,
   Input:
     | ComponentList
     | $npm$styledComponents$ReactComponentStyled<Props, DefaultProps>
-    | $npm$styledComponents$ReactComponentClass<Props, DefaultProps>
-    | $npm$styledComponents$ReactComponentFunctional<Props>
+    | $npm$styledComponents$ReactComponentUnionWithDefaultProps<Props,
+        DefaultProps>
 >(
   Input
 ) => $npm$styledComponents$ReactComponentStyled<Props, DefaultProps>
 
+// ---- STATIC PROPERTIES ----
 type $npm$styledComponents$ReactComponentStyledStaticProps<
   Props,
   ComponentList
 > = {|
-  attrs: <O: {}>(
-    O
-  ) => $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<
-    Props,
-    ComponentList
-  >,
-  extend: $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<
-    Props,
-    ComponentList
-  >,
-  withComponent: $npm$styledComponents$ReactComponentStyledStaticPropsWithComponent<
-    ComponentList
-  >,
+  attrs: <AdditionalProps: {}>(
+    AdditionalProps
+  ) => $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<Props & AdditionalProps,
+    ComponentList>,
+  extend: $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<Props,
+    ComponentList>,
 |}
 
+type $npm$styledComponents$ReactComponentStyledStaticPropsWithComponent<
+  Props,
+  ComponentList
+> = {|
+  withComponent: $npm$styledComponents$ReactComponentStyledWithComponent<ComponentList>,
+  attrs: <AdditionalProps: {}>(
+    AdditionalProps
+  ) => $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<Props & AdditionalProps,
+    ComponentList>,
+  extend: $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<Props,
+    ComponentList>,
+|}
+
+// ---- STYLED FUNCTION ----
+// Error: styled(CustomComponent).withComponent('a')
+// Ok:    styled('div').withComponent('a')
+type $npm$styledComponents$Call<
+  ComponentListKeys
+> = (ComponentListKeys => $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<{},
+  ComponentListKeys>) &
+  (<Props>(
+    $npm$styledComponents$ReactComponentUnion<Props>
+  ) => $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<Props,
+    ComponentListKeys>)
+
+// ---- STYLED COMPONENT ----
 type $npm$styledComponents$ReactComponentStyled<
   Props,
   ComponentList,
   DefaultProps = *
-> = $npm$styledComponents$ReactComponentStyledStaticProps<
-  Props,
-  ComponentList
-> &
+> = $npm$styledComponents$ReactComponentStyledStaticPropsWithComponent<Props,
+  ComponentList> &
   $npm$styledComponents$ReactComponentIntersection<Props, DefaultProps>
 
+// ---- TAGGED TEMPLATE LITERAL ----
 type $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<
   Props,
   ComponentList
-> = $npm$styledComponents$ReactComponentStyledStaticProps<
+> = $npm$styledComponents$ReactComponentStyledStaticProps<Props,
+  ComponentList> &
+  $npm$styledComponents$TaggedTemplateLiteral<$npm$styledComponents$ReactComponentStyled<Props, ComponentList>>
+
+type $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<
   Props,
   ComponentList
-> &
-  $npm$styledComponents$TaggedTemplateLiteral<
-    $npm$styledComponents$ReactComponentStyled<Props, ComponentList>
-  >
+> = $npm$styledComponents$ReactComponentStyledStaticPropsWithComponent<Props,
+  ComponentList> &
+  $npm$styledComponents$TaggedTemplateLiteral<$npm$styledComponents$ReactComponentStyled<Props, ComponentList>>
 
+// ---- WITHTHEME ----
 type $npm$styledComponents$WithThemeReactComponentClass = <
   InputProps: { theme: $npm$styledComponents$Theme },
   InputDefaultProps: {},
@@ -94,58 +140,61 @@ type $npm$styledComponents$WithThemeReactComponentClassUndefinedDefaultProps = <
   InputProps: { theme: $npm$styledComponents$Theme },
   OutputProps: $Diff<InputProps, { theme: $npm$styledComponents$Theme }>
 >(
-  $npm$styledComponents$ReactComponentClass<InputProps, void>
-) => $npm$styledComponents$ReactComponentClass<
-  OutputProps,
-  { theme: $npm$styledComponents$Theme }
->
+  $npm$styledComponents$ReactComponentClassUndefinedDefaultProps<InputProps>
+) => $npm$styledComponents$ReactComponentClass<OutputProps,
+  { theme: $npm$styledComponents$Theme }>
 
 type $npm$styledComponents$WithThemeReactComponentFunctional = <
   InputProps: { theme: $npm$styledComponents$Theme },
+  InputDefaultProps: {},
+  OutputProps: $Diff<InputProps, { theme: $npm$styledComponents$Theme }>,
+  OutputDefaultProps: InputDefaultProps & { theme: $npm$styledComponents$Theme }
+>(
+  $npm$styledComponents$ReactComponentFunctional<InputProps, InputDefaultProps>
+) => $npm$styledComponents$ReactComponentFunctional<OutputProps,
+  OutputDefaultProps>
+
+type $npm$styledComponents$WithThemeReactComponentFunctionalUndefinedDefaultProps = <
+  InputProps: { theme: $npm$styledComponents$Theme },
   OutputProps: $Diff<InputProps, { theme: $npm$styledComponents$Theme }>
 >(
-  $npm$styledComponents$ReactComponentFunctional<InputProps>
-) => $npm$styledComponents$ReactComponentFunctional<OutputProps>
+  $npm$styledComponents$ReactComponentFunctionalUndefinedDefaultProps<InputProps>
+) => $npm$styledComponents$ReactComponentFunctional<OutputProps,
+  { theme: $npm$styledComponents$Theme }>
 
 type $npm$styledComponents$WithTheme = $npm$styledComponents$WithThemeReactComponentClass &
   $npm$styledComponents$WithThemeReactComponentClassUndefinedDefaultProps &
-  $npm$styledComponents$WithThemeReactComponentFunctional
+  $npm$styledComponents$WithThemeReactComponentFunctional &
+  $npm$styledComponents$WithThemeReactComponentFunctionalUndefinedDefaultProps
 
+// ---- MISC ----
 type $npm$styledComponents$Theme = { [key: string]: mixed }
 type $npm$styledComponents$ThemeProviderProps = {
-  theme:
-    | $npm$styledComponents$Theme
+  theme: | $npm$styledComponents$Theme
     | ((outerTheme: $npm$styledComponents$Theme) => void),
 }
 
-class Npm$StyledComponents$ThemeProvider extends React$Component {
-  props: $npm$styledComponents$ThemeProviderProps
-}
+class Npm$StyledComponents$ThemeProvider extends React$Component<
+  $npm$styledComponents$ThemeProviderProps
+> {}
 
-type $npm$styledComponents$StyleSheetManagerProps = {
+class Npm$StyledComponents$StyleSheetManager extends React$Component<{
   sheet: mixed,
-}
-
-class Npm$StyledComponents$StyleSheetManager extends React$Component {
-  props: $npm$styledComponents$StyleSheetManagerProps
-}
+}> {}
 
 class Npm$StyledComponents$ServerStyleSheet {
   instance: StyleSheet
-  collectStyles: (children: any) => React$Element<*>
+  collectStyles: (children: any) => React$Node
   getStyleTags: () => string
-  getStyleElement: () => React$Element<*>
+  getStyleElement: () => React$Node
 }
 
-type $npm$styledComponents$StyledComponentsComponentListKeys = $Subtype<
-  $Keys<$npm$styledComponents$StyledComponentsComponentList>
->
+type $npm$styledComponents$StyledComponentsComponentListKeys = $Subtype<$Keys<$npm$styledComponents$StyledComponentsComponentList>>
 
-type $npm$styledComponents$StyledComponentsComponentListValue = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<
-  {},
-  $npm$styledComponents$StyledComponentsComponentListKeys
->
+type $npm$styledComponents$StyledComponentsComponentListValue = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<{},
+  $npm$styledComponents$StyledComponentsComponentListKeys>
 
+// ---- COMPONENT LIST ----
 type $npm$styledComponents$StyledComponentsComponentList = {|
   a: $npm$styledComponents$StyledComponentsComponentListValue,
   abbr: $npm$styledComponents$StyledComponentsComponentListValue,
@@ -291,14 +340,22 @@ declare module 'styled-components' {
   declare type TaggedTemplateLiteral<
     R
   > = $npm$styledComponents$TaggedTemplateLiteral<R>
+  declare type ComponentListKeys = $npm$styledComponents$StyledComponentsComponentListKeys
 
   declare type ReactComponentFunctional<
+    Props: {},
+    DefaultProps: ?{} = *
+  > = $npm$styledComponents$ReactComponentFunctional<Props, DefaultProps>
+  declare type ReactComponentFunctionalUndefinedDefaultProps<
     Props: {}
-  > = $npm$styledComponents$ReactComponentFunctional<Props>
+  > = $npm$styledComponents$ReactComponentFunctionalUndefinedDefaultProps<Props>
   declare type ReactComponentClass<
-    Props,
-    DefaultProps = *
+    Props: {},
+    DefaultProps: ?{} = *
   > = $npm$styledComponents$ReactComponentClass<Props, DefaultProps>
+  declare type ReactComponentClassUndefinedDefaultProps<
+    Props: {}
+  > = $npm$styledComponents$ReactComponentClassUndefinedDefaultProps<Props>
   declare type ReactComponentUnion<
     Props
   > = $npm$styledComponents$ReactComponentUnion<Props>
@@ -307,27 +364,18 @@ declare module 'styled-components' {
   > = $npm$styledComponents$ReactComponentIntersection<Props>
   declare type ReactComponentStyledStaticProps<
     Props
-  > = $npm$styledComponents$ReactComponentStyledStaticProps<
-    Props,
-    $Subtype<$Keys<$npm$styledComponents$StyledComponentsComponentList<*>>>
-  >
+  > = $npm$styledComponents$ReactComponentStyledStaticPropsWithComponent<Props,
+    ComponentListKeys>
   declare type ReactComponentStyled<
     Props
-  > = $npm$styledComponents$ReactComponentStyled<
-    Props,
-    $Subtype<$Keys<$npm$styledComponents$StyledComponentsComponentList<*>>>
-  >
+  > = $npm$styledComponents$ReactComponentStyled<Props, ComponentListKeys>
   declare type ReactComponentStyledTaggedTemplateLiteral<
     Props
-  > = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<
-    Props,
-    $Subtype<$Keys<$npm$styledComponents$StyledComponentsComponentList<*>>>
-  >
+  > = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<Props,
+    ComponentListKeys>
 
   declare module.exports: {
-    <Props>(
-      ReactComponentUnion<Props>
-    ): ReactComponentStyledTaggedTemplateLiteral<Props>,
+    $call: $npm$styledComponents$Call<ComponentListKeys>,
 
     injectGlobal: TaggedTemplateLiteral<void>,
     css: TaggedTemplateLiteral<Array<Interpolation>>,
@@ -341,14 +389,10 @@ declare module 'styled-components' {
   }
 }
 
-type $npm$styledComponents$StyledComponentsNativeComponentListKeys = $Subtype<
-  $Keys<$npm$styledComponents$StyledComponentsNativeComponentList>
->
+type $npm$styledComponents$StyledComponentsNativeComponentListKeys = $Subtype<$Keys<$npm$styledComponents$StyledComponentsNativeComponentList>>
 
-type $npm$styledComponents$StyledComponentsNativeComponentListValue = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<
-  {},
-  $npm$styledComponents$StyledComponentsNativeComponentListKeys
->
+type $npm$styledComponents$StyledComponentsNativeComponentListValue = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<{},
+  $npm$styledComponents$StyledComponentsNativeComponentListKeys>
 
 type $npm$styledComponents$StyledComponentsNativeComponentList = {|
   ActivityIndicator: $npm$styledComponents$StyledComponentsNativeComponentListValue,
@@ -408,14 +452,22 @@ declare module 'styled-components/native' {
   declare type TaggedTemplateLiteral<
     R
   > = $npm$styledComponents$TaggedTemplateLiteral<R>
+  declare type NativeComponentListKeys = $npm$styledComponents$StyledComponentsNativeComponentListKeys
 
   declare type ReactComponentFunctional<
+    Props: {},
+    DefaultProps: ?{} = *
+  > = $npm$styledComponents$ReactComponentFunctional<Props, DefaultProps>
+  declare type ReactComponentFunctionalUndefinedDefaultProps<
     Props: {}
-  > = $npm$styledComponents$ReactComponentFunctional<Props>
+  > = $npm$styledComponents$ReactComponentFunctionalUndefinedDefaultProps<Props>
   declare type ReactComponentClass<
-    Props,
-    DefaultProps = *
+    Props: {},
+    DefaultProps: ?{} = *
   > = $npm$styledComponents$ReactComponentClass<Props, DefaultProps>
+  declare type ReactComponentClassUndefinedDefaultProps<
+    Props: {}
+  > = $npm$styledComponents$ReactComponentClassUndefinedDefaultProps<Props>
   declare type ReactComponentUnion<
     Props
   > = $npm$styledComponents$ReactComponentUnion<Props>
@@ -424,33 +476,18 @@ declare module 'styled-components/native' {
   > = $npm$styledComponents$ReactComponentIntersection<Props>
   declare type ReactComponentStyledStaticProps<
     Props
-  > = $npm$styledComponents$ReactComponentStyledStaticProps<
-    Props,
-    $Subtype<
-      $Keys<$npm$styledComponents$StyledComponentsNativeComponentList<*>>
-    >
-  >
+  > = $npm$styledComponents$ReactComponentStyledStaticPropsWithComponent<Props,
+    NativeComponentListKeys>
   declare type ReactComponentStyled<
     Props
-  > = $npm$styledComponents$ReactComponentStyled<
-    Props,
-    $Subtype<
-      $Keys<$npm$styledComponents$StyledComponentsNativeComponentList<*>>
-    >
-  >
+  > = $npm$styledComponents$ReactComponentStyled<Props, NativeComponentListKeys>
   declare type ReactComponentStyledTaggedTemplateLiteral<
     Props
-  > = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteral<
-    Props,
-    $Subtype<
-      $Keys<$npm$styledComponents$StyledComponentsNativeComponentList<*>>
-    >
-  >
+  > = $npm$styledComponents$ReactComponentStyledTaggedTemplateLiteralWithComponent<Props,
+    NativeComponentListKeys>
 
   declare module.exports: {
-    <Props>(
-      ReactComponentUnion<Props>
-    ): ReactComponentStyledTaggedTemplateLiteral<Props>,
+    $call: $npm$styledComponents$Call<NativeComponentListKeys>,
 
     css: TaggedTemplateLiteral<Array<Interpolation>>,
     keyframes: TaggedTemplateLiteral<string>,

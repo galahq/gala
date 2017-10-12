@@ -32,13 +32,14 @@ function convertFromOldStyleCardSerialization (content: string): ?Object {
 
   var convertedRawContent = convertToRaw(
     ContentState.createFromBlockArray(
-      blocksFromHTML.contentBlocks,
+      blocksFromHTML.contentBlocks || [],
       blocksFromHTML.entityMap
     )
   )
 
   Object.keys(convertedRawContent.entityMap).forEach(key => {
     const entity = convertedRawContent.entityMap[`${key}`]
+    if (entity.data == null) return
     const { url, title, target } = entity.data
 
     let convertedEntity

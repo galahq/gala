@@ -14,7 +14,7 @@ import type { Question as QuestionT } from 'redux/state'
 type Props = QuestionT & {
   selectedAnswer: string,
   correctAnswer?: string,
-  onChange: (e: SyntheticInputEvent) => void,
+  onChange: (e: SyntheticInputEvent<*>) => void,
 }
 const Question = ({
   id,

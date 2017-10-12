@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
 import AuthorsListForm from './AuthorsListForm'
@@ -11,15 +11,17 @@ import AuthorsListForm from './AuthorsListForm'
 import type { Byline } from 'redux/state'
 import type { AuthorsListFormState } from './AuthorsListForm'
 
-class AuthorsList extends React.Component {
-  props: {
+class AuthorsList extends React.Component<
+  {
     canEdit: boolean,
     byline: Byline,
     onChange: Byline => any,
-  }
+  },
+  { editing: boolean }
+> {
   state = { editing: false }
 
-  handleStartEditing = (e: SyntheticEvent) => {
+  handleStartEditing = (e: SyntheticEvent<*>) => {
     if (this.props.canEdit) this.setState({ editing: true })
   }
 
@@ -49,17 +51,15 @@ class AuthorsList extends React.Component {
         <p>
           {authorsString}
           <br />
-          {translatorsString !== '' &&
-            <em>
-              {translatorsString}
-            </em>}
+          {translatorsString !== '' && <em>{translatorsString}</em>}
         </p>
-        {canEdit &&
+        {canEdit && (
           <AuthorsListForm
             byline={byline}
             editing={this.state.editing}
             onFinishEditing={this.handleFinishEditing}
-          />}
+          />
+        )}
       </div>
     )
   }

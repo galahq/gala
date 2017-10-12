@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -39,7 +39,7 @@ function mapStateToProps (
 
 type Props = {
   activeCommunity: ?Community,
-  communities: ?(Community[]),
+  communities: Community[],
   rounded: boolean,
   white: boolean,
   disabled: boolean,
@@ -55,8 +55,9 @@ export const UnconnectedCommunityChooser = ({
   caseSlug,
   updateActiveCommunity,
 }: Props) => {
-  const activeCommunityPresent = (communities || [])
-    .some(x => activeCommunity && x.id === activeCommunity.id)
+  const activeCommunityPresent = (communities || []).some(
+    x => activeCommunity && x.id === activeCommunity.id
+  )
   const anyCommunitiesPresent = communities && communities.length > 0
   return (
     <Bar
@@ -65,7 +66,7 @@ export const UnconnectedCommunityChooser = ({
       white={white}
       disabled={disabled}
     >
-      {activeCommunity &&
+      {activeCommunity && (
         <Popover
           position={rounded ? Position.BOTTOM_LEFT : Position.BOTTOM}
           isDisabled={!anyCommunitiesPresent}
@@ -78,20 +79,20 @@ export const UnconnectedCommunityChooser = ({
                 You’ll see the discussion taking place in the community you
                 choose.
               </Instructions>
-              {(communities || []).map(c =>
+              {(communities || []).map(c => (
                 <MenuItem
                   key={c.id || 'null'}
                   iconName={c.global ? 'globe' : 'social-media'}
                   className={c.active ? 'pt-active pt-intent-primary' : ''}
                   text={c.name}
-                  onClick={() => {
+                  onClick={_ => {
                     updateActiveCommunity &&
                       caseSlug &&
                       updateActiveCommunity(caseSlug, c.id)
                   }}
                   onKeyPress={acceptKeyboardClick}
                 />
-              )}
+              ))}
             </CommunityMenu>
           }
         >
@@ -117,7 +118,8 @@ export const UnconnectedCommunityChooser = ({
             </Tooltip>
             {disabled || !anyCommunitiesPresent ? '' : ' ▾'}
           </CommunityName>
-        </Popover>}
+        </Popover>
+      )}
     </Bar>
   )
 }
@@ -141,9 +143,7 @@ const Bar = styled.div`
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `
 
-const CommunityMenu = styled(Menu)`
-  width: 16em;
-`
+const CommunityMenu = styled(Menu)`width: 16em;`
 
 const Instructions = styled.li`
   margin: 5px;

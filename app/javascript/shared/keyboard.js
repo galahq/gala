@@ -2,7 +2,7 @@
  * @flow
  */
 
-export function acceptKeyboardClick (event: SyntheticKeyboardEvent) {
+export function acceptKeyboardClick (event: SyntheticKeyboardEvent<*>) {
   event.preventDefault()
   // $FlowFixMe
   if (event.key === 'Enter' || event.key === ' ') event.currentTarget.click()
@@ -10,9 +10,9 @@ export function acceptKeyboardClick (event: SyntheticKeyboardEvent) {
 
 export function hotkeyDispatch (
   keys: { [keyName: string]: () => mixed },
-  defaultFunc: ?(SyntheticEvent) => mixed = null
-): SyntheticKeyboardEvent => mixed {
-  return (event: SyntheticKeyboardEvent) => {
+  defaultFunc: ?(SyntheticEvent<*>) => mixed = null
+): (SyntheticKeyboardEvent<*>) => mixed {
+  return (event: SyntheticKeyboardEvent<*>) => {
     if (keys.hasOwnProperty(event.key)) {
       const shouldContinue = keys[event.key]()
       shouldContinue || event.preventDefault()

@@ -3,6 +3,7 @@
  * @flow
  */
 
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { EditorState, RichUtils, SelectionState } from 'draft-js'
@@ -27,11 +28,11 @@ import type { State } from 'redux/state'
 /**
  * Public API for <Card />
  */
-export type CardProps = {
+export type CardProps = {|
   id: string,
   nonNarrative: boolean,
-  title?: React$Element<{}>,
-}
+  title?: React.Node,
+|}
 
 type OwnProps = ContextRouter & {
   id: string,
