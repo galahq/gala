@@ -28,6 +28,7 @@ type OwnProps = {
 
 class MapViewController extends React.Component<OwnProps, *> {
   state = {
+    hasError: false,
     viewport: this.props.startingViewport,
     acceptingScroll: false,
     openPin: '',
@@ -59,7 +60,13 @@ class MapViewController extends React.Component<OwnProps, *> {
     this.props.onChangeViewport &&
     this.props.onChangeViewport(this.state.viewport)
 
+  componentDidCatch () {
+    this.setState({ hasError: true })
+  }
+
   render () {
+    if (this.state.hasError) return null
+
     const { height, cases, title, editing, intl } = this.props
     return (
       <Container height={height}>
