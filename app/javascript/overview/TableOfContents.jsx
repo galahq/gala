@@ -19,13 +19,13 @@ import PostTestLink from 'quiz/PostTestLink'
 
 import type { State } from 'redux/state'
 
-function mapStateToProps (state: State) {
+function mapStateToProps ({ caseData, edit, quiz }: State) {
   return {
-    caseSlug: state.caseData.slug,
-    elements: state.caseData.caseElements,
-    disabled: !state.caseData.reader,
-    editing: state.edit.inProgress,
-    hasQuiz: !!state.quiz.questions,
+    caseSlug: caseData.slug,
+    elements: caseData.caseElements,
+    disabled: !caseData.reader,
+    editing: edit.inProgress,
+    hasQuiz: !!quiz.questions && quiz.questions.length > 0,
   }
 }
 

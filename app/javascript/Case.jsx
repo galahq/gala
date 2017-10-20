@@ -97,7 +97,7 @@ class Case extends React.Component {
 export default connect(
   ({ quiz, caseData }: State) => ({
     needsPretest: quiz.needsPretest,
-    hasQuiz: !!quiz.questions,
+    hasQuiz: !!quiz.questions && quiz.questions.length > 0,
     caseSlug: caseData.slug,
     kicker: caseData.kicker,
     loadComments: !!(
