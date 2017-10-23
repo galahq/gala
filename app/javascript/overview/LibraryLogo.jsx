@@ -6,9 +6,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-const LibraryLogo = () => (
-  <Container title="Michigan Sustainability Cases">
-    <Logo src="https://msc-gala.imgix.net/block-m.svg" />
+import type { Library } from 'redux/state'
+
+const LibraryLogo = ({ library }: { library: Library }) => (
+  <Container title={library.name} {...library}>
+    <Logo src={library.logoUrl} />
   </Container>
 )
 export default LibraryLogo
@@ -18,8 +20,8 @@ const Container = styled.abbr`
   top: 0;
   width: 67px;
   height: 110px;
-  background-color: #00274c;
-  border-bottom: 6px solid #ffcb05;
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  border-bottom: 6px solid ${({ foregroundColor }) => foregroundColor};
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   box-shadow: 0px 8px 80px 0px #ffffff60;
