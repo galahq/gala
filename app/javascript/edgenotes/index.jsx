@@ -44,6 +44,7 @@ export default connect(mapStateToProps)(EdgenotesCard)
 function getEdgenoteSlugs (editorState: EditorState): string[] {
   const rawContent = convertToRaw(editorState.getCurrentContent())
   return values(rawContent.entityMap)
-    .filter(entity => entity.type === 'EDGENOTE')
-    .map(entity => entity.data.slug)
+    .filter(({ type }) => type === 'EDGENOTE')
+    .map(({ data }) => (data ? data.slug : ''))
+    .filter(x => !!x)
 }

@@ -2,7 +2,8 @@
  * @flow
  */
 
-import type { EditorState, RawDraftContentState } from 'draft-js'
+import type { EditorState } from 'draft-js'
+import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
 // Redux state
 export type { State } from 'redux/reducers'

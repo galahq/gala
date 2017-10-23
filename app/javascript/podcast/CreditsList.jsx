@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -13,15 +13,17 @@ import CreditsListForm from './CreditsListForm'
 import type { PodcastCreditList } from 'redux/state'
 import type { CreditsListFormState } from './CreditsListForm'
 
-class CreditsList extends React.Component {
-  props: {
+class CreditsList extends React.Component<
+  {
     canEdit: boolean,
     credits: PodcastCreditList,
     onChange: PodcastCreditList => any,
-  }
+  },
+  { editing: boolean }
+> {
   state = { editing: false }
 
-  handleStartEditing = (e: SyntheticEvent) => {
+  handleStartEditing = () => {
     if (this.props.canEdit) this.setState({ editing: true })
   }
 
@@ -50,12 +52,8 @@ class CreditsList extends React.Component {
         <dl>
           {guests.map(guest => {
             return [
-              <dt key={`name:${guest.name}`}>
-                {guest.name}
-              </dt>,
-              <dd key={`title:${guest.title}`}>
-                {guest.title}
-              </dd>,
+              <dt key={`name:${guest.name}`}>{guest.name}</dt>,
+              <dd key={`title:${guest.title}`}>{guest.title}</dd>,
             ]
           })}
         </dl>

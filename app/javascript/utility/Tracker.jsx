@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
 
@@ -26,9 +26,7 @@ type TrackerState = {
   timeArrived: number,
 }
 
-class BaseTracker extends React.Component {
-  props: TrackerProps
-  state: TrackerState
+class BaseTracker extends React.Component<TrackerProps, TrackerState> {
   _startTimer: () => void
   _pauseTimer: () => void
   _stopTimer: () => void
@@ -124,9 +122,12 @@ class BaseTracker extends React.Component {
   }
 }
 
-const Tracker = connect((state: State) => ({ caseSlug: state.caseData.slug }))(
-  BaseTracker
-)
+function mapStateToProps ({ caseData }: State) {
+  return {
+    caseSlug: caseData.slug,
+  }
+}
+const Tracker = connect(mapStateToProps)(BaseTracker)
 export default Tracker
 
 // Specializations
@@ -142,9 +143,10 @@ type OnScreenTrackerState = {
   interval?: number,
 }
 
-export class OnScreenTracker extends React.Component {
-  props: OnScreenTrackerProps
-  state: OnScreenTrackerState
+export class OnScreenTracker extends React.Component<
+  OnScreenTrackerProps,
+  OnScreenTrackerState
+> {
   _isVisible: () => boolean
   _checkVisibility: () => void
   _maybeCheckVisibility: () => void

@@ -87,7 +87,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                   <Button
                     className="pt-minimal"
                     iconName="add"
-                    onClick={() => handleAddQuestionOption(questionIx)}
+                    onClick={_ => handleAddQuestionOption(questionIx)}
                   >
                     Add option
                   </Button>
@@ -95,7 +95,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                   <Button
                     className="pt-minimal"
                     iconName="delete"
-                    onClick={() => handleRemoveQuestion(questionIx)}
+                    onClick={_ => handleRemoveQuestion(questionIx)}
                   >
                     Delete question
                   </Button>
@@ -106,7 +106,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                   if (content) handleAddQuestionOption(questionIx)
                 },
               })}
-              onChange={(e: SyntheticInputEvent) =>
+              onChange={(e: SyntheticInputEvent<*>) =>
                 handleEditQuestionContent(questionIx, e.target.value)}
             />
 
@@ -117,7 +117,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                     value={option}
                     checked={option !== '' && option === correctAnswer}
                     className="pt-fixed"
-                    onChange={(e: SyntheticInputEvent) => {
+                    onChange={(e: SyntheticInputEvent<*>) => {
                       if (e.target.checked) {
                         handleEditQuestionAnswer(questionIx, option)
                       }
@@ -133,7 +133,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                         intent={Intent.DANGER}
                         className="pt-minimal"
                         iconName="delete"
-                        onClick={() =>
+                        onClick={_ =>
                           handleRemoveQuestionOption(questionIx, optionIx)}
                       />
                     }
@@ -149,7 +149,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                         }
                       },
                     })}
-                    onChange={(e: SyntheticInputEvent) =>
+                    onChange={(e: SyntheticInputEvent<*>) =>
                       handleEditQuestionOption(
                         questionIx,
                         optionIx,

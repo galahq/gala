@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { Button, EditableText } from '@blueprintjs/core'
@@ -52,47 +52,48 @@ const Page = (props: Props) => {
             onChange={(value: string) => updatePage(id, { title: value })}
           />
         </h1>
-        {editing &&
+        {editing && (
           <button
             type="button"
             className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
             onClick={deleteElement}
           >
             Delete Page
-          </button>}
+          </button>
+        )}
       </section>
 
       {cards.map((cardId, i) => [
-        props.editing &&
+        props.editing && (
           <CreateCardLink
             pageId={id}
             i={i}
             key={`create-${i}`}
             createCard={createCard}
-          />,
+          />
+        ),
         <section key={cardId}>
           <Card id={cardId} />
           <Edgenotes cardId={cardId} />
         </section>,
       ])}
 
-      {props.editing &&
+      {props.editing && (
         <CreateCardLink
           pageId={id}
           key={`create-last`}
           createCard={createCard}
-        />}
+        />
+      )}
     </article>
   )
 }
 
-class CreateCardLink extends React.Component {
-  props: {
-    pageId: string,
-    i?: number,
-    createCard: typeof createCard,
-  }
-
+class CreateCardLink extends React.Component<{
+  pageId: string,
+  i?: number,
+  createCard: typeof createCard,
+}> {
   handleCreateCard = () => {
     this.props.createCard(this.props.pageId, this.props.i + 1)
   }

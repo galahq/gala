@@ -2,7 +2,7 @@
  * @providesModule Statistics
  * @flow
  */
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { loadStatistics } from 'redux/actions'
@@ -24,16 +24,18 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
 }
 
 type Props =
-  | (OwnProps & { visible: false, statistics: null })
+  | (OwnProps & {
+      visible: false,
+      statistics: null,
+      loadStatistics: string => void,
+    })
   | (OwnProps & {
       visible: true,
       statistics: StatisticsType,
       loadStatistics: string => void,
     })
 
-class Statistics extends React.Component {
-  props: Props
-
+class Statistics extends React.Component<Props> {
   _maybeFetchStatistics = (props: Props) => {
     if (props.visible && !props.statistics) {
       props.loadStatistics(props.uri)
@@ -70,22 +72,16 @@ class Statistics extends React.Component {
     return (
       <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
         <Icon filename="ahoy-uniques" className="c-statistics__icon" />
-        <span className="c-statistics__uniques">
-          {uniques}
-        </span>
+        <span className="c-statistics__uniques">{uniques}</span>
 
         <Icon filename="ahoy-views" className="c-statistics__icon" />
-        <span className="c-statistics__views">
-          {views}
-        </span>
+        <span className="c-statistics__views">{views}</span>
 
         <Icon
           filename="ahoy-duration"
           className="c-statistics__icon c-statistics__icon--less-space"
         />
-        <span className="c-statistics__average-time">
-          {averageTime}
-        </span>
+        <span className="c-statistics__average-time">{averageTime}</span>
       </p>
     )
   }

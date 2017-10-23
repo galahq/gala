@@ -3,11 +3,11 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 
 import { Orchard } from 'shared/orchard'
 
-class SignInForm extends React.Component {
+class SignInForm extends React.Component<{}, { form: ?string }> {
   state = { form: null }
 
   componentDidMount () {

@@ -2,10 +2,11 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
-export class AccessibleAlert extends Component {
+type State = { style: { display: 'none' | 'initial' } }
+export class AccessibleAlert extends React.Component<*, State> {
   state = { style: { display: 'none' }}
 
   componentDidMount () {

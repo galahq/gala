@@ -2,7 +2,7 @@
  * @providesModule CaseElement
  * @flow
  */
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect, Link } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
@@ -19,7 +19,8 @@ import { FormattedMessage } from 'react-intl'
 
 import { deleteElement } from 'redux/actions.js'
 
-import type { State } from 'redux/state'
+import type { ContextRouter } from 'react-router-dom'
+import type { State, Reader } from 'redux/state'
 
 function mapStateToProps (state: State, { match }) {
   const position = parseInt(match.params.position, 10) - 1
@@ -52,7 +53,19 @@ function mapStateToProps (state: State, { match }) {
   }
 }
 
-class CaseElement extends React.Component {
+class CaseElement extends React.Component<{
+  kicker: string,
+  reader: Reader,
+  editing: boolean,
+  next: ?{ position: string, title: string },
+  id: string,
+  url: string,
+  title: string,
+  model: string,
+  position: number,
+  deleteElement: typeof deleteElement,
+  ...ContextRouter,
+}> {
   _scrollToTop: () => void
 
   constructor (props) {
@@ -101,9 +114,11 @@ class CaseElement extends React.Component {
           <DocumentTitle
             title={`${kicker} — ${title} — Michigan Sustainability Cases`}
           >
-            {Child
-              ? <Child id={id} deleteElement={deleteElement} />
-              : redirectToOverview}
+            {Child ? (
+              <Child id={id} deleteElement={deleteElement} />
+            ) : (
+              redirectToOverview
+            )}
           </DocumentTitle>
 
           <Route
@@ -132,16 +147,18 @@ export default connect(mapStateToProps, { deleteElement })(CaseElement)
 type NextProps = ?{ title: string, position: string }
 
 const NextLink = ({ next }: { next: NextProps }) =>
-  next
-    ? <Link className="nextLink" to={`/${next.position}`}>
+  next ? (
+    <Link className="nextLink" to={`/${next.position}`}>
       <FormattedMessage id="case.next" />
       {next.title}
     </Link>
-    : <footer>
+  ) : (
+    <footer>
       <h2>
         <FormattedMessage id="case.end" />
       </h2>
     </footer>
+  )
 
 const ConditionalNextLink = connect(
   (state: State, ownProps: { next: NextProps }) => {

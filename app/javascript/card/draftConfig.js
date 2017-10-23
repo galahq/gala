@@ -102,7 +102,7 @@ function getFindEntityFunction (type) {
     contentBlock.findEntityRanges(character => {
       const entityKey = character.getEntity()
       return (
-        entityKey !== null &&
+        entityKey != null &&
         contentState.getEntity(entityKey).getType() === type
       )
     }, callback)
@@ -152,11 +152,7 @@ export function removeShadowSelection (editorState: EditorState): EditorState {
 }
 
 export function addEntity (
-  {
-    type,
-    mutability,
-    data,
-  }: { type: string, mutability: string, data: Object },
+  { type, mutability, data }: { type: *, mutability: *, data: Object },
   editorState: EditorState,
   selection: SelectionState = editorState.getSelection(),
   contentState: ContentState = editorState.getCurrentContent()
