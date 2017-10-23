@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170921172025) do
+ActiveRecord::Schema.define(version: 20171023182346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,6 +114,8 @@ ActiveRecord::Schema.define(version: 20170921172025) do
     t.float "latitude"
     t.float "longitude"
     t.float "zoom"
+    t.bigint "library_id"
+    t.index ["library_id"], name: "index_cases_on_library_id"
     t.index ["slug"], name: "index_cases_on_slug", unique: true
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
   end
@@ -244,6 +246,17 @@ ActiveRecord::Schema.define(version: 20170921172025) do
     t.datetime "updated_at", null: false
     t.index ["community_id"], name: "index_invitations_on_community_id"
     t.index ["reader_id"], name: "index_invitations_on_reader_id"
+  end
+
+  create_table "libraries", force: :cascade do |t|
+    t.string "slug"
+    t.string "name"
+    t.string "logo_url"
+    t.string "background_color"
+    t.string "foreground_color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_libraries_on_slug", unique: true
   end
 
   create_table "pages", id: :serial, force: :cascade do |t|
