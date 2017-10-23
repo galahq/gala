@@ -10,7 +10,7 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all.includes(:case_elements)
+    @cases = Case.all.includes(:case_elements, :library)
   end
 
   # GET /cases/1
