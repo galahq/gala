@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { map } from 'ramda'
 
 import QuizSelector from './QuizSelector'
@@ -53,9 +53,7 @@ const validated = map((question: Question) => ({
   hasError: questionHasError(question),
 }))
 
-class Deployment extends React.Component {
-  props: Props
-  state: State
+class Deployment extends React.Component<Props, State> {
   toaster: Toaster
 
   _needsPretest = () => {

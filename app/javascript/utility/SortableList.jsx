@@ -57,15 +57,15 @@ type ChildProps<Item> = {
   onChangeItem: Item => void,
 }
 
-const Handle = SortableHandle(() =>
+const Handle = SortableHandle(() => (
   <span
     className="pt-button pt-icon-drag-handle-horizontal pt-fixed"
     style={{ paddingLeft: 7 }}
   />
-)
+))
 
 const Item = SortableElement(
-  ({ item, index, render, onChangeItem, onRemove }: ItemProps<*>) =>
+  ({ item, index, render, onChangeItem, onRemove }: ItemProps<*>) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
       <Handle />
 
@@ -78,12 +78,13 @@ const Item = SortableElement(
         onClick={onRemove}
       />
     </div>
+  )
 )
 
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange }: ContainerProps<*>) =>
+  ({ newItem, items, render, onChange }: ContainerProps<*>) => (
     <div>
-      {items.map((item, i) =>
+      {items.map((item, i) => (
         <Item
           key={i}
           index={i}
@@ -92,17 +93,18 @@ const Container = SortableContainer(
           onChangeItem={item => onChange(update(i, item, items))}
           onRemove={() => onChange(remove(i, 1, items))}
         />
-      )}
+      ))}
       <Button
         intent={Intent.SUCCESS}
         iconName="add"
         text="Add"
-        onClick={() => onChange(append(newItem, items))}
+        onClick={_ => onChange(append(newItem, items))}
       />
     </div>
+  )
 )
 
-const SortableList = (props: Props<*>) =>
+const SortableList = (props: Props<*>) => (
   <Container
     {...props}
     useDragHandle={true}
@@ -111,17 +113,19 @@ const SortableList = (props: Props<*>) =>
     onSortEnd={({ oldIndex, newIndex }) =>
       props.onChange(arrayMove(props.items, oldIndex, newIndex))}
   />
+)
 
 export default SortableList
 
 export function createSortableInput (props: Object = {}) {
-  const SortableInput = ({ item, onChangeItem }: ChildProps<string>) =>
+  const SortableInput = ({ item, onChangeItem }: ChildProps<string>) => (
     <input
       className="pt-input"
       type="text"
       {...props}
       value={item}
-      onChange={(e: SyntheticInputEvent) => onChangeItem(e.target.value)}
+      onChange={(e: SyntheticInputEvent<*>) => onChangeItem(e.target.value)}
     />
+  )
   return SortableInput
 }

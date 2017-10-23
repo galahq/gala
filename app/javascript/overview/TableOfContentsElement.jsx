@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { DragSource, DropTarget } from 'react-dnd'
 import { NavLink, withRouter } from 'react-router-dom'
@@ -23,7 +23,7 @@ function getElementDataFrom (state) {
 }
 
 // eslint-disable-next-line react/prefer-stateless-function
-class TableOfContentsElement extends Component {
+class TableOfContentsElement extends React.Component<*> {
   render () {
     const {
       position,

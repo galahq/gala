@@ -10,6 +10,7 @@ import { EditorState } from 'draft-js'
 import { updateCardContents, openCitation } from 'redux/actions'
 
 import type { State } from 'redux/state'
+import type { Dispatch } from 'redux/actions'
 
 type OwnProps = {
   cardId: string,
@@ -18,15 +19,15 @@ type OwnProps = {
 function mapStateToProps (state: State, ownProps: OwnProps) {
   const editorState =
     state.cardsById[ownProps.cardId].editorState || EditorState.createEmpty()
-  const { href, contents } = editorState
+  const { href, contents } = (editorState
     .getCurrentContent()
     .getEntity(ownProps.openedCitation.key)
-    .getData()
+    .getData(): { href: string, contents: string })
 
   return { editorState, href, contents }
 }
 
-function mapDispatchToProps (dispatch: *, ownProps: OwnProps) {
+function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
   return {
     onChange: (eS: EditorState) =>
       dispatch(updateCardContents(ownProps.cardId, eS)),
@@ -82,8 +83,8 @@ const CitationTooltip = ({
       style={{ ...styles.tooltip, ...positionalStyles }}
       onClick={closeCitation}
     >
-      {editable
-        ? <form>
+      {editable ? (
+        <form>
           <input
             style={styles.field}
             value={contents}
@@ -96,21 +97,20 @@ const CitationTooltip = ({
             placeholder="Resource URL"
             onChange={updateCitation('href')}
           />
-          <button
-            type="button"
-            style={styles.button}
-            onClick={onCloseCitation}
-          >
-              Close
-            </button>
+          <button type="button" style={styles.button} onClick={onCloseCitation}>
+            Close
+          </button>
         </form>
-        : <span>
+      ) : (
+        <span>
           {contents}{' '}
-          {href &&
-          <a href={href} target="_blank" rel="noopener noreferrer">
-                Read&nbsp;more&nbsp;›
-              </a>}
-        </span>}
+          {href && (
+            <a href={href} target="_blank" rel="noopener noreferrer">
+              Read&nbsp;more&nbsp;›
+            </a>
+          )}
+        </span>
+      )}
     </cite>
   )
 }

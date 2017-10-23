@@ -1,5 +1,8 @@
 [ignore]
 .*/node_modules/styled-components/.*
+.*/node_modules/unflowify/test
+.*/node_modules/mapbox-gl
+.*/node_modules/jsonlint-lines-primitives
 
 [include]
 ./node_modules/immutable
@@ -22,3 +25,6 @@ unsafe.enable_getters_and_setters=true
 suppress_type=$FlowIssue
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(2[0-8]\\|1[0-9]\\|[0-9]\\).[0-9]\\)? *\\).*\n
+
+[version]
+0.54.1

@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
@@ -11,19 +11,21 @@ import { acceptKeyboardClick } from 'shared/keyboard'
 // Less is a collapse component that shows a certain amount of its children
 // before fading out and offering a “read more” link. The name is inspired by
 // the unix tool.
-class Less extends Component {
-  static defaultProps = {
-    height: '10em',
-    prompt: 'Read more',
-    startOpen: false,
-    disabled: false,
-  }
-  props: {
+class Less extends React.Component<
+  {
     children: React$Element<*>,
     height: string,
     prompt: string,
     startOpen: boolean,
     disabled: boolean,
+  },
+  { open: boolean }
+> {
+  static defaultProps = {
+    height: '10em',
+    prompt: 'Read more',
+    startOpen: false,
+    disabled: false,
   }
   state = { open: this.props.startOpen }
 

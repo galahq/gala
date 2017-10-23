@@ -7,7 +7,7 @@ import React from 'react'
 
 import { Route } from 'react-router-dom'
 import { Dialog, Button, Tooltip, Position } from '@blueprintjs/core'
-import type { RouteProps } from 'react-router-dom'
+import type { ContextRouter } from 'react-router-dom'
 
 import CaseOverview from 'overview/CaseOverview'
 import { providesQuiz } from './Quiz'
@@ -16,7 +16,7 @@ import Question from './Question'
 import type { Question as QuestionT } from 'redux/state'
 import type { QuizProviderProps } from './Quiz'
 
-type Props = RouteProps & QuizProviderProps
+type Props = ContextRouter & QuizProviderProps
 const PreTest = ({
   answers,
   canSubmit,
@@ -34,7 +34,7 @@ const PreTest = ({
         isOpen={!!match}
         title="Before you get started"
         style={{ top: '10%', width: '100%', maxWidth: 800 }}
-        onClose={() => {
+        onClose={e => {
           history.replace('/')
         }}
       >
@@ -45,14 +45,14 @@ const PreTest = ({
           </p>
 
           <div className="pt-card">
-            {questions.map((q: QuestionT) =>
+            {questions.map((q: QuestionT) => (
               <Question
                 selectedAnswer={answers[q.id]}
                 key={q.id}
                 {...q}
-                onChange={(e: SyntheticInputEvent) => onChange(q.id, e)}
+                onChange={(e: SyntheticInputEvent<*>) => onChange(q.id, e)}
               />
-            )}
+            ))}
           </div>
         </div>
 

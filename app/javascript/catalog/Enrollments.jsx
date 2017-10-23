@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -21,8 +21,7 @@ type Props = {
   intl: any,
   onDeleteEnrollment: $PropertyType<Catalog, 'handleDeleteEnrollment'>,
 }
-class Enrollments extends Component {
-  props: Props
+class Enrollments extends React.Component<Props, { editing: boolean }> {
   state = { editing: false }
 
   handleToggleEditing = () => {

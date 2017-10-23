@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
 import {
@@ -20,8 +20,8 @@ import { acceptKeyboardClick } from 'shared/keyboard'
 
 import type { Reader } from 'redux/state'
 
-class MainMenu extends React.Component {
-  state: Reader = window.reader
+class MainMenu extends React.Component<{}, Reader> {
+  state = window.reader
 
   render () {
     const reader = this.state
@@ -35,7 +35,7 @@ class MainMenu extends React.Component {
               text="Sign out"
               iconName="log-out"
               href="#"
-              onClick={() =>
+              onClick={_ =>
                 Orchard.prune('readers/sign_out').then(
                   () => (window.location = '/')
                 )}
