@@ -10,6 +10,7 @@ import { EditableText } from '@blueprintjs/core'
 
 import { updateCase } from 'redux/actions'
 
+import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
 
 import type { State, CaseDataState, Byline } from 'redux/state'
@@ -103,7 +104,7 @@ export const UnconnectedBillboardTitle = ({
       )}
 
       <cite className="o-bottom-right c-photo-credit">
-        {minimal || (
+        {!minimal && (
           <EditableText
             value={photoCredit}
             disabled={!editing}
@@ -112,6 +113,8 @@ export const UnconnectedBillboardTitle = ({
           />
         )}
       </cite>
+
+      {!minimal && <LibraryLogo library="michigan" />}
     </div>
   )
 }
