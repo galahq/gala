@@ -128,6 +128,7 @@ export type Case = {
   kicker: string,
   latitude: ?number,
   learningObjectives: string[],
+  library: Library,
   longitude: ?number,
   otherAvailableLocales: string[],
   photoCredit: string,
@@ -175,6 +176,13 @@ export type CommentThread = {
   start: number,
 }
 
+export type Community = {
+  id: string | null,
+  name: string,
+  active: boolean,
+  global: boolean,
+}
+
 export type Edgenote = {
   attribution: string,
   audioUrl: string,
@@ -204,33 +212,12 @@ export type Enrollment = {
   caseSlug: string,
 }
 
-export type Community = {
-  id: string | null,
+export type Library = {
+  slug: string,
   name: string,
-  active: boolean,
-  global: boolean,
-}
-
-export type ReplyToThreadNotification = {
-  notifier: {
-    // instance of Reader
-    id: string,
-    name: string,
-    initials: string,
-  },
-  community: {
-    id: string,
-    name: string,
-  },
-  case: {
-    slug: string,
-    kicker: string,
-  },
-  element: {
-    position: number,
-  },
-  cardId: string,
-  commentThreadId: number,
+  logoUrl: string,
+  backgroundColor: string,
+  foregroundColor: string,
 }
 
 export type Notification = {
@@ -291,6 +278,28 @@ export type Reader = {
     editor: boolean,
     invisible: boolean,
   },
+}
+
+export type ReplyToThreadNotification = {
+  notifier: {
+    // instance of Reader
+    id: string,
+    name: string,
+    initials: string,
+  },
+  community: {
+    id: string,
+    name: string,
+  },
+  case: {
+    slug: string,
+    kicker: string,
+  },
+  element: {
+    position: number,
+  },
+  cardId: string,
+  commentThreadId: number,
 }
 
 export type Statistics = ({ loaded: true } & StatisticsData) | { loaded: false }
