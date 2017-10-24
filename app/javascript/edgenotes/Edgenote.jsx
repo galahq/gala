@@ -4,6 +4,7 @@
  */
 
 import * as React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 import ImageZoom from 'react-medium-image-zoom'
 import YoutubePlayer from 'react-youtube-player'
@@ -19,7 +20,7 @@ import {
   updateEdgenote,
 } from 'redux/actions'
 
-import type { State } from 'redux/state'
+import type { State, Edgenote } from 'redux/state'
 
 type OwnProps = { slug: string }
 function mapStateToProps (state: State, { slug }: OwnProps) {
@@ -51,11 +52,22 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
   }
 }
 
-class EdgenoteFigure extends React.Component<*> {
+class EdgenoteFigure extends React.Component<{
+  contents: ?Edgenote,
+  selected: boolean,
+  active: boolean,
+  editing: boolean,
+  activate: () => Promise<any>,
+  deactivate: () => Promise<any>,
+  onMouseOver: () => Promise<any>,
+  onMouseOut: () => Promise<any>,
+  onChange: string => any => Promise<any>,
+}> {
   componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {
-      if (this.props.contents.callToAction && this.props.contents.websiteUrl) {
-        window.open(this.props.contents.websiteUrl, '_blank')
+      const { contents } = this.props
+      if (contents && contents.callToAction && contents.websiteUrl) {
+        window.open(contents.websiteUrl, '_blank')
         setTimeout(() => {
           this.props.deactivate()
         }, 300)
@@ -87,6 +99,8 @@ class EdgenoteFigure extends React.Component<*> {
       websiteUrl,
       audioUrl,
       attribution,
+      altText,
+      photoCredit,
     } = contents
 
     const isALink = !youtubeSlug && !audioUrl && !!callToAction && !editing
@@ -153,9 +167,11 @@ class EdgenoteFigure extends React.Component<*> {
             !!audioUrl || (
               <Image
                 src={imageUrl}
+                alt={altText}
+                photoCredit={photoCredit}
                 callToAction={callToAction}
                 {...reduxProps}
-                onChange={onChange('imageUrl')}
+                onChange={onChange}
               />
             )}
 
@@ -190,11 +206,9 @@ class EdgenoteFigure extends React.Component<*> {
   }
 }
 
-export const Edgenote = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  mergeProps
-)(EdgenoteFigure)
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  EdgenoteFigure
+)
 
 const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) => (
   <div>
@@ -220,6 +234,8 @@ const YouTube = ({ slug, active, activate, deactivate, editing, onChange }) => (
 
 const Image = ({
   src,
+  alt,
+  photoCredit,
   callToAction,
   active,
   activate,
@@ -230,9 +246,10 @@ const Image = ({
   let imageProps = {
     style: { width: '100%', minHeight: '3em', display: 'block' },
     src: `${src}?w=640`,
+    alt,
   }
   let imageComponent = callToAction ? (
-    <img {...imageProps} />
+    <img alt={alt} {...imageProps} />
   ) : (
     <ImageZoom
       isZoomed={active}
@@ -246,13 +263,32 @@ const Image = ({
 
   return (
     <div>
+      {src &&
+        (editing || photoCredit) && (
+          <PhotoCredit>
+            <EditableText
+              value={photoCredit}
+              disabled={!editing}
+              placeholder={editing ? 'Photo credit' : ''}
+              onChange={onChange('photoCredit')}
+            />
+          </PhotoCredit>
+        )}
       {src && imageComponent}
       <EditableAttribute
         disabled={!editing}
         title="image url"
         value={src}
-        onChange={onChange}
+        onChange={onChange('imageUrl')}
       />
+      {src && (
+        <EditableAttribute
+          disabled={!editing}
+          title="alt text"
+          value={alt}
+          onChange={onChange('altText')}
+        />
+      )}
     </div>
   )
 }
@@ -388,3 +424,14 @@ const backgroundedStyle = {
 }
 
 const lightGreen = '#6ACB72'
+
+const PhotoCredit = styled.cite`
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+  color: rgba(235, 234, 228, 0.5);
+  font: normal 500 10px 'tenso';
+  display: block;
+  min-width: 100%;
+  text-align: right;
+  margin: 2px -3px;
+`

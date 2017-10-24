@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171023182346) do
+ActiveRecord::Schema.define(version: 20171024180715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(version: 20171023182346) do
     t.jsonb "call_to_action", default: ""
     t.jsonb "audio_url", default: ""
     t.jsonb "youtube_slug", default: ""
+    t.string "alt_text"
     t.index ["card_id"], name: "index_edgenotes_on_card_id"
     t.index ["case_id"], name: "index_edgenotes_on_case_id"
     t.index ["slug"], name: "index_edgenotes_on_slug", unique: true
