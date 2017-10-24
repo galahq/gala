@@ -9,7 +9,7 @@ import { values } from 'ramda'
 
 import { convertToRaw } from 'draft-js'
 import OldEdgenote from 'deprecated/OldEdgenote'
-import { Edgenote } from 'edgenotes/Edgenote'
+import Edgenote from 'edgenotes/Edgenote'
 
 import { EditorState } from 'draft-js'
 import type { State } from 'redux/state'
