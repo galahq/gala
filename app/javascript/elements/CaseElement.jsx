@@ -112,7 +112,9 @@ class CaseElement extends React.Component<{
         <Sidebar />
         <main id="top" className={`s-CaseElement__${model}`}>
           <DocumentTitle
-            title={`${kicker} — ${title} — Michigan Sustainability Cases`}
+            title={`${kicker} — ${title} — ${process.env['FLAG_OLD_LOGO']
+              ? 'Michigan Sustainability Cases'
+              : 'Gala'}`}
           >
             {Child ? (
               <Child id={id} deleteElement={deleteElement} />
