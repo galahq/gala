@@ -123,7 +123,10 @@ class EdgenoteFigure extends React.Component<{
     return (
       <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
         <Statistics inline uri={`edgenotes/${slug}`} />
-        <ConditionalLink onClick={active ? () => {} : activate}>
+        <ConditionalLink
+          tabIndex={isALink ? '0' : false}
+          onClick={active ? () => {} : activate}
+        >
           {!!pullQuote ||
             !!imageUrl ||
             !!audioUrl || (
