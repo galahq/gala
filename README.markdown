@@ -1,6 +1,6 @@
 # Gala
 
-Gala is the students’ interface for learning from Michigan Sustainability Cases.
+Gala is a platform for the collaborative study of media-rich teaching cases.
 
 ## Install
 
