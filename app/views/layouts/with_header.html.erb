@@ -1,6 +1,12 @@
 <header>
-  <%= link_to root_path, id: "logo" do %>
-    <%= inline_svg 'msc-logo.svg' %>
+  <% if ENV['FLAG_OLD_LOGO'] %>
+    <%= link_to root_path, id: "msc-logo" do %>
+      <%= inline_svg 'msc-logo.svg' %>
+    <% end %>
+  <% else %>
+    <%= link_to root_path, id: "gala-logo" do %>
+      <%= inline_svg 'gala-logo.svg' %>
+    <% end %>
   <% end %>
   <div id="main-menu-app" class="pt-dark"></div>
   <%= javascript_tag do %>

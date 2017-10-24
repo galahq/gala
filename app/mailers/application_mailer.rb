@@ -4,7 +4,7 @@ class ApplicationMailer < ActionMailer::Base
   helper :application
 
   FROM_ADDRESS = 'hello@learnmsc.org'
-  default from: "Michigan Sustainability Cases <#{FROM_ADDRESS}>"
+  default from: "#{ENV['FLAG_OLD_LOGO'] ? 'Michigan Sustainability Cases' : 'Gala'}<#{FROM_ADDRESS}>"
 
   layout 'mailer'
 end

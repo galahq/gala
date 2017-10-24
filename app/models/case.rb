@@ -14,6 +14,8 @@ class Case < ApplicationRecord
 
   resourcify
 
+  belongs_to :library
+
   has_many :activities, dependent: :destroy
   has_many :cards
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy
