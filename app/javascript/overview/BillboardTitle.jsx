@@ -10,9 +10,10 @@ import { EditableText } from '@blueprintjs/core'
 
 import { updateCase } from 'redux/actions'
 
+import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
 
-import type { State, CaseDataState, Byline } from 'redux/state'
+import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
@@ -24,6 +25,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     translators,
     translatorsString,
     coverUrl,
+    library,
   } = caseData
 
   return {
@@ -35,6 +37,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     translators,
     authorsString,
     translatorsString,
+    library,
     editing: edit.inProgress,
   }
 }
@@ -47,6 +50,7 @@ type Props = {
   coverUrl: string,
   updateCase: ($Shape<CaseDataState>) => void,
   minimal: boolean,
+  library: Library,
 } & Byline
 
 export const UnconnectedBillboardTitle = ({
@@ -61,6 +65,7 @@ export const UnconnectedBillboardTitle = ({
   coverUrl,
   updateCase,
   minimal,
+  library,
 }: Props) => {
   const background = {
     backgroundImage: `
@@ -103,7 +108,7 @@ export const UnconnectedBillboardTitle = ({
       )}
 
       <cite className="o-bottom-right c-photo-credit">
-        {minimal || (
+        {!minimal && (
           <EditableText
             value={photoCredit}
             disabled={!editing}
@@ -112,6 +117,9 @@ export const UnconnectedBillboardTitle = ({
           />
         )}
       </cite>
+
+      {!minimal &&
+        !process.env['FLAG_OLD_LOGO'] && <LibraryLogo library={library} />}
     </div>
   )
 }
