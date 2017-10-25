@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   scope '(:locale)', locale: locale_regex do
     resources :comment_threads, only: %i[show destroy] do
-      resources :comments, shallow: true
+      resources :comments, shallow: true, only: %i[create update destroy]
     end
     resources :cases, except: %i[create edit], param: :slug do
       resources :case_elements, shallow: true, only: %i[update]
