@@ -6,7 +6,21 @@ import type { EditorState } from 'draft-js'
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
 // Redux state
-export type { State } from 'redux/reducers'
+export type State = {
+  caseData: CaseDataState,
+  edgenotesBySlug: EdgenotesState,
+  pagesById: PagesState,
+  podcastsById: PodcastsState,
+  activitiesById: ActivitiesState,
+  cardsById: CardsState,
+  commentThreadsById: CommentThreadsState,
+  commentsById: CommentsState,
+  communities: CommunitiesState[],
+  statistics: StatisticsState,
+  quiz: QuizState,
+  edit: EditState,
+  ui: UIState,
+}
 
 export type ActivitiesState = {
   [activityId: string]: Activity,
@@ -25,6 +39,8 @@ export type CommentThreadsState = {
 export type CommentsState = {
   [commentId: string]: Comment,
 }
+
+export type CommunitiesState = Community[]
 
 export type EdgenotesState = {
   [edgenoteSlug: string]: Edgenote,
