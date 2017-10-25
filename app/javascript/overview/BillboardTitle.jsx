@@ -24,6 +24,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     authorsString,
     translators,
     translatorsString,
+    acknowledgements,
     coverUrl,
     library,
   } = caseData
@@ -37,6 +38,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     translators,
     authorsString,
     translatorsString,
+    acknowledgements,
     library,
     editing: edit.inProgress,
   }
@@ -62,6 +64,7 @@ export const UnconnectedBillboardTitle = ({
   translators,
   authorsString,
   translatorsString,
+  acknowledgements,
   coverUrl,
   updateCase,
   minimal,
@@ -102,6 +105,7 @@ export const UnconnectedBillboardTitle = ({
             translators,
             authorsString,
             translatorsString,
+            acknowledgements,
           }}
           onChange={(value: Byline) => updateCase(value)}
         />

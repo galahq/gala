@@ -86,7 +86,7 @@ class CasesController < ApplicationController
     params.require(:case).permit(
       :published, :featured, :kicker, :title, :dek, :slug, :photo_credit,
       :summary, :tags, :cover_url, :latitude, :longitude, :zoom,
-      authors: [], translators: [], learning_objectives: []
+      :acknowledgements, authors: [], translators: [], learning_objectives: []
     )
   end
 end
