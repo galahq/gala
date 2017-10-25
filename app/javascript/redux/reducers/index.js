@@ -38,6 +38,3 @@ const state = {
 const reducer = combineReducers(state)
 
 export default reducer
-
-type ExtractReturnType = <V>((...*) => V) => V
-export type State = $ObjMap<typeof state, ExtractReturnType>

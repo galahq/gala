@@ -61,6 +61,7 @@ export type Action =
   | HoverCommentThreadAction
   | ChangeCommentInProgressAction
   | AddCommentAction
+  | RemoveCommentAction
   | CreateEdgenoteAction
   | UpdateEdgenoteAction
   | HighlightEdgenoteAction
@@ -726,9 +727,9 @@ function removeCommentThread (
 
 export type HoverCommentThreadAction = {
   type: 'HOVER_COMMENT_THREAD',
-  id: string,
+  id: ?string,
 }
-export function hoverCommentThread (id: string): HoverCommentThreadAction {
+export function hoverCommentThread (id: ?string): HoverCommentThreadAction {
   return { type: 'HOVER_COMMENT_THREAD', id }
 }
 
@@ -777,6 +778,30 @@ export function createComment (threadId: string, content: string): ThunkAction {
           })
         )
       })
+  }
+}
+
+export type RemoveCommentAction = {
+  type: 'REMOVE_COMMENT',
+  id: string,
+  threadId: string,
+}
+function removeComment (id: string, threadId: string): RemoveCommentAction {
+  return { type: 'REMOVE_COMMENT', id, threadId }
+}
+
+export function deleteComment (id: string): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    if (
+      window.confirm(
+        'Are you sure you want to delete this comment? This action cannot be undone.'
+      )
+    ) {
+      const threadId = `${getState().commentsById[id].commentThreadId}`
+      Orchard.prune(`comments/${id}`).then(() => {
+        dispatch(removeComment(id, threadId))
+      })
+    }
   }
 }
 

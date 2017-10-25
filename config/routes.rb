@@ -11,8 +11,8 @@ Rails.application.routes.draw do
   get '/read/497/(*x)', to: redirect('/cases/mi-wolves')
 
   scope '(:locale)', locale: locale_regex do
-    resources :comment_threads, only: %i[show] do
-      resources :comments, shallow: true
+    resources :comment_threads, only: %i[show destroy] do
+      resources :comments, shallow: true, only: %i[create update destroy]
     end
     resources :cases, except: %i[create edit], param: :slug do
       resources :case_elements, shallow: true, only: %i[update]

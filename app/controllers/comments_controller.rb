@@ -1,21 +1,9 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
-  before_action :authenticate_reader!, only: %i[create update destroy]
+  before_action :authenticate_reader!
   before_action :set_comment, only: %i[show update destroy]
   before_action :set_comment_thread, only: [:create]
-
-  # GET /comments
-  def index
-    @comments = Comment.all
-
-    render json: @comments
-  end
-
-  # GET /comments/1
-  def show
-    render partial: @comment
-  end
 
   # POST /comments
   def create

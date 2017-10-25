@@ -3,17 +3,21 @@
  * @flow
  */
 
+import { without } from 'ramda'
+
 import type { CommentThreadsState } from 'redux/state'
 import type {
   SetCommentThreadsByIdAction,
   AddCommentThreadAction,
   RemoveCommentThreadAction,
+  RemoveCommentAction,
 } from 'redux/actions'
 
 type Action =
   | SetCommentThreadsByIdAction
   | AddCommentThreadAction
   | RemoveCommentThreadAction
+  | RemoveCommentAction
 
 export default function commentThreadsById (
   state: CommentThreadsState = ({
@@ -35,6 +39,15 @@ export default function commentThreadsById (
       return {
         ...state,
         [action.threadId]: undefined,
+      }
+
+    case 'REMOVE_COMMENT':
+      return {
+        ...state,
+        [action.threadId]: {
+          ...state[action.threadId],
+          commentIds: without([action.id], state[action.threadId].commentIds),
+        },
       }
 
     default:

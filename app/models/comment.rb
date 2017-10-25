@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Comment < ApplicationRecord
+  include Authority::Abilities
+  
   belongs_to :reader
   belongs_to :comment_thread, counter_cache: true, touch: true
 
