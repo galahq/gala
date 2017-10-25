@@ -1,7 +1,12 @@
+/**
+ * @providesModule EdgenoteEntity
+ * @flow
+ */
 import React from 'react' // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
 import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
+import { acceptKeyboardClick } from 'shared/keyboard'
 
 import { highlightEdgenote, activateEdgenote } from 'redux/actions'
 
@@ -52,10 +57,12 @@ const EdgenoteSpan = ({
 }) => {
   return (
     <a
+      tabIndex="0"
       className={`c-edgenote-entity${commentThreadsOpen ? '--inactive' : ''}`}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
       onClick={editing ? () => {} : onClick}
+      onKeyPress={acceptKeyboardClick}
     >
       {children.map(child =>
         React.cloneElement(child, { forceSelection: true, location })
