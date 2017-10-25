@@ -42,9 +42,9 @@ class AuthorsList extends React.Component<
 
     return (
       <div
-        tabIndex="0"
-        role="button"
-        style={{ cursor: canEdit ? 'pointer' : 'auto' }}
+        tabIndex={canEdit ? '0' : null}
+        role={canEdit ? 'button' : null}
+        style={{ cursor: canEdit ? 'pointer' : null }}
         onKeyPress={acceptKeyboardClick}
         onClick={this.handleStartEditing}
       >
