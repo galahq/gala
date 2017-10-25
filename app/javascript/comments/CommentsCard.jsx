@@ -16,14 +16,20 @@ import { styles } from 'card/draftConfig'
 import { Link, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
 
+import Comment from 'comments/Comment'
 import Icon from 'utility/Icon'
 
-import type { State, Reader } from 'redux/state'
+import type { ContextRouter } from 'react-router-dom'
+import type { State } from 'redux/state'
+import type { Dispatch } from 'redux/actions'
 
-type OwnProps = { match: { params: { commentThreadId: string } } }
+type OwnProps = {
+  ...ContextRouter,
+  match: { params: { commentThreadId: string } },
+}
 function mapStateToProps (
   { commentThreadsById, commentsById, ui, caseData }: State,
-  { match }: OwnProps
+  { location, match }: OwnProps
 ) {
   const threadId = match.params.commentThreadId
   const thread = commentThreadsById[threadId]
@@ -33,15 +39,17 @@ function mapStateToProps (
     commentInProgress: ui.commentInProgress[threadId] || '',
     userName: caseData.reader ? caseData.reader.name : '',
     threadDetached: thread.start == null || thread.blockIndex == null,
+    readerIsModerator: caseData.reader && caseData.reader.canUpdateCase,
+    location,
     threadId,
   }
 }
 
 function mapDispatchToProps (dispatch: Dispatch) {
   return {
-    handleChange: threadId => e =>
+    handleChange: (threadId: string) => (e: SyntheticInputEvent<*>) =>
       dispatch(changeCommentInProgress(threadId, e.target.value)),
-    handleSubmit: (threadId, comment) => () =>
+    handleSubmit: (threadId: string, comment: string) => () =>
       dispatch(createComment(threadId, comment)),
   }
 }
@@ -54,6 +62,7 @@ const CommentsCard = ({
   userName,
   originalHighlightText,
   threadDetached,
+  readerIsModerator,
   handleChange,
   handleSubmit,
   location,
@@ -101,7 +110,7 @@ const CommentsCard = ({
             defaultMessage: 'Write a reply...',
           })}
           value={commentInProgress}
-          onKeyDown={e => {
+          onKeyDown={(e: SyntheticKeyboardEvent<*>) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
               handleSubmit(threadId, commentInProgress)()
@@ -123,15 +132,6 @@ const CommentsCard = ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   injectIntl(CommentsCard)
-)
-
-type CommentProps = { reader: Reader, timestamp: string, content: string }
-const Comment = ({ reader, timestamp, content }: CommentProps) => (
-  <div className="Comment">
-    <cite>{reader.name}</cite>
-    <i>{timestamp}</i>
-    <blockquote>{content}</blockquote>
-  </div>
 )
 
 const Callout = styled.div.attrs({ className: 'pt-callout pt-icon-error' })`
