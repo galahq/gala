@@ -23,14 +23,18 @@ type Props = {
   displayToast: Toast => void,
   onFinishEditing: (?AuthorsListFormState) => void,
 }
-export type AuthorsListFormState = { authors: string[], translators: string[] }
+export type AuthorsListFormState = {
+  authors: string[],
+  translators: string[],
+  acknowledgements: string,
+}
 
 class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
   constructor (props: Props) {
     super(props)
 
-    const { authors, translators } = props.byline
-    this.state = { authors, translators }
+    const { authors, translators, acknowledgements } = props.byline
+    this.state = { authors, translators, acknowledgements }
   }
 
   handleChangeAuthors = (authors: string[]) => {
@@ -39,6 +43,10 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
 
   handleChangeTranslators = (translators: string[]) => {
     this.setState({ translators })
+  }
+
+  handleChangeAcknowledgements = (e: SyntheticInputEvent<*>) => {
+    this.setState({ acknowledgements: e.currentTarget.value })
   }
 
   handleCancel = () => {
@@ -58,7 +66,7 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
 
   render () {
     const { editing } = this.props
-    const { authors, translators } = this.state
+    const { authors, translators, acknowledgements } = this.state
     return (
       <Dialog
         isOpen={editing}
@@ -85,6 +93,12 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
             newItem=""
             render={TranslatorInput}
             onChange={this.handleChangeTranslators}
+          />
+          <SectionTitle>Acknowledgements</SectionTitle>
+          <textarea
+            className="pt-input pt-fill"
+            value={acknowledgements}
+            onChange={this.handleChangeAcknowledgements}
           />
         </div>
         <div className="pt-dialog-footer">

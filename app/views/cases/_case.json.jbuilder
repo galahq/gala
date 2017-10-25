@@ -3,8 +3,8 @@
 json.key_format! camelize: :lower
 
 json.extract! c, :slug, :published_at, :kicker, :title, :dek, :authors,
-              :translators, :tags, :photo_credit, :latitude, :longitude, :zoom,
-              :featured_at
+              :translators, :acknowledgements, :tags, :photo_credit, :latitude,
+              :longitude, :zoom, :featured_at
 
 json.authors_string c.authors.to_sentence
 json.translators_string translators_string c
