@@ -105,6 +105,7 @@ export type Byline = {
   authorsString: string,
   translators: string[],
   translatorsString: string,
+  acknowledgements: string,
 }
 
 export type Card = {
@@ -118,6 +119,7 @@ export type Card = {
 }
 
 export type Case = {
+  acknowledgements: string,
   audience: string,
   baseCoverUrl: string,
   caseElements: CaseElement[],
