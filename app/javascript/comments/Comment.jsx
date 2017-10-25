@@ -43,6 +43,7 @@ export default connect(
 
 const DeleteCommentButton = styled.button.attrs({
   className: 'pt-button pt-minimal pt-small pt-icon-trash pt-intent-danger',
+  'aria-label': 'Delete comment',
 })`
   position: absolute;
   top: calc(50% - 12px);
@@ -50,6 +51,7 @@ const DeleteCommentButton = styled.button.attrs({
 
   transition: opacity ease-out 0.3s;
   opacity: 0;
+  z-index: 999;
 
   .Comment:hover & {
     opacity: 1;
