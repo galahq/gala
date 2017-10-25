@@ -185,6 +185,7 @@ export type Community = {
 
 export type Edgenote = {
   attribution: string,
+  altText: string,
   audioUrl: string,
   averageTime: string,
   callToAction: string,
