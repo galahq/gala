@@ -13,8 +13,6 @@ import { hoverCommentThread, deleteCommentThread } from 'redux/actions'
 import { Link, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 
-import Icon from 'utility/Icon'
-
 import type { Location, RouterHistory, Match } from 'react-router-dom'
 import type { Dispatch } from 'redux/actions'
 import type { State, Comment } from 'redux/state'
@@ -217,6 +215,7 @@ const styles = {
 }
 
 const DeleteThreadButton = styled.button.attrs({
+  'aria-label': 'Delete comment thread',
   className: 'pt-button pt-minimal pt-small pt-icon-trash pt-intent-danger',
 })`
   position: absolute;
