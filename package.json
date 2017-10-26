@@ -1,7 +1,8 @@
 {
   "name": "gala",
   "version": "1.0.0",
-  "description": "Learning system for Michigan Sustainability Cases",
+  "description":
+    "A platform for the collaborative study of media-rich teaching cases",
   "main": "app/application.js",
   "repository": {
     "type": "git",
