@@ -270,6 +270,7 @@ const Image = ({
         (editing || photoCredit) && (
           <PhotoCredit>
             <EditableText
+              multiline
               value={photoCredit}
               disabled={!editing}
               placeholder={editing ? 'Photo credit' : ''}
