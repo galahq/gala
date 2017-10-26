@@ -108,11 +108,7 @@ class Case extends React.Component<{
   render () {
     const { kicker, basename, needsPretest, hasQuiz } = this.props
     return (
-      <DocumentTitle
-        title={`${kicker} — ${process.env['FLAG_OLD_LOGO']
-          ? 'Michigan Sustainability Cases'
-          : 'Gala'}`}
-      >
+      <DocumentTitle title={`${kicker} — Gala`}>
         <Router basename={basename}>
           <div id="Case">
             <StatusBar />
