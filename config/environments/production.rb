@@ -37,8 +37,8 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
-  config.action_cable.url = 'wss://www.learnmsc.org/cable'
-  config.action_cable.allowed_request_origins = ['http://www.learnmsc.org', 'https://www.learnmsc.org']
+  config.action_cable.url = 'wss://www.learngala.com/cable'
+  config.action_cable.allowed_request_origins = ['http://www.learngala.com', 'https://www.learngala.com']
 
   # Don't mount Action Cable in the main server process.
   # config.action_cable.mount_path = nil
@@ -73,7 +73,7 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { host: 'www.learnmsc.org' }
+  config.action_mailer.default_url_options = { host: 'www.learngala.com' }
   config.action_mailer.smtp_settings = {
     address: 'email-smtp.us-west-2.amazonaws.com',
     port: 587,
