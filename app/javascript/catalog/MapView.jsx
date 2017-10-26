@@ -14,19 +14,26 @@ import { Button, Intent } from '@blueprintjs/core'
 import { SectionTitle } from 'catalog/shared'
 import Pin from 'catalog/Pin'
 
+import type { IntlShape } from 'react-intl'
 import type { Case, Viewport } from 'redux/state'
 
-type OwnProps = {
-  cases: { [string]: Case },
+type Props = {
+  cases: Case[],
   editing?: boolean,
   height?: number,
-  intl: any,
+  intl: IntlShape,
   startingViewport: Viewport,
   title: { id: string, defaultMessage: string },
   onChangeViewport?: Viewport => any,
 }
+type State = {
+  hasError: boolean,
+  viewport: Viewport,
+  acceptingScroll: boolean,
+  openPin: string,
+}
 
-class MapViewController extends React.Component<OwnProps, *> {
+class MapViewController extends React.Component<Props, State> {
   state = {
     hasError: false,
     viewport: this.props.startingViewport,
