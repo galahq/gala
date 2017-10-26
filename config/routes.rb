@@ -79,6 +79,8 @@ Rails.application.routes.draw do
       resources :groups
       resources :enrollments, only: %i[destroy]
     end
+
+    resources :search, only: %i[index]
   end
 
   namespace 'authentication_strategies' do
