@@ -18,18 +18,27 @@ import CaseList from 'catalog/CaseList'
 import { MaxWidthContainer } from 'utility/styledComponents'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
+import type { IntlShape } from 'react-intl'
 import type { Case, Enrollment, Reader } from 'redux/state'
 
 export type Loading = { reader: boolean, cases: boolean }
 
-class Catalog extends React.Component<{ intl: any }, *> {
+class Catalog extends React.Component<
+  { intl: IntlShape },
+  {
+    loading: { [string]: boolean },
+    reader: ?Reader,
+    cases: { [string]: Case },
+    enrollments: Enrollment[],
+    features: string[],
+  }
+> {
   state = {
     loading: { reader: true, cases: true },
-
-    reader: (null: ?Reader),
-    cases: ({}: { [string]: Case }),
-    enrollments: ([]: Enrollment[]),
-    features: ([]: string[]),
+    reader: null,
+    cases: {},
+    enrollments: [],
+    features: [],
   }
 
   handleDeleteEnrollment = (
