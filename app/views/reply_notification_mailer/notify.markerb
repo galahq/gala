@@ -8,7 +8,7 @@
 
 <% email_footer <<-FOOTER
 You are receiving this email because someone replied to a comment you made on a
-Michigan Sustainability Case you’re studying. If you do not want to receive
+teaching case you’re studying on Gala. If you do not want to receive
 emails like this, you can [change your notification settings](#{
   edit_profile_url @notification.reader.locale
 }).

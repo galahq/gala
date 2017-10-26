@@ -12,7 +12,7 @@ class EnrollmentMailer < ApplicationMailer
 
     mail(to: enrollment.reader.name_and_email,
          subject: 'You’ve been enrolled in a new ' \
-                  'Michigan Sustainability Case') do |format|
+                  'teaching case on Gala') do |format|
       format.text
       format.html
     end
