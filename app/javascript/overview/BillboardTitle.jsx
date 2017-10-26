@@ -122,8 +122,7 @@ export const UnconnectedBillboardTitle = ({
         )}
       </cite>
 
-      {!minimal &&
-        !process.env['FLAG_OLD_LOGO'] && <LibraryLogo library={library} />}
+      {!minimal && <LibraryLogo library={library} />}
     </div>
   )
 }
