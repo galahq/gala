@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171025205053) do
+ActiveRecord::Schema.define(version: 20171030185254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -252,12 +252,14 @@ ActiveRecord::Schema.define(version: 20171025205053) do
 
   create_table "libraries", force: :cascade do |t|
     t.string "slug"
-    t.string "name"
     t.string "logo_url"
     t.string "background_color"
     t.string "foreground_color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "description"
+    t.jsonb "url"
+    t.jsonb "name"
     t.index ["slug"], name: "index_libraries_on_slug", unique: true
   end
 
