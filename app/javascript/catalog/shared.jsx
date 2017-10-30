@@ -5,6 +5,15 @@
 import React from 'react' // eslint-disable-line no-unused-vars
 import styled from 'styled-components'
 
+export const Main = styled.main`
+  flex: 1;
+  margin: 0 0.5em;
+  max-width: calc(100% - 20em);
+  @media (max-width: 700px) {
+    max-width: 100%;
+  }
+`
+
 export const SectionTitle = styled.h2`
   font-family: 'tenso';
   font-size: 14px;
@@ -12,10 +21,13 @@ export const SectionTitle = styled.h2`
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #ebeae4;
-  margin: 2px 0 12px;
+  margin: 0px 0 10px;
+  line-height: 1.2;
 `
 
 export const CatalogSection = styled.section`
+  position: relative;
+  overflow: hidden;
   padding: 10px;
 
   ${({ solid }) =>
