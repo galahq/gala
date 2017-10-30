@@ -81,6 +81,7 @@ Rails.application.routes.draw do
     end
 
     resources :search, only: %i[index]
+    resources :libraries, param: :slug, only: %i[show]
   end
 
   namespace 'authentication_strategies' do
