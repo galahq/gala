@@ -234,6 +234,8 @@ export type Enrollment = {
 export type Library = {
   slug: string,
   name: string,
+  description: string,
+  url: string,
   logoUrl: string,
   backgroundColor: string,
   foregroundColor: string,

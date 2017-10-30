@@ -5,16 +5,20 @@
 
 import React from 'react'
 
+import { withRouter } from 'react-router-dom'
+
 import Toolbar from 'utility/Toolbar'
 
-const CatalogToolbar = () => (
+import type { ContextRouter } from 'react-router-dom'
+
+const CatalogToolbar = ({ history }: ContextRouter) => (
   <Toolbar
     groups={[
       [
         {
           message: 'catalog',
           iconName: 'home',
-          onClick: () => (window.location = '/'),
+          onClick: () => history.push('/'),
         },
         {
           message: 'catalog.proposeACase',
@@ -29,4 +33,4 @@ const CatalogToolbar = () => (
   />
 )
 
-export default CatalogToolbar
+export default withRouter(CatalogToolbar)
