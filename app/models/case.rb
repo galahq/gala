@@ -32,6 +32,12 @@ class Case < ApplicationRecord
   has_many :quizzes, dependent: :destroy
 
   scope :published, -> { where.not(published_on: nil) }
+  scope :ordered,
+        -> do
+          order(<<~SQL)
+            featured_at DESC NULLS LAST, published_at DESC NULLS LAST
+          SQL
+        end
 
   validates :slug, presence: true, uniqueness: true
   validates_format_of :slug, with: /\A[a-z0-9-]+\Z/

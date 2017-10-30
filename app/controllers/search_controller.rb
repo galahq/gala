@@ -4,6 +4,7 @@ class SearchController < ApplicationController
   def index
     @cases = Case.all
                  .merge(libraries_query)
+                 .ordered
                  .pluck(:slug)
     render json: @cases
   end
