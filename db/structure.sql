@@ -1210,6 +1210,30 @@ ALTER TABLE ONLY visits ALTER COLUMN id SET DEFAULT nextval('visits_id_seq'::reg
 
 
 --
+-- Name: cases cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cases
+    ADD CONSTRAINT cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cases_search_index_en; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW cases_search_index_en AS
+ SELECT cases.id,
+    ((((((((((setweight(to_tsvector(COALESCE((cases.kicker ->> 'en'::text), ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE((cases.title ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.dek ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.summary ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.learning_objectives ->> 'en'::text), ''::text)), 'B'::"char")) || to_tsvector('simple'::regconfig, (cases.authors)::text)) || setweight(to_tsvector(COALESCE(string_agg((pages.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((podcasts.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((activities.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg((podcasts.credits ->> 'en'::text), ' '::text), ''::text))) || to_tsvector(COALESCE(string_agg(((cards.raw_content -> 'en'::text) ->> 'blocks'::text), ' '::text), ''::text))) AS document
+   FROM ((((cases
+     LEFT JOIN pages ON ((pages.case_id = cases.id)))
+     LEFT JOIN podcasts ON ((podcasts.case_id = cases.id)))
+     LEFT JOIN activities ON ((activities.case_id = cases.id)))
+     LEFT JOIN cards ON ((cards.case_id = pages.id)))
+  GROUP BY cases.id
+  WITH NO DATA;
+
+
+--
 -- Name: activities activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1263,14 +1287,6 @@ ALTER TABLE ONLY cards
 
 ALTER TABLE ONLY case_elements
     ADD CONSTRAINT case_elements_pkey PRIMARY KEY (id);
-
-
---
--- Name: cases cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY cases
-    ADD CONSTRAINT cases_pkey PRIMARY KEY (id);
 
 
 --
@@ -1536,6 +1552,13 @@ CREATE INDEX index_case_elements_on_case_id ON case_elements USING btree (case_i
 --
 
 CREATE INDEX index_case_elements_on_element_type_and_element_id ON case_elements USING btree (element_type, element_id);
+
+
+--
+-- Name: index_cases_on_english_full_text; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_on_english_full_text ON cases_search_index_en USING gin (document);
 
 
 --
@@ -2172,6 +2195,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171023182346'),
 ('20171024180715'),
 ('20171025205053'),
-('20171030185254');
+('20171030185254'),
+('20171031161433');
 
 
