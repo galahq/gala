@@ -4,7 +4,7 @@ class SearchController < ApplicationController
   def index
     @cases = Case.all
                  .merge(libraries_query)
-                 .ordered
+                 .merge(full_text_query)
                  .pluck(:slug)
     render json: @cases
   end
@@ -23,5 +23,19 @@ class SearchController < ApplicationController
       SQL
       libraries: params[:libraries]
     )
+        .ordered
+  end
+
+  def full_text_query
+    return Case.all unless params[:q]
+
+    Case.joins('JOIN cases_search_index_en ON cases_search_index_en.id = cases.id')
+        .where('cases_search_index_en.document @@ plainto_tsquery(:q)', q: params[:q])
+        .reorder(
+          "ts_rank(
+             cases_search_index_en.document,
+             plainto_tsquery(#{ActiveRecord::Base.connection.quote(params[:q])})
+           ) DESC"
+        )
   end
 end
