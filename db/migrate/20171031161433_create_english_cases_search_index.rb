@@ -18,7 +18,7 @@ class CreateEnglishCasesSearchIndex < ActiveRecord::Migration[5.1]
                     ),
                     'B'
                   )
-               || to_tsvector('simple', cases.authors::text)
+               || to_tsvector(cases.authors::text)
                || setweight(
                     to_tsvector(
                       coalesce(string_agg(pages.title->>'en', ' '), '')
