@@ -54,6 +54,8 @@ class CreateEnglishCasesSearchIndex < ActiveRecord::Migration[5.1]
         LEFT JOIN cards ON cards.case_id = pages.id
        GROUP BY cases.id;
 
+      CREATE UNIQUE INDEX index_cases_search_index_en ON cases_search_index_en
+             USING btree(id);
       CREATE INDEX index_cases_on_english_full_text ON cases_search_index_en
              USING gin(document);
     SQL
@@ -62,6 +64,7 @@ class CreateEnglishCasesSearchIndex < ActiveRecord::Migration[5.1]
   def down
     execute <<~SQL
       DROP INDEX index_cases_on_english_full_text;
+      DROP INDEX index_cases_search_index_en;
       DROP MATERIALIZED VIEW cases_search_index_en;
     SQL
   end
