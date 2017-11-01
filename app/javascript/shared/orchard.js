@@ -4,23 +4,28 @@
  */
 
 import { append, keys } from 'ramda'
+import qs from 'qs'
 
 type ErrorResponse = {
   [string]: string[],
 }
 
 export class Orchard {
-  static harvest (endpoint: string): Promise<any> {
-    let r = new Request(
-      `${window.galaHostname || ''}/${window.i18n.locale}/${endpoint}.json`,
+  static harvest (endpoint: string, params: Object = {}): Promise<any> {
+    const query = params
+      ? `?${qs.stringify(params, { arrayFormat: 'brackets' })}`
+      : ''
+    const r = new Request(
+      `${window.galaHostname || ''}/${window.i18n
+        .locale}/${endpoint}.json${query}`,
       { credentials: 'same-origin' }
     )
     return fetch(r).then(this._handleResponse)
   }
 
   static graft (endpoint: string, params: Object): Promise<any> {
-    let body = JSON.stringify(params)
-    let r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
+    const body = JSON.stringify(params)
+    const r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
       credentials: 'same-origin',
       method: 'POST',
       body,
@@ -34,8 +39,8 @@ export class Orchard {
 
   // Train a fruit tree to grow into a desired figure.
   static espalier (endpoint: string, params: ?Object): Promise<any> {
-    let body = JSON.stringify(params)
-    let r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
+    const body = JSON.stringify(params)
+    const r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
       credentials: 'same-origin',
       method: 'PUT',
       body,
@@ -48,7 +53,7 @@ export class Orchard {
   }
 
   static prune (endpoint: string): Promise<Response> {
-    let r = new Request(`/${endpoint}.json`, {
+    const r = new Request(`/${endpoint}.json`, {
       credentials: 'same-origin',
       method: 'DELETE',
       headers: new Headers({ Accept: 'application/json' }),

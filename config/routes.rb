@@ -3,8 +3,6 @@
 locale_regex = /#{Rails.application.config.i18n.available_locales.map(&:to_s).join("|")}/
 
 Rails.application.routes.draw do
-  get 'catalog/home'
-
   get '/read/1071/(*x)', to: redirect('/fr/cases/mi-wolves')
   get '/read/862/(*x)', to: redirect('/cases/indonesia-conservation')
   get '/read/611/(*x)', to: redirect('/cases/ethiopia-napa')
@@ -79,17 +77,21 @@ Rails.application.routes.draw do
       resources :groups
       resources :enrollments, only: %i[destroy]
     end
+
+    resources :search, only: %i[index]
+    resources :libraries, param: :slug, only: %i[show]
+
+    namespace 'catalog' do
+      get :home
+      match :content_items, via: %i[get post]
+      get '*react_router_location', action: :home
+    end
   end
 
   namespace 'authentication_strategies' do
     namespace 'config' do
       get :lti
     end
-  end
-
-  namespace 'catalog' do
-    get :home
-    match :content_items, via: %i[get post]
   end
 
   devise_for :authentication_strategies, only: :omniauth_callbacks, controllers: {

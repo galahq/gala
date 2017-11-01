@@ -18,5 +18,7 @@ module Orchard
     config.i18n.available_locales = %i[en fr ja zh-CN zh-TW am]
 
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
+
+    config.active_record.schema_format = :sql
   end
 end

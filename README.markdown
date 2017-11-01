@@ -23,3 +23,10 @@ When developing the LTI tool provider components of Gala, it is useful to be abl
 1. Trust the certificate on your host machine using Keychain Access. Drag `localhost.crt` into the app, then Get Info and choose Always Trust.
 1. Start the development servers with `LOCALHOST_SSL=true foreman start`
 1. Browse to https://localhost:3000 (http will not work)
+
+## Cron jobs
+
+The full-text case search is powered by a Postgres materialized view so it’s
+really fast. The consequence is that changes don’t appear in search results
+until the view is refreshed. Set a cron job or use Heroku Scheduler or the
+equivalent to run `rake indices:refresh` as frequently as makes sense.
