@@ -19,7 +19,6 @@ import SearchForm from 'catalog/SearchForm'
 import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
 import { Container as Sidebar } from 'catalog/Sidebar'
 
-import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'catalog'
 
@@ -66,8 +65,9 @@ class Results extends React.Component<
       <Main key="main">
         <CatalogSection>
           <SectionTitle>Search Results</SectionTitle>
-          {loading.cases ? null : this.state.results.length === 0 ? (
-            <NoSearchResults />
+          {loading.cases || this.state.loading ? null : this.state.results
+            .length === 0 ? (
+              <NoSearchResults />
           ) : (
             <CaseList
               cases={this.state.results.map(slug => cases[slug])}
