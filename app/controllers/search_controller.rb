@@ -14,28 +14,22 @@ class SearchController < ApplicationController
   def libraries_query
     return Case.all unless params[:libraries]
 
-    Case.where(
-      <<~SQL,
-        cases.library_id IN (
-          SELECT id FROM libraries
-          WHERE libraries.slug IN (:libraries)
-        )
-      SQL
-      libraries: params[:libraries]
-    )
+    Case.joins(:library)
+        .where(libraries: { slug: params[:libraries] })
         .ordered
   end
 
   def full_text_query
     return Case.all unless params[:q]
 
+    query = params[:q].is_a?(Array) ? params[:q].join(' ') : params[:q]
     Case.joins('JOIN cases_search_index_en ON cases_search_index_en.id = cases.id')
-        .where('cases_search_index_en.document @@ plainto_tsquery(:q)', q: params[:q])
+        .where('cases_search_index_en.document @@ plainto_tsquery(?)', query)
         .reorder(
-          "ts_rank(
-             cases_search_index_en.document,
-             plainto_tsquery(#{ActiveRecord::Base.connection.quote(params[:q])})
-           ) DESC"
+          'ts_rank(' \
+             'cases_search_index_en.document, ' \
+             "plainto_tsquery(#{ActiveRecord::Base.connection.quote(query)})" \
+           ') DESC'
         )
   end
 end
