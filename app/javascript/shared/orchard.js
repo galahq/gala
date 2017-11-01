@@ -12,7 +12,9 @@ type ErrorResponse = {
 
 export class Orchard {
   static harvest (endpoint: string, params: Object = {}): Promise<any> {
-    const query = params ? `?${qs.stringify(params)}` : ''
+    const query = params
+      ? `?${qs.stringify(params, { arrayFormat: 'brackets' })}`
+      : ''
     const r = new Request(
       `${window.galaHostname || ''}/${window.i18n
         .locale}/${endpoint}.json${query}`,

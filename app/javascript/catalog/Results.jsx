@@ -6,6 +6,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import qs from 'qs'
+import { map } from 'ramda'
 
 import { Orchard } from 'shared/orchard'
 
@@ -13,12 +14,13 @@ import { Route } from 'react-router-dom'
 
 import CaseList from 'catalog/CaseList'
 import LibraryInfo from 'catalog/LibraryInfo'
+import SearchForm from 'catalog/SearchForm'
 import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'catalog'
 
-type Query = { [string]: string | string[] }
+export type Query = { [string]: string[] }
 
 type Props = { ...ContextRouter, ...State, readerIsEditor: boolean }
 class Results extends React.Component<
@@ -52,6 +54,7 @@ class Results extends React.Component<
           path="/catalog/libraries/:slug"
           render={({ match }) => <LibraryInfo slug={match.params.slug || ''} />}
         />
+        <SearchForm params={this._getQueryParams()} />
       </Sidebar>,
       <Main key="main">
         <CatalogSection>
@@ -77,18 +80,24 @@ class Results extends React.Component<
   _getQueryParams = (): Query => {
     const { pathname, search } = this.props.location
     return {
-      ...qs.parse(search, { ignoreQueryPrefix: true }),
+      ...coerceIntoArrayValues(qs.parse(search, { ignoreQueryPrefix: true })),
       ...getQueryFromPathname(pathname),
     }
   }
 }
 export default Results
 
-function getQueryFromPathname (pathname: string): { [string]: string } {
+function coerceIntoArrayValues (params: {
+  [string]: string | string[],
+}): { [string]: string[] } {
+  return map(x => (Array.isArray(x) ? x : [x]), params)
+}
+
+function getQueryFromPathname (pathname: string): { [string]: string[] } {
   return ['libraries', 'tags'].reduce((params, key) => {
     const match = pathname.match(RegExp(`${key}/([0-9a-z%+-]+)`))
     if (!match) return params
-    params[key] = match[1]
+    params[key] = [match[1]]
     return params
   }, {})
 }
