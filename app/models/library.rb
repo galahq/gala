@@ -4,7 +4,7 @@ class Library < ApplicationRecord
   HEX_COLOR = /\A#(?:[0-9a-fA-F]{3}){1,2}\z/
 
   include Mobility
-  translates :name, :description, :url
+  translates :name, :description, :url, fallbacks: true
 
   has_many :cases
 
