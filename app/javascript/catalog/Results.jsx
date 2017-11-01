@@ -4,7 +4,6 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
 import qs from 'qs'
 import { map } from 'ramda'
 
@@ -16,6 +15,7 @@ import CaseList from 'catalog/CaseList'
 import LibraryInfo from 'catalog/LibraryInfo'
 import SearchForm from 'catalog/SearchForm'
 import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
+import { Container as Sidebar } from 'catalog/Sidebar'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'catalog'
@@ -101,8 +101,3 @@ function getQueryFromPathname (pathname: string): { [string]: string[] } {
     return params
   }, {})
 }
-
-const Sidebar = styled.aside`
-  width: 18em;
-  margin: 0 0.5em 2em;
-`

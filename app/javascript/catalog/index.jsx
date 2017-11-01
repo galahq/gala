@@ -93,7 +93,7 @@ class Catalog extends React.Component<{ intl: IntlShape }, State> {
   render () {
     return (
       <Router>
-        <div style={{ minHeight: '100%' }}>
+        <Container>
           <CatalogToolbar />
           <MaxWidthContainer>
             <Window>
@@ -122,7 +122,7 @@ class Catalog extends React.Component<{ intl: IntlShape }, State> {
               </Switch>
             </Window>
           </MaxWidthContainer>
-        </div>
+        </Container>
       </Router>
     )
   }
@@ -135,6 +135,11 @@ class Catalog extends React.Component<{ intl: IntlShape }, State> {
 
 export default injectIntl(Catalog)
 
+const Container = styled.div`
+  min-height: 100%;
+  width: 100vw;
+  overflow: hidden;
+`
 const Window = styled.div`
   min-height: 100%;
   position: relative;
