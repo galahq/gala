@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import * as React from 'react'
 import { injectIntl } from 'react-intl'
 import styled, { css } from 'styled-components'
 import { omit } from 'ramda'
@@ -25,7 +25,11 @@ type BarMenu = {|
   iconName: string,
   submenu: Array<BarButton>,
 |}
-type BarElement = BarButton | BarMessage | BarMenu
+type BarComponent = {|
+  message?: string,
+  component: React.Element<*>,
+|}
+type BarElement = BarButton | BarMessage | BarMenu | BarComponent
 type BarGroup = Array<?BarElement>
 
 const pass = omit(['message', 'submenu'])
@@ -55,7 +59,9 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
             {group.map((element, j) => {
               if (element == null) return null
 
-              return element.submenu != null ? (
+              return element.component != null ? (
+                React.cloneElement(element.component, { key: j })
+              ) : element.submenu != null ? (
                 <Popover
                   key={j}
                   position={Position.BOTTOM_RIGHT}
@@ -78,7 +84,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 >
                   <Item key={j} text={t(element.message)} {...pass(element)} />
                 </Popover>
-              ) : element.onClick ? (
+              ) : element.onClick != null ? (
                 <Item key={j} text={t(element.message)} {...pass(element)} />
               ) : (
                 <span key={j}>{t(element.message)}</span>
