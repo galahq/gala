@@ -1583,6 +1583,13 @@ CREATE INDEX index_cases_on_tags ON cases USING gin (tags);
 
 
 --
+-- Name: index_cases_search_index_en; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_cases_search_index_en ON cases_search_index_en USING btree (id);
+
+
+--
 -- Name: index_comment_threads_on_card_id; Type: INDEX; Schema: public; Owner: -
 --
 
