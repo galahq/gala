@@ -45,6 +45,7 @@ const UnstyledList = styled.ul`
 
 const Image = styled.img.attrs({ role: 'presentation' })`
   width: 50px;
+  min-width: 50px;
   height: 50px;
   border-radius: 2px;
   margin-right: 1em;
