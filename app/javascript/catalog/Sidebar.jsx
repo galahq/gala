@@ -49,8 +49,9 @@ const Sidebar = ({
 
 export default Sidebar
 
-const Container = styled.aside`
+export const Container = styled.aside`
   width: 18em;
+
   @media (max-width: 700px) {
     width: 100%;
   }
