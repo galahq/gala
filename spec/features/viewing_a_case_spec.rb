@@ -27,6 +27,7 @@ feature 'Viewing a case' do
         expect(page).to have_content published_case.pages.first.title
 
         click_link published_case.pages.first.title
+        sleep(1)
         expect(all('.Card').count).to eq published_case.pages.first.cards.count
         expect(page).to have_selector '.DraftEditor-root'
       end
