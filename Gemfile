@@ -66,6 +66,7 @@ gem 'table_print'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 gem 'acts_as_list'
+gem 'memoist'
 gem 'virtus'
 
 gem 'authority'
