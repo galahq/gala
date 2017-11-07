@@ -30,3 +30,6 @@ The full-text case search is powered by a Postgres materialized view so it’s
 really fast. The consequence is that changes don’t appear in search results
 until the view is refreshed. Set a cron job or use Heroku Scheduler or the
 equivalent to run `rake indices:refresh` as frequently as makes sense.
+
+To send a weekly report of usage data, run `rake emails:send_weekly_report` once
+per week.
