@@ -17,16 +17,25 @@ import {
   handleNotification,
 } from 'redux/actions.js'
 
+import asyncComponent from 'utility/asyncComponent'
+
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
-import CaseElement from 'elements/CaseElement'
-import PreTest from 'quiz/PreTest'
-import PostTest from 'quiz/PostTest'
 
 // import { Toaster } from '@blueprintjs/core'
 import hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet from 'shared/badTerribleAwfulCode'
 
 import type { State } from 'redux/state'
+
+const CaseElement = asyncComponent(() =>
+  import('elements/CaseElement').then(m => m.default)
+)
+const PreTest = asyncComponent(() =>
+  import('quiz/PreTest').then(m => m.default)
+)
+const PostTest = asyncComponent(() =>
+  import('quiz/PostTest').then(m => m.default)
+)
 
 function mapStateToProps ({ quiz, caseData }: State) {
   return {
