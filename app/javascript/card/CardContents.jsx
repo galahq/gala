@@ -12,16 +12,21 @@ import { Route } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
 import { blockRenderMap, getStyleMap } from './draftConfig'
 
+import asyncComponent from 'utility/asyncComponent'
+
 import EditorToolbar from './EditorToolbar'
 import Statistics from 'utility/Statistics'
 import CitationTooltip from './CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
-import CommentThreadsCard from 'comments/CommentThreadsCard'
 import { OnScreenTracker } from 'utility/Tracker'
 
 import type { ContextRouter, Match } from 'react-router-dom'
 
 import type { CardProps } from 'card'
+
+const CommentThreadsCard = asyncComponent(() =>
+  import('comments/CommentThreadsCard').then(m => m.default)
+)
 
 type Props = {
   acceptingSelection: boolean,
