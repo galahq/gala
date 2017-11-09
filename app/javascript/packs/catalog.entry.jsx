@@ -9,7 +9,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import { AppContainer } from 'react-hot-loader'
-import { IntlProvider } from 'react-intl'
+import { addLocaleData, IntlProvider } from 'react-intl'
 
 import { FocusStyleManager } from '@blueprintjs/core'
 
@@ -31,7 +31,10 @@ const render = (Component: React$Component) => {
   )
 }
 
-render(Catalog)
+import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
+  addLocaleData(m)
+  render(Catalog)
+})
 
 if (module.hot) {
   module.hot.accept('Catalog', () => {

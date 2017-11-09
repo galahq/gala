@@ -29,5 +29,11 @@ fr:
         many: Traducteurs(-rices)
   readers:
     form:
-      my_account: 'Mon compte'
-      save: 'Modifier mon profil'
+      my_account: Mon compte
+      save: Modifier mon profil
+      create_a_password: Choisissez un mot de passe
+      you_have_not_created_a_password: |
+        Parce que vous vous êtes connecté pour la première fois à l’aide de
+        %{provider}, vous n’avez jamais choisi un mot de passe. Si vous le
+        choisissez maintenant, vous pourrez l’utiliser, ou continuer à utiliser
+        %{provider}, pour vous connecter.

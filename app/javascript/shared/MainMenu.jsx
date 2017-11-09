@@ -5,6 +5,7 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { injectIntl } from 'react-intl'
 
 import {
   AnchorButton,
@@ -19,20 +20,32 @@ import { Orchard } from 'shared/orchard'
 import { acceptKeyboardClick } from 'shared/keyboard'
 
 import type { Reader } from 'redux/state'
+import type { IntlShape } from 'react-intl'
 
-class MainMenu extends React.Component<{}, Reader> {
+class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
   state = window.reader
 
   render () {
+    const { formatMessage } = this.props.intl
     const reader = this.state
     return reader ? (
       <Popover
         position={Position.BOTTOM_RIGHT}
         content={
           <Menu>
-            <MenuItem text="My account" iconName="user" href="/profile/edit" />
             <MenuItem
-              text="Sign out"
+              text={formatMessage({
+                id: 'menu.myAccount',
+                defaultMessage: 'My account',
+              })}
+              iconName="user"
+              href="/profile/edit"
+            />
+            <MenuItem
+              text={formatMessage({
+                id: 'menu.signOut',
+                defaultMessage: 'Sign out',
+              })}
               iconName="log-out"
               href="#"
               onClick={_ =>
@@ -43,7 +56,12 @@ class MainMenu extends React.Component<{}, Reader> {
           </Menu>
         }
       >
-        <Row aria-label="Account options">
+        <Row
+          aria-label={formatMessage({
+            id: 'menu.accountOptions',
+            defaultMessage: 'Account options',
+          })}
+        >
           <Identicon reader={reader} />
           <CaretDown />
         </Row>
@@ -52,14 +70,14 @@ class MainMenu extends React.Component<{}, Reader> {
       <AnchorButton
         className="pt-minimal"
         iconName="log-in"
-        text="Sign in"
+        text={formatMessage({ id: 'menu.signIn', defaultMessage: 'Sign in' })}
         href="/readers/sign_in"
       />
     )
   }
 }
 
-export default MainMenu
+export default injectIntl(MainMenu)
 
 const CaretDown = styled.span.attrs({
   className: 'pt-icon pt-icon-caret-down',

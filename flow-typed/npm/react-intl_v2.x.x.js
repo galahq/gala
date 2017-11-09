@@ -124,7 +124,7 @@ declare module "react-intl" {
   ): T;
   declare function injectIntl<Props: {}>(
     WrappedComponent: React$ComponentType<
-      { intl: $npm$ReactIntl$IntlShape } & Props
+      {| intl: $npm$ReactIntl$IntlShape, ...Props |}
     >,
     options?: {
       intlPropName?: string,

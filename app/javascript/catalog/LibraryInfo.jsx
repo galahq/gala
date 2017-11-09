@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import { withRouter } from 'react-router-dom'
 import { Orchard } from 'shared/orchard'
+import { FormattedMessage } from 'react-intl'
 
 import LibraryLogo from 'overview/LibraryLogo'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
@@ -36,7 +37,13 @@ class LibraryInfo extends React.Component<Props, Library> {
         </RightFloatLogoContainer>
         <SectionTitle>{name}</SectionTitle>
         <Description>{description}</Description>
-        <LearnMore href={url}>Learn more ›</LearnMore>
+        <LearnMore href={url}>
+          <FormattedMessage
+            id="catalog.learnMore"
+            defaultMessage="Learn more"
+          />{' '}
+          ›
+        </LearnMore>
       </CatalogSection>
     )
   }

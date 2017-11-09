@@ -5,6 +5,7 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { FormattedMessage } from 'react-intl'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
 
@@ -15,7 +16,7 @@ class Less extends React.Component<
   {
     children: React$Element<*>,
     height: string,
-    prompt: string,
+    prompt: { id: string, defaultMessage: string },
     startOpen: boolean,
     disabled: boolean,
   },
@@ -23,7 +24,7 @@ class Less extends React.Component<
 > {
   static defaultProps = {
     height: '10em',
-    prompt: 'Read more',
+    prompt: { id: 'less.readMore', defaultMessage: 'Read more' },
     startOpen: false,
     disabled: false,
   }
@@ -65,7 +66,7 @@ class Less extends React.Component<
                 onClick={this.handleOpen}
                 onKeyPress={acceptKeyboardClick}
               >
-                {prompt}
+                <FormattedMessage {...prompt} />
               </ReadMoreLink>
             )}
           </div>

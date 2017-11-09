@@ -17,11 +17,6 @@ import thunk from 'redux-thunk'
 
 import { FocusStyleManager } from '@blueprintjs/core'
 import { addLocaleData, IntlProvider } from 'react-intl'
-import en from 'react-intl/locale-data/en'
-import fr from 'react-intl/locale-data/fr'
-import ja from 'react-intl/locale-data/ja'
-import zh from 'react-intl/locale-data/zh'
-import am from 'react-intl/locale-data/am'
 
 import Case from 'Case'
 
@@ -36,12 +31,6 @@ const store = createStore(
   enableBatching(reducer),
   composeEnhancers(applyMiddleware(thunk))
 )
-
-if (!global.Intl) {
-  global.Intl = require('intl')
-} // eslint-disable-line
-
-addLocaleData([...en, ...fr, ...ja, ...zh, ...am])
 
 const { locale } = (window.i18n: { locale: string })
 
@@ -60,7 +49,10 @@ const render = (Component: React$Component) => {
   )
 }
 
-render(Case)
+import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
+  addLocaleData(m)
+  render(Case)
+})
 
 if (module.hot) {
   module.hot.accept('Case', () => {

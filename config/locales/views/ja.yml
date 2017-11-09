@@ -1,7 +1,7 @@
 ja:
   catalog:
     home:
-      title: "全ての事例研究"
+      title: 全ての事例研究
       redefining_sustainability_education: 環境科学の教育の新たな方法
       intro_paragraph: |
         Michigan Sustainability Cases（MSC：ミシガン大学の持続可能性の事例研究）
@@ -30,5 +30,10 @@ ja:
         many: 翻訳
   readers:
     form:
-      my_account: 'マイアカウント'
+      my_account: マイアカウント
       save: プロフィールの変化を保存
+      create_a_password: パスワードを選ぶ
+      you_have_not_created_a_password: |
+        初めて%{provider}でサインインしましたので、パスワードをまだ選びませんでした。選んだら、今後%{provider}とパスワードと両方でサインイン可能性があります。
+  notifications:
+    replied_to_your_comment: "%{case_kicker}でのコメントには、%{notifier}が返信を書きました。"

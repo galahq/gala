@@ -24,6 +24,14 @@ zh-CN:
       translator:
         one: 翻译
         many: 翻译
-  reader:
-    show:
+  readers:
+    form:
       my_account: 我的用户
+      save: 更新个人信息
+      create_a_password: 设置密码
+      you_have_not_created_a_password: |
+        因为你首次登陆时使用的是%{provider}，并没有设置密码。
+        你现在可以通过设置密码来用于下次登陆，或者继续使用
+        %{provider}进行登陆。
+  notifications:
+    replied_to_your_comment: "%{notifier}回复了你在%{case_kicker}的讨论。"
