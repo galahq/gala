@@ -5,9 +5,8 @@ class SubmissionsController < ApplicationController
   before_action :set_quiz
 
   def index
-    @answers = current_reader.answers
-                             .merge(@quiz.answers)
-                             .order(:created_at)
+    @submissions = Submission.where(quiz: @quiz)
+                             .merge(reader_accessible_submissions)
   end
 
   def create
@@ -22,6 +21,10 @@ class SubmissionsController < ApplicationController
   end
 
   private
+
+  def reader_accessible_submissions
+    Submission.where(reader: current_reader)
+  end
 
   def set_quiz
     @quiz = Quiz.find_by_id params['quiz_id']
