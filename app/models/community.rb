@@ -6,7 +6,7 @@ class Community < ApplicationRecord
   has_many :forums # One forum for each case the community is discussing
 
   include Mobility
-  translates :name
+  translates :name, fallbacks: true
 
   delegate :comment_threads, to: :forum
 

@@ -64,7 +64,12 @@ class Results extends React.Component<
       </Sidebar>,
       <Main key="main">
         <CatalogSection>
-          <SectionTitle>Search Results</SectionTitle>
+          <SectionTitle>
+            <FormattedMessage
+              id="search.results"
+              defaultMessage="Search Results"
+            />
+          </SectionTitle>
           {loading.cases || this.state.loading ? null : this.state.results
             .length === 0 ? (
               <NoSearchResults />

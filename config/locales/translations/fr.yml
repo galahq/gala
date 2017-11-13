@@ -7,6 +7,7 @@ fr:
       comment_thread: Commentaire fil  #g
       edgenote: Edgenote  #g
       enrollment: Inscription  #g
+      global_community: Communauté globale
       group: Groupe  #g
       group_membership: Appartenance à un groupe  #g
       podcast: Podcast  #g
@@ -98,8 +99,8 @@ fr:
         password: Mot de passe
         password_confirmation: Confirmation du mot de passe
         remember_me: Se souvenir de moi
-        reset_password_token: 
-        unlock_token: 
+        reset_password_token:
+        unlock_token:
   devise:
     shared:
       links:

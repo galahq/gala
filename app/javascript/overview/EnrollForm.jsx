@@ -5,6 +5,8 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+
 import { enrollReader } from 'redux/actions'
 
 import type { State } from 'redux/state'
@@ -19,18 +21,27 @@ function mapStateToProps ({ caseData }: State) {
   }
 }
 
-const EnrollForm = ({ caseSlug, readerId, enrollReader }) =>
+const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   <div className="CaseOverview--enroll-form">
-    <h2>Enroll in this case</h2>
+    <h2>
+      <FormattedMessage
+        id="case.enrollInThisCase"
+        defaultMessage="Enroll in this case"
+      />
+    </h2>
     <p>
-      If this case catches your eye, enroll for easy access from “My Cases.”
+      <FormattedMessage
+        id="case.enrollForEasyAccess"
+        defaultMessage="If this case catches your eye, enroll for easy access from “My Cases.”"
+      />
     </p>
     <button
       className="o-button pt-button"
       onClick={() => enrollReader(readerId, caseSlug)}
     >
-      Enroll
+      <FormattedMessage id="case.enroll" defaultMessage="Enroll" />
     </button>
   </div>
+)
 
 export default connect(mapStateToProps, { enrollReader })(EnrollForm)

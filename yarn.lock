@@ -6347,8 +6347,8 @@ react-intl@^2.2.3:
     invariant "^2.1.1"
 
 react-map-gl@^3.0.4:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-3.1.0.tgz#27933d09638bce14a1b41ea6a7ff363350461cad"
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-3.1.1.tgz#4d0d5045f50f364d01d172756014fd5767d2ca05"
   dependencies:
     babel-runtime "^6.23.0"
     bowser "^1.2.0"

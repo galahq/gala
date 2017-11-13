@@ -11,7 +11,10 @@ import type { Library } from 'redux/state'
 const LibraryLogo = ({ library }: { library: Library }) => (
   <Container
     title={library.name}
-    href={`/catalog/libraries/${library.slug}`}
+    href={window.location.pathname.replace(
+      /cases.*/,
+      `catalog/libraries/${library.slug}`
+    )}
     {...library}
   >
     <Logo src={library.logoUrl} />

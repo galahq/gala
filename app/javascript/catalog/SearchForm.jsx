@@ -9,14 +9,16 @@ import qs from 'qs'
 import { reject, isEmpty } from 'ramda'
 
 import { withRouter } from 'react-router-dom'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { InputGroup, Button, Intent } from '@blueprintjs/core'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
+import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
 import type { Query } from 'catalog/Results'
 
-type Props = { params: Query } & ContextRouter
+type Props = {| ...ContextRouter, params: Query, intl: IntlShape |}
 type State = { q: string, libraries: string[] }
 class SearchForm extends React.Component<Props, State> {
   state = {
@@ -50,22 +52,29 @@ class SearchForm extends React.Component<Props, State> {
     const { q } = this.state
     return (
       <CatalogSection className="pt-dark">
-        <SectionTitle>Refine search</SectionTitle>
+        <SectionTitle>
+          <FormattedMessage id="search.refine" defaultMessage="Refine search" />
+        </SectionTitle>
         <form onSubmit={this.handleSubmit}>
           <InputGroup
             className="pt-fill"
             leftIconName="search"
-            placeholder="Keyword query"
+            placeholder={this.props.intl.formatMessage({
+              id: 'search.keywordQuery',
+              defaultMessage: 'Keyword query',
+            })}
             value={q}
             onChange={this.handleChangeQuery}
           />
-          <SubmitButton>Search</SubmitButton>
+          <SubmitButton>
+            <FormattedMessage id="search.search" defaultMessage="Search" />
+          </SubmitButton>
         </form>
       </CatalogSection>
     )
   }
 }
-export default withRouter(SearchForm)
+export default injectIntl(withRouter(SearchForm))
 
 export function getSearchPath (params: Object): string {
   return `/catalog/search?${qs.stringify(reject(isEmpty, params), {

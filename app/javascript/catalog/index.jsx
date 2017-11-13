@@ -91,8 +91,9 @@ class Catalog extends React.Component<{ intl: IntlShape }, State> {
   }
 
   render () {
+    const basename = window.location.pathname.match(/^(\/\w{2}(-\w{2})?)?\//)[0]
     return (
-      <Router>
+      <Router basename={basename}>
         <Container>
           <CatalogToolbar />
           <MaxWidthContainer>

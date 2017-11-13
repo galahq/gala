@@ -7,7 +7,8 @@ zh-CN:
       comment_thread: 跟帖评论  #g
       edgenote: 沿注  #g
       enrollment: 注册  #g
-      group: 组  #g
+      global_community: 通用讨论组
+      group: "组"  #g
       group_membership: 组成员  #g
       podcast: 播客  #g
       reader: 读者  #g
@@ -98,8 +99,22 @@ zh-CN:
         password: "密码"
         password_confirmation: "密码确认"
         remember_me: "记住登录信息"
-        reset_password_token: 
-        unlock_token: 
+        reset_password_token:
+        unlock_token:
+        send_reply_notifications: 发送回复提醒
+
   devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: 注册免费账户
     sessions:
       destroy: 登出
+    registrations:
+      new:
+        minimum_characters: 最少%{count}个字符
+      edit:
+        change_my_password: 更改我的密码
+        my_account: 我的账户
+        leave_blank_if_you_dont_want_to_change_it: 留空白则保持原密码
+        to_confirm_your_changes: 确认修改
+        save: 保存
