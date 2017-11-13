@@ -5,6 +5,7 @@ class Quiz < ApplicationRecord
 
   has_many :deployments, dependent: :nullify
   has_many :custom_questions, class_name: 'Question', dependent: :destroy
+  has_many :submissions, dependent: :destroy
   belongs_to :case
   belongs_to :template, class_name: 'Quiz'
   belongs_to :author, class_name: 'Reader'
