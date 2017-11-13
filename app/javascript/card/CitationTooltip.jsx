@@ -6,6 +6,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { EditorState } from 'draft-js'
+import { FormattedMessage } from 'react-intl'
 
 import { updateCardContents, openCitation } from 'redux/actions'
 
@@ -106,7 +107,13 @@ const CitationTooltip = ({
           {contents}{' '}
           {href && (
             <a href={href} target="_blank" rel="noopener noreferrer">
-              Read&nbsp;more&nbsp;›
+              <span style={{ whiteSpace: 'nowrap' }}>
+                <FormattedMessage
+                  id="catalog.learnMore"
+                  defaultMessage="Learn more"
+                />{' '}
+                ›
+              </span>
             </a>
           )}
         </span>

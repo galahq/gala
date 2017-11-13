@@ -1,33 +1,61 @@
 {
   "en": {
-    "my_cases": "My Cases",
-    "study_a_case": "Study a case",
+    "menu.accountOptions": "Account options",
+    "menu.myAccount": "My account",
+    "menu.signIn": "Sign in",
+    "menu.signOut": "Sign out",
+
     "catalog": "Catalog",
     "catalog.proposeACase": "Propose a case",
+    "catalog.search": "Search cases",
+
     "catalog.featuredCases": "Featured cases",
+    "catalog.locations": "Site locations",
+    "catalog.allCases": "All cases",
+
+    "catalog.chooseForYourself": "Choose for yourself",
+    "catalog.meetStakeholders":
+      "Meet different stakeholders and dive deep with a multimodal narrative.",
+    "catalog.shortcutExperience": "Apply principles to improves practice.",
+    "catalog.joinConversation":
+      "Join the conversation by asking questions and paying your learning forward.",
+    "catalog.enrollmentsInstruction":
+      "Cases you enroll in will be presented here for easy access.",
+
+    "catalog.enrolledCases": "Enrolled cases",
+    "catalog.editEnrolled": "Edit enrolled cases",
     "catalog.unenrollConfirmation":
       "Are you sure you want to unenroll in this case?",
     "catalog.unenrollBetaWarning":
       "Because this case is not published, you will need another invitation to reenroll.",
-    "catalog.enrolledCases": "Enrolled cases",
-    "catalog.editEnrolled": "Edit enrolled cases",
     "catalog.unenroll": "Unenroll from this case",
+
+    "catalog.learnMore": "Learn more",
+
+    "search.search": "Search",
+    "search.results": "Search results",
+    "search.refine": "Refine search",
+    "search.keywordQuery": "Keyword query",
+    "search.noResults": "No search results",
+    "search.didntMatch": "Your search didn’t match any cases.",
+    "search.tryAgain": "Try searching for something else.",
+    "search.proposeACase":
+      "If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.",
+
     "summary": "Case Summary",
+    "case.acknowledgements": "Acknowledgements",
+    "case.enrollInThisCase": "Enroll in this case",
+    "case.enrollForEasyAccess":
+      "If this case catches your eye, enroll for easy access.",
+    "case.enroll": "Enroll",
     "case.toc": "Table of Contents",
     "case.backToOverview": "Overview",
-    "overview.read": "Read",
-    "overview.listen": "Listen",
-    "overview.relatedPodcast": "Related podcast",
-    "overview.explore": "Explore",
-    "overview.edgenoteGallery": "Edgenote Gallery",
-    "overview.consider": "Decide",
-    "overview.respond": "Respond",
-    "overview.giveFeedback": "Give us your feedback about this case.",
+    "overview.location": "Case location",
     "overview.learningObjectives": "Learning objectives",
     "case.forthcoming": "Forthcoming",
     "case.next": "Next: ",
-    "open-in-new-tab": "Open in a new tab.",
     "case.end": "End",
+
     "statusBar.betaNotification": "This case is not yet published",
     "statusBar.beginEdit": "Edit this case",
     "statusBar.endEdit": "Stop editing this case",
@@ -36,14 +64,18 @@
     "statusBar.save": "Save",
     "statusBar.publishCase": "Publish this case",
     "statusBar.unpublishCase": "Unpublish this case",
+    "statusBar.featureCase": "Feature this case",
+    "statusBar.unfeatureCase": "Remove from featured cases",
+
     "podcast.hosts": "with {count, plural, one {host} other {hosts}}",
-    "create": "Create",
+
     "overview.otherLanguages":
       "This case is also available in these languages: ",
     "en": "English",
     "fr": "French",
     "ja": "Japanese",
     "am": "Amharic",
+
     "comments.respond": "Respond",
     "comments.nResponses":
       "{count, number} {count, plural, one {response} other {responses}}",
@@ -55,109 +87,395 @@
       "{count, number} other {count, plural, one {response} other {responses} }",
     "comments.write": "Write a reply...",
     "comments.selectionNotUnique":
-      "This selection appears more than once. Please select a few more words.",
+      "The words you have selected appear more than once. Please select a few more words.",
+
+    "community.choose": "Choose a community",
+    "community.instructions":
+      "You’ll see the discussion taking place in the community you choose.",
+    "community.notDiscussing":
+      "Your active community is not discussing this case",
+
     "submit": "Submit",
-    "finishEditing": "Finish editing"
+    "close": "Close",
+    "finishEditing": "Finish editing",
+    "less.readMore": "Read more"
   },
 
   "fr": {
-    "summary": "Résumé du cas d’étude",
+    "menu.accountOptions": "Options de compte",
+    "menu.myAccount": "Mon compte",
+    "menu.signIn": "Connexion",
+    "menu.signOut": "Déconnexion",
+
+    "catalog": "Catalogue",
+    "catalog.proposeACase": "Proposez une étude de cas",
+    "catalog.search": "Recherchez",
+
+    "catalog.featuredCases": "Études phares",
+    "catalog.locations": "Emplacements des sites",
+    "catalog.allCases": "Toutes les études de cas",
+
+    "catalog.chooseForYourself": "Faites votre choix",
+    "catalog.meetStakeholders":
+      "Rencontrez des parties prenantes et plongez dans un récit multimodal.",
+    "catalog.shortcutExperience":
+      "Appliquez les principes pour améliorer la pratique.",
+    "catalog.joinConversation":
+      "Rentrez dans les debats, interrogez, propagez et partagez la savoir",
+    "catalog.enrollmentsInstruction":
+      "Les études de cas dans lesquels vous vous inscriverez seront affichée ici pour un accès rapide.",
+
+    "catalog.enrolledCases": "Études de cas inscrites",
+    "catalog.editEnrolled": "Changez vos études de cas inscrites",
+    "catalog.unenrollConfirmation":
+      "Êtes-vous sûr de vouloir vous désinscrire dans cette étude de cas?",
+    "catalog.unenrollBetaWarning":
+      "Parce que celle-ci n’est pas publiée, vous ne pourrez réinscrire que sous invitation.",
+    "catalog.unenroll": "Désinscrivez-vous de cette étude de cas",
+
+    "catalog.learnMore": "En savoir plus",
+
+    "search.search": "Recherchez",
+    "search.results": "Résultats de la recherche",
+    "search.refine": "Affinez votre recherche",
+    "search.keywordQuery": "Phrase ou mot-clé",
+    "search.noResults": "Aucun résultat trouvé",
+    "search.didntMatch":
+      "Votre recherche n’a correspondu à aucune étude de cas.",
+    "search.tryAgain": "Modifiez votre recherche.",
+    "search.proposeACase":
+      "Auriez-vous une étude de cas à nous proposer? Contactez-nous. Ensemble, nous pourrions construir la ressource la plus complète pour l’enseignement dans les domaines de l’environnement et la durabilité.",
+
+    "summary": "Résumé de l’étude de cas",
+    "case.acknowledgements": "Remerciements",
+    "case.enrollInThisCase": "Inscrivez-vous dans cette étude de cas",
+    "case.enrollForEasyAccess":
+      "Si cette étude de cas attire votre attention, inscrivez-vous pour un accès facile.",
+    "case.enroll": "Inscrivez",
     "case.toc": "Table des matières",
     "case.backToOverview": "Retour au résumé",
-    "overview.read": "Lisez",
-    "overview.listen": "Écoutez",
-    "overview.relatedPodcast": "Podcast",
-    "overview.explore": "Explorez",
-    "overview.edgenoteGallery": "Galerie des Edgenotes",
-    "overview.consider": "Décidez",
-    "overview.respond": "Répondez",
-    "overview.giveFeedback": "Donnez-nous vos commentaires sur ce cas d'étude.",
+    "overview.location": "Emplacement de l’étude de cas",
+    "overview.learningObjectives": "Objectifs pédagogiques",
+    "case.forthcoming": "À venir",
     "case.next": "Suite: ",
-    "open-in-new-tab": "Ouvrir dans un nouvel onglet.",
     "case.end": "Fin",
-    "statusBar.betaNotification": "Ce cas d’étude n’a pas été publié",
-    "statusBar.beginEdit": "Modifiez ce cas",
-    "statusBar.endEdit": "Finissez de modifier ce cas",
+
+    "statusBar.betaNotification": "Celle étude de cas n’a pas été publiée",
+    "statusBar.beginEdit": "Modifiez cette étude de cas",
+    "statusBar.endEdit": "Finissez de modifier cette étude de cas",
     "statusBar.editInstructions":
-      "Pour modifiez ce cas, il suffit de changer le texte",
+      "Pour modifiez cette étude de cas, il suffit de changer le texte",
+    "statusBar.options": "Options",
     "statusBar.save": "Enregistrez",
+    "statusBar.publishCase": "Publiez cette étude de cas",
+    "statusBar.unpublishCase": "Annulez la publication de cette étude de cas",
+    "statusBar.featureCase": "Ajoutez celle-ci aux études phares",
+    "statusBar.unfeatureCase": "Enlevez ceci des études phares",
+
     "podcast.hosts":
-      "avec {count, plural, one {animateur/-trics} other {animateurs/-trices}}",
+      "avec {count, plural, one {animateur/-trice} other {animateurs/-trices}}",
+
     "overview.otherLanguages":
-      "Ce cas d’étude est aussi disponible dans ces langues-ci :",
+      "Cette étude de cas est aussi disponible dans les langues suivantes :",
     "en": "Anglais",
     "fr": "Français",
     "ja": "Japonais",
     "am": "Amharic",
+
     "comments.respond": "Répondez",
     "comments.nResponses":
       "{count, number} {count, plural, one {réponse} other {résponses}}",
     "comments.writeNew": "Écrivez une nouvelle réponse",
     "comments.select": "Sélectionnez quelques mots",
     "comments.here": "Répondez ici",
-    "comments.placeholderContent": "Sans commentaires",
+    "comments.placeholderContent": "Aucune réponse",
     "comments.otherComments":
       "{count, number} {count, plural, one {autre résponse} other {autres résponses} }",
     "comments.write": "Écrivez quelque chose...",
-    "submit": "Soumettez"
+    "comments.selectionNotUnique":
+      "Les mots que vous avez sélectionnés apparaissent plusieurs fois. Veuillez sélectionner quelques mots de plus",
+
+    "community.choose": "Choisissez une communauté",
+    "community.instructions":
+      "Vous verrez la discussion se dérouler dans la communauté que vous choisissez.",
+    "community.notDiscussing":
+      "Votre communauté activée ne discute pas de cette étude de cas",
+
+    "submit": "Soumettez",
+    "close": "Fermez",
+    "finishEditing": "Terminez l’édition",
+    "less.readMore": "Lisez la suite"
   },
 
   "ja": {
+    "menu.accountOptions": "アカウントのオプション",
+    "menu.myAccount": "マイアカウント",
+    "menu.signIn": "サインイン",
+    "menu.signOut": "サインアウト",
+
+    "catalog": "目録",
+    "catalog.proposeACase": "事例を提案",
+    "catalog.search": "事例の検索",
+
+    "catalog.featuredCases": "注目の事例研究",
+    "catalog.locations": "場所",
+    "catalog.allCases": "すべての事例研究",
+
+    "catalog.chooseForYourself": "自分で選択する",
+    "catalog.meetStakeholders": "さまざまなステークホルダーに会い、マルチモーダルな物語で深く理解できます。",
+    "catalog.shortcutExperience": "原則を実践することで経験を得ることができます。",
+    "catalog.joinConversation": "質問をしたり、他の学習者を助けたりして、会話に参加できます。",
+    "catalog.enrollmentsInstruction": "登録する事例研究は、簡単に見つけられるようにここに表示されます。",
+
+    "catalog.enrolledCases": "登録された事例研究",
+    "catalog.editEnrolled": "登録された事例研究を編集",
+    "catalog.unenrollConfirmation": "この事例研究、登録を解除してもよろしいですか？",
+    "catalog.unenrollBetaWarning": "この事例研究は公開されていないため、再登録するには別の招待状が必要です。",
+    "catalog.unenroll": "この事例研究の登録を解除する",
+
+    "catalog.learnMore": "もっと詳しく知る",
+
+    "search.search": "検索",
+    "search.results": "検索結果",
+    "search.refine": "詳細検索",
+    "search.keywordQuery": "キーワード検索",
+    "search.noResults": "検索結果なし",
+    "search.didntMatch": "検索はどの事例研究とも見つけませんでした。",
+    "search.tryAgain": "他のキーワードを検索してみてください。",
+    "search.proposeACase":
+      "あなたがGalaを見たいと思う事件研究（またはそれについての良いアイデア）がある場合は、お問い合わせください。一緒に、環境と持続可能性について教えるための最も完全なリソースを作ることができます。",
+
     "summary": "要約",
+    "case.acknowledgements": "謝辞",
+    "case.enrollInThisCase": "この事例研究に登録する",
+    "case.enrollForEasyAccess": "このケースが目を引く場合は、簡単に見つけれるよう登録してください。",
+    "case.enroll": "登録",
     "case.toc": "目次",
     "case.backToOverview": "戻る",
-    "overview.read": "読む",
-    "overview.listen": "聞く",
-    "overview.relatedPodcast": "関連のポッドキャスト",
-    "overview.explore": "探る",
-    "overview.edgenoteGallery": "Edgenoteの収集",
-    "overview.consider": "選ぶ",
-    "overview.respond": "答える",
-    "overview.giveFeedback": "事例研究はどう思うのか知らせてくださいませんか。",
+    "overview.location": "場所",
+    "overview.learningObjectives": "学習目標",
+    "case.forthcoming": "今後の予定",
     "case.next": "次：",
-    "open-in-new-tab": "新たなタッブで開く。",
     "case.end": "終わり",
     "statusBar.betaNotification": "この事例研究はまだ発刊していない",
     "statusBar.beginEdit": "編集",
+    "statusBar.endEdit": "編集を停止する",
     "statusBar.editInstructions": "テキストを変化するのができる。",
-    "statusBar.save": "保存"
+    "statusBar.options": "オプション",
+    "statusBar.save": "保存",
+    "statusBar.publishCase": "発刊する",
+    "statusBar.unpublishCase": "不発刊する",
+    "statusBar.featureCase": "注目の事例研究に追加する",
+    "statusBar.unfeatureCase": "注目の事例研究から除去する",
+
+    "podcast.hosts": "共に司会者",
+
+    "overview.otherLanguages": "この事例研究は次の言語でも利用できます。",
+    "en": "英語",
+    "fr": "フランス語",
+    "ja": "日本語",
+    "am": "アムハラ語",
+
+    "comments.respond": "応答",
+    "comments.nResponses": "{count, number}件の返信",
+    "comments.writeNew": "新しい返信を書く",
+    "comments.select": "数語を選択",
+    "comments.here": "こちらに返信を書く",
+    "comments.placeholderContent": "コメント無し",
+    "comments.otherComments": "{count, number}件の返信",
+    "comments.write": "返事を書いてください",
+    "comments.selectionNotUnique": "選択された言葉が複数回表示されます。さらにいくつかの文字を選択してください。",
+
+    "community.choose": "コミュニティを選択",
+    "community.instructions": "選択したコミュニティの議論が見えます。",
+    "community.notDiscussing": "あなたのアクティブなコミュニティはこの事例研究について議論していません",
+
+    "submit": "提出",
+    "close": "閉じる",
+    "finishEditing": "編集を完了する",
+    "less.readMore": "続きを読む"
   },
 
   "zh-CN": {
+    "menu.accountOptions": "账户选项",
+    "menu.myAccount": "我的账户",
+    "menu.signIn": "登陆",
+    "menu.signOut": "退出登陆",
+
+    "catalog": "案例目录",
+    "catalog.proposeACase": "案例征集",
+    "catalog.search": "案例搜索",
+
+    "catalog.featuredCases": "明星案例",
+    "catalog.locations": "案例地点",
+    "catalog.allCases": "全部案例",
+
+    "catalog.chooseForYourself": "我的学习我做主",
+    "catalog.meetStakeholders": "在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。",
+    "catalog.shortcutExperience": "通过案例学习获取将所学知识运用于实践的捷径。",
+    "catalog.joinConversation": "参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。",
+    "catalog.enrollmentsInstruction": "选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。",
+
+    "catalog.enrolledCases": "加入案例学习",
+    "catalog.editEnrolled": "编辑我的案例",
+    "catalog.unenrollConfirmation": "你确定要退出这个案例的学习吗？",
+    "catalog.unenrollBetaWarning": "这个案例还未公开发表，你将需要另一封邀请函来重新加入此案例的学习。",
+    "catalog.unenroll": "退出该案例的学习",
+
+    "catalog.learnMore": "了解更多",
+
+    "search.search": "搜索",
+    "search.results": "搜索结果",
+    "search.refine": "细化搜索",
+    "search.keywordQuery": "关键词查询",
+    "search.noResults": "没有可显示的搜索结果",
+    "search.didntMatch": "抱歉，没有找到你所搜索的案例。",
+    "search.tryAgain": "请试试输入其他关键词。",
+    "search.proposeACase":
+      "或者，如果你有希望收入到Gala的案例，或关于案例的设想，请与我们联系。让我们一起为环境和可持续发展领域提供更多更有效的学习资源。",
+
     "summary": "摘要",
+    "case.acknowledgements": "致谢",
+    "case.enrollInThisCase": "加入此案例的学习",
+    "case.enrollForEasyAccess":
+      "如果你喜欢这个案例，就参与到该案例的学习中吧。加入之后，首页上“我的案例”处将会出现链接到该案例的快捷方式。",
+    "case.enroll": "参与学习",
     "case.toc": "目录",
-    "case.backToOverview": "返回主页",
-    "overview.read": "阅读",
-    "overview.listen": "收听",
-    "overview.relatedPodcast": "相关节目",
-    "overview.explore": "探索",
-    "overview.edgenoteGallery": "Edgenote资料库",
-    "overview.consider": "决策",
-    "overview.respond": "建议",
-    "overview.giveFeedback": "请告诉我们你的想法和建议。",
-    "case.next": "下一页：",
-    "open-in-new-tab": "在新的窗口中打开",
+    "case.backToOverview": "返回案例主页",
+    "overview.location": "案例发生地",
+    "overview.learningObjectives": "学习目标",
+    "case.forthcoming": "案例开发中",
+    "case.next": "下一页",
     "case.end": "终",
-    "saved": "已保存",
-    "saving": "保存中",
-    "podcast.hosts": "主持："
+
+    "statusBar.betaNotification": "案例未发表",
+    "statusBar.beginEdit": "编辑该案例",
+    "statusBar.endEdit": "停止编辑该案例",
+    "statusBar.editInstructions": "点击案例，开始编辑。",
+    "statusBar.options": "选项",
+    "statusBar.save": "保存",
+    "statusBar.publishCase": "发表该案例",
+    "statusBar.unpublishCase": "取消发表该案例",
+    "statusBar.featureCase": "将此案例设置为明星案例",
+    "statusBar.unfeatureCase": "取消设置此案例为明星案例",
+
+    "podcast.hosts": "主持人",
+
+    "overview.otherLanguages": "此案例还有以下不同语言的版本：",
+    "en": "英语",
+    "fr": "法语",
+    "ja": "日语",
+    "am": "阿姆哈拉语",
+
+    "comments.respond": "参与讨论",
+    "comments.nResponses": "{count, number}条回复",
+    "comments.writeNew": "发起新话题",
+    "comments.select": "选择想要发起讨论的词句",
+    "comments.here": "回应",
+    "comments.placeholderContent": "目前没有相关讨论",
+    "comments.otherComments": "{count, number}条其他回复",
+    "comments.write": "发表回复",
+    "comments.selectionNotUnique": "你所选择的词句已存在相关话题，请多选几个词。",
+
+    "community.choose": "选择讨论小组",
+    "community.instructions": "加入讨论小组后，你将能够看到该讨论版中的所有对话。",
+    "community.notDiscussing": "你的讨论小组还没有对该案例展开讨论。",
+
+    "submit": "提交",
+    "close": "关闭",
+    "finishEditing": "结束编辑",
+    "less.readMore": "阅读更多"
   },
 
-  "zh-TW": {
+  "zh-CN": {
+    "menu.accountOptions": "賬戶選項",
+    "menu.myAccount": "我的賬戶",
+    "menu.signIn": "登陸",
+    "menu.signOut": "退出登陸",
+
+    "catalog": "案例目錄",
+    "catalog.proposeACase": "案例征集",
+    "catalog.search": "案例搜索",
+
+    "catalog.featuredCases": "明星案例",
+    "catalog.locations": "案例地點",
+    "catalog.allCases": "全部案例",
+
+    "catalog.chooseForYourself": "我的學習我做主",
+    "catalog.meetStakeholders": "在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。",
+    "catalog.shortcutExperience": "通過案例學習獲取將所學知識運用於實踐的捷徑。",
+    "catalog.joinConversation": "參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。",
+    "catalog.enrollmentsInstruction": "選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。",
+
+    "catalog.enrolledCases": "加入案例學習",
+    "catalog.editEnrolled": "編輯我的案例",
+    "catalog.unenrollConfirmation": "你確定要退出這個案例的學習嗎？",
+    "catalog.unenrollBetaWarning": "這個案例還未公開發表，你將需要另一封邀請函來重新加入此案例的學習。",
+    "catalog.unenroll": "退出該案例的學習",
+
+    "catalog.learnMore": "了解更多",
+
+    "search.search": "搜索",
+    "search.results": "搜索結果",
+    "search.refine": "細化搜索",
+    "search.keywordQuery": "關鍵詞查詢",
+    "search.noResults": "沒有可顯示的搜索結果",
+    "search.didntMatch": "抱歉，沒有找到你所搜索的案例。",
+    "search.tryAgain": "請試試輸入其他關鍵詞。",
+    "search.proposeACase":
+      "或者，如果你有希望收入到Gala的案例，或關於案例的設想，請與我們聯系。讓我們一起為環境和可持續發展領域提供更多更有效的學習資源。",
+
     "summary": "摘要",
+    "case.acknowledgements": "致謝",
+    "case.enrollInThisCase": "加入此案例的學習",
+    "case.enrollForEasyAccess":
+      "如果你喜歡這個案例，就參與到該案例的學習中吧。加入之后，首頁上“我的案例”處將會出現鏈接到該案例的快捷方式。",
+    "case.enroll": "參與學習",
     "case.toc": "目錄",
-    "case.backToOverview": "返回主頁",
-    "overview.read": "閱讀",
-    "overview.listen": "收聽",
-    "overview.relatedPodcast": "相關節目",
-    "overview.explore": "探索",
-    "overview.edgenoteGallery": "Edgenote資料庫",
-    "overview.consider": "決策",
-    "overview.respond": "建議",
-    "overview.giveFeedback": "請告訴我們你的想法和建議。",
-    "case.next": "下一頁：",
-    "open-in-new-tab": "在新的窗口中打開",
-    "case.end": "終"
+    "case.backToOverview": "返回案例主頁",
+    "overview.location": "案例發生地",
+    "overview.learningObjectives": "學習目標",
+    "case.forthcoming": "案例開發中",
+    "case.next": "下一頁",
+    "case.end": "終",
+
+    "statusBar.betaNotification": "案例未發表",
+    "statusBar.beginEdit": "編輯該案例",
+    "statusBar.endEdit": "停止編輯該案例",
+    "statusBar.editInstructions": "點擊案例，開始編輯。",
+    "statusBar.options": "選項",
+    "statusBar.save": "保存",
+    "statusBar.publishCase": "發表該案例",
+    "statusBar.unpublishCase": "取消發表該案例",
+    "statusBar.featureCase": "將此案例設置為明星案例",
+    "statusBar.unfeatureCase": "取消設置此案例為明星案例",
+
+    "podcast.hosts": "主持人",
+
+    "overview.otherLanguages": "此案例還有以下不同語言的版本：",
+    "en": "英語",
+    "fr": "法語",
+    "ja": "日語",
+    "am": "阿姆哈拉語",
+
+    "comments.respond": "參與討論",
+    "comments.nResponses": "{count, number}條回復",
+    "comments.writeNew": "發起新話題",
+    "comments.select": "選擇想要發起討論的詞句",
+    "comments.here": "回應",
+    "comments.placeholderContent": "目前沒有相關討論",
+    "comments.otherComments": "{count, number}條其他回復",
+    "comments.write": "發表回復",
+    "comments.selectionNotUnique": "你所選擇的詞句已存在相關話題，請多選幾個詞。",
+
+    "community.choose": "選擇討論小組",
+    "community.instructions": "加入討論小組后，你將能夠看到該討論版中的所有對話。",
+    "community.notDiscussing": "你的討論小組還沒有對該案例展開討論。",
+
+    "submit": "提交",
+    "close": "關閉",
+    "finishEditing": "結束編輯",
+    "less.readMore": "閱讀更多"
   },
 
   "am": {

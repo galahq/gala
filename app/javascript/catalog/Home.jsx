@@ -6,6 +6,8 @@
 import * as React from 'react'
 import { values, omit } from 'ramda'
 
+import { FormattedMessage } from 'react-intl'
+
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import MapView from 'catalog/MapView'
@@ -61,7 +63,12 @@ class Home extends React.Component<{
           }}
         />
         <CatalogSection>
-          <SectionTitle>All cases</SectionTitle>
+          <SectionTitle>
+            <FormattedMessage
+              id="catalog.allCases"
+              defaultMessage="All cases"
+            />
+          </SectionTitle>
           <CaseList
             readerIsEditor={readerIsEditor}
             cases={this._allOtherCases()}

@@ -7,6 +7,7 @@ ja:
       comment_thread: コメントスレッド  #g
       edgenote: Edgenote  #g
       enrollment: 登録  #g
+      global_community: グローバルコミュニティ
       group: グループ  #g
       group_membership: グループのメンバーシップ  #g
       podcast: ポッドキャスト  #g
@@ -98,9 +99,10 @@ ja:
         password: "パスワード"
         password_confirmation: "確認用パスワード"
         remember_me: "ログインを記憶"
-        reset_password_token: 
-        unlock_token: 
+        reset_password_token:
+        unlock_token:
         locale: 言語
+        send_reply_notifications: 私が書いたコメントに誰かが返信したときに通知する
   devise:
     shared:
       links:
@@ -113,5 +115,5 @@ ja:
       edit:
         change_my_password: パスワードを変化
         my_account: アカウント
-        to_confirm_your_changes: 
+        to_confirm_your_changes:
         save: 変化を保存

@@ -7,9 +7,13 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import styled from 'styled-components'
+import { addLocaleData, IntlProvider } from 'react-intl'
 
 import { UnconnectedBillboardTitle } from 'overview/BillboardTitle'
 import { UnconnectedCommunityChooser } from 'overview/CommunityChooser'
+
+const { locale } = (window.i18n: { locale: string })
+import messages from '../../../config/locales/react.json' // eslint-disable-line
 
 const container = document.getElementById('billboard-app')
 
@@ -33,22 +37,28 @@ const Button = styled.button.attrs({
   margin: 2em;
 `
 
-if (container != null) {
-  ReactDOM.render(
-    <Column>
-      <UnconnectedBillboardTitle updateCase={() => {}} {...caseData} />
-      <UnconnectedCommunityChooser
-        rounded
-        disabled
-        activeCommunity={groupData}
-        communities={[{ groupData }]}
-      />
+import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
+  addLocaleData(m)
 
-      <form action="/enrollments" method="POST">
-        <input type="hidden" name="deployment_key" value={deploymentKey} />
-        <Button>Let’s get started!</Button>
-      </form>
-    </Column>,
-    container
-  )
-}
+  if (container != null) {
+    ReactDOM.render(
+      <IntlProvider locale={locale} messages={messages[locale]}>
+        <Column>
+          <UnconnectedBillboardTitle updateCase={() => {}} {...caseData} />
+          <UnconnectedCommunityChooser
+            rounded
+            disabled
+            activeCommunity={groupData}
+            communities={[{ groupData }]}
+          />
+
+          <form action="/enrollments" method="POST">
+            <input type="hidden" name="deployment_key" value={deploymentKey} />
+            <Button>Let’s get started!</Button>
+          </form>
+        </Column>
+      </IntlProvider>,
+      container
+    )
+  }
+})

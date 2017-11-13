@@ -54,7 +54,11 @@ function StatusBar ({
         ? {
           message: 'catalog',
           iconName: 'home',
-          onClick: () => (window.location = '/'),
+          onClick: () =>
+              (window.location = window.location.pathname.replace(
+                /cases.*/,
+                ''
+              )),
         }
         : {
           message: 'case.backToOverview',

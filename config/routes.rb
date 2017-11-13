@@ -97,5 +97,6 @@ Rails.application.routes.draw do
   devise_for :authentication_strategies, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'authentication_strategies/omniauth_callbacks'
   }
+  get '(:locale)', locale: locale_regex, to: 'catalog#home'
   root to: 'catalog#home'
 end
