@@ -30,9 +30,9 @@ class Quiz < ApplicationRecord
     end
   end
 
-  def questions
-    @questions ||= Question.where <<~SQL
-      questions.quiz_id IN (
+  def ancestors
+    @ancestors ||= Quiz.where <<~SQL
+      id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
             SELECT id, template_id
               FROM quizzes
@@ -46,6 +46,10 @@ class Quiz < ApplicationRecord
           FROM template_quizzes
       )
     SQL
+  end
+
+  def questions
+    @questions ||= Question.where quiz_id: ancestors.pluck(:id)
   end
 
   def answers

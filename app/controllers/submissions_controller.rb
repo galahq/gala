@@ -56,8 +56,8 @@ class SubmissionsController < ApplicationController
     @quiz = @deployment.quiz
 
     Submission.includes(:reader, :answers)
-              .where(quiz_id: @quiz.id, reader_id: reader_ids)
-              .order(:created_at)
+              .where(quiz_id: @quiz.ancestors.pluck(:id),
+                     reader_id: reader_ids)
   end
 
   def answers
