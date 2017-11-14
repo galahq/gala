@@ -19,6 +19,7 @@ class Reader < ApplicationRecord
   has_many :groups, through: :group_memberships
   has_many :deployments, through: :groups
 
+  has_many :submissions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :quizzes, through: :answers
 
