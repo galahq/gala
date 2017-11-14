@@ -25,6 +25,6 @@ class Submission < ApplicationRecord
   end
 
   def answer(to_question_id:)
-    answers.find { |a| a.question_id == to_question_id }.content || ''
+    answers.find { |a| a.question_id == to_question_id }.try(:content) || ''
   end
 end
