@@ -52,4 +52,9 @@ class ApplicationController < ActionController::Base
   def authority_forbidden(_error)
     render file: Rails.root.join('public', '403.html'), status: 403, layout: false
   end
+
+  def download_as(filename, type = nil)
+    headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+    headers['Content-Type'] ||= type
+  end
 end

@@ -1,0 +1,20 @@
+<%- headers = [
+                "Timestamp",
+                "Reader name",
+                "Reader email",
+                "Percent Completion"
+              ] + @quiz.questions.map(&:content) -%>
+<%= raw CSV.generate_line headers -%>
+<%= raw CSV.generate_line [
+                            '', 'Answer key', '', ''
+                          ] + @quiz.questions.map(&:correct_answer) -%>
+<%  @submissions.find_each do |submission| -%>
+<%    answers = @quiz.questions.map(&:id)
+                     .map {|id| submission.answer to_question_id: id} -%>
+<%=   raw CSV.generate_line [
+        submission.created_at,
+        submission.reader.name,
+        submission.reader.email,
+        submission.answers.take.case_completion,
+      ] + answers -%>
+<% end -%>

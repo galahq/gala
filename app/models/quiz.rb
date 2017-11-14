@@ -31,7 +31,7 @@ class Quiz < ApplicationRecord
   end
 
   def questions
-    Question.where <<~SQL
+    @questions ||= Question.where <<~SQL
       questions.quiz_id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
             SELECT id, template_id

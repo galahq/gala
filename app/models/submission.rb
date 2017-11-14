@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Submission < ApplicationRecord
+  include Authority::Abilities
+
   belongs_to :quiz
   belongs_to :reader
   has_many :answers, dependent: :destroy
@@ -20,5 +22,9 @@ class Submission < ApplicationRecord
     rescue ActiveRecord::RecordInvalid
       return false
     end
+  end
+
+  def answer(to_question_id:)
+    answers.find { |a| a.question_id == to_question_id }.content || ''
   end
 end
