@@ -2,7 +2,7 @@
                 "Timestamp",
                 "Reader name",
                 "Reader email",
-                "Percent Completion"
+                "Percent completion"
               ] + @quiz.questions.map(&:content) -%>
 <%= raw CSV.generate_line headers -%>
 <%= raw CSV.generate_line [
