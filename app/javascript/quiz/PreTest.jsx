@@ -6,7 +6,7 @@
 import React from 'react'
 
 import { Route } from 'react-router-dom'
-import { Dialog, Button, Tooltip, Position } from '@blueprintjs/core'
+import { Dialog, Button } from '@blueprintjs/core'
 import type { ContextRouter } from 'react-router-dom'
 
 import CaseOverview from 'overview/CaseOverview'
@@ -58,13 +58,7 @@ const PreTest = ({
 
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
-            <Tooltip
-              isDisabled={canSubmit}
-              content="Please answer all the questions"
-              position={Position.TOP}
-            >
-              <Button disabled={!canSubmit} text="Submit" onClick={onSubmit} />
-            </Tooltip>
+            <Button disabled={!canSubmit} text="Submit" onClick={onSubmit} />
           </div>
         </div>
       </Dialog>

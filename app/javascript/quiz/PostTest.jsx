@@ -7,7 +7,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { values } from 'ramda'
 
-import { Button, Tooltip, Position, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 
 import Sidebar from 'elements/Sidebar'
 import { providesQuiz } from './Quiz'
@@ -125,18 +125,12 @@ class PostTest extends React.Component<
                 onChange={(e: SyntheticInputEvent<*>) => onChange(q.id, e)}
               />
             ))}
-            <Tooltip
-              isDisabled={canSubmit}
-              content="Please answer all the questions"
-              position={Position.TOP}
-            >
-              <Button
-                disabled={!canSubmit}
-                intent={Intent.PRIMARY}
-                text="Submit"
-                onClick={this.handleSubmit}
-              />
-            </Tooltip>
+            <Button
+              disabled={!canSubmit}
+              intent={Intent.PRIMARY}
+              text="Submit"
+              onClick={this.handleSubmit}
+            />
           </div>
         </main>
       </div>
