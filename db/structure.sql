@@ -109,7 +109,8 @@ CREATE TABLE answers (
     correct boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    case_completion numeric
+    case_completion numeric,
+    submission_id bigint
 );
 
 
@@ -974,6 +975,38 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE submissions (
+    id bigint NOT NULL,
+    quiz_id bigint,
+    reader_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE submissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE submissions_id_seq OWNED BY submissions.id;
+
+
+--
 -- Name: visits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1200,6 +1233,13 @@ ALTER TABLE ONLY reply_notifications ALTER COLUMN id SET DEFAULT nextval('reply_
 --
 
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: submissions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY submissions ALTER COLUMN id SET DEFAULT nextval('submissions_id_seq'::regclass);
 
 
 --
@@ -1442,6 +1482,14 @@ ALTER TABLE ONLY schema_migrations
 
 
 --
+-- Name: submissions submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY submissions
+    ADD CONSTRAINT submissions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: visits visits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1503,6 +1551,13 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_answers_on_reader_id ON answers USING btree (reader_id);
+
+
+--
+-- Name: index_answers_on_submission_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_answers_on_submission_id ON answers USING btree (submission_id);
 
 
 --
@@ -1863,6 +1918,20 @@ CREATE INDEX index_roles_on_name_and_resource_type_and_resource_id ON roles USIN
 
 
 --
+-- Name: index_submissions_on_quiz_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_submissions_on_quiz_id ON submissions USING btree (quiz_id);
+
+
+--
+-- Name: index_submissions_on_reader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_submissions_on_reader_id ON submissions USING btree (reader_id);
+
+
+--
 -- Name: index_visits_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1893,11 +1962,27 @@ ALTER TABLE ONLY comment_threads
 
 
 --
+-- Name: answers fk_rails_03d3a93cfc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY answers
+    ADD CONSTRAINT fk_rails_03d3a93cfc FOREIGN KEY (submission_id) REFERENCES submissions(id);
+
+
+--
 -- Name: enrollments fk_rails_0411d261ff; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY enrollments
     ADD CONSTRAINT fk_rails_0411d261ff FOREIGN KEY (case_id) REFERENCES cases(id);
+
+
+--
+-- Name: submissions fk_rails_369ed4eb5c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY submissions
+    ADD CONSTRAINT fk_rails_369ed4eb5c FOREIGN KEY (quiz_id) REFERENCES quizzes(id);
 
 
 --
@@ -2109,6 +2194,14 @@ ALTER TABLE ONLY podcasts
 
 
 --
+-- Name: submissions fk_rails_ea35513632; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY submissions
+    ADD CONSTRAINT fk_rails_ea35513632 FOREIGN KEY (reader_id) REFERENCES readers(id);
+
+
+--
 -- Name: deployments fk_rails_f49860c54d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2203,6 +2296,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171024180715'),
 ('20171025205053'),
 ('20171030185254'),
-('20171031161433');
+('20171031161433'),
+('20171113192541');
 
 

@@ -54,7 +54,9 @@ Rails.application.routes.draw do
     end
 
     resources :groups, only: [] do
-      resources :deployments, shallow: true, only: %i[create edit update]
+      resources :deployments, shallow: true, only: %i[create edit update] do
+        resources :submissions, only: %i[index]
+      end
     end
 
     resources :enrollments, only: %i[index new create]

@@ -1,5 +1,4 @@
 /**
- * @providesModule Quiz
  * @flow
  */
 
@@ -49,36 +48,46 @@ export function providesQuiz<P: {}> (
     ...P,
   |}>
 ) {
-  class QuizProvider extends React.Component<*, QuizState> {
-    state: QuizState = {}
+  class QuizProvider extends React.Component<
+    *,
+    { submitting: boolean, quizState: QuizState }
+  > {
+    state = { submitting: false, quizState: {}}
 
     _canSubmit = () => {
       const { submissionNeeded, isInstructor, questions } = this.props
+      const { submitting, quizState } = this.state
+      if (submitting) return false
       if (!submissionNeeded) return false
       if (isInstructor) return false
 
       return questions.map(x => x.id).every(x => {
-        const answer = this.state[x]
+        const answer = quizState[x]
         return answer && answer.trim().length > 0
       })
     }
 
     handleChange = (questionId: string, e: SyntheticInputEvent<*>) => {
       const value = e.target.value
-      this.setState((state: QuizState) => ({
-        ...state,
-        [questionId]: value,
+      this.setState(state => ({
+        quizState: {
+          ...state.quizState,
+          [questionId]: value,
+        },
       }))
     }
 
     handleSubmit = () => {
-      return this.props.submitQuiz(this.props.id, this.state)
+      this.setState({ submitting: true })
+      return this.props
+        .submitQuiz(this.props.id, this.state.quizState)
+        .then(() => this.setState({ submitting: false }))
     }
 
     render () {
       return (
         <QuizPresenter
-          answers={this.state}
+          answers={this.state.quizState}
           canSubmit={this._canSubmit()}
           {...this.props}
           onChange={this.handleChange}

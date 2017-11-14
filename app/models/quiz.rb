@@ -5,6 +5,7 @@ class Quiz < ApplicationRecord
 
   has_many :deployments, dependent: :nullify
   has_many :custom_questions, class_name: 'Question', dependent: :destroy
+  has_many :submissions, dependent: :destroy
   belongs_to :case
   belongs_to :template, class_name: 'Quiz'
   belongs_to :author, class_name: 'Reader'
@@ -29,9 +30,9 @@ class Quiz < ApplicationRecord
     end
   end
 
-  def questions
-    Question.where <<~SQL
-      questions.quiz_id IN (
+  def ancestors
+    @ancestors ||= Quiz.where <<~SQL
+      id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
             SELECT id, template_id
               FROM quizzes
@@ -45,6 +46,10 @@ class Quiz < ApplicationRecord
           FROM template_quizzes
       )
     SQL
+  end
+
+  def questions
+    @questions ||= Question.where quiz_id: ancestors.pluck(:id)
   end
 
   def answers

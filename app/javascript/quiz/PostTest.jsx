@@ -5,8 +5,9 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { values } from 'ramda'
 
-import { Button, Tooltip, Position, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 
 import Sidebar from 'elements/Sidebar'
 import { providesQuiz } from './Quiz'
@@ -18,15 +19,32 @@ import { Orchard } from 'shared/orchard'
 import type { Question as QuestionT } from 'redux/state'
 import type { QuizProviderProps } from './Quiz'
 
-type Submission = {
-  answersByQuestionId: {
+type Quiz = {
+  id: string,
+  questions: {
+    id: string,
+    content: string,
+    correctAnswer: string,
+    options: string[],
+  }[],
+}
+
+type Submissions = {
+  submissions: {
     [string]: {
       id: string,
+      readerId: string,
       quizId: string,
-      content: string,
-      correct: boolean,
       createdAt: Date,
-    }[],
+      answersByQuestionId: {
+        [string]: {
+          id: string,
+          content: string,
+          correct: boolean,
+          createdAt: Date,
+        },
+      },
+    },
   },
 }
 
@@ -107,18 +125,12 @@ class PostTest extends React.Component<
                 onChange={(e: SyntheticInputEvent<*>) => onChange(q.id, e)}
               />
             ))}
-            <Tooltip
-              isDisabled={canSubmit}
-              content="Please answer all the questions"
-              position={Position.TOP}
-            >
-              <Button
-                disabled={!canSubmit}
-                intent={Intent.PRIMARY}
-                text="Submit"
-                onClick={this.handleSubmit}
-              />
-            </Tooltip>
+            <Button
+              disabled={!canSubmit}
+              intent={Intent.PRIMARY}
+              text="Submit"
+              onClick={this.handleSubmit}
+            />
           </div>
         </main>
       </div>
@@ -127,19 +139,24 @@ class PostTest extends React.Component<
 
   _loadCorrectAnswers = () => {
     const { id } = this.props
-    Orchard.harvest(`quizzes/${id}`).then(quiz =>
+    Orchard.harvest(`quizzes/${id}`).then((quiz: Quiz) =>
       Orchard.harvest(
         `quizzes/${id}/submissions`
-      ).then((submission: Submission) =>
+      ).then(({ submissions }: Submissions) => {
+        const lastSubmission = values(submissions).reduce(
+          (max, submission) =>
+            max.createdAt >= submission.createdAt ? max : submission
+        )
+
         this.setState({
           correctAnswers: quiz.questions.map(q => q.correctAnswer),
           selectedAnswers: quiz.questions.map(q => {
-            const answers = submission.answersByQuestionId[(q.id: string)]
+            const answers = lastSubmission.answersByQuestionId[q.id]
             if (answers == null) return ''
-            return answers.pop().content
+            return answers.content
           }),
         })
-      )
+      })
     )
   }
 }
