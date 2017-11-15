@@ -1,16 +1,18 @@
 <header>
-  <%= link_to root_path, id: "gala-logo" do %>
-    <%= inline_svg 'gala-logo.svg' %>
-  <% end %>
-  <div id="main-menu-app" class="pt-dark"></div>
-  <%= javascript_tag do %>
-    window.reader = <% if reader_signed_in? %>
-    <%= raw render partial: "readers/reader", formats: [:json], locals: {reader: current_reader}%>
-    <% else %>
-    undefined;
+  <div class="header__container">
+    <%= link_to root_path, id: "gala-logo" do %>
+      <%= inline_svg 'gala-logo.svg' %>
     <% end %>
-  <% end %>
-  <%= javascript_pack_tag 'main-menu', async: true %>
+    <div id="main-menu-app" class="pt-dark"></div>
+    <%= javascript_tag do %>
+      window.reader = <% if reader_signed_in? %>
+      <%= raw render partial: "readers/reader", formats: [:json], locals: {reader: current_reader}%>
+      <% else %>
+      undefined;
+      <% end %>
+    <% end %>
+    <%= javascript_pack_tag 'main-menu', async: true %>
+</div>
 </header>
 
 <% if flash[:notice] || flash[:alert] %>
