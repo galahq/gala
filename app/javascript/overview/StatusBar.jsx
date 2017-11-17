@@ -49,9 +49,9 @@ function StatusBar ({
   history,
 }) {
   const groups = [
-    [
-      pathname === '/'
-        ? {
+    pathname === '/'
+      ? [
+        {
           message: 'catalog',
           iconName: 'home',
           onClick: () =>
@@ -59,13 +59,20 @@ function StatusBar ({
                 /cases.*/,
                 ''
               )),
-        }
-        : {
+        },
+        {
+          message: 'conversation',
+          iconName: 'chat',
+          onClick: () => history.push('/conversation'),
+        },
+      ]
+      : [
+        {
           message: 'case.backToOverview',
           iconName: 'arrow-left',
           onClick: () => history.push('/'),
         },
-    ],
+      ],
     [
       editing
         ? { message: 'statusBar.editInstructions' }

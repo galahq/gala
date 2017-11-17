@@ -14,10 +14,12 @@ export const identiconStyle = ({
   image,
   hashKey,
   text,
+  width,
 }: {
   image: string,
   hashKey: string,
   text: string,
+  width: number,
 }) => css`
   background-image: ${({ image, hashKey }) =>
     image ? `url(${image})` : identigradient(hashKey)};
@@ -28,22 +30,31 @@ export const identiconStyle = ({
     content: ${({ text, image }) => (image ? '' : `'${text[0]}'`)};
     font-weight: 600;
     color: #ebeae4;
+    font-size: ${({ width }) => (width >= 25 ? '16px' : '12px')};
   }
 `
 
 const IdenticonDiv = styled.div.attrs({
   'aria-label': ({ text }) => text,
+  className: 'Identicon',
 })`
-  width: 36px;
-  height: 36px;
+  width: ${({ width }) => `${width}px`};
+  height: ${({ width }) => `${width}px`};
   border-radius: 2px;
   background-size: cover;
   background-position: center;
   ${identiconStyle};
 `
 
-const Identicon = ({ reader }: { reader: Reader }) => (
+const Identicon = ({
+  reader,
+  width = 36,
+}: {
+  reader: { imageUrl: ?string, email: string, name: string },
+  width?: number,
+}) => (
   <IdenticonDiv
+    width={width}
     image={reader.imageUrl}
     hashKey={reader.email}
     text={reader.name}
