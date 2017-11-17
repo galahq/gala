@@ -36,6 +36,9 @@ const PreTest = asyncComponent(() =>
 const PostTest = asyncComponent(() =>
   import('quiz/PostTest').then(m => m.default)
 )
+const Conversation = asyncComponent(() =>
+  import('conversation').then(m => m.default)
+)
 
 function mapStateToProps ({ quiz, caseData }: State) {
   return {
@@ -125,6 +128,7 @@ class Case extends React.Component<{
               <Route exact path="/" component={CaseOverview} />
               <Route path={needsPretest ? '/*' : 'miss'} component={PreTest} />
               <Route path={hasQuiz ? '/quiz/' : 'miss'} component={PostTest} />
+              <Route path="/conversation" component={Conversation} />
               <Route path="/:position/" component={CaseElement} />
             </Switch>
           </div>
