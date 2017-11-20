@@ -4,11 +4,12 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
 import Truncate from 'react-truncate'
+import { matchPath, Link, withRouter } from 'react-router-dom'
 
 import {
   CommentThreadBreadcrumbs,
@@ -16,11 +17,13 @@ import {
 } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 
+import type { ContextRouter } from 'react-router-dom'
+
 import type { State } from 'redux/state'
 
 function mapStateToProps (
   { commentThreadsById, cardsById, pagesById, commentsById }: State,
-  { id }: { id: string }
+  { id, location }: { id: string, ...ContextRouter }
 ) {
   const {
     cardId,
@@ -32,24 +35,29 @@ function mapStateToProps (
   const { position: pageNumber } = pagesById[cardsById[cardId].pageId]
   const mostRecentComment =
     commentsById[commentIds[commentIds.length - 1]].content
+  const open = !!matchPath(location.pathname, { path: `/conversation/${id}` })
 
   return {
-    pageNumber,
-    originalHighlightText,
-    mostRecentComment,
+    open,
     commentsCount,
+    mostRecentComment,
+    originalHighlightText,
+    pageNumber,
     readers,
+    threadId: id,
   }
 }
 
 const CommentThreadItem = ({
-  pageNumber,
-  originalHighlightText,
-  mostRecentComment,
+  open,
   commentsCount,
+  mostRecentComment,
+  originalHighlightText,
+  pageNumber,
   readers,
+  threadId,
 }) => (
-  <CommentThreadContainer>
+  <CommentThreadLink to={`/conversation/${threadId}`} open={open}>
     <CommentThreadBreadcrumbs>
       <CommentThreadBreadcrumb>
         <FormattedMessage
@@ -64,13 +72,13 @@ const CommentThreadItem = ({
     </CommentThreadBreadcrumbs>
 
     <MostRecentComment>
-      <Truncate lines={5}>{mostRecentComment}</Truncate>
+      <PureTruncate lines={5} content={mostRecentComment} />
     </MostRecentComment>
 
     <ConversationMetadata>
       <Indenticons>
         {readers.map(reader => (
-          <Identicon key={reader.email} width={22} reader={reader} />
+          <Identicon key={reader.hashKey} width={22} reader={reader} />
         ))}
       </Indenticons>
       <CommentCount>
@@ -84,16 +92,47 @@ const CommentThreadItem = ({
         />
       </CommentCount>
     </ConversationMetadata>
-  </CommentThreadContainer>
+  </CommentThreadLink>
 )
-export default connect(mapStateToProps)(CommentThreadItem)
+export default withRouter(connect(mapStateToProps)(CommentThreadItem))
 
-const CommentThreadContainer = styled.div`
+const CommentThreadLink = styled(Link)`
+  display: block;
+  color: inherit;
   padding: 14px 18px;
+
+  &:hover {
+    color: inherit;
+  }
 
   &:not(:last-child) {
     border-bottom: 1px solid #bfbdac;
   }
+
+  &:focus {
+    border: 3px solid #373565;
+    padding: 11px 15px 12px;
+    outline: none;
+  }
+
+  .pt-focus-disabled & {
+    border: none;
+    padding: 14px 18px;
+    border-bottom: 1px solid #bfbdac;
+  }
+
+  ${({ open }) =>
+    open &&
+    css`
+      background-color: #d2c9ef;
+
+      & .has-text-shadow {
+        text-shadow: #d2c9ef 0.03em 0px, #d2c9ef -0.03em 0px, #d2c9ef 0px 0.03em,
+          #d2c9ef 0px -0.03em, #d2c9ef 0.06em 0px, #d2c9ef -0.06em 0px,
+          #d2c9ef 0.09em 0px, #d2c9ef -0.09em 0px, #d2c9ef 0.12em 0px,
+          #d2c9ef -0.12em 0px, #d2c9ef 0.15em 0px, #d2c9ef -0.15em 0px;
+      }
+    `};
 `
 
 const MostRecentComment = styled.blockquote`
@@ -125,3 +164,14 @@ const CommentCount = styled.div`
   color: #5c7080;
   font-size: 13px;
 `
+
+// eslint-disable-next-line react/prefer-stateless-function
+class PureTruncate extends React.PureComponent<{
+  lines: number,
+  content: string,
+}> {
+  render () {
+    const { lines, content } = this.props
+    return <Truncate lines={lines}>{content}</Truncate>
+  }
+}

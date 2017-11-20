@@ -100,6 +100,10 @@ class Reader < ApplicationRecord
     enrollments.find { |e| e.case.id == c.id }
   end
 
+  def hash_key
+    @hash_key ||= Digest::SHA256.hexdigest(email)
+  end
+
   def quiz?(quiz)
     (quiz.lti_uid && quiz.lti_uid == lti_uid) ||
       (quiz.author_id && quiz.author_id == id)

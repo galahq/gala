@@ -50,13 +50,13 @@ const Identicon = ({
   reader,
   width = 36,
 }: {
-  reader: { imageUrl: ?string, email: string, name: string },
+  reader: { imageUrl: ?string, hashKey: string, name: string },
   width?: number,
 }) => (
   <IdenticonDiv
     width={width}
     image={reader.imageUrl}
-    hashKey={reader.email}
+    hashKey={reader.hashKey}
     text={reader.name}
   />
 )

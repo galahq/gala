@@ -4,6 +4,7 @@
 
 import * as React from 'react'
 import styled, { css } from 'styled-components'
+import { FormattedDate } from 'react-intl'
 
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
   className: 'pt-breadcrumbs',
@@ -61,7 +62,9 @@ const StyledBreadcrumbLink = styled.a.attrs({ className: 'pt-breadcrumb' })`
     `};
 `
 
-const OptionalUnderline = styled.span`
+const OptionalUnderline = styled.span.attrs({
+  className: ({ quotation }) => (quotation ? 'has-text-shadow' : ''),
+})`
   ${({ quotation }) =>
     quotation &&
     css`
@@ -80,3 +83,22 @@ export const ScrollView = styled.div`
   max-height: ${({ maxHeight }) => maxHeight || '100vh'};
   overflow: scroll;
 `
+
+export const SmallGreyText = styled.span`
+  font-size: 14px;
+  color: #5c7080;
+  line-height: 1.2;
+`
+
+const CONVERSATION_TIME_FORMAT = { hour: 'numeric', minute: 'numeric' }
+const CONVERSATION_DATE_FORMAT = {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+}
+export const ConversationTimestamp = ({ value }: { value: string }) => (
+  <span>
+    <FormattedDate {...CONVERSATION_DATE_FORMAT} value={value} /> ·{' '}
+    <FormattedDate {...CONVERSATION_TIME_FORMAT} value={value} />
+  </span>
+)
