@@ -10,6 +10,7 @@ import type {
   OpenCitationAction,
   HoverCommentThreadAction,
   AcceptSelectionAction,
+  SetMostRecentCommentThreadsAction,
   AddCommentThreadAction,
   ChangeCommentInProgressAction,
   RegisterToasterAction,
@@ -22,6 +23,7 @@ type Action =
   | OpenCitationAction
   | HoverCommentThreadAction
   | AcceptSelectionAction
+  | SetMostRecentCommentThreadsAction
   | AddCommentThreadAction
   | ChangeCommentInProgressAction
   | RegisterToasterAction
@@ -37,6 +39,7 @@ export default function ui (state: ?UIState, action: Action): UIState {
       acceptingSelection: false,
       commentInProgress: {},
       toaster: null,
+      mostRecentCommentThreads: [],
     }
   }
 
@@ -52,6 +55,13 @@ export default function ui (state: ?UIState, action: Action): UIState {
 
     case 'ACCEPT_SELECTION':
       return { ...state, acceptingSelection: action.enabled }
+
+    case 'SET_MOST_RECENT_COMMENT_THREADS':
+      return {
+        ...state,
+        mostRecentCommentThreads: action.mostRecentCommentThreads,
+      }
+
     case 'ADD_COMMENT_THREAD':
       return { ...state, acceptingSelection: false }
 

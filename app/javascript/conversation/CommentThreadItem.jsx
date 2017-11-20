@@ -5,6 +5,10 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
+
+import { FormattedMessage } from 'react-intl'
+import Truncate from 'react-truncate'
 
 import {
   CommentThreadBreadcrumbs,
@@ -12,37 +16,77 @@ import {
 } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 
-const CommentThreadItem = () => (
+import type { State } from 'redux/state'
+
+function mapStateToProps (
+  { commentThreadsById, cardsById, pagesById, commentsById }: State,
+  { id }: { id: string }
+) {
+  const {
+    cardId,
+    commentsCount,
+    commentIds,
+    originalHighlightText,
+    readers,
+  } = commentThreadsById[id]
+  const { position: pageNumber } = pagesById[cardsById[cardId].pageId]
+  const mostRecentComment =
+    commentsById[commentIds[commentIds.length - 1]].content
+
+  return {
+    pageNumber,
+    originalHighlightText,
+    mostRecentComment,
+    commentsCount,
+    readers,
+  }
+}
+
+const CommentThreadItem = ({
+  pageNumber,
+  originalHighlightText,
+  mostRecentComment,
+  commentsCount,
+  readers,
+}) => (
   <CommentThreadContainer>
     <CommentThreadBreadcrumbs>
-      <CommentThreadBreadcrumb>Beginning in 1984…</CommentThreadBreadcrumb>
+      <CommentThreadBreadcrumb>
+        <FormattedMessage
+          id="case.pageN"
+          defaultMessage={`Page {pageNumber, number}`}
+          values={{ pageNumber }}
+        />
+      </CommentThreadBreadcrumb>
       <CommentThreadBreadcrumb quotation>
-        the program has suffered from under-funding since 1996, when the tax
-        creating the Superfund was allowed to expire
+        {originalHighlightText}
       </CommentThreadBreadcrumb>
     </CommentThreadBreadcrumbs>
 
     <MostRecentComment>
-      To “spray the lawns” Gelman shot a spray of contaminated water high into
-      the air, which allowed wind dispersion.
+      <Truncate lines={5}>{mostRecentComment}</Truncate>
     </MostRecentComment>
 
     <ConversationMetadata>
       <Indenticons>
-        <Identicon
-          width={22}
-          reader={{
-            imageUrl: null,
-            email: 'cameronbothner@gmail.com',
-            name: 'Cameron',
-          }}
-        />
+        {readers.map(reader => (
+          <Identicon key={reader.email} width={22} reader={reader} />
+        ))}
       </Indenticons>
-      <CommentCount>1 comment</CommentCount>
+      <CommentCount>
+        <FormattedMessage
+          id="comments.nResponses"
+          defaultMessage={`{count, number} {count, plural,
+          one {response}
+          other {responses}
+        }`}
+          values={{ count: commentsCount }}
+        />
+      </CommentCount>
     </ConversationMetadata>
   </CommentThreadContainer>
 )
-export default CommentThreadItem
+export default connect(mapStateToProps)(CommentThreadItem)
 
 const CommentThreadContainer = styled.div`
   padding: 14px 18px;
@@ -53,7 +97,7 @@ const CommentThreadContainer = styled.div`
 `
 
 const MostRecentComment = styled.blockquote`
-  padding-left: 0;
+  padding: 0;
   border: none;
   font-size: 16px;
   line-height: 1.3;
@@ -69,7 +113,14 @@ const ConversationMetadata = styled.div`
   justify-content: space-between;
   margin: 14px 0 0.5em;
 `
-const Indenticons = styled.div``
+const Indenticons = styled.div`
+  display: flex;
+  justify-content: flex-start;
+
+  & .Identicon {
+    margin-right: 5px;
+  }
+`
 const CommentCount = styled.div`
   color: #5c7080;
   font-size: 13px;
