@@ -14,25 +14,25 @@ import { ScrollView } from 'conversation/shared'
 
 import type { State } from 'redux/state'
 
-function mapStateToProps ({ caseData }: State) {
+function mapStateToProps ({ caseData, ui }: State) {
   const { coverUrl } = caseData
+  const { mostRecentCommentThreads } = ui
   return {
     coverUrl,
+    mostRecentCommentThreads,
   }
 }
 
-const RecentCommentThreads = ({ coverUrl }) => (
+const RecentCommentThreads = ({ coverUrl, mostRecentCommentThreads }) => (
   <Container>
     <CoverImageContainer src={coverUrl} />
     <Shadow>
       <CommunityChooser />
     </Shadow>
     <ScrollView maxHeight="calc(100vh - 216px)">
-      <CommentThreadItem />
-      <CommentThreadItem />
-      <CommentThreadItem />
-      <CommentThreadItem />
-      <CommentThreadItem />
+      {mostRecentCommentThreads.map(id => (
+        <CommentThreadItem key={id} id={id} />
+      ))}
     </ScrollView>
   </Container>
 )

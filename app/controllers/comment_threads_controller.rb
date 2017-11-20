@@ -9,7 +9,7 @@ class CommentThreadsController < ApplicationController
   def index
     @forum = current_reader.active_community.forums.find_by(case: @case)
     @comment_threads = if @forum.nil?
-                         []
+                         CommentThread.none
                        else
                          @forum.comment_threads
                                .visible_to_reader?(current_reader)

@@ -654,14 +654,18 @@ export function resubscribeToActiveForumChannel (slug: string): ThunkAction {
 //
 export function fetchCommentThreads (slug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const { commentThreads, comments, cards } = await Orchard.harvest(
-      `cases/${slug}/comment_threads`
-    )
+    const {
+      commentThreads,
+      comments,
+      cards,
+      mostRecentCommentThreads,
+    } = await Orchard.harvest(`cases/${slug}/comment_threads`)
     dispatch(
       batchActions([
         setCommentsById(comments),
         setCommentThreadsById(commentThreads),
         setCards(cards),
+        setMostRecentCommentThreads(mostRecentCommentThreads),
       ])
     )
     dispatch(parseAllCards())
@@ -676,6 +680,14 @@ export function setCommentThreadsById (
   commentThreadsById: CommentThreadsState
 ): SetCommentThreadsByIdAction {
   return { type: 'SET_COMMENT_THREADS_BY_ID', commentThreadsById }
+}
+
+export type SetMostRecentCommentThreadsAction = {
+  type: 'SET_MOST_RECENT_COMMENT_THREADS',
+  mostRecentCommentThreads: string[],
+}
+function setMostRecentCommentThreads (mostRecentCommentThreads: string[]) {
+  return { type: 'SET_MOST_RECENT_COMMENT_THREADS', mostRecentCommentThreads }
 }
 
 export function createCommentThread (
@@ -930,11 +942,13 @@ export function handleNotification (notification: Notification): ThunkAction {
         intent: Intent.PRIMARY,
         action: {
           onClick: _ => {
-            dispatch(
-              updateActiveCommunity(kase.slug, community.id)
-            ).then(() => {
-              window.location = `/cases/${kase.slug}/${element.position}/cards/${cardId}/comments/${commentThreadId}`
-            })
+            dispatch(updateActiveCommunity(kase.slug, community.id)).then(
+              () => {
+                window.location = `/cases/${kase.slug}/${
+                  element.position
+                }/cards/${cardId}/comments/${commentThreadId}`
+              }
+            )
           },
           text: 'Read',
         },

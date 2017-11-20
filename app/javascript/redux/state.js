@@ -94,6 +94,7 @@ export type UIState = {
   },
   highlightedEdgenote: ?string,
   hoveredCommentThread: ?string,
+  mostRecentCommentThreads: string[],
   openedCitation: | {| key: null |}
     | {|
         key: string,
@@ -129,6 +130,7 @@ export type Card = {
   content: string,
   editorState: ?EditorState,
   id: string,
+  pageId: string,
   position: number,
   rawContent: ?RawDraftContentState,
   solid: boolean,
@@ -191,6 +193,7 @@ export type CommentThread = {
   length: number,
   originalHighlightText: string,
   readerId: number,
+  readers: { imageUrl: ?string, email: string, name: string }[],
   start: number,
 }
 
