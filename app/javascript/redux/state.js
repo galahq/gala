@@ -180,6 +180,8 @@ export type Comment = {
     id: string,
     initials: string,
     name: string,
+    imageUrl: ?string,
+    hashKey: string,
   },
   timestamp: string,
 }
@@ -193,7 +195,7 @@ export type CommentThread = {
   length: number,
   originalHighlightText: string,
   readerId: number,
-  readers: { imageUrl: ?string, email: string, name: string }[],
+  readers: { imageUrl: ?string, hashKey: string, name: string }[],
   start: number,
 }
 
@@ -294,6 +296,7 @@ export type Question = {
 export type Reader = {
   activeCommunity: ?Community,
   email: string,
+  hashKey: string,
   id: string,
   imageUrl: ?string,
   initials: string,
