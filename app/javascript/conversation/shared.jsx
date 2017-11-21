@@ -80,7 +80,8 @@ const OptionalUnderline = styled.span.attrs({
 `
 
 export const ScrollView = styled.div`
-  max-height: ${({ maxHeight }) => maxHeight || '100vh'};
+  max-height: ${({ maxHeightOffset }) =>
+    `calc(100vh - (${maxHeightOffset}))` || '100vh'};
   overflow: scroll;
 `
 

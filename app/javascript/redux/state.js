@@ -5,6 +5,10 @@
 import type { EditorState } from 'draft-js'
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
+// eslint-disable-next-line no-unused-vars
+type _ExtractReturn<B, F: (...args: any[]) => B> = B
+export type ExtractReturn<F> = _ExtractReturn<*, F>
+
 // Redux state
 export type State = {
   caseData: CaseDataState,
@@ -90,7 +94,7 @@ export type UIState = {
   acceptingSelection: boolean,
   activeEdgenote: ?string,
   commentInProgress: {
-    [commentThreadId: string]: string,
+    [commentThreadId: string]: EditorState,
   },
   highlightedEdgenote: ?string,
   hoveredCommentThread: ?string,
