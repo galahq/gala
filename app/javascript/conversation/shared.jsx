@@ -102,3 +102,13 @@ export const ConversationTimestamp = ({ value }: { value: string }) => (
     <FormattedDate {...CONVERSATION_TIME_FORMAT} value={value} />
   </span>
 )
+
+export const NoSelectedCommentThread = styled.div`
+  flex: 1;
+  max-width: 633px;
+  height: calc(100vh - 140px);
+  margin: 30px 0 0 36px;
+  padding: 30px;
+  background-color: #415e77;
+  border-radius: 2px;
+`

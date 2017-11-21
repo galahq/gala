@@ -11,7 +11,7 @@ import { InputGroup } from '@blueprintjs/core'
 
 import LeadComment from 'conversation/LeadComment'
 import Responses from 'conversation/Responses'
-import { ScrollView } from 'conversation/shared'
+import { ScrollView, NoSelectedCommentThread } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 
 import type { ContextRouter } from 'react-router-dom'
@@ -21,9 +21,9 @@ function mapStateToProps (
   { commentThreadsById, commentsById, cardsById, pagesById, caseData }: State,
   { match }: ContextRouter
 ) {
-  if (match.params.threadId == null) return {}
+  const commentThread = commentThreadsById[match.params.threadId || '']
+  if (commentThread == null) return {}
 
-  const commentThread = commentThreadsById[match.params.threadId]
   const { id: threadId, originalHighlightText, cardId, readers } = commentThread
   const { position: cardPosition, pageId } = cardsById[cardId]
   const { title: pageTitle, position: pagePosition } = pagesById[pageId]
@@ -56,33 +56,36 @@ const SelectedCommentThread = ({
   pageTitle,
   reader,
   responses,
-}) => (
-  <Container>
-    <ScrollView maxHeight="calc(100vh - 163px)">
-      <CommentsContainer>
-        <LeadComment
-          cardPosition={cardPosition}
-          inSituPath={inSituPath}
-          leadComment={leadComment}
-          originalHighlightText={originalHighlightText}
-          pageTitle={pageTitle}
-          reader={leadCommenter}
-        />
-        <Responses responses={responses} />
-      </CommentsContainer>
-    </ScrollView>
+}) =>
+  !leadComment ? (
+    <NoSelectedCommentThread />
+  ) : (
+    <Container>
+      <ScrollView maxHeight="calc(100vh - 163px)">
+        <CommentsContainer>
+          <LeadComment
+            cardPosition={cardPosition}
+            inSituPath={inSituPath}
+            leadComment={leadComment}
+            originalHighlightText={originalHighlightText}
+            pageTitle={pageTitle}
+            reader={leadCommenter}
+          />
+          <Responses responses={responses} />
+        </CommentsContainer>
+      </ScrollView>
 
-    <NewCommentForm>
-      <Identicon width={32} reader={reader} />
-      <InputGroup
-        placeholder="Write a message"
-        rightElement={
-          <button className="pt-button pt-minimal pt-intent-primary pt-icon-upload" />
-        }
-      />
-    </NewCommentForm>
-  </Container>
-)
+      <NewCommentForm>
+        <Identicon width={32} reader={reader} />
+        <InputGroup
+          placeholder="Write a message"
+          rightElement={
+            <button className="pt-button pt-minimal pt-intent-primary pt-icon-upload" />
+          }
+        />
+      </NewCommentForm>
+    </Container>
+  )
 export default connect(mapStateToProps)(SelectedCommentThread)
 
 const Container = styled.div`
