@@ -760,11 +760,11 @@ export function setCommentsById (
 export type ChangeCommentInProgressAction = {
   type: 'CHANGE_COMMENT_IN_PROGRESS',
   threadId: string,
-  content: string,
+  content: EditorState,
 }
 export function changeCommentInProgress (
   threadId: string,
-  content: string
+  content: EditorState
 ): ChangeCommentInProgressAction {
   return { type: 'CHANGE_COMMENT_IN_PROGRESS', threadId, content }
 }
@@ -774,13 +774,16 @@ export function addComment (data: Comment): AddCommentAction {
   return { type: 'ADD_COMMENT', data }
 }
 
-export function createComment (threadId: string, content: string): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function createComment (threadId: string): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const editorState = getState().ui.commentInProgress[threadId]
+    const content = editorState.getCurrentContent().getPlainText()
+
     Orchard.graft(`comment_threads/${threadId}/comments`, {
       comment: { content },
     })
       .then(() => {
-        dispatch(changeCommentInProgress(threadId, ''))
+        dispatch(changeCommentInProgress(threadId, EditorState.createEmpty()))
       })
       .catch((error: Error) => {
         dispatch(

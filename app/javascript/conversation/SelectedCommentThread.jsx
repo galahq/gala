@@ -7,18 +7,16 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
-import { InputGroup } from '@blueprintjs/core'
-
 import LeadComment from 'conversation/LeadComment'
 import Responses from 'conversation/Responses'
+import NewCommentForm from 'conversation/NewCommentForm'
 import { ScrollView, NoSelectedCommentThread } from 'conversation/shared'
-import Identicon from 'shared/Identicon'
 
 import type { ContextRouter } from 'react-router-dom'
-import type { State } from 'redux/state'
+import type { ExtractReturn, State } from 'redux/state'
 
 function mapStateToProps (
-  { commentThreadsById, commentsById, cardsById, pagesById, caseData }: State,
+  { commentThreadsById, commentsById, cardsById, pagesById }: State,
   { match }: ContextRouter
 ) {
   const commentThread = commentThreadsById[match.params.threadId || '']
@@ -31,7 +29,6 @@ function mapStateToProps (
   const [leadComment, ...responses] = commentThread.commentIds.map(
     id => commentsById[id]
   )
-  const { reader } = caseData
 
   const inSituPath = `/${pagePosition}/cards/${cardId}/comments/${threadId}`
 
@@ -42,50 +39,55 @@ function mapStateToProps (
     leadCommenter,
     originalHighlightText,
     pageTitle,
-    reader,
     responses,
+    threadId,
   }
 }
 
-const SelectedCommentThread = ({
-  cardPosition,
-  inSituPath,
-  leadComment,
-  leadCommenter,
-  originalHighlightText,
-  pageTitle,
-  reader,
-  responses,
-}) =>
-  !leadComment ? (
-    <NoSelectedCommentThread />
-  ) : (
-    <Container>
-      <ScrollView maxHeight="calc(100vh - 163px)">
-        <CommentsContainer>
-          <LeadComment
-            cardPosition={cardPosition}
-            inSituPath={inSituPath}
-            leadComment={leadComment}
-            originalHighlightText={originalHighlightText}
-            pageTitle={pageTitle}
-            reader={leadCommenter}
-          />
-          <Responses responses={responses} />
-        </CommentsContainer>
-      </ScrollView>
+type Props = ExtractReturn<typeof mapStateToProps>
+class SelectedCommentThread extends React.Component<
+  Props,
+  { formHeight: number }
+> {
+  state = { formHeight: 57 }
 
-      <NewCommentForm>
-        <Identicon width={32} reader={reader} />
-        <InputGroup
-          placeholder="Write a message"
-          rightElement={
-            <button className="pt-button pt-minimal pt-intent-primary pt-icon-upload" />
-          }
-        />
-      </NewCommentForm>
-    </Container>
-  )
+  handleFormResize = (formHeight: number) => this.setState({ formHeight })
+
+  render () {
+    const {
+      cardPosition,
+      inSituPath,
+      leadComment,
+      leadCommenter,
+      originalHighlightText,
+      pageTitle,
+      responses,
+      threadId,
+    } = this.props
+    const { formHeight } = this.state
+    return !leadComment ? (
+      <NoSelectedCommentThread />
+    ) : (
+      <Container>
+        <ScrollView maxHeightOffset={`108px + ${formHeight}px`}>
+          <CommentsContainer>
+            <LeadComment
+              cardPosition={cardPosition}
+              inSituPath={inSituPath}
+              leadComment={leadComment}
+              originalHighlightText={originalHighlightText}
+              pageTitle={pageTitle}
+              reader={leadCommenter}
+            />
+            <Responses responses={responses} />
+          </CommentsContainer>
+        </ScrollView>
+
+        <NewCommentForm threadId={threadId} onResize={this.handleFormResize} />
+      </Container>
+    )
+  }
+}
 export default connect(mapStateToProps)(SelectedCommentThread)
 
 const Container = styled.div`
@@ -110,18 +112,4 @@ const CommentsContainer = styled.div`
   padding: 30px;
   background-color: #ebeae4;
   border-radius: 2px 2px 0 0;
-`
-
-const NewCommentForm = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #ebeae4;
-  border-top: 1px solid #bfbdac;
-  border-radius: 0 0 2px 2px;
-  padding: 11px;
-
-  & .pt-input-group {
-    flex: 1;
-    margin-left: 11px;
-  }
 `

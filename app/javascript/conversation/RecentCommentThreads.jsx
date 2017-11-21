@@ -29,7 +29,7 @@ const RecentCommentThreads = ({ coverUrl, mostRecentCommentThreads }) => (
     <Shadow>
       <CommunityChooser />
     </Shadow>
-    <ScrollView maxHeight="calc(100vh - 216px)">
+    <ScrollView maxHeightOffset="216px">
       {mostRecentCommentThreads.map(id => (
         <CommentThreadItem key={id} id={id} />
       ))}
