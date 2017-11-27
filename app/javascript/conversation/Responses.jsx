@@ -14,9 +14,10 @@ import type { Comment } from 'redux/state'
 
 const ms = x => new Date(x).getTime()
 
-const ONE_MINUTE = 6000
-const closeEnoughTimestamps = (a, b) =>
-  Math.abs(ms(a.timestamp) - ms(b.timestamp)) < ONE_MINUTE
+const TWO_MINUTES = 2 * 60 * 1000 // milliseconds
+const closeEnoughTimestamps = (a, b) => {
+  return Math.abs(ms(a.timestamp) - ms(b.timestamp)) < TWO_MINUTES
+}
 const sameReader = (a, b) => a.reader.hashKey === b.reader.hashKey
 
 const groupComments = comments =>
@@ -35,7 +36,9 @@ const Responses = ({ responses }: Props) => {
             <ConversationTimestamp value={firstTimestamp} />
           </Timestamp>,
           readerGroups.map(comments => (
-            <ResponseGroup key={`${comments[0].timestamp}-group`}>
+            <ResponseGroup
+              key={`${comments[0].reader.name} ${comments[0].timestamp}`}
+            >
               <SmallGreyText>{comments[0].reader.name}</SmallGreyText>
               {comments.map(comment => (
                 <Response key={comment.id}>{comment.content}</Response>

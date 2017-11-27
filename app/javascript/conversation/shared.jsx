@@ -10,6 +10,7 @@ export const CommentThreadBreadcrumbs = styled.ul.attrs({
   className: 'pt-breadcrumbs',
 })`
   display: flex;
+  align-items: baseline;
   white-space: nowrap;
 `
 
@@ -52,6 +53,7 @@ const StyledBreadcrumbLink = styled.a.attrs({ className: 'pt-breadcrumb' })`
       color: black;
       font-family: 'freight-text-pro';
       font-size: 15px;
+      display: block;
 
       &::before {
         content: '“';
@@ -79,10 +81,12 @@ const OptionalUnderline = styled.span.attrs({
     `};
 `
 
-export const ScrollView = styled.div`
+export const ScrollView = styled.div.attrs({ className: 'ScrollView' })`
   max-height: ${({ maxHeightOffset }) =>
     `calc(100vh - (${maxHeightOffset}))` || '100vh'};
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 `
 
 export const SmallGreyText = styled.span`
@@ -112,4 +116,8 @@ export const NoSelectedCommentThread = styled.div`
   padding: 30px;
   background-color: #415e77;
   border-radius: 2px;
+
+  @media (max-width: 700px) {
+    display: none;
+  }
 `
