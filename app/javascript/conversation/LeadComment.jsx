@@ -67,7 +67,6 @@ const LeadComment = ({
         {originalHighlightText}
       </Link>
     </HighlightedText>
-    {/* http://localhost:3000/en/cases/ethiopia-napa/4/cards/77/comments/53 */}
   </CommentThreadLocation>,
 
   <LeadCommentContents key="3">

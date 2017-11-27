@@ -96,6 +96,24 @@ const CommentThreadItem = ({
 )
 export default withRouter(connect(mapStateToProps)(CommentThreadItem))
 
+const ConversationMetadata = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 0 0.5em;
+`
+const Indenticons = styled.div`
+  display: flex;
+  justify-content: flex-start;
+
+  & .Identicon {
+    margin-right: 5px;
+  }
+`
+const CommentCount = styled.div`
+  color: #5c7080;
+  font-size: 13px;
+`
+
 const CommentThreadLink = styled(Link)`
   display: block;
   color: inherit;
@@ -110,9 +128,12 @@ const CommentThreadLink = styled(Link)`
   }
 
   &:focus {
-    border: 3px solid #373565;
-    padding: 11px 15px 12px;
     outline: none;
+    & ${CommentCount} {
+      border: 3px rgb(210, 201, 239) solid;
+      margin: -5px -10px;
+      padding: 2px 7px;
+    }
   }
 
   .pt-focus-disabled & {
@@ -145,24 +166,6 @@ const MostRecentComment = styled.blockquote`
   &:first-child {
     margin-top: 7px;
   }
-`
-
-const ConversationMetadata = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 14px 0 0.5em;
-`
-const Indenticons = styled.div`
-  display: flex;
-  justify-content: flex-start;
-
-  & .Identicon {
-    margin-right: 5px;
-  }
-`
-const CommentCount = styled.div`
-  color: #5c7080;
-  font-size: 13px;
 `
 
 // eslint-disable-next-line react/prefer-stateless-function

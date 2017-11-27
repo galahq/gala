@@ -2,7 +2,7 @@
 
 class Comment < ApplicationRecord
   include Authority::Abilities
-  
+
   belongs_to :reader
   belongs_to :comment_thread, counter_cache: true, touch: true
 
@@ -20,7 +20,7 @@ class Comment < ApplicationRecord
   delegate :forum, to: :comment_thread
 
   def timestamp
-    I18n.l created_at.in_time_zone('America/Detroit'), format: :long
+    created_at
   end
 
   private

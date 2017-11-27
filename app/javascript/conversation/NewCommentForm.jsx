@@ -34,9 +34,9 @@ function mapStateToProps ({ caseData, ui }: State, { threadId }: OwnProps) {
 
 function mapDispatchToProps (dispatch: Dispatch, { threadId }: OwnProps) {
   return {
-    handleChange: (editorState: EditorState) =>
+    onSaveChanges: (editorState: EditorState) =>
       dispatch(changeCommentInProgress(threadId, editorState)) && void 0,
-    handleSubmit: () => dispatch(createComment(threadId)),
+    onSubmitComment: () => dispatch(createComment(threadId)),
   }
 }
 
@@ -44,24 +44,24 @@ type StateProps = ExtractReturn<typeof mapStateToProps>
 type DispatchProps = ExtractReturn<typeof mapDispatchToProps>
 type Props = { ...OwnProps, ...StateProps, ...DispatchProps }
 
-class NewCommentForm extends React.Component<Props> {
+class NewCommentForm extends React.Component<
+  Props,
+  { editorState: EditorState }
+> {
+  state = { editorState: this.props.editorState }
+
   container: ?HTMLDivElement
 
-  componentDidUpdate (prevProps) {
-    if (this.props.editorState === prevProps.editorState) return
-    const height = this.container && this.container.offsetHeight
-    height && this.props.onResize(height)
+  componentDidUpdate (prevProps: Props) {
+    if (prevProps.threadId !== this.props.threadId) {
+      this.setState({ editorState: this.props.editorState })
+    }
+    this._updateHeight()
   }
 
   render () {
-    const {
-      editorHasFocus,
-      editorState,
-      handleChange,
-      handleSubmit,
-      intl,
-      reader,
-    } = this.props
+    const { editorHasFocus, onSubmitComment, intl, reader } = this.props
+    const { editorState } = this.state
     if (reader == null) return null
     return (
       <Container innerRef={(el: HTMLDivElement) => (this.container = el)}>
@@ -73,7 +73,8 @@ class NewCommentForm extends React.Component<Props> {
               id: 'comments.write',
               defaultMessage: 'Write a reply...',
             })}
-            onChange={handleChange}
+            onChange={this.handleChange}
+            onBlur={this.handleBlur}
           />
         </Input>
         <SendButton
@@ -83,10 +84,19 @@ class NewCommentForm extends React.Component<Props> {
           })}
           className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
           editorHasFocus={editorHasFocus}
-          onClick={handleSubmit}
+          onClick={onSubmitComment}
         />
       </Container>
     )
+  }
+
+  handleChange = editorState => this.setState({ editorState })
+  handleBlur = () => this.props.onSaveChanges(this.state.editorState)
+
+  _updateHeight = () => {
+    console.log('_updateHeight')
+    const height = this.container && this.container.offsetHeight
+    height && this.props.onResize(height)
   }
 }
 export default injectIntl(
@@ -94,16 +104,23 @@ export default injectIntl(
 )
 
 const Container = styled.div`
-  display: flex;
-  align-items: flex-end;
+  flex-shrink: 0;
   background-color: #ebeae4;
   border-top: 1px solid #bfbdac;
   border-radius: 0 0 2px 2px;
+  display: flex;
+  align-items: flex-end;
   padding: 11px;
+  position: relative;
 
   & .Identicon {
     margin-bottom: 1px;
   }
+
+  @media (max-width: 700px) {
+    margin: 0 6px;
+    bottom: 0;
+    width: calc(100vw - 12px);
 `
 
 const Input = styled.div`
@@ -119,7 +136,7 @@ const Input = styled.div`
   line-height: 1.3;
 
   & .public-DraftEditorPlaceholder-root {
-    position: absolute;
+    margin-bottom: -18px;
     pointer-events: none;
     opacity: 0.6;
     &.public-DraftEditorPlaceholder-hasFocus {
