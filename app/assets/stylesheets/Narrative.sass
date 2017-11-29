@@ -90,7 +90,7 @@ article
   position: relative
 
   p,
-  div[data-block]
+  & > .DraftEditor-root div[data-block]
     margin: 1em 0
 
   @media screen and (max-width: $mobileCutoff)
@@ -103,7 +103,7 @@ article
     background-color: rgb(159, 187, 214)
     text-shadow: none
 
-  a:not([data-edgenote])
+  a:not(.c-edgenote-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
     color: $darkGreen
 
     &:hover

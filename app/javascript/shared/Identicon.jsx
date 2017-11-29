@@ -8,8 +8,6 @@ import styled, { css } from 'styled-components'
 
 import { identigradient } from 'shared/identigradient'
 
-import type { Reader } from 'redux/state'
-
 export const identiconStyle = ({
   image,
   hashKey,
@@ -35,7 +33,9 @@ export const identiconStyle = ({
 `
 
 const IdenticonDiv = styled.div.attrs({
-  'aria-label': ({ text }) => text,
+  'aria-label': ({ presentational, text }) => (presentational ? null : text),
+  'aria-hidden': ({ presentational }) => (presentational ? 'true' : null),
+  role: ({ presentational }) => (presentational ? 'presentational' : null),
   className: 'Identicon',
 })`
   width: ${({ width }) => `${width}px`};
@@ -49,11 +49,14 @@ const IdenticonDiv = styled.div.attrs({
 const Identicon = ({
   reader,
   width = 36,
+  presentational,
 }: {
   reader: { imageUrl: ?string, hashKey: string, name: string },
   width?: number,
+  presentational?: boolean,
 }) => (
   <IdenticonDiv
+    presentational={presentational}
     width={width}
     image={reader.imageUrl}
     hashKey={reader.hashKey}

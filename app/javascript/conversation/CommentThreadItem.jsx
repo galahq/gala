@@ -78,7 +78,12 @@ const CommentThreadItem = ({
     <ConversationMetadata>
       <Indenticons>
         {readers.map(reader => (
-          <Identicon key={reader.hashKey} width={22} reader={reader} />
+          <Identicon
+            presentational
+            key={reader.hashKey}
+            width={22}
+            reader={reader}
+          />
         ))}
       </Indenticons>
       <CommentCount>

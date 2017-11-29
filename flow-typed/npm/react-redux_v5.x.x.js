@@ -81,35 +81,35 @@ declare module "react-redux" {
 
   declare function connect<A, OP>(
     ...rest: Array<void> // <= workaround for https://github.com/facebook/flow/issues/2360
-  ): Connector<OP, $Supertype<{ dispatch: Dispatch<A> } & OP>>;
+  ): Connector<OP, { dispatch: Dispatch<A> } & OP>;
 
   declare function connect<A, OP>(
     mapStateToProps: Null,
     mapDispatchToProps: Null,
     mergeProps: Null,
     options: ConnectOptions
-  ): Connector<OP, $Supertype<{ dispatch: Dispatch<A> } & OP>>;
+  ): Connector<OP, { dispatch: Dispatch<A> } & OP>;
 
   declare function connect<S, A, OP, SP>(
     mapStateToProps: MapStateToProps<S, OP, SP>,
     mapDispatchToProps: Null,
     mergeProps: Null,
     options?: ConnectOptions
-  ): Connector<OP, $Supertype<SP & { dispatch: Dispatch<A> } & OP>>;
+  ): Connector<OP, SP & { dispatch: Dispatch<A> } & OP>;
 
   declare function connect<A, OP, DP>(
     mapStateToProps: Null,
     mapDispatchToProps: MapDispatchToProps<A, OP, DP>,
     mergeProps: Null,
     options?: ConnectOptions
-  ): Connector<OP, $Supertype<DP & OP>>;
+  ): Connector<OP, DP & OP>;
 
   declare function connect<S, A, OP, SP, DP>(
     mapStateToProps: MapStateToProps<S, OP, SP>,
     mapDispatchToProps: MapDispatchToProps<A, OP, DP>,
     mergeProps: Null,
     options?: ConnectOptions
-  ): Connector<OP, $Supertype<SP & DP & OP>>;
+  ): Connector<OP, SP & DP & OP>;
 
   declare function connect<S, A, OP, SP, DP, P>(
     mapStateToProps: MapStateToProps<S, OP, SP>,

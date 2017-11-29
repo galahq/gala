@@ -36,7 +36,9 @@ const Conversation = ({ kicker, intl }) => (
       <Switch>
         <Route
           path="/conversation/:threadId"
-          component={SelectedCommentThread}
+          render={props => (
+            <SelectedCommentThread heightOffset={108} {...props} />
+          )}
         />
         <Route component={NoSelectedCommentThread} />
       </Switch>

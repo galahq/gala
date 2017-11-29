@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
-import R from 'ramda'
+import { groupWith } from 'ramda'
 
 import Identicon from 'shared/Identicon'
 import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
@@ -21,7 +21,7 @@ const closeEnoughTimestamps = (a, b) => {
 const sameReader = (a, b) => a.reader.hashKey === b.reader.hashKey
 
 const groupComments = comments =>
-  R.groupWith(closeEnoughTimestamps, comments).map(R.groupWith(sameReader))
+  groupWith(closeEnoughTimestamps, comments).map(groupWith(sameReader))
 
 type Props = { responses: Comment[] }
 const Responses = ({ responses }: Props) => {
@@ -44,6 +44,7 @@ const Responses = ({ responses }: Props) => {
                 <Response key={comment.id}>{comment.content}</Response>
               ))}
               <Identicon
+                presentational
                 key={comments[0].reader.hashKey}
                 width={32}
                 reader={comments[0].reader}

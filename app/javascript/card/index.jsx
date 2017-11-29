@@ -53,7 +53,7 @@ function mapStateToProps (
   const anyCommentThreadsOpen = matchPath(pathname, commentThreadsOpen())
   const anyCommentsOpen = matchPath(pathname, commentsOpen())
   const selectedCommentThread =
-    anyCommentsOpen && anyCommentsOpen.params.commentThreadId
+    anyCommentsOpen && anyCommentsOpen.params.threadId
 
   return {
     commentable:

@@ -6,6 +6,12 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { FormattedDate } from 'react-intl'
 
+function cancelScrollEvent (e: WheelEvent) {
+  e.stopImmediatePropagation()
+  e.preventDefault()
+  return false
+}
+
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
   className: 'pt-breadcrumbs',
 })`
@@ -81,7 +87,52 @@ const OptionalUnderline = styled.span.attrs({
     `};
 `
 
-export const ScrollView = styled.div.attrs({ className: 'ScrollView' })`
+export class ScrollView extends React.Component<{
+  maxHeightOffset: string,
+  children: React.Node,
+}> {
+  container: ?HTMLDivElement
+
+  componentDidMount () {
+    this.container &&
+      this.container.addEventListener('wheel', this.handleScroll, false)
+  }
+
+  componentWillUnmount () {
+    this.container &&
+      this.container.removeEventListener('wheel', this.handleScroll, false)
+  }
+
+  render () {
+    const { children, ...rest } = this.props
+    return (
+      <ScrollViewDiv innerRef={el => (this.container = el)} {...rest}>
+        {children}
+      </ScrollViewDiv>
+    )
+  }
+
+  handleScroll = (e: WheelEvent) => {
+    const target = ((e.target: any): HTMLElement)
+    if (this.container && this.container.contains(target)) {
+      var scrollTop = this.container.scrollTop
+      var scrollHeight = this.container.scrollHeight
+      var height = this.container.clientHeight
+      var wheelDelta = e.deltaY
+      var isDeltaPositive = wheelDelta > 0
+
+      if (isDeltaPositive && wheelDelta > scrollHeight - height - scrollTop) {
+        this.container.scrollTop = scrollHeight
+        return cancelScrollEvent(e)
+      } else if (!isDeltaPositive && -wheelDelta > scrollTop) {
+        this.container.scrollTop = 0
+        return cancelScrollEvent(e)
+      }
+    }
+  }
+}
+
+const ScrollViewDiv = styled.div.attrs({ className: 'ScrollView' })`
   max-height: ${({ maxHeightOffset }) =>
     `calc(100vh - (${maxHeightOffset}))` || '100vh'};
   overflow-x: hidden;
