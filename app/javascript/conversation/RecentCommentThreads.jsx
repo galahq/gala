@@ -48,13 +48,6 @@ const Container = styled.div`
   @media (max-width: 1000px) {
     width: calc(30vw - 16px);
   }
-  @media (max-width: 700px) {
-    margin-top: 18px;
-
-    & .BillboardTitle {
-      padding-top: 18px;
-    }
-  }
 `
 
 const Shadow = styled.div`

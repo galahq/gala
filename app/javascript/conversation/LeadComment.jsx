@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
@@ -18,37 +18,47 @@ import {
 } from 'conversation/shared'
 import { styles } from 'card/draftConfig'
 
-import type { Comment } from 'redux/state'
+import type { Page, Comment } from 'redux/state'
 
 type Props = {
   cardPosition: number,
+  inSitu: boolean,
   inSituPath: string,
   leadComment: Comment,
   originalHighlightText: string,
-  pageTitle: string,
+  page: Page,
   reader: { imageUrl: ?string, hashKey: string, name: string },
 }
 const LeadComment = ({
   cardPosition,
+  inSitu,
   inSituPath,
   leadComment,
   originalHighlightText,
-  pageTitle,
+  page,
   reader,
 }: Props) => [
   <LeadCommenter key="1">
-    <Identicon width={32} reader={reader} />
+    <Identicon presentational width={32} reader={reader} />
     <cite>{reader.name}</cite>
   </LeadCommenter>,
 
   <CommentThreadLocation key="2">
     <CommentThreadBreadcrumbs>
       <CommentThreadBreadcrumb>
-        <FormattedMessage
-          id="conversation.commentsOnPage"
-          defaultMessage="Comments on “{pageTitle}”"
-          values={{ pageTitle }}
-        />
+        {inSitu ? (
+          <FormattedMessage
+            id="conversation.commentsOnPageNumber"
+            defaultMessage="Comments on Page {position, number}"
+            values={{ position: page.position }}
+          />
+        ) : (
+          <FormattedMessage
+            id="conversation.commentsOnPage"
+            defaultMessage="Comments on “{title}”"
+            values={{ title: page.title }}
+          />
+        )}
       </CommentThreadBreadcrumb>
       <CommentThreadBreadcrumb>
         <FormattedMessage
@@ -58,7 +68,7 @@ const LeadComment = ({
         />
       </CommentThreadBreadcrumb>
     </CommentThreadBreadcrumbs>
-    <HighlightedText>
+    <HighlightedText disabled={inSitu}>
       <Link
         to={inSituPath}
         className="CommentThread__metadata__text"
@@ -96,6 +106,11 @@ const HighlightedText = styled.div`
   font-size: 17px;
   line-height: 1.6;
   margin-top: -2px;
+  ${({ disabled }: { disabled: boolean }) =>
+    disabled &&
+    css`
+      pointer-events: none;
+    `};
 `
 
 const LeadCommentContents = styled.div`
@@ -107,6 +122,7 @@ const LeadCommentContents = styled.div`
 
   & > blockquote {
     padding: 0;
+    margin: 0;
     border: none;
     font-size: 17px;
     line-height: 1.3;

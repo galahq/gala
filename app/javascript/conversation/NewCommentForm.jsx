@@ -135,6 +135,12 @@ const Input = styled.div`
   font-size: 14px;
   line-height: 1.3;
 
+  &:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 1px #7351d4, 0 0 0 3px rgba(115, 81, 212, 0.3),
+      inset 0 1px 1px rgba(16, 22, 26, 0.2);
+  }
+
   & .public-DraftEditorPlaceholder-root {
     margin-bottom: -18px;
     pointer-events: none;

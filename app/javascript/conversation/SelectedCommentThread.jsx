@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
 import { Link } from 'react-router-dom'
@@ -14,40 +14,49 @@ import LeadComment from 'conversation/LeadComment'
 import Responses from 'conversation/Responses'
 import NewCommentForm from 'conversation/NewCommentForm'
 import { ScrollView, NoSelectedCommentThread } from 'conversation/shared'
+import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { ExtractReturn, State } from 'redux/state'
 
+type OwnProps = {|
+  ...ContextRouter,
+  inSitu?: boolean,
+  heightOffset: number,
+|}
+
 function mapStateToProps (
   { commentThreadsById, commentsById, cardsById, pagesById }: State,
-  { match }: ContextRouter
+  ownProps: OwnProps
 ) {
-  const commentThread = commentThreadsById[match.params.threadId || '']
+  const commentThread = commentThreadsById[ownProps.match.params.threadId || '']
   if (commentThread == null) return {}
 
   const { id: threadId, originalHighlightText, cardId, readers } = commentThread
   const { position: cardPosition, pageId } = cardsById[cardId]
-  const { title: pageTitle, position: pagePosition } = pagesById[pageId]
+  const page = pagesById[pageId]
   const [leadCommenter] = readers
   const [leadComment, ...responses] = commentThread.commentIds.map(
     id => commentsById[id]
   )
 
-  const inSituPath = `/${pagePosition}/cards/${cardId}/comments/${threadId}`
+  const inSituPath = `/${page.position}/cards/${cardId}/comments/${threadId}`
 
   return {
+    ...ownProps,
     cardPosition,
     inSituPath,
     leadComment,
     leadCommenter,
     originalHighlightText,
-    pageTitle,
+    page,
     responses,
     threadId,
   }
 }
 
 type Props = ExtractReturn<typeof mapStateToProps>
+
 class SelectedCommentThread extends React.Component<
   Props,
   { formHeight: number }
@@ -59,11 +68,13 @@ class SelectedCommentThread extends React.Component<
   render () {
     const {
       cardPosition,
+      heightOffset,
+      inSitu,
       inSituPath,
       leadComment,
       leadCommenter,
       originalHighlightText,
-      pageTitle,
+      page,
       responses,
       threadId,
     } = this.props
@@ -71,28 +82,43 @@ class SelectedCommentThread extends React.Component<
     return !leadComment ? (
       <NoSelectedCommentThread />
     ) : (
-      <Container>
-        <ScrollView maxHeightOffset={`108px + ${formHeight}px`}>
-          <CommentsContainer>
-            <AllCommentsButton to="/conversation">
-              <FormattedMessage
-                id="conversation.allComments"
-                defaultMessage="All comments"
+      <Container inSitu={inSitu}>
+        <FocusContainer>
+          <ScrollView maxHeightOffset={`${heightOffset}px + ${formHeight}px`}>
+            <CommentsContainer>
+              <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
+                <AllCommentsButton
+                  replace
+                  to={
+                    inSitu
+                      ? inSituPath.replace(new RegExp(`/${threadId}$`), '')
+                      : '/conversation'
+                  }
+                >
+                  <FormattedMessage
+                    id="conversation.allComments"
+                    defaultMessage="All comments"
+                  />
+                </AllCommentsButton>
+              </LabelForScreenReaders>
+              <LeadComment
+                cardPosition={cardPosition}
+                inSitu={inSitu}
+                inSituPath={inSituPath}
+                leadComment={leadComment}
+                originalHighlightText={originalHighlightText}
+                page={page}
+                reader={leadCommenter}
               />
-            </AllCommentsButton>
-            <LeadComment
-              cardPosition={cardPosition}
-              inSituPath={inSituPath}
-              leadComment={leadComment}
-              originalHighlightText={originalHighlightText}
-              pageTitle={pageTitle}
-              reader={leadCommenter}
-            />
-            <Responses responses={responses} />
-          </CommentsContainer>
-        </ScrollView>
+              <Responses responses={responses} />
+            </CommentsContainer>
+          </ScrollView>
 
-        <NewCommentForm threadId={threadId} onResize={this.handleFormResize} />
+          <NewCommentForm
+            threadId={threadId}
+            onResize={this.handleFormResize}
+          />
+        </FocusContainer>
       </Container>
     )
   }
@@ -102,10 +128,18 @@ export default connect(mapStateToProps)(SelectedCommentThread)
 const Container = styled.div`
   flex: 1;
   max-width: 633px;
-  margin-left: 16px;
+  margin-left: 36px;
   position: relative;
   display: flex;
   flex-direction: column;
+  ${({ inSitu }: { inSitu: boolean }) =>
+    inSitu &&
+    css`
+      position: fixed;
+      top: 0;
+      font-weight: 400;
+      margin-left: 0;
+    `};
 
   &::before {
     position: absolute;
@@ -126,10 +160,6 @@ const Container = styled.div`
     margin: 0;
     left: 0;
     top: 0;
-
-    & .ScrollView {
-      max-height: none;
-    }
   }
 `
 
@@ -149,7 +179,4 @@ const AllCommentsButton = styled(Link).attrs({
   className: 'pt-button pt-minimal pt-icon-arrow-left',
 })`
   margin: -10px 0 15px -32px;
-  @media (min-width: 699px) {
-    display: none;
-  }
 `
