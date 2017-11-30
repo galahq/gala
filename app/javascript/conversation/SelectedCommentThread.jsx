@@ -83,7 +83,7 @@ class SelectedCommentThread extends React.Component<
       <NoSelectedCommentThread />
     ) : (
       <Container inSitu={inSitu}>
-        <FocusContainer>
+        <FocusContainer priority={2}>
           <ScrollView maxHeightOffset={`${heightOffset}px + ${formHeight}px`}>
             <CommentsContainer>
               <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
