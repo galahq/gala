@@ -54,18 +54,64 @@ export const LabelForScreenReaders = styled.div`
 `
 
 /**
+ * A list which keeps its elements sorted by priority (higher numbers win)
+ */
+type ListValue<T> = {
+  priority: number,
+  value: T,
+}
+class SortedList<T> {
+  static _compareFunction = (a, b) => (a.priority > b.priority ? -1 : 1)
+
+  _data: Array<ListValue<T>>
+
+  constructor (initialData: Array<ListValue<T>> = []) {
+    this._data = initialData.sort(this.constructor._compareFunction)
+  }
+
+  get first () {
+    return this._data[0].value
+  }
+
+  insert (value: T, priority: number) {
+    const i = this._data.findIndex(
+      x => this.constructor._compareFunction({ priority, value }, x) === -1
+    )
+
+    if (i === -1) this._data.push({ priority, value })
+    else this._data.splice(i, 0, { priority, value })
+
+    return this
+  }
+
+  remove (value: T) {
+    const i = this._data.findIndex(x => x.value === value)
+    if (i === -1) return this
+
+    this._data.splice(i, 1)
+    return this
+  }
+}
+
+/**
  * This element keeps focus inside itself. It’s intended to contain some kind of
  * modal interstitial.
  *
  * NOTE:
  * There must be some element inside this container which, when clicked,
  * unmounts this container!
- *
- * Extracted from @blueprintjs/core overlay; converted from typescript
- * https://github.com/palantir/blueprint/blob/master/packages/core/src/components/overlay/overlay.tsx
  */
-export class FocusContainer extends React.Component<{ children: React.Node }> {
+export class FocusContainer extends React.Component<{
+  priority: number,
+  children: React.Node,
+}> {
+  static activeFocusContainers = new SortedList()
   containerElement: ?HTMLDivElement
+
+  constructor (props: *) {
+    super(props)
+    this.constructor.activeFocusContainers.insert(this, this.props.priority)
+  }
 
   componentDidMount () {
     document.addEventListener(
@@ -73,6 +119,7 @@ export class FocusContainer extends React.Component<{ children: React.Node }> {
       this.handleDocumentFocus,
       /* useCapture */ true
     )
+    this._bringFocusInsideOverlay()
   }
 
   componentWillUnmount () {
@@ -81,19 +128,21 @@ export class FocusContainer extends React.Component<{ children: React.Node }> {
       this.handleDocumentFocus,
       /* useCapture */ true
     )
+    this.constructor.activeFocusContainers.remove(this)
   }
 
   render () {
     return (
-      <div tabIndex="0" ref={el => (this.containerElement = el)}>
+      <FocusableDiv tabIndex="0" innerRef={el => (this.containerElement = el)}>
         {this.props.children}
-      </div>
+      </FocusableDiv>
     )
   }
 
   handleDocumentFocus = (e: FocusEvent) => {
     const target: HTMLDivElement = (e.target: any)
     if (
+      this === this.constructor.activeFocusContainers.first &&
       this.containerElement != null &&
       !this.containerElement.contains(target)
     ) {
@@ -121,11 +170,8 @@ export class FocusContainer extends React.Component<{ children: React.Node }> {
       if (isFocusOutsideModal) {
         // element marked autofocus has higher priority than the other clowns
         const autofocusElement = containerElement.querySelector('[autofocus]')
-        const wrapperElement = containerElement.querySelector('[tabindex]')
         if (autofocusElement != null) {
           autofocusElement.focus()
-        } else if (wrapperElement != null) {
-          wrapperElement.focus()
         } else {
           containerElement.focus()
         }
@@ -133,3 +179,9 @@ export class FocusContainer extends React.Component<{ children: React.Node }> {
     })
   }
 }
+
+const FocusableDiv = styled.div`
+  &:focus {
+    outline: none;
+  }
+`

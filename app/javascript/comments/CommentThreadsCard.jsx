@@ -16,6 +16,7 @@ import CommentThread from 'comments/CommentThread'
 import CommentsCard from 'comments/CommentsCard'
 import NewCommentButton from 'comments/NewCommentButton'
 import Icon from 'utility/Icon'
+import { FocusContainer } from 'utility/A11y'
 
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
@@ -53,53 +54,55 @@ const CommentThreadsCard = ({
 
   return (
     <div className="CommentThreads">
-      <CommentThreadsWindow>
-        <div style={styles.header}>
-          <Link
-            replace
-            to={closeCommentThreadsPath}
-            className="CommentThread__icon-button"
-            onClick={() => acceptSelection(false)}
-          >
-            <Icon
-              filename="comments-close"
-              style={{ ...styles.toolbarButton, cursor: 'pointer' }}
-            />
-          </Link>
+      <FocusContainer priority={1}>
+        <CommentThreadsWindow>
+          <div style={styles.header}>
+            <Link
+              replace
+              to={closeCommentThreadsPath}
+              className="CommentThread__icon-button"
+              onClick={() => acceptSelection(false)}
+            >
+              <Icon
+                filename="comments-close"
+                style={{ ...styles.toolbarButton, cursor: 'pointer' }}
+              />
+            </Link>
 
-          <FormattedMessage
-            id="comments.nResponses"
-            defaultMessage={`{count, number} {count, plural,
+            <FormattedMessage
+              id="comments.nResponses"
+              defaultMessage={`{count, number} {count, plural,
             one {response}
             other {responses}
           }`}
-            values={{ count: commentThreads.length }}
-          />
-
-          <div style={styles.toolbarButton} />
-        </div>
-
-        <ol style={styles.commentList}>
-          {commentThreads.map((thread, i) => (
-            <CommentThread
-              key={`${thread.id}`}
-              cardId={cardId}
-              threadId={thread.id}
-              location={location}
-              match={match}
-              history={history}
-              last={i === commentThreads.length - 1}
+              values={{ count: commentThreads.length }}
             />
-          ))}
-        </ol>
 
-        <div className="CommentThreads__footer">
-          <NewCommentButton
-            cardId={cardId}
-            addCommentThread={addCommentThread}
-          />
-        </div>
-      </CommentThreadsWindow>
+            <div style={styles.toolbarButton} />
+          </div>
+
+          <ol style={styles.commentList}>
+            {commentThreads.map((thread, i) => (
+              <CommentThread
+                key={`${thread.id}`}
+                cardId={cardId}
+                threadId={thread.id}
+                location={location}
+                match={match}
+                history={history}
+                last={i === commentThreads.length - 1}
+              />
+            ))}
+          </ol>
+
+          <div className="CommentThreads__footer">
+            <NewCommentButton
+              cardId={cardId}
+              addCommentThread={addCommentThread}
+            />
+          </div>
+        </CommentThreadsWindow>
+      </FocusContainer>
 
       {
         <Portal>
