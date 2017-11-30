@@ -5,9 +5,10 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
-import { Tooltip, Position, Intent } from '@blueprintjs/core'
+import { Button, Tooltip, Position, Intent } from '@blueprintjs/core'
 import { EditorState } from 'draft-js'
 
 import CommunityChooser from 'overview/CommunityChooser'
@@ -45,7 +46,7 @@ const NewCommentButton = ({
   addCommentThread,
   acceptSelection,
 }: Props) => (
-  <Tooltip
+  <FlexTooltip
     position={Position.BOTTOM}
     intent={selectionNotUnique ? Intent.DANGER : undefined}
     portalClassName="NewCommentButton__CommunityChooser"
@@ -58,8 +59,12 @@ const NewCommentButton = ({
       )
     }
   >
-    <button
-      className="o-button CommentThreads__new-button"
+    <StyledButton
+      iconName={
+        !acceptingSelection
+          ? 'edit'
+          : !selectionPending ? 'text-highlight' : 'manually-entered-data'
+      }
       disabled={(acceptingSelection && !selectionPending) || selectionNotUnique}
       onClick={acceptingSelection ? addCommentThread : acceptSelection}
     >
@@ -76,8 +81,8 @@ const NewCommentButton = ({
       ) : (
         <FormattedMessage id="comments.here" defaultMessage="Respond here" />
       )}
-    </button>
-  </Tooltip>
+    </StyledButton>
+  </FlexTooltip>
 )
 
 export default connect(mapStateToProps, { acceptSelection })(NewCommentButton)
@@ -95,3 +100,22 @@ function selectionNotUnique (editorState: EditorState): boolean {
   const card = getParagraphs(editorState).join('\n----->8-----\n')
   return card.split(selection).length > 2
 }
+
+const FlexTooltip = styled(Tooltip)`
+  flex: 1;
+`
+
+const StyledButton = styled(Button).attrs({
+  className: 'pt-intent-primary pt-fill',
+})`
+  font-size: 11pt;
+  color: white;
+  &:hover,
+  &:focus {
+    background-color: #493092;
+  }
+  &:disabled {
+    cursor: initial;
+    background-color: transparent;
+  }
+`
