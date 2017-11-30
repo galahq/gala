@@ -12,11 +12,11 @@ import { acceptSelection } from 'redux/actions'
 
 import { FormattedMessage } from 'react-intl'
 
-import CommentThread from 'comments/CommentThread'
+import CommentThreadItem from 'conversation/CommentThreadItem'
 import CommentsCard from 'comments/CommentsCard'
 import NewCommentButton from 'comments/NewCommentButton'
-import Icon from 'utility/Icon'
 import { FocusContainer } from 'utility/A11y'
+import { CommentThreadBreadcrumbs, ScrollView } from 'conversation/shared'
 
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
@@ -53,21 +53,15 @@ const CommentThreadsCard = ({
   if (commentThreads == null) return null
 
   return (
-    <div className="CommentThreads">
+    <Container>
       <FocusContainer priority={1}>
         <CommentThreadsWindow>
-          <div style={styles.header}>
-            <Link
+          <Header>
+            <CloseButton
               replace
               to={closeCommentThreadsPath}
-              className="CommentThread__icon-button"
               onClick={() => acceptSelection(false)}
-            >
-              <Icon
-                filename="comments-close"
-                style={{ ...styles.toolbarButton, cursor: 'pointer' }}
-              />
-            </Link>
+            />
 
             <FormattedMessage
               id="comments.nResponses"
@@ -78,87 +72,164 @@ const CommentThreadsCard = ({
               values={{ count: commentThreads.length }}
             />
 
-            <div style={styles.toolbarButton} />
-          </div>
+            <div style={{ width: 28 }} />
+          </Header>
 
-          <ol style={styles.commentList}>
-            {commentThreads.map((thread, i) => (
-              <CommentThread
-                key={`${thread.id}`}
-                cardId={cardId}
-                threadId={thread.id}
-                location={location}
-                match={match}
-                history={history}
-                last={i === commentThreads.length - 1}
-              />
-            ))}
-          </ol>
+          <List>
+            <ScrollView maxHeightOffset="126px">
+              {commentThreads.map(({ id }, i) => (
+                <CommentThreadItem key={id} id={id} />
+              ))}
+            </ScrollView>
+          </List>
 
-          <div className="CommentThreads__footer">
+          <Footer>
             <NewCommentButton
               cardId={cardId}
               addCommentThread={addCommentThread}
             />
-          </div>
+          </Footer>
         </CommentThreadsWindow>
       </FocusContainer>
 
       {
         <Portal>
-          <Link
+          <Backdrop
             replace
             to={closeCommentThreadsPath}
-            style={styles.backdrop}
             onClick={() => acceptSelection(false)}
           />
         </Portal>
       }
 
       <Route {...commentsOpen()} component={CommentsCard} />
-    </div>
+    </Container>
   )
 }
 
 export default connect(mapStateToProps, { acceptSelection })(CommentThreadsCard)
 
-const styles = {
-  backdrop: {
-    position: 'fixed',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 200,
-  },
+const List = styled.ol`
+  margin: 0;
+  padding: 0;
+  min-height: 1em;
+  background-color: #ebeae4;
 
-  header: {
-    backgroundColor: '#493092',
-    textTransform: 'uppercase',
-    fontSize: '10pt',
-    letterSpacing: 0.6,
-    padding: '0.25em 0 0',
-    borderBottom: '1px solid #351D7A',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+  &::before {
+    position: absolute;
+    box-shadow: inset 0px 16px 16px -16px #3c2e65;
+    top: 27px;
+    width: 100%;
+    height: 10px;
+    content: '';
+    z-index: 100;
 
-  commentList: {
-    margin: 0,
-    padding: 0,
-    minHeight: '1em',
-  },
+    @media (max-width: 513px) {
+      top: 40px;
+      width: calc(100% - 24px);
+    }
+  }
+`
 
-  toolbarButton: {
-    width: 11,
-    padding: '0 0.5em',
-  },
-}
+const Container = styled.div`
+  position: fixed;
+  top: 30px;
+  width: 267px;
+  font-family: 'tenso';
+  font-size: 12pt;
+  transition: margin-left 0.3s;
+
+  margin-left: 756px;
+  @media (max-width: 1600px) {
+    .Card.has-comments-open & {
+      margin-left: 585px;
+    }
+  }
+  @media (max-width: 1438px) {
+    margin-left: 585px;
+  }
+  @media (max-width: 1024px) {
+    margin-left: 426px;
+    .Card.has-comments-open & {
+      margin-left: 426px;
+    }
+  }
+  @media (max-width: 768px) {
+    margin-left: 236px;
+    .Card.has-comments-open & {
+      margin-left: 236px;
+    }
+  }
+
+  @media (max-width: 513px) {
+    margin-left: 0;
+    .Card.has-comments-open & {
+      margin-left: 0;
+    }
+
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    background-color: #35536f;
+  }
+
+  & ${List} ${CommentThreadBreadcrumbs} {
+    display: none;
+  }
+`
 
 const CommentThreadsWindow = styled.div`
   background-color: #7351d4;
   box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+
+  @media (max-width: 1279px) {
+    .Card.has-comments-open & {
+      display: none;
+    }
+  }
+`
+
+const Header = styled.div.attrs({ className: 'pt-dark' })`
+  background-color: #493092;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 500;
+  font-size: 10pt;
   color: white;
+  padding: 2px 0 0;
+  border-radius: 2px 2px 0 0;
+  border-bottom: 1px solid #351d7a;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+`
+
+const CloseButton = styled(Link).attrs({
+  className: 'pt-button pt-minimal pt-icon-cross pt-small',
+})`
+  margin: -2px 2px 0;
+  &:before {
+    color: white !important;
+  }
+`
+
+const Footer = styled.div`
+  background-color: #493092;
+  border-radius: 0 0 2px 2px;
+  border-top: 1px solid #351d7a;
+  padding: 0.25em;
+  display: flex;
+`
+
+const Backdrop = styled(Link)`
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 200;
 `

@@ -17,13 +17,15 @@ import {
 } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 
+import { commentsOpen } from 'shared/routes'
+
 import type { ContextRouter } from 'react-router-dom'
 
 import type { State } from 'redux/state'
 
 function mapStateToProps (
   { commentThreadsById, cardsById, pagesById, commentsById }: State,
-  { id, location }: { id: string, ...ContextRouter }
+  { id, location, match }: { id: string, ...ContextRouter }
 ) {
   const {
     cardId,
@@ -35,7 +37,9 @@ function mapStateToProps (
   const { position: pageNumber } = pagesById[cardsById[cardId].pageId]
   const mostRecentComment =
     commentsById[commentIds[commentIds.length - 1]].content
-  const open = !!matchPath(location.pathname, { path: `/conversation/${id}` })
+  const open =
+    !!matchPath(location.pathname, { path: `/conversation/${id}` }) ||
+    !!matchPath(location.pathname, commentsOpen(id))
 
   return {
     open,
@@ -45,6 +49,7 @@ function mapStateToProps (
     pageNumber,
     readers,
     threadId: id,
+    basename: location.pathname.replace(/\/[0-9]+$/, ''),
   }
 }
 
@@ -56,8 +61,9 @@ const CommentThreadItem = ({
   pageNumber,
   readers,
   threadId,
+  basename,
 }) => (
-  <CommentThreadLink to={`/conversation/${threadId}`} open={open}>
+  <CommentThreadLink to={`${basename}/${threadId}`} open={open}>
     <CommentThreadBreadcrumbs>
       <CommentThreadBreadcrumb>
         <FormattedMessage
