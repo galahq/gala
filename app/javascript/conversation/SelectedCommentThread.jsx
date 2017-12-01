@@ -7,7 +7,7 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
 import LeadComment from 'conversation/LeadComment'
@@ -29,10 +29,15 @@ function mapStateToProps (
   { commentThreadsById, commentsById, cardsById, pagesById }: State,
   ownProps: OwnProps
 ) {
-  const commentThread = commentThreadsById[ownProps.match.params.threadId || '']
-  if (commentThread == null) return {}
+  const threadId = ownProps.match.params.threadId || ''
+  const commentThread = commentThreadsById[threadId]
+  const backPath = ownProps.location.pathname.replace(
+    new RegExp(`/${threadId}$`),
+    ''
+  )
+  if (commentThread == null) return { backPath }
 
-  const { id: threadId, originalHighlightText, cardId, readers } = commentThread
+  const { originalHighlightText, cardId, readers } = commentThread
   const { position: cardPosition, pageId } = cardsById[cardId]
   const page = pagesById[pageId]
   const [leadCommenter] = readers
@@ -44,6 +49,7 @@ function mapStateToProps (
 
   return {
     ...ownProps,
+    backPath,
     cardPosition,
     inSituPath,
     leadComment,
@@ -67,6 +73,7 @@ class SelectedCommentThread extends React.Component<
 
   render () {
     const {
+      backPath,
       cardPosition,
       heightOffset,
       inSitu,
@@ -79,22 +86,13 @@ class SelectedCommentThread extends React.Component<
       threadId,
     } = this.props
     const { formHeight } = this.state
-    return !leadComment ? (
-      <NoSelectedCommentThread />
-    ) : (
+    return leadComment ? (
       <Container inSitu={inSitu}>
         <FocusContainer priority={2}>
           <ScrollView maxHeightOffset={`${heightOffset}px + ${formHeight}px`}>
             <CommentsContainer>
               <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
-                <AllCommentsButton
-                  replace
-                  to={
-                    inSitu
-                      ? inSituPath.replace(new RegExp(`/${threadId}$`), '')
-                      : '/conversation'
-                  }
-                >
+                <AllCommentsButton replace to={backPath}>
                   <FormattedMessage
                     id="conversation.allComments"
                     defaultMessage="All comments"
@@ -120,6 +118,10 @@ class SelectedCommentThread extends React.Component<
           />
         </FocusContainer>
       </Container>
+    ) : inSitu ? (
+      <Redirect replace to={backPath} />
+    ) : (
+      <NoSelectedCommentThread />
     )
   }
 }
