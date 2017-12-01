@@ -98,7 +98,7 @@ export type UIState = {
   },
   highlightedEdgenote: ?string,
   hoveredCommentThread: ?string,
-  mostRecentCommentThreads: string[],
+  mostRecentCommentThreads: ?(string[]),
   openedCitation: | {| key: null |}
     | {|
         key: string,
