@@ -26,36 +26,34 @@ type OwnProps = {|
 |}
 
 function mapStateToProps (
-  { commentThreadsById, commentsById, cardsById, pagesById }: State,
+  { caseData, commentThreadsById, commentsById, cardsById, pagesById }: State,
   ownProps: OwnProps
 ) {
   const threadId = ownProps.match.params.threadId || ''
   const commentThread = commentThreadsById[threadId]
-  const backPath = ownProps.location.pathname.replace(
-    new RegExp(`/${threadId}$`),
-    ''
-  )
-  if (commentThread == null) return { backPath }
+  if (commentThread == null) return {}
 
-  const { originalHighlightText, cardId, readers } = commentThread
+  const { reader: activeReader } = caseData
+  const { originalHighlightText, cardId, readerId, readers } = commentThread
   const { position: cardPosition, pageId } = cardsById[cardId]
   const page = pagesById[pageId]
-  const [leadCommenter] = readers
-  const [leadComment, ...responses] = commentThread.commentIds.map(
-    id => commentsById[id]
-  )
+  const leadCommenter = readers[0] || activeReader
+  const comments = commentThread.commentIds.map(id => commentsById[id])
+  const leadComment: ?* = comments[0]
+  const [, ...responses] = comments
 
   const inSituPath = `/${page.position}/cards/${cardId}/comments/${threadId}`
 
   return {
     ...ownProps,
-    backPath,
+    activeReader,
     cardPosition,
     inSituPath,
     leadComment,
     leadCommenter,
     originalHighlightText,
     page,
+    readerId,
     responses,
     threadId,
   }
@@ -69,27 +67,46 @@ class SelectedCommentThread extends React.Component<
 > {
   state = { formHeight: 57 }
 
+  scrollView: ?HTMLDivElement
+
   handleFormResize = (formHeight: number) => this.setState({ formHeight })
+
+  componentDidUpdate (prevProps) {
+    const { threadId, responses, activeReader } = this.props
+    if (
+      prevProps.threadId === threadId &&
+      prevProps.responses.length < responses.length &&
+      responses[responses.length - 1].reader.id === activeReader.id &&
+      this.scrollView != null
+    ) {
+      this.scrollView.scrollTop = this.scrollView.scrollHeight
+    }
+  }
 
   render () {
     const {
-      backPath,
       cardPosition,
       heightOffset,
       inSitu,
       inSituPath,
       leadComment,
       leadCommenter,
+      location,
       originalHighlightText,
       page,
+      readerId,
       responses,
       threadId,
     } = this.props
+    const backPath = location.pathname.replace(new RegExp(`/${threadId}$`), '')
     const { formHeight } = this.state
-    return leadComment ? (
+    return readerId != null ? (
       <Container inSitu={inSitu}>
         <FocusContainer priority={2}>
-          <ScrollView maxHeightOffset={`${heightOffset}px + ${formHeight}px`}>
+          <ScrollView
+            innerRef={scrollView => (this.scrollView = scrollView)}
+            maxHeightOffset={`${heightOffset}px + ${formHeight}px`}
+          >
             <CommentsContainer>
               <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
                 <AllCommentsButton replace to={backPath}>
@@ -130,6 +147,7 @@ export default connect(mapStateToProps)(SelectedCommentThread)
 const Container = styled.div`
   flex: 1;
   max-width: 633px;
+  min-width: 370px;
   margin-left: 36px;
   position: relative;
   display: flex;

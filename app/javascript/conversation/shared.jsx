@@ -89,13 +89,17 @@ const OptionalUnderline = styled.span.attrs({
 
 export class ScrollView extends React.Component<{
   maxHeightOffset: string,
+  innerRef: HTMLDivElement => any,
   children: React.Node,
 }> {
+  static defaultProps = { innerRef: (_: HTMLDivElement) => {} }
+
   container: ?HTMLDivElement
 
   componentDidMount () {
     this.container &&
       this.container.addEventListener('wheel', this.handleScroll, false)
+    this.container && this.props.innerRef(this.container)
   }
 
   componentWillUnmount () {
@@ -106,7 +110,7 @@ export class ScrollView extends React.Component<{
   render () {
     const { children, ...rest } = this.props
     return (
-      <ScrollViewDiv innerRef={el => (this.container = el)} {...rest}>
+      <ScrollViewDiv {...rest} innerRef={el => (this.container = el)}>
         {children}
       </ScrollViewDiv>
     )

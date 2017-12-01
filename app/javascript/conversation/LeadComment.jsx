@@ -24,7 +24,7 @@ type Props = {
   cardPosition: number,
   inSitu: boolean,
   inSituPath: string,
-  leadComment: Comment,
+  leadComment: ?Comment,
   originalHighlightText: string,
   page: Page,
   reader: { imageUrl: ?string, hashKey: string, name: string },
@@ -79,12 +79,14 @@ const LeadComment = ({
     </HighlightedText>
   </CommentThreadLocation>,
 
-  <LeadCommentContents key="3">
-    <SmallGreyText>
-      <ConversationTimestamp value={leadComment.timestamp} />
-    </SmallGreyText>
-    <blockquote>{leadComment.content}</blockquote>
-  </LeadCommentContents>,
+  leadComment && (
+    <LeadCommentContents key="3">
+      <SmallGreyText>
+        <ConversationTimestamp value={leadComment.timestamp} />
+      </SmallGreyText>
+      <blockquote>{leadComment.content}</blockquote>
+    </LeadCommentContents>
+  ),
 ]
 export default LeadComment
 

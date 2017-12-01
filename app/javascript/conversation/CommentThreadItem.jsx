@@ -6,10 +6,12 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
 
 import { FormattedMessage } from 'react-intl'
 import Truncate from 'react-truncate'
 import { matchPath, Link, withRouter } from 'react-router-dom'
+import { EditorState } from 'draft-js'
 
 import {
   CommentThreadBreadcrumbs,
@@ -24,7 +26,7 @@ import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'redux/state'
 
 function mapStateToProps (
-  { commentThreadsById, cardsById, pagesById, commentsById }: State,
+  { commentThreadsById, cardsById, pagesById, commentsById, ui }: State,
   { id, location, match }: { id: string, ...ContextRouter }
 ) {
   const {
@@ -35,8 +37,15 @@ function mapStateToProps (
     readers,
   } = commentThreadsById[id]
   const { position: pageNumber } = pagesById[cardsById[cardId].pageId]
+
   const mostRecentComment =
-    commentsById[commentIds[commentIds.length - 1]].content
+    commentsById[commentIds[commentIds.length - 1]] || {}
+  const mostRecentCommentContent =
+    mostRecentComment.content ||
+    (ui.commentInProgress[id] || EditorState.createEmpty())
+      .getCurrentContent()
+      .getPlainText()
+
   const open =
     !!matchPath(location.pathname, { path: `/conversation/${id}` }) ||
     !!matchPath(location.pathname, commentsOpen(id))
@@ -44,7 +53,7 @@ function mapStateToProps (
   return {
     open,
     commentsCount,
-    mostRecentComment,
+    mostRecentCommentContent,
     originalHighlightText,
     pageNumber,
     readers,
@@ -56,7 +65,8 @@ function mapStateToProps (
 const CommentThreadItem = ({
   open,
   commentsCount,
-  mostRecentComment,
+  intl,
+  mostRecentCommentContent,
   originalHighlightText,
   pageNumber,
   readers,
@@ -78,7 +88,16 @@ const CommentThreadItem = ({
     </CommentThreadBreadcrumbs>
 
     <MostRecentComment>
-      <PureTruncate lines={5} content={mostRecentComment} />
+      <PureTruncate
+        lines={5}
+        content={
+          mostRecentCommentContent ||
+          intl.formatMessage({
+            id: 'comments.newCommentThread',
+            defaultMessage: 'New comment thread...',
+          })
+        }
+      />
     </MostRecentComment>
 
     <ConversationMetadata>
@@ -105,7 +124,9 @@ const CommentThreadItem = ({
     </ConversationMetadata>
   </CommentThreadLink>
 )
-export default withRouter(connect(mapStateToProps)(CommentThreadItem))
+export default withRouter(
+  injectIntl(connect(mapStateToProps)(CommentThreadItem))
+)
 
 const ConversationMetadata = styled.div`
   display: flex;
