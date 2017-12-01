@@ -101,7 +101,23 @@ class SortedList<T> {
  * There must be some element inside this container which, when clicked,
  * unmounts this container!
  */
-export class FocusContainer extends React.Component<{
+export const FocusContainer = ({
+  children,
+  priority,
+  active,
+}: {
+  children: React.Node,
+  priority: number,
+  active: boolean,
+}) =>
+  active ? (
+    <ActiveFocusContainer priority={priority} children={children} />
+  ) : (
+    children
+  )
+FocusContainer.defaultProps = { active: true }
+
+class ActiveFocusContainer extends React.Component<{
   priority: number,
   children: React.Node,
 }> {

@@ -28,8 +28,7 @@ function mapStateToProps ({ caseData, ui }: State, { threadId }: OwnProps) {
   const { reader } = caseData
   const editorState =
     ui.commentInProgress[threadId] || EditorState.createEmpty()
-  const editorHasFocus = editorState.getSelection().getHasFocus()
-  return { editorHasFocus, editorState, reader }
+  return { editorState, reader }
 }
 
 function mapDispatchToProps (dispatch: Dispatch, { threadId }: OwnProps) {
@@ -53,14 +52,17 @@ class NewCommentForm extends React.Component<
   container: ?HTMLDivElement
 
   componentDidUpdate (prevProps: Props) {
-    if (prevProps.threadId !== this.props.threadId) {
+    if (
+      prevProps.threadId !== this.props.threadId ||
+      prevProps.editorState !== this.props.editorState
+    ) {
       this.setState({ editorState: this.props.editorState })
     }
     this._updateHeight()
   }
 
   render () {
-    const { editorHasFocus, onSubmitComment, intl, reader } = this.props
+    const { onSubmitComment, intl, reader } = this.props
     const { editorState } = this.state
     if (reader == null) return null
     return (
@@ -83,7 +85,7 @@ class NewCommentForm extends React.Component<
             defaultMessage: 'Respond',
           })}
           className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
-          editorHasFocus={editorHasFocus}
+          disabled={editorState.getCurrentContent().getPlainText() === ''}
           onClick={onSubmitComment}
         />
       </Container>
@@ -94,7 +96,6 @@ class NewCommentForm extends React.Component<
   handleBlur = () => this.props.onSaveChanges(this.state.editorState)
 
   _updateHeight = () => {
-    console.log('_updateHeight')
     const height = this.container && this.container.offsetHeight
     height && this.props.onResize(height)
   }
@@ -156,11 +157,4 @@ const SendButton = styled.button`
   right: 16px;
   bottom: 16px;
   border-radius: 100%;
-  ${({ editorHasFocus }) =>
-    editorHasFocus ||
-    css`
-      &:not(:hover):not(:focus)::before {
-        color: #5c7080 !important;
-      }
-    `};
 `

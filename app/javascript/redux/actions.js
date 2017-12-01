@@ -781,6 +781,8 @@ export function createComment (threadId: string): ThunkAction {
     const editorState = getState().ui.commentInProgress[threadId]
     const content = editorState.getCurrentContent().getPlainText()
 
+    if (content.trim() === '') return
+
     Orchard.graft(`comment_threads/${threadId}/comments`, {
       comment: { content },
     })
