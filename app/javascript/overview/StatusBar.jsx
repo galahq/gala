@@ -22,7 +22,7 @@ import type { State } from 'redux/state'
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
   let { edit, caseData } = state
   let { inProgress } = edit
-  let { publishedAt, featuredAt } = caseData
+  let { publishedAt, featuredAt, reader } = caseData
   let { pathname } = location
   return {
     editable: edit.possible,
@@ -32,6 +32,7 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
     featured: !!featuredAt,
     pathname,
     history,
+    reader,
   }
 }
 
@@ -47,6 +48,7 @@ function StatusBar ({
   saveChanges,
   pathname,
   history,
+  reader,
 }) {
   const groups = [
     pathname === '/'
@@ -61,6 +63,7 @@ function StatusBar ({
               )),
         },
         {
+          disabled: !reader,
           message: 'conversation',
           iconName: 'chat',
           onClick: () => history.push('/conversation'),

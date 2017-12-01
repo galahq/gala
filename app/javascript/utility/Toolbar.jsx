@@ -152,4 +152,6 @@ const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
 `
 const Item = styled(Button).attrs({ className: 'pt-minimal' })``
 
-const StyledMenu = styled(Menu)`font-size: 90%;`
+const StyledMenu = styled(Menu)`
+  font-size: 90%;
+`
