@@ -74,6 +74,7 @@ export type Action =
   | SetCommentsByIdAction
   | SetCommentThreadsByIdAction
   | SetCommunitiesAction
+  | SetMostRecentCommentThreadsAction
 
 type GetState = () => State
 type PromiseAction = Promise<Action>
@@ -604,6 +605,7 @@ export function updateActiveCommunity (
         return
       }
     }
+    dispatch(setMostRecentCommentThreads(null))
     await Orchard.espalier(`profile`, { reader: { activeCommunityId: id }})
     dispatch(fetchCommunities(slug))
     dispatch(fetchCommentThreads(slug))
@@ -684,9 +686,9 @@ export function setCommentThreadsById (
 
 export type SetMostRecentCommentThreadsAction = {
   type: 'SET_MOST_RECENT_COMMENT_THREADS',
-  mostRecentCommentThreads: string[],
+  mostRecentCommentThreads: ?(string[]),
 }
-function setMostRecentCommentThreads (mostRecentCommentThreads: string[]) {
+function setMostRecentCommentThreads (mostRecentCommentThreads: ?(string[])) {
   return { type: 'SET_MOST_RECENT_COMMENT_THREADS', mostRecentCommentThreads }
 }
 
