@@ -49,7 +49,7 @@ class Quiz < ApplicationRecord
   end
 
   def questions
-    @questions ||= Question.where quiz_id: ancestors.pluck(:id)
+    @questions ||= Question.where(quiz_id: ancestors.pluck(:id)).order(:created_at)
   end
 
   def answers
