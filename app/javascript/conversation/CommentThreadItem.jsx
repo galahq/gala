@@ -19,15 +19,18 @@ import {
 } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 
-import { commentsOpen } from 'shared/routes'
+import { commentsOpen, commentThreadsOpen } from 'shared/routes'
+import { hoverCommentThread, deleteCommentThread } from 'redux/actions'
 
 import type { ContextRouter } from 'react-router-dom'
 
+import type { Dispatch } from 'redux/actions'
 import type { State } from 'redux/state'
 
+type OwnProps = { id: string, ...ContextRouter }
 function mapStateToProps (
   { commentThreadsById, cardsById, pagesById, commentsById, ui }: State,
-  { id, location, match }: { id: string, ...ContextRouter }
+  { id, location, match }: OwnProps
 ) {
   const {
     cardId,
@@ -42,7 +45,7 @@ function mapStateToProps (
     commentsById[commentIds[commentIds.length - 1]] || {}
   const mostRecentCommentContent =
     mostRecentComment.content ||
-    (ui.commentInProgress[id] || EditorState.createEmpty())
+    EditorState.createEmpty()
       .getCurrentContent()
       .getPlainText()
 
@@ -62,18 +65,47 @@ function mapStateToProps (
   }
 }
 
+function mapDispatchToProps (
+  dispatch: Dispatch,
+  { id, history, location }: OwnProps
+) {
+  return {
+    handleMouseEnter: () => dispatch(hoverCommentThread(id)),
+    handleMouseLeave: () => dispatch(hoverCommentThread(null)),
+    handleDeleteThread: (e: SyntheticMouseEvent<*>) => {
+      e.preventDefault()
+      const promise = dispatch(deleteCommentThread(id))
+
+      const commentsMatch = matchPath(location.pathname, commentsOpen())
+      if (commentsMatch && `${id}` === commentsMatch.params.threadId) {
+        const threadsMatch = matchPath(location.pathname, commentThreadsOpen())
+        threadsMatch && history.replace(threadsMatch.url)
+      }
+      return promise
+    },
+  }
+}
+
 const CommentThreadItem = ({
-  open,
+  basename,
   commentsCount,
+  handleMouseEnter,
+  handleMouseLeave,
+  handleDeleteThread,
   intl,
   mostRecentCommentContent,
+  open,
   originalHighlightText,
   pageNumber,
   readers,
   threadId,
-  basename,
 }) => (
-  <CommentThreadLink to={`${basename}/${threadId}`} open={open}>
+  <CommentThreadLink
+    to={`${basename}/${threadId}`}
+    open={open}
+    onMouseEnter={handleMouseEnter}
+    onMouseLeave={handleMouseLeave}
+  >
     <CommentThreadBreadcrumbs>
       <CommentThreadBreadcrumb>
         <FormattedMessage
@@ -88,28 +120,32 @@ const CommentThreadItem = ({
     </CommentThreadBreadcrumbs>
 
     <MostRecentComment>
-      <PureTruncate
-        lines={5}
-        content={
-          mostRecentCommentContent ||
-          intl.formatMessage({
-            id: 'comments.newCommentThread',
-            defaultMessage: 'New comment thread...',
-          })
-        }
-      />
+      {mostRecentCommentContent ? (
+        <PureTruncate lines={5} content={mostRecentCommentContent} />
+      ) : (
+        <Grey>
+          <FormattedMessage
+            id="comments.newCommentThread"
+            defaultMessage="New comment thread..."
+          />
+        </Grey>
+      )}
     </MostRecentComment>
 
     <ConversationMetadata>
       <Indenticons>
-        {readers.map(reader => (
-          <Identicon
-            presentational
-            key={reader.hashKey}
-            width={22}
-            reader={reader}
-          />
-        ))}
+        {readers.length > 0 ? (
+          readers.map(reader => (
+            <Identicon
+              presentational
+              key={reader.hashKey}
+              width={22}
+              reader={reader}
+            />
+          ))
+        ) : (
+          <DeleteButton onClick={handleDeleteThread} />
+        )}
       </Indenticons>
       <CommentCount>
         <FormattedMessage
@@ -125,7 +161,7 @@ const CommentThreadItem = ({
   </CommentThreadLink>
 )
 export default withRouter(
-  injectIntl(connect(mapStateToProps)(CommentThreadItem))
+  injectIntl(connect(mapStateToProps, mapDispatchToProps)(CommentThreadItem))
 )
 
 const ConversationMetadata = styled.div`
@@ -198,6 +234,14 @@ const MostRecentComment = styled.blockquote`
   &:first-child {
     margin-top: 7px;
   }
+`
+
+const DeleteButton = styled.button.attrs({
+  className: 'pt-button pt-intent-danger pt-icon-trash pt-small pt-minimal',
+})``
+
+const Grey = styled.span`
+  color: #5c7080;
 `
 
 // eslint-disable-next-line react/prefer-stateless-function

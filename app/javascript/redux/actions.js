@@ -717,11 +717,9 @@ export function addCommentThread (data: CommentThread): AddCommentThreadAction {
   return { type: 'ADD_COMMENT_THREAD', data }
 }
 
-export function deleteCommentThread (
-  threadId: string,
-  cardId: string
-): ThunkAction {
-  return async (dispatch: Dispatch) => {
+export function deleteCommentThread (threadId: string): ThunkAction {
+  return async (dispatch: Dispatch, getState: GetState) => {
+    const { cardId } = getState().commentThreadsById[threadId]
     await Orchard.prune(`comment_threads/${threadId}`)
     dispatch(removeCommentThread(threadId, cardId))
   }
