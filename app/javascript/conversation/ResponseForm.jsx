@@ -1,49 +1,30 @@
 /**
- * @providesModule NewCommentForm
+ * @providesModule ResponseForm
  * @flow
  */
 
 import * as React from 'react'
-import styled, { css } from 'styled-components'
-import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
+import styled from 'styled-components'
 
 import { Editor, EditorState } from 'draft-js'
 
 import Identicon from 'shared/Identicon'
 
-import { changeCommentInProgress, createComment } from 'redux/actions'
+import commentFormConnector from 'conversation/commentFormConnector'
+import type {
+  OwnProps,
+  StateProps,
+  DispatchProps,
+} from 'conversation/commentFormConnector'
 
-import type { IntlShape } from 'react-intl'
-import type { ExtractReturn, State } from 'redux/state'
-import type { Dispatch } from 'redux/actions'
-
-type OwnProps = {|
-  intl: IntlShape,
+type Props = {
+  ...OwnProps,
+  ...StateProps,
+  ...DispatchProps,
   onResize: number => mixed,
-  threadId: string,
-|}
-
-function mapStateToProps ({ caseData, ui }: State, { threadId }: OwnProps) {
-  const { reader } = caseData
-  const editorState =
-    ui.commentInProgress[threadId] || EditorState.createEmpty()
-  return { editorState, reader }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { threadId }: OwnProps) {
-  return {
-    onSaveChanges: (editorState: EditorState) =>
-      dispatch(changeCommentInProgress(threadId, editorState)) && void 0,
-    onSubmitComment: () => dispatch(createComment(threadId)),
-  }
-}
-
-type StateProps = ExtractReturn<typeof mapStateToProps>
-type DispatchProps = ExtractReturn<typeof mapDispatchToProps>
-type Props = { ...OwnProps, ...StateProps, ...DispatchProps }
-
-class NewCommentForm extends React.Component<
+class ResponseForm extends React.Component<
   Props,
   { editorState: EditorState }
 > {
@@ -85,7 +66,12 @@ class NewCommentForm extends React.Component<
             defaultMessage: 'Respond',
           })}
           className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
-          disabled={editorState.getCurrentContent().getPlainText() === ''}
+          disabled={
+            editorState
+              .getCurrentContent()
+              .getPlainText()
+              .trim() === ''
+          }
           onClick={onSubmitComment}
         />
       </Container>
@@ -100,9 +86,7 @@ class NewCommentForm extends React.Component<
     height && this.props.onResize(height)
   }
 }
-export default injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(NewCommentForm)
-)
+export default commentFormConnector(ResponseForm)
 
 const Container = styled.div`
   flex-shrink: 0;
@@ -122,6 +106,12 @@ const Container = styled.div`
     margin: 0 6px;
     bottom: 0;
     width: calc(100vw - 12px);
+  }
+`
+
+export const EmptyResponseFormContainer = Container.extend`
+  border-top: none;
+  padding: 1px;
 `
 
 const Input = styled.div`

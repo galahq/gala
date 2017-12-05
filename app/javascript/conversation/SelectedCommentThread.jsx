@@ -12,7 +12,9 @@ import { FormattedMessage } from 'react-intl'
 
 import LeadComment from 'conversation/LeadComment'
 import Responses from 'conversation/Responses'
-import NewCommentForm from 'conversation/NewCommentForm'
+import ResponseForm, {
+  EmptyResponseFormContainer,
+} from 'conversation/ResponseForm'
 import { ScrollView, NoSelectedCommentThread } from 'conversation/shared'
 import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 
@@ -124,15 +126,20 @@ class SelectedCommentThread extends React.Component<
                 originalHighlightText={originalHighlightText}
                 page={page}
                 reader={leadCommenter}
+                threadId={threadId}
               />
               <Responses responses={responses} />
             </CommentsContainer>
           </ScrollView>
 
-          <NewCommentForm
-            threadId={threadId}
-            onResize={this.handleFormResize}
-          />
+          {leadComment != null ? (
+            <ResponseForm
+              threadId={threadId}
+              onResize={this.handleFormResize}
+            />
+          ) : (
+            <EmptyResponseFormContainer />
+          )}
         </FocusContainer>
       </Container>
     ) : inSitu ? (

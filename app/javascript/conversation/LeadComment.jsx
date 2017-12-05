@@ -9,6 +9,7 @@ import styled, { css } from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
+import FirstPostForm from 'conversation/FirstPostForm'
 import Identicon from 'shared/Identicon'
 import {
   ConversationTimestamp,
@@ -28,6 +29,7 @@ type Props = {
   originalHighlightText: string,
   page: Page,
   reader: { imageUrl: ?string, hashKey: string, name: string },
+  threadId: string,
 }
 const LeadComment = ({
   cardPosition,
@@ -37,6 +39,7 @@ const LeadComment = ({
   originalHighlightText,
   page,
   reader,
+  threadId,
 }: Props) => [
   <LeadCommenter key="1">
     <Identicon presentational width={32} reader={reader} />
@@ -79,13 +82,15 @@ const LeadComment = ({
     </HighlightedText>
   </CommentThreadLocation>,
 
-  leadComment && (
+  leadComment ? (
     <LeadCommentContents key="3">
       <SmallGreyText>
         <ConversationTimestamp value={leadComment.timestamp} />
       </SmallGreyText>
       <blockquote>{leadComment.content}</blockquote>
     </LeadCommentContents>
+  ) : (
+    <FirstPostForm threadId={threadId} />
   ),
 ]
 export default LeadComment
