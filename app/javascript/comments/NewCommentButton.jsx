@@ -46,43 +46,54 @@ const NewCommentButton = ({
   addCommentThread,
   acceptSelection,
 }: Props) => (
-  <FlexTooltip
-    position={Position.BOTTOM}
-    intent={selectionNotUnique ? Intent.DANGER : undefined}
-    portalClassName="NewCommentButton__CommunityChooser"
-    isOpen={acceptingSelection && selectionPending}
-    content={
-      selectionNotUnique ? (
-        <UniquenessWarning />
-      ) : (
-        <CommunityChooser white disabled />
-      )
-    }
-  >
-    <StyledButton
-      iconName={
-        !acceptingSelection
-          ? 'edit'
-          : !selectionPending ? 'text-highlight' : 'manually-entered-data'
+  <Container>
+    <FlexTooltip
+      position={Position.BOTTOM}
+      intent={selectionNotUnique ? Intent.DANGER : undefined}
+      portalClassName="NewCommentButton__CommunityChooser"
+      isOpen={acceptingSelection && selectionPending}
+      content={
+        selectionNotUnique ? (
+          <UniquenessWarning />
+        ) : (
+          <CommunityChooser white disabled />
+        )
       }
-      disabled={(acceptingSelection && !selectionPending) || selectionNotUnique}
-      onClick={acceptingSelection ? addCommentThread : acceptSelection}
     >
-      {!acceptingSelection ? (
-        <FormattedMessage
-          id="comments.writeNew"
-          defaultMessage="Write a new response"
-        />
-      ) : !selectionPending ? (
-        <FormattedMessage
-          id="comments.select"
-          defaultMessage="Select a few words"
-        />
-      ) : (
-        <FormattedMessage id="comments.here" defaultMessage="Respond here" />
+      <StyledButton
+        iconName={
+          !acceptingSelection
+            ? 'edit'
+            : !selectionPending ? 'text-highlight' : 'manually-entered-data'
+        }
+        disabled={
+          (acceptingSelection && !selectionPending) || selectionNotUnique
+        }
+        onClick={acceptingSelection ? addCommentThread : acceptSelection}
+      >
+        {!acceptingSelection ? (
+          <FormattedMessage
+            id="comments.writeNew"
+            defaultMessage="Write a new response"
+          />
+        ) : !selectionPending ? (
+          <FormattedMessage
+            id="comments.select"
+            defaultMessage="Select a few words"
+          />
+        ) : (
+          <FormattedMessage id="comments.here" defaultMessage="Respond here" />
+        )}
+      </StyledButton>
+    </FlexTooltip>
+
+    {acceptingSelection &&
+      !selectionPending && (
+        <CancelButton onClick={() => acceptSelection(false)}>
+          Cancel
+        </CancelButton>
       )}
-    </StyledButton>
-  </FlexTooltip>
+  </Container>
 )
 
 export default connect(mapStateToProps, { acceptSelection })(NewCommentButton)
@@ -101,6 +112,23 @@ function selectionNotUnique (editorState: EditorState): boolean {
   return card.split(selection).length > 2
 }
 
+const Container = styled.div.attrs({ className: 'pt-dark' })`
+  display: flex;
+  width: 100%;
+  @media (max-width: 513px) {
+    .accepting-selection & {
+      position: fixed;
+      top: -7px;
+      left: 0px;
+      width: 100%;
+      padding: 60px 6px 6px;
+      background-color: #35536f;
+      border-bottom: 1px solid #1d3f5e;
+      border-radius: 7px;
+    }
+  }
+`
+
 const FlexTooltip = styled(Tooltip)`
   flex: 1;
 `
@@ -117,5 +145,10 @@ const StyledButton = styled(Button).attrs({
   &:disabled {
     cursor: initial;
     background-color: transparent;
+    color: rgba(253, 253, 250, 1) !important;
   }
+`
+
+const CancelButton = styled(Button)`
+  margin-left: 6px;
 `
