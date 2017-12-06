@@ -10,6 +10,7 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import FirstPostForm from 'conversation/FirstPostForm'
+import { StyledComment } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 import {
   ConversationTimestamp,
@@ -87,7 +88,9 @@ const LeadComment = ({
       <SmallGreyText>
         <ConversationTimestamp value={leadComment.timestamp} />
       </SmallGreyText>
-      <blockquote>{leadComment.content}</blockquote>
+      <blockquote>
+        <StyledComment markdown={leadComment.content} />
+      </blockquote>
     </LeadCommentContents>
   ) : (
     <FirstPostForm threadId={threadId} />

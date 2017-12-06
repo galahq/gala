@@ -7,6 +7,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { groupWith } from 'ramda'
 
+import { StyledComment } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
 
@@ -41,7 +42,9 @@ const Responses = ({ responses }: Props) => {
             >
               <SmallGreyText>{comments[0].reader.name}</SmallGreyText>
               {comments.map(comment => (
-                <Response key={comment.id}>{comment.content}</Response>
+                <Response key={comment.id}>
+                  <StyledComment markdown={comment.content} />
+                </Response>
               ))}
               <Identicon
                 presentational

@@ -6,9 +6,14 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Editor, EditorState } from 'draft-js'
+import { EditorState } from 'draft-js'
+import { FormattedMessage } from 'react-intl'
 
+import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
+import FormattingToolbar from 'conversation/FormattingToolbar'
+
+import type { Editor } from 'draft-js'
 import type {
   OwnProps,
   StateProps,
@@ -18,6 +23,8 @@ import type {
 type Props = { ...OwnProps, ...StateProps, ...DispatchProps }
 type State = { editorState: EditorState }
 class FirstPostForm extends React.Component<Props, State> {
+  editor: ?Editor
+
   state = { editorState: this.props.editorState }
 
   componentDidUpdate (prevProps: Props) {
@@ -30,16 +37,17 @@ class FirstPostForm extends React.Component<Props, State> {
   }
 
   render () {
-    const { intl, onSubmitComment } = this.props
+    const { onSubmitComment } = this.props
     const { editorState } = this.state
     return [
-      <Input key="1">
-        <Editor
+      <Input key="1" onClick={this.handleFocusEditor}>
+        <FormattingToolbar
           editorState={editorState}
-          placeholder={intl.formatMessage({
-            id: 'comments.write',
-            defaultMessage: 'Write a reply...',
-          })}
+          onChange={this.handleChange}
+        />
+        <CommentEditor
+          innerRef={ref => (this.editor = ref)}
+          editorState={editorState}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
         />
@@ -54,7 +62,7 @@ class FirstPostForm extends React.Component<Props, State> {
           }
           onClick={onSubmitComment}
         >
-          Submit
+          <FormattedMessage id="submit" defaultMessage="Submit" />
         </SubmitButton>
       </Options>,
     ]
@@ -62,13 +70,13 @@ class FirstPostForm extends React.Component<Props, State> {
 
   handleChange = editorState => this.setState({ editorState })
   handleBlur = () => this.props.onSaveChanges(this.state.editorState)
+  handleFocusEditor = () => this.editor && this.editor.focus()
 }
 export default commentFormConnector(FirstPostForm)
 
-const Input = styled.div`
+const Input = styled.div.attrs({ className: 'pt-card pt-elevation-1' })`
   background-color: white;
-  border-radius: 2px;
-  padding: 12px 16px;
+  padding: 8px 16px 12px;
   min-height: 235px;
 
   font-size: 17px;
