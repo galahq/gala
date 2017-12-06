@@ -173,6 +173,10 @@ const Container = styled.div`
     height: 100%;
     padding: 12px;
     background-color: #35536f;
+
+    .accepting-selection & {
+      left: -10000px;
+    }
   }
 
   & ${List} ${CommentThreadBreadcrumbs} {
