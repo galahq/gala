@@ -5,6 +5,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { FormattedDate } from 'react-intl'
+import ReactMarkdown from 'react-markdown'
 
 function cancelScrollEvent (e: WheelEvent) {
   e.stopImmediatePropagation()
@@ -174,5 +175,73 @@ export const NoSelectedCommentThread = styled.div`
 
   @media (max-width: 700px) {
     display: none;
+  }
+`
+
+const LinkWithTargetBlank = ({ children, ...rest }) => (
+  <a {...rest} target="_blank" rel="noopener noreferrer">
+    {children}
+  </a>
+)
+export const StyledComment = ({ markdown }: { markdown: string }) => (
+  <StyledCommentContainer>
+    <ReactMarkdown
+      source={markdown}
+      renderers={{ link: LinkWithTargetBlank }}
+    />
+  </StyledCommentContainer>
+)
+export const StyledCommentContainer = styled.div`
+  ${({ hidePlaceholder }) =>
+    hidePlaceholder &&
+    css`
+      & .public-DraftEditorPlaceholder-root {
+        display: none;
+      }
+    `};
+
+  & strong {
+    letter-spacing: normal;
+    font-weight: bold;
+  }
+
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    color: black;
+    font-family: tenso;
+    font-size: 1.2em;
+    margin: 1em 0 0.3em;
+    &:first-child {
+      margin-top: 0.2em;
+    }
+  }
+
+  & blockquote {
+    font-size: inherit;
+    line-height: 1.3em;
+    margin: 0 0 0.625em;
+  }
+
+  & ol,
+  & ul {
+    margin-top: 0;
+  }
+
+  & div > .public-DraftStyleDefault-block,
+  & p {
+    /* Unstyled paragraphs */
+    margin: 0 0 0.625em;
+  }
+
+  & div:last-child > .public-DraftStyleDefault-block,
+  & p:last-child,
+  & ul:last-child,
+  & ol:last-child,
+  & blockquote:last-child {
+    margin-bottom: 0;
   }
 `

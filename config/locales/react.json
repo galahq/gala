@@ -95,6 +95,14 @@
     "community.notDiscussing":
       "Your active community is not discussing this case",
 
+    "bold": "Inline style: Bold.",
+    "italic": "Inline style: Italic.",
+    "code": "Inline style: Code.",
+    "header": "Block style: Header.",
+    "blockquote": "Block style: Quotation.",
+    "ol": "Block style: Ordered list item.",
+    "ul": "Block style: Unordered list item.",
+
     "submit": "Submit",
     "close": "Close",
     "finishEditing": "Finish editing",

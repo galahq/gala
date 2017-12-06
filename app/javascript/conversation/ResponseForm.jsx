@@ -6,10 +6,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Editor, EditorState } from 'draft-js'
+import { EditorState } from 'draft-js'
 
 import Identicon from 'shared/Identicon'
 
+import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
 import type {
   OwnProps,
@@ -50,12 +51,8 @@ class ResponseForm extends React.Component<
       <Container innerRef={(el: HTMLDivElement) => (this.container = el)}>
         <Identicon width={32} reader={reader} />
         <Input>
-          <Editor
+          <CommentEditor
             editorState={editorState}
-            placeholder={intl.formatMessage({
-              id: 'comments.write',
-              defaultMessage: 'Write a reply...',
-            })}
             onChange={this.handleChange}
             onBlur={this.handleBlur}
           />
@@ -114,7 +111,7 @@ export const EmptyResponseFormContainer = Container.extend`
   padding: 1px;
 `
 
-const Input = styled.div`
+const Input = styled.div.attrs({ className: 'pt-card' })`
   background-color: white;
   border-radius: 20px;
   margin-left: 10px;

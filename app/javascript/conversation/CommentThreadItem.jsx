@@ -251,6 +251,18 @@ class PureTruncate extends React.PureComponent<{
 }> {
   render () {
     const { lines, content } = this.props
-    return <Truncate lines={lines}>{content}</Truncate>
+    return (
+      <Truncate lines={lines}>
+        {content.split('\n\n').map((line, i, arr) => {
+          line = <span key={i}>{line}</span>
+
+          if (i === arr.length - 1) {
+            return line
+          } else {
+            return [line, <br key={i + 'br'} />]
+          }
+        })}
+      </Truncate>
+    )
   }
 }

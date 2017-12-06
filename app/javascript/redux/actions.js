@@ -3,14 +3,13 @@
  */
 
 import { batchActions } from 'redux-batched-actions'
+import { EditorState, convertToRaw } from 'draft-js'
+import { Intent } from '@blueprintjs/core'
+import { draftToMarkdown } from 'markdown-draft-js'
 
 import { Orchard } from 'shared/orchard'
-import { convertToRaw } from 'draft-js'
-import { Intent } from '@blueprintjs/core'
-
 import { getSelectionText } from 'shared/draftHelpers'
 
-import { EditorState } from 'draft-js'
 import type { SelectionState } from 'draft-js'
 import type { Toaster, Toast } from '@blueprintjs/core'
 
@@ -777,7 +776,9 @@ export function addComment (data: Comment): AddCommentAction {
 export function createComment (threadId: string): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const editorState = getState().ui.commentInProgress[threadId]
-    const content = editorState.getCurrentContent().getPlainText()
+    const content: string = draftToMarkdown(
+      convertToRaw(editorState.getCurrentContent())
+    )
 
     if (content.trim() === '') return
 

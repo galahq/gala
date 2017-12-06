@@ -5,7 +5,6 @@
 .*/node_modules/jsonlint-lines-primitives
 
 [include]
-./node_modules/immutable
 ./node_modules/fbjs/flow/lib
 
 [libs]
