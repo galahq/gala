@@ -4,12 +4,15 @@
  */
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { groupWith } from 'ramda'
 
 import { StyledComment } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
+
+import { deleteComment } from 'redux/actions'
 
 import type { Comment } from 'redux/state'
 
@@ -24,8 +27,8 @@ const sameReader = (a, b) => a.reader.hashKey === b.reader.hashKey
 const groupComments = comments =>
   groupWith(closeEnoughTimestamps, comments).map(groupWith(sameReader))
 
-type Props = { responses: Comment[] }
-const Responses = ({ responses }: Props) => {
+type Props = { deleteComment: typeof deleteComment, responses: Comment[] }
+const Responses = ({ deleteComment, responses }: Props) => {
   if (responses.length === 0) return null
   const timeGroups = groupComments(responses)
   return (
@@ -43,7 +46,10 @@ const Responses = ({ responses }: Props) => {
               <SmallGreyText>{comments[0].reader.name}</SmallGreyText>
               {comments.map(comment => (
                 <Response key={comment.id}>
-                  <StyledComment markdown={comment.content} />
+                  <SpeechBubble>
+                    <StyledComment markdown={comment.content} />
+                  </SpeechBubble>
+                  <DeleteButton onClick={() => deleteComment(comment.id)} />
                 </Response>
               ))}
               <Identicon
@@ -59,7 +65,7 @@ const Responses = ({ responses }: Props) => {
     </Container>
   )
 }
-export default Responses
+export default connect(null, { deleteComment })(Responses)
 
 const Container = styled.div``
 
@@ -91,7 +97,14 @@ const ResponseGroup = styled.div`
   }
 `
 
-const Response = styled.blockquote`
+const Response = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+`
+
+const SpeechBubble = styled.blockquote`
   margin: 6px 0 0 44px;
   border: none;
   background-color: #d9d8d3;
@@ -99,4 +112,14 @@ const Response = styled.blockquote`
   max-width: 500px;
   padding: 7px 16px;
   line-height: 1.3;
+`
+
+const DeleteButton = styled.button.attrs({
+  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
+})`
+  transition: opacity 0.2s;
+  opacity: 0;
+  ${Response}:hover & {
+    opacity: 1;
+  }
 `
