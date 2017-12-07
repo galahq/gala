@@ -3,6 +3,8 @@
  * @flow
  */
 
+import { without } from 'ramda'
+
 import type { UIState } from 'redux/state'
 import type {
   HighlightEdgenoteAction,
@@ -12,6 +14,7 @@ import type {
   AcceptSelectionAction,
   SetMostRecentCommentThreadsAction,
   AddCommentThreadAction,
+  RemoveCommentThreadAction,
   ChangeCommentInProgressAction,
   RegisterToasterAction,
   DisplayToastAction,
@@ -25,6 +28,7 @@ type Action =
   | AcceptSelectionAction
   | SetMostRecentCommentThreadsAction
   | AddCommentThreadAction
+  | RemoveCommentThreadAction
   | ChangeCommentInProgressAction
   | RegisterToasterAction
   | DisplayToastAction
@@ -63,7 +67,22 @@ export default function ui (state: ?UIState, action: Action): UIState {
       }
 
     case 'ADD_COMMENT_THREAD':
-      return { ...state, acceptingSelection: false }
+      return {
+        ...state,
+        acceptingSelection: false,
+        mostRecentCommentThreads: [
+          String(action.data.id),
+          ...(state.mostRecentCommentThreads || []),
+        ],
+      }
+
+    case 'REMOVE_COMMENT_THREAD':
+      return {
+        ...state,
+        mostRecentCommentThreads:
+          state.mostRecentCommentThreads &&
+          without([action.threadId], state.mostRecentCommentThreads),
+      }
 
     case 'HOVER_COMMENT_THREAD':
       return { ...state, hoveredCommentThread: action.id }

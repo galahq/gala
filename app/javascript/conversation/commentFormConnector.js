@@ -14,19 +14,25 @@ import type { IntlShape } from 'react-intl'
 import type { ExtractReturn, State } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
 
-export type OwnProps = {|
+export type CommentFormProps = {|
   intl: IntlShape,
   threadId: string,
 |}
 
-function mapStateToProps ({ caseData, ui }: State, { threadId }: OwnProps) {
+function mapStateToProps (
+  { caseData, ui }: State,
+  { threadId }: CommentFormProps
+) {
   const { reader } = caseData
   const editorState =
     ui.commentInProgress[threadId] || EditorState.createEmpty()
   return { editorState, reader }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { threadId }: OwnProps) {
+function mapDispatchToProps (
+  dispatch: Dispatch,
+  { threadId }: CommentFormProps
+) {
   return {
     onSaveChanges: (editorState: EditorState) =>
       dispatch(changeCommentInProgress(threadId, editorState)) && void 0,

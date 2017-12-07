@@ -18,7 +18,10 @@ import ResponseForm, {
 import { ScrollView, NoSelectedCommentThread } from 'conversation/shared'
 import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 
+import { deleteCommentThread } from 'redux/actions'
+
 import type { ContextRouter } from 'react-router-dom'
+import type { Dispatch } from 'redux/actions'
 import type { ExtractReturn, State } from 'redux/state'
 
 type OwnProps = {|
@@ -47,7 +50,6 @@ function mapStateToProps (
   const inSituPath = `/${page.position}/cards/${cardId}/comments/${threadId}`
 
   return {
-    ...ownProps,
     activeReader,
     cardPosition,
     inSituPath,
@@ -61,7 +63,28 @@ function mapStateToProps (
   }
 }
 
-type Props = ExtractReturn<typeof mapStateToProps>
+function mapDispatchToProps (
+  dispatch: Dispatch,
+  { match, history, location }: OwnProps
+) {
+  const id = match.params.threadId || ''
+  return {
+    handleDeleteThread: (e: SyntheticMouseEvent<*>) => {
+      e.preventDefault()
+      const promise = dispatch(deleteCommentThread(id))
+
+      const threadIdSuffix = RegExp(`/${id}$`)
+      if (threadIdSuffix.test(location.pathname)) {
+        history.replace(location.pathname.replace(threadIdSuffix, ''))
+      }
+      return promise
+    },
+  }
+}
+
+type StateProps = ExtractReturn<typeof mapStateToProps>
+type DispatchProps = ExtractReturn<typeof mapDispatchToProps>
+type Props = OwnProps & StateProps & DispatchProps
 
 class SelectedCommentThread extends React.Component<
   Props,
@@ -91,6 +114,7 @@ class SelectedCommentThread extends React.Component<
       heightOffset,
       inSitu,
       inSituPath,
+      handleDeleteThread,
       leadComment,
       leadCommenter,
       location,
@@ -127,6 +151,7 @@ class SelectedCommentThread extends React.Component<
                 page={page}
                 reader={leadCommenter}
                 threadId={threadId}
+                onCancel={handleDeleteThread}
               />
               <Responses responses={responses} />
             </CommentsContainer>
@@ -149,7 +174,9 @@ class SelectedCommentThread extends React.Component<
     )
   }
 }
-export default connect(mapStateToProps)(SelectedCommentThread)
+export default connect(mapStateToProps, mapDispatchToProps)(
+  SelectedCommentThread
+)
 
 const Container = styled.div`
   flex: 1;

@@ -13,13 +13,13 @@ import Identicon from 'shared/Identicon'
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
 import type {
-  OwnProps,
+  CommentFormProps,
   StateProps,
   DispatchProps,
 } from 'conversation/commentFormConnector'
 
 type Props = {
-  ...OwnProps,
+  ...CommentFormProps,
   ...StateProps,
   ...DispatchProps,
   onResize: number => mixed,

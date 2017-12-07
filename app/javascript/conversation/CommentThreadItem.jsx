@@ -134,7 +134,7 @@ const CommentThreadItem = ({
 
     <ConversationMetadata>
       <Indenticons>
-        {readers.length > 0 ? (
+        {readers.length > 0 &&
           readers.map(reader => (
             <Identicon
               presentational
@@ -142,10 +142,7 @@ const CommentThreadItem = ({
               width={22}
               reader={reader}
             />
-          ))
-        ) : (
-          <DeleteButton onClick={handleDeleteThread} />
-        )}
+          ))}
       </Indenticons>
       <CommentCount>
         <FormattedMessage
@@ -235,10 +232,6 @@ const MostRecentComment = styled.blockquote`
     margin-top: 7px;
   }
 `
-
-const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-intent-danger pt-icon-trash pt-small pt-minimal',
-})``
 
 const Grey = styled.span`
   color: #5c7080;

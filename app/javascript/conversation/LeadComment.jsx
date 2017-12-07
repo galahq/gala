@@ -31,6 +31,7 @@ type Props = {
   page: Page,
   reader: { imageUrl: ?string, hashKey: string, name: string },
   threadId: string,
+  onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
 }
 const LeadComment = ({
   cardPosition,
@@ -41,6 +42,7 @@ const LeadComment = ({
   page,
   reader,
   threadId,
+  onCancel,
 }: Props) => [
   <LeadCommenter key="1">
     <Identicon presentational width={32} reader={reader} />
@@ -93,7 +95,7 @@ const LeadComment = ({
       </blockquote>
     </LeadCommentContents>
   ) : (
-    <FirstPostForm threadId={threadId} />
+    <FirstPostForm key="3" threadId={threadId} onCancel={onCancel} />
   ),
 ]
 export default LeadComment
