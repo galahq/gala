@@ -1140,6 +1140,8 @@ declare module ramda {
     os: Array<{ [k: string]: T }>
   ): { [k: string]: T }
 
+  declare function mergeDeepRight (Object, Object): Object
+
   declare function mergeWith<
     T,
     S,

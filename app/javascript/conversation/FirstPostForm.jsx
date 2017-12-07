@@ -15,12 +15,20 @@ import FormattingToolbar from 'conversation/FormattingToolbar'
 
 import type { Editor } from 'draft-js'
 import type {
-  OwnProps,
+  CommentFormProps,
   StateProps,
   DispatchProps,
 } from 'conversation/commentFormConnector'
 
-type Props = { ...OwnProps, ...StateProps, ...DispatchProps }
+type OwnProps = {
+  onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
+}
+type Props = {
+  ...OwnProps,
+  ...CommentFormProps,
+  ...StateProps,
+  ...DispatchProps,
+}
 type State = { editorState: EditorState }
 class FirstPostForm extends React.Component<Props, State> {
   editor: ?Editor
@@ -37,7 +45,7 @@ class FirstPostForm extends React.Component<Props, State> {
   }
 
   render () {
-    const { onSubmitComment } = this.props
+    const { onSubmitComment, onCancel } = this.props
     const { editorState } = this.state
     return [
       <Input key="1" onClick={this.handleFocusEditor}>
@@ -53,6 +61,9 @@ class FirstPostForm extends React.Component<Props, State> {
         />
       </Input>,
       <Options key="2">
+        <Button onClick={onCancel}>
+          <FormattedMessage id="cancel" defaultMessage="Cancel" />
+        </Button>
         <SubmitButton
           disabled={
             editorState
@@ -98,6 +109,9 @@ const Options = styled.div`
   margin-top: 8px;
 `
 
+const Button = styled.button.attrs({ className: 'pt-button' })``
 const SubmitButton = styled.button.attrs({
   className: 'pt-button pt-intent-primary',
-})``
+})`
+  margin-left: 8px;
+`

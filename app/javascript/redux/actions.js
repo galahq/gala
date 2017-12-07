@@ -666,7 +666,7 @@ export function fetchCommentThreads (slug: string): ThunkAction {
         setCommentsById(comments),
         setCommentThreadsById(commentThreads),
         setCards(cards),
-        setMostRecentCommentThreads(mostRecentCommentThreads),
+        setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
       ])
     )
     dispatch(parseAllCards())

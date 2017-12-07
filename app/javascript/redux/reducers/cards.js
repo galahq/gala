@@ -7,7 +7,7 @@ import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization from 'card/convertFromOldStyleCardSerialization'
 import { decorator } from 'card/draftConfig'
 
-import { omit } from 'ramda'
+import { omit, lensPath, view, set, reduce } from 'ramda'
 
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
@@ -116,31 +116,36 @@ function cardsById (
 
       if (commentThreads.find(x => x.id === data.id)) return state
 
-      const newCard = {
+      const cardWithThread = {
         ...card,
         commentThreads: [...commentThreads, data].sort(sortCommentThreads),
       }
       return {
         ...state,
         [data.cardId]: {
-          ...newCard,
-          editorState: parseEditorStateFromPersistedCard(newCard),
+          ...cardWithThread,
+          editorState: parseEditorStateFromPersistedCard(cardWithThread),
         },
       }
     }
 
     case 'REMOVE_COMMENT_THREAD': {
       const { cardId, threadId } = action
-      const commentThreads = state[cardId].commentThreads || []
-      const newCard = {
-        ...state[cardId],
-        commentThreads: commentThreads.filter(x => x.id !== threadId),
+      const card = state[cardId]
+      const commentThreads = card.commentThreads || []
+
+      const cardWithoutThread = {
+        ...card,
+        commentThreads: commentThreads.filter(
+          thread => `${thread.id}` !== threadId
+        ),
       }
+
       return {
         ...state,
         [action.cardId]: {
-          ...newCard,
-          editorState: parseEditorStateFromPersistedCard(newCard),
+          ...cardWithoutThread,
+          editorState: parseEditorStateFromPersistedCard(cardWithoutThread),
         },
       }
     }
@@ -173,7 +178,7 @@ function sortCommentThreads (a: CommentThread, b: CommentThread): number {
 
 function parseEditorStateFromPersistedCard (card: Card) {
   const content =
-    card.rawContent || convertFromOldStyleCardSerialization(card.content)
+    { ...card.rawContent } || convertFromOldStyleCardSerialization(card.content)
   if (content == null) return EditorState.createEmpty()
 
   const contentWithCommentThreads = addCommentThreads(content, card)
@@ -184,30 +189,27 @@ function parseEditorStateFromPersistedCard (card: Card) {
 }
 
 function addCommentThreads (content: RawDraftContentState, card: Card) {
-  let newContent = { ...content }
-
   const commentThreads = card.commentThreads || []
 
-  commentThreads.forEach(thread => {
-    const { id, blockIndex, length, start: offset } = thread
-    if (offset == null || blockIndex == null) return
+  const styleRangesForComment = ({ id, length, start: offset }) => [
+    { length, offset, style: 'THREAD' },
+    { length, offset, style: `thread--${id}` },
+  ]
 
-    const key = `thread--${id}`
+  const inlineStylesLensForBlock = blockIndex =>
+    lensPath(['blocks', blockIndex, 'inlineStyleRanges'])
 
-    const inlineStyleRanges = newContent.blocks[blockIndex].inlineStyleRanges
-    inlineStyleRanges &&
-      inlineStyleRanges.push({
-        length,
-        offset,
-        style: 'THREAD',
-      })
-    inlineStyleRanges &&
-      inlineStyleRanges.push({
-        length,
-        offset,
-        style: key,
-      })
-  })
+  const inlineStylesWithComment = (content, comment) => [
+    ...view(inlineStylesLensForBlock(comment.blockIndex), content),
+    ...styleRangesForComment(comment),
+  ]
 
-  return newContent
+  const setInlineStylesForComment = (content, comment) =>
+    set(
+      inlineStylesLensForBlock(comment.blockIndex),
+      inlineStylesWithComment(content, comment),
+      content
+    )
+
+  return reduce(setInlineStylesForComment, content, commentThreads)
 }
