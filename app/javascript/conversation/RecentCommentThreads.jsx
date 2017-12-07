@@ -39,7 +39,7 @@ const RecentCommentThreads = ({
     <Shadow>
       <CommunityChooser />
     </Shadow>
-    <ScrollView maxHeightOffset="126px">
+    <ScrollView maxHeightOffset="215px">
       {mostRecentCommentThreads == null ? (
         <Loading />
       ) : mostRecentCommentThreads.length > 0 ? (
