@@ -18,12 +18,12 @@ import { NoSelectedCommentThread } from 'conversation/shared'
 import type { State } from 'redux/state'
 
 function mapStateToProps ({ caseData }: State) {
-  const { kicker, reader } = caseData
-  return { kicker, reader }
+  const { commentable, kicker, reader } = caseData
+  return { commentable, kicker, reader }
 }
 
-const Conversation = ({ kicker, intl, reader }) =>
-  !reader ? (
+const Conversation = ({ commentable, kicker, intl, reader }) =>
+  !commentable || !reader || !reader.enrollment ? (
     <Redirect to="/" />
   ) : (
     <DocumentTitle
