@@ -109,9 +109,14 @@ const InnerContainer = styled.div`
 
 const ReadMoreLink = styled.a`
   font: 12pt tenso;
-  color: black;
+  color: #277a2e;
   position: absolute;
   bottom: -0.75em;
   left: 50%;
   transform: translateX(-50%);
+
+  &:hover {
+    color: #277a2e;
+    text-decoration: underline;
+  }
 `
