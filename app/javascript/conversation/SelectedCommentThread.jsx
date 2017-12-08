@@ -24,11 +24,11 @@ import type { ContextRouter } from 'react-router-dom'
 import type { Dispatch } from 'redux/actions'
 import type { ExtractReturn, State } from 'redux/state'
 
-type OwnProps = {|
+type OwnProps = {
   ...ContextRouter,
   inSitu?: boolean,
   heightOffset: number,
-|}
+}
 
 function mapStateToProps (
   { caseData, commentThreadsById, commentsById, cardsById, pagesById }: State,
@@ -131,7 +131,9 @@ class SelectedCommentThread extends React.Component<
         <FocusContainer priority={2}>
           <ScrollView
             innerRef={scrollView => (this.scrollView = scrollView)}
-            maxHeightOffset={`${heightOffset}px + ${formHeight}px`}
+            maxHeightOffset={`${heightOffset}px + ${
+              leadComment == null ? 0 : formHeight
+            }px`}
           >
             <CommentsContainer>
               <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
