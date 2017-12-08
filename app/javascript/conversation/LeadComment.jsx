@@ -25,7 +25,7 @@ import { styles } from 'card/draftConfig'
 
 import type { IntlShape } from 'react-intl'
 import type { Dispatch } from 'redux/actions'
-import type { Page, Comment } from 'redux/state'
+import type { State, Page, Comment } from 'redux/state'
 
 type OwnProps = {
   cardPosition: number,
@@ -40,6 +40,14 @@ type OwnProps = {
   threadId: string,
   onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
 }
+
+function mapStateToProps ({ caseData }: State) {
+  const { reader } = caseData
+  return {
+    readerCanDeleteComments: reader && reader.canUpdateCase,
+  }
+}
+type StateProps = { readerCanDeleteComments: boolean }
 
 function mapDispatchToProps (
   dispatch: Dispatch,
@@ -56,8 +64,11 @@ function mapDispatchToProps (
     handleDeleteThread,
   }
 }
+type DispatchProps = {
+  handleDeleteThread: (SyntheticMouseEvent<*>) => Promise<any>,
+}
 
-type Props = OwnProps & { handleDeleteThread: () => Promise<any> }
+type Props = OwnProps & StateProps & DispatchProps
 
 const LeadComment = ({
   cardPosition,
@@ -69,6 +80,7 @@ const LeadComment = ({
   originalHighlightText,
   page,
   reader,
+  readerCanDeleteComments,
   responseCount,
   threadId,
   onCancel,
@@ -120,15 +132,16 @@ const LeadComment = ({
         <SmallGreyText>
           <ConversationTimestamp value={leadComment.timestamp} />
         </SmallGreyText>
-        {responseCount === 0 && (
-          <DeleteButton
-            aria-label={intl.formatMessage({
-              id: 'comments.deleteCommentThread',
-              defaultMessage: 'Delete comment thread',
-            })}
-            onClick={handleDeleteThread}
-          />
-        )}
+        {readerCanDeleteComments &&
+          responseCount === 0 && (
+            <DeleteButton
+              aria-label={intl.formatMessage({
+                id: 'comments.deleteCommentThread',
+                defaultMessage: 'Delete comment thread',
+              })}
+              onClick={handleDeleteThread}
+            />
+          )}
       </Row>
       <blockquote>
         <StyledComment markdown={leadComment.content} />
@@ -138,7 +151,9 @@ const LeadComment = ({
     <FirstPostForm key="3" threadId={threadId} onCancel={onCancel} />
   ),
 ]
-export default injectIntl(connect(null, mapDispatchToProps)(LeadComment))
+export default injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(LeadComment)
+)
 
 const LeadCommenter = styled.div`
   display: flex;
