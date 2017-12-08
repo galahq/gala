@@ -152,6 +152,7 @@ class SelectedCommentThread extends React.Component<
                 originalHighlightText={originalHighlightText}
                 page={page}
                 reader={leadCommenter}
+                responseCount={responses.length}
                 threadId={threadId}
                 onCancel={handleDeleteThread}
               />

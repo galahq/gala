@@ -4,10 +4,13 @@
  */
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 import styled, { css } from 'styled-components'
 
-import { FormattedMessage } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
+
+import { deleteComment } from 'redux/actions'
 
 import FirstPostForm from 'conversation/FirstPostForm'
 import { StyledComment } from 'conversation/shared'
@@ -20,27 +23,53 @@ import {
 } from 'conversation/shared'
 import { styles } from 'card/draftConfig'
 
+import type { IntlShape } from 'react-intl'
+import type { Dispatch } from 'redux/actions'
 import type { Page, Comment } from 'redux/state'
 
-type Props = {
+type OwnProps = {
   cardPosition: number,
   inSitu: boolean,
   inSituPath: string,
+  intl: IntlShape,
   leadComment: ?Comment,
   originalHighlightText: string,
   page: Page,
   reader: { imageUrl: ?string, hashKey: string, name: string },
+  responseCount: number,
   threadId: string,
   onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
 }
+
+function mapDispatchToProps (
+  dispatch: Dispatch,
+  { leadComment, onCancel }: OwnProps
+) {
+  let handleDeleteThread
+  if (leadComment != null) {
+    const { id: commentId } = leadComment
+    handleDeleteThread = (e: SyntheticMouseEvent<*>) =>
+      dispatch(deleteComment(commentId)).then(() => onCancel(e))
+  }
+
+  return {
+    handleDeleteThread,
+  }
+}
+
+type Props = OwnProps & { handleDeleteThread: () => Promise<any> }
+
 const LeadComment = ({
   cardPosition,
+  handleDeleteThread,
   inSitu,
   inSituPath,
+  intl,
   leadComment,
   originalHighlightText,
   page,
   reader,
+  responseCount,
   threadId,
   onCancel,
 }: Props) => [
@@ -87,9 +116,20 @@ const LeadComment = ({
 
   leadComment ? (
     <LeadCommentContents key="3">
-      <SmallGreyText>
-        <ConversationTimestamp value={leadComment.timestamp} />
-      </SmallGreyText>
+      <Row>
+        <SmallGreyText>
+          <ConversationTimestamp value={leadComment.timestamp} />
+        </SmallGreyText>
+        {responseCount === 0 && (
+          <DeleteButton
+            aria-label={intl.formatMessage({
+              id: 'comments.deleteCommentThread',
+              defaultMessage: 'Delete comment thread',
+            })}
+            onClick={handleDeleteThread}
+          />
+        )}
+      </Row>
       <blockquote>
         <StyledComment markdown={leadComment.content} />
       </blockquote>
@@ -98,7 +138,7 @@ const LeadComment = ({
     <FirstPostForm key="3" threadId={threadId} onCancel={onCancel} />
   ),
 ]
-export default LeadComment
+export default injectIntl(connect(null, mapDispatchToProps)(LeadComment))
 
 const LeadCommenter = styled.div`
   display: flex;
@@ -138,5 +178,21 @@ const LeadCommentContents = styled.div`
     border: none;
     font-size: 17px;
     line-height: 1.3;
+  }
+`
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+`
+
+const DeleteButton = styled.button.attrs({
+  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
+})`
+  transition: opacity 0.2s;
+  opacity: 0;
+  ${LeadCommentContents}:hover & {
+    opacity: 1;
   }
 `

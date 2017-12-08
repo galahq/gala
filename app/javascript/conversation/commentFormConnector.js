@@ -14,10 +14,10 @@ import type { IntlShape } from 'react-intl'
 import type { ExtractReturn, State } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
 
-export type CommentFormProps = {|
+export type CommentFormProps = {
   intl: IntlShape,
   threadId: string,
-|}
+}
 
 function mapStateToProps (
   { caseData, ui }: State,

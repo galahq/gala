@@ -816,7 +816,7 @@ export function deleteComment (id: string): ThunkAction {
       )
     ) {
       const threadId = `${getState().commentsById[id].commentThreadId}`
-      Orchard.prune(`comments/${id}`).then(() => {
+      return Orchard.prune(`comments/${id}`).then(() => {
         dispatch(removeComment(id, threadId))
       })
     }
