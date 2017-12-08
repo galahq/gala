@@ -5,6 +5,7 @@
 
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { groupWith } from 'ramda'
 
@@ -14,6 +15,7 @@ import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
 
 import { deleteComment } from 'redux/actions'
 
+import type { IntlShape } from 'react-intl'
 import type { Comment } from 'redux/state'
 
 const ms = x => new Date(x).getTime()
@@ -27,8 +29,12 @@ const sameReader = (a, b) => a.reader.hashKey === b.reader.hashKey
 const groupComments = comments =>
   groupWith(closeEnoughTimestamps, comments).map(groupWith(sameReader))
 
-type Props = { deleteComment: typeof deleteComment, responses: Comment[] }
-const Responses = ({ deleteComment, responses }: Props) => {
+type Props = {
+  deleteComment: typeof deleteComment,
+  intl: IntlShape,
+  responses: Comment[],
+}
+const Responses = ({ deleteComment, intl, responses }: Props) => {
   if (responses.length === 0) return null
   const timeGroups = groupComments(responses)
   return (
@@ -49,7 +55,13 @@ const Responses = ({ deleteComment, responses }: Props) => {
                   <SpeechBubble>
                     <StyledComment markdown={comment.content} />
                   </SpeechBubble>
-                  <DeleteButton onClick={() => deleteComment(comment.id)} />
+                  <DeleteButton
+                    aria-label={intl.formatMessage({
+                      id: 'comments.deleteComment',
+                      defaultMessage: 'Delete comment',
+                    })}
+                    onClick={() => deleteComment(comment.id)}
+                  />
                 </Response>
               ))}
               <Identicon
@@ -65,7 +77,7 @@ const Responses = ({ deleteComment, responses }: Props) => {
     </Container>
   )
 }
-export default connect(null, { deleteComment })(Responses)
+export default injectIntl(connect(null, { deleteComment })(Responses))
 
 const Container = styled.div``
 
