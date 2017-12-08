@@ -122,8 +122,8 @@ const Container = styled.div.attrs({ className: 'pt-dark' })`
       left: 0px;
       width: 100%;
       padding: 60px 6px 6px;
-      background-color: #35536f;
-      border-bottom: 1px solid #1d3f5e;
+      background-color: #493092;
+      border-bottom: 1px solid #351d7a;
       border-radius: 7px;
     }
   }
