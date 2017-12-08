@@ -16,7 +16,14 @@ import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
 import { deleteComment } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
-import type { Comment } from 'redux/state'
+import type { State, Comment } from 'redux/state'
+
+function mapStateToProps ({ caseData }: State) {
+  const { reader } = caseData
+  return {
+    readerCanDeleteComments: reader && reader.canUpdateCase,
+  }
+}
 
 const ms = x => new Date(x).getTime()
 
@@ -32,9 +39,15 @@ const groupComments = comments =>
 type Props = {
   deleteComment: typeof deleteComment,
   intl: IntlShape,
+  readerCanDeleteComments: boolean,
   responses: Comment[],
 }
-const Responses = ({ deleteComment, intl, responses }: Props) => {
+const Responses = ({
+  deleteComment,
+  intl,
+  readerCanDeleteComments,
+  responses,
+}: Props) => {
   if (responses.length === 0) return null
   const timeGroups = groupComments(responses)
   return (
@@ -55,13 +68,15 @@ const Responses = ({ deleteComment, intl, responses }: Props) => {
                   <SpeechBubble>
                     <StyledComment markdown={comment.content} />
                   </SpeechBubble>
-                  <DeleteButton
-                    aria-label={intl.formatMessage({
-                      id: 'comments.deleteComment',
-                      defaultMessage: 'Delete comment',
-                    })}
-                    onClick={() => deleteComment(comment.id)}
-                  />
+                  {readerCanDeleteComments && (
+                    <DeleteButton
+                      aria-label={intl.formatMessage({
+                        id: 'comments.deleteComment',
+                        defaultMessage: 'Delete comment',
+                      })}
+                      onClick={() => deleteComment(comment.id)}
+                    />
+                  )}
                 </Response>
               ))}
               <Identicon
@@ -77,7 +92,9 @@ const Responses = ({ deleteComment, intl, responses }: Props) => {
     </Container>
   )
 }
-export default injectIntl(connect(null, { deleteComment })(Responses))
+export default injectIntl(
+  connect(mapStateToProps, { deleteComment })(Responses)
+)
 
 const Container = styled.div``
 
