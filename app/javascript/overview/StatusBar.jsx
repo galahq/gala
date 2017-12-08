@@ -22,7 +22,7 @@ import type { State } from 'redux/state'
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
   let { edit, caseData } = state
   let { inProgress } = edit
-  let { publishedAt, featuredAt, reader } = caseData
+  let { commentable, publishedAt, featuredAt, reader } = caseData
   let { pathname } = location
   return {
     editable: edit.possible,
@@ -30,6 +30,7 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
     edited: edit.changed,
     published: !!publishedAt,
     featured: !!featuredAt,
+    commentable,
     pathname,
     history,
     reader,
@@ -37,6 +38,7 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
 }
 
 function StatusBar ({
+  commentable,
   editable,
   editing,
   edited,
@@ -63,7 +65,7 @@ function StatusBar ({
               )),
         },
         {
-          disabled: !reader,
+          disabled: !commentable || !reader || !reader.enrollment,
           message: 'conversation',
           iconName: 'chat',
           onClick: () => history.push('/conversation'),
