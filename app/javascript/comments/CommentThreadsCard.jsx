@@ -76,7 +76,7 @@ const CommentThreadsCard = ({
           </Header>
 
           <List>
-            <ScrollView maxHeightOffset="126px">
+            <ScrollView maxHeightOffset="187px">
               {commentThreads.map(({ id }, i) => (
                 <CommentThreadItem key={id} id={id} />
               ))}
