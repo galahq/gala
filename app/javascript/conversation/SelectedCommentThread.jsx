@@ -181,7 +181,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
   SelectedCommentThread
 )
 
-const Container = styled.div`
+const Container = styled.div.attrs({ className: 'SelectedCommentThread' })`
   flex: 1;
   max-width: 633px;
   min-width: 370px;

@@ -30,7 +30,7 @@ feature 'Leaving a comment' do
     first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
     click_button 'Respond here'
-    expect(page).to have_selector 'textarea'
+    expect(page).to have_selector '.public-DraftEditorPlaceholder-root'
 
     reply_placeholder = find('.public-DraftEditorPlaceholder-root',
                              text: 'Write a reply...')
@@ -38,7 +38,7 @@ feature 'Leaving a comment' do
     page.driver.browser.action.move_to(reply_placeholder).click.perform
     page.driver.browser.action.send_keys('Test reply').perform
     click_button 'Submit'
-    expect(page).to have_selector 'blockquote', text: 'Test comment'
+    expect(page).to have_selector 'blockquote', text: 'Test reply'
   end
 
   scenario 'is not possible with a non-unique selection' do
