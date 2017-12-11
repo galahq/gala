@@ -19,6 +19,7 @@ import { FocusStyleManager } from '@blueprintjs/core'
 import { addLocaleData, IntlProvider } from 'react-intl'
 
 import Case from 'Case'
+import ErrorBoundary from 'utility/ErrorBoundary'
 
 import reducer from 'redux/reducers'
 
@@ -39,11 +40,13 @@ delete AppContainer.prototype.unstable_handleError
 const render = (Component: React$Component) => {
   ReactDOM.render(
     <AppContainer>
-      <Provider store={store}>
-        <IntlProvider locale={locale} messages={messages[locale]}>
-          <Component />
-        </IntlProvider>
-      </Provider>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <IntlProvider locale={locale} messages={messages[locale]}>
+            <Component />
+          </IntlProvider>
+        </Provider>
+      </ErrorBoundary>
     </AppContainer>,
     document.getElementById('container')
   )
