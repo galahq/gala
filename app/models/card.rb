@@ -15,6 +15,10 @@ class Card < ApplicationRecord
 
   before_save :set_case_from_element
 
+  def page_id
+    element_type == 'Page' ? element_id : nil
+  end
+
   def paragraphs
     raw_content['blocks'].map { |x| x['text'] }
   rescue

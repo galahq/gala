@@ -19,23 +19,30 @@ feature 'Moderating a comment thread' do
       forum: global_forum
     )
   end
-  let!(:comment) do
+
+  before do
+    login_as enrollment.reader
     comment_thread.comments.create(
-      content: 'Bad comment',
+      content: 'First comment',
+      reader: other_reader
+    )
+    comment_thread.comments.create(
+      content: 'Second comment',
       reader: other_reader
     )
   end
 
-  before { login_as enrollment.reader }
-
   it 'is possible to delete a comment as an editor' do
     visit comment_thread_path(:en, comment_thread)
     accept_confirm 'Are you sure' do
-      find('.Comment').hover
+      find('blockquote', text: 'Second comment').hover
       find('[aria-label="Delete comment"]').click
     end
-    expect(page).not_to have_content 'Bad comment'
-    find('[aria-label="Delete comment thread"]').click
-    expect(page).not_to have_content 'No comment'
+    expect(page).not_to have_content 'Second comment'
+    accept_confirm 'Are you sure' do
+      find('blockquote', text: 'First comment').hover
+      find('[aria-label="Delete comment thread"]').click
+    end
+    expect(page).not_to have_content 'First comment'
   end
 end
