@@ -934,14 +934,7 @@ export type HandleNotificationAction = {
 }
 export function handleNotification (notification: Notification): ThunkAction {
   return (dispatch: Dispatch) => {
-    const {
-      message,
-      case: kase,
-      element,
-      cardId,
-      commentThreadId,
-      community,
-    } = notification
+    const { message, case: kase, commentThreadId, community } = notification
     dispatch(
       displayToast({
         message,
@@ -950,9 +943,9 @@ export function handleNotification (notification: Notification): ThunkAction {
           onClick: _ => {
             dispatch(updateActiveCommunity(kase.slug, community.id)).then(
               () => {
-                window.location = `/cases/${kase.slug}/${
-                  element.position
-                }/cards/${cardId}/comments/${commentThreadId}`
+                window.location = `/cases/${
+                  kase.slug
+                }/conversation/${commentThreadId}`
               }
             )
           },
