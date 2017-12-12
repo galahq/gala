@@ -14,7 +14,7 @@ def generate_blocks(paragraphs)
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :card do
     raw_content do
       blocks = generate_blocks Faker::Hipster.paragraphs(rand(1..3))
