@@ -10,4 +10,4 @@ if DEV_MOCK_AUTH_HASH
   reader.add_role :invisible
 end
 
-10.times { FactoryGirl.create :case_with_elements, :published }
+10.times { FactoryBot.create :case_with_elements, :published }

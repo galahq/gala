@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :library do
     sequence(:slug) { |n| "michigan-sustainaility-cases-#{n}"}
     name "Michigan Sustainability Cases"
