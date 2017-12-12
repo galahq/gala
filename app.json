@@ -13,6 +13,9 @@
     "MapboxAccessToken": {
       "required": true
     },
+    "MOCK_OMNIAUTH": {
+      "value": "1"
+    },
     "NODE_ENV": {
       "required": true
     },
