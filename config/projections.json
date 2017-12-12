@@ -22,7 +22,7 @@
   "spec/factories/*_factory.rb": {
     "command": "factory",
     "template": [
-      "FactoryGirl.define do",
+      "FactoryBot.define do",
       "  factory :{} do",
       "",
       "  end",

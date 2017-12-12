@@ -63,14 +63,14 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
   config.include Devise::Test::ControllerHelpers, type: :controller
 
   config.before(:suite) do
     begin
       DatabaseCleaner.strategy = :transaction
-      FactoryGirl.lint
+      FactoryBot.lint
       DatabaseCleaner.clean_with(:truncation)
     end
   end

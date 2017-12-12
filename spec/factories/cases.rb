@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :case do
     sequence(:slug) { |n| "#{Faker::Internet.slug(nil, '-')}#{n}" }
     commentable true
