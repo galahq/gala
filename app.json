@@ -1,0 +1,52 @@
+{
+  "name": "gala",
+  "scripts": {
+    "postdeploy": "rails db:structure:load db:seed"
+  },
+  "env": {
+    "LTI_KEY": {
+      "required": true
+    },
+    "LTI_SECRET": {
+      "required": true
+    },
+    "MapboxAccessToken": {
+      "required": true
+    },
+    "NODE_ENV": {
+      "required": true
+    },
+    "RAILS_MAX_THREADS": {
+      "required": true
+    },
+    "SECRET_KEY_BASE": {
+      "generator": "secret"
+    },
+    "WEB_CONCURRENCY": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [
+    "memcachier",
+    "newrelic",
+    "papertrail",
+    "heroku-postgresql",
+    "heroku-redis",
+    "scheduler",
+    "scout"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}
