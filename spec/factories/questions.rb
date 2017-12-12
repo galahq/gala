@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :question do
     content { Faker::Lorem.question }
     correct_answer { Faker::Lorem.sentence }

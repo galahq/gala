@@ -31,6 +31,10 @@ gem 'lograge'
 gem 'newrelic_rpm'
 gem 'scout_apm'
 
+# To seed the database for Heroku review apps, this is included in production
+gem 'factory_bot_rails'
+gem 'faker'
+
 group :test do
   gem 'database_cleaner'
 end
@@ -41,8 +45,6 @@ group :development, :test do
   gem 'pry'
 
   gem 'capybara'
-  gem 'factory_girl_rails'
-  gem 'faker'
   gem 'guard-rspec'
   gem 'rspec-rails', '~> 3.5'
   gem 'rspec_junit_formatter'
