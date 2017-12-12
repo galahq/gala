@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if Rails.env.development? || ENV['MOCK_OMNIAUTH']
+if Rails.env.development? && !ENV['LOCALHOST_SSL'] || ENV['MOCK_OMNIAUTH']
   OmniAuth.config.test_mode = true
   auth_hash = { provider: 'google_oauth2', uid: '1234567890',
                 info: {
