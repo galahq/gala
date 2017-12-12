@@ -66,15 +66,17 @@ export default function ui (state: ?UIState, action: Action): UIState {
         mostRecentCommentThreads: action.mostRecentCommentThreads,
       }
 
-    case 'ADD_COMMENT_THREAD':
+    case 'ADD_COMMENT_THREAD': {
+      const id = `${action.data.id}`
       return {
         ...state,
         acceptingSelection: false,
         mostRecentCommentThreads: [
-          String(action.data.id),
-          ...(state.mostRecentCommentThreads || []),
+          id,
+          ...(state.mostRecentCommentThreads || []).filter(x => x !== id),
         ],
       }
+    }
 
     case 'REMOVE_COMMENT_THREAD':
       return {
