@@ -94,14 +94,14 @@ const NoComments = injectIntl(({ activeCommunity, intl }) => (
         communityName: activeCommunity ? activeCommunity.name : '',
       }
     )}
-    action={
-      <button className="pt-button pt-intent-primary pt-icon-edit">
-        <FormattedMessage
-          id="comments.writeNew"
-          defaultMessage="Write a new response"
-        />
-      </button>
-    }
+    // action={
+    //   <button className="pt-button pt-intent-primary pt-icon-edit">
+    //     <FormattedMessage
+    //       id="comments.writeNew"
+    //       defaultMessage="Write a new response"
+    //     />
+    //   </button>
+    // }
   />
 ))
 
