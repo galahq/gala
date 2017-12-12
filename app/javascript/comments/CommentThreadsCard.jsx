@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Portal } from '@blueprintjs/core'
 
@@ -41,14 +42,15 @@ function mapStateToProps (state: State, { cardId, location }: OwnProps) {
 }
 
 const CommentThreadsCard = ({
-  cardId,
-  commentThreads,
   acceptSelection,
-  closeCommentThreadsPath,
   addCommentThread,
+  cardId,
+  closeCommentThreadsPath,
+  commentThreads,
+  history,
+  intl,
   location,
   match,
-  history,
 }) => {
   if (commentThreads == null) return null
 
@@ -59,6 +61,10 @@ const CommentThreadsCard = ({
           <Header>
             <CloseButton
               replace
+              aria-label={intl.formatMessage({
+                id: 'close',
+                defaultMessage: 'Close',
+              })}
               to={closeCommentThreadsPath}
               onClick={() => acceptSelection(false)}
             />
@@ -107,7 +113,9 @@ const CommentThreadsCard = ({
   )
 }
 
-export default connect(mapStateToProps, { acceptSelection })(CommentThreadsCard)
+export default injectIntl(
+  connect(mapStateToProps, { acceptSelection })(CommentThreadsCard)
+)
 
 const List = styled.ol`
   margin: 0;
