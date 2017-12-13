@@ -95,6 +95,14 @@
     "community.notDiscussing":
       "Your active community is not discussing this case",
 
+    "bold": "Inline style: Bold.",
+    "italic": "Inline style: Italic.",
+    "code": "Inline style: Code.",
+    "header": "Block style: Header.",
+    "blockquote": "Block style: Quotation.",
+    "ol": "Block style: Ordered list item.",
+    "ul": "Block style: Unordered list item.",
+
     "submit": "Submit",
     "close": "Close",
     "finishEditing": "Finish editing",
@@ -222,15 +230,21 @@
     "catalog.allCases": "すべての事例研究",
 
     "catalog.chooseForYourself": "自分で選択する",
-    "catalog.meetStakeholders": "さまざまなステークホルダーに会い、マルチモーダルな物語で深く理解できます。",
-    "catalog.shortcutExperience": "原則を実践することで経験を得ることができます。",
-    "catalog.joinConversation": "質問をしたり、他の学習者を助けたりして、会話に参加できます。",
-    "catalog.enrollmentsInstruction": "登録する事例研究は、簡単に見つけられるようにここに表示されます。",
+    "catalog.meetStakeholders":
+      "さまざまなステークホルダーに会い、マルチモーダルな物語で深く理解できます。",
+    "catalog.shortcutExperience":
+      "原則を実践することで経験を得ることができます。",
+    "catalog.joinConversation":
+      "質問をしたり、他の学習者を助けたりして、会話に参加できます。",
+    "catalog.enrollmentsInstruction":
+      "登録する事例研究は、簡単に見つけられるようにここに表示されます。",
 
     "catalog.enrolledCases": "登録された事例研究",
     "catalog.editEnrolled": "登録された事例研究を編集",
-    "catalog.unenrollConfirmation": "この事例研究、登録を解除してもよろしいですか？",
-    "catalog.unenrollBetaWarning": "この事例研究は公開されていないため、再登録するには別の招待状が必要です。",
+    "catalog.unenrollConfirmation":
+      "この事例研究、登録を解除してもよろしいですか？",
+    "catalog.unenrollBetaWarning":
+      "この事例研究は公開されていないため、再登録するには別の招待状が必要です。",
     "catalog.unenroll": "この事例研究の登録を解除する",
 
     "catalog.learnMore": "もっと詳しく知る",
@@ -248,7 +262,8 @@
     "summary": "要約",
     "case.acknowledgements": "謝辞",
     "case.enrollInThisCase": "この事例研究に登録する",
-    "case.enrollForEasyAccess": "このケースが目を引く場合は、簡単に見つけれるよう登録してください。",
+    "case.enrollForEasyAccess":
+      "このケースが目を引く場合は、簡単に見つけれるよう登録してください。",
     "case.enroll": "登録",
     "case.toc": "目次",
     "case.backToOverview": "戻る",
@@ -284,11 +299,13 @@
     "comments.placeholderContent": "コメント無し",
     "comments.otherComments": "{count, number}件の返信",
     "comments.write": "返事を書いてください",
-    "comments.selectionNotUnique": "選択された言葉が複数回表示されます。さらにいくつかの文字を選択してください。",
+    "comments.selectionNotUnique":
+      "選択された言葉が複数回表示されます。さらにいくつかの文字を選択してください。",
 
     "community.choose": "コミュニティを選択",
     "community.instructions": "選択したコミュニティの議論が見えます。",
-    "community.notDiscussing": "あなたのアクティブなコミュニティはこの事例研究について議論していません",
+    "community.notDiscussing":
+      "あなたのアクティブなコミュニティはこの事例研究について議論していません",
 
     "submit": "提出",
     "close": "閉じる",
@@ -311,15 +328,20 @@
     "catalog.allCases": "全部案例",
 
     "catalog.chooseForYourself": "我的学习我做主",
-    "catalog.meetStakeholders": "在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。",
-    "catalog.shortcutExperience": "通过案例学习获取将所学知识运用于实践的捷径。",
-    "catalog.joinConversation": "参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。",
-    "catalog.enrollmentsInstruction": "选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。",
+    "catalog.meetStakeholders":
+      "在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。",
+    "catalog.shortcutExperience":
+      "通过案例学习获取将所学知识运用于实践的捷径。",
+    "catalog.joinConversation":
+      "参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。",
+    "catalog.enrollmentsInstruction":
+      "选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。",
 
     "catalog.enrolledCases": "加入案例学习",
     "catalog.editEnrolled": "编辑我的案例",
     "catalog.unenrollConfirmation": "你确定要退出这个案例的学习吗？",
-    "catalog.unenrollBetaWarning": "这个案例还未公开发表，你将需要另一封邀请函来重新加入此案例的学习。",
+    "catalog.unenrollBetaWarning":
+      "这个案例还未公开发表，你将需要另一封邀请函来重新加入此案例的学习。",
     "catalog.unenroll": "退出该案例的学习",
 
     "catalog.learnMore": "了解更多",
@@ -375,10 +397,12 @@
     "comments.placeholderContent": "目前没有相关讨论",
     "comments.otherComments": "{count, number}条其他回复",
     "comments.write": "发表回复",
-    "comments.selectionNotUnique": "你所选择的词句已存在相关话题，请多选几个词。",
+    "comments.selectionNotUnique":
+      "你所选择的词句已存在相关话题，请多选几个词。",
 
     "community.choose": "选择讨论小组",
-    "community.instructions": "加入讨论小组后，你将能够看到该讨论版中的所有对话。",
+    "community.instructions":
+      "加入讨论小组后，你将能够看到该讨论版中的所有对话。",
     "community.notDiscussing": "你的讨论小组还没有对该案例展开讨论。",
 
     "submit": "提交",
@@ -402,15 +426,20 @@
     "catalog.allCases": "全部案例",
 
     "catalog.chooseForYourself": "我的學習我做主",
-    "catalog.meetStakeholders": "在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。",
-    "catalog.shortcutExperience": "通過案例學習獲取將所學知識運用於實踐的捷徑。",
-    "catalog.joinConversation": "參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。",
-    "catalog.enrollmentsInstruction": "選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。",
+    "catalog.meetStakeholders":
+      "在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。",
+    "catalog.shortcutExperience":
+      "通過案例學習獲取將所學知識運用於實踐的捷徑。",
+    "catalog.joinConversation":
+      "參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。",
+    "catalog.enrollmentsInstruction":
+      "選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。",
 
     "catalog.enrolledCases": "加入案例學習",
     "catalog.editEnrolled": "編輯我的案例",
     "catalog.unenrollConfirmation": "你確定要退出這個案例的學習嗎？",
-    "catalog.unenrollBetaWarning": "這個案例還未公開發表，你將需要另一封邀請函來重新加入此案例的學習。",
+    "catalog.unenrollBetaWarning":
+      "這個案例還未公開發表，你將需要另一封邀請函來重新加入此案例的學習。",
     "catalog.unenroll": "退出該案例的學習",
 
     "catalog.learnMore": "了解更多",
@@ -466,10 +495,12 @@
     "comments.placeholderContent": "目前沒有相關討論",
     "comments.otherComments": "{count, number}條其他回復",
     "comments.write": "發表回復",
-    "comments.selectionNotUnique": "你所選擇的詞句已存在相關話題，請多選幾個詞。",
+    "comments.selectionNotUnique":
+      "你所選擇的詞句已存在相關話題，請多選幾個詞。",
 
     "community.choose": "選擇討論小組",
-    "community.instructions": "加入討論小組后，你將能夠看到該討論版中的所有對話。",
+    "community.instructions":
+      "加入討論小組后，你將能夠看到該討論版中的所有對話。",
     "community.notDiscussing": "你的討論小組還沒有對該案例展開討論。",
 
     "submit": "提交",

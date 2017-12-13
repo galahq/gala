@@ -3,14 +3,13 @@
  */
 
 import { batchActions } from 'redux-batched-actions'
+import { EditorState, convertToRaw } from 'draft-js'
+import { Intent } from '@blueprintjs/core'
+import { draftToMarkdown } from 'markdown-draft-js'
 
 import { Orchard } from 'shared/orchard'
-import { convertToRaw } from 'draft-js'
-import { Intent } from '@blueprintjs/core'
-
 import { getSelectionText } from 'shared/draftHelpers'
 
-import { EditorState } from 'draft-js'
 import type { SelectionState } from 'draft-js'
 import type { Toaster, Toast } from '@blueprintjs/core'
 
@@ -74,6 +73,7 @@ export type Action =
   | SetCommentsByIdAction
   | SetCommentThreadsByIdAction
   | SetCommunitiesAction
+  | SetMostRecentCommentThreadsAction
 
 type GetState = () => State
 type PromiseAction = Promise<Action>
@@ -604,6 +604,7 @@ export function updateActiveCommunity (
         return
       }
     }
+    dispatch(setMostRecentCommentThreads(null))
     await Orchard.espalier(`profile`, { reader: { activeCommunityId: id }})
     dispatch(fetchCommunities(slug))
     dispatch(fetchCommentThreads(slug))
@@ -654,14 +655,18 @@ export function resubscribeToActiveForumChannel (slug: string): ThunkAction {
 //
 export function fetchCommentThreads (slug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const { commentThreads, comments, cards } = await Orchard.harvest(
-      `cases/${slug}/comment_threads`
-    )
+    const {
+      commentThreads,
+      comments,
+      cards,
+      mostRecentCommentThreads,
+    } = await Orchard.harvest(`cases/${slug}/comment_threads`)
     dispatch(
       batchActions([
         setCommentsById(comments),
         setCommentThreadsById(commentThreads),
         setCards(cards),
+        setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
       ])
     )
     dispatch(parseAllCards())
@@ -676,6 +681,14 @@ export function setCommentThreadsById (
   commentThreadsById: CommentThreadsState
 ): SetCommentThreadsByIdAction {
   return { type: 'SET_COMMENT_THREADS_BY_ID', commentThreadsById }
+}
+
+export type SetMostRecentCommentThreadsAction = {
+  type: 'SET_MOST_RECENT_COMMENT_THREADS',
+  mostRecentCommentThreads: ?(string[]),
+}
+function setMostRecentCommentThreads (mostRecentCommentThreads: ?(string[])) {
+  return { type: 'SET_MOST_RECENT_COMMENT_THREADS', mostRecentCommentThreads }
 }
 
 export function createCommentThread (
@@ -703,11 +716,9 @@ export function addCommentThread (data: CommentThread): AddCommentThreadAction {
   return { type: 'ADD_COMMENT_THREAD', data }
 }
 
-export function deleteCommentThread (
-  threadId: string,
-  cardId: string
-): ThunkAction {
-  return async (dispatch: Dispatch) => {
+export function deleteCommentThread (threadId: string): ThunkAction {
+  return async (dispatch: Dispatch, getState: GetState) => {
+    const { cardId } = getState().commentThreadsById[threadId]
     await Orchard.prune(`comment_threads/${threadId}`)
     dispatch(removeCommentThread(threadId, cardId))
   }
@@ -748,11 +759,11 @@ export function setCommentsById (
 export type ChangeCommentInProgressAction = {
   type: 'CHANGE_COMMENT_IN_PROGRESS',
   threadId: string,
-  content: string,
+  content: EditorState,
 }
 export function changeCommentInProgress (
   threadId: string,
-  content: string
+  content: EditorState
 ): ChangeCommentInProgressAction {
   return { type: 'CHANGE_COMMENT_IN_PROGRESS', threadId, content }
 }
@@ -762,13 +773,20 @@ export function addComment (data: Comment): AddCommentAction {
   return { type: 'ADD_COMMENT', data }
 }
 
-export function createComment (threadId: string, content: string): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function createComment (threadId: string): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const editorState = getState().ui.commentInProgress[threadId]
+    const content: string = draftToMarkdown(
+      convertToRaw(editorState.getCurrentContent())
+    )
+
+    if (content.trim() === '') return
+
     Orchard.graft(`comment_threads/${threadId}/comments`, {
       comment: { content },
     })
       .then(() => {
-        dispatch(changeCommentInProgress(threadId, ''))
+        dispatch(changeCommentInProgress(threadId, EditorState.createEmpty()))
       })
       .catch((error: Error) => {
         dispatch(
@@ -798,7 +816,7 @@ export function deleteComment (id: string): ThunkAction {
       )
     ) {
       const threadId = `${getState().commentsById[id].commentThreadId}`
-      Orchard.prune(`comments/${id}`).then(() => {
+      return Orchard.prune(`comments/${id}`).then(() => {
         dispatch(removeComment(id, threadId))
       })
     }
@@ -916,25 +934,20 @@ export type HandleNotificationAction = {
 }
 export function handleNotification (notification: Notification): ThunkAction {
   return (dispatch: Dispatch) => {
-    const {
-      message,
-      case: kase,
-      element,
-      cardId,
-      commentThreadId,
-      community,
-    } = notification
+    const { message, case: kase, commentThreadId, community } = notification
     dispatch(
       displayToast({
         message,
         intent: Intent.PRIMARY,
         action: {
           onClick: _ => {
-            dispatch(
-              updateActiveCommunity(kase.slug, community.id)
-            ).then(() => {
-              window.location = `/cases/${kase.slug}/${element.position}/cards/${cardId}/comments/${commentThreadId}`
-            })
+            dispatch(updateActiveCommunity(kase.slug, community.id)).then(
+              () => {
+                window.location = `/cases/${
+                  kase.slug
+                }/conversation/${commentThreadId}`
+              }
+            )
           },
           text: 'Read',
         },

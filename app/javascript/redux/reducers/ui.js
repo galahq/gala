@@ -3,6 +3,8 @@
  * @flow
  */
 
+import { without } from 'ramda'
+
 import type { UIState } from 'redux/state'
 import type {
   HighlightEdgenoteAction,
@@ -10,7 +12,9 @@ import type {
   OpenCitationAction,
   HoverCommentThreadAction,
   AcceptSelectionAction,
+  SetMostRecentCommentThreadsAction,
   AddCommentThreadAction,
+  RemoveCommentThreadAction,
   ChangeCommentInProgressAction,
   RegisterToasterAction,
   DisplayToastAction,
@@ -22,7 +26,9 @@ type Action =
   | OpenCitationAction
   | HoverCommentThreadAction
   | AcceptSelectionAction
+  | SetMostRecentCommentThreadsAction
   | AddCommentThreadAction
+  | RemoveCommentThreadAction
   | ChangeCommentInProgressAction
   | RegisterToasterAction
   | DisplayToastAction
@@ -37,6 +43,7 @@ export default function ui (state: ?UIState, action: Action): UIState {
       acceptingSelection: false,
       commentInProgress: {},
       toaster: null,
+      mostRecentCommentThreads: [],
     }
   }
 
@@ -52,8 +59,32 @@ export default function ui (state: ?UIState, action: Action): UIState {
 
     case 'ACCEPT_SELECTION':
       return { ...state, acceptingSelection: action.enabled }
-    case 'ADD_COMMENT_THREAD':
-      return { ...state, acceptingSelection: false }
+
+    case 'SET_MOST_RECENT_COMMENT_THREADS':
+      return {
+        ...state,
+        mostRecentCommentThreads: action.mostRecentCommentThreads,
+      }
+
+    case 'ADD_COMMENT_THREAD': {
+      const id = `${action.data.id}`
+      return {
+        ...state,
+        acceptingSelection: false,
+        mostRecentCommentThreads: [
+          id,
+          ...(state.mostRecentCommentThreads || []).filter(x => x !== id),
+        ],
+      }
+    }
+
+    case 'REMOVE_COMMENT_THREAD':
+      return {
+        ...state,
+        mostRecentCommentThreads:
+          state.mostRecentCommentThreads &&
+          without([action.threadId], state.mostRecentCommentThreads),
+      }
 
     case 'HOVER_COMMENT_THREAD':
       return { ...state, hoveredCommentThread: action.id }

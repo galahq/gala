@@ -8,16 +8,16 @@ import styled, { css } from 'styled-components'
 
 import { identigradient } from 'shared/identigradient'
 
-import type { Reader } from 'redux/state'
-
 export const identiconStyle = ({
   image,
   hashKey,
   text,
+  width,
 }: {
   image: string,
   hashKey: string,
   text: string,
+  width: number,
 }) => css`
   background-image: ${({ image, hashKey }) =>
     image ? `url(${image})` : identigradient(hashKey)};
@@ -28,24 +28,38 @@ export const identiconStyle = ({
     content: ${({ text, image }) => (image ? '' : `'${text[0]}'`)};
     font-weight: 600;
     color: #ebeae4;
+    font-size: ${({ width }) => (width >= 25 ? '16px' : '12px')};
   }
 `
 
 const IdenticonDiv = styled.div.attrs({
-  'aria-label': ({ text }) => text,
+  'aria-label': ({ presentational, text }) => (presentational ? null : text),
+  'aria-hidden': ({ presentational }) => (presentational ? 'true' : null),
+  role: ({ presentational }) => (presentational ? 'presentational' : null),
+  className: 'Identicon',
 })`
-  width: 36px;
-  height: 36px;
+  width: ${({ width }) => `${width}px`};
+  height: ${({ width }) => `${width}px`};
   border-radius: 2px;
   background-size: cover;
   background-position: center;
   ${identiconStyle};
 `
 
-const Identicon = ({ reader }: { reader: Reader }) => (
+const Identicon = ({
+  reader,
+  width = 36,
+  presentational,
+}: {
+  reader: { imageUrl: ?string, hashKey: string, name: string },
+  width?: number,
+  presentational?: boolean,
+}) => (
   <IdenticonDiv
+    presentational={presentational}
+    width={width}
     image={reader.imageUrl}
-    hashKey={reader.email}
+    hashKey={reader.hashKey}
     text={reader.name}
   />
 )

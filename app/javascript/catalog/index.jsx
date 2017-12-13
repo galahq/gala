@@ -29,7 +29,7 @@ export type State = {|
   features: string[],
 |}
 
-class Catalog extends React.Component<{ intl: IntlShape }, State> {
+export class Catalog extends React.Component<{ intl: IntlShape }, State> {
   state = {
     loading: { reader: true, cases: true },
     reader: null,
@@ -48,13 +48,15 @@ class Catalog extends React.Component<{ intl: IntlShape }, State> {
         `${intl.formatMessage({
           id: 'catalog.unenrollConfirmation',
           defaultMessage: 'Are you sure you want to unenroll in this case?',
-        })}${options.displayBetaWarning
-          ? `\n\n${intl.formatMessage({
-            id: 'catalog.unenrollBetaWarning',
-            defaultMessage:
-                'Because this case is not published, you will need another invitation to reenroll.',
-          })}`
-          : ''}`
+        })}${
+          options.displayBetaWarning
+            ? `\n\n${intl.formatMessage({
+              id: 'catalog.unenrollBetaWarning',
+              defaultMessage:
+                  'Because this case is not published, you will need another invitation to reenroll.',
+            })}`
+            : ''
+        }`
       )
     ) {
       return

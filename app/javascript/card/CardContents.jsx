@@ -19,6 +19,8 @@ import Statistics from 'utility/Statistics'
 import CitationTooltip from './CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
 import { OnScreenTracker } from 'utility/Tracker'
+import { FocusContainer } from 'utility/A11y'
+import { ScrollIntoView } from 'utility/ScrollView'
 
 import type { ContextRouter, Match } from 'react-router-dom'
 
@@ -111,6 +113,7 @@ class CardContents extends React.Component<Props, *> {
       theseCommentThreadsOpen,
       hoveredCommentThread,
       selectedCommentThread,
+      acceptingSelection,
       readOnly,
       commentable,
       title,
@@ -140,18 +143,25 @@ class CardContents extends React.Component<Props, *> {
           transition: 'padding-top 0.1s, flex 0.3s',
         }}
       >
+        {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
+
         {editing && <EditorToolbar cardId={id} />}
         {title}
-        <Editor
-          readOnly={readOnly}
-          customStyleMap={styleMap}
-          onChange={(eS: EditorState) => onChange(eS)}
-          {...{
-            blockRenderMap,
-            editorState,
-            handleKeyCommand,
-          }}
-        />
+        <FocusContainer
+          active={!!(theseCommentThreadsOpen && acceptingSelection)}
+          priority={100}
+        >
+          <Editor
+            readOnly={readOnly}
+            customStyleMap={styleMap}
+            onChange={(eS: EditorState) => onChange(eS)}
+            {...{
+              blockRenderMap,
+              editorState,
+              handleKeyCommand,
+            }}
+          />
+        </FocusContainer>
 
         {commentable &&
           solid && <CommentThreadsTag cardId={id} match={match} />}

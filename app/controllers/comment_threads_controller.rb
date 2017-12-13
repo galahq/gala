@@ -9,7 +9,7 @@ class CommentThreadsController < ApplicationController
   def index
     @forum = current_reader.active_community.forums.find_by(case: @case)
     @comment_threads = if @forum.nil?
-                         []
+                         CommentThread.none
                        else
                          @forum.comment_threads
                                .visible_to_reader?(current_reader)
@@ -34,7 +34,7 @@ class CommentThreadsController < ApplicationController
   def show
     current_reader.update active_community_id: @comment_thread.forum
                                                               .community.id
-    redirect_to inline_comment_thread_url @comment_thread
+    redirect_to conversation_comment_thread_url @comment_thread
   end
 
   def destroy
@@ -64,9 +64,8 @@ class CommentThreadsController < ApplicationController
     params.require(:comment_thread).permit(:start, :length, :block_index, :original_highlight_text)
   end
 
-  def inline_comment_thread_url(comment_thread)
+  def conversation_comment_thread_url(comment_thread)
     "#{case_url(I18n.locale, comment_thread.card.case.slug)}" \
-      "/#{comment_thread.card.element.case_element.position}" \
-      "/cards/#{comment_thread.card_id}/comments/#{comment_thread.id}"
+      "/conversation/#{comment_thread.id}"
   end
 end

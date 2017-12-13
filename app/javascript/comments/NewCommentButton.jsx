@@ -5,9 +5,10 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
-import { Tooltip, Position, Intent } from '@blueprintjs/core'
+import { Button, Tooltip, Position, Intent } from '@blueprintjs/core'
 import { EditorState } from 'draft-js'
 
 import CommunityChooser from 'overview/CommunityChooser'
@@ -45,39 +46,54 @@ const NewCommentButton = ({
   addCommentThread,
   acceptSelection,
 }: Props) => (
-  <Tooltip
-    position={Position.BOTTOM}
-    intent={selectionNotUnique ? Intent.DANGER : undefined}
-    portalClassName="NewCommentButton__CommunityChooser"
-    isOpen={acceptingSelection && selectionPending}
-    content={
-      selectionNotUnique ? (
-        <UniquenessWarning />
-      ) : (
-        <CommunityChooser white disabled />
-      )
-    }
-  >
-    <button
-      className="o-button CommentThreads__new-button"
-      disabled={(acceptingSelection && !selectionPending) || selectionNotUnique}
-      onClick={acceptingSelection ? addCommentThread : acceptSelection}
+  <Container>
+    <FlexTooltip
+      position={Position.BOTTOM}
+      intent={selectionNotUnique ? Intent.DANGER : undefined}
+      portalClassName="NewCommentButton__CommunityChooser"
+      isOpen={acceptingSelection && selectionPending}
+      content={
+        selectionNotUnique ? (
+          <UniquenessWarning />
+        ) : (
+          <CommunityChooser white disabled />
+        )
+      }
     >
-      {!acceptingSelection ? (
-        <FormattedMessage
-          id="comments.writeNew"
-          defaultMessage="Write a new response"
-        />
-      ) : !selectionPending ? (
-        <FormattedMessage
-          id="comments.select"
-          defaultMessage="Select a few words"
-        />
-      ) : (
-        <FormattedMessage id="comments.here" defaultMessage="Respond here" />
+      <StyledButton
+        iconName={
+          !acceptingSelection
+            ? 'edit'
+            : !selectionPending ? 'text-highlight' : 'manually-entered-data'
+        }
+        disabled={
+          (acceptingSelection && !selectionPending) || selectionNotUnique
+        }
+        onClick={acceptingSelection ? addCommentThread : acceptSelection}
+      >
+        {!acceptingSelection ? (
+          <FormattedMessage
+            id="comments.writeNew"
+            defaultMessage="Write a new response"
+          />
+        ) : !selectionPending ? (
+          <FormattedMessage
+            id="comments.select"
+            defaultMessage="Select a few words"
+          />
+        ) : (
+          <FormattedMessage id="comments.here" defaultMessage="Respond here" />
+        )}
+      </StyledButton>
+    </FlexTooltip>
+
+    {acceptingSelection &&
+      !selectionPending && (
+        <CancelButton onClick={() => acceptSelection(false)}>
+          Cancel
+        </CancelButton>
       )}
-    </button>
-  </Tooltip>
+  </Container>
 )
 
 export default connect(mapStateToProps, { acceptSelection })(NewCommentButton)
@@ -95,3 +111,44 @@ function selectionNotUnique (editorState: EditorState): boolean {
   const card = getParagraphs(editorState).join('\n----->8-----\n')
   return card.split(selection).length > 2
 }
+
+const Container = styled.div.attrs({ className: 'pt-dark' })`
+  display: flex;
+  width: 100%;
+  @media (max-width: 513px) {
+    .accepting-selection & {
+      position: fixed;
+      top: -7px;
+      left: 0px;
+      width: 100%;
+      padding: 60px 6px 6px;
+      background-color: #493092;
+      border-bottom: 1px solid #351d7a;
+      border-radius: 7px;
+    }
+  }
+`
+
+const FlexTooltip = styled(Tooltip)`
+  flex: 1;
+`
+
+const StyledButton = styled(Button).attrs({
+  className: 'pt-intent-primary pt-fill',
+})`
+  font-size: 11pt;
+  color: white;
+  &:hover,
+  &:focus {
+    background-color: #493092;
+  }
+  &:disabled {
+    cursor: initial;
+    background-color: transparent;
+    color: rgba(253, 253, 250, 1) !important;
+  }
+`
+
+const CancelButton = styled(Button)`
+  margin-left: 6px;
+`

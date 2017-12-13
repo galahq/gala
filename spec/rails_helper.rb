@@ -16,7 +16,12 @@ require 'capybara/rspec'
 Capybara.server = :puma
 
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new app, browser: :chrome
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chrome_options: { args: %w[window-size=1440,900] }
+  )
+  Capybara::Selenium::Driver.new app,
+                                 browser: :chrome,
+                                 desired_capabilities: capabilities
 end
 
 Capybara.register_driver :headless_chrome do |app|
