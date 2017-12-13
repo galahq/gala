@@ -20,6 +20,7 @@ import CitationTooltip from './CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
 import { OnScreenTracker } from 'utility/Tracker'
 import { FocusContainer } from 'utility/A11y'
+import { ScrollIntoView } from 'utility/ScrollView'
 
 import type { ContextRouter, Match } from 'react-router-dom'
 
@@ -142,6 +143,8 @@ class CardContents extends React.Component<Props, *> {
           transition: 'padding-top 0.1s, flex 0.3s',
         }}
       >
+        {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
+
         {editing && <EditorToolbar cardId={id} />}
         {title}
         <FocusContainer

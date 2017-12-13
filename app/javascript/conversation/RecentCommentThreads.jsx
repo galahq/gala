@@ -13,7 +13,7 @@ import { NonIdealState } from '@blueprintjs/core'
 import { CoverImageContainer } from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
 import CommentThreadItem from 'conversation/CommentThreadItem'
-import { ScrollView } from 'conversation/shared'
+import ScrollView from 'utility/ScrollView'
 
 import type { State } from 'redux/state'
 

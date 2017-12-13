@@ -15,7 +15,8 @@ import Responses from 'conversation/Responses'
 import ResponseForm, {
   EmptyResponseFormContainer,
 } from 'conversation/ResponseForm'
-import { ScrollView, NoSelectedCommentThread } from 'conversation/shared'
+import { NoSelectedCommentThread } from 'conversation/shared'
+import ScrollView from 'utility/ScrollView'
 import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 
 import { deleteCommentThread } from 'redux/actions'

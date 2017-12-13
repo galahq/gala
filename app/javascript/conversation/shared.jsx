@@ -7,12 +7,6 @@ import styled, { css } from 'styled-components'
 import { FormattedDate } from 'react-intl'
 import ReactMarkdown from 'react-markdown'
 
-function cancelScrollEvent (e: WheelEvent) {
-  e.stopImmediatePropagation()
-  e.preventDefault()
-  return false
-}
-
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
   className: 'pt-breadcrumbs',
 })`
@@ -86,63 +80,6 @@ const OptionalUnderline = styled.span.attrs({
         rgb(235, 234, 228) 0.12em 0px, rgb(235, 234, 228) -0.12em 0px,
         rgb(235, 234, 228) 0.15em 0px, rgb(235, 234, 228) -0.15em 0px;
     `};
-`
-
-export class ScrollView extends React.Component<{
-  maxHeightOffset: string,
-  innerRef: HTMLDivElement => any,
-  children: React.Node,
-}> {
-  static defaultProps = { innerRef: (_: HTMLDivElement) => {} }
-
-  container: ?HTMLDivElement
-
-  componentDidMount () {
-    this.container &&
-      this.container.addEventListener('wheel', this.handleScroll, false)
-    this.container && this.props.innerRef(this.container)
-  }
-
-  componentWillUnmount () {
-    this.container &&
-      this.container.removeEventListener('wheel', this.handleScroll, false)
-  }
-
-  render () {
-    const { children, ...rest } = this.props
-    return (
-      <ScrollViewDiv {...rest} innerRef={el => (this.container = el)}>
-        {children}
-      </ScrollViewDiv>
-    )
-  }
-
-  handleScroll = (e: WheelEvent) => {
-    const target = ((e.target: any): HTMLElement)
-    if (this.container && this.container.contains(target)) {
-      var scrollTop = this.container.scrollTop
-      var scrollHeight = this.container.scrollHeight
-      var height = this.container.clientHeight
-      var wheelDelta = e.deltaY
-      var isDeltaPositive = wheelDelta > 0
-
-      if (isDeltaPositive && wheelDelta > scrollHeight - height - scrollTop) {
-        this.container.scrollTop = scrollHeight
-        return cancelScrollEvent(e)
-      } else if (!isDeltaPositive && -wheelDelta > scrollTop) {
-        this.container.scrollTop = 0
-        return cancelScrollEvent(e)
-      }
-    }
-  }
-}
-
-const ScrollViewDiv = styled.div.attrs({ className: 'ScrollView' })`
-  max-height: ${({ maxHeightOffset }) =>
-    `calc(100vh - (${maxHeightOffset}))` || '100vh'};
-  overflow-x: hidden;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
 `
 
 export const SmallGreyText = styled.span`
