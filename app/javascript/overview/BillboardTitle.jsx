@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
 import { EditableText } from '@blueprintjs/core'
@@ -70,15 +71,8 @@ export const UnconnectedBillboardTitle = ({
   minimal,
   library,
 }: Props) => {
-  const background = {
-    backgroundImage: `
-      linear-gradient(rgba(0,0,0,0.0), rgba(0,0,0,0.5)),
-      url(${coverUrl})
-    `,
-  }
-
   return (
-    <div className="BillboardTitle pt-dark" style={background}>
+    <CoverImageContainer src={coverUrl}>
       <h1>
         <span className="c-kicker">
           <EditableText
@@ -123,10 +117,25 @@ export const UnconnectedBillboardTitle = ({
       </cite>
 
       {!minimal && <LibraryLogo library={library} />}
-    </div>
+    </CoverImageContainer>
   )
 }
 
 export default connect(mapStateToProps, { updateCase })(
   UnconnectedBillboardTitle
 )
+
+export const CoverImageContainer = styled.div.attrs({
+  className: 'BillboardTitle pt-dark',
+})`
+  ${({ src }) => css`
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)),
+      url(${src});
+  `};
+
+  ${({ children }) =>
+    React.Children.count(children) === 0 &&
+    css`
+      padding-top: 2em;
+    `};
+`

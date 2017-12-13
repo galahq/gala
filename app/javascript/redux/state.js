@@ -5,6 +5,10 @@
 import type { EditorState } from 'draft-js'
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
+// eslint-disable-next-line no-unused-vars
+type _ExtractReturn<B, F: (...args: any[]) => B> = B
+export type ExtractReturn<F> = _ExtractReturn<*, F>
+
 // Redux state
 export type State = {
   caseData: CaseDataState,
@@ -90,10 +94,11 @@ export type UIState = {
   acceptingSelection: boolean,
   activeEdgenote: ?string,
   commentInProgress: {
-    [commentThreadId: string]: string,
+    [commentThreadId: string]: EditorState,
   },
   highlightedEdgenote: ?string,
   hoveredCommentThread: ?string,
+  mostRecentCommentThreads: ?(string[]),
   openedCitation: | {| key: null |}
     | {|
         key: string,
@@ -129,6 +134,7 @@ export type Card = {
   content: string,
   editorState: ?EditorState,
   id: string,
+  pageId: string,
   position: number,
   rawContent: ?RawDraftContentState,
   solid: boolean,
@@ -178,6 +184,8 @@ export type Comment = {
     id: string,
     initials: string,
     name: string,
+    imageUrl: ?string,
+    hashKey: string,
   },
   timestamp: string,
 }
@@ -191,6 +199,7 @@ export type CommentThread = {
   length: number,
   originalHighlightText: string,
   readerId: number,
+  readers: { imageUrl: ?string, hashKey: string, name: string }[],
   start: number,
 }
 
@@ -291,6 +300,7 @@ export type Question = {
 export type Reader = {
   activeCommunity: ?Community,
   email: string,
+  hashKey: string,
   id: string,
   imageUrl: ?string,
   initials: string,

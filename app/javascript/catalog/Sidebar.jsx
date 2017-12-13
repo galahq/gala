@@ -35,7 +35,7 @@ const Sidebar = ({
           image={reader.imageUrl}
           text={reader.name}
           href="/profile/edit"
-          hashKey={reader.email}
+          hashKey={reader.hashKey}
         />
         <Enrollments
           loading={loading}
@@ -62,5 +62,8 @@ export const Container = styled.aside`
 const IdentigradientElement = styled(Element)`
   & > ${ElementImage} {
     ${identiconStyle};
+    &:after {
+      font-size: 16px;
+    }
   }
 `

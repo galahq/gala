@@ -30,12 +30,28 @@ feature 'Leaving a comment' do
     first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
     click_button 'Respond here'
-    expect(page).to have_selector 'textarea'
+    expect(page).to have_selector '.public-DraftEditorPlaceholder-root'
 
-    fill_in placeholder: 'Write a reply...', with: 'Test comment'
+    reply_placeholder = find('.public-DraftEditorPlaceholder-root',
+                             text: 'Write a reply...')
+                        .native
+    page.driver.browser.action.move_to(reply_placeholder).click.perform
+    page.driver.browser.action.send_keys('Test reply').perform
     click_button 'Submit'
-    expect(page).to have_content 'Test comment'
-    expect(find('textarea').value).to be_blank
+    expect(page).to have_selector 'blockquote', text: 'Test reply'
+
+    find('[aria-label="Close"]').click
+    click_button 'Overview'
+    click_button 'Conversation'
+    click_link 'Test reply'
+    reply_placeholder = find('.public-DraftEditorPlaceholder-root',
+                             text: 'Write a reply...')
+                        .native
+    page.driver.browser.action.move_to(reply_placeholder).click.perform
+    page.driver.browser.action.send_keys('Conversation view works!').perform
+    find('button[aria-label="Respond"]').click
+    expect(page).to have_content 'Conversation view works!'
+    expect(page).to have_content 'Write a reply...'
   end
 
   scenario 'is not possible with a non-unique selection' do
@@ -117,11 +133,15 @@ feature 'Leaving a comment' do
       comment_entity.click
       expect(page).to have_content comment.content
 
-      fill_in placeholder: 'Write a reply...', with: 'Test reply'
-      click_button 'Submit'
+      reply_placeholder = find('.public-DraftEditorPlaceholder-root',
+                               text: 'Write a reply...')
+                          .native
+      page.driver.browser.action.move_to(reply_placeholder).click.perform
+      page.driver.browser.action.send_keys('Test reply').perform
+      find('button[aria-label="Respond"]').click
       sleep 1
       expect(page).to have_content 'Test reply'
-      expect(find('textarea').value).to be_blank
+      expect(page).to have_content 'Write a reply...'
     end
 
     it 'displays a toast to the other comment’s author' do

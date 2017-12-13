@@ -35,6 +35,9 @@
 
   .CaseOverviewRight
     +flex($fg: 0, $fs: 1, $fb: 20em)
+    @media screen and (max-width: $mobileCutoff)
+      +flex($fg: 1, $fs: 1, $fb: 20em)
+
     min-width: 15em
     & > *
       margin: 1em
