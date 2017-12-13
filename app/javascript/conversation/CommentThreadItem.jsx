@@ -18,6 +18,7 @@ import {
   CommentThreadBreadcrumb,
 } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
+import { ScrollIntoView } from 'utility/ScrollView'
 
 import { commentsOpen, commentThreadsOpen } from 'shared/routes'
 import { hoverCommentThread, deleteCommentThread } from 'redux/actions'
@@ -69,9 +70,15 @@ function mapDispatchToProps (
   dispatch: Dispatch,
   { id, history, location }: OwnProps
 ) {
+  const inSitu = /cards/.test(location.pathname)
+  const hoverHandlers = inSitu
+    ? {
+      handleMouseEnter: () => dispatch(hoverCommentThread(id)),
+      handleMouseLeave: () => dispatch(hoverCommentThread(null)),
+    }
+    : {}
   return {
-    handleMouseEnter: () => dispatch(hoverCommentThread(id)),
-    handleMouseLeave: () => dispatch(hoverCommentThread(null)),
+    ...hoverHandlers,
     handleDeleteThread: (e: SyntheticMouseEvent<*>) => {
       e.preventDefault()
       const promise = dispatch(deleteCommentThread(id))
@@ -106,6 +113,8 @@ const CommentThreadItem = ({
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}
   >
+    {open && <ScrollIntoView />}
+
     <CommentThreadBreadcrumbs>
       <CommentThreadBreadcrumb>
         <FormattedMessage
