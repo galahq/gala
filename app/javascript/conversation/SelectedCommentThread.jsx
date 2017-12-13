@@ -22,21 +22,38 @@ import { deleteCommentThread } from 'redux/actions'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { Dispatch } from 'redux/actions'
-import type { ExtractReturn, State } from 'redux/state'
+import type { State, Reader, Page, Comment } from 'redux/state'
 
-type OwnProps = {
+type OwnProps = {|
   ...ContextRouter,
   inSitu?: boolean,
   heightOffset: number,
-}
+|}
 
+type StateProps =
+  | {|
+      commentThreadFound: true,
+      activeReader: ?Reader,
+      cardPosition: number,
+      inSituPath: string,
+      leadComment: ?Comment,
+      leadCommenter: { hashKey: string, imageUrl: ?string, name: string },
+      originalHighlightText: string,
+      page: Page,
+      readerId: number,
+      responses: Comment[],
+      threadId: string,
+    |}
+  | {| commentThreadFound: false |}
 function mapStateToProps (
   { caseData, commentThreadsById, commentsById, cardsById, pagesById }: State,
   ownProps: OwnProps
-) {
+): StateProps {
   const threadId = ownProps.match.params.threadId || ''
   const commentThread = commentThreadsById[threadId]
-  if (commentThread == null) return {}
+  if (commentThread == null) {
+    return { commentThreadFound: false }
+  }
 
   const { reader: activeReader } = caseData
   const { originalHighlightText, cardId, readerId, readers } = commentThread
@@ -44,12 +61,13 @@ function mapStateToProps (
   const page = pagesById[pageId]
   const leadCommenter = readers[0] || activeReader
   const comments = commentThread.commentIds.map(id => commentsById[id])
-  const leadComment: ?* = comments[0]
+  const leadComment: ?Comment = comments[0]
   const [, ...responses] = comments
 
   const inSituPath = `/${page.position}/cards/${cardId}/comments/${threadId}`
 
   return {
+    commentThreadFound: true,
     activeReader,
     cardPosition,
     inSituPath,
@@ -63,6 +81,9 @@ function mapStateToProps (
   }
 }
 
+type DispatchProps = {|
+  handleDeleteThread: (SyntheticMouseEvent<*>) => Promise<any>,
+|}
 function mapDispatchToProps (
   dispatch: Dispatch,
   { match, history, location }: OwnProps
@@ -82,9 +103,7 @@ function mapDispatchToProps (
   }
 }
 
-type StateProps = ExtractReturn<typeof mapStateToProps>
-type DispatchProps = ExtractReturn<typeof mapDispatchToProps>
-type Props = OwnProps & StateProps & DispatchProps
+type Props = {| ...OwnProps, ...StateProps, ...DispatchProps |}
 
 class SelectedCommentThread extends React.Component<
   Props,
@@ -97,6 +116,13 @@ class SelectedCommentThread extends React.Component<
   handleFormResize = (formHeight: number) => this.setState({ formHeight })
 
   componentDidUpdate (prevProps) {
+    if (
+      !this.props.commentThreadFound ||
+      !prevProps.commentThreadFound ||
+      !this.props.activeReader
+    ) {
+      return
+    }
     const { threadId, responses, activeReader } = this.props
     if (
       prevProps.threadId === threadId &&
@@ -109,24 +135,30 @@ class SelectedCommentThread extends React.Component<
   }
 
   render () {
+    const { inSitu, match, location } = this.props
+    const threadId = match.params.threadId || ''
+    const backPath = location.pathname.replace(new RegExp(`/${threadId}$`), '')
+    if (!this.props.commentThreadFound) {
+      return inSitu ? (
+        <Redirect replace to={backPath} />
+      ) : (
+        <NoSelectedCommentThread />
+      )
+    }
+
     const {
       cardPosition,
       heightOffset,
-      inSitu,
       inSituPath,
       handleDeleteThread,
       leadComment,
       leadCommenter,
-      location,
       originalHighlightText,
       page,
-      readerId,
       responses,
-      threadId,
     } = this.props
-    const backPath = location.pathname.replace(new RegExp(`/${threadId}$`), '')
     const { formHeight } = this.state
-    return readerId != null ? (
+    return (
       <Container inSitu={inSitu}>
         <FocusContainer priority={2}>
           <ScrollView
@@ -170,10 +202,6 @@ class SelectedCommentThread extends React.Component<
           )}
         </FocusContainer>
       </Container>
-    ) : inSitu ? (
-      <Redirect replace to={backPath} />
-    ) : (
-      <NoSelectedCommentThread />
     )
   }
 }
