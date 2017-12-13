@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 
 import { Link, Redirect } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
+import { isMobile } from 'react-device-detect'
 
 import LeadComment from 'conversation/LeadComment'
 import Responses from 'conversation/Responses'
@@ -166,7 +167,7 @@ class SelectedCommentThread extends React.Component<
             innerRef={scrollView => (this.scrollView = scrollView)}
             maxHeightOffset={`${heightOffset}px + ${
               leadComment == null ? 0 : formHeight
-            }px`}
+            }px + ${isMobile ? 80 : 0}px`}
           >
             <CommentsContainer>
               <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
