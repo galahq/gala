@@ -4,7 +4,6 @@
  */
 
 import { EditorState, convertFromRaw } from 'draft-js'
-import convertFromOldStyleCardSerialization from 'card/convertFromOldStyleCardSerialization'
 import { decorator } from 'card/draftConfig'
 
 // $FlowFixMe
@@ -178,8 +177,7 @@ function sortCommentThreads (a: CommentThread, b: CommentThread): number {
 }
 
 function parseEditorStateFromPersistedCard (card: Card) {
-  const content =
-    card.rawContent || convertFromOldStyleCardSerialization(card.content)
+  const content = card.rawContent
   if (content == null) return EditorState.createEmpty()
 
   const contentWithCommentThreads = addCommentThreads(content, card)

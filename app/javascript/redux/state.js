@@ -127,12 +127,11 @@ export type Byline = {
 
 export type Card = {
   commentThreads: ?(CommentThread[]),
-  content: string,
   editorState: ?EditorState,
   id: string,
   pageId: string,
   position: number,
-  rawContent: ?RawDraftContentState,
+  rawContent: RawDraftContentState,
   solid: boolean,
 }
 
