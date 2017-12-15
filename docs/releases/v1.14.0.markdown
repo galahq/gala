@@ -1,0 +1,13 @@
+# v1.14: Conversation Interface
+
+This release adds a new “messaging-style” view to the stratified forum, which makes it much easier to follow active discussions from across a case. It is substantially more usable on mobile and more accessible to people who use assistive technologies. We brought the new design from the conversation tab to the inline discussion modals, as well.
+
+Newly, we allow rich text comments and offer a wysiwyg editor for the initial post. This will allow instructors to write more detailed reports of their use of the cases, and lays the groundwork for the instructors’ community that we plan to connect to each case. (#173)
+
+![screen shot 2017-12-13 at 16 29 49](https://user-images.githubusercontent.com/4642599/33963586-71ff6960-e023-11e7-9eba-21c2aee284c2.png)
+![screen shot 2017-12-13 at 16 30 11](https://user-images.githubusercontent.com/4642599/33963587-720ee02a-e023-11e7-9a24-8fafcfd7fade.png)
+![screen shot 2017-12-13 at 16 33 43](https://user-images.githubusercontent.com/4642599/33963588-721be0e0-e023-11e7-9e7f-b8ecf18dd873.png)
+
+## Bug fixes and improvements
+
+* Enables review apps on Heroku for quicker, more “true-to-prod” reviews of new contributions (#180, #181, #182)

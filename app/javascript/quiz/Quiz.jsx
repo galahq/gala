@@ -42,7 +42,7 @@ type QuizDelegateProps = {
 
 export type QuizProviderProps = QuizDelegateProps & QuizProps & QuizState
 
-export function providesQuiz<P: {}> (
+export function providesQuiz<P> (
   QuizPresenter: React$ComponentType<{|
     ...QuizProviderProps,
     ...P,

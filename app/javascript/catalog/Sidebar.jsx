@@ -12,7 +12,8 @@ import SignInForm from 'utility/SignInForm'
 import { identiconStyle } from 'shared/Identicon'
 
 import type { Case, Reader } from 'redux/state'
-import type Catalog, { Loading } from 'catalog'
+import type { Loading } from 'catalog'
+import typeof Catalog from 'catalog'
 
 type Props = {
   loading: Loading,

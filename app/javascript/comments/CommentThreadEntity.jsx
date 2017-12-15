@@ -54,7 +54,7 @@ function getFirstThreadId (leaf: DraftEditorLeaf): ?string {
   const styles = leaf.props.block.getInlineStyleAt(leaf.props.start)
   const ids = styles
     .map(s => s.match(/thread--([0-9]+)/))
-    .filter(s => s && s[1])
-    .map(s => s[1])
+    .map(s => s && s[1])
+    .filter(x => !!x)
   return ids.count() > 0 ? ids.toJS()[0] : null
 }

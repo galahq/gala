@@ -7,6 +7,7 @@ import { EditorState, convertFromRaw } from 'draft-js'
 import convertFromOldStyleCardSerialization from 'card/convertFromOldStyleCardSerialization'
 import { decorator } from 'card/draftConfig'
 
+// $FlowFixMe
 import { omit, lensPath, view, set, reduce } from 'ramda'
 
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
@@ -185,6 +186,7 @@ function parseEditorStateFromPersistedCard (card: Card) {
 
   const contentState = convertFromRaw(contentWithCommentThreads)
 
+  // $FlowFixMe
   return EditorState.createWithContent(contentState, decorator)
 }
 

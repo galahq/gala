@@ -10,7 +10,7 @@ import { injectIntl } from 'react-intl'
 import { Button } from '@blueprintjs/core'
 import { EditorState, RichUtils } from 'draft-js'
 
-import { IntlShape } from 'react-intl'
+import type { IntlShape } from 'react-intl'
 
 function typeEquals (editorState: EditorState, type: string) {
   return (

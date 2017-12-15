@@ -14,6 +14,7 @@ feature 'Editing a case' do
       expect(page).to have_selector('.Card', count: 5)
 
       click_button 'Options'
+      sleep(1)
       click_link 'Edit this case'
       click_button('Add card', match: :first)
       sleep(1)

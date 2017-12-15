@@ -17,20 +17,25 @@ const CaseOverview = ({ editing, signInForm, reader }) => {
     <div id="CaseOverview" className={`window ${editing && 'editing'}`}>
       <Billboard />
       <aside className="CaseOverviewRight">
-        {signInForm != null
-          ? <div
+        {signInForm != null ? (
+          <div
             className="dialog"
             dangerouslySetInnerHTML={{ __html: signInForm }}
           />
-          : !reader.enrollment ? <EnrollForm /> : null}
+        ) : !reader.enrollment ? (
+          <EnrollForm />
+        ) : null}
         <TableOfContents />
       </aside>
     </div>
   )
 }
 
-export default connect((state: State) => ({
-  reader: state.caseData.reader,
-  signInForm: (window.caseData.signInForm: ?string),
-  editing: state.edit.inProgress,
-}))(CaseOverview)
+export default connect(
+  (state: State) => ({
+    reader: state.caseData.reader,
+    signInForm: (window.caseData.signInForm: ?string),
+    editing: state.edit.inProgress,
+  }),
+  () => {}
+)(CaseOverview)

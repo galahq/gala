@@ -15,21 +15,22 @@ import type { Toaster, Toast } from '@blueprintjs/core'
 
 import type {
   State,
-  CaseDataState,
-  CaseElement,
+  Activity,
   Card,
   CardsState,
-  Page,
-  Podcast,
-  Activity,
+  CaseDataState,
+  CaseElement,
+  Citation,
   Comment,
   CommentsState,
   CommentThread,
   CommentThreadsState,
   Community,
   Edgenote,
-  QuizNecessity,
   Notification,
+  Page,
+  Podcast,
+  QuizNecessity,
   StatisticsData,
 } from 'redux/state'
 
@@ -527,20 +528,19 @@ export function deleteCard (id: string) {
 
 export type OpenCitationAction = {
   type: 'OPEN_CITATION',
-  data: | {| key: null |}
-    | {|
-        key: string,
-        labelRef: HTMLElement,
-      |},
+  data: Citation,
 }
 export function openCitation (
   key: string | null,
   labelRef?: HTMLElement
 ): OpenCitationAction {
   if (key != null && labelRef != null) {
-    return { type: 'OPEN_CITATION', data: { key, labelRef }}
+    return {
+      type: 'OPEN_CITATION',
+      data: ({ key, labelRef }: {| key: string, labelRef: HTMLElement |}),
+    }
   } else if (key == null) {
-    return { type: 'OPEN_CITATION', data: { key }}
+    return { type: 'OPEN_CITATION', data: { key, labelRef: null }}
   } else {
     throw new Error('Should never happen')
   }

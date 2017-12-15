@@ -21,4 +21,5 @@ export function getParagraphs (editorState: EditorState): string[] {
     .getCurrentContent()
     .getBlockMap()
     .map(block => block.getText())
+    .toArray()
 }

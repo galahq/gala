@@ -59,7 +59,7 @@ function convertFromOldStyleCardSerialization (content: string): ?Object {
       convertedEntity = entity
     }
 
-    convertedRawContent.entityMap[`${key}`] = convertedEntity
+    convertedRawContent.entityMap[`${key}`] = (convertedEntity: $FlowIssue)
   })
 
   return convertedRawContent
