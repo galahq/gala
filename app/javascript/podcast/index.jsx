@@ -52,7 +52,7 @@ function Podcast ({
       />
 
       <div className="PodcastInfo">
-        <Card nonNarrative id={cardId} />
+        <Card nonNarrative id={`${cardId}`} />
       </div>
     </div>
   )

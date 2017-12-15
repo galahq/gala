@@ -1,0 +1,19 @@
+# v1.13: Search
+
+This release adds search functionality to our case library, and lays the groundwork for the days that we host cases from libraries around the world. The full text of all the cases can be searched for any keyword; we’re using Postgres `ts_vectors` in a materialized view to keep that fast. The search results view is also able to handle “subindexes” of all the cases from a given library, or later all the cases from a given stack or category. (#161)
+
+![screen shot 2017-12-13 at 16 00 50](https://user-images.githubusercontent.com/4642599/33962226-d1c07862-e01e-11e7-8ffc-61820f29b82d.png)
+
+### Other features
+
+* Sends a weekly usage report to the team, keeping us apprised of how many students and instructors are using our platform, and which cases they’re using (#167)
+* Updates the platform’s French, Japanese, and Chinese translations (#169, #170)
+* Allows for the download of a CSV formatted report of all quiz submissions by students in a given deployment (#171)
+
+## Bug fixes and improvements
+* Caches assets, greatly speeding up subsequent pages after the first (#165)
+* Splits up the JS bundle to lazy load pages the user might never access (#164)
+* Preserves the order of quiz questions (#175)
+* Handle errors intelligently (#178)
+* Updates flow to 0.60.1 (#179)
+* Tweaks some visual things (#168, #172)

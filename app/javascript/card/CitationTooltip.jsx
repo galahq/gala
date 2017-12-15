@@ -10,20 +10,25 @@ import { FormattedMessage } from 'react-intl'
 
 import { updateCardContents, openCitation } from 'redux/actions'
 
-import type { State } from 'redux/state'
+import type { State, Citation } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
 
 type OwnProps = {
   cardId: string,
-  openedCitation: { key: string, labelRef: any },
+  openedCitation: Citation,
 }
+
 function mapStateToProps (state: State, ownProps: OwnProps) {
   const editorState =
     state.cardsById[ownProps.cardId].editorState || EditorState.createEmpty()
-  const { href, contents } = (editorState
-    .getCurrentContent()
-    .getEntity(ownProps.openedCitation.key)
-    .getData(): { href: string, contents: string })
+  const key = ownProps.openedCitation.key
+  const { href, contents } =
+    key != null
+      ? (editorState
+          .getCurrentContent()
+          .getEntity(key)
+          .getData(): { href: string, contents: string })
+      : { href: '', contents: '' }
 
   return { editorState, href, contents }
 }

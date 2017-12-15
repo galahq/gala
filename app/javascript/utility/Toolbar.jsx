@@ -32,7 +32,7 @@ type BarComponent = {|
 type BarElement = BarButton | BarMessage | BarMenu | BarComponent
 type BarGroup = Array<?BarElement>
 
-const pass = omit(['message', 'submenu'])
+const pass = omit(['message'])
 
 type Props = {
   light?: boolean,

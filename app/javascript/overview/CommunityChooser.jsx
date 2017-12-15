@@ -23,32 +23,28 @@ import { updateActiveCommunity } from 'redux/actions'
 import type { IntlShape } from 'react-intl'
 import type { State, Community } from 'redux/state'
 
-type OwnProps = { rounded: boolean, white: boolean, disabled: boolean }
-function mapStateToProps (
-  { caseData, communities }: State,
-  { rounded, white, disabled }: OwnProps
-) {
+type OwnProps = {| rounded?: boolean, white?: boolean, disabled?: boolean |}
+
+type StateProps = {|
+  activeCommunity: ?Community,
+  communities: Community[],
+  caseSlug: string,
+|}
+function mapStateToProps ({ caseData, communities }: State) {
   const { reader, slug: caseSlug } = caseData
   return {
-    rounded,
-    white,
     communities,
     caseSlug,
-    disabled,
     activeCommunity: reader && reader.enrollment && reader.activeCommunity,
   }
 }
 
-type Props = {
-  activeCommunity: ?Community,
-  communities: Community[],
-  rounded: boolean,
-  white: boolean,
-  disabled: boolean,
-  caseSlug?: string,
+type Props = {|
+  ...StateProps,
+  ...OwnProps,
   updateActiveCommunity?: typeof updateActiveCommunity,
   intl: IntlShape,
-}
+|}
 export const UnconnectedCommunityChooser = injectIntl(
   ({
     activeCommunity,
@@ -125,9 +121,11 @@ export const UnconnectedCommunityChooser = injectIntl(
               >
                 <span>
                   <span
-                    className={`pt-icon pt-icon-${activeCommunityPresent
-                      ? activeCommunity.global ? 'globe' : 'social-media'
-                      : 'cross'}`}
+                    className={`pt-icon pt-icon-${
+                      activeCommunityPresent
+                        ? activeCommunity.global ? 'globe' : 'social-media'
+                        : 'cross'
+                    }`}
                   />&#8196;
                   {activeCommunity.name}
                 </span>
@@ -160,7 +158,9 @@ const Bar = styled.div`
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `
 
-const CommunityMenu = styled(Menu)`width: 16em;`
+const CommunityMenu = styled(Menu)`
+  width: 16em;
+`
 
 const Instructions = styled.li`
   margin: 5px;

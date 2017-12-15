@@ -15,9 +15,10 @@ import RecentCommentThreads from 'conversation/RecentCommentThreads'
 import SelectedCommentThread from 'conversation/SelectedCommentThread'
 import { NoSelectedCommentThread } from 'conversation/shared'
 
-import type { State } from 'redux/state'
+import type { State, Reader } from 'redux/state'
 
-function mapStateToProps ({ caseData }: State) {
+type StateProps = { commentable: boolean, kicker: string, reader: ?Reader }
+function mapStateToProps ({ caseData }: State): StateProps {
   const { commentable, kicker, reader } = caseData
   return { commentable, kicker, reader }
 }
@@ -37,8 +38,13 @@ const Conversation = ({ commentable, kicker, intl, reader }) =>
         <Switch>
           <Route
             path="/conversation/:threadId"
-            render={props => (
-              <SelectedCommentThread heightOffset={108} {...props} />
+            render={({ history, location, match }) => (
+              <SelectedCommentThread
+                heightOffset={108}
+                history={history}
+                location={location}
+                match={match}
+              />
             )}
           />
           <Route component={NoSelectedCommentThread} />

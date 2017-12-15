@@ -169,5 +169,6 @@ const ConditionalNextLink = connect(
     return {
       next: ownProps.next || postTestNext,
     }
-  }
+  },
+  () => {}
 )(NextLink)

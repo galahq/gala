@@ -6,7 +6,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { injectIntl } from 'react-intl'
 
 import { NonIdealState } from '@blueprintjs/core'
 
@@ -52,7 +52,7 @@ const RecentCommentThreads = ({
     </ScrollView>
   </Container>
 )
-export default connect(mapStateToProps)(RecentCommentThreads)
+export default connect(mapStateToProps, () => {})(RecentCommentThreads)
 
 const Container = styled.div`
   flex: 1;

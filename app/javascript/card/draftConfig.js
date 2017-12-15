@@ -2,14 +2,7 @@
  * @flow
  */
 
-import {
-  CompositeDecorator,
-  DefaultDraftBlockRenderMap,
-  RichUtils,
-  Modifier,
-  EditorState,
-} from 'draft-js'
-import { Map } from 'immutable'
+import { CompositeDecorator, RichUtils, Modifier, EditorState } from 'draft-js'
 
 import EdgenoteEntity from './EdgenoteEntity'
 import CitationEntity from './CitationEntity'
@@ -17,16 +10,7 @@ import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
 
 import type { ContentState, SelectionState } from 'draft-js'
-import type { Match } from 'react-router-dom'
-
-const newBlockRenderMap = Map({
-  unstyled: {
-    element: 'div',
-  },
-})
-export const blockRenderMap = DefaultDraftBlockRenderMap.merge(
-  newBlockRenderMap
-)
+import type { DraftEntityMutability } from 'draft-js/lib/DraftEntityMutability'
 
 export const styles = {
   smallCaps: {
@@ -70,9 +54,9 @@ export const styles = {
 
 type StyleMapArgs = {
   commentable: boolean,
-  theseCommentThreadsOpen: ?Match,
-  hoveredCommentThread: string | null,
-  selectedCommentThread: string | null,
+  theseCommentThreadsOpen: boolean,
+  hoveredCommentThread: ?string,
+  selectedCommentThread: ?string,
 }
 export function getStyleMap ({
   commentable,
@@ -152,7 +136,11 @@ export function removeShadowSelection (editorState: EditorState): EditorState {
 }
 
 export function addEntity (
-  { type, mutability, data }: { type: *, mutability: *, data: Object },
+  {
+    type,
+    mutability,
+    data,
+  }: { type: $FlowIssue, mutability: DraftEntityMutability, data: Object },
   editorState: EditorState,
   selection: SelectionState = editorState.getSelection(),
   contentState: ContentState = editorState.getCurrentContent()

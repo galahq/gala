@@ -85,10 +85,9 @@ class Results extends React.Component<
   }
 
   _fetchResults = () => {
-    Orchard.harvest(
-      `search`,
-      this._getQueryParams()
-    ).then((results: string[]) => this.setState({ loading: false, results }))
+    Orchard.harvest(`search`, this._getQueryParams()).then(
+      (results: string[]) => this.setState({ loading: false, results })
+    )
   }
 
   _getQueryParams = (): Query => {
