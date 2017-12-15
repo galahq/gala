@@ -127,7 +127,7 @@ function mapStateToProps ({ caseData }: State) {
     caseSlug: caseData.slug,
   }
 }
-const Tracker = connect(mapStateToProps, () => {})(BaseTracker)
+const Tracker = connect(mapStateToProps, () => ({}))(BaseTracker)
 export default Tracker
 
 // Specializations
