@@ -52,7 +52,7 @@ const RecentCommentThreads = ({
     </ScrollView>
   </Container>
 )
-export default connect(mapStateToProps, () => {})(RecentCommentThreads)
+export default connect(mapStateToProps, () => ({}))(RecentCommentThreads)
 
 const Container = styled.div`
   flex: 1;
