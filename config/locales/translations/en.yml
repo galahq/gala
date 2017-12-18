@@ -12,6 +12,7 @@ en:
       group_membership: Group membership  #g
       podcast: Podcast  #g
       reader: Reader  #g
+      shared_cases_library: Shared cases
 
     attributes:
       activity:
@@ -102,6 +103,10 @@ en:
         content: Content
         options: Options
         correct_answer: Correct answer
+
+      shared_cases_library:
+        description: |
+          These cases were shared by Gala users.
 
     errors:
       models:
