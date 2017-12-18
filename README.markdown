@@ -1,6 +1,10 @@
 # Gala
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
+[![GitHub release badge.](https://img.shields.io/github/release/galahq/gala.svg)](https://github.com/galahq/gala/releases)
+![Github commits (since latest release)](https://img.shields.io/github/commits-since/galahq/gala/latest.svg)
+[![CircleCI badge.](https://img.shields.io/circleci/project/github/galahq/gala.svg)](https://circleci.com/gh/galahq/gala)
+[![Greenkeeper badge.](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
+[![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/master/LICENSE)
 
 Gala is a platform for the collaborative study of media-rich teaching cases.
 
