@@ -36,7 +36,7 @@ const Activity = ({
   iconSlug = 'activity-text',
   updateActivity,
   deleteElement,
-}) =>
+}) => (
   <article>
     <section className="Page-meta">
       <h1>
@@ -48,14 +48,15 @@ const Activity = ({
           onChange={value => updateActivity(id, { title: value })}
         />
       </h1>
-      {editing &&
+      {editing && (
         <button
           type="button"
           className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
           onClick={deleteElement}
         >
           Delete Podcast
-        </button>}
+        </button>
+      )}
     </section>
 
     <section>
@@ -95,5 +96,6 @@ const Activity = ({
       />
     </section>
   </article>
+)
 
 export default connect(mapStateToProps, { updateActivity })(Activity)

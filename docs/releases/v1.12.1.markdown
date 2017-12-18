@@ -1,0 +1,12 @@
+# v1.12.1
+
+* Reveals the correct answers after a user has submitted their post-quiz (#147, #148)
+* Improves accessibility of the pre/post test and Edgenotes (#147, #154)
+* Adds an acknowledgements field to cases (#157)
+* Adds photo credits to Edgenotes (#154, #158)
+* Rebrands the platform as “Gala” (#153, #159, #160)
+* Upgrades to React 16 (#141)
+* Upgrades to Ruby 2.4.2 (#145)
+* Upgrades to flow 0.54.1 (#151)
+* Improves the onboarding experience for a new dev (#144)
+* Uses polyfill.io to provide new Javascript APIs on old browsers (#162)

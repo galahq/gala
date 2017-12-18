@@ -2,7 +2,21 @@
 @import _flexbox
 @import _columns
 @import _tint_and_shade
-@import Catalog
+
+=banner
+  color: $black
+  position: absolute
+  top: 1em
+  right: 0
+  padding: 0.2rem 0.5rem 0.15rem 0.4rem
+  font-size: 85%
+
+  @media screen and (max-width: $mobileCutoff)
+    font-size: 70%
+
+  text-transform: uppercase
+  font-weight: 500
+  letter-spacing: 0.6px
 
 .Card.accepting-selection ::selection
   background-color: #bfaeec
@@ -39,58 +53,7 @@
 
 
 .CommentThread
-  padding: 1.5em
-  border: 0.5em solid $purple
-  background-color: $white
-  position: absolute
-  top: 0
-  left: 18.1em
-  width: 30em
-  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3)
-
-  &__back
-    position: absolute
-    top: 3px
-    left: 3px
-
-    & > span
-      width: 22px
-      height: 22px
-
-  &__submit-button.pt-button
-    margin-left: 1em
-    @media screen and (max-width: 768px)
-      font-size: 0.7em !important
-
-  &__icon-button
-    display: flex
-    justify-content: center
-    align-items: center
-
-    &:hover
-      background-color: rgba(0, 0, 0, 0.2)
-
-  form
-    margin-top: 1em
-
-    #CommentSubmit
-      display: flex
-      align-items: flex-end
-      margin-bottom: 0.15em
-
-      textarea
-        height: 4em
-        margin: 0
-        padding: 0.5em
-        flex: 1
-        font-family: $sansFont
-
-        &::-webkit-input-placeholder
-          color: $purple
-
   &__metadata
-    margin-bottom: 1em
-
     &__text
       font-family: $serifFont
       position: relative
@@ -106,46 +69,6 @@
         color: black
         position: absolute
         right: -8px
-
-.Comment
-  color: shade($purple, 40%)
-  line-height: 90%
-  position: relative
-
-  cite
-    display: block
-
-  blockquote
-    margin: 0
-    padding: 0
-    border: 0
-    line-height: 1.4
-    font-weight: 400
-    white-space: pre-wrap
-
-  &:not(:first-of-type)
-    margin-top: 1em
-
-.Comment i,
-.CommentThread__metadata__label
-  color: $purple
-  font-size: 70%
-  font-style: normal
-  text-transform: uppercase
-  letter-spacing: 0.3px
-  margin: 2px 0 0 0
-  display: block
-  font-weight: 400
-  line-height: 1.0
-
-.Comment cite,
-.CommentThread form label
-  font-size: 95%
-  color: shade($purple, 40%)
-  font-weight: 700
-  font-style: normal
-  text-transform: uppercase
-  letter-spacing: 0.4px
 
 #Sidebar
   transition: margin-left 0.3s

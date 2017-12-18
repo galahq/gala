@@ -36,7 +36,7 @@ type Action =
 export default function ui (state: ?UIState, action: Action): UIState {
   if (state == null) {
     return {
-      openedCitation: { key: null },
+      openedCitation: { key: null, labelRef: null },
       activeEdgenote: null,
       highlightedEdgenote: null,
       hoveredCommentThread: null,

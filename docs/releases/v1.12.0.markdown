@@ -1,0 +1,17 @@
+# v1.12: Catalog Redesign
+
+This release redesigns the catalog to make it easier to see what cases are available and to find one that meets your needs. We now display six featured cases with large images, an interactive map of case locations, and a readable list of the cases you’re enrolled in on the sidebar. (#113, #129, #131, #133, #136)
+
+![screen shot 2017-12-13 at 15 30 16](https://user-images.githubusercontent.com/4642599/33961155-fee45830-e01a-11e7-856e-e6cdf34f7f46.png)
+
+### Other features
+
+* Redesigns the status bar (#99)
+* Adds a button to publish and unpublish a case (#89 thanks to @pearlzhuzeng)
+* Adds buttons to add and remove cards without forcing a refresh (#101 thanks to @pearlzhuzeng)
+* Redesigns the user account menu to include an Identicon and to be accessible (#127)
+
+## Bug fixes and improvements
+
+* Upgrades to Rails 5.1 (#100)
+* Rebases our Blueprint theme (#140)

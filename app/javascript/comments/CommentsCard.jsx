@@ -10,9 +10,15 @@ import SelectedCommentThread from 'conversation/SelectedCommentThread'
 
 import type { ContextRouter } from 'react-router-dom'
 
-const CommentsCard = (props: ContextRouter) => (
+const CommentsCard = ({ history, location, match }: ContextRouter) => (
   <InlineCommentsCardContainer>
-    <SelectedCommentThread inSitu heightOffset={0} {...props} />
+    <SelectedCommentThread
+      inSitu
+      heightOffset={0}
+      history={history}
+      location={location}
+      match={match}
+    />
   </InlineCommentsCardContainer>
 )
 

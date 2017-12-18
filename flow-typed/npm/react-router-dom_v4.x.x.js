@@ -1,3 +1,6 @@
+// flow-typed signature: 4d8e947f2e396ef2f26ecbd1ed7f04ab
+// flow-typed version: 97d98ab83e/react-router-dom_v4.x.x/flow_>=v0.53.x
+
 declare module "react-router-dom" {
   declare export class BrowserRouter extends React$Component<{
     basename?: string,
@@ -138,7 +141,7 @@ declare module "react-router-dom" {
   }> {}
 
   declare export function withRouter<P>(
-    Component: React$ComponentType<{| ...ContextRouter, ...P |}>
+    Component: React$ComponentType<$Supertype<ContextRouter & P>>
   ): React$ComponentType<P>;
 
   declare type MatchPathOptions = {

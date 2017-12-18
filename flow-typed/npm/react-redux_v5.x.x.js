@@ -1,12 +1,17 @@
+// flow-typed signature: 59b0c4be0e1408f21e2446be96c79804
+// flow-typed version: 9092387fd2/react-redux_v5.x.x/flow_>=v0.54.x
+
 import type { Dispatch, Store } from "redux";
 
 declare module "react-redux" {
   /*
+
     S = State
     A = Action
     OP = OwnProps
     SP = StateProps
     DP = DispatchProps
+
   */
 
   declare type MapStateToProps<S, OP: Object, SP: Object> = (
@@ -81,35 +86,35 @@ declare module "react-redux" {
 
   declare function connect<A, OP>(
     ...rest: Array<void> // <= workaround for https://github.com/facebook/flow/issues/2360
-  ): Connector<OP, { dispatch: Dispatch<A> } & OP>;
+  ): Connector<OP, $Supertype<{ dispatch: Dispatch<A> } & OP>>;
 
   declare function connect<A, OP>(
     mapStateToProps: Null,
     mapDispatchToProps: Null,
     mergeProps: Null,
     options: ConnectOptions
-  ): Connector<OP, { dispatch: Dispatch<A> } & OP>;
+  ): Connector<OP, $Supertype<{ dispatch: Dispatch<A> } & OP>>;
 
   declare function connect<S, A, OP, SP>(
     mapStateToProps: MapStateToProps<S, OP, SP>,
     mapDispatchToProps: Null,
     mergeProps: Null,
     options?: ConnectOptions
-  ): Connector<OP, SP & { dispatch: Dispatch<A> } & OP>;
+  ): Connector<OP, $Supertype<SP & { dispatch: Dispatch<A> } & OP>>;
 
   declare function connect<A, OP, DP>(
     mapStateToProps: Null,
     mapDispatchToProps: MapDispatchToProps<A, OP, DP>,
     mergeProps: Null,
     options?: ConnectOptions
-  ): Connector<OP, DP & OP>;
+  ): Connector<OP, $Supertype<DP & OP>>;
 
   declare function connect<S, A, OP, SP, DP>(
     mapStateToProps: MapStateToProps<S, OP, SP>,
     mapDispatchToProps: MapDispatchToProps<A, OP, DP>,
     mergeProps: Null,
     options?: ConnectOptions
-  ): Connector<OP, SP & DP & OP>;
+  ): Connector<OP, $Supertype<SP & DP & OP>>;
 
   declare function connect<S, A, OP, SP, DP, P>(
     mapStateToProps: MapStateToProps<S, OP, SP>,
