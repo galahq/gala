@@ -10,7 +10,7 @@ import { append } from 'ramda'
 import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
-import { blockRenderMap, getStyleMap } from './draftConfig'
+import { getStyleMap } from './draftConfig'
 
 import asyncComponent from 'utility/asyncComponent'
 
@@ -22,40 +22,13 @@ import { OnScreenTracker } from 'utility/Tracker'
 import { FocusContainer } from 'utility/A11y'
 import { ScrollIntoView } from 'utility/ScrollView'
 
-import type { ContextRouter, Match } from 'react-router-dom'
-
 import type { CardProps } from 'card'
 
 const CommentThreadsCard = asyncComponent(() =>
   import('comments/CommentThreadsCard').then(m => m.default)
 )
 
-type Props = {
-  acceptingSelection: boolean,
-  addCommentThread: () => Promise<void>,
-  anyCommentThreadsOpen: ?Match,
-  anyCommentsOpen: ?Match,
-  commentable: boolean,
-  createCommentThread: (cardId: string, eS: EditorState) => any,
-  editable: boolean,
-  editing: boolean,
-  editorState: EditorState,
-  handleKeyCommand: string => any,
-  handleDeleteCard: () => any,
-  hoveredCommentThread: string | null,
-  onChange: EditorState => any,
-  onChangeContents: EditorState => any,
-  onMakeSelectionForComment: EditorState => any,
-  openedCitation: { +key?: string, +labelRef?: any },
-  readOnly: boolean,
-  selectedCommentThread: string | null,
-  solid: boolean,
-  theseCommentThreadsOpen: ?Match,
-  ...CardProps,
-  ...ContextRouter,
-}
-
-class CardContents extends React.Component<Props, *> {
+class CardContents extends React.Component<CardProps, *> {
   // We have to be able to respond to props change that would change
   // customStyleMap by "jiggling" each block of editorState to trigger a
   // rerender. This internal state should exactly track props, plus jiggle.
@@ -63,7 +36,7 @@ class CardContents extends React.Component<Props, *> {
 
   cardRef: ?HTMLElement
 
-  _shouldJiggle = (nextProps: Props) =>
+  _shouldJiggle = (nextProps: CardProps) =>
     this.props.commentable !== nextProps.commentable ||
     this.props.theseCommentThreadsOpen !== nextProps.theseCommentThreadsOpen ||
     this.props.hoveredCommentThread !== nextProps.hoveredCommentThread ||
@@ -81,7 +54,7 @@ class CardContents extends React.Component<Props, *> {
     return n.join(' ')
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  componentWillReceiveProps (nextProps: CardProps) {
     let editorState = nextProps.editorState
     if (this._shouldJiggle(nextProps)) {
       const contentState = editorState.getCurrentContent()
@@ -154,12 +127,9 @@ class CardContents extends React.Component<Props, *> {
           <Editor
             readOnly={readOnly}
             customStyleMap={styleMap}
+            editorState={editorState}
+            handleKeyCommand={handleKeyCommand}
             onChange={(eS: EditorState) => onChange(eS)}
-            {...{
-              blockRenderMap,
-              editorState,
-              handleKeyCommand,
-            }}
           />
         </FocusContainer>
 
@@ -181,7 +151,8 @@ class CardContents extends React.Component<Props, *> {
           <CitationTooltip
             cardId={id}
             cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
-            {...{ openedCitation, editable }}
+            openedCitation={openedCitation}
+            editable={editable}
           />
         )}
 

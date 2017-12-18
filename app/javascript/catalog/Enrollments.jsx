@@ -13,7 +13,8 @@ import { SectionTitle, CaseRow, Element } from 'catalog/shared'
 import EnrollmentInstructions from 'catalog/EnrollmentInstructions'
 
 import type { Case } from 'redux/state'
-import type Catalog, { Loading } from 'catalog'
+import type { Loading } from 'catalog'
+import typeof Catalog from 'catalog'
 
 type Props = {
   loading: Loading,
@@ -79,7 +80,8 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
                           onClick={() =>
                             onDeleteEnrollment(slug, {
                               displayBetaWarning: !publishedAt,
-                            })}
+                            })
+                          }
                         />
                       )
                     }
@@ -97,9 +99,11 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
 
 export default injectIntl(Enrollments)
 
-const SidebarSectionTitle = SectionTitle.extend`margin: 24px 0.5em 2px 0;`
+const SidebarSectionTitle = SectionTitle.extend`
+  margin: 24px 0.5em 2px 0;
+`
 const SidebarButton = styled(Button).attrs({ className: 'pt-minimal' })`
-  margin-right:-10px;
+  margin-right: -10px;
   z-index: 1;
 `
 

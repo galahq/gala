@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import type { State } from 'redux/state'
 
 declare class Ahoy {
-  track(name: string, properties: Object): void,
+  track(name: string, properties: Object): void;
 }
 
 type TimerState = 'STOPPED' | 'RUNNING' | 'PAUSED'
@@ -127,7 +127,7 @@ function mapStateToProps ({ caseData }: State) {
     caseSlug: caseData.slug,
   }
 }
-const Tracker = connect(mapStateToProps)(BaseTracker)
+const Tracker = connect(mapStateToProps, () => ({}))(BaseTracker)
 export default Tracker
 
 // Specializations

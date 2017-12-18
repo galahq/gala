@@ -21,41 +21,56 @@ import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 
 import type { ContextRouter } from 'react-router-dom'
+import type { DraftHandleValue } from 'draft-js/lib/DraftHandleValue'
 
 import type { Dispatch } from 'redux/actions'
-import type { State } from 'redux/state'
+import type { State, Citation } from 'redux/state'
 
 /**
  * Public API for <Card />
  */
-export type CardProps = {|
+type OwnProps = {|
+  ...ContextRouter,
   id: string,
   nonNarrative: boolean,
   title?: React.Node,
 |}
 
-type OwnProps = ContextRouter & {
-  id: string,
-  nonNarrative: boolean,
-}
-
+type StateProps = {|
+  acceptingSelection: boolean,
+  anyCommentsOpen: boolean,
+  anyCommentThreadsOpen: boolean,
+  commentable: boolean,
+  editable: boolean,
+  editing: boolean,
+  editorState: EditorState,
+  hoveredCommentThread: ?string,
+  openedCitation: Citation,
+  readOnly: boolean,
+  selectedCommentThread: ?string,
+  solid: boolean,
+  theseCommentThreadsOpen: boolean,
+|}
 function mapStateToProps (
   state: State,
   { id, location, nonNarrative }: OwnProps
-) {
+): StateProps {
   const { solid, commentThreads } = state.cardsById[id]
   const editorState =
     state.cardsById[id].editorState || EditorState.createEmpty()
   const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
 
   const { pathname } = location
-  const theseCommentThreadsOpen = matchPath(pathname, commentThreadsOpen(id))
-  const anyCommentThreadsOpen = matchPath(pathname, commentThreadsOpen())
+  const theseCommentThreadsOpen = !!matchPath(pathname, commentThreadsOpen(id))
+  const anyCommentThreadsOpen = !!matchPath(pathname, commentThreadsOpen())
   const anyCommentsOpen = matchPath(pathname, commentsOpen())
   const selectedCommentThread =
     anyCommentsOpen && anyCommentsOpen.params.threadId
 
   return {
+    acceptingSelection,
+    anyCommentsOpen: !!anyCommentsOpen,
+    anyCommentThreadsOpen,
     commentable:
       commentThreads != null &&
       !nonNarrative &&
@@ -63,25 +78,33 @@ function mapStateToProps (
       !!(state.caseData.reader && state.caseData.reader.enrollment),
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
+    editorState,
+    hoveredCommentThread,
+    openedCitation,
     readOnly: !(
       (state.edit.inProgress && !openedCitation.key) ||
       acceptingSelection
     ),
-    anyCommentsOpen,
-    openedCitation,
-    acceptingSelection,
-    hoveredCommentThread,
     selectedCommentThread,
-    theseCommentThreadsOpen,
-    anyCommentThreadsOpen,
     solid,
-    editorState,
+    theseCommentThreadsOpen,
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { id }: OwnProps) {
+type DispatchProps = {|
+  onChangeContents: EditorState => void,
+  onMakeSelectionForComment: EditorState => void,
+  createCommentThread: (cardId: string, eS: EditorState) => Promise<any>,
+  handleDeleteCard: () => Promise<any>,
+|}
+function mapDispatchToProps (
+  dispatch: Dispatch,
+  { id }: OwnProps
+): DispatchProps {
   return {
-    onChangeContents: (eS: EditorState) => dispatch(updateCardContents(id, eS)),
+    onChangeContents: (eS: EditorState) => {
+      dispatch(updateCardContents(id, eS))
+    },
 
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
@@ -101,7 +124,19 @@ function mapDispatchToProps (dispatch: Dispatch, { id }: OwnProps) {
   }
 }
 
-function mergeProps (stateProps, dispatchProps, ownProps: OwnProps) {
+export type CardProps = {|
+  ...OwnProps,
+  ...StateProps,
+  ...DispatchProps,
+  addCommentThread: () => Promise<any>,
+  onChange: EditorState => void,
+  handleKeyCommand: string => DraftHandleValue,
+|}
+function mergeProps (
+  stateProps: StateProps,
+  dispatchProps: DispatchProps,
+  ownProps: OwnProps
+): CardProps {
   const { editable, editorState } = stateProps
   const {
     onChangeContents,
@@ -112,6 +147,9 @@ function mergeProps (stateProps, dispatchProps, ownProps: OwnProps) {
 
   const onChange = editable ? onChangeContents : onMakeSelectionForComment
 
+  // Flow fails to infer exactness when exact objects are spread
+  // https://github.com/facebook/flow/issues/2405
+  // $FlowFixMe
   return {
     ...ownProps,
     ...stateProps,
@@ -120,7 +158,11 @@ function mergeProps (stateProps, dispatchProps, ownProps: OwnProps) {
     onChange,
     handleKeyCommand: (command: string) => {
       let newState = RichUtils.handleKeyCommand(editorState, command)
-      return newState ? onChange(newState) && 'handled' : 'not-handled'
+      if (newState) {
+        onChange(newState)
+        return 'handled'
+      }
+      return 'not-handled'
     },
 
     addCommentThread: async () => {
@@ -137,5 +179,6 @@ function mergeProps (stateProps, dispatchProps, ownProps: OwnProps) {
 }
 
 export default withRouter(
+  // $FlowFixMe
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(CardContents)
 )

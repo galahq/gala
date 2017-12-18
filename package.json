@@ -31,7 +31,7 @@
     "color-hash": "^1.0.3",
     "compression-webpack-plugin": "^0.4.0",
     "css-loader": "^0.28.0",
-    "draft-js": "0.10.3",
+    "draft-js": "0.10.4",
     "draft-js-linkify-plugin": "^2.0.1",
     "draft-js-plugins-editor": "^2.0.3",
     "extract-text-webpack-plugin": "^2.1.0",
@@ -39,7 +39,6 @@
     "glob": "^7.1.1",
     "history": "^4.6.1",
     "immutability-helper": "^2.4.0",
-    "immutable": "^3.8.2",
     "intl": "^1.2.5",
     "js-yaml": "^3.8.3",
     "json-loader": "^0.5.4",
@@ -105,7 +104,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^2.1.1",
-    "flow-bin": "0.60.1",
+    "flow-bin": "0.61.0",
     "flow-inspect": "^1.0.1",
     "webpack-dev-server": "^2.7.1"
   }

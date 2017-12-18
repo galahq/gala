@@ -99,11 +99,7 @@ export type UIState = {
   highlightedEdgenote: ?string,
   hoveredCommentThread: ?string,
   mostRecentCommentThreads: ?(string[]),
-  openedCitation: | {| key: null |}
-    | {|
-        key: string,
-        labelRef: HTMLElement,
-      |},
+  openedCitation: Citation,
   toaster: any,
 }
 
@@ -131,12 +127,11 @@ export type Byline = {
 
 export type Card = {
   commentThreads: ?(CommentThread[]),
-  content: string,
   editorState: ?EditorState,
   id: string,
   pageId: string,
   position: number,
-  rawContent: ?RawDraftContentState,
+  rawContent: RawDraftContentState,
   solid: boolean,
 }
 
@@ -175,6 +170,13 @@ export type CaseElement = {
 }
 
 export type CaseElementStore = 'pagesById' | 'podcastsById' | 'activitiesById'
+
+export type Citation =
+  | {| +key: null, +labelRef: null |}
+  | {|
+      +key: string,
+      +labelRef: HTMLElement,
+    |}
 
 export type Comment = {
   commentThreadId: number,

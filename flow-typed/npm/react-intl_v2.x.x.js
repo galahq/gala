@@ -1,9 +1,14 @@
+// flow-typed signature: f73eea0966eb5d83ff1954e38a6cd053
+// flow-typed version: cc3eacb5a2/react-intl_v2.x.x/flow_>=v0.57.x
+
 /**
  * Original implementation of this file by @marudor at https://github.com/marudor/flowInterfaces
  * Copied here based on intention to merge with flow-typed expressed here:
  * https://github.com/marudor/flowInterfaces/issues/6
  */
 // Mostly from https://github.com/yahoo/react-intl/wiki/API#react-intl-api
+
+import * as React from 'react'
 
 type $npm$ReactIntl$LocaleData = {
   locale: string,
@@ -122,15 +127,43 @@ declare module "react-intl" {
   >(
     messageDescriptors: T
   ): T;
-  declare function injectIntl<Props: {}>(
-    WrappedComponent: React$ComponentType<
-      {| intl: $npm$ReactIntl$IntlShape |} & Props
-    >,
-    options?: {
-      intlPropName?: string,
-      withRef?: boolean
-    }
-  ): React$ComponentType<Props>;
+
+  declare type InjectIntlProvidedProps = {
+    intl: $npm$ReactIntl$IntlShape
+  }
+
+  declare type ComponentWithDefaultProps<DefaultProps: {}, Props: {}> =
+    React.ComponentType<Props> & { defaultProps: DefaultProps };
+
+  declare type InjectIntlOtions = {
+    intlPropName?: string,
+    withRef?: boolean
+  }
+
+  declare class IntlInjectedComponent<TOwnProps, TDefaultProps> extends React.Component<TOwnProps> {
+    static WrappedComponent: Class<React.Component<TOwnProps & InjectIntlProvidedProps>>,
+    static defaultProps: TDefaultProps,
+    props: TOwnProps
+  }
+
+  declare type IntlInjectedComponentClass<TOwnProps, TDefaultProps: {} = {}> = Class<
+    IntlInjectedComponent<TOwnProps, TDefaultProps>
+  >;
+
+  declare function injectIntl<OriginalProps: InjectIntlProvidedProps, DefaultProps: {}>
+  (
+    component: ComponentWithDefaultProps<DefaultProps, OriginalProps>,
+    options?: InjectIntlOtions,
+  ):
+  IntlInjectedComponentClass<$Diff<OriginalProps, InjectIntlProvidedProps>, DefaultProps>
+
+  declare function injectIntl<OriginalProps: InjectIntlProvidedProps>
+  (
+    component: React.ComponentType<OriginalProps>,
+    options?: InjectIntlOtions,
+  ):
+  IntlInjectedComponentClass<$Diff<OriginalProps, InjectIntlProvidedProps>>;
+
   declare function formatMessage(
     messageDescriptor: $npm$ReactIntl$MessageDescriptor,
     values?: Object
@@ -163,35 +196,35 @@ declare module "react-intl" {
     options?: $npm$ReactIntl$PluralFormatOptions
   ): $npm$ReactIntl$PluralCategoryString;
 
-  declare class FormattedMessage extends React$Component<
+  declare class FormattedMessage extends React.Component<
     $npm$ReactIntl$MessageDescriptor & {
       values?: Object,
       tagName?: string,
       children?: (...formattedMessage: Array<React$Node>) => React$Node
     }
   > {}
-  declare class FormattedHTMLMessage extends React$Component<
+  declare class FormattedHTMLMessage extends React.Component<
     $npm$ReactIntl$DateTimeFormatOptions & {
       values?: Object,
       tagName?: string,
       children?: (...formattedMessage: Array<React$Node>) => React$Node
     }
   > {}
-  declare class FormattedDate extends React$Component<
+  declare class FormattedDate extends React.Component<
     $npm$ReactIntl$DateTimeFormatOptions & {
       value: $npm$ReactIntl$DateParseable,
       format?: string,
       children?: (formattedDate: string) => React$Node
     }
   > {}
-  declare class FormattedTime extends React$Component<
+  declare class FormattedTime extends React.Component<
     $npm$ReactIntl$DateTimeFormatOptions & {
       value: $npm$ReactIntl$DateParseable,
       format?: string,
       children?: (formattedDate: string) => React$Node
     }
   > {}
-  declare class FormattedRelative extends React$Component<
+  declare class FormattedRelative extends React.Component<
     $npm$ReactIntl$RelativeFormatOptions & {
       value: $npm$ReactIntl$DateParseable,
       format?: string,
@@ -200,28 +233,28 @@ declare module "react-intl" {
       children?: (formattedDate: string) => React$Node
     }
   > {}
-  declare class FormattedNumber extends React$Component<
+  declare class FormattedNumber extends React.Component<
     $npm$ReactIntl$NumberFormatOptions & {
       value: number | string,
       format?: string,
       children?: (formattedNumber: string) => React$Node
     }
   > {}
-  declare class FormattedPlural extends React$Component<
+  declare class FormattedPlural extends React.Component<
     $npm$ReactIntl$PluralFormatOptions & {
       value: number | string,
-      other: React$Node,
-      zero?: React$Node,
-      one?: React$Node,
-      two?: React$Node,
-      few?: React$Node,
-      many?: React$Node,
-      children?: (formattedPlural: React$Node) => React$Node
+      other: React.Node,
+      zero?: React.Node,
+      one?: React.Node,
+      two?: React.Node,
+      few?: React.Node,
+      many?: React.Node,
+      children?: (formattedPlural: React.Node) => React.Node
     }
   > {}
-  declare class IntlProvider extends React$Component<
+  declare class IntlProvider extends React.Component<
     $npm$ReactIntl$IntlProviderConfig & {
-      children: React$Node,
+      children: React.Node,
       initialNow?: $npm$ReactIntl$DateParseable
     }
   > {}
