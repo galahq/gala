@@ -11,5 +11,8 @@ class LibrariesController < ApplicationController
 
   def set_library
     @library = Library.find_by_slug params[:slug]
+    if params[:slug] == SharedCasesLibrary.instance.slug
+      @library ||= SharedCasesLibrary.instance
+    end
   end
 end
