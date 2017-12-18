@@ -37,13 +37,15 @@ class LibraryInfo extends React.Component<Props, Library> {
         </RightFloatLogoContainer>
         <SectionTitle>{name}</SectionTitle>
         <Description>{description}</Description>
-        <LearnMore href={url}>
-          <FormattedMessage
-            id="catalog.learnMore"
-            defaultMessage="Learn more"
-          />{' '}
-          ›
-        </LearnMore>
+        {url && (
+          <LearnMore href={url}>
+            <FormattedMessage
+              id="catalog.learnMore"
+              defaultMessage="Learn more"
+            />{' '}
+            ›
+          </LearnMore>
+        )}
       </CatalogSection>
     )
   }
