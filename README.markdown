@@ -1,5 +1,7 @@
 # Gala
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
+
 Gala is a platform for the collaborative study of media-rich teaching cases.
 
 ## Install
