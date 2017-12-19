@@ -3,6 +3,7 @@
 class SearchController < ApplicationController
   def index
     @cases = Case.all
+                 .ordered
                  .merge(libraries_query)
                  .merge(full_text_query)
                  .pluck(:slug)
@@ -14,9 +15,18 @@ class SearchController < ApplicationController
   def libraries_query
     return Case.all unless params[:libraries]
 
-    Case.joins(:library)
-        .where(libraries: { slug: params[:libraries] })
+    Case.joins('LEFT JOIN libraries ON libraries.id = cases.library_id')
+        .where(libraries[:slug].in(params[:libraries])
+                                .or(maybe_shared_library))
         .ordered
+  end
+
+  def maybe_shared_library
+    if params[:libraries].include? SharedCasesLibrary.instance.slug
+      cases[:library_id].eq(nil)
+    else
+      cases[:id].eq(-1)
+    end
   end
 
   def full_text_query
@@ -31,5 +41,13 @@ class SearchController < ApplicationController
              "plainto_tsquery(#{ActiveRecord::Base.connection.quote(query)})" \
            ') DESC'
         )
+  end
+
+  def cases
+    Case.arel_table
+  end
+
+  def libraries
+    Library.arel_table
   end
 end
