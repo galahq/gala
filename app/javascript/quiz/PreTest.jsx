@@ -12,6 +12,7 @@ import type { ContextRouter } from 'react-router-dom'
 import CaseOverview from 'overview/CaseOverview'
 import { providesQuiz } from './Quiz'
 import Question from './Question'
+import Tracker from 'utility/Tracker'
 
 import type { Question as QuestionT } from 'redux/state'
 import type { QuizProviderProps } from './Quiz'
@@ -20,10 +21,11 @@ type Props = ContextRouter & QuizProviderProps
 const PreTest = ({
   answers,
   canSubmit,
+  history,
+  id: quizId,
+  match,
   onChange,
   onSubmit,
-  history,
-  match,
   questions,
 }: Props) => {
   return (
@@ -61,6 +63,16 @@ const PreTest = ({
             <Button disabled={!canSubmit} text="Submit" onClick={onSubmit} />
           </div>
         </div>
+
+        <Tracker
+          timerState="RUNNING"
+          targetKey={`pre_test`}
+          targetParameters={{
+            name: 'read_quiz',
+            preOrPost: 'pre',
+            quizId,
+          }}
+        />
       </Dialog>
     </div>
   )
