@@ -9,20 +9,39 @@ import { connect } from 'react-redux'
 import TableOfContents from './TableOfContents'
 import Billboard from './Billboard'
 import EnrollForm from './EnrollForm'
+import Tracker from 'utility/Tracker'
 
-import type { State } from 'redux/state'
+import type { ContextRouter } from 'react-router-dom'
+import type { State, Reader } from 'redux/state'
 
-const CaseOverview = ({ editing, signInForm, reader }) => {
+type StateProps = { editing: boolean, reader: ?Reader, signInForm: ?string }
+function mapStateToProps ({ caseData, edit }: State): StateProps {
+  return {
+    editing: edit.inProgress,
+    reader: caseData.reader,
+    signInForm: window.caseData.signInForm,
+  }
+}
+
+type Props = StateProps & ContextRouter
+const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
   return (
-    <div id="CaseOverview" className={`window ${editing && 'editing'}`}>
+    <div id="CaseOverview" className={`window ${editing ? 'editing' : ''}`}>
       <Billboard />
       <aside className="CaseOverviewRight">
+        {location.pathname === '/' && (
+          <Tracker
+            timerState="RUNNING"
+            targetKey={`overview`}
+            targetParameters={{ name: 'read_overview' }}
+          />
+        )}
         {signInForm != null ? (
           <div
             className="dialog"
             dangerouslySetInnerHTML={{ __html: signInForm }}
           />
-        ) : !reader.enrollment ? (
+        ) : reader && !reader.enrollment ? (
           <EnrollForm />
         ) : null}
         <TableOfContents />
@@ -31,11 +50,4 @@ const CaseOverview = ({ editing, signInForm, reader }) => {
   )
 }
 
-export default connect(
-  (state: State) => ({
-    reader: state.caseData.reader,
-    signInForm: (window.caseData.signInForm: ?string),
-    editing: state.edit.inProgress,
-  }),
-  () => {}
-)(CaseOverview)
+export default connect(mapStateToProps, () => {})(CaseOverview)
