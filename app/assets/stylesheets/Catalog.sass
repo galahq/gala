@@ -1,0 +1,427 @@
+@import _globals
+@import _flexbox
+@import _tint_and_shade
+
+.catalog-cases
+  width: 100%
+
+.c-catalog__heading
+  color: $white
+  text-align: center
+  margin: 1em 0 0.5em 0
+  font-family: $sansFont
+  text-transform: uppercase
+  letter-spacing: 1px
+  font-size: 0.9em
+  line-height: 1.2em
+
+.BillboardTitle
+  h2
+    font-size: 1.5em
+    color: $white
+    line-height: 1.1
+    margin-bottom: 0.35em
+    span.c-kicker
+      display: block
+      font-size: 0.6em
+      text-transform: uppercase
+      letter-spacing: 1px
+      font-family: $sansFont
+      margin-bottom: 0.6em
+  p
+    font-weight: 500
+    margin-top: 0.5em
+    color: $white
+    margin-bottom: 1.3em
+    font-size: 1em
+    line-height: 110%
+    font-family: $sansFont
+
+.catalog-cases-featured
+  +flexbox
+
+  width: 100%
+  overflow-x: hidden
+  background-color: tint($umichBlue, 25%)
+  padding: 1rem 0
+
+  .catalog-case
+    +flex(0, 0, 33em)
+    @media screen and (max-width: $mobileCutoff)
+      +flex(0, 0, 28em)
+      font-size: 13px
+    height: 18rem !important
+    &:first-child
+      margin-left: auto
+    &:last-child
+      margin-right: auto
+
+.carousel
+  position: relative
+
+.carousel-button
+  display: none
+  position: absolute
+  top: 8.5rem
+  z-index: 200
+  cursor: pointer
+  font-size: 25px
+  background-color: $lightGreen
+  padding: 0.6em 0.5em
+
+  &-left
+    border-right: 0.35rem solid $darkGreen
+    left: -3em
+
+  &-right
+    border-left: 0.35rem solid $darkGreen
+    right: -3em
+
+.catalog-cases-index
+  +flexbox
+
+  +flex-flow(row wrap)
+
+  +justify-content(center)
+
+  .catalog-case
+    +flex(0, 0, 18em)
+    height: 16em
+    @media screen and (max-width: $mobileCutoff)
+      +flex(1, 0, 15em)
+      height: 11em
+    margin: 0 0.5rem 1rem 0.5rem
+
+    h2
+      font-size: 1.3em
+      margin-bottom: 1em
+      margin-bottom: 1.1em
+      span.c-kicker
+        font-size: 0.7em
+        margin-bottom: 0.45em
+
+    p
+      margin-top: -1em
+
+=banner
+  color: $black
+  position: absolute
+  top: 1em
+  right: 0
+  padding: 0.2rem 0.5rem 0.15rem 0.4rem
+  font-size: 85%
+
+  @media screen and (max-width: $mobileCutoff)
+    font-size: 70%
+
+  text-transform: uppercase
+  font-weight: 500
+  letter-spacing: 0.6px
+
+.catalog-case
+  +flexbox
+
+  +flex-flow(column)
+
+  +justify-content(flex-end)
+
+  margin: 0 0.5rem
+  padding: 0.5rem 1.5rem
+  position: relative
+  overflow: hidden
+
+  &-credits
+    transition: box-shadow 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+    box-shadow: 0 0 0 10em rgba(0, 0, 0, 0), inset 0 0 0 10em rgba(0, 0, 0, 0)
+
+    &.dimmed
+      box-shadow: 0 0 0 10em rgba(0, 0, 0, 0.5), inset 0 0 0 10em rgba(0, 0, 0, 0.5)
+
+  &-unpublished
+    cursor: default
+
+    &-banner
+      +banner
+
+      background-color: $lightGreen
+      border-left: 0.35rem solid $darkGreen
+
+.catalog-case-preview-banner
+  +banner
+
+  background-color: lighten($purple, 10%)
+  border-left: 0.35rem solid shade($purple, 20%)
+
+.catalog-case-accessible
+  transition: box-shadow 0.15s cubic-bezier(0.33, 0.66, 0.66, 1), transform 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+
+  &:hover,
+  &:focus
+    cursor: pointer
+    transform: scale(1.02)
+    -webkit-box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.4)
+    -moz-box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.4)
+    box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.4)
+    outline: none
+
+.catalog-splash
+  padding: 1em
+  margin-top: -1em
+
+.catalog-welcome
+  +flexbox
+
+  +justify-content(space-between)
+
+  @media screen and (max-width: $mobileCutoff)
+    +flex-flow(row wrap)
+
+  margin: auto
+  max-width: 53em
+
+  &-message
+    +flex(0 1 33em)
+    p
+      margin-top: 1em
+
+    h1
+      line-height: 20px
+
+    @media screen and (min-width: $mobileCutoff)
+      h1, p, a
+        font-size: 19px !important
+        line-height: 26px !important
+
+  &-sign-in
+    +flex(1 1 15em)
+    min-width: 12em
+
+    @media screen and (min-width: $mobileCutoff)
+      margin-left: 1em
+
+    @media screen and (max-width: $mobileCutoff)
+      margin-top: 1em
+
+    h2
+      line-height: 26px !important
+      margin-top: 0
+
+.catalog-dashboard
+  border-bottom: 5px solid $darkPurple
+  background-color: $purple
+  color: $white
+  padding: 0.5em 0
+  flex-wrap: wrap
+
+  a:hover
+    background-color: transparent
+    color: inherit
+
+  +flexbox
+
+  +justify-content(flex-start)
+
+  @media screen and (max-width: $mobileCutoff)
+    display: block
+
+  &--empty
+    @media screen and (max-width: 713px)
+      display: block
+
+    .catalog-dashboard__reader
+      text-align: right
+      margin: 0.5rem 1rem 0.4rem 4.4rem
+      order: 1
+
+      +flex(0 0 auto)
+
+      @media screen and (max-width: 713px)
+        margin: 0.5rem
+        text-align: left
+        width: 10em
+        margin-left: 4.5rem
+
+      @media screen and (max-width: $mobileCutoff)
+        margin-left: 1rem
+
+  @media screen and (max-width: $mobileCutoff)
+    +align-content(flex-start)
+
+  h1, h2, h3
+    font-family: $sansFont
+    margin: 0
+    color: $white
+  h1
+    font-size: 1.5em
+    line-height: 1.1em
+  h2
+    font-weight: normal
+    font-size: 1.2em
+    line-height: 1.1em
+    margin-bottom: 0.8em
+
+  &__reader
+    text-align: right
+    margin: 0.5rem 1rem 0.4rem 4.4rem
+    order: 1
+
+    +flex(0 0 auto)
+
+    @media screen and (max-width: 713px)
+      margin: 0.5rem
+      width: 7em
+      margin-left: 4.5rem
+
+    @media screen and (max-width: $mobileCutoff)
+      margin-left: 1rem
+      text-align: left
+
+      h2 a.catalog-dashboard__edit
+        margin-left: 0
+        display: inline
+
+    @media screen and (max-width: 375px)
+      width: 7.25em
+
+    @media screen and (max-width: 320px)
+      width: 6.75em
+
+  &__edit
+    display: block
+    margin-top: 0.1em
+    opacity: 0.5
+    font-size: 90%
+    color: $white
+
+    svg
+      margin-bottom: -1px
+
+    &:hover
+      background-color: transparent
+      color: $white
+      opacity: 1
+
+  &__my-cases
+    +flexbox
+
+    +flex-flow(row wrap)
+
+    +justify-content(flex-start)
+
+    flex: 1 1 10em
+
+    order: 2
+
+    @media screen and (max-width: $mobileCutoff)
+      margin-left: 0.6em
+
+    &__case
+      +flexbox
+
+      +flex-flow(column wrap)
+
+      font-size: 90%
+      margin: 0.6rem 0 0.5rem 0.5rem
+      color: $white !important
+      width: 10em
+
+      @media screen and (max-width: 465px)
+        width: 8.6em
+
+      @media screen and (max-width: 400px) and (min-width: 361px)
+        width: 7.7em
+
+      transition: transform 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+      position: relative
+      cursor: default
+
+      &__delete
+        position: absolute
+        top: -4px
+        right: 14px
+        transition: transform 0.1s cubic-bezier(0.33, 0.66, 0.66, 1)
+
+        &:hover
+          transform: scale(1.1)
+
+      img
+        width: 8em
+        height: 8em
+        transition: box-shadow 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+        box-shadow: 0 0 3em rgba(255, 255, 255, 0)
+        @media screen and (max-width: 465px)
+          width: 7.8em
+          height: 7.8em
+        @media screen and (max-width: 400px) and (min-width: 361px)
+          width: 7.2em
+          height: 7.2em
+
+      strong
+        text-transform: uppercase
+        font-weight: bold
+        margin-top: 0.3em
+        line-height: 1.1em
+
+      &[href^='/cases/']:hover,
+      &[href^='/cases/']:focus
+        cursor: pointer
+        transform: scale(1.02)
+        outline: none
+
+        img
+          box-shadow: 0 0 3em rgba(255, 255, 255, 0.3)
+
+  &__my-cases--empty
+    &__case
+      @extend .catalog-dashboard__my-cases__case
+      pointer-events: none
+      color: $darkPurple !important
+      order: 2
+
+      @media screen and (max-width: 713px)
+        margin-right: 3rem
+        margin-left: 1rem
+        float: right
+        order: 1
+
+      @media screen and (max-width: $mobileCutoff)
+        margin-right: 0.5rem
+
+    &__intro
+      +flex(1 0 20em)
+
+      margin: 0.6rem 4rem 0.27rem 0
+      hyphens: auto
+      -webkit-hyphens: auto
+      order: 3
+
+      h2
+        font-size: 1em
+        text-transform: uppercase
+        font-weight: 600
+        letter-spacing: 0.04em
+        margin-bottom: 0.5em
+
+      @media screen and (max-width: 713px)
+        margin-left: 4.5rem
+        h2
+          margin-top: 0.5em
+
+      @media screen and (max-width: $mobileCutoff)
+        margin-left: 1rem
+        margin-right: 1rem
+
+      ul, p
+        margin: 0.3em 0
+        list-style: none
+        @media screen and (max-width: 713px)
+          line-height: 1.3em
+
+        & > li
+          text-indent: -1em
+          @media screen and (max-width: 713px)
+            margin-bottom: 0.25em
+
+        li:before
+          text-indent: -1em
+          content: "— "
