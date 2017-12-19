@@ -86,4 +86,9 @@ class Case < ApplicationRecord
   def comments
     Comment.where(comment_thread: comment_threads)
   end
+
+  def library
+    return SharedCasesLibrary.instance if library_id.nil?
+    super
+  end
 end
