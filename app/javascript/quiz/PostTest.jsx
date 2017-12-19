@@ -13,6 +13,7 @@ import Sidebar from 'elements/Sidebar'
 import { providesQuiz } from './Quiz'
 import Question from './Question'
 import { AccessibleAlert, LabelForScreenReaders } from 'utility/A11y'
+import Tracker from 'utility/Tracker'
 
 import { Orchard } from 'shared/orchard'
 
@@ -70,13 +71,25 @@ class PostTest extends React.Component<
   }
 
   render () {
-    const { answers, canSubmit, onChange, questions } = this.props
+    const { answers, canSubmit, id: quizId, onChange, questions } = this.props
     const { correctAnswers, selectedAnswers } = this.state
     const needsResponse = correctAnswers.length === 0
     return (
       <div className="window">
         <Sidebar />
         <main>
+          {needsResponse && (
+            <Tracker
+              timerState="RUNNING"
+              targetKey={`post_test`}
+              targetParameters={{
+                name: 'read_quiz',
+                preOrPost: 'post',
+                quizId,
+              }}
+            />
+          )}
+
           <h1
             style={{
               color: 'white',
@@ -108,7 +121,9 @@ class PostTest extends React.Component<
                     <ol>
                       {questions.map((q, i) => (
                         <li key={i}>
-                          The correct answer to the question “{q.content}” is “{correctAnswers[i]}”
+                          The correct answer to the question “{q.content}” is “{
+                            correctAnswers[i]
+                          }”
                         </li>
                       ))}
                     </ol>
@@ -140,23 +155,23 @@ class PostTest extends React.Component<
   _loadCorrectAnswers = () => {
     const { id } = this.props
     Orchard.harvest(`quizzes/${id}`).then((quiz: Quiz) =>
-      Orchard.harvest(
-        `quizzes/${id}/submissions`
-      ).then(({ submissions }: Submissions) => {
-        const lastSubmission = values(submissions).reduce(
-          (max, submission) =>
-            max.createdAt >= submission.createdAt ? max : submission
-        )
+      Orchard.harvest(`quizzes/${id}/submissions`).then(
+        ({ submissions }: Submissions) => {
+          const lastSubmission = values(submissions).reduce(
+            (max, submission) =>
+              max.createdAt >= submission.createdAt ? max : submission
+          )
 
-        this.setState({
-          correctAnswers: quiz.questions.map(q => q.correctAnswer),
-          selectedAnswers: quiz.questions.map(q => {
-            const answers = lastSubmission.answersByQuestionId[q.id]
-            if (answers == null) return ''
-            return answers.content
-          }),
-        })
-      })
+          this.setState({
+            correctAnswers: quiz.questions.map(q => q.correctAnswer),
+            selectedAnswers: quiz.questions.map(q => {
+              const answers = lastSubmission.answersByQuestionId[q.id]
+              if (answers == null) return ''
+              return answers.content
+            }),
+          })
+        }
+      )
     )
   }
 }
