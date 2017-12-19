@@ -73,3 +73,19 @@ For video and audio edgenote, this counts time playing. For image edgenotes, thi
   },
 }
 ```
+
+### A reader reads a quiz
+
+_Note: the presence of this event does not mean the quiz was submitted._
+
+```javascript
+{
+  name: 'read_quiz',
+  properties: {
+    case_slug: string,
+    pre_or_post: 'pre' | 'post',
+    quiz_id: number,
+    duration: number
+  }
+}
+```
