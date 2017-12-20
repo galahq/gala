@@ -30,11 +30,7 @@ class AuthorsList extends React.Component<
   handleFinishEditing = (formState: ?AuthorsListFormState) => {
     this.setState({ editing: false })
     if (formState != null) {
-      this.props.onChange({
-        ...formState,
-        authorsString: formState.authors.join(' • '),
-        translatorsString: `Translators: ${formState.translators.join(' • ')}`,
-      })
+      this.props.onChange(formState)
     }
   }
 
