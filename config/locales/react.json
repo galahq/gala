@@ -106,7 +106,12 @@
     "submit": "Submit",
     "close": "Close",
     "finishEditing": "Finish editing",
-    "less.readMore": "Read more"
+    "less.readMore": "Read more",
+
+    "list.two": " and ",
+    "list.start": ", ",
+    "list.middle": ", ",
+    "list.end": ", and "
   },
 
   "fr": {
@@ -212,7 +217,12 @@
     "submit": "Soumettez",
     "close": "Fermez",
     "finishEditing": "Terminez l’édition",
-    "less.readMore": "Lisez la suite"
+    "less.readMore": "Lisez la suite",
+
+    "list.two": " et ",
+    "list.start": ", ",
+    "list.middle": ", ",
+    "list.end": " et "
   },
 
   "ja": {
@@ -310,7 +320,12 @@
     "submit": "提出",
     "close": "閉じる",
     "finishEditing": "編集を完了する",
-    "less.readMore": "続きを読む"
+    "less.readMore": "続きを読む",
+
+    "list.two": "と",
+    "list.start": "と",
+    "list.middle": "と",
+    "list.end": "と"
   },
 
   "zh-CN": {
@@ -408,7 +423,12 @@
     "submit": "提交",
     "close": "关闭",
     "finishEditing": "结束编辑",
-    "less.readMore": "阅读更多"
+    "less.readMore": "阅读更多",
+
+    "list.two": "、",
+    "list.start": "、",
+    "list.middle": "、",
+    "list.end": "和"
   },
 
   "zh-TW": {
@@ -506,7 +526,12 @@
     "submit": "提交",
     "close": "關閉",
     "finishEditing": "結束編輯",
-    "less.readMore": "閱讀更多"
+    "less.readMore": "閱讀更多",
+
+    "list.two": ", ",
+    "list.start": ", ",
+    "list.middle": ", ",
+    "list.end": "和"
   },
 
   "am": {
