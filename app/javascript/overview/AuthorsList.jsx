@@ -8,6 +8,7 @@ import * as React from 'react'
 import { acceptKeyboardClick } from 'shared/keyboard'
 import AuthorsListForm from './AuthorsListForm'
 import Acknowledgements from './Acknowledgements'
+import { FormattedList } from 'shared/react-intl'
 
 import type { Byline } from 'redux/state'
 import type { AuthorsListFormState } from './AuthorsListForm'
@@ -39,21 +40,30 @@ class AuthorsList extends React.Component<
 
   render () {
     const { canEdit, byline } = this.props
-    const { authorsString, translatorsString, acknowledgements } = byline
+    const { authors, translators, acknowledgements } = byline
 
     return (
+      // eslint-disable-next-line
       <div
-        tabIndex={canEdit ? '0' : null}
+        tabIndex={canEdit ? '0' : null} // eslint-disable-line
         role={canEdit ? 'button' : null}
         style={{ cursor: canEdit ? 'pointer' : null }}
         onKeyPress={acceptKeyboardClick}
         onClick={this.handleStartEditing}
       >
         <p>
-          {authorsString}
+          <FormattedList
+            list={authors.map(a => <span key={a.name}>{a.name}</span>)}
+          />
           <Acknowledgements contents={acknowledgements} />
           <br />
-          {translatorsString !== '' && <em>{translatorsString}</em>}
+          {translators.length !== 0 && (
+            <em>
+              <FormattedList
+                list={translators.map(t => <span key={t}>{t}</span>)}
+              />
+            </em>
+          )}
         </p>
         {canEdit && (
           <AuthorsListForm
