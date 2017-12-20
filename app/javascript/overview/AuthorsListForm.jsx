@@ -15,7 +15,7 @@ import { isCompact } from 'shared/functions'
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
 import type { Toast } from '@blueprintjs/core'
-import type { Byline } from 'redux/state'
+import type { Author, Byline } from 'redux/state'
 
 type Props = {
   editing: boolean,
@@ -23,21 +23,16 @@ type Props = {
   displayToast: Toast => void,
   onFinishEditing: (?AuthorsListFormState) => void,
 }
-export type AuthorsListFormState = {
-  authors: string[],
-  translators: string[],
-  acknowledgements: string,
-}
+export type AuthorsListFormState = Byline
 
 class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
   constructor (props: Props) {
     super(props)
 
-    const { authors, translators, acknowledgements } = props.byline
-    this.state = { authors, translators, acknowledgements }
+    this.state = { ...props.byline }
   }
 
-  handleChangeAuthors = (authors: string[]) => {
+  handleChangeAuthors = authors => {
     this.setState({ authors })
   }
 
@@ -45,7 +40,9 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
     this.setState({ translators })
   }
 
-  handleChangeAcknowledgements = (e: SyntheticInputEvent<*>) => {
+  handleChangeAcknowledgements = (
+    e: SyntheticInputEvent<HTMLTextAreaElement>
+  ) => {
     this.setState({ acknowledgements: e.currentTarget.value })
   }
 
@@ -122,10 +119,35 @@ function formStateClean ({
   authors,
   translators,
 }: AuthorsListFormState): boolean {
-  return isCompact(authors) && isCompact(translators)
+  return isCompact(authors.map(a => a.name)) && isCompact(translators)
 }
 
-const AuthorInput = createSortableInput({ placeholder: 'Author name' })
+type AuthorInputProps = { item: Author, onChangeItem: Author => void }
+const AuthorInput = ({ item, onChangeItem }: AuthorInputProps) => (
+  <span style={{ display: 'flex' }}>
+    <input
+      className="pt-input"
+      type="text"
+      placeholder="Author name"
+      value={item.name}
+      onChange={(e: SyntheticInputEvent<*>) => {
+        onChangeItem({ ...item, name: e.target.value })
+      }}
+    />
+
+    <input
+      className="pt-input"
+      style={{ flexGrow: 1 }}
+      type="text"
+      placeholder="Author institution"
+      value={item.institution}
+      onChange={(e: SyntheticInputEvent<*>) => {
+        onChangeItem({ ...item, institution: e.target.value })
+      }}
+    />
+  </span>
+)
+
 const TranslatorInput = createSortableInput({ placeholder: 'Translator name' })
 
 const SectionTitle = styled.h5`
