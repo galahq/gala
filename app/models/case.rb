@@ -7,7 +7,7 @@ class Case < ApplicationRecord
   include Mobility
   translates :kicker, :title, :dek, :summary, :narrative, :translators,
              :learning_objectives, :audience, :classroom_timeline,
-             :acknowledgements,
+             :acknowledgements, :authors,
              fallbacks: true
 
   time_for_a_boolean :published
