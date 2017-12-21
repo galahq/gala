@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { acceptKeyboardClick } from 'shared/keyboard'
 
 import { Intent, Position, Tooltip } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 
 import AuthorsListForm from './AuthorsListForm'
 import Acknowledgements from './Acknowledgements'
@@ -62,6 +63,14 @@ class AuthorsList extends React.Component<
           <br />
           {translators.length !== 0 && (
             <em>
+              <FormattedMessage
+                id="case.translators"
+                defaultMessage="{count, plural,
+                  one {Translator}
+                  other {Translators}
+                }: "
+                values={{ count: translators.length }}
+              />
               <FormattedList
                 list={translators.map(t => <span key={t}>{t}</span>)}
               />
