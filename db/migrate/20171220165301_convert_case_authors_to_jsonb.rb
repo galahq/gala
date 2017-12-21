@@ -2,6 +2,14 @@
 
 require_relative '20171031161433_create_english_cases_search_index'
 
+# HOLY MOLY WHAT?!
+#
+# Yeah, we’re redefining Case to strip out the Mobility extensions.
+# This allows us to access the underlying column authors during the migration
+# without having Mobility try to, say, coerce the array column into jsonb,
+# look for a key 'en', find none, and return the default []
+class Case < ApplicationRecord; end
+
 class ConvertCaseAuthorsToJsonb < ActiveRecord::Migration[5.1]
   def change
     add_column :cases, :authors_jsonb, :jsonb, default: ''
