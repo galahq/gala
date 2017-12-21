@@ -44,6 +44,8 @@
 
     "summary": "Case Summary",
     "case.acknowledgements": "Acknowledgements",
+    "case.translators":
+      "{count, plural, one {Translator} other {Translators} }: ",
     "case.enrollInThisCase": "Enroll in this case",
     "case.enrollForEasyAccess":
       "If this case catches your eye, enroll for easy access.",
@@ -161,6 +163,8 @@
 
     "summary": "Résumé de l’étude de cas",
     "case.acknowledgements": "Remerciements",
+    "case.translators":
+      "{count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : ",
     "case.enrollInThisCase": "Inscrivez-vous dans cette étude de cas",
     "case.enrollForEasyAccess":
       "Si cette étude de cas attire votre attention, inscrivez-vous pour un accès facile.",
@@ -271,6 +275,7 @@
 
     "summary": "要約",
     "case.acknowledgements": "謝辞",
+    "case.translators": "翻訳：",
     "case.enrollInThisCase": "この事例研究に登録する",
     "case.enrollForEasyAccess":
       "このケースが目を引く場合は、簡単に見つけれるよう登録してください。",
