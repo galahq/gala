@@ -117,11 +117,11 @@ export type Activity = {
   url: string,
 }
 
+export type Author = { name: string, institution: string }
+
 export type Byline = {
-  authors: string[],
-  authorsString: string,
+  authors: Author[],
   translators: string[],
-  translatorsString: string,
   acknowledgements: string,
 }
 
