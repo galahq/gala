@@ -14,6 +14,13 @@ SET row_security = off;
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -250,7 +257,6 @@ ALTER SEQUENCE case_elements_id_seq OWNED BY case_elements.id;
 CREATE TABLE cases (
     id integer NOT NULL,
     slug text NOT NULL,
-    authors character varying[] DEFAULT '{}'::character varying[],
     tags text[] DEFAULT '{}'::text[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -273,7 +279,8 @@ CREATE TABLE cases (
     longitude double precision,
     zoom double precision,
     library_id bigint,
-    acknowledgements jsonb
+    acknowledgements jsonb,
+    authors jsonb DEFAULT '""'::jsonb
 );
 
 
@@ -1256,7 +1263,7 @@ ALTER TABLE ONLY cases
 
 CREATE MATERIALIZED VIEW cases_search_index_en AS
  SELECT cases.id,
-    ((((((((((setweight(to_tsvector(COALESCE((cases.kicker ->> 'en'::text), ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE((cases.title ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.dek ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.summary ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.learning_objectives ->> 'en'::text), ''::text)), 'B'::"char")) || to_tsvector((cases.authors)::text)) || setweight(to_tsvector(COALESCE(string_agg((pages.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((podcasts.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((activities.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg((podcasts.credits ->> 'en'::text), ' '::text), ''::text))) || to_tsvector(COALESCE(string_agg(((cards.raw_content -> 'en'::text) ->> 'blocks'::text), ' '::text), ''::text))) AS document
+    ((((((((((setweight(to_tsvector(COALESCE((cases.kicker ->> 'en'::text), ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE((cases.title ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.dek ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.summary ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.learning_objectives ->> 'en'::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE((cases.authors ->> 'en'::text), ''::text))) || setweight(to_tsvector(COALESCE(string_agg((pages.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((podcasts.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((activities.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg((podcasts.credits ->> 'en'::text), ' '::text), ''::text))) || to_tsvector(COALESCE(string_agg(((cards.raw_content -> 'en'::text) ->> 'blocks'::text), ' '::text), ''::text))) AS document
    FROM ((((cases
      LEFT JOIN pages ON ((pages.case_id = cases.id)))
      LEFT JOIN podcasts ON ((podcasts.case_id = cases.id)))
@@ -2290,6 +2297,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171025205053'),
 ('20171030185254'),
 ('20171031161433'),
-('20171113192541');
+('20171113192541'),
+('20171220165301');
 
 

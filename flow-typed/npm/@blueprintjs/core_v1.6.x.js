@@ -317,6 +317,6 @@ declare module '@blueprintjs/core' {
       transitionDuration?: number,
       useSmartArrowPositioning?: boolean,
       useSmartPositioning?: boolean,
-    } & IIntentProps
+    } & IIntentProps & IProps
   > {}
 }

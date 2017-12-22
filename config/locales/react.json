@@ -44,6 +44,8 @@
 
     "summary": "Case Summary",
     "case.acknowledgements": "Acknowledgements",
+    "case.translators":
+      "{count, plural, one {Translator} other {Translators} }: ",
     "case.enrollInThisCase": "Enroll in this case",
     "case.enrollForEasyAccess":
       "If this case catches your eye, enroll for easy access.",
@@ -106,7 +108,12 @@
     "submit": "Submit",
     "close": "Close",
     "finishEditing": "Finish editing",
-    "less.readMore": "Read more"
+    "less.readMore": "Read more",
+
+    "list.two": " and ",
+    "list.start": ", ",
+    "list.middle": ", ",
+    "list.end": ", and "
   },
 
   "fr": {
@@ -156,6 +163,8 @@
 
     "summary": "Résumé de l’étude de cas",
     "case.acknowledgements": "Remerciements",
+    "case.translators":
+      "{count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : ",
     "case.enrollInThisCase": "Inscrivez-vous dans cette étude de cas",
     "case.enrollForEasyAccess":
       "Si cette étude de cas attire votre attention, inscrivez-vous pour un accès facile.",
@@ -212,7 +221,12 @@
     "submit": "Soumettez",
     "close": "Fermez",
     "finishEditing": "Terminez l’édition",
-    "less.readMore": "Lisez la suite"
+    "less.readMore": "Lisez la suite",
+
+    "list.two": " et ",
+    "list.start": ", ",
+    "list.middle": ", ",
+    "list.end": " et "
   },
 
   "ja": {
@@ -261,6 +275,7 @@
 
     "summary": "要約",
     "case.acknowledgements": "謝辞",
+    "case.translators": "翻訳：",
     "case.enrollInThisCase": "この事例研究に登録する",
     "case.enrollForEasyAccess":
       "このケースが目を引く場合は、簡単に見つけれるよう登録してください。",
@@ -310,7 +325,12 @@
     "submit": "提出",
     "close": "閉じる",
     "finishEditing": "編集を完了する",
-    "less.readMore": "続きを読む"
+    "less.readMore": "続きを読む",
+
+    "list.two": "と",
+    "list.start": "と",
+    "list.middle": "と",
+    "list.end": "と"
   },
 
   "zh-CN": {
@@ -408,7 +428,12 @@
     "submit": "提交",
     "close": "关闭",
     "finishEditing": "结束编辑",
-    "less.readMore": "阅读更多"
+    "less.readMore": "阅读更多",
+
+    "list.two": "、",
+    "list.start": "、",
+    "list.middle": "、",
+    "list.end": "和"
   },
 
   "zh-TW": {
@@ -506,7 +531,12 @@
     "submit": "提交",
     "close": "關閉",
     "finishEditing": "結束編輯",
-    "less.readMore": "閱讀更多"
+    "less.readMore": "閱讀更多",
+
+    "list.two": ", ",
+    "list.start": ", ",
+    "list.middle": ", ",
+    "list.end": "和"
   },
 
   "am": {

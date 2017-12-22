@@ -5,10 +5,9 @@ class Case < ApplicationRecord
   include Comparable
 
   include Mobility
-  translates :kicker, :title, :dek, :summary, :narrative, :translators,
-             :learning_objectives, :audience, :classroom_timeline,
-             :acknowledgements,
-             fallbacks: true
+  translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
+             :audience, :classroom_timeline, :acknowledgements, fallbacks: true
+  translates :authors, :translators, default: [], fallbacks: true
 
   time_for_a_boolean :published
   time_for_a_boolean :featured
@@ -65,10 +64,6 @@ class Case < ApplicationRecord
 
   def other_available_locales
     read_attribute(:title).keys - [I18n.locale.to_s]
-  end
-
-  def translators
-    super || []
   end
 
   def readers_by_enrollment_status

@@ -22,9 +22,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     title,
     photoCredit,
     authors,
-    authorsString,
     translators,
-    translatorsString,
     acknowledgements,
     coverUrl,
     library,
@@ -37,8 +35,6 @@ function mapStateToProps ({ edit, caseData }: State) {
     coverUrl,
     authors,
     translators,
-    authorsString,
-    translatorsString,
     acknowledgements,
     library,
     editing: edit.inProgress,
@@ -63,8 +59,6 @@ export const UnconnectedBillboardTitle = ({
   photoCredit,
   authors,
   translators,
-  authorsString,
-  translatorsString,
   acknowledgements,
   coverUrl,
   updateCase,
@@ -97,8 +91,6 @@ export const UnconnectedBillboardTitle = ({
           byline={{
             authors,
             translators,
-            authorsString,
-            translatorsString,
             acknowledgements,
           }}
           onChange={(value: Byline) => updateCase(value)}
