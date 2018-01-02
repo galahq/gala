@@ -2,10 +2,42 @@
 
 source 'https://rubygems.org'
 
-gem 'pg', '~> 0.18'
-gem 'puma', '~> 3.0'
 gem 'rails', '>= 5.1.0', '< 5.2'
 
+# Infrastructure
+gem 'connection_pool'
+gem 'dalli'
+gem 'pg', '~> 0.18'
+gem 'puma', '~> 3.0'
+gem 'rack-canonical-host'
+gem 'redis', '~> 3.0'
+
+# Models
+gem 'acts_as_list'
+gem 'memoist'
+gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'
+gem 'virtus'
+
+# Authentication and Authorization
+gem 'authority'
+gem 'devise', '~> 4.1'
+gem 'devise-i18n'
+gem 'ims-lti'
+gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
+gem 'rolify'
+
+# Events
+gem 'ahoy_matey', git: 'https://github.com/ankane/ahoy'
+gem 'groupdate'
+
+# Localization
+gem 'http_accept_language'
+gem 'i18n_generators'
+gem 'mobility'
+
+# View Interpreters
 gem 'haml'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.0'
@@ -18,25 +50,27 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'webpacker', git: 'https://github.com/rails/webpacker'
 
+# Front-end
 gem 'bourbon'
 gem 'coffee-rails'
 gem 'jquery-rails'
 
-gem 'connection_pool'
-gem 'dalli'
-gem 'redis', '~> 3.0'
-
+# Logging and Monitoring
 gem 'awesome_print'
 gem 'lograge'
 gem 'newrelic_rpm'
 gem 'scout_apm'
+gem 'table_print'
 
-# To seed the database for Heroku review apps, this is included in production
-gem 'factory_bot_rails'
-gem 'faker'
-
-group :test do
-  gem 'database_cleaner'
+group :development do
+  gem 'foreman'
+  gem 'listen', '~> 3.1.5'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'bullet'
+  gem 'letter_opener'
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'web-console'
 end
 
 group :development, :test do
@@ -52,43 +86,12 @@ group :development, :test do
   gem 'spring-commands-rspec'
 end
 
-group :development do
-  gem 'foreman'
-  gem 'listen', '~> 3.1.5'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'bullet'
-  gem 'letter_opener'
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'web-console'
+# To seed the database for Heroku review apps, this is included in production
+gem 'factory_bot_rails'
+gem 'faker'
+
+group :test do
+  gem 'database_cleaner'
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'table_print'
-gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
-
-gem 'acts_as_list'
-gem 'memoist'
-gem 'virtus'
-
-gem 'authority'
-gem 'devise', '~> 4.1'
-gem 'devise-i18n'
-gem 'ims-lti'
-gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
-gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
-gem 'rolify'
-
-gem 'ahoy_matey', git: 'https://github.com/ankane/ahoy'
-gem 'groupdate'
-
-gem 'http_accept_language'
-gem 'i18n_generators'
-gem 'mobility'
-
-gem 'rack-canonical-host'
-
-gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'
 
 ruby '2.4.2'
