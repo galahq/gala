@@ -10,7 +10,7 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all.includes(:case_elements, :library)
+    @cases = Case.all.ordered.includes(:case_elements, :library)
   end
 
   # GET /cases/1
@@ -86,8 +86,8 @@ class CasesController < ApplicationController
     params.require(:case).permit(
       :published, :featured, :kicker, :title, :dek, :slug, :photo_credit,
       :summary, :tags, :cover_url, :latitude, :longitude, :zoom,
-      :acknowledgements, authors: [:name, :institution], translators: [],
-      learning_objectives: []
+      :acknowledgements, authors: %i[name institution], translators: [],
+                         learning_objectives: []
     )
   end
 end

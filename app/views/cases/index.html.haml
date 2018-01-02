@@ -1,32 +1,29 @@
-= render "admin_cases_menu"
-
-%main.admin-board
-  %h2
+.admin.pt-dark
+  %h1.admin__title
     All Cases
 
-  %table
+  = link_to "New Case", new_case_path, class: "pt-button"
+
+  %table.admin-cases.pt-table
     %thead
-      %td.admin-case-slug Slug
       %td
-      %td
-      %td Catalog Position
+      %td Case Title
+      %td Slug
+      %td Library
+      %td Featured
       %td Published
-      -#%td Category
-      %td
-        = button_to "New Case", new_case_path, class: "button--subtle button--subtle--reverse",
-          method: :get
     %tbody
       -@cases.each do |kase|
         %tr
-          %td.admin-case-slug=kase.slug
           %td
-            %img.admin-case-cover-thumbnail{src: ix_cover_image(kase, :small)}
-          %td=kase.kicker.upcase
-          %td=kase.catalog_position.humanize.titlecase
-          %td{class: "admin-case-date#{kase.published_at.nil? ? '--forthcoming' : '--published'}"}
-            =kase.published_at || "Forthcoming"
-          -#%td
+            %img.admin-cases__thumbnail{src: ix_cover_image(kase, :small)}
           %td
-            = button_to "Edit Case", case_path(kase, anchor: "/edit"),
-              method: :get,
-              class: "button--subtle"
+            %span.admin-cases__slug= kase.kicker
+            = kase.title
+          %td
+            %code= kase.slug
+          %td= kase.library.name
+          %td{title: kase.featured_at}
+            = time_ago_in_words kase.featured_at unless kase.featured_at.nil?
+          %td{title: kase.published_at}
+            = time_ago_in_words kase.published_at unless kase.published_at.nil?
