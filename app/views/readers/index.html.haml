@@ -1,6 +1,10 @@
 = render "admin_readers_menu"
 
-.admin.pt-dark
+.admin.admin__readers.pt-dark
+  = form_for readers_path, method: :get, enforce_utf8: false do |f|
+    = text_field_tag :q, params[:q], class: %w[pt-input pt-round],
+                                     placeholder: 'Search readers...'
+
   %h1.admin__title Reader Accounts
 
   %table.admin__table.pt-table
@@ -28,6 +32,6 @@
           %span.previous
             = link_to_previous_page @readers, t('views.pagination.previous').html_safe
           %span.info
-            = page_entries_info @readers
+            = page_entries_info @readers, entry_name: 'reader'
           %span.next
             = link_to_next_page @readers, t('views.pagination.next').html_safe

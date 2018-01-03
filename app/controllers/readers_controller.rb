@@ -11,7 +11,9 @@ class ReadersController < ApplicationController
   # GET /readers.json
   def index
     @readers = Reader.page(params[:page])
+                     .merge(maybe_filter_by_name)
                      .preload(:roles)
+
     @roles = Role.where(name: %w[editor invisible])
 
     render layout: 'admin'
@@ -58,6 +60,11 @@ class ReadersController < ApplicationController
   end
 
   private
+
+  def maybe_filter_by_name
+    return Reader.all unless params[:q]
+    Reader.where 'name ILIKE ?', "#{params[:q]}%"
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_reader
