@@ -9,7 +9,7 @@ feature 'Doing a pre-/post-assessment' do
 
   scenario 'works' do
     login_as reader
-    visit new_enrollment_path key: deployment.key
+    visit magic_link_path key: deployment.key
     click_button 'Let’s get started!'
     click_link kase.pages.first.title
     expect(page).to have_content deployment.quiz.questions.first.content
