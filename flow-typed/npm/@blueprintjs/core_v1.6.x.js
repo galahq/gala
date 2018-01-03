@@ -18,7 +18,7 @@ declare module '@blueprintjs/core' {
     | DANGER
     | typeof undefined
 
-  declare export interface Intent {
+  declare export class Intent {
     static PRIMARY: PRIMARY,
     static SUCCESS: SUCCESS,
     static WARNING: WARNING,
@@ -51,7 +51,7 @@ declare module '@blueprintjs/core' {
     | LEFT
     | LEFT_TOP
 
-  declare export interface Position {
+  declare export class Position {
     static TOP_LEFT: TOP_LEFT,
     static TOP: TOP,
     static TOP_RIGHT: TOP_RIGHT,
@@ -76,7 +76,7 @@ declare module '@blueprintjs/core' {
     | HOVER
     | HOVER_TARGET_ONLY
 
-  declare export interface PopoverInteractionKind {
+  declare export class PopoverInteractionKind {
     static CLICK: CLICK,
     static CLICK_TARGET_ONLY: CLICK_TARGET_ONLY,
     static HOVER: HOVER,
