@@ -149,6 +149,9 @@ en:
       create: Create %{model}
       submit: Save %{model}
       update: Update %{model}
+    page_entries_info:
+      more_pages:
+        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
   number:
     currency:
       format:

@@ -1,21 +1,33 @@
 = render "admin_readers_menu"
 
-%main.admin-board
-  %h2 Reader Accounts
-  %table
+.admin.pt-dark
+  %h1.admin__title Reader Accounts
+
+  %table.admin__table.pt-table
     %thead
       %td Name
       %td Email
       %td Provider
       %td Last Signed In
-      - Role.all.each do |role|
+      - @roles.each do |role|
         %td=role.name.capitalize
     -@readers.each do |reader|
       %tr{data: { reader_id: reader.id }}
-        %td= render reader
-        %td= reader.email
+        %td= reader.name
+        %td
+          %code= reader.email
         %td= reader.provider.capitalize rescue "—"
         %td= time_ago_in_words(reader.last_sign_in_at) rescue ""
-        - Role.all.each do |role|
+        - @roles.each do |role|
           %td
             = toggle_role_button reader, role
+
+    %tfoot
+      %tr
+        %td.pagination{colspan: 4 + @roles.length}
+          %span.previous
+            = link_to_previous_page @readers, t('views.pagination.previous').html_safe
+          %span.info
+            = page_entries_info @readers
+          %span.next
+            = link_to_next_page @readers, t('views.pagination.next').html_safe
