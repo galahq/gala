@@ -42,19 +42,65 @@ div.window.window-admin
     td
       padding: 0.5em 1em
 
-.admin-case-slug
-  text-align: right
+.admin
+  padding: 2em
 
-tbody .admin-case-slug
-  font-size: 11pt !important
-  font-family: "fira-mono" !important
+  &--centered
+    margin: 0 auto
 
-.admin-case-date--forthcoming
-  opacity: 0.6
+  &__title
+    font-family: $sansFont
+    font-size: 21px
+    font-weight: 600
+    margin: 0 0 10px
+    padding: 0
+    line-height: .9em
 
-.admin-board h2
-  font-family: $headlineFont
-  color: $white
-  font-size: 1.2em
-  line-height: 1.1em
-  margin: 0.8em 0
+  &__table
+    line-height: 1.3
+
+    & tr td
+      vertical-align: middle
+
+    &__thumbnail
+      width: 50px
+      height: 50px
+      border-radius: 2px
+
+    &__slug
+      display: block
+      font-weight: 600
+
+    & a
+      color: $white
+
+      &:hover
+        color: $white
+        text-decoration: underline
+
+  &__readers
+    width: 100%
+    max-width: 1000px
+
+    .admin__table
+      width: 100%
+
+    #name
+      float: right
+
+.pagination.pagination
+  text-align: center
+
+  .previous,
+  .next
+    display: inline-block
+    width: 100px
+
+  .previous
+    font-weight: 600
+    margin-right: 0.5em
+    text-align: right
+  .next
+    font-weight: 600
+    margin-left: 0.5em
+    text-align: left

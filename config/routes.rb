@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     resources :comment_threads, only: %i[show destroy] do
       resources :comments, shallow: true, only: %i[create update destroy]
     end
-    resources :cases, except: %i[create edit], param: :slug do
+    resources :cases, only: %i[index show new create update], param: :slug do
       resources :case_elements, shallow: true, only: %i[update]
       resources :activities, shallow: true
       resources :podcasts, shallow: true do
@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       resources :comment_threads, only: %i[index]
       resources :communities, only: %i[index]
 
-      resource :enrollment, only: %i[destroy]
+      resource :enrollment, only: %i[create destroy]
 
       get '*react_router_location', to: 'cases#show'
 
@@ -59,21 +59,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :enrollments, only: %i[index new create]
+    resources :enrollments, only: %i[index]
+    resource :magic_link, only: %i[show create]
 
     scope 'admin' do
       resources :readers, except: %i[show edit update] do
         resources :roles, only: %i[create destroy]
-      end
-
-      resources :cases, only: %i[create edit], param: :slug do
-        resources :readers, only: %i[destroy] do
-          resources :enrollments, only: [] do
-            collection do
-              put :upsert
-            end
-          end
-        end
       end
 
       resources :groups

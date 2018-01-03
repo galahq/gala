@@ -10,7 +10,7 @@ feature 'Following a magic link' do
     let(:reader) { create :reader }
 
     scenario 'while not logged in' do
-      visit new_enrollment_path key: deployment.key
+      visit magic_link_path key: deployment.key
       click_button 'Let’s get started!'
       login_as reader
       expect(page).to have_content deployment.group.name
@@ -19,7 +19,7 @@ feature 'Following a magic link' do
 
     scenario 'while logged in' do
       login_as reader
-      visit new_enrollment_path key: deployment.key
+      visit magic_link_path key: deployment.key
       click_button 'Let’s get started!'
       expect(page).to have_content deployment.group.name
       expect(page).not_to have_content 'Enroll in this case'
@@ -32,7 +32,7 @@ feature 'Following a magic link' do
                         active_group_id: nil,
                         status: :instructor
       quiz_deployment = create :deployment, :with_pretest, case: kase
-      visit new_enrollment_path key: quiz_deployment.key
+      visit magic_link_path key: quiz_deployment.key
       click_button 'Let’s get started!'
       expect(page).to have_content quiz_deployment.group.name
       expect(page).not_to have_content 'Enroll in this case'
@@ -42,7 +42,7 @@ feature 'Following a magic link' do
   end
 
   scenario 'creating an account' do
-    visit new_enrollment_path key: deployment.key
+    visit magic_link_path key: deployment.key
     click_button 'Let’s get started!'
     reader = build :reader
     fill_in 'Name', with: reader.name
@@ -61,7 +61,7 @@ feature 'Following a magic link' do
   end
 
   scenario 'signing in with Google' do
-    visit new_enrollment_path key: deployment.key
+    visit magic_link_path key: deployment.key
     click_button 'Let’s get started!'
     find('.oauth-icon-google').click
     expect(page).to have_content deployment.group.name

@@ -1,8 +1,6 @@
 @import _globals
 
 form
-  color: $purple
-
   .field div
     display: inline
 
@@ -16,6 +14,8 @@ select, input, textarea, button
   font-family: $sansFont
 
 .edit_reader, .new_reader
+  color: $purple
+
   label:not(.notification)
     font: 600 80% $sansFont
     text-transform: uppercase
@@ -117,3 +117,6 @@ form + ul
 .actions--horizontal
   display: flex
   flex-flow: column
+
+.form__errors
+  margin-bottom: 1em

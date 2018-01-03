@@ -289,9 +289,8 @@ export function toggleFeatured (): ThunkAction {
 
 export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const enrollment = await Orchard.espalier(
-      `admin/cases/${caseSlug}/readers/${readerId}/enrollments/upsert`
-    )
+    const enrollment = await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
+
     dispatch(setReaderEnrollment(!!enrollment))
     dispatch(fetchCommunities(caseSlug))
     dispatch(fetchCommentThreads(caseSlug))
