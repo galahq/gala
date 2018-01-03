@@ -4,7 +4,7 @@
 
   = link_to "New Case", new_case_path, class: "pt-button"
 
-  %table.admin-cases.pt-table
+  %table.admin__table.pt-table
     %thead
       %td
       %td Case Title
@@ -16,9 +16,9 @@
       -@cases.each do |kase|
         %tr
           %td
-            %img.admin-cases__thumbnail{src: ix_cover_image(kase, :small)}
+            %img.admin__table__thumbnail{src: ix_cover_image(kase, :small)}
           %td
-            %span.admin-cases__slug= kase.kicker
+            %span.admin__table__slug= kase.kicker
             = kase.title
           %td
             %code= kase.slug

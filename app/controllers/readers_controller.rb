@@ -10,8 +10,9 @@ class ReadersController < ApplicationController
   # GET /readers
   # GET /readers.json
   def index
-    @readers = Reader.all.order(:name).preload(:roles)
-                     .includes(:cases, enrollments: [:case])
+    @readers = Reader.page(params[:page])
+                     .preload(:roles)
+    @roles = Role.where(name: %w[editor invisible])
 
     render layout: 'admin'
   end
@@ -30,11 +31,16 @@ class ReadersController < ApplicationController
     respond_to do |format|
       if @reader.update(reader_params)
         bypass_sign_in @reader if reader_params.key? :password
-        format.html { redirect_to edit_profile_path, notice: 'Reader was successfully updated.' }
+        format.html do
+          redirect_to edit_profile_path,
+                      notice: 'Reader was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @reader }
       else
         format.html { render :edit }
-        format.json { render json: @reader.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @reader.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -44,7 +50,9 @@ class ReadersController < ApplicationController
   def destroy
     @reader.destroy
     respond_to do |format|
-      format.html { redirect_to readers_url, notice: 'Reader was successfully destroyed.' }
+      format.html do
+        redirect_to readers_url, notice: 'Reader was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
