@@ -52,7 +52,7 @@ import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
             communities={[{ groupData }]}
           />
 
-          <form action="/enrollments" method="POST">
+          <form action="/magic_link" method="POST">
             <input type="hidden" name="deployment_key" value={deploymentKey} />
             <Button>Let’s get started!</Button>
           </form>
