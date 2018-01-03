@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       resources :comment_threads, only: %i[index]
       resources :communities, only: %i[index]
 
-      resource :enrollment, only: %i[destroy]
+      resource :enrollment, only: %i[create destroy]
 
       get '*react_router_location', to: 'cases#show'
 
@@ -59,7 +59,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :enrollments, only: %i[index new create]
+    resources :enrollments, only: %i[index]
+    resource :magic_link, only: %i[show create]
 
     scope 'admin' do
       resources :readers, except: %i[show edit update] do

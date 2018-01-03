@@ -16,8 +16,9 @@ export class Orchard {
       ? `?${qs.stringify(params, { arrayFormat: 'brackets' })}`
       : ''
     const r = new Request(
-      `${window.galaHostname || ''}/${window.i18n
-        .locale}/${endpoint}.json${query}`,
+      `${window.galaHostname || ''}/${
+        window.i18n.locale
+      }/${endpoint}.json${query}`,
       { credentials: 'same-origin' }
     )
     return fetch(r).then(this._handleResponse)
@@ -63,7 +64,7 @@ export class Orchard {
 
   static _handleResponse (response: Response): Promise<any> {
     if (response.ok) {
-      return response.json()
+      return response.json().catch(() => Promise.resolve(true))
     } else {
       return response.json().then((errorResponse: ErrorResponse) => {
         const errorFieldNames = keys(errorResponse)
