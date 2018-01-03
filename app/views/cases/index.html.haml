@@ -18,7 +18,8 @@
           %td
             %img.admin__table__thumbnail{src: ix_cover_image(kase, :small)}
           %td
-            %span.admin__table__slug= kase.kicker
+            = link_to case_path kase do
+              %span.admin__table__slug= kase.kicker
             = kase.title
           %td
             %code= kase.slug
