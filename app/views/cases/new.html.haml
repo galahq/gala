@@ -1,4 +1,24 @@
-= render "admin_cases_menu"
+.admin.admin--centered
+  .pt-card.pt-elevation-2
+    = form_for @case, builder: BlueprintFormBuilder do |f|
+      %h1.admin__title= "New Case"
 
-%main
-  = render 'form'
+      - if @case.errors.any?
+        .pt-callout.pt-intent-danger.pt-icon-error.form__errors
+          %h5 The case could not be saved
+          - @case.errors.full_messages.each do |msg|
+            %div= msg
+
+      - slug_format = 'A unique string of lowercase letters or numbers separated by hyphens.'
+      = f.form_group :slug, in_parens: 'required',
+                            helper_text: slug_format do |f, error_classes|
+        .pt-input-group{class: error_classes}
+          %span.pt-icon.pt-icon-link
+          = f.text_field :slug, class: %w[pt-input], placeholder: 'example-slug'
+
+      = f.form_group :library_id do |f, error_classes|
+        .pt-select.pt-fill{class: error_classes}
+          = f.select :library_id, @libraries.map { |l| [l.name, l.id]  },
+                   { include_blank: t('activerecord.models.shared_cases_library') }
+      .actions
+        = f.submit class: %w[pt-button pt-intent-success]

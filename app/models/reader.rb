@@ -2,13 +2,10 @@
 
 # Mock public API in AnonymousReader
 class Reader < ApplicationRecord
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-         :trackable, :validatable, :confirmable
-
   include Authority::UserAbilities
   include Authority::Abilities
 
-  rolify
+  default_scope { order(:name) }
 
   has_many :authentication_strategies, dependent: :destroy
 
@@ -33,6 +30,11 @@ class Reader < ApplicationRecord
   has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id'
 
   before_update :set_created_password, if: :encrypted_password_changed?
+
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable,
+         :trackable, :validatable, :confirmable
+
+  rolify
 
   def self.from_omniauth(auth)
     info = auth.info

@@ -3,6 +3,7 @@
 class CasesController < ApplicationController
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
+  before_action :set_libraries, only: %i[new create edit]
 
   authorize_actions_for Case, except: %i[index show]
 
@@ -10,7 +11,7 @@ class CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all.includes(:case_elements, :library)
+    @cases = Case.all.ordered.includes(:case_elements, :library)
   end
 
   # GET /cases/1
@@ -26,6 +27,8 @@ class CasesController < ApplicationController
   def new
     @case = Case.new
   end
+
+  def edit; end
 
   # POST /cases
   def create
@@ -75,6 +78,10 @@ class CasesController < ApplicationController
     ).first
   end
 
+  def set_libraries
+    @libraries = Library.all
+  end
+
   def set_group_and_deployment
     @enrollment = current_user.enrollment_for_case @case
     @group = @enrollment.try(:active_group) || GlobalGroup.new
@@ -86,8 +93,8 @@ class CasesController < ApplicationController
     params.require(:case).permit(
       :published, :featured, :kicker, :title, :dek, :slug, :photo_credit,
       :summary, :tags, :cover_url, :latitude, :longitude, :zoom,
-      :acknowledgements, authors: [:name, :institution], translators: [],
-      learning_objectives: []
+      :acknowledgements, :library_id,
+      authors: %i[name institution], translators: [], learning_objectives: []
     )
   end
 end

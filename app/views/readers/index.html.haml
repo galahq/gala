@@ -1,21 +1,44 @@
-= render "admin_readers_menu"
+%nav.admin-menu.admin-menu-secondary
+  %ul
+    %li= link_to "All Readers", readers_path
+    %li= link_to "Editors", readers_path(role: 'editor')
+    %li= link_to "Invisible Readers", readers_path(role: 'invisible')
 
-%main.admin-board
-  %h2 Reader Accounts
-  %table
+.admin.admin__readers.pt-dark
+  = form_for readers_path, method: :get, enforce_utf8: false do |f|
+    = hidden_field_tag :role, params[:role]
+    = text_field_tag :name, params[:name], class: %w[pt-input pt-round],
+                                     placeholder: 'Search readers...'
+
+  %h1.admin__title
+    = params[:role].try(&:capitalize)
+    Readers
+
+  %table.admin__table.pt-table
     %thead
       %td Name
       %td Email
       %td Provider
       %td Last Signed In
-      - Role.all.each do |role|
+      - @roles.each do |role|
         %td=role.name.capitalize
     -@readers.each do |reader|
       %tr{data: { reader_id: reader.id }}
-        %td= render reader
-        %td= reader.email
+        %td= reader.name
+        %td
+          %code= reader.email
         %td= reader.provider.capitalize rescue "—"
         %td= time_ago_in_words(reader.last_sign_in_at) rescue ""
-        - Role.all.each do |role|
+        - @roles.each do |role|
           %td
             = toggle_role_button reader, role
+
+    %tfoot
+      %tr
+        %td.pagination{colspan: 4 + @roles.length}
+          %span.previous
+            = link_to_previous_page @readers, t('views.pagination.previous').html_safe
+          %span.info
+            = page_entries_info @readers, entry_name: 'reader'
+          %span.next
+            = link_to_next_page @readers, t('views.pagination.next').html_safe
