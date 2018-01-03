@@ -10,9 +10,9 @@ class ReadersController < ApplicationController
   # GET /readers
   # GET /readers.json
   def index
-    @readers = Reader.page(params[:page])
-                     .merge(maybe_filter_by_name)
-                     .preload(:roles)
+    @readers = FindReaders.by(**search_params)
+                          .page(params[:page])
+                          .preload(:roles)
 
     @roles = Role.where(name: %w[editor invisible])
 
@@ -61,11 +61,6 @@ class ReadersController < ApplicationController
 
   private
 
-  def maybe_filter_by_name
-    return Reader.all unless params[:q]
-    Reader.where 'name ILIKE ?', "#{params[:q]}%"
-  end
-
   # Use callbacks to share common setup or constraints between actions.
   def set_reader
     @reader = if params[:id].blank?
@@ -75,7 +70,10 @@ class ReadersController < ApplicationController
               end
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
+  def search_params
+    params.permit(:name, :role).to_h.symbolize_keys
+  end
+
   def reader_params
     unless defined? @reader_can_set_password
       @reader_can_set_password = @reader && !@reader.created_password
