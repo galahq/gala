@@ -12,7 +12,9 @@ class DeploymentsController < ApplicationController
     the_group = Group.find params[:group_id]
     the_case = Case.find_by_slug params[:case_slug]
 
-    @deployment = Deployment.find_or_initialize_by(group: the_group, case: the_case) do |d|
+    @deployment = Deployment.find_or_initialize_by(
+      group: the_group, case: the_case
+    ) do |d|
       d.answers_needed = 0
     end
 
@@ -34,7 +36,7 @@ class DeploymentsController < ApplicationController
     author_id = current_reader.try :id
     customizer = CustomizeDeploymentService.new @deployment, author_id, lti_uid
 
-    result = customizer.customize **deployment_params
+    result = customizer.customize(**deployment_params)
 
     if result.errors.empty?
       render
@@ -54,13 +56,12 @@ class DeploymentsController < ApplicationController
   end
 
   def set_recommended_quizzes
-    reader = begin
-               current_reader
-             rescue
-               nil
-             end
-    custom_quizzes = @deployment.case.quizzes.authored_by reader: reader, lti_uid: lti_uid
-    @recommended_quizzes = [] + @deployment.case.quizzes.recommended + custom_quizzes
+    reader = reader_signed_in? ? current_reader : nil
+    recommended_quizzes = @deployment.case.quizzes.recommended
+    custom_quizzes = @deployment.case.quizzes
+                                .authored_by reader: reader, lti_uid: lti_uid
+
+    @recommended_quizzes = [] + recommended_quizzes + custom_quizzes
   end
 
   def set_selection_params
@@ -77,8 +78,10 @@ class DeploymentsController < ApplicationController
   end
 
   def deployment_params
-    params.require(:deployment).permit(:answers_needed, :quiz_id,
-                                       custom_questions: [:id, :content, :correct_answer, options: []])
+    params.require(:deployment).permit(
+      :answers_needed, :quiz_id,
+      custom_questions: [:id, :content, :correct_answer, options: []]
+    )
           .to_h
           .symbolize_keys
   end

@@ -5,7 +5,7 @@ class LibrariesController < ApplicationController
 
   # GET /libraries/slug.json
   def show
-    head(:not_found) && return unless @library
+    return head(:not_found) unless @library
   end
 
   private
