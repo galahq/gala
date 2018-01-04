@@ -7,17 +7,7 @@ class EdgenotesController < ApplicationController
 
   authorize_actions_for Edgenote, except: %i[show]
 
-  # GET /edgenotes
-  def index
-    @edgenotes = Edgenote.all
-
-    render json: @edgenotes
-  end
-
-  # GET /edgenotes/1
-  def show; end
-
-  # POST /edgenotes
+  # POST /cases/case-slug/edgenotes
   def create
     @edgenote = @case.edgenotes.build(
       slug: params[:slug],
@@ -32,7 +22,7 @@ class EdgenotesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /edgenotes/1
+  # PATCH/PUT /edgenotes/slug
   def update
     if @edgenote.update(edgenote_params)
       render partial: 'edgenote', locals: { edgenote: @edgenote }
@@ -41,7 +31,7 @@ class EdgenotesController < ApplicationController
     end
   end
 
-  # DELETE /edgenotes/1
+  # DELETE /edgenotes/slug
   def destroy
     @edgenote.destroy
   end

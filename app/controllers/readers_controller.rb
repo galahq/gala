@@ -8,7 +8,6 @@ class ReadersController < ApplicationController
   authorize_actions_for Case, only: %i[index destroy]
 
   # GET /readers
-  # GET /readers.json
   def index
     @readers = FindReaders.by(**search_params)
                           .page(params[:page])
@@ -19,15 +18,15 @@ class ReadersController < ApplicationController
     render layout: 'admin'
   end
 
+  # GET /profile
   def show; end
 
-  # GET /readers/1/edit
+  # GET /profile/edit
   def edit
     authorize_action_for @reader
   end
 
-  # PATCH/PUT /readers/1
-  # PATCH/PUT /readers/1.json
+  # PATCH/PUT /profile
   def update
     authorize_action_for @reader
     respond_to do |format|
@@ -37,25 +36,13 @@ class ReadersController < ApplicationController
           redirect_to edit_profile_path,
                       notice: 'Reader was successfully updated.'
         end
-        format.json { render :show, status: :ok, location: @reader }
+        format.json { render :show, status: :ok, location: profile_path }
       else
         format.html { render :edit }
         format.json do
           render json: @reader.errors, status: :unprocessable_entity
         end
       end
-    end
-  end
-
-  # DELETE /readers/1
-  # DELETE /readers/1.json
-  def destroy
-    @reader.destroy
-    respond_to do |format|
-      format.html do
-        redirect_to readers_url, notice: 'Reader was successfully destroyed.'
-      end
-      format.json { head :no_content }
     end
   end
 

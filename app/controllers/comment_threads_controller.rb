@@ -6,6 +6,7 @@ class CommentThreadsController < ApplicationController
   before_action :set_card, only: [:create]
   before_action :set_comment_thread, only: %i[show destroy]
 
+  # GET /cases/case-slug/comment_threads
   def index
     @forum = current_reader.active_community.forums.find_by(case: @case)
     @comment_threads = if @forum.nil?
@@ -18,6 +19,7 @@ class CommentThreadsController < ApplicationController
                        end
   end
 
+  # POST /cards/1/comment_threads
   def create
     @comment_thread = @card.comment_threads.build(comment_thread_params)
     @comment_thread.reader = current_reader
@@ -31,12 +33,18 @@ class CommentThreadsController < ApplicationController
     end
   end
 
+  # GET /comment_threads/1
+  #
+  # This is the permalink to a comment thread that is sent to to the user in a
+  # notification email. The comment thread is actually presented in a view of
+  # the case react app.
   def show
     current_reader.update active_community_id: @comment_thread.forum
                                                               .community.id
     redirect_to conversation_comment_thread_url @comment_thread
   end
 
+  # DELETE /comment_threads/1
   def destroy
     authorize_action_for @comment_thread
     @comment_thread.destroy
@@ -61,7 +69,8 @@ class CommentThreadsController < ApplicationController
   end
 
   def comment_thread_params
-    params.require(:comment_thread).permit(:start, :length, :block_index, :original_highlight_text)
+    params.require(:comment_thread)
+          .permit(:start, :length, :block_index, :original_highlight_text)
   end
 
   def conversation_comment_thread_url(comment_thread)

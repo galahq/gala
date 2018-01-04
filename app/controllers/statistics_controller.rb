@@ -6,6 +6,7 @@ class StatisticsController < ApplicationController
 
   authorize_actions_for Case, all_actions: :update
 
+  # GET /#{trackable member path}/statistics
   def show
     render partial: 'trackable/statistics', locals: { trackable: @trackable }
   end

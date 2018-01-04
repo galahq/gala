@@ -7,19 +7,7 @@ class ActivitiesController < ApplicationController
 
   authorize_actions_for Activity
 
-  # GET /activities
-  def index
-    @activities = Activity.all
-
-    render json: @activities
-  end
-
-  # GET /activities/1
-  def show
-    render json: @activity
-  end
-
-  # POST /activities
+  # POST /cases/case-slug/activities
   def create
     @activity = Activity.create_as_element @case, title: 'New activity'
 
