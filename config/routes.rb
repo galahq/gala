@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
+
 LOCALES = Rails.application.config.i18n.available_locales
 LOCALE_REGEX = /#{LOCALES.map(&:to_s).join("|")}/
 
@@ -108,9 +110,11 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :authentication_strategies,
-             only: :omniauth_callbacks,
-             controllers: {
-               omniauth_callbacks: 'authentication_strategies/omniauth_callbacks'
-             }
+  devise_for(
+    :authentication_strategies,
+    only: :omniauth_callbacks,
+    controllers: {
+      omniauth_callbacks: 'authentication_strategies/omniauth_callbacks'
+    }
+  )
 end
