@@ -28,8 +28,6 @@ class CasesController < ApplicationController
     @case = Case.new
   end
 
-  def edit; end
-
   # POST /cases
   def create
     @case = Case.new(case_params)
@@ -56,11 +54,6 @@ class CasesController < ApplicationController
     else
       render json: @case.errors, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /cases/1
-  def destroy
-    @case.destroy
   end
 
   private

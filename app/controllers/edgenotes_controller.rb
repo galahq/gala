@@ -7,16 +7,6 @@ class EdgenotesController < ApplicationController
 
   authorize_actions_for Edgenote, except: %i[show]
 
-  # GET /edgenotes
-  def index
-    @edgenotes = Edgenote.all
-
-    render json: @edgenotes
-  end
-
-  # GET /edgenotes/1
-  def show; end
-
   # POST /edgenotes
   def create
     @edgenote = @case.edgenotes.build(

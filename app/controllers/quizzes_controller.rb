@@ -2,27 +2,10 @@
 
 class QuizzesController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_quiz, except: [:create]
-  authorize_actions_for Quiz, except: [:show]
+  before_action :set_quiz
 
   def show
     authorize_action_for @quiz
-  end
-
-  def create
-    if @quiz.create quiz_params
-      render @quiz, status: :created
-    else
-      render json: @quiz.errors, status: :unprocessable_entity
-    end
-  end
-
-  def update
-    if @quiz.update quiz_params
-      render @quiz
-    else
-      render json: @quiz.errors, status: :unprocessable_entity
-    end
   end
 
   private

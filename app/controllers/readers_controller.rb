@@ -47,18 +47,6 @@ class ReadersController < ApplicationController
     end
   end
 
-  # DELETE /readers/1
-  # DELETE /readers/1.json
-  def destroy
-    @reader.destroy
-    respond_to do |format|
-      format.html do
-        redirect_to readers_url, notice: 'Reader was successfully destroyed.'
-      end
-      format.json { head :no_content }
-    end
-  end
-
   private
 
   # Use callbacks to share common setup or constraints between actions.
