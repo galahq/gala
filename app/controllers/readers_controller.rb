@@ -8,7 +8,6 @@ class ReadersController < ApplicationController
   authorize_actions_for Case, only: %i[index destroy]
 
   # GET /readers
-  # GET /readers.json
   def index
     @readers = FindReaders.by(**search_params)
                           .page(params[:page])
@@ -19,15 +18,15 @@ class ReadersController < ApplicationController
     render layout: 'admin'
   end
 
+  # GET /profile
   def show; end
 
-  # GET /readers/1/edit
+  # GET /profile/edit
   def edit
     authorize_action_for @reader
   end
 
-  # PATCH/PUT /readers/1
-  # PATCH/PUT /readers/1.json
+  # PATCH/PUT /profile
   def update
     authorize_action_for @reader
     respond_to do |format|

@@ -7,7 +7,7 @@ class PodcastsController < ApplicationController
 
   authorize_actions_for Podcast
 
-  # POST /podcasts
+  # POST /cases/case-slug/podcasts
   def create
     @podcast = Podcast.create_as_element @case, title: 'New podcast'
 

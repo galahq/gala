@@ -7,6 +7,7 @@ class DeploymentsController < ApplicationController
 
   layout 'embed'
 
+  # POST /groups/1/deployments
   def create
     the_group = Group.find params[:group_id]
     the_case = Case.find_by_slug params[:case_slug]
@@ -18,6 +19,7 @@ class DeploymentsController < ApplicationController
     redirect_to edit_deployment_path @deployment if @deployment.save
   end
 
+  # GET /deployments/1/edit
   def edit
     authorize_action_for @deployment, selection_params: session[:content_item_selection_params]
 
@@ -25,6 +27,7 @@ class DeploymentsController < ApplicationController
     set_recommended_quizzes
   end
 
+  # PATCH/PUT /deployments/1
   def update
     authorize_action_for @deployment, selection_params: session[:content_item_selection_params]
 

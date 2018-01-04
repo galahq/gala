@@ -15,6 +15,7 @@ class MagicLinksController < ApplicationController
   end
 
   include MagicLink
+  # POST /magic_link?key=ABCDEF
   def create
     save_deployment_in_session
     link_reader

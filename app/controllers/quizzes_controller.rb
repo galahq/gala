@@ -4,6 +4,7 @@ class QuizzesController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_quiz
 
+  # GET /quizzes/1
   def show
     authorize_action_for @quiz
   end

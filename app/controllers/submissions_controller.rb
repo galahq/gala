@@ -4,11 +4,11 @@ class SubmissionsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_quiz, only: %i[create]
 
+  # GET /quizzes/1/submissions
   # One reader’s submissions to fill the submitted post-test with their answers
-  # => /quizzes/:quiz_id/submissions
   #
+  # GET /deployments/1/submissions
   # All submissions from the readers in a particular deployment, for assessment
-  # => /deployments/:deployment_id/submissions
   def index
     if set_quiz
       @submissions = readers_submissions_for_quiz
@@ -25,6 +25,7 @@ class SubmissionsController < ApplicationController
     end
   end
 
+  # POST /quizzes/1/submissions
   def create
     enrollment = current_reader.enrollment_for_case @quiz.case
     @deployment = enrollment.active_group.deployment_for_case(@quiz.case)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  # GET /search.json
   def index
     @cases = Case.all
                  .ordered
