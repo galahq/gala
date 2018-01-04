@@ -36,7 +36,7 @@ class ReadersController < ApplicationController
           redirect_to edit_profile_path,
                       notice: 'Reader was successfully updated.'
         end
-        format.json { render :show, status: :ok, location: @reader }
+        format.json { render :show, status: :ok, location: profile_path }
       else
         format.html { render :edit }
         format.json do
