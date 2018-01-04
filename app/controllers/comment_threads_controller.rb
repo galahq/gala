@@ -69,7 +69,8 @@ class CommentThreadsController < ApplicationController
   end
 
   def comment_thread_params
-    params.require(:comment_thread).permit(:start, :length, :block_index, :original_highlight_text)
+    params.require(:comment_thread)
+          .permit(:start, :length, :block_index, :original_highlight_text)
   end
 
   def conversation_comment_thread_url(comment_thread)
