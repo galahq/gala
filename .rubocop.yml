@@ -8,3 +8,5 @@ Style/LambdaCall:
   Enabled: false
 Security/YAMLLoad:
   Enabled: false
+Metrics/MethodLength:
+  Enabled: false

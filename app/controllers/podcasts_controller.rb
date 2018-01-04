@@ -7,16 +7,7 @@ class PodcastsController < ApplicationController
 
   authorize_actions_for Podcast
 
-  # GET /podcasts
-  def index
-    set_case
-    @podcasts = @case.podcasts
-  end
-
-  # GET /podcasts/1
-  def show; end
-
-  # POST /podcasts
+  # POST /cases/case-slug/podcasts
   def create
     @podcast = Podcast.create_as_element @case, title: 'New podcast'
 

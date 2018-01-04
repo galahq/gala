@@ -5,6 +5,7 @@ class CaseElementsController < ApplicationController
 
   # authorize_actions_for CaseElement
 
+  # PATCH/PUT /case_elements/1
   def update
     @case_element = CaseElement.find(params[:id])
     if @case_element.update(case_element_params)

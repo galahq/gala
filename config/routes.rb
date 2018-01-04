@@ -1,84 +1,107 @@
 # frozen_string_literal: true
 
-locale_regex = /#{Rails.application.config.i18n.available_locales.map(&:to_s).join("|")}/
+# rubocop:disable Metrics/BlockLength
+
+LOCALES = Rails.application.config.i18n.available_locales
+LOCALE_REGEX = /#{LOCALES.map(&:to_s).join("|")}/
 
 Rails.application.routes.draw do
+  concern :has_statistics do
+    resource :statistics, only: %i[show]
+  end
+
+  # Some of these links are in published literature and should not be broken
   get '/read/1071/(*x)', to: redirect('/fr/cases/mi-wolves')
   get '/read/862/(*x)', to: redirect('/cases/indonesia-conservation')
   get '/read/611/(*x)', to: redirect('/cases/ethiopia-napa')
   get '/read/497/(*x)', to: redirect('/cases/mi-wolves')
 
-  scope '(:locale)', locale: locale_regex do
-    resources :comment_threads, only: %i[show destroy] do
-      resources :comments, shallow: true, only: %i[create update destroy]
+  get '(:locale)', locale: LOCALE_REGEX, to: 'catalog#home'
+  root to: 'catalog#home'
+
+  scope '(:locale)', locale: LOCALE_REGEX do
+    resources :activities, only: %i[update destroy]
+
+    resources :cards, only: %i[update destroy], concerns: :has_statistics do
+      resources :comment_threads, only: %i[create]
     end
+
+    resources :case_elements, only: %i[update]
+
     resources :cases, only: %i[index show new create update], param: :slug do
-      resources :case_elements, shallow: true, only: %i[update]
-      resources :activities, shallow: true
-      resources :podcasts, shallow: true do
-        resource :statistics, only: %i[show]
-      end
-      resources :pages, only: %i[create]
-      resources :edgenotes, shallow: true, param: :slug do
-        resource :statistics, only: %i[show]
-      end
+      resources :activities, only: %i[create]
+
       resources :comment_threads, only: %i[index]
+
       resources :communities, only: %i[index]
+
+      resources :edgenotes, only: %i[create]
 
       resource :enrollment, only: %i[create destroy]
 
-      get '*react_router_location', to: 'cases#show'
+      resources :podcasts, only: %i[create]
+
+      resources :pages, only: %i[create]
 
       collection do
-        resources :features, only: %i[index create update destroy]
+        resources :features, only: %i[index]
       end
+
+      get '*react_router_location', to: 'cases#show'
     end
+
+    namespace 'catalog' do
+      resources :content_items, only: %w[create]
+
+      get '*react_router_location', action: :home
+    end
+
+    resources :comment_threads, only: %i[show destroy] do
+      resources :comments, only: %i[create]
+    end
+
+    resources :comments, only: %i[update destroy]
+
+    resources :deployments, only: %i[create edit update] do
+      resources :submissions, only: %i[index]
+    end
+
+    resources :edgenotes, only: %i[update destroy], param: :slug,
+                          concerns: :has_statistics
+
+    resources :enrollments, only: %i[index]
+
+    resources :groups, only: [] do
+      resources :deployments, only: %i[create]
+    end
+
+    resources :libraries, param: :slug, only: %i[show]
+
+    resource :magic_link, only: %i[show create]
+
     resources :pages, only: %i[update destroy] do
       resources :cards, only: %i[create]
     end
-    resources :cards, only: %i[update destroy] do
-      resources :comment_threads, only: %i[create]
-      resource :statistics, only: %i[show]
-    end
 
-    devise_for :readers, skip: :omniauth_callbacks, controllers: {
-      sessions: 'readers/sessions',
-      registrations: 'readers/registrations',
-      confirmations: 'readers/confirmations'
-    }
+    resources :podcasts, only: %i[update destroy], concerns: :has_statistics
 
     resource :profile, controller: :readers, only: %i[show edit update]
 
-    resources :quizzes, only: %i[create update show] do
+    resources :quizzes, only: %i[show] do
       resources :submissions, only: %i[index create]
     end
 
-    resources :groups, only: [] do
-      resources :deployments, shallow: true, only: %i[create edit update] do
-        resources :submissions, only: %i[index]
-      end
-    end
-
-    resources :enrollments, only: %i[index]
-    resource :magic_link, only: %i[show create]
-
-    scope 'admin' do
-      resources :readers, except: %i[show edit update] do
-        resources :roles, only: %i[create destroy]
-      end
-
-      resources :groups
-      resources :enrollments, only: %i[destroy]
+    resources :readers, only: %i[index] do
+      resources :roles, only: %i[create destroy]
     end
 
     resources :search, only: %i[index]
-    resources :libraries, param: :slug, only: %i[show]
 
-    namespace 'catalog' do
-      get :home
-      match :content_items, via: %i[get post]
-      get '*react_router_location', action: :home
-    end
+    devise_for :readers, skip: :omniauth_callbacks, controllers: {
+      confirmations: 'readers/confirmations',
+      registrations: 'readers/registrations',
+      sessions: 'readers/sessions'
+    }
   end
 
   namespace 'authentication_strategies' do
@@ -87,9 +110,11 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :authentication_strategies, only: :omniauth_callbacks, controllers: {
-    omniauth_callbacks: 'authentication_strategies/omniauth_callbacks'
-  }
-  get '(:locale)', locale: locale_regex, to: 'catalog#home'
-  root to: 'catalog#home'
+  devise_for(
+    :authentication_strategies,
+    only: :omniauth_callbacks,
+    controllers: {
+      omniauth_callbacks: 'authentication_strategies/omniauth_callbacks'
+    }
+  )
 end

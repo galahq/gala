@@ -14,7 +14,7 @@ class EnrollmentsController < ApplicationController
     end
   end
 
-  # POST /cases/:case_slug/enrollment
+  # POST /cases/case-slug/enrollment
   def create
     authorize_action_for @enrollment
 
@@ -25,7 +25,7 @@ class EnrollmentsController < ApplicationController
     end
   end
 
-  # DELETE /cases/:case_slug/enrollment
+  # DELETE /cases/case-slug/enrollment
   def destroy
     head :no_content && return unless @enrollment
 

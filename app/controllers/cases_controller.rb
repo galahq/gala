@@ -14,7 +14,7 @@ class CasesController < ApplicationController
     @cases = Case.all.ordered.includes(:case_elements, :library)
   end
 
-  # GET /cases/1
+  # GET /cases/slug
   def show
     authenticate_reader! unless @case.published
     authorize_action_for @case
@@ -24,11 +24,10 @@ class CasesController < ApplicationController
     render layout: 'with_header'
   end
 
+  # GET /cases/new
   def new
     @case = Case.new
   end
-
-  def edit; end
 
   # POST /cases
   def create
@@ -47,7 +46,7 @@ class CasesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /cases/1
+  # PATCH/PUT /cases/slug
   def update
     set_group_and_deployment
 
@@ -56,11 +55,6 @@ class CasesController < ApplicationController
     else
       render json: @case.errors, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /cases/1
-  def destroy
-    @case.destroy
   end
 
   private
