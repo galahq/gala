@@ -49,7 +49,7 @@ Rails.application.routes.draw do
     end
 
     namespace 'catalog' do
-      match :content_items, via: %i[get post]
+      resources :content_items, only: %w[create]
 
       get '*react_router_location', action: :home
     end
