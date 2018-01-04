@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   before_action :set_comment, only: %i[show update destroy]
   before_action :set_comment_thread, only: [:create]
 
-  # POST /comments
+  # POST /comment_threads/1/comments
   def create
     @comment = @comment_thread.comments.build(comment_params)
     @comment.reader = current_reader

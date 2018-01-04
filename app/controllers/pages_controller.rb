@@ -7,6 +7,7 @@ class PagesController < ApplicationController
 
   authorize_actions_for Page
 
+  # POST /cases/case-slug/pages
   def create
     @page = Page.create_as_element @case, title: 'New page'
 
@@ -17,6 +18,7 @@ class PagesController < ApplicationController
     end
   end
 
+  # PATCH/PUT /pages/1
   def update
     if @page.update(page_params)
       render @page
@@ -25,6 +27,7 @@ class PagesController < ApplicationController
     end
   end
 
+  # DELETE /pages/1
   def destroy
     @page.destroy
   end

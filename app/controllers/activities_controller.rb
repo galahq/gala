@@ -7,7 +7,7 @@ class ActivitiesController < ApplicationController
 
   authorize_actions_for Activity
 
-  # POST /activities
+  # POST /cases/case-slug/activities
   def create
     @activity = Activity.create_as_element @case, title: 'New activity'
 
