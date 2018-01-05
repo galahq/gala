@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class CaseElementsController < ApplicationController
-  # before_action :authenticate_reader!
-
-  # authorize_actions_for CaseElement
+  before_action :authenticate_reader!
 
   # PATCH/PUT /case_elements/1
   def update
     @case_element = CaseElement.find(params[:id])
+    authorize_action_for @case_element.case
+
     if @case_element.update(case_element_params)
       @case_elements = Case.includes(:case_elements)
                            .find_by(id: @case_element.case_id)
