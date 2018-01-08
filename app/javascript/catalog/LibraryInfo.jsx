@@ -16,7 +16,7 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 import type { ContextRouter } from 'react-router-dom'
 import type { Library } from 'redux/state'
 
-type Props = ContextRouter & {| slug: string |}
+type Props = {| ...ContextRouter, slug: string |}
 class LibraryInfo extends React.Component<Props, Library> {
   componentDidMount () {
     this._fetchLibraryInfo()

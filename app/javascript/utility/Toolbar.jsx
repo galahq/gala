@@ -13,6 +13,8 @@ import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
 
 import { MaxWidthContainer } from 'utility/styledComponents'
 
+import type { IntlShape } from 'react-intl'
+
 type BarButton = {|
   disabled?: boolean,
   message?: string,
@@ -37,7 +39,7 @@ const pass = omit(['message'])
 type Props = {
   light?: boolean,
   groups: [BarGroup, BarGroup, BarGroup],
-  intl: any,
+  intl: IntlShape,
   canBeIconsOnly: boolean,
 }
 const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
