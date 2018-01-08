@@ -107,7 +107,7 @@ export type UIState = {
 export type Element = Activity | Page | Podcast
 
 export type Activity = {
-  cardId: number,
+  cardId: string,
   caseElement: CaseElement,
   iconSlug: string,
   id: string,

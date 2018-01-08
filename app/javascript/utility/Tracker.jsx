@@ -140,7 +140,7 @@ type OnScreenTrackerProps = {|
 type OnScreenTrackerState = {
   isVisible: boolean,
   needsVisibilityCheck: boolean,
-  interval?: number,
+  interval?: IntervalID,
 }
 
 export class OnScreenTracker extends React.Component<

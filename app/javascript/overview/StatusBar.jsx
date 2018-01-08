@@ -59,10 +59,10 @@ function StatusBar ({
           message: 'catalog',
           iconName: 'home',
           onClick: () =>
-              (window.location = window.location.pathname.replace(
-                /cases.*/,
-                ''
-              )),
+            (window.location = window.location.pathname.replace(
+              /cases.*/,
+              ''
+            )),
         },
         {
           disabled: !commentable || !reader || !reader.enrollment,
@@ -90,28 +90,28 @@ function StatusBar ({
           iconName: 'cog',
           submenu: [
             editing || edited
-                ? {
-                  disabled: !edited,
-                  message: 'statusBar.save',
-                  iconName: 'floppy-disk',
-                  onClick: saveChanges,
-                }
-                : {
-                  message: published
-                      ? 'statusBar.unpublishCase'
-                      : 'statusBar.publishCase',
-                  iconName: published ? 'lock' : 'upload',
-                  onClick: togglePublished,
-                },
+              ? {
+                disabled: !edited,
+                message: 'statusBar.save',
+                iconName: 'floppy-disk',
+                onClick: saveChanges,
+              }
+              : {
+                message: published
+                  ? 'statusBar.unpublishCase'
+                  : 'statusBar.publishCase',
+                iconName: published ? 'lock' : 'upload',
+                onClick: togglePublished,
+              },
             published && !edited
-                ? {
-                  message: featured
-                      ? 'statusBar.unfeatureCase'
-                      : 'statusBar.featureCase',
-                  iconName: featured ? 'star-empty' : 'star',
-                  onClick: toggleFeatured,
-                }
-                : null,
+              ? {
+                message: featured
+                  ? 'statusBar.unfeatureCase'
+                  : 'statusBar.featureCase',
+                iconName: featured ? 'star-empty' : 'star',
+                onClick: toggleFeatured,
+              }
+              : null,
             {
               message: editing ? 'statusBar.endEdit' : 'statusBar.beginEdit',
               iconName: editing ? 'cross' : 'edit',
