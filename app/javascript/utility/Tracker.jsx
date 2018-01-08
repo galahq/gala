@@ -4,7 +4,6 @@
  */
 
 import * as React from 'react'
-import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
 
 import type { State } from 'redux/state'
@@ -20,6 +19,7 @@ type TrackerProps = {
   targetParameters: $Supertype<{ name: string }>,
   timerState: TimerState,
   instantaneous?: boolean,
+  innerRef?: (?HTMLSpanElement) => any,
 }
 type TrackerState = {
   durationSoFar: number,
@@ -118,7 +118,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
   }
 
   render () {
-    return <span />
+    return <span ref={this.props.innerRef} />
   }
 }
 
@@ -140,13 +140,15 @@ type OnScreenTrackerProps = {|
 type OnScreenTrackerState = {
   isVisible: boolean,
   needsVisibilityCheck: boolean,
-  interval?: number,
+  interval?: IntervalID,
 }
 
 export class OnScreenTracker extends React.Component<
   OnScreenTrackerProps,
   OnScreenTrackerState
 > {
+  node: ?HTMLElement
+
   _isVisible: () => boolean
   _checkVisibility: () => void
   _maybeCheckVisibility: () => void
@@ -155,10 +157,9 @@ export class OnScreenTracker extends React.Component<
   _isVisible () {
     if (document.hidden) return false
 
-    const self = findDOMNode(this)
-    if (self == null || self instanceof Text) return false
+    if (this.node == null || this.node instanceof Text) return false
 
-    const rectangle = self.getBoundingClientRect()
+    const rectangle = this.node.getBoundingClientRect()
     const threshold = 100
 
     if (document.documentElement == null) return false
@@ -221,6 +222,7 @@ export class OnScreenTracker extends React.Component<
     return (
       <Tracker
         timerState={this.state.isVisible ? 'RUNNING' : 'PAUSED'}
+        innerRef={el => (this.node = el)}
         {...this.props}
       />
     )
