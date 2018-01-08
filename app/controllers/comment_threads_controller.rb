@@ -13,7 +13,7 @@ class CommentThreadsController < ApplicationController
                          CommentThread.none
                        else
                          @forum.comment_threads
-                               .visible_to_reader?(current_reader)
+                               .visible_to_reader(current_reader)
                                .order(:block_index, :start)
                                .includes(:card, comments: [:reader])
                        end

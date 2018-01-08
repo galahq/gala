@@ -1,17 +1,21 @@
 # frozen_string_literal: true
 
+# A reader’s response to the case
+#
+# @attr content [RawDraftContentState]
 class Comment < ApplicationRecord
   include Authority::Abilities
+  include Mobility
+
+  default_scope { order :created_at }
+
+  alias_attribute :timestamp, :created_at
+  translates :content, fallbacks: true
 
   belongs_to :reader
   belongs_to :comment_thread, counter_cache: true, touch: true
 
-  include Mobility
-  translates :content, fallbacks: true
-
-  default_scope { order :created_at }
-
-  validates :content, presence: :true
+  validates :content, presence: true
 
   after_create { CommentBroadcastJob.perform_now self }
   after_create_commit { CommentThreadBroadcastJob.perform_later comment_thread }
@@ -19,12 +23,10 @@ class Comment < ApplicationRecord
 
   delegate :forum, to: :comment_thread
 
-  def timestamp
-    created_at
-  end
-
   private
 
+  # Send a notification over ActionCable to participants in the thread other
+  # than the respondant
   def send_notifications_of_reply
     card = comment_thread.card
     comment_thread.collocutors.each do |other_reader|

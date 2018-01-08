@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Card
 class CardsController < ApplicationController
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_page, only: [:create]

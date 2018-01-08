@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# A relationship between a {Group} and a {Reader} that is automatic and has no
+# “request” associated with it, nor opportunity to “accept” or “decline”
 class GroupMembership < ApplicationRecord
   belongs_to :reader
   belongs_to :group
