@@ -1,31 +1,41 @@
 # frozen_string_literal: true
 
+# A model of which the usage can be tracked. This module provides methods that
+# get summary statistics of reader behavior.
+#
+# {include:file:docs/trackable_event_schema.md}
 module Trackable
   extend ActiveSupport::Concern
 
-  # >> TRACKABLE PROTOCOL >>
-  #
-  # event_name -> String
-  # Set the event name to query for
+  # @abstract Override to set the event name to query for in calculating
+  #   summary statistics.
+  # @return [String]
   def event_name
     'trackable_event'
   end
 
-  # event_properties -> Hash
-  # Set the event properties to filter by.
+  # @abstract Override to set the event properties to filter by in calculating
+  #   summary statistics.
+  # @return [Hash] in the shape of the including model’s corresponding
+  #   {Ahoy::Event#properties} schema
   def event_properties
     {}
   end
-  # << TRACKABLE PROTOCOL <<
 
+  # How many times as this object been viewed?
+  # @return [Numeric]
   def views
     events.count
   end
 
+  # How many different readers viewed this object?
+  # @return [Numeric]
   def uniques
     events.distinct.pluck(:user_id).count
   end
 
+  # What is the average duration of engagement for this object?
+  # @return [String] formatted as 'mm:ss'
   def average_time
     milliseconds = events.average("(properties ->> 'duration')::int") || 0
     seconds = milliseconds / 1000

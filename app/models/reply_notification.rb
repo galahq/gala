@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# The record of a reply to a {Reader}’s {Comment}. All the many `belongs_to`
+# relations are needed for the websocket notification to trigger a Toast with
+# a ReactRouter link to the reply
 class ReplyNotification < ApplicationRecord
   belongs_to :reader
   belongs_to :notifier, class_name: 'Reader'

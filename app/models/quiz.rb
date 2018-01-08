@@ -1,22 +1,50 @@
 # frozen_string_literal: true
 
+# A pre/post quiz, particular to a {Case}, consisting of multiple {Question}s.
+#
+# Quizzes exist in an inheritance chain: the quiz’s {template} is its direct
+# parent, and each quiz consists of some custom questions preceeded,
+# recursively, by its anscestors’ questions.
+#
+# Quizzes belong to a particular {author}, and appear in the deployment
+# customization workflow as choices to only that author. Because some authors,
+# following an LTI ContentItemsSelection request, are identified to us only by
+# their {lti_uid}, quizzes are associated with an author in two ways:
+# {author} takes precedence if set, falling back to {lti_uid} if not. The
+# {CustomizeDeploymentService} normalizes this, setting {author} as soon as
+# it is known.
+#
+# Quizzes where `author == nil` are our “provided” assessments and appear to all
+# instructors.
+#
+# @attr customized [Boolean]
+# @attr lti_uid [String] the unique identifier of an LMS user who has not yet
+#   had a {Reader} and associated {AuthenticationStrategy} created
 class Quiz < ApplicationRecord
   include Authority::Abilities
 
-  has_many :deployments, dependent: :nullify
   has_many :custom_questions, class_name: 'Question', dependent: :destroy
+  has_many :deployments, dependent: :nullify
   has_many :submissions, dependent: :destroy
+
+  belongs_to :author, class_name: 'Reader'
   belongs_to :case
   belongs_to :template, class_name: 'Quiz'
-  belongs_to :author, class_name: 'Reader'
 
   scope :recommended, -> { where author_id: nil, lti_uid: nil }
 
+  # A relation of quizzes that the reader, in the context of her active group,
+  # hasn’t answered enough times. Whether “enough” is 1 or 2 depends on the
+  # instructor’s choice, per {Deployment}.
+  # @return [ActiveRecord::Relation<Quiz>]
   def self.requiring_response_from(reader)
     where(id: reader.deployments.select(:quiz_id))
       .where(id: Question.requiring_response_from(reader).select(:quiz_id))
   end
 
+  # Quizzes authored by the given reader, identified by {author} and {lti_uid}
+  # in concert.
+  # @return [ActiveRecord::Relation<Quiz>]
   def self.authored_by(reader: nil, lti_uid: nil)
     if reader
       where <<~SQL, reader_id: reader.id, lti_uid: reader.lti_uid
@@ -30,6 +58,8 @@ class Quiz < ApplicationRecord
     end
   end
 
+  # The quizzes from which this quiz inherits its shared questions.
+  # @return [ActiveRecord::Relation<Quiz>]
   def ancestors
     @ancestors ||= Quiz.where <<~SQL
       id IN (
@@ -49,7 +79,8 @@ class Quiz < ApplicationRecord
   end
 
   def questions
-    @questions ||= Question.where(quiz_id: ancestors.pluck(:id)).order(:created_at)
+    @questions ||= Question.where(quiz_id: ancestors.pluck(:id))
+                           .order(:created_at)
   end
 
   def answers
@@ -60,6 +91,7 @@ class Quiz < ApplicationRecord
     questions.requiring_response_from(reader, in_group: in_group).any?
   end
 
+  # The number of responses to this quiz already made by a given reader
   def number_of_responses_from(reader)
     answers.merge(reader.answers).group(:question_id).count(:question_id)
            .values.min || 0

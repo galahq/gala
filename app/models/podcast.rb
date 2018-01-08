@@ -1,15 +1,22 @@
 # frozen_string_literal: true
 
+# An audio component of a case. It can have one associated card as a description
+#
+# @attr title [Translated<String>]
+# @attr audio_url [Translated<String>]
+# @attr credits [Translated<CreditsList>] the hosts and guests on the episode
+# @attr artwork_url [String] a cover image for the podcast
+# @attr photo_credit [String] attribution for the {artwork_url}’s rights holder
 class Podcast < ApplicationRecord
   include Authority::Abilities
+  include Element
+  include Mobility
+  include Trackable
+
+  translates :title, :audio_url, :description, :credits, fallbacks: true
 
   belongs_to :case, touch: true
   has_one :card, as: :element, dependent: :destroy
-
-  include Element
-
-  include Mobility
-  translates :title, :audio_url, :description, :credits, fallbacks: true
 
   after_create_commit -> { create_card }
 
@@ -33,7 +40,6 @@ class Podcast < ApplicationRecord
     end
   end
 
-  include Trackable
   def event_name
     'visit_podcast'
   end
