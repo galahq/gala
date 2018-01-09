@@ -12,7 +12,7 @@ module Catalog
   class ContentItemsController < ApplicationController
     before_action :validate_lti_request!
 
-    # POST /catalog/content_items
+    # @route [POST] `/catalog/content_items`
     def create
       linker = LinkerService.new LinkerService::LTIStrategy.new params
 

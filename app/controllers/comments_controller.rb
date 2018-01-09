@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+# @see Comment
 class CommentsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_comment, only: %i[show update destroy]
   before_action :set_comment_thread, only: [:create]
 
-  # POST /comment_threads/1/comments
+  # @route [POST] `/comment_threads/1/comments`
   def create
     @comment = @comment_thread.comments.build(comment_params)
     @comment.reader = current_reader
@@ -17,7 +18,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /comments/1
+  # @route [PATCH/PUT] `/comments/1`
   def update
     authorize_action_for @comment
     if @comment.update(comment_params)
@@ -27,7 +28,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  # DELETE /comments/1
+  # @route [DELETE] `/comments/1`
   def destroy
     authorize_action_for @comment
     @comment.destroy

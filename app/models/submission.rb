@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+# A set of {Answer}s for a {Quiz}’s {Question}s.
 class Submission < ApplicationRecord
   include Authority::Abilities
 
   belongs_to :quiz
   belongs_to :reader
+
   has_many :answers, dependent: :destroy
 
   def self.create(answers:, quiz:, reader:)
@@ -24,6 +26,7 @@ class Submission < ApplicationRecord
     end
   end
 
+  # @return [String]
   def answer(to_question_id:)
     answers.find { |a| a.question_id == to_question_id }.try(:content) || ''
   end

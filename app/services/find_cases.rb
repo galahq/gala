@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Find cases matching search parameters
+# Find {Case}s matching search parameters
 class FindCases
-  # @param [{libraries?: string[], q?: string}]
-  # @return ActiveRecord::Relation<Case>
+  # @param params [{libraries?: string[], q?: string}]
+  # @return [ActiveRecord::Relation<Case>]
   def self.by(params)
     new(params).call
   end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Case
 module CasesHelper
   def translators_string(c)
     return '' if c.translators.empty?

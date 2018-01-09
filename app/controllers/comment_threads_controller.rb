@@ -1,25 +1,26 @@
 # frozen_string_literal: true
 
+# @see CommentThread
 class CommentThreadsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_case, only: [:index]
   before_action :set_card, only: [:create]
   before_action :set_comment_thread, only: %i[show destroy]
 
-  # GET /cases/case-slug/comment_threads
+  # @route [GET] `/cases/case-slug/comment_threads`
   def index
     @forum = current_reader.active_community.forums.find_by(case: @case)
     @comment_threads = if @forum.nil?
                          CommentThread.none
                        else
                          @forum.comment_threads
-                               .visible_to_reader?(current_reader)
+                               .visible_to_reader(current_reader)
                                .order(:block_index, :start)
                                .includes(:card, comments: [:reader])
                        end
   end
 
-  # POST /cards/1/comment_threads
+  # @route [POST] `/cards/1/comment_threads`
   def create
     @comment_thread = @card.comment_threads.build(comment_thread_params)
     @comment_thread.reader = current_reader
@@ -33,7 +34,7 @@ class CommentThreadsController < ApplicationController
     end
   end
 
-  # GET /comment_threads/1
+  # @route [GET] `/comment_threads/1`
   #
   # This is the permalink to a comment thread that is sent to to the user in a
   # notification email. The comment thread is actually presented in a view of
@@ -44,7 +45,7 @@ class CommentThreadsController < ApplicationController
     redirect_to conversation_comment_thread_url @comment_thread
   end
 
-  # DELETE /comment_threads/1
+  # @route [DELETE] `/comment_threads/1`
   def destroy
     authorize_action_for @comment_thread
     @comment_thread.destroy

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+# @see Enrollment
 class EnrollmentsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_enrollment, only: %i[create destroy]
 
-  # GET /enrollments
+  # @route [GET] `/enrollments`
   def index
     @enrollments = current_reader.enrollments
 
@@ -14,7 +15,7 @@ class EnrollmentsController < ApplicationController
     end
   end
 
-  # POST /cases/case-slug/enrollment
+  # @route [POST] `/cases/case-slug/enrollment`
   def create
     authorize_action_for @enrollment
 
@@ -25,7 +26,7 @@ class EnrollmentsController < ApplicationController
     end
   end
 
-  # DELETE /cases/case-slug/enrollment
+  # @route [DELETE] `/cases/case-slug/enrollment`
   def destroy
     head :no_content && return unless @enrollment
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Podcast
 class PodcastsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_podcast, only: %i[show update destroy]
@@ -7,7 +8,7 @@ class PodcastsController < ApplicationController
 
   authorize_actions_for Podcast
 
-  # POST /cases/case-slug/podcasts
+  # @route [POST] `/cases/case-slug/podcasts`
   def create
     @podcast = Podcast.create_as_element @case, title: 'New podcast'
 
@@ -18,7 +19,7 @@ class PodcastsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /podcasts/1
+  # @route [PATCH/PUT] `/podcasts/1`
   def update
     if @podcast.update(podcast_params)
       render @podcast
@@ -27,7 +28,7 @@ class PodcastsController < ApplicationController
     end
   end
 
-  # DELETE /podcasts/1
+  # @route [DELETE] `/podcasts/1`
   def destroy
     @podcast.destroy
   end

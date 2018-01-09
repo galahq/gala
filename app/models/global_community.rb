@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-# Null object pattern for Community
+# Null object for {Community} of which every {Reader} is a member and in which
+# every {Case} has a {Forum}
+#
+# @see Community
 class GlobalCommunity
   include Singleton
 

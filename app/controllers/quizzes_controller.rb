@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+# @see Quiz
 class QuizzesController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_quiz
 
-  # GET /quizzes/1
+  # @route [GET] `/quizzes/1`
   def show
     authorize_action_for @quiz
   end

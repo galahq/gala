@@ -10,3 +10,62 @@ Security/YAMLLoad:
   Enabled: false
 Metrics/MethodLength:
   Enabled: false
+Layout/ClassStructure:
+  Enabled: true
+  Categories:
+    module_inclusion:
+      - include
+      - prepend
+      - extend
+    overrides:
+      - default_scope
+      - "table_name="
+    attributes:
+      - attribute
+      - attr_reader
+      - attr_writer
+      - attr_accessor
+      - alias_attribute
+      - translates
+    associations:
+      - has_one
+      - has_many
+      - belongs_to
+      - has_and_belongs_to_many
+    validations:
+      - validate
+      - validates_presence_of
+      - validates_uniqueness_of
+    hooks:
+      - before_validation
+      - after_validation
+      - before_save
+      - around_save
+      - before_create
+      - before_update
+      - before_destroy
+      - around_create
+      - around_update
+      - around_destroy
+      - after_create
+      - after_update
+      - after_destroy
+      - after_save
+      - after_commit
+      - after_rollback
+  ExpectedOrder:
+      - module_inclusion
+      - inner_class
+      - overrides
+      - constants
+      - attributes
+      - enum
+      - associations
+      - validations
+      - hooks
+      - public_class_methods
+      - initializer
+      - public_methods
+      - protected_methods
+      - private_methods
+      - memoize

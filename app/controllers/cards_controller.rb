@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Card
 class CardsController < ApplicationController
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_page, only: [:create]
@@ -7,7 +8,7 @@ class CardsController < ApplicationController
 
   authorize_actions_for Card
 
-  # POST /pages/1/cards
+  # @route [POST] `/pages/1/cards`
   def create
     @card = @page.cards.build(card_params)
 
@@ -18,7 +19,7 @@ class CardsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /cards/1
+  # @route [PATCH/PUT] `/cards/1`
   def update
     if @card.update(card_params)
       render @card
@@ -27,7 +28,7 @@ class CardsController < ApplicationController
     end
   end
 
-  # DELETE /cards/1
+  # @route [DELETE] `/cards/1`
   def destroy
     @card.destroy
     head :no_content
@@ -51,7 +52,7 @@ class CardsController < ApplicationController
     ).(params.require(:card))
   end
 
-  def raw_draft_content_state
+  def raw_draft_content_state # rubocop:disable Metrics/AbcSize
     camelize(
       Sv.struct_of(
         blocks: Sv.array_of(
