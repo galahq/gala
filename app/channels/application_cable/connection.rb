@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 module ApplicationCable
+  # Only authenticated {Reader}s can subscribe to a cable
   class Connection < ActionCable::Connection::Base
     identified_by :current_reader
 
@@ -12,7 +12,7 @@ module ApplicationCable
     private
 
     def find_verified_reader
-      if verified_user = env['warden'].user
+      if (verified_user = env['warden'].user)
         verified_user
       else
         reject_unauthorized_connection
