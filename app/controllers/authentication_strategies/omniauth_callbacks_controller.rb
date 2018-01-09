@@ -15,7 +15,8 @@ module AuthenticationStrategies
         link_reader if following_magic_link?
         redirect_to after_linking_redirect_path || root_path
       else
-        session['devise.google_data'] = request.env['omniauth.auth'].except(:extra)
+        session['devise.google_data'] = request.env['omniauth.auth']
+                                               .except(:extra)
         render 'devise/registrations/new', layout: 'window'
       end
     end
@@ -42,7 +43,9 @@ module AuthenticationStrategies
     private
 
     def set_authentication_strategy
-      @authentication_strategy = AuthenticationStrategy.from_omniauth(request.env['omniauth.auth'])
+      @authentication_strategy = AuthenticationStrategy.from_omniauth(
+        request.env['omniauth.auth']
+      )
     end
 
     def set_reader
