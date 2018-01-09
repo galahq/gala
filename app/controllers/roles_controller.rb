@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
+# @see Role
 class RolesController < ApplicationController
   before_action :set_role
 
-  # POST /readers/1/roles
+  # @route [POST] `/readers/1/roles`
   def create
     @reader.add_role @role.name
     render js: replace_button_script
   end
 
-  # DELETE /readers/1/roles/1
+  # @route [DELETE] `/readers/1/roles/1`
   def destroy
     @reader.remove_role @role.name
     render js: replace_button_script

@@ -55,7 +55,7 @@ class LinkerService
     def group
       @group ||= Group.upsert context_id: @launch_params[:context_id],
                               name: @launch_params[:context_title]
-    rescue
+    rescue ActiveRecord::RecordNotUnique
       # If two readers from the same class hit the launch url at the same time
       # it will violate a uniqueness constraint, but retrying the second will
       # return the group created by the first.
@@ -63,9 +63,10 @@ class LinkerService
     end
 
     def status
-      if @launch_params[:ext_roles] =~ %r{urn:lti:role:ims/lis/Instructor}
-        :instructor
-      end
+      instructor_role = %r{urn:lti:role:ims/lis/Instructor}
+      return unless @launch_params[:ext_roles] =~ instructor_role
+
+      :instructor
     end
 
     private
@@ -86,12 +87,11 @@ class LinkerService
   # strategy assumes the deployment has been created in advance and that a user
   # is already signed in.
   class SessionStrategy
+    attr_accessor :reader
     def initialize(session, reader)
       @reader = reader
       @deployment = Deployment.find_by_key session.delete MagicLink::SESSION_KEY
     end
-
-    attr_accessor :reader
 
     def kase
       @deployment.case

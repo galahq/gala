@@ -30,3 +30,6 @@ localhost.key
 /public/packs
 /public/packs-test
 /node_modules
+
+/.yardoc/
+/doc/

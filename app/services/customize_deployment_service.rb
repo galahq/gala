@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Customizes a {Deployment} by creating or modifying a {Quiz} and its associated
+# {Question}s
 class CustomizeDeploymentService
   def initialize(deployment, author_id, lti_uid)
     @deployment = deployment
@@ -70,6 +72,11 @@ class CustomizeDeploymentService
     end
   end
 
+  # Since deployment customization from an LTI ContentItemSelection request
+  # can happen before the instructor’s {Reader} account has been created, we
+  # have to identify the author of a {Quiz} by {author_id} and {lti_uid} in
+  # concert. {author_id} takes precedence if set; we fall back to {lti_uid}
+  # (when creating and when finding quizzes) if not.
   class AuthorIdentifier
     attr_accessor :author_id, :lti_uid
 

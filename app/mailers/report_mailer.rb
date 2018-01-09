@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Send a weekly usage report to the Gala team
 class ReportMailer < ApplicationMailer
   def weekly_report
     @report = UsageReportsService.new

@@ -2,6 +2,7 @@
 
 # Controller methods to handle linking a user to a deployment specified by a
 # magic link.
+# @see MagicLinkController
 module MagicLink
   SESSION_KEY = 'deployment_key'
 

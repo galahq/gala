@@ -1,18 +1,43 @@
 # frozen_string_literal: true
 
+# A case study in Gala with attributes for the case’s “metadata” (the catalog or
+# overview information) and associations for all the case’s constituent parts.
+#
+# @attr slug [String] a globally unique kabob-case identifier: the URL param
+# @attr kicker [Translated<String>] a two or three word tagline for the case.
+#   This comes from newspapers: the little mini-headline appearing above the hed
+#   to which continuations of the article refer (e.g. “from CORRUPTION, A1”)
+# @attr title [Translated<String>] the case’s title, in the form of a question
+# @attr dek [Translated<String>] a one-sentence teaser which appears in larger
+#   text above the summary
+# @attr authors [Translated<{name: String, institution?: String}>]
+# @attr translators [Translated<Array<String>>] the translators’ names, if any
+# @attr acknowledgements [Translated<String>] a place for the authors’ gratitude
+#
+# @attr cover_url [URI] the primary image associated with the case. This is
+#   expected to repond to GET params to vary size and crop, following the [Imgix
+#   API](https://docs.imgix.com/apis/url)
+# @attr photo_credit [String] attribution for the {cover_url}’s rights holder
+# @attr latitude [Numeric] where the case takes place
+# @attr longitude [Numeric] where the case takes place
+# @attr zoom [Numeric] the default zoom level for the site location map (mapbox)
+#
+# @attr summary [Translated<String>] a short paragraph-length abstract
+# @attr learning_objectives [Translated<Array<String>>]
+# @attr audience [Translated<String>] yet unused
+# @attr classroom_timeline [Translated<String>] yet unused
+#
+# @attr published_at [DateTime] generic readers can only access published cases
+# @attr featured_at [DateTime] featured cases appear prominently in the catalog
+# @attr commentable [Boolean] whether or not forums are enabled on the case
 class Case < ApplicationRecord
   include Authority::Abilities
   include Comparable
-
   include Mobility
+
   translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
              :audience, :classroom_timeline, :acknowledgements, fallbacks: true
   translates :authors, :translators, default: [], fallbacks: true
-
-  time_for_a_boolean :published
-  time_for_a_boolean :featured
-
-  resourcify
 
   belongs_to :library
 
@@ -30,48 +55,47 @@ class Case < ApplicationRecord
   has_many :deployments, dependent: :destroy
   has_many :quizzes, dependent: :destroy
 
+  after_create :create_forum_for_global_community
+
+  validates :slug, presence: true,
+                   uniqueness: true,
+                   format: { with: /\A[a-z0-9-]+\Z/ }
+
+  time_for_a_boolean :featured
+  time_for_a_boolean :published
+
+  resourcify
+
   scope :published, -> { where.not(published_on: nil) }
   scope :ordered,
         -> do
-          order(<<~SQL)
+          order(<<~SQL.squish)
             featured_at DESC NULLS LAST, published_at DESC NULLS LAST
           SQL
         end
 
-  validates :slug, presence: true, uniqueness: true
-  validates_format_of :slug, with: /\A[a-z0-9-]+\Z/
-
-  after_create :create_forum_for_global_community
-
-  def <=>(other)
-    return published ? 1 : -1 if published ^ other.try(:published)
-    return published_at.nil? ? -1 : 1 if published_at.nil? ||
-                                         other.published_at.nil?
-    published_at <=> other.published_at
-  end
-
+  # The global community (`community_id == nil`) has a forum on all cases
   def create_forum_for_global_community
     Forum.create case: self
   end
 
+  # @return [String]
   def to_param
     slug
   end
 
+  # @return [ActiveRecord::Relation<Ahoy::Event>]
   def events
     Ahoy::Event.for_case self
   end
 
+  # The title is used as a synecdoche for the whole case: if it’s been
+  # translated then the case is considered to be available in that language.
+  # @note The React front-end currently updates all attributes of a case if one
+  #   attribute is edited
+  # @return [Array<Iso639_1Code>]
   def other_available_locales
     read_attribute(:title).keys - [I18n.locale.to_s]
-  end
-
-  def readers_by_enrollment_status
-    hash = {}
-    Enrollment.statuses.each do |type, _|
-      hash[type] = enrollments.select(&:"#{type}?")
-    end
-    hash
   end
 
   def comment_threads

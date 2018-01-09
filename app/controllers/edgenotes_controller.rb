@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Edgenote
 class EdgenotesController < ApplicationController
   before_action :set_edgenote, only: %i[show update destroy]
   before_action :set_case, only: [:create]
@@ -7,7 +8,7 @@ class EdgenotesController < ApplicationController
 
   authorize_actions_for Edgenote, except: %i[show]
 
-  # POST /cases/case-slug/edgenotes
+  # @route [POST] `/cases/case-slug/edgenotes`
   def create
     @edgenote = @case.edgenotes.build(
       slug: params[:slug],
@@ -22,7 +23,7 @@ class EdgenotesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /edgenotes/slug
+  # @route [PATCH/PUT] `/edgenotes/slug`
   def update
     if @edgenote.update(edgenote_params)
       render partial: 'edgenote', locals: { edgenote: @edgenote }
@@ -31,7 +32,7 @@ class EdgenotesController < ApplicationController
     end
   end
 
-  # DELETE /edgenotes/slug
+  # @route [DELETE] `/edgenotes/slug`
   def destroy
     @edgenote.destroy
   end

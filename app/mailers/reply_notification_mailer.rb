@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see ReplyNotification
 class ReplyNotificationMailer < ApplicationMailer
   helper :cases
   helper :comment_threads

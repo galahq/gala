@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+# @see Reader
 module ReadersHelper
   def reader_icon(r)
-    haml_tag :div, id: 'reader-icon', style: ("background-image: url(#{r.image_url})" unless r.image_url.blank?) do
+    style = ("background-image: url(#{r.image_url})" unless r.image_url.blank?)
+
+    haml_tag :div, id: 'reader-icon', style: style do
       haml_tag :span, (r.initials if r.image_url.blank?)
     end
   end

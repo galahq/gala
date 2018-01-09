@@ -32,6 +32,14 @@ GIT
       omniauth
 
 GIT
+  remote: https://github.com/pchaganti/doc_to_dash
+  revision: 44029a791b3b6f9bd79a79fa50a08b9c77a8407a
+  specs:
+    doc_to_dash (0.0.9)
+      nokogiri
+      sqlite3
+
+GIT
   remote: https://github.com/rails/webpacker
   revision: c76a64dfd43c558ee542e63dbdac2faa7fd25825
   specs:
@@ -381,6 +389,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sqlite3 (1.3.13)
     table_print (1.5.6)
     temple (0.8.0)
     thor (0.19.4)
@@ -410,6 +419,11 @@ GEM
     websocket-extensions (0.1.2)
     xpath (2.1.0)
       nokogiri (~> 1.3)
+    yard (0.9.12)
+    yard-activerecord (0.0.16)
+      yard (>= 0.8.3)
+    yard-activesupport-concern (0.0.1)
+      yard (>= 0.8)
 
 PLATFORMS
   ruby
@@ -429,6 +443,7 @@ DEPENDENCIES
   database_cleaner
   devise (~> 4.1)
   devise-i18n
+  doc_to_dash!
   factory_bot_rails
   faker
   foreman
@@ -477,9 +492,12 @@ DEPENDENCIES
   virtus
   web-console
   webpacker!
+  yard
+  yard-activerecord
+  yard-activesupport-concern
 
 RUBY VERSION
    ruby 2.4.2p198
 
 BUNDLED WITH
-   1.15.4
+   1.16.1

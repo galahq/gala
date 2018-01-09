@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
+# @see Submission
 class SubmissionsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_quiz, only: %i[create]
 
-  # GET /quizzes/1/submissions
+  # @route [GET] `/quizzes/1/submissions`
   # One reader’s submissions to fill the submitted post-test with their answers
   #
-  # GET /deployments/1/submissions
+  # @route [GET] `/deployments/1/submissions`
   # All submissions from the readers in a particular deployment, for assessment
   def index
     if set_quiz
@@ -25,7 +26,7 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  # POST /quizzes/1/submissions
+  # @route [POST] `/quizzes/1/submissions`
   def create
     enrollment = current_reader.enrollment_for_case @quiz.case
     @deployment = enrollment.active_group.deployment_for_case(@quiz.case)

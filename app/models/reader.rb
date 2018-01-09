@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
-# Mock public API in AnonymousReader
+# The user model. It has devise methods in addition to those listed below.
+#
+# @attr name [String]
+# @attr email [String] the unique login for devise
+# @attr password [EncryptedString]
+# @attr initials [String]
+# @attr locale [Iso639_1Code] the reader’s preferred locale
+# @attr created_password [Boolean] readers who sign in first with Omniauth will
+#   not initially select a password in order to sign in without that provider.
+#   If this attribute is false, the user can create a password without providing
+#   the password that was randomly generated for their account in the Omniauth
+#   callback process. After it has been set, the previous password will need to
+#   be provided.
+# @attr send_reply_notifications [Boolean] whether or not the user wants to be
+#   notified by email when another reader responds to her comment
+# @attr active_community_id [Numeric] the id of the reader’s most recently
+#   activated community
+#
+# @see AnonymousUser AnonymousUser: this model’s null object
 class Reader < ApplicationRecord
   include Authority::UserAbilities
   include Authority::Abilities
@@ -36,7 +54,8 @@ class Reader < ApplicationRecord
 
   rolify
 
-  def self.from_omniauth(auth)
+  # Creates a Reader from the information provided by an OAuth provider
+  def self.from_omniauth(auth) # rubocop:disable Metrics/AbcSize
     info = auth.info
     email = info.email
 
@@ -56,32 +75,24 @@ class Reader < ApplicationRecord
     end
   end
 
-  def self.new_with_session(params, session)
-    super.tap do |reader|
-      data = session['devise.google_data']
-      if data
-        info = data['info']
-        reader.name = info['name']
-        reader.initials = reader.name.split(' ').map(&:first).join
-        reader.email = info['email']
-        reader.image_url = info['image_url']
-      end
-    end
-  end
-
+  # @return [Community, GlobalCommunity]
   def active_community
     return GlobalCommunity.instance if active_community_id.nil?
     Community.find(active_community_id)
   end
 
+  # A reader’s communities include those she has a {GroupMembership} in and an
+  # {Invitation} to. This relation does not include the {GlobalCommunity}, but
+  # all readers are a member therein.
+  # @return [ActiveRecord::Relation<Community>]
   def communities
     query = Community
             .distinct
-            .joins(<<~SQL)
+            .joins(<<~SQL.squish)
               LEFT JOIN "invitations"
               ON "communities"."id" = "invitations"."community_id"
             SQL
-            .joins(<<~SQL)
+            .joins(<<~SQL.squish)
               LEFT JOIN "groups"
               ON "communities"."group_id" = "groups"."id"
                 LEFT JOIN "group_memberships"
@@ -93,32 +104,46 @@ class Reader < ApplicationRecord
     )
   end
 
+  # @deprecated
   def ensure_authentication_token
     return unless authentication_token.blank?
     self.authentication_token = generate_authentication_token
   end
 
+  # @return [Enrollment]
   def enrollment_for_case(c)
     enrollments.find { |e| e.case.id == c.id }
   end
 
+  # A hash of the reader’s email used to calculate her Identicon without leaking
+  # her private email to other users clever enough to open the browser inspector
+  # @return [String]
   def hash_key
     @hash_key ||= Digest::SHA256.hexdigest(email)
   end
 
+  # Whether or not the given quiz belongs to this author
   def quiz?(quiz)
     (quiz.lti_uid && quiz.lti_uid == lti_uid) ||
       (quiz.author_id && quiz.author_id == id)
   end
 
+  # The reader’s information for a To: header of an email
+  # @todo Move to a decorator
+  # @return [String]
   def name_and_email
     "#{name} <#{email}>"
   end
 
+  # OAuth providers with which this reader can sign in
+  # @return [Array<String>]
   def providers
     authentication_strategies.pluck :provider
   end
 
+  # This user’s unique identifier as given by an LMS
+  # @todo This assumes a user will only ever sign in with one LMS... fix that
+  # @return [String, nil]
   def lti_uid
     @lti_uid ||= authentication_strategies.where(provider: 'lti').pluck :uid
   end

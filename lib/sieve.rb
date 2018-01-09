@@ -1,8 +1,51 @@
 # frozen_string_literal: true
 
 # A functional, composable way of filtering parameters.
-# http://blog.martinosis.com/blog/simple-functional-strong-params-in-ruby/
-
+# From [Simple Functional Strong Parameters in Ruby](http://blog.martinosis.com/blog/simple-functional-strong-params-in-ruby/)
+#
+# @example
+#   def card_params
+#     Sv.hash_of(
+#       position: Sv.scalar,
+#       solid: Sv.scalar,
+#       raw_content: raw_draft_content_state
+#     ).(params.require(:card))
+#   end
+#
+#   def raw_draft_content_state
+#     Sv.struct_of(
+#       blocks: Sv.array_of(
+#         Sv.hash_of(
+#           key: Sv.scalar,
+#           type: Sv.scalar,
+#           text: Sv.scalar,
+#           depth: Sv.scalar,
+#           data: Sv.anything,
+#           inlineStyleRanges: Sv.array_of(
+#             Sv.struct_of(
+#               style: Sv.one_of(%w[BOLD ITALIC]),
+#               offset: Sv.scalar,
+#               length: Sv.scalar
+#             )
+#           ),
+#           entityRanges: Sv.array_of(
+#             Sv.struct_of(
+#               key: Sv.scalar,
+#               offset: Sv.scalar,
+#               length: Sv.scalar
+#             )
+#           )
+#         )
+#       ),
+#       entityMap: Sv.map_of(
+#         Sv.struct_of(
+#           type: Sv.scalar,
+#           mutability: Sv.scalar,
+#           data: Sv.anything
+#         )
+#       )
+#     )
+#   end
 class Sv
   mattr_accessor :hash_of, :struct_of, :map_of, :array_of, :one_of, :scalar,
                  :anything, :default

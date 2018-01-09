@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see CommentThread
 class CommentThreadBroadcastJob < ActiveJob::Base
   queue_as :default
 
