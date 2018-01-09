@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Find cases matching search parameters
+# Find {Case}s matching search parameters
 class FindCases
   # @param params [{libraries?: string[], q?: string}]
   # @return [ActiveRecord::Relation<Case>]

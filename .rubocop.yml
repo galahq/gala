@@ -68,3 +68,4 @@ Layout/ClassStructure:
       - public_methods
       - protected_methods
       - private_methods
+      - memoize

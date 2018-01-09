@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+# Find {Reader}s based on name and role
 class FindReaders
+  # @param name [String, nil]
+  # @param role [String, nil]
+  # @return [ActiveRecord::Relation<Reader>]
   def self.by(name: nil, role: nil)
     new(name, role).call
   end
