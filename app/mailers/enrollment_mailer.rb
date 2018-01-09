@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+# @see Enrollment
 class EnrollmentMailer < ApplicationMailer
   helper :cases
 
+  # Email to notify readers who have been manually enrolled in a case
+  # @deprecated
   def introduce_case(enrollment)
     @case = enrollment.case
     @reader = enrollment.reader
