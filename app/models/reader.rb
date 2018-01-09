@@ -88,11 +88,11 @@ class Reader < ApplicationRecord
   def communities
     query = Community
             .distinct
-            .joins(<<~SQL)
+            .joins(<<~SQL.squish)
               LEFT JOIN "invitations"
               ON "communities"."id" = "invitations"."community_id"
             SQL
-            .joins(<<~SQL)
+            .joins(<<~SQL.squish)
               LEFT JOIN "groups"
               ON "communities"."group_id" = "groups"."id"
                 LEFT JOIN "group_memberships"

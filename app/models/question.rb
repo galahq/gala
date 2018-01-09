@@ -26,19 +26,23 @@ class Question < ApplicationRecord
   # instructor’s choice, per {Deployment}.
   # @return [ActiveRecord::Relation<Question>]
   def self.requiring_response_from(reader, in_group:)
-    joins(:quiz).where <<~SQL, reader_id: reader.id, group_id: in_group.id
-      (
-        SELECT COUNT(answers.id)
-          FROM answers
-         WHERE answers.question_id = questions.id
-           AND answers.reader_id = :reader_id
-      ) < (
-        SELECT deployments.answers_needed
-          FROM deployments
-         WHERE deployments.group_id = :group_id
-           AND deployments.case_id = quizzes.case_id
-      )
+    joins(:quiz).where(
+      <<~SQL.squish,
+        (
+          SELECT COUNT(answers.id)
+            FROM answers
+           WHERE answers.question_id = questions.id
+             AND answers.reader_id = :reader_id
+        ) < (
+          SELECT deployments.answers_needed
+            FROM deployments
+           WHERE deployments.group_id = :group_id
+             AND deployments.case_id = quizzes.case_id
+        )
     SQL
+      reader_id: reader.id,
+      group_id: in_group.id
+    )
   end
 
   def multiple_choice?

@@ -47,7 +47,7 @@ class Quiz < ApplicationRecord
   # @return [ActiveRecord::Relation<Quiz>]
   def self.authored_by(reader: nil, lti_uid: nil)
     if reader
-      where <<~SQL, reader_id: reader.id, lti_uid: reader.lti_uid
+      where <<~SQL.squish, reader_id: reader.id, lti_uid: reader.lti_uid
         author_id = :reader_id OR (lti_uid = :lti_uid AND lti_uid IS NOT NULL)
         SQL
 
@@ -61,7 +61,7 @@ class Quiz < ApplicationRecord
   # The quizzes from which this quiz inherits its shared questions.
   # @return [ActiveRecord::Relation<Quiz>]
   def ancestors
-    @ancestors ||= Quiz.where <<~SQL
+    @ancestors ||= Quiz.where <<~SQL.squish
       id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
             SELECT id, template_id

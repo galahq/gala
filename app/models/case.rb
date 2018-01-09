@@ -69,7 +69,7 @@ class Case < ApplicationRecord
   scope :published, -> { where.not(published_on: nil) }
   scope :ordered,
         -> do
-          order(<<~SQL)
+          order(<<~SQL.squish)
             featured_at DESC NULLS LAST, published_at DESC NULLS LAST
           SQL
         end

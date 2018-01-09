@@ -18,7 +18,7 @@ module Ahoy
     belongs_to :visit
     belongs_to :user, class_name: 'Reader', optional: true
 
-    scope :interesting, -> { joins(:user).where <<~SQL }
+    scope :interesting, -> { joins(:user).where <<~SQL.squish }
       readers.id NOT IN
         (SELECT reader_id
            FROM readers_roles
