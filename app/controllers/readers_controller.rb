@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Reader
 class ReadersController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_reader, only: %i[show edit update destroy]
@@ -7,7 +8,7 @@ class ReadersController < ApplicationController
 
   authorize_actions_for Case, only: %i[index destroy]
 
-  # GET /readers
+  # @route [GET] `/readers`
   def index
     @readers = FindReaders.by(**search_params)
                           .page(params[:page])
@@ -18,15 +19,15 @@ class ReadersController < ApplicationController
     render layout: 'admin'
   end
 
-  # GET /profile
+  # @route [GET] `/profile`
   def show; end
 
-  # GET /profile/edit
+  # @route [GET] `/profile/edit`
   def edit
     authorize_action_for @reader
   end
 
-  # PATCH/PUT /profile
+  # @route [PATCH/PUT] `/profile`
   def update
     authorize_action_for @reader
     respond_to do |format|

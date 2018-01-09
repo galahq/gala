@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Activity
 class ActivitiesController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_activity, only: %i[show update destroy]
@@ -7,7 +8,7 @@ class ActivitiesController < ApplicationController
 
   authorize_actions_for Activity
 
-  # POST /cases/case-slug/activities
+  # @route [POST] `/cases/case-slug/activities`
   def create
     @activity = Activity.create_as_element @case, title: 'New activity'
 
@@ -18,7 +19,7 @@ class ActivitiesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /activities/1
+  # @route [PATCH/PUT] `/activities/1`
   def update
     if @activity.update(activity_params)
       render @activity
@@ -27,7 +28,7 @@ class ActivitiesController < ApplicationController
     end
   end
 
-  # DELETE /activities/1
+  # @route [DELETE] `/activities/1`
   def destroy
     @activity.destroy
   end

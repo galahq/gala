@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Case
 class CasesController < ApplicationController
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
@@ -9,12 +10,12 @@ class CasesController < ApplicationController
 
   layout 'admin'
 
-  # GET /cases
+  # @route [GET] `/cases`
   def index
     @cases = Case.all.ordered.includes(:case_elements, :library)
   end
 
-  # GET /cases/slug
+  # @route [GET] `/cases/slug`
   def show
     authenticate_reader! unless @case.published
     authorize_action_for @case
@@ -24,12 +25,12 @@ class CasesController < ApplicationController
     render layout: 'with_header'
   end
 
-  # GET /cases/new
+  # @route [GET] `/cases/new`
   def new
     @case = Case.new
   end
 
-  # POST /cases
+  # @route [POST] `/cases`
   def create
     @case = Case.new(case_params)
     @case.kicker ||= @case.slug.split('-').join(' ').titlecase
@@ -46,7 +47,7 @@ class CasesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /cases/slug
+  # @route [PATCH/PUT] `/cases/slug`
   def update
     set_group_and_deployment
 

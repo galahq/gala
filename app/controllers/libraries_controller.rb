@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+# @see Library
 class LibrariesController < ApplicationController
   before_action :set_library
 
-  # GET /libraries/slug.json
+  # @route [GET] `/libraries/slug.json`
   def show
     return head(:not_found) unless @library
   end

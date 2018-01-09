@@ -8,7 +8,7 @@ class CardsController < ApplicationController
 
   authorize_actions_for Card
 
-  # POST /pages/1/cards
+  # @route [POST] `/pages/1/cards`
   def create
     @card = @page.cards.build(card_params)
 
@@ -19,7 +19,7 @@ class CardsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /cards/1
+  # @route [PATCH/PUT] `/cards/1`
   def update
     if @card.update(card_params)
       render @card
@@ -28,7 +28,7 @@ class CardsController < ApplicationController
     end
   end
 
-  # DELETE /cards/1
+  # @route [DELETE] `/cards/1`
   def destroy
     @card.destroy
     head :no_content
