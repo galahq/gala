@@ -52,7 +52,7 @@ class CardsController < ApplicationController
     ).(params.require(:card))
   end
 
-  def raw_draft_content_state
+  def raw_draft_content_state # rubocop:disable Metrics/AbcSize
     camelize(
       Sv.struct_of(
         blocks: Sv.array_of(
