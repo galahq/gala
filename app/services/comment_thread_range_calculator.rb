@@ -4,17 +4,16 @@
 # by looking for the first occurance of its highlight text. It is the consumer’s
 # responsibility to ensure that substring is unique.
 class CommentThreadRangeCalculator
+  attr_reader :block_index, :start
+
   def initialize(comment_thread)
     @comment_thread = comment_thread
     search
   end
 
-  attr_reader :block_index, :start
-
   def length
+    return 0 unless @comment_thread.original_highlight_text.respond_to? :length
     @comment_thread.original_highlight_text.length
-  rescue
-    0
   end
 
   private
