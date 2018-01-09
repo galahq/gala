@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Helper methods available in every view
 module ApplicationHelper
   def parent_layout(layout)
     @view_flow.set(:layout, output_buffer)

@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
+# Makes it easier to make forms in the [Blueprint](http://blueprintjs.com/)
+# style
 class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   FIELD_ERROR_PROC = proc do |html_tag, _instance_tag|
     html_tag
   end
 
+  # Creates a label, input, and helper text that are colored red together when
+  # there is an error in the field.
+  # rubocop:disable Metrics/ParameterLists
   def form_group(method, label: nil, in_parens: nil, placeholder: nil,
                  helper_text: nil, &block)
     without_field_error_wrapper do
@@ -16,6 +21,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
   end
+  # rubocop:enable Metrics/ParameterLists
 
   private
 
