@@ -17,7 +17,11 @@ if Rails.env.development?
     desc 'Generates dash docset from yard output'
     task dash: :yard do
       system(
-        'bundle exec doc_to_dash doc/yard --name Gala --output doc/dash --parser YardParser'
+        'bundle', 'exec', 'doc_to_dash',
+        'doc/yard',
+        '--name', 'Gala',
+        '--output', 'doc/dash',
+        '--parser', 'YardParser'
       )
     end
   end
