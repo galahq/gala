@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see ReplyNotification
 class ReplyNotificationBroadcastJob < ActiveJob::Base
   queue_as :default
 
