@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Page
 class PagesController < ApplicationController
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_case, only: [:create]
@@ -7,7 +8,7 @@ class PagesController < ApplicationController
 
   authorize_actions_for Page
 
-  # POST /cases/case-slug/pages
+  # @route [POST] `/cases/case-slug/pages`
   def create
     @page = Page.create_as_element @case, title: 'New page'
 
@@ -18,7 +19,7 @@ class PagesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /pages/1
+  # @route [PATCH/PUT] `/pages/1`
   def update
     if @page.update(page_params)
       render @page
@@ -27,7 +28,7 @@ class PagesController < ApplicationController
     end
   end
 
-  # DELETE /pages/1
+  # @route [DELETE] `/pages/1`
   def destroy
     @page.destroy
   end

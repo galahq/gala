@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+# The case catalog is searchable.
+# @see FindCases
 class SearchController < ApplicationController
-  # GET /search.json
+  # @route [GET] `/search.json`
   def index
     @cases = FindCases.by(params).pluck(:slug)
     render json: @cases

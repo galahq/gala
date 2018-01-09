@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+# @see Community
 class CommunitiesController < ApplicationController
   before_action :authenticate_reader!
 
-  # GET /cases/case-slug/communities
+  # @route [GET] `/cases/case-slug/communities`
   def index
     kase = Case.find_by_slug params[:case_slug]
     @communities = [GlobalCommunity.instance] +

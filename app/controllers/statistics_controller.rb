@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
+# Calculates the summary statistics for a trackable model.
+# @see Trackable
 class StatisticsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_trackable
 
   authorize_actions_for Case, all_actions: :update
 
-  # GET /#{trackable member path}/statistics
+  # @route [GET] `/#{trackable` member path}/statistics
   def show
     render partial: 'trackable/statistics', locals: { trackable: @trackable }
   end

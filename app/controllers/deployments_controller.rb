@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @see Deployment
 class DeploymentsController < ApplicationController
   before_action :set_deployment, only: %i[edit update]
   before_action :ensure_content_item_selection_params_set!, only: [:create]
@@ -8,7 +9,7 @@ class DeploymentsController < ApplicationController
 
   layout 'embed'
 
-  # POST /groups/1/deployments
+  # @route [POST] `/groups/1/deployments`
   def create
     the_group = Group.find params[:group_id]
     the_case = Case.find_by_slug params[:case_slug]
@@ -22,13 +23,13 @@ class DeploymentsController < ApplicationController
     redirect_to edit_deployment_path @deployment if @deployment.save
   end
 
-  # GET /deployments/1/edit
+  # @route [GET] `/deployments/1/edit`
   def edit
     set_selection_params
     set_recommended_quizzes
   end
 
-  # PATCH/PUT /deployments/1
+  # @route [PATCH/PUT] `/deployments/1`
   def update
     author_id = current_reader.try :id
     customizer = CustomizeDeploymentService.new @deployment, author_id, lti_uid

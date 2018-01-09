@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+# @see CaseElement
 class CaseElementsController < ApplicationController
   before_action :authenticate_reader!
 
-  # PATCH/PUT /case_elements/1
+  # @route [PATCH/PUT] `/case_elements/1`
   def update
     @case_element = CaseElement.find(params[:id])
     authorize_action_for @case_element.case
