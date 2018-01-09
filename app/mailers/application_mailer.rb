@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# @abstract
 class ApplicationMailer < ActionMailer::Base
   helper :application
 
