@@ -45,7 +45,7 @@ const EdgenotesCard = ({ edgenoteSlugs, oldStyle }) => {
 
 export default connect(mapStateToProps, () => ({}))(EdgenotesCard)
 
-function getEdgenoteSlugs (editorState: EditorState): string[] {
+export function getEdgenoteSlugs (editorState: EditorState): string[] {
   const rawContent = convertToRaw(editorState.getCurrentContent())
   return values(rawContent.entityMap)
     .filter(({ type }) => type === 'EDGENOTE')
