@@ -10,11 +10,7 @@ class EdgenotesController < ApplicationController
 
   # @route [POST] `/cases/case-slug/edgenotes`
   def create
-    @edgenote = @case.edgenotes.build(
-      slug: params[:slug],
-      format: 'aside',
-      style: :v2
-    )
+    @edgenote = @case.edgenotes.build
 
     if @edgenote.save
       render partial: 'edgenote', locals: { edgenote: @edgenote }
@@ -42,7 +38,10 @@ class EdgenotesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_edgenote
     @edgenote = Edgenote.where(slug: params[:slug])
-                        .includes(case: [:podcasts, :edgenotes, pages: [:cards], enrollments: [:reader]])
+                        .includes(case: [:podcasts,
+                                         :edgenotes,
+                                         pages: [:cards],
+                                         enrollments: [:reader]])
                         .first
   end
 
@@ -66,6 +65,8 @@ class EdgenotesController < ApplicationController
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
     headers['Access-Control-Request-Method'] = '*'
-    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, ' \
+                                              'Content-Type, Accept, ' \
+                                              'Authorization'
   end
 end
