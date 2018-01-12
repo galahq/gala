@@ -9,11 +9,12 @@
  */
 
 import * as React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { forEachObjIndexed } from 'ramda'
 
-import { Button, Dialog, Intent } from '@blueprintjs/core'
+import { Button, Dialog, Icon, Intent } from '@blueprintjs/core'
 
 import { getEdgenoteSlugs } from 'edgenotes'
 import { createEdgenote } from 'redux/actions'
@@ -47,12 +48,16 @@ type Props = {
   intl: IntlShape,
   unattachedEdgenotes: Edgenote[],
   onSelectEdgenote: string => void,
-  onCancel: () => void,
+  onCancel: () => void
 }
 
 class EdgenoteLibrary extends React.Component<Props> {
   componentDidMount () {
-    const { unattachedEdgenotes, onSelectEdgenote, createEdgenote } = this.props
+    const {
+      unattachedEdgenotes,
+      onSelectEdgenote,
+      createEdgenote,
+    } = this.props
     if (unattachedEdgenotes.length === 0) {
       createEdgenote().then(onSelectEdgenote)
     }
@@ -70,31 +75,34 @@ class EdgenoteLibrary extends React.Component<Props> {
     if (unattachedEdgenotes.length === 0) return null
 
     return (
-      <Dialog isOpen={true} title="Unused Edgenotes" onClose={onCancel}>
+      <Dialog
+        iconName="add-column-right"
+        isOpen={true}
+        title="Unused Edgenotes"
+        style={{ width: 800 }}
+        onClose={onCancel}
+      >
         <div className="pt-dialog-body">
-          <table className="pt-table pt-condensed">
-            <thead>
-              <tr>
-                <td />
-                <td>Caption</td>
-              </tr>
-            </thead>
+          <div className="pt-callout pt-intent-success pt-icon-help">
+            <FormattedMessage
+              id="edgenotes.reattachInstructions"
+              defaultMessage="The Edgenotes that belong to this case but that
+              are not attached to any card are listed below. They can be
+              reattached or deleted if they are no longer needed. Or, you can
+              create a brand new Edgenote and deal with these later."
+            />
+          </div>
+          <Table>
             <tbody>
               {unattachedEdgenotes.map(edgenote => (
-                <tr key={edgenote.slug}>
-                  <td>
-                    <Button
-                      className="pt-minimal"
-                      iconName="add"
-                      text="Add"
-                      onClick={() => onSelectEdgenote(edgenote.slug)}
-                    />
-                  </td>
-                  <td>{edgenote.caption || '—'}</td>
-                </tr>
+                <UnattachedEdgenote
+                  key={edgenote.slug}
+                  edgenote={edgenote}
+                  onSelect={() => onSelectEdgenote(edgenote.slug)}
+                />
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
 
         <div className="pt-dialog-footer">
@@ -108,7 +116,7 @@ class EdgenoteLibrary extends React.Component<Props> {
             />
             <Button
               iconName="add"
-              intent={Intent.PRIMARY}
+              intent={Intent.SUCCESS}
               text={intl.formatMessage({
                 id: 'edgenotes.new',
                 defaultMessage: 'New Edgenote',
@@ -123,4 +131,105 @@ class EdgenoteLibrary extends React.Component<Props> {
 }
 export default connect(mapStateToProps, { createEdgenote })(
   injectIntl(EdgenoteLibrary)
+)
+
+const Table = styled.table.attrs({ className: 'pt-table pt-condensed' })`
+  width: 100%;
+  margin-top: 1em;
+`
+
+const Td = styled.td`
+  padding-top: 9px !important;
+  min-width: 140px;
+
+  & .pt-icon-standard {
+    color: #bdbaab;
+    margin-right: 6px;
+  }
+`
+
+/**
+ * Shows only the Edgenote attributes that would be visible based on that
+ * Edgenote’s style.
+ */
+const UnattachedEdgenote = ({ edgenote, onSelect }) => {
+  let attributeComponents = []
+  if (edgenote.youtubeSlug) {
+    attributeComponents = [YoutubeSlug, Blank, Blank]
+  } else if (edgenote.pullQuote || edgenote.audioUrl) {
+    attributeComponents = [PullQuote, HasAudio, Website]
+  } else if (edgenote.imageUrl) {
+    attributeComponents = [Image, AltText, Website]
+  } else {
+    attributeComponents = [Blank, Blank, Website]
+  }
+
+  return (
+    <tr>
+      <td>
+        <Button
+          className="pt-minimal pt-small"
+          iconName="add"
+          intent={Intent.SUCCESS}
+          onClick={onSelect}
+        />
+      </td>
+      <Td>
+        <Icon iconName="tag" /> {edgenote.caption || '—'}
+      </Td>
+      {attributeComponents.map((Component, i) => (
+        <Component key={i} edgenote={edgenote} />
+      ))}
+    </tr>
+  )
+}
+
+const Link = styled.a.attrs({ target: '_blank', rel: 'noopener noreferrer' })``
+
+const Blank = () => <Td>—</Td>
+
+const YoutubeSlug = ({ edgenote }) => (
+  <Td>
+    <Icon iconName="video" />
+    <Link href={`https://www.youtube.com/watch?v=${edgenote.youtubeSlug}`}>
+      {edgenote.youtubeSlug}
+    </Link>
+  </Td>
+)
+
+const PullQuote = ({ edgenote }) => (
+  <Td>
+    <Icon iconName="citation" /> {edgenote.pullQuote}
+  </Td>
+)
+
+const HasAudio = ({ edgenote }) => (
+  <Td>{edgenote.audioUrl ? <Icon iconName="volume-up" /> : null}</Td>
+)
+
+const Img = styled.img`
+  width: 46px;
+  height: 46px;
+  object-fit: cover;
+`
+
+const Image = ({ edgenote }) => (
+  <Td>
+    <Img src={edgenote.imageUrl} />
+  </Td>
+)
+
+const AltText = ({ edgenote }) => <Td>{edgenote.altText || '—'}</Td>
+
+const Website = ({ edgenote }) => (
+  <Td>
+    {edgenote.websiteUrl && edgenote.callToAction ? (
+      <React.Fragment>
+        <Icon iconName="link" />
+        <Link href={edgenote.websiteUrl}>{edgenote.callToAction}</Link>
+      </React.Fragment>
+    ) : (
+      '—'
+    )}
+  </Td>
 )
