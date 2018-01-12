@@ -90,12 +90,14 @@ class EdgenoteLibrary extends React.Component<Props> {
               create a brand new Edgenote and deal with these later."
             />
           </div>
+
           <Table>
             <tbody>
               {unattachedEdgenotes.map(edgenote => (
                 <UnattachedEdgenote
                   key={edgenote.slug}
                   edgenote={edgenote}
+                  intl={intl}
                   onSelect={() => onSelectEdgenote(edgenote.slug)}
                   onDelete={() => deleteEdgenote(edgenote.slug)}
                 />
@@ -151,7 +153,7 @@ const Td = styled.td`
  * Shows only the Edgenote attributes that would be visible based on that
  * Edgenote’s style.
  */
-const UnattachedEdgenote = ({ edgenote, onSelect, onDelete }) => {
+const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
   let attributeComponents = []
   if (edgenote.youtubeSlug) {
     attributeComponents = [YoutubeSlug, Blank, Blank]
@@ -167,20 +169,38 @@ const UnattachedEdgenote = ({ edgenote, onSelect, onDelete }) => {
     <tr>
       <td>
         <Button
+          aria-label={intl.formatMessage({
+            id: 'edgenotes.attach',
+            defaultMessage: 'Attach this Edgenote.',
+          })}
           className="pt-minimal pt-small"
           iconName="add"
           intent={Intent.SUCCESS}
           onClick={onSelect}
         />
       </td>
+
       <Td>
-        <Icon iconName="tag" /> {edgenote.caption || '—'}
+        <Icon
+          aria-label={intl.formatMessage({
+            id: 'edgenotes.caption',
+            defaultMessage: 'Caption: ',
+          })}
+          iconName="tag"
+        />{' '}
+        {edgenote.caption || '—'}
       </Td>
+
       {attributeComponents.map((Component, i) => (
-        <Component key={i} edgenote={edgenote} />
+        <Component key={i} edgenote={edgenote} intl={intl} />
       ))}
+
       <td>
         <Button
+          aria-label={intl.formatMessage({
+            id: 'edgenotes.delete',
+            defaultMessage: 'Delete this Edgenote.',
+          })}
           className="pt-minimal pt-small"
           iconName="trash"
           intent={Intent.DANGER}
@@ -195,23 +215,46 @@ const Link = styled.a.attrs({ target: '_blank', rel: 'noopener noreferrer' })``
 
 const Blank = () => <Td>—</Td>
 
-const YoutubeSlug = ({ edgenote }) => (
+const YoutubeSlug = ({ edgenote, intl }) => (
   <Td>
-    <Icon iconName="video" />
+    <Icon
+      aria-label={intl.formatMessage({
+        id: 'edgenotes.videoSlug',
+        defaultMessage: 'YouTube video slug:',
+      })}
+      iconName="video"
+    />
     <Link href={`https://www.youtube.com/watch?v=${edgenote.youtubeSlug}`}>
       {edgenote.youtubeSlug}
     </Link>
   </Td>
 )
 
-const PullQuote = ({ edgenote }) => (
+const PullQuote = ({ edgenote, intl }) => (
   <Td>
-    <Icon iconName="citation" /> {edgenote.pullQuote}
+    <Icon
+      aria-label={intl.formatMessage({
+        id: 'edgenotes.pullQuote',
+        defaultMessage: 'Quotation: ',
+      })}
+      iconName="citation"
+    />
+    {edgenote.pullQuote}
   </Td>
 )
 
-const HasAudio = ({ edgenote }) => (
-  <Td>{edgenote.audioUrl ? <Icon iconName="volume-up" /> : null}</Td>
+const HasAudio = ({ edgenote, intl }) => (
+  <Td>
+    {edgenote.audioUrl ? (
+      <Icon
+        aria-label={intl.formatMessage({
+          id: 'edgenotes.hasAudio',
+          defaultMessage: 'This edgenote has an audio clip.',
+        })}
+        iconName="volume-up"
+      />
+    ) : null}
+  </Td>
 )
 
 const Img = styled.img`
