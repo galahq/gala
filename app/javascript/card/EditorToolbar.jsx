@@ -8,12 +8,11 @@ import { connect } from 'react-redux'
 import { EditorState, Modifier, RichUtils } from 'draft-js'
 
 import { addEntity } from './draftConfig'
-import { Orchard } from 'shared/orchard'
 
-import { updateCardContents, createEdgenote } from 'redux/actions'
+import { updateCardContents } from 'redux/actions'
 
 import type { Dispatch } from 'redux/actions'
-import type { State, Edgenote } from 'redux/state'
+import type { State } from 'redux/state'
 
 type OwnProps = { cardId: string }
 function mapStateToProps (state: State, ownProps: OwnProps) {
@@ -21,7 +20,6 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
     caseSlug: state.caseData.slug,
     editorState:
       state.cardsById[ownProps.cardId].editorState || EditorState.createEmpty(),
-    edgenoteExists: (slug: string) => !!state.edgenotesBySlug[slug],
   }
 }
 
@@ -29,17 +27,14 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
   return {
     updateEditorState: (eS: EditorState) =>
       dispatch(updateCardContents(ownProps.cardId, eS)),
-    createEdgenoteRecord: (slug: string, data: Edgenote) =>
-      dispatch(createEdgenote(slug, data)),
   }
 }
 
 class EditorToolbar extends React.Component<{
   caseSlug: string,
   editorState: EditorState,
-  edgenoteExists: string => boolean,
+  getEdgenote: () => Promise<string>,
   updateEditorState: EditorState => Promise<any>,
-  createEdgenoteRecord: (string, Edgenote) => Promise<any>,
 }> {
   // These must call this.props.editorState individually to keep from
   // capturing editorState as it exists when EditorToolbar is constructed.
@@ -85,35 +80,18 @@ class EditorToolbar extends React.Component<{
   }
 
   handleAddEdgenote = () => {
-    let {
-      caseSlug,
-      editorState,
-      updateEditorState,
-      edgenoteExists,
-      createEdgenoteRecord,
-    } = this.props
+    let { editorState, getEdgenote, updateEditorState } = this.props
 
-    const slug = prompt('Slug?')
-    if (slug.length === '') return
-
-    const addHighlight = () =>
-      updateEditorState(
-        addEntity(
-          { type: 'EDGENOTE', mutability: 'MUTABLE', data: { slug }},
-          editorState
+    getEdgenote()
+      .then(slug =>
+        updateEditorState(
+          addEntity(
+            { type: 'EDGENOTE', mutability: 'MUTABLE', data: { slug }},
+            editorState
+          )
         )
       )
-
-    if (edgenoteExists(slug)) {
-      addHighlight()
-    } else {
-      Orchard.graft(`cases/${caseSlug}/edgenotes`, {
-        slug,
-      }).then((data: Edgenote) => {
-        createEdgenoteRecord(slug, data)
-        addHighlight()
-      })
-    }
+      .catch(e => e && console.log(e))
   }
 
   render () {

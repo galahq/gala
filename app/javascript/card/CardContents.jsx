@@ -81,6 +81,7 @@ class CardContents extends React.Component<CardProps, *> {
       onChange,
       handleKeyCommand,
       handleDeleteCard,
+      getEdgenote,
       openedCitation,
       addCommentThread,
       theseCommentThreadsOpen,
@@ -118,7 +119,7 @@ class CardContents extends React.Component<CardProps, *> {
       >
         {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
 
-        {editing && <EditorToolbar cardId={id} />}
+        {editing && <EditorToolbar cardId={id} getEdgenote={getEdgenote} />}
         {title}
         <FocusContainer
           active={!!(theseCommentThreadsOpen && acceptingSelection)}

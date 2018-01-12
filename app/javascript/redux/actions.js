@@ -62,8 +62,9 @@ export type Action =
   | ChangeCommentInProgressAction
   | AddCommentAction
   | RemoveCommentAction
-  | CreateEdgenoteAction
+  | AddEdgenoteAction
   | UpdateEdgenoteAction
+  | RemoveEdgenoteAction
   | HighlightEdgenoteAction
   | ActivateEdgenoteAction
   | RegisterToasterAction
@@ -824,16 +825,25 @@ export function deleteComment (id: string): ThunkAction {
 
 // EDGENOTE
 //
-export type CreateEdgenoteAction = {
-  type: 'CREATE_EDGENOTE',
+export function createEdgenote (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const { slug } = getState().caseData
+    return Orchard.graft(`cases/${slug}/edgenotes`, {}).then(
+      (edgenote: Edgenote) => {
+        dispatch(addEdgenote(edgenote.slug, edgenote))
+        return edgenote.slug
+      }
+    )
+  }
+}
+
+export type AddEdgenoteAction = {
+  type: 'ADD_EDGENOTE',
   slug: string,
   data: Edgenote,
 }
-export function createEdgenote (
-  slug: string,
-  data: Edgenote
-): CreateEdgenoteAction {
-  return { type: 'CREATE_EDGENOTE', slug, data }
+export function addEdgenote (slug: string, data: Edgenote): AddEdgenoteAction {
+  return { type: 'ADD_EDGENOTE', slug, data }
 }
 
 export type UpdateEdgenoteAction = {
@@ -847,6 +857,28 @@ export function updateEdgenote (
 ): UpdateEdgenoteAction {
   setUnsaved()
   return { type: 'UPDATE_EDGENOTE', slug, data }
+}
+
+export function deleteEdgenote (slug: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    if (
+      window.confirm(
+        'Are you sure you want to delete this Edgenote? This action cannot be undone.'
+      )
+    ) {
+      return Orchard.prune(`edgenotes/${slug}`).then(() =>
+        dispatch(removeEdgenote(slug))
+      )
+    }
+  }
+}
+
+export type RemoveEdgenoteAction = {
+  type: 'REMOVE_EDGENOTE',
+  slug: string,
+}
+function removeEdgenote (slug: string): RemoveEdgenoteAction {
+  return { type: 'REMOVE_EDGENOTE', slug }
 }
 
 export type HighlightEdgenoteAction = {

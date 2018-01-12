@@ -19,10 +19,10 @@ declare module '@blueprintjs/core' {
     | typeof undefined
 
   declare export class Intent {
-    static PRIMARY: PRIMARY,
-    static SUCCESS: SUCCESS,
-    static WARNING: WARNING,
-    static DANGER: DANGER,
+    static PRIMARY: PRIMARY;
+    static SUCCESS: SUCCESS;
+    static WARNING: WARNING;
+    static DANGER: DANGER;
   }
 
   declare export type TOP_LEFT = 'TOP_LEFT'
@@ -52,18 +52,18 @@ declare module '@blueprintjs/core' {
     | LEFT_TOP
 
   declare export class Position {
-    static TOP_LEFT: TOP_LEFT,
-    static TOP: TOP,
-    static TOP_RIGHT: TOP_RIGHT,
-    static RIGHT_TOP: RIGHT_TOP,
-    static RIGHT: RIGHT,
-    static RIGHT_BOTTOM: RIGHT_BOTTOM,
-    static BOTTOM_RIGHT: BOTTOM_RIGHT,
-    static BOTTOM: BOTTOM,
-    static BOTTOM_LEFT: BOTTOM_LEFT,
-    static LEFT_BOTTOM: LEFT_BOTTOM,
-    static LEFT: LEFT,
-    static LEFT_TOP: LEFT_TOP,
+    static TOP_LEFT: TOP_LEFT;
+    static TOP: TOP;
+    static TOP_RIGHT: TOP_RIGHT;
+    static RIGHT_TOP: RIGHT_TOP;
+    static RIGHT: RIGHT;
+    static RIGHT_BOTTOM: RIGHT_BOTTOM;
+    static BOTTOM_RIGHT: BOTTOM_RIGHT;
+    static BOTTOM: BOTTOM;
+    static BOTTOM_LEFT: BOTTOM_LEFT;
+    static LEFT_BOTTOM: LEFT_BOTTOM;
+    static LEFT: LEFT;
+    static LEFT_TOP: LEFT_TOP;
   }
 
   declare export type CLICK = 'CLICK'
@@ -77,72 +77,72 @@ declare module '@blueprintjs/core' {
     | HOVER_TARGET_ONLY
 
   declare export class PopoverInteractionKind {
-    static CLICK: CLICK,
-    static CLICK_TARGET_ONLY: CLICK_TARGET_ONLY,
-    static HOVER: HOVER,
-    static HOVER_TARGET_ONLY: HOVER_TARGET_ONLY,
+    static CLICK: CLICK;
+    static CLICK_TARGET_ONLY: CLICK_TARGET_ONLY;
+    static HOVER: HOVER;
+    static HOVER_TARGET_ONLY: HOVER_TARGET_ONLY;
   }
 
   //
   // Interfaces
   //
   declare export interface IProps {
-    className?: string,
+    className?: string;
   }
 
   declare export interface IActionProps {
-    disabled?: boolean,
-    text?: string,
-    iconName?: string,
-    onClick?: (SyntheticEvent<*>) => any,
+    disabled?: boolean;
+    text?: string;
+    iconName?: string;
+    onClick?: (SyntheticEvent<*>) => any;
   }
 
   declare export interface IBackdropProps {
-    backdropClassName?: string,
-    backdropProps?: HTMLDivElement,
-    canOutsideClickClose?: boolean,
-    hasBackdrop?: boolean,
+    backdropClassName?: string;
+    backdropProps?: HTMLDivElement;
+    canOutsideClickClose?: boolean;
+    hasBackdrop?: boolean;
   }
 
   declare export interface IControlledProps {
-    defaultValue?: string,
-    onChange?: (SyntheticInputEvent<*>) => any,
-    value?: string,
+    defaultValue?: string;
+    onChange?: (SyntheticInputEvent<*>) => any;
+    value?: string;
   }
 
   declare export interface IControlProps {
-    checked?: boolean,
-    defaultChecked?: boolean,
-    disabled?: boolean,
-    inputRef?: HTMLInputElement => any,
-    label?: string,
-    onChange?: (SyntheticInputEvent<*>) => any,
+    checked?: boolean;
+    defaultChecked?: boolean;
+    disabled?: boolean;
+    inputRef?: HTMLInputElement => any;
+    label?: string;
+    onChange?: (SyntheticInputEvent<*>) => any;
   }
 
   declare export interface IIntentProps {
-    intent?: IntentType,
+    intent?: IntentType;
   }
 
   declare export interface ILinkProps {
-    href?: string,
-    target?: '_self' | '_blank' | '_parent' | '_top',
+    href?: string;
+    target?: '_self' | '_blank' | '_parent' | '_top';
   }
 
   declare export interface IOptionProps {
-    className?: string,
-    disabled?: boolean,
-    label?: string,
-    value?: string,
+    className?: string;
+    disabled?: boolean;
+    label?: string;
+    value?: string;
   }
 
   declare export interface IOverlayableProps {
-    autoFocus?: boolean,
-    canEscapeKeyClose?: boolean,
-    enforceFocus?: boolean,
-    inline?: boolean,
-    lazy?: boolean,
-    onClose?: (SyntheticEvent<*>) => any,
-    transitionDuration?: number,
+    autoFocus?: boolean;
+    canEscapeKeyClose?: boolean;
+    enforceFocus?: boolean;
+    inline?: boolean;
+    lazy?: boolean;
+    onClose?: (SyntheticEvent<*>) => any;
+    transitionDuration?: number;
   }
 
   //
@@ -192,6 +192,14 @@ declare module '@blueprintjs/core' {
     } & IProps &
       IBackdropProps &
       IOverlayableProps
+  > {}
+
+  declare export class Icon extends React.Components<
+    {
+      iconName: string,
+      iconSize?: 'inherit' | 16 | 20,
+    } & IProps &
+      IIntentProps
   > {}
 
   declare export class InputGroup extends React.Component<
@@ -290,12 +298,12 @@ declare module '@blueprintjs/core' {
         position?: Position,
       } & IProps),
       container: ?HTMLElement
-    ): Toaster,
-    show(props: Toast): string,
-    update(key: string, props: Toast): void,
-    dismiss(key: string): void,
-    clear(): void,
-    getToasts(): Toast[],
+    ): Toaster;
+    show(props: Toast): string;
+    update(key: string, props: Toast): void;
+    dismiss(key: string): void;
+    clear(): void;
+    getToasts(): Toast[];
   }
 
   declare export class Tooltip extends React.Component<
@@ -317,6 +325,7 @@ declare module '@blueprintjs/core' {
       transitionDuration?: number,
       useSmartArrowPositioning?: boolean,
       useSmartPositioning?: boolean,
-    } & IIntentProps & IProps
+    } & IIntentProps &
+      IProps
   > {}
 }

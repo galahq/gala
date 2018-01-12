@@ -19,6 +19,7 @@ import {
 
 import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'shared/routes'
+import withGetEdgenote from './withGetEdgenote'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { DraftHandleValue } from 'draft-js/lib/DraftHandleValue'
@@ -131,6 +132,7 @@ export type CardProps = {|
   addCommentThread: () => Promise<any>,
   onChange: EditorState => void,
   handleKeyCommand: string => DraftHandleValue,
+  getEdgenote: () => Promise<string>,
 |}
 function mergeProps (
   stateProps: StateProps,
@@ -180,5 +182,7 @@ function mergeProps (
 
 export default withRouter(
   // $FlowFixMe
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(CardContents)
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withGetEdgenote(CardContents)
+  )
 )

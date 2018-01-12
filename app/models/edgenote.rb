@@ -51,6 +51,8 @@ class Edgenote < ApplicationRecord
   include Mobility
   include Trackable
 
+  attribute :format, :string, default: 'aside'
+  attribute :style, :integer, default: 1 # :v2
   translates :caption, :content, :instructions, :image_url, :website_url,
              :embed_code, :photo_credit, :pdf_url, :pull_quote, :attribution,
              :call_to_action, :audio_url, :youtube_slug, fallbacks: true
@@ -62,6 +64,8 @@ class Edgenote < ApplicationRecord
 
   validates :format, inclusion: { in: %w[aside audio graphic link photo quote
                                          report video] }
+
+  before_create :ensure_slug_set
 
   # The name of the corresponding {Ahoy::Event}s
   # @see Trackable#event_name
@@ -77,5 +81,11 @@ class Edgenote < ApplicationRecord
 
   def to_param
     slug
+  end
+
+  private
+
+  def ensure_slug_set
+    self.slug ||= SecureRandom.uuid
   end
 end
