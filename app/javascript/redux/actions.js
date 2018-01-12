@@ -64,6 +64,7 @@ export type Action =
   | RemoveCommentAction
   | AddEdgenoteAction
   | UpdateEdgenoteAction
+  | RemoveEdgenoteAction
   | HighlightEdgenoteAction
   | ActivateEdgenoteAction
   | RegisterToasterAction
@@ -856,6 +857,28 @@ export function updateEdgenote (
 ): UpdateEdgenoteAction {
   setUnsaved()
   return { type: 'UPDATE_EDGENOTE', slug, data }
+}
+
+export function deleteEdgenote (slug: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    if (
+      window.confirm(
+        'Are you sure you want to delete this Edgenote? This action cannot be undone.'
+      )
+    ) {
+      return Orchard.prune(`edgenotes/${slug}`).then(() =>
+        dispatch(removeEdgenote(slug))
+      )
+    }
+  }
+}
+
+export type RemoveEdgenoteAction = {
+  type: 'REMOVE_EDGENOTE',
+  slug: string,
+}
+function removeEdgenote (slug: string): RemoveEdgenoteAction {
+  return { type: 'REMOVE_EDGENOTE', slug }
 }
 
 export type HighlightEdgenoteAction = {

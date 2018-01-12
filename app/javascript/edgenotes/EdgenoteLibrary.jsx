@@ -17,7 +17,7 @@ import { forEachObjIndexed } from 'ramda'
 import { Button, Dialog, Icon, Intent } from '@blueprintjs/core'
 
 import { getEdgenoteSlugs } from 'edgenotes'
-import { createEdgenote } from 'redux/actions'
+import { createEdgenote, deleteEdgenote } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
 import type { State, CardsState, EdgenotesState, Edgenote } from 'redux/state'
@@ -45,19 +45,16 @@ function mapStateToProps ({ cardsById, edgenotesBySlug }: State) {
 
 type Props = {
   createEdgenote: () => Promise<string>,
+  deleteEdgenote: string => mixed,
   intl: IntlShape,
   unattachedEdgenotes: Edgenote[],
   onSelectEdgenote: string => void,
-  onCancel: () => void
+  onCancel: () => void,
 }
 
 class EdgenoteLibrary extends React.Component<Props> {
   componentDidMount () {
-    const {
-      unattachedEdgenotes,
-      onSelectEdgenote,
-      createEdgenote,
-    } = this.props
+    const { unattachedEdgenotes, onSelectEdgenote, createEdgenote } = this.props
     if (unattachedEdgenotes.length === 0) {
       createEdgenote().then(onSelectEdgenote)
     }
@@ -66,6 +63,7 @@ class EdgenoteLibrary extends React.Component<Props> {
   render () {
     const {
       createEdgenote,
+      deleteEdgenote,
       intl,
       unattachedEdgenotes,
       onSelectEdgenote,
@@ -99,6 +97,7 @@ class EdgenoteLibrary extends React.Component<Props> {
                   key={edgenote.slug}
                   edgenote={edgenote}
                   onSelect={() => onSelectEdgenote(edgenote.slug)}
+                  onDelete={() => deleteEdgenote(edgenote.slug)}
                 />
               ))}
             </tbody>
@@ -129,7 +128,7 @@ class EdgenoteLibrary extends React.Component<Props> {
     )
   }
 }
-export default connect(mapStateToProps, { createEdgenote })(
+export default connect(mapStateToProps, { createEdgenote, deleteEdgenote })(
   injectIntl(EdgenoteLibrary)
 )
 
@@ -152,7 +151,7 @@ const Td = styled.td`
  * Shows only the Edgenote attributes that would be visible based on that
  * Edgenote’s style.
  */
-const UnattachedEdgenote = ({ edgenote, onSelect }) => {
+const UnattachedEdgenote = ({ edgenote, onSelect, onDelete }) => {
   let attributeComponents = []
   if (edgenote.youtubeSlug) {
     attributeComponents = [YoutubeSlug, Blank, Blank]
@@ -180,6 +179,14 @@ const UnattachedEdgenote = ({ edgenote, onSelect }) => {
       {attributeComponents.map((Component, i) => (
         <Component key={i} edgenote={edgenote} />
       ))}
+      <td>
+        <Button
+          className="pt-minimal pt-small"
+          iconName="trash"
+          intent={Intent.DANGER}
+          onClick={onDelete}
+        />
+      </td>
     </tr>
   )
 }
