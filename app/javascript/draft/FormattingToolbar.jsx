@@ -4,12 +4,14 @@
  */
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
 import { Button } from '@blueprintjs/core'
 import { EditorState, RichUtils } from 'draft-js'
 
+import { displayToast } from 'redux/actions'
 import {
   blockTypeEquals,
   entityTypeEquals,
@@ -95,6 +97,7 @@ const ACTIONS: Action[] = [
 
 type Props = {
   actions: { [ActionName]: boolean },
+  displayToast: typeof displayToast,
   editorState: EditorState,
   getEdgenote: ?() => Promise<string>,
   intl: IntlShape,
@@ -132,7 +135,7 @@ FormattingToolbar.defaultProps = {
   actions: {},
 }
 
-export default injectIntl(FormattingToolbar)
+export default connect(null, { displayToast })(injectIntl(FormattingToolbar))
 
 const ButtonGroup = styled.div.attrs({
   className: ({ active }) =>

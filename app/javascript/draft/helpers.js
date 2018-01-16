@@ -6,9 +6,13 @@
 
 import { RichUtils, Modifier, EditorState, SelectionState } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
+import { Intent } from '@blueprintjs/core'
 
+import type { IntlShape } from 'react-intl'
 import type { ContentState } from 'draft-js'
 import type { DraftEntityMutability } from 'draft-js/lib/DraftEntityMutability'
+
+import typeof { displayToast } from 'redux/actions'
 
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
@@ -145,17 +149,35 @@ export const entityTypeEquals = (type: string) => (
   )
 }
 
+type ToggleEdgenoteProps = {
+  displayToast: displayToast,
+  getEdgenote: ?() => Promise<string>,
+  intl: IntlShape,
+}
 export async function toggleEdgenote (
   editorState: EditorState,
-  { getEdgenote }: { getEdgenote: ?() => Promise<string> }
+  { displayToast, getEdgenote, intl }: ToggleEdgenoteProps
 ) {
   if (getEdgenote == null) return editorState
 
   if (entityTypeEquals('EDGENOTE')(editorState)) {
     return removeSelectedEntity(editorState)
-  } else {
-    return getEdgenote().then(slug => addEdgenoteEntity(slug, editorState))
   }
+
+  if (editorState.getSelection().isCollapsed()) {
+    displayToast({
+      iconName: 'error',
+      intent: Intent.WARNING,
+      message: intl.formatMessage({
+        id: 'edgenotes.makeSelection',
+        defaultMessage:
+          'Please select the phrase that you would like to attach an Edgenote to.',
+      }),
+    })
+    return editorState
+  }
+
+  return getEdgenote().then(slug => addEdgenoteEntity(slug, editorState))
 }
 
 export function addCitationEntity (editorState: EditorState) {
