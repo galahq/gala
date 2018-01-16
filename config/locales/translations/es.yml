@@ -1,0 +1,360 @@
+es:
+  activerecord:
+    models:
+      global_community: Comunidad global
+      shared_cases_library: Casos compartidos
+      activity: Actividad  #g
+      ahoy/event: Ahoy / evento  #g
+      answer: Respuestas  #g
+      authentication_strategy: Estrategia de autenticación  #g
+      card: Tarjeta  #g
+      case: Caso  #g
+      case_element: Elemento de caso  #g
+      comment: Comentario  #g
+      comment_thread: Hilo de comentario  #g
+      community: Comunidad  #g
+      deployment: Despliegue  #g
+      edgenote: Edgenote  #g
+      enrollment: Inscripción  #g
+      forum: Foro  #g
+      group: Grupo  #g
+      group_membership: Membresía de grupo  #g
+      invitation: Invitación  #g
+      library: Biblioteca  #g
+      page: Página  #g
+      podcast: Podcast  #g
+      question: Pregunta  #g
+      quiz: Examen  #g
+      reader: Lector  #g
+      reply_notification: Notificación de respuesta  #g
+      role: Papel  #g
+      submission: Sumisión  #g
+      visit: Visitar  #g
+
+    attributes:
+      shared_cases_library:
+        description: |
+          Estos casos fueron compartidos por los usuarios de Gala.
+
+      activity:
+        card: :activerecord.models.card  #g
+        case: :activerecord.models.case  #g
+        case_element: :activerecord.models.case_element  #g
+        description: Descripción  #g
+        icon_slug: Babosa de icono  #g
+        pdf_url: URL de PDF  #g
+        position: Posición  #g
+        title: Título  #g
+
+      ahoy/event:
+        name: Nombre  #g
+        properties: Propiedades  #g
+        time: Hora  #g
+        user: :activerecord.models.user  #g
+        visit: :activerecord.models.visit  #g
+
+      answer:
+        case_completion: Completar caso  #g
+        content: Contenido  #g
+        correct: Correcto  #g
+        question: :activerecord.models.question  #g
+        quiz: :activerecord.models.quiz  #g
+        reader: :activerecord.models.reader  #g
+        submission: :activerecord.models.submission  #g
+
+      authentication_strategy:
+        provider: Proveedor  #g
+        reader: :activerecord.models.reader  #g
+        uid: Uid  #g
+
+      card:
+        case: :activerecord.models.case  #g
+        comment_threads: Hilos de comentario  #g
+        content: Contenido  #g
+        element: :activerecord.models.element  #g
+        element_type: Tipo de elemento  #g
+        position: Posición  #g
+        raw_content: Contenido sin procesar  #g
+        solid: Sólido  #g
+
+      case:
+        acknowledgements: Expresiones de gratitud  #g
+        activities: Ocupaciones  #g
+        audience: Audiencia  #g
+        authors: Autores  #g
+        cards: Tarjetas  #g
+        case_elements: Elementos del caso  #g
+        classroom_timeline: Calendario de clase  #g
+        comment_threads: Hilos de comentario  #g
+        commentable: Commentable  #g
+        comments: Comentarios  #g
+        cover_url: Cubrir url  #g
+        dek: Dek  #g
+        deployments: Despliegues  #g
+        edgenotes: Edgenotes  #g
+        enrollments: Inscripciones  #g
+        featured_at: Presentado en  #g
+        forums: Foros  #g
+        kicker: Pateador  #g
+        latitude: Latitud  #g
+        learning_objectives: Objetivos de aprendizaje  #g
+        library: :activerecord.models.library  #g
+        longitude: Longitud  #g
+        narrative: Narrativa  #g
+        pages: Páginas  #g
+        photo_credit: autor de la foto  #g
+        podcasts: Podcasts  #g
+        published_at: Publicado en  #g
+        quizzes: Cuestionarios  #g
+        readers: Lectores  #g
+        roles: Roles  #g
+        short_title: Título corto  #g
+        slug: Babosa  #g
+        summary: Resumen  #g
+        tags: Etiquetas  #g
+        title: Título  #g
+        translators: Traductores  #g
+        zoom: Enfocar  #g
+
+      case_element:
+        case: :activerecord.models.case  #g
+        element: :activerecord.models.element  #g
+        element_type: Tipo de elemento  #g
+        position: Posición  #g
+
+      comment:
+        comment_thread: :activerecord.models.comment_thread  #g
+        content: Contenido  #g
+        position: Posición  #g
+        reader: :activerecord.models.reader  #g
+
+      comment_thread:
+        block_index: Índice de bloque  #g
+        card: :activerecord.models.card  #g
+        comments: Comentarios  #g
+        forum: :activerecord.models.forum  #g
+        length: Longitud  #g
+        locale: Lugar  #g
+        original_highlight_text: Texto resaltado original  #g
+        reader: :activerecord.models.reader  #g
+        start: comienzo  #g
+
+      community:
+        forums: Foros  #g
+        group: :activerecord.models.group  #g
+        invitations: Invitaciones  #g
+        name: Nombre  #g
+
+      deployment:
+        answers_needed: Respuestas necesarias  #g
+        case: :activerecord.models.case  #g
+        group: :activerecord.models.group  #g
+        key: Llave  #g
+        quiz: :activerecord.models.quiz  #g
+
+      edgenote:
+        alt_text: texto alternativo  #g
+        attribution: Atribución  #g
+        audio_url: URL de audio  #g
+        call_to_action: Llamada a la acción  #g
+        caption: Subtítulo  #g
+        card: :activerecord.models.card  #g
+        case: :activerecord.models.case  #g
+        content: Contenido  #g
+        embed_code: Código de inserción  #g
+        format: Formato  #g
+        image_url: URL de la imagen  #g
+        instructions: Instrucciones  #g
+        pdf_url: URL de PDF  #g
+        photo_credit: autor de la foto  #g
+        pull_quote: Pull quote  #g
+        slug: Babosa  #g
+        style: Estilo  #g
+        thumbnail_url: URL en miniatura  #g
+        website_url: URL del sitio web  #g
+        youtube_slug: Babosa de Youtube  #g
+
+      enrollment:
+        active_group: :activerecord.models.active_group  #g
+        case: :activerecord.models.case  #g
+        reader: :activerecord.models.reader  #g
+        status: Estado  #g
+
+      forum:
+        case: :activerecord.models.case  #g
+        comment_threads: Hilos de comentario  #g
+        community: :activerecord.models.community  #g
+
+      group:
+        community: :activerecord.models.community  #g
+        deployments: Despliegues  #g
+        group_memberships: Membresías grupales  #g
+        name: Nombre  #g
+        readers: Lectores  #g
+
+      group_membership:
+        group: :activerecord.models.group  #g
+        reader: :activerecord.models.reader  #g
+
+      habtm_readers:
+        left_side: :activerecord.models.left_side  #g
+        reader: :activerecord.models.reader  #g
+
+      habtm_roles:
+        left_side: :activerecord.models.left_side  #g
+        role: :activerecord.models.role  #g
+
+      invitation:
+        accepted_at: Aceptado en  #g
+        community: :activerecord.models.community  #g
+        inviter: :activerecord.models.inviter  #g
+        reader: :activerecord.models.reader  #g
+        rescinded_at: Rescindido en  #g
+
+      library:
+        background_color: Color de fondo  #g
+        cases: Casos  #g
+        description: Descripción  #g
+        foreground_color: Color de primer plano  #g
+        logo_url: Logo url  #g
+        name: Nombre  #g
+        slug: Babosa  #g
+        url: Url  #g
+
+      page:
+        cards: Tarjetas  #g
+        case: :activerecord.models.case  #g
+        case_element: :activerecord.models.case_element  #g
+        position: Posición  #g
+        title: Título  #g
+
+      podcast:
+        artwork_url: URL de la obra  #g
+        audio_url: URL de audio  #g
+        card: :activerecord.models.card  #g
+        case: :activerecord.models.case  #g
+        case_element: :activerecord.models.case_element  #g
+        credits: Créditos  #g
+        description: Descripción  #g
+        photo_credit: autor de la foto  #g
+        position: Posición  #g
+        title: Título  #g
+
+      question:
+        answers: Respuestas  #g
+        content: Contenido  #g
+        correct_answer: Respuesta correcta  #g
+        options: Opciones  #g
+        quiz: :activerecord.models.quiz  #g
+
+      quiz:
+        author: :activerecord.models.author  #g
+        case: :activerecord.models.case  #g
+        custom_questions: Preguntas personalizadas  #g
+        customized: Personalizado  #g
+        deployments: Despliegues  #g
+        lti_uid: Lti uid  #g
+        submissions: Presentaciones  #g
+        template: :activerecord.models.template  #g
+
+      reader:
+        answers: Respuestas  #g
+        authentication_strategies: Estrategias de autenticación  #g
+        cases: Casos  #g
+        comment_threads: Hilos de comentario  #g
+        comments: Comentarios  #g
+        confirmation_sent_at: Confirmación enviada a  #g
+        confirmation_token: Token de confirmación  #g
+        confirmed_at: Confirmado en  #g
+        created_password: Contraseña creada  #g
+        current_sign_in_at: Inicia sesión en  #g
+        current_sign_in_ip: Signo actual en ip  #g
+        deployments: Despliegues  #g
+        email: Email  #g
+        encrypted_password: Contraseña cifrada  #g
+        enrollments: Inscripciones  #g
+        events: Eventos  #g
+        group_communities: Comunidades grupales  #g
+        group_memberships: Membresías grupales  #g
+        groups: Grupos  #g
+        image_url: URL de la imagen  #g
+        initials: Iniciales  #g
+        invitations: Invitaciones  #g
+        invited_communities: Comunidades invitadas  #g
+        last_sign_in_at: Último inicio de sesión en  #g
+        last_sign_in_ip: Último inicio de sesión en ip  #g
+        locale: Lugar  #g
+        name: Nombre  #g
+        quizzes: Cuestionarios  #g
+        remember_created_at: Recuerde creado en  #g
+        reset_password_sent_at: Restablecer la contraseña enviada a  #g
+        reset_password_token: Restablecer contraseña token  #g
+        roles: Roles  #g
+        send_reply_notifications: Notificarme cuando alguien responda a un comentario que escribí
+        submissions: Presentaciones  #g
+        unconfirmed_email: Correo electrónico no confirmado  #g
+
+      reply_notification:
+        card: :activerecord.models.card  #g
+        case: :activerecord.models.case  #g
+        comment: :activerecord.models.comment  #g
+        comment_thread: :activerecord.models.comment_thread  #g
+        notifier: :activerecord.models.notifier  #g
+        page: :activerecord.models.page  #g
+        reader: :activerecord.models.reader  #g
+
+      role:
+        name: Nombre  #g
+        readers: Lectores  #g
+        resource: :activerecord.models.resource  #g
+        resource_type: Tipo de recurso  #g
+
+      submission:
+        answers: Respuestas  #g
+        quiz: :activerecord.models.quiz  #g
+        reader: :activerecord.models.reader  #g
+
+      visit:
+        ahoy_events: Ahoy eventos  #g
+        browser: Navegador  #g
+        city: Ciudad  #g
+        country: País  #g
+        device_type: Tipo de dispositivo  #g
+        ip: Ip  #g
+        landing_page: Página de destino  #g
+        latitude: Latitud  #g
+        longitude: Longitud  #g
+        os: Os  #g
+        postal_code: código postal  #g
+        referrer: Referente  #g
+        referring_domain: Dominio de referencia  #g
+        region: Región  #g
+        screen_height: Altura de la pantalla  #g
+        screen_width: Ancho de la pantalla  #g
+        search_keyword: Buscar la palabra clave  #g
+        started_at: Empezó a las  #g
+        user: :activerecord.models.user  #g
+        user_agent: Agente de usuario  #g
+        utm_campaign: Campaña de Utm  #g
+        utm_content: Contenido de Utm  #g
+        utm_medium: Utm medium  #g
+        utm_source: Utm fuente  #g
+        utm_term: Término de Utm  #g
+        visit_token: Visit token  #g
+        visitor_token: Token de visitante  #g
+
+  devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: Regístrese para obtener una cuenta gratuita
+    sessions:
+      destroy: Salir
+    registrations:
+      new:
+        minimum_characters: '%{count} caracteres como mínimo'
+      edit:
+        change_my_password: Cambiar mi contraseña
+        my_account: Mi cuenta
+        leave_blank_if_you_dont_want_to_change_it: déjelo en blanco si no desea cambiarlo
+        to_confirm_your_changes: para confirmar tus cambios
+        save: Guardar

@@ -90,7 +90,7 @@ const NewCommentButton = ({
     {acceptingSelection &&
       !selectionPending && (
         <CancelButton onClick={() => acceptSelection(false)}>
-          Cancel
+          <FormattedMessage id="cancel" defaultMessage="Cancel" />
         </CancelButton>
       )}
   </Container>
