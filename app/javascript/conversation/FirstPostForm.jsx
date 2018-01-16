@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
-import FormattingToolbar from 'conversation/FormattingToolbar'
+import FormattingToolbar from 'draft/FormattingToolbar'
 
 import type { Editor } from 'draft-js'
 import type {
