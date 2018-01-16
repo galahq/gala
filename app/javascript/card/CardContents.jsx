@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { append } from 'ramda'
 
 import { Editor, EditorState } from 'draft-js'
@@ -191,6 +191,14 @@ const Card = styled.div`
   & > .pt-button-group {
     position: absolute;
     margin-top: -14px;
+  }
+
+  & .c-edgenote-entity {
+    ${p =>
+    p.editable &&
+      css`
+        pointer-events: none;
+      `};
   }
 `
 
