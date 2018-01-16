@@ -10,11 +10,11 @@ import { append } from 'ramda'
 import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
-import { getStyleMap } from './draftConfig'
+import { getStyleMap } from 'draft/config'
 
 import asyncComponent from 'utility/asyncComponent'
 
-import EditorToolbar from './EditorToolbar'
+import FormattingToolbar from 'draft/FormattingToolbar'
 import Statistics from 'utility/Statistics'
 import CitationTooltip from './CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
@@ -77,7 +77,6 @@ class CardContents extends React.Component<CardProps, *> {
       id,
       solid,
       editable,
-      editing,
       onChange,
       handleKeyCommand,
       handleDeleteCard,
@@ -108,18 +107,22 @@ class CardContents extends React.Component<CardProps, *> {
     })
 
     return (
-      <div
-        ref={el => (this.cardRef = el)}
+      <Card
+        innerRef={el => (this.cardRef = el)}
         className={this._getClassNames()}
-        style={{
-          paddingTop: editing && '2em',
-          zIndex: theseCommentThreadsOpen && 300,
-          transition: 'padding-top 0.1s, flex 0.3s',
-        }}
+        editable={editable}
+        theseCommentThreadsOpen={theseCommentThreadsOpen}
       >
         {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
 
-        {editing && <EditorToolbar cardId={id} getEdgenote={getEdgenote} />}
+        {editable && (
+          <FormattingToolbar
+            actions={{ code: false, header: false, blockquote: false }}
+            editorState={editorState}
+            getEdgenote={getEdgenote}
+            onChange={onChange}
+          />
+        )}
         {title}
         <FocusContainer
           active={!!(theseCommentThreadsOpen && acceptingSelection)}
@@ -130,7 +133,7 @@ class CardContents extends React.Component<CardProps, *> {
             customStyleMap={styleMap}
             editorState={editorState}
             handleKeyCommand={handleKeyCommand}
-            onChange={(eS: EditorState) => onChange(eS)}
+            onChange={onChange}
           />
         </FocusContainer>
 
@@ -168,7 +171,7 @@ class CardContents extends React.Component<CardProps, *> {
             card_id: id,
           }}
         />
-      </div>
+      </Card>
     )
   }
 }
@@ -180,6 +183,16 @@ function citationInsideThisCard (card: ?Element, citation: ?Element): boolean {
   if (card === citation) return true
   return citationInsideThisCard(card, citation.parentElement)
 }
+
+const Card = styled.div`
+  padding-top: ${p => p.editable && '2em'};
+  z-index: ${p => p.theseCommentThreadsOpen && 300};
+
+  & > .pt-button-group {
+    position: absolute;
+    margin-top: -14px;
+  }
+`
 
 const DeleteCardButton = styled.button.attrs({
   className: 'pt-button pt-minimal pt-icon-trash pt-intent-danger',
