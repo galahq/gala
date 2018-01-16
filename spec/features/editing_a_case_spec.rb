@@ -42,6 +42,55 @@ feature 'Editing a case' do
       expect(page).to have_content 'Adding a test sentence for testing.'
     end
 
+    context 'by adding and removing Edgenotes' do
+      scenario 'is possible' do
+        visit case_path('en', kase) + '/1'
+        3.times { click_button 'Options' }
+        click_link 'Edit this case'
+
+        # Try to attach an edgenote without a selection and expect an error
+        edgenote_button = find('button[aria-label*="edgenote"]', match: :first)
+        edgenote_button.click
+        expect(page).to have_content(
+          'Please select the phrase that you would ' \
+          'like to attach an Edgenote to.'
+        )
+
+        # Add an Edgenote and fill in a quotation
+        first_paragraph = find('.DraftEditor-root div[data-block]',
+                               match: :first)
+        first_paragraph.double_click
+
+        edgenote_button.click
+        expect(page).to have_selector '.c-edgenote-entity'
+        expect(page).to have_content '“Add quotation...”'
+
+        find('.pt-editable-text', text: '“Add quotation...”').click
+        page.driver.browser.action.send_keys('“I have a dream”').perform
+
+        # Remove the Edgenote by clicking the button again
+        page.driver.browser.action.move_to(
+          find('.c-edgenote-entity').native
+        ).click.perform
+        edgenote_button.click
+        expect(page).not_to have_content '“I have a dream”'
+
+        # Reattach the Edgenote from the library
+        first_paragraph.double_click
+        edgenote_button.click
+        expect(page).to have_content 'Unused Edgenotes'
+        find('button[aria-label="Attach this Edgenote."]').click
+        expect(page).not_to have_content 'Unused Edgenotes'
+        expect(page).to have_content '“I have a dream”'
+
+        # The Edgenote should persist on save
+        click_button 'Options'
+        click_link 'Save'
+        page.driver.browser.navigate.refresh
+        expect(page).to have_content '“I have a dream”'
+      end
+    end
+
     context 'with a comment thread' do
       let!(:global_forum) { kase.forums.find_by community: nil }
       let!(:comment_thread) do
@@ -89,7 +138,9 @@ feature 'Editing a case' do
 
       click_button 'Options'
       click_link 'Edit this case'
-      accept_confirm 'Are you sure you want to delete this card and its associated comments?' do
+      accept_confirm(
+        'Are you sure you want to delete this card and its associated comments?'
+      ) do
         find('.Card', match: :first).hover
         within('.Card', match: :first) do
           find('.pt-icon-trash').click
