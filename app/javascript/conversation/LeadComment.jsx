@@ -13,15 +13,15 @@ import { Link } from 'react-router-dom'
 import { deleteComment } from 'redux/actions'
 
 import FirstPostForm from 'conversation/FirstPostForm'
-import { StyledComment } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
 import {
+  StyledComment,
   ConversationTimestamp,
   CommentThreadBreadcrumbs,
   CommentThreadBreadcrumb,
   SmallGreyText,
 } from 'conversation/shared'
-import { styles } from 'card/draftConfig'
+import { styles } from 'draft/config'
 
 import type { IntlShape } from 'react-intl'
 import type { Dispatch } from 'redux/actions'

@@ -1,16 +1,15 @@
 /**
+ * Helper functions for configuring Draft.js Editors
+ *
  * @flow
  */
 
-import { CompositeDecorator, RichUtils, Modifier, EditorState } from 'draft-js'
+import { CompositeDecorator } from 'draft-js'
 
 import EdgenoteEntity from './EdgenoteEntity'
 import CitationEntity from './CitationEntity'
 import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
-
-import type { ContentState, SelectionState } from 'draft-js'
-import type { DraftEntityMutability } from 'draft-js/lib/DraftEntityMutability'
 
 export const styles = {
   smallCaps: {
@@ -115,51 +114,3 @@ export const decorator = new CompositeDecorator([
     component: LinkEntity,
   },
 ])
-
-// We need the selection to remain visible while the user interacts with the
-// edgenote creation popover, so we add an inline style of type "SELECTION",
-// which gives a grey background.
-export function addShadowSelection (editorState: EditorState): EditorState {
-  if (!editorState.getSelection().isCollapsed()) {
-    return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
-  } else {
-    return editorState
-  }
-}
-
-export function removeShadowSelection (editorState: EditorState): EditorState {
-  if (editorState.getCurrentInlineStyle().has('SELECTION')) {
-    return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
-  } else {
-    return editorState
-  }
-}
-
-export function addEntity (
-  {
-    type,
-    mutability,
-    data,
-  }: { type: $FlowIssue, mutability: DraftEntityMutability, data: Object },
-  editorState: EditorState,
-  selection: SelectionState = editorState.getSelection(),
-  contentState: ContentState = editorState.getCurrentContent()
-) {
-  const contentStateWithEntity = contentState.createEntity(
-    type,
-    mutability,
-    data
-  )
-  const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-  const contentStateWithEntityApplied = Modifier.applyEntity(
-    contentStateWithEntity,
-    selection,
-    entityKey
-  )
-  const editorStateWithEntity = EditorState.push(
-    editorState,
-    contentStateWithEntityApplied,
-    'apply-entity'
-  )
-  return editorStateWithEntity
-}

@@ -104,6 +104,8 @@
     "blockquote": "Block style: Quotation.",
     "ol": "Block style: Ordered list item.",
     "ul": "Block style: Unordered list item.",
+    "addEdgenoteEntity": "Add edgenote to selection.",
+    "addCitationEntity": "Add citation here.",
 
     "submit": "Submit",
     "close": "Close",
