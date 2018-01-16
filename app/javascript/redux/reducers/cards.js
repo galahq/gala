@@ -4,7 +4,7 @@
  */
 
 import { EditorState, convertFromRaw } from 'draft-js'
-import { decorator } from 'card/draftConfig'
+import { decorator } from 'draft/config'
 
 // $FlowFixMe
 import { omit, lensPath, view, set, reduce } from 'ramda'

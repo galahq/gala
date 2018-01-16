@@ -8,8 +8,10 @@ Style/LambdaCall:
   Enabled: false
 Security/YAMLLoad:
   Enabled: false
-Metrics/MethodLength:
-  Enabled: false
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - spec/**/*
 Layout/ClassStructure:
   Enabled: true
   Categories:
