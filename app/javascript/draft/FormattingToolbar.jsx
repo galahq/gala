@@ -10,21 +10,19 @@ import { injectIntl } from 'react-intl'
 import { Button } from '@blueprintjs/core'
 import { EditorState, RichUtils } from 'draft-js'
 
-import type { IntlShape } from 'react-intl'
+import {
+  blockTypeEquals,
+  entityTypeEquals,
+  toggleEdgenote,
+  addCitationEntity,
+} from './helpers'
 
-function typeEquals (editorState: EditorState, type: string) {
-  return (
-    editorState
-      .getCurrentContent()
-      .getBlockForKey(editorState.getSelection().getStartKey())
-      .getType() === type
-  )
-}
+import type { IntlShape } from 'react-intl'
 
 type Action = {
   name: ActionName,
   iconName: string,
-  call: (editorState: EditorState) => EditorState,
+  call: (editorState: EditorState, props: Props) => Promise<EditorState>,
   active: (editorState: EditorState) => boolean,
 }
 type ActionName =
@@ -35,58 +33,75 @@ type ActionName =
   | 'ol'
   | 'ul'
   | 'header'
+  | 'addEdgenoteEntity'
+  | 'addCitationEntity'
+
 const ACTIONS: Action[] = [
   {
     name: 'bold',
     iconName: 'bold',
-    call: eS => RichUtils.toggleInlineStyle(eS, 'BOLD'),
+    call: async eS => RichUtils.toggleInlineStyle(eS, 'BOLD'),
     active: eS => eS.getCurrentInlineStyle().has('BOLD'),
   },
   {
     name: 'italic',
     iconName: 'italic',
-    call: eS => RichUtils.toggleInlineStyle(eS, 'ITALIC'),
+    call: async eS => RichUtils.toggleInlineStyle(eS, 'ITALIC'),
     active: eS => eS.getCurrentInlineStyle().has('ITALIC'),
   },
   {
     name: 'code',
     iconName: 'code',
-    call: eS => RichUtils.toggleInlineStyle(eS, 'CODE'),
+    call: async eS => RichUtils.toggleInlineStyle(eS, 'CODE'),
     active: eS => eS.getCurrentInlineStyle().has('CODE'),
   },
   {
     name: 'header',
     iconName: 'header',
-    call: eS => RichUtils.toggleBlockType(eS, 'header-two'),
-    active: eS => typeEquals(eS, 'header-two'),
+    call: async eS => RichUtils.toggleBlockType(eS, 'header-two'),
+    active: blockTypeEquals('header-two'),
   },
   {
     name: 'blockquote',
     iconName: 'citation',
-    call: eS => RichUtils.toggleBlockType(eS, 'blockquote'),
-    active: eS => typeEquals(eS, 'blockquote'),
+    call: async eS => RichUtils.toggleBlockType(eS, 'blockquote'),
+    active: blockTypeEquals('blockquote'),
   },
   {
     name: 'ol',
     iconName: 'numbered-list',
-    call: eS => RichUtils.toggleBlockType(eS, 'ordered-list-item'),
-    active: eS => typeEquals(eS, 'ordered-list-item'),
+    call: async eS => RichUtils.toggleBlockType(eS, 'ordered-list-item'),
+    active: blockTypeEquals('ordered-list-item'),
   },
   {
     name: 'ul',
     iconName: 'properties',
-    call: eS => RichUtils.toggleBlockType(eS, 'unordered-list-item'),
-    active: eS => typeEquals(eS, 'unordered-list-item'),
+    call: async eS => RichUtils.toggleBlockType(eS, 'unordered-list-item'),
+    active: blockTypeEquals('unordered-list-item'),
+  },
+  {
+    name: 'addEdgenoteEntity',
+    iconName: 'add-column-right',
+    call: toggleEdgenote,
+    active: entityTypeEquals('EDGENOTE'),
+  },
+  {
+    name: 'addCitationEntity',
+    iconName: 'bookmark',
+    call: async eS => addCitationEntity(eS),
+    active: blockTypeEquals('unordered-list-item'),
   },
 ]
 
 type Props = {
   actions: { [ActionName]: boolean },
   editorState: EditorState,
+  getEdgenote: ?() => Promise<string>,
   intl: IntlShape,
   onChange: EditorState => mixed,
 }
-const FormattingToolbar = ({ actions, editorState, intl, onChange }: Props) => {
+const FormattingToolbar = (props: Props) => {
+  const { actions, editorState, intl, onChange } = props
   return (
     <ButtonGroup>
       {ACTIONS.filter(action => actions[action.name] !== false).map(action => (
@@ -98,10 +113,14 @@ const FormattingToolbar = ({ actions, editorState, intl, onChange }: Props) => {
             id: action.name,
             defaultMessage: action.name,
           })}
-          onClick={(e: SyntheticMouseEvent<*>) => {
+          title={intl.formatMessage({
+            id: action.name,
+            defaultMessage: action.name,
+          })}
+          onClick={async (e: SyntheticMouseEvent<*>) => {
             e.preventDefault()
             e.stopPropagation()
-            onChange(action.call(editorState))
+            onChange(await action.call(editorState, props))
           }}
         />
       ))}
