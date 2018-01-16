@@ -16,7 +16,7 @@ module Orchard
     # -- all .rb files in that directory are automatically loaded.
 
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-    config.i18n.available_locales = %i[en fr ja zh-CN zh-TW am]
+    config.i18n.available_locales = %i[en fr es ja zh-CN zh-TW am]
 
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
 
