@@ -52,7 +52,7 @@
     "polished": "^1.9.0",
     "postcss-loader": "^2.0.9",
     "postcss-smart-import": "^0.7.6",
-    "precss": "^2.0.0",
+    "precss": "^3.0.0",
     "prop-types": "^15.5.10",
     "qs": "^6.5.1",
     "rails-erb-loader": "^5.0.0",
