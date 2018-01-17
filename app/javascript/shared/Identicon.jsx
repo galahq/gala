@@ -8,6 +8,8 @@ import styled, { css } from 'styled-components'
 
 import { identigradient } from 'shared/identigradient'
 
+const NBSP = '\u00A0'
+
 export const identiconStyle = ({
   image,
   hashKey,
@@ -25,7 +27,7 @@ export const identiconStyle = ({
   align-items: center;
   justify-content: center;
   &::after {
-    content: ${({ text, image }) => (image ? '' : `'${text[0]}'`)};
+    content: '${({ text, image }) => (image ? NBSP : text[0])}';
     font-weight: 600;
     color: #ebeae4;
     font-size: ${({ width }) => (width >= 25 ? '16px' : '12px')};
