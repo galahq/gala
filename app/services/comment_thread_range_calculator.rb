@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-# Calculates the correct positioning of the comment_thread in its card’s text
-# by looking for the first occurance of its highlight text. It is the consumer’s
-# responsibility to ensure that substring is unique.
+# Calculates the correct positioning of the comment_thread in its card’s text,
+# if it is attached to a card, by looking for the first occurance of its
+# highlight text. It is the consumer’s responsibility to ensure that substring
+# is unique.
 class CommentThreadRangeCalculator
   attr_reader :block_index, :start
 
   def initialize(comment_thread)
     @comment_thread = comment_thread
-    search
+    search unless @comment_thread.card.nil?
   end
 
   def length

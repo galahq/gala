@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     resources :cases, only: %i[index show new create update], param: :slug do
       resources :activities, only: %i[create]
 
-      resources :comment_threads, only: %i[index]
+      resources :comment_threads, only: %i[index create]
 
       resources :communities, only: %i[index]
 
