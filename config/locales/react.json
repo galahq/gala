@@ -16,7 +16,7 @@
     "catalog.chooseForYourself": "Choose for yourself",
     "catalog.meetStakeholders":
       "Meet different stakeholders and dive deep with a multimodal narrative.",
-    "catalog.shortcutExperience": "Apply principles to improves practice.",
+    "catalog.shortcutExperience": "Apply principles to improve practice.",
     "catalog.joinConversation":
       "Join the conversation by asking questions and paying your learning forward.",
     "catalog.enrollmentsInstruction":
@@ -104,6 +104,8 @@
     "blockquote": "Block style: Quotation.",
     "ol": "Block style: Ordered list item.",
     "ul": "Block style: Unordered list item.",
+    "addEdgenoteEntity": "Add edgenote to selection.",
+    "addCitationEntity": "Add citation here.",
 
     "submit": "Submit",
     "close": "Close",
@@ -114,6 +116,128 @@
     "list.start": ", ",
     "list.middle": ", ",
     "list.end": ", and "
+  },
+
+  "es": {
+    "menu.accountOptions": "Opciones de cuenta.",
+    "menu.myAccount": "Mi cuenta",
+    "menu.signIn": "Iniciar sesión",
+    "menu.signOut": "Salir",
+
+    "catalog": "Catálogo",
+    "catalog.proposeACase": "Proponer un estudio de caso",
+    "catalog.search": "Buscar casos",
+
+    "catalog.featuredCases": "Casos destacados",
+    "catalog.locations": "Ubicaciones",
+    "catalog.allCases": "Todos los casos",
+
+    "catalog.chooseForYourself": "Tú vas a elegir",
+    "catalog.meetStakeholders":
+      "Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.",
+    "catalog.shortcutExperience":
+      "Aplicar principios para mejorar en la práctica.",
+    "catalog.joinConversation":
+      "Súmete a la conversación, preguntá, y compartí tu conomiciento.",
+    "catalog.enrollmentsInstruction":
+      "Casos en los que estás inscrito se presentarán aquí para su acceso facil.",
+
+    "catalog.enrolledCases": "Casos inscritos",
+    "catalog.editEnrolled": "Editar casos inscritos.",
+    "catalog.unenrollConfirmation": "¿Estás seguro que quieres desinscribirse?",
+    "catalog.unenrollBetaWarning":
+      "Porque el caso no ha sido publicado, necesitarás otra invitación para inscribirse.",
+    "catalog.unenroll": "Desinscribirse del caso.",
+
+    "catalog.learnMore": "Más información",
+
+    "search.search": "Buscar",
+    "search.results": "Resultados de busqueda",
+    "search.refine": "Limitar busqueda",
+    "search.keywordQuery": "Palabras claves",
+    "search.noResults": "Sin resultados",
+    "search.didntMatch": "Your search didn’t match any cases.",
+    "search.tryAgain": "Try searching for something else.",
+    "search.proposeACase":
+      "If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.",
+
+    "summary": "Resumen del caso",
+    "case.acknowledgements": "Reconocimientos",
+    "case.translators":
+      "{count, plural, one {Traductor(a)} other {Traductores} }: ",
+    "case.enrollInThisCase": "Inscribirse en este caso",
+    "case.enrollForEasyAccess":
+      "Si este caso te llama la atención inscribirse para acceso facil.",
+    "case.enroll": "Inscribirse",
+    "case.toc": "Tabla de Contenido",
+    "case.backToOverview": "Resumen",
+    "overview.location": "Ubicación del caso",
+    "overview.learningObjectives": "Objetivos de aprendizaje",
+    "case.forthcoming": "A venir",
+    "case.next": "Próximo: ",
+    "case.end": "Fin",
+
+    "statusBar.betaNotification": "Este caso aún no ha sido publicado",
+    "statusBar.beginEdit": "Editar este caso",
+    "statusBar.endEdit": "Dejar de editar este caso",
+    "statusBar.editInstructions":
+      "Para editar este caso, simplemente cambie el texto",
+    "statusBar.options": "Opciones",
+    "statusBar.save": "Guardar",
+    "statusBar.publishCase": "Publicar este caso",
+    "statusBar.unpublishCase": "Annular la publicacion",
+    "statusBar.featureCase": "Agregar caso destacado",
+    "statusBar.unfeatureCase": "Quitar de casos destacados",
+
+    "podcast.hosts":
+      "con {count, plural, one {el/la anfitrión(a)} other {los/las anfitriones(as)}}",
+
+    "overview.otherLanguages":
+      "Este caso también está disponible en los siguientes idiomas: ",
+    "en": "Inglés",
+    "fr": "Francés",
+    "ja": "Japonés",
+    "zh-CN": "",
+    "zh-TW": "",
+    "es": "Español",
+    "am": "Amharic",
+
+    "comments.respond": "Comentar",
+    "comments.nResponses":
+      "{count, number} {count, plural, one {comentario} other {comentarios}}",
+    "comments.writeNew": "Escribir nueva respuesta",
+    "comments.select": "Resaltar unas palabras",
+    "comments.here": "Responder aquí",
+    "comments.write": "Escribir su respuesta...",
+    "comments.selectionNotUnique":
+      "Las palabras seleccionadas aparecen más que una vez, favor ampliar su selección.",
+
+    "community.choose": "Escoger comunidad",
+    "community.instructions":
+      "Verás una discusión tomando lugar en la comunidad escogida.",
+    "community.notDiscussing":
+      "Tu comunidad activa no está hablando de este caso",
+
+    "bold": "Texto en negrita.",
+    "italic": "Texto en cursiva.",
+    "code": "Inline style: Code.",
+    "header": "Encabezado.",
+    "blockquote": "Citas.",
+    "ol": "Enumerar lista.",
+    "ul": "Lista no numerada.",
+    "addEdgenoteEntity": "Agregar “Edgenote” a la selección.",
+    "addCitationEntity": "Agregar cita aquí.",
+
+    "submit": "Enviar",
+    "cancel": "Anular",
+    "close": "Cerrar",
+    "finishEditing": "Terminar de editar",
+    "less.readMore": "Leer más",
+
+    "list.two": " y ",
+    "list.start": ", ",
+    "list.middle": ", ",
+    "list.end": " y "
   },
 
   "fr": {

@@ -1,25 +1,4 @@
 en:
-  catalog:
-    home:
-      title: "All Cases"
-      redefining_sustainability_education: Redefining sustainability education
-      intro_paragraph: |
-        MSCs provide an immersive and exploratory educational approach to teach
-        practical skills in environmental sustainability.  Sign up for a free
-        account to learn with us.
-      featured_cases: Featured Cases
-      case_index: Case Index
-      learn_more: Learn more about what we’re doing
-      greeting: "Hello, %{initials}"
-      my_cases: My Cases
-      study_a_case: Study a Case
-      my_cases_placeholder: |
-        ###Choose for yourself
-
-        - Meet different stakeholders and dive deep with a multimodal narrative.
-        - Shortcut experience by putting principles into practice.
-
-        Cases you select from the index below will be presented here for easy access.
   cases:
     case:
       forthcoming: Forthcoming
@@ -30,6 +9,7 @@ en:
     form:
       my_account: 'My Account'
       save: 'Update profile'
+      notification_settings: Notification settings
       create_a_password: Create a password
       you_have_not_created_a_password: |
         Because you first signed in using %{provider}, you never created a password.
