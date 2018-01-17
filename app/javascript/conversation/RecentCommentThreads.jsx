@@ -13,6 +13,7 @@ import { NonIdealState } from '@blueprintjs/core'
 import { CoverImageContainer } from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
 import CommentThreadItem from 'conversation/CommentThreadItem'
+import NewUnattachedCommentButton from 'conversation/NewUnattachedCommentButton'
 import ScrollView from 'utility/ScrollView'
 
 import type { State } from 'redux/state'
@@ -31,7 +32,6 @@ function mapStateToProps ({ caseData, ui }: State) {
 const RecentCommentThreads = ({
   activeCommunity,
   coverUrl,
-  intl,
   mostRecentCommentThreads,
 }) => (
   <Container>
@@ -40,15 +40,18 @@ const RecentCommentThreads = ({
       <CommunityChooser />
     </Shadow>
     <ScrollView maxHeightOffset="215px">
-      {mostRecentCommentThreads == null ? (
-        <Loading />
-      ) : mostRecentCommentThreads.length > 0 ? (
-        mostRecentCommentThreads.map(id => (
-          <CommentThreadItem key={id} id={id} />
-        ))
-      ) : (
-        <NoComments activeCommunity={activeCommunity} />
-      )}
+      <React.Fragment>
+        <NewUnattachedCommentButton />
+        {mostRecentCommentThreads == null ? (
+          <Loading />
+        ) : mostRecentCommentThreads.length > 0 ? (
+          mostRecentCommentThreads.map(id => (
+            <CommentThreadItem key={id} id={id} />
+          ))
+        ) : (
+          <NoComments activeCommunity={activeCommunity} />
+        )}
+      </React.Fragment>
     </ScrollView>
   </Container>
 )
@@ -95,12 +98,6 @@ const NoComments = injectIntl(({ activeCommunity, intl }) => (
       }
     )}
     // action={
-    //   <button className="pt-button pt-intent-primary pt-icon-edit">
-    //     <FormattedMessage
-    //       id="comments.writeNew"
-    //       defaultMessage="Write a new response"
-    //     />
-    //   </button>
     // }
   />
 ))

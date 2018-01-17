@@ -9,8 +9,8 @@ import { injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { groupWith } from 'ramda'
 
-import { StyledComment } from 'conversation/shared'
 import Identicon from 'shared/Identicon'
+import { StyledComment } from 'conversation/shared'
 import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
 
 import { deleteComment } from 'redux/actions'
