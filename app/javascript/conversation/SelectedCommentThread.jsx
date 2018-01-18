@@ -36,12 +36,12 @@ type StateProps =
   | {|
       commentThreadFound: true,
       activeReader: ?Reader,
-      cardPosition: number,
-      inSituPath: string,
+      cardPosition: ?number,
+      inSituPath: ?string,
       leadComment: ?Comment,
       leadCommenter: { hashKey: string, imageUrl: ?string, name: string },
-      originalHighlightText: string,
-      page: Page,
+      originalHighlightText: ?string,
+      page: ?Page,
       readerId: number,
       responses: Comment[],
       threadId: string,
@@ -59,14 +59,17 @@ function mapStateToProps (
 
   const { reader: activeReader } = caseData
   const { originalHighlightText, cardId, readerId, readers } = commentThread
-  const { position: cardPosition, pageId } = cardsById[cardId]
-  const page = pagesById[pageId]
+
   const leadCommenter = readers[0] || activeReader
   const comments = commentThread.commentIds.map(id => commentsById[id])
   const leadComment: ?Comment = comments[0]
   const [, ...responses] = comments
 
-  const inSituPath = `/${page.position}/cards/${cardId}/comments/${threadId}`
+  const { position: cardPosition, pageId } =
+    cardId != null ? cardsById[cardId] : {}
+  const page = pageId != null ? pagesById[pageId] : null
+  const inSituPath =
+    cardId && page && `/${page.position}/cards/${cardId}/comments/${threadId}`
 
   return {
     commentThreadFound: true,

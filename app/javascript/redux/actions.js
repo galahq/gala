@@ -740,11 +740,11 @@ export function deleteCommentThread (threadId: string): ThunkAction {
 export type RemoveCommentThreadAction = {
   type: 'REMOVE_COMMENT_THREAD',
   threadId: string,
-  cardId: string,
+  cardId: ?string,
 }
 function removeCommentThread (
   threadId: string,
-  cardId: string
+  cardId: ?string
 ): RemoveCommentThreadAction {
   return { type: 'REMOVE_COMMENT_THREAD', threadId, cardId }
 }

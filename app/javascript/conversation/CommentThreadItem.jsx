@@ -6,9 +6,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
-
-import { FormattedMessage } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import Truncate from 'react-truncate'
 import { matchPath, Link, withRouter } from 'react-router-dom'
 import { EditorState } from 'draft-js'
@@ -40,7 +38,8 @@ function mapStateToProps (
     originalHighlightText,
     readers,
   } = commentThreadsById[id]
-  const { position: pageNumber } = pagesById[cardsById[cardId].pageId]
+  const { position: pageNumber } =
+    cardId != null ? pagesById[cardsById[cardId].pageId] : {}
 
   const mostRecentComment =
     commentsById[commentIds[commentIds.length - 1]] || {}
@@ -113,20 +112,20 @@ const CommentThreadItem = ({
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}
   >
-    {open && <ScrollIntoView />}
-
-    <CommentThreadBreadcrumbs>
-      <CommentThreadBreadcrumb>
-        <FormattedMessage
-          id="case.pageN"
-          defaultMessage={`Page {pageNumber, number}`}
-          values={{ pageNumber }}
-        />
-      </CommentThreadBreadcrumb>
-      <CommentThreadBreadcrumb quotation>
-        {originalHighlightText}
-      </CommentThreadBreadcrumb>
-    </CommentThreadBreadcrumbs>
+    {originalHighlightText && (
+      <CommentThreadBreadcrumbs>
+        <CommentThreadBreadcrumb>
+          <FormattedMessage
+            id="case.pageN"
+            defaultMessage={`Page {pageNumber, number}`}
+            values={{ pageNumber }}
+          />
+        </CommentThreadBreadcrumb>
+        <CommentThreadBreadcrumb quotation>
+          {originalHighlightText}
+        </CommentThreadBreadcrumb>
+      </CommentThreadBreadcrumbs>
+    )}
 
     <MostRecentComment>
       {mostRecentCommentContent ? (
@@ -140,6 +139,8 @@ const CommentThreadItem = ({
         </Grey>
       )}
     </MostRecentComment>
+
+    {open && <ScrollIntoView />}
 
     <ConversationMetadata>
       <Indenticons>
