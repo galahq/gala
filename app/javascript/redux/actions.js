@@ -708,6 +708,19 @@ export function createCommentThread (
   }
 }
 
+export function createUnattachedCommentThread (): ThunkAction {
+  return async (dispatch: Dispatch, getState: GetState) => {
+    const { slug } = getState().caseData
+    const newCommentThread = (await Orchard.graft(
+      `cases/${slug}/comment_threads`,
+      { commentThread: {}}
+    ): CommentThread)
+
+    dispatch(addCommentThread(newCommentThread))
+    return newCommentThread.id
+  }
+}
+
 export type AddCommentThreadAction = {
   type: 'ADD_COMMENT_THREAD',
   data: CommentThread,
@@ -727,11 +740,11 @@ export function deleteCommentThread (threadId: string): ThunkAction {
 export type RemoveCommentThreadAction = {
   type: 'REMOVE_COMMENT_THREAD',
   threadId: string,
-  cardId: string,
+  cardId: ?string,
 }
 function removeCommentThread (
   threadId: string,
-  cardId: string
+  cardId: ?string
 ): RemoveCommentThreadAction {
   return { type: 'REMOVE_COMMENT_THREAD', threadId, cardId }
 }

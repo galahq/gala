@@ -11,7 +11,7 @@ import { omit, lensPath, view, set, reduce } from 'ramda'
 
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
-import type { CardsState, Card, CommentThread } from 'redux/state'
+import type { CardsState, Card } from 'redux/state'
 import type {
   SetCardsAction,
   UpdateCardContentsAction,
@@ -111,7 +111,10 @@ function cardsById (
 
     case 'ADD_COMMENT_THREAD': {
       const { data } = action
-      const card = state[data.cardId]
+      const { cardId } = data
+      if (cardId == null) return state
+
+      const card = state[cardId]
       const commentThreads = card.commentThreads || []
 
       if (commentThreads.find(x => x.id === data.id)) return state
@@ -122,7 +125,7 @@ function cardsById (
       }
       return {
         ...state,
-        [data.cardId]: {
+        [cardId]: {
           ...cardWithThread,
           editorState: parseEditorStateFromPersistedCard(cardWithThread),
         },
@@ -131,6 +134,8 @@ function cardsById (
 
     case 'REMOVE_COMMENT_THREAD': {
       const { cardId, threadId } = action
+      if (cardId == null) return state
+
       const card = state[cardId]
       const commentThreads = card.commentThreads || []
 
@@ -143,7 +148,7 @@ function cardsById (
 
       return {
         ...state,
-        [action.cardId]: {
+        [cardId]: {
           ...cardWithoutThread,
           editorState: parseEditorStateFromPersistedCard(cardWithoutThread),
         },
@@ -167,10 +172,15 @@ function cardsById (
 
 export default cardsById
 
-function sortCommentThreads (a: CommentThread, b: CommentThread): number {
-  // Always sort detached threads last
-  if (a.start == null) return 1
-  if (b.start == null) return -1
+// Comment Threads that are attached to a card should be displayed in the order
+// that their highlighted text appears on the card. Threads that have had their
+// text changed out from under them should appear last.
+function sortCommentThreads<T: { start: ?number, blockIndex: ?number }> (
+  a: T,
+  b: T
+): number {
+  if (a.start == null || a.blockIndex == null) return 1
+  if (b.start == null || b.blockIndex == null) return -1
 
   if (a.blockIndex !== b.blockIndex) return a.blockIndex - b.blockIndex
   return a.start - b.start
