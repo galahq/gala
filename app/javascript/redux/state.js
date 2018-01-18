@@ -193,16 +193,16 @@ export type Comment = {
 }
 
 export type CommentThread = {
-  blockIndex: number,
-  cardId: string,
+  blockIndex: ?number,
+  cardId: ?string,
   commentIds: string[],
   commentsCount: number,
   id: string,
   length: number,
-  originalHighlightText: string,
+  originalHighlightText: ?string,
   readerId: number,
   readers: { imageUrl: ?string, hashKey: string, name: string }[],
-  start: number,
+  start: ?number,
 }
 
 export type Community = {

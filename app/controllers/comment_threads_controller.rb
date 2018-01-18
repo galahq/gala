@@ -3,7 +3,7 @@
 # @see CommentThread
 class CommentThreadsController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_case, only: [:index]
+  before_action :set_case, only: %i[index create]
   before_action :set_card, only: [:create]
   before_action :set_comment_thread, only: %i[show destroy]
 
@@ -21,8 +21,14 @@ class CommentThreadsController < ApplicationController
   end
 
   # @route [POST] `/cards/1/comment_threads`
+  # @route [POST] `/cases/case-slug/comment_threads`
+  #
+  # A CommentThread can live either on a Card, in which case its range is
+  # calculated by searching the card text for the
+  # `CommentThread#original_highlight_text`, or it can be “unattached,” living
+  # only on a Case.
   def create
-    @comment_thread = @card.comment_threads.build(comment_thread_params)
+    build_comment_thread
     @comment_thread.reader = current_reader
     @comment_thread.forum = active_forum
     @comment_thread.locale = I18n.locale
@@ -53,25 +59,33 @@ class CommentThreadsController < ApplicationController
 
   private
 
+  def build_comment_thread
+    relation = (@card || @case)
+    return head :unprocessable_entity if relation.nil?
+
+    @comment_thread = relation.comment_threads.build(comment_thread_params)
+  end
+
   def set_comment_thread
     @comment_thread = CommentThread.find params[:id]
   end
 
   def set_case
-    @case = Case.find_by_slug params[:case_slug]
+    @case = Case.find_by_slug params[:case_slug] if params[:case_slug]
   end
 
   def set_card
-    @card = Card.find params[:card_id]
+    @card = Card.find params[:card_id] if params[:card_id]
   end
 
   def active_forum
-    current_reader.active_community.forums.find_by case: @card.case
+    kase = @case || @card.case
+    current_reader.active_community.forums.find_by case: kase
   end
 
   def comment_thread_params
-    params.require(:comment_thread)
-          .permit(:start, :length, :block_index, :original_highlight_text)
+    params[:comment_thread]
+      .permit(:start, :length, :block_index, :original_highlight_text)
   end
 
   def conversation_comment_thread_url(comment_thread)

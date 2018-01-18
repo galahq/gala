@@ -94,6 +94,8 @@ const Input = styled.div.attrs({ className: 'pt-card pt-elevation-1' })`
   font-size: 17px;
   line-height: 1.3;
 
+  margin-top: 28px;
+
   & .public-DraftEditorPlaceholder-root {
     margin-bottom: -20px;
     pointer-events: none;
