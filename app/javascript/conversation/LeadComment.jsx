@@ -28,13 +28,13 @@ import type { Dispatch } from 'redux/actions'
 import type { State, Page, Comment } from 'redux/state'
 
 type OwnProps = {
-  cardPosition: number,
+  cardPosition: ?number,
   inSitu: boolean,
-  inSituPath: string,
+  inSituPath: ?string,
   intl: IntlShape,
   leadComment: ?Comment,
-  originalHighlightText: string,
-  page: Page,
+  originalHighlightText: ?string,
+  page: ?Page,
   reader: { imageUrl: ?string, hashKey: string, name: string },
   responseCount: number,
   threadId: string,
@@ -84,73 +84,79 @@ const LeadComment = ({
   responseCount,
   threadId,
   onCancel,
-}: Props) => [
-  <LeadCommenter key="1">
-    <Identicon presentational width={32} reader={reader} />
-    <cite>{reader.name}</cite>
-  </LeadCommenter>,
+}: Props) => (
+  <React.Fragment>
+    <LeadCommenter>
+      <Identicon presentational width={32} reader={reader} />
+      <cite>{reader.name}</cite>
+    </LeadCommenter>
 
-  <CommentThreadLocation key="2">
-    <CommentThreadBreadcrumbs>
-      <CommentThreadBreadcrumb>
-        {inSitu ? (
-          <FormattedMessage
-            id="conversation.commentsOnPageNumber"
-            defaultMessage="Comments on Page {position, number}"
-            values={{ position: page.position }}
-          />
-        ) : (
-          <FormattedMessage
-            id="conversation.commentsOnPage"
-            defaultMessage="Comments on “{title}”"
-            values={{ title: page.title }}
-          />
-        )}
-      </CommentThreadBreadcrumb>
-      <CommentThreadBreadcrumb>
-        <FormattedMessage
-          id="conversation.cardN"
-          defaultMessage="Card {cardPosition}"
-          values={{ cardPosition }}
-        />
-      </CommentThreadBreadcrumb>
-    </CommentThreadBreadcrumbs>
-    <HighlightedText disabled={inSitu}>
-      <Link
-        to={inSituPath}
-        className="CommentThread__metadata__text"
-        style={styles.purpleHighlight}
-      >
-        {originalHighlightText}
-      </Link>
-    </HighlightedText>
-  </CommentThreadLocation>,
+    {page != null &&
+      inSituPath != null && (
+        <CommentThreadLocation>
+          <CommentThreadBreadcrumbs>
+            <CommentThreadBreadcrumb>
+              {inSitu ? (
+                <FormattedMessage
+                  id="conversation.commentsOnPageNumber"
+                  defaultMessage="Comments on Page {position, number}"
+                  values={{ position: page.position }}
+                />
+              ) : (
+                <FormattedMessage
+                  id="conversation.commentsOnPage"
+                  defaultMessage="Comments on “{title}”"
+                  values={{ title: page.title }}
+                />
+              )}
+            </CommentThreadBreadcrumb>
+            <CommentThreadBreadcrumb>
+              <FormattedMessage
+                id="conversation.cardN"
+                defaultMessage="Card {cardPosition}"
+                values={{ cardPosition }}
+              />
+            </CommentThreadBreadcrumb>
+          </CommentThreadBreadcrumbs>
+          <HighlightedText disabled={inSitu}>
+            <Link
+              to={inSituPath}
+              className="CommentThread__metadata__text"
+              style={styles.purpleHighlight}
+            >
+              {originalHighlightText}
+            </Link>
+          </HighlightedText>
+        </CommentThreadLocation>
+      )}
 
-  leadComment ? (
-    <LeadCommentContents key="3">
-      <Row>
-        <SmallGreyText>
-          <ConversationTimestamp value={leadComment.timestamp} />
-        </SmallGreyText>
-        {readerCanDeleteComments &&
-          responseCount === 0 && (
-            <DeleteButton
-              aria-label={intl.formatMessage({
-                id: 'comments.deleteCommentThread',
-                defaultMessage: 'Delete comment thread',
-              })}
-              onClick={handleDeleteThread}
-            />
-          )}
-      </Row>
-      <blockquote>
-        <StyledComment markdown={leadComment.content} />
-      </blockquote>
-    </LeadCommentContents>
-  ) : (
-    <FirstPostForm key="3" threadId={threadId} onCancel={onCancel} />
-  ),
-]
+    {leadComment ? (
+      <LeadCommentContents>
+        <Row>
+          <SmallGreyText>
+            <ConversationTimestamp value={leadComment.timestamp} />
+          </SmallGreyText>
+          {readerCanDeleteComments &&
+            responseCount === 0 && (
+              <DeleteButton
+                aria-label={intl.formatMessage({
+                  id: 'comments.deleteCommentThread',
+                  defaultMessage: 'Delete comment thread',
+                })}
+                onClick={handleDeleteThread}
+              />
+            )}
+        </Row>
+        <blockquote>
+          <StyledComment markdown={leadComment.content} />
+        </blockquote>
+      </LeadCommentContents>
+    ) : (
+      <FirstPostForm key="3" threadId={threadId} onCancel={onCancel} />
+    )}
+  </React.Fragment>
+)
+
 export default injectIntl(
   connect(mapStateToProps, mapDispatchToProps)(LeadComment)
 )
