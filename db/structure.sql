@@ -387,7 +387,8 @@ CREATE TABLE communities (
     group_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description jsonb DEFAULT '""'::jsonb
+    description jsonb DEFAULT '""'::jsonb,
+    universal boolean DEFAULT false
 );
 
 
@@ -1692,6 +1693,13 @@ CREATE INDEX index_comments_on_reader_id ON comments USING btree (reader_id);
 --
 
 CREATE INDEX index_communities_on_group_id ON communities USING btree (group_id);
+
+
+--
+-- Name: index_communities_on_universal; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_communities_on_universal ON communities USING btree (universal);
 
 
 --
