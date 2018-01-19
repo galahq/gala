@@ -13,7 +13,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 
 import RecentCommentThreads from 'conversation/RecentCommentThreads'
 import SelectedCommentThread from 'conversation/SelectedCommentThread'
-import { NoSelectedCommentThread } from 'conversation/shared'
+import NoSelectedCommentThread from 'conversation/NoSelectedCommentThread'
 
 import type { State, Reader } from 'redux/state'
 

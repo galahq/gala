@@ -101,21 +101,7 @@ export const ConversationTimestamp = ({ value }: { value: string }) => (
   </span>
 )
 
-export const NoSelectedCommentThread = styled.div`
-  flex: 1;
-  max-width: 633px;
-  height: calc(100vh - 140px);
-  margin: 30px 0 0 36px;
-  padding: 30px;
-  background-color: #415e77;
-  border-radius: 2px;
-
-  @media (max-width: 700px) {
-    display: none;
-  }
-`
-
-const LinkWithTargetBlank = ({ children, ...rest }) => (
+export const LinkWithTargetBlank = ({ children, ...rest }: any) => (
   <a {...rest} target="_blank" rel="noopener noreferrer">
     {children}
   </a>
@@ -136,6 +122,8 @@ export const StyledCommentContainer = styled.div`
         display: none;
       }
     `};
+
+  line-height: 1.4;
 
   & strong {
     letter-spacing: normal;
@@ -165,7 +153,12 @@ export const StyledCommentContainer = styled.div`
 
   & ol,
   & ul {
+    line-height: 1.3;
     margin-top: 0;
+
+    & li:not(:last-child) {
+      margin-bottom: 4px;
+    }
   }
 
   & div > .public-DraftStyleDefault-block,
