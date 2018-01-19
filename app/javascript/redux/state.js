@@ -208,6 +208,7 @@ export type CommentThread = {
 export type Community = {
   id: string | null,
   name: string,
+  description: string,
   active: boolean,
   global: boolean,
 }

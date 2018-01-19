@@ -16,7 +16,7 @@ import Responses from 'conversation/Responses'
 import ResponseForm, {
   EmptyResponseFormContainer,
 } from 'conversation/ResponseForm'
-import { NoSelectedCommentThread } from 'conversation/shared'
+import NoSelectedCommentThread from 'conversation/NoSelectedCommentThread'
 import ScrollView from 'utility/ScrollView'
 import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 
