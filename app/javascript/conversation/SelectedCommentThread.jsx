@@ -222,6 +222,7 @@ const Container = styled.div.attrs({ className: 'SelectedCommentThread' })`
   position: relative;
   display: flex;
   flex-direction: column;
+  z-index: 1;
   ${({ inSitu }: { inSitu: boolean }) =>
     inSitu &&
     css`
