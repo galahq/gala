@@ -386,7 +386,8 @@ CREATE TABLE communities (
     name jsonb,
     group_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '""'::jsonb
 );
 
 
@@ -2298,6 +2299,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171030185254'),
 ('20171031161433'),
 ('20171113192541'),
-('20171220165301');
+('20171220165301'),
+('20180119170858');
 
 

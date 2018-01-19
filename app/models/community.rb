@@ -6,12 +6,13 @@
 # this is distinct from Group.
 #
 # @attr name [Translated<String>]
+# @attr description [Translated<String>]
 #
 # @see GlobalCommunity GlobalCommunity: this model’s null object
 class Community < ApplicationRecord
   include Mobility
 
-  translates :name, fallbacks: true
+  translates :name, :description, fallbacks: true
 
   belongs_to :group
 
