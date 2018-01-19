@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 
 import DocumentTitle from 'react-document-title'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route, Redirect, Link } from 'react-router-dom'
 
 import RecentCommentThreads from 'conversation/RecentCommentThreads'
 import SelectedCommentThread from 'conversation/SelectedCommentThread'
@@ -39,12 +39,15 @@ const Conversation = ({ commentable, kicker, intl, reader }) =>
           <Route
             path="/conversation/:threadId"
             render={({ history, location, match }) => (
-              <SelectedCommentThread
-                heightOffset={108}
-                history={history}
-                location={location}
-                match={match}
-              />
+              <React.Fragment>
+                <SelectedCommentThread
+                  heightOffset={108}
+                  history={history}
+                  location={location}
+                  match={match}
+                />
+                <UnselectCommentLink aria-hidden replace to={'/conversation'} />
+              </React.Fragment>
             )}
           />
           <Route component={NoSelectedCommentThread} />
@@ -55,8 +58,17 @@ const Conversation = ({ commentable, kicker, intl, reader }) =>
 export default injectIntl(connect(mapStateToProps)(Conversation))
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 0 1em;
+`
+
+const UnselectCommentLink = styled(Link)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 `
