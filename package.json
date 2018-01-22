@@ -31,7 +31,7 @@
     "color-hash": "^1.0.3",
     "compression-webpack-plugin": "^1.1.2",
     "css-loader": "^0.28.0",
-    "draft-js": "0.10.4",
+    "draft-js": "0.10.5",
     "draft-js-linkify-plugin": "^2.0.1",
     "draft-js-plugins-editor": "^2.0.3",
     "extract-text-webpack-plugin": "^3.0.2",
