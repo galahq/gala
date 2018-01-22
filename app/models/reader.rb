@@ -59,6 +59,7 @@ class Reader < ApplicationRecord
   def self.from_omniauth(auth)
     find_or_create_by!(email: auth.email) do |reader|
       reader.attributes = auth.reader_attributes
+      reader.instructor! if auth.instructor?
     end
   end
 
@@ -107,6 +108,12 @@ class Reader < ApplicationRecord
   # @return [String]
   def hash_key
     @hash_key ||= Digest::SHA256.hexdigest(email)
+  end
+
+  # Make an reader an instructor
+  def instructor!
+    add_role :instructor
+    invited_communities << Community.case_log
   end
 
   # Whether or not the given quiz belongs to this author

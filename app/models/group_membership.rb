@@ -9,6 +9,7 @@ class GroupMembership < ApplicationRecord
   after_create :set_readers_active_community
 
   def set_readers_active_community
+    return if reader.has_role? :instructor
     reader.update active_community_id: group.community.id
   end
 end
