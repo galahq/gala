@@ -24,7 +24,7 @@ if DEV_MOCK_AUTH_HASH
 
   reader.add_role :editor
   reader.add_role :invisible
-  reader.instructor!
+  reader.add_role :instructor
 end
 
 10.times { FactoryBot.create :case_with_elements, :published }
