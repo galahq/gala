@@ -32,6 +32,14 @@ class Community < ApplicationRecord
     joins(:forums).where(forums: { case_id: case_id })
   end
 
+  # Instructors are automatically invited to this instructors-only community,
+  # which is added in db/seeds but really must exist.
+  def self.case_log
+    case_log = find_by! %(name @> '{"en": "CaseLog"}'::jsonb)
+    case_log ||= create(name: 'CaseLog')
+    case_log
+  end
+
   # Universal communities need to have a forum on all Cases
   def ensure_forum_exists_for_every_case
     Case.where.not(id: forums.map(&:case_id)).find_each do |kase|
