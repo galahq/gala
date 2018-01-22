@@ -2495,9 +2495,9 @@ draft-js-plugins-editor@^2.0.3:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js@0.10.4:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.4.tgz#147741642097c8120d8edc232e9503e8b7fb8d35"
+draft-js@0.10.5:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
   dependencies:
     fbjs "^0.8.15"
     immutable "~3.7.4"
@@ -7557,7 +7557,7 @@ style-loader@^0.19.1:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
 
-styled-components@3.0.1:
+styled-components@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.0.1.tgz#dcc2de917e8faf686c3ac1a749dad5b6502fe547"
   dependencies:
