@@ -55,23 +55,10 @@ class Reader < ApplicationRecord
   rolify
 
   # Creates a Reader from the information provided by an OAuth provider
-  def self.from_omniauth(auth) # rubocop:disable Metrics/AbcSize
-    info = auth.info
-    email = info.email
-
-    where(email: email).first_or_create! do |reader|
-      name = info.first_name != '' && "#{info.first_name} #{info.last_name}"
-      name ||= info.name
-
-      reader.email = email
-      reader.password = Devise.friendly_token[0, 20]
-      reader.created_password = false
-      reader.name = name
-      reader.initials = name.split(' ').map(&:first).join
-      reader.image_url = info.image unless auth.provider == 'lti'
-      reader.locale = auth.extra.raw_info.try :[], :launch_presentation_locale
-
-      reader.confirmed_at = Time.zone.now
+  # @param auth [Auth]
+  def self.from_omniauth(auth)
+    find_or_create_by!(email: auth.email) do |reader|
+      reader.attributes = auth.reader_attributes
     end
   end
 
