@@ -16,7 +16,7 @@ gem 'redis', '~> 3.0'
 gem 'acts_as_list'
 gem 'kaminari'
 gem 'memoist'
-gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'
+gem 'time_for_a_boolean', '~> 0.2.0'
 gem 'virtus'
 
 # Authentication and Authorization

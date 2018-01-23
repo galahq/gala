@@ -28,6 +28,7 @@ Layout/ClassStructure:
       - attr_writer
       - attr_accessor
       - alias_attribute
+      - time_for_a_boolean
       - translates
     associations:
       - has_one
