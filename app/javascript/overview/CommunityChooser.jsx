@@ -90,7 +90,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                 {(communities || []).map(c => (
                   <MenuItem
                     key={c.id || 'null'}
-                    iconName={c.global ? 'globe' : 'social-media'}
+                    iconName={communityIcon(c)}
                     className={c.active ? 'pt-active pt-intent-primary' : ''}
                     text={c.name}
                     onClick={() => {
@@ -121,11 +121,10 @@ export const UnconnectedCommunityChooser = injectIntl(
               >
                 <span>
                   <span
-                    className={`pt-icon pt-icon-${
-                      activeCommunityPresent
-                        ? activeCommunity.global ? 'globe' : 'social-media'
-                        : 'cross'
-                    }`}
+                    className={`pt-icon pt-icon-${communityIcon(
+                      activeCommunity,
+                      { disabled: !activeCommunityPresent }
+                    )}`}
                   />&#8196;
                   {activeCommunity.name}
                 </span>
@@ -142,6 +141,15 @@ export const UnconnectedCommunityChooser = injectIntl(
 export default connect(mapStateToProps, { updateActiveCommunity })(
   UnconnectedCommunityChooser
 )
+
+function communityIcon (
+  { global, name }: Community,
+  { disabled }: { disabled?: boolean } = {}
+) {
+  if (disabled) return 'cross'
+  if (name === 'CaseLog') return 'key'
+  return global ? 'globe' : 'social-media'
+}
 
 const Bar = styled.div`
   background-color: ${({ white }) => (white ? '#EBEAE4' : '#373566')};

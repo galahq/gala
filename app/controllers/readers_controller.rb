@@ -14,7 +14,7 @@ class ReadersController < ApplicationController
                           .page(params[:page])
                           .preload(:roles)
 
-    @roles = Role.where(name: %w[editor invisible])
+    @roles = Role.where(name: %w[editor invisible instructor])
 
     render layout: 'admin'
   end

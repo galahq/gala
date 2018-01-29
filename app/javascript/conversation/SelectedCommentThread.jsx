@@ -16,7 +16,7 @@ import Responses from 'conversation/Responses'
 import ResponseForm, {
   EmptyResponseFormContainer,
 } from 'conversation/ResponseForm'
-import { NoSelectedCommentThread } from 'conversation/shared'
+import NoSelectedCommentThread from 'conversation/NoSelectedCommentThread'
 import ScrollView from 'utility/ScrollView'
 import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 
@@ -222,6 +222,7 @@ const Container = styled.div.attrs({ className: 'SelectedCommentThread' })`
   position: relative;
   display: flex;
   flex-direction: column;
+  z-index: 1;
   ${({ inSitu }: { inSitu: boolean }) =>
     inSitu &&
     css`
