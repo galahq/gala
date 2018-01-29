@@ -12,10 +12,11 @@ class AuthenticationStrategy < ApplicationRecord
 
   devise :omniauthable, omniauth_providers: %i[google lti]
 
+  # @param auth
   # @return [AuthenticationStrategy]
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create! do |strategy|
-      strategy.reader = Reader.from_omniauth(auth)
+    find_or_create_by!(provider: auth.provider, uid: auth.uid) do |strategy|
+      strategy.reader = Reader.from_omniauth Auth.new auth
     end
   end
 end

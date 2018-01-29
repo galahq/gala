@@ -5,6 +5,7 @@
 # ### Significant roles
 # - `:editor` – admin
 # - `:invisible` – ignored by the summary statistics of {Ahoy::Event}s
+# - `:instructor` — whether or not the reader has access to CaseLog
 #
 # @attr name [String]
 class Role < ApplicationRecord
