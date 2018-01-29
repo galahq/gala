@@ -17,8 +17,9 @@ class Community < ApplicationRecord
 
   belongs_to :group
 
-  has_many :invitations
-  has_many :forums # One forum for each case the community is discussing
+  has_many :invitations, dependent: :destroy
+  # One forum for each case the community is discussing
+  has_many :forums, dependent: :destroy
 
   after_save :ensure_forum_exists_for_every_case, if: :universal
 
