@@ -6,7 +6,7 @@ class Forum < ApplicationRecord
   belongs_to :case
   belongs_to :community
 
-  has_many :comment_threads
+  has_many :comment_threads, dependent: :nullify
 
   def community
     super || GlobalCommunity.instance

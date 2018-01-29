@@ -19,6 +19,10 @@ class GlobalCommunity
     I18n.t 'activerecord.models.global_community'
   end
 
+  def description
+    ''
+  end
+
   def global?
     true
   end

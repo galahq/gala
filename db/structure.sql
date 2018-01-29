@@ -386,7 +386,9 @@ CREATE TABLE communities (
     name jsonb,
     group_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '""'::jsonb,
+    universal boolean DEFAULT false
 );
 
 
@@ -1694,6 +1696,13 @@ CREATE INDEX index_communities_on_group_id ON communities USING btree (group_id)
 
 
 --
+-- Name: index_communities_on_universal; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_communities_on_universal ON communities USING btree (universal);
+
+
+--
 -- Name: index_deployments_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2298,6 +2307,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171030185254'),
 ('20171031161433'),
 ('20171113192541'),
-('20171220165301');
+('20171220165301'),
+('20180119170858'),
+('20180129143420');
 
 
