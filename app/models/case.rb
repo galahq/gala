@@ -55,7 +55,7 @@ class Case < ApplicationRecord
   has_many :deployments, dependent: :destroy
   has_many :quizzes, dependent: :destroy
 
-  after_create :create_forum_for_global_community
+  after_create :create_forum_for_universal_communities
 
   validates :slug, presence: true,
                    uniqueness: true,
@@ -74,9 +74,14 @@ class Case < ApplicationRecord
           SQL
         end
 
-  # The global community (`community_id == nil`) has a forum on all cases
-  def create_forum_for_global_community
+  # Universal communities and the global community (`community_id == nil`) need
+  # to have a forum on all cases.
+  def create_forum_for_universal_communities
     Forum.create case: self
+
+    Community.universal.find_each do |community|
+      community.forums.create case: self
+    end
   end
 
   # @return [String]

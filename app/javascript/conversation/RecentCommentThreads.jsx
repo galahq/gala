@@ -63,6 +63,7 @@ const Container = styled.div`
   background-color: #ebeae4;
   border-radius: 2px;
   margin-top: 30px;
+  z-index: 1;
 
   @media (max-width: 1000px) {
     width: calc(30vw - 16px);
