@@ -7,12 +7,12 @@ I18n.locale = :en
 Community.create name: 'CaseLog', universal: true, description: <<~DESCRIPTION
   CaseLog is a community of practice for instructors teaching with cases on
   Gala. Case studies, like all forms of engaged learning, work best when they’re
-  tuned for your specific audience. As you prepare to use a case with your
-  students, read other instructors’ write-ups about what worked and what didn’t
-  in their classroom. Hopefully these “meta case studies” will provide some
-  inspiration.
+  tuned for your specific audience. As you and your teaching team prepare to use
+  a case with your students, read other instructors’ write-ups about what worked
+  and what didn’t in their classroom. These “meta case studies” will provide
+  some inspiration.
 
-  And after you’ve deployed this case, add your voice to the conversation. Share
+  After you’ve deployed this case, add your voice to the conversation. Share
   the choices you made and why you made them. Did you structure your classroom
   discussion in a particular way? Did you employ an interesting simulation or
   exercise? Tell us about it.
