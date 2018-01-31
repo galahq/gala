@@ -38,7 +38,7 @@
     "file-loader": "^1.1.6",
     "glob": "^7.1.1",
     "history": "^4.6.1",
-    "immer": "^0.8.1",
+    "immer": "^1.0.0",
     "immutability-helper": "^2.4.0",
     "intl": "^1.2.5",
     "js-yaml": "^3.8.3",
