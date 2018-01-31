@@ -11,10 +11,15 @@
 #   - 0 means no quiz (and assumes quiz == nil)
 # @attr key [String] a random URL safe string used as the hard-to-guess
 #   identifier that allows the {MagicLink} to work
+# @attr retrospective_prompt_sent_at [DateTime] at most once after a professor
+#   has deployed a case, we want to prompt them to write up their experience
+#   teaching with the case as a post in CaseLog
 #
 # @see GenericDeployment GenericDeployment: this model’s null object
 class Deployment < ApplicationRecord
   include Authority::Abilities
+
+  time_for_a_boolean :retrospective_prompt_sent
 
   belongs_to :case
   belongs_to :group

@@ -15,14 +15,6 @@ GIT
       uuidtools
 
 GIT
-  remote: https://github.com/calebthompson/time_for_a_boolean
-  revision: 636a4c6b4645f9888402ff49b40b7f42c270d946
-  specs:
-    time_for_a_boolean (0.1.0)
-      activerecord
-      railties
-
-GIT
   remote: https://github.com/cbothner/omniauth-lti
   revision: 578245b0cabb755a209221ce1682667d9154ac4d
   specs:
@@ -395,6 +387,9 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.8)
+    time_for_a_boolean (0.2.0)
+      activerecord
+      railties
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
     uglifier (3.2.0)
@@ -487,7 +482,7 @@ DEPENDENCIES
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
   table_print
-  time_for_a_boolean!
+  time_for_a_boolean (~> 0.2.0)
   uglifier (>= 1.3.0)
   virtus
   web-console

@@ -423,7 +423,8 @@ CREATE TABLE deployments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     answers_needed integer DEFAULT 1,
-    key character varying
+    key character varying,
+    retrospective_prompt_sent_at timestamp without time zone
 );
 
 
@@ -2309,6 +2310,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171113192541'),
 ('20171220165301'),
 ('20180119170858'),
-('20180129143420');
+('20180129143420'),
+('20180129162300');
 
 
