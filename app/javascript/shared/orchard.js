@@ -33,6 +33,7 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...csrfHeader(),
       }),
     })
     return fetch(r).then(handleResponse)
@@ -48,6 +49,7 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...csrfHeader(),
       }),
     })
     return fetch(r).then(handleResponse)
@@ -57,10 +59,22 @@ export class Orchard {
     const r = new Request(`/${endpoint}.json`, {
       credentials: 'same-origin',
       method: 'DELETE',
-      headers: new Headers({ Accept: 'application/json' }),
+      headers: new Headers({ Accept: 'application/json', ...csrfHeader() }),
     })
     return fetch(r)
   }
+}
+
+function csrfHeader (): { [string]: string } {
+  const token = getMetaContent('csrf-token')
+
+  if (token == null) return {}
+  return { 'X-CSRF-Token': token }
+}
+
+function getMetaContent (key: string): ?string {
+  const meta = document.querySelector(`meta[name="${key}"]`)
+  return meta && meta.getAttribute('content')
 }
 
 function handleResponse (response: Response): Promise<any> {
