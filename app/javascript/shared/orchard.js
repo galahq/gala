@@ -21,7 +21,7 @@ export class Orchard {
       }/${endpoint}.json${query}`,
       { credentials: 'same-origin' }
     )
-    return fetch(r).then(this._handleResponse)
+    return fetch(r).then(handleResponse)
   }
 
   static graft (endpoint: string, params: Object): Promise<any> {
@@ -35,7 +35,7 @@ export class Orchard {
         'Content-Type': 'application/json',
       }),
     })
-    return fetch(r).then(this._handleResponse)
+    return fetch(r).then(handleResponse)
   }
 
   // Train a fruit tree to grow into a desired figure.
@@ -50,7 +50,7 @@ export class Orchard {
         'Content-Type': 'application/json',
       }),
     })
-    return fetch(r).then(this._handleResponse)
+    return fetch(r).then(handleResponse)
   }
 
   static prune (endpoint: string): Promise<Response> {
@@ -61,38 +61,38 @@ export class Orchard {
     })
     return fetch(r)
   }
+}
 
-  static _handleResponse (response: Response): Promise<any> {
-    if (response.ok) {
-      return response.json().catch(() => Promise.resolve(true))
-    } else {
-      return response.json().then((errorResponse: ErrorResponse) => {
-        const errorFieldNames = keys(errorResponse)
+function handleResponse (response: Response): Promise<any> {
+  if (response.ok) {
+    return response.json().catch(() => Promise.resolve(true))
+  } else {
+    return response.json().then((errorResponse: ErrorResponse) => {
+      const errorFieldNames = keys(errorResponse)
 
-        const errorMessages = errorFieldNames
-          .reduce((all: string[], fieldName: string) => {
-            const fieldErrors = errorResponse[fieldName]
+      const errorMessages = errorFieldNames
+        .reduce((all: string[], fieldName: string) => {
+          const fieldErrors = errorResponse[fieldName]
 
-            if (fieldErrors != null && Array.isArray(fieldErrors)) {
-              return append(
-                fieldErrors
-                  .map(
-                    err =>
-                      `${fieldName} ${typeof err === 'string' ? err : 'error'}`
-                  )
-                  .join('\n'),
-                all
-              )
-            }
+          if (fieldErrors != null && Array.isArray(fieldErrors)) {
+            return append(
+              fieldErrors
+                .map(
+                  err =>
+                    `${fieldName} ${typeof err === 'string' ? err : 'error'}`
+                )
+                .join('\n'),
+              all
+            )
+          }
 
-            return [...all, `${fieldName}: error`]
-          }, [])
-          .join('\n')
+          return [...all, `${fieldName}: error`]
+        }, [])
+        .join('\n')
 
-        var e = Error(errorMessages)
-        e.name = 'OrchardError'
-        throw e
-      })
-    }
+      var e = Error(errorMessages)
+      e.name = 'OrchardError'
+      throw e
+    })
   }
 }
