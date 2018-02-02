@@ -35,8 +35,10 @@ class Enrollment < ApplicationRecord
     elements_used = self.case.events.where(name: 'visit_element')
                         .merge(reader.events)
                         .distinct
-                        .pluck("ahoy_events.properties ->> 'element_id'",
-                               "ahoy_events.properties ->> 'element_type'")
+                        .pluck(
+                          Arel.sql("ahoy_events.properties ->> 'element_id'"),
+                          Arel.sql("ahoy_events.properties ->> 'element_type'")
+                        )
                         .count
     elements_used.to_f / self.case.case_elements.count
   end
