@@ -5,6 +5,8 @@ FactoryBot.define do
     association :question
     association :quiz
     association :reader
+    association :submission
+
     content 'MyString'
     correct false
   end

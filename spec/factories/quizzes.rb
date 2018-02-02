@@ -8,8 +8,8 @@ FactoryBot.define do
     customized false
 
     after :create do |this|
-      create :question, :multiple_choice, quiz_id: this.id
-      create :question, quiz_id: this.id
+      create :question, :multiple_choice, quiz: this
+      create :question, quiz: this
     end
   end
 end
