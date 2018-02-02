@@ -41,7 +41,6 @@ class Case < ApplicationRecord
 
   belongs_to :library
 
-  has_many :activities, dependent: :destroy
   has_many :cards
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy
   has_many :comment_threads, dependent: :destroy
@@ -49,11 +48,16 @@ class Case < ApplicationRecord
   has_many :edgenotes, dependent: :destroy
   has_many :enrollments, dependent: :destroy
   has_many :forums, dependent: :destroy
-  has_many :pages, dependent: :destroy
-  has_many :podcasts, dependent: :destroy
   has_many :readers, through: :enrollments
   has_many :deployments, dependent: :destroy
   has_many :quizzes, dependent: :destroy
+
+  has_many :activities,
+           through: :case_elements, source: :element, source_type: 'Activity'
+  has_many :pages,
+           through: :case_elements, source: :element, source_type: 'Page'
+  has_many :podcasts,
+           through: :case_elements, source: :element, source_type: 'Podcast'
 
   after_create :create_forum_for_universal_communities
 
