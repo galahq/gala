@@ -39,7 +39,7 @@ class Case < ApplicationRecord
              :audience, :classroom_timeline, :acknowledgements, fallbacks: true
   translates :authors, :translators, default: [], fallbacks: true
 
-  belongs_to :library
+  belongs_to :library, optional: true
 
   has_many :cards
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy

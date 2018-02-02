@@ -17,7 +17,7 @@ class Enrollment < ApplicationRecord
   belongs_to :reader
   belongs_to :case
 
-  belongs_to :active_group, class_name: 'Group'
+  belongs_to :active_group, class_name: 'Group', optional: true
 
   # Create a new enrollment or modify `active_group` or `status` on one that
   # already exists

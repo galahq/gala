@@ -27,9 +27,9 @@ class Quiz < ApplicationRecord
   has_many :deployments, dependent: :nullify
   has_many :submissions, dependent: :destroy
 
-  belongs_to :author, class_name: 'Reader'
+  belongs_to :author, class_name: 'Reader', optional: true
   belongs_to :case
-  belongs_to :template, class_name: 'Quiz'
+  belongs_to :template, class_name: 'Quiz', optional: true
 
   scope :recommended, -> { where author_id: nil, lti_uid: nil }
 

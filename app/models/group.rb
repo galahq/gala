@@ -17,7 +17,7 @@ class Group < ApplicationRecord
   has_many :readers, through: :group_memberships
   has_many :deployments, dependent: :destroy
 
-  has_one :community
+  has_one :community, dependent: :destroy
 
   validates :context_id, uniqueness: true, if: -> { context_id.present? }
 
