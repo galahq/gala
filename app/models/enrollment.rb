@@ -32,14 +32,12 @@ class Enrollment < ApplicationRecord
   # Ratio of elements used to total number of elements: a measurement of how
   # thoroughly a student has engaged with the case.
   def case_completion
-    elements_used = self.case.events.where(name: 'visit_element')
-                        .merge(reader.events)
-                        .distinct
-                        .pluck(
-                          Arel.sql("ahoy_events.properties ->> 'element_id'"),
-                          Arel.sql("ahoy_events.properties ->> 'element_type'")
-                        )
-                        .count
+    elements_used = visit_element_events
+                    .pluck(
+                      Arel.sql("ahoy_events.properties ->> 'element_id'"),
+                      Arel.sql("ahoy_events.properties ->> 'element_type'")
+                    )
+                    .count
     elements_used.to_f / self.case.case_elements.count
   end
 
@@ -47,5 +45,13 @@ class Enrollment < ApplicationRecord
     super(options.merge(include: [reader: {
                           only: %i[id image_url initials name]
                         }]))
+  end
+
+  private
+
+  def visit_element_events
+    self.case.events.where(name: 'visit_element')
+        .merge(reader.events)
+        .distinct
   end
 end
