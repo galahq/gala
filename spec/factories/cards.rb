@@ -16,6 +16,7 @@ end
 
 FactoryBot.define do
   factory :card do
+    association :element, factory: :page
     raw_content do
       blocks = generate_blocks Faker::Hipster.paragraphs(rand(1..3))
       {

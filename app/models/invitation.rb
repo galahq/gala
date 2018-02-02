@@ -9,6 +9,6 @@
 # @attr rescinded_at [DateTime]
 class Invitation < ApplicationRecord
   belongs_to :community
-  belongs_to :inviter, class_name: 'Reader'
+  belongs_to :inviter, class_name: 'Reader', optional: true
   belongs_to :reader
 end

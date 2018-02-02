@@ -10,8 +10,6 @@ class Page < ApplicationRecord
 
   translates :title, fallbacks: true
 
-  belongs_to :case, touch: true
-
   has_many :cards, -> { order position: :asc }, as: :element,
                                                 dependent: :destroy
 end

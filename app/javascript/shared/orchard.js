@@ -21,7 +21,7 @@ export class Orchard {
       }/${endpoint}.json${query}`,
       { credentials: 'same-origin' }
     )
-    return fetch(r).then(this._handleResponse)
+    return fetch(r).then(handleResponse)
   }
 
   static graft (endpoint: string, params: Object): Promise<any> {
@@ -33,9 +33,10 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...csrfHeader(),
       }),
     })
-    return fetch(r).then(this._handleResponse)
+    return fetch(r).then(handleResponse)
   }
 
   // Train a fruit tree to grow into a desired figure.
@@ -48,51 +49,64 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...csrfHeader(),
       }),
     })
-    return fetch(r).then(this._handleResponse)
+    return fetch(r).then(handleResponse)
   }
 
   static prune (endpoint: string): Promise<Response> {
     const r = new Request(`/${endpoint}.json`, {
       credentials: 'same-origin',
       method: 'DELETE',
-      headers: new Headers({ Accept: 'application/json' }),
+      headers: new Headers({ Accept: 'application/json', ...csrfHeader() }),
     })
     return fetch(r)
   }
+}
 
-  static _handleResponse (response: Response): Promise<any> {
-    if (response.ok) {
-      return response.json().catch(() => Promise.resolve(true))
-    } else {
-      return response.json().then((errorResponse: ErrorResponse) => {
-        const errorFieldNames = keys(errorResponse)
+function csrfHeader (): { [string]: string } {
+  const token = getMetaContent('csrf-token')
 
-        const errorMessages = errorFieldNames
-          .reduce((all: string[], fieldName: string) => {
-            const fieldErrors = errorResponse[fieldName]
+  if (token == null) return {}
+  return { 'X-CSRF-Token': token }
+}
 
-            if (fieldErrors != null && Array.isArray(fieldErrors)) {
-              return append(
-                fieldErrors
-                  .map(
-                    err =>
-                      `${fieldName} ${typeof err === 'string' ? err : 'error'}`
-                  )
-                  .join('\n'),
-                all
-              )
-            }
+function getMetaContent (key: string): ?string {
+  const meta = document.querySelector(`meta[name="${key}"]`)
+  return meta && meta.getAttribute('content')
+}
 
-            return [...all, `${fieldName}: error`]
-          }, [])
-          .join('\n')
+function handleResponse (response: Response): Promise<any> {
+  if (response.ok) {
+    return response.json().catch(() => Promise.resolve(true))
+  } else {
+    return response.json().then((errorResponse: ErrorResponse) => {
+      const errorFieldNames = keys(errorResponse)
 
-        var e = Error(errorMessages)
-        e.name = 'OrchardError'
-        throw e
-      })
-    }
+      const errorMessages = errorFieldNames
+        .reduce((all: string[], fieldName: string) => {
+          const fieldErrors = errorResponse[fieldName]
+
+          if (fieldErrors != null && Array.isArray(fieldErrors)) {
+            return append(
+              fieldErrors
+                .map(
+                  err =>
+                    `${fieldName} ${typeof err === 'string' ? err : 'error'}`
+                )
+                .join('\n'),
+              all
+            )
+          }
+
+          return [...all, `${fieldName}: error`]
+        }, [])
+        .join('\n')
+
+      var e = Error(errorMessages)
+      e.name = 'OrchardError'
+      throw e
+    })
   }
 }

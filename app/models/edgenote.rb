@@ -60,7 +60,6 @@ class Edgenote < ApplicationRecord
   enum style: { v1: 0, v2: 1 }
 
   belongs_to :case, touch: true
-  belongs_to :card
 
   validates :format, inclusion: { in: %w[aside audio graphic link photo quote
                                          report video] }

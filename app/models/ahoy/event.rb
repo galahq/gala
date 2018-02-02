@@ -15,7 +15,7 @@ module Ahoy
 
     self.table_name = 'ahoy_events'
 
-    belongs_to :visit
+    belongs_to :visit, optional: true
     belongs_to :user, class_name: 'Reader', optional: true
 
     scope :interesting, -> { joins(:user).where <<~SQL.squish }

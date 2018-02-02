@@ -10,9 +10,10 @@ class PodcastsController < ApplicationController
 
   # @route [POST] `/cases/case-slug/podcasts`
   def create
-    @podcast = Podcast.create_as_element @case, title: 'New podcast'
+    @podcast = Podcast.new podcast_params
+    @podcast.build_case_element case: @case
 
-    if @podcast.persisted?
+    if @podcast.save
       render @podcast
     else
       render json: @podcast.errors, status: :unprocessable_entity
@@ -46,8 +47,8 @@ class PodcastsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def podcast_params
-    params.require(:podcast).permit(:title, :audio_url, :description,
-                                    :case_id, :artwork_url, :photo_credit,
-                                    credits_list: [hosts: [], guests: %i[name title]])
+    params[:podcast].permit(:title, :audio_url, :description,
+                            :case_id, :artwork_url, :photo_credit,
+                            credits_list: [hosts: [], guests: %i[name title]])
   end
 end

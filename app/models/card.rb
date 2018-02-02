@@ -23,7 +23,7 @@ class Card < ApplicationRecord
   has_many :comment_threads, -> { order(:block_index, :start) },
            dependent: :destroy
 
-  before_save :set_case_from_element
+  before_validation :set_case_from_element
 
   acts_as_list scope: %i[element_id element_type]
 

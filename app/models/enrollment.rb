@@ -17,7 +17,7 @@ class Enrollment < ApplicationRecord
   belongs_to :reader
   belongs_to :case
 
-  belongs_to :active_group, class_name: 'Group'
+  belongs_to :active_group, class_name: 'Group', optional: true
 
   # Create a new enrollment or modify `active_group` or `status` on one that
   # already exists
@@ -32,12 +32,12 @@ class Enrollment < ApplicationRecord
   # Ratio of elements used to total number of elements: a measurement of how
   # thoroughly a student has engaged with the case.
   def case_completion
-    elements_used = self.case.events.where(name: 'visit_element')
-                        .merge(reader.events)
-                        .distinct
-                        .pluck("ahoy_events.properties ->> 'element_id'",
-                               "ahoy_events.properties ->> 'element_type'")
-                        .count
+    elements_used = visit_element_events
+                    .pluck(
+                      Arel.sql("ahoy_events.properties ->> 'element_id'"),
+                      Arel.sql("ahoy_events.properties ->> 'element_type'")
+                    )
+                    .count
     elements_used.to_f / self.case.case_elements.count
   end
 
@@ -45,5 +45,13 @@ class Enrollment < ApplicationRecord
     super(options.merge(include: [reader: {
                           only: %i[id image_url initials name]
                         }]))
+  end
+
+  private
+
+  def visit_element_events
+    self.case.events.where(name: 'visit_element')
+        .merge(reader.events)
+        .distinct
   end
 end
