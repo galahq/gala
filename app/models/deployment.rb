@@ -16,6 +16,8 @@
 class Deployment < ApplicationRecord
   include Authority::Abilities
 
+  attribute :key, :string, default: -> { SecureRandom.urlsafe_base64 }
+
   belongs_to :case
   belongs_to :group
   belongs_to :quiz, optional: true
