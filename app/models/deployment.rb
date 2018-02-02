@@ -18,7 +18,7 @@ class Deployment < ApplicationRecord
 
   belongs_to :case
   belongs_to :group
-  belongs_to :quiz
+  belongs_to :quiz, optional: true
 
   validates :quiz, presence: true, if: -> { answers_needed.positive? }
 

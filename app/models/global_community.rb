@@ -11,6 +11,10 @@ class GlobalCommunity
     'communities/community'
   end
 
+  def marked_for_destruction?
+    false
+  end
+
   def id
     nil
   end
