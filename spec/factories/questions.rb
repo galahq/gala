@@ -2,6 +2,8 @@
 
 FactoryBot.define do
   factory :question do
+    association :quiz
+
     content { Faker::Lorem.question }
     correct_answer { Faker::Lorem.sentence }
     options []

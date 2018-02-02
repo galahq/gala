@@ -1,15 +1,27 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :case_element do
-    factory :page_element do
-      association :element, factory: :page
+  factory :page_element, class: CaseElement do
+    association :case
+
+    after :build do |this|
+      this.element ||= create :page_with_cards, case_element: this
     end
-    factory :podcast_element do
-      association :element, factory: :podcast
+  end
+
+  factory :podcast_element, class: CaseElement do
+    association :case
+
+    after :build do |this|
+      this.element ||= create :podcast, case_element: this
     end
-    factory :activity_element do
-      association :element, factory: :activity
+  end
+
+  factory :activity_element, class: CaseElement do
+    association :case
+
+    after :build do |this|
+      this.element ||= create :activity, case_element: this
     end
   end
 end
