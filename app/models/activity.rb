@@ -12,13 +12,12 @@ class Activity < ApplicationRecord
 
   translates :title, :description, :pdf_url, fallbacks: true
 
-  belongs_to :case, touch: true
-
   # @!method card
   #   @api private
-  has_one :card, as: :element, dependent: :destroy
+  #   Prefer {cards}
+  has_one :card, as: :element, dependent: :destroy, required: true
 
-  after_create_commit -> { create_card }
+  before_validation :build_card
 
   # @return [Array<Card>]
   def cards

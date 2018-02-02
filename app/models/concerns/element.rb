@@ -6,17 +6,13 @@ module Element
   extend ActiveSupport::Concern
 
   included do
-    has_one :case_element, as: :element, dependent: :destroy
+    has_one :case_element, as: :element, dependent: :destroy, required: true
+
+    after_save -> { case_element.touch }
   end
 
-  class_methods do
-    # Create a new instance of the Element and the corresponding CaseElement
-    # instance to connect it to the given case
-    def create_as_element(kase, params)
-      instance = new(params)
-      instance.case = kase
-      kase.case_elements.create(element: instance) if instance.save
-      instance
-    end
+  # @return [Case]
+  def case
+    case_element.case
   end
 end

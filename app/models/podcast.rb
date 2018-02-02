@@ -15,10 +15,12 @@ class Podcast < ApplicationRecord
 
   translates :title, :audio_url, :description, :credits, fallbacks: true
 
-  belongs_to :case, touch: true
-  has_one :card, as: :element, dependent: :destroy
+  # @!method card
+  #   @api private
+  #   Prefer {cards}
+  has_one :card, as: :element, dependent: :destroy, required: true
 
-  after_create_commit -> { create_card }
+  before_validation :build_card
 
   def cards
     [card]
