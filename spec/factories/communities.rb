@@ -2,7 +2,8 @@
 
 FactoryBot.define do
   factory :community do
+    association :group
+
     name { "House #{Faker::GameOfThrones.house}" }
-    group nil
   end
 end

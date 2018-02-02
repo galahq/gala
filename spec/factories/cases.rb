@@ -15,7 +15,7 @@ FactoryBot.define do
         url = 'https://source.unsplash.com/random'
         begin
           Net::HTTP.get_response(URI(url))['location']
-        rescue
+        rescue StandardError
           url
         end
       end
@@ -27,8 +27,8 @@ FactoryBot.define do
 
     trait :published do
       published_at { rand(30).minutes.ago }
-      latitude { rand(140) - 70 }
-      longitude { rand(360) - 180 }
+      latitude { rand(-70..69) }
+      longitude { rand(-180..179) }
       zoom { rand 10 }
     end
 
@@ -42,16 +42,10 @@ FactoryBot.define do
       in_catalog
 
       after :create do |this, ev|
-        this.case_elements = create_list(:page_element, ev.page_count) +
-                             create_list(:podcast_element, ev.podcast_count) +
-                             create_list(:activity_element, ev.activity_count)
-
-        this.case_elements.includes(:element).map(&:element)
-            .each { |e| e.update case: this }
-            .each { |e| e.cards.each { |c| c.update case: this } }
-
-        this.pages.includes(:cards).flat_map(&:cards)
-            .each { |e| e.update case: this }
+        create_list(:page_element, ev.page_count, case: this)
+        create_list(:podcast_element, ev.podcast_count, case: this)
+        create_list(:activity_element, ev.activity_count, case: this)
+        this.case_elements.reload
       end
     end
   end

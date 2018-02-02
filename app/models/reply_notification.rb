@@ -9,8 +9,8 @@ class ReplyNotification < ApplicationRecord
   belongs_to :comment
   belongs_to :comment_thread
   belongs_to :case
-  belongs_to :page
-  belongs_to :card
+  belongs_to :page, optional: true
+  belongs_to :card, optional: true
 
   after_create_commit { ReplyNotificationBroadcastJob.perform_now self }
   after_create_commit { ReplyNotificationMailer.notify(self).deliver }

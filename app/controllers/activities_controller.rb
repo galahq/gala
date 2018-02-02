@@ -10,9 +10,10 @@ class ActivitiesController < ApplicationController
 
   # @route [POST] `/cases/case-slug/activities`
   def create
-    @activity = Activity.create_as_element @case, title: 'New activity'
+    @activity = Activity.new activity_params
+    @activity.build_case_element case: @case
 
-    if @activity.persisted?
+    if @activity.save
       render @activity
     else
       render json: @activity.errors, status: :unprocessable_entity
@@ -46,6 +47,6 @@ class ActivitiesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def activity_params
-    params.require(:activity).permit(:title, :description, :pdf_url, :case_id)
+    params[:activity].permit(:title, :description, :pdf_url, :case_id)
   end
 end

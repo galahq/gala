@@ -2,9 +2,10 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '>= 5.1.0', '< 5.2'
+gem 'rails', '>= 5.2.0-rc1', '< 5.3'
 
 # Infrastructure
+gem 'bootsnap', require: false
 gem 'connection_pool'
 gem 'dalli'
 gem 'pg', '~> 0.18'
@@ -13,7 +14,7 @@ gem 'rack-canonical-host'
 gem 'redis', '~> 3.0'
 
 # Models
-gem 'acts_as_list'
+gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git', ref: '2811810'
 gem 'kaminari'
 gem 'memoist'
 gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'

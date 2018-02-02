@@ -39,9 +39,8 @@ class Case < ApplicationRecord
              :audience, :classroom_timeline, :acknowledgements, fallbacks: true
   translates :authors, :translators, default: [], fallbacks: true
 
-  belongs_to :library
+  belongs_to :library, optional: true
 
-  has_many :activities, dependent: :destroy
   has_many :cards
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy
   has_many :comment_threads, dependent: :destroy
@@ -49,11 +48,16 @@ class Case < ApplicationRecord
   has_many :edgenotes, dependent: :destroy
   has_many :enrollments, dependent: :destroy
   has_many :forums, dependent: :destroy
-  has_many :pages, dependent: :destroy
-  has_many :podcasts, dependent: :destroy
   has_many :readers, through: :enrollments
   has_many :deployments, dependent: :destroy
   has_many :quizzes, dependent: :destroy
+
+  has_many :activities,
+           through: :case_elements, source: :element, source_type: 'Activity'
+  has_many :pages,
+           through: :case_elements, source: :element, source_type: 'Page'
+  has_many :podcasts,
+           through: :case_elements, source: :element, source_type: 'Podcast'
 
   after_create :create_forum_for_universal_communities
 
@@ -69,7 +73,7 @@ class Case < ApplicationRecord
   scope :published, -> { where.not(published_on: nil) }
   scope :ordered,
         -> do
-          order(<<~SQL.squish)
+          order(Arel.sql(<<~SQL.squish))
             featured_at DESC NULLS LAST, published_at DESC NULLS LAST
           SQL
         end

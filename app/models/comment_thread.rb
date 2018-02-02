@@ -11,7 +11,7 @@
 class CommentThread < ApplicationRecord
   include Authority::Abilities
 
-  belongs_to :card, touch: true
+  belongs_to :card, touch: true, optional: true
   belongs_to :forum, touch: true
   belongs_to :reader
 

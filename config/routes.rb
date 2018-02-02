@@ -2,8 +2,8 @@
 
 # rubocop:disable Metrics/BlockLength
 
-LOCALES = Rails.application.config.i18n.available_locales
-LOCALE_REGEX = /#{LOCALES.map(&:to_s).join("|")}/
+LOCALES ||= Rails.application.config.i18n.available_locales
+LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/
 
 Rails.application.routes.draw do
   concern :has_statistics do
