@@ -20,6 +20,7 @@ test:
   pre:
     - greenkeeper-lockfile-update
   override:
+    - bundle exec rake factory_bot:lint RAILS_ENV='test'
     - bundle exec rspec -r rspec_junit_formatter --format progress --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml:
         parallel: true
         files:

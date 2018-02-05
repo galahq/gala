@@ -66,7 +66,7 @@ gem 'table_print'
 
 group :development do
   gem 'foreman'
-  gem 'listen', '~> 3.1.5'
+  gem 'listen'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'bullet'
   gem 'letter_opener'
@@ -87,7 +87,8 @@ group :development, :test do
 
   gem 'capybara'
   gem 'guard-rspec'
-  gem 'rspec-rails', '~> 3.5'
+  gem 'rspec'
+  gem 'rspec-rails'
   gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
