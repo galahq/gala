@@ -72,25 +72,8 @@ RSpec.configure do |config|
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
   config.include Devise::Test::ControllerHelpers, type: :controller
 
-  config.before(:suite) do
-    begin
-      DatabaseCleaner.clean_with(:truncation)
-      DatabaseCleaner.strategy = :transaction
-      FactoryBot.lint
-      DatabaseCleaner.clean_with(:truncation)
-    end
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
-  end
-
-  config.before(:each, type: :feature) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
+  config.before(:all, type: :feature) do
+    Capybara.server = :puma, { Silent: true }
   end
 
   config.after(:each) do |example|
@@ -99,10 +82,6 @@ RSpec.configure do |config|
       Rails.logger.info page.driver.browser.manage.logs.get('browser')
                             .map(&:as_json).awesome_inspect
     end
-  end
-
-  config.append_after(:each) do
-    DatabaseCleaner.clean
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
