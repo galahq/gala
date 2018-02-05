@@ -101,4 +101,4 @@ group :test do
   gem 'database_cleaner'
 end
 
-ruby '2.4.2'
+ruby '2.5.0'
