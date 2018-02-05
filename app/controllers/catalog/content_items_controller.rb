@@ -10,6 +10,7 @@ module Catalog
   # the class group and forum. Then they can edit the deployment to add a quiz.
   # deployments#edit is responsible for responding to the tool consumer.
   class ContentItemsController < ApplicationController
+    skip_before_action :verify_authenticity_token
     before_action :validate_lti_request!
 
     # @route [POST] `/catalog/content_items`
