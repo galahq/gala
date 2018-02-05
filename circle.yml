@@ -2,7 +2,7 @@ machine:
   node:
     version: 7.7.4
   ruby:
-    version: 2.4.2
+    version: 2.5.0
 dependencies:
   pre:
     - sudo service postgresql stop

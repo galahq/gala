@@ -49,16 +49,16 @@ Vagrant.configure(2) do |config|
       mv chromedriver /usr/local/bin
 
       RUBY_VERSION=`ruby --version | cut -c6-10`
-      if [ "x${RUBY_VERSION}" != "x2.4.2" ]; then
+      if [ "x${RUBY_VERSION}" != "x2.5.0" ]; then
           cd /usr/src
-          curl -s -O https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.2.tar.bz2
-          tar xjf ruby-2.4.2.tar.bz2
-          cd ruby-2.4.2/
+          curl -s -O https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.0.tar.bz2
+          tar xjf ruby-2.5.0.tar.bz2
+          cd ruby-2.5.0/
           ./configure
           make
           make install
       else
-          echo "ruby 2.4.2 already installed"
+          echo "ruby 2.5.0 already installed"
       fi
 
       cd /vagrant
