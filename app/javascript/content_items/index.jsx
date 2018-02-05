@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { submitForm } from 'shared/lti'
+import { CSRF } from 'shared/orchard'
 
 type ContentItem = {
   slug: string,
@@ -23,6 +24,7 @@ type ContentItemsProps = {
 function createDeployment (groupId: string, caseSlug: string) {
   submitForm(`/groups/${groupId}/deployments`, {
     case_slug: caseSlug,
+    ...CSRF.param(),
   })
 }
 
@@ -31,13 +33,13 @@ const ContentItems = ({ items, groupId }: ContentItemsProps) => {
   return (
     <div className="catalog-cases">
       <div className="catalog-cases-index">
-        {items.map((item: ContentItem, i: number) =>
+        {items.map((item: ContentItem, i: number) => (
           <ContentItemLink
             key={i}
             {...item}
             handleSelectContentItem={handleSelectContentItem}
           />
-        )}
+        ))}
       </div>
     </div>
   )
@@ -70,18 +72,15 @@ const ContentItemLink = ({
       }}
       onClick={handleClick}
     >
-      {published ||
-        <div className="catalog-case-unpublished-banner">Forthcoming</div>}
+      {published || (
+        <div className="catalog-case-unpublished-banner">Forthcoming</div>
+      )}
       <div className="catalog-case-credits">
         <h2>
-          <span className="c-kicker">
-            {kicker}
-          </span>
+          <span className="c-kicker">{kicker}</span>
           {title}
         </h2>
-        <p style={{ display: 'none' }}>
-          {dek}
-        </p>
+        <p style={{ display: 'none' }}>{dek}</p>
       </div>
     </a>
   )

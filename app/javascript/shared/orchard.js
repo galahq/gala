@@ -33,7 +33,7 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        ...csrfHeader(),
+        ...CSRF.header(),
       }),
     })
     return fetch(r).then(handleResponse)
@@ -49,7 +49,7 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        ...csrfHeader(),
+        ...CSRF.header(),
       }),
     })
     return fetch(r).then(handleResponse)
@@ -59,17 +59,29 @@ export class Orchard {
     const r = new Request(`/${endpoint}.json`, {
       credentials: 'same-origin',
       method: 'DELETE',
-      headers: new Headers({ Accept: 'application/json', ...csrfHeader() }),
+      headers: new Headers({ Accept: 'application/json', ...CSRF.header() }),
     })
     return fetch(r)
   }
 }
 
-function csrfHeader (): { [string]: string } {
-  const token = getMetaContent('csrf-token')
+export const CSRF = {
+  header (): { [string]: string } {
+    const token = CSRF.token()
+    if (token == null) return {}
+    return { 'X-CSRF-Token': token }
+  },
 
-  if (token == null) return {}
-  return { 'X-CSRF-Token': token }
+  param (): { [string]: string } {
+    const paramName = getMetaContent('csrf-param')
+    const token = CSRF.token()
+    if (paramName == null || token == null) return {}
+    return { [paramName]: token }
+  },
+
+  token (): ?string {
+    return getMetaContent('csrf-token')
+  },
 }
 
 function getMetaContent (key: string): ?string {
