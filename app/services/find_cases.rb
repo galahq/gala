@@ -46,10 +46,10 @@ class FindCases
     )
         .where('cases_search_index_en.document @@ plainto_tsquery(?)', query)
         .reorder(
-          'ts_rank(' \
+          Arel.sql('ts_rank(' \
              'cases_search_index_en.document, ' \
              "plainto_tsquery(#{ActiveRecord::Base.connection.quote(query)})" \
-           ') DESC'
+           ') DESC')
         )
   end
 
