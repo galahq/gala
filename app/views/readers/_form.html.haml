@@ -1,6 +1,6 @@
 .dialog.devise
   %h2= t '.my_account'
-  = form_for @reader, url: :profile do |f|
+  = form_for @reader, url: :profile, builder: BlueprintFormBuilder do |f|
     .pt-control-group.pt-fill
       = f.label :name, class: "pt-label" do
         = t 'activerecord.attributes.reader.name'
@@ -17,6 +17,14 @@
     = f.label :email, class: "pt-label" do
       = t 'activerecord.attributes.user.email'
       = f.email_field :email, class: "pt-input pt-fill", tabindex: 3
+
+    .reader-image-input
+      = f.label :image, class: 'pt-label' do
+        = t 'activerecord.attributes.user.image'
+        .pt-file-upload.pt-fill
+          = f.file_field :image, tabindex: 4
+          %span.pt-file-upload-input= t '.choose_an_image'
+      %img{ src: @reader.image_url }
 
     %h2= t '.notification_settings'
     %div{ style: 'padding-bottom: 1em'}

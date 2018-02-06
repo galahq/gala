@@ -59,6 +59,8 @@ class Case < ApplicationRecord
   has_many :podcasts,
            through: :case_elements, source: :element, source_type: 'Podcast'
 
+  has_one_attached :cover_image
+
   after_create :create_forum_for_universal_communities
 
   validates :slug, presence: true,

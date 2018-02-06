@@ -14,5 +14,6 @@ en:
       you_have_not_created_a_password: |
         Because you first signed in using %{provider}, you never created a password.
         If you create one now, you will be able to use it, or %{provider}, to sign in.
+      choose_an_image: Choose a profile image
   notifications:
     replied_to_your_comment: "%{notifier} replied to your comment on “%{case_kicker}.”"

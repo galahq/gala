@@ -51,11 +51,12 @@ class ReadersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_reader
-    @reader = if params[:id].blank?
-                current_reader
-              else
-                Reader.find(params[:id])
-              end
+    reader = if params[:id].blank?
+               current_reader
+             else
+               Reader.find(params[:id])
+             end
+    @reader = reader.decorate
   end
 
   def search_params
@@ -68,7 +69,7 @@ class ReadersController < ApplicationController
     end
 
     permitted = %i[name initials email locale send_reply_notifications
-                   active_community_id]
+                   active_community_id image]
     permitted << :password if @reader_can_set_password
 
     params.require(:reader).permit(*permitted)
