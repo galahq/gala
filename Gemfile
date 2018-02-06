@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '>= 5.2.0-rc1', '< 5.3'
 
 # Infrastructure
+gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
 gem 'connection_pool'
 gem 'dalli'
