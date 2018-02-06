@@ -267,6 +267,7 @@ GEM
     memoist (0.16.0)
     method_source (0.9.0)
     mimemagic (0.3.2)
+    mini_magick (4.8.0)
     mini_mime (0.1.4)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
@@ -492,6 +493,7 @@ DEPENDENCIES
   lograge
   markerb
   memoist
+  mini_magick
   mobility
   multi_json
   newrelic_rpm

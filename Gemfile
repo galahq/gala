@@ -9,6 +9,7 @@ gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
 gem 'connection_pool'
 gem 'dalli'
+gem 'mini_magick'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-canonical-host'
