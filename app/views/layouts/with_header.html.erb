@@ -6,7 +6,9 @@
     <div id="main-menu-app" class="pt-dark"></div>
     <%= javascript_tag do %>
       window.reader = <% if reader_signed_in? %>
-      <%= raw render partial: "readers/reader", formats: [:json], locals: {reader: current_reader}%>
+      <%= raw render partial: "readers/reader",
+                     formats: [:json],
+                     locals: { reader: current_reader.decorate } %>
       <% else %>
       undefined;
       <% end %>

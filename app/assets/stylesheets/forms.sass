@@ -31,6 +31,11 @@ select, input, textarea, button
     padding: 0.1em 0.5em
     margin-bottom: 0.5em
 
+  .pt-file-upload
+    margin-top: 5px
+    text-transform: none
+    letter-spacing: 0
+
   .pt-checkbox
     margin: 5px 0 0 0
 
@@ -120,3 +125,15 @@ form + ul
 
 .form__errors
   margin-bottom: 1em
+
+.reader-image-input
+  display: flex
+
+  & img
+    margin-left: 10px
+    width: 50px
+    height: 50px
+    object-fit: cover
+    border-radius: 2px
+    background-color: #FAF9F5
+    box-shadow: 0 0 0 0 rgba(115, 81, 212, 0), 0 0 0 0 rgba(115, 81, 212, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2)
