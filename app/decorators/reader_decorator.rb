@@ -6,7 +6,7 @@ class ReaderDecorator < Draper::Decorator
 
   # @param size [:thumbnail]
   def image_url(size = :thumbnail)
-    return nil unless image.attached?
+    return model.image_url unless image.attached?
 
     case size
     when :thumbnail
