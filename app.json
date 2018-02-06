@@ -19,6 +19,9 @@
     "NODE_ENV": {
       "required": true
     },
+    "RAILS_MASTER_KEY": {
+      "required": true
+    },
     "RAILS_MAX_THREADS": {
       "required": true
     },
