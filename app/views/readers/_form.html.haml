@@ -22,7 +22,7 @@
       = f.label :image, class: 'pt-label' do
         = t 'activerecord.attributes.user.image'
         .pt-file-upload.pt-fill
-          = f.file_field :image, tabindex: 4
+          = f.file_field :image, direct_upload: true, tabindex: 4
           %span.pt-file-upload-input= t '.choose_an_image'
       %img{ src: @reader.image_url }
 
@@ -47,3 +47,5 @@
         = t 'activerecord.attributes.user.password'
         = f.password_field :password, class: 'pt-input pt-fill'
       = f.submit t('.create_a_password'), class: 'o-button pt-button'
+
+= javascript_pack_tag 'file_upload'
