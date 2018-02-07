@@ -1,18 +1,21 @@
+# frozen_string_literal: true
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = 'ubuntu/xenial64'
   config.vm.provider 'virtualbox' do |v|
     v.memory = 4096
   end
 
-  config.vm.network 'private_network', type: "dhcp" # needed for the nfs synced_folder
+  config.vm.network 'private_network', type: 'dhcp' # needed for the nfs synced_folder
   # needed because the default synced_folder method is way too slow
-  config.vm.synced_folder ".", "/vagrant", type: "nfs", fsnotify: true, exclude: ["node_modules"]
-  config.vm.network "forwarded_port", guest: 3000, host: 3000
-  config.vm.network "forwarded_port", guest: 3001, host: 3001
+  config.vm.synced_folder '.', '/vagrant', type: 'nfs', fsnotify: true,
+                                           exclude: ['node_modules']
+  config.vm.network 'forwarded_port', guest: 3000, host: 3000
+  config.vm.network 'forwarded_port', guest: 3001, host: 3001
 
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision 'shell', inline: <<-SHELL
     set -xe
 
     if [ -e /.installed ]; then
@@ -41,6 +44,7 @@ Vagrant.configure(2) do |config|
         git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev \
         libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev \
         libcurl4-openssl-dev python-software-properties libffi-dev \
+        imagemagick \
         yarn
 
       cd /tmp
@@ -85,5 +89,4 @@ Vagrant.configure(2) do |config|
       touch /.installed
     fi
   SHELL
-
 end
