@@ -60,17 +60,6 @@ addEventListener('direct-upload:progress', ({ detail }) => {
   progressBar.style.width = `${progress}%`
 })
 
-addEventListener('direct-upload:error', event => {
-  event.preventDefault()
-  const { id, error } = event.detail
-  const progressBar = document.getElementById(`direct-upload-progress-${id}`)
-  if (progressBar == null) return
-
-  progressBar.classList.add('pt-intent-danger')
-  progressBar.classList.add('pt-no-animation')
-  progressBar.setAttribute('title', error)
-})
-
 addEventListener('direct-upload:end', ({ detail }) => {
   const { id } = detail
   const progressBar = document.getElementById(`direct-upload-progress-${id}`)
