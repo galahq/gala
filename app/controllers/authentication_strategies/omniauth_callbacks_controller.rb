@@ -5,6 +5,7 @@ module AuthenticationStrategies
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     include MagicLink
 
+    skip_before_action :verify_authenticity_token
     before_action :set_authentication_strategy, except: [:failure]
     before_action :set_reader, except: [:failure]
 
