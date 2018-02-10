@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
-import EditableAttribute from 'utility/EditableAttribute'
 import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
 import CommunityChooser from './CommunityChooser'
@@ -68,13 +67,7 @@ const Billboard = ({
   <section className="Billboard">
     <BillboardTitle />
     <CommunityChooser />
-    <EditableAttribute
-      disabled={!editing}
-      title="Base cover image URL"
-      value={baseCoverUrl}
-      style={{ color: '#EBEAE4' }}
-      onChange={v => updateCase({ baseCoverUrl: v, coverUrl: v })}
-    />
+
     <div className="Card BillboardSnippet pt-light">
       <h3 className="c-BillboardSnippet__dek">
         <EditableText
@@ -101,12 +94,12 @@ const Billboard = ({
       </Less>
 
       {(learningObjectives || editing) && (
-      <LearningObjectives
-        disabled={!editing}
-        learningObjectives={learningObjectives}
-        onChange={value => updateCase({ learningObjectives: value })}
-      />
-        )}
+        <LearningObjectives
+          disabled={!editing}
+          learningObjectives={learningObjectives}
+          onChange={value => updateCase({ learningObjectives: value })}
+        />
+      )}
 
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>

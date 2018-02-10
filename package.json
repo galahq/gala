@@ -60,6 +60,7 @@
     "ramda": "^0.25.0",
     "raw-loader": "^0.5.1",
     "react": "^16.0.0",
+    "react-activestorage-provider": "*",
     "react-addons-css-transition-group": "^15.4.2",
     "react-animate": "^3.0.0",
     "react-device-detect": "^0.1.0",

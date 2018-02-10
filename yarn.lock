@@ -6533,6 +6533,12 @@ rc@~1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~1.0.4"
 
+react-activestorage-provider@*:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-activestorage-provider/-/react-activestorage-provider-0.0.2.tgz#bc02612cb8b5c8a367cf05e2c7f5b6918daa2382"
+  dependencies:
+    activestorage "^0.1.1"
+
 react-addons-css-transition-group@^15.4.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react-addons-css-transition-group/-/react-addons-css-transition-group-15.6.2.tgz#9e4376bcf40b5217d14ec68553081cee4b08a6d6"
