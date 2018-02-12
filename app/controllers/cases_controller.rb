@@ -12,7 +12,7 @@ class CasesController < ApplicationController
 
   # @route [GET] `/cases`
   def index
-    @cases = Case.all.ordered.includes(:case_elements, :library)
+    @cases = Case.all.ordered.includes(:case_elements, :library).decorate
   end
 
   # @route [GET] `/cases/slug`
@@ -70,7 +70,7 @@ class CasesController < ApplicationController
       pages: %i[case_element cards],
       cards: [comment_threads: [:reader, comments: [:reader]]],
       enrollments: [:reader]
-    ).first
+    ).first.decorate
   end
 
   def set_libraries
