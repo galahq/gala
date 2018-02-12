@@ -3,7 +3,7 @@
     case_data: render(
       template: 'cases/_case',
       formats: [:json],
-      locals: { c: @deployment.case }
+      locals: { c: @deployment.case.decorate }
     ),
     group_data: @deployment.group.slice(:name).to_json,
     deployment_key: @deployment.key
