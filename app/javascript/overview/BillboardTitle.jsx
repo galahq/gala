@@ -9,12 +9,12 @@ import { connect } from 'react-redux'
 
 import ActiveStorageProvider from 'react-activestorage-provider'
 import { EditableText } from '@blueprintjs/core'
-import { FormattedMessage } from 'react-intl'
 
 import { updateCase } from 'redux/actions'
 
 import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
+import FileUploadWidget from 'utility/FileUploadWidget'
 
 import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
@@ -82,18 +82,14 @@ export const UnconnectedBillboardTitle = ({
               attribute: 'cover_image',
               method: 'PUT',
             }}
-            render={({ handleUpload, uploads, ready }) => (
-              <FileUploadContainer>
-                <HiddenFileUpload
-                  onChange={e => handleUpload(e.currentTarget.files)}
-                />
-                <UploadButton>
-                  <FormattedMessage
-                    id="case.changeCover"
-                    defaultMessage="Change cover image"
-                  />
-                </UploadButton>
-              </FileUploadContainer>
+            render={renderProps => (
+              <CoverImageUploadWidget
+                message={{
+                  id: 'case.changeCover',
+                  defaultMessage: 'Change cover image',
+                }}
+                {...renderProps}
+              />
             )}
             onSubmit={({ coverUrl }) => updateCase({ coverUrl })}
           />
@@ -164,18 +160,8 @@ export const CoverImageContainer = styled.div.attrs({
     `};
 `
 
-const FileUploadContainer = styled.label`
+const CoverImageUploadWidget = styled(FileUploadWidget)`
   position: absolute;
   top: 10px;
   right: 10px;
 `
-
-const HiddenFileUpload = styled.input.attrs({ type: 'file' })`
-  opacity: 0;
-  margin: 0;
-  min-width: 1em;
-`
-
-const UploadButton = styled.span.attrs({
-  className: 'pt-button pt-icon-cloud-upload',
-})``

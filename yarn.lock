@@ -6534,8 +6534,8 @@ rc@~1.1.6:
     strip-json-comments "~1.0.4"
 
 react-activestorage-provider@*:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/react-activestorage-provider/-/react-activestorage-provider-0.0.2.tgz#bc02612cb8b5c8a367cf05e2c7f5b6918daa2382"
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/react-activestorage-provider/-/react-activestorage-provider-0.0.3.tgz#f4ce3ce5cc62d0e4b57aeda13b75d73664c8d9c8"
   dependencies:
     activestorage "^0.1.1"
 
