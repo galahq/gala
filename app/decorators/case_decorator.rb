@@ -9,8 +9,7 @@ class CaseDecorator < Draper::Decorator
   end
 
   def small_cover_url
-    if cover_image.attached?
-      h.url_for(cover_image.variant(thumbnail: '200x200^'))
-    end
+    return unless cover_image.attached?
+    h.url_for(cover_image.variant(thumbnail: '200x200^'))
   end
 end
