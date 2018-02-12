@@ -4,12 +4,17 @@
 class CaseDecorator < Draper::Decorator
   delegate_all
 
+  DARK_BLUE_PIXEL =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU' \
+    'lEQVR42mOUtY/7DwAC9gG7VNK2ygAAAABJRU5ErkJggg=='
+
   def cover_url
-    h.url_for(cover_image.variant(resize: '1280x540^')) if cover_image.attached?
+    return DARK_BLUE_PIXEL unless cover_image.attached?
+    h.url_for(cover_image.variant(resize: '1280x540^'))
   end
 
   def small_cover_url
-    return unless cover_image.attached?
+    return DARK_BLUE_PIXEL unless cover_image.attached?
     h.url_for(cover_image.variant(thumbnail: '200x200^'))
   end
 end
