@@ -54,6 +54,7 @@ function edit (state: ?EditState, action: Action): EditState {
       }
 
     case 'UPDATE_CASE':
+      if (action.needsSaving === false) return state
       return {
         ...state,
         changed: true,

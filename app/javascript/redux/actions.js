@@ -242,10 +242,14 @@ function clearUnsaved (): ClearUnsavedAction {
 export type UpdateCaseAction = {
   type: 'UPDATE_CASE',
   data: $Shape<CaseDataState>,
+  needsSaving: boolean,
 }
-export function updateCase (data: $Shape<CaseDataState>): UpdateCaseAction {
-  setUnsaved()
-  return { type: 'UPDATE_CASE', data }
+export function updateCase (
+  data: $Shape<CaseDataState>,
+  needsSaving?: boolean = true
+): UpdateCaseAction {
+  if (needsSaving) setUnsaved()
+  return { type: 'UPDATE_CASE', data, needsSaving }
 }
 
 export function togglePublished (): ThunkAction {
