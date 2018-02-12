@@ -12,7 +12,10 @@ class CasesController < ApplicationController
 
   # @route [GET] `/cases`
   def index
-    @cases = Case.all.ordered.includes(:case_elements, :library).decorate
+    @cases = Case.all.ordered
+                 .with_attached_cover_image
+                 .includes(:case_elements, :library)
+                 .decorate
   end
 
   # @route [GET] `/cases/slug`
