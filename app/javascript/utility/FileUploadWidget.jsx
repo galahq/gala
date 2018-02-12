@@ -17,6 +17,7 @@ type Props = {
   uploads: ActiveStorageFileUpload[],
   className?: string,
   message: MessageDescriptor,
+  accept?: string,
 }
 const FileUploadWidget = ({
   handleUpload,
@@ -24,10 +25,14 @@ const FileUploadWidget = ({
   ready,
   className,
   message,
+  accept,
 }: Props) => (
   <React.Fragment>
     <label className={className} style={{ display: ready ? 'block' : 'none' }}>
-      <HiddenFileUpload onChange={e => handleUpload(e.currentTarget.files)} />
+      <HiddenFileUpload
+        accept={accept || 'image/*'}
+        onChange={e => handleUpload(e.currentTarget.files)}
+      />
       <UploadButton>
         <FormattedMessage {...message} />
       </UploadButton>
