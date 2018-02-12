@@ -14,9 +14,6 @@
 # @attr translators [Translated<Array<String>>] the translators’ names, if any
 # @attr acknowledgements [Translated<String>] a place for the authors’ gratitude
 #
-# @attr cover_url [URI] the primary image associated with the case. This is
-#   expected to repond to GET params to vary size and crop, following the [Imgix
-#   API](https://docs.imgix.com/apis/url)
 # @attr photo_credit [String] attribution for the {cover_url}’s rights holder
 # @attr latitude [Numeric] where the case takes place
 # @attr longitude [Numeric] where the case takes place
