@@ -52,7 +52,7 @@ type Props = {
   title: string,
   photoCredit: string,
   coverUrl: string,
-  updateCase: ($Shape<CaseDataState>) => void,
+  updateCase: typeof updateCase,
   minimal: boolean,
   library: Library,
 } & Byline
@@ -91,7 +91,9 @@ export const UnconnectedBillboardTitle = ({
                 {...renderProps}
               />
             )}
-            onSubmit={({ coverUrl }) => updateCase({ coverUrl })}
+            onSubmit={({ coverUrl }: CaseDataState) =>
+              updateCase({ coverUrl }, false)
+            }
           />
         )}
 
