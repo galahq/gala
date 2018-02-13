@@ -9,10 +9,7 @@ class ReplyNotificationMailer < ApplicationMailer
     reader = @notification.reader
     return unless reader.send_reply_notifications
 
-    if @notification.case.cover_image.attached?
-      kase = CaseDecorator.decorate @notification.case
-      attachments.inline['cover'] = kase.cover_image_attachment
-    end
+    attach_cover_image
 
     mail(to: reader.name_and_email,
          from: from_header,
@@ -41,5 +38,12 @@ class ReplyNotificationMailer < ApplicationMailer
     "RE: [#{@notification.case.kicker}] " \
       "“#{comment_thread.comments.first.content.truncate(40)}” " \
       "(##{comment_thread.id})"
+  end
+
+  def attach_cover_image
+    return unless @notification.case.cover_image.attached?
+
+    kase = CaseDecorator.decorate @notification.case
+    attachments.inline['cover'] = kase.cover_image_attachment
   end
 end
