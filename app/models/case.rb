@@ -28,7 +28,6 @@
 # @attr featured_at [DateTime] featured cases appear prominently in the catalog
 # @attr commentable [Boolean] whether or not forums are enabled on the case
 class Case < ApplicationRecord
-  include Authority::Abilities
   include Comparable
   include Mobility
 
@@ -69,7 +68,7 @@ class Case < ApplicationRecord
 
   resourcify
 
-  scope :published, -> { where.not(published_on: nil) }
+  scope :published, -> { where.not(published_at: nil) }
   scope :ordered,
         -> do
           order(Arel.sql(<<~SQL.squish))

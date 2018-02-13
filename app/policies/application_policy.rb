@@ -51,7 +51,6 @@ class ApplicationPolicy
     end
 
     def resolve
-      return scope.all if user.has_cached_role? :editor
       scope
     end
   end
