@@ -328,7 +328,6 @@ CREATE TABLE cases (
     tags text[] DEFAULT '{}'::text[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    cover_url character varying,
     short_title text,
     photo_credit text,
     commentable boolean,
@@ -2429,6 +2428,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171220165301'),
 ('20180119170858'),
 ('20180129143420'),
-('20180206151601');
+('20180206151601'),
+('20180212172121');
 
 

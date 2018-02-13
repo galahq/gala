@@ -12,7 +12,10 @@ class CasesController < ApplicationController
 
   # @route [GET] `/cases`
   def index
-    @cases = Case.all.ordered.includes(:case_elements, :library)
+    @cases = Case.all.ordered
+                 .with_attached_cover_image
+                 .includes(:case_elements, :library)
+                 .decorate
   end
 
   # @route [GET] `/cases/slug`
@@ -70,7 +73,7 @@ class CasesController < ApplicationController
       pages: %i[case_element cards],
       cards: [comment_threads: [:reader, comments: [:reader]]],
       enrollments: [:reader]
-    ).first
+    ).first.decorate
   end
 
   def set_libraries
@@ -87,7 +90,7 @@ class CasesController < ApplicationController
   def case_params
     params.require(:case).permit(
       :published, :featured, :kicker, :title, :dek, :slug, :photo_credit,
-      :summary, :tags, :cover_url, :latitude, :longitude, :zoom,
+      :summary, :tags, :cover_image, :latitude, :longitude, :zoom,
       :acknowledgements, :library_id,
       authors: %i[name institution], translators: [], learning_objectives: []
     )

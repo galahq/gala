@@ -1,5 +1,5 @@
 <% headline one_liner "#{@notification.notifier.name} replied to your comment" %>
-<% background_image_url ix_cover_image @notification.case, :email %>
+<% background_image_url attachments['cover'].url if attachments['cover'] %>
 
 <%= @notification.comment.content %>
 
