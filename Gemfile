@@ -31,6 +31,7 @@ gem 'ims-lti'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
+gem 'pundit'
 gem 'rolify'
 
 # Events

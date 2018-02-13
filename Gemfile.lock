@@ -325,6 +325,8 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (3.0.0)
     puma (3.10.0)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (2.0.4)
     rack-attack (5.0.1)
       rack
@@ -516,6 +518,7 @@ DEPENDENCIES
   pg (~> 0.18)
   pry
   puma (~> 3.0)
+  pundit
   rack-canonical-host
   rails (>= 5.2.0.pre.rc1, < 5.3)
   redcarpet
