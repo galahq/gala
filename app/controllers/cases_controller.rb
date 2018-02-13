@@ -6,13 +6,12 @@ class CasesController < ApplicationController
   before_action :set_case, only: %i[show edit update destroy]
   before_action :set_libraries, only: %i[new create edit]
 
-  authorize_actions_for Case, except: %i[index show]
-
   layout 'admin'
 
   # @route [GET] `/cases`
   def index
-    @cases = Case.all.ordered
+    @cases = Case.all
+                 .ordered
                  .with_attached_cover_image
                  .includes(:case_elements, :library)
                  .decorate
@@ -21,7 +20,7 @@ class CasesController < ApplicationController
   # @route [GET] `/cases/slug`
   def show
     authenticate_reader! unless @case.published
-    authorize_action_for @case
+    authorize @case
 
     set_group_and_deployment
 
@@ -30,11 +29,15 @@ class CasesController < ApplicationController
 
   # @route [GET] `/cases/new`
   def new
+    authorize Case
+
     @case = Case.new
   end
 
   # @route [POST] `/cases`
   def create
+    authorize Case
+
     @case = Case.new(case_params)
     @case.kicker ||= @case.slug.split('-').join(' ').titlecase
     @case.title ||= ''
@@ -52,6 +55,8 @@ class CasesController < ApplicationController
 
   # @route [PATCH/PUT] `/cases/slug`
   def update
+    authorize @case
+
     set_group_and_deployment
 
     if @case.update(case_params)
