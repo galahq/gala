@@ -2,13 +2,17 @@
 
 # @see ReplyNotification
 class ReplyNotificationMailer < ApplicationMailer
-  helper :cases
   helper :comment_threads
 
   def notify(notification)
     @notification = notification
     reader = @notification.reader
     return unless reader.send_reply_notifications
+
+    if @notification.case.cover_image.attached?
+      kase = CaseDecorator.decorate @notification.case
+      attachments.inline['cover'] = kase.cover_image_attachment
+    end
 
     mail(to: reader.name_and_email,
          from: from_header,

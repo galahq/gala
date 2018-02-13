@@ -9,7 +9,7 @@ end
 
 json.case_data do
   json.extract! @deployment.case, :kicker, :title
-  json.cover_url ix_cover_image(@deployment.case, :square)
+  json.cover_url @deployment.case.decorate.cover_url
   json.callback_url authentication_strategy_lti_omniauth_callback_url case_slug: @deployment.case.slug
 end
 

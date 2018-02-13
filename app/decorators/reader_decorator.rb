@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 # @see Reader
-class ReaderDecorator < Draper::Decorator
-  delegate_all
-
+class ReaderDecorator < ApplicationDecorator
   # @param size [:thumbnail]
   def image_url(size = :thumbnail)
     return model.image_url unless image.attached?
