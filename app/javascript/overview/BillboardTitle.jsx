@@ -7,17 +7,20 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
+import ActiveStorageProvider from 'react-activestorage-provider'
 import { EditableText } from '@blueprintjs/core'
 
 import { updateCase } from 'redux/actions'
 
 import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
+import FileUploadWidget from 'utility/FileUploadWidget'
 
 import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
+    slug,
     kicker,
     title,
     photoCredit,
@@ -29,6 +32,7 @@ function mapStateToProps ({ edit, caseData }: State) {
   } = caseData
 
   return {
+    slug,
     kicker,
     title,
     photoCredit,
@@ -42,17 +46,19 @@ function mapStateToProps ({ edit, caseData }: State) {
 }
 
 type Props = {
+  slug: string,
   editing: boolean,
   kicker: string,
   title: string,
   photoCredit: string,
   coverUrl: string,
-  updateCase: ($Shape<CaseDataState>) => void,
+  updateCase: typeof updateCase,
   minimal: boolean,
   library: Library,
 } & Byline
 
 export const UnconnectedBillboardTitle = ({
+  slug,
   editing,
   kicker,
   title,
@@ -67,6 +73,30 @@ export const UnconnectedBillboardTitle = ({
 }: Props) => {
   return (
     <CoverImageContainer src={coverUrl}>
+      {!minimal &&
+        editing && (
+          <ActiveStorageProvider
+            endpoint={{
+              path: `/cases/${slug}`,
+              model: 'Case',
+              attribute: 'cover_image',
+              method: 'PUT',
+            }}
+            render={renderProps => (
+              <CoverImageUploadWidget
+                message={{
+                  id: 'case.changeCover',
+                  defaultMessage: 'Change cover image',
+                }}
+                {...renderProps}
+              />
+            )}
+            onSubmit={({ coverUrl }: CaseDataState) =>
+              updateCase({ coverUrl }, false)
+            }
+          />
+        )}
+
       <h1>
         <span className="c-kicker">
           <EditableText
@@ -130,4 +160,10 @@ export const CoverImageContainer = styled.div.attrs({
     css`
       padding-top: 2em;
     `};
+`
+
+const CoverImageUploadWidget = styled(FileUploadWidget)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
 `

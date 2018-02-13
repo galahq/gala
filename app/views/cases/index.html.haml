@@ -16,7 +16,7 @@
       -@cases.each do |kase|
         %tr
           %td
-            %img.admin__table__thumbnail{src: ix_cover_image(kase, :small)}
+            %img.admin__table__thumbnail{src: kase.small_cover_url}
           %td
             = link_to case_path kase do
               %span.admin__table__slug= kase.kicker

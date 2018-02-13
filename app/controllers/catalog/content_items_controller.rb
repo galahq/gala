@@ -24,7 +24,7 @@ module Catalog
 
       save_selection_params_to_session
 
-      @items = Case.all.sort_by(&:kicker)
+      @items = Case.all.with_attached_cover_image.order(:kicker).decorate
       render layout: 'embed'
     end
 

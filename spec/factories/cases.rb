@@ -11,14 +11,6 @@ FactoryBot.define do
       kicker { Faker::Hipster.words(2).join(' ').titlecase }
       title { Faker::Hipster.sentence }
       dek { Faker::Hipster.sentence }
-      cover_url do
-        url = 'https://source.unsplash.com/random'
-        begin
-          Net::HTTP.get_response(URI(url))['location']
-        rescue StandardError
-          url
-        end
-      end
     end
 
     trait :featured do
