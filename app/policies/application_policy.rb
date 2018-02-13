@@ -10,7 +10,7 @@ class ApplicationPolicy
   end
 
   def index?
-    false
+    editor?
   end
 
   def show?
@@ -18,7 +18,7 @@ class ApplicationPolicy
   end
 
   def create?
-    false
+    editor?
   end
 
   def new?
@@ -26,7 +26,7 @@ class ApplicationPolicy
   end
 
   def update?
-    false
+    editor?
   end
 
   def edit?
@@ -34,7 +34,7 @@ class ApplicationPolicy
   end
 
   def destroy?
-    false
+    editor?
   end
 
   def scope
@@ -51,7 +51,14 @@ class ApplicationPolicy
     end
 
     def resolve
+      return scope.all if user.has_cached_role? :editor
       scope
     end
+  end
+
+  private
+
+  def editor?
+    user.has_cached_role? :editor
   end
 end
