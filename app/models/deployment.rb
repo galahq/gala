@@ -14,8 +14,6 @@
 #
 # @see GenericDeployment GenericDeployment: this model’s null object
 class Deployment < ApplicationRecord
-  include Authority::Abilities
-
   attribute :key, :string, default: -> { SecureRandom.urlsafe_base64 }
 
   belongs_to :case

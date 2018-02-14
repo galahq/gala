@@ -10,7 +10,7 @@ feature 'Customizing a deployment' do
 
     scenario 'is not possible' do
       visit edit_deployment_path('en', deployment)
-      expect(page).to have_content 'Access Denied'
+      expect(page).to have_content 'not authorized'
     end
   end
 
@@ -21,7 +21,7 @@ feature 'Customizing a deployment' do
 
     scenario 'is not possible' do
       visit edit_deployment_path('en', deployment)
-      expect(page).to have_content 'Access Denied'
+      expect(page).to have_content 'not authorized'
     end
   end
 
