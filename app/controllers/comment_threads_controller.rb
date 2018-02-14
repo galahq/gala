@@ -53,7 +53,7 @@ class CommentThreadsController < ApplicationController
 
   # @route [DELETE] `/comment_threads/1`
   def destroy
-    authorize_action_for @comment_thread
+    authorize @comment_thread
     @comment_thread.destroy
   end
 
