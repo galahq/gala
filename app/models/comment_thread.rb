@@ -9,8 +9,6 @@
 # @attr locale [Iso639_1Code] which translation of the case this comment thread
 #   is attached to.
 class CommentThread < ApplicationRecord
-  include Authority::Abilities
-
   belongs_to :card, touch: true, optional: true
   belongs_to :forum, touch: true
   belongs_to :reader
