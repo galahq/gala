@@ -14,7 +14,7 @@ class SubmissionsController < ApplicationController
     if set_quiz
       @submissions = readers_submissions_for_quiz
     elsif set_deployment
-      authorize_action_for Submission, deployment: @deployment
+      authorize @deployment, :update?
       @submissions = all_submissions_for_deployment
     else
       head :not_found
