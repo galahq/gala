@@ -7,7 +7,7 @@ class QuizzesController < ApplicationController
 
   # @route [GET] `/quizzes/1`
   def show
-    authorize_action_for @quiz
+    authorize @quiz
   end
 
   private
