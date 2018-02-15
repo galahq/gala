@@ -6,10 +6,9 @@ class StatisticsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_trackable
 
-  authorize_actions_for Case, all_actions: :update
-
   # @route [GET] `/#{trackable` member path}/statistics
   def show
+    authorize Case, :index? # TODO: authorize @trackable, :update?
     render partial: 'trackable/statistics', locals: { trackable: @trackable }
   end
 
