@@ -21,8 +21,6 @@
 # @attr lti_uid [String] the unique identifier of an LMS user who has not yet
 #   had a {Reader} and associated {AuthenticationStrategy} created
 class Quiz < ApplicationRecord
-  include Authority::Abilities
-
   has_many :custom_questions, class_name: 'Question', dependent: :destroy
   has_many :deployments, dependent: :nullify
   has_many :submissions, dependent: :destroy
