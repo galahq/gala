@@ -20,8 +20,6 @@
 #
 # @see AnonymousUser AnonymousUser: this model’s null object
 class Reader < ApplicationRecord
-  include Authority::UserAbilities
-
   default_scope { order(:name) }
 
   has_many :authentication_strategies, dependent: :destroy
