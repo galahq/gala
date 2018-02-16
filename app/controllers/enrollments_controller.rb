@@ -17,7 +17,7 @@ class EnrollmentsController < ApplicationController
 
   # @route [POST] `/cases/case-slug/enrollment`
   def create
-    authorize_action_for @enrollment
+    authorize @enrollment
 
     if @enrollment.save
       head :created
@@ -30,7 +30,7 @@ class EnrollmentsController < ApplicationController
   def destroy
     head :no_content && return unless @enrollment
 
-    authorize_action_for @enrollment
+    authorize @enrollment
     @enrollment.destroy
   end
 

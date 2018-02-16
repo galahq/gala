@@ -33,7 +33,7 @@ if reader_signed_in?
 
   json.reader do
     json.partial! current_reader
-    json.can_update_case current_reader.can_update? c
+    json.can_update_case Pundit.policy(current_user, c).update?
     json.enrollment @enrollment
   end
 
@@ -49,7 +49,7 @@ if reader_signed_in?
     end
   end
 
-  if current_reader.can_update? c
+  if Pundit.policy(current_user, c).update?
     json.enrollments do
       Enrollment.statuses.each do |status, _num|
         json.set! status, c.enrollments.select(&:"#{status}?")

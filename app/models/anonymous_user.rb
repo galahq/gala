@@ -5,8 +5,6 @@
 #
 # @see Reader
 class AnonymousUser
-  include Authority::UserAbilities
-
   # @return [false]
   def has_role?(_role, _resource = nil) # rubocop:disable Naming/PredicateName
     false

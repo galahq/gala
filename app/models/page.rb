@@ -4,7 +4,6 @@
 #
 # @attr title [Translated<String>] the page’s title
 class Page < ApplicationRecord
-  include Authority::Abilities
   include Element
   include Mobility
 

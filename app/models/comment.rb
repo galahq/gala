@@ -4,7 +4,6 @@
 #
 # @attr content [RawDraftContentState]
 class Comment < ApplicationRecord
-  include Authority::Abilities
   include Mobility
 
   default_scope { order :created_at }

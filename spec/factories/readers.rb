@@ -14,7 +14,7 @@ FactoryBot.define do
     end
 
     trait :editor do
-      after :create do |this|
+      after :build do |this|
         this.add_role :editor
       end
     end
