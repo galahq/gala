@@ -47,7 +47,6 @@
 # @attr youtube_slug [Translated<String>]
 # @attr alt_text [String] @todo translate this
 class Edgenote < ApplicationRecord
-  include Authority::Abilities
   include Mobility
   include Trackable
 

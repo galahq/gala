@@ -6,10 +6,10 @@ class ActivitiesController < ApplicationController
   before_action :set_activity, only: %i[show update destroy]
   before_action :set_case, only: [:create]
 
-  authorize_actions_for Activity
-
   # @route [POST] `/cases/case-slug/activities`
   def create
+    authorize @case, :update?
+
     @activity = Activity.new activity_params
     @activity.build_case_element case: @case
 
@@ -22,6 +22,8 @@ class ActivitiesController < ApplicationController
 
   # @route [PATCH/PUT] `/activities/1`
   def update
+    authorize @activity.case
+
     if @activity.update(activity_params)
       render @activity
     else
@@ -31,6 +33,8 @@ class ActivitiesController < ApplicationController
 
   # @route [DELETE] `/activities/1`
   def destroy
+    authorize @activity.case
+
     @activity.destroy
   end
 

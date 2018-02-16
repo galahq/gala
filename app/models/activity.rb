@@ -6,7 +6,6 @@
 # @attr title [Translated<String>]
 # @attr pdf_url [Translated<String>]
 class Activity < ApplicationRecord
-  include Authority::Abilities
   include Element
   include Mobility
 

@@ -8,7 +8,6 @@
 # @attr artwork_url [String] a cover image for the podcast
 # @attr photo_credit [String] attribution for the {artwork_url}’s rights holder
 class Podcast < ApplicationRecord
-  include Authority::Abilities
   include Element
   include Mobility
   include Trackable

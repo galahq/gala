@@ -6,10 +6,10 @@ class CardsController < ApplicationController
   before_action :set_page, only: [:create]
   before_action :set_card, only: %i[update destroy]
 
-  authorize_actions_for Card
-
   # @route [POST] `/pages/1/cards`
   def create
+    authorize @page.case, :update?
+
     @card = @page.cards.build(card_params)
 
     if @card.save
@@ -21,6 +21,8 @@ class CardsController < ApplicationController
 
   # @route [PATCH/PUT] `/cards/1`
   def update
+    authorize @card.case, :update?
+
     if @card.update(card_params)
       render @card
     else
@@ -30,6 +32,8 @@ class CardsController < ApplicationController
 
   # @route [DELETE] `/cards/1`
   def destroy
+    authorize @card.case, :update?
+
     @card.destroy
     head :no_content
   end

@@ -20,7 +20,7 @@ class CommentsController < ApplicationController
 
   # @route [PATCH/PUT] `/comments/1`
   def update
-    authorize_action_for @comment
+    authorize @comment
     if @comment.update(comment_params)
       render json: @comment
     else
@@ -30,7 +30,7 @@ class CommentsController < ApplicationController
 
   # @route [DELETE] `/comments/1`
   def destroy
-    authorize_action_for @comment
+    authorize @comment
     @comment.destroy
   end
 
