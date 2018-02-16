@@ -24,13 +24,13 @@ gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_bool
 gem 'virtus'
 
 # Authentication and Authorization
-gem 'authority'
 gem 'devise', '~> 4.1'
 gem 'devise-i18n'
 gem 'ims-lti'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
+gem 'pundit'
 gem 'rolify'
 
 # Events

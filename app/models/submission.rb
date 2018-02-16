@@ -2,8 +2,6 @@
 
 # A set of {Answer}s for a {Quiz}’s {Question}s.
 class Submission < ApplicationRecord
-  include Authority::Abilities
-
   belongs_to :quiz
   belongs_to :reader
 

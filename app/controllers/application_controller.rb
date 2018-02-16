@@ -6,9 +6,12 @@ require 'sieve'
 # @abstract
 class ApplicationController < ActionController::Base
   include Omniauth::Lti::Context
+  include Pundit
 
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   # All url helpers use this: keep users in their active locale after it’s set.
   def default_url_options(options = {})
@@ -17,6 +20,18 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def user_not_authorized
+    respond_to do |format|
+      format.html do
+        flash[:alert] = 'You are not authorized to perform this action.'
+        redirect_to reader_signed_in? ? root_path : new_reader_session_path
+      end
+      format.json do
+        head :forbidden
+      end
+    end
+  end
 
   def set_locale
     if params[:locale]

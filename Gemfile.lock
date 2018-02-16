@@ -107,8 +107,6 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (9.0.0)
-    authority (3.3.0)
-      activesupport (>= 3.0.0)
     awesome_print (1.8.0)
     aws-partitions (1.58.0)
     aws-sdk-core (3.14.0)
@@ -325,6 +323,8 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (3.0.0)
     puma (3.10.0)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (2.0.4)
     rack-attack (5.0.1)
       rack
@@ -470,7 +470,6 @@ PLATFORMS
 DEPENDENCIES
   acts_as_list!
   ahoy_matey!
-  authority
   awesome_print
   aws-sdk-s3
   bootsnap
@@ -516,6 +515,7 @@ DEPENDENCIES
   pg (~> 0.18)
   pry
   puma (~> 3.0)
+  pundit
   rack-canonical-host
   rails (>= 5.2.0.pre.rc1, < 5.3)
   redcarpet

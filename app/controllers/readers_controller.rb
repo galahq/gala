@@ -6,10 +6,10 @@ class ReadersController < ApplicationController
   before_action :set_reader, only: %i[show edit update destroy]
   layout 'window'
 
-  authorize_actions_for Case, only: %i[index destroy]
-
   # @route [GET] `/readers`
   def index
+    authorize Reader
+
     @readers = FindReaders.by(**search_params)
                           .page(params[:page])
                           .preload(:roles)
@@ -24,12 +24,13 @@ class ReadersController < ApplicationController
 
   # @route [GET] `/profile/edit`
   def edit
-    authorize_action_for @reader
+    authorize @reader
   end
 
   # @route [PATCH/PUT] `/profile`
   def update
-    authorize_action_for @reader
+    authorize @reader
+
     respond_to do |format|
       if @reader.update(reader_params)
         bypass_sign_in @reader if reader_params.key? :password

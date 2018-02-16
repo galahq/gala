@@ -7,7 +7,7 @@ class CaseElementsController < ApplicationController
   # @route [PATCH/PUT] `/case_elements/1`
   def update
     @case_element = CaseElement.find(params[:id])
-    authorize_action_for @case_element.case
+    authorize @case_element.case, :update?
 
     if @case_element.update(case_element_params)
       @case_elements = Case.includes(:case_elements)

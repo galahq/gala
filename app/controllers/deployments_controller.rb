@@ -4,7 +4,6 @@
 class DeploymentsController < ApplicationController
   before_action :set_deployment, only: %i[edit update]
   before_action :ensure_content_item_selection_params_set!, only: [:create]
-  before_action :authorize_action_with_selection_params, only: %w[edit update]
   after_action :clear_content_item_selection_params, only: [:update]
 
   layout 'embed'
@@ -25,12 +24,15 @@ class DeploymentsController < ApplicationController
 
   # @route [GET] `/deployments/1/edit`
   def edit
+    authorize @deployment
     set_selection_params
     set_recommended_quizzes
   end
 
   # @route [PATCH/PUT] `/deployments/1`
   def update
+    authorize @deployment
+
     author_id = current_reader.try :id
     customizer = CustomizeDeploymentService.new @deployment, author_id, lti_uid
 
@@ -45,13 +47,13 @@ class DeploymentsController < ApplicationController
 
   private
 
-  def set_deployment
-    @deployment = Deployment.find params[:id]
+  def pundit_user
+    DeploymentPolicy::UserContext.new current_user,
+                                      session[:content_item_selection_params]
   end
 
-  def authorize_action_with_selection_params
-    selection_params = session[:content_item_selection_params]
-    authorize_action_for @deployment, selection_params: selection_params
+  def set_deployment
+    @deployment = Deployment.find params[:id]
   end
 
   def lti_uid
