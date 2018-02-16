@@ -107,8 +107,6 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (9.0.0)
-    authority (3.3.0)
-      activesupport (>= 3.0.0)
     awesome_print (1.8.0)
     aws-partitions (1.58.0)
     aws-sdk-core (3.14.0)
@@ -472,7 +470,6 @@ PLATFORMS
 DEPENDENCIES
   acts_as_list!
   ahoy_matey!
-  authority
   awesome_print
   aws-sdk-s3
   bootsnap
