@@ -22,8 +22,15 @@ class ApplicationController < ActionController::Base
   private
 
   def user_not_authorized
-    flash[:alert] = 'You are not authorized to perform this action.'
-    redirect_to reader_signed_in? ? root_path : new_reader_session_path
+    respond_to do |format|
+      format.html do
+        flash[:alert] = 'You are not authorized to perform this action.'
+        redirect_to reader_signed_in? ? root_path : new_reader_session_path
+      end
+      format.json do
+        head :forbidden
+      end
+    end
   end
 
   def set_locale

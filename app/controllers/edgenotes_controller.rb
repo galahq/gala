@@ -6,10 +6,10 @@ class EdgenotesController < ApplicationController
   before_action :set_case, only: [:create]
   before_action :set_cors_headers, only: [:show]
 
-  authorize_actions_for Edgenote, except: %i[show]
-
   # @route [POST] `/cases/case-slug/edgenotes`
   def create
+    authorize @case, :update?
+
     @edgenote = @case.edgenotes.build
 
     if @edgenote.save
@@ -21,6 +21,8 @@ class EdgenotesController < ApplicationController
 
   # @route [PATCH/PUT] `/edgenotes/slug`
   def update
+    authorize @edgenote.case, :update?
+
     if @edgenote.update(edgenote_params)
       render partial: 'edgenote', locals: { edgenote: @edgenote }
     else
@@ -30,6 +32,8 @@ class EdgenotesController < ApplicationController
 
   # @route [DELETE] `/edgenotes/slug`
   def destroy
+    authorize @edgenote.case, :update?
+
     @edgenote.destroy
   end
 
