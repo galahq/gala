@@ -8,7 +8,7 @@ class FeaturesController < ApplicationController
     features = Case.where.not(id: enrolled)
                    .ordered
                    .limit(6)
-                   .pluck(:slug)
+                   .map(&:slug)
     render json: { features: features }
   end
 end

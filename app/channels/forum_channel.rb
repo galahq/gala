@@ -5,7 +5,7 @@
 class ForumChannel < ApplicationCable::Channel
   def subscribed
     current_reader.reload
-    kase = Case.find_by_slug(params[:case_slug])
+    kase = Case.friendly.find(params[:case_slug])
     forum = current_reader.active_community.forums.find_by case: kase
     stream_for forum
   end

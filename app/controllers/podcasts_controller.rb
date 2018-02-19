@@ -46,7 +46,7 @@ class PodcastsController < ApplicationController
   end
 
   def set_case
-    @case = Case.find_by_slug(params[:case_slug])
+    @case = Case.friendly.find(params[:case_slug])
   end
 
   # Only allow a trusted parameter "white list" through.
