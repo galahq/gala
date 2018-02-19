@@ -3,7 +3,7 @@
 # A case study in Gala with attributes for the case’s “metadata” (the catalog or
 # overview information) and associations for all the case’s constituent parts.
 #
-# @attr slug [String] a globally unique kabob-case identifier: the URL param
+# @attr slug [String] the URL param (managed by friendly_id)
 # @attr kicker [Translated<String>] a two or three word tagline for the case.
 #   This comes from newspapers: the little mini-headline appearing above the hed
 #   to which continuations of the article refer (e.g. “from CORRUPTION, A1”)
@@ -30,6 +30,9 @@
 class Case < ApplicationRecord
   include Comparable
   include Mobility
+  extend FriendlyId
+
+  friendly_id :kicker, use: %i[history slugged]
 
   translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
              :audience, :classroom_timeline, :acknowledgements, fallbacks: true
@@ -59,8 +62,8 @@ class Case < ApplicationRecord
 
   after_create :create_forum_for_universal_communities
 
-  validates :slug, presence: true,
-                   uniqueness: true,
+  validates :kicker, :title, :slug, presence: true
+  validates :slug, uniqueness: true,
                    format: { with: /\A[a-z0-9-]+\Z/ }
 
   time_for_a_boolean :featured

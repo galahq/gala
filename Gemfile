@@ -18,6 +18,7 @@ gem 'redis', '~> 3.0'
 # Models
 gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git', ref: '2811810'
 gem 'draper'
+gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git', ref: 'a29e7d'
 gem 'kaminari'
 gem 'memoist'
 gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'

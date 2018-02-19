@@ -1,10 +1,20 @@
 en:
+  forms:
+    required: required
   cases:
     case:
       forthcoming: Forthcoming
       translator:
         one: Translator
         many: Translators
+    new:
+      new_case: Create a New Case
+      short_noun_phrase: |
+        Choose a short noun phrase which identifies the topic of the case. This
+        appears above the main title in smaller text.
+      the_main_question: |
+        The main title should ask the primary question at the center of the
+        case.
   readers:
     form:
       my_account: 'My Account'

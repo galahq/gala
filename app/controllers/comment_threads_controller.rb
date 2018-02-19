@@ -71,7 +71,7 @@ class CommentThreadsController < ApplicationController
   end
 
   def set_case
-    @case = Case.find_by_slug params[:case_slug] if params[:case_slug]
+    @case = Case.friendly.find params[:case_slug] if params[:case_slug]
   end
 
   def set_card

@@ -39,17 +39,12 @@ class CasesController < ApplicationController
     authorize Case
 
     @case = Case.new(case_params)
-    @case.kicker ||= @case.slug.split('-').join(' ').titlecase
-    @case.title ||= ''
 
-    respond_to do |format|
-      if @case.save
-        format.html { redirect_to case_path(@case, anchor: '/edit') }
-        format.json { render json: @case, status: :created, location: @case }
-      else
-        format.html { render :new }
-        format.json { render json: @case.errors, status: :unprocessable_entity }
-      end
+    if @case.save
+      redirect_to case_path(@case, anchor: '/edit')
+    else
+      @case.errors.delete(:slug)
+      render :new
     end
   end
 
@@ -70,15 +65,20 @@ class CasesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_case
-    slug = params[:slug] || params[:case_slug]
-    @case = Case.where(slug: slug).includes(
-      :podcasts,
-      :edgenotes,
-      activities: %i[case_element card],
-      pages: %i[case_element cards],
-      cards: [comment_threads: [:reader, comments: [:reader]]],
-      enrollments: [:reader]
-    ).first.decorate
+    @case = Case.friendly
+                .includes(
+                  :podcasts, :edgenotes,
+                  activities: %i[case_element card],
+                  pages: %i[case_element cards],
+                  cards: [comment_threads: [:reader, comments: [:reader]]],
+                  enrollments: [:reader]
+                )
+                .find(slug)
+                .decorate
+  end
+
+  def slug
+    params[:slug] || params[:case_slug]
   end
 
   def set_libraries

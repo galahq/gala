@@ -6,7 +6,7 @@ class CommunitiesController < ApplicationController
 
   # @route [GET] `/cases/case-slug/communities`
   def index
-    kase = Case.find_by_slug params[:case_slug]
+    kase = Case.friendly.find params[:case_slug]
     @communities = [GlobalCommunity.instance] +
                    Community.active_for_case(kase.id)
                             .merge(current_reader.communities)
