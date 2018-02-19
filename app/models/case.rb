@@ -32,7 +32,7 @@ class Case < ApplicationRecord
   include Mobility
   extend FriendlyId
 
-  friendly_id :kicker, use: %i[history mobility]
+  friendly_id :kicker, use: %i[history slugged]
 
   translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
              :audience, :classroom_timeline, :acknowledgements, fallbacks: true
@@ -62,8 +62,8 @@ class Case < ApplicationRecord
 
   after_create :create_forum_for_universal_communities
 
-  validates :slug, presence: true,
-                   uniqueness: true,
+  validates :kicker, :title, :slug, presence: true
+  validates :slug, uniqueness: true,
                    format: { with: /\A[a-z0-9-]+\Z/ }
 
   time_for_a_boolean :featured

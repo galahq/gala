@@ -1,7 +1,7 @@
 .admin.admin--centered
   .pt-card.pt-elevation-2
     = form_for @case, builder: BlueprintFormBuilder do |f|
-      %h1.admin__title= "New Case"
+      %h1.admin__title= t '.new_case'
 
       - if @case.errors.any?
         .pt-callout.pt-intent-danger.pt-icon-error.form__errors
@@ -9,12 +9,19 @@
           - @case.errors.full_messages.each do |msg|
             %div= msg
 
-      - slug_format = 'A unique string of lowercase letters or numbers separated by hyphens.'
-      = f.form_group :slug, in_parens: 'required',
-                            helper_text: slug_format do |f, error_classes|
+      = f.form_group :kicker,
+                     in_parens: t('forms.required'),
+                     helper_text: t('.short_noun_phrase') do |f, error_classes|
         .pt-input-group{class: error_classes}
-          %span.pt-icon.pt-icon-link
-          = f.text_field :slug, class: %w[pt-input], placeholder: 'example-slug'
+          %span.pt-icon.pt-icon-tag
+          = f.text_field :kicker, class: %w[pt-input]
+
+      = f.form_group :title,
+                     in_parens: t('forms.required'),
+                     helper_text: t('.the_main_question') do |f, error_classes|
+        .pt-input-group{class: error_classes}
+          %span.pt-icon.pt-icon-help
+          = f.text_field :title, class: %w[pt-input]
 
       = f.form_group :library_id do |f, error_classes|
         .pt-select.pt-fill{class: error_classes}

@@ -39,17 +39,12 @@ class CasesController < ApplicationController
     authorize Case
 
     @case = Case.new(case_params)
-    @case.kicker ||= @case.slug.split('-').join(' ').titlecase
-    @case.title ||= ''
 
-    respond_to do |format|
-      if @case.save
-        format.html { redirect_to case_path(@case, anchor: '/edit') }
-        format.json { render json: @case, status: :created, location: @case }
-      else
-        format.html { render :new }
-        format.json { render json: @case.errors, status: :unprocessable_entity }
-      end
+    if @case.save
+      redirect_to case_path(@case, anchor: '/edit')
+    else
+      @case.errors.delete(:slug)
+      render :new
     end
   end
 
