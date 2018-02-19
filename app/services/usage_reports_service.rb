@@ -36,7 +36,7 @@ class UsageReportsService
                        .limit(limit)
                        .count
                        .keys
-    slugs.map { |slug| Case.find_by_slug(slug) }
+    slugs.map { |slug| Case.friendly.find(slug) }
   end
 
   def number_of_new_comments

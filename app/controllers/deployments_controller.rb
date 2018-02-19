@@ -11,7 +11,7 @@ class DeploymentsController < ApplicationController
   # @route [POST] `/groups/1/deployments`
   def create
     the_group = Group.find params[:group_id]
-    the_case = Case.find_by_slug params[:case_slug]
+    the_case = Case.friendly.find params[:case_slug]
 
     @deployment = Deployment.find_or_initialize_by(
       group: the_group, case: the_case

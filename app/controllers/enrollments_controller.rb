@@ -37,7 +37,7 @@ class EnrollmentsController < ApplicationController
   private
 
   def set_enrollment
-    kase = Case.find_by_slug params[:case_slug]
+    kase = Case.friendly.find params[:case_slug]
     @enrollment = Enrollment.find_or_initialize_by case_id: kase.id,
                                                    reader_id: current_reader.id
   end
