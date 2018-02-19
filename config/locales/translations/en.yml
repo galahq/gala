@@ -29,6 +29,7 @@ en:
         cover_url: Cover URL  #g
         edgenotes: Edgenotes  #g
         enrollments: Enrollments  #g
+        kicker: Short title
         narrative: Narrative #g
         podcasts: Podcasts  #g
         published: Published  #g
@@ -36,7 +37,7 @@ en:
         slug: Slug  #g
         summary: Summary #g
         tags: Tags  #g
-        title: Title #g
+        title: Question
 
       comment:
         comment_thread: :activerecord.models.comment_thread  #g
