@@ -42,7 +42,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
 
     unless in_parens.nil?
       contents << ' '
-      contents << @template.content_tag(:span, "(#{in_parens})",
+      contents << @template.content_tag(:span, "(#{in_parens})".html_safe,
                                         class: 'pt-text-muted')
     end
 
