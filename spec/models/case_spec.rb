@@ -9,9 +9,15 @@ RSpec.describe Case, type: :model do
     expect(subject).to be_valid
   end
 
-  it 'is not valid without a slug' do
-    subject.slug = nil
+  it 'is not valid without a kicker' do
+    subject.kicker = nil
     expect(subject).to_not be_valid
+  end
+
+  it 'is generates a slug from the kicker if needed' do
+    subject.slug = nil
+    expect(subject).to be_valid
+    expect(subject.slug).not_to be_nil
   end
 
   it 'is not valid with an invalid slug' do
