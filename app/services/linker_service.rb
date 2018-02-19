@@ -49,7 +49,7 @@ class LinkerService
     end
 
     def kase
-      @case ||= Case.find_by_slug @launch_params[:case_slug]
+      @case ||= Case.friendly.find @launch_params[:case_slug]
     end
 
     def group
