@@ -195,6 +195,8 @@ GEM
     foreman (0.84.0)
       thor (~> 0.19.1)
     formatador (0.2.5)
+    friendly_id (5.2.3)
+      activerecord (>= 4.0.0)
     geocoder (1.4.4)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -488,6 +490,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   foreman
+  friendly_id
   groupdate
   guard-rspec
   haml
