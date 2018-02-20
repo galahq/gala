@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
-
 LOCALES ||= Rails.application.config.i18n.available_locales
 LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/
 
@@ -78,6 +76,8 @@ Rails.application.routes.draw do
     resources :libraries, param: :slug, only: %i[show]
 
     resource :magic_link, only: %i[show create]
+
+    resources :my_cases, only: %i[index]
 
     resources :pages, only: %i[update destroy] do
       resources :cards, only: %i[create]
