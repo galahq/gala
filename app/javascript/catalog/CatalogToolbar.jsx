@@ -26,10 +26,9 @@ const CatalogToolbar = ({ history }: ContextRouter) => (
           onClick: () => history.push('/'),
         },
         {
-          message: 'catalog.proposeACase',
-          iconName: 'annotation',
-          onClick: () =>
-            (window.location = 'http://www.teachmsc.org/action/make'),
+          message: 'catalog.myCases',
+          iconName: 'book',
+          onClick: () => (window.location = '/my_cases'),
         },
       ],
       [],
@@ -96,13 +95,13 @@ const FormCoveringToolbarOnMobile = styled.form`
     background-color: #1d3f5e;
     margin-left: -24px;
     ${({ active }) =>
-      active
-        ? css`
+    active
+      ? css`
             margin-left: 0px;
             position: absolute;
             left: 14px;
             width: calc(100vw - 28px);
           `
-        : ''};
+      : ''};
   }
 `

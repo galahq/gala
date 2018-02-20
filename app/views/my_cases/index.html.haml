@@ -1,30 +1,45 @@
 .admin.pt-dark
   %h1.admin__title
-    All Cases
+    My Cases
 
-  = link_to "New Case", new_case_path, class: "pt-button"
+  - if @cases.any?
+    = link_to new_case_path, class: 'pt-button pt-intent-success pt-icon-add' do
+      = t '.new_case'
 
-  %table.admin__table.pt-table
-    %thead
-      %td
-      %td Case Title
-      %td Slug
-      %td Library
-      %td Featured
-      %td Published
-    %tbody
-      -@cases.each do |kase|
-        %tr
-          %td
-            %img.admin__table__thumbnail{src: kase.small_cover_url}
-          %td
-            = link_to case_path kase do
-              %span.admin__table__slug= kase.kicker
-            = kase.title
-          %td
-            %code= kase.slug
-          %td= kase.library.name
-          %td{title: kase.featured_at}
-            = time_ago_in_words kase.featured_at unless kase.featured_at.nil?
-          %td{title: kase.published_at}
-            = time_ago_in_words kase.published_at unless kase.published_at.nil?
+    %table.admin__table.pt-table
+      %thead
+        %td
+        %td Case Title
+        %td Slug
+        %td Library
+        %td Featured
+        %td Published
+      %tbody
+        -@cases.each do |kase|
+          %tr
+            %td
+              %img.admin__table__thumbnail{src: kase.small_cover_url}
+            %td
+              = link_to case_path kase do
+                %span.admin__table__slug= kase.kicker
+              = kase.title
+            %td
+              %code= kase.slug
+            %td= kase.library.name
+            %td{title: kase.featured_at}
+              = time_ago_in_words kase.featured_at unless kase.featured_at.nil?
+            %td{title: kase.published_at}
+              = time_ago_in_words kase.published_at unless kase.published_at.nil?
+
+  - else
+    .pt-non-ideal-state
+      .pt-non-ideal-state-visual.pt-non-ideal-state-icon
+        %span.pt-icon.pt-icon-book
+      %h4.pt-non-ideal-state-title
+        = t '.write_a_case'
+      .pt-non-ideal-state-description
+        = t '.put_your_own_cases_on_gala'
+      .pt-non-ideal-state-action
+        = link_to new_case_path,
+                  class: 'pt-button pt-intent-success pt-icon-add' do
+          = t '.new_case'
