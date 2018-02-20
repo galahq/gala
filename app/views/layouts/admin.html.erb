@@ -1,11 +1,18 @@
-<nav class="admin-menu admin-menu-first">
-  <ul>
-    <li> <%= link_to "Cases", cases_path %> </li>
-    <li> <%= link_to "Readers", readers_path %> </li>
+<nav class="Toolbar__bar pt-dark">
+  <div class="MaxWidthContainer">
+    <div class="Toolbar__group pt-navbar-group">
+      <%= link_to t('.catalog'), root_path,
+                  class: 'pt-button pt-minimal pt-icon-home' %>
+      <%= link_to t('.my_cases'), my_cases_path,
+                  class: 'pt-button pt-minimal pt-icon-book' %>
+    </div>
+  </div>
 </nav>
 
 <div class="window window-admin">
-  <%= yield %>
+  <div class="MaxWidthContainer">
+    <%= yield %>
+  </div>
 </div>
 
 <% parent_layout 'with_header' %>
