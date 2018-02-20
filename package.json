@@ -99,7 +99,7 @@
     "babel-preset-flow": "^6.23.0",
     "eslint": "^4.13.1",
     "eslint-config-standard": "^11.0.0",
-    "eslint-config-standard-react": "^5.0.0",
+    "eslint-config-standard-react": "^6.0.0",
     "eslint-import-resolver-webpack": "^0.8.1",
     "eslint-plugin-babel": "^4.1.1",
     "eslint-plugin-flowtype": "^2.30.4",
