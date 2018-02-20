@@ -12,10 +12,6 @@ RSpec.describe CasePolicy do
 
   subject { described_class }
 
-  # permissions ".scope" do
-  #   pending "add some examples to (or delete) #{__FILE__}"
-  # end
-
   permissions :show? do
     it 'grants an anonymous user access to a published case' do
       expect(subject).to permit anon, published_case
@@ -56,9 +52,20 @@ RSpec.describe CasePolicy do
   end
 
   permissions :update? do
+    before do
+      reader.save
+      published_case.save
+    end
+
     it 'denies a normal user' do
       expect(subject).not_to permit anon, published_case
       expect(subject).not_to permit reader, published_case
+    end
+
+    it 'allows a user who has an editorship' do
+      published_case.editorships.create editor: reader
+
+      expect(subject).to permit reader, published_case
     end
 
     it 'allows an editor' do

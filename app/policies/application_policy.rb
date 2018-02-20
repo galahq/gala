@@ -53,6 +53,12 @@ class ApplicationPolicy
     def resolve
       scope
     end
+
+    private
+
+    def editor?
+      user.has_cached_role? :editor
+    end
   end
 
   private
