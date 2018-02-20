@@ -50,6 +50,8 @@ class LinkerService
 
     def kase
       @case ||= Case.friendly.find @launch_params[:case_slug]
+    rescue ActiveRecord::RecordNotFound
+      nil
     end
 
     def group
