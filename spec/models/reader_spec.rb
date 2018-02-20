@@ -26,4 +26,10 @@ RSpec.describe Reader, type: :model do
     expect(subject.communities).to include(invited_community,
                                            group.community)
   end
+
+  it 'can have many editable cases' do
+    subject.my_cases.build attributes_for(:case)
+    subject.my_cases.build attributes_for(:case)
+    expect(subject.my_cases.length).to eq 2
+  end
 end
