@@ -44,6 +44,9 @@ class Reader < ApplicationRecord
 
   has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id'
 
+  has_many :editorships, dependent: :destroy, foreign_key: 'editor_id'
+  has_many :my_cases, through: :editorships, source: :case
+
   has_one_attached :image
 
   before_update :set_created_password, if: :encrypted_password_changed?
