@@ -831,6 +831,38 @@ ALTER SEQUENCE libraries_id_seq OWNED BY libraries.id;
 
 
 --
+-- Name: managerships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE managerships (
+    id bigint NOT NULL,
+    library_id bigint,
+    manager_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: managerships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE managerships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: managerships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE managerships_id_seq OWNED BY managerships.id;
+
+
+--
 -- Name: pages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1349,6 +1381,13 @@ ALTER TABLE ONLY libraries ALTER COLUMN id SET DEFAULT nextval('libraries_id_seq
 
 
 --
+-- Name: managerships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships ALTER COLUMN id SET DEFAULT nextval('managerships_id_seq'::regclass);
+
+
+--
 -- Name: pages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1609,6 +1648,14 @@ ALTER TABLE ONLY invitations
 
 ALTER TABLE ONLY libraries
     ADD CONSTRAINT libraries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: managerships managerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships
+    ADD CONSTRAINT managerships_pkey PRIMARY KEY (id);
 
 
 --
@@ -2077,6 +2124,20 @@ CREATE UNIQUE INDEX index_libraries_on_slug ON libraries USING btree (slug);
 
 
 --
+-- Name: index_managerships_on_library_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_managerships_on_library_id ON managerships USING btree (library_id);
+
+
+--
+-- Name: index_managerships_on_manager_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_managerships_on_manager_id ON managerships USING btree (manager_id);
+
+
+--
 -- Name: index_pages_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2242,6 +2303,14 @@ ALTER TABLE ONLY enrollments
 
 
 --
+-- Name: managerships fk_rails_3617778c6a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships
+    ADD CONSTRAINT fk_rails_3617778c6a FOREIGN KEY (manager_id) REFERENCES readers(id);
+
+
+--
 -- Name: submissions fk_rails_369ed4eb5c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2367,6 +2436,14 @@ ALTER TABLE ONLY activities
 
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_rails_8ed9cff919 FOREIGN KEY (case_id) REFERENCES cases(id);
+
+
+--
+-- Name: managerships fk_rails_98339b9ce3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships
+    ADD CONSTRAINT fk_rails_98339b9ce3 FOREIGN KEY (library_id) REFERENCES libraries(id);
 
 
 --
@@ -2584,6 +2661,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180206151601'),
 ('20180212172121'),
 ('20180219152023'),
-('20180220162824');
+('20180220162824'),
+('20180221153559');
 
 
