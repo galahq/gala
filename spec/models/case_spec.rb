@@ -54,10 +54,4 @@ RSpec.describe Case, type: :model do
       expect(subject.other_available_locales).to eq %w[en]
     end
   end
-
-  it 'can have many editors' do
-    subject.editors.build attributes_for(:reader)
-    subject.editors.build attributes_for(:reader)
-    expect(subject.editors.length).to eq 2
-  end
 end
