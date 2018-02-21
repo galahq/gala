@@ -29,8 +29,6 @@ class CasesController < ApplicationController
 
   # @route [GET] `/cases/new`
   def new
-    authorize Case
-
     @case = Case.new
   end
 
@@ -82,7 +80,7 @@ class CasesController < ApplicationController
   end
 
   def set_libraries
-    @libraries = Library.all
+    @libraries = Pundit.policy_scope!(current_reader, Library)
   end
 
   def set_group_and_deployment
