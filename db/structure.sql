@@ -570,7 +570,9 @@ ALTER SEQUENCE edgenotes_id_seq OWNED BY edgenotes.id;
 CREATE TABLE editorships (
     id bigint NOT NULL,
     case_id bigint,
-    editor_id bigint
+    editor_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
