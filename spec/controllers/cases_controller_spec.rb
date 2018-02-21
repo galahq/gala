@@ -3,16 +3,24 @@
 require 'rails_helper'
 
 RSpec.describe CasesController do
+  let(:reader) { create :reader }
+
+  before do
+    sign_in reader
+  end
+
   describe 'POST #create' do
     it 'creates a new case with an editorship for the current user' do
-      reader = create :reader
-      sign_in reader
+      post :create, params: { case: attributes_for(:case) }
 
-      post :create, params: { case: { kicker: 'Solar Flares',
-                                      title: 'How can we see more aurora?' } }
+      expect(reader.my_cases.count).to eq 1
+    end
 
-      kase = Case.friendly.find 'solar-flares'
-      expect(kase.editors).to include reader
+    it 'enrolls a the user in the case after it is created' do
+      post :create, params: { case: attributes_for(:case) }
+
+      reader.enrollments.reload
+      expect(reader.enrollments.count).to eq 1
     end
   end
 end
