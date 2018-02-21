@@ -16,6 +16,7 @@ class CasePolicy < ApplicationPolicy
   def show?
     record.published? ||
       user.enrollment_for_case(record).present? ||
+      user.my_cases.include?(record) ||
       editor?
   end
 

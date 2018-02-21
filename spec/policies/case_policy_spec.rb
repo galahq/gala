@@ -34,6 +34,11 @@ RSpec.describe CasePolicy do
       expect(subject).to permit reader, kase
     end
 
+    it 'grants a user access to a case of which she is an editor' do
+      reader.editorships.build case: kase
+      expect(subject).to permit reader, kase
+    end
+
     it 'grants an editor access to any case' do
       expect(subject).to permit editor, published_case
       expect(subject).to permit editor, kase
