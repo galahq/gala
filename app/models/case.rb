@@ -32,7 +32,8 @@ class Case < ApplicationRecord
   include Mobility
   extend FriendlyId
 
-  friendly_id :kicker, use: %i[history slugged]
+  attribute :slug, :string, default: -> { SecureRandom.uuid }
+  friendly_id :slug, use: %i[history]
 
   translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
              :audience, :classroom_timeline, :acknowledgements, fallbacks: true
