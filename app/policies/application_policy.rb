@@ -51,7 +51,11 @@ class ApplicationPolicy
     end
 
     def resolve
-      scope
+      if editor?
+        scope.all
+      else
+        scope.none
+      end
     end
 
     private
