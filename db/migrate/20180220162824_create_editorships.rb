@@ -5,6 +5,8 @@ class CreateEditorships < ActiveRecord::Migration[5.2]
     create_table :editorships do |t|
       t.references :case, foreign_key: true
       t.references :editor, foreign_key: { to_table: :readers }
+
+      t.timestamps
     end
   end
 end
