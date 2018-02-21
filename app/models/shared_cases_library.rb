@@ -6,14 +6,12 @@
 class SharedCasesLibrary
   include Singleton
 
-  attr_reader :id, :slug, :url, :logo_url, :background_color, :foreground_color
+  attr_reader :id, :slug, :url, :background_color, :foreground_color
 
   def initialize
     @id = nil
     @slug = 'shared'
     @url = ''
-    @logo_url = ActionController::Base
-                .helpers.asset_path('shared-cases-library.svg')
     @background_color = 'rgba(255, 255, 255, 0.3)'
     @foreground_color = 'rgba(255, 255, 255, 0.4)'
   end
@@ -26,7 +24,16 @@ class SharedCasesLibrary
     I18n.t 'activerecord.attributes.shared_cases_library.description'
   end
 
+  def logo_url
+    @logo_url ||=
+      ActionController::Base.helpers.asset_path('shared-cases-library.svg')
+  end
+
   def to_partial_path
     'libraries/library'
+  end
+
+  def persisted?
+    false
   end
 end
