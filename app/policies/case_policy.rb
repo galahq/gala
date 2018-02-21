@@ -19,6 +19,10 @@ class CasePolicy < ApplicationPolicy
       editor?
   end
 
+  def create?
+    user_can_update_library?
+  end
+
   def update?
     admin_scope.where(id: record.id).exists?
   end
@@ -29,5 +33,16 @@ class CasePolicy < ApplicationPolicy
 
   def admin_scope
     AdminScope.new(user, record.class).resolve
+  end
+
+  private
+
+  def user_can_update_library?
+    return true unless record.library.persisted?
+    library_policy.update?
+  end
+
+  def library_policy
+    LibraryPolicy.new(user, record.library)
   end
 end
