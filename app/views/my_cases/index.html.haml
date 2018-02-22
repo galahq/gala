@@ -1,6 +1,6 @@
 .admin.pt-dark
   %h1.admin__title
-    My Cases
+    = t '.my_cases'
 
   - if @cases.any?
     = link_to new_case_path, class: 'pt-button pt-intent-success pt-icon-add' do
