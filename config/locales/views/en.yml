@@ -1,6 +1,7 @@
 en:
   forms:
     required: required
+
   cases:
     case:
       forthcoming: Forthcoming
@@ -15,6 +16,16 @@ en:
       the_main_question: |
         The main title should ask the primary question at the center of the
         case.
+
+  my_cases:
+    index:
+      my_cases: My Cases
+      write_a_case: Write a Case
+      put_your_own_cases_on_gala: |
+        You can put your own case on Gala and enrich your teaching with curated
+        media, integrated discussions, and the insight that comes from detailed
+        analysis of your students’ engagement with the material.
+
   readers:
     form:
       my_account: 'My Account'
@@ -25,5 +36,6 @@ en:
         Because you first signed in using %{provider}, you never created a password.
         If you create one now, you will be able to use it, or %{provider}, to sign in.
       choose_an_image: Choose a profile image
+
   notifications:
     replied_to_your_comment: "%{notifier} replied to your comment on “%{case_kicker}.”"
