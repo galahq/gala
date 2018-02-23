@@ -20,11 +20,14 @@ en:
   my_cases:
     index:
       my_cases: My Cases
-      write_a_case: Write a Case
+      publish_a_case: Publish a Case
       put_your_own_cases_on_gala: |
-        You can put your own case on Gala and enrich your teaching with curated
-        media, integrated discussions, and the insight that comes from detailed
-        analysis of your students’ engagement with the material.
+        Put your case on Gala and enrich your teaching with integrated
+        discussion, curated media, and insights from detailed analysis of your
+        students’ engagement with the material.
+
+        You keep the rights to the cases you publish on Gala and we make them
+        easy to deploy in and beyond the classroom.
 
   readers:
     form:
