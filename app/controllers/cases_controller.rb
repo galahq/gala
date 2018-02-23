@@ -34,11 +34,11 @@ class CasesController < ApplicationController
 
   # @route [POST] `/cases`
   def create
-    @case = current_reader.my_cases.build(case_params)
+    @case = current_reader.my_cases.build
     authorize @case
 
     if @case.save
-      redirect_to case_path(@case, anchor: '/edit')
+      redirect_to case_path(@case, edit: true)
     else
       @case.errors.delete(:slug)
       render :new

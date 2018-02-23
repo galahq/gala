@@ -3,7 +3,9 @@
     = t '.my_cases'
 
   - if @cases.any?
-    = link_to new_case_path, class: 'pt-button pt-intent-success pt-icon-add' do
+    = button_to cases_path,
+                method: :post,
+                class: 'pt-button pt-intent-success pt-icon-add' do
       = t '.new_case'
 
     %table.admin__table.pt-table
@@ -41,6 +43,7 @@
         :markdown
           #{t '.put_your_own_cases_on_gala'}
       .pt-non-ideal-state-action
-        = link_to new_case_path,
-                  class: 'pt-button pt-intent-success pt-icon-add' do
+        = button_to cases_path,
+                    method: :post,
+                    class: 'pt-button pt-intent-success pt-icon-add' do
           = t '.new_case'
