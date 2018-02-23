@@ -13,6 +13,7 @@ import {
   fetchCommentThreads,
   fetchCommunities,
   registerToaster,
+  toggleEditing,
   subscribeToActiveForumChannel,
   handleNotification,
 } from 'redux/actions.js'
@@ -55,6 +56,7 @@ function mapStateToProps ({ quiz, caseData }: State) {
       RegExp(`${caseData.slug}.*`),
       caseData.slug
     ),
+    editable: caseData.reader && caseData.reader.canUpdateCase,
   }
 }
 
@@ -68,9 +70,11 @@ class Case extends React.Component<{
   parseAllCards: typeof parseAllCards,
   fetchCommentThreads: typeof fetchCommentThreads,
   fetchCommunities: typeof fetchCommunities,
+  toggleEditing: typeof toggleEditing,
   registerToaster: typeof registerToaster,
   subscribeToActiveForumChannel: typeof subscribeToActiveForumChannel,
   handleNotification: typeof handleNotification,
+  editable: ?boolean,
 }> {
   _subscribe = () => {
     const {
@@ -99,6 +103,7 @@ class Case extends React.Component<{
       caseSlug,
       fetchCommentThreads,
       fetchCommunities,
+      toggleEditing,
       registerToaster,
     } = this.props
 
@@ -107,6 +112,10 @@ class Case extends React.Component<{
     if (loadComments) {
       fetchCommentThreads(caseSlug)
       fetchCommunities(caseSlug)
+    }
+
+    if (this._shouldStartInEditMode()) {
+      toggleEditing()
     }
 
     // registerToaster(Toaster.create())
@@ -136,12 +145,22 @@ class Case extends React.Component<{
       </DocumentTitle>
     )
   }
+
+  _shouldStartInEditMode (): boolean {
+    if (!this.props.editable) return false
+    if (URLSearchParams == null) return false
+
+    const { search } = window.location
+    const params = new URLSearchParams(search.substring(0)) // remove leading '?'
+    return params.has('edit')
+  }
 }
 
 export default connect(mapStateToProps, {
   parseAllCards,
   fetchCommentThreads,
   fetchCommunities,
+  toggleEditing,
   registerToaster,
   subscribeToActiveForumChannel,
   handleNotification,
