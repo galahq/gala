@@ -32,13 +32,14 @@
               = time_ago_in_words kase.published_at unless kase.published_at.nil?
 
   - else
-    .pt-non-ideal-state
+    .my-cases-non-ideal-state.pt-non-ideal-state
       .pt-non-ideal-state-visual.pt-non-ideal-state-icon
         %span.pt-icon.pt-icon-book
       %h4.pt-non-ideal-state-title
-        = t '.write_a_case'
+        = t '.publish_a_case'
       .pt-non-ideal-state-description
-        = t '.put_your_own_cases_on_gala'
+        :markdown
+          #{t '.put_your_own_cases_on_gala'}
       .pt-non-ideal-state-action
         = link_to new_case_path,
                   class: 'pt-button pt-intent-success pt-icon-add' do
