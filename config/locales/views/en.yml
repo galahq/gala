@@ -16,6 +16,10 @@ en:
       the_main_question: |
         The main title should ask the primary question at the center of the
         case.
+    create:
+      created: Your case was successfully created.
+    destroy:
+      deleted: The case was successfully deleted.
 
   my_cases:
     index:
@@ -28,6 +32,12 @@ en:
 
         You keep the rights to the cases you publish on Gala and we make them
         easy to deploy in and beyond the classroom.
+      featured: :activerecord.attributes.case.featured
+      edit_case: Edit case.
+      edit_case_settings: Edit case settings.
+      delete_case: Delete case.
+      confirm_delete: |
+        Are you sure you wish to delete this case? This action cannot be undone.
 
   readers:
     form:

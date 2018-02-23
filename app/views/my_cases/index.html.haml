@@ -11,27 +11,55 @@
     %table.admin__table.pt-table
       %thead
         %td
-        %td Case Title
-        %td Slug
-        %td Library
-        %td Featured
-        %td Published
+        %td= t 'activerecord.attributes.case.case_title'
+        %td= t 'activerecord.attributes.case.slug'
+        %td= t 'activerecord.attributes.case.library'
+        %td= t 'activerecord.attributes.case.published'
+        %td
+        %td
+
       %tbody
         -@cases.each do |kase|
           %tr
             %td
-              %img.admin__table__thumbnail{src: kase.small_cover_url}
+              %img.admin__table__thumbnail{ src: kase.small_cover_url,
+                                            role: 'presentation' }
+
+            %td
+              %span.admin__table__slug
+                = kase.kicker || '—'
+                - if kase.featured?
+                  %span.pt-tag.pt-minimal.pt-intent-success
+                    = succeed ':' do
+                      = t '.featured'
+                    = localize kase.featured_at.to_date
+              = kase.title
+
             %td
               = link_to case_path kase do
-                %span.admin__table__slug= kase.kicker
-              = kase.title
-            %td
-              %code= kase.slug
+                %code= kase.slug
+
             %td= kase.library.name
-            %td{title: kase.featured_at}
-              = time_ago_in_words kase.featured_at unless kase.featured_at.nil?
+
             %td{title: kase.published_at}
-              = time_ago_in_words kase.published_at unless kase.published_at.nil?
+              - if kase.published?
+                = localize kase.published_at.to_date, format: :long
+              - else
+                —
+
+            %td
+              = link_to '', edit_case_path(kase),
+                        aria: { label: t('.edit_case') },
+                        class: 'pt-button pt-minimal pt-icon-edit'
+
+            %td
+              = button_to case_path(kase),
+                          class: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
+                          aria: { label: t('.delete_case') },
+                          data: { confirm: t('.confirm_delete') },
+                          method: :delete do
+                -# This needs to take a block because that makes a <button> tag
+                -# rather than an <input type="submit"> tag
 
   - else
     .my-cases-non-ideal-state.pt-non-ideal-state
