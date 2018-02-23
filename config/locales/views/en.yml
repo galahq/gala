@@ -8,18 +8,22 @@ en:
       translator:
         one: Translator
         many: Translators
-    new:
-      new_case: Create a New Case
-      short_noun_phrase: |
-        Choose a short noun phrase which identifies the topic of the case. This
-        appears above the main title in smaller text.
-      the_main_question: |
-        The main title should ask the primary question at the center of the
-        case.
     create:
       created: Your case was successfully created.
     destroy:
       deleted: The case was successfully deleted.
+    settings:
+      edit:
+        edit_case_settings: Edit Case Settings
+        lowercase_letters_and_numbers_separated_by_hyphens_html: |
+          <b>Format:</b> lowercase letters and numbers separated by
+          hyphens,<br />100 characters maximum
+        changing_url_leaves_your_old_url_available_for_anyone_else: |
+          If you change your case’s URL, your old URL will redirect to your new
+          one. However, if someone else takes your old URL, the redirect will be
+          overridden.
+      update:
+        updated: The case settings were successfully updated.
 
   my_cases:
     index:
