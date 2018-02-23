@@ -32,6 +32,7 @@ class Case < ApplicationRecord
   include Mobility
   extend FriendlyId
 
+  attribute :commentable, default: true
   attribute :slug, :string, default: -> { SecureRandom.uuid }
   friendly_id :slug, use: %i[history]
 
