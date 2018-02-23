@@ -4,7 +4,6 @@
 class CasesController < ApplicationController
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
-  before_action :set_libraries, only: %i[new create edit]
 
   layout 'admin'
 
@@ -27,22 +26,23 @@ class CasesController < ApplicationController
     render layout: 'with_header'
   end
 
-  # @route [GET] `/cases/new`
-  def new
-    @case = Case.new
-  end
-
   # @route [POST] `/cases`
   def create
     @case = current_reader.my_cases.build
     authorize @case
 
     if @case.save
-      redirect_to case_path(@case, edit: true)
+      redirect_to edit_case_path(@case), notice: t('.created')
     else
       @case.errors.delete(:slug)
       render :new
     end
+  end
+
+  # @route [GET] `/cases/slug/edit`
+  def edit
+    authorize @case
+    redirect_to case_path @case, edit: true
   end
 
   # @route [PATCH/PUT] `/cases/slug`
@@ -56,6 +56,13 @@ class CasesController < ApplicationController
     else
       render json: @case.errors, status: :unprocessable_entity
     end
+  end
+
+  # @route [DELETE] `/cases/slug`
+  def destroy
+    authorize @case
+    @case.destroy
+    redirect_to my_cases_path, notice: t('.deleted')
   end
 
   private
@@ -76,10 +83,6 @@ class CasesController < ApplicationController
 
   def slug
     params[:slug] || params[:case_slug]
-  end
-
-  def set_libraries
-    @libraries = Pundit.policy_scope!(current_reader, Library)
   end
 
   def set_group_and_deployment

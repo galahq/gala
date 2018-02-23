@@ -26,7 +26,8 @@ Rails.application.routes.draw do
 
     resources :case_elements, only: %i[update]
 
-    resources :cases, only: %i[index show new create update], param: :slug do
+    resources :cases, only: %i[index show create edit update destroy],
+                      param: :slug do
       resources :activities, only: %i[create]
 
       resources :comment_threads, only: %i[index create]
@@ -44,7 +45,9 @@ Rails.application.routes.draw do
       collection do
         resources :features, only: %i[index]
       end
+    end
 
+    scope 'cases' do
       get '*react_router_location', to: 'cases#show'
     end
 
