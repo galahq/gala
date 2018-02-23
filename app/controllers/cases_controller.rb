@@ -29,7 +29,6 @@ class CasesController < ApplicationController
   # @route [POST] `/cases`
   def create
     @case = current_reader.my_cases.build
-    authorize @case
 
     if @case.save
       redirect_to edit_case_path(@case), notice: successfully_created
@@ -94,9 +93,8 @@ class CasesController < ApplicationController
   # Only allow a trusted parameter "white list" through.
   def case_params
     params.require(:case).permit(
-      :published, :featured, :kicker, :title, :dek, :slug, :photo_credit,
-      :summary, :tags, :cover_image, :latitude, :longitude, :zoom,
-      :acknowledgements, :library_id,
+      :published, :featured, :kicker, :title, :dek, :photo_credit, :summary,
+      :tags, :cover_image, :latitude, :longitude, :zoom, :acknowledgements,
       authors: %i[name institution], translators: [], learning_objectives: []
     )
   end

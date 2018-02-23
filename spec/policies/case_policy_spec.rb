@@ -46,48 +46,54 @@ RSpec.describe CasePolicy do
   end
 
   permissions :create? do
+  end
+
+  permissions :update? do
+    before do
+      reader.save
+      kase.save
+    end
+
     let(:library) { create :library }
 
+    it 'denies a normal user' do
+      expect(subject).not_to permit anon, kase
+      expect(subject).not_to permit reader, kase
+    end
+
+    it 'allows a user who has an editorship' do
+      kase.editorships.create editor: reader
+
+      expect(subject).to permit reader, kase
+    end
+
+    it 'allows an editor' do
+      expect(subject).to permit editor, kase
+    end
+
     it 'allows a reader to add a case to the Shared Cases library' do
+      kase.editorships.create editor: reader
+
       expect(subject).to permit reader, kase
     end
 
     it 'does not allow a reader to add a case to an arbitrary library' do
+      kase.editorships.create editor: reader
       kase.library = library
       expect(subject).not_to permit reader, kase
     end
 
     it 'allows a reader to add a case to a library she manages' do
+      kase.editorships.create editor: reader
       library.managers << reader
       kase.library = library
+
       expect(subject).to permit reader, kase
     end
 
     it 'allows an editor to add a case to an arbitrary library' do
       kase.library = library
       expect(subject).to permit editor, kase
-    end
-  end
-
-  permissions :update? do
-    before do
-      reader.save
-      published_case.save
-    end
-
-    it 'denies a normal user' do
-      expect(subject).not_to permit anon, published_case
-      expect(subject).not_to permit reader, published_case
-    end
-
-    it 'allows a user who has an editorship' do
-      published_case.editorships.create editor: reader
-
-      expect(subject).to permit reader, published_case
-    end
-
-    it 'allows an editor' do
-      expect(subject).to permit editor, published_case
     end
   end
 

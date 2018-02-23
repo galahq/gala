@@ -20,12 +20,9 @@ class CasePolicy < ApplicationPolicy
       editor?
   end
 
-  def create?
-    user_can_update_library?
-  end
-
   def update?
-    admin_scope.where(id: record.id).exists?
+    return false unless admin_scope.where(id: record.id).exists?
+    user_can_update_library?
   end
 
   def destroy?

@@ -29,6 +29,7 @@ module Cases
 
     def set_case
       @case = Case.friendly.find(params[:case_slug]).decorate
+      authorize @case
     end
 
     def set_libraries
