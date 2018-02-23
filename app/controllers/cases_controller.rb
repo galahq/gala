@@ -32,7 +32,7 @@ class CasesController < ApplicationController
     authorize @case
 
     if @case.save
-      redirect_to edit_case_path(@case), notice: t('.created')
+      redirect_to edit_case_path(@case), notice: successfully_created
     else
       @case.errors.delete(:slug)
       render :new
@@ -62,7 +62,7 @@ class CasesController < ApplicationController
   def destroy
     authorize @case
     @case.destroy
-    redirect_to my_cases_path, notice: t('.deleted')
+    redirect_to my_cases_path, notice: successfully_destroyed
   end
 
   private

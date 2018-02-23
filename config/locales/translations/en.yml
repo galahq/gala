@@ -3,6 +3,8 @@ en:
     models:
       activity: Activity  #g
       case: Case  #g
+      cases:
+        setting: Case settings
       comment: Comment  #g
       comment_thread: Comment thread  #g
       edgenote: Edgenote  #g
