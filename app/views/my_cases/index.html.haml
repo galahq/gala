@@ -17,6 +17,7 @@
         %td= t 'activerecord.attributes.case.published'
         %td
         %td
+        %td
 
       %tbody
         -@cases.each do |kase|
@@ -51,6 +52,11 @@
               = link_to '', edit_case_path(kase),
                         aria: { label: t('.edit_case') },
                         class: 'pt-button pt-minimal pt-icon-edit'
+
+            %td
+              = link_to '', edit_case_settings_path(kase),
+                        aria: { label: t('.edit_case_settings') },
+                        class: 'pt-button pt-minimal pt-icon-cog'
 
             %td
               = button_to case_path(kase),

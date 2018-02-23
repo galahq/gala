@@ -42,6 +42,8 @@ Rails.application.routes.draw do
 
       resources :pages, only: %i[create]
 
+      resource :settings, module: 'cases', only: %i[edit update]
+
       collection do
         resources :features, only: %i[index]
       end

@@ -66,7 +66,8 @@ class Case < ApplicationRecord
   after_create :create_forum_for_universal_communities
 
   validates :slug, presence: true, uniqueness: true,
-                   format: { with: /\A[a-z0-9-]+\Z/ }
+                   format: { with: /\A[a-z0-9-]+\Z/ },
+                   length: { maximum: 100 }
 
   time_for_a_boolean :featured
   time_for_a_boolean :published
