@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     end
 
     scope 'cases' do
-      get '*react_router_location', to: 'cases#show'
+      get ':case_slug/*react_router_location', to: 'cases#show'
     end
 
     namespace 'catalog' do
