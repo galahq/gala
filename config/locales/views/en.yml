@@ -8,10 +8,6 @@ en:
       translator:
         one: Translator
         many: Translators
-    create:
-      created: Your case was successfully created.
-    destroy:
-      deleted: The case was successfully deleted.
     settings:
       edit:
         edit_case_settings: Edit Case Settings
@@ -22,8 +18,6 @@ en:
           If you change your case’s URL, your old URL will redirect to your new
           one. However, if someone else takes your old URL, the redirect will be
           overridden.
-      update:
-        updated: The case settings were successfully updated.
 
   my_cases:
     index:

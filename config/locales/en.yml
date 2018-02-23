@@ -8,6 +8,11 @@ en:
         restrict_dependent_destroy:
           has_one: "Cannot delete record because a dependent %{record} exists"
           has_many: "Cannot delete record because dependent %{record} exist"
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        updated: "%{model} successfully updated."
+        destroyed: "%{model} successfully deleted."
   date:
     abbr_day_names:
     - Sun

@@ -5,6 +5,7 @@ require 'sieve'
 # Base controller for actions to run on every request
 # @abstract
 class ApplicationController < ActionController::Base
+  include TranslatedFlashMessages
   include Omniauth::Lti::Context
   include Pundit
 

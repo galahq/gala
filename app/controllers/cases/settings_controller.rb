@@ -18,7 +18,7 @@ module Cases
       set_case
 
       if @case.update(case_settings_params)
-        redirect_to edit_case_settings_path(@case), notice: t('.updated')
+        redirect_to edit_case_settings_path(@case), notice: successfully_updated
       else
         set_libraries
         render :edit
