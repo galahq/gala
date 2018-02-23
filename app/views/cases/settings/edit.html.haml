@@ -7,13 +7,7 @@
 
     = form_for @case, url: case_settings_path(@case),
                       builder: BlueprintFormBuilder do |f|
-      - if @case.errors.any?
-        .pt-callout.pt-intent-danger.pt-icon-error.form__callout
-          %h5
-            = t 'errors.template.header', model: @case.model_name.human,
-                                          count: @case.errors.count
-          - @case.errors.full_messages.each do |msg|
-            %div= msg
+      = f.errors
 
       - slug_format = t('.lowercase_letters_and_numbers_separated_by_hyphens_html')
       = f.form_group :slug, helper_text: slug_format do |f, error_classes|

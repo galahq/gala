@@ -23,6 +23,17 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
   # rubocop:enable Metrics/ParameterLists
 
+  # Creates a callout listing the form’s errors if there are any
+  def errors
+    return if @object.errors.empty?
+    classes = %w[pt-callout pt-intent-danger pt-icon-error form__callout]
+    @template.content_tag :div, class: classes do
+      contents = ''.html_safe
+      contents << error_header
+      contents << error_list
+    end
+  end
+
   private
 
   def error_classes(method)
@@ -80,5 +91,20 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     ensure
       ::ActionView::Base.field_error_proc = default_field_error_proc
     end
+  end
+
+  def error_header
+    @template.content_tag :h5 do
+      I18n.translate 'errors.template.header',
+                     model: @object.model_name.human.downcase,
+                     count: @object.errors.count
+    end
+  end
+
+  def error_list
+    @object.errors.full_messages
+           .map { |error| @template.content_tag :div, error }
+           .join
+           .html_safe
   end
 end
