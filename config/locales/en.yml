@@ -140,8 +140,8 @@ en:
     template:
       body: 'There were problems with the following fields:'
       header:
-        one: 1 error prohibited this %{model} from being saved
-        other: "%{count} errors prohibited this %{model} from being saved"
+        one: 1 error prevented this %{model} from being saved
+        other: "%{count} errors prevented this %{model} from being saved"
   helpers:
     select:
       prompt: Please select
