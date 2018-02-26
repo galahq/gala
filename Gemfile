@@ -16,9 +16,11 @@ gem 'rack-canonical-host'
 gem 'redis', '~> 3.0'
 
 # Models
-gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git', ref: '2811810'
+gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
+                    ref: '2811810'
 gem 'draper'
-gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git', ref: 'a29e7d'
+gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git',
+                   ref: 'a29e7d'
 gem 'kaminari'
 gem 'memoist'
 gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'
@@ -41,6 +43,7 @@ gem 'groupdate'
 # Localization
 gem 'http_accept_language'
 gem 'i18n_generators'
+gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
@@ -71,7 +74,8 @@ gem 'table_print'
 group :development do
   gem 'foreman'
   gem 'listen'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  # Spring speeds up development by keeping your application running in the
+  # background. Read more: https://github.com/rails/spring
   gem 'bullet'
   gem 'letter_opener'
   gem 'spring'
@@ -85,7 +89,8 @@ group :development do
 end
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger
+  # console
   gem 'byebug', platform: :mri
   gem 'pry'
 

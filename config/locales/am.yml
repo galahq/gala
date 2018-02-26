@@ -1,13 +1,158 @@
----
 am:
-  name: አማርኛ
   activerecord:
+    attributes:
+      activity:
+        case: :activerecord.models.case  #g
+        description: መግለጫ   #g
+        pdf_url: Pdf ዩአርኤል   #g
+        position: የስራ መደቡ  #g
+        title: ርዕስ   #g
+      card:
+        content: የይዘት   #g
+        page: :activerecord.models.page  #g
+        position: የስራ መደቡ  #g
+        solid: ጠንካራ  #g
+      case:
+        activities: ተግባራት  #g
+        authors: ደራሲያን  #g
+        cases: አጋጣሚዎች  #g
+        catalog_position: ካታሎግ ቦታ  #g
+        comment_threads: የአስተያየት ተከታታዮች  #g
+        comments: አስተያየቶች  #g
+        cover_url: የሽፋን ዩአርኤል  #g
+        edgenotes: Edgenotes  #g
+        enrollments: የመመዝገቢያ  #g
+        narrative: የትረካ   #g
+        pages: ገጾች  #g
+        podcasts: ፖድካስቶች  #g
+        publication_date: የታተመበት ቀን  #g
+        published: የታተመ  #g
+        readers: አንባቢዎች  #g
+        short_title: አጭር ርዕስ  #g
+        slug: የቅጠል ትል  #g
+        summary: ማጠቃለያ   #g
+        tags: መለያዎች  #g
+        title: ርዕስ   #g
+        translators: ተርጓሚዎች  #g
+      comment:
+        comment_thread: :activerecord.models.comment_thread  #g
+        content: የይዘት   #g
+        reader: :activerecord.models.reader  #g
+      comment_thread:
+        case: :activerecord.models.case  #g
+        comments: አስተያየቶች  #g
+        group: :activerecord.models.group  #g
+      edgenote:
+        caption: የመግለጫ   #g
+        card: :activerecord.models.card  #g
+        case: :activerecord.models.case  #g
+        content: የይዘት   #g
+        format: ቅርጸት  #g
+        slug: የቅጠል ትል  #g
+        thumbnail_url: ድንክዬ ዩ አር ኤል  #g
+      enrollment:
+        case: :activerecord.models.case  #g
+        reader: :activerecord.models.reader  #g
+      group:
+        comment_threads: የአስተያየት ተከታታዮች  #g
+        group_memberships: ቡድን አባልነት  #g
+        name: ስም   #g
+        readers: አንባቢዎች  #g
+      group_membership:
+        group: :activerecord.models.group  #g
+        reader: :activerecord.models.reader  #g
+      habtm_readers:
+        left_side: :activerecord.models.left_side  #g
+        reader: :activerecord.models.reader  #g
+      habtm_roles:
+        left_side: :activerecord.models.left_side  #g
+        role: :activerecord.models.role  #g
+      page:
+        cards: ካርዶች  #g
+        case: :activerecord.models.case  #g
+        position: የስራ መደቡ  #g
+        title: ርዕስ   #g
+      podcast:
+        artwork_url: የስነ ጥበብ ዩአርኤል  #g
+        audio_url: የተሰሚ ዩአርኤል   #g
+        case: :activerecord.models.case  #g
+        credits: ምስጋናዎች   #g
+        description: መግለጫ   #g
+        position: የስራ መደቡ  #g
+        title: ርዕስ   #g
+      reader:
+        authentication_token: የማረጋገጫ ማስመሰያ  #g
+        cases: አጋጣሚዎች  #g
+        comments: አስተያየቶች  #g
+        current_sign_in_at: በ ውስጥ የአሁኑ ምልክት  #g
+        current_sign_in_ip: ፒ ውስጥ የአሁኑ ምልክት  #g
+        email: ኢሜይል  #g
+        encrypted_password: የተመሰጠረ የይለፍ ቃል  #g
+        enrollments: የመመዝገቢያ  #g
+        group_memberships: ቡድን አባልነት  #g
+        groups: ቡድኖች  #g
+        image_url: የምስል ዩአርኤል  #g
+        initials: ፊርማዎች  #g
+        last_sign_in_at: በ ውስጥ የመጨረሻው ምልክት  #g
+        last_sign_in_ip: ፒ ውስጥ የመጨረሻው ምልክት  #g
+        name: ስም  #g
+        provider: አቅራቢ  #g
+        remember_created_at: ላይ የተፈጠረ አትዘንጋ  #g
+        reset_password_sent_at: ይላካል የይለፍ ቃል ዳግም አስጀምር  #g
+        reset_password_token: የይለፍ ቃል ዳግም ማስመሰያ  #g
+        roles: ሚናዎችን  #g
+        uid: UID  #g
+      role:
+        name: ስም  #g
+        readers: አንባቢዎች  #g
+        resource: :activerecord.models.resource  #g
+        resource_type: የንብረት አይነት  #g
     errors:
       messages:
         record_invalid: "Validation failed: %{errors}"
         restrict_dependent_destroy:
-          has_one: "Cannot delete record because a dependent %{record} exists"
           has_many: "Cannot delete record because dependent %{record} exist"
+          has_one: "Cannot delete record because a dependent %{record} exists"
+    models:
+      activity: ሥራ  #g
+      card: ካርድ  #g
+      case: ክስ  #g
+      comment: አስተያየት  #g
+      comment_thread: የአስተያየት ክር  #g
+      edgenote: Edgenote  #g
+      enrollment: ምዝገባ  #g
+      group: ቡድን  #g
+      group_membership: የቡድን አባልነት  #g
+      habtm_readers: Habtm አንባቢዎች  #g
+      habtm_roles: Habtm ሚና  #g
+      page: ገጽ  #g
+      podcast: ፖድካስት  #g
+      reader: አንባቢ  #g
+      role: ሚና  #g
+  cases:
+    case:
+      forthcoming: ከማሰማቱም
+      translator:
+        many: ተርጓሚዎች
+        one: ተርጓሚ
+  catalog:
+    home:
+      case_index: ጉዳዮች መረጃ ጠቋሚ
+      featured_cases: ተለይተው የቀረቡ ጉዳዮች
+      greeting: "Hello, %{initials}"
+      intro_paragraph: |
+        MSCs አካባቢያዊ ዘላቂነት ውስጥ ተግባራዊ ትምህርት ለመስጠት መሳጭ እና ለመመርመር የትምህርት አቀራረብ ይሰጣሉ.
+        ከእኛ ጋር ለማወቅ አንድ ነጻ መለያ ይመዝገቡ.
+      learn_more: እኛ ምን እየሰሩ ተጨማሪ ይወቁ
+      my_cases: My Cases
+      my_cases_placeholder: |
+        ###Choose for yourself
+        - Meet different stakeholders and dive deep with a multimodal narrative.
+        - Shortcut experience by putting principles into practice.
+        Cases you select from the index below will be presented here for easy access.
+      redefining_sustainability_education: አካባቢያዊ ዘላቂነት ስለ የፈጠራ ትምህርት
+      study_a_case: Study a Case
+      title: በሁሉም ጉዳዮች
   date:
     abbr_day_names:
     - Sun
@@ -109,7 +254,6 @@ am:
     messages:
       accepted: must be accepted
       blank: can't be blank
-      present: must be blank
       confirmation: doesn't match %{attribute}
       empty: can't be empty
       equal_to: must be equal to %{count}
@@ -125,6 +269,8 @@ am:
       not_a_number: is not a number
       not_an_integer: must be an integer
       odd: must be odd
+      other_than: must be other than %{count}
+      present: must be blank
       required: must exist
       taken: has already been taken
       too_long:
@@ -136,7 +282,6 @@ am:
       wrong_length:
         one: is the wrong length (should be 1 character)
         other: is the wrong length (should be %{count} characters)
-      other_than: must be other than %{count}
     template:
       body: 'There were problems with the following fields:'
       header:
@@ -149,6 +294,7 @@ am:
       create: Create %{model}
       submit: Save %{model}
       update: Update %{model}
+  name: አማርኛ
   number:
     currency:
       format:
@@ -197,6 +343,9 @@ am:
     precision:
       format:
         delimiter: ''
+  reader:
+    show:
+      my_account: አካውንቴ
   support:
     array:
       last_word_connector: ", እና "
