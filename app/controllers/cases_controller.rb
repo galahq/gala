@@ -4,7 +4,6 @@
 class CasesController < ApplicationController
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
-  before_action :set_libraries, only: %i[new create edit]
 
   layout 'admin'
 
@@ -27,25 +26,22 @@ class CasesController < ApplicationController
     render layout: 'with_header'
   end
 
-  # @route [GET] `/cases/new`
-  def new
-    authorize Case
-
-    @case = Case.new
-  end
-
   # @route [POST] `/cases`
   def create
-    authorize Case
-
-    @case = Case.new(case_params)
+    @case = current_reader.my_cases.build
 
     if @case.save
-      redirect_to case_path(@case, anchor: '/edit')
+      redirect_to edit_case_path(@case), notice: successfully_created
     else
       @case.errors.delete(:slug)
       render :new
     end
+  end
+
+  # @route [GET] `/cases/slug/edit`
+  def edit
+    authorize @case
+    redirect_to case_path @case, edit: true
   end
 
   # @route [PATCH/PUT] `/cases/slug`
@@ -59,6 +55,13 @@ class CasesController < ApplicationController
     else
       render json: @case.errors, status: :unprocessable_entity
     end
+  end
+
+  # @route [DELETE] `/cases/slug`
+  def destroy
+    authorize @case
+    @case.destroy
+    redirect_to my_cases_path, notice: successfully_destroyed
   end
 
   private
@@ -81,10 +84,6 @@ class CasesController < ApplicationController
     params[:slug] || params[:case_slug]
   end
 
-  def set_libraries
-    @libraries = Library.all
-  end
-
   def set_group_and_deployment
     @enrollment = current_user.enrollment_for_case @case
     @group = @enrollment.try(:active_group) || GlobalGroup.new
@@ -94,9 +93,8 @@ class CasesController < ApplicationController
   # Only allow a trusted parameter "white list" through.
   def case_params
     params.require(:case).permit(
-      :published, :featured, :kicker, :title, :dek, :slug, :photo_credit,
-      :summary, :tags, :cover_image, :latitude, :longitude, :zoom,
-      :acknowledgements, :library_id,
+      :published, :featured, :kicker, :title, :dek, :photo_credit, :summary,
+      :tags, :cover_image, :latitude, :longitude, :zoom, :acknowledgements,
       authors: %i[name institution], translators: [], learning_objectives: []
     )
   end

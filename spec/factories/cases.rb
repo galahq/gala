@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :case do
-    sequence(:slug) { |n| "#{Faker::Internet.slug(nil, '-')}#{n}" }
     kicker { Faker::Hipster.words(2).join(' ').titlecase }
     title { Faker::Hipster.sentence }
     commentable true

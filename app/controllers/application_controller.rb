@@ -5,6 +5,7 @@ require 'sieve'
 # Base controller for actions to run on every request
 # @abstract
 class ApplicationController < ActionController::Base
+  include TranslatedFlashMessages
   include Omniauth::Lti::Context
   include Pundit
 
@@ -24,13 +25,18 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     respond_to do |format|
       format.html do
-        flash[:alert] = 'You are not authorized to perform this action.'
-        redirect_to reader_signed_in? ? root_path : new_reader_session_path
+        flash[:alert] =
+          I18n.t 'pundit.not_authorized'
+        redirect_to not_authorized_redirect_path
       end
       format.json do
         head :forbidden
       end
     end
+  end
+
+  def not_authorized_redirect_path
+    reader_signed_in? ? root_path : new_reader_session_path
   end
 
   def set_locale

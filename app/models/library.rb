@@ -19,5 +19,8 @@ class Library < ApplicationRecord
 
   has_many :cases
 
+  has_many :managerships, dependent: :destroy
+  has_many :managers, through: :managerships
+
   validates :background_color, :foreground_color, format: { with: HEX_COLOR }
 end
