@@ -1,66 +1,80 @@
----
 zh-TW:
-  name: 中文（簡體）
   activerecord:
+    attributes:
+      reader:
+        created_at: "建立於"
+        current_password: "原始密碼"
+        current_sign_in_at: "現在登入狀態開始於"
+        current_sign_in_ip: "現在登入中的IP位址"
+        email: "電子信箱"
+        failed_attempts: "錯誤嘗試次數"
+        last_sign_in_at: "上次登入於"
+        last_sign_in_ip: "上次登入的IP位址"
+        password: "密碼"
+        password_confirmation: "確認密碼"
+        remember_me: "記住我的資訊"
+        send_reply_notifications: 發送回復提醒
+        sign_in_count: "登入次數"
+        updated_at: "更新於"
     errors:
       messages:
         record_invalid: "校驗失敗: %{errors}"
         restrict_dependent_destroy:
-          has_one: 由於 %{record} 需要此記錄，所以無法移除記錄
           has_many: 由於 %{record} 需要此記錄，所以無法移除記錄
+          has_one: 由於 %{record} 需要此記錄，所以無法移除記錄
   date:
     abbr_day_names:
-    - 周日
-    - 周一
-    - 周二
-    - 周三
-    - 周四
-    - 周五
-    - 周六
+      - 周日
+      - 周一
+      - 周二
+      - 周三
+      - 周四
+      - 周五
+      - 周六
     abbr_month_names:
-    -
-    - 1月
-    - 2月
-    - 3月
-    - 4月
-    - 5月
-    - 6月
-    - 7月
-    - 8月
-    - 9月
-    - 10月
-    - 11月
-    - 12月
+      - ~
+      - 1月
+      - 2月
+      - 3月
+      - 4月
+      - 5月
+      - 6月
+      - 7月
+      - 8月
+      - 9月
+      - 10月
+      - 11月
+      - 12月
     day_names:
-    - 星期日
-    - 星期一
-    - 星期二
-    - 星期三
-    - 星期四
-    - 星期五
-    - 星期六
+      - 星期日
+      - 星期一
+      - 星期二
+      - 星期三
+      - 星期四
+      - 星期五
+      - 星期六
     formats:
       default: "%Y-%m-%d"
       long: "%Y年%b%d日"
       short: "%b%d日"
     month_names:
-    -
-    - 一月
-    - 二月
-    - 三月
-    - 四月
-    - 五月
-    - 六月
-    - 七月
-    - 八月
-    - 九月
-    - 十月
-    - 十一月
-    - 十二月
+      - ~
+      - 一月
+      - 二月
+      - 三月
+      - 四月
+      - 五月
+      - 六月
+      - 七月
+      - 八月
+      - 九月
+      - 十月
+      - 十一月
+      - 十二月
     order:
-    - :year
-    - :month
-    - :day
+      - :year
+      - :month
+      - :day
   datetime:
     distance_in_words:
       about_x_hours:
@@ -104,12 +118,15 @@ zh-TW:
       month: 月
       second: 秒
       year: 年
+  devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: 注冊免費賬戶
   errors:
     format: "%{attribute} %{message}"
     messages:
       accepted: 必須是可被接受的
       blank: 不能是空白字元
-      present: 必須是空白
       confirmation: 兩次輸入須一致
       empty: 不能留空
       equal_to: 必須等於 %{count}
@@ -125,6 +142,8 @@ zh-TW:
       not_a_number: 不是數字
       not_an_integer: 必須是整數
       odd: 必須是奇數
+      other_than: 不可以是 %{count} 個字
+      present: 必須是空白
       required: 必須存在
       taken: 已經被使用
       too_long:
@@ -136,7 +155,6 @@ zh-TW:
       wrong_length:
         one: 字數錯誤 (必須是一個字)
         other: 字數錯誤 (必須是 %{count} 個字)
-      other_than: 不可以是 %{count} 個字
     template:
       body: 以下欄位發生問題：
       header:
@@ -149,6 +167,7 @@ zh-TW:
       create: 新增%{model}
       submit: 儲存%{model}
       update: 更新%{model}
+  name: 中文（簡體）
   number:
     currency:
       format:

@@ -1,13 +1,77 @@
----
 ja:
-  name: 日本語
   activerecord:
+    attributes:
+      reader:
+        confirmation_sent_at: "パスワード確認送信時刻"
+        confirmation_token: "パスワード確認用トークン"
+        confirmed_at: "パスワード確認時刻"
+        created_at: "作成日"
+        current_password: "現在のパスワード"
+        current_sign_in_at: "現在のログイン時刻"
+        current_sign_in_ip: "現在のログインIPアドレス"
+        email: "メールアドレス"
+        encrypted_password: "暗号化パスワード"
+        failed_attempts: "失敗したログイン試行回数"
+        last_sign_in_at: "最終ログイン時刻"
+        last_sign_in_ip: "最終ログインIPアドレス"
+        locale: 言語
+        locked_at: "ロック時刻"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認用）"
+        remember_created_at: "ログイン記憶時刻"
+        remember_me: "ログインを記憶する"
+        reset_password_sent_at: "パスワードリセット送信時刻"
+        reset_password_token: "パスワードリセット用トークン"
+        send_reply_notifications: 私が書いたコメントに誰かが返信したときに通知する
+        sign_in_count: "ログイン回数"
+        unconfirmed_email: "未確認Eメール"
+        unlock_token: "ロック解除用トークン"
+        updated_at: "更新日"
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"
         restrict_dependent_destroy:
-          has_one: "%{record}が存在しているので削除できません"
           has_many: "%{record}が存在しているので削除できません"
+          has_one: "%{record}が存在しているので削除できません"
+    models:
+      activity: アクティビティ  #g
+      case: 場合  #g
+      comment: コメント  #g
+      comment_thread: コメントスレッド  #g
+      edgenote: Edgenote  #g
+      enrollment: 登録  #g
+      global_community: グローバルコミュニティ
+      group: グループ  #g
+      group_membership: グループのメンバーシップ  #g
+      podcast: ポッドキャスト  #g
+      reader: リーダー  #g
+  cases:
+    case:
+      forthcoming: 今後
+      translator:
+        many: 翻訳
+        one: 翻訳
+  catalog:
+    home:
+      case_index: 全ての事例研究
+      featured_cases: 注目の事例研究
+      greeting: ようこそ
+      intro_paragraph: |
+        Michigan Sustainability Cases（MSC：ミシガン大学の持続可能性の事例研究）
+        というプロジェクトは、様々な専門職大学院のために事例研究を元にして環境科学
+        の教育課程を発刊する。多様な視聴覚の教材と現実の意思決定者との会話を
+        組入れることによって、没入型にニュアンスをわからせる持続可能性と環境の
+        教育的アプローチのは、MSCだ。
+      learn_more: プロジェクトの詳細については、こちらをご覧ください
+      my_cases: マイ事例研究
+      my_cases_placeholder: |
+        ###自分で選んで
+        - 様々な視点から見て、詳しいストーリーで熟考する。
+        - 基本的な原理を使うように経験を得る。
+        以下の索引から選んだケースをこちらですぐに見つけられる。
+      redefining_sustainability_education: 環境科学の教育の新たな方法
+      study_a_case: ケースを勉強
+      title: 全ての事例研究
   date:
     abbr_day_names:
     - 日
@@ -104,12 +168,15 @@ ja:
       month: 月
       second: 秒
       year: 年
+  devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: "無料で申し込む"
   errors:
     format: "%{attribute}%{message}"
     messages:
       accepted: を受諾してください
       blank: を入力してください
-      present: は入力しないでください
       confirmation: と%{attribute}の入力が一致しません
       empty: を入力してください
       equal_to: は%{count}にしてください
@@ -125,12 +192,13 @@ ja:
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
+      other_than: は%{count}以外の値にしてください
+      present: は入力しないでください
       required: を入力してください
       taken: はすでに存在します
       too_long: は%{count}文字以内で入力してください
       too_short: は%{count}文字以上で入力してください
       wrong_length: は%{count}文字で入力してください
-      other_than: は%{count}以外の値にしてください
     template:
       body: 次の項目を確認してください
       header:
@@ -143,6 +211,9 @@ ja:
       create: 登録する
       submit: 保存する
       update: 更新する
+  name: 日本語
+  notifications:
+    replied_to_your_comment: "%{case_kicker}でのコメントには、%{notifier}が返信を書きました。"
   number:
     currency:
       format:
@@ -189,6 +260,13 @@ ja:
     precision:
       format:
         delimiter: ''
+  readers:
+    form:
+      create_a_password: パスワードを選ぶ
+      my_account: マイアカウント
+      save: プロフィールの変化を保存
+      you_have_not_created_a_password: |
+        初めて%{provider}でサインインしましたので、パスワードをまだ選びませんでした。選んだら、今後%{provider}とパスワードと両方でサインイン可能性があります。
   support:
     array:
       last_word_connector: と

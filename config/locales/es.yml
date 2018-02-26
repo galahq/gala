@@ -1,13 +1,41 @@
----
 es:
-  name: Español
   activerecord:
+    attributes:
+      reader:
+        confirmation_sent_at: Fecha de envío de confirmación
+        confirmation_token: Código de confirmación
+        confirmed_at: Fecha de confirmación
+        created_at: Fecha de creación
+        current_password: Contraseña actual
+        current_sign_in_at: Fecha del ingreso actual
+        current_sign_in_ip: IP del ingreso actual
+        email: Email
+        encrypted_password: Contraseña cifrada
+        failed_attempts: Intentos fallidos
+        last_sign_in_at: Fecha del último ingreso
+        last_sign_in_ip: IP del último ingreso
+        locale: Lugar
+        locked_at: Fecha de bloqueo
+        name: Nombre
+        password: Contraseña
+        password_confirmation: Confirmación de la contraseña
+        remember_created_at: Fecha de 'Recordarme'
+        remember_me: Recordarme
+        reset_password_sent_at: Fecha de envío de código para contraseña
+        reset_password_token: Código para restablecer contraseña
+        sign_in_count: Cantidad de ingresos
+        unconfirmed_email: Email no confirmado
+        unlock_token: Código de desbloqueo
+        updated_at: Fecha de actualización
     errors:
       messages:
         record_invalid: "La validación falló: %{errors}"
         restrict_dependent_destroy:
-          has_one: No se puede eliminar el registro porque existe un %{record} dependiente
           has_many: No se puede eliminar el registro porque existen %{record} dependientes
+          has_one: No se puede eliminar el registro porque existe un %{record} dependiente
+    models:
+      global_community: Comunidad global
+      shared_cases_library: Casos compartidos
   date:
     abbr_day_names:
     - dom
@@ -94,12 +122,12 @@ es:
       x_months:
         one: 1 mes
         other: "%{count} meses"
-      x_years:
-        one: 1 año
-        other: "%{count} años"
       x_seconds:
         one: 1 segundo
         other: "%{count} segundos"
+      x_years:
+        one: 1 año
+        other: "%{count} años"
     prompts:
       day: Día
       hour: Hora
@@ -107,12 +135,15 @@ es:
       month: Mes
       second: Segundos
       year: Año
+  devise:
+    shared:
+      links:
+        sign_up_for_a_free_account: Regístrese para obtener una cuenta gratuita
   errors:
     format: "%{attribute} %{message}"
     messages:
       accepted: debe ser aceptado
       blank: no puede estar en blanco
-      present: debe estar en blanco
       confirmation: no coincide
       empty: no puede estar vacío
       equal_to: debe ser igual a %{count}
@@ -128,6 +159,8 @@ es:
       not_a_number: no es un número
       not_an_integer: debe ser un entero
       odd: debe ser impar
+      other_than: debe ser distinto de %{count}
+      present: debe estar en blanco
       required: debe existir
       taken: ya está en uso
       too_long:
@@ -139,12 +172,19 @@ es:
       wrong_length:
         one: "no tiene la longitud correcta (1 carácter exactos)"
         other: "no tiene la longitud correcta (%{count} caracteres exactos)"
-      other_than: debe ser distinto de %{count}
     template:
+      already_confirmed: "ya fue confirmada. Intenta ingresar."
       body: 'Se encontraron problemas con los siguientes campos:'
+      confirmation_period_expired: "necesita ser confirmada dentro de %{period}, por favor pide una nueva"
+      expired: "ha expirado, por favor pide una nueva"
       header:
         one: No se pudo guardar este/a %{model} porque se encontró 1 error
         other: No se pudo guardar este/a %{model} porque se encontraron %{count} errores
+      not_found: "no encontrado"
+      not_locked: "no ha sido bloqueada"
+      not_saved:
+        one: "Ha ocurrido 1 error:"
+        other: "Han ocurrido %{count} errores:"
   helpers:
     select:
       prompt: Por favor seleccione
@@ -152,6 +192,9 @@ es:
       create: Crear %{model}
       submit: Guardar %{model}
       update: Actualizar %{model}
+  name: Español
+  notifications:
+    replied_to_your_comment: "%{notifier} respondió a tu comentario en “%{case_kicker}.”"
   number:
     currency:
       format:
@@ -204,6 +247,16 @@ es:
     precision:
       format:
         delimiter: ''
+  readers:
+    form:
+      create_a_password: Crear contraseña
+      my_account: Mi cuenta
+      notification_settings: Configuración de notificación
+      save: Actualizar perfil
+      you_have_not_created_a_password: |
+        Porque iniciaste tú primera sesión con %{provider}, no creaste una
+        contraseña. Si creas una contraseña, podrás usarla o %{provider}
+        para iniciar la sesión.
   support:
     array:
       last_word_connector: " y "
