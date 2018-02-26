@@ -564,6 +564,38 @@ ALTER SEQUENCE edgenotes_id_seq OWNED BY edgenotes.id;
 
 
 --
+-- Name: editorships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE editorships (
+    id bigint NOT NULL,
+    case_id bigint,
+    editor_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: editorships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE editorships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: editorships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE editorships_id_seq OWNED BY editorships.id;
+
+
+--
 -- Name: enrollments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -796,6 +828,38 @@ CREATE SEQUENCE libraries_id_seq
 --
 
 ALTER SEQUENCE libraries_id_seq OWNED BY libraries.id;
+
+
+--
+-- Name: managerships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE managerships (
+    id bigint NOT NULL,
+    library_id bigint,
+    manager_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: managerships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE managerships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: managerships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE managerships_id_seq OWNED BY managerships.id;
 
 
 --
@@ -1261,6 +1325,13 @@ ALTER TABLE ONLY edgenotes ALTER COLUMN id SET DEFAULT nextval('edgenotes_id_seq
 
 
 --
+-- Name: editorships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY editorships ALTER COLUMN id SET DEFAULT nextval('editorships_id_seq'::regclass);
+
+
+--
 -- Name: enrollments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1307,6 +1378,13 @@ ALTER TABLE ONLY invitations ALTER COLUMN id SET DEFAULT nextval('invitations_id
 --
 
 ALTER TABLE ONLY libraries ALTER COLUMN id SET DEFAULT nextval('libraries_id_seq'::regclass);
+
+
+--
+-- Name: managerships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships ALTER COLUMN id SET DEFAULT nextval('managerships_id_seq'::regclass);
 
 
 --
@@ -1509,6 +1587,14 @@ ALTER TABLE ONLY edgenotes
 
 
 --
+-- Name: editorships editorships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY editorships
+    ADD CONSTRAINT editorships_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: enrollments enrollments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1562,6 +1648,14 @@ ALTER TABLE ONLY invitations
 
 ALTER TABLE ONLY libraries
     ADD CONSTRAINT libraries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: managerships managerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships
+    ADD CONSTRAINT managerships_pkey PRIMARY KEY (id);
 
 
 --
@@ -1918,6 +2012,20 @@ CREATE UNIQUE INDEX index_edgenotes_on_slug ON edgenotes USING btree (slug);
 
 
 --
+-- Name: index_editorships_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_editorships_on_case_id ON editorships USING btree (case_id);
+
+
+--
+-- Name: index_editorships_on_editor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_editorships_on_editor_id ON editorships USING btree (editor_id);
+
+
+--
 -- Name: index_enrollments_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2013,6 +2121,20 @@ CREATE INDEX index_invitations_on_reader_id ON invitations USING btree (reader_i
 --
 
 CREATE UNIQUE INDEX index_libraries_on_slug ON libraries USING btree (slug);
+
+
+--
+-- Name: index_managerships_on_library_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_managerships_on_library_id ON managerships USING btree (library_id);
+
+
+--
+-- Name: index_managerships_on_manager_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_managerships_on_manager_id ON managerships USING btree (manager_id);
 
 
 --
@@ -2181,6 +2303,14 @@ ALTER TABLE ONLY enrollments
 
 
 --
+-- Name: managerships fk_rails_3617778c6a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships
+    ADD CONSTRAINT fk_rails_3617778c6a FOREIGN KEY (manager_id) REFERENCES readers(id);
+
+
+--
 -- Name: submissions fk_rails_369ed4eb5c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2261,6 +2391,14 @@ ALTER TABLE ONLY comment_threads
 
 
 --
+-- Name: editorships fk_rails_65154bc221; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY editorships
+    ADD CONSTRAINT fk_rails_65154bc221 FOREIGN KEY (editor_id) REFERENCES readers(id);
+
+
+--
 -- Name: comments fk_rails_715847c280; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2298,6 +2436,14 @@ ALTER TABLE ONLY activities
 
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_rails_8ed9cff919 FOREIGN KEY (case_id) REFERENCES cases(id);
+
+
+--
+-- Name: managerships fk_rails_98339b9ce3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managerships
+    ADD CONSTRAINT fk_rails_98339b9ce3 FOREIGN KEY (library_id) REFERENCES libraries(id);
 
 
 --
@@ -2370,6 +2516,14 @@ ALTER TABLE ONLY deployments
 
 ALTER TABLE ONLY edgenotes
     ADD CONSTRAINT fk_rails_cb36917c96 FOREIGN KEY (card_id) REFERENCES cards(id);
+
+
+--
+-- Name: editorships fk_rails_cdd20e6a1b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY editorships
+    ADD CONSTRAINT fk_rails_cdd20e6a1b FOREIGN KEY (case_id) REFERENCES cases(id);
 
 
 --
@@ -2506,6 +2660,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180129143420'),
 ('20180206151601'),
 ('20180212172121'),
-('20180219152023');
+('20180219152023'),
+('20180220162824'),
+('20180221153559');
 
 

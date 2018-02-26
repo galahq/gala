@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
-
 LOCALES ||= Rails.application.config.i18n.available_locales
 LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/
 
@@ -28,7 +26,8 @@ Rails.application.routes.draw do
 
     resources :case_elements, only: %i[update]
 
-    resources :cases, only: %i[index show new create update], param: :slug do
+    resources :cases, only: %i[index show create edit update destroy],
+                      param: :slug do
       resources :activities, only: %i[create]
 
       resources :comment_threads, only: %i[index create]
@@ -43,11 +42,15 @@ Rails.application.routes.draw do
 
       resources :pages, only: %i[create]
 
+      resource :settings, module: 'cases', only: %i[edit update]
+
       collection do
         resources :features, only: %i[index]
       end
+    end
 
-      get '*react_router_location', to: 'cases#show'
+    scope 'cases' do
+      get ':case_slug/*react_router_location', to: 'cases#show'
     end
 
     namespace 'catalog' do
@@ -78,6 +81,8 @@ Rails.application.routes.draw do
     resources :libraries, param: :slug, only: %i[show]
 
     resource :magic_link, only: %i[show create]
+
+    resources :my_cases, only: %i[index]
 
     resources :pages, only: %i[update destroy] do
       resources :cards, only: %i[create]

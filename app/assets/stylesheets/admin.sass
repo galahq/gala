@@ -59,6 +59,7 @@ div.window.window-admin
     line-height: .9em
 
   &__table
+    width: 100%
     line-height: 1.3
 
     & tr td
@@ -73,6 +74,9 @@ div.window.window-admin
     &__slug
       display: block
       font-weight: 600
+
+      & .pt-tag
+        margin-left: 0.5em
 
     & a
       color: $white
@@ -107,3 +111,17 @@ div.window.window-admin
     font-weight: 600
     margin-left: 0.5em
     text-align: left
+
+.case-cover-card-top
+  height: 100px
+  background-size: cover
+  background-position: center
+  margin: -20px -20px 20px
+  padding: 20px
+  border-radius: 3px 3px 0 0
+  color: $white
+  display: flex
+  align-items: flex-end
+
+  & span
+    text-shadow: 0 0 1em black

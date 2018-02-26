@@ -2,13 +2,45 @@
 
 # @see Case
 class CasePolicy < ApplicationPolicy
+  # What cases can this user administrate?
+  class AdminScope < Scope
+    def resolve
+      if editor?
+        scope.all
+      else
+        scope.merge(user.my_cases)
+      end
+    end
+  end
+
   def show?
     record.published? ||
       user.enrollment_for_case(record).present? ||
+      user.my_cases.include?(record) ||
       editor?
+  end
+
+  def update?
+    return false unless admin_scope.where(id: record.id).exists?
+    user_can_update_library?
   end
 
   def destroy?
     editor? unless record.published?
+  end
+
+  def admin_scope
+    AdminScope.new(user, record.class).resolve
+  end
+
+  private
+
+  def user_can_update_library?
+    return true unless record.library.persisted?
+    library_policy.update?
+  end
+
+  def library_policy
+    LibraryPolicy.new(user, record.library)
   end
 end

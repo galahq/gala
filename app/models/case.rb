@@ -32,7 +32,9 @@ class Case < ApplicationRecord
   include Mobility
   extend FriendlyId
 
-  friendly_id :kicker, use: %i[history slugged]
+  attribute :commentable, default: true
+  attribute :slug, :string, default: -> { SecureRandom.uuid }
+  friendly_id :slug, use: %i[history]
 
   translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
              :audience, :classroom_timeline, :acknowledgements, fallbacks: true
@@ -45,6 +47,8 @@ class Case < ApplicationRecord
   has_many :comment_threads, dependent: :destroy
   has_many :comments, through: :comment_threads
   has_many :edgenotes, dependent: :destroy
+  has_many :editorships, dependent: :destroy
+  has_many :editors, through: :editorships, class_name: 'Reader'
   has_many :enrollments, dependent: :destroy
   has_many :forums, dependent: :destroy
   has_many :readers, through: :enrollments
@@ -62,9 +66,9 @@ class Case < ApplicationRecord
 
   after_create :create_forum_for_universal_communities
 
-  validates :kicker, :title, :slug, presence: true
-  validates :slug, uniqueness: true,
-                   format: { with: /\A[a-z0-9-]+\Z/ }
+  validates :slug, presence: true, uniqueness: true,
+                   format: { with: /\A[a-z0-9-]+\Z/ },
+                   length: { maximum: 100 }
 
   time_for_a_boolean :featured
   time_for_a_boolean :published

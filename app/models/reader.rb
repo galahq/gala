@@ -25,7 +25,7 @@ class Reader < ApplicationRecord
   has_many :authentication_strategies, dependent: :destroy
 
   has_many :enrollments, -> { includes(:case) }, dependent: :destroy
-  has_many :cases, through: :enrollments
+  has_many :enrolled_cases, through: :enrollments
 
   has_many :group_memberships, dependent: :destroy
   has_many :groups, through: :group_memberships
@@ -43,6 +43,12 @@ class Reader < ApplicationRecord
   has_many :comments, dependent: :nullify
 
   has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id'
+
+  has_many :editorships, dependent: :destroy, foreign_key: 'editor_id'
+  has_many :my_cases, through: :editorships, source: :case
+
+  has_many :managerships, dependent: :destroy, foreign_key: 'manager_id'
+  has_many :libraries, through: :managerships
 
   has_one_attached :image
 

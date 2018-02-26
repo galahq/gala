@@ -3,6 +3,8 @@ en:
     models:
       activity: Activity  #g
       case: Case  #g
+      cases:
+        setting: Case settings
       comment: Comment  #g
       comment_thread: Comment thread  #g
       edgenote: Edgenote  #g
@@ -24,17 +26,20 @@ en:
       case:
         activities: Activities  #g
         authors: Authors  #g
+        case_title: Case Title
         comment_threads: Comment threads  #g
         comments: Comments  #g
         cover_url: Cover URL  #g
         edgenotes: Edgenotes  #g
         enrollments: Enrollments  #g
+        featured: Featured
+        library: :activerecord.models.library
         kicker: Short title
         narrative: Narrative #g
         podcasts: Podcasts  #g
         published: Published  #g
         readers: Readers  #g
-        slug: Slug  #g
+        slug: Case URL
         summary: Summary #g
         tags: Tags  #g
         title: Question

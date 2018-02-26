@@ -8,6 +8,11 @@ en:
         restrict_dependent_destroy:
           has_one: "Cannot delete record because a dependent %{record} exists"
           has_many: "Cannot delete record because dependent %{record} exist"
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        updated: "%{model} successfully updated."
+        destroyed: "%{model} successfully deleted."
   date:
     abbr_day_names:
     - Sun
@@ -140,8 +145,8 @@ en:
     template:
       body: 'There were problems with the following fields:'
       header:
-        one: 1 error prohibited this %{model} from being saved
-        other: "%{count} errors prohibited this %{model} from being saved"
+        one: 1 error prevented this %{model} from being saved
+        other: "%{count} errors prevented this %{model} from being saved"
   helpers:
     select:
       prompt: Please select
@@ -212,3 +217,5 @@ en:
       long: "%B %d, %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  pundit:
+    not_authorized: You are not authorized to perform this action.
