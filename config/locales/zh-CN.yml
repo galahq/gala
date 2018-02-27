@@ -4,11 +4,11 @@ zh-CN:
     attributes:
       case:
         acknowledgements: 致谢
-        featured: Featured
-        kicker: Short title
-        learning_objectives: Learning objectives
+        featured: 明星
+        kicker: 短标题
+        learning_objectives: 学习目标
         library: Library
-        location: Case location
+        location: 案例发生地
         slug: Case URL
         title: Question
         translators:
@@ -61,7 +61,7 @@ zh-CN:
               inclusion: "is not included in the list of possible answers"
     models:
       activity: Activity
-      case: Case
+      case: 案例
       cases:
         setting: Case Settings
       comment: Comment
