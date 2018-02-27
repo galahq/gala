@@ -13,8 +13,7 @@ zh-TW:
         title: Question
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
-          many: Translators
-          one: Translator
+          other: Translators
       question:
         content: Content
         correct_answer: Correct answer
@@ -126,8 +125,6 @@ zh-TW:
   catalog:
     catalog: Catalog
     choose_for_yourself: Choose for yourself
-    edit_enrolled: Edit enrolled cases
-    enrolled_cases: Enrolled cases
     enrollments_instruction: |
       Cases you enroll in will be presented here for easy access.
     join_conversation: |
@@ -156,8 +153,7 @@ zh-TW:
       join_the_conversation: Join the conversation
       n_responses:
         js: "{count, number} {count, plural, one {response} other {responses}}"
-        many: "%{count} responses"
-        one: 1 response
+        other: "%{count} responses"
       no_comments: No comments
       nobody_has_left_a_comment: |
         Nobody in the {communityName} discussion group has left a comment on
@@ -460,8 +456,7 @@ zh-TW:
     show:
       with_host:
         js: "with {count, plural, one {host} other {hosts}}"
-        many: with hosts
-        one: with host
+        other: with hosts
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
