@@ -119,36 +119,35 @@ ja:
       next: "次："
       not_yet_published: この事例研究はまだ発刊していない
       other_languages: "この事例研究は次の言語でも利用できます。"
-      toc: Table of Contents
+      toc: 目次
   catalog:
-    catalog: Catalog
-    choose_for_yourself: Choose for yourself
+    catalog: 目録
+    choose_for_yourself: 自分で選択する
     enrollments_instruction: |
-      Cases you enroll in will be presented here for easy access.
+      登録する事例研究は、簡単に見つけられるようにここに表示されます。
     join_conversation: |
-      Join the conversation by asking questions
-      and paying your learning forward.
-    learn_more: Learn more
+      質問をしたり、他の学習者を助けたりして、会話に参加できます。
+    learn_more: もっと詳しく知る
     meet_stakeholders: |
-      Meet different stakeholders and dive deep with a multimodal narrative.
-    propose_a_case: Propose a case
-    shortcut_experience: Apply principles to improve practice.
+      さまざまなステークホルダーに会い、マルチモーダルな物語で深く理解できます。
+    propose_a_case: 事例を提案
+    shortcut_experience: 原則を実践することで経験を得ることができます。
   comment_threads:
     destroy:
-      delete_comment_thread: Delete comment thread
+      delete_comment_thread: コメントスレッドを削除します。
     new:
-      new_comment_thread: New comment thread...
+      new_comment_thread: 新しいコメントスレッド…
     show:
-      card_n: Card {cardPosition}
-      comments_on_page: Comments on “{title}”
-      comments_on_page_number: Comments on Page {position, number}
-      page_n: Page {pageNumber, number}
+      card_n: 第{cardPosition}カード
+      comments_on_page: '「{title}」についてのコメント'
+      comments_on_page_number: 第{position, number}ページのコメント
+      page_n: 第{pageNumber, number}ページ
   comments:
-    destroy: Delete comment
+    destroy: コメントを削除
     index:
-      all_comments: All comments
-      conversation: Conversation
-      join_the_conversation: Join the conversation
+      all_comments: すべてのコメント
+      conversation: 会話
+      join_the_conversation: 会話に参加します
       n_responses:
         js: "{count, number} {count, plural, one {response} other {responses}}"
         other: "%{count} responses"
