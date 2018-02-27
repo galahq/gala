@@ -25,25 +25,19 @@ class Acknowledgements extends React.Component<
   render () {
     const { contents, intl } = this.props
     if (!contents) return null
+    const acknowledgements = intl.formatMessage({
+      id: 'activerecord.attributes.case.acknowledgements',
+    })
     return [
       <AcknowledgementsButton
         key="1"
-        aria-label={intl.formatMessage({
-          id: 'case.acknowledgements',
-          defaultMessage: 'Acknowledgements',
-        })}
-        title={intl.formatMessage({
-          id: 'case.acknowledgements',
-          defaultMessage: 'Acknowledgements',
-        })}
+        aria-label={acknowledgements}
+        title={acknowledgements}
         onClick={this.handleClick}
       />,
       <Dialog
         key="2"
-        title={intl.formatMessage({
-          id: 'case.acknowledgements',
-          defaultMessage: 'Acknowledgements',
-        })}
+        title={acknowledgements}
         className="pt-dark"
         {...this.state}
         onClose={this.handleClick}
@@ -54,7 +48,7 @@ class Acknowledgements extends React.Component<
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
             <Button onClick={this.handleClick}>
-              <FormattedMessage id="close" defaultMessage="Close" />
+              <FormattedMessage id="helpers.close" />
             </Button>
           </div>
         </div>

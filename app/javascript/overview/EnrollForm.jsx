@@ -24,22 +24,16 @@ function mapStateToProps ({ caseData }: State) {
 const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   <div className="CaseOverview--enroll-form">
     <h2>
-      <FormattedMessage
-        id="case.enrollInThisCase"
-        defaultMessage="Enroll in this case"
-      />
+      <FormattedMessage id="enrollments.new.enrollinThisCase" />
     </h2>
     <p>
-      <FormattedMessage
-        id="case.enrollForEasyAccess"
-        defaultMessage="If this case catches your eye, enroll for easy access from “My Cases.”"
-      />
+      <FormattedMessage id="enrollments.new.enrollForEasyAccess" />
     </p>
     <button
       className="o-button pt-button"
       onClick={() => enrollReader(readerId, caseSlug)}
     >
-      <FormattedMessage id="case.enroll" defaultMessage="Enroll" />
+      <FormattedMessage id="enrollments.new.enroll" />
     </button>
   </div>
 )

@@ -59,7 +59,7 @@ class CreditsList extends React.Component<
         </dl>
         <em>
           <FormattedMessage
-            id="podcast.hosts"
+            id="podcasts.show.withHost.js"
             values={{ count: hosts.length }}
           />{' '}
           {hostsString}

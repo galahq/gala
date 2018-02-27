@@ -63,7 +63,7 @@ class FirstPostForm extends React.Component<Props, State> {
       </Input>,
       <Options key="2">
         <Button onClick={onCancel}>
-          <FormattedMessage id="cancel" defaultMessage="Cancel" />
+          <FormattedMessage id="helpers.cancel" />
         </Button>
         <SubmitButton
           disabled={
@@ -74,7 +74,7 @@ class FirstPostForm extends React.Component<Props, State> {
           }
           onClick={onSubmitComment}
         >
-          <FormattedMessage id="submit" defaultMessage="Submit" />
+          <FormattedMessage id="helpers.submit.submit" />
         </SubmitButton>
       </Options>,
     ]

@@ -15,10 +15,11 @@ import { FocusStyleManager } from '@blueprintjs/core'
 
 import Catalog from 'catalog'
 
+import messages from '../../../config/locales'
+
 FocusStyleManager.onlyShowFocusOnTabs()
 
 const { locale } = (window.i18n: { locale: string })
-import messages from '../../../config/locales/react.json' // eslint-disable-line
 
 const render = (Component: React$Component) => {
   ReactDOM.render(

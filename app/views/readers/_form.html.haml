@@ -38,7 +38,7 @@
       = f.submit t('.save'), class: "o-button pt-button pt-intent-primary"
 
   - if @reader.created_password
-    %p=link_to t('devise.registrations.edit.change_my_password'), edit_reader_registration_path
+    %p=link_to t('devise.passwords.edit.change_my_password'), edit_reader_registration_path
   - else
     %h2= t '.create_a_password'
     = form_for @reader, url: :profile do |f|

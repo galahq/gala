@@ -175,10 +175,7 @@ class SelectedCommentThread extends React.Component<
             <CommentsContainer>
               <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
                 <AllCommentsButton replace to={backPath}>
-                  <FormattedMessage
-                    id="conversation.allComments"
-                    defaultMessage="All comments"
-                  />
+                  <FormattedMessage id="comments.index.allComments" />
                 </AllCommentsButton>
               </LabelForScreenReaders>
               <LeadComment

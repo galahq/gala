@@ -112,7 +112,7 @@ const Billboard = ({
         longitude: caseData.longitude || 0,
         zoom: caseData.zoom || 1,
       }}
-      title={{ id: 'overview.location', defaultMessage: 'Case Location' }}
+      title={{ id: 'activerecord.attributes.case.location' }}
       onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
     />
   </section>
@@ -125,7 +125,7 @@ function FlagLinks ({ slug, languages }: FlagLinksProps) {
   if (languages.length > 0) {
     return (
       <div className="flag-links">
-        <FormattedMessage id="overview.otherLanguages" />
+        <FormattedMessage id="cases.show.otherLanguages" />
         <br />
         {languages.map(lx => <FlagLink key={lx} lx={lx} slug={slug} />)}
       </div>
@@ -145,7 +145,7 @@ function FlagLink ({ slug, lx }: FlagLinkProps) {
         }}
       />
       &nbsp;
-      <FormattedMessage id={lx} />
+      <FormattedMessage id={`support.languages.${lx}`} />
     </a>
   )
 }

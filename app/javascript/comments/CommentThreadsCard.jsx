@@ -62,20 +62,13 @@ const CommentThreadsCard = ({
           <Header>
             <CloseButton
               replace
-              aria-label={intl.formatMessage({
-                id: 'close',
-                defaultMessage: 'Close',
-              })}
+              aria-label={intl.formatMessage({ id: 'helpers.close' })}
               to={closeCommentThreadsPath}
               onClick={() => acceptSelection(false)}
             />
 
             <FormattedMessage
-              id="comments.nResponses"
-              defaultMessage={`{count, number} {count, plural,
-            one {response}
-            other {responses}
-          }`}
+              id="comments.index.nResponses"
               values={{ count: commentThreads.length }}
             />
 

@@ -18,7 +18,7 @@ export const FormattedList = ({ list }: { list: React.Node[] }): React.Node => {
       return (
         <span>
           {list[0]}
-          <FormattedMessage id="list.two" defaultMessage=" and " />
+          <FormattedMessage id="helpers.list.two" />
           {list[1]}
         </span>
       )
@@ -30,12 +30,9 @@ export const FormattedList = ({ list }: { list: React.Node[] }): React.Node => {
       return (
         <span>
           {start}
-          <FormattedMessage id="list.start" defaultMessage=", " />
-          {intersperse(
-            <FormattedMessage id="list.middle" defaultMessage=", " />,
-            middle
-          )}
-          <FormattedMessage id="list.end" defaultMessage=", and " />
+          <FormattedMessage id="helpers.list.start" />
+          {intersperse(<FormattedMessage id="helpers.list.middle" />, middle)}
+          <FormattedMessage id="helpers.list.end" />
           {end}
         </span>
       )

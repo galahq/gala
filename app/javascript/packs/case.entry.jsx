@@ -23,7 +23,7 @@ import ErrorBoundary from 'utility/ErrorBoundary'
 
 import reducer from 'redux/reducers'
 
-import messages from '../../../config/locales/react.json' // eslint-disable-line
+import messages from '../../../config/locales'
 
 FocusStyleManager.onlyShowFocusOnTabs()
 

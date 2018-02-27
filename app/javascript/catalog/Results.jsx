@@ -65,20 +65,17 @@ class Results extends React.Component<
       <Main key="main">
         <CatalogSection>
           <SectionTitle>
-            <FormattedMessage
-              id="search.results"
-              defaultMessage="Search Results"
-            />
+            <FormattedMessage id="search.results" />
           </SectionTitle>
           {loading.cases || this.state.loading ? null : this.state.results
             .length === 0 ? (
               <NoSearchResults />
-          ) : (
-            <CaseList
-              cases={this.state.results.map(slug => cases[slug])}
-              readerIsEditor={readerIsEditor}
-            />
-          )}
+            ) : (
+              <CaseList
+                cases={this.state.results.map(slug => cases[slug])}
+                readerIsEditor={readerIsEditor}
+              />
+            )}
         </CatalogSection>
       </Main>,
     ]
@@ -120,38 +117,25 @@ const NoSearchResults = injectIntl(({ intl }) => (
     className="pt-dark"
     title={intl.formatMessage({
       id: 'search.noResults',
-      defaultMessage: 'No search results',
     })}
     description={
       <span>
-        <FormattedMessage
-          id="search.didntMatch"
-          defaultMessage="Your search didn’t match any cases."
-        />
+        <FormattedMessage id="search.didntMatch" />
         <br />
-        <FormattedMessage
-          id="search.tryAgain"
-          defaultMessage="Try searching for something else."
-        />
+        <FormattedMessage id="search.tryAgain" />
       </span>
     }
     visual="search"
     action={
       <div style={{ textAlign: 'center' }}>
         <p>
-          <FormattedMessage
-            id="search.proposeACase"
-            defaultMessage="If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability."
-          />
+          <FormattedMessage id="search.proposeACase" />
         </p>
         <a
           className="pt-button pt-intent-primary pt-icon-annotation"
           href="http://www.teachmsc.org/action/make/proposal"
         >
-          <FormattedMessage
-            id="catalog.proposeACase"
-            defaultMessage="Propose a case"
-          />
+          <FormattedMessage id="catalog.proposeACase" />
         </a>
       </div>
     }

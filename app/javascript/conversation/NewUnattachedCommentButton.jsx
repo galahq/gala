@@ -26,10 +26,7 @@ const NewUnattachedCommentButton = ({
   history,
 }: Props) => (
   <NewUnattachedButtonContainer>
-    <FormattedMessage
-      id="conversation.joinConversation"
-      defaultMessage="Join the conversation"
-    />
+    <FormattedMessage id="comments.index.joinTheConversation" />
     <button
       className="pt-button pt-intent-primary pt-icon-edit"
       onClick={() =>
@@ -38,10 +35,7 @@ const NewUnattachedCommentButton = ({
         )
       }
     >
-      <FormattedMessage
-        id="comments.writeNew"
-        defaultMessage="Write a new response"
-      />
+      <FormattedMessage id="comments.new.writeNew" />
     </button>
   </NewUnattachedButtonContainer>
 )

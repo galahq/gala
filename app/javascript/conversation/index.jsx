@@ -29,8 +29,7 @@ const Conversation = ({ commentable, kicker, intl, reader }) =>
   ) : (
     <DocumentTitle
       title={`${intl.formatMessage({
-        id: 'conversation',
-        defaultMessage: 'Conversation',
+        id: 'comments.index.conversation',
       })} — ${kicker} — Gala`}
     >
       <Container>

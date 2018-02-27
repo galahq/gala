@@ -82,13 +82,7 @@ class EdgenoteLibrary extends React.Component<Props> {
       >
         <div className="pt-dialog-body">
           <div className="pt-callout pt-intent-success pt-icon-help">
-            <FormattedMessage
-              id="edgenotes.reattachInstructions"
-              defaultMessage="The Edgenotes that belong to this case but that
-              are not attached to any card are listed below. They can be
-              reattached or deleted if they are no longer needed. Or, you can
-              create a brand new Edgenote and deal with these later."
-            />
+            <FormattedMessage id="edgenotes.index.reattachInstructions" />
           </div>
 
           <Table>
@@ -110,18 +104,14 @@ class EdgenoteLibrary extends React.Component<Props> {
           <div className="pt-dialog-footer-actions">
             <Button
               text={intl.formatMessage({
-                id: 'cancel',
-                defaultMessage: 'Cancel',
+                id: 'helpers.cancel',
               })}
               onClick={onCancel}
             />
             <Button
               iconName="add"
               intent={Intent.SUCCESS}
-              text={intl.formatMessage({
-                id: 'edgenotes.new',
-                defaultMessage: 'New Edgenote',
-              })}
+              text={intl.formatMessage({ id: 'edgenotes.new.new_edgenote' })}
               onClick={() => createEdgenote().then(onSelectEdgenote)}
             />
           </div>
@@ -169,10 +159,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
     <tr>
       <td>
         <Button
-          aria-label={intl.formatMessage({
-            id: 'edgenotes.attach',
-            defaultMessage: 'Attach this Edgenote.',
-          })}
+          aria-label={intl.formatMessage({ id: 'edgenotes.index.attach' })}
           className="pt-minimal pt-small"
           iconName="add"
           intent={Intent.SUCCESS}
@@ -182,10 +169,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
 
       <Td>
         <Icon
-          aria-label={intl.formatMessage({
-            id: 'edgenotes.caption',
-            defaultMessage: 'Caption: ',
-          })}
+          aria-label={intl.formatMessage({ id: 'edgenotes.edgenote.caption' })}
           iconName="tag"
         />{' '}
         {edgenote.caption || '—'}
@@ -197,10 +181,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
 
       <td>
         <Button
-          aria-label={intl.formatMessage({
-            id: 'edgenotes.delete',
-            defaultMessage: 'Delete this Edgenote.',
-          })}
+          aria-label={intl.formatMessage({ id: 'edgenotes.destroy.delete' })}
           className="pt-minimal pt-small"
           iconName="trash"
           intent={Intent.DANGER}
@@ -219,8 +200,7 @@ const YoutubeSlug = ({ edgenote, intl }) => (
   <Td>
     <Icon
       aria-label={intl.formatMessage({
-        id: 'edgenotes.videoSlug',
-        defaultMessage: 'YouTube video slug:',
+        id: 'edgenotes.edgenote.videoSlug',
       })}
       iconName="video"
     />
@@ -233,10 +213,7 @@ const YoutubeSlug = ({ edgenote, intl }) => (
 const PullQuote = ({ edgenote, intl }) => (
   <Td>
     <Icon
-      aria-label={intl.formatMessage({
-        id: 'edgenotes.pullQuote',
-        defaultMessage: 'Quotation: ',
-      })}
+      aria-label={intl.formatMessage({ id: 'edgenotes.pullQuote' })}
       iconName="citation"
     />
     {edgenote.pullQuote}
@@ -247,10 +224,7 @@ const HasAudio = ({ edgenote, intl }) => (
   <Td>
     {edgenote.audioUrl ? (
       <Icon
-        aria-label={intl.formatMessage({
-          id: 'edgenotes.hasAudio',
-          defaultMessage: 'This edgenote has an audio clip.',
-        })}
+        aria-label={intl.formatMessage({ id: 'edgenotes.hasAudio' })}
         iconName="volume-up"
       />
     ) : null}
@@ -265,7 +239,7 @@ const Img = styled.img`
 
 const Image = ({ edgenote }) => (
   <Td>
-    <Img src={edgenote.imageUrl} />
+    <Img src={edgenote.imageUrl} role="presentation" />
   </Td>
 )
 

@@ -52,10 +52,7 @@ class Home extends React.Component<{
         />
         <MapView
           cases={values(cases).filter(x => !!x.publishedAt)}
-          title={{
-            id: 'catalog.locations',
-            defaultMessage: 'Site locations',
-          }}
+          title={{ id: 'cases.index.locations' }}
           startingViewport={{
             latitude: 17.770231041567445,
             longitude: 16.286555860170893,
@@ -64,10 +61,7 @@ class Home extends React.Component<{
         />
         <CatalogSection>
           <SectionTitle>
-            <FormattedMessage
-              id="catalog.allCases"
-              defaultMessage="All cases"
-            />
+            <FormattedMessage id="cases.index.allCases" />
           </SectionTitle>
           <CaseList
             readerIsEditor={readerIsEditor}

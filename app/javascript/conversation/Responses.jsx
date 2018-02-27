@@ -71,8 +71,7 @@ const Responses = ({
                   {readerCanDeleteComments && (
                     <DeleteButton
                       aria-label={intl.formatMessage({
-                        id: 'comments.deleteComment',
-                        defaultMessage: 'Delete comment',
+                        id: 'comments.destroy.deleteComment',
                       })}
                       onClick={() => deleteComment(comment.id)}
                     />

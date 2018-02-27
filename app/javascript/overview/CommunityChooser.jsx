@@ -75,17 +75,11 @@ export const UnconnectedCommunityChooser = injectIntl(
               <CommunityMenu>
                 <li className="pt-menu-header">
                   <h6>
-                    <FormattedMessage
-                      id="community.choose"
-                      defaultMessage="Choose a community"
-                    />
+                    <FormattedMessage id="communities.index.choose_a_community" />
                   </h6>
                 </li>
                 <Instructions>
-                  <FormattedMessage
-                    id="community.instructions"
-                    defaultMessage="You’ll see the discussion taking place in the community you choose."
-                  />
+                  <FormattedMessage id="communities.index.instructions" />
                 </Instructions>
                 {(communities || []).map(c => (
                   <MenuItem
@@ -112,9 +106,7 @@ export const UnconnectedCommunityChooser = injectIntl(
               <Tooltip
                 isDisabled={activeCommunityPresent}
                 content={intl.formatMessage({
-                  id: 'community.notDiscussing',
-                  defaultMessage:
-                    'Your active community is not discussing this case',
+                  id: 'communities.index.notDiscussing',
                 })}
                 intent={Intent.DANGER}
                 position={rounded ? Position.TOP_LEFT : Position.TOP}

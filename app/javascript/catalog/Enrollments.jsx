@@ -38,22 +38,13 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
       <div>
         <CaseRow baseline>
           <SidebarSectionTitle>
-            <FormattedMessage
-              id="catalog.enrolledCases"
-              defaultMessage="Enrolled cases"
-            />
+            <FormattedMessage id="enrollments.index.enrolledCases" />
           </SidebarSectionTitle>
           <SidebarButton
             aria-label={
               editing
-                ? intl.formatMessage({
-                  id: 'finishEditing',
-                  defaultMessage: 'Finish editing',
-                })
-                : intl.formatMessage({
-                  id: 'catalog.editEnrolled',
-                  defaultMessage: 'Edit enrolled cases',
-                })
+                ? intl.formatMessage({ id: 'enrollments.index.finishEditing' })
+                : intl.formatMessage({ id: 'enrollments.index.editEnrolled' })
             }
             iconName={editing ? 'tick' : 'cog'}
             onClick={this.handleToggleEditing}
@@ -73,8 +64,7 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
                         <SidebarButton
                           intent={Intent.DANGER}
                           aria-label={intl.formatMessage({
-                            id: 'catalog.unenroll',
-                            defaultMessage: 'Unenroll from this case',
+                            id: 'enrollments.destroy.unenroll',
                           })}
                           iconName="cross"
                           onClick={() =>

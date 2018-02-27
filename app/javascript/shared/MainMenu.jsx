@@ -34,34 +34,24 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
         content={
           <Menu>
             <MenuItem
-              text={formatMessage({
-                id: 'menu.myAccount',
-                defaultMessage: 'My account',
-              })}
+              text={formatMessage({ id: 'readers.form.myAccount' })}
               iconName="user"
               href="/profile/edit"
             />
             <MenuItem
-              text={formatMessage({
-                id: 'menu.signOut',
-                defaultMessage: 'Sign out',
-              })}
+              text={formatMessage({ id: 'devise.sessions.destroy.signOut' })}
               iconName="log-out"
               href="#"
               onClick={_ =>
                 Orchard.prune('readers/sign_out').then(
                   () => (window.location = '/')
-                )}
+                )
+              }
             />
           </Menu>
         }
       >
-        <Row
-          aria-label={formatMessage({
-            id: 'menu.accountOptions',
-            defaultMessage: 'Account options',
-          })}
-        >
+        <Row aria-label={formatMessage({ id: 'readers.form.accountOptions' })}>
           <Identicon reader={reader} />
           <CaretDown />
         </Row>
@@ -70,7 +60,7 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
       <AnchorButton
         className="pt-minimal"
         iconName="log-in"
-        text={formatMessage({ id: 'menu.signIn', defaultMessage: 'Sign in' })}
+        text={formatMessage({ id: 'devise.sessions.new.signIn' })}
         href="/readers/sign_in"
       />
     )
