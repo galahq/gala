@@ -87,18 +87,18 @@ zh-CN:
   cases:
     edit:
       change_cover_image: Change cover image
-      edit: Edit this case
-      feature_case: Feature this case
-      just_change_the_text: To edit this case, just change the text
-      options: Options
-      publish_case: Publish this case
-      save: Save
-      stop_editing: Stop editing this case
-      unfeature_case: Remove from featured cases
-      unpublish_case: Unpublish this case
+      edit: 编辑该案例
+      feature_case: 将此案例设置为明星案例
+      just_change_the_text: 点击案例，开始编辑。
+      options: 选项
+      publish_case: 发表该案例
+      save: 保存
+      stop_editing: 停止编辑该案例
+      unfeature_case: 取消设置此案例为明星案例
+      unpublish_case: 取消发表该案例
     index:
-      all_cases: All cases
-      locations: Site locations
+      all_cases: 全部案例
+      locations: 案例地点
     settings:
       edit:
         changing_url_leaves_your_old_url_available_for_anyone_else: |
@@ -130,11 +130,11 @@ zh-CN:
     join_conversation: |
       Join the conversation by asking questions
       and paying your learning forward.
-    learn_more: Learn more
+    learn_more: 了解更多
     meet_stakeholders: |
-      Meet different stakeholders and dive deep with a multimodal narrative.
-    propose_a_case: Propose a case
-    shortcut_experience: Apply principles to improve practice.
+      在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
+    propose_a_case: 案例征集
+    shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
@@ -152,28 +152,27 @@ zh-CN:
       conversation: Conversation
       join_the_conversation: Join the conversation
       n_responses:
-        js: "{count, number} {count, plural, one {response} other {responses}}"
-        other: "%{count} responses"
+        js: "{count, number}条回复"
+        other: "%{count}条回复"
       no_comments: No comments
       nobody_has_left_a_comment: |
         Nobody in the {communityName} discussion group has left a comment on
         this case. Switch to a different discussion group or be the first to
         leave a comment.
     new:
-      respond: Respond
-      respond_here: Respond here
-      select: Select a few words
+      respond: 参与讨论
+      respond_here: 回应
+      select: 选择想要发起讨论的词句
       selection_not_unique: |
-        The words you have selected appear more than once.
-        Please select a few more words.
-      write: Write a reply...
-      write_new: Write a new response
+        你所选择的词句已存在相关话题，请多选几个词。
+      write: 发表回复
+      write_new: 发起新话题
   communities:
     index:
-      choose_a_community: Choose a community
+      choose_a_community: 选择讨论小组
       instructions: |
-        You’ll see the discussion taking place in the community you choose.
-      not_discussing: Your active community is not discussing this case
+        加入讨论小组后，你将能够看到该讨论版中的所有对话。
+      not_discussing: 你的讨论小组还没有对该案例展开讨论。
   date:
     abbr_day_names:
       - 周日
@@ -262,14 +261,14 @@ zh-CN:
   devise:
     sessions:
       destroy:
-        sign_out: Sign out
+        sign_out: 退出登陆
       new:
-        sign_in: Sign in
+        sign_in: 登陆
     shared:
       links:
         sign_up_for_a_free_account: 注册免费账户
       minimum_password_length:
-        other: (%{count} characters minimum)
+        other: '（最少%{count}个字符）'
   edgenotes:
     destroy:
       delete: Delete this Edgenote.
@@ -291,17 +290,16 @@ zh-CN:
       new_edgenote: New Edgenote
   enrollments:
     destroy:
-      are_you_sure: Are you sure you want to unenroll in this case?
-      unenroll: Unenroll from this case
+      are_you_sure: 你确定要退出这个案例的学习吗？
+      unenroll: 退出该案例的学习
       you_will_need_another_invitation: |
-        Because this case is not published, you will need
-        another invitation to reenroll.
+        这个案例还未公开发表，你将需要另一封邀请函来重新加入此案例的学习。
     index:
-      edit_enrolled: Edit enrolled cases
-      enrolled_cases: Enrolled cases
-      finish_editing: Finish editing
+      edit_enrolled: 编辑我的案例
+      enrolled_cases: 加入案例学习
+      finish_editing: 结束编辑
     new:
-      enroll: Enroll
+      enroll: 参与学习
       enroll_for_easy_access: |
         If this case catches your eye, enroll for easy access.
       enroll_in_this_case: Enroll in this case
@@ -392,7 +390,7 @@ zh-CN:
       confirm_delete: |
         Are you sure you wish to delete this case? This action cannot be undone.
       delete_case: Delete case.
-      edit_case: Edit case.
+      edit_case: 编辑该案例
       edit_case_settings: Edit case settings.
       featured: ':activerecord.attributes.case.featured'
       my_cases: My Cases
@@ -440,7 +438,7 @@ zh-CN:
         format: "%n %u"
         units:
           byte:
-            other: Bytes
+            other: Byte
           gb: GB
           kb: KB
           mb: MB
@@ -455,13 +453,13 @@ zh-CN:
   podcasts:
     show:
       with_host:
-        js: "with {count, plural, one {host} other {hosts}}"
-        other: with hosts
+        js: "主持人"
+        other: 主持人
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
     form:
-      account_options: Account options
+      account_options: 账户选项
       choose_an_image: Choose a profile image
       create_a_password: 设置密码
       my_account: 我的用户
