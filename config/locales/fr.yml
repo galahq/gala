@@ -152,7 +152,7 @@ fr:
       conversation: Conversation
       join_the_conversation: Rejoignez la conversation
       n_responses:
-        js: "{count, number} {count, plural, one {réponse} other {résponses}}"
+        js: "{count, number} {count, plural, one {réponse} other {réponses}}"
         one: 1 response
         other: "%{count} responses"
       no_comments: Aucune réponse
@@ -312,7 +312,7 @@ fr:
       enrolled_cases: Études de cas inscrites
       finish_editing: Terminez l’édition
     new:
-      enroll: Inscriver
+      enroll: Inscrire
       enroll_for_easy_access: |
         Si cette étude de cas attire votre attention, inscrivez-vous pour un accès facile.
       enroll_in_this_case: Inscrivez-vous dans cette étude de cas
@@ -371,7 +371,7 @@ fr:
       add_citation_entity: "Ajoutez une référence ici."
       add_edgenote_entity: "Ajouter une Edgenote à la sélection."
       blockquote: "Style du paragraphe : Citation."
-      bold: "Style intraligne : texte en gras."
+      bold: "Style intraligne : Texte en gras."
       code: "Style intraligne : Code."
       header: "Style du paragraphe: Titre."
       italic: "Style intraligne : texte en italique."
@@ -392,7 +392,7 @@ fr:
     submit:
       create: Créer un(e) %{model}
       save: Save %{model}
-      submit: Enregistrer ce(tte) %{model}
+      submit: Soumettre
       update: Modifier ce(tte) %{model}
   layouts:
     mailer:
