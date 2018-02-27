@@ -1,14 +1,14 @@
 ja:
-  __name: English
+  __name: 日本語
   activerecord:
     attributes:
       case:
-        acknowledgements: Acknowledgements
-        featured: Featured
+        acknowledgements: 謝辞
+        featured: 注目
         kicker: Short title
-        learning_objectives: Learning objectives
+        learning_objectives: 学習目標
         library: Library
-        location: Case location
+        location: 場所
         slug: Case URL
         title: Question
         translators:
@@ -494,7 +494,7 @@ ja:
       words_connector: "と"
     languages:
       am: Amharic
-      en: English
+      en: 日本語
       fr: French
       ja: Japanese
       zh-CN: Mandarin (Simplified)
