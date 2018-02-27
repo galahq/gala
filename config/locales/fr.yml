@@ -9,7 +9,7 @@ fr:
         learning_objectives: Objectifs pédagogiques
         library: Collection
         location: Emplacement de l’étude de cas
-        slug: URL de l’etude de cas
+        slug: URL de l’étude de cas
         title: Question
         translators:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
@@ -83,7 +83,7 @@ fr:
         updated: "%{model} a été mis à jour avec succès."
   activities:
     show:
-      download: Téléchargez
+      download: Télécharger
       instructions: Instructions
   cases:
     edit:
