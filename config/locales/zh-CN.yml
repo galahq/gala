@@ -115,21 +115,20 @@ zh-CN:
           zoom_in: Zoom in
           zoom_out: Zoom out
     show:
-      back_to_overview: Overview
-      end: End
-      forthcoming: Forthcoming
-      next: "Next: "
-      not_yet_published: This case is not yet published
-      other_languages: "This case is also available in these languages: "
-      toc: Table of Contents
+      back_to_overview: 返回案例主页
+      end: 终
+      forthcoming: 案例开发中
+      next: "下一页："
+      not_yet_published: 案例未发表
+      other_languages: "此案例还有以下不同语言的版本："
+      toc: 目录
   catalog:
-    catalog: Catalog
-    choose_for_yourself: Choose for yourself
+    catalog: 案例目录
+    choose_for_yourself: 我的学习我做主
     enrollments_instruction: |
-      Cases you enroll in will be presented here for easy access.
+      选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     join_conversation: |
-      Join the conversation by asking questions
-      and paying your learning forward.
+      参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
     learn_more: 了解更多
     meet_stakeholders: |
       在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
@@ -301,8 +300,8 @@ zh-CN:
     new:
       enroll: 参与学习
       enroll_for_easy_access: |
-        If this case catches your eye, enroll for easy access.
-      enroll_in_this_case: Enroll in this case
+        如果你喜欢这个案例，就参与到该案例的学习中吧。加入之后，首页上“我的案例”处将会出现链接到该案例的快捷方式。
+      enroll_in_this_case: 加入此案例的学习
   errors:
     format: "%{attribute}%{message}"
     messages:
@@ -343,12 +342,12 @@ zh-CN:
         other: "有 %{count} 个错误发生导致「%{model}」无法被保存。"
   features:
     index:
-      featured_cases: Featured cases
+      featured_cases: 明星案例
   forms:
-    required: required
+    required: 必需
   helpers:
-    cancel: Cancel
-    close: Close
+    cancel: 取消
+    close: 关闭
     formatting:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
@@ -360,15 +359,15 @@ zh-CN:
       ol: "Block style: Ordered list item."
       ul: "Block style: Unordered list item."
     less:
-      read_more: Read more
+      read_more: 阅读更多
     list:
-      end: ', and '
-      middle: ', '
-      start: ', '
-      two: ' and '
+      end: '和'
+      middle: '、'
+      start: '、'
+      two: '、'
     page_entries_info:
       more_pages:
-        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
+        display_entries: "显示 %{entry_name} <b>%{first} - %{last}</b>　共<b>%{total}</b>"
     select:
       prompt: 请选择
     submit:
@@ -470,28 +469,26 @@ zh-CN:
         你现在可以通过设置密码来用于下次登陆，或者继续使用
         %{provider}进行登陆。
   search:
-    didnt_match: Your search didn’t match any cases.
-    keyword_query: Keyword query
-    no_results: No search results
+    didnt_match: 抱歉，没有找到你所搜索的案例。
+    keyword_query: 关键词查询
+    no_results: 没有可显示的搜索结果
     propose_a_case: |
-      If you have a case (or a good idea for one) that you’d like to see on
-      Gala, reach out to us. Together we can make the most complete resource for
-      teaching about environment and sustainability.,
-    refine: Refine search
-    results: Search results
-    search: Search
-    search_cases: Search cases
-    try_again: Try searching for something else.
+      或者，如果你有希望收入到Gala的案例，或关于案例的设想，请与我们联系。让我们一起为环境和可持续发展领域提供更多更有效的学习资源。
+    refine: 细化搜索
+    results: 搜索结果
+    search: 搜索
+    search_cases: 案例搜索
+    try_again: 请试试输入其他关键词。
   support:
     array:
       last_word_connector: "和"
       two_words_connector: "和"
       words_connector: "、"
     languages:
-      am: Amharic
+      am: 阿姆哈拉文
       en: 中文（简体)
-      fr: French
-      ja: Japanese
+      fr: 法文
+      ja: 日文
       zh-CN: Mandarin (Simplified)
       zh-TW: Mandarin (Traditional)
   time:
