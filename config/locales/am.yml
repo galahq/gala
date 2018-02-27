@@ -1,5 +1,5 @@
 am:
-  __name: English
+  __name: አማርኛ
   activerecord:
     attributes:
       case:
@@ -9,8 +9,8 @@ am:
         learning_objectives: Learning objectives
         library: Library
         location: Case location
-        slug: የቅጠል ትል
-        title: ርዕስ
+        slug: Case URL
+        title: Question
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
           one: Translator
@@ -25,22 +25,22 @@ am:
         confirmed_at: Confirmed at
         created_at: Created at
         current_password: Current password
-        current_sign_in_at: በ ውስጥ የአሁኑ ምልክት
-        current_sign_in_ip: ፒ ውስጥ የአሁኑ ምልክት
-        email: ኢሜይል
-        encrypted_password: የተመሰጠረ የይለፍ ቃል
+        current_sign_in_at: Current sign in at
+        current_sign_in_ip: Current sign in IP
+        email: Email
+        encrypted_password: Encrypted password
         failed_attempts: Failed attempts
-        initials: ፊርማዎች
-        last_sign_in_at: በ ውስጥ የመጨረሻው ምልክት
-        last_sign_in_ip: ፒ ውስጥ የመጨረሻው ምልክት
+        initials: Initials
+        last_sign_in_at: Last sign in at
+        last_sign_in_ip: Last sign in IP
         locked_at: Locked at
-        name: ስም
+        name: Full Name
         password: Password
         password_confirmation: Password confirmation
-        remember_created_at: ላይ የተፈጠረ አትዘንጋ
+        remember_created_at: Remember created at
         remember_me: Remember me
-        reset_password_sent_at: ይላካል የይለፍ ቃል ዳግም አስጀምር
-        reset_password_token: የይለፍ ቃል ዳግም ማስመሰያ
+        reset_password_sent_at: Reset password sent at
+        reset_password_token: Reset password token
         send_reply_notifications: Notify me when someone replies to a comment I wrote
         sign_in_count: Sign in count
         unconfirmed_email: Unconfirmed email
@@ -61,20 +61,20 @@ am:
             correct_answer:
               inclusion: "is not included in the list of possible answers"
     models:
-      activity: ሥራ
-      case: ክስ
+      activity: Activity
+      case: Case
       cases:
         setting: Case Settings
-      comment: አስተያየት
-      comment_thread: የአስተያየት ክር
+      comment: Comment
+      comment_thread: Comment thread
       edgenote: Edgenote
-      enrollment: ምዝገባ
+      enrollment: Enrollment
       global_community: Global Community
-      group: ቡድን
-      group_membership: የቡድን አባልነት
-      page: ገጽ
-      podcast: ፖድካስት
-      reader: አንባቢ
+      group: Group
+      group_membership: Group Membership
+      page: Page
+      podcast: Podcast
+      reader: Reader
       shared_cases_library: Shared Cases
     persistance:
       messages:
@@ -323,9 +323,9 @@ am:
     format: "%{attribute} %{message}"
     messages:
       accepted: must be accepted
-      blank: can't be blank
-      confirmation: doesn't match %{attribute}
-      empty: can't be empty
+      blank: can’t be blank
+      confirmation: doesn’t match %{attribute}
+      empty: can’t be empty
       equal_to: must be equal to %{count}
       even: must be even
       exclusion: is reserved
@@ -360,8 +360,8 @@ am:
     template:
       body: 'There were problems with the following fields:'
       header:
-        one: 1 error prohibited this %{model} from being saved
-        other: "%{count} errors prohibited this %{model} from being saved"
+        one: 1 error prevented this %{model} from being saved
+        other: "%{count} errors prevented this %{model} from being saved"
   features:
     index:
       featured_cases: Featured cases
@@ -395,7 +395,7 @@ am:
     submit:
       create: Create %{model}
       save: Save %{model}
-      submit: Save %{model}
+      submit: Submit
       update: Update %{model}
   layouts:
     mailer:
@@ -506,12 +506,12 @@ am:
     try_again: Try searching for something else.
   support:
     array:
-      last_word_connector: ", እና "
-      two_words_connector: " እና "
+      last_word_connector: ", and "
+      two_words_connector: " and "
       words_connector: ", "
     languages:
       am: Amharic
-      en: English
+      en: አማርኛ
       fr: French
       ja: Japanese
       zh-CN: Mandarin (Simplified)
