@@ -99,14 +99,14 @@ fr:
       unpublish_case: Annuler la publication de cette étude de cas
     index:
       all_cases: Toutes les études de cas
-      locations: Site locations
+      locations: Emplacements des sites
     settings:
       edit:
         changing_url_leaves_your_old_url_available_for_anyone_else: |
           If you change your case’s URL, your old URL will redirect to your new
           one. However, if someone else takes your old URL, the redirect will be
           overridden.
-        edit_case_settings: Edit Case Settings
+        edit_case_settings: Modifier les Paramètres de l’Étude de Cas
         lowercase_letters_and_numbers_separated_by_hyphens_html: |
           <b>Format:</b> lowercase letters and numbers separated by
           hyphens,<br />100 characters maximum
@@ -116,31 +116,30 @@ fr:
           zoom_in: Zoom in
           zoom_out: Zoom out
     show:
-      back_to_overview: Overview
-      end: End
-      forthcoming: Forthcoming
-      next: "Next: "
-      not_yet_published: This case is not yet published
-      other_languages: "This case is also available in these languages: "
-      toc: Table of Contents
+      back_to_overview: Retour au résumé
+      end: Fin
+      forthcoming: À venir
+      next: "Suite: "
+      not_yet_published: Celle étude de cas n’a pas été publiée
+      other_languages: "Cette étude de cas est aussi disponible dans les langues suivantes : "
+      toc: Table des Matières
   catalog:
-    catalog: Catalog
-    choose_for_yourself: Choose for yourself
+    catalog: Catalogue
+    choose_for_yourself: Faites votre choix
     edit_enrolled: Edit enrolled cases
     enrolled_cases: Enrolled cases
     enrollments_instruction: |
-      Cases you enroll in will be presented here for easy access.
+      Les études de cas dans lesquels vous vous inscriverez seront affichée ici pour un accès rapide.
     join_conversation: |
-      Join the conversation by asking questions
-      and paying your learning forward.
-    learn_more: Learn more
+      Rentrez dans les debats, interrogez, propagez et partagez la savoir.
+    learn_more: En savoir plus
     meet_stakeholders: |
-      Meet different stakeholders and dive deep with a multimodal narrative.
-    propose_a_case: Propose a case
-    shortcut_experience: Apply principles to improve practice.
+      Rencontrez des parties prenantes et plongez dans un récit multimodal.
+    propose_a_case: Proposez une étude de cas
+    shortcut_experience: Appliquez les principes pour améliorer la pratique.
   comment_threads:
     destroy:
-      delete_comment_thread: Delete comment thread
+      delete_comment_thread: Supprimer le fil de commentaire
     new:
       new_comment_thread: New comment thread...
     show:
