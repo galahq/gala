@@ -5,9 +5,9 @@ ja:
       case:
         acknowledgements: 謝辞
         featured: 注目
-        kicker: Short title
+        kicker: 短いタイトル
         learning_objectives: 学習目標
-        library: Library
+        library: ライブラリ
         location: 場所
         slug: 事例研究のURL
         title: 質問
@@ -378,18 +378,17 @@ ja:
       prompt: 選択してください
     submit:
       create: 登録する
-      save: Save %{model}
+      save: '%{model} を保存します'
       submit: 保存する
       update: 更新する
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
         html: |
-          You are receiving this email because you are a user of <a
-          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+          このメールを受け取る理由は<a
+          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>のユーザーです。
         text: |
-          You are receiving this email because you are a user of Gala
-          (https://www.learngala.com).
+          このメールを受け取る理由はGala（https://www.learngala.com）のユーザーです。
   my_cases:
     index:
       confirm_delete: |
