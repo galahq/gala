@@ -92,14 +92,14 @@ es:
       feature_case: Agregar caso destacado
       just_change_the_text: Para editar este caso, simplemente cambie el texto
       options: Opciones
-      publish_case: Publish this case
-      save: Save
-      stop_editing: Stop editing this case
-      unfeature_case: Remove from featured cases
-      unpublish_case: Unpublish this case
+      publish_case: Publicar este caso
+      save: Guardar
+      stop_editing: Dejar de editar este caso
+      unfeature_case: Quitar de casos destacados
+      unpublish_case: Annular la publicacion
     index:
-      all_cases: All cases
-      locations: Site locations
+      all_cases: Todos los casos
+      locations: Ubicaciones
     settings:
       edit:
         changing_url_leaves_your_old_url_available_for_anyone_else: |
@@ -116,26 +116,25 @@ es:
           zoom_in: Zoom in
           zoom_out: Zoom out
     show:
-      back_to_overview: Overview
-      end: End
-      forthcoming: Forthcoming
-      next: "Next: "
-      not_yet_published: This case is not yet published
-      other_languages: "This case is also available in these languages: "
-      toc: Table of Contents
+      back_to_overview: Resumen
+      end: Fin
+      forthcoming: A venir
+      next: "Próximo: "
+      not_yet_published: Este caso aún no ha sido publicado
+      other_languages: "Este caso también está disponible en los siguientes idiomas: "
+      toc: Tabla de Contenido
   catalog:
-    catalog: Catalog
-    choose_for_yourself: Choose for yourself
+    catalog: Catálogo
+    choose_for_yourself: Tú vas a elegir
     enrollments_instruction: |
-      Cases you enroll in will be presented here for easy access.
+      Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     join_conversation: |
-      Join the conversation by asking questions
-      and paying your learning forward.
-    learn_more: Learn more
+      Súmete a la conversación, preguntá, y compartí tu conomiciento.
+    learn_more: Más información
     meet_stakeholders: |
-      Meet different stakeholders and dive deep with a multimodal narrative.
-    propose_a_case: Propose a case
-    shortcut_experience: Apply principles to improve practice.
+      Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
+    propose_a_case: Proponer un estudio de caso
+    shortcut_experience: Aplicar principios para mejorar en la práctica.
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
@@ -153,29 +152,28 @@ es:
       conversation: Conversation
       join_the_conversation: Join the conversation
       n_responses:
-        js: "{count, number} {count, plural, one {response} other {responses}}"
-        one: 1 response
-        other: "%{count} responses"
+        js: "{count, number} {count, plural, one {comentario} other {comentarios}}"
+        one: 1 comentario
+        other: "%{count} comentarios"
       no_comments: No comments
       nobody_has_left_a_comment: |
         Nobody in the {communityName} discussion group has left a comment on
         this case. Switch to a different discussion group or be the first to
         leave a comment.
     new:
-      respond: Respond
-      respond_here: Respond here
-      select: Select a few words
+      respond: Comentar
+      respond_here: Responder aquí
+      select: Resaltar unas palabras
       selection_not_unique: |
-        The words you have selected appear more than once.
-        Please select a few more words.
-      write: Write a reply...
-      write_new: Write a new response
+        Las palabras seleccionadas aparecen más que una vez, favor ampliar su selección.
+      write: Escribir su respuesta...
+      write_new: Escribir nueva respuesta
   communities:
     index:
-      choose_a_community: Choose a community
+      choose_a_community: Escoger comunidad
       instructions: |
-        You’ll see the discussion taking place in the community you choose.
-      not_discussing: Your active community is not discussing this case
+        Verás una discusión tomando lugar en la comunidad escogida.
+      not_discussing: Tu comunidad activa no está hablando de este caso
   date:
     abbr_day_names:
       - dom
@@ -275,9 +273,9 @@ es:
   devise:
     sessions:
       destroy:
-        sign_out: Sign out
+        sign_out: Salir
       new:
-        sign_in: Sign in
+        sign_in: Iniciar sesión
     shared:
       links:
         sign_up_for_a_free_account: Regístrese para obtener una cuenta gratuita
