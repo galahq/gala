@@ -1,20 +1,20 @@
 es:
-  __name: English
+  __name: Español
   activerecord:
     attributes:
       case:
-        acknowledgements: Acknowledgements
-        featured: Featured
+        acknowledgements: Reconocimientos
+        featured: Destacado
         kicker: Short title
-        learning_objectives: Learning objectives
+        learning_objectives: Objetivos de aprendizaje
         library: Library
-        location: Case location
+        location: Ubicación del caso
         slug: Case URL
         title: Question
         translators:
-          js: "{count, plural, one {Translator} other {Translators} }: "
-          one: Translator
-          other: Translators
+          js: "{count, plural, one {Traductor(a)} other {Traductores} }: "
+          one: Traductor(a)
+          other: Traductores
       question:
         content: Content
         correct_answer: Correct answer
@@ -88,10 +88,10 @@ es:
   cases:
     edit:
       change_cover_image: Change cover image
-      edit: Edit this case
-      feature_case: Feature this case
-      just_change_the_text: To edit this case, just change the text
-      options: Options
+      edit: Editar este caso
+      feature_case: Agregar caso destacado
+      just_change_the_text: Para editar este caso, simplemente cambie el texto
+      options: Opciones
       publish_case: Publish this case
       save: Save
       stop_editing: Stop editing this case
@@ -512,7 +512,7 @@ es:
       words_connector: ", "
     languages:
       am: Amharic
-      en: English
+      en: Español
       fr: French
       ja: Japanese
       zh-CN: Mandarin (Simplified)
