@@ -13,7 +13,7 @@ ja:
         title: 質問
         translators:
           js: "翻訳者："
-          other: Translators
+          other: 翻訳者
       question:
         content: 内容
         correct_answer: 正解
@@ -149,28 +149,27 @@ ja:
       conversation: 会話
       join_the_conversation: 会話に参加します
       n_responses:
-        js: "{count, number} {count, plural, one {response} other {responses}}"
-        other: "%{count} responses"
-      no_comments: No comments
+        js: "{count, number}件の返事"
+        other: "%{count}件の返事"
+      no_comments: コメントがありません
       nobody_has_left_a_comment: |
         Nobody in the {communityName} discussion group has left a comment on
         this case. Switch to a different discussion group or be the first to
         leave a comment.
     new:
-      respond: Respond
-      respond_here: Respond here
-      select: Select a few words
+      respond: 対応
+      respond_here: こちらに返信を書く
+      select: 数語を選択
       selection_not_unique: |
-        The words you have selected appear more than once.
-        Please select a few more words.
-      write: Write a reply...
-      write_new: Write a new response
+        選択された言葉が複数回表示されます。さらにいくつかの文字を選択してください。
+      write: 返事を書いてください
+      write_new: 新しい返信を書く
   communities:
     index:
-      choose_a_community: Choose a community
+      choose_a_community: コミュニティを選択
       instructions: |
-        You’ll see the discussion taking place in the community you choose.
-      not_discussing: Your active community is not discussing this case
+        選択したコミュニティの議論が見えます。
+      not_discussing: あなたのアクティブなコミュニティはこの事例研究について議論していません
   date:
     abbr_day_names:
       - 日
@@ -483,12 +482,12 @@ ja:
       two_words_connector: "と"
       words_connector: "と"
     languages:
-      am: Amharic
+      am: アムハラ語
       en: 日本語
-      fr: French
-      ja: Japanese
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
+      fr: フランス語
+      ja: 日本語
+      zh-CN: 中国語 (簡体字)
+      zh-TW: 中国語 (繁体字)
   time:
     am: 午前
     formats:
