@@ -78,35 +78,35 @@ ja:
       shared_cases_library: 共有の事例研究
     persistance:
       messages:
-        created: "%{model}は登録されました"
-        destroyed: "%{model} successfully deleted."
-        updated: "%{model} successfully updated."
+        created: "%{model}が正常に作成されました。"
+        destroyed: "%{model}が正常に削除されました。"
+        updated: "%{model}が正常に便新されました。"
   activities:
     show:
-      download: Download
-      instructions: Instructions
+      download: ダウンロード
+      instructions: 説明
   cases:
     edit:
-      change_cover_image: Change cover image
-      edit: Edit this case
-      feature_case: Feature this case
-      just_change_the_text: To edit this case, just change the text
+      change_cover_image: 画像を変更
+      edit: 編集
+      feature_case: 注目の事例研究に追加する
+      just_change_the_text: テキストを変化するのができる
       options: 選択肢
-      publish_case: Publish this case
-      save: Save
-      stop_editing: Stop editing this case
-      unfeature_case: Remove from featured cases
-      unpublish_case: Unpublish this case
+      publish_case: 発刊する
+      save: 保存
+      stop_editing: 編集を停止する
+      unfeature_case: 注目の事例研究から除去する
+      unpublish_case: 非公開にする
     index:
-      all_cases: All cases
-      locations: Site locations
+      all_cases: すべての事例研究
+      locations: 場所
     settings:
       edit:
         changing_url_leaves_your_old_url_available_for_anyone_else: |
           If you change your case’s URL, your old URL will redirect to your new
           one. However, if someone else takes your old URL, the redirect will be
           overridden.
-        edit_case_settings: Edit Case Settings
+        edit_case_settings: 事例研究の設定を編集
         lowercase_letters_and_numbers_separated_by_hyphens_html: |
           <b>Format:</b> lowercase letters and numbers separated by
           hyphens,<br />100 characters maximum
