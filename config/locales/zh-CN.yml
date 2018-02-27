@@ -7,7 +7,7 @@ zh-CN:
         featured: Featured
         kicker: Short title
         learning_objectives: Learning objectives
-        library: ':activerecord.models.library'
+        library: Library
         location: Case location
         slug: Case URL
         title: Question
