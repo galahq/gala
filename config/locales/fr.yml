@@ -13,8 +13,8 @@ fr:
         title: Question
         translators:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
-          many: Traducteurs(-rices)
-          one: Traducteur(-rice)
+          one: Translator
+          other: Translators
       question:
         content: Contenu
         correct_answer: Bonne réponse
@@ -126,8 +126,6 @@ fr:
   catalog:
     catalog: Catalogue
     choose_for_yourself: Faites votre choix
-    edit_enrolled: Edit enrolled cases
-    enrolled_cases: Enrolled cases
     enrollments_instruction: |
       Les études de cas dans lesquels vous vous inscriverez seront affichée ici pour un accès rapide.
     join_conversation: |
@@ -155,8 +153,8 @@ fr:
       join_the_conversation: Rejoignez la conversation
       n_responses:
         js: "{count, number} {count, plural, one {réponse} other {résponses}}"
-        many: "%{count} responses"
-        one: 1 réponse
+        one: 1 response
+        other: "%{count} responses"
       no_comments: Aucune réponse
       nobody_has_left_a_comment: |
         Nobody in the {communityName} discussion group has left a comment on
@@ -475,8 +473,8 @@ fr:
     show:
       with_host:
         js: "with {count, plural, one {host} other {hosts}}"
-        many: with hosts
         one: with host
+        other: with hosts
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
