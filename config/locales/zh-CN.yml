@@ -1,59 +1,183 @@
 zh-CN:
+  __name: English
   activerecord:
     attributes:
+      case:
+        acknowledgements: Acknowledgements
+        featured: Featured
+        kicker: Short title
+        learning_objectives: Learning objectives
+        library: ':activerecord.models.library'
+        location: Case location
+        slug: Case URL
+        title: Question
+        translators:
+          js: "{count, plural, one {Translator} other {Translators} }: "
+          many: Translators
+          one: Translator
+      question:
+        content: Content
+        correct_answer: Correct answer
+        options: Options
       reader:
-        confirmation_sent_at: "确认邮件发送自"
-        confirmation_token: "确认令牌"
-        confirmed_at: "确认于"
-        created_at: "创建于"
-        current_password: "当前密码"
-        current_sign_in_at: "最近登录于"
-        current_sign_in_ip: "最近登录 IP"
-        email: "电子邮箱"
-        encrypted_password: "密码被加密"
-        failed_attempts: "失败尝试"
-        last_sign_in_at: "最后登录于"
-        last_sign_in_ip: "最后登录的 IP"
-        locked_at: "锁定于"
-        password: "密码"
-        password_confirmation: "密码确认"
-        remember_created_at: "记住创建于"
-        remember_me: "记住登录信息"
-        reset_password_sent_at: "重置密码发送于"
-        reset_password_token: "密码重置令牌"
-        sign_in_count: "登录次数"
-        unconfirmed_email: "未确认邮件"
-        unlock_token: "帐户解锁令牌"
-        updated_at: "更新于"
+        confirmation_sent_at: 确认邮件发送自
+        confirmation_token: 确认令牌
+        confirmed_at: 确认于
+        created_at: 创建于
+        current_password: 当前密码
+        current_sign_in_at: 最近登录于
+        current_sign_in_ip: 最近登录 IP
+        email: 电子邮箱
+        encrypted_password: 密码被加密
+        failed_attempts: 失败尝试
+        initials: Initials
+        last_sign_in_at: 最后登录于
+        last_sign_in_ip: 最后登录的 IP
+        locked_at: 锁定于
+        name: Full Name
+        password: 密码
+        password_confirmation: 密码确认
+        remember_created_at: 记住创建于
+        remember_me: 记住登录信息
+        reset_password_sent_at: 重置密码发送于
+        reset_password_token: 密码重置令牌
+        send_reply_notifications: Notify me when someone replies to a comment I wrote
+        sign_in_count: 登录次数
+        unconfirmed_email: 未确认邮件
+        unlock_token: 帐户解锁令牌
+        updated_at: 更新于
+      shared_cases_library:
+        description: |
+          These cases were shared by Gala users.
     errors:
       messages:
-        record_invalid: '验证失败: %{errors}'
+        record_invalid: "验证失败: %{errors}"
         restrict_dependent_destroy:
-          has_many: '由于 %{record} 需要此记录，所以无法移除记录'
-          has_one: '由于 %{record} 需要此记录，所以无法移除记录'
+          has_many: "由于 %{record} 需要此记录，所以无法移除记录"
+          has_one: "由于 %{record} 需要此记录，所以无法移除记录"
+      models:
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "is not included in the list of possible answers"
+    models:
+      activity: Activity
+      case: Case
+      cases:
+        setting: Case Settings
+      comment: Comment
+      comment_thread: Comment thread
+      edgenote: Edgenote
+      enrollment: Enrollment
+      global_community: Global Community
+      group: Group
+      group_membership: Group Membership
+      page: Page
+      podcast: Podcast
+      reader: Reader
+      shared_cases_library: Shared Cases
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        destroyed: "%{model} successfully deleted."
+        updated: "%{model} successfully updated."
+  activities:
+    show:
+      download: Download
+      instructions: Instructions
   cases:
-    case:
-      forthcoming: 即將出版
-      translator:
-        many: 翻譯
-        one: 翻譯
+    edit:
+      change_cover_image: Change cover image
+      edit: Edit this case
+      feature_case: Feature this case
+      just_change_the_text: To edit this case, just change the text
+      options: Options
+      publish_case: Publish this case
+      save: Save
+      stop_editing: Stop editing this case
+      unfeature_case: Remove from featured cases
+      unpublish_case: Unpublish this case
+    index:
+      all_cases: All cases
+      locations: Site locations
+    settings:
+      edit:
+        changing_url_leaves_your_old_url_available_for_anyone_else: |
+          If you change your case’s URL, your old URL will redirect to your new
+          one. However, if someone else takes your old URL, the redirect will be
+          overridden.
+        edit_case_settings: Edit Case Settings
+        lowercase_letters_and_numbers_separated_by_hyphens_html: |
+          <b>Format:</b> lowercase letters and numbers separated by
+          hyphens,<br />100 characters maximum
+        map:
+          reset: Reset
+          set: Set
+          zoom_in: Zoom in
+          zoom_out: Zoom out
+    show:
+      back_to_overview: Overview
+      end: End
+      forthcoming: Forthcoming
+      next: "Next: "
+      not_yet_published: This case is not yet published
+      other_languages: "This case is also available in these languages: "
+      toc: Table of Contents
   catalog:
-    home:
-      case_index: 所有案例
-      featured_cases: 推薦案例
-      greeting: 'Hello, %{initials}'
-      intro_paragraph: |
-        MSC 為學習者提供了一種新穎的學習方式，整個過程是有趣而參與式的。你能夠完全進入角色，從一個行業實踐者的角度來看待與解決問題。免費注冊你的用戶。
-      learn_more: 了解更多
-      my_cases: My Cases
-      my_cases_placeholder: |
-        ###Choose for yourself
-        - Meet different stakeholders and dive deep with a multimodal narrative.
-        - Shortcut experience by putting principles into practice.
-        Cases you select from the index below will be presented here for easy access.
-      redefining_sustainability_education: 重新定義你的課程學習
-      study_a_case: Study a Case
-      title: 全部案例
+    catalog: Catalog
+    choose_for_yourself: Choose for yourself
+    edit_enrolled: Edit enrolled cases
+    enrolled_cases: Enrolled cases
+    enrollments_instruction: |
+      Cases you enroll in will be presented here for easy access.
+    join_conversation: |
+      Join the conversation by asking questions
+      and paying your learning forward.
+    learn_more: Learn more
+    meet_stakeholders: |
+      Meet different stakeholders and dive deep with a multimodal narrative.
+    propose_a_case: Propose a case
+    shortcut_experience: Apply principles to improve practice.
+  comment_threads:
+    destroy:
+      delete_comment_thread: Delete comment thread
+    new:
+      new_comment_thread: New comment thread...
+    show:
+      card_n: Card {cardPosition}
+      comments_on_page: Comments on “{title}”
+      comments_on_page_number: Comments on Page {position, number}
+      page_n: Page {pageNumber, number}
+  comments:
+    destroy: Delete comment
+    index:
+      all_comments: All comments
+      conversation: Conversation
+      join_the_conversation: Join the conversation
+      n_responses:
+        js: "{count, number} {count, plural, one {response} other {responses}}"
+        many: "%{count} responses"
+        one: 1 response
+      no_comments: No comments
+      nobody_has_left_a_comment: |
+        Nobody in the {communityName} discussion group has left a comment on
+        this case. Switch to a different discussion group or be the first to
+        leave a comment.
+    new:
+      respond: Respond
+      respond_here: Respond here
+      select: Select a few words
+      selection_not_unique: |
+        The words you have selected appear more than once.
+        Please select a few more words.
+      write: Write a reply...
+      write_new: Write a new response
+  communities:
+    index:
+      choose_a_community: Choose a community
+      instructions: |
+        You’ll see the discussion taking place in the community you choose.
+      not_discussing: Your active community is not discussing this case
   date:
     abbr_day_names:
       - 周日
@@ -64,7 +188,7 @@ zh-CN:
       - 周五
       - 周六
     abbr_month_names:
-      - null
+      -
       - 1月
       - 2月
       - 3月
@@ -86,11 +210,11 @@ zh-CN:
       - 星期五
       - 星期六
     formats:
-      default: '%Y-%m-%d'
-      long: '%Y年%b%d日'
-      short: '%b%d日'
+      default: "%Y-%m-%d"
+      long: "%Y年%b%d日"
+      short: "%b%d日"
     month_names:
-      - null
+      -
       - 一月
       - 二月
       - 三月
@@ -104,45 +228,34 @@ zh-CN:
       - 十一月
       - 十二月
     order:
-      - ':year'
-      - ':month'
-      - ':day'
+      - :year
+      - :month
+      - :day
   datetime:
     distance_in_words:
       about_x_hours:
-        one: 大约一小时
-        other: '大约 %{count} 小时'
+        other: 大约 %{count} 小时
       about_x_months:
-        one: 大约一个月
-        other: '大约 %{count} 个月'
+        other: 大约 %{count} 个月
       about_x_years:
-        one: 大约一年
-        other: '大约 %{count} 年'
+        other: 大约 %{count} 年
       almost_x_years:
-        one: 接近一年
-        other: '接近 %{count} 年'
+        other: 接近 %{count} 年
       half_a_minute: 半分钟
       less_than_x_minutes:
-        one: 不到一分钟
-        other: '不到 %{count} 分钟'
+        other: 不到 %{count} 分钟
       less_than_x_seconds:
-        one: 不到一秒
-        other: '不到 %{count} 秒'
+        other: 不到 %{count} 秒
       over_x_years:
-        one: 一年多
         other: '%{count} 年多'
       x_days:
-        one: 一天
-        other: '%{count} 天'
+        other: "%{count} 天"
       x_minutes:
-        one: 一分钟
-        other: '%{count} 分钟'
+        other: "%{count} 分钟"
       x_months:
-        one: 一个月
-        other: '%{count} 个月'
+        other: "%{count} 个月"
       x_seconds:
-        one: 一秒
-        other: '%{count} 秒'
+        other: "%{count} 秒"
     prompts:
       day: 日
       hour: 时
@@ -151,77 +264,170 @@ zh-CN:
       second: 秒
       year: 年
   devise:
+    sessions:
+      destroy:
+        sign_out: Sign out
+      new:
+        sign_in: Sign in
     shared:
       links:
         sign_up_for_a_free_account: 注册免费账户
+      minimum_password_length:
+        other: (%{count} characters minimum)
+  edgenotes:
+    destroy:
+      delete: Delete this Edgenote.
+    edgenote:
+      caption: "Caption: "
+      has_audio: This edgenote has an audio clip.
+      pull_quote: "Quotation: "
+      video_slug: "YouTube video slug: "
+    index:
+      attach: Attach this Edgenote
+      reattach_instructions: |
+        The Edgenotes that belong to this case but that are not attached to any
+        card are listed below. They can be reattached or deleted if they are no
+        longer needed. Or, you can create a brand new Edgenote and deal with
+        these later.
+    new:
+      make_selection: |
+        Please select the phrase that you would like to attach an Edgenote to.
+      new_edgenote: New Edgenote
+  enrollments:
+    destroy:
+      are_you_sure: Are you sure you want to unenroll in this case?
+      unenroll: Unenroll from this case
+      you_will_need_another_invitation: |
+        Because this case is not published, you will need
+        another invitation to reenroll.
+    index:
+      edit_enrolled: Edit enrolled cases
+      enrolled_cases: Enrolled cases
+      finish_editing: Finish editing
+    new:
+      enroll: Enroll
+      enroll_for_easy_access: |
+        If this case catches your eye, enroll for easy access.
+      enroll_in_this_case: Enroll in this case
   errors:
-    format: '%{attribute}%{message}'
+    format: "%{attribute}%{message}"
     messages:
       accepted: 必须是可被接受的
       blank: 不能为空字符
       confirmation: 与确认值不匹配
       empty: 不能留空
-      equal_to: '必须等于 %{count}'
+      equal_to: 必须等于 %{count}
       even: 必须为双数
       exclusion: 是保留关键字
-      expired: 邮件确认已过期，请重新注册。
-      greater_than: '必须大于 %{count}'
-      greater_than_or_equal_to: '必须大于或等于 %{count}'
+      greater_than: 必须大于 %{count}
+      greater_than_or_equal_to: 必须大于或等于 %{count}
       inclusion: 不包含于列表中
       invalid: 是无效的
-      less_than: '必须小于 %{count}'
-      less_than_or_equal_to: '必须小于或等于 %{count}'
-      model_invalid: '验证失败: %{errors}'
+      less_than: 必须小于 %{count}
+      less_than_or_equal_to: 必须小于或等于 %{count}
+      model_invalid: "验证失败: %{errors}"
       not_a_number: 不是数字
       not_an_integer: 必须是整数
+      not_found: "not found"
+      not_locked: "was not locked"
+      not_saved:
+        other: "%{count} errors prohibited this %{resource} from being saved:"
       odd: 必须为单数
-      other_than: '长度非法（不可为 %{count} 个字符'
+      other_than: 长度非法（不可为 %{count} 个字符
       present: 必须是空白
       required: 必须存在
       taken: 已经被使用
       too_long:
-        one: 过长（最长为一个字符）
-        other: '过长（最长为 %{count} 个字符）'
+        other: 过长（最长为 %{count} 个字符）
       too_short:
-        one: 过短（最短为一个字符）
-        other: '过短（最短为 %{count} 个字符）'
+        other: 过短（最短为 %{count} 个字符）
       wrong_length:
-        one: 长度非法（必须为一个字符）
-        other: '长度非法（必须为 %{count} 个字符）'
+        other: 长度非法（必须为 %{count} 个字符）
     template:
-      body: 如下字段出现错误：
+      body: '如下字段出现错误：'
       header:
-        one: '有 1 个错误发生导致「%{model}」无法被保存。'
-        other: '有 %{count} 个错误发生导致「%{model}」无法被保存。'
+        other: "有 %{count} 个错误发生导致「%{model}」无法被保存。"
+  features:
+    index:
+      featured_cases: Featured cases
+  forms:
+    required: required
   helpers:
+    cancel: Cancel
+    close: Close
+    formatting:
+      add_citation_entity: "Add citation here."
+      add_edgenote_entity: "Add edgenote to selection."
+      blockquote: "Block style: Quotation."
+      bold: "Inline style: Bold."
+      code: "Inline style: Code."
+      header: "Block style: Header."
+      italic: "Inline style: Italic."
+      ol: "Block style: Ordered list item."
+      ul: "Block style: Unordered list item."
+    less:
+      read_more: Read more
+    list:
+      end: ', and '
+      middle: ', '
+      start: ', '
+      two: ' and '
+    page_entries_info:
+      more_pages:
+        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
     select:
       prompt: 请选择
     submit:
-      create: '新增%{model}'
-      submit: '储存%{model}'
-      update: '更新%{model}'
-  name: 中文（简体)
+      create: 新增%{model}
+      save: Save %{model}
+      submit: 储存%{model}
+      update: 更新%{model}
+  layouts:
+    mailer:
+      you_are_receiving_this_email_because_you_are_a_user_of_gala:
+        html: |
+          You are receiving this email because you are a user of <a
+          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: |
+          You are receiving this email because you are a user of Gala
+          (https://www.learngala.com).
+  my_cases:
+    index:
+      confirm_delete: |
+        Are you sure you wish to delete this case? This action cannot be undone.
+      delete_case: Delete case.
+      edit_case: Edit case.
+      edit_case_settings: Edit case settings.
+      featured: ':activerecord.attributes.case.featured'
+      my_cases: My Cases
+      publish_a_case: Publish a Case
+      put_your_own_cases_on_gala: |
+        Put your case on Gala and enrich your teaching with integrated
+        discussion, curated media, and insights from detailed analysis of your
+        students’ engagement with the material.
+        You keep the rights to the cases you publish on Gala and we make them
+        easy to deploy in and beyond the classroom.
   notifications:
-    replied_to_your_comment: '%{notifier}回复了你在%{case_kicker}的讨论。'
+    replied_to_your_comment: "%{notifier}回复了你在%{case_kicker}的讨论。"
   number:
     currency:
       format:
-        delimiter: ','
-        format: '%u %n'
+        delimiter: ","
+        format: "%u %n"
         precision: 2
-        separator: .
+        separator: "."
         significant: false
         strip_insignificant_zeros: false
-        unit: CN¥
+        unit: "CN¥"
     format:
-      delimiter: ','
+      delimiter: ","
       precision: 3
-      separator: .
+      separator: "."
       significant: false
       strip_insignificant_zeros: false
     human:
       decimal_units:
-        format: '%n %u'
+        format: "%n %u"
         units:
           billion: 十亿
           million: 百万
@@ -232,13 +438,12 @@ zh-CN:
       format:
         delimiter: ''
         precision: 1
-        significant: false
-        strip_insignificant_zeros: false
+        significant: true
+        strip_insignificant_zeros: true
       storage_units:
-        format: '%n %u'
+        format: "%n %u"
         units:
           byte:
-            one: Byte
             other: Bytes
           gb: GB
           kb: KB
@@ -247,28 +452,59 @@ zh-CN:
     percentage:
       format:
         delimiter: ''
-        format: '%n%'
+        format: "%n%"
     precision:
       format:
         delimiter: ''
+  podcasts:
+    show:
+      with_host:
+        js: "with {count, plural, one {host} other {hosts}}"
+        many: with hosts
+        one: with host
+  pundit:
+    not_authorized: You are not authorized to perform this action.
   readers:
     form:
+      account_options: Account options
+      choose_an_image: Choose a profile image
       create_a_password: 设置密码
       my_account: 我的用户
-      save: 更新个人信息
+      notification_settings: Notification settings
+      save: '更新个人信息'
       you_have_not_created_a_password: |
         因为你首次登陆时使用的是%{provider}，并没有设置密码。
         你现在可以通过设置密码来用于下次登陆，或者继续使用
         %{provider}进行登陆。
+  search:
+    didnt_match: Your search didn’t match any cases.
+    keyword_query: Keyword query
+    no_results: No search results
+    propose_a_case: |
+      If you have a case (or a good idea for one) that you’d like to see on
+      Gala, reach out to us. Together we can make the most complete resource for
+      teaching about environment and sustainability.,
+    refine: Refine search
+    results: Search results
+    search: Search
+    search_cases: Search cases
+    try_again: Try searching for something else.
   support:
     array:
-      last_word_connector: 和
-      two_words_connector: 和
-      words_connector: 、
+      last_word_connector: "和"
+      two_words_connector: "和"
+      words_connector: "、"
+    languages:
+      am: Amharic
+      en: English
+      fr: French
+      ja: Japanese
+      zh-CN: Mandarin (Simplified)
+      zh-TW: Mandarin (Traditional)
   time:
     am: 上午
     formats:
-      default: '%Y年%b%d日 %A %H:%M:%S %Z'
-      long: '%Y年%b%d日 %H:%M'
-      short: '%b%d日 %H:%M'
+      default: "%Y年%b%d日 %A %H:%M:%S %Z"
+      long: "%Y年%b%d日 %H:%M"
+      short: "%b%d日 %H:%M"
     pm: 下午
