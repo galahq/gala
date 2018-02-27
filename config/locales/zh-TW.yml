@@ -1,36 +1,177 @@
 zh-TW:
+  __name: 中文（繁体）
   activerecord:
     attributes:
+      case:
+        acknowledgements: 致謝
+        featured: 明星
+        kicker: 短標題
+        learning_objectives: 學習目標
+        library: Library
+        location: 案例發生地
+        slug: Case URL
+        title: Question
+        translators:
+          js: "{count, plural, one {Translator} other {Translators} }: "
+          other: Translators
+      question:
+        content: Content
+        correct_answer: Correct answer
+        options: Options
       reader:
-        confirmation_sent_at: "確認郵件發送自"
-        confirmation_token: "確認令牌"
-        confirmed_at: "確認於"
-        created_at: "創建於"
-        current_password: "當前密碼"
-        current_sign_in_at: "最近登錄於"
-        current_sign_in_ip: "最近登錄 IP"
-        email: "電子郵箱"
-        encrypted_password: "密碼被加密"
-        failed_attempts: "失敗嘗試"
-        last_sign_in_at: "最后登錄於"
-        last_sign_in_ip: "最后登錄的 IP"
-        locked_at: "鎖定於"
-        password: "密碼"
-        password_confirmation: "密碼確認"
-        remember_created_at: "記住創建於"
-        remember_me: "記住登錄信息"
-        reset_password_sent_at: "重置密碼發送於"
-        reset_password_token: "密碼重置令牌"
-        sign_in_count: "登錄次數"
-        unconfirmed_email: "未確認郵件"
-        unlock_token: "帳戶解鎖令牌"
-        updated_at: "更新於"
+        confirmation_sent_at: Confirmation sent at
+        confirmation_token: 確認令牌
+        confirmed_at: 確認於
+        created_at: 創建於
+        current_password: 當前密碼
+        current_sign_in_at: 最近登錄於
+        current_sign_in_ip: 最近登錄 IP
+        email: 電子郵箱
+        encrypted_password: 密碼被加密
+        failed_attempts: 失敗嘗試
+        initials: Initials
+        last_sign_in_at: 最后登錄於
+        last_sign_in_ip: 最后登錄的 IP
+        locked_at: 鎖定於
+        name: Full Name
+        password: 密碼
+        password_confirmation: 密碼確認
+        remember_created_at: 記住創建於
+        remember_me: 記住登錄信息
+        reset_password_sent_at: 重置密碼發送於
+        reset_password_token: 密碼重置令牌
+        send_reply_notifications: Notify me when someone replies to a comment I wrote
+        sign_in_count: 登錄次數
+        unconfirmed_email: 未確認郵件
+        unlock_token: 帳戶解鎖令牌
+        updated_at: 更新於
+      shared_cases_library:
+        description: |
+          These cases were shared by Gala users.
     errors:
       messages:
-        record_invalid: "校驗失敗: %{errors}"
+        record_invalid: "驗証失敗: %{errors}"
         restrict_dependent_destroy:
-          has_many: 由於 %{record} 需要此記錄，所以無法移除記錄
-          has_one: 由於 %{record} 需要此記錄，所以無法移除記錄
+          has_many: "由於 %{record} 需要此記錄，所以無法移除記錄"
+          has_one: "由於 %{record} 需要此記錄，所以無法移除記錄"
+      models:
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "is not included in the list of possible answers"
+    models:
+      activity: Activity
+      case: 案例
+      cases:
+        setting: Case Settings
+      comment: Comment
+      comment_thread: Comment thread
+      edgenote: Edgenote
+      enrollment: Enrollment
+      global_community: Global Community
+      group: Group
+      group_membership: Group Membership
+      page: Page
+      podcast: Podcast
+      reader: Reader
+      shared_cases_library: Shared Cases
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        destroyed: "%{model} successfully deleted."
+        updated: "%{model} successfully updated."
+  activities:
+    show:
+      download: Download
+      instructions: Instructions
+  cases:
+    edit:
+      change_cover_image: Change cover image
+      edit: 編輯該案例
+      feature_case: 將此案例設置為明星案例
+      just_change_the_text: 點擊案例，開始編輯。
+      options: 選項
+      publish_case: 發表該案例
+      save: 保存
+      stop_editing: 停止編輯該案例
+      unfeature_case: 取消設置此案例為明星案例
+      unpublish_case: 取消發表該案例
+    index:
+      all_cases: 全部案例
+      locations: 案例地點
+    settings:
+      edit:
+        changing_url_leaves_your_old_url_available_for_anyone_else: |
+          If you change your case’s URL, your old URL will redirect to your new
+          one. However, if someone else takes your old URL, the redirect will be
+          overridden.
+        edit_case_settings: Edit Case Settings
+        lowercase_letters_and_numbers_separated_by_hyphens_html: |
+          <b>Format:</b> lowercase letters and numbers separated by
+          hyphens,<br />100 characters maximum
+        map:
+          reset: Reset
+          set: Set
+          zoom_in: Zoom in
+          zoom_out: Zoom out
+    show:
+      back_to_overview: 返回案例主頁
+      end: 終
+      forthcoming: 案例開發中
+      next: "下一頁："
+      not_yet_published: 案例未發表
+      other_languages: "此案例還有以下不同語言的版本："
+      toc: 目錄
+  catalog:
+    catalog: 案例目錄
+    choose_for_yourself: 我的學習我做主
+    enrollments_instruction: |
+      選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。
+    join_conversation: |
+      參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。
+    learn_more: 了解更多
+    meet_stakeholders: |
+      在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。
+    propose_a_case: 案例征集
+    shortcut_experience: 通過案例學習獲取將所學知識運用於實踐的捷徑。
+  comment_threads:
+    destroy:
+      delete_comment_thread: Delete comment thread
+    new:
+      new_comment_thread: New comment thread...
+    show:
+      card_n: Card {cardPosition}
+      comments_on_page: Comments on “{title}”
+      comments_on_page_number: Comments on Page {position, number}
+      page_n: Page {pageNumber, number}
+  comments:
+    destroy: Delete comment
+    index:
+      all_comments: All comments
+      conversation: Conversation
+      join_the_conversation: Join the conversation
+      n_responses:
+        js: "{count, number}條回復"
+        other: "%{count}條回復"
+      no_comments: No comments
+      nobody_has_left_a_comment: |
+        Nobody in the {communityName} discussion group has left a comment on
+        this case. Switch to a different discussion group or be the first to
+        leave a comment.
+    new:
+      respond: 參與討論
+      respond_here: 回應
+      select: 選擇想要發起討論的詞句
+      selection_not_unique: |
+        你所選擇的詞句已存在相關話題，請多選幾個詞。
+      write: 發表回復
+      write_new: 發起新話題
+  communities:
+    index:
+      choose_a_community: 選擇討論小組
+      instructions: |
+        加入討論小組后，你將能夠看到該討論版中的所有對話。
+      not_discussing: 你的討論小組還沒有對該案例展開討論。
   date:
     abbr_day_names:
       - 周日
@@ -41,7 +182,7 @@ zh-TW:
       - 周五
       - 周六
     abbr_month_names:
-      - ~
+      -
       - 1月
       - 2月
       - 3月
@@ -67,7 +208,7 @@ zh-TW:
       long: "%Y年%b%d日"
       short: "%b%d日"
     month_names:
-      - ~
+      -
       - 一月
       - 二月
       - 三月
@@ -87,38 +228,27 @@ zh-TW:
   datetime:
     distance_in_words:
       about_x_hours:
-        one: 大約一小時
         other: 大約 %{count} 小時
       about_x_months:
-        one: 大約一個月
         other: 大約 %{count} 個月
       about_x_years:
-        one: 大約一年
         other: 大約 %{count} 年
       almost_x_years:
-        one: 接近一年
         other: 接近 %{count} 年
       half_a_minute: 半分鐘
       less_than_x_minutes:
-        one: 不到一分鐘
         other: 不到 %{count} 分鐘
       less_than_x_seconds:
-        one: 不到一秒
         other: 不到 %{count} 秒
       over_x_years:
-        one: 一年多
-        other: "%{count} 年多"
+        other: '%{count} 年多'
       x_days:
-        one: 一天
         other: "%{count} 天"
       x_minutes:
-        one: 一分鐘
         other: "%{count} 分鐘"
       x_months:
-        one: 一個月
         other: "%{count} 個月"
       x_seconds:
-        one: 一秒
         other: "%{count} 秒"
     prompts:
       day: 日
@@ -128,55 +258,150 @@ zh-TW:
       second: 秒
       year: 年
   devise:
+    sessions:
+      destroy:
+        sign_out: 退出登陸
+      new:
+        sign_in: 登陸
     shared:
       links:
         sign_up_for_a_free_account: 注冊免費賬戶
+      minimum_password_length:
+        other: '（最少%{count}個字符）'
+  edgenotes:
+    destroy:
+      delete: Delete this Edgenote.
+    edgenote:
+      caption: "Caption: "
+      has_audio: This edgenote has an audio clip.
+      pull_quote: "Quotation: "
+      video_slug: "YouTube video slug: "
+    index:
+      attach: Attach this Edgenote
+      reattach_instructions: |
+        The Edgenotes that belong to this case but that are not attached to any
+        card are listed below. They can be reattached or deleted if they are no
+        longer needed. Or, you can create a brand new Edgenote and deal with
+        these later.
+    new:
+      make_selection: |
+        Please select the phrase that you would like to attach an Edgenote to.
+      new_edgenote: New Edgenote
+  enrollments:
+    destroy:
+      are_you_sure: 你確定要退出這個案例的學習嗎？
+      unenroll: 退出該案例的學習
+      you_will_need_another_invitation: |
+        這個案例還未公開發表，你將需要另一封邀請函來重新加入此案例的學習。
+    index:
+      edit_enrolled: 編輯我的案例
+      enrolled_cases: 加入案例學習
+      finish_editing: 結束編輯
+    new:
+      enroll: 參與學習
+      enroll_for_easy_access: |
+        如果你喜歡這個案例，就參與到該案例的學習中吧。加入之后，首頁上“我的案例”處將會出現鏈接到該案例的快捷方式。
+      enroll_in_this_case: 加入此案例的學習
   errors:
-    format: "%{attribute} %{message}"
+    format: "%{attribute}%{message}"
     messages:
       accepted: 必須是可被接受的
-      blank: 不能是空白字元
-      confirmation: 兩次輸入須一致
+      blank: 不能為空字符
+      confirmation: 與確認值不匹配
       empty: 不能留空
       equal_to: 必須等於 %{count}
-      even: 必須是偶數
-      exclusion: 是被保留的關鍵字
+      even: 必須為雙數
+      exclusion: 是保留關鍵字
       greater_than: 必須大於 %{count}
       greater_than_or_equal_to: 必須大於或等於 %{count}
-      inclusion: 沒有包含在列表中
+      inclusion: 不包含於列表中
       invalid: 是無效的
       less_than: 必須小於 %{count}
       less_than_or_equal_to: 必須小於或等於 %{count}
-      model_invalid: "校驗失敗: %{errors}"
+      model_invalid: "驗証失敗: %{errors}"
       not_a_number: 不是數字
       not_an_integer: 必須是整數
-      odd: 必須是奇數
-      other_than: 不可以是 %{count} 個字
+      not_found: "not found"
+      not_locked: "was not locked"
+      not_saved:
+        other: "%{count} errors prohibited this %{resource} from being saved:"
+      odd: 必須為單數
+      other_than: 長度非法（不可為 %{count} 個字符
       present: 必須是空白
       required: 必須存在
       taken: 已經被使用
       too_long:
-        one: 過長（最長是一個字）
-        other: 過長（最長是 %{count} 個字）
+        other: 過長（最長為 %{count} 個字符）
       too_short:
-        one: 過短（最短是一個字）
-        other: 過短（最短是 %{count} 個字）
+        other: 過短（最短為 %{count} 個字符）
       wrong_length:
-        one: 字數錯誤 (必須是一個字)
-        other: 字數錯誤 (必須是 %{count} 個字)
+        other: 長度非法（必須為 %{count} 個字符）
     template:
-      body: 以下欄位發生問題：
+      body: '如下字段出現錯誤：'
       header:
-        one: 有 1 個錯誤發生使得「%{model}」無法被儲存。
-        other: 有 %{count} 個錯誤發生使得「%{model}」無法被儲存。
+        other: "有 %{count} 個錯誤發生導致「%{model}」無法被保存。"
+  features:
+    index:
+      featured_cases: 明星案例
+  forms:
+    required: 必需
   helpers:
+    cancel: 取消
+    close: 關閉
+    formatting:
+      add_citation_entity: "Add citation here."
+      add_edgenote_entity: "Add edgenote to selection."
+      blockquote: "Block style: Quotation."
+      bold: "Inline style: Bold."
+      code: "Inline style: Code."
+      header: "Block style: Header."
+      italic: "Inline style: Italic."
+      ol: "Block style: Ordered list item."
+      ul: "Block style: Unordered list item."
+    less:
+      read_more: 閱讀更多
+    list:
+      end: '和'
+      middle: '、'
+      start: '、'
+      two: '、'
+    page_entries_info:
+      more_pages:
+        display_entries: "顯示 %{entry_name} <b>%{first} - %{last}</b>　共<b>%{total}</b>"
     select:
       prompt: 請選擇
     submit:
       create: 新增%{model}
+      save: Save %{model}
       submit: 儲存%{model}
       update: 更新%{model}
-  name: 中文（簡體）
+  layouts:
+    mailer:
+      you_are_receiving_this_email_because_you_are_a_user_of_gala:
+        html: |
+          You are receiving this email because you are a user of <a
+          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: |
+          You are receiving this email because you are a user of Gala
+          (https://www.learngala.com).
+  my_cases:
+    index:
+      confirm_delete: |
+        Are you sure you wish to delete this case? This action cannot be undone.
+      delete_case: Delete case.
+      edit_case: 編輯該案例
+      edit_case_settings: Edit case settings.
+      featured: ':activerecord.attributes.case.featured'
+      my_cases: My Cases
+      publish_a_case: Publish a Case
+      put_your_own_cases_on_gala: |
+        Put your case on Gala and enrich your teaching with integrated
+        discussion, curated media, and insights from detailed analysis of your
+        students’ engagement with the material.
+        You keep the rights to the cases you publish on Gala and we make them
+        easy to deploy in and beyond the classroom.
+  notifications:
+    replied_to_your_comment: "%{notifier}回復了你在%{case_kicker}的討論。"
   number:
     currency:
       format:
@@ -186,7 +411,7 @@ zh-TW:
         separator: "."
         significant: false
         strip_insignificant_zeros: false
-        unit: NT$
+        unit: "CN¥"
     format:
       delimiter: ","
       precision: 3
@@ -206,14 +431,13 @@ zh-TW:
       format:
         delimiter: ''
         precision: 1
-        significant: false
-        strip_insignificant_zeros: false
+        significant: true
+        strip_insignificant_zeros: true
       storage_units:
         format: "%n %u"
         units:
           byte:
-            one: 位元組
-            other: 位元組
+            other: Byte
           gb: GB
           kb: KB
           mb: MB
@@ -225,11 +449,48 @@ zh-TW:
     precision:
       format:
         delimiter: ''
+  podcasts:
+    show:
+      with_host:
+        js: "主持人"
+        other: 主持人
+  pundit:
+    not_authorized: You are not authorized to perform this action.
+  readers:
+    form:
+      account_options: 賬戶選項
+      choose_an_image: Choose a profile image
+      create_a_password: 設置密碼
+      my_account: 我的用戶
+      notification_settings: Notification settings
+      save: '更新個人信息'
+      you_have_not_created_a_password: |
+        因為你首次登陸時使用的是%{provider}，並沒有設置密碼。
+        你現在可以通過設置密碼來用於下次登陸，或者繼續使用
+        %{provider}進行登陸。
+  search:
+    didnt_match: 抱歉，沒有找到你所搜索的案例。
+    keyword_query: 關鍵詞查詢
+    no_results: 沒有可顯示的搜索結果
+    propose_a_case: |
+      或者，如果你有希望收入到Gala的案例，或關於案例的設想，請與我們聯系。讓我們一起為環境和可持續發展領域提供更多更有效的學習資源。
+    refine: 細化搜索
+    results: 搜索結果
+    search: 搜索
+    search_cases: 案例搜索
+    try_again: 請試試輸入其他關鍵詞。
   support:
     array:
-      last_word_connector: ", 和 "
-      two_words_connector: " 和 "
-      words_connector: ", "
+      last_word_connector: "和"
+      two_words_connector: "和"
+      words_connector: "、"
+    languages:
+      am: 阿姆哈拉文
+      en: 中文（簡體)
+      fr: 法文
+      ja: 日文
+      zh-CN: Mandarin (Simplified)
+      zh-TW: Mandarin (Traditional)
   time:
     am: 上午
     formats:

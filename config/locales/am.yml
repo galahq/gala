@@ -1,211 +1,234 @@
 am:
+  __name: አማርኛ
   activerecord:
     attributes:
-      activity:
-        case: :activerecord.models.case  #g
-        description: መግለጫ   #g
-        pdf_url: Pdf ዩአርኤል   #g
-        position: የስራ መደቡ  #g
-        title: ርዕስ   #g
-      card:
-        content: የይዘት   #g
-        page: :activerecord.models.page  #g
-        position: የስራ መደቡ  #g
-        solid: ጠንካራ  #g
       case:
-        activities: ተግባራት  #g
-        authors: ደራሲያን  #g
-        cases: አጋጣሚዎች  #g
-        catalog_position: ካታሎግ ቦታ  #g
-        comment_threads: የአስተያየት ተከታታዮች  #g
-        comments: አስተያየቶች  #g
-        cover_url: የሽፋን ዩአርኤል  #g
-        edgenotes: Edgenotes  #g
-        enrollments: የመመዝገቢያ  #g
-        narrative: የትረካ   #g
-        pages: ገጾች  #g
-        podcasts: ፖድካስቶች  #g
-        publication_date: የታተመበት ቀን  #g
-        published: የታተመ  #g
-        readers: አንባቢዎች  #g
-        short_title: አጭር ርዕስ  #g
-        slug: የቅጠል ትል  #g
-        summary: ማጠቃለያ   #g
-        tags: መለያዎች  #g
-        title: ርዕስ   #g
-        translators: ተርጓሚዎች  #g
-      comment:
-        comment_thread: :activerecord.models.comment_thread  #g
-        content: የይዘት   #g
-        reader: :activerecord.models.reader  #g
-      comment_thread:
-        case: :activerecord.models.case  #g
-        comments: አስተያየቶች  #g
-        group: :activerecord.models.group  #g
-      edgenote:
-        caption: የመግለጫ   #g
-        card: :activerecord.models.card  #g
-        case: :activerecord.models.case  #g
-        content: የይዘት   #g
-        format: ቅርጸት  #g
-        slug: የቅጠል ትል  #g
-        thumbnail_url: ድንክዬ ዩ አር ኤል  #g
-      enrollment:
-        case: :activerecord.models.case  #g
-        reader: :activerecord.models.reader  #g
-      group:
-        comment_threads: የአስተያየት ተከታታዮች  #g
-        group_memberships: ቡድን አባልነት  #g
-        name: ስም   #g
-        readers: አንባቢዎች  #g
-      group_membership:
-        group: :activerecord.models.group  #g
-        reader: :activerecord.models.reader  #g
-      habtm_readers:
-        left_side: :activerecord.models.left_side  #g
-        reader: :activerecord.models.reader  #g
-      habtm_roles:
-        left_side: :activerecord.models.left_side  #g
-        role: :activerecord.models.role  #g
-      page:
-        cards: ካርዶች  #g
-        case: :activerecord.models.case  #g
-        position: የስራ መደቡ  #g
-        title: ርዕስ   #g
-      podcast:
-        artwork_url: የስነ ጥበብ ዩአርኤል  #g
-        audio_url: የተሰሚ ዩአርኤል   #g
-        case: :activerecord.models.case  #g
-        credits: ምስጋናዎች   #g
-        description: መግለጫ   #g
-        position: የስራ መደቡ  #g
-        title: ርዕስ   #g
+        acknowledgements: Acknowledgements
+        featured: Featured
+        kicker: Short title
+        learning_objectives: Learning objectives
+        library: Library
+        location: Case location
+        slug: Case URL
+        title: Question
+        translators:
+          js: "{count, plural, one {Translator} other {Translators} }: "
+          one: Translator
+          other: Translators
+      question:
+        content: Content
+        correct_answer: Correct answer
+        options: Options
       reader:
-        authentication_token: የማረጋገጫ ማስመሰያ  #g
-        cases: አጋጣሚዎች  #g
-        comments: አስተያየቶች  #g
-        current_sign_in_at: በ ውስጥ የአሁኑ ምልክት  #g
-        current_sign_in_ip: ፒ ውስጥ የአሁኑ ምልክት  #g
-        email: ኢሜይል  #g
-        encrypted_password: የተመሰጠረ የይለፍ ቃል  #g
-        enrollments: የመመዝገቢያ  #g
-        group_memberships: ቡድን አባልነት  #g
-        groups: ቡድኖች  #g
-        image_url: የምስል ዩአርኤል  #g
-        initials: ፊርማዎች  #g
-        last_sign_in_at: በ ውስጥ የመጨረሻው ምልክት  #g
-        last_sign_in_ip: ፒ ውስጥ የመጨረሻው ምልክት  #g
-        name: ስም  #g
-        provider: አቅራቢ  #g
-        remember_created_at: ላይ የተፈጠረ አትዘንጋ  #g
-        reset_password_sent_at: ይላካል የይለፍ ቃል ዳግም አስጀምር  #g
-        reset_password_token: የይለፍ ቃል ዳግም ማስመሰያ  #g
-        roles: ሚናዎችን  #g
-        uid: UID  #g
-      role:
-        name: ስም  #g
-        readers: አንባቢዎች  #g
-        resource: :activerecord.models.resource  #g
-        resource_type: የንብረት አይነት  #g
+        confirmation_sent_at: Confirmation sent at
+        confirmation_token: Confirmation token
+        confirmed_at: Confirmed at
+        created_at: Created at
+        current_password: Current password
+        current_sign_in_at: Current sign in at
+        current_sign_in_ip: Current sign in IP
+        email: Email
+        encrypted_password: Encrypted password
+        failed_attempts: Failed attempts
+        initials: Initials
+        last_sign_in_at: Last sign in at
+        last_sign_in_ip: Last sign in IP
+        locked_at: Locked at
+        name: Full Name
+        password: Password
+        password_confirmation: Password confirmation
+        remember_created_at: Remember created at
+        remember_me: Remember me
+        reset_password_sent_at: Reset password sent at
+        reset_password_token: Reset password token
+        send_reply_notifications: Notify me when someone replies to a comment I wrote
+        sign_in_count: Sign in count
+        unconfirmed_email: Unconfirmed email
+        unlock_token: Unlock token
+        updated_at: Updated at
+      shared_cases_library:
+        description: |
+          These cases were shared by Gala users.
     errors:
       messages:
         record_invalid: "Validation failed: %{errors}"
         restrict_dependent_destroy:
           has_many: "Cannot delete record because dependent %{record} exist"
           has_one: "Cannot delete record because a dependent %{record} exists"
+      models:
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "is not included in the list of possible answers"
     models:
-      activity: ሥራ  #g
-      card: ካርድ  #g
-      case: ክስ  #g
-      comment: አስተያየት  #g
-      comment_thread: የአስተያየት ክር  #g
-      edgenote: Edgenote  #g
-      enrollment: ምዝገባ  #g
-      group: ቡድን  #g
-      group_membership: የቡድን አባልነት  #g
-      habtm_readers: Habtm አንባቢዎች  #g
-      habtm_roles: Habtm ሚና  #g
-      page: ገጽ  #g
-      podcast: ፖድካስት  #g
-      reader: አንባቢ  #g
-      role: ሚና  #g
+      activity: Activity
+      case: Case
+      cases:
+        setting: Case Settings
+      comment: Comment
+      comment_thread: Comment thread
+      edgenote: Edgenote
+      enrollment: Enrollment
+      global_community: Global Community
+      group: Group
+      group_membership: Group Membership
+      page: Page
+      podcast: Podcast
+      reader: Reader
+      shared_cases_library: Shared Cases
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        destroyed: "%{model} successfully deleted."
+        updated: "%{model} successfully updated."
+  activities:
+    show:
+      download: Download
+      instructions: Instructions
   cases:
-    case:
-      forthcoming: ከማሰማቱም
-      translator:
-        many: ተርጓሚዎች
-        one: ተርጓሚ
+    edit:
+      change_cover_image: Change cover image
+      edit: Edit this case
+      feature_case: Feature this case
+      just_change_the_text: To edit this case, just change the text
+      options: Options
+      publish_case: Publish this case
+      save: Save
+      stop_editing: Stop editing this case
+      unfeature_case: Remove from featured cases
+      unpublish_case: Unpublish this case
+    index:
+      all_cases: All cases
+      locations: Site locations
+    settings:
+      edit:
+        changing_url_leaves_your_old_url_available_for_anyone_else: |
+          If you change your case’s URL, your old URL will redirect to your new
+          one. However, if someone else takes your old URL, the redirect will be
+          overridden.
+        edit_case_settings: Edit Case Settings
+        lowercase_letters_and_numbers_separated_by_hyphens_html: |
+          <b>Format:</b> lowercase letters and numbers separated by
+          hyphens,<br />100 characters maximum
+        map:
+          reset: Reset
+          set: Set
+          zoom_in: Zoom in
+          zoom_out: Zoom out
+    show:
+      back_to_overview: Overview
+      end: End
+      forthcoming: Forthcoming
+      next: "Next: "
+      not_yet_published: This case is not yet published
+      other_languages: "This case is also available in these languages: "
+      toc: Table of Contents
   catalog:
-    home:
-      case_index: ጉዳዮች መረጃ ጠቋሚ
-      featured_cases: ተለይተው የቀረቡ ጉዳዮች
-      greeting: "Hello, %{initials}"
-      intro_paragraph: |
-        MSCs አካባቢያዊ ዘላቂነት ውስጥ ተግባራዊ ትምህርት ለመስጠት መሳጭ እና ለመመርመር የትምህርት አቀራረብ ይሰጣሉ.
-        ከእኛ ጋር ለማወቅ አንድ ነጻ መለያ ይመዝገቡ.
-      learn_more: እኛ ምን እየሰሩ ተጨማሪ ይወቁ
-      my_cases: My Cases
-      my_cases_placeholder: |
-        ###Choose for yourself
-        - Meet different stakeholders and dive deep with a multimodal narrative.
-        - Shortcut experience by putting principles into practice.
-        Cases you select from the index below will be presented here for easy access.
-      redefining_sustainability_education: አካባቢያዊ ዘላቂነት ስለ የፈጠራ ትምህርት
-      study_a_case: Study a Case
-      title: በሁሉም ጉዳዮች
+    catalog: Catalog
+    choose_for_yourself: Choose for yourself
+    enrollments_instruction: |
+      Cases you enroll in will be presented here for easy access.
+    join_conversation: |
+      Join the conversation by asking questions
+      and paying your learning forward.
+    learn_more: Learn more
+    meet_stakeholders: |
+      Meet different stakeholders and dive deep with a multimodal narrative.
+    propose_a_case: Propose a case
+    shortcut_experience: Apply principles to improve practice.
+  comment_threads:
+    destroy:
+      delete_comment_thread: Delete comment thread
+    new:
+      new_comment_thread: New comment thread...
+    show:
+      card_n: Card {cardPosition}
+      comments_on_page: Comments on “{title}”
+      comments_on_page_number: Comments on Page {position, number}
+      page_n: Page {pageNumber, number}
+  comments:
+    destroy: Delete comment
+    index:
+      all_comments: All comments
+      conversation: Conversation
+      join_the_conversation: Join the conversation
+      n_responses:
+        js: "{count, number} {count, plural, one {response} other {responses}}"
+        one: 1 response
+        other: "%{count} responses"
+      no_comments: No comments
+      nobody_has_left_a_comment: |
+        Nobody in the {communityName} discussion group has left a comment on
+        this case. Switch to a different discussion group or be the first to
+        leave a comment.
+    new:
+      respond: Respond
+      respond_here: Respond here
+      select: Select a few words
+      selection_not_unique: |
+        The words you have selected appear more than once.
+        Please select a few more words.
+      write: Write a reply...
+      write_new: Write a new response
+  communities:
+    index:
+      choose_a_community: Choose a community
+      instructions: |
+        You’ll see the discussion taking place in the community you choose.
+      not_discussing: Your active community is not discussing this case
   date:
     abbr_day_names:
-    - Sun
-    - Mon
-    - Tue
-    - Wed
-    - Thu
-    - Fri
-    - Sat
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
     abbr_month_names:
-    -
-    - Jan
-    - Feb
-    - Mar
-    - Apr
-    - May
-    - Jun
-    - Jul
-    - Aug
-    - Sep
-    - Oct
-    - Nov
-    - Dec
+      -
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
     day_names:
-    - Sunday
-    - Monday
-    - Tuesday
-    - Wednesday
-    - Thursday
-    - Friday
-    - Saturday
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
     formats:
       default: "%Y-%m-%d"
       long: "%B %d, %Y"
       short: "%b %d"
     month_names:
-    -
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
+      -
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
     order:
-    - :year
-    - :month
-    - :day
+      - :year
+      - :month
+      - :day
   datetime:
     distance_in_words:
       about_x_hours:
@@ -249,13 +272,60 @@ am:
       month: Month
       second: Seconds
       year: Year
+  devise:
+    sessions:
+      destroy:
+        sign_out: Sign out
+      new:
+        sign_in: Sign in
+    shared:
+      links:
+        sign_up_for_a_free_account: Sign up for a free account
+      minimum_password_length:
+        one: (%{count} character minimum)
+        other: (%{count} characters minimum)
+  edgenotes:
+    destroy:
+      delete: Delete this Edgenote.
+    edgenote:
+      caption: "Caption: "
+      has_audio: This edgenote has an audio clip.
+      pull_quote: "Quotation: "
+      video_slug: "YouTube video slug: "
+    index:
+      attach: Attach this Edgenote
+      reattach_instructions: |
+        The Edgenotes that belong to this case but that are not attached to any
+        card are listed below. They can be reattached or deleted if they are no
+        longer needed. Or, you can create a brand new Edgenote and deal with
+        these later.
+    new:
+      make_selection: |
+        Please select the phrase that you would like to attach an Edgenote to.
+      new_edgenote: New Edgenote
+  enrollments:
+    destroy:
+      are_you_sure: Are you sure you want to unenroll in this case?
+      unenroll: Unenroll from this case
+      you_will_need_another_invitation: |
+        Because this case is not published, you will need
+        another invitation to reenroll.
+    index:
+      edit_enrolled: Edit enrolled cases
+      enrolled_cases: Enrolled cases
+      finish_editing: Finish editing
+    new:
+      enroll: Enroll
+      enroll_for_easy_access: |
+        If this case catches your eye, enroll for easy access.
+      enroll_in_this_case: Enroll in this case
   errors:
     format: "%{attribute} %{message}"
     messages:
       accepted: must be accepted
-      blank: can't be blank
-      confirmation: doesn't match %{attribute}
-      empty: can't be empty
+      blank: can’t be blank
+      confirmation: doesn’t match %{attribute}
+      empty: can’t be empty
       equal_to: must be equal to %{count}
       even: must be even
       exclusion: is reserved
@@ -268,6 +338,11 @@ am:
       model_invalid: "Validation failed: %{errors}"
       not_a_number: is not a number
       not_an_integer: must be an integer
+      not_found: "not found"
+      not_locked: "was not locked"
+      not_saved:
+        one: "1 error prohibited this %{resource} from being saved:"
+        other: "%{count} errors prohibited this %{resource} from being saved:"
       odd: must be odd
       other_than: must be other than %{count}
       present: must be blank
@@ -285,16 +360,70 @@ am:
     template:
       body: 'There were problems with the following fields:'
       header:
-        one: 1 error prohibited this %{model} from being saved
-        other: "%{count} errors prohibited this %{model} from being saved"
+        one: 1 error prevented this %{model} from being saved
+        other: "%{count} errors prevented this %{model} from being saved"
+  features:
+    index:
+      featured_cases: Featured cases
+  forms:
+    required: required
   helpers:
+    cancel: Cancel
+    close: Close
+    formatting:
+      add_citation_entity: "Add citation here."
+      add_edgenote_entity: "Add edgenote to selection."
+      blockquote: "Block style: Quotation."
+      bold: "Inline style: Bold."
+      code: "Inline style: Code."
+      header: "Block style: Header."
+      italic: "Inline style: Italic."
+      ol: "Block style: Ordered list item."
+      ul: "Block style: Unordered list item."
+    less:
+      read_more: Read more
+    list:
+      end: ', and '
+      middle: ', '
+      start: ', '
+      two: ' and '
+    page_entries_info:
+      more_pages:
+        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
     select:
       prompt: Please select
     submit:
       create: Create %{model}
-      submit: Save %{model}
+      save: Save %{model}
+      submit: Submit
       update: Update %{model}
-  name: አማርኛ
+  layouts:
+    mailer:
+      you_are_receiving_this_email_because_you_are_a_user_of_gala:
+        html: |
+          You are receiving this email because you are a user of <a
+          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: |
+          You are receiving this email because you are a user of Gala
+          (https://www.learngala.com).
+  my_cases:
+    index:
+      confirm_delete: |
+        Are you sure you wish to delete this case? This action cannot be undone.
+      delete_case: Delete case.
+      edit_case: Edit case.
+      edit_case_settings: Edit case settings.
+      featured: ':activerecord.attributes.case.featured'
+      my_cases: My Cases
+      publish_a_case: Publish a Case
+      put_your_own_cases_on_gala: |
+        Put your case on Gala and enrich your teaching with integrated
+        discussion, curated media, and insights from detailed analysis of your
+        students’ engagement with the material.
+        You keep the rights to the cases you publish on Gala and we make them
+        easy to deploy in and beyond the classroom.
+  notifications:
+    replied_to_your_comment: "%{notifier} replied to your comment on “%{case_kicker}.”"
   number:
     currency:
       format:
@@ -343,14 +472,50 @@ am:
     precision:
       format:
         delimiter: ''
-  reader:
+  podcasts:
     show:
-      my_account: አካውንቴ
+      with_host:
+        js: "with {count, plural, one {host} other {hosts}}"
+        one: with host
+        other: with hosts
+  pundit:
+    not_authorized: You are not authorized to perform this action.
+  readers:
+    form:
+      account_options: Account options
+      choose_an_image: Choose a profile image
+      create_a_password: Create a password
+      my_account: My account
+      notification_settings: Notification settings
+      save: 'Update profile'
+      you_have_not_created_a_password: |
+        Because you first signed in using %{provider}, you never created a password.
+        If you create one now, you will be able to use it, or %{provider}, to sign in.
+  search:
+    didnt_match: Your search didn’t match any cases.
+    keyword_query: Keyword query
+    no_results: No search results
+    propose_a_case: |
+      If you have a case (or a good idea for one) that you’d like to see on
+      Gala, reach out to us. Together we can make the most complete resource for
+      teaching about environment and sustainability.,
+    refine: Refine search
+    results: Search results
+    search: Search
+    search_cases: Search cases
+    try_again: Try searching for something else.
   support:
     array:
-      last_word_connector: ", እና "
-      two_words_connector: " እና "
+      last_word_connector: ", and "
+      two_words_connector: " and "
       words_connector: ", "
+    languages:
+      am: Amharic
+      en: አማርኛ
+      fr: French
+      ja: Japanese
+      zh-CN: Mandarin (Simplified)
+      zh-TW: Mandarin (Traditional)
   time:
     am: am
     formats:
