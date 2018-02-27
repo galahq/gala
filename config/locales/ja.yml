@@ -13,8 +13,7 @@ ja:
         title: 質問
         translators:
           js: "翻訳者："
-          many: Translators
-          one: 翻訳者
+          other: Translators
       question:
         content: 内容
         correct_answer: 正解
@@ -103,9 +102,7 @@ ja:
     settings:
       edit:
         changing_url_leaves_your_old_url_available_for_anyone_else: |
-          If you change your case’s URL, your old URL will redirect to your new
-          one. However, if someone else takes your old URL, the redirect will be
-          overridden.
+          事例研究のURLを変化すれば、先のURLは新しいのにリダイレクトします。しかし、他人はそのURLを選択したとたんに、リダイレクトが無効にされます。
         edit_case_settings: 事例研究の設定を編集
         lowercase_letters_and_numbers_separated_by_hyphens_html: |
           <b>Format:</b> lowercase letters and numbers separated by
@@ -120,14 +117,12 @@ ja:
       end: 終わり
       forthcoming: 今後
       next: "次："
-      not_yet_published: This case is not yet published
-      other_languages: "This case is also available in these languages: "
+      not_yet_published: この事例研究はまだ発刊していない
+      other_languages: "この事例研究は次の言語でも利用できます。"
       toc: Table of Contents
   catalog:
     catalog: Catalog
     choose_for_yourself: Choose for yourself
-    edit_enrolled: Edit enrolled cases
-    enrolled_cases: Enrolled cases
     enrollments_instruction: |
       Cases you enroll in will be presented here for easy access.
     join_conversation: |
@@ -156,8 +151,7 @@ ja:
       join_the_conversation: Join the conversation
       n_responses:
         js: "{count, number} {count, plural, one {response} other {responses}}"
-        many: "%{count} responses"
-        one: 1 response
+        other: "%{count} responses"
       no_comments: No comments
       nobody_has_left_a_comment: |
         Nobody in the {communityName} discussion group has left a comment on
@@ -458,8 +452,7 @@ ja:
     show:
       with_host:
         js: "with {count, plural, one {host} other {hosts}}"
-        many: with hosts
-        one: with host
+        other: with hosts
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
