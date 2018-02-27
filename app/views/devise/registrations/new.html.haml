@@ -25,7 +25,9 @@
       = t 'activerecord.attributes.user.password'
       - if @minimum_password_length
         %br
-        %span.pt-text-muted= t '.minimum_characters', count: @minimum_password_length
+        %span.pt-text-muted
+          = t 'devise.shared.minimum_password_length',
+              count: @minimum_password_length
       = f.password_field :password, class: "pt-input pt-fill", autocomplete: "off", tabindex: 4
 
     = f.label :password_confirmation, class: "pt-label" do
