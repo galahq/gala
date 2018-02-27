@@ -388,9 +388,9 @@ ja:
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
-      featured: ':activerecord.attributes.case.featured'
-      my_cases: My Cases
-      publish_a_case: Publish a Case
+      featured: 注目
+      my_cases: マイケース
+      publish_a_case: 事例研究を発刊しましょう
       put_your_own_cases_on_gala: |
         Put your case on Gala and enrich your teaching with integrated
         discussion, curated media, and insights from detailed analysis of your
@@ -449,13 +449,13 @@ ja:
   podcasts:
     show:
       with_host:
-        js: "with {count, plural, one {host} other {hosts}}"
-        other: with hosts
+        js: "共に司会者"
+        other: 共に司会者
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
     form:
-      account_options: Account options
+      account_options: アカウントのオプション
       choose_an_image: プロフィール画像を選択
       create_a_password: パスワードを選ぶ
       my_account: マイアカウント
@@ -465,17 +465,15 @@ ja:
         初めて%{provider}でサインインしましたので、パスワードをまだ選びませんでした。選んだら、今後%{provider}とパスワードと両方でサインイン可能性があります。
   search:
     didnt_match: 検索はどの事例研究にも一致しませんでした。
-    keyword_query: Keyword query
-    no_results: No search results
+    keyword_query: キーワード検索
+    no_results: 検索結果なし
     propose_a_case: |
-      If you have a case (or a good idea for one) that you’d like to see on
-      Gala, reach out to us. Together we can make the most complete resource for
-      teaching about environment and sustainability.,
-    refine: Refine search
-    results: Search results
-    search: Search
-    search_cases: Search cases
-    try_again: Try searching for something else.
+      あなたがGalaを見たいと思う事件研究（またはそれについての良いアイデア）がある場合は、お問い合わせください。一緒に、環境と持続可能性について教えるための最も完全なリソースを作ることができます。
+    refine: 詳細検索
+    results: 検索結果
+    search: 検索
+    search_cases: 事例の検索
+    try_again: 他のキーワードを検索してみてください。
   support:
     array:
       last_word_connector: "と"
