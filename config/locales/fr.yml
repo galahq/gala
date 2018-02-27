@@ -141,10 +141,10 @@ fr:
     destroy:
       delete_comment_thread: Supprimer le fil de commentaire
     new:
-      new_comment_thread: New comment thread...
+      new_comment_thread: Nouveau fil de commentaire...
     show:
-      card_n: Card {cardPosition}
-      comments_on_page: Comments on “{title}”
+      card_n: Carte {cardPosition}
+      comments_on_page: Commentaires sur «{title}»
       comments_on_page_number: Comments on Page {position, number}
       page_n: Page {pageNumber, number}
   comments:
