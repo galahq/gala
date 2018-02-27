@@ -277,22 +277,22 @@ fr:
   devise:
     sessions:
       destroy:
-        sign_out: Sign out
+        sign_out: Déconnexion
       new:
-        sign_in: Sign in
+        sign_in: Connexion
     shared:
       links:
         sign_up_for_a_free_account: Inscription gratuite
       minimum_password_length:
-        one: (%{count} character minimum)
-        other: (%{count} characters minimum)
+        one: (%{count} caractère minimum)
+        other: (%{count} caractères minimum)
   edgenotes:
     destroy:
-      delete: Delete this Edgenote.
+      delete: Supprimer cette Edgenote.
     edgenote:
-      caption: "Caption: "
-      has_audio: This edgenote has an audio clip.
-      pull_quote: "Quotation: "
+      caption: "Légende : "
+      has_audio: Cette Edgenote a un clip audio.
+      pull_quote: "Citation : "
       video_slug: "YouTube video slug: "
     index:
       attach: Attach this Edgenote
@@ -307,20 +307,19 @@ fr:
       new_edgenote: New Edgenote
   enrollments:
     destroy:
-      are_you_sure: Are you sure you want to unenroll in this case?
-      unenroll: Unenroll from this case
+      are_you_sure: Êtes-vous sûr de vouloir vous désinscrire dans cette étude de cas?
+      unenroll: Désinscrivez-vous de cette étude de cas
       you_will_need_another_invitation: |
-        Because this case is not published, you will need
-        another invitation to reenroll.
+        Parce que celle-ci n’est pas publiée, vous ne pourrez réinscrire que sous invitation.
     index:
-      edit_enrolled: Edit enrolled cases
-      enrolled_cases: Enrolled cases
-      finish_editing: Finish editing
+      edit_enrolled: Changez vos études de cas inscrites
+      enrolled_cases: Études de cas inscrites
+      finish_editing: Terminez l’édition
     new:
-      enroll: Enroll
+      enroll: Inscriver
       enroll_for_easy_access: |
-        If this case catches your eye, enroll for easy access.
-      enroll_in_this_case: Enroll in this case
+        Si cette étude de cas attire votre attention, inscrivez-vous pour un accès facile.
+      enroll_in_this_case: Inscrivez-vous dans cette étude de cas
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -337,7 +336,7 @@ fr:
       invalid: n'est pas valide
       less_than: doit être inférieur à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
-      model_invalid: "Validation failed: %{errors}"
+      model_invalid: "La validation a échoué : %{errors}"
       not_a_number: n'est pas un nombre
       not_an_integer: doit être un nombre entier
       not_found: "n’a pas été trouvé(e)"
@@ -515,7 +514,7 @@ fr:
       words_connector: ", "
     languages:
       am: Amharic
-      en: English
+      en: Français
       fr: French
       ja: Japanese
       zh-CN: Mandarin (Simplified)
