@@ -456,15 +456,15 @@ ja:
   readers:
     form:
       account_options: Account options
-      choose_an_image: Choose a profile image
+      choose_an_image: プロフィール画像を選択
       create_a_password: パスワードを選ぶ
       my_account: マイアカウント
-      notification_settings: Notification settings
+      notification_settings: 通知の設定
       save: 'プロフィールの変化を保存'
       you_have_not_created_a_password: |
         初めて%{provider}でサインインしましたので、パスワードをまだ選びませんでした。選んだら、今後%{provider}とパスワードと両方でサインイン可能性があります。
   search:
-    didnt_match: Your search didn’t match any cases.
+    didnt_match: 検索はどの事例研究にも一致しませんでした。
     keyword_query: Keyword query
     no_results: No search results
     propose_a_case: |
