@@ -48,7 +48,7 @@ fr:
         updated_at: Date de mise à jour
       shared_cases_library:
         description: |
-          These cases were shared by Gala users.
+          Celles études de cas étaient partagée par les utilisateurs de Gala.
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
@@ -59,27 +59,27 @@ fr:
         question:
           attributes:
             correct_answer:
-              inclusion: "is not included in the list of possible answers"
+              inclusion: "n’est pas inclus dans la liste des réponses possibles"
     models:
-      activity: Activity
-      case: Case
+      activity: Activité
+      case: Étude de Cas
       cases:
-        setting: Case Settings
-      comment: Comment
-      comment_thread: Comment thread
+        setting: Paramètres de l’Étude de Cas
+      comment: Réponse
+      comment_thread: Fil de commentaire
       edgenote: Edgenote
-      enrollment: Enrollment
-      global_community: Global Community
-      group: Group
+      enrollment: Inscription
+      global_community: Communauté Mondiale
+      group: Groupe
       group_membership: Group Membership
       page: Page
       podcast: Podcast
       reader: Reader
-      shared_cases_library: Shared Cases
+      shared_cases_library: Études de Cas Partagées
     persistance:
       messages:
-        created: "%{model} successfully created."
-        destroyed: "%{model} successfully deleted."
+        created: "%{model} a été créé(e) aves succès."
+        destroyed: "%{model} a été supprimé(e) avec succès."
         updated: "%{model} successfully updated."
   activities:
     show:
