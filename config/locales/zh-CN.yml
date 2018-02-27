@@ -1,5 +1,5 @@
 zh-CN:
-  __name: English
+  __name: 中文（简体)
   activerecord:
     attributes:
       case:
@@ -496,7 +496,7 @@ zh-CN:
       words_connector: "、"
     languages:
       am: Amharic
-      en: English
+      en: 中文（简体)
       fr: French
       ja: Japanese
       zh-CN: Mandarin (Simplified)
