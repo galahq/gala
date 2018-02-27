@@ -107,26 +107,23 @@ const FormattingToolbar = (props: Props) => {
   const { actions, editorState, intl, onChange } = props
   return (
     <ButtonGroup>
-      {ACTIONS.filter(action => actions[action.name] !== false).map(action => (
-        <Button
-          key={action.name}
-          iconName={action.iconName}
-          active={action.active(editorState)}
-          aria-label={intl.formatMessage({
-            id: action.name,
-            defaultMessage: action.name,
-          })}
-          title={intl.formatMessage({
-            id: action.name,
-            defaultMessage: action.name,
-          })}
-          onClick={async (e: SyntheticMouseEvent<*>) => {
-            e.preventDefault()
-            e.stopPropagation()
-            onChange(await action.call(editorState, props))
-          }}
-        />
-      ))}
+      {ACTIONS.filter(action => actions[action.name] !== false).map(action => {
+        const messageId = `helpers.formatting.${action.name}`
+        return (
+          <Button
+            key={action.name}
+            iconName={action.iconName}
+            active={action.active(editorState)}
+            aria-label={intl.formatMessage({ id: messageId })}
+            title={intl.formatMessage({ id: messageId })}
+            onClick={async (e: SyntheticMouseEvent<*>) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onChange(await action.call(editorState, props))
+            }}
+          />
+        )
+      })}
     </ButtonGroup>
   )
 }

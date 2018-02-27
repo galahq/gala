@@ -15,10 +15,7 @@ type Props = { featuredCases: Case[], readerIsEditor: boolean }
 const Featured = ({ featuredCases, readerIsEditor }: Props) => (
   <CatalogSection solid>
     <SectionTitle>
-      <FormattedMessage
-        id="catalog.featuredCases"
-        defaultMessage="Featured cases"
-      />
+      <FormattedMessage id="features.index.featuredCases" />
     </SectionTitle>
     <Grid>
       {featuredCases.map(
@@ -59,7 +56,8 @@ const Grid = styled.ul`
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, minmax(250px, 2fr))
+    grid-template-rows:
+      repeat(2, minmax(250px, 2fr))
       repeat(4, minmax(150px, 1fr));
   }
 `

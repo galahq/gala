@@ -169,9 +169,7 @@ export async function toggleEdgenote (
       iconName: 'error',
       intent: Intent.WARNING,
       message: intl.formatMessage({
-        id: 'edgenotes.makeSelection',
-        defaultMessage:
-          'Please select the phrase that you would like to attach an Edgenote to.',
+        id: 'edgenotesnew..makeSelection',
       }),
     })
     return editorState

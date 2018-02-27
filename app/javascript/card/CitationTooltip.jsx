@@ -25,9 +25,9 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   const { href, contents } =
     key != null
       ? (editorState
-          .getCurrentContent()
-          .getEntity(key)
-          .getData(): { href: string, contents: string })
+        .getCurrentContent()
+        .getEntity(key)
+        .getData(): { href: string, contents: string })
       : { href: '', contents: '' }
 
   return { editorState, href, contents }
@@ -113,11 +113,7 @@ const CitationTooltip = ({
           {href && (
             <a href={href} target="_blank" rel="noopener noreferrer">
               <span style={{ whiteSpace: 'nowrap' }}>
-                <FormattedMessage
-                  id="catalog.learnMore"
-                  defaultMessage="Learn more"
-                />{' '}
-                ›
+                <FormattedMessage id="catalog.learnMore" /> ›
               </span>
             </a>
           )}

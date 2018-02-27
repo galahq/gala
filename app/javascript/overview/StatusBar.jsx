@@ -56,7 +56,7 @@ function StatusBar ({
     pathname === '/'
       ? [
         {
-          message: 'catalog',
+          message: 'catalog.catalog',
           iconName: 'home',
           onClick: () =>
             (window.location = window.location.pathname.replace(
@@ -66,54 +66,56 @@ function StatusBar ({
         },
         {
           disabled: !commentable || !reader || !reader.enrollment,
-          message: 'conversation',
+          message: 'comments.index.conversation',
           iconName: 'chat',
           onClick: () => history.push('/conversation'),
         },
       ]
       : [
         {
-          message: 'case.backToOverview',
+          message: 'case.show.backToOverview',
           iconName: 'arrow-left',
           onClick: () => history.push('/'),
         },
       ],
     [
       editing
-        ? { message: 'statusBar.editInstructions' }
-        : !published ? { message: 'statusBar.betaNotification' } : null,
+        ? { message: 'cases.edit.just_change_the_text' }
+        : !published ? { message: 'cases.show.not_yet_published' } : null,
     ],
     [
       editable
         ? {
-          message: 'statusBar.options',
+          message: 'cases.edit.options',
           iconName: 'cog',
           submenu: [
             editing || edited
               ? {
                 disabled: !edited,
-                message: 'statusBar.save',
+                message: 'cases.edit.save',
                 iconName: 'floppy-disk',
                 onClick: saveChanges,
               }
               : {
                 message: published
-                  ? 'statusBar.unpublishCase'
-                  : 'statusBar.publishCase',
+                  ? 'cases.edit.unpublishCase'
+                  : 'cases.edit.publishCase',
                 iconName: published ? 'lock' : 'upload',
                 onClick: togglePublished,
               },
             published && !edited
               ? {
                 message: featured
-                  ? 'statusBar.unfeatureCase'
-                  : 'statusBar.featureCase',
+                  ? 'cases.edit.unfeatureCase'
+                  : 'cases.edit.featureCase',
                 iconName: featured ? 'star-empty' : 'star',
                 onClick: toggleFeatured,
               }
               : null,
             {
-              message: editing ? 'statusBar.endEdit' : 'statusBar.beginEdit',
+              message: editing
+                ? 'cases.edit.stop_editing'
+                : 'cases.edit.edit',
               iconName: editing ? 'cross' : 'edit',
               onClick: toggleEditing,
             },

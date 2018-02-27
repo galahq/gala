@@ -55,7 +55,9 @@ const Kicker = styled.span`
   display: block;
   font-weight: 600;
 `
-const Title = styled.div.attrs({ className: 'pt-dark' })`line-height: 1.3;`
+const Title = styled.div.attrs({ className: 'pt-dark' })`
+  line-height: 1.3;
+`
 
 const ForthcomingTag = styled.span.attrs({
   className: 'pt-tag pt-minimal',
@@ -65,6 +67,6 @@ const ForthcomingTag = styled.span.attrs({
 `
 const Forthcoming = () => (
   <ForthcomingTag>
-    <FormattedMessage id="case.forthcoming" defaultMessage="Forthcoming" />
+    <FormattedMessage id="cases.show.forthcoming" />
   </ForthcomingTag>
 )

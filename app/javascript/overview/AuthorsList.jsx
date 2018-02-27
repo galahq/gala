@@ -64,11 +64,7 @@ class AuthorsList extends React.Component<
           {translators.length !== 0 && (
             <em>
               <FormattedMessage
-                id="case.translators"
-                defaultMessage="{count, plural,
-                  one {Translator}
-                  other {Translators}
-                }: "
+                id="activerecord.attributes.case.translators.js"
                 values={{ count: translators.length }}
               />
               <FormattedList

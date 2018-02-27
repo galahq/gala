@@ -83,20 +83,11 @@ const NoComments = injectIntl(({ activeCommunity, intl }) => (
   <PaddedNonIdealState
     visual="chat"
     title={intl.formatMessage({
-      id: 'conversation.noComments',
-      defaultMessage: 'No comments',
+      id: 'comments.index.noComments',
     })}
     description={intl.formatMessage(
-      {
-        id: 'conversation.nobodyHasLeftAComment',
-        defaultMessage: `
-      Nobody in the {communityName} discussion group has left a comment on this case.
-      Switch to a different discussion group or be the first to leave
-      a comment.`,
-      },
-      {
-        communityName: activeCommunity ? activeCommunity.name : '',
-      }
+      { id: 'comments.index.nobodyHasLeftAComment' },
+      { communityName: activeCommunity ? activeCommunity.name : '' }
     )}
     // action={
     // }

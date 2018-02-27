@@ -21,7 +21,7 @@ const CatalogToolbar = ({ history }: ContextRouter) => (
     groups={[
       [
         {
-          message: 'catalog',
+          message: 'catalog.catalog',
           iconName: 'home',
           onClick: () => history.push('/'),
         },
@@ -78,8 +78,7 @@ class SearchField extends React.Component<
             />
           }
           placeholder={this.props.intl.formatMessage({
-            id: 'catalog.search',
-            defaultMessage: 'Search cases',
+            id: 'search.searchCases',
           })}
           onFocus={() => this.setState({ active: true })}
           onBlur={() => this.setState({ active: false })}

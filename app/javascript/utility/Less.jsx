@@ -16,7 +16,7 @@ class Less extends React.Component<
   {
     children: React$Element<*>,
     height: string,
-    prompt: { id: string, defaultMessage: string },
+    prompt: { id: string },
     startOpen: boolean,
     disabled: boolean,
   },
@@ -24,7 +24,7 @@ class Less extends React.Component<
 > {
   static defaultProps = {
     height: '10em',
-    prompt: { id: 'less.readMore', defaultMessage: 'Read more' },
+    prompt: { id: 'helpers.less.readMore' },
     startOpen: false,
     disabled: false,
   }

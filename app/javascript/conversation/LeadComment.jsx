@@ -98,22 +98,19 @@ const LeadComment = ({
             <CommentThreadBreadcrumb>
               {inSitu ? (
                 <FormattedMessage
-                  id="conversation.commentsOnPageNumber"
-                  defaultMessage="Comments on Page {position, number}"
+                  id="commentThreads.show.commentsOnPageNumber"
                   values={{ position: page.position }}
                 />
               ) : (
                 <FormattedMessage
-                  id="conversation.commentsOnPage"
-                  defaultMessage="Comments on “{title}”"
+                  id="commentThreads.show.commentsOnPage"
                   values={{ title: page.title }}
                 />
               )}
             </CommentThreadBreadcrumb>
             <CommentThreadBreadcrumb>
               <FormattedMessage
-                id="conversation.cardN"
-                defaultMessage="Card {cardPosition}"
+                id="commentThreads.show.cardN"
                 values={{ cardPosition }}
               />
             </CommentThreadBreadcrumb>
@@ -140,8 +137,7 @@ const LeadComment = ({
             responseCount === 0 && (
               <DeleteButton
                 aria-label={intl.formatMessage({
-                  id: 'comments.deleteCommentThread',
-                  defaultMessage: 'Delete comment thread',
+                  id: 'commentThreads.destroy.deleteCommentThread',
                 })}
                 onClick={handleDeleteThread}
               />

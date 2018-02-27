@@ -59,8 +59,7 @@ class ResponseForm extends React.Component<
         </Input>
         <SendButton
           aria-label={intl.formatMessage({
-            id: 'comments.respond',
-            defaultMessage: 'Respond',
+            id: 'comments.new.respond',
           })}
           className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
           disabled={

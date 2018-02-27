@@ -47,7 +47,7 @@ class TableOfContents extends React.Component<*> {
     return (
       <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
         <h2 className="c-toc__header">
-          <FormattedMessage id="case.toc" />
+          <FormattedMessage id="cases.show.toc" />
         </h2>
         {connectDropTarget(
           <ol className="c-toc__list">
@@ -67,21 +67,21 @@ class TableOfContents extends React.Component<*> {
                     className="pt-button pt-icon-add"
                     onClick={() => createPage(caseSlug)}
                   >
-                    Page
+                    <FormattedMessage id="activerecord.models.page" />
                   </button>
                   <button
                     type="button"
                     className="pt-button pt-icon-add"
                     onClick={() => createPodcast(caseSlug)}
                   >
-                    Podcast
+                    <FormattedMessage id="activerecord.models.podcast" />
                   </button>
                   <button
                     type="button"
                     className="pt-button pt-icon-add"
                     onClick={() => createActivity(caseSlug)}
                   >
-                    Activity
+                    <FormattedMessage id="activerecord.models.activity" />
                   </button>
                 </div>
               )}

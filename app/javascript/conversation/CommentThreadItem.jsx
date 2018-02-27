@@ -116,8 +116,7 @@ const CommentThreadItem = ({
       <CommentThreadBreadcrumbs>
         <CommentThreadBreadcrumb>
           <FormattedMessage
-            id="case.pageN"
-            defaultMessage={`Page {pageNumber, number}`}
+            id="commentThreads.show.pageN"
             values={{ pageNumber }}
           />
         </CommentThreadBreadcrumb>
@@ -132,10 +131,7 @@ const CommentThreadItem = ({
         <PureTruncate lines={5} content={mostRecentCommentContent} />
       ) : (
         <Grey>
-          <FormattedMessage
-            id="comments.newCommentThread"
-            defaultMessage="New comment thread..."
-          />
+          <FormattedMessage id="commentThreads.new.newCommentThread" />
         </Grey>
       )}
     </MostRecentComment>
@@ -156,11 +152,7 @@ const CommentThreadItem = ({
       </Indenticons>
       <CommentCount>
         <FormattedMessage
-          id="comments.nResponses"
-          defaultMessage={`{count, number} {count, plural,
-          one {response}
-          other {responses}
-        }`}
+          id="comments.index.nResponses.js"
           values={{ count: commentsCount }}
         />
       </CommentCount>
