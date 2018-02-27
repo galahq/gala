@@ -372,17 +372,17 @@ fr:
     formatting:
       add_citation_entity: "Ajoutez une référence ici."
       add_edgenote_entity: "Ajouter une Edgenote à la sélection."
-      blockquote: "Style du paragraphe : citation."
+      blockquote: "Style du paragraphe : Citation."
       bold: "Style intraligne : texte en gras."
       code: "Style intraligne : Code."
-      header: "Block style: Header."
-      italic: "Inline style: Italic."
-      ol: "Block style: Ordered list item."
-      ul: "Block style: Unordered list item."
+      header: "Style du paragraphe: Titre."
+      italic: "Style intraligne : texte en italique."
+      ol: "Style du paragraphe: Élément de la liste triée."
+      ul: "Style du paragraphe: Élément de la liste non triée."
     less:
-      read_more: Read more
+      read_more: Lisez la suite
     list:
-      end: ', and '
+      end: ' et '
       middle: ', '
       start: ', '
       two: ' and '
@@ -511,12 +511,12 @@ fr:
       two_words_connector: " et "
       words_connector: ", "
     languages:
-      am: Amharic
+      am: Amharique
       en: Français
-      fr: French
-      ja: Japanese
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
+      fr: Français
+      ja: Japonais
+      zh-CN: Mandarin (simplifié)
+      zh-TW: Mandarin (traditionnel)
   time:
     am: am
     formats:
