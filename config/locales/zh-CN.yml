@@ -3,7 +3,7 @@ zh-CN:
   activerecord:
     attributes:
       case:
-        acknowledgements: Acknowledgements
+        acknowledgements: 致谢
         featured: Featured
         kicker: Short title
         learning_objectives: Learning objectives
