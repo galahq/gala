@@ -4,7 +4,8 @@
 
   = f.label :email do
     = t "activerecord.attributes.user.email"
-    = f.email_field :email, class: "pt-input pt-fill", autofocus: true, spellcheck: false
+    = f.email_field :email, class: "pt-input pt-fill", autofocus: true,
+                            spellcheck: false
 
   = f.label :password do
     = t "activerecord.attributes.user.password"
@@ -16,9 +17,11 @@
       = f.check_box :remember_me
       %span.pt-control-indicator
 
-  = f.submit t('devise.sessions.new.sign_in'), class: "o-button pt-button pt-intent-primary"
+  = f.submit t('devise.sessions.new.sign_in'),
+             class: "o-button pt-button pt-intent-primary"
   %a.o-button.pt-button.pt-icon-log-in.oauth-icon-google{role: 'button',
-    tabindex: '0', href: omniauth_authorize_path('authentication_strategy', 'google')}
+    tabindex: '0',
+    href: omniauth_authorize_path('authentication_strategy', 'google')}
     = t('devise.shared.links.sign_in_with_provider', provider: 'google')
 
 = render "devise/shared/links"

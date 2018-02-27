@@ -161,6 +161,11 @@ class Reader < ApplicationRecord
     @lti_uid ||= authentication_strategies.where(provider: 'lti').pluck :uid
   end
 
+  # Overridden from Devise for I18n
+  def send_devise_notification(notification, *args)
+    I18n.with_locale(locale) { super notification, *args }
+  end
+
   private
 
   def set_created_password

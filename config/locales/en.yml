@@ -284,6 +284,9 @@ en:
     shared:
       links:
         sign_up_for_a_free_account: Sign up for a free account
+      minimum_password_length:
+        one: (%{count} character minimum)
+        other: (%{count} characters minimum)
   edgenotes:
     destroy:
       delete: Delete this Edgenote.
@@ -397,6 +400,15 @@ en:
       save: Save %{model}
       submit: Submit
       update: Update %{model}
+  layouts:
+    mailer:
+      you_are_receiving_this_email_because_you_are_a_user_of_gala:
+        html: |
+          You are receiving this email because you are a user of <a
+          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: |
+          You are receiving this email because you are a user of Gala
+          (https://www.learngala.com).
   my_cases:
     index:
       confirm_delete: |
@@ -476,7 +488,7 @@ en:
       account_options: Account options
       choose_an_image: Choose a profile image
       create_a_password: Create a password
-      my_account: 'My Account'
+      my_account: My account
       notification_settings: Notification settings
       save: 'Update profile'
       you_have_not_created_a_password: |
