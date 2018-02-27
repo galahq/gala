@@ -1,24 +1,24 @@
 fr:
-  __name: English
+  __name: Français
   activerecord:
     attributes:
       case:
-        acknowledgements: Acknowledgements
-        featured: Featured
-        kicker: Short title
-        learning_objectives: Learning objectives
-        library: Library
-        location: Case location
-        slug: Case URL
+        acknowledgements: Remerciements
+        featured: Ajouté aux études phares
+        kicker: Titre court
+        learning_objectives: Objectifs pédagogiques
+        library: Collection
+        location: Emplacement de l’étude de cas
+        slug: URL de l’etude de cas
         title: Question
         translators:
-          js: "{count, plural, one {Translator} other {Translators} }: "
-          many: Translators
-          one: Translator
+          js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
+          many: Traducteurs(-rices)
+          one: Traducteur(-rice)
       question:
-        content: Content
-        correct_answer: Correct answer
-        options: Options
+        content: Contenu
+        correct_answer: Bonne réponse
+        options: Choix
       reader:
         confirmation_sent_at: Date d'envoi de la confirmation
         confirmation_token: Clé de confirmation du mot de passe
@@ -34,7 +34,7 @@ fr:
         last_sign_in_at: Date de la dernière connexion
         last_sign_in_ip: IP de la dernière connexion
         locked_at: Verrouillé à
-        name: Full Name
+        name: Nom et prénom
         password: Mot de passe
         password_confirmation: Confirmation du mot de passe
         remember_created_at: Mémorisé à
