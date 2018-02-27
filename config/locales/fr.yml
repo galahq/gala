@@ -145,32 +145,31 @@ fr:
     show:
       card_n: Carte {cardPosition}
       comments_on_page: Commentaires sur «{title}»
-      comments_on_page_number: Comments on Page {position, number}
+      comments_on_page_number: Commentaires sur Page {position, number}
       page_n: Page {pageNumber, number}
   comments:
-    destroy: Delete comment
+    destroy: Supprimer le commentaire
     index:
-      all_comments: All comments
+      all_comments: Tous les commentaires
       conversation: Conversation
-      join_the_conversation: Join the conversation
+      join_the_conversation: Rejoignez la conversation
       n_responses:
-        js: "{count, number} {count, plural, one {response} other {responses}}"
+        js: "{count, number} {count, plural, one {réponse} other {résponses}}"
         many: "%{count} responses"
-        one: 1 response
-      no_comments: No comments
+        one: 1 réponse
+      no_comments: Aucune réponse
       nobody_has_left_a_comment: |
         Nobody in the {communityName} discussion group has left a comment on
         this case. Switch to a different discussion group or be the first to
         leave a comment.
     new:
-      respond: Respond
-      respond_here: Respond here
-      select: Select a few words
+      respond: Répondre
+      respond_here: Répondez ici
+      select: Sélectionnez quelques mots
       selection_not_unique: |
-        The words you have selected appear more than once.
-        Please select a few more words.
-      write: Write a reply...
-      write_new: Write a new response
+        Les mots que vous avez sélectionnés apparaissent plusieurs fois. Veuillez sélectionner quelques mots de plus.
+      write: Écrivez quelque chose...
+      write_new: Écrivez une nouvelle réponse
   communities:
     index:
       choose_a_community: Choisir une communauté
@@ -346,7 +345,7 @@ fr:
       odd: doit être impair
       other_than: doit être différent de %{count}
       present: doit être vide
-      required: must exist
+      required: doit exister
       taken: n'est pas disponible
       too_long:
         one: est trop long (pas plus d'un caractère)
@@ -364,18 +363,18 @@ fr:
         other: "Impossible d'enregistrer ce(tte) %{model} : %{count} erreurs"
   features:
     index:
-      featured_cases: Featured cases
+      featured_cases: Études phares
   forms:
-    required: required
+    required: obligatoire
   helpers:
-    cancel: Cancel
-    close: Close
+    cancel: Annuler
+    close: Fermer
     formatting:
-      add_citation_entity: "Add citation here."
-      add_edgenote_entity: "Add edgenote to selection."
-      blockquote: "Block style: Quotation."
-      bold: "Inline style: Bold."
-      code: "Inline style: Code."
+      add_citation_entity: "Ajoutez une référence ici."
+      add_edgenote_entity: "Ajouter une Edgenote à la sélection."
+      blockquote: "Style du paragraphe : citation."
+      bold: "Style intraligne : texte en gras."
+      code: "Style intraligne : Code."
       header: "Block style: Header."
       italic: "Inline style: Italic."
       ol: "Block style: Ordered list item."
