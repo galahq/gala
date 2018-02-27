@@ -116,10 +116,10 @@ ja:
           zoom_in: Zoom in
           zoom_out: Zoom out
     show:
-      back_to_overview: Overview
-      end: End
-      forthcoming: Forthcoming
-      next: "Next: "
+      back_to_overview: 概要に戻る
+      end: 終わり
+      forthcoming: 今後
+      next: "次："
       not_yet_published: This case is not yet published
       other_languages: "This case is also available in these languages: "
       toc: Table of Contents
@@ -266,24 +266,24 @@ ja:
   devise:
     sessions:
       destroy:
-        sign_out: Sign out
+        sign_out: サインアウト
       new:
-        sign_in: Sign in
+        sign_in: サインイン
     shared:
       links:
         sign_up_for_a_free_account: 無料で申し込む
       minimum_password_length:
-        other: (%{count} characters minimum)
+        other: '（最小%{count}文字）'
   edgenotes:
     destroy:
-      delete: Delete this Edgenote.
+      delete: このEdgenoteを削除する。
     edgenote:
-      caption: "Caption: "
-      has_audio: This edgenote has an audio clip.
-      pull_quote: "Quotation: "
+      caption: "キャプション："
+      has_audio: このエッジノートはオーディオが添付しています。
+      pull_quote: "引用："
       video_slug: "YouTube video slug: "
     index:
-      attach: Attach this Edgenote
+      attach: この Edgenote を添付します。
       reattach_instructions: |
         The Edgenotes that belong to this case but that are not attached to any
         card are listed below. They can be reattached or deleted if they are no
@@ -292,23 +292,22 @@ ja:
     new:
       make_selection: |
         Please select the phrase that you would like to attach an Edgenote to.
-      new_edgenote: New Edgenote
+      new_edgenote: Edgenoteを登録
   enrollments:
     destroy:
-      are_you_sure: Are you sure you want to unenroll in this case?
-      unenroll: Unenroll from this case
+      are_you_sure: この事例研究、登録を解除してもよろしいですか？
+      unenroll: この事例研究の登録を解除する
       you_will_need_another_invitation: |
-        Because this case is not published, you will need
-        another invitation to reenroll.
+        公開されていないので、再登録するには別の招待状が必要です。
     index:
-      edit_enrolled: Edit enrolled cases
-      enrolled_cases: Enrolled cases
-      finish_editing: Finish editing
+      edit_enrolled: 登録された事例研究を編集
+      enrolled_cases: 登録された事例研究
+      finish_editing: 編集を完了する
     new:
-      enroll: Enroll
+      enroll: 登録
       enroll_for_easy_access: |
-        If this case catches your eye, enroll for easy access.
-      enroll_in_this_case: Enroll in this case
+        このケースが目を引く場合は、簡単に見つけれるよう登録してください。
+      enroll_in_this_case: この事例研究に登録する
   errors:
     format: "%{attribute}%{message}"
     messages:
@@ -328,10 +327,10 @@ ja:
       model_invalid: "バリデーションに失敗しました: %{errors}"
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
-      not_found: "not found"
-      not_locked: "was not locked"
+      not_found: "は見つけませんでした"
+      not_locked: "はロックされてませんでした"
       not_saved:
-        other: "%{count} errors prohibited this %{resource} from being saved:"
+        other: "%{resource}に%{count}個のエラーが発生しました:"
       odd: は奇数にしてください
       other_than: は%{count}以外の値にしてください
       present: は入力しないでください
