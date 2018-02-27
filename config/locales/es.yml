@@ -1,6 +1,24 @@
 es:
+  __name: Español
   activerecord:
     attributes:
+      case:
+        acknowledgements: Reconocimientos
+        featured: Destacado
+        kicker: Short title
+        learning_objectives: Objetivos de aprendizaje
+        library: Library
+        location: Ubicación del caso
+        slug: Case URL
+        title: Question
+        translators:
+          js: "{count, plural, one {Traductor(a)} other {Traductores} }: "
+          one: Traductor(a)
+          other: Traductores
+      question:
+        content: Content
+        correct_answer: Correct answer
+        options: Options
       reader:
         confirmation_sent_at: Fecha de envío de confirmación
         confirmation_token: Código de confirmación
@@ -12,9 +30,9 @@ es:
         email: Email
         encrypted_password: Contraseña cifrada
         failed_attempts: Intentos fallidos
+        initials: Initials
         last_sign_in_at: Fecha del último ingreso
         last_sign_in_ip: IP del último ingreso
-        locale: Lugar
         locked_at: Fecha de bloqueo
         name: Nombre
         password: Contraseña
@@ -23,72 +41,192 @@ es:
         remember_me: Recordarme
         reset_password_sent_at: Fecha de envío de código para contraseña
         reset_password_token: Código para restablecer contraseña
+        send_reply_notifications: Notify me when someone replies to a comment I wrote
         sign_in_count: Cantidad de ingresos
         unconfirmed_email: Email no confirmado
         unlock_token: Código de desbloqueo
         updated_at: Fecha de actualización
+      shared_cases_library:
+        description: |
+          These cases were shared by Gala users.
     errors:
       messages:
         record_invalid: "La validación falló: %{errors}"
         restrict_dependent_destroy:
-          has_many: No se puede eliminar el registro porque existen %{record} dependientes
-          has_one: No se puede eliminar el registro porque existe un %{record} dependiente
+          has_many: "No se puede eliminar el registro porque existen %{record} dependientes"
+          has_one: "No se puede eliminar el registro porque existe un %{record} dependiente"
+      models:
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "is not included in the list of possible answers"
     models:
+      activity: Activity
+      case: Case
+      cases:
+        setting: Case Settings
+      comment: Comment
+      comment_thread: Comment thread
+      edgenote: Edgenote
+      enrollment: Enrollment
       global_community: Comunidad global
+      group: Group
+      group_membership: Group Membership
+      page: Page
+      podcast: Podcast
+      reader: Reader
       shared_cases_library: Casos compartidos
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        destroyed: "%{model} successfully deleted."
+        updated: "%{model} successfully updated."
+  activities:
+    show:
+      download: Download
+      instructions: Instructions
+  cases:
+    edit:
+      change_cover_image: Change cover image
+      edit: Editar este caso
+      feature_case: Agregar caso destacado
+      just_change_the_text: Para editar este caso, simplemente cambie el texto
+      options: Opciones
+      publish_case: Publicar este caso
+      save: Guardar
+      stop_editing: Dejar de editar este caso
+      unfeature_case: Quitar de casos destacados
+      unpublish_case: Annular la publicacion
+    index:
+      all_cases: Todos los casos
+      locations: Ubicaciones
+    settings:
+      edit:
+        changing_url_leaves_your_old_url_available_for_anyone_else: |
+          If you change your case’s URL, your old URL will redirect to your new
+          one. However, if someone else takes your old URL, the redirect will be
+          overridden.
+        edit_case_settings: Edit Case Settings
+        lowercase_letters_and_numbers_separated_by_hyphens_html: |
+          <b>Format:</b> lowercase letters and numbers separated by
+          hyphens,<br />100 characters maximum
+        map:
+          reset: Reset
+          set: Set
+          zoom_in: Zoom in
+          zoom_out: Zoom out
+    show:
+      back_to_overview: Resumen
+      end: Fin
+      forthcoming: A venir
+      next: "Próximo: "
+      not_yet_published: Este caso aún no ha sido publicado
+      other_languages: "Este caso también está disponible en los siguientes idiomas: "
+      toc: Tabla de Contenido
+  catalog:
+    catalog: Catálogo
+    choose_for_yourself: Tú vas a elegir
+    enrollments_instruction: |
+      Casos en los que estás inscrito se presentarán aquí para su acceso facil.
+    join_conversation: |
+      Súmete a la conversación, preguntá, y compartí tu conomiciento.
+    learn_more: Más información
+    meet_stakeholders: |
+      Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
+    propose_a_case: Proponer un estudio de caso
+    shortcut_experience: Aplicar principios para mejorar en la práctica.
+  comment_threads:
+    destroy:
+      delete_comment_thread: Delete comment thread
+    new:
+      new_comment_thread: New comment thread...
+    show:
+      card_n: Card {cardPosition}
+      comments_on_page: Comments on “{title}”
+      comments_on_page_number: Comments on Page {position, number}
+      page_n: Page {pageNumber, number}
+  comments:
+    destroy: Delete comment
+    index:
+      all_comments: All comments
+      conversation: Conversation
+      join_the_conversation: Join the conversation
+      n_responses:
+        js: "{count, number} {count, plural, one {comentario} other {comentarios}}"
+        one: 1 comentario
+        other: "%{count} comentarios"
+      no_comments: No comments
+      nobody_has_left_a_comment: |
+        Nobody in the {communityName} discussion group has left a comment on
+        this case. Switch to a different discussion group or be the first to
+        leave a comment.
+    new:
+      respond: Comentar
+      respond_here: Responder aquí
+      select: Resaltar unas palabras
+      selection_not_unique: |
+        Las palabras seleccionadas aparecen más que una vez, favor ampliar su selección.
+      write: Escribir su respuesta...
+      write_new: Escribir nueva respuesta
+  communities:
+    index:
+      choose_a_community: Escoger comunidad
+      instructions: |
+        Verás una discusión tomando lugar en la comunidad escogida.
+      not_discussing: Tu comunidad activa no está hablando de este caso
   date:
     abbr_day_names:
-    - dom
-    - lun
-    - mar
-    - mié
-    - jue
-    - vie
-    - sáb
+      - dom
+      - lun
+      - mar
+      - mié
+      - jue
+      - vie
+      - sáb
     abbr_month_names:
-    -
-    - ene
-    - feb
-    - mar
-    - abr
-    - may
-    - jun
-    - jul
-    - ago
-    - sep
-    - oct
-    - nov
-    - dic
+      -
+      - ene
+      - feb
+      - mar
+      - abr
+      - may
+      - jun
+      - jul
+      - ago
+      - sep
+      - oct
+      - nov
+      - dic
     day_names:
-    - domingo
-    - lunes
-    - martes
-    - miércoles
-    - jueves
-    - viernes
-    - sábado
+      - domingo
+      - lunes
+      - martes
+      - miércoles
+      - jueves
+      - viernes
+      - sábado
     formats:
       default: "%-d/%-m/%Y"
       long: "%-d de %B de %Y"
       short: "%-d de %b"
     month_names:
-    -
-    - enero
-    - febrero
-    - marzo
-    - abril
-    - mayo
-    - junio
-    - julio
-    - agosto
-    - septiembre
-    - octubre
-    - noviembre
-    - diciembre
+      -
+      - enero
+      - febrero
+      - marzo
+      - abril
+      - mayo
+      - junio
+      - julio
+      - agosto
+      - septiembre
+      - octubre
+      - noviembre
+      - diciembre
     order:
-    - :day
-    - :month
-    - :year
+      - :day
+      - :month
+      - :year
   datetime:
     distance_in_words:
       about_x_hours:
@@ -125,9 +263,6 @@ es:
       x_seconds:
         one: 1 segundo
         other: "%{count} segundos"
-      x_years:
-        one: 1 año
-        other: "%{count} años"
     prompts:
       day: Día
       hour: Hora
@@ -136,9 +271,51 @@ es:
       second: Segundos
       year: Año
   devise:
+    sessions:
+      destroy:
+        sign_out: Salir
+      new:
+        sign_in: Iniciar sesión
     shared:
       links:
         sign_up_for_a_free_account: Regístrese para obtener una cuenta gratuita
+      minimum_password_length:
+        one: (%{count} caractere como mínimo)
+        other: (%{count} caracteres como mínimo)
+  edgenotes:
+    destroy:
+      delete: Delete this Edgenote.
+    edgenote:
+      caption: "Caption: "
+      has_audio: This edgenote has an audio clip.
+      pull_quote: "Quotation: "
+      video_slug: "YouTube video slug: "
+    index:
+      attach: Attach this Edgenote
+      reattach_instructions: |
+        The Edgenotes that belong to this case but that are not attached to any
+        card are listed below. They can be reattached or deleted if they are no
+        longer needed. Or, you can create a brand new Edgenote and deal with
+        these later.
+    new:
+      make_selection: |
+        Please select the phrase that you would like to attach an Edgenote to.
+      new_edgenote: New Edgenote
+  enrollments:
+    destroy:
+      are_you_sure: '¿Estás seguro que quieres desinscribirse?'
+      unenroll: Desinscribirse del caso
+      you_will_need_another_invitation: |
+        Porque el caso no ha sido publicado, necesitarás otra invitación para inscribirse.
+    index:
+      edit_enrolled: Editar casos inscritos
+      enrolled_cases: Casos inscritos
+      finish_editing: Terminar de editar
+    new:
+      enroll: Inscribirse
+      enroll_for_easy_access: |
+        Si este caso te llama la atención inscribirse para acceso facil.
+      enroll_in_this_case: Inscribirse en este caso
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -158,41 +335,90 @@ es:
       model_invalid: "La validación falló: %{errors}"
       not_a_number: no es un número
       not_an_integer: debe ser un entero
+      not_found: "not found"
+      not_locked: "was not locked"
+      not_saved:
+        one: "1 error prohibited this %{resource} from being saved:"
+        other: "%{count} errors prohibited this %{resource} from being saved:"
       odd: debe ser impar
       other_than: debe ser distinto de %{count}
       present: debe estar en blanco
       required: debe existir
       taken: ya está en uso
       too_long:
-        one: "es demasiado largo (1 carácter máximo)"
-        other: "es demasiado largo (%{count} caracteres máximo)"
+        one: es demasiado largo (1 carácter máximo)
+        other: es demasiado largo (%{count} caracteres máximo)
       too_short:
-        one: "es demasiado corto (1 carácter mínimo)"
-        other: "es demasiado corto (%{count} caracteres mínimo)"
+        one: es demasiado corto (1 carácter mínimo)
+        other: es demasiado corto (%{count} caracteres mínimo)
       wrong_length:
-        one: "no tiene la longitud correcta (1 carácter exactos)"
-        other: "no tiene la longitud correcta (%{count} caracteres exactos)"
+        one: no tiene la longitud correcta (1 carácter exactos)
+        other: no tiene la longitud correcta (%{count} caracteres exactos)
     template:
-      already_confirmed: "ya fue confirmada. Intenta ingresar."
       body: 'Se encontraron problemas con los siguientes campos:'
-      confirmation_period_expired: "necesita ser confirmada dentro de %{period}, por favor pide una nueva"
-      expired: "ha expirado, por favor pide una nueva"
       header:
         one: No se pudo guardar este/a %{model} porque se encontró 1 error
-        other: No se pudo guardar este/a %{model} porque se encontraron %{count} errores
-      not_found: "no encontrado"
-      not_locked: "no ha sido bloqueada"
-      not_saved:
-        one: "Ha ocurrido 1 error:"
-        other: "Han ocurrido %{count} errores:"
+        other: "No se pudo guardar este/a %{model} porque se encontraron %{count} errores"
+  features:
+    index:
+      featured_cases: Casos destacados
+  forms:
+    required: required
   helpers:
+    cancel: Anular
+    close: Cerrar
+    formatting:
+      add_citation_entity: "Add citation here."
+      add_edgenote_entity: "Add edgenote to selection."
+      blockquote: "Block style: Quotation."
+      bold: "Inline style: Bold."
+      code: "Inline style: Code."
+      header: "Block style: Header."
+      italic: "Inline style: Italic."
+      ol: "Block style: Ordered list item."
+      ul: "Block style: Unordered list item."
+    less:
+      read_more: Leer más
+    list:
+      end: ' y '
+      middle: ', '
+      start: ', '
+      two: ' y '
+    page_entries_info:
+      more_pages:
+        display_entries: "Mostrando <b>%{first}&nbsp;–&nbsp;%{last}</b> %{entry_name} de <b>%{total}</b> en total"
     select:
       prompt: Por favor seleccione
     submit:
       create: Crear %{model}
-      submit: Guardar %{model}
+      save: Guardar %{model}
+      submit: Guardar
       update: Actualizar %{model}
-  name: Español
+  layouts:
+    mailer:
+      you_are_receiving_this_email_because_you_are_a_user_of_gala:
+        html: |
+          You are receiving this email because you are a user of <a
+          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: |
+          You are receiving this email because you are a user of Gala
+          (https://www.learngala.com).
+  my_cases:
+    index:
+      confirm_delete: |
+        Are you sure you wish to delete this case? This action cannot be undone.
+      delete_case: Delete case.
+      edit_case: Edit case.
+      edit_case_settings: Edit case settings.
+      featured: ':activerecord.attributes.case.featured'
+      my_cases: My Cases
+      publish_a_case: Publish a Case
+      put_your_own_cases_on_gala: |
+        Put your case on Gala and enrich your teaching with integrated
+        discussion, curated media, and insights from detailed analysis of your
+        students’ engagement with the material.
+        You keep the rights to the cases you publish on Gala and we make them
+        easy to deploy in and beyond the classroom.
   notifications:
     replied_to_your_comment: "%{notifier} respondió a tu comentario en “%{case_kicker}.”"
   number:
@@ -216,14 +442,10 @@ es:
         format: "%n %u"
         units:
           billion: mil millones
-          million:
-            one: millón
-            other: millones
+          million: Million
           quadrillion: mil billones
           thousand: mil
-          trillion:
-            one: billón
-            other: billones
+          trillion: Trillion
           unit: ''
       format:
         delimiter: ''
@@ -247,21 +469,49 @@ es:
     precision:
       format:
         delimiter: ''
+  podcasts:
+    show:
+      with_host:
+        js: "con {count, plural, one {el/la anfitrión(a)} other {los/las anfitriones(as)}}"
+        one: con el/la anfitrión(a)
+        other: con los/las anfitriones(as)
+  pundit:
+    not_authorized: You are not authorized to perform this action.
   readers:
     form:
+      account_options: Opciones de cuenta
+      choose_an_image: Choose a profile image
       create_a_password: Crear contraseña
       my_account: Mi cuenta
       notification_settings: Configuración de notificación
-      save: Actualizar perfil
+      save: 'Actualizar perfil'
       you_have_not_created_a_password: |
         Porque iniciaste tú primera sesión con %{provider}, no creaste una
         contraseña. Si creas una contraseña, podrás usarla o %{provider}
         para iniciar la sesión.
+  search:
+    didnt_match: Tu búsqueda no ha generado resultados.
+    keyword_query: Palabras claves
+    no_results: Sin resultados
+    propose_a_case: |
+      Si tienes un estudio de caso (o una buena idea para un estudio de caso) que te gustaría ver en Gala, escríbanos. Juntos podemos crear un recurso de enseñanza sobre el ambiente y sostenibilidad más comprensivo.
+    refine: Limitar busqueda
+    results: Resultados de busqueda
+    search: Buscar
+    search_cases: Buscar casos
+    try_again: Intente cambiar tu búsqueda.
   support:
     array:
       last_word_connector: " y "
       two_words_connector: " y "
       words_connector: ", "
+    languages:
+      am: Amhárico
+      en: Inglés
+      fr: Francés
+      ja: Japonés
+      zh-CN: Mandarín (simplificado)
+      zh-TW: Mandarín (tradicional)
   time:
     am: am
     formats:
