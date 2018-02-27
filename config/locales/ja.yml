@@ -337,26 +337,26 @@ ja:
       required: を入力してください
       taken: はすでに存在します
       too_long:
-        other: is too long (maximum is %{count} characters)
+        other: は%{count}文字以内で入力してください
       too_short:
-        other: is too short (minimum is %{count} characters)
+        other: は%{count}文字以上で入力してください
       wrong_length:
-        other: is the wrong length (should be %{count} characters)
+        other: は%{count}文字で入力してください
     template:
       body: '次の項目を確認してください'
       header:
         other: "%{model}に%{count}個のエラーが発生しました"
   features:
     index:
-      featured_cases: Featured cases
+      featured_cases: 注目の事例研究
   forms:
-    required: required
+    required: 必須
   helpers:
-    cancel: Cancel
-    close: Close
+    cancel: キャンセル
+    close: 閉じる
     formatting:
-      add_citation_entity: "Add citation here."
-      add_edgenote_entity: "Add edgenote to selection."
+      add_citation_entity: "ここで引用を追加します。"
+      add_edgenote_entity: "Edgenote を選択に添付します。"
       blockquote: "Block style: Quotation."
       bold: "Inline style: Bold."
       code: "Inline style: Code."
@@ -365,15 +365,15 @@ ja:
       ol: "Block style: Ordered list item."
       ul: "Block style: Unordered list item."
     less:
-      read_more: Read more
+      read_more: 続きを読む
     list:
-      end: ', and '
-      middle: ', '
-      start: ', '
-      two: ' and '
+      end: 'と'
+      middle: 'と'
+      start: 'と'
+      two: 'と'
     page_entries_info:
       more_pages:
-        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
+        display_entries: "<b>%{total}</b>中の%{entry_name}を表示しています <b>%{first}〜%{last}</b>"
     select:
       prompt: 選択してください
     submit:
