@@ -9,16 +9,16 @@ ja:
         learning_objectives: 学習目標
         library: Library
         location: 場所
-        slug: Case URL
-        title: Question
+        slug: 事例研究のURL
+        title: 質問
         translators:
-          js: "{count, plural, one {Translator} other {Translators} }: "
+          js: "翻訳者："
           many: Translators
-          one: Translator
+          one: 翻訳者
       question:
-        content: Content
-        correct_answer: Correct answer
-        options: Options
+        content: 内容
+        correct_answer: 正解
+        options: 選択肢
       reader:
         confirmation_sent_at: パスワード確認送信時刻
         confirmation_token: パスワード確認用トークン
@@ -34,7 +34,7 @@ ja:
         last_sign_in_at: 最終ログイン時刻
         last_sign_in_ip: 最終ログインIPアドレス
         locked_at: ロック時刻
-        name: Full Name
+        name: 姓名
         password: パスワード
         password_confirmation: パスワード（確認用）
         remember_created_at: ログイン記憶時刻
@@ -48,7 +48,7 @@ ja:
         updated_at: 更新日
       shared_cases_library:
         description: |
-          These cases were shared by Gala users.
+          この事例研究はGalaのユーザーが投稿しました。
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"
@@ -59,12 +59,12 @@ ja:
         question:
           attributes:
             correct_answer:
-              inclusion: "is not included in the list of possible answers"
+              inclusion: "は選択肢の一覧にありません"
     models:
       activity: アクティビティ
       case: 場合
       cases:
-        setting: Case Settings
+        setting: 事例研究の設定
       comment: コメント
       comment_thread: コメントスレッド
       edgenote: Edgenote
@@ -72,13 +72,13 @@ ja:
       global_community: グローバルコミュニティ
       group: グループ
       group_membership: グループのメンバーシップ
-      page: Page
+      page: ページ
       podcast: ポッドキャスト
       reader: リーダー
-      shared_cases_library: Shared Cases
+      shared_cases_library: 共有の事例研究
     persistance:
       messages:
-        created: "%{model} successfully created."
+        created: "%{model}は登録されました"
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
   activities:
@@ -91,7 +91,7 @@ ja:
       edit: Edit this case
       feature_case: Feature this case
       just_change_the_text: To edit this case, just change the text
-      options: Options
+      options: 選択肢
       publish_case: Publish this case
       save: Save
       stop_editing: Stop editing this case
