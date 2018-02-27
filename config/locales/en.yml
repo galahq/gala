@@ -13,7 +13,7 @@ en:
         title: Question
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
-          many: Translators
+          other: Translators
           one: Translator
       question:
         content: Content
@@ -127,8 +127,6 @@ en:
   catalog:
     catalog: Catalog
     choose_for_yourself: Choose for yourself
-    edit_enrolled: Edit enrolled cases
-    enrolled_cases: Enrolled cases
     enrollments_instruction: |
       Cases you enroll in will be presented here for easy access.
     join_conversation: |
@@ -157,7 +155,7 @@ en:
       join_the_conversation: Join the conversation
       n_responses:
         js: "{count, number} {count, plural, one {response} other {responses}}"
-        many: "%{count} responses"
+        other: "%{count} responses"
         one: 1 response
       no_comments: No comments
       nobody_has_left_a_comment: |
@@ -479,7 +477,7 @@ en:
     show:
       with_host:
         js: "with {count, plural, one {host} other {hosts}}"
-        many: with hosts
+        other: with hosts
         one: with host
   pundit:
     not_authorized: You are not authorized to perform this action.
