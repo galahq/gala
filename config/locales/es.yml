@@ -280,8 +280,8 @@ es:
       links:
         sign_up_for_a_free_account: Regístrese para obtener una cuenta gratuita
       minimum_password_length:
-        one: (%{count} character minimum)
-        other: (%{count} characters minimum)
+        one: (%{count} caractere como mínimo)
+        other: (%{count} caracteres como mínimo)
   edgenotes:
     destroy:
       delete: Delete this Edgenote.
@@ -303,20 +303,19 @@ es:
       new_edgenote: New Edgenote
   enrollments:
     destroy:
-      are_you_sure: Are you sure you want to unenroll in this case?
-      unenroll: Unenroll from this case
+      are_you_sure: '¿Estás seguro que quieres desinscribirse?'
+      unenroll: Desinscribirse del caso
       you_will_need_another_invitation: |
-        Because this case is not published, you will need
-        another invitation to reenroll.
+        Porque el caso no ha sido publicado, necesitarás otra invitación para inscribirse.
     index:
-      edit_enrolled: Edit enrolled cases
-      enrolled_cases: Enrolled cases
-      finish_editing: Finish editing
+      edit_enrolled: Editar casos inscritos
+      enrolled_cases: Casos inscritos
+      finish_editing: Terminar de editar
     new:
-      enroll: Enroll
+      enroll: Inscribirse
       enroll_for_easy_access: |
-        If this case catches your eye, enroll for easy access.
-      enroll_in_this_case: Enroll in this case
+        Si este caso te llama la atención inscribirse para acceso facil.
+      enroll_in_this_case: Inscribirse en este caso
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -362,12 +361,12 @@ es:
         other: "No se pudo guardar este/a %{model} porque se encontraron %{count} errores"
   features:
     index:
-      featured_cases: Featured cases
+      featured_cases: Casos destacados
   forms:
     required: required
   helpers:
-    cancel: Cancel
-    close: Close
+    cancel: Anular
+    close: Cerrar
     formatting:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
@@ -379,21 +378,21 @@ es:
       ol: "Block style: Ordered list item."
       ul: "Block style: Unordered list item."
     less:
-      read_more: Read more
+      read_more: Leer más
     list:
-      end: ', and '
+      end: ' y '
       middle: ', '
       start: ', '
-      two: ' and '
+      two: ' y '
     page_entries_info:
       more_pages:
-        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
+        display_entries: "Mostrando <b>%{first}&nbsp;–&nbsp;%{last}</b> %{entry_name} de <b>%{total}</b> en total"
     select:
       prompt: Por favor seleccione
     submit:
       create: Crear %{model}
-      save: Save %{model}
-      submit: Guardar %{model}
+      save: Guardar %{model}
+      submit: Guardar
       update: Actualizar %{model}
   layouts:
     mailer:
@@ -473,14 +472,14 @@ es:
   podcasts:
     show:
       with_host:
-        js: "with {count, plural, one {host} other {hosts}}"
-        one: with host
-        other: with hosts
+        js: "con {count, plural, one {el/la anfitrión(a)} other {los/las anfitriones(as)}}"
+        one: con el/la anfitrión(a)
+        other: con los/las anfitriones(as)
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
     form:
-      account_options: Account options
+      account_options: Opciones de cuenta
       choose_an_image: Choose a profile image
       create_a_password: Crear contraseña
       my_account: Mi cuenta
@@ -491,30 +490,28 @@ es:
         contraseña. Si creas una contraseña, podrás usarla o %{provider}
         para iniciar la sesión.
   search:
-    didnt_match: Your search didn’t match any cases.
-    keyword_query: Keyword query
-    no_results: No search results
+    didnt_match: Tu búsqueda no ha generado resultados.
+    keyword_query: Palabras claves
+    no_results: Sin resultados
     propose_a_case: |
-      If you have a case (or a good idea for one) that you’d like to see on
-      Gala, reach out to us. Together we can make the most complete resource for
-      teaching about environment and sustainability.,
-    refine: Refine search
-    results: Search results
-    search: Search
-    search_cases: Search cases
-    try_again: Try searching for something else.
+      Si tienes un estudio de caso (o una buena idea para un estudio de caso) que te gustaría ver en Gala, escríbanos. Juntos podemos crear un recurso de enseñanza sobre el ambiente y sostenibilidad más comprensivo.
+    refine: Limitar busqueda
+    results: Resultados de busqueda
+    search: Buscar
+    search_cases: Buscar casos
+    try_again: Intente cambiar tu búsqueda.
   support:
     array:
       last_word_connector: " y "
       two_words_connector: " y "
       words_connector: ", "
     languages:
-      am: Amharic
-      en: Español
-      fr: French
-      ja: Japanese
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
+      am: Amhárico
+      en: Inglés
+      fr: Francés
+      ja: Japonés
+      zh-CN: Mandarín (simplificado)
+      zh-TW: Mandarín (tradicional)
   time:
     am: am
     formats:
