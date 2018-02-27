@@ -1,165 +1,260 @@
 ja:
+  __name: English
   activerecord:
     attributes:
+      case:
+        acknowledgements: Acknowledgements
+        featured: Featured
+        kicker: Short title
+        learning_objectives: Learning objectives
+        library: ':activerecord.models.library'
+        location: Case location
+        slug: Case URL
+        title: Question
+        translators:
+          js: "{count, plural, one {Translator} other {Translators} }: "
+          many: Translators
+          one: Translator
+      question:
+        content: Content
+        correct_answer: Correct answer
+        options: Options
       reader:
-        confirmation_sent_at: "パスワード確認送信時刻"
-        confirmation_token: "パスワード確認用トークン"
-        confirmed_at: "パスワード確認時刻"
-        created_at: "作成日"
-        current_password: "現在のパスワード"
-        current_sign_in_at: "現在のログイン時刻"
-        current_sign_in_ip: "現在のログインIPアドレス"
-        email: "メールアドレス"
-        encrypted_password: "暗号化パスワード"
-        failed_attempts: "失敗したログイン試行回数"
-        last_sign_in_at: "最終ログイン時刻"
-        last_sign_in_ip: "最終ログインIPアドレス"
-        locale: 言語
-        locked_at: "ロック時刻"
-        password: "パスワード"
-        password_confirmation: "パスワード（確認用）"
-        remember_created_at: "ログイン記憶時刻"
-        remember_me: "ログインを記憶する"
-        reset_password_sent_at: "パスワードリセット送信時刻"
-        reset_password_token: "パスワードリセット用トークン"
+        confirmation_sent_at: パスワード確認送信時刻
+        confirmation_token: パスワード確認用トークン
+        confirmed_at: パスワード確認時刻
+        created_at: 作成日
+        current_password: 現在のパスワード
+        current_sign_in_at: 現在のログイン時刻
+        current_sign_in_ip: 現在のログインIPアドレス
+        email: メールアドレス
+        encrypted_password: 暗号化パスワード
+        failed_attempts: 失敗したログイン試行回数
+        initials: Initials
+        last_sign_in_at: 最終ログイン時刻
+        last_sign_in_ip: 最終ログインIPアドレス
+        locked_at: ロック時刻
+        name: Full Name
+        password: パスワード
+        password_confirmation: パスワード（確認用）
+        remember_created_at: ログイン記憶時刻
+        remember_me: ログインを記憶する
+        reset_password_sent_at: パスワードリセット送信時刻
+        reset_password_token: パスワードリセット用トークン
         send_reply_notifications: 私が書いたコメントに誰かが返信したときに通知する
-        sign_in_count: "ログイン回数"
-        unconfirmed_email: "未確認Eメール"
-        unlock_token: "ロック解除用トークン"
-        updated_at: "更新日"
+        sign_in_count: ログイン回数
+        unconfirmed_email: 未確認Eメール
+        unlock_token: ロック解除用トークン
+        updated_at: 更新日
+      shared_cases_library:
+        description: |
+          These cases were shared by Gala users.
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"
         restrict_dependent_destroy:
           has_many: "%{record}が存在しているので削除できません"
           has_one: "%{record}が存在しているので削除できません"
+      models:
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "is not included in the list of possible answers"
     models:
-      activity: アクティビティ  #g
-      case: 場合  #g
-      comment: コメント  #g
-      comment_thread: コメントスレッド  #g
-      edgenote: Edgenote  #g
-      enrollment: 登録  #g
+      activity: アクティビティ
+      case: 場合
+      cases:
+        setting: Case Settings
+      comment: コメント
+      comment_thread: コメントスレッド
+      edgenote: Edgenote
+      enrollment: 登録
       global_community: グローバルコミュニティ
-      group: グループ  #g
-      group_membership: グループのメンバーシップ  #g
-      podcast: ポッドキャスト  #g
-      reader: リーダー  #g
+      group: グループ
+      group_membership: グループのメンバーシップ
+      page: Page
+      podcast: ポッドキャスト
+      reader: リーダー
+      shared_cases_library: Shared Cases
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        destroyed: "%{model} successfully deleted."
+        updated: "%{model} successfully updated."
+  activities:
+    show:
+      download: Download
+      instructions: Instructions
   cases:
-    case:
-      forthcoming: 今後
-      translator:
-        many: 翻訳
-        one: 翻訳
+    edit:
+      change_cover_image: Change cover image
+      edit: Edit this case
+      feature_case: Feature this case
+      just_change_the_text: To edit this case, just change the text
+      options: Options
+      publish_case: Publish this case
+      save: Save
+      stop_editing: Stop editing this case
+      unfeature_case: Remove from featured cases
+      unpublish_case: Unpublish this case
+    index:
+      all_cases: All cases
+      locations: Site locations
+    settings:
+      edit:
+        changing_url_leaves_your_old_url_available_for_anyone_else: |
+          If you change your case’s URL, your old URL will redirect to your new
+          one. However, if someone else takes your old URL, the redirect will be
+          overridden.
+        edit_case_settings: Edit Case Settings
+        lowercase_letters_and_numbers_separated_by_hyphens_html: |
+          <b>Format:</b> lowercase letters and numbers separated by
+          hyphens,<br />100 characters maximum
+        map:
+          reset: Reset
+          set: Set
+          zoom_in: Zoom in
+          zoom_out: Zoom out
+    show:
+      back_to_overview: Overview
+      end: End
+      forthcoming: Forthcoming
+      next: "Next: "
+      not_yet_published: This case is not yet published
+      other_languages: "This case is also available in these languages: "
+      toc: Table of Contents
   catalog:
-    home:
-      case_index: 全ての事例研究
-      featured_cases: 注目の事例研究
-      greeting: ようこそ
-      intro_paragraph: |
-        Michigan Sustainability Cases（MSC：ミシガン大学の持続可能性の事例研究）
-        というプロジェクトは、様々な専門職大学院のために事例研究を元にして環境科学
-        の教育課程を発刊する。多様な視聴覚の教材と現実の意思決定者との会話を
-        組入れることによって、没入型にニュアンスをわからせる持続可能性と環境の
-        教育的アプローチのは、MSCだ。
-      learn_more: プロジェクトの詳細については、こちらをご覧ください
-      my_cases: マイ事例研究
-      my_cases_placeholder: |
-        ###自分で選んで
-        - 様々な視点から見て、詳しいストーリーで熟考する。
-        - 基本的な原理を使うように経験を得る。
-        以下の索引から選んだケースをこちらですぐに見つけられる。
-      redefining_sustainability_education: 環境科学の教育の新たな方法
-      study_a_case: ケースを勉強
-      title: 全ての事例研究
+    catalog: Catalog
+    choose_for_yourself: Choose for yourself
+    edit_enrolled: Edit enrolled cases
+    enrolled_cases: Enrolled cases
+    enrollments_instruction: |
+      Cases you enroll in will be presented here for easy access.
+    join_conversation: |
+      Join the conversation by asking questions
+      and paying your learning forward.
+    learn_more: Learn more
+    meet_stakeholders: |
+      Meet different stakeholders and dive deep with a multimodal narrative.
+    propose_a_case: Propose a case
+    shortcut_experience: Apply principles to improve practice.
+  comment_threads:
+    destroy:
+      delete_comment_thread: Delete comment thread
+    new:
+      new_comment_thread: New comment thread...
+    show:
+      card_n: Card {cardPosition}
+      comments_on_page: Comments on “{title}”
+      comments_on_page_number: Comments on Page {position, number}
+      page_n: Page {pageNumber, number}
+  comments:
+    destroy: Delete comment
+    index:
+      all_comments: All comments
+      conversation: Conversation
+      join_the_conversation: Join the conversation
+      n_responses:
+        js: "{count, number} {count, plural, one {response} other {responses}}"
+        many: "%{count} responses"
+        one: 1 response
+      no_comments: No comments
+      nobody_has_left_a_comment: |
+        Nobody in the {communityName} discussion group has left a comment on
+        this case. Switch to a different discussion group or be the first to
+        leave a comment.
+    new:
+      respond: Respond
+      respond_here: Respond here
+      select: Select a few words
+      selection_not_unique: |
+        The words you have selected appear more than once.
+        Please select a few more words.
+      write: Write a reply...
+      write_new: Write a new response
+  communities:
+    index:
+      choose_a_community: Choose a community
+      instructions: |
+        You’ll see the discussion taking place in the community you choose.
+      not_discussing: Your active community is not discussing this case
   date:
     abbr_day_names:
-    - 日
-    - 月
-    - 火
-    - 水
-    - 木
-    - 金
-    - 土
+      - 日
+      - 月
+      - 火
+      - 水
+      - 木
+      - 金
+      - 土
     abbr_month_names:
-    -
-    - 1月
-    - 2月
-    - 3月
-    - 4月
-    - 5月
-    - 6月
-    - 7月
-    - 8月
-    - 9月
-    - 10月
-    - 11月
-    - 12月
+      -
+      - 1月
+      - 2月
+      - 3月
+      - 4月
+      - 5月
+      - 6月
+      - 7月
+      - 8月
+      - 9月
+      - 10月
+      - 11月
+      - 12月
     day_names:
-    - 日曜日
-    - 月曜日
-    - 火曜日
-    - 水曜日
-    - 木曜日
-    - 金曜日
-    - 土曜日
+      - 日曜日
+      - 月曜日
+      - 火曜日
+      - 水曜日
+      - 木曜日
+      - 金曜日
+      - 土曜日
     formats:
       default: "%Y/%m/%d"
       long: "%Y年%m月%d日(%a)"
       short: "%m/%d"
     month_names:
-    -
-    - 1月
-    - 2月
-    - 3月
-    - 4月
-    - 5月
-    - 6月
-    - 7月
-    - 8月
-    - 9月
-    - 10月
-    - 11月
-    - 12月
+      -
+      - 1月
+      - 2月
+      - 3月
+      - 4月
+      - 5月
+      - 6月
+      - 7月
+      - 8月
+      - 9月
+      - 10月
+      - 11月
+      - 12月
     order:
-    - :year
-    - :month
-    - :day
+      - :year
+      - :month
+      - :day
   datetime:
     distance_in_words:
       about_x_hours:
-        one: 約1時間
         other: 約%{count}時間
       about_x_months:
-        one: 約1ヶ月
         other: 約%{count}ヶ月
       about_x_years:
-        one: 約1年
         other: 約%{count}年
       almost_x_years:
-        one: 1年弱
-        other: "%{count}年弱"
+        other: '%{count}年弱'
       half_a_minute: 30秒前後
       less_than_x_minutes:
-        one: 1分以内
-        other: "%{count}分未満"
+        other: '%{count}分未満'
       less_than_x_seconds:
-        one: 1秒以内
-        other: "%{count}秒未満"
+        other: '%{count}秒未満'
       over_x_years:
-        one: 1年以上
-        other: "%{count}年以上"
+        other: '%{count}年以上'
       x_days:
-        one: 1日
         other: "%{count}日"
       x_minutes:
-        one: 1分
         other: "%{count}分"
       x_months:
-        one: 1ヶ月
         other: "%{count}ヶ月"
       x_seconds:
-        one: 1秒
         other: "%{count}秒"
     prompts:
       day: 日
@@ -169,9 +264,51 @@ ja:
       second: 秒
       year: 年
   devise:
+    sessions:
+      destroy:
+        sign_out: Sign out
+      new:
+        sign_in: Sign in
     shared:
       links:
-        sign_up_for_a_free_account: "無料で申し込む"
+        sign_up_for_a_free_account: 無料で申し込む
+      minimum_password_length:
+        other: (%{count} characters minimum)
+  edgenotes:
+    destroy:
+      delete: Delete this Edgenote.
+    edgenote:
+      caption: "Caption: "
+      has_audio: This edgenote has an audio clip.
+      pull_quote: "Quotation: "
+      video_slug: "YouTube video slug: "
+    index:
+      attach: Attach this Edgenote
+      reattach_instructions: |
+        The Edgenotes that belong to this case but that are not attached to any
+        card are listed below. They can be reattached or deleted if they are no
+        longer needed. Or, you can create a brand new Edgenote and deal with
+        these later.
+    new:
+      make_selection: |
+        Please select the phrase that you would like to attach an Edgenote to.
+      new_edgenote: New Edgenote
+  enrollments:
+    destroy:
+      are_you_sure: Are you sure you want to unenroll in this case?
+      unenroll: Unenroll from this case
+      you_will_need_another_invitation: |
+        Because this case is not published, you will need
+        another invitation to reenroll.
+    index:
+      edit_enrolled: Edit enrolled cases
+      enrolled_cases: Enrolled cases
+      finish_editing: Finish editing
+    new:
+      enroll: Enroll
+      enroll_for_easy_access: |
+        If this case catches your eye, enroll for easy access.
+      enroll_in_this_case: Enroll in this case
   errors:
     format: "%{attribute}%{message}"
     messages:
@@ -191,27 +328,85 @@ ja:
       model_invalid: "バリデーションに失敗しました: %{errors}"
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
+      not_found: "not found"
+      not_locked: "was not locked"
+      not_saved:
+        other: "%{count} errors prohibited this %{resource} from being saved:"
       odd: は奇数にしてください
       other_than: は%{count}以外の値にしてください
       present: は入力しないでください
       required: を入力してください
       taken: はすでに存在します
-      too_long: は%{count}文字以内で入力してください
-      too_short: は%{count}文字以上で入力してください
-      wrong_length: は%{count}文字で入力してください
+      too_long:
+        other: is too long (maximum is %{count} characters)
+      too_short:
+        other: is too short (minimum is %{count} characters)
+      wrong_length:
+        other: is the wrong length (should be %{count} characters)
     template:
-      body: 次の項目を確認してください
+      body: '次の項目を確認してください'
       header:
-        one: "%{model}にエラーが発生しました"
         other: "%{model}に%{count}個のエラーが発生しました"
+  features:
+    index:
+      featured_cases: Featured cases
+  forms:
+    required: required
   helpers:
+    cancel: Cancel
+    close: Close
+    formatting:
+      add_citation_entity: "Add citation here."
+      add_edgenote_entity: "Add edgenote to selection."
+      blockquote: "Block style: Quotation."
+      bold: "Inline style: Bold."
+      code: "Inline style: Code."
+      header: "Block style: Header."
+      italic: "Inline style: Italic."
+      ol: "Block style: Ordered list item."
+      ul: "Block style: Unordered list item."
+    less:
+      read_more: Read more
+    list:
+      end: ', and '
+      middle: ', '
+      start: ', '
+      two: ' and '
+    page_entries_info:
+      more_pages:
+        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
     select:
       prompt: 選択してください
     submit:
       create: 登録する
+      save: Save %{model}
       submit: 保存する
       update: 更新する
-  name: 日本語
+  layouts:
+    mailer:
+      you_are_receiving_this_email_because_you_are_a_user_of_gala:
+        html: |
+          You are receiving this email because you are a user of <a
+          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: |
+          You are receiving this email because you are a user of Gala
+          (https://www.learngala.com).
+  my_cases:
+    index:
+      confirm_delete: |
+        Are you sure you wish to delete this case? This action cannot be undone.
+      delete_case: Delete case.
+      edit_case: Edit case.
+      edit_case_settings: Edit case settings.
+      featured: ':activerecord.attributes.case.featured'
+      my_cases: My Cases
+      publish_a_case: Publish a Case
+      put_your_own_cases_on_gala: |
+        Put your case on Gala and enrich your teaching with integrated
+        discussion, curated media, and insights from detailed analysis of your
+        students’ engagement with the material.
+        You keep the rights to the cases you publish on Gala and we make them
+        easy to deploy in and beyond the classroom.
   notifications:
     replied_to_your_comment: "%{case_kicker}でのコメントには、%{notifier}が返信を書きました。"
   number:
@@ -223,7 +418,7 @@ ja:
         separator: "."
         significant: false
         strip_insignificant_zeros: false
-        unit: 円
+        unit: "円"
     format:
       delimiter: ","
       precision: 3
@@ -248,7 +443,8 @@ ja:
       storage_units:
         format: "%n%u"
         units:
-          byte: バイト
+          byte:
+            other: Bytes
           gb: ギガバイト
           kb: キロバイト
           mb: メガバイト
@@ -260,18 +456,49 @@ ja:
     precision:
       format:
         delimiter: ''
+  podcasts:
+    show:
+      with_host:
+        js: "with {count, plural, one {host} other {hosts}}"
+        many: with hosts
+        one: with host
+  pundit:
+    not_authorized: You are not authorized to perform this action.
   readers:
     form:
+      account_options: Account options
+      choose_an_image: Choose a profile image
       create_a_password: パスワードを選ぶ
       my_account: マイアカウント
-      save: プロフィールの変化を保存
+      notification_settings: Notification settings
+      save: 'プロフィールの変化を保存'
       you_have_not_created_a_password: |
         初めて%{provider}でサインインしましたので、パスワードをまだ選びませんでした。選んだら、今後%{provider}とパスワードと両方でサインイン可能性があります。
+  search:
+    didnt_match: Your search didn’t match any cases.
+    keyword_query: Keyword query
+    no_results: No search results
+    propose_a_case: |
+      If you have a case (or a good idea for one) that you’d like to see on
+      Gala, reach out to us. Together we can make the most complete resource for
+      teaching about environment and sustainability.,
+    refine: Refine search
+    results: Search results
+    search: Search
+    search_cases: Search cases
+    try_again: Try searching for something else.
   support:
     array:
-      last_word_connector: と
-      two_words_connector: と
-      words_connector: と
+      last_word_connector: "と"
+      two_words_connector: "と"
+      words_connector: "と"
+    languages:
+      am: Amharic
+      en: English
+      fr: French
+      ja: Japanese
+      zh-CN: Mandarin (Simplified)
+      zh-TW: Mandarin (Traditional)
   time:
     am: 午前
     formats:
