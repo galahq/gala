@@ -80,25 +80,25 @@ fr:
       messages:
         created: "%{model} a été créé(e) aves succès."
         destroyed: "%{model} a été supprimé(e) avec succès."
-        updated: "%{model} successfully updated."
+        updated: "%{model} a été mis à jour avec succès."
   activities:
     show:
-      download: Download
+      download: Téléchargez
       instructions: Instructions
   cases:
     edit:
-      change_cover_image: Change cover image
-      edit: Edit this case
-      feature_case: Feature this case
-      just_change_the_text: To edit this case, just change the text
+      change_cover_image: Modifier l’image
+      edit: Modifier cette étude de cas
+      feature_case: Ajouter celle-ci aux études phares
+      just_change_the_text: Pour modifier cette étude de cas, il suffit de changer le texte
       options: Options
-      publish_case: Publish this case
-      save: Save
-      stop_editing: Stop editing this case
-      unfeature_case: Remove from featured cases
-      unpublish_case: Unpublish this case
+      publish_case: Publier cette étude de cas
+      save: Enregistrer
+      stop_editing: Finir de modifier cette étude de cas
+      unfeature_case: Enlever celle-ci des études phares
+      unpublish_case: Annuler la publication de cette étude de cas
     index:
-      all_cases: All cases
+      all_cases: Toutes les études de cas
       locations: Site locations
     settings:
       edit:
@@ -174,10 +174,10 @@ fr:
       write_new: Write a new response
   communities:
     index:
-      choose_a_community: Choose a community
+      choose_a_community: Choisir une communauté
       instructions: |
-        You’ll see the discussion taking place in the community you choose.
-      not_discussing: Your active community is not discussing this case
+        Vous verrez la discussion se dérouler dans la communauté que vous choisissez.
+      not_discussing: Votre communauté activée ne discute pas de cette étude de cas
   date:
     abbr_day_names:
       - dim
