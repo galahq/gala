@@ -7,13 +7,13 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import styled from 'styled-components'
-import { addLocaleData, IntlProvider } from 'react-intl'
+import { FormattedMessage, addLocaleData, IntlProvider } from 'react-intl'
 
 import { UnconnectedBillboardTitle } from 'overview/BillboardTitle'
 import { UnconnectedCommunityChooser } from 'overview/CommunityChooser'
 
 const { locale } = (window.i18n: { locale: string })
-import messages from '../../../config/locales/react.json' // eslint-disable-line
+import messages from '../../../config/locales' // eslint-disable-line
 
 const container = document.getElementById('billboard-app')
 
@@ -54,7 +54,9 @@ import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
 
           <form action="/magic_link" method="POST">
             <input type="hidden" name="deployment_key" value={deploymentKey} />
-            <Button>Let’s get started!</Button>
+            <Button>
+              <FormattedMessage id="magicLink.show.letsGetStarted" />
+            </Button>
           </form>
         </Column>
       </IntlProvider>,
