@@ -1,0 +1,9 @@
+files:
+  - source: /config/locales/en.yml
+    translation: /config/locales/%locale%.yml
+    languages_mapping:
+      locale:
+        am: am
+        fr: fr
+        ja: ja
+        es-ES: es

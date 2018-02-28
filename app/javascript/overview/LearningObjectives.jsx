@@ -19,31 +19,30 @@ const LearningObjectives = ({
   disabled,
   learningObjectives,
   onChange,
-}: Props) =>
+}: Props) => (
   <div>
     <Label>
-      <FormattedMessage id="overview.learningObjectives" />
+      <FormattedMessage id="activerecord.attributes.case.learningObjectives" />
     </Label>
-    {disabled
-      ? <ul>
-        {learningObjectives.map((objective, i) =>
-          <li key={i}>
-            {objective}
-          </li>
-          )}
+    {disabled ? (
+      <ul>
+        {learningObjectives.map((objective, i) => <li key={i}>{objective}</li>)}
       </ul>
-      : <SortableList
+    ) : (
+      <SortableList
         items={learningObjectives || []}
         newItem={''}
         render={ObjectiveInput}
         onChange={onChange}
-      />}
+      />
+    )}
   </div>
+)
 
 export default LearningObjectives
 
 const Label = styled.h3`
-  font-family: 'tenso';
+  font-family: ${p => p.theme.sansFont};
   font-size: 0.95em;
   font-weight: 500;
 `

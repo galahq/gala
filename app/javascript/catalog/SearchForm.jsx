@@ -53,7 +53,7 @@ class SearchForm extends React.Component<Props, State> {
     return (
       <CatalogSection className="pt-dark">
         <SectionTitle>
-          <FormattedMessage id="search.refine" defaultMessage="Refine search" />
+          <FormattedMessage id="search.refine" />
         </SectionTitle>
         <form onSubmit={this.handleSubmit}>
           <InputGroup
@@ -61,13 +61,12 @@ class SearchForm extends React.Component<Props, State> {
             leftIconName="search"
             placeholder={this.props.intl.formatMessage({
               id: 'search.keywordQuery',
-              defaultMessage: 'Keyword query',
             })}
             value={q}
             onChange={this.handleChangeQuery}
           />
           <SubmitButton>
-            <FormattedMessage id="search.search" defaultMessage="Search" />
+            <FormattedMessage id="search.search" />
           </SubmitButton>
         </form>
       </CatalogSection>

@@ -65,10 +65,7 @@ const Activity = ({
         id={cardId}
         title={
           <h3 className="c-activity__instructions__title">
-            <FormattedMessage
-              id="activity-instructions"
-              defaultMessage="Instructions"
-            />
+            <FormattedMessage id="activities.show.instructions" />
           </h3>
         }
       />
@@ -77,10 +74,7 @@ const Activity = ({
           <a href={pdfUrl}>
             <Icon className="c-activity__file__icon" filename={iconSlug} />
             <figcaption className="c-activity__file__name">
-              <FormattedMessage
-                id="activity-download"
-                defaultMessage="Download"
-              />
+              <FormattedMessage id="activities.show.download" />
             </figcaption>
           </a>
         </figure>

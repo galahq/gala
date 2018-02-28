@@ -84,10 +84,7 @@ export const UnconnectedBillboardTitle = ({
             }}
             render={renderProps => (
               <CoverImageUploadWidget
-                message={{
-                  id: 'case.changeCover',
-                  defaultMessage: 'Change cover image',
-                }}
+                message={{ id: 'cases.edit.changeCoverImage' }}
                 {...renderProps}
               />
             )}

@@ -1,30 +1,36 @@
 .dialog.devise
-  %h2=t '.change_my_password'
+  %h2=t 'devise.passwords.edit.change_your_password'
 
-  =form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+  =form_for(resource, as: resource_name, url: registration_path(resource_name),
+                      html: { method: :put }) do |f|
     = devise_error_messages!
 
     - if devise_mapping.confirmable? && resource.pending_reconfirmation?
       %div
-        Currently waiting confirmation for:
-        = resource.unconfirmed_email
+        = t '.currently_waiting_confirmation_for_email',
+            email: resource.unconfirmed_email
 
     = f.label :password, class: "pt-label" do
       = t 'activerecord.attributes.user.password'
-      = f.password_field :password, class: "pt-input pt-fill", autocomplete: "off"
+      = f.password_field :password, class: "pt-input pt-fill",
+                                    autocomplete: "off"
 
     = f.label :password_confirmation, class: "pt-label" do
       = t 'activerecord.attributes.user.password_confirmation'
-      = f.password_field :password_confirmation, class: "pt-input pt-fill", autocomplete: "off"
+      = f.password_field :password_confirmation, class: "pt-input pt-fill",
+                                                 autocomplete: "off"
 
     = f.label :current_password, class: "pt-label" do
       = t 'activerecord.attributes.user.current_password'
       %br
-      %span.pt-text-muted= t '.to_confirm_your_changes'
-      = f.password_field :current_password, class: "pt-input pt-fill", autocomplete: "off"
+      %span.pt-text-muted
+        = t '.we_need_your_current_password_to_confirm_your_changes'
+      = f.password_field :current_password, class: "pt-input pt-fill",
+                                            autocomplete: "off"
 
     .actions
-      = f.submit t('.save'), class: "o-button pt-button pt-intent-primary"
+      = f.submit t('devise.passwords.edit.change_my_password'),
+                 class: "o-button pt-button pt-intent-primary"
 
 -#.dialog.devise
   -#%h2= t'.cancel_my_account'

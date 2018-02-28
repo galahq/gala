@@ -23,7 +23,7 @@ type Props = {
   height?: number,
   intl: IntlShape,
   startingViewport: Viewport,
-  title: { id: string, defaultMessage: string },
+  title: { id: string },
   onChangeViewport?: Viewport => any,
 }
 type State = {
@@ -91,34 +91,22 @@ class MapViewController extends React.Component<Props, State> {
           <PositionedPin key="pin" />,
           <PositionedButtons key="buttons">
             <PaddedButton
-              text={intl.formatMessage({
-                id: 'map.reset',
-                defaultMessage: 'Reset',
-              })}
+              text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
               onClick={this.handleReset}
             />
             <PaddedButton
-              aria-label={intl.formatMessage({
-                id: 'map.zoomOut',
-                defaultMessage: 'Zoom out',
-              })}
+              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomOut' })}
               iconName="zoom-out"
               onClick={this.handleZoomOut}
             />
             <PaddedButton
-              aria-label={intl.formatMessage({
-                id: 'map.zoomIn',
-                defaultMessage: 'Zoom in',
-              })}
+              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomIn' })}
               iconName="zoom-in"
               onClick={this.handleZoomIn}
             />
             <PaddedButton
               intent={Intent.SUCCESS}
-              text={intl.formatMessage({
-                id: 'map.set',
-                defaultMessage: 'Set',
-              })}
+              text={intl.formatMessage({ id: 'cases.edit.map.set' })}
               onClick={this.handleSave}
             />
           </PositionedButtons>,
@@ -178,7 +166,9 @@ const PositionedButtons = styled.div.attrs({ className: 'pt-dark' })`
   right: 58px;
   z-index: 1;
 `
-const PaddedButton = styled(Button)`margin-left: 0.5em;`
+const PaddedButton = styled(Button)`
+  margin-left: 0.5em;
+`
 const PositionedPin = styled(Pin)`
   position: absolute;
   top: calc(50% - 11px);

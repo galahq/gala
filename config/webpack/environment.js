@@ -6,6 +6,10 @@ environment.loaders.set('svg', {
   test: /\.svg$/,
   loader: 'raw-loader',
 })
+environment.loaders.set('yaml', {
+  test: /\.yaml$|\.yml$/,
+  use: [{ loader: 'json-loader' }, { loader: 'yaml-loader' }],
+})
 
 environment.plugins.set(
   'CommonsChunkVendor',

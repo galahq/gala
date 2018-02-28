@@ -147,13 +147,13 @@ type NextProps = ?{ title: string, position: string }
 const NextLink = ({ next }: { next: NextProps }) =>
   next ? (
     <Link className="nextLink" to={`/${next.position}`}>
-      <FormattedMessage id="case.next" />
+      <FormattedMessage id="cases.show.next" />
       {next.title}
     </Link>
   ) : (
     <footer>
       <h2>
-        <FormattedMessage id="case.end" />
+        <FormattedMessage id="cases.show.end" />
       </h2>
     </footer>
   )

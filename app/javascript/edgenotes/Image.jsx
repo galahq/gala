@@ -94,7 +94,7 @@ const PhotoCredit = styled.cite`
   text-transform: uppercase;
   letter-spacing: 0.25px;
   color: rgba(235, 234, 228, 0.5);
-  font: normal 500 10px 'tenso';
+  font: normal 500 10px ${p => p.theme.sansFont};
   display: block;
   min-width: 100%;
   text-align: right;

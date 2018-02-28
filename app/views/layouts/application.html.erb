@@ -16,9 +16,8 @@
     <%= javascript_pack_tag "manifest" %>
     <%= javascript_pack_tag "vendor" %>
 
-    <script src="https://cdn.polyfill.io/v2/polyfill.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>|always"></script>
-    <script src="https://use.typekit.net/adn1xoi.js"></script>
-    <script>try{Typekit.load({ async: true  });}catch(e){}</script>
+    <%= render 'application/fonts' %>
+
     <meta property="og:site_name" content="Gala" />
     <% if content_for? :head %><%= content_for :head %><% end %>
   </head>

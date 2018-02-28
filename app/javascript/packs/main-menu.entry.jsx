@@ -13,11 +13,12 @@ import { addLocaleData, IntlProvider } from 'react-intl'
 
 import MainMenu from 'shared/MainMenu'
 
+import messages from '../../../config/locales'
+
 import { FocusStyleManager } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
 const { locale } = (window.i18n: { locale: string })
-import messages from '../../../config/locales/react.json' // eslint-disable-line
 
 delete AppContainer.prototype.unstable_handleError
 

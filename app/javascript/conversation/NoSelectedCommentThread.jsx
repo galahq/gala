@@ -58,7 +58,7 @@ const Container = styled.div.attrs({ className: 'pt-running-text' })`
   }
 
   & h2 {
-    font-family: 'tenso';
+    font-family: ${p => p.theme.sansFont};
     color: white;
   }
 `

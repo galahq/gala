@@ -72,17 +72,11 @@ const NewCommentButton = ({
         onClick={acceptingSelection ? addCommentThread : acceptSelection}
       >
         {!acceptingSelection ? (
-          <FormattedMessage
-            id="comments.writeNew"
-            defaultMessage="Write a new response"
-          />
+          <FormattedMessage id="comments.new.writeNew" />
         ) : !selectionPending ? (
-          <FormattedMessage
-            id="comments.select"
-            defaultMessage="Select a few words"
-          />
+          <FormattedMessage id="comments.new.select" />
         ) : (
-          <FormattedMessage id="comments.here" defaultMessage="Respond here" />
+          <FormattedMessage id="comments.new.respondHere" />
         )}
       </StyledButton>
     </FlexTooltip>
@@ -90,7 +84,7 @@ const NewCommentButton = ({
     {acceptingSelection &&
       !selectionPending && (
         <CancelButton onClick={() => acceptSelection(false)}>
-          <FormattedMessage id="cancel" defaultMessage="Cancel" />
+          <FormattedMessage id="helpers.cancel" />
         </CancelButton>
       )}
   </Container>
@@ -100,7 +94,7 @@ export default connect(mapStateToProps, { acceptSelection })(NewCommentButton)
 
 const UniquenessWarning = () => (
   <div style={{ padding: '6px 12px' }}>
-    <FormattedMessage id="comments.selectionNotUnique" />
+    <FormattedMessage id="comments.new.selectionNotUnique" />
   </div>
 )
 
