@@ -126,7 +126,7 @@ es:
     enrollments_instruction: >
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     join_conversation: >
-      Join the conversation by asking questions and paying your learning forward.
+      Súmete a la conversación, preguntá, y compartí tu conomiciento.
     learn_more: Más información
     meet_stakeholders: >
       Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
@@ -161,7 +161,7 @@ es:
       respond_here: Responder aquí
       select: Resaltar unas palabras
       selection_not_unique: >
-        The words you have selected appear more than once. Please select a few more words.
+        Las palabras seleccionadas aparecen más que una vez, favor ampliar su selección.
       write: Escribir su respuesta...
       write_new: Escribir nueva respuesta
   communities:
@@ -299,7 +299,7 @@ es:
       are_you_sure: '¿Estás seguro que quieres desinscribirse?'
       unenroll: Desinscribirse del caso
       you_will_need_another_invitation: >
-        Because this case is not published, you will need another invitation to reenroll.
+        Porque el caso no ha sido publicado, necesitarás otra invitación para inscribirse.
     index:
       edit_enrolled: Editar casos inscritos
       enrolled_cases: Casos inscritos
@@ -364,7 +364,7 @@ es:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
       blockquote: "Block style: Quotation."
-      bold: "Inline style: Bold."
+      bold: "Texto en negrita."
       code: "Inline style: Code."
       header: "Block style: Header."
       italic: "Inline style: Italic."
@@ -481,7 +481,7 @@ es:
     keyword_query: Palabras claves
     no_results: Sin resultados
     propose_a_case: >
-      If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.,
+      Si tienes un estudio de caso (o una buena idea para un estudio de caso) que te gustaría ver en Gala, escríbanos. Juntos podemos crear un recurso de enseñanza sobre el ambiente y sostenibilidad más comprensivo.
     refine: Limitar busqueda
     results: Resultados de busqueda
     search: Buscar
