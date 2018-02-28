@@ -7,7 +7,7 @@ fr:
         featured: Ajoutée aux études phares
         kicker: Titre court
         learning_objectives: Objectifs pédagogiques
-        library: Collection
+        library: Répertoire
         location: Emplacement de l’étude de cas
         slug: URL de l’étude de cas
         title: Question
@@ -48,7 +48,7 @@ fr:
         updated_at: Date de mise à jour
       shared_cases_library:
         description: >
-          Celles études de cas étaient partagée par les utilisateurs de Gala.
+          Études de cas partagées par les utilisateurs de Gala.
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
@@ -80,7 +80,7 @@ fr:
       messages:
         created: "%{model} a été créé(e) aves succès."
         destroyed: "%{model} a été supprimé(e) avec succès."
-        updated: "%{model} a été mis à jour avec succès."
+        updated: "%{model} mis à jour avec succès."
   activities:
     show:
       download: Télécharger
@@ -126,7 +126,7 @@ fr:
     enrollments_instruction: >
       Les études de cas dans lesquels vous vous inscriverez seront affichée ici pour un accès rapide.
     join_conversation: >
-      Rentrez dans les debats, interrogez, propagez et partagez la savoir.
+      Rentrez dans les debats, interrogez, propagez et partagez le savoir.
     learn_more: En savoir plus
     meet_stakeholders: >
       Rencontrez des parties prenantes et plongez dans un récit multimodal.
