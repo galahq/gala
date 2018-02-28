@@ -363,11 +363,11 @@ fr:
     formatting:
       add_citation_entity: "Ajoutez une référence ici."
       add_edgenote_entity: "Ajouter une Edgenote à la sélection."
-      blockquote: "Style du paragraphe : Citation."
+      blockquote: "Disposition du paragraphe : Citation."
       bold: "Style intraligne : Texte en gras."
-      code: "Style intraligne : Code."
-      header: "Style du paragraphe: Titre."
-      italic: "Style intraligne : texte en italique."
+      code: "Disposition intraligne : Code."
+      header: "Disposition du paragraphe: Titre."
+      italic: "Disposition intraligne : texte en italique."
       ol: "Style du paragraphe: Élément de la liste triée."
       ul: "Style du paragraphe: Élément de la liste non triée."
     less:
