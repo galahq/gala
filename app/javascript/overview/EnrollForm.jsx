@@ -24,7 +24,7 @@ function mapStateToProps ({ caseData }: State) {
 const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   <div className="CaseOverview--enroll-form">
     <h2>
-      <FormattedMessage id="enrollments.new.enrollinThisCase" />
+      <FormattedMessage id="enrollments.new.enrollInThisCase" />
     </h2>
     <p>
       <FormattedMessage id="enrollments.new.enrollForEasyAccess" />

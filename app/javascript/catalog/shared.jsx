@@ -15,7 +15,7 @@ export const Main = styled.main`
 `
 
 export const SectionTitle = styled.h2`
-  font-family: 'tenso';
+  font-family: ${p => p.theme.sansFont};
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;

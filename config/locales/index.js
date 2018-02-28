@@ -38,6 +38,6 @@ export default {
   es: withFallback(flattenObj(es.es)),
   fr: withFallback(flattenObj(fr.fr)),
   ja: withFallback(flattenObj(ja.ja)),
-  zhCN: withFallback(flattenObj(zhCN['zh-CN'])),
-  zhTW: withFallback(flattenObj(zhTW['zh-TW'])),
+  'zh-CN': withFallback(flattenObj(zhCN['zh-CN'])),
+  'zh-TW': withFallback(flattenObj(zhTW['zh-TW'])),
 }
