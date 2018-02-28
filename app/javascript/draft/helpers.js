@@ -169,7 +169,7 @@ export async function toggleEdgenote (
       iconName: 'error',
       intent: Intent.WARNING,
       message: intl.formatMessage({
-        id: 'edgenotesnew..makeSelection',
+        id: 'edgenotes.new.makeSelection',
       }),
     })
     return editorState

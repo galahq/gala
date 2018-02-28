@@ -76,7 +76,7 @@ const NewCommentButton = ({
         ) : !selectionPending ? (
           <FormattedMessage id="comments.new.select" />
         ) : (
-          <FormattedMessage id="comments.new.respond_here" />
+          <FormattedMessage id="comments.new.respondHere" />
         )}
       </StyledButton>
     </FlexTooltip>
@@ -94,7 +94,7 @@ export default connect(mapStateToProps, { acceptSelection })(NewCommentButton)
 
 const UniquenessWarning = () => (
   <div style={{ padding: '6px 12px' }}>
-    <FormattedMessage id="comments.selectionNotUnique" />
+    <FormattedMessage id="comments.new.selectionNotUnique" />
   </div>
 )
 
