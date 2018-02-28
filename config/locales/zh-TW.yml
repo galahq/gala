@@ -125,7 +125,7 @@ zh-TW:
     enrollments_instruction: >
       選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。
     join_conversation: >
-      Join the conversation by asking questions and paying your learning forward.
+      參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。
     learn_more: 了解更多
     meet_stakeholders: >
       在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。
@@ -159,7 +159,7 @@ zh-TW:
       respond_here: 回應
       select: 選擇想要發起討論的詞句
       selection_not_unique: >
-        The words you have selected appear more than once. Please select a few more words.
+        你所選擇的詞句已存在相關話題，請多選幾個詞。
       write: 發表回復
       write_new: 發起新話題
   communities:
@@ -285,7 +285,7 @@ zh-TW:
       are_you_sure: 你確定要退出這個案例的學習嗎？
       unenroll: 退出該案例的學習
       you_will_need_another_invitation: >
-        Because this case is not published, you will need another invitation to reenroll.
+        這個案例還未公開發表，你將需要另一封邀請函來重新加入此案例的學習。
     index:
       edit_enrolled: 編輯我的案例
       enrolled_cases: 加入案例學習
@@ -454,13 +454,13 @@ zh-TW:
       notification_settings: Notification settings
       save: '更新個人信息'
       you_have_not_created_a_password: >
-        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
+        因為你首次登陸時使用的是%{provider}，並沒有設置密碼。你現在可以通過設置密碼來用於下次登陸，或者繼續使用%{provider}進行登陸。
   search:
     didnt_match: 抱歉，沒有找到你所搜索的案例。
     keyword_query: 關鍵詞查詢
     no_results: 沒有可顯示的搜索結果
     propose_a_case: >
-      If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.,
+      或者，如果你有希望收入到Gala的案例，或關於案例的設想，請與我們聯系。讓我們一起為環境和可持續發展領域提供更多更有效的學習資源。
     refine: 細化搜索
     results: 搜索結果
     search: 搜索
