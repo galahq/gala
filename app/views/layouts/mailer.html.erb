@@ -117,7 +117,7 @@
              <% if content_for? :email_footer %>
               <%= raw markdown content_for :email_footer %>
              <% else %>
-               You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+               <%= t '.you_are_receiving_this_email_because_you_are_a_user_of_gala.html' %>
              <% end %>
           </td>
           <td style="box-sizing:border-box;font-size:14px;margin:0;vertical-align:top" valign="top"></td>

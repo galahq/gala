@@ -178,7 +178,8 @@ GEM
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
-    devise-i18n (1.2.0)
+    devise-i18n (1.6.0)
+      devise (>= 4.4)
     diff-lcs (1.3)
     draper (3.0.1)
       actionpack (~> 5.0)
@@ -230,6 +231,7 @@ GEM
     i18n (0.8.6)
     i18n_generators (2.1.1)
       rails (>= 3.0.0)
+    i18n_yaml_sorter (0.2.0)
     ice_nine (0.11.2)
     ims-lti (1.1.13)
       builder
@@ -502,6 +504,7 @@ DEPENDENCIES
   haml
   http_accept_language
   i18n_generators
+  i18n_yaml_sorter
   ims-lti
   inline_svg
   jbuilder (~> 2.0)

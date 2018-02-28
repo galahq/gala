@@ -63,10 +63,7 @@ const CommentEditor = ({
     <Editor
       ref={innerRef}
       editorState={editorState}
-      placeholder={intl.formatMessage({
-        id: 'comments.write',
-        defaultMessage: 'Write a reply...',
-      })}
+      placeholder={intl.formatMessage({ id: 'comments.new.write' })}
       plugins={[linkifyPlugin]}
       customStyleMap={styleMapWithCode}
       handleKeyCommand={handleKeyCommand} // eslint-disable-line

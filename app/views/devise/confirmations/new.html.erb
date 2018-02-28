@@ -1,16 +1,29 @@
-<h2>Resend confirmation instructions</h2>
+<h2><%= t '.resend_confirmation_instructions' %></h2>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name),
+                       html: { method: :post }) do |f| %>
   <%= devise_error_messages! %>
 
-  <%= f.label :email do%>
+  <%= f.label :email do %>
     <%= t "activerecord.attributes.user.email" %>
-    <%= f.email_field :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
-      class: "pt-input pt-fill", autofocus: true, spellcheck: false %>
+    <%= f.email_field(
+      :email,
+      value: (
+        if resource.pending_reconfirmation?
+          resource.unconfirmed_email
+        else
+          resource.email
+        end
+      ),
+      class: "pt-input pt-fill",
+      autofocus: true,
+      spellcheck: false
+    ) %>
   <% end %>
 
   <div class="actions">
-    <%= f.submit "Resend confirmation instructions", :class => "o-button o-button-multiline pt-button pt-intent-primary" %>
+    <%= f.submit t('.resend_confirmation_instructions'),
+    :class => "o-button o-button-multiline pt-button pt-intent-primary" %>
   </div>
 <% end %>
 

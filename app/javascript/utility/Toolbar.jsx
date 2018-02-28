@@ -7,7 +7,6 @@ import * as React from 'react'
 import { injectIntl } from 'react-intl'
 import styled, { css } from 'styled-components'
 import { omit } from 'ramda'
-import { sentenceCase } from 'change-case'
 
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
 
@@ -45,13 +44,7 @@ type Props = {
 const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
   if (!groups.some(group => group.some(element => element))) return null
 
-  const t = (id: ?string) =>
-    id
-      ? intl.formatMessage({
-        id,
-        defaultMessage: sentenceCase(id.split('.').pop()),
-      })
-      : null
+  const t = (id: ?string) => (id ? intl.formatMessage({ id }) : null)
 
   return (
     <Bar light={light}>
@@ -111,7 +104,7 @@ const Bar = styled.div.attrs({ className: ({ light }) => light || 'pt-dark' })`
   border-style: solid;
   border-bottom-color: ${({ light }) => (light ? '#c0bca9' : '#193c5b')};
 
-  font: 90% 'tenso';
+  font: 90% ${p => p.theme.sansFont};
   text-transform: uppercase;
   text-align: center;
   letter-spacing: 0.05em;

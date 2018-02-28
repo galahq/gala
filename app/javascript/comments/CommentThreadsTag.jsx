@@ -28,7 +28,7 @@ function mapStateToProps (
   }
 }
 
-const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) =>
+const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) => (
   <Link
     replace
     to={`${match.url}/cards/${cardId}/comments`}
@@ -37,14 +37,12 @@ const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) =>
       count === 0 && acceptSelection()
     }}
   >
-    {count > 0
-      ? <FormattedMessage
-        id="comments.nResponses"
-        defaultMessage={`{count, number} {count, plural, one {response} other
-        {responses} }`}
-        values={{ count }}
-      />
-      : <FormattedMessage id="comments.respond" defaultMessage="Respond" />}
+    {count > 0 ? (
+      <FormattedMessage id="comments.index.nResponses.js" values={{ count }} />
+    ) : (
+      <FormattedMessage id="comments.new.respond" />
+    )}
   </Link>
+)
 
 export default connect(mapStateToProps, { acceptSelection })(CommentThreadsTag)

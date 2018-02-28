@@ -32,7 +32,7 @@ module ApplicationHelper
 
   def locale_names
     I18n.available_locales.map do |l|
-      [I18n.t('name', locale: l), l]
+      [I18n.t('__name', locale: l), l]
     end
   end
 
