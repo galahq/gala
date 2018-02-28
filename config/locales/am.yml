@@ -413,7 +413,7 @@ am:
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
-      featured: ':activerecord.attributes.case.featured'
+      featured: Featured
       my_cases: My Cases
       publish_a_case: Publish a Case
       put_your_own_cases_on_gala: |
