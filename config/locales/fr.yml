@@ -151,8 +151,8 @@ fr:
       join_the_conversation: Rejoignez la conversation
       n_responses:
         js: "{count, number} {count, plural, one {réponse} other {réponses}}"
-        one: 1 response
-        other: "%{count} responses"
+        one: 1 réponse
+        other: "%{count} réponses"
       no_comments: Aucune réponse
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
@@ -368,8 +368,8 @@ fr:
       code: "Disposition intraligne : Code."
       header: "Disposition du paragraphe: Titre."
       italic: "Disposition intraligne : texte en italique."
-      ol: "Style du paragraphe: Élément de la liste triée."
-      ul: "Style du paragraphe: Élément de la liste non triée."
+      ol: "Disposition du paragraphe: Élément de la liste triée."
+      ul: "Disposition du paragraphe: Élément de la liste non triée."
     less:
       read_more: Lisez la suite
     list:
