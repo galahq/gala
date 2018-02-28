@@ -361,15 +361,15 @@ es:
     cancel: Anular
     close: Cerrar
     formatting:
-      add_citation_entity: "Add citation here."
-      add_edgenote_entity: "Add edgenote to selection."
-      blockquote: "Block style: Quotation."
+      add_citation_entity: "Agregar cita aquí."
+      add_edgenote_entity: "Agregar “Edgenote” a la selección."
+      blockquote: "Citas."
       bold: "Texto en negrita."
       code: "Inline style: Code."
-      header: "Block style: Header."
-      italic: "Inline style: Italic."
-      ol: "Block style: Ordered list item."
-      ul: "Block style: Unordered list item."
+      header: "Encabezado."
+      italic: "Texto en cursiva."
+      ol: "Enumerar lista."
+      ul: "Lista no numerada."
     less:
       read_more: Leer más
     list:
@@ -404,7 +404,7 @@ es:
       edit_case_settings: Edit case settings.
       featured: Destacado
       my_cases: My Cases
-      publish_a_case: Publish a Case
+      publish_a_case: Publicar este caso
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
   notifications:
@@ -475,7 +475,7 @@ es:
       notification_settings: Configuración de notificación
       save: 'Actualizar perfil'
       you_have_not_created_a_password: >
-        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
+        Porque iniciaste tú primera sesión con %{provider}, no creaste una contraseña. Si creas una contraseña, podrás usarla o %{provider} para iniciar la sesión.
   search:
     didnt_match: Tu búsqueda no ha generado resultados.
     keyword_query: Palabras claves
