@@ -13,8 +13,8 @@ fr:
         title: Question
         translators:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
-          one: Translator
-          other: Translators
+          one: Traducteur(-rice)
+          other: Traducteurs(-rices)
       question:
         content: Contenu
         correct_answer: Bonne réponse
@@ -461,14 +461,14 @@ fr:
   podcasts:
     show:
       with_host:
-        js: "with {count, plural, one {host} other {hosts}}"
-        one: with host
-        other: with hosts
+        js: "avec {count, plural, one {animateur(-trice)} other {animateurs(-trices)}}"
+        one: avec animateur(-trice)
+        other: avec animateurs(-trices)
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
     form:
-      account_options: Account options
+      account_options: Options de compte
       choose_an_image: Choose a profile image
       create_a_password: Choisissez un mot de passe
       my_account: Mon compte
