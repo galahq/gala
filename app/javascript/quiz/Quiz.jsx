@@ -40,7 +40,8 @@ type QuizDelegateProps = {
   onSubmit: (e: ?SyntheticEvent<*>) => Promise<any>,
 }
 
-export type QuizProviderProps = QuizDelegateProps & QuizProps & QuizState
+export type QuizProviderProps = QuizDelegateProps &
+  QuizProps & { answers: QuizState }
 
 export function providesQuiz<P> (
   QuizPresenter: React$ComponentType<{|
