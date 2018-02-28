@@ -78,8 +78,8 @@ fr:
       shared_cases_library: Études de Cas Partagées
     persistance:
       messages:
-        created: "%{model} a été créé(e) aves succès."
-        destroyed: "%{model} a été supprimé(e) avec succès."
+        created: "%{model} créé(e) aves succès."
+        destroyed: "%{model} supprimé(e) avec succès."
         updated: "%{model} mis à jour avec succès."
   activities:
     show:
