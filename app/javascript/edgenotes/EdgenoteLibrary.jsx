@@ -111,7 +111,7 @@ class EdgenoteLibrary extends React.Component<Props> {
             <Button
               iconName="add"
               intent={Intent.SUCCESS}
-              text={intl.formatMessage({ id: 'edgenotes.new.new_edgenote' })}
+              text={intl.formatMessage({ id: 'edgenotes.new.newEdgenote' })}
               onClick={() => createEdgenote().then(onSelectEdgenote)}
             />
           </div>
