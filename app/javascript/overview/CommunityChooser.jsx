@@ -75,7 +75,7 @@ export const UnconnectedCommunityChooser = injectIntl(
               <CommunityMenu>
                 <li className="pt-menu-header">
                   <h6>
-                    <FormattedMessage id="communities.index.choose_a_community" />
+                    <FormattedMessage id="communities.index.chooseACommunity" />
                   </h6>
                 </li>
                 <Instructions>

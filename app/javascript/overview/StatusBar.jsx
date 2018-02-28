@@ -73,15 +73,15 @@ function StatusBar ({
       ]
       : [
         {
-          message: 'case.show.backToOverview',
+          message: 'cases.show.backToOverview',
           iconName: 'arrow-left',
           onClick: () => history.push('/'),
         },
       ],
     [
       editing
-        ? { message: 'cases.edit.just_change_the_text' }
-        : !published ? { message: 'cases.show.not_yet_published' } : null,
+        ? { message: 'cases.edit.justChangeTheText' }
+        : !published ? { message: 'cases.show.notYetPublished' } : null,
     ],
     [
       editable
@@ -113,9 +113,7 @@ function StatusBar ({
               }
               : null,
             {
-              message: editing
-                ? 'cases.edit.stop_editing'
-                : 'cases.edit.edit',
+              message: editing ? 'cases.edit.stopEditing' : 'cases.edit.edit',
               iconName: editing ? 'cross' : 'edit',
               onClick: toggleEditing,
             },
