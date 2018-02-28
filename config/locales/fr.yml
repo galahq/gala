@@ -395,6 +395,9 @@ fr:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  magic_link:
+    show:
+      lets_get_started: Let’s get started!
   my_cases:
     index:
       confirm_delete: >
@@ -466,6 +469,10 @@ fr:
         other: avec animateurs(-trices)
   pundit:
     not_authorized: You are not authorized to perform this action.
+  quizzes:
+    show:
+      the_correct_answer_is: >
+        The correct answer to the question “{question}” is “{answer}”
   readers:
     form:
       account_options: Options de compte
@@ -487,6 +494,19 @@ fr:
     search: Rechercher
     search_cases: Recherchez
     try_again: Modifiez votre recherche.
+  submissions:
+    new:
+      before_you_get_started: Before you get started
+      check_your_understanding: Check your understanding
+      post_case_quiz: Post-case quiz
+      please_answer: >
+        Please answer the following questions to demonstrate your current level of knowledge.
+      please_take_this_after_engaging_with_all_elements: >
+        After you have engaged with all elements of the case, please take this post-test to check your understanding.
+    show:
+      correct_answers_are_below: >
+        The correct answers are shown below, highlighted green, so you may check your work.
+      thank_you: Thank you for your submission.
   support:
     array:
       last_word_connector: " et "
