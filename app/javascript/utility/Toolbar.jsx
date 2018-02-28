@@ -104,7 +104,7 @@ const Bar = styled.div.attrs({ className: ({ light }) => light || 'pt-dark' })`
   border-style: solid;
   border-bottom-color: ${({ light }) => (light ? '#c0bca9' : '#193c5b')};
 
-  font: 90% 'tenso';
+  font: 90% ${p => p.theme.sansFont};
   text-transform: uppercase;
   text-align: center;
   letter-spacing: 0.05em;

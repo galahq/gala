@@ -15,6 +15,9 @@ import { Provider } from 'react-redux'
 import { enableBatching } from 'redux-batched-actions'
 import thunk from 'redux-thunk'
 
+import { ThemeProvider } from 'styled-components'
+import { theme } from 'utility/styledComponents'
+
 import { FocusStyleManager } from '@blueprintjs/core'
 import { addLocaleData, IntlProvider } from 'react-intl'
 
@@ -43,7 +46,9 @@ const render = (Component: React$Component) => {
       <ErrorBoundary>
         <Provider store={store}>
           <IntlProvider locale={locale} messages={messages[locale]}>
-            <Component />
+            <ThemeProvider theme={theme}>
+              <Component />
+            </ThemeProvider>
           </IntlProvider>
         </Provider>
       </ErrorBoundary>

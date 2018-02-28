@@ -11,6 +11,9 @@ import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import { addLocaleData, IntlProvider } from 'react-intl'
 
+import { ThemeProvider } from 'styled-components'
+import { theme } from 'utility/styledComponents'
+
 import { FocusStyleManager } from '@blueprintjs/core'
 
 import Catalog from 'catalog'
@@ -25,7 +28,9 @@ const render = (Component: React$Component) => {
   ReactDOM.render(
     <AppContainer>
       <IntlProvider locale={locale} messages={messages[locale]}>
-        <Component />
+        <ThemeProvider theme={theme}>
+          <Component />
+        </ThemeProvider>
       </IntlProvider>
     </AppContainer>,
     document.getElementById('catalog-app')

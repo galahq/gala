@@ -137,7 +137,7 @@ export const StyledCommentContainer = styled.div`
   & h5,
   & h6 {
     color: black;
-    font-family: tenso;
+    font-family: ${p => p.theme.sansFont};
     font-size: 1.2em;
     margin: 1em 0 0.3em;
     &:first-child {

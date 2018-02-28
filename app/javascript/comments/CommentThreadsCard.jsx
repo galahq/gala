@@ -137,7 +137,7 @@ const Container = styled.div`
   position: fixed;
   top: 30px;
   width: 267px;
-  font-family: 'tenso';
+  font-family: ${p => p.theme.sansFont};
   font-size: 12pt;
   transition: margin-left 0.3s;
 

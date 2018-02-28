@@ -93,7 +93,7 @@ const Title = styled.h3`
 `
 const Kicker = styled.span`
   display: block;
-  font-family: 'tenso';
+  font-family: ${p => p.theme.sansFont};
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -126,7 +126,7 @@ const Background = styled.a`
   padding: 1.7em 1.5em;
   border-radius: 2px;
   position: relative;
-  font-family: 'tenso';
+  font-family: ${p => p.theme.sansFont};
   color: #ebeae4;
   display: flex;
   justify-content: flex-end;
@@ -150,7 +150,7 @@ const PhotoCredit = styled.cite.attrs({ 'aria-hidden': true })`
   text-transform: uppercase;
   letter-spacing: 0.25px;
   color: rgba(235, 234, 228, 0.5);
-  font: normal 500 10px 'tenso';
+  font: normal 500 10px ${p => p.theme.sansFont};
   max-width: 18em;
   position: absolute;
   bottom: 0.5rem;

@@ -108,7 +108,7 @@ const InnerContainer = styled.div`
 `
 
 const ReadMoreLink = styled.a`
-  font: 12pt tenso;
+  font: 12pt ${p => p.theme.sansFont};
   color: #277a2e;
   position: absolute;
   bottom: -0.75em;

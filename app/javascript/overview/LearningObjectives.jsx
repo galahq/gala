@@ -42,7 +42,7 @@ const LearningObjectives = ({
 export default LearningObjectives
 
 const Label = styled.h3`
-  font-family: 'tenso';
+  font-family: ${p => p.theme.sansFont};
   font-size: 0.95em;
   font-weight: 500;
 `

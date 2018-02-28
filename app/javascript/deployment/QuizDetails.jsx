@@ -64,7 +64,7 @@ const DetailsCard = styled.div`
 `
 
 const CardTitle = styled.h1`
-  font-family: 'tenso';
+  font-family: ${p => p.theme.sansFont};
   font-size: 17px;
 `
 
