@@ -47,7 +47,7 @@ am:
         unlock_token: Unlock token
         updated_at: Updated at
       shared_cases_library:
-        description: |
+        description: >
           These cases were shared by Gala users.
     errors:
       messages:
@@ -102,14 +102,11 @@ am:
       locations: Site locations
     settings:
       edit:
-        changing_url_leaves_your_old_url_available_for_anyone_else: |
-          If you change your case’s URL, your old URL will redirect to your new
-          one. However, if someone else takes your old URL, the redirect will be
-          overridden.
+        changing_url_leaves_your_old_url_available_for_anyone_else: >
+          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
         edit_case_settings: Edit Case Settings
-        lowercase_letters_and_numbers_separated_by_hyphens_html: |
-          <b>Format:</b> lowercase letters and numbers separated by
-          hyphens,<br />100 characters maximum
+        lowercase_letters_and_numbers_separated_by_hyphens_html: >
+          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
         map:
           reset: Reset
           set: Set
@@ -126,13 +123,12 @@ am:
   catalog:
     catalog: Catalog
     choose_for_yourself: Choose for yourself
-    enrollments_instruction: |
+    enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
-    join_conversation: |
-      Join the conversation by asking questions
-      and paying your learning forward.
+    join_conversation: >
+      Join the conversation by asking questions and paying your learning forward.
     learn_more: Learn more
-    meet_stakeholders: |
+    meet_stakeholders: >
       Meet different stakeholders and dive deep with a multimodal narrative.
     propose_a_case: Propose a case
     shortcut_experience: Apply principles to improve practice.
@@ -147,7 +143,8 @@ am:
       comments_on_page_number: Comments on Page {position, number}
       page_n: Page {pageNumber, number}
   comments:
-    destroy: Delete comment
+    destroy:
+      delete_comment: Delete comment
     index:
       all_comments: All comments
       conversation: Conversation
@@ -157,23 +154,20 @@ am:
         one: 1 response
         other: "%{count} responses"
       no_comments: No comments
-      nobody_has_left_a_comment: |
-        Nobody in the {communityName} discussion group has left a comment on
-        this case. Switch to a different discussion group or be the first to
-        leave a comment.
+      nobody_has_left_a_comment: >
+        Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
       respond: Respond
       respond_here: Respond here
       select: Select a few words
-      selection_not_unique: |
-        The words you have selected appear more than once.
-        Please select a few more words.
+      selection_not_unique: >
+        The words you have selected appear more than once. Please select a few more words.
       write: Write a reply...
       write_new: Write a new response
   communities:
     index:
       choose_a_community: Choose a community
-      instructions: |
+      instructions: >
         You’ll see the discussion taking place in the community you choose.
       not_discussing: Your active community is not discussing this case
   date:
@@ -293,30 +287,26 @@ am:
       pull_quote: "Quotation: "
       video_slug: "YouTube video slug: "
     index:
-      attach: Attach this Edgenote
-      reattach_instructions: |
-        The Edgenotes that belong to this case but that are not attached to any
-        card are listed below. They can be reattached or deleted if they are no
-        longer needed. Or, you can create a brand new Edgenote and deal with
-        these later.
+      attach: Attach this Edgenote.
+      reattach_instructions: >
+        The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: |
+      make_selection: >
         Please select the phrase that you would like to attach an Edgenote to.
       new_edgenote: New Edgenote
   enrollments:
     destroy:
       are_you_sure: Are you sure you want to unenroll in this case?
       unenroll: Unenroll from this case
-      you_will_need_another_invitation: |
-        Because this case is not published, you will need
-        another invitation to reenroll.
+      you_will_need_another_invitation: >
+        Because this case is not published, you will need another invitation to reenroll.
     index:
       edit_enrolled: Edit enrolled cases
       enrolled_cases: Enrolled cases
       finish_editing: Finish editing
     new:
       enroll: Enroll
-      enroll_for_easy_access: |
+      enroll_for_easy_access: >
         If this case catches your eye, enroll for easy access.
       enroll_in_this_case: Enroll in this case
   errors:
@@ -389,7 +379,8 @@ am:
       two: ' and '
     page_entries_info:
       more_pages:
-        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
+        display_entries: >
+          Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total
     select:
       prompt: Please select
     submit:
@@ -400,30 +391,25 @@ am:
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
-        html: |
-          You are receiving this email because you are a user of <a
-          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
-        text: |
-          You are receiving this email because you are a user of Gala
-          (https://www.learngala.com).
+        html: >
+          You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: >
+          You are receiving this email because you are a user of Gala (https://www.learngala.com).
   my_cases:
     index:
-      confirm_delete: |
+      confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
-      featured: ':activerecord.attributes.case.featured'
+      featured: Featured
       my_cases: My Cases
       publish_a_case: Publish a Case
-      put_your_own_cases_on_gala: |
-        Put your case on Gala and enrich your teaching with integrated
-        discussion, curated media, and insights from detailed analysis of your
-        students’ engagement with the material.
-        You keep the rights to the cases you publish on Gala and we make them
-        easy to deploy in and beyond the classroom.
+      put_your_own_cases_on_gala: >
+        Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
   notifications:
-    replied_to_your_comment: "%{notifier} replied to your comment on “%{case_kicker}.”"
+    replied_to_your_comment: >
+      %{notifier} replied to your comment on “%{case_kicker}.”
   number:
     currency:
       format:
@@ -488,17 +474,14 @@ am:
       my_account: My account
       notification_settings: Notification settings
       save: 'Update profile'
-      you_have_not_created_a_password: |
-        Because you first signed in using %{provider}, you never created a password.
-        If you create one now, you will be able to use it, or %{provider}, to sign in.
+      you_have_not_created_a_password: >
+        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
   search:
     didnt_match: Your search didn’t match any cases.
     keyword_query: Keyword query
     no_results: No search results
-    propose_a_case: |
-      If you have a case (or a good idea for one) that you’d like to see on
-      Gala, reach out to us. Together we can make the most complete resource for
-      teaching about environment and sustainability.,
+    propose_a_case: >
+      If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.,
     refine: Refine search
     results: Search results
     search: Search
