@@ -299,7 +299,7 @@ fr:
       are_you_sure: Êtes-vous sûr de vouloir vous désinscrire dans cette étude de cas?
       unenroll: Désinscrivez-vous de cette étude de cas
       you_will_need_another_invitation: >
-        Parce que celle-ci n’est pas publiée, vous ne pourrez réinscrire que sous invitation.
+        Parce que celle-ci n’est pas publiée, vous ne pourrez vous réinscrire que sous invitation.
     index:
       edit_enrolled: Changez vos études de cas inscrites
       enrolled_cases: Études de cas inscrites
