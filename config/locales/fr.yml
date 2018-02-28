@@ -475,18 +475,18 @@ fr:
       notification_settings: Notification settings
       save: 'Modifier mon profil'
       you_have_not_created_a_password: >
-        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
+        Parce que vous vous êtes connecté pour la première fois à l’aide de %{provider}, vous n’avez jamais choisi un mot de passe. Si vous le choisissez maintenant, vous pourrez l’utiliser, ou continuer à utiliser %{provider}, pour vous connecter.
   search:
-    didnt_match: Your search didn’t match any cases.
-    keyword_query: Keyword query
-    no_results: No search results
+    didnt_match: Votre recherche n’a correspondu à aucune étude de cas.
+    keyword_query: Phrase ou mot-clé
+    no_results: Aucun résultat trouvé
     propose_a_case: >
-      If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.,
-    refine: Refine search
-    results: Search results
-    search: Search
-    search_cases: Search cases
-    try_again: Try searching for something else.
+      Auriez-vous une étude de cas à nous proposer? Contactez-nous. Ensemble, nous pourrions construir la ressource la plus complète pour l’enseignement dans les domaines de l’environnement et la durabilité.
+    refine: Affiner la recherche
+    results: Résultats de la recherche
+    search: Rechercher
+    search_cases: Recherchez
+    try_again: Modifiez votre recherche.
   support:
     array:
       last_word_connector: " et "
