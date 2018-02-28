@@ -102,7 +102,7 @@ ja:
     settings:
       edit:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
-          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
+          事例研究のURLを変化すれば、先のURLは新しいのにリダイレクトします。しかし、他人はそのURLを選択したとたんに、リダイレクトが無効にされます。
         edit_case_settings: 事例研究の設定を編集
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
@@ -125,7 +125,7 @@ ja:
     enrollments_instruction: >
       登録する事例研究は、簡単に見つけられるようにここに表示されます。
     join_conversation: >
-      Join the conversation by asking questions and paying your learning forward.
+      質問をしたり、他の学習者を助けたりして、会話に参加できます。
     learn_more: もっと詳しく知る
     meet_stakeholders: >
       さまざまなステークホルダーに会い、マルチモーダルな物語で深く理解できます。
@@ -143,7 +143,7 @@ ja:
       page_n: 第{pageNumber, number}ページ
   comments:
     destroy:
-      delete_comment: Delete comment
+      delete_comment: コメントを削除
     index:
       all_comments: すべてのコメント
       conversation: 会話
@@ -159,7 +159,7 @@ ja:
       respond_here: こちらに返信を書く
       select: 数語を選択
       selection_not_unique: >
-        The words you have selected appear more than once. Please select a few more words.
+        選択された言葉が複数回表示されます。さらにいくつかの文字を選択してください。
       write: 返事を書いてください
       write_new: 新しい返信を書く
   communities:
@@ -273,7 +273,7 @@ ja:
       pull_quote: "引用："
       video_slug: "YouTube video slug: "
     index:
-      attach: Attach this Edgenote.
+      attach: この Edgenote を添付します。
       reattach_instructions: >
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
@@ -285,7 +285,7 @@ ja:
       are_you_sure: この事例研究、登録を解除してもよろしいですか？
       unenroll: この事例研究の登録を解除する
       you_will_need_another_invitation: >
-        Because this case is not published, you will need another invitation to reenroll.
+        公開されていないので、再登録するには別の招待状が必要です。
     index:
       edit_enrolled: 登録された事例研究を編集
       enrolled_cases: 登録された事例研究
@@ -373,9 +373,9 @@ ja:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
         html: >
-          You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+          このメールを受け取る理由は<a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>のユーザーです。
         text: >
-          You are receiving this email because you are a user of Gala (https://www.learngala.com).
+          このメールを受け取る理由はGala（https://www.learngala.com）のユーザーです。
   my_cases:
     index:
       confirm_delete: >
@@ -454,13 +454,13 @@ ja:
       notification_settings: 通知の設定
       save: 'プロフィールの変化を保存'
       you_have_not_created_a_password: >
-        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
+        初めて%{provider}でサインインしましたので、パスワードをまだ選びませんでした。選んだら、今後%{provider}とパスワードと両方でサインイン可能性があります。
   search:
     didnt_match: 検索はどの事例研究にも一致しませんでした。
     keyword_query: キーワード検索
     no_results: 検索結果なし
     propose_a_case: >
-      If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.,
+      あなたがGalaを見たいと思う事件研究（またはそれについての良いアイデア）がある場合は、お問い合わせください。一緒に、環境と持続可能性について教えるための最も完全なリソースを作ることができます。
     refine: 詳細検索
     results: 検索結果
     search: 検索
