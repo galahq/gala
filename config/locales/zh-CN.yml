@@ -46,7 +46,7 @@ zh-CN:
         unlock_token: 帐户解锁令牌
         updated_at: 更新于
       shared_cases_library:
-        description: |
+        description: >
           These cases were shared by Gala users.
     errors:
       messages:
@@ -101,14 +101,11 @@ zh-CN:
       locations: 案例地点
     settings:
       edit:
-        changing_url_leaves_your_old_url_available_for_anyone_else: |
-          If you change your case’s URL, your old URL will redirect to your new
-          one. However, if someone else takes your old URL, the redirect will be
-          overridden.
+        changing_url_leaves_your_old_url_available_for_anyone_else: >
+          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
         edit_case_settings: Edit Case Settings
-        lowercase_letters_and_numbers_separated_by_hyphens_html: |
-          <b>Format:</b> lowercase letters and numbers separated by
-          hyphens,<br />100 characters maximum
+        lowercase_letters_and_numbers_separated_by_hyphens_html: >
+          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
         map:
           reset: Reset
           set: Set
@@ -125,12 +122,12 @@ zh-CN:
   catalog:
     catalog: 案例目录
     choose_for_yourself: 我的学习我做主
-    enrollments_instruction: |
+    enrollments_instruction: >
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
-    join_conversation: |
-      参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
+    join_conversation: >
+      Join the conversation by asking questions and paying your learning forward.
     learn_more: 了解更多
-    meet_stakeholders: |
+    meet_stakeholders: >
       在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
     propose_a_case: 案例征集
     shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
@@ -145,7 +142,8 @@ zh-CN:
       comments_on_page_number: Comments on Page {position, number}
       page_n: Page {pageNumber, number}
   comments:
-    destroy: Delete comment
+    destroy:
+      delete_comment: Delete comment
     index:
       all_comments: All comments
       conversation: Conversation
@@ -154,22 +152,20 @@ zh-CN:
         js: "{count, number}条回复"
         other: "%{count}条回复"
       no_comments: No comments
-      nobody_has_left_a_comment: |
-        Nobody in the {communityName} discussion group has left a comment on
-        this case. Switch to a different discussion group or be the first to
-        leave a comment.
+      nobody_has_left_a_comment: >
+        Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
       respond: 参与讨论
       respond_here: 回应
       select: 选择想要发起讨论的词句
-      selection_not_unique: |
-        你所选择的词句已存在相关话题，请多选几个词。
+      selection_not_unique: >
+        The words you have selected appear more than once. Please select a few more words.
       write: 发表回复
       write_new: 发起新话题
   communities:
     index:
       choose_a_community: 选择讨论小组
-      instructions: |
+      instructions: >
         加入讨论小组后，你将能够看到该讨论版中的所有对话。
       not_discussing: 你的讨论小组还没有对该案例展开讨论。
   date:
@@ -277,29 +273,26 @@ zh-CN:
       pull_quote: "Quotation: "
       video_slug: "YouTube video slug: "
     index:
-      attach: Attach this Edgenote
-      reattach_instructions: |
-        The Edgenotes that belong to this case but that are not attached to any
-        card are listed below. They can be reattached or deleted if they are no
-        longer needed. Or, you can create a brand new Edgenote and deal with
-        these later.
+      attach: Attach this Edgenote.
+      reattach_instructions: >
+        The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: |
+      make_selection: >
         Please select the phrase that you would like to attach an Edgenote to.
       new_edgenote: New Edgenote
   enrollments:
     destroy:
       are_you_sure: 你确定要退出这个案例的学习吗？
       unenroll: 退出该案例的学习
-      you_will_need_another_invitation: |
-        这个案例还未公开发表，你将需要另一封邀请函来重新加入此案例的学习。
+      you_will_need_another_invitation: >
+        Because this case is not published, you will need another invitation to reenroll.
     index:
       edit_enrolled: 编辑我的案例
       enrolled_cases: 加入案例学习
       finish_editing: 结束编辑
     new:
       enroll: 参与学习
-      enroll_for_easy_access: |
+      enroll_for_easy_access: >
         如果你喜欢这个案例，就参与到该案例的学习中吧。加入之后，首页上“我的案例”处将会出现链接到该案例的快捷方式。
       enroll_in_this_case: 加入此案例的学习
   errors:
@@ -367,7 +360,8 @@ zh-CN:
       two: '、'
     page_entries_info:
       more_pages:
-        display_entries: "显示 %{entry_name} <b>%{first} - %{last}</b>　共<b>%{total}</b>"
+        display_entries: >
+          显示 %{entry_name} <b>%{first} - %{last}</b>　共<b>%{total}</b>
     select:
       prompt: 请选择
     submit:
@@ -378,15 +372,13 @@ zh-CN:
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
-        html: |
-          You are receiving this email because you are a user of <a
-          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
-        text: |
-          You are receiving this email because you are a user of Gala
-          (https://www.learngala.com).
+        html: >
+          You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: >
+          You are receiving this email because you are a user of Gala (https://www.learngala.com).
   my_cases:
     index:
-      confirm_delete: |
+      confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
       delete_case: Delete case.
       edit_case: 编辑该案例
@@ -394,14 +386,11 @@ zh-CN:
       featured: 明星
       my_cases: My Cases
       publish_a_case: Publish a Case
-      put_your_own_cases_on_gala: |
-        Put your case on Gala and enrich your teaching with integrated
-        discussion, curated media, and insights from detailed analysis of your
-        students’ engagement with the material.
-        You keep the rights to the cases you publish on Gala and we make them
-        easy to deploy in and beyond the classroom.
+      put_your_own_cases_on_gala: >
+        Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
   notifications:
-    replied_to_your_comment: "%{notifier}回复了你在%{case_kicker}的讨论。"
+    replied_to_your_comment: >
+      %{notifier}回复了你在%{case_kicker}的讨论。
   number:
     currency:
       format:
@@ -464,16 +453,14 @@ zh-CN:
       my_account: 我的用户
       notification_settings: Notification settings
       save: '更新个人信息'
-      you_have_not_created_a_password: |
-        因为你首次登陆时使用的是%{provider}，并没有设置密码。
-        你现在可以通过设置密码来用于下次登陆，或者继续使用
-        %{provider}进行登陆。
+      you_have_not_created_a_password: >
+        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
   search:
     didnt_match: 抱歉，没有找到你所搜索的案例。
     keyword_query: 关键词查询
     no_results: 没有可显示的搜索结果
-    propose_a_case: |
-      或者，如果你有希望收入到Gala的案例，或关于案例的设想，请与我们联系。让我们一起为环境和可持续发展领域提供更多更有效的学习资源。
+    propose_a_case: >
+      If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.,
     refine: 细化搜索
     results: 搜索结果
     search: 搜索
