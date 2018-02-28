@@ -4,15 +4,18 @@
  */
 
 import React from 'react'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { Route } from 'react-router-dom'
 import { Dialog, Button } from '@blueprintjs/core'
-import type { ContextRouter } from 'react-router-dom'
 
 import CaseOverview from 'overview/CaseOverview'
 import { providesQuiz } from './Quiz'
 import Question from './Question'
 import Tracker from 'utility/Tracker'
+
+import type { ContextRouter } from 'react-router-dom'
+import type { IntlShape } from 'react-intl'
 
 import type { Question as QuestionT } from 'redux/state'
 import type { QuizProviderProps } from './Quiz'
@@ -23,18 +26,21 @@ const PreTest = ({
   canSubmit,
   history,
   id: quizId,
+  intl,
   match,
   onChange,
   onSubmit,
   questions,
-}: Props) => {
+}: Props & { intl: IntlShape }) => {
   return (
     <div style={{ height: '100%' }}>
       <Route component={CaseOverview} />
       <Dialog
         className="pt-dark"
         isOpen={!!match}
-        title="Before you get started"
+        title={intl.formatMessage({
+          id: 'submissions.new.beforeYouGetStarted',
+        })}
         style={{ top: '10%', width: '100%', maxWidth: 800 }}
         onClose={e => {
           history.replace('/')
@@ -42,8 +48,7 @@ const PreTest = ({
       >
         <div className="pt-dialog-body">
           <p>
-            Please answer the following questions to demonstrate your current
-            level of knowledge.
+            <FormattedMessage id="submissions.new.pleaseAnswer" />
           </p>
 
           <div className="pt-card">
@@ -60,7 +65,11 @@ const PreTest = ({
 
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
-            <Button disabled={!canSubmit} text="Submit" onClick={onSubmit} />
+            <Button
+              disabled={!canSubmit}
+              text={intl.formatMessage({ id: 'helpers.submit.submit' })}
+              onClick={onSubmit}
+            />
           </div>
         </div>
 
@@ -78,4 +87,4 @@ const PreTest = ({
   )
 }
 
-export default providesQuiz(PreTest)
+export default providesQuiz(injectIntl(PreTest))

@@ -5,6 +5,7 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { values } from 'ramda'
 
 import { Button, Intent } from '@blueprintjs/core'
@@ -17,6 +18,7 @@ import Tracker from 'utility/Tracker'
 
 import { Orchard } from 'shared/orchard'
 
+import type { IntlShape } from 'react-intl'
 import type { Question as QuestionT } from 'redux/state'
 import type { QuizProviderProps } from './Quiz'
 
@@ -49,7 +51,7 @@ type Submissions = {
   },
 }
 
-type Props = QuizProviderProps
+type Props = QuizProviderProps & { intl: IntlShape }
 class PostTest extends React.Component<
   Props,
   {
@@ -71,7 +73,14 @@ class PostTest extends React.Component<
   }
 
   render () {
-    const { answers, canSubmit, id: quizId, onChange, questions } = this.props
+    const {
+      answers,
+      canSubmit,
+      id: quizId,
+      onChange,
+      questions,
+      intl,
+    } = this.props
     const { correctAnswers, selectedAnswers } = this.state
     const needsResponse = correctAnswers.length === 0
     return (
@@ -97,7 +106,7 @@ class PostTest extends React.Component<
               margin: '1em 0 0.75em',
             }}
           >
-            Post-case quiz
+            <FormattedMessage id="submissions.new.postCaseQuiz" />
           </h1>
           <div
             className="pt-card"
@@ -106,24 +115,28 @@ class PostTest extends React.Component<
             <Instructions needsResponse={needsResponse}>
               {needsResponse ? (
                 <div>
-                  <h5>Check your understanding</h5> After you have engaged with
-                  all elements of the case, please take this post-test to check
-                  your understanding.
+                  <h5>
+                    <FormattedMessage id="submissions.new.checkYourUnderstanding" />
+                  </h5>
+                  <FormattedMessage id="submissions.new.pleaseTakeThisAfterEngagingWithAllElements" />
                 </div>
               ) : (
                 <AccessibleAlert>
-                  Thank you for your submission.{' '}
+                  <FormattedMessage id="submissions.show.thankYou" />{' '}
                   <span aria-hidden>
-                    The correct answers are shown below, highlighted green, so
-                    you may check your work.
+                    <FormattedMessage id="submissions.show.correctAnswersAreBelow" />
                   </span>
                   <LabelForScreenReaders>
                     <ol>
                       {questions.map((q, i) => (
                         <li key={i}>
-                          The correct answer to the question “{q.content}” is “{
-                            correctAnswers[i]
-                          }”
+                          <FormattedMessage
+                            id="quizzes.show.theCorrectAnswerIs"
+                            values={{
+                              question: q.content,
+                              answer: correctAnswers[i],
+                            }}
+                          />
                         </li>
                       ))}
                     </ol>
@@ -143,7 +156,7 @@ class PostTest extends React.Component<
             <Button
               disabled={!canSubmit}
               intent={Intent.PRIMARY}
-              text="Submit"
+              text={intl.formatMessage({ id: 'helpers.submit.submit' })}
               onClick={this.handleSubmit}
             />
           </div>
@@ -176,7 +189,7 @@ class PostTest extends React.Component<
   }
 }
 
-export default providesQuiz(PostTest)
+export default providesQuiz(injectIntl(PostTest))
 
 const Instructions = styled.div.attrs({
   className: ({ needsResponse }) =>
