@@ -4,17 +4,17 @@ fr:
     attributes:
       case:
         acknowledgements: Remerciements
-        featured: Ajouté aux études phares
+        featured: Ajoutée aux études phares
         kicker: Titre court
         learning_objectives: Objectifs pédagogiques
-        library: Collection
+        library: Répertoire
         location: Emplacement de l’étude de cas
         slug: URL de l’étude de cas
         title: Question
         translators:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
-          one: Translator
-          other: Translators
+          one: Traducteur(-rice)
+          other: Traducteurs(-rices)
       question:
         content: Contenu
         correct_answer: Bonne réponse
@@ -47,8 +47,8 @@ fr:
         unlock_token: Clé de déverrouillage
         updated_at: Date de mise à jour
       shared_cases_library:
-        description: |
-          Celles études de cas étaient partagée par les utilisateurs de Gala.
+        description: >
+          Études de cas partagées par les utilisateurs de Gala.
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
@@ -80,7 +80,7 @@ fr:
       messages:
         created: "%{model} a été créé(e) aves succès."
         destroyed: "%{model} a été supprimé(e) avec succès."
-        updated: "%{model} a été mis à jour avec succès."
+        updated: "%{model} mis à jour avec succès."
   activities:
     show:
       download: Télécharger
@@ -102,14 +102,11 @@ fr:
       locations: Emplacements des sites
     settings:
       edit:
-        changing_url_leaves_your_old_url_available_for_anyone_else: |
-          If you change your case’s URL, your old URL will redirect to your new
-          one. However, if someone else takes your old URL, the redirect will be
-          overridden.
+        changing_url_leaves_your_old_url_available_for_anyone_else: >
+          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
         edit_case_settings: Modifier les Paramètres de l’Étude de Cas
-        lowercase_letters_and_numbers_separated_by_hyphens_html: |
-          <b>Format:</b> lowercase letters and numbers separated by
-          hyphens,<br />100 characters maximum
+        lowercase_letters_and_numbers_separated_by_hyphens_html: >
+          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
         map:
           reset: Reset
           set: Set
@@ -126,12 +123,12 @@ fr:
   catalog:
     catalog: Catalogue
     choose_for_yourself: Faites votre choix
-    enrollments_instruction: |
+    enrollments_instruction: >
       Les études de cas dans lesquels vous vous inscriverez seront affichée ici pour un accès rapide.
-    join_conversation: |
-      Rentrez dans les debats, interrogez, propagez et partagez la savoir.
+    join_conversation: >
+      Rentrez dans les debats, interrogez, propagez et partagez le savoir.
     learn_more: En savoir plus
-    meet_stakeholders: |
+    meet_stakeholders: >
       Rencontrez des parties prenantes et plongez dans un récit multimodal.
     propose_a_case: Proposez une étude de cas
     shortcut_experience: Appliquez les principes pour améliorer la pratique.
@@ -146,32 +143,31 @@ fr:
       comments_on_page_number: Commentaires sur Page {position, number}
       page_n: Page {pageNumber, number}
   comments:
-    destroy: Supprimer le commentaire
+    destroy:
+      delete_comment: Supprimer le commentaire
     index:
       all_comments: Tous les commentaires
       conversation: Conversation
       join_the_conversation: Rejoignez la conversation
       n_responses:
         js: "{count, number} {count, plural, one {réponse} other {réponses}}"
-        one: 1 response
-        other: "%{count} responses"
+        one: 1 réponse
+        other: "%{count} réponses"
       no_comments: Aucune réponse
-      nobody_has_left_a_comment: |
-        Nobody in the {communityName} discussion group has left a comment on
-        this case. Switch to a different discussion group or be the first to
-        leave a comment.
+      nobody_has_left_a_comment: >
+        Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
       respond: Répondre
       respond_here: Répondez ici
       select: Sélectionnez quelques mots
-      selection_not_unique: |
+      selection_not_unique: >
         Les mots que vous avez sélectionnés apparaissent plusieurs fois. Veuillez sélectionner quelques mots de plus.
       write: Écrivez quelque chose...
       write_new: Écrivez une nouvelle réponse
   communities:
     index:
       choose_a_community: Choisir une communauté
-      instructions: |
+      instructions: >
         Vous verrez la discussion se dérouler dans la communauté que vous choisissez.
       not_discussing: Votre communauté activée ne discute pas de cette étude de cas
   date:
@@ -291,29 +287,26 @@ fr:
       pull_quote: "Citation : "
       video_slug: "YouTube video slug: "
     index:
-      attach: Attach this Edgenote
-      reattach_instructions: |
-        The Edgenotes that belong to this case but that are not attached to any
-        card are listed below. They can be reattached or deleted if they are no
-        longer needed. Or, you can create a brand new Edgenote and deal with
-        these later.
+      attach: Attach this Edgenote.
+      reattach_instructions: >
+        The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: |
+      make_selection: >
         Please select the phrase that you would like to attach an Edgenote to.
       new_edgenote: New Edgenote
   enrollments:
     destroy:
       are_you_sure: Êtes-vous sûr de vouloir vous désinscrire dans cette étude de cas?
       unenroll: Désinscrivez-vous de cette étude de cas
-      you_will_need_another_invitation: |
-        Parce que celle-ci n’est pas publiée, vous ne pourrez réinscrire que sous invitation.
+      you_will_need_another_invitation: >
+        Parce que celle-ci n’est pas publiée, vous ne pourrez vous réinscrire que sous invitation.
     index:
       edit_enrolled: Changez vos études de cas inscrites
       enrolled_cases: Études de cas inscrites
       finish_editing: Terminez l’édition
     new:
       enroll: Inscrire
-      enroll_for_easy_access: |
+      enroll_for_easy_access: >
         Si cette étude de cas attire votre attention, inscrivez-vous pour un accès facile.
       enroll_in_this_case: Inscrivez-vous dans cette étude de cas
   errors:
@@ -370,13 +363,13 @@ fr:
     formatting:
       add_citation_entity: "Ajoutez une référence ici."
       add_edgenote_entity: "Ajouter une Edgenote à la sélection."
-      blockquote: "Style du paragraphe : Citation."
+      blockquote: "Disposition du paragraphe : Citation."
       bold: "Style intraligne : Texte en gras."
-      code: "Style intraligne : Code."
-      header: "Style du paragraphe: Titre."
-      italic: "Style intraligne : texte en italique."
-      ol: "Style du paragraphe: Élément de la liste triée."
-      ul: "Style du paragraphe: Élément de la liste non triée."
+      code: "Disposition intraligne : Code."
+      header: "Disposition du paragraphe: Titre."
+      italic: "Disposition intraligne : texte en italique."
+      ol: "Disposition du paragraphe: Élément de la liste triée."
+      ul: "Disposition du paragraphe: Élément de la liste non triée."
     less:
       read_more: Lisez la suite
     list:
@@ -386,7 +379,8 @@ fr:
       two: ' and '
     page_entries_info:
       more_pages:
-        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total"
+        display_entries: >
+          Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total
     select:
       prompt: Veuillez sélectionner
     submit:
@@ -397,30 +391,25 @@ fr:
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
-        html: |
-          You are receiving this email because you are a user of <a
-          style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
-        text: |
-          You are receiving this email because you are a user of Gala
-          (https://www.learngala.com).
+        html: >
+          You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: >
+          You are receiving this email because you are a user of Gala (https://www.learngala.com).
   my_cases:
     index:
-      confirm_delete: |
+      confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
-      featured: ':activerecord.attributes.case.featured'
+      featured: Ajoutée aux études phares
       my_cases: My Cases
       publish_a_case: Publish a Case
-      put_your_own_cases_on_gala: |
-        Put your case on Gala and enrich your teaching with integrated
-        discussion, curated media, and insights from detailed analysis of your
-        students’ engagement with the material.
-        You keep the rights to the cases you publish on Gala and we make them
-        easy to deploy in and beyond the classroom.
+      put_your_own_cases_on_gala: >
+        Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
   notifications:
-    replied_to_your_comment: "%{notifier} replied to your comment on “%{case_kicker}.”"
+    replied_to_your_comment: >
+      %{notifier} replied to your comment on “%{case_kicker}.”
   number:
     currency:
       format:
@@ -472,37 +461,32 @@ fr:
   podcasts:
     show:
       with_host:
-        js: "with {count, plural, one {host} other {hosts}}"
-        one: with host
-        other: with hosts
+        js: "avec {count, plural, one {animateur(-trice)} other {animateurs(-trices)}}"
+        one: avec animateur(-trice)
+        other: avec animateurs(-trices)
   pundit:
     not_authorized: You are not authorized to perform this action.
   readers:
     form:
-      account_options: Account options
+      account_options: Options de compte
       choose_an_image: Choose a profile image
       create_a_password: Choisissez un mot de passe
       my_account: Mon compte
       notification_settings: Notification settings
       save: 'Modifier mon profil'
-      you_have_not_created_a_password: |
-        Parce que vous vous êtes connecté pour la première fois à l’aide de
-        %{provider}, vous n’avez jamais choisi un mot de passe. Si vous le
-        choisissez maintenant, vous pourrez l’utiliser, ou continuer à utiliser
-        %{provider}, pour vous connecter.
+      you_have_not_created_a_password: >
+        Parce que vous vous êtes connecté pour la première fois à l’aide de %{provider}, vous n’avez jamais choisi un mot de passe. Si vous le choisissez maintenant, vous pourrez l’utiliser, ou continuer à utiliser %{provider}, pour vous connecter.
   search:
-    didnt_match: Your search didn’t match any cases.
-    keyword_query: Keyword query
-    no_results: No search results
-    propose_a_case: |
-      If you have a case (or a good idea for one) that you’d like to see on
-      Gala, reach out to us. Together we can make the most complete resource for
-      teaching about environment and sustainability.,
-    refine: Refine search
-    results: Search results
-    search: Search
-    search_cases: Search cases
-    try_again: Try searching for something else.
+    didnt_match: Votre recherche n’a correspondu à aucune étude de cas.
+    keyword_query: Phrase ou mot-clé
+    no_results: Aucun résultat trouvé
+    propose_a_case: >
+      Auriez-vous une étude de cas à nous proposer? Contactez-nous. Ensemble, nous pourrions construir la ressource la plus complète pour l’enseignement dans les domaines de l’environnement et la durabilité.
+    refine: Affiner la recherche
+    results: Résultats de la recherche
+    search: Rechercher
+    search_cases: Recherchez
+    try_again: Modifiez votre recherche.
   support:
     array:
       last_word_connector: " et "
@@ -510,7 +494,7 @@ fr:
       words_connector: ", "
     languages:
       am: Amharique
-      en: Français
+      en: Anglais
       fr: Français
       ja: Japonais
       zh-CN: Mandarin (simplifié)
