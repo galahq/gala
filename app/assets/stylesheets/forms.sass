@@ -8,7 +8,9 @@ form
     color: $red
 
 .field em
-  font: 400 80% $sansFont
+  font-weight: 400
+  font-size: 80%
+  font-family: $sansFont
 
 select, input, textarea, button
   font-family: $sansFont
@@ -20,7 +22,10 @@ select, input, textarea, button
     display: none
 
   label:not(.notification)
-    font: 600 80% $sansFont
+    font-weight: 600
+    font-size: 80%
+    font-family: $sansFont
+    line-height: 1.2
     text-transform: uppercase
     letter-spacing: 0.05em
     margin: 0
@@ -53,7 +58,9 @@ select, input, textarea, button
   background: transparent
   border: solid 1px lighten($purple, 10%)
   color: lighten($purple, 10%)
-  font: 600 80% $sansFont
+  font-weight: 600
+  font-size: 80%
+  font-family: $sansFont
   letter-spacing: 0.1em
   margin-top: 0.5em
   padding: 0.3em 0.5em
@@ -114,7 +121,8 @@ form + ul
 
 .dialog
   a
-    font: 90% $sansFont
+    font-size: 90%
+    font-family: $sansFont
     color: $purple
     border: none
     box-shadow: none
