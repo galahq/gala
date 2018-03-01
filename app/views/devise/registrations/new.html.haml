@@ -24,7 +24,6 @@
     = f.label :password, class: "pt-label" do
       = t 'activerecord.attributes.user.password'
       - if @minimum_password_length
-        %br
         %span.pt-text-muted
           = t 'devise.shared.minimum_password_length',
               count: @minimum_password_length
