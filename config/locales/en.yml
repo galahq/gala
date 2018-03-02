@@ -367,6 +367,18 @@ en:
   features:
     index:
       featured_cases: Featured cases
+    create:
+      this_case_is_not_featured: >
+        This case is not featured. Feature it to have it displayed on Gala’s
+        front page when it is one of the six most recently featured cases that
+        a reader is not already enrolled in.
+      feature_case: Feature this case
+    destroy:
+      this_case_was_featured_on: >
+        This case was featured on %{date}. It will be displayed on Gala’s front
+        page when it is one of the six most recently featured cases that a
+        reader is not already enrolled in.
+      unfeature_case: Remove from featured cases
   forms:
     required: required
   helpers:
