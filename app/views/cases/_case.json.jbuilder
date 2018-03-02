@@ -26,4 +26,6 @@ json.library do
   end
 end
 
-json.url case_path I18n.locale, c
+json.links do
+  json.self case_path I18n.locale, c
+end
