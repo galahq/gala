@@ -52,13 +52,13 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
         </CaseRow>
         <UnstyledUL>
           {enrolledCases.map(
-            ({ slug, smallCoverUrl, kicker, url, publishedAt } = {}) =>
+            ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
               slug && (
                 <UnstyledLI key={slug}>
                   <Element
                     image={smallCoverUrl}
                     text={kicker}
-                    href={editing ? null : url}
+                    href={editing ? null : links.self}
                     rightElement={
                       editing && (
                         <SidebarButton
