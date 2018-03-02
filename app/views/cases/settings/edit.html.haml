@@ -3,32 +3,47 @@
     .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})"}
       %span.admin__table__slug= @case.kicker
 
-    %h1.admin__title= t '.edit_case_settings'
+    %div
+      %h1.admin__title= t '.edit_case_settings'
 
-    = form_for @case, url: case_settings_path(@case),
-                      builder: BlueprintFormBuilder do |f|
-      = f.errors
-
-      - slug_format = t('.lowercase_letters_and_numbers_separated_by_hyphens_html')
-      = f.form_group :slug, helper_text: slug_format do |f, error_classes|
-        .pt-callout.pt-icon-hand-right.form__callout
-          = t('.changing_url_leaves_your_old_url_available_for_anyone_else')
-
-        .pt-control-group
-          .pt-input-group.pt-fill{class: error_classes}
-            %span.pt-icon.pt-icon-link
-            = f.text_field :slug, class: %w[pt-input],
-                                  placeholder: 'example-slug'
-          = f.submit t('.change_url', default: 'Change URL'),
-                     class: %w[pt-button pt-intent-success]
-
-    - if @libraries.any?
       = form_for @case, url: case_settings_path(@case),
                         builder: BlueprintFormBuilder do |f|
-        = f.form_group :library_id do |f, error_classes|
+        = f.errors
+
+        - slug_format = t('.lowercase_letters_and_numbers_separated_by_hyphens_html')
+        = f.form_group :slug, helper_text: slug_format do |f, error_classes|
+          .pt-callout.pt-icon-hand-right.form__callout
+            = t('.changing_url_leaves_your_old_url_available_for_anyone_else')
+
           .pt-control-group
-            .pt-select.pt-fill{class: error_classes}
-              = f.select :library_id, @libraries.map { |l| [l.name, l.id]  },
-                         include_blank: t('activerecord.models.shared_cases_library')
-            = f.submit t('.change_library', default: 'Change Library'),
+            .pt-input-group.pt-fill{class: error_classes}
+              %span.pt-icon.pt-icon-link
+              = f.text_field :slug, class: %w[pt-input],
+                                    placeholder: 'example-slug'
+            = f.submit t('.change_url', default: 'Change URL'),
                        class: %w[pt-button pt-intent-success]
+
+      - if @libraries.any?
+        = form_for @case, url: case_settings_path(@case),
+                          builder: BlueprintFormBuilder do |f|
+          = f.form_group :library_id do |f, error_classes|
+            .pt-control-group
+              .pt-select.pt-fill{class: error_classes}
+                = f.select :library_id, @libraries.map { |l| [l.name, l.id]  },
+                           include_blank: t('activerecord.models.shared_cases_library')
+              = f.submit t('.change_library', default: 'Change Library'),
+                         class: %w[pt-button pt-intent-success]
+
+      - if @case.featured?
+        %h2.admin__title= t 'features.destroy.unfeature_case'
+        %p= t 'features.destroy.this_case_was_featured_on',
+              date: l(@case.featured_at.to_date, format: :long)
+        = form_with url: feature_path(@case), method: :delete,
+                    local: true do |f|
+          = f.submit t('features.destroy.unfeature_case'), class: %w[pt-button]
+      - else
+        %h2.admin__title= t 'features.create.feature_case'
+        %p= t 'features.create.this_case_is_not_featured'
+        = form_with url: features_path, local: true do |f|
+          = hidden_field_tag :case_slug, @case.slug
+          = f.submit t('features.create.feature_case'), class: %w[pt-button]
