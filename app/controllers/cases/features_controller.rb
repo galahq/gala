@@ -17,14 +17,14 @@ module Cases
 
     # @route [POST] `/cases/features`
     def create
-      authorize :'cases/features'
+      authorize :'cases/feature'
       @case.update featured: true
       redirect_to edit_case_settings_path @case
     end
 
     # @route [DELETE] `/cases/features/case-slug`
     def destroy
-      authorize :'cases/features'
+      authorize :'cases/feature'
       @case.update featured: false
       redirect_to edit_case_settings_path @case
     end

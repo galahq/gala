@@ -2,6 +2,6 @@
 
 module Cases
   # @see Case::FeaturesController
-  class FeaturesPolicy < ApplicationPolicy
+  class FeaturePolicy < ApplicationPolicy
   end
 end
