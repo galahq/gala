@@ -150,6 +150,7 @@ export type Case = {
   library: Library,
   links: {
     self: string,
+    settings: string,
   },
   longitude: ?number,
   otherAvailableLocales: string[],
