@@ -103,19 +103,20 @@ en:
       locations: Site locations
     settings:
       edit:
-        changing_url_leaves_your_old_url_available_for_anyone_else: >
-          If you change your case’s URL, your old URL will redirect to your new
-          one. However, if someone else takes your old URL, the redirect will be
-          overridden.
         edit_case_settings: Edit case settings
-        lowercase_letters_and_numbers_separated_by_hyphens_html: >
-          <b>Format:</b> lowercase letters and numbers separated by
-          hyphens,<br />100 characters maximum
         map:
           reset: Reset
           set: Set
           zoom_in: Zoom in
           zoom_out: Zoom out
+      slug_form:
+        changing_url_leaves_your_old_url_available_for_anyone_else: >
+          If you change your case’s URL, your old URL will redirect to your new
+          one. However, if someone else takes your old URL, the redirect will be
+          overridden.
+        lowercase_letters_and_numbers_separated_by_hyphens_html: >
+          <b>Format:</b> lowercase letters and numbers separated by
+          hyphens,<br />100 characters maximum
     show:
       back_to_overview: Overview
       end: End

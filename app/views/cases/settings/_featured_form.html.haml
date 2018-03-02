@@ -1,0 +1,17 @@
+- if @case.featured?
+  - if policy(:'cases/features').destroy?
+    %h2.admin__title= t 'features.destroy.unfeature_case'
+    %p= t 'features.destroy.this_case_was_featured_on',
+          date: l(@case.featured_at.to_date, format: :long)
+    = form_with url: feature_path(@case), method: :delete,
+                local: true do |f|
+      = f.submit I18n.t('features.destroy.unfeature_case'),
+                 class: %w[pt-button]
+- else
+  - if policy(:'cases/features').create?
+    %h2.admin__title= t 'features.create.feature_case'
+    %p= t 'features.create.this_case_is_not_featured'
+    = form_with url: features_path, local: true do |f|
+      = hidden_field_tag :case_slug, @case.slug
+      = f.submit I18n.t('features.create.feature_case'),
+                 class: %w[pt-button]

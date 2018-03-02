@@ -1,0 +1,16 @@
+= form_for @case, url: case_settings_path(@case),
+                  builder: BlueprintFormBuilder do |f|
+  = f.errors
+
+  - slug_format = t('.lowercase_letters_and_numbers_separated_by_hyphens_html')
+  = f.form_group :slug, helper_text: slug_format do |f, error_classes|
+    .pt-callout.pt-icon-hand-right.form__callout
+      = t('.changing_url_leaves_your_old_url_available_for_anyone_else')
+
+    .pt-control-group
+      .pt-input-group.pt-fill{class: error_classes}
+        %span.pt-icon.pt-icon-link
+        = f.text_field :slug, class: %w[pt-input],
+                              placeholder: 'example-slug'
+      = f.submit I18n.t('cases.settings.edit.change_url'),
+                 class: %w[pt-button pt-intent-success]
