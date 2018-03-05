@@ -273,25 +273,6 @@ export function togglePublished (): ThunkAction {
   }
 }
 
-export function toggleFeatured (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
-    const { caseData } = getState()
-    const { slug, featuredAt } = caseData
-    if (
-      window.confirm(
-        `Are you sure you want to ${featuredAt ? 'un' : ''}feature this case?`
-      )
-    ) {
-      Orchard.espalier(`cases/${slug}`, {
-        case: { featured: !featuredAt },
-      }).then(() => {
-        dispatch(updateCase({ featuredAt: featuredAt ? null : new Date() }))
-        dispatch(clearUnsaved())
-      })
-    }
-  }
-}
-
 export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
     const enrollment = await Orchard.graft(`cases/${caseSlug}/enrollment`, {})

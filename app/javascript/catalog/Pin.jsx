@@ -38,7 +38,7 @@ class Pin extends React.Component<{
                     <AnchorButton
                       iconName="circle-arrow-right"
                       className="pt-minimal"
-                      href={kase.url}
+                      href={kase.links.self}
                     />
                   )
                 }
@@ -58,7 +58,9 @@ export default Pin
 
 const TooltipElement = styled(Element).attrs({
   className: 'pt-dark',
-})`margin-bottom: -4px;`
+})`
+  margin-bottom: -4px;
+`
 const PinIcon = styled.span.attrs({
   dangerouslySetInnerHTML: { __html: require('images/pin.svg') },
 })`
