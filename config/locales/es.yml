@@ -4,12 +4,14 @@ es:
     attributes:
       case:
         acknowledgements: Reconocimientos
+        case_title: Case title
         featured: Destacado
         featured_at: Featured at
         kicker: Short title
         learning_objectives: Objetivos de aprendizaje
         library: Library
         location: Ubicación del caso
+        published: Published
         slug: Case URL
         title: Question
         translators:
@@ -31,9 +33,11 @@ es:
         email: Email
         encrypted_password: Contraseña cifrada
         failed_attempts: Intentos fallidos
+        image: Image
         initials: Initials
         last_sign_in_at: Fecha del último ingreso
         last_sign_in_ip: IP del último ingreso
+        locale: Locale
         locked_at: Fecha de bloqueo
         name: Nombre
         password: Contraseña
@@ -104,6 +108,8 @@ es:
       locations: Ubicaciones
     settings:
       edit:
+        change_library: Change library
+        change_url: Change URL
         edit_case_settings: Edit case settings
         map:
           reset: Reset
@@ -420,6 +426,7 @@ es:
       edit_case_settings: Edit case settings.
       featured: Destacado
       my_cases: My Cases
+      new_case: New Case
       publish_a_case: Publicar este caso
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
