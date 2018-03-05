@@ -35,6 +35,6 @@ module TranslatedFlashMessages
   end
 
   def keyify(name)
-    name.underscore.tr('/', '.')
+    name.to_s.underscore.tr('/', '.')
   end
 end
