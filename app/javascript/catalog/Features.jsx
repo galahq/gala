@@ -20,7 +20,16 @@ const Featured = ({ featuredCases, readerIsEditor }: Props) => (
     <Grid>
       {featuredCases.map(
         (
-          { slug, kicker, title, dek, coverUrl, photoCredit, url, publishedAt },
+          {
+            slug,
+            kicker,
+            title,
+            dek,
+            coverUrl,
+            photoCredit,
+            links,
+            publishedAt,
+          },
           i
         ) => (
           <CaseBlock
@@ -31,7 +40,7 @@ const Featured = ({ featuredCases, readerIsEditor }: Props) => (
             dek={i < 2 && dek}
             coverUrl={coverUrl}
             photoCredit={photoCredit}
-            url={publishedAt || readerIsEditor ? url : undefined}
+            url={publishedAt || readerIsEditor ? links.self : undefined}
           />
         )
       )}

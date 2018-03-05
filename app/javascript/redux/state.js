@@ -148,6 +148,10 @@ export type Case = {
   latitude: ?number,
   learningObjectives: string[],
   library: Library,
+  links: {
+    self: string,
+    settings: string,
+  },
   longitude: ?number,
   otherAvailableLocales: string[],
   photoCredit: string,
@@ -156,7 +160,6 @@ export type Case = {
   smallCoverUrl: string,
   summary: string,
   title: string,
-  url: string,
   zoom: ?number,
 } & Byline
 
