@@ -97,6 +97,11 @@ fr:
       edit: Modifier cette étude de cas
       feature_case: Ajouter celle-ci aux études phares
       just_change_the_text: Pour modifier cette étude de cas, il suffit de changer le texte
+      map:
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
       options: Options
       publish_case: Publier cette étude de cas
       save: Enregistrer
@@ -111,11 +116,6 @@ fr:
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
-        map:
-          reset: Reset
-          set: Set
-          zoom_in: Zoom in
-          zoom_out: Zoom out
       featured_form:
         change_featured_time: Change time
       slug_form:
