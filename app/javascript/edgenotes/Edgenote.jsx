@@ -27,14 +27,12 @@
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { EditableText } from '@blueprintjs/core'
 
 import YouTube from './YouTube'
 import Image from './Image'
 import PullQuote from './PullQuote'
 import Statistics from 'utility/Statistics'
 import Tracker from 'utility/Tracker'
-import EditableAttribute from 'utility/EditableAttribute'
 
 import {
   highlightEdgenote,
@@ -79,13 +77,13 @@ export type ReduxProps = {|
   activate: () => Promise<any>,
   active: boolean,
   deactivate: () => Promise<any>,
-  editing: boolean,
   selected: boolean,
 |}
 
 class EdgenoteFigure extends React.Component<{
   ...ReduxProps,
   contents: ?Edgenote,
+  editing: boolean,
   onMouseOver: () => Promise<any>,
   onMouseOut: () => Promise<any>,
   onChange: string => string => Promise<any>,
@@ -94,7 +92,7 @@ class EdgenoteFigure extends React.Component<{
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
       if (contents && contents.callToAction && contents.websiteUrl) {
-        window.open(contents.websiteUrl, '_blank')
+        window.open(contents.websiteUrl, '_blank', 'noopener')
         setTimeout(() => {
           this.props.deactivate()
         }, 300)
@@ -110,7 +108,6 @@ class EdgenoteFigure extends React.Component<{
       onMouseOver,
       onMouseOut,
       editing,
-      onChange,
     } = this.props
     if (contents == null) return null
 
@@ -119,7 +116,6 @@ class EdgenoteFigure extends React.Component<{
       caption,
       youtubeSlug,
       pullQuote,
-      imageUrl,
       callToAction,
       audioUrl,
     } = contents
@@ -134,11 +130,6 @@ class EdgenoteFigure extends React.Component<{
       }
       : {}
 
-    const Or =
-      editing && !youtubeSlug && !pullQuote && !audioUrl && !imageUrl
-        ? () => <span>or</span>
-        : () => null
-
     return (
       <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
         <Statistics inline uri={`edgenotes/${slug}`} />
@@ -146,58 +137,51 @@ class EdgenoteFigure extends React.Component<{
           tabIndex={isALink ? '0' : false}
           onClick={active ? () => {} : activate}
         >
-          {this.renderVideoSection()}
-          <Or />
-          {this.renderQuotationSection()}
-          <Or />
-          {this.renderImageSection()}
+          {this.renderVideoSection() ||
+            this.renderQuotationSection() ||
+            this.renderImageSection()}
 
           <Caption
             contents={caption}
             {...this._reduxProps()}
             {...(pullQuote ? { selected: false } : {})} // overrides reduxProps
-            onChange={onChange('caption')}
           />
           {this.renderCallToAction()}
         </ConditionalLink>
 
-        <Tracker
-          timerState={active ? 'RUNNING' : 'STOPPED'}
-          targetKey={`edgenotes/${slug}`}
-          targetParameters={{
-            name: 'visit_edgenote',
-            edgenoteSlug: slug,
-          }}
-          instantaneous={isALink}
-        />
+        {editing || (
+          <Tracker
+            timerState={active ? 'RUNNING' : 'STOPPED'}
+            targetKey={`edgenotes/${slug}`}
+            targetParameters={{
+              name: 'visit_edgenote',
+              edgenoteSlug: slug,
+            }}
+            instantaneous={isALink}
+          />
+        )}
       </figure>
     )
   }
 
   renderVideoSection () {
-    const { contents, onChange } = this.props
+    const { contents } = this.props
 
     if (contents == null) return null
-    const { pullQuote, imageUrl, audioUrl, youtubeSlug } = contents
+    const { youtubeSlug } = contents
 
-    if (!!pullQuote || !!imageUrl || !!audioUrl) return null
+    if (!youtubeSlug) return null
 
-    return (
-      <YouTube
-        slug={youtubeSlug}
-        onChange={onChange('youtubeSlug')}
-        {...this._reduxProps()}
-      />
-    )
+    return <YouTube slug={youtubeSlug} {...this._reduxProps()} />
   }
 
   renderQuotationSection () {
-    const { contents, onChange } = this.props
+    const { contents } = this.props
 
     if (contents == null) return null
-    const { pullQuote, imageUrl, audioUrl, youtubeSlug, attribution } = contents
+    const { pullQuote, audioUrl, attribution } = contents
 
-    if (!!youtubeSlug || !!imageUrl) return null
+    if (!audioUrl && !pullQuote && !attribution) return null
 
     return (
       <PullQuote
@@ -206,26 +190,17 @@ class EdgenoteFigure extends React.Component<{
         contents={pullQuote}
         hasBackground={!!audioUrl}
         {...this._reduxProps()}
-        onChangeProp={onChange}
       />
     )
   }
 
   renderImageSection () {
-    const { contents, onChange } = this.props
+    const { contents } = this.props
 
     if (contents == null) return null
-    const {
-      pullQuote,
-      imageUrl,
-      audioUrl,
-      youtubeSlug,
-      altText,
-      photoCredit,
-      callToAction,
-    } = contents
+    const { imageUrl, altText, photoCredit, callToAction } = contents
 
-    if (!!youtubeSlug || !!pullQuote || !!audioUrl) return null
+    if (!imageUrl) return null
 
     return (
       <Image
@@ -234,13 +209,12 @@ class EdgenoteFigure extends React.Component<{
         photoCredit={photoCredit}
         callToAction={callToAction}
         {...this._reduxProps()}
-        onChange={onChange}
       />
     )
   }
 
   renderCallToAction () {
-    const { contents, onChange } = this.props
+    const { contents } = this.props
 
     if (contents == null) return null
     const { audioUrl, youtubeSlug, callToAction, websiteUrl } = contents
@@ -252,14 +226,13 @@ class EdgenoteFigure extends React.Component<{
         websiteUrl={websiteUrl}
         contents={callToAction}
         {...this._reduxProps()}
-        onChange={onChange}
       />
     )
   }
 
   _reduxProps () {
-    const { active, activate, deactivate, editing, selected } = this.props
-    return { active, activate, deactivate, editing, selected }
+    const { active, activate, deactivate, selected } = this.props
+    return { active, activate, deactivate, selected }
   }
 }
 
@@ -267,42 +240,21 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
   EdgenoteFigure
 )
 
-const CallToAction = ({ contents, websiteUrl, editing, onChange }) => (
-  <div>
-    <EditableAttribute
-      disabled={!editing}
-      title="website"
-      value={websiteUrl}
-      onChange={onChange('websiteUrl')}
-    />
-    {(contents || editing) && (
-      <div style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>
-        <EditableText
-          multiline
-          disabled={!editing}
-          placeholder="Add call to action ›"
-          value={contents}
-          onChange={onChange('callToAction')}
-        />
-      </div>
-    )}
-  </div>
-)
+const CallToAction = ({ contents, websiteUrl }) =>
+  contents && (
+    <div>
+      <div style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>{contents}</div>
+    </div>
+  )
 
-const Caption = ({ contents, selected, editing, onChange }) =>
-  contents || editing ? (
+const Caption = ({ contents, selected }) =>
+  contents && (
     <div style={{ margin: '0.25em 0 0 0' }}>
       <figcaption
         className={selected ? 'edge--highlighted' : ''}
-        style={{ fontSize: '110%', lineHeight: 1.1 }}
+        style={{ fontSize: '110%', lineHeight: 1.1, display: 'inline' }}
       >
-        <EditableText
-          multiline
-          placeholder="Add caption..."
-          value={contents}
-          disabled={!editing}
-          onChange={onChange}
-        />
+        {contents}
       </figcaption>
     </div>
-  ) : null
+  )

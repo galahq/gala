@@ -10,10 +10,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { EditableText } from '@blueprintjs/core'
 import ImageZoom from 'react-medium-image-zoom'
-
-import EditableAttribute from 'utility/EditableAttribute'
 
 import type { ReduxProps } from './Edgenote'
 
@@ -22,7 +19,6 @@ type Props = {
   alt: string,
   photoCredit: string,
   callToAction: string,
-  onChange: string => string => any,
   ...ReduxProps,
 }
 
@@ -34,8 +30,6 @@ const Image = ({
   active,
   activate,
   deactivate,
-  editing,
-  onChange,
 }: Props) => {
   let imageProps = {
     style: { width: '100%', minHeight: '3em', display: 'block' },
@@ -57,33 +51,8 @@ const Image = ({
 
   return (
     <div>
-      {src &&
-        (editing || photoCredit) && (
-          <PhotoCredit>
-            <EditableText
-              multiline
-              value={photoCredit}
-              disabled={!editing}
-              placeholder={editing ? 'Photo credit' : ''}
-              onChange={onChange('photoCredit')}
-            />
-          </PhotoCredit>
-        )}
+      {src && photoCredit && <PhotoCredit>{photoCredit}</PhotoCredit>}
       {src && imageComponent}
-      <EditableAttribute
-        disabled={!editing}
-        title="image url"
-        value={src}
-        onChange={onChange('imageUrl')}
-      />
-      {src && (
-        <EditableAttribute
-          disabled={!editing}
-          title="alt text"
-          value={alt}
-          onChange={onChange('altText')}
-        />
-      )}
     </div>
   )
 }
