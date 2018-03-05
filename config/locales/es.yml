@@ -5,6 +5,7 @@ es:
       case:
         acknowledgements: Reconocimientos
         featured: Destacado
+        featured_at: Featured at
         kicker: Short title
         learning_objectives: Objetivos de aprendizaje
         library: Library
@@ -65,6 +66,7 @@ es:
       case: Case
       cases:
         setting: Case Settings
+        feature: Featured status
       comment: Comment
       comment_thread: Comment thread
       edgenote: Edgenote
@@ -102,16 +104,19 @@ es:
       locations: Ubicaciones
     settings:
       edit:
-        changing_url_leaves_your_old_url_available_for_anyone_else: >
-          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
-        edit_case_settings: Edit Case Settings
-        lowercase_letters_and_numbers_separated_by_hyphens_html: >
-          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
+        edit_case_settings: Edit case settings
         map:
           reset: Reset
           set: Set
           zoom_in: Zoom in
           zoom_out: Zoom out
+      featured_form:
+        change_featured_time: Change time
+      slug_form:
+        changing_url_leaves_your_old_url_available_for_anyone_else: >
+          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
+        lowercase_letters_and_numbers_separated_by_hyphens_html: >
+          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
     show:
       back_to_overview: Resumen
       end: Fin
@@ -355,6 +360,14 @@ es:
   features:
     index:
       featured_cases: Casos destacados
+    create:
+      this_case_is_not_featured: >
+        This case is not featured. Feature it to have it displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      feature_case: Agregar caso destacado
+    destroy:
+      this_case_was_featured_on: >
+        This case was featured on %{date}. It will be displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      unfeature_case: Quitar de casos destacados
   forms:
     required: required
   helpers:
