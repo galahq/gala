@@ -97,6 +97,11 @@ es:
       edit: Editar este caso
       feature_case: Agregar caso destacado
       just_change_the_text: Para editar este caso, simplemente cambie el texto
+      map:
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
       options: Opciones
       publish_case: Publicar este caso
       save: Guardar
@@ -111,11 +116,6 @@ es:
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
-        map:
-          reset: Reset
-          set: Set
-          zoom_in: Zoom in
-          zoom_out: Zoom out
       featured_form:
         change_featured_time: Change time
       slug_form:
