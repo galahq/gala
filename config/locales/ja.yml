@@ -96,6 +96,11 @@ ja:
       edit: 編集
       feature_case: 注目の事例研究に追加する
       just_change_the_text: テキストを変化するのができる
+      map:
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
       options: 選択肢
       publish_case: 発刊する
       save: 保存
@@ -110,11 +115,6 @@ ja:
         change_library: Change library
         change_url: Change URL
         edit_case_settings: 事例研究の設定を編集
-        map:
-          reset: 元に戻す
-          set: 保存
-          zoom_in: ズームイン
-          zoom_out: ズームアウト
       featured_form:
         change_featured_time: 時間の変更
       slug_form:
