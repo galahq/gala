@@ -4,12 +4,14 @@ zh-CN:
     attributes:
       case:
         acknowledgements: 致谢
+        case_title: Case title
         featured: 明星
         featured_at: Featured at
         kicker: 短标题
         learning_objectives: 学习目标
         library: Library
         location: 案例发生地
+        published: Published
         slug: Case URL
         title: Question
         translators:
@@ -30,9 +32,11 @@ zh-CN:
         email: 电子邮箱
         encrypted_password: 密码被加密
         failed_attempts: 失败尝试
+        image: Image
         initials: Initials
         last_sign_in_at: 最后登录于
         last_sign_in_ip: 最后登录的 IP
+        locale: Locale
         locked_at: 锁定于
         name: Full Name
         password: 密码
@@ -103,6 +107,8 @@ zh-CN:
       locations: 案例地点
     settings:
       edit:
+        change_library: Change library
+        change_url: Change URL
         edit_case_settings: Edit case settings
         map:
           reset: Reset
@@ -401,6 +407,7 @@ zh-CN:
       edit_case_settings: Edit case settings.
       featured: 明星
       my_cases: My Cases
+      new_case: New Case
       publish_a_case: Publish a Case
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
