@@ -96,6 +96,11 @@ zh-CN:
       edit: 编辑该案例
       feature_case: 将此案例设置为明星案例
       just_change_the_text: 点击案例，开始编辑。
+      map:
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
       options: 选项
       publish_case: 发表该案例
       save: 保存
@@ -110,11 +115,6 @@ zh-CN:
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
-        map:
-          reset: Reset
-          set: Set
-          zoom_in: Zoom in
-          zoom_out: Zoom out
       featured_form:
         change_featured_time: Change time
       slug_form:
