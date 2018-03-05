@@ -19,7 +19,7 @@ import { FocusStyleManager } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
 const { locale } = (window.i18n: { locale: string })
-import messages from '../../../config/locales/react.json' // eslint-disable-line
+import messages from '../../../config/locales' // eslint-disable-line
 
 const container = document.getElementById('deployment-app')
 

@@ -19,7 +19,7 @@ const CaseList = ({ cases, readerIsEditor }: Props) => (
       const Row = link ? CaseLinkRow : CaseRow
       return (
         <li key={kase.slug}>
-          <Row href={link ? kase.url : undefined}>
+          <Row href={link ? kase.links.self : undefined}>
             <Image src={kase.smallCoverUrl} />
             <Title>
               <Kicker>

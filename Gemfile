@@ -109,6 +109,7 @@ gem 'faker'
 
 group :test do
   gem 'database_cleaner'
+  gem 'rspec-retry'
 end
 
 ruby '2.5.0'

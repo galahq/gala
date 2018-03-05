@@ -7,12 +7,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import {
-  toggleEditing,
-  saveChanges,
-  togglePublished,
-  toggleFeatured,
-} from 'redux/actions'
+import { toggleEditing, saveChanges, togglePublished } from 'redux/actions'
 
 import Toolbar from 'utility/Toolbar'
 
@@ -22,14 +17,14 @@ import type { State } from 'redux/state'
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
   let { edit, caseData } = state
   let { inProgress } = edit
-  let { commentable, publishedAt, featuredAt, reader } = caseData
+  let { commentable, links, publishedAt, reader } = caseData
   let { pathname } = location
   return {
     editable: edit.possible,
     editing: inProgress,
     edited: edit.changed,
     published: !!publishedAt,
-    featured: !!featuredAt,
+    links,
     commentable,
     pathname,
     history,
@@ -43,10 +38,9 @@ function StatusBar ({
   editing,
   edited,
   published,
-  featured,
+  links,
   toggleEditing,
   togglePublished,
-  toggleFeatured,
   saveChanges,
   pathname,
   history,
@@ -89,6 +83,15 @@ function StatusBar ({
           message: 'cases.edit.options',
           iconName: 'cog',
           submenu: [
+            edited
+              ? null
+              : {
+                message: 'cases.settings.edit.editCaseSettings',
+                iconName: 'cog',
+                onClick: () => {
+                  window.location = links.settings
+                },
+              },
             editing || edited
               ? {
                 disabled: !edited,
@@ -103,15 +106,6 @@ function StatusBar ({
                 iconName: published ? 'lock' : 'upload',
                 onClick: togglePublished,
               },
-            published && !edited
-              ? {
-                message: featured
-                  ? 'cases.edit.unfeatureCase'
-                  : 'cases.edit.featureCase',
-                iconName: featured ? 'star-empty' : 'star',
-                onClick: toggleFeatured,
-              }
-              : null,
             {
               message: editing ? 'cases.edit.stopEditing' : 'cases.edit.edit',
               iconName: editing ? 'cross' : 'edit',
@@ -133,6 +127,5 @@ export default withRouter(
     toggleEditing,
     saveChanges,
     togglePublished,
-    toggleFeatured,
   })(StatusBar)
 )

@@ -1,0 +1,10 @@
+- if @libraries.any?
+  = form_for @case, url: case_settings_path(@case),
+                    builder: BlueprintFormBuilder do |f|
+    = f.form_group :library_id do |f, error_classes|
+      .pt-control-group
+        .pt-select.pt-fill{class: error_classes}
+          = f.select :library_id, @libraries.map { |l| [l.name, l.id]  },
+                     include_blank: t('activerecord.models.shared_cases_library')
+        = f.submit I18n.t('cases.settings.edit.change_library'),
+                   class: %w[pt-button pt-intent-success]

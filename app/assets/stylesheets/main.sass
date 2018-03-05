@@ -46,7 +46,9 @@ a.o-button
     text-decoration: none
 
 .o-button.pt-button
-  font: 600 80% $sansFont
+  font-weight: 600
+  font-size: 80%
+  font-family: $sansFont
   letter-spacing: 0.5px
   text-transform: uppercase
   margin-top: 0.5em
@@ -55,7 +57,9 @@ a.o-button
   background: $purple
   border: 0
   color: white
-  font: 600 80% $sansFont
+  font-weight: 600
+  font-size: 80%
+  font-family: $sansFont
   letter-spacing: 0.1em
   margin-top: 0.5em
   padding: 0.5em 1em
@@ -76,15 +80,18 @@ a.o-button
   white-space: normal
   padding: 5px 10px
 
-.pt-button[class*="pt-icon-"].oauth-icon-google::before
-  display: inline-block
-  content: " "
-  background-image: image_url('google-logo.svg')
-  background-size: 16px 16px
-  width: 16px
-  height: 16px
-  margin-right: 3px
-  margin-bottom: -3px
+.pt-button[class*="pt-icon-"].oauth-icon-google
+  line-height: 15px
+
+  &::before
+    display: inline-block
+    content: " "
+    background-image: image_url('google-logo.svg')
+    background-size: 16px 16px
+    width: 16px
+    height: 16px
+    margin-right: 3px
+    margin-bottom: -3px
 
 h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, p, figcaption, a, abbr, span,
 em, strong
@@ -156,7 +163,7 @@ strong
   line-height: 1.1
 
   &:not(:last-child)
-    margin-bottom: 0.25em
+    margin-bottom: 0.3em
   a
     font-size: 15px
 
@@ -203,8 +210,3 @@ sub
 
 .sortable-helper
   z-index: 999
-
-.wf-loading h1,
-.wf-loading h2,
-.wf-loading p
-  visibility: hidden
