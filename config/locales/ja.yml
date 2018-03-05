@@ -112,14 +112,14 @@ ja:
         edit_case_settings: 事例研究の設定を編集
         map:
           reset: 元に戻す
-          set: 設定
-          zoom_in: Zoom in
-          zoom_out: Zoom out
+          set: 保存
+          zoom_in: ズームイン
+          zoom_out: ズームアウト
       featured_form:
-        change_featured_time: Change time
+        change_featured_time: 時間の変更
       slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
-          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
+          事例研究のURLを変化すれば、先のURLは新しいのにリダイレクトします。しかし、他人はそのURLを選択したとたんに、リダイレクトが無効にされます。
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
     show:
@@ -397,7 +397,7 @@ ja:
           このメールを受け取る理由はGala（https://www.learngala.com）のユーザーです。
   magic_link:
     show:
-      lets_get_started: Let’s get started!
+      lets_get_started: 始めましょう!
   my_cases:
     index:
       confirm_delete: >
