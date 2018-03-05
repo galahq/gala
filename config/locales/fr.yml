@@ -4,12 +4,14 @@ fr:
     attributes:
       case:
         acknowledgements: Remerciements
+        case_title: Case title
         featured: Ajoutée aux études phares
         featured_at: Featured at
         kicker: Titre court
         learning_objectives: Objectifs pédagogiques
         library: Répertoire
         location: Emplacement de l’étude de cas
+        published: Published
         slug: URL de l’étude de cas
         title: Question
         translators:
@@ -31,9 +33,11 @@ fr:
         email: Courriel
         encrypted_password: Mot de passe crypté
         failed_attempts: Tentatives échouées
+        image: Image
         initials: Initials
         last_sign_in_at: Date de la dernière connexion
         last_sign_in_ip: IP de la dernière connexion
+        locale: Locale
         locked_at: Verrouillé à
         name: Nom et prénom
         password: Mot de passe
@@ -104,6 +108,8 @@ fr:
       locations: Emplacements des sites
     settings:
       edit:
+        change_library: Change library
+        change_url: Change URL
         edit_case_settings: Edit case settings
         map:
           reset: Reset
@@ -420,6 +426,7 @@ fr:
       edit_case_settings: Edit case settings.
       featured: Ajoutée aux études phares
       my_cases: My Cases
+      new_case: New Case
       publish_a_case: Publish a Case
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
