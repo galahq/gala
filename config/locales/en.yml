@@ -5,6 +5,7 @@ en:
       case:
         acknowledgements: Acknowledgements
         featured: Featured
+        featured_at: Featured at
         kicker: Short title
         learning_objectives: Learning objectives
         library: Library
@@ -66,6 +67,7 @@ en:
       case: Case
       cases:
         setting: Case Settings
+        feature: Featured status
       comment: Comment
       comment_thread: Comment thread
       edgenote: Edgenote
@@ -109,6 +111,8 @@ en:
           set: Set
           zoom_in: Zoom in
           zoom_out: Zoom out
+      featured_form:
+        change_featured_time: Change time
       slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
           If you change your case’s URL, your old URL will redirect to your new
