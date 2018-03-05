@@ -10,25 +10,12 @@ import * as React from 'react'
 
 import YoutubePlayer from 'react-youtube-player'
 
-import EditableAttribute from 'utility/EditableAttribute'
-
 import type { ReduxProps } from './Edgenote'
 
-type Props = {
-  slug: string,
-  onChange: string => any,
-  ...ReduxProps,
-}
-const YouTube = ({
-  slug,
-  active,
-  activate,
-  deactivate,
-  editing,
-  onChange,
-}: Props) => (
-  <div>
-    {slug && (
+type Props = { slug: string, ...ReduxProps }
+const YouTube = ({ slug, active, activate, deactivate }: Props) =>
+  slug && (
+    <div>
       <YoutubePlayer
         videoId={slug}
         playbackState={active ? 'playing' : 'paused'}
@@ -38,14 +25,7 @@ const YouTube = ({
         onPlay={activate}
         onPause={deactivate}
       />
-    )}
-    <EditableAttribute
-      disabled={!editing}
-      title="YouTube slug"
-      value={slug}
-      onChange={onChange}
-    />
-  </div>
-)
+    </div>
+  )
 
 export default YouTube
