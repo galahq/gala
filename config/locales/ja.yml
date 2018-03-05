@@ -4,12 +4,14 @@ ja:
     attributes:
       case:
         acknowledgements: 謝辞
+        case_title: Case title
         featured: 注目
-        featured_at: Featured at
+        featured_at: 注目の事例研究に追加した時
         kicker: 短いタイトル
         learning_objectives: 学習目標
         library: ライブラリ
         location: 場所
+        published: Published
         slug: 事例研究のURL
         title: 質問
         translators:
@@ -30,9 +32,11 @@ ja:
         email: メールアドレス
         encrypted_password: 暗号化パスワード
         failed_attempts: 失敗したログイン試行回数
+        image: Image
         initials: Initials
         last_sign_in_at: 最終ログイン時刻
         last_sign_in_ip: 最終ログインIPアドレス
+        locale: Locale
         locked_at: ロック時刻
         name: 姓名
         password: パスワード
@@ -65,7 +69,7 @@ ja:
       case: 場合
       cases:
         setting: 事例研究の設定
-        feature: Featured status
+        feature: 注目の状態
       comment: コメント
       comment_thread: コメントスレッド
       edgenote: Edgenote
@@ -103,10 +107,12 @@ ja:
       locations: 場所
     settings:
       edit:
-        edit_case_settings: Edit case settings
+        change_library: Change library
+        change_url: Change URL
+        edit_case_settings: 事例研究の設定を編集
         map:
-          reset: Reset
-          set: Set
+          reset: 元に戻す
+          set: 設定
           zoom_in: Zoom in
           zoom_out: Zoom out
       featured_form:
@@ -401,6 +407,7 @@ ja:
       edit_case_settings: Edit case settings.
       featured: 注目
       my_cases: マイケース
+      new_case: New Case
       publish_a_case: 事例研究を発刊しましょう
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
