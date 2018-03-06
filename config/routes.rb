@@ -45,7 +45,8 @@ Rails.application.routes.draw do
       resource :settings, module: 'cases', only: %i[edit update]
 
       collection do
-        resources :features, only: %i[index]
+        resources :features, module: 'cases', param: :case_slug,
+                             only: %i[index create update destroy]
       end
     end
 
