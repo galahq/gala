@@ -9,9 +9,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import ReactMarkdown from 'react-markdown'
 
-import { LinkWithTargetBlank } from './shared'
+import Markdown from 'utility/Markdown'
 
 import type { State } from 'redux/state'
 
@@ -33,10 +32,7 @@ const NoSelectedCommentThread = ({
     {description && (
       <React.Fragment>
         <h2>{name || ''}</h2>
-        <ReactMarkdown
-          source={description || ''}
-          renderers={{ link: LinkWithTargetBlank }}
-        />
+        <Markdown source={description || ''} />
       </React.Fragment>
     )}
   </Container>
