@@ -26,6 +26,7 @@
  */
 
 import * as React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 import YouTube from './YouTube'
@@ -33,6 +34,7 @@ import Image from './Image'
 import PullQuote from './PullQuote'
 import Statistics from 'utility/Statistics'
 import Tracker from 'utility/Tracker'
+import EdgenoteEditor from './EdgenoteEditor'
 
 import {
   highlightEdgenote,
@@ -59,8 +61,7 @@ function mapDispatchToProps (dispatch: Dispatch, { slug }: OwnProps) {
     deactivate: () => dispatch(activateEdgenote(null)),
     onMouseOver: () => dispatch(highlightEdgenote(slug)),
     onMouseOut: () => dispatch(highlightEdgenote(null)),
-    onChange: (attr: string) => (value: string) =>
-      dispatch(updateEdgenote(slug, { [attr]: value })),
+    onChange: (data: $Shape<Edgenote>) => dispatch(updateEdgenote(slug, data)),
   }
 }
 
@@ -86,7 +87,7 @@ class EdgenoteFigure extends React.Component<{
   editing: boolean,
   onMouseOver: () => Promise<any>,
   onMouseOut: () => Promise<any>,
-  onChange: string => string => Promise<any>,
+  onChange: ($Shape<Edgenote>) => Promise<any>,
 }> {
   componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {
@@ -105,6 +106,7 @@ class EdgenoteFigure extends React.Component<{
       contents,
       active,
       activate,
+      onChange,
       onMouseOver,
       onMouseOut,
       editing,
@@ -131,7 +133,11 @@ class EdgenoteFigure extends React.Component<{
       : {}
 
     return (
-      <figure className="edge" id={slug} {...conditionalHoverCallbacks}>
+      <Container id={slug} {...conditionalHoverCallbacks}>
+        {editing && (
+          <EdgenoteEditor contents={contents} slug={slug} onChange={onChange} />
+        )}
+
         <Statistics inline uri={`edgenotes/${slug}`} />
         <ConditionalLink
           tabIndex={isALink ? '0' : false}
@@ -160,7 +166,7 @@ class EdgenoteFigure extends React.Component<{
             instantaneous={isALink}
           />
         )}
-      </figure>
+      </Container>
     )
   }
 
@@ -239,6 +245,10 @@ class EdgenoteFigure extends React.Component<{
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
   EdgenoteFigure
 )
+
+const Container = styled.figure.attrs({ className: 'edge' })`
+  position: relative;
+`
 
 const CallToAction = ({ contents, websiteUrl }) =>
   contents && (
