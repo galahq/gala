@@ -5,7 +5,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { FormattedDate } from 'react-intl'
-import ReactMarkdown from 'react-markdown'
+import Markdown from 'utility/Markdown'
 
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
   className: 'pt-breadcrumbs',
@@ -101,17 +101,9 @@ export const ConversationTimestamp = ({ value }: { value: string }) => (
   </span>
 )
 
-export const LinkWithTargetBlank = ({ children, ...rest }: any) => (
-  <a {...rest} target="_blank" rel="noopener noreferrer">
-    {children}
-  </a>
-)
 export const StyledComment = ({ markdown }: { markdown: string }) => (
   <StyledCommentContainer>
-    <ReactMarkdown
-      source={markdown}
-      renderers={{ link: LinkWithTargetBlank }}
-    />
+    <Markdown source={markdown} />
   </StyledCommentContainer>
 )
 export const StyledCommentContainer = styled.div`
