@@ -75,21 +75,35 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
 }
 
 export type ReduxProps = {|
-  activate: () => Promise<any>,
+  activate: () => any,
   active: boolean,
-  deactivate: () => Promise<any>,
+  deactivate: () => any,
   selected: boolean,
 |}
 
-class EdgenoteFigure extends React.Component<{
+type Props = {
   ...ReduxProps,
   contents: ?Edgenote,
   editing: boolean,
-  onMouseOver: () => Promise<any>,
-  onMouseOut: () => Promise<any>,
-  onChange: ($Shape<Edgenote>) => Promise<any>,
-}> {
-  componentDidUpdate (prevProps) {
+  embedded?: boolean,
+  onMouseOver: () => any,
+  onMouseOut: () => any,
+  onChange: ($Shape<Edgenote>) => any,
+}
+
+export class EdgenoteFigure extends React.Component<Props> {
+  static defaultProps = {
+    activate: () => {},
+    active: false,
+    deactivate: () => {},
+    editing: false,
+    selected: false,
+    onMouseOver: () => {},
+    onMouseOut: () => {},
+    onChange: () => {},
+  }
+
+  componentDidUpdate (prevProps: Props) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
       if (contents && contents.callToAction && contents.websiteUrl) {
@@ -110,6 +124,7 @@ class EdgenoteFigure extends React.Component<{
       onMouseOver,
       onMouseOut,
       editing,
+      embedded,
     } = this.props
     if (contents == null) return null
 
@@ -138,7 +153,7 @@ class EdgenoteFigure extends React.Component<{
           <EdgenoteEditor contents={contents} slug={slug} onChange={onChange} />
         )}
 
-        <Statistics inline uri={`edgenotes/${slug}`} />
+        {embedded || <Statistics inline uri={`edgenotes/${slug}`} />}
         <ConditionalLink
           tabIndex={isALink ? '0' : false}
           onClick={active ? () => {} : activate}

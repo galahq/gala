@@ -220,7 +220,6 @@ export type Edgenote = {
   attribution: string,
   altText: string,
   audioUrl: string,
-  averageTime: string,
   callToAction: string,
   caption: string,
   content: string,
@@ -234,8 +233,6 @@ export type Edgenote = {
   slug: string,
   style: 'v1' | 'v2',
   thumbnailUrl: string,
-  uniques: number,
-  views: number,
   websiteUrl: string,
   youtubeSlug: string,
 }
