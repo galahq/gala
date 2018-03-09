@@ -13,6 +13,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 
 import EdgenoteForm from 'edgenotes/EdgenoteForm'
+import { EdgenoteFigure } from 'edgenotes/Edgenote'
 
 import type { IntlShape } from 'react-intl'
 import type { Edgenote } from 'redux/state'
@@ -45,7 +46,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
 
   renderDialog () {
     const { intl } = this.props
-    const { open } = this.state
+    const { contents, open } = this.state
 
     return (
       <Dialog
@@ -56,14 +57,21 @@ class EdgenoteEditor extends React.Component<Props, State> {
       >
         <Body>
           <Column>
-            <EdgenoteForm intl={intl} />
+            <EdgenoteForm
+              contents={contents}
+              intl={intl}
+              onChange={this.handleChangeContents}
+            />
           </Column>
           <Separator />
-          <Card>
+          <Column>
             <h5>
               <FormattedMessage id="edgenotes.edit.preview" />
             </h5>
-          </Card>
+            <Card>
+              <EdgenoteFigure contents={contents} embedded={true} />
+            </Card>
+          </Column>
         </Body>
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
@@ -93,6 +101,11 @@ class EdgenoteEditor extends React.Component<Props, State> {
 
   handleOpen = () => this.setState({ open: true })
   handleClose = () => this.setState({ open: false })
+
+  handleChangeContents = (attributes: $Shape<Edgenote>) =>
+    this.setState(({ contents }: State) => ({
+      contents: { ...contents, ...attributes },
+    }))
 }
 export default injectIntl(EdgenoteEditor)
 
@@ -127,7 +140,7 @@ const EditButton = styled(Button).attrs({
 `
 
 const Dialog = styled(BaseDialog)`
-  width: 1000px;
+  width: 772px;
 `
 
 const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
@@ -143,4 +156,8 @@ const Separator = styled.div`
   padding: 1em;
 `
 
-const Card = styled.div.attrs({ className: 'pt-card pt-dark pt-elevation-2' })``
+const Card = styled.div.attrs({ className: 'pt-card pt-dark pt-elevation-3' })`
+  & .edge {
+    width: auto;
+  }
+`
