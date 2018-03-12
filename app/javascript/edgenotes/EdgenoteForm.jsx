@@ -14,17 +14,26 @@ import { FormGroup } from '@blueprintjs/core'
 import Markdown from 'utility/Markdown'
 
 import type { IntlShape } from 'react-intl'
+import type { ChangesToAttachments } from 'edgenotes/EdgenoteEditor'
 import type { Edgenote, ExtractReturn } from 'redux/state'
 
+type FormContents = { ...Edgenote, ...ChangesToAttachments }
+
 type Props = {
-  contents: Edgenote,
+  contents: FormContents,
   intl: IntlShape,
-  onChange: ($Shape<Edgenote>) => any,
+  onChange: ($Shape<Edgenote>) => mixed,
+  onChangeAttachment: ($Keys<ChangesToAttachments>, ?FileList) => mixed,
 }
 
-const EdgenoteForm = ({ contents, intl, onChange }: Props) => {
+const EdgenoteForm = ({
+  contents,
+  intl,
+  onChange,
+  onChangeAttachment,
+}: Props) => {
   const disabled = shouldDisable(contents)
-  const commonProps = { contents, disabled, intl, onChange }
+  const commonProps = { contents, disabled, intl, onChange, onChangeAttachment }
   return (
     <React.Fragment>
       <Heading messageId="edgenotes.edit.pasteALink" />
@@ -60,17 +69,10 @@ const EdgenoteForm = ({ contents, intl, onChange }: Props) => {
         {...commonProps}
       />
 
-      <Field
+      <FileField
         name="audioUrl"
-        label="edgenotes.edit.uploadAnAudioFile"
-        render={({ disabled, onChange }) => (
-          <label className="pt-file-upload pt-fill">
-            <input type="file" {...{ disabled, onChange }} />
-            <span className="pt-file-upload-input">
-              <FormattedMessage id="edgenotes.edit.chooseAudioFile" />
-            </span>
-          </label>
-        )}
+        accept="audio/*"
+        placeholder="edgenotes.edit.chooseAudioFile"
         {...commonProps}
       />
 
@@ -78,16 +80,10 @@ const EdgenoteForm = ({ contents, intl, onChange }: Props) => {
 
       <Heading messageId="edgenotes.edit.attachAnImage" />
 
-      <Field
+      <FileField
         name="imageUrl"
-        render={({ disabled, onChange }) => (
-          <label className="pt-file-upload pt-fill">
-            <input type="file" {...{ disabled, onChange }} />
-            <span className="pt-file-upload-input">
-              <FormattedMessage id="edgenotes.edit.chooseImage" />
-            </span>
-          </label>
-        )}
+        accept="image/*"
+        placeholder="edgenotes.edit.chooseImage"
         {...commonProps}
       />
 
@@ -140,16 +136,22 @@ const Heading = ({ messageId }: { messageId: string }) => (
   </h5>
 )
 
-type FieldProps = {
-  contents: Edgenote,
+type CommonFieldProps = {
+  contents: *,
   disabled: *,
   intl: IntlShape,
-  onChange: ($Shape<Edgenote>) => any,
+  onChange: *,
+  onChangeAttachment: *,
   label?: string,
   helperText?: React.Node,
+  placeholder?: string,
+}
+
+type FieldProps = CommonFieldProps & {
   name: $Keys<ExtractReturn<typeof shouldDisable>>,
   render: ({
     disabled: boolean,
+    placeholder?: string,
     value: string,
     onChange: (SyntheticInputEvent<*>) => any,
   }) => React.Node,
@@ -163,6 +165,7 @@ const Field = ({
   label,
   helperText,
   name,
+  placeholder,
   render,
 }: FieldProps) => (
   <FormGroup
@@ -173,6 +176,7 @@ const Field = ({
     {render({
       disabled: disabled[name],
       value: contents[name] || '',
+      placeholder: placeholder && intl.formatMessage({ id: placeholder }),
       onChange: (e: SyntheticInputEvent<*>) =>
         onChange({ [name]: e.target.value }),
     })}
@@ -182,14 +186,47 @@ const Field = ({
 const Input = styled.input.attrs({ className: 'pt-input pt-fill' })``
 const TextArea = Input.withComponent('textarea')
 
-const shouldDisable = (contents: Edgenote) => ({
+const FileField = (
+  props: CommonFieldProps & {
+    name: $Keys<ChangesToAttachments>,
+    accept: string,
+  }
+) => {
+  const attachment = props.contents[props.name]
+  const fileList = attachment && attachment.fileList
+  return (
+    <Field
+      {...props}
+      render={({ disabled, placeholder }) => (
+        <label className="pt-file-upload pt-fill">
+          <input
+            accept={props.accept}
+            type="file"
+            disabled={disabled}
+            onChange={(e: SyntheticInputEvent<*>) =>
+              props.onChangeAttachment(props.name, e.target.files)
+            }
+          />
+          <span className="pt-file-upload-input">
+            {fileList && fileList.length > 0
+              ? fileList.item(0).name
+              : placeholder}
+          </span>
+        </label>
+      )}
+    />
+  )
+}
+
+const shouldDisable = (contents: { ...Edgenote, ...ChangesToAttachments }) => ({
   websiteUrl: !!contents.audioUrl,
 
   pullQuote: !!contents.imageUrl,
-  attribution: !contents.pullQuote,
+  attribution: !contents.pullQuote && !contents.attribution,
   audioUrl: !contents.pullQuote || !!contents.websiteUrl,
 
-  imageUrl: !!contents.pullQuote,
+  imageUrl:
+    !!contents.pullQuote || !!contents.attribution || !!contents.audioUrl,
   altText: !contents.imageUrl,
   photoCredit: !contents.imageUrl,
 

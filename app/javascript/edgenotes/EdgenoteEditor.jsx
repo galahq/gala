@@ -9,6 +9,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { injectIntl, FormattedMessage } from 'react-intl'
+import * as R from 'ramda'
 
 import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 
@@ -18,20 +19,41 @@ import { EdgenoteFigure } from 'edgenotes/Edgenote'
 import type { IntlShape } from 'react-intl'
 import type { Edgenote } from 'redux/state'
 
+type ChangeToAttachment = ?Attachment
+export type ChangesToAttachments = {|
+  audioUrl: ChangeToAttachment,
+  imageUrl: ChangeToAttachment,
+|}
+
 type Props = {
   contents: Edgenote,
   intl: IntlShape,
   slug: string,
   onChange: ($Shape<Edgenote>) => Promise<any>,
 }
-type State = { open: boolean, contents: Edgenote }
+type State = {
+  open: boolean,
+  contents: Edgenote,
+  changesToAttachments: ChangesToAttachments,
+}
 class EdgenoteEditor extends React.Component<Props, State> {
-  state = { open: false, contents: this.props.contents }
+  state = {
+    open: false,
+    contents: this.props.contents,
+    changesToAttachments: { audioUrl: undefined, imageUrl: undefined },
+  }
 
   componentWillReceiveProps (nextProps: Props) {
     if (this.props.slug !== nextProps.slug) {
       this.setState({ contents: nextProps.contents })
     }
+  }
+
+  componentWillUnmount () {
+    Object.keys(this.state.changesToAttachments).forEach(key => {
+      const attachment = this.state.changesToAttachments[key]
+      attachment && (attachment.fileList = null)
+    })
   }
 
   renderOverlay () {
@@ -46,7 +68,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
 
   renderDialog () {
     const { intl } = this.props
-    const { contents, open } = this.state
+    const { contents, open, changesToAttachments } = this.state
 
     return (
       <Dialog
@@ -58,9 +80,10 @@ class EdgenoteEditor extends React.Component<Props, State> {
         <Body>
           <Column>
             <EdgenoteForm
-              contents={contents}
+              contents={({ ...contents, ...changesToAttachments }: $FlowIssue)}
               intl={intl}
               onChange={this.handleChangeContents}
+              onChangeAttachment={this.handleChangeAttachment}
             />
           </Column>
           <Separator />
@@ -69,7 +92,10 @@ class EdgenoteEditor extends React.Component<Props, State> {
               <FormattedMessage id="edgenotes.edit.preview" />
             </h5>
             <Card>
-              <EdgenoteFigure contents={contents} embedded={true} />
+              <EdgenoteFigure
+                contents={this._displayPropsIncludingChangesToAttachments()}
+                embedded={true}
+              />
             </Card>
           </Column>
         </Body>
@@ -106,8 +132,56 @@ class EdgenoteEditor extends React.Component<Props, State> {
     this.setState(({ contents }: State) => ({
       contents: { ...contents, ...attributes },
     }))
+
+  handleChangeAttachment = (
+    attribute: $Keys<ChangesToAttachments>,
+    attachment: ?FileList
+  ) => {
+    const changeToAttachment =
+      this.state.changesToAttachments[attribute] || new Attachment()
+    changeToAttachment.fileList = attachment
+
+    return this.setState(({ changesToAttachments }: State) => ({
+      changesToAttachments: Object.freeze({
+        ...changesToAttachments,
+        [attribute]: changeToAttachment,
+      }),
+    }))
+  }
+
+  _displayPropsIncludingChangesToAttachments () {
+    const { contents, changesToAttachments } = this.state
+    const havingChanges = R.filter(Boolean)
+    const objectUrls = R.map(attachment => attachment && attachment.objectUrl)
+    return {
+      ...contents,
+      ...objectUrls(havingChanges(changesToAttachments)),
+    }
+  }
 }
 export default injectIntl(EdgenoteEditor)
+
+class Attachment {
+  _fileList: ?FileList
+  _objectUrl: ?string
+
+  get fileList (): ?FileList {
+    return this._fileList
+  }
+
+  set fileList (newFileList: ?FileList) {
+    if (this._objectUrl) URL.revokeObjectURL(this.objectUrl)
+    this._fileList = newFileList
+    this._objectUrl =
+      this._fileList && this._fileList.length > 0
+        ? URL.createObjectURL(this._fileList.item(0))
+        : null
+  }
+
+  get objectUrl (): string {
+    return this._objectUrl || ''
+  }
+}
 
 const Overlay = styled.div`
   position: absolute;

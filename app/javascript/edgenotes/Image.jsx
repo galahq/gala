@@ -33,7 +33,7 @@ const Image = ({
 }: Props) => {
   let imageProps = {
     style: { width: '100%', minHeight: '3em', display: 'block' },
-    src: `${src}?w=640`,
+    src,
     alt,
   }
   let imageComponent = callToAction ? (
