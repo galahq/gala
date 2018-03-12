@@ -9,15 +9,16 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
-import { FormGroup } from '@blueprintjs/core'
+import { Button, FormGroup, Intent } from '@blueprintjs/core'
 
+import Attachment from './Attachment'
 import Markdown from 'utility/Markdown'
 
 import type { IntlShape } from 'react-intl'
 import type { ChangesToAttachments } from 'edgenotes/editor'
 import type { Edgenote, ExtractReturn } from 'redux/state'
 
-type FormContents = { ...Edgenote, ...ChangesToAttachments }
+type FormContents = { ...Edgenote, ...$Shape<ChangesToAttachments> }
 
 type Props = {
   contents: FormContents,
@@ -192,44 +193,78 @@ const FileField = (
     accept: string,
   }
 ) => {
-  const attachment = props.contents[props.name]
-  const fileList = attachment && attachment.fileList
+  const attachment: ?Attachment | string = props.contents[props.name]
+  const fileList = attachment instanceof Attachment && attachment.fileList
   return (
-    <Field
-      {...props}
-      render={({ disabled, placeholder }) => (
-        <label className="pt-file-upload pt-fill">
-          <input
-            accept={props.accept}
-            type="file"
-            disabled={disabled}
-            onChange={(e: SyntheticInputEvent<*>) =>
-              props.onChangeAttachment(props.name, e.target.files)
-            }
-          />
-          <span className="pt-file-upload-input">
-            {fileList && fileList.length > 0
-              ? fileList.item(0).name
-              : placeholder}
-          </span>
-        </label>
+    <Row>
+      <Field
+        {...props}
+        render={({ disabled, placeholder }) => (
+          <label className="pt-file-upload pt-fill">
+            <input
+              accept={props.accept}
+              type="file"
+              disabled={disabled}
+              onChange={(e: SyntheticInputEvent<*>) =>
+                props.onChangeAttachment(props.name, e.target.files)
+              }
+            />
+            <span className="pt-file-upload-input">
+              {fileList && fileList.length > 0
+                ? fileList.item(0).name
+                : placeholder}
+            </span>
+          </label>
+        )}
+      />
+
+      {truthyAttachment(attachment) && (
+        <Button
+          intent={Intent.DANGER}
+          iconName="trash"
+          onClick={() => props.onChangeAttachment(props.name, null)}
+        >
+          <FormattedMessage id="edgenotes.edit.remove" />
+        </Button>
       )}
-    />
+    </Row>
   )
 }
 
 const shouldDisable = (contents: { ...Edgenote, ...ChangesToAttachments }) => ({
-  websiteUrl: !!contents.audioUrl,
+  websiteUrl: truthyAttachment(contents.audioUrl),
 
-  pullQuote: !!contents.imageUrl,
+  pullQuote: truthyAttachment(contents.imageUrl),
   attribution: !contents.pullQuote && !contents.attribution,
   audioUrl: !contents.pullQuote || !!contents.websiteUrl,
 
   imageUrl:
-    !!contents.pullQuote || !!contents.attribution || !!contents.audioUrl,
-  altText: !contents.imageUrl,
-  photoCredit: !contents.imageUrl,
+    !!contents.pullQuote ||
+    !!contents.attribution ||
+    truthyAttachment(contents.audioUrl),
+  altText: !truthyAttachment(contents.imageUrl),
+  photoCredit: !truthyAttachment(contents.imageUrl),
 
   caption: false,
-  callToAction: !!contents.audioUrl,
+  callToAction: truthyAttachment(contents.audioUrl),
 })
+
+function truthyAttachment (attachment: ?Attachment | string) {
+  return (
+    attachment != null &&
+    (typeof attachment === 'string' || !!attachment.objectUrl)
+  )
+}
+
+const Row = styled.div`
+  display: flex;
+  align-items: flex-end;
+
+  .pt-form-group {
+    flex: 1;
+  }
+
+  .pt-button {
+    margin: 0 0 15px 6px;
+  }
+`
