@@ -15,6 +15,7 @@ import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 
 import EdgenoteForm from './EdgenoteForm'
 import { EdgenoteFigure } from 'edgenotes/Edgenote'
+import Attachment from './Attachment'
 
 import type { IntlShape } from 'react-intl'
 import type { Edgenote } from 'redux/state'
@@ -52,7 +53,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
   componentWillUnmount () {
     Object.keys(this.state.changesToAttachments).forEach(key => {
       const attachment = this.state.changesToAttachments[key]
-      attachment && (attachment.fileList = null)
+      attachment && attachment.cleanup()
     })
   }
 
@@ -80,7 +81,12 @@ class EdgenoteEditor extends React.Component<Props, State> {
         <Body>
           <Column>
             <EdgenoteForm
-              contents={({ ...contents, ...changesToAttachments }: $FlowIssue)}
+              contents={
+                ({
+                  ...contents,
+                  ...R.filter(Boolean, changesToAttachments),
+                }: $FlowIssue)
+              }
               intl={intl}
               onChange={this.handleChangeContents}
               onChangeAttachment={this.handleChangeAttachment}
@@ -160,28 +166,6 @@ class EdgenoteEditor extends React.Component<Props, State> {
   }
 }
 export default injectIntl(EdgenoteEditor)
-
-class Attachment {
-  _fileList: ?FileList
-  _objectUrl: ?string
-
-  get fileList (): ?FileList {
-    return this._fileList
-  }
-
-  set fileList (newFileList: ?FileList) {
-    if (this._objectUrl) URL.revokeObjectURL(this.objectUrl)
-    this._fileList = newFileList
-    this._objectUrl =
-      this._fileList && this._fileList.length > 0
-        ? URL.createObjectURL(this._fileList.item(0))
-        : null
-  }
-
-  get objectUrl (): string {
-    return this._objectUrl || ''
-  }
-}
 
 const Overlay = styled.div`
   position: absolute;
