@@ -14,7 +14,7 @@ import { FormGroup } from '@blueprintjs/core'
 import Markdown from 'utility/Markdown'
 
 import type { IntlShape } from 'react-intl'
-import type { ChangesToAttachments } from 'edgenotes/EdgenoteEditor'
+import type { ChangesToAttachments } from 'edgenotes/editor'
 import type { Edgenote, ExtractReturn } from 'redux/state'
 
 type FormContents = { ...Edgenote, ...ChangesToAttachments }

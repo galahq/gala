@@ -34,7 +34,7 @@ import Image from './Image'
 import PullQuote from './PullQuote'
 import Statistics from 'utility/Statistics'
 import Tracker from 'utility/Tracker'
-import EdgenoteEditor from './EdgenoteEditor'
+import EdgenoteEditor from 'edgenotes/editor'
 
 import {
   highlightEdgenote,
