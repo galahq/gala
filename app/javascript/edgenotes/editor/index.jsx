@@ -13,7 +13,7 @@ import * as R from 'ramda'
 
 import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 
-import EdgenoteForm from 'edgenotes/EdgenoteForm'
+import EdgenoteForm from './EdgenoteForm'
 import { EdgenoteFigure } from 'edgenotes/Edgenote'
 
 import type { IntlShape } from 'react-intl'
