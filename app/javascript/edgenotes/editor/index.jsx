@@ -57,6 +57,15 @@ class EdgenoteEditor extends React.Component<Props, State> {
     })
   }
 
+  render () {
+    return (
+      <React.Fragment>
+        {this.renderOverlay()}
+        {this.renderDialog()}
+      </React.Fragment>
+    )
+  }
+
   renderOverlay () {
     return (
       <Overlay>
@@ -122,17 +131,9 @@ class EdgenoteEditor extends React.Component<Props, State> {
     )
   }
 
-  render () {
-    return (
-      <React.Fragment>
-        {this.renderOverlay()}
-        {this.renderDialog()}
-      </React.Fragment>
-    )
-  }
-
   handleOpen = () => this.setState({ open: true })
-  handleClose = () => this.setState({ open: false })
+  handleClose = () =>
+    this.setState({ contents: this.props.contents, open: false })
 
   handleChangeContents = (attributes: $Shape<Edgenote>) =>
     this.setState(({ contents }: State) => ({
