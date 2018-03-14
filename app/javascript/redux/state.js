@@ -227,6 +227,9 @@ export type Edgenote = {
   format: string,
   imageUrl: string,
   instructions: string,
+  links: {
+    self: string,
+  },
   pdfUrl: string,
   photoCredit: string,
   pullQuote: string,
