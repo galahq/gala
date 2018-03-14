@@ -17,7 +17,7 @@ import Tracker from 'utility/Tracker'
 
 import { FormattedMessage } from 'react-intl'
 
-import { deleteElement } from 'redux/actions.js'
+import { deleteElement } from 'redux/actions'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { State, Reader } from 'redux/state'
