@@ -101,6 +101,7 @@ export type UIState = {
   mostRecentCommentThreads: ?(string[]),
   openedCitation: Citation,
   toaster: any,
+  toasts: { [string]: string },
 }
 
 // Model Objects

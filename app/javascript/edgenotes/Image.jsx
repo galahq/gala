@@ -52,14 +52,20 @@ const Image = ({
   )
 
   return (
-    <div>
+    <Container>
       {src && photoCredit && <PhotoCredit>{photoCredit}</PhotoCredit>}
       {src && imageComponent}
-    </div>
+    </Container>
   )
 }
 
 export default Image
+
+const Container = styled.div`
+  img {
+    background-color: #4e6881aa;
+  }
+`
 
 const PhotoCredit = styled.cite`
   text-transform: uppercase;
