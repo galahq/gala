@@ -18,7 +18,7 @@ import type { IntlShape } from 'react-intl'
 import type { ChangesToAttachments } from 'edgenotes/editor'
 import type { Edgenote, ExtractReturn } from 'redux/state'
 
-type FormContents = { ...Edgenote, ...$Shape<ChangesToAttachments> }
+export type FormContents = { ...Edgenote, ...$Shape<ChangesToAttachments> }
 
 type Props = {
   contents: FormContents,

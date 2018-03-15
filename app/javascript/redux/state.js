@@ -228,6 +228,8 @@ export type Edgenote = {
   imageUrl: string,
   instructions: string,
   links: {
+    audio: string,
+    image: string,
     self: string,
   },
   pdfUrl: string,

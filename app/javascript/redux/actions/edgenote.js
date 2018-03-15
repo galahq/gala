@@ -2,12 +2,13 @@
  * @flow
  */
 
-import { setUnsaved } from 'redux/actions'
-
 import { Orchard } from 'shared/orchard'
+import * as R from 'ramda'
 
 import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
 import type { Edgenote } from 'redux/state'
+import type { FormContents as EdgenoteFormContents } from 'edgenotes/editor/EdgenoteForm'
+import type Attachment from 'edgenotes/editor/attachment'
 
 export function createEdgenote (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
@@ -30,16 +31,70 @@ export function addEdgenote (slug: string, data: Edgenote): AddEdgenoteAction {
   return { type: 'ADD_EDGENOTE', slug, data }
 }
 
+const filterParams: $FlowIssue = R.pick([
+  'altText',
+  'attribution',
+  'audio',
+  'callToAction',
+  'caption',
+  'content',
+  'format',
+  'image',
+  'photoCredit',
+  'pullQuote',
+  'websiteUrl',
+])
+
+export function changeEdgenote (
+  slug: string,
+  contents: EdgenoteFormContents
+): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const {
+      self: edgenotePath,
+      image: imagePath,
+      audio: audioPath,
+    } = getState().edgenotesBySlug[slug].links
+
+    return Promise.all([
+      uploadOrDetach(dispatch, contents.imageUrl, 'image', imagePath),
+      uploadOrDetach(dispatch, contents.audioUrl, 'audio', audioPath),
+    ]).then(patches =>
+      Orchard.espalier(edgenotePath, {
+        edgenote: filterParams(
+          R.reduce((obj, patch) => ({ ...obj, ...patch }), contents, patches)
+        ),
+      }).then((edgenote: Edgenote) => dispatch(updateEdgenote(slug, edgenote)))
+    )
+  }
+}
+
+function uploadOrDetach (
+  dispatch: Dispatch,
+  attachment: ?Attachment,
+  attribute: string,
+  detachEndpoint: string
+): Promise<Object> {
+  if (attachment == null) return Promise.resolve({})
+  return attachment.save({ detachEndpoint }).then(
+    blobId =>
+      blobId
+        ? {
+          [attribute]: blobId,
+        }
+        : {}
+  )
+}
+
 export type UpdateEdgenoteAction = {
   type: 'UPDATE_EDGENOTE',
   slug: string,
-  data: $Shape<Edgenote>,
+  data: Edgenote,
 }
 export function updateEdgenote (
   slug: string,
-  data: $Shape<Edgenote>
+  data: Edgenote
 ): UpdateEdgenoteAction {
-  setUnsaved()
   return { type: 'UPDATE_EDGENOTE', slug, data }
 }
 

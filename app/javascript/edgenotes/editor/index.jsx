@@ -7,6 +7,7 @@
  */
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import * as R from 'ramda'
@@ -16,6 +17,7 @@ import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 import EdgenoteForm from './EdgenoteForm'
 import { EdgenoteFigure } from 'edgenotes/Edgenote'
 import Attachment from './Attachment'
+import { changeEdgenote } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
 import type { Edgenote } from 'redux/state'
@@ -28,6 +30,7 @@ export type ChangesToAttachments = {|
 
 type Props = {
   contents: Edgenote,
+  changeEdgenote: typeof changeEdgenote,
   intl: IntlShape,
   slug: string,
   onChange: ($Shape<Edgenote>) => Promise<any>,
@@ -77,7 +80,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
   }
 
   renderDialog () {
-    const { intl } = this.props
+    const { intl, changeEdgenote, slug } = this.props
     const { contents, open, changesToAttachments } = this.state
 
     return (
@@ -122,8 +125,16 @@ class EdgenoteEditor extends React.Component<Props, State> {
             />
             <Button
               intent={Intent.SUCCESS}
-              // TODO: onClick
               text={intl.formatMessage({ id: 'helpers.save' })}
+              onClick={() => {
+                changeEdgenote(
+                  slug,
+                  ({
+                    ...contents,
+                    ...changesToAttachments,
+                  }: $FlowIssue)
+                ).then(() => this.handleClose())
+              }}
             />
           </div>
         </div>
@@ -166,7 +177,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
     }
   }
 }
-export default injectIntl(EdgenoteEditor)
+export default connect(null, { changeEdgenote })(injectIntl(EdgenoteEditor))
 
 const Overlay = styled.div`
   position: absolute;
