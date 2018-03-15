@@ -71,7 +71,10 @@ Rails.application.routes.draw do
     end
 
     resources :edgenotes, only: %i[update destroy], param: :slug,
-                          concerns: :has_statistics
+                          concerns: :has_statistics do
+      resources :attachments, module: 'edgenotes', only: %i[destroy],
+                              param: :attribute
+    end
 
     resources :enrollments, only: %i[index]
 
