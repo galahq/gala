@@ -43,6 +43,7 @@ const PullQuote = ({
             lineHeight: 1.3,
             margin: '0 0 0.5em 0',
             padding: '0',
+            display: 'inline',
           }}
         >
           {contents}
