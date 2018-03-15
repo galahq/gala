@@ -219,13 +219,20 @@ export class EdgenoteFigure extends React.Component<Props> {
     const { contents } = this.props
 
     if (contents == null) return null
-    const { imageUrl, altText, photoCredit, callToAction } = contents
+    const {
+      imageUrl,
+      imageThumbnailUrl,
+      altText,
+      photoCredit,
+      callToAction,
+    } = contents
 
     if (!imageUrl) return null
 
     return (
       <Image
         src={imageUrl}
+        thumbnailSrc={imageThumbnailUrl}
         alt={altText}
         photoCredit={photoCredit}
         callToAction={callToAction}

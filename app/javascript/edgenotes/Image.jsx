@@ -16,6 +16,7 @@ import type { ReduxProps } from './Edgenote'
 
 type Props = {
   src: string,
+  thumbnailSrc: ?string,
   alt: string,
   photoCredit: string,
   callToAction: string,
@@ -24,6 +25,7 @@ type Props = {
 
 const Image = ({
   src,
+  thumbnailSrc,
   alt,
   photoCredit,
   callToAction,
@@ -31,18 +33,18 @@ const Image = ({
   activate,
   deactivate,
 }: Props) => {
-  let imageProps = {
+  let thumbnailProps = {
     style: { width: '100%', minHeight: '3em', display: 'block' },
-    src,
+    src: thumbnailSrc || src,
     alt,
   }
   let imageComponent = callToAction ? (
-    <img alt={alt} {...imageProps} />
+    <img alt={alt} {...thumbnailProps} />
   ) : (
     <ImageZoom
       isZoomed={active}
       defaultStyles={{ overlay: { backgroundColor: '#1D2934' }}}
-      image={imageProps}
+      image={thumbnailProps}
       zoomImage={{ src }}
       onZoom={activate}
       onUnzoom={deactivate}

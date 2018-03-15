@@ -174,6 +174,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
     return {
       ...contents,
       ...objectUrls(havingChanges(changesToAttachments)),
+      imageThumbnailUrl: undefined,
     }
   }
 }

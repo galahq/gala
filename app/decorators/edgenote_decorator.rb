@@ -7,6 +7,10 @@ class EdgenoteDecorator < ApplicationDecorator
     h.url_for image.variant transforms
   end
 
+  def image_thumbnail_url
+    image_url resize: '640'
+  end
+
   def audio_url
     return nil unless audio.attached?
     h.url_for audio
