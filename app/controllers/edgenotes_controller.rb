@@ -24,7 +24,7 @@ class EdgenotesController < ApplicationController
     authorize @edgenote.case, :update?
 
     if @edgenote.update(edgenote_params)
-      render partial: 'edgenote', locals: { edgenote: @edgenote }
+      render partial: 'edgenote', locals: { edgenote: @edgenote.decorate }
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -58,10 +58,10 @@ class EdgenotesController < ApplicationController
   def edgenote_params
     params.require(:edgenote).permit(:caption, :format, :thumbnail_url,
                                      :content, :embed_code, :website_url,
-                                     :image_url, :pdf_url, :instructions,
+                                     :image, :pdf_url, :instructions,
                                      :photo_credit, :slug, :style, :pull_quote,
                                      :attribution, :call_to_action,
-                                     :audio_url, :youtube_slug, :statistics,
+                                     :audio, :youtube_slug, :statistics,
                                      :alt_text)
   end
 
