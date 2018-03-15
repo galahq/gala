@@ -2,8 +2,13 @@
  * @flow
  */
 
+import * as React from 'react'
+
+import { displayToast, dismissToast } from 'redux/actions'
+
 import { Orchard } from 'shared/orchard'
 import * as R from 'ramda'
+import { Intent, ProgressBar } from '@blueprintjs/core'
 
 import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
 import type { Edgenote } from 'redux/state'
@@ -76,14 +81,39 @@ function uploadOrDetach (
   detachEndpoint: string
 ): Promise<Object> {
   if (attachment == null) return Promise.resolve({})
-  return attachment.save({ detachEndpoint }).then(
-    blobId =>
-      blobId
-        ? {
-          [attribute]: blobId,
-        }
-        : {}
-  )
+  const key = `image-${new Date().getTime()}`
+  const onDismiss = () => dispatch(dismissToast(key))
+
+  return attachment
+    .save({
+      detachEndpoint,
+      onProgress: progress =>
+        dispatch(
+          displayToast({ ...progressBarToastProps(progress), onDismiss }, key)
+        ),
+    })
+    .then(
+      blobId =>
+        blobId
+          ? {
+            [attribute]: blobId,
+          }
+          : {}
+    )
+}
+
+function progressBarToastProps (progress: number) {
+  return {
+    iconName: 'cloud-upload',
+    timeout: progress < 100 ? 0 : 2000,
+    message: (
+      <ProgressBar
+        className={progress >= 100 ? 'pt-no-stripes' : ''}
+        intent={progress < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+        value={progress / 100}
+      />
+    ),
+  }
 }
 
 export type UpdateEdgenoteAction = {

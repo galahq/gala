@@ -126,15 +126,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
             <Button
               intent={Intent.SUCCESS}
               text={intl.formatMessage({ id: 'helpers.save' })}
-              onClick={() => {
-                changeEdgenote(
-                  slug,
-                  ({
-                    ...contents,
-                    ...changesToAttachments,
-                  }: $FlowIssue)
-                ).then(() => this.handleClose())
-              }}
+              onClick={this.handleSubmit}
             />
           </div>
         </div>
@@ -144,7 +136,9 @@ class EdgenoteEditor extends React.Component<Props, State> {
 
   handleOpen = () => this.setState({ open: true })
   handleClose = () =>
-    this.setState({ contents: this.props.contents, open: false })
+    new Promise(resolve =>
+      this.setState({ contents: this.props.contents, open: false }, resolve)
+    )
 
   handleChangeContents = (attributes: $Shape<Edgenote>) =>
     this.setState(({ contents }: State) => ({
@@ -165,6 +159,21 @@ class EdgenoteEditor extends React.Component<Props, State> {
         [attribute]: changeToAttachment,
       }),
     }))
+  }
+
+  handleSubmit = () => {
+    const { slug, changeEdgenote } = this.props
+    const { contents, changesToAttachments } = this.state
+
+    this.handleClose().then(() =>
+      changeEdgenote(
+        slug,
+        ({
+          ...contents,
+          ...changesToAttachments,
+        }: $FlowIssue)
+      )
+    )
   }
 
   _displayPropsIncludingChangesToAttachments () {
