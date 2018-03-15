@@ -1,6 +1,7 @@
 declare module 'activestorage' {
   declare module.exports: {
     start(): void,
+    DirectUpload: any,
   }
 }
 

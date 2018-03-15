@@ -6,5 +6,7 @@ json.extract! edgenote, :slug, :caption, :format, :thumbnail_url, :content,
               :photo_credit, :style, :pull_quote, :attribution,
               :call_to_action, :audio_url, :youtube_slug, :alt_text
 json.links do
-  json.self edgenote_path I18n.locale, edgenote
+  json.self edgenote_path edgenote
+  json.audio edgenote_attachment_path edgenote, :audio
+  json.image edgenote_attachment_path edgenote, :image
 end
