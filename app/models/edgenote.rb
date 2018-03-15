@@ -37,8 +37,6 @@
 # @attr slug [String] a unique, URL-safe identifier
 # @attr style [:v1, :v2] deprecated `v1` or new-style `v2`
 # @attr caption [Translated<String>]
-# @attr image_url [Translated<String>]
-# @attr website_url [Translated<String>]
 # @attr photo_credit [Translated<String>]
 # @attr pull_quote [Translated<String>]
 # @attr attribution [Translated<String>]
@@ -52,13 +50,16 @@ class Edgenote < ApplicationRecord
 
   attribute :format, :string, default: 'aside'
   attribute :style, :integer, default: 1 # :v2
-  translates :caption, :content, :instructions, :image_url, :website_url,
+  translates :caption, :content, :instructions, :website_url,
              :embed_code, :photo_credit, :pdf_url, :pull_quote, :attribution,
-             :call_to_action, :audio_url, :youtube_slug, fallbacks: true
+             :call_to_action, :youtube_slug, fallbacks: true
 
   enum style: { v1: 0, v2: 1 }
 
   belongs_to :case, touch: true
+
+  has_one_attached :image
+  has_one_attached :audio
 
   validates :format, inclusion: { in: %w[aside audio graphic link photo quote
                                          report video] }
