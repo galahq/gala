@@ -108,8 +108,8 @@ export class EdgenoteFigure extends React.Component<Props> {
   componentDidUpdate (prevProps: Props) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
-      if (contents && contents.callToAction && contents.websiteUrl) {
-        window.open(contents.websiteUrl, '_blank', 'noopener')
+      if (contents && contents.websiteUrl) {
+        window.open(contents.websiteUrl, '_blank')
         setTimeout(() => {
           this.props.deactivate()
         }, 300)
@@ -130,16 +130,9 @@ export class EdgenoteFigure extends React.Component<Props> {
     } = this.props
     if (contents == null) return null
 
-    const {
-      slug,
-      caption,
-      youtubeSlug,
-      pullQuote,
-      callToAction,
-      audioUrl,
-    } = contents
+    const { slug, caption, pullQuote, websiteUrl } = contents
 
-    const isALink = !youtubeSlug && !audioUrl && !!callToAction && !editing
+    const isALink = !editing && !!websiteUrl
 
     const ConditionalLink = Body.withComponent(isALink ? 'a' : 'div')
     const conditionalHoverCallbacks = isALink
