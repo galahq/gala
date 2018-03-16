@@ -230,6 +230,7 @@ const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
 
 const Column = styled.div`
   max-width: 350px;
+  width: 100%;
 `
 
 const Separator = styled.div`
