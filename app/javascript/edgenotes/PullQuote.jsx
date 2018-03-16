@@ -16,6 +16,8 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
+import { FormattedMessage } from 'react-intl'
+
 import type { ReduxProps } from './Edgenote'
 
 type Props = {
@@ -46,7 +48,13 @@ const PullQuote = ({
             display: 'inline',
           }}
         >
+          {contents.startsWith('“') || (
+            <FormattedMessage id="support.quote.begin" />
+          )}
           {contents}
+          {contents.endsWith('”') || (
+            <FormattedMessage id="support.quote.end" />
+          )}
         </blockquote>
       )}
       <Attribution name={attribution} />
@@ -78,6 +86,10 @@ const Attribution = ({ name }) =>
         lineHeight: 1,
       }}
     >
+      {name &&
+        !name.startsWith('—') && (
+          <FormattedMessage id="support.quote.attributionPrefix" />
+        )}
       {name}
     </cite>
   ) : null
