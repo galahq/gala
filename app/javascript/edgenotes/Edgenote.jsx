@@ -141,7 +141,7 @@ export class EdgenoteFigure extends React.Component<Props> {
 
     const isALink = !youtubeSlug && !audioUrl && !!callToAction && !editing
 
-    const ConditionalLink = isALink ? 'a' : 'div'
+    const ConditionalLink = Body.withComponent(isALink ? 'a' : 'div')
     const conditionalHoverCallbacks = isALink
       ? {
         onMouseEnter: onMouseOver,
@@ -272,6 +272,15 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
 
 const Container = styled.figure.attrs({ className: 'edge' })`
   position: relative;
+`
+
+const Body = styled.div`
+  &:empty {
+    background-color: #4e6881aa;
+    border-radius: 2px;
+    height: 8em;
+    width: 100%;
+  }
 `
 
 const CallToAction = ({ contents, websiteUrl }) =>
