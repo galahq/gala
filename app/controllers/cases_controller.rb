@@ -70,7 +70,8 @@ class CasesController < ApplicationController
   def set_case
     @case = Case.friendly
                 .includes(
-                  :podcasts, :edgenotes,
+                  :podcasts,
+                  edgenotes: [image_attachment: :blob, audio_attachment: :blob],
                   activities: %i[case_element card],
                   pages: %i[case_element cards],
                   cards: [comment_threads: [:reader, comments: [:reader]]],
