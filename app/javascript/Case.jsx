@@ -16,7 +16,7 @@ import {
   toggleEditing,
   subscribeToActiveForumChannel,
   handleNotification,
-} from 'redux/actions.js'
+} from 'redux/actions'
 
 import asyncComponent from 'utility/asyncComponent'
 
