@@ -29,6 +29,8 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
+import { FormattedMessage } from 'react-intl'
+
 import YouTube from './YouTube'
 import Image from './Image'
 import PullQuote from './PullQuote'
@@ -273,9 +275,13 @@ const Container = styled.figure.attrs({ className: 'edge' })`
 `
 
 const CallToAction = ({ contents, websiteUrl }) =>
-  contents && (
+  (contents || websiteUrl) && (
     <div>
-      <div style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>{contents}</div>
+      <div style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>
+        {contents ||
+          (websiteUrl ? <FormattedMessage id="helpers.less.readMore" /> : '')}
+        {!contents || (contents && !contents.endsWith('›')) ? ' ›' : ''}
+      </div>
     </div>
   )
 

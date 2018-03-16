@@ -609,6 +609,10 @@ en:
       last_word_connector: ", and "
       two_words_connector: " and "
       words_connector: ", "
+    quote:
+      begin: “
+      end: ”
+      attribution_prefix: "— "
     languages:
       am: Amharic
       en: English
