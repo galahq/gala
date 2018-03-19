@@ -197,6 +197,7 @@ const Overlay = styled.div`
   height: 100%;
   border: none;
   background-color: transparent;
+  z-index: 1;
 
   opacity: 0;
   transition: opacity 0.1s ease-out;

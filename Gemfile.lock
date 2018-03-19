@@ -326,6 +326,9 @@ GEM
     omniauth-oauth2 (1.4.0)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
+    opengraph_parser (0.2.3)
+      addressable
+      nokogiri
     orm_adapter (0.5.0)
     pg (0.21.0)
     pry (0.11.3)
@@ -526,6 +529,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-google-oauth2
   omniauth-lti!
+  opengraph_parser
   pg (~> 0.18)
   pry
   puma (~> 3.0)
