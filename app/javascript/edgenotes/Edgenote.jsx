@@ -31,6 +31,7 @@ import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
 
+import withExpansion from './withExpansion'
 import YouTube from './YouTube'
 import Image from './Image'
 import PullQuote from './PullQuote'
@@ -46,6 +47,7 @@ import {
 
 import type { State, Edgenote } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
+import type { ExpansionProps } from './withExpansion'
 
 type OwnProps = { slug: string }
 function mapStateToProps (state: State, { slug }: OwnProps) {
@@ -91,9 +93,9 @@ type Props = {
   onMouseOver: () => any,
   onMouseOut: () => any,
   onChange: ($Shape<Edgenote>) => any,
-}
+} & ExpansionProps
 
-export class EdgenoteFigure extends React.Component<Props> {
+class BaseEdgenoteFigure extends React.Component<Props> {
   static defaultProps = {
     activate: () => {},
     active: false,
@@ -156,6 +158,8 @@ export class EdgenoteFigure extends React.Component<Props> {
           {this.renderVideoSection() ||
             this.renderQuotationSection() ||
             this.renderImageSection()}
+
+          {this.props.expansion}
 
           <Caption
             contents={caption}
@@ -237,17 +241,24 @@ export class EdgenoteFigure extends React.Component<Props> {
   }
 
   renderCallToAction () {
-    const { contents } = this.props
+    const { contents, linkDomain } = this.props
 
     if (contents == null) return null
-    const { audioUrl, youtubeSlug, callToAction, websiteUrl } = contents
+    const {
+      audioUrl,
+      youtubeSlug,
+      callToAction,
+      pullQuote,
+      imageUrl,
+    } = contents
 
     if (!!youtubeSlug || !!audioUrl) return null
 
     return (
       <CallToAction
-        websiteUrl={websiteUrl}
+        linkDomain={linkDomain}
         contents={callToAction}
+        canHighlight={!pullQuote && !imageUrl}
         {...this._reduxProps()}
       />
     )
@@ -258,6 +269,8 @@ export class EdgenoteFigure extends React.Component<Props> {
     return { active, activate, deactivate, selected }
   }
 }
+
+export const EdgenoteFigure = withExpansion(BaseEdgenoteFigure)
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
   EdgenoteFigure
@@ -276,12 +289,14 @@ const Body = styled.div`
   }
 `
 
-const CallToAction = ({ contents, websiteUrl }) =>
-  (contents || websiteUrl) && (
+const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
+  (contents || linkDomain) && (
     <div>
-      <div style={{ margin: '0.25em 0 0 0', lineHeight: 1 }}>
-        {contents ||
-          (websiteUrl ? <FormattedMessage id="helpers.less.readMore" /> : '')}
+      <div
+        className={canHighlight && selected ? 'edge--highlighted' : ''}
+        style={{ display: 'inline', margin: '0.25em 0 0 0', lineHeight: 1 }}
+      >
+        {contents || linkDomain}
         {!contents || (contents && !contents.endsWith('›')) ? ' ›' : ''}
       </div>
     </div>

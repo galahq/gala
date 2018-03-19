@@ -71,6 +71,9 @@ gem 'newrelic_rpm'
 gem 'scout_apm'
 gem 'table_print'
 
+# Services
+gem 'opengraph_parser'
+
 group :development do
   gem 'foreman'
   gem 'listen'
