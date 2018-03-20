@@ -136,7 +136,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
     const isALink = !editing && !!websiteUrl
 
-    const ConditionalLink = Body.withComponent(isALink ? 'a' : 'div')
+    const ConditionalLink = isALink ? LinkBody : Body
     const conditionalHoverCallbacks = isALink
       ? {
         onMouseEnter: onMouseOver,
@@ -288,6 +288,8 @@ const Body = styled.div`
     width: 100%;
   }
 `
+
+const LinkBody = Body.withComponent('a')
 
 const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
   (contents || linkDomain) && (
