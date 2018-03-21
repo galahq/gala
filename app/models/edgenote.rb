@@ -44,6 +44,7 @@
 # @attr audio_url [Translated<String>]
 # @attr youtube_slug [Translated<String>]
 # @attr alt_text [String] @todo translate this
+# @attr website_url [Translated<String>]
 class Edgenote < ApplicationRecord
   include Mobility
   include Trackable
@@ -57,6 +58,9 @@ class Edgenote < ApplicationRecord
   enum style: { v1: 0, v2: 1 }
 
   belongs_to :case, touch: true
+
+  has_one :link_expansion_visibility, class_name: 'LinkExpansion::Visibility',
+                                      dependent: :destroy
 
   has_one_attached :image
   has_one_attached :audio

@@ -112,11 +112,13 @@ export default function withExpansion<Props: BaseProps> (
     }
 
     async _fetchExpansion () {
-      const { websiteUrl } = this.props.contents
+      const { slug, websiteUrl } = this.props.contents
 
       if (!websiteUrl) return null
 
-      return Orchard.harvest('edgenotes/link_expansion', { href: websiteUrl })
+      return Orchard.harvest(`edgenotes/${slug}/link_expansion`, {
+        href: websiteUrl,
+      })
     }
   }
 
