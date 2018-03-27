@@ -10,19 +10,25 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import * as R from 'ramda'
-import { Switch } from '@blueprintjs/core'
 
 import { EdgenoteFigure } from 'edgenotes/Edgenote'
+import withExpansion from 'edgenotes/withExpansion'
 
 import type { Edgenote } from 'redux/state'
-import type { ChangesToAttachments } from './index'
+import type { ChangesToAttachments } from 'edgenotes/editor'
+import type { ExpansionProps } from 'edgenotes/withExpansion'
 
 type Props = {
   contents: Edgenote,
   changesToAttachments: ChangesToAttachments,
+  ...ExpansionProps,
 }
 
-const EdgenotePreview = ({ contents, changesToAttachments }: Props) => (
+const EdgenotePreview = ({
+  contents,
+  changesToAttachments,
+  ...expansionProps
+}: Props) => (
   <React.Fragment>
     <h5>
       <FormattedMessage id="edgenotes.edit.preview" />
@@ -32,25 +38,15 @@ const EdgenotePreview = ({ contents, changesToAttachments }: Props) => (
       <EdgenoteFigure
         contents={edgenotePreviewProps(contents, changesToAttachments)}
         embedded={true}
+        {...expansionProps}
       />
     </Card>
 
-    <Switch
-      checked={false}
-      label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
-    />
-    <Switch
-      checked={true}
-      label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
-    />
-    <Switch
-      checked={true}
-      label={<FormattedMessage id="edgenotes.edit.usePreviewDescription" />}
-    />
+    {expansionProps.expansionForm}
   </React.Fragment>
 )
 
-export default EdgenotePreview
+export default withExpansion(EdgenotePreview)
 
 function edgenotePreviewProps (contents, changesToAttachments) {
   const havingChanges = R.filter(Boolean)

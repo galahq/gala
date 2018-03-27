@@ -5,7 +5,7 @@ class LinkExpansion
   class DefaultVisibility
     include Singleton
 
-    %w[no_description no_embed no_image].each do |method|
+    %i[no_description no_embed no_image].each do |method|
       define_method(method) { false }
     end
   end
