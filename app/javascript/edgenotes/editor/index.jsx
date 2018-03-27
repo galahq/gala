@@ -14,6 +14,7 @@ import * as R from 'ramda'
 
 import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 
+import withExpansion from 'edgenotes/withExpansion'
 import EdgenoteForm from './EdgenoteForm'
 import EdgenotePreview from './EdgenotePreview'
 import Attachment from './Attachment'
@@ -21,6 +22,7 @@ import { changeEdgenote } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
 import type { Edgenote } from 'redux/state'
+import type { ExpansionProps } from 'edgenotes/withExpansion'
 
 type ChangeToAttachment = ?Attachment
 export type ChangesToAttachments = {|
@@ -34,6 +36,7 @@ type Props = {
   intl: IntlShape,
   slug: string,
   onChange: ($Shape<Edgenote>) => Promise<any>,
+  ...ExpansionProps,
 }
 type State = {
   open: boolean,
@@ -80,8 +83,15 @@ class EdgenoteEditor extends React.Component<Props, State> {
   }
 
   renderDialog () {
-    const { intl, changeEdgenote, slug } = this.props
+    const {
+      actsAsLink,
+      expansion,
+      expansionForm,
+      intl,
+      linkDomain,
+    } = this.props
     const { contents, open, changesToAttachments } = this.state
+    const expansionProps = { actsAsLink, expansion, expansionForm, linkDomain }
 
     return (
       <Dialog
@@ -109,6 +119,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
             <EdgenotePreview
               contents={contents}
               changesToAttachments={changesToAttachments}
+              {...expansionProps}
             />
           </Column>
         </Body>
@@ -171,7 +182,9 @@ class EdgenoteEditor extends React.Component<Props, State> {
     )
   }
 }
-export default connect(null, { changeEdgenote })(injectIntl(EdgenoteEditor))
+export default connect(null, { changeEdgenote })(
+  injectIntl(withExpansion(EdgenoteEditor))
+)
 
 const Overlay = styled.div`
   position: absolute;

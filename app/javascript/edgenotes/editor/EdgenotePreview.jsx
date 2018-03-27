@@ -12,11 +12,9 @@ import { FormattedMessage } from 'react-intl'
 import * as R from 'ramda'
 
 import { EdgenoteFigure } from 'edgenotes/Edgenote'
-import withExpansion from 'edgenotes/withExpansion'
 
 import type { Edgenote } from 'redux/state'
 import type { ChangesToAttachments } from 'edgenotes/editor'
-import type { ExpansionProps } from 'edgenotes/withExpansion'
 
 type Props = {
   contents: Edgenote,
@@ -46,7 +44,7 @@ const EdgenotePreview = ({
   </React.Fragment>
 )
 
-export default withExpansion(EdgenotePreview)
+export default EdgenotePreview
 
 function edgenotePreviewProps (contents, changesToAttachments) {
   const havingChanges = R.filter(Boolean)
