@@ -270,10 +270,10 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   }
 }
 
-export const EdgenoteFigure = withExpansion(BaseEdgenoteFigure)
+export const EdgenoteFigure = BaseEdgenoteFigure
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-  EdgenoteFigure
+  withExpansion(EdgenoteFigure)
 )
 
 const Container = styled.figure.attrs({ className: 'edge' })`

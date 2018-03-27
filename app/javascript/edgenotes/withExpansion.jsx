@@ -25,6 +25,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { FormattedMessage } from 'react-intl'
+import { Switch } from '@blueprintjs/core'
+
 import { Orchard } from 'shared/orchard'
 
 import type { Edgenote } from 'redux/state'
@@ -33,6 +36,7 @@ export type ExpansionProps = {
   actsAsLink: boolean,
   linkDomain: string,
   expansion: React.Node,
+  expansionForm: React.Node,
 }
 
 type BaseProps = {
@@ -49,13 +53,22 @@ type State = {
       images: string[],
     },
   },
+
+  visibility: {
+    noEmbed: boolean,
+    noDescription: boolean,
+    noImage: boolean,
+  },
 }
 
 export default function withExpansion<Props: BaseProps> (
   Component: React.ComponentType<Props & ExpansionProps>
 ): React.ComponentType<Props> {
   class WrapperComponent extends React.Component<BaseProps, State> {
-    state = { expansion: null }
+    state = {
+      expansion: null,
+      visibility: { noEmbed: false, noDescription: false, noImage: false },
+    }
 
     componentDidMount () {
       this._fetchExpansion().then(expansion => this.setState({ expansion }))
@@ -76,12 +89,13 @@ export default function withExpansion<Props: BaseProps> (
           actsAsLink={this._actsAsLink()}
           linkDomain={this._linkDomain()}
           expansion={this.renderExpansion()}
+          expansionForm={this.renderExpansionForm()}
         />
       )
     }
 
     renderExpansion () {
-      const { expansion } = this.state
+      const { expansion, visibility } = this.state
       if (!expansion) return null
 
       const { contents } = this.props
@@ -89,17 +103,73 @@ export default function withExpansion<Props: BaseProps> (
       if (pullQuote || (imageUrl && caption)) return null
 
       const { preview } = expansion
+      const { noDescription, noEmbed, noImage } = visibility
       return (
         preview && (
           <Container>
-            {!!imageUrl || <Image src={preview.images[0]} />}
+            {noImage || !!imageUrl || <Image src={preview.images[0]} />}
             <Text>
               <Title>{preview.title}</Title>
-              {!!caption || <Description>{preview.description}</Description>}
+              {noDescription ||
+                !!caption || <Description>{preview.description}</Description>}
             </Text>
           </Container>
         )
       )
+    }
+
+    renderExpansionForm () {
+      const { expansion, visibility } = this.state
+      const { embed } = expansion || {}
+      const { noDescription, noEmbed, noImage } = visibility
+      return (
+        <React.Fragment>
+          {embed != null && (
+            <Switch
+              checked={!noEmbed}
+              label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
+              onChange={this.handleToggleEmbed}
+            />
+          )}
+
+          <Switch
+            checked={!noImage}
+            label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
+            onChange={this.handleToggleImage}
+          />
+          <Switch
+            checked={!noDescription}
+            label={
+              <FormattedMessage id="edgenotes.edit.usePreviewDescription" />
+            }
+            onChange={this.handleToggleDescription}
+          />
+        </React.Fragment>
+      )
+    }
+
+    handleToggleEmbed = () => {
+      this.setState(s => ({
+        ...s,
+        visibility: { ...s.visibility, noEmbed: !s.visibility.noEmbed },
+      }))
+    }
+
+    handleToggleImage = () => {
+      this.setState(s => ({
+        ...s,
+        visibility: { ...s.visibility, noImage: !s.visibility.noImage },
+      }))
+    }
+
+    handleToggleDescription = () => {
+      this.setState(s => ({
+        ...s,
+        visibility: {
+          ...s.visibility,
+          noDescription: !s.visibility.noDescription,
+        },
+      }))
     }
 
     _actsAsLink () {
