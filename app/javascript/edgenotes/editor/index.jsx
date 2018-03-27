@@ -15,7 +15,7 @@ import * as R from 'ramda'
 import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 
 import EdgenoteForm from './EdgenoteForm'
-import { EdgenoteFigure } from 'edgenotes/Edgenote'
+import EdgenotePreview from './EdgenotePreview'
 import Attachment from './Attachment'
 import { changeEdgenote } from 'redux/actions'
 
@@ -106,15 +106,10 @@ class EdgenoteEditor extends React.Component<Props, State> {
           </Column>
           <Separator />
           <Column>
-            <h5>
-              <FormattedMessage id="edgenotes.edit.preview" />
-            </h5>
-            <Card>
-              <EdgenoteFigure
-                contents={this._displayPropsIncludingChangesToAttachments()}
-                embedded={true}
-              />
-            </Card>
+            <EdgenotePreview
+              contents={contents}
+              changesToAttachments={changesToAttachments}
+            />
           </Column>
         </Body>
         <div className="pt-dialog-footer">
@@ -175,17 +170,6 @@ class EdgenoteEditor extends React.Component<Props, State> {
       )
     )
   }
-
-  _displayPropsIncludingChangesToAttachments () {
-    const { contents, changesToAttachments } = this.state
-    const havingChanges = R.filter(Boolean)
-    const objectUrls = R.map(attachment => attachment && attachment.objectUrl)
-    return {
-      ...contents,
-      ...objectUrls(havingChanges(changesToAttachments)),
-      imageThumbnailUrl: undefined,
-    }
-  }
 }
 export default connect(null, { changeEdgenote })(injectIntl(EdgenoteEditor))
 
@@ -236,10 +220,4 @@ const Column = styled.div`
 
 const Separator = styled.div`
   padding: 1em;
-`
-
-const Card = styled.div.attrs({ className: 'pt-card pt-dark pt-elevation-3' })`
-  & .edge {
-    width: auto;
-  }
 `
