@@ -11,7 +11,7 @@ import * as R from 'ramda'
 import { Intent, ProgressBar } from '@blueprintjs/core'
 
 import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
-import type { Edgenote } from 'redux/state'
+import type { Edgenote, LinkExpansionVisibility } from 'redux/state'
 import type { FormContents as EdgenoteFormContents } from 'edgenotes/editor/EdgenoteForm'
 import type Attachment from 'edgenotes/editor/attachment'
 
@@ -148,6 +148,17 @@ export type RemoveEdgenoteAction = {
 }
 function removeEdgenote (slug: string): RemoveEdgenoteAction {
   return { type: 'REMOVE_EDGENOTE', slug }
+}
+
+export function updateLinkExpansionVisibility (
+  edgenoteSlug: string,
+  { noDescription, noEmbed, noImage }: LinkExpansionVisibility
+): ThunkAction {
+  return () =>
+    [noDescription, noEmbed, noImage].some(attribute => attribute != null) &&
+    Orchard.espalier(`edgenotes/${edgenoteSlug}/link_expansion`, {
+      visibility: { noDescription, noEmbed, noImage },
+    })
 }
 
 export type HighlightEdgenoteAction = {

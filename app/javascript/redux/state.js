@@ -260,6 +260,12 @@ export type Library = {
   foregroundColor: string,
 }
 
+export type LinkExpansionVisibility = {
+  noEmbed?: boolean,
+  noDescription?: boolean,
+  noImage?: boolean,
+}
+
 export type Notification = {
   id: string,
   message: string,
