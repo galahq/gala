@@ -18,7 +18,7 @@ import withExpansion from 'edgenotes/withExpansion'
 import EdgenoteForm from './EdgenoteForm'
 import EdgenotePreview from './EdgenotePreview'
 import Attachment from './Attachment'
-import { changeEdgenote } from 'redux/actions'
+import { changeEdgenote, updateLinkExpansionVisibility } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
 import type { Edgenote } from 'redux/state'
@@ -34,6 +34,7 @@ type Props = {
   contents: Edgenote,
   changeEdgenote: typeof changeEdgenote,
   intl: IntlShape,
+  updateLinkExpansionVisibility: typeof updateLinkExpansionVisibility,
   slug: string,
   onChange: ($Shape<Edgenote>) => Promise<any>,
   ...ExpansionProps,
@@ -168,21 +169,28 @@ class EdgenoteEditor extends React.Component<Props, State> {
   }
 
   handleSubmit = () => {
-    const { slug, changeEdgenote } = this.props
+    const {
+      slug,
+      changeEdgenote,
+      updateLinkExpansionVisibility,
+      visibility,
+    } = this.props
     const { contents, changesToAttachments } = this.state
 
-    this.handleClose().then(() =>
-      changeEdgenote(
-        slug,
-        ({
-          ...contents,
-          ...changesToAttachments,
-        }: $FlowIssue)
+    this.handleClose()
+      .then(() => updateLinkExpansionVisibility(slug, visibility))
+      .then(() =>
+        changeEdgenote(
+          slug,
+          ({
+            ...contents,
+            ...changesToAttachments,
+          }: $FlowIssue)
+        )
       )
-    )
   }
 }
-export default connect(null, { changeEdgenote })(
+export default connect(null, { changeEdgenote, updateLinkExpansionVisibility })(
   injectIntl(withExpansion(EdgenoteEditor))
 )
 

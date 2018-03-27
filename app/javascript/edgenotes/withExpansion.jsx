@@ -30,13 +30,14 @@ import { Switch } from '@blueprintjs/core'
 
 import { Orchard } from 'shared/orchard'
 
-import type { Edgenote } from 'redux/state'
+import type { Edgenote, LinkExpansionVisibility } from 'redux/state'
 
 export type ExpansionProps = {
   actsAsLink: boolean,
   linkDomain: string,
   expansion: React.Node,
   expansionForm: React.Node,
+  visibility: LinkExpansionVisibility,
 }
 
 type BaseProps = {
@@ -53,22 +54,14 @@ type State = {
       images: string[],
     },
   },
-
-  visibility: {
-    noEmbed: boolean,
-    noDescription: boolean,
-    noImage: boolean,
-  },
+  visibility: LinkExpansionVisibility,
 }
 
 export default function withExpansion<Props: BaseProps> (
   Component: React.ComponentType<Props & ExpansionProps>
 ): React.ComponentType<Props> {
   class WrapperComponent extends React.Component<BaseProps, State> {
-    state = {
-      expansion: null,
-      visibility: { noEmbed: false, noDescription: false, noImage: false },
-    }
+    state = { expansion: null, visibility: {}}
 
     componentDidMount () {
       this._fetchExpansion().then(expansion => this.setState({ expansion }))
@@ -87,9 +80,10 @@ export default function withExpansion<Props: BaseProps> (
         <Component
           {...this.props}
           actsAsLink={this._actsAsLink()}
-          linkDomain={this._linkDomain()}
           expansion={this.renderExpansion()}
           expansionForm={this.renderExpansionForm()}
+          linkDomain={this._linkDomain()}
+          visibility={this.state.visibility}
         />
       )
     }
@@ -107,11 +101,16 @@ export default function withExpansion<Props: BaseProps> (
       return (
         preview && (
           <Container>
-            {noImage || !!imageUrl || <Image src={preview.images[0]} />}
+            {noImage ||
+              !!imageUrl ||
+              (preview.images.length > 0 && <Image src={preview.images[0]} />)}
             <Text>
               <Title>{preview.title}</Title>
               {noDescription ||
-                !!caption || <Description>{preview.description}</Description>}
+                !!caption ||
+                (preview.description && (
+                  <Description>{preview.description}</Description>
+                ))}
             </Text>
           </Container>
         )
