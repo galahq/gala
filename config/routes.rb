@@ -74,7 +74,7 @@ Rails.application.routes.draw do
                           concerns: :has_statistics do
       resources :attachments, module: 'edgenotes', only: %i[destroy],
                               param: :attribute
-      resource :link_expansion, module: 'edgenotes', only: %i[show]
+      resource :link_expansion, module: 'edgenotes', only: %i[show update]
     end
 
     resources :enrollments, only: %i[index]
