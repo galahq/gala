@@ -82,6 +82,10 @@ class Edgenote < ApplicationRecord
     { edgenote_slug: slug }
   end
 
+  def find_or_build_link_expansion_visibility
+    link_expansion_visibility || build_link_expansion_visibility
+  end
+
   def to_param
     slug
   end
