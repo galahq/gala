@@ -50,9 +50,10 @@ type State = {
       title: string,
       type: string,
       url: string,
-      description: string,
-      images: string[],
+      description?: string,
+      images?: string[],
     },
+    embed?: { __html?: string },
   },
   visibility: LinkExpansionVisibility,
 }
@@ -103,7 +104,9 @@ export default function withExpansion<Props: BaseProps> (
           <Container>
             {noImage ||
               !!imageUrl ||
-              (preview.images.length > 0 && <Image src={preview.images[0]} />)}
+              (preview.images instanceof Array && (
+                <Image src={preview.images[0]} />
+              ))}
             <Text>
               <Title>{preview.title}</Title>
               {noDescription ||
@@ -118,32 +121,42 @@ export default function withExpansion<Props: BaseProps> (
     }
 
     renderExpansionForm () {
+      const { contents } = this.props
       const { expansion, visibility } = this.state
-      const { embed } = expansion || {}
+      const { embed, preview } = expansion || {}
       const { noDescription, noEmbed, noImage } = visibility
       return (
-        <React.Fragment>
-          {embed != null && (
-            <Switch
-              checked={!noEmbed}
-              label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
-              onChange={this.handleToggleEmbed}
-            />
-          )}
+        expansion && (
+          <React.Fragment>
+            {(embed == null || embed.__html != null) && (
+              <Switch
+                checked={noEmbed != null ? !noEmbed : embed != null}
+                label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
+                onChange={this.handleToggleEmbed}
+              />
+            )}
 
-          <Switch
-            checked={!noImage}
-            label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
-            onChange={this.handleToggleImage}
-          />
-          <Switch
-            checked={!noDescription}
-            label={
-              <FormattedMessage id="edgenotes.edit.usePreviewDescription" />
-            }
-            onChange={this.handleToggleDescription}
-          />
-        </React.Fragment>
+            <Switch
+              checked={noImage != null ? !noImage : preview.images != null}
+              label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
+              onChange={this.handleToggleImage}
+            />
+
+            {!!contents.caption || (
+              <Switch
+                checked={
+                  noDescription != null
+                    ? !noDescription
+                    : preview.description != null
+                }
+                label={
+                  <FormattedMessage id="edgenotes.edit.usePreviewDescription" />
+                }
+                onChange={this.handleToggleDescription}
+              />
+            )}
+          </React.Fragment>
+        )
       )
     }
 
