@@ -6,5 +6,6 @@ class LinkExpansion
   def initialize(url, visibility = nil)
     visibility ||= DefaultVisibility.instance
     @preview = Preview.new url, visibility
+    @embed = {}
   end
 end

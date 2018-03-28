@@ -21,12 +21,12 @@ class LinkExpansion
     private
 
     def description
-      return nil if @visibility.no_description
+      return if @visibility.no_description
       @open_graph.description
     end
 
     def images
-      return [] if @visibility.no_image
+      return if @visibility.no_image
       @open_graph.images
     end
   end
