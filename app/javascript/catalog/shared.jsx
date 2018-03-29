@@ -6,12 +6,7 @@ import React from 'react' // eslint-disable-line no-unused-vars
 import styled from 'styled-components'
 
 export const Main = styled.main`
-  flex: 1;
-  margin: 0 0.5em;
-  max-width: calc(100% - 20em);
-  @media (max-width: 700px) {
-    max-width: 100%;
-  }
+  grid-area: main;
 `
 
 export const SectionTitle = styled.h2`
