@@ -15,7 +15,7 @@ const ValueProposition = () => (
       <FormattedMessage id="catalog.openAccessLearningTools" />
     </h1>
 
-    <div className="pt-callout pt-icon-book pt-intent-danger">
+    <div className="pt-callout pt-icon-new-link pt-intent-danger">
       <h5 className="pt-callout-title">
         <FormattedMessage id="catalog.impactfulCases" />
       </h5>
@@ -23,7 +23,7 @@ const ValueProposition = () => (
         <FormattedMessage id="catalog.findACase" />
       </p>
     </div>
-    <div className="pt-callout pt-intent-success pt-icon-thumbs-up">
+    <div className="pt-callout pt-intent-success pt-icon-git-new-branch">
       <h5 className="pt-callout-title">
         <FormattedMessage id="catalog.innovativeTeaching" />
       </h5>
@@ -31,7 +31,7 @@ const ValueProposition = () => (
         <FormattedMessage id="catalog.improveYourCommunication" />
       </p>
     </div>
-    <div className="pt-callout pt-intent-primary pt-icon-chat">
+    <div className="pt-callout pt-intent-primary pt-icon-exchange">
       <h5 className="pt-callout-title">
         <FormattedMessage id="catalog.inclusiveCommunity" />
       </h5>
