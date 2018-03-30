@@ -166,7 +166,7 @@ export async function toggleEdgenote (
 
   if (editorState.getSelection().isCollapsed()) {
     displayToast({
-      iconName: 'error',
+      icon: 'error',
       intent: Intent.WARNING,
       message: intl.formatMessage({
         id: 'edgenotes.new.makeSelection',

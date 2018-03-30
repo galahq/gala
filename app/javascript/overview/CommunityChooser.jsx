@@ -70,7 +70,7 @@ export const UnconnectedCommunityChooser = injectIntl(
         {activeCommunity && (
           <Popover
             position={rounded ? Position.BOTTOM_LEFT : Position.BOTTOM}
-            isDisabled={!anyCommunitiesPresent}
+            disabled={!anyCommunitiesPresent}
             content={
               <CommunityMenu>
                 <li className="pt-menu-header">
@@ -84,7 +84,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                 {(communities || []).map(c => (
                   <MenuItem
                     key={c.id || 'null'}
-                    iconName={communityIcon(c)}
+                    icon={communityIcon(c)}
                     className={c.active ? 'pt-active pt-intent-primary' : ''}
                     text={c.name}
                     onClick={() => {
@@ -104,7 +104,7 @@ export const UnconnectedCommunityChooser = injectIntl(
               onClick={acceptKeyboardClick}
             >
               <Tooltip
-                isDisabled={activeCommunityPresent}
+                disabled={activeCommunityPresent}
                 content={intl.formatMessage({
                   id: 'communities.index.notDiscussing',
                 })}

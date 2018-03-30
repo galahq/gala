@@ -93,7 +93,7 @@ declare module '@blueprintjs/core' {
   declare export interface IActionProps {
     disabled?: boolean;
     text?: string;
-    iconName?: string;
+    icon?: string;
     onClick?: (SyntheticEvent<*>) => any;
   }
 
@@ -184,7 +184,7 @@ declare module '@blueprintjs/core' {
 
   declare export class Dialog extends React.Component<
     {
-      iconName?: string,
+      icon?: string,
       isCloseButtonShown?: boolean,
       isOpen: boolean,
       style: Object,
@@ -196,7 +196,7 @@ declare module '@blueprintjs/core' {
 
   declare export class Icon extends React.Components<
     {
-      iconName: string,
+      icon: string,
       iconSize?: 'inherit' | 16 | 20,
     } & IProps &
       IIntentProps
@@ -206,7 +206,7 @@ declare module '@blueprintjs/core' {
     {
       disabled?: boolean,
       intent?: IntentType,
-      leftIconName?: string,
+      lefticon?: string,
       placeholder?: string,
       rightElement?: React.Node,
       type?: string,
@@ -284,7 +284,7 @@ declare module '@blueprintjs/core' {
     action?: IActionProps & ILinkProps,
     message: React.Node,
     onDismiss?: (didTimoutExpire: boolean) => any,
-    iconName?: string,
+    icon?: string,
     timeout?: number,
   } & IProps &
     IIntentProps

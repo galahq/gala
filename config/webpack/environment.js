@@ -3,7 +3,7 @@ const { environment } = require('@rails/webpacker')
 
 environment.loaders.get(
   'file'
-).test = /\.(jpg|jpeg|png|gif|eot|otf|ttf|woff|woff2)$/i
+).test = /\.(jpg|jpeg|png|gif|tiff|ico|eot|otf|ttf|woff|woff2)$/i
 
 environment.loaders.append('svg', {
   test: /\.svg$/,

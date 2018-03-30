@@ -21,7 +21,7 @@
     .reader-image-input
       = f.label :image, class: 'pt-label' do
         = t 'activerecord.attributes.user.image'
-        .pt-file-upload.pt-fill
+        .pt-file-input.pt-fill
           = f.file_field :image, direct_upload: true, tabindex: 4
           %span.pt-file-upload-input= t '.choose_an_image'
       %img{ src: @reader.image_url }

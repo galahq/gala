@@ -551,7 +551,7 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   virtus
   web-console
-  webpacker
+  webpacker (~> 3.4.1)
   yard
   yard-activerecord
   yard-activesupport-concern

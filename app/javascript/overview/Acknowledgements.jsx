@@ -60,7 +60,7 @@ export default injectIntl(Acknowledgements)
 
 const AcknowledgementsButton = styled(Button).attrs({
   className: 'pt-minimal pt-small',
-  iconName: 'more',
+  icon: 'more',
 })`
   margin-left: 0.25em;
 `

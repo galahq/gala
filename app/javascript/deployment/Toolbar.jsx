@@ -83,7 +83,7 @@ const Switch = ({
 }: SwitchParams) =>
   <Button
     className="pt-minimal"
-    iconName={checked ? 'tick' : 'cross'}
+    icon={checked ? 'tick' : 'cross'}
     disabled={disabled}
     onClick={onClick}
   >

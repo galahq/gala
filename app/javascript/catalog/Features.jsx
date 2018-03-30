@@ -172,7 +172,7 @@ const ForthcomingBanner = styled.div`
   position: absolute;
   top: 1em;
   right: 0;
-  padding: 0.2rem 0.5rem 0.15rem 0.4rem;
+  padding: 0.35rem 0.5rem 0.35rem 0.35rem;
   font-size: 80%;
   text-transform: uppercase;
   font-weight: 500;

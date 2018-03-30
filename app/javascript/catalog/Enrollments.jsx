@@ -46,7 +46,7 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
                 ? intl.formatMessage({ id: 'enrollments.index.finishEditing' })
                 : intl.formatMessage({ id: 'enrollments.index.editEnrolled' })
             }
-            iconName={editing ? 'tick' : 'cog'}
+            icon={editing ? 'tick' : 'cog'}
             onClick={this.handleToggleEditing}
           />
         </CaseRow>
@@ -66,7 +66,7 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
                           aria-label={intl.formatMessage({
                             id: 'enrollments.destroy.unenroll',
                           })}
-                          iconName="cross"
+                          icon="cross"
                           onClick={() =>
                             onDeleteEnrollment(slug, {
                               displayBetaWarning: !publishedAt,

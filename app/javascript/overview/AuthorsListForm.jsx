@@ -67,7 +67,7 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
     return (
       <Dialog
         isOpen={editing}
-        iconName="edit"
+        icon="edit"
         className="pt-dark"
         title="Editing authors and translators"
         style={{ width: 700 }}
@@ -94,7 +94,7 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
           <SectionTitle>Acknowledgements</SectionTitle>
           <textarea
             className="pt-input pt-fill"
-            value={acknowledgements}
+            value={acknowledgements || ''}
             onChange={this.handleChangeAcknowledgements}
           />
         </div>

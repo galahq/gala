@@ -74,7 +74,7 @@ class EdgenoteLibrary extends React.Component<Props> {
 
     return (
       <Dialog
-        iconName="add-column-right"
+        icon="add-column-right"
         isOpen={true}
         title="Unused Edgenotes"
         style={{ width: 800 }}
@@ -109,7 +109,7 @@ class EdgenoteLibrary extends React.Component<Props> {
               onClick={onCancel}
             />
             <Button
-              iconName="add"
+              icon="add"
               intent={Intent.SUCCESS}
               text={intl.formatMessage({ id: 'edgenotes.new.newEdgenote' })}
               onClick={() => createEdgenote().then(onSelectEdgenote)}
@@ -124,7 +124,7 @@ export default connect(mapStateToProps, { createEdgenote, deleteEdgenote })(
   injectIntl(EdgenoteLibrary)
 )
 
-const Table = styled.table.attrs({ className: 'pt-table pt-condensed' })`
+const Table = styled.table.attrs({ className: 'pt-html-table pt-small' })`
   width: 100%;
   margin-top: 1em;
 `
@@ -159,7 +159,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
         <Button
           aria-label={intl.formatMessage({ id: 'edgenotes.index.attach' })}
           className="pt-minimal pt-small"
-          iconName="add"
+          icon="add"
           intent={Intent.SUCCESS}
           onClick={onSelect}
         />
@@ -168,7 +168,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
       <Td>
         <Icon
           aria-label={intl.formatMessage({ id: 'edgenotes.edgenote.caption' })}
-          iconName="tag"
+          icon="tag"
         />{' '}
         {edgenote.caption || '—'}
       </Td>
@@ -181,7 +181,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
         <Button
           aria-label={intl.formatMessage({ id: 'edgenotes.destroy.delete' })}
           className="pt-minimal pt-small"
-          iconName="trash"
+          icon="trash"
           intent={Intent.DANGER}
           onClick={onDelete}
         />
@@ -198,7 +198,7 @@ const PullQuote = ({ edgenote, intl }) => (
   <Td>
     <Icon
       aria-label={intl.formatMessage({ id: 'edgenotes.pullQuote' })}
-      iconName="citation"
+      icon="citation"
     />
     {edgenote.pullQuote}
   </Td>
@@ -209,7 +209,7 @@ const HasAudio = ({ edgenote, intl }) => (
     {edgenote.audioUrl ? (
       <Icon
         aria-label={intl.formatMessage({ id: 'edgenotes.hasAudio' })}
-        iconName="volume-up"
+        icon="volume-up"
       />
     ) : null}
   </Td>
@@ -236,7 +236,7 @@ const Website = ({ edgenote }) => (
   <Td>
     {edgenote.websiteUrl ? (
       <React.Fragment>
-        <Icon iconName="link" />
+        <Icon icon="link" />
         <BreakingLink href={edgenote.websiteUrl}>
           {edgenote.callToAction || edgenote.websiteUrl}
         </BreakingLink>

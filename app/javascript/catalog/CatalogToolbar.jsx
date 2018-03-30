@@ -22,12 +22,12 @@ const CatalogToolbar = ({ history }: ContextRouter) => (
       [
         {
           message: 'catalog.catalog',
-          iconName: 'home',
+          icon: 'home',
           onClick: () => history.push('/'),
         },
         {
           message: 'catalog.proposeACase',
-          iconName: 'annotation',
+          icon: 'annotation',
           onClick: () =>
             (window.location = 'http://www.teachmsc.org/action/make'),
         },
@@ -70,7 +70,7 @@ class SearchField extends React.Component<
         <InputGroup
           inputRef={el => (this.input = el)}
           className="pt-round"
-          leftIconName="search"
+          leftIcon="search"
           rightElement={
             <button
               className="pt-button pt-minimal pt-icon-arrow-right"

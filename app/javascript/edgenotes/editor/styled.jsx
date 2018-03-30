@@ -26,7 +26,7 @@ export const Overlay = styled.div`
 
 export const EditButton = styled(Button).attrs({
   intent: Intent.SUCCESS,
-  iconName: 'edit',
+  icon: 'edit',
 })`
   position: absolute;
   left: 50%;

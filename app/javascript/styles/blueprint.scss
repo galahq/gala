@@ -1,0 +1,83 @@
+$icon-font-path: '~@blueprintjs/icons/resources/icons';
+$pt-font-family: tenso, sans-serif;
+$pt-font-family-monospace: fira-mono, monospace;
+
+$dark-gray1: #01182e;
+$dark-gray2: #0d2338;
+$dark-gray3: #1b3043;
+$dark-gray4: #25394b;
+$dark-gray5: #314354;
+
+$gray1: #5d6b77;
+$gray2: #737f89;
+$gray3: #8b949c;
+$gray4: #adb3b7;
+$gray5: #c5c9cb;
+
+$light-gray1: #d4d7d6;
+$light-gray2: #dee0df;
+$light-gray3: #e7e8e6;
+$light-gray4: #f1f0ed;
+$light-gray5: #faf9f5;
+
+$white: #fdfdfa;
+
+$violet1: #563e9c;
+$violet2: #6344bc;
+$violet3: #7351d4;
+$violet4: #8464dd;
+$violet5: #9c80ea;
+
+$green1: #277a2e;
+$green2: #348a3b;
+$green3: #419d48;
+$green4: #50b458;
+$green5: #6acb72;
+
+$pt-intent-primary: $violet3;
+
+@import '~@blueprintjs/core/src/components/button/_common.scss';
+$button-intents: map-merge(
+  $button-intents,
+  ('primary': ($pt-intent-primary, $violet2, $violet1))
+);
+
+@import '~@blueprintjs/icons/src/blueprint-icons';
+@import '~@blueprintjs/core/src/blueprint';
+
+/**
+ * Overrides
+ */
+
+*:focus {
+  outline-color: rgba(170, 148, 232, 0.5);
+  outline-offset: 2px;
+}
+
+.pt-toast-container {
+  z-index: 500;
+}
+
+.pt-editable-text.pt-disabled {
+  display: inline !important;
+  cursor: inherit;
+}
+
+.pt-button {
+  margin: 0;
+}
+
+.pt-input {
+  -webkit-appearance: none;
+}
+
+.pt-button,
+.pt-input {
+  font-family: $pt-font-family;
+}
+
+.pt-control {
+  input {
+    position: absolute !important;
+  }
+}

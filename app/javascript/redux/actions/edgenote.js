@@ -104,7 +104,7 @@ function uploadOrDetach (
 
 function progressBarToastProps (progress: number) {
   return {
-    iconName: 'cloud-upload',
+    icon: 'cloud-upload',
     timeout: progress < 100 ? 0 : 2000,
     message: (
       <ProgressBar

@@ -42,34 +42,37 @@ class CreditsList extends React.Component<
     let { guests, hosts, hosts_string: hostsString } = credits
 
     return (
-      <div
-        tabIndex="0"
-        role="button"
-        style={{ cursor: canEdit ? 'pointer' : 'auto' }}
-        onKeyPress={acceptKeyboardClick}
-        onClick={this.handleStartEditing}
-      >
-        <dl>
-          {guests.map(guest => {
-            return [
-              <dt key={`name:${guest.name}`}>{guest.name}</dt>,
-              <dd key={`title:${guest.title}`}>{guest.title}</dd>,
-            ]
-          })}
-        </dl>
-        <em>
-          <FormattedMessage
-            id="podcasts.show.withHost.js"
-            values={{ count: hosts.length }}
-          />{' '}
-          {hostsString}
-        </em>
+      <React.Fragment>
+        {/* eslint-disable-next-line */}
+        <div
+          tabIndex={canEdit ? '0' : null} // eslint-disable-line
+          role={canEdit ? 'button' : null}
+          style={{ cursor: canEdit ? 'pointer' : 'auto' }}
+          onKeyPress={acceptKeyboardClick}
+          onClick={this.handleStartEditing}
+        >
+          <dl>
+            {guests.map(guest => {
+              return [
+                <dt key={`name:${guest.name}`}>{guest.name}</dt>,
+                <dd key={`title:${guest.title}`}>{guest.title}</dd>,
+              ]
+            })}
+          </dl>
+          <em>
+            <FormattedMessage
+              id="podcasts.show.withHost.js"
+              values={{ count: hosts.length }}
+            />{' '}
+            {hostsString}
+          </em>
+        </div>
         <CreditsListForm
           credits={credits}
           editing={this.state.editing}
           onFinishEditing={this.handleFinishEditing}
         />
-      </div>
+      </React.Fragment>
     )
   }
 }

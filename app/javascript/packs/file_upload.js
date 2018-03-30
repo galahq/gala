@@ -20,9 +20,9 @@ const filenameFromPath = path =>
     .pop()
 
 // Display the filename in Blueprint file inputs when a user has selected one
-document.querySelectorAll('.pt-file-upload').forEach(fileUpload => {
-  const hiddenInput = fileUpload.querySelector('input[type=file]')
-  const displayElement = fileUpload.querySelector('.pt-file-upload-input')
+document.querySelectorAll('.pt-file-input').forEach(fileInput => {
+  const hiddenInput = fileInput.querySelector('input[type=file]')
+  const displayElement = fileInput.querySelector('.pt-file-upload-input')
   if (hiddenInput == null || displayElement == null) return
 
   hiddenInput.addEventListener('change', e => {

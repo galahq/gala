@@ -35,12 +35,12 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
           <Menu>
             <MenuItem
               text={formatMessage({ id: 'readers.form.myAccount' })}
-              iconName="user"
+              icon="user"
               href="/profile/edit"
             />
             <MenuItem
               text={formatMessage({ id: 'devise.sessions.destroy.signOut' })}
-              iconName="log-out"
+              icon="log-out"
               href="#"
               onClick={_ =>
                 Orchard.prune('readers/sign_out').then(
@@ -59,7 +59,7 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
     ) : (
       <AnchorButton
         className="pt-minimal"
-        iconName="log-in"
+        icon="log-in"
         text={formatMessage({ id: 'devise.sessions.new.signIn' })}
         href="/readers/sign_in"
       />

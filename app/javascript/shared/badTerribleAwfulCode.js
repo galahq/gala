@@ -28,7 +28,7 @@ const hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet = (
     if (internalReactRootContainer.isScheduled) return
 
     const child = internalReactRootContainer.current.child
-    if (child.type !== Toaster) return
+    if (child.type.name !== 'Toaster') return
 
     // And when we finally find a toaster, we can stop waiting and dispatch a
     // ref of it to the redux store

@@ -58,7 +58,7 @@ const EditorDialog = ({
 
   return (
     <Dialog
-      iconName="edit"
+      icon="edit"
       isOpen={open}
       title={intl.formatMessage({ id: 'edgenotes.edit.editEdgenote' })}
       onClose={onClose}

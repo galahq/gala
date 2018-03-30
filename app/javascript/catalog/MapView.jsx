@@ -87,30 +87,34 @@ class MapViewController extends React.Component<Props, State> {
         <PositionedSectionTitle>
           <FormattedMessage {...title} />
         </PositionedSectionTitle>
-        {editing && [
-          <PositionedPin key="pin" />,
-          <PositionedButtons key="buttons">
-            <PaddedButton
-              text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
-              onClick={this.handleReset}
-            />
-            <PaddedButton
-              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomOut' })}
-              iconName="zoom-out"
-              onClick={this.handleZoomOut}
-            />
-            <PaddedButton
-              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomIn' })}
-              iconName="zoom-in"
-              onClick={this.handleZoomIn}
-            />
-            <PaddedButton
-              intent={Intent.SUCCESS}
-              text={intl.formatMessage({ id: 'cases.edit.map.set' })}
-              onClick={this.handleSave}
-            />
-          </PositionedButtons>,
-        ]}
+        {editing && (
+          <React.Fragment>
+            <PositionedPin />,
+            <PositionedButtons>
+              <PaddedButton
+                text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
+                onClick={this.handleReset}
+              />
+              <PaddedButton
+                aria-label={intl.formatMessage({
+                  id: 'cases.edit.map.zoomOut',
+                })}
+                icon="zoom-out"
+                onClick={this.handleZoomOut}
+              />
+              <PaddedButton
+                aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomIn' })}
+                icon="zoom-in"
+                onClick={this.handleZoomIn}
+              />
+              <PaddedButton
+                intent={Intent.SUCCESS}
+                text={intl.formatMessage({ id: 'cases.edit.map.set' })}
+                onClick={this.handleSave}
+              />
+            </PositionedButtons>,
+          </React.Fragment>
+        )}
       </Container>
     )
   }
@@ -160,15 +164,19 @@ const PositionedSectionTitle = styled(SectionTitle)`
   left: 58px;
   z-index: 1;
 `
+
 const PositionedButtons = styled.div.attrs({ className: 'pt-dark' })`
+  display: flex;
   position: absolute;
-  top: 40px;
   right: 58px;
+  top: 40px;
   z-index: 1;
 `
+
 const PaddedButton = styled(Button)`
   margin-left: 0.5em;
 `
+
 const PositionedPin = styled(Pin)`
   position: absolute;
   top: calc(50% - 11px);
