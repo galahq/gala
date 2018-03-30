@@ -147,7 +147,7 @@ const Window = styled.div`
   min-height: 100%;
   position: relative;
   padding: 2em 1em;
-  margin: 0 -0.5em;
+  margin: 0;
 
   @media (max-width: 700px) {
     grid-template: 'value-proposition' 'sidebar' 'main';
