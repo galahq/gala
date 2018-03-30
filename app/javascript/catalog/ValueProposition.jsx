@@ -48,7 +48,7 @@ const Container = styled.aside.attrs({ className: 'pt-dark' })`
   display: grid;
   font-family: tenso;
   grid-area: value-proposition;
-  grid-gap: 1.5em;
+  grid-gap: 1em 1.5em;
   grid-template-columns: repeat(3, 1fr);
   hyphens: auto;
   margin-bottom: 1.5em;
