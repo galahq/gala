@@ -139,11 +139,16 @@ const Container = styled.div`
   overflow: hidden;
 `
 const Window = styled.div`
+  display: grid;
+  grid-gap: 0 1rem;
+  grid-template:
+    'sidebar value-proposition'
+    'sidebar main' auto / 19em calc(100% - 19em - 1em);
   min-height: 100%;
   position: relative;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
   padding: 2em 1em;
-  margin: 0 -0.5em;
+  margin: 0;
+
+  @media (max-width: 700px) {
+    grid-template: 'value-proposition' 'sidebar' 'main' auto / 100%;
 `

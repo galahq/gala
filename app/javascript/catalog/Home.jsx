@@ -4,10 +4,12 @@
  */
 
 import * as React from 'react'
+import styled from 'styled-components'
 import { values, omit } from 'ramda'
 
 import { FormattedMessage } from 'react-intl'
 
+import ValueProposition from 'catalog/ValueProposition'
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import MapView from 'catalog/MapView'
@@ -37,39 +39,41 @@ class Home extends React.Component<{
       readerIsEditor,
       cases,
     } = this.props
-    return [
-      <Sidebar
-        key="sidebar"
-        loading={loading}
-        reader={reader}
-        enrolledCases={this._enrolledCases()}
-        onDeleteEnrollment={onDeleteEnrollment}
-      />,
-      <Main key="main">
-        <Features
-          readerIsEditor={readerIsEditor}
-          featuredCases={this._featuredCases()}
+    return (
+      <React.Fragment>
+        {loading.reader || !!reader || <ValueProposition />}
+        <Sidebar
+          loading={loading}
+          reader={reader}
+          enrolledCases={this._enrolledCases()}
+          onDeleteEnrollment={onDeleteEnrollment}
         />
-        <MapView
-          cases={values(cases).filter(x => !!x.publishedAt)}
-          title={{ id: 'cases.index.locations' }}
-          startingViewport={{
-            latitude: 17.770231041567445,
-            longitude: 16.286555860170893,
-            zoom: 1.1606345336768273,
-          }}
-        />
-        <CatalogSection>
-          <SectionTitle>
-            <FormattedMessage id="cases.index.allCases" />
-          </SectionTitle>
-          <CaseList
+        <Main>
+          <Features
             readerIsEditor={readerIsEditor}
-            cases={this._allOtherCases()}
+            featuredCases={this._featuredCases()}
           />
-        </CatalogSection>
-      </Main>,
-    ]
+          <MapView
+            cases={values(cases).filter(x => !!x.publishedAt)}
+            title={{ id: 'cases.index.locations' }}
+            startingViewport={{
+              latitude: 17.770231041567445,
+              longitude: 16.286555860170893,
+              zoom: 1.1606345336768273,
+            }}
+          />
+          <CatalogSection>
+            <SectionTitle>
+              <FormattedMessage id="cases.index.allCases" />
+            </SectionTitle>
+            <CaseList
+              readerIsEditor={readerIsEditor}
+              cases={this._allOtherCases()}
+            />
+          </CatalogSection>
+        </Main>
+      </React.Fragment>
+    )
   }
 
   _enrolledCases = () =>
