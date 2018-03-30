@@ -53,7 +53,7 @@ const Container = styled.aside.attrs({ className: 'pt-dark' })`
   hyphens: auto;
   margin-bottom: 1.5em;
 
-  @media (max-width: 700px) {
+  @media (max-width: 1000px) {
     grid-template-columns: 1fr;
   }
 
