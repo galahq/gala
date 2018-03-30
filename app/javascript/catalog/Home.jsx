@@ -41,7 +41,7 @@ class Home extends React.Component<{
     } = this.props
     return (
       <React.Fragment>
-        <ValueProposition />
+        {loading.reader || !!reader || <ValueProposition />}
         <Sidebar
           loading={loading}
           reader={reader}
