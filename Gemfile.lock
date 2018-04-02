@@ -409,6 +409,7 @@ GEM
     rspec-support (3.7.1)
     rspec_junit_formatter (0.3.0)
       rspec-core (>= 2, < 4, != 2.12.0)
+    ruby-oembed (0.12.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.1)
     safely_block (0.2.0)
@@ -543,6 +544,7 @@ DEPENDENCIES
   rspec-rails
   rspec-retry
   rspec_junit_formatter
+  ruby-oembed
   sass-rails (~> 5.0)
   scout_apm
   selenium-webdriver
