@@ -3,6 +3,10 @@
 class LinkExpansion
   # OpenGraph link preview
   class Preview
+    def self.for(url, with_visibility:)
+      new url, with_visibility
+    end
+
     def initialize(url, visibility)
       @open_graph = OpenGraph.new url
       @visibility = visibility

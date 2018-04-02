@@ -249,6 +249,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       callToAction,
       pullQuote,
       imageUrl,
+      caption,
     } = contents
 
     if (!!youtubeSlug || !!audioUrl) return null
@@ -257,7 +258,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       <CallToAction
         linkDomain={linkDomain}
         contents={callToAction}
-        canHighlight={!pullQuote && !imageUrl}
+        canHighlight={!pullQuote && !imageUrl && !caption}
         {...this._reduxProps()}
       />
     )
