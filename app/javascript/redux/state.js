@@ -240,6 +240,7 @@ export type Edgenote = {
   slug: string,
   style: 'v1' | 'v2',
   thumbnailUrl: string,
+  updatedAt: Date,
   websiteUrl: string,
   youtubeSlug: string,
 }

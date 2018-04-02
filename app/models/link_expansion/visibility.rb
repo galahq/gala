@@ -9,5 +9,7 @@ class LinkExpansion
   # @attr no_image [Boolean] Don’t use the image from OpenGraph
   class Visibility < ApplicationRecord
     self.table_name = :link_expansion_visibilities
+
+    belongs_to :edgenote, touch: true
   end
 end
