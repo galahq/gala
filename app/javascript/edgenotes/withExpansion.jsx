@@ -32,16 +32,16 @@ import { Orchard } from 'shared/orchard'
 
 import type { Edgenote, LinkExpansionVisibility } from 'redux/state'
 
-export type ExpansionProps = {
+export type ExpansionProps = {|
   actsAsLink: boolean,
   linkDomain: string,
   expansion: React.Node,
   expansionForm: React.Node,
   visibility: LinkExpansionVisibility,
-}
+|}
 
 type BaseProps = {
-  contents: ?Edgenote,
+  contents: Edgenote,
 }
 
 type State = {
@@ -59,9 +59,9 @@ type State = {
 }
 
 export default function withExpansion<Props: BaseProps> (
-  Component: React.ComponentType<Props & ExpansionProps>
+  Component: React.ComponentType<{ ...Props, ...ExpansionProps }>
 ): React.ComponentType<Props> {
-  class WrapperComponent extends React.Component<BaseProps, State> {
+  class WrapperComponent extends React.Component<Props, State> {
     state = { expansion: null, visibility: {}}
 
     componentDidMount () {
@@ -79,12 +79,12 @@ export default function withExpansion<Props: BaseProps> (
     render () {
       return (
         <Component
-          {...this.props}
           actsAsLink={this._actsAsLink()}
           expansion={this.renderExpansion()}
           expansionForm={this.renderExpansionForm()}
           linkDomain={this._linkDomain()}
           visibility={this.state.visibility}
+          {...this.props}
         />
       )
     }
