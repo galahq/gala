@@ -69,7 +69,10 @@ export default function withExpansion<Props: BaseProps> (
     }
 
     componentDidUpdate (prevProps: BaseProps) {
-      if (prevProps.contents.websiteUrl === this.props.contents.websiteUrl) {
+      if (
+        prevProps.contents.websiteUrl === this.props.contents.websiteUrl &&
+        prevProps.contents.updatedAt === this.props.contents.updatedAt
+      ) {
         return
       }
 
@@ -194,12 +197,13 @@ export default function withExpansion<Props: BaseProps> (
     }
 
     async _fetchExpansion () {
-      const { slug, websiteUrl } = this.props.contents
+      const { slug, updatedAt, websiteUrl } = this.props.contents
 
       if (!websiteUrl) return null
 
       return Orchard.harvest(`edgenotes/${slug}/link_expansion`, {
         href: websiteUrl,
+        updatedAt,
       })
     }
   }
