@@ -39,11 +39,13 @@ type Props = {
   onChange: ($Shape<Edgenote>) => Promise<any>,
   ...ExpansionProps,
 }
+
 type State = {
   open: boolean,
   contents: Edgenote,
   changesToAttachments: ChangesToAttachments,
 }
+
 class EdgenoteEditor extends React.Component<Props, State> {
   state = {
     open: false,
@@ -90,9 +92,16 @@ class EdgenoteEditor extends React.Component<Props, State> {
       expansionForm,
       intl,
       linkDomain,
+      visibility,
     } = this.props
     const { contents, open, changesToAttachments } = this.state
-    const expansionProps = { actsAsLink, expansion, expansionForm, linkDomain }
+    const expansionProps = {
+      actsAsLink,
+      expansion,
+      expansionForm,
+      linkDomain,
+      visibility,
+    }
 
     return (
       <Dialog

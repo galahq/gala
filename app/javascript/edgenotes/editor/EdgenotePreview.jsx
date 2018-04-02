@@ -15,6 +15,7 @@ import { EdgenoteFigure } from 'edgenotes/Edgenote'
 
 import type { Edgenote } from 'redux/state'
 import type { ChangesToAttachments } from 'edgenotes/editor'
+import type { ExpansionProps } from 'edgenotes/withExpansion'
 
 type Props = {
   contents: Edgenote,
@@ -25,7 +26,12 @@ type Props = {
 const EdgenotePreview = ({
   contents,
   changesToAttachments,
-  ...expansionProps
+
+  actsAsLink,
+  expansion,
+  expansionForm,
+  linkDomain,
+  visibility,
 }: Props) => (
   <React.Fragment>
     <h5>
@@ -36,11 +42,15 @@ const EdgenotePreview = ({
       <EdgenoteFigure
         contents={edgenotePreviewProps(contents, changesToAttachments)}
         embedded={true}
-        {...expansionProps}
+        actsAsLink={actsAsLink}
+        expansion={expansion}
+        expansionForm={expansionForm}
+        linkDomain={linkDomain}
+        visibility={visibility}
       />
     </Card>
 
-    {expansionProps.expansionForm}
+    {expansionForm}
   </React.Fragment>
 )
 

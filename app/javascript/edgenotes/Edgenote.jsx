@@ -29,8 +29,6 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
-import { FormattedMessage } from 'react-intl'
-
 import withExpansion from './withExpansion'
 import YouTube from './YouTube'
 import Image from './Image'
@@ -93,7 +91,8 @@ type Props = {
   onMouseOver: () => any,
   onMouseOut: () => any,
   onChange: ($Shape<Edgenote>) => any,
-} & ExpansionProps
+  ...ExpansionProps,
+}
 
 class BaseEdgenoteFigure extends React.Component<Props> {
   static defaultProps = {
