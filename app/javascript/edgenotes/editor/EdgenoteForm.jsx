@@ -24,6 +24,7 @@ type Props = {
   contents: FormContents,
   intl: IntlShape,
   onChange: ($Shape<Edgenote>) => mixed,
+  onChangeUrl: string => mixed,
   onChangeAttachment: ($Keys<ChangesToAttachments>, ?FileList) => mixed,
 }
 
@@ -31,6 +32,7 @@ const EdgenoteForm = ({
   contents,
   intl,
   onChange,
+  onChangeUrl,
   onChangeAttachment,
 }: Props) => {
   const disabled = shouldDisable(contents)
@@ -50,6 +52,10 @@ const EdgenoteForm = ({
         }
         render={props => <Input {...props} />}
         {...commonProps}
+        onChange={(edgenote: Edgenote) => {
+          onChange(edgenote)
+          onChangeUrl(edgenote.websiteUrl)
+        }}
       />
 
       {/* ~~~---~~~ */}

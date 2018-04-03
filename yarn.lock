@@ -6671,6 +6671,12 @@ react-medium-image-zoom@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-medium-image-zoom/-/react-medium-image-zoom-3.0.0.tgz#a7759ce914b375fe0df86665a8ae61a654d962a0"
 
+react-oembed-container@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-oembed-container/-/react-oembed-container-0.3.0.tgz#6fcfc145d1a392fd27e801d19adcaeeb3f5b6865"
+  dependencies:
+    prop-types "^15.6.0"
+
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-3.0.0-alpha.1.tgz#4400426bcfa80caa6724c7755695315209fa4b07"

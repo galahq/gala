@@ -92,6 +92,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
       expansionForm,
       intl,
       linkDomain,
+      onChangeUrl,
       visibility,
     } = this.props
     const { contents, open, changesToAttachments } = this.state
@@ -100,6 +101,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
       expansion,
       expansionForm,
       linkDomain,
+      onChangeUrl,
       visibility,
     }
 
@@ -121,6 +123,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
               }
               intl={intl}
               onChange={this.handleChangeContents}
+              onChangeUrl={onChangeUrl}
               onChangeAttachment={this.handleChangeAttachment}
             />
           </Column>

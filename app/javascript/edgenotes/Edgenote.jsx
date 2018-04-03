@@ -85,13 +85,13 @@ export type ReduxProps = {|
 
 type Props = {
   ...ReduxProps,
+  ...ExpansionProps,
   contents: ?Edgenote,
   editing: boolean,
   embedded?: boolean,
   onMouseOver: () => any,
   onMouseOut: () => any,
   onChange: ($Shape<Edgenote>) => any,
-  ...ExpansionProps,
 }
 
 class BaseEdgenoteFigure extends React.Component<Props> {
@@ -128,12 +128,13 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       onMouseOut,
       editing,
       embedded,
+      actsAsLink,
     } = this.props
     if (contents == null) return null
 
-    const { slug, caption, pullQuote, websiteUrl } = contents
+    const { slug, caption, pullQuote } = contents
 
-    const isALink = !editing && !!websiteUrl
+    const isALink = !editing && actsAsLink
 
     const ConditionalLink = isALink ? LinkBody : Body
     const conditionalHoverCallbacks = isALink
@@ -151,8 +152,8 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
         {embedded || <Statistics inline uri={`edgenotes/${slug}`} />}
         <ConditionalLink
-          tabIndex={isALink ? '0' : false}
-          onClick={active ? () => {} : activate}
+          tabIndex={isALink ? '0' : ''}
+          onClick={!isALink || active ? () => {} : activate}
         >
           {this.renderVideoSection() ||
             this.renderQuotationSection() ||
@@ -240,9 +241,9 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   }
 
   renderCallToAction () {
-    const { contents, linkDomain } = this.props
+    const { actsAsLink, contents, linkDomain } = this.props
 
-    if (contents == null) return null
+    if (!actsAsLink || contents == null) return null
     const {
       audioUrl,
       youtubeSlug,
