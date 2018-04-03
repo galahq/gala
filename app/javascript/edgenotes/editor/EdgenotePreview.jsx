@@ -31,6 +31,7 @@ const EdgenotePreview = ({
   expansion,
   expansionForm,
   linkDomain,
+  onChangeUrl,
   visibility,
 }: Props) => (
   <React.Fragment>
@@ -47,6 +48,7 @@ const EdgenotePreview = ({
         expansionForm={expansionForm}
         linkDomain={linkDomain}
         visibility={visibility}
+        onChangeUrl={onChangeUrl}
       />
     </Card>
 
