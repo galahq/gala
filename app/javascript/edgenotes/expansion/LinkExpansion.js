@@ -7,6 +7,8 @@
 
 import { Orchard } from 'shared/orchard'
 
+import type { LinkExpansionVisibility } from 'redux/state'
+
 type Embed = { __html?: string }
 type Preview = {
   title?: string,
@@ -19,6 +21,7 @@ type Preview = {
 export interface ILinkExpansion {
   actsAsLink(): boolean;
   linkDomain(): string;
+  previewVisibility(visibility: LinkExpansionVisibility): ILinkExpansion;
 }
 
 class LinkExpansion implements ILinkExpansion {
@@ -37,7 +40,7 @@ class LinkExpansion implements ILinkExpansion {
   embed: ?Embed
   preview: Preview
 
-  constructor ({ embed, preview }: { embed: Embed, preview: Preview }) {
+  constructor ({ embed, preview }: { embed: ?Embed, preview: Preview }) {
     this.embed = embed
     this.preview = preview
   }
@@ -48,6 +51,21 @@ class LinkExpansion implements ILinkExpansion {
 
   linkDomain () {
     return domain(this.preview.url)
+  }
+
+  previewVisibility ({
+    noDescription,
+    noEmbed,
+    noImage,
+  }: LinkExpansionVisibility) {
+    return new LinkExpansion({
+      embed: noEmbed ? undefined : this.embed,
+      preview: {
+        ...this.preview,
+        description: noDescription ? undefined : this.preview.description,
+        images: noImage ? [] : this.preview.images,
+      },
+    })
   }
 }
 
@@ -66,6 +84,10 @@ export class NullLinkExpansion implements ILinkExpansion {
 
   linkDomain () {
     return domain(this.url)
+  }
+
+  previewVisibility (_) {
+    return this
   }
 }
 

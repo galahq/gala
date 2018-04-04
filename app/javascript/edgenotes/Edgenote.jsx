@@ -44,7 +44,7 @@ import {
   updateEdgenote,
 } from 'redux/actions'
 
-import type { State, Edgenote, LinkExpansionVisibility } from 'redux/state'
+import type { State, Edgenote } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
 import type { ILinkExpansion } from './expansion/LinkExpansion'
 
@@ -90,7 +90,6 @@ type Props = {
   editing: boolean,
   embedded?: boolean,
   expansion: ILinkExpansion,
-  visibility: LinkExpansionVisibility,
   onMouseOver: () => any,
   onMouseOut: () => any,
   onChange: ($Shape<Edgenote>) => any,
@@ -103,7 +102,6 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     deactivate: () => {},
     editing: false,
     selected: false,
-    visibility: {},
     onMouseOver: () => {},
     onMouseOut: () => {},
     onChange: () => {},
@@ -132,7 +130,6 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       editing,
       embedded,
       expansion,
-      visibility,
     } = this.props
     if (contents == null) return null
 
@@ -163,11 +160,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
             this.renderQuotationSection() ||
             this.renderImageSection()}
 
-          <Expansion
-            contents={contents}
-            expansion={expansion}
-            visibility={visibility}
-          />
+          <Expansion contents={contents} expansion={expansion} />
 
           <Caption
             contents={caption}

@@ -78,8 +78,7 @@ const EditorDialog = ({
           <EdgenotePreview
             contents={contents}
             changesToAttachments={changesToAttachments}
-            expansion={expansion}
-            visibility={visibility}
+            expansion={expansion.previewVisibility(visibility)}
           />
 
           <ExpansionVisibilityForm
