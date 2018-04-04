@@ -216,9 +216,9 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   }
 
   renderImageSection () {
-    const { contents } = this.props
+    const { contents, expansion } = this.props
 
-    if (contents == null) return null
+    if (contents == null || expansion.hasEmbed()) return null
     const {
       imageUrl,
       imageThumbnailUrl,
