@@ -88,10 +88,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
   }
 
   handleOpen = () => this.setState({ open: true })
-  handleClose = () =>
-    new Promise(resolve =>
-      this.setState({ contents: this.props.contents, open: false }, resolve)
-    )
+  handleClose = () => this._close().then(this._reset())
 
   handleChangeContents = (attributes: $Shape<Edgenote>) =>
     this.setState(({ contents }: State) => ({
@@ -123,7 +120,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
     } = this.props
     const { contents, changesToAttachments } = this.state
 
-    this.handleClose()
+    this._close()
       .then(() => updateLinkExpansionVisibility(slug, visibility))
       .then(() =>
         changeEdgenote(
@@ -134,7 +131,11 @@ class EdgenoteEditor extends React.Component<Props, State> {
           }: $FlowIssue)
         )
       )
+      .then(this._reset)
   }
+
+  _close = () => new Promise(resolve => this.setState({ open: false }, resolve))
+  _reset = () => this.setState({ contents: this.props.contents })
 }
 export default compose(
   connect(null, { changeEdgenote, updateLinkExpansionVisibility }),
