@@ -29,7 +29,8 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
-import withExpansion from './withExpansion'
+import Expansion from './expansion'
+import withExpansion from './expansion/withExpansion'
 import YouTube from './YouTube'
 import Image from './Image'
 import PullQuote from './PullQuote'
@@ -43,9 +44,9 @@ import {
   updateEdgenote,
 } from 'redux/actions'
 
-import type { State, Edgenote } from 'redux/state'
+import type { State, Edgenote, LinkExpansionVisibility } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
-import type { ExpansionProps } from './withExpansion'
+import type { ILinkExpansion } from './expansion/LinkExpansion'
 
 type OwnProps = { slug: string }
 function mapStateToProps (state: State, { slug }: OwnProps) {
@@ -85,10 +86,11 @@ export type ReduxProps = {|
 
 type Props = {
   ...ReduxProps,
-  ...ExpansionProps,
   contents: ?Edgenote,
   editing: boolean,
   embedded?: boolean,
+  expansion: ILinkExpansion,
+  visibility: LinkExpansionVisibility,
   onMouseOver: () => any,
   onMouseOut: () => any,
   onChange: ($Shape<Edgenote>) => any,
@@ -101,6 +103,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     deactivate: () => {},
     editing: false,
     selected: false,
+    visibility: {},
     onMouseOver: () => {},
     onMouseOut: () => {},
     onChange: () => {},
@@ -128,13 +131,14 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       onMouseOut,
       editing,
       embedded,
-      actsAsLink,
+      expansion,
+      visibility,
     } = this.props
     if (contents == null) return null
 
     const { slug, caption, pullQuote } = contents
 
-    const isALink = !editing && actsAsLink
+    const isALink = !editing && expansion.actsAsLink()
 
     const ConditionalLink = isALink ? LinkBody : Body
     const conditionalHoverCallbacks = isALink
@@ -159,7 +163,11 @@ class BaseEdgenoteFigure extends React.Component<Props> {
             this.renderQuotationSection() ||
             this.renderImageSection()}
 
-          {this.props.expansion}
+          <Expansion
+            contents={contents}
+            expansion={expansion}
+            visibility={visibility}
+          />
 
           <Caption
             contents={caption}
@@ -241,9 +249,9 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   }
 
   renderCallToAction () {
-    const { actsAsLink, contents, linkDomain } = this.props
+    const { contents, expansion } = this.props
 
-    if (!actsAsLink || contents == null) return null
+    if (!expansion.actsAsLink() || contents == null) return null
     const {
       audioUrl,
       youtubeSlug,
@@ -257,7 +265,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
     return (
       <CallToAction
-        linkDomain={linkDomain}
+        linkDomain={expansion.linkDomain()}
         contents={callToAction}
         canHighlight={!pullQuote && !imageUrl && !caption}
         {...this._reduxProps()}
