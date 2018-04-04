@@ -28,24 +28,22 @@ import { Container, Description, Embed, Image, Text, Title } from './styled'
 import LinkExpansion from './LinkExpansion'
 
 import type { ILinkExpansion } from './LinkExpansion'
-import type { Edgenote, LinkExpansionVisibility } from 'redux/state'
+import type { Edgenote } from 'redux/state'
 
 type Props = {
   contents: Edgenote,
   expansion: ILinkExpansion,
-  visibility: LinkExpansionVisibility,
 }
 
-const Expansion = ({ contents, expansion, visibility }: Props) => {
+const Expansion = ({ contents, expansion }: Props) => {
   if (!(expansion instanceof LinkExpansion)) return null
 
   const { pullQuote, imageUrl, caption } = contents
   if (pullQuote || (imageUrl && caption)) return null
 
   const { embed, preview } = expansion
-  const { noDescription, noEmbed, noImage } = visibility
 
-  return embed && embed.__html && !noEmbed ? (
+  return embed && embed.__html ? (
     <EmbedContainer markup={embed.__html}>
       <Embed
         dangerouslySetInnerHTML={embed}
@@ -56,15 +54,13 @@ const Expansion = ({ contents, expansion, visibility }: Props) => {
     preview &&
       preview.title && (
       <Container>
-        {noImage ||
-            !!imageUrl ||
+        {!!imageUrl ||
             (preview.images instanceof Array && (
               <Image src={preview.images[0]} />
             ))}
         <Text>
           <Title>{preview.title}</Title>
-          {noDescription ||
-              !!caption ||
+          {!!caption ||
               (preview.description && (
                 <Description>{preview.description}</Description>
               ))}

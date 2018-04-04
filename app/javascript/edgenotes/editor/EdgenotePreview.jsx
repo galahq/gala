@@ -13,7 +13,7 @@ import * as R from 'ramda'
 
 import { EdgenoteFigure } from 'edgenotes/Edgenote'
 
-import type { Edgenote, LinkExpansionVisibility } from 'redux/state'
+import type { Edgenote } from 'redux/state'
 import type { ChangesToAttachments } from 'edgenotes/editor'
 import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
 
@@ -21,14 +21,12 @@ type Props = {
   contents: Edgenote,
   changesToAttachments: ChangesToAttachments,
   expansion: ILinkExpansion,
-  visibility: LinkExpansionVisibility,
 }
 
 const EdgenotePreview = ({
   contents,
   changesToAttachments,
   expansion,
-  visibility,
 }: Props) => (
   <React.Fragment>
     <h5>
@@ -40,7 +38,6 @@ const EdgenotePreview = ({
         contents={edgenotePreviewProps(contents, changesToAttachments)}
         embedded={true}
         expansion={expansion}
-        visibility={visibility}
       />
     </Card>
   </React.Fragment>
