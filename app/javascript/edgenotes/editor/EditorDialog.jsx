@@ -50,6 +50,12 @@ const EditorDialog = ({
   onClose,
   onSubmit,
 }: Props) => {
+  const contentsWithAttachmentChanges = ({
+    ...contents,
+    ...R.filter(Boolean, changesToAttachments),
+  }: $FlowIssue)
+  const expansionWithVisibilityChanges = expansion.previewVisibility(visibility)
+
   return (
     <Dialog
       iconName="edit"
@@ -60,12 +66,8 @@ const EditorDialog = ({
       <Body>
         <Column>
           <EdgenoteForm
-            contents={
-              ({
-                ...contents,
-                ...R.filter(Boolean, changesToAttachments),
-              }: $FlowIssue)
-            }
+            contents={contentsWithAttachmentChanges}
+            expansion={expansionWithVisibilityChanges}
             intl={intl}
             onChange={onChangeContents}
             onChangeAttachment={onChangeAttachment}
@@ -78,11 +80,11 @@ const EditorDialog = ({
           <EdgenotePreview
             contents={contents}
             changesToAttachments={changesToAttachments}
-            expansion={expansion.previewVisibility(visibility)}
+            expansion={expansionWithVisibilityChanges}
           />
 
           <ExpansionVisibilityForm
-            contents={contents}
+            contents={contentsWithAttachmentChanges}
             expansion={expansion}
             toggleVisibility={toggleVisibility}
             visibility={visibility}

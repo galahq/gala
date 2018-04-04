@@ -10,6 +10,7 @@ import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Switch } from '@blueprintjs/core'
 import LinkExpansion from 'edgenotes/expansion/LinkExpansion'
+import Attachment from 'edgenotes/editor/Attachment'
 
 import type { Edgenote } from 'redux/state'
 import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
@@ -31,27 +32,48 @@ const ExpansionVisibilityForm = ({
 
   const { embed, preview } = expansion
   const { noDescription, noEmbed, noImage } = visibility
+
+  const checked = {
+    embed: noEmbed != null ? !noEmbed : embed != null,
+    image: noImage != null ? !noImage : preview.images != null,
+    description:
+      noDescription != null ? !noDescription : preview.description != null,
+  }
+
+  const visible = {
+    embed: embed == null || embed.__html != null,
+    image: !checked.embed && !contents.pullQuote,
+    description: !checked.embed && !contents.pullQuote,
+  }
+
+  const disabled = {
+    image: Attachment.truthy(contents.imageUrl),
+    description: !!contents.caption,
+  }
+
   return (
     <React.Fragment>
-      {(embed == null || embed.__html != null) && (
+      {visible.embed && (
         <Switch
-          checked={noEmbed != null ? !noEmbed : embed != null}
+          checked={checked.embed}
           label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
           onChange={() => toggleVisibility('noEmbed')}
         />
       )}
 
-      <Switch
-        checked={noImage != null ? !noImage : preview.images != null}
-        label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
-        onChange={() => toggleVisibility('noImage')}
-      />
-
-      {!!contents.caption || (
+      {visible.image && (
         <Switch
-          checked={
-            noDescription != null ? !noDescription : preview.description != null
-          }
+          checked={checked.image}
+          disabled={disabled.image}
+          label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
+          onChange={() => toggleVisibility('noImage')}
+        />
+      )}
+
+      {visible.description && (
+        <Switch
+          checked={checked.description}
+          disabled={disabled.description}
           label={<FormattedMessage id="edgenotes.edit.usePreviewDescription" />}
           onChange={() => toggleVisibility('noDescription')}
         />

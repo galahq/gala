@@ -17,11 +17,13 @@ import Markdown from 'utility/Markdown'
 import type { IntlShape } from 'react-intl'
 import type { ChangesToAttachments } from 'edgenotes/editor'
 import type { Edgenote, ExtractReturn } from 'redux/state'
+import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
 
 export type FormContents = { ...Edgenote, ...$Shape<ChangesToAttachments> }
 
 type Props = {
   contents: FormContents,
+  expansion: ILinkExpansion,
   intl: IntlShape,
   onChange: ($Shape<Edgenote>) => mixed,
   onChangeAttachment: ($Keys<ChangesToAttachments>, ?FileList) => mixed,
@@ -29,11 +31,12 @@ type Props = {
 
 const EdgenoteForm = ({
   contents,
+  expansion,
   intl,
   onChange,
   onChangeAttachment,
 }: Props) => {
-  const disabled = shouldDisable(contents)
+  const disabled = shouldDisable(contents, expansion)
   const commonProps = { contents, disabled, intl, onChange, onChangeAttachment }
   return (
     <React.Fragment>
@@ -219,7 +222,7 @@ const FileField = (
         )}
       />
 
-      {truthyAttachment(attachment) && (
+      {Attachment.truthy(attachment) && (
         <Button
           intent={Intent.DANGER}
           iconName="trash"
@@ -232,30 +235,27 @@ const FileField = (
   )
 }
 
-const shouldDisable = (contents: { ...Edgenote, ...ChangesToAttachments }) => ({
-  websiteUrl: truthyAttachment(contents.audioUrl),
+const shouldDisable = (
+  contents: { ...Edgenote, ...ChangesToAttachments },
+  expansion: ILinkExpansion
+) => ({
+  websiteUrl: Attachment.truthy(contents.audioUrl),
 
-  pullQuote: truthyAttachment(contents.imageUrl),
+  pullQuote: Attachment.truthy(contents.imageUrl) || expansion.hasEmbed(),
   attribution: !contents.pullQuote && !contents.attribution,
   audioUrl: !contents.pullQuote || !!contents.websiteUrl,
 
   imageUrl:
     !!contents.pullQuote ||
     !!contents.attribution ||
-    truthyAttachment(contents.audioUrl),
-  altText: !truthyAttachment(contents.imageUrl),
-  photoCredit: !truthyAttachment(contents.imageUrl),
+    Attachment.truthy(contents.audioUrl) ||
+    expansion.hasEmbed(),
+  altText: !Attachment.truthy(contents.imageUrl),
+  photoCredit: !Attachment.truthy(contents.imageUrl),
 
   caption: false,
-  callToAction: truthyAttachment(contents.audioUrl),
+  callToAction: Attachment.truthy(contents.audioUrl) || expansion.hasEmbed(),
 })
-
-function truthyAttachment (attachment: ?Attachment | string) {
-  return (
-    attachment != null &&
-    (typeof attachment === 'string' || !!attachment.objectUrl)
-  )
-}
 
 const Row = styled.div`
   display: flex;

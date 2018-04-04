@@ -10,6 +10,13 @@ import { DirectUpload } from 'activestorage'
 import { Orchard } from 'shared/orchard'
 
 class Attachment {
+  static truthy (attachment: ?Attachment | string) {
+    return (
+      attachment != null &&
+      (typeof attachment === 'string' || !!attachment.objectUrl)
+    )
+  }
+
   _fileList: ?FileList
   _objectUrl: ?string
 
