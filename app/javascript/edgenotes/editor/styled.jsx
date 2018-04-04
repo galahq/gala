@@ -42,11 +42,14 @@ export const Dialog = styled(BaseDialog)`
 
 export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row;
+
+  @media (max-width: 600px) {
+    flex-flow: column-reverse;
+  }
 `
 
 export const Column = styled.div`
-  max-width: 350px;
   width: 100%;
 `
 
