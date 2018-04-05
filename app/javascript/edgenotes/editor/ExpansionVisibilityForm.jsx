@@ -34,10 +34,12 @@ const ExpansionVisibilityForm = ({
   const { noDescription, noEmbed, noImage } = visibility
 
   const checked = {
-    embed: noEmbed != null ? !noEmbed : embed != null,
-    image: noImage != null ? !noImage : preview.images != null,
-    description:
-      noDescription != null ? !noDescription : preview.description != null,
+    embed: noEmbed != null ? !noEmbed : !!embed && !!embed.__html,
+    image:
+      noImage != null
+        ? !noImage
+        : !!preview.images && preview.images.length > 0,
+    description: noDescription != null ? !noDescription : !!preview.description,
   }
 
   const visible = {
