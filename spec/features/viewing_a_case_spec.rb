@@ -78,7 +78,8 @@ feature 'Viewing a case' do
       before { login_as enrollment.reader }
 
       scenario 'is accessible' do
-        expect(find('aside')).to have_link forthcoming_case.kicker
+        expect(find('[data-test-id="enrollments"]'))
+          .to have_link forthcoming_case.kicker
         click_link forthcoming_case.kicker
         expect(page).to have_content forthcoming_case.pages.first.title
       end
