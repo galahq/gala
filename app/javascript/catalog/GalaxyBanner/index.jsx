@@ -50,6 +50,12 @@ const Tagline = styled.p`
   font-style: italic;
   font-weight: 500;
   margin: 1px 0 0 1em;
+  text-align: center;
+
+  @media (max-width: 1050px) {
+    flex-basis: 100%;
+    margin: 4px 0 0;
+  }
 `
 
 const Spacer = styled.div`
