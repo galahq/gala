@@ -44,7 +44,7 @@ class Home extends React.Component<{
       <React.Fragment>
         {loading.reader || !!reader || <ValueProposition />}
 
-        <GalaxyBanner />
+        {loading.reader || <GalaxyBanner />}
 
         <Sidebar
           loading={loading}
