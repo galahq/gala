@@ -35,7 +35,7 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
     const { editing } = this.state
     const { intl, enrolledCases, onDeleteEnrollment, loading } = this.props
     return loading.cases ? null : enrolledCases.length > 0 ? (
-      <div>
+      <div data-test-id="enrollments">
         <CaseRow baseline>
           <SidebarSectionTitle>
             <FormattedMessage id="enrollments.index.enrolledCases" />
