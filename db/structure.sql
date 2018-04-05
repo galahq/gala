@@ -539,7 +539,6 @@ CREATE TABLE edgenotes (
     attribution jsonb DEFAULT '""'::jsonb,
     call_to_action jsonb DEFAULT '""'::jsonb,
     audio_url jsonb DEFAULT '""'::jsonb,
-    youtube_slug jsonb DEFAULT '""'::jsonb,
     alt_text character varying
 );
 
@@ -2717,6 +2716,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180219152023'),
 ('20180220162824'),
 ('20180221153559'),
-('20180321161907');
+('20180321161907'),
+('20180405141157'),
+('20180405181811');
 
 

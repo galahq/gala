@@ -42,7 +42,6 @@
 # @attr attribution [Translated<String>]
 # @attr call_to_action [Translated<String>]
 # @attr audio_url [Translated<String>]
-# @attr youtube_slug [Translated<String>]
 # @attr alt_text [String] @todo translate this
 # @attr website_url [Translated<String>]
 class Edgenote < ApplicationRecord
@@ -53,7 +52,7 @@ class Edgenote < ApplicationRecord
   attribute :style, :integer, default: 1 # :v2
   translates :caption, :content, :instructions, :website_url,
              :embed_code, :photo_credit, :pdf_url, :pull_quote, :attribution,
-             :call_to_action, :youtube_slug, fallbacks: true
+             :call_to_action, fallbacks: true
 
   enum style: { v1: 0, v2: 1 }
 
