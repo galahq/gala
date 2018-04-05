@@ -143,6 +143,7 @@ const Window = styled.div`
   grid-gap: 0 1rem;
   grid-template:
     'sidebar value-proposition'
+    'sidebar banner'
     'sidebar main' auto / 19em calc(100% - 19em - 1em);
   min-height: 100%;
   position: relative;
@@ -150,5 +151,5 @@ const Window = styled.div`
   margin: 0;
 
   @media (max-width: 700px) {
-    grid-template: 'value-proposition' 'sidebar' 'main' auto / 100%;
+    grid-template: 'value-proposition' 'sidebar' 'banner' 'main' auto / 100%;
 `
