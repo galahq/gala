@@ -145,14 +145,12 @@ const Td = styled.td`
  */
 const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
   let attributeComponents = []
-  if (edgenote.youtubeSlug) {
-    attributeComponents = [YoutubeSlug, Blank, Blank]
-  } else if (edgenote.pullQuote || edgenote.audioUrl) {
+  if (edgenote.pullQuote || edgenote.audioUrl) {
     attributeComponents = [PullQuote, HasAudio, Website]
   } else if (edgenote.imageUrl) {
     attributeComponents = [Image, AltText, Website]
   } else {
-    attributeComponents = [Blank, Blank, Website]
+    attributeComponents = [Website, Blank, Blank]
   }
 
   return (
@@ -196,20 +194,6 @@ const Link = styled.a.attrs({ target: '_blank', rel: 'noopener noreferrer' })``
 
 const Blank = () => <Td>—</Td>
 
-const YoutubeSlug = ({ edgenote, intl }) => (
-  <Td>
-    <Icon
-      aria-label={intl.formatMessage({
-        id: 'edgenotes.edgenote.videoSlug',
-      })}
-      iconName="video"
-    />
-    <Link href={`https://www.youtube.com/watch?v=${edgenote.youtubeSlug}`}>
-      {edgenote.youtubeSlug}
-    </Link>
-  </Td>
-)
-
 const PullQuote = ({ edgenote, intl }) => (
   <Td>
     <Icon
@@ -245,12 +229,17 @@ const Image = ({ edgenote }) => (
 
 const AltText = ({ edgenote }) => <Td>{edgenote.altText || '—'}</Td>
 
+const BreakingLink = Link.extend`
+  word-break: break-all;
+`
 const Website = ({ edgenote }) => (
   <Td>
-    {edgenote.websiteUrl && edgenote.callToAction ? (
+    {edgenote.websiteUrl ? (
       <React.Fragment>
         <Icon iconName="link" />
-        <Link href={edgenote.websiteUrl}>{edgenote.callToAction}</Link>
+        <BreakingLink href={edgenote.websiteUrl}>
+          {edgenote.callToAction || edgenote.websiteUrl}
+        </BreakingLink>
       </React.Fragment>
     ) : (
       '—'
