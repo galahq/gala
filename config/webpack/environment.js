@@ -1,7 +1,10 @@
 const webpack = require('webpack')
 const { environment } = require('@rails/webpacker')
 
-environment.loaders.delete('file')
+environment.loaders.get(
+  'file'
+).test = /\.(jpg|jpeg|png|gif|eot|otf|ttf|woff|woff2)$/i
+
 environment.loaders.set('svg', {
   test: /\.svg$/,
   loader: 'raw-loader',
