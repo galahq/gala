@@ -40,7 +40,9 @@ const EdgenoteForm = ({
   const commonProps = { contents, disabled, intl, onChange, onChangeAttachment }
   return (
     <React.Fragment>
-      <Heading messageId="edgenotes.edit.pasteALink" />
+      <label htmlFor="websiteUrl">
+        <Heading id="pasteALink" messageId="edgenotes.edit.pasteALink" />
+      </label>
 
       <Field
         name="websiteUrl"
@@ -177,9 +179,11 @@ const Field = ({
     disabled={disabled[name]}
     helperText={helperText}
     label={label && intl.formatMessage({ id: label })}
+    labelFor={name}
   >
     {render({
       disabled: disabled[name],
+      id: name,
       value: contents[name] || '',
       placeholder: placeholder && intl.formatMessage({ id: placeholder }),
       onChange: (e: SyntheticInputEvent<*>) =>

@@ -148,7 +148,11 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       : {}
 
     return (
-      <Container id={slug} {...conditionalHoverCallbacks}>
+      <Container
+        data-test-id="edgenote"
+        id={slug}
+        {...conditionalHoverCallbacks}
+      >
         {editing && (
           <EdgenoteEditor contents={contents} slug={slug} onChange={onChange} />
         )}
