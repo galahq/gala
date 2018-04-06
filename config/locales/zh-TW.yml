@@ -17,6 +17,13 @@ zh-TW:
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
+      edgenote:
+        alt_text: Image description for accessibility
+        attribution: Attribution
+        call_to_action: Call to action
+        caption: Caption
+        photo_credit: Photo credit
+        pull_quote: Pull quote
       question:
         content: Content
         correct_answer: Correct answer
@@ -291,8 +298,28 @@ zh-TW:
     edgenote:
       caption: "Caption: "
       has_audio: This edgenote has an audio clip.
+      jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
+      return_to_narrative: Return to narrative
       video_slug: "YouTube video slug: "
+    edit:
+      alt_text_guidelines: >
+        Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
+      attach_an_image: Attach an image
+      choose_audio_file: Choose audio file...
+      choose_image: Choose image...
+      edit_edgenote: Edit Edgenote
+      embed_or_external_link: >
+        You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      paste_a_link: Paste a link
+      preview: Edgenote preview
+      pull_a_quote: Pull a quote
+      remove: Remove
+      use_embed: Embed a widget from this website
+      use_preview_description: Include a description in the link preview
+      use_preview_image: Include an image in the the link preview
+      upload_an_audio_file: Upload an audio file
+      write_a_caption: Write a caption
     index:
       attach: Attach this Edgenote.
       reattach_instructions: >
@@ -370,6 +397,7 @@ zh-TW:
   helpers:
     cancel: 取消
     close: 關閉
+    edit: Edit
     formatting:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
@@ -391,6 +419,7 @@ zh-TW:
       more_pages:
         display_entries: >
           顯示 %{entry_name} <b>%{first} - %{last}</b>　共<b>%{total}</b>
+    save: 保存
     select:
       prompt: 請選擇
     submit:
@@ -521,6 +550,10 @@ zh-TW:
       last_word_connector: "和"
       two_words_connector: "和"
       words_connector: "、"
+    quote:
+      begin: '“'
+      end: '”'
+      attribution_prefix: "— "
     languages:
       am: 阿姆哈拉文
       en: 英文
