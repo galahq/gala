@@ -328,7 +328,9 @@ en:
     edgenote:
       caption: "Caption: "
       has_audio: This edgenote has an audio clip.
+      jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
+      return_to_narrative: Return to narrative
       video_slug: "YouTube video slug: "
     edit:
       alt_text_guidelines: >

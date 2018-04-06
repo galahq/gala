@@ -23,20 +23,34 @@ export class AccessibleAlert extends React.Component<*, State> {
 }
 
 export const LabelForScreenReaders = styled.div`
-  position: absolute;
+  height: 1px;
   left: -10000px;
+  overflow: hidden;
+  position: absolute;
   top: auto;
   width: 1px;
-  height: 1px;
-  overflow: hidden;
 
   &:focus-within {
-    position: initial;
+    height: initial;
     left: initial;
+    overflow: initial;
     top: initial;
     width: initial;
-    height: initial;
-    overflow: initial;
+
+    ${p =>
+    p.visibleBelowMaxWidth ||
+      css`
+        background-color: black;
+        color: white;
+        font-family: ${p => p.theme.sansFont};
+        font-size: 100%;
+        font-weight: 500;
+        padding: 0 0.25em;
+
+        a {
+          color: white !important;
+        }
+      `};
   }
 
   ${({ visibleBelowMaxWidth }) =>
