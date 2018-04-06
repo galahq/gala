@@ -254,7 +254,7 @@ const shouldDisable = (
   photoCredit: !Attachment.truthy(contents.imageUrl),
 
   caption: false,
-  callToAction: Attachment.truthy(contents.audioUrl) || expansion.hasEmbed(),
+  callToAction: false,
 })
 
 const Row = styled.div`

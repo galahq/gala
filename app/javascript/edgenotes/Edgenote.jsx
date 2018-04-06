@@ -242,7 +242,12 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   renderCallToAction () {
     const { contents, expansion } = this.props
 
-    if (!expansion.actsAsLink() || contents == null) return null
+    if (
+      contents == null ||
+      (!expansion.actsAsLink() && contents.callToAction == null)
+    ) {
+      return null
+    }
     const { audioUrl, callToAction, pullQuote, imageUrl, caption } = contents
 
     if (audioUrl) return null
