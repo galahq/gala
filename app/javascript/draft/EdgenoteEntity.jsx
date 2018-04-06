@@ -2,13 +2,15 @@
  * @providesModule EdgenoteEntity
  * @flow
  */
-import React from 'react' // eslint-disable-line no-unused-vars
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen } from 'shared/routes'
 import { acceptKeyboardClick } from 'shared/keyboard'
 
 import { highlightEdgenote, activateEdgenote } from 'redux/actions'
+import { FormattedMessage } from 'react-intl'
+import { LabelForScreenReaders } from 'utility/A11y'
 
 import type { State } from 'redux/state'
 
@@ -47,27 +49,35 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 const EdgenoteSpan = ({
-  editing,
-  onMouseOver,
-  onMouseOut,
-  onClick,
   children,
   commentThreadsOpen,
+  editing,
   location,
+  onClick,
+  onMouseOut,
+  onMouseOver,
+  slug,
 }) => {
   return (
-    <a
-      tabIndex="0"
-      className={`c-edgenote-entity${commentThreadsOpen ? '--inactive' : ''}`}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-      onClick={editing ? () => {} : onClick}
-      onKeyPress={acceptKeyboardClick}
-    >
-      {children.map(child =>
-        React.cloneElement(child, { forceSelection: true, location })
-      )}
-    </a>
+    <React.Fragment>
+      <a
+        tabIndex="0"
+        className={`c-edgenote-entity${commentThreadsOpen ? '--inactive' : ''}`}
+        onMouseOver={onMouseOver}
+        onMouseOut={onMouseOut}
+        onClick={editing ? () => {} : onClick}
+        onKeyPress={acceptKeyboardClick}
+      >
+        {children.map(child =>
+          React.cloneElement(child, { forceSelection: true, location })
+        )}
+      </a>
+      <LabelForScreenReaders>
+        <a id={`edgenote-highlight-${slug}`} href={`#edgenote-${slug}`}>
+          <FormattedMessage id="edgenotes.edgenote.jumpToEdgenote" />
+        </a>
+      </LabelForScreenReaders>
+    </React.Fragment>
   )
 }
 
