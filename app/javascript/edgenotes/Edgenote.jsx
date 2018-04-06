@@ -301,7 +301,7 @@ const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
         style={{ display: 'inline', margin: '0.25em 0 0 0', lineHeight: 1 }}
       >
         {contents || linkDomain}
-        {!contents || (contents && !contents.endsWith('›')) ? ' ›' : ''}
+        {!contents || (contents && !contents.trim().endsWith('›')) ? ' ›' : ''}
       </div>
     </div>
   )

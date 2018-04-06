@@ -48,11 +48,11 @@ const PullQuote = ({
             display: 'inline',
           }}
         >
-          {contents.startsWith('“') || (
+          {contents.trim().startsWith('“') || (
             <FormattedMessage id="support.quote.begin" />
           )}
           {contents}
-          {contents.endsWith('”') || (
+          {contents.trim().endsWith('”') || (
             <FormattedMessage id="support.quote.end" />
           )}
         </blockquote>
@@ -87,7 +87,7 @@ const Attribution = ({ name }) =>
       }}
     >
       {name &&
-        !name.startsWith('—') && (
+        !name.trim().startsWith('—') && (
           <FormattedMessage id="support.quote.attributionPrefix" />
         )}
       {name}
