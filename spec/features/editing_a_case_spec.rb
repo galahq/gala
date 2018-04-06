@@ -63,10 +63,11 @@ feature 'Editing a case' do
 
         edgenote_button.click
         expect(page).to have_selector '.c-edgenote-entity'
-        expect(page).to have_content '“Add quotation...”'
 
-        find('.pt-editable-text', text: '“Add quotation...”').click
-        page.driver.browser.action.send_keys('“I have a dream”').perform
+        find('[data-test-id=edgenote]').hover
+        click_button 'Edit'
+        fill_in 'Pull quote', with: '“I have a dream”'
+        click_button 'Save'
 
         # Remove the Edgenote by clicking the button again
         page.driver.browser.action.move_to(
