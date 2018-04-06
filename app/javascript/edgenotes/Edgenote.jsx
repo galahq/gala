@@ -37,7 +37,6 @@ import Tracker from 'utility/Tracker'
 import EdgenoteEditor from 'edgenotes/editor'
 import Expansion from './expansion'
 import withExpansion from './expansion/withExpansion'
-import YouTube from './YouTube'
 import Image from './Image'
 import PullQuote from './PullQuote'
 
@@ -163,9 +162,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
           onClick={!isALink || active ? () => {} : activate}
           onKeyPress={acceptKeyboardClick}
         >
-          {this.renderVideoSection() ||
-            this.renderQuotationSection() ||
-            this.renderImageSection()}
+          {this.renderQuotationSection() || this.renderImageSection()}
 
           <Expansion contents={contents} expansion={expansion} />
 
@@ -195,17 +192,6 @@ class BaseEdgenoteFigure extends React.Component<Props> {
         )}
       </Container>
     )
-  }
-
-  renderVideoSection () {
-    const { contents } = this.props
-
-    if (contents == null) return null
-    const { youtubeSlug } = contents
-
-    if (!youtubeSlug) return null
-
-    return <YouTube slug={youtubeSlug} {...this._reduxProps()} />
   }
 
   renderQuotationSection () {
@@ -257,16 +243,9 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     const { contents, expansion } = this.props
 
     if (!expansion.actsAsLink() || contents == null) return null
-    const {
-      audioUrl,
-      youtubeSlug,
-      callToAction,
-      pullQuote,
-      imageUrl,
-      caption,
-    } = contents
+    const { audioUrl, callToAction, pullQuote, imageUrl, caption } = contents
 
-    if (!!youtubeSlug || !!audioUrl) return null
+    if (audioUrl) return null
 
     return (
       <CallToAction

@@ -242,7 +242,6 @@ export type Edgenote = {
   thumbnailUrl: string,
   updatedAt: Date,
   websiteUrl: string,
-  youtubeSlug: string,
 }
 
 export type Enrollment = {
