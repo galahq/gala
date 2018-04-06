@@ -11,6 +11,8 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import ImageZoom from 'react-medium-image-zoom'
+import { FormattedMessage } from 'react-intl'
+import { LabelForScreenReaders } from 'utility/A11y'
 
 import type { ReduxProps } from './Edgenote'
 
@@ -53,8 +55,16 @@ const Image = ({
 
   return (
     <Container>
-      {src && photoCredit && <PhotoCredit>{photoCredit}</PhotoCredit>}
       {src && imageComponent}
+      {src &&
+        photoCredit && (
+          <PhotoCredit>
+            <LabelForScreenReaders>
+              <FormattedMessage id="activerecord.attributes.edgenote.photoCredit" />:
+            </LabelForScreenReaders>
+            {photoCredit}
+          </PhotoCredit>
+        )}
     </Container>
   )
 }
@@ -62,6 +72,9 @@ const Image = ({
 export default Image
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+
   img {
     background-color: #4e6881aa;
   }

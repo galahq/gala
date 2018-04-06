@@ -29,14 +29,17 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
+import { FormattedMessage } from 'react-intl'
+import { LabelForScreenReaders } from 'utility/A11y'
+import { acceptKeyboardClick } from 'shared/keyboard'
+import Statistics from 'utility/Statistics'
+import Tracker from 'utility/Tracker'
+import EdgenoteEditor from 'edgenotes/editor'
 import Expansion from './expansion'
 import withExpansion from './expansion/withExpansion'
 import YouTube from './YouTube'
 import Image from './Image'
 import PullQuote from './PullQuote'
-import Statistics from 'utility/Statistics'
-import Tracker from 'utility/Tracker'
-import EdgenoteEditor from 'edgenotes/editor'
 
 import {
   highlightEdgenote,
@@ -152,9 +155,13 @@ class BaseEdgenoteFigure extends React.Component<Props> {
         )}
 
         {embedded || <Statistics inline uri={`edgenotes/${slug}`} />}
+
         <ConditionalLink
           tabIndex={isALink ? '0' : ''}
+          id={`edgenote-${slug}`}
+          role={isALink ? 'button' : undefined}
           onClick={!isALink || active ? () => {} : activate}
+          onKeyPress={acceptKeyboardClick}
         >
           {this.renderVideoSection() ||
             this.renderQuotationSection() ||
@@ -169,6 +176,11 @@ class BaseEdgenoteFigure extends React.Component<Props> {
           />
           {this.renderCallToAction()}
         </ConditionalLink>
+        <LabelForScreenReaders>
+          <a href={`#edgenote-highlight-${slug}`}>
+            <FormattedMessage id="edgenotes.edgenote.returnToNarrative" />
+          </a>
+        </LabelForScreenReaders>
 
         {editing || (
           <Tracker
