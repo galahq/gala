@@ -68,17 +68,14 @@ class CasesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_case
-    @case = Case.friendly
-                .includes(
-                  :podcasts,
-                  edgenotes: [image_attachment: :blob, audio_attachment: :blob],
-                  activities: %i[case_element card],
-                  pages: %i[case_element cards],
-                  cards: [comment_threads: [:reader, comments: [:reader]]],
-                  enrollments: [:reader]
-                )
-                .find(slug)
-                .decorate
+    @case = Case.friendly.includes(
+      :podcasts,
+      edgenotes: [image_attachment: :blob, audio_attachment: :blob],
+      cards: [comment_threads: [:reader, comments: [:reader]]],
+      activities: %i[case_element card], pages: %i[case_element cards],
+      enrollments: [:reader]
+    )
+                .find(slug).decorate
   end
 
   def slug
