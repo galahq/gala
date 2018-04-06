@@ -10,45 +10,43 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { EditableText } from '@blueprintjs/core'
 import ImageZoom from 'react-medium-image-zoom'
-
-import EditableAttribute from 'utility/EditableAttribute'
+import { FormattedMessage } from 'react-intl'
+import { LabelForScreenReaders } from 'utility/A11y'
 
 import type { ReduxProps } from './Edgenote'
 
 type Props = {
   src: string,
+  thumbnailSrc: ?string,
   alt: string,
   photoCredit: string,
   callToAction: string,
-  onChange: string => string => any,
   ...ReduxProps,
 }
 
 const Image = ({
   src,
+  thumbnailSrc,
   alt,
   photoCredit,
   callToAction,
   active,
   activate,
   deactivate,
-  editing,
-  onChange,
 }: Props) => {
-  let imageProps = {
+  let thumbnailProps = {
     style: { width: '100%', minHeight: '3em', display: 'block' },
-    src: `${src}?w=640`,
+    src: thumbnailSrc || src,
     alt,
   }
   let imageComponent = callToAction ? (
-    <img alt={alt} {...imageProps} />
+    <img alt={alt} {...thumbnailProps} />
   ) : (
     <ImageZoom
       isZoomed={active}
       defaultStyles={{ overlay: { backgroundColor: '#1D2934' }}}
-      image={imageProps}
+      image={thumbnailProps}
       zoomImage={{ src }}
       onZoom={activate}
       onUnzoom={deactivate}
@@ -56,39 +54,31 @@ const Image = ({
   )
 
   return (
-    <div>
+    <Container>
+      {src && imageComponent}
       {src &&
-        (editing || photoCredit) && (
+        photoCredit && (
           <PhotoCredit>
-            <EditableText
-              multiline
-              value={photoCredit}
-              disabled={!editing}
-              placeholder={editing ? 'Photo credit' : ''}
-              onChange={onChange('photoCredit')}
-            />
+            <LabelForScreenReaders>
+              <FormattedMessage id="activerecord.attributes.edgenote.photoCredit" />:
+            </LabelForScreenReaders>
+            {photoCredit}
           </PhotoCredit>
         )}
-      {src && imageComponent}
-      <EditableAttribute
-        disabled={!editing}
-        title="image url"
-        value={src}
-        onChange={onChange('imageUrl')}
-      />
-      {src && (
-        <EditableAttribute
-          disabled={!editing}
-          title="alt text"
-          value={alt}
-          onChange={onChange('altText')}
-        />
-      )}
-    </div>
+    </Container>
   )
 }
 
 export default Image
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+
+  img {
+    background-color: #4e6881aa;
+  }
+`
 
 const PhotoCredit = styled.cite`
   text-transform: uppercase;

@@ -6,6 +6,8 @@ class EdgenotesController < ApplicationController
   before_action :set_case, only: [:create]
   before_action :set_cors_headers, only: [:show]
 
+  decorates_assigned :edgenote
+
   # @route [POST] `/cases/case-slug/edgenotes`
   def create
     authorize @case, :update?
@@ -13,7 +15,7 @@ class EdgenotesController < ApplicationController
     @edgenote = @case.edgenotes.build
 
     if @edgenote.save
-      render partial: 'edgenote', locals: { edgenote: @edgenote }
+      render partial: 'edgenote', locals: { edgenote: edgenote }
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -24,7 +26,7 @@ class EdgenotesController < ApplicationController
     authorize @edgenote.case, :update?
 
     if @edgenote.update(edgenote_params)
-      render partial: 'edgenote', locals: { edgenote: @edgenote }
+      render partial: 'edgenote', locals: { edgenote: edgenote }
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -58,10 +60,10 @@ class EdgenotesController < ApplicationController
   def edgenote_params
     params.require(:edgenote).permit(:caption, :format, :thumbnail_url,
                                      :content, :embed_code, :website_url,
-                                     :image_url, :pdf_url, :instructions,
+                                     :image, :pdf_url, :instructions,
                                      :photo_credit, :slug, :style, :pull_quote,
                                      :attribution, :call_to_action,
-                                     :audio_url, :youtube_slug, :statistics,
+                                     :audio, :youtube_slug, :statistics,
                                      :alt_text)
   end
 

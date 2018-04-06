@@ -282,7 +282,7 @@ declare module '@blueprintjs/core' {
 
   declare export type Toast = {
     action?: IActionProps & ILinkProps,
-    message: string,
+    message: React.Node,
     onDismiss?: (didTimoutExpire: boolean) => any,
     iconName?: string,
     timeout?: number,
