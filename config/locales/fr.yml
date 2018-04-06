@@ -18,6 +18,13 @@ fr:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
           one: Traducteur(-rice)
           other: Traducteurs(-rices)
+      edgenote:
+        alt_text: Image description for accessibility
+        attribution: Attribution
+        call_to_action: Call to action
+        caption: Caption
+        photo_credit: Photo credit
+        pull_quote: Pull quote
       question:
         content: Contenu
         correct_answer: Bonne réponse
@@ -305,8 +312,28 @@ fr:
     edgenote:
       caption: "Légende : "
       has_audio: Cette Edgenote a un clip audio.
+      jump_to_edgenote: Jump to Edgenote
       pull_quote: "Citation : "
+      return_to_narrative: Return to narrative
       video_slug: "YouTube video slug: "
+    edit:
+      alt_text_guidelines: >
+        Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
+      attach_an_image: Attach an image
+      choose_audio_file: Choose audio file...
+      choose_image: Choose image...
+      edit_edgenote: Edit Edgenote
+      embed_or_external_link: >
+        You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      paste_a_link: Paste a link
+      preview: Edgenote preview
+      pull_a_quote: Pull a quote
+      remove: Remove
+      use_embed: Embed a widget from this website
+      use_preview_description: Include a description in the link preview
+      use_preview_image: Include an image in the the link preview
+      upload_an_audio_file: Upload an audio file
+      write_a_caption: Write a caption
     index:
       attach: Attach this Edgenote.
       reattach_instructions: >
@@ -389,6 +416,7 @@ fr:
   helpers:
     cancel: Annuler
     close: Fermer
+    edit: Edit
     formatting:
       add_citation_entity: "Ajoutez une référence ici."
       add_edgenote_entity: "Ajouter une Edgenote à la sélection."
@@ -410,6 +438,7 @@ fr:
       more_pages:
         display_entries: >
           Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total
+    save: Enregistrer
     select:
       prompt: Veuillez sélectionner
     submit:
@@ -542,6 +571,10 @@ fr:
       last_word_connector: " et "
       two_words_connector: " et "
       words_connector: ", "
+    quote:
+      begin: '“'
+      end: '”'
+      attribution_prefix: "— "
     languages:
       am: Amharique
       en: Anglais
