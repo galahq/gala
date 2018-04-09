@@ -48,15 +48,6 @@ GIT
       sqlite3
 
 GIT
-  remote: https://github.com/rails/webpacker
-  revision: c76a64dfd43c558ee542e63dbdac2faa7fd25825
-  specs:
-    webpacker (3.0.1)
-      activesupport (>= 4.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 4.2)
-
-GIT
   remote: https://github.com/swanandp/acts_as_list.git
   revision: 28118105775acd3a967358a2c5f576a607165ab6
   ref: 2811810
@@ -344,7 +335,7 @@ GEM
     rack-canonical-host (0.2.3)
       addressable (> 0, < 3)
       rack (>= 1.0.0, < 3)
-    rack-proxy (0.6.2)
+    rack-proxy (0.6.4)
       rack
     rack-test (0.8.2)
       rack (>= 1.0, < 3)
@@ -469,6 +460,10 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
+    webpacker (3.4.3)
+      activesupport (>= 4.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 4.2)
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
@@ -556,7 +551,7 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   virtus
   web-console
-  webpacker!
+  webpacker
   yard
   yard-activerecord
   yard-activesupport-concern
