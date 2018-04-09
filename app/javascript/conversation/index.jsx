@@ -15,9 +15,9 @@ import RecentCommentThreads from 'conversation/RecentCommentThreads'
 import SelectedCommentThread from 'conversation/SelectedCommentThread'
 import NoSelectedCommentThread from 'conversation/NoSelectedCommentThread'
 
-import type { State, Reader } from 'redux/state'
+import type { State, ReaderState } from 'redux/state'
 
-type StateProps = { commentable: boolean, kicker: string, reader: ?Reader }
+type StateProps = { commentable: boolean, kicker: string, reader: ?ReaderState }
 function mapStateToProps ({ caseData }: State): StateProps {
   const { commentable, kicker, reader } = caseData
   return { commentable, kicker, reader }
