@@ -6672,12 +6672,9 @@ react-deep-force-update@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-2.1.1.tgz#8ea4263cd6455a050b37445b3f08fd839d86e909"
 
-react-device-detect@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-device-detect/-/react-device-detect-0.1.0.tgz#91f249fb1034a3fdab86666f3babc73f8288c438"
-  dependencies:
-    react "^16.0.0"
-    react-dom "^16.0.0"
+react-device-detect@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-device-detect/-/react-device-detect-1.0.1.tgz#3a79474729e472cf8e63d104b4c74866f565bdc2"
 
 react-dimensions@^1.3.0:
   version "1.3.0"
