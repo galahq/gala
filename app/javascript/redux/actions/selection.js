@@ -18,7 +18,7 @@ export function acceptSelection (
 
 type OldDocument = { selection: { empty: () => void } }
 function clearSelection (): void {
-  if (document.selection) {
+  if ((document: any).selection) {
     ;((document: any): OldDocument).selection.empty()
   } else if (window.getSelection) {
     window.getSelection().removeAllRanges()
