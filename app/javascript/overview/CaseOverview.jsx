@@ -12,9 +12,13 @@ import EnrollForm from './EnrollForm'
 import Tracker from 'utility/Tracker'
 
 import type { ContextRouter } from 'react-router-dom'
-import type { State, Reader } from 'redux/state'
+import type { State, ReaderState } from 'redux/state'
 
-type StateProps = { editing: boolean, reader: ?Reader, signInForm: ?string }
+type StateProps = {
+  editing: boolean,
+  reader: ?ReaderState,
+  signInForm: ?string,
+}
 function mapStateToProps ({ caseData, edit }: State): StateProps {
   return {
     editing: edit.inProgress,

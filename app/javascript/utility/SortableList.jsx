@@ -43,6 +43,9 @@ type Props<Item> = {
   // Your chance to handle any change to the list. You will be called with a
   // changed copy of items.
   onChange: (Item[]) => void,
+
+  // So the elements don’t change theme while being dragged
+  dark?: boolean,
 }
 
 // The props with which the `render` props of SortableList will be called
@@ -111,7 +114,8 @@ const SortableList = (props: Props<*>) => (
     transitionDuration={100}
     helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
     onSortEnd={({ oldIndex, newIndex }) =>
-      props.onChange(arrayMove(props.items, oldIndex, newIndex))}
+      props.onChange(arrayMove(props.items, oldIndex, newIndex))
+    }
   />
 )
 
