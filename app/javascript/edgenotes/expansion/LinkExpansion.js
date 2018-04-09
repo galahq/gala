@@ -95,7 +95,7 @@ export class NullLinkExpansion implements ILinkExpansion {
     return domain(this.url)
   }
 
-  previewVisibility (_) {
+  previewVisibility (_: mixed) {
     return this
   }
 }
