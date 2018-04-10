@@ -191,6 +191,12 @@ activestorage@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-0.1.1.tgz#a5db701467e80e6a139fb1a8e77977829115f131"
 
+activestorage@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-5.2.0.tgz#91e526ea56db7157d7a9ee69f1e26b53327d6a6d"
+  dependencies:
+    spark-md5 "^3.0.0"
+
 ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
@@ -7740,6 +7746,10 @@ sourcemapped-stacktrace@^1.1.6:
   resolved "https://registry.yarnpkg.com/sourcemapped-stacktrace/-/sourcemapped-stacktrace-1.1.7.tgz#17e05374ff78b71a9d89ad3975a49f22725ba935"
   dependencies:
     source-map "0.5.6"
+
+spark-md5@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/spark-md5/-/spark-md5-3.0.0.tgz#3722227c54e2faf24b1dc6d933cc144e6f71bfef"
 
 spdx-correct@~1.0.0:
   version "1.0.2"
