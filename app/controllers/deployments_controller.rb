@@ -7,7 +7,6 @@ class DeploymentsController < ApplicationController
   before_action :set_deployment, only: %i[edit update]
   after_action :clear_content_item_selection_params, only: [:update]
 
-
   # @route [GET] `/deployments/1/edit`
   def edit
     authorize @deployment
@@ -19,11 +18,7 @@ class DeploymentsController < ApplicationController
   def update
     authorize @deployment
 
-    author_id = current_reader.try :id
-    customizer = CustomizeDeploymentService.new @deployment, author_id, lti_uid
-
-    result = customizer.customize(**deployment_params)
-
+    result = customizer.customize(**customized_deployment_params)
     if result.errors.empty?
       render
     else
@@ -46,7 +41,12 @@ class DeploymentsController < ApplicationController
     @recommended_quizzes = [] + recommended_quizzes + custom_quizzes
   end
 
-  def deployment_params
+  def customizer
+    author_id = current_reader.try :id
+    CustomizeDeploymentService.new @deployment, author_id, lti_uid
+  end
+
+  def customized_deployment_params
     params.require(:deployment).permit(
       :answers_needed, :quiz_id,
       custom_questions: [:id, :content, :correct_answer, options: []]
