@@ -80,7 +80,7 @@ Rails.application.routes.draw do
     resources :enrollments, only: %i[index]
 
     resources :groups, only: [] do
-      resources :deployments, only: %i[create]
+      resources :canvas_deployments, only: %i[create]
     end
 
     resources :libraries, param: :slug, only: %i[show]

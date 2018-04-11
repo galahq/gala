@@ -2,25 +2,11 @@
 
 # @see Deployment
 class DeploymentsController < ApplicationController
+  include SelectionParams
+
   before_action :set_deployment, only: %i[edit update]
-  before_action :ensure_content_item_selection_params_set!, only: [:create]
   after_action :clear_content_item_selection_params, only: [:update]
 
-  layout 'embed'
-
-  # @route [POST] `/groups/1/deployments`
-  def create
-    the_group = Group.find params[:group_id]
-    the_case = Case.friendly.find params[:case_slug]
-
-    @deployment = Deployment.find_or_initialize_by(
-      group: the_group, case: the_case
-    ) do |d|
-      d.answers_needed = 0
-    end
-
-    redirect_to edit_deployment_path @deployment if @deployment.save
-  end
 
   # @route [GET] `/deployments/1/edit`
   def edit
@@ -47,17 +33,8 @@ class DeploymentsController < ApplicationController
 
   private
 
-  def pundit_user
-    DeploymentPolicy::UserContext.new current_user,
-                                      session[:content_item_selection_params]
-  end
-
   def set_deployment
     @deployment = Deployment.find params[:id]
-  end
-
-  def lti_uid
-    session[:content_item_selection_params].try :[], 'lti_uid'
   end
 
   def set_recommended_quizzes
@@ -67,19 +44,6 @@ class DeploymentsController < ApplicationController
                                 .authored_by reader: reader, lti_uid: lti_uid
 
     @recommended_quizzes = [] + recommended_quizzes + custom_quizzes
-  end
-
-  def set_selection_params
-    @selection_params = session[:content_item_selection_params]
-  end
-
-  def ensure_content_item_selection_params_set!
-    redirect_to root_url unless session[:content_item_selection_params]
-    set_selection_params
-  end
-
-  def clear_content_item_selection_params
-    session[:content_item_selection_params] = nil
   end
 
   def deployment_params
