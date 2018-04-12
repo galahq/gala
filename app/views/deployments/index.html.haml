@@ -1,0 +1,19 @@
+.admin.md-container
+  %header.md-header.pt-dark
+    %h1.admin__title= t '.teach_with_a_case'
+
+  %aside.md-master.spaced
+    .pt-card.pt-elevation-2
+      %h2.admin__title= t '.new_deployment'
+      = render 'form'
+
+  %main.md-detail.pt-dark
+    .pt-non-ideal-state
+      .pt-non-ideal-state-visual.pt-non-ideal-state-icon
+        %span.pt-icon.pt-icon-folder-open
+      %h3.pt-non-ideal-state-title= t '.deploy_a_case'
+      .pt-non-ideal-state-description
+        Instructions la la la. Make a study group, which could be a classroom,
+        a workshop, a city, or just you and your friends. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation and
+        discussion and the option to configure a pre-/post-quiz.

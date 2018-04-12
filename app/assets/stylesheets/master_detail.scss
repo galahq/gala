@@ -1,0 +1,17 @@
+.md-container {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template: 'md-header md-header' 'md-master md-detail' auto / 20rem auto;
+}
+
+.md-header {
+  grid-area: md-header;
+}
+
+.md-master {
+  grid-area: md-master;
+}
+
+.md-detail {
+  grid-area: md-detail;
+}

@@ -1,0 +1,23 @@
+= form_for @deployment, builder: BlueprintFormBuilder,
+                        data: { controller: 'select-new'} do |f|
+  = f.errors
+
+  = f.form_group :case_id do |f|
+    .pt-select.pt-fill
+      = f.select :case_id, options_for_case_select,
+                 include_blank: t('.select_a_case')
+
+  = f.form_group :group_id do |f|
+    .pt-select.pt-fill
+      = f.select :group_id, options_for_group_select,
+                 {include_blank: t('.select_a_group'), disabled: ['2']},
+                 data: { action: 'select-new#toggleFormVisibility' }
+
+  .new-group{ data: { target: 'select-new.form' } }
+    = f.fields_for :group do |f|
+      = f.form_group :name do |f, err|
+        = f.text_field :name, disabled: true,
+                              data: { target: 'select-new.input' },
+                              class: %w[pt-input pt-fill] + err
+
+  = f.submit class: %w[pt-button pt-intent-primary]

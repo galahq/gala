@@ -18,6 +18,11 @@ en:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
           one: Translator
+      deployment:
+        case_id: Case
+        group_id: Study Group
+        group_attributes:
+          name: Group Name
       edgenote:
         alt_text: Image description for accessibility
         attribution: Attribution
@@ -310,6 +315,16 @@ en:
       month: Month
       second: Seconds
       year: Year
+  deployments:
+    helpers:
+      all_study_groups: All Study Groups
+      create_a_new_study_group: Create a New Study Group
+    index:
+      case_deployments: Case Deployments
+      deploy_a_case: Deploy a Case
+      teach_with_a_case: Teach with a Case
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
   devise:
     sessions:
       destroy:

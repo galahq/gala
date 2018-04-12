@@ -7,11 +7,19 @@ class DeploymentsController < ApplicationController
   before_action :set_deployment, only: %i[edit update]
   after_action :clear_content_item_selection_params, only: [:update]
 
+  layout 'admin'
+
+  def index
+    @deployment ||= Deployment.new
+    build_group
+  end
+
   # @route [GET] `/deployments/1/edit`
   def edit
     authorize @deployment
     set_selection_params
     set_recommended_quizzes
+    render layout: 'embed' if selection_params.present?
   end
 
   # @route [PATCH/PUT] `/deployments/1`
@@ -30,6 +38,10 @@ class DeploymentsController < ApplicationController
 
   def set_deployment
     @deployment = Deployment.find params[:id]
+  end
+
+  def build_group
+    @deployment.build_group if @deployment.group.blank?
   end
 
   def set_recommended_quizzes
