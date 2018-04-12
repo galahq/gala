@@ -14,6 +14,17 @@ class DeploymentsController < ApplicationController
     build_group
   end
 
+  def create
+    @deployment = Deployment.new deployment_params
+    build_group
+
+    if @deployment.save
+      redirect_to deployments_path, notice: successfully_created
+    else
+      render :index
+    end
+  end
+
   # @route [GET] `/deployments/1/edit`
   def edit
     authorize @deployment
@@ -42,6 +53,10 @@ class DeploymentsController < ApplicationController
 
   def build_group
     @deployment.build_group if @deployment.group.blank?
+  end
+
+  def deployment_params
+    params.require(:deployment).permit(:case_id, :group_id, group_attributes: %i[name])
   end
 
   def set_recommended_quizzes

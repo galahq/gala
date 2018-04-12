@@ -19,6 +19,7 @@ class Group < ApplicationRecord
 
   has_one :community, dependent: :destroy
 
+  validates :name, presence: true
   validates :context_id, uniqueness: true, if: -> { context_id.present? }
 
   after_create :create_associated_community
