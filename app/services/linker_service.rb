@@ -56,7 +56,7 @@ class LinkerService
 
     def group
       @group ||= Group.upsert context_id: @launch_params[:context_id],
-                              name: @launch_params[:context_title]
+                              name: (@launch_params[:context_title] || '—')
     rescue ActiveRecord::RecordNotUnique
       # If two readers from the same class hit the launch url at the same time
       # it will violate a uniqueness constraint, but retrying the second will
