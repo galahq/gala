@@ -4,10 +4,13 @@
 class DeploymentsController < ApplicationController
   include SelectionParams
 
+  before_action :set_deployments, only: %i[index create]
   before_action :set_deployment, only: %i[edit update]
   after_action :clear_content_item_selection_params, only: [:update]
 
   layout 'admin'
+
+  decorates_assigned :deployments, with: DeploymentsDecorator
 
   def index
     @deployment ||= Deployment.new
@@ -46,6 +49,10 @@ class DeploymentsController < ApplicationController
   end
 
   private
+
+  def set_deployments
+    @deployments = Deployment.all
+  end
 
   def set_deployment
     @deployment = Deployment.find params[:id]

@@ -316,6 +316,16 @@ en:
       second: Seconds
       year: Year
   deployments:
+    deployment:
+      n_enrolled: "%{count} enrolled"
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
+      invite_learners: Invite Learners
+    form:
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
     helpers:
       all_study_groups: All Study Groups
       create_a_new_study_group: Create a New Study Group
@@ -323,8 +333,6 @@ en:
       case_deployments: Case Deployments
       deploy_a_case: Deploy a Case
       teach_with_a_case: Teach with a Case
-      select_a_case: Select a Case...
-      select_a_group: Select a Group...
   devise:
     sessions:
       destroy:
@@ -459,6 +467,7 @@ en:
     required: required
   helpers:
     cancel: Cancel
+    copy: Copy
     close: Close
     edit: Edit
     formatting:
