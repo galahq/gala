@@ -1,7 +1,11 @@
 .md-container {
   display: grid;
-  grid-gap: 1rem;
+  grid-gap: 2rem;
   grid-template: 'md-header md-header' 'md-master md-detail' auto / 20rem auto;
+
+  @media (max-width: 900px) {
+    grid-template: 'md-header' 'md-master' 'md-detail';
+  }
 }
 
 .md-header {
