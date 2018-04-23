@@ -17,7 +17,7 @@ module DeploymentsHelper
       Case.published,
       :id,
       :kicker,
-      @deployment.case
+      @deployment.case_id
     )
   end
 
