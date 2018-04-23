@@ -20,6 +20,6 @@ class DeploymentDecorator < ApplicationDecorator
   end
 
   def quiz_link_icon
-    posttest_assigned? ? 'pt-icon-add' : 'pt-icon-edit'
+    posttest_assigned? ? 'pt-icon-edit' : 'pt-icon-add' 
   end
 end
