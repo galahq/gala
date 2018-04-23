@@ -13,7 +13,7 @@ class DeploymentsController < ApplicationController
   decorates_assigned :deployments, with: DeploymentsDecorator
 
   def index
-    @deployment ||= Deployment.new
+    @deployment ||= Deployment.new case: Case.friendly.find(params[:case_slug])
     build_group
   end
 
