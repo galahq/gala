@@ -22,6 +22,7 @@ class DeploymentsController < ApplicationController
     build_group
 
     if @deployment.save
+      @deployment.group.add_administrator current_reader
       redirect_to deployments_path, notice: successfully_created
     else
       render :index
@@ -63,7 +64,8 @@ class DeploymentsController < ApplicationController
   end
 
   def deployment_params
-    params.require(:deployment).permit(:case_id, :group_id, group_attributes: %i[name])
+    params.require(:deployment)
+          .permit(:case_id, :group_id, group_attributes: %i[name])
   end
 
   def set_recommended_quizzes

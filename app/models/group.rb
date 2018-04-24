@@ -34,6 +34,17 @@ class Group < ApplicationRecord
     group
   end
 
+  # Ensure the passed reader is an administrator of the group. This method is
+  # idempotent.
+  def add_administrator(reader)
+    GroupMembership
+      .find_or_initialize_by(group: self, reader: reader)
+      .tap do |group_membership|
+      group_membership.status = :admin
+      group_membership.save! if group_membership.changed?
+    end
+  end
+
   # Every Group needs a Community. They are only different to allow Readers to
   # change part of the effect of being in a Group without being able to change
   # another.
