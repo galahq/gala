@@ -66,7 +66,7 @@ Rails.application.routes.draw do
 
     resources :comments, only: %i[update destroy]
 
-    resources :deployments, only: %i[index create edit update] do
+    resources :deployments, only: %i[index new create edit update] do
       resources :submissions, only: %i[index]
     end
 
