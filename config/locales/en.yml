@@ -331,9 +331,8 @@ en:
       all_study_groups: All Study Groups
       create_a_new_study_group: Create a New Study Group
     index:
-      case_deployments: Case Deployments
       deploy_a_case: Deploy a Case
-      teach_with_a_case: Teach with a Case
+      teach_with_cases: Teach with Cases
     new:
       teach_this_case: Teach this case
   devise:
