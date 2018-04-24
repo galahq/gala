@@ -40,6 +40,6 @@ module DeploymentsHelper
   end
 
   def groups
-    Group.administered_by(current_reader)
+    Group.administered_by(current_user)
   end
 end

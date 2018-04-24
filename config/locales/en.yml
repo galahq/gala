@@ -331,9 +331,20 @@ en:
       all_study_groups: All Study Groups
       create_a_new_study_group: Create a New Study Group
     index:
-      deploy_a_case: Deploy a Case
       teach_with_cases: Teach with Cases
+    instructions:
+      deploy_a_case: Deploy a Case
+      instructions: |
+        Gala makes it easy to teach a case in a group of any size: a classroom,
+        a workshop, a city, or just you and your friends. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
     new:
+      instructions: |
+        Deploy this case to a study group, which could be a classroom,
+        a workshop, a city, or just you and your friends. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
       teach_this_case: Teach this case
   devise:
     sessions:
