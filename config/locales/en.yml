@@ -86,6 +86,7 @@ en:
         feature: Featured status
       comment: Comment
       comment_thread: Comment thread
+      deployment: Deployment
       edgenote: Edgenote
       enrollment: Enrollment
       global_community: Global Community

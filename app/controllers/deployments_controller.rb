@@ -13,19 +13,24 @@ class DeploymentsController < ApplicationController
   decorates_assigned :deployments, with: DeploymentsDecorator
 
   def index
-    @deployment ||= Deployment.new case: Case.friendly.find(params[:case_slug])
-    build_group
+    @deployment ||= Deployment.new
+    prepare_for_form
+  end
+
+  def new
+    @deployment ||= Deployment.new autofill_params
+    prepare_for_form
   end
 
   def create
     @deployment = Deployment.new deployment_params
-    build_group
+    prepare_for_form
 
     if @deployment.save
       @deployment.group.add_administrator current_reader
       redirect_to deployments_path, notice: successfully_created
     else
-      render :index
+      render :new
     end
   end
 
@@ -60,8 +65,17 @@ class DeploymentsController < ApplicationController
     @deployment = Deployment.find params[:id]
   end
 
-  def build_group
+  def prepare_for_form
     @deployment.build_group if @deployment.group.blank?
+    @case = @deployment.case.decorate if @deployment.case.present?
+  end
+
+  def autofill_params
+    if params.key? :case_slug
+      { case: Case.friendly.find(params[:case_slug]) }
+    else
+      {}
+    end
   end
 
   def deployment_params
