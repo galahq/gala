@@ -4,6 +4,7 @@
 class DeploymentsController < ApplicationController
   include SelectionParams
 
+  before_action :authenticate_reader!, only: %i[new create]
   before_action :set_deployments, only: %i[index create]
   before_action :set_deployment, only: %i[edit update]
   after_action :clear_content_item_selection_params, only: [:update]
