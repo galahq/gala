@@ -24,6 +24,13 @@ class Group < ApplicationRecord
 
   after_create :create_associated_community
 
+  # Groups that the given user has admin privileges in
+  def self.administered_by(admin)
+    joins(:group_memberships)
+      .where(group_memberships: { reader_id: admin.id })
+      .merge(GroupMembership.admin)
+  end
+
   # Find or create a Group with a given context id (from LTI) and set or update
   # its name.
   # @return [Group]

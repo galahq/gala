@@ -26,8 +26,13 @@ module DeploymentsHelper
                          { data: { new: true } }]]) +
       grouped_options_for_select(
         [[I18n.t('deployments.helpers.all_study_groups'),
-          options_from_collection_for_select(Group.all, :id, :name,
-                                             @deployment.group_id)]]
+
+          options_from_collection_for_select(
+            Group.administered_by(current_reader),
+            :id,
+            :name,
+            @deployment.group_id
+          )]]
       )
   end
 end
