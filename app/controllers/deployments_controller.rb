@@ -52,7 +52,8 @@ class DeploymentsController < ApplicationController
   private
 
   def set_deployments
-    @deployments = Deployment.all
+    @deployments = DeploymentPolicy::AdminScope.new(current_user, Deployment)
+                                               .resolve
   end
 
   def set_deployment

@@ -2,6 +2,15 @@
 
 # @see Deployment
 class DeploymentPolicy < ApplicationPolicy
+  # What deployments can this user administrate?
+  class AdminScope < Scope
+    def resolve
+      scope.joins(group: [:group_memberships])
+           .where(group_memberships: { reader_id: user.id })
+           .merge(GroupMembership.admin)
+    end
+  end
+
   # Since an LTI ContentItemsSelection request creates a new deployment, even
   # a yet-unauthenticated reader from that source can edit that deployment. We
   # know if a user is in the LTI content items selection workflow by storing
