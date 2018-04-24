@@ -2,10 +2,16 @@
   %header.md-header.pt-dark
     %h1.admin__title= t '.teach_with_cases'
 
-  %aside.md-master.spaced
-    .pt-card.pt-elevation-2
-      %h2.admin__title= t '.new_deployment'
-      = render 'form'
+  %aside.md-master
+    - if reader_signed_in?
+      .pt-card.pt-elevation-2.spaced
+        %h2.admin__title= t '.new_deployment'
+        = render 'form'
+    - else
+      .dialog
+        %div
+          = render partial: 'devise/sessions/sign_in',
+                   locals: { resource: Reader.new }
 
   %main.md-detail.pt-dark
     - if deployments.empty?

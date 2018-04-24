@@ -5,10 +5,6 @@
         %span.admin__table__slug= @case.kicker
 
     %h1.admin__title= t '.teach_this_case'
-    %p
-      Deploy this case to a study group, which could be a classroom,
-      a workshop, a city, or just you and your friends. When you deploy a case
-      to a study group, you get a private forum for collaborative annotation
-      and the option to configure a pre-/post-quiz.
+    %p= t '.instructions'
 
     = render 'form'
