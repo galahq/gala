@@ -333,6 +333,8 @@ en:
       case_deployments: Case Deployments
       deploy_a_case: Deploy a Case
       teach_with_a_case: Teach with a Case
+    new:
+      teach_this_case: Teach this case
   devise:
     sessions:
       destroy:
