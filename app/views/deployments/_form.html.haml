@@ -10,7 +10,7 @@
   = f.form_group :group_id do |f|
     .pt-select.pt-fill
       = f.select :group_id, options_for_group_select,
-                 {include_blank: t('.select_a_group'), disabled: ['2']},
+                 {include_blank: t('.select_a_group')},
                  data: { action: 'select-new#toggleFormVisibility' }
 
   .new-group{ data: { target: 'select-new.form' } }

@@ -22,17 +22,24 @@ module DeploymentsHelper
   end
 
   def options_for_group_select
-    options_for_select([[t('deployments.helpers.create_a_new_study_group'), nil,
-                         { data: { new: true } }]]) +
-      grouped_options_for_select(
-        [[I18n.t('deployments.helpers.all_study_groups'),
+    options = options_for_select(
+      [[t('deployments.helpers.create_a_new_study_group'), nil,
+        { data: { new: true } }]]
+    )
 
+    unless groups.empty?
+      options += grouped_options_for_select(
+        [[I18n.t('deployments.helpers.all_study_groups'),
           options_from_collection_for_select(
-            Group.administered_by(current_reader),
-            :id,
-            :name,
-            @deployment.group_id
+            groups, :id, :name, @deployment.group_id
           )]]
       )
+    end
+
+    options
+  end
+
+  def groups
+    Group.administered_by(current_reader)
   end
 end
