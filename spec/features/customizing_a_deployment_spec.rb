@@ -26,9 +26,9 @@ feature 'Customizing a deployment' do
   end
 
   context 'as an instructor' do
-    let(:enrollment) { create :enrollment, status: :instructor }
-    let(:deployment) { create :deployment, case: enrollment.case }
-    before { login_as enrollment.reader }
+    let(:group_membership) { create :group_membership, status: :admin }
+    let(:deployment) { create :deployment, group: group_membership.group }
+    before { login_as group_membership.reader }
 
     scenario 'it is possible to create and edit a new quiz' do
       visit edit_deployment_path('en', deployment)
