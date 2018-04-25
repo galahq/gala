@@ -27,6 +27,6 @@ module SelectionParams
   end
 
   def clear_content_item_selection_params
-    selection_params = nil
+    session[:content_item_selection_params] = nil
   end
 end
