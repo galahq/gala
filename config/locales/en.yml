@@ -318,6 +318,8 @@ en:
       year: Year
   deployments:
     deployment:
+      add_quiz: Add Quiz
+      edit_quiz: Edit Quiz
       n_enrolled: "%{count} enrolled"
       invite_instructions_html: |
         <b>Invite Link:</b> Send someone this link to invite them to study this
@@ -331,6 +333,7 @@ en:
       all_study_groups: All Study Groups
       create_a_new_study_group: Create a New Study Group
     index:
+      new_deployment: New Deployment
       teach_with_cases: Teach with Cases
     instructions:
       deploy_a_case: Deploy a Case
