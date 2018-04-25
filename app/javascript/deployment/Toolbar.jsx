@@ -34,9 +34,7 @@ const Toolbar = ({
     <BottomFixedToolbar className="pt-navbar">
       <div className="pt-navbar-group pt-align-left">
         <CaseIcon src={coverUrl} />
-        <div className="pt-navbar-heading">
-          {kicker}
-        </div>
+        <div className="pt-navbar-heading">{kicker}</div>
       </div>
       <div className="pt-navbar-group pt-align-right">
         <Switch
@@ -80,7 +78,7 @@ const Switch = ({
   no,
   onClick,
   disabled = false,
-}: SwitchParams) =>
+}: SwitchParams) => (
   <Button
     className="pt-minimal"
     iconName={checked ? 'tick' : 'cross'}
@@ -89,6 +87,7 @@ const Switch = ({
   >
     {checked ? yes : no}
   </Button>
+)
 
 const BottomFixedToolbar = styled.nav`
   position: fixed;
@@ -96,6 +95,12 @@ const BottomFixedToolbar = styled.nav`
   width: calc(100% - 24px);
   left: 12px;
   z-index: 20;
+
+  .window-admin & {
+    bottom: 2rem;
+    left: 2rem;
+    width: calc(100% - 4rem);
+  }
 `
 
 const CaseIcon = styled.img`
