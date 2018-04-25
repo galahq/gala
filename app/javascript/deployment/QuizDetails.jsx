@@ -24,9 +24,7 @@ const QuizDetails = ({
   onDeselect,
 }: Props) => (
   <DetailsCard className="pt-card">
-    <CloseLink onClick={onDeselect}>
-      <span className="pt-icon-standard pt-icon-cross" />
-    </CloseLink>
+    <CloseLink onClick={onDeselect} />
     <CardTitle>Quiz details</CardTitle>
     <QuestionsList>
       {quiz.questions.length > 0 && <SectionTitle>Base questions</SectionTitle>}
@@ -117,7 +115,10 @@ const Option = styled.span.attrs({
   }
 `
 
-const CloseLink = styled.a`
+const CloseLink = styled.button.attrs({
+  className: 'pt-button pt-minimal pt-icon-cross',
+  'aria-label': 'Return to quiz selection.',
+})`
   position: absolute;
   top: 2px;
   right: 6px;
