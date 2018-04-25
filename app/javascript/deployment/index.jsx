@@ -118,15 +118,12 @@ class Deployment extends React.Component<Props, State> {
             selectedQuizId != null ? customQuestions[`${selectedQuizId}`] : [],
         },
       })
-        .then((data: Props) => {
+        .then(({ redirect }: { redirect: string }) => {
           const { returnUrl, returnData, caseData } = this.props
           if (returnUrl != null && returnData != null) {
             chooseContentItem(returnUrl, returnData, caseData.callbackUrl)
           } else {
-            this._displayToast(
-              'Deployment successfully updated; get the user off this page or refresh.',
-              Intent.SUCCESS
-            )
+            window.location = redirect
           }
         })
         .catch((e: Error) => this._displayToast(e.message))

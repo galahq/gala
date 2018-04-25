@@ -49,7 +49,7 @@ class DeploymentsController < ApplicationController
 
     result = customizer.customize(**customized_deployment_params)
     if result.errors.empty?
-      render
+      render json: { redirect: deployments_path }
     else
       render json: result.errors, status: :unprocessable_entity
     end
