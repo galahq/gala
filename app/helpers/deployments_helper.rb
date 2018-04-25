@@ -42,4 +42,8 @@ module DeploymentsHelper
   def groups
     Group.administered_by(current_user)
   end
+
+  def show_header?
+    controller.send(:selection_params).blank?
+  end
 end
