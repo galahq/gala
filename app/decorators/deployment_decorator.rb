@@ -8,7 +8,7 @@ class DeploymentDecorator < ApplicationDecorator
 
   def quiz_link
     h.link_to quiz_link_text, h.edit_deployment_path(object),
-              class: %w[pt-button pt-small pt-minimal] << quiz_link_icon
+              class: %w[pt-button pt-small pt-minimal] << variable_link_classes
   end
 
   private
@@ -19,7 +19,7 @@ class DeploymentDecorator < ApplicationDecorator
     )
   end
 
-  def quiz_link_icon
-    posttest_assigned? ? 'pt-icon-edit' : 'pt-icon-add' 
+  def variable_link_classes
+    posttest_assigned? ? 'pt-icon-edit' : 'pt-icon-plus'
   end
 end
