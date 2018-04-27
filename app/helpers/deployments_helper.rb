@@ -3,7 +3,7 @@
 # @see Deployment
 module DeploymentsHelper
   def reader_counts_by_deployment_id
-    @_reader_counts_by_deployment_id ||=
+    @reader_counts_by_deployment_id ||=
       Reader.unscoped
             .joins(groups: :deployments, enrollments: { case: :deployments })
             .group('deployments.id, deployments_cases.id')
@@ -26,16 +26,7 @@ module DeploymentsHelper
       [[t('deployments.helpers.create_a_new_study_group'), nil,
         { data: { new: true } }]]
     )
-
-    unless groups.empty?
-      options += grouped_options_for_select(
-        [[I18n.t('deployments.helpers.all_study_groups'),
-          options_from_collection_for_select(
-            groups, :id, :name, @deployment.group_id
-          )]]
-      )
-    end
-
+    options += all_group_options unless groups.empty?
     options
   end
 
@@ -45,5 +36,16 @@ module DeploymentsHelper
 
   def show_header?
     controller.send(:selection_params).blank?
+  end
+
+  private
+
+  def all_group_options
+    grouped_options_for_select(
+      [[I18n.t('deployments.helpers.all_study_groups'),
+        options_from_collection_for_select(
+          groups, :id, :name, @deployment.group_id
+        )]]
+    )
   end
 end
