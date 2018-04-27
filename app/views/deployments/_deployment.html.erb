@@ -16,7 +16,7 @@
 
     <div class="deployment__actions">
       <%= deployment.quiz_link %>
-      
+
       <button
         class="deployment__open-invite pt-button pt-small pt-minimal
                pt-icon-new-person"
@@ -44,6 +44,9 @@
       <div class="pt-input-group pt-fill">
         <span class="pt-icon pt-icon-new-person"></span>
         <input
+          aria-label="<%= I18n.t 'deployments.deployment.invite_link',
+                                 case_kicker: deployment.case.kicker,
+                                 group_name: deployment.group.name %>"
           class="pt-input"
           data-target="clipboard.source"
           value="<%= deployment.magic_link %>"
