@@ -326,6 +326,9 @@ en:
         case with you. They’ll see any quiz you’ve chosen and be able to
         participate in your private forum.
       invite_learners: Invite Learners
+      invite_link: |
+        Invite link for the deployment of the case “%{case_kicker}”
+        in the group “%{group_name}”
     form:
       select_a_case: Select a Case...
       select_a_group: Select a Group...
