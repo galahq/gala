@@ -23,7 +23,7 @@
     "camelize": "^1.0.0",
     "caniuse-lite": "^1.0.30000824",
     "change-case": "^3.0.1",
-    "coffeescript": "^1.12.5",
+    "coffeescript": "^2.3.0",
     "color-hash": "^1.0.3",
     "draft-js": "0.10.5",
     "draft-js-linkify-plugin": "^2.0.1",
