@@ -6,6 +6,10 @@ module DeploymentsHelper
     deployments_path anchor: "d#{deployment.id}"
   end
 
+  def focus_deployment_quiz_path(deployment)
+    deployments_path anchor: "d#{deployment.id}quiz"
+  end
+
   def reader_counts_by_deployment_id
     @reader_counts_by_deployment_id ||=
       Reader.unscoped

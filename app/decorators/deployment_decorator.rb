@@ -8,6 +8,7 @@ class DeploymentDecorator < ApplicationDecorator
 
   def quiz_link
     h.link_to quiz_link_text, h.edit_deployment_path(object),
+              data: { controller: 'anchor-focus' }, id: "d#{id}quiz",
               class: %w[pt-button pt-small pt-minimal] << variable_link_classes
   end
 
