@@ -47,7 +47,7 @@ class DeploymentsController < ApplicationController
 
     result = customizer.customize(**customized_deployment_params)
     if result.errors.empty?
-      render json: { redirect: deployments_path }
+      render json: { redirect: helpers.focus_deployment_quiz_path(@deployment) }
     else
       render json: result.errors, status: :unprocessable_entity
     end
