@@ -5,7 +5,7 @@ class DeploymentsController < ApplicationController
   include SelectionParams
 
   before_action :authenticate_reader!, only: %i[new create]
-  before_action :set_deployments, only: %i[index]
+  before_action :set_deployments, only: %i[index new create]
   before_action :set_deployment, only: %i[edit update]
   after_action :clear_content_item_selection_params, only: [:edit]
 
@@ -16,7 +16,7 @@ class DeploymentsController < ApplicationController
   def index; end
 
   def new
-    @deployment ||= Deployment.new case: Case.friendly.find(params[:case_slug])
+    @deployment ||= Deployment.new case: selected_case
     prepare_for_form
   end
 
@@ -55,8 +55,13 @@ class DeploymentsController < ApplicationController
   private
 
   def set_deployments
-    @deployments = DeploymentPolicy::AdminScope.new(current_user, Deployment)
-                                               .resolve
+    @deployments =
+      DeploymentPolicy::AdminScope
+      .new(current_user, Deployment)
+      .resolve
+      .yield_self do |scope|
+        selected_case ? scope.where(case: selected_case) : scope
+      end
   end
 
   def set_deployment
@@ -66,6 +71,12 @@ class DeploymentsController < ApplicationController
   def prepare_for_form
     @deployment.build_group if @deployment.group.blank?
     @case = @deployment.case.decorate
+  end
+
+  def selected_case
+    Case.friendly.find params[:case_slug]
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   def deployment_params
