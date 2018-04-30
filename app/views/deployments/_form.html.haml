@@ -2,10 +2,7 @@
                         data: { controller: 'select-new'} do |f|
   = f.errors
 
-  = f.form_group :case_id do |f|
-    .pt-select.pt-fill
-      = f.select :case_id, options_for_case_select,
-                 include_blank: t('.select_a_case')
+  = f.hidden_field :case_id
 
   = f.form_group :group_id do |f|
     .pt-select.pt-fill
