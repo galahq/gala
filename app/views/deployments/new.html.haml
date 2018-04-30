@@ -1,5 +1,5 @@
-.admin.admin--centered
-  .pt-card.pt-elevation-2
+.window.admin
+  .new-deployment.pt-card.pt-elevation-2
     - if @case
       .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
         %span.admin__table__slug= @case.kicker
@@ -8,3 +8,12 @@
     %p= t '.instructions'
 
     = render 'form'
+
+  - unless @deployments.empty?
+    .new-deployment__others.pt-dark.spaced--compact
+      %h2.deployments__group= t '.active_deployments'
+
+      - @deployments.sort_by{ |d| d.group.name }.each do |deployment|
+        .deployment
+          = link_to deployment.group.name, deployments_path,
+                    class: %w[pt-tag pt-minimal]
