@@ -15,5 +15,5 @@
 
       - @deployments.sort_by{ |d| d.group.name }.each do |deployment|
         .deployment
-          = link_to deployment.group.name, deployments_path,
+          = link_to deployment.group.name, focus_deployment_path(deployment),
                     class: %w[pt-tag pt-minimal]

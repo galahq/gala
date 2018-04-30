@@ -26,7 +26,8 @@ class DeploymentsController < ApplicationController
 
     if @deployment.save
       @deployment.group.add_administrator current_reader
-      redirect_to deployments_path, notice: successfully_created
+      redirect_to helpers.focus_deployment_path(@deployment),
+                  notice: successfully_created
     else
       render :new
     end
