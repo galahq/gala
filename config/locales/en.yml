@@ -336,15 +336,21 @@ en:
       all_study_groups: All Study Groups
       create_a_new_study_group: Create a New Study Group
     index:
-      new_deployment: New Deployment
-      teach_with_cases: Teach with Cases
-    instructions:
       deploy_a_case: Deploy a Case
+      find_a_case_then_click_teach_this_case: |
+        Once you’ve found a case that will suit your needs, click the “Teach
+        this Case” button in the top right of its Overview page.
       instructions: |
         Gala makes it easy to teach a case in a group of any size: a classroom,
         a workshop, a city, or just you and your friends. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      new_deployment: New Deployment
+      once_youve_deployed: |
+        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        learners from this page.
+      teach_with_cases: Teach with Cases
+      youre_not_teaching_any_cases: You’re not teaching any cases yet
     new:
       instructions: |
         Deploy this case to a study group, which could be a classroom,
