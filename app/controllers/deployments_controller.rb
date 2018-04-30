@@ -5,7 +5,7 @@ class DeploymentsController < ApplicationController
   include SelectionParams
 
   before_action :authenticate_reader!, only: %i[new create]
-  before_action :set_deployments, only: %i[index create]
+  before_action :set_deployments, only: %i[index]
   before_action :set_deployment, only: %i[edit update]
   after_action :clear_content_item_selection_params, only: [:edit]
 
@@ -13,13 +13,10 @@ class DeploymentsController < ApplicationController
 
   decorates_assigned :deployments, with: DeploymentsDecorator
 
-  def index
-    @deployment ||= Deployment.new
-    prepare_for_form
-  end
+  def index; end
 
   def new
-    @deployment ||= Deployment.new autofill_params
+    @deployment ||= Deployment.new case: Case.friendly.find(params[:case_slug])
     prepare_for_form
   end
 
@@ -68,15 +65,7 @@ class DeploymentsController < ApplicationController
 
   def prepare_for_form
     @deployment.build_group if @deployment.group.blank?
-    @case = @deployment.case.decorate if @deployment.case.present?
-  end
-
-  def autofill_params
-    if params.key? :case_slug
-      { case: Case.friendly.find(params[:case_slug]) }
-    else
-      {}
-    end
+    @case = @deployment.case.decorate
   end
 
   def deployment_params
