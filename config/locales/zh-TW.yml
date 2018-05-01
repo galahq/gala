@@ -4,16 +4,31 @@ zh-TW:
     attributes:
       case:
         acknowledgements: 致謝
+        case_title: Case title
         featured: 明星
+        featured_at: Featured at
         kicker: 短標題
         learning_objectives: 學習目標
         library: Library
         location: 案例發生地
+        published: Published
         slug: Case URL
         title: Question
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
+      deployment:
+        case_id: 案例
+        group_id: Study Group
+        group_attributes:
+          name: Group Name
+      edgenote:
+        alt_text: Image description for accessibility
+        attribution: Attribution
+        call_to_action: Call to action
+        caption: Caption
+        photo_credit: Photo credit
+        pull_quote: Pull quote
       question:
         content: Content
         correct_answer: Correct answer
@@ -29,9 +44,11 @@ zh-TW:
         email: 電子郵箱
         encrypted_password: 密碼被加密
         failed_attempts: 失敗嘗試
+        image: Image
         initials: Initials
         last_sign_in_at: 最后登錄於
         last_sign_in_ip: 最后登錄的 IP
+        locale: Locale
         locked_at: 鎖定於
         name: Full Name
         password: 密碼
@@ -64,8 +81,10 @@ zh-TW:
       case: 案例
       cases:
         setting: Case Settings
+        feature: Featured status
       comment: Comment
       comment_thread: Comment thread
+      deployment: Deployment
       edgenote: Edgenote
       enrollment: Enrollment
       global_community: Global Community
@@ -90,6 +109,11 @@ zh-TW:
       edit: 編輯該案例
       feature_case: 將此案例設置為明星案例
       just_change_the_text: 點擊案例，開始編輯。
+      map:
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
       options: 選項
       publish_case: 發表該案例
       save: 保存
@@ -101,16 +125,16 @@ zh-TW:
       locations: 案例地點
     settings:
       edit:
+        change_library: Change library
+        change_url: Change URL
+        edit_case_settings: Edit case settings
+      featured_form:
+        change_featured_time: Change time
+      slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
           If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
-        edit_case_settings: Edit Case Settings
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
-        map:
-          reset: Reset
-          set: Set
-          zoom_in: Zoom in
-          zoom_out: Zoom out
     show:
       back_to_overview: 返回案例主頁
       end: 終
@@ -124,12 +148,22 @@ zh-TW:
     choose_for_yourself: 我的學習我做主
     enrollments_instruction: >
       選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。
+    find_a_case: >
+      Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+    impactful_cases: Impactful Cases
+    improve_your_communication: >
+      Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
+    inclusive_community: Inclusive Community
+    innovative_teaching: Innovative Teaching
+    join_the_community: >
+      Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
       參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。
     learn_more: 了解更多
     meet_stakeholders: >
       在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。
-    propose_a_case: 案例征集
+    open_access_learning_tools: Open access learning tools for sustainability science
+    propose_a_case: Propose a Case
     shortcut_experience: 通過案例學習獲取將所學知識運用於實踐的捷徑。
   comment_threads:
     destroy:
@@ -253,6 +287,48 @@ zh-TW:
       month: 月
       second: 秒
       year: 年
+  deployments:
+    deployment:
+      add_quiz: Add Quiz
+      edit_quiz: Edit Quiz
+      n_enrolled: "%{count} enrolled"
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
+      invite_learners: Invite Learners
+      invite_link: |
+        Invite link for the deployment of the case “%{case_kicker}”
+        in the group “%{group_name}”
+    form:
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
+    helpers:
+      all_study_groups: All Study Groups
+      create_a_new_study_group: Create a New Study Group...
+    index:
+      deploy_a_case: Deploy a Case
+      find_a_case_then_click_teach_this_case: |
+        Once you’ve found a case that will suit your needs, click the “Deploy
+        this Case” button in the top right of its Overview page.
+      instructions: |
+        Gala makes it easy to teach a case in a group of any size: a classroom,
+        a workshop, a town, or a team. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      new_deployment: New Deployment
+      once_youve_deployed: |
+        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        learners from this page.
+      teach_with_cases: Teach with Cases
+      youre_not_teaching_any_cases: You’re not teaching any cases yet
+    new:
+      active_deployments: Active Deployments
+      instructions: |
+        Deploy this case in a group of any size: a classroom, a workshop, a
+        town, or a team. You’ll get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      teach_this_case: Deploy this Case
   devise:
     sessions:
       destroy:
@@ -270,8 +346,28 @@ zh-TW:
     edgenote:
       caption: "Caption: "
       has_audio: This edgenote has an audio clip.
+      jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
+      return_to_narrative: Return to narrative
       video_slug: "YouTube video slug: "
+    edit:
+      alt_text_guidelines: >
+        Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
+      attach_an_image: Attach an image
+      choose_audio_file: Choose audio file...
+      choose_image: Choose image...
+      edit_edgenote: Edit Edgenote
+      embed_or_external_link: >
+        You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      paste_a_link: Paste a link
+      preview: Edgenote preview
+      pull_a_quote: Pull a quote
+      remove: Remove
+      use_embed: Embed a widget from this website
+      use_preview_description: Include a description in the link preview
+      use_preview_image: Include an image in the the link preview
+      upload_an_audio_file: Upload an audio file
+      write_a_caption: Write a caption
     index:
       attach: Attach this Edgenote.
       reattach_instructions: >
@@ -336,11 +432,21 @@ zh-TW:
   features:
     index:
       featured_cases: 明星案例
+    create:
+      this_case_is_not_featured: >
+        This case is not featured. Feature it to have it displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      feature_case: 將此案例設置為明星案例
+    destroy:
+      this_case_was_featured_on: >
+        This case was featured on %{date}. It will be displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      unfeature_case: 取消設置此案例為明星案例
   forms:
     required: 必需
   helpers:
     cancel: 取消
+    copy: Copy
     close: 關閉
+    edit: Edit
     formatting:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
@@ -362,6 +468,7 @@ zh-TW:
       more_pages:
         display_entries: >
           顯示 %{entry_name} <b>%{first} - %{last}</b>　共<b>%{total}</b>
+    save: 保存
     select:
       prompt: 請選擇
     submit:
@@ -376,15 +483,20 @@ zh-TW:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  magic_link:
+    show:
+      lets_get_started: Let’s get started!
   my_cases:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
+      create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: 編輯該案例
       edit_case_settings: Edit case settings.
       featured: 明星
       my_cases: My Cases
+      new_case: New Case
       publish_a_case: Publish a Case
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
@@ -445,6 +557,10 @@ zh-TW:
         other: 主持人
   pundit:
     not_authorized: You are not authorized to perform this action.
+  quizzes:
+    show:
+      the_correct_answer_is: >
+        The correct answer to the question “{question}” is “{answer}”
   readers:
     form:
       account_options: 賬戶選項
@@ -464,13 +580,30 @@ zh-TW:
     refine: 細化搜索
     results: 搜索結果
     search: 搜索
-    search_cases: 案例搜索
+    search_cases: Search Cases...
     try_again: 請試試輸入其他關鍵詞。
+  submissions:
+    new:
+      before_you_get_started: Before you get started
+      check_your_understanding: Check your understanding
+      post_case_quiz: Post-case quiz
+      please_answer: >
+        Please answer the following questions to demonstrate your current level of knowledge.
+      please_take_this_after_engaging_with_all_elements: >
+        After you have engaged with all elements of the case, please take this post-test to check your understanding.
+    show:
+      correct_answers_are_below: >
+        The correct answers are shown below, highlighted green, so you may check your work.
+      thank_you: Thank you for your submission.
   support:
     array:
       last_word_connector: "和"
       two_words_connector: "和"
       words_connector: "、"
+    quote:
+      begin: '“'
+      end: '”'
+      attribution_prefix: "— "
     languages:
       am: 阿姆哈拉文
       en: 英文
