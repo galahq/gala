@@ -1,18 +1,9 @@
 /**
  * @providesModule locales
- * @flow
+ * @noflow
  */
 
-// $FlowFixMe
-import am from './am.yml' // $FlowFixMe
-import en from './en.yml' // $FlowFixMe
-import es from './es.yml' // $FlowFixMe
-import fr from './fr.yml' // $FlowFixMe
-import ja from './ja.yml' // $FlowFixMe
-import zhCN from './zh-CN.yml' // $FlowFixMe
-import zhTW from './zh-TW.yml' // $FlowFixMe
-
-import { chain, map, merge, toPairs, fromPairs } from 'ramda'
+import { chain, map, toPairs, fromPairs } from 'ramda'
 import camelize from 'camelize'
 
 // Convert from deeply nested locale object to a flat object with dot
@@ -30,14 +21,7 @@ const flattenObj = obj => {
   return fromPairs(go(camelize(obj)))
 }
 
-const withFallback = merge(flattenObj(en.en))
-
-export default {
-  am: withFallback(flattenObj(am.am)),
-  en: flattenObj(en.en),
-  es: withFallback(flattenObj(es.es)),
-  fr: withFallback(flattenObj(fr.fr)),
-  ja: withFallback(flattenObj(ja.ja)),
-  'zh-CN': withFallback(flattenObj(zhCN['zh-CN'])),
-  'zh-TW': withFallback(flattenObj(zhTW['zh-TW'])),
+export default async function (locale) {
+  const messages = await import(`./${locale}.yml`)
+  return flattenObj(messages[locale])
 }

@@ -18,29 +18,32 @@ import { FocusStyleManager } from '@blueprintjs/core'
 
 import Catalog from 'catalog'
 
-import messages from '../../../config/locales'
+import loadMessages from '../../../config/locales'
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
 const { locale } = (window.i18n: { locale: string })
 
 const render = (Component: React$Component) => {
-  ReactDOM.render(
-    <AppContainer>
-      <IntlProvider locale={locale} messages={messages[locale]}>
-        <ThemeProvider theme={theme}>
-          <Component />
-        </ThemeProvider>
-      </IntlProvider>
-    </AppContainer>,
-    document.getElementById('catalog-app')
-  )
+  Promise.all([
+    import(`react-intl/locale-data/${locale.substring(0, 2)}`),
+    loadMessages(locale),
+  ]).then(([localeData, messages]) => {
+    addLocaleData(localeData)
+    ReactDOM.render(
+      <AppContainer>
+        <IntlProvider locale={locale} messages={messages}>
+          <ThemeProvider theme={theme}>
+            <Component />
+          </ThemeProvider>
+        </IntlProvider>
+      </AppContainer>,
+      document.getElementById('catalog-app')
+    )
+  })
 }
 
-import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
-  addLocaleData(m)
-  render(Catalog)
-})
+render(Catalog)
 
 if (module.hot) {
   module.hot.accept('Catalog', () => {
