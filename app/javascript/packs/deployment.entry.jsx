@@ -19,29 +19,32 @@ import { FocusStyleManager } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
 const { locale } = (window.i18n: { locale: string })
-import messages from '../../../config/locales' // eslint-disable-line
+import loadMessages from '../../../config/locales' // eslint-disable-line
 
 const container = document.getElementById('deployment-app')
 
 delete AppContainer.prototype.unstable_handleError
 
 const render = Component => {
-  ReactDOM.render(
-    <AppContainer>
-      <IntlProvider locale={locale} messages={messages[locale]}>
-        <ThemeProvider theme={theme}>
-          <Component {...JSON.parse(container.getAttribute('data-params'))} />
-        </ThemeProvider>
-      </IntlProvider>
-    </AppContainer>,
-    container
-  )
+  Promise.all([
+    import(`react-intl/locale-data/${locale.substring(0, 2)}`),
+    loadMessages(locale),
+  ]).then(([localeData, messages]) => {
+    addLocaleData(localeData)
+    ReactDOM.render(
+      <AppContainer>
+        <IntlProvider locale={locale} messages={messages}>
+          <ThemeProvider theme={theme}>
+            <Component {...JSON.parse(container.getAttribute('data-params'))} />
+          </ThemeProvider>
+        </IntlProvider>
+      </AppContainer>,
+      container
+    )
+  })
 }
 
-import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
-  addLocaleData(m)
-  render(Deployment)
-})
+render(Deployment)
 
 if (module.hot) {
   module.hot.accept('Deployment', () => {
