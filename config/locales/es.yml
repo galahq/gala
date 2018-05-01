@@ -4,17 +4,32 @@ es:
     attributes:
       case:
         acknowledgements: Reconocimientos
+        case_title: Case title
         featured: Destacado
+        featured_at: Featured at
         kicker: Short title
         learning_objectives: Objetivos de aprendizaje
         library: Library
         location: Ubicación del caso
+        published: Published
         slug: Case URL
         title: Question
         translators:
           js: "{count, plural, one {Traductor(a)} other {Traductores} }: "
           one: Traductor(a)
           other: Traductores
+      deployment:
+        case_id: Case
+        group_id: Study Group
+        group_attributes:
+          name: Group Name
+      edgenote:
+        alt_text: Image description for accessibility
+        attribution: Attribution
+        call_to_action: Call to action
+        caption: Caption
+        photo_credit: Photo credit
+        pull_quote: Pull quote
       question:
         content: Content
         correct_answer: Correct answer
@@ -30,9 +45,11 @@ es:
         email: Email
         encrypted_password: Contraseña cifrada
         failed_attempts: Intentos fallidos
+        image: Imágen
         initials: Initials
         last_sign_in_at: Fecha del último ingreso
         last_sign_in_ip: IP del último ingreso
+        locale: Locale
         locked_at: Fecha de bloqueo
         name: Nombre
         password: Contraseña
@@ -65,8 +82,10 @@ es:
       case: Case
       cases:
         setting: Case Settings
+        feature: Featured status
       comment: Comment
       comment_thread: Comment thread
+      deployment: Deployment
       edgenote: Edgenote
       enrollment: Enrollment
       global_community: Comunidad global
@@ -91,6 +110,11 @@ es:
       edit: Editar este caso
       feature_case: Agregar caso destacado
       just_change_the_text: Para editar este caso, simplemente cambie el texto
+      map:
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
       options: Opciones
       publish_case: Publicar este caso
       save: Guardar
@@ -102,16 +126,16 @@ es:
       locations: Ubicaciones
     settings:
       edit:
+        change_library: Change library
+        change_url: Change URL
+        edit_case_settings: Edit case settings
+      featured_form:
+        change_featured_time: Change time
+      slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
           If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
-        edit_case_settings: Edit Case Settings
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
-        map:
-          reset: Reset
-          set: Set
-          zoom_in: Zoom in
-          zoom_out: Zoom out
     show:
       back_to_overview: Resumen
       end: Fin
@@ -125,12 +149,22 @@ es:
     choose_for_yourself: Tú vas a elegir
     enrollments_instruction: >
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
+    find_a_case: >
+      Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+    impactful_cases: Impactful Cases
+    improve_your_communication: >
+      Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
+    inclusive_community: Inclusive Community
+    innovative_teaching: Innovative Teaching
+    join_the_community: >
+      Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
       Súmete a la conversación, preguntá, y compartí tu conomiciento.
     learn_more: Más información
     meet_stakeholders: >
       Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
-    propose_a_case: Proponer un estudio de caso
+    open_access_learning_tools: Open access learning tools for sustainability science
+    propose_a_case: Propose a Case
     shortcut_experience: Aplicar principios para mejorar en la práctica.
   comment_threads:
     destroy:
@@ -266,6 +300,48 @@ es:
       month: Mes
       second: Segundos
       year: Año
+  deployments:
+    deployment:
+      add_quiz: Add Quiz
+      edit_quiz: Edit Quiz
+      n_enrolled: "%{count} enrolled"
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
+      invite_learners: Invite Learners
+      invite_link: |
+        Invite link for the deployment of the case “%{case_kicker}”
+        in the group “%{group_name}”
+    form:
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
+    helpers:
+      all_study_groups: All Study Groups
+      create_a_new_study_group: Create a New Study Group...
+    index:
+      deploy_a_case: Deploy a Case
+      find_a_case_then_click_teach_this_case: |
+        Once you’ve found a case that will suit your needs, click the “Deploy
+        this Case” button in the top right of its Overview page.
+      instructions: |
+        Gala makes it easy to teach a case in a group of any size: a classroom,
+        a workshop, a town, or a team. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      new_deployment: New Deployment
+      once_youve_deployed: |
+        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        learners from this page.
+      teach_with_cases: Teach with Cases
+      youre_not_teaching_any_cases: You’re not teaching any cases yet
+    new:
+      active_deployments: Active Deployments
+      instructions: |
+        Deploy this case in a group of any size: a classroom, a workshop, a
+        town, or a team. You’ll get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      teach_this_case: Deploy this Case
   devise:
     sessions:
       destroy:
@@ -284,8 +360,28 @@ es:
     edgenote:
       caption: "Caption: "
       has_audio: This edgenote has an audio clip.
+      jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
+      return_to_narrative: Return to narrative
       video_slug: "YouTube video slug: "
+    edit:
+      alt_text_guidelines: >
+        Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
+      attach_an_image: Attach an image
+      choose_audio_file: Choose audio file...
+      choose_image: Choose image...
+      edit_edgenote: Edit Edgenote
+      embed_or_external_link: >
+        You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      paste_a_link: Paste a link
+      preview: Edgenote preview
+      pull_a_quote: Pull a quote
+      remove: Remove
+      use_embed: Embed a widget from this website
+      use_preview_description: Include a description in the link preview
+      use_preview_image: Include an image in the the link preview
+      upload_an_audio_file: Upload an audio file
+      write_a_caption: Write a caption
     index:
       attach: Attach this Edgenote.
       reattach_instructions: >
@@ -355,11 +451,21 @@ es:
   features:
     index:
       featured_cases: Casos destacados
+    create:
+      this_case_is_not_featured: >
+        This case is not featured. Feature it to have it displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      feature_case: Agregar caso destacado
+    destroy:
+      this_case_was_featured_on: >
+        This case was featured on %{date}. It will be displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      unfeature_case: Quitar de casos destacados
   forms:
     required: required
   helpers:
     cancel: Anular
+    copy: Copy
     close: Cerrar
+    edit: Edit
     formatting:
       add_citation_entity: "Agregar cita aquí."
       add_edgenote_entity: "Agregar “Edgenote” a la selección."
@@ -381,6 +487,7 @@ es:
       more_pages:
         display_entries: >
           Mostrando <b>%{first}&nbsp;–&nbsp;%{last}</b> %{entry_name} de <b>%{total}</b> en total
+    save: Guardar
     select:
       prompt: Por favor seleccione
     submit:
@@ -395,15 +502,20 @@ es:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  magic_link:
+    show:
+      lets_get_started: Let’s get started!
   my_cases:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
+      create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
       featured: Destacado
       my_cases: My Cases
+      new_case: New Case
       publish_a_case: Publicar este caso
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
@@ -466,6 +578,10 @@ es:
         other: con los/las anfitriones(as)
   pundit:
     not_authorized: You are not authorized to perform this action.
+  quizzes:
+    show:
+      the_correct_answer_is: >
+        The correct answer to the question “{question}” is “{answer}”
   readers:
     form:
       account_options: Opciones de cuenta
@@ -485,13 +601,30 @@ es:
     refine: Limitar busqueda
     results: Resultados de busqueda
     search: Buscar
-    search_cases: Buscar casos
+    search_cases: Search Cases...
     try_again: Intente cambiar tu búsqueda.
+  submissions:
+    new:
+      before_you_get_started: Before you get started
+      check_your_understanding: Check your understanding
+      post_case_quiz: Post-case quiz
+      please_answer: >
+        Please answer the following questions to demonstrate your current level of knowledge.
+      please_take_this_after_engaging_with_all_elements: >
+        After you have engaged with all elements of the case, please take this post-test to check your understanding.
+    show:
+      correct_answers_are_below: >
+        The correct answers are shown below, highlighted green, so you may check your work.
+      thank_you: Thank you for your submission.
   support:
     array:
       last_word_connector: " y "
       two_words_connector: " y "
       words_connector: ", "
+    quote:
+      begin: '“'
+      end: '”'
+      attribution_prefix: "— "
     languages:
       am: Amhárico
       en: Inglés

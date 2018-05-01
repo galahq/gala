@@ -4,16 +4,31 @@ ja:
     attributes:
       case:
         acknowledgements: 謝辞
+        case_title: Case title
         featured: 注目
+        featured_at: 注目の事例研究に追加した時
         kicker: 短いタイトル
         learning_objectives: 学習目標
         library: ライブラリ
         location: 場所
+        published: Published
         slug: 事例研究のURL
         title: 質問
         translators:
           js: "翻訳者："
           other: 翻訳者
+      deployment:
+        case_id: 場合
+        group_id: Study Group
+        group_attributes:
+          name: Group Name
+      edgenote:
+        alt_text: Image description for accessibility
+        attribution: Attribution
+        call_to_action: Call to action
+        caption: Caption
+        photo_credit: Photo credit
+        pull_quote: Pull quote
       question:
         content: 内容
         correct_answer: 正解
@@ -29,9 +44,11 @@ ja:
         email: メールアドレス
         encrypted_password: 暗号化パスワード
         failed_attempts: 失敗したログイン試行回数
+        image: Image
         initials: Initials
         last_sign_in_at: 最終ログイン時刻
         last_sign_in_ip: 最終ログインIPアドレス
+        locale: Locale
         locked_at: ロック時刻
         name: 姓名
         password: パスワード
@@ -64,8 +81,10 @@ ja:
       case: 場合
       cases:
         setting: 事例研究の設定
+        feature: 注目の状態
       comment: コメント
       comment_thread: コメントスレッド
+      deployment: Deployment
       edgenote: Edgenote
       enrollment: 登録
       global_community: グローバルコミュニティ
@@ -90,6 +109,11 @@ ja:
       edit: 編集
       feature_case: 注目の事例研究に追加する
       just_change_the_text: テキストを変化するのができる
+      map:
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
       options: 選択肢
       publish_case: 発刊する
       save: 保存
@@ -101,16 +125,16 @@ ja:
       locations: 場所
     settings:
       edit:
+        change_library: Change library
+        change_url: Change URL
+        edit_case_settings: 事例研究の設定を編集
+      featured_form:
+        change_featured_time: 時間の変更
+      slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
           事例研究のURLを変化すれば、先のURLは新しいのにリダイレクトします。しかし、他人はそのURLを選択したとたんに、リダイレクトが無効にされます。
-        edit_case_settings: 事例研究の設定を編集
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
-        map:
-          reset: Reset
-          set: Set
-          zoom_in: Zoom in
-          zoom_out: Zoom out
     show:
       back_to_overview: 概要に戻る
       end: 終わり
@@ -124,12 +148,22 @@ ja:
     choose_for_yourself: 自分で選択する
     enrollments_instruction: >
       登録する事例研究は、簡単に見つけられるようにここに表示されます。
+    find_a_case: >
+      Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+    impactful_cases: Impactful Cases
+    improve_your_communication: >
+      Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
+    inclusive_community: Inclusive Community
+    innovative_teaching: Innovative Teaching
+    join_the_community: >
+      Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
       質問をしたり、他の学習者を助けたりして、会話に参加できます。
     learn_more: もっと詳しく知る
     meet_stakeholders: >
       さまざまなステークホルダーに会い、マルチモーダルな物語で深く理解できます。
-    propose_a_case: 事例を提案
+    open_access_learning_tools: Open access learning tools for sustainability science
+    propose_a_case: Propose a Case
     shortcut_experience: 原則を実践することで経験を得ることができます。
   comment_threads:
     destroy:
@@ -253,6 +287,48 @@ ja:
       month: 月
       second: 秒
       year: 年
+  deployments:
+    deployment:
+      add_quiz: Add Quiz
+      edit_quiz: Edit Quiz
+      n_enrolled: "%{count} enrolled"
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
+      invite_learners: Invite Learners
+      invite_link: |
+        Invite link for the deployment of the case “%{case_kicker}”
+        in the group “%{group_name}”
+    form:
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
+    helpers:
+      all_study_groups: All Study Groups
+      create_a_new_study_group: Create a New Study Group...
+    index:
+      deploy_a_case: Deploy a Case
+      find_a_case_then_click_teach_this_case: |
+        Once you’ve found a case that will suit your needs, click the “Deploy
+        this Case” button in the top right of its Overview page.
+      instructions: |
+        Gala makes it easy to teach a case in a group of any size: a classroom,
+        a workshop, a town, or a team. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      new_deployment: New Deployment
+      once_youve_deployed: |
+        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        learners from this page.
+      teach_with_cases: Teach with Cases
+      youre_not_teaching_any_cases: You’re not teaching any cases yet
+    new:
+      active_deployments: Active Deployments
+      instructions: |
+        Deploy this case in a group of any size: a classroom, a workshop, a
+        town, or a team. You’ll get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      teach_this_case: Deploy this Case
   devise:
     sessions:
       destroy:
@@ -270,8 +346,28 @@ ja:
     edgenote:
       caption: "キャプション："
       has_audio: このエッジノートはオーディオが添付しています。
+      jump_to_edgenote: Jump to Edgenote
       pull_quote: "引用："
+      return_to_narrative: Return to narrative
       video_slug: "YouTube video slug: "
+    edit:
+      alt_text_guidelines: >
+        Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
+      attach_an_image: Attach an image
+      choose_audio_file: Choose audio file...
+      choose_image: Choose image...
+      edit_edgenote: Edit Edgenote
+      embed_or_external_link: >
+        You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      paste_a_link: Paste a link
+      preview: Edgenote preview
+      pull_a_quote: Pull a quote
+      remove: Remove
+      use_embed: Embed a widget from this website
+      use_preview_description: Include a description in the link preview
+      use_preview_image: Include an image in the the link preview
+      upload_an_audio_file: Upload an audio file
+      write_a_caption: Write a caption
     index:
       attach: この Edgenote を添付します。
       reattach_instructions: >
@@ -336,11 +432,21 @@ ja:
   features:
     index:
       featured_cases: 注目の事例研究
+    create:
+      this_case_is_not_featured: >
+        This case is not featured. Feature it to have it displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      feature_case: 注目の事例研究に追加する
+    destroy:
+      this_case_was_featured_on: >
+        This case was featured on %{date}. It will be displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      unfeature_case: 注目の事例研究から除去する
   forms:
     required: 必須
   helpers:
     cancel: キャンセル
+    copy: Copy
     close: 閉じる
+    edit: Edit
     formatting:
       add_citation_entity: "ここで引用を追加します。"
       add_edgenote_entity: "Edgenote を選択に添付します。"
@@ -362,6 +468,7 @@ ja:
       more_pages:
         display_entries: >
           <b>%{total}</b>中の%{entry_name}を表示しています <b>%{first}〜%{last}</b>
+    save: 保存
     select:
       prompt: 選択してください
     submit:
@@ -376,15 +483,20 @@ ja:
           このメールを受け取る理由は<a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>のユーザーです。
         text: >
           このメールを受け取る理由はGala（https://www.learngala.com）のユーザーです。
+  magic_link:
+    show:
+      lets_get_started: 始めましょう!
   my_cases:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
+      create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
       featured: 注目
       my_cases: マイケース
+      new_case: New Case
       publish_a_case: 事例研究を発刊しましょう
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
@@ -445,6 +557,10 @@ ja:
         other: 共に司会者
   pundit:
     not_authorized: You are not authorized to perform this action.
+  quizzes:
+    show:
+      the_correct_answer_is: >
+        The correct answer to the question “{question}” is “{answer}”
   readers:
     form:
       account_options: アカウントのオプション
@@ -464,13 +580,30 @@ ja:
     refine: 詳細検索
     results: 検索結果
     search: 検索
-    search_cases: 事例の検索
+    search_cases: Search Cases...
     try_again: 他のキーワードを検索してみてください。
+  submissions:
+    new:
+      before_you_get_started: Before you get started
+      check_your_understanding: Check your understanding
+      post_case_quiz: Post-case quiz
+      please_answer: >
+        Please answer the following questions to demonstrate your current level of knowledge.
+      please_take_this_after_engaging_with_all_elements: >
+        After you have engaged with all elements of the case, please take this post-test to check your understanding.
+    show:
+      correct_answers_are_below: >
+        The correct answers are shown below, highlighted green, so you may check your work.
+      thank_you: Thank you for your submission.
   support:
     array:
       last_word_connector: "と"
       two_words_connector: "と"
       words_connector: "と"
+    quote:
+      begin: '“'
+      end: '”'
+      attribution_prefix: "— "
     languages:
       am: アムハラ語
       en: 英語
