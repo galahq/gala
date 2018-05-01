@@ -12,7 +12,8 @@
     = form_with url: '/catalog/search', local: true, method: :get do
       .pt-input-group.pt-round
         %span.pt-icon.pt-icon-search
-        %input.pt-input(type="text" name="q" placeholder="Search cases")
+        %input.pt-input{ type: 'text', name: 'q',
+                         placeholder: I18n.t('search.search_cases') }
           %span.pt-input-action
             %button.pt-button.pt-minimal.pt-icon-arrow-right(type="submit")
 
