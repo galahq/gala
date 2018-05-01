@@ -9,7 +9,7 @@ feature 'Creating a new deployment' do
   scenario 'is possible' do
     kase = create :case, :published
     visit case_path 'en', kase
-    click_button 'Teach this case'
+    click_button 'Deploy this Case'
     click_button 'Create Deployment'
     expect(page).to have_content 'Group name can’t be blank'
 
@@ -28,7 +28,7 @@ feature 'Creating a new deployment' do
 
     cas = create :case, :published
     visit case_path 'en', cas
-    click_button 'Teach this case'
+    click_button 'Deploy this Case'
     select 'My Study Group', from: 'Study Group'
     click_button 'Create Deployment'
     expect(page).to have_content 'Deployment successfully created'
