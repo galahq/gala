@@ -78,6 +78,11 @@ function StatusBar ({
         : !published ? { message: 'cases.show.notYetPublished' } : null,
     ],
     [
+      {
+        message: 'deployments.new.teachThisCase',
+        iconName: 'follower',
+        onClick: () => (window.location = links.teach),
+      },
       editable
         ? {
           message: 'cases.edit.options',

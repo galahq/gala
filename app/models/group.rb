@@ -19,9 +19,17 @@ class Group < ApplicationRecord
 
   has_one :community, dependent: :destroy
 
+  validates :name, presence: true
   validates :context_id, uniqueness: true, if: -> { context_id.present? }
 
   after_create :create_associated_community
+
+  # Groups that the given user has admin privileges in
+  def self.administered_by(admin)
+    joins(:group_memberships)
+      .where(group_memberships: { reader_id: admin.id })
+      .merge(GroupMembership.admin)
+  end
 
   # Find or create a Group with a given context id (from LTI) and set or update
   # its name.
@@ -31,6 +39,17 @@ class Group < ApplicationRecord
     group.name = name
     group.save! if group.changed?
     group
+  end
+
+  # Ensure the passed reader is an administrator of the group. This method is
+  # idempotent.
+  def add_administrator(reader)
+    GroupMembership
+      .find_or_initialize_by(group: self, reader: reader)
+      .tap do |group_membership|
+      group_membership.status = :admin
+      group_membership.save! if group_membership.changed?
+    end
   end
 
   # Every Group needs a Community. They are only different to allow Readers to

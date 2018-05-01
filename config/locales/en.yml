@@ -18,6 +18,11 @@ en:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
           one: Translator
+      deployment:
+        case_id: Case
+        group_id: Study Group
+        group_attributes:
+          name: Group Name
       edgenote:
         alt_text: Image description for accessibility
         attribution: Attribution
@@ -81,6 +86,7 @@ en:
         feature: Featured status
       comment: Comment
       comment_thread: Comment thread
+      deployment: Deployment
       edgenote: Edgenote
       enrollment: Enrollment
       global_community: Global Community
@@ -171,7 +177,7 @@ en:
       Meet different stakeholders and dive deep with a multimodal narrative.
     open_access_learning_tools:
       Open access learning tools for sustainability science
-    propose_a_case: Propose a case
+    propose_a_case: Propose a Case
     shortcut_experience: Apply principles to improve practice.
   comment_threads:
     destroy:
@@ -310,6 +316,48 @@ en:
       month: Month
       second: Seconds
       year: Year
+  deployments:
+    deployment:
+      add_quiz: Add Quiz
+      edit_quiz: Edit Quiz
+      n_enrolled: "%{count} enrolled"
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
+      invite_learners: Invite Learners
+      invite_link: |
+        Invite link for the deployment of the case “%{case_kicker}”
+        in the group “%{group_name}”
+    form:
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
+    helpers:
+      all_study_groups: All Study Groups
+      create_a_new_study_group: Create a New Study Group...
+    index:
+      deploy_a_case: Deploy a Case
+      find_a_case_then_click_teach_this_case: |
+        Once you’ve found a case that will suit your needs, click the “Deploy
+        this Case” button in the top right of its Overview page.
+      instructions: |
+        Gala makes it easy to teach a case in a group of any size: a classroom,
+        a workshop, a town, or a team. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      new_deployment: New Deployment
+      once_youve_deployed: |
+        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        learners from this page.
+      teach_with_cases: Teach with Cases
+      youre_not_teaching_any_cases: You’re not teaching any cases yet
+    new:
+      active_deployments: Active Deployments
+      instructions: |
+        Deploy this case in a group of any size: a classroom, a workshop, a
+        town, or a team. You’ll get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      teach_this_case: Deploy this Case
   devise:
     sessions:
       destroy:
@@ -444,6 +492,7 @@ en:
     required: required
   helpers:
     cancel: Cancel
+    copy: Copy
     close: Close
     edit: Edit
     formatting:
@@ -492,6 +541,7 @@ en:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
+      create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
@@ -591,7 +641,7 @@ en:
     refine: Refine search
     results: Search results
     search: Search
-    search_cases: Search cases
+    search_cases: Search Cases...
     try_again: Try searching for something else.
   submissions:
     new:

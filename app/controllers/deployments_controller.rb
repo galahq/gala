@@ -2,24 +2,35 @@
 
 # @see Deployment
 class DeploymentsController < ApplicationController
+  include SelectionParams
+
+  before_action :authenticate_reader!, only: %i[new create]
+  before_action :set_deployments, only: %i[index new create]
   before_action :set_deployment, only: %i[edit update]
-  before_action :ensure_content_item_selection_params_set!, only: [:create]
-  after_action :clear_content_item_selection_params, only: [:update]
+  after_action :clear_content_item_selection_params, only: [:edit]
 
-  layout 'embed'
+  layout 'admin'
 
-  # @route [POST] `/groups/1/deployments`
+  decorates_assigned :deployments, with: DeploymentsDecorator
+
+  def index; end
+
+  def new
+    @deployment ||= Deployment.new case: selected_case
+    prepare_for_form
+  end
+
   def create
-    the_group = Group.find params[:group_id]
-    the_case = Case.friendly.find params[:case_slug]
+    @deployment = Deployment.new deployment_params
+    prepare_for_form
 
-    @deployment = Deployment.find_or_initialize_by(
-      group: the_group, case: the_case
-    ) do |d|
-      d.answers_needed = 0
+    if @deployment.save
+      @deployment.group.add_administrator current_reader
+      redirect_to helpers.focus_deployment_path(@deployment),
+                  notice: successfully_created
+    else
+      render :new
     end
-
-    redirect_to edit_deployment_path @deployment if @deployment.save
   end
 
   # @route [GET] `/deployments/1/edit`
@@ -27,19 +38,16 @@ class DeploymentsController < ApplicationController
     authorize @deployment
     set_selection_params
     set_recommended_quizzes
+    render layout: 'embed' if selection_params.present?
   end
 
   # @route [PATCH/PUT] `/deployments/1`
   def update
     authorize @deployment
 
-    author_id = current_reader.try :id
-    customizer = CustomizeDeploymentService.new @deployment, author_id, lti_uid
-
-    result = customizer.customize(**deployment_params)
-
+    result = customizer.customize(**customized_deployment_params)
     if result.errors.empty?
-      render
+      render json: { redirect: helpers.focus_deployment_quiz_path(@deployment) }
     else
       render json: result.errors, status: :unprocessable_entity
     end
@@ -47,17 +55,34 @@ class DeploymentsController < ApplicationController
 
   private
 
-  def pundit_user
-    DeploymentPolicy::UserContext.new current_user,
-                                      session[:content_item_selection_params]
+  def set_deployments
+    @deployments =
+      DeploymentPolicy::AdminScope
+      .new(current_user, Deployment)
+      .resolve
+      .yield_self do |scope|
+        selected_case ? scope.where(case: selected_case) : scope
+      end
   end
 
   def set_deployment
     @deployment = Deployment.find params[:id]
   end
 
-  def lti_uid
-    session[:content_item_selection_params].try :[], 'lti_uid'
+  def prepare_for_form
+    @deployment.build_group if @deployment.group.blank?
+    @case = @deployment.case.decorate
+  end
+
+  def selected_case
+    Case.friendly.find params[:case_slug]
+  rescue ActiveRecord::RecordNotFound
+    nil
+  end
+
+  def deployment_params
+    params.require(:deployment)
+          .permit(:case_id, :group_id, group_attributes: %i[name])
   end
 
   def set_recommended_quizzes
@@ -69,20 +94,12 @@ class DeploymentsController < ApplicationController
     @recommended_quizzes = [] + recommended_quizzes + custom_quizzes
   end
 
-  def set_selection_params
-    @selection_params = session[:content_item_selection_params]
+  def customizer
+    author_id = current_reader.try :id
+    CustomizeDeploymentService.new @deployment, author_id, lti_uid
   end
 
-  def ensure_content_item_selection_params_set!
-    redirect_to root_url unless session[:content_item_selection_params]
-    set_selection_params
-  end
-
-  def clear_content_item_selection_params
-    session[:content_item_selection_params] = nil
-  end
-
-  def deployment_params
+  def customized_deployment_params
     params.require(:deployment).permit(
       :answers_needed, :quiz_id,
       custom_questions: [:id, :content, :correct_answer, options: []]

@@ -26,12 +26,14 @@ feature 'Customizing a deployment' do
   end
 
   context 'as an instructor' do
-    let(:enrollment) { create :enrollment, status: :instructor }
-    let(:deployment) { create :deployment, case: enrollment.case }
-    before { login_as enrollment.reader }
+    let!(:group_membership) { create :group_membership, status: :admin }
+    let!(:deployment) { create :deployment, group: group_membership.group }
+    before { login_as group_membership.reader }
 
     scenario 'it is possible to create and edit a new quiz' do
-      visit edit_deployment_path('en', deployment)
+      visit deployments_path
+      expect(page).to have_content group_membership.group.name
+      click_link 'Add Quiz'
       find('h4', text: 'Custom Assessment').click
       click_button 'Add question'
       fill_in placeholder: 'Question text', with: 'What is the color of the sky?'
@@ -41,10 +43,8 @@ feature 'Customizing a deployment' do
       expect(page).to have_content 'Please'
       all('.pt-radio').first.click
       click_button 'Deploy'
-      expect(page).to have_content 'Deployment successfully updated'
 
-      visit root_path
-      visit edit_deployment_path('en', deployment)
+      click_link 'Edit Quiz'
       expect(page).to have_selector '.pt-input[value="What is the color of the sky?"]'
       click_button 'Add question'
       click_button 'Deploy'
@@ -54,7 +54,7 @@ feature 'Customizing a deployment' do
       expect(page).to have_content 'Please'
       find('textarea').set 'Because it is.'
       click_button 'Deploy'
-      expect(page).to have_content 'Deployment successfully updated'
+      expect(page).to have_content 'Edit Quiz'
     end
   end
 end

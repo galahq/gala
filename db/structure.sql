@@ -702,7 +702,8 @@ CREATE TABLE group_memberships (
     reader_id integer,
     group_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    status integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2718,6 +2719,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180221153559'),
 ('20180321161907'),
 ('20180405141157'),
-('20180405181811');
+('20180405181811'),
+('20180423145615');
 
 
