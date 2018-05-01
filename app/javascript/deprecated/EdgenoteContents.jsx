@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { ScrollLock } from 'deprecated/ScrollLock'
 import Tracker from 'utility/Tracker'
 
 function mapStateToProps (state, { match }) {
@@ -13,22 +12,25 @@ function mapStateToProps (state, { match }) {
 class EdgenoteContents extends React.Component {
   constructor (props) {
     super(props)
+
     this.handleDismiss = () => {
+      document.removeEventListener('keydown', this.handleKeyDown)
       if (props.location.state && props.location.state.internalLink) {
         props.history.goBack()
       } else {
         props.history.push(`/${props.match.params.position}`)
       }
     }
+
+    this.handleKeyDown = e => {
+      if (e.which === 27) {
+        this.handleDismiss()
+      }
+    }
   }
 
   componentDidMount () {
-    $(document).on('keydown', e => {
-      if (e.which === 27) {
-        $(document).off('keydown')
-        this.handleDismiss()
-      }
-    })
+    document.addEventListener('keydown', this.handleKeyDown)
   }
 
   render () {
@@ -55,9 +57,7 @@ class EdgenoteContents extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(
-  ScrollLock(EdgenoteContents, '.EdgenoteContents-window')
-)
+export default connect(mapStateToProps)(EdgenoteContents)
 
 class EdgenoteDisplay extends React.Component {
   renderWebsiteLink () {
@@ -70,9 +70,11 @@ class EdgenoteDisplay extends React.Component {
           }}
         />
         <img
-          src={`${this.props.imageUrl}${this.props.format !== 'video'
-            ? '?w=700&htn=3&con=-40&mono=1E2934'
-            : ''}`}
+          src={`${this.props.imageUrl}${
+            this.props.format !== 'video'
+              ? '?w=700&htn=3&con=-40&mono=1E2934'
+              : ''
+          }`}
         />
       </a>
     )
@@ -107,8 +109,9 @@ class EdgenoteDisplay extends React.Component {
   renderPDF () {
     return (
       <iframe
-        src={`http://docs.google.com/gview?url=${this.props
-          .pdfUrl}&embedded=true`}
+        src={`http://docs.google.com/gview?url=${
+          this.props.pdfUrl
+        }&embedded=true`}
         style={{ height: '100%', width: '100%' }}
         frameBorder="0"
       />
@@ -176,9 +179,7 @@ class EdgenoteSidebar extends React.Component {
         <section className="EdgenoteSidebar-meta scrolling">
           <div>
             {this.renderFormatIcon()}
-            <h4>
-              {caption}
-            </h4>
+            <h4>{caption}</h4>
           </div>
           <p dangerouslySetInnerHTML={{ __html: instructions }} />
         </section>
