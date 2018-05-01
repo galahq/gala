@@ -16,9 +16,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { EditableText } from '@blueprintjs/core'
-
-import EditableAttribute from 'utility/EditableAttribute'
+import { FormattedMessage } from 'react-intl'
 
 import type { ReduxProps } from './Edgenote'
 
@@ -27,7 +25,6 @@ type Props = {
   audioUrl: string,
   contents: string,
   hasBackground: boolean,
-  onChangeProp: string => string => any,
   ...ReduxProps,
 }
 const PullQuote = ({
@@ -36,13 +33,11 @@ const PullQuote = ({
   contents,
   hasBackground,
   selected,
-  editing,
   active,
-  onChangeProp,
 }: Props) => (
   <React.Fragment>
     <Background visible={hasBackground}>
-      {contents || editing ? (
+      {contents && (
         <blockquote
           className={selected ? 'edge--highlighted' : ''}
           style={{
@@ -50,29 +45,21 @@ const PullQuote = ({
             lineHeight: 1.3,
             margin: '0 0 0.5em 0',
             padding: '0',
+            display: 'inline',
           }}
         >
-          <EditableText
-            multiline
-            placeholder="“Add quotation...”"
-            value={contents}
-            disabled={!editing}
-            onChange={onChangeProp('pullQuote')}
-          />
+          {contents.trim().startsWith('“') || (
+            <FormattedMessage id="support.quote.begin" />
+          )}
+          {contents}
+          {contents.trim().endsWith('”') || (
+            <FormattedMessage id="support.quote.end" />
+          )}
         </blockquote>
-      ) : null}
-      <Attribution
-        name={attribution}
-        editing={editing}
-        onChange={onChangeProp('attribution')}
-      />
+      )}
+      <Attribution name={attribution} />
     </Background>
-    <AudioPlayer
-      src={audioUrl}
-      editing={editing}
-      active={active}
-      onChange={onChangeProp('audioUrl')}
-    />
+    <AudioPlayer src={audioUrl} active={active} />
   </React.Fragment>
 )
 
@@ -88,8 +75,8 @@ const Background = styled.div`
     `};
 `
 
-const Attribution = ({ name, editing, onChange }) =>
-  name || editing ? (
+const Attribution = ({ name }) =>
+  name ? (
     <cite
       style={{
         textAlign: 'right',
@@ -99,21 +86,17 @@ const Attribution = ({ name, editing, onChange }) =>
         lineHeight: 1,
       }}
     >
-      <EditableText
-        multiline
-        placeholder="— Attribution"
-        value={name}
-        disabled={!editing}
-        onChange={onChange}
-      />
+      {name &&
+        !name.trim().startsWith('—') && (
+          <FormattedMessage id="support.quote.attributionPrefix" />
+        )}
+      {name}
     </cite>
   ) : null
 
 type AudioPlayerProps = {
   src: string,
   active: boolean,
-  editing: boolean,
-  onChange: string => any,
 }
 
 class AudioPlayer extends React.Component<AudioPlayerProps> {
@@ -126,7 +109,7 @@ class AudioPlayer extends React.Component<AudioPlayerProps> {
   }
 
   render () {
-    let { src, editing, onChange } = this.props
+    let { src } = this.props
     return (
       <div>
         {src && (
@@ -145,12 +128,6 @@ class AudioPlayer extends React.Component<AudioPlayerProps> {
             src={src}
           />
         )}
-        <EditableAttribute
-          disabled={!editing}
-          title="audio url"
-          value={src}
-          onChange={onChange}
-        />
       </div>
     )
   }

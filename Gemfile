@@ -37,7 +37,7 @@ gem 'pundit'
 gem 'rolify'
 
 # Events
-gem 'ahoy_matey', git: 'https://github.com/ankane/ahoy'
+gem 'ahoy_matey'
 gem 'groupdate'
 
 # Localization
@@ -56,13 +56,7 @@ gem 'oj'
 gem 'oj_mimic_json'
 gem 'redcarpet'
 gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
-gem 'webpacker', git: 'https://github.com/rails/webpacker'
-
-# Front-end
-gem 'bourbon'
-gem 'coffee-rails'
-gem 'jquery-rails'
+gem 'webpacker'
 
 # Logging and Monitoring
 gem 'awesome_print'
@@ -70,6 +64,10 @@ gem 'lograge'
 gem 'newrelic_rpm'
 gem 'scout_apm'
 gem 'table_print'
+
+# Services
+gem 'opengraph_parser'
+gem 'ruby-oembed'
 
 group :development do
   gem 'foreman'

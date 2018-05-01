@@ -14,9 +14,22 @@ export type RegisterToasterAction = { type: 'REGISTER_TOASTER', toaster: any }
 export function registerToaster (toaster: Toaster): RegisterToasterAction {
   return { type: 'REGISTER_TOASTER', toaster }
 }
-export type DisplayToastAction = { type: 'DISPLAY_TOAST', options: Toast }
-export function displayToast (options: Toast): DisplayToastAction {
-  return { type: 'DISPLAY_TOAST', options }
+
+export type DisplayToastAction = {
+  type: 'DISPLAY_TOAST',
+  options: Toast,
+  key?: string,
+}
+export function displayToast (options: Toast, key?: string): DisplayToastAction {
+  return { type: 'DISPLAY_TOAST', options, key }
+}
+
+export type DismissToastAction = {
+  type: 'DISMISS_TOAST',
+  key: string,
+}
+export function dismissToast (key: string): DismissToastAction {
+  return { type: 'DISMISS_TOAST', key }
 }
 
 export type HandleNotificationAction = {

@@ -19,7 +19,7 @@ const QuizSelector = ({
   recommendedQuizzes,
   customQuestions,
   onSelect,
-}: Props) =>
+}: Props) => (
   <Container>
     <div className="pt-callout pt-icon-help" style={{ lineHeight: 1.2 }}>
       <h5>Assessment options</h5>
@@ -31,14 +31,14 @@ const QuizSelector = ({
         : 'Think of a few multiple choice or short answer questions and they will be presented to your students before and after the case materials.'}
     </div>
     <TwoColumns>
-      {Object.keys(recommendedQuizzes).map((id: string, i: number) =>
+      {Object.keys(recommendedQuizzes).map((id: string, i: number) => (
         <QuizCard
           key={id}
           {...recommendedQuizzes[id]}
           customQuestions={customQuestions[id]}
           onClick={onSelect}
         />
-      )}
+      ))}
       <QuizCard
         id="new"
         questions={[]}
@@ -48,27 +48,17 @@ const QuizSelector = ({
       />
     </TwoColumns>
   </Container>
+)
 
 export default QuizSelector
 
-const Container = styled.div`padding-bottom: 60px;`
+const Container = styled.div`
+  padding-bottom: 75px;
+`
 
 const TwoColumns = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-
-  & > * {
-    flex: 0 1 calc(50% - 0.5em);
-    margin: 1em 0;
-
-    &:nth-child(even) {
-      margin-left: 0.5em;
-    }
-    &:nth-child(odd) {
-      margin-right: 0.5em;
-    }
-    &:nth-child(n + 3) {
-      margin-top: 0;
-    }
-  }
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: repeat(auto-fill, minmax(48%, 1fr));
+  margin-top: 1em;
 `

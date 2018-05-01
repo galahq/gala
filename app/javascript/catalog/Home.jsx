@@ -10,6 +10,7 @@ import { values, omit } from 'ramda'
 import { FormattedMessage } from 'react-intl'
 
 import ValueProposition from 'catalog/ValueProposition'
+import GalaxyBanner from 'catalog/GalaxyBanner'
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import MapView from 'catalog/MapView'
@@ -42,17 +43,22 @@ class Home extends React.Component<{
     return (
       <React.Fragment>
         {loading.reader || !!reader || <ValueProposition />}
+
+        {loading.reader || <GalaxyBanner />}
+
         <Sidebar
           loading={loading}
           reader={reader}
           enrolledCases={this._enrolledCases()}
           onDeleteEnrollment={onDeleteEnrollment}
         />
+
         <Main>
           <Features
             readerIsEditor={readerIsEditor}
             featuredCases={this._featuredCases()}
           />
+
           <MapView
             cases={values(cases).filter(x => !!x.publishedAt)}
             title={{ id: 'cases.index.locations' }}
@@ -62,10 +68,12 @@ class Home extends React.Component<{
               zoom: 1.1606345336768273,
             }}
           />
+
           <CatalogSection>
             <SectionTitle>
               <FormattedMessage id="cases.index.allCases" />
             </SectionTitle>
+
             <CaseList
               readerIsEditor={readerIsEditor}
               cases={this._allOtherCases()}

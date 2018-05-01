@@ -1,4 +1,4 @@
-<header>
+<header class="header">
   <div class="header__container" style="justify-content: center">
     <%= link_to root_path, id: "gala-logo" do %>
       <%= inline_svg 'gala-logo.svg' %>
@@ -6,7 +6,7 @@
   </div>
 </header>
 
-<div class="window" style="min-height: calc(100% - 73px)">
+<div class="window window-embed" style="min-height: calc(100% - 73px)">
   <%= yield %>
 </div>
 

@@ -101,6 +101,7 @@ export type UIState = {
   mostRecentCommentThreads: ?(string[]),
   openedCitation: Citation,
   toaster: any,
+  toasts: { [string]: string },
 }
 
 // Model Objects
@@ -151,6 +152,7 @@ export type Case = {
   links: {
     self: string,
     settings: string,
+    teach: string,
   },
   longitude: ?number,
   otherAvailableLocales: string[],
@@ -220,24 +222,27 @@ export type Edgenote = {
   attribution: string,
   altText: string,
   audioUrl: string,
-  averageTime: string,
   callToAction: string,
   caption: string,
   content: string,
   embedCode: string,
   format: string,
   imageUrl: string,
+  imageThumbnailUrl: string,
   instructions: string,
+  links: {
+    audio: string,
+    image: string,
+    self: string,
+  },
   pdfUrl: string,
   photoCredit: string,
   pullQuote: string,
   slug: string,
   style: 'v1' | 'v2',
   thumbnailUrl: string,
-  uniques: number,
-  views: number,
+  updatedAt: Date,
   websiteUrl: string,
-  youtubeSlug: string,
 }
 
 export type Enrollment = {
@@ -254,6 +259,12 @@ export type Library = {
   logoUrl: string,
   backgroundColor: string,
   foregroundColor: string,
+}
+
+export type LinkExpansionVisibility = {
+  noEmbed?: boolean,
+  noDescription?: boolean,
+  noImage?: boolean,
 }
 
 export type Notification = {

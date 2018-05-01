@@ -84,4 +84,5 @@ export type Action =
   | SelectionActions.ApplySelectionAction
   | StatisticsActions.SetStatisticsAction
   | ToastActions.DisplayToastAction
+  | ToastActions.DismissToastAction
   | ToastActions.RegisterToasterAction

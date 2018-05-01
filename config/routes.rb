@@ -66,17 +66,21 @@ Rails.application.routes.draw do
 
     resources :comments, only: %i[update destroy]
 
-    resources :deployments, only: %i[create edit update] do
+    resources :deployments, only: %i[index new create edit update] do
       resources :submissions, only: %i[index]
     end
 
     resources :edgenotes, only: %i[update destroy], param: :slug,
-                          concerns: :has_statistics
+                          concerns: :has_statistics do
+      resources :attachments, module: 'edgenotes', only: %i[destroy],
+                              param: :attribute
+      resource :link_expansion, module: 'edgenotes', only: %i[show update]
+    end
 
     resources :enrollments, only: %i[index]
 
     resources :groups, only: [] do
-      resources :deployments, only: %i[create]
+      resources :canvas_deployments, only: %i[create]
     end
 
     resources :libraries, param: :slug, only: %i[show]

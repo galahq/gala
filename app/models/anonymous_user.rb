@@ -5,6 +5,10 @@
 #
 # @see Reader
 class AnonymousUser
+  def id
+    nil
+  end
+
   # @return [false]
   def has_role?(_role, _resource = nil) # rubocop:disable Naming/PredicateName
     false

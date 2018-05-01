@@ -1,0 +1,34 @@
+.admin.md-container.pt-dark
+  %header.md-header
+    %h1.admin__title= t '.teach_with_cases'
+
+  %aside.md-master.spaced
+    %h2.admin__title= t '.deploy_a_case'
+    = raw markdown t '.instructions'
+
+    .pt-callout.pt-icon-hand-right
+      = t '.find_a_case_then_click_teach_this_case'
+
+    = form_with url: '/catalog/search', local: true, method: :get do
+      .pt-input-group.pt-round
+        %span.pt-icon.pt-icon-search
+        %input.pt-input{ type: 'text', name: 'q',
+                         placeholder: I18n.t('search.search_cases') }
+          %span.pt-input-action
+            %button.pt-button.pt-minimal.pt-icon-arrow-right(type="submit")
+
+  %main.md-detail
+    - if deployments.empty?
+      .pt-non-ideal-state
+        .pt-non-ideal-state-visual.pt-non-ideal-state-icon
+          %span.pt-icon.pt-icon-folder-open
+        %h3.pt-non-ideal-state-title= t '.youre_not_teaching_any_cases'
+        .pt-non-ideal-state-description= t '.once_youve_deployed'
+
+    -else
+      .spaced
+        - deployments.grouped.each do |group, group_deployments|
+          %h2.deployments__group= group.name
+
+          - group_deployments.each do |deployment|
+            = render deployment

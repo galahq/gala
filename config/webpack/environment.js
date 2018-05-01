@@ -1,17 +1,20 @@
 const webpack = require('webpack')
 const { environment } = require('@rails/webpacker')
 
-environment.loaders.delete('file')
-environment.loaders.set('svg', {
+environment.loaders.get(
+  'file'
+).test = /\.(jpg|jpeg|png|gif|eot|otf|ttf|woff|woff2)$/i
+
+environment.loaders.append('svg', {
   test: /\.svg$/,
   loader: 'raw-loader',
 })
-environment.loaders.set('yaml', {
+environment.loaders.append('yaml', {
   test: /\.yaml$|\.yml$/,
   use: [{ loader: 'json-loader' }, { loader: 'yaml-loader' }],
 })
 
-environment.plugins.set(
+environment.plugins.append(
   'CommonsChunkVendor',
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
@@ -22,7 +25,7 @@ environment.plugins.set(
   })
 )
 
-environment.plugins.set(
+environment.plugins.append(
   'CommonsChunkManifest',
   new webpack.optimize.CommonsChunkPlugin({
     name: 'manifest',

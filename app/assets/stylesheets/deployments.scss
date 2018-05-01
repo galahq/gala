@@ -1,0 +1,103 @@
+@import 'globals';
+
+.new-group:not(.new-group--visible) {
+  display: none;
+}
+
+.deployments__group {
+  border-top: 3px solid rgba(white, 0.7);
+  display: inline-block;
+  font-family: $sansFont;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.1;
+  padding-top: 0.5em;
+
+  &:not(:first-child) {
+    margin-top: 1.5em;
+  }
+}
+
+.deployment {
+  &__details {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    .pt-tag {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
+
+  &__actions {
+    align-items: baseline;
+    display: flex;
+    flex: 0 0 auto;
+  }
+
+  &__close-invite {
+    display: none;
+  }
+
+  &__invite {
+    &__drawer {
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: none;
+      flex-flow: row wrap;
+      font-size: 90%;
+      padding-top: 0.6rem;
+    }
+
+    &__instructions {
+      flex: 1;
+      max-width: 36em;
+      min-width: 18em;
+    }
+
+    &__link {
+      flex: 1;
+      margin-left: 2em;
+
+      @media (max-width: 1200px) {
+        flex-basis: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.deployment.deployment--active {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 2pt;
+  margin: -0.4em -0.5em -0.6em;
+  margin-top: 0.6em;
+  padding: 0.4em 0.5em 0.6em;
+
+  .deployment__invite__drawer {
+    display: flex !important;
+  }
+
+  .deployment__close-invite {
+    display: initial;
+  }
+
+  .deployment__open-invite {
+    display: none;
+  }
+}
+
+.window-admin #deployment-app {
+  padding: 0 1.25em 2em;
+}
+
+.new-deployment {
+  max-width: 30em;
+  margin: 0 1em 2em;
+
+  &__others {
+    margin: 0 1em;
+    max-width: 10em;
+  }
+}

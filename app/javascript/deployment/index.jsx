@@ -45,8 +45,8 @@ const questionHasError = (question: Question) =>
   (question.options.length === 0
     ? question.correctAnswer === '' || question.correctAnswer == null
     : !question.options.some(
-        (option: string) => option === question.correctAnswer
-      ))
+      (option: string) => option === question.correctAnswer
+    ))
 
 const validated = map((question: Question) => ({
   ...question,
@@ -118,15 +118,12 @@ class Deployment extends React.Component<Props, State> {
             selectedQuizId != null ? customQuestions[`${selectedQuizId}`] : [],
         },
       })
-        .then((data: Props) => {
+        .then(({ redirect }: { redirect: string }) => {
           const { returnUrl, returnData, caseData } = this.props
           if (returnUrl != null && returnData != null) {
             chooseContentItem(returnUrl, returnData, caseData.callbackUrl)
           } else {
-            this._displayToast(
-              'Deployment successfully updated; get the user off this page or refresh.',
-              Intent.SUCCESS
-            )
+            window.location = redirect
           }
         })
         .catch((e: Error) => this._displayToast(e.message))
@@ -160,25 +157,29 @@ class Deployment extends React.Component<Props, State> {
     const { caseData, recommendedQuizzes } = this.props
     const { selectedQuizId, customQuestions } = this.state
     return (
-      <div className="pt-dark" style={{ padding: '0 12px' }}>
-        {selectedQuizId == null ? (
-          <QuizSelector
-            recommendedQuizzes={recommendedQuizzes}
-            customQuestions={customQuestions}
-            onSelect={this.handleSelectQuiz}
-          />
-        ) : (
-          <QuizDetails
-            quiz={recommendedQuizzes[`${selectedQuizId}`]}
-            customQuestions={customQuestions[`${selectedQuizId}`]}
-            onChangeCustomQuestions={(newCustomQuestions: Question[]) =>
-              this.handleChangeCustomQuestions(
-                selectedQuizId,
-                newCustomQuestions
-              )}
-            onDeselect={() => this.handleSelectQuiz(null)}
-          />
-        )}
+      <React.Fragment>
+        <div className="pt-dark" style={{ padding: '0 12px' }}>
+          {selectedQuizId == null ? (
+            <QuizSelector
+              recommendedQuizzes={recommendedQuizzes}
+              customQuestions={customQuestions}
+              onSelect={this.handleSelectQuiz}
+            />
+          ) : (
+            <QuizDetails
+              quiz={recommendedQuizzes[`${selectedQuizId}`]}
+              customQuestions={customQuestions[`${selectedQuizId}`]}
+              onChangeCustomQuestions={(newCustomQuestions: Question[]) =>
+                this.handleChangeCustomQuestions(
+                  selectedQuizId,
+                  newCustomQuestions
+                )
+              }
+              onDeselect={() => this.handleSelectQuiz(null)}
+            />
+          )}
+        </div>
+
         <Toolbar
           withPretest={this._needsPretest()}
           withPosttest={this._needsPosttest()}
@@ -187,7 +188,7 @@ class Deployment extends React.Component<Props, State> {
           onDeselect={() => this.handleSelectQuiz(null)}
           onSubmit={this.handleSubmit}
         />
-      </div>
+      </React.Fragment>
     )
   }
 }

@@ -15,18 +15,15 @@ export class Orchard {
     const query = params
       ? `?${qs.stringify(params, { arrayFormat: 'brackets' })}`
       : ''
-    const r = new Request(
-      `${window.galaHostname || ''}/${
-        window.i18n.locale
-      }/${endpoint}.json${query}`,
-      { credentials: 'same-origin' }
-    )
+    const r = new Request(`${resolve(endpoint)}${query}`, {
+      credentials: 'same-origin',
+    })
     return fetch(r).then(handleResponse)
   }
 
   static graft (endpoint: string, params: Object): Promise<any> {
     const body = JSON.stringify(params)
-    const r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
+    const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'POST',
       body,
@@ -42,7 +39,7 @@ export class Orchard {
   // Train a fruit tree to grow into a desired figure.
   static espalier (endpoint: string, params: ?Object): Promise<any> {
     const body = JSON.stringify(params)
-    const r = new Request(`/${window.i18n.locale}/${endpoint}.json`, {
+    const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'PUT',
       body,
@@ -56,12 +53,20 @@ export class Orchard {
   }
 
   static prune (endpoint: string): Promise<Response> {
-    const r = new Request(`/${endpoint}.json`, {
+    const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'DELETE',
       headers: new Headers({ Accept: 'application/json', ...CSRF.header() }),
     })
     return fetch(r)
+  }
+}
+
+function resolve (endpoint: string) {
+  if (endpoint.startsWith('/')) {
+    return endpoint
+  } else {
+    return `/${window.i18n.locale}/${endpoint}.json`
   }
 }
 
