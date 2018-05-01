@@ -8,11 +8,20 @@
     border-bottom-color: #193c5b
     font: 90% 'tenso'
 
+    & .MaxWidthContainer
+      display: flex
+
   &__group
     height: 36px
     margin: 0 8px
     flex: 1
     white-space: nowrap
+
+    &:nth-child(2)
+      flex: 0
+
+    &:nth-child(3)
+      justify-content: flex-end
 
 .MaxWidthContainer
   max-width: 1667px
