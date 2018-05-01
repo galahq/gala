@@ -334,15 +334,15 @@ en:
       select_a_group: Select a Group...
     helpers:
       all_study_groups: All Study Groups
-      create_a_new_study_group: Create a New Study Group
+      create_a_new_study_group: Create a New Study Group...
     index:
       deploy_a_case: Deploy a Case
       find_a_case_then_click_teach_this_case: |
-        Once you’ve found a case that will suit your needs, click the “Teach
+        Once you’ve found a case that will suit your needs, click the “Deploy
         this Case” button in the top right of its Overview page.
       instructions: |
         Gala makes it easy to teach a case in a group of any size: a classroom,
-        a workshop, a city, or just you and your friends. When you deploy a case
+        a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       new_deployment: New Deployment
@@ -352,12 +352,12 @@ en:
       teach_with_cases: Teach with Cases
       youre_not_teaching_any_cases: You’re not teaching any cases yet
     new:
+      active_deployments: Active Deployments
       instructions: |
-        Deploy this case to a study group, which could be a classroom,
-        a workshop, a city, or just you and your friends. When you deploy a case
-        to a study group, you get a private forum for collaborative annotation
+        Deploy this case in a group of any size: a classroom, a workshop, a
+        town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      teach_this_case: Teach this case
+      teach_this_case: Deploy this Case
   devise:
     sessions:
       destroy:
@@ -541,6 +541,7 @@ en:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
+      create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
@@ -640,7 +641,7 @@ en:
     refine: Refine search
     results: Search results
     search: Search
-    search_cases: Search cases
+    search_cases: Search Cases...
     try_again: Try searching for something else.
   submissions:
     new:
