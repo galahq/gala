@@ -102,5 +102,9 @@ export class NullLinkExpansion implements ILinkExpansion {
 
 function domain (url: ?string): string {
   if (url == null) return ''
-  return new URL(url).host.replace(/^www\./, '')
+  try {
+    return new URL(url).host.replace(/^www\./, '')
+  } catch (e) {
+    return ''
+  }
 }
