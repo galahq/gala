@@ -26,7 +26,7 @@ import ErrorBoundary from 'utility/ErrorBoundary'
 
 import reducer from 'redux/reducers'
 
-import messages from '../../../config/locales'
+import loadMessages from '../../../config/locales'
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
@@ -41,26 +41,29 @@ const { locale } = (window.i18n: { locale: string })
 delete AppContainer.prototype.unstable_handleError
 
 const render = (Component: React$Component) => {
-  ReactDOM.render(
-    <AppContainer>
-      <ErrorBoundary>
-        <Provider store={store}>
-          <IntlProvider locale={locale} messages={messages[locale]}>
-            <ThemeProvider theme={theme}>
-              <Component />
-            </ThemeProvider>
-          </IntlProvider>
-        </Provider>
-      </ErrorBoundary>
-    </AppContainer>,
-    document.getElementById('container')
-  )
+  Promise.all([
+    import(`react-intl/locale-data/${locale.substring(0, 2)}`),
+    loadMessages(locale),
+  ]).then(([localeData, messages]) => {
+    addLocaleData(localeData)
+    ReactDOM.render(
+      <AppContainer>
+        <ErrorBoundary>
+          <Provider store={store}>
+            <IntlProvider locale={locale} messages={messages}>
+              <ThemeProvider theme={theme}>
+                <Component />
+              </ThemeProvider>
+            </IntlProvider>
+          </Provider>
+        </ErrorBoundary>
+      </AppContainer>,
+      document.getElementById('container')
+    )
+  })
 }
 
-import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
-  addLocaleData(m)
-  render(Case)
-})
+render(Case)
 
 if (module.hot) {
   module.hot.accept('Case', () => {
