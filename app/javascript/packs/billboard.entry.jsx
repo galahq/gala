@@ -13,7 +13,7 @@ import { UnconnectedBillboardTitle } from 'overview/BillboardTitle'
 import { UnconnectedCommunityChooser } from 'overview/CommunityChooser'
 import MagicLink from 'magic_link'
 
-import messages from '../../../config/locales' // eslint-disable-line
+import loadMessages from '../../../config/locales' // eslint-disable-line
 const { locale } = (window.i18n: { locale: string })
 
 const container = document.getElementById('billboard-app')
@@ -31,12 +31,15 @@ const Column = styled.div`
   align-items: center;
 `
 
-import(`react-intl/locale-data/${locale.substring(0, 2)}`).then(m => {
-  addLocaleData(m)
+Promise.all([
+  import(`react-intl/locale-data/${locale.substring(0, 2)}`),
+  loadMessages(locale),
+]).then(([localeData, messages]) => {
+  addLocaleData(localeData)
 
   if (container != null) {
     ReactDOM.render(
-      <IntlProvider locale={locale} messages={messages[locale]}>
+      <IntlProvider locale={locale} messages={messages}>
         <Column>
           <UnconnectedBillboardTitle updateCase={() => {}} {...caseData} />
           <UnconnectedCommunityChooser
