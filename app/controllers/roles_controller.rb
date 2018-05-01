@@ -7,13 +7,11 @@ class RolesController < ApplicationController
   # @route [POST] `/readers/1/roles`
   def create
     @reader.add_role @role.name
-    render js: replace_button_script
   end
 
   # @route [DELETE] `/readers/1/roles/1`
   def destroy
     @reader.remove_role @role.name
-    render js: replace_button_script
   end
 
   private
@@ -21,9 +19,5 @@ class RolesController < ApplicationController
   def set_role
     @reader = Reader.find params[:reader_id]
     @role = Role.find(params[:id] || params[:role][:id])
-  end
-
-  def replace_button_script
-    "$('[data-reader-id=#{@reader.id}] form').has('[data-role-id=#{@role.id}]').replaceWith('#{view_context.toggle_role_button(@reader, @role)}')"
   end
 end
