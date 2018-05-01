@@ -1,3 +1,8 @@
+- if show_header?
+  .admin
+    .pt-dark
+      %h1.admin__title= t '.edit_embedded_assessment'
+
 #deployment-app{data: {params: render(template: 'deployments/edit', formats: [:json])}, style: "width: 100%"}
 
 = javascript_pack_tag 'deployment'

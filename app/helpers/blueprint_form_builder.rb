@@ -48,7 +48,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     contents = ''.html_safe
 
     contents << (label || @template.translate(
-      "activerecord.attributes.#{@object_name}.#{method}"
+      "activerecord.attributes.#{normalized_object_name}.#{method}"
     ))
 
     unless in_parens.nil?
@@ -58,6 +58,10 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     end
 
     label method, contents, class: 'pt-label'
+  end
+
+  def normalized_object_name
+    @object_name.tr('[', '.').delete(']')
   end
 
   def form_content(method, placeholder, helper_text)

@@ -22,7 +22,7 @@ type ContentItemsProps = {
 }
 
 function createDeployment (groupId: string, caseSlug: string) {
-  submitForm(`/groups/${groupId}/deployments`, {
+  submitForm(`/groups/${groupId}/canvas_deployments`, {
     case_slug: caseSlug,
     ...CSRF.param(),
   })

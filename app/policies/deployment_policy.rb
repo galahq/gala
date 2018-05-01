@@ -2,18 +2,27 @@
 
 # @see Deployment
 class DeploymentPolicy < ApplicationPolicy
+  # What deployments can this user administrate?
+  class AdminScope < Scope
+    def resolve
+      scope.joins(group: [:group_memberships])
+           .where(group_memberships: { reader_id: user.id })
+           .merge(GroupMembership.admin)
+    end
+  end
+
   # Since an LTI ContentItemsSelection request creates a new deployment, even
   # a yet-unauthenticated reader from that source can edit that deployment. We
   # know if a user is in the LTI content items selection workflow by storing
   # the selection parameters in the session. This object wraps the current user
   # and those selection parameters
-  UserContext = Struct.new(:user, :selection_params) do
-    delegate_missing_to :user
+  UserContext = Struct.new(:reader, :selection_params) do
+    delegate_missing_to :reader
   end
 
   def update?
     return true if selection_params_valid?
-    enrollment&.instructor?
+    group_membership&.admin?
   end
 
   private
@@ -24,7 +33,7 @@ class DeploymentPolicy < ApplicationPolicy
     user.selection_params['context_id'] == record.group.context_id
   end
 
-  def enrollment
-    user.enrollment_for_case record.case
+  def group_membership
+    user.group_memberships.find_by group_id: record.group_id
   end
 end

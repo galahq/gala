@@ -31,6 +31,11 @@ const CatalogToolbar = ({ history }: ContextRouter) => (
           onClick: () =>
             (window.location = 'http://www.teachmsc.org/action/make'),
         },
+        {
+          message: 'deployments.index.deployACase',
+          iconName: 'follower',
+          onClick: () => (window.location = '/deployments'),
+        },
       ],
       [],
       [{ component: <Search /> }],

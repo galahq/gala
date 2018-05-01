@@ -18,16 +18,13 @@
   @media screen and (max-width: $mobileCutoff)
     flex-grow: 1
 
-main
+.main
   flex: 0 1 90rem
 
-main#EdgenoteGallery
-  flex: 0 1 104rem
-
-header
+.header
   background-color: $umichBlue
 
-  .header__container
+  &__container
     max-width: 1667px
     margin: auto
     padding: 1em
@@ -145,3 +142,27 @@ header
 
 .hidden
   display: none
+
+.spaced
+  * + *
+    margin-top: 1em
+
+  .row
+    * + *
+      margin-top: 0
+      margin-left: 1em
+
+  .row--compact
+    * + *
+      margin-top: 0
+      margin-left: 0.5em
+
+.spaced--compact
+  * + *
+    margin-top: 0.5em
+
+.spaced, .spaced--compact, .row, .row-compact
+  .non-spaced, .pt-form-group, .pt-callout, .pt-control-group, .pt-input-group
+    * + *
+      margin-top: 0
+      margin-left: 0

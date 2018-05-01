@@ -14,11 +14,13 @@
 #
 # @see GenericDeployment GenericDeployment: this model’s null object
 class Deployment < ApplicationRecord
+  attribute :answers_needed, :integer, default: 0
   attribute :key, :string, default: -> { SecureRandom.urlsafe_base64 }
 
   belongs_to :case
   belongs_to :group
   belongs_to :quiz, optional: true
+  accepts_nested_attributes_for :group
 
   validates :quiz, presence: true, if: -> { answers_needed.positive? }
 

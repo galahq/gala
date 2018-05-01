@@ -22,60 +22,73 @@ const QuizDetails = ({
   customQuestions = [],
   onChangeCustomQuestions,
   onDeselect,
-}: Props) =>
+}: Props) => (
   <DetailsCard className="pt-card">
-    <CloseLink onClick={onDeselect}>
-      <span className="pt-icon-standard pt-icon-cross" />
-    </CloseLink>
+    <CloseLink onClick={onDeselect} />
     <CardTitle>Quiz details</CardTitle>
-    <ol>
+    <QuestionsList>
       {quiz.questions.length > 0 && <SectionTitle>Base questions</SectionTitle>}
-      {quiz.questions.map((question: Question, i: number) =>
+      {quiz.questions.map((question: Question, i: number) => (
         <li key={i}>
           {question.content}
-          {question.options.length === 0
-            ? <QuestionType className="pt-icon-standard pt-icon-comment" />
-            : <OptionsList>
-              {question.options.map((option: string, i: number) =>
-                <li key={i}>
-                  <Option correct={question.correctAnswer === option}>
-                    {option}
-                  </Option>
-                </li>
-                )}
-            </OptionsList>}
+          {question.options.length === 0 ? (
+            <QuestionType className="pt-icon-standard pt-icon-comment" />
+          ) : (
+            <OptionsList>
+              {question.options.map((option: string, i: number) => {
+                const correct = question.correctAnswer === option
+
+                return (
+                  <li key={i}>
+                    <Option correct={correct}>
+                      {correct && <span className="pt-icon pt-icon-tick" />}
+                      {option}
+                    </Option>
+                  </li>
+                )
+              })}
+            </OptionsList>
+          )}
         </li>
-      )}
+      ))}
       <SectionTitle>Custom questions</SectionTitle>
       <QuizCustomizer
         customQuestions={customQuestions}
         onChange={onChangeCustomQuestions}
       />
-    </ol>
+    </QuestionsList>
   </DetailsCard>
+)
 
 export default QuizDetails
 
 const DetailsCard = styled.div`
   background-color: #446583;
+  margin-bottom: 75px;
   overflow: scroll;
-  height: calc(100vh - 164px);
   position: relative;
 `
 
-const CardTitle = styled.h1`
+const CardTitle = styled.h2`
   font-family: ${p => p.theme.sansFont};
   font-size: 17px;
+  margin-bottom: 0.5em;
 `
 
-export const SectionTitle = styled.label`
+export const SectionTitle = styled.h3`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
   line-height: 1;
   display: block;
-  margin: 1em 0 0.25em -17px;
+  margin: 1.5em 0 0.25em -17px;
+`
+
+const QuestionsList = styled.ol`
+  & > li + li {
+    margin-top: 1em;
+  }
 `
 
 const OptionsList = styled.ul`
@@ -93,16 +106,19 @@ const OptionsList = styled.ul`
   }
 `
 
-const Option = styled.span`
-  ${({ correct }: { correct: boolean }) =>
-    correct &&
-    css`
-    color: #6ACB72;
-    font-weight: bold;
-  `};
+const Option = styled.span.attrs({
+  className: p => `pt-tag ${p.correct ? 'pt-intent-success' : ''}`,
+})`
+  display: inline;
+  .pt-icon {
+    margin-right: 0.25em;
+  }
 `
 
-const CloseLink = styled.a`
+const CloseLink = styled.button.attrs({
+  className: 'pt-button pt-minimal pt-icon-cross',
+  'aria-label': 'Return to quiz selection.',
+})`
   position: absolute;
   top: 2px;
   right: 6px;

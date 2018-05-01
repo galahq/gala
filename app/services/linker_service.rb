@@ -4,7 +4,8 @@
 # case enrollment and group membership
 class LinkerService
   attr_reader :strategy
-  delegate :reader, :kase, :group, :status, to: :strategy
+  delegate :reader, :kase, :group, :enrollment_status, :membership_status,
+           to: :strategy
 
   def initialize(strategy)
     @strategy = strategy
@@ -20,7 +21,7 @@ class LinkerService
   def create_group_membership
     return unless reader
     return if reader.group_memberships.exists? group: group
-    reader.group_memberships.create group: group
+    reader.group_memberships.create group: group, status: membership_status
   end
 
   def create_case_enrollment
@@ -28,7 +29,7 @@ class LinkerService
     Enrollment.upsert reader_id: reader.id,
                       case_id: kase.id,
                       active_group_id: group.id,
-                      status: status
+                      status: enrollment_status
   end
 end
 
@@ -56,7 +57,7 @@ class LinkerService
 
     def group
       @group ||= Group.upsert context_id: @launch_params[:context_id],
-                              name: @launch_params[:context_title]
+                              name: (@launch_params[:context_title] || '—')
     rescue ActiveRecord::RecordNotUnique
       # If two readers from the same class hit the launch url at the same time
       # it will violate a uniqueness constraint, but retrying the second will
@@ -64,11 +65,16 @@ class LinkerService
       retry
     end
 
-    def status
+    def enrollment_status
       instructor_role = %r{urn:lti:role:ims/lis/Instructor}
       return unless @launch_params[:ext_roles] =~ instructor_role
 
       :instructor
+    end
+
+    def membership_status
+      return :normal if enrollment_status.blank?
+      :admin
     end
 
     private
@@ -103,8 +109,12 @@ class LinkerService
       @deployment.group
     end
 
-    def status
+    def enrollment_status
       nil
+    end
+
+    def membership_status
+      :normal
     end
   end
 end

@@ -66,7 +66,7 @@ Rails.application.routes.draw do
 
     resources :comments, only: %i[update destroy]
 
-    resources :deployments, only: %i[create edit update] do
+    resources :deployments, only: %i[index new create edit update] do
       resources :submissions, only: %i[index]
     end
 
@@ -80,7 +80,7 @@ Rails.application.routes.draw do
     resources :enrollments, only: %i[index]
 
     resources :groups, only: [] do
-      resources :deployments, only: %i[create]
+      resources :canvas_deployments, only: %i[create]
     end
 
     resources :libraries, param: :slug, only: %i[show]

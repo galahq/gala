@@ -1,0 +1,61 @@
+<div
+  class="deployment spaced--compact"
+  data-controller="deployments--invite-drawer anchor-focus"
+  data-target="deployments--invite-drawer.container anchor-focus.container"
+  id="d<%= deployment.id %>"
+>
+  <div class="deployment__details row--compact">
+    <div class="deployment__case">
+      <%= deployment.case.kicker %>
+      <div class="pt-tag pt-minimal">
+        <span class="pt-icon pt-icon-people"></span>
+        <%= t '.n_enrolled',
+              count: reader_counts_by_deployment_id[deployment.id]
+        %>
+      </div>
+    </div>
+
+    <div class="deployment__actions">
+      <%= deployment.quiz_link %>
+
+      <button
+        class="deployment__open-invite pt-button pt-small pt-minimal
+               pt-icon-new-person"
+        data-action="deployments--invite-drawer#open"
+      >
+        <%= t '.invite_learners' %>
+      </button>
+
+      <button
+        class="deployment__close-invite pt-button pt-small pt-minimal
+               pt-icon-cross"
+        data-action="deployments--invite-drawer#close"
+      >
+        <%= t 'helpers.close' %>
+      </button>
+    </div>
+  </div>
+
+  <div class="deployment__invite__drawer" data-controller="clipboard">
+    <div class="deployment__invite__instructions">
+      <%= t '.invite_instructions_html' %>
+    </div>
+
+    <div class="deployment__invite__link pt-control-group">
+      <div class="pt-input-group pt-fill">
+        <span class="pt-icon pt-icon-new-person"></span>
+        <input
+          aria-label="<%= I18n.t 'deployments.deployment.invite_link',
+                                 case_kicker: deployment.case.kicker,
+                                 group_name: deployment.group.name %>"
+          class="pt-input"
+          data-target="clipboard.source"
+          value="<%= deployment.magic_link %>"
+        />
+      </div>
+      <button class="pt-button pt-icon-clipboard" data-action="clipboard#copy">
+        <%= t 'helpers.copy' %>
+      </button>
+    </div>
+  </div>
+</div>
