@@ -17,6 +17,11 @@ zh-TW:
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
+      deployment:
+        case_id: 案例
+        group_id: Study Group
+        group_attributes:
+          name: Group Name
       edgenote:
         alt_text: Image description for accessibility
         attribution: Attribution
@@ -79,6 +84,7 @@ zh-TW:
         feature: Featured status
       comment: Comment
       comment_thread: Comment thread
+      deployment: Deployment
       edgenote: Edgenote
       enrollment: Enrollment
       global_community: Global Community
@@ -157,7 +163,7 @@ zh-TW:
     meet_stakeholders: >
       在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。
     open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: 案例征集
+    propose_a_case: Propose a Case
     shortcut_experience: 通過案例學習獲取將所學知識運用於實踐的捷徑。
   comment_threads:
     destroy:
@@ -281,6 +287,48 @@ zh-TW:
       month: 月
       second: 秒
       year: 年
+  deployments:
+    deployment:
+      add_quiz: Add Quiz
+      edit_quiz: Edit Quiz
+      n_enrolled: "%{count} enrolled"
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
+      invite_learners: Invite Learners
+      invite_link: |
+        Invite link for the deployment of the case “%{case_kicker}”
+        in the group “%{group_name}”
+    form:
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
+    helpers:
+      all_study_groups: All Study Groups
+      create_a_new_study_group: Create a New Study Group...
+    index:
+      deploy_a_case: Deploy a Case
+      find_a_case_then_click_teach_this_case: |
+        Once you’ve found a case that will suit your needs, click the “Deploy
+        this Case” button in the top right of its Overview page.
+      instructions: |
+        Gala makes it easy to teach a case in a group of any size: a classroom,
+        a workshop, a town, or a team. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      new_deployment: New Deployment
+      once_youve_deployed: |
+        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        learners from this page.
+      teach_with_cases: Teach with Cases
+      youre_not_teaching_any_cases: You’re not teaching any cases yet
+    new:
+      active_deployments: Active Deployments
+      instructions: |
+        Deploy this case in a group of any size: a classroom, a workshop, a
+        town, or a team. You’ll get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      teach_this_case: Deploy this Case
   devise:
     sessions:
       destroy:
@@ -396,6 +444,7 @@ zh-TW:
     required: 必需
   helpers:
     cancel: 取消
+    copy: Copy
     close: 關閉
     edit: Edit
     formatting:
@@ -441,6 +490,7 @@ zh-TW:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
+      create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: 編輯該案例
       edit_case_settings: Edit case settings.
@@ -530,7 +580,7 @@ zh-TW:
     refine: 細化搜索
     results: 搜索結果
     search: 搜索
-    search_cases: 案例搜索
+    search_cases: Search Cases...
     try_again: 請試試輸入其他關鍵詞。
   submissions:
     new:
