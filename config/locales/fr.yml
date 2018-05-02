@@ -570,6 +570,9 @@ fr:
       format:
         delimiter: ''
   podcasts:
+    edit:
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "avec {count, plural, one {animateur(-trice)} other {animateurs(-trices)}}"
