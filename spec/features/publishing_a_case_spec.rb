@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 feature 'Publishing a case' do
-  let!(:kase) { create :case_with_elements }
+  let!(:kase) { create :case }
   let!(:reader) { create :reader, :editor }
 
   scenario 'works' do
