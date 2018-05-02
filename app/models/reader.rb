@@ -5,7 +5,6 @@
 # @attr name [String]
 # @attr email [String] the unique login for devise
 # @attr password [EncryptedString]
-# @attr initials [String]
 # @attr locale [Iso639_1Code] the reader’s preferred locale
 # @attr created_password [Boolean] readers who sign in first with Omniauth will
 #   not initially select a password in order to sign in without that provider.
