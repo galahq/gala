@@ -570,6 +570,9 @@ am:
       format:
         delimiter: ''
   podcasts:
+    edit:
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "with {count, plural, one {host} other {hosts}}"
