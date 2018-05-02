@@ -570,6 +570,9 @@ es:
       format:
         delimiter: ''
   podcasts:
+    edit:
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "con {count, plural, one {el/la anfitrión(a)} other {los/las anfitriones(as)}}"
