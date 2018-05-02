@@ -550,6 +550,9 @@ ja:
       format:
         delimiter: ''
   podcasts:
+    edit:
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "共に司会者"
