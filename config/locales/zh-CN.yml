@@ -45,7 +45,6 @@ zh-CN:
         encrypted_password: 密码被加密
         failed_attempts: 失败尝试
         image: Image
-        initials: Initials
         last_sign_in_at: 最后登录于
         last_sign_in_ip: 最后登录的 IP
         locale: Locale
