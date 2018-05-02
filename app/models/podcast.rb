@@ -20,7 +20,7 @@ class Podcast < ApplicationRecord
   has_one_attached :artwork
   has_one_attached :audio
 
-  before_validation :build_card
+  before_validation :build_card, on: :create
 
   def cards
     [card]
