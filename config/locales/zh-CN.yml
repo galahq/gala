@@ -4,24 +4,24 @@ zh-CN:
     attributes:
       case:
         acknowledgements: 致谢
-        case_title: Case title
+        case_title: 案例标题
         featured: 明星
-        featured_at: Featured at
+        featured_at: 推荐
         kicker: 短标题
         learning_objectives: 学习目标
-        library: Library
+        library: 案例库
         location: 案例发生地
-        published: Published
-        slug: Case URL
-        title: Question
+        published: 已发布
+        slug: 案例链接
+        title: 探究问题
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
-          other: Translators
+          other: 翻译
       deployment:
         case_id: 案例
-        group_id: Study Group
+        group_id: 学习组
         group_attributes:
-          name: Group Name
+          name: 组名
       edgenote:
         alt_text: Image description for accessibility
         attribution: Attribution
