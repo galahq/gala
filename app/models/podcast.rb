@@ -3,21 +3,22 @@
 # An audio component of a case. It can have one associated card as a description
 #
 # @attr title [Translated<String>]
-# @attr audio_url [Translated<String>]
 # @attr credits [Translated<CreditsList>] the hosts and guests on the episode
-# @attr artwork_url [String] a cover image for the podcast
 # @attr photo_credit [String] attribution for the {artwork_url}’s rights holder
 class Podcast < ApplicationRecord
   include Element
   include Mobility
   include Trackable
 
-  translates :title, :audio_url, :description, :credits, fallbacks: true
+  translates :title, :description, :credits, fallbacks: true
 
   # @!method card
   #   @api private
   #   Prefer {cards}
   has_one :card, as: :element, dependent: :destroy, required: true
+
+  has_one_attached :artwork
+  has_one_attached :audio
 
   before_validation :build_card
 
