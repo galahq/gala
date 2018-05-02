@@ -14,7 +14,7 @@ class PodcastsController < ApplicationController
     @podcast.build_case_element case: @case
 
     if @podcast.save
-      render @podcast
+      render @podcast.decorate
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class PodcastsController < ApplicationController
     authorize @podcast.case, :update?
 
     if @podcast.update(podcast_params)
-      render @podcast
+      render @podcast.decorate
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -51,8 +51,8 @@ class PodcastsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def podcast_params
-    params[:podcast].permit(:title, :audio_url, :description,
-                            :case_id, :artwork_url, :photo_credit,
+    params[:podcast].permit(:title, :audio, :description, :artwork,
+                            :photo_credit,
                             credits_list: [hosts: [], guests: %i[name title]])
   end
 end

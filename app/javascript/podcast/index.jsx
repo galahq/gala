@@ -5,15 +5,18 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
+import ActiveStorageProvider from 'react-activestorage-provider'
 import { EditableText } from '@blueprintjs/core'
 
 import { updatePodcast } from 'redux/actions'
 
 import CreditsList from './CreditsList'
-import EditableAttribute from 'utility/EditableAttribute'
 import Statistics from 'utility/Statistics'
 import Card from 'card'
 import Tracker from 'utility/Tracker'
+import FileUploadWidget, {
+  PositionedFileUploadWidget,
+} from 'utility/FileUploadWidget'
 
 import type { State, Podcast as PodcastT } from 'redux/state'
 
@@ -100,16 +103,33 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
           </button>
         )}
 
-        <EditableAttribute
-          title="Artwork URL"
-          value={artworkUrl}
-          disabled={!editing}
-          onChange={v => updatePodcast(`${id}`, { artworkUrl: v })}
-        />
         <div
           className="artwork"
-          style={{ backgroundImage: `url(${artworkUrl})` }}
+          style={{
+            backgroundImage: `url(${artworkUrl})`,
+            position: 'relative',
+          }}
         >
+          {editing && (
+            <ActiveStorageProvider
+              endpoint={{
+                path: `/podcasts/${id}`,
+                model: 'Podcast',
+                attribute: 'artwork',
+                method: 'PUT',
+              }}
+              render={renderProps => (
+                <PositionedFileUploadWidget
+                  message={{ id: 'podcasts.edit.uploadArtwork' }}
+                  {...renderProps}
+                />
+              )}
+              onSubmit={({ artworkUrl }: PodcastT) =>
+                updatePodcast(`${id}`, { artworkUrl }, false)
+              }
+            />
+          )}
+
           <cite className="o-bottom-right c-photo-credit">
             <EditableText
               multiline
@@ -138,13 +158,36 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
           />
         </div>
 
-        <audio
-          src={audioUrl}
-          controls="controls"
-          preload="auto"
-          onPlay={this.handlePlay}
-          onPause={this.handlePause}
-        />
+        <div className="spaced">
+          {editing && (
+            <ActiveStorageProvider
+              endpoint={{
+                path: `/podcasts/${id}`,
+                model: 'Podcast',
+                attribute: 'audio',
+                method: 'PUT',
+              }}
+              render={renderProps => (
+                <FileUploadWidget
+                  accept="audio/*"
+                  message={{ id: 'podcasts.edit.uploadPodcast' }}
+                  {...renderProps}
+                />
+              )}
+              onSubmit={({ audioUrl }: PodcastT) =>
+                updatePodcast(`${id}`, { audioUrl }, false)
+              }
+            />
+          )}
+
+          <audio
+            src={audioUrl}
+            controls="controls"
+            preload="auto"
+            onPlay={this.handlePlay}
+            onPause={this.handlePause}
+          />
+        </div>
 
         <Statistics uri={`podcasts/${id}`} inline={true} />
 
@@ -156,15 +199,6 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
             podcast_id: id,
           }}
         />
-
-        <div>
-          <EditableAttribute
-            disabled={!editing}
-            title="Audio URL"
-            value={audioUrl}
-            onChange={v => updatePodcast(`${id}`, { audioUrl: v })}
-          />
-        </div>
       </div>
     )
   }

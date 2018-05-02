@@ -28,11 +28,13 @@ export type UpdatePodcastAction = {
   type: 'UPDATE_PODCAST',
   id: string,
   data: $Shape<Podcast>,
+  needsSaving: boolean,
 }
 export function updatePodcast (
   id: string,
-  data: $Shape<Podcast>
+  data: $Shape<Podcast>,
+  needsSaving?: boolean = true
 ): UpdatePodcastAction {
-  setUnsaved()
-  return { type: 'UPDATE_PODCAST', id, data }
+  if (needsSaving) setUnsaved()
+  return { type: 'UPDATE_PODCAST', id, data, needsSaving }
 }
