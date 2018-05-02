@@ -14,7 +14,7 @@ import { updateCase } from 'redux/actions'
 
 import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
-import FileUploadWidget from 'utility/FileUploadWidget'
+import { PositionedFileUploadWidget } from 'utility/FileUploadWidget'
 
 import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
@@ -75,24 +75,24 @@ export const UnconnectedBillboardTitle = ({
     <CoverImageContainer src={coverUrl}>
       {!minimal &&
         editing && (
-          <ActiveStorageProvider
-            endpoint={{
-              path: `/cases/${slug}`,
-              model: 'Case',
-              attribute: 'cover_image',
-              method: 'PUT',
-            }}
-            render={renderProps => (
-              <CoverImageUploadWidget
-                message={{ id: 'cases.edit.changeCoverImage' }}
-                {...renderProps}
-              />
-            )}
-            onSubmit={({ coverUrl }: CaseDataState) =>
-              updateCase({ coverUrl }, false)
-            }
-          />
-        )}
+        <ActiveStorageProvider
+          endpoint={{
+            path: `/cases/${slug}`,
+            model: 'Case',
+            attribute: 'cover_image',
+            method: 'PUT',
+          }}
+          render={renderProps => (
+            <PositionedFileUploadWidget
+              message={{ id: 'cases.edit.changeCoverImage' }}
+              {...renderProps}
+            />
+          )}
+          onSubmit={({ coverUrl }: CaseDataState) =>
+            updateCase({ coverUrl }, false)
+          }
+        />
+      )}
 
       <h1>
         <span className="c-kicker">
@@ -157,10 +157,4 @@ export const CoverImageContainer = styled.div.attrs({
     css`
       padding-top: 2em;
     `};
-`
-
-const CoverImageUploadWidget = styled(FileUploadWidget)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
 `
