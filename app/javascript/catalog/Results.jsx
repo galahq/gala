@@ -53,7 +53,7 @@ class Results extends React.Component<
   }
 
   render () {
-    const { loading, cases, readerIsEditor } = this.props
+    const { loading, readerIsEditor } = this.props
     return [
       <Sidebar key="sidebar">
         <Route
@@ -67,14 +67,11 @@ class Results extends React.Component<
           <SectionTitle>
             <FormattedMessage id="search.results" />
           </SectionTitle>
-          {loading.cases || this.state.loading ? null : this.state.results
+          {loading.cases || this.state.loading ? null : this._results()
             .length === 0 ? (
               <NoSearchResults />
             ) : (
-              <CaseList
-                cases={this.state.results.map(slug => cases[slug])}
-                readerIsEditor={readerIsEditor}
-              />
+              <CaseList cases={this._results()} readerIsEditor={readerIsEditor} />
             )}
         </CatalogSection>
       </Main>,
@@ -93,6 +90,12 @@ class Results extends React.Component<
       ...coerceIntoArrayValues(qs.parse(search, { ignoreQueryPrefix: true })),
       ...getQueryFromPathname(pathname),
     }
+  }
+
+  _results () {
+    return this.state.results
+      .map(slug => this.props.cases[slug])
+      .filter(Boolean)
   }
 }
 export default Results
