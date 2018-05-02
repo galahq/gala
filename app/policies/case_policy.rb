@@ -2,6 +2,15 @@
 
 # @see Case
 class CasePolicy < ApplicationPolicy
+  # What cases can this user see in the library?
+  class Scope < Scope
+    def resolve
+      scope.where id: scope.published.pluck(:id) +
+                      user.my_cases.pluck(:id) +
+                      user.enrolled_cases.pluck(:id)
+    end
+  end
+
   # What cases can this user administrate?
   class AdminScope < Scope
     def resolve
