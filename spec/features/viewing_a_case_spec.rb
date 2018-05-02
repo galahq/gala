@@ -59,13 +59,11 @@ feature 'Viewing a case' do
     end
 
     context 'a forthcoming case' do
-      let!(:forthcoming_case) { create :case, :in_catalog }
+      let!(:forthcoming_case) { create :case }
       before { login_as user }
 
       scenario 'is not accessible' do
-        expect(page).to have_content 'FORTHCOMING'
-        expect(page).to have_content forthcoming_case.title
-        expect(page).not_to have_link forthcoming_case.title
+        expect(page).not_to have_content forthcoming_case.title
       end
     end
   end
