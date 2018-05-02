@@ -6,7 +6,7 @@ feature 'Unenrolling from a case' do
   let!(:reader) { create :reader, :editor }
 
   scenario 'is possible' do
-    kase = create :case_with_elements, :published
+    kase = create :case, :published
     kase.enrollments.create(reader: reader)
 
     login_as reader
@@ -20,7 +20,7 @@ feature 'Unenrolling from a case' do
   end
 
   scenario 'displays an extra warning if the case is not published' do
-    kase = create :case_with_elements
+    kase = create :case
     kase.enrollments.create(reader: reader)
 
     login_as reader
