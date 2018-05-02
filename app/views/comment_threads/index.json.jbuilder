@@ -10,7 +10,7 @@ by_id json,
 
 json.cards do
   @case.cards.each do |card|
-    json.cache! [card, @forum, current_reader] do
+    json.cache! [I18n.locale, card, @forum, current_reader] do
       json.set! card.to_param do
         json.extract! card, :id, :page_id, :position, :solid, :raw_content
         json.page_id card.element_type == 'Page' ? card.element_id : nil
