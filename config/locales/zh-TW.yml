@@ -45,7 +45,6 @@ zh-TW:
         encrypted_password: 密碼被加密
         failed_attempts: 失敗嘗試
         image: Image
-        initials: Initials
         last_sign_in_at: 最后登錄於
         last_sign_in_ip: 最后登錄的 IP
         locale: Locale
