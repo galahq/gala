@@ -30,6 +30,11 @@ class AnonymousUser
     Case.none
   end
 
+  # @return [ActiveRecord::Relation<Case>] an empty relation
+  def enrolled_cases
+    Case.none
+  end
+
   # @return [ActiveRecord::Relation<Enrollment>] an empty relation
   def enrollments
     Enrollment.none

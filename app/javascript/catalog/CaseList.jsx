@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
-import { CaseRow, CaseLinkRow } from 'catalog/shared'
+import { CaseLinkRow } from 'catalog/shared'
 
 import type { Case } from 'redux/state'
 
@@ -15,11 +15,9 @@ type Props = { cases: Case[], readerIsEditor: boolean }
 const CaseList = ({ cases, readerIsEditor }: Props) => (
   <UnstyledList>
     {cases.map(kase => {
-      const link = kase.publishedAt || readerIsEditor
-      const Row = link ? CaseLinkRow : CaseRow
       return (
         <li key={kase.slug}>
-          <Row href={link ? kase.links.self : undefined}>
+          <CaseLinkRow href={kase.links.self}>
             <Image src={kase.smallCoverUrl} />
             <Title>
               <Kicker>
@@ -28,7 +26,7 @@ const CaseList = ({ cases, readerIsEditor }: Props) => (
               </Kicker>
               {kase.title}
             </Title>
-          </Row>
+          </CaseLinkRow>
         </li>
       )
     })}

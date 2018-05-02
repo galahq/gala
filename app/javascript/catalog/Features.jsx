@@ -18,20 +18,19 @@ const Featured = ({ featuredCases, readerIsEditor }: Props) => (
       <FormattedMessage id="features.index.featuredCases" />
     </SectionTitle>
     <Grid>
-      {featuredCases.map(
-        (
-          {
-            slug,
-            kicker,
-            title,
-            dek,
-            coverUrl,
-            photoCredit,
-            links,
-            publishedAt,
-          },
-          i
-        ) => (
+      {six(featuredCases).map((kase, i) => {
+        if (kase == null) return <Box />
+        const {
+          slug,
+          kicker,
+          title,
+          dek,
+          coverUrl,
+          photoCredit,
+          links,
+          publishedAt,
+        } = kase
+        return (
           <CaseBlock
             key={slug}
             published={!!publishedAt}
@@ -43,12 +42,17 @@ const Featured = ({ featuredCases, readerIsEditor }: Props) => (
             url={publishedAt || readerIsEditor ? links.self : undefined}
           />
         )
-      )}
+      })}
     </Grid>
   </CatalogSection>
 )
 
 export default Featured
+
+function six (arr) {
+  const paddedArr = arr.length < 6 ? [...arr, ...Array(6)] : arr
+  return paddedArr.slice(0, 6)
+}
 
 const Grid = styled.ul`
   margin: 0;
@@ -115,7 +119,10 @@ const Dek = styled.p`
   line-height: 110%;
 `
 const Box = styled.li`
+  background-color: #35536f;
+  border-radius: 2pt;
   display: block;
+
   &:nth-child(-n + 2) {
     @media (min-width: 800px) {
       grid-column-end: span 2;
