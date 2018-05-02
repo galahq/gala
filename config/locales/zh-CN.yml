@@ -23,10 +23,10 @@ zh-CN:
         group_attributes:
           name: 组名
       edgenote:
-        alt_text: Image description for accessibility
-        attribution: Attribution
-        call_to_action: Call to action
-        caption: Caption
+        alt_text: 图像描述
+        attribution: 致谢
+        call_to_action: 操作提示
+        caption: 添加说明
         photo_credit: Photo credit
         pull_quote: Pull quote
       question:
