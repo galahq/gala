@@ -46,7 +46,6 @@ es:
         encrypted_password: Contraseña cifrada
         failed_attempts: Intentos fallidos
         image: Imágen
-        initials: Initials
         last_sign_in_at: Fecha del último ingreso
         last_sign_in_ip: IP del último ingreso
         locale: Locale
