@@ -69,16 +69,18 @@ class Home extends React.Component<{
             }}
           />
 
-          <CatalogSection>
-            <SectionTitle>
-              <FormattedMessage id="cases.index.allCases" />
-            </SectionTitle>
+          {this._allOtherCases().length > 0 && (
+            <CatalogSection>
+              <SectionTitle>
+                <FormattedMessage id="cases.index.allCases" />
+              </SectionTitle>
 
-            <CaseList
-              readerIsEditor={readerIsEditor}
-              cases={this._allOtherCases()}
-            />
-          </CatalogSection>
+              <CaseList
+                readerIsEditor={readerIsEditor}
+                cases={this._allOtherCases()}
+              />
+            </CatalogSection>
+          )}
         </Main>
       </React.Fragment>
     )
