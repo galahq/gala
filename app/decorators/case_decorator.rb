@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
+DARK_BLUE_PIXEL =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU' \
+  'lEQVR42mOUtY/7DwAC9gG7VNK2ygAAAABJRU5ErkJggg=='
+
 # @see Case
 class CaseDecorator < ApplicationDecorator
-  DARK_BLUE_PIXEL =
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU' \
-    'lEQVR42mOUtY/7DwAC9gG7VNK2ygAAAABJRU5ErkJggg=='
-
   decorates_association :edgenotes
+  decorates_association :podcasts
 
   def cover_url(transforms = { resize: '1280x540^' })
     return DARK_BLUE_PIXEL unless cover_image.attached?
