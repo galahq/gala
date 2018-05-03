@@ -17,7 +17,7 @@ class Activity < ApplicationRecord
 
   has_one_attached :pdf
 
-  before_validation :build_card
+  before_validation :build_card, on: :create
 
   # @return [Array<Card>]
   def cards

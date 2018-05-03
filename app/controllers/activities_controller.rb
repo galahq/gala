@@ -51,6 +51,6 @@ class ActivitiesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def activity_params
-    params[:activity].permit(:title, :description, :pdf_url, :case_id)
+    params[:activity].permit(:title, :description, :pdf, :case_id)
   end
 end

@@ -101,6 +101,9 @@ en:
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
   activities:
+    edit:
+      delete_activity: Delete Activity
+      upload_attachment: Upload Attachment
     show:
       download: Download
       instructions: Instructions
