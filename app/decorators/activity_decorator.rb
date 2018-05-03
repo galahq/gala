@@ -4,6 +4,6 @@
 class ActivityDecorator < ApplicationDecorator
   def pdf_url
     return nil unless pdf.attached?
-    h.url_for pdf
+    h.rails_blob_path pdf, disposition: 'attachment'
   end
 end
