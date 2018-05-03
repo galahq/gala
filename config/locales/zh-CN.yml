@@ -27,12 +27,12 @@ zh-CN:
         attribution: 致谢
         call_to_action: 操作提示
         caption: 添加说明
-        photo_credit: Photo credit
-        pull_quote: Pull quote
+        photo_credit: 图片来源
+        pull_quote: 引用
       question:
-        content: Content
-        correct_answer: Correct answer
-        options: Options
+        content: 内容
+        correct_answer: 正确答案
+        options: 选项
       reader:
         confirmation_sent_at: 确认邮件发送自
         confirmation_token: 确认令牌
@@ -44,26 +44,26 @@ zh-CN:
         email: 电子邮箱
         encrypted_password: 密码被加密
         failed_attempts: 失败尝试
-        image: Image
+        image: 图片
         last_sign_in_at: 最后登录于
         last_sign_in_ip: 最后登录的 IP
-        locale: Locale
+        locale: 区域
         locked_at: 锁定于
-        name: Full Name
+        name: 全名
         password: 密码
         password_confirmation: 密码确认
         remember_created_at: 记住创建于
         remember_me: 记住登录信息
         reset_password_sent_at: 重置密码发送于
         reset_password_token: 密码重置令牌
-        send_reply_notifications: Notify me when someone replies to a comment I wrote
+        send_reply_notifications: 当有人回复我的评论时，请通知我。
         sign_in_count: 登录次数
         unconfirmed_email: 未确认邮件
         unlock_token: 帐户解锁令牌
         updated_at: 更新于
       shared_cases_library:
         description: >
-          These cases were shared by Gala users.
+          这些是来自Gala用户的共享案例。
     errors:
       messages:
         record_invalid: "验证失败: %{errors}"
@@ -74,7 +74,7 @@ zh-CN:
         question:
           attributes:
             correct_answer:
-              inclusion: "is not included in the list of possible answers"
+              inclusion: "不包括在可能的答案列表中"
     models:
       activity: Activity
       case: 案例
