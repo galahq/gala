@@ -15,7 +15,7 @@ zh-CN:
         slug: 案例链接
         title: 探究问题
         translators:
-          js: "{count, plural, one {Translator} other {Translators} }: "
+          js: "翻译："
           other: 翻译
       deployment:
         case_id: 案例
