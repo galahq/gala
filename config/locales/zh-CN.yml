@@ -131,9 +131,9 @@ zh-CN:
         change_featured_time: 更改时间
       slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
-          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
+          如果您更改了您的案例的链接，原先的案例链接将自动链接到这个新链接。但是，如果其他人采用您所废弃了的链接，那么那个链接地址将重置为链接到他人案例的地址。
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
-          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
+          <b>格式:</b> 小写字母和由连字符分隔的数字,<br />最多能容纳100个字符
     show:
       back_to_overview: 返回案例主页
       end: 终
