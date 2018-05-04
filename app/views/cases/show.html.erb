@@ -1,7 +1,15 @@
 <div id="container"></div>
 
 <%=javascript_tag do %>
-  window.caseData = <%= raw render partial: "show", formats: [:json], locals: {c: @case} %>
+  window.caseData = <%=
+  raw ActiveModelSerializers::SerializableResource
+    .new(
+      @case, serializer: CaseReaderSerializer,
+             scope: controller.view_context, scope_name: :view_context,
+             deployment: @deployment, enrollment: @enrollment
+    )
+    .to_json
+  %>
 <% end %>
 
 <%=javascript_pack_tag "case"%>
