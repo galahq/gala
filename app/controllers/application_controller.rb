@@ -14,6 +14,8 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+  serialization_scope :view_context
+
   # All url helpers use this: keep users in their active locale after it’s set.
   def default_url_options(options = {})
     options[:locale] = params[:locale]

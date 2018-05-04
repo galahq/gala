@@ -23,7 +23,13 @@ class CasesController < ApplicationController
 
     set_group_and_deployment
 
-    render layout: 'with_header'
+    respond_to do |format|
+      format.html { render layout: 'with_header' }
+      format.json do
+        render json: @case, serializer: CaseReaderSerializer,
+               deployment: @deployment, enrollment: @enrollment
+      end
+    end
   end
 
   # @route [POST] `/cases`
@@ -69,11 +75,9 @@ class CasesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_case
     @case = Case.friendly.includes(
-      :podcasts,
+      :podcasts, :cards,
       edgenotes: [image_attachment: :blob, audio_attachment: :blob],
-      cards: [comment_threads: [:reader, comments: [:reader]]],
-      activities: %i[case_element card], pages: %i[case_element cards],
-      enrollments: [:reader]
+      activities: %i[case_element card], pages: %i[case_element cards]
     )
                 .find(slug).decorate
   end
