@@ -76,12 +76,12 @@ zh-CN:
             correct_answer:
               inclusion: "不包括在可能的答案列表中"
     models:
-      activity: Activity
+      activity: 活动
       case: 案例
       cases:
-        setting: Case Settings
-        feature: Featured status
-      comment: Comment
+        setting: 案例设置
+        feature: 推荐设置
+      comment: 评论
       comment_thread: Comment thread
       deployment: Deployment
       edgenote: Edgenote
