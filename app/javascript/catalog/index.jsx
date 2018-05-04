@@ -73,9 +73,9 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
           loading: { ...loading, reader: false },
         }))
       )
-    Orchard.harvest('cases').then(cases =>
+    Orchard.harvest('cases').then((cases: Case[]) =>
       this.setState(({ loading }) => ({
-        cases,
+        cases: normalize(cases, 'slug'),
         loading: { ...loading, cases: false },
       }))
     )
@@ -152,4 +152,12 @@ const Window = styled.div`
 
   @media (max-width: 700px) {
     grid-template: 'value-proposition' 'sidebar' 'banner' 'main' auto / 100%;
+  }
 `
+
+function normalize<T: {}> (array: T[], key: $Keys<T>): { [string]: T } {
+  return array.reduce((table, element) => {
+    table[element[key]] = element
+    return table
+  }, ({}: { [string]: T }))
+}

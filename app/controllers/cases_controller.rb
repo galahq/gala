@@ -14,6 +14,13 @@ class CasesController < ApplicationController
              .with_attached_cover_image
              .includes(:case_elements, :library)
              .decorate
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: @cases, each_serializer: CasePreviewSerializer
+      end
+    end
   end
 
   # @route [GET] `/cases/slug`
