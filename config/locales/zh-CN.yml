@@ -90,29 +90,29 @@ zh-CN:
       group: 组
       group_membership: 组成员
       page: 页
-      podcast: Podcast
-      reader: Reader
-      shared_cases_library: Shared Cases
+      podcast: 广播节目
+      reader: 读者
+      shared_cases_library: 共享案例
     persistance:
       messages:
-        created: "%{model} successfully created."
-        destroyed: "%{model} successfully deleted."
-        updated: "%{model} successfully updated."
+        created: "%{model} 创建成功。"
+        destroyed: "%{model} 删除成功。"
+        updated: "%{model} 更新成功。"
   activities:
     show:
-      download: Download
-      instructions: Instructions
+      download: 下载
+      instructions: 说明
   cases:
     edit:
-      change_cover_image: Change cover image
+      change_cover_image: 更改封面图片
       edit: 编辑该案例
       feature_case: 将此案例设置为明星案例
       just_change_the_text: 点击案例，开始编辑。
       map:
-        reset: Reset
-        set: Set
-        zoom_in: Zoom in
-        zoom_out: Zoom out
+        reset: 重置
+        set: 确定
+        zoom_in: 放大
+        zoom_out: 缩小
       options: 选项
       publish_case: 发表该案例
       save: 保存
@@ -124,11 +124,11 @@ zh-CN:
       locations: 案例地点
     settings:
       edit:
-        change_library: Change library
-        change_url: Change URL
-        edit_case_settings: Edit case settings
+        change_library: 更换案例库
+        change_url: 更改案例链接
+        edit_case_settings: 编辑案例设置
       featured_form:
-        change_featured_time: Change time
+        change_featured_time: 更改时间
       slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
           If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
