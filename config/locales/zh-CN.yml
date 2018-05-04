@@ -86,10 +86,10 @@ zh-CN:
       deployment: 案例教学
       edgenote: 边注
       enrollment: 案例学员名册
-      global_community: Global Community
-      group: Group
-      group_membership: Group Membership
-      page: Page
+      global_community: 通用讨论组
+      group: 组
+      group_membership: 组成员
+      page: 页
       podcast: Podcast
       reader: Reader
       shared_cases_library: Shared Cases
