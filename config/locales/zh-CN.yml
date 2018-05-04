@@ -82,10 +82,10 @@ zh-CN:
         setting: 案例设置
         feature: 推荐设置
       comment: 评论
-      comment_thread: Comment thread
-      deployment: Deployment
-      edgenote: Edgenote
-      enrollment: Enrollment
+      comment_thread: 评论
+      deployment: 案例教学
+      edgenote: 边注
+      enrollment: 案例学员名册
       global_community: Global Community
       group: Group
       group_membership: Group Membership
