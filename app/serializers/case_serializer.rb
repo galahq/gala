@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # @see Case
-class CaseSerializer < CasePreviewSerializer
+class CaseSerializer < Cases::PreviewSerializer
   belongs_to :library
 
   has_many :case_elements
