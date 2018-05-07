@@ -2,8 +2,7 @@
 
 <%=javascript_tag do %>
   window.caseData = <%=
-  raw ActiveModelSerializers::SerializableResource
-    .new(
+  raw ActiveModel::Serializer.for(
       @case, serializer: Cases::ShowSerializer,
              scope: controller.view_context, scope_name: :view_context,
              deployment: @deployment, enrollment: @enrollment
