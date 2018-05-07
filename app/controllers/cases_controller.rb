@@ -18,7 +18,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        render json: @cases, each_serializer: CasePreviewSerializer
+        render json: @cases, each_serializer: Cases::PreviewSerializer
       end
     end
   end
@@ -33,7 +33,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html { render layout: 'with_header' }
       format.json do
-        render json: @case, serializer: CaseReaderSerializer,
+        render json: @case, serializer: Cases::ShowSerializer,
                deployment: @deployment, enrollment: @enrollment
       end
     end

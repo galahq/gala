@@ -4,7 +4,7 @@
   window.caseData = <%=
   raw ActiveModelSerializers::SerializableResource
     .new(
-      @case, serializer: CaseReaderSerializer,
+      @case, serializer: Cases::ShowSerializer,
              scope: controller.view_context, scope_name: :view_context,
              deployment: @deployment, enrollment: @enrollment
     )
