@@ -63,6 +63,7 @@ gem 'awesome_print'
 gem 'lograge'
 gem 'newrelic_rpm'
 gem 'scout_apm'
+gem 'skylight'
 gem 'table_print'
 
 # Services
