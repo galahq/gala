@@ -3,7 +3,9 @@
  * @flow
  */
 
+import * as R from 'ramda'
 import produce from 'immer'
+import { paramCase } from 'change-case'
 
 import type { EdgenotesState } from 'redux/state'
 import type {
@@ -13,7 +15,9 @@ import type {
 } from 'redux/actions'
 
 export default function edgenotesBySlug (
-  state: EdgenotesState = ({ ...window.caseData.edgenotes }: EdgenotesState),
+  state: EdgenotesState = ({
+    ...dasherizeKeys(window.caseData.edgenotes),
+  }: EdgenotesState),
   action: AddEdgenoteAction | UpdateEdgenoteAction | RemoveEdgenoteAction
 ): EdgenotesState {
   switch (action.type) {
@@ -41,3 +45,8 @@ export default function edgenotesBySlug (
       return state
   }
 }
+
+const renameBy = R.curry((fn, obj) =>
+  R.pipe(R.toPairs, R.map(R.adjust(fn, 0)), R.fromPairs)(obj)
+)
+const dasherizeKeys = renameBy(paramCase)
