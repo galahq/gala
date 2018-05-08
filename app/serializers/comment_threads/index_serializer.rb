@@ -9,7 +9,7 @@ module CommentThreads
       attribute(:comment_threads) do
         ActiveModel::Serializer
           .for(instance_options[:threads_by_card_id][object.id])
-          .as_json
+          .as_json || []
       end
     end
 
