@@ -5,8 +5,11 @@
 # researcher, so we don’t want to imply these cases are less-than in any way.
 class SharedCasesLibrary
   include Singleton
+  include Serializable
 
   attr_reader :id, :slug, :url, :background_color, :foreground_color
+
+  serialize_with LibrarySerializer
 
   def initialize
     @id = nil

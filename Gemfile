@@ -47,6 +47,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'haml'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.0'

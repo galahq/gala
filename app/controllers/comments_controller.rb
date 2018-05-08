@@ -12,7 +12,7 @@ class CommentsController < ApplicationController
     @comment.reader = current_reader
 
     if @comment.save
-      render partial: @comment
+      render json: @comment
     else
       render json: @comment.errors, status: :unprocessable_entity
     end
