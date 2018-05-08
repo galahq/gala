@@ -12,8 +12,6 @@ class CommentThreadBroadcastJob < ActiveJob::Base
   private
 
   def render_comment_thread(comment_thread)
-    ApplicationController.renderer
-                         .render partial: 'comment_threads/comment_thread',
-                                 locals: { comment_thread: comment_thread }
+    ActiveModel::Serializer.for(comment_thread).as_json
   end
 end
