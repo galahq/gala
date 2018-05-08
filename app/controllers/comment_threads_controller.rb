@@ -33,7 +33,7 @@ class CommentThreadsController < ApplicationController
     @comment_thread.locale = I18n.locale
 
     if @comment_thread.save
-      render partial: @comment_thread
+      render json: @comment_thread
     else
       render json: @comment_thread.errors, status: :unprocessable_entity
     end
