@@ -64,7 +64,8 @@ class CasesController < ApplicationController
     set_group_and_deployment
 
     if @case.update(case_params)
-      render :show, status: :ok, location: @case
+      render json: @case, serializer: Cases::ShowSerializer,
+             deployment: @deployment, enrollment: @enrollment
     else
       render json: @case.errors, status: :unprocessable_entity
     end
