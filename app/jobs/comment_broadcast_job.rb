@@ -12,6 +12,6 @@ class CommentBroadcastJob < ActiveJob::Base
   private
 
   def render_comment(comment)
-    ActiveModel::Serializer.for(comment).as_json
+    ActiveModel::Serializer.for(comment).to_json
   end
 end
