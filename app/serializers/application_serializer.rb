@@ -4,6 +4,19 @@
 class ApplicationSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
+  # Wrapper for a hash that disables key transformations
+  class UntransformableHash
+    delegate_missing_to :@hash
+
+    def initialize(hash = {})
+      @hash = hash
+    end
+
+    def deep_transform_keys!
+      self
+    end
+  end
+
   attribute :links, if: -> { _links.any? } do
     _links.transform_values do |value|
       value unless value.respond_to? :call
@@ -20,8 +33,8 @@ class ApplicationSerializer < ActiveModel::Serializer
   end
 
   def by_id(collection, options = {})
-    collection.each_with_object({}) do |element, hash|
-      hash[element.to_param] =
+    collection.each_with_object(UntransformableHash.new) do |element, hash|
+      hash[element.to_param.freeze] =
         ActiveModel::Serializer.for(element, options).as_json
     end
   end
