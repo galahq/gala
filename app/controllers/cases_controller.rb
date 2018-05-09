@@ -15,12 +15,7 @@ class CasesController < ApplicationController
              .includes(:case_elements, :library)
              .decorate
 
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: @cases, each_serializer: Cases::PreviewSerializer
-      end
-    end
+    render json: @cases, each_serializer: Cases::PreviewSerializer
   end
 
   # @route [GET] `/cases/slug`
