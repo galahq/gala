@@ -2,9 +2,7 @@
 
 ActiveModelSerializers.config.key_transform = :camel_lower
 
-ActiveSupport::Notifications.unsubscribe(
-  ActiveModelSerializers::Logging::RENDER_EVENT
-)
+ActiveModelSerializers.logger = Logger.new(IO::NULL)
 
 ActiveModel::Serializer.class_eval do
   def self.for(resource, options = {})
