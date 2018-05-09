@@ -4,19 +4,20 @@
 # can do to solidify their understanding.
 #
 # @attr title [Translated<String>]
-# @attr pdf_url [Translated<String>]
 class Activity < ApplicationRecord
   include Element
   include Mobility
 
-  translates :title, :description, :pdf_url, fallbacks: true
+  translates :title, :description, fallbacks: true
 
   # @!method card
   #   @api private
   #   Prefer {cards}
   has_one :card, as: :element, dependent: :destroy, required: true
 
-  before_validation :build_card
+  has_one_attached :pdf
+
+  before_validation :build_card, on: :create
 
   # @return [Array<Card>]
   def cards

@@ -9,7 +9,7 @@ import { Orchard } from 'shared/orchard'
 import type { Dispatch } from 'redux/actions'
 import type { Activity } from 'redux/state'
 
-export type AddActivityAction = { type: 'ADD_ACTIVITY', data: Activity }
+export type AddActivityAction = { type: "ADD_ACTIVITY", data: Activity }
 function addActivity (data: Activity): AddActivityAction {
   return { type: 'ADD_ACTIVITY', data }
 }
@@ -25,14 +25,15 @@ export function createActivity (caseSlug: string) {
 }
 
 export type UpdateActivityAction = {
-  type: 'UPDATE_ACTIVITY',
+  type: "UPDATE_ACTIVITY",
   id: string,
   data: $Shape<Activity>,
 }
 export function updateActivity (
   id: string,
-  data: $Shape<Activity>
+  data: $Shape<Activity>,
+  needsSaving?: boolean = true
 ): UpdateActivityAction {
-  setUnsaved()
+  if (needsSaving) setUnsaved()
   return { type: 'UPDATE_ACTIVITY', id, data }
 }

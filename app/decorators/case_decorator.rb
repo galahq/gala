@@ -6,6 +6,7 @@ DARK_BLUE_PIXEL =
 
 # @see Case
 class CaseDecorator < ApplicationDecorator
+  decorates_association :activities
   decorates_association :edgenotes
   decorates_association :podcasts
 

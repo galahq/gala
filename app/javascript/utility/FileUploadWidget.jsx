@@ -30,7 +30,7 @@ const FileUploadWidget = ({
   <React.Fragment>
     <label className={className} style={{ display: ready ? 'block' : 'none' }}>
       <HiddenFileUpload
-        accept={accept || 'image/*'}
+        accept={accept == null ? 'image/*' : ''}
         onChange={e => handleUpload(e.currentTarget.files)}
       />
       <UploadButton>

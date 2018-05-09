@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.key_format! camelize: :lower
 json.url url_for activity
 json.extract! activity, :id, :position, :title, :pdf_url, :icon_slug

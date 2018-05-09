@@ -14,7 +14,7 @@ class ActivitiesController < ApplicationController
     @activity.build_case_element case: @case
 
     if @activity.save
-      render @activity
+      render @activity.decorate
     else
       render json: @activity.errors, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class ActivitiesController < ApplicationController
     authorize @activity.case
 
     if @activity.update(activity_params)
-      render @activity
+      render @activity.decorate
     else
       render json: @activity.errors, status: :unprocessable_entity
     end
@@ -51,6 +51,6 @@ class ActivitiesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def activity_params
-    params[:activity].permit(:title, :description, :pdf_url, :case_id)
+    params[:activity].permit(:title, :description, :pdf, :case_id)
   end
 end
