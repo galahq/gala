@@ -47,7 +47,7 @@ const render = Component => {
 render(Deployment)
 
 if (module.hot) {
-  module.hot.accept('Deployment', () => {
+  module.hot.accept('deployment', () => {
     render(Deployment)
   })
 }
