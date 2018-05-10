@@ -77,13 +77,14 @@ class Case extends React.Component<{
   editable: ?boolean,
 }> {
   _subscribe = () => {
+    if (typeof App === 'undefined' || !('WebSocket' in window)) return
+
     const {
       handleNotification,
       subscribeToActiveForumChannel,
       caseSlug,
     } = this.props
 
-    if (typeof App === 'undefined') return
     App.readerNotification = App.cable.subscriptions.create(
       'ReaderNotificationsChannel',
       {
