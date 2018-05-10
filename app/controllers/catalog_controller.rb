@@ -4,6 +4,9 @@
 class CatalogController < ApplicationController
   # @route [GET] `/`
   def home
+    @cases = policy_scope(Case)
+             .ordered
+
     render layout: 'with_header'
   end
 end
