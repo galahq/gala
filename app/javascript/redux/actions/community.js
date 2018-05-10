@@ -53,6 +53,8 @@ export function setCommunities (communities: Community[]): SetCommunitiesAction 
 
 export function subscribeToActiveForumChannel (slug: string): ThunkAction {
   return (dispatch: Dispatch) => {
+    if (!('WebSocket' in window)) return
+
     App.forum = App.cable.subscriptions.create(
       {
         channel: 'ForumChannel',

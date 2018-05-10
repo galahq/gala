@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns#">
   <head>
+    <meta charset="utf-8">
+    <script src="https://cdn.polyfill.io/v2/polyfill.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>|always"></script>
+
     <title>Gala</title>
     <%= favicon_link_tag 'https://msc-gala.imgix.net/favicon_gala.png' %>
     <%= csrf_meta_tags %>

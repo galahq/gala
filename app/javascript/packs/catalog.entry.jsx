@@ -46,7 +46,7 @@ const render = (Component: React$Component) => {
 render(Catalog)
 
 if (module.hot) {
-  module.hot.accept('Catalog', () => {
+  module.hot.accept('catalog', () => {
     render(Catalog)
   })
 }
