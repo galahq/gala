@@ -38,3 +38,5 @@ localhost.key
 /config/master.key
 
 /storage
+
+spec/examples.txt
