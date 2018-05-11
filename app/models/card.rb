@@ -23,6 +23,7 @@ class Card < ApplicationRecord
            dependent: :destroy
 
   before_validation :set_case_from_element
+  after_destroy -> { element.try :create_card }
 
   acts_as_list scope: %i[element_id element_type]
 
