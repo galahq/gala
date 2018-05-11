@@ -61,30 +61,30 @@ class TableOfContents extends React.Component<*> {
             ))}
             {editing &&
               !readOnly && (
-                <div className="c-toc__actions pt-button-group pt-fill">
-                  <button
-                    type="button"
-                    className="pt-button pt-icon-add"
-                    onClick={() => createPage(caseSlug)}
-                  >
-                    <FormattedMessage id="activerecord.models.page" />
-                  </button>
-                  <button
-                    type="button"
-                    className="pt-button pt-icon-add"
-                    onClick={() => createPodcast(caseSlug)}
-                  >
-                    <FormattedMessage id="activerecord.models.podcast" />
-                  </button>
-                  <button
-                    type="button"
-                    className="pt-button pt-icon-add"
-                    onClick={() => createActivity(caseSlug)}
-                  >
-                    <FormattedMessage id="activerecord.models.activity" />
-                  </button>
-                </div>
-              )}
+              <div className="c-toc__actions pt-button-group pt-fill">
+                <button
+                  type="button"
+                  className="pt-button pt-icon-add"
+                  onClick={() => createPage(caseSlug)}
+                >
+                  <FormattedMessage id="activerecord.models.page" />
+                </button>
+                <button
+                  type="button"
+                  className="pt-button pt-icon-add"
+                  onClick={() => createPodcast(caseSlug)}
+                >
+                  <FormattedMessage id="activerecord.models.podcast" />
+                </button>
+                <button
+                  type="button"
+                  className="pt-button pt-icon-add"
+                  onClick={() => createActivity(caseSlug)}
+                >
+                  <FormattedMessage id="activerecord.models.activity" />
+                </button>
+              </div>
+            )}
           </ol>
         )}
         {hasQuiz && <PostTestLink />}

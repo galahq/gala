@@ -104,6 +104,9 @@ en:
     show:
       download: Download
       instructions: Instructions
+  case_elements:
+    new:
+      untitled: Untitled
   cases:
     edit:
       add_authors: Add authors
