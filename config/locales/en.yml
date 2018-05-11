@@ -106,6 +106,7 @@ en:
       instructions: Instructions
   cases:
     edit:
+      add_authors: Add authors
       change_cover_image: Change cover image
       edit: Edit this case
       feature_case: Feature this case
