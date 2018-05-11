@@ -66,7 +66,7 @@ const Billboard = ({
 }: Props) => (
   <section className="Billboard">
     <BillboardTitle />
-    <CommunityChooser />
+    {editing || <CommunityChooser />}
 
     <div className="Card BillboardSnippet pt-light">
       <h3 className="c-BillboardSnippet__dek">
