@@ -39,7 +39,7 @@ const Activity = ({
 }) => (
   <article>
     <section className="Page-meta">
-      <h1>
+      <h1 className="pt-dark">
         <EditableText
           multiline
           placeholder="Activity title"
