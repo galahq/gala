@@ -26,6 +26,7 @@ export default LibraryLogo
 const Container = styled.a`
   position: absolute;
   top: 0;
+  left: 2em;
   width: 67px;
   height: 110px;
   background-color: ${({ backgroundColor }) => backgroundColor};
