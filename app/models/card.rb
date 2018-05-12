@@ -23,7 +23,6 @@ class Card < ApplicationRecord
            dependent: :destroy
 
   before_validation :set_case_from_element
-  after_destroy -> { element.try :create_card }
 
   acts_as_list scope: %i[element_id element_type]
 
@@ -51,6 +50,11 @@ class Card < ApplicationRecord
   # @see Trackable#event_properties
   def event_properties
     { card_id: id }
+  end
+
+  # Could this card’s element have other cards too?
+  def siblings?
+    element_type.constantize.reflect_on_association(:cards)
   end
 
   private
