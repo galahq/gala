@@ -89,7 +89,10 @@ function cardsById (
     case 'ADD_CARD':
       return {
         ...state,
-        [action.data.id]: action.data,
+        [action.data.id]: {
+          ...action.data,
+          editorState: parseEditorStateFromPersistedCard(action.data),
+        },
       }
 
     case 'PARSE_ALL_CARDS':
@@ -188,7 +191,7 @@ function sortCommentThreads<T: { start: ?number, blockIndex: ?number }> (
 
 function parseEditorStateFromPersistedCard (card: Card) {
   const content = card.rawContent
-  if (content == null) return EditorState.createEmpty()
+  if (content == null) return EditorState.createEmpty(decorator)
 
   const contentWithCommentThreads = addCommentThreads(content, card)
 
