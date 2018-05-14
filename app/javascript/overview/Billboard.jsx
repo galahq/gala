@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
@@ -103,18 +103,21 @@ const Billboard = ({
 
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>
-    <MapView
-      cases={[caseData]}
-      editing={editing}
-      height={300}
-      startingViewport={{
-        latitude: caseData.latitude || 0,
-        longitude: caseData.longitude || 0,
-        zoom: caseData.zoom || 1,
-      }}
-      title={{ id: 'activerecord.attributes.case.location' }}
-      onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
-    />
+
+    {(caseData.latitude || editing) && (
+      <MapView
+        cases={[caseData]}
+        editing={editing}
+        height={300}
+        startingViewport={{
+          latitude: caseData.latitude || 0,
+          longitude: caseData.longitude || 0,
+          zoom: caseData.zoom || 1,
+        }}
+        title={{ id: 'activerecord.attributes.case.location' }}
+        onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
+      />
+    )}
   </section>
 )
 

@@ -9,7 +9,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Dimensions from 'react-dimensions'
 import ReactMapGL, { Marker } from 'react-map-gl'
-import { Button, Intent } from '@blueprintjs/core'
+import { Button, Intent, Position } from '@blueprintjs/core'
 
 import { SectionTitle } from 'catalog/shared'
 import Pin from 'catalog/Pin'
@@ -76,42 +76,55 @@ class MapViewController extends React.Component<Props, State> {
 
     const { height, cases, title, editing, intl } = this.props
     return (
-      <Container height={height}>
-        <AutosizedMapView
-          {...this.state}
-          cases={editing ? [] : cases}
-          onClickMap={this.handleClickMap}
-          onClickPin={this.handleClickPin}
-          onChangeViewport={this.handleChangeViewport}
-        />
-        <PositionedSectionTitle>
-          <FormattedMessage {...title} />
-        </PositionedSectionTitle>
-        {editing && [
-          <PositionedPin key="pin" />,
-          <PositionedButtons key="buttons">
-            <PaddedButton
-              text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
-              onClick={this.handleReset}
-            />
-            <PaddedButton
-              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomOut' })}
-              iconName="zoom-out"
-              onClick={this.handleZoomOut}
-            />
-            <PaddedButton
-              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomIn' })}
-              iconName="zoom-in"
-              onClick={this.handleZoomIn}
-            />
-            <PaddedButton
-              intent={Intent.SUCCESS}
-              text={intl.formatMessage({ id: 'cases.edit.map.set' })}
-              onClick={this.handleSave}
-            />
-          </PositionedButtons>,
-        ]}
-      </Container>
+      <div className="pt-dark">
+        {editing && (
+          <Instructions>
+            <FormattedMessage id="cases.edit.map.instructions" />
+          </Instructions>
+        )}
+        <Container height={height}>
+          <AutosizedMapView
+            {...this.state}
+            cases={editing ? [] : cases}
+            onClickMap={this.handleClickMap}
+            onClickPin={this.handleClickPin}
+            onChangeViewport={this.handleChangeViewport}
+          />
+          <PositionedSectionTitle>
+            <FormattedMessage {...title} />
+          </PositionedSectionTitle>
+          {editing && (
+            <React.Fragment>
+              <PositionedPin />
+              <PositionedButtons>
+                <PaddedButton
+                  text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
+                  onClick={this.handleReset}
+                />
+                <PaddedButton
+                  aria-label={intl.formatMessage({
+                    id: 'cases.edit.map.zoomOut',
+                  })}
+                  iconName="zoom-out"
+                  onClick={this.handleZoomOut}
+                />
+                <PaddedButton
+                  aria-label={intl.formatMessage({
+                    id: 'cases.edit.map.zoomIn',
+                  })}
+                  iconName="zoom-in"
+                  onClick={this.handleZoomIn}
+                />
+                <PaddedButton
+                  intent={Intent.SUCCESS}
+                  text={intl.formatMessage({ id: 'cases.edit.map.set' })}
+                  onClick={this.handleSave}
+                />
+              </PositionedButtons>
+            </React.Fragment>
+          )}
+        </Container>
+      </div>
     )
   }
 }
@@ -239,3 +252,11 @@ class MapView extends React.Component<{
 }
 
 const AutosizedMapView = Dimensions()(MapView)
+
+const Instructions = styled.div.attrs({
+  className: 'pt-callout pt-intent-success pt-icon-locate',
+})`
+  margin-bottom: -2em;
+  margin-top: 1em;
+  z-index: 1;
+`
