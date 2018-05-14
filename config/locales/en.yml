@@ -122,6 +122,7 @@ en:
         set: Set
         zoom_in: Zoom in
         zoom_out: Zoom out
+      no_elements: This case has no elements.
       options: Options
       publish_case: Publish this case
       save: Save
