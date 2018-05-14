@@ -81,7 +81,7 @@ const Billboard = ({
         />
       </h3>
 
-      <Less startOpen={false} disabled={editing}>
+      <Less startOpen={!summary || summary.length < 500} disabled={editing}>
         <div style={{ margin: 0 }}>
           <EditableText
             multiline
