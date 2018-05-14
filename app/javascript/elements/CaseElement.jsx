@@ -46,7 +46,7 @@ function mapStateToProps (state: State, { match }) {
       }
       : null,
     id: elementId,
-    url: url.substring(1), // Because rails url_for helper returns /pages/:id
+    url,
     title,
     model,
     position,
