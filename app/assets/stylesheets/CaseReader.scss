@@ -8,15 +8,18 @@
 }
 
 .window.editing {
-  background-image: linear-gradient(
-    135deg,
-    tint($umichBlue, 20%) 49%,
-    tint($umichBlue, 30%) 49%,
-    tint($umichBlue, 30%) 50%,
-    tint($umichBlue, 20%) 50%,
-    tint($umichBlue, 20%) 99%,
-    tint($umichBlue, 30%) 99%,
-    tint($umichBlue, 30%) 100%
-  );
-  background-size: 100px 100px;
+  background-image: linear-gradient(0deg, #35536f, rgba(53, 83, 111, 0)),
+    linear-gradient(
+      135deg,
+      #35536f 49%,
+      #4e6981 49%,
+      #4e6981 50%,
+      #35536f 50%,
+      #35536f 99%,
+      #4e6981 99%,
+      #4e6981 100%
+    );
+  background-size: 100% 20em, 100px 100px;
+  background-repeat: no-repeat, repeat;
+  background-position: bottom;
 }
