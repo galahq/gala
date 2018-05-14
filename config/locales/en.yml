@@ -115,6 +115,9 @@ en:
       feature_case: Feature this case
       just_change_the_text: To edit this case, just change the text
       map:
+        instructions: |
+          Drag the map to position the pin, change the zoom to give context,
+          then click “Set”
         reset: Reset
         set: Set
         zoom_in: Zoom in
