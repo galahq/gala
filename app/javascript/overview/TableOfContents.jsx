@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl'
 import { withRouter } from 'react-router-dom'
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DropTarget, DragDropContext } from 'react-dnd'
+import styled from 'styled-components'
 
 import { createPage, createPodcast, createActivity } from 'redux/actions'
 
@@ -49,6 +50,14 @@ class TableOfContents extends React.Component<*> {
         <h2 className="c-toc__header">
           <FormattedMessage id="cases.show.toc" />
         </h2>
+
+        {(elements && elements.length > 0) ||
+          editing || (
+          <NoElements>
+            <FormattedMessage id="cases.edit.noElements" />
+          </NoElements>
+        )}
+
         {connectDropTarget(
           <ol className="c-toc__list">
             {elements.map((element, index) => (
@@ -87,6 +96,7 @@ class TableOfContents extends React.Component<*> {
             )}
           </ol>
         )}
+
         {hasQuiz && <PostTestLink />}
       </nav>
     )
@@ -104,3 +114,8 @@ export default withRouter(
     DragDropTableOfContents
   )
 )
+
+const NoElements = styled.p`
+  margin: 0.5em;
+  opacity: 0.5;
+`
