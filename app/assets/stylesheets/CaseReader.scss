@@ -1,0 +1,22 @@
+@import '_globals';
+@import '_tint_and_shade';
+
+.window {
+  background-color: tint($umichBlue, 20%);
+  position: relative;
+  padding-top: 1em;
+}
+
+.window.editing {
+  background-image: linear-gradient(
+    135deg,
+    tint($umichBlue, 20%) 49%,
+    tint($umichBlue, 30%) 49%,
+    tint($umichBlue, 30%) 50%,
+    tint($umichBlue, 20%) 50%,
+    tint($umichBlue, 20%) 99%,
+    tint($umichBlue, 30%) 99%,
+    tint($umichBlue, 30%) 100%
+  );
+  background-size: 100px 100px;
+}
