@@ -46,7 +46,7 @@ function mapStateToProps (state: State, { match }) {
       }
       : null,
     id: elementId,
-    url: url.substring(1), // Because rails url_for helper returns /pages/:id
+    url,
     title,
     model,
     position,
@@ -104,13 +104,15 @@ class CaseElement extends React.Component<{
     const models = { Page, Podcast, Activity }
     const Child = models[model]
     const deleteElement = () => {
-      this.props.deleteElement(url, position) && history.push('/')
+      this.props
+        .deleteElement(url, position)
+        .then(confirmed => confirmed && history.push('/'))
     }
 
     return (
       <div className={`window ${editing ? 'editing' : ''}`}>
-        <Sidebar />
-        <main id="top" className={`s-CaseElement__${model}`}>
+        <Sidebar editing={editing} />
+        <main id="top" className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
             {Child ? (
               <Child id={id} deleteElement={deleteElement} />

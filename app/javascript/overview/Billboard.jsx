@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react'
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
@@ -66,7 +66,7 @@ const Billboard = ({
 }: Props) => (
   <section className="Billboard">
     <BillboardTitle />
-    <CommunityChooser />
+    {editing || <CommunityChooser />}
 
     <div className="Card BillboardSnippet pt-light">
       <h3 className="c-BillboardSnippet__dek">
@@ -81,7 +81,7 @@ const Billboard = ({
         />
       </h3>
 
-      <Less startOpen={false} disabled={editing}>
+      <Less startOpen={!summary || summary.length < 500} disabled={editing}>
         <div style={{ margin: 0 }}>
           <EditableText
             multiline
@@ -103,18 +103,21 @@ const Billboard = ({
 
       <FlagLinks languages={otherAvailableLocales} slug={slug} />
     </div>
-    <MapView
-      cases={[caseData]}
-      editing={editing}
-      height={300}
-      startingViewport={{
-        latitude: caseData.latitude || 0,
-        longitude: caseData.longitude || 0,
-        zoom: caseData.zoom || 1,
-      }}
-      title={{ id: 'activerecord.attributes.case.location' }}
-      onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
-    />
+
+    {(caseData.latitude || editing) && (
+      <MapView
+        cases={[caseData]}
+        editing={editing}
+        height={300}
+        startingViewport={{
+          latitude: caseData.latitude || 0,
+          longitude: caseData.longitude || 0,
+          zoom: caseData.zoom || 1,
+        }}
+        title={{ id: 'activerecord.attributes.case.location' }}
+        onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
+      />
+    )}
   </section>
 )
 

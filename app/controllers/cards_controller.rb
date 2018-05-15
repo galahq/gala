@@ -8,9 +8,8 @@ class CardsController < ApplicationController
 
   # @route [POST] `/pages/1/cards`
   def create
-    authorize @page.case, :update?
-
     @card = @page.cards.build(card_params)
+    authorize @card
 
     if @card.save
       render @card
@@ -21,7 +20,7 @@ class CardsController < ApplicationController
 
   # @route [PATCH/PUT] `/cards/1`
   def update
-    authorize @card.case, :update?
+    authorize @card
 
     if @card.update(card_params)
       render @card
@@ -32,7 +31,7 @@ class CardsController < ApplicationController
 
   # @route [DELETE] `/cards/1`
   def destroy
-    authorize @card.case, :update?
+    authorize @card
 
     @card.destroy
     head :no_content

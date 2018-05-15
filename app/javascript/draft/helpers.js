@@ -4,6 +4,7 @@
  * @flow
  */
 
+import React from 'react'
 import { RichUtils, Modifier, EditorState, SelectionState } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
 import { Intent } from '@blueprintjs/core'
@@ -168,9 +169,16 @@ export async function toggleEdgenote (
     displayToast({
       iconName: 'error',
       intent: Intent.WARNING,
-      message: intl.formatMessage({
-        id: 'edgenotes.new.makeSelection',
-      }),
+      message: (
+        <span
+          className="pt-dark"
+          dangerouslySetInnerHTML={{
+            __html: intl.formatMessage({
+              id: 'edgenotes.new.makeSelectionHtml',
+            }),
+          }}
+        />
+      ),
     })
     return editorState
   }

@@ -63,9 +63,10 @@
                           class: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
                           aria: { label: t('.delete_case') },
                           data: { confirm: t('.confirm_delete') },
+                          disabled: kase.published?,
                           method: :delete do
-                -# This needs to take a block because that makes a <button> tag
-                -# rather than an <input type="submit"> tag
+                -# This needs to take a block because that makes a <button>
+                -# tag rather than an <input type="submit"> tag
 
   - else
     .my-cases-non-ideal-state.pt-non-ideal-state

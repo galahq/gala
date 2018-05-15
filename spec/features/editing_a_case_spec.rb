@@ -13,9 +13,7 @@ feature 'Editing a case' do
       visit case_path('en', kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
-      click_button 'Options'
-      sleep(1)
-      click_link 'Edit this case'
+      click_button 'Edit this case'
       click_button('Add card', match: :first)
       sleep(1)
       page.driver.browser.navigate.refresh
@@ -26,17 +24,14 @@ feature 'Editing a case' do
   context 'changing a card' do
     scenario 'is possible' do
       visit case_path('en', kase) + '/1'
-      # It gets confused the first time the menu mounts >.<
-      3.times { click_button 'Options' }
-      click_link 'Edit this case'
+      click_button 'Edit this case'
       expect(page).to have_content 'To edit this case, just change the text'
 
       first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
       first_paragraph.click
       page.driver.browser.action
           .send_keys('Adding a test sentence for testing.').perform
-      click_button 'Options'
-      click_link 'Save'
+      click_button 'Save'
 
       page.driver.browser.navigate.refresh
       expect(page).to have_content 'Adding a test sentence for testing.'
@@ -45,15 +40,14 @@ feature 'Editing a case' do
     context 'by adding and removing Edgenotes' do
       scenario 'is possible' do
         visit case_path('en', kase) + '/1'
-        3.times { click_button 'Options' }
-        click_link 'Edit this case'
+        click_button 'Edit this case'
 
         # Try to attach an edgenote without a selection and expect an error
         edgenote_button = find('button[aria-label*="edgenote"]', match: :first)
         edgenote_button.click
         expect(page).to have_content(
           'Please select the phrase that you would ' \
-          'like to attach an Edgenote to.'
+          'like to attach an Edgenote to'
         )
 
         # Add an Edgenote and fill in a quotation
@@ -67,7 +61,7 @@ feature 'Editing a case' do
         find('[data-test-id=edgenote]').hover
         click_button 'Edit'
         fill_in 'Pull quote', with: '“I have a dream”'
-        click_button 'Save'
+        click_button 'Save Edgenote'
 
         # Remove the Edgenote by clicking the button again
         page.driver.browser.action.move_to(
@@ -85,8 +79,7 @@ feature 'Editing a case' do
         expect(page).to have_content '“I have a dream”'
 
         # The Edgenote should persist on save
-        click_button 'Options'
-        click_link 'Save'
+        click_button 'Save'
         page.driver.browser.navigate.refresh
         expect(page).to have_content '“I have a dream”'
       end
@@ -110,8 +103,7 @@ feature 'Editing a case' do
         visit case_path('en', kase) + '/1'
         expect(page).to have_content 'RESPOND'
 
-        click_button 'Options'
-        click_link 'Edit this case'
+        click_button 'Edit this case'
         expect(page).to have_content 'To edit this case, just change the text'
 
         first_paragraph = find('.DraftEditor-root div[data-block]',
@@ -121,8 +113,7 @@ feature 'Editing a case' do
             .click
             .send_keys('Adding a test sentence for testing.')
             .perform
-        click_button 'Options'
-        click_link 'Save'
+        click_button 'Save'
 
         page.driver.browser.navigate.refresh
         entity = find('span.c-comment-thread-entity', match: :first)
@@ -137,8 +128,7 @@ feature 'Editing a case' do
       visit case_path('en', kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
-      click_button 'Options'
-      click_link 'Edit this case'
+      click_button 'Edit this case'
       accept_confirm(
         'Are you sure you want to delete this card and its associated comments?'
       ) do

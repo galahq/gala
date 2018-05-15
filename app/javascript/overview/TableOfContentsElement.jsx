@@ -7,6 +7,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { DragSource, DropTarget } from 'react-dnd'
 import { NavLink, withRouter } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 import { ItemTypes } from 'shared/dndConfig'
 import Icon from 'utility/Icon'
@@ -48,7 +49,11 @@ class TableOfContentsElement extends React.Component<*> {
                 <div className="c-toc__number">
                   {editing && !readOnly ? ': : :' : position}
                 </div>
-                <div className="c-toc__title">{element.title}</div>
+                <div className="c-toc__title">
+                  {element.title || (
+                    <FormattedMessage id="caseElements.new.untitled" />
+                  )}
+                </div>
                 <div className="c-toc__icon">{element.typeIcon}</div>
               </div>
             </li>

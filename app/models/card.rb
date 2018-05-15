@@ -52,6 +52,11 @@ class Card < ApplicationRecord
     { card_id: id }
   end
 
+  # Could this card’s element have other cards too?
+  def siblings?
+    element_type.constantize.reflect_on_association(:cards)
+  end
+
   private
 
   # Since elements are polymorphic, it’s way easier to eagerly load cards when

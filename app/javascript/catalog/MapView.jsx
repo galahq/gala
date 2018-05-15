@@ -76,42 +76,68 @@ class MapViewController extends React.Component<Props, State> {
 
     const { height, cases, title, editing, intl } = this.props
     return (
-      <Container height={height}>
-        <AutosizedMapView
-          {...this.state}
-          cases={editing ? [] : cases}
-          onClickMap={this.handleClickMap}
-          onClickPin={this.handleClickPin}
-          onChangeViewport={this.handleChangeViewport}
-        />
-        <PositionedSectionTitle>
-          <FormattedMessage {...title} />
-        </PositionedSectionTitle>
-        {editing && [
-          <PositionedPin key="pin" />,
-          <PositionedButtons key="buttons">
-            <PaddedButton
-              text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
-              onClick={this.handleReset}
-            />
-            <PaddedButton
-              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomOut' })}
-              iconName="zoom-out"
-              onClick={this.handleZoomOut}
-            />
-            <PaddedButton
-              aria-label={intl.formatMessage({ id: 'cases.edit.map.zoomIn' })}
-              iconName="zoom-in"
-              onClick={this.handleZoomIn}
-            />
-            <PaddedButton
-              intent={Intent.SUCCESS}
-              text={intl.formatMessage({ id: 'cases.edit.map.set' })}
-              onClick={this.handleSave}
-            />
-          </PositionedButtons>,
-        ]}
-      </Container>
+      <div className="pt-dark">
+        {editing && (
+          <Instructions>
+            <FormattedMessage id="cases.edit.map.instructions" />
+          </Instructions>
+        )}
+        <Container height={height}>
+          <AutosizedMapView
+            {...this.state}
+            cases={editing ? [] : cases}
+            onClickMap={this.handleClickMap}
+            onClickPin={this.handleClickPin}
+            onChangeViewport={this.handleChangeViewport}
+          />
+          <PositionedSectionTitle>
+            <FormattedMessage {...title} />
+          </PositionedSectionTitle>
+          {editing && (
+            <React.Fragment>
+              <PositionedPin />
+              <PositionedButtons>
+                <PaddedButton
+                  disabled={this._viewportSet()}
+                  text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
+                  onClick={this.handleReset}
+                />
+                <PaddedButton
+                  disabled={this._viewportSet()}
+                  iconName={this._viewportSet() ? 'tick' : ''}
+                  intent={Intent.SUCCESS}
+                  text={intl.formatMessage({ id: 'cases.edit.map.set' })}
+                  onClick={this.handleSave}
+                />
+                <PaddedButton
+                  aria-label={intl.formatMessage({
+                    id: 'cases.edit.map.zoomOut',
+                  })}
+                  iconName="zoom-out"
+                  onClick={this.handleZoomOut}
+                />
+                <PaddedButton
+                  aria-label={intl.formatMessage({
+                    id: 'cases.edit.map.zoomIn',
+                  })}
+                  iconName="zoom-in"
+                  onClick={this.handleZoomIn}
+                />
+              </PositionedButtons>
+            </React.Fragment>
+          )}
+        </Container>
+      </div>
+    )
+  }
+
+  _viewportSet (): boolean {
+    const { startingViewport } = this.props
+    const { viewport } = this.state
+    return (
+      viewport.latitude === startingViewport.latitude &&
+      viewport.longitude === startingViewport.longitude &&
+      viewport.zoom === startingViewport.zoom
     )
   }
 }
@@ -239,3 +265,11 @@ class MapView extends React.Component<{
 }
 
 const AutosizedMapView = Dimensions()(MapView)
+
+const Instructions = styled.div.attrs({
+  className: 'pt-callout pt-intent-success pt-icon-locate',
+})`
+  margin-bottom: -2em;
+  margin-top: 1em;
+  z-index: 1;
+`
