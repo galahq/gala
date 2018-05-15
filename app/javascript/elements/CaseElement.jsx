@@ -104,7 +104,9 @@ class CaseElement extends React.Component<{
     const models = { Page, Podcast, Activity }
     const Child = models[model]
     const deleteElement = () => {
-      this.props.deleteElement(url, position) && history.push('/')
+      this.props
+        .deleteElement(url, position)
+        .then(confirmed => confirmed && history.push('/'))
     }
 
     return (
