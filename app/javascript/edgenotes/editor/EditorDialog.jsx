@@ -58,6 +58,8 @@ const EditorDialog = ({
 
   return (
     <Dialog
+      canEscapeKeyClose={false}
+      canOutsideClickClose={false}
       iconName="edit"
       isOpen={open}
       title={intl.formatMessage({ id: 'edgenotes.edit.editEdgenote' })}
