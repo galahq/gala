@@ -101,7 +101,7 @@ const EditorDialog = ({
           />
           <Button
             intent={Intent.SUCCESS}
-            text={intl.formatMessage({ id: 'helpers.save' })}
+            text={intl.formatMessage({ id: 'edgenotes.edit.saveEdgenote' })}
             onClick={onSubmit}
           />
         </div>
