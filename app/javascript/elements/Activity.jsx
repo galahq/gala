@@ -54,7 +54,7 @@ const Activity = ({
           className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
           onClick={deleteElement}
         >
-          Delete Podcast
+          <FormattedMessage id="activities.destroy.deleteActivity" />
         </button>
       )}
     </section>
