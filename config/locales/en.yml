@@ -418,8 +418,11 @@ en:
         longer needed. Or, you can create a brand new Edgenote and deal with
         these later.
     new:
-      make_selection: >
-        Please select the phrase that you would like to attach an Edgenote to.
+      make_selection_html: >
+        Please select the phrase that you would like to attach an Edgenote to,
+        then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-add-column-right"></span> Add
+        Edgenote</span> button.
       new_edgenote: New Edgenote
   enrollments:
     destroy:
