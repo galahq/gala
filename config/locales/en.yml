@@ -101,6 +101,8 @@ en:
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
   activities:
+    destroy:
+      delete_activity: Delete Activity
     show:
       download: Download
       instructions: Instructions
@@ -617,6 +619,8 @@ en:
       format:
         delimiter: ''
   podcasts:
+    destroy:
+      delete_podcast: Delete Podcast
     edit:
       uploadArtwork: Upload Artwork
       uploadPodcast: Upload Podcast

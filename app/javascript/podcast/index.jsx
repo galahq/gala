@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 
 import ActiveStorageProvider from 'react-activestorage-provider'
 import { EditableText } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 
 import { updatePodcast } from 'redux/actions'
 
@@ -54,8 +55,18 @@ function Podcast ({
         {...podcast}
       />
 
-      <div className="PodcastInfo">
+      <div className="PodcastInfo spaced">
         <Card nonNarrative id={`${cardId}`} />
+
+        {editing && (
+          <button
+            type="button"
+            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
+            onClick={deleteElement}
+          >
+            <FormattedMessage id="podcasts.destroy.deletePodcast" />
+          </button>
+        )}
       </div>
     </div>
   )
@@ -89,20 +100,9 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
       creditsList,
       editing,
       updatePodcast,
-      deleteElement,
     } = this.props
     return (
       <div className="PodcastPlayer pt-dark">
-        {editing && (
-          <button
-            type="button"
-            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
-            onClick={deleteElement}
-          >
-            Delete Podcast
-          </button>
-        )}
-
         <div
           className="artwork"
           style={{
