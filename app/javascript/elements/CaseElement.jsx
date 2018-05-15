@@ -111,7 +111,7 @@ class CaseElement extends React.Component<{
 
     return (
       <div className={`window ${editing ? 'editing' : ''}`}>
-        <Sidebar />
+        <Sidebar editing={editing} />
         <main id="top" className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
             {Child ? (
