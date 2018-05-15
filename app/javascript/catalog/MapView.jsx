@@ -9,7 +9,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Dimensions from 'react-dimensions'
 import ReactMapGL, { Marker } from 'react-map-gl'
-import { Button, Intent, Position } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle } from 'catalog/shared'
 import Pin from 'catalog/Pin'
@@ -98,8 +98,16 @@ class MapViewController extends React.Component<Props, State> {
               <PositionedPin />
               <PositionedButtons>
                 <PaddedButton
+                  disabled={this._viewportSet()}
                   text={intl.formatMessage({ id: 'cases.edit.map.reset' })}
                   onClick={this.handleReset}
+                />
+                <PaddedButton
+                  disabled={this._viewportSet()}
+                  iconName={this._viewportSet() ? 'tick' : ''}
+                  intent={Intent.SUCCESS}
+                  text={intl.formatMessage({ id: 'cases.edit.map.set' })}
+                  onClick={this.handleSave}
                 />
                 <PaddedButton
                   aria-label={intl.formatMessage({
@@ -115,16 +123,21 @@ class MapViewController extends React.Component<Props, State> {
                   iconName="zoom-in"
                   onClick={this.handleZoomIn}
                 />
-                <PaddedButton
-                  intent={Intent.SUCCESS}
-                  text={intl.formatMessage({ id: 'cases.edit.map.set' })}
-                  onClick={this.handleSave}
-                />
               </PositionedButtons>
             </React.Fragment>
           )}
         </Container>
       </div>
+    )
+  }
+
+  _viewportSet (): boolean {
+    const { startingViewport } = this.props
+    const { viewport } = this.state
+    return (
+      viewport.latitude === startingViewport.latitude &&
+      viewport.longitude === startingViewport.longitude &&
+      viewport.zoom === startingViewport.zoom
     )
   }
 }
