@@ -39,7 +39,7 @@ const Activity = ({
 }) => (
   <article>
     <section className="Page-meta">
-      <h1>
+      <h1 className="pt-dark">
         <EditableText
           multiline
           placeholder="Activity title"
@@ -54,7 +54,7 @@ const Activity = ({
           className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
           onClick={deleteElement}
         >
-          Delete Podcast
+          <FormattedMessage id="activities.destroy.deleteActivity" />
         </button>
       )}
     </section>

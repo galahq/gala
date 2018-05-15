@@ -35,7 +35,8 @@ class CasePolicy < ApplicationPolicy
   end
 
   def destroy?
-    editor? unless record.published?
+    return false if record.published?
+    user.my_cases.include?(record) || editor?
   end
 
   def admin_scope

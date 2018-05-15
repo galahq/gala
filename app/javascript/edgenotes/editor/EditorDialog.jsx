@@ -58,6 +58,8 @@ const EditorDialog = ({
 
   return (
     <Dialog
+      canEscapeKeyClose={false}
+      canOutsideClickClose={false}
       iconName="edit"
       isOpen={open}
       title={intl.formatMessage({ id: 'edgenotes.edit.editEdgenote' })}
@@ -99,7 +101,7 @@ const EditorDialog = ({
           />
           <Button
             intent={Intent.SUCCESS}
-            text={intl.formatMessage({ id: 'helpers.save' })}
+            text={intl.formatMessage({ id: 'edgenotes.edit.saveEdgenote' })}
             onClick={onSubmit}
           />
         </div>

@@ -78,47 +78,50 @@ function StatusBar ({
         : !published ? { message: 'cases.show.notYetPublished' } : null,
     ],
     [
-      {
+      editing || {
         message: 'deployments.new.teachThisCase',
         iconName: 'follower',
         onClick: () => (window.location = links.teach),
       },
-      editable
-        ? {
-          message: 'cases.edit.options',
-          iconName: 'cog',
-          submenu: [
-            edited
-              ? null
-              : {
-                message: 'cases.settings.edit.editCaseSettings',
-                iconName: 'cog',
-                onClick: () => {
-                  window.location = links.settings
-                },
+
+      editable &&
+        (edited
+          ? {
+            disabled: !edited,
+            message: 'cases.edit.save',
+            iconName: 'floppy-disk',
+            onClick: saveChanges,
+          }
+          : {
+            message: editing ? 'cases.edit.stopEditing' : 'cases.edit.edit',
+            iconName: editing ? 'cross' : 'edit',
+            onClick: toggleEditing,
+          }),
+
+      editable && {
+        message: 'cases.edit.options',
+        iconName: 'cog',
+        submenu: [
+          edited
+            ? null
+            : {
+              message: 'cases.settings.edit.editCaseSettings',
+              iconName: 'settings',
+              onClick: () => {
+                window.location = links.settings
               },
-            editing || edited
-              ? {
-                disabled: !edited,
-                message: 'cases.edit.save',
-                iconName: 'floppy-disk',
-                onClick: saveChanges,
-              }
-              : {
-                message: published
-                  ? 'cases.edit.unpublishCase'
-                  : 'cases.edit.publishCase',
-                iconName: published ? 'lock' : 'upload',
-                onClick: togglePublished,
-              },
-            {
-              message: editing ? 'cases.edit.stopEditing' : 'cases.edit.edit',
-              iconName: editing ? 'cross' : 'edit',
-              onClick: toggleEditing,
             },
-          ],
-        }
-        : null,
+          editing || edited
+            ? null
+            : {
+              message: published
+                ? 'cases.edit.unpublishCase'
+                : 'cases.edit.publishCase',
+              iconName: published ? 'lock' : 'upload',
+              onClick: togglePublished,
+            },
+        ],
+      },
     ],
   ]
 

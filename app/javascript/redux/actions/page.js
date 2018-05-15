@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { setUnsaved } from 'redux/actions'
+import { setUnsaved, createCard } from 'redux/actions'
 
 import { Orchard } from 'shared/orchard'
 
@@ -18,6 +18,7 @@ export function createPage (caseSlug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
     const data: Page = await Orchard.graft(`cases/${caseSlug}/pages`, {})
     dispatch(addPage(data))
+    dispatch(createCard(data.id))
   }
 }
 

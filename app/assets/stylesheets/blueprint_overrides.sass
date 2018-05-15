@@ -24,3 +24,17 @@
 .pt-control
   input
     position: absolute !important
+
+.pt-dark [class*="pt-intent-"],
+[class*="pt-intent-"] .pt-dark,
+    .pt-tag:not(.pt-minimal):not([class*="pt-intent-"])
+      background-color: #FAF9F5
+
+.pt-tag
+  .pt-icon
+    margin: 0 0.25em
+
+    &:first-child
+      margin-left: 0
+    &:last-child
+      margin-right: 0

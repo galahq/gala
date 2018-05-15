@@ -8,19 +8,27 @@ import { Intent } from '@blueprintjs/core'
 import { EditorState, convertToRaw } from 'draft-js'
 import { Orchard } from 'shared/orchard'
 
-import type { ThunkAction, GetState } from 'redux/actions'
+import type { Dispatch, ThunkAction, GetState } from 'redux/actions'
 import type { State } from 'redux/state'
 
 export type ToggleEditingAction = { type: 'TOGGLE_EDITING' }
-export function toggleEditing (): ToggleEditingAction {
-  return { type: 'TOGGLE_EDITING' }
+export function toggleEditing (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    if (window.autosaveInterval) {
+      window.clearInterval(window.autosaveInterval)
+    } else {
+      window.autosaveInterval = window.setInterval(
+        () => dispatch(silentlySave()),
+        5000 // 5 sec
+      )
+    }
+
+    dispatch({ type: 'TOGGLE_EDITING' })
+  }
 }
 
 export function saveChanges (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
-    const state = getState()
-
-    dispatch(clearUnsaved())
+  return (dispatch: Dispatch) => {
     dispatch(
       displayToast({
         message: 'Saved successfully',
@@ -28,12 +36,21 @@ export function saveChanges (): ThunkAction {
       })
     )
 
+    dispatch(silentlySave())
+  }
+}
+
+function silentlySave (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
     Object.keys(state.edit.unsavedChanges).forEach(endpoint => {
       saveModel(
         endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
         state
       )
     })
+
+    dispatch(clearUnsaved())
   }
 }
 

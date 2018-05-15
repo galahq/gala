@@ -89,6 +89,7 @@ class CardContents extends React.Component<CardProps, *> {
       acceptingSelection,
       readOnly,
       commentable,
+      deletable,
       title,
       match,
     } = this.props
@@ -160,7 +161,8 @@ class CardContents extends React.Component<CardProps, *> {
           />
         )}
 
-        {editable && <DeleteCardButton id={id} onClick={handleDeleteCard} />}
+        {editable &&
+          deletable && <DeleteCardButton id={id} onClick={handleDeleteCard} />}
 
         {solid && !editable && <Statistics uri={`cards/${id}`} />}
 
