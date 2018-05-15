@@ -99,20 +99,30 @@ zh-TW:
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
   activities:
+    destroy:
+      delete_activity: Delete Activity
     show:
       download: Download
       instructions: Instructions
+  case_elements:
+    new:
+      untitled: Untitled
   cases:
     edit:
+      add_authors: Add authors
       change_cover_image: Change cover image
       edit: 編輯該案例
       feature_case: 將此案例設置為明星案例
       just_change_the_text: 點擊案例，開始編輯。
       map:
+        instructions: |
+          Drag the map to position the pin, change the zoom to give context,
+          then click “Set”
         reset: Reset
         set: Set
         zoom_in: Zoom in
         zoom_out: Zoom out
+      no_elements: This case has no elements.
       options: 選項
       publish_case: 發表該案例
       save: 保存
@@ -362,6 +372,7 @@ zh-TW:
       preview: Edgenote preview
       pull_a_quote: Pull a quote
       remove: Remove
+      save_edgenote: Save Edgenote
       use_embed: Embed a widget from this website
       use_preview_description: Include a description in the link preview
       use_preview_image: Include an image in the the link preview
@@ -372,8 +383,8 @@ zh-TW:
       reattach_instructions: >
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: >
-        Please select the phrase that you would like to attach an Edgenote to.
+      make_selection_html: >
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: New Edgenote
   enrollments:
     destroy:
@@ -550,6 +561,8 @@ zh-TW:
       format:
         delimiter: ''
   podcasts:
+    destroy:
+      delete_podcast: Delete Podcast
     edit:
       uploadArtwork: Upload Artwork
       uploadPodcast: Upload Podcast
