@@ -39,7 +39,7 @@ class TableOfContents extends React.Component<*> {
       elements,
       disabled,
       connectDropTarget,
-      readOnly,
+      onSidebar,
       createPage,
       createPodcast,
       createActivity,
@@ -65,12 +65,15 @@ class TableOfContents extends React.Component<*> {
                 element={element}
                 key={element.id}
                 position={index + 1}
-                readOnly={readOnly}
+                readOnly={onSidebar}
               />
             ))}
-            {editing &&
-              !readOnly && (
-              <div className="c-toc__actions pt-button-group pt-fill">
+            {editing && (
+              <div
+                className={`c-toc__actions pt-button-group pt-fill ${
+                  onSidebar ? 'pt-vertical' : ''
+                }`}
+              >
                 <button
                   type="button"
                   className="pt-button pt-icon-add"

@@ -17,7 +17,12 @@ function mapStateToProps (state, { location }) {
   }
 }
 
-const Sidebar = ({ commentThreadsOpen, commentsOpen, readerEnrolled }) => {
+const Sidebar = ({
+  commentThreadsOpen,
+  commentsOpen,
+  editing,
+  readerEnrolled,
+}) => {
   const _getClassNames = () => {
     let n = []
     if (commentThreadsOpen) n = [...n, 'has-comment-threads-open']
@@ -28,8 +33,8 @@ const Sidebar = ({ commentThreadsOpen, commentsOpen, readerEnrolled }) => {
   return (
     <aside id="Sidebar" className={_getClassNames()}>
       <BillboardTitle minimal />
-      <CommunityChooser rounded />
-      <TableOfContents readOnly />
+      {editing || <CommunityChooser rounded />}
+      <TableOfContents onSidebar />
 
       {readerEnrolled || (
         <div style={{ paddingTop: '1em' }}>
