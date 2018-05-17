@@ -50,21 +50,31 @@ class CreditsList extends React.Component<
         onKeyPress={acceptKeyboardClick}
         onClick={this.handleStartEditing}
       >
-        <dl>
-          {guests.map(guest => {
-            return [
-              <dt key={`name:${guest.name}`}>{guest.name}</dt>,
-              <dd key={`title:${guest.title}`}>{guest.title}</dd>,
-            ]
-          })}
-        </dl>
-        <em>
-          <FormattedMessage
-            id="podcasts.show.withHost.js"
-            values={{ count: hosts.length }}
-          />{' '}
-          <FormattedList list={hosts.map(h => <span key={h}>{h}</span>)} />
-        </em>
+        {guests.length > 0 || hosts.length > 0 ? (
+          <React.Fragment>
+            <dl>
+              {guests.map(guest => {
+                return [
+                  <dt key={`name:${guest.name}`}>{guest.name}</dt>,
+                  <dd key={`title:${guest.title}`}>{guest.title}</dd>,
+                ]
+              })}
+            </dl>
+            <em>
+              <FormattedMessage
+                id="podcasts.show.withHost.js"
+                values={{ count: hosts.length }}
+              />{' '}
+              <FormattedList list={hosts.map(h => <span key={h}>{h}</span>)} />
+            </em>
+          </React.Fragment>
+        ) : (
+          canEdit && (
+            <button className="pt-button pt-icon-people">
+              <FormattedMessage id="podcasts.edit.addGuests" />
+            </button>
+          )
+        )}
         <CreditsListForm
           credits={credits}
           editing={this.state.editing}
