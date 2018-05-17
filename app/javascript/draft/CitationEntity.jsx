@@ -22,14 +22,16 @@ function mapDispatchToProps (dispatch, ownProps) {
 
 class CitationSpan extends React.Component {
   render () {
-    let { isOpen, open, close, editable } = this.props
+    let { isOpen, open, close, editable, children } = this.props
 
     let citationLabel = !editable && isOpen ? '×' : '◦'
     let toggle = isOpen ? close : () => open(this.label)
     return (
       <span style={styles.label} onClick={toggle}>
         <sup ref={(e: HTMLElement) => (this.label = e)}>
-          {citationLabel}
+          {children.map(child =>
+            React.cloneElement(child, { text: citationLabel })
+          )}
         </sup>
       </span>
     )
