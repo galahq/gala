@@ -6,6 +6,7 @@
 import * as React from 'react'
 
 import { FormattedMessage } from 'react-intl'
+import { FormattedList } from 'shared/react-intl'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
 import CreditsListForm from './CreditsListForm'
@@ -39,7 +40,7 @@ class CreditsList extends React.Component<
 
   render () {
     const { canEdit, credits } = this.props
-    let { guests, hosts, hosts_string: hostsString } = credits
+    let { guests, hosts } = credits
 
     return (
       <div
@@ -62,7 +63,7 @@ class CreditsList extends React.Component<
             id="podcasts.show.withHost.js"
             values={{ count: hosts.length }}
           />{' '}
-          {hostsString}
+          <FormattedList list={hosts.map(h => <span key={h}>{h}</span>)} />
         </em>
         <CreditsListForm
           credits={credits}
