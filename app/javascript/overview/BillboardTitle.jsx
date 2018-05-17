@@ -29,6 +29,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     acknowledgements,
     coverUrl,
     library,
+    links,
   } = caseData
 
   return {
@@ -41,6 +42,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     translators,
     acknowledgements,
     library,
+    links,
     editing: edit.inProgress,
   }
 }
@@ -55,6 +57,7 @@ type Props = {
   updateCase: typeof updateCase,
   minimal: boolean,
   library: Library,
+  links: $PropertyType<CaseDataState, 'links'>,
 } & Byline
 
 export const UnconnectedBillboardTitle = ({
@@ -70,6 +73,7 @@ export const UnconnectedBillboardTitle = ({
   updateCase,
   minimal,
   library,
+  links,
 }: Props) => {
   return (
     <CoverImageContainer src={coverUrl}>
@@ -135,7 +139,12 @@ export const UnconnectedBillboardTitle = ({
         )}
       </cite>
 
-      {!minimal && <LibraryLogo library={library} />}
+      {!minimal && (
+        <LibraryLogo
+          library={library}
+          href={editing ? links.settings : undefined}
+        />
+      )}
     </CoverImageContainer>
   )
 }

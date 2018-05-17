@@ -9,13 +9,22 @@ import { opacify } from 'polished'
 
 import type { Library } from 'redux/state'
 
-const LibraryLogo = ({ library }: { library: Library }) => (
+const LibraryLogo = ({
+  library,
+  href,
+}: {
+  library: Library,
+  href?: string,
+}) => (
   <Container
     title={library.name}
-    href={window.location.pathname.replace(
-      /cases.*/,
-      `catalog/libraries/${library.slug}`
-    )}
+    href={
+      href ||
+      window.location.pathname.replace(
+        /cases.*/,
+        `catalog/libraries/${library.slug}`
+      )
+    }
     {...library}
   >
     <Logo src={library.logoUrl} />
