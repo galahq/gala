@@ -4,6 +4,7 @@ en:
     attributes:
       case:
         acknowledgements: Acknowledgements
+        authors: Authors
         case_title: Case title
         featured: Featured
         featured_at: Featured at
@@ -118,8 +119,11 @@ en:
   cases:
     edit:
       add_authors: Add authors
+      author_institution: Author Institution
+      author_name: Author Name
       change_cover_image: Change cover image
       edit: Edit this case
+      editing_authors: Editing Authors and Translators
       feature_case: Feature this case
       just_change_the_text: |
         To edit this case, just change the text. We’ll save your work
@@ -132,11 +136,13 @@ en:
         set: Set
         zoom_in: Zoom in
         zoom_out: Zoom out
+      missed_something: Please delete any unused author or translator rows.
       no_elements: This case has no elements.
       options: Options
       publish_case: Publish this case
       save: Save
       stop_editing: Stop editing this case
+      translator_name: Translator Name
       unfeature_case: Remove from featured cases
       unpublish_case: Unpublish this case
     index:

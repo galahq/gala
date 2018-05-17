@@ -6,6 +6,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { Button, Dialog, Intent } from '@blueprintjs/core'
 
@@ -15,12 +16,14 @@ import { isCompact } from 'shared/functions'
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
 import type { Toast } from '@blueprintjs/core'
+import type { IntlShape } from 'react-intl'
 import type { Author, Byline } from 'redux/state'
 
 type Props = {
   editing: boolean,
   byline: Byline,
   displayToast: Toast => void,
+  intl: IntlShape,
   onFinishEditing: (?AuthorsListFormState) => void,
 }
 export type AuthorsListFormState = Byline
@@ -55,26 +58,30 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
       this.props.onFinishEditing(this.state)
     } else {
       this.props.displayToast({
-        message: 'You missed something!',
+        message: this.props.intl.formatMessage({
+          id: 'cases.edit.missedSomething',
+        }),
         intent: Intent.WARNING,
       })
     }
   }
 
   render () {
-    const { editing } = this.props
+    const { editing, intl } = this.props
     const { authors, translators, acknowledgements } = this.state
     return (
       <Dialog
         isOpen={editing}
         iconName="edit"
         className="pt-dark"
-        title="Editing authors and translators"
+        title={intl.formatMessage({ id: 'cases.edit.editingAuthors' })}
         style={{ width: 700 }}
         onClose={this.handleCancel}
       >
         <div className="pt-dialog-body">
-          <SectionTitle>Authors</SectionTitle>
+          <SectionTitle>
+            <FormattedMessage id="activerecord.attributes.case.authors" />
+          </SectionTitle>
           <SortableList
             dark
             items={authors}
@@ -83,7 +90,9 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
             onChange={this.handleChangeAuthors}
           />
 
-          <SectionTitle>Translators</SectionTitle>
+          <SectionTitle>
+            <FormattedMessage id="activerecord.attributes.case.translators.other" />
+          </SectionTitle>
           <SortableList
             dark
             items={translators}
@@ -91,7 +100,9 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
             render={TranslatorInput}
             onChange={this.handleChangeTranslators}
           />
-          <SectionTitle>Acknowledgements</SectionTitle>
+          <SectionTitle>
+            <FormattedMessage id="activerecord.attributes.case.acknowledgements" />
+          </SectionTitle>
           <textarea
             className="pt-input pt-fill"
             value={acknowledgements}
@@ -103,7 +114,7 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
             <Button text="Cancel" onClick={this.handleCancel} />
             <Button
               intent={Intent.SUCCESS}
-              text="Done"
+              text={intl.formatMessage({ id: 'helpers.save' })}
               onClick={this.handleDone}
             />
           </div>
@@ -113,7 +124,7 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
   }
 }
 
-export default connect(undefined, { displayToast })(AuthorsListForm)
+export default connect(undefined, { displayToast })(injectIntl(AuthorsListForm))
 
 function formStateClean ({
   authors,
@@ -122,13 +133,17 @@ function formStateClean ({
   return isCompact(authors.map(a => a.name)) && isCompact(translators)
 }
 
-type AuthorInputProps = { item: Author, onChangeItem: Author => void }
-const AuthorInput = ({ item, onChangeItem }: AuthorInputProps) => (
+type AuthorInputProps = {
+  item: Author,
+  intl: IntlShape,
+  onChangeItem: Author => void,
+}
+const BaseAuthorInput = ({ intl, item, onChangeItem }: AuthorInputProps) => (
   <span style={{ display: 'flex' }}>
     <input
       className="pt-input"
       type="text"
-      placeholder="Author name"
+      placeholder={intl.formatMessage({ id: 'cases.edit.authorName' })}
       value={item.name}
       onChange={(e: SyntheticInputEvent<*>) => {
         onChangeItem({ ...item, name: e.target.value })
@@ -139,7 +154,7 @@ const AuthorInput = ({ item, onChangeItem }: AuthorInputProps) => (
       className="pt-input"
       style={{ flexGrow: 1 }}
       type="text"
-      placeholder="Author institution"
+      placeholder={intl.formatMessage({ id: 'cases.edit.authorInstitution' })}
       value={item.institution}
       onChange={(e: SyntheticInputEvent<*>) => {
         onChangeItem({ ...item, institution: e.target.value })
@@ -147,8 +162,11 @@ const AuthorInput = ({ item, onChangeItem }: AuthorInputProps) => (
     />
   </span>
 )
+const AuthorInput = injectIntl(BaseAuthorInput)
 
-const TranslatorInput = createSortableInput({ placeholder: 'Translator name' })
+const TranslatorInput = createSortableInput({
+  placeholderId: 'cases.edit.translatorName',
+})
 
 const SectionTitle = styled.h5`
   &:not(:first-child) {
