@@ -638,6 +638,7 @@ en:
     destroy:
       delete_podcast: Delete Podcast
     edit:
+      addGuests: Add Guests
       uploadArtwork: Upload Artwork
       uploadPodcast: Upload Podcast
     show:
