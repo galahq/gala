@@ -78,6 +78,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
     const {
       id,
       solid,
+      nonNarrative,
       editable,
       onChange,
       handleKeyCommand,
@@ -121,7 +122,13 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
 
         {editable && (
           <FormattingToolbar
-            actions={{ code: false, header: false, blockquote: false }}
+            actions={{
+              code: false,
+              header: false,
+              blockquote: false,
+              addEdgenoteEntity: !nonNarrative,
+              addCitationEntity: !nonNarrative,
+            }}
             editorState={editorState}
             getEdgenote={getEdgenote}
             onChange={onChange}
