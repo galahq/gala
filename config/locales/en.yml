@@ -106,6 +106,12 @@ en:
     show:
       download: Download
       instructions: Instructions
+  cards:
+    edit:
+      citation_added: |
+        Citation added. Click the <span class="pt-tag pt-intent-success">
+        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        edit.
   case_elements:
     new:
       untitled: Untitled
