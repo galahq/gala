@@ -49,19 +49,25 @@ class CitationSpan extends React.Component<Props> {
       <span
         role="button"
         style={styles.label}
+        ref={e => (this.label = e)}
         onClick={toggle}
         onKeyPress={acceptKeyboardClick}
       >
-        <sup ref={e => (this.label = e)}>
+        <sup>
           {children.map(child =>
-            React.cloneElement(child, { text: citationLabel })
+            React.cloneElement(child, {
+              forceSelection: true,
+              text: citationLabel,
+            })
           )}
+        </sup>
+        {editable || (
           <LabelForScreenReaders>
             <a id={`citation-marker-${entityKey}`} tabIndex="0">
               <FormattedMessage id="cards.show.openCitation" />
             </a>
           </LabelForScreenReaders>
-        </sup>
+        )}
       </span>
     )
   }

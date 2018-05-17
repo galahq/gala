@@ -44,7 +44,9 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
       dispatch(updateCardContents(ownProps.cardId, eS)),
     onCloseCitation: () => {
       dispatch(openCitation(null))
-      key && (window.location.hash = `citation-marker-${key}`)
+      key &&
+        !document.documentElement.classList.contains('pt-focus-disabled') &&
+        (window.location.hash = `citation-marker-${key}`)
     },
   }
 }
@@ -52,7 +54,9 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
 class CitationTooltip extends React.Component<*> {
   componentDidMount () {
     const { key } = this.props.openedCitation
-    key && (window.location.hash = `citation-${key}`)
+    key &&
+      !document.documentElement.classList.contains('pt-focus-disabled') &&
+      (window.location.hash = `citation-${key}`)
   }
   render () {
     const {
@@ -78,7 +82,7 @@ class CitationTooltip extends React.Component<*> {
       position: 'absolute',
       left,
       top,
-      transform: 'translateY(calc(-100% + 3px)',
+      transform: 'translateY(calc((-100% + 3em)))',
     }
 
     let closeCitation = editable ? null : close
