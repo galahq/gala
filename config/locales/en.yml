@@ -115,7 +115,9 @@ en:
       change_cover_image: Change cover image
       edit: Edit this case
       feature_case: Feature this case
-      just_change_the_text: To edit this case, just change the text
+      just_change_the_text: |
+        To edit this case, just change the text. We’ll save your work
+        automatically.
       map:
         instructions: |
           Drag the map to position the pin, change the zoom to give context,
