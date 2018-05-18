@@ -43,6 +43,7 @@ class Case < ApplicationRecord
 
   belongs_to :library, optional: true
 
+  has_many :active_locks, class_name: 'Lock'
   has_many :cards
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy
   has_many :comment_threads, dependent: :destroy
