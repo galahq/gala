@@ -8,4 +8,12 @@ class Lock < ApplicationRecord
   belongs_to :case
 
   validates :lockable_type, only_polymorphic: true
+
+  before_validation :set_case_from_lockable, unless: -> { self.case.present? }
+
+  private
+
+  def set_case_from_lockable
+    self.case = lockable.case
+  end
 end
