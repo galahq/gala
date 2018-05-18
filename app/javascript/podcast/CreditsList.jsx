@@ -6,6 +6,7 @@
 import * as React from 'react'
 
 import { FormattedMessage } from 'react-intl'
+import { FormattedList } from 'shared/react-intl'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
 import CreditsListForm from './CreditsListForm'
@@ -39,7 +40,7 @@ class CreditsList extends React.Component<
 
   render () {
     const { canEdit, credits } = this.props
-    let { guests, hosts, hosts_string: hostsString } = credits
+    let { guests, hosts } = credits
 
     return (
       <div
@@ -49,21 +50,31 @@ class CreditsList extends React.Component<
         onKeyPress={acceptKeyboardClick}
         onClick={this.handleStartEditing}
       >
-        <dl>
-          {guests.map(guest => {
-            return [
-              <dt key={`name:${guest.name}`}>{guest.name}</dt>,
-              <dd key={`title:${guest.title}`}>{guest.title}</dd>,
-            ]
-          })}
-        </dl>
-        <em>
-          <FormattedMessage
-            id="podcasts.show.withHost.js"
-            values={{ count: hosts.length }}
-          />{' '}
-          {hostsString}
-        </em>
+        {guests.length > 0 || hosts.length > 0 ? (
+          <React.Fragment>
+            <dl>
+              {guests.map(guest => {
+                return [
+                  <dt key={`name:${guest.name}`}>{guest.name}</dt>,
+                  <dd key={`title:${guest.title}`}>{guest.title}</dd>,
+                ]
+              })}
+            </dl>
+            <em>
+              <FormattedMessage
+                id="podcasts.show.withHost.js"
+                values={{ count: hosts.length }}
+              />{' '}
+              <FormattedList list={hosts.map(h => <span key={h}>{h}</span>)} />
+            </em>
+          </React.Fragment>
+        ) : (
+          canEdit && (
+            <button className="pt-button pt-icon-people">
+              <FormattedMessage id="podcasts.edit.addGuests" />
+            </button>
+          )
+        )}
         <CreditsListForm
           credits={credits}
           editing={this.state.editing}

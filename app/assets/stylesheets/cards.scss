@@ -1,0 +1,18 @@
+.Card {
+  .public-DraftEditorPlaceholder {
+    &-root {
+      position: absolute;
+      opacity: 0.6;
+      z-index: 1;
+    }
+
+    &-hasFocus {
+      opacity: 0.3;
+    }
+  }
+
+  .DraftEditor-editorContainer {
+    position: relative;
+    z-index: 1;
+  }
+}

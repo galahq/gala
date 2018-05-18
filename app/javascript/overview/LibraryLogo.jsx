@@ -9,13 +9,22 @@ import { opacify } from 'polished'
 
 import type { Library } from 'redux/state'
 
-const LibraryLogo = ({ library }: { library: Library }) => (
+const LibraryLogo = ({
+  library,
+  href,
+}: {
+  library: Library,
+  href?: string,
+}) => (
   <Container
     title={library.name}
-    href={window.location.pathname.replace(
-      /cases.*/,
-      `catalog/libraries/${library.slug}`
-    )}
+    href={
+      href ||
+      window.location.pathname.replace(
+        /cases.*/,
+        `catalog/libraries/${library.slug}`
+      )
+    }
     {...library}
   >
     <Logo src={library.logoUrl} />
@@ -26,7 +35,6 @@ export default LibraryLogo
 const Container = styled.a`
   position: absolute;
   top: 0;
-  left: 2em;
   width: 67px;
   height: 110px;
   background-color: ${({ backgroundColor }) => backgroundColor};
@@ -35,6 +43,10 @@ const Container = styled.a`
   border-bottom-right-radius: 4px;
   box-shadow: 0px 8px 80px 0px #ebeae460;
   transition: box-shadow ease-out 0.1s, background ease-out 0.1s;
+
+  .BillboardTitle & {
+    left: 2em;
+  }
 
   &[href]:hover,
   &:focus {

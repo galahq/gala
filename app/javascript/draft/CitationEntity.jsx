@@ -1,5 +1,13 @@
-import React from 'react' // eslint-disable-line no-unused-vars
+/**
+ * @providesModule CitationEntity
+ * @flow
+ */
+
+import * as React from 'react' // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { LabelForScreenReaders } from 'utility/A11y'
+import { acceptKeyboardClick } from 'shared/keyboard'
 
 import { openCitation } from 'redux/actions'
 
@@ -20,17 +28,46 @@ function mapDispatchToProps (dispatch, ownProps) {
   }
 }
 
-class CitationSpan extends React.Component {
+type Props = {
+  isOpen: boolean,
+  open: HTMLElement => mixed,
+  close: () => mixed,
+  editable: boolean,
+  children: Array<React.Element<*>>,
+  entityKey: string,
+}
+
+class CitationSpan extends React.Component<Props> {
+  label: ?HTMLElement = null
+
   render () {
-    let { isOpen, open, close, editable } = this.props
+    let { isOpen, open, close, editable, entityKey, children } = this.props
 
     let citationLabel = !editable && isOpen ? '×' : '◦'
-    let toggle = isOpen ? close : () => open(this.label)
+    let toggle = isOpen ? close : () => this.label && open(this.label)
     return (
-      <span style={styles.label} onClick={toggle}>
-        <sup ref={(e: HTMLElement) => (this.label = e)}>
-          {citationLabel}
+      <span
+        role="button"
+        style={styles.label}
+        ref={e => (this.label = e)}
+        onClick={toggle}
+        onKeyPress={acceptKeyboardClick}
+      >
+        <sup>
+          {children.map(child =>
+            React.cloneElement(child, {
+              forceSelection: true,
+              text: citationLabel,
+            })
+          )}
         </sup>
+        {editable || (
+          <LabelForScreenReaders>
+            <a id={`citation-marker-${entityKey}`} tabIndex="0">
+              <FormattedMessage id="cards.show.openCitation" />
+            </a>
+          </LabelForScreenReaders>
+        )}
       </span>
     )
   }
