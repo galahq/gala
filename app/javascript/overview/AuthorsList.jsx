@@ -123,4 +123,5 @@ const StyledTooltip = styled(Tooltip).attrs({
   className: 'pt-tooltip-indicator',
 })`
   border-bottom-color: #ffffffaa;
+  vertical-align: baseline;
 `

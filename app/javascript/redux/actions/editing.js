@@ -16,6 +16,7 @@ export function toggleEditing (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     if (window.autosaveInterval) {
       window.clearInterval(window.autosaveInterval)
+      delete window.autosaveInterval
     } else {
       window.autosaveInterval = window.setInterval(
         () => dispatch(silentlySave()),

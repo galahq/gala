@@ -144,7 +144,7 @@ const Window = styled.div`
   grid-template:
     'sidebar value-proposition'
     'sidebar banner'
-    'sidebar main' auto / 19em calc(100% - 19em - 1em);
+    'sidebar main' min-content / 19em calc(100% - 19em - 1em);
   min-height: 100%;
   position: relative;
   padding: 2em 1em;

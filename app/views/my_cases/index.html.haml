@@ -27,14 +27,15 @@
                                             role: 'presentation' }
 
             %td
-              %span.admin__table__slug
-                = kase.kicker || '—'
-                - if kase.featured?
-                  %span.pt-tag.pt-minimal.pt-intent-success
-                    = succeed ':' do
-                      = t '.featured'
-                    = localize kase.featured_at.to_date
-              = kase.title
+              = link_to case_path kase do
+                %span.admin__table__slug
+                  = kase.kicker || '—'
+                  - if kase.featured?
+                    %span.pt-tag.pt-minimal.pt-intent-success
+                      = succeed ':' do
+                        = t '.featured'
+                      = localize kase.featured_at.to_date
+                = kase.title
 
             %td
               = link_to case_path kase do
