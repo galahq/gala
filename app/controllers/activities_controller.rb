@@ -3,10 +3,12 @@
 # @see Activity
 class ActivitiesController < ApplicationController
   include BroadcastEdits
+  include VerifyLock
 
   before_action :authenticate_reader!
   before_action :set_activity, only: %i[show update destroy]
   before_action :set_case, only: [:create]
+  before_action -> { verify_lock_on @activity }, only: %i[update destroy]
 
   broadcast_edits to: :@activity
 
