@@ -43,12 +43,18 @@ class LocksController < ApplicationController
 
   def set_lockable
     klass = params[:lock][:lockable_type].constantize
-    @lockable = klass.find params[:lock][:lockable_id]
-  rescue StandardError
+    param_name = lockable_param klass
+    @lockable = klass.find_by! param_name => params[:lock][:lockable_param]
+  rescue ActiveRecord::RecordNotFound, NameError
     head :unprocessable_entity
   end
 
   def set_lock
     @lock = Lock.find params[:id]
+  end
+
+  def lockable_param(klass)
+    return :id unless klass.respond_to? :friendly
+    klass.friendly_id_config.base
   end
 end
