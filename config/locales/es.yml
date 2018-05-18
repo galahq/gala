@@ -4,6 +4,7 @@ es:
     attributes:
       case:
         acknowledgements: Reconocimientos
+        authors: Authors
         case_title: Case title
         featured: Destacado
         featured_at: Featured at
@@ -105,16 +106,28 @@ es:
     show:
       download: Download
       instructions: Instructions
+  cards:
+    edit:
+      citation_added: |
+        Citation added. Click the <span class="pt-tag pt-intent-success">
+        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        edit.
+      write_something: Write something...
   case_elements:
     new:
       untitled: Untitled
   cases:
     edit:
       add_authors: Add authors
+      author_institution: Author Institution
+      author_name: Author Name
       change_cover_image: Change cover image
       edit: Editar este caso
+      editing_authors: Editing Authors and Translators
       feature_case: Agregar caso destacado
-      just_change_the_text: Para editar este caso, simplemente cambie el texto
+      just_change_the_text: |
+        To edit this case, just change the text. We’ll save your work
+        automatically.
       map:
         instructions: |
           Drag the map to position the pin, change the zoom to give context,
@@ -123,11 +136,13 @@ es:
         set: Set
         zoom_in: Zoom in
         zoom_out: Zoom out
+      missed_something: Please delete any unused author or translator rows.
       no_elements: This case has no elements.
       options: Opciones
       publish_case: Publicar este caso
       save: Guardar
       stop_editing: Dejar de editar este caso
+      translator_name: Translator Name
       unfeature_case: Quitar de casos destacados
       unpublish_case: Annular la publicacion
     index:
@@ -584,6 +599,7 @@ es:
     destroy:
       delete_podcast: Delete Podcast
     edit:
+      addGuests: Add Guests
       uploadArtwork: Upload Artwork
       uploadPodcast: Upload Podcast
     show:
