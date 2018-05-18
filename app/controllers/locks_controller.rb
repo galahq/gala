@@ -11,11 +11,13 @@ class LocksController < ApplicationController
 
   # @route [GET] `/cases/:slug/locks`
   def index
+    authorize @case, :update?
     render json: @locks
   end
 
   # @route [POST] `/locks`
   def create
+    authorize @lockable, :update?
     @lock = @lockable.lock_by current_user
 
     if @lock.present?
@@ -27,6 +29,7 @@ class LocksController < ApplicationController
 
   # @route [DELETE] `/locks/:id`
   def destroy
+    authorize @lock.lockable, :update?
     @lock.lockable.unlock
     head :no_content
   end
@@ -34,8 +37,8 @@ class LocksController < ApplicationController
   private
 
   def set_locks
-    kase = Case.friendly.find params[:case_slug]
-    @locks = kase.active_locks
+    @case = Case.friendly.find params[:case_slug]
+    @locks = @case.active_locks
   end
 
   def set_lockable
