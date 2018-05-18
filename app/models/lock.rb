@@ -6,4 +6,6 @@ class Lock < ApplicationRecord
   belongs_to :lockable, polymorphic: true
   belongs_to :reader
   belongs_to :case
+
+  validates :lockable_type, only_polymorphic: true
 end
