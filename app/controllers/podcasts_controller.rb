@@ -3,10 +3,12 @@
 # @see Podcast
 class PodcastsController < ApplicationController
   include BroadcastEdits
+  include VerifyLock
 
   before_action :authenticate_reader!
   before_action :set_podcast, only: %i[show update destroy]
   before_action :set_case, only: [:create]
+  before_action -> { verify_lock_on @podcast }, only: %i[update destroy]
 
   broadcast_edits to: :@podcast
 

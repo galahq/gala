@@ -3,10 +3,12 @@
 # @see Page
 class PagesController < ApplicationController
   include BroadcastEdits
+  include VerifyLock
 
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_case, only: [:create]
   before_action :set_page, only: %i[update destroy]
+  before_action -> { verify_lock_on @page }, only: %i[update destroy]
 
   broadcast_edits to: :@page
 
