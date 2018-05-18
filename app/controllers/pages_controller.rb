@@ -12,10 +12,10 @@ class PagesController < ApplicationController
 
   # @route [POST] `/cases/case-slug/pages`
   def create
-    authorize @case, :update?
-
     @page = Page.new page_params
     @page.build_case_element case: @case
+
+    authorize @page
 
     if @page.save
       render @page
@@ -26,7 +26,7 @@ class PagesController < ApplicationController
 
   # @route [PATCH/PUT] `/pages/1`
   def update
-    authorize @page.case, :update?
+    authorize @page
 
     if @page.update(page_params)
       render @page
@@ -37,7 +37,7 @@ class PagesController < ApplicationController
 
   # @route [DELETE] `/pages/1`
   def destroy
-    authorize @page.case, :update?
+    authorize @page
 
     @page.destroy
   end
