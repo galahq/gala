@@ -14,9 +14,8 @@ class EdgenotesController < ApplicationController
 
   # @route [POST] `/cases/case-slug/edgenotes`
   def create
-    authorize @case, :update?
-
     @edgenote = @case.edgenotes.build
+    authorize @edgenote
 
     if @edgenote.save
       render partial: 'edgenote', locals: { edgenote: edgenote }
@@ -27,7 +26,7 @@ class EdgenotesController < ApplicationController
 
   # @route [PATCH/PUT] `/edgenotes/slug`
   def update
-    authorize @edgenote.case, :update?
+    authorize @edgenote
 
     if @edgenote.update(edgenote_params)
       render partial: 'edgenote', locals: { edgenote: edgenote }
@@ -38,7 +37,7 @@ class EdgenotesController < ApplicationController
 
   # @route [DELETE] `/edgenotes/slug`
   def destroy
-    authorize @edgenote.case, :update?
+    authorize @edgenote
 
     @edgenote.destroy
   end

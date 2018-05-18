@@ -11,6 +11,12 @@ module Element
     after_save -> { case_element.touch }
   end
 
+  class_methods do
+    def policy_class
+      ElementPolicy
+    end
+  end
+
   # @return [Case]
   def case
     case_element.case

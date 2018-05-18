@@ -12,10 +12,10 @@ class PodcastsController < ApplicationController
 
   # @route [POST] `/cases/case-slug/podcasts`
   def create
-    authorize @case, :update?
-
     @podcast = Podcast.new podcast_params
     @podcast.build_case_element case: @case
+
+    authorize @podcast
 
     if @podcast.save
       render @podcast.decorate
@@ -26,7 +26,7 @@ class PodcastsController < ApplicationController
 
   # @route [PATCH/PUT] `/podcasts/1`
   def update
-    authorize @podcast.case, :update?
+    authorize @podcast
 
     if @podcast.update(podcast_params)
       render @podcast.decorate
@@ -37,7 +37,7 @@ class PodcastsController < ApplicationController
 
   # @route [DELETE] `/podcasts/1`
   def destroy
-    authorize @podcast.case, :update?
+    authorize @podcast
 
     @podcast.destroy
   end

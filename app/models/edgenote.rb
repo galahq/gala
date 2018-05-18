@@ -43,6 +43,10 @@ class Edgenote < ApplicationRecord
 
   before_create :ensure_slug_set
 
+  def self.policy_class
+    ElementPolicy
+  end
+
   # The name of the corresponding {Ahoy::Event}s
   # @see Trackable#event_name
   def event_name
