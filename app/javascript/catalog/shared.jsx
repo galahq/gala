@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 export const Main = styled.main`
   grid-area: main;
+  min-height: 300px;
 `
 
 export const SectionTitle = styled.h2`
