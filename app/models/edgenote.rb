@@ -18,6 +18,7 @@
 # @attr alt_text [String] @todo translate this
 # @attr website_url [Translated<String>]
 class Edgenote < ApplicationRecord
+  include Lockable
   include Mobility
   include Trackable
 

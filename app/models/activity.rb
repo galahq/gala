@@ -7,6 +7,7 @@
 # @attr pdf_url [Translated<String>]
 class Activity < ApplicationRecord
   include Element
+  include Lockable
   include Mobility
 
   translates :title, :description, :pdf_url, fallbacks: true

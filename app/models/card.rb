@@ -11,6 +11,7 @@
 # @attr raw_content [Translated<RawDraftContentState>] the card’s content, to be
 #   used with Draft.js in React
 class Card < ApplicationRecord
+  include Lockable
   include Mobility
   include Trackable
 
