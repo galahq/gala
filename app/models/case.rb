@@ -127,6 +127,7 @@ class Case < ApplicationRecord
     super
   end
 
+  # This is to conform with Lockable
   def case
     self
   end
