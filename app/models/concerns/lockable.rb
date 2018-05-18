@@ -11,9 +11,9 @@ module Lockable
   end
 
   def lock_by(reader)
-    transaction do
-      create_lock! reader: reader
-    end
+    create_lock! reader: reader
+  rescue ActiveRecord::RecordNotUnique
+    nil
   end
 
   def locked?
