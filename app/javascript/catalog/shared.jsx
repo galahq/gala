@@ -91,6 +91,11 @@ export const ElementText = styled.span`
   flex: 1;
   margin: 0 14px;
   line-height: 1.1;
+
+  .pt-tooltip.pt-dark &,
+  .pt-dark .pt-tooltip & {
+    color: #314354;
+  }
 `
 export const NotificationBadge = styled.span`
   height: 20px;

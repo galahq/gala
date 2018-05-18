@@ -37,7 +37,7 @@ class Pin extends React.Component<{
                   !!kase.publishedAt && (
                     <AnchorButton
                       iconName="circle-arrow-right"
-                      className="pt-minimal"
+                      className="pt-intent-success"
                       href={kase.links.self}
                     />
                   )
@@ -56,9 +56,7 @@ class Pin extends React.Component<{
 }
 export default Pin
 
-const TooltipElement = styled(Element).attrs({
-  className: 'pt-dark',
-})`
+const TooltipElement = styled(Element)`
   margin-bottom: -4px;
 `
 const PinIcon = styled.span.attrs({
