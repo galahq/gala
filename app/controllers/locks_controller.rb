@@ -21,7 +21,7 @@ class LocksController < ApplicationController
     @lock = @lockable.lock_by current_user
 
     if @lock.present?
-      render json: @lock
+      render json: @lock, status: :created
     else
       render json: @lockable.lock, status: :conflict
     end
