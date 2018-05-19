@@ -26,8 +26,8 @@ ja:
       edgenote:
         alt_text: アクセシビリティのための画像記述
         attribution: 出典
-        call_to_action: Call to action
-        caption: Caption
+        call_to_action: 行動を促す言葉
+        caption: 説明文
         photo_credit: Photo credit
         pull_quote: Pull quote
       question:
