@@ -30,7 +30,6 @@
 class Case < ApplicationRecord
   include Comparable
   include Mobility
-  include Watchable
   extend FriendlyId
 
   attribute :commentable, default: true

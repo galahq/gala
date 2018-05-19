@@ -20,7 +20,6 @@
 class Edgenote < ApplicationRecord
   include Mobility
   include Trackable
-  include Watchable
 
   attribute :format, :string, default: 'aside'
   attribute :style, :integer, default: 1 # :v2

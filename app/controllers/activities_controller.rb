@@ -5,6 +5,7 @@ class ActivitiesController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_activity, only: %i[show update destroy]
   before_action :set_case, only: [:create]
+  after_action -> { BroadcastEdit.to @activity }, if: :successful?
 
   # @route [POST] `/cases/case-slug/activities`
   def create

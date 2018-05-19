@@ -13,7 +13,6 @@
 class Card < ApplicationRecord
   include Mobility
   include Trackable
-  include Watchable
 
   translates :content, :raw_content, fallbacks: true
 

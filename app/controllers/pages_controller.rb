@@ -5,6 +5,7 @@ class PagesController < ApplicationController
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_case, only: [:create]
   before_action :set_page, only: %i[update destroy]
+  after_action -> { BroadcastEdit.to @page }, if: :successful?
 
   # @route [POST] `/cases/case-slug/pages`
   def create

@@ -25,11 +25,15 @@ class EditBroadcastJob < ActiveJob::Base
   end
 
   def edit_type
-    if @watchable.updated?
+    if updated?
       :updated
     else
       :created
     end
+  end
+
+  def updated?
+    @watchable.created_at != @watchable.updated_at
   end
 
   def serialized_watchable
