@@ -4,15 +4,15 @@ ja:
     attributes:
       case:
         acknowledgements: 謝辞
-        authors: Authors
-        case_title: Case title
+        authors: 作者
+        case_title: タイトル
         featured: 注目
         featured_at: 注目の事例研究に追加した時
         kicker: 短いタイトル
         learning_objectives: 学習目標
         library: ライブラリ
         location: 場所
-        published: Published
+        published: 公開された
         slug: 事例研究のURL
         title: 質問
         translators:
@@ -20,7 +20,7 @@ ja:
           other: 翻訳者
       deployment:
         case_id: 場合
-        group_id: Study Group
+        group_id: 勉強会
         group_attributes:
           name: Group Name
       edgenote:
