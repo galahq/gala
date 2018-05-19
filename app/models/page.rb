@@ -6,6 +6,7 @@
 class Page < ApplicationRecord
   include Element
   include Mobility
+  include Watchable
 
   translates :title, fallbacks: true
 

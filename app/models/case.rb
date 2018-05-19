@@ -30,6 +30,7 @@
 class Case < ApplicationRecord
   include Comparable
   include Mobility
+  include Watchable
   extend FriendlyId
 
   attribute :commentable, default: true
@@ -123,5 +124,9 @@ class Case < ApplicationRecord
   def library
     return SharedCasesLibrary.instance if library_id.nil?
     super
+  end
+
+  def case
+    self
   end
 end

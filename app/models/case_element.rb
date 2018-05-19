@@ -7,6 +7,7 @@
 #   contents
 class CaseElement < ApplicationRecord
   include Trackable
+  include Watchable
 
   belongs_to :case, touch: true
   belongs_to :element, polymorphic: true, dependent: :destroy
