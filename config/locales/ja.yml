@@ -22,10 +22,10 @@ ja:
         case_id: 場合
         group_id: 勉強会
         group_attributes:
-          name: Group Name
+          name: グループ名
       edgenote:
-        alt_text: Image description for accessibility
-        attribution: Attribution
+        alt_text: アクセシビリティのための画像記述
+        attribution: 出典
         call_to_action: Call to action
         caption: Caption
         photo_credit: Photo credit
