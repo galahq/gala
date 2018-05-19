@@ -6,6 +6,7 @@
 class SharedCasesLibrary
   include Singleton
   include Serializable
+  extend ActiveModel::Naming
 
   attr_reader :id, :slug, :url, :background_color, :foreground_color
 
@@ -30,6 +31,10 @@ class SharedCasesLibrary
   def logo_url
     @logo_url ||=
       ActionController::Base.helpers.asset_path('shared-cases-library.svg')
+  end
+
+  def to_param
+    nil
   end
 
   def to_partial_path
