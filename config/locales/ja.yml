@@ -29,7 +29,7 @@ ja:
         call_to_action: 行動を促す言葉
         caption: 説明文
         photo_credit: クレジット表記
-        pull_quote: Pull quote
+        pull_quote: 引用
       question:
         content: 内容
         correct_answer: 正解
@@ -45,10 +45,10 @@ ja:
         email: メールアドレス
         encrypted_password: 暗号化パスワード
         failed_attempts: 失敗したログイン試行回数
-        image: Image
+        image: 画像
         last_sign_in_at: 最終ログイン時刻
         last_sign_in_ip: 最終ログインIPアドレス
-        locale: Locale
+        locale: 言語
         locked_at: ロック時刻
         name: 姓名
         password: パスワード
@@ -84,7 +84,7 @@ ja:
         feature: 注目の状態
       comment: コメント
       comment_thread: コメントスレッド
-      deployment: Deployment
+      deployment: 配備
       edgenote: Edgenote
       enrollment: 登録
       global_community: グローバルコミュニティ
@@ -101,7 +101,7 @@ ja:
         updated: "%{model}が正常に便新されました。"
   activities:
     destroy:
-      delete_activity: Delete Activity
+      delete_activity: アクティビティを削除
     show:
       download: ダウンロード
       instructions: 説明
