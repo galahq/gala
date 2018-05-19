@@ -9,7 +9,6 @@ class Podcast < ApplicationRecord
   include Element
   include Mobility
   include Trackable
-  include Watchable
 
   translates :title, :description, :credits, fallbacks: true
 

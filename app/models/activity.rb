@@ -8,7 +8,6 @@
 class Activity < ApplicationRecord
   include Element
   include Mobility
-  include Watchable
 
   translates :title, :description, :pdf_url, fallbacks: true
 
