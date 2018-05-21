@@ -5,6 +5,7 @@
 
 import { append, keys } from 'ramda'
 import qs from 'qs'
+import uuid from 'uuid/v4'
 
 type ErrorResponse = {
   [string]: string[],
@@ -30,6 +31,7 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        'X-Session-ID': sessionId(),
         ...CSRF.header(),
       }),
     })
@@ -46,6 +48,7 @@ export class Orchard {
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        'X-Session-ID': sessionId(),
         ...CSRF.header(),
       }),
     })
@@ -56,7 +59,11 @@ export class Orchard {
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'DELETE',
-      headers: new Headers({ Accept: 'application/json', ...CSRF.header() }),
+      headers: new Headers({
+        Accept: 'application/json',
+        'X-Session-ID': sessionId(),
+        ...CSRF.header(),
+      }),
     })
     return fetch(r)
   }
@@ -126,4 +133,9 @@ function handleResponse (response: Response): Promise<any> {
       throw e
     })
   }
+}
+
+export function sessionId (): string {
+  window.sessionId || (window.sessionId = uuid())
+  return window.sessionId
 }
