@@ -72,6 +72,7 @@
     "stimulus": "^1.0.1",
     "styled-components": "^3.0.1",
     "url-loader": "^0.6.2",
+    "uuid": "^3.2.1",
     "webpack": "^3.5.6",
     "webpack-merge": "^4.1.0",
     "whatwg-fetch": "^2.0.3",
