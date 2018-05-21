@@ -2,11 +2,12 @@
 
 # @see Case
 class CasesController < ApplicationController
+  include BroadcastEdits
+
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
-  after_action -> { BroadcastEdit.to @case, type: action_name },
-               only: %i[create update destroy],
-               if: :successful?
+
+  broadcast_edits to: :@case
 
   layout 'admin'
 

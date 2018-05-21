@@ -2,11 +2,13 @@
 
 # @see Podcast
 class PodcastsController < ApplicationController
+  include BroadcastEdits
+
   before_action :authenticate_reader!
   before_action :set_podcast, only: %i[show update destroy]
   before_action :set_case, only: [:create]
-  after_action -> { BroadcastEdit.to @podcast, type: action_name },
-               if: :successful?
+
+  broadcast_edits to: :@podcast
 
   # @route [POST] `/cases/case-slug/podcasts`
   def create
