@@ -5,7 +5,8 @@ class EdgenotesController < ApplicationController
   before_action :set_edgenote, only: %i[show update destroy]
   before_action :set_case, only: [:create]
   before_action :set_cors_headers, only: [:show]
-  after_action -> { BroadcastEdit.to @edgenote }, if: :successful?
+  after_action -> { BroadcastEdit.to @edgenote, type: action_name },
+               if: :successful?
 
   decorates_assigned :edgenote
 

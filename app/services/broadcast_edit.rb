@@ -3,19 +3,21 @@
 # Given a case component post-create, update, or destroy, broadcast that change
 # to the EditsChannel for the component’s case
 class BroadcastEdit
-  attr_reader :resource
+  attr_reader :resource, :type
 
-  def self.to(resource)
-    new(resource).call
+  def self.to(resource, type:)
+    new(resource, type).call
   end
 
-  def initialize(resource)
+  def initialize(resource, type)
     @resource = resource
+    @type = type
   end
 
   def call
     EditBroadcastJob.perform_later resource, case_slug: resource.case.slug,
-                                             cached_params: cached_params
+                                             cached_params: cached_params,
+                                             type: type
   end
 
   private
