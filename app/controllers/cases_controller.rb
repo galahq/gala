@@ -4,8 +4,9 @@
 class CasesController < ApplicationController
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
-  after_action -> { BroadcastEdit.to @case }, only: %i[create update destroy],
-                                              if: :successful?
+  after_action -> { BroadcastEdit.to @case, type: action_name },
+               only: %i[create update destroy],
+               if: :successful?
 
   layout 'admin'
 

@@ -5,7 +5,8 @@ class CardsController < ApplicationController
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_page, only: [:create]
   before_action :set_card, only: %i[update destroy]
-  after_action -> { BroadcastEdit.to @card }, if: :successful?
+  after_action -> { BroadcastEdit.to @card, type: action_name },
+               if: :successful?
 
   # @route [POST] `/pages/1/cards`
   def create
