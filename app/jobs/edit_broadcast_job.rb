@@ -5,7 +5,7 @@ class EditBroadcastJob < ActiveJob::Base
   queue_as :default
 
   def perform(watchable, case_slug:, cached_params:)
-    @watchable = watchable
+    @watchable = maybe_decorated watchable
     @case_slug = case_slug
 
     broadcast_edit
@@ -18,6 +18,12 @@ class EditBroadcastJob < ActiveJob::Base
   end
 
   private
+
+  def maybe_decorated(watchable)
+    watchable.decorate
+  rescue Draper::UninferrableDecoratorError
+    watchable
+  end
 
   def broadcast_edit(type: edit_type)
     EditsChannel.broadcast_to @case_slug,
