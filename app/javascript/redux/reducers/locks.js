@@ -6,11 +6,23 @@
 import { reject } from 'ramda'
 
 import type { LocksState, Lock } from 'redux/state'
-import type { AddLockAction, RemoveLockAction } from 'redux/actions'
-type Action = AddLockAction | RemoveLockAction
+import type {
+  SetLocksAction,
+  AddLockAction,
+  RemoveLockAction,
+} from 'redux/actions'
+type Action = SetLocksAction | AddLockAction | RemoveLockAction
 
 export default function locks (state: LocksState = {}, action: Action) {
   switch (action.type) {
+    case 'SET_LOCKS': {
+      const { data } = action
+      return data.reduce((object, lock) => {
+        object[gid(lock.lockable)] = lock
+        return object
+      }, {})
+    }
+
     case 'ADD_LOCK':
       return {
         ...state,
