@@ -75,6 +75,7 @@ function edit (state: ?EditState, action: Action): EditState {
       }
 
     case 'UPDATE_PAGE':
+      if (action.needsSaving === false) return state
       return {
         ...state,
         changed: true,
@@ -85,6 +86,7 @@ function edit (state: ?EditState, action: Action): EditState {
       }
 
     case 'UPDATE_PODCAST':
+      if (action.needsSaving === false) return state
       return {
         ...state,
         changed: true,
@@ -95,6 +97,7 @@ function edit (state: ?EditState, action: Action): EditState {
       }
 
     case 'UPDATE_ACTIVITY':
+      if (action.needsSaving === false) return state
       return {
         ...state,
         changed: true,
@@ -105,6 +108,7 @@ function edit (state: ?EditState, action: Action): EditState {
       }
 
     case 'UPDATE_EDGENOTE':
+      if (action.needsSaving === false) return state
       return {
         ...state,
         changed: true,
