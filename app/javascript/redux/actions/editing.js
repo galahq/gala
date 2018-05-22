@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { displayToast } from 'redux/actions'
+import { displayToast, reloadLocks } from 'redux/actions'
 
 import { Intent } from '@blueprintjs/core'
 import { EditorState, convertToRaw } from 'draft-js'
@@ -24,6 +24,7 @@ export function toggleEditing (): ThunkAction {
       )
     }
 
+    dispatch(reloadLocks())
     dispatch({ type: 'TOGGLE_EDITING' })
   }
 }

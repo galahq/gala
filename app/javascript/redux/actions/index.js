@@ -78,6 +78,7 @@ export type Action =
   | EdgenoteActions.UpdateEdgenoteAction
   | EditingActions.ClearUnsavedAction
   | EditingActions.ToggleEditingAction
+  | LockActions.SetLocksAction
   | LockActions.AddLockAction
   | LockActions.RemoveLockAction
   | PageActions.AddPageAction
