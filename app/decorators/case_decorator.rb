@@ -11,7 +11,7 @@ class CaseDecorator < ApplicationDecorator
 
   def cover_url(transforms = { resize: '1280x540^' })
     return DARK_BLUE_PIXEL unless cover_image.attached?
-    h.url_for(cover_image.variant(transforms))
+    polymorphic_path cover_image.variant(transforms), only_path: true
   end
 
   def small_cover_url
