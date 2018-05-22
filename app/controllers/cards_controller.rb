@@ -2,9 +2,13 @@
 
 # @see Card
 class CardsController < ApplicationController
+  include BroadcastEdits
+
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_page, only: [:create]
   before_action :set_card, only: %i[update destroy]
+
+  broadcast_edits to: :@card
 
   # @route [POST] `/pages/1/cards`
   def create

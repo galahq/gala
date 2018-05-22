@@ -15,6 +15,7 @@ import {
   registerToaster,
   toggleEditing,
   subscribeToActiveForumChannel,
+  subscribeToEditsChannel,
   handleNotification,
 } from 'redux/actions'
 
@@ -73,6 +74,7 @@ class Case extends React.Component<{
   toggleEditing: typeof toggleEditing,
   registerToaster: typeof registerToaster,
   subscribeToActiveForumChannel: typeof subscribeToActiveForumChannel,
+  subscribeToEditsChannel: typeof subscribeToEditsChannel,
   handleNotification: typeof handleNotification,
   editable: ?boolean,
 }> {
@@ -82,6 +84,7 @@ class Case extends React.Component<{
     const {
       handleNotification,
       subscribeToActiveForumChannel,
+      subscribeToEditsChannel,
       caseSlug,
     } = this.props
 
@@ -94,6 +97,7 @@ class Case extends React.Component<{
       }
     )
 
+    subscribeToEditsChannel()
     subscribeToActiveForumChannel(caseSlug)
   }
 
@@ -164,5 +168,6 @@ export default connect(mapStateToProps, {
   toggleEditing,
   registerToaster,
   subscribeToActiveForumChannel,
+  subscribeToEditsChannel,
   handleNotification,
 })(Case)

@@ -120,12 +120,14 @@ export type UpdateEdgenoteAction = {
   type: 'UPDATE_EDGENOTE',
   slug: string,
   data: Edgenote,
+  needsSaving: boolean,
 }
 export function updateEdgenote (
   slug: string,
-  data: Edgenote
+  data: Edgenote,
+  needsSaving?: boolean = true
 ): UpdateEdgenoteAction {
-  return { type: 'UPDATE_EDGENOTE', slug, data }
+  return { type: 'UPDATE_EDGENOTE', slug, data, needsSaving }
 }
 
 export function deleteEdgenote (slug: string): ThunkAction {
@@ -146,7 +148,7 @@ export type RemoveEdgenoteAction = {
   type: 'REMOVE_EDGENOTE',
   slug: string,
 }
-function removeEdgenote (slug: string): RemoveEdgenoteAction {
+export function removeEdgenote (slug: string): RemoveEdgenoteAction {
   return { type: 'REMOVE_EDGENOTE', slug }
 }
 

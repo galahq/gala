@@ -24,6 +24,10 @@ class ApplicationSerializer < ActiveModel::Serializer
     end
   end
 
+  attribute(:type) { object.model_name.name }
+  attribute(:table) { object.model_name.plural }
+  attribute(:param) { object.to_param }
+
   delegate :render, :reader_signed_in?, :current_user, to: :view_context
 
   def self.has_many_by_id(relation, options = {})
