@@ -2,11 +2,15 @@
 
 # @see Lock
 class LocksController < ApplicationController
+  include BroadcastEdits
+
   before_action :authenticate_reader!
 
   before_action :set_locks, only: %i[index]
   before_action :set_lockable, only: %i[create]
   before_action :set_lock, only: %i[destroy]
+
+  broadcast_edits to: :@lock
 
   # @route [GET] `/cases/:slug/locks`
   def index
