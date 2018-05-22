@@ -2,7 +2,6 @@
 
 # @see Lock
 class LocksController < ApplicationController
-  skip_before_action :verify_authenticity_token
   before_action :authenticate_reader!
 
   before_action :set_locks, only: %i[index]
