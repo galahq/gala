@@ -183,7 +183,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
           targetKey={`cards/${id}`}
           targetParameters={{
             name: 'read_card',
-            card_id: id,
+            card_id: parseInt(id, 10),
           }}
         />
       </Card>

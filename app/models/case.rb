@@ -124,4 +124,8 @@ class Case < ApplicationRecord
     return SharedCasesLibrary.instance if library_id.nil?
     super
   end
+
+  def case
+    self
+  end
 end

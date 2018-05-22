@@ -2,9 +2,13 @@
 
 # @see Edgenote
 class EdgenotesController < ApplicationController
+  include BroadcastEdits
+
   before_action :set_edgenote, only: %i[show update destroy]
   before_action :set_case, only: [:create]
   before_action :set_cors_headers, only: [:show]
+
+  broadcast_edits to: :@edgenote
 
   decorates_assigned :edgenote
 

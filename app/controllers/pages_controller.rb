@@ -2,9 +2,13 @@
 
 # @see Page
 class PagesController < ApplicationController
+  include BroadcastEdits
+
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_case, only: [:create]
   before_action :set_page, only: %i[update destroy]
+
+  broadcast_edits to: :@page
 
   # @route [POST] `/cases/case-slug/pages`
   def create

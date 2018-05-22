@@ -2,9 +2,13 @@
 
 # @see Activity
 class ActivitiesController < ApplicationController
+  include BroadcastEdits
+
   before_action :authenticate_reader!
   before_action :set_activity, only: %i[show update destroy]
   before_action :set_case, only: [:create]
+
+  broadcast_edits to: :@activity
 
   # @route [POST] `/cases/case-slug/activities`
   def create

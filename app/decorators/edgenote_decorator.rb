@@ -9,7 +9,7 @@ class EdgenoteDecorator < ApplicationDecorator
 
   def image_url(transforms = {})
     return nil unless image.attached?
-    h.url_for image.variant transforms
+    polymorphic_path image.variant(transforms), only_path: true
   end
 
   def image_thumbnail_url
@@ -18,6 +18,6 @@ class EdgenoteDecorator < ApplicationDecorator
 
   def audio_url
     return nil unless audio.attached?
-    h.url_for audio
+    polymorphic_path audio, only_path: true
   end
 end

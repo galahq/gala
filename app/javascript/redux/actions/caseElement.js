@@ -45,7 +45,7 @@ export function persistCaseElementReordering (
 
 export type RemoveElementAction = { type: 'REMOVE_ELEMENT', position: number }
 
-function removeElement (position): RemoveElementAction {
+export function removeElement (position: number): RemoveElementAction {
   return { type: 'REMOVE_ELEMENT', position }
 }
 
