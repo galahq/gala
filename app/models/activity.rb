@@ -16,7 +16,7 @@ class Activity < ApplicationRecord
   #   Prefer {cards}
   has_one :card, as: :element, dependent: :destroy, required: true
 
-  before_validation :build_card
+  before_validation :build_card, on: :create
 
   # @return [Array<Card>]
   def cards
