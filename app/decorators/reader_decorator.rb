@@ -8,7 +8,7 @@ class ReaderDecorator < ApplicationDecorator
 
     case size
     when :thumbnail
-      h.url_for(image.variant(thumbnail: '100x100^'))
+      polymorphic_path image.variant(thumbnail: '100x100^'), only_path: true
     end
   end
 end
