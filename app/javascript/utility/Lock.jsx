@@ -8,6 +8,9 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { FormattedRelative, FormattedMessage } from 'react-intl'
 
+import { createLock } from 'redux/actions'
+
+import type { Dispatch } from 'redux/actions'
 import type { State, Lock as LockT } from 'redux/state'
 
 type OwnProps = {
@@ -28,16 +31,28 @@ function mapStateToProps (
   }
 }
 
+function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
+  return {
+    onBeginEditing: () => {
+      dispatch(createLock(type, param))
+    },
+  }
+}
+
+type LockableProps = {
+  onBeginEditing: () => void,
+}
+
 type Props = {
-  children: () => React.Node,
+  children: LockableProps => React.Node,
   lock: ?LockT,
   locked: boolean,
   visible: boolean,
-}
+} & LockableProps
 
-const Lock = ({ children, lock, locked, visible }: Props) => (
+const Lock = ({ children, lock, locked, onBeginEditing, visible }: Props) => (
   <React.Fragment>
-    {children()}
+    {children({ onBeginEditing })}
     {visible &&
       locked &&
       lock && (
@@ -67,7 +82,7 @@ const Lock = ({ children, lock, locked, visible }: Props) => (
   </React.Fragment>
 )
 
-export default connect(mapStateToProps)(Lock)
+export default connect(mapStateToProps, mapDispatchToProps)(Lock)
 
 /**
  * STYLED COMPONENTS
