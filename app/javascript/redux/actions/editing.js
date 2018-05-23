@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { displayToast, reloadLocks } from 'redux/actions'
+import { deleteEnqueuedLocks, displayToast, reloadLocks } from 'redux/actions'
 
 import { Intent } from '@blueprintjs/core'
 import { EditorState, convertToRaw } from 'draft-js'
@@ -51,6 +51,8 @@ function silentlySave (): ThunkAction {
         state
       )
     })
+
+    dispatch(deleteEnqueuedLocks())
 
     dispatch(clearUnsaved())
   }
