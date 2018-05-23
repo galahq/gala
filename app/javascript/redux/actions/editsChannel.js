@@ -90,7 +90,7 @@ export function subscribeToEditsChannel (): A.ThunkAction {
       { channel: 'EditsChannel', case_slug: slug },
       {
         received: ({ type, watchable, editor_session_id: editorSessionId }) => {
-          if (watchable.type !== 'Lock' && editorSessionId === sessionId()) {
+          if (editorSessionId === sessionId()) {
             return
           }
 
