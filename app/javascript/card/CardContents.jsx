@@ -120,7 +120,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
         theseCommentThreadsOpen={theseCommentThreadsOpen}
       >
         <Lock type="Card" param={id}>
-          {() => (
+          {({ onBeginEditing, onFinishEditing }) => (
             <React.Fragment>
               {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
 
@@ -151,7 +151,9 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
                   customStyleMap={styleMap}
                   editorState={editorState}
                   handleKeyCommand={handleKeyCommand}
+                  onFocus={onBeginEditing}
                   onChange={onChange}
+                  onBlur={onFinishEditing}
                 />
               </FocusContainer>
 
