@@ -3,6 +3,7 @@
  */
 
 import { Orchard } from 'shared/orchard'
+import { lockableGID } from 'redux/reducers/locks'
 
 import type { Lock } from 'redux/state'
 import type { Dispatch, GetState, ThunkAction } from 'redux/actions'
@@ -20,20 +21,17 @@ function setLocks (data: Lock[]): SetLocksAction {
   return { type: 'SET_LOCKS', data }
 }
 
-export function createLock (
-  lockableType: string,
-  lockableParam: string
-): ThunkAction {
+export function createLock (type: string, param: string): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
-    const extantLock = getState().locks[`${lockableType}/${lockableParam}`]
+    const extantLock = getState().locks[lockableGID({ type, param })]
     if (extantLock) {
-      dispatch(removeLockFromDeletionQueue(lockableType, lockableParam))
+      dispatch(removeLockFromDeletionQueue(type, param))
       return
     }
 
-    Orchard.graft(`locks`, { lock: { lockableType, lockableParam }}).then(
-      (lock: Lock) => dispatch(addLock(lock))
-    )
+    Orchard.graft(`locks`, {
+      lock: { lockableType: type, lockableParam: param },
+    }).then((lock: Lock) => dispatch(addLock(lock)))
   }
 }
 
@@ -47,25 +45,25 @@ export type EnqueueLockForDeletionAction = {
   gid: string,
 }
 export function enqueueLockForDeletion (
-  lockableType: string,
-  lockableParam: string
+  type: string,
+  param: string
 ): EnqueueLockForDeletionAction {
   return {
     type: 'ENQUEUE_LOCK_FOR_DELETION',
-    gid: `${lockableType}/${lockableParam}`,
+    gid: lockableGID({ type, param }),
   }
 }
 
-export function deleteLock (
-  lockableType: string,
-  lockableParam: string
-): ThunkAction {
+export function deleteLock (type: string, param: string): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
-    const lock = getState().locks[`${lockableType}/${lockableParam}`]
+    const gid = lockableGID({ type, param })
+    const lock = getState().locks[gid]
     if (!lock) return
 
-    const { param } = lock
-    Orchard.prune(`locks/${param}`).then(() => dispatch(removeLock(param)))
+    const { param: lockParam } = lock
+    Orchard.prune(`locks/${lockParam}`).then(() =>
+      dispatch(removeLock(lockParam))
+    )
   }
 }
 
@@ -79,11 +77,11 @@ export type RemoveLockFromDeletionQueueAction = {
   gid: string,
 }
 export function removeLockFromDeletionQueue (
-  lockableType: string,
-  lockableParam: string
+  type: string,
+  param: string
 ): RemoveLockFromDeletionQueueAction {
   return {
     type: 'REMOVE_LOCK_FROM_DELETION_QUEUE',
-    gid: `${lockableType}/${lockableParam}`,
+    gid: lockableGID({ type, param }),
   }
 }

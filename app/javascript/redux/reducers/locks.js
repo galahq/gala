@@ -18,7 +18,7 @@ export default function locks (state: LocksState = {}, action: Action) {
     case 'SET_LOCKS': {
       const { data } = action
       return data.reduce((object, lock) => {
-        object[gid(lock.lockable)] = lock
+        object[lockableGID(lock.lockable)] = lock
         return object
       }, {})
     }
@@ -26,7 +26,7 @@ export default function locks (state: LocksState = {}, action: Action) {
     case 'ADD_LOCK':
       return {
         ...state,
-        [gid(action.data.lockable)]: action.data,
+        [lockableGID(action.data.lockable)]: action.data,
       }
 
     case 'REMOVE_LOCK': {
@@ -39,6 +39,6 @@ export default function locks (state: LocksState = {}, action: Action) {
   }
 }
 
-function gid (lockable) {
+export function lockableGID (lockable: { type: string, param: string }) {
   return `${lockable.type}/${lockable.param}`
 }
