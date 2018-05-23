@@ -61,15 +61,34 @@ export function deleteLock (type: string, param: string): ThunkAction {
     if (!lock) return
 
     const { param: lockParam } = lock
-    Orchard.prune(`locks/${lockParam}`).then(() =>
+    Orchard.prune(`locks/${lockParam}`).then(() => {
       dispatch(removeLock(lockParam))
-    )
+      dispatch(removeLockFromDeletionQueue(type, param))
+    })
   }
 }
 
 export type RemoveLockAction = { type: 'REMOVE_LOCK', param: string }
 export function removeLock (param: string): RemoveLockAction {
   return { type: 'REMOVE_LOCK', param }
+}
+
+export function deleteEnqueuedLocks (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { locksToDelete } = state.edit
+
+    const { reader } = state.caseData
+    if (reader == null) return
+
+    locksToDelete.forEach(gid => {
+      const lock = state.locks[gid]
+      if (lock.reader.param !== reader.id) {
+        const [type, param] = gid.split('/')
+        dispatch(deleteLock(type, param))
+      }
+    })
+  }
 }
 
 export type RemoveLockFromDeletionQueueAction = {
