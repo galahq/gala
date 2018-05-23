@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { FormattedRelative, FormattedMessage } from 'react-intl'
 
-import { createLock, deleteLock } from 'redux/actions'
+import { createLock, deleteLock, enqueueLockForDeletion } from 'redux/actions'
 
 import type { Dispatch } from 'redux/actions'
 import type { State, Lock as LockT } from 'redux/state'
@@ -37,11 +37,15 @@ function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
       dispatch(createLock(type, param))
     },
     onEditAnyway: () => dispatch(deleteLock(type, param)),
+    onFinishEditing: () => {
+      dispatch(enqueueLockForDeletion(type, param))
+    },
   }
 }
 
 type LockableProps = {
   onBeginEditing: () => void,
+  onFinishEditing: () => void,
 }
 
 type Props = {
@@ -58,10 +62,11 @@ const Lock = ({
   locked,
   onBeginEditing,
   onEditAnyway,
+  onFinishEditing,
   visible,
 }: Props) => (
   <React.Fragment>
-    {children({ onBeginEditing })}
+    {children({ onBeginEditing, onFinishEditing })}
     {visible &&
       locked &&
       lock && (

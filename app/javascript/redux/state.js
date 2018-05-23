@@ -54,6 +54,7 @@ export type EdgenotesState = {
 export type EditState = {
   changed: boolean,
   inProgress: boolean,
+  locksToDelete: string[],
   possible: boolean,
   unsavedChanges: {
     [modelSlashId: string]: boolean,

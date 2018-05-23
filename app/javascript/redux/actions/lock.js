@@ -26,7 +26,10 @@ export function createLock (
 ): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const extantLock = getState().locks[`${lockableType}/${lockableParam}`]
-    if (extantLock) return
+    if (extantLock) {
+      dispatch(removeLockFromDeletionQueue(lockableType, lockableParam))
+      return
+    }
 
     Orchard.graft(`locks`, { lock: { lockableType, lockableParam }}).then(
       (lock: Lock) => dispatch(addLock(lock))
@@ -37,6 +40,20 @@ export function createLock (
 export type AddLockAction = { type: 'ADD_LOCK', data: Lock }
 export function addLock (data: Lock): AddLockAction {
   return { type: 'ADD_LOCK', data }
+}
+
+export type EnqueueLockForDeletionAction = {
+  type: 'ENQUEUE_LOCK_FOR_DELETION',
+  gid: string,
+}
+export function enqueueLockForDeletion (
+  lockableType: string,
+  lockableParam: string
+): EnqueueLockForDeletionAction {
+  return {
+    type: 'ENQUEUE_LOCK_FOR_DELETION',
+    gid: `${lockableType}/${lockableParam}`,
+  }
 }
 
 export function deleteLock (
@@ -55,4 +72,18 @@ export function deleteLock (
 export type RemoveLockAction = { type: 'REMOVE_LOCK', param: string }
 export function removeLock (param: string): RemoveLockAction {
   return { type: 'REMOVE_LOCK', param }
+}
+
+export type RemoveLockFromDeletionQueueAction = {
+  type: 'REMOVE_LOCK_FROM_DELETION_QUEUE',
+  gid: string,
+}
+export function removeLockFromDeletionQueue (
+  lockableType: string,
+  lockableParam: string
+): RemoveLockFromDeletionQueueAction {
+  return {
+    type: 'REMOVE_LOCK_FROM_DELETION_QUEUE',
+    gid: `${lockableType}/${lockableParam}`,
+  }
 }

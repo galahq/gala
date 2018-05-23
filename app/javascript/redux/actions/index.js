@@ -80,7 +80,9 @@ export type Action =
   | EditingActions.ToggleEditingAction
   | LockActions.SetLocksAction
   | LockActions.AddLockAction
+  | LockActions.EnqueueLockForDeletionAction
   | LockActions.RemoveLockAction
+  | LockActions.RemoveLockFromDeletionQueueAction
   | PageActions.AddPageAction
   | PageActions.UpdatePageAction
   | PodcastActions.AddPodcastAction
