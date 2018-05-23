@@ -281,6 +281,7 @@ export type Lock = {
     hashKey: string,
     imageUrl: string,
     name: string,
+    param: string,
   },
 }
 

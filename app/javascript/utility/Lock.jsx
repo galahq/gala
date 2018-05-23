@@ -4,31 +4,43 @@
  */
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { FormattedRelative, FormattedMessage } from 'react-intl'
 
-const reader = {
-  type: 'Reader',
-  table: 'readers',
-  param: '2',
-  imageUrl:
-    '/rails/active_storage/variants/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--4a867c77a651735ac13737582dcbe8e7f4a4e439/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCam9PZEdoMWJXSnVZV2xzU1NJTk1UQXdlREV3TUY0R09nWkZWQT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--76ab9de1d2e504c8e6bde0b7b9990f1713e4f7a8/griffin.jpeg',
-  hashKey: 'f8b92ac580f078295d054b6df47f41eabd62ed763a00950152d8bc1da80d8743',
-  name: 'Cameron Bothner',
+import type { State, Lock as LockT } from 'redux/state'
+
+type OwnProps = {
+  param: string,
+  type: string,
 }
-const time = new Date('2018-05-23T16:26:07.639Z')
+
+function mapStateToProps (
+  { caseData, edit, locks }: State,
+  { type, param }: OwnProps
+) {
+  const { reader } = caseData
+  const lock = locks[`${type}/${param}`]
+  return {
+    lock,
+    locked: !!reader && !!lock && lock.reader.param !== `${reader.id}`,
+    visible: edit.inProgress,
+  }
+}
 
 type Props = {
   children: () => React.Node,
-  locked?: boolean,
-  visible?: boolean,
+  lock: ?LockT,
+  locked: boolean,
+  visible: boolean,
 }
 
-const Lock = ({ children, locked, visible }: Props) => (
+const Lock = ({ children, lock, locked, visible }: Props) => (
   <React.Fragment>
     {children()}
-    {locked &&
-      visible && (
+    {visible &&
+      locked &&
+      lock && (
       <React.Fragment>
         <LockOverlay />
         <LockDetails>
@@ -40,8 +52,8 @@ const Lock = ({ children, locked, visible }: Props) => (
               <FormattedMessage
                 id="locks.lock.details"
                 values={{
-                  name: reader.name,
-                  someTimeAgo: <FormattedRelative value={time} />,
+                  name: lock.reader.name,
+                  someTimeAgo: <FormattedRelative value={lock.createdAt} />,
                 }}
               />
             </p>
@@ -55,7 +67,7 @@ const Lock = ({ children, locked, visible }: Props) => (
   </React.Fragment>
 )
 
-export default Lock
+export default connect(mapStateToProps)(Lock)
 
 /**
  * STYLED COMPONENTS
