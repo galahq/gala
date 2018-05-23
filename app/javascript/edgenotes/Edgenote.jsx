@@ -32,6 +32,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { LabelForScreenReaders } from 'utility/A11y'
 import { acceptKeyboardClick } from 'shared/keyboard'
+import Lock from 'utility/Lock'
 import Statistics from 'utility/Statistics'
 import Tracker from 'utility/Tracker'
 import EdgenoteEditor from 'edgenotes/editor'
@@ -153,47 +154,57 @@ class BaseEdgenoteFigure extends React.Component<Props> {
         id={slug}
         {...conditionalHoverCallbacks}
       >
-        {editing && (
-          <EdgenoteEditor contents={contents} slug={slug} onChange={onChange} />
-        )}
+        <Lock type="Edgenote" param={slug}>
+          {() => (
+            <React.Fragment>
+              {editing && (
+                <EdgenoteEditor
+                  contents={contents}
+                  slug={slug}
+                  onChange={onChange}
+                />
+              )}
 
-        {embedded || <Statistics inline uri={`edgenotes/${slug}`} />}
+              {embedded || <Statistics inline uri={`edgenotes/${slug}`} />}
 
-        <ConditionalLink
-          tabIndex={isALink ? '0' : ''}
-          id={`edgenote-${slug}`}
-          role={isALink ? 'button' : undefined}
-          onClick={!isALink || active ? () => {} : activate}
-          onKeyPress={acceptKeyboardClick}
-        >
-          {this.renderQuotationSection() || this.renderImageSection()}
+              <ConditionalLink
+                tabIndex={isALink ? '0' : ''}
+                id={`edgenote-${slug}`}
+                role={isALink ? 'button' : undefined}
+                onClick={!isALink || active ? () => {} : activate}
+                onKeyPress={acceptKeyboardClick}
+              >
+                {this.renderQuotationSection() || this.renderImageSection()}
 
-          <Expansion contents={contents} expansion={expansion} />
+                <Expansion contents={contents} expansion={expansion} />
 
-          <Caption
-            contents={caption}
-            {...this._reduxProps()}
-            {...(pullQuote ? { selected: false } : {})} // overrides reduxProps
-          />
-          {this.renderCallToAction()}
-        </ConditionalLink>
-        <LabelForScreenReaders>
-          <a href={`#edgenote-highlight-${slug}`}>
-            <FormattedMessage id="edgenotes.edgenote.returnToNarrative" />
-          </a>
-        </LabelForScreenReaders>
+                <Caption
+                  contents={caption}
+                  {...this._reduxProps()}
+                  {...(pullQuote ? { selected: false } : {})} // overrides reduxProps
+                />
+                {this.renderCallToAction()}
+              </ConditionalLink>
+              <LabelForScreenReaders>
+                <a href={`#edgenote-highlight-${slug}`}>
+                  <FormattedMessage id="edgenotes.edgenote.returnToNarrative" />
+                </a>
+              </LabelForScreenReaders>
 
-        {editing || (
-          <Tracker
-            timerState={active ? 'RUNNING' : 'STOPPED'}
-            targetKey={`edgenotes/${slug}`}
-            targetParameters={{
-              name: 'visit_edgenote',
-              edgenoteSlug: slug,
-            }}
-            instantaneous={isALink}
-          />
-        )}
+              {editing || (
+                <Tracker
+                  timerState={active ? 'RUNNING' : 'STOPPED'}
+                  targetKey={`edgenotes/${slug}`}
+                  targetParameters={{
+                    name: 'visit_edgenote',
+                    edgenoteSlug: slug,
+                  }}
+                  instantaneous={isALink}
+                />
+              )}
+            </React.Fragment>
+          )}
+        </Lock>
       </Container>
     )
   }

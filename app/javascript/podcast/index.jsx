@@ -12,6 +12,7 @@ import { FormattedMessage } from 'react-intl'
 import { updatePodcast } from 'redux/actions'
 
 import CreditsList from './CreditsList'
+import Lock from 'utility/Lock'
 import Statistics from 'utility/Statistics'
 import Card from 'card'
 import Tracker from 'utility/Tracker'
@@ -103,102 +104,108 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
     } = this.props
     return (
       <div className="PodcastPlayer pt-dark">
-        <div
-          className="artwork"
-          style={{
-            backgroundImage: `url(${artworkUrl})`,
-            position: 'relative',
-          }}
-        >
-          {editing && (
-            <ActiveStorageProvider
-              endpoint={{
-                path: `/podcasts/${id}`,
-                model: 'Podcast',
-                attribute: 'artwork',
-                method: 'PUT',
-              }}
-              render={renderProps => (
-                <PositionedFileUploadWidget
-                  message={{ id: 'podcasts.edit.uploadArtwork' }}
-                  {...renderProps}
+        <Lock type="Podcast" param={id}>
+          {() => (
+            <React.Fragment>
+              <div
+                className="artwork"
+                style={{
+                  backgroundImage: `url(${artworkUrl})`,
+                  position: 'relative',
+                }}
+              >
+                {editing && (
+                  <ActiveStorageProvider
+                    endpoint={{
+                      path: `/podcasts/${id}`,
+                      model: 'Podcast',
+                      attribute: 'artwork',
+                      method: 'PUT',
+                    }}
+                    render={renderProps => (
+                      <PositionedFileUploadWidget
+                        message={{ id: 'podcasts.edit.uploadArtwork' }}
+                        {...renderProps}
+                      />
+                    )}
+                    onSubmit={({ artworkUrl }: PodcastT) =>
+                      updatePodcast(`${id}`, { artworkUrl }, false)
+                    }
+                  />
+                )}
+
+                <cite className="o-bottom-right c-photo-credit">
+                  <EditableText
+                    multiline
+                    disabled={!editing}
+                    value={photoCredit}
+                    placeholder={editing ? 'Photo credit' : ''}
+                    onChange={v => updatePodcast(`${id}`, { photoCredit: v })}
+                  />
+                </cite>
+              </div>
+
+              <div className="credits">
+                <h1>
+                  <EditableText
+                    multiline
+                    disabled={!editing}
+                    value={title}
+                    onChange={v => updatePodcast(`${id}`, { title: v })}
+                  />
+                </h1>
+
+                <CreditsList
+                  canEdit={editing}
+                  credits={creditsList}
+                  onChange={v => updatePodcast(`${id}`, { creditsList: v })}
                 />
-              )}
-              onSubmit={({ artworkUrl }: PodcastT) =>
-                updatePodcast(`${id}`, { artworkUrl }, false)
-              }
-            />
-          )}
+              </div>
 
-          <cite className="o-bottom-right c-photo-credit">
-            <EditableText
-              multiline
-              disabled={!editing}
-              value={photoCredit}
-              placeholder={editing ? 'Photo credit' : ''}
-              onChange={v => updatePodcast(`${id}`, { photoCredit: v })}
-            />
-          </cite>
-        </div>
+              <div className="spaced">
+                {editing && (
+                  <ActiveStorageProvider
+                    endpoint={{
+                      path: `/podcasts/${id}`,
+                      model: 'Podcast',
+                      attribute: 'audio',
+                      method: 'PUT',
+                    }}
+                    render={renderProps => (
+                      <FileUploadWidget
+                        accept="audio/*"
+                        message={{ id: 'podcasts.edit.uploadPodcast' }}
+                        {...renderProps}
+                      />
+                    )}
+                    onSubmit={({ audioUrl }: PodcastT) =>
+                      updatePodcast(`${id}`, { audioUrl }, false)
+                    }
+                  />
+                )}
 
-        <div className="credits">
-          <h1>
-            <EditableText
-              multiline
-              disabled={!editing}
-              value={title}
-              onChange={v => updatePodcast(`${id}`, { title: v })}
-            />
-          </h1>
-
-          <CreditsList
-            canEdit={editing}
-            credits={creditsList}
-            onChange={v => updatePodcast(`${id}`, { creditsList: v })}
-          />
-        </div>
-
-        <div className="spaced">
-          {editing && (
-            <ActiveStorageProvider
-              endpoint={{
-                path: `/podcasts/${id}`,
-                model: 'Podcast',
-                attribute: 'audio',
-                method: 'PUT',
-              }}
-              render={renderProps => (
-                <FileUploadWidget
-                  accept="audio/*"
-                  message={{ id: 'podcasts.edit.uploadPodcast' }}
-                  {...renderProps}
+                <audio
+                  src={audioUrl}
+                  controls="controls"
+                  preload="auto"
+                  onPlay={this.handlePlay}
+                  onPause={this.handlePause}
                 />
-              )}
-              onSubmit={({ audioUrl }: PodcastT) =>
-                updatePodcast(`${id}`, { audioUrl }, false)
-              }
-            />
+              </div>
+
+              <Statistics uri={`podcasts/${id}`} inline={true} />
+
+              <Tracker
+                timerState={this.state.playing ? 'RUNNING' : 'PAUSED'}
+                targetKey={`podcast/${id}`}
+                targetParameters={{
+                  name: 'visit_podcast',
+                  podcast_id: id,
+                }}
+              />
+            </React.Fragment>
           )}
-
-          <audio
-            src={audioUrl}
-            controls="controls"
-            preload="auto"
-            onPlay={this.handlePlay}
-            onPause={this.handlePause}
-          />
-        </div>
-
-        <Statistics uri={`podcasts/${id}`} inline={true} />
-
-        <Tracker
-          timerState={this.state.playing ? 'RUNNING' : 'PAUSED'}
-          targetKey={`podcast/${id}`}
-          targetParameters={{
-            name: 'visit_podcast',
-            podcast_id: id,
-          }}
-        />
+        </Lock>
       </div>
     )
   }

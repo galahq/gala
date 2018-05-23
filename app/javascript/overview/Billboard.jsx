@@ -4,11 +4,13 @@
  */
 
 import React, { Fragment } from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
+import Lock from 'utility/Lock'
 import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
 import CommunityChooser from './CommunityChooser'
@@ -64,64 +66,77 @@ const Billboard = ({
   learningObjectives,
   caseData,
 }: Props) => (
-  <section className="Billboard">
-    <BillboardTitle />
-    {editing || <CommunityChooser />}
+  <Container>
+    <Lock type="Case" param={slug}>
+      {() => (
+        <Fragment>
+          <BillboardTitle />
+          {editing || <CommunityChooser />}
 
-    <div className="Card BillboardSnippet pt-light">
-      <h3 className="c-BillboardSnippet__dek">
-        <EditableText
-          multiline
-          value={dek}
-          disabled={!editing}
-          placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
-          onChange={value => {
-            updateCase({ dek: value })
-          }}
-        />
-      </h3>
+          <div className="Card BillboardSnippet pt-light">
+            <h3 className="c-BillboardSnippet__dek">
+              <EditableText
+                multiline
+                value={dek}
+                disabled={!editing}
+                placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
+                onChange={value => {
+                  updateCase({ dek: value })
+                }}
+              />
+            </h3>
 
-      <Less startOpen={!summary || summary.length < 500} disabled={editing}>
-        <div style={{ margin: 0 }}>
-          <EditableText
-            multiline
-            value={summary}
-            disabled={!editing}
-            placeholder="Summarize the case in a short paragraph."
-            onChange={value => updateCase({ summary: value })}
-          />
-        </div>
-      </Less>
+            <Less
+              startOpen={!summary || summary.length < 500}
+              disabled={editing}
+            >
+              <div style={{ margin: 0 }}>
+                <EditableText
+                  multiline
+                  value={summary}
+                  disabled={!editing}
+                  placeholder="Summarize the case in a short paragraph."
+                  onChange={value => updateCase({ summary: value })}
+                />
+              </div>
+            </Less>
 
-      {(learningObjectives || editing) && (
-        <LearningObjectives
-          disabled={!editing}
-          learningObjectives={learningObjectives}
-          onChange={value => updateCase({ learningObjectives: value })}
-        />
+            {(learningObjectives || editing) && (
+              <LearningObjectives
+                disabled={!editing}
+                learningObjectives={learningObjectives}
+                onChange={value => updateCase({ learningObjectives: value })}
+              />
+            )}
+
+            <FlagLinks languages={otherAvailableLocales} slug={slug} />
+          </div>
+
+          {(caseData.latitude || editing) && (
+            <MapView
+              cases={[caseData]}
+              editing={editing}
+              height={300}
+              startingViewport={{
+                latitude: caseData.latitude || 0,
+                longitude: caseData.longitude || 0,
+                zoom: caseData.zoom || 1,
+              }}
+              title={{ id: 'activerecord.attributes.case.location' }}
+              onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
+            />
+          )}
+        </Fragment>
       )}
-
-      <FlagLinks languages={otherAvailableLocales} slug={slug} />
-    </div>
-
-    {(caseData.latitude || editing) && (
-      <MapView
-        cases={[caseData]}
-        editing={editing}
-        height={300}
-        startingViewport={{
-          latitude: caseData.latitude || 0,
-          longitude: caseData.longitude || 0,
-          zoom: caseData.zoom || 1,
-        }}
-        title={{ id: 'activerecord.attributes.case.location' }}
-        onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
-      />
-    )}
-  </section>
+    </Lock>
+  </Container>
 )
 
 export default connect(mapStateToProps, { updateCase })(Billboard)
+
+const Container = styled.section.attrs({ className: 'Billboard' })`
+  position: relative;
+`
 
 type FlagLinksProps = { slug: string, languages: string[] }
 function FlagLinks ({ slug, languages }: FlagLinksProps) {
