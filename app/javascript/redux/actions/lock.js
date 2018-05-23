@@ -39,6 +39,19 @@ export function addLock (data: Lock): AddLockAction {
   return { type: 'ADD_LOCK', data }
 }
 
+export function deleteLock (
+  lockableType: string,
+  lockableParam: string
+): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const lock = getState().locks[`${lockableType}/${lockableParam}`]
+    if (!lock) return
+
+    const { param } = lock
+    Orchard.prune(`locks/${param}`).then(() => dispatch(removeLock(param)))
+  }
+}
+
 export type RemoveLockAction = { type: 'REMOVE_LOCK', param: string }
 export function removeLock (param: string): RemoveLockAction {
   return { type: 'REMOVE_LOCK', param }

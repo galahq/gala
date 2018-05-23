@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { FormattedRelative, FormattedMessage } from 'react-intl'
 
-import { createLock } from 'redux/actions'
+import { createLock, deleteLock } from 'redux/actions'
 
 import type { Dispatch } from 'redux/actions'
 import type { State, Lock as LockT } from 'redux/state'
@@ -36,6 +36,7 @@ function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
     onBeginEditing: () => {
       dispatch(createLock(type, param))
     },
+    onEditAnyway: () => dispatch(deleteLock(type, param)),
   }
 }
 
@@ -47,10 +48,18 @@ type Props = {
   children: LockableProps => React.Node,
   lock: ?LockT,
   locked: boolean,
+  onEditAnyway: () => mixed,
   visible: boolean,
 } & LockableProps
 
-const Lock = ({ children, lock, locked, onBeginEditing, visible }: Props) => (
+const Lock = ({
+  children,
+  lock,
+  locked,
+  onBeginEditing,
+  onEditAnyway,
+  visible,
+}: Props) => (
   <React.Fragment>
     {children({ onBeginEditing })}
     {visible &&
@@ -72,7 +81,10 @@ const Lock = ({ children, lock, locked, onBeginEditing, visible }: Props) => (
                 }}
               />
             </p>
-            <button className="pt-button pt-intent-danger">
+            <button
+              className="pt-button pt-intent-danger"
+              onClick={onEditAnyway}
+            >
               <FormattedMessage id="locks.destroy.editAnyway" />
             </button>
           </div>
