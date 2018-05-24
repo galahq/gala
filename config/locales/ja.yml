@@ -123,8 +123,7 @@ ja:
       editing_authors: 著者と訳者の編集
       feature_case: 注目の事例研究に追加する
       just_change_the_text: |
-        To edit this case, just change the text. We’ll save your work
-        automatically.
+        この事例研究を編集するには、ただテキストを変えてください。自動的に保存されます。
       map:
         instructions: |
           Drag the map to position the pin, change the zoom to give context,
