@@ -71,7 +71,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
     const { intl, toggleVisibility, visibility } = this.props
     const { changesToAttachments, contents, open } = this.state
     return (
-      <React.Fragment>
+      <>
         <Overlay>
           <EditButton onClick={this.handleOpen}>
             <FormattedMessage id="helpers.edit" />
@@ -90,7 +90,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
           onClose={this.handleClose}
           onSubmit={this.handleSubmit}
         />
-      </React.Fragment>
+      </>
     )
   }
 

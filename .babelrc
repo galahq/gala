@@ -1,28 +1,28 @@
 {
   "env": {
     "development": {
-      "plugins": ["transform-react-jsx-source"]
+      "plugins": ["@babel/transform-react-jsx-source"]
     }
   },
   "presets": [
     [
-      "env",
+      "@babel/env",
       {
         "modules": false,
         "targets": {
-          "browsers": [">0.25%", "not ie 11", "not op_mini all"],
-          "uglify": true
+          "browsers": [">0.25%", "not ie 11", "not op_mini all"]
         },
-        "useBuiltIns": true
+        "useBuiltIns": "usage"
       }
     ],
-    "react"
+    "@babel/react",
+    "@babel/flow"
   ],
 
   "plugins": [
     "babel-plugin-styled-components",
-    "syntax-dynamic-import",
-    "transform-object-rest-spread",
-    ["transform-class-properties", { "spec": true }]
+    "@babel/syntax-dynamic-import",
+    "@babel/proposal-object-rest-spread",
+    ["@babel/proposal-class-properties", { "spec": true }]
   ]
 }

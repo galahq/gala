@@ -54,7 +54,7 @@ const ExpansionVisibilityForm = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       {visible.embed && (
         <Switch
           checked={checked.embed}
@@ -80,7 +80,7 @@ const ExpansionVisibilityForm = ({
           onChange={() => toggleVisibility('noDescription')}
         />
       )}
-    </React.Fragment>
+    </>
   )
 }
 

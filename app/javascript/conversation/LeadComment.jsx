@@ -85,7 +85,7 @@ const LeadComment = ({
   threadId,
   onCancel,
 }: Props) => (
-  <React.Fragment>
+  <>
     <LeadCommenter>
       <Identicon presentational width={32} reader={reader} />
       <cite>{reader.name}</cite>
@@ -150,7 +150,7 @@ const LeadComment = ({
     ) : (
       <FirstPostForm key="3" threadId={threadId} onCancel={onCancel} />
     )}
-  </React.Fragment>
+  </>
 )
 
 export default injectIntl(

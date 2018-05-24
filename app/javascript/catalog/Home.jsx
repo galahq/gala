@@ -41,7 +41,7 @@ class Home extends React.Component<{
       cases,
     } = this.props
     return (
-      <React.Fragment>
+      <>
         {loading.reader || !!reader || <ValueProposition />}
 
         {loading.reader || <GalaxyBanner />}
@@ -82,7 +82,7 @@ class Home extends React.Component<{
             </CatalogSection>
           )}
         </Main>
-      </React.Fragment>
+      </>
     )
   }
 
