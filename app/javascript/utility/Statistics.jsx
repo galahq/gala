@@ -11,7 +11,7 @@ import Icon from './Icon'
 
 import type { State, Statistics as StatisticsType } from 'redux/state'
 
-type OwnProps = {| uri: string, inline: boolean |}
+type OwnProps = {| uri: string, inline?: boolean |}
 
 type StateProps =
   | {| visible: false, statistics: { loaded: false } |}

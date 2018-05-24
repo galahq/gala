@@ -194,7 +194,19 @@ declare module '@blueprintjs/core' {
       IOverlayableProps
   > {}
 
-  declare export class Icon extends React.Components<
+  declare export class FormGroup extends React.Component<
+    {
+      disabled?: boolean,
+      helperText?: React.Node,
+      inline?: boolean,
+      label?: React.Node,
+      labelFor?: string,
+      requiredLabel?: boolean | React.Node,
+    } & IIntentProps &
+      IProps
+  > {}
+
+  declare export class Icon extends React.Component<
     {
       iconName: string,
       iconSize?: 'inherit' | 16 | 20,
@@ -269,6 +281,13 @@ declare module '@blueprintjs/core' {
 
   declare export class Portal extends React.Component<{}> {}
 
+  declare export class ProgressBar extends React.Component<
+    {
+      value: number,
+    } & IIntentProps &
+      IProps
+  > {}
+
   declare export class Radio extends React.Component<IControlProps & IProps> {}
 
   declare export class RadioGroup extends React.Component<{
@@ -279,6 +298,8 @@ declare module '@blueprintjs/core' {
     options?: IOptionProps[],
     selectedValue?: string,
   }> {}
+
+  declare export class Switch extends React.Component<IControlProps & IProps> {}
 
   declare export type Toast = {
     action?: IActionProps & ILinkProps,

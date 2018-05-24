@@ -21,13 +21,7 @@ function mapStateToProps (state: State) {
   return activeCommunity || {}
 }
 
-const NoSelectedCommentThread = ({
-  name,
-  description,
-}: {
-  name?: string,
-  description?: ?string,
-}) => (
+const NoSelectedCommentThread = ({ name, description }) => (
   <Container>
     {description && (
       <React.Fragment>

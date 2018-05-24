@@ -47,7 +47,7 @@ const CommentThreadEntity = ({ onClick, children }) => {
 }
 
 export default withRouter(
-  connect(mapStateToProps, {}, mergeProps)(CommentThreadEntity)
+  connect(mapStateToProps, null, mergeProps)(CommentThreadEntity)
 )
 
 function getFirstThreadId (leaf: DraftEditorLeaf): ?string {

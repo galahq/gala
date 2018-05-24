@@ -21,7 +21,7 @@ type Guest = { name: string, title: string }
 type Props = {
   editing: boolean,
   credits: PodcastCreditList,
-  displayToast: Toast => void,
+  displayToast: Toast => any,
   onFinishEditing: (?CreditsListFormState) => void,
 }
 export type CreditsListFormState = { guests: Guest[], hosts: string[] }
