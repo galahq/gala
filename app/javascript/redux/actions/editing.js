@@ -45,16 +45,19 @@ export function saveChanges (): ThunkAction {
 function silentlySave (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
-    Object.keys(state.edit.unsavedChanges).forEach(endpoint => {
-      saveModel(
-        endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
-        state
-      )
-    })
+    const unsavedChanges = Object.keys(state.edit.unsavedChanges)
+
+    if (unsavedChanges.length > 0) {
+      unsavedChanges.forEach(endpoint => {
+        saveModel(
+          endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
+          state
+        )
+      })
+      dispatch(clearUnsaved())
+    }
 
     dispatch(deleteEnqueuedLocks())
-
-    dispatch(clearUnsaved())
   }
 }
 
