@@ -506,6 +506,14 @@ ja:
           このメールを受け取る理由は<a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>のユーザーです。
         text: >
           このメールを受け取る理由はGala（https://www.learngala.com）のユーザーです。
+  locks:
+    destroy:
+      edit_anyway: Edit Anyway
+    lock:
+      details: |
+        {name} is editing this section as of {someTimeAgo}. If you proceed,
+        their changes may be lost.
+      this_section_is_locked: This section is locked.
   magic_link:
     show:
       lets_get_started: 始めましょう!
