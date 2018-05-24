@@ -105,7 +105,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
     return (
       <div className="PodcastPlayer pt-dark">
         <Lock type="Podcast" param={id}>
-          {() => (
+          {({ onBeginEditing, onFinishEditing }) => (
             <React.Fragment>
               <div
                 className="artwork"
@@ -141,6 +141,9 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                     value={photoCredit}
                     placeholder={editing ? 'Photo credit' : ''}
                     onChange={v => updatePodcast(`${id}`, { photoCredit: v })}
+                    onEdit={onBeginEditing}
+                    onCancel={onFinishEditing}
+                    onConfirm={onFinishEditing}
                   />
                 </cite>
               </div>
@@ -152,6 +155,9 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                     disabled={!editing}
                     value={title}
                     onChange={v => updatePodcast(`${id}`, { title: v })}
+                    onEdit={onBeginEditing}
+                    onCancel={onFinishEditing}
+                    onConfirm={onFinishEditing}
                   />
                 </h1>
 
@@ -159,6 +165,8 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                   canEdit={editing}
                   credits={creditsList}
                   onChange={v => updatePodcast(`${id}`, { creditsList: v })}
+                  onStartEditing={onBeginEditing}
+                  onFinishEditing={onFinishEditing}
                 />
               </div>
 
