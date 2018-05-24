@@ -116,11 +116,11 @@ ja:
   cases:
     edit:
       add_authors: 著者を追加
-      author_institution: Author Institution
-      author_name: Author Name
+      author_institution: 著者の大学・学部
+      author_name: 著者の名前
       change_cover_image: 画像を変更
       edit: 編集
-      editing_authors: Editing Authors and Translators
+      editing_authors: 著者と訳者の編集
       feature_case: 注目の事例研究に追加する
       just_change_the_text: |
         To edit this case, just change the text. We’ll save your work
@@ -129,17 +129,17 @@ ja:
         instructions: |
           Drag the map to position the pin, change the zoom to give context,
           then click “Set”
-        reset: Reset
-        set: Set
-        zoom_in: Zoom in
-        zoom_out: Zoom out
+        reset: リセット
+        set: セット
+        zoom_in: ズームイン
+        zoom_out: ズームアウト
       missed_something: Please delete any unused author or translator rows.
       no_elements: This case has no elements.
       options: 選択肢
       publish_case: 発刊する
       save: 保存
       stop_editing: 編集を停止する
-      translator_name: Translator Name
+      translator_name: 翻訳者の名前
       unfeature_case: 注目の事例研究から除去する
       unpublish_case: 非公開にする
     index:
