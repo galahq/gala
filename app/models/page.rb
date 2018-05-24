@@ -5,6 +5,7 @@
 # @attr title [Translated<String>] the page’s title
 class Page < ApplicationRecord
   include Element
+  include Lockable
   include Mobility
 
   translates :title, fallbacks: true

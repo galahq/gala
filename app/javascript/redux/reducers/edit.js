@@ -13,6 +13,8 @@ import type {
   UpdatePodcastAction,
   UpdateActivityAction,
   UpdateEdgenoteAction,
+  EnqueueLockForDeletionAction,
+  RemoveLockFromDeletionQueueAction,
 } from 'redux/actions'
 
 type Action =
@@ -24,6 +26,8 @@ type Action =
   | UpdatePodcastAction
   | UpdateActivityAction
   | UpdateEdgenoteAction
+  | EnqueueLockForDeletionAction
+  | RemoveLockFromDeletionQueueAction
 
 function edit (state: ?EditState, action: Action): EditState {
   if (state == null) {
@@ -32,6 +36,7 @@ function edit (state: ?EditState, action: Action): EditState {
       possible: !!reader.canUpdateCase,
       inProgress: false,
       changed: false,
+      locksToDelete: [],
       unsavedChanges: {
         // Using this like a Set
         // [`${modelName}/${modelId}` || "caseData"]: true,
@@ -117,6 +122,20 @@ function edit (state: ?EditState, action: Action): EditState {
           [`edgenotes/${action.slug}`]: true,
         },
       }
+
+    case 'ENQUEUE_LOCK_FOR_DELETION':
+      return {
+        ...state,
+        locksToDelete: [...state.locksToDelete, action.gid],
+      }
+
+    case 'REMOVE_LOCK_FROM_DELETION_QUEUE': {
+      const { gid } = action
+      return {
+        ...state,
+        locksToDelete: state.locksToDelete.filter(toDelete => toDelete !== gid),
+      }
+    }
 
     default:
       return state

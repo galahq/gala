@@ -29,6 +29,7 @@
 # @attr commentable [Boolean] whether or not forums are enabled on the case
 class Case < ApplicationRecord
   include Comparable
+  include Lockable
   include Mobility
   extend FriendlyId
 
@@ -42,6 +43,7 @@ class Case < ApplicationRecord
 
   belongs_to :library, optional: true
 
+  has_many :active_locks, class_name: 'Lock'
   has_many :cards
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy
   has_many :comment_threads, dependent: :destroy
@@ -125,6 +127,7 @@ class Case < ApplicationRecord
     super
   end
 
+  # This is to conform with Lockable
   def case
     self
   end

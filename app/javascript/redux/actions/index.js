@@ -13,6 +13,7 @@ import * as CommentThreadActions from './commentThread.js'
 import * as CommunityActions from './community.js'
 import * as EdgenoteActions from './edgenote.js'
 import * as EditingActions from './editing.js'
+import * as LockActions from './lock.js'
 import * as PageActions from './page.js'
 import * as PodcastActions from './podcast.js'
 import * as QuizActions from './quiz.js'
@@ -30,6 +31,7 @@ export * from './community.js'
 export * from './edgenote.js'
 export * from './editing.js'
 export * from './editsChannel.js'
+export * from './lock.js'
 export * from './page.js'
 export * from './podcast.js'
 export * from './quiz.js'
@@ -76,6 +78,11 @@ export type Action =
   | EdgenoteActions.UpdateEdgenoteAction
   | EditingActions.ClearUnsavedAction
   | EditingActions.ToggleEditingAction
+  | LockActions.SetLocksAction
+  | LockActions.AddLockAction
+  | LockActions.EnqueueLockForDeletionAction
+  | LockActions.RemoveLockAction
+  | LockActions.RemoveLockFromDeletionQueueAction
   | PageActions.AddPageAction
   | PageActions.UpdatePageAction
   | PodcastActions.AddPodcastAction

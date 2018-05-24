@@ -68,6 +68,15 @@ function mapBroadcastToAction (type, watchable) {
           return A.removePodcast(watchable.param)
       }
       break
+
+    case 'Lock':
+      switch (type) {
+        case 'create':
+          return A.addLock(watchable)
+        case 'destroy':
+          return A.removeLock(watchable.param)
+      }
+      break
   }
 }
 
@@ -81,7 +90,9 @@ export function subscribeToEditsChannel (): A.ThunkAction {
       { channel: 'EditsChannel', case_slug: slug },
       {
         received: ({ type, watchable, editor_session_id: editorSessionId }) => {
-          if (editorSessionId === sessionId()) return
+          if (editorSessionId === sessionId()) {
+            return
+          }
 
           dispatch((mapBroadcastToAction(type, watchable): any))
         },

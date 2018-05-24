@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { displayToast } from 'redux/actions'
+import { deleteEnqueuedLocks, displayToast, reloadLocks } from 'redux/actions'
 
 import { Intent } from '@blueprintjs/core'
 import { EditorState, convertToRaw } from 'draft-js'
@@ -24,6 +24,7 @@ export function toggleEditing (): ThunkAction {
       )
     }
 
+    dispatch(reloadLocks())
     dispatch({ type: 'TOGGLE_EDITING' })
   }
 }
@@ -44,14 +45,19 @@ export function saveChanges (): ThunkAction {
 function silentlySave (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
-    Object.keys(state.edit.unsavedChanges).forEach(endpoint => {
-      saveModel(
-        endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
-        state
-      )
-    })
+    const unsavedChanges = Object.keys(state.edit.unsavedChanges)
 
-    dispatch(clearUnsaved())
+    if (unsavedChanges.length > 0) {
+      unsavedChanges.forEach(endpoint => {
+        saveModel(
+          endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
+          state
+        )
+      })
+      dispatch(clearUnsaved())
+    }
+
+    dispatch(deleteEnqueuedLocks())
   }
 }
 

@@ -24,7 +24,9 @@ type Props = {
   intl: IntlShape,
   startingViewport: Viewport,
   title: { id: string },
+  onBeginEditing?: () => void,
   onChangeViewport?: Viewport => any,
+  onFinishEditing?: () => void,
 }
 type State = {
   hasError: boolean,
@@ -48,7 +50,12 @@ class MapViewController extends React.Component<Props, State> {
     this.setState({ openPin: '' })
   }
 
-  handleChangeViewport = (viewport: Viewport) => this.setState({ viewport })
+  handleChangeViewport = (viewport: Viewport) => {
+    this.setState({ viewport })
+    this.props.editing &&
+      this.props.onBeginEditing &&
+      this.props.onBeginEditing()
+  }
 
   handleClickPin = (caseSlug: string) => this.setState({ openPin: caseSlug })
 
@@ -61,11 +68,16 @@ class MapViewController extends React.Component<Props, State> {
       viewport: { ...viewport, zoom: viewport.zoom + 1 },
     }))
 
-  handleReset = () => this.setState({ viewport: this.props.startingViewport })
+  handleReset = () => {
+    this.setState({ viewport: this.props.startingViewport })
+    this.props.onFinishEditing && this.props.onFinishEditing()
+  }
 
-  handleSave = () =>
-    this.props.onChangeViewport &&
-    this.props.onChangeViewport(this.state.viewport)
+  handleSave = () => {
+    const { onChangeViewport, onFinishEditing } = this.props
+    onChangeViewport && onChangeViewport(this.state.viewport)
+    onFinishEditing && onFinishEditing()
+  }
 
   componentDidCatch () {
     this.setState({ hasError: true })

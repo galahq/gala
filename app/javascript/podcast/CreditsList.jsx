@@ -19,13 +19,18 @@ class CreditsList extends React.Component<
     canEdit: boolean,
     credits: PodcastCreditList,
     onChange: PodcastCreditList => any,
+    onStartEditing: () => void,
+    onFinishEditing: () => void,
   },
   { editing: boolean }
 > {
   state = { editing: false }
 
   handleStartEditing = () => {
-    if (this.props.canEdit) this.setState({ editing: true })
+    if (this.props.canEdit) {
+      this.setState({ editing: true })
+      this.props.onStartEditing()
+    }
   }
 
   handleFinishEditing = (formState: ?CreditsListFormState) => {
@@ -36,6 +41,7 @@ class CreditsList extends React.Component<
         hosts_string: formState.hosts.join(' • '),
       })
     }
+    this.props.onFinishEditing()
   }
 
   render () {

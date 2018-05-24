@@ -38,6 +38,8 @@ Rails.application.routes.draw do
 
       resource :enrollment, only: %i[create destroy]
 
+      resources :locks, only: %i[index]
+
       resources :podcasts, only: %i[create]
 
       resources :pages, only: %i[create]
@@ -84,6 +86,8 @@ Rails.application.routes.draw do
     end
 
     resources :libraries, param: :slug, only: %i[show]
+
+    resources :locks, only: %i[create destroy]
 
     resource :magic_link, only: %i[show create]
 
