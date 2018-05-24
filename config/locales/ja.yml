@@ -126,14 +126,13 @@ ja:
         この事例研究を編集するには、ただテキストを変えてください。自動的に保存されます。
       map:
         instructions: |
-          Drag the map to position the pin, change the zoom to give context,
-          then click “Set”
+          地図のピンを位置づけて、文脈を伝えるためにズームインしてください。そして、「セット」をクリックしてください。
         reset: リセット
         set: セット
         zoom_in: ズームイン
         zoom_out: ズームアウト
-      missed_something: Please delete any unused author or translator rows.
-      no_elements: This case has no elements.
+      missed_something: 未使用な行を削除してください。
+      no_elements: この事例研究は要素がありません。
       options: 選択肢
       publish_case: 発刊する
       save: 保存
@@ -146,8 +145,8 @@ ja:
       locations: 場所
     settings:
       edit:
-        change_library: Change library
-        change_url: Change URL
+        change_library: ライブラリを変更
+        change_url: URLを変更
         edit_case_settings: 事例研究の設定を編集
       featured_form:
         change_featured_time: 時間の変更
@@ -155,7 +154,7 @@ ja:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
           事例研究のURLを変化すれば、先のURLは新しいのにリダイレクトします。しかし、他人はそのURLを選択したとたんに、リダイレクトが無効にされます。
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
-          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
+          <b>形式：</b>小文字と数字、ハイフンで区切られました<br />100文字以内。
     show:
       back_to_overview: 概要に戻る
       end: 終わり
