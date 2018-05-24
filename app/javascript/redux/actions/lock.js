@@ -83,7 +83,7 @@ export function deleteEnqueuedLocks (): ThunkAction {
 
     locksToDelete.forEach(gid => {
       const lock = state.locks[gid]
-      if (lock.reader.param !== reader.id) {
+      if (lock.reader.param === `${reader.id}`) {
         const [type, param] = gid.split('/')
         dispatch(deleteLock(type, param))
       }
