@@ -111,6 +111,7 @@ const LockOverlay = styled.div`
   border-radius: 2pt;
   height: calc(100% + 16px);
   left: -8px;
+  margin: 0;
   mix-blend-mode: hard-light;
   position: absolute;
   top: -8px;
