@@ -28,6 +28,7 @@ type Props = {
   changeEdgenote: typeof changeEdgenote,
   contents: Edgenote,
   intl: IntlShape,
+  locked: boolean,
   slug: string,
   updateLinkExpansionVisibility: typeof updateLinkExpansionVisibility,
   onChange: ($Shape<Edgenote>) => Promise<any>,
@@ -52,6 +53,10 @@ class EdgenoteEditor extends React.Component<Props, State> {
   componentWillReceiveProps (nextProps: Props) {
     if (this.props.slug !== nextProps.slug) {
       this.setState({ contents: nextProps.contents })
+    }
+
+    if (this.props.locked !== nextProps.locked && nextProps.locked) {
+      this.handleClose()
     }
   }
 

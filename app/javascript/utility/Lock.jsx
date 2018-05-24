@@ -44,6 +44,7 @@ function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
 }
 
 type LockableProps = {
+  locked: boolean,
   onBeginEditing: () => void,
   onFinishEditing: () => void,
 }
@@ -51,7 +52,6 @@ type LockableProps = {
 type Props = {
   children: LockableProps => React.Node,
   lock: ?LockT,
-  locked: boolean,
   onEditAnyway: () => mixed,
   visible: boolean,
 } & LockableProps
@@ -66,7 +66,7 @@ const Lock = ({
   visible,
 }: Props) => (
   <React.Fragment>
-    {children({ onBeginEditing, onFinishEditing })}
+    {children({ locked, onBeginEditing, onFinishEditing })}
     {visible &&
       locked &&
       lock && (
