@@ -28,7 +28,7 @@ const EdgenotePreview = ({
   changesToAttachments,
   expansion,
 }: Props) => (
-  <React.Fragment>
+  <>
     <h5>
       <FormattedMessage id="edgenotes.edit.preview" />
     </h5>
@@ -40,7 +40,7 @@ const EdgenotePreview = ({
         expansion={expansion}
       />
     </Card>
-  </React.Fragment>
+  </>
 )
 
 export default EdgenotePreview

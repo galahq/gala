@@ -158,7 +158,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       >
         <Lock type="Edgenote" param={slug}>
           {({ locked, onBeginEditing, onFinishEditing }) => (
-            <React.Fragment>
+            <>
               {editing && (
                 <EdgenoteEditor
                   contents={contents}
@@ -207,7 +207,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
                   instantaneous={isALink}
                 />
               )}
-            </React.Fragment>
+            </>
           )}
         </Lock>
       </Container>

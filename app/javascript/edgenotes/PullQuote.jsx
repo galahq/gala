@@ -35,7 +35,7 @@ const PullQuote = ({
   selected,
   active,
 }: Props) => (
-  <React.Fragment>
+  <>
     <Background visible={hasBackground}>
       {contents && (
         <blockquote
@@ -60,7 +60,7 @@ const PullQuote = ({
       <Attribution name={attribution} />
     </Background>
     <AudioPlayer src={audioUrl} active={active} />
-  </React.Fragment>
+  </>
 )
 
 export default PullQuote

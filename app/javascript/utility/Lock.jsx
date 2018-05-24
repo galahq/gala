@@ -65,12 +65,12 @@ const Lock = ({
   onFinishEditing,
   visible,
 }: Props) => (
-  <React.Fragment>
+  <>
     {children({ locked, onBeginEditing, onFinishEditing })}
     {visible &&
       locked &&
       lock && (
-      <React.Fragment>
+      <>
         <LockOverlay />
         <LockDetails>
           <div className="pt-callout pt-intent-danger pt-icon-lock">
@@ -94,9 +94,9 @@ const Lock = ({
             </button>
           </div>
         </LockDetails>
-      </React.Fragment>
+      </>
     )}
-  </React.Fragment>
+  </>
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lock)

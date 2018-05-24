@@ -157,7 +157,7 @@ class Deployment extends React.Component<Props, State> {
     const { caseData, recommendedQuizzes } = this.props
     const { selectedQuizId, customQuestions } = this.state
     return (
-      <React.Fragment>
+      <>
         <div className="pt-dark" style={{ padding: '0 12px' }}>
           {selectedQuizId == null ? (
             <QuizSelector
@@ -188,7 +188,7 @@ class Deployment extends React.Component<Props, State> {
           onDeselect={() => this.handleSelectQuiz(null)}
           onSubmit={this.handleSubmit}
         />
-      </React.Fragment>
+      </>
     )
   }
 }

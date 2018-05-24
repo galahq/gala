@@ -57,7 +57,7 @@ class CreditsList extends React.Component<
         onClick={this.handleStartEditing}
       >
         {guests.length > 0 || hosts.length > 0 ? (
-          <React.Fragment>
+          <>
             <dl>
               {guests.map(guest => {
                 return [
@@ -73,7 +73,7 @@ class CreditsList extends React.Component<
               />{' '}
               <FormattedList list={hosts.map(h => <span key={h}>{h}</span>)} />
             </em>
-          </React.Fragment>
+          </>
         ) : (
           canEdit && (
             <button className="pt-button pt-icon-people">

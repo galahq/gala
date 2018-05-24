@@ -24,10 +24,10 @@ function mapStateToProps (state: State) {
 const NoSelectedCommentThread = ({ name, description }) => (
   <Container>
     {description && (
-      <React.Fragment>
+      <>
         <h2>{name || ''}</h2>
         <Markdown source={description || ''} />
-      </React.Fragment>
+      </>
     )}
   </Container>
 )
