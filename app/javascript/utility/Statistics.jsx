@@ -52,7 +52,7 @@ class Statistics extends React.Component<Props> {
     this._maybeFetchStatistics(props)
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this._maybeFetchStatistics(nextProps)
   }
 

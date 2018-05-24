@@ -84,7 +84,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     if (this.props.timerState === 'RUNNING') this._startTimer()
   }
 
-  componentWillReceiveProps (nextProps: TrackerProps) {
+  UNSAFE_componentWillReceiveProps (nextProps: TrackerProps) {
     if (
       this.props.timerState === nextProps.timerState &&
       this.props.targetKey === nextProps.targetKey
