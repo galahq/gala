@@ -47,10 +47,17 @@ export type EnqueueLockForDeletionAction = {
 export function enqueueLockForDeletion (
   type: string,
   param: string
-): EnqueueLockForDeletionAction {
-  return {
-    type: 'ENQUEUE_LOCK_FOR_DELETION',
-    gid: lockableGID({ type, param }),
+): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const gid = lockableGID({ type, param })
+    const state = getState()
+    state.locks[gid] &&
+      state.caseData.reader &&
+      state.locks[gid].reader.param === `${state.caseData.reader.id}` &&
+      dispatch({
+        type: 'ENQUEUE_LOCK_FOR_DELETION',
+        gid,
+      })
   }
 }
 
