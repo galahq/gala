@@ -27,29 +27,28 @@ type TrackerState = {
 }
 
 class BaseTracker extends React.Component<TrackerProps, TrackerState> {
-  _startTimer: () => void
-  _pauseTimer: () => void
-  _stopTimer: () => void
-  _log: number => void
-  _timeSinceArrival: TrackerState => number
+  state = {
+    durationSoFar: 0,
+    timeArrived: Date.now(),
+  }
 
-  _startTimer () {
+  _startTimer = () => {
     this.setState({ timeArrived: Date.now() })
     window.addEventListener('beforeunload', this._stopTimer)
   }
 
-  _pauseTimer () {
+  _pauseTimer = () => {
     this.setState({ durationSoFar: this._timeSinceArrival(this.state) })
   }
 
-  _stopTimer () {
+  _stopTimer = () => {
     window.removeEventListener('beforeunload', this._stopTimer)
     const duration = this._timeSinceArrival(this.state)
     if (duration > 0) this._log(duration)
     this.setState({ durationSoFar: 0 })
   }
 
-  _log (duration: number) {
+  _log = (duration: number) => {
     const { targetParameters, caseSlug, instantaneous } = this.props
 
     const loggedDuration = instantaneous ? 3000 : duration
@@ -68,19 +67,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     return state.durationSoFar + thisSegment
   }
 
-  constructor (props: TrackerProps) {
-    super(props)
-    this._startTimer = this._startTimer.bind(this)
-    this._pauseTimer = this._pauseTimer.bind(this)
-    this._stopTimer = this._stopTimer.bind(this)
-    this._log = this._log.bind(this)
-    this.state = {
-      durationSoFar: 0,
-      timeArrived: Date.now(),
-    }
-  }
-
-  componentDidMount () {
+  componentDidMount = () => {
     if (this.props.timerState === 'RUNNING') this._startTimer()
   }
 
@@ -149,12 +136,12 @@ export class OnScreenTracker extends React.Component<
 > {
   node: ?HTMLElement
 
-  _isVisible: () => boolean
-  _checkVisibility: () => void
-  _maybeCheckVisibility: () => void
-  _setNeedsCheckVisibility: () => void
+  state = {
+    isVisible: false,
+    needsVisibilityCheck: false,
+  }
 
-  _isVisible () {
+  _isVisible = () => {
     if (document.hidden) return false
 
     if (this.node == null || this.node instanceof Text) return false
@@ -174,33 +161,21 @@ export class OnScreenTracker extends React.Component<
     return !above && !below
   }
 
-  _checkVisibility () {
+  _checkVisibility = () => {
     this.setState({
       isVisible: this._isVisible(),
       needsVisibilityCheck: false,
     })
   }
 
-  _maybeCheckVisibility () {
+  _maybeCheckVisibility = () => {
     if (this.state.needsVisibilityCheck) {
       this._checkVisibility()
     }
   }
 
-  _setNeedsCheckVisibility () {
+  _setNeedsCheckVisibility = () => {
     this.setState({ needsVisibilityCheck: true })
-  }
-
-  constructor (props: OnScreenTrackerProps) {
-    super(props)
-    this._isVisible = this._isVisible.bind(this)
-    this._checkVisibility = this._checkVisibility.bind(this)
-    this._maybeCheckVisibility = this._maybeCheckVisibility.bind(this)
-    this._setNeedsCheckVisibility = this._setNeedsCheckVisibility.bind(this)
-    this.state = {
-      isVisible: false,
-      needsVisibilityCheck: false,
-    }
   }
 
   componentDidMount () {
