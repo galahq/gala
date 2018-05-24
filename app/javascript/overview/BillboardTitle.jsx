@@ -55,9 +55,11 @@ type Props = {
   photoCredit: string,
   coverUrl: string,
   updateCase: typeof updateCase,
-  minimal: boolean,
+  minimal?: boolean,
   library: Library,
   links: $PropertyType<CaseDataState, 'links'>,
+  onBeginEditing?: () => void,
+  onFinishEditing?: () => void,
 } & Byline
 
 export const UnconnectedBillboardTitle = ({
@@ -74,6 +76,8 @@ export const UnconnectedBillboardTitle = ({
   minimal,
   library,
   links,
+  onBeginEditing,
+  onFinishEditing,
 }: Props) => {
   return (
     <CoverImageContainer src={coverUrl}>
@@ -105,6 +109,9 @@ export const UnconnectedBillboardTitle = ({
             disabled={!editing || minimal}
             placeholder="Snappy kicker"
             onChange={value => updateCase({ kicker: value })}
+            onEdit={onBeginEditing}
+            onCancel={onFinishEditing}
+            onConfirm={onFinishEditing}
           />
         </span>
         <EditableText
@@ -113,6 +120,9 @@ export const UnconnectedBillboardTitle = ({
           disabled={!editing || minimal}
           placeholder="What is the central question of the case?"
           onChange={value => updateCase({ title: value })}
+          onEdit={onBeginEditing}
+          onCancel={onFinishEditing}
+          onConfirm={onFinishEditing}
         />
       </h1>
 
@@ -125,6 +135,8 @@ export const UnconnectedBillboardTitle = ({
             acknowledgements,
           }}
           onChange={(value: Byline) => updateCase(value)}
+          onStartEditing={onBeginEditing}
+          onFinishEditing={onFinishEditing}
         />
       )}
 
@@ -135,6 +147,9 @@ export const UnconnectedBillboardTitle = ({
             disabled={!editing}
             placeholder={editing ? 'Photo credit' : ''}
             onChange={value => updateCase({ photoCredit: value })}
+            onEdit={onBeginEditing}
+            onCancel={onFinishEditing}
+            onConfirm={onFinishEditing}
           />
         )}
       </cite>

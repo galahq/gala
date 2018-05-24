@@ -6,6 +6,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import debounce from 'lodash.debounce'
 import { FormattedMessage } from 'react-intl'
 
 import SortableList, { createSortableInput } from 'utility/SortableList'
@@ -14,30 +15,38 @@ type Props = {
   disabled: boolean,
   learningObjectives: string[],
   onChange: (string[]) => any,
+  onStopChanging: () => any,
 }
-const LearningObjectives = ({
-  disabled,
-  learningObjectives,
-  onChange,
-}: Props) => (
-  <div>
-    <Label>
-      <FormattedMessage id="activerecord.attributes.case.learningObjectives" />
-    </Label>
-    {disabled ? (
-      <ul>
-        {learningObjectives.map((objective, i) => <li key={i}>{objective}</li>)}
-      </ul>
-    ) : (
-      <SortableList
-        items={learningObjectives || []}
-        newItem={''}
-        render={ObjectiveInput}
-        onChange={onChange}
-      />
-    )}
-  </div>
-)
+class LearningObjectives extends React.Component<Props> {
+  onStopChanging = debounce(this.props.onStopChanging, 200)
+  render () {
+    const { disabled, learningObjectives, onChange } = this.props
+    return (
+      <div>
+        <Label>
+          <FormattedMessage id="activerecord.attributes.case.learningObjectives" />
+        </Label>
+        {disabled ? (
+          <ul>
+            {learningObjectives.map((objective, i) => (
+              <li key={i}>{objective}</li>
+            ))}
+          </ul>
+        ) : (
+          <SortableList
+            items={learningObjectives || []}
+            newItem={''}
+            render={ObjectiveInput}
+            onChange={(...args) => {
+              onChange(...args)
+              this.onStopChanging()
+            }}
+          />
+        )}
+      </div>
+    )
+  }
+}
 
 export default LearningObjectives
 

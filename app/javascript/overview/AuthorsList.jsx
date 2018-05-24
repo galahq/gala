@@ -24,13 +24,18 @@ class AuthorsList extends React.Component<
     canEdit: boolean,
     byline: Byline,
     onChange: Byline => any,
+    onStartEditing?: () => void,
+    onFinishEditing?: () => void,
   },
   { editing: boolean }
 > {
   state = { editing: false }
 
   handleStartEditing = (e: SyntheticEvent<*>) => {
-    if (this.props.canEdit) this.setState({ editing: true })
+    if (this.props.canEdit) {
+      this.setState({ editing: true })
+      this.props.onStartEditing && this.props.onStartEditing()
+    }
   }
 
   handleFinishEditing = (formState: ?AuthorsListFormState) => {
@@ -38,6 +43,7 @@ class AuthorsList extends React.Component<
     if (formState != null) {
       this.props.onChange(formState)
     }
+    this.props.onFinishEditing && this.props.onFinishEditing()
   }
 
   render () {
