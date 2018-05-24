@@ -54,4 +54,4 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
   )
 }
 
-export default connect(mapStateToProps, () => {})(CaseOverview)
+export default connect(mapStateToProps)(CaseOverview)

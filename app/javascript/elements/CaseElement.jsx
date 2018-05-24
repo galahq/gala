@@ -44,7 +44,7 @@ function mapStateToProps (state: State, { match }) {
         title: state[nextElementStore][nextElementId].title,
         position: `${position + 2}`,
       }
-      : null,
+      : undefined,
     id: elementId,
     url,
     title,

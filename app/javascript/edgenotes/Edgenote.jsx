@@ -76,7 +76,9 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
     ...stateProps,
     ...dispatchProps,
     ...ownProps,
-    activate: stateProps.editing ? () => {} : dispatchProps.activate,
+    activate: stateProps.editing
+      ? () => Promise.resolve()
+      : dispatchProps.activate,
   }
 }
 
