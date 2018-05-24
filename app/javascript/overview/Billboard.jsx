@@ -68,9 +68,12 @@ const Billboard = ({
 }: Props) => (
   <Container>
     <Lock type="Case" param={slug}>
-      {() => (
+      {({ onBeginEditing, onFinishEditing }) => (
         <Fragment>
-          <BillboardTitle />
+          <BillboardTitle
+            onBeginEditing={onBeginEditing}
+            onFinishEditing={onFinishEditing}
+          />
           {editing || <CommunityChooser />}
 
           <div className="Card BillboardSnippet pt-light">
@@ -83,6 +86,9 @@ const Billboard = ({
                 onChange={value => {
                   updateCase({ dek: value })
                 }}
+                onEdit={onBeginEditing}
+                onCancel={onFinishEditing}
+                onConfirm={onFinishEditing}
               />
             </h3>
 
@@ -97,6 +103,9 @@ const Billboard = ({
                   disabled={!editing}
                   placeholder="Summarize the case in a short paragraph."
                   onChange={value => updateCase({ summary: value })}
+                  onEdit={onBeginEditing}
+                  onCancel={onFinishEditing}
+                  onConfirm={onFinishEditing}
                 />
               </div>
             </Less>
@@ -105,7 +114,11 @@ const Billboard = ({
               <LearningObjectives
                 disabled={!editing}
                 learningObjectives={learningObjectives}
-                onChange={value => updateCase({ learningObjectives: value })}
+                onChange={value => {
+                  updateCase({ learningObjectives: value })
+                  onBeginEditing()
+                }}
+                onStopChanging={onFinishEditing}
               />
             )}
 
@@ -123,7 +136,9 @@ const Billboard = ({
                 zoom: caseData.zoom || 1,
               }}
               title={{ id: 'activerecord.attributes.case.location' }}
+              onBeginEditing={onBeginEditing}
               onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
+              onFinishEditing={onFinishEditing}
             />
           )}
         </Fragment>
