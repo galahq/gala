@@ -31,7 +31,10 @@ feature 'Editing a case' do
       first_paragraph.click
       page.driver.browser.action
           .send_keys('Adding a test sentence for testing.').perform
+
+      expect(kase.pages.first.cards.first).to be_locked
       click_button 'Save'
+      expect(kase.pages.first.cards.first).not_to be_locked
 
       page.driver.browser.navigate.refresh
       expect(page).to have_content 'Adding a test sentence for testing.'
@@ -140,6 +143,32 @@ feature 'Editing a case' do
       sleep(1)
       page.driver.browser.navigate.refresh
       expect(page).to have_selector('.Card', count: 4)
+    end
+  end
+  
+  context 'at the same time as someone else' do
+    scenario 'the elements they’re editing are locked' do
+      other_reader = create :reader, :editor
+
+      visit case_path('en', kase, edit: true)
+
+      Capybara.using_session 'other' do
+        login_as other_reader
+        visit case_path('en', kase, edit: true)
+        find('h1', text: kase.title).click
+      end
+
+      find('h1', text: kase.title).hover
+      expect(page).to have_content 'This section is locked'
+      click_button 'Edit Anyway'
+
+      expect(kase).not_to have_content 'This section is locked'
+      find('h1', text: kase.title).click
+
+      Capybara.using_session 'other' do
+        find('h1', text: kase.title).hover
+        expect(page).to have_content 'This section is locked'
+      end
     end
   end
 end
