@@ -47,7 +47,7 @@ export default EdgenotePreview
 
 function edgenotePreviewProps (contents, changesToAttachments) {
   const havingChanges = R.filter(Boolean)
-  const objectUrls = R.map(attachment => attachment && attachment.objectUrl)
+  const objectUrls = R.map(attachment => attachment?.objectUrl)
   return {
     ...contents,
     ...objectUrls(havingChanges(changesToAttachments)),

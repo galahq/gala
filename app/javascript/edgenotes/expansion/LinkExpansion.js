@@ -47,11 +47,11 @@ class LinkExpansion implements ILinkExpansion {
   }
 
   actsAsLink (): boolean {
-    return !(this.embed && this.embed.__html)
+    return !(this.embed?.__html)
   }
 
   hasEmbed (): boolean {
-    return !!(this.embed && this.embed.__html)
+    return !!(this.embed?.__html)
   }
 
   linkDomain () {

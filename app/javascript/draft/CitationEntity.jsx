@@ -23,7 +23,7 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   const citation = state.ui.openedCitation
   return {
     editable: state.edit.inProgress,
-    isOpen: citation && citation.key === ownProps.entityKey,
+    isOpen: citation?.key === ownProps.entityKey,
   }
 }
 

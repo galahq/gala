@@ -23,6 +23,7 @@
     "babel-plugin-styled-components",
     "@babel/syntax-dynamic-import",
     "@babel/proposal-object-rest-spread",
+    "@babel/proposal-optional-chaining",
     ["@babel/proposal-class-properties", { "spec": true }]
   ]
 }

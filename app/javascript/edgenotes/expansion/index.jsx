@@ -43,8 +43,8 @@ const Expansion = ({ contents, expansion }: Props) => {
 
   const { embed, preview } = expansion
 
-  return embed && embed.__html ? (
-    <EmbedContainer markup={embed.__html}>
+  return embed?.__html ? (
+    <EmbedContainer markup={embed?.__html}>
       <Embed
         dangerouslySetInnerHTML={embed}
         widescreen={widescreenRatio(expansion.linkDomain())}

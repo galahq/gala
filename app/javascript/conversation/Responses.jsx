@@ -21,7 +21,7 @@ import type { State, Comment } from 'redux/state'
 function mapStateToProps ({ caseData }: State) {
   const { reader } = caseData
   return {
-    readerCanDeleteComments: reader && reader.canUpdateCase,
+    readerCanDeleteComments: reader?.canUpdateCase,
   }
 }
 

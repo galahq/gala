@@ -57,7 +57,7 @@ function mapStateToProps ({ quiz, caseData }: State) {
       RegExp(`${caseData.slug}.*`),
       caseData.slug
     ),
-    editable: caseData.reader && caseData.reader.canUpdateCase,
+    editable: caseData.reader?.canUpdateCase,
   }
 }
 

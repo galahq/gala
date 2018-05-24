@@ -115,8 +115,8 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   componentDidUpdate (prevProps: Props) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
-      if (contents && contents.websiteUrl) {
-        window.open(contents.websiteUrl, '_blank')
+      if (contents?.websiteUrl) {
+        window.open(contents?.websiteUrl, '_blank')
         setTimeout(() => {
           this.props.deactivate()
         }, 300)
