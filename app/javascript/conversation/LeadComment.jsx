@@ -44,7 +44,7 @@ type OwnProps = {
 function mapStateToProps ({ caseData }: State) {
   const { reader } = caseData
   return {
-    readerCanDeleteComments: reader && reader.canUpdateCase,
+    readerCanDeleteComments: reader?.canUpdateCase,
   }
 }
 type StateProps = { readerCanDeleteComments: boolean }

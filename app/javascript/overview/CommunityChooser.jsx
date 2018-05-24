@@ -35,7 +35,7 @@ function mapStateToProps ({ caseData, communities }: State) {
   return {
     communities,
     caseSlug,
-    activeCommunity: reader && reader.enrollment && reader.activeCommunity,
+    activeCommunity: reader?.enrollment && reader?.activeCommunity,
   }
 }
 

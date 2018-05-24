@@ -17,6 +17,7 @@
     "@babel/core": "7.0.0-beta.46",
     "@babel/plugin-proposal-class-properties": "7.0.0-beta.46",
     "@babel/plugin-proposal-object-rest-spread": "7.0.0-beta.46",
+    "@babel/plugin-proposal-optional-chaining": "^7.0.0-beta.48",
     "@babel/plugin-syntax-dynamic-import": "7.0.0-beta.46",
     "@babel/polyfill": "7.0.0-beta.46",
     "@babel/preset-env": "7.0.0-beta.46",
@@ -103,6 +104,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "flow-bin": "0.72.0",
     "flow-inspect": "^1.0.1",
+    "prettier": "^1.12.1",
     "webpack-dev-server": "^2.11.1"
   },
   "greenkeeper": {

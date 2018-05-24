@@ -180,6 +180,10 @@
   version "7.0.0-beta.46"
   resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.0.0-beta.46.tgz#f630adbd9d645d0ba2e43f4955b4ad61f44ccdf4"
 
+"@babel/helper-plugin-utils@7.0.0-beta.48":
+  version "7.0.0-beta.48"
+  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.0.0-beta.48.tgz#bf310f89e91d146ac0f1369562164be45edba587"
+
 "@babel/helper-regex@7.0.0-beta.46":
   version "7.0.0-beta.46"
   resolved "https://registry.yarnpkg.com/@babel/helper-regex/-/helper-regex-7.0.0-beta.46.tgz#df3675cec700e062d823225c52830e012f32308f"
@@ -289,6 +293,13 @@
     "@babel/helper-plugin-utils" "7.0.0-beta.46"
     "@babel/plugin-syntax-optional-catch-binding" "7.0.0-beta.46"
 
+"@babel/plugin-proposal-optional-chaining@^7.0.0-beta.48":
+  version "7.0.0-beta.48"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-optional-chaining/-/plugin-proposal-optional-chaining-7.0.0-beta.48.tgz#3bbb1c60c34823db924a21158460f0d7b3e8251b"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.48"
+    "@babel/plugin-syntax-optional-chaining" "7.0.0-beta.48"
+
 "@babel/plugin-proposal-unicode-property-regex@7.0.0-beta.46":
   version "7.0.0-beta.46"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-unicode-property-regex/-/plugin-proposal-unicode-property-regex-7.0.0-beta.46.tgz#b422a602094d7feeea4a7b81e7e32d1687337123"
@@ -338,6 +349,12 @@
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-optional-catch-binding/-/plugin-syntax-optional-catch-binding-7.0.0-beta.46.tgz#701ba500cc154dd87c4d16a41fa858e9ffc6db89"
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.46"
+
+"@babel/plugin-syntax-optional-chaining@7.0.0-beta.48":
+  version "7.0.0-beta.48"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-optional-chaining/-/plugin-syntax-optional-chaining-7.0.0-beta.48.tgz#a1460e57201f8ed1444e62a854bf1f5b2a236178"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.48"
 
 "@babel/plugin-transform-arrow-functions@7.0.0-beta.46":
   version "7.0.0-beta.46"
@@ -7015,6 +7032,10 @@ prepend-http@^1.0.0:
 preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
+
+prettier@^1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.12.1.tgz#c1ad20e803e7749faf905a409d2367e06bbe7325"
 
 private@^0.1.6, private@^0.1.7:
   version "0.1.7"
