@@ -13,7 +13,9 @@ import type {
 } from 'redux/actions'
 
 export default function edgenotesBySlug (
-  state: EdgenotesState = ({ ...window.caseData.edgenotes }: EdgenotesState),
+  state: EdgenotesState = ({
+    ...window.caseData.edgenotes,
+  }: EdgenotesState),
   action: AddEdgenoteAction | UpdateEdgenoteAction | RemoveEdgenoteAction
 ): EdgenotesState {
   switch (action.type) {

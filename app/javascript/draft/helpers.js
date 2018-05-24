@@ -4,6 +4,7 @@
  * @flow
  */
 
+import React from 'react'
 import { RichUtils, Modifier, EditorState, SelectionState } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
 import { Intent } from '@blueprintjs/core'
@@ -149,14 +150,14 @@ export const entityTypeEquals = (type: string) => (
   )
 }
 
-type ToggleEdgenoteProps = {
+type ToolbarProps = {
   displayToast: displayToast,
   getEdgenote: ?() => Promise<string>,
   intl: IntlShape,
 }
 export async function toggleEdgenote (
   editorState: EditorState,
-  { displayToast, getEdgenote, intl }: ToggleEdgenoteProps
+  { displayToast, getEdgenote, intl }: ToolbarProps
 ) {
   if (getEdgenote == null) return editorState
 
@@ -168,9 +169,16 @@ export async function toggleEdgenote (
     displayToast({
       iconName: 'error',
       intent: Intent.WARNING,
-      message: intl.formatMessage({
-        id: 'edgenotes.new.makeSelection',
-      }),
+      message: (
+        <span
+          className="pt-dark"
+          dangerouslySetInnerHTML={{
+            __html: intl.formatMessage({
+              id: 'edgenotes.new.makeSelectionHtml',
+            }),
+          }}
+        />
+      ),
     })
     return editorState
   }
@@ -178,7 +186,10 @@ export async function toggleEdgenote (
   return getEdgenote().then(slug => addEdgenoteEntity(slug, editorState))
 }
 
-export function addCitationEntity (editorState: EditorState) {
+export function addCitationEntity (
+  editorState: EditorState,
+  { displayToast, intl }: ToolbarProps
+) {
   let selection = editorState.getSelection()
 
   const collapsedSelection: SelectionState = selection.merge({
@@ -195,6 +206,21 @@ export function addCitationEntity (editorState: EditorState) {
   const circleSelection: SelectionState = collapsedSelection.merge({
     anchorOffset: collapsedSelection.focusOffset,
     focusOffset: collapsedSelection.focusOffset + 1,
+  })
+
+  displayToast({
+    iconName: 'tick',
+    intent: Intent.SUCCESS,
+    message: (
+      <span
+        className="pt-dark"
+        dangerouslySetInnerHTML={{
+          __html: intl.formatMessage({
+            id: 'cards.edit.citationAdded',
+          }),
+        }}
+      />
+    ),
   })
 
   return addEntity(

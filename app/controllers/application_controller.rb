@@ -12,7 +12,11 @@ class ApplicationController < ActionController::Base
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
 
+  delegate :successful?, to: :response
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  serialization_scope :view_context
 
   # All url helpers use this: keep users in their active locale after it’s set.
   def default_url_options(options = {})

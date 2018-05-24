@@ -4,7 +4,7 @@
 
 import { Orchard } from 'shared/orchard'
 
-import type { ThunkAction } from 'redux/actions'
+import type { ThunkAction, Dispatch } from 'redux/actions'
 import type { CaseElement } from 'redux/state'
 
 export type UpdateCaseElementAction = {
@@ -45,7 +45,7 @@ export function persistCaseElementReordering (
 
 export type RemoveElementAction = { type: 'REMOVE_ELEMENT', position: number }
 
-function removeElement (position): RemoveElementAction {
+export function removeElement (position: number): RemoveElementAction {
   return { type: 'REMOVE_ELEMENT', position }
 }
 
@@ -60,7 +60,7 @@ export function deleteElement (
       )
     ) {
       await Orchard.prune(`${elementUrl}`)
-      dispatch(removeElement(position))
+      return dispatch(removeElement(position))
     }
   }
 }

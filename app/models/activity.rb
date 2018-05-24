@@ -7,6 +7,7 @@
 # @attr pdf_url [Translated<String>]
 class Activity < ApplicationRecord
   include Element
+  include Lockable
   include Mobility
 
   translates :title, :description, :pdf_url, fallbacks: true
@@ -16,7 +17,7 @@ class Activity < ApplicationRecord
   #   Prefer {cards}
   has_one :card, as: :element, dependent: :destroy, required: true
 
-  before_validation :build_card
+  before_validation :build_card, on: :create
 
   # @return [Array<Card>]
   def cards

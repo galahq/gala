@@ -3,12 +3,14 @@
  * @flow
  */
 
-import React from 'react'
+import React, { Fragment } from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
+import Lock from 'utility/Lock'
 import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
 import CommunityChooser from './CommunityChooser'
@@ -64,61 +66,92 @@ const Billboard = ({
   learningObjectives,
   caseData,
 }: Props) => (
-  <section className="Billboard">
-    <BillboardTitle />
-    <CommunityChooser />
-
-    <div className="Card BillboardSnippet pt-light">
-      <h3 className="c-BillboardSnippet__dek">
-        <EditableText
-          multiline
-          value={dek}
-          disabled={!editing}
-          placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
-          onChange={value => {
-            updateCase({ dek: value })
-          }}
-        />
-      </h3>
-
-      <Less startOpen={false} disabled={editing}>
-        <div style={{ margin: 0 }}>
-          <EditableText
-            multiline
-            value={summary}
-            disabled={!editing}
-            placeholder="Summarize the case in a short paragraph."
-            onChange={value => updateCase({ summary: value })}
+  <Container>
+    <Lock type="Case" param={slug}>
+      {({ onBeginEditing, onFinishEditing }) => (
+        <Fragment>
+          <BillboardTitle
+            onBeginEditing={onBeginEditing}
+            onFinishEditing={onFinishEditing}
           />
-        </div>
-      </Less>
+          {editing || <CommunityChooser />}
 
-      {(learningObjectives || editing) && (
-        <LearningObjectives
-          disabled={!editing}
-          learningObjectives={learningObjectives}
-          onChange={value => updateCase({ learningObjectives: value })}
-        />
+          <div className="Card BillboardSnippet pt-light">
+            <h3 className="c-BillboardSnippet__dek">
+              <EditableText
+                multiline
+                value={dek}
+                disabled={!editing}
+                placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
+                onChange={value => {
+                  updateCase({ dek: value })
+                }}
+                onEdit={onBeginEditing}
+                onCancel={onFinishEditing}
+                onConfirm={onFinishEditing}
+              />
+            </h3>
+
+            <Less
+              startOpen={!summary || summary.length < 500}
+              disabled={editing}
+            >
+              <div style={{ margin: 0 }}>
+                <EditableText
+                  multiline
+                  value={summary}
+                  disabled={!editing}
+                  placeholder="Summarize the case in a short paragraph."
+                  onChange={value => updateCase({ summary: value })}
+                  onEdit={onBeginEditing}
+                  onCancel={onFinishEditing}
+                  onConfirm={onFinishEditing}
+                />
+              </div>
+            </Less>
+
+            {(learningObjectives || editing) && (
+              <LearningObjectives
+                disabled={!editing}
+                learningObjectives={learningObjectives}
+                onChange={value => {
+                  updateCase({ learningObjectives: value })
+                  onBeginEditing()
+                }}
+                onStopChanging={onFinishEditing}
+              />
+            )}
+
+            <FlagLinks languages={otherAvailableLocales} slug={slug} />
+          </div>
+
+          {(caseData.latitude || editing) && (
+            <MapView
+              cases={[caseData]}
+              editing={editing}
+              height={300}
+              startingViewport={{
+                latitude: caseData.latitude || 0,
+                longitude: caseData.longitude || 0,
+                zoom: caseData.zoom || 1,
+              }}
+              title={{ id: 'activerecord.attributes.case.location' }}
+              onBeginEditing={onBeginEditing}
+              onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
+              onFinishEditing={onFinishEditing}
+            />
+          )}
+        </Fragment>
       )}
-
-      <FlagLinks languages={otherAvailableLocales} slug={slug} />
-    </div>
-    <MapView
-      cases={[caseData]}
-      editing={editing}
-      height={300}
-      startingViewport={{
-        latitude: caseData.latitude || 0,
-        longitude: caseData.longitude || 0,
-        zoom: caseData.zoom || 1,
-      }}
-      title={{ id: 'activerecord.attributes.case.location' }}
-      onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
-    />
-  </section>
+    </Lock>
+  </Container>
 )
 
 export default connect(mapStateToProps, { updateCase })(Billboard)
+
+const Container = styled.section.attrs({ className: 'Billboard' })`
+  position: relative;
+`
 
 type FlagLinksProps = { slug: string, languages: string[] }
 function FlagLinks ({ slug, languages }: FlagLinksProps) {

@@ -2,8 +2,14 @@
 
 # @see Case
 class CasesController < ApplicationController
+  include BroadcastEdits
+  include VerifyLock
+
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
+  before_action -> { verify_lock_on @case }, only: %i[update destroy]
+
+  broadcast_edits to: :@case
 
   layout 'admin'
 
@@ -14,6 +20,8 @@ class CasesController < ApplicationController
              .with_attached_cover_image
              .includes(:case_elements, :library)
              .decorate
+
+    render json: @cases, each_serializer: Cases::PreviewSerializer
   end
 
   # @route [GET] `/cases/slug`
@@ -23,7 +31,13 @@ class CasesController < ApplicationController
 
     set_group_and_deployment
 
-    render layout: 'with_header'
+    respond_to do |format|
+      format.html { render layout: 'with_header' }
+      format.json do
+        render json: @case, serializer: Cases::ShowSerializer,
+               deployment: @deployment, enrollment: @enrollment
+      end
+    end
   end
 
   # @route [POST] `/cases`
@@ -51,7 +65,8 @@ class CasesController < ApplicationController
     set_group_and_deployment
 
     if @case.update(case_params)
-      render :show, status: :ok, location: @case
+      render json: @case, serializer: Cases::ShowSerializer,
+             deployment: @deployment, enrollment: @enrollment
     else
       render json: @case.errors, status: :unprocessable_entity
     end
@@ -69,11 +84,9 @@ class CasesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_case
     @case = Case.friendly.includes(
-      :podcasts,
+      :podcasts, :cards,
       edgenotes: [image_attachment: :blob, audio_attachment: :blob],
-      cards: [comment_threads: [:reader, comments: [:reader]]],
-      activities: %i[case_element card], pages: %i[case_element cards],
-      enrollments: [:reader]
+      activities: %i[case_element card], pages: %i[case_element cards]
     )
                 .find(slug).decorate
   end

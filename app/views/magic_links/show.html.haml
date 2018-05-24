@@ -1,10 +1,6 @@
 :ruby
   billboard_data = {
-    case_data: render(
-      template: 'cases/_case',
-      formats: [:json],
-      locals: { c: @deployment.case.decorate }
-    ),
+    case_data: ActiveModel::Serializer.for(@deployment.case.decorate).to_json,
     group_data: @deployment.group.slice(:name).to_json,
     deployment_key: @deployment.key
   }

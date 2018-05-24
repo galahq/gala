@@ -6,6 +6,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { append } from 'ramda'
+import { injectIntl } from 'react-intl'
 
 import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
@@ -18,17 +19,19 @@ import FormattingToolbar from 'draft/FormattingToolbar'
 import Statistics from 'utility/Statistics'
 import CitationTooltip from './CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
+import Lock from 'utility/Lock'
 import { OnScreenTracker } from 'utility/Tracker'
 import { FocusContainer } from 'utility/A11y'
 import { ScrollIntoView } from 'utility/ScrollView'
 
+import type { IntlShape } from 'react-intl'
 import type { CardProps } from 'card'
 
 const CommentThreadsCard = asyncComponent(() =>
   import('comments/CommentThreadsCard').then(m => m.default)
 )
 
-class CardContents extends React.Component<CardProps, *> {
+class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
   // We have to be able to respond to props change that would change
   // customStyleMap by "jiggling" each block of editorState to trigger a
   // rerender. This internal state should exactly track props, plus jiggle.
@@ -76,6 +79,7 @@ class CardContents extends React.Component<CardProps, *> {
     const {
       id,
       solid,
+      nonNarrative,
       editable,
       onChange,
       handleKeyCommand,
@@ -89,8 +93,10 @@ class CardContents extends React.Component<CardProps, *> {
       acceptingSelection,
       readOnly,
       commentable,
+      deletable,
       title,
       match,
+      intl,
     } = this.props
     const { editorState } = this.state
 
@@ -113,70 +119,90 @@ class CardContents extends React.Component<CardProps, *> {
         editable={editable}
         theseCommentThreadsOpen={theseCommentThreadsOpen}
       >
-        {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
+        <Lock type="Card" param={id}>
+          {({ onBeginEditing, onFinishEditing }) => (
+            <React.Fragment>
+              {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
 
-        {editable && (
-          <FormattingToolbar
-            actions={{ code: false, header: false, blockquote: false }}
-            editorState={editorState}
-            getEdgenote={getEdgenote}
-            onChange={onChange}
-          />
-        )}
-        {title}
-        <FocusContainer
-          active={!!(theseCommentThreadsOpen && acceptingSelection)}
-          priority={100}
-        >
-          <Editor
-            readOnly={readOnly}
-            customStyleMap={styleMap}
-            editorState={editorState}
-            handleKeyCommand={handleKeyCommand}
-            onChange={onChange}
-          />
-        </FocusContainer>
+              {editable && (
+                <FormattingToolbar
+                  actions={{
+                    code: false,
+                    header: false,
+                    blockquote: false,
+                    addEdgenoteEntity: !nonNarrative,
+                    addCitationEntity: !nonNarrative,
+                  }}
+                  editorState={editorState}
+                  getEdgenote={getEdgenote}
+                  onChange={onChange}
+                />
+              )}
+              {title}
+              <FocusContainer
+                active={!!(theseCommentThreadsOpen && acceptingSelection)}
+                priority={100}
+              >
+                <Editor
+                  placeholder={intl.formatMessage({
+                    id: 'cards.edit.writeSomething',
+                  })}
+                  readOnly={readOnly}
+                  customStyleMap={styleMap}
+                  editorState={editorState}
+                  handleKeyCommand={handleKeyCommand}
+                  onFocus={onBeginEditing}
+                  onChange={onChange}
+                  onBlur={onFinishEditing}
+                />
+              </FocusContainer>
 
-        {commentable &&
-          solid && <CommentThreadsTag cardId={id} match={match} />}
+              {commentable &&
+                solid && <CommentThreadsTag cardId={id} match={match} />}
 
-        <Route
-          {...commentThreadsOpen(id)}
-          render={routeProps => (
-            <CommentThreadsCard
-              {...routeProps}
-              cardId={id}
-              addCommentThread={addCommentThread}
-            />
+              <Route
+                {...commentThreadsOpen(id)}
+                render={routeProps => (
+                  <CommentThreadsCard
+                    {...routeProps}
+                    cardId={id}
+                    addCommentThread={addCommentThread}
+                  />
+                )}
+              />
+
+              {citationOpenWithinCard && (
+                <CitationTooltip
+                  cardId={id}
+                  cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
+                  openedCitation={openedCitation}
+                  editable={editable}
+                />
+              )}
+
+              {editable &&
+                deletable && (
+                <DeleteCardButton id={id} onClick={handleDeleteCard} />
+              )}
+
+              {solid && !editable && <Statistics uri={`cards/${id}`} />}
+
+              <OnScreenTracker
+                targetKey={`cards/${id}`}
+                targetParameters={{
+                  name: 'read_card',
+                  card_id: parseInt(id, 10),
+                }}
+              />
+            </React.Fragment>
           )}
-        />
-
-        {citationOpenWithinCard && (
-          <CitationTooltip
-            cardId={id}
-            cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
-            openedCitation={openedCitation}
-            editable={editable}
-          />
-        )}
-
-        {editable && <DeleteCardButton id={id} onClick={handleDeleteCard} />}
-
-        {solid && !editable && <Statistics uri={`cards/${id}`} />}
-
-        <OnScreenTracker
-          targetKey={`cards/${id}`}
-          targetParameters={{
-            name: 'read_card',
-            card_id: id,
-          }}
-        />
+        </Lock>
       </Card>
     )
   }
 }
 
-export default CardContents
+export default injectIntl(CardContents)
 
 function citationInsideThisCard (card: ?Element, citation: ?Element): boolean {
   if (!card || !citation) return false

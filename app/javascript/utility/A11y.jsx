@@ -40,15 +40,17 @@ export const LabelForScreenReaders = styled.div`
     ${p =>
     p.visibleBelowMaxWidth ||
       css`
-        background-color: black;
-        color: white;
-        font-family: ${p => p.theme.sansFont};
-        font-size: 100%;
-        font-weight: 500;
-        padding: 0 0.25em;
+        html:not(.pt-focus-disabled) & {
+          background-color: black;
+          color: white;
+          font-family: ${p => p.theme.sansFont};
+          font-size: 100%;
+          font-weight: 500;
+          padding: 0 0.25em;
 
-        a {
-          color: white !important;
+          a {
+            color: white !important;
+          }
         }
       `};
   }

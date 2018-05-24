@@ -2,17 +2,22 @@
 
 # @see Edgenote
 class EdgenotesController < ApplicationController
+  include BroadcastEdits
+  include VerifyLock
+
   before_action :set_edgenote, only: %i[show update destroy]
   before_action :set_case, only: [:create]
   before_action :set_cors_headers, only: [:show]
+  before_action -> { verify_lock_on @edgenote }, only: %i[update destroy]
+
+  broadcast_edits to: :@edgenote
 
   decorates_assigned :edgenote
 
   # @route [POST] `/cases/case-slug/edgenotes`
   def create
-    authorize @case, :update?
-
     @edgenote = @case.edgenotes.build
+    authorize @edgenote
 
     if @edgenote.save
       render partial: 'edgenote', locals: { edgenote: edgenote }
@@ -23,7 +28,7 @@ class EdgenotesController < ApplicationController
 
   # @route [PATCH/PUT] `/edgenotes/slug`
   def update
-    authorize @edgenote.case, :update?
+    authorize @edgenote
 
     if @edgenote.update(edgenote_params)
       render partial: 'edgenote', locals: { edgenote: edgenote }
@@ -34,7 +39,7 @@ class EdgenotesController < ApplicationController
 
   # @route [DELETE] `/edgenotes/slug`
   def destroy
-    authorize @edgenote.case, :update?
+    authorize @edgenote
 
     @edgenote.destroy
   end

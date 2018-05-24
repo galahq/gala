@@ -26,7 +26,7 @@ export type AddCardAction = {
   pageId: string,
   data: Card,
 }
-function addCard (pageId: string, data: Card): AddCardAction {
+export function addCard (pageId: string, data: Card): AddCardAction {
   return { type: 'ADD_CARD', pageId, data }
 }
 
@@ -65,7 +65,7 @@ export type RemoveCardAction = {
   type: 'REMOVE_CARD',
   id: string,
 }
-function removeCard (id: string): RemoveCardAction {
+export function removeCard (id: string): RemoveCardAction {
   return { type: 'REMOVE_CARD', id }
 }
 

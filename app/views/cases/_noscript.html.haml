@@ -1,0 +1,16 @@
+%noscript
+  .pt-running-text.pt-dark
+    %h1
+      = succeed ':' do
+        = @case.kicker
+      = @case.title
+
+    %h2= @case.dek
+
+    %p
+      %em= @case.authors.map { |a| a[:name] }.to_sentence
+
+    %p= @case.summary
+    
+    .pt-callout.pt-intent-danger.pt-icon-error
+      Javascript is required to use Gala.

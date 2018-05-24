@@ -15,6 +15,7 @@ import {
   registerToaster,
   toggleEditing,
   subscribeToActiveForumChannel,
+  subscribeToEditsChannel,
   handleNotification,
 } from 'redux/actions'
 
@@ -73,17 +74,20 @@ class Case extends React.Component<{
   toggleEditing: typeof toggleEditing,
   registerToaster: typeof registerToaster,
   subscribeToActiveForumChannel: typeof subscribeToActiveForumChannel,
+  subscribeToEditsChannel: typeof subscribeToEditsChannel,
   handleNotification: typeof handleNotification,
   editable: ?boolean,
 }> {
   _subscribe = () => {
+    if (typeof App === 'undefined' || !('WebSocket' in window)) return
+
     const {
       handleNotification,
       subscribeToActiveForumChannel,
+      subscribeToEditsChannel,
       caseSlug,
     } = this.props
 
-    if (typeof App === 'undefined') return
     App.readerNotification = App.cable.subscriptions.create(
       'ReaderNotificationsChannel',
       {
@@ -93,6 +97,7 @@ class Case extends React.Component<{
       }
     )
 
+    subscribeToEditsChannel()
     subscribeToActiveForumChannel(caseSlug)
   }
 
@@ -163,5 +168,6 @@ export default connect(mapStateToProps, {
   toggleEditing,
   registerToaster,
   subscribeToActiveForumChannel,
+  subscribeToEditsChannel,
   handleNotification,
 })(Case)

@@ -2,15 +2,15 @@
  * @flow
  */
 
-import { setUnsaved } from 'redux/actions'
+import { setUnsaved, removeElement } from 'redux/actions'
 
 import { Orchard } from 'shared/orchard'
 
-import type { Dispatch } from 'redux/actions'
+import type { Dispatch, ThunkAction, GetState } from 'redux/actions'
 import type { Podcast } from 'redux/state'
 
 export type AddPodcastAction = { type: 'ADD_PODCAST', data: Podcast }
-function addPodcast (data: Podcast): AddPodcastAction {
+export function addPodcast (data: Podcast): AddPodcastAction {
   return { type: 'ADD_PODCAST', data }
 }
 
@@ -28,11 +28,20 @@ export type UpdatePodcastAction = {
   type: 'UPDATE_PODCAST',
   id: string,
   data: $Shape<Podcast>,
+  needsSaving: boolean,
 }
 export function updatePodcast (
   id: string,
-  data: $Shape<Podcast>
+  data: $Shape<Podcast>,
+  needsSaving?: boolean = true
 ): UpdatePodcastAction {
-  setUnsaved()
-  return { type: 'UPDATE_PODCAST', id, data }
+  if (needsSaving) setUnsaved()
+  return { type: 'UPDATE_PODCAST', id, data, needsSaving }
+}
+
+export function removePodcast (id: string): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const { position } = getState().podcastsById[id].caseElement
+    dispatch(removeElement(position - 1))
+  }
 }

@@ -17,10 +17,12 @@ class Acknowledgements extends React.Component<
 > {
   state = { isOpen: false }
 
-  handleClick = () =>
+  handleClick = (e: SyntheticMouseEvent<*>) => {
+    e.stopPropagation()
     this.setState(({ isOpen }: $PropertyType<Acknowledgements, 'state'>) => ({
       isOpen: !isOpen,
     }))
+  }
 
   render () {
     const { contents, intl } = this.props

@@ -10,14 +10,13 @@ class CommentThreadsController < ApplicationController
   # @route [GET] `/cases/case-slug/comment_threads`
   def index
     @forum = current_reader.active_community.forums.find_by(case: @case)
-    @comment_threads = if @forum.nil?
-                         CommentThread.none
-                       else
-                         @forum.comment_threads
+    @comment_threads = CommentThread.none if @forum.nil?
+    @comment_threads ||= @forum.comment_threads
                                .visible_to_reader(current_reader)
                                .order(:block_index, :start)
                                .includes(:card, comments: [:reader])
-                       end
+    render json: @comment_threads, serializer: CommentThreads::IndexSerializer,
+           case: @case, forum: @forum
   end
 
   # @route [POST] `/cards/1/comment_threads`
@@ -34,7 +33,7 @@ class CommentThreadsController < ApplicationController
     @comment_thread.locale = I18n.locale
 
     if @comment_thread.save
-      render partial: @comment_thread
+      render json: @comment_thread
     else
       render json: @comment_thread.errors, status: :unprocessable_entity
     end

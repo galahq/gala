@@ -11,6 +11,7 @@
 # @attr raw_content [Translated<RawDraftContentState>] the card’s content, to be
 #   used with Draft.js in React
 class Card < ApplicationRecord
+  include Lockable
   include Mobility
   include Trackable
 
@@ -50,6 +51,11 @@ class Card < ApplicationRecord
   # @see Trackable#event_properties
   def event_properties
     { card_id: id }
+  end
+
+  # Could this card’s element have other cards too?
+  def siblings?
+    element_type.constantize.reflect_on_association(:cards)
   end
 
   private

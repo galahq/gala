@@ -2,19 +2,25 @@
 
 # @see Podcast
 class PodcastsController < ApplicationController
+  include BroadcastEdits
+  include VerifyLock
+
   before_action :authenticate_reader!
   before_action :set_podcast, only: %i[show update destroy]
   before_action :set_case, only: [:create]
+  before_action -> { verify_lock_on @podcast }, only: %i[update destroy]
+
+  broadcast_edits to: :@podcast
 
   # @route [POST] `/cases/case-slug/podcasts`
   def create
-    authorize @case, :update?
-
     @podcast = Podcast.new podcast_params
     @podcast.build_case_element case: @case
 
+    authorize @podcast
+
     if @podcast.save
-      render @podcast
+      render @podcast.decorate
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -22,10 +28,10 @@ class PodcastsController < ApplicationController
 
   # @route [PATCH/PUT] `/podcasts/1`
   def update
-    authorize @podcast.case, :update?
+    authorize @podcast
 
     if @podcast.update(podcast_params)
-      render @podcast
+      render @podcast.decorate
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -33,7 +39,7 @@ class PodcastsController < ApplicationController
 
   # @route [DELETE] `/podcasts/1`
   def destroy
-    authorize @podcast.case, :update?
+    authorize @podcast
 
     @podcast.destroy
   end
@@ -51,8 +57,8 @@ class PodcastsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def podcast_params
-    params[:podcast].permit(:title, :audio_url, :description,
-                            :case_id, :artwork_url, :photo_credit,
+    params[:podcast].permit(:title, :audio, :description, :artwork,
+                            :photo_credit,
                             credits_list: [hosts: [], guests: %i[name title]])
   end
 end

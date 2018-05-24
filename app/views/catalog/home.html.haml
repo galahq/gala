@@ -1,2 +1,24 @@
 #catalog-app
 = javascript_pack_tag "catalog"
+
+%noscript
+  .pt-running-text.pt-dark
+    %h1= t 'catalog.open_access_learning_tools'
+    %h2= t 'catalog.impactful_cases'
+    %p= t 'catalog.find_a_case'
+    %h2= t 'catalog.innovative_teaching'
+    %p= t 'catalog.improve_your_communication'
+    %h2= t 'catalog.inclusive_community'
+    %p= t 'catalog.join_the_community'
+
+    .pt-callout.pt-intent-danger.pt-icon-error
+      Javascript is required to use Gala.
+
+    %h2= t 'cases.index.all_cases'
+    %ul
+    - @cases.each do |kase|
+      %li
+        = link_to case_path kase do
+          = succeed ':' do
+            = kase.kicker
+          = kase.title

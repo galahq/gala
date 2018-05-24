@@ -2,15 +2,20 @@
 
 # @see Card
 class CardsController < ApplicationController
+  include BroadcastEdits
+  include VerifyLock
+
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_page, only: [:create]
   before_action :set_card, only: %i[update destroy]
+  before_action -> { verify_lock_on @card }, only: %i[update destroy]
+
+  broadcast_edits to: :@card
 
   # @route [POST] `/pages/1/cards`
   def create
-    authorize @page.case, :update?
-
     @card = @page.cards.build(card_params)
+    authorize @card
 
     if @card.save
       render @card
@@ -21,7 +26,7 @@ class CardsController < ApplicationController
 
   # @route [PATCH/PUT] `/cards/1`
   def update
-    authorize @card.case, :update?
+    authorize @card
 
     if @card.update(card_params)
       render @card
@@ -32,7 +37,7 @@ class CardsController < ApplicationController
 
   # @route [DELETE] `/cards/1`
   def destroy
-    authorize @card.case, :update?
+    authorize @card
 
     @card.destroy
     head :no_content

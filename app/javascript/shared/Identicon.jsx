@@ -52,10 +52,12 @@ const Identicon = ({
   reader,
   width = 36,
   presentational,
+  className,
 }: {
   reader: { imageUrl: ?string, hashKey: string, name: string },
   width?: number,
   presentational?: boolean,
+  className?: string,
 }) => (
   <IdenticonDiv
     presentational={presentational}
@@ -63,6 +65,7 @@ const Identicon = ({
     image={reader.imageUrl}
     hashKey={reader.hashKey}
     text={reader.name}
+    className={className}
   />
 )
 export default Identicon

@@ -12,7 +12,6 @@ class CommentBroadcastJob < ActiveJob::Base
   private
 
   def render_comment(comment)
-    ApplicationController.renderer.render partial: 'comments/comment',
-                                          locals: { comment: comment }
+    ActiveModel::Serializer.for(comment).to_json
   end
 end

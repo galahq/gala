@@ -74,7 +74,11 @@ class Statistics extends React.Component<Props> {
 
     const { uniques, views, averageTime } = this.props.statistics
     return (
-      <p className={`o-${inline ? 'tag' : 'bottom-right'} c-statistics`}>
+      <p
+        className={`non-spaced o-${
+          inline ? 'tag' : 'bottom-right'
+        } c-statistics`}
+      >
         <Icon filename="ahoy-uniques" className="c-statistics__icon" />
         <span className="c-statistics__uniques">{uniques}</span>
 

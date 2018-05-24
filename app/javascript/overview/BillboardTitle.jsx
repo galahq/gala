@@ -14,7 +14,7 @@ import { updateCase } from 'redux/actions'
 
 import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
-import FileUploadWidget from 'utility/FileUploadWidget'
+import { PositionedFileUploadWidget } from 'utility/FileUploadWidget'
 
 import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
@@ -29,6 +29,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     acknowledgements,
     coverUrl,
     library,
+    links,
   } = caseData
 
   return {
@@ -41,6 +42,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     translators,
     acknowledgements,
     library,
+    links,
     editing: edit.inProgress,
   }
 }
@@ -53,8 +55,11 @@ type Props = {
   photoCredit: string,
   coverUrl: string,
   updateCase: typeof updateCase,
-  minimal: boolean,
+  minimal?: boolean,
   library: Library,
+  links: $PropertyType<CaseDataState, 'links'>,
+  onBeginEditing?: () => void,
+  onFinishEditing?: () => void,
 } & Byline
 
 export const UnconnectedBillboardTitle = ({
@@ -70,29 +75,32 @@ export const UnconnectedBillboardTitle = ({
   updateCase,
   minimal,
   library,
+  links,
+  onBeginEditing,
+  onFinishEditing,
 }: Props) => {
   return (
     <CoverImageContainer src={coverUrl}>
       {!minimal &&
         editing && (
-          <ActiveStorageProvider
-            endpoint={{
-              path: `/cases/${slug}`,
-              model: 'Case',
-              attribute: 'cover_image',
-              method: 'PUT',
-            }}
-            render={renderProps => (
-              <CoverImageUploadWidget
-                message={{ id: 'cases.edit.changeCoverImage' }}
-                {...renderProps}
-              />
-            )}
-            onSubmit={({ coverUrl }: CaseDataState) =>
-              updateCase({ coverUrl }, false)
-            }
-          />
-        )}
+        <ActiveStorageProvider
+          endpoint={{
+            path: `/cases/${slug}`,
+            model: 'Case',
+            attribute: 'cover_image',
+            method: 'PUT',
+          }}
+          render={renderProps => (
+            <PositionedFileUploadWidget
+              message={{ id: 'cases.edit.changeCoverImage' }}
+              {...renderProps}
+            />
+          )}
+          onSubmit={({ coverUrl }: CaseDataState) =>
+            updateCase({ coverUrl }, false)
+          }
+        />
+      )}
 
       <h1>
         <span className="c-kicker">
@@ -101,6 +109,9 @@ export const UnconnectedBillboardTitle = ({
             disabled={!editing || minimal}
             placeholder="Snappy kicker"
             onChange={value => updateCase({ kicker: value })}
+            onEdit={onBeginEditing}
+            onCancel={onFinishEditing}
+            onConfirm={onFinishEditing}
           />
         </span>
         <EditableText
@@ -109,6 +120,9 @@ export const UnconnectedBillboardTitle = ({
           disabled={!editing || minimal}
           placeholder="What is the central question of the case?"
           onChange={value => updateCase({ title: value })}
+          onEdit={onBeginEditing}
+          onCancel={onFinishEditing}
+          onConfirm={onFinishEditing}
         />
       </h1>
 
@@ -121,6 +135,8 @@ export const UnconnectedBillboardTitle = ({
             acknowledgements,
           }}
           onChange={(value: Byline) => updateCase(value)}
+          onStartEditing={onBeginEditing}
+          onFinishEditing={onFinishEditing}
         />
       )}
 
@@ -131,11 +147,19 @@ export const UnconnectedBillboardTitle = ({
             disabled={!editing}
             placeholder={editing ? 'Photo credit' : ''}
             onChange={value => updateCase({ photoCredit: value })}
+            onEdit={onBeginEditing}
+            onCancel={onFinishEditing}
+            onConfirm={onFinishEditing}
           />
         )}
       </cite>
 
-      {!minimal && <LibraryLogo library={library} />}
+      {!minimal && (
+        <LibraryLogo
+          library={library}
+          href={editing ? links.settings : undefined}
+        />
+      )}
     </CoverImageContainer>
   )
 }
@@ -157,10 +181,4 @@ export const CoverImageContainer = styled.div.attrs({
     css`
       padding-top: 2em;
     `};
-`
-
-const CoverImageUploadWidget = styled(FileUploadWidget)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
 `

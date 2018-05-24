@@ -11,18 +11,19 @@ export type ExtractReturn<F> = _ExtractReturn<*, F>
 
 // Redux state
 export type State = {
-  caseData: CaseDataState,
-  edgenotesBySlug: EdgenotesState,
-  pagesById: PagesState,
-  podcastsById: PodcastsState,
   activitiesById: ActivitiesState,
   cardsById: CardsState,
-  commentThreadsById: CommentThreadsState,
+  caseData: CaseDataState,
   commentsById: CommentsState,
+  commentThreadsById: CommentThreadsState,
   communities: CommunitiesState[],
-  statistics: StatisticsState,
-  quiz: QuizState,
+  edgenotesBySlug: EdgenotesState,
   edit: EditState,
+  locks: LocksState,
+  pagesById: PagesState,
+  podcastsById: PodcastsState,
+  quiz: QuizState,
+  statistics: StatisticsState,
   ui: UIState,
 }
 
@@ -53,10 +54,15 @@ export type EdgenotesState = {
 export type EditState = {
   changed: boolean,
   inProgress: boolean,
+  locksToDelete: string[],
   possible: boolean,
   unsavedChanges: {
     [modelSlashId: string]: boolean,
   },
+}
+
+export type LocksState = {
+  [gid: string]: Lock,
 }
 
 export type PagesState = {
@@ -265,6 +271,19 @@ export type LinkExpansionVisibility = {
   noEmbed?: boolean,
   noDescription?: boolean,
   noImage?: boolean,
+}
+
+export type Lock = {
+  caseSlug: string,
+  createdAt: Date,
+  lockable: { type: string, table: string, param: string },
+  param: string,
+  reader: {
+    hashKey: string,
+    imageUrl: string,
+    name: string,
+    param: string,
+  },
 }
 
 export type Notification = {

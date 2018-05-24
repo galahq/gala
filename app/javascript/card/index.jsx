@@ -45,6 +45,7 @@ type StateProps = {|
   editable: boolean,
   editing: boolean,
   editorState: EditorState,
+  deletable: boolean,
   hoveredCommentThread: ?string,
   openedCitation: Citation,
   readOnly: boolean,
@@ -56,7 +57,7 @@ function mapStateToProps (
   state: State,
   { id, location, nonNarrative }: OwnProps
 ): StateProps {
-  const { solid, commentThreads } = state.cardsById[id]
+  const { solid, commentThreads, pageId } = state.cardsById[id]
   const editorState =
     state.cardsById[id].editorState || EditorState.createEmpty()
   const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
@@ -77,6 +78,7 @@ function mapStateToProps (
       !nonNarrative &&
       state.caseData.commentable &&
       !!(state.caseData.reader && state.caseData.reader.enrollment),
+    deletable: !!pageId,
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,
     editorState,
