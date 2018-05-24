@@ -3,19 +3,21 @@
 # @see Page
 class PagesController < ApplicationController
   include BroadcastEdits
+  include VerifyLock
 
   before_action :authenticate_reader!, only: %i[create update destroy]
   before_action :set_case, only: [:create]
   before_action :set_page, only: %i[update destroy]
+  before_action -> { verify_lock_on @page }, only: %i[update destroy]
 
   broadcast_edits to: :@page
 
   # @route [POST] `/cases/case-slug/pages`
   def create
-    authorize @case, :update?
-
     @page = Page.new page_params
     @page.build_case_element case: @case
+
+    authorize @page
 
     if @page.save
       render @page
@@ -26,7 +28,7 @@ class PagesController < ApplicationController
 
   # @route [PATCH/PUT] `/pages/1`
   def update
-    authorize @page.case, :update?
+    authorize @page
 
     if @page.update(page_params)
       render @page
@@ -37,7 +39,7 @@ class PagesController < ApplicationController
 
   # @route [DELETE] `/pages/1`
   def destroy
-    authorize @page.case, :update?
+    authorize @page
 
     @page.destroy
   end

@@ -3,9 +3,11 @@
 # @see Case
 class CasesController < ApplicationController
   include BroadcastEdits
+  include VerifyLock
 
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
+  before_action -> { verify_lock_on @case }, only: %i[update destroy]
 
   broadcast_edits to: :@case
 

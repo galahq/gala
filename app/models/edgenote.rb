@@ -18,11 +18,14 @@
 # @attr alt_text [String] @todo translate this
 # @attr website_url [Translated<String>]
 class Edgenote < ApplicationRecord
+  include Lockable
   include Mobility
   include Trackable
+  extend FriendlyId
 
   attribute :format, :string, default: 'aside'
   attribute :style, :integer, default: 1 # :v2
+  friendly_id :slug
   translates :caption, :content, :instructions, :website_url,
              :embed_code, :photo_credit, :pdf_url, :pull_quote, :attribution,
              :call_to_action, fallbacks: true
@@ -41,6 +44,10 @@ class Edgenote < ApplicationRecord
                                          report video] }
 
   before_create :ensure_slug_set
+
+  def self.policy_class
+    ElementPolicy
+  end
 
   # The name of the corresponding {Ahoy::Event}s
   # @see Trackable#event_name

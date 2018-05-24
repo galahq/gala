@@ -19,6 +19,7 @@ import FormattingToolbar from 'draft/FormattingToolbar'
 import Statistics from 'utility/Statistics'
 import CitationTooltip from './CitationTooltip'
 import CommentThreadsTag from 'comments/CommentThreadsTag'
+import Lock from 'utility/Lock'
 import { OnScreenTracker } from 'utility/Tracker'
 import { FocusContainer } from 'utility/A11y'
 import { ScrollIntoView } from 'utility/ScrollView'
@@ -118,74 +119,84 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
         editable={editable}
         theseCommentThreadsOpen={theseCommentThreadsOpen}
       >
-        {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
+        <Lock type="Card" param={id}>
+          {({ onBeginEditing, onFinishEditing }) => (
+            <React.Fragment>
+              {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
 
-        {editable && (
-          <FormattingToolbar
-            actions={{
-              code: false,
-              header: false,
-              blockquote: false,
-              addEdgenoteEntity: !nonNarrative,
-              addCitationEntity: !nonNarrative,
-            }}
-            editorState={editorState}
-            getEdgenote={getEdgenote}
-            onChange={onChange}
-          />
-        )}
-        {title}
-        <FocusContainer
-          active={!!(theseCommentThreadsOpen && acceptingSelection)}
-          priority={100}
-        >
-          <Editor
-            placeholder={intl.formatMessage({
-              id: 'cards.edit.writeSomething',
-            })}
-            readOnly={readOnly}
-            customStyleMap={styleMap}
-            editorState={editorState}
-            handleKeyCommand={handleKeyCommand}
-            onChange={onChange}
-          />
-        </FocusContainer>
+              {editable && (
+                <FormattingToolbar
+                  actions={{
+                    code: false,
+                    header: false,
+                    blockquote: false,
+                    addEdgenoteEntity: !nonNarrative,
+                    addCitationEntity: !nonNarrative,
+                  }}
+                  editorState={editorState}
+                  getEdgenote={getEdgenote}
+                  onChange={onChange}
+                />
+              )}
+              {title}
+              <FocusContainer
+                active={!!(theseCommentThreadsOpen && acceptingSelection)}
+                priority={100}
+              >
+                <Editor
+                  placeholder={intl.formatMessage({
+                    id: 'cards.edit.writeSomething',
+                  })}
+                  readOnly={readOnly}
+                  customStyleMap={styleMap}
+                  editorState={editorState}
+                  handleKeyCommand={handleKeyCommand}
+                  onFocus={onBeginEditing}
+                  onChange={onChange}
+                  onBlur={onFinishEditing}
+                />
+              </FocusContainer>
 
-        {commentable &&
-          solid && <CommentThreadsTag cardId={id} match={match} />}
+              {commentable &&
+                solid && <CommentThreadsTag cardId={id} match={match} />}
 
-        <Route
-          {...commentThreadsOpen(id)}
-          render={routeProps => (
-            <CommentThreadsCard
-              {...routeProps}
-              cardId={id}
-              addCommentThread={addCommentThread}
-            />
+              <Route
+                {...commentThreadsOpen(id)}
+                render={routeProps => (
+                  <CommentThreadsCard
+                    {...routeProps}
+                    cardId={id}
+                    addCommentThread={addCommentThread}
+                  />
+                )}
+              />
+
+              {citationOpenWithinCard && (
+                <CitationTooltip
+                  cardId={id}
+                  cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
+                  openedCitation={openedCitation}
+                  editable={editable}
+                />
+              )}
+
+              {editable &&
+                deletable && (
+                <DeleteCardButton id={id} onClick={handleDeleteCard} />
+              )}
+
+              {solid && !editable && <Statistics uri={`cards/${id}`} />}
+
+              <OnScreenTracker
+                targetKey={`cards/${id}`}
+                targetParameters={{
+                  name: 'read_card',
+                  card_id: parseInt(id, 10),
+                }}
+              />
+            </React.Fragment>
           )}
-        />
-
-        {citationOpenWithinCard && (
-          <CitationTooltip
-            cardId={id}
-            cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
-            openedCitation={openedCitation}
-            editable={editable}
-          />
-        )}
-
-        {editable &&
-          deletable && <DeleteCardButton id={id} onClick={handleDeleteCard} />}
-
-        {solid && !editable && <Statistics uri={`cards/${id}`} />}
-
-        <OnScreenTracker
-          targetKey={`cards/${id}`}
-          targetParameters={{
-            name: 'read_card',
-            card_id: parseInt(id, 10),
-          }}
-        />
+        </Lock>
       </Card>
     )
   }

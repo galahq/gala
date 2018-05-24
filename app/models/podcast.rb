@@ -7,6 +7,7 @@
 # @attr photo_credit [String] attribution for the {artwork_url}’s rights holder
 class Podcast < ApplicationRecord
   include Element
+  include Lockable
   include Mobility
   include Trackable
 

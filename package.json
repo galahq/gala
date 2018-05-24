@@ -34,6 +34,7 @@
     "immutability-helper": "^2.4.0",
     "intl": "^1.2.5",
     "loader-utils": "1.1.0",
+    "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "markdown-draft-js": "^0.6.0",
     "path-to-regexp": "^2.1.0",
