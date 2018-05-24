@@ -21,9 +21,11 @@ class Edgenote < ApplicationRecord
   include Lockable
   include Mobility
   include Trackable
+  extend FriendlyId
 
   attribute :format, :string, default: 'aside'
   attribute :style, :integer, default: 1 # :v2
+  friendly_id :slug
   translates :caption, :content, :instructions, :website_url,
              :embed_code, :photo_credit, :pdf_url, :pull_quote, :attribution,
              :call_to_action, fallbacks: true

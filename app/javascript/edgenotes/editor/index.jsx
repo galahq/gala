@@ -31,6 +31,8 @@ type Props = {
   slug: string,
   updateLinkExpansionVisibility: typeof updateLinkExpansionVisibility,
   onChange: ($Shape<Edgenote>) => Promise<any>,
+  onClose?: () => void,
+  onOpen?: () => void,
   ...VisibilityChangeProps,
 }
 
@@ -87,8 +89,11 @@ class EdgenoteEditor extends React.Component<Props, State> {
     )
   }
 
-  handleOpen = () => this.setState({ open: true })
-  handleClose = () => this._close().then(this._reset())
+  handleOpen = () => this.setState({ open: true }, this.props.onOpen)
+  handleClose = () =>
+    this._close()
+      .then(this._reset())
+      .then(this.props.onClose)
 
   handleChangeContents = (attributes: $Shape<Edgenote>) =>
     this.setState(({ contents }: State) => ({
@@ -132,6 +137,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
         )
       )
       .then(this._reset)
+      .then(this.props.onClose)
   }
 
   _close = () => new Promise(resolve => this.setState({ open: false }, resolve))

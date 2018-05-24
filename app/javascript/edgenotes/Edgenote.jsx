@@ -155,13 +155,15 @@ class BaseEdgenoteFigure extends React.Component<Props> {
         {...conditionalHoverCallbacks}
       >
         <Lock type="Edgenote" param={slug}>
-          {() => (
+          {({ onBeginEditing, onFinishEditing }) => (
             <React.Fragment>
               {editing && (
                 <EdgenoteEditor
                   contents={contents}
                   slug={slug}
                   onChange={onChange}
+                  onClose={onFinishEditing}
+                  onOpen={onBeginEditing}
                 />
               )}
 
