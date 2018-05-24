@@ -50,7 +50,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
     changesToAttachments: { audioUrl: undefined, imageUrl: undefined },
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (this.props.slug !== nextProps.slug) {
       this.setState({ contents: nextProps.contents })
     }

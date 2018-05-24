@@ -57,7 +57,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
     return n.join(' ')
   }
 
-  componentWillReceiveProps (nextProps: CardProps) {
+  UNSAFE_componentWillReceiveProps (nextProps: CardProps) {
     let editorState = nextProps.editorState
     if (this._shouldJiggle(nextProps)) {
       const contentState = editorState.getCurrentContent()
