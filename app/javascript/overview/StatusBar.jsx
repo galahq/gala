@@ -75,7 +75,9 @@ function StatusBar ({
     [
       editing
         ? { message: 'cases.edit.justChangeTheText' }
-        : !published ? { message: 'cases.show.notYetPublished' } : null,
+        : !published
+          ? { message: 'cases.show.notYetPublished' }
+          : null,
     ],
     [
       editing || {

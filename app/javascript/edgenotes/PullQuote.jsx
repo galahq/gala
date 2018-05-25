@@ -88,8 +88,8 @@ const Attribution = ({ name }) =>
     >
       {name &&
         !name.trim().startsWith('—') && (
-          <FormattedMessage id="support.quote.attributionPrefix" />
-        )}
+        <FormattedMessage id="support.quote.attributionPrefix" />
+      )}
       {name}
     </cite>
   ) : null

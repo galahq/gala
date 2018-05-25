@@ -93,39 +93,39 @@ const LeadComment = ({
 
     {page != null &&
       inSituPath != null && (
-        <CommentThreadLocation>
-          <CommentThreadBreadcrumbs>
-            <CommentThreadBreadcrumb>
-              {inSitu ? (
-                <FormattedMessage
-                  id="commentThreads.show.commentsOnPageNumber"
-                  values={{ position: page.position }}
-                />
-              ) : (
-                <FormattedMessage
-                  id="commentThreads.show.commentsOnPage"
-                  values={{ title: page.title }}
-                />
-              )}
-            </CommentThreadBreadcrumb>
-            <CommentThreadBreadcrumb>
+      <CommentThreadLocation>
+        <CommentThreadBreadcrumbs>
+          <CommentThreadBreadcrumb>
+            {inSitu ? (
               <FormattedMessage
-                id="commentThreads.show.cardN"
-                values={{ cardPosition }}
+                id="commentThreads.show.commentsOnPageNumber"
+                values={{ position: page.position }}
               />
-            </CommentThreadBreadcrumb>
-          </CommentThreadBreadcrumbs>
-          <HighlightedText disabled={inSitu}>
-            <Link
-              to={inSituPath}
-              className="CommentThread__metadata__text"
-              style={styles.purpleHighlight}
-            >
-              {originalHighlightText}
-            </Link>
-          </HighlightedText>
-        </CommentThreadLocation>
-      )}
+            ) : (
+              <FormattedMessage
+                id="commentThreads.show.commentsOnPage"
+                values={{ title: page.title }}
+              />
+            )}
+          </CommentThreadBreadcrumb>
+          <CommentThreadBreadcrumb>
+            <FormattedMessage
+              id="commentThreads.show.cardN"
+              values={{ cardPosition }}
+            />
+          </CommentThreadBreadcrumb>
+        </CommentThreadBreadcrumbs>
+        <HighlightedText disabled={inSitu}>
+          <Link
+            to={inSituPath}
+            className="CommentThread__metadata__text"
+            style={styles.purpleHighlight}
+          >
+            {originalHighlightText}
+          </Link>
+        </HighlightedText>
+      </CommentThreadLocation>
+    )}
 
     {leadComment ? (
       <LeadCommentContents>
@@ -135,13 +135,13 @@ const LeadComment = ({
           </SmallGreyText>
           {readerCanDeleteComments &&
             responseCount === 0 && (
-              <DeleteButton
-                aria-label={intl.formatMessage({
-                  id: 'commentThreads.destroy.deleteCommentThread',
-                })}
-                onClick={handleDeleteThread}
-              />
-            )}
+            <DeleteButton
+              aria-label={intl.formatMessage({
+                id: 'commentThreads.destroy.deleteCommentThread',
+              })}
+              onClick={handleDeleteThread}
+            />
+          )}
         </Row>
         <blockquote>
           <StyledComment markdown={leadComment.content} />

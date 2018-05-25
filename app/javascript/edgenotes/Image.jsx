@@ -58,13 +58,13 @@ const Image = ({
       {src && imageComponent}
       {src &&
         photoCredit && (
-          <PhotoCredit>
-            <LabelForScreenReaders>
-              <FormattedMessage id="activerecord.attributes.edgenote.photoCredit" />:
-            </LabelForScreenReaders>
-            {photoCredit}
-          </PhotoCredit>
-        )}
+        <PhotoCredit>
+          <LabelForScreenReaders>
+            <FormattedMessage id="activerecord.attributes.edgenote.photoCredit" />:
+          </LabelForScreenReaders>
+          {photoCredit}
+        </PhotoCredit>
+      )}
     </Container>
   )
 }

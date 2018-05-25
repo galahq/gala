@@ -76,8 +76,7 @@ export class ScrollIntoView extends React.Component<{}> {
   componentDidMount () {
     setTimeout(() => {
       const rect = this.ref && this.ref.getBoundingClientRect()
-      const windowHeight =
-        document.documentElement?.clientHeight
+      const windowHeight = document.documentElement?.clientHeight
 
       if (
         rect &&

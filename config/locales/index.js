@@ -21,7 +21,7 @@ const flattenObj = obj => {
   return fromPairs(go(camelize(obj)))
 }
 
-export default async function (locale) {
+export default (async function (locale) {
   const messages = await import(`./${locale}.yml`)
   return flattenObj(messages[locale])
-}
+})
