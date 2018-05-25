@@ -106,7 +106,7 @@ class MapViewController extends React.Component<Props, State> {
             <FormattedMessage {...title} />
           </PositionedSectionTitle>
           {editing && (
-            <React.Fragment>
+            <>
               <PositionedPin />
               <PositionedButtons>
                 <PaddedButton
@@ -136,7 +136,7 @@ class MapViewController extends React.Component<Props, State> {
                   onClick={this.handleZoomIn}
                 />
               </PositionedButtons>
-            </React.Fragment>
+            </>
           )}
         </Container>
       </div>

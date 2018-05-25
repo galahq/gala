@@ -235,12 +235,12 @@ const BreakingLink = Link.extend`
 const Website = ({ edgenote }) => (
   <Td>
     {edgenote.websiteUrl ? (
-      <React.Fragment>
+      <>
         <Icon iconName="link" />
         <BreakingLink href={edgenote.websiteUrl}>
           {edgenote.callToAction || edgenote.websiteUrl}
         </BreakingLink>
-      </React.Fragment>
+      </>
     ) : (
       '—'
     )}

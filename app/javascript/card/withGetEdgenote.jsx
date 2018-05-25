@@ -30,7 +30,7 @@ function withGetEdgenote<Props: {}> (
 
     render () {
       return (
-        <React.Fragment>
+        <>
           <Component {...this.props} getEdgenote={this.getEdgenote} />
 
           {this.state.open && (
@@ -39,7 +39,7 @@ function withGetEdgenote<Props: {}> (
               onCancel={this.handleCancel}
             />
           )}
-        </React.Fragment>
+        </>
       )
     }
 

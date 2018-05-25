@@ -40,7 +40,7 @@ const RecentCommentThreads = ({
       <CommunityChooser />
     </Shadow>
     <ScrollView maxHeightOffset="215px">
-      <React.Fragment>
+      <>
         <NewUnattachedCommentButton />
         {mostRecentCommentThreads == null ? (
           <Loading />
@@ -51,7 +51,7 @@ const RecentCommentThreads = ({
         ) : (
           <NoComments activeCommunity={activeCommunity} />
         )}
-      </React.Fragment>
+      </>
     </ScrollView>
   </Container>
 )

@@ -66,8 +66,7 @@ function mapStateToProps (
   const theseCommentThreadsOpen = !!matchPath(pathname, commentThreadsOpen(id))
   const anyCommentThreadsOpen = !!matchPath(pathname, commentThreadsOpen())
   const anyCommentsOpen = matchPath(pathname, commentsOpen())
-  const selectedCommentThread =
-    anyCommentsOpen && anyCommentsOpen.params.threadId
+  const selectedCommentThread = anyCommentsOpen?.params.threadId
 
   return {
     acceptingSelection,
@@ -77,7 +76,7 @@ function mapStateToProps (
       commentThreads != null &&
       !nonNarrative &&
       state.caseData.commentable &&
-      !!(state.caseData.reader && state.caseData.reader.enrollment),
+      !!state.caseData.reader?.enrollment,
     deletable: !!pageId,
     editable: state.edit.inProgress,
     editing: state.edit.inProgress && editorState.getSelection().hasFocus,

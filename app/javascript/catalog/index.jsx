@@ -127,7 +127,7 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
 
   _readerIsEditor = () => {
     const { reader } = this.state
-    return !!reader && !!reader.roles && reader.roles.editor
+    return !!reader?.roles?.editor
   }
 }
 

@@ -24,9 +24,10 @@ const PurpleTOCFooterButton = styled(Link)`
   }
 `
 
-const PostTestLink = () =>
+const PostTestLink = () => (
   <PurpleTOCFooterButton to="/quiz">
     Check your understanding
   </PurpleTOCFooterButton>
+)
 
 export default PostTestLink

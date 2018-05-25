@@ -11,17 +11,23 @@ import { acceptKeyboardClick } from 'shared/keyboard'
 
 import { openCitation } from 'redux/actions'
 
+import type { Dispatch } from 'redux/actions'
 import type { State } from 'redux/state'
 
-function mapStateToProps (state: State, ownProps) {
+type OwnProps = {
+  children: Array<React.Element<*>>,
+  entityKey: string,
+}
+
+function mapStateToProps (state: State, ownProps: OwnProps) {
   const citation = state.ui.openedCitation
   return {
     editable: state.edit.inProgress,
-    isOpen: citation && citation.key === ownProps.entityKey,
+    isOpen: citation?.key === ownProps.entityKey,
   }
 }
 
-function mapDispatchToProps (dispatch, ownProps) {
+function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
   return {
     open: labelRef => dispatch(openCitation(ownProps.entityKey, labelRef)),
     close: () => dispatch(openCitation(null)),

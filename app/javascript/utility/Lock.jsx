@@ -26,7 +26,7 @@ function mapStateToProps (
   const lock = locks[`${type}/${param}`]
   return {
     lock,
-    locked: !!reader && !!lock && lock.reader.param !== `${reader.id}`,
+    locked: lock?.reader.param !== `${reader?.id || ''}`,
     visible: edit.inProgress,
   }
 }
@@ -65,38 +65,38 @@ const Lock = ({
   onFinishEditing,
   visible,
 }: Props) => (
-  <React.Fragment>
+  <>
     {children({ locked, onBeginEditing, onFinishEditing })}
     {visible &&
       locked &&
       lock && (
-      <React.Fragment>
-        <LockOverlay />
-        <LockDetails>
-          <div className="pt-callout pt-intent-danger pt-icon-lock">
-            <h5 className="pt-callout-title">
-              <FormattedMessage id="locks.lock.thisSectionIsLocked" />
-            </h5>
-            <p>
-              <FormattedMessage
-                id="locks.lock.details"
-                values={{
-                  name: lock.reader.name,
-                  someTimeAgo: <FormattedRelative value={lock.createdAt} />,
-                }}
-              />
-            </p>
-            <button
-              className="pt-button pt-intent-danger"
-              onClick={onEditAnyway}
-            >
-              <FormattedMessage id="locks.destroy.editAnyway" />
-            </button>
-          </div>
-        </LockDetails>
-      </React.Fragment>
+        <>
+          <LockOverlay />
+          <LockDetails>
+            <div className="pt-callout pt-intent-danger pt-icon-lock">
+              <h5 className="pt-callout-title">
+                <FormattedMessage id="locks.lock.thisSectionIsLocked" />
+              </h5>
+              <p>
+                <FormattedMessage
+                  id="locks.lock.details"
+                  values={{
+                    name: lock.reader.name,
+                    someTimeAgo: <FormattedRelative value={lock.createdAt} />,
+                  }}
+                />
+              </p>
+              <button
+                className="pt-button pt-intent-danger"
+                onClick={onEditAnyway}
+              >
+                <FormattedMessage id="locks.destroy.editAnyway" />
+              </button>
+            </div>
+          </LockDetails>
+        </>
     )}
-  </React.Fragment>
+  </>
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lock)

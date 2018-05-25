@@ -106,7 +106,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
       <div className="PodcastPlayer pt-dark">
         <Lock type="Podcast" param={id}>
           {({ onBeginEditing, onFinishEditing }) => (
-            <React.Fragment>
+            <>
               <div
                 className="artwork"
                 style={{
@@ -211,7 +211,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                   podcast_id: id,
                 }}
               />
-            </React.Fragment>
+            </>
           )}
         </Lock>
       </div>
