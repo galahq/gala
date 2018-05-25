@@ -12,3 +12,6 @@ class Ahoy::Store < Ahoy::DatabaseStore
     Visit
   end
 end
+
+Ahoy.mask_ips = true
+Ahoy.cookies = false
