@@ -38,7 +38,7 @@ const Conversation = ({ commentable, kicker, intl, reader }) =>
           <Route
             path="/conversation/:threadId"
             render={({ history, location, match }) => (
-              <React.Fragment>
+              <>
                 <SelectedCommentThread
                   heightOffset={108}
                   history={history}
@@ -46,7 +46,7 @@ const Conversation = ({ commentable, kicker, intl, reader }) =>
                   match={match}
                 />
                 <UnselectCommentLink aria-hidden replace to={'/conversation'} />
-              </React.Fragment>
+              </>
             )}
           />
           <Route component={NoSelectedCommentThread} />

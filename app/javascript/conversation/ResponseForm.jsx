@@ -78,7 +78,7 @@ class ResponseForm extends React.Component<
   handleBlur = () => this.props.onSaveChanges(this.state.editorState)
 
   _updateHeight = () => {
-    const height = this.container && this.container.offsetHeight
+    const height = this.container?.offsetHeight
     height && this.props.onResize(height)
   }
 }

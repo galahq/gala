@@ -11,7 +11,7 @@ import Icon from './Icon'
 
 import type { State, Statistics as StatisticsType } from 'redux/state'
 
-type OwnProps = {| uri: string, inline: boolean |}
+type OwnProps = {| uri: string, inline?: boolean |}
 
 type StateProps =
   | {| visible: false, statistics: { loaded: false } |}
@@ -52,7 +52,7 @@ class Statistics extends React.Component<Props> {
     this._maybeFetchStatistics(props)
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this._maybeFetchStatistics(nextProps)
   }
 

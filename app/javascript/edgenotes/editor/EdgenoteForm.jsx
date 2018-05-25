@@ -39,7 +39,7 @@ const EdgenoteForm = ({
   const disabled = shouldDisable(contents, expansion)
   const commonProps = { contents, disabled, intl, onChange, onChangeAttachment }
   return (
-    <React.Fragment>
+    <>
       <label htmlFor="websiteUrl">
         <Heading id="pasteALink" messageId="edgenotes.edit.pasteALink" />
       </label>
@@ -132,7 +132,7 @@ const EdgenoteForm = ({
         render={props => <Input {...props} />}
         {...commonProps}
       />
-    </React.Fragment>
+    </>
   )
 }
 export default EdgenoteForm

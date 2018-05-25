@@ -57,7 +57,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
     return n.join(' ')
   }
 
-  componentWillReceiveProps (nextProps: CardProps) {
+  UNSAFE_componentWillReceiveProps (nextProps: CardProps) {
     let editorState = nextProps.editorState
     if (this._shouldJiggle(nextProps)) {
       const contentState = editorState.getCurrentContent()
@@ -121,7 +121,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
       >
         <Lock type="Card" param={id}>
           {({ onBeginEditing, onFinishEditing }) => (
-            <React.Fragment>
+            <>
               {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
 
               {editable && (
@@ -194,7 +194,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
                   card_id: parseInt(id, 10),
                 }}
               />
-            </React.Fragment>
+            </>
           )}
         </Lock>
       </Card>

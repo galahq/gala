@@ -27,7 +27,7 @@ const hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet = (
   const pollForRender = setInterval(() => {
     if (internalReactRootContainer.isScheduled) return
 
-    const child = internalReactRootContainer.current.child
+    const child = internalReactRootContainer._internalRoot.current.child
     if (child.type !== Toaster) return
 
     // And when we finally find a toaster, we can stop waiting and dispatch a

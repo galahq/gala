@@ -8,7 +8,7 @@ type Config = { withRef?: boolean }
 type ElementProps = {
   index: number,
   collection?: number | string,
-  disabled?: boolean
+  disabled?: boolean,
 }
 
 type Axis = 'x' | 'y' | 'xy'
@@ -21,24 +21,48 @@ type ContainerProps<Item> = {
   pressThreshold?: number,
   distance?: number,
   shouldCancelStart?: (e: SyntheticEvent<*>) => boolean,
-  onSortStart?: ({node: HTMLElement, index?: number, collection: Item[]}) => void,
+  onSortStart?: ({
+    node: HTMLElement,
+    index?: number,
+    collection: Item[],
+  }) => void,
   onSortMove?: (e: SyntheticMouseEvent<*>) => void,
-  onSortEnd?: ({oldIndex: number, newIndex: number, collection: Item[]}, SyntheticEvent<*>) => void,
+  onSortEnd?: (
+    { oldIndex: number, newIndex: number, collection: Item[] },
+    SyntheticEvent<*>
+  ) => void,
   useDragHandle?: boolean,
   useWindowAsScrollContainer?: boolean,
   hideSortableGhost?: boolean,
   lockToContainerEdges?: boolean,
-  lockOffset?: number | string,  // CSS-style string made up of number and unit
-  getContainer?: React$Element<any> => HTMLElement,
-  getHelperDimensions?: ({node: HTMLElement, index: number, collection: Item[]}) => { width: number, height: number}
+  lockOffset?: number | string, // CSS-style string made up of number and unit
+  getContainer?: (React$Element<any>) => HTMLElement,
+  getHelperDimensions?: ({
+    node: HTMLElement,
+    index: number,
+    collection: Item[],
+  }) => { width: number, height: number },
 }
 
 declare module 'react-sortable-hoc' {
-  declare export function SortableHandle <P> (FunctionComponent<P>, ?Config): ClassComponent<P, {}>
+  declare export function SortableHandle<P>(
+    FunctionComponent<P>,
+    ?Config
+  ): ClassComponent<P, {}>
 
-  declare export function SortableElement <P> (FunctionComponent<P & ElementProps>, ?Config): ClassComponent<P & ElementProps, {}>
+  declare export function SortableElement<P>(
+    FunctionComponent<P & ElementProps>,
+    ?Config
+  ): ClassComponent<P & ElementProps, {}>
 
-  declare export function SortableContainer <P, Item> (FunctionComponent<P & ContainerProps<Item>>, ?Config): ClassComponent<P & ContainerProps<Item>, {}>
+  declare export function SortableContainer<P, Item>(
+    FunctionComponent<P & ContainerProps<Item>>,
+    ?Config
+  ): ClassComponent<P & ContainerProps<Item>, {}>
 
-  declare export function arrayMove <Item> (array: Item[], previousIndex: number, nextIndex: number): Item[]
+  declare export function arrayMove<Item>(
+    array: Item[],
+    previousIndex: number,
+    nextIndex: number
+  ): Item[]
 }

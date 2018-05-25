@@ -50,7 +50,7 @@ type StateProps =
 function mapStateToProps (
   { caseData, commentThreadsById, commentsById, cardsById, pagesById }: State,
   ownProps: OwnProps
-): StateProps {
+) {
   const threadId = ownProps.match.params.threadId || ''
   const commentThread = commentThreadsById[threadId]
   if (commentThread == null) {

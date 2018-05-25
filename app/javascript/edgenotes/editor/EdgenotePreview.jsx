@@ -28,7 +28,7 @@ const EdgenotePreview = ({
   changesToAttachments,
   expansion,
 }: Props) => (
-  <React.Fragment>
+  <>
     <h5>
       <FormattedMessage id="edgenotes.edit.preview" />
     </h5>
@@ -40,14 +40,14 @@ const EdgenotePreview = ({
         expansion={expansion}
       />
     </Card>
-  </React.Fragment>
+  </>
 )
 
 export default EdgenotePreview
 
 function edgenotePreviewProps (contents, changesToAttachments) {
   const havingChanges = R.filter(Boolean)
-  const objectUrls = R.map(attachment => attachment && attachment.objectUrl)
+  const objectUrls = R.map(attachment => attachment?.objectUrl)
   return {
     ...contents,
     ...objectUrls(havingChanges(changesToAttachments)),

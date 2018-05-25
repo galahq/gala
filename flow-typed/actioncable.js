@@ -1,25 +1,25 @@
 declare class ActionCable$Consumer {
-  send(data: mixed): boolean,
-  connect(): boolean,
-  disconnect({ allowReconnect: boolean }): boolean,
-  ensureActiveConnection(): boolean,
+  send(data: mixed): boolean;
+  connect(): boolean;
+  disconnect({ allowReconnect: boolean }): boolean;
+  ensureActiveConnection(): boolean;
 
-  subscriptions: ActionCable$Subscriptions,
+  subscriptions: ActionCable$Subscriptions;
 }
 
 declare class ActionCable$Subscription {
-  perform(action: string, data: Object): boolean,
-  send(data: Object): boolean,
-  unsubscribe(): void,
+  perform(action: string, data: Object): boolean;
+  send(data: Object): boolean;
+  unsubscribe(): void;
 
-  identifier: string,  // Stringified JSON params
+  identifier: string; // Stringified JSON params
 }
 
 declare class ActionCable$Subscriptions {
   create(
     params: string | { channel: string },
-    mixin: {[string]: Function}
-  ): ActionCable$Subscription,
+    mixin: { [string]: Function }
+  ): ActionCable$Subscription;
 }
 
 declare type ActionCable = {

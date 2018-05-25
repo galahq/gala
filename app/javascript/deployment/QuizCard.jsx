@@ -46,7 +46,7 @@ const Questions = ({
   sectionTitle?: string,
 }) =>
   questions.length > 0 ? (
-    <React.Fragment>
+    <>
       <SectionTitle>{sectionTitle}</SectionTitle>
       {questions.map((question: QuestionT, i: number) => (
         <Question key={i}>
@@ -58,7 +58,7 @@ const Questions = ({
           />
         </Question>
       ))}
-    </React.Fragment>
+    </>
   ) : null
 
 export const Link = styled.a`

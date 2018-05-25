@@ -64,7 +64,9 @@ const NewCommentButton = ({
         iconName={
           !acceptingSelection
             ? 'edit'
-            : !selectionPending ? 'text-highlight' : 'manually-entered-data'
+            : !selectionPending
+              ? 'text-highlight'
+              : 'manually-entered-data'
         }
         disabled={
           (acceptingSelection && !selectionPending) || selectionNotUnique
@@ -83,10 +85,10 @@ const NewCommentButton = ({
 
     {acceptingSelection &&
       !selectionPending && (
-        <CancelButton onClick={() => acceptSelection(false)}>
-          <FormattedMessage id="helpers.cancel" />
-        </CancelButton>
-      )}
+      <CancelButton onClick={() => acceptSelection(false)}>
+        <FormattedMessage id="helpers.cancel" />
+      </CancelButton>
+    )}
   </Container>
 )
 

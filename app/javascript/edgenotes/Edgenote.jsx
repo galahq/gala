@@ -76,7 +76,9 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
     ...stateProps,
     ...dispatchProps,
     ...ownProps,
-    activate: stateProps.editing ? () => {} : dispatchProps.activate,
+    activate: stateProps.editing
+      ? () => Promise.resolve()
+      : dispatchProps.activate,
   }
 }
 
@@ -113,8 +115,8 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   componentDidUpdate (prevProps: Props) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
-      if (contents && contents.websiteUrl) {
-        window.open(contents.websiteUrl, '_blank')
+      if (contents?.websiteUrl) {
+        window.open(contents?.websiteUrl, '_blank')
         setTimeout(() => {
           this.props.deactivate()
         }, 300)
@@ -156,7 +158,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       >
         <Lock type="Edgenote" param={slug}>
           {({ locked, onBeginEditing, onFinishEditing }) => (
-            <React.Fragment>
+            <>
               {editing && (
                 <EdgenoteEditor
                   contents={contents}
@@ -205,7 +207,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
                   instantaneous={isALink}
                 />
               )}
-            </React.Fragment>
+            </>
           )}
         </Lock>
       </Container>

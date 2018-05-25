@@ -27,7 +27,7 @@ const FileUploadWidget = ({
   message,
   accept,
 }: Props) => (
-  <React.Fragment>
+  <>
     <label className={className} style={{ display: ready ? 'block' : 'none' }}>
       <HiddenFileUpload
         accept={accept || 'image/*'}
@@ -49,7 +49,7 @@ const FileUploadWidget = ({
           </ProgressBar>
         )
     )}
-  </React.Fragment>
+  </>
 )
 
 export default FileUploadWidget

@@ -15,7 +15,7 @@ class EdgenoteContents extends React.Component {
 
     this.handleDismiss = () => {
       document.removeEventListener('keydown', this.handleKeyDown)
-      if (props.location.state && props.location.state.internalLink) {
+      if (props.location.state?.internalLink) {
         props.history.goBack()
       } else {
         props.history.push(`/${props.match.params.position}`)

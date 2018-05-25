@@ -13,7 +13,7 @@ function mapStateToProps (state: State, { children }) {
   let commentThreadId = getFirstThreadId(children[0]) || ''
   let commentThread = state.commentThreadsById[commentThreadId]
   return {
-    cardId: commentThread && commentThread.cardId,
+    cardId: commentThread?.cardId,
     disabled: state.ui.acceptingSelection || !state.caseData.commentable,
     commentThreadId,
   }
@@ -47,7 +47,7 @@ const CommentThreadEntity = ({ onClick, children }) => {
 }
 
 export default withRouter(
-  connect(mapStateToProps, {}, mergeProps)(CommentThreadEntity)
+  connect(mapStateToProps, null, mergeProps)(CommentThreadEntity)
 )
 
 function getFirstThreadId (leaf: DraftEditorLeaf): ?string {

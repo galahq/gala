@@ -45,7 +45,10 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
     onCloseCitation: () => {
       dispatch(openCitation(null))
       key &&
-        !document.documentElement.classList.contains('pt-focus-disabled') &&
+        !(
+          document.documentElement &&
+          document.documentElement.classList.contains('pt-focus-disabled')
+        ) &&
         (window.location.hash = `citation-marker-${key}`)
     },
   }
@@ -55,7 +58,10 @@ class CitationTooltip extends React.Component<*> {
   componentDidMount () {
     const { key } = this.props.openedCitation
     key &&
-      !document.documentElement.classList.contains('pt-focus-disabled') &&
+      !(
+        document.documentElement &&
+        document.documentElement.classList.contains('pt-focus-disabled')
+      ) &&
       (window.location.hash = `citation-${key}`)
   }
   render () {
