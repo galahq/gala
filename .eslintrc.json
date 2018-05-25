@@ -78,7 +78,6 @@
       }
     ],
     "jsx-a11y/no-autofocus": 0,
-    "quotes": 0,
-    "babel/quotes": [2, "single"]
+    "quotes": 0
   }
 }
