@@ -23,11 +23,7 @@ const EditableAttribute = ({
   if (disabled) return null
   return (
     <div style={{ ...styles.container, ...style }}>
-      {value &&
-        value.length > 0 &&
-        <label style={styles.label}>
-          {title}
-        </label>}
+      {value && value.length > 0 && <label style={styles.label}>{title}</label>}
       <EditableText
         placeholder={`Add ${title}...`}
         value={value}

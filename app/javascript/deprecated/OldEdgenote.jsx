@@ -87,8 +87,7 @@ class OldEdgenoteFigure extends React.Component {
             dangerouslySetInnerHTML={{ __html: caption }}
           />
           {editing &&
-            style === 'v1' &&
-            <button onClick={upgrade}>Upgrade</button>}
+            style === 'v1' && <button onClick={upgrade}>Upgrade</button>}
         </div>
       </Link>
     )
