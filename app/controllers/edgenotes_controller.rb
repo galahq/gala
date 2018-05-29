@@ -20,7 +20,7 @@ class EdgenotesController < ApplicationController
     authorize @edgenote
 
     if @edgenote.save
-      render partial: 'edgenote', locals: { edgenote: edgenote }
+      render json: edgenote
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class EdgenotesController < ApplicationController
     authorize @edgenote
 
     if @edgenote.update(edgenote_params)
-      render partial: 'edgenote', locals: { edgenote: edgenote }
+      render json: edgenote
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
