@@ -13,11 +13,15 @@ class EdgenoteDecorator < ApplicationDecorator
   end
 
   def image_thumbnail_url
-    image_url resize: '640'
+    image_url resize: thumbnail_width
   end
 
   def audio_url
     return nil unless audio.attached?
     polymorphic_path audio, only_path: true
+  end
+
+  def thumbnail_width
+    highlighted ? '2500' : '640'
   end
 end
