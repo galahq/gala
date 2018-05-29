@@ -26,7 +26,7 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
@@ -51,7 +51,7 @@ import type { State, Edgenote } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
 import type { ILinkExpansion } from './expansion/LinkExpansion'
 
-type OwnProps = { slug: string }
+type OwnProps = { slug: string, i: number }
 function mapStateToProps (state: State, { slug }: OwnProps) {
   return {
     editing: state.edit.inProgress,
@@ -98,6 +98,7 @@ type Props = {
   onMouseOver: () => any,
   onMouseOut: () => any,
   onChange: ($Shape<Edgenote>) => any,
+  i: number,
 }
 
 class BaseEdgenoteFigure extends React.Component<Props> {
@@ -135,6 +136,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       editing,
       embedded,
       expansion,
+      i,
     } = this.props
     if (contents == null) return null
 
@@ -154,6 +156,8 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       <Container
         data-test-id="edgenote"
         id={slug}
+        i={i}
+        highlighted={(window.highlightedEdgenotes || []).includes(slug)}
         {...conditionalHoverCallbacks}
       >
         <Lock type="Edgenote" param={slug}>
@@ -296,6 +300,27 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
 
 const Container = styled.figure.attrs({ className: 'edge' })`
   position: relative;
+  margin: 0 0 1em;
+
+  @media screen and (max-width: 1300px) {
+    margin-top: 1em;
+  }
+
+  @media (max-width: 700px) {
+    grid-column: 1 / span 2;
+  }
+
+  ${p =>
+    p.highlighted &&
+    css`
+      grid-row: highlighted ${p => p.i + 1};
+      grid-column: 1 / -1;
+      margin-top: 1em;
+
+      @media screen and (max-width: 1300px) {
+        grid-row: unset;
+      }
+    `};
 `
 
 const Body = styled.div`

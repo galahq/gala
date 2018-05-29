@@ -42,7 +42,7 @@ const Page = (props: Props) => {
 
   return (
     <article>
-      <section className="Page-meta">
+      <section className="section Page-meta">
         <h1 className="pt-dark" key={`h2:${id}`}>
           <EditableText
             multiline
@@ -63,20 +63,17 @@ const Page = (props: Props) => {
         )}
       </section>
 
-      {cards.map((cardId, i) => [
-        props.editing && (
-          <CreateCardLink
-            pageId={id}
-            i={i}
-            key={`create-${i}`}
-            createCard={createCard}
-          />
-        ),
-        <section key={cardId}>
-          <Card id={cardId} />
-          <Edgenotes cardId={cardId} />
-        </section>,
-      ])}
+      {cards.map((cardId, i) => (
+        <>
+          {props.editing && (
+            <CreateCardLink pageId={id} i={i} createCard={createCard} />
+          )}
+          <Section>
+            <Card id={cardId} />
+            <Edgenotes cardId={cardId} />
+          </Section>
+        </>
+      ))}
 
       {props.editing && (
         <CreateCardLink
@@ -88,6 +85,37 @@ const Page = (props: Props) => {
     </article>
   )
 }
+
+export default connect(mapStateToProps, { updatePage, createCard })(Page)
+
+const Section = styled.section`
+  display: grid;
+  grid-column-gap: 1em;
+  grid-template-columns: repeat(2, 23em) repeat(2, minmax(min-content, 1fr));
+  grid-template-rows: repeat(100, auto) repeat(100, [highlighted] auto);
+  margin: 1em;
+
+  @media screen and (max-width: 1440px) {
+    grid-template-columns: repeat(2, 18em) repeat(2, minmax(min-content, 1fr));
+  }
+
+  @media screen and (max-width: 1300px) {
+    grid-template-columns: repeat(2, minmax(min-content, 18em));
+  }
+`
+
+const AddCardButton = styled(Button).attrs({
+  className: 'pt-minimal',
+  iconName: 'add',
+})`
+  margin-left: 1.5em;
+  opacity: 0.5;
+  transition: opacity ease-out 0.1s;
+
+  &:hover {
+    opacity: 1;
+  }
+`
 
 class CreateCardLink extends React.Component<{
   pageId: string,
@@ -106,18 +134,3 @@ class CreateCardLink extends React.Component<{
     )
   }
 }
-
-export default connect(mapStateToProps, { updatePage, createCard })(Page)
-
-const AddCardButton = styled(Button).attrs({
-  className: 'pt-minimal',
-  iconName: 'add',
-})`
-  margin-left: 1.5em;
-  opacity: 0.5;
-  transition: opacity ease-out 0.1s;
-
-  &:hover {
-    opacity: 1;
-  }
-`
