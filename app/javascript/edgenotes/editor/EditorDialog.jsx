@@ -8,7 +8,8 @@
 
 import * as React from 'react'
 import * as R from 'ramda'
-import { Button, Intent } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
+import { Button, Intent, Switch } from '@blueprintjs/core'
 import { Dialog, Body, Column, Separator } from './styled'
 import withExpansion from 'edgenotes/expansion/withExpansion'
 import EdgenoteForm from './EdgenoteForm'
@@ -16,7 +17,7 @@ import EdgenotePreview from './EdgenotePreview'
 import ExpansionVisibilityForm from './ExpansionVisibilityForm'
 
 import type { IntlShape } from 'react-intl'
-import type { Edgenote, LinkExpansionVisibility } from 'redux/state'
+import type { Edgenote } from 'redux/state'
 import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
 import type { ChangesToAttachments } from './index'
 import type { VisibilityChangeProps } from './withVisibilityChanges'
@@ -83,6 +84,17 @@ const EditorDialog = ({
             contents={contents}
             changesToAttachments={changesToAttachments}
             expansion={expansionWithVisibilityChanges}
+          />
+
+          <Switch
+            checked={contents.highlighted}
+            label={<FormattedMessage id="edgenotes.edit.highlight" />}
+            onChange={() =>
+              onChangeContents({
+                ...contents,
+                highlighted: !contents.highlighted,
+              })
+            }
           />
 
           <ExpansionVisibilityForm

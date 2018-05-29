@@ -44,6 +44,7 @@ const filterParams: $FlowIssue = R.pick([
   'caption',
   'content',
   'format',
+  'highlighted',
   'image',
   'photoCredit',
   'pullQuote',
