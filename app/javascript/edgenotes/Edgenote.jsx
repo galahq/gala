@@ -140,7 +140,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     } = this.props
     if (contents == null) return null
 
-    const { slug, caption, pullQuote } = contents
+    const { slug, caption, pullQuote, highlighted } = contents
 
     const isALink = !editing && expansion.actsAsLink()
 
@@ -157,7 +157,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
         data-test-id="edgenote"
         id={slug}
         i={i}
-        highlighted={(window.highlightedEdgenotes || []).includes(slug)}
+        highlighted={highlighted}
         {...conditionalHoverCallbacks}
       >
         <Lock type="Edgenote" param={slug}>

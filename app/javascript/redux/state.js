@@ -233,6 +233,7 @@ export type Edgenote = {
   content: string,
   embedCode: string,
   format: string,
+  highlighted: boolean,
   imageUrl: string,
   imageThumbnailUrl: string,
   instructions: string,
