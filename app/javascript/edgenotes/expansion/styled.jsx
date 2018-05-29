@@ -14,6 +14,7 @@ export const Description = styled.span`
   font-size: 0.8rem;
   line-height: 1.3;
   margin-top: 0.25rem;
+  max-width: 40em;
 `
 
 export const Embed = styled.div`
@@ -62,4 +63,5 @@ export const Title = styled.strong`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.2;
+  max-width: 40em;
 `

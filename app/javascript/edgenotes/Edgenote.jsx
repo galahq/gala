@@ -336,7 +336,7 @@ const LinkBody = Body.withComponent('a')
 
 const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
   (contents || linkDomain) && (
-    <div>
+    <div style={{ maxWidth: '40em' }}>
       <div
         className={canHighlight && selected ? 'edge--highlighted' : ''}
         style={{ display: 'inline', margin: '0.25em 0 0 0', lineHeight: 1 }}
@@ -349,7 +349,7 @@ const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
 
 const Caption = ({ contents, selected }) =>
   contents && (
-    <div style={{ margin: '0.25em 0 0 0' }}>
+    <div style={{ margin: '0.25em 0 0 0', maxWidth: '40em' }}>
       <figcaption
         className={selected ? 'edge--highlighted' : ''}
         style={{ fontSize: '110%', lineHeight: 1.1, display: 'inline' }}
