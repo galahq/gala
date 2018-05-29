@@ -61,6 +61,7 @@ const EditorDialog = ({
     <Dialog
       canEscapeKeyClose={false}
       canOutsideClickClose={false}
+      highlighted={contents.highlighted}
       iconName="edit"
       isOpen={open}
       title={intl.formatMessage({ id: 'edgenotes.edit.editEdgenote' })}
@@ -79,7 +80,7 @@ const EditorDialog = ({
 
         <Separator />
 
-        <Column>
+        <Column highlighted={contents.highlighted}>
           <EdgenotePreview
             contents={contents}
             changesToAttachments={changesToAttachments}
