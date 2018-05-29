@@ -38,6 +38,7 @@ const EdgenotePreview = ({
         contents={edgenotePreviewProps(contents, changesToAttachments)}
         embedded={true}
         expansion={expansion}
+        i={0}
       />
     </Card>
   </>

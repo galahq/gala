@@ -61,35 +61,37 @@ class OldEdgenoteFigure extends React.Component {
     const linkDestination = style === 'v2' || editing ? {} : this.props.location
 
     return (
-      <Link
-        to={linkDestination}
-        className={className}
-        onMouseOver={() => {
-          this.setState({ hovering: true })
-        }}
-        onMouseOut={() => {
-          this.setState({ hovering: false })
-        }}
-      >
-        <div className="c-edgenote s-edgenote">
-          <Statistics uri={`edgenotes/${slug}`} inline={true} />
-          <div className="c-edgenote__cover">
-            <img src={`${thumbnailUrl}?w=640`} />
+      <aside className="edgenotes">
+        <Link
+          to={linkDestination}
+          className={className}
+          onMouseOver={() => {
+            this.setState({ hovering: true })
+          }}
+          onMouseOut={() => {
+            this.setState({ hovering: false })
+          }}
+        >
+          <div className="c-edgenote s-edgenote">
+            <Statistics uri={`edgenotes/${slug}`} inline={true} />
+            <div className="c-edgenote__cover">
+              <img src={`${thumbnailUrl}?w=640`} />
+            </div>
+            <div
+              className={`edgenote-icon edgenote-icon-${format}`}
+              dangerouslySetInnerHTML={{
+                __html: require(`images/edgenote-${format}.svg`),
+              }}
+            />
+            <figcaption
+              className={selected ? 'focus' : ''}
+              dangerouslySetInnerHTML={{ __html: caption }}
+            />
+            {editing &&
+              style === 'v1' && <button onClick={upgrade}>Upgrade</button>}
           </div>
-          <div
-            className={`edgenote-icon edgenote-icon-${format}`}
-            dangerouslySetInnerHTML={{
-              __html: require(`images/edgenote-${format}.svg`),
-            }}
-          />
-          <figcaption
-            className={selected ? 'focus' : ''}
-            dangerouslySetInnerHTML={{ __html: caption }}
-          />
-          {editing &&
-            style === 'v1' && <button onClick={upgrade}>Upgrade</button>}
-        </div>
-      </Link>
+        </Link>
+      </aside>
     )
   }
 
