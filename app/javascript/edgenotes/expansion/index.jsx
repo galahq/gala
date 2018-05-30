@@ -35,6 +35,16 @@ type Props = {
   expansion: ILinkExpansion,
 }
 
+const EMBED_RATIOS: { [string]: [number, number] } = {
+  'cdn.knightlab.com': [16, 9],
+  'live.amcharts.com': [16, 9],
+  'soundcloud.com': [21, 9],
+  'speakerdeck.com': [1, 1],
+  'ted.com': [16, 9],
+  'vimeo.com': [16, 9],
+  'youtube.com': [16, 9],
+}
+
 const Expansion = ({ contents, expansion }: Props) => {
   if (!(expansion instanceof LinkExpansion)) return null
 
@@ -47,7 +57,7 @@ const Expansion = ({ contents, expansion }: Props) => {
     <EmbedContainer markup={embed?.__html}>
       <Embed
         dangerouslySetInnerHTML={embed}
-        widescreen={widescreenRatio(expansion.linkDomain())}
+        ratio={EMBED_RATIOS[expansion.linkDomain()]}
       />
     </EmbedContainer>
   ) : (
@@ -71,7 +81,3 @@ const Expansion = ({ contents, expansion }: Props) => {
 }
 
 export default Expansion
-
-function widescreenRatio (linkDomain: string) {
-  return ['youtube.com', 'live.amcharts.com', 'vimeo.com'].includes(linkDomain)
-}

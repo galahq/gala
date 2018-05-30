@@ -1,64 +1,69 @@
 @import _globals
 @import _flexbox
 
-article
+.section
+  +flexbox
+
+  +flex-flow(row wrap)
+
+  +justify-content(flex-start)
+
+  h1, h2, h3, h4, h5, h6
+    color: $white
+    margin: 20px 20px 0 20px
+    font-family: $headlineFont
+
+    @media screen and (min-width: $mobileCutoff)
+      margin: 20px 30px 5px 30px
+
+  h1
+    font-size: 1.3em
+    line-height: 1.1em
+
+  h2
+    font-size: 1.1em
+    line-height: 1em
+    margin-top: 10px
+
+  blockquote
+    margin: 10px 10px 0 10px
+
+  .card-container
+    font-size: 19px
+    margin: 1rem 0
+
+    +flex($fg: 0, $fs: 1, $fb: 40.8em)
+
+    @media screen and (max-width: 1440px)
+      +flex($fg: 0, $fs: 1, $fb: 31.8em)
+
+
+  .Card
+    margin: 9px
+    height: 100%
+
+    @media screen and (min-width: $mobileCutoff)
+      margin: 0.5rem 1rem
+
+    & > span
+      margin: 1rem 0
+
+  &.Page-meta
+    align-items: baseline
+
+  .Page-delete-option
+    font-family: $sansFont
+    color: $red
+    background-color: $white
+    padding: .1em .25em
+
+    &:hover
+      text-decoration: underline
+
+.Card
   font-family: $serifFont
   font-weight: 400
 
-  section
-    +flexbox
-
-    +flex-flow(row wrap)
-
-    +justify-content(flex-start)
-
-    h1, h2, h3, h4, h5, h6
-      color: $white
-      margin: 20px 20px 0 20px
-      font-family: $headlineFont
-
-      @media screen and (min-width: $mobileCutoff)
-        margin: 20px 30px 5px 30px
-
-    h1
-      font-size: 1.3em
-      line-height: 1.1em
-
-    h2
-      font-size: 1.1em
-      line-height: 1em
-      margin-top: 10px
-
-    blockquote
-      margin: 10px 10px 0 10px
-
-    .Card
-      height: 100%
-
-      +flex($fg: 0, $fs: 1, $fb: 40.8em)
-
-      @media screen and (max-width: 1440px)
-        +flex($fg: 0, $fs: 1, $fb: 31.8em)
-
-      margin: 9px
-
-      @media screen and (min-width: $mobileCutoff)
-        margin: 0.5em 1em
-
-      & > span
-        margin: 1em 0
-
-    &.Page-meta
-      align-items: baseline
-
-    .Page-delete-option
-      font-family: $sansFont
-      color: $red
-      background-color: $white
-      padding: .1em .25em
-
-      &:hover
-        text-decoration: underline
 
 .Card table
   width: 100%
