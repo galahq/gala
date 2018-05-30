@@ -26,12 +26,12 @@ class LinkExpansion
 
     def description
       return if @visibility.no_description
-      @open_graph.description
+      @open_graph.description || ''
     end
 
     def images
       return if @visibility.no_image
-      @open_graph.images
+      @open_graph.images || []
     end
   end
 end

@@ -2,7 +2,7 @@
  * @flow
  */
 
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Button, Dialog as BaseDialog, Intent } from '@blueprintjs/core'
 
 export const Overlay = styled.div`
@@ -38,6 +38,12 @@ export const EditButton = styled(Button).attrs({
 
 export const Dialog = styled(BaseDialog)`
   width: 772px;
+
+  ${p =>
+    p.highlighted &&
+    css`
+      width: 1150px;
+    `};
 `
 
 export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
@@ -51,6 +57,14 @@ export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
 
 export const Column = styled.div`
   width: 100%;
+
+  ${p =>
+    p.highlighted &&
+    css`
+      @media (min-width: 600px) {
+        width: 200%;
+      }
+    `};
 `
 
 export const Separator = styled.div`

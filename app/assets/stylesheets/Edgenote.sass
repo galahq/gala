@@ -28,18 +28,10 @@ aside.edgenotes
 aside.edgenotes
   +justify-content(center)
 
-  margin: 9px
-  padding: 0.3em
-  padding-bottom: 0
-
-  @media screen and (min-width: $mobileCutoff)
-    margin: 10px 1em
-    padding: 0.5em
-
   background-color: rgba(darken($black, 10%), 0.6)
   border-radius: 2pt
+  padding-bottom: 18px
 
-.edge,
 a.Edgenote
   text-decoration: none
 
@@ -48,7 +40,6 @@ a.Edgenote
 
   width: 100%
   height: 100%
-  margin: 0.5em
   transition: all 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
 
   @media screen and (min-width: $mobileCutoff)
@@ -58,9 +49,6 @@ a.Edgenote
   font-family: $sansFont
   font-weight: 500
   color: $white
-
-  @media screen and (min-width: $mobileCutoff)
-    width: 46%
 
   a
     color: inherit !important

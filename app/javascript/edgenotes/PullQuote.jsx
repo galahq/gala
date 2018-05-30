@@ -66,6 +66,7 @@ const PullQuote = ({
 export default PullQuote
 
 const Background = styled.div`
+  max-width: 40em;
   ${p =>
     p.visible &&
     css`

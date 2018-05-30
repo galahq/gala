@@ -20,7 +20,7 @@ class EdgenotesController < ApplicationController
     authorize @edgenote
 
     if @edgenote.save
-      render partial: 'edgenote', locals: { edgenote: edgenote }
+      render json: edgenote
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class EdgenotesController < ApplicationController
     authorize @edgenote
 
     if @edgenote.update(edgenote_params)
-      render partial: 'edgenote', locals: { edgenote: edgenote }
+      render json: edgenote
     else
       render json: @edgenote.errors, status: :unprocessable_entity
     end
@@ -69,7 +69,7 @@ class EdgenotesController < ApplicationController
                                      :photo_credit, :slug, :style, :pull_quote,
                                      :attribution, :call_to_action,
                                      :audio, :youtube_slug, :statistics,
-                                     :alt_text)
+                                     :alt_text, :highlighted)
   end
 
   def set_cors_headers
