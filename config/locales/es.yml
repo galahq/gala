@@ -397,6 +397,7 @@ es:
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      highlight: Allow this Edgenote to take up the full width of the page
       paste_a_link: Paste a link
       preview: Edgenote preview
       pull_a_quote: Pull a quote
