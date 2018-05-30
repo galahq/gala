@@ -49,8 +49,13 @@ const ExpansionVisibilityForm = ({
   }
 
   const disabled = {
-    image: Attachment.truthy(contents.imageUrl),
-    description: !!contents.caption,
+    image:
+      Attachment.truthy(contents.imageUrl) ||
+      (preview.images instanceof Array && preview.images.length === 0),
+    description:
+      !!contents.caption ||
+      (typeof preview.description === 'string' &&
+        preview.description.length === 0),
   }
 
   return (
