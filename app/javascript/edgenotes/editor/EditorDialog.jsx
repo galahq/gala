@@ -44,7 +44,7 @@ const EditorDialog = ({
   expansion,
   intl,
   open,
-  toggleVisibility,
+  setVisibility,
   visibility,
   onChangeAttachment,
   onChangeContents,
@@ -101,7 +101,7 @@ const EditorDialog = ({
           <ExpansionVisibilityForm
             contents={contentsWithAttachmentChanges}
             expansion={expansion}
-            toggleVisibility={toggleVisibility}
+            setVisibility={setVisibility}
             visibility={visibility}
           />
         </Column>

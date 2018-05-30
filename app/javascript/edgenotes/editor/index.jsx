@@ -68,7 +68,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
   }
 
   render () {
-    const { intl, toggleVisibility, visibility } = this.props
+    const { intl, setVisibility, visibility } = this.props
     const { changesToAttachments, contents, open } = this.state
     return (
       <>
@@ -83,7 +83,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
           contents={contents}
           intl={intl}
           open={open}
-          toggleVisibility={toggleVisibility}
+          setVisibility={setVisibility}
           visibility={visibility}
           onChangeAttachment={this.handleChangeAttachment}
           onChangeContents={this.handleChangeContents}

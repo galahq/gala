@@ -26,7 +26,7 @@ const ExpansionVisibilityForm = ({
   contents,
   expansion,
   visibility,
-  toggleVisibility,
+  setVisibility,
 }: Props) => {
   if (!(expansion instanceof LinkExpansion)) return null
 
@@ -64,7 +64,7 @@ const ExpansionVisibilityForm = ({
         <Switch
           checked={checked.embed}
           label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
-          onChange={() => toggleVisibility('noEmbed')}
+          onChange={() => setVisibility('noEmbed', checked.embed)}
         />
       )}
 
@@ -73,7 +73,7 @@ const ExpansionVisibilityForm = ({
           checked={checked.image}
           disabled={disabled.image}
           label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
-          onChange={() => toggleVisibility('noImage')}
+          onChange={() => setVisibility('noImage', checked.image)}
         />
       )}
 
@@ -82,7 +82,7 @@ const ExpansionVisibilityForm = ({
           checked={checked.description}
           disabled={disabled.description}
           label={<FormattedMessage id="edgenotes.edit.usePreviewDescription" />}
-          onChange={() => toggleVisibility('noDescription')}
+          onChange={() => setVisibility('noDescription', checked.description)}
         />
       )}
     </>
