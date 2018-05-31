@@ -36,6 +36,8 @@ Rails.application.routes.draw do
 
       resources :edgenotes, only: %i[create]
 
+      resources :editorships, only: %i[new create]
+
       resource :enrollment, only: %i[create destroy]
 
       resources :locks, only: %i[index]
@@ -78,6 +80,8 @@ Rails.application.routes.draw do
                               param: :attribute
       resource :link_expansion, module: 'edgenotes', only: %i[show update]
     end
+
+    resources :editorships, only: %i[destroy]
 
     resources :enrollments, only: %i[index]
 

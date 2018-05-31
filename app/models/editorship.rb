@@ -9,6 +9,8 @@ class Editorship < ApplicationRecord
 
   after_create_commit :enroll_editor_in_case
 
+  delegate :name, to: :editor, prefix: true
+
   # Readers who have an editorship on the case should be automatically be
   # enrolled in it
   def enroll_editor_in_case
