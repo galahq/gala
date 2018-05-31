@@ -4,7 +4,7 @@ module Cases
   # Featured cases appear prominently in the catalog.
   class FeaturesController < ApplicationController
     before_action :set_case, only: %i[create update destroy]
-    before_action :authorize, only: %i[create update destroy]
+    before_action :authorize_user, only: %i[create update destroy]
 
     # @route [GET] `/cases/features`
     def index
@@ -41,7 +41,7 @@ module Cases
       @case = Case.friendly.find params[:case_slug]
     end
 
-    def authorize
+    def authorize_user
       authorize :'cases/feature'
     end
   end
