@@ -18,8 +18,16 @@ export const Description = styled.span`
 `
 
 export const Embed = styled.div`
+  background-color: white;
+  border-radius: 2pt;
+  padding: 4px;
+
   iframe {
     width: 100%;
+  }
+
+  p {
+    line-height: 1.1;
   }
 
   ${p =>
