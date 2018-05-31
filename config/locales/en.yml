@@ -151,9 +151,11 @@ en:
       locations: Site locations
     settings:
       edit:
+        case_editors: Case editors
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
+        invite_editors: Invite Editors
       featured_form:
         change_featured_time: Change time
       slug_form:
