@@ -12,14 +12,17 @@
   .admin-card__sidebar.pt-dark.spaced--compact
     %h2.deployments__group= t '.case_editors'
 
-    - @editors.sort_by(&:name).each do |editor|
-      .non-spaced
-        %span.pt-tag.pt-minimal= editor.name
-        %button.pt-button.pt-small.pt-minimal.pt-intent-danger.pt-icon-small-cross.pt-unsaturated
+    - @editorships.sort_by(&:editor_name).each do |editorship|
+      .editorship.non-spaced
+        %span.pt-tag.pt-minimal= editorship.editor_name
+        = form_with url: editorship_path(editorship),
+                    method: :delete, local: true do |f|
+          = f.button '', aria: { label: I18n.t('editorships.destroy.delete') },
+                         class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated]
 
 
     .admin-card__sidebar__actions
-      %a
+      = link_to new_case_editorship_path @case do
         %span.pt-tag.pt-intent-success
           %span.pt-icon.pt-icon-add
           %span= t '.invite_editors'
