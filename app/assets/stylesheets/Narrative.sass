@@ -94,13 +94,8 @@
   padding: 1.2em 2.4em
   position: relative
 
-  p,
-  & > .DraftEditor-root div[data-block],
-  & > div > .DraftEditor-root div[data-block]
-    margin: 1em 0
-
   @media screen and (max-width: $mobileCutoff)
-    padding: 0em 0.7em
+    padding: 0.1em 0.7em
 
     &.commentable
       padding-top: 0.75em
@@ -108,6 +103,11 @@
   \::selection
     background-color: rgb(159, 187, 214)
     text-shadow: none
+
+  p,
+  & > .DraftEditor-root div[data-block],
+  & > div > .DraftEditor-root div[data-block]
+    margin: 1em 0
 
   .DraftEditor-root a:not(.c-edgenote-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
     color: $darkGreen
