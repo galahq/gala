@@ -88,6 +88,7 @@ en:
       comment_thread: Comment thread
       deployment: Deployment
       edgenote: Edgenote
+      editorship: Editorship
       enrollment: Enrollment
       global_community: Global Community
       group: Group
@@ -446,6 +447,11 @@ en:
         <span class="pt-icon pt-icon-add-column-right"></span> Add
         Edgenote</span> button.
       new_edgenote: New Edgenote
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Editor
   enrollments:
     destroy:
       are_you_sure: Are you sure you want to unenroll in this case?

@@ -3,6 +3,7 @@
 # @see Editorship
 class EditorshipsController < ApplicationController
   before_action :authenticate_reader!
+  before_action :set_editorship, only: %i[destroy]
 
   layout 'admin'
 
@@ -13,5 +14,18 @@ class EditorshipsController < ApplicationController
   def create; end
 
   # @param [DELETE] /editorships/id
-  def destroy; end
+  def destroy
+    authorize @editorship.case, :update?
+    @editorship.destroy
+    redirect_to edit_case_settings_path(@editorship.case),
+                notice: successfully_destroyed
+  end
+
+  private
+
+  def set_editorship
+    @editorship = Editorship.find params[:id]
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
+  end
 end
