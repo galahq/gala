@@ -10,6 +10,7 @@ class Editorship < ApplicationRecord
   belongs_to :editor, class_name: 'Reader', inverse_of: :editorships
 
   before_validation :set_editor_from_email
+  before_validation :set_editor_from_email, if: :editor_email_changed?
   after_create_commit :enroll_editor_in_case
 
   delegate :name, to: :editor, prefix: true, allow_nil: true
