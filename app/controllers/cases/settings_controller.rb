@@ -11,6 +11,7 @@ module Cases
     def edit
       set_case
       set_libraries
+      set_editors
     end
 
     # @param [PATCH/PUT] /cases/case-slug/settings
@@ -21,6 +22,7 @@ module Cases
         redirect_to edit_case_settings_path(@case), notice: successfully_updated
       else
         set_libraries
+        set_editors
         render :edit
       end
     end
@@ -34,6 +36,10 @@ module Cases
 
     def set_libraries
       @libraries = Pundit.policy_scope!(current_reader, Library)
+    end
+
+    def set_editors
+      @editors = @case.editors
     end
 
     def case_settings_params

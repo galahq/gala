@@ -1,5 +1,5 @@
-.admin.admin--centered
-  .pt-card.pt-elevation-2
+.window.admin
+  .admin-card.pt-card.pt-elevation-2
     .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
       %span.admin__table__slug= @case.kicker
 
@@ -8,3 +8,18 @@
       = render 'slug_form'
       = render 'library_form'
       = render 'featured_form'
+
+  .admin-card__sidebar.pt-dark.spaced--compact
+    %h2.deployments__group= t '.case_editors'
+
+    - @editors.sort_by(&:name).each do |editor|
+      .non-spaced
+        %span.pt-tag.pt-minimal= editor.name
+        %button.pt-button.pt-small.pt-minimal.pt-intent-danger.pt-icon-small-cross.pt-unsaturated
+
+
+    .admin-card__sidebar__actions
+      %a
+        %span.pt-tag.pt-intent-success
+          %span.pt-icon.pt-icon-add
+          %span= t '.invite_editors'
