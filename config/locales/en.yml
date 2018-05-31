@@ -31,6 +31,9 @@ en:
         caption: Caption
         photo_credit: Photo credit
         pull_quote: Pull quote
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
       question:
         content: Content
         correct_answer: Correct answer
@@ -78,6 +81,12 @@ en:
           attributes:
             correct_answer:
               inclusion: "is not included in the list of possible answers"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
     models:
       activity: Activity
       case: Case
@@ -156,7 +165,6 @@ en:
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
-        invite_editors: Invite Editors
       featured_form:
         change_featured_time: Change time
       slug_form:
@@ -451,7 +459,14 @@ en:
     destroy:
       are_you_sure: |
         Are you sure you want to remove %{name} as an editor of this case?
-      remove: Remove Editor
+      remove: Remove Collaborator
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: Are you sure you want to unenroll in this case?
