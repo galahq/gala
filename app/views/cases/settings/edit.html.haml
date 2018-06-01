@@ -1,3 +1,10 @@
+- content_for :title do
+  = I18n.t('cases.settings.edit.edit_case_settings')
+  - unless @case.kicker.blank?
+    —
+    = @case.kicker
+
+
 .window.admin
   .admin-card.pt-card.pt-elevation-2
     .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
