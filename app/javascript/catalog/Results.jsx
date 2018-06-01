@@ -12,6 +12,7 @@ import { Orchard } from 'shared/orchard'
 import { Route } from 'react-router-dom'
 import { NonIdealState } from '@blueprintjs/core'
 import { injectIntl, FormattedMessage } from 'react-intl'
+import DocumentTitle from 'react-document-title'
 
 import CaseList from 'catalog/CaseList'
 import LibraryInfo from 'catalog/LibraryInfo'
@@ -20,6 +21,7 @@ import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
 import { Container as Sidebar } from 'catalog/Sidebar'
 
 import type { ContextRouter } from 'react-router-dom'
+import type { IntlShape } from 'react-intl'
 import type { State } from 'catalog'
 
 export type Query = { [string]: string[] }
@@ -28,6 +30,7 @@ type Props = {
   ...ContextRouter,
   ...State,
   readerIsEditor: boolean,
+  intl: IntlShape,
 }
 class Results extends React.Component<
   Props,
@@ -53,29 +56,40 @@ class Results extends React.Component<
   }
 
   render () {
-    const { loading, readerIsEditor } = this.props
-    return [
-      <Sidebar key="sidebar">
-        <Route
-          path="/catalog/libraries/:slug"
-          render={({ match }) => <LibraryInfo slug={match.params.slug || ''} />}
-        />
-        <SearchForm params={this._getQueryParams()} />
-      </Sidebar>,
-      <Main key="main">
-        <CatalogSection>
-          <SectionTitle>
-            <FormattedMessage id="search.results" />
-          </SectionTitle>
-          {loading.cases || this.state.loading ? null : this._results()
-            .length === 0 ? (
-              <NoSearchResults />
-            ) : (
-              <CaseList cases={this._results()} readerIsEditor={readerIsEditor} />
-            )}
-        </CatalogSection>
-      </Main>,
-    ]
+    const { intl, loading, readerIsEditor } = this.props
+    return (
+      <DocumentTitle
+        title={`${intl.formatMessage({ id: 'search.results' })} — Gala`}
+      >
+        <>
+          <Sidebar>
+            <Route
+              path="/catalog/libraries/:slug"
+              render={({ match }) => (
+                <LibraryInfo slug={match.params.slug || ''} />
+              )}
+            />
+            <SearchForm params={this._getQueryParams()} />
+          </Sidebar>
+          <Main>
+            <CatalogSection>
+              <SectionTitle>
+                <FormattedMessage id="search.results" />
+              </SectionTitle>
+              {loading.cases || this.state.loading ? null : this._results()
+                .length === 0 ? (
+                  <NoSearchResults />
+                ) : (
+                  <CaseList
+                    cases={this._results()}
+                    readerIsEditor={readerIsEditor}
+                  />
+                )}
+            </CatalogSection>
+          </Main>
+        </>
+      </DocumentTitle>
+    )
   }
 
   _fetchResults = () => {
@@ -98,7 +112,7 @@ class Results extends React.Component<
       .filter(Boolean)
   }
 }
-export default Results
+export default injectIntl(Results)
 
 function coerceIntoArrayValues (params: {
   [string]: string | string[],

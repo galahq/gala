@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { Orchard } from 'shared/orchard'
 import { FormattedMessage } from 'react-intl'
+import DocumentTitle from 'react-document-title'
 
 import LibraryLogo from 'overview/LibraryLogo'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
@@ -31,18 +32,20 @@ class LibraryInfo extends React.Component<Props, Library> {
 
     const { name, description, url } = this.state
     return (
-      <CatalogSection solid>
-        <RightFloatLogoContainer>
-          <LibraryLogo library={this.state} />
-        </RightFloatLogoContainer>
-        <SectionTitle>{name}</SectionTitle>
-        <Description>{description}</Description>
-        {url && (
-          <LearnMore href={url}>
-            <FormattedMessage id="catalog.learnMore" /> ›
-          </LearnMore>
-        )}
-      </CatalogSection>
+      <DocumentTitle title={`${name} — Gala`}>
+        <CatalogSection solid>
+          <RightFloatLogoContainer>
+            <LibraryLogo library={this.state} />
+          </RightFloatLogoContainer>
+          <SectionTitle>{name}</SectionTitle>
+          <Description>{description}</Description>
+          {url && (
+            <LearnMore href={url}>
+              <FormattedMessage id="catalog.learnMore" /> ›
+            </LearnMore>
+          )}
+        </CatalogSection>
+      </DocumentTitle>
     )
   }
 
