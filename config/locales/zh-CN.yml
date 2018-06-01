@@ -323,6 +323,8 @@ zh-CN:
       second: 秒
       year: 年
   deployments:
+    edit:
+      edit_embedded_assessment: Edit embedded assessment
     deployment:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
