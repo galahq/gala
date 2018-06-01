@@ -1,3 +1,10 @@
+- content_for :title do
+  = I18n.t('magic_link.show.lets_get_started')
+  - unless @deployment.case.kicker.blank?
+    —
+    = @deployment.case.kicker
+
+
 :ruby
   billboard_data = {
     case_data: ActiveModel::Serializer.for(@deployment.case.decorate).to_json,
