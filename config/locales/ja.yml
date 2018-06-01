@@ -30,6 +30,9 @@ ja:
         caption: 説明文
         photo_credit: クレジット表記
         pull_quote: 引用
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
       question:
         content: 内容
         correct_answer: 正解
@@ -76,6 +79,12 @@ ja:
           attributes:
             correct_answer:
               inclusion: "は選択肢の一覧にありません"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
     models:
       activity: アクティビティ
       case: 場合
@@ -86,6 +95,7 @@ ja:
       comment_thread: コメントスレッド
       deployment: 配備
       edgenote: Edgenote
+      editorship: Editorship
       enrollment: 登録
       global_community: グローバルコミュニティ
       group: グループ
@@ -145,6 +155,7 @@ ja:
       locations: 場所
     settings:
       edit:
+        case_editors: Case editors
         change_library: ライブラリを変更
         change_url: URLを変更
         edit_case_settings: 事例研究の設定を編集
@@ -398,6 +409,18 @@ ja:
       make_selection_html: >
         Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: Edgenoteを登録
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Collaborator
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: この事例研究、登録を解除してもよろしいですか？
