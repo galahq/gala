@@ -30,6 +30,9 @@ zh-CN:
         caption: 添加说明
         photo_credit: 图片来源
         pull_quote: 引用
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
       question:
         content: 内容
         correct_answer: 正确答案
@@ -76,6 +79,12 @@ zh-CN:
           attributes:
             correct_answer:
               inclusion: "不包括在可能的答案列表中"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
     models:
       activity: 活动
       case: 案例
@@ -86,6 +95,7 @@ zh-CN:
       comment_thread: 评论
       deployment: 案例教学
       edgenote: 边注
+      editorship: Editorship
       enrollment: 案例学员名册
       global_community: 通用讨论组
       group: 组
@@ -149,6 +159,7 @@ zh-CN:
       locations: 案例地点
     settings:
       edit:
+        case_editors: Case editors
         change_library: 更换案例库
         change_url: 更改案例链接
         edit_case_settings: 编辑案例设置
@@ -402,6 +413,18 @@ zh-CN:
       make_selection_html: >
         Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: New Edgenote
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Collaborator
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: 你确定要退出这个案例的学习吗？
