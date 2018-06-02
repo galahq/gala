@@ -206,21 +206,21 @@ zh-CN:
     show:
       card_n: 卡片{cardPosition}
       comments_on_page: Comments on “{title}”
-      comments_on_page_number: Comments on Page {position, number}
-      page_n: Page {pageNumber, number}
+      comments_on_page_number: 评论所在的页面位置 {position, number}
+      page_n: 页面 {pageNumber, number}
   comments:
     destroy:
-      delete_comment: Delete comment
+      delete_comment: 删除评论
     index:
-      all_comments: All comments
-      conversation: Conversation
-      join_the_conversation: Join the conversation
+      all_comments: 所有评论
+      conversation: 讨论
+      join_the_conversation: 加入讨论
       n_responses:
         js: "{count, number}条回复"
         other: "%{count}条回复"
-      no_comments: No comments
+      no_comments: 暂无评论
       nobody_has_left_a_comment: >
-        Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
+        {communityName} 该讨论组中没有人发起关于这个案例的讨论。发起讨论或切换到另一个讨论组。
     new:
       respond: 参与讨论
       respond_here: 回应
@@ -324,8 +324,8 @@ zh-CN:
     edit:
       edit_embedded_assessment: Edit embedded assessment
     deployment:
-      add_quiz: Add Quiz
-      edit_quiz: Edit Quiz
+      add_quiz: 添加测验
+      edit_quiz: 编辑测验
       n_enrolled: "%{count} enrolled"
       invite_instructions_html: |
         <b>Invite Link:</b> Send someone this link to invite them to study this
