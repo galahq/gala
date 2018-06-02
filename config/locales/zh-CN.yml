@@ -31,8 +31,8 @@ zh-CN:
         photo_credit: 图片来源
         pull_quote: 引用
       editorship:
-        editor: Your collaborator’s account
-        editor_email: Collaborator’s Email
+        editor: 你的合作者账户
+        editor_email: 合作者的电子邮件
       question:
         content: 内容
         correct_answer: 正确答案
@@ -83,8 +83,7 @@ zh-CN:
           attributes:
             editor:
               required: |
-                could not be found. Please ensure your collaborator has created
-                an account with the email you have entered.
+                未找到。请确保您的合作伙伴拥有一个用您输入的电子邮件所创建的帐户。
     models:
       activity: 活动
       case: 案例
@@ -95,7 +94,7 @@ zh-CN:
       comment_thread: 评论
       deployment: 案例教学
       edgenote: 边注
-      editorship: Editorship
+      editorship: 编辑权限
       enrollment: 案例学员名册
       global_community: 通用讨论组
       group: 组
@@ -111,16 +110,15 @@ zh-CN:
         updated: "%{model} 更新成功。"
   activities:
     destroy:
-      delete_activity: Delete Activity
+      delete_activity: 删除该练习
     show:
       download: 下载
       instructions: 说明
   cards:
     edit:
       citation_added: |
-        Citation added. Click the <span class="pt-tag pt-intent-success">
-        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
-        edit.
+        注释已添加。单击 <span class="pt-tag pt-intent-success">
+        <span class="pt-icon pt-icon-ring"></span> 引注标记</span>进行编辑。
       write_something: 添加内容
   case_elements:
     new:
@@ -128,7 +126,7 @@ zh-CN:
   cases:
     edit:
       add_authors: 添加作者
-      author_institution: Author Institution
+      author_institution: 作者所在机构
       author_name: 作者姓名
       change_cover_image: 更改封面图片
       edit: 编辑该案例
@@ -144,7 +142,7 @@ zh-CN:
         zoom_in: 放大
         zoom_out: 缩小
       missed_something: 请删除任何多余的作者或翻译者栏。
-      no_elements: This case has no elements.
+      no_elements: 此案例暂时为空
       options: 选项
       publish_case: 发表该案例
       save: 保存
@@ -205,7 +203,7 @@ zh-CN:
       new_comment_thread: 发起新的话题讨论
     show:
       card_n: 卡片{cardPosition}
-      comments_on_page: Comments on “{title}”
+      comments_on_page: 关于"{title}"章节的评论
       comments_on_page_number: 评论所在的页面位置 {position, number}
       page_n: 页面 {pageNumber, number}
   comments:
