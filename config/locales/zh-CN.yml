@@ -196,15 +196,15 @@ zh-CN:
     meet_stakeholders: >
       在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
     open_access_learning_tools: 致力于可持续发展的开源型教学平台
-    propose_a_case: Propose a Case
+    propose_a_case: 提出一个案例提案
     shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
   comment_threads:
     destroy:
-      delete_comment_thread: Delete comment thread
+      delete_comment_thread: 删除整个话题讨论
     new:
-      new_comment_thread: New comment thread...
+      new_comment_thread: 发起新的话题讨论
     show:
-      card_n: Card {cardPosition}
+      card_n: 卡片{cardPosition}
       comments_on_page: Comments on “{title}”
       comments_on_page_number: Comments on Page {position, number}
       page_n: Page {pageNumber, number}
