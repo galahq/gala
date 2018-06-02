@@ -121,37 +121,35 @@ zh-CN:
         Citation added. Click the <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
         edit.
-      write_something: Write something...
+      write_something: 添加内容
   case_elements:
     new:
-      untitled: Untitled
+      untitled: 未命名
   cases:
     edit:
-      add_authors: Add authors
+      add_authors: 添加作者
       author_institution: Author Institution
-      author_name: Author Name
+      author_name: 作者姓名
       change_cover_image: 更改封面图片
       edit: 编辑该案例
-      editing_authors: Editing Authors and Translators
+      editing_authors: 编辑作者和翻译人员信息
       feature_case: 将此案例设置为明星案例
       just_change_the_text: |
-        To edit this case, just change the text. We’ll save your work
-        automatically.
+        请直接进行内容编辑，您的编辑将被自动保存。
       map:
         instructions: |
-          Drag the map to position the pin, change the zoom to give context,
-          then click “Set”
+          拖动地图修改定位, 通过放大或缩小地图来改变所提供信息的广度和详细程度。点击完成保存您的修改。
         reset: 重置
         set: 确定
         zoom_in: 放大
         zoom_out: 缩小
-      missed_something: Please delete any unused author or translator rows.
+      missed_something: 请删除任何多余的作者或翻译者栏。
       no_elements: This case has no elements.
       options: 选项
       publish_case: 发表该案例
       save: 保存
       stop_editing: 停止编辑该案例
-      translator_name: Translator Name
+      translator_name: 译者姓名
       unfeature_case: 取消设置此案例为明星案例
       unpublish_case: 取消发表该案例
     index:
@@ -159,7 +157,7 @@ zh-CN:
       locations: 案例地点
     settings:
       edit:
-        case_editors: Case editors
+        case_editors: 案例作者
         change_library: 更换案例库
         change_url: 更改案例链接
         edit_case_settings: 编辑案例设置
