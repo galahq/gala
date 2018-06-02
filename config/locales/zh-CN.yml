@@ -324,32 +324,31 @@ zh-CN:
     deployment:
       add_quiz: 添加测验
       edit_quiz: 编辑测验
-      n_enrolled: "%{count} enrolled"
+      n_enrolled: "%{count} 已加入学习"
       invite_instructions_html: |
         <b>Invite Link:</b> Send someone this link to invite them to study this
         case with you. They’ll see any quiz you’ve chosen and be able to
         participate in your private forum.
-      invite_learners: Invite Learners
+      invite_learners: 邀请学员
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
     form:
-      select_a_case: Select a Case...
-      select_a_group: Select a Group...
+      select_a_case: 选择一个案例...
+      select_a_group: 选择一个学习组
     helpers:
-      all_study_groups: All Study Groups
-      create_a_new_study_group: Create a New Study Group...
+      all_study_groups: 全部学习组
+      create_a_new_study_group: 新建学习组
     index:
-      deploy_a_case: Deploy a Case
+      deploy_a_case: 运用案例
       find_a_case_then_click_teach_this_case: |
-        Once you’ve found a case that will suit your needs, click the “Deploy
-        this Case” button in the top right of its Overview page.
+        一旦找到合适的案例, 请单击其概览页右上方的 “运用该案例” 按钮。
       instructions: |
         Gala makes it easy to teach a case in a group of any size: a classroom,
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      new_deployment: New Deployment
+      new_deployment: 新建案例运用
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
