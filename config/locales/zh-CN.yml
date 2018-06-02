@@ -360,7 +360,7 @@ zh-CN:
         Deploy this case in a group of any size: a classroom, a workshop, a
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      teach_this_case: Deploy this Case
+      teach_this_case: 运用该案例
   devise:
     sessions:
       destroy:
@@ -374,10 +374,10 @@ zh-CN:
         other: '（最少%{count}个字符）'
   edgenotes:
     destroy:
-      delete: Delete this Edgenote.
+      delete: 删除此侧注。
     edgenote:
-      caption: "Caption: "
-      has_audio: This edgenote has an audio clip.
+      caption: "说明： "
+      has_audio: 此侧注包含一个音频片段。
       jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
       return_to_narrative: Return to narrative
