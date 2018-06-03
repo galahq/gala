@@ -1,5 +1,5 @@
 zh-CN:
-  __name: 中文（简体)
+  __name: 英语
   activerecord:
     attributes:
       case:
@@ -181,11 +181,11 @@ zh-CN:
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
       运用案例来进行关于当代可持续发展问题的教学。在Gala平台上你能轻松找到寓教于乐的可用于课堂或公众教育教学的材料。
-    impactful_cases: 案例使用
+    impactful_cases: 运用案例
     improve_your_communication: >
       将你的多媒体案例发表到Gala平台上，用Gala清晰而易于使用的界面帮助教学者在美好的用户体验中更好地理解复杂的问题。
-    inclusive_community: 包容的多元化的学习组
-    innovative_teaching: 教学创新
+    inclusive_community: 展开探讨
+    innovative_teaching: 创新教学
     join_the_community: >
       从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
     join_conversation: >
@@ -320,15 +320,13 @@ zh-CN:
       year: 年
   deployments:
     edit:
-      edit_embedded_assessment: Edit embedded assessment
+      edit_embedded_assessment: 编辑学习效果测评
     deployment:
       add_quiz: 添加测验
       edit_quiz: 编辑测验
       n_enrolled: "%{count} 已加入学习"
       invite_instructions_html: |
-        <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
-        participate in your private forum.
+        <b>邀请链接:</b> 发送此链接邀请他人与您共同学习这个案例。他们将看到您选择的任何测验, 并能够参加您所建立的论坛。
       invite_learners: 邀请学员
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
@@ -395,29 +393,29 @@ zh-CN:
       paste_a_link: Paste a link
       preview: Edgenote preview
       pull_a_quote: Pull a quote
-      remove: Remove
-      save_edgenote: Save Edgenote
+      remove: 删除
+      save_edgenote: 保存测边注
       use_embed: Embed a widget from this website
       use_preview_description: Include a description in the link preview
       use_preview_image: Include an image in the the link preview
       upload_an_audio_file: Upload an audio file
       write_a_caption: Write a caption
     index:
-      attach: Attach this Edgenote.
+      attach: 附上这个测边注。
       reattach_instructions: >
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
       make_selection_html: >
         Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
-      new_edgenote: New Edgenote
+      new_edgenote: 新的测边注
   editorships:
     destroy:
       are_you_sure: |
-        Are you sure you want to remove %{name} as an editor of this case?
-      remove: Remove Collaborator
+        您确定要移除 %{name} 作为此案例编辑的身份吗？
+      remove: 删除合作者
     new:
-      add_editor: Add Collaborator
-      create_collaboratively: Collaborate on your case
+      add_editor: 新增合作者
+      create_collaboratively: 邀请他人与你合作写这个案例
       instructions: |
         Add someone else as an editor by entering the email they’ve used to
         create an account on Gala. That person will have the same access to this
@@ -456,7 +454,7 @@ zh-CN:
       model_invalid: "验证失败: %{errors}"
       not_a_number: 不是数字
       not_an_integer: 必须是整数
-      not_found: "not found"
+      not_found: "未找到"
       not_locked: "was not locked"
       not_saved:
         other: "%{count} errors prohibited this %{resource} from being saved:"
@@ -490,11 +488,11 @@ zh-CN:
     required: 必需
   helpers:
     cancel: 取消
-    copy: Copy
+    copy: 复制
     close: 关闭
-    edit: Edit
+    edit: 编辑
     formatting:
-      add_citation_entity: "Add citation here."
+      add_citation_entity: "添加引用"
       add_edgenote_entity: "Add edgenote to selection."
       blockquote: "Block style: Quotation."
       bold: "Inline style: Bold."
@@ -544,7 +542,7 @@ zh-CN:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
-      create_a_case: Create a Case
+      create_a_case: 新建案例
       delete_case: Delete case.
       edit_case: 编辑该案例
       edit_case_settings: Edit case settings.
@@ -669,8 +667,8 @@ zh-CN:
       en: 英文
       fr: 法文
       ja: 日文
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
+      zh-CN: 中文简体
+      zh-TW: 中文繁体
   time:
     am: 上午
     formats:
