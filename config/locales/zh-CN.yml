@@ -545,11 +545,11 @@ zh-CN:
       create_a_case: 新建案例
       delete_case: Delete case.
       edit_case: 编辑该案例
-      edit_case_settings: Edit case settings.
+      edit_case_settings: 编辑案例设置
       featured: 明星
-      my_cases: My Cases
-      new_case: New Case
-      publish_a_case: Publish a Case
+      my_cases: 我的案例
+      new_case: 新建案例
+      publish_a_case: 发表案例
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
   notifications:
