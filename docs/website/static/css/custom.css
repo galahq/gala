@@ -1,0 +1,33 @@
+body {
+  font-family: $sansSerif;
+}
+
+.fixedHeaderContainer {
+  padding: 16px 0;
+}
+
+.headerTitleWithLogo {
+  display: none !important;
+}
+
+.navigationSlider .slidingNav ul {
+  margin-top: 66px;
+}
+
+.navPusher {
+  padding-top: 116px;
+}
+
+@media only screen and (min-width: 736px) {
+  .navigationSlider .slidingNav ul {
+    margin: 0 -10px;
+  }
+
+  .navPusher {
+    padding-top: 66px;
+  }
+}
+
+footer .fbOpenSource {
+  width: 300px;
+}
