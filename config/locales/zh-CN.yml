@@ -350,8 +350,8 @@ zh-CN:
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
-      teach_with_cases: Teach with Cases
-      youre_not_teaching_any_cases: You’re not teaching any cases yet
+      teach_with_cases: 选择案例进行教学
+      youre_not_teaching_any_cases: 您目前未选择用于教学的案例
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -383,16 +383,16 @@ zh-CN:
     edit:
       alt_text_guidelines: >
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
-      attach_an_image: Attach an image
-      choose_audio_file: Choose audio file...
-      choose_image: Choose image...
-      edit_edgenote: Edit Edgenote
+      attach_an_image: 加入图片
+      choose_audio_file: 选择一个音频文件
+      choose_image: 选择图片
+      edit_edgenote: 编辑侧边注
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
       highlight: Allow this Edgenote to take up the full width of the page
-      paste_a_link: Paste a link
-      preview: Edgenote preview
-      pull_a_quote: Pull a quote
+      paste_a_link: 粘贴链接
+      preview: 侧边注预览
+      pull_a_quote: 引用文章或音频选段
       remove: 删除
       save_edgenote: 保存测边注
       use_embed: Embed a widget from this website
