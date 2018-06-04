@@ -376,10 +376,10 @@ zh-CN:
     edgenote:
       caption: "说明： "
       has_audio: 此侧注包含一个音频片段。
-      jump_to_edgenote: Jump to Edgenote
-      pull_quote: "Quotation: "
-      return_to_narrative: Return to narrative
-      video_slug: "YouTube video slug: "
+      jump_to_edgenote: 跳转到侧边注
+      pull_quote: "引用："
+      return_to_narrative: 返回案例故事
+      video_slug: "YouTube视频链接："
     edit:
       alt_text_guidelines: >
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
