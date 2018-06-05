@@ -1,29 +1,63 @@
 ---
 id: authoring-getting-started
-title: Authoring a Teaching Case with Gala
-sidebar_label: Getting Started
+title: Getting Started
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+With Gala’s tools for authors, anyone can create a media-rich, immersive teaching case to communicate a complex sustainability topic.
+You can embed media resources, facilitate discussion in a forum, and administer pre-/post-tests to assess how well your case is working.
+Publishing a case on Gala can be the perfect way to bring more attention to issues you care about, inside and beyond the classroom.
 
-## Lorem
+All you need to do to get started is [sign in to Gala](https://www.learngala.com/en/readers/sign_in) and click the [`Create a Case`](https://www.learngala.com/my_cases) button in the toolbar.
+Once you’re authoring some cases, they will be listed here. For now, click the big green `New Case` button to create one.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+## Introduce your case in its overview
 
-## Mauris In Code
+Your new case is blank, but on the Overview page you’ll see placeholders where you can enter the details of your case.
+Here are some tips to consider when writing your case’s overview.
 
-```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
+![A screenshot of the blank case overview](/docs/assets/overview-screenshot.png)
 
-## Nulla
+### Kicker and question
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+The kicker and the question work together as a your case’s title.
+The kicker should, in two or three words, hint at what the case is about.
+It will sometimes stand alone to identify your case, so make it clear and memorable.
+The question presents the primary decision point of your case, and frames it for your readers.
+Here’s an example of a good kicker/question pair:
 
-## Orci
+> A Radioactive Decision<br />
+> **Should DTE Energy build a new nuclear reactor in Michigan?**
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+### Cover image
 
-## Phasellus
+When choosing a cover image, make sure to you have the legal right to use that photograph.
+If you took it yourself, perfect.
+Otherwise, make sure it was released with a license that allows reuse, like Creative Commons.
+If you need help finding an image, try searching on [Unsplash](https://unsplash.com), [Pixabay](https://pixabay.com), or even Google Images with the “usage rights” search tool set to “labelled for non-commercial reuse.”
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+Keep in mind that your kicker, question, and author names will be displayed on top of this image.
+Make sure that the text remains easy to read on top of the image.
+
+### Case location map
+
+Choose the location that your case takes place by dragging the map until the pin is in the right position.
+Change the zoom level to include just the right amount of context: what is the extent of the area affected by your case’s topic?
+Once you like the look of the map, lock it in by clicking `Set`.
+
+## Add pages and write your narrative
+
+The narrative of a case on Gala is divided into pages.
+Since these are digital pages, we’re not limited to 8 ½ʺ × 11ʺ.
+Make your pages as long or short as you need.
+Think of them in the same way as chapters of a book or sections of a research paper.
+
+Each page is also subdivided into cards.
+When you add a page by clicking the button in the sidebar, it comes with a single blank card.
+A good rule of thumb is to add a new card for every new paragraph, but sometimes two short paragraphs that are closely related should go on the same card.
+
+### Citations
+
+Cases are academic works; it is important to cite your sources.
+To add a citation, place your cursor after the fact you want to cite, and click the <img class="buttonIcon" src="/docs/assets/add-citation-icon.png" role="presentation"> Add Citation button in the card’s toolbar.
+A small circle will be added to the text: this is the citation marker.
+Click the citation marker, and add the text and optional URL of the work you’re citing.
