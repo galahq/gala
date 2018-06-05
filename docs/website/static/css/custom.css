@@ -31,6 +31,10 @@ body {
     height: 34px;
     margin-top: 0;
   }
+
+  .navPusher {
+    padding-top: 72px;
+  }
 }
 
 /* Body */
