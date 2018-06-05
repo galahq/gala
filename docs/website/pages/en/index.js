@@ -76,7 +76,6 @@ class HomeSplash extends React.Component {
     let language = this.props.language || ''
     return (
       <SplashContainer>
-        <Logo img_src={imgUrl('docusaurus.svg')} />
         <div className="inner">
           <ProjectTitle />
           <PromoSection>
@@ -99,50 +98,67 @@ const Block = props => (
     id={props.id}
     background={props.background}
   >
-    <GridBlock align="center" contents={props.children} layout={props.layout} />
+    <GridBlock
+      align={props.centered && 'center'}
+      contents={props.children}
+      layout={props.layout}
+    />
   </Container>
 )
 
 const Features = props => (
-  <Block layout="fourColumn">
+  <Block centered layout="fourColumn">
     {[
       {
-        content: 'This is the content of my feature',
-        image: imgUrl('docusaurus.svg'),
+        title: 'Impactful Cases',
+        content: `Find a case about contemporary sustainability issues to study
+          or to teach as they are unfolding. It’s now easy to find engaging
+          teaching materials for use in classrooms and for public education.`,
+        image: imgUrl('impact-icon.png'),
         imageAlign: 'top',
-        title: 'Feature One',
       },
       {
-        content: 'The content of my second feature',
-        image: imgUrl('docusaurus.svg'),
+        title: 'Innovative Teaching',
+        content: `Improve your ability to communicate complex topics by adding
+          your own case study to Gala. Your media-rich cases and Gala’s
+          immersive user interface will delight instructors and learners.`,
+        image: imgUrl('innovation-icon.png'),
         imageAlign: 'top',
-        title: 'Feature Two',
+      },
+      {
+        title: 'Inclusive Community',
+        content: `Join conversations that consider a wide range of perspectives.
+          Share your own on our embedded forums, hear from others on our
+          podcasts, and create your own unconventional solutions.`,
+        image: imgUrl('inclusion-icon.png'),
+        imageAlign: 'top',
       },
     ]}
   </Block>
-)
-
-const FeatureCallout = props => (
-  <div
-    className="productShowcaseSection paddingBottom"
-    style={{ textAlign: 'center' }}
-  >
-    <h2>Feature Callout</h2>
-    <MarkdownBlock>These are features of this project</MarkdownBlock>
-  </div>
 )
 
 const Description = props => (
-  <Block background="light">
-    {[
-      {
-        content: 'This is another description of how this project is useful',
-        image: imgUrl('docusaurus.svg'),
-        imageAlign: 'right',
-        title: 'Description',
-      },
-    ]}
-  </Block>
+  <div className="whatIsGala">
+    <Block background="light">
+      {[
+        {
+          title: 'What is Gala?',
+          image: imgUrl('malia-and-danielle.png'),
+          content: `We built Gala to make the best teaching cases on
+          sustainability, and to enable collaboration across the world. Anyone
+          can create, publish, and continually update a case about any topic
+          they want. We named it for an apple variety commonly grown in
+          Michigan. But the name also evokes a party where people come together
+          to combine their resources for innovative work in the world. Because
+          making cleaner, safer, more efficient and resilient systems for water,
+          food, waste, energy, transport, recreation, and more is worth
+          celebrating—and worth supporting. And so we invite you to join us in
+          learning and teaching, and to be the hands that build bridges.`,
+          imageAlign: 'right',
+        },
+      ]}
+    </Block>
+  </div>
 )
 
 class Index extends React.Component {
@@ -154,7 +170,6 @@ class Index extends React.Component {
         <HomeSplash language={language} />
         <div className="mainContainer">
           <Features />
-          <FeatureCallout />
           <Description />
         </div>
       </div>

@@ -1,6 +1,6 @@
 const siteConfig = {
   title: 'How to use Gala',
-  tagline: 'Open access learning tools for sustainability science',
+  tagline: 'Open-access learning tools for\nsustainability science',
   url: 'https://docs.learngala.com',
   baseUrl: '/',
 
@@ -11,6 +11,7 @@ const siteConfig = {
     { doc: 'authoring-getting-started', label: 'Authoring' },
     { doc: 'teaching-getting-started', label: 'Teaching' },
     { page: 'help', label: 'Help' },
+    { href: 'https://www.learngala.com', label: 'Go to Gala' },
   ],
 
   headerIcon: 'img/gala-logo.svg',
