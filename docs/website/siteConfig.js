@@ -1,5 +1,5 @@
 const siteConfig = {
-  title: 'How to use Gala',
+  title: 'Gala',
   tagline: 'Open-access learning tools for\nsustainability science',
   url: 'https://docs.learngala.com',
   baseUrl: '/',
