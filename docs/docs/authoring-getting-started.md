@@ -7,8 +7,8 @@ With Gala’s tools for authors, anyone can create a media-rich, immersive teach
 You can embed media resources, facilitate discussion in a forum, and administer pre-/post-tests to assess how well your case is working.
 Publishing a case on Gala can be the perfect way to bring more attention to issues you care about, inside and beyond the classroom.
 
-All you need to do to get started is [sign in to Gala](https://www.learngala.com/en/readers/sign_in) and click the [`Create a Case`](https://www.learngala.com/my_cases) button in the toolbar.
-Once you’re authoring some cases, they will be listed here. For now, click the big green `New Case` button to create one.
+All you need to do to get started is [sign in to Gala](https://www.learngala.com/en/readers/sign_in) and click the “[Create a Case](https://www.learngala.com/my_cases)” button in the toolbar.
+Once you’re authoring some cases, they will be listed here. For now, click the big green “New Case” button to create one.
 
 ## Introduce your case in its overview
 
@@ -58,6 +58,6 @@ A good rule of thumb is to add a new card for every new paragraph, but sometimes
 ### Citations
 
 Cases are academic works; it is important to cite your sources.
-To add a citation, place your cursor after the fact you want to cite, and click the <img class="buttonIcon" src="/docs/assets/add-citation-icon.png" role="presentation"> Add Citation button in the card’s toolbar.
+To add a citation, place your cursor after the fact you want to cite, and click the <img class="buttonIcon" src="/docs/assets/add-citation-icon.png" role="presentation"> “Add Citation” button in the card’s toolbar.
 A small circle will be added to the text: this is the citation marker.
 Click the citation marker, and add the text and optional URL of the work you’re citing.
