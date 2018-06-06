@@ -158,6 +158,8 @@ fr:
     index:
       all_cases: Toutes les études de cas
       locations: Emplacements des sites
+    new:
+      create_a_case: Create a Case
     settings:
       edit:
         case_editors: Case editors
