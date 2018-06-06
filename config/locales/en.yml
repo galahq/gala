@@ -159,6 +159,8 @@ en:
     index:
       all_cases: All cases
       locations: Site locations
+    new:
+      create_a_case: Create a Case
     settings:
       edit:
         case_editors: Case editors
