@@ -118,7 +118,7 @@ const Input = styled.div.attrs({ className: 'pt-card' })`
   flex: 1;
   min-height: 34px;
   max-height: 105px;
-  overflow: scroll;
+  overflow: auto;
   font-size: 14px;
   line-height: 1.3;
 

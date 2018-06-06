@@ -66,7 +66,7 @@ const ScrollViewDiv = styled.div.attrs({ className: 'ScrollView' })`
   max-height: ${({ maxHeightOffset }) =>
     `calc(100vh - (${maxHeightOffset}))` || '100vh'};
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 `
 
