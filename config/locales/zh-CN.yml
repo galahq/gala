@@ -153,6 +153,8 @@ zh-CN:
     index:
       all_cases: 全部案例
       locations: 案例地点
+    new:
+      create_a_case: 新建案例
     settings:
       edit:
         case_editors: 案例作者
