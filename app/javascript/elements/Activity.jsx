@@ -38,7 +38,7 @@ const Activity = ({
   deleteElement,
 }) => (
   <article>
-    <section className="Page-meta">
+    <section className="section Page-meta">
       <h1 className="pt-dark">
         <EditableText
           multiline
@@ -59,12 +59,12 @@ const Activity = ({
       )}
     </section>
 
-    <section>
+    <section className="section">
       <Card
         nonNarrative
         id={cardId}
         title={
-          <h3 className="c-activity__instructions__title">
+          <h3 className="c-activity__instructions__title ">
             <FormattedMessage id="activities.show.instructions" />
           </h3>
         }

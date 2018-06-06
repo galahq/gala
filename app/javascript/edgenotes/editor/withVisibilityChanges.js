@@ -10,17 +10,17 @@ import type { HOC } from 'recompose'
 import type { LinkExpansionVisibility } from 'redux/state'
 
 export type VisibilityChangeProps = {|
-  toggleVisibility: (key: $Keys<LinkExpansionVisibility>) => mixed,
+  setVisibility: (key: $Keys<LinkExpansionVisibility>, value: boolean) => mixed,
   visibility: LinkExpansionVisibility,
 |}
 
 const enhance: HOC<*, VisibilityChangeProps> = withStateHandlers(
   { visibility: ({}: LinkExpansionVisibility) },
   {
-    toggleVisibility: ({ visibility }) => key => ({
+    setVisibility: ({ visibility }) => (key, value) => ({
       visibility: {
         ...visibility,
-        [key]: !visibility[key],
+        [key]: value,
       },
     }),
   }

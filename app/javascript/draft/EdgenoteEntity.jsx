@@ -59,7 +59,7 @@ const EdgenoteSpan = ({
   slug,
 }) => {
   return (
-    <React.Fragment>
+    <>
       <a
         tabIndex="0"
         className={`c-edgenote-entity${commentThreadsOpen ? '--inactive' : ''}`}
@@ -77,7 +77,7 @@ const EdgenoteSpan = ({
           <FormattedMessage id="edgenotes.edgenote.jumpToEdgenote" />
         </a>
       </LabelForScreenReaders>
-    </React.Fragment>
+    </>
   )
 }
 

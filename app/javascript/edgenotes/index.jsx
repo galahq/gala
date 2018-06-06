@@ -37,9 +37,11 @@ const EdgenotesCard = ({ edgenoteSlugs, oldStyle }) => {
   const AnEdgenote = oldStyle ? OldEdgenote : Edgenote
 
   return (
-    <aside className={oldStyle ? 'edgenotes' : 'c-edgenotes-card pt-dark'}>
-      {edgenoteSlugs.map(slug => <AnEdgenote key={`${slug}`} slug={slug} />)}
-    </aside>
+    <>
+      {edgenoteSlugs.map((slug, i) => (
+        <AnEdgenote key={slug} slug={slug} i={i} />
+      ))}
+    </>
   )
 }
 

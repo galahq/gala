@@ -35,7 +35,7 @@ const PullQuote = ({
   selected,
   active,
 }: Props) => (
-  <React.Fragment>
+  <>
     <Background visible={hasBackground}>
       {contents && (
         <blockquote
@@ -60,12 +60,13 @@ const PullQuote = ({
       <Attribution name={attribution} />
     </Background>
     <AudioPlayer src={audioUrl} active={active} />
-  </React.Fragment>
+  </>
 )
 
 export default PullQuote
 
 const Background = styled.div`
+  max-width: 40em;
   ${p =>
     p.visible &&
     css`
@@ -88,8 +89,8 @@ const Attribution = ({ name }) =>
     >
       {name &&
         !name.trim().startsWith('—') && (
-          <FormattedMessage id="support.quote.attributionPrefix" />
-        )}
+        <FormattedMessage id="support.quote.attributionPrefix" />
+      )}
       {name}
     </cite>
   ) : null

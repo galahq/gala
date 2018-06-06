@@ -26,7 +26,7 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
 import { FormattedMessage } from 'react-intl'
@@ -51,7 +51,7 @@ import type { State, Edgenote } from 'redux/state'
 import type { Dispatch } from 'redux/actions'
 import type { ILinkExpansion } from './expansion/LinkExpansion'
 
-type OwnProps = { slug: string }
+type OwnProps = { slug: string, i: number }
 function mapStateToProps (state: State, { slug }: OwnProps) {
   return {
     editing: state.edit.inProgress,
@@ -76,7 +76,9 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
     ...stateProps,
     ...dispatchProps,
     ...ownProps,
-    activate: stateProps.editing ? () => {} : dispatchProps.activate,
+    activate: stateProps.editing
+      ? () => Promise.resolve()
+      : dispatchProps.activate,
   }
 }
 
@@ -96,6 +98,7 @@ type Props = {
   onMouseOver: () => any,
   onMouseOut: () => any,
   onChange: ($Shape<Edgenote>) => any,
+  i: number,
 }
 
 class BaseEdgenoteFigure extends React.Component<Props> {
@@ -113,8 +116,8 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   componentDidUpdate (prevProps: Props) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
-      if (contents && contents.websiteUrl) {
-        window.open(contents.websiteUrl, '_blank')
+      if (contents?.websiteUrl) {
+        window.open(contents?.websiteUrl, '_blank')
         setTimeout(() => {
           this.props.deactivate()
         }, 300)
@@ -133,10 +136,11 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       editing,
       embedded,
       expansion,
+      i,
     } = this.props
     if (contents == null) return null
 
-    const { slug, caption, pullQuote } = contents
+    const { slug, caption, pullQuote, highlighted } = contents
 
     const isALink = !editing && expansion.actsAsLink()
 
@@ -152,11 +156,13 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       <Container
         data-test-id="edgenote"
         id={slug}
+        i={i}
+        highlighted={highlighted}
         {...conditionalHoverCallbacks}
       >
         <Lock type="Edgenote" param={slug}>
           {({ locked, onBeginEditing, onFinishEditing }) => (
-            <React.Fragment>
+            <>
               {editing && (
                 <EdgenoteEditor
                   contents={contents}
@@ -205,7 +211,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
                   instantaneous={isALink}
                 />
               )}
-            </React.Fragment>
+            </>
           )}
         </Lock>
       </Container>
@@ -294,6 +300,27 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
 
 const Container = styled.figure.attrs({ className: 'edge' })`
   position: relative;
+  margin: 0 0 1em;
+
+  @media screen and (max-width: 1300px) {
+    margin-top: 1em;
+  }
+
+  @media (max-width: 700px) {
+    grid-column: 1 / span 2;
+  }
+
+  ${p =>
+    p.highlighted &&
+    css`
+      grid-row: highlighted ${p => p.i + 1};
+      grid-column: 1 / -1;
+      margin-top: 1em;
+
+      @media screen and (max-width: 1300px) {
+        grid-row: unset;
+      }
+    `};
 `
 
 const Body = styled.div`
@@ -309,7 +336,7 @@ const LinkBody = Body.withComponent('a')
 
 const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
   (contents || linkDomain) && (
-    <div>
+    <div style={{ maxWidth: '40em' }}>
       <div
         className={canHighlight && selected ? 'edge--highlighted' : ''}
         style={{ display: 'inline', margin: '0.25em 0 0 0', lineHeight: 1 }}
@@ -322,7 +349,7 @@ const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
 
 const Caption = ({ contents, selected }) =>
   contents && (
-    <div style={{ margin: '0.25em 0 0 0' }}>
+    <div style={{ margin: '0.25em 0 0 0', maxWidth: '40em' }}>
       <figcaption
         className={selected ? 'edge--highlighted' : ''}
         style={{ fontSize: '110%', lineHeight: 1.1, display: 'inline' }}

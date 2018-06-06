@@ -30,9 +30,9 @@ class ErrorBoundary extends React.Component<
             description={
               <InfoBox>
                 <code>
-                  Uncaught {error && error.name}: {error && error.message}
+                  Uncaught {error?.name}: {error?.message}
                   {'\n'}
-                  {info && info.componentStack}
+                  {info?.componentStack}
                 </code>
               </InfoBox>
             }

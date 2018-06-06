@@ -1,3 +1,6 @@
+<% content_for :title, I18n.t('devise.passwords.new.forgot_your_password') %>
+
+
 <h2><%= t '.forgot_your_password' %></h2>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name),

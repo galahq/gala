@@ -12,14 +12,14 @@ import * as React from 'react'
 
 type $npm$ReactIntl$LocaleData = {
   locale: string,
-  [key: string]: any
-};
+  [key: string]: any,
+}
 
 type $npm$ReactIntl$MessageDescriptor = {
   id: string,
   description?: string,
-  defaultMessage?: string
-};
+  defaultMessage?: string,
+}
 
 type $npm$ReactIntl$IntlConfig = {
   locale: string,
@@ -27,8 +27,8 @@ type $npm$ReactIntl$IntlConfig = {
   messages: { [id: string]: string },
 
   defaultLocale?: string,
-  defaultFormats?: Object
-};
+  defaultFormats?: Object,
+}
 
 type $npm$ReactIntl$IntlProviderConfig = {
   locale?: string,
@@ -36,8 +36,8 @@ type $npm$ReactIntl$IntlProviderConfig = {
   messages?: { [id: string]: string },
 
   defaultLocale?: string,
-  defaultFormats?: Object
-};
+  defaultFormats?: Object,
+}
 
 type $npm$ReactIntl$IntlFormat = {
   formatDate: (value: any, options?: Object) => string,
@@ -52,42 +52,42 @@ type $npm$ReactIntl$IntlFormat = {
   formatHTMLMessage: (
     messageDescriptor: $npm$ReactIntl$MessageDescriptor,
     values?: Object
-  ) => string
-};
+  ) => string,
+}
 
 type $npm$ReactIntl$IntlShape = $npm$ReactIntl$IntlConfig &
-  $npm$ReactIntl$IntlFormat & { now: () => number };
+  $npm$ReactIntl$IntlFormat & { now: () => number }
 
 type $npm$ReactIntl$DateTimeFormatOptions = {
-  localeMatcher?: "best fit" | "lookup",
-  formatMatcher?: "basic" | "best fit",
+  localeMatcher?: 'best fit' | 'lookup',
+  formatMatcher?: 'basic' | 'best fit',
 
   timeZone?: string,
   hour12?: boolean,
 
-  weekday?: "narrow" | "short" | "long",
-  era?: "narrow" | "short" | "long",
-  year?: "numeric" | "2-digit",
-  month?: "numeric" | "2-digit" | "narrow" | "short" | "long",
-  day?: "numeric" | "2-digit",
-  hour?: "numeric" | "2-digit",
-  minute?: "numeric" | "2-digit",
-  second?: "numeric" | "2-digit",
-  timeZoneName?: "short" | "long"
-};
+  weekday?: 'narrow' | 'short' | 'long',
+  era?: 'narrow' | 'short' | 'long',
+  year?: 'numeric' | '2-digit',
+  month?: 'numeric' | '2-digit' | 'narrow' | 'short' | 'long',
+  day?: 'numeric' | '2-digit',
+  hour?: 'numeric' | '2-digit',
+  minute?: 'numeric' | '2-digit',
+  second?: 'numeric' | '2-digit',
+  timeZoneName?: 'short' | 'long',
+}
 
 type $npm$ReactIntl$RelativeFormatOptions = {
-  style?: "best fit" | "numeric",
-  units?: "second" | "minute" | "hour" | "day" | "month" | "year"
-};
+  style?: 'best fit' | 'numeric',
+  units?: 'second' | 'minute' | 'hour' | 'day' | 'month' | 'year',
+}
 
 type $npm$ReactIntl$NumberFormatOptions = {
-  localeMatcher?: "best fit" | "lookup",
+  localeMatcher?: 'best fit' | 'lookup',
 
-  style?: "decimal" | "currency" | "percent",
+  style?: 'decimal' | 'currency' | 'percent',
 
   currency?: string,
-  currencyDisplay?: "symbol" | "code" | "name",
+  currencyDisplay?: 'symbol' | 'code' | 'name',
 
   useGrouping?: boolean,
 
@@ -95,133 +95,143 @@ type $npm$ReactIntl$NumberFormatOptions = {
   minimumFractionDigits?: number,
   maximumFractionDigits?: number,
   minimumSignificantDigits?: number,
-  maximumSignificantDigits?: number
-};
+  maximumSignificantDigits?: number,
+}
 
 type $npm$ReactIntl$PluralFormatOptions = {
-  style?: "cardinal" | "ordinal"
-};
+  style?: 'cardinal' | 'ordinal',
+}
 
 type $npm$ReactIntl$PluralCategoryString =
-  | "zero"
-  | "one"
-  | "two"
-  | "few"
-  | "many"
-  | "other";
+  | 'zero'
+  | 'one'
+  | 'two'
+  | 'few'
+  | 'many'
+  | 'other'
 
-type $npm$ReactIntl$DateParseable = number | string | Date;
+type $npm$ReactIntl$DateParseable = number | string | Date
 
-declare module "react-intl" {
+declare module 'react-intl' {
   // PropType checker
   declare function intlShape(
     props: Object,
     propName: string,
     componentName: string
-  ): void;
+  ): void
   declare function addLocaleData(
     data: $npm$ReactIntl$LocaleData | Array<$npm$ReactIntl$LocaleData>
-  ): void;
+  ): void
   declare function defineMessages<
     T: { [key: string]: $npm$ReactIntl$MessageDescriptor }
   >(
     messageDescriptors: T
-  ): T;
+  ): T
 
   declare type InjectIntlProvidedProps = {
-    intl: $npm$ReactIntl$IntlShape
+    intl: $npm$ReactIntl$IntlShape,
   }
 
-  declare type ComponentWithDefaultProps<DefaultProps: {}, Props: {}> =
-    React.ComponentType<Props> & { defaultProps: DefaultProps };
+  declare type ComponentWithDefaultProps<
+    DefaultProps: {},
+    Props: {}
+  > = React.ComponentType<Props> & { defaultProps: DefaultProps }
 
   declare type InjectIntlOtions = {
     intlPropName?: string,
-    withRef?: boolean
+    withRef?: boolean,
   }
 
-  declare class IntlInjectedComponent<TOwnProps, TDefaultProps> extends React.Component<TOwnProps> {
-    static WrappedComponent: Class<React.Component<TOwnProps & InjectIntlProvidedProps>>,
-    static defaultProps: TDefaultProps,
-    props: TOwnProps
+  declare class IntlInjectedComponent<
+    TOwnProps,
+    TDefaultProps
+  > extends React.Component<TOwnProps> {
+    static WrappedComponent: Class<
+      React.Component<TOwnProps & InjectIntlProvidedProps>
+    >;
+    static defaultProps: TDefaultProps;
+    props: TOwnProps;
   }
 
-  declare type IntlInjectedComponentClass<TOwnProps, TDefaultProps: {} = {}> = Class<
-    IntlInjectedComponent<TOwnProps, TDefaultProps>
-  >;
+  declare type IntlInjectedComponentClass<
+    TOwnProps,
+    TDefaultProps: {} = {}
+  > = Class<IntlInjectedComponent<TOwnProps, TDefaultProps>>
 
-  declare function injectIntl<OriginalProps: InjectIntlProvidedProps, DefaultProps: {}>
-  (
+  declare function injectIntl<
+    OriginalProps: InjectIntlProvidedProps,
+    DefaultProps: {}
+  >(
     component: ComponentWithDefaultProps<DefaultProps, OriginalProps>,
-    options?: InjectIntlOtions,
-  ):
-  IntlInjectedComponentClass<$Diff<OriginalProps, InjectIntlProvidedProps>, DefaultProps>
+    options?: InjectIntlOtions
+  ): IntlInjectedComponentClass<
+    $Diff<OriginalProps, InjectIntlProvidedProps>,
+    DefaultProps
+  >
 
-  declare function injectIntl<OriginalProps: InjectIntlProvidedProps>
-  (
+  declare function injectIntl<OriginalProps: InjectIntlProvidedProps>(
     component: React.ComponentType<OriginalProps>,
-    options?: InjectIntlOtions,
-  ):
-  IntlInjectedComponentClass<$Diff<OriginalProps, InjectIntlProvidedProps>>;
+    options?: InjectIntlOtions
+  ): IntlInjectedComponentClass<$Diff<OriginalProps, InjectIntlProvidedProps>>
 
   declare function formatMessage(
     messageDescriptor: $npm$ReactIntl$MessageDescriptor,
     values?: Object
-  ): string;
+  ): string
   declare function formatHTMLMessage(
     messageDescriptor: $npm$ReactIntl$MessageDescriptor,
     values?: Object
-  ): string;
+  ): string
   declare function formatDate(
     value: any,
     options?: $npm$ReactIntl$DateTimeFormatOptions & { format: string }
-  ): string;
+  ): string
   declare function formatTime(
     value: any,
     options?: $npm$ReactIntl$DateTimeFormatOptions & { format: string }
-  ): string;
+  ): string
   declare function formatRelative(
     value: any,
     options?: $npm$ReactIntl$RelativeFormatOptions & {
       format: string,
-      now: any
+      now: any,
     }
-  ): string;
+  ): string
   declare function formatNumber(
     value: any,
     options?: $npm$ReactIntl$NumberFormatOptions & { format: string }
-  ): string;
+  ): string
   declare function formatPlural(
     value: any,
     options?: $npm$ReactIntl$PluralFormatOptions
-  ): $npm$ReactIntl$PluralCategoryString;
+  ): $npm$ReactIntl$PluralCategoryString
 
   declare class FormattedMessage extends React.Component<
     $npm$ReactIntl$MessageDescriptor & {
       values?: Object,
       tagName?: string,
-      children?: (...formattedMessage: Array<React$Node>) => React$Node
+      children?: (...formattedMessage: Array<React$Node>) => React$Node,
     }
   > {}
   declare class FormattedHTMLMessage extends React.Component<
     $npm$ReactIntl$DateTimeFormatOptions & {
       values?: Object,
       tagName?: string,
-      children?: (...formattedMessage: Array<React$Node>) => React$Node
+      children?: (...formattedMessage: Array<React$Node>) => React$Node,
     }
   > {}
   declare class FormattedDate extends React.Component<
     $npm$ReactIntl$DateTimeFormatOptions & {
       value: $npm$ReactIntl$DateParseable,
       format?: string,
-      children?: (formattedDate: string) => React$Node
+      children?: (formattedDate: string) => React$Node,
     }
   > {}
   declare class FormattedTime extends React.Component<
     $npm$ReactIntl$DateTimeFormatOptions & {
       value: $npm$ReactIntl$DateParseable,
       format?: string,
-      children?: (formattedDate: string) => React$Node
+      children?: (formattedDate: string) => React$Node,
     }
   > {}
   declare class FormattedRelative extends React.Component<
@@ -230,14 +240,14 @@ declare module "react-intl" {
       format?: string,
       updateInterval?: number,
       initialNow?: $npm$ReactIntl$DateParseable,
-      children?: (formattedDate: string) => React$Node
+      children?: (formattedDate: string) => React$Node,
     }
   > {}
   declare class FormattedNumber extends React.Component<
     $npm$ReactIntl$NumberFormatOptions & {
       value: number | string,
       format?: string,
-      children?: (formattedNumber: string) => React$Node
+      children?: (formattedNumber: string) => React$Node,
     }
   > {}
   declare class FormattedPlural extends React.Component<
@@ -249,15 +259,15 @@ declare module "react-intl" {
       two?: React.Node,
       few?: React.Node,
       many?: React.Node,
-      children?: (formattedPlural: React.Node) => React.Node
+      children?: (formattedPlural: React.Node) => React.Node,
     }
   > {}
   declare class IntlProvider extends React.Component<
     $npm$ReactIntl$IntlProviderConfig & {
       children: React.Node,
-      initialNow?: $npm$ReactIntl$DateParseable
+      initialNow?: $npm$ReactIntl$DateParseable,
     }
   > {}
-  declare type IntlShape = $npm$ReactIntl$IntlShape;
-  declare type MessageDescriptor = $npm$ReactIntl$MessageDescriptor;
+  declare type IntlShape = $npm$ReactIntl$IntlShape
+  declare type MessageDescriptor = $npm$ReactIntl$MessageDescriptor
 }

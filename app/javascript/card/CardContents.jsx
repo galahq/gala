@@ -57,7 +57,7 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
     return n.join(' ')
   }
 
-  componentWillReceiveProps (nextProps: CardProps) {
+  UNSAFE_componentWillReceiveProps (nextProps: CardProps) {
     let editorState = nextProps.editorState
     if (this._shouldJiggle(nextProps)) {
       const contentState = editorState.getCurrentContent()
@@ -113,91 +113,93 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
     })
 
     return (
-      <Card
-        innerRef={el => (this.cardRef = el)}
-        className={this._getClassNames()}
-        editable={editable}
-        theseCommentThreadsOpen={theseCommentThreadsOpen}
-      >
-        <Lock type="Card" param={id}>
-          {({ onBeginEditing, onFinishEditing }) => (
-            <React.Fragment>
-              {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
+      <Container>
+        <Card
+          innerRef={el => (this.cardRef = el)}
+          className={this._getClassNames()}
+          editable={editable}
+          theseCommentThreadsOpen={theseCommentThreadsOpen}
+        >
+          <Lock type="Card" param={id}>
+            {({ onBeginEditing, onFinishEditing }) => (
+              <>
+                {theseCommentThreadsOpen ? <ScrollIntoView /> : null}
 
-              {editable && (
-                <FormattingToolbar
-                  actions={{
-                    code: false,
-                    header: false,
-                    blockquote: false,
-                    addEdgenoteEntity: !nonNarrative,
-                    addCitationEntity: !nonNarrative,
-                  }}
-                  editorState={editorState}
-                  getEdgenote={getEdgenote}
-                  onChange={onChange}
-                />
-              )}
-              {title}
-              <FocusContainer
-                active={!!(theseCommentThreadsOpen && acceptingSelection)}
-                priority={100}
-              >
-                <Editor
-                  placeholder={intl.formatMessage({
-                    id: 'cards.edit.writeSomething',
-                  })}
-                  readOnly={readOnly}
-                  customStyleMap={styleMap}
-                  editorState={editorState}
-                  handleKeyCommand={handleKeyCommand}
-                  onFocus={onBeginEditing}
-                  onChange={onChange}
-                  onBlur={onFinishEditing}
-                />
-              </FocusContainer>
-
-              {commentable &&
-                solid && <CommentThreadsTag cardId={id} match={match} />}
-
-              <Route
-                {...commentThreadsOpen(id)}
-                render={routeProps => (
-                  <CommentThreadsCard
-                    {...routeProps}
-                    cardId={id}
-                    addCommentThread={addCommentThread}
+                {editable && (
+                  <FormattingToolbar
+                    actions={{
+                      code: false,
+                      header: false,
+                      blockquote: false,
+                      addEdgenoteEntity: !nonNarrative,
+                      addCitationEntity: !nonNarrative,
+                    }}
+                    editorState={editorState}
+                    getEdgenote={getEdgenote}
+                    onChange={onChange}
                   />
                 )}
-              />
+                {title}
+                <FocusContainer
+                  active={!!(theseCommentThreadsOpen && acceptingSelection)}
+                  priority={100}
+                >
+                  <Editor
+                    placeholder={intl.formatMessage({
+                      id: 'cards.edit.writeSomething',
+                    })}
+                    readOnly={readOnly}
+                    customStyleMap={styleMap}
+                    editorState={editorState}
+                    handleKeyCommand={handleKeyCommand}
+                    onFocus={onBeginEditing}
+                    onChange={onChange}
+                    onBlur={onFinishEditing}
+                  />
+                </FocusContainer>
 
-              {citationOpenWithinCard && (
-                <CitationTooltip
-                  cardId={id}
-                  cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
-                  openedCitation={openedCitation}
-                  editable={editable}
+                {commentable &&
+                  solid && <CommentThreadsTag cardId={id} match={match} />}
+
+                <Route
+                  {...commentThreadsOpen(id)}
+                  render={routeProps => (
+                    <CommentThreadsCard
+                      {...routeProps}
+                      cardId={id}
+                      addCommentThread={addCommentThread}
+                    />
+                  )}
                 />
-              )}
 
-              {editable &&
-                deletable && (
-                <DeleteCardButton id={id} onClick={handleDeleteCard} />
-              )}
+                {citationOpenWithinCard && (
+                  <CitationTooltip
+                    cardId={id}
+                    cardWidth={this.cardRef ? this.cardRef.clientWidth : 0}
+                    openedCitation={openedCitation}
+                    editable={editable}
+                  />
+                )}
 
-              {solid && !editable && <Statistics uri={`cards/${id}`} />}
+                {editable &&
+                  deletable && (
+                  <DeleteCardButton id={id} onClick={handleDeleteCard} />
+                )}
 
-              <OnScreenTracker
-                targetKey={`cards/${id}`}
-                targetParameters={{
-                  name: 'read_card',
-                  card_id: parseInt(id, 10),
-                }}
-              />
-            </React.Fragment>
-          )}
-        </Lock>
-      </Card>
+                {solid && !editable && <Statistics uri={`cards/${id}`} />}
+
+                <OnScreenTracker
+                  targetKey={`cards/${id}`}
+                  targetParameters={{
+                    name: 'read_card',
+                    card_id: parseInt(id, 10),
+                  }}
+                />
+              </>
+            )}
+          </Lock>
+        </Card>
+      </Container>
     )
   }
 }
@@ -209,6 +211,11 @@ function citationInsideThisCard (card: ?Element, citation: ?Element): boolean {
   if (card === citation) return true
   return citationInsideThisCard(card, citation.parentElement)
 }
+
+const Container = styled.div.attrs({ className: 'card-container' })`
+  grid-column: 1 / span 2;
+  grid-row: 1 / highlighted;
+`
 
 const Card = styled.div`
   padding-top: ${p => p.editable && '2em'};

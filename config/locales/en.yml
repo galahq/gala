@@ -31,6 +31,9 @@ en:
         caption: Caption
         photo_credit: Photo credit
         pull_quote: Pull quote
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
       question:
         content: Content
         correct_answer: Correct answer
@@ -78,6 +81,12 @@ en:
           attributes:
             correct_answer:
               inclusion: "is not included in the list of possible answers"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
     models:
       activity: Activity
       case: Case
@@ -88,6 +97,7 @@ en:
       comment_thread: Comment thread
       deployment: Deployment
       edgenote: Edgenote
+      editorship: Editorship
       enrollment: Enrollment
       global_community: Global Community
       group: Group
@@ -151,6 +161,7 @@ en:
       locations: Site locations
     settings:
       edit:
+        case_editors: Case editors
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
@@ -341,6 +352,8 @@ en:
       second: Seconds
       year: Year
   deployments:
+    edit:
+      edit_embedded_assessment: Edit embedded assessment
     deployment:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
@@ -418,6 +431,8 @@ en:
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote.
         Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      highlight:
+        Allow this Edgenote to take up the full width of the page
       paste_a_link: Paste a link
       preview: Edgenote preview
       pull_a_quote: Pull a quote
@@ -442,6 +457,18 @@ en:
         <span class="pt-icon pt-icon-add-column-right"></span> Add
         Edgenote</span> button.
       new_edgenote: New Edgenote
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Collaborator
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: Are you sure you want to unenroll in this case?

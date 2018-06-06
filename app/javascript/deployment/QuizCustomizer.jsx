@@ -107,7 +107,8 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                 },
               })}
               onChange={(e: SyntheticInputEvent<*>) =>
-                handleEditQuestionContent(questionIx, e.target.value)}
+                handleEditQuestionContent(questionIx, e.target.value)
+              }
             />
 
             {options.length > 0 ? (
@@ -134,7 +135,8 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                         className="pt-minimal"
                         iconName="delete"
                         onClick={_ =>
-                          handleRemoveQuestionOption(questionIx, optionIx)}
+                          handleRemoveQuestionOption(questionIx, optionIx)
+                        }
                       />
                     }
                     onKeyDown={hotkeyDispatch({
@@ -154,7 +156,8 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                         questionIx,
                         optionIx,
                         e.target.value
-                      )}
+                      )
+                    }
                   />
                 </div>
               ))
@@ -162,7 +165,8 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
               <RubricTextArea
                 value={correctAnswer}
                 onChange={e =>
-                  handleEditQuestionAnswer(questionIx, e.currentTarget.value)}
+                  handleEditQuestionAnswer(questionIx, e.currentTarget.value)
+                }
               />
             )}
           </PaddedItem>

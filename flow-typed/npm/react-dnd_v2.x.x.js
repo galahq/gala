@@ -1,33 +1,33 @@
 // flow-typed signature: 127954d01aa89a07e16464c0db385046
 // flow-typed version: 010c66895a/react-dnd_v2.x.x/flow_>=v0.53.x
 
-declare module "react-dnd" {
-  declare type Identifier = string;
+declare module 'react-dnd' {
+  declare type Identifier = string
 
   declare type ClientOffset = {
     x: number,
-    y: number
-  };
+    y: number,
+  }
 
-  declare type ElementOrNode = React$Element<any> | HTMLElement;
+  declare type ElementOrNode = React$Element<any> | HTMLElement
 
   declare type DndOptions<P> = {
-    arePropsEqual?: (props: P, otherProps: P) => boolean
-  };
+    arePropsEqual?: (props: P, otherProps: P) => boolean,
+  }
 
   declare type ComponentClassWithDefaultProps<D: {}, P: {}, S> = Class<
     React$Component<P, S>
-  > & { defaultProps: D };
+  > & { defaultProps: D }
 
-  declare type _InstanceOf<I, C: Class<I>> = I;
-  declare type InstanceOf<C> = _InstanceOf<*, C>;
+  declare type _InstanceOf<I, C: Class<I>> = I
+  declare type InstanceOf<C> = _InstanceOf<*, C>
 
   declare class ConnectedComponent<C, I, P> extends React$Component<P> {
-    static DecoratedComponent: C,
-    getDecoratedComponentInstance(): I,
-    getHandlerId(): Identifier,
-    props: P,
-    state: void
+    static DecoratedComponent: C;
+    getDecoratedComponentInstance(): I;
+    getHandlerId(): Identifier;
+    props: P;
+    state: void;
   }
 
   declare type Connector<SP: {}, CP: {}> = (<
@@ -47,12 +47,12 @@ declare module "react-dnd" {
     >) &
     (<P: SP, C: React$StatelessFunctionalComponent<P>>(
       component: C
-    ) => Class<ConnectedComponent<C, void, { ...CP } & $Diff<P, CP>>>);
+    ) => Class<ConnectedComponent<C, void, { ...CP } & $Diff<P, CP>>>)
 
   // Drag Source
   // ----------------------------------------------------------------------
 
-  declare type DragSourceType<P> = Identifier | ((props: P) => Identifier);
+  declare type DragSourceType<P> = Identifier | ((props: P) => Identifier)
 
   declare type DragSourceSpec<P> = {
     beginDrag: (
@@ -69,8 +69,8 @@ declare module "react-dnd" {
 
     canDrag?: (props: P, monitor: DragSourceMonitor) => boolean,
 
-    isDragging?: (props: P, monitor: DragSourceMonitor) => boolean
-  };
+    isDragging?: (props: P, monitor: DragSourceMonitor) => boolean,
+  }
 
   declare type DragSourceMonitor = {
     canDrag: () => boolean,
@@ -83,45 +83,45 @@ declare module "react-dnd" {
     getInitialSourceClientOffset: () => ClientOffset,
     getClientOffset: () => ClientOffset,
     getDifferenceFromInitialOffset: () => ClientOffset,
-    getSourceClientOffset: () => ClientOffset
-  };
+    getSourceClientOffset: () => ClientOffset,
+  }
 
   declare type DragSourceConnector = {
     dragSource: () => ConnectDragSource,
-    dragPreview: () => ConnectDragPreview
-  };
+    dragPreview: () => ConnectDragPreview,
+  }
 
   declare type DragSourceOptions = {
-    dropEffect?: string
-  };
+    dropEffect?: string,
+  }
 
   declare type DragPreviewOptions = {
     captureDraggingState?: boolean,
     anchorX?: number,
-    anchorY?: number
-  };
+    anchorY?: number,
+  }
 
   declare type ConnectDragSource = <T: ElementOrNode>(
     elementOrNode: T,
     options?: DragSourceOptions
-  ) => ?T;
+  ) => ?T
 
   declare type ConnectDragPreview = <T: ElementOrNode>(
     elementOrNode: T,
     options?: DragPreviewOptions
-  ) => ?T;
+  ) => ?T
 
   declare type DragSourceCollector<T> = (
     connect: DragSourceConnector,
     monitor: DragSourceMonitor
-  ) => T;
+  ) => T
 
   declare function DragSource<OP: {}, CP: {}>(
     type: DragSourceType<OP>,
     spec: DragSourceSpec<OP>,
     collect: DragSourceCollector<CP>,
     options?: DndOptions<OP>
-  ): Connector<$Supertype<OP & CP>, CP>;
+  ): Connector<$Supertype<OP & CP>, CP>
 
   // Drop Target
   // ----------------------------------------------------------------------
@@ -129,7 +129,7 @@ declare module "react-dnd" {
   declare type DropTargetTypes<P> =
     | Identifier
     | Array<Identifier>
-    | ((props: P) => Identifier | Array<Identifier>);
+    | ((props: P) => Identifier | Array<Identifier>)
 
   declare type DropTargetSpec<P> = {
     drop?: (
@@ -144,8 +144,8 @@ declare module "react-dnd" {
       component: React$Component<P, any>
     ) => void,
 
-    canDrop?: (props: P, monitor: DropTargetMonitor) => boolean
-  };
+    canDrop?: (props: P, monitor: DropTargetMonitor) => boolean,
+  }
 
   declare type DropTargetMonitor = {
     canDrop: () => boolean,
@@ -158,26 +158,26 @@ declare module "react-dnd" {
     getInitialSourceClientOffset: () => ClientOffset,
     getClientOffset: () => ClientOffset,
     getDifferenceFromInitialOffset: () => ClientOffset,
-    getSourceClientOffset: () => ClientOffset
-  };
+    getSourceClientOffset: () => ClientOffset,
+  }
 
   declare type DropTargetConnector = {
-    dropTarget: () => ConnectDropTarget
-  };
+    dropTarget: () => ConnectDropTarget,
+  }
 
-  declare type ConnectDropTarget = <T: ElementOrNode>(elementOrNode: T) => ?T;
+  declare type ConnectDropTarget = <T: ElementOrNode>(elementOrNode: T) => ?T
 
   declare type DropTargetCollector<T> = (
     connect: DropTargetConnector,
     monitor: DropTargetMonitor
-  ) => T;
+  ) => T
 
   declare function DropTarget<OP: {}, CP: {}>(
     types: DropTargetTypes<OP>,
     spec: DropTargetSpec<OP>,
     collect: DropTargetCollector<CP>,
     options?: DndOptions<OP>
-  ): Connector<$Supertype<OP & CP>, CP>;
+  ): Connector<$Supertype<OP & CP>, CP>
 
   // Drag Layer
   // ----------------------------------------------------------------------
@@ -190,18 +190,18 @@ declare module "react-dnd" {
     getInitialSourceClientOffset: () => ClientOffset,
     getClientOffset: () => ClientOffset,
     getDifferenceFromInitialOffset: () => ClientOffset,
-    getSourceClientOffset: () => ClientOffset
-  };
+    getSourceClientOffset: () => ClientOffset,
+  }
 
   declare function DragLayer<OP: {}, CP: {}>(
     collect: (monitor: DragLayerMonitor) => CP,
     options?: DndOptions<OP>
-  ): Connector<$Supertype<OP & CP>, CP>;
+  ): Connector<$Supertype<OP & CP>, CP>
 
   // Drag Drop Context
   // ----------------------------------------------------------------------
 
   declare function DragDropContext<OP: {}, CP: {}>(
     backend: mixed
-  ): Connector<$Supertype<OP & CP>, CP>;
+  ): Connector<$Supertype<OP & CP>, CP>
 }

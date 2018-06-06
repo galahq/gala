@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { Fragment } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
@@ -69,7 +69,7 @@ const Billboard = ({
   <Container>
     <Lock type="Case" param={slug}>
       {({ onBeginEditing, onFinishEditing }) => (
-        <Fragment>
+        <>
           <BillboardTitle
             onBeginEditing={onBeginEditing}
             onFinishEditing={onFinishEditing}
@@ -141,7 +141,7 @@ const Billboard = ({
               onFinishEditing={onFinishEditing}
             />
           )}
-        </Fragment>
+        </>
       )}
     </Lock>
   </Container>

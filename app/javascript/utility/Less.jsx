@@ -32,9 +32,11 @@ class Less extends React.Component<
 
   _innerContainer: HTMLElement
   _getHeight = () => {
-    const node = this._innerContainer && this._innerContainer.children[0]
+    const node = this._innerContainer?.children[0]
     return this.state.open
-      ? node ? `${node.offsetHeight}px` : 'auto'
+      ? node
+        ? `${node.offsetHeight}px`
+        : 'auto'
       : this.props.height
   }
 

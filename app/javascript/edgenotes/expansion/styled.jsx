@@ -14,18 +14,27 @@ export const Description = styled.span`
   font-size: 0.8rem;
   line-height: 1.3;
   margin-top: 0.25rem;
+  max-width: 40em;
 `
 
 export const Embed = styled.div`
+  background-color: white;
+  border-radius: 2pt;
+  padding: 4px;
+
   iframe {
     width: 100%;
   }
 
+  p {
+    line-height: 1.1;
+  }
+
   ${p =>
-    p.widescreen &&
+    p.ratio &&
     css`
       position: relative;
-      padding-bottom: 56.25%; /* 16:9 */
+      padding-bottom: ${100 * p.ratio[1] / p.ratio[0]}%;
       height: 0;
 
       iframe {
@@ -62,4 +71,5 @@ export const Title = styled.strong`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.2;
+  max-width: 40em;
 `

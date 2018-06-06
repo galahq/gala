@@ -1,5 +1,12 @@
-.admin.admin--centered
-  .pt-card.pt-elevation-2
+- content_for :title do
+  = I18n.t('cases.settings.edit.edit_case_settings')
+  - unless @case.kicker.blank?
+    —
+    = @case.kicker
+
+
+.window.admin
+  .admin-card.pt-card.pt-elevation-2
     .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
       %span.admin__table__slug= @case.kicker
 
@@ -8,3 +15,25 @@
       = render 'slug_form'
       = render 'library_form'
       = render 'featured_form'
+
+  .admin-card__sidebar.pt-dark.spaced--compact
+    %h2.deployments__group= t '.case_editors'
+
+    - @editorships.sort_by(&:editor_name).each do |editorship|
+      .editorship.non-spaced
+        %span.pt-tag.pt-minimal= editorship.editor_name
+        - unless editorship.editor == current_reader
+          = form_with url: editorship_path(editorship),
+                      method: :delete, local: true do |f|
+            = f.button '',
+                       aria: { label: I18n.t('editorships.destroy.remove') },
+                       class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated],
+                       data: { confirm: I18n.t('editorships.destroy.are_you_sure',
+                                               name: editorship.editor_name) }
+
+
+    .admin-card__sidebar__actions
+      = link_to new_case_editorship_path @case do
+        %span.pt-tag.pt-intent-success
+          %span.pt-icon.pt-icon-add
+          %span= t 'editorships.new.add_editor'
