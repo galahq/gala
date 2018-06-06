@@ -1,7 +1,13 @@
 @import _globals
 @import _flexbox
 
+body
+  +flexbox
+  +flex-direction(column)
+
 .window
+  flex-grow: 1
+
   +flexbox
 
   +justify-content(center)
@@ -24,7 +30,7 @@
 .header
   background-color: $umichBlue
 
-  &__container
+  .header__container, .footer__container
     max-width: 1667px
     margin: auto
     padding: 1em
