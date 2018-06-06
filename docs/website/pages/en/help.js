@@ -5,53 +5,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+const React = require('react')
 
-const CompLibrary = require('../../core/CompLibrary.js');
-const Container = CompLibrary.Container;
-const GridBlock = CompLibrary.GridBlock;
+const CompLibrary = require('../../core/CompLibrary.js')
+const Container = CompLibrary.Container
+const MarkdownBlock = CompLibrary.MarkdownBlock
 
-const siteConfig = require(process.cwd() + '/siteConfig.js');
-
-function docUrl(doc, language) {
-  return siteConfig.baseUrl + 'docs/' + (language ? language + '/' : '') + doc;
+function Help (props) {
+  return (
+    <div className="docMainWrapper wrapper">
+      <Container className="mainContainer documentContainer postContainer">
+        <div className="post">
+          <header className="postHeader">
+            <h2>Need help?</h2>
+          </header>
+          <MarkdownBlock>
+            Gala is developed and maintained by a very small team in the
+            University of Michigan’s School of Environment and Sustainability.
+            We hope this website will have the answers to your questions. If
+            not, please email us at hello@learngala.com. We’ll be happy to hear
+            from you and we’ll do our best to help.
+          </MarkdownBlock>
+        </div>
+      </Container>
+    </div>
+  )
 }
 
-class Help extends React.Component {
-  render() {
-    let language = this.props.language || '';
-    const supportLinks = [
-      {
-        content: `Learn more using the [documentation on this site.](${docUrl(
-          'doc1.html',
-          language
-        )})`,
-        title: 'Browse Docs',
-      },
-      {
-        content: 'Ask questions about the documentation and project',
-        title: 'Join the community',
-      },
-      {
-        content: "Find out what's new with this project",
-        title: 'Stay up to date',
-      },
-    ];
-
-    return (
-      <div className="docMainWrapper wrapper">
-        <Container className="mainContainer documentContainer postContainer">
-          <div className="post">
-            <header className="postHeader">
-              <h2>Need help?</h2>
-            </header>
-            <p>This project is maintained by a dedicated group of people.</p>
-            <GridBlock contents={supportLinks} layout="threeColumn" />
-          </div>
-        </Container>
-      </div>
-    );
-  }
-}
-
-module.exports = Help;
+module.exports = Help
