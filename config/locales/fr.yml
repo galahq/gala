@@ -4,6 +4,7 @@ fr:
     attributes:
       case:
         acknowledgements: Remerciements
+        authors: Authors
         case_title: Case title
         featured: Ajoutée aux études phares
         featured_at: Featured at
@@ -30,6 +31,9 @@ fr:
         caption: Caption
         photo_credit: Photo credit
         pull_quote: Pull quote
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
       question:
         content: Contenu
         correct_answer: Bonne réponse
@@ -46,7 +50,6 @@ fr:
         encrypted_password: Mot de passe crypté
         failed_attempts: Tentatives échouées
         image: Image
-        initials: Initials
         last_sign_in_at: Date de la dernière connexion
         last_sign_in_ip: IP de la dernière connexion
         locale: Locale
@@ -77,6 +80,12 @@ fr:
           attributes:
             correct_answer:
               inclusion: "n’est pas inclus dans la liste des réponses possibles"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
     models:
       activity: Activité
       case: Étude de Cas
@@ -87,6 +96,7 @@ fr:
       comment_thread: Fil de commentaire
       deployment: Deployment
       edgenote: Edgenote
+      editorship: Editorship
       enrollment: Inscription
       global_community: Communauté Mondiale
       group: Groupe
@@ -101,31 +111,58 @@ fr:
         destroyed: "%{model} supprimé(e) avec succès."
         updated: "%{model} mis à jour avec succès."
   activities:
+    destroy:
+      delete_activity: Delete Activity
     show:
       download: Télécharger
       instructions: Instructions
+  cards:
+    edit:
+      citation_added: |
+        Citation added. Click the <span class="pt-tag pt-intent-success">
+        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        edit.
+      write_something: Write something...
+  case_elements:
+    new:
+      untitled: Untitled
   cases:
     edit:
+      add_authors: Add authors
+      author_institution: Author Institution
+      author_name: Author Name
       change_cover_image: Modifier l’image
       edit: Modifier cette étude de cas
+      editing_authors: Editing Authors and Translators
       feature_case: Ajouter celle-ci aux études phares
-      just_change_the_text: Pour modifier cette étude de cas, il suffit de changer le texte
+      just_change_the_text: |
+        To edit this case, just change the text. We’ll save your work
+        automatically.
       map:
+        instructions: |
+          Drag the map to position the pin, change the zoom to give context,
+          then click “Set”
         reset: Reset
         set: Set
         zoom_in: Zoom in
         zoom_out: Zoom out
+      missed_something: Please delete any unused author or translator rows.
+      no_elements: This case has no elements.
       options: Options
       publish_case: Publier cette étude de cas
       save: Enregistrer
       stop_editing: Finir de modifier cette étude de cas
+      translator_name: Translator Name
       unfeature_case: Enlever celle-ci des études phares
       unpublish_case: Annuler la publication de cette étude de cas
     index:
       all_cases: Toutes les études de cas
       locations: Emplacements des sites
+    new:
+      create_a_case: Create a Case
     settings:
       edit:
+        case_editors: Case editors
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
@@ -301,6 +338,8 @@ fr:
       second: Seconde
       year: Année
   deployments:
+    edit:
+      edit_embedded_assessment: Edit embedded assessment
     deployment:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
@@ -373,10 +412,12 @@ fr:
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      highlight: Allow this Edgenote to take up the full width of the page
       paste_a_link: Paste a link
       preview: Edgenote preview
       pull_a_quote: Pull a quote
       remove: Remove
+      save_edgenote: Save Edgenote
       use_embed: Embed a widget from this website
       use_preview_description: Include a description in the link preview
       use_preview_image: Include an image in the the link preview
@@ -387,9 +428,21 @@ fr:
       reattach_instructions: >
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: >
-        Please select the phrase that you would like to attach an Edgenote to.
+      make_selection_html: >
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: New Edgenote
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Collaborator
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: Êtes-vous sûr de vouloir vous désinscrire dans cette étude de cas?
@@ -502,6 +555,14 @@ fr:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  locks:
+    destroy:
+      edit_anyway: Edit Anyway
+    lock:
+      details: |
+        {name} is editing this section as of {someTimeAgo}. If you proceed,
+        their changes may be lost.
+      this_section_is_locked: This section is locked.
   magic_link:
     show:
       lets_get_started: Let’s get started!
@@ -571,6 +632,12 @@ fr:
       format:
         delimiter: ''
   podcasts:
+    destroy:
+      delete_podcast: Delete Podcast
+    edit:
+      addGuests: Add Guests
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "avec {count, plural, one {animateur(-trice)} other {animateurs(-trices)}}"

@@ -1,38 +1,42 @@
 zh-CN:
-  __name: 中文（简体)
+  __name: 英语
   activerecord:
     attributes:
       case:
         acknowledgements: 致谢
-        case_title: Case title
+        authors: 作者
+        case_title: 案例标题
         featured: 明星
-        featured_at: Featured at
+        featured_at: 推荐
         kicker: 短标题
         learning_objectives: 学习目标
-        library: Library
+        library: 案例库
         location: 案例发生地
-        published: Published
-        slug: Case URL
-        title: Question
+        published: 已发布
+        slug: 案例链接
+        title: 探究问题
         translators:
-          js: "{count, plural, one {Translator} other {Translators} }: "
-          other: Translators
+          js: "翻译："
+          other: 翻译
       deployment:
         case_id: 案例
-        group_id: Study Group
+        group_id: 学习组
         group_attributes:
-          name: Group Name
+          name: 组名
       edgenote:
-        alt_text: Image description for accessibility
-        attribution: Attribution
-        call_to_action: Call to action
-        caption: Caption
-        photo_credit: Photo credit
-        pull_quote: Pull quote
+        alt_text: 图像描述
+        attribution: 致谢
+        call_to_action: 操作提示
+        caption: 添加说明
+        photo_credit: 图片来源
+        pull_quote: 引用
+      editorship:
+        editor: 你的合作者账户
+        editor_email: 合作者的电子邮件
       question:
-        content: Content
-        correct_answer: Correct answer
-        options: Options
+        content: 内容
+        correct_answer: 正确答案
+        options: 选项
       reader:
         confirmation_sent_at: 确认邮件发送自
         confirmation_token: 确认令牌
@@ -44,27 +48,26 @@ zh-CN:
         email: 电子邮箱
         encrypted_password: 密码被加密
         failed_attempts: 失败尝试
-        image: Image
-        initials: Initials
+        image: 图片
         last_sign_in_at: 最后登录于
         last_sign_in_ip: 最后登录的 IP
-        locale: Locale
+        locale: 区域
         locked_at: 锁定于
-        name: Full Name
+        name: 全名
         password: 密码
         password_confirmation: 密码确认
         remember_created_at: 记住创建于
         remember_me: 记住登录信息
         reset_password_sent_at: 重置密码发送于
         reset_password_token: 密码重置令牌
-        send_reply_notifications: Notify me when someone replies to a comment I wrote
+        send_reply_notifications: 当有人回复我的评论时，请通知我。
         sign_in_count: 登录次数
         unconfirmed_email: 未确认邮件
         unlock_token: 帐户解锁令牌
         updated_at: 更新于
       shared_cases_library:
         description: >
-          These cases were shared by Gala users.
+          这些是来自Gala用户的共享案例。
     errors:
       messages:
         record_invalid: "验证失败: %{errors}"
@@ -75,66 +78,96 @@ zh-CN:
         question:
           attributes:
             correct_answer:
-              inclusion: "is not included in the list of possible answers"
+              inclusion: "不包括在可能的答案列表中"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                未找到。请确保您的合作伙伴拥有一个用您输入的电子邮件所创建的帐户。
     models:
-      activity: Activity
+      activity: 活动
       case: 案例
       cases:
-        setting: Case Settings
-        feature: Featured status
-      comment: Comment
-      comment_thread: Comment thread
-      deployment: Deployment
-      edgenote: Edgenote
-      enrollment: Enrollment
-      global_community: Global Community
-      group: Group
-      group_membership: Group Membership
-      page: Page
-      podcast: Podcast
-      reader: Reader
-      shared_cases_library: Shared Cases
+        setting: 案例设置
+        feature: 推荐设置
+      comment: 评论
+      comment_thread: 评论
+      deployment: 案例教学
+      edgenote: 边注
+      editorship: 编辑权限
+      enrollment: 案例学员名册
+      global_community: 通用讨论组
+      group: 组
+      group_membership: 组成员
+      page: 页
+      podcast: 广播节目
+      reader: 读者
+      shared_cases_library: 共享案例
     persistance:
       messages:
-        created: "%{model} successfully created."
-        destroyed: "%{model} successfully deleted."
-        updated: "%{model} successfully updated."
+        created: "%{model} 创建成功。"
+        destroyed: "%{model} 删除成功。"
+        updated: "%{model} 更新成功。"
   activities:
+    destroy:
+      delete_activity: 删除该练习
     show:
-      download: Download
-      instructions: Instructions
+      download: 下载
+      instructions: 说明
+  cards:
+    edit:
+      citation_added: |
+        注释已添加。单击 <span class="pt-tag pt-intent-success">
+        <span class="pt-icon pt-icon-ring"></span> 引注标记</span>进行编辑。
+      write_something: 添加内容
+  case_elements:
+    new:
+      untitled: 未命名
   cases:
     edit:
-      change_cover_image: Change cover image
+      add_authors: 添加作者
+      author_institution: 作者所在机构
+      author_name: 作者姓名
+      change_cover_image: 更改封面图片
       edit: 编辑该案例
+      editing_authors: 编辑作者和翻译人员信息
       feature_case: 将此案例设置为明星案例
-      just_change_the_text: 点击案例，开始编辑。
+      just_change_the_text: |
+        请直接进行内容编辑，您的编辑将被自动保存。
       map:
-        reset: Reset
-        set: Set
-        zoom_in: Zoom in
-        zoom_out: Zoom out
+        instructions: |
+          拖动地图修改定位, 通过放大或缩小地图来改变所提供信息的广度和详细程度。点击完成保存您的修改。
+        reset: 重置
+        set: 确定
+        zoom_in: 放大
+        zoom_out: 缩小
+      missed_something: 请删除任何多余的作者或翻译者栏。
+      no_elements: 此案例暂时为空
       options: 选项
       publish_case: 发表该案例
       save: 保存
       stop_editing: 停止编辑该案例
+      translator_name: 译者姓名
       unfeature_case: 取消设置此案例为明星案例
       unpublish_case: 取消发表该案例
     index:
       all_cases: 全部案例
       locations: 案例地点
+    new:
+      create_a_case: 新建案例
     settings:
       edit:
-        change_library: Change library
-        change_url: Change URL
-        edit_case_settings: Edit case settings
+        case_editors: 案例作者
+        change_library: 更换案例库
+        change_url: 更改案例链接
+        edit_case_settings: 编辑案例设置
       featured_form:
-        change_featured_time: Change time
+        change_featured_time: 更改时间
       slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
-          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
+          如果您更改了您的案例的链接，原先的案例链接将自动链接到这个新链接。但是，如果其他人采用您所废弃了的链接，那么那个链接地址将重置为链接到他人案例的地址。
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
-          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
+          <b>格式:</b> 小写字母和由连字符分隔的数字,<br />最多能容纳100个字符
     show:
       back_to_overview: 返回案例主页
       end: 终
@@ -149,45 +182,45 @@ zh-CN:
     enrollments_instruction: >
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
-      Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
-    impactful_cases: Impactful Cases
+      运用案例来进行关于当代可持续发展问题的教学。在Gala平台上你能轻松找到寓教于乐的可用于课堂或公众教育教学的材料。
+    impactful_cases: 运用案例
     improve_your_communication: >
-      Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
-    inclusive_community: Inclusive Community
-    innovative_teaching: Innovative Teaching
+      将你的多媒体案例发表到Gala平台上，用Gala清晰而易于使用的界面帮助教学者在美好的用户体验中更好地理解复杂的问题。
+    inclusive_community: 展开探讨
+    innovative_teaching: 创新教学
     join_the_community: >
-      Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
+      从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
     join_conversation: >
       参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
     learn_more: 了解更多
     meet_stakeholders: >
       在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
-    open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: Propose a Case
+    open_access_learning_tools: 致力于可持续发展的开源型教学平台
+    propose_a_case: 提出一个案例提案
     shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
   comment_threads:
     destroy:
-      delete_comment_thread: Delete comment thread
+      delete_comment_thread: 删除整个话题讨论
     new:
-      new_comment_thread: New comment thread...
+      new_comment_thread: 发起新的话题讨论
     show:
-      card_n: Card {cardPosition}
-      comments_on_page: Comments on “{title}”
-      comments_on_page_number: Comments on Page {position, number}
-      page_n: Page {pageNumber, number}
+      card_n: 卡片{cardPosition}
+      comments_on_page: 关于"{title}"章节的评论
+      comments_on_page_number: 评论所在的页面位置 {position, number}
+      page_n: 页面 {pageNumber, number}
   comments:
     destroy:
-      delete_comment: Delete comment
+      delete_comment: 删除评论
     index:
-      all_comments: All comments
-      conversation: Conversation
-      join_the_conversation: Join the conversation
+      all_comments: 所有评论
+      conversation: 讨论
+      join_the_conversation: 加入讨论
       n_responses:
         js: "{count, number}条回复"
         other: "%{count}条回复"
-      no_comments: No comments
+      no_comments: 暂无评论
       nobody_has_left_a_comment: >
-        Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
+        {communityName} 该讨论组中没有人发起关于这个案例的讨论。发起讨论或切换到另一个讨论组。
     new:
       respond: 参与讨论
       respond_here: 回应
@@ -288,47 +321,46 @@ zh-CN:
       second: 秒
       year: 年
   deployments:
+    edit:
+      edit_embedded_assessment: 编辑学习效果测评
     deployment:
-      add_quiz: Add Quiz
-      edit_quiz: Edit Quiz
-      n_enrolled: "%{count} enrolled"
+      add_quiz: 添加测验
+      edit_quiz: 编辑测验
+      n_enrolled: "%{count} 已加入学习"
       invite_instructions_html: |
-        <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
-        participate in your private forum.
-      invite_learners: Invite Learners
+        <b>邀请链接:</b> 发送此链接邀请他人与您共同学习这个案例。他们将看到您选择的任何测验, 并能够参加您所建立的论坛。
+      invite_learners: 邀请学员
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
     form:
-      select_a_case: Select a Case...
-      select_a_group: Select a Group...
+      select_a_case: 选择一个案例...
+      select_a_group: 选择一个学习组
     helpers:
-      all_study_groups: All Study Groups
-      create_a_new_study_group: Create a New Study Group...
+      all_study_groups: 全部学习组
+      create_a_new_study_group: 新建学习组
     index:
-      deploy_a_case: Deploy a Case
+      deploy_a_case: 运用案例
       find_a_case_then_click_teach_this_case: |
-        Once you’ve found a case that will suit your needs, click the “Deploy
-        this Case” button in the top right of its Overview page.
+        一旦找到合适的案例, 请单击其概览页右上方的 “运用该案例” 按钮。
       instructions: |
         Gala makes it easy to teach a case in a group of any size: a classroom,
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      new_deployment: New Deployment
+      new_deployment: 新建案例运用
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
-      teach_with_cases: Teach with Cases
-      youre_not_teaching_any_cases: You’re not teaching any cases yet
+      teach_with_cases: 选择案例进行教学
+      youre_not_teaching_any_cases: 您目前未选择用于教学的案例
     new:
       active_deployments: Active Deployments
       instructions: |
         Deploy this case in a group of any size: a classroom, a workshop, a
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      teach_this_case: Deploy this Case
+      teach_this_case: 运用该案例
   devise:
     sessions:
       destroy:
@@ -342,40 +374,54 @@ zh-CN:
         other: '（最少%{count}个字符）'
   edgenotes:
     destroy:
-      delete: Delete this Edgenote.
+      delete: 删除此侧注。
     edgenote:
-      caption: "Caption: "
-      has_audio: This edgenote has an audio clip.
-      jump_to_edgenote: Jump to Edgenote
-      pull_quote: "Quotation: "
-      return_to_narrative: Return to narrative
-      video_slug: "YouTube video slug: "
+      caption: "说明： "
+      has_audio: 此侧注包含一个音频片段。
+      jump_to_edgenote: 跳转到侧边注
+      pull_quote: "引用："
+      return_to_narrative: 返回案例故事
+      video_slug: "YouTube视频链接："
     edit:
       alt_text_guidelines: >
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
-      attach_an_image: Attach an image
-      choose_audio_file: Choose audio file...
-      choose_image: Choose image...
-      edit_edgenote: Edit Edgenote
+      attach_an_image: 加入图片
+      choose_audio_file: 选择一个音频文件
+      choose_image: 选择图片
+      edit_edgenote: 编辑侧边注
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
-      paste_a_link: Paste a link
-      preview: Edgenote preview
-      pull_a_quote: Pull a quote
-      remove: Remove
+      highlight: Allow this Edgenote to take up the full width of the page
+      paste_a_link: 粘贴链接
+      preview: 侧边注预览
+      pull_a_quote: 引用文章或音频选段
+      remove: 删除
+      save_edgenote: 保存测边注
       use_embed: Embed a widget from this website
       use_preview_description: Include a description in the link preview
       use_preview_image: Include an image in the the link preview
       upload_an_audio_file: Upload an audio file
       write_a_caption: Write a caption
     index:
-      attach: Attach this Edgenote.
+      attach: 附上这个测边注。
       reattach_instructions: >
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: >
-        Please select the phrase that you would like to attach an Edgenote to.
-      new_edgenote: New Edgenote
+      make_selection_html: >
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
+      new_edgenote: 新的测边注
+  editorships:
+    destroy:
+      are_you_sure: |
+        您确定要移除 %{name} 作为此案例编辑的身份吗？
+      remove: 删除合作者
+    new:
+      add_editor: 新增合作者
+      create_collaboratively: 邀请他人与你合作写这个案例
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: 你确定要退出这个案例的学习吗？
@@ -410,7 +456,7 @@ zh-CN:
       model_invalid: "验证失败: %{errors}"
       not_a_number: 不是数字
       not_an_integer: 必须是整数
-      not_found: "not found"
+      not_found: "未找到"
       not_locked: "was not locked"
       not_saved:
         other: "%{count} errors prohibited this %{resource} from being saved:"
@@ -444,11 +490,11 @@ zh-CN:
     required: 必需
   helpers:
     cancel: 取消
-    copy: Copy
+    copy: 复制
     close: 关闭
-    edit: Edit
+    edit: 编辑
     formatting:
-      add_citation_entity: "Add citation here."
+      add_citation_entity: "添加引用"
       add_edgenote_entity: "Add edgenote to selection."
       blockquote: "Block style: Quotation."
       bold: "Inline style: Bold."
@@ -483,6 +529,14 @@ zh-CN:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  locks:
+    destroy:
+      edit_anyway: Edit Anyway
+    lock:
+      details: |
+        {name} is editing this section as of {someTimeAgo}. If you proceed,
+        their changes may be lost.
+      this_section_is_locked: This section is locked.
   magic_link:
     show:
       lets_get_started: Let’s get started!
@@ -490,14 +544,14 @@ zh-CN:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
-      create_a_case: Create a Case
+      create_a_case: 新建案例
       delete_case: Delete case.
       edit_case: 编辑该案例
-      edit_case_settings: Edit case settings.
+      edit_case_settings: 编辑案例设置
       featured: 明星
-      my_cases: My Cases
-      new_case: New Case
-      publish_a_case: Publish a Case
+      my_cases: 我的案例
+      new_case: 新建案例
+      publish_a_case: 发表案例
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and insights from detailed analysis of your students’ engagement with the material. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
   notifications:
@@ -551,6 +605,12 @@ zh-CN:
       format:
         delimiter: ''
   podcasts:
+    destroy:
+      delete_podcast: Delete Podcast
+    edit:
+      addGuests: Add Guests
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "主持人"
@@ -609,8 +669,8 @@ zh-CN:
       en: 英文
       fr: 法文
       ja: 日文
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
+      zh-CN: 中文简体
+      zh-TW: 中文繁体
   time:
     am: 上午
     formats:
