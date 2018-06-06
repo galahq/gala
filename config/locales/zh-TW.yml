@@ -157,6 +157,8 @@ zh-TW:
     index:
       all_cases: 全部案例
       locations: 案例地點
+    new:
+      create_a_case: Create a Case
     settings:
       edit:
         case_editors: Case editors
