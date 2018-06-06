@@ -32,7 +32,7 @@ const siteConfig = {
     theme: 'default',
   },
 
-  scripts: ['https://buttons.github.io/buttons.js'],
+  scripts: ['https://buttons.github.io/buttons.js', '/js/typekit.js'],
 
   onPageNav: 'separate',
 
