@@ -103,6 +103,10 @@ blockquote {
 
 /* Footer */
 
+footer.nav-footer {
+  background-color: #35536f;
+}
+
 footer .fbOpenSource {
   width: 300px;
 }
