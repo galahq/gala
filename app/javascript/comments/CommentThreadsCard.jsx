@@ -108,7 +108,10 @@ const CommentThreadsCard = ({
 }
 
 export default injectIntl(
-  connect(mapStateToProps, { acceptSelection })(CommentThreadsCard)
+  connect(
+    mapStateToProps,
+    { acceptSelection }
+  )(CommentThreadsCard)
 )
 
 const List = styled.ol`
@@ -175,6 +178,7 @@ const Container = styled.div`
     height: 100%;
     padding: 12px;
     background-color: #35536f;
+    z-index: 10;
 
     .accepting-selection & {
       left: -10000px;
