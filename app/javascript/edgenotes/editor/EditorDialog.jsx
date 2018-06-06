@@ -108,6 +108,15 @@ const EditorDialog = ({
       </Body>
       <div className="pt-dialog-footer">
         <div className="pt-dialog-footer-actions">
+          <a
+            className="pt-button pt-icon-help"
+            href="https://docs.learngala.com/docs/authoring-embedding-media.html"
+            target="blank"
+            style={{ marginLeft: 0 }}
+          >
+            <FormattedMessage id="helpers.help" />
+          </a>
+          <div style={{ flex: 1 }} />
           <Button
             text={intl.formatMessage({ id: 'helpers.cancel' })}
             onClick={onClose}
