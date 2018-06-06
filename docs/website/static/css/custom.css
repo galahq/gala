@@ -77,6 +77,10 @@ body {
   text-decoration: underline;
 }
 
+a.anchor {
+  top: -85px;
+}
+
 .mainContainer .wrapper strong {
   font-weight: 500;
 }
