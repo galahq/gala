@@ -26,10 +26,9 @@ const CatalogToolbar = ({ history }: ContextRouter) => (
           onClick: () => history.push('/'),
         },
         {
-          message: 'catalog.proposeACase',
+          message: 'cases.new.createACase',
           iconName: 'annotation',
-          onClick: () =>
-            (window.location = 'http://www.teachmsc.org/action/make'),
+          onClick: () => (window.location = '/my_cases'),
         },
         {
           message: 'deployments.index.deployACase',
