@@ -111,6 +111,16 @@ footer .fbOpenSource {
   width: 300px;
 }
 
+@media only screen and (max-width: 736px) {
+  footer .sitemap .nav-home {
+    padding-left: 0;
+  }
+
+  .sitemap div:not(:first-of-type) > h5 {
+    margin-top: 20px;
+  }
+}
+
 /* Icon Images */
 img.buttonIcon {
   display: inline;

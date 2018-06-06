@@ -33,6 +33,7 @@ class Footer extends React.Component {
               />
             )}
           </a>
+
           <div>
             <h5>Guides</h5>
             <a
@@ -51,31 +52,38 @@ class Footer extends React.Component {
             >
               Teaching a Case
             </a>
+            <a href={this.pageUrl('help.html', this.props.language)}>
+              Get Help
+            </a>
           </div>
+
           <div>
             <h5>Community</h5>
-            <a href={this.pageUrl('users.html', this.props.language)}>
-              User Showcase
-            </a>
             <a
-              href="http://stackoverflow.com/questions/tagged/"
+              href="http://www.teachmsc.org/"
               target="_blank"
               rel="noreferrer noopener"
             >
-              Stack Overflow
+              Michigan Sustainability Cases
             </a>
-            <a href="https://discordapp.com/">Project Chat</a>
             <a
-              href="https://twitter.com/"
+              href="http://seas.umich.edu"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              School of Environment and Sustainability
+            </a>
+          </div>
+
+          <div>
+            <h5>More</h5>
+            <a
+              href="https://twitter.com/learnmsc"
               target="_blank"
               rel="noreferrer noopener"
             >
               Twitter
             </a>
-          </div>
-          <div>
-            <h5>More</h5>
-            <a href={this.props.config.baseUrl + 'blog'}>Blog</a>
             <a href="https://github.com/">GitHub</a>
             <a
               className="github-button"
@@ -99,7 +107,7 @@ class Footer extends React.Component {
         >
           <img
             src={this.props.config.baseUrl + 'img/msc-logo.svg'}
-            alt="Facebook Open Source"
+            alt="Michigan Sustainability Cases"
           />
         </a>
         <section className="copyright">{this.props.config.copyright}</section>
