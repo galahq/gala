@@ -4,14 +4,15 @@ ja:
     attributes:
       case:
         acknowledgements: 謝辞
-        case_title: Case title
+        authors: 作者
+        case_title: タイトル
         featured: 注目
         featured_at: 注目の事例研究に追加した時
         kicker: 短いタイトル
         learning_objectives: 学習目標
         library: ライブラリ
         location: 場所
-        published: Published
+        published: 公開された
         slug: 事例研究のURL
         title: 質問
         translators:
@@ -19,16 +20,19 @@ ja:
           other: 翻訳者
       deployment:
         case_id: 場合
-        group_id: Study Group
+        group_id: 勉強会
         group_attributes:
-          name: Group Name
+          name: グループ名
       edgenote:
-        alt_text: Image description for accessibility
-        attribution: Attribution
-        call_to_action: Call to action
-        caption: Caption
-        photo_credit: Photo credit
-        pull_quote: Pull quote
+        alt_text: アクセシビリティのための画像記述
+        attribution: 出典
+        call_to_action: 行動を促す言葉
+        caption: 説明文
+        photo_credit: クレジット表記
+        pull_quote: 引用
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
       question:
         content: 内容
         correct_answer: 正解
@@ -44,11 +48,10 @@ ja:
         email: メールアドレス
         encrypted_password: 暗号化パスワード
         failed_attempts: 失敗したログイン試行回数
-        image: Image
-        initials: Initials
+        image: 画像
         last_sign_in_at: 最終ログイン時刻
         last_sign_in_ip: 最終ログインIPアドレス
-        locale: Locale
+        locale: 言語
         locked_at: ロック時刻
         name: 姓名
         password: パスワード
@@ -76,6 +79,12 @@ ja:
           attributes:
             correct_answer:
               inclusion: "は選択肢の一覧にありません"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
     models:
       activity: アクティビティ
       case: 場合
@@ -84,8 +93,9 @@ ja:
         feature: 注目の状態
       comment: コメント
       comment_thread: コメントスレッド
-      deployment: Deployment
+      deployment: 配備
       edgenote: Edgenote
+      editorship: Editorship
       enrollment: 登録
       global_community: グローバルコミュニティ
       group: グループ
@@ -100,33 +110,56 @@ ja:
         destroyed: "%{model}が正常に削除されました。"
         updated: "%{model}が正常に便新されました。"
   activities:
+    destroy:
+      delete_activity: アクティビティを削除
     show:
       download: ダウンロード
       instructions: 説明
+  cards:
+    edit:
+      citation_added: |
+        出典表記付いた。<span class="pt-tag pt-intent-success"><span class="pt-icon pt-icon-ring"></span>出典店</span>をクリックして、編集できる。
+      write_something: 何かをお書き下さい...
+  case_elements:
+    new:
+      untitled: タイトルなし
   cases:
     edit:
+      add_authors: 著者を追加
+      author_institution: 著者の大学・学部
+      author_name: 著者の名前
       change_cover_image: 画像を変更
       edit: 編集
+      editing_authors: 著者と訳者の編集
       feature_case: 注目の事例研究に追加する
-      just_change_the_text: テキストを変化するのができる
+      just_change_the_text: |
+        この事例研究を編集するには、ただテキストを変えてください。自動的に保存されます。
       map:
-        reset: Reset
-        set: Set
-        zoom_in: Zoom in
-        zoom_out: Zoom out
+        instructions: |
+          地図のピンを位置づけて、文脈を伝えるためにズームインしてください。そして、「セット」をクリックしてください。
+        reset: リセット
+        set: セット
+        zoom_in: ズームイン
+        zoom_out: ズームアウト
+      missed_something: 未使用な行を削除してください。
+      no_elements: この事例研究は要素がありません。
       options: 選択肢
       publish_case: 発刊する
       save: 保存
       stop_editing: 編集を停止する
+      translator_name: 翻訳者の名前
       unfeature_case: 注目の事例研究から除去する
       unpublish_case: 非公開にする
     index:
       all_cases: すべての事例研究
       locations: 場所
+    new:
+      create_a_case: Create a Case
     settings:
       edit:
-        change_library: Change library
-        change_url: Change URL
+        case_editors: Case editors
+        change_library: ライブラリを変更
+        change_url: URLを変更
         edit_case_settings: 事例研究の設定を編集
       featured_form:
         change_featured_time: 時間の変更
@@ -134,7 +167,7 @@ ja:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
           事例研究のURLを変化すれば、先のURLは新しいのにリダイレクトします。しかし、他人はそのURLを選択したとたんに、リダイレクトが無効にされます。
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
-          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
+          <b>形式：</b>小文字と数字、ハイフンで区切られました<br />100文字以内。
     show:
       back_to_overview: 概要に戻る
       end: 終わり
@@ -288,6 +321,8 @@ ja:
       second: 秒
       year: 年
   deployments:
+    edit:
+      edit_embedded_assessment: Edit embedded assessment
     deployment:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
@@ -359,10 +394,12 @@ ja:
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      highlight: Allow this Edgenote to take up the full width of the page
       paste_a_link: Paste a link
       preview: Edgenote preview
       pull_a_quote: Pull a quote
       remove: Remove
+      save_edgenote: Save Edgenote
       use_embed: Embed a widget from this website
       use_preview_description: Include a description in the link preview
       use_preview_image: Include an image in the the link preview
@@ -373,9 +410,21 @@ ja:
       reattach_instructions: >
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: >
-        Please select the phrase that you would like to attach an Edgenote to.
+      make_selection_html: >
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: Edgenoteを登録
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Collaborator
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: この事例研究、登録を解除してもよろしいですか？
@@ -483,6 +532,14 @@ ja:
           このメールを受け取る理由は<a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>のユーザーです。
         text: >
           このメールを受け取る理由はGala（https://www.learngala.com）のユーザーです。
+  locks:
+    destroy:
+      edit_anyway: Edit Anyway
+    lock:
+      details: |
+        {name} is editing this section as of {someTimeAgo}. If you proceed,
+        their changes may be lost.
+      this_section_is_locked: This section is locked.
   magic_link:
     show:
       lets_get_started: 始めましょう!
@@ -551,6 +608,12 @@ ja:
       format:
         delimiter: ''
   podcasts:
+    destroy:
+      delete_podcast: Delete Podcast
+    edit:
+      addGuests: Add Guests
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "共に司会者"

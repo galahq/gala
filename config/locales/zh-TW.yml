@@ -4,6 +4,7 @@ zh-TW:
     attributes:
       case:
         acknowledgements: 致謝
+        authors: Authors
         case_title: Case title
         featured: 明星
         featured_at: Featured at
@@ -29,6 +30,9 @@ zh-TW:
         caption: Caption
         photo_credit: Photo credit
         pull_quote: Pull quote
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
       question:
         content: Content
         correct_answer: Correct answer
@@ -45,7 +49,6 @@ zh-TW:
         encrypted_password: 密碼被加密
         failed_attempts: 失敗嘗試
         image: Image
-        initials: Initials
         last_sign_in_at: 最后登錄於
         last_sign_in_ip: 最后登錄的 IP
         locale: Locale
@@ -76,6 +79,12 @@ zh-TW:
           attributes:
             correct_answer:
               inclusion: "is not included in the list of possible answers"
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
     models:
       activity: Activity
       case: 案例
@@ -86,6 +95,7 @@ zh-TW:
       comment_thread: Comment thread
       deployment: Deployment
       edgenote: Edgenote
+      editorship: Editorship
       enrollment: Enrollment
       global_community: Global Community
       group: Group
@@ -100,31 +110,58 @@ zh-TW:
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
   activities:
+    destroy:
+      delete_activity: Delete Activity
     show:
       download: Download
       instructions: Instructions
+  cards:
+    edit:
+      citation_added: |
+        Citation added. Click the <span class="pt-tag pt-intent-success">
+        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        edit.
+      write_something: Write something...
+  case_elements:
+    new:
+      untitled: Untitled
   cases:
     edit:
+      add_authors: Add authors
+      author_institution: Author Institution
+      author_name: Author Name
       change_cover_image: Change cover image
       edit: 編輯該案例
+      editing_authors: Editing Authors and Translators
       feature_case: 將此案例設置為明星案例
-      just_change_the_text: 點擊案例，開始編輯。
+      just_change_the_text: |
+        To edit this case, just change the text. We’ll save your work
+        automatically.
       map:
+        instructions: |
+          Drag the map to position the pin, change the zoom to give context,
+          then click “Set”
         reset: Reset
         set: Set
         zoom_in: Zoom in
         zoom_out: Zoom out
+      missed_something: Please delete any unused author or translator rows.
+      no_elements: This case has no elements.
       options: 選項
       publish_case: 發表該案例
       save: 保存
       stop_editing: 停止編輯該案例
+      translator_name: Translator Name
       unfeature_case: 取消設置此案例為明星案例
       unpublish_case: 取消發表該案例
     index:
       all_cases: 全部案例
       locations: 案例地點
+    new:
+      create_a_case: Create a Case
     settings:
       edit:
+        case_editors: Case editors
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
@@ -288,6 +325,8 @@ zh-TW:
       second: 秒
       year: 年
   deployments:
+    edit:
+      edit_embedded_assessment: Edit embedded assessment
     deployment:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
@@ -359,10 +398,12 @@ zh-TW:
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+      highlight: Allow this Edgenote to take up the full width of the page
       paste_a_link: Paste a link
       preview: Edgenote preview
       pull_a_quote: Pull a quote
       remove: Remove
+      save_edgenote: Save Edgenote
       use_embed: Embed a widget from this website
       use_preview_description: Include a description in the link preview
       use_preview_image: Include an image in the the link preview
@@ -373,9 +414,21 @@ zh-TW:
       reattach_instructions: >
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
-      make_selection: >
-        Please select the phrase that you would like to attach an Edgenote to.
+      make_selection_html: >
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: New Edgenote
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Collaborator
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
       are_you_sure: 你確定要退出這個案例的學習嗎？
@@ -483,6 +536,14 @@ zh-TW:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  locks:
+    destroy:
+      edit_anyway: Edit Anyway
+    lock:
+      details: |
+        {name} is editing this section as of {someTimeAgo}. If you proceed,
+        their changes may be lost.
+      this_section_is_locked: This section is locked.
   magic_link:
     show:
       lets_get_started: Let’s get started!
@@ -551,6 +612,12 @@ zh-TW:
       format:
         delimiter: ''
   podcasts:
+    destroy:
+      delete_podcast: Delete Podcast
+    edit:
+      addGuests: Add Guests
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
     show:
       with_host:
         js: "主持人"
