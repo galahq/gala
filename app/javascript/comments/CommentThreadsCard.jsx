@@ -68,7 +68,7 @@ const CommentThreadsCard = ({
             />
 
             <FormattedMessage
-              id="comments.index.nResponses"
+              id="comments.index.nResponses.js"
               values={{ count: commentThreads.length }}
             />
 
@@ -76,6 +76,11 @@ const CommentThreadsCard = ({
           </Header>
 
           <List>
+            {commentThreads.length === 0 && (
+              <Small>
+                <FormattedMessage id="comments.index.noComments" />
+              </Small>
+            )}
             <ScrollView maxHeightOffset="187px">
               {commentThreads.map(({ id }, i) => (
                 <CommentThreadItem key={id} id={id} />
@@ -242,4 +247,12 @@ const Backdrop = styled(Link)`
   width: 100%;
   height: 100%;
   z-index: 200;
+`
+
+const Small = styled.small`
+  display: block;
+  font-size: 90%;
+  opacity: 0.8;
+  padding: 0.75em 0 0.5em;
+  text-align: center;
 `
