@@ -16,7 +16,7 @@ Once you’re authoring some cases, they will be listed here. For now, click the
 Your new case is blank, but on the Overview page you’ll see placeholders where you can enter the details of your case.
 Here are some tips to consider when writing your case’s overview.
 
-![A screenshot of the blank case overview](/docs/assets/overview-screenshot.png)
+![A screenshot of the blank case overview](./assets/overview-screenshot.png)
 
 ### Kicker and question
 
@@ -59,6 +59,6 @@ A good rule of thumb is to add a new card for every new paragraph, but sometimes
 ### Citations
 
 Cases are academic works; it is important to cite your sources.
-To add a citation, place your cursor after the fact you want to cite, and click the <img class="buttonIcon" src="/docs/assets/add-citation-icon.png" role="presentation"> “Add Citation” button in the card’s toolbar.
+To add a citation, place your cursor after the fact you want to cite, and click the <img class="buttonIcon" src="./assets/add-citation-icon.png" role="presentation"> “Add Citation” button in the card’s toolbar.
 A small circle will be added to the text: this is the citation marker.
 Click the citation marker, and add the text and optional URL of the work you’re citing.
