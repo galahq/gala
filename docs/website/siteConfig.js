@@ -7,6 +7,8 @@ const siteConfig = {
   projectName: 'gala-docs',
   organizationName: 'galahq',
 
+  customDocsPath: 'guides',
+
   headerLinks: [
     { doc: 'authoring-getting-started', label: 'Authoring' },
     { doc: 'teaching-getting-started', label: 'Teaching' },
