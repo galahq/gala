@@ -124,13 +124,16 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
   }
 }
 
-export default connect(undefined, { displayToast })(injectIntl(AuthorsListForm))
+export default connect(
+  undefined,
+  { displayToast }
+)(injectIntl(AuthorsListForm))
 
 function formStateClean ({
   authors,
   translators,
 }: AuthorsListFormState): boolean {
-  return isCompact(authors.map(a => a.name)) && isCompact(translators)
+  return isCompact(authors.map(a => a.name || '')) && isCompact(translators)
 }
 
 type AuthorInputProps = {
