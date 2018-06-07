@@ -28,6 +28,7 @@ plugins:
 exclude_patterns:
   - "config/"
   - "db/"
+  - "docs/"
   - "dist/"
   - "features/"
   - "**/node_modules/"

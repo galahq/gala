@@ -69,6 +69,8 @@ export class Orchard {
   }
 }
 
+window.Orchard = Orchard
+
 function resolve (endpoint: string) {
   if (endpoint.startsWith('/')) {
     return endpoint
