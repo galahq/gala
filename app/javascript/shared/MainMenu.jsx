@@ -52,6 +52,7 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
         }
       >
         <Row aria-label={formatMessage({ id: 'readers.form.accountOptions' })}>
+          <HelpButton />
           <Identicon reader={reader} />
           <CaretDown />
         </Row>
@@ -68,6 +69,20 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
 }
 
 export default injectIntl(MainMenu)
+
+const HelpButton = injectIntl(styled.a.attrs({
+  className: 'pt-button pt-minimal pt-icon-help',
+  href: 'https://docs.learngala.com',
+  'aria-label': p => p.intl.formatMessage({ id: 'helpers.help' }),
+})`
+  margin-right: 1.5em;
+  opacity: 0.5;
+  transition: opacity 0.1s ease-out;
+
+  &:hover {
+    opacity: 1;
+  }
+`)
 
 const CaretDown = styled.span.attrs({
   className: 'pt-icon pt-icon-caret-down',
