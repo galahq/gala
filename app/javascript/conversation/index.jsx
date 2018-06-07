@@ -62,6 +62,17 @@ const Container = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding: 0 1em;
+
+  &::after {
+    box-shadow: inset 0 -10px 10px -5px #02284b11;
+    bottom: 0;
+    content: '';
+    height: 10px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+  }
 `
 
 const UnselectCommentLink = styled(Link)`
