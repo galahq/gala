@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require './app/decorators/case_decorator.rb'
+
 # @see Edgenote
 class EdgenoteDecorator < ApplicationDecorator
   # We can’t delegate format because it gets confused with Kernel#format somehow
@@ -9,6 +11,7 @@ class EdgenoteDecorator < ApplicationDecorator
 
   def image_url(transforms = {})
     return nil unless image.attached?
+    return RED_PIXEL unless image.variable?
     polymorphic_path image.variant(transforms), only_path: true
   end
 
