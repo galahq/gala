@@ -1,5 +1,6 @@
 ---
 id: teaching-getting-started
-title: Latin-ish
-sidebar_label: Getting Started
+title: Deploying a Case
 ---
+
+The guide to teaching with cases using Gala is coming soon.
