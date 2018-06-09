@@ -175,7 +175,13 @@ class BaseEdgenoteFigure extends React.Component<Props> {
                 />
               )}
 
-              {embedded || <Statistics inline uri={`edgenotes/${slug}`} />}
+              {embedded || (
+                <Statistics
+                  inline
+                  key={`edgenotes/${slug}`}
+                  uri={`edgenotes/${slug}`}
+                />
+              )}
 
               <ConditionalLink
                 tabIndex={isALink ? '0' : ''}

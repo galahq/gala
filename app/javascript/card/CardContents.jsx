@@ -186,7 +186,10 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
                   <DeleteCardButton id={id} onClick={handleDeleteCard} />
                 )}
 
-                {solid && !editable && <Statistics uri={`cards/${id}`} />}
+                {solid &&
+                  !editable && (
+                  <Statistics key={`cards/${id}`} uri={`cards/${id}`} />
+                )}
 
                 <OnScreenTracker
                   targetKey={`cards/${id}`}
