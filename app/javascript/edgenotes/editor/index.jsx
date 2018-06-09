@@ -50,16 +50,6 @@ class EdgenoteEditor extends React.Component<Props, State> {
     changesToAttachments: { audioUrl: undefined, imageUrl: undefined },
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (this.props.slug !== nextProps.slug) {
-      this.setState({ contents: nextProps.contents })
-    }
-
-    if (this.props.locked !== nextProps.locked && nextProps.locked) {
-      this.handleClose()
-    }
-  }
-
   componentWillUnmount () {
     Object.keys(this.state.changesToAttachments).forEach(key => {
       const attachment = this.state.changesToAttachments[key]
@@ -149,7 +139,10 @@ class EdgenoteEditor extends React.Component<Props, State> {
   _reset = () => this.setState({ contents: this.props.contents })
 }
 export default compose(
-  connect(null, { changeEdgenote, updateLinkExpansionVisibility }),
+  connect(
+    null,
+    { changeEdgenote, updateLinkExpansionVisibility }
+  ),
   withVisibilityChanges,
   injectIntl
 )(EdgenoteEditor)
