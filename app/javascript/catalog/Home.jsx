@@ -11,7 +11,6 @@ import { FormattedMessage } from 'react-intl'
 import DocumentTitle from 'react-document-title'
 
 import ValueProposition from 'catalog/ValueProposition'
-import GalaxyBanner from 'catalog/GalaxyBanner'
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import MapView from 'catalog/MapView'
@@ -45,8 +44,6 @@ class Home extends React.Component<{
       <DocumentTitle title="Gala">
         <>
           {loading.reader || !!reader || <ValueProposition />}
-
-          {loading.reader || <GalaxyBanner />}
 
           <Sidebar
             loading={loading}
