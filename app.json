@@ -39,13 +39,8 @@
     }
   },
   "addons": [
-    "memcachier",
-    "newrelic",
-    "papertrail",
     "heroku-postgresql",
-    "heroku-redis",
-    "scheduler",
-    "scout"
+    "heroku-redis"
   ],
   "buildpacks": [
     {
