@@ -71,21 +71,21 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     if (this.props.timerState === 'RUNNING') this._startTimer()
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: TrackerProps) {
+  componentDidUpdate (prevProps: TrackerProps) {
     if (
-      this.props.timerState === nextProps.timerState &&
-      this.props.targetKey === nextProps.targetKey
+      prevProps.timerState === this.props.timerState &&
+      prevProps.targetKey === this.props.targetKey
     ) {
       return
     }
 
-    if (this.props.targetKey !== nextProps.targetKey) {
+    if (prevProps.targetKey !== this.props.targetKey) {
       this._stopTimer()
       this._startTimer()
       return
     }
 
-    switch (nextProps.timerState) {
+    switch (this.props.timerState) {
       case 'RUNNING':
         this._startTimer()
         break
@@ -114,7 +114,10 @@ function mapStateToProps ({ caseData }: State) {
     caseSlug: caseData.slug,
   }
 }
-const Tracker = connect(mapStateToProps, () => ({}))(BaseTracker)
+const Tracker = connect(
+  mapStateToProps,
+  () => ({})
+)(BaseTracker)
 export default Tracker
 
 // Specializations

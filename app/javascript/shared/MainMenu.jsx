@@ -29,34 +29,38 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
     const { formatMessage } = this.props.intl
     const reader = this.state
     return reader ? (
-      <Popover
-        position={Position.BOTTOM_RIGHT}
-        content={
-          <Menu>
-            <MenuItem
-              text={formatMessage({ id: 'readers.form.myAccount' })}
-              iconName="user"
-              href="/profile/edit"
-            />
-            <MenuItem
-              text={formatMessage({ id: 'devise.sessions.destroy.signOut' })}
-              iconName="log-out"
-              href="#"
-              onClick={_ =>
-                Orchard.prune('readers/sign_out').then(
-                  () => (window.location = '/')
-                )
-              }
-            />
-          </Menu>
-        }
-      >
-        <Row aria-label={formatMessage({ id: 'readers.form.accountOptions' })}>
-          <HelpButton />
-          <Identicon reader={reader} />
-          <CaretDown />
-        </Row>
-      </Popover>
+      <Row>
+        <HelpButton />
+        <Popover
+          position={Position.BOTTOM_RIGHT}
+          content={
+            <Menu>
+              <MenuItem
+                text={formatMessage({ id: 'readers.form.myAccount' })}
+                iconName="user"
+                href="/profile/edit"
+              />
+              <MenuItem
+                text={formatMessage({ id: 'devise.sessions.destroy.signOut' })}
+                iconName="log-out"
+                href="#"
+                onClick={_ =>
+                  Orchard.prune('readers/sign_out').then(
+                    () => (window.location = '/')
+                  )
+                }
+              />
+            </Menu>
+          }
+        >
+          <Row
+            aria-label={formatMessage({ id: 'readers.form.accountOptions' })}
+          >
+            <Identicon reader={reader} />
+            <CaretDown />
+          </Row>
+        </Popover>
+      </Row>
     ) : (
       <AnchorButton
         className="pt-minimal"
