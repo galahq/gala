@@ -73,7 +73,10 @@ function Podcast ({
   )
 }
 
-export default connect(mapStateToProps, { updatePodcast })(Podcast)
+export default connect(
+  mapStateToProps,
+  { updatePodcast }
+)(Podcast)
 
 class PodcastPlayer extends React.Component<*, { playing: boolean }> {
   state = {
@@ -201,7 +204,11 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                 />
               </div>
 
-              <Statistics uri={`podcasts/${id}`} inline={true} />
+              <Statistics
+                inline
+                key={`podcasts/${id}`}
+                uri={`podcasts/${id}`}
+              />
 
               <Tracker
                 timerState={this.state.playing ? 'RUNNING' : 'PAUSED'}

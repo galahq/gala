@@ -73,7 +73,11 @@ class OldEdgenoteFigure extends React.Component {
           }}
         >
           <div className="c-edgenote s-edgenote">
-            <Statistics uri={`edgenotes/${slug}`} inline={true} />
+            <Statistics
+              inline
+              key={`edgenotes/${slug}`}
+              uri={`edgenotes/${slug}`}
+            />
             <div className="c-edgenote__cover">
               <img src={`${thumbnailUrl}?w=640`} />
             </div>
@@ -102,5 +106,8 @@ class OldEdgenoteFigure extends React.Component {
 }
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(OldEdgenoteFigure)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(OldEdgenoteFigure)
 )

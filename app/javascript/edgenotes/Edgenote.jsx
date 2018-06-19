@@ -165,6 +165,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
             <>
               {editing && (
                 <EdgenoteEditor
+                  key={`${slug}-${locked ? 'locked' : 'unlocked'}`}
                   contents={contents}
                   locked={locked}
                   slug={slug}
@@ -174,7 +175,13 @@ class BaseEdgenoteFigure extends React.Component<Props> {
                 />
               )}
 
-              {embedded || <Statistics inline uri={`edgenotes/${slug}`} />}
+              {embedded || (
+                <Statistics
+                  inline
+                  key={`edgenotes/${slug}`}
+                  uri={`edgenotes/${slug}`}
+                />
+              )}
 
               <ConditionalLink
                 tabIndex={isALink ? '0' : ''}
@@ -294,9 +301,11 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
 export const EdgenoteFigure = BaseEdgenoteFigure
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-  withExpansion(EdgenoteFigure)
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
+)(withExpansion(EdgenoteFigure))
 
 const Container = styled.figure.attrs({ className: 'edge' })`
   position: relative;

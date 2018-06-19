@@ -31,19 +31,50 @@ const CommentThreadsCard = asyncComponent(() =>
   import('comments/CommentThreadsCard').then(m => m.default)
 )
 
-class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
+type Props = CardProps & { intl: IntlShape }
+type State = {
+  commentable: boolean,
+  editorState: EditorState,
+  hoveredCommentThread: ?string,
+  selectedCommentThread: ?string,
+  theseCommentThreadsOpen: boolean,
+}
+
+class CardContents extends React.Component<Props, State> {
   // We have to be able to respond to props change that would change
   // customStyleMap by "jiggling" each block of editorState to trigger a
-  // rerender. This internal state should exactly track props, plus jiggle.
-  state = { editorState: this.props.editorState }
+  // rerender. Internal state should exactly track props, plus jiggle.
+  static getDerivedStateFromProps (props: Props, state: State) {
+    let { editorState } = props
+    const {
+      commentable,
+      hoveredCommentThread,
+      selectedCommentThread,
+      theseCommentThreadsOpen,
+    } = props
+
+    if (shouldJiggle(props, state)) editorState = jiggle(editorState)
+
+    return {
+      commentable,
+      hoveredCommentThread,
+      selectedCommentThread,
+      theseCommentThreadsOpen,
+      editorState,
+    }
+  }
+
+  state = {
+    editorState: this.props.editorState,
+
+    // Cached props for comparison with new props in shouldJiggle
+    commentable: this.props.commentable,
+    hoveredCommentThread: this.props.hoveredCommentThread,
+    selectedCommentThread: this.props.selectedCommentThread,
+    theseCommentThreadsOpen: this.props.theseCommentThreadsOpen,
+  }
 
   cardRef: ?HTMLElement
-
-  _shouldJiggle = (nextProps: CardProps) =>
-    this.props.commentable !== nextProps.commentable ||
-    this.props.theseCommentThreadsOpen !== nextProps.theseCommentThreadsOpen ||
-    this.props.hoveredCommentThread !== nextProps.hoveredCommentThread ||
-    this.props.selectedCommentThread !== nextProps.selectedCommentThread
 
   _getClassNames = () => {
     let n: string[] = []
@@ -55,24 +86,6 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
     if (this.props.acceptingSelection) n = append('accepting-selection', n)
     if (this.props.commentable) n = append('commentable', n)
     return n.join(' ')
-  }
-
-  UNSAFE_componentWillReceiveProps (nextProps: CardProps) {
-    let editorState = nextProps.editorState
-    if (this._shouldJiggle(nextProps)) {
-      const contentState = editorState.getCurrentContent()
-      const blockMap = contentState.getBlockMap()
-
-      const indented = blockMap.map(blk => blk.set('depth', blk.getDepth() + 1))
-      const outdented = indented.map(blk =>
-        blk.set('depth', blk.getDepth() - 1)
-      )
-      const outdentedContentState = contentState.set('blockMap', outdented)
-      editorState = EditorState.set(editorState, {
-        currentContent: outdentedContentState,
-      })
-    }
-    this.setState({ editorState })
   }
 
   render () {
@@ -186,7 +199,10 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
                   <DeleteCardButton id={id} onClick={handleDeleteCard} />
                 )}
 
-                {solid && !editable && <Statistics uri={`cards/${id}`} />}
+                {solid &&
+                  !editable && (
+                  <Statistics key={`cards/${id}`} uri={`cards/${id}`} />
+                )}
 
                 <OnScreenTracker
                   targetKey={`cards/${id}`}
@@ -205,6 +221,27 @@ class CardContents extends React.Component<CardProps & { intl: IntlShape }, *> {
 }
 
 export default injectIntl(CardContents)
+
+function shouldJiggle (props: Props, state: State) {
+  return (
+    props.commentable !== state.commentable ||
+    props.theseCommentThreadsOpen !== state.theseCommentThreadsOpen ||
+    props.hoveredCommentThread !== state.hoveredCommentThread ||
+    props.selectedCommentThread !== state.selectedCommentThread
+  )
+}
+
+function jiggle (editorState: EditorState): EditorState {
+  const contentState = editorState.getCurrentContent()
+  const blockMap = contentState.getBlockMap()
+
+  const indented = blockMap.map(blk => blk.set('depth', blk.getDepth() + 1))
+  const outdented = indented.map(blk => blk.set('depth', blk.getDepth() - 1))
+  const outdentedContentState = contentState.set('blockMap', outdented)
+  return EditorState.set(editorState, {
+    currentContent: outdentedContentState,
+  })
+}
 
 function citationInsideThisCard (card: ?Element, citation: ?Element): boolean {
   if (!card || !citation) return false
