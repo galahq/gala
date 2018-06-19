@@ -26,7 +26,7 @@ function mapStateToProps (
   const lock = locks[`${type}/${param}`]
   return {
     lock,
-    locked: lock?.reader.param !== `${reader?.id || ''}`,
+    locked: lock && lock.reader.param !== `${reader?.id || ''}`,
     visible: edit.inProgress,
   }
 }
@@ -99,7 +99,10 @@ const Lock = ({
   </>
 )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Lock)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Lock)
 
 /**
  * STYLED COMPONENTS
