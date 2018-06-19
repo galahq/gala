@@ -52,10 +52,6 @@ class Statistics extends React.Component<Props> {
     this._maybeFetchStatistics(props)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    this._maybeFetchStatistics(nextProps)
-  }
-
   render () {
     const { visible, inline } = this.props
     if (!visible || !this.props.statistics) return null
@@ -95,4 +91,7 @@ class Statistics extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, { loadStatistics })(Statistics)
+export default connect(
+  mapStateToProps,
+  { loadStatistics }
+)(Statistics)

@@ -4,6 +4,10 @@ DARK_BLUE_PIXEL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU' \
   'lEQVR42mOUtY/7DwAC9gG7VNK2ygAAAABJRU5ErkJggg=='
 
+RED_PIXEL =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAFoEvQfAAAABG' \
+  'dBTUEAALGPC/xhBQAAAA1JREFUCB1juOtg/x8ABbYCXHCMAk8AAAAASUVORK5CYII='
+
 # @see Case
 class CaseDecorator < ApplicationDecorator
   decorates_association :edgenotes
@@ -11,6 +15,7 @@ class CaseDecorator < ApplicationDecorator
 
   def cover_url(transforms = { resize: '1280x540^' })
     return DARK_BLUE_PIXEL unless cover_image.attached?
+    return RED_PIXEL unless cover_image.variable?
     polymorphic_path cover_image.variant(transforms), only_path: true
   end
 
