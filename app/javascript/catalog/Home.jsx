@@ -4,7 +4,6 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
 import { values, omit } from 'ramda'
 
 import { FormattedMessage } from 'react-intl'
@@ -14,6 +13,7 @@ import ValueProposition from 'catalog/ValueProposition'
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import MapView from 'catalog/MapView'
+import Categories from 'catalog/Categories'
 import CaseList from 'catalog/CaseList'
 import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
 
@@ -67,6 +67,8 @@ class Home extends React.Component<{
                 zoom: 1.1606345336768273,
               }}
             />
+
+            <Categories />
 
             {this._allOtherCases().length > 0 && (
               <CatalogSection>

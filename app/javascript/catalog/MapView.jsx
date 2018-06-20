@@ -157,7 +157,7 @@ class MapViewController extends React.Component<Props, State> {
 export default injectIntl(MapViewController)
 
 const Container = styled.section`
-  margin: 0 -2em;
+  margin: -1em -2em 0;
   height: ${({ height }) => height || 550}px;
   position: relative;
 
