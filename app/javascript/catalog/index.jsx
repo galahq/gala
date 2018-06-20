@@ -150,6 +150,13 @@ const Window = styled.div`
   padding: 2em 1em;
   margin: 0;
 
+  @media (max-width: 1100px) {
+    grid-template:
+      'sidebar value-proposition'
+      'sidebar banner'
+      'sidebar main' min-content / 15em calc(100% - 15em - 1em);
+  }
+
   @media (max-width: 700px) {
     grid-template: 'value-proposition' 'sidebar' 'banner' 'main' auto / 100%;
   }

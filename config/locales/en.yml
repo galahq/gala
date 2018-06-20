@@ -187,6 +187,15 @@ en:
       toc: Table of Contents
   catalog:
     catalog: Catalog
+    categories:
+      climate: Climate
+      energy: Energy
+      food: Food
+      health: Health
+      land: Land
+      lifeforms: Lifeforms
+      materials: Materials
+      water: Water
     choose_for_yourself: Choose for yourself
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
@@ -195,6 +204,7 @@ en:
       study or to teach as they are unfolding. It’s now easy to find
       engaging teaching materials for use in classrooms and for public
       education.
+    global_systems: Global Systems
     impactful_cases: Impactful Cases
     improve_your_communication: >
       Improve your ability to communicate complex topics by adding your own
@@ -212,6 +222,7 @@ en:
     learn_more: Learn more
     meet_stakeholders: >
       Meet different stakeholders and dive deep with a multimodal narrative.
+    natural_resources: Natural Resources
     open_access_learning_tools:
       Open access learning tools for sustainability science
     propose_a_case: Propose a Case
