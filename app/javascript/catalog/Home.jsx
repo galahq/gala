@@ -14,7 +14,7 @@ import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import MapView from 'catalog/MapView'
 import Categories from 'catalog/Categories'
-import CaseList from 'catalog/CaseList'
+import Keywords from 'catalog/Keywords'
 import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
 
 import type { Case, Enrollment, Reader } from 'redux/state'
@@ -70,18 +70,7 @@ class Home extends React.Component<{
 
             <Categories />
 
-            {this._allOtherCases().length > 0 && (
-              <CatalogSection>
-                <SectionTitle>
-                  <FormattedMessage id="cases.index.allCases" />
-                </SectionTitle>
-
-                <CaseList
-                  readerIsEditor={readerIsEditor}
-                  cases={this._allOtherCases()}
-                />
-              </CatalogSection>
-            )}
+            <Keywords />
           </Main>
         </>
       </DocumentTitle>
