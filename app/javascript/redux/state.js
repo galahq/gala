@@ -165,6 +165,7 @@ export type Case = {
   slug: string,
   smallCoverUrl: string,
   summary: string,
+  tags: string[],
   title: string,
   zoom: ?number,
 } & Byline
