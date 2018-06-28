@@ -16,20 +16,22 @@ module Taggable
   end
 
   def tagged?(name)
-    tag_named(name).present?
+    tagging_for_tag_named(name).present?
   end
 
   def tag(name)
-    taggings << Tagging.with_tag_named(name)
+    Tagging.with_tag_named(name).tap { |t| taggings << t }
+  rescue ActiveRecord::RecordNotUnique
+    tagging_for_tag_named name
   end
 
   def untag(name)
-    tag_named(name).destroy
+    tagging_for_tag_named(name)&.destroy
   end
 
   private
 
-  def tag_named(name)
+  def tagging_for_tag_named(name)
     taggings.joins(:tag).find_by(tags: { name: name })
   end
 end
