@@ -18,7 +18,7 @@ class CasesController < ApplicationController
     @cases = policy_scope(Case)
              .ordered
              .with_attached_cover_image
-             .includes(:case_elements, :library)
+             .includes(:case_elements, :library, :tags)
              .decorate
 
     render json: @cases, each_serializer: Cases::PreviewSerializer
