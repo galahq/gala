@@ -48,6 +48,8 @@ Rails.application.routes.draw do
 
       resource :settings, module: 'cases', only: %i[edit update]
 
+      resources :taggings, only: %i[create destroy], param: :tag_name
+
       collection do
         resources :features, module: 'cases', param: :case_slug,
                              only: %i[index create update destroy]
