@@ -165,7 +165,7 @@ export type Case = {
   slug: string,
   smallCoverUrl: string,
   summary: string,
-  tags: string[],
+  tags: Tag[],
   title: string,
   zoom: ?number,
 } & Byline
@@ -376,6 +376,12 @@ export type StatisticsData = {
   uniques: number,
   views: number,
   updatedAt: number,
+}
+
+export type Tag = {
+  category: boolean,
+  displayName: string,
+  name: string,
 }
 
 export type Viewport = { latitude: number, longitude: number, zoom: number }

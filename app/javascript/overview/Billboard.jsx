@@ -20,7 +20,7 @@ import CaseKeywords from './CaseKeywords'
 
 import { updateCase } from 'redux/actions'
 
-import type { State, Case, Viewport } from 'redux/state'
+import type { State, Case, Tag, Viewport } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
@@ -55,7 +55,7 @@ type Props = {
   otherAvailableLocales: string[],
   slug: string,
   summary: string,
-  tags: string[],
+  tags: Tag[],
   updateCase: typeof updateCase,
 }
 
