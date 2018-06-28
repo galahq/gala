@@ -9,7 +9,9 @@ import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
-type Props = { tags: string[] }
+import type { Tag } from 'redux/state'
+
+type Props = { tags: Tag[] }
 const CaseKeywords = ({ tags }: Props) => {
   if (tags.length === 0) return null
 
@@ -20,28 +22,24 @@ const CaseKeywords = ({ tags }: Props) => {
       </SectionTitle>
 
       <div>
-        {categoryTags(tags).map(category => (
-          <CategoryTag key={category} category={category} />
-        ))}
+        {tags
+          .filter(tag => tag.category)
+          .map(({ name, displayName }) => (
+            <CategoryTag key={name} category={displayName} />
+          ))}
       </div>
 
       <div className="pt-dark">
-        {keywordTags(tags).map(tag => <KeywordTag key={tag}>{tag}</KeywordTag>)}
+        {tags
+          .filter(tag => !tag.category)
+          .map(({ name, displayName }) => (
+            <KeywordTag key={name}>{displayName}</KeywordTag>
+          ))}
       </div>
     </CatalogSection>
   )
 }
 export default CaseKeywords
-
-function categoryTags (tags: string[]) {
-  return tags
-    .filter(tag => tag.startsWith('category:'))
-    .map(tag => tag.replace(/^category:/, ''))
-}
-
-function keywordTags (tags: string[]) {
-  return tags.filter(tag => !tag.startsWith('category:'))
-}
 
 const CategoryTag = styled.span.attrs({ className: 'pt-tag pt-large' })`
   background-image: url(${p => require(`images/category-${p.category}.png`)});
