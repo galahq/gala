@@ -9,26 +9,32 @@ import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
-const Categories = () => (
-  <>
-    <Section title="naturalResources">
-      <NaturalResourcesGrid>
-        <NaturalResourceLink category="water" />
-        <NaturalResourceLink category="materials" />
-        <NaturalResourceLink category="energy" />
-        <NaturalResourceLink category="land" />
-        <NaturalResourceLink category="lifeforms" />
-      </NaturalResourcesGrid>
-    </Section>
-    <Section title="globalSystems">
-      <GlobalSystemsGrid>
-        <GlobalSystemLink category="food" />
-        <GlobalSystemLink category="climate" />
-        <GlobalSystemLink category="health" />
-      </GlobalSystemsGrid>
-    </Section>
-  </>
-)
+import type { Tag } from 'redux/state'
+
+type Props = { tags: Tag[] }
+const Categories = ({ tags }: Props) => {
+  const getDisplayName = name => tags.find(t => t.name === name)?.displayName
+  return (
+    <>
+      <Section title="naturalResources">
+        <NaturalResourcesGrid>
+          <NaturalResourceLink category={getDisplayName('water')} />
+          <NaturalResourceLink category={getDisplayName('materials')} />
+          <NaturalResourceLink category={getDisplayName('energy')} />
+          <NaturalResourceLink category={getDisplayName('land')} />
+          <NaturalResourceLink category={getDisplayName('lifeforms')} />
+        </NaturalResourcesGrid>
+      </Section>
+      <Section title="globalSystems">
+        <GlobalSystemsGrid>
+          <GlobalSystemLink category={getDisplayName('food')} />
+          <GlobalSystemLink category={getDisplayName('climate')} />
+          <GlobalSystemLink category={getDisplayName('health')} />
+        </GlobalSystemsGrid>
+      </Section>
+    </>
+  )
+}
 export default Categories
 
 const Section = ({ children, title }) => (
@@ -131,14 +137,14 @@ const LinkContainer = styled.div`
 
 const NaturalResourceLabel = styled.span`
   bottom: 20%;
-  color: #EBEAE4;
+  color: #ebeae4;
   font-family: freight-text-pro, ${p => p.theme.sansFont};
   font-style: italic;
   font-size: 24px;
   font-weight: 700;
   left: 50%;
   position: absolute;
-  text-shadow: 0 0 6px rgba(0,0,0,0.50);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   transform: translateX(-50%);
 
   @media (max-width: 800px) {
@@ -148,13 +154,13 @@ const NaturalResourceLabel = styled.span`
 `
 
 const GlobalSystemLabel = styled.span`
-  color: #EBEAE4;
+  color: #ebeae4;
   font-size: 28px;
   font-weight: 700;
   left: 50%;
   letter-spacing: 1.15px;
   position: absolute;
-  text-shadow: 0 0 6px rgba(0,0,0,0.50);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   text-transform: uppercase;
   top: 50%;
   transform: translate(-50%, -50%);

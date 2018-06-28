@@ -10,75 +10,18 @@ import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
-const keywords = [
-  'Adaptation',
-  'Agriculture',
-  'Awareness Raising',
-  'Biodiversity',
-  'Bioenergy',
-  'Climate',
-  'Conservation',
-  'Cost Benefit Analysis',
-  'Cradle to Cradle',
-  'Deforestation',
-  'Design',
-  'Development',
-  'Disaster',
-  'Diversity',
-  'Ecology',
-  'Ecosystem',
-  'Energy',
-  'Equity',
-  'Externality',
-  'Farming',
-  'Finance',
-  'Food Chain',
-  'Footprint',
-  'Geothermal',
-  'Globalization',
-  'Governance',
-  'Greenhouse Effect',
-  'Human Rights',
-  'Integration',
-  'Investment',
-  'Justice',
-  'Land',
-  'LEED',
-  'Life Cycle',
-  'Marine',
-  'Materials',
-  'Nature',
-  'Nutrition',
-  'Oceans',
-  'Planning',
-  'Policy',
-  'Politics',
-  'Poverty',
-  'Public Health',
-  'Race',
-  'Recycling',
-  'Rights',
-  'Rural',
-  'Social',
-  'Solar',
-  'Stakeholders',
-  'Stewardship',
-  'Supply Chain',
-  'Systems Thinking',
-  'Technology',
-  'Tradeoffs',
-  'Transportation',
-  'Triple Bottom Line',
-  'Underserved',
-  'Unintended Consequence',
-  'Urban',
-  'Water',
-  'Wind',
-  'Women',
-]
+import type { Tag } from 'redux/state'
 
-const Keywords = () => {
-  const keywordGroups = R.groupWith((a, b) => a[0] === b[0], keywords).sort()
+const sortGroup = (t: Tag) => t.displayName[0]
+const groupKeywords = R.compose(
+  R.sortWith([R.ascend(R.prop('displayName'))]),
+  R.groupWith((a, b) => sortGroup(a) === sortGroup(b)),
+  R.filter(tag => !tag.category)
+)
+
+type Props = { tags: Tag[] }
+const Keywords = ({ tags }: Props) => {
+  const keywordGroups = groupKeywords(tags)
 
   return (
     <CatalogSection>
@@ -102,17 +45,16 @@ const Columns = styled.div`
   margin-top: 1em;
 `
 
-type GroupProps = { keywords: string[] }
+type GroupProps = { keywords: Tag[] }
 const Group = ({ keywords }: GroupProps) => {
-  console.log(keywords)
   return (
     keywords.length > 0 && (
       <GroupContainer>
-        <h3>{keywords[0][0]}</h3>
+        <h3>{keywords[0].displayName[0]}</h3>
         <ul>
-          {keywords.map(keyword => (
-            <li key={keyword}>
-              <a href={`/catalog/search?q=${keyword}`}>{keyword}</a>
+          {keywords.map(({ name, displayName }) => (
+            <li key={name}>
+              <a href={`/catalog/search?q=${name}`}>{displayName}</a>
             </li>
           ))}
         </ul>
@@ -125,11 +67,12 @@ const GroupContainer = styled.div`
   break-inside: avoid;
 
   h3 {
-    color: #EBEAE4;
+    color: #ebeae4;
     font-size: 90%;
     font-weight: 600;
     margin-bottom: 0;
     opacity: 0.5;
+    text-transform: uppercase;
   }
 
   ul {
@@ -144,7 +87,8 @@ const GroupContainer = styled.div`
   }
 
   a {
-    color: #EBEAE4;
+    color: #ebeae4;
+    text-transform: capitalize;
 
     &:hover {
       text-decoration: underline;
