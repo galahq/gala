@@ -13,23 +13,23 @@ import type { Tag } from 'redux/state'
 
 type Props = { tags: Tag[] }
 const Categories = ({ tags }: Props) => {
-  const getDisplayName = name => tags.find(t => t.name === name)?.displayName
+  const get = name => tags.find(t => t.name === name)
   return (
     <>
       <Section title="naturalResources">
         <NaturalResourcesGrid>
-          <NaturalResourceLink category={getDisplayName('water')} />
-          <NaturalResourceLink category={getDisplayName('materials')} />
-          <NaturalResourceLink category={getDisplayName('energy')} />
-          <NaturalResourceLink category={getDisplayName('land')} />
-          <NaturalResourceLink category={getDisplayName('lifeforms')} />
+          <NaturalResourceLink tag={get('water')} />
+          <NaturalResourceLink tag={get('materials')} />
+          <NaturalResourceLink tag={get('energy')} />
+          <NaturalResourceLink tag={get('land')} />
+          <NaturalResourceLink tag={get('lifeforms')} />
         </NaturalResourcesGrid>
       </Section>
       <Section title="globalSystems">
         <GlobalSystemsGrid>
-          <GlobalSystemLink category={getDisplayName('food')} />
-          <GlobalSystemLink category={getDisplayName('climate')} />
-          <GlobalSystemLink category={getDisplayName('health')} />
+          <GlobalSystemLink tag={get('food')} />
+          <GlobalSystemLink tag={get('climate')} />
+          <GlobalSystemLink tag={get('health')} />
         </GlobalSystemsGrid>
       </Section>
     </>
@@ -103,25 +103,23 @@ const GlobalSystemsGrid = styled.div`
   }
 `
 
-const NaturalResourceLink = ({ category }) => (
-  <Link category={category} labelComponent={NaturalResourceLabel} />
+const NaturalResourceLink = ({ tag }) => (
+  <Link tag={tag} labelComponent={NaturalResourceLabel} />
 )
 
-const GlobalSystemLink = ({ category }) => (
-  <Link category={category} labelComponent={GlobalSystemLabel} />
+const GlobalSystemLink = ({ tag }) => (
+  <Link tag={tag} labelComponent={GlobalSystemLabel} />
 )
 
 type LinkParams = {
-  category: string,
+  tag: ?Tag,
   labelComponent: React.ComponentType<*>,
 }
 
-const Link = ({ category, labelComponent: Label }: LinkParams) => (
+const Link = ({ tag, labelComponent: Label }: LinkParams) => (
   <LinkContainer>
-    <img alt="" src={require(`images/category-${category}.png`)} />
-    <Label>
-      <FormattedMessage id={`catalog.categories.${category}`} />
-    </Label>
+    <img alt="" src={require(`images/category-${tag?.name || 'water'}.png`)} />
+    <Label>{tag?.displayName}</Label>
   </LinkContainer>
 )
 
@@ -145,11 +143,17 @@ const NaturalResourceLabel = styled.span`
   left: 50%;
   position: absolute;
   text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  text-transform: capitalize;
   transform: translateX(-50%);
 
   @media (max-width: 800px) {
     top: 55px;
     transform: translate(-50%, -50%);
+  }
+
+  html[lang^='ja'] &,
+  html[lang^='zh'] & {
+    font-style: normal;
   }
 `
 
