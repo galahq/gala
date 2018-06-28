@@ -15,6 +15,12 @@ class Tag < ApplicationRecord
 
   before_validation :ensure_english_display_name_matches_name
 
+  # The most popular tags, as well as all the categories, are shown on the
+  # catalog page
+  scope :most_popular, -> do
+    order(category: :desc, taggings_count: :desc).limit(50)
+  end
+
   def self.get(name)
     create name: name
   rescue ::ActiveRecord::RecordNotUnique
