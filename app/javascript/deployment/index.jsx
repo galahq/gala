@@ -10,8 +10,8 @@ import QuizSelector from './QuizSelector'
 import QuizDetails from './QuizDetails'
 import Toolbar from './Toolbar'
 
-import { Intent, Toaster } from '@blueprintjs/core'
-import hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet from 'shared/badTerribleAwfulCode'
+import { Intent } from '@blueprintjs/core'
+import Toaster from 'shared/Toaster'
 
 import type { IntentType } from '@blueprintjs/core'
 
@@ -54,8 +54,6 @@ const validated = map((question: Question) => ({
 }))
 
 class Deployment extends React.Component<Props, State> {
-  toaster: Toaster
-
   _needsPretest = () => {
     return this.state.selectedQuizId != null && this.state.answersNeeded === 2
   }
@@ -83,7 +81,7 @@ class Deployment extends React.Component<Props, State> {
   }
 
   _displayToast = (error: string, intent: IntentType = Intent.WARNING) => {
-    this.toaster.show({
+    Toaster.show({
       message: error,
       intent,
     })
@@ -146,11 +144,6 @@ class Deployment extends React.Component<Props, State> {
       answersNeeded: 2,
       customQuestions,
     }
-
-    // this.toaster = Toaster.create()
-    hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet(
-      toaster => (this.toaster = toaster)
-    )
   }
 
   render () {

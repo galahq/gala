@@ -106,7 +106,7 @@ const Section = styled.section`
 
 const AddCardButton = styled(Button).attrs({
   className: 'pt-minimal',
-  iconName: 'add',
+  icon: 'add',
 })`
   margin-left: 1.5em;
   opacity: 0.5;

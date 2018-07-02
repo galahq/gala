@@ -61,7 +61,7 @@ const NewCommentButton = ({
       }
     >
       <StyledButton
-        iconName={
+        icon={
           !acceptingSelection
             ? 'edit'
             : !selectionPending

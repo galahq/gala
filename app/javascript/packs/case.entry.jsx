@@ -18,7 +18,6 @@ import thunk from 'redux-thunk'
 import { ThemeProvider } from 'styled-components'
 import { theme } from 'utility/styledComponents'
 
-import { FocusStyleManager } from '@blueprintjs/core'
 import { addLocaleData, IntlProvider } from 'react-intl'
 
 import Case from 'Case'
@@ -27,8 +26,6 @@ import ErrorBoundary from 'utility/ErrorBoundary'
 import reducer from 'redux/reducers'
 
 import loadMessages from '../../../config/locales'
-
-FocusStyleManager.onlyShowFocusOnTabs()
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(

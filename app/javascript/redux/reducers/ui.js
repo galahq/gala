@@ -3,7 +3,8 @@
  * @flow
  */
 
-import { omit, without } from 'ramda'
+import { without } from 'ramda'
+import Toaster from 'shared/Toaster'
 
 import type { UIState } from 'redux/state'
 import type {
@@ -16,7 +17,6 @@ import type {
   AddCommentThreadAction,
   RemoveCommentThreadAction,
   ChangeCommentInProgressAction,
-  RegisterToasterAction,
   DisplayToastAction,
   DismissToastAction,
 } from 'redux/actions'
@@ -31,7 +31,6 @@ type Action =
   | AddCommentThreadAction
   | RemoveCommentThreadAction
   | ChangeCommentInProgressAction
-  | RegisterToasterAction
   | DisplayToastAction
   | DismissToastAction
 
@@ -44,8 +43,6 @@ export default function ui (state: ?UIState, action: Action): UIState {
       hoveredCommentThread: null,
       acceptingSelection: false,
       commentInProgress: {},
-      toaster: null,
-      toasts: {},
       mostRecentCommentThreads: [],
     }
   }
@@ -101,37 +98,15 @@ export default function ui (state: ?UIState, action: Action): UIState {
         },
       }
 
-    case 'REGISTER_TOASTER':
-      return {
-        ...state,
-        toaster: action.toaster,
-      }
-
     case 'DISPLAY_TOAST': {
-      let internalKey: string
+      Toaster.show(action.options, action.key)
 
-      if (action.key && state.toasts.hasOwnProperty(action.key)) {
-        state.toaster.update(state.toasts[action.key], action.options)
-      } else {
-        internalKey = state.toaster.show(action.options)
-      }
-
-      return internalKey && action.key
-        ? {
-          ...state,
-          toasts: {
-            ...state.toasts,
-            [action.key]: internalKey,
-          },
-        }
-        : state
+      return state
     }
 
     case 'DISMISS_TOAST':
-      return {
-        ...state,
-        toasts: omit([(action.key: any)], state.toasts),
-      }
+      Toaster.dismiss(action.key)
+      return state
 
     default:
       return state

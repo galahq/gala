@@ -62,7 +62,7 @@ class CreditsListForm extends React.Component<Props, CreditsListFormState> {
     return (
       <Dialog
         isOpen={editing}
-        iconName="edit"
+        icon="edit"
         className="pt-dark"
         title="Editing podcast credits"
         style={{ width: 700 }}

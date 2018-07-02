@@ -208,7 +208,7 @@ const FileField = (
       <Field
         {...props}
         render={({ disabled, placeholder }) => (
-          <label className="pt-file-upload pt-fill">
+          <label className="pt-file-input pt-fill">
             <input
               accept={props.accept}
               type="file"
@@ -229,7 +229,7 @@ const FileField = (
       {Attachment.truthy(attachment) && (
         <Button
           intent={Intent.DANGER}
-          iconName="trash"
+          icon="trash"
           onClick={() => props.onChangeAttachment(props.name, null)}
         >
           <FormattedMessage id="edgenotes.edit.remove" />

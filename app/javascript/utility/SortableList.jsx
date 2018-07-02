@@ -64,7 +64,7 @@ type ChildProps<Item> = {
 const Handle = SortableHandle(() => (
   <span
     className="pt-button pt-icon-drag-handle-horizontal pt-fixed"
-    style={{ paddingLeft: 7 }}
+    style={{ marginRight: -3 }}
   />
 ))
 
@@ -78,7 +78,7 @@ const Item = SortableElement(
       <Button
         className="pt-fixed"
         intent={Intent.DANGER}
-        iconName="delete"
+        icon="delete"
         onClick={onRemove}
       />
     </div>
@@ -100,7 +100,7 @@ const Container = SortableContainer(
       ))}
       <Button
         intent={Intent.SUCCESS}
-        iconName="add"
+        icon="add"
         text="Add"
         onClick={_ => onChange(append(newItem, items))}
       />

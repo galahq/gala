@@ -1,0 +1,123 @@
+$icon-font-path: '~@blueprintjs/icons/resources/icons';
+$pt-line-height: 1.22;
+
+$white: #FDFDFA;
+
+$dark-gray1: #01182E;
+$dark-gray2: #0D2338;
+$dark-gray3: #1B3043;
+$dark-gray4: #25394B;
+$dark-gray5: #314354;
+
+$gray1: #5D6B77;
+$gray2: #737F89;
+$gray3: #8B949C;
+$gray4: #ADB3B7;
+$gray5: #C5C9CB;
+
+$light-gray1: #D4D7D6;
+$light-gray2: #DEE0DF;
+$light-gray3: #E7E8E6;
+$light-gray4: #F1F0ED;
+$light-gray5: #FAF9F5;
+
+$blue1: #563E9C;
+$blue2: #6344BC;
+$blue3: #7351D4;
+$blue4: #8464DD;
+$blue5: #9C80EA;
+
+$green1: #277A2E;
+$green2: #348A3B;
+$green3: #419D48;
+$green4: #50B458;
+$green5: #6ACB72;
+
+@import '~@blueprintjs/icons/src/blueprint-icons';
+@import '~@blueprintjs/core/src/blueprint';
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: unset;
+}
+
+*:focus {
+  outline-color: rgba(170, 148, 232, 0.5);
+  outline-offset: 2px;
+}
+
+.pt-toast-container {
+  z-index: 500;
+}
+
+.pt-editable-text.pt-disabled {
+  display: inline !important;
+  cursor: inherit;
+}
+
+.pt-button {
+  margin: 0;
+}
+
+.pt-button.pt-button--baseline-aligned {
+  display: inline-block;
+  text-align: center;
+}
+
+input[type="submit"].pt-button:empty {
+  padding: 5px 10px;
+}
+
+.pt-input {
+  -webkit-appearance: none;
+}
+
+.pt-toast-message {
+  .pt-progress-bar {
+    margin-top: 5px;
+  }
+}
+
+.pt-control {
+  input {
+    position: absolute !important;
+  }
+}
+
+.pt-dark [class*="pt-intent-"],
+[class*="pt-intent-"] .pt-dark {
+  .pt-tag:not(.pt-minimal):not([class*="pt-intent-"]) {
+    background-color: #FAF9F5;
+  }
+}
+
+.pt-tag {
+  .pt-icon {
+    margin: 0 0.25em;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
+  color: #01182E;
+
+  &:before {
+    color: #5D6B77 !important;
+  }
+}
+
+.pt-dark {
+  .pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
+    color: #FAF9F5;
+
+    &::before {
+      color: #C5C9CB !important;
+    }
+  }
+}

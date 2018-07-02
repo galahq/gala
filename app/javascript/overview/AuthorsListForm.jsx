@@ -72,7 +72,7 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
     return (
       <Dialog
         isOpen={editing}
-        iconName="edit"
+        icon="edit"
         className="pt-dark"
         title={intl.formatMessage({ id: 'cases.edit.editingAuthors' })}
         style={{ width: 700 }}
