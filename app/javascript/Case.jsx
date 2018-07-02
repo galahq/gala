@@ -12,7 +12,6 @@ import {
   parseAllCards,
   fetchCommentThreads,
   fetchCommunities,
-  registerToaster,
   toggleEditing,
   subscribeToActiveForumChannel,
   subscribeToEditsChannel,
@@ -23,9 +22,6 @@ import asyncComponent from 'utility/asyncComponent'
 
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
-
-// import { Toaster } from '@blueprintjs/core'
-import hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet from 'shared/badTerribleAwfulCode'
 
 import type { State } from 'redux/state'
 
@@ -72,7 +68,6 @@ class Case extends React.Component<{
   fetchCommentThreads: typeof fetchCommentThreads,
   fetchCommunities: typeof fetchCommunities,
   toggleEditing: typeof toggleEditing,
-  registerToaster: typeof registerToaster,
   subscribeToActiveForumChannel: typeof subscribeToActiveForumChannel,
   subscribeToEditsChannel: typeof subscribeToEditsChannel,
   handleNotification: typeof handleNotification,
@@ -109,7 +104,6 @@ class Case extends React.Component<{
       fetchCommentThreads,
       fetchCommunities,
       toggleEditing,
-      registerToaster,
     } = this.props
 
     parseAllCards()
@@ -122,11 +116,6 @@ class Case extends React.Component<{
     if (this._shouldStartInEditMode()) {
       toggleEditing()
     }
-
-    // registerToaster(Toaster.create())
-    hackIntoReactAndCreateAToasterBecauseBlueprintDoesntSupportFiberYet(
-      toaster => registerToaster(toaster)
-    )
 
     this._subscribe()
   }
@@ -166,7 +155,6 @@ export default connect(mapStateToProps, {
   fetchCommentThreads,
   fetchCommunities,
   toggleEditing,
-  registerToaster,
   subscribeToActiveForumChannel,
   subscribeToEditsChannel,
   handleNotification,

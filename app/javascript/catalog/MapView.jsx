@@ -116,7 +116,7 @@ class MapViewController extends React.Component<Props, State> {
                 />
                 <PaddedButton
                   disabled={this._viewportSet()}
-                  iconName={this._viewportSet() ? 'tick' : ''}
+                  icon={this._viewportSet() ? 'tick' : ''}
                   intent={Intent.SUCCESS}
                   text={intl.formatMessage({ id: 'cases.edit.map.set' })}
                   onClick={this.handleSave}
@@ -125,14 +125,14 @@ class MapViewController extends React.Component<Props, State> {
                   aria-label={intl.formatMessage({
                     id: 'cases.edit.map.zoomOut',
                   })}
-                  iconName="zoom-out"
+                  icon="zoom-out"
                   onClick={this.handleZoomOut}
                 />
                 <PaddedButton
                   aria-label={intl.formatMessage({
                     id: 'cases.edit.map.zoomIn',
                   })}
-                  iconName="zoom-in"
+                  icon="zoom-in"
                   onClick={this.handleZoomIn}
                 />
               </PositionedButtons>

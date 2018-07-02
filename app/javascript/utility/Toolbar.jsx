@@ -18,12 +18,12 @@ type BarButton = {|
   disabled?: boolean,
   message?: string,
   onClick: () => any,
-  iconName: string,
+  icon: string,
 |}
 type BarMessage = {| message: string |}
 type BarMenu = {|
   message?: string,
-  iconName: string,
+  icon: string,
   submenu: Array<BarButton>,
 |}
 type BarComponent = {|

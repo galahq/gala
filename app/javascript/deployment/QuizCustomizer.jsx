@@ -77,16 +77,16 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
           <PaddedItem key={questionIx}>
             <QuestionInputGroup
               autoFocus
-              intent={question.hasError && Intent.WARNING}
+              intent={question.hasError ? Intent.WARNING : null}
               value={content}
               placeholder="Question text"
               type="text"
-              leftIconName={options.length > 0 ? 'properties' : 'comment'}
+              leftIcon={options.length > 0 ? 'properties' : 'comment'}
               rightElement={
                 content ? (
                   <Button
                     className="pt-minimal"
-                    iconName="add"
+                    icon="add"
                     onClick={_ => handleAddQuestionOption(questionIx)}
                   >
                     Add option
@@ -94,7 +94,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                 ) : (
                   <Button
                     className="pt-minimal"
-                    iconName="delete"
+                    icon="delete"
                     onClick={_ => handleRemoveQuestion(questionIx)}
                   >
                     Delete question
@@ -133,7 +133,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
                       <Button
                         intent={Intent.DANGER}
                         className="pt-minimal"
-                        iconName="delete"
+                        icon="delete"
                         onClick={_ =>
                           handleRemoveQuestionOption(questionIx, optionIx)
                         }
@@ -174,7 +174,7 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
       })}
       <FlushButton
         alone={customQuestions.length === 0}
-        iconName="add"
+        icon="add"
         onClick={handleAddQuestion}
       >
         Add question

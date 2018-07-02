@@ -106,8 +106,6 @@ export type UIState = {
   hoveredCommentThread: ?string,
   mostRecentCommentThreads: ?(string[]),
   openedCitation: Citation,
-  toaster: any,
-  toasts: { [string]: string },
 }
 
 // Model Objects

@@ -14,13 +14,9 @@ import { addLocaleData, IntlProvider } from 'react-intl'
 import { ThemeProvider } from 'styled-components'
 import { theme } from 'utility/styledComponents'
 
-import { FocusStyleManager } from '@blueprintjs/core'
-
 import Catalog from 'catalog'
 
 import loadMessages from '../../../config/locales'
-
-FocusStyleManager.onlyShowFocusOnTabs()
 
 const { locale } = (window.i18n: { locale: string })
 

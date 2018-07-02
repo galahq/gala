@@ -36,7 +36,7 @@ class Pin extends React.Component<{
                 rightElement={
                   !!kase.publishedAt && (
                     <AnchorButton
-                      iconName="circle-arrow-right"
+                      icon="circle-arrow-right"
                       className="pt-intent-success"
                       href={kase.links.self}
                     />
