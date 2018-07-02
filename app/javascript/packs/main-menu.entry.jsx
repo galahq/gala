@@ -15,9 +15,6 @@ import MainMenu from 'shared/MainMenu'
 
 import loadMessages from '../../../config/locales'
 
-import { FocusStyleManager } from '@blueprintjs/core'
-FocusStyleManager.onlyShowFocusOnTabs()
-
 const { locale } = (window.i18n: { locale: string })
 
 delete AppContainer.prototype.unstable_handleError

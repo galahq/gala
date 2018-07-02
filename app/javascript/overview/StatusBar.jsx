@@ -51,7 +51,7 @@ function StatusBar ({
       ? [
         {
           message: 'catalog.catalog',
-          iconName: 'home',
+          icon: 'home',
           onClick: () =>
             (window.location = window.location.pathname.replace(
               /cases.*/,
@@ -61,14 +61,14 @@ function StatusBar ({
         {
           disabled: !commentable || !reader || !reader.enrollment,
           message: 'comments.index.conversation',
-          iconName: 'chat',
+          icon: 'chat',
           onClick: () => history.push('/conversation'),
         },
       ]
       : [
         {
           message: 'cases.show.backToOverview',
-          iconName: 'arrow-left',
+          icon: 'arrow-left',
           onClick: () => history.push('/'),
         },
       ],
@@ -82,7 +82,7 @@ function StatusBar ({
     [
       editing || {
         message: 'deployments.new.teachThisCase',
-        iconName: 'follower',
+        icon: 'follower',
         onClick: () => (window.location = links.teach),
       },
 
@@ -91,24 +91,24 @@ function StatusBar ({
           ? {
             disabled: !edited,
             message: 'cases.edit.save',
-            iconName: 'floppy-disk',
+            icon: 'floppy-disk',
             onClick: saveChanges,
           }
           : {
             message: editing ? 'cases.edit.stopEditing' : 'cases.edit.edit',
-            iconName: editing ? 'cross' : 'edit',
+            icon: editing ? 'cross' : 'edit',
             onClick: toggleEditing,
           }),
 
       editable && {
         message: 'cases.edit.options',
-        iconName: 'cog',
+        icon: 'cog',
         submenu: [
           edited
             ? null
             : {
               message: 'cases.settings.edit.editCaseSettings',
-              iconName: 'settings',
+              icon: 'settings',
               onClick: () => {
                 window.location = links.settings
               },
@@ -119,7 +119,7 @@ function StatusBar ({
               message: published
                 ? 'cases.edit.unpublishCase'
                 : 'cases.edit.publishCase',
-              iconName: published ? 'lock' : 'upload',
+              icon: published ? 'lock' : 'upload',
               onClick: togglePublished,
             },
         ],

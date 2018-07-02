@@ -49,44 +49,48 @@ class CreditsList extends React.Component<
     let { guests, hosts } = credits
 
     return (
-      <div
-        tabIndex="0"
-        role="button"
-        style={{ cursor: canEdit ? 'pointer' : 'auto' }}
-        onKeyPress={acceptKeyboardClick}
-        onClick={this.handleStartEditing}
-      >
-        {guests.length > 0 || hosts.length > 0 ? (
-          <>
-            <dl>
-              {guests.map(guest => {
-                return [
-                  <dt key={`name:${guest.name}`}>{guest.name}</dt>,
-                  <dd key={`title:${guest.title}`}>{guest.title}</dd>,
-                ]
-              })}
-            </dl>
-            <em>
-              <FormattedMessage
-                id="podcasts.show.withHost.js"
-                values={{ count: hosts.length }}
-              />{' '}
-              <FormattedList list={hosts.map(h => <span key={h}>{h}</span>)} />
-            </em>
-          </>
-        ) : (
-          canEdit && (
-            <button className="pt-button pt-icon-people">
-              <FormattedMessage id="podcasts.edit.addGuests" />
-            </button>
-          )
-        )}
+      <>
+        <div
+          tabIndex="0"
+          role="button"
+          style={{ cursor: canEdit ? 'pointer' : 'auto' }}
+          onKeyPress={acceptKeyboardClick}
+          onClick={this.handleStartEditing}
+        >
+          {guests.length > 0 || hosts.length > 0 ? (
+            <>
+              <dl>
+                {guests.map(guest => {
+                  return [
+                    <dt key={`name:${guest.name}`}>{guest.name}</dt>,
+                    <dd key={`title:${guest.title}`}>{guest.title}</dd>,
+                  ]
+                })}
+              </dl>
+              <em>
+                <FormattedMessage
+                  id="podcasts.show.withHost.js"
+                  values={{ count: hosts.length }}
+                />{' '}
+                <FormattedList
+                  list={hosts.map(h => <span key={h}>{h}</span>)}
+                />
+              </em>
+            </>
+          ) : (
+            canEdit && (
+              <button className="pt-button pt-icon-people">
+                <FormattedMessage id="podcasts.edit.addGuests" />
+              </button>
+            )
+          )}
+        </div>
         <CreditsListForm
           credits={credits}
           editing={this.state.editing}
           onFinishEditing={this.handleFinishEditing}
         />
-      </div>
+      </>
     )
   }
 }

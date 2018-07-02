@@ -58,7 +58,7 @@ class SearchForm extends React.Component<Props, State> {
         <form onSubmit={this.handleSubmit}>
           <InputGroup
             className="pt-fill"
-            leftIconName="search"
+            leftIcon="search"
             placeholder={this.props.intl.formatMessage({
               id: 'search.keywordQuery',
             })}

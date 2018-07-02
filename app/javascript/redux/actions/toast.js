@@ -8,12 +8,7 @@ import { Intent } from '@blueprintjs/core'
 
 import type { ThunkAction, Dispatch } from 'redux/actions'
 import type { Notification } from 'redux/state'
-import type { Toaster, Toast } from '@blueprintjs/core'
-
-export type RegisterToasterAction = { type: 'REGISTER_TOASTER', toaster: any }
-export function registerToaster (toaster: Toaster): RegisterToasterAction {
-  return { type: 'REGISTER_TOASTER', toaster }
-}
+import type { Toast } from '@blueprintjs/core'
 
 export type DisplayToastAction = {
   type: 'DISPLAY_TOAST',

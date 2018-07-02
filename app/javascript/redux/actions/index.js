@@ -93,4 +93,3 @@ export type Action =
   | StatisticsActions.SetStatisticsAction
   | ToastActions.DisplayToastAction
   | ToastActions.DismissToastAction
-  | ToastActions.RegisterToasterAction

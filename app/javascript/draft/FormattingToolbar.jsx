@@ -23,7 +23,7 @@ import type { IntlShape } from 'react-intl'
 
 type Action = {
   name: ActionName,
-  iconName: string,
+  icon: string,
   call: (editorState: EditorState, props: Props) => Promise<EditorState>,
   active: (editorState: EditorState) => boolean,
 }
@@ -41,55 +41,55 @@ type ActionName =
 const ACTIONS: Action[] = [
   {
     name: 'bold',
-    iconName: 'bold',
+    icon: 'bold',
     call: async eS => RichUtils.toggleInlineStyle(eS, 'BOLD'),
     active: eS => eS.getCurrentInlineStyle().has('BOLD'),
   },
   {
     name: 'italic',
-    iconName: 'italic',
+    icon: 'italic',
     call: async eS => RichUtils.toggleInlineStyle(eS, 'ITALIC'),
     active: eS => eS.getCurrentInlineStyle().has('ITALIC'),
   },
   {
     name: 'code',
-    iconName: 'code',
+    icon: 'code',
     call: async eS => RichUtils.toggleInlineStyle(eS, 'CODE'),
     active: eS => eS.getCurrentInlineStyle().has('CODE'),
   },
   {
     name: 'header',
-    iconName: 'header',
+    icon: 'header',
     call: async eS => RichUtils.toggleBlockType(eS, 'header-two'),
     active: blockTypeEquals('header-two'),
   },
   {
     name: 'blockquote',
-    iconName: 'citation',
+    icon: 'citation',
     call: async eS => RichUtils.toggleBlockType(eS, 'blockquote'),
     active: blockTypeEquals('blockquote'),
   },
   {
     name: 'ol',
-    iconName: 'numbered-list',
+    icon: 'numbered-list',
     call: async eS => RichUtils.toggleBlockType(eS, 'ordered-list-item'),
     active: blockTypeEquals('ordered-list-item'),
   },
   {
     name: 'ul',
-    iconName: 'properties',
+    icon: 'properties',
     call: async eS => RichUtils.toggleBlockType(eS, 'unordered-list-item'),
     active: blockTypeEquals('unordered-list-item'),
   },
   {
     name: 'addEdgenoteEntity',
-    iconName: 'add-column-right',
+    icon: 'add-column-right',
     call: toggleEdgenote,
     active: entityTypeEquals('EDGENOTE'),
   },
   {
     name: 'addCitationEntity',
-    iconName: 'bookmark',
+    icon: 'bookmark',
     call: async (eS, props) => addCitationEntity(eS, props),
     active: blockTypeEquals('unordered-list-item'),
   },
@@ -112,7 +112,7 @@ const FormattingToolbar = (props: Props) => {
         return (
           <Button
             key={action.name}
-            iconName={action.iconName}
+            icon={action.icon}
             active={action.active(editorState)}
             aria-label={intl.formatMessage({ id: messageId })}
             title={intl.formatMessage({ id: messageId })}

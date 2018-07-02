@@ -61,8 +61,8 @@ class Acknowledgements extends React.Component<
 export default injectIntl(Acknowledgements)
 
 const AcknowledgementsButton = styled(Button).attrs({
-  className: 'pt-minimal pt-small',
-  iconName: 'more',
+  className: 'pt-minimal pt-small pt-button--baseline-aligned',
+  icon: 'more',
 })`
   margin-left: 0.25em;
 `

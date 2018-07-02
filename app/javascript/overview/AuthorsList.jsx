@@ -53,39 +53,41 @@ class AuthorsList extends React.Component<
     const isButton = authors.length === 0 && canEdit
 
     return (
-      // eslint-disable-next-line
-      <div
-        className={isButton ? 'pt-button pt-icon-people' : ''}
-        tabIndex={canEdit ? '0' : null} // eslint-disable-line
-        role={canEdit ? 'button' : null}
-        style={{ cursor: canEdit ? 'pointer' : null }}
-        onKeyPress={acceptKeyboardClick}
-        onClick={this.handleStartEditing}
-      >
-        {isButton ? (
-          <FormattedMessage id="cases.edit.addAuthors" />
-        ) : (
-          <p>
-            <FormattedList
-              list={authors.map(a => (
-                <AuthorName key={a.name} author={a} canEdit={canEdit} />
-              ))}
-            />
-            <Acknowledgements contents={acknowledgements} />
-            <br />
-            {translators.length !== 0 && (
-              <em>
-                <FormattedMessage
-                  id="activerecord.attributes.case.translators.js"
-                  values={{ count: translators.length }}
-                />
-                <FormattedList
-                  list={translators.map(t => <span key={t}>{t}</span>)}
-                />
-              </em>
-            )}
-          </p>
-        )}
+      <>
+        {/* eslint-disable-next-line */}
+        <div
+          className={isButton ? 'pt-button pt-icon-people' : ''}
+          tabIndex={canEdit ? '0' : null} // eslint-disable-line
+          role={canEdit ? 'button' : null}
+          style={{ cursor: canEdit ? 'pointer' : null }}
+          onKeyPress={acceptKeyboardClick}
+          onClick={this.handleStartEditing}
+        >
+          {isButton ? (
+            <FormattedMessage id="cases.edit.addAuthors" />
+          ) : (
+            <p>
+              <FormattedList
+                list={authors.map(a => (
+                  <AuthorName key={a.name} author={a} canEdit={canEdit} />
+                ))}
+              />
+              <Acknowledgements contents={acknowledgements} />
+              <br />
+              {translators.length !== 0 && (
+                <em>
+                  <FormattedMessage
+                    id="activerecord.attributes.case.translators.js"
+                    values={{ count: translators.length }}
+                  />
+                  <FormattedList
+                    list={translators.map(t => <span key={t}>{t}</span>)}
+                  />
+                </em>
+              )}
+            </p>
+          )}
+        </div>
         {canEdit && (
           <AuthorsListForm
             byline={byline}
@@ -93,7 +95,7 @@ class AuthorsList extends React.Component<
             onFinishEditing={this.handleFinishEditing}
           />
         )}
-      </div>
+      </>
     )
   }
 }
@@ -111,9 +113,8 @@ const AuthorName = ({
   return institution ? (
     <StyledTooltip
       content={institution}
-      isDisabled={canEdit}
+      disabled={canEdit}
       intent={Intent.SUCCESS}
-      position={Position.BOTTOM_LEFT}
     >
       <span>
         {name}
