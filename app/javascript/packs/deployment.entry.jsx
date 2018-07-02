@@ -15,9 +15,6 @@ import Deployment from 'deployment'
 import { ThemeProvider } from 'styled-components'
 import { theme } from 'utility/styledComponents'
 
-import { FocusStyleManager } from '@blueprintjs/core'
-FocusStyleManager.onlyShowFocusOnTabs()
-
 const { locale } = (window.i18n: { locale: string })
 import loadMessages from '../../../config/locales' // eslint-disable-line
 

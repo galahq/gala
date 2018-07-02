@@ -167,7 +167,7 @@ export async function toggleEdgenote (
 
   if (editorState.getSelection().isCollapsed()) {
     displayToast({
-      iconName: 'error',
+      icon: 'error',
       intent: Intent.WARNING,
       message: (
         <span
@@ -209,7 +209,7 @@ export function addCitationEntity (
   })
 
   displayToast({
-    iconName: 'tick',
+    icon: 'tick',
     intent: Intent.SUCCESS,
     message: (
       <span

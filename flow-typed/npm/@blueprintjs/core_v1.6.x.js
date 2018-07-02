@@ -93,7 +93,7 @@ declare module '@blueprintjs/core' {
   declare export interface IActionProps {
     disabled?: boolean;
     text?: string;
-    iconName?: string;
+    icon?: string;
     onClick?: (SyntheticEvent<*>) => any;
   }
 
@@ -184,7 +184,7 @@ declare module '@blueprintjs/core' {
 
   declare export class Dialog extends React.Component<
     {
-      iconName?: string,
+      icon?: string,
       isCloseButtonShown?: boolean,
       isOpen: boolean,
       style: Object,
@@ -208,7 +208,7 @@ declare module '@blueprintjs/core' {
 
   declare export class Icon extends React.Component<
     {
-      iconName: string,
+      icon: string,
       iconSize?: 'inherit' | 16 | 20,
     } & IProps &
       IIntentProps
@@ -218,7 +218,7 @@ declare module '@blueprintjs/core' {
     {
       disabled?: boolean,
       intent?: IntentType,
-      leftIconName?: string,
+      leftIcon?: string,
       placeholder?: string,
       rightElement?: React.Node,
       type?: string,
@@ -261,8 +261,8 @@ declare module '@blueprintjs/core' {
       hoverOpenDelay?: number,
       inheritDarkTheme?: boolean,
       interactionKind?: PopoverInteractionKindType,
-      isDisabled?: boolean,
-      isModal?: boolean,
+      disabled?: boolean,
+      hasBackdrop?: boolean,
       isOpen?: boolean,
       onInteraction?: (nextOpenState: boolean) => void,
       popoverClassName?: string,
@@ -305,7 +305,7 @@ declare module '@blueprintjs/core' {
     action?: IActionProps & ILinkProps,
     message: React.Node,
     onDismiss?: (didTimoutExpire: boolean) => any,
-    iconName?: string,
+    icon?: string,
     timeout?: number,
   } & IProps &
     IIntentProps
@@ -320,11 +320,11 @@ declare module '@blueprintjs/core' {
       } & IProps),
       container: ?HTMLElement
     ): Toaster;
-    show(props: Toast): string;
-    update(key: string, props: Toast): void;
-    dismiss(key: string): void;
+    
     clear(): void;
+    dismiss(key: string): void;
     getToasts(): Toast[];
+    show(props: Toast, key?: string): string;
   }
 
   declare export class Tooltip extends React.Component<
@@ -335,7 +335,7 @@ declare module '@blueprintjs/core' {
       hoverOpenDelay?: number,
       inheritDarkTheme?: boolean,
       inline?: boolean,
-      isDisabled?: boolean,
+      disabled?: boolean,
       isOpen?: boolean,
       onInteraction?: (nextOpenState: boolean) => void,
       openOnTargetFocus?: boolean,
