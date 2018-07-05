@@ -582,6 +582,7 @@ en:
       middle: ', '
       start: ', '
       two: ' and '
+    loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
@@ -762,6 +763,9 @@ en:
       ja: Japanese
       zh-CN: Mandarin (Simplified)
       zh-TW: Mandarin (Traditional)
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
   time:
     am: am
     formats:
