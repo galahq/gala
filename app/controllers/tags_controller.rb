@@ -4,7 +4,16 @@
 class TagsController < ApplicationController
   # @route [GET] `/tags`
   def index
-    @tags = Tag.most_popular
+    @tags = Tag.most_popular.yield_self(&method(:matching_query))
     render json: @tags
+  end
+
+  private
+
+  def matching_query(relation)
+    return relation unless params[:q].present?
+    relation.where <<~SQL.squish, q: params[:q]
+      (tags.display_name #>> '{}') ILIKE '%' || :q || '%'
+    SQL
   end
 end
