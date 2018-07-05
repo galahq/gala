@@ -147,7 +147,11 @@ const Billboard = ({
             />
           )}
 
-          <CaseKeywords tags={tags} />
+          <CaseKeywords
+            editing={editing}
+            tags={tags}
+            onChange={(tags: Tag[]) => updateCase({ tags })}
+          />
         </>
       )}
     </Lock>
