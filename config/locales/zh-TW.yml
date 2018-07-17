@@ -187,6 +187,7 @@ zh-TW:
       選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。
     find_a_case: >
       Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+    global_systems: Global Systems
     impactful_cases: Impactful Cases
     improve_your_communication: >
       Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
@@ -196,9 +197,11 @@ zh-TW:
       Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
       參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。
+    keywords: Keywords
     learn_more: 了解更多
     meet_stakeholders: >
       在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。
+    natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
     propose_a_case: Propose a Case
     shortcut_experience: 通過案例學習獲取將所學知識運用於實踐的捷徑。
@@ -518,6 +521,7 @@ zh-TW:
       middle: '、'
       start: '、'
       two: '、'
+    loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
@@ -644,7 +648,7 @@ zh-TW:
         因為你首次登陸時使用的是%{provider}，並沒有設置密碼。你現在可以通過設置密碼來用於下次登陸，或者繼續使用%{provider}進行登陸。
   search:
     didnt_match: 抱歉，沒有找到你所搜索的案例。
-    keyword_query: 關鍵詞查詢
+    full_text_search: Full text search...
     no_results: 沒有可顯示的搜索結果
     propose_a_case: >
       或者，如果你有希望收入到Gala的案例，或關於案例的設想，請與我們聯系。讓我們一起為環境和可持續發展領域提供更多更有效的學習資源。
@@ -682,6 +686,9 @@ zh-TW:
       ja: 日文
       zh-CN: Mandarin (Simplified)
       zh-TW: Mandarin (Traditional)
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
   time:
     am: 上午
     formats:
