@@ -16,8 +16,14 @@ import { Orchard } from 'shared/orchard'
 
 import type { IntlShape } from 'react-intl'
 import type { Tag } from 'redux/state'
+import type TaggingsManager from './TaggingsManager'
 
-type Props = { intl: IntlShape, onChange: (Tag[]) => mixed, tags: Tag[] }
+type Props = {
+  intl: IntlShape,
+  onChange: (Tag[]) => mixed,
+  taggingsManager: TaggingsManager,
+  tags: Tag[],
+}
 type State = { items: Tag[], query: string }
 class KeywordsChooser extends React.Component<Props, State> {
   state = { items: [], query: '' }
@@ -44,7 +50,7 @@ class KeywordsChooser extends React.Component<Props, State> {
   }
 
   render () {
-    const { intl, onChange, tags } = this.props
+    const { intl, onChange, taggingsManager, tags } = this.props
     return (
       <div className="pt-dark">
         <MultiSelect
@@ -74,20 +80,25 @@ class KeywordsChooser extends React.Component<Props, State> {
             inputProps: { onFocus: this._loadKeywords },
             onAdd: values => {
               if (this.state.items.length > 0) return
-              this.setState({ query: '' }, () =>
+              this.setState({ query: '' }, () => {
+                values.forEach(v => taggingsManager.add(v))
                 onChange([
                   ...tags,
                   ...values.map(name => ({ name, displayName: name })),
                 ])
-              )
+              })
               return true
             },
             onInputChange: ({ target: { value }}) =>
               this.setState({ query: value }, this.loadKeywords),
-            onRemove: ({ props: { tag }}) => onChange(R.without([tag], tags)),
+            onRemove: ({ props: { tag }}) => {
+              taggingsManager.remove(tag.name)
+              onChange(R.without([tag], tags))
+            },
           }}
           onItemSelect={tag =>
             this.setState({ query: '' }, () => {
+              taggingsManager.add(tag.name)
               onChange([...tags, tag])
               this._loadKeywords()
             })

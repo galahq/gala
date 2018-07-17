@@ -31,6 +31,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     slug,
     summary,
     tags,
+    links,
   } = caseData
 
   return {
@@ -42,6 +43,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     otherAvailableLocales,
     slug,
     summary,
+    taggingsPath: links.taggings,
     tags,
   }
 }
@@ -55,6 +57,7 @@ type Props = {
   otherAvailableLocales: string[],
   slug: string,
   summary: string,
+  taggingsPath: string,
   tags: Tag[],
   updateCase: typeof updateCase,
 }
@@ -68,6 +71,7 @@ const Billboard = ({
   otherAvailableLocales,
   slug,
   summary,
+  taggingsPath,
   tags,
   updateCase,
 }: Props) => (
@@ -149,6 +153,8 @@ const Billboard = ({
 
           <CaseKeywords
             editing={editing}
+            key={taggingsPath}
+            taggingsPath={taggingsPath}
             tags={tags}
             onChange={(tags: Tag[]) => updateCase({ tags })}
           />

@@ -9,25 +9,40 @@ import { FormattedMessage } from 'react-intl'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import KeywordsChooser from './keywords/KeywordsChooser'
 import KeywordsDisplay from './keywords/KeywordsDisplay'
+import TaggingsManager from './keywords/TaggingsManager'
 
 import type { Tag } from 'redux/state'
 
-type Props = { editing: boolean, onChange: (Tag[]) => mixed, tags: Tag[] }
-const CaseKeywords = ({ editing, onChange, tags }: Props) => {
-  if (tags.length === 0 && !editing) return null
+type Props = {
+  editing: boolean,
+  onChange: (Tag[]) => mixed,
+  taggingsPath: string,
+  tags: Tag[],
+}
+class CaseKeywords extends React.Component<Props> {
+  taggingsManager = new TaggingsManager(this.props.taggingsPath)
 
-  return (
-    <CatalogSection>
-      <SectionTitle>
-        <FormattedMessage id="catalog.keywords" />
-      </SectionTitle>
+  render () {
+    const { editing, onChange, tags } = this.props
+    if (tags.length === 0 && !editing) return null
 
-      {editing ? (
-        <KeywordsChooser tags={tags} onChange={onChange} />
-      ) : (
-        <KeywordsDisplay tags={tags} />
-      )}
-    </CatalogSection>
-  )
+    return (
+      <CatalogSection>
+        <SectionTitle>
+          <FormattedMessage id="catalog.keywords" />
+        </SectionTitle>
+
+        {editing ? (
+          <KeywordsChooser
+            taggingsManager={this.taggingsManager}
+            tags={tags}
+            onChange={onChange}
+          />
+        ) : (
+          <KeywordsDisplay tags={tags} />
+        )}
+      </CatalogSection>
+    )
+  }
 }
 export default CaseKeywords
