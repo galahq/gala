@@ -5,7 +5,7 @@
 class SearchController < ApplicationController
   # @route [GET] `/search.json`
   def index
-    @cases = policy_scope(FindCases.by(params)).pluck(:slug)
+    @cases = policy_scope(FindCases.by(params)).pluck(:slug).uniq
     render json: @cases
   end
 

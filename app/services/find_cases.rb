@@ -2,7 +2,7 @@
 
 # Find {Case}s matching search parameters
 class FindCases
-  # @param params [{libraries?: string[], q?: string}]
+  # @param params [{libraries?: string[], tags?: string[], q?: string}]
   # @return [ActiveRecord::Relation<Case>]
   def self.by(params)
     new(params).call
@@ -15,6 +15,7 @@ class FindCases
   def call
     Case.ordered
         .merge(maybe_filter_by_library)
+        .merge(maybe_filter_by_tags)
         .merge(maybe_search_by_full_text)
   end
 
@@ -35,6 +36,13 @@ class FindCases
     else
       cases[:id].eq(-1)
     end
+  end
+
+  def maybe_filter_by_tags
+    return Case.all if @params[:tags].blank?
+
+    Case.joins(taggings: [:tag])
+        .where(taggings: { tags: { name: @params[:tags] } })
   end
 
   def maybe_search_by_full_text
