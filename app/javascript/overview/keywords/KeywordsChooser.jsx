@@ -20,8 +20,9 @@ import type TaggingsManager from './TaggingsManager'
 
 type Props = {
   intl: IntlShape,
+  fullWidth?: boolean,
   onChange: (Tag[]) => mixed,
-  taggingsManager: TaggingsManager,
+  taggingsManager?: TaggingsManager,
   tags: Tag[],
 }
 type State = { items: Tag[], query: string }
@@ -77,11 +78,12 @@ class KeywordsChooser extends React.Component<Props, State> {
           popoverProps={{ minimal: true }}
           //
           tagInputProps={{
+            leftIcon: 'tag',
             inputProps: { onFocus: this._loadKeywords },
             onAdd: values => {
               if (this.state.items.length > 0) return
               this.setState({ query: '' }, () => {
-                values.forEach(v => taggingsManager.add(v))
+                values.forEach(v => taggingsManager && taggingsManager.add(v))
                 onChange([
                   ...tags,
                   ...values.map(name => ({ name, displayName: name })),
@@ -92,13 +94,13 @@ class KeywordsChooser extends React.Component<Props, State> {
             onInputChange: ({ target: { value }}) =>
               this.setState({ query: value }, this.loadKeywords),
             onRemove: ({ props: { tag }}) => {
-              taggingsManager.remove(tag.name)
+              taggingsManager && taggingsManager.remove(tag.name)
               onChange(R.without([tag], tags))
             },
           }}
           onItemSelect={tag =>
             this.setState({ query: '' }, () => {
-              taggingsManager.add(tag.name)
+              taggingsManager && taggingsManager.add(tag.name)
               onChange([...tags, tag])
               this._loadKeywords()
             })
