@@ -18,6 +18,8 @@ class CreateTags < ActiveRecord::Migration[5.2]
 
     reversible do |dir|
       dir.up do
+        Tag.create name: 'biosphere', display_name: { en: 'biosphere' },
+                   category: true
         Tag.create name: 'climate', display_name: { en: 'climate' },
                    category: true
         Tag.create name: 'energy', display_name: { en: 'energy' },
@@ -27,8 +29,6 @@ class CreateTags < ActiveRecord::Migration[5.2]
         Tag.create name: 'health', display_name: { en: 'health' },
                    category: true
         Tag.create name: 'land', display_name: { en: 'land' },
-                   category: true
-        Tag.create name: 'lifeforms', display_name: { en: 'lifeforms' },
                    category: true
         Tag.create name: 'materials', display_name: { en: 'materials' },
                    category: true
