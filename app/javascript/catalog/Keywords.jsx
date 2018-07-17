@@ -54,7 +54,7 @@ const Group = ({ keywords }: GroupProps) => {
         <ul>
           {keywords.map(({ name, displayName }) => (
             <li key={name}>
-              <a href={`/catalog/search?q=${name}`}>{displayName}</a>
+              <a href={`/catalog/search?tags[]=${name}`}>{displayName}</a>
             </li>
           ))}
         </ul>
