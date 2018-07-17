@@ -22,7 +22,7 @@ const Categories = ({ tags }: Props) => {
           <NaturalResourceLink tag={get('materials')} />
           <NaturalResourceLink tag={get('energy')} />
           <NaturalResourceLink tag={get('land')} />
-          <NaturalResourceLink tag={get('lifeforms')} />
+          <NaturalResourceLink tag={get('biosphere')} />
         </NaturalResourcesGrid>
       </Section>
       <Section title="globalSystems">

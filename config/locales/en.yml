@@ -187,15 +187,6 @@ en:
       toc: Table of Contents
   catalog:
     catalog: Catalog
-    categories:
-      climate: Climate
-      energy: Energy
-      food: Food
-      health: Health
-      land: Land
-      lifeforms: Lifeforms
-      materials: Materials
-      water: Water
     choose_for_yourself: Choose for yourself
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
