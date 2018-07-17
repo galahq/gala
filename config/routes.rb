@@ -48,6 +48,8 @@ Rails.application.routes.draw do
 
       resource :settings, module: 'cases', only: %i[edit update]
 
+      resources :taggings, only: %i[create destroy], param: :tag_name
+
       collection do
         resources :features, module: 'cases', param: :case_slug,
                              only: %i[index create update destroy]
@@ -114,6 +116,8 @@ Rails.application.routes.draw do
     end
 
     resources :search, only: %i[index]
+
+    resources :tags, only: %i[index]
 
     devise_for :readers, skip: :omniauth_callbacks, controllers: {
       confirmations: 'readers/confirmations',

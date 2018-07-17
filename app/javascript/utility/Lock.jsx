@@ -99,10 +99,7 @@ const Lock = ({
   </>
 )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Lock)
+export default connect(mapStateToProps, mapDispatchToProps)(Lock)
 
 /**
  * STYLED COMPONENTS

@@ -86,31 +86,33 @@ declare module '@blueprintjs/core' {
   //
   // Interfaces
   //
-  declare export interface IProps {
+  declare export type IProps = {
     className?: string;
   }
 
-  declare export interface IActionProps {
+  declare export type IActionProps = {
     disabled?: boolean;
     text?: string;
     icon?: string;
     onClick?: (SyntheticEvent<*>) => any;
   }
 
-  declare export interface IBackdropProps {
+  declare export type IBackdropProps = {
     backdropClassName?: string;
     backdropProps?: HTMLDivElement;
     canOutsideClickClose?: boolean;
     hasBackdrop?: boolean;
   }
 
-  declare export interface IControlledProps {
+  declare export type IButtonProps = IActionProps & { active?: boolean }
+
+  declare export type IControlledProps = {
     defaultValue?: string;
     onChange?: (SyntheticInputEvent<*>) => any;
     value?: string;
   }
 
-  declare export interface IControlProps {
+  declare export type IControlProps = {
     checked?: boolean;
     defaultChecked?: boolean;
     disabled?: boolean;
@@ -119,49 +121,18 @@ declare module '@blueprintjs/core' {
     onChange?: (SyntheticInputEvent<*>) => any;
   }
 
-  declare export interface IIntentProps {
-    intent?: IntentType;
-  }
+  declare export type IDialogProps = IProps &
+    IBackdropProps &
+    IOverlayableProps & {
+      icon?: string,
+      isCloseButtonShown?: boolean,
+      isOpen: boolean,
+      style: Object,
+      title: React.Node,
+    }
 
-  declare export interface ILinkProps {
-    href?: string;
-    target?: '_self' | '_blank' | '_parent' | '_top';
-  }
-
-  declare export interface IOptionProps {
-    className?: string;
-    disabled?: boolean;
-    label?: string;
-    value?: string;
-  }
-
-  declare export interface IOverlayableProps {
-    autoFocus?: boolean;
-    canEscapeKeyClose?: boolean;
-    enforceFocus?: boolean;
-    inline?: boolean;
-    lazy?: boolean;
-    onClose?: (SyntheticEvent<*>) => any;
-    transitionDuration?: number;
-  }
-
-  //
-  // Components
-  //
-  declare export class AnchorButton extends React.Component<
-    {
-      active?: boolean,
-    } & IActionProps
-  > {}
-
-  declare export class Button extends React.Component<
-    {
-      active?: boolean,
-    } & IActionProps
-  > {}
-
-  declare export class EditableText extends React.Component<
-    {
+  declare export type IEditableTextProps = IProps &
+    IIntentProps & {
       confirmOnEnterKey?: boolean,
       defaultValue?: string,
       disabled?: boolean,
@@ -178,33 +149,122 @@ declare module '@blueprintjs/core' {
       placeholder?: string,
       selectAllOnFocus?: boolean,
       value?: string,
-    } & IProps &
-      IIntentProps
-  > {}
+    }
 
-  declare export class Dialog extends React.Component<
-    {
-      icon?: string,
-      isCloseButtonShown?: boolean,
-      isOpen: boolean,
-      style: Object,
-      title: React.Node,
-    } & IProps &
-      IBackdropProps &
-      IOverlayableProps
-  > {}
+    declare export type IFormGroupProps = IIntentProps &
+      IProps & {
+        disabled?: boolean,
+        helperText?: React.Node,
+        inline?: boolean,
+        label?: React.Node,
+        labelFor?: string,
+        requiredLabel?: boolean | React.Node,
+      }
 
-  declare export class FormGroup extends React.Component<
-    {
+  declare export type IIntentProps = {
+    intent?: IntentType;
+  }
+
+  declare export type ILinkProps = {
+    href?: string;
+    target?: '_self' | '_blank' | '_parent' | '_top';
+  }
+
+  declare export type IOptionProps = {
+    className?: string;
+    disabled?: boolean;
+    label?: string;
+    value?: string;
+  }
+
+  declare export type IOverlayableProps = {
+    autoFocus?: boolean;
+    canEscapeKeyClose?: boolean;
+    enforceFocus?: boolean;
+    inline?: boolean;
+    lazy?: boolean;
+    onClose?: (SyntheticEvent<*>) => any;
+    transitionDuration?: number;
+  }
+
+  declare export type IPopoverProps = IOverlayableProps &
+    IProps & {
+      backdropProps?: HTMLDivElement,
+      content?: React.Node,
+      defaultIsOpen?: boolean,
       disabled?: boolean,
-      helperText?: React.Node,
-      inline?: boolean,
-      label?: React.Node,
-      labelFor?: string,
-      requiredLabel?: boolean | React.Node,
-    } & IIntentProps &
-      IProps
+      hasBackdrop?: boolean,
+      hoverCloseDelay?: number,
+      hoverOpenDelay?: number,
+      inheritDarkTheme?: boolean,
+      interactionKind?: PopoverInteractionKindType,
+      isOpen?: boolean,
+      lazy?: boolean,
+      minimal?: boolean,
+      modifiers?: any, // PopperModifers,
+      onInteraction?: (nextOpenState: boolean) => void,
+      openOnTargetFocus?: boolean,
+      popoverClassName?: string,
+      popoverDidClose?: () => void,
+      popoverDidOpen?: () => void,
+      popoverRef?: (?HTMLDivElement) => void,
+      popoverWillClose?: () => void,
+      popoverWillOpen?: () => void,
+      portalClassName?: string,
+      position?: PositionType,
+      rootElementTag?: string,
+      target?: React.Node,
+      targetClassName?: string,
+      targetElementTag?: string,
+      usePortal?: boolean,
+    }
+
+  declare export type ITagInputProps = IProps & {
+    addOnBlur?: boolean,
+    disabled?: boolean,
+    fill?: boolean,
+    inputProps?: $Shape<HTMLInputElement>,
+    inputRef?: ?HTMLInputElement => void,
+    inputValue?: string,
+    large?: boolean,
+    leftIcon?: string | React.Node,
+    onAdd?: (values: string[])=> ?boolean,
+    onChange?: (values: React.Node[]) => ?boolean,
+    onInputChange?: SyntheticInputEvent<*> => mixed,
+    onKeyDown?: SyntheticKeyboardEvent<*> => mixed,
+    onKeyUp?: SyntheticKeyboardEvent<*> => mixed,
+    onRemove?: (value: string, index: number) => mixed,
+    placeholder?: string,
+    rightElement?: React.Node,
+    separator?: string | RegExp | false,
+    tagProps?: ITagProps | (value: React.Node, index: number) => ITagProps,
+    values: React.Node[],
+  }
+
+  declare export type ITagProps = IProps & IIntentProps & {
+    active?: boolean,
+    interactive?: boolean,
+    large?: boolean,
+    minimal?: boolean,
+    onClick?: SyntheticMouseEvent<*> => mixed,
+    onRemove?: (SyntheticMouseEvent<*>, ITagProps) => mixed,
+    round?: boolean
+  }
+
+  //
+  // Components
+  //
+  declare export class AnchorButton extends React.Component<IButtonProps> {}
+
+  declare export class Button extends React.Component<IButtonProps> {}
+
+  declare export class Dialog extends React.Component<IDialogProps> {}
+
+  declare export class EditableText extends React.Component<
+    IEditableTextProps
   > {}
+
+  declare export class FormGroup extends React.Component<IFormGroupProps> {}
 
   declare export class Icon extends React.Component<
     {
@@ -252,32 +312,7 @@ declare module '@blueprintjs/core' {
     } & IProps
   > {}
 
-  declare export class Popover extends React.Component<
-    {
-      backdropProps?: HTMLDivElement,
-      content?: React.Node,
-      defaultIsOpen?: boolean,
-      hoverCloseDelay?: number,
-      hoverOpenDelay?: number,
-      inheritDarkTheme?: boolean,
-      interactionKind?: PopoverInteractionKindType,
-      disabled?: boolean,
-      hasBackdrop?: boolean,
-      isOpen?: boolean,
-      onInteraction?: (nextOpenState: boolean) => void,
-      popoverClassName?: string,
-      popoverDidOpen?: () => void,
-      popoverWillClose?: () => void,
-      popoverWillOpen?: () => void,
-      portalClassName?: string,
-      position?: PositionType,
-      rootElementTag?: string,
-      target?: React.Node,
-      tetherOptions?: Object,
-      useSmartArrowPositioning?: boolean,
-    } & IOverlayableProps &
-      IProps
-  > {}
+  declare export class Popover extends React.Component<IPopoverProps> {}
 
   declare export class Portal extends React.Component<{}> {}
 
@@ -301,6 +336,10 @@ declare module '@blueprintjs/core' {
 
   declare export class Switch extends React.Component<IControlProps & IProps> {}
 
+  declare export class Tag extends React.Component<ITagProps> {}
+
+  declare export class TagInput extends React.Component<ITagInputProps> {}
+
   declare export type Toast = {
     action?: IActionProps & ILinkProps,
     message: React.Node,
@@ -320,7 +359,7 @@ declare module '@blueprintjs/core' {
       } & IProps),
       container: ?HTMLElement
     ): Toaster;
-    
+
     clear(): void;
     dismiss(key: string): void;
     getToasts(): Toast[];
