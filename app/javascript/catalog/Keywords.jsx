@@ -13,10 +13,10 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 import type { Tag } from 'redux/state'
 
 const sortGroup = (t: Tag) => t.displayName[0]
-const groupKeywords = R.compose(
+const groupKeywords = R.pipe(
   R.sortWith([R.ascend(R.prop('displayName'))]),
-  R.groupWith((a, b) => sortGroup(a) === sortGroup(b)),
-  R.filter(tag => !tag.category)
+  R.filter(tag => !tag.category),
+  R.groupWith((a, b) => sortGroup(a) === sortGroup(b))
 )
 
 type Props = { tags: Tag[] }

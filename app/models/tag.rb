@@ -14,6 +14,7 @@ class Tag < ApplicationRecord
   has_many :cases, through: :taggings
 
   before_validation :ensure_english_display_name_matches_name
+  before_validation -> { display_name.downcase! }
 
   # The most popular tags, as well as all the categories, are shown on the
   # catalog page
