@@ -195,6 +195,7 @@ en:
       study or to teach as they are unfolding. It’s now easy to find
       engaging teaching materials for use in classrooms and for public
       education.
+    global_systems: Global Systems
     impactful_cases: Impactful Cases
     improve_your_communication: >
       Improve your ability to communicate complex topics by adding your own
@@ -209,9 +210,11 @@ en:
     join_conversation: >
       Join the conversation by asking questions
       and paying your learning forward.
+    keywords: Keywords
     learn_more: Learn more
     meet_stakeholders: >
       Meet different stakeholders and dive deep with a multimodal narrative.
+    natural_resources: Natural Resources
     open_access_learning_tools:
       Open access learning tools for sustainability science
     propose_a_case: Propose a Case
@@ -570,6 +573,7 @@ en:
       middle: ', '
       start: ', '
       two: ' and '
+    loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
@@ -707,7 +711,7 @@ en:
         %{provider}, to sign in.
   search:
     didnt_match: Your search didn’t match any cases.
-    keyword_query: Keyword query
+    full_text_search: Full text search...
     no_results: No search results
     propose_a_case: >
       If you have a case (or a good idea for one) that you’d like to see on
@@ -750,6 +754,9 @@ en:
       ja: Japanese
       zh-CN: Mandarin (Simplified)
       zh-TW: Mandarin (Traditional)
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
   time:
     am: am
     formats:

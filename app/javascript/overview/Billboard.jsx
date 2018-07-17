@@ -16,55 +16,64 @@ import BillboardTitle from './BillboardTitle'
 import CommunityChooser from './CommunityChooser'
 import LearningObjectives from './LearningObjectives'
 import MapView from 'catalog/MapView'
+import CaseKeywords from './CaseKeywords'
 
 import { updateCase } from 'redux/actions'
 
-import type { State, Case, Viewport } from 'redux/state'
+import type { State, Case, Tag, Viewport } from 'redux/state'
 
-function mapStateToProps (state: State) {
-  const { edit, caseData } = state
+function mapStateToProps ({ edit, caseData }: State) {
   const {
-    slug,
-    dek,
-    summary,
     baseCoverUrl,
-    otherAvailableLocales,
+    dek,
     learningObjectives,
+    otherAvailableLocales,
+    slug,
+    summary,
+    tags,
+    links,
   } = caseData
+
   return {
-    editing: edit.inProgress,
-    slug,
-    dek,
-    summary,
     baseCoverUrl,
-    otherAvailableLocales,
-    learningObjectives,
     caseData,
+    dek,
+    editing: edit.inProgress,
+    learningObjectives,
+    otherAvailableLocales,
+    slug,
+    summary,
+    taggingsPath: links.taggings,
+    tags,
   }
 }
 
 type Props = {
-  editing: boolean,
-  slug: string,
-  dek: string,
-  summary: string,
   baseCoverUrl: string,
-  updateCase: typeof updateCase,
-  otherAvailableLocales: string[],
-  learningObjectives: string[],
   caseData: Case,
+  dek: string,
+  editing: boolean,
+  learningObjectives: string[],
+  otherAvailableLocales: string[],
+  slug: string,
+  summary: string,
+  taggingsPath: string,
+  tags: Tag[],
+  updateCase: typeof updateCase,
 }
 
 const Billboard = ({
-  editing,
-  slug,
-  dek,
-  summary,
   baseCoverUrl,
-  updateCase,
-  otherAvailableLocales,
-  learningObjectives,
   caseData,
+  dek,
+  editing,
+  learningObjectives,
+  otherAvailableLocales,
+  slug,
+  summary,
+  taggingsPath,
+  tags,
+  updateCase,
 }: Props) => (
   <Container>
     <Lock type="Case" param={slug}>
@@ -141,6 +150,14 @@ const Billboard = ({
               onFinishEditing={onFinishEditing}
             />
           )}
+
+          <CaseKeywords
+            editing={editing}
+            key={taggingsPath}
+            taggingsPath={taggingsPath}
+            tags={tags}
+            onChange={(tags: Tag[]) => updateCase({ tags })}
+          />
         </>
       )}
     </Lock>

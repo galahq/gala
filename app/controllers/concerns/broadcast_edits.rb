@@ -6,22 +6,22 @@ module BroadcastEdits
   extend ActiveSupport::Concern
 
   class_methods do
-    def broadcast_edits(to:)
-      after_action -> { broadcast_edit_to to }, if: :successful?,
-                                                only: %i[create update destroy]
+    def broadcast_edits(to:, type: nil)
+      after_action -> { broadcast_edit_to to, type: type || action_name },
+                   if: :successful?, only: %i[create update destroy]
     end
   end
 
   private
 
-  def broadcast_edit_to(resource_name)
+  def broadcast_edit_to(resource_name, type:)
     resource = if resource_name.to_s.start_with? '@'
                  instance_variable_get resource_name
                else
                  send resource_name
                end
 
-    BroadcastEdit.to resource, type: action_name,
+    BroadcastEdit.to resource, type: type.to_s,
                                session_id: request.headers['X-Session-ID']
   end
 end
