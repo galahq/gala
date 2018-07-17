@@ -117,13 +117,13 @@ type LinkParams = {
 }
 
 const Link = ({ tag, labelComponent: Label }: LinkParams) => (
-  <LinkContainer>
+  <LinkContainer href={tag && `/catalog/search?tags[]=${tag.name}`}>
     <img alt="" src={require(`images/category-${tag?.name || 'water'}.png`)} />
     <Label>{tag?.displayName}</Label>
   </LinkContainer>
 )
 
-const LinkContainer = styled.div`
+const LinkContainer = styled.a`
   border-radius: 4pt;
   position: relative;
 
