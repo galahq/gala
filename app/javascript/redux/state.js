@@ -156,6 +156,7 @@ export type Case = {
   links: {
     self: string,
     settings: string,
+    taggings: string,
     teach: string,
   },
   longitude: ?number,

@@ -11,8 +11,9 @@ module Cases
 
     has_many :tags
 
-    link(:self) { case_path(I18n.locale, object) }
-    link(:settings) { edit_case_settings_path(I18n.locale, object) }
-    link(:teach) { new_deployment_path(case_slug: object.slug) }
+    link(:self) { case_path I18n.locale, object }
+    link(:settings) { edit_case_settings_path I18n.locale, object }
+    link(:taggings) { case_taggings_path I18n.locale, object }
+    link(:teach) { new_deployment_path case_slug: object.slug }
   end
 end
