@@ -188,6 +188,7 @@ es:
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     find_a_case: >
       Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+    global_systems: Global Systems
     impactful_cases: Impactful Cases
     improve_your_communication: >
       Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
@@ -197,9 +198,11 @@ es:
       Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
       Súmete a la conversación, preguntá, y compartí tu conomiciento.
+    keywords: Keywords
     learn_more: Más información
     meet_stakeholders: >
       Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
+    natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
     propose_a_case: Propose a Case
     shortcut_experience: Aplicar principios para mejorar en la práctica.
@@ -537,6 +540,7 @@ es:
       middle: ', '
       start: ', '
       two: ' y '
+    loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
@@ -665,7 +669,7 @@ es:
         Porque iniciaste tú primera sesión con %{provider}, no creaste una contraseña. Si creas una contraseña, podrás usarla o %{provider} para iniciar la sesión.
   search:
     didnt_match: Tu búsqueda no ha generado resultados.
-    keyword_query: Palabras claves
+    full_text_search: Full text search...
     no_results: Sin resultados
     propose_a_case: >
       Si tienes un estudio de caso (o una buena idea para un estudio de caso) que te gustaría ver en Gala, escríbanos. Juntos podemos crear un recurso de enseñanza sobre el ambiente y sostenibilidad más comprensivo.
@@ -703,6 +707,9 @@ es:
       ja: Japonés
       zh-CN: Mandarín (simplificado)
       zh-TW: Mandarín (tradicional)
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
   time:
     am: am
     formats:
