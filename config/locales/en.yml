@@ -720,7 +720,7 @@ en:
         %{provider}, to sign in.
   search:
     didnt_match: Your search didn’t match any cases.
-    keyword_query: Keyword query
+    full_text_search: Full text search...
     no_results: No search results
     propose_a_case: >
       If you have a case (or a good idea for one) that you’d like to see on

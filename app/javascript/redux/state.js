@@ -380,7 +380,7 @@ export type StatisticsData = {
 }
 
 export type Tag = {
-  category: boolean,
+  category?: boolean,
   displayName: string,
   name: string,
 }
