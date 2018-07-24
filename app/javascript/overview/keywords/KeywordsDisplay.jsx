@@ -10,6 +10,10 @@ import styled from 'styled-components'
 
 import type { Tag } from 'redux/state'
 
+function categoryQueryPath (name) {
+  return `/catalog/search?tags[]=${name}`
+}
+
 type Props = { tags: Tag[] }
 const KeywordsDisplay = ({ tags }: Props) => (
   <>
@@ -17,23 +21,27 @@ const KeywordsDisplay = ({ tags }: Props) => (
       {tags
         .filter(tag => tag.category)
         .map(({ name, displayName }) => (
-          <CategoryTag key={name} category={displayName} />
+          <CategoryTag
+            key={name}
+            category={displayName}
+            href={categoryQueryPath(name)}
+          />
         ))}
     </div>
 
     <div className="pt-dark">
-      {tags
-        .filter(tag => !tag.category)
-        .map(({ name, displayName }) => (
-          <KeywordTag key={name}>{displayName}</KeywordTag>
-        ))}
+      {tags.filter(tag => !tag.category).map(({ name, displayName }) => (
+        <KeywordTag key={name} href={categoryQueryPath(name)}>
+          {displayName}
+        </KeywordTag>
+      ))}
     </div>
   </>
 )
 
 export default KeywordsDisplay
 
-const CategoryTag = styled.span.attrs({ className: 'pt-tag pt-large' })`
+const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
   background-image: url(${p => require(`images/category-${p.category}.png`)});
   background-position: center;
   background-size: cover;
@@ -47,9 +55,17 @@ const CategoryTag = styled.span.attrs({ className: 'pt-tag pt-large' })`
     content: '${p => p.category}';
     text-transform: capitalize;
   }
+
+  &:hover {
+    color: white;
+  }
 `
 
-const KeywordTag = styled.span.attrs({ className: 'pt-tag' })`
+const KeywordTag = styled.a.attrs({ className: 'pt-tag' })`
   margin: 0 0.5em 0.5em 0;
   text-transform: capitalize;
+
+  &:hover {
+    color: black !important;
+  }
 `
