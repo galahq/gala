@@ -75,7 +75,10 @@ class KeywordsChooser extends React.Component<Props, State> {
           tagRenderer={tag => (
             <Capitalized tag={tag}>{tag.displayName}</Capitalized>
           )}
-          popoverProps={{ minimal: true }}
+          popoverProps={{
+            className: 'keywords-chooser__popover',
+            minimal: true,
+          }}
           //
           tagInputProps={{
             leftIcon: 'tag',
