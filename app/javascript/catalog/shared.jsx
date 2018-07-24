@@ -3,7 +3,7 @@
  */
 
 import React from 'react' // eslint-disable-line no-unused-vars
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Main = styled.main`
   grid-area: main;
@@ -22,15 +22,17 @@ export const SectionTitle = styled.h2`
 `
 
 export const CatalogSection = styled.section`
-  position: relative;
+  margin-bottom: 1em;
   overflow: hidden;
   padding: 10px;
+  position: relative;
 
   ${({ solid }) =>
-    solid
-      ? ` background-color: #415e77;
-    border: 1px solid #2b4d67;`
-      : ''};
+    solid &&
+    css`
+      background-color: #415e77;
+      border: 1px solid #2b4d67;
+    `};
 `
 
 export const CaseRow = styled.div`

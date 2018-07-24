@@ -4,20 +4,19 @@
  */
 
 import * as React from 'react'
-import styled from 'styled-components'
 import { values, omit } from 'ramda'
 
-import { FormattedMessage } from 'react-intl'
 import DocumentTitle from 'react-document-title'
 
 import ValueProposition from 'catalog/ValueProposition'
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import MapView from 'catalog/MapView'
-import CaseList from 'catalog/CaseList'
-import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
+import Categories from 'catalog/Categories'
+import Keywords from 'catalog/Keywords'
+import { Main } from 'catalog/shared'
 
-import type { Case, Enrollment, Reader } from 'redux/state'
+import type { Case, Enrollment, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
 
 class Home extends React.Component<{
@@ -26,6 +25,7 @@ class Home extends React.Component<{
   cases: { [string]: Case },
   enrollments: Enrollment[],
   features: string[],
+  tags: Tag[],
   readerIsEditor: boolean,
   onDeleteEnrollment: (
     slug: string,
@@ -39,6 +39,7 @@ class Home extends React.Component<{
       onDeleteEnrollment,
       readerIsEditor,
       cases,
+      tags,
     } = this.props
     return (
       <DocumentTitle title="Gala">
@@ -68,17 +69,12 @@ class Home extends React.Component<{
               }}
             />
 
-            {this._allOtherCases().length > 0 && (
-              <CatalogSection>
-                <SectionTitle>
-                  <FormattedMessage id="cases.index.allCases" />
-                </SectionTitle>
-
-                <CaseList
-                  readerIsEditor={readerIsEditor}
-                  cases={this._allOtherCases()}
-                />
-              </CatalogSection>
+            {tags &&
+              tags.length > 0 && (
+                <>
+                  <Categories tags={tags} />
+                  <Keywords tags={tags} />
+                </>
             )}
           </Main>
         </>

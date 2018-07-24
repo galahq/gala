@@ -31,6 +31,7 @@ class Case < ApplicationRecord
   include Comparable
   include Lockable
   include Mobility
+  include Taggable
   extend FriendlyId
 
   attribute :commentable, default: true
@@ -48,14 +49,14 @@ class Case < ApplicationRecord
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy
   has_many :comment_threads, dependent: :destroy
   has_many :comments, through: :comment_threads
+  has_many :deployments, dependent: :destroy
   has_many :edgenotes, dependent: :destroy
   has_many :editorships, dependent: :destroy
   has_many :editors, through: :editorships, class_name: 'Reader'
   has_many :enrollments, dependent: :destroy
   has_many :forums, dependent: :destroy
-  has_many :readers, through: :enrollments
-  has_many :deployments, dependent: :destroy
   has_many :quizzes, dependent: :destroy
+  has_many :readers, through: :enrollments
 
   has_many :activities,
            through: :case_elements, source: :element, source_type: 'Activity'
