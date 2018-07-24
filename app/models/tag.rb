@@ -26,12 +26,13 @@ class Tag < ApplicationRecord
   # one public case
   scope :part_of_catalog, -> do
     where id: (
-      joins(Arel.sql(<<~SQL.squish)).pluck(:id) \
+      joins(Arel.sql(<<~SQL.squish))
         INNER JOIN taggings ON tags.id = taggings.tag_id
         INNER JOIN cases
           ON taggings.case_id = cases.id AND cases.published_at < NOW()
       SQL
-      + where(category: true).pluck(:id)
+      .limit(false) # If the consumer has limited before this scope, it breaks
+      .pluck(:id) + where(category: true).limit(false).pluck(:id)
     )
   end
 
