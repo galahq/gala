@@ -47,6 +47,7 @@ const Image = styled.img.attrs({ role: 'presentation' })`
   height: 50px;
   border-radius: 2px;
   margin-right: 1em;
+  object-fit: cover;
 `
 
 const Kicker = styled.span`
