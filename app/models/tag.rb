@@ -22,6 +22,19 @@ class Tag < ApplicationRecord
     order(category: :desc, taggings_count: :desc).limit(50)
   end
 
+  # Tags should only be included in the catalog if they are assigned to at least
+  # one public case
+  scope :part_of_catalog, -> do
+    where id: (
+      joins(Arel.sql(<<~SQL.squish)).pluck(:id) \
+        INNER JOIN taggings ON tags.id = taggings.tag_id
+        INNER JOIN cases
+          ON taggings.case_id = cases.id AND cases.published_at < NOW()
+      SQL
+      + where(category: true).pluck(:id)
+    )
+  end
+
   def self.get(name)
     create name: name
   rescue ::ActiveRecord::RecordNotUnique
