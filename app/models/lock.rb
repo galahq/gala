@@ -9,7 +9,7 @@ class Lock < ApplicationRecord
 
   validates :lockable_type, only_polymorphic: true
 
-  before_validation :set_case_from_lockable, unless: -> { self.case.present? }
+  before_validation :set_case_from_lockable
 
   private
 
