@@ -12,6 +12,7 @@ import ReactMapGL, { Marker } from 'react-map-gl'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle } from 'catalog/shared'
+import { Container as BillboardContainer } from 'overview/Billboard'
 import Pin from 'catalog/Pin'
 
 import type { IntlShape } from 'react-intl'
@@ -160,6 +161,10 @@ const Container = styled.section`
   margin: -1em -2em 0;
   height: ${({ height }) => height || 550}px;
   position: relative;
+
+  ${BillboardContainer} & {
+    margin-top: 0;
+  }
 
   &:after {
     content: '';

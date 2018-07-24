@@ -166,7 +166,7 @@ const Billboard = ({
 
 export default connect(mapStateToProps, { updateCase })(Billboard)
 
-const Container = styled.section.attrs({ className: 'Billboard' })`
+export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
 `
 
