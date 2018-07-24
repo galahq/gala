@@ -105,6 +105,7 @@ export const UnconnectedBillboardTitle = ({
       <h1>
         <span className="c-kicker">
           <EditableText
+            className="pt-multiline"
             value={kicker}
             disabled={!editing || minimal}
             placeholder="Snappy kicker"
