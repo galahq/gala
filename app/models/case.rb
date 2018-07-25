@@ -82,7 +82,9 @@ class Case < ApplicationRecord
   scope :ordered,
         -> do
           order(Arel.sql(<<~SQL.squish))
-            featured_at DESC NULLS LAST, published_at DESC NULLS LAST
+            featured_at DESC NULLS LAST,
+            published_at DESC NULLS LAST,
+            updated_at DESC
           SQL
         end
 
