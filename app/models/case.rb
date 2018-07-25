@@ -28,10 +28,10 @@
 # @attr featured_at [DateTime] featured cases appear prominently in the catalog
 # @attr commentable [Boolean] whether or not forums are enabled on the case
 class Case < ApplicationRecord
-  include Comparable
-  include Lockable
+  include Cases::Taggable
   include Mobility
-  include Taggable
+  include Lockable
+  include Comparable
   extend FriendlyId
 
   attribute :commentable, default: true
@@ -82,9 +82,9 @@ class Case < ApplicationRecord
   scope :ordered,
         -> do
           order(Arel.sql(<<~SQL.squish))
-            featured_at DESC NULLS LAST,
-            published_at DESC NULLS LAST,
-            updated_at DESC
+            cases.featured_at DESC NULLS LAST,
+            cases.published_at DESC NULLS LAST,
+            cases.updated_at DESC
           SQL
         end
 
