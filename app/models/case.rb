@@ -35,6 +35,7 @@ class Case < ApplicationRecord
   extend FriendlyId
 
   attribute :commentable, default: true
+  attribute :locale, :string, default: -> { I18n.locale }
   attribute :slug, :string, default: -> { SecureRandom.uuid }
   friendly_id :slug, use: %i[history]
 
@@ -43,6 +44,9 @@ class Case < ApplicationRecord
   translates :authors, :translators, default: [], fallbacks: true
 
   belongs_to :library, optional: true
+  belongs_to :translation_base,
+             class_name: 'Case',
+             optional: true # Not really -- just can't = id before saving
 
   has_many :active_locks, class_name: 'Lock'
   has_many :cards
@@ -68,6 +72,9 @@ class Case < ApplicationRecord
   has_one_attached :cover_image
 
   after_create :create_forum_for_universal_communities
+  after_save -> {
+    update_columns translation_base_id: id if translation_base_id.blank?
+  }
 
   validates :slug, presence: true, uniqueness: true,
                    format: { with: /\A[a-z0-9-]+\Z/ },
@@ -115,6 +122,11 @@ class Case < ApplicationRecord
   # @return [Array<Iso639_1Code>]
   def other_available_locales
     read_attribute(:title).keys - [I18n.locale.to_s]
+  end
+
+  # The cases that represent translations of this case
+  def translations
+    Case.where(translation_base_id: translation_base_id).where.not(id: id)
   end
 
   def comment_threads

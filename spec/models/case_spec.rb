@@ -27,24 +27,25 @@ RSpec.describe Case, type: :model do
     expect(subject).to_not be_valid
   end
 
-  context 'in translation' do
-    after :each do
-      I18n.locale = :en
+  context 'in translation', focus: true do
+    subject { build :case }
+
+    it 'sets itself as translation base when created w/o other translations' do
+      subject.save
+      expect(subject.translation_base).to eq subject
     end
 
-    it 'keeps both languages’ details' do
-      subject.title = 'Something'
-      I18n.locale = :fr
-      subject.title = 'Quelque chose'
-      I18n.locale = :en
-      expect(subject.title).to eq 'Something'
+    it 'doesn’t override a defined translation base' do
+      subject.save
+      sujet = Case.create translation_base_id: subject.id, locale: :fr
+      expect(sujet.translation_base).to eq subject
     end
 
-    it 'knows what other languages it’s available in' do
-      subject.title = 'Something'
-      I18n.locale = :fr
-      subject.title = 'Quelque chose'
-      expect(subject.other_available_locales).to eq %w[en]
+    it 'filters itself out of its translations' do
+      subject.save
+      sujet = Case.create translation_base_id: subject.id, locale: :fr
+      expect(sujet.translations).to include subject
+      expect(sujet.translations).not_to include sujet
     end
   end
 end

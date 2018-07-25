@@ -347,7 +347,9 @@ CREATE TABLE cases (
     zoom double precision,
     library_id bigint,
     acknowledgements jsonb,
-    authors jsonb DEFAULT '""'::jsonb
+    authors jsonb DEFAULT '""'::jsonb,
+    locale text NOT NULL,
+    translation_base_id bigint
 );
 
 
@@ -2093,6 +2095,13 @@ CREATE INDEX index_cases_on_tags ON cases USING gin (tags);
 
 
 --
+-- Name: index_cases_on_translation_base_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_on_translation_base_id ON cases USING btree (translation_base_id);
+
+
+--
 -- Name: index_cases_search_index_en; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2552,6 +2561,14 @@ ALTER TABLE ONLY enrollments
 
 
 --
+-- Name: cases fk_rails_04f7dcd821; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cases
+    ADD CONSTRAINT fk_rails_04f7dcd821 FOREIGN KEY (translation_base_id) REFERENCES cases(id);
+
+
+--
 -- Name: locks fk_rails_18e2ec121a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2949,11 +2966,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180405181811'),
 ('20180423145615'),
 ('20180502185535'),
-('20180503154001'),
 ('20180518184926'),
 ('20180525133320'),
 ('20180529153730'),
 ('20180627142157'),
-('20180627142644');
+('20180627142644'),
+('20180725173214');
 
 
