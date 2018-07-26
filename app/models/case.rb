@@ -95,6 +95,19 @@ class Case < ApplicationRecord
           SQL
         end
 
+  def self.with_locale_or_fallback(locale)
+    locale = ::ActiveRecord::Base.connection.quote locale
+    scope = select('DISTINCT ON (cases.translation_base_id) cases.id') \
+            .reorder(Arel.sql(<<~SQL.squish))
+              cases.translation_base_id,
+              CASE WHEN (locale = #{locale}) THEN 0
+                   WHEN (locale = 'en')      THEN 1
+                   ELSE                           2
+              END
+    SQL
+    where(id: scope)
+  end
+
   # Universal communities and the global community (`community_id == nil`) need
   # to have a forum on all cases.
   def create_forum_for_universal_communities

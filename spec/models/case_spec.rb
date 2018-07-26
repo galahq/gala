@@ -27,7 +27,7 @@ RSpec.describe Case, type: :model do
     expect(subject).to_not be_valid
   end
 
-  context 'in translation', focus: true do
+  context 'in translation' do
     subject { build :case }
 
     it 'sets itself as translation base when created w/o other translations' do
@@ -46,6 +46,23 @@ RSpec.describe Case, type: :model do
       sujet = Case.create translation_base_id: subject.id, locale: :fr
       expect(sujet.translations).to include subject
       expect(sujet.translations).not_to include sujet
+    end
+  end
+
+  describe '::with_locale_or_fallback' do
+    it 'returns one case per translation base, prioritizing the correct '\
+       'locale before falling back to English, then any other language.' do
+      english_with_translation = Case.create locale: :en
+      french_translation =
+        Case.create locale: :fr,
+                    translation_base_id: english_with_translation.id
+
+      english_without_translation = Case.create locale: :en
+
+      cases_for_a_french_user = Case.with_locale_or_fallback :fr
+      expect(cases_for_a_french_user).to include french_translation
+      expect(cases_for_a_french_user).to include english_without_translation
+      expect(cases_for_a_french_user).not_to include english_with_translation
     end
   end
 end
