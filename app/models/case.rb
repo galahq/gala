@@ -115,15 +115,6 @@ class Case < ApplicationRecord
     Ahoy::Event.for_case self
   end
 
-  # The title is used as a synecdoche for the whole case: if it’s been
-  # translated then the case is considered to be available in that language.
-  # @note The React front-end currently updates all attributes of a case if one
-  #   attribute is edited
-  # @return [Array<Iso639_1Code>]
-  def other_available_locales
-    read_attribute(:title).keys - [I18n.locale.to_s]
-  end
-
   # The cases that represent translations of this case
   def translations
     Case.where(translation_base_id: translation_base_id).where.not(id: id)

@@ -5,9 +5,8 @@ module Cases
   class PreviewSerializer < ApplicationSerializer
     attributes :acknowledgements, :audience, :authors, :commentable, :cover_url,
                :dek, :featured_at, :kicker, :latitude, :learning_objectives,
-               :longitude, :other_available_locales, :photo_credit,
-               :published_at, :slug, :small_cover_url, :summary, :title,
-               :translators, :zoom
+               :longitude, :photo_credit, :published_at, :slug,
+               :small_cover_url, :summary, :title, :translators, :zoom
 
     has_many :tags
 
