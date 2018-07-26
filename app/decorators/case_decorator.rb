@@ -30,4 +30,8 @@ class CaseDecorator < ApplicationDecorator
   def cover_image_attachment
     open(cover_image.variant(resize: '470x95^').processed.service_url).read
   end
+
+  def other_available_locales
+    translations.pluck :locale
+  end
 end
