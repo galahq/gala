@@ -16,6 +16,8 @@ class Card < ApplicationRecord
   include Trackable
 
   translates :content, :raw_content, fallbacks: true
+  # composed_of :content_state, class_name: 'ContentState',
+  #                             mapping: %w[raw_content raw_content]
 
   belongs_to :case
   belongs_to :element, polymorphic: true, touch: true
@@ -27,18 +29,19 @@ class Card < ApplicationRecord
 
   acts_as_list scope: %i[element_id element_type]
 
+  delegate :paragraphs, to: :content_state
+
+  def content_state
+    ContentState.new raw_content
+  end
+
+  def content_state=(content_state)
+    self.raw_content = content_state.raw_content
+  end
+
   # @return [Numeric, nil]
   def page_id
     element_type == 'Page' ? element_id : nil
-  end
-
-  # Unpack the RawDraftContentState structure to get the plain text contents
-  # of the card
-  # @return [Array<String>]
-  def paragraphs
-    raw_content['blocks'].map { |x| x['text'] }
-  rescue StandardError
-    []
   end
 
   # The name of the corresponding {Ahoy::Event}s
