@@ -13,6 +13,8 @@ require 'devise'
 require 'capybara/rails'
 require 'capybara/rspec'
 
+require 'clowne/rspec'
+
 Capybara.server = :puma
 
 Capybara.register_driver :chrome do |app|

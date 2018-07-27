@@ -144,6 +144,7 @@ GEM
       activesupport
     childprocess (0.7.1)
       ffi (~> 1.0, >= 1.0.11)
+    clowne (0.2.0)
     coderay (1.1.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -476,6 +477,7 @@ DEPENDENCIES
   bullet
   byebug
   capybara
+  clowne
   connection_pool
   dalli
   database_cleaner
