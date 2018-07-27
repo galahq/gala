@@ -12,5 +12,9 @@ class ContentState
     return [] unless @raw_content&.key? :blocks
     @raw_content[:blocks].map { |x| x[:text] }
   end
+
+  def entity_map
+    return unless @raw_content&.key? :entityMap
+    @raw_content[:entityMap]
   end
 end

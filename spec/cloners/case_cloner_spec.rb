@@ -1,0 +1,49 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe CaseCloner, type: :cloner do
+  subject { described_class }
+  let(:kase) { create :case, locale: :en }
+
+  it 'nullifies published_at and featured_at' do
+    kase.published_at = Time.zone.now
+    kase.featured_at = Time.zone.now
+
+    clone = described_class.partial_apply(:nullify, kase)
+
+    expect(clone.published_at).to be_nil
+    expect(clone.featured_at).to be_nil
+  end
+
+  it 'sets the new locale' do
+    clone = described_class.partial_apply(:finalize, kase, locale: :fr)
+    expect(clone.locale).to eq 'fr'
+  end
+
+  it 'adds a placeholder for the translator name' do
+    clone = described_class.partial_apply(:finalize, kase, locale: :fr)
+    expect(clone.translators).to eq ['—']
+  end
+
+  it 'copies all the case_elements', focus: true do
+    kase = create :case_with_elements, locale: :en
+
+    clone = described_class.call kase, locale: :fr
+
+    expect(clone.case_elements).not_to eq kase.case_elements
+    expect(table_of_contents(clone)).to eq table_of_contents kase
+    expect(first_card(clone).paragraphs).to eq first_card(kase).paragraphs
+    expect(first_card(clone).case).to eq clone
+  end
+
+  private
+
+  def table_of_contents(kase)
+    kase.case_elements.preload(:element).map(&:element).map(&:title)
+  end
+
+  def first_card(kase)
+    kase.pages.first.cards.first
+  end
+end
