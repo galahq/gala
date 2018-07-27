@@ -18,6 +18,7 @@ gem 'redis', '~> 3.0'
 # Models
 gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
                     ref: '2811810'
+gem 'clowne'
 gem 'draper'
 gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git',
                    ref: 'a29e7d'
