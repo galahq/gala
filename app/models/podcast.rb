@@ -21,7 +21,7 @@ class Podcast < ApplicationRecord
   has_one_attached :artwork
   has_one_attached :audio
 
-  before_validation :build_card, on: :create
+  before_validation :build_card, on: :create, unless: -> { card.present? }
 
   def cards
     [card]
