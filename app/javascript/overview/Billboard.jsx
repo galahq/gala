@@ -54,7 +54,7 @@ type Props = {
   dek: string,
   editing: boolean,
   learningObjectives: string[],
-  otherAvailableLocales: string[],
+  otherAvailableLocales: { [string]: string },
   slug: string,
   summary: string,
   taggingsPath: string,
@@ -131,7 +131,7 @@ const Billboard = ({
               />
             )}
 
-            <FlagLinks languages={otherAvailableLocales} slug={slug} />
+            <FlagLinks languages={otherAvailableLocales} />
           </div>
 
           {(caseData.latitude || editing) && (
@@ -170,25 +170,26 @@ export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
 `
 
-type FlagLinksProps = { slug: string, languages: string[] }
-function FlagLinks ({ slug, languages }: FlagLinksProps) {
-  if (languages.length > 0) {
+type FlagLinksProps = { languages: { [string]: string } }
+function FlagLinks ({ languages }: FlagLinksProps) {
+  if (Object.keys(languages).length > 0) {
     return (
       <div className="flag-links">
         <FormattedMessage id="cases.show.otherLanguages" />
         <br />
-        {languages.map(lx => <FlagLink key={lx} lx={lx} slug={slug} />)}
+        {Object.keys(languages).map(lx => (
+          <FlagLink key={lx} lx={lx} href={languages[lx]} />
+        ))}
       </div>
     )
   }
   return <span />
 }
 
-type FlagLinkProps = { slug: string, lx: string }
-function FlagLink ({ slug, lx }: FlagLinkProps) {
+type FlagLinkProps = { lx: string, href: string }
+function FlagLink ({ href, lx }: FlagLinkProps) {
   return (
-    <a href={`/${lx}/cases/${slug}`}>
-      <span
+    <a href={href}>
       <img
         className="flag-links__icon"
         src={`data:image/svg+xml,${require(`images/flag-${lx}.svg`)}`}
