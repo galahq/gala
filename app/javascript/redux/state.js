@@ -160,7 +160,7 @@ export type Case = {
     teach: string,
   },
   longitude: ?number,
-  otherAvailableLocales: string[],
+  otherAvailableLocales: { [string]: string },
   photoCredit: string,
   publishedAt: ?Date,
   slug: string,
