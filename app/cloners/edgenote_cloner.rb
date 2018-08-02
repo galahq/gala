@@ -2,7 +2,7 @@
 
 # @see Edgenote
 class EdgenoteCloner < Clowne::Cloner
-  # include_associations :audio, :image
+  include_attached :audio, :image
   include_associations :link_expansion_visibility
 
   nullify :slug

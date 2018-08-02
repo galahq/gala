@@ -2,7 +2,7 @@
 
 # @see Case
 class CaseCloner < Clowne::Cloner
-  # include_associations :cover_image
+  include_attached :cover_image
   include_associations :editorships
 
   nullify :published_at, :featured_at
