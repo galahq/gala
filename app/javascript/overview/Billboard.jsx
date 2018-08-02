@@ -189,10 +189,10 @@ function FlagLink ({ slug, lx }: FlagLinkProps) {
   return (
     <a href={`/${lx}/cases/${slug}`}>
       <span
+      <img
         className="flag-links__icon"
-        dangerouslySetInnerHTML={{
-          __html: require(`images/flag-${lx}.svg`),
-        }}
+        src={`data:image/svg+xml,${require(`images/flag-${lx}.svg`)}`}
+        alt=""
       />
       &nbsp;
       <FormattedMessage id={`support.languages.${lx}`} />
