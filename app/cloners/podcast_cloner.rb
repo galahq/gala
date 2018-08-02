@@ -2,6 +2,6 @@
 
 # @see Podcast
 class PodcastCloner < ElementCloner
-  # include_associations :artwork, :audio
+  include_attached :artwork, :audio
   include_association :card, params: true
 end
