@@ -10,6 +10,7 @@ module Cases
 
     has_many :tags
 
+    link(:new_translation) { new_case_translation_path I18n.locale, object }
     link(:self) { case_path I18n.locale, object }
     link(:settings) { edit_case_settings_path I18n.locale, object }
     link(:taggings) { case_taggings_path I18n.locale, object }

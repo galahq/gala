@@ -50,6 +50,8 @@ Rails.application.routes.draw do
 
       resources :taggings, only: %i[create destroy], param: :tag_name
 
+      resources :translations, only: %i[new create show], param: :case_locale
+
       collection do
         resources :features, module: 'cases', param: :case_slug,
                              only: %i[index create update destroy]
