@@ -775,3 +775,7 @@ en:
         translating your case on your behalf, add that person as a collaborator
         after making the copy.
       translate_this_case: Translate this case
+    show:
+      please_wait_while_your_case_is_being_copied_for_translation: >
+        Please wait while your case is being copied...
+      translation_pending: Translation Pending
