@@ -26,7 +26,7 @@ RSpec.describe CaseCloner, type: :cloner do
     expect(clone.translators).to eq ['—']
   end
 
-  it 'copies all the case_elements', focus: true do
+  it 'copies all the case_elements' do
     kase = create :case_with_elements, locale: :en
 
     clone = described_class.call kase, locale: :fr
