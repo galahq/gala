@@ -11,6 +11,7 @@ en:
         kicker: Short title
         learning_objectives: Learning objectives
         library: Library
+        locale: Language
         location: Case location
         published: Published
         slug: Case URL
@@ -750,6 +751,7 @@ en:
     languages:
       am: Amharic
       en: English
+      es: Spanish
       fr: French
       ja: Japanese
       zh-CN: Mandarin (Simplified)
@@ -764,3 +766,12 @@ en:
       long: "%B %d, %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  translations:
+    new:
+      create_translation: Copy Case for Translation
+      make_a_copy_of_your_case_then_change_the_text: >
+        Translate your case into another language. We will make a copy of your
+        case so you can simply change the text in place. If someone else will be
+        translating your case on your behalf, add that person as a collaborator
+        after making the copy.
+      translate_this_case: Translate this case

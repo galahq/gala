@@ -130,7 +130,11 @@ class Case < ApplicationRecord
 
   # The cases that represent translations of this case
   def translations
-    Case.where(translation_base_id: translation_base_id).where.not(id: id)
+    translation_set.where.not(id: id)
+  end
+
+  def translation_set
+    Case.where(translation_base_id: translation_base_id)
   end
 
   def comment_threads
