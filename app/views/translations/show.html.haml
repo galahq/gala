@@ -1,0 +1,19 @@
+- content_for :title do
+  = I18n.t('translations.show.translation_pending')
+  - unless @case.kicker.blank?
+    —
+    = @case.kicker
+
+
+.window.admin
+  .admin-card.pt-card.pt-elevation-2
+    .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
+      %span.admin__table__slug= @case.kicker
+
+    %div
+      %h1.admin__title= t '.translation_pending'
+
+      %p= t('.please_wait_while_your_case_is_being_copied_for_translation')
+
+:javascript
+  window.setInterval(() => { location.reload() }, 2000)
