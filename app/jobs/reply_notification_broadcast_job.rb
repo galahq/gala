@@ -2,8 +2,6 @@
 
 # @see ReplyNotification
 class ReplyNotificationBroadcastJob < ActiveJob::Base
-  queue_as :default
-
   def perform(notification)
     ReaderNotificationsChannel
       .broadcast_to notification.reader,
