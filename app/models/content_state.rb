@@ -16,6 +16,8 @@ class ContentState
     entityMap: {}
   }.with_indifferent_access.freeze
 
+  Range = Struct.new(:block_index, :start, :length)
+
   attr_reader :data
 
   def self.for(data)
@@ -49,6 +51,30 @@ class ContentState
 
   def paragraphs
     blocks.map { |x| x[:text] }
+  end
+
+  def add_edgenote(edgenote, range:)
+    return self unless selection(range)
+
+    key = SecureRandom.hex(16)
+    add_entity_range range, key: key
+    add_edgenote_entity edgenote, key: key
+  end
+
+  def selection(range)
+    blocks.dig(range.block_index, :text)&.slice(range.start, range.length)
+  end
+
+  private
+
+  def add_entity_range(range, key:)
+    ranges = blocks[range.block_index][:entityRanges] ||= []
+    ranges << { key: key, length: range.length, offset: range.start }
+  end
+
+  def add_edgenote_entity(edgenote, key:)
+    entity_map[key] =
+      { data: edgenote.slice(:slug), type: :EDGENOTE, mutability: :MUTABLE }
   end
 end
 

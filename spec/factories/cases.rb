@@ -37,6 +37,15 @@ FactoryBot.define do
         create_list(:activity_element, ev.activity_count, case: this)
         this.case_elements.reload
       end
+
+      factory :case_with_edgenotes do
+        after :create do |this|
+          card = this.pages.first.cards.first
+          card.add_edgenote Edgenote.new(website_url: 'https://www.nytimes.com/2018/08/04/world/europe/europe-heat-wave.html'),
+                            range: ContentState::Range.new(0, 0, 10)
+          card.save
+        end
+      end
     end
   end
 end

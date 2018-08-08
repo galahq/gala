@@ -50,6 +50,15 @@ class Card < ApplicationRecord
     element_type.constantize.reflect_on_association(:cards)
   end
 
+  # Add an Edgenote to the Card
+  # @param edgenote [Edgenote]
+  # @param range [ContentState::Range]
+  def add_edgenote(edgenote, range:)
+    return false if edgenote.case.present? && edgenote.case != self.case
+    edgenote.update case: self.case unless edgenote.case.present?
+    raw_content.add_edgenote edgenote, range: range
+  end
+
   private
 
   # Since elements are polymorphic, it’s way easier to eagerly load cards when
