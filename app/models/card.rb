@@ -8,14 +8,12 @@
 # @attr position [Numeric] this card’s sequence within its {Page} (other
 #   {Element}s can only have one)
 # @attr solid [Boolean] whether the card should have a white background or not
-# @attr raw_content [Translated<RawDraftContentState>] the card’s content, to be
+# @attr raw_content [RawDraftContentState] the card’s content, to be
 #   used with Draft.js in React
 class Card < ApplicationRecord
   include Lockable
-  include Mobility
   include Trackable
 
-  translates :content, :raw_content, fallbacks: true
   # composed_of :content_state, class_name: 'ContentState',
   #                             mapping: %w[raw_content raw_content]
 
