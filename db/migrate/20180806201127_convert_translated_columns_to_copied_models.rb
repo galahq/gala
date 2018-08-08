@@ -216,6 +216,7 @@ class ConvertTranslatedColumnsToCopiedModels < ActiveRecord::Migration[5.2]
 
   def restore_working_defaults
     Case.where(translators: nil).update_all translators: []
+    Case.where(authors: nil).update_all authors: []
   end
 
   def delete_translated_columns

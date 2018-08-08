@@ -33,6 +33,7 @@ class Case < ApplicationRecord
   include Comparable
   extend FriendlyId
 
+  attribute :authors, :json, default: []
   attribute :commentable, default: true
   attribute :locale, :string, default: -> { I18n.locale }
   attribute :slug, :string, default: -> { SecureRandom.uuid }
