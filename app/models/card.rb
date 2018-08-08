@@ -14,8 +14,7 @@ class Card < ApplicationRecord
   include Lockable
   include Trackable
 
-  # composed_of :content_state, class_name: 'ContentState',
-  #                             mapping: %w[raw_content raw_content]
+  attribute :raw_content, ContentState::Type.new
 
   belongs_to :case
   belongs_to :element, polymorphic: true, touch: true
@@ -27,15 +26,7 @@ class Card < ApplicationRecord
 
   acts_as_list scope: %i[element_id element_type]
 
-  delegate :paragraphs, to: :content_state
-
-  def content_state
-    ContentState.new raw_content
-  end
-
-  def content_state=(content_state)
-    self.raw_content = content_state.raw_content
-  end
+  delegate :paragraphs, to: :raw_content
 
   # @return [Numeric, nil]
   def page_id
