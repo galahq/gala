@@ -3,7 +3,7 @@
 # @see Podcast
 class PodcastSerializer < ApplicationSerializer
   attributes :id, :position, :title, :audio_url, :artwork_url, :photo_credit
-  attribute(:url) { podcast_path I18n.locale, object }
+  attribute(:url) { podcast_path object }
   attribute(:credits_list) { object.credits_list.to_sentence }
   attribute(:card_id) { object.card.id }
   attribute(:icon_slug) { 'toc-podcast' }

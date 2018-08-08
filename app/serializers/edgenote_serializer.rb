@@ -7,7 +7,7 @@ class EdgenoteSerializer < ApplicationSerializer
              :pdf_url, :photo_credit, :style, :pull_quote, :attribution,
              :call_to_action, :audio_url, :alt_text, :updated_at, :highlighted
 
-  link(:self) { edgenote_path I18n.locale, object }
-  link(:audio) { edgenote_attachment_path I18n.locale, object, :audio }
-  link(:image) { edgenote_attachment_path I18n.locale, object, :image }
+  link(:self) { edgenote_path object }
+  link(:audio) { edgenote_attachment_path object, :audio }
+  link(:image) { edgenote_attachment_path object, :image }
 end

@@ -4,7 +4,7 @@
 <%= @notification.comment.content %>
 
 <%= md_button_to "Reply online",
-                 comment_thread_url(I18n.locale, @notification.comment_thread) %>
+                 comment_thread_url @notification.comment_thread %>
 
 <% email_footer <<-FOOTER
 You are receiving this email because someone replied to a comment you made on a
