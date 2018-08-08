@@ -4,32 +4,31 @@
 # overview information) and associations for all the case’s constituent parts.
 #
 # @attr slug [String] the URL param (managed by friendly_id)
-# @attr kicker [Translated<String>] a two or three word tagline for the case.
+# @attr kicker [String] a two or three word tagline for the case.
 #   This comes from newspapers: the little mini-headline appearing above the hed
 #   to which continuations of the article refer (e.g. “from CORRUPTION, A1”)
-# @attr title [Translated<String>] the case’s title, in the form of a question
-# @attr dek [Translated<String>] a one-sentence teaser which appears in larger
+# @attr title [String] the case’s title, in the form of a question
+# @attr dek [String] a one-sentence teaser which appears in larger
 #   text above the summary
-# @attr authors [Translated<{name: String, institution?: String}>]
-# @attr translators [Translated<Array<String>>] the translators’ names, if any
-# @attr acknowledgements [Translated<String>] a place for the authors’ gratitude
+# @attr authors [{name: String, institution?: String}]
+# @attr translators [Array<String>] the translators’ names, if any
+# @attr acknowledgements [String] a place for the authors’ gratitude
 #
 # @attr photo_credit [String] attribution for the {cover_url}’s rights holder
 # @attr latitude [Numeric] where the case takes place
 # @attr longitude [Numeric] where the case takes place
 # @attr zoom [Numeric] the default zoom level for the site location map (mapbox)
 #
-# @attr summary [Translated<String>] a short paragraph-length abstract
-# @attr learning_objectives [Translated<Array<String>>]
-# @attr audience [Translated<String>] yet unused
-# @attr classroom_timeline [Translated<String>] yet unused
+# @attr summary [String] a short paragraph-length abstract
+# @attr learning_objectives [Array<String>]
+# @attr audience [String] yet unused
+# @attr classroom_timeline [String] yet unused
 #
 # @attr published_at [DateTime] generic readers can only access published cases
 # @attr featured_at [DateTime] featured cases appear prominently in the catalog
 # @attr commentable [Boolean] whether or not forums are enabled on the case
 class Case < ApplicationRecord
   include Cases::Taggable
-  include Mobility
   include Lockable
   include Comparable
   extend FriendlyId
@@ -37,11 +36,8 @@ class Case < ApplicationRecord
   attribute :commentable, default: true
   attribute :locale, :string, default: -> { I18n.locale }
   attribute :slug, :string, default: -> { SecureRandom.uuid }
+  attribute :translators, :json, default: []
   friendly_id :slug, use: %i[history]
-
-  translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
-             :audience, :classroom_timeline, :acknowledgements, fallbacks: true
-  translates :authors, :translators, default: [], fallbacks: true
 
   belongs_to :library, optional: true
   belongs_to :translation_base,
