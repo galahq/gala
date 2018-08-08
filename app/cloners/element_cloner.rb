@@ -4,8 +4,10 @@
 # CaseElement to relate it to its case.
 class ElementCloner < Clowne::Cloner
   finalize do |_source, record, kase:, **|
-    record.build_case_element case: kase
-    record.cards.each { |card| card.element = record }
-    record.save!
+    Card.acts_as_list_no_update do
+      record.build_case_element case: kase
+      record.cards.each { |card| card.element = record }
+      record.save!
+    end
   end
 end
