@@ -26,13 +26,18 @@ RSpec.describe CaseCloner, type: :cloner do
     expect(clone.translators).to eq ['—']
   end
 
-  it 'copies all the case_elements' do
-    kase = create :case_with_elements, locale: :en
+  it 'copies all the case_elements', focus: true do
+    kase = create :case_with_edgenotes, locale: :en
 
     clone = described_class.call kase, locale: :fr
 
     expect(clone.case_elements).not_to eq kase.case_elements
     expect(table_of_contents(clone)).to eq table_of_contents kase
+
+    expect(clone.edgenotes.map(&:slug)).not_to eq kase.edgenotes.map(&:slug)
+    expect(clone.edgenotes.map(&:website_url))
+      .to eq kase.edgenotes.map(&:website_url)
+
     expect(first_card(clone).paragraphs).to eq first_card(kase).paragraphs
     expect(first_card(clone).case).to eq clone
   end
