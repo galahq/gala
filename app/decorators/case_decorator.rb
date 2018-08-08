@@ -34,7 +34,7 @@ class CaseDecorator < ApplicationDecorator
   def other_available_locales
     translations.each_with_object({}) do |kase, table|
       table[kase.locale] =
-        polymorphic_path kase, locale: I18n.locale, only_path: true
+        polymorphic_path kase, only_path: true
     end
   end
 end

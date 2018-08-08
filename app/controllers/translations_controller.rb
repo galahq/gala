@@ -21,7 +21,7 @@ class TranslationsController < ApplicationController
   # @route [GET] `/cases/slug/translations/locale`
   def show
     translation = @case.translations.find_by locale: case_locale
-    redirect_to case_path I18n.locale, translation if translation.present?
+    redirect_to case_path translation if translation.present?
   end
 
   private
