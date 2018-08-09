@@ -30,9 +30,9 @@ module ApplicationHelper
     devise_mapping.to
   end
 
-  def locale_names(locales = I18n.available_locales)
+  def locale_names(locales = Translation.languages)
     locales.map do |l|
-      [I18n.t('__name', locale: l), l]
+      [Translation.language_name(l), l]
     end
   end
 

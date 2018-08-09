@@ -9,7 +9,7 @@
     = f.label :locale, class: "pt-label" do
       = t 'activerecord.attributes.reader.locale'
       .pt-select
-        = f.select :locale, options_for_select(locale_names, I18n.locale), {}, tabindex: 2
+        = f.select :locale, options_for_select(locale_names, current_reader.locale), {}, tabindex: 2
 
     = f.label :email, class: "pt-label" do
       = t 'activerecord.attributes.user.email'

@@ -1,5 +1,4 @@
 en:
-  __name: English
   activerecord:
     attributes:
       case:
@@ -53,7 +52,7 @@ en:
         image: Image
         last_sign_in_at: Last sign in at
         last_sign_in_ip: Last sign in IP
-        locale: Locale
+        locale: Preferred language
         locked_at: Locked at
         name: Full Name
         password: Password
@@ -748,14 +747,6 @@ en:
       begin: “
       end: ”
       attribution_prefix: "— "
-    languages:
-      am: Amharic
-      en: English
-      es: Spanish
-      fr: French
-      ja: Japanese
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
   tags:
     new:
       pressEnter: No results. Press Enter to create a new keyword.
