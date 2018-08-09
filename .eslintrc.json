@@ -18,6 +18,7 @@
   },
   "plugins": ["babel", "import", "react", "jsx-a11y", "flowtype"],
   "rules": {
+    "no-debugger": 0,
     "babel/semi": [2, "never"],
     "flowtype/semi": [2, "never"],
     "valid-typeof": 0,
