@@ -33,8 +33,10 @@ class CaseDecorator < ApplicationDecorator
 
   def other_available_locales
     translations.each_with_object({}) do |kase, table|
-      table[kase.locale] =
-        polymorphic_path kase, only_path: true
+      table[kase.locale] = {
+        link: polymorphic_path(kase, only_path: true),
+        name: Translation.language_name(kase.locale)
+      }
     end
   end
 end
