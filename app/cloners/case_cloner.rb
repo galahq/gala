@@ -10,7 +10,7 @@ class CaseCloner < Clowne::Cloner
   finalize do |source, record, locale:, slug: SecureRandom.uuid, **|
     record.locale = locale
     record.slug = slug
-    record.title = "#{I18n.t("support.languages.#{locale}")}: #{record.title}"
+    record.title = "#{Translation.language_name(locale)}: #{record.title}"
     record.translators = ['—']
 
     record.save!

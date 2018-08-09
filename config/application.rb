@@ -18,9 +18,6 @@ module Orchard
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-    config.i18n.available_locales = %i[en fr es ja zh-CN zh-TW am]
-
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
 
     config.active_record.schema_format = :sql
