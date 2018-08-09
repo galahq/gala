@@ -83,14 +83,44 @@ class ConvertTranslatedColumnsToCopiedModels < ActiveRecord::Migration[5.2]
 
   def update_materialized_view
     execute <<~SQL
+      CREATE AGGREGATE tsvector_agg (tsvector) (
+        SFUNC = tsvector_concat,
+        STYPE = tsvector
+      );
+    SQL
+
+    execute <<~SQL
+      CREATE OR REPLACE FUNCTION jsonb_path_to_tsvector(
+        jsondata jsonb,
+        path_elems text[],
+        out tsv tsvector
+      )
+      AS $func$
+        BEGIN
+          SELECT INTO tsv
+            coalesce(
+              tsvector_agg(to_tsvector(data #>> path_elems)),
+              to_tsvector('')
+            )
+          FROM jsonb_array_elements(jsondata) AS data;
+          RETURN;
+        END;
+      $func$ LANGUAGE plpgsql
+      IMMUTABLE;
+    SQL
+
+    execute <<~SQL
       CREATE MATERIALIZED VIEW cases_search_index AS
       SELECT cases.id AS id,
-             setweight(to_tsvector(cases.kicker), 'A')
-               || setweight(to_tsvector(cases.title), 'A')
-               || setweight(to_tsvector(cases.dek), 'A')
-               || setweight(to_tsvector(cases.summary), 'A')
-               || setweight(to_tsvector(cases.learning_objectives::text), 'B')
-               || to_tsvector(cases.authors::text)
+             setweight(to_tsvector(coalesce(cases.kicker, '')), 'A')
+               || setweight(to_tsvector(coalesce(cases.title, '')), 'A')
+               || setweight(to_tsvector(coalesce(cases.dek, '')), 'A')
+               || setweight(to_tsvector(coalesce(cases.summary, '')), 'A')
+               || setweight(
+                    jsonb_path_to_tsvector(learning_objectives, '{}'),
+                    'B'
+                  )
+               || jsonb_path_to_tsvector(cases.authors, '{name}')
                || setweight(
                     to_tsvector(coalesce(string_agg(pages.title, ' '), '')),
                     'B'
@@ -106,21 +136,26 @@ class ConvertTranslatedColumnsToCopiedModels < ActiveRecord::Migration[5.2]
                     'B'
                   )
                || to_tsvector(coalesce(string_agg(podcasts.credits, ' '), ''))
-               || to_tsvector(
-                    coalesce(
-                      string_agg(cards.raw_content->>'blocks', ' '),
-                      ''
-                    )
+               || coalesce(
+                    tsvector_agg(
+                      jsonb_path_to_tsvector(
+                        cards.raw_content->'blocks',
+                        '{text}'
+                      )
+                    ),
+                    to_tsvector('')
                   )
              AS document
         FROM cases
         LEFT JOIN pages ON pages.case_id = cases.id
         LEFT JOIN podcasts ON podcasts.case_id = cases.id
         LEFT JOIN activities ON activities.case_id = cases.id
-        LEFT JOIN cards ON cards.case_id = pages.id
+        LEFT JOIN cards ON cards.case_id = cases.id
           GROUP BY cases.id;
+
       CREATE UNIQUE INDEX index_cases_search_index ON cases_search_index
              USING btree(id);
+
       CREATE INDEX index_cases_on_full_text ON cases_search_index
              USING gin(document);
     SQL

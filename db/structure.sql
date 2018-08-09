@@ -23,6 +23,35 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 
 SET search_path = public, pg_catalog;
 
+--
+-- Name: jsonb_path_to_tsvector(jsonb, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION jsonb_path_to_tsvector(jsondata jsonb, path_elems text[], OUT tsv tsvector) RETURNS tsvector
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+  BEGIN
+    SELECT INTO tsv
+      coalesce(
+        tsvector_agg(to_tsvector(data #>> path_elems)),
+        to_tsvector('')
+      )
+    FROM jsonb_array_elements(jsondata) AS data;
+    RETURN;
+  END;
+$$;
+
+
+--
+-- Name: tsvector_agg(tsvector); Type: AGGREGATE; Schema: public; Owner: -
+--
+
+CREATE AGGREGATE tsvector_agg(tsvector) (
+    SFUNC = tsvector_concat,
+    STYPE = tsvector
+);
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -1618,12 +1647,12 @@ ALTER TABLE ONLY cases
 
 CREATE MATERIALIZED VIEW cases_search_index AS
  SELECT cases.id,
-    ((((((((((setweight(to_tsvector(cases.kicker), 'A'::"char") || setweight(to_tsvector(cases.title), 'A'::"char")) || setweight(to_tsvector(cases.dek), 'A'::"char")) || setweight(to_tsvector(cases.summary), 'A'::"char")) || setweight(to_tsvector((cases.learning_objectives)::text), 'B'::"char")) || to_tsvector((cases.authors)::text)) || setweight(to_tsvector(COALESCE(string_agg(pages.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(podcasts.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(activities.title, ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg(podcasts.credits, ' '::text), ''::text))) || to_tsvector(COALESCE(string_agg((cards.raw_content ->> 'blocks'::text), ' '::text), ''::text))) AS document
+    ((((((((((setweight(to_tsvector(COALESCE(cases.kicker, ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(cases.title, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.dek, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.summary, ''::text)), 'A'::"char")) || setweight(jsonb_path_to_tsvector(cases.learning_objectives, '{}'::text[]), 'B'::"char")) || jsonb_path_to_tsvector(cases.authors, '{name}'::text[])) || setweight(to_tsvector(COALESCE(string_agg(pages.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(podcasts.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(activities.title, ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg(podcasts.credits, ' '::text), ''::text))) || COALESCE(tsvector_agg(jsonb_path_to_tsvector((cards.raw_content -> 'blocks'::text), '{text}'::text[])), to_tsvector(''::text))) AS document
    FROM ((((cases
      LEFT JOIN pages ON ((pages.case_id = cases.id)))
      LEFT JOIN podcasts ON ((podcasts.case_id = cases.id)))
      LEFT JOIN activities ON ((activities.case_id = cases.id)))
-     LEFT JOIN cards ON ((cards.case_id = pages.id)))
+     LEFT JOIN cards ON ((cards.case_id = cases.id)))
   GROUP BY cases.id
   WITH NO DATA;
 
