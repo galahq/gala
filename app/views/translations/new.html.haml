@@ -18,7 +18,8 @@
                            builder: BlueprintFormBuilder do |f|
         %p= t('.make_a_copy_of_your_case_then_change_the_text')
 
-        = f.form_group :locale do |f, error_classes|
+        - dont_see = t('.dont_see_your_language_html')
+        = f.form_group :locale, helper_text: dont_see  do |f, error_classes|
           .pt-select.pt-fill
             = f.select :locale, options_for_locale_select(@case)
 

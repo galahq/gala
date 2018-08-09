@@ -760,6 +760,9 @@ en:
   translations:
     new:
       create_translation: Copy Case for Translation
+      dont_see_your_language_html: >
+        Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact
+        us</a> and we’ll add it.
       make_a_copy_of_your_case_then_change_the_text: >
         Translate your case into another language. We will make a copy of your
         case so you can simply change the text in place. If someone else will be
