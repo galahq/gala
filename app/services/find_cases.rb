@@ -50,12 +50,12 @@ class FindCases
 
     query = @params[:q].is_a?(Array) ? @params[:q].join(' ') : @params[:q]
     Case.joins(
-      'JOIN cases_search_index_en ON cases_search_index_en.id = cases.id'
+      'JOIN cases_search_index ON cases_search_index.id = cases.id'
     )
-        .where('cases_search_index_en.document @@ plainto_tsquery(?)', query)
+        .where('cases_search_index.document @@ plainto_tsquery(?)', query)
         .reorder(
           Arel.sql('ts_rank(' \
-             'cases_search_index_en.document, ' \
+             'cases_search_index.document, ' \
              "plainto_tsquery(#{ActiveRecord::Base.connection.quote(query)})" \
            ') DESC')
         )
