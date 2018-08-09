@@ -8,7 +8,7 @@
 ./node_modules/fbjs/flow/lib
 
 [declarations]
-./node_modules/.*
+.*/node_modules/.*
 
 [options]
 module.system.node.resolve_dirname=node_modules
