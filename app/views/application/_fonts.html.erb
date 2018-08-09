@@ -4,7 +4,7 @@
 <%# We don’t want the Japanese font to override the Chinese fonts, in order
   # to prevent simplified characters without different codepoints from being
   # displayed in the Traditional/Japanese manner. %>
-<% unless I18n.locale == :ja %>
+<% unless in_locale 'ja' %>
 <style>
   @font-face {
     font-family: 'vdl-v7gothic';
@@ -14,7 +14,7 @@
 </style>
 <% end %>
 
-<% unless I18n.locale == :"zh-CN" %>
+<% unless in_locale 'zh-CN' %>
 <style>
   @font-face {
     font-family: 'source-han-sans-simplified-c';
@@ -23,3 +23,13 @@
   }
 </style>
 <% end %>
+
+<%# The Japanese font eats Greek and Russian, so we’ll specify something better
+  # first, but limit it to Greek’s unicode range %>
+<style>
+  @font-face {
+    font-family: 'greek-and-cyrillic-fallback';
+    src: local(-apple-system), local(arial);
+    unicode-range: U+0370-052F;
+  }
+</style>

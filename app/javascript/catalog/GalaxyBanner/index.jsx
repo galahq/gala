@@ -45,7 +45,7 @@ const GalaxyLogo = styled.span.attrs({ role: 'presentation' })`
 `
 
 const Tagline = styled.p`
-  font-family: freight-text-pro;
+  font-family: ${p => p.theme.serifFont};
   font-size: 135%;
   font-style: italic;
   font-weight: 500;
