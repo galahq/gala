@@ -3,7 +3,7 @@
 # @see Case
 class CaseCloner < Clowne::Cloner
   include_attached :cover_image
-  include_associations :editorships
+  include_associations :editorships, :taggings
 
   nullify :published_at, :featured_at
 
