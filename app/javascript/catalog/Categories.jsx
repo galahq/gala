@@ -136,7 +136,7 @@ const LinkContainer = styled.a`
 const NaturalResourceLabel = styled.span`
   bottom: 20%;
   color: #ebeae4;
-  font-family: freight-text-pro, ${p => p.theme.sansFont};
+  font-family: ${p => p.theme.serifFont};
   font-style: italic;
   font-size: 24px;
   font-weight: 700;

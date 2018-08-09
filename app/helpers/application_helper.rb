@@ -30,6 +30,14 @@ module ApplicationHelper
     devise_mapping.to
   end
 
+  def case_locale
+    @case&.locale
+  end
+
+  def in_locale(locale = 'en')
+    I18n.locale == locale || @case&.locale == locale
+  end
+
   def locale_names(locales = Translation.languages)
     locales.map do |l|
       [Translation.language_name(l), l]
