@@ -7,7 +7,8 @@
 [include]
 ./node_modules/fbjs/flow/lib
 
-[libs]
+[declarations]
+./node_modules/.*
 
 [options]
 module.system.node.resolve_dirname=node_modules
@@ -25,4 +26,4 @@ suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(2[0-8]\\|1[0-9]\\|[0-9]\\).[0-9]\\)? *\\).*\n
 
 [version]
-0.72.0
+0.78.0
