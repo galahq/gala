@@ -20,7 +20,7 @@ feature 'Leaving a comment' do
     )]
     card.save
 
-    visit case_path 'en', kase
+    visit case_path kase
 
     first_page = kase.pages.first
     click_link first_page.title
@@ -60,7 +60,7 @@ feature 'Leaving a comment' do
                                       .merge(text: 'apple ' * 50)]
     card.save
 
-    visit case_path('en', enrollment.case) + '/1'
+    visit case_path(enrollment.case) + '/1'
     click_link 'Respond', match: :first
     first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
@@ -86,7 +86,7 @@ feature 'Leaving a comment' do
 
   scenario 'makes it show up for other people looking at the same forum' do
     enrollment.reader.update(active_community_id: nil)
-    visit case_path('en', enrollment.case) + '/1'
+    visit case_path(enrollment.case) + '/1'
     expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
     sleep(1)
     comment_thread.comments.create(
@@ -126,7 +126,7 @@ feature 'Leaving a comment' do
 
     it 'is possible' do
       kase = enrollment.case
-      visit case_path 'en', enrollment.case
+      visit case_path enrollment.case
       click_link kase.pages.first.title
 
       comment_entity = find '.c-comment-thread-entity'
@@ -149,7 +149,7 @@ feature 'Leaving a comment' do
         content: 'Test reply',
         reader: enrollment.reader
       )
-      visit case_path('en', enrollment.case) + '/1'
+      visit case_path(enrollment.case) + '/1'
       comment_thread.comments.create(
         content: 'Should trigger toast',
         reader: other_reader

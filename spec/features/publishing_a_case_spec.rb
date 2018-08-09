@@ -8,7 +8,7 @@ feature 'Publishing a case' do
 
   scenario 'works' do
     login_as reader
-    visit case_path('en', kase)
+    visit case_path kase
 
     accept_confirm 'Are you sure you want to change the publication status?' do
       click_button 'Options'
