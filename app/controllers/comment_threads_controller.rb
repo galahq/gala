@@ -13,7 +13,6 @@ class CommentThreadsController < ApplicationController
     @comment_threads = CommentThread.none if @forum.nil?
     @comment_threads ||= @forum.comment_threads
                                .visible_to_reader(current_reader)
-                               .order(:block_index, :start)
                                .includes(:card, comments: [:reader])
     render json: @comment_threads, serializer: CommentThreads::IndexSerializer,
            case: @case, forum: @forum
