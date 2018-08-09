@@ -236,11 +236,13 @@ class ConvertTranslatedColumnsToCopiedModels < ActiveRecord::Migration[5.2]
   end
 
   def copy_localized_data_for_new_edgenotes(kase)
+    kase.edgenotes.reload
+
     without_updating_timestamps do
       kase.edgenotes.each do |edgenote|
         COLUMNS.keys.select { |(table)| table == :edgenotes }
                .each do |(_, attribute)|
-          copy_localized_data edgenote, attribute, locale: kase.locale
+          copy_localized_data edgenote, attribute, kase.locale
         end
       end
     end
