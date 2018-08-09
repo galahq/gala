@@ -163,14 +163,11 @@ class ConvertTranslatedColumnsToCopiedModels < ActiveRecord::Migration[5.2]
 
   def make_clones_for_each_locale_of_title
     Case.find_each do |kase|
-      keys = begin
-               kase.title_i18n.keys
-             rescue StandardError
-               []
-             end
+      keys = kase.title_i18n.keys rescue []
 
       (keys - ['en']).each do |locale|
-        CaseCloner.call(kase, locale: locale)
+        clone = CaseCloner.call kase, locale: locale
+        clone.update published_at: kase.published_at
       end
     end
   end
