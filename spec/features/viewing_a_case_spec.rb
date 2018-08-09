@@ -44,7 +44,7 @@ feature 'Viewing a case' do
           user.invitations.create community: invited_community
           user.update active_community_id: invited_community.id
 
-          visit case_path('en', published_case)
+          visit case_path published_case
           click_button 'Enroll'
           expect(page).to have_content "#{invited_community.name} ▾"
           find_link(invited_community.name).hover
