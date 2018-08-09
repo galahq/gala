@@ -883,8 +883,8 @@ activestorage@^0.1.1:
   resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-0.1.1.tgz#a5db701467e80e6a139fb1a8e77977829115f131"
 
 activestorage@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-5.2.0.tgz#91e526ea56db7157d7a9ee69f1e26b53327d6a6d"
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-5.2.1.tgz#b4be57fbedc25c6c361802707fc5e8884766f6a1"
   dependencies:
     spark-md5 "^3.0.0"
 
@@ -4020,9 +4020,9 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-flow-bin@0.72.0:
-  version "0.72.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.72.0.tgz#12051180fb2db7ccb728fefe67c77e955e92a44d"
+flow-bin@0.78.0:
+  version "0.78.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.78.0.tgz#df9fe7f9c9a2dfaff39083949fe2d831b41627b7"
 
 flow-bin@^0.64.0:
   version "0.64.0"
@@ -7325,8 +7325,8 @@ rc@^1.1.7:
     strip-json-comments "~2.0.1"
 
 react-activestorage-provider@*:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/react-activestorage-provider/-/react-activestorage-provider-0.2.0.tgz#5b997a4eb2b5cead9d5c16afbaf8839d03145025"
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-activestorage-provider/-/react-activestorage-provider-0.3.0.tgz#00c1c43327fa285519783d9f292e2214043ac6e8"
   dependencies:
     activestorage "^5.2.0"
 

@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '>= 5.2.0-rc1', '< 5.3'
+gem 'rails', '>= 5.2.1', '< 5.3'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
