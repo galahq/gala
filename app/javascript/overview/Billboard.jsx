@@ -7,7 +7,6 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
-import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
 import Lock from 'utility/Lock'
@@ -17,6 +16,7 @@ import CommunityChooser from './CommunityChooser'
 import LearningObjectives from './LearningObjectives'
 import MapView from 'catalog/MapView'
 import CaseKeywords from './CaseKeywords'
+import TranslationLinks from './TranslationLinks'
 
 import { updateCase } from 'redux/actions'
 
@@ -131,7 +131,7 @@ const Billboard = ({
               />
             )}
 
-            <FlagLinks languages={otherAvailableLocales} />
+            <TranslationLinks languages={otherAvailableLocales} />
           </div>
 
           {(caseData.latitude || editing) && (
@@ -169,34 +169,3 @@ export default connect(mapStateToProps, { updateCase })(Billboard)
 export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
 `
-
-type FlagLinksProps = { languages: { [string]: string } }
-function FlagLinks ({ languages }: FlagLinksProps) {
-  if (Object.keys(languages).length > 0) {
-    return (
-      <div className="flag-links">
-        <FormattedMessage id="cases.show.otherLanguages" />
-        <br />
-        {Object.keys(languages).map(lx => (
-          <FlagLink key={lx} lx={lx} href={languages[lx]} />
-        ))}
-      </div>
-    )
-  }
-  return <span />
-}
-
-type FlagLinkProps = { lx: string, href: string }
-function FlagLink ({ href, lx }: FlagLinkProps) {
-  return (
-    <a href={href}>
-      <img
-        className="flag-links__icon"
-        src={`data:image/svg+xml,${require(`images/flag-${lx}.svg`)}`}
-        alt=""
-      />
-      &nbsp;
-      <FormattedMessage id={`support.languages.${lx}`} />
-    </a>
-  )
-}
