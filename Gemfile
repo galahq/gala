@@ -103,6 +103,7 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
+  gem 'webdrivers'
 end
 
 # To seed the database for Heroku review apps, this is included in production

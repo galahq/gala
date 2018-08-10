@@ -46,7 +46,7 @@ feature 'Viewing a case' do
 
           visit case_path published_case
           click_button 'Enroll'
-          expect(page).to have_content "#{invited_community.name} ▾"
+          expect(page).to have_content invited_community.name.to_s
           find_link(invited_community.name).hover
           expect(find_link(invited_community.name)).to have_selector '.pt-icon-cross'
 

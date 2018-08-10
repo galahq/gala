@@ -10,9 +10,6 @@ feature 'Moderating a comment thread' do
     first_card = enrollment.case.pages.first.cards.first
     first_letter = first_card.paragraphs[0][0]
     first_card.comment_threads.create(
-      start: 0,
-      length: 1,
-      block_index: 0,
       original_highlight_text: first_letter,
       reader: other_reader,
       locale: I18n.locale,
@@ -33,7 +30,7 @@ feature 'Moderating a comment thread' do
   end
 
   it 'is possible to delete a comment as an editor' do
-    visit comment_thread_path(:en, comment_thread)
+    visit comment_thread_path comment_thread
     accept_confirm 'Are you sure' do
       within '.SelectedCommentThread' do
         find('blockquote', text: 'Second comment').hover
