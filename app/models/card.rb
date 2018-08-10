@@ -19,8 +19,7 @@ class Card < ApplicationRecord
   belongs_to :case
   belongs_to :element, polymorphic: true, touch: true
 
-  has_many :comment_threads, -> { order(:block_index, :start) },
-           dependent: :destroy
+  has_many :comment_threads, dependent: :destroy
 
   before_validation :set_case_from_element
 

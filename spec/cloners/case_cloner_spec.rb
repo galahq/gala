@@ -6,14 +6,10 @@ RSpec.describe CaseCloner, type: :cloner do
   subject { described_class }
   let(:kase) { create :case, locale: :en }
 
-  it 'nullifies published_at and featured_at' do
+  it 'nullifies published_at' do
     kase.published_at = Time.zone.now
-    kase.featured_at = Time.zone.now
-
     clone = described_class.partial_apply(:nullify, kase)
-
     expect(clone.published_at).to be_nil
-    expect(clone.featured_at).to be_nil
   end
 
   it 'sets the new locale' do

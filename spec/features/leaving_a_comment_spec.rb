@@ -15,7 +15,7 @@ feature 'Leaving a comment' do
   scenario 'is possible with a unique selection' do
     kase = enrollment.case
     card = kase.pages.first.cards.first
-    card.raw_content['blocks'] = [card.raw_content['blocks'][0].merge(
+    card.raw_content.data[:blocks] = [card.raw_content.blocks[0].merge(
       text: 'abcdefghijklmnopqrstuvwxyz'.each_char.map { |x| x * 5 }.join(' ')
     )]
     card.save
@@ -56,8 +56,8 @@ feature 'Leaving a comment' do
 
   scenario 'is not possible with a non-unique selection' do
     card = enrollment.case.pages.first.cards.first
-    card.raw_content['blocks'] = [card.raw_content['blocks'][0]
-                                      .merge(text: 'apple ' * 50)]
+    card.raw_content.data[:blocks] = [card.raw_content.blocks[0]
+                                          .merge(text: 'apple ' * 50)]
     card.save
 
     visit case_path(enrollment.case) + '/1'
