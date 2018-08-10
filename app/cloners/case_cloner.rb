@@ -5,7 +5,7 @@ class CaseCloner < Clowne::Cloner
   include_attached :cover_image
   include_associations :editorships, :taggings
 
-  nullify :published_at, :featured_at
+  nullify :published_at
 
   finalize do |source, record, locale:, slug: SecureRandom.uuid, **|
     record.locale = locale
