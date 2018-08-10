@@ -4,16 +4,18 @@
 class FindCases
   # @param params [{libraries?: string[], tags?: string[], q?: string}]
   # @return [ActiveRecord::Relation<Case>]
-  def self.by(params)
-    new(params).call
+  def self.by(params, locale:)
+    new(params, locale: locale).call
   end
 
-  def initialize(params)
+  def initialize(params, locale:)
     @params = params
+    @locale = locale
   end
 
   def call
     Case.ordered
+        .with_locale_or_fallback(@locale)
         .merge(maybe_filter_by_library)
         .merge(maybe_filter_by_tags)
         .merge(maybe_search_by_full_text)
