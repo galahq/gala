@@ -9,6 +9,10 @@ class AnonymousUser
     nil
   end
 
+  def locale
+    I18n.locale
+  end
+
   # @return [false]
   def has_role?(_role, _resource = nil) # rubocop:disable Naming/PredicateName
     false

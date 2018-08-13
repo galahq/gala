@@ -2,8 +2,6 @@
 
 # @see Comment
 class CommentBroadcastJob < ActiveJob::Base
-  queue_as :default
-
   def perform(comment)
     ForumChannel.broadcast_to comment.forum,
                               comment: render_comment(comment)

@@ -15,12 +15,12 @@ feature 'Leaving a comment' do
   scenario 'is possible with a unique selection' do
     kase = enrollment.case
     card = kase.pages.first.cards.first
-    card.raw_content['blocks'] = [card.raw_content['blocks'][0].merge(
+    card.raw_content.data[:blocks] = [card.raw_content.blocks[0].merge(
       text: 'abcdefghijklmnopqrstuvwxyz'.each_char.map { |x| x * 5 }.join(' ')
     )]
     card.save
 
-    visit case_path 'en', kase
+    visit case_path kase
 
     first_page = kase.pages.first
     click_link first_page.title
@@ -56,11 +56,11 @@ feature 'Leaving a comment' do
 
   scenario 'is not possible with a non-unique selection' do
     card = enrollment.case.pages.first.cards.first
-    card.raw_content['blocks'] = [card.raw_content['blocks'][0]
-                                      .merge(text: 'apple ' * 50)]
+    card.raw_content.data[:blocks] = [card.raw_content.blocks[0]
+                                          .merge(text: 'apple ' * 50)]
     card.save
 
-    visit case_path('en', enrollment.case) + '/1'
+    visit case_path(enrollment.case) + '/1'
     click_link 'Respond', match: :first
     first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
@@ -74,9 +74,6 @@ feature 'Leaving a comment' do
     first_card = enrollment.case.pages.first.cards.first
     first_letter = first_card.paragraphs[0][0]
     first_card.comment_threads.create(
-      start: 0,
-      length: 1,
-      block_index: 0,
       original_highlight_text: first_letter,
       reader: other_reader,
       locale: I18n.locale,
@@ -86,7 +83,7 @@ feature 'Leaving a comment' do
 
   scenario 'makes it show up for other people looking at the same forum' do
     enrollment.reader.update(active_community_id: nil)
-    visit case_path('en', enrollment.case) + '/1'
+    visit case_path(enrollment.case) + '/1'
     expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
     sleep(1)
     comment_thread.comments.create(
@@ -126,7 +123,7 @@ feature 'Leaving a comment' do
 
     it 'is possible' do
       kase = enrollment.case
-      visit case_path 'en', enrollment.case
+      visit case_path enrollment.case
       click_link kase.pages.first.title
 
       comment_entity = find '.c-comment-thread-entity'
@@ -149,7 +146,7 @@ feature 'Leaving a comment' do
         content: 'Test reply',
         reader: enrollment.reader
       )
-      visit case_path('en', enrollment.case) + '/1'
+      visit case_path(enrollment.case) + '/1'
       comment_thread.comments.create(
         content: 'Should trigger toast',
         reader: other_reader

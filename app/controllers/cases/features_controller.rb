@@ -8,11 +8,13 @@ module Cases
 
     # @route [GET] `/cases/features`
     def index
-      enrolled = current_user.enrollments.pluck(:case_id)
-      features = Case.where.not(id: enrolled)
-                     .ordered
-                     .limit(6)
-                     .map(&:slug)
+      features = unenrolled_cases
+                 .published
+                 .with_locale_or_fallback(current_user.locale)
+                 .ordered
+                 .limit(6)
+                 .pluck(:slug)
+
       render json: { features: features }
     end
 
@@ -39,6 +41,14 @@ module Cases
     def set_case
       return head :bad_request if params[:case_slug].blank?
       @case = Case.friendly.find params[:case_slug]
+    end
+
+    def unenrolled_cases
+      enrolled_translation_sets =
+        Case.where(id: current_user.enrollments.pluck(:case_id))
+            .pluck(:translation_base_id)
+
+      Case.where.not(translation_base_id: enrolled_translation_sets)
     end
 
     def authorize_user

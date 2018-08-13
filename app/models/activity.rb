@@ -3,21 +3,18 @@
 # An attachment to a case that provides an engaging activity that the learners
 # can do to solidify their understanding.
 #
-# @attr title [Translated<String>]
-# @attr pdf_url [Translated<String>]
+# @attr title [String]
+# @attr pdf_url [String]
 class Activity < ApplicationRecord
   include Element
   include Lockable
-  include Mobility
-
-  translates :title, :description, :pdf_url, fallbacks: true
 
   # @!method card
   #   @api private
   #   Prefer {cards}
   has_one :card, as: :element, dependent: :destroy, required: true
 
-  before_validation :build_card, on: :create
+  before_validation :build_card, on: :create, unless: -> { card.present? }
 
   # @return [Array<Card>]
   def cards

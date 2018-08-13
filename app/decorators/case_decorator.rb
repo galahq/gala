@@ -30,4 +30,13 @@ class CaseDecorator < ApplicationDecorator
   def cover_image_attachment
     open(cover_image.variant(resize: '470x95^').processed.service_url).read
   end
+
+  def other_available_locales
+    translations.each_with_object({}) do |kase, table|
+      table[kase.locale] = {
+        link: polymorphic_path(kase, only_path: true),
+        name: Translation.language_name(kase.locale)
+      }
+    end
+  end
 end

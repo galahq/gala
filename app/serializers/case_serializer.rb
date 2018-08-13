@@ -2,6 +2,8 @@
 
 # @see Case
 class CaseSerializer < Cases::PreviewSerializer
+  attributes :other_available_locales
+
   belongs_to :library
 
   has_many :case_elements

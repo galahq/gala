@@ -7,7 +7,6 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
-import { FormattedMessage } from 'react-intl'
 import { EditableText } from '@blueprintjs/core'
 
 import Lock from 'utility/Lock'
@@ -17,6 +16,7 @@ import CommunityChooser from './CommunityChooser'
 import LearningObjectives from './LearningObjectives'
 import MapView from 'catalog/MapView'
 import CaseKeywords from './CaseKeywords'
+import TranslationLinks from './TranslationLinks'
 
 import { updateCase } from 'redux/actions'
 
@@ -54,7 +54,7 @@ type Props = {
   dek: string,
   editing: boolean,
   learningObjectives: string[],
-  otherAvailableLocales: string[],
+  otherAvailableLocales: { [string]: string },
   slug: string,
   summary: string,
   taggingsPath: string,
@@ -131,7 +131,7 @@ const Billboard = ({
               />
             )}
 
-            <FlagLinks languages={otherAvailableLocales} slug={slug} />
+            <TranslationLinks languages={otherAvailableLocales} />
           </div>
 
           {(caseData.latitude || editing) && (
@@ -169,33 +169,3 @@ export default connect(mapStateToProps, { updateCase })(Billboard)
 export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
 `
-
-type FlagLinksProps = { slug: string, languages: string[] }
-function FlagLinks ({ slug, languages }: FlagLinksProps) {
-  if (languages.length > 0) {
-    return (
-      <div className="flag-links">
-        <FormattedMessage id="cases.show.otherLanguages" />
-        <br />
-        {languages.map(lx => <FlagLink key={lx} lx={lx} slug={slug} />)}
-      </div>
-    )
-  }
-  return <span />
-}
-
-type FlagLinkProps = { slug: string, lx: string }
-function FlagLink ({ slug, lx }: FlagLinkProps) {
-  return (
-    <a href={`/${lx}/cases/${slug}`}>
-      <span
-        className="flag-links__icon"
-        dangerouslySetInnerHTML={{
-          __html: require(`images/flag-${lx}.svg`),
-        }}
-      />
-      &nbsp;
-      <FormattedMessage id={`support.languages.${lx}`} />
-    </a>
-  )
-}

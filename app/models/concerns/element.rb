@@ -8,7 +8,7 @@ module Element
   included do
     has_one :case_element, as: :element, dependent: :destroy, required: true
 
-    after_save -> { case_element.touch }
+    after_save -> { case_element.touch if case_element.persisted? }
   end
 
   class_methods do

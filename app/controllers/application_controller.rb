@@ -52,6 +52,8 @@ class ApplicationController < ActionController::Base
       I18n.locale = http_accept_language
                     .compatible_language_from I18n.available_locales
     end
+  rescue I18n::InvalidLocale
+    I18n.locale = :en
   end
 
   def validate_lti_request!
