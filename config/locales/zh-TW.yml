@@ -1,5 +1,4 @@
 zh-TW:
-  __name: 中文（繁体）
   activerecord:
     attributes:
       case:
@@ -11,6 +10,7 @@ zh-TW:
         kicker: 短標題
         learning_objectives: 學習目標
         library: Library
+        locale: Language
         location: 案例發生地
         published: Published
         slug: Case URL
@@ -51,7 +51,7 @@ zh-TW:
         image: Image
         last_sign_in_at: 最后登錄於
         last_sign_in_ip: 最后登錄的 IP
-        locale: Locale
+        locale: Preferred language
         locked_at: 鎖定於
         name: Full Name
         password: 密碼
@@ -679,13 +679,6 @@ zh-TW:
       begin: '“'
       end: '”'
       attribution_prefix: "— "
-    languages:
-      am: 阿姆哈拉文
-      en: 英文
-      fr: 法文
-      ja: 日文
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
   tags:
     new:
       pressEnter: No results. Press Enter to create a new keyword.
@@ -696,3 +689,15 @@ zh-TW:
       long: "%Y年%b%d日 %H:%M"
       short: "%b%d日 %H:%M"
     pm: 下午
+  translations:
+    new:
+      create_translation: Copy Case for Translation
+      dont_see_your_language_html: >
+        Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact us</a> and we’ll add it.
+      make_a_copy_of_your_case_then_change_the_text: >
+        Translate your case into another language. We will make a copy of your case so you can simply change the text in place. If someone else will be translating your case on your behalf, add that person as a collaborator after making the copy.
+      translate_this_case: Translate this case
+    show:
+      please_wait_while_your_case_is_being_copied_for_translation: >
+        Please wait while your case is being copied...
+      translation_pending: Translation Pending
