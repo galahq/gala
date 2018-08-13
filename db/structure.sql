@@ -23,6 +23,35 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 
 SET search_path = public, pg_catalog;
 
+--
+-- Name: jsonb_path_to_tsvector(jsonb, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION jsonb_path_to_tsvector(jsondata jsonb, path_elems text[], OUT tsv tsvector) RETURNS tsvector
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+  BEGIN
+    SELECT INTO tsv
+      coalesce(
+        tsvector_agg(to_tsvector(data #>> path_elems)),
+        to_tsvector('')
+      )
+    FROM jsonb_array_elements(jsondata) AS data;
+    RETURN;
+  END;
+$$;
+
+
+--
+-- Name: tsvector_agg(tsvector); Type: AGGREGATE; Schema: public; Owner: -
+--
+
+CREATE AGGREGATE tsvector_agg(tsvector) (
+    SFUNC = tsvector_concat,
+    STYPE = tsvector
+);
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -106,9 +135,8 @@ CREATE TABLE activities (
     updated_at timestamp without time zone NOT NULL,
     "position" integer,
     icon_slug character varying DEFAULT 'activity-text'::character varying,
-    title jsonb DEFAULT '""'::jsonb,
-    description jsonb DEFAULT '""'::jsonb,
-    pdf_url jsonb DEFAULT '""'::jsonb
+    pdf_url text DEFAULT ''::text,
+    title text DEFAULT ''::text
 );
 
 
@@ -260,7 +288,6 @@ CREATE TABLE cards (
     element_type character varying,
     element_id integer,
     case_id integer,
-    content jsonb DEFAULT '""'::jsonb,
     raw_content jsonb DEFAULT '""'::jsonb
 );
 
@@ -325,29 +352,28 @@ ALTER SEQUENCE case_elements_id_seq OWNED BY case_elements.id;
 CREATE TABLE cases (
     id integer NOT NULL,
     slug text NOT NULL,
-    tags text[] DEFAULT '{}'::text[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    short_title text,
     photo_credit text,
     commentable boolean,
-    title jsonb DEFAULT '""'::jsonb,
-    summary jsonb DEFAULT '""'::jsonb,
-    narrative jsonb DEFAULT '""'::jsonb,
-    translators jsonb DEFAULT '""'::jsonb,
-    kicker jsonb DEFAULT '""'::jsonb,
-    dek jsonb DEFAULT '""'::jsonb,
-    learning_objectives jsonb,
-    audience jsonb,
-    classroom_timeline jsonb,
     published_at timestamp without time zone,
     featured_at timestamp without time zone,
     latitude double precision,
     longitude double precision,
     zoom double precision,
     library_id bigint,
-    acknowledgements jsonb,
-    authors jsonb DEFAULT '""'::jsonb
+    locale text NOT NULL,
+    translation_base_id bigint,
+    acknowledgements text DEFAULT ''::text,
+    audience text DEFAULT ''::text,
+    authors jsonb DEFAULT '""'::jsonb,
+    classroom_timeline text DEFAULT ''::text,
+    dek text DEFAULT ''::text,
+    kicker text DEFAULT ''::text,
+    learning_objectives jsonb DEFAULT '""'::jsonb,
+    summary text DEFAULT ''::text,
+    title text DEFAULT ''::text,
+    translators jsonb DEFAULT '""'::jsonb
 );
 
 
@@ -379,9 +405,6 @@ CREATE TABLE comment_threads (
     case_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    start integer,
-    length integer,
-    block_index integer,
     original_highlight_text character varying,
     locale character varying,
     card_id integer,
@@ -527,20 +550,20 @@ CREATE TABLE edgenotes (
     slug text NOT NULL,
     card_id integer,
     style integer DEFAULT 0,
-    caption jsonb DEFAULT '""'::jsonb,
-    content jsonb DEFAULT '""'::jsonb,
-    instructions jsonb DEFAULT '""'::jsonb,
-    image_url jsonb DEFAULT '""'::jsonb,
-    website_url jsonb DEFAULT '""'::jsonb,
-    embed_code jsonb DEFAULT '""'::jsonb,
-    photo_credit jsonb DEFAULT '""'::jsonb,
-    pdf_url jsonb DEFAULT '""'::jsonb,
-    pull_quote jsonb DEFAULT '""'::jsonb,
-    attribution jsonb DEFAULT '""'::jsonb,
-    call_to_action jsonb DEFAULT '""'::jsonb,
-    audio_url jsonb DEFAULT '""'::jsonb,
     alt_text character varying,
-    highlighted boolean DEFAULT false
+    highlighted boolean DEFAULT false,
+    attribution text DEFAULT ''::text,
+    audio_url text DEFAULT ''::text,
+    call_to_action text DEFAULT ''::text,
+    caption text DEFAULT ''::text,
+    content text DEFAULT ''::text,
+    embed_code text DEFAULT ''::text,
+    image_url text DEFAULT ''::text,
+    instructions text DEFAULT ''::text,
+    pdf_url text DEFAULT ''::text,
+    photo_credit text DEFAULT ''::text,
+    pull_quote text DEFAULT ''::text,
+    website_url text DEFAULT ''::text
 );
 
 
@@ -939,7 +962,7 @@ CREATE TABLE pages (
     case_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title jsonb DEFAULT '""'::jsonb
+    title text DEFAULT ''::text
 );
 
 
@@ -974,10 +997,9 @@ CREATE TABLE podcasts (
     "position" integer,
     artwork_url character varying,
     photo_credit text,
-    title jsonb DEFAULT '""'::jsonb,
-    audio_url jsonb DEFAULT '""'::jsonb,
-    description jsonb DEFAULT '""'::jsonb,
-    credits jsonb DEFAULT '""'::jsonb
+    audio_url text DEFAULT ''::text,
+    credits text DEFAULT ''::text,
+    title text DEFAULT ''::text
 );
 
 
@@ -1620,17 +1642,17 @@ ALTER TABLE ONLY cases
 
 
 --
--- Name: cases_search_index_en; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+-- Name: cases_search_index; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW cases_search_index_en AS
+CREATE MATERIALIZED VIEW cases_search_index AS
  SELECT cases.id,
-    ((((((((((setweight(to_tsvector(COALESCE((cases.kicker ->> 'en'::text), ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE((cases.title ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.dek ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.summary ->> 'en'::text), ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE((cases.learning_objectives ->> 'en'::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE((cases.authors ->> 'en'::text), ''::text))) || setweight(to_tsvector(COALESCE(string_agg((pages.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((podcasts.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg((activities.title ->> 'en'::text), ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg((podcasts.credits ->> 'en'::text), ' '::text), ''::text))) || to_tsvector(COALESCE(string_agg(((cards.raw_content -> 'en'::text) ->> 'blocks'::text), ' '::text), ''::text))) AS document
+    ((((((((((setweight(to_tsvector(COALESCE(cases.kicker, ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(cases.title, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.dek, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.summary, ''::text)), 'A'::"char")) || setweight(jsonb_path_to_tsvector(cases.learning_objectives, '{}'::text[]), 'B'::"char")) || jsonb_path_to_tsvector(cases.authors, '{name}'::text[])) || setweight(to_tsvector(COALESCE(string_agg(pages.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(podcasts.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(activities.title, ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg(podcasts.credits, ' '::text), ''::text))) || COALESCE(tsvector_agg(jsonb_path_to_tsvector((cards.raw_content -> 'blocks'::text), '{text}'::text[])), to_tsvector(''::text))) AS document
    FROM ((((cases
      LEFT JOIN pages ON ((pages.case_id = cases.id)))
      LEFT JOIN podcasts ON ((podcasts.case_id = cases.id)))
      LEFT JOIN activities ON ((activities.case_id = cases.id)))
-     LEFT JOIN cards ON ((cards.case_id = pages.id)))
+     LEFT JOIN cards ON ((cards.case_id = cases.id)))
   GROUP BY cases.id
   WITH NO DATA;
 
@@ -2065,10 +2087,10 @@ CREATE INDEX index_case_elements_on_element_type_and_element_id ON case_elements
 
 
 --
--- Name: index_cases_on_english_full_text; Type: INDEX; Schema: public; Owner: -
+-- Name: index_cases_on_full_text; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_on_english_full_text ON cases_search_index_en USING gin (document);
+CREATE INDEX index_cases_on_full_text ON cases_search_index USING gin (document);
 
 
 --
@@ -2086,17 +2108,17 @@ CREATE UNIQUE INDEX index_cases_on_slug ON cases USING btree (slug);
 
 
 --
--- Name: index_cases_on_tags; Type: INDEX; Schema: public; Owner: -
+-- Name: index_cases_on_translation_base_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_on_tags ON cases USING gin (tags);
+CREATE INDEX index_cases_on_translation_base_id ON cases USING btree (translation_base_id);
 
 
 --
--- Name: index_cases_search_index_en; Type: INDEX; Schema: public; Owner: -
+-- Name: index_cases_search_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_cases_search_index_en ON cases_search_index_en USING btree (id);
+CREATE UNIQUE INDEX index_cases_search_index ON cases_search_index USING btree (id);
 
 
 --
@@ -2552,6 +2574,14 @@ ALTER TABLE ONLY enrollments
 
 
 --
+-- Name: cases fk_rails_04f7dcd821; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cases
+    ADD CONSTRAINT fk_rails_04f7dcd821 FOREIGN KEY (translation_base_id) REFERENCES cases(id);
+
+
+--
 -- Name: locks fk_rails_18e2ec121a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2949,11 +2979,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180405181811'),
 ('20180423145615'),
 ('20180502185535'),
-('20180503154001'),
 ('20180518184926'),
 ('20180525133320'),
 ('20180529153730'),
 ('20180627142157'),
-('20180627142644');
+('20180627142644'),
+('20180725173214'),
+('20180806201126'),
+('20180806201127');
 
 

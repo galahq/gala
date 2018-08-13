@@ -8,37 +8,28 @@
 # @attr position [Numeric] this card’s sequence within its {Page} (other
 #   {Element}s can only have one)
 # @attr solid [Boolean] whether the card should have a white background or not
-# @attr raw_content [Translated<RawDraftContentState>] the card’s content, to be
+# @attr raw_content [RawDraftContentState] the card’s content, to be
 #   used with Draft.js in React
 class Card < ApplicationRecord
   include Lockable
-  include Mobility
   include Trackable
 
-  translates :content, :raw_content, fallbacks: true
+  attribute :raw_content, ContentState::Type.new
 
   belongs_to :case
   belongs_to :element, polymorphic: true, touch: true
 
-  has_many :comment_threads, -> { order(:block_index, :start) },
-           dependent: :destroy
+  has_many :comment_threads, dependent: :destroy
 
   before_validation :set_case_from_element
 
   acts_as_list scope: %i[element_id element_type]
 
+  delegate :paragraphs, to: :raw_content
+
   # @return [Numeric, nil]
   def page_id
     element_type == 'Page' ? element_id : nil
-  end
-
-  # Unpack the RawDraftContentState structure to get the plain text contents
-  # of the card
-  # @return [Array<String>]
-  def paragraphs
-    raw_content['blocks'].map { |x| x['text'] }
-  rescue StandardError
-    []
   end
 
   # The name of the corresponding {Ahoy::Event}s
@@ -56,6 +47,15 @@ class Card < ApplicationRecord
   # Could this card’s element have other cards too?
   def siblings?
     element_type.constantize.reflect_on_association(:cards)
+  end
+
+  # Add an Edgenote to the Card
+  # @param edgenote [Edgenote]
+  # @param range [ContentState::Range]
+  def add_edgenote(edgenote, range:)
+    return false if edgenote.case.present? && edgenote.case != self.case
+    edgenote.update case: self.case unless edgenote.case.present?
+    raw_content.add_edgenote edgenote, range: range
   end
 
   private

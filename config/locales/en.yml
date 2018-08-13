@@ -1,5 +1,4 @@
 en:
-  __name: English
   activerecord:
     attributes:
       case:
@@ -11,6 +10,7 @@ en:
         kicker: Short title
         learning_objectives: Learning objectives
         library: Library
+        locale: Language
         location: Case location
         published: Published
         slug: Case URL
@@ -52,7 +52,7 @@ en:
         image: Image
         last_sign_in_at: Last sign in at
         last_sign_in_ip: Last sign in IP
-        locale: Locale
+        locale: Preferred language
         locked_at: Locked at
         name: Full Name
         password: Password
@@ -747,13 +747,6 @@ en:
       begin: “
       end: ”
       attribution_prefix: "— "
-    languages:
-      am: Amharic
-      en: English
-      fr: French
-      ja: Japanese
-      zh-CN: Mandarin (Simplified)
-      zh-TW: Mandarin (Traditional)
   tags:
     new:
       pressEnter: No results. Press Enter to create a new keyword.
@@ -764,3 +757,19 @@ en:
       long: "%B %d, %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  translations:
+    new:
+      create_translation: Copy Case for Translation
+      dont_see_your_language_html: >
+        Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact
+        us</a> and we’ll add it.
+      make_a_copy_of_your_case_then_change_the_text: >
+        Translate your case into another language. We will make a copy of your
+        case so you can simply change the text in place. If someone else will be
+        translating your case on your behalf, add that person as a collaborator
+        after making the copy.
+      translate_this_case: Translate this case
+    show:
+      please_wait_while_your_case_is_being_copied_for_translation: >
+        Please wait while your case is being copied...
+      translation_pending: Translation Pending

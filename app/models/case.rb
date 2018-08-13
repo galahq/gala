@@ -4,45 +4,48 @@
 # overview information) and associations for all the case’s constituent parts.
 #
 # @attr slug [String] the URL param (managed by friendly_id)
-# @attr kicker [Translated<String>] a two or three word tagline for the case.
+# @attr locale [Iso639_1Code] the language the case is written in
+#
+# @attr kicker [String] a two or three word tagline for the case.
 #   This comes from newspapers: the little mini-headline appearing above the hed
 #   to which continuations of the article refer (e.g. “from CORRUPTION, A1”)
-# @attr title [Translated<String>] the case’s title, in the form of a question
-# @attr dek [Translated<String>] a one-sentence teaser which appears in larger
+# @attr title [String] the case’s title, in the form of a question
+# @attr dek [String] a one-sentence teaser which appears in larger
 #   text above the summary
-# @attr authors [Translated<{name: String, institution?: String}>]
-# @attr translators [Translated<Array<String>>] the translators’ names, if any
-# @attr acknowledgements [Translated<String>] a place for the authors’ gratitude
+# @attr authors [{name: String, institution?: String}]
+# @attr translators [Array<String>] the translators’ names, if any
+# @attr acknowledgements [String] a place for the authors’ gratitude
 #
 # @attr photo_credit [String] attribution for the {cover_url}’s rights holder
 # @attr latitude [Numeric] where the case takes place
 # @attr longitude [Numeric] where the case takes place
 # @attr zoom [Numeric] the default zoom level for the site location map (mapbox)
 #
-# @attr summary [Translated<String>] a short paragraph-length abstract
-# @attr learning_objectives [Translated<Array<String>>]
-# @attr audience [Translated<String>] yet unused
-# @attr classroom_timeline [Translated<String>] yet unused
+# @attr summary [String] a short paragraph-length abstract
+# @attr learning_objectives [Array<String>]
+# @attr audience [String] yet unused
+# @attr classroom_timeline [String] yet unused
 #
 # @attr published_at [DateTime] generic readers can only access published cases
 # @attr featured_at [DateTime] featured cases appear prominently in the catalog
 # @attr commentable [Boolean] whether or not forums are enabled on the case
 class Case < ApplicationRecord
   include Cases::Taggable
-  include Mobility
   include Lockable
   include Comparable
   extend FriendlyId
 
+  attribute :authors, :json, default: []
   attribute :commentable, default: true
+  attribute :locale, :string, default: -> { I18n.locale }
   attribute :slug, :string, default: -> { SecureRandom.uuid }
+  attribute :translators, :json, default: []
   friendly_id :slug, use: %i[history]
 
-  translates :kicker, :title, :dek, :summary, :narrative, :learning_objectives,
-             :audience, :classroom_timeline, :acknowledgements, fallbacks: true
-  translates :authors, :translators, default: [], fallbacks: true
-
   belongs_to :library, optional: true
+  belongs_to :translation_base,
+             class_name: 'Case',
+             optional: true # Not really -- just can't = id before saving
 
   has_many :active_locks, class_name: 'Lock'
   has_many :cards
@@ -68,6 +71,9 @@ class Case < ApplicationRecord
   has_one_attached :cover_image
 
   after_create :create_forum_for_universal_communities
+  after_save -> {
+    update_columns translation_base_id: id if translation_base_id.blank?
+  }
 
   validates :slug, presence: true, uniqueness: true,
                    format: { with: /\A[a-z0-9-]+\Z/ },
@@ -87,6 +93,19 @@ class Case < ApplicationRecord
             cases.updated_at DESC
           SQL
         end
+
+  def self.with_locale_or_fallback(locale)
+    locale = ::ActiveRecord::Base.connection.quote locale
+    scope = select('DISTINCT ON (cases.translation_base_id) cases.id') \
+            .reorder(Arel.sql(<<~SQL.squish))
+              cases.translation_base_id,
+              CASE WHEN (locale = #{locale}) THEN 0
+                   WHEN (locale = 'en')      THEN 1
+                   ELSE                           2
+              END
+    SQL
+    where(id: scope)
+  end
 
   # Universal communities and the global community (`community_id == nil`) need
   # to have a forum on all cases.
@@ -108,13 +127,13 @@ class Case < ApplicationRecord
     Ahoy::Event.for_case self
   end
 
-  # The title is used as a synecdoche for the whole case: if it’s been
-  # translated then the case is considered to be available in that language.
-  # @note The React front-end currently updates all attributes of a case if one
-  #   attribute is edited
-  # @return [Array<Iso639_1Code>]
-  def other_available_locales
-    read_attribute(:title).keys - [I18n.locale.to_s]
+  # The cases that represent translations of this case
+  def translations
+    translation_set.where.not(id: id)
+  end
+
+  def translation_set
+    Case.where(translation_base_id: translation_base_id)
   end
 
   def comment_threads

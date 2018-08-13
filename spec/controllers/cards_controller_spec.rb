@@ -38,7 +38,7 @@ RSpec.describe CardsController, type: :controller do
       put :update, format: :json,
                    params: { id: card, card: { raw_content: empty } }
       card.reload
-      expect(card.raw_content['blocks'].map { |x| x['text'] }).to eq ['']
+      expect(card.raw_content.blocks.map { |x| x['text'] }).to eq ['']
     end
 
     it 'allows :raw_content to be set with a complex RawDraftContentState' do
@@ -71,9 +71,9 @@ RSpec.describe CardsController, type: :controller do
       put :update, format: :json,
                    params: { id: card, card: { raw_content: complex } }
       card.reload
-      expect(card.raw_content.dig('blocks', 0, 'inlineStyleRanges').count)
+      expect(card.raw_content.blocks.dig(0, 'inlineStyleRanges').count)
         .to eq 2
-      expect(card.raw_content.dig('entityMap', '0', 'type')).to eq 'EDGENOTE'
+      expect(card.raw_content.entity_map.dig('0', 'type')).to eq 'EDGENOTE'
     end
 
     it 'does not allow :raw_content to have comment threads baked in' do
@@ -118,9 +118,9 @@ RSpec.describe CardsController, type: :controller do
       put :update, format: :json,
                    params: { id: card, card: { raw_content: baked_in } }
       card.reload
-      expect(card.raw_content.dig('blocks', 0, 'text').split(' ')[0])
+      expect(card.raw_content.blocks.dig(0, 'text').split(' ')[0])
         .to eq 'The'
-      expect(card.raw_content.dig('blocks', 0, 'inlineStyleRanges').count)
+      expect(card.raw_content.blocks.dig(0, 'inlineStyleRanges').count)
         .to eq 0
     end
   end

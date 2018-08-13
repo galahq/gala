@@ -113,6 +113,13 @@ function StatusBar ({
                 window.location = links.settings
               },
             },
+          {
+            message: 'translations.new.translateThisCase',
+            icon: 'translate',
+            onClick: () => {
+              window.location = links.newTranslation
+            },
+          },
           editing || edited
             ? null
             : {

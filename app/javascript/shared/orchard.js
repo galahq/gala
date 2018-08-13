@@ -75,7 +75,7 @@ function resolve (endpoint: string) {
   if (endpoint.startsWith('/')) {
     return endpoint
   } else {
-    return `/${window.i18n.locale}/${endpoint}.json`
+    return `/${endpoint}.json`
   }
 }
 
