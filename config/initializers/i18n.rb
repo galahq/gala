@@ -14,7 +14,7 @@ module Translation
   AVAILABLE_LANGUAGES = {
     en: 'English',
     'zh-CN': '中文（简体）',
-    'zh-TW': '中文（繁体）',
+    'zh-TW': '中文（繁體）',
     hi: 'हिन्दी',
     es: 'Español',
     ar: 'العَرَبِيَّة‎',
