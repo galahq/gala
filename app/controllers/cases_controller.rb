@@ -42,7 +42,7 @@ class CasesController < ApplicationController
 
   # @route [POST] `/cases`
   def create
-    @case = current_reader.my_cases.build
+    @case = current_reader.my_cases.build create_case_params
 
     if @case.save
       redirect_to edit_case_path(@case), notice: successfully_created
@@ -64,7 +64,7 @@ class CasesController < ApplicationController
 
     set_group_and_deployment
 
-    if @case.update(case_params)
+    if @case.update(update_case_params)
       render json: @case, serializer: Cases::ShowSerializer,
              deployment: @deployment, enrollment: @enrollment
     else
@@ -102,7 +102,11 @@ class CasesController < ApplicationController
   end
 
   # Only allow a trusted parameter "white list" through.
-  def case_params
+  def create_case_params
+    params.require(:case).permit(:locale)
+  end
+
+  def update_case_params
     params.require(:case).permit(
       :published, :kicker, :title, :dek, :photo_credit, :summary, :tags,
       :cover_image, :latitude, :longitude, :zoom, :acknowledgements,
