@@ -9,20 +9,20 @@
   %aside.md-master
     %h2.admin__title
       = t '.create_a_case'
+      = link_to 'https://docs.learngala.com/docs/authoring-getting-started.html',
+                class: %i[pt-button pt-minimal pt-icon-help],
+                aria: { label: I18n.t('helpers.help') }, target: 'blank' do
+        -# Empty
 
     :markdown
       #{t '.put_your_own_cases_on_gala'}
 
-    .spaced
-      .row
-        = button_to cases_path,
-                    method: :post,
-                    class: 'pt-button pt-intent-success pt-icon-add' do
-          = t '.new_case'
-        = link_to 'https://docs.learngala.com/docs/authoring-getting-started.html',
-                  class: %i[pt-button pt-minimal pt-icon-help],
-                  aria: { label: I18n.t('helpers.help') }, target: 'blank' do
-          -# Empty
+    = form_with model: Case.new, local: true do |f|
+      = f.submit I18n.t('my_cases.index.new_case'),
+                 class: 'pt-button pt-intent-success pt-icon-add'
+
+      .pt-select
+        = f.select :locale, options_for_select(locale_names, current_user.locale)
 
   - if @cases.any?
     %main.md-detail
@@ -31,6 +31,7 @@
           %td
           %td= t 'activerecord.attributes.case.case_title'
           %td= t 'activerecord.attributes.case.slug'
+          %td= t 'activerecord.attributes.case.locale'
           %td= t 'activerecord.attributes.case.library'
           %td= t 'activerecord.attributes.case.published'
           %td
@@ -58,6 +59,8 @@
               %td
                 = link_to case_path kase do
                   %code= kase.slug
+
+              %td= Translation.language_name kase.locale
 
               %td= kase.library.name
 
