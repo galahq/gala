@@ -33,3 +33,7 @@ sketchfab << 'http://sketchfab.com/models/*'
 sketchfab << 'https://sketchfab.com/models/*'
 sketchfab << 'https://sketchfab.com/*/folders/*'
 OEmbed::Providers.register sketchfab
+
+naive = OEmbed::Provider.new Rails.application.credentials.dig :naive_oembed_url
+naive << 'https://cdn.knightlab.com/libs/storyline/*'
+OEmbed::Providers.register naive
