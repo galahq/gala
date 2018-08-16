@@ -10,7 +10,7 @@ feature 'Editing a case' do
 
   context 'adding a card' do
     scenario 'is possible' do
-      visit case_path('en', kase) + '/1'
+      visit case_path(kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
       click_button 'Edit this case'
@@ -23,7 +23,7 @@ feature 'Editing a case' do
 
   context 'changing a card' do
     scenario 'is possible' do
-      visit case_path('en', kase) + '/1'
+      visit case_path(kase) + '/1'
       click_button 'Edit this case'
       expect(page).to have_content 'To edit this case, just change the text'
 
@@ -42,7 +42,7 @@ feature 'Editing a case' do
 
     context 'by adding and removing Edgenotes' do
       scenario 'is possible' do
-        visit case_path('en', kase) + '/1'
+        visit case_path(kase) + '/1'
         click_button 'Edit this case'
 
         # Try to attach an edgenote without a selection and expect an error
@@ -101,9 +101,9 @@ feature 'Editing a case' do
       end
 
       scenario 'does not cause the comment thread to shift' do
-        visit case_path('en', kase)
+        visit case_path(kase)
         click_button 'Enroll'
-        visit case_path('en', kase) + '/1'
+        visit case_path(kase) + '/1'
         expect(page).to have_content 'RESPOND'
 
         click_button 'Edit this case'
@@ -128,7 +128,7 @@ feature 'Editing a case' do
 
   context 'removing a card' do
     scenario 'is possible' do
-      visit case_path('en', kase) + '/1'
+      visit case_path(kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
       click_button 'Edit this case'
@@ -150,11 +150,11 @@ feature 'Editing a case' do
     scenario 'the elements they’re editing are locked' do
       other_reader = create :reader, :editor
 
-      visit case_path('en', kase, edit: true)
+      visit case_path(kase, edit: true)
 
       Capybara.using_session 'other' do
         login_as other_reader
-        visit case_path('en', kase, edit: true)
+        visit case_path(kase, edit: true)
         find('h1', text: kase.title).click
       end
 

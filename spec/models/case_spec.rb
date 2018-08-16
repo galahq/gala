@@ -28,23 +28,41 @@ RSpec.describe Case, type: :model do
   end
 
   context 'in translation' do
-    after :each do
-      I18n.locale = :en
+    subject { build :case }
+
+    it 'sets itself as translation base when created w/o other translations' do
+      subject.save
+      expect(subject.translation_base).to eq subject
     end
 
-    it 'keeps both languages’ details' do
-      subject.title = 'Something'
-      I18n.locale = :fr
-      subject.title = 'Quelque chose'
-      I18n.locale = :en
-      expect(subject.title).to eq 'Something'
+    it 'doesn’t override a defined translation base' do
+      subject.save
+      sujet = Case.create translation_base_id: subject.id, locale: :fr
+      expect(sujet.translation_base).to eq subject
     end
 
-    it 'knows what other languages it’s available in' do
-      subject.title = 'Something'
-      I18n.locale = :fr
-      subject.title = 'Quelque chose'
-      expect(subject.other_available_locales).to eq %w[en]
+    it 'filters itself out of its translations' do
+      subject.save
+      sujet = Case.create translation_base_id: subject.id, locale: :fr
+      expect(sujet.translations).to include subject
+      expect(sujet.translations).not_to include sujet
+    end
+  end
+
+  describe '::with_locale_or_fallback' do
+    it 'returns one case per translation base, prioritizing the correct '\
+       'locale before falling back to English, then any other language.' do
+      english_with_translation = Case.create locale: :en
+      french_translation =
+        Case.create locale: :fr,
+                    translation_base_id: english_with_translation.id
+
+      english_without_translation = Case.create locale: :en
+
+      cases_for_a_french_user = Case.with_locale_or_fallback :fr
+      expect(cases_for_a_french_user).to include french_translation
+      expect(cases_for_a_french_user).to include english_without_translation
+      expect(cases_for_a_french_user).not_to include english_with_translation
     end
   end
 end

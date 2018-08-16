@@ -2,8 +2,6 @@
 
 # Broadcast edits to a case
 class EditBroadcastJob < ActiveJob::Base
-  queue_as :default
-
   def perform(watchable, case_slug:, cached_params:, type:, session_id:)
     @watchable = maybe_decorated watchable
     @case_slug = case_slug

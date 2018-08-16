@@ -52,7 +52,7 @@ const StyledBreadcrumbLink = styled.a.attrs({ className: 'pt-breadcrumb' })`
     quotation &&
     css`
       color: black;
-      font-family: 'freight-text-pro';
+      font-family: ${p => p.theme.serifFont};
       font-size: 15px;
       display: block;
 

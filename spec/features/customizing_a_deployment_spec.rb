@@ -9,7 +9,7 @@ feature 'Customizing a deployment' do
     before { login_as user }
 
     scenario 'is not possible' do
-      visit edit_deployment_path('en', deployment)
+      visit edit_deployment_path deployment
       expect(page).to have_content 'not authorized'
     end
   end
@@ -20,7 +20,7 @@ feature 'Customizing a deployment' do
     before { login_as enrollment.reader }
 
     scenario 'is not possible' do
-      visit edit_deployment_path('en', deployment)
+      visit edit_deployment_path deployment
       expect(page).to have_content 'not authorized'
     end
   end

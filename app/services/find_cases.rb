@@ -4,16 +4,18 @@
 class FindCases
   # @param params [{libraries?: string[], tags?: string[], q?: string}]
   # @return [ActiveRecord::Relation<Case>]
-  def self.by(params)
-    new(params).call
+  def self.by(params, locale:)
+    new(params, locale: locale).call
   end
 
-  def initialize(params)
+  def initialize(params, locale:)
     @params = params
+    @locale = locale
   end
 
   def call
     Case.ordered
+        .with_locale_or_fallback(@locale)
         .merge(maybe_filter_by_library)
         .merge(maybe_filter_by_tags)
         .merge(maybe_search_by_full_text)
@@ -50,12 +52,12 @@ class FindCases
 
     query = @params[:q].is_a?(Array) ? @params[:q].join(' ') : @params[:q]
     Case.joins(
-      'JOIN cases_search_index_en ON cases_search_index_en.id = cases.id'
+      'JOIN cases_search_index ON cases_search_index.id = cases.id'
     )
-        .where('cases_search_index_en.document @@ plainto_tsquery(?)', query)
+        .where('cases_search_index.document @@ plainto_tsquery(?)', query)
         .reorder(
           Arel.sql('ts_rank(' \
-             'cases_search_index_en.document, ' \
+             'cases_search_index.document, ' \
              "plainto_tsquery(#{ActiveRecord::Base.connection.quote(query)})" \
            ') DESC')
         )
