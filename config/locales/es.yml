@@ -1,5 +1,4 @@
 es:
-  __name: Español
   activerecord:
     attributes:
       case:
@@ -11,6 +10,7 @@ es:
         kicker: Short title
         learning_objectives: Objetivos de aprendizaje
         library: Library
+        locale: Language
         location: Ubicación del caso
         published: Published
         slug: Case URL
@@ -52,7 +52,7 @@ es:
         image: Imágen
         last_sign_in_at: Fecha del último ingreso
         last_sign_in_ip: IP del último ingreso
-        locale: Locale
+        locale: Preferred language
         locked_at: Fecha de bloqueo
         name: Nombre
         password: Contraseña
@@ -188,6 +188,7 @@ es:
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     find_a_case: >
       Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+    global_systems: Global Systems
     impactful_cases: Impactful Cases
     improve_your_communication: >
       Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
@@ -197,9 +198,11 @@ es:
       Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
       Súmete a la conversación, preguntá, y compartí tu conomiciento.
+    keywords: Keywords
     learn_more: Más información
     meet_stakeholders: >
       Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
+    natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
     propose_a_case: Propose a Case
     shortcut_experience: Aplicar principios para mejorar en la práctica.
@@ -537,6 +540,7 @@ es:
       middle: ', '
       start: ', '
       two: ' y '
+    loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
@@ -665,7 +669,7 @@ es:
         Porque iniciaste tú primera sesión con %{provider}, no creaste una contraseña. Si creas una contraseña, podrás usarla o %{provider} para iniciar la sesión.
   search:
     didnt_match: Tu búsqueda no ha generado resultados.
-    keyword_query: Palabras claves
+    full_text_search: Full text search...
     no_results: Sin resultados
     propose_a_case: >
       Si tienes un estudio de caso (o una buena idea para un estudio de caso) que te gustaría ver en Gala, escríbanos. Juntos podemos crear un recurso de enseñanza sobre el ambiente y sostenibilidad más comprensivo.
@@ -696,13 +700,9 @@ es:
       begin: '“'
       end: '”'
       attribution_prefix: "— "
-    languages:
-      am: Amhárico
-      en: Inglés
-      fr: Francés
-      ja: Japonés
-      zh-CN: Mandarín (simplificado)
-      zh-TW: Mandarín (tradicional)
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
   time:
     am: am
     formats:
@@ -710,3 +710,15 @@ es:
       long: "%-d de %B de %Y %H:%M"
       short: "%-d de %b %H:%M"
     pm: pm
+  translations:
+    new:
+      create_translation: Copy Case for Translation
+      dont_see_your_language_html: >
+        Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact us</a> and we’ll add it.
+      make_a_copy_of_your_case_then_change_the_text: >
+        Translate your case into another language. We will make a copy of your case so you can simply change the text in place. If someone else will be translating your case on your behalf, add that person as a collaborator after making the copy.
+      translate_this_case: Translate this case
+    show:
+      please_wait_while_your_case_is_being_copied_for_translation: >
+        Please wait while your case is being copied...
+      translation_pending: Translation Pending
