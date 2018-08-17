@@ -1,5 +1,4 @@
 fr:
-  __name: Français
   activerecord:
     attributes:
       case:
@@ -11,6 +10,7 @@ fr:
         kicker: Titre court
         learning_objectives: Objectifs pédagogiques
         library: Répertoire
+        locale: Language
         location: Emplacement de l’étude de cas
         published: Published
         slug: URL de l’étude de cas
@@ -52,7 +52,7 @@ fr:
         image: Image
         last_sign_in_at: Date de la dernière connexion
         last_sign_in_ip: IP de la dernière connexion
-        locale: Locale
+        locale: Preferred language
         locked_at: Verrouillé à
         name: Nom et prénom
         password: Mot de passe
@@ -188,6 +188,7 @@ fr:
       Les études de cas dans lesquels vous vous inscriverez seront affichée ici pour un accès rapide.
     find_a_case: >
       Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+    global_systems: Global Systems
     impactful_cases: Impactful Cases
     improve_your_communication: >
       Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
@@ -197,9 +198,11 @@ fr:
       Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
       Rentrez dans les debats, interrogez, propagez et partagez le savoir.
+    keywords: Keywords
     learn_more: En savoir plus
     meet_stakeholders: >
       Rencontrez des parties prenantes et plongez dans un récit multimodal.
+    natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
     propose_a_case: Propose a Case
     shortcut_experience: Appliquez les principes pour améliorer la pratique.
@@ -537,6 +540,7 @@ fr:
       middle: ', '
       start: ', '
       two: ' and '
+    loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
@@ -665,7 +669,7 @@ fr:
         Parce que vous vous êtes connecté pour la première fois à l’aide de %{provider}, vous n’avez jamais choisi un mot de passe. Si vous le choisissez maintenant, vous pourrez l’utiliser, ou continuer à utiliser %{provider}, pour vous connecter.
   search:
     didnt_match: Votre recherche n’a correspondu à aucune étude de cas.
-    keyword_query: Phrase ou mot-clé
+    full_text_search: Full text search...
     no_results: Aucun résultat trouvé
     propose_a_case: >
       Auriez-vous une étude de cas à nous proposer? Contactez-nous. Ensemble, nous pourrions construir la ressource la plus complète pour l’enseignement dans les domaines de l’environnement et la durabilité.
@@ -696,13 +700,9 @@ fr:
       begin: '“'
       end: '”'
       attribution_prefix: "— "
-    languages:
-      am: Amharique
-      en: Anglais
-      fr: Français
-      ja: Japonais
-      zh-CN: Mandarin (simplifié)
-      zh-TW: Mandarin (traditionnel)
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
   time:
     am: am
     formats:
@@ -710,3 +710,15 @@ fr:
       long: "%A %d %B %Y %Hh%M"
       short: "%d %b %Hh%M"
     pm: pm
+  translations:
+    new:
+      create_translation: Copy Case for Translation
+      dont_see_your_language_html: >
+        Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact us</a> and we’ll add it.
+      make_a_copy_of_your_case_then_change_the_text: >
+        Translate your case into another language. We will make a copy of your case so you can simply change the text in place. If someone else will be translating your case on your behalf, add that person as a collaborator after making the copy.
+      translate_this_case: Translate this case
+    show:
+      please_wait_while_your_case_is_being_copied_for_translation: >
+        Please wait while your case is being copied...
+      translation_pending: Translation Pending

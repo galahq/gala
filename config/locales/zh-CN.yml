@@ -1,5 +1,4 @@
 zh-CN:
-  __name: 英语
   activerecord:
     attributes:
       case:
@@ -11,6 +10,7 @@ zh-CN:
         kicker: 短标题
         learning_objectives: 学习目标
         library: 案例库
+        locale: Language
         location: 案例发生地
         published: 已发布
         slug: 案例链接
@@ -51,7 +51,7 @@ zh-CN:
         image: 图片
         last_sign_in_at: 最后登录于
         last_sign_in_ip: 最后登录的 IP
-        locale: 区域
+        locale: Preferred language
         locked_at: 锁定于
         name: 全名
         password: 密码
@@ -183,6 +183,7 @@ zh-CN:
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
       运用案例来进行关于当代可持续发展问题的教学。在Gala平台上你能轻松找到寓教于乐的可用于课堂或公众教育教学的材料。
+    global_systems: Global Systems
     impactful_cases: 运用案例
     improve_your_communication: >
       将你的多媒体案例发表到Gala平台上，用Gala清晰而易于使用的界面帮助教学者在美好的用户体验中更好地理解复杂的问题。
@@ -192,9 +193,11 @@ zh-CN:
       从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
     join_conversation: >
       参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
+    keywords: Keywords
     learn_more: 了解更多
     meet_stakeholders: >
       在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
+    natural_resources: Natural Resources
     open_access_learning_tools: 致力于可持续发展的开源型教学平台
     propose_a_case: 提出一个案例提案
     shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
@@ -511,6 +514,7 @@ zh-CN:
       middle: '、'
       start: '、'
       two: '、'
+    loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
@@ -637,7 +641,7 @@ zh-CN:
         因为你首次登陆时使用的是%{provider}，并没有设置密码。你现在可以通过设置密码来用于下次登陆，或者继续使用%{provider}进行登陆。
   search:
     didnt_match: 抱歉，没有找到你所搜索的案例。
-    keyword_query: 关键词查询
+    full_text_search: Full text search...
     no_results: 没有可显示的搜索结果
     propose_a_case: >
       或者，如果你有希望收入到Gala的案例，或关于案例的设想，请与我们联系。让我们一起为环境和可持续发展领域提供更多更有效的学习资源。
@@ -668,13 +672,9 @@ zh-CN:
       begin: '“'
       end: '”'
       attribution_prefix: "— "
-    languages:
-      am: 阿姆哈拉文
-      en: 英文
-      fr: 法文
-      ja: 日文
-      zh-CN: 中文简体
-      zh-TW: 中文繁体
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
   time:
     am: 上午
     formats:
@@ -682,3 +682,15 @@ zh-CN:
       long: "%Y年%b%d日 %H:%M"
       short: "%b%d日 %H:%M"
     pm: 下午
+  translations:
+    new:
+      create_translation: Copy Case for Translation
+      dont_see_your_language_html: >
+        Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact us</a> and we’ll add it.
+      make_a_copy_of_your_case_then_change_the_text: >
+        Translate your case into another language. We will make a copy of your case so you can simply change the text in place. If someone else will be translating your case on your behalf, add that person as a collaborator after making the copy.
+      translate_this_case: Translate this case
+    show:
+      please_wait_while_your_case_is_being_copied_for_translation: >
+        Please wait while your case is being copied...
+      translation_pending: Translation Pending
