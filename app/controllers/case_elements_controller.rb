@@ -2,9 +2,11 @@
 
 # @see CaseElement
 class CaseElementsController < ApplicationController
+  include BroadcastEdits
+
   before_action :authenticate_reader!
-  after_action -> { BroadcastEdit.to @case_element, type: action_name },
-               if: :successful?
+
+  broadcast_edits to: :@case_element
 
   # @route [PATCH/PUT] `/case_elements/1`
   def update
