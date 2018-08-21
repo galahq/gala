@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { EditorState } from 'draft-js'
+import { EditorState, Modifier } from 'draft-js'
 
 export function getSelectionText (editorState: EditorState): string {
   const selection = editorState.getSelection()
@@ -22,4 +22,51 @@ export function getParagraphs (editorState: EditorState): string[] {
     .getBlockMap()
     .map(block => block.getText())
     .toArray()
+}
+
+const getPrecedingCharacter = (editorState: EditorState) => (
+  n: number
+): string => {
+  debugger
+  const selection = editorState.getSelection()
+  const content = editorState.getCurrentContent()
+  const block = content.getBlockForKey(selection.getStartKey())
+  const cursorOffset = selection.getStartOffset()
+  return block.getText().slice(cursorOffset - n, cursorOffset)
+}
+
+const addCharacterAtSelection = (editorState: EditorState) => (
+  text: string,
+  { replacing }: { replacing: number } = { replacing: 0 }
+): EditorState => {
+  const contentState = editorState.getCurrentContent()
+  const targetRange = editorState
+    .getSelection()
+    .update('anchorOffset', offset => offset - replacing)
+  const newContentState = Modifier.replaceText(contentState, targetRange, text)
+  return EditorState.push(editorState, newContentState, 'insert-characters')
+}
+
+export function applySmartTypography (
+  chars: string,
+  editorState: EditorState
+): ?EditorState {
+  const preceding = getPrecedingCharacter(editorState)
+
+  const insert = addCharacterAtSelection(editorState)
+
+  switch (chars) {
+    case "'":
+      if (preceding(1).match(/^[ “]?$/)) return insert('‘')
+      return insert('’')
+    case '"':
+      if (preceding(1).match(/^[ ‘]?$/)) return insert('“')
+      return insert('”')
+    case '-':
+      if (preceding(1).match(/[-–]/)) return insert('—', { replacing: 1 })
+      if (preceding(1).match(/[\d\s]/)) return insert('–')
+      break
+    case '.':
+      if (preceding(2) === '..') return insert('…', { replacing: 2 })
+  }
 }
