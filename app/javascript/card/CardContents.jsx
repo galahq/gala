@@ -96,6 +96,7 @@ class CardContents extends React.Component<Props, State> {
       editable,
       onChange,
       handleKeyCommand,
+      handleBeforeInput,
       handleDeleteCard,
       getEdgenote,
       openedCitation,
@@ -165,6 +166,7 @@ class CardContents extends React.Component<Props, State> {
                     customStyleMap={styleMap}
                     editorState={editorState}
                     handleKeyCommand={handleKeyCommand}
+                    handleBeforeInput={handleBeforeInput}
                     onFocus={onBeginEditing}
                     onChange={onChange}
                     onBlur={onFinishEditing}
