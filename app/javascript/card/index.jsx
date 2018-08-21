@@ -20,6 +20,7 @@ import {
 import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 import withGetEdgenote from './withGetEdgenote'
+import { applySmartTypography } from 'shared/draftHelpers'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { DraftHandleValue } from 'draft-js/lib/DraftHandleValue'
@@ -133,6 +134,7 @@ export type CardProps = {|
   addCommentThread: () => Promise<any>,
   onChange: EditorState => void,
   handleKeyCommand: string => DraftHandleValue,
+  handleBeforeInput: (string, EditorState) => DraftHandleValue,
   getEdgenote: () => Promise<string>,
 |}
 function mergeProps (
@@ -161,11 +163,18 @@ function mergeProps (
     onChange,
     handleKeyCommand: (command: string) => {
       let newState = RichUtils.handleKeyCommand(editorState, command)
-      if (newState) {
-        onChange(newState)
-        return 'handled'
-      }
-      return 'not-handled'
+      if (newState == null) return 'not-handled'
+
+      onChange(newState)
+      return 'handled'
+    },
+
+    handleBeforeInput: (chars, editorState) => {
+      let newState = applySmartTypography(chars, editorState)
+      if (newState == null) return 'not-handled'
+
+      onChange(newState)
+      return 'handled'
     },
 
     addCommentThread: async () => {
