@@ -68,13 +68,14 @@ const Expansion = ({ contents, expansion }: Props) => {
             (preview.images instanceof Array && (
               <Image src={preview.images[0]} />
             ))}
-        <Text>
-          <Title>{preview.title}</Title>
-          {!!caption ||
-              (preview.description && (
-                <Description>{preview.description}</Description>
-              ))}
-        </Text>
+        {!!caption || (
+          <Text>
+            <Title>{preview.title}</Title>
+            {preview.description && (
+              <Description>{preview.description}</Description>
+            )}
+          </Text>
+        )}
       </Container>
     )
   )
