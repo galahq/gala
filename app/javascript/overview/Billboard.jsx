@@ -6,6 +6,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
+import { isEmpty, isNil } from 'ramda'
 
 import { EditableText } from '@blueprintjs/core'
 
@@ -119,7 +120,8 @@ const Billboard = ({
               </div>
             </Less>
 
-            {(learningObjectives || editing) && (
+            {(editing ||
+              !(isNil(learningObjectives) || isEmpty(learningObjectives))) && (
               <LearningObjectives
                 disabled={!editing}
                 learningObjectives={learningObjectives}
