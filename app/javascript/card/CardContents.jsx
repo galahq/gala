@@ -143,7 +143,7 @@ class CardContents extends React.Component<Props, State> {
                   <FormattingToolbar
                     actions={{
                       code: false,
-                      header: false,
+                      header: true,
                       blockquote: false,
                       addEdgenoteEntity: !nonNarrative,
                       addCitationEntity: !nonNarrative,
