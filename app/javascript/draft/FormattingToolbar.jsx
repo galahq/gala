@@ -23,12 +23,11 @@ import type { IntlShape } from 'react-intl'
 
 type Action = {
   name: ActionName,
-  icon: string,
+  icon: string | React.Node,
   call: (editorState: EditorState, props: Props) => Promise<EditorState>,
   active: (editorState: EditorState) => boolean,
 }
 type ActionName =
-  | 'bold'
   | 'italic'
   | 'code'
   | 'blockquote'
@@ -39,12 +38,6 @@ type ActionName =
   | 'addCitationEntity'
 
 const ACTIONS: Action[] = [
-  {
-    name: 'bold',
-    icon: 'bold',
-    call: async eS => RichUtils.toggleInlineStyle(eS, 'BOLD'),
-    active: eS => eS.getCurrentInlineStyle().has('BOLD'),
-  },
   {
     name: 'italic',
     icon: 'italic',
