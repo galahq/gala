@@ -93,7 +93,7 @@ declare module '@blueprintjs/core' {
   declare export type IActionProps = {
     disabled?: boolean;
     text?: string;
-    icon?: string;
+    icon?: string | React.Node;
     onClick?: (SyntheticEvent<*>) => any;
   }
 
