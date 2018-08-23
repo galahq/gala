@@ -14,6 +14,7 @@ zh-CN:
         location: 案例发生地
         published: 已发布
         slug: 案例链接
+        teaching_guide: Teaching guide
         title: 探究问题
         translators:
           js: "翻译："
@@ -145,11 +146,14 @@ zh-CN:
       no_elements: 此案例暂时为空
       options: 选项
       publish_case: 发表该案例
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
       save: 保存
       stop_editing: 停止编辑该案例
       translator_name: 译者姓名
       unfeature_case: 取消设置此案例为明星案例
       unpublish_case: 取消发表该案例
+      upload_teaching_guide: Upload teaching guide
     index:
       all_cases: 全部案例
       locations: 案例地点
@@ -170,6 +174,7 @@ zh-CN:
           <b>格式:</b> 小写字母和由连字符分隔的数字,<br />最多能容纳100个字符
     show:
       back_to_overview: 返回案例主页
+      download_teaching_guide: Download teaching guide
       end: 终
       forthcoming: 案例开发中
       next: "下一页："
