@@ -159,6 +159,7 @@ export type Case = {
     settings: string,
     taggings: string,
     teach: string,
+    teachingGuide: string,
   },
   longitude: ?number,
   otherAvailableLocales: { [string]: { link: string, name: string } },
@@ -168,6 +169,7 @@ export type Case = {
   smallCoverUrl: string,
   summary: string,
   tags: Tag[],
+  teachingGuideUrl: ?string,
   title: string,
   zoom: ?number,
 } & Byline

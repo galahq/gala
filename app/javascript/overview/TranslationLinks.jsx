@@ -41,6 +41,7 @@ export default TranslationLinks
 const Container = styled.div`
   font-family: ${p => p.theme.sansFont};
   font-size: 12pt;
+  margin-top: 1em;
 `
 
 const List = styled.ul`

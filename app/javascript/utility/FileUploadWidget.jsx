@@ -28,7 +28,7 @@ const FileUploadWidget = ({
   accept,
 }: Props) => (
   <>
-    <label className={className} style={{ display: ready ? 'block' : 'none' }}>
+    <label className={className} style={{ display: ready ? 'unset' : 'none' }}>
       <HiddenFileUpload
         accept={accept || 'image/*'}
         onChange={e => handleUpload(e.currentTarget.files)}

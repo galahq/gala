@@ -31,6 +31,11 @@ class CaseDecorator < ApplicationDecorator
     open(cover_image.variant(resize: '470x95^').processed.service_url).read
   end
 
+  def teaching_guide_url
+    return nil unless teaching_guide.attached?
+    polymorphic_path teaching_guide, only_path: true
+  end
+
   def other_available_locales
     translations.each_with_object({}) do |kase, table|
       table[kase.locale] = {

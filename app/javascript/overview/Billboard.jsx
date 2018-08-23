@@ -6,7 +6,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { isEmpty, isNil } from 'ramda'
 
 import { EditableText } from '@blueprintjs/core'
 
@@ -18,6 +17,7 @@ import LearningObjectives from './LearningObjectives'
 import MapView from 'catalog/MapView'
 import CaseKeywords from './CaseKeywords'
 import TranslationLinks from './TranslationLinks'
+import TeachingGuide from './TeachingGuide'
 
 import { updateCase } from 'redux/actions'
 
@@ -33,6 +33,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     summary,
     tags,
     links,
+    teachingGuideUrl,
   } = caseData
 
   return {
@@ -46,6 +47,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     summary,
     taggingsPath: links.taggings,
     tags,
+    teachingGuideUrl,
   }
 }
 
@@ -60,6 +62,7 @@ type Props = {
   summary: string,
   taggingsPath: string,
   tags: Tag[],
+  teachingGuideUrl: string,
   updateCase: typeof updateCase,
 }
 
@@ -74,6 +77,7 @@ const Billboard = ({
   summary,
   taggingsPath,
   tags,
+  teachingGuideUrl,
   updateCase,
 }: Props) => (
   <Container>
@@ -120,18 +124,17 @@ const Billboard = ({
               </div>
             </Less>
 
-            {(editing ||
-              !(isNil(learningObjectives) || isEmpty(learningObjectives))) && (
-              <LearningObjectives
-                disabled={!editing}
-                learningObjectives={learningObjectives}
-                onChange={value => {
-                  updateCase({ learningObjectives: value })
-                  onBeginEditing()
-                }}
-                onStopChanging={onFinishEditing}
-              />
-            )}
+            <LearningObjectives
+              editing={editing}
+              learningObjectives={learningObjectives}
+              onChange={value => {
+                updateCase({ learningObjectives: value })
+                onBeginEditing()
+              }}
+              onStopChanging={onFinishEditing}
+            />
+
+            <TeachingGuide />
 
             <TranslationLinks languages={otherAvailableLocales} />
           </div>
