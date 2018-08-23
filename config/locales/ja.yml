@@ -14,6 +14,7 @@ ja:
         location: 場所
         published: 公開された
         slug: 事例研究のURL
+        teaching_guide: Teaching guide
         title: 質問
         translators:
           js: "翻訳者："
@@ -145,11 +146,14 @@ ja:
       no_elements: この事例研究は要素がありません。
       options: 選択肢
       publish_case: 発刊する
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
       save: 保存
       stop_editing: 編集を停止する
       translator_name: 翻訳者の名前
       unfeature_case: 注目の事例研究から除去する
       unpublish_case: 非公開にする
+      upload_teaching_guide: Upload teaching guide
     index:
       all_cases: すべての事例研究
       locations: 場所
@@ -170,6 +174,7 @@ ja:
           <b>形式：</b>小文字と数字、ハイフンで区切られました<br />100文字以内。
     show:
       back_to_overview: 概要に戻る
+      download_teaching_guide: Download teaching guide
       end: 終わり
       forthcoming: 今後
       next: "次："
