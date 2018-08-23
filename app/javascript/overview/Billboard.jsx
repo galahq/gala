@@ -7,8 +7,6 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
-import { isBlank } from 'shared/functions'
-
 import { EditableText } from '@blueprintjs/core'
 
 import Lock from 'utility/Lock'
@@ -136,12 +134,7 @@ const Billboard = ({
               onStopChanging={onFinishEditing}
             />
 
-            <TeachingGuide
-              teachingGuideUrl={teachingGuideUrl}
-              editing={editing}
-              caseSlug={slug}
-              updateCase={updateCase}
-            />
+            <TeachingGuide />
 
             <TranslationLinks languages={otherAvailableLocales} />
           </div>

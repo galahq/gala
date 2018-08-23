@@ -152,6 +152,8 @@ en:
       no_elements: This case has no elements.
       options: Options
       publish_case: Publish this case
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
       save: Save
       stop_editing: Stop editing this case
       translator_name: Translator Name
