@@ -6,7 +6,8 @@ module Cases
     attributes :acknowledgements, :audience, :authors, :commentable, :cover_url,
                :dek, :featured_at, :kicker, :latitude, :learning_objectives,
                :longitude, :photo_credit, :published_at, :slug,
-               :small_cover_url, :summary, :title, :translators, :zoom
+               :small_cover_url, :summary, :teaching_guide_url, :title,
+               :translators, :zoom
 
     has_many :tags
 

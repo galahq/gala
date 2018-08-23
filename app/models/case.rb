@@ -69,6 +69,7 @@ class Case < ApplicationRecord
            through: :case_elements, source: :element, source_type: 'Podcast'
 
   has_one_attached :cover_image
+  has_one_attached :teaching_guide
 
   after_create :create_forum_for_universal_communities
   after_save -> {
