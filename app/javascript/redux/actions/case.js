@@ -67,3 +67,12 @@ export type SetReaderEnrollmentAction = {
 function setReaderEnrollment (enrollment: boolean): SetReaderEnrollmentAction {
   return { type: 'SET_READER_ENROLLMENT', enrollment }
 }
+
+export function deleteTeachingGuide (): ThunkAction {
+  return async (dispatch: Dispatch, getState: GetState) => {
+    const url = getState().caseData.links.teachingGuide
+    Orchard.prune(url).then(() =>
+      dispatch(updateCase({ teachingGuideUrl: null }, false))
+    )
+  }
+}

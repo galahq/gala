@@ -2,7 +2,16 @@
  * @flow
  */
 
-import { compose, isEmpty, map, none, values, flatten } from 'ramda'
+import {
+  compose,
+  either,
+  flatten,
+  isEmpty,
+  isNil,
+  map,
+  none,
+  values,
+} from 'ramda'
 
 const listValues = map(values)
 
@@ -17,3 +26,5 @@ export const areObjectsCompact: (Object[]) => boolean = compose(
   flatten,
   listValues
 )
+
+export const isBlank: any => boolean = either(isEmpty, isNil)

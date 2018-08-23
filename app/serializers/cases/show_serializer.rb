@@ -9,6 +9,12 @@ module Cases
     attribute :reader, if: :reader_signed_in?
     attribute :statistics, if: :reader_signed_in?
 
+    link(:new_translation) { new_case_translation_path object }
+    link(:settings) { edit_case_settings_path object }
+    link(:taggings) { case_taggings_path object }
+    link(:teach) { new_deployment_path case_slug: object.slug }
+    link(:teaching_guide) { case_attachment_path object, :teaching_guide }
+
     def quiz
       deployment = instance_options[:deployment]
       {
