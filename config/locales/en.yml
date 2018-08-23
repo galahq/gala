@@ -14,6 +14,7 @@ en:
         location: Case location
         published: Published
         slug: Case URL
+        teaching_guide: Teaching guide
         title: Question
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
@@ -156,6 +157,7 @@ en:
       translator_name: Translator Name
       unfeature_case: Remove from featured cases
       unpublish_case: Unpublish this case
+      upload_teaching_guide: Upload teaching guide
     index:
       all_cases: All cases
       locations: Site locations
@@ -179,6 +181,7 @@ en:
           hyphens,<br />100 characters maximum
     show:
       back_to_overview: Overview
+      download_teaching_guide: Download teaching guide
       end: End
       forthcoming: Forthcoming
       next: "Next: "

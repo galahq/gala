@@ -5,14 +5,14 @@
 
 import React from 'react'
 import styled from 'styled-components'
-
 import debounce from 'lodash.debounce'
+import { isBlank } from 'shared/functions'
 import { FormattedMessage } from 'react-intl'
 
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
 type Props = {
-  disabled: boolean,
+  editing: boolean,
   learningObjectives: string[],
   onChange: (string[]) => any,
   onStopChanging: () => any,
@@ -20,13 +20,15 @@ type Props = {
 class LearningObjectives extends React.Component<Props> {
   onStopChanging = debounce(this.props.onStopChanging, 200)
   render () {
-    const { disabled, learningObjectives, onChange } = this.props
+    const { editing, learningObjectives, onChange } = this.props
+    if (!editing && isBlank(learningObjectives)) return null
+
     return (
       <div>
         <Label>
           <FormattedMessage id="activerecord.attributes.case.learningObjectives" />
         </Label>
-        {disabled ? (
+        {!editing ? (
           <ul>
             {learningObjectives.map((objective, i) => (
               <li key={i}>{objective}</li>
