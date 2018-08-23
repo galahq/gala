@@ -168,6 +168,7 @@ export type Case = {
   smallCoverUrl: string,
   summary: string,
   tags: Tag[],
+  teachingGuideUrl: string,
   title: string,
   zoom: ?number,
 } & Byline
