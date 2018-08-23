@@ -36,6 +36,9 @@ Rails.application.routes.draw do
 
   resources :cases, only: %i[index show create edit update destroy],
                     param: :slug do
+    resources :attachments, module: 'cases', only: %i[destroy],
+                            param: :attribute
+
     resources :activities, only: %i[create]
 
     resources :comment_threads, only: %i[index create]
