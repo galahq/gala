@@ -14,6 +14,7 @@ es:
         location: Ubicación del caso
         published: Published
         slug: Case URL
+        teaching_guide: Teaching guide
         title: Question
         translators:
           js: "{count, plural, one {Traductor(a)} other {Traductores} }: "
@@ -150,11 +151,14 @@ es:
       no_elements: This case has no elements.
       options: Opciones
       publish_case: Publicar este caso
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
       save: Guardar
       stop_editing: Dejar de editar este caso
       translator_name: Translator Name
       unfeature_case: Quitar de casos destacados
       unpublish_case: Annular la publicacion
+      upload_teaching_guide: Upload teaching guide
     index:
       all_cases: Todos los casos
       locations: Ubicaciones
@@ -175,6 +179,7 @@ es:
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
     show:
       back_to_overview: Resumen
+      download_teaching_guide: Download teaching guide
       end: Fin
       forthcoming: A venir
       next: "Próximo: "
