@@ -42,7 +42,7 @@ class Case < ApplicationRecord
   attribute :translators, :json, default: []
   friendly_id :slug, use: %i[history]
 
-  belongs_to :library, optional: true
+  belongs_to :library, optional: true, counter_cache: true
   belongs_to :translation_base,
              class_name: 'Case',
              optional: true # Not really -- just can't = id before saving
