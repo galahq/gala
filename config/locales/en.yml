@@ -110,6 +110,7 @@ en:
       global_community: Global Community
       group: Group
       group_membership: Group Membership
+      library: Library
       page: Page
       podcast: Podcast
       reader: Reader
@@ -610,6 +611,11 @@ en:
           You are receiving this email because you are a user of Gala
           (https://www.learngala.com).
   libraries:
+    destroy:
+      are_you_sure: >
+        Are you sure you wish to delete this library? All cases that belong to
+        it will return to the “Shared Cases Library.”
+      delete_library: Delete Library
     edit:
       edit_library: Edit Library
     index:

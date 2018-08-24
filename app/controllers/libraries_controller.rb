@@ -4,7 +4,7 @@
 class LibrariesController < ApplicationController
   before_action :authenticate_reader!, only: %i[index]
   before_action :set_libraries, only: %i[index create]
-  before_action :set_library, only: %i[show edit update]
+  before_action :set_library, only: %i[show edit update destroy]
 
   layout 'admin'
 
@@ -47,6 +47,13 @@ class LibrariesController < ApplicationController
     else
       render :edit
     end
+  end
+
+  # @route [DELETE] `/libraries/slug`
+  def destroy
+    authorize @library
+    @library.destroy
+    redirect_to libraries_url, notice: successfully_destroyed
   end
 
   private
