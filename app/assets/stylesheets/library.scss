@@ -1,0 +1,22 @@
+.library-logo {
+  align-items: center;
+  background-color: var(--library-background);
+  border-left: 6px solid var(--library-foreground);
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  display: flex;
+  justify-content: center;
+
+  img {
+    margin: 0.5em;
+    width: 43px;
+  }
+}
+
+.library-description {
+  max-width: 30em;
+}
+
+.library-button {
+  white-space: pre;
+}

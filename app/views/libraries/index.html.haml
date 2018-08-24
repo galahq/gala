@@ -1,0 +1,48 @@
+- content_for :title, I18n.t('libraries.index.libraries')
+
+.admin.md-container.pt-dark
+  %header.md-header
+    %h1.admin__title
+      = t '.libraries'
+
+  %aside.md-master
+    %h2.admin__title
+      = t '.create_a_new_library'
+
+  %main.md-detail
+    %table.admin__table.pt-html-table.my-cases__table
+      %thead
+        %th(scope="col")=# Logo
+        %th(scope="col")= t 'activerecord.attributes.library.name'
+        %th(scope="col")=# Url
+        %th(scope="col")= t 'activerecord.attributes.library.description'
+        %th(scope="col")=# Number of Cases
+        %th(scope="col")=# Edit link
+
+      %tbody
+        - libraries.each do |library|
+          %tr
+            %td.library-logo{ style: library.define_color_variables }
+              %img{ src: library.logo_url, alt: '' }
+            %td= library.name
+            %td
+              = link_to library.url,
+                        class: %i[pt-button pt-minimal pt-icon-share],
+                        aria: { label: I18n.t('activerecord.attributes.library.website') },
+                        target: 'blank' do
+                -# Empty
+            %td.library-description
+              = truncate library.description, length: 140, separator: ' ' do
+                = ' '
+                = link_to t('helpers.less.read_more'), library.catalog_path
+            %td
+              = link_to pluralize(library.cases.count, 'case'),
+                        library.catalog_path,
+                        class: %i[pt-button pt-icon-book library-button]
+            %td
+              - if policy(library).update?
+                = link_to '#',
+                          class: %i[pt-button pt-minimal pt-icon-cog],
+                          aria: { label: I18n.t('helpers.ed') },
+                          target: 'blank' do
+                  -# Empty

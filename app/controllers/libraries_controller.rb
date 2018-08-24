@@ -2,7 +2,17 @@
 
 # @see Library
 class LibrariesController < ApplicationController
-  before_action :set_library
+  before_action :authenticate_reader!, only: %i[index]
+  before_action :set_library, only: %i[show]
+
+  layout 'admin'
+
+  decorates_assigned :libraries
+
+  # @route [GET] `/libraries`
+  def index
+    @libraries = policy_scope Library.ordered
+  end
 
   # @route [GET] `/libraries/slug.json`
   def show
