@@ -1,0 +1,9 @@
+- content_for :title do
+  = I18n.t('libraries.edit.edit_library')
+  = library.name
+
+.window.admin
+  .admin-card.pt-card.pt-elevation-2
+    %div
+      %h1.admin__title= t '.edit_library'
+      = render 'form'

@@ -610,6 +610,8 @@ en:
           You are receiving this email because you are a user of Gala
           (https://www.learngala.com).
   libraries:
+    edit:
+      edit_library: Edit Library
     index:
       create_a_new_library: Create a New Library
       libraries: Libraries
