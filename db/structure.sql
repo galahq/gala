@@ -831,7 +831,8 @@ CREATE TABLE libraries (
     updated_at timestamp without time zone NOT NULL,
     description jsonb,
     url jsonb,
-    name jsonb
+    name jsonb,
+    cases_count integer DEFAULT 0
 );
 
 
@@ -2986,6 +2987,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180627142644'),
 ('20180725173214'),
 ('20180806201126'),
-('20180806201127');
+('20180806201127'),
+('20180824210458');
 
 

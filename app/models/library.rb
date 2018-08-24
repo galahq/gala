@@ -30,5 +30,5 @@ class Library < ApplicationRecord
   validates :background_color, :foreground_color,
             format: { with: HEX_COLOR }, allow_blank: true
 
-  scope :ordered, -> { order :name }
+  scope :ordered, -> { order cases_count: :desc }
 end

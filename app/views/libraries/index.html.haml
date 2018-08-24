@@ -48,7 +48,7 @@
                 = link_to t('helpers.less.read_more'), library.catalog_path
 
             %td
-              = link_to pluralize(library.cases.count, 'case'),
+              = link_to pluralize(library.cases_count, 'case'),
                         library.catalog_path,
                         class: %i[pt-button pt-icon-book library-button]
 
