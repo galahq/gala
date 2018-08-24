@@ -20,7 +20,7 @@ class Library < ApplicationRecord
   friendly_id :name, use: %i[history slugged]
   translates :name, :description, :url, fallbacks: true
 
-  has_many :cases
+  has_many :cases, dependent: :nullify
   has_many :managerships, dependent: :destroy
   has_many :managers, through: :managerships
 

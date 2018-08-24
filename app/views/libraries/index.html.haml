@@ -24,13 +24,16 @@
         %th(scope="col")= t 'activerecord.attributes.library.description'
         %th(scope="col")=# Number of Cases
         %th(scope="col")=# Edit link
+        %th(scope="col")=# Delete link
 
       %tbody
         - libraries.each do |library|
           %tr
             %td.library-logo{ style: library.define_color_variables }
               %img{ src: library.logo_url, alt: '' }
+
             %td= library.name
+
             %td
               - unless library.url.blank?
                 = link_to library.url,
@@ -38,17 +41,27 @@
                           aria: { label: I18n.t('activerecord.attributes.library.website') },
                           target: 'blank' do
                   -# Empty
+
             %td.library-description
               = truncate library.description, length: 140, separator: ' ' do
                 = ' '
                 = link_to t('helpers.less.read_more'), library.catalog_path
+
             %td
               = link_to pluralize(library.cases.count, 'case'),
                         library.catalog_path,
                         class: %i[pt-button pt-icon-book library-button]
+
             %td
               - if policy(library).update?
                 = link_to edit_library_path(library),
                           class: %i[pt-button pt-minimal pt-icon-cog],
-                          aria: { label: I18n.t('helpers.ed') } do
+                          aria: { label: I18n.t('helpers.edit') } do
+                  -# Empty
+            %td
+              - if policy(library).destroy?
+                = button_to library_path(library), method: :delete,
+                          data: { confirm: I18n.t('libraries.destroy.are_you_sure') },
+                          class: %i[pt-button pt-minimal pt-intent-danger pt-icon-trash],
+                          aria: { label: I18n.t('libraries.destroy.delete_library') } do
                   -# Empty
