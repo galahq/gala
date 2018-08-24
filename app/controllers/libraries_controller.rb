@@ -8,8 +8,7 @@ class LibrariesController < ApplicationController
 
   layout 'admin'
 
-  decorates_assigned :libraries
-  decorates_assigned :library
+  decorates_assigned :libraries, :library
 
   # @route [GET] `/libraries`
   def index
