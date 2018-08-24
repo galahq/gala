@@ -12,9 +12,13 @@
 # @attr foreground_color [Color] the foreground color for the library’s banner
 class Library < ApplicationRecord
   include Mobility
+  extend FriendlyId
 
-  HEX_COLOR = /\A#(?:[0-9a-fA-F]{3}){1,2}\z/
+  HEX_COLOR = /\A#\h{6}\z/
 
+  attribute :background_color, :text, default: '#000000'
+  attribute :foreground_color, :text, default: '#ffffff'
+  friendly_id :name, use: %i[history slugged]
   translates :name, :description, :url, fallbacks: true
 
   has_many :cases
@@ -22,7 +26,9 @@ class Library < ApplicationRecord
   has_many :managerships, dependent: :destroy
   has_many :managers, through: :managerships
 
-  validates :background_color, :foreground_color, format: { with: HEX_COLOR }
+  validates :name, presence: true
+  validates :background_color, :foreground_color,
+            format: { with: HEX_COLOR }, allow_blank: true
 
   scope :ordered, -> { order :name }
 end

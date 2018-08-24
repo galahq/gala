@@ -16,11 +16,9 @@
       = f.email_field :email, class: "pt-input pt-fill", tabindex: 3
 
     .reader-image-input
-      = f.label :image, class: 'pt-label' do
-        = t 'activerecord.attributes.user.image'
-        .pt-file-input.pt-fill
-          = f.file_field :image, direct_upload: true, tabindex: 4
-          %span.pt-file-upload-input= t '.choose_an_image'
+      = f.file_field :image, class: %i[pt-fill], direct_upload: true,
+                             tabindex: 4
+                             
       %img{ src: @reader.image_url }
 
     %h2= t '.notification_settings'
