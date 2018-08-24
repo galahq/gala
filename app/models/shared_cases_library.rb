@@ -44,4 +44,8 @@ class SharedCasesLibrary
   def persisted?
     false
   end
+
+  def decorate(options)
+    LibraryDecorator.new self, options
+  end
 end
