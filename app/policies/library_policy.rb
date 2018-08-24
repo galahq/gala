@@ -2,8 +2,16 @@
 
 # @see Library
 class LibraryPolicy < ApplicationPolicy
-  # Libraries to which this user can add a case
+  # The Libraries this user can see in the index
   class Scope < Scope
+    def resolve
+      scope.where(Arel.sql('cases_count > 0'))
+           .or(scope.where(id: user.libraries.select(:id)))
+    end
+  end
+
+  # Libraries to which this user can add a case
+  class AdminScope < Scope
     def resolve
       if editor?
         scope.all

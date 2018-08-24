@@ -10,10 +10,10 @@ RSpec.describe LibraryPolicy do
 
   subject { described_class }
 
-  permissions '.scope' do
+  permissions 'AdminScope' do
     it 'includes only the libraries a reader manages' do
       managed_library = reader.libraries.create attributes_for :library
-      scope = Pundit.policy_scope!(reader, Library)
+      scope = LibraryPolicy::AdminScope.new(reader, Library).resolve
 
       expect(scope).not_to include library
       expect(scope).to include managed_library
@@ -21,9 +21,26 @@ RSpec.describe LibraryPolicy do
 
     it 'includes all libraries for an editor' do
       managed_library = editor.libraries.create attributes_for :library
-      scope = Pundit.policy_scope!(editor, Library)
+      scope = LibraryPolicy::AdminScope.new(editor, Library).resolve
 
       expect(scope).to include library
+      expect(scope).to include managed_library
+    end
+  end
+
+  permissions 'Scope' do
+    it 'includes libraries that have at least one case' do
+      create(:case).tap do |c|
+        library.cases << c
+        library.reload
+      end
+      scope = Pundit.policy_scope!(editor, Library)
+      expect(scope).to include library
+    end
+
+    it 'includes the libraries a reader manages' do
+      managed_library = reader.libraries.create attributes_for :library
+      scope = Pundit.policy_scope!(reader, Library)
       expect(scope).to include managed_library
     end
   end
