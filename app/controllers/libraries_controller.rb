@@ -9,6 +9,7 @@ class LibrariesController < ApplicationController
   layout 'admin'
 
   decorates_assigned :libraries
+  decorates_assigned :library
 
   # @route [GET] `/libraries`
   def index
@@ -36,7 +37,7 @@ class LibrariesController < ApplicationController
   private
 
   def set_libraries
-    @libraries = policy_scope Library.ordered
+    @libraries = policy_scope(Library).ordered
   end
 
   def set_library
@@ -48,7 +49,7 @@ class LibrariesController < ApplicationController
 
   def library_params
     params.require(:library)
-          .permit(:slug, :name, :description, :url, :background_color,
+          .permit(:slug, :name, :description, :url, :logo, :background_color,
                   :foreground_color)
   end
 end

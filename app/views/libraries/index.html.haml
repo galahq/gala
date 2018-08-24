@@ -6,17 +6,17 @@
       = t '.libraries'
 
   %aside.md-master.spaced
-    .pt-dark
-      .pt-callout.pt-icon-git-push
-        = t '.libraries_on_gala'
-
     - if policy(Library).create?
       .pt-card
         %h2.admin__title= t '.create_a_new_library'
         = render 'form'
 
+    .pt-dark
+      .pt-callout.pt-icon-git-push
+        = t '.libraries_on_gala'
+
   %main.md-detail.pt-dark
-    %table.admin__table.pt-html-table.my-cases__table
+    %table.admin__table.pt-html-table.libraries__table
       %thead
         %th(scope="col")=# Logo
         %th(scope="col")= t 'activerecord.attributes.library.name'
@@ -32,11 +32,12 @@
               %img{ src: library.logo_url, alt: '' }
             %td= library.name
             %td
-              = link_to library.url,
-                        class: %i[pt-button pt-minimal pt-icon-share],
-                        aria: { label: I18n.t('activerecord.attributes.library.website') },
-                        target: 'blank' do
-                -# Empty
+              - unless library.url.blank?
+                = link_to library.url,
+                          class: %i[pt-button pt-minimal pt-icon-share],
+                          aria: { label: I18n.t('activerecord.attributes.library.website') },
+                          target: 'blank' do
+                  -# Empty
             %td.library-description
               = truncate library.description, length: 140, separator: ' ' do
                 = ' '

@@ -7,7 +7,6 @@
 # @attr name [Translated<String>] the library’s name
 # @attr description [Translated<String>] a couple of sentences of background
 # @attr url [Translated<String>] a link to the library’s website
-# @attr logo_url [String] a logo to identify the library
 # @attr background_color [Color] the background color for the library’s banner
 # @attr foreground_color [Color] the foreground color for the library’s banner
 class Library < ApplicationRecord
@@ -22,9 +21,10 @@ class Library < ApplicationRecord
   translates :name, :description, :url, fallbacks: true
 
   has_many :cases
-
   has_many :managerships, dependent: :destroy
   has_many :managers, through: :managerships
+
+  has_one_attached :logo
 
   validates :name, presence: true
   validates :background_color, :foreground_color,

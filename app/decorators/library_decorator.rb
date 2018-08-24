@@ -12,4 +12,14 @@ class LibraryDecorator < ApplicationDecorator
       --library-foreground: #{foreground_color};
     CSS
   end
+
+  def logo_url
+    return object.logo_url unless object.respond_to? :logo
+    return nil unless logo.attached?
+    polymorphic_path logo, only_path: true
+  end
+
+  def serializer_class
+    LibrarySerializer
+  end
 end

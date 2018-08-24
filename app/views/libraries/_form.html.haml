@@ -15,6 +15,9 @@
       = f.color_field :foreground_color,
                       class: %i[pt-input pt-fill] + error_classes
 
+  = f.file_field :logo, class: %i[pt-fill], direct_upload: true,
+                        accept: 'image/png, image/svg+xml'
+
   = f.submit
 
 = javascript_pack_tag 'file_upload'
