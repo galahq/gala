@@ -4,7 +4,7 @@
 class LibrariesController < ApplicationController
   before_action :authenticate_reader!, only: %i[index]
   before_action :set_libraries, only: %i[index create]
-  before_action :set_library, only: %i[show]
+  before_action :set_library, only: %i[show edit update]
 
   layout 'admin'
 
@@ -34,6 +34,21 @@ class LibrariesController < ApplicationController
     end
   end
 
+  # @route [GET] `/libraries/slug/edit`
+  def edit
+    authorize @library
+  end
+
+  # @route [PUT/PATCH] `/libraries/slug`
+  def update
+    authorize @library
+    if @library.update library_params
+      redirect_to libraries_url, notice: successfully_updated
+    else
+      render :edit
+    end
+  end
+
   private
 
   def set_libraries
@@ -41,10 +56,11 @@ class LibrariesController < ApplicationController
   end
 
   def set_library
-    @library = Library.find_by_slug params[:slug]
     if params[:slug] == SharedCasesLibrary.instance.slug
-      @library ||= SharedCasesLibrary.instance
+      return @library = SharedCasesLibrary.instance
     end
+
+    @library = Library.friendly.find params[:slug]
   end
 
   def library_params

@@ -48,8 +48,7 @@
                         class: %i[pt-button pt-icon-book library-button]
             %td
               - if policy(library).update?
-                = link_to '#',
+                = link_to edit_library_path(library),
                           class: %i[pt-button pt-minimal pt-icon-cog],
-                          aria: { label: I18n.t('helpers.ed') },
-                          target: 'blank' do
+                          aria: { label: I18n.t('helpers.ed') } do
                   -# Empty

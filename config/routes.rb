@@ -104,7 +104,7 @@ Rails.application.routes.draw do
     resources :canvas_deployments, only: %i[create]
   end
 
-  resources :libraries, param: :slug, only: %i[index show create]
+  resources :libraries, param: :slug, only: %i[index show create edit update]
 
   resources :locks, only: %i[create destroy]
 
