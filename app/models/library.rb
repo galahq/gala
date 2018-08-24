@@ -23,4 +23,6 @@ class Library < ApplicationRecord
   has_many :managers, through: :managerships
 
   validates :background_color, :foreground_color, format: { with: HEX_COLOR }
+
+  scope :ordered, -> { order :name }
 end
