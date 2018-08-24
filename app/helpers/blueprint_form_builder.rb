@@ -9,7 +9,6 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
 
   # Creates a label, input, and helper text that are colored red together when
   # there is an error in the field.
-  # rubocop:disable Metrics/ParameterLists
   def form_group(method, label: nil, in_parens: nil, placeholder: nil,
                  helper_text: nil, &block)
     without_field_error_wrapper do
@@ -21,7 +20,6 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
   end
-  # rubocop:enable Metrics/ParameterLists
 
   # Creates a callout listing the form’s errors if there are any
   def errors
@@ -32,6 +30,19 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
       contents << error_header
       contents << error_list
     end
+  end
+
+  # Creates a blueprint style file input
+  def file_field(method, **kwargs)
+    without_field_error_wrapper do
+      with_blueprint_file_input method, kwargs do |options|
+        super(method, options)
+      end
+    end
+  end
+
+  def submit(*args, **kwargs)
+    super(*args, kwargs.merge(class: %i[pt-button pt-intent-success]))
   end
 
   private
@@ -47,9 +58,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   def label_with_text_in_parens(method, label, in_parens)
     contents = ''.html_safe
 
-    contents << (label || @template.translate(
-      "activerecord.attributes.#{normalized_object_name}.#{method}"
-    ))
+    contents << (label || default_label_text(method))
 
     unless in_parens.nil?
       contents << ' '
@@ -58,6 +67,12 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     end
 
     label method, contents, class: 'pt-label'
+  end
+
+  def default_label_text(method)
+    @template.translate(
+      "activerecord.attributes.#{normalized_object_name}.#{method}"
+    )
   end
 
   def normalized_object_name
@@ -74,7 +89,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
                       yield self, error_classes
                     end
                   else
-                    classes = %w[pt-input] + error_classes
+                    classes = %w[pt-input pt-fill] + error_classes
                     text_field(method, class: classes, placeholder: placeholder)
                   end
 
@@ -110,5 +125,24 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
            .map { |error| @template.content_tag :div, error }
            .join
            .html_safe
+  end
+
+  def with_blueprint_file_input(method, instructions: nil, **options)
+    label method, class: 'pt-label' do
+      contents = ''.html_safe
+      contents << default_label_text(method)
+      classes = %w[pt-file-input].concat Array(options.delete(:class))
+      contents << @template.content_tag(:div, class: classes) do
+        div_contents = ''.html_safe
+        div_contents << yield(options)
+        div_contents << file_input_span(instructions)
+      end
+    end
+  end
+
+  def file_input_span(instructions)
+    @template.content_tag :span, class: %i[pt-file-upload-input] do
+      instructions || I18n.t('helpers.choose_an_image')
+    end
   end
 end

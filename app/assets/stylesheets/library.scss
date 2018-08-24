@@ -20,3 +20,18 @@
 .library-button {
   white-space: pre;
 }
+
+.new_library {
+  .row {
+    display: flex;
+    flex-direction: row;
+
+    * {
+      flex: 1;
+    }
+  }
+
+  .pt-form-group {
+    margin-bottom: 0;
+  }
+}

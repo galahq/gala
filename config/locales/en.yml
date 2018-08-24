@@ -10,6 +10,7 @@ en:
         kicker: Short title
         learning_objectives: Learning objectives
         library: Library
+        library_id: Library
         locale: Language
         location: Case location
         published: Published
@@ -35,6 +36,12 @@ en:
       editorship:
         editor: Your collaborator’s account
         editor_email: Collaborator’s Email
+      library:
+        background_color: Background Color
+        description: Description
+        foreground_color: Foreground Color
+        logo: Logo
+        name: Name
       question:
         content: Content
         correct_answer: Correct answer
@@ -557,8 +564,9 @@ en:
     required: required
   helpers:
     cancel: Cancel
-    copy: Copy
+    choose_an_image: Choose an Image
     close: Close
+    copy: Copy
     edit: Edit
     formatting:
       add_citation_entity: "Add citation here."
@@ -601,6 +609,12 @@ en:
         text: >
           You are receiving this email because you are a user of Gala
           (https://www.learngala.com).
+  libraries:
+    index:
+      create_a_new_library: Create a New Library
+      libraries: Libraries
+      libraries_on_gala: >
+        Gala has libraries for blah blah reasons.
   locks:
     destroy:
       edit_anyway: Edit Anyway
