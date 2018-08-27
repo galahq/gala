@@ -42,6 +42,9 @@ en:
         foreground_color: Foreground Color
         logo: Logo
         name: Name
+      managership:
+        manager: The manager’s account
+        manager_email: Manager’s Email
       question:
         content: Content
         correct_answer: Correct answer
@@ -111,6 +114,7 @@ en:
       group: Group
       group_membership: Group Membership
       library: Library
+      managership: Managership
       page: Page
       podcast: Podcast
       reader: Reader
@@ -618,6 +622,7 @@ en:
       delete_library: Delete Library
     edit:
       edit_library: Edit Library
+      library_managers: Library Managers
     index:
       create_a_new_library: Create a New Library
       libraries: Libraries
@@ -634,6 +639,20 @@ en:
   magic_link:
     show:
       lets_get_started: Let’s get started!
+  managerships:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+      remove: Remove Manager
+    new:
+      add_manager: Add Manager
+      instructions: >
+        Add someone else as a manager of this library by entering the email
+        they’ve used to create an account on Gala. That person will be able to
+        edit this library’s attributes, change which cases are included, and
+        add or remove other users as managers.
+      invite_someone_to_manage_this_library: >
+        Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >

@@ -105,11 +105,15 @@ Rails.application.routes.draw do
   end
 
   resources :libraries, param: :slug,
-                        only: %i[index show create edit update destroy]
+                        only: %i[index show create edit update destroy] do
+    resources :managerships, only: %i[new create]
+  end
 
   resources :locks, only: %i[create destroy]
 
   resource :magic_link, only: %i[show create]
+
+  resources :managerships, only: %i[destroy]
 
   resources :my_cases, only: %i[index]
 

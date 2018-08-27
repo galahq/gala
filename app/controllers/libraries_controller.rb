@@ -36,6 +36,7 @@ class LibrariesController < ApplicationController
   # @route [GET] `/libraries/slug/edit`
   def edit
     authorize @library
+    @managerships = @library.managerships
   end
 
   # @route [PUT/PATCH] `/libraries/slug`
