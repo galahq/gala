@@ -18,6 +18,7 @@ class Library < ApplicationRecord
   attribute :background_color, :text, default: '#000000'
   attribute :foreground_color, :text, default: '#ffffff'
   friendly_id :name, use: %i[history slugged]
+  time_for_a_boolean :visible_in_catalog
   translates :name, :description, :url, fallbacks: true
 
   has_many :cases, dependent: :nullify
