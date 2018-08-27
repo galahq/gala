@@ -1,0 +1,29 @@
+- content_for :title do
+  = I18n.t('managerships.new.invite_someone_to_manage_this_library')
+  —
+  = library.name
+
+
+.window.admin
+  .admin-card.pt-card.pt-elevation-2
+    = link_to edit_library_url library do
+      .library-cover-card-top{ style: library.define_color_variables }
+        %span.admin__table__slug= library.name
+
+    %div
+      %h1.admin__title= t '.invite_someone_to_manage_this_library'
+      = form_for @managership, url: library_managerships_path(library),
+                              builder: BlueprintFormBuilder do |f|
+        = f.errors
+
+        %p= t('.instructions')
+
+
+        = f.form_group :manager_email do |f, error_classes|
+          .pt-input-group.pt-fill{ class: error_classes }
+            %span.pt-icon.pt-icon-envelope
+            = f.email_field :manager_email,
+                            class: %w[pt-input]
+
+        = f.submit I18n.t('managerships.new.add_manager'),
+                   class: %w[pt-button pt-intent-success]

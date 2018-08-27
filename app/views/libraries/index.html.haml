@@ -44,7 +44,7 @@
 
             %td.library-description
               = truncate library.description, length: 140, separator: ' ' do
-                = ' '
+                &emsp;
                 = link_to t('helpers.less.read_more'), library.catalog_path
 
             %td
