@@ -6,7 +6,7 @@ class LibraryPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.where(Arel.sql('cases_count > 0'))
-           .or(scope.where(id: user.libraries.select(:id)))
+           .or(scope.where(id: AdminScope.new(user, Library).resolve))
     end
   end
 
