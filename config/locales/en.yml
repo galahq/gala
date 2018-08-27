@@ -42,6 +42,8 @@ en:
         foreground_color: Foreground Color
         logo: Logo
         name: Name
+        visible_in_catalog: Listed on Gala’s Home Page
+        website: Website
       managership:
         manager: The manager’s account
         manager_email: Manager’s Email
@@ -628,6 +630,7 @@ en:
       libraries: Libraries
       libraries_on_gala: >
         Gala has libraries for blah blah reasons.
+      on_home_page: On Home Page
   locks:
     destroy:
       edit_anyway: Edit Anyway

@@ -32,7 +32,11 @@
             %td.library-logo{ style: library.define_color_variables }
               %img{ src: library.logo_url, alt: '' }
 
-            %td= library.name
+            %td
+              = library.name
+              - if library.visible_in_catalog?
+                %span.pt-tag.pt-minimal.pt-intent-success
+                  = t '.on_home_page'
 
             %td
               - unless library.url.blank?

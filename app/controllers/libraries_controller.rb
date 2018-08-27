@@ -71,8 +71,10 @@ class LibrariesController < ApplicationController
   end
 
   def library_params
-    params.require(:library)
-          .permit(:slug, :name, :description, :url, :logo, :background_color,
-                  :foreground_color)
+    allowlist = %i[slug name description url logo background_color
+                   foreground_color]
+    allowlist.concat %i[visible_in_catalog] if policy(Library).create?
+
+    params.require(:library).permit allowlist
   end
 end

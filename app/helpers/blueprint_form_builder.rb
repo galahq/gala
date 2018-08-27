@@ -32,6 +32,17 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def check_box(method, **options)
+    without_field_error_wrapper do
+      @template.content_tag :label, class: %i[pt-control pt-checkbox] do
+        content = ''.html_safe
+        content << super(method, options)
+        content << @template.content_tag(:span, '', class: %i[pt-control-indicator])
+        content << default_label_text(method)
+      end
+    end
+  end
+
   # Creates a blueprint style file input
   def file_field(method, **kwargs)
     without_field_error_wrapper do
