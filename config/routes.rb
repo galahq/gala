@@ -51,6 +51,8 @@ Rails.application.routes.draw do
 
     resource :enrollment, only: %i[create destroy]
 
+    resource :library, module: 'cases', only: %i[update]
+
     resources :locks, only: %i[index]
 
     resources :podcasts, only: %i[create]

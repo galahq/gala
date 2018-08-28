@@ -30,8 +30,8 @@ class CasePolicy < ApplicationPolicy
   end
 
   def update?
-    return false unless admin_scope.where(id: record.id).exists?
-    user_can_update_library?
+    return true if user_can_update_library?
+    admin_scope.where(id: record.id).exists?
   end
 
   def destroy?
@@ -46,7 +46,7 @@ class CasePolicy < ApplicationPolicy
   private
 
   def user_can_update_library?
-    return true unless record.library.persisted?
+    return false if record.library == SharedCasesLibrary.instance
     library_policy.update?
   end
 
