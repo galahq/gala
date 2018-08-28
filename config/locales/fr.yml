@@ -42,6 +42,7 @@ fr:
         foreground_color: Foreground Color
         logo: Logo
         name: Name
+        url: Library Website
         visible_in_catalog: Listed on Gala’s Home Page
         website: Website
       managership:
