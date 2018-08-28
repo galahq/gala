@@ -2,7 +2,7 @@
 
 # @see Library
 class LibrariesController < ApplicationController
-  before_action :authenticate_reader!, only: %i[index]
+  before_action :authenticate_reader!, only: %i[create edit update destroy]
   before_action :set_libraries, only: %i[index create]
   before_action :set_library, only: %i[show edit update destroy]
 
