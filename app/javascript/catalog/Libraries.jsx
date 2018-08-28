@@ -17,7 +17,9 @@ const Libraries = ({ libraries }: Props) => {
   return (
     <CatalogSection solid>
       <SectionTitle>
-        <FormattedMessage id="libraries.index.libraries" />
+        <LibrariesLink href="/libraries">
+          <FormattedMessage id="libraries.index.libraries" />
+        </LibrariesLink>
       </SectionTitle>
 
       <Grid>{libraries.map(l => <Library key={l.slug} library={l} />)}</Grid>
@@ -27,6 +29,19 @@ const Libraries = ({ libraries }: Props) => {
 
 export default Libraries
 
+const LibrariesLink = styled.a`
+  color: #ebeae4;
+
+  &::after {
+    content: ' ›';
+  }
+
+  &:hover {
+    color: #ebeae4;
+    text-decoration: underline;
+  }
+`
+
 const Grid = styled.div`
   display: grid;
   grid-gap: 10px;
@@ -34,13 +49,13 @@ const Grid = styled.div`
 `
 
 const Library = ({ library }) => (
-  <Link href={library.links.self}>
+  <LibraryLink href={library.links.self}>
     <img alt="" src={library.logoUrl} />
     {library.name}
-  </Link>
+  </LibraryLink>
 )
 
-const Link = styled.a`
+const LibraryLink = styled.a`
   align-items: center;
   background-color: #1c3f5d;
   border-radius: 2px;
