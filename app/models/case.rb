@@ -37,6 +37,7 @@ class Case < ApplicationRecord
 
   attribute :authors, :json, default: []
   attribute :commentable, default: true
+  attribute :learning_objectives, :json, default: []
   attribute :locale, :string, default: -> { I18n.locale }
   attribute :slug, :string, default: -> { SecureRandom.uuid }
   attribute :translators, :json, default: []
