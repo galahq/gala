@@ -75,6 +75,13 @@ RSpec.describe CasePolicy do
       expect(subject).to permit reader, kase
     end
 
+    it 'allows a user who can edit the library' do
+      reader.libraries << library
+      kase.library = library
+
+      expect(subject).to permit reader, kase
+    end
+
     it 'allows an editor' do
       expect(subject).to permit editor, kase
     end
