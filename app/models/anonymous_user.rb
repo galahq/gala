@@ -44,6 +44,11 @@ class AnonymousUser
     Enrollment.none
   end
 
+  # @return [ActiveRecord::Relation<Library>] an empty relation
+  def libraries
+    Library.none
+  end
+
   # @return [Array(GlobalGroup)]
   def groups
     [GlobalGroup.new]
