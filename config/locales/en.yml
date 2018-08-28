@@ -629,7 +629,10 @@ en:
       create_a_new_library: Create a New Library
       libraries: Libraries
       libraries_on_gala: >
-        Gala has libraries for blah blah reasons.
+        Gala hosts cases from many different libraries as well as those that
+        independent scholars have published themselves. How a case study becomes
+        included in a library differs, but in all cases the library managers
+        have confirmed its quality.
       on_home_page: On Home Page
   locks:
     destroy:
