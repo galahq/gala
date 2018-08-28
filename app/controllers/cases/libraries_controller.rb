@@ -9,7 +9,7 @@ module Cases
     def update
       set_case
       set_library
-      @case.update library: @library
+      @case.update library_id: @library.id
       redirect_to edit_case_settings_path(@case), notice: successfully_updated
     end
 

@@ -12,6 +12,10 @@ class SharedCasesLibrary
 
   serialize_with LibrarySerializer
 
+  def self.policy_class
+    LibraryPolicy
+  end
+
   def initialize
     @id = nil
     @slug = 'shared'
