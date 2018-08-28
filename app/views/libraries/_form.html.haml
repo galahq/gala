@@ -7,6 +7,8 @@
     = f.form_group :description do |f, error_classes|
       = f.text_area :description, class: %i[pt-input pt-fill] + error_classes
 
+    = f.form_group :url
+
     .row
       = f.form_group :background_color do |f, error_classes|
         = f.color_field :background_color,
