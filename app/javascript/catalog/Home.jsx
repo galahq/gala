@@ -15,8 +15,9 @@ import MapView from 'catalog/MapView'
 import Categories from 'catalog/Categories'
 import Keywords from 'catalog/Keywords'
 import { Main } from 'catalog/shared'
+import Libraries from 'catalog/Libraries'
 
-import type { Case, Enrollment, Reader, Tag } from 'redux/state'
+import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
 
 class Home extends React.Component<{
@@ -31,6 +32,7 @@ class Home extends React.Component<{
     slug: string,
     options: { displayBetaWarning?: boolean }
   ) => any,
+  libraries: Library[]
 }> {
   render () {
     const {
@@ -40,6 +42,7 @@ class Home extends React.Component<{
       readerIsEditor,
       cases,
       tags,
+      libraries,
     } = this.props
     return (
       <DocumentTitle title="Gala">
@@ -76,6 +79,8 @@ class Home extends React.Component<{
                   <Keywords tags={tags} />
                 </>
             )}
+
+            <Libraries libraries={libraries} />
           </Main>
         </>
       </DocumentTitle>
