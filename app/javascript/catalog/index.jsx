@@ -17,7 +17,7 @@ import Home from 'catalog/Home'
 import Results from 'catalog/Results'
 
 import type { IntlShape } from 'react-intl'
-import type { Case, Enrollment, Reader, Tag } from 'redux/state'
+import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 
 export type Loading = { reader: boolean, cases: boolean }
 
@@ -28,6 +28,7 @@ export type State = {|
   enrollments: Enrollment[],
   features: string[],
   tags: Tag[],
+  libraries: Library[],
 |}
 
 export class Catalog extends React.Component<{ intl: IntlShape }, State> {
@@ -38,6 +39,7 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     enrollments: [],
     features: [],
     tags: [],
+    libraries: [],
   }
 
   handleDeleteEnrollment = (
@@ -88,6 +90,9 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
       this.setState({ enrollments })
     )
     Orchard.harvest('tags').then(tags => this.setState({ tags }))
+    Orchard.harvest('catalog/libraries').then(libraries =>
+      this.setState({ libraries })
+    )
   }
 
   render () {

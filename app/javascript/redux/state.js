@@ -269,6 +269,9 @@ export type Library = {
   logoUrl: string,
   backgroundColor: string,
   foregroundColor: string,
+  links: {
+    self: string,
+  },
 }
 
 export type LinkExpansionVisibility = {
