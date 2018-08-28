@@ -32,4 +32,5 @@ class Library < ApplicationRecord
             format: { with: HEX_COLOR }, allow_blank: true
 
   scope :ordered, -> { order cases_count: :desc }
+  scope :visible_in_catalog, -> { where 'visible_in_catalog_at < NOW()' }
 end
