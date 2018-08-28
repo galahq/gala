@@ -35,7 +35,8 @@ module Cases
     end
 
     def set_libraries
-      @libraries = Pundit.policy_scope!(current_reader, Library)
+      @libraries = LibraryPolicy::AdminScope.new(current_reader, Library)
+                                            .resolve
     end
 
     def set_editorships

@@ -104,11 +104,16 @@ Rails.application.routes.draw do
     resources :canvas_deployments, only: %i[create]
   end
 
-  resources :libraries, param: :slug, only: %i[show]
+  resources :libraries, param: :slug,
+                        only: %i[index show create edit update destroy] do
+    resources :managerships, only: %i[new create]
+  end
 
   resources :locks, only: %i[create destroy]
 
   resource :magic_link, only: %i[show create]
+
+  resources :managerships, only: %i[destroy]
 
   resources :my_cases, only: %i[index]
 

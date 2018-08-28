@@ -12,6 +12,7 @@ RED_PIXEL =
 class CaseDecorator < ApplicationDecorator
   decorates_association :edgenotes
   decorates_association :podcasts
+  decorates_association :library
 
   def cover_url(transforms = { resize: '1280x540^' })
     return DARK_BLUE_PIXEL unless cover_image.attached?
