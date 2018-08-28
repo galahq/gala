@@ -67,32 +67,22 @@ RSpec.describe CasePolicy do
       expect(subject).to permit reader, kase
     end
 
+    it 'allows a user who has an editorship even if her case is in a library ' \
+       'she does not control' do
+      kase.editors << reader
+      kase.library = library
+
+      expect(subject).to permit reader, kase
+    end
+
+    it 'allows a user who can edit the library' do
+      reader.libraries << library
+      kase.library = library
+
+      expect(subject).to permit reader, kase
+    end
+
     it 'allows an editor' do
-      expect(subject).to permit editor, kase
-    end
-
-    it 'allows a reader to add a case to the Shared Cases library' do
-      kase.editorships.create editor: reader
-
-      expect(subject).to permit reader, kase
-    end
-
-    it 'does not allow a reader to add a case to an arbitrary library' do
-      kase.editorships.create editor: reader
-      kase.library = library
-      expect(subject).not_to permit reader, kase
-    end
-
-    it 'allows a reader to add a case to a library she manages' do
-      kase.editorships.create editor: reader
-      library.managers << reader
-      kase.library = library
-
-      expect(subject).to permit reader, kase
-    end
-
-    it 'allows an editor to add a case to an arbitrary library' do
-      kase.library = library
       expect(subject).to permit editor, kase
     end
   end

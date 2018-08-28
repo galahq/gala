@@ -12,6 +12,10 @@ class SharedCasesLibrary
 
   serialize_with LibrarySerializer
 
+  def self.policy_class
+    LibraryPolicy
+  end
+
   def initialize
     @id = nil
     @slug = 'shared'
@@ -47,5 +51,9 @@ class SharedCasesLibrary
 
   def decorate(options)
     LibraryDecorator.new self, options
+  end
+
+  def managers
+    Reader.all
   end
 end
