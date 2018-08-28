@@ -1649,7 +1649,11 @@ ALTER TABLE ONLY cases
 
 CREATE MATERIALIZED VIEW cases_search_index AS
  SELECT cases.id,
-    ((((((((((setweight(to_tsvector(COALESCE(cases.kicker, ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(cases.title, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.dek, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.summary, ''::text)), 'A'::"char")) || setweight(jsonb_path_to_tsvector(cases.learning_objectives, '{}'::text[]), 'B'::"char")) || jsonb_path_to_tsvector(cases.authors, '{name}'::text[])) || setweight(to_tsvector(COALESCE(string_agg(pages.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(podcasts.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(activities.title, ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg(podcasts.credits, ' '::text), ''::text))) || COALESCE(tsvector_agg(jsonb_path_to_tsvector((cards.raw_content -> 'blocks'::text), '{text}'::text[])), to_tsvector(''::text))) AS document
+    ((((((((((setweight(to_tsvector(COALESCE(cases.kicker, ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(cases.title, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.dek, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.summary, ''::text)), 'A'::"char")) || setweight(jsonb_path_to_tsvector(
+        CASE
+            WHEN (jsonb_typeof(cases.learning_objectives) <> 'array'::text) THEN '[]'::jsonb
+            ELSE cases.learning_objectives
+        END, '{}'::text[]), 'B'::"char")) || jsonb_path_to_tsvector(cases.authors, '{name}'::text[])) || setweight(to_tsvector(COALESCE(string_agg(pages.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(podcasts.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(activities.title, ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg(podcasts.credits, ' '::text), ''::text))) || COALESCE(tsvector_agg(jsonb_path_to_tsvector((cards.raw_content -> 'blocks'::text), '{text}'::text[])), to_tsvector(''::text))) AS document
    FROM ((((cases
      LEFT JOIN pages ON ((pages.case_id = cases.id)))
      LEFT JOIN podcasts ON ((podcasts.case_id = cases.id)))
@@ -2997,6 +3001,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180806201126'),
 ('20180806201127'),
 ('20180824210458'),
-('20180827153920');
+('20180827153920'),
+('20180828192116');
 
 
