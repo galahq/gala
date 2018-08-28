@@ -25,8 +25,12 @@
 }
 
 .spaced, .spaced--compact {
+  * + label.pt-label {
+    margin: 1em 0 0;
+  }
+
   .non-spaced, .pt-form-group, .pt-callout, .pt-control-group, .pt-input-group,
-  .pt-button-group {
+  .pt-button-group, .pt-file-input {
     * + * {
       margin-top: 0;
     }
@@ -35,7 +39,7 @@
 
 .row, .row-compact {
   .non-spaced, .pt-form-group, .pt-callout, .pt-control-group, .pt-input-group,
-  .pt-button-group {
+  .pt-button-group, .pt-file-input {
     * + * {
       margin-left: 0;
     }

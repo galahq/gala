@@ -1,0 +1,27 @@
+.spaced
+  = form_for @library, builder: BlueprintFormBuilder do |f|
+    = f.errors
+
+    = f.form_group :name
+
+    = f.form_group :description do |f, error_classes|
+      = f.text_area :description, class: %i[pt-input pt-fill] + error_classes
+
+    .row
+      = f.form_group :background_color do |f, error_classes|
+        = f.color_field :background_color,
+                        class: %i[pt-input pt-fill] + error_classes
+
+      = f.form_group :foreground_color do |f, error_classes|
+        = f.color_field :foreground_color,
+                        class: %i[pt-input pt-fill] + error_classes
+
+    = f.file_field :logo, class: %i[pt-fill], direct_upload: true,
+                          accept: 'image/png, image/svg+xml'
+
+    - if policy(Library).create?
+      = f.check_box :visible_in_catalog
+
+    = f.submit
+
+= javascript_pack_tag 'file_upload'

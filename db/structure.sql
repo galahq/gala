@@ -831,7 +831,9 @@ CREATE TABLE libraries (
     updated_at timestamp without time zone NOT NULL,
     description jsonb,
     url jsonb,
-    name jsonb
+    name jsonb,
+    cases_count integer DEFAULT 0,
+    visible_in_catalog_at timestamp without time zone
 );
 
 
@@ -2339,6 +2341,13 @@ CREATE UNIQUE INDEX index_libraries_on_slug ON libraries USING btree (slug);
 
 
 --
+-- Name: index_libraries_on_visible_in_catalog_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_libraries_on_visible_in_catalog_at ON libraries USING btree (visible_in_catalog_at);
+
+
+--
 -- Name: index_link_expansion_visibilities_on_edgenote_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2986,6 +2995,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180627142644'),
 ('20180725173214'),
 ('20180806201126'),
-('20180806201127');
+('20180806201127'),
+('20180824210458'),
+('20180827153920');
 
 
