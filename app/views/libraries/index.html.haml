@@ -34,7 +34,7 @@
 
             %td
               = library.name
-              - if library.visible_in_catalog?
+              - if policy(Library).create? && library.visible_in_catalog?
                 %span.pt-tag.pt-minimal.pt-intent-success
                   = t '.on_home_page'
 
