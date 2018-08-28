@@ -13,6 +13,8 @@ module Catalog
     skip_before_action :verify_authenticity_token
     before_action :validate_lti_request!
 
+    layout 'embed'
+
     # @route [POST] `/catalog/content_items`
     def create
       linker = LinkerService.new LinkerService::LTIStrategy.new params
@@ -24,8 +26,8 @@ module Catalog
 
       save_selection_params_to_session
 
-      @items = Case.all.with_attached_cover_image.order(:kicker).decorate
-      render layout: 'embed'
+      @items = policy_scope(Case).published.ordered.with_attached_cover_image
+                                 .decorate
     end
 
     private
