@@ -10,6 +10,7 @@ fr:
         kicker: Titre court
         learning_objectives: Objectifs pédagogiques
         library: Répertoire
+        library_id: Répertoire
         locale: Language
         location: Emplacement de l’étude de cas
         published: Published
@@ -35,6 +36,17 @@ fr:
       editorship:
         editor: Your collaborator’s account
         editor_email: Collaborator’s Email
+      library:
+        background_color: Background Color
+        description: Description
+        foreground_color: Foreground Color
+        logo: Logo
+        name: Name
+        visible_in_catalog: Listed on Gala’s Home Page
+        website: Website
+      managership:
+        manager: The manager’s account
+        manager_email: Manager’s Email
       question:
         content: Contenu
         correct_answer: Bonne réponse
@@ -102,6 +114,8 @@ fr:
       global_community: Communauté Mondiale
       group: Groupe
       group_membership: Group Membership
+      library: Répertoire
+      managership: Managership
       page: Page
       podcast: Podcast
       reader: Reader
@@ -524,8 +538,9 @@ fr:
     required: obligatoire
   helpers:
     cancel: Annuler
-    copy: Copy
+    choose_an_image: Choose an Image
     close: Fermer
+    copy: Copy
     edit: Edit
     formatting:
       add_citation_entity: "Ajoutez une référence ici."
@@ -565,6 +580,20 @@ fr:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  libraries:
+    destroy:
+      are_you_sure: >
+        Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
+      delete_library: Delete Library
+    edit:
+      edit_library: Edit Library
+      library_managers: Library Managers
+    index:
+      create_a_new_library: Create a New Library
+      libraries: Libraries
+      libraries_on_gala: >
+        Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
+      on_home_page: On Home Page
   locks:
     destroy:
       edit_anyway: Edit Anyway
@@ -576,6 +605,17 @@ fr:
   magic_link:
     show:
       lets_get_started: Let’s get started!
+  managerships:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+      remove: Remove Manager
+    new:
+      add_manager: Add Manager
+      instructions: >
+        Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
+      invite_someone_to_manage_this_library: >
+        Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >
