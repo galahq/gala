@@ -94,7 +94,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx-source": "^7.0.0-beta.51",
-    "babel-eslint": "^8.2.3",
+    "babel-eslint": "^9.0.0",
     "eslint": "^5.0.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-config-standard-react": "^6.0.0",
