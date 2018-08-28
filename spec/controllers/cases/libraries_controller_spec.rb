@@ -24,6 +24,18 @@ RSpec.describe Cases::LibrariesController do
       expect(kase.library_id).to eq library.id
     end
 
+    it 'allows a manager to remove her case from her library' do
+      reader.my_cases << kase
+      reader.libraries << library
+
+      patch :update, params: { case_slug: kase.slug,
+                               case: { library_id: nil } }
+      expect(flash[:notice]).to match 'successfully updated'
+
+      kase.reload
+      expect(kase.library_id).to eq nil
+    end
+
     it 'rejects a user who’s trying to add her case to a library ' \
        'she does not manage' do
       patch :update, params: { case_slug: kase.slug,

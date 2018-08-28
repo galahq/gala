@@ -33,4 +33,9 @@ class Library < ApplicationRecord
 
   scope :ordered, -> { order cases_count: :desc }
   scope :visible_in_catalog, -> { where 'visible_in_catalog_at < NOW()' }
+
+  def self.find(id)
+    return SharedCasesLibrary.instance if id.blank?
+    super(id)
+  end
 end
