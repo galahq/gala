@@ -10,6 +10,7 @@ zh-CN:
         kicker: 短标题
         learning_objectives: 学习目标
         library: 案例库
+        library_id: 案例库
         locale: Language
         location: 案例发生地
         published: 已发布
@@ -34,6 +35,17 @@ zh-CN:
       editorship:
         editor: 你的合作者账户
         editor_email: 合作者的电子邮件
+      library:
+        background_color: Background Color
+        description: Description
+        foreground_color: Foreground Color
+        logo: Logo
+        name: Name
+        visible_in_catalog: Listed on Gala’s Home Page
+        website: Website
+      managership:
+        manager: The manager’s account
+        manager_email: Manager’s Email
       question:
         content: 内容
         correct_answer: 正确答案
@@ -100,6 +112,8 @@ zh-CN:
       global_community: 通用讨论组
       group: 组
       group_membership: 组成员
+      library: 案例库
+      managership: Managership
       page: 页
       podcast: 广播节目
       reader: 读者
@@ -498,8 +512,9 @@ zh-CN:
     required: 必需
   helpers:
     cancel: 取消
-    copy: 复制
+    choose_an_image: Choose an Image
     close: 关闭
+    copy: 复制
     edit: 编辑
     formatting:
       add_citation_entity: "添加引用"
@@ -539,6 +554,20 @@ zh-CN:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  libraries:
+    destroy:
+      are_you_sure: >
+        Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
+      delete_library: Delete Library
+    edit:
+      edit_library: Edit Library
+      library_managers: Library Managers
+    index:
+      create_a_new_library: Create a New Library
+      libraries: Libraries
+      libraries_on_gala: >
+        Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
+      on_home_page: On Home Page
   locks:
     destroy:
       edit_anyway: Edit Anyway
@@ -550,6 +579,17 @@ zh-CN:
   magic_link:
     show:
       lets_get_started: Let’s get started!
+  managerships:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+      remove: Remove Manager
+    new:
+      add_manager: Add Manager
+      instructions: >
+        Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
+      invite_someone_to_manage_this_library: >
+        Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >
