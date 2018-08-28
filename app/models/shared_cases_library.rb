@@ -48,4 +48,8 @@ class SharedCasesLibrary
   def decorate(options)
     LibraryDecorator.new self, options
   end
+
+  def managers
+    Reader.all
+  end
 end

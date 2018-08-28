@@ -1,5 +1,5 @@
 - if @libraries.any?
-  = form_for @case, url: case_settings_path(@case),
+  = form_for @case, url: case_library_path(@case),
                     builder: BlueprintFormBuilder do |f|
     = f.form_group :library_id do |f, error_classes|
       .pt-control-group
