@@ -1,27 +1,27 @@
-zh-TW:
+am:
   activerecord:
     attributes:
       case:
-        acknowledgements: 致謝
+        acknowledgements: Acknowledgements
         authors: Authors
         case_title: Case title
-        featured: 明星
+        featured: Featured
         featured_at: Featured at
-        kicker: 短標題
-        learning_objectives: 學習目標
+        kicker: Short title
+        learning_objectives: Learning objectives
         library: Library
-        library_id: Library
         locale: Language
-        location: 案例發生地
+        location: Case location
         published: Published
         slug: Case URL
         teaching_guide: Teaching guide
         title: Question
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
+          one: Translator
           other: Translators
       deployment:
-        case_id: 案例
+        case_id: Case
         group_id: Study Group
         group_attributes:
           name: Group Name
@@ -35,59 +35,47 @@ zh-TW:
       editorship:
         editor: Your collaborator’s account
         editor_email: Collaborator’s Email
-      library:
-        background_color: Background Color
-        description: Description
-        foreground_color: Foreground Color
-        logo: Logo
-        name: Name
-        url: Library Website
-        visible_in_catalog: Listed on Gala’s Home Page
-        website: Website
-      managership:
-        manager: The manager’s account
-        manager_email: Manager’s Email
       question:
         content: Content
         correct_answer: Correct answer
         options: Options
       reader:
         confirmation_sent_at: Confirmation sent at
-        confirmation_token: 確認令牌
-        confirmed_at: 確認於
-        created_at: 創建於
-        current_password: 當前密碼
-        current_sign_in_at: 最近登錄於
-        current_sign_in_ip: 最近登錄 IP
-        email: 電子郵箱
-        encrypted_password: 密碼被加密
-        failed_attempts: 失敗嘗試
+        confirmation_token: Confirmation token
+        confirmed_at: Confirmed at
+        created_at: Created at
+        current_password: Current password
+        current_sign_in_at: Current sign in at
+        current_sign_in_ip: Current sign in IP
+        email: Email
+        encrypted_password: Encrypted password
+        failed_attempts: Failed attempts
         image: Image
-        last_sign_in_at: 最后登錄於
-        last_sign_in_ip: 最后登錄的 IP
+        last_sign_in_at: Last sign in at
+        last_sign_in_ip: Last sign in IP
         locale: Preferred language
-        locked_at: 鎖定於
+        locked_at: Locked at
         name: Full Name
-        password: 密碼
-        password_confirmation: 密碼確認
-        remember_created_at: 記住創建於
-        remember_me: 記住登錄信息
-        reset_password_sent_at: 重置密碼發送於
-        reset_password_token: 密碼重置令牌
+        password: Password
+        password_confirmation: Password confirmation
+        remember_created_at: Remember created at
+        remember_me: Remember me
+        reset_password_sent_at: Reset password sent at
+        reset_password_token: Reset password token
         send_reply_notifications: Notify me when someone replies to a comment I wrote
-        sign_in_count: 登錄次數
-        unconfirmed_email: 未確認郵件
-        unlock_token: 帳戶解鎖令牌
-        updated_at: 更新於
+        sign_in_count: Sign in count
+        unconfirmed_email: Unconfirmed email
+        unlock_token: Unlock token
+        updated_at: Updated at
       shared_cases_library:
         description: >
           These cases were shared by Gala users.
     errors:
       messages:
-        record_invalid: "驗証失敗: %{errors}"
+        record_invalid: "Validation failed: %{errors}"
         restrict_dependent_destroy:
-          has_many: "由於 %{record} 需要此記錄，所以無法移除記錄"
-          has_one: "由於 %{record} 需要此記錄，所以無法移除記錄"
+          has_many: "Cannot delete record because dependent %{record} exist"
+          has_one: "Cannot delete record because a dependent %{record} exists"
       models:
         question:
           attributes:
@@ -101,7 +89,7 @@ zh-TW:
                 an account with the email you have entered.
     models:
       activity: Activity
-      case: 案例
+      case: Case
       cases:
         setting: Case Settings
         feature: Featured status
@@ -114,8 +102,6 @@ zh-TW:
       global_community: Global Community
       group: Group
       group_membership: Group Membership
-      library: Library
-      managership: Managership
       page: Page
       podcast: Podcast
       reader: Reader
@@ -147,9 +133,9 @@ zh-TW:
       author_institution: Author Institution
       author_name: Author Name
       change_cover_image: Change cover image
-      edit: 編輯該案例
+      edit: Edit this case
       editing_authors: Editing Authors and Translators
-      feature_case: 將此案例設置為明星案例
+      feature_case: Feature this case
       just_change_the_text: |
         To edit this case, just change the text. We’ll save your work
         automatically.
@@ -163,19 +149,19 @@ zh-TW:
         zoom_out: Zoom out
       missed_something: Please delete any unused author or translator rows.
       no_elements: This case has no elements.
-      options: 選項
-      publish_case: 發表該案例
+      options: Options
+      publish_case: Publish this case
       remove_teaching_guide: Remove teaching guide
       replace_teaching_guide: Replace teaching guide
-      save: 保存
-      stop_editing: 停止編輯該案例
+      save: Save
+      stop_editing: Stop editing this case
       translator_name: Translator Name
-      unfeature_case: 取消設置此案例為明星案例
-      unpublish_case: 取消發表該案例
+      unfeature_case: Remove from featured cases
+      unpublish_case: Unpublish this case
       upload_teaching_guide: Upload teaching guide
     index:
-      all_cases: 全部案例
-      locations: 案例地點
+      all_cases: All cases
+      locations: Site locations
     new:
       create_a_case: Create a Case
     settings:
@@ -192,19 +178,19 @@ zh-TW:
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
     show:
-      back_to_overview: 返回案例主頁
+      back_to_overview: Overview
       download_teaching_guide: Download teaching guide
-      end: 終
-      forthcoming: 案例開發中
-      next: "下一頁："
-      not_yet_published: 案例未發表
-      other_languages: "此案例還有以下不同語言的版本："
-      toc: 目錄
+      end: End
+      forthcoming: Forthcoming
+      next: "Next: "
+      not_yet_published: This case is not yet published
+      other_languages: "This case is also available in these languages: "
+      toc: Table of Contents
   catalog:
-    catalog: 案例目錄
-    choose_for_yourself: 我的學習我做主
+    catalog: Catalog
+    choose_for_yourself: Choose for yourself
     enrollments_instruction: >
-      選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。
+      Cases you enroll in will be presented here for easy access.
     find_a_case: >
       Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
     global_systems: Global Systems
@@ -216,15 +202,15 @@ zh-TW:
     join_the_community: >
       Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     join_conversation: >
-      參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。
+      Join the conversation by asking questions and paying your learning forward.
     keywords: Keywords
-    learn_more: 了解更多
+    learn_more: Learn more
     meet_stakeholders: >
-      在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。
+      Meet different stakeholders and dive deep with a multimodal narrative.
     natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
     propose_a_case: Propose a Case
-    shortcut_experience: 通過案例學習獲取將所學知識運用於實踐的捷徑。
+    shortcut_experience: Apply principles to improve practice.
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
@@ -243,74 +229,75 @@ zh-TW:
       conversation: Conversation
       join_the_conversation: Join the conversation
       n_responses:
-        js: "{count, number}條回復"
-        other: "%{count}條回復"
+        js: "{count, number} {count, plural, one {response} other {responses}}"
+        one: 1 response
+        other: "%{count} responses"
       no_comments: No comments
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
-      respond: 參與討論
-      respond_here: 回應
-      select: 選擇想要發起討論的詞句
+      respond: Respond
+      respond_here: Respond here
+      select: Select a few words
       selection_not_unique: >
-        你所選擇的詞句已存在相關話題，請多選幾個詞。
-      write: 發表回復
-      write_new: 發起新話題
+        The words you have selected appear more than once. Please select a few more words.
+      write: Write a reply...
+      write_new: Write a new response
   communities:
     index:
-      choose_a_community: 選擇討論小組
+      choose_a_community: Choose a community
       instructions: >
-        加入討論小組后，你將能夠看到該討論版中的所有對話。
-      not_discussing: 你的討論小組還沒有對該案例展開討論。
+        You’ll see the discussion taking place in the community you choose.
+      not_discussing: Your active community is not discussing this case
   date:
     abbr_day_names:
-      - 周日
-      - 周一
-      - 周二
-      - 周三
-      - 周四
-      - 周五
-      - 周六
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
     abbr_month_names:
       -
-      - 1月
-      - 2月
-      - 3月
-      - 4月
-      - 5月
-      - 6月
-      - 7月
-      - 8月
-      - 9月
-      - 10月
-      - 11月
-      - 12月
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
     day_names:
-      - 星期日
-      - 星期一
-      - 星期二
-      - 星期三
-      - 星期四
-      - 星期五
-      - 星期六
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
     formats:
       default: "%Y-%m-%d"
-      long: "%Y年%b%d日"
-      short: "%b%d日"
+      long: "%B %d, %Y"
+      short: "%b %d"
     month_names:
       -
-      - 一月
-      - 二月
-      - 三月
-      - 四月
-      - 五月
-      - 六月
-      - 七月
-      - 八月
-      - 九月
-      - 十月
-      - 十一月
-      - 十二月
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
     order:
       - :year
       - :month
@@ -318,35 +305,46 @@ zh-TW:
   datetime:
     distance_in_words:
       about_x_hours:
-        other: 大約 %{count} 小時
+        one: about 1 hour
+        other: about %{count} hours
       about_x_months:
-        other: 大約 %{count} 個月
+        one: about 1 month
+        other: about %{count} months
       about_x_years:
-        other: 大約 %{count} 年
+        one: about 1 year
+        other: about %{count} years
       almost_x_years:
-        other: 接近 %{count} 年
-      half_a_minute: 半分鐘
+        one: almost 1 year
+        other: almost %{count} years
+      half_a_minute: half a minute
       less_than_x_minutes:
-        other: 不到 %{count} 分鐘
+        one: less than a minute
+        other: less than %{count} minutes
       less_than_x_seconds:
-        other: 不到 %{count} 秒
+        one: less than 1 second
+        other: less than %{count} seconds
       over_x_years:
-        other: '%{count} 年多'
+        one: over 1 year
+        other: over %{count} years
       x_days:
-        other: "%{count} 天"
+        one: 1 day
+        other: "%{count} days"
       x_minutes:
-        other: "%{count} 分鐘"
+        one: 1 minute
+        other: "%{count} minutes"
       x_months:
-        other: "%{count} 個月"
+        one: 1 month
+        other: "%{count} months"
       x_seconds:
-        other: "%{count} 秒"
+        one: 1 second
+        other: "%{count} seconds"
     prompts:
-      day: 日
-      hour: 時
-      minute: 分
-      month: 月
-      second: 秒
-      year: 年
+      day: Day
+      hour: Hour
+      minute: Minute
+      month: Month
+      second: Seconds
+      year: Year
   deployments:
     edit:
       edit_embedded_assessment: Edit embedded assessment
@@ -394,14 +392,15 @@ zh-TW:
   devise:
     sessions:
       destroy:
-        sign_out: 退出登陸
+        sign_out: Sign out
       new:
-        sign_in: 登陸
+        sign_in: Sign in
     shared:
       links:
-        sign_up_for_a_free_account: 注冊免費賬戶
+        sign_up_for_a_free_account: Sign up for a free account
       minimum_password_length:
-        other: '（最少%{count}個字符）'
+        one: (%{count} character minimum)
+        other: (%{count} characters minimum)
   edgenotes:
     destroy:
       delete: Delete this Edgenote.
@@ -454,75 +453,79 @@ zh-TW:
         case that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
-      are_you_sure: 你確定要退出這個案例的學習嗎？
-      unenroll: 退出該案例的學習
+      are_you_sure: Are you sure you want to unenroll in this case?
+      unenroll: Unenroll from this case
       you_will_need_another_invitation: >
-        這個案例還未公開發表，你將需要另一封邀請函來重新加入此案例的學習。
+        Because this case is not published, you will need another invitation to reenroll.
     index:
-      edit_enrolled: 編輯我的案例
-      enrolled_cases: 加入案例學習
-      finish_editing: 結束編輯
+      edit_enrolled: Edit enrolled cases
+      enrolled_cases: Enrolled cases
+      finish_editing: Finish editing
     new:
-      enroll: 參與學習
+      enroll: Enroll
       enroll_for_easy_access: >
-        如果你喜歡這個案例，就參與到該案例的學習中吧。加入之后，首頁上“我的案例”處將會出現鏈接到該案例的快捷方式。
-      enroll_in_this_case: 加入此案例的學習
+        If this case catches your eye, enroll for easy access.
+      enroll_in_this_case: Enroll in this case
   errors:
-    format: "%{attribute}%{message}"
+    format: "%{attribute} %{message}"
     messages:
-      accepted: 必須是可被接受的
-      blank: 不能為空字符
-      confirmation: 與確認值不匹配
-      empty: 不能留空
-      equal_to: 必須等於 %{count}
-      even: 必須為雙數
-      exclusion: 是保留關鍵字
-      greater_than: 必須大於 %{count}
-      greater_than_or_equal_to: 必須大於或等於 %{count}
-      inclusion: 不包含於列表中
-      invalid: 是無效的
-      less_than: 必須小於 %{count}
-      less_than_or_equal_to: 必須小於或等於 %{count}
-      model_invalid: "驗証失敗: %{errors}"
-      not_a_number: 不是數字
-      not_an_integer: 必須是整數
+      accepted: must be accepted
+      blank: can’t be blank
+      confirmation: doesn’t match %{attribute}
+      empty: can’t be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not included in the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      model_invalid: "Validation failed: %{errors}"
+      not_a_number: is not a number
+      not_an_integer: must be an integer
       not_found: "not found"
       not_locked: "was not locked"
       not_saved:
+        one: "1 error prohibited this %{resource} from being saved:"
         other: "%{count} errors prohibited this %{resource} from being saved:"
-      odd: 必須為單數
-      other_than: 長度非法（不可為 %{count} 個字符
-      present: 必須是空白
-      required: 必須存在
-      taken: 已經被使用
+      odd: must be odd
+      other_than: must be other than %{count}
+      present: must be blank
+      required: must exist
+      taken: has already been taken
       too_long:
-        other: 過長（最長為 %{count} 個字符）
+        one: is too long (maximum is 1 character)
+        other: is too long (maximum is %{count} characters)
       too_short:
-        other: 過短（最短為 %{count} 個字符）
+        one: is too short (minimum is 1 character)
+        other: is too short (minimum is %{count} characters)
       wrong_length:
-        other: 長度非法（必須為 %{count} 個字符）
+        one: is the wrong length (should be 1 character)
+        other: is the wrong length (should be %{count} characters)
     template:
-      body: '如下字段出現錯誤：'
+      body: 'There were problems with the following fields:'
       header:
-        other: "有 %{count} 個錯誤發生導致「%{model}」無法被保存。"
+        one: 1 error prevented this %{model} from being saved
+        other: "%{count} errors prevented this %{model} from being saved"
   features:
     index:
-      featured_cases: 明星案例
+      featured_cases: Featured cases
     create:
       this_case_is_not_featured: >
         This case is not featured. Feature it to have it displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
-      feature_case: 將此案例設置為明星案例
+      feature_case: Feature this case
     destroy:
       this_case_was_featured_on: >
         This case was featured on %{date}. It will be displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
-      unfeature_case: 取消設置此案例為明星案例
+      unfeature_case: Remove from featured cases
   forms:
-    required: 必需
+    required: required
   helpers:
-    cancel: 取消
-    choose_an_image: Choose an Image
-    close: 關閉
+    cancel: Cancel
     copy: Copy
+    close: Close
     edit: Edit
     formatting:
       add_citation_entity: "Add citation here."
@@ -536,25 +539,25 @@ zh-TW:
       ul: "Block style: Unordered list item."
     help: Help
     less:
-      read_more: 閱讀更多
+      read_more: Read more
     list:
-      end: '和'
-      middle: '、'
-      start: '、'
-      two: '、'
+      end: ', and '
+      middle: ', '
+      start: ', '
+      two: ' and '
     loading: Loading...
     page_entries_info:
       more_pages:
         display_entries: >
-          顯示 %{entry_name} <b>%{first} - %{last}</b>　共<b>%{total}</b>
-    save: 保存
+          Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total
+    save: Save
     select:
-      prompt: 請選擇
+      prompt: Please select
     submit:
-      create: 新增%{model}
+      create: Create %{model}
       save: Save %{model}
-      submit: 儲存%{model}
-      update: 更新%{model}
+      submit: Submit
+      update: Update %{model}
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
@@ -562,20 +565,6 @@ zh-TW:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
-  libraries:
-    destroy:
-      are_you_sure: >
-        Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
-      delete_library: Delete Library
-    edit:
-      edit_library: Edit Library
-      library_managers: Library Managers
-    index:
-      create_a_new_library: Create a New Library
-      libraries: Libraries
-      libraries_on_gala: >
-        Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
-      on_home_page: On Home Page
   locks:
     destroy:
       edit_anyway: Edit Anyway
@@ -587,26 +576,15 @@ zh-TW:
   magic_link:
     show:
       lets_get_started: Let’s get started!
-  managerships:
-    destroy:
-      are_you_sure: >
-        Are you sure you want to remove %{name} as a manager of this library?
-      remove: Remove Manager
-    new:
-      add_manager: Add Manager
-      instructions: >
-        Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
-      invite_someone_to_manage_this_library: >
-        Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >
         Are you sure you wish to delete this case? This action cannot be undone.
       create_a_case: Create a Case
       delete_case: Delete case.
-      edit_case: 編輯該案例
+      edit_case: Edit case.
       edit_case_settings: Edit case settings.
-      featured: 明星
+      featured: Featured
       my_cases: My Cases
       new_case: New Case
       once_youve_created: >
@@ -617,17 +595,17 @@ zh-TW:
       youre_not_authoring_any_cases: You’re not authoring any cases yet
   notifications:
     replied_to_your_comment: >
-      %{notifier}回復了你在%{case_kicker}的討論。
+      %{notifier} replied to your comment on “%{case_kicker}.”
   number:
     currency:
       format:
         delimiter: ","
-        format: "%u %n"
+        format: "%u%n"
         precision: 2
         separator: "."
         significant: false
         strip_insignificant_zeros: false
-        unit: "CN¥"
+        unit: "$"
     format:
       delimiter: ","
       precision: 3
@@ -638,22 +616,23 @@ zh-TW:
       decimal_units:
         format: "%n %u"
         units:
-          billion: 十億
-          million: 百萬
-          quadrillion: 千兆
-          thousand: 千
-          trillion: 兆
+          billion: Billion
+          million: Million
+          quadrillion: Quadrillion
+          thousand: Thousand
+          trillion: Trillion
           unit: ''
       format:
         delimiter: ''
-        precision: 1
+        precision: 3
         significant: true
         strip_insignificant_zeros: true
       storage_units:
         format: "%n %u"
         units:
           byte:
-            other: Byte
+            one: Byte
+            other: Bytes
           gb: GB
           kb: KB
           mb: MB
@@ -674,8 +653,9 @@ zh-TW:
       uploadPodcast: Upload Podcast
     show:
       with_host:
-        js: "主持人"
-        other: 主持人
+        js: "with {count, plural, one {host} other {hosts}}"
+        one: with host
+        other: with hosts
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
@@ -684,25 +664,25 @@ zh-TW:
         The correct answer to the question “{question}” is “{answer}”
   readers:
     form:
-      account_options: 賬戶選項
+      account_options: Account options
       choose_an_image: Choose a profile image
-      create_a_password: 設置密碼
-      my_account: 我的用戶
+      create_a_password: Create a password
+      my_account: My account
       notification_settings: Notification settings
-      save: '更新個人信息'
+      save: 'Update profile'
       you_have_not_created_a_password: >
-        因為你首次登陸時使用的是%{provider}，並沒有設置密碼。你現在可以通過設置密碼來用於下次登陸，或者繼續使用%{provider}進行登陸。
+        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
   search:
-    didnt_match: 抱歉，沒有找到你所搜索的案例。
+    didnt_match: Your search didn’t match any cases.
     full_text_search: Full text search...
-    no_results: 沒有可顯示的搜索結果
+    no_results: No search results
     propose_a_case: >
-      或者，如果你有希望收入到Gala的案例，或關於案例的設想，請與我們聯系。讓我們一起為環境和可持續發展領域提供更多更有效的學習資源。
-    refine: 細化搜索
-    results: 搜索結果
-    search: 搜索
+      If you have a case (or a good idea for one) that you’d like to see on Gala, reach out to us. Together we can make the most complete resource for teaching about environment and sustainability.,
+    refine: Refine search
+    results: Search results
+    search: Search
     search_cases: Search Cases...
-    try_again: 請試試輸入其他關鍵詞。
+    try_again: Try searching for something else.
   submissions:
     new:
       before_you_get_started: Before you get started
@@ -718,9 +698,9 @@ zh-TW:
       thank_you: Thank you for your submission.
   support:
     array:
-      last_word_connector: "和"
-      two_words_connector: "和"
-      words_connector: "、"
+      last_word_connector: ", and "
+      two_words_connector: " and "
+      words_connector: ", "
     quote:
       begin: '“'
       end: '”'
@@ -729,12 +709,12 @@ zh-TW:
     new:
       pressEnter: No results. Press Enter to create a new keyword.
   time:
-    am: 上午
+    am: am
     formats:
-      default: "%Y年%b%d日 %A %H:%M:%S %Z"
-      long: "%Y年%b%d日 %H:%M"
-      short: "%b%d日 %H:%M"
-    pm: 下午
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+    pm: pm
   translations:
     new:
       create_translation: Copy Case for Translation
