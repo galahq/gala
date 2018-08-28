@@ -40,5 +40,8 @@ feature 'Editing a library' do
     select library.name, from: 'Library'
     click_button 'Change library'
     expect(page).to have_content 'successfully updated'
+
+    kase.reload
+    expect(kase.library_id).to eq library.id
   end
 end

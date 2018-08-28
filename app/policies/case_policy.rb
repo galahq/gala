@@ -30,7 +30,7 @@ class CasePolicy < ApplicationPolicy
   end
 
   def update?
-    return false unless admin_scope.where(id: record.id).exists?
+    return true if admin_scope.where(id: record.id).exists?
     user_can_update_library?
   end
 
@@ -46,7 +46,6 @@ class CasePolicy < ApplicationPolicy
   private
 
   def user_can_update_library?
-    return true unless record.library.persisted?
     library_policy.update?
   end
 
