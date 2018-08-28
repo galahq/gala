@@ -74,7 +74,9 @@ Rails.application.routes.draw do
   end
 
   namespace 'catalog' do
-    resources :content_items, only: %w[create]
+    resources :content_items, only: %i[create]
+
+    resources :libraries, only: %i[index]
 
     get '*react_router_location', action: :home
   end
