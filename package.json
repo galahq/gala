@@ -97,7 +97,7 @@
     "babel-eslint": "^8.2.3",
     "eslint": "^5.0.1",
     "eslint-config-standard": "^11.0.0",
-    "eslint-config-standard-react": "^6.0.0",
+    "eslint-config-standard-react": "^7.0.0",
     "eslint-plugin-babel": "^5.0.0",
     "eslint-plugin-flowtype": "^2.30.4",
     "eslint-plugin-import": "^2.2.0",
