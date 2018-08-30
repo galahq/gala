@@ -4,6 +4,7 @@
  */
 
 import * as React from 'react'
+import { hot } from 'react-hot-loader'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
@@ -150,12 +151,14 @@ class Case extends React.Component<{
   }
 }
 
-export default connect(mapStateToProps, {
-  parseAllCards,
-  fetchCommentThreads,
-  fetchCommunities,
-  toggleEditing,
-  subscribeToActiveForumChannel,
-  subscribeToEditsChannel,
-  handleNotification,
-})(Case)
+export default hot(module)(
+  connect(mapStateToProps, {
+    parseAllCards,
+    fetchCommentThreads,
+    fetchCommunities,
+    toggleEditing,
+    subscribeToActiveForumChannel,
+    subscribeToEditsChannel,
+    handleNotification,
+  })(Case)
+)
