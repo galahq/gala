@@ -1,5 +1,13 @@
-const webpack = require('webpack')
+/**
+ * @noflow
+ */
+
 const { environment } = require('@rails/webpacker')
+
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+//   .BundleAnalyzerPlugin
+//
+// environment.plugins.append('BundleAnalyzer', new BundleAnalyzerPlugin())
 
 environment.loaders.get(
   'file'
@@ -9,28 +17,26 @@ environment.loaders.append('svg', {
   test: /\.svg$/,
   loader: 'raw-loader',
 })
+
 environment.loaders.append('yaml', {
   test: /\.yaml$|\.yml$/,
   use: [{ loader: 'json-loader' }, { loader: 'yaml-loader' }],
 })
 
-environment.plugins.append(
-  'CommonsChunkVendor',
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: module => {
-      // this assumes your vendor imports exist in the node_modules directory
-      return module.context && module.context.indexOf('node_modules') !== -1
+environment.config.merge({
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'initial',
+          name: 'vendor',
+          test: /node_modules/,
+          enforce: true,
+        },
+      },
     },
-  })
-)
-
-environment.plugins.append(
-  'CommonsChunkManifest',
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'manifest',
-    minChunks: Infinity,
-  })
-)
+    runtimeChunk: 'single',
+  },
+})
 
 module.exports = environment

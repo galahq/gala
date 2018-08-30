@@ -20,6 +20,7 @@
   ],
 
   "plugins": [
+    "react-hot-loader/babel",
     "babel-plugin-styled-components",
     "@babel/syntax-dynamic-import",
     "@babel/proposal-object-rest-spread",

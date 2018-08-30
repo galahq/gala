@@ -11,14 +11,18 @@ import DocumentTitle from 'react-document-title'
 import ValueProposition from 'catalog/ValueProposition'
 import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
-import MapView from 'catalog/MapView'
 import Categories from 'catalog/Categories'
 import Keywords from 'catalog/Keywords'
 import { Main } from 'catalog/shared'
 import Libraries from 'catalog/Libraries'
+import asyncComponent from 'utility/asyncComponent'
 
 import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
+
+const MapView = asyncComponent(() =>
+  import('catalog/MapView').then(m => m.default)
+)
 
 class Home extends React.Component<{
   loading: Loading,
@@ -32,7 +36,7 @@ class Home extends React.Component<{
     slug: string,
     options: { displayBetaWarning?: boolean }
   ) => any,
-  libraries: Library[]
+  libraries: Library[],
 }> {
   render () {
     const {
@@ -62,15 +66,17 @@ class Home extends React.Component<{
               featuredCases={this._featuredCases()}
             />
 
-            <MapView
-              cases={values(cases).filter(x => !!x.publishedAt)}
-              title={{ id: 'cases.index.locations' }}
-              startingViewport={{
-                latitude: 17.770231041567445,
-                longitude: 16.286555860170893,
-                zoom: 1.1606345336768273,
-              }}
-            />
+            {loading.cases || (
+              <MapView
+                cases={values(cases).filter(x => !!x.publishedAt)}
+                title={{ id: 'cases.index.locations' }}
+                startingViewport={{
+                  latitude: 17.770231041567445,
+                  longitude: 16.286555860170893,
+                  zoom: 1.1606345336768273,
+                }}
+              />
+            )}
 
             {tags &&
               tags.length > 0 && (

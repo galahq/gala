@@ -4,6 +4,7 @@
  */
 
 import * as React from 'react'
+import { hot } from 'react-hot-loader'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
@@ -139,7 +140,7 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
   }
 }
 
-export default injectIntl(Catalog)
+export default hot(module)(injectIntl(Catalog))
 
 const Container = styled.div`
   min-height: 100%;
