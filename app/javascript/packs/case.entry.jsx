@@ -2,13 +2,8 @@
  * @noflow
  */
 
-import 'babel-polyfill'
-import 'react-hot-loader/patch'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
-
-import { AppContainer } from 'react-hot-loader'
 
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
@@ -35,35 +30,21 @@ const store = createStore(
 
 const { locale } = (window.i18n: { locale: string })
 
-delete AppContainer.prototype.unstable_handleError
-
-const render = (Component: React$Component) => {
-  Promise.all([
-    import(`react-intl/locale-data/${locale.substring(0, 2)}`),
-    loadMessages(locale),
-  ]).then(([localeData, messages]) => {
-    addLocaleData(localeData)
-    ReactDOM.render(
-      <AppContainer>
-        <ErrorBoundary>
-          <Provider store={store}>
-            <IntlProvider locale={locale} messages={messages}>
-              <ThemeProvider theme={theme}>
-                <Component />
-              </ThemeProvider>
-            </IntlProvider>
-          </Provider>
-        </ErrorBoundary>
-      </AppContainer>,
-      document.getElementById('container')
-    )
-  })
-}
-
-render(Case)
-
-if (module.hot) {
-  module.hot.accept('Case', () => {
-    render(Case)
-  })
-}
+Promise.all([
+  import(`react-intl/locale-data/${locale.substring(0, 2)}`),
+  loadMessages(locale),
+]).then(([localeData, messages]) => {
+  addLocaleData(localeData)
+  ReactDOM.render(
+    <ErrorBoundary>
+      <Provider store={store}>
+        <IntlProvider locale={locale} messages={messages}>
+          <ThemeProvider theme={theme}>
+            <Case />
+          </ThemeProvider>
+        </IntlProvider>
+      </Provider>
+    </ErrorBoundary>,
+    document.getElementById('container')
+  )
+})
