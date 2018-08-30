@@ -59,7 +59,7 @@ gem 'oj'
 gem 'oj_mimic_json'
 gem 'redcarpet'
 gem 'sass-rails', '~> 5.0'
-gem 'webpacker'
+gem 'webpacker', '>= 4.0.x'
 
 # Logging and Monitoring
 gem 'awesome_print'

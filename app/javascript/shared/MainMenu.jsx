@@ -4,6 +4,7 @@
  */
 
 import * as React from 'react'
+import { hot } from 'react-hot-loader'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
@@ -72,7 +73,7 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
   }
 }
 
-export default injectIntl(MainMenu)
+export default hot(module)(injectIntl(MainMenu))
 
 const HelpButton = injectIntl(styled.a.attrs({
   className: 'pt-button pt-minimal pt-icon-help',
