@@ -14,14 +14,18 @@ import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
 import CommunityChooser from './CommunityChooser'
 import LearningObjectives from './LearningObjectives'
-import MapView from 'catalog/MapView'
 import CaseKeywords from './CaseKeywords'
 import TranslationLinks from './TranslationLinks'
 import TeachingGuide from './TeachingGuide'
 
+import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
 import type { State, Case, Tag, Viewport } from 'redux/state'
+
+const MapView = asyncComponent(() =>
+  import('catalog/MapView').then(m => m.default)
+)
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {

@@ -4,6 +4,11 @@
 
 const { environment } = require('@rails/webpacker')
 
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+//   .BundleAnalyzerPlugin
+//
+// environment.plugins.append('BundleAnalyzer', new BundleAnalyzerPlugin())
+
 environment.loaders.get(
   'file'
 ).test = /\.(jpg|jpeg|png|gif|eot|otf|ttf|woff|woff2)$/i
