@@ -21,14 +21,14 @@ class DeploymentsController < ApplicationController
   end
 
   def create
-    @deployment = Deployment.new deployment_params
-    prepare_for_form
+    service = DeployCaseService.new deployment_params, current_reader
+    @deployment = service.call
 
-    if @deployment.save
-      @deployment.group.add_administrator current_reader
+    if @deployment.persisted?
       redirect_to helpers.focus_deployment_path(@deployment),
                   notice: successfully_created
     else
+      prepare_for_form
       render :new
     end
   end
