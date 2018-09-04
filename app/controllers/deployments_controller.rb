@@ -22,8 +22,9 @@ class DeploymentsController < ApplicationController
 
   def create
     service = DeployCaseService.new deployment_params, current_reader
+    @deployment = service.call
 
-    if (@deployment = service.call)
+    if @deployment.persisted?
       redirect_to helpers.focus_deployment_path(@deployment),
                   notice: successfully_created
     else
