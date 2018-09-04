@@ -18,7 +18,7 @@ class DeployCaseService
       invite_reader_to_caselog
       enroll_reader_as_instructor
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved
-      return nil
+      nil
     end
     deployment
   end
@@ -26,6 +26,7 @@ class DeployCaseService
   private
 
   def save_deployment
+    deployment.build_group if deployment.group.blank?
     deployment.save!
   end
 
