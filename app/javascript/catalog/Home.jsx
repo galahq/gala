@@ -16,6 +16,7 @@ import Keywords from 'catalog/Keywords'
 import { Main } from 'catalog/shared'
 import Libraries from 'catalog/Libraries'
 import asyncComponent from 'utility/asyncComponent'
+import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
 import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
@@ -53,12 +54,18 @@ class Home extends React.Component<{
         <>
           {loading.reader || !!reader || <ValueProposition />}
 
-          <Sidebar
-            loading={loading}
-            reader={reader}
-            enrolledCases={this._enrolledCases()}
-            onDeleteEnrollment={onDeleteEnrollment}
-          />
+          <ContentItemSelectionContextConsumer>
+            {({ selecting }) =>
+              selecting || (
+                <Sidebar
+                  loading={loading}
+                  reader={reader}
+                  enrolledCases={this._enrolledCases()}
+                  onDeleteEnrollment={onDeleteEnrollment}
+                />
+              )
+            }
+          </ContentItemSelectionContextConsumer>
 
           <Main>
             <Features
