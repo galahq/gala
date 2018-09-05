@@ -8,11 +8,8 @@
  */
 
 import * as React from 'react'
-
-export type ContentItemSelectionContext = {
-  selecting: boolean,
-  onSelect: (caseSlug: string) => void,
-}
+import { submitForm } from 'shared/lti'
+import { CSRF } from 'shared/orchard'
 
 const defaultContext = { selecting: false, onSelect: () => {} }
 const { Provider: BaseProvider, Consumer } = React.createContext(defaultContext)
@@ -32,7 +29,15 @@ export class Provider extends React.Component<{ children: React.Node }, State> {
     params: window['content_item_selection_params'],
   }
 
-  handleSelect = () => {}
+  handleSelect = (caseSlug: string) => {
+    const { params } = this.state
+    if (!params) return
+
+    submitForm(params.canvas_deployments_path, {
+      case_slug: caseSlug,
+      ...CSRF.param(),
+    })
+  }
 
   render () {
     return (
