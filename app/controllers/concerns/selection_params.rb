@@ -9,6 +9,10 @@ module SelectionParams
     session[:content_item_selection_params]
   end
 
+  def selection_params=(data)
+    session[:content_item_selection_params] = data
+  end
+
   def lti_uid
     selection_params.try :[], 'lti_uid'
   end
