@@ -54,7 +54,7 @@ function six (arr) {
   return paddedArr.slice(0, 6)
 }
 
-const Grid = styled.ul`
+export const Grid = styled.ul`
   margin: 0;
   padding: 0;
   display: grid;
@@ -97,7 +97,7 @@ const CaseBlock = ({
   </Box>
 )
 
-const Title = styled.h3`
+export const Title = styled.h3`
   font-family: 'adelle';
   font-size: 1.3em;
   line-height: 1.1;

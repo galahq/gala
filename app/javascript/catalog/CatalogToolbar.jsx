@@ -10,6 +10,7 @@ import { withRouter } from 'react-router-dom'
 
 import { InputGroup } from '@blueprintjs/core'
 
+import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 import Toolbar from 'utility/Toolbar'
 import { getSearchPath } from 'catalog/SearchForm'
 
@@ -17,29 +18,33 @@ import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
 
 const CatalogToolbar = ({ history }: ContextRouter) => (
-  <Toolbar
-    groups={[
-      [
-        {
-          message: 'catalog.catalog',
-          icon: 'home',
-          onClick: () => history.push('/'),
-        },
-        {
-          message: 'cases.new.createACase',
-          icon: 'annotation',
-          onClick: () => (window.location = '/my_cases'),
-        },
-        {
-          message: 'deployments.index.deployACase',
-          icon: 'follower',
-          onClick: () => (window.location = '/deployments'),
-        },
-      ],
-      [],
-      [{ component: <Search /> }],
-    ]}
-  />
+  <ContentItemSelectionContextConsumer>
+    {({ selecting }) => (
+      <Toolbar
+        groups={[
+          [
+            {
+              message: 'catalog.catalog',
+              icon: 'home',
+              onClick: () => history.push('/'),
+            },
+            selecting || {
+              message: 'cases.new.createACase',
+              icon: 'annotation',
+              onClick: () => (window.location = '/my_cases'),
+            },
+            selecting || {
+              message: 'deployments.index.deployACase',
+              icon: 'follower',
+              onClick: () => (window.location = '/deployments'),
+            },
+          ],
+          [],
+          [{ component: <Search /> }],
+        ]}
+      />
+    )}
+  </ContentItemSelectionContextConsumer>
 )
 
 export default withRouter(CatalogToolbar)
