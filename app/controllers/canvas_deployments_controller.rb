@@ -4,6 +4,7 @@
 class CanvasDeploymentsController < ApplicationController
   include SelectionParams
 
+  skip_before_action :verify_authenticity_token
   before_action :ensure_content_item_selection_params_set!, only: [:create]
 
   # @route [POST] `/groups/1/canvas_deployments`
