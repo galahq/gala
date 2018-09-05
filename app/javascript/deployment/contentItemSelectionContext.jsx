@@ -9,7 +9,7 @@
 
 import * as React from 'react'
 import { submitForm } from 'shared/lti'
-import { CSRF } from 'shared/orchard'
+import { Orchard, CSRF } from 'shared/orchard'
 
 const defaultContext = { selecting: false, onSelect: () => {} }
 const { Provider: BaseProvider, Consumer } = React.createContext(defaultContext)
@@ -27,6 +27,10 @@ type State = {
 export class Provider extends React.Component<{ children: React.Node }, State> {
   state = {
     params: window['content_item_selection_params'],
+  }
+
+  componentDidMount () {
+    if (this.state.params) this.ensurePresentedWithinIframe()
   }
 
   handleSelect = (caseSlug: string) => {
@@ -50,6 +54,14 @@ export class Provider extends React.Component<{ children: React.Node }, State> {
         {this.props.children}
       </BaseProvider>
     )
+  }
+
+  ensurePresentedWithinIframe () {
+    if (window.self === window.top) {
+      Orchard.prune('/catalog/content_items/session').then(() =>
+        this.setState({ params: undefined })
+      )
+    }
   }
 }
 
