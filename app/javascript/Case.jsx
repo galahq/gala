@@ -23,6 +23,7 @@ import asyncComponent from 'utility/asyncComponent'
 
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
+import { Provider as ContentItemSelectionContextProvider } from 'deployment/contentItemSelectionContext'
 
 import type { State } from 'redux/state'
 
@@ -126,16 +127,24 @@ class Case extends React.Component<{
     return (
       <DocumentTitle title={`${kicker} — Gala`}>
         <Router basename={basename}>
-          <div id="Case">
-            <StatusBar />
-            <Switch>
-              <Route exact path="/" component={CaseOverview} />
-              <Route path={needsPretest ? '/*' : 'miss'} component={PreTest} />
-              <Route path={hasQuiz ? '/quiz/' : 'miss'} component={PostTest} />
-              <Route path="/conversation" component={Conversation} />
-              <Route path="/:position/" component={CaseElement} />
-            </Switch>
-          </div>
+          <ContentItemSelectionContextProvider>
+            <div id="Case">
+              <StatusBar />
+              <Switch>
+                <Route exact path="/" component={CaseOverview} />
+                <Route
+                  path={needsPretest ? '/*' : 'miss'}
+                  component={PreTest}
+                />
+                <Route
+                  path={hasQuiz ? '/quiz/' : 'miss'}
+                  component={PostTest}
+                />
+                <Route path="/conversation" component={Conversation} />
+                <Route path="/:position/" component={CaseElement} />
+              </Switch>
+            </div>
+          </ContentItemSelectionContextProvider>
         </Router>
       </DocumentTitle>
     )
