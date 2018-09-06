@@ -76,7 +76,9 @@ Rails.application.routes.draw do
   end
 
   namespace 'catalog' do
-    resources :content_items, only: %i[create]
+    resource :content_items, only: %i[create] do
+      resource :session, module: 'content_items', only: %i[destroy]
+    end
 
     resources :libraries, only: %i[index]
 

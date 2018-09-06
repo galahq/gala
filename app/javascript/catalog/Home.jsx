@@ -16,6 +16,7 @@ import Keywords from 'catalog/Keywords'
 import { Main } from 'catalog/shared'
 import Libraries from 'catalog/Libraries'
 import asyncComponent from 'utility/asyncComponent'
+import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
 import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
@@ -50,45 +51,55 @@ class Home extends React.Component<{
     } = this.props
     return (
       <DocumentTitle title="Gala">
-        <>
-          {loading.reader || !!reader || <ValueProposition />}
+        <ContentItemSelectionContextConsumer>
+          {({ selecting }) => (
+            <>
+              {loading.reader || !!reader || <ValueProposition />}
 
-          <Sidebar
-            loading={loading}
-            reader={reader}
-            enrolledCases={this._enrolledCases()}
-            onDeleteEnrollment={onDeleteEnrollment}
-          />
+              {selecting || (
+                <Sidebar
+                  loading={loading}
+                  reader={reader}
+                  enrolledCases={this._enrolledCases()}
+                  onDeleteEnrollment={onDeleteEnrollment}
+                />
+              )}
 
-          <Main>
-            <Features
-              readerIsEditor={readerIsEditor}
-              featuredCases={this._featuredCases()}
-            />
+              <Main>
+                <Features
+                  readerIsEditor={readerIsEditor}
+                  featuredCases={
+                    selecting
+                      ? [...this._enrolledCases(), ...this._featuredCases()]
+                      : this._featuredCases()
+                  }
+                />
 
-            {loading.cases || (
-              <MapView
-                cases={values(cases).filter(x => !!x.publishedAt)}
-                title={{ id: 'cases.index.locations' }}
-                startingViewport={{
-                  latitude: 17.770231041567445,
-                  longitude: 16.286555860170893,
-                  zoom: 1.1606345336768273,
-                }}
-              />
-            )}
+                {loading.cases || (
+                  <MapView
+                    cases={values(cases).filter(x => !!x.publishedAt)}
+                    title={{ id: 'cases.index.locations' }}
+                    startingViewport={{
+                      latitude: 17.770231041567445,
+                      longitude: 16.286555860170893,
+                      zoom: 1.1606345336768273,
+                    }}
+                  />
+                )}
 
-            {tags &&
-              tags.length > 0 && (
-                <>
-                  <Categories tags={tags} />
-                  <Keywords tags={tags} />
-                </>
-            )}
+                {tags &&
+                  tags.length > 0 && (
+                    <>
+                      <Categories tags={tags} />
+                      <Keywords tags={tags} />
+                    </>
+                )}
 
-            <Libraries libraries={libraries} />
-          </Main>
-        </>
+                <Libraries libraries={libraries} />
+              </Main>
+            </>
+          )}
+        </ContentItemSelectionContextConsumer>
       </DocumentTitle>
     )
   }

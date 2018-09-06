@@ -2,6 +2,8 @@
   <%= render 'noscript' %>
 </div>
 
+<%= render 'catalog/content_items/selection_params' %>
+
 <%=javascript_tag do %>
   window.caseData = <%=
   raw ActiveModel::Serializer.for(
