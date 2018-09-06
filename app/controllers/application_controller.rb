@@ -57,7 +57,9 @@ class ApplicationController < ActionController::Base
   end
 
   def validate_lti_request!
-    redirect_to root_path unless lti_request_valid?
+    return if lti_request_valid?
+    Rails.logger.info 'Invalid LTI request'
+    redirect_to root_path
   end
 
   def lti_request_valid?
