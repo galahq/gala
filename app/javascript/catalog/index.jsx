@@ -9,6 +9,12 @@ import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
 import { Orchard } from 'shared/orchard'
+import {
+  Provider as ContentItemSelectionContextProvider,
+  Consumer as ContentItemSelectionContextConsumer,
+} from 'deployment/contentItemSelectionContext'
+import { Grid as FeaturesGrid, Title as FeatureTitle } from 'catalog/Features'
+import { NaturalResourcesGrid, GlobalSystemsGrid } from 'catalog/Categories'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -100,36 +106,40 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     const basename = window.location.pathname.match(/^(\/\w{2}(-\w{2})?)?\//)[0]
     return (
       <Router basename={basename}>
-        <Container>
-          <CatalogToolbar />
-          <MaxWidthContainer>
-            <Window>
+        <ContentItemSelectionContextProvider>
+          <Container>
+            <CatalogToolbar />
+            <MaxWidthContainer>
               <Switch>
                 <Route
                   exact
                   path="/"
                   render={() => (
-                    <Home
-                      readerIsEditor={this._readerIsEditor()}
-                      {...this.state}
-                      onDeleteEnrollment={this.handleDeleteEnrollment}
-                    />
+                    <ConnectedWindow>
+                      <Home
+                        readerIsEditor={this._readerIsEditor()}
+                        {...this.state}
+                        onDeleteEnrollment={this.handleDeleteEnrollment}
+                      />
+                    </ConnectedWindow>
                   )}
                 />
                 <Route
                   path="/catalog/"
                   render={props => (
-                    <Results
-                      readerIsEditor={this._readerIsEditor()}
-                      {...this.state}
-                      {...props}
-                    />
+                    <Window>
+                      <Results
+                        readerIsEditor={this._readerIsEditor()}
+                        {...this.state}
+                        {...props}
+                      />
+                    </Window>
                   )}
                 />
               </Switch>
-            </Window>
-          </MaxWidthContainer>
-        </Container>
+            </MaxWidthContainer>
+          </Container>
+        </ContentItemSelectionContextProvider>
       </Router>
     )
   }
@@ -170,6 +180,54 @@ const Window = styled.div`
     grid-template: 'value-proposition' 'sidebar' 'banner' 'main' auto / 100%;
   }
 `
+
+const ContentItemSelectionInProgressWindow = styled(Window)`
+grid-template:
+  'value-proposition'
+  'banner'
+  'main' min-content / 100%;
+
+  @media (max-width: 1100px) {
+    grid-template:
+      'value-proposition'
+      'banner'
+      'main' min-content / 100%;
+  }
+
+  @media (max-width: 700px) {
+    grid-template: 'value-proposition' 'banner' 'main' auto / 100%;
+  }
+
+  & ${FeaturesGrid} {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 300px minmax(230px, 1fr);
+  }
+
+  & ${FeatureTitle} {
+    font-size: 1.1em;
+  }
+
+  & ${NaturalResourcesGrid},
+  & ${GlobalSystemsGrid} {
+    flex-direction: row;
+
+    & > *:not(:last-child) {
+      margin-right: 1em !important;
+      margin-bottom: 0 !important;
+    }
+  }
+`
+
+const ConnectedWindow = ({ children }) => (
+  <ContentItemSelectionContextConsumer>
+    {({ selecting }) => {
+      const Container = selecting
+        ? ContentItemSelectionInProgressWindow
+        : Window
+      return <Container>{children}</Container>
+    }}
+  </ContentItemSelectionContextConsumer>
+)
 
 function normalize<T: {}> (array: T[], key: $Keys<T>): { [string]: T } {
   return array.reduce((table, element) => {

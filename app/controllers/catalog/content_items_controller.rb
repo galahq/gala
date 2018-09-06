@@ -10,34 +10,32 @@ module Catalog
   # the class group and forum. Then they can edit the deployment to add a quiz.
   # deployments#edit is responsible for responding to the tool consumer.
   class ContentItemsController < ApplicationController
+    include SelectionParams
+
     skip_before_action :verify_authenticity_token
     before_action :validate_lti_request!
 
-    layout 'embed'
-
     # @route [POST] `/catalog/content_items`
     def create
-      linker = LinkerService.new LinkerService::LTIStrategy.new params
-
       sign_in linker.reader if linker.reader
-      @group = linker.group
-
       linker.call
-
       save_selection_params_to_session
-
-      @items = policy_scope(Case).published.ordered.with_attached_cover_image
-                                 .decorate
+      redirect_to root_path
     end
 
     private
 
+    def linker
+      @linker ||= LinkerService.new LinkerService::LTIStrategy.new params
+    end
+
     def save_selection_params_to_session
-      session[:content_item_selection_params] = {
+      self.selection_params = {
         lti_uid: params[:user_id],
         return_url: params[:content_item_return_url],
         return_data: params[:data],
-        context_id: params[:context_id]
+        context_id: params[:context_id],
+        canvas_deployments_path: group_canvas_deployments_path(linker.group)
       }
     end
   end

@@ -15,6 +15,7 @@ import { MaxWidthContainer } from 'utility/styledComponents'
 import type { IntlShape } from 'react-intl'
 
 type BarButton = {|
+  className?: string,
   disabled?: boolean,
   message?: string,
   onClick: () => any,
@@ -145,7 +146,9 @@ const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
         `
       : ''};
 `
-const Item = styled(Button).attrs({ className: 'pt-minimal' })``
+const Item = styled(Button).attrs({
+  className: p => p.className || 'pt-minimal',
+})``
 
 const StyledMenu = styled(Menu)`
   font-size: 90%;
