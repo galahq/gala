@@ -24,3 +24,18 @@
           = succeed ':' do
             = kase.kicker
           = kase.title
+
+
+- content_for :head do
+  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+         href: profile_path(format: :json) }
+  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+         href: cases_path(format: :json) }
+  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+         href: features_path(format: :json) }
+  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+         href: enrollments_path(format: :json) }
+  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+         href: tags_path(format: :json) }
+  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+         href: catalog_libraries_path(format: :json) }
