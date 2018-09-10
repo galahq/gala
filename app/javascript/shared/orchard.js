@@ -12,7 +12,7 @@ type ErrorResponse = {
 }
 
 export class Orchard {
-  static harvest (endpoint: string, params: Object = {}): Promise<any> {
+  static harvest (endpoint: string, params: ?Object = null): Promise<any> {
     const query = params
       ? `?${qs.stringify(params, { arrayFormat: 'brackets' })}`
       : ''
