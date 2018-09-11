@@ -48,6 +48,9 @@ en:
       managership:
         manager: The manager’s account
         manager_email: Manager’s Email
+      page:
+        iconSlug: Icon for Table of Contents
+        title: Title
       question:
         content: Content
         correct_answer: Correct answer
@@ -732,6 +735,9 @@ en:
     precision:
       format:
         delimiter: ''
+  pages:
+    edit:
+      pageSettings: Page Settings
   podcasts:
     destroy:
       delete_podcast: Delete Podcast
