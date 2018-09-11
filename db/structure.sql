@@ -964,7 +964,8 @@ CREATE TABLE pages (
     case_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title text DEFAULT ''::text
+    title text DEFAULT ''::text,
+    icon_slug text
 );
 
 
@@ -3002,6 +3003,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180806201127'),
 ('20180824210458'),
 ('20180827153920'),
-('20180828192116');
+('20180828192116'),
+('20180911154308');
 
 

@@ -3,6 +3,8 @@
 # A page of narrative, consisting of multiple {Card}s and associated {Edgenote}s
 #
 # @attr title [String] the page’s title
+# @attr icon_slug [?String] the slug of the icon to display in the TOC if the
+#   page represents an activity
 class Page < ApplicationRecord
   include Element
   include Lockable
