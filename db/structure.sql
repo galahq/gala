@@ -563,7 +563,8 @@ CREATE TABLE edgenotes (
     pdf_url text DEFAULT ''::text,
     photo_credit text DEFAULT ''::text,
     pull_quote text DEFAULT ''::text,
-    website_url text DEFAULT ''::text
+    website_url text DEFAULT ''::text,
+    icon_slug text
 );
 
 
@@ -3004,6 +3005,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180824210458'),
 ('20180827153920'),
 ('20180828192116'),
-('20180911154308');
+('20180911154308'),
+('20180911155612');
 
 
