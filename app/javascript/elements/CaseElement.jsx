@@ -8,7 +8,7 @@ import { Route, Redirect, Link } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
 
 import Sidebar from './Sidebar'
-import Page from './Page'
+import Page from 'page'
 import Podcast from 'podcast'
 import Activity from './Activity'
 import EdgenoteContents from 'deprecated/EdgenoteContents'
