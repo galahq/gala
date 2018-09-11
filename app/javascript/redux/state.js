@@ -301,7 +301,7 @@ export type Notification = {
 export type Page = {
   cards: string[],
   caseElement: CaseElement,
-  iconSlug: void,
+  iconSlug: ?string,
   id: string,
   position: number,
   title: string,

@@ -6,9 +6,10 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { Button, EditableText } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 
 import { updatePage, createCard } from 'redux/actions'
+import DetailsForm from 'page/DetailsForm'
 
 import Edgenotes from 'edgenotes'
 import Card from 'card'
@@ -19,52 +20,35 @@ type OwnProps = { id: string, deleteElement: () => void }
 function mapStateToProps (state: State, { id }: OwnProps) {
   return {
     editing: state.edit.inProgress,
-    ...state.pagesById[id],
+    page: state.pagesById[id],
   }
 }
 
-type Props = OwnProps &
-  PageT & {
-    editing: boolean,
-    updatePage: typeof updatePage,
-    createCard: typeof createCard,
-  }
+type Props = OwnProps & { page: PageT } & {
+  editing: boolean,
+  updatePage: typeof updatePage,
+  createCard: typeof createCard,
+}
 const Page = (props: Props) => {
-  let {
-    id,
-    title,
-    cards,
-    editing,
-    updatePage,
-    deleteElement,
-    createCard,
-  } = props
+  let { page, editing, updatePage, deleteElement, createCard } = props
+  let { id, title, cards } = page
 
   return (
     <article>
-      <section className="section Page-meta">
-        <h1 className="pt-dark" key={`h2:${id}`}>
-          <EditableText
-            multiline
-            placeholder="Page title"
-            value={title}
-            disabled={!editing}
-            onChange={(value: string) => updatePage(id, { title: value })}
+      <section className="pt-dark section Page-meta">
+        {editing ? (
+          <DetailsForm
+            page={page}
+            onChange={data => updatePage(id, data)}
+            onDelete={deleteElement}
           />
-        </h1>
-        {editing && (
-          <button
-            type="button"
-            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
-            onClick={deleteElement}
-          >
-            Delete Page
-          </button>
+        ) : (
+          <h1>{title}</h1>
         )}
       </section>
 
       {cards.map((cardId, i) => (
-        <>
+        <React.Fragment key={i}>
           {props.editing && (
             <CreateCardLink pageId={id} i={i} createCard={createCard} />
           )}
@@ -72,7 +56,7 @@ const Page = (props: Props) => {
             <Card id={cardId} />
             <Edgenotes cardId={cardId} />
           </Section>
-        </>
+        </React.Fragment>
       ))}
 
       {props.editing && (
