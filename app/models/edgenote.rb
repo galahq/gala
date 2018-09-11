@@ -7,6 +7,7 @@
 # `v2` Edgenotes have a clean design which looks less like a textbook than `v1`,
 # which is deprecated.
 #
+# @attr highlighted [Boolean] whether the Edgenote should be full width
 # @attr slug [String] a unique, URL-safe identifier
 # @attr style [:v1, :v2] deprecated `v1` or new-style `v2`
 # @attr caption [String]
@@ -17,6 +18,8 @@
 # @attr audio_url [String]
 # @attr alt_text [String] @todo translate this
 # @attr website_url [String]
+# @attr icon_slug [?String] the slug of the icon to display to represent the
+#   attachment type
 class Edgenote < ApplicationRecord
   include Lockable
   include Trackable
@@ -33,8 +36,9 @@ class Edgenote < ApplicationRecord
   has_one :link_expansion_visibility, class_name: 'LinkExpansion::Visibility',
                                       dependent: :destroy
 
-  has_one_attached :image
   has_one_attached :audio
+  has_one_attached :file
+  has_one_attached :image
 
   validates :format, inclusion: { in: %w[aside audio graphic link photo quote
                                          report video] }
