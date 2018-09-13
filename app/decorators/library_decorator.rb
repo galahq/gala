@@ -3,7 +3,7 @@
 # @see Library
 class LibraryDecorator < ApplicationDecorator
   def catalog_path
-    h.catalog_path react_router_location: "libraries/#{slug}"
+    super react_router_location: "libraries/#{slug}"
   end
 
   def define_color_variables
