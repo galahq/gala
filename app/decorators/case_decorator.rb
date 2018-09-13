@@ -1,35 +1,26 @@
 # frozen_string_literal: true
 
-DARK_BLUE_PIXEL =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU' \
-  'lEQVR42mOUtY/7DwAC9gG7VNK2ygAAAABJRU5ErkJggg=='
-
-RED_PIXEL =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAFoEvQfAAAABG' \
-  'dBTUEAALGPC/xhBQAAAA1JREFUCB1juOtg/x8ABbYCXHCMAk8AAAAASUVORK5CYII='
-
 # @see Case
 class CaseDecorator < ApplicationDecorator
   decorates_association :edgenotes
   decorates_association :podcasts
   decorates_association :library
 
-  def cover_url(transforms = { resize: '1280x540^' })
-    return DARK_BLUE_PIXEL unless cover_image.attached?
-    return RED_PIXEL unless cover_image.variable?
-    polymorphic_path cover_image.variant(transforms), only_path: true
+  def cover_url(options = { width: 1280, height: 540 })
+    ImageDecorator.decorate(cover_image).resized_path(options)
   end
 
   def small_cover_url
-    cover_url thumbnail: '200x200^'
+    cover_url width: 200, height: 200, sharpen: '0x1'
   end
 
   def open_graph_cover_url
-    cover_url resize: '1200x1200^'
+    cover_url width: 1200, height: 1200
   end
 
+  # cover_image as a File for attachment to an email
   def cover_image_attachment
-    open(cover_image.variant(resize: '470x95^').processed.service_url).read
+    ImageDecorator.decorate(cover_image).resized_file width: 470, height: 95
   end
 
   def teaching_guide_url

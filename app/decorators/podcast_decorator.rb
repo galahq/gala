@@ -2,9 +2,8 @@
 
 # @see Podcast
 class PodcastDecorator < ApplicationDecorator
-  def artwork_url(transforms = { resize: '950x384^' })
-    return DARK_BLUE_PIXEL unless artwork.attached?
-    polymorphic_path artwork.variant(transforms), only_path: true
+  def artwork_url(transforms = { width: 950, height: 384 })
+    ImageDecorator.decorate(artwork).resized_path transforms
   end
 
   def audio_url
