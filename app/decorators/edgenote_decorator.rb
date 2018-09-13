@@ -21,6 +21,11 @@ class EdgenoteDecorator < ApplicationDecorator
     polymorphic_path audio, only_path: true
   end
 
+  def file_url
+    return nil unless file.attached?
+    polymorphic_path file, only_path: true
+  end
+
   private
 
   def thumbnail_width

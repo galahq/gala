@@ -31,6 +31,7 @@ en:
         attribution: Attribution
         call_to_action: Call to action
         caption: Caption
+        icon_slug: Attachment icon
         photo_credit: Photo credit
         pull_quote: Pull quote
       editorship:
@@ -440,6 +441,7 @@ en:
       delete: Delete this Edgenote.
     edgenote:
       caption: "Caption: "
+      download_file: Download file
       has_audio: This edgenote has an audio clip.
       jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
@@ -453,8 +455,10 @@ en:
         [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en)
         on Twitter for some practical examples.
       attach_an_image: Attach an image
+      attach_a_file: Attach a file
       choose_audio_file: Choose audio file...
       choose_image: Choose image...
+      choose_file: Choose file...
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote.
