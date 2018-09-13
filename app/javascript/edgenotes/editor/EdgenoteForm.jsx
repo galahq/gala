@@ -117,6 +117,23 @@ const EdgenoteForm = ({
 
       {/* ~~~---~~~ */}
 
+      <Heading messageId="edgenotes.edit.attachAFile" />
+
+      <FileField
+        name="fileUrl"
+        placeholder="edgenotes.edit.chooseFile"
+        {...commonProps}
+      />
+
+      <Field
+        name="iconSlug"
+        label="activerecord.attributes.edgenote.iconSlug"
+        render={props => <Input {...props} />}
+        {...commonProps}
+      />
+
+      {/* ~~~---~~~ */}
+
       <Heading messageId="edgenotes.edit.writeACaption" />
 
       <Field
@@ -198,7 +215,7 @@ const TextArea = Input.withComponent('textarea')
 const FileField = (
   props: CommonFieldProps & {
     name: $Keys<ChangesToAttachments>,
-    accept: string,
+    accept?: string,
   }
 ) => {
   const attachment: ?Attachment | string = props.contents[props.name]
@@ -243,9 +260,13 @@ const shouldDisable = (
   contents: { ...Edgenote, ...ChangesToAttachments },
   expansion: ILinkExpansion
 ) => ({
-  websiteUrl: Attachment.truthy(contents.audioUrl),
+  websiteUrl:
+    Attachment.truthy(contents.audioUrl) || Attachment.truthy(contents.fileUrl),
 
-  pullQuote: Attachment.truthy(contents.imageUrl) || expansion.hasEmbed(),
+  pullQuote:
+    Attachment.truthy(contents.imageUrl) ||
+    Attachment.truthy(contents.fileUrl) ||
+    expansion.hasEmbed(),
   attribution: !contents.pullQuote && !contents.attribution,
   audioUrl: !contents.pullQuote || !!contents.websiteUrl,
 
@@ -256,6 +277,9 @@ const shouldDisable = (
     expansion.hasEmbed(),
   altText: !Attachment.truthy(contents.imageUrl),
   photoCredit: !Attachment.truthy(contents.imageUrl),
+
+  fileUrl: !!contents.websiteUrl || !!contents.pullQuote,
+  iconSlug: !contents.fileUrl,
 
   caption: false,
   callToAction: false,

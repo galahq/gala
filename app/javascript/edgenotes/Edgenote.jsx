@@ -40,6 +40,7 @@ import Expansion from './expansion'
 import withExpansion from './expansion/withExpansion'
 import Image from './Image'
 import PullQuote from './PullQuote'
+import Icon from 'utility/Icon'
 
 import {
   highlightEdgenote,
@@ -116,8 +117,10 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   componentDidUpdate (prevProps: Props) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
-      if (contents?.websiteUrl) {
-        window.open(contents?.websiteUrl, '_blank')
+
+      const url = contents?.websiteUrl || contents?.fileUrl
+      if (url) {
+        window.open(url, '_blank')
         setTimeout(() => {
           this.props.deactivate()
         }, 300)
@@ -207,6 +210,8 @@ class BaseEdgenoteFigure extends React.Component<Props> {
                 </a>
               </LabelForScreenReaders>
 
+              {this.renderDownloadSection()}
+
               {editing || (
                 <Tracker
                   timerState={active ? 'RUNNING' : 'STOPPED'}
@@ -270,12 +275,32 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     )
   }
 
+  renderDownloadSection () {
+    const { contents, activate } = this.props
+    if (!contents) return null
+
+    const { fileUrl, iconSlug, callToAction } = contents
+    if (!fileUrl) return null
+
+    return (
+      <DownloadButton onClick={activate}>
+        <Icon className="pt-icon" filename={iconSlug || 'activity-basic'} />
+        {callToAction ? (
+          <span>{callToAction}</span>
+        ) : (
+          <FormattedMessage id="edgenotes.edgenote.downloadFile" />
+        )}
+      </DownloadButton>
+    )
+  }
+
   renderCallToAction () {
     const { contents, expansion } = this.props
 
     if (
       contents == null ||
-      (!expansion.actsAsLink() && contents.callToAction == null)
+      (!expansion.actsAsLink() && contents.callToAction == null) ||
+      !!contents.fileUrl
     ) {
       return null
     }
@@ -307,7 +332,7 @@ export default connect(
   mergeProps
 )(withExpansion(EdgenoteFigure))
 
-const Container = styled.figure.attrs({ className: 'edge' })`
+const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
   position: relative;
   margin: 0 0 1em;
 
@@ -342,6 +367,12 @@ const Body = styled.div`
 `
 
 const LinkBody = Body.withComponent('a')
+
+const DownloadButton = styled.button.attrs({
+  className: 'pt-button',
+})`
+  margin-top: 0.5em;
+`
 
 const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
   (contents || linkDomain) && (
