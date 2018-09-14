@@ -615,6 +615,15 @@ en:
       save: Save %{model}
       submit: Submit
       update: Update %{model}
+  icons:
+    activity:
+      calculate: Calculate
+      consider: Consider
+      discuss: Discuss
+      evaluate: Evaluate
+      explore: Explore
+      role_play: Role Play
+      write: Write
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:

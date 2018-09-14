@@ -33,7 +33,7 @@ const Activity = ({
   pdfUrl,
   cardId,
   editing,
-  iconSlug = 'activity-text',
+  iconSlug = 'activity-discuss',
   updateActivity,
   deleteElement,
 }) => (
@@ -92,4 +92,7 @@ const Activity = ({
   </article>
 )
 
-export default connect(mapStateToProps, { updateActivity })(Activity)
+export default connect(
+  mapStateToProps,
+  { updateActivity }
+)(Activity)
