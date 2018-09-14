@@ -2,7 +2,7 @@
   <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="17.5 23.5 .5 23.5 .5 .5 11.5 .5 17.5 6.5"/>
     <polyline points="11.5 .5 11.5 6.5 17.5 6.5"/>
-    <polygon points="14.5 20.5 3.5 20.5 3.5 8.5 14.5 8.5"/>
-    <path d="M3.5 11.5L14.5 11.5M3.5 14.5L14.5 14.5M3.5 17.5L14.5 17.5M7.5 8.5L7.5 20.5"/>
+    <polyline points="4.5 8 4.5 19.5 13.5 19.5"/>
+    <path d="M7.5 14.5L7.5 19.5M10.5 10.5L10.5 19.5M13.5 10.5L13.5 19.5M7.5 16.5L10.5 16.5M13.5 10.5L10.5 10.5M4.5 14.5L7.5 14.5"/>
   </g>
 </svg>

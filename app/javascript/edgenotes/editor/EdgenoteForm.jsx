@@ -13,6 +13,7 @@ import { Button, FormGroup, Intent } from '@blueprintjs/core'
 
 import Attachment from './Attachment'
 import Markdown from 'utility/Markdown'
+import { IconChooser } from 'utility/Icon'
 
 import type { IntlShape } from 'react-intl'
 import type { ChangesToAttachments } from 'edgenotes/editor'
@@ -128,7 +129,27 @@ const EdgenoteForm = ({
       <Field
         name="iconSlug"
         label="activerecord.attributes.edgenote.iconSlug"
-        render={props => <Input {...props} />}
+        render={({ onChange, ...props }) => (
+          <IconChooser
+            icons={[
+              'file-basic',
+              'file-audio',
+              'file-code',
+              'file-data',
+              'file-image',
+              'file-model',
+              'file-shapes',
+              'file-spreadsheet',
+              'file-tasks',
+              'file-text',
+              'file-video',
+            ]}
+            {...props}
+            onChange={iconSlug =>
+              onChange(({ target: { value: iconSlug }}: $FlowIssue))
+            }
+          />
+        )}
         {...commonProps}
       />
 
@@ -279,7 +300,7 @@ const shouldDisable = (
   photoCredit: !Attachment.truthy(contents.imageUrl),
 
   fileUrl: !!contents.websiteUrl || !!contents.pullQuote,
-  iconSlug: !contents.fileUrl,
+  iconSlug: !Attachment.truthy(contents.fileUrl),
 
   caption: false,
   callToAction: false,
