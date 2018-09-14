@@ -9,6 +9,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Button, FormGroup, InputGroup } from '@blueprintjs/core'
 import { FormattedMessage } from 'react-intl'
+import { IconChooser } from 'utility/Icon'
 
 import type { Page } from 'redux/state'
 
@@ -45,12 +46,19 @@ const DetailsForm = ({
           label={
             <FormattedMessage id="activerecord.attributes.page.iconSlug" />
           }
-          labelFor="page_icon_slug"
         >
-          <InputGroup
-            id="page_icon_slug"
-            defaultValue={iconSlug}
-            onBlur={e => onChange({ iconSlug: e.target.value })}
+          <IconChooser
+            icons={[
+              'activity-calculate',
+              'activity-consider',
+              'activity-discuss',
+              'activity-evaluate',
+              'activity-explore',
+              'activity-rolePlay',
+              'activity-write',
+            ]}
+            value={iconSlug}
+            onChange={iconSlug => onChange({ iconSlug })}
           />
         </FormGroup>
       )}
