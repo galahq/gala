@@ -21,6 +21,7 @@ const Icon = ({ filename, ...props }: Props) => (
 export default Icon
 
 type IconChooserProps = {
+  disabled: boolean,
   icons: string[],
   value: string,
   onChange: string => mixed,
@@ -30,9 +31,11 @@ export const IconChooser = ({
   icons,
   value,
   onChange,
+  disabled,
   ...props
 }: IconChooserProps) => (
   <Select
+    disabled={disabled}
     filterable={false}
     inputProps={{ value, onChange }}
     items={icons}
@@ -49,6 +52,7 @@ export const IconChooser = ({
     onItemSelect={onChange}
   >
     <Button
+      disabled={disabled}
       icon={<Icon filename={value} />}
       style={{ flex: 1 }}
       rightIcon="double-caret-vertical"

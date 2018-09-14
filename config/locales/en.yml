@@ -624,6 +624,18 @@ en:
       explore: Explore
       role_play: Role Play
       write: Write
+    file:
+      audio: Audio
+      basic: Basic
+      code: Code
+      data: Data
+      image: Image
+      model: Model
+      shapes: Shapes
+      spreadsheet: Spreadsheet
+      tasks: Tasks
+      text: Text
+      video: Video
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
