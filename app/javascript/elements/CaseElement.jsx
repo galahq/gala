@@ -10,7 +10,6 @@ import DocumentTitle from 'react-document-title'
 import Sidebar from './Sidebar'
 import Page from 'page'
 import Podcast from 'podcast'
-import Activity from './Activity'
 import EdgenoteContents from 'deprecated/EdgenoteContents'
 
 import Tracker from 'utility/Tracker'
@@ -101,7 +100,7 @@ class CaseElement extends React.Component<{
 
     if (!reader) return redirectToOverview
 
-    const models = { Page, Podcast, Activity }
+    const models = { Page, Podcast }
     const Child = models[model]
     const deleteElement = () => {
       this.props
@@ -142,7 +141,10 @@ class CaseElement extends React.Component<{
   }
 }
 
-export default connect(mapStateToProps, { deleteElement })(CaseElement)
+export default connect(
+  mapStateToProps,
+  { deleteElement }
+)(CaseElement)
 
 type NextProps = ?{ title: string, position: string }
 

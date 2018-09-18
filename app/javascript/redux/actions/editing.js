@@ -151,19 +151,6 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
       }
       break
 
-    case 'activities':
-      {
-        const { title, pdfUrl, iconSlug } = state.activitiesById[id]
-        data = {
-          activity: {
-            title,
-            pdfUrl,
-            iconSlug,
-          },
-        }
-      }
-      break
-
     case 'edgenotes':
       data = { edgenote: state.edgenotesBySlug[id] }
 

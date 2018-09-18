@@ -88,7 +88,7 @@ class CasesController < ApplicationController
     @case = Case.friendly.includes(
       :podcasts, :cards,
       edgenotes: [image_attachment: :blob, audio_attachment: :blob],
-      activities: %i[case_element card], pages: %i[case_element cards]
+      pages: %i[case_element cards]
     )
                 .find(slug).decorate
   end

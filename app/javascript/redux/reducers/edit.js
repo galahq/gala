@@ -11,7 +11,6 @@ import type {
   UpdateCardContentsAction,
   UpdatePageAction,
   UpdatePodcastAction,
-  UpdateActivityAction,
   UpdateEdgenoteAction,
   EnqueueLockForDeletionAction,
   RemoveLockFromDeletionQueueAction,
@@ -24,7 +23,6 @@ type Action =
   | UpdateCardContentsAction
   | UpdatePageAction
   | UpdatePodcastAction
-  | UpdateActivityAction
   | UpdateEdgenoteAction
   | EnqueueLockForDeletionAction
   | RemoveLockFromDeletionQueueAction
@@ -98,17 +96,6 @@ function edit (state: ?EditState, action: Action): EditState {
         unsavedChanges: {
           ...state.unsavedChanges,
           [`podcasts/${action.id}`]: true,
-        },
-      }
-
-    case 'UPDATE_ACTIVITY':
-      if (action.needsSaving === false) return state
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`activities/${action.id}`]: true,
         },
       }
 

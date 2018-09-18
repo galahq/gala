@@ -16,12 +16,4 @@ FactoryBot.define do
       this.element ||= create :podcast, case_element: this
     end
   end
-
-  factory :activity_element, class: CaseElement do
-    association :case
-
-    after :build do |this|
-      this.element ||= create :activity, case_element: this
-    end
-  end
 end
