@@ -129,7 +129,7 @@ const EdgenoteForm = ({
       <Field
         name="iconSlug"
         label="activerecord.attributes.edgenote.iconSlug"
-        render={({ onChange, ...props }) => (
+        render={({ onChange, value, ...props }) => (
           <IconChooser
             icons={[
               'file-basic',
@@ -144,6 +144,7 @@ const EdgenoteForm = ({
               'file-text',
               'file-video',
             ]}
+            value={value || 'file-basic'}
             {...props}
             onChange={iconSlug =>
               onChange(({ target: { value: iconSlug }}: $FlowIssue))
