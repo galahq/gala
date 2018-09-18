@@ -23,7 +23,6 @@ import type {
   AddCommentThreadAction,
   RemoveCommentThreadAction,
   AddPodcastAction,
-  AddActivityAction,
 } from 'redux/actions'
 
 const { forceSelection } = EditorState
@@ -39,7 +38,6 @@ type Action =
   | AddCommentThreadAction
   | RemoveCommentThreadAction
   | AddPodcastAction
-  | AddActivityAction
 
 function cardsById (
   state: CardsState = ({ ...window.caseData.cards }: CardsState),
@@ -159,7 +157,6 @@ function cardsById (
     }
 
     case 'ADD_PODCAST':
-    case 'ADD_ACTIVITY':
       return {
         ...state,
         [action.data.cardId]: {

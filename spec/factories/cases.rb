@@ -26,7 +26,6 @@ FactoryBot.define do
       transient do
         page_count 3
         podcast_count 1
-        activity_count 1
       end
 
       in_catalog
@@ -34,7 +33,7 @@ FactoryBot.define do
       after :create do |this, ev|
         create_list(:page_element, ev.page_count, case: this)
         create_list(:podcast_element, ev.podcast_count, case: this)
-        create_list(:activity_element, ev.activity_count, case: this)
+        ActivityCreator.for(this)
         this.case_elements.reload
       end
 

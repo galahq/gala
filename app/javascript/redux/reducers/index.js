@@ -5,7 +5,6 @@
 
 import { combineReducers } from 'redux'
 
-import activitiesById from './activitiesById'
 import cardsById from './cards'
 import caseData from './caseData'
 import commentsById from './commentsById'
@@ -21,7 +20,6 @@ import statistics from './statistics'
 import ui from './ui'
 
 const state = {
-  activitiesById,
   cardsById,
   caseData,
   commentsById,

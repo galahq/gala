@@ -10,7 +10,6 @@ class CaseSerializer < Cases::PreviewSerializer
 
   has_many :case_elements
 
-  has_many_by_id :activities
   has_many_by_id :cards
   has_many_by_id :edgenotes
   has_many_by_id :pages
