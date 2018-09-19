@@ -84,6 +84,7 @@ const Container = styled.fieldset.attrs({ className: 'pt-card' })`
 const Header = styled.legend``
 
 const Row = styled.div`
+  align-items: flex-end;
   display: flex;
   margin-left: -1em;
 

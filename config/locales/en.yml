@@ -50,7 +50,7 @@ en:
         manager: The manager’s account
         manager_email: Manager’s Email
       page:
-        iconSlug: Icon for Table of Contents
+        iconSlug: Table of Contents Icon
         title: Title
       question:
         content: Content
