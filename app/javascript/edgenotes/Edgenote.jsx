@@ -284,7 +284,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
     return (
       <DownloadButton onClick={activate}>
-        <Icon className="pt-icon" filename={iconSlug || 'activity-basic'} />
+        <Icon className="pt-icon" filename={iconSlug || 'file-basic'} />
         {callToAction ? (
           <span>{callToAction}</span>
         ) : (
