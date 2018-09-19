@@ -9,6 +9,7 @@ describe ContentState::Block do
       data: {},
       text: 'Hello, world!',
       depth: 0,
+      type: 'unstyled',
       entityRanges: [],
       inlineStyleRanges: []
     }.with_indifferent_access
@@ -38,6 +39,26 @@ describe ContentState::Block do
   describe '#text' do
     it 'returns the plain text contents of the block' do
       expect(block.text).to eq 'Hello, world!'
+    end
+  end
+
+  describe '#text=' do
+    it 'sets the plain text contents of the block' do
+      block.text = 'What’s up?'
+      expect(block.text).to eq 'What’s up?'
+    end
+  end
+
+  describe '#type' do
+    it 'returns the type of the block' do
+      expect(block.type).to eq 'unstyled'
+    end
+  end
+
+  describe '#text=' do
+    it 'sets the type of the block' do
+      block.type = 'header-two'
+      expect(block.type).to eq 'header-two'
     end
   end
 

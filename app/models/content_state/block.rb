@@ -7,6 +7,7 @@ class ContentState
       data: {},
       text: '',
       depth: 0,
+      type: 'unstyled',
       entityRanges: [],
       inlineStyleRanges: []
     }.freeze
@@ -20,8 +21,14 @@ class ContentState
       @data = empty.merge(data).with_indifferent_access
     end
 
-    def text
-      data[:text]
+    %i[text depth type].map do |method|
+      define_method method do                  # def text
+        data[method]                           #   data[:text]
+      end
+
+      define_method :"#{method}=" do |value|   # def text=(value)
+        data[method] = value                   #   data[:text] = value
+      end
     end
 
     def entity_ranges
