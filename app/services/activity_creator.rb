@@ -36,7 +36,7 @@ class ActivityCreator
   end
 
   def create_card
-    @card = page.cards.create raw_content: ContentState.with_text(default_text)
+    @card = page.cards.create raw_content: default_content_state
   end
 
   def create_edgenote
@@ -49,9 +49,11 @@ class ActivityCreator
     { icon_slug: 'activity-evaluate' }
   end
 
-  def default_text
-    ['Instructions',
-     'Use the attached file to...']
+  def default_content_state
+    ContentState.with_text(['Instructions', 'Use the attached file to...'])
+                .tap do |c_s|
+      c_s.blocks.first.type = 'header-two'
+    end
   end
 
   def default_edgenote_params
