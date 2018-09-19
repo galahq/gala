@@ -125,41 +125,6 @@ ALTER SEQUENCE active_storage_blobs_id_seq OWNED BY active_storage_blobs.id;
 
 
 --
--- Name: activities; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE activities (
-    id integer NOT NULL,
-    case_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    "position" integer,
-    icon_slug character varying DEFAULT 'activity-text'::character varying,
-    pdf_url text DEFAULT ''::text,
-    title text DEFAULT ''::text
-);
-
-
---
--- Name: activities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE activities_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: activities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE activities_id_seq OWNED BY activities.id;
-
-
---
 -- Name: ahoy_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1400,13 +1365,6 @@ ALTER TABLE ONLY active_storage_blobs ALTER COLUMN id SET DEFAULT nextval('activ
 
 
 --
--- Name: activities id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY activities ALTER COLUMN id SET DEFAULT nextval('activities_id_seq'::regclass);
-
-
---
 -- Name: ahoy_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1651,15 +1609,14 @@ ALTER TABLE ONLY cases
 
 CREATE MATERIALIZED VIEW cases_search_index AS
  SELECT cases.id,
-    ((((((((((setweight(to_tsvector(COALESCE(cases.kicker, ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(cases.title, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.dek, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.summary, ''::text)), 'A'::"char")) || setweight(jsonb_path_to_tsvector(
+    (((((((((setweight(to_tsvector(COALESCE(cases.kicker, ''::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(cases.title, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.dek, ''::text)), 'A'::"char")) || setweight(to_tsvector(COALESCE(cases.summary, ''::text)), 'A'::"char")) || setweight(jsonb_path_to_tsvector(
         CASE
             WHEN (jsonb_typeof(cases.learning_objectives) <> 'array'::text) THEN '[]'::jsonb
             ELSE cases.learning_objectives
-        END, '{}'::text[]), 'B'::"char")) || jsonb_path_to_tsvector(cases.authors, '{name}'::text[])) || setweight(to_tsvector(COALESCE(string_agg(pages.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(podcasts.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(activities.title, ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg(podcasts.credits, ' '::text), ''::text))) || COALESCE(tsvector_agg(jsonb_path_to_tsvector((cards.raw_content -> 'blocks'::text), '{text}'::text[])), to_tsvector(''::text))) AS document
-   FROM ((((cases
+        END, '{}'::text[]), 'B'::"char")) || jsonb_path_to_tsvector(cases.authors, '{name}'::text[])) || setweight(to_tsvector(COALESCE(string_agg(pages.title, ' '::text), ''::text)), 'B'::"char")) || setweight(to_tsvector(COALESCE(string_agg(podcasts.title, ' '::text), ''::text)), 'B'::"char")) || to_tsvector(COALESCE(string_agg(podcasts.credits, ' '::text), ''::text))) || COALESCE(tsvector_agg(jsonb_path_to_tsvector((cards.raw_content -> 'blocks'::text), '{text}'::text[])), to_tsvector(''::text))) AS document
+   FROM (((cases
      LEFT JOIN pages ON ((pages.case_id = cases.id)))
      LEFT JOIN podcasts ON ((podcasts.case_id = cases.id)))
-     LEFT JOIN activities ON ((activities.case_id = cases.id)))
      LEFT JOIN cards ON ((cards.case_id = cases.id)))
   GROUP BY cases.id
   WITH NO DATA;
@@ -1679,14 +1636,6 @@ ALTER TABLE ONLY active_storage_attachments
 
 ALTER TABLE ONLY active_storage_blobs
     ADD CONSTRAINT active_storage_blobs_pkey PRIMARY KEY (id);
-
-
---
--- Name: activities activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY activities
-    ADD CONSTRAINT activities_pkey PRIMARY KEY (id);
 
 
 --
@@ -1980,13 +1929,6 @@ CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON active_storag
 --
 
 CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON active_storage_blobs USING btree (key);
-
-
---
--- Name: index_activities_on_case_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_activities_on_case_id ON activities USING btree (case_id);
 
 
 --
@@ -2733,14 +2675,6 @@ ALTER TABLE ONLY pages
 
 
 --
--- Name: activities fk_rails_87f70881a5; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY activities
-    ADD CONSTRAINT fk_rails_87f70881a5 FOREIGN KEY (case_id) REFERENCES cases(id);
-
-
---
 -- Name: cards fk_rails_8ed9cff919; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3006,6 +2940,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180827153920'),
 ('20180828192116'),
 ('20180911154308'),
-('20180911155612');
+('20180911155612'),
+('20180919145935');
 
 
