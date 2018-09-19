@@ -11,6 +11,7 @@ describe ContentState do
           data: {},
           text: 'Hello, world!',
           depth: 0,
+          type: 'unstyled',
           entityRanges: [],
           inlineStyleRanges: []
         }
