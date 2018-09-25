@@ -144,6 +144,7 @@ export const UnconnectedBillboardTitle = ({
       <cite className="o-bottom-right c-photo-credit">
         {!minimal && (
           <EditableText
+            multiline
             value={photoCredit}
             disabled={!editing}
             placeholder={editing ? 'Photo credit' : ''}
