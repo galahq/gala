@@ -10,10 +10,12 @@ ja:
         kicker: 短いタイトル
         learning_objectives: 学習目標
         library: ライブラリ
+        library_id: ライブラリ
         locale: Language
         location: 場所
         published: 公開された
         slug: 事例研究のURL
+        teaching_guide: Teaching guide
         title: 質問
         translators:
           js: "翻訳者："
@@ -28,11 +30,27 @@ ja:
         attribution: 出典
         call_to_action: 行動を促す言葉
         caption: 説明文
+        icon_slug: Attachment icon
         photo_credit: クレジット表記
         pull_quote: 引用
       editorship:
         editor: Your collaborator’s account
         editor_email: Collaborator’s Email
+      library:
+        background_color: Background Color
+        description: Description
+        foreground_color: Foreground Color
+        logo: Logo
+        name: Name
+        url: Library Website
+        visible_in_catalog: Listed on Gala’s Home Page
+        website: Website
+      managership:
+        manager: The manager’s account
+        manager_email: Manager’s Email
+      page:
+        iconSlug: Table of Contents Icon
+        title: Title
       question:
         content: 内容
         correct_answer: 正解
@@ -100,6 +118,8 @@ ja:
       global_community: グローバルコミュニティ
       group: グループ
       group_membership: グループのメンバーシップ
+      library: ライブラリ
+      managership: Managership
       page: ページ
       podcast: ポッドキャスト
       reader: リーダー
@@ -145,11 +165,14 @@ ja:
       no_elements: この事例研究は要素がありません。
       options: 選択肢
       publish_case: 発刊する
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
       save: 保存
       stop_editing: 編集を停止する
       translator_name: 翻訳者の名前
       unfeature_case: 注目の事例研究から除去する
       unpublish_case: 非公開にする
+      upload_teaching_guide: Upload teaching guide
     index:
       all_cases: すべての事例研究
       locations: 場所
@@ -170,6 +193,7 @@ ja:
           <b>形式：</b>小文字と数字、ハイフンで区切られました<br />100文字以内。
     show:
       back_to_overview: 概要に戻る
+      download_teaching_guide: Download teaching guide
       end: 終わり
       forthcoming: 今後
       next: "次："
@@ -383,6 +407,7 @@ ja:
       delete: このEdgenoteを削除する。
     edgenote:
       caption: "キャプション："
+      download_file: Download file
       has_audio: このエッジノートはオーディオが添付しています。
       jump_to_edgenote: Jump to Edgenote
       pull_quote: "引用："
@@ -392,8 +417,10 @@ ja:
       alt_text_guidelines: >
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
       attach_an_image: Attach an image
+      attach_a_file: Attach a file
       choose_audio_file: Choose audio file...
       choose_image: Choose image...
+      choose_file: Choose file...
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
@@ -496,8 +523,9 @@ ja:
     required: 必須
   helpers:
     cancel: キャンセル
-    copy: Copy
+    choose_an_image: Choose an Image
     close: 閉じる
+    copy: Copy
     edit: Edit
     formatting:
       add_citation_entity: "ここで引用を追加します。"
@@ -530,6 +558,27 @@ ja:
       save: '%{model} を保存します'
       submit: 保存する
       update: 更新する
+  icons:
+    activity:
+      calculate: Calculate
+      consider: Consider
+      discuss: Discuss
+      evaluate: Evaluate
+      explore: Explore
+      role_play: Role Play
+      write: Write
+    file:
+      audio: Audio
+      basic: Basic
+      code: Code
+      data: Data
+      image: 画像
+      model: Model
+      shapes: Shapes
+      spreadsheet: Spreadsheet
+      tasks: Tasks
+      text: Text
+      video: Video
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
@@ -537,6 +586,20 @@ ja:
           このメールを受け取る理由は<a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>のユーザーです。
         text: >
           このメールを受け取る理由はGala（https://www.learngala.com）のユーザーです。
+  libraries:
+    destroy:
+      are_you_sure: >
+        Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
+      delete_library: Delete Library
+    edit:
+      edit_library: Edit Library
+      library_managers: Library Managers
+    index:
+      create_a_new_library: Create a New Library
+      libraries: Libraries
+      libraries_on_gala: >
+        Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
+      on_home_page: On Home Page
   locks:
     destroy:
       edit_anyway: Edit Anyway
@@ -548,6 +611,17 @@ ja:
   magic_link:
     show:
       lets_get_started: 始めましょう!
+  managerships:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+      remove: Remove Manager
+    new:
+      add_manager: Add Manager
+      instructions: >
+        Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
+      invite_someone_to_manage_this_library: >
+        Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >
@@ -615,6 +689,9 @@ ja:
     precision:
       format:
         delimiter: ''
+  pages:
+    edit:
+      pageSettings: Page Settings
   podcasts:
     destroy:
       delete_podcast: Delete Podcast
