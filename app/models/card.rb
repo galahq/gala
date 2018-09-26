@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# A card of text. It represents a discrete quantum of narrative. {Podcast} and
-# {Activity} elements have one; many can appear on each {Page}. Cards on pages
-# can have {Edgenote}s attached, which are referenced by slug in the card’s
-# {raw_content} as `DraftEntity`s.
+# A card of text. It represents a discrete quantum of narrative. {Podcast}
+# elements have one; many can appear on each {Page}. Cards on pages can have
+# {Edgenote}s attached, which are referenced by slug in the card’s {raw_content}
+# as `DraftEntity`s.
 #
 # @attr position [Numeric] this card’s sequence within its {Page} (other
 #   {Element}s can only have one)

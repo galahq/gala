@@ -4,7 +4,6 @@
 
 import type { State } from 'redux/state'
 
-import * as ActivityActions from './activity.js'
 import * as CardActions from './card.js'
 import * as CaseActions from './case.js'
 import * as CaseElementActions from './caseElement.js'
@@ -47,8 +46,6 @@ export type Dispatch = (
 ) => Promise<any>
 
 export type Action =
-  | ActivityActions.AddActivityAction
-  | ActivityActions.UpdateActivityAction
   | CardActions.AddCardAction
   | CardActions.OpenCitationAction
   | CardActions.ParseAllCardsAction

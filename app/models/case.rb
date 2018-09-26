@@ -62,8 +62,6 @@ class Case < ApplicationRecord
   has_many :quizzes, dependent: :destroy
   has_many :readers, through: :enrollments
 
-  has_many :activities,
-           through: :case_elements, source: :element, source_type: 'Activity'
   has_many :pages,
            through: :case_elements, source: :element, source_type: 'Page'
   has_many :podcasts,

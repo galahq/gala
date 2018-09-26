@@ -13,6 +13,7 @@ import { Button, FormGroup, Intent } from '@blueprintjs/core'
 
 import Attachment from './Attachment'
 import Markdown from 'utility/Markdown'
+import { IconChooser } from 'utility/Icon'
 
 import type { IntlShape } from 'react-intl'
 import type { ChangesToAttachments } from 'edgenotes/editor'
@@ -117,6 +118,44 @@ const EdgenoteForm = ({
 
       {/* ~~~---~~~ */}
 
+      <Heading messageId="edgenotes.edit.attachAFile" />
+
+      <FileField
+        name="fileUrl"
+        placeholder="edgenotes.edit.chooseFile"
+        {...commonProps}
+      />
+
+      <Field
+        name="iconSlug"
+        label="activerecord.attributes.edgenote.iconSlug"
+        render={({ onChange, value, ...props }) => (
+          <IconChooser
+            icons={[
+              'file-basic',
+              'file-audio',
+              'file-code',
+              'file-data',
+              'file-image',
+              'file-model',
+              'file-shapes',
+              'file-spreadsheet',
+              'file-tasks',
+              'file-text',
+              'file-video',
+            ]}
+            value={value || 'file-basic'}
+            {...props}
+            onChange={iconSlug =>
+              onChange(({ target: { value: iconSlug }}: $FlowIssue))
+            }
+          />
+        )}
+        {...commonProps}
+      />
+
+      {/* ~~~---~~~ */}
+
       <Heading messageId="edgenotes.edit.writeACaption" />
 
       <Field
@@ -198,7 +237,7 @@ const TextArea = Input.withComponent('textarea')
 const FileField = (
   props: CommonFieldProps & {
     name: $Keys<ChangesToAttachments>,
-    accept: string,
+    accept?: string,
   }
 ) => {
   const attachment: ?Attachment | string = props.contents[props.name]
@@ -243,9 +282,13 @@ const shouldDisable = (
   contents: { ...Edgenote, ...ChangesToAttachments },
   expansion: ILinkExpansion
 ) => ({
-  websiteUrl: Attachment.truthy(contents.audioUrl),
+  websiteUrl:
+    Attachment.truthy(contents.audioUrl) || Attachment.truthy(contents.fileUrl),
 
-  pullQuote: Attachment.truthy(contents.imageUrl) || expansion.hasEmbed(),
+  pullQuote:
+    Attachment.truthy(contents.imageUrl) ||
+    Attachment.truthy(contents.fileUrl) ||
+    expansion.hasEmbed(),
   attribution: !contents.pullQuote && !contents.attribution,
   audioUrl: !contents.pullQuote || !!contents.websiteUrl,
 
@@ -256,6 +299,9 @@ const shouldDisable = (
     expansion.hasEmbed(),
   altText: !Attachment.truthy(contents.imageUrl),
   photoCredit: !Attachment.truthy(contents.imageUrl),
+
+  fileUrl: !!contents.websiteUrl || !!contents.pullQuote,
+  iconSlug: !Attachment.truthy(contents.fileUrl),
 
   caption: false,
   callToAction: false,

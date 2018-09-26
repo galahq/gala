@@ -21,6 +21,7 @@ import type { VisibilityChangeProps } from './withVisibilityChanges'
 type ChangeToAttachment = ?Attachment
 export type ChangesToAttachments = {|
   audioUrl: ChangeToAttachment,
+  fileUrl: ChangeToAttachment,
   imageUrl: ChangeToAttachment,
 |}
 
@@ -47,7 +48,11 @@ class EdgenoteEditor extends React.Component<Props, State> {
   state = {
     open: false,
     contents: this.props.contents,
-    changesToAttachments: { audioUrl: undefined, imageUrl: undefined },
+    changesToAttachments: {
+      audioUrl: undefined,
+      fileUrl: undefined,
+      imageUrl: undefined,
+    },
   }
 
   componentWillUnmount () {
@@ -139,10 +144,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
   _reset = () => this.setState({ contents: this.props.contents })
 }
 export default compose(
-  connect(
-    null,
-    { changeEdgenote, updateLinkExpansionVisibility }
-  ),
+  connect(null, { changeEdgenote, updateLinkExpansionVisibility }),
   withVisibilityChanges,
   injectIntl
 )(EdgenoteEditor)

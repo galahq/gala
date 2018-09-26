@@ -43,8 +43,10 @@ const filterParams: $FlowIssue = R.pick([
   'callToAction',
   'caption',
   'content',
+  'file',
   'format',
   'highlighted',
+  'iconSlug',
   'image',
   'photoCredit',
   'pullQuote',
@@ -60,11 +62,13 @@ export function changeEdgenote (
       self: edgenotePath,
       image: imagePath,
       audio: audioPath,
+      file: filePath,
     } = getState().edgenotesBySlug[slug].links
 
     return Promise.all([
       uploadOrDetach(dispatch, contents.imageUrl, 'image', imagePath),
       uploadOrDetach(dispatch, contents.audioUrl, 'audio', audioPath),
+      uploadOrDetach(dispatch, contents.fileUrl, 'file', filePath),
     ]).then(patches =>
       Orchard.espalier(edgenotePath, {
         edgenote: filterParams(

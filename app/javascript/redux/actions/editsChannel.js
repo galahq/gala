@@ -7,17 +7,6 @@ import * as A from 'redux/actions'
 
 function mapBroadcastToAction (type, watchable) {
   switch (watchable.type) {
-    case 'Activity':
-      switch (type) {
-        case 'create':
-          return A.addActivity(watchable)
-        case 'update':
-          return A.updateActivity(watchable.param, watchable, false)
-        case 'destroy':
-          return A.removeActivity(watchable.param)
-      }
-      break
-
     case 'Card':
       switch (type) {
         case 'create':

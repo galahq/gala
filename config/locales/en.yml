@@ -31,6 +31,7 @@ en:
         attribution: Attribution
         call_to_action: Call to action
         caption: Caption
+        icon_slug: Attachment icon
         photo_credit: Photo credit
         pull_quote: Pull quote
       editorship:
@@ -48,6 +49,9 @@ en:
       managership:
         manager: The manager’s account
         manager_email: Manager’s Email
+      page:
+        iconSlug: Table of Contents Icon
+        title: Title
       question:
         content: Content
         correct_answer: Correct answer
@@ -437,6 +441,7 @@ en:
       delete: Delete this Edgenote.
     edgenote:
       caption: "Caption: "
+      download_file: Download file
       has_audio: This edgenote has an audio clip.
       jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
@@ -450,8 +455,10 @@ en:
         [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en)
         on Twitter for some practical examples.
       attach_an_image: Attach an image
+      attach_a_file: Attach a file
       choose_audio_file: Choose audio file...
       choose_image: Choose image...
+      choose_file: Choose file...
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote.
@@ -608,6 +615,27 @@ en:
       save: Save %{model}
       submit: Submit
       update: Update %{model}
+  icons:
+    activity:
+      calculate: Calculate
+      consider: Consider
+      discuss: Discuss
+      evaluate: Evaluate
+      explore: Explore
+      role_play: Role Play
+      write: Write
+    file:
+      audio: Audio
+      basic: Basic
+      code: Code
+      data: Data
+      image: Image
+      model: Model
+      shapes: Shapes
+      spreadsheet: Spreadsheet
+      tasks: Tasks
+      text: Text
+      video: Video
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
@@ -732,6 +760,9 @@ en:
     precision:
       format:
         delimiter: ''
+  pages:
+    edit:
+      pageSettings: Page Settings
   podcasts:
     destroy:
       delete_podcast: Delete Podcast

@@ -31,8 +31,8 @@ RSpec.describe CaseCloner, type: :cloner do
     expect(table_of_contents(clone)).to eq table_of_contents kase
 
     expect(clone.edgenotes.map(&:slug)).not_to eq kase.edgenotes.map(&:slug)
-    expect(clone.edgenotes.map(&:website_url))
-      .to eq kase.edgenotes.map(&:website_url)
+    expect(clone.edgenotes.map(&:website_url).to_set)
+      .to eq kase.edgenotes.map(&:website_url).to_set
 
     expect(first_card(clone).paragraphs).to eq first_card(kase).paragraphs
     expect(first_card(clone).case).to eq clone

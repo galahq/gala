@@ -11,7 +11,6 @@ export type ExtractReturn<F> = _ExtractReturn<*, F>
 
 // Redux state
 export type State = {
-  activitiesById: ActivitiesState,
   cardsById: CardsState,
   caseData: CaseDataState,
   commentsById: CommentsState,
@@ -25,10 +24,6 @@ export type State = {
   quiz: QuizState,
   statistics: StatisticsState,
   ui: UIState,
-}
-
-export type ActivitiesState = {
-  [activityId: string]: Activity,
 }
 
 export type CardsState = {
@@ -109,18 +104,7 @@ export type UIState = {
 }
 
 // Model Objects
-export type Element = Activity | Page | Podcast
-
-export type Activity = {
-  cardId: string,
-  caseElement: CaseElement,
-  iconSlug: string,
-  id: string,
-  pdfUrl: string,
-  position: number,
-  title: string,
-  url: string,
-}
+export type Element = Page | Podcast
 
 export type Author = { name: string, institution: string }
 
@@ -235,13 +219,16 @@ export type Edgenote = {
   caption: string,
   content: string,
   embedCode: string,
+  fileUrl: string,
   format: string,
   highlighted: boolean,
+  iconSlug: ?string,
   imageUrl: string,
   imageThumbnailUrl: string,
   instructions: string,
   links: {
     audio: string,
+    file: string,
     image: string,
     self: string,
   },
@@ -301,7 +288,7 @@ export type Notification = {
 export type Page = {
   cards: string[],
   caseElement: CaseElement,
-  iconSlug: void,
+  iconSlug: ?string,
   id: string,
   position: number,
   title: string,
