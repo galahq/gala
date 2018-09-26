@@ -55,6 +55,6 @@ class PagesController < ApplicationController
   end
 
   def page_params
-    params[:page].permit(:title, :position)
+    params[:page].permit(:title, :position, :icon_slug)
   end
 end

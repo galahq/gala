@@ -119,11 +119,12 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
 
     case 'pages':
       {
-        const { title, position } = state.pagesById[id]
+        const { title, position, iconSlug } = state.pagesById[id]
         data = {
           page: {
             title,
             position,
+            iconSlug,
           },
         }
       }
@@ -145,19 +146,6 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
             artworkUrl,
             audioUrl,
             photoCredit,
-          },
-        }
-      }
-      break
-
-    case 'activities':
-      {
-        const { title, pdfUrl, iconSlug } = state.activitiesById[id]
-        data = {
-          activity: {
-            title,
-            pdfUrl,
-            iconSlug,
           },
         }
       }

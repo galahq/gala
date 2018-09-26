@@ -13,7 +13,6 @@ import type {
   RemoveElementAction,
   AddPageAction,
   AddPodcastAction,
-  AddActivityAction,
   SetCommunitiesAction,
   ToggleEditingAction,
 } from 'redux/actions'
@@ -28,7 +27,6 @@ type Action =
   | RemoveElementAction
   | AddPageAction
   | AddPodcastAction
-  | AddActivityAction
   | SetCommunitiesAction
   | ToggleEditingAction
 
@@ -68,8 +66,7 @@ export default function caseData (
     }
 
     case 'ADD_PAGE':
-    case 'ADD_PODCAST':
-    case 'ADD_ACTIVITY': {
+    case 'ADD_PODCAST': {
       const { caseElement } = action.data
       return {
         ...state,
