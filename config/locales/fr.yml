@@ -10,10 +10,12 @@ fr:
         kicker: Titre court
         learning_objectives: Objectifs pédagogiques
         library: Répertoire
+        library_id: Répertoire
         locale: Language
         location: Emplacement de l’étude de cas
         published: Published
         slug: URL de l’étude de cas
+        teaching_guide: Teaching guide
         title: Question
         translators:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
@@ -29,11 +31,27 @@ fr:
         attribution: Attribution
         call_to_action: Call to action
         caption: Caption
+        icon_slug: Attachment icon
         photo_credit: Photo credit
         pull_quote: Pull quote
       editorship:
         editor: Your collaborator’s account
         editor_email: Collaborator’s Email
+      library:
+        background_color: Background Color
+        description: Description
+        foreground_color: Foreground Color
+        logo: Logo
+        name: Name
+        url: Library Website
+        visible_in_catalog: Listed on Gala’s Home Page
+        website: Website
+      managership:
+        manager: The manager’s account
+        manager_email: Manager’s Email
+      page:
+        iconSlug: Table of Contents Icon
+        title: Title
       question:
         content: Contenu
         correct_answer: Bonne réponse
@@ -101,6 +119,8 @@ fr:
       global_community: Communauté Mondiale
       group: Groupe
       group_membership: Group Membership
+      library: Répertoire
+      managership: Managership
       page: Page
       podcast: Podcast
       reader: Reader
@@ -150,11 +170,14 @@ fr:
       no_elements: This case has no elements.
       options: Options
       publish_case: Publier cette étude de cas
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
       save: Enregistrer
       stop_editing: Finir de modifier cette étude de cas
       translator_name: Translator Name
       unfeature_case: Enlever celle-ci des études phares
       unpublish_case: Annuler la publication de cette étude de cas
+      upload_teaching_guide: Upload teaching guide
     index:
       all_cases: Toutes les études de cas
       locations: Emplacements des sites
@@ -175,6 +198,7 @@ fr:
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
     show:
       back_to_overview: Retour au résumé
+      download_teaching_guide: Download teaching guide
       end: Fin
       forthcoming: À venir
       next: "Suite: "
@@ -401,6 +425,7 @@ fr:
       delete: Supprimer cette Edgenote.
     edgenote:
       caption: "Légende : "
+      download_file: Download file
       has_audio: Cette Edgenote a un clip audio.
       jump_to_edgenote: Jump to Edgenote
       pull_quote: "Citation : "
@@ -410,8 +435,10 @@ fr:
       alt_text_guidelines: >
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
       attach_an_image: Attach an image
+      attach_a_file: Attach a file
       choose_audio_file: Choose audio file...
       choose_image: Choose image...
+      choose_file: Choose file...
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
@@ -519,8 +546,9 @@ fr:
     required: obligatoire
   helpers:
     cancel: Annuler
-    copy: Copy
+    choose_an_image: Choose an Image
     close: Fermer
+    copy: Copy
     edit: Edit
     formatting:
       add_citation_entity: "Ajoutez une référence ici."
@@ -553,6 +581,27 @@ fr:
       save: Save %{model}
       submit: Soumettre
       update: Modifier ce(tte) %{model}
+  icons:
+    activity:
+      calculate: Calculate
+      consider: Consider
+      discuss: Discuss
+      evaluate: Evaluate
+      explore: Explore
+      role_play: Role Play
+      write: Write
+    file:
+      audio: Audio
+      basic: Basic
+      code: Code
+      data: Data
+      image: Image
+      model: Model
+      shapes: Shapes
+      spreadsheet: Spreadsheet
+      tasks: Tasks
+      text: Text
+      video: Video
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
@@ -560,6 +609,20 @@ fr:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  libraries:
+    destroy:
+      are_you_sure: >
+        Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
+      delete_library: Delete Library
+    edit:
+      edit_library: Edit Library
+      library_managers: Library Managers
+    index:
+      create_a_new_library: Create a New Library
+      libraries: Libraries
+      libraries_on_gala: >
+        Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
+      on_home_page: On Home Page
   locks:
     destroy:
       edit_anyway: Edit Anyway
@@ -571,6 +634,17 @@ fr:
   magic_link:
     show:
       lets_get_started: Let’s get started!
+  managerships:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+      remove: Remove Manager
+    new:
+      add_manager: Add Manager
+      instructions: >
+        Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
+      invite_someone_to_manage_this_library: >
+        Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >
@@ -639,6 +713,9 @@ fr:
     precision:
       format:
         delimiter: ''
+  pages:
+    edit:
+      pageSettings: Page Settings
   podcasts:
     destroy:
       delete_podcast: Delete Podcast
