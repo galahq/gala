@@ -10,10 +10,12 @@ zh-TW:
         kicker: 短標題
         learning_objectives: 學習目標
         library: Library
+        library_id: Library
         locale: Language
         location: 案例發生地
         published: Published
         slug: Case URL
+        teaching_guide: Teaching guide
         title: Question
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
@@ -28,11 +30,27 @@ zh-TW:
         attribution: Attribution
         call_to_action: Call to action
         caption: Caption
+        icon_slug: Attachment icon
         photo_credit: Photo credit
         pull_quote: Pull quote
       editorship:
         editor: Your collaborator’s account
         editor_email: Collaborator’s Email
+      library:
+        background_color: Background Color
+        description: Description
+        foreground_color: Foreground Color
+        logo: Logo
+        name: Name
+        url: Library Website
+        visible_in_catalog: Listed on Gala’s Home Page
+        website: Website
+      managership:
+        manager: The manager’s account
+        manager_email: Manager’s Email
+      page:
+        iconSlug: Table of Contents Icon
+        title: Title
       question:
         content: Content
         correct_answer: Correct answer
@@ -100,6 +118,8 @@ zh-TW:
       global_community: Global Community
       group: Group
       group_membership: Group Membership
+      library: Library
+      managership: Managership
       page: Page
       podcast: Podcast
       reader: Reader
@@ -149,11 +169,14 @@ zh-TW:
       no_elements: This case has no elements.
       options: 選項
       publish_case: 發表該案例
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
       save: 保存
       stop_editing: 停止編輯該案例
       translator_name: Translator Name
       unfeature_case: 取消設置此案例為明星案例
       unpublish_case: 取消發表該案例
+      upload_teaching_guide: Upload teaching guide
     index:
       all_cases: 全部案例
       locations: 案例地點
@@ -174,6 +197,7 @@ zh-TW:
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
     show:
       back_to_overview: 返回案例主頁
+      download_teaching_guide: Download teaching guide
       end: 終
       forthcoming: 案例開發中
       next: "下一頁："
@@ -387,6 +411,7 @@ zh-TW:
       delete: Delete this Edgenote.
     edgenote:
       caption: "Caption: "
+      download_file: Download file
       has_audio: This edgenote has an audio clip.
       jump_to_edgenote: Jump to Edgenote
       pull_quote: "Quotation: "
@@ -396,8 +421,10 @@ zh-TW:
       alt_text_guidelines: >
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
       attach_an_image: Attach an image
+      attach_a_file: Attach a file
       choose_audio_file: Choose audio file...
       choose_image: Choose image...
+      choose_file: Choose file...
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
@@ -500,8 +527,9 @@ zh-TW:
     required: 必需
   helpers:
     cancel: 取消
-    copy: Copy
+    choose_an_image: Choose an Image
     close: 關閉
+    copy: Copy
     edit: Edit
     formatting:
       add_citation_entity: "Add citation here."
@@ -534,6 +562,27 @@ zh-TW:
       save: Save %{model}
       submit: 儲存%{model}
       update: 更新%{model}
+  icons:
+    activity:
+      calculate: Calculate
+      consider: Consider
+      discuss: Discuss
+      evaluate: Evaluate
+      explore: Explore
+      role_play: Role Play
+      write: Write
+    file:
+      audio: Audio
+      basic: Basic
+      code: Code
+      data: Data
+      image: Image
+      model: Model
+      shapes: Shapes
+      spreadsheet: Spreadsheet
+      tasks: Tasks
+      text: Text
+      video: Video
   layouts:
     mailer:
       you_are_receiving_this_email_because_you_are_a_user_of_gala:
@@ -541,6 +590,20 @@ zh-TW:
           You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
         text: >
           You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  libraries:
+    destroy:
+      are_you_sure: >
+        Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
+      delete_library: Delete Library
+    edit:
+      edit_library: Edit Library
+      library_managers: Library Managers
+    index:
+      create_a_new_library: Create a New Library
+      libraries: Libraries
+      libraries_on_gala: >
+        Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
+      on_home_page: On Home Page
   locks:
     destroy:
       edit_anyway: Edit Anyway
@@ -552,6 +615,17 @@ zh-TW:
   magic_link:
     show:
       lets_get_started: Let’s get started!
+  managerships:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+      remove: Remove Manager
+    new:
+      add_manager: Add Manager
+      instructions: >
+        Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
+      invite_someone_to_manage_this_library: >
+        Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >
@@ -619,6 +693,9 @@ zh-TW:
     precision:
       format:
         delimiter: ''
+  pages:
+    edit:
+      pageSettings: Page Settings
   podcasts:
     destroy:
       delete_podcast: Delete Podcast
