@@ -30,9 +30,9 @@
 # @attr featured_at [DateTime] featured cases appear prominently in the catalog
 # @attr commentable [Boolean] whether or not forums are enabled on the case
 class Case < ApplicationRecord
-  include Cases::Taggable
-  include Lockable
   include Comparable
+  include Lockable
+  include Taggable
   extend FriendlyId
 
   attribute :authors, :json, default: []
