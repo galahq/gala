@@ -6,14 +6,17 @@ class DeploymentsController < ApplicationController
 
   before_action :authenticate_reader!, only: %i[new create]
   before_action :set_deployments, only: %i[index new create]
-  before_action :set_deployment, only: %i[edit update]
+  before_action :set_deployment, only: %i[show edit update]
   after_action :clear_content_item_selection_params, only: [:edit]
 
   layout 'admin'
 
   decorates_assigned :deployments, with: DeploymentsDecorator
+  decorates_assigned :deployment
 
   def index; end
+
+  def show; end
 
   def new
     @deployment ||= Deployment.new case: selected_case

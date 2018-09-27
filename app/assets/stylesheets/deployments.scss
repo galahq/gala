@@ -63,6 +63,21 @@
   }
 }
 
+.md-master .deployment.deployment--active {
+  margin-top: 0;
+
+  .deployment__invite {
+    &__drawer {
+      border-top: none;
+      padding-top: 0.1rem;
+    }
+
+    &__link {
+      margin-left: 0;
+    }
+  }
+}
+
 .deployment.deployment--active {
   background-color: rgba(255, 255, 255, 0.1) !important;
   border-radius: 2pt;
