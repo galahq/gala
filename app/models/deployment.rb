@@ -29,6 +29,11 @@ class Deployment < ApplicationRecord
 
   after_create :create_forum
 
+  def reader_progressions(scope: readers)
+    scope.joins(:enrollments).where(enrollments: { case_id: self.case.id })
+         .map { |reader| Case::Progression.new reader, self }
+  end
+
   # Ensure that there is a forum for this group’s community to discuss this case
   def create_forum
     group.community.forums.create case: self.case
