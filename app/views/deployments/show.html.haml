@@ -17,7 +17,6 @@
                                  kase_path: url_for(deployment.case)
 
   %aside.md-master
-    %h2.admin__title= t 'deployments.deployment.invite_learners'
     .spaced.deployment.deployment--active
       = render 'invite_drawer', deployment: deployment
 
@@ -27,25 +26,24 @@
     %table.admin__table.pt-html-table
       %thead
         %th(scope="col")= t 'activerecord.attributes.reader.name'
-        - if deployment.pretest_assigned?
-          %th(scope="col")= t '.pretest'
+        %th(scope="col")= t '.pretest'
         %th(scope="col")= t '.case_completion'
-        - if deployment.posttest_assigned?
-          %th(scope="col")= t '.posttest'
+        %th(scope="col")= t '.posttest'
 
       %tbody
-        - deployment.readers.each do |reader|
+        - deployment.reader_progressions.each do |progression|
           %tr
-            %td= reader.name
-
-            - if deployment.pretest_assigned?
-              %td
-                %span.pt-icon.pt-icon-tick
-                %span.pt-tag.pt-minimal
-                  7 of 10
+            %th(scope="row")= progression.reader_name
 
             %td
-              75%
+              - if progression.pretest_submitted?
+                %span.pt-icon.pt-icon-tick
+                = progression.pretest_submission.score
 
-            - if deployment.posttest_assigned?
-              %td
+            %td= number_to_percentage progression.completed_fraction * 100,
+                                      precision: 0
+
+            %td
+              - if progression.posttest_submitted?
+                %span.pt-icon.pt-icon-tick
+                = progression.posttest_submission.score
