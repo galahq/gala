@@ -387,10 +387,6 @@ en:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
       n_enrolled: "%{count} enrolled"
-      invite_instructions_html: |
-        <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
-        participate in your private forum.
       invite_learners: Invite Learners
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
@@ -411,12 +407,18 @@ en:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
       new_deployment: New Deployment
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
       teach_with_cases: Teach with Cases
       youre_not_teaching_any_cases: You’re not teaching any cases yet
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -424,6 +426,9 @@ en:
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
   devise:
     sessions:
       destroy:

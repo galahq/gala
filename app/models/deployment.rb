@@ -20,6 +20,9 @@ class Deployment < ApplicationRecord
   belongs_to :case
   belongs_to :group
   belongs_to :quiz, optional: true
+
+  has_many :readers, through: :group
+
   accepts_nested_attributes_for :group
 
   validates :quiz, presence: true, if: -> { answers_needed.positive? }
