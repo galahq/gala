@@ -23,11 +23,6 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-
-    .pt-tag {
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
   }
 
   &__actions {
