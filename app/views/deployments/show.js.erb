@@ -1,0 +1,10 @@
+<% new_table = render 'enrolled_learners', formats: [:html],
+                                           deployment: deployment,
+                                           progressions: @progressions %>
+;(function () {
+
+  let table = document.querySelector('[data-target="enrolled-learners"]')
+  table.outerHTML = '<%= j new_table %>'
+  table.focus()
+
+})();

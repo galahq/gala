@@ -391,6 +391,10 @@ en:
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
     form:
       select_a_case: Select a Case...
       select_a_group: Select a Group...
@@ -427,12 +431,9 @@ en:
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
     show:
-      case_completion: Percent of Case Completed
       enrolled_learners: Enrolled Learners
       deployment_of: Deployment of “%{kase}”
       deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
-      posttest: Posttest Score
-      pretest: Pretest Score
   devise:
     sessions:
       destroy:

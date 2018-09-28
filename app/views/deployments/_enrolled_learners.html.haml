@@ -1,0 +1,42 @@
+%table.admin__table.pt-html-table(data-target="enrolled-learners")
+  %thead
+    %th(scope="col")= t 'activerecord.attributes.reader.name'
+    %th(scope="col")= t '.pretest'
+    %th(scope="col")= t '.case_completion'
+    %th(scope="col")= t '.posttest'
+
+  %tbody
+    - progressions.each do |progression|
+      %tr
+        %th(scope="row")= progression.reader_name
+
+        %td
+          - if !deployment.pretest_assigned?
+            = t 'helpers.n_a'
+          - elsif progression.pretest_submitted?
+            %span.pt-icon.pt-icon-tick
+            = progression.pretest_submission.score
+
+        %td= number_to_percentage progression.completed_fraction * 100,
+                                  precision: 0
+
+        %td
+          - if !deployment.posttest_assigned?
+            = t 'helpers.n_a'
+          - elsif progression.posttest_submitted?
+            %span.pt-icon.pt-icon-tick
+            = progression.posttest_submission.score
+
+  %tfoot
+    %tr
+      %td.pagination(colspan=4)
+        %span.previous
+          = link_to_previous_page @progressions,
+                                  t('views.pagination.previous').html_safe,
+                                  remote: true
+        %span.info
+          = page_entries_info @progressions, entry_name: 'learner'
+        %span.next
+          = link_to_next_page @progressions,
+                              t('views.pagination.next').html_safe,
+                              remote: true
