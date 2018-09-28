@@ -4,7 +4,7 @@
 class DeploymentsController < ApplicationController
   include SelectionParams
 
-  before_action :authenticate_reader!, only: %i[new create]
+  before_action :authenticate_reader!, only: %i[show new create]
   before_action :set_deployments, only: %i[index new create]
   before_action :set_deployment, only: %i[show edit update]
   after_action :clear_content_item_selection_params, only: [:edit]
@@ -17,6 +17,7 @@ class DeploymentsController < ApplicationController
   def index; end
 
   def show
+    authorize @deployment
     @progressions = Kaminari.paginate_array(@deployment.reader_progressions)
                             .page(params[:page]).per(10)
   end
