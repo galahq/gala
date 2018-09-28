@@ -427,8 +427,12 @@ en:
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
     show:
+      case_completion: Percent of Case Completed
+      enrolled_learners: Enrolled Learners
       deployment_of: Deployment of “%{kase}”
       deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      posttest: Posttest Score
+      pretest: Pretest Score
   devise:
     sessions:
       destroy:
@@ -607,6 +611,7 @@ en:
       start: ', '
       two: ' and '
     loading: Loading...
+    n_a: N/A
     page_entries_info:
       more_pages:
         display_entries: >

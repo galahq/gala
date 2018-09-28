@@ -36,7 +36,9 @@
             %th(scope="row")= progression.reader_name
 
             %td
-              - if progression.pretest_submitted?
+              - if !deployment.pretest_assigned?
+                = t 'helpers.n_a'
+              - elsif progression.pretest_submitted?
                 %span.pt-icon.pt-icon-tick
                 = progression.pretest_submission.score
 
@@ -44,6 +46,8 @@
                                       precision: 0
 
             %td
-              - if progression.posttest_submitted?
+              - if !deployment.posttest_assigned?
+                = t 'helpers.n_a'
+              - elsif progression.posttest_submitted?
                 %span.pt-icon.pt-icon-tick
                 = progression.posttest_submission.score
