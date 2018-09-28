@@ -77,8 +77,7 @@ class Quiz < ApplicationRecord
   end
 
   def questions
-    @questions ||= Question.where(quiz_id: ancestors.pluck(:id))
-                           .order(:created_at)
+    Question.where(quiz_id: ancestors.pluck(:id)).order(:created_at)
   end
 
   def answers
