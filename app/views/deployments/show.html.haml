@@ -21,6 +21,45 @@
       = render 'invite_drawer', deployment: deployment
 
   %main.md-detail
+    %h2.admin__title= t '.quiz_details'
+
+    - if !deployment.posttest_assigned?
+      %span.pt-tag.pt-minimal.pt-large= t '.no_quiz_assigned'
+      = link_to edit_deployment_path(deployment),
+                class: %w[pt-button pt-icon-plus] do
+        = t 'deployments.deployment.add_quiz'
+
+    - else
+      .quiz-details.pt-card.pt-running-text
+        .quiz-details__metadata
+          .quiz-details__counts
+            %span.pt-tag.pt-minimal.pt-large
+              = t 'quizzes.quiz.multiple_choice_questions',
+                  count: deployment.quiz.questions.multiple_choice.count
+
+            %span.pt-tag.pt-minimal.pt-large
+              = t 'quizzes.quiz.open_ended_questions',
+                  count: deployment.quiz.questions.open_ended.count
+
+          .quiz-details__actions
+            = link_to edit_deployment_path(deployment),
+                      class: %w[pt-button pt-icon-edit] do
+              = t 'deployments.deployment.edit_quiz'
+
+        %ol
+          - deployment.quiz.questions.each do |question|
+            %li= question.content
+            - if question.open_ended?
+              %p
+                %em= t '.sample_answer'
+                %br
+                = question.correct_answer
+            - else
+              %ul
+                - question.options.each do |option|
+                  %li{ class: ('quiz-details__correct-answer' if option == question.correct_answer) }
+                    = option
+
     %h2.admin__title= t '.enrolled_learners'
     = render 'enrolled_learners', deployment: deployment,
                                   progressions: @progressions

@@ -101,3 +101,34 @@
 .window-admin #deployment-app {
   padding: 0 1.25em 2em;
 }
+
+.quiz-details {
+  font-size: 95%;
+  line-height: 1.2;
+  margin: 0.5em 0;
+  max-height: 20em;
+  max-width: 50em;
+  overflow-y: auto;
+  position: relative;
+
+  &__metadata {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__correct-answer {
+    color: #6ACB72;
+    list-style: none;
+
+    &::before {
+      content: "\2713";
+      font-family: "Icons16", sans-serif;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      position: absolute;
+      transform: translateX(calc(-100% - 5px));
+      line-height: 1;
+    }
+  }
+}

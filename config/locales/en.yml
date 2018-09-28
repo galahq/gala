@@ -431,9 +431,11 @@ en:
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
     show:
-      enrolled_learners: Enrolled Learners
       deployment_of: Deployment of “%{kase}”
       deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      enrolled_learners: Enrolled Learners
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
   devise:
     sessions:
       destroy:
@@ -789,6 +791,13 @@ en:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    quiz:
+      multiple_choice_questions:
+        one: "%{count} Multiple Choice Question"
+        other: "%{count} Multiple Choice Questions"
+      open_ended_questions:
+        one: "%{count} Open Ended Question"
+        other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
