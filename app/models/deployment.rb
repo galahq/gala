@@ -30,7 +30,9 @@ class Deployment < ApplicationRecord
   after_create :create_forum
 
   def reader_progressions(scope: readers)
-    scope.joins(:enrollments).where(enrollments: { case_id: self.case.id })
+    scope.joins(:enrollments)
+         .includes(enrollments: :reader)
+         .where(enrollments: { case_id: self.case.id })
          .map { |reader| Case::Progression.new reader, self }
   end
 
