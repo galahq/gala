@@ -16,7 +16,10 @@ class DeploymentsController < ApplicationController
 
   def index; end
 
-  def show; end
+  def show
+    @progressions = Kaminari.paginate_array(@deployment.reader_progressions)
+                            .page(params[:page]).per(10)
+  end
 
   def new
     @deployment ||= Deployment.new case: selected_case
