@@ -433,7 +433,9 @@ en:
     show:
       deployment_of: Deployment of “%{kase}”
       deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
       enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
       quiz_details: Quiz Details
       sample_answer: "Sample Answer:"
   devise:
