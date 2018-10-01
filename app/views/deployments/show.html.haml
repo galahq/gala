@@ -63,3 +63,7 @@
     %h2.admin__title= t '.enrolled_learners'
     = render 'enrolled_learners', deployment: deployment,
                                   progressions: @progressions
+    - if deployment.posttest_assigned?
+      = link_to deployment_submissions_path(deployment, format: :csv),
+                class: %i[pt-button pt-icon-download] do
+        = t '.download_all_quiz_submissions'
