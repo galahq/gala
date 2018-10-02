@@ -87,7 +87,11 @@ class CasesController < ApplicationController
   def set_case
     @case = Case.friendly.includes(
       :podcasts, :cards,
-      edgenotes: [image_attachment: :blob, audio_attachment: :blob],
+      edgenotes: [
+        image_attachment: :blob,
+        audio_attachment: :blob,
+        file_attachment: :blob
+      ],
       pages: %i[case_element cards]
     )
                 .find(slug).decorate
