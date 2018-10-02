@@ -354,12 +354,14 @@ zh-CN:
       add_quiz: 添加测验
       edit_quiz: 编辑测验
       n_enrolled: "%{count} 已加入学习"
-      invite_instructions_html: |
-        <b>邀请链接:</b> 发送此链接邀请他人与您共同学习这个案例。他们将看到您选择的任何测验, 并能够参加您所建立的论坛。
       invite_learners: 邀请学员
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
     form:
       select_a_case: 选择一个案例...
       select_a_group: 选择一个学习组
@@ -375,12 +377,18 @@ zh-CN:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
       new_deployment: 新建案例运用
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
       teach_with_cases: 选择案例进行教学
       youre_not_teaching_any_cases: 您目前未选择用于教学的案例
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -388,6 +396,14 @@ zh-CN:
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       teach_this_case: 运用该案例
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
+      enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
   devise:
     sessions:
       destroy:
@@ -543,6 +559,7 @@ zh-CN:
       start: '、'
       two: '、'
     loading: Loading...
+    n_a: N/A
     page_entries_info:
       more_pages:
         display_entries: >
@@ -703,6 +720,11 @@ zh-CN:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    quiz:
+      multiple_choice_questions:
+        other: "%{count} Multiple Choice Questions"
+      open_ended_questions:
+        other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
