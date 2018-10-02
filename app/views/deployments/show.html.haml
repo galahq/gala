@@ -46,6 +46,8 @@
                       class: %w[pt-button pt-icon-edit] do
               = t 'deployments.deployment.edit_quiz'
 
+        %hr
+
         %ol
           - deployment.quiz.questions.each do |question|
             %li= question.content
