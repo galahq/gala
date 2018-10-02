@@ -2,6 +2,12 @@
 
 # A set of {Answer}s for a {Quiz}’s {Question}s.
 class Submission < ApplicationRecord
+  Score = Struct.new(:correct, :total) do
+    def to_s
+      "#{correct}/#{total}"
+    end
+  end
+
   belongs_to :quiz
   belongs_to :reader
 
@@ -22,6 +28,15 @@ class Submission < ApplicationRecord
     rescue ActiveRecord::RecordInvalid
       return false
     end
+  end
+
+  def score
+    Score.new autogradable_answers.count(&:correct),
+              autogradable_answers.count
+  end
+
+  def autogradable_answers
+    answers.includes(:question).reject { |a| a.question.options.blank? }
   end
 
   # @return [String]

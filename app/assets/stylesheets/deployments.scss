@@ -23,11 +23,6 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-
-    .pt-tag {
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
   }
 
   &__actions {
@@ -68,6 +63,21 @@
   }
 }
 
+.md-master .deployment.deployment--active {
+  margin-top: 0;
+
+  .deployment__invite {
+    &__drawer {
+      border-top: none;
+      padding-top: 0.1rem;
+    }
+
+    &__link {
+      margin-left: 0;
+    }
+  }
+}
+
 .deployment.deployment--active {
   background-color: rgba(255, 255, 255, 0.1) !important;
   border-radius: 2pt;
@@ -90,4 +100,36 @@
 
 .window-admin #deployment-app {
   padding: 0 1.25em 2em;
+}
+
+.quiz-details {
+  background-color: #283E52;
+  font-size: 95%;
+  line-height: 1.2;
+  margin: 0.5em 0;
+  max-height: 20em;
+  max-width: 50em;
+  overflow-y: auto;
+  position: relative;
+
+  &__metadata {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__correct-answer {
+    color: #6ACB72;
+    list-style: none;
+
+    &::before {
+      content: "\2713";
+      font-family: "Icons16", sans-serif;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      position: absolute;
+      transform: translateX(calc(-100% - 5px));
+      line-height: 1;
+    }
+  }
 }

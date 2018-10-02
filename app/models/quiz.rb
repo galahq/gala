@@ -23,7 +23,7 @@
 class Quiz < ApplicationRecord
   has_many :custom_questions, class_name: 'Question', dependent: :destroy
   has_many :deployments, dependent: :nullify
-  has_many :submissions, dependent: :destroy
+  has_many :submissions, -> { order created_at: :asc }, dependent: :destroy
 
   belongs_to :author, class_name: 'Reader', optional: true
   belongs_to :case
@@ -77,8 +77,7 @@ class Quiz < ApplicationRecord
   end
 
   def questions
-    @questions ||= Question.where(quiz_id: ancestors.pluck(:id))
-                           .order(:created_at)
+    Question.where(quiz_id: ancestors.pluck(:id)).order(:created_at)
   end
 
   def answers

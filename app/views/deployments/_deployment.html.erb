@@ -6,13 +6,16 @@
 >
   <div class="deployment__details row--compact">
     <div class="deployment__case">
-      <%= deployment.case.kicker %>
-      <div class="pt-tag pt-minimal">
-        <span class="pt-icon pt-icon-people"></span>
+      <span class="deployment__case__kicker">
+        <%= deployment.case.kicker %>
+      </span>
+
+      <%= link_to deployment,
+                  class: %w[pt-button pt-small pt-minimal pt-icon-people] do %>
         <%= t '.n_enrolled',
               count: reader_counts_by_deployment_id[deployment.id]
         %>
-      </div>
+      <% end %>
     </div>
 
     <div class="deployment__actions">
@@ -36,26 +39,5 @@
     </div>
   </div>
 
-  <div class="deployment__invite__drawer" data-controller="clipboard">
-    <div class="deployment__invite__instructions">
-      <%= t '.invite_instructions_html' %>
-    </div>
-
-    <div class="deployment__invite__link pt-control-group">
-      <div class="pt-input-group pt-fill">
-        <span class="pt-icon pt-icon-new-person"></span>
-        <input
-          aria-label="<%= I18n.t 'deployments.deployment.invite_link',
-                                 case_kicker: deployment.case.kicker,
-                                 group_name: deployment.group.name %>"
-          class="pt-input"
-          data-target="clipboard.source"
-          value="<%= deployment.magic_link %>"
-        />
-      </div>
-      <button class="pt-button pt-icon-clipboard" data-action="clipboard#copy">
-        <%= t 'helpers.copy' %>
-      </button>
-    </div>
-  </div>
+  <%= render 'invite_drawer', deployment: deployment %>
 </div>
