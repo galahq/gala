@@ -20,11 +20,21 @@ class Deployment < ApplicationRecord
   belongs_to :case
   belongs_to :group
   belongs_to :quiz, optional: true
+
+  has_many :readers, through: :group
+
   accepts_nested_attributes_for :group
 
   validates :quiz, presence: true, if: -> { answers_needed.positive? }
 
   after_create :create_forum
+
+  def reader_progressions(scope: readers)
+    scope.joins(:enrollments)
+         .includes(enrollments: :reader)
+         .where(enrollments: { case_id: self.case.id })
+         .map { |reader| Case::Progression.new reader, self }
+  end
 
   # Ensure that there is a forum for this group’s community to discuss this case
   def create_forum

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Cases
+class Case
   # Cases can be tagged with categories and keywords
   module Taggable
     extend ActiveSupport::Concern
