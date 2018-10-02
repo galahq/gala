@@ -358,14 +358,14 @@ zh-TW:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
       n_enrolled: "%{count} enrolled"
-      invite_instructions_html: |
-        <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
-        participate in your private forum.
       invite_learners: Invite Learners
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
     form:
       select_a_case: Select a Case...
       select_a_group: Select a Group...
@@ -382,12 +382,18 @@ zh-TW:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
       new_deployment: New Deployment
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
       teach_with_cases: Teach with Cases
       youre_not_teaching_any_cases: You’re not teaching any cases yet
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -395,6 +401,14 @@ zh-TW:
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
+      enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
   devise:
     sessions:
       destroy:
@@ -550,6 +564,7 @@ zh-TW:
       start: '、'
       two: '、'
     loading: Loading...
+    n_a: N/A
     page_entries_info:
       more_pages:
         display_entries: >
@@ -710,6 +725,11 @@ zh-TW:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    quiz:
+      multiple_choice_questions:
+        other: "%{count} Multiple Choice Questions"
+      open_ended_questions:
+        other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
