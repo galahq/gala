@@ -1,31 +1,31 @@
 %table.admin__table.pt-html-table(data-target="enrolled-learners")
   %thead
     %th(scope="col")= t 'activerecord.attributes.reader.name'
-    %th(scope="col")= t '.pretest'
+    - if deployment.pretest_assigned?
+      %th(scope="col")= t '.pretest'
     %th(scope="col")= t '.case_completion'
-    %th(scope="col")= t '.posttest'
+    - if deployment.pretest_assigned?
+      %th(scope="col")= t '.posttest'
 
   %tbody
     - progressions.each do |progression|
       %tr
         %th(scope="row")= progression.reader_name
 
-        %td
-          - if !deployment.pretest_assigned?
-            = t 'helpers.n_a'
-          - elsif progression.pretest_submitted?
-            %span.pt-icon.pt-icon-tick
-            = progression.pretest_submission.score
+        - if deployment.pretest_assigned?
+          %td
+            - if progression.pretest_submitted?
+              %span.pt-icon.pt-icon-tick
+              = progression.pretest_submission.score
 
         %td= number_to_percentage progression.completed_fraction * 100,
                                   precision: 0
 
-        %td
-          - if !deployment.posttest_assigned?
-            = t 'helpers.n_a'
-          - elsif progression.posttest_submitted?
-            %span.pt-icon.pt-icon-tick
-            = progression.posttest_submission.score
+        - if deployment.pretest_assigned?
+          %td
+            - if progression.posttest_submitted?
+              %span.pt-icon.pt-icon-tick
+              = progression.posttest_submission.score
 
   %tfoot
     %tr
