@@ -17,7 +17,8 @@ import { getSearchPath } from 'catalog/SearchForm'
 import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
 
-const CatalogToolbar = ({ history }: ContextRouter) => (
+type Props = ContextRouter & { author: boolean, instructor: boolean }
+const CatalogToolbar = ({ author, history, instructor }: Props) => (
   <ContentItemSelectionContextConsumer>
     {({ selecting }) => (
       <Toolbar
@@ -29,12 +30,16 @@ const CatalogToolbar = ({ history }: ContextRouter) => (
               onClick: () => history.push('/'),
             },
             selecting || {
-              message: 'cases.new.createACase',
+              message: author
+                ? 'myCases.index.myCases'
+                : 'cases.new.createACase',
               icon: 'annotation',
               onClick: () => (window.location = '/my_cases'),
             },
             selecting || {
-              message: 'deployments.index.deployACase',
+              message: instructor
+                ? 'deployments.index.myDeployments'
+                : 'deployments.index.deployACase',
               icon: 'follower',
               onClick: () => (window.location = '/deployments'),
             },

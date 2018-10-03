@@ -10,3 +10,5 @@ end
 json.active_community do
   json.partial! current_reader.active_community
 end
+json.any_editorships reader.editorships.any?
+json.any_deployments reader.deployments.any?
