@@ -18,16 +18,12 @@
     .reader-image-input
       = f.file_field :image, class: %i[pt-fill], direct_upload: true,
                              tabindex: 4
-                             
+
       %img{ src: @reader.image_url }
 
     %h2= t '.notification_settings'
     %div{ style: 'padding-bottom: 1em'}
-
-      = f.label :send_reply_notifications, class: 'notification pt-control pt-checkbox' do
-        = t 'activerecord.attributes.reader.send_reply_notifications'
-        = f.check_box :send_reply_notifications
-        %span.pt-control-indicator
+      = f.check_box :send_reply_notifications
 
     .actions
       = f.submit t('.save'), class: "o-button pt-button pt-intent-primary"
