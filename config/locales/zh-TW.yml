@@ -232,6 +232,10 @@ zh-TW:
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        other: "%{count} threads"
     new:
       new_comment_thread: New comment thread...
     show:
@@ -247,19 +251,19 @@ zh-TW:
       conversation: Conversation
       join_the_conversation: Join the conversation
       n_responses:
-        js: "{count, number}條回復"
-        other: "%{count}條回復"
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        other: "%{count} comments"
       no_comments: No comments
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
       respond: 參與討論
-      respond_here: 回應
+      respond_here: Respond Here
       select: 選擇想要發起討論的詞句
       selection_not_unique: >
         你所選擇的詞句已存在相關話題，請多選幾個詞。
       write: 發表回復
-      write_new: 發起新話題
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: 選擇討論小組
@@ -486,7 +490,7 @@ zh-TW:
     new:
       enroll: 參與學習
       enroll_for_easy_access: >
-        如果你喜歡這個案例，就參與到該案例的學習中吧。加入之后，首頁上“我的案例”處將會出現鏈接到該案例的快捷方式。
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
       enroll_in_this_case: 加入此案例的學習
   errors:
     format: "%{attribute}%{message}"
