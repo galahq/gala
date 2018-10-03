@@ -10,6 +10,19 @@ RSpec.describe DeploymentPolicy do
 
   subject { described_class }
 
+  permissions :show? do
+    it 'does not allow an arbitrary reader to view a deployment' do
+      expect(subject).not_to permit reader_context, deployment
+    end
+
+    it 'allows an instructor to view her own deployment' do
+      create :group_membership, group: deployment.group,
+                                reader: reader_context.reader,
+                                status: :admin
+      expect(subject).to permit reader_context, deployment
+    end
+  end
+
   permissions :update? do
     it 'does not allow an arbitrary reader to edit a deployment' do
       expect(subject).not_to permit reader_context, deployment
