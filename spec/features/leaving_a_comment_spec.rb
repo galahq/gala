@@ -29,7 +29,7 @@ feature 'Leaving a comment' do
 
     first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
-    click_button 'Respond here'
+    click_button 'Respond Here'
     expect(page).to have_selector '.public-DraftEditorPlaceholder-root'
 
     reply_placeholder = find('.public-DraftEditorPlaceholder-root',
@@ -89,7 +89,7 @@ feature 'Leaving a comment' do
       content: 'Test comment',
       reader: other_reader
     )
-    expect(first('.CommentThreads__banner')).to have_content '1 RESPONSE'
+    expect(first('.CommentThreads__banner')).to have_content '1 COMMENT'
 
     click_link GlobalCommunity.instance.name
     expect(page).to have_content private_forum.community.name
@@ -103,13 +103,13 @@ feature 'Leaving a comment' do
 
     click_link private_forum.community.name
     find('.pt-menu-item', text: GlobalCommunity.instance.name).click
-    expect(first('.CommentThreads__banner')).to have_content '2 RESPONSES'
+    expect(first('.CommentThreads__banner')).to have_content '2 COMMENTS'
     sleep(1)
     comment_thread.comments.create(
       content: 'Test comment',
       reader: other_reader
     )
-    expect(first('.CommentThreads__banner')).to have_content '3 RESPONSES'
+    expect(first('.CommentThreads__banner')).to have_content '3 COMMENTS'
   end
 
   context 'in response to another comment' do

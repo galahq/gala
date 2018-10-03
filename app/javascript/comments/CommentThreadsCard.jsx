@@ -68,7 +68,7 @@ const CommentThreadsCard = ({
             />
 
             <FormattedMessage
-              id="comments.index.nResponses.js"
+              id="commentThreads.index.nCommentThreads.js"
               values={{ count: commentThreads.length }}
             />
 

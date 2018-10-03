@@ -49,6 +49,16 @@ class AnonymousUser
     Library.none
   end
 
+  # @return [ActiveRecord::Relation<Editorship>] an empty relation
+  def editorships
+    Editorship.none
+  end
+
+  # @return [ActiveRecord::Relation<Deployment>] an empty relation
+  def deployments
+    Deployment.none
+  end
+
   # @return [Array(GlobalGroup)]
   def groups
     [GlobalGroup.new]
