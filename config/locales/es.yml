@@ -233,6 +233,11 @@ es:
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        one: 1 thread
+        other: "%{count} threads"
     new:
       new_comment_thread: New comment thread...
     show:
@@ -248,20 +253,20 @@ es:
       conversation: Conversation
       join_the_conversation: Join the conversation
       n_responses:
-        js: "{count, number} {count, plural, one {comentario} other {comentarios}}"
-        one: 1 comentario
-        other: "%{count} comentarios"
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        one: 1 comment
+        other: "%{count} comments"
       no_comments: No comments
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
       respond: Comentar
-      respond_here: Responder aquí
+      respond_here: Respond Here
       select: Resaltar unas palabras
       selection_not_unique: >
         Las palabras seleccionadas aparecen más que una vez, favor ampliar su selección.
       write: Escribir su respuesta...
-      write_new: Escribir nueva respuesta
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: Escoger comunidad
@@ -500,7 +505,7 @@ es:
     new:
       enroll: Inscribirse
       enroll_for_easy_access: >
-        Si este caso te llama la atención inscribirse para acceso facil.
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
       enroll_in_this_case: Inscribirse en este caso
   errors:
     format: "%{attribute} %{message}"
