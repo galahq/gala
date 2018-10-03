@@ -80,4 +80,20 @@ MD
       end
     end
   end
+
+  def  my_cases_nav_button_text
+    if current_user.editorships.any?
+      t 'my_cases.index.my_cases'
+    else
+      t 'cases.new.create_a_case'
+    end
+  end
+
+  def deployments_nav_button_text
+    if current_user.deployments.any?
+      t 'deployments.index.my_deployments'
+    else
+      t 'deployments.index.deploy_a_case'
+    end
+  end
 end
