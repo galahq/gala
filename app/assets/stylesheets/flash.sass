@@ -1,15 +1,16 @@
 @import _globals
 
 .flash
-  font: 90% $sansFont
-  color: $white
-  text-align: center
-  width: 100%
-  padding: 0.2em
-  border-bottom-width: 2px
   border-bottom-style: solid
+  border-bottom-width: 2px
+  color: $white
+  flex-shrink: 0
+  font: 90% $sansFont
   overflow: hidden
+  padding: 0.2em
+  text-align: center
   transition: all 0.2s ease-in
+  width: 100%
 
   a
     color: inherit
@@ -36,10 +37,10 @@
   background-color: $white
   border-bottom-color: darken($white, 20%)
   color: $black
-  text-transform: initial
   letter-spacing: 0em
+  text-transform: initial
 
 .flash-hidden
+  border-width: 0
   max-height: 0
   padding: 0
-  border-width: 0
