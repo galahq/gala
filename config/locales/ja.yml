@@ -228,6 +228,10 @@ ja:
   comment_threads:
     destroy:
       delete_comment_thread: コメントスレッドを削除します。
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        other: "%{count} threads"
     new:
       new_comment_thread: 新しいコメントスレッド…
     show:
@@ -243,19 +247,19 @@ ja:
       conversation: 会話
       join_the_conversation: 会話に参加します
       n_responses:
-        js: "{count, number}件の返事"
-        other: "%{count}件の返事"
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        other: "%{count} comments"
       no_comments: コメントがありません
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
       respond: 対応
-      respond_here: こちらに返信を書く
+      respond_here: Respond Here
       select: 数語を選択
       selection_not_unique: >
         選択された言葉が複数回表示されます。さらにいくつかの文字を選択してください。
       write: 返事を書いてください
-      write_new: 新しい返信を書く
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: コミュニティを選択
@@ -482,7 +486,7 @@ ja:
     new:
       enroll: 登録
       enroll_for_easy_access: >
-        このケースが目を引く場合は、簡単に見つけれるよう登録してください。
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
       enroll_in_this_case: この事例研究に登録する
   errors:
     format: "%{attribute}%{message}"
