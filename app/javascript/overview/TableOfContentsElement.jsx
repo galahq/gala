@@ -47,7 +47,11 @@ class TableOfContentsElement extends React.Component<*> {
             <li className="c-toc__item">
               <div className="c-toc__item-data">
                 <div className="c-toc__number">
-                  {editing && !readOnly ? ': : :' : position}
+                  {editing && !readOnly ? (
+                    <span className="pt-icon pt-icon-drag-handle-horizontal" />
+                  ) : (
+                    position
+                  )}
                 </div>
                 <div className="c-toc__title">
                   {element.title || (
