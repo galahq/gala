@@ -108,7 +108,10 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
       <Router basename={basename}>
         <ContentItemSelectionContextProvider>
           <Container>
-            <CatalogToolbar />
+            <CatalogToolbar
+              author={this._readerIsAuthor()}
+              instructor={this._readerIsInstructor()}
+            />
             <MaxWidthContainer>
               <Switch>
                 <Route
@@ -144,10 +147,9 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     )
   }
 
-  _readerIsEditor = () => {
-    const { reader } = this.state
-    return !!reader?.roles?.editor
-  }
+  _readerIsAuthor = () => this.state.reader?.anyEditorships
+  _readerIsInstructor = () => this.state.reader?.anyDeployments
+  _readerIsEditor = () => !!this.state.reader?.roles?.editor
 }
 
 export default hot(module)(injectIntl(Catalog))
@@ -182,10 +184,10 @@ const Window = styled.div`
 `
 
 const ContentItemSelectionInProgressWindow = styled(Window)`
-grid-template:
-  'value-proposition'
-  'banner'
-  'main' min-content / 100%;
+  grid-template:
+    'value-proposition'
+    'banner'
+    'main' min-content / 100%;
 
   @media (max-width: 1100px) {
     grid-template:
@@ -207,8 +209,7 @@ grid-template:
     font-size: 1.1em;
   }
 
-  & ${NaturalResourcesGrid},
-  & ${GlobalSystemsGrid} {
+  & ${NaturalResourcesGrid}, & ${GlobalSystemsGrid} {
     flex-direction: row;
 
     & > *:not(:last-child) {

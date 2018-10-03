@@ -7,6 +7,8 @@
 class GlobalCommunity
   include Singleton
 
+  alias read_attribute_for_serialization send
+
   def to_partial_path
     'communities/community'
   end

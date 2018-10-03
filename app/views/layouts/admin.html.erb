@@ -3,10 +3,9 @@
     <div class="Toolbar__group pt-navbar-group">
       <%= link_to t('catalog.catalog'), root_path,
                   class: 'pt-button pt-minimal pt-icon-home' %>
-      <%= link_to t('cases.new.create_a_case'),
-                  my_cases_path,
+      <%= link_to my_cases_nav_button_text, my_cases_path,
                   class: 'pt-button pt-minimal pt-icon-annotation' %>
-      <%= link_to t('deployments.index.deploy_a_case'), deployments_path,
+      <%= link_to deployments_nav_button_text, deployments_path,
                   class: 'pt-button pt-minimal pt-icon-follower' %>
     </div>
 

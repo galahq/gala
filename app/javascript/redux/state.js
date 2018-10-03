@@ -329,6 +329,8 @@ export type Question = {
 
 export type Reader = {
   activeCommunity: ?Community,
+  anyDeployments: boolean,
+  anyEditorships: boolean,
   email: string,
   hashKey: string,
   id: string,
