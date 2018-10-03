@@ -20,9 +20,13 @@ class DeploymentPolicy < ApplicationPolicy
     delegate_missing_to :reader
   end
 
+  def show?
+    group_membership&.admin?
+  end
+
   def update?
     return true if selection_params_valid?
-    group_membership&.admin?
+    show?
   end
 
   private
