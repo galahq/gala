@@ -246,6 +246,11 @@ en:
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        other: "%{count} threads"
+        one: 1 thread
     new:
       new_comment_thread: New comment thread...
     show:
@@ -261,9 +266,9 @@ en:
       conversation: Conversation
       join_the_conversation: Join the conversation
       n_responses:
-        js: "{count, number} {count, plural, one {response} other {responses}}"
-        other: "%{count} responses"
-        one: 1 response
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        other: "%{count} comments"
+        one: 1 comment
       no_comments: No comments
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on
@@ -271,13 +276,13 @@ en:
         leave a comment.
     new:
       respond: Respond
-      respond_here: Respond here
+      respond_here: Respond Here
       select: Select a few words
       selection_not_unique: >
         The words you have selected appear more than once.
         Please select a few more words.
       write: Write a reply...
-      write_new: Write a new response
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: Choose a community
