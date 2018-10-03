@@ -529,7 +529,9 @@ en:
     new:
       enroll: Enroll
       enroll_for_easy_access: >
-        If this case catches your eye, enroll for easy access.
+        If this case catches your eye, enroll to study and discuss it in our
+        global community of learners. You can easily find the cases you’re
+        enrolled in on the home page.
       enroll_in_this_case: Enroll in this case
   errors:
     format: "%{attribute} %{message}"
