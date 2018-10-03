@@ -195,13 +195,15 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                   />
                 )}
 
-                <audio
-                  src={audioUrl}
-                  controls="controls"
-                  preload="auto"
-                  onPlay={this.handlePlay}
-                  onPause={this.handlePause}
-                />
+                {audioUrl && (
+                  <audio
+                    src={audioUrl}
+                    controls="controls"
+                    preload="auto"
+                    onPlay={this.handlePlay}
+                    onPause={this.handlePause}
+                  />
+                )}
               </div>
 
               <Statistics
