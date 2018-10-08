@@ -70,7 +70,10 @@ const Page = (props: Props) => {
   )
 }
 
-export default connect(mapStateToProps, { updatePage, createCard })(Page)
+export default connect(
+  mapStateToProps,
+  { updatePage, createCard }
+)(Page)
 
 const Section = styled.section`
   display: grid;
@@ -78,6 +81,13 @@ const Section = styled.section`
   grid-template-columns: repeat(2, 23em) repeat(2, minmax(min-content, 1fr));
   grid-template-rows: repeat(100, auto) repeat(100, [highlighted] auto);
   margin: 1em;
+  transition: grid-template-columns 0.3s;
+
+  @media screen and (max-width: 1600px) {
+    .has-comments-open & {
+      grid-template-columns: repeat(2, 18em) repeat(2, minmax(min-content, 1fr));
+    }
+  }
 
   @media screen and (max-width: 1440px) {
     grid-template-columns: repeat(2, 18em) repeat(2, minmax(min-content, 1fr));
@@ -85,6 +95,18 @@ const Section = styled.section`
 
   @media screen and (max-width: 1300px) {
     grid-template-columns: repeat(2, minmax(min-content, 18em));
+  }
+
+  @media screen and (max-width: 1024px) {
+    .has-comment-threads-open & {
+      grid-template-columns: repeat(2, 13em) repeat(2, minmax(min-content, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .has-comment-threads-open & {
+      grid-template-columns: repeat(2, 8em) repeat(2, minmax(min-content, 1fr));
+    }
   }
 `
 
