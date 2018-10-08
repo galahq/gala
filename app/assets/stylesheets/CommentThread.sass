@@ -73,25 +73,22 @@
 #Sidebar
   transition: margin-left 0.3s
 
-#Sidebar.has-comments-open
+.has-comments-open #Sidebar
   margin-left: 1em
 
 .CommentThread__back
   display: none
 
 @media screen and (max-width: 2025px)
-  #Sidebar.has-comments-open
+  .has-comments-open #Sidebar
     margin-left: -10.5em
 
 @media screen and (max-width: 1830px)
-  #Sidebar.has-comments-open
+  .has-comments-open #Sidebar
     margin-left: -25em
 
 @media screen and (max-width: 1600px)
-  .Card.has-comments-open
-    flex-basis: 31.8em
-
-  #Sidebar.has-comments-open
+  .has-comments-open #Sidebar
     margin-left: -15em
 
   aside.CommentThread
@@ -113,10 +110,10 @@
   .CommentThread__back
     display: flex
 
-  #Sidebar.has-comment-threads-open
+  .has-comment-threads-open #Sidebar
     margin-left: -15em
 
-  .Card.has-comments-open .CommentThreads__window
+  .has-comments-open .Card .CommentThreads__window
     display: none
 
 @media screen and (max-width: 1024px)
@@ -124,19 +121,13 @@
     left: 0
     width: 17.5em
 
-  #Sidebar.has-comment-threads-open
+  .has-comment-threads-open #Sidebar
     margin-left: -15em
-
-  .Card.has-comment-threads-open
-    flex-basis: 23em
 
 @media screen and (max-width: 768px)
   aside.CommentThread
     left: 0
     width: 14.5em
-
-  .Card.has-comment-threads-open
-    flex-basis: 13em
 
   .CommentThreads
     width: 14.5em
@@ -144,19 +135,15 @@
 
   #Sidebar
     flex-basis: 12rem !important
-    &.has-comment-threads-open
+    .has-comment-threads-open &
       margin-left: -13em
 
 @media screen and (max-width: $mobileCutoff)
-  #Sidebar.has-comment-threads-open
+  .has-comment-threads-open #Sidebar
     margin-left: 1em
 
-  #Sidebar.has-comments-open
+  .has-comments-open #Sidebar
     margin-left: 1em
-
-  .Card.has-comment-threads-open.has-comments-open,
-  .Card.has-comment-threads-open
-    flex-basis: 100%
 
   .CommentThreads
     top: inherit
