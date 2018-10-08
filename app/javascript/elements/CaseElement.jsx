@@ -4,8 +4,9 @@
  */
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Route, Redirect, Link } from 'react-router-dom'
+import { Route, Redirect, Link, matchPath } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
+import classNames from 'classnames'
 
 import Sidebar from './Sidebar'
 import Page from 'page'
@@ -14,6 +15,7 @@ import EdgenoteContents from 'deprecated/EdgenoteContents'
 
 import Tracker from 'utility/Tracker'
 
+import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 import { FormattedMessage } from 'react-intl'
 
 import { deleteElement } from 'redux/actions'
@@ -21,7 +23,7 @@ import { deleteElement } from 'redux/actions'
 import type { ContextRouter } from 'react-router-dom'
 import type { State, Reader } from 'redux/state'
 
-function mapStateToProps (state: State, { match }) {
+function mapStateToProps (state: State, { match, location }) {
   const position = parseInt(match.params.position, 10) - 1
   const caseElement = state.caseData.caseElements[position]
   if (!caseElement) return {}
@@ -49,6 +51,8 @@ function mapStateToProps (state: State, { match }) {
     title,
     model,
     position,
+    commentThreadsOpen: matchPath(location.pathname, commentThreadsOpen()),
+    commentsOpen: matchPath(location.pathname, commentsOpen()),
   }
 }
 
@@ -63,6 +67,8 @@ class CaseElement extends React.Component<{
   model: string,
   position: number,
   deleteElement: typeof deleteElement,
+  commentThreadsOpen: boolean,
+  commentsOpen: boolean,
   ...ContextRouter,
 }> {
   _scrollToTop: () => void
@@ -94,6 +100,8 @@ class CaseElement extends React.Component<{
       url,
       position,
       history,
+      commentThreadsOpen,
+      commentsOpen,
     } = this.props
 
     const redirectToOverview = <Redirect to="/" />
@@ -109,7 +117,14 @@ class CaseElement extends React.Component<{
     }
 
     return (
-      <div className={`window ${editing ? 'editing' : ''}`}>
+      <div
+        className={classNames({
+          window: true,
+          editing,
+          'has-comment-threads-open': commentThreadsOpen,
+          'has-comments-open': commentsOpen,
+        })}
+      >
         <Sidebar editing={editing} />
         <main id="top" className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
