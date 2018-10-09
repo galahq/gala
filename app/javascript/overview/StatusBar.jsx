@@ -133,15 +133,13 @@ function StatusBar ({
                     window.location = links.newTranslation
                   },
                 },
-                editing || edited
-                  ? null
-                  : {
-                    message: published
-                      ? 'cases.edit.unpublishCase'
-                      : 'cases.edit.publishCase',
-                    icon: published ? 'lock' : 'upload',
-                    onClick: togglePublished,
-                  },
+                {
+                  message: published
+                    ? 'cases.edit.unpublishCase'
+                    : 'cases.edit.publishCase',
+                  icon: published ? 'lock' : 'upload',
+                  onClick: togglePublished,
+                },
               ],
             },
           ],
@@ -154,9 +152,12 @@ function StatusBar ({
 }
 
 export default withRouter(
-  connect(mapStateToProps, {
-    toggleEditing,
-    saveChanges,
-    togglePublished,
-  })(StatusBar)
+  connect(
+    mapStateToProps,
+    {
+      toggleEditing,
+      saveChanges,
+      togglePublished,
+    }
+  )(StatusBar)
 )
