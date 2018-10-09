@@ -1,10 +1,11 @@
 = form_for @case, url: case_settings_path(@case),
-                  builder: BlueprintFormBuilder,
-                  data: { controller: 'cases--settings--slug'} do |f|
+                  builder: BlueprintFormBuilder do |f|
   = f.errors
 
   - slug_format = t('.lowercase_letters_and_numbers_separated_by_hyphens_html')
-  = f.form_group :slug, helper_text: slug_format do |f, error_classes|
+  = f.form_group :slug, data: { controller: 'cases--settings--slug',
+                                target: 'cases--settings--slug.formGroup'},
+                        helper_text: slug_format do |f, error_classes|
     .pt-callout.pt-icon-hand-right.form__callout
       = t('.changing_url_leaves_your_old_url_available_for_anyone_else')
 
@@ -16,7 +17,8 @@
                               data: { target: 'cases--settings--slug.input',
                                       action: 'input->cases--settings--slug#update' }
       = f.submit I18n.t('cases.settings.edit.change_url'),
-                 class: %w[pt-button pt-intent-success]
+                 class: %w[pt-button pt-intent-success],
+                 data: { target: 'cases--settings--slug.submit' }
     %p.case-slug-preview
       https://www.learngala.com/cases/
       %span.case-slug-preview__highlight{ data: { target: 'cases--settings--slug.preview'}}><
