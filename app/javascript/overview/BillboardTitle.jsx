@@ -108,7 +108,7 @@ export const UnconnectedBillboardTitle = ({
             className="pt-multiline"
             value={kicker}
             disabled={!editing || minimal}
-            placeholder="Snappy kicker"
+            placeholder="Short Title"
             onChange={value => updateCase({ kicker: value })}
             onEdit={onBeginEditing}
             onCancel={onFinishEditing}
