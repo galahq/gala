@@ -6,6 +6,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
 
 import ActiveStorageProvider from 'react-activestorage-provider'
 import { EditableText } from '@blueprintjs/core'
@@ -16,6 +17,7 @@ import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
 import { PositionedFileUploadWidget } from 'utility/FileUploadWidget'
 
+import type { IntlShape } from 'react-intl'
 import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
 function mapStateToProps ({ edit, caseData }: State) {
@@ -48,36 +50,38 @@ function mapStateToProps ({ edit, caseData }: State) {
 }
 
 type Props = {
-  slug: string,
-  editing: boolean,
-  kicker: string,
-  title: string,
-  photoCredit: string,
   coverUrl: string,
-  updateCase: typeof updateCase,
-  minimal?: boolean,
+  editing: boolean,
+  intl: IntlShape,
+  kicker: string,
   library: Library,
   links: $PropertyType<CaseDataState, 'links'>,
+  minimal?: boolean,
   onBeginEditing?: () => void,
   onFinishEditing?: () => void,
+  photoCredit: string,
+  slug: string,
+  title: string,
+  updateCase: typeof updateCase,
 } & Byline
 
 export const UnconnectedBillboardTitle = ({
-  slug,
-  editing,
-  kicker,
-  title,
-  photoCredit,
-  authors,
-  translators,
   acknowledgements,
+  authors,
   coverUrl,
-  updateCase,
-  minimal,
+  editing,
+  intl,
+  kicker,
   library,
   links,
+  minimal,
   onBeginEditing,
   onFinishEditing,
+  photoCredit,
+  slug,
+  title,
+  translators,
+  updateCase,
 }: Props) => {
   return (
     <CoverImageContainer src={coverUrl}>
@@ -108,7 +112,7 @@ export const UnconnectedBillboardTitle = ({
             className="pt-multiline"
             value={kicker}
             disabled={!editing || minimal}
-            placeholder="Snappy kicker"
+            placeholder={intl.formatMessage({ id: 'cases.new.shortTitle' })}
             onChange={value => updateCase({ kicker: value })}
             onEdit={onBeginEditing}
             onCancel={onFinishEditing}
@@ -119,7 +123,7 @@ export const UnconnectedBillboardTitle = ({
           multiline
           value={title}
           disabled={!editing || minimal}
-          placeholder="What is the central question of the case?"
+          placeholder={intl.formatMessage({ id: 'cases.new.whatQuestion' })}
           onChange={value => updateCase({ title: value })}
           onEdit={onBeginEditing}
           onCancel={onFinishEditing}
@@ -147,7 +151,13 @@ export const UnconnectedBillboardTitle = ({
             multiline
             value={photoCredit}
             disabled={!editing}
-            placeholder={editing ? 'Photo credit' : ''}
+            placeholder={
+              editing
+                ? intl.formatMessage({
+                  id: 'activerecord.attributes.case.photoCredit',
+                })
+                : ''
+            }
             onChange={value => updateCase({ photoCredit: value })}
             onEdit={onBeginEditing}
             onCancel={onFinishEditing}
@@ -166,9 +176,10 @@ export const UnconnectedBillboardTitle = ({
   )
 }
 
-export default connect(mapStateToProps, { updateCase })(
-  UnconnectedBillboardTitle
-)
+export default connect(
+  mapStateToProps,
+  { updateCase }
+)(injectIntl(UnconnectedBillboardTitle))
 
 export const CoverImageContainer = styled.div.attrs({
   className: 'BillboardTitle pt-dark',
