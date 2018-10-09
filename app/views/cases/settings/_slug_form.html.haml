@@ -1,5 +1,6 @@
 = form_for @case, url: case_settings_path(@case),
-                  builder: BlueprintFormBuilder do |f|
+                  builder: BlueprintFormBuilder,
+                  data: { controller: 'cases--settings--slug'} do |f|
   = f.errors
 
   - slug_format = t('.lowercase_letters_and_numbers_separated_by_hyphens_html')
@@ -11,6 +12,12 @@
       .pt-input-group.pt-fill{class: error_classes}
         %span.pt-icon.pt-icon-link
         = f.text_field :slug, class: %w[pt-input],
-                              placeholder: 'example-slug'
+                              placeholder: 'example-slug',
+                              data: { target: 'cases--settings--slug.input',
+                                      action: 'input->cases--settings--slug#update' }
       = f.submit I18n.t('cases.settings.edit.change_url'),
                  class: %w[pt-button pt-intent-success]
+    %p.case-slug-preview
+      https://www.learngala.com/cases/
+      %span.case-slug-preview__highlight{ data: { target: 'cases--settings--slug.preview'}}><
+        = @case.slug
