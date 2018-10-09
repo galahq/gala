@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <script src="https://cdn.polyfill.io/v2/polyfill.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>|always"></script>
 
+    <%= render 'application/fonts' %>
+
     <title>
       <% if content_for? :title %><%= content_for :title %> — <% end %>
       Gala
@@ -23,8 +25,6 @@
       window.i18n = {}
       window.i18n.locale = '<%=I18n.locale%>'
     <% end %>
-
-    <%= render 'application/fonts' %>
 
     <meta property="og:site_name" content="Gala" />
     <% if content_for? :head %><%= content_for :head %><% end %>
