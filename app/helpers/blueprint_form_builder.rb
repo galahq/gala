@@ -10,10 +10,10 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   # Creates a label, input, and helper text that are colored red together when
   # there is an error in the field.
   def form_group(method, label: nil, in_parens: nil, placeholder: nil,
-                 helper_text: nil, &block)
+                 helper_text: nil, **kwargs, &block)
     without_field_error_wrapper do
       classes = ['pt-form-group'] + error_classes(method)
-      @template.content_tag :div, class: classes do
+      @template.content_tag :div, class: classes, **kwargs do
         contents = ''.html_safe
         contents << label_with_text_in_parens(method, label, in_parens)
         contents << form_content(method, placeholder, helper_text, &block)
