@@ -78,6 +78,8 @@ export default hot(module)(injectIntl(MainMenu))
 const HelpButton = injectIntl(styled.a.attrs({
   className: 'pt-button pt-minimal pt-icon-help',
   href: 'https://docs.learngala.com',
+  target: '_blank',
+  rel: 'noopener noreferrer',
   'aria-label': p => p.intl.formatMessage({ id: 'helpers.help' }),
 })`
   margin-right: 1.5em;

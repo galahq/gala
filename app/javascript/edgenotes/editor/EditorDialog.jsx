@@ -111,7 +111,8 @@ const EditorDialog = ({
           <a
             className="pt-button pt-icon-help"
             href="https://docs.learngala.com/docs/authoring-embedding-media.html"
-            target="blank"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{ marginLeft: 0 }}
           >
             <FormattedMessage id="helpers.help" />
