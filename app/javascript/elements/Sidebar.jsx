@@ -1,6 +1,7 @@
 /* @flow */
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import BillboardTitle from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
 import TableOfContents from 'overview/TableOfContents'
@@ -12,9 +13,9 @@ function mapStateToProps (state) {
   }
 }
 
-const Sidebar = ({ editing, readerEnrolled }) => {
+const Sidebar = ({ editing, readerEnrolled, location }) => {
   return (
-    <aside id="Sidebar">
+    <aside id="Sidebar" data-active={location.pathname}>
       <BillboardTitle minimal />
       {editing || <CommunityChooser rounded />}
       <TableOfContents onSidebar />
@@ -28,4 +29,4 @@ const Sidebar = ({ editing, readerEnrolled }) => {
   )
 }
 
-export default connect(mapStateToProps)(Sidebar)
+export default withRouter(connect(mapStateToProps)(Sidebar))
