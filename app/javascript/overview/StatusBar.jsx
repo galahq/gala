@@ -53,9 +53,9 @@ function StatusBar ({
     <ContentItemSelectionContextConsumer>
       {({ selecting, onSelect }) => {
         const groups = [
-          pathname === '/'
-            ? [
-              {
+          [
+            pathname === '/'
+              ? {
                 message: 'catalog.catalog',
                 icon: 'home',
                 onClick: () =>
@@ -63,21 +63,20 @@ function StatusBar ({
                     /cases.*/,
                     ''
                   )),
-              },
-              {
-                disabled: !commentable || !reader || !reader.enrollment,
-                message: 'comments.index.conversation',
-                icon: 'chat',
-                onClick: () => history.push('/conversation'),
-              },
-            ]
-            : [
-              {
+              }
+              : {
                 message: 'cases.show.backToOverview',
                 icon: 'arrow-left',
                 onClick: () => history.push('/'),
               },
-            ],
+
+            {
+              disabled: !commentable || !reader || !reader.enrollment,
+              message: 'comments.index.conversation',
+              icon: 'chat',
+              onClick: () => history.push('/conversation'),
+            },
+          ],
           [
             editing
               ? { message: 'cases.edit.justChangeTheText' }
