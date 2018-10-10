@@ -164,13 +164,6 @@ const EdgenoteForm = ({
         render={props => <TextArea {...props} />}
         {...commonProps}
       />
-
-      <Field
-        name="callToAction"
-        label="activerecord.attributes.edgenote.callToAction"
-        render={props => <Input {...props} />}
-        {...commonProps}
-      />
     </>
   )
 }
@@ -304,7 +297,6 @@ const shouldDisable = (
   iconSlug: !Attachment.truthy(contents.fileUrl),
 
   caption: false,
-  callToAction: false,
 })
 
 const Row = styled.div`
