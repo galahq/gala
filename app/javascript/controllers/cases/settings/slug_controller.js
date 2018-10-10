@@ -14,7 +14,7 @@
 
    validate () {
      const { classList } = this.formGroupTarget
-     if (this.isValid())) {
+     if (this.isValid()) {
        classList.remove('pt-intent-danger')
        this.submitTarget.disabled = false
      } else {
@@ -24,6 +24,6 @@
    }
 
    isValid () {
-     return this.inputTarget.value.match(/^[-a-z\d]{1,100}$/
+     return this.inputTarget.value.match(/^[-a-z\d]{1,100}$/)
    }
  }
