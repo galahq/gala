@@ -53,6 +53,11 @@ class Reader < ApplicationRecord
 
   before_update :set_created_password, if: :encrypted_password_changed?
 
+  validates :image, size: { less_than: 2.megabytes,
+                            message: 'is bigger than 2MB' },
+                    content_type: { in: %w[image/png image/jpeg],
+                                    message: 'must be JPEG or PNG' }
+
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
          :trackable, :validatable, :confirmable
 
