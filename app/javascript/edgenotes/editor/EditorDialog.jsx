@@ -80,7 +80,7 @@ const EditorDialog = ({
 
         <Separator />
 
-        <Column highlighted={contents.highlighted}>
+        <Column sticky highlighted={contents.highlighted}>
           <EdgenotePreview
             contents={contents}
             changesToAttachments={changesToAttachments}

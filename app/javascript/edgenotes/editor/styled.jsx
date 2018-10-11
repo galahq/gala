@@ -47,16 +47,33 @@ export const Dialog = styled(BaseDialog)`
 `
 
 export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
+  align-items: flex-start;
   display: flex;
   flex-flow: row;
 
   @media (max-width: 600px) {
-    flex-flow: column-reverse;
+    flex-flow: column;
   }
 `
 
 export const Column = styled.div`
   width: 100%;
+
+  ${p =>
+    p.sticky &&
+    window.CSS.supports('position: sticky') &&
+    css`
+      /**
+       * Safari’s implementation of position: -webkit-sticky barfs all over the
+       * place, but because @supports is autoprefixed by stylis, we can’t detect
+       * actual non-prefixed position: sticky in that way.
+       */
+
+      @media (min-width: 600px) {
+        position: sticky;
+        top: 1em;
+      }
+    `};
 
   ${p =>
     p.highlighted &&
