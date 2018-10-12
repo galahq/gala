@@ -3,7 +3,7 @@
  * @flow
  */
 
-import { append, keys } from 'ramda'
+import * as R from 'ramda'
 import qs from 'qs'
 import uuid from 'uuid/v4'
 
@@ -108,33 +108,28 @@ function handleResponse (response: Response): Promise<any> {
     return response.json().catch(() => Promise.resolve(true))
   } else {
     return response.json().then((errorResponse: ErrorResponse) => {
-      const errorFieldNames = keys(errorResponse)
-
-      const errorMessages = errorFieldNames
-        .reduce((all: string[], fieldName: string) => {
-          const fieldErrors = errorResponse[fieldName]
-
-          if (fieldErrors != null && Array.isArray(fieldErrors)) {
-            return append(
-              fieldErrors
-                .map(
-                  err =>
-                    `${fieldName} ${typeof err === 'string' ? err : 'error'}`
-                )
-                .join('\n'),
-              all
-            )
-          }
-
-          return [...all, `${fieldName}: error`]
-        }, [])
-        .join('\n')
-
-      var e = Error(errorMessages)
+      const errorMessages = formatErrors(errorResponse)
+      let e = Error(errorMessages)
       e.name = 'OrchardError'
       throw e
     })
   }
+}
+
+function formatAttributeName (name: string) {
+  return name
+    .replace('_', ' ')
+    .replace(/./, (letter, i) => (i === 0 ? letter.toUpperCase() : letter))
+}
+
+export function formatErrors (errorResponse: ErrorResponse): string {
+  return R.flatten(
+    R.map(
+      ([key, values]) =>
+        R.map(value => `${formatAttributeName(key)} ${value}.`, values),
+      R.toPairs(errorResponse)
+    )
+  ).join('\n')
 }
 
 export function sessionId (): string {

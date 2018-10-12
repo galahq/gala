@@ -8,7 +8,11 @@ import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import { changeEdgenote, updateLinkExpansionVisibility } from 'redux/actions'
+import {
+  changeEdgenote,
+  updateLinkExpansionVisibility,
+  displayErrorToast,
+} from 'redux/actions'
 import withVisibilityChanges from './withVisibilityChanges'
 import { Overlay, EditButton } from './styled'
 import EditorDialog from './EditorDialog'
@@ -32,6 +36,7 @@ type Props = {
   locked: boolean,
   slug: string,
   updateLinkExpansionVisibility: typeof updateLinkExpansionVisibility,
+  displayErrorToast: typeof displayErrorToast,
   onChange: ($Shape<Edgenote>) => Promise<any>,
   onClose?: () => void,
   onOpen?: () => void,
@@ -122,6 +127,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
       changeEdgenote,
       updateLinkExpansionVisibility,
       visibility,
+      displayErrorToast,
     } = this.props
     const { contents, changesToAttachments } = this.state
 
@@ -138,13 +144,20 @@ class EdgenoteEditor extends React.Component<Props, State> {
       )
       .then(this._reset)
       .then(this.props.onClose)
+      .catch(e => {
+        displayErrorToast(e.message)
+        this.setState({ open: true })
+      })
   }
 
   _close = () => new Promise(resolve => this.setState({ open: false }, resolve))
   _reset = () => this.setState({ contents: this.props.contents })
 }
 export default compose(
-  connect(null, { changeEdgenote, updateLinkExpansionVisibility }),
+  connect(
+    null,
+    { changeEdgenote, updateLinkExpansionVisibility, displayErrorToast }
+  ),
   withVisibilityChanges,
   injectIntl
 )(EdgenoteEditor)

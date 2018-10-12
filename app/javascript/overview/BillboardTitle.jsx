@@ -10,7 +10,8 @@ import { connect } from 'react-redux'
 import ActiveStorageProvider from 'react-activestorage-provider'
 import { EditableText } from '@blueprintjs/core'
 
-import { updateCase } from 'redux/actions'
+import { updateCase, displayErrorToast } from 'redux/actions'
+import { formatErrors } from 'shared/orchard'
 
 import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
@@ -55,6 +56,7 @@ type Props = {
   photoCredit: string,
   coverUrl: string,
   updateCase: typeof updateCase,
+  displayErrorToast: typeof displayErrorToast,
   minimal?: boolean,
   library: Library,
   links: $PropertyType<CaseDataState, 'links'>,
@@ -78,6 +80,7 @@ export const UnconnectedBillboardTitle = ({
   links,
   onBeginEditing,
   onFinishEditing,
+  displayErrorToast,
 }: Props) => {
   return (
     <CoverImageContainer src={coverUrl}>
@@ -99,6 +102,12 @@ export const UnconnectedBillboardTitle = ({
           onSubmit={({ coverUrl }: CaseDataState) =>
             updateCase({ coverUrl }, false)
           }
+          onError={error => {
+            error
+              .json()
+              .then(formatErrors)
+              .then(displayErrorToast)
+          }}
         />
       )}
 
@@ -166,9 +175,10 @@ export const UnconnectedBillboardTitle = ({
   )
 }
 
-export default connect(mapStateToProps, { updateCase })(
-  UnconnectedBillboardTitle
-)
+export default connect(
+  mapStateToProps,
+  { updateCase, displayErrorToast }
+)(UnconnectedBillboardTitle)
 
 export const CoverImageContainer = styled.div.attrs({
   className: 'BillboardTitle pt-dark',
