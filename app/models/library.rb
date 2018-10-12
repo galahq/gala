@@ -30,7 +30,7 @@ class Library < ApplicationRecord
   validates :background_color, :foreground_color,
             format: { with: HEX_COLOR }, allow_blank: true
   validates :logo, size: { less_than: 2.megabytes,
-                           message: 'is bigger than 2MB' },
+                           message: 'cannot be larger than 2 MB' },
                    content_type: { in: %w[image/png image/svg+xml],
                                    message: 'must be PNG or SVG' }
   validates :name, presence: true
