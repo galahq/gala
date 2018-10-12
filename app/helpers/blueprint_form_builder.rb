@@ -141,7 +141,6 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   def with_blueprint_file_input(method, instructions: nil, **options)
     label method, class: 'pt-label' do
       contents = ''.html_safe
-      contents << default_label_text(method)
       classes = %w[pt-file-input].concat Array(options.delete(:class))
       contents << @template.content_tag(:div, class: classes) do
         div_contents = ''.html_safe

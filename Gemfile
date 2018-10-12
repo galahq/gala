@@ -16,6 +16,7 @@ gem 'rack-canonical-host'
 gem 'redis', '~> 3.0'
 
 # Models
+gem 'active_storage_validations'
 gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
                     ref: '2811810'
 gem 'clowne'

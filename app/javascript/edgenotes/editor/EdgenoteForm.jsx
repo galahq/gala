@@ -92,6 +92,12 @@ const EdgenoteForm = ({
         name="imageUrl"
         accept="image/*"
         placeholder="edgenotes.edit.chooseImage"
+        helperText={
+          <FormattedMessage
+            id="helpers.attachments.maxSize.js"
+            values={{ mb: 2 }}
+          />
+        }
         {...commonProps}
       />
 
@@ -301,7 +307,11 @@ const shouldDisable = (
 
 const Row = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
+
+  .pt-form-group label.pt-label:empty {
+    margin-bottom: 0;
+  }
 
   .pt-form-group {
     flex: 1;

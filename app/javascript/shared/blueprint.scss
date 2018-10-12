@@ -141,3 +141,7 @@ input[type="submit"].pt-button:empty {
 .pt-icon-drag-handle-horizontal {
   cursor: ns-resize;
 }
+
+.pt-form-group .pt-label .pt-file-input {
+  margin-top: 0;
+}
