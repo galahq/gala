@@ -539,6 +539,12 @@ zh-CN:
   forms:
     required: 必需
   helpers:
+    attachments:
+      file_type:
+        ruby: "Accepted file types: %{types}."
+      max_size:
+        ruby: File size must be under %{size}.
+        js: File size must be under {mb} MB.
     cancel: 取消
     choose_an_image: Choose an Image
     close: 关闭
