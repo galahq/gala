@@ -16,10 +16,14 @@
       = f.email_field :email, class: "pt-input pt-fill", tabindex: 3
 
     .reader-image-input
-      = f.file_field :image, class: %i[pt-fill], direct_upload: true,
-                             tabindex: 4
+      = f.label :image, class: "pt-label" do
+        = t 'activerecord.attributes.reader.image'
+        = f.file_field :image, class: %i[pt-fill], direct_upload: true,
+                               tabindex: 4
 
       %img{ src: @reader.image_url }
+    = t 'helpers.attachments.max_size.ruby',
+      size: number_to_human_size(2.megabytes)
 
     %h2= t '.notification_settings'
     %div{ style: 'padding-bottom: 1em'}
