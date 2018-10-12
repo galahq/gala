@@ -564,6 +564,12 @@ es:
   forms:
     required: required
   helpers:
+    attachments:
+      file_type:
+        ruby: "Accepted file types: %{types}."
+      max_size:
+        ruby: File size must be under %{size}.
+        js: File size must be under {mb} MB.
     cancel: Anular
     choose_an_image: Choose an Image
     close: Cerrar
