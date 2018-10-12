@@ -18,8 +18,19 @@
         = f.color_field :foreground_color,
                         class: %i[pt-input pt-fill] + error_classes
 
-    = f.file_field :logo, class: %i[pt-fill], direct_upload: true,
-                          accept: 'image/png, image/svg+xml'
+    :ruby
+      logo_helper_text = "#{
+        t 'helpers.attachments.max_size.ruby',
+          size: number_to_human_size(2.megabytes)
+      }<br />#{
+        t 'helpers.attachments.file_type.ruby',
+        types: %w[SVG PNG].to_sentence
+      }".html_safe
+
+    = f.form_group :logo, helper_text: logo_helper_text do |f, error_classes|
+      = f.file_field :logo, class: %i[pt-fill] + error_classes,
+                            direct_upload: true,
+                            accept: 'image/png, image/svg+xml'
 
     - if policy(Library).create?
       = f.check_box :visible_in_catalog
