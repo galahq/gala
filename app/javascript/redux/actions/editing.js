@@ -2,7 +2,12 @@
  * @flow
  */
 
-import { deleteEnqueuedLocks, displayToast, reloadLocks } from 'redux/actions'
+import {
+  deleteEnqueuedLocks,
+  displayToast,
+  displayErrorToast,
+  reloadLocks,
+} from 'redux/actions'
 
 import { Intent } from '@blueprintjs/core'
 import { EditorState, convertToRaw } from 'draft-js'
@@ -31,14 +36,19 @@ export function toggleEditing (): ThunkAction {
 
 export function saveChanges (): ThunkAction {
   return (dispatch: Dispatch) => {
-    dispatch(
-      displayToast({
-        message: 'Saved successfully',
-        intent: Intent.SUCCESS,
-      })
-    )
-
     dispatch(silentlySave())
+      .then(() =>
+        dispatch(
+          displayToast({
+            message: 'Saved successfully',
+            icon: 'tick',
+            intent: Intent.SUCCESS,
+          })
+        )
+      )
+      .catch(e => {
+        debugger
+      })
   }
 }
 
@@ -47,17 +57,20 @@ function silentlySave (): ThunkAction {
     const state = getState()
     const unsavedChanges = Object.keys(state.edit.unsavedChanges)
 
-    if (unsavedChanges.length > 0) {
-      unsavedChanges.forEach(endpoint => {
+    return Promise.all(
+      unsavedChanges.map(endpoint =>
         saveModel(
           endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
           state
-        )
-      })
-      dispatch(clearUnsaved())
-    }
-
-    dispatch(deleteEnqueuedLocks())
+        ).catch(e => {
+          dispatch(displayErrorToast(e.message))
+          throw e
+        })
+      )
+    ).then(() => {
+      if (unsavedChanges.length > 0) dispatch(clearUnsaved())
+      dispatch(deleteEnqueuedLocks())
+    })
   }
 }
 
