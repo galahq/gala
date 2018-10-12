@@ -34,6 +34,7 @@ feature 'Editing a case' do
 
       expect(kase.pages.first.cards.first).to be_locked
       click_button 'Save'
+      expect(page).to have_content 'Saved successfully'
       expect(kase.pages.first.cards.first).not_to be_locked
 
       page.driver.browser.navigate.refresh
@@ -83,6 +84,7 @@ feature 'Editing a case' do
 
         # The Edgenote should persist on save
         click_button 'Save'
+        expect(page).to have_content 'Saved successfully'
         page.driver.browser.navigate.refresh
         expect(page).to have_content '“I have a dream”'
       end
@@ -117,6 +119,7 @@ feature 'Editing a case' do
             .send_keys('Adding a test sentence for testing.')
             .perform
         click_button 'Save'
+        expect(page).to have_content 'Saved successfully'
 
         page.driver.browser.navigate.refresh
         entity = find('span.c-comment-thread-entity', match: :first)
@@ -145,7 +148,7 @@ feature 'Editing a case' do
       expect(page).to have_selector('.Card', count: 4)
     end
   end
-  
+
   context 'at the same time as someone else' do
     scenario 'the elements they’re editing are locked' do
       other_reader = create :reader, :editor
