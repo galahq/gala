@@ -20,6 +20,11 @@ class Podcast < ApplicationRecord
 
   before_validation :build_card, on: :create, unless: -> { card.present? }
 
+  validates :artwork, size: { less_than: 2.megabytes,
+                              message: 'cannot be larger than 2 MB' },
+                      content_type: { in: %w[image/png image/jpeg],
+                                      message: 'must be JPEG or PNG' }
+
   def cards
     [card]
   end

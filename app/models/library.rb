@@ -27,9 +27,13 @@ class Library < ApplicationRecord
 
   has_one_attached :logo
 
-  validates :name, presence: true
   validates :background_color, :foreground_color,
             format: { with: HEX_COLOR }, allow_blank: true
+  validates :logo, size: { less_than: 2.megabytes,
+                           message: 'cannot be larger than 2 MB' },
+                   content_type: { in: %w[image/png image/svg+xml],
+                                   message: 'must be PNG or SVG' }
+  validates :name, presence: true
 
   scope :ordered, -> { order cases_count: :desc }
   scope :visible_in_catalog, -> { where 'visible_in_catalog_at < NOW()' }

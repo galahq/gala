@@ -9,7 +9,8 @@ import ActiveStorageProvider from 'react-activestorage-provider'
 import { EditableText } from '@blueprintjs/core'
 import { FormattedMessage } from 'react-intl'
 
-import { updatePodcast } from 'redux/actions'
+import { updatePodcast, displayErrorToast } from 'redux/actions'
+import { formatErrors } from 'shared/orchard'
 
 import CreditsList from './CreditsList'
 import Lock from 'utility/Lock'
@@ -35,6 +36,7 @@ type Props = {
   slug: string,
   editing: boolean,
   updatePodcast: typeof updatePodcast,
+  displayErrorToast: typeof displayErrorToast,
   deleteElement: () => void,
 }
 function Podcast ({
@@ -42,6 +44,7 @@ function Podcast ({
   slug,
   editing,
   updatePodcast,
+  displayErrorToast,
   deleteElement,
 }: Props) {
   let { cardId } = podcast
@@ -53,6 +56,7 @@ function Podcast ({
         slug={slug}
         updatePodcast={updatePodcast}
         deleteElement={deleteElement}
+        displayErrorToast={displayErrorToast}
         {...podcast}
       />
 
@@ -75,7 +79,7 @@ function Podcast ({
 
 export default connect(
   mapStateToProps,
-  { updatePodcast }
+  { updatePodcast, displayErrorToast }
 )(Podcast)
 
 class PodcastPlayer extends React.Component<*, { playing: boolean }> {
@@ -104,6 +108,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
       creditsList,
       editing,
       updatePodcast,
+      displayErrorToast,
     } = this.props
     return (
       <div className="PodcastPlayer pt-dark">
@@ -134,6 +139,12 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                     onSubmit={({ artworkUrl }: PodcastT) =>
                       updatePodcast(`${id}`, { artworkUrl }, false)
                     }
+                    onError={error => {
+                      error
+                        .json()
+                        .then(formatErrors)
+                        .then(displayErrorToast)
+                    }}
                   />
                 )}
 

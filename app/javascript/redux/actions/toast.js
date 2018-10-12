@@ -2,6 +2,7 @@
  * @flow
  */
 
+import * as React from 'react'
 import { updateActiveCommunity } from 'redux/actions'
 
 import { Intent } from '@blueprintjs/core'
@@ -50,6 +51,18 @@ export function handleNotification (notification: Notification): ThunkAction {
           },
           text: 'Read',
         },
+      })
+    )
+  }
+}
+
+export function displayErrorToast (message: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    dispatch(
+      displayToast({
+        intent: Intent.DANGER,
+        icon: 'error',
+        message: <span style={{ whiteSpace: 'pre-wrap' }}>{message}</span>,
       })
     )
   }

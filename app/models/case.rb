@@ -75,6 +75,10 @@ class Case < ApplicationRecord
     update_columns translation_base_id: id if translation_base_id.blank?
   }
 
+  validates :cover_image, size: { less_than: 2.megabytes,
+                                  message: 'cannot be larger than 2 MB' },
+                          content_type: { in: %w[image/png image/jpeg],
+                                          message: 'must be JPEG or PNG' }
   validates :slug, presence: true, uniqueness: true,
                    format: { with: /\A[a-z0-9-]+\Z/ },
                    length: { maximum: 100 }
