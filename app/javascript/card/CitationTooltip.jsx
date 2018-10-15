@@ -9,6 +9,7 @@ import { EditorState } from 'draft-js'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { LabelForScreenReaders } from 'utility/A11y'
+import { ensureHttp } from 'shared/functions'
 
 import { updateCardContents, openCitation } from 'redux/actions'
 
@@ -157,11 +158,6 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(CitationTooltip)
-
-function ensureHttp (url: string) {
-  if (url.match(/^https?:\/\//)) return url
-  return `http://${url}`
-}
 
 const Tooltip = styled.cite`
   background: #6acb72;
