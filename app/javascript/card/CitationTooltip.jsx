@@ -128,7 +128,11 @@ class CitationTooltip extends React.Component<*> {
           <span tabIndex="0" id={`citation-${openedCitation.key}`}>
             {contents}{' '}
             {href && (
-              <a href={href} target="_blank" rel="noopener noreferrer">
+              <a
+                href={ensureHttp(href)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <span style={{ whiteSpace: 'nowrap' }}>
                   <FormattedMessage id="catalog.learnMore" /> ›
                 </span>
@@ -149,7 +153,15 @@ class CitationTooltip extends React.Component<*> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CitationTooltip)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CitationTooltip)
+
+function ensureHttp (url: string) {
+  if (url.match(/^https?:\/\//)) return url
+  return `http://${url}`
+}
 
 const Tooltip = styled.cite`
   background: #6acb72;
