@@ -40,5 +40,6 @@ unless naive_oembed_url.blank?
   naive << 'https://cdn.knightlab.com/libs/storyline/*'
   naive << 'https://*.maps.arcgis.com/home/webmap/*'
   naive << 'https://*.maps.arcgis.com/apps/webappviewer/*'
+  naive << 'https://plot.ly/~*/*.embed'
   OEmbed::Providers.register naive
 end
