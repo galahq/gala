@@ -14,14 +14,6 @@ export const Overlay = styled.div`
   border: none;
   background-color: transparent;
   z-index: 1;
-
-  opacity: 0;
-  transition: opacity 0.1s ease-out;
-
-  &:hover,
-  &:focus-within {
-    opacity: 1;
-  }
 `
 
 export const EditButton = styled(Button).attrs({
