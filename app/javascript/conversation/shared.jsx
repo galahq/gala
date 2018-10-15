@@ -116,6 +116,7 @@ export const StyledCommentContainer = styled.div`
     `};
 
   line-height: 1.4;
+  flex: 1;
 
   & strong {
     letter-spacing: normal;
