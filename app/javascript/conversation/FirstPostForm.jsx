@@ -11,6 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
+import CommentAttachments from 'conversation/CommentAttachments'
 import FormattingToolbar from 'draft/FormattingToolbar'
 
 import type { Editor } from 'draft-js'
@@ -29,11 +30,11 @@ type Props = {
   ...StateProps,
   ...DispatchProps,
 }
-type State = { editorState: EditorState }
+type State = { editorState: EditorState, attachments: File[] }
 class FirstPostForm extends React.Component<Props, State> {
   editor: ?Editor
 
-  state = { editorState: this.props.editorState }
+  state = { editorState: this.props.editorState, attachments: [] }
 
   componentDidUpdate (prevProps: Props) {
     if (
@@ -46,55 +47,69 @@ class FirstPostForm extends React.Component<Props, State> {
 
   render () {
     const { onSubmitComment, onCancel } = this.props
-    const { editorState } = this.state
-    return [
-      <Input key="1" onClick={this.handleFocusEditor}>
-        <FormattingToolbar
-          actions={{ addEdgenoteEntity: false, addCitationEntity: false }}
-          editorState={editorState}
-          onChange={this.handleChange}
-        />
-        <CommentEditor
-          innerRef={ref => (this.editor = ref)}
-          editorState={editorState}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-        />
-      </Input>,
-      <Options key="2">
-        <Button onClick={onCancel}>
-          <FormattedMessage id="helpers.cancel" />
-        </Button>
-        <SubmitButton
-          disabled={
-            editorState
-              .getCurrentContent()
-              .getPlainText()
-              .trim() === ''
-          }
-          onClick={onSubmitComment}
-        >
-          <FormattedMessage id="helpers.submit.submit" />
-        </SubmitButton>
-      </Options>,
-    ]
+    const { attachments, editorState } = this.state
+    return (
+      <>
+        <Input onClick={this.handleFocusEditor}>
+          <FormattingToolbar
+            actions={{ addEdgenoteEntity: false, addCitationEntity: false }}
+            editorState={editorState}
+            onChange={this.handleChange}
+          />
+          <CommentEditor
+            innerRef={ref => (this.editor = ref)}
+            editorState={editorState}
+            onChange={this.handleChange}
+            onBlur={this.handleBlur}
+          />
+          <CommentAttachments
+            attachments={attachments}
+            onChange={this.handleChangeAttachments}
+          />
+        </Input>
+        <Options>
+          <Button onClick={onCancel}>
+            <FormattedMessage id="helpers.cancel" />
+          </Button>
+          <SubmitButton
+            disabled={
+              editorState
+                .getCurrentContent()
+                .getPlainText()
+                .trim() === ''
+            }
+            onClick={onSubmitComment}
+          >
+            <FormattedMessage id="helpers.submit.submit" />
+          </SubmitButton>
+        </Options>
+      </>
+    )
   }
 
   handleChange = editorState => this.setState({ editorState })
+  handleChangeAttachments = attachments =>
+    this.setState(state => ({ attachments }))
+
   handleBlur = () => this.props.onSaveChanges(this.state.editorState)
-  handleFocusEditor = () => this.editor && this.editor.focus()
+  handleFocusEditor = () =>
+    requestAnimationFrame(() => {
+      this.editor && this.editor.focus()
+    })
 }
 export default commentFormConnector(FirstPostForm)
 
 const Input = styled.div.attrs({ className: 'pt-card pt-elevation-1' })`
+  align-items: stretch;
   background-color: white;
-  padding: 8px 16px 12px;
-  min-height: 235px;
-
+  display: flex;
+  flex-direction: column;
   font-size: 17px;
   line-height: 1.3;
-
   margin-top: 28px;
+  min-height: 235px;
+  padding: 8px 16px 12px;
+  position: relative;
 
   & .public-DraftEditorPlaceholder-root {
     margin-bottom: -20px;

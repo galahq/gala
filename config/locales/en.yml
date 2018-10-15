@@ -275,6 +275,7 @@ en:
         this case. Switch to a different discussion group or be the first to
         leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: Respond
       respond_here: Respond Here
       select: Select a few words
