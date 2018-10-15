@@ -14,6 +14,7 @@ import { Button, FormGroup, Intent } from '@blueprintjs/core'
 import Attachment from './Attachment'
 import Markdown from 'utility/Markdown'
 import { IconChooser } from 'utility/Icon'
+import { ensureHttp } from 'shared/functions'
 
 import type { IntlShape } from 'react-intl'
 import type { ChangesToAttachments } from 'edgenotes/editor'
@@ -54,7 +55,14 @@ const EdgenoteForm = ({
             })}
           />
         }
-        render={props => <Input {...props} />}
+        render={props => (
+          <Input
+            {...props}
+            onBlur={() =>
+              props.value && onChange({ websiteUrl: ensureHttp(props.value) })
+            }
+          />
+        )}
         {...commonProps}
         onChange={(edgenote: Edgenote) => onChange(edgenote)}
       />
