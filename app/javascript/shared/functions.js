@@ -28,3 +28,8 @@ export const areObjectsCompact: (Object[]) => boolean = compose(
 )
 
 export const isBlank: any => boolean = either(isEmpty, isNil)
+
+export function ensureHttp (url: string) {
+  if (url.match(/^https?:\/\//)) return url
+  return `http://${url}`
+}

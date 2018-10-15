@@ -9,6 +9,7 @@ import { EditorState } from 'draft-js'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { LabelForScreenReaders } from 'utility/A11y'
+import { ensureHttp } from 'shared/functions'
 
 import { updateCardContents, openCitation } from 'redux/actions'
 
@@ -128,7 +129,11 @@ class CitationTooltip extends React.Component<*> {
           <span tabIndex="0" id={`citation-${openedCitation.key}`}>
             {contents}{' '}
             {href && (
-              <a href={href} target="_blank" rel="noopener noreferrer">
+              <a
+                href={ensureHttp(href)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <span style={{ whiteSpace: 'nowrap' }}>
                   <FormattedMessage id="catalog.learnMore" /> ›
                 </span>
@@ -149,7 +154,10 @@ class CitationTooltip extends React.Component<*> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CitationTooltip)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CitationTooltip)
 
 const Tooltip = styled.cite`
   background: #6acb72;
