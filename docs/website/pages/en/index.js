@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * Copyright (c) 2017-present, Facebook, Inc.
  *
@@ -78,12 +79,13 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         <div className="inner">
           <ProjectTitle />
+          <p style={{ color: 'white' }}>Start with the guide for:</p>
           <PromoSection>
             <Button href={docUrl('authoring-getting-started.html', language)}>
-              Author a Case
+              Authoring a Case
             </Button>
             <Button href={docUrl('teaching-getting-started.html', language)}>
-              Teach a Case
+              Teaching a Case
             </Button>
           </PromoSection>
         </div>
