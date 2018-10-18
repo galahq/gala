@@ -36,7 +36,8 @@ function mapDispatchToProps (
   return {
     onSaveChanges: (editorState: EditorState) =>
       dispatch(changeCommentInProgress(threadId, editorState)) && void 0,
-    onSubmitComment: () => dispatch(createComment(threadId)),
+    onSubmitComment: (editorState: EditorState, attachmentIds: string[]) =>
+      dispatch(createComment(threadId, editorState, attachmentIds)),
   }
 }
 
@@ -44,4 +45,9 @@ export type StateProps = ExtractReturn<typeof mapStateToProps>
 export type DispatchProps = ExtractReturn<typeof mapDispatchToProps>
 
 export default (component: React.ComponentType<*>) =>
-  injectIntl(connect(mapStateToProps, mapDispatchToProps)(component))
+  injectIntl(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(component)
+  )
