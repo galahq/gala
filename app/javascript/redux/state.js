@@ -177,6 +177,10 @@ export type Citation =
     |}
 
 export type Comment = {
+  attachments: {
+    name: string,
+    url: string,
+  }[],
   commentThreadId: number,
   content: string,
   id: string,
