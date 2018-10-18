@@ -8,10 +8,11 @@ import styled from 'styled-components'
 
 import { EditorState } from 'draft-js'
 import { FormattedMessage } from 'react-intl'
+import { DirectUploadProvider } from 'react-activestorage-provider'
 
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
-import CommentAttachments from 'conversation/CommentAttachments'
+import CommentAttachmentsChooser from 'conversation/CommentAttachmentsChooser'
 import FormattingToolbar from 'draft/FormattingToolbar'
 
 import type { Editor } from 'draft-js'
@@ -30,11 +31,11 @@ type Props = {
   ...StateProps,
   ...DispatchProps,
 }
-type State = { editorState: EditorState, attachments: File[] }
+type State = { editorState: EditorState }
 class FirstPostForm extends React.Component<Props, State> {
   editor: ?Editor
 
-  state = { editorState: this.props.editorState, attachments: [] }
+  state = { editorState: this.props.editorState }
 
   componentDidUpdate (prevProps: Props) {
     if (
@@ -46,50 +47,58 @@ class FirstPostForm extends React.Component<Props, State> {
   }
 
   render () {
-    const { onSubmitComment, onCancel } = this.props
-    const { attachments, editorState } = this.state
+    const { onCancel } = this.props
+    const { editorState } = this.state
     return (
-      <>
-        <Input onClick={this.handleFocusEditor}>
-          <FormattingToolbar
-            actions={{ addEdgenoteEntity: false, addCitationEntity: false }}
-            editorState={editorState}
-            onChange={this.handleChange}
-          />
-          <CommentEditor
-            innerRef={ref => (this.editor = ref)}
-            editorState={editorState}
-            onChange={this.handleChange}
-            onBlur={this.handleBlur}
-          />
-          <CommentAttachments
-            attachments={attachments}
-            onChange={this.handleChangeAttachments}
-          />
-        </Input>
-        <Options>
-          <Button onClick={onCancel}>
-            <FormattedMessage id="helpers.cancel" />
-          </Button>
-          <SubmitButton
-            disabled={
-              editorState
-                .getCurrentContent()
-                .getPlainText()
-                .trim() === ''
-            }
-            onClick={onSubmitComment}
-          >
-            <FormattedMessage id="helpers.submit.submit" />
-          </SubmitButton>
-        </Options>
-      </>
+      <DirectUploadProvider
+        multiple
+        render={({ ready, uploads, handleChooseFiles, handleBeginUpload }) => (
+          <>
+            <Input onClick={this.handleFocusEditor}>
+              <FormattingToolbar
+                actions={{ addEdgenoteEntity: false, addCitationEntity: false }}
+                editorState={editorState}
+                onChange={this.handleChange}
+              />
+              <CommentEditor
+                innerRef={ref => (this.editor = ref)}
+                editorState={editorState}
+                onChange={this.handleChange}
+                onBlur={this.handleBlur}
+              />
+              <CommentAttachmentsChooser
+                attachments={uploads}
+                onChange={handleChooseFiles}
+              />
+            </Input>
+            <Options>
+              <Button onClick={onCancel}>
+                <FormattedMessage id="helpers.cancel" />
+              </Button>
+              <SubmitButton
+                disabled={
+                  !ready ||
+                  editorState
+                    .getCurrentContent()
+                    .getPlainText()
+                    .trim() === ''
+                }
+                onClick={handleBeginUpload}
+              >
+                <FormattedMessage id="helpers.submit.submit" />
+              </SubmitButton>
+            </Options>
+          </>
+        )}
+        onSuccess={this.handleSubmitComment}
+      />
     )
   }
 
   handleChange = editorState => this.setState({ editorState })
-  handleChangeAttachments = attachments =>
-    this.setState(state => ({ attachments }))
+  handleSubmitComment = attachmentIds => {
+    this.props.onSubmitComment(this.props.editorState, attachmentIds)
+  }
 
   handleBlur = () => this.props.onSaveChanges(this.state.editorState)
   handleFocusEditor = () =>

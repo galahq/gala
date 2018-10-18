@@ -11,11 +11,13 @@ declare module '@blueprintjs/core' {
   declare export type SUCCESS = 'SUCCESS'
   declare export type WARNING = 'WARNING'
   declare export type DANGER = 'DANGER'
+  declare export type NONE = 'NONE'
   declare export type IntentType =
     | PRIMARY
     | SUCCESS
     | WARNING
     | DANGER
+    | NONE
     | typeof undefined
 
   declare export class Intent {
@@ -23,6 +25,7 @@ declare module '@blueprintjs/core' {
     static SUCCESS: SUCCESS;
     static WARNING: WARNING;
     static DANGER: DANGER;
+    static NONE: NONE;
   }
 
   declare export type TOP_LEFT = 'TOP_LEFT'
