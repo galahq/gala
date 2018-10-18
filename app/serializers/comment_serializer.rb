@@ -3,11 +3,13 @@
 # @see Comment
 class CommentSerializer < ApplicationSerializer
   attributes :id, :content, :timestamp, :comment_thread_id
-  attribute :attachment_urls
+  attribute :attachments
   attribute :reader
 
-  def attachment_urls
-    object.attachments.map { |a| polymorphic_path a, only_path: true }
+  def attachments
+    object.attachments.map do |a|
+      { name: a.filename, url: polymorphic_path(a, only_path: true) }
+    end
   end
 
   def reader

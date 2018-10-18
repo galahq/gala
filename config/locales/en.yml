@@ -21,6 +21,8 @@ en:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
           one: Translator
+      comment:
+        attachments: Attachments
       deployment:
         case_id: Case
         group_id: Study Group
