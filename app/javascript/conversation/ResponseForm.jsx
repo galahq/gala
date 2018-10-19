@@ -68,7 +68,7 @@ class ResponseForm extends React.Component<
               .getPlainText()
               .trim() === ''
           }
-          onClick={onSubmitComment}
+          onClick={() => onSubmitComment(editorState, [])}
         />
       </Container>
     )
