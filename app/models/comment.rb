@@ -14,6 +14,8 @@ class Comment < ApplicationRecord
   belongs_to :reader
   belongs_to :comment_thread, counter_cache: true, touch: true
 
+  has_many_attached :attachments
+
   validates :content, presence: true
 
   after_create { CommentBroadcastJob.perform_now self }

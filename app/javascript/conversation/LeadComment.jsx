@@ -143,9 +143,25 @@ const LeadComment = ({
             />
           )}
         </Row>
+
         <blockquote>
           <StyledComment markdown={leadComment.content} />
         </blockquote>
+
+        {leadComment.attachments?.length > 0 && (
+          <AttachmentsSection>
+            <SmallGreyText>
+              <FormattedMessage id="activerecord.attributes.comment.attachments" />
+            </SmallGreyText>
+            <ul>
+              {leadComment.attachments.map((attachment, i) => (
+                <li className="pt-tag pt-minimal pt-interactive" key={i}>
+                  <a href={attachment.url}>{attachment.name}</a>
+                </li>
+              ))}
+            </ul>
+          </AttachmentsSection>
+        )}
       </LeadCommentContents>
     ) : (
       <FirstPostForm key="3" threadId={threadId} onCancel={onCancel} />
@@ -154,7 +170,10 @@ const LeadComment = ({
 )
 
 export default injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(LeadComment)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(LeadComment)
 )
 
 const LeadCommenter = styled.div`
@@ -211,5 +230,24 @@ const DeleteButton = styled.button.attrs({
   opacity: 0;
   ${LeadCommentContents}:hover & {
     opacity: 1;
+  }
+`
+
+const AttachmentsSection = styled.div`
+  margin-top: 1em;
+
+  ul {
+    line-height: 1.6;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin-right: 0.5em;
+
+      a:link {
+        color: black;
+      }
+    }
   }
 `

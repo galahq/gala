@@ -41,9 +41,12 @@ export function addComment (data: Comment): AddCommentAction {
   return { type: 'ADD_COMMENT', data }
 }
 
-export function createComment (threadId: string): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
-    const editorState = getState().ui.commentInProgress[threadId]
+export function createComment (
+  threadId: string,
+  editorState: EditorState,
+  attachmentIds: string[]
+): ThunkAction {
+  return (dispatch: Dispatch) => {
     const content: string = draftToMarkdown(
       convertToRaw(editorState.getCurrentContent())
     )
@@ -51,7 +54,7 @@ export function createComment (threadId: string): ThunkAction {
     if (content.trim() === '') return
 
     Orchard.graft(`comment_threads/${threadId}/comments`, {
-      comment: { content },
+      comment: { content, attachments: attachmentIds },
     })
       .then(() => {
         dispatch(changeCommentInProgress(threadId, EditorState.createEmpty()))
