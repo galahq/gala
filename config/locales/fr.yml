@@ -21,6 +21,8 @@ fr:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
           one: Traducteur(-rice)
           other: Traducteurs(-rices)
+      comment:
+        attachments: Attachments
       deployment:
         case_id: Étude de Cas
         group_id: Study Group
@@ -260,6 +262,7 @@ fr:
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: Répondre
       respond_here: Respond Here
       select: Sélectionnez quelques mots
