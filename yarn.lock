@@ -7669,9 +7669,9 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-"react-activestorage-provider@https://github.com/cbothner/react-activestorage-provider":
+react-activestorage-provider@cbothner/react-activestorage-provider:
   version "0.4.0"
-  resolved "https://github.com/cbothner/react-activestorage-provider#8d5cd12f26b5340e3af1c5d171e98d077aea918e"
+  resolved "https://codeload.github.com/cbothner/react-activestorage-provider/tar.gz/8d5cd12f26b5340e3af1c5d171e98d077aea918e"
   dependencies:
     "@babel/runtime" "^7.1.2"
     activestorage "^5.2.0"
