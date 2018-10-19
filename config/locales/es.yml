@@ -21,6 +21,8 @@ es:
           js: "{count, plural, one {Traductor(a)} other {Traductores} }: "
           one: Traductor(a)
           other: Traductores
+      comment:
+        attachments: Attachments
       deployment:
         case_id: Case
         group_id: Study Group
@@ -260,6 +262,7 @@ es:
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: Comentar
       respond_here: Respond Here
       select: Resaltar unas palabras
