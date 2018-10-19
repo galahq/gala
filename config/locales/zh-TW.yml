@@ -20,6 +20,8 @@ zh-TW:
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
+      comment:
+        attachments: Attachments
       deployment:
         case_id: 案例
         group_id: Study Group
@@ -257,6 +259,7 @@ zh-TW:
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: 參與討論
       respond_here: Respond Here
       select: 選擇想要發起討論的詞句
