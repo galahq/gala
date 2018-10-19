@@ -20,6 +20,8 @@ zh-CN:
         translators:
           js: "翻译："
           other: 翻译
+      comment:
+        attachments: Attachments
       deployment:
         case_id: 案例
         group_id: 学习组
@@ -253,6 +255,7 @@ zh-CN:
       nobody_has_left_a_comment: >
         {communityName} 该讨论组中没有人发起关于这个案例的讨论。发起讨论或切换到另一个讨论组。
     new:
+      add_attachment: Add Attachment
       respond: 参与讨论
       respond_here: Respond Here
       select: 选择想要发起讨论的词句
