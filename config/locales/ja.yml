@@ -20,6 +20,8 @@ ja:
         translators:
           js: "翻訳者："
           other: 翻訳者
+      comment:
+        attachments: Attachments
       deployment:
         case_id: 場合
         group_id: 勉強会
@@ -253,6 +255,7 @@ ja:
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: 対応
       respond_here: Respond Here
       select: 数語を選択
