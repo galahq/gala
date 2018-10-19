@@ -11,9 +11,11 @@ class CommentThreadsController < ApplicationController
   def index
     @forum = current_reader.active_community.forums.find_by(case: @case)
     @comment_threads = CommentThread.none if @forum.nil?
-    @comment_threads ||= @forum.comment_threads
-                               .visible_to_reader(current_reader)
-                               .includes(:card, comments: [:reader])
+    @comment_threads ||=
+      @forum.comment_threads
+            .visible_to_reader(current_reader)
+            .includes(:card, comments: [:reader, attachments_attachments: :blob])
+
     render json: @comment_threads, serializer: CommentThreads::IndexSerializer,
            case: @case, forum: @forum
   end
