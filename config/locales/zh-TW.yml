@@ -245,6 +245,7 @@ zh-TW:
       comments_on_page: Comments on “{title}”
       comments_on_page_number: Comments on Page {position, number}
       page_n: Page {pageNumber, number}
+      text_changed: The text being discussed has changed since this conversation started.
   comments:
     destroy:
       delete_comment: Delete comment
