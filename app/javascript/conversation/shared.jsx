@@ -13,6 +13,9 @@ export const CommentThreadBreadcrumbs = styled.ul.attrs({
   display: flex;
   align-items: baseline;
   white-space: nowrap;
+
+  display: grid;
+  grid-template-columns: min-content auto;
 `
 
 type CommentThreadBreadcrumbProps = {
