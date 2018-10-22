@@ -126,6 +126,34 @@ feature 'Editing a case' do
         expect(entity.text.strip)
           .to eq comment_thread.original_highlight_text.strip
       end
+
+      scenario 'detaches the comment thread if its text is changed' do
+        comment_thread.comments.create! content: 'Test comment', reader: reader
+        visit case_path kase
+        click_on 'Enroll'
+        visit case_path(kase) + '/1'
+
+        expect(page).to have_selector 'span.c-comment-thread-entity'
+
+        click_on 'Edit this case'
+        find('.c-comment-thread-entity', match: :first).click
+        page.driver.browser.action
+            .send_keys('new text added')
+            .perform
+        click_on 'Save'
+        expect(page).to have_content 'Saved successfully'
+
+        page.driver.browser.navigate.refresh
+        expect(page).to have_content 'new text added'
+        expect(page).not_to have_selector 'span.c-comment-thread-entity'
+        expect(page).to have_content '1 COMMENT'
+
+        click_on '1 comment'
+        expect(page).to have_content 'Test comment'
+
+        click_on 'Test comment'
+        expect(page).to have_content 'The text being discussed has changed'
+      end
     end
   end
 

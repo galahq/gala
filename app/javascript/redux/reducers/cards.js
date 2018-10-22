@@ -7,7 +7,17 @@ import { EditorState, convertFromRaw } from 'draft-js'
 import { decorator } from 'draft/config'
 
 // $FlowFixMe
-import { omit, lensPath, view, set, reduce } from 'ramda'
+import {
+  complement,
+  isNil,
+  filter,
+  where,
+  omit,
+  lensPath,
+  view,
+  set,
+  reduce,
+} from 'ramda'
 
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
@@ -221,5 +231,9 @@ function addCommentThreads (content: RawDraftContentState, card: Card) {
       content
     )
 
-  return reduce(setInlineStylesForComment, content, commentThreads)
+  const attached = filter(
+    where({ blockIndex: complement(isNil), start: complement(isNil) })
+  )
+
+  return reduce(setInlineStylesForComment, content, attached(commentThreads))
 }
