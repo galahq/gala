@@ -241,6 +241,7 @@ zh-CN:
       comments_on_page: 关于"{title}"章节的评论
       comments_on_page_number: 评论所在的页面位置 {position, number}
       page_n: 页面 {pageNumber, number}
+      text_changed: The text being discussed has changed since this conversation started.
   comments:
     destroy:
       delete_comment: 删除评论
