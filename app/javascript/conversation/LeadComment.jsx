@@ -41,10 +41,15 @@ type OwnProps = {
   onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
 }
 
-function mapStateToProps ({ caseData }: State) {
+function mapStateToProps (
+  { caseData, commentThreadsById }: State,
+  { threadId }: OwnProps
+) {
   const { reader } = caseData
+  const thread = commentThreadsById[threadId]
   return {
     readerCanDeleteComments: reader?.canUpdateCase,
+    threadDetached: thread.start == null || thread.blockIndex == null,
   }
 }
 type StateProps = { readerCanDeleteComments: boolean }
@@ -83,6 +88,7 @@ const LeadComment = ({
   readerCanDeleteComments,
   responseCount,
   threadId,
+  threadDetached,
   onCancel,
 }: Props) => (
   <>
@@ -94,6 +100,12 @@ const LeadComment = ({
     {page != null &&
       inSituPath != null && (
       <CommentThreadLocation>
+        {threadDetached && (
+          <Callout>
+            <FormattedMessage id="commentThreads.show.textChanged" />
+          </Callout>
+        )}
+
         <CommentThreadBreadcrumbs>
           <CommentThreadBreadcrumb>
             {inSitu ? (
@@ -115,6 +127,7 @@ const LeadComment = ({
             />
           </CommentThreadBreadcrumb>
         </CommentThreadBreadcrumbs>
+
         <HighlightedText disabled={inSitu}>
           <Link
             to={inSituPath}
@@ -188,6 +201,12 @@ const LeadCommenter = styled.div`
 
 const CommentThreadLocation = styled.div`
   margin: 18px 0 28px;
+`
+
+const Callout = styled.div.attrs({ className: 'pt-callout pt-icon-error' })`
+  line-height: 1.3;
+  font-weight: 400;
+  margin-bottom: 1em;
 `
 
 const HighlightedText = styled.div`
