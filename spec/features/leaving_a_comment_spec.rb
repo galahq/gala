@@ -67,6 +67,20 @@ feature 'Leaving a comment' do
     expect(page).to have_content 'Please select a few more words.'
   end
 
+  scenario 'is not possible when your active community is not discussing the case' do
+    other_community = create :community
+    enrollment.reader.update active_community_id: other_community.id
+
+    visit case_path(enrollment.case) + '/1'
+
+    community_chooser = find('a', text: other_community.name).native
+    page.driver.browser.action.move_to(community_chooser).perform
+    expect(page)
+      .to have_content 'Your active community is not discussing this case'
+
+    expect(page).not_to have_content 'RESPOND'
+  end
+
   let!(:other_reader) { create :reader }
 
   let!(:comment_thread) do
