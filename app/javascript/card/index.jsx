@@ -69,6 +69,11 @@ function mapStateToProps (
   const anyCommentsOpen = matchPath(pathname, commentsOpen())
   const selectedCommentThread = anyCommentsOpen?.params.threadId
 
+  const activeCommunity = state.caseData.reader?.activeCommunity
+  const activeCommunityPresent = (state.communities || []).some(
+    x => activeCommunity && x.id === activeCommunity.id
+  )
+
   return {
     acceptingSelection,
     anyCommentsOpen: !!anyCommentsOpen,
@@ -76,6 +81,7 @@ function mapStateToProps (
     commentable:
       commentThreads != null &&
       !nonNarrative &&
+      activeCommunityPresent &&
       state.caseData.commentable &&
       !!state.caseData.reader?.enrollment,
     deletable: !!pageId,
@@ -192,7 +198,9 @@ function mergeProps (
 
 export default withRouter(
   // $FlowFixMe
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    withGetEdgenote(CardContents)
-  )
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+  )(withGetEdgenote(CardContents))
 )
