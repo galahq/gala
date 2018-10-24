@@ -49,10 +49,11 @@ class CitationSpan extends React.Component<Props> {
   render () {
     let { isOpen, open, close, editable, entityKey, children } = this.props
 
-    let citationLabel = !editable && isOpen ? '×' : '◦'
+    let citationLabel = !editable && isOpen ? '×' : '○'
     let toggle = isOpen ? close : () => this.label && open(this.label)
     return (
       <span
+        data-test-id="CitationEntity"
         role="button"
         style={styles.label}
         ref={e => (this.label = e)}
@@ -79,9 +80,10 @@ class CitationSpan extends React.Component<Props> {
   }
 }
 
-const CitationEntity = connect(mapStateToProps, mapDispatchToProps)(
-  CitationSpan
-)
+const CitationEntity = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CitationSpan)
 
 export default CitationEntity
 
@@ -90,7 +92,8 @@ const styles = {
     color: '#4a8e50',
     cursor: 'pointer',
     display: 'inline-block',
-    marginLeft: -2,
+    fontWeight: 600,
+    marginLeft: -1,
     width: 8,
   },
 }
