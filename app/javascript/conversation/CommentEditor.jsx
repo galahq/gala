@@ -45,10 +45,10 @@ const CommentEditor = ({
   onBlur,
 }: {|
   editorState: EditorState,
-  innerRef: Editor => mixed,
+  innerRef: (?Editor) => any,
   intl: IntlShape,
-  onChange: EditorState => mixed,
-  onBlur: EditorState => mixed,
+  onChange: EditorState => any,
+  onBlur: (SyntheticEvent<*>) => any,
 |}) => (
   <StyledCommentContainer
     hidePlaceholder={

@@ -1,43 +1,68 @@
 declare module 'activestorage' {
-  declare module.exports: {
-    start(): void,
-    DirectUpload: any,
+  declare export function start(): void
+
+  declare export class DirectUpload {
+    id: number;
+    file: File;
+    url: string;
+
+    constructor(
+      file: File,
+      url: string,
+      delegate: {
+        +directUploadWillCreateBlobWithXHR?: (xhr: XMLHttpRequest) => mixed,
+        +directUploadWillStoreFileWithXHR?: (xhr: XMLHttpRequest) => mixed,
+      }
+    ): DirectUpload;
+
+    create(
+      callback: (
+        error: Error,
+        blob: {
+          byte_size: number,
+          checksum: string,
+          content_type: string,
+          filename: string,
+          signed_id: string,
+        }
+      ) => mixed
+    ): void;
   }
 }
 
-declare type InitializeEvent = {
+declare type $ActiveStorage$DirectUploadInitializeEvent = {
   target: HTMLInputElement,
   detail: { id: string, file: File },
 } & Event
 
-declare type ProgressEvent = {
+declare type $ActiveStorage$DirectUploadProgressEvent = {
   target: HTMLInputElement,
   detail: { id: string, file: File, progress: number },
 } & Event
 
-declare type ErrorEvent = {
+declare type $ActiveStorage$DirectUploadErrorEvent = {
   target: HTMLInputElement,
   detail: { id: string, file: File, error: string },
 } & Event
 
-declare type EndEvent = {
+declare type $ActiveStorage$DirectUploadEndEvent = {
   target: HTMLInputElement,
   detail: { id: string, file: File },
 }
 
 declare function addEventListener(
   'direct-upload:initialize',
-  (InitializeEvent) => mixed
+  ($ActiveStorage$DirectUploadInitializeEvent) => mixed
 ): void
 declare function addEventListener(
   'direct-upload:progress',
-  (ProgressEvent) => mixed
+  ($ActiveStorage$DirectUploadProgressEvent) => mixed
 ): void
 declare function addEventListener(
   'direct-upload:error',
-  (ErrorEvent) => mixed
+  ($ActiveStorage$DirectUploadErrorEvent) => mixed
 ): void
 declare function addEventListener(
   'direct-upload:end',
-  (EndEvent) => mixed
+  ($ActiveStorage$DirectUploadEndEvent) => mixed
 ): void

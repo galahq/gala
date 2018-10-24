@@ -21,7 +21,7 @@ const Icon = ({ filename, ...props }: Props) => (
 export default Icon
 
 type IconChooserProps = {
-  disabled: boolean,
+  disabled?: boolean,
   icons: string[],
   value: string,
   onChange: string => mixed,

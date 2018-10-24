@@ -52,7 +52,7 @@ function mapStateToProps (
     threadDetached: thread.start == null || thread.blockIndex == null,
   }
 }
-type StateProps = { readerCanDeleteComments: boolean }
+type StateProps = { readerCanDeleteComments: boolean, threadDetached: boolean }
 
 function mapDispatchToProps (
   dispatch: Dispatch,

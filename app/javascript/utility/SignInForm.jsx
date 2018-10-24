@@ -7,7 +7,7 @@ import * as React from 'react'
 
 import { Orchard } from 'shared/orchard'
 
-class SignInForm extends React.Component<{}, { form: ?string }> {
+class SignInForm extends React.Component<{}, { form: string | null }> {
   state = { form: null }
 
   componentDidMount () {
