@@ -8851,9 +8851,9 @@ rc@^1.2.7:
     strip-json-comments "~2.0.1"
 
 react-activestorage-provider@*:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/react-activestorage-provider/-/react-activestorage-provider-0.5.0.tgz#83b88fb65e7e192de6ee682b5ec0f2546910bdc9"
-  integrity sha512-lmv6FPGX/6n8MTHnqT7Oq50J6G66EyIXUo+KEi48PmTnkhf8xaGbwxl74b5+78dgJaNRieKXhtJB9VWK07Sc9A==
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-activestorage-provider/-/react-activestorage-provider-0.6.0.tgz#08461db7b4520f8158a1f69c82a5fe76a35ebd3c"
+  integrity sha512-BbmQMjl7QgXxp9GlbOqsAVHTHfiAbQJKCE/EF1rJGU9qsTJ2dsoa+8/ZhB0UYDwCsZ25A0dSxJOeqsgIvYjjPA==
   dependencies:
     "@babel/runtime" "^7.1.2"
     activestorage "^5.2.0"
