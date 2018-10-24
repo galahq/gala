@@ -37,6 +37,7 @@
     "classnames": "^2.2.6",
     "coffeescript": "^2.3.1",
     "color-hash": "^1.0.3",
+    "css-loader": "^1.0.0",
     "draft-js": "0.10.5",
     "draft-js-linkify-plugin": "^2.0.1",
     "draft-js-plugins-editor": "^2.1.1",
@@ -52,6 +53,7 @@
     "markdown-draft-js": "^1.1.5",
     "path-to-regexp": "^2.4.0",
     "polished": "^2.0.3",
+    "postcss-cssnext": "^3.1.0",
     "postcss-smart-import": "^0.7.6",
     "prop-types": "^15.6.2",
     "qs": "^6.5.2",
@@ -89,7 +91,7 @@
     "styled-components": "^3.4.5",
     "url-loader": "^1.1.1",
     "uuid": "^3.3.2",
-    "webpack": "^4.4.1",
+    "webpack": "^4.22.0",
     "webpack-merge": "^4.1.4",
     "whatwg-fetch": "^2.0.4",
     "yaml-loader": "^0.5.0"
@@ -111,8 +113,9 @@
     "flow-bin": "0.83.0",
     "flow-inspect": "^1.0.1",
     "prettier": "^1.14.2",
-    "webpack-bundle-analyzer": "^2.13.1",
-    "webpack-dev-server": "^3.1.7"
+    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   },
   "greenkeeper": {
     "ignore": [
