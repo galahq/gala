@@ -145,3 +145,9 @@ input[type="submit"].pt-button:empty {
 .pt-form-group .pt-label .pt-file-input {
   margin-top: 0;
 }
+
+button > svg,
+button > svg > path,
+button > svg > title {
+  pointer-events: none;
+}
