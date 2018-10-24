@@ -3,14 +3,14 @@
  * @flow
  */
 
-import type { Community } from 'redux/state'
+import type { CommunitiesState } from 'redux/state'
 import type { SetCommunitiesAction } from 'redux/actions'
 
 type Action = SetCommunitiesAction
 export default function communities (
-  state: Community[] = [],
+  state: CommunitiesState = [],
   action: Action
-): Community[] {
+): CommunitiesState {
   switch (action.type) {
     case 'SET_COMMUNITIES':
       return action.communities

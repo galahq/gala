@@ -12,7 +12,7 @@ import type { MessageDescriptor } from 'react-intl'
 import type { ActiveStorageFileUpload } from 'react-activestorage-provider'
 
 type Props = {
-  handleUpload: FileList => void,
+  handleUpload: FileList => mixed,
   ready: boolean,
   uploads: ActiveStorageFileUpload[],
   className?: string,

@@ -61,7 +61,7 @@ type Props = {
   dek: string,
   editing: boolean,
   learningObjectives: string[],
-  otherAvailableLocales: { [string]: string },
+  otherAvailableLocales: $PropertyType<Case, 'otherAvailableLocales'>,
   slug: string,
   summary: string,
   taggingsPath: string,
@@ -173,7 +173,10 @@ const Billboard = ({
   </Container>
 )
 
-export default connect(mapStateToProps, { updateCase })(Billboard)
+export default connect(
+  mapStateToProps,
+  { updateCase }
+)(Billboard)
 
 export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;

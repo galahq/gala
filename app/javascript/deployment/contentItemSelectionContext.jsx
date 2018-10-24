@@ -11,22 +11,27 @@ import * as React from 'react'
 import { submitForm } from 'shared/lti'
 import { Orchard, CSRF } from 'shared/orchard'
 
-const defaultContext = { selecting: false, onSelect: () => {} }
+const defaultContext = { selecting: false, onSelect: (caseSlug: string) => {} }
 const { Provider: BaseProvider, Consumer } = React.createContext(defaultContext)
 
+type ContentItemSelectionParams = {
+  lti_uid: string,
+  return_url: string,
+  return_data: string,
+  context_id: string,
+  canvas_deployments_path: string,
+}
 type State = {
-  params?: {
-    lti_uid: string,
-    return_url: string,
-    return_data: string,
-    context_id: string,
-    canvas_deployments_path: string,
-  },
+  params: ?ContentItemSelectionParams,
+}
+
+function getContentItemSelectionParams (): ?ContentItemSelectionParams {
+  return window['content_item_selection_params']
 }
 
 export class Provider extends React.Component<{ children: React.Node }, State> {
   state = {
-    params: window['content_item_selection_params'],
+    params: getContentItemSelectionParams(),
   }
 
   componentDidMount () {

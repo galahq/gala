@@ -70,8 +70,8 @@ function uploadBlob (file: File, onProgress?: number => mixed): Promise<string> 
       '/rails/active_storage/direct_uploads',
       {
         directUploadWillStoreFileWithXHR: xhr => {
-          xhr.upload.addEventListener('progress', event => {
-            const progress = event.loaded / event.total * 100
+          xhr.upload.addEventListener('progress', (event: ProgressEvent) => {
+            const progress = (event.loaded / event.total) * 100
             onProgress && progress && onProgress(progress)
           })
         },
