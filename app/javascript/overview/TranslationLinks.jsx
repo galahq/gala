@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 import type { Case } from 'redux/state'
 
-type TranslationLinksProps = {
+export type TranslationLinksProps = {
   languages: $PropertyType<Case, 'otherAvailableLocales'>,
 }
 function TranslationLinks ({ languages }: TranslationLinksProps) {
