@@ -14,7 +14,10 @@
   },
   "settings": {
     "ecmascript": 6,
-    "jsx": true
+    "jsx": true,
+    "react": {
+      "version": "16"
+    }
   },
   "plugins": ["babel", "import", "react", "jsx-a11y", "flowtype"],
   "rules": {
