@@ -32,7 +32,7 @@
     "babel-loader": "^8.0.0",
     "babel-plugin-styled-components": "^1.5.1",
     "camelize": "^1.0.0",
-    "caniuse-lite": "^1.0.30000882",
+    "caniuse-lite": "^1.0.30000898",
     "change-case": "^3.0.2",
     "classnames": "^2.2.6",
     "coffeescript": "^2.3.1",
@@ -93,7 +93,7 @@
     "uuid": "^3.3.2",
     "webpack": "^4.22.0",
     "webpack-merge": "^4.1.4",
-    "whatwg-fetch": "^2.0.4",
+    "whatwg-fetch": "^3.0.0",
     "yaml-loader": "^0.5.0"
   },
   "devDependencies": {
@@ -112,7 +112,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "flow-bin": "0.83.0",
     "flow-inspect": "^1.0.1",
-    "prettier": "^1.14.2",
+    "prettier": "^1.14.3",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10"
