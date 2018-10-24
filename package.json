@@ -108,7 +108,7 @@
     "eslint-plugin-promise": "^4.0.0",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^4.0.0",
-    "flow-bin": "0.80.0",
+    "flow-bin": "0.83.0",
     "flow-inspect": "^1.0.1",
     "prettier": "^1.14.2",
     "webpack-bundle-analyzer": "^2.13.1",
