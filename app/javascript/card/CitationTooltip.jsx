@@ -113,17 +113,27 @@ class CitationTooltip extends React.Component<*> {
       <Tooltip style={positionalStyles} onClick={closeCitation}>
         {editable ? (
           <form>
-            <Field
-              value={contents}
-              placeholder="Citation text"
-              onChange={updateCitation('contents')}
-            />
-            <Field
-              value={href}
-              placeholder="Resource URL"
-              onChange={updateCitation('href')}
-            />
-            <Button onClick={onCloseCitation}>Close</Button>
+            <Grid>
+              <label htmlFor={`citation-${openedCitation.key}[text]`}>
+                <FormattedMessage id="cards.edit.citationText" />
+              </label>
+              <Field
+                id={`citation-${openedCitation.key}[text]`}
+                value={contents}
+                onChange={updateCitation('contents')}
+              />
+              <label htmlFor={`citation-${openedCitation.key}[url]`}>
+                <FormattedMessage id="cards.edit.citationUrl" />
+              </label>
+              <Field
+                id={`citation-${openedCitation.key}[url]`}
+                value={href}
+                onChange={updateCitation('href')}
+              />
+            </Grid>
+            <Button onClick={onCloseCitation}>
+              <FormattedMessage id="helpers.save" />
+            </Button>
           </form>
         ) : (
           <span tabIndex="0" id={`citation-${openedCitation.key}`}>
@@ -133,6 +143,7 @@ class CitationTooltip extends React.Component<*> {
                 href={ensureHttp(href)}
                 target="_blank"
                 rel="noopener noreferrer"
+                tabIndex="0"
               >
                 <span style={{ whiteSpace: 'nowrap' }}>
                   <FormattedMessage id="catalog.learnMore" /> ›
@@ -142,6 +153,7 @@ class CitationTooltip extends React.Component<*> {
             <LabelForScreenReaders>
               <a
                 href={`#citation-marker-${openedCitation.key}`}
+                tabIndex="0"
                 onClick={onCloseCitation}
               >
                 <FormattedMessage id="edgenotes.edgenote.returnToNarrative" />
@@ -159,7 +171,7 @@ export default connect(
   mapDispatchToProps
 )(CitationTooltip)
 
-const Tooltip = styled.cite`
+const Tooltip = styled.cite.attrs({ 'data-test-id': 'CitationTooltip' })`
   background: #6acb72;
   border-radius: 2px;
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 2px 4px rgba(16, 22, 26, 0.2),
@@ -172,7 +184,23 @@ const Tooltip = styled.cite`
   z-index: 10;
 `
 
-const Field = styled.input.attrs({ className: 'pt-input pt-fill' })`
+const Grid = styled.div`
+  align-items: center;
+  display: grid;
+  grid-gap: 0 0.5em;
+  grid-template-columns: 4em auto;
+
+  label {
+    justify-self: flex-end;
+  }
+
+  input + label {
+    /* for non grid browsers */
+    display: block;
+  }
+`
+
+const Field = styled.input.attrs({ className: 'pt-input' })`
   margin-top: 0.25em;
 `
 

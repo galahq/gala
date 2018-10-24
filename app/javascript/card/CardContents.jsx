@@ -129,7 +129,7 @@ class CardContents extends React.Component<Props, State> {
     return (
       <Container>
         <Card
-          innerRef={el => (this.cardRef = el)}
+          ref={el => (this.cardRef = el)}
           className={this._getClassNames()}
           editable={editable}
           theseCommentThreadsOpen={theseCommentThreadsOpen}
