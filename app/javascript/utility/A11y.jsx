@@ -165,7 +165,7 @@ class ActiveFocusContainer extends React.Component<{
 
   render () {
     return (
-      <FocusableDiv tabIndex="0" innerRef={el => (this.containerElement = el)}>
+      <FocusableDiv tabIndex="0" ref={el => (this.containerElement = el)}>
         {this.props.children}
       </FocusableDiv>
     )
