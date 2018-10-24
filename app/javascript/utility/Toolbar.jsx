@@ -112,7 +112,7 @@ const Bar = styled.div.attrs({ className: ({ light }) => light || 'pt-dark' })`
   text-transform: initial;
   letter-spacing: 0em;
 `
-const MaxWidthFlexContainer = MaxWidthContainer.extend`
+const MaxWidthFlexContainer = styled(MaxWidthContainer)`
   display: flex;
   justify-content: space-between;
 

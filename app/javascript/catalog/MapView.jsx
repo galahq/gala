@@ -177,14 +177,23 @@ const Container = styled.section`
     pointer-events: none;
   }
 
+  & .mapboxgl-ctrl-bottom-left {
+    left: 25px;
+    opacity: 0.4;
+  }
+
   & .mapboxgl-ctrl-bottom-right {
     position: absolute;
     z-index: 1;
     bottom: 0px;
-    right: 53px;
+    right: 28px;
     font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.1px;
+
+    .mapboxgl-ctrl-attrib {
+      background-color: transparent;
+    }
 
     & a {
       color: #5c748a;

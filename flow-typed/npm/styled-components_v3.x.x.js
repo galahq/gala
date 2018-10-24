@@ -1,3 +1,6 @@
+// flow-typed signature: f523b1ef4ab2de4542946d8ff8f9d2be
+// flow-typed version: a92e9b07d7/styled-components_v3.x.x/flow_>=v0.75.x
+
 // @flow
 
 type $npm$styledComponents$Interpolation = (<C: {}>(executionContext: C) => string) | string | number;
