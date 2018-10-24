@@ -207,9 +207,10 @@ class SelectedCommentThread extends React.Component<
     )
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(
-  SelectedCommentThread
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SelectedCommentThread)
 
 const Container = styled.div.attrs({ className: 'SelectedCommentThread' })`
   flex: 1;

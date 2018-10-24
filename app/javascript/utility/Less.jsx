@@ -56,7 +56,7 @@ class Less extends React.Component<
             <InnerContainer
               open={open}
               height={this._getHeight()}
-              innerRef={(ref: HTMLElement) => (this._innerContainer = ref)}
+              ref={(ref: HTMLElement) => (this._innerContainer = ref)}
               onClick={this.handleOpen}
             >
               {children}
