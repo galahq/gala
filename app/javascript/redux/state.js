@@ -15,7 +15,7 @@ export type State = {
   caseData: CaseDataState,
   commentsById: CommentsState,
   commentThreadsById: CommentThreadsState,
-  communities: CommunitiesState[],
+  communities: CommunitiesState,
   edgenotesBySlug: EdgenotesState,
   edit: EditState,
   locks: LocksState,
@@ -167,7 +167,7 @@ export type CaseElement = {
   position: number,
 }
 
-export type CaseElementStore = 'pagesById' | 'podcastsById' | 'activitiesById'
+export type CaseElementStore = 'pagesById' | 'podcastsById'
 
 export type Citation =
   | {| +key: null, +labelRef: null |}

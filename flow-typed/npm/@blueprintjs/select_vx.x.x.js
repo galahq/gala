@@ -1,8 +1,14 @@
+/* @flow */
 // flow-typed signature: 1b23b6b7435a755030d68864b1de73ce
 // flow-typed version: <<STUB>>/@blueprintjs/select_v2.0.1/flow_v0.72.0
 
 import * as React from 'react'
-import type { IPopoverProps, IProps, ITagInputProps } from '@blueprintjs/core'
+import type {
+  IInputProps,
+  IPopoverProps,
+  IProps,
+  ITagInputProps,
+} from '@blueprintjs/core'
 
 declare module '@blueprintjs/select' {
   declare export type ItemListPredicate<T> = (query: string, items: T[]) => T[]
@@ -63,7 +69,19 @@ declare module '@blueprintjs/select' {
     tagRenderer: T => React.Node,
   }
 
+  declare export type ISelectProps<T> = IListItemsProps<T> & {
+    disabled?: boolean,
+    filterable?: boolean,
+    inputProps?: $Shape<IInputProps>,
+    onQueryChange?: (query: string) => void,
+    popoverProps?: $Shape<IPopoverProps>,
+    resetOnClose?: boolean,
+    resetOnSelect?: boolean,
+  }
+
   declare export class MultiSelect<T> extends React.Component<
-  IMultiSelectProps<T>
+    IMultiSelectProps<T>
   > {}
+
+  declare export class Select<T> extends React.Component<ISelectProps<T>> {}
 }

@@ -3,7 +3,6 @@
 .*/node_modules/unflowify/test
 .*/node_modules/@mapbox
 .*/node_modules/jsonlint-lines-primitives
-.*/node_modules/draft-js-plugins-editor
 
 [include]
 ./node_modules/fbjs/flow/lib

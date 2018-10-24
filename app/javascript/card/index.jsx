@@ -70,7 +70,7 @@ function mapStateToProps (
   const selectedCommentThread = anyCommentsOpen?.params.threadId
 
   const activeCommunity = state.caseData.reader?.activeCommunity
-  const activeCommunityPresent = (state.communities || []).some(
+  const activeCommunityPresent = state.communities.some(
     x => activeCommunity && x.id === activeCommunity.id
   )
 
@@ -197,10 +197,12 @@ function mergeProps (
 }
 
 export default withRouter(
-  // $FlowFixMe
   connect(
+    // $FlowFixMe
     mapStateToProps,
+    // $FlowFixMe
     mapDispatchToProps,
+    // $FlowFixMe
     mergeProps
   )(withGetEdgenote(CardContents))
 )

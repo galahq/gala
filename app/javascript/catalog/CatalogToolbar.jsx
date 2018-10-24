@@ -17,7 +17,7 @@ import { getSearchPath } from 'catalog/SearchForm'
 import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
 
-type Props = ContextRouter & { author: boolean, instructor: boolean }
+type Props = {| ...ContextRouter, author?: boolean, instructor?: boolean |}
 const CatalogToolbar = ({ author, history, instructor }: Props) => (
   <ContentItemSelectionContextConsumer>
     {({ selecting }) => (
