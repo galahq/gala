@@ -89,7 +89,7 @@ class Enrollments extends React.Component<Props, { editing: boolean }> {
 
 export default injectIntl(Enrollments)
 
-const SidebarSectionTitle = SectionTitle.extend`
+const SidebarSectionTitle = styled(SectionTitle)`
   margin: 24px 0.5em 2px 0;
 `
 const SidebarButton = styled(Button).attrs({
