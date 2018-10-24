@@ -229,7 +229,7 @@ const Image = ({ edgenote }) => (
 
 const AltText = ({ edgenote }) => <Td>{edgenote.altText || '—'}</Td>
 
-const BreakingLink = Link.extend`
+const BreakingLink = styled(Link)`
   word-break: break-all;
 `
 const Website = ({ edgenote }) => (

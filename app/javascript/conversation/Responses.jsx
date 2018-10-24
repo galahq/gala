@@ -97,7 +97,7 @@ export default injectIntl(
 
 const Container = styled.div``
 
-const Timestamp = SmallGreyText.extend`
+const Timestamp = styled(SmallGreyText)`
   display: block;
   width: 100%;
   text-align: center;

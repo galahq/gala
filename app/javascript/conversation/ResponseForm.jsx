@@ -105,7 +105,7 @@ const Container = styled.div`
   }
 `
 
-export const EmptyResponseFormContainer = Container.extend`
+export const EmptyResponseFormContainer = styled(Container)`
   border-top: none;
   padding: 1px;
 `
