@@ -1,14 +1,12 @@
 [ignore]
 .*/node_modules/styled-components/.*
 .*/node_modules/unflowify/test
-.*/node_modules/mapbox-gl
+.*/node_modules/@mapbox
 .*/node_modules/jsonlint-lines-primitives
+.*/node_modules/draft-js-plugins-editor
 
 [include]
 ./node_modules/fbjs/flow/lib
-
-[declarations]
-.*/node_modules/.*
 
 [options]
 module.system.node.resolve_dirname=node_modules
@@ -26,4 +24,4 @@ suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(2[0-8]\\|1[0-9]\\|[0-9]\\).[0-9]\\)? *\\).*\n
 
 [version]
-0.80.0
+0.83.0
