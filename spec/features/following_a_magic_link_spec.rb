@@ -44,18 +44,26 @@ feature 'Following a magic link' do
   scenario 'creating an account' do
     visit magic_link_path key: deployment.key
     click_button 'Let’s get started!'
+
+    click_on 'Sign up'
+    expect(page).to have_content 'Email can’t be blank'
+
     reader = build :reader
     fill_in 'Name', with: reader.name
     fill_in 'Email', with: reader.email
     fill_in 'Password', with: reader.password, match: :first
     fill_in 'Password confirmation', with: reader.password
     click_button 'Sign up'
+
     Capybara.reset_sessions!
+
     saved_reader = Reader.find_by_email reader.email
     visit reader_confirmation_path confirmation_token: saved_reader.confirmation_token
+
     fill_in 'Email', with: reader.email
     fill_in 'Password', with: reader.password
     click_button 'Sign in'
+
     expect(page).to have_content deployment.group.name
     expect(page).not_to have_content 'Enroll in this case'
   end
