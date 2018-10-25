@@ -21,6 +21,8 @@ fr:
           js: "{ count, plural, one {Traducteur(-rice)} other {Traducteurs(-rices)} } : "
           one: Traducteur(-rice)
           other: Traducteurs(-rices)
+      comment:
+        attachments: Attachments
       deployment:
         case_id: Étude de Cas
         group_id: Study Group
@@ -142,7 +144,11 @@ fr:
         Citation added. Click the <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
         edit.
+      citation_text: Title
+      citation_url: URL
       write_something: Write something...
+    show:
+      open_citation: Open citation.
   case_elements:
     new:
       untitled: Untitled
@@ -233,6 +239,11 @@ fr:
   comment_threads:
     destroy:
       delete_comment_thread: Supprimer le fil de commentaire
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        one: 1 thread
+        other: "%{count} threads"
     new:
       new_comment_thread: Nouveau fil de commentaire...
     show:
@@ -240,6 +251,7 @@ fr:
       comments_on_page: Commentaires sur «{title}»
       comments_on_page_number: Commentaires sur Page {position, number}
       page_n: Page {pageNumber, number}
+      text_changed: The text being discussed has changed since this conversation started.
   comments:
     destroy:
       delete_comment: Supprimer le commentaire
@@ -248,20 +260,21 @@ fr:
       conversation: Conversation
       join_the_conversation: Rejoignez la conversation
       n_responses:
-        js: "{count, number} {count, plural, one {réponse} other {réponses}}"
-        one: 1 réponse
-        other: "%{count} réponses"
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        one: 1 comment
+        other: "%{count} comments"
       no_comments: Aucune réponse
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: Répondre
-      respond_here: Répondez ici
+      respond_here: Respond Here
       select: Sélectionnez quelques mots
       selection_not_unique: >
         Les mots que vous avez sélectionnés apparaissent plusieurs fois. Veuillez sélectionner quelques mots de plus.
       write: Écrivez quelque chose...
-      write_new: Écrivez une nouvelle réponse
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: Choisir une communauté
@@ -371,14 +384,14 @@ fr:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
       n_enrolled: "%{count} enrolled"
-      invite_instructions_html: |
-        <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
-        participate in your private forum.
       invite_learners: Invite Learners
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
     form:
       select_a_case: Select a Case...
       select_a_group: Select a Group...
@@ -395,12 +408,18 @@ fr:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
       new_deployment: New Deployment
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
       teach_with_cases: Teach with Cases
       youre_not_teaching_any_cases: You’re not teaching any cases yet
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -408,6 +427,14 @@ fr:
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
+      enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
   devise:
     sessions:
       destroy:
@@ -486,7 +513,7 @@ fr:
     new:
       enroll: Inscrire
       enroll_for_easy_access: >
-        Si cette étude de cas attire votre attention, inscrivez-vous pour un accès facile.
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
       enroll_in_this_case: Inscrivez-vous dans cette étude de cas
   errors:
     format: "%{attribute} %{message}"
@@ -545,6 +572,12 @@ fr:
   forms:
     required: obligatoire
   helpers:
+    attachments:
+      file_type:
+        ruby: "Accepted file types: %{types}."
+      max_size:
+        ruby: File size must be under %{size}.
+        js: File size must be under {mb} MB.
     cancel: Annuler
     choose_an_image: Choose an Image
     close: Fermer
@@ -569,6 +602,7 @@ fr:
       start: ', '
       two: ' and '
     loading: Loading...
+    n_a: N/A
     page_entries_info:
       more_pages:
         display_entries: >
@@ -731,6 +765,13 @@ fr:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    quiz:
+      multiple_choice_questions:
+        one: "%{count} Multiple Choice Question"
+        other: "%{count} Multiple Choice Questions"
+      open_ended_questions:
+        one: "%{count} Open Ended Question"
+        other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”

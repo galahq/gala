@@ -20,6 +20,8 @@ ja:
         translators:
           js: "翻訳者："
           other: 翻訳者
+      comment:
+        attachments: Attachments
       deployment:
         case_id: 場合
         group_id: 勉強会
@@ -139,7 +141,11 @@ ja:
     edit:
       citation_added: |
         出典表記付いた。<span class="pt-tag pt-intent-success"><span class="pt-icon pt-icon-ring"></span>出典店</span>をクリックして、編集できる。
+      citation_text: Title
+      citation_url: URL
       write_something: 何かをお書き下さい...
+    show:
+      open_citation: Open citation.
   case_elements:
     new:
       untitled: タイトルなし
@@ -228,6 +234,10 @@ ja:
   comment_threads:
     destroy:
       delete_comment_thread: コメントスレッドを削除します。
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        other: "%{count} threads"
     new:
       new_comment_thread: 新しいコメントスレッド…
     show:
@@ -235,6 +245,7 @@ ja:
       comments_on_page: '「{title}」についてのコメント'
       comments_on_page_number: 第{position, number}ページのコメント
       page_n: 第{pageNumber, number}ページ
+      text_changed: The text being discussed has changed since this conversation started.
   comments:
     destroy:
       delete_comment: コメントを削除
@@ -243,19 +254,20 @@ ja:
       conversation: 会話
       join_the_conversation: 会話に参加します
       n_responses:
-        js: "{count, number}件の返事"
-        other: "%{count}件の返事"
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        other: "%{count} comments"
       no_comments: コメントがありません
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: 対応
-      respond_here: こちらに返信を書く
+      respond_here: Respond Here
       select: 数語を選択
       selection_not_unique: >
         選択された言葉が複数回表示されます。さらにいくつかの文字を選択してください。
       write: 返事を書いてください
-      write_new: 新しい返信を書く
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: コミュニティを選択
@@ -354,14 +366,14 @@ ja:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
       n_enrolled: "%{count} enrolled"
-      invite_instructions_html: |
-        <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
-        participate in your private forum.
       invite_learners: Invite Learners
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
     form:
       select_a_case: Select a Case...
       select_a_group: Select a Group...
@@ -378,12 +390,18 @@ ja:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
       new_deployment: New Deployment
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
       teach_with_cases: Teach with Cases
       youre_not_teaching_any_cases: You’re not teaching any cases yet
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -391,6 +409,14 @@ ja:
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
+      enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
   devise:
     sessions:
       destroy:
@@ -468,7 +494,7 @@ ja:
     new:
       enroll: 登録
       enroll_for_easy_access: >
-        このケースが目を引く場合は、簡単に見つけれるよう登録してください。
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
       enroll_in_this_case: この事例研究に登録する
   errors:
     format: "%{attribute}%{message}"
@@ -522,6 +548,12 @@ ja:
   forms:
     required: 必須
   helpers:
+    attachments:
+      file_type:
+        ruby: "Accepted file types: %{types}."
+      max_size:
+        ruby: File size must be under %{size}.
+        js: File size must be under {mb} MB.
     cancel: キャンセル
     choose_an_image: Choose an Image
     close: 閉じる
@@ -546,6 +578,7 @@ ja:
       start: 'と'
       two: 'と'
     loading: Loading...
+    n_a: N/A
     page_entries_info:
       more_pages:
         display_entries: >
@@ -706,6 +739,11 @@ ja:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    quiz:
+      multiple_choice_questions:
+        other: "%{count} Multiple Choice Questions"
+      open_ended_questions:
+        other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
