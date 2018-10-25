@@ -8,6 +8,7 @@ import { hot } from 'react-hot-loader'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
+import ErrorBoundary from 'utility/ErrorBoundary'
 import { Orchard } from 'shared/orchard'
 import {
   Provider as ContentItemSelectionContextProvider,
@@ -93,9 +94,11 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     Orchard.harvest('cases/features').then(({ features }) =>
       this.setState({ features })
     )
-    Orchard.harvest('enrollments').then(enrollments =>
-      this.setState({ enrollments })
-    )
+    Orchard.harvest('enrollments')
+      .then(enrollments => this.setState({ enrollments }))
+      .catch(
+        e => e.name === 'OrchardError' && this.setState({ enrollments: [] })
+      )
     Orchard.harvest('tags').then(tags => this.setState({ tags }))
     Orchard.harvest('catalog/libraries').then(libraries =>
       this.setState({ libraries })
@@ -105,45 +108,47 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
   render () {
     const basename = window.location.pathname.match(/^(\/\w{2}(-\w{2})?)?\//)[0]
     return (
-      <Router basename={basename}>
-        <ContentItemSelectionContextProvider>
-          <Container>
-            <CatalogToolbar
-              author={this._readerIsAuthor()}
-              instructor={this._readerIsInstructor()}
-            />
-            <MaxWidthContainer>
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={() => (
-                    <ConnectedWindow>
-                      <Home
-                        readerIsEditor={this._readerIsEditor()}
-                        {...this.state}
-                        onDeleteEnrollment={this.handleDeleteEnrollment}
-                      />
-                    </ConnectedWindow>
-                  )}
-                />
-                <Route
-                  path="/catalog/"
-                  render={props => (
-                    <Window>
-                      <Results
-                        readerIsEditor={this._readerIsEditor()}
-                        {...this.state}
-                        {...props}
-                      />
-                    </Window>
-                  )}
-                />
-              </Switch>
-            </MaxWidthContainer>
-          </Container>
-        </ContentItemSelectionContextProvider>
-      </Router>
+      <ErrorBoundary>
+        <Router basename={basename}>
+          <ContentItemSelectionContextProvider>
+            <Container>
+              <CatalogToolbar
+                author={this._readerIsAuthor()}
+                instructor={this._readerIsInstructor()}
+              />
+              <MaxWidthContainer>
+                <Switch>
+                  <Route
+                    exact
+                    path="/"
+                    render={() => (
+                      <ConnectedWindow>
+                        <Home
+                          readerIsEditor={this._readerIsEditor()}
+                          {...this.state}
+                          onDeleteEnrollment={this.handleDeleteEnrollment}
+                        />
+                      </ConnectedWindow>
+                    )}
+                  />
+                  <Route
+                    path="/catalog/"
+                    render={props => (
+                      <Window>
+                        <Results
+                          readerIsEditor={this._readerIsEditor()}
+                          {...this.state}
+                          {...props}
+                        />
+                      </Window>
+                    )}
+                  />
+                </Switch>
+              </MaxWidthContainer>
+            </Container>
+          </ContentItemSelectionContextProvider>
+        </Router>
+      </ErrorBoundary>
     )
   }
 
