@@ -20,7 +20,7 @@ module Readers
     # @route [POST] `/resource`
     def create
       super do |reader|
-        link_reader! reader if following_magic_link?
+        link_reader! reader if reader.persisted? && following_magic_link?
       end
     end
 
