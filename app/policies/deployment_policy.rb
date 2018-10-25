@@ -21,6 +21,7 @@ class DeploymentPolicy < ApplicationPolicy
   end
 
   def show?
+    return true if editor?
     group_membership&.admin?
   end
 
