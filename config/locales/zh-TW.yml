@@ -20,6 +20,8 @@ zh-TW:
         translators:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
+      comment:
+        attachments: Attachments
       deployment:
         case_id: 案例
         group_id: Study Group
@@ -141,7 +143,11 @@ zh-TW:
         Citation added. Click the <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
         edit.
+      citation_text: Title
+      citation_url: URL
       write_something: Write something...
+    show:
+      open_citation: Open citation.
   case_elements:
     new:
       untitled: Untitled
@@ -232,6 +238,10 @@ zh-TW:
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        other: "%{count} threads"
     new:
       new_comment_thread: New comment thread...
     show:
@@ -239,6 +249,7 @@ zh-TW:
       comments_on_page: Comments on “{title}”
       comments_on_page_number: Comments on Page {position, number}
       page_n: Page {pageNumber, number}
+      text_changed: The text being discussed has changed since this conversation started.
   comments:
     destroy:
       delete_comment: Delete comment
@@ -247,19 +258,20 @@ zh-TW:
       conversation: Conversation
       join_the_conversation: Join the conversation
       n_responses:
-        js: "{count, number}條回復"
-        other: "%{count}條回復"
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        other: "%{count} comments"
       no_comments: No comments
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
     new:
+      add_attachment: Add Attachment
       respond: 參與討論
-      respond_here: 回應
+      respond_here: Respond Here
       select: 選擇想要發起討論的詞句
       selection_not_unique: >
         你所選擇的詞句已存在相關話題，請多選幾個詞。
       write: 發表回復
-      write_new: 發起新話題
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: 選擇討論小組
@@ -358,14 +370,14 @@ zh-TW:
       add_quiz: Add Quiz
       edit_quiz: Edit Quiz
       n_enrolled: "%{count} enrolled"
-      invite_instructions_html: |
-        <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
-        participate in your private forum.
       invite_learners: Invite Learners
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
     form:
       select_a_case: Select a Case...
       select_a_group: Select a Group...
@@ -382,12 +394,18 @@ zh-TW:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
       new_deployment: New Deployment
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
       teach_with_cases: Teach with Cases
       youre_not_teaching_any_cases: You’re not teaching any cases yet
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -395,6 +413,14 @@ zh-TW:
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       teach_this_case: Deploy this Case
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
+      enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
   devise:
     sessions:
       destroy:
@@ -472,7 +498,7 @@ zh-TW:
     new:
       enroll: 參與學習
       enroll_for_easy_access: >
-        如果你喜歡這個案例，就參與到該案例的學習中吧。加入之后，首頁上“我的案例”處將會出現鏈接到該案例的快捷方式。
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
       enroll_in_this_case: 加入此案例的學習
   errors:
     format: "%{attribute}%{message}"
@@ -526,6 +552,12 @@ zh-TW:
   forms:
     required: 必需
   helpers:
+    attachments:
+      file_type:
+        ruby: "Accepted file types: %{types}."
+      max_size:
+        ruby: File size must be under %{size}.
+        js: File size must be under {mb} MB.
     cancel: 取消
     choose_an_image: Choose an Image
     close: 關閉
@@ -550,6 +582,7 @@ zh-TW:
       start: '、'
       two: '、'
     loading: Loading...
+    n_a: N/A
     page_entries_info:
       more_pages:
         display_entries: >
@@ -710,6 +743,11 @@ zh-TW:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    quiz:
+      multiple_choice_questions:
+        other: "%{count} Multiple Choice Questions"
+      open_ended_questions:
+        other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”

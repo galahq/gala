@@ -20,6 +20,8 @@ zh-CN:
         translators:
           js: "翻译："
           other: 翻译
+      comment:
+        attachments: Attachments
       deployment:
         case_id: 案例
         group_id: 学习组
@@ -139,7 +141,11 @@ zh-CN:
       citation_added: |
         注释已添加。单击 <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> 引注标记</span>进行编辑。
+      citation_text: Title
+      citation_url: URL
       write_something: 添加内容
+    show:
+      open_citation: Open citation.
   case_elements:
     new:
       untitled: 未命名
@@ -228,6 +234,10 @@ zh-CN:
   comment_threads:
     destroy:
       delete_comment_thread: 删除整个话题讨论
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        other: "%{count} threads"
     new:
       new_comment_thread: 发起新的话题讨论
     show:
@@ -235,6 +245,7 @@ zh-CN:
       comments_on_page: 关于"{title}"章节的评论
       comments_on_page_number: 评论所在的页面位置 {position, number}
       page_n: 页面 {pageNumber, number}
+      text_changed: The text being discussed has changed since this conversation started.
   comments:
     destroy:
       delete_comment: 删除评论
@@ -243,19 +254,20 @@ zh-CN:
       conversation: 讨论
       join_the_conversation: 加入讨论
       n_responses:
-        js: "{count, number}条回复"
-        other: "%{count}条回复"
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        other: "%{count} comments"
       no_comments: 暂无评论
       nobody_has_left_a_comment: >
         {communityName} 该讨论组中没有人发起关于这个案例的讨论。发起讨论或切换到另一个讨论组。
     new:
+      add_attachment: Add Attachment
       respond: 参与讨论
-      respond_here: 回应
+      respond_here: Respond Here
       select: 选择想要发起讨论的词句
       selection_not_unique: >
         你所选择的词句已存在相关话题，请多选几个词。
       write: 发表回复
-      write_new: 发起新话题
+      write_new: New Comment Thread
   communities:
     index:
       choose_a_community: 选择讨论小组
@@ -354,12 +366,14 @@ zh-CN:
       add_quiz: 添加测验
       edit_quiz: 编辑测验
       n_enrolled: "%{count} 已加入学习"
-      invite_instructions_html: |
-        <b>邀请链接:</b> 发送此链接邀请他人与您共同学习这个案例。他们将看到您选择的任何测验, 并能够参加您所建立的论坛。
       invite_learners: 邀请学员
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
     form:
       select_a_case: 选择一个案例...
       select_a_group: 选择一个学习组
@@ -375,12 +389,18 @@ zh-CN:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
       new_deployment: 新建案例运用
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
         learners from this page.
       teach_with_cases: 选择案例进行教学
       youre_not_teaching_any_cases: 您目前未选择用于教学的案例
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
@@ -388,6 +408,14 @@ zh-CN:
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       teach_this_case: 运用该案例
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
+      enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
   devise:
     sessions:
       destroy:
@@ -465,7 +493,7 @@ zh-CN:
     new:
       enroll: 参与学习
       enroll_for_easy_access: >
-        如果你喜欢这个案例，就参与到该案例的学习中吧。加入之后，首页上“我的案例”处将会出现链接到该案例的快捷方式。
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
       enroll_in_this_case: 加入此案例的学习
   errors:
     format: "%{attribute}%{message}"
@@ -519,6 +547,12 @@ zh-CN:
   forms:
     required: 必需
   helpers:
+    attachments:
+      file_type:
+        ruby: "Accepted file types: %{types}."
+      max_size:
+        ruby: File size must be under %{size}.
+        js: File size must be under {mb} MB.
     cancel: 取消
     choose_an_image: Choose an Image
     close: 关闭
@@ -543,6 +577,7 @@ zh-CN:
       start: '、'
       two: '、'
     loading: Loading...
+    n_a: N/A
     page_entries_info:
       more_pages:
         display_entries: >
@@ -703,6 +738,11 @@ zh-CN:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    quiz:
+      multiple_choice_questions:
+        other: "%{count} Multiple Choice Questions"
+      open_ended_questions:
+        other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
