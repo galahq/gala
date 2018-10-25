@@ -21,5 +21,7 @@ module Orchard
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
 
     config.active_record.schema_format = :sql
+
+    config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
   end
 end
