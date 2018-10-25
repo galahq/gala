@@ -20,6 +20,7 @@ import {
 } from 'redux/actions'
 
 import asyncComponent from 'utility/asyncComponent'
+import ErrorBoundary from 'utility/ErrorBoundary'
 
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
@@ -125,28 +126,30 @@ class Case extends React.Component<{
   render () {
     const { kicker, basename, needsPretest, hasQuiz } = this.props
     return (
-      <DocumentTitle title={`${kicker} — Gala`}>
-        <Router basename={basename}>
-          <ContentItemSelectionContextProvider>
-            <div id="Case">
-              <StatusBar />
-              <Switch>
-                <Route exact path="/" component={CaseOverview} />
-                <Route
-                  path={needsPretest ? '/*' : 'miss'}
-                  component={PreTest}
-                />
-                <Route
-                  path={hasQuiz ? '/quiz/' : 'miss'}
-                  component={PostTest}
-                />
-                <Route path="/conversation" component={Conversation} />
-                <Route path="/:position/" component={CaseElement} />
-              </Switch>
-            </div>
-          </ContentItemSelectionContextProvider>
-        </Router>
-      </DocumentTitle>
+      <ErrorBoundary>
+        <DocumentTitle title={`${kicker} — Gala`}>
+          <Router basename={basename}>
+            <ContentItemSelectionContextProvider>
+              <div id="Case">
+                <StatusBar />
+                <Switch>
+                  <Route exact path="/" component={CaseOverview} />
+                  <Route
+                    path={needsPretest ? '/*' : 'miss'}
+                    component={PreTest}
+                  />
+                  <Route
+                    path={hasQuiz ? '/quiz/' : 'miss'}
+                    component={PostTest}
+                  />
+                  <Route path="/conversation" component={Conversation} />
+                  <Route path="/:position/" component={CaseElement} />
+                </Switch>
+              </div>
+            </ContentItemSelectionContextProvider>
+          </Router>
+        </DocumentTitle>
+      </ErrorBoundary>
     )
   }
 
@@ -161,13 +164,16 @@ class Case extends React.Component<{
 }
 
 export default hot(module)(
-  connect(mapStateToProps, {
-    parseAllCards,
-    fetchCommentThreads,
-    fetchCommunities,
-    toggleEditing,
-    subscribeToActiveForumChannel,
-    subscribeToEditsChannel,
-    handleNotification,
-  })(Case)
+  connect(
+    mapStateToProps,
+    {
+      parseAllCards,
+      fetchCommentThreads,
+      fetchCommunities,
+      toggleEditing,
+      subscribeToActiveForumChannel,
+      subscribeToEditsChannel,
+      handleNotification,
+    }
+  )(Case)
 )

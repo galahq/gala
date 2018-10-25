@@ -6,7 +6,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { NonIdealState } from '@blueprintjs/core'
+import { Button, Intent, NonIdealState } from '@blueprintjs/core'
 
 class ErrorBoundary extends React.Component<
   { children: React.Node },
@@ -14,8 +14,18 @@ class ErrorBoundary extends React.Component<
 > {
   state = { hasError: false, error: null, info: null }
 
-  componentDidCatch (error: Error, info: ?{ componentStack: string }) {
+  componentDidCatch (error: Error, info: { componentStack: string }) {
     this.setState({ hasError: true, error, info })
+
+    Sentry.withScope(scope => {
+      if (window.reader != null) scope.setUser({ email: window.reader.email })
+
+      Object.keys(info).forEach(key => {
+        scope.setExtra(key, info[key])
+      })
+
+      Sentry.captureException(error)
+    })
   }
 
   render () {
@@ -28,13 +38,16 @@ class ErrorBoundary extends React.Component<
             visual="error"
             title="Something went wrong"
             description={
-              <InfoBox>
-                <code>
-                  Uncaught {error?.name}: {error?.message}
-                  {'\n'}
-                  {info?.componentStack}
-                </code>
-              </InfoBox>
+              <>
+                <Button
+                  icon="comment"
+                  intent={Intent.PRIMARY}
+                  onClick={() => Sentry.showReportDialog()}
+                >
+                  Report feedback
+                </Button>
+                <InfoBox error={error} info={info} />
+              </>
             }
           />
         </Container>
@@ -44,7 +57,6 @@ class ErrorBoundary extends React.Component<
   }
 }
 export default ErrorBoundary
-
 const Container = styled.div.attrs({ className: 'pt-dark' })`
   margin-top: 40px;
 
@@ -56,10 +68,43 @@ const Container = styled.div.attrs({ className: 'pt-dark' })`
     }
   }
 `
-
-const InfoBox = styled.pre`
-  text-align: left;
+class InfoBox extends React.Component<
+  { error: ?Error, info: ?{ componentStack: string } },
+  { detailsVisible: boolean }
+> {
+  state = {
+    detailsVisible: false,
+  }
+  render () {
+    const { error, info } = this.props
+    const { detailsVisible } = this.state
+    return (
+      <InfoBoxContainer>
+        {detailsVisible ? (
+          <InfoBoxDetails>
+            <code>
+              Uncaught {error?.name}: {error?.message}
+              {'\n'}
+              {info?.componentStack}
+            </code>
+          </InfoBoxDetails>
+        ) : (
+          <Button
+            icon="info-sign"
+            onClick={() => this.setState({ detailsVisible: true })}
+          >
+            Show Details
+          </Button>
+        )}
+      </InfoBoxContainer>
+    )
+  }
+}
+const InfoBoxContainer = styled.div`
   margin: 16px;
+`
+const InfoBoxDetails = styled.pre`
+  text-align: left;
   overflow-x: scroll;
 
   & code {
