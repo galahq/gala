@@ -64,6 +64,7 @@ gem 'webpacker', '>= 4.0.x'
 
 # Logging and Monitoring
 gem 'awesome_print'
+gem 'barnes'
 gem 'lograge'
 gem 'skylight'
 gem 'table_print'
