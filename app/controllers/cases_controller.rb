@@ -6,6 +6,21 @@ class CasesController < ApplicationController
   include SelectionParams
   include VerifyLock
 
+  CASE_EAGER_LOADING_CONFIG = [
+    :cards,
+    podcasts: [
+      :card, :case_element,
+      audio_attachment: :blob,
+      artwork_attachment: :blob
+    ],
+    edgenotes: [
+      image_attachment: :blob,
+      audio_attachment: :blob,
+      file_attachment: :blob
+    ],
+    pages: %i[case_element cards]
+  ].freeze
+
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
   before_action -> { verify_lock_on @case }, only: %i[update destroy]
@@ -20,7 +35,7 @@ class CasesController < ApplicationController
     @cases = policy_scope(Case)
              .ordered
              .with_attached_cover_image
-             .includes(:case_elements, :library, :tags)
+             .includes(:library, :tags)
              .decorate
 
     render json: @cases, each_serializer: Cases::PreviewSerializer
@@ -85,15 +100,7 @@ class CasesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_case
-    @case = Case.friendly.includes(
-      :podcasts, :cards,
-      edgenotes: [
-        image_attachment: :blob,
-        audio_attachment: :blob,
-        file_attachment: :blob
-      ],
-      pages: %i[case_element cards]
-    )
+    @case = Case.friendly.includes(*CASE_EAGER_LOADING_CONFIG)
                 .find(slug).decorate
   end
 
