@@ -414,6 +414,8 @@ GEM
     selenium-webdriver (3.5.2)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
+    sentry-raven (2.7.4)
+      faraday (>= 0.7.6, < 1.0)
     shellany (0.0.1)
     skylight (2.0.1)
       skylight-core (= 2.0.1)
@@ -543,6 +545,7 @@ DEPENDENCIES
   ruby-oembed
   sass-rails (~> 5.0)
   selenium-webdriver
+  sentry-raven
   skylight
   spring
   spring-commands-rspec

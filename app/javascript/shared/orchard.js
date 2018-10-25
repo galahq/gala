@@ -124,11 +124,10 @@ function formatAttributeName (name: string) {
 
 export function formatErrors (errorResponse: ErrorResponse): string {
   return R.flatten(
-    R.map(
-      ([key, values]) =>
-        R.map(value => `${formatAttributeName(key)} ${value}.`, values),
-      R.toPairs(errorResponse)
-    )
+    R.map(([key, values]) => {
+      if (!Array.isArray(values)) { return `${formatAttributeName(key)} ${values}.` }
+      return R.map(value => `${formatAttributeName(key)} ${value}.`, values)
+    }, R.toPairs(errorResponse))
   ).join('\n')
 }
 

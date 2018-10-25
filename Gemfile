@@ -66,6 +66,7 @@ gem 'webpacker', '>= 4.0.x'
 gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
+gem 'sentry-raven'
 gem 'skylight'
 gem 'table_print'
 
