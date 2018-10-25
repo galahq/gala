@@ -21,6 +21,10 @@ RSpec.describe DeploymentPolicy do
                                 status: :admin
       expect(subject).to permit reader_context, deployment
     end
+
+    it 'allows an editor to view any deployment' do
+      expect(subject).to permit editor, deployment
+    end
   end
 
   permissions :update? do
