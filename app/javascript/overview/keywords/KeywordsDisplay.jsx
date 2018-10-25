@@ -42,7 +42,7 @@ const KeywordsDisplay = ({ tags }: Props) => (
 export default KeywordsDisplay
 
 const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
-  background-image: url(${p => require(`images/category-${p.category}.png`)});
+  background-image: url(${p => require(`images/category-${p.category}.jpg`)});
   background-position: center;
   background-size: cover;
   font-size: 120% !important;
