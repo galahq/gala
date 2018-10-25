@@ -10,6 +10,7 @@ import { addLocaleData, IntlProvider } from 'react-intl'
 import { ThemeProvider } from 'styled-components'
 import { theme } from 'utility/styledComponents'
 
+import ErrorBoundary from 'utility/ErrorBoundary'
 import Catalog from 'catalog'
 
 import loadMessages from '../../../config/locales'
@@ -22,11 +23,13 @@ Promise.all([
 ]).then(([localeData, messages]) => {
   addLocaleData(localeData)
   ReactDOM.render(
-    <IntlProvider locale={locale} messages={messages}>
-      <ThemeProvider theme={theme}>
-        <Catalog />
-      </ThemeProvider>
-    </IntlProvider>,
+    <ErrorBoundary>
+      <IntlProvider locale={locale} messages={messages}>
+        <ThemeProvider theme={theme}>
+          <Catalog />
+        </ThemeProvider>
+      </IntlProvider>
+    </ErrorBoundary>,
     document.getElementById('catalog-app')
   )
 })
