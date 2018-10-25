@@ -16,6 +16,6 @@ class MyCasesController < ApplicationController
     CasePolicy::AdminScope.new(current_user, Case).resolve
                           .ordered
                           .with_attached_cover_image
-                          .includes(:case_elements, :library)
+                          .includes(:library)
   end
 end
