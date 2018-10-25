@@ -29,7 +29,7 @@ class ScrollView extends React.Component<{
   render () {
     const { children, ...rest } = this.props
     return (
-      <ScrollViewDiv {...rest} innerRef={el => (this.container = el)}>
+      <ScrollViewDiv {...rest} ref={el => (this.container = el)}>
         {children}
       </ScrollViewDiv>
     )
@@ -91,7 +91,7 @@ export class ScrollIntoView extends React.Component<{}> {
   }
 
   render () {
-    return <ScrollTarget innerRef={ref => (this.ref = ref)} />
+    return <ScrollTarget ref={ref => (this.ref = ref)} />
   }
 }
 const ScrollTarget = styled.div`
