@@ -18,8 +18,6 @@ class ErrorBoundary extends React.Component<
     this.setState({ hasError: true, error, info })
 
     Sentry.withScope(scope => {
-      if (window.reader != null) scope.setUser({ email: window.reader.email })
-
       Object.keys(info).forEach(key => {
         scope.setExtra(key, info[key])
       })

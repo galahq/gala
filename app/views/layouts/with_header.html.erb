@@ -4,14 +4,6 @@
       <%= inline_svg 'gala-logo.svg' %>
     <% end %>
     <div id="main-menu-app" class="pt-dark"></div>
-    <%= javascript_tag do %>
-      window.reader = <% if reader_signed_in? %>
-      <%= raw ActiveModelSerializers::SerializableResource
-                .new(current_reader.decorate).to_json %>
-      <% else %>
-      undefined;
-      <% end %>
-    <% end %>
     <%= javascript_pack_tag 'main-menu', async: true %>
 </div>
 </header>
