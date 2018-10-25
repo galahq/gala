@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
 
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
+  before_action :set_raven_context
 
   delegate :successful?, to: :response
 
@@ -90,5 +91,10 @@ class ApplicationController < ActionController::Base
   def download_as(filename, type = nil)
     headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
     headers['Content-Type'] ||= type
+  end
+
+  def set_raven_context
+    Raven.user_context(id: current_user.id)
+    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
   end
 end
