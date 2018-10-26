@@ -6,8 +6,6 @@
 import * as React from 'react'
 import { values } from 'ramda'
 
-import DocumentTitle from 'react-document-title'
-
 import ValueProposition from 'catalog/home/ValueProposition'
 import Sidebar from 'catalog/home/Sidebar'
 import Features from 'catalog/home/Features'
@@ -16,6 +14,7 @@ import Keywords from 'catalog/home/Keywords'
 import { Main, CatalogSection } from 'catalog/shared'
 import Libraries from 'catalog/home/Libraries'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
+import { useDocumentTitle } from 'utility/hooks'
 
 import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
@@ -61,67 +60,65 @@ function Home ({
     [features, cases]
   )
 
-  return (
-    <DocumentTitle title="Gala">
-      <ContentItemSelectionContextConsumer>
-        {({ selecting }) => (
-          <>
-            {loading.reader || !!reader || <ValueProposition />}
+  useDocumentTitle('Gala')
 
-            {selecting || (
-              <Sidebar
-                loading={loading}
-                reader={reader}
-                enrolledCases={enrolledCases}
-                onDeleteEnrollment={onDeleteEnrollment}
-              />
+  return (
+    <ContentItemSelectionContextConsumer>
+      {({ selecting }) => (
+        <>
+          {loading.reader || !!reader || <ValueProposition />}
+
+          {selecting || (
+            <Sidebar
+              loading={loading}
+              reader={reader}
+              enrolledCases={enrolledCases}
+              onDeleteEnrollment={onDeleteEnrollment}
+            />
+          )}
+
+          <Main>
+            <Features
+              readerIsEditor={readerIsEditor}
+              featuredCases={
+                selecting ? [...enrolledCases, ...featuredCases] : featuredCases
+              }
+            />
+
+            {loading.cases || (
+              // $FlowFixMe
+              <React.Suspense
+                fallback={
+                  <CatalogSection className="pt-skeleton">
+                    Loading...
+                  </CatalogSection>
+                }
+              >
+                <MapView
+                  cases={values(cases).filter(x => !!x.publishedAt)}
+                  title={{ id: 'cases.index.locations' }}
+                  startingViewport={{
+                    latitude: 17.770231041567445,
+                    longitude: 16.286555860170893,
+                    zoom: 1.1606345336768273,
+                  }}
+                />
+              </React.Suspense>
             )}
 
-            <Main>
-              <Features
-                readerIsEditor={readerIsEditor}
-                featuredCases={
-                  selecting
-                    ? [...enrolledCases, ...featuredCases]
-                    : featuredCases
-                }
-              />
+            {tags &&
+              tags.length > 0 && (
+                <>
+                  <Categories tags={tags} />
+                  <Keywords tags={tags} />
+                </>
+            )}
 
-              {loading.cases || (
-                // $FlowFixMe
-                <React.Suspense
-                  fallback={
-                    <CatalogSection className="pt-skeleton">
-                      Loading...
-                    </CatalogSection>
-                  }
-                >
-                  <MapView
-                    cases={values(cases).filter(x => !!x.publishedAt)}
-                    title={{ id: 'cases.index.locations' }}
-                    startingViewport={{
-                      latitude: 17.770231041567445,
-                      longitude: 16.286555860170893,
-                      zoom: 1.1606345336768273,
-                    }}
-                  />
-                </React.Suspense>
-              )}
-
-              {tags &&
-                tags.length > 0 && (
-                  <>
-                    <Categories tags={tags} />
-                    <Keywords tags={tags} />
-                  </>
-              )}
-
-              <Libraries libraries={libraries} />
-            </Main>
-          </>
-        )}
-      </ContentItemSelectionContextConsumer>
-    </DocumentTitle>
+            <Libraries libraries={libraries} />
+          </Main>
+        </>
+      )}
+    </ContentItemSelectionContextConsumer>
   )
 }
 

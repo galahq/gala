@@ -14,3 +14,13 @@ export function useToggle (initial: boolean = false): [boolean, () => void] {
 
   return [state, toggle]
 }
+
+export function useDocumentTitle (title: string) {
+  // $FlowFixMe
+  React.useEffect(
+    () => {
+      document.title = title
+    },
+    [title]
+  )
+}
