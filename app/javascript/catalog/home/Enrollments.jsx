@@ -10,7 +10,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle, CaseRow, Element } from 'catalog/shared'
-import EnrollmentInstructions from 'catalog/EnrollmentInstructions'
+import EnrollmentInstructions from 'catalog/home/EnrollmentInstructions'
 
 import type { Case } from 'redux/state'
 import type { Loading } from 'catalog'

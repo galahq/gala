@@ -8,20 +8,20 @@ import { values } from 'ramda'
 
 import DocumentTitle from 'react-document-title'
 
-import ValueProposition from 'catalog/ValueProposition'
-import Sidebar from 'catalog/Sidebar'
-import Features from 'catalog/Features'
-import Categories from 'catalog/Categories'
-import Keywords from 'catalog/Keywords'
+import ValueProposition from 'catalog/home/ValueProposition'
+import Sidebar from 'catalog/home/Sidebar'
+import Features from 'catalog/home/Features'
+import Categories from 'catalog/home/Categories'
+import Keywords from 'catalog/home/Keywords'
 import { Main, CatalogSection } from 'catalog/shared'
-import Libraries from 'catalog/Libraries'
+import Libraries from 'catalog/home/Libraries'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
 import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
 
 // $FlowFixMe
-const MapView = React.lazy(() => import('catalog/MapView'))
+const MapView = React.lazy(() => import('map_view'))
 
 type Props = {
   loading: Loading,

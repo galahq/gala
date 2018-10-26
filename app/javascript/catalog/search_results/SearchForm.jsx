@@ -17,7 +17,7 @@ import KeywordsChooser from 'overview/keywords/KeywordsChooser'
 
 import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
-import type { Query } from 'catalog/Results'
+import type { Query } from 'catalog/search_results'
 import type { Tag } from 'redux/state'
 
 type Props = {| ...ContextRouter, params: Query, intl: IntlShape |}

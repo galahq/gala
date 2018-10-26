@@ -13,7 +13,7 @@ import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle } from 'catalog/shared'
 import { Container as BillboardContainer } from 'overview/Billboard'
-import Pin from 'catalog/Pin'
+import Pin from 'map_view/Pin'
 
 import type { IntlShape } from 'react-intl'
 import type { Case, Viewport } from 'redux/state'

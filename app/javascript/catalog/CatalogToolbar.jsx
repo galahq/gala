@@ -12,7 +12,7 @@ import { InputGroup } from '@blueprintjs/core'
 
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 import Toolbar from 'utility/Toolbar'
-import { getSearchPath } from 'catalog/SearchForm'
+import { getSearchPath } from 'catalog/search_results/SearchForm'
 
 import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'

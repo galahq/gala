@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { Element, ElementImage } from 'catalog/shared'
-import Enrollments from 'catalog/Enrollments'
+import Enrollments from 'catalog/home/Enrollments'
 import SignInForm from 'utility/SignInForm'
 import { identiconStyle } from 'shared/Identicon'
 
