@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { values, omit } from 'ramda'
+import { values } from 'ramda'
 
 import DocumentTitle from 'react-document-title'
 
@@ -25,7 +25,7 @@ const MapView = asyncComponent(() =>
   import('catalog/MapView').then(m => m.default)
 )
 
-class Home extends React.Component<{
+type Props = {
   loading: Loading,
   reader: ?Reader,
   cases: { [string]: Case },
@@ -38,44 +38,58 @@ class Home extends React.Component<{
     options: { displayBetaWarning?: boolean }
   ) => any,
   libraries: Library[],
-}> {
-  render () {
-    const {
-      loading,
-      reader,
-      onDeleteEnrollment,
-      readerIsEditor,
-      cases,
-      tags,
-      libraries,
-    } = this.props
-    return (
-      <DocumentTitle title="Gala">
-        <ContentItemSelectionContextConsumer>
-          {({ selecting }) => (
-            <>
-              {loading.reader || !!reader || <ValueProposition />}
+}
 
-              {selecting || (
-                <Sidebar
-                  loading={loading}
-                  reader={reader}
-                  enrolledCases={this._enrolledCases()}
-                  onDeleteEnrollment={onDeleteEnrollment}
-                />
-              )}
+function Home ({
+  loading,
+  reader,
+  onDeleteEnrollment,
+  readerIsEditor,
+  cases,
+  tags,
+  libraries,
+  enrollments,
+  features,
+}: Props) {
+  // $FlowFixMe
+  const enrolledCases = React.useMemo(
+    () => enrollments.map(e => cases[e.caseSlug]).filter(x => !!x),
+    [cases, enrollments]
+  )
 
-              <Main>
-                <Features
-                  readerIsEditor={readerIsEditor}
-                  featuredCases={
-                    selecting
-                      ? [...this._enrolledCases(), ...this._featuredCases()]
-                      : this._featuredCases()
-                  }
-                />
+  // $FlowFixMe
+  const featuredCases = React.useMemo(
+    () => features.map(slug => cases[slug]).filter(x => !!x),
+    [features, cases]
+  )
 
-                {loading.cases || (
+  return (
+    <DocumentTitle title="Gala">
+      <ContentItemSelectionContextConsumer>
+        {({ selecting }) => (
+          <>
+            {loading.reader || !!reader || <ValueProposition />}
+
+            {selecting || (
+              <Sidebar
+                loading={loading}
+                reader={reader}
+                enrolledCases={enrolledCases}
+                onDeleteEnrollment={onDeleteEnrollment}
+              />
+            )}
+
+            <Main>
+              <Features
+                readerIsEditor={readerIsEditor}
+                featuredCases={
+                  selecting
+                    ? [...enrolledCases, ...featuredCases]
+                    : featuredCases
+                }
+              />
+
+              {loading.cases || (
                   <MapView
                     cases={values(cases).filter(x => !!x.publishedAt)}
                     title={{ id: 'cases.index.locations' }}
@@ -85,41 +99,23 @@ class Home extends React.Component<{
                       zoom: 1.1606345336768273,
                     }}
                   />
-                )}
+              )}
 
-                {tags &&
-                  tags.length > 0 && (
-                    <>
-                      <Categories tags={tags} />
-                      <Keywords tags={tags} />
-                    </>
-                )}
+              {tags &&
+                tags.length > 0 && (
+                  <>
+                    <Categories tags={tags} />
+                    <Keywords tags={tags} />
+                  </>
+              )}
 
-                <Libraries libraries={libraries} />
-              </Main>
-            </>
-          )}
-        </ContentItemSelectionContextConsumer>
-      </DocumentTitle>
-    )
-  }
-
-  _enrolledCases = () =>
-    this.props.enrollments
-      .map(e => this.props.cases[e.caseSlug])
-      .filter(x => !!x)
-
-  _featuredCases = () =>
-    this.props.features.map(slug => this.props.cases[slug]).filter(x => !!x)
-
-  _allOtherCases = () =>
-    values(
-      omit(
-        this.props.enrollments.map(e => e.caseSlug).concat(this.props.features),
-        this.props.cases
-      )
-    )
-      .filter(x => !!x.kicker)
-      .sort((a, b) => a.kicker.localeCompare(b.kicker))
+              <Libraries libraries={libraries} />
+            </Main>
+          </>
+        )}
+      </ContentItemSelectionContextConsumer>
+    </DocumentTitle>
+  )
 }
+
 export default Home
