@@ -10,13 +10,13 @@ import { map } from 'ramda'
 import { Orchard } from 'shared/orchard'
 
 import { Route } from 'react-router-dom'
-import { NonIdealState } from '@blueprintjs/core'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import DocumentTitle from 'react-document-title'
 
 import CaseList from 'catalog/search_results/CaseList'
 import LibraryInfo from 'catalog/search_results/LibraryInfo'
 import SearchForm from 'catalog/search_results/SearchForm'
+import NoSearchResults from 'catalog/search_results/NoSearchResults'
 import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
 import { Container as Sidebar } from 'catalog/home/Sidebar'
 
@@ -128,33 +128,3 @@ function getQueryFromPathname (pathname: string): { [string]: string[] } {
     return params
   }, {})
 }
-
-const NoSearchResults = injectIntl(({ intl }) => (
-  <NonIdealState
-    className="pt-dark"
-    title={intl.formatMessage({
-      id: 'search.noResults',
-    })}
-    description={
-      <span>
-        <FormattedMessage id="search.didntMatch" />
-        <br />
-        <FormattedMessage id="search.tryAgain" />
-      </span>
-    }
-    visual="search"
-    action={
-      <div style={{ textAlign: 'center' }}>
-        <p>
-          <FormattedMessage id="search.proposeACase" />
-        </p>
-        <a
-          className="pt-button pt-intent-primary pt-icon-annotation"
-          href="http://www.teachmsc.org/action/make/proposal"
-        >
-          <FormattedMessage id="catalog.proposeACase" />
-        </a>
-      </div>
-    }
-  />
-))
