@@ -1,5 +1,5 @@
 /**
- * @providesModule Results
+ * @providesModule SearchResults
  * @flow
  */
 
@@ -14,11 +14,11 @@ import { NonIdealState } from '@blueprintjs/core'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import DocumentTitle from 'react-document-title'
 
-import CaseList from 'catalog/CaseList'
-import LibraryInfo from 'catalog/LibraryInfo'
-import SearchForm from 'catalog/SearchForm'
+import CaseList from 'catalog/search_results/CaseList'
+import LibraryInfo from 'catalog/search_results/LibraryInfo'
+import SearchForm from 'catalog/search_results/SearchForm'
 import { Main, CatalogSection, SectionTitle } from 'catalog/shared'
-import { Container as Sidebar } from 'catalog/Sidebar'
+import { Container as Sidebar } from 'catalog/home/Sidebar'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { IntlShape } from 'react-intl'
@@ -32,7 +32,7 @@ type Props = {
   readerIsEditor: boolean,
   intl: IntlShape,
 }
-class Results extends React.Component<
+class SearchResults extends React.Component<
   Props,
   { loading: boolean, results: string[] }
 > {
@@ -112,7 +112,7 @@ class Results extends React.Component<
       .filter(Boolean)
   }
 }
-export default injectIntl(Results)
+export default injectIntl(SearchResults)
 
 function coerceIntoArrayValues (params: {
   [string]: string | string[],
