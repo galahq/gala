@@ -13,17 +13,15 @@ import Sidebar from 'catalog/Sidebar'
 import Features from 'catalog/Features'
 import Categories from 'catalog/Categories'
 import Keywords from 'catalog/Keywords'
-import { Main } from 'catalog/shared'
+import { Main, CatalogSection } from 'catalog/shared'
 import Libraries from 'catalog/Libraries'
-import asyncComponent from 'utility/asyncComponent'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
 import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
 import type { Loading } from 'catalog'
 
-const MapView = asyncComponent(() =>
-  import('catalog/MapView').then(m => m.default)
-)
+// $FlowFixMe
+const MapView = React.lazy(() => import('catalog/MapView'))
 
 type Props = {
   loading: Loading,
@@ -90,6 +88,14 @@ function Home ({
               />
 
               {loading.cases || (
+                // $FlowFixMe
+                <React.Suspense
+                  fallback={
+                    <CatalogSection className="pt-skeleton">
+                      Loading...
+                    </CatalogSection>
+                  }
+                >
                   <MapView
                     cases={values(cases).filter(x => !!x.publishedAt)}
                     title={{ id: 'cases.index.locations' }}
@@ -99,6 +105,7 @@ function Home ({
                       zoom: 1.1606345336768273,
                     }}
                   />
+                </React.Suspense>
               )}
 
               {tags &&
