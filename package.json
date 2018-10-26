@@ -69,7 +69,6 @@
     "react-document-title": "^2.0.2",
     "react-dom": "^16.6.0",
     "react-google-analytics": "^0.2.0",
-    "react-hot-loader": "^4.3.5",
     "react-intl": "^2.2.3",
     "react-map-gl": "^3.3.4",
     "react-markdown": "^4.0.3",
