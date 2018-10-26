@@ -12,6 +12,8 @@ import { Button, Intent } from '@blueprintjs/core'
 import { SectionTitle, CaseRow, Element } from 'catalog/shared'
 import EnrollmentInstructions from 'catalog/home/EnrollmentInstructions'
 
+import { useToggle } from 'utility/hooks'
+
 import type { Case } from 'redux/state'
 import type { Loading } from 'catalog'
 import typeof Catalog from 'catalog'
@@ -22,69 +24,65 @@ type Props = {
   intl: any,
   onDeleteEnrollment: $PropertyType<Catalog, 'handleDeleteEnrollment'>,
 }
-class Enrollments extends React.Component<Props, { editing: boolean }> {
-  state = { editing: false }
+function Enrollments ({
+  intl,
+  enrolledCases,
+  onDeleteEnrollment,
+  loading,
+}: Props) {
+  const [editing, toggleEditing] = useToggle(false)
 
-  handleToggleEditing = () => {
-    this.setState(({ editing }) => ({
-      editing: !editing,
-    }))
-  }
+  return loading.cases ? null : enrolledCases.length > 0 ? (
+    <div data-test-id="enrollments">
+      <CaseRow baseline>
+        <SidebarSectionTitle>
+          <FormattedMessage id="enrollments.index.enrolledCases" />
+        </SidebarSectionTitle>
+        <SidebarButton
+          aria-label={
+            editing
+              ? intl.formatMessage({ id: 'enrollments.index.finishEditing' })
+              : intl.formatMessage({ id: 'enrollments.index.editEnrolled' })
+          }
+          icon={editing ? 'tick' : 'cog'}
+          onClick={toggleEditing}
+        />
+      </CaseRow>
 
-  render () {
-    const { editing } = this.state
-    const { intl, enrolledCases, onDeleteEnrollment, loading } = this.props
-    return loading.cases ? null : enrolledCases.length > 0 ? (
-      <div data-test-id="enrollments">
-        <CaseRow baseline>
-          <SidebarSectionTitle>
-            <FormattedMessage id="enrollments.index.enrolledCases" />
-          </SidebarSectionTitle>
-          <SidebarButton
-            aria-label={
-              editing
-                ? intl.formatMessage({ id: 'enrollments.index.finishEditing' })
-                : intl.formatMessage({ id: 'enrollments.index.editEnrolled' })
-            }
-            icon={editing ? 'tick' : 'cog'}
-            onClick={this.handleToggleEditing}
-          />
-        </CaseRow>
-        <UnstyledUL>
-          {enrolledCases.map(
-            ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
-              slug && (
-                <UnstyledLI key={slug}>
-                  <Element
-                    image={smallCoverUrl}
-                    text={kicker}
-                    href={editing ? null : links.self}
-                    rightElement={
-                      editing && (
-                        <SidebarButton
-                          intent={Intent.DANGER}
-                          aria-label={intl.formatMessage({
-                            id: 'enrollments.destroy.unenroll',
-                          })}
-                          icon="cross"
-                          onClick={() =>
-                            onDeleteEnrollment(slug, {
-                              displayBetaWarning: !publishedAt,
-                            })
-                          }
-                        />
-                      )
-                    }
-                  />
-                </UnstyledLI>
-              )
-          )}
-        </UnstyledUL>
-      </div>
-    ) : (
-      <EnrollmentInstructions />
-    )
-  }
+      <UnstyledUL>
+        {enrolledCases.map(
+          ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
+            slug && (
+              <UnstyledLI key={slug}>
+                <Element
+                  image={smallCoverUrl}
+                  text={kicker}
+                  href={editing ? null : links.self}
+                  rightElement={
+                    editing && (
+                      <SidebarButton
+                        intent={Intent.DANGER}
+                        aria-label={intl.formatMessage({
+                          id: 'enrollments.destroy.unenroll',
+                        })}
+                        icon="cross"
+                        onClick={() =>
+                          onDeleteEnrollment(slug, {
+                            displayBetaWarning: !publishedAt,
+                          })
+                        }
+                      />
+                    )
+                  }
+                />
+              </UnstyledLI>
+            )
+        )}
+      </UnstyledUL>
+    </div>
+  ) : (
+    <EnrollmentInstructions />
+  )
 }
 
 export default injectIntl(Enrollments)
