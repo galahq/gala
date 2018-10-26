@@ -23,12 +23,12 @@ class FindReaders
   private
 
   def maybe_filter_by_name
-    return Reader.all if @name.nil?
-    Reader.where 'readers.name ILIKE ?', "#{@name}%"
+    return Reader.all if @name.blank?
+    Reader.where 'readers.name ILIKE ?', "%#{@name}%"
   end
 
   def maybe_filter_by_role
-    return Reader.all if @role.nil?
+    return Reader.all if @role.blank?
     Reader.with_role(*@role)
   end
 end
