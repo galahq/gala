@@ -15,44 +15,42 @@ import LibraryLogo from 'overview/LibraryLogo'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
 import type { ContextRouter } from 'react-router-dom'
-import type { Library } from 'redux/state'
 
 type Props = {| ...ContextRouter, slug: string |}
-class LibraryInfo extends React.Component<Props, Library> {
-  componentDidMount () {
-    this._fetchLibraryInfo()
+function LibraryInfo ({ history, slug }: Props) {
+  const [library, setLibrary] = React.useState(null)
+
+  async function fetchLibraryInfo () {
+    try {
+      const data = await Orchard.harvest(`libraries/${slug}`)
+      setLibrary(data)
+    } catch {
+      history.replace('/')
+    }
   }
 
-  componentDidUpdate (prevProps: Props) {
-    if (this.props.slug !== prevProps.slug) this._fetchLibraryInfo()
-  }
+  React.useEffect(fetchLibraryInfo, [slug])
 
-  render () {
-    if (!this.state) return null
+  if (library == null) return null
 
-    const { name, description, url } = this.state
-    return (
-      <DocumentTitle title={`${name} — Gala`}>
-        <CatalogSection solid>
-          <RightFloatLogoContainer>
-            <LibraryLogo library={this.state} />
-          </RightFloatLogoContainer>
-          <SectionTitle>{name}</SectionTitle>
-          <Description>{description}</Description>
-          {url && (
-            <LearnMore href={url}>
-              <FormattedMessage id="catalog.learnMore" /> ›
-            </LearnMore>
-          )}
-        </CatalogSection>
-      </DocumentTitle>
-    )
-  }
+  const { name, description, url } = library
 
-  _fetchLibraryInfo = () =>
-    Orchard.harvest(`libraries/${this.props.slug}`)
-      .then((library: Library) => this.setState(library))
-      .catch(() => this.props.history.replace('/'))
+  return (
+    <DocumentTitle title={`${name} — Gala`}>
+      <CatalogSection solid>
+        <RightFloatLogoContainer>
+          <LibraryLogo library={library} />
+        </RightFloatLogoContainer>
+        <SectionTitle>{name}</SectionTitle>
+        <Description>{description}</Description>
+        {url && (
+          <LearnMore href={url}>
+            <FormattedMessage id="catalog.learnMore" /> ›
+          </LearnMore>
+        )}
+      </CatalogSection>
+    </DocumentTitle>
+  )
 }
 export default withRouter(LibraryInfo)
 
