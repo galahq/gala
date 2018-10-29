@@ -78,8 +78,8 @@ const PreTest = ({
           targetKey={`pre_test`}
           targetParameters={{
             name: 'read_quiz',
-            preOrPost: 'pre',
-            quizId,
+            pre_or_post: 'pre',
+            quiz_id: quizId,
           }}
         />
       </Dialog>
