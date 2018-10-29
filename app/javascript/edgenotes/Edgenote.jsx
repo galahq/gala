@@ -218,7 +218,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
                   targetKey={`edgenotes/${slug}`}
                   targetParameters={{
                     name: 'visit_edgenote',
-                    edgenoteSlug: slug,
+                    edgenote_slug: slug,
                   }}
                   instantaneous={isALink}
                 />

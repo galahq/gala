@@ -1,3 +1,5 @@
+/* @noflow */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import Tracker from 'utility/Tracker'
@@ -48,7 +50,7 @@ class EdgenoteContents extends React.Component {
             targetKey={`edgenotes/${this.props.edgenote.slug}`}
             targetParameters={{
               name: 'visit_edgenote',
-              edgenoteSlug: this.props.edgenote.slug,
+              edgenote_slug: this.props.edgenote.slug,
             }}
           />
         </aside>

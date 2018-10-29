@@ -55,7 +55,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     if (loggedDuration >= 3000) {
       ;(window.ahoy: Ahoy).track(targetParameters.name, {
         ...targetParameters,
-        caseSlug,
+        case_slug: caseSlug,
         duration: loggedDuration,
       })
     }
