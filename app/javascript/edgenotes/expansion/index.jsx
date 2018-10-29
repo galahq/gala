@@ -57,7 +57,7 @@ const Expansion = ({ contents, expansion }: Props) => {
     <EmbedContainer markup={embed?.__html}>
       <Embed
         dangerouslySetInnerHTML={embed}
-        ratio={EMBED_RATIOS[expansion.linkDomain()]}
+        ratio={EMBED_RATIOS[expansion.linkDomain]}
       />
     </EmbedContainer>
   ) : (

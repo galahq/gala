@@ -295,7 +295,7 @@ const shouldDisable = (
   pullQuote:
     Attachment.truthy(contents.imageUrl) ||
     Attachment.truthy(contents.fileUrl) ||
-    expansion.hasEmbed(),
+    expansion.hasEmbed,
   attribution: !contents.pullQuote && !contents.attribution,
   audioUrl: !contents.pullQuote || !!contents.websiteUrl,
 
@@ -303,7 +303,7 @@ const shouldDisable = (
     !!contents.pullQuote ||
     !!contents.attribution ||
     Attachment.truthy(contents.audioUrl) ||
-    expansion.hasEmbed(),
+    expansion.hasEmbed,
   altText: !Attachment.truthy(contents.imageUrl),
   photoCredit: !Attachment.truthy(contents.imageUrl),
 
