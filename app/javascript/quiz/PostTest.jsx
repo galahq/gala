@@ -93,8 +93,8 @@ class PostTest extends React.Component<
               targetKey={`post_test`}
               targetParameters={{
                 name: 'read_quiz',
-                preOrPost: 'post',
-                quizId,
+                pre_or_post: 'post',
+                quiz_id: quizId,
               }}
             />
           )}
