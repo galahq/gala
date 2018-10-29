@@ -40,6 +40,7 @@ import Expansion from './expansion'
 import withExpansion from './expansion/withExpansion'
 import Image from './Image'
 import PullQuote from './PullQuote'
+import CallToAction from './CallToAction'
 import Icon from 'utility/Icon'
 
 import {
@@ -297,22 +298,25 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   renderCallToAction () {
     const { contents, expansion } = this.props
 
-    if (
-      contents == null ||
-      (!expansion.actsAsLink() && contents.callToAction == null) ||
-      !!contents.fileUrl
-    ) {
-      return null
-    }
-    const { audioUrl, callToAction, pullQuote, imageUrl, caption } = contents
+    if (contents == null || !!contents.fileUrl) return null
+
+    const {
+      audioUrl,
+      callToAction,
+      pullQuote,
+      imageUrl,
+      caption,
+      websiteUrl,
+    } = contents
 
     if (audioUrl) return null
 
     return (
       <CallToAction
-        linkDomain={expansion.linkDomain()}
-        contents={callToAction}
         canHighlight={!pullQuote && !imageUrl && !caption}
+        contents={callToAction}
+        expansion={expansion}
+        websiteUrl={websiteUrl}
         {...this._reduxProps()}
       />
     )
@@ -373,19 +377,6 @@ const DownloadButton = styled.button.attrs({
 })`
   margin-top: 0.5em;
 `
-
-const CallToAction = ({ contents, linkDomain, canHighlight, selected }) =>
-  (contents || linkDomain) && (
-    <div style={{ maxWidth: '40em' }}>
-      <div
-        className={canHighlight && selected ? 'edge--highlighted' : ''}
-        style={{ display: 'inline', margin: '0.25em 0 0 0', lineHeight: 1 }}
-      >
-        {contents || linkDomain}
-        {!contents || (contents && !contents.trim().endsWith('›')) ? ' ›' : ''}
-      </div>
-    </div>
-  )
 
 const Caption = ({ contents, selected }) =>
   contents && (
