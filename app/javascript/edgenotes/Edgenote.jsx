@@ -145,7 +145,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
     const { slug, caption, pullQuote, highlighted } = contents
 
-    const isALink = !editing && expansion.actsAsLink()
+    const isALink = !editing && expansion.actsAsLink
 
     const ConditionalLink = isALink ? LinkBody : Body
     const conditionalHoverCallbacks = isALink
@@ -252,7 +252,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
   renderImageSection () {
     const { contents, expansion } = this.props
 
-    if (contents == null || expansion.hasEmbed()) return null
+    if (contents == null || expansion.hasEmbed) return null
     const {
       imageUrl,
       imageThumbnailUrl,

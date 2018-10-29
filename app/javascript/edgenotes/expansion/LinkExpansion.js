@@ -19,9 +19,9 @@ type Preview = {
 }
 
 export interface ILinkExpansion {
-  actsAsLink(): boolean;
-  hasEmbed(): boolean;
-  linkDomain(): string;
+  +actsAsLink: boolean;
+  +hasEmbed: boolean;
+  +linkDomain: string;
   previewVisibility(visibility: LinkExpansionVisibility): ILinkExpansion;
 }
 
@@ -46,15 +46,15 @@ class LinkExpansion implements ILinkExpansion {
     this.preview = preview
   }
 
-  actsAsLink (): boolean {
+  get actsAsLink (): boolean {
     return !this.embed?.__html
   }
 
-  hasEmbed (): boolean {
+  get hasEmbed (): boolean {
     return !!this.embed?.__html
   }
 
-  linkDomain () {
+  get linkDomain () {
     return domain(this.preview.url)
   }
 
@@ -83,15 +83,15 @@ export class NullLinkExpansion implements ILinkExpansion {
     this.url = url
   }
 
-  actsAsLink () {
+  get actsAsLink () {
     return !!this.url
   }
 
-  hasEmbed () {
+  get hasEmbed () {
     return false
   }
 
-  linkDomain () {
+  get linkDomain () {
     return domain(this.url)
   }
 
