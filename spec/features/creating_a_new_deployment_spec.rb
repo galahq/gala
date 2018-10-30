@@ -9,16 +9,16 @@ feature 'Creating a new deployment' do
   scenario 'is possible' do
     kase = create :case, :published
     visit case_path kase
-    click_button 'Deploy this Case'
-    click_button 'Create Deployment'
+    click_on 'Deploy this Case'
+    click_on 'Create Deployment'
     expect(page).to have_content 'Group name can’t be blank'
 
     select 'Create a New Study Group', from: 'Study Group'
     fill_in 'Group Name', with: 'My Study Group'
-    click_button 'Create Deployment'
+    click_on 'Create Deployment'
     expect(page).to have_content 'Deployment successfully created'
 
-    click_button 'Invite Learners'
+    click_on 'Invite Learners'
     expect(page).to have_content 'Send someone this link to invite them to study this case with you.'
 
     magic_link = find('[aria-label^="Invite link"]')
@@ -28,10 +28,31 @@ feature 'Creating a new deployment' do
 
     cas = create :case, :published
     visit case_path cas
-    click_button 'Deploy this Case'
+    click_on 'Deploy this Case'
     select 'My Study Group', from: 'Study Group'
-    click_button 'Create Deployment'
+    click_on 'Create Deployment'
     expect(page).to have_content 'Deployment successfully created'
     expect(page).to have_content 'Invite Learners', count: 2
+  end
+
+  context 'of the same case in the same group' do
+    it 'shows an error message' do
+      kase = create :case, :published
+      visit case_path kase
+      click_on 'Deploy this Case'
+      click_on 'Create Deployment'
+      expect(page).to have_content 'Group name can’t be blank'
+
+      select 'Create a New Study Group', from: 'Study Group'
+      fill_in 'Group Name', with: 'My Study Group'
+      click_on 'Create Deployment'
+      expect(page).to have_content 'Deployment successfully created'
+
+      visit case_path kase
+      click_on 'Deploy this Case'
+      select 'My Study Group', from: 'Study Group'
+      click_on 'Create Deployment'
+      expect(page).to have_content 'Case has already been deployed in this study group'
+    end
   end
 end
