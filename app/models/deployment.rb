@@ -25,6 +25,7 @@ class Deployment < ApplicationRecord
 
   accepts_nested_attributes_for :group
 
+  validates :case_id, uniqueness: { scope: :group_id }
   validates :quiz, presence: true, if: -> { answers_needed.positive? }
 
   after_create :create_forum
