@@ -2142,6 +2142,13 @@ CREATE INDEX index_deployments_on_group_id ON deployments USING btree (group_id)
 
 
 --
+-- Name: index_deployments_on_group_id_and_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_deployments_on_group_id_and_case_id ON deployments USING btree (group_id, case_id);
+
+
+--
 -- Name: index_deployments_on_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2942,6 +2949,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180911154308'),
 ('20180911155612'),
 ('20180919145935'),
-('20181029165916');
+('20181029165916'),
+('20181030194657');
 
 
