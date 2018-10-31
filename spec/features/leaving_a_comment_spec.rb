@@ -195,4 +195,20 @@ feature 'Leaving a comment' do
       expect(email).to be_nil
     end
   end
+
+  context 'as an author of the case' do
+    it 'doesn’t lock the card you’re commenting on' do
+      kase = enrollment.case
+      card = kase.pages.first.cards.first
+
+      enrollment.reader.my_cases << kase
+
+      visit case_path(enrollment.case) + '/1'
+      click_link 'Respond', match: :first
+      first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
+      first_paragraph.double_click
+
+      expect(card).not_to be_locked
+    end
+  end
 end
