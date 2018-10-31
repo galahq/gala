@@ -95,15 +95,19 @@ zh-CN:
           has_many: "由于 %{record} 需要此记录，所以无法移除记录"
           has_one: "由于 %{record} 需要此记录，所以无法移除记录"
       models:
-        question:
+        deployment:
           attributes:
-            correct_answer:
-              inclusion: "不包括在可能的答案列表中"
+            case_id:
+              taken: has already been deployed in this study group
         editorship:
           attributes:
             editor:
               required: |
                 未找到。请确保您的合作伙伴拥有一个用您输入的电子邮件所创建的帐户。
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "不包括在可能的答案列表中"
     models:
       activity: 活动
       case: 案例
