@@ -92,7 +92,7 @@ class CasesController < ApplicationController
   # @route [DELETE] `/cases/slug`
   def destroy
     authorize @case
-    @case.destroy
+    @case.destroy!
     redirect_to my_cases_path, notice: successfully_destroyed
   end
 
