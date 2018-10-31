@@ -95,16 +95,20 @@ ja:
           has_many: "%{record}が存在しているので削除できません"
           has_one: "%{record}が存在しているので削除できません"
       models:
-        question:
+        deployment:
           attributes:
-            correct_answer:
-              inclusion: "は選択肢の一覧にありません"
+            case_id:
+              taken: has already been deployed in this study group
         editorship:
           attributes:
             editor:
               required: |
                 could not be found. Please ensure your collaborator has created
                 an account with the email you have entered.
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "は選択肢の一覧にありません"
     models:
       activity: アクティビティ
       case: 場合
