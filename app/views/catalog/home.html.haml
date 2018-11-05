@@ -18,11 +18,11 @@
 
     %h2= t 'cases.index.all_cases'
     %ul
-    - @cases.each do |kase|
+    - cases.each do |kase|
       %li
         = link_to case_path kase do
           = succeed ':' do
-            = kase.kicker
+            = kase.short_title
           = kase.title
 
 

@@ -1,14 +1,13 @@
 - content_for :title do
   = I18n.t('translations.show.translation_pending')
-  - unless @case.kicker.blank?
-    —
-    = @case.kicker
+  —
+  = @case.short_title
 
 
 .window.admin
   .admin-card.pt-card.pt-elevation-2
     .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
-      %span.admin__table__slug= @case.kicker
+      %span.admin__table__slug= @case.short_title
 
     %div
       %h1.admin__title= t '.translation_pending'
