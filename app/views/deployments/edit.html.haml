@@ -1,15 +1,15 @@
 - content_for :title do
   = I18n.t('deployments.edit.edit_embedded_assessment')
-  - unless @deployment.case.kicker.blank?
-    —
-    = @deployment.case.kicker
-    
+  —
+  = deployment.case.short_title
+
 
 - if show_header?
   .admin
     .pt-dark
       %h1.admin__title= t '.edit_embedded_assessment'
 
-#deployment-app{data: {params: render(template: 'deployments/edit', formats: [:json])}, style: "width: 100%"}
+#deployment-app{data: {params: render(template: 'deployments/edit',
+                                      formats: [:json])}, style: "width: 100%"}
 
 = javascript_pack_tag 'deployment'

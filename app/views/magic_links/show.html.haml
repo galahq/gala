@@ -1,15 +1,14 @@
 - content_for :title do
   = I18n.t('magic_link.show.lets_get_started')
-  - unless @deployment.case.kicker.blank?
-    —
-    = @deployment.case.kicker
+  —
+  = deployment.case.short_title
 
 
 :ruby
   billboard_data = {
-    case_data: ActiveModel::Serializer.for(@deployment.case.decorate).to_json,
-    group_data: @deployment.group.slice(:name).to_json,
-    deployment_key: @deployment.key
+    case_data: ActiveModel::Serializer.for(deployment.case).to_json,
+    group_data: deployment.group.slice(:name).to_json,
+    deployment_key: deployment.key
   }
 
 #billboard-app{ data: billboard_data }

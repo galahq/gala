@@ -29,14 +29,14 @@ class UsageReportsService
   end
 
   def most_heavily_used_cases(limit: 5)
-    slugs =
-      Ahoy::Event
-      .interesting.where(time: @range)
-      .group("(properties ->> 'case_slug')")
-      .order('count_all desc')
-      .limit(limit)
-      .count.keys
-    slugs.compact.map { |slug| Case.friendly.find(slug) }
+    slugs = Ahoy::Event
+            .interesting.where(time: @range)
+            .group("(properties ->> 'case_slug')")
+            .order('count_all desc')
+            .limit(limit)
+            .count.keys
+
+    slugs.compact.map { |slug| Case.friendly.find(slug).decorate }
   end
 
   def number_of_new_comments

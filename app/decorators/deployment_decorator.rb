@@ -2,6 +2,8 @@
 
 # @see Decorator
 class DeploymentDecorator < ApplicationDecorator
+  decorates_association :case
+
   def magic_link
     h.magic_link_url key: key
   end

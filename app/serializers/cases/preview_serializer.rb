@@ -9,5 +9,9 @@ module Cases
     has_many :tags
 
     link(:self) { case_path object }
+
+    def kicker
+      object.short_title
+    end
   end
 end
