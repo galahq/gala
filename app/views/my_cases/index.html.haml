@@ -82,14 +82,9 @@
                           class: 'pt-button pt-minimal pt-icon-cog'
 
               %td
-                = button_to case_path(kase),
-                            class: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
-                            aria: { label: t('.delete_case') },
-                            data: { confirm: t('.confirm_delete') },
-                            disabled: kase.published?,
-                            method: :delete do
-                  -# This needs to take a block because that makes a <button>
-                  -# tag rather than an <input type="submit"> tag
+                = link_to '', case_confirm_deletion_path(kase),
+                          class: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
+                          aria: { label: t('.delete_case') }
 
   - else
     %main.md-detail

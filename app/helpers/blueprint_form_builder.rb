@@ -53,7 +53,9 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def submit(*args, **kwargs)
-    super(*args, kwargs.merge(class: %i[pt-button pt-intent-success]))
+    class_argument = kwargs.delete(:class) || []
+    classes = %i[pt-button pt-intent-success].append(class_argument)
+    super(*args, kwargs.merge(class: classes))
   end
 
   private
@@ -81,9 +83,11 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def default_label_text(method)
-    @template.translate(
-      "activerecord.attributes.#{normalized_object_name}.#{method}"
-    )
+    defaults = []
+    defaults << :"helpers.label.#{normalized_object_name}.#{method}"
+    defaults << :"#{object.class.i18n_scope}.attributes.#{normalized_object_name}.#{method}"
+    key = defaults.shift
+    @template.translate key, default: defaults
   end
 
   def normalized_object_name
