@@ -40,6 +40,7 @@ Capybara.default_driver = ENV['NOT_HEADLESS'] ? :chrome : :headless_chrome
 Capybara.configure do |config|
   config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']
 end
+Capybara.enable_aria_label = true
 
 class Ahoy::Store
   def exclude?

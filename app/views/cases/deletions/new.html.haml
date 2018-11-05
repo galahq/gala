@@ -1,0 +1,34 @@
+- content_for :title do
+  = I18n.t('cases.deletions.new.confirm_deletion')
+  —
+  = @case.short_title
+
+.window.admin
+  .admin-card.pt-card.pt-elevation-2
+    = link_to case_path @case do
+      .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
+        %span.admin__table__slug
+          = @case.short_title
+
+    %div
+      %h1.admin__title= t '.are_you_sure'
+      .pt-running-text= raw markdown t '.this_action_cannot_be_undone'
+
+    = form_for @confirm_deletion_form, url: case_confirm_deletion_path,
+               data: { controller: 'confirmation' },
+               builder: BlueprintFormBuilder do |f|
+      = f.errors
+
+      - if @confirm_deletion_form.needs_confirmation?
+        = f.form_group :kicker_confirmation do |f, error_classes|
+          = f.text_field :kicker_confirmation,
+                         class: %w[pt-input pt-fill] + error_classes,
+                         data: { action: 'input->confirmation#check',
+                                 expected: @confirm_deletion_form.case.kicker }
+      - else
+        = f.hidden_field :kicker_confirmation
+
+
+      = f.submit disabled: @confirm_deletion_form.needs_confirmation?,
+                 class: %i[pt-fill pt-intent-danger],
+                 data: { target: 'confirmation.submit' }

@@ -1,5 +1,7 @@
 AllCops:
   TargetRubyVersion: 2.5
+Style/AndOr:
+  Enabled: false
 Style/AsciiComments:
   Enabled: false
 Style/Lambda:
