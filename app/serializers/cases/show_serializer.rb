@@ -15,6 +15,10 @@ module Cases
     link(:teach) { new_deployment_path case_slug: object.slug }
     link(:teaching_guide) { case_attachment_path object, :teaching_guide }
 
+    def kicker
+      object.kicker
+    end
+
     def quiz
       deployment = instance_options[:deployment]
       {

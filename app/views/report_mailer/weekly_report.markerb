@@ -20,7 +20,7 @@ if @report.number_of_new_enrollments.positive?
 %>- <%= pluralize @report.number_of_new_enrollments, 'reader' %> enrolled in a new case.<% end %>
 - The top five most active cases this week were
 <% @report.most_heavily_used_cases(limit: 5).map do |kase|
-%>    + <%= kase.kicker %>
+%>    + <%= kase.short_title %>
 <% end %>
 
 ### Comments

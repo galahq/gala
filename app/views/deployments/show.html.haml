@@ -1,5 +1,5 @@
 - content_for :title do
-  = I18n.t('deployments.show.deployment_of', kase: deployment.case.kicker)
+  = I18n.t('deployments.show.deployment_of', kase: deployment.case.short_title)
   —
   = deployment.group.name
 
@@ -13,7 +13,7 @@
         %a.pt-breadcrumb.pt-disabled= deployment.group.name
 
     %h1.admin__title
-      = t '.deployment_of_html', kase: deployment.case.kicker,
+      = t '.deployment_of_html', kase: deployment.case.short_title,
                                  kase_path: url_for(deployment.case)
 
   %aside.md-master

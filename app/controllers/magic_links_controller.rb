@@ -20,6 +20,8 @@
 class MagicLinksController < ApplicationController
   include MagicLink
 
+  decorates_assigned :deployment
+
   # @route [GET] `/magic_link?key=ABCDEF`
   def show
     @deployment = Deployment.find_by_key params['key']
