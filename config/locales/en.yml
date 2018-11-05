@@ -1,4 +1,16 @@
 en:
+  activemodel:
+    attributes:
+      confirm_deletion_form:
+        kicker_confirmation: Confirmation of case title
+    errors:
+      models:
+        confirm_deletion_form:
+          attributes:
+            kicker_confirmation:
+              match: does not match the expected value
+    models:
+      confirm_deletion_form: confirmation
   activerecord:
     attributes:
       case:
@@ -158,6 +170,14 @@ en:
     new:
       untitled: Untitled
   cases:
+    deletions:
+      new:
+        are_you_sure: Are you sure you want to delete this case?
+        confirm_deletion: Confirm Deletion
+        this_action_cannot_be_undone: |
+          This action _cannot_ be undone. This will permanently delete the
+          case, its elements, Edgenotes, comments, forums, quizzes, and
+          quiz submissions.
     edit:
       add_authors: Add authors
       author_institution: Author Institution
@@ -633,6 +653,9 @@ en:
       ol: "Block style: Ordered list item."
       ul: "Block style: Unordered list item."
     help: Help
+    label:
+      confirm_deletion_form:
+        kicker_confirmation: Please type in the title of the case to confirm
     less:
       read_more: Read more
     list:
@@ -655,6 +678,8 @@ en:
       save: Save %{model}
       submit: Submit
       update: Update %{model}
+      confirm_deletion_form:
+        create: I’m sure I want to delete this case
   icons:
     activity:
       calculate: Calculate

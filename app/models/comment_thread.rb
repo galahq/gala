@@ -13,7 +13,7 @@ class CommentThread < ApplicationRecord
   belongs_to :forum, touch: true
   belongs_to :reader
 
-  has_many :comments, dependent: :restrict_with_error
+  has_many :comments, dependent: :destroy
 
   # The comment threads that are visible to a given reader
   # @return [ActiveRecord::Relation<CommentThread>]

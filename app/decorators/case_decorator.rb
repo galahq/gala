@@ -6,6 +6,10 @@ class CaseDecorator < ApplicationDecorator
   decorates_association :podcasts
   decorates_association :library
 
+  def short_title
+    kicker.tap { |k| return 'Untitled Case' unless k.present? }
+  end
+
   def cover_url(options = { width: 1280, height: 540 })
     ImageDecorator.decorate(cover_image).resized_path(options)
   end
