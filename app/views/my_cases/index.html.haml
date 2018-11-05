@@ -49,7 +49,7 @@
               %td
                 = link_to case_path kase do
                   %span.admin__table__slug
-                    = kase.kicker || '—'
+                    = kase.short_title
                     - if kase.featured?
                       %span.pt-tag.pt-minimal.pt-intent-success
                         = succeed ':' do

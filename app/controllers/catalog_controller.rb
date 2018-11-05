@@ -6,6 +6,8 @@ class CatalogController < ApplicationController
 
   before_action :set_selection_params
 
+  decorates_assigned :cases
+
   # @route [GET] `/`
   def home
     @cases = policy_scope(Case)
