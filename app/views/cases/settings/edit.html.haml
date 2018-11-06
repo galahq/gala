@@ -12,9 +12,9 @@
 
     %div
       %h1.admin__title= t '.edit_case_settings'
-      = render 'slug_form'
-      = render 'library_form'
-      = render 'featured_form'
+      = render 'slug_form', kase: @case
+      = render 'library_form', kase: @case, libraries: @libraries
+      = render 'featured_form', kase: @case
 
   .admin-card__sidebar.pt-dark.spaced--compact
     %h2.deployments__group= t '.case_editors'

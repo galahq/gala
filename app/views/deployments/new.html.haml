@@ -13,7 +13,7 @@
     %h1.admin__title= t '.teach_this_case'
     %p= t '.instructions'
 
-    = render 'form'
+    = render 'form', deployment: @deployment
 
   - unless @deployments.empty?
     .admin-card__sidebar.pt-dark.spaced--compact

@@ -1,4 +1,4 @@
-= form_for @case, url: case_settings_path(@case),
+= form_for kase, url: case_settings_path(kase),
                   builder: BlueprintFormBuilder do |f|
   = f.errors
 
@@ -22,4 +22,4 @@
     %p.case-slug-preview
       https://www.learngala.com/cases/
       %span.case-slug-preview__highlight{ data: { target: 'cases--settings--slug.preview'}}><
-        = @case.slug
+        = kase.slug
