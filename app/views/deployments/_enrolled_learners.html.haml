@@ -31,12 +31,12 @@
     %tr
       %td.pagination(colspan=4)
         %span.previous
-          = link_to_previous_page @progressions,
+          = link_to_previous_page progressions,
                                   t('views.pagination.previous').html_safe,
                                   remote: true
         %span.info
-          = page_entries_info @progressions, entry_name: 'learner'
+          = page_entries_info progressions, entry_name: 'learner'
         %span.next
-          = link_to_next_page @progressions,
+          = link_to_next_page progressions,
                               t('views.pagination.next').html_safe,
                               remote: true
