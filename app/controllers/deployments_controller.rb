@@ -43,7 +43,6 @@ class DeploymentsController < ApplicationController
   # @route [GET] `/deployments/1/edit`
   def edit
     authorize @deployment
-    set_selection_params
     set_recommended_quizzes
     render layout: 'embed' if selection_params.present?
   end

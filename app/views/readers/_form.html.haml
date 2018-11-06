@@ -1,6 +1,6 @@
 .dialog.devise
   %h2= t '.my_account'
-  = form_for @reader, url: :profile, builder: BlueprintFormBuilder do |f|
+  = form_for reader, url: :profile, builder: BlueprintFormBuilder do |f|
     .pt-control-group.pt-fill
       = f.label :name, class: "pt-label" do
         = t 'activerecord.attributes.reader.name'
@@ -21,7 +21,7 @@
         = f.file_field :image, class: %i[pt-fill], direct_upload: true,
                                tabindex: 4
 
-      %img{ src: @reader.image_url }
+      %img{ src: reader.image_url }
     = t 'helpers.attachments.max_size.ruby',
       size: number_to_human_size(2.megabytes)
 
@@ -32,12 +32,12 @@
     .actions
       = f.submit t('.save'), class: "o-button pt-button pt-intent-primary"
 
-  - if @reader.created_password
+  - if reader.created_password
     %p=link_to t('devise.passwords.edit.change_my_password'), edit_reader_registration_path
   - else
     %h2= t '.create_a_password'
-    = form_for @reader, url: :profile do |f|
-      %p.pt-text-muted= t '.you_have_not_created_a_password', provider: @reader.providers.first.capitalize
+    = form_for reader, url: :profile do |f|
+      %p.pt-text-muted= t '.you_have_not_created_a_password', provider: reader.providers.first.capitalize
       = f.label :password, class: 'pt-label' do
         = t 'activerecord.attributes.user.password'
         = f.password_field :password, class: 'pt-input pt-fill'

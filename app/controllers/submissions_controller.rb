@@ -32,7 +32,8 @@ class SubmissionsController < ApplicationController
     @deployment = enrollment.active_group.deployment_for_case(@quiz.case)
 
     if Submission.create answers: answers, quiz: @quiz, reader: current_reader
-      render partial: 'submission', status: :created
+      render partial: 'submission', locals: { deployment: @deployment },
+             status: :created
     else
       render status: :unprocessable_entity
     end

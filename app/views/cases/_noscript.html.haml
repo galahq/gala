@@ -2,15 +2,15 @@
   .pt-running-text.pt-dark
     %h1
       = succeed ':' do
-        = @case.short_title
-      = @case.title
+        = kase.short_title
+      = kase.title
 
-    %h2= @case.dek
+    %h2= kase.dek
 
     %p
-      %em= @case.authors.map { |a| a[:name] }.to_sentence
+      %em= kase.authors.map { |a| a[:name] }.to_sentence
 
-    %p= @case.summary
+    %p= kase.summary
 
     .pt-callout.pt-intent-danger.pt-icon-error
       Javascript is required to use Gala.

@@ -3,10 +3,10 @@
 debugger
 var button = document
   .querySelector(
-    '[data-reader-id="<%= @reader.id %>"] form [data-role-id="<%= @role.id %>"]'
+    '[data-reader-id="<%= reader.id %>"] form [data-role-id="<%= role.id %>"]'
   )
 
 var newButton = document.createElement('div')
-newButton.innerHTML = '<%= toggle_role_button(@reader, @role) %>'
+newButton.innerHTML = '<%= toggle_role_button(reader, role) %>'
 
 if (button != null) button.parentNode.replaceWith(newButton)
