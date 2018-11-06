@@ -3,6 +3,12 @@
 # Helpers for dealing with ContentItemSelectionParams which live in the session
 # during the process of a Canvas deployment
 module SelectionParams
+  extend ActiveSupport::Concern
+
+  included do
+    helper_method :selection_params
+  end
+
   private
 
   def selection_params
@@ -23,11 +29,6 @@ module SelectionParams
 
   def ensure_content_item_selection_params_set!
     redirect_to root_url unless selection_params.present?
-    set_selection_params
-  end
-
-  def set_selection_params
-    @selection_params = selection_params
   end
 
   def clear_content_item_selection_params
