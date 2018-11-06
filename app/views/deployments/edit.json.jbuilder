@@ -4,9 +4,9 @@ json.key_format! camelize: :lower
 
 json.id deployment.id
 
-if @selection_params
-  json.return_url @selection_params['return_url']
-  json.return_data @selection_params['return_data']
+if selection_params
+  json.return_url selection_params['return_url']
+  json.return_data selection_params['return_data']
 end
 
 json.case_data do

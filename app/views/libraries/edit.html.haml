@@ -6,7 +6,7 @@
   .admin-card.pt-card.pt-elevation-2
     %div
       %h1.admin__title= t '.edit_library'
-      = render 'form'
+      = render 'form', library: @library
 
   .admin-card__sidebar.pt-dark.spaced--compact
     %h2.deployments__group= t '.library_managers'

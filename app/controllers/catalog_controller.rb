@@ -4,8 +4,6 @@
 class CatalogController < ApplicationController
   include SelectionParams
 
-  before_action :set_selection_params
-
   decorates_assigned :cases
 
   # @route [GET] `/`
