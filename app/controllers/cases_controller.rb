@@ -24,7 +24,6 @@ class CasesController < ApplicationController
   before_action :authenticate_reader!, except: %i[index show]
   before_action :set_case, only: %i[show edit update destroy]
   before_action -> { verify_lock_on @case }, only: %i[update destroy]
-  before_action :set_selection_params, only: %i[show]
 
   broadcast_edits to: :@case
 
