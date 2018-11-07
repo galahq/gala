@@ -16,6 +16,8 @@ feature 'Creating a suggested quiz' do
     expect(page).to have_content 'Suggested Quizzes'
 
     click_on 'New Quiz'
-    end
+    fill_in 'Quiz title', with: 'My Suggested Quiz'
+    click_on 'Add question'
+    fill_in 'Question text', with: 'What is your favorite color?'
   end
 end

@@ -1,14 +1,7 @@
 /**
  * @flow
  */
-
-export type DraftQuestion = {
-  id: ?string,
-  content: string,
-  options: string[],
-  correctAnswer: string,
-  hasError?: boolean,
-}
+import type { DraftQuestion } from 'redux/state'
 
 export type ID = number | 'new'
 
