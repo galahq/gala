@@ -8,11 +8,11 @@ import styled from 'styled-components'
 
 import QuizCard from './QuizCard'
 
-import type { ID, Quiz, Question } from './types'
+import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
 type Props = {
-  recommendedQuizzes: { [id: string]: Quiz },
-  customQuestions: { [id: string]: Question[] },
+  recommendedQuizzes: { [id: string]: CustomizedQuiz },
+  customQuestions: { [id: string]: DraftQuestion[] },
   onSelect: (?ID) => void,
 }
 const QuizSelector = ({

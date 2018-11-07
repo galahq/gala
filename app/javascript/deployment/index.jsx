@@ -18,7 +18,7 @@ import type { IntentType } from '@blueprintjs/core'
 import { Orchard } from 'shared/orchard'
 import { chooseContentItem } from 'shared/lti'
 
-import type { ID, Quiz, Question } from './types'
+import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
 type Props = {
   id: string,
@@ -29,18 +29,18 @@ type Props = {
     callbackUrl: string,
   },
   selectedQuizId: ?ID,
-  recommendedQuizzes: { [id: string]: Quiz },
+  recommendedQuizzes: { [id: string]: CustomizedQuiz },
   returnUrl?: string,
   returnData?: string,
 }
 
 type State = {
   selectedQuizId: ?ID,
-  customQuestions: { [id: string]: Question[] },
+  customQuestions: { [id: string]: DraftQuestion[] },
   answersNeeded: 1 | 2,
 }
 
-const questionHasError = (question: Question) =>
+const questionHasError = (question: DraftQuestion) =>
   !question.content ||
   (question.options.length === 0
     ? question.correctAnswer === '' || question.correctAnswer == null
@@ -48,7 +48,7 @@ const questionHasError = (question: Question) =>
       (option: string) => option === question.correctAnswer
     ))
 
-const validated = map((question: Question) => ({
+const validated = map((question: DraftQuestion) => ({
   ...question,
   hasError: questionHasError(question),
 }))
@@ -76,7 +76,7 @@ class Deployment extends React.Component<Props, State> {
     }
     this.setState(validatedState)
     return !validatedState.customQuestions[`${selectedQuizId}`].some(
-      (question: Question) => question.hasError
+      (question: DraftQuestion) => question.hasError
     )
   }
 
@@ -98,7 +98,10 @@ class Deployment extends React.Component<Props, State> {
     }))
   }
 
-  handleChangeCustomQuestions = (quizId: ID, customQuestions: Question[]) => {
+  handleChangeCustomQuestions = (
+    quizId: ID,
+    customQuestions: DraftQuestion[]
+  ) => {
     this.setState((state: State) => ({
       ...state,
       customQuestions: { ...state.customQuestions, [quizId]: customQuestions },
@@ -136,7 +139,7 @@ class Deployment extends React.Component<Props, State> {
     super(props)
 
     const customQuestions = map(
-      (quiz: Quiz) => quiz.customQuestions,
+      (quiz: CustomizedQuiz) => quiz.customQuestions,
       props.recommendedQuizzes
     )
     this.state = {
@@ -162,7 +165,7 @@ class Deployment extends React.Component<Props, State> {
             <QuizDetails
               quiz={recommendedQuizzes[`${selectedQuizId}`]}
               customQuestions={customQuestions[`${selectedQuizId}`]}
-              onChangeCustomQuestions={(newCustomQuestions: Question[]) =>
+              onChangeCustomQuestions={(newCustomQuestions: DraftQuestion[]) =>
                 this.handleChangeCustomQuestions(
                   selectedQuizId,
                   newCustomQuestions
