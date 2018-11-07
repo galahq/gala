@@ -39,6 +39,9 @@ const PostTest = asyncComponent(() =>
 const Conversation = asyncComponent(() =>
   import('conversation').then(m => m.default)
 )
+const SuggestedQuizzes = asyncComponent(() =>
+  import('suggested_quizzes').then(m => m.default)
+)
 
 function mapStateToProps ({ quiz, caseData }: State) {
   return {
@@ -142,6 +145,10 @@ class Case extends React.Component<{
                     component={PostTest}
                   />
                   <Route path="/conversation" component={Conversation} />
+                  <Route
+                    path="/suggested_quizzes"
+                    component={SuggestedQuizzes}
+                  />
                   <Route path="/:position/" component={CaseElement} />
                 </Switch>
               </div>

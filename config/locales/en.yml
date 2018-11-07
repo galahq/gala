@@ -205,6 +205,13 @@ en:
       replace_teaching_guide: Replace teaching guide
       save: Save
       stop_editing: Stop editing this case
+      suggested_quizzes:
+        description: |
+          Include a suggested pre/post assessment that instructors can
+          use when deploying your case...
+        pre_post_assessment: Pre/Post Assessment
+        suggest_an_assessment: Suggest an Assessment
+        title: Suggested Quizzes
       translator_name: Translator Name
       unfeature_case: Remove from featured cases
       unpublish_case: Unpublish this case
@@ -843,6 +850,8 @@ en:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    new:
+      new_quiz: New Quiz
     quiz:
       multiple_choice_questions:
         one: "%{count} Multiple Choice Question"
