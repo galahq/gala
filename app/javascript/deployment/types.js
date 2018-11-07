@@ -2,19 +2,19 @@
  * @flow
  */
 
-export type Question = {
-  id: ?number,
+export type DraftQuestion = {
+  id: ?string,
   content: string,
   options: string[],
   correctAnswer: string,
-  hasError: boolean,
+  hasError?: boolean,
 }
 
 export type ID = number | 'new'
 
-export type Quiz = {
+export type CustomizedQuiz = {
   id: ID,
-  questions: Question[],
-  customQuestions: Question[],
+  questions: DraftQuestion[],
+  customQuestions: DraftQuestion[],
   customized: boolean,
 }

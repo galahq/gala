@@ -9,13 +9,13 @@ import { append, update, remove } from 'ramda'
 
 import { Button, Intent, InputGroup, Radio } from '@blueprintjs/core'
 
-import type { Question } from './types'
+import type { DraftQuestion } from './types'
 
 import { hotkeyDispatch } from 'shared/keyboard'
 
 type Props = {
-  customQuestions: Question[],
-  onChange: (Question[]) => void,
+  customQuestions: DraftQuestion[],
+  onChange: (DraftQuestion[]) => void,
 }
 const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
   const handleAddQuestion = () =>
