@@ -206,6 +206,7 @@ en:
       save: Save
       stop_editing: Stop editing this case
       suggested_quizzes:
+        all_suggested_quizzes: All Suggested Quizzes
         description: |
           Include a suggested pre/post assessment that instructors can
           use when deploying your case...

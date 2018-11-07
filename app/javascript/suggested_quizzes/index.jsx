@@ -4,51 +4,55 @@
  */
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { FormattedMessage } from 'react-intl'
-import { Button, Intent, NonIdealState } from '@blueprintjs/core'
+import { Switch, Route } from 'react-router-dom'
 
 import Sidebar from 'elements/Sidebar'
+import AllQuizzes from 'suggested_quizzes/AllQuizzes'
+import QuizDetails from 'suggested_quizzes/QuizDetails'
 
-export default function SuggestedQuizzes () {
+import { createSuggestedQuiz } from 'redux/actions'
+
+type Props = {
+  createSuggestedQuiz: typeof createSuggestedQuiz,
+}
+function SuggestedQuizzes ({ createSuggestedQuiz }: Props) {
   return (
     <Container>
       <Sidebar />
       <main>
-        <Title>
-          <FormattedMessage id="cases.edit.suggestedQuizzes.title" />
-        </Title>
-
-        <Card>
-          <NonIdealState
-            visual="properties"
-            title={
-              <FormattedMessage id="cases.edit.suggestedQuizzes.suggestAnAssessment" />
-            }
-            description={
-              <FormattedMessage id="cases.edit.suggestedQuizzes.description" />
-            }
-            action={
-              <Button intent={Intent.SUCCESS} icon="add">
-                <FormattedMessage id="quizzes.new.newQuiz" />
-              </Button>
-            }
+        <Switch>
+          <Route
+            path="/suggested_quizzes/:quizId"
+            render={({
+              match: {
+                params: { quizId },
+              },
+            }) => <QuizDetails id={quizId || ''} />}
           />
-        </Card>
+
+          <Route
+            path="/suggested_quizzes"
+            render={({ history }) => (
+              <AllQuizzes
+                onCreateQuiz={() =>
+                  createSuggestedQuiz().then(id =>
+                    history.push(`/suggested_quizzes/${id}`)
+                  )
+                }
+              />
+            )}
+          />
+        </Switch>
       </main>
     </Container>
   )
 }
 
+export default connect(
+  null,
+  { createSuggestedQuiz }
+)(SuggestedQuizzes)
+
 const Container = styled.div.attrs({ className: 'window' })``
-
-const Title = styled.h1`
-  color: white;
-  font-size: 1.3em;
-  margin: 1em 0 0.75em;
-`
-
-const Card = styled.div.attrs({ className: 'pt-card' })`
-  background-color: #ebeae4;
-  max-width: 45em;
-`
