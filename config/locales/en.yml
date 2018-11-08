@@ -857,9 +857,11 @@ en:
       multiple_choice_questions:
         one: "%{count} Multiple Choice Question"
         other: "%{count} Multiple Choice Questions"
+        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
       open_ended_questions:
         one: "%{count} Open Ended Question"
         other: "%{count} Open Ended Questions"
+        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
