@@ -31,9 +31,13 @@ type Props = OwnProps & {
   updateSuggestedQuiz: typeof updateSuggestedQuiz,
 }
 function QuizDetails ({ id, quiz, updateSuggestedQuiz }: Props) {
-  const { questions } = quiz
+  const { questions, title } = quiz
 
-  function onChangeQuestions (questions: DraftQuestion[]) {
+  function handleChangeTitle (e: SyntheticInputEvent<*>) {
+    updateSuggestedQuiz(id, { ...quiz, title: e.target.value })
+  }
+
+  function handleChangeQuestions (questions: DraftQuestion[]) {
     updateSuggestedQuiz(id, { ...quiz, questions })
   }
 
@@ -45,13 +49,18 @@ function QuizDetails ({ id, quiz, updateSuggestedQuiz }: Props) {
       </Link>
 
       <FormGroup label="Quiz title" labelFor="quiz[title]">
-        <TitleField id="quiz[title]" placeholder="Untitled Quiz" />
+        <TitleField
+          id="quiz[title]"
+          placeholder="Untitled Quiz"
+          value={title}
+          onChange={handleChangeTitle}
+        />
       </FormGroup>
 
       <ol className="pt-card">
         <QuizCustomizer
           customQuestions={questions}
-          onChange={onChangeQuestions}
+          onChange={handleChangeQuestions}
         />
       </ol>
     </div>

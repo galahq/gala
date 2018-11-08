@@ -396,6 +396,7 @@ export type StatisticsData = {
 export type SuggestedQuiz = {
   param: string,
   questions: DraftQuestion[],
+  title: string,
 }
 
 export type Tag = {
