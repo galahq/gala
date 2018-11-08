@@ -4,7 +4,6 @@
  */
 
 import * as React from 'react'
-import { hot } from 'react-hot-loader'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
@@ -14,15 +13,21 @@ import {
   Provider as ContentItemSelectionContextProvider,
   Consumer as ContentItemSelectionContextConsumer,
 } from 'deployment/contentItemSelectionContext'
-import { Grid as FeaturesGrid, Title as FeatureTitle } from 'catalog/Features'
-import { NaturalResourcesGrid, GlobalSystemsGrid } from 'catalog/Categories'
+import {
+  Grid as FeaturesGrid,
+  Title as FeatureTitle,
+} from 'catalog/home/Features'
+import {
+  NaturalResourcesGrid,
+  GlobalSystemsGrid,
+} from 'catalog/home/Categories'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import CatalogToolbar from 'catalog/CatalogToolbar'
 import { MaxWidthContainer } from 'utility/styledComponents'
-import Home from 'catalog/Home'
-import Results from 'catalog/Results'
+import Home from 'catalog/home'
+import Results from 'catalog/search_results'
 
 import type { IntlShape } from 'react-intl'
 import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
@@ -157,7 +162,7 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
   _readerIsEditor = () => !!this.state.reader?.roles?.editor
 }
 
-export default hot(module)(injectIntl(Catalog))
+export default injectIntl(Catalog)
 
 const Container = styled.div`
   min-height: 100%;
