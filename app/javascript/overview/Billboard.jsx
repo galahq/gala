@@ -24,7 +24,7 @@ import { updateCase } from 'redux/actions'
 import type { State, Case, Tag, Viewport } from 'redux/state'
 
 const MapView = asyncComponent(() =>
-  import('catalog/MapView').then(m => m.default)
+  import('map_view').then(m => m.default)
 )
 
 function mapStateToProps ({ edit, caseData }: State) {

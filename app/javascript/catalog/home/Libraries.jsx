@@ -7,6 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
+import { Link } from 'react-router-dom'
 
 import type { Library as LibraryT } from 'redux/state'
 
@@ -22,7 +23,11 @@ const Libraries = ({ libraries }: Props) => {
         </LibrariesLink>
       </SectionTitle>
 
-      <Grid>{libraries.map(l => <Library key={l.slug} library={l} />)}</Grid>
+      <Grid>
+        {libraries.map(l => (
+          <Library key={l.slug} library={l} />
+        ))}
+      </Grid>
     </CatalogSection>
   )
 }
@@ -49,13 +54,13 @@ const Grid = styled.div`
 `
 
 const Library = ({ library }) => (
-  <LibraryLink href={library.links.self}>
+  <LibraryLink to={library.links.self}>
     <img alt="" src={library.logoUrl} />
     {library.name}
   </LibraryLink>
 )
 
-const LibraryLink = styled.a`
+const LibraryLink = styled(Link)`
   align-items: center;
   background-color: #1c3f5d;
   border-radius: 2px;
