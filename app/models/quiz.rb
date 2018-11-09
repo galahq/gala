@@ -17,6 +17,7 @@
 # Quizzes where `author == nil` are our “provided” assessments and appear to all
 # instructors.
 #
+# @attr title [String]
 # @attr customized [Boolean]
 # @attr lti_uid [String] the unique identifier of an LMS user who has not yet
 #   had a {Reader} and associated {AuthenticationStrategy} created
