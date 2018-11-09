@@ -30,7 +30,7 @@ class Quiz < ApplicationRecord
   belongs_to :case
   belongs_to :template, class_name: 'Quiz', optional: true
 
-  scope :recommended, -> { where author_id: nil, lti_uid: nil }
+  scope :suggested, -> { where author_id: nil, lti_uid: nil }
 
   # A relation of quizzes that the reader, in the context of her active group,
   # hasn’t answered enough times. Whether “enough” is 1 or 2 depends on the
@@ -48,7 +48,7 @@ class Quiz < ApplicationRecord
     if reader
       where <<~SQL.squish, reader_id: reader.id, lti_uid: reader.lti_uid
         author_id = :reader_id OR (lti_uid = :lti_uid AND lti_uid IS NOT NULL)
-        SQL
+      SQL
 
     elsif lti_uid
       where lti_uid: lti_uid
