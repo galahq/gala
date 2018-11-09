@@ -169,6 +169,13 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
 
       break
 
+    case 'quizzes':
+      {
+        const { title, questions } = state.suggestedQuizzes[id]
+        data = { quiz: { title, questions }}
+      }
+      break
+
     default:
       throw Error('Bad model.')
   }

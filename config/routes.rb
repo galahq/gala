@@ -141,7 +141,7 @@ Rails.application.routes.draw do
 
   resource :profile, controller: :readers, only: %i[show edit update]
 
-  resources :quizzes, only: %i[show] do
+  resources :quizzes, only: %i[show update] do
     resources :submissions, only: %i[index create]
   end
 
