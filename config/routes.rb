@@ -70,7 +70,7 @@ Rails.application.routes.draw do
 
     resources :pages, only: %i[create]
 
-    resources :quizzes, only: %i[create]
+    resources :quizzes, only: %i[index create]
 
     resource :settings, module: 'cases', only: %i[edit update]
 

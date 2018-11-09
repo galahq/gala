@@ -4,7 +4,13 @@
 class QuizzesController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_quiz, only: %i[show update]
-  before_action :set_case, only: %i[create]
+  before_action :set_case, only: %i[index create]
+
+  # @route [GET] `/cases/slug/quizzes`
+  def index
+    authorize @case, :update?
+    render json: @case.quizzes.suggested
+  end
 
   # @route [GET] `/quizzes/1`
   def show

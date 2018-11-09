@@ -90,6 +90,7 @@ export type Action =
   | SelectionActions.AcceptSelectionAction
   | SelectionActions.ApplySelectionAction
   | StatisticsActions.SetStatisticsAction
+  | SuggestedQuizActions.SetSuggestedQuizzesAction
   | SuggestedQuizActions.AddSuggestedQuizAction
   | SuggestedQuizActions.UpdateSuggestedQuizAction
   | ToastActions.DisplayToastAction

@@ -7,6 +7,39 @@ import { Orchard } from 'shared/orchard'
 import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
 import type { SuggestedQuiz } from 'redux/state'
 
+export function fetchSuggestedQuizzes (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const {
+      caseData: { slug },
+      edit: { unsavedChanges },
+    } = getState()
+
+    if (includesUnsavedQuiz(unsavedChanges)) return
+
+    return Orchard.harvest(`cases/${slug}/quizzes`).then(
+      (quizzes: SuggestedQuiz[]) => {
+        dispatch(setSuggestedQuizzes(quizzes))
+      }
+    )
+  }
+}
+
+function includesUnsavedQuiz (unsavedChanges) {
+  return Object.keys(unsavedChanges).some(
+    key => key.startsWith('quizzes') && unsavedChanges[key]
+  )
+}
+
+export type SetSuggestedQuizzesAction = {
+  type: 'SET_SUGGESTED_QUIZZES',
+  quizzes: SuggestedQuiz[],
+}
+function setSuggestedQuizzes (
+  quizzes: SuggestedQuiz[]
+): SetSuggestedQuizzesAction {
+  return { type: 'SET_SUGGESTED_QUIZZES', quizzes }
+}
+
 export function createSuggestedQuiz (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const { slug } = getState().caseData
