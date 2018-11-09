@@ -5,12 +5,14 @@ require 'rails_helper'
 feature 'Creating a suggested quiz' do
   let(:reader) { create :reader }
   let(:case_study) do
-    create(:case, :published).tap { |k| reader.my_cases << k }
+    create(:case, :published)
   end
 
   before(:each) { login_as reader }
 
   scenario 'is possible' do
+    reader.my_cases << case_study
+
     visit case_path(case_study, edit: true)
     click_on 'Pre/Post Assessment'
     expect(page).to have_content 'Suggested Quizzes'
@@ -39,5 +41,13 @@ feature 'Creating a suggested quiz' do
       click_on 'Add Quiz'
       expect(page).to have_content 'What is your favorite color?'
     end
+  end
+
+  scenario 'is not possible when the user can’t edit the case' do
+    visit case_path case_study
+    expect(page).not_to have_content 'Pre/Post Assessment'
+
+    visit case_path(case_study) + '/suggested_quizzes'
+    expect(page).not_to have_content 'Suggested Quizzes'
   end
 end

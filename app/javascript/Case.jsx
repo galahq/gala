@@ -126,7 +126,7 @@ class Case extends React.Component<{
   }
 
   render () {
-    const { kicker, basename, needsPretest, hasQuiz } = this.props
+    const { kicker, basename, needsPretest, hasQuiz, editable } = this.props
     return (
       <ErrorBoundary>
         <DocumentTitle title={`${kicker} — Gala`}>
@@ -146,7 +146,7 @@ class Case extends React.Component<{
                   />
                   <Route path="/conversation" component={Conversation} />
                   <Route
-                    path="/suggested_quizzes"
+                    path={editable ? '/suggested_quizzes' : 'miss'}
                     component={SuggestedQuizzes}
                   />
                   <Route path="/:position/" component={CaseElement} />
