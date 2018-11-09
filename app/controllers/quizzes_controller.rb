@@ -3,7 +3,7 @@
 # @see Quiz
 class QuizzesController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_quiz, only: %i[show]
+  before_action :set_quiz, only: %i[show update]
   before_action :set_case, only: %i[create]
 
   # @route [GET] `/quizzes/1`
@@ -17,6 +17,17 @@ class QuizzesController < ApplicationController
     render json: @case.quizzes.create
   end
 
+  # @route [PUT|PATCH] `/quizzes/1`
+  def update
+    authorize @quiz.case
+
+    if QuizUpdater.new(@quiz).update quiz_params
+      render json: @quiz
+    else
+      render json: @quiz.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_quiz
@@ -28,6 +39,8 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:template_id, answers: [:content])
+    params.require(:quiz).permit(
+      :title, questions: [:id, :content, :correct_answer, options: []]
+    )
   end
 end
