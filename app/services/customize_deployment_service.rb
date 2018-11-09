@@ -22,7 +22,7 @@ class CustomizeDeploymentService
       @deployment.tap(&:save!)
     end
   rescue ActiveRecord::RecordInvalid => invalid
-    return invalid.record
+    invalid.record
   end
 
   private
@@ -47,29 +47,9 @@ class CustomizeDeploymentService
   end
 
   def customize_quiz(custom_questions)
-    delete_questions_not_included_in(custom_questions.map { |q| q['id'] })
-    upsert_questions custom_questions
-    set_quiz_author
-  end
-
-  def set_quiz_author
-    @deployment.quiz.update @author_identifier.quiz_attributes
-  end
-
-  def delete_questions_not_included_in(question_ids)
-    @deployment.quiz.custom_questions.each do |question|
-      question.destroy unless question_ids.include? question.id
-    end
-  end
-
-  def upsert_questions(custom_questions)
-    custom_questions.each do |question|
-      if question['id']
-        Question.find(question['id']).update! question
-      else
-        @deployment.quiz.custom_questions.create! question
-      end
-    end
+    quiz_params = @author_identifier.quiz_attributes
+                                    .merge questions: custom_questions
+    QuizUpdater.new(@deployment.quiz).update quiz_params
   end
 
   # Since deployment customization from an LTI ContentItemSelection request
