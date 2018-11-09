@@ -50,4 +50,14 @@ feature 'Creating a suggested quiz' do
     visit case_path(case_study) + '/suggested_quizzes'
     expect(page).not_to have_content 'Suggested Quizzes'
   end
+
+  scenario 'is possible when other quizzes already exist' do
+    reader.my_cases << case_study
+    create :quiz, case: case_study
+
+    visit case_path(case_study, edit: true)
+    click_on 'Pre/Post Assessment'
+    click_on 'New Quiz'
+    expect(page).to have_field 'Quiz title'
+  end
 end
