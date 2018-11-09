@@ -5,9 +5,12 @@
 
 import type { SuggestedQuizzesState } from 'redux/state'
 
-import type { AddSuggestedQuizAction } from 'redux/actions'
+import type {
+  AddSuggestedQuizAction,
+  UpdateSuggestedQuizAction,
+} from 'redux/actions'
 
-type Action = AddSuggestedQuizAction
+type Action = AddSuggestedQuizAction | UpdateSuggestedQuizAction
 
 export default function suggestedQuizzes (
   state: SuggestedQuizzesState = {},
