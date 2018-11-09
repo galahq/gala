@@ -29,7 +29,7 @@ type Props = {
     callbackUrl: string,
   },
   selectedQuizId: ?ID,
-  recommendedQuizzes: { [id: string]: CustomizedQuiz },
+  suggestedQuizzes: { [id: string]: CustomizedQuiz },
   returnUrl?: string,
   returnData?: string,
 }
@@ -140,7 +140,7 @@ class Deployment extends React.Component<Props, State> {
 
     const customQuestions = map(
       (quiz: CustomizedQuiz) => quiz.customQuestions,
-      props.recommendedQuizzes
+      props.suggestedQuizzes
     )
     this.state = {
       selectedQuizId: props.selectedQuizId,
@@ -150,20 +150,20 @@ class Deployment extends React.Component<Props, State> {
   }
 
   render () {
-    const { caseData, recommendedQuizzes } = this.props
+    const { caseData, suggestedQuizzes } = this.props
     const { selectedQuizId, customQuestions } = this.state
     return (
       <>
         <div className="pt-dark" style={{ padding: '0 12px' }}>
           {selectedQuizId == null ? (
             <QuizSelector
-              recommendedQuizzes={recommendedQuizzes}
+              suggestedQuizzes={suggestedQuizzes}
               customQuestions={customQuestions}
               onSelect={this.handleSelectQuiz}
             />
           ) : (
             <QuizDetails
-              quiz={recommendedQuizzes[`${selectedQuizId}`]}
+              quiz={suggestedQuizzes[`${selectedQuizId}`]}
               customQuestions={customQuestions[`${selectedQuizId}`]}
               onChangeCustomQuestions={(newCustomQuestions: DraftQuestion[]) =>
                 this.handleChangeCustomQuestions(
