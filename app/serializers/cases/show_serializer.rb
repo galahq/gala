@@ -21,12 +21,15 @@ module Cases
 
     def quiz
       deployment = instance_options[:deployment]
-      {
+      quiz_necessity = {
         needs_pretest: deployment.reader_needs_pretest?(current_user),
         needs_posttest: deployment.reader_needs_posttest?(current_user)
-      }.merge(
-        ActiveModel::Serializer.for(deployment.quiz).as_json || {}
-      )
+      }
+      return quiz_necessity unless deployment.quiz.present?
+
+      options = { serializer: Quizzes::UnsubmittedSerializer }
+      quiz = ActiveModel::Serializer.for(deployment.quiz, options).as_json
+      quiz_necessity.merge(quiz)
     end
 
     def reader
