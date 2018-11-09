@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Updates a {Quiz} by adding, updating, or deleting its {Question}s
 class QuizUpdater
   attr_reader :quiz
 
