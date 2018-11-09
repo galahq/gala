@@ -39,33 +39,36 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
 
       <Card>
         {quizzes.length > 0 ? (
-          <List>
-            {quizzes.map(quiz => {
-              const {
-                multipleChoiceCount,
-                openEndedCount,
-              } = countQuestionTypes(quiz.questions)
-              return (
-                <li key={quiz.param}>
-                  <Link to={`/suggested_quizzes/${quiz.param}`}>
-                    {quiz.title}
-                    <Tag>
-                      <FormattedMessage
-                        id="quizzes.quiz.multipleChoiceQuestions.js"
-                        values={{ count: multipleChoiceCount }}
-                      />
-                    </Tag>
-                    <Tag>
-                      <FormattedMessage
-                        id="quizzes.quiz.openEndedQuestions.js"
-                        values={{ count: openEndedCount }}
-                      />
-                    </Tag>
-                  </Link>
-                </li>
-              )
-            })}
-          </List>
+          <>
+            <List>
+              {quizzes.map(quiz => {
+                const {
+                  multipleChoiceCount,
+                  openEndedCount,
+                } = countQuestionTypes(quiz.questions)
+                return (
+                  <li key={quiz.param}>
+                    <Link to={`/suggested_quizzes/${quiz.param}`}>
+                      {quiz.title}
+                      <Tag>
+                        <FormattedMessage
+                          id="quizzes.quiz.multipleChoiceQuestions.js"
+                          values={{ count: multipleChoiceCount }}
+                        />
+                      </Tag>
+                      <Tag>
+                        <FormattedMessage
+                          id="quizzes.quiz.openEndedQuestions.js"
+                          values={{ count: openEndedCount }}
+                        />
+                      </Tag>
+                    </Link>
+                  </li>
+                )
+              })}
+            </List>
+            <NewQuizButton onClick={onCreateQuiz} />
+          </>
         ) : (
           <NonIdealState
             visual="properties"
@@ -75,11 +78,7 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
             description={
               <FormattedMessage id="cases.edit.suggestedQuizzes.description" />
             }
-            action={
-              <Button intent={Intent.SUCCESS} icon="add" onClick={onCreateQuiz}>
-                <FormattedMessage id="quizzes.new.newQuiz" />
-              </Button>
-            }
+            action={<NewQuizButton onClick={onCreateQuiz} />}
           />
         )}
       </Card>
@@ -114,3 +113,11 @@ const List = styled.ul`
 const Tag = styled.span.attrs({ className: 'pt-tag pt-minimal pt-large' })`
   margin-left: 0.3em;
 `
+
+function NewQuizButton ({ onClick }) {
+  return (
+    <Button intent={Intent.SUCCESS} icon="add" onClick={onClick}>
+      <FormattedMessage id="quizzes.new.newQuiz" />
+    </Button>
+  )
+}
