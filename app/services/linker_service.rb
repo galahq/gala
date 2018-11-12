@@ -4,6 +4,7 @@
 # case enrollment and group membership
 class LinkerService
   attr_reader :strategy
+
   delegate :reader, :kase, :group, :enrollment_status, :membership_status,
            to: :strategy
 
@@ -21,11 +22,13 @@ class LinkerService
   def create_group_membership
     return unless reader
     return if reader.group_memberships.exists? group: group
+
     reader.group_memberships.create group: group, status: membership_status
   end
 
   def create_case_enrollment
     return unless kase && reader
+
     Enrollment.upsert reader_id: reader.id,
                       case_id: kase.id,
                       active_group_id: group.id,
@@ -74,6 +77,7 @@ class LinkerService
 
     def membership_status
       return :normal if enrollment_status.blank?
+
       :admin
     end
 
@@ -87,6 +91,7 @@ class LinkerService
 
     def ensure_deployment_exists
       return unless group.deployments.exists? case: kase
+
       group.deployments.create case: kase
     end
   end
@@ -95,10 +100,13 @@ class LinkerService
   # strategy assumes the deployment has been created in advance and that a user
   # is already signed in.
   class SessionStrategy
+    class MissingDeploymentError < StandardError; end
+
     attr_accessor :reader
     def initialize(session, reader)
       @reader = reader
       @deployment = Deployment.find_by_key session.delete MagicLink::SESSION_KEY
+      raise MissingDeploymentError unless @deployment.present?
     end
 
     def kase
