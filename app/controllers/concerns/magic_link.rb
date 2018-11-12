@@ -33,5 +33,7 @@ module MagicLink
     strategy = LinkerService::SessionStrategy.new session, reader
     @linker = LinkerService.new strategy
     @linker.call
+  rescue LinkerService::SessionStrategy::MissingDeploymentError
+    nil
   end
 end
