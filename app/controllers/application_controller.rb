@@ -30,8 +30,6 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     respond_to do |format|
       format.html do
-        flash[:alert] =
-          I18n.t 'pundit.not_authorized'
         redirect_to not_authorized_redirect_path
       end
       format.json do
@@ -41,7 +39,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_authorized_redirect_path
-    reader_signed_in? ? root_path : new_reader_session_path
+    reader_signed_in? ? '/403' : new_reader_session_path
   end
 
   def set_locale
@@ -59,6 +57,7 @@ class ApplicationController < ActionController::Base
 
   def validate_lti_request!
     return if lti_request_valid?
+
     Rails.logger.info 'Invalid LTI request'
     redirect_to root_path
   end
