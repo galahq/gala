@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 LOCALES ||= Rails.application.config.i18n.available_locales
-LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/
+LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/.freeze
 
 Rails.application.routes.draw do
   concern :has_statistics do
     resource :statistics, only: %i[show]
   end
+
+  get '403' => 'errors#forbidden'
+  get '404' => 'errors#not_found'
+  get '422' => 'errors#unprocessable_entity'
+  get '500' => 'errors#internal_server_error'
 
   # Some of these links are in published literature and should not be broken
   get '/read/1071/(*x)', to: redirect('/cases/mi-wolves/translations/fr')
