@@ -1,0 +1,21 @@
+- content_for :title, '422 Unprocessable Entity'
+
+:javascript
+  function reportFeedback () {
+    Sentry.showReportDialog(#{raw report_dialog_options.to_json})
+  }
+
+.pt-dark
+  .pt-non-ideal-state
+    .pt-non-ideal-state-visual.pt-non-ideal-state-icon
+      %span.pt-icon.pt-icon-error
+
+    %h4.pt-non-ideal-state-title 422 Unprocessable Entity
+
+    .pt-non-ideal-state-description
+      %p That’s not supposed to happen.
+
+    .pt-non-ideal-state-action
+      %button.pt-button.pt-intent-primary.pt-icon-comment{ type: "button",
+                                                           onclick: 'reportFeedback()'}
+        Report Feedback

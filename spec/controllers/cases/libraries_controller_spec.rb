@@ -40,8 +40,8 @@ RSpec.describe Cases::LibrariesController do
        'she does not manage' do
       patch :update, params: { case_slug: kase.slug,
                                case: { library_id: library.id } }
-      expect(response.status).to eq 302
-      expect(flash[:alert]).to eq I18n.t 'pundit.not_authorized'
+
+      expect(response).to redirect_to '/403'
 
       kase.reload
       expect(kase.library_id).not_to eq library.id
