@@ -24,12 +24,14 @@ class MagicLinksController < ApplicationController
 
   # @route [GET] `/magic_link?key=ABCDEF`
   def show
+    redirect_to root_path and return unless params['key'].present?
+
     @deployment = Deployment.find_by_key params['key']
 
     if @deployment
       render layout: 'window'
     else
-      head :not_found
+      redirect_to root_path
     end
   end
 
