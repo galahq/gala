@@ -56,9 +56,10 @@ function QuizDetails ({
 
   function handleSave () {
     let validatedQuiz = {
-      ...quiz,
+      ...draftQuiz,
       questions: validatedQuestions(draftQuiz.questions),
     }
+
     if (validatedQuiz.questions.some(question => !!question.hasError)) {
       setDraftQuiz(validatedQuiz)
       displayErrorToast(

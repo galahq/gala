@@ -21,11 +21,18 @@ feature 'Creating a suggested quiz' do
     fill_in 'Quiz title', with: 'My Suggested Quiz'
     click_on 'Add question'
     fill_in 'Question text', with: 'What is your favorite color?'
+    click_on 'Save'
 
-    click_on 'All Suggested Quizzes'
+    expect(page)
+      .to have_content 'Questions cannot be blank and correct answers are required.'
+    fill_in 'Enter a sample answer, or click “Add option” to make this question multiple choice...',
+            with: 'Blue is what most people say.'
+    click_on 'Save'
+
     expect(page).to have_content 'My Suggested Quiz'
     expect(page).to have_content '1 Open Ended Question'
 
+    click_on 'Close'
     click_on 'Save'
     expect(page).to have_content 'Saved successfully'
 
