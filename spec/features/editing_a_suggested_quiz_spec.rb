@@ -17,9 +17,11 @@ feature 'Editing a suggested quiz' do
 
     click_on quiz.title
     click_on 'Add question'
-    all('input[placeholder="Question text"]')
-      .last.set 'What is your favorite color?'
+    all('input[placeholder="Question text"]').last.set 'What’s up?'
+    all('textarea[placeholder^="Enter a sample answer"]').last.set 'Not much...'
+    click_on 'Save'
 
+    click_on 'Close'
     click_on 'Save'
     expect(page).to have_content 'Saved successfully'
 
