@@ -32,57 +32,51 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
   useEffect(() => fetchSuggestedQuizzes(), [])
 
   return (
-    <>
-      <Title>
-        <FormattedMessage id="cases.edit.suggestedQuizzes.title" />
-      </Title>
-
-      <Card>
-        {quizzes.length > 0 ? (
-          <>
-            <List>
-              {quizzes.map(quiz => {
-                const {
-                  multipleChoiceCount,
-                  openEndedCount,
-                } = countQuestionTypes(quiz.questions)
-                return (
-                  <li key={quiz.param}>
-                    <Link to={`/suggested_quizzes/${quiz.param}`}>
-                      {quiz.title}
-                      <Tag>
-                        <FormattedMessage
-                          id="quizzes.quiz.multipleChoiceQuestions.js"
-                          values={{ count: multipleChoiceCount }}
-                        />
-                      </Tag>
-                      <Tag>
-                        <FormattedMessage
-                          id="quizzes.quiz.openEndedQuestions.js"
-                          values={{ count: openEndedCount }}
-                        />
-                      </Tag>
-                    </Link>
-                  </li>
-                )
-              })}
-            </List>
-            <NewQuizButton onClick={onCreateQuiz} />
-          </>
-        ) : (
-          <NonIdealState
-            visual="properties"
-            title={
-              <FormattedMessage id="cases.edit.suggestedQuizzes.suggestAnAssessment" />
-            }
-            description={
-              <FormattedMessage id="cases.edit.suggestedQuizzes.description" />
-            }
-            action={<NewQuizButton onClick={onCreateQuiz} />}
-          />
-        )}
-      </Card>
-    </>
+    <div className="pt-dialog-body">
+      {quizzes.length > 0 ? (
+        <>
+          <List>
+            {quizzes.map(quiz => {
+              const {
+                multipleChoiceCount,
+                openEndedCount,
+              } = countQuestionTypes(quiz.questions)
+              return (
+                <li key={quiz.param}>
+                  <Link to={`/suggested_quizzes/${quiz.param}`}>
+                    {quiz.title}
+                    <Tag>
+                      <FormattedMessage
+                        id="quizzes.quiz.multipleChoiceQuestions.js"
+                        values={{ count: multipleChoiceCount }}
+                      />
+                    </Tag>
+                    <Tag>
+                      <FormattedMessage
+                        id="quizzes.quiz.openEndedQuestions.js"
+                        values={{ count: openEndedCount }}
+                      />
+                    </Tag>
+                  </Link>
+                </li>
+              )
+            })}
+          </List>
+          <NewQuizButton onClick={onCreateQuiz} />
+        </>
+      ) : (
+        <NonIdealState
+          visual="properties"
+          title={
+            <FormattedMessage id="cases.edit.suggestedQuizzes.suggestAnAssessment" />
+          }
+          description={
+            <FormattedMessage id="cases.edit.suggestedQuizzes.description" />
+          }
+          action={<NewQuizButton onClick={onCreateQuiz} />}
+        />
+      )}
+    </div>
   )
 }
 
@@ -101,11 +95,6 @@ function countQuestionTypes (questions: DraftQuestion[]) {
 
   return { multipleChoiceCount, openEndedCount }
 }
-
-const Card = styled.div.attrs({ className: 'pt-card' })`
-  background-color: #ebeae4;
-  max-width: 45em;
-`
 
 const List = styled.ul`
   list-style: none;

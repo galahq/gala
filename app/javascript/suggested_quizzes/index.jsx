@@ -7,21 +7,33 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Switch, Route } from 'react-router-dom'
+import { Dialog } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 
-import Sidebar from 'elements/Sidebar'
 import AllQuizzes from 'suggested_quizzes/AllQuizzes'
 import QuizDetails from 'suggested_quizzes/QuizDetails'
+import CaseOverview from 'overview/CaseOverview'
 
 import { createSuggestedQuiz } from 'redux/actions'
 
-type Props = {
+import type { ContextRouter } from 'react-router-dom'
+
+type Props = ContextRouter & {
   createSuggestedQuiz: typeof createSuggestedQuiz,
 }
-function SuggestedQuizzes ({ createSuggestedQuiz }: Props) {
+function SuggestedQuizzes ({ createSuggestedQuiz, history, match }: Props) {
   return (
     <Container>
-      <Sidebar />
-      <main>
+      <Route component={CaseOverview} />
+      <Dialog
+        isOpen={!!match}
+        className="pt-dark"
+        title={<FormattedMessage id="cases.edit.suggestedQuizzes.title" />}
+        style={{ top: '10%', width: '100%', maxWidth: 800 }}
+        onClose={e => {
+          history.replace('/')
+        }}
+      >
         <Switch>
           <Route
             path="/suggested_quizzes/:quizId"
@@ -45,7 +57,7 @@ function SuggestedQuizzes ({ createSuggestedQuiz }: Props) {
             )}
           />
         </Switch>
-      </main>
+      </Dialog>
     </Container>
   )
 }
@@ -55,4 +67,6 @@ export default connect(
   { createSuggestedQuiz }
 )(SuggestedQuizzes)
 
-const Container = styled.div.attrs({ className: 'window' })``
+const Container = styled.div`
+  height: 100%;
+`
