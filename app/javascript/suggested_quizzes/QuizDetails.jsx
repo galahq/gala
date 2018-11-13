@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { Button, FormGroup, Intent, InputGroup } from '@blueprintjs/core'
 
 import QuizCustomizer from 'deployment/QuizCustomizer'
-import { validatedQuestions } from 'deployment'
+import { validatedQuestions } from 'suggested_quizzes/helpers'
 
 import { updateSuggestedQuiz, displayErrorToast } from 'redux/actions'
 

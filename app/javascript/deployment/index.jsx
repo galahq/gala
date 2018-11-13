@@ -17,6 +17,7 @@ import type { IntentType } from '@blueprintjs/core'
 
 import { Orchard } from 'shared/orchard'
 import { chooseContentItem } from 'shared/lti'
+import { validatedQuestions } from 'suggested_quizzes/helpers'
 
 import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
@@ -39,21 +40,6 @@ type State = {
   customQuestions: { [id: string]: DraftQuestion[] },
   answersNeeded: 1 | 2,
 }
-
-const questionHasError = (question: DraftQuestion) =>
-  !question.content ||
-  (question.options.length === 0
-    ? question.correctAnswer === '' || question.correctAnswer == null
-    : !question.options.some(
-      (option: string) => option === question.correctAnswer
-    ))
-
-export const validatedQuestions: (DraftQuestion[]) => DraftQuestion[] = map(
-  (question: DraftQuestion) => ({
-    ...question,
-    hasError: questionHasError(question),
-  })
-)
 
 class Deployment extends React.Component<Props, State> {
   _needsPretest = () => {
