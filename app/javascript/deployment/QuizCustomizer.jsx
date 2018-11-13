@@ -71,13 +71,13 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
 
   return (
     <div>
-      {customQuestions.map((question: Question, questionIx: number) => {
+      {customQuestions.map((question: DraftQuestion, questionIx: number) => {
         const { content, options, correctAnswer } = question
         return (
           <PaddedItem key={questionIx}>
             <QuestionInputGroup
               autoFocus
-              intent={question.hasError ? Intent.WARNING : null}
+              intent={question.hasError ? Intent.DANGER : null}
               value={content}
               placeholder="Question text"
               type="text"
