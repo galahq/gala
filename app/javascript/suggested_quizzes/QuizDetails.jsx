@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { FormGroup, Icon, InputGroup } from '@blueprintjs/core'
+import { FormGroup, InputGroup } from '@blueprintjs/core'
 
 import QuizCustomizer from 'deployment/QuizCustomizer'
 
@@ -42,28 +42,33 @@ function QuizDetails ({ id, quiz, updateSuggestedQuiz }: Props) {
   }
 
   return (
-    <div className="pt-dark">
-      <Link className="pt-button pt-minimal" to="/suggested_quizzes">
-        <Icon icon="left-arrow" />
-        <FormattedMessage id="cases.edit.suggestedQuizzes.allSuggestedQuizzes" />
-      </Link>
+    <>
+      <div className="pt-dialog-body">
+        <FormGroup label="Quiz title" labelFor="quiz[title]">
+          <TitleField
+            id="quiz[title]"
+            placeholder="Untitled Quiz"
+            value={title}
+            onChange={handleChangeTitle}
+          />
+        </FormGroup>
 
-      <FormGroup label="Quiz title" labelFor="quiz[title]">
-        <TitleField
-          id="quiz[title]"
-          placeholder="Untitled Quiz"
-          value={title}
-          onChange={handleChangeTitle}
-        />
-      </FormGroup>
+        <Card>
+          <QuizCustomizer
+            customQuestions={questions}
+            onChange={handleChangeQuestions}
+          />
+        </Card>
+      </div>
 
-      <ol className="pt-card">
-        <QuizCustomizer
-          customQuestions={questions}
-          onChange={handleChangeQuestions}
-        />
-      </ol>
-    </div>
+      <div className="pt-dialog-footer">
+        <div className="pt-dialog-footer-actions">
+          <Link className="pt-button pt-intent-primary" to="/suggested_quizzes">
+            <FormattedMessage id="helpers.save" />
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -76,3 +81,9 @@ const TitleField = styled(InputGroup).attrs({
   large: true,
   type: 'text',
 })``
+
+const Card = styled.ol.attrs({
+  className: 'pt-card',
+})`
+  padding: 1em 1em 1em 2em;
+`
