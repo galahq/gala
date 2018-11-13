@@ -2,6 +2,7 @@
  * @flow
  */
 import type { DraftQuestion } from 'redux/state'
+export type { DraftQuestion } from 'redux/state'
 
 export type ID = number | 'new'
 

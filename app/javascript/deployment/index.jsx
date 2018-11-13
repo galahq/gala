@@ -48,10 +48,12 @@ const questionHasError = (question: DraftQuestion) =>
       (option: string) => option === question.correctAnswer
     ))
 
-const validated = map((question: DraftQuestion) => ({
-  ...question,
-  hasError: questionHasError(question),
-}))
+export const validatedQuestions: (DraftQuestion[]) => DraftQuestion[] = map(
+  (question: DraftQuestion) => ({
+    ...question,
+    hasError: questionHasError(question),
+  })
+)
 
 class Deployment extends React.Component<Props, State> {
   _needsPretest = () => {
@@ -71,7 +73,9 @@ class Deployment extends React.Component<Props, State> {
       ...state,
       customQuestions: {
         ...customQuestions,
-        [`${selectedQuizId}`]: validated(customQuestions[`${selectedQuizId}`]),
+        [`${selectedQuizId}`]: validatedQuestions(
+          customQuestions[`${selectedQuizId}`]
+        ),
       },
     }
     this.setState(validatedState)
@@ -80,7 +84,7 @@ class Deployment extends React.Component<Props, State> {
     )
   }
 
-  _displayToast = (error: string, intent: IntentType = Intent.WARNING) => {
+  _displayToast = (error: string, intent: IntentType = Intent.DANGER) => {
     Toaster.show({
       message: error,
       intent,

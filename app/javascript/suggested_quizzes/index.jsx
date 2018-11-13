@@ -41,7 +41,8 @@ function SuggestedQuizzes ({ createSuggestedQuiz, history, match }: Props) {
               match: {
                 params: { quizId },
               },
-            }) => <QuizDetails id={quizId || ''} />}
+              history,
+            }) => <QuizDetails id={quizId || ''} history={history} />}
           />
 
           <Route

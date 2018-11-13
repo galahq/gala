@@ -5,15 +5,17 @@
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
-import { Link } from 'react-router-dom'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import { FormGroup, InputGroup } from '@blueprintjs/core'
+import { Button, FormGroup, Intent, InputGroup } from '@blueprintjs/core'
 
 import QuizCustomizer from 'deployment/QuizCustomizer'
+import { validatedQuestions } from 'deployment'
 
-import { updateSuggestedQuiz } from 'redux/actions'
+import { updateSuggestedQuiz, displayErrorToast } from 'redux/actions'
 
+import type { IntlShape } from 'react-intl'
+import type { RouterHistory } from 'react-router-dom'
 import type { State, DraftQuestion, SuggestedQuiz } from 'redux/state'
 
 type OwnProps = {
@@ -27,18 +29,45 @@ function mapStateToProps ({ suggestedQuizzes }: State, { id }: OwnProps) {
 }
 
 type Props = OwnProps & {
+  displayErrorToast: typeof displayErrorToast,
+  intl: IntlShape,
+  history: RouterHistory,
   quiz: SuggestedQuiz,
   updateSuggestedQuiz: typeof updateSuggestedQuiz,
 }
-function QuizDetails ({ id, quiz, updateSuggestedQuiz }: Props) {
-  const { questions, title } = quiz
+function QuizDetails ({
+  displayErrorToast,
+  history,
+  id,
+  intl,
+  quiz,
+  updateSuggestedQuiz,
+}: Props) {
+  const [draftQuiz, setDraftQuiz] = React.useState(quiz)
+  const { questions, title } = draftQuiz
 
   function handleChangeTitle (e: SyntheticInputEvent<*>) {
-    updateSuggestedQuiz(id, { ...quiz, title: e.target.value })
+    setDraftQuiz({ ...draftQuiz, title: e.target.value })
   }
 
   function handleChangeQuestions (questions: DraftQuestion[]) {
-    updateSuggestedQuiz(id, { ...quiz, questions })
+    setDraftQuiz({ ...draftQuiz, questions })
+  }
+
+  function handleSave () {
+    let validatedQuiz = {
+      ...quiz,
+      questions: validatedQuestions(draftQuiz.questions),
+    }
+    if (validatedQuiz.questions.some(question => !!question.hasError)) {
+      setDraftQuiz(validatedQuiz)
+      displayErrorToast(
+        intl.formatMessage({ id: 'cases.edit.suggestedQuizzes.error' })
+      )
+    } else {
+      updateSuggestedQuiz(id, draftQuiz)
+      history.replace('/suggested_quizzes/')
+    }
   }
 
   return (
@@ -63,19 +92,21 @@ function QuizDetails ({ id, quiz, updateSuggestedQuiz }: Props) {
 
       <div className="pt-dialog-footer">
         <div className="pt-dialog-footer-actions">
-          <Link className="pt-button pt-intent-primary" to="/suggested_quizzes">
+          <Button intent={Intent.PRIMARY} onClick={handleSave}>
             <FormattedMessage id="helpers.save" />
-          </Link>
+          </Button>
         </div>
       </div>
     </>
   )
 }
 
-export default connect(
-  mapStateToProps,
-  { updateSuggestedQuiz }
-)(QuizDetails)
+export default injectIntl(
+  connect(
+    mapStateToProps,
+    { updateSuggestedQuiz, displayErrorToast }
+  )(QuizDetails)
+)
 
 const TitleField = styled(InputGroup).attrs({
   large: true,
