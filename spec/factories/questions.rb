@@ -6,7 +6,7 @@ FactoryBot.define do
 
     content { Faker::Lorem.question }
     correct_answer { Faker::Lorem.sentence }
-    options []
+    options { [] }
 
     trait :multiple_choice do
       options { Faker::Lorem.sentences(4) }
