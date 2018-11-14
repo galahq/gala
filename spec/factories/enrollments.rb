@@ -5,10 +5,10 @@ FactoryBot.define do
     association :case, factory: :case_with_elements
     association :reader
 
-    status :student
+    status { :student }
 
     trait :as_instructor do
-      status :instructor
+      status { :instructor }
     end
   end
 end
