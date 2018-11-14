@@ -10,7 +10,7 @@ FactoryBot.define do
 
     factory :page_with_cards do
       transient do
-        card_count 5
+        card_count { 5 }
       end
 
       after :create do |this, ev|

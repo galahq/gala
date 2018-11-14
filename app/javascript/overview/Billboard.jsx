@@ -155,7 +155,7 @@ const Billboard = ({
               }}
               title={{ id: 'activerecord.attributes.case.location' }}
               onBeginEditing={onBeginEditing}
-              onChangeViewport={(viewport: Viewport) => updateCase(viewport)}
+              onViewportChange={(viewport: Viewport) => updateCase(viewport)}
               onFinishEditing={onFinishEditing}
             />
           )}
