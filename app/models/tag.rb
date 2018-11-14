@@ -26,7 +26,7 @@ class Tag < ApplicationRecord
   # one public case
   scope :part_of_catalog, -> do
     where id: (
-      joins(Arel.sql(<<~SQL.squish))
+      joins(::Arel.sql(<<~SQL.squish))
         INNER JOIN taggings ON tags.id = taggings.tag_id
         INNER JOIN cases
           ON taggings.case_id = cases.id AND cases.published_at < NOW()

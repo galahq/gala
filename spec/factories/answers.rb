@@ -7,7 +7,7 @@ FactoryBot.define do
     association :reader
     association :submission
 
-    content 'MyString'
-    correct false
+    content { 'MyString' }
+    correct { false }
   end
 end

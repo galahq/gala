@@ -5,10 +5,10 @@ FactoryBot.define do
     kicker { Faker::Hipster.words(2).join(' ').titlecase }
     title { Faker::Hipster.sentence }
     dek { Faker::Hipster.sentence }
-    commentable true
+    commentable { true }
 
     trait :featured do
-      catalog_position :featured
+      catalog_position { :featured }
     end
 
     trait :published do
@@ -24,8 +24,8 @@ FactoryBot.define do
 
     factory :case_with_elements do
       transient do
-        page_count 3
-        podcast_count 1
+        page_count { 3 }
+        podcast_count { 1 }
       end
 
       in_catalog

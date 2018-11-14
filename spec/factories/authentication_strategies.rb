@@ -5,8 +5,8 @@ FactoryBot.define do
     reader
 
     trait :google do
-      provider 'google'
-      uid '123456'
+      provider { 'google' }
+      uid { '123456' }
     end
   end
 end

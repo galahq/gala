@@ -26,7 +26,7 @@ type Props = {
   startingViewport: Viewport,
   title: { id: string },
   onBeginEditing?: () => void,
-  onChangeViewport?: Viewport => any,
+  onViewportChange?: Viewport => any,
   onFinishEditing?: () => void,
 }
 type State = {
@@ -37,6 +37,10 @@ type State = {
 }
 
 class MapViewController extends React.Component<Props, State> {
+  // handleChangeViewport is fired when the component first mounts, but we
+  // don’t want to create a lock until the user clicks
+  ignoreViewportChange = true
+
   state = {
     hasError: false,
     viewport: this.props.startingViewport,
@@ -53,6 +57,12 @@ class MapViewController extends React.Component<Props, State> {
 
   handleChangeViewport = (viewport: Viewport) => {
     this.setState({ viewport })
+
+    if (this.ignoreViewportChange) {
+      this.ignoreViewportChange = false
+      return
+    }
+
     this.props.editing &&
       this.props.onBeginEditing &&
       this.props.onBeginEditing()
@@ -75,8 +85,8 @@ class MapViewController extends React.Component<Props, State> {
   }
 
   handleSave = () => {
-    const { onChangeViewport, onFinishEditing } = this.props
-    onChangeViewport && onChangeViewport(this.state.viewport)
+    const { onViewportChange, onFinishEditing } = this.props
+    onViewportChange && onViewportChange(this.state.viewport)
     onFinishEditing && onFinishEditing()
   }
 
@@ -101,7 +111,7 @@ class MapViewController extends React.Component<Props, State> {
             cases={editing ? [] : cases}
             onClickMap={this.handleClickMap}
             onClickPin={this.handleClickPin}
-            onChangeViewport={this.handleChangeViewport}
+            onViewportChange={this.handleChangeViewport}
           />
           <PositionedSectionTitle>
             <FormattedMessage {...title} />
@@ -239,7 +249,7 @@ class MapView extends React.Component<{
   viewport: Viewport,
   onClickMap: () => void,
   onClickPin: string => void,
-  onChangeViewport: Viewport => void,
+  onViewportChange: Viewport => void,
 }> {
   render () {
     const {
@@ -251,7 +261,7 @@ class MapView extends React.Component<{
       viewport,
       onClickMap,
       onClickPin,
-      onChangeViewport,
+      onViewportChange,
     } = this.props
     const { latitude, longitude, zoom } = viewport
     return (
@@ -264,26 +274,25 @@ class MapView extends React.Component<{
         zoom={zoom}
         scrollZoom={acceptingScroll}
         onClick={onClickMap}
-        onChangeViewport={onChangeViewport}
+        onViewportChange={onViewportChange}
       >
-        {cases.map(
-          kase =>
-            kase.latitude && kase.longitude ? (
-              <Marker
+        {cases.map(kase =>
+          kase.latitude && kase.longitude ? (
+            <Marker
+              key={kase.slug}
+              latitude={kase.latitude}
+              longitude={kase.longitude}
+              offsetLeft={-3}
+              offsetTop={-11}
+            >
+              <Pin
                 key={kase.slug}
-                latitude={kase.latitude}
-                longitude={kase.longitude}
-                offsetLeft={-3}
-                offsetTop={-11}
-              >
-                <Pin
-                  key={kase.slug}
-                  kase={cases.length > 1 ? kase : undefined}
-                  isOpen={openPin === kase.slug}
-                  onClick={onClickPin}
-                />
-              </Marker>
-            ) : null
+                kase={cases.length > 1 ? kase : undefined}
+                isOpen={openPin === kase.slug}
+                onClick={onClickPin}
+              />
+            </Marker>
+          ) : null
         )}
       </ReactMapGL>
     )

@@ -5,10 +5,10 @@ FactoryBot.define do
     association :case
     association :group
 
-    answers_needed 0
+    answers_needed { 0 }
 
     trait :with_quiz do
-      answers_needed 1
+      answers_needed { 1 }
       after :build do |this|
         this.quiz = create :quiz, case: this.case
       end
@@ -16,7 +16,7 @@ FactoryBot.define do
 
     trait :with_pretest do
       with_quiz
-      answers_needed 2
+      answers_needed { 2 }
     end
   end
 end

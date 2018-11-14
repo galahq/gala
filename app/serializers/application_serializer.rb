@@ -19,8 +19,7 @@ class ApplicationSerializer < ActiveModel::Serializer
 
   attribute :links, if: -> { _links.any? } do
     _links.transform_values do |value|
-      value unless value.respond_to? :call
-      instance_eval(&value)
+      instance_eval(&value.block)
     end
   end
 
