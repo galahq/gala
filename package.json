@@ -73,7 +73,7 @@
     "react-dom": "^16.7.0-alpha.0",
     "react-google-analytics": "^0.2.0",
     "react-intl": "^2.2.3",
-    "react-map-gl": "^3.3.4",
+    "react-map-gl": "^4.0.0",
     "react-markdown": "^4.0.3",
     "react-medium-image-zoom": "^3.0.15",
     "react-oembed-container": "^0.3.0",

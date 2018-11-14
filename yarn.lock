@@ -5388,11 +5388,6 @@ immutability-helper@^2.7.1:
   dependencies:
     invariant "^2.2.0"
 
-immutable@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
-  integrity sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=
-
 immutable@~3.7.4:
   version "3.7.6"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
@@ -7188,11 +7183,12 @@ mixin-object@^2.0.1:
     for-in "^0.1.3"
     is-extendable "^0.1.1"
 
-mjolnir.js@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/mjolnir.js/-/mjolnir.js-1.2.2.tgz#65938d6b443fed5b5c65456e6c934b01fece3610"
-  integrity sha512-mHUweKiDag0ieTANM6ao++9rktEqp6FgBALLH3fWRzgt6NF+BdcNMR06MMHHSQYCK9ywCjhg76FOy/efwdaEJg==
+mjolnir.js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/mjolnir.js/-/mjolnir.js-2.0.0.tgz#8475d2fb3b09780dbff122f245c6b3ddc46fc41e"
+  integrity sha512-2OfO77sNbPBlPl3ptU/EdDA/f482C/WunbDPkQyUmqkxGi88qQyvSEyxWGWV3Zw5RAHrWzLx1rH6htTFkzaOKg==
   dependencies:
+    "@babel/runtime" "^7.0.0"
     hammerjs "^2.0.8"
 
 mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
@@ -9295,17 +9291,17 @@ react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2, react-lifecycles
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-map-gl@^3.3.4:
-  version "3.3.7"
-  resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-3.3.7.tgz#919d5bd8819805aeda89a63f8b376b07799735ea"
-  integrity sha512-WPSA9qnvPvnAxj39CvZZxnXNOq7D2WLf7kluLt++gI+dNIpyLnmivALC6mNWpj7jWXi0zEjZx0vKyxuEyoEdKQ==
+react-map-gl@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-4.0.0.tgz#b8e0c50fd4b5da9304a32f5d68de39d864906a09"
+  integrity sha512-aQ2tXtDlAlVO4WxMvYWzTZGgTyQI60gFhsWdkd3O6mQA4YOLRQTvuqXmzX6hBsXvnaIXy1Malgu0vaOMc6J+8g==
   dependencies:
-    babel-runtime "^6.23.0"
-    immutable "^3.8.2"
+    "@babel/runtime" "^7.0.0"
     mapbox-gl "~0.50.0"
     math.gl "^2.0.0"
-    mjolnir.js "^1.2.1"
+    mjolnir.js "^2.0.0"
     prop-types "^15.5.7"
+    react-virtualized-auto-sizer "^1.0.2"
     viewport-mercator-project "^6.0.0"
 
 react-markdown@^4.0.3:
@@ -9410,6 +9406,11 @@ react-truncate@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/react-truncate/-/react-truncate-2.4.0.tgz#3cf5ff09ab86f93e3c078d359f4de6d75aa60510"
   integrity sha512-3QW11/COYwi6iPUaunUhl06DW5NJBJD1WkmxW5YxqqUu6kvP+msB3jfoLg8WRbu57JqgebjVW8Lknw6T5/QZdA==
+
+react-virtualized-auto-sizer@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-virtualized-auto-sizer/-/react-virtualized-auto-sizer-1.0.2.tgz#a61dd4f756458bbf63bd895a92379f9b70f803bd"
+  integrity sha512-MYXhTY1BZpdJFjUovvYHVBmkq79szK/k7V3MO+36gJkWGkrXKtyr4vCPtpphaTLRAdDNoYEYFZWE8LjN+PIHNg==
 
 react-youtube-player@^2.0.1:
   version "2.0.1"
