@@ -4,20 +4,13 @@
  */
 
 import * as React from 'react'
-import * as R from 'ramda'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
+import { groupKeywords } from './helpers'
 
 import type { Tag } from 'redux/state'
-
-const sortGroup = (t: Tag) => t.displayName[0]
-const groupKeywords = R.pipe(
-  R.sortWith([R.ascend(R.prop('displayName'))]),
-  R.filter(tag => !tag.category),
-  R.groupWith((a, b) => sortGroup(a) === sortGroup(b))
-)
 
 type Props = { tags: Tag[] }
 const Keywords = ({ tags }: Props) => {
