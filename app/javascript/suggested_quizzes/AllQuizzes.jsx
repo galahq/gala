@@ -43,8 +43,8 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
               } = countQuestionTypes(quiz.questions)
               return (
                 <li key={quiz.param}>
-                  <Link to={`/suggested_quizzes/${quiz.param}`}>
-                    {quiz.title}
+                  <QuizLink to={`/suggested_quizzes/${quiz.param}`}>
+                    <QuizTitle>{quiz.title}</QuizTitle>
                     <Tag>
                       <FormattedMessage
                         id="quizzes.quiz.multipleChoiceQuestions.js"
@@ -57,7 +57,7 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
                         values={{ count: openEndedCount }}
                       />
                     </Tag>
-                  </Link>
+                  </QuizLink>
                 </li>
               )
             })}
@@ -98,7 +98,19 @@ function countQuestionTypes (questions: DraftQuestion[]) {
 
 const List = styled.ul`
   list-style: none;
+  padding: 0;
 `
+
+const QuizLink = styled(Link)`
+  align-items: baseline;
+  display: flex;
+  margin-bottom: 0.25em;
+`
+
+const QuizTitle = styled.span`
+  flex: 1;
+`
+
 const Tag = styled.span.attrs({ className: 'pt-tag pt-minimal pt-large' })`
   margin-left: 0.3em;
 `
