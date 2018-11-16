@@ -49,16 +49,18 @@ type StateProps = {|
   deletable: boolean,
   hoveredCommentThread: ?string,
   openedCitation: Citation,
+  position: number,
   readOnly: boolean,
   selectedCommentThread: ?string,
   solid: boolean,
   theseCommentThreadsOpen: boolean,
 |}
+
 function mapStateToProps (
   state: State,
   { id, location, nonNarrative }: OwnProps
 ): StateProps {
-  const { solid, commentThreads, pageId } = state.cardsById[id]
+  const { solid, commentThreads, pageId, position } = state.cardsById[id]
   const editorState =
     state.cardsById[id].editorState || EditorState.createEmpty()
   const { openedCitation, hoveredCommentThread, acceptingSelection } = state.ui
@@ -90,6 +92,7 @@ function mapStateToProps (
     editorState,
     hoveredCommentThread,
     openedCitation,
+    position,
     readOnly: !(
       (state.edit.inProgress && !openedCitation.key) ||
       acceptingSelection
