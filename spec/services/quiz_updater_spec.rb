@@ -23,21 +23,21 @@ RSpec.describe QuizUpdater, type: :model do
     it 'adds new questions' do
       question = attributes_for :question, content: "What's your favorite food?"
       subject.update 'questions' => [question]
-      expect(quiz.questions.i18n.exists?(content: "What's your favorite food?"))
-        .to be_truthy
+      expect(quiz.questions.i18n.where(content: "What's your favorite food?"))
+        .to exist
     end
 
     it 'changes existing questions' do
       question = quiz.questions.first.attributes
       question['content'] = "What's your name?"
       subject.update 'questions' => [question]
-      expect(quiz.questions.i18n.exists?(content: "What's your name?"))
-        .to be_truthy
+      expect(quiz.questions.i18n.where(content: "What's your name?"))
+        .to exist
 
       question['content'] = 'How old are you?'
       subject.update 'questions' => [question]
-      expect(quiz.questions.i18n.exists?(content: "What's your name?"))
-        .not_to be_truthy
+      expect(quiz.questions.i18n.where(content: "What's your name?"))
+        .not_to exist
     end
 
     it 'deletes questions that are not included anymore' do

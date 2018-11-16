@@ -15,6 +15,7 @@ class QuizUpdater
     quiz.update quiz_params
 
     return if questions.nil?
+
     delete_questions_not_included_in questions
     upsert_questions questions
   end
