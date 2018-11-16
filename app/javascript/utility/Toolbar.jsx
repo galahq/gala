@@ -97,6 +97,7 @@ export default injectIntl(Toolbar)
 
 const Bar = styled.div.attrs({ className: ({ light }) => light || 'pt-dark' })`
   width: 100%;
+  overflow: auto;
 
   color: ${({ light }) => (light ? '#262626' : '#ebeae4')};
   background-color: ${({ light }) => (light ? '#ebeae4' : '#1d3f5e')};
