@@ -10,6 +10,8 @@ import { injectIntl } from 'react-intl'
 
 import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
+import { Draggable } from 'react-beautiful-dnd'
+
 import { commentThreadsOpen } from 'shared/routes'
 import { getStyleMap } from 'draft/config'
 
@@ -91,6 +93,7 @@ class CardContents extends React.Component<Props, State> {
   render () {
     const {
       id,
+      position,
       solid,
       nonNarrative,
       editable,
@@ -111,6 +114,7 @@ class CardContents extends React.Component<Props, State> {
       title,
       match,
       intl,
+      dragHandleProps,
     } = this.props
     const { editorState } = this.state
 
@@ -173,8 +177,9 @@ class CardContents extends React.Component<Props, State> {
                   />
                 </FocusContainer>
 
-                {commentable &&
-                  solid && <CommentThreadsTag cardId={id} match={match} />}
+                {commentable && solid && (
+                  <CommentThreadsTag cardId={id} match={match} />
+                )}
 
                 <Route
                   {...commentThreadsOpen(id)}
@@ -196,13 +201,13 @@ class CardContents extends React.Component<Props, State> {
                   />
                 )}
 
-                {editable &&
-                  deletable && (
+                {editable && deletable && (
                   <DeleteCardButton id={id} onClick={handleDeleteCard} />
                 )}
 
-                {solid &&
-                  !editable && (
+                <DragHandle hidden={!editable} {...dragHandleProps} />
+
+                {solid && !editable && (
                   <Statistics key={`cards/${id}`} uri={`cards/${id}`} />
                 )}
 
@@ -287,4 +292,20 @@ const DeleteCardButton = styled.button.attrs({
   .Card:hover & {
     opacity: 1;
   }
+`
+
+const DragHandle = styled.span.attrs({
+  className: 'pt-icon pt-icon-drag-handle-vertical',
+})`
+  ${p =>
+    p.hidden &&
+    css`
+      display: none;
+    `};
+
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 `

@@ -16,10 +16,19 @@ type Props = {
 
 function GalaDragDropContext ({ children, reorderCaseElements }: Props) {
   function onDragEnd (result) {
-    const { source, destination } = result
-    if (!destination) return
+    const { type, source, destination } = result
+    switch (type) {
+      case 'CaseElement': {
+        if (!destination) return
 
-    reorderCaseElements(source.index, destination.index)
+        reorderCaseElements(source.index, destination.index)
+        return
+      }
+
+      case 'Page': {
+        console.log({ source, destination })
+      }
+    }
   }
 
   return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>
