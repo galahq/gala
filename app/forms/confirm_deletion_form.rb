@@ -7,7 +7,7 @@ class ConfirmDeletionForm
 
   attr_accessor :case, :kicker_confirmation
 
-  validate :kicker_confirmed?
+  validate :kicker_confirmed?, if: :needs_confirmation?
 
   def needs_confirmation?
     self.case.kicker.present?
@@ -15,6 +15,7 @@ class ConfirmDeletionForm
 
   def save
     return unless valid?
+
     delete_case
     true
   end
@@ -23,6 +24,7 @@ class ConfirmDeletionForm
 
   def kicker_confirmed?
     return if kicker_confirmation == self.case.kicker
+
     errors.add :kicker_confirmation, :match
   end
 
