@@ -9,8 +9,8 @@ FactoryBot.define do
     customized { false }
 
     transient do
-      multiple_choice_question_count 1
-      open_ended_question_count 1
+      multiple_choice_question_count { 1 }
+      open_ended_question_count { 1 }
     end
 
     after :create do |this, ev|
