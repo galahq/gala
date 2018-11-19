@@ -3,7 +3,7 @@
 # @see Quiz
 class QuizzesController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_quiz, only: %i[show update]
+  before_action :set_quiz, only: %i[show update destroy]
   before_action :set_case, only: %i[index create]
 
   # @route [GET] `/cases/slug/quizzes`
@@ -33,6 +33,12 @@ class QuizzesController < ApplicationController
       render json: @quiz.errors, status: :unprocessable_entity
     end
   end
+
+  # @route [DELETE] `/quizzes/1`
+  def destroy
+    authorize @quiz.case, :update?
+    @quiz.destroy!
+  end 
 
   private
 

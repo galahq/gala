@@ -207,6 +207,8 @@ en:
       stop_editing: Stop editing this case
       suggested_quizzes:
         all_suggested_quizzes: All Suggested Quizzes
+        confirm_delete: Are you sure you want to delete this quiz?
+        delete_quiz: Delete Quiz
         description: >
           Include a suggested pre/post assessment that instructors can
           use when deploying your case...

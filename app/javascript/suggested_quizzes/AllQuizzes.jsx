@@ -6,14 +6,13 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Intent, NonIdealState } from '@blueprintjs/core'
 import { Link } from 'react-router-dom'
 
-import { Title } from 'suggested_quizzes/styled'
+import { deleteSuggestedQuiz, fetchSuggestedQuizzes } from 'redux/actions'
 
-import { fetchSuggestedQuizzes } from 'redux/actions'
-
+import type { IntlShape } from 'react-intl'
 import type { DraftQuestion, State, SuggestedQuiz } from 'redux/state'
 
 function mapStateToProps ({ suggestedQuizzes }: State) {
@@ -23,13 +22,33 @@ function mapStateToProps ({ suggestedQuizzes }: State) {
 }
 
 type Props = {
+  deleteSuggestedQuiz: typeof deleteSuggestedQuiz,
   fetchSuggestedQuizzes: typeof fetchSuggestedQuizzes,
+  intl: IntlShape,
   quizzes: SuggestedQuiz[],
   onCreateQuiz: () => any,
 }
 
-function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
+function AllQuizzes ({
+  deleteSuggestedQuiz,
+  fetchSuggestedQuizzes,
+  intl,
+  onCreateQuiz,
+  quizzes,
+}: Props) {
   useEffect(() => fetchSuggestedQuizzes(), [])
+
+  function handleDeleteQuiz (param) {
+    if (
+      window.confirm(
+        intl.formatMessage({
+          id: 'cases.edit.suggestedQuizzes.confirmDelete',
+        })
+      )
+    ) {
+      deleteSuggestedQuiz(param)
+    }
+  }
 
   return (
     <div className="pt-dialog-body">
@@ -42,7 +61,7 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
                 openEndedCount,
               } = countQuestionTypes(quiz.questions)
               return (
-                <li key={quiz.param}>
+                <ListItem key={quiz.param}>
                   <QuizLink to={`/suggested_quizzes/${quiz.param}`}>
                     <QuizTitle>{quiz.title}</QuizTitle>
                     <Tag>
@@ -58,7 +77,13 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
                       />
                     </Tag>
                   </QuizLink>
-                </li>
+                  <DeleteButton
+                    aria-label={intl.formatMessage({
+                      id: 'cases.edit.suggestedQuizzes.deleteQuiz',
+                    })}
+                    onClick={() => handleDeleteQuiz(quiz.param)}
+                  />
+                </ListItem>
               )
             })}
           </List>
@@ -80,10 +105,12 @@ function AllQuizzes ({ fetchSuggestedQuizzes, onCreateQuiz, quizzes }: Props) {
   )
 }
 
-export default connect(
-  mapStateToProps,
-  { fetchSuggestedQuizzes }
-)(AllQuizzes)
+export default injectIntl(
+  connect(
+    mapStateToProps,
+    { deleteSuggestedQuiz, fetchSuggestedQuizzes }
+  )(AllQuizzes)
+)
 
 function countQuestionTypes (questions: DraftQuestion[]) {
   let multipleChoiceCount = 0
@@ -100,6 +127,12 @@ const List = styled.ul`
   list-style: none;
   padding: 0;
 `
+const ListItem = styled.li`
+  align-items: baseline;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`
 
 const QuizLink = styled(Link)`
   align-items: baseline;
@@ -114,6 +147,10 @@ const QuizTitle = styled.span`
 const Tag = styled.span.attrs({ className: 'pt-tag pt-minimal pt-large' })`
   margin-left: 0.3em;
 `
+
+const DeleteButton = styled.button.attrs({
+  className: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
+})``
 
 function NewQuizButton ({ onClick }) {
   return (

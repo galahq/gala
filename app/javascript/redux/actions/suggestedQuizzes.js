@@ -2,7 +2,10 @@
  * @flow
  */
 
+import { Intent } from '@blueprintjs/core'
+
 import { Orchard } from 'shared/orchard'
+import { displayToast } from 'redux/actions'
 
 import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
 import type { SuggestedQuiz } from 'redux/state'
@@ -74,4 +77,27 @@ export function updateSuggestedQuiz (
   data: SuggestedQuiz
 ): UpdateSuggestedQuizAction {
   return { type: 'UPDATE_SUGGESTED_QUIZ', param, data }
+}
+
+export function deleteSuggestedQuiz (param: string): ThunkAction {
+  return (dispatch: Dispatch) => {
+    return Orchard.prune(`quizzes/${param}`).then(() => {
+      dispatch(removeSuggestedQuiz(param))
+      dispatch(
+        displayToast({
+          intent: Intent.SUCCESS,
+          icon: 'tick-circle',
+          message: 'Quiz successfully deleted',
+        })
+      )
+    })
+  }
+}
+
+export type RemoveSuggestedQuizAction = {
+  type: 'REMOVE_SUGGESTED_QUIZ',
+  param: string,
+}
+function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
+  return { type: 'REMOVE_SUGGESTED_QUIZ', param }
 }
