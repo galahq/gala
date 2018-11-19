@@ -3,18 +3,22 @@
  * @flow
  */
 
+import produce from 'immer'
+
 import type { SuggestedQuizzesState } from 'redux/state'
 
 import type {
   SetSuggestedQuizzesAction,
   AddSuggestedQuizAction,
   UpdateSuggestedQuizAction,
+  RemoveSuggestedQuizAction,
 } from 'redux/actions'
 
 type Action =
   | SetSuggestedQuizzesAction
   | AddSuggestedQuizAction
   | UpdateSuggestedQuizAction
+  | RemoveSuggestedQuizAction
 
 export default function suggestedQuizzes (
   state: SuggestedQuizzesState = {},
@@ -33,6 +37,13 @@ export default function suggestedQuizzes (
         ...state,
         [action.param]: action.data,
       }
+
+    case 'REMOVE_SUGGESTED_QUIZ': {
+      const { param } = action
+      return produce(state, draft => {
+        delete draft[param]
+      })
+    }
 
     default:
       return state

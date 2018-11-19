@@ -93,5 +93,6 @@ export type Action =
   | SuggestedQuizActions.SetSuggestedQuizzesAction
   | SuggestedQuizActions.AddSuggestedQuizAction
   | SuggestedQuizActions.UpdateSuggestedQuizAction
+  | SuggestedQuizActions.RemoveSuggestedQuizAction
   | ToastActions.DisplayToastAction
   | ToastActions.DismissToastAction
