@@ -52,8 +52,7 @@ class TableOfContents extends React.Component<*> {
             <FormattedMessage id="cases.show.toc" />
           </h2>
 
-          {(elements && elements.length > 0) ||
-            editing || (
+          {(elements && elements.length > 0) || editing || (
             <NoElements>
               <FormattedMessage id="cases.edit.noElements" />
             </NoElements>
@@ -135,7 +134,7 @@ const NoElements = styled.p`
 `
 
 const AssessmentButton = styled(Link).attrs({
-  className: 'pt-button pt-fill',
+  className: 'pt-button pt-fill pt-icon-properties pt-intent-success',
 })`
   margin-top: 1em;
 `

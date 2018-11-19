@@ -211,7 +211,7 @@ en:
         delete_quiz: Delete Quiz
         description: >
           Include a suggested pre/post assessment that instructors can
-          use when deploying your case...
+          use when deploying your case.
         error: Questions cannot be blank and correct answers are required.
         pre_post_assessment: Pre/Post Assessment
         suggest_an_assessment: Suggest an Assessment
