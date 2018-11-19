@@ -22,10 +22,10 @@ end
 
 json.selected_quiz_id deployment.quiz.id if deployment.quiz
 
-if @recommended_quizzes
-  json.recommended_quizzes({})
-  json.recommended_quizzes do
-    @recommended_quizzes.each do |quiz|
+if @suggested_quizzes
+  json.suggested_quizzes({})
+  json.suggested_quizzes do
+    @suggested_quizzes.each do |quiz|
       json.set! quiz.id do
         json.extract! quiz, :id
 

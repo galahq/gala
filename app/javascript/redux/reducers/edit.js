@@ -12,6 +12,7 @@ import type {
   UpdatePageAction,
   UpdatePodcastAction,
   UpdateEdgenoteAction,
+  UpdateSuggestedQuizAction,
   EnqueueLockForDeletionAction,
   RemoveLockFromDeletionQueueAction,
 } from 'redux/actions'
@@ -24,6 +25,7 @@ type Action =
   | UpdatePageAction
   | UpdatePodcastAction
   | UpdateEdgenoteAction
+  | UpdateSuggestedQuizAction
   | EnqueueLockForDeletionAction
   | RemoveLockFromDeletionQueueAction
 
@@ -107,6 +109,16 @@ function edit (state: ?EditState, action: Action): EditState {
         unsavedChanges: {
           ...state.unsavedChanges,
           [`edgenotes/${action.slug}`]: true,
+        },
+      }
+
+    case 'UPDATE_SUGGESTED_QUIZ':
+      return {
+        ...state,
+        changed: true,
+        unsavedChanges: {
+          ...state.unsavedChanges,
+          [`quizzes/${action.param}`]: true,
         },
       }
 

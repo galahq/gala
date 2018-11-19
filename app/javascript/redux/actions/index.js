@@ -18,6 +18,7 @@ import * as PodcastActions from './podcast.js'
 import * as QuizActions from './quiz.js'
 import * as SelectionActions from './selection.js'
 import * as StatisticsActions from './statistics.js'
+import * as SuggestedQuizActions from './suggestedQuizzes.js'
 import * as ToastActions from './toast.js'
 
 export * from './activity.js'
@@ -36,6 +37,7 @@ export * from './podcast.js'
 export * from './quiz.js'
 export * from './selection.js'
 export * from './statistics.js'
+export * from './suggestedQuizzes.js'
 export * from './toast.js'
 
 export type GetState = () => State
@@ -88,5 +90,9 @@ export type Action =
   | SelectionActions.AcceptSelectionAction
   | SelectionActions.ApplySelectionAction
   | StatisticsActions.SetStatisticsAction
+  | SuggestedQuizActions.SetSuggestedQuizzesAction
+  | SuggestedQuizActions.AddSuggestedQuizAction
+  | SuggestedQuizActions.UpdateSuggestedQuizAction
+  | SuggestedQuizActions.RemoveSuggestedQuizAction
   | ToastActions.DisplayToastAction
   | ToastActions.DismissToastAction

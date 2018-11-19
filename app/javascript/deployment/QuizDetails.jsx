@@ -4,17 +4,17 @@
  */
 
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import QuizCustomizer from './QuizCustomizer'
 import { QuestionType } from './QuizCard'
 
-import type { Question, Quiz } from './types'
+import type { DraftQuestion, CustomizedQuiz } from './types'
 
 type Props = {
-  quiz: Quiz,
-  customQuestions: Question[],
-  onChangeCustomQuestions: (Question[]) => void,
+  quiz: CustomizedQuiz,
+  customQuestions: DraftQuestion[],
+  onChangeCustomQuestions: (DraftQuestion[]) => void,
   onDeselect: () => void,
 }
 const QuizDetails = ({
@@ -28,7 +28,7 @@ const QuizDetails = ({
     <CardTitle>Quiz details</CardTitle>
     <QuestionsList>
       {quiz.questions.length > 0 && <SectionTitle>Base questions</SectionTitle>}
-      {quiz.questions.map((question: Question, i: number) => (
+      {quiz.questions.map((question, i) => (
         <li key={i}>
           {question.content}
           {question.options.length === 0 ? (

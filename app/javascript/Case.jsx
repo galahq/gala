@@ -39,8 +39,11 @@ const PostTest = asyncComponent(() =>
 const Conversation = asyncComponent(() =>
   import('conversation').then(m => m.default)
 )
+const SuggestedQuizzes = asyncComponent(() =>
+  import('suggested_quizzes').then(m => m.default)
+)
 
-function mapStateToProps ({ quiz, caseData }: State) {
+function mapStateToProps ({ edit, quiz, caseData }: State) {
   return {
     needsPretest: quiz.needsPretest,
     hasQuiz: !!quiz.questions && quiz.questions.length > 0,
@@ -56,6 +59,7 @@ function mapStateToProps ({ quiz, caseData }: State) {
       caseData.slug
     ),
     editable: caseData.reader?.canUpdateCase,
+    editing: edit.inProgress,
   }
 }
 
@@ -74,6 +78,7 @@ class Case extends React.Component<{
   subscribeToEditsChannel: typeof subscribeToEditsChannel,
   handleNotification: typeof handleNotification,
   editable: ?boolean,
+  editing: boolean,
 }> {
   _subscribe = () => {
     if (typeof App === 'undefined' || !('WebSocket' in window)) return
@@ -123,7 +128,7 @@ class Case extends React.Component<{
   }
 
   render () {
-    const { kicker, basename, needsPretest, hasQuiz } = this.props
+    const { kicker, basename, needsPretest, hasQuiz, editing } = this.props
     return (
       <ErrorBoundary>
         <DocumentTitle title={`${kicker} — Gala`}>
@@ -142,6 +147,10 @@ class Case extends React.Component<{
                     component={PostTest}
                   />
                   <Route path="/conversation" component={Conversation} />
+                  <Route
+                    path={editing ? '/suggested_quizzes' : 'miss'}
+                    component={SuggestedQuizzes}
+                  />
                   <Route path="/:position/" component={CaseElement} />
                 </Switch>
               </div>

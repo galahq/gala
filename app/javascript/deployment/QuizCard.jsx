@@ -11,9 +11,9 @@ import { NonIdealState } from '@blueprintjs/core'
 import { acceptKeyboardClick } from 'shared/keyboard'
 import { SectionTitle } from './QuizDetails'
 
-import type { ID, Quiz, Question as QuestionT } from './types'
+import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
-type Params = Quiz & { onClick: (quizId: ID) => void }
+type Params = CustomizedQuiz & { onClick: (quizId: ID) => void }
 const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
   <Link
     className="pt-card pt-elevation-1 pt-interactive"
@@ -42,13 +42,13 @@ const Questions = ({
   questions,
   sectionTitle,
 }: {
-  questions: QuestionT[],
+  questions: DraftQuestion[],
   sectionTitle?: string,
 }) =>
   questions.length > 0 ? (
     <>
       <SectionTitle>{sectionTitle}</SectionTitle>
-      {questions.map((question: QuestionT, i: number) => (
+      {questions.map((question, i) => (
         <Question key={i}>
           {question.content}
           <QuestionType
