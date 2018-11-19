@@ -1,20 +1,14 @@
 /**
  * @flow
  */
-
-export type Question = {
-  id: ?number,
-  content: string,
-  options: string[],
-  correctAnswer: string,
-  hasError: boolean,
-}
+import type { DraftQuestion } from 'redux/state'
+export type { DraftQuestion } from 'redux/state'
 
 export type ID = number | 'new'
 
-export type Quiz = {
+export type CustomizedQuiz = {
   id: ID,
-  questions: Question[],
-  customQuestions: Question[],
+  questions: DraftQuestion[],
+  customQuestions: DraftQuestion[],
   customized: boolean,
 }

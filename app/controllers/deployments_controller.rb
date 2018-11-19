@@ -43,7 +43,7 @@ class DeploymentsController < ApplicationController
   # @route [GET] `/deployments/1/edit`
   def edit
     authorize @deployment
-    set_recommended_quizzes
+    set_suggested_quizzes
     render layout: 'embed' if selection_params.present?
   end
 
@@ -91,13 +91,13 @@ class DeploymentsController < ApplicationController
           .permit(:case_id, :group_id, group_attributes: %i[name])
   end
 
-  def set_recommended_quizzes
+  def set_suggested_quizzes
     reader = reader_signed_in? ? current_reader : nil
-    recommended_quizzes = @deployment.case.quizzes.recommended
+    suggested_quizzes = @deployment.case.quizzes.suggested
     custom_quizzes = @deployment.case.quizzes
                                 .authored_by reader: reader, lti_uid: lti_uid
 
-    @recommended_quizzes = [] + recommended_quizzes + custom_quizzes
+    @suggested_quizzes = [] + suggested_quizzes + custom_quizzes
   end
 
   def customizer

@@ -56,7 +56,7 @@ export function handleNotification (notification: Notification): ThunkAction {
   }
 }
 
-export function displayErrorToast (message: string): ThunkAction {
+export function displayErrorToast (message: string | React.Node): ThunkAction {
   return (dispatch: Dispatch) => {
     dispatch(
       displayToast({

@@ -17,6 +17,7 @@ import pagesById from './pagesById'
 import podcastsById from './podcastsById'
 import quiz from './quiz'
 import statistics from './statistics'
+import suggestedQuizzes from './suggestedQuizzes'
 import ui from './ui'
 
 const state = {
@@ -32,6 +33,7 @@ const state = {
   podcastsById,
   quiz,
   statistics,
+  suggestedQuizzes,
   ui,
 }
 

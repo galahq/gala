@@ -1037,7 +1037,8 @@ CREATE TABLE quizzes (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     author_id integer,
-    lti_uid character varying
+    lti_uid character varying,
+    title character varying DEFAULT ''::character varying
 );
 
 
@@ -2950,6 +2951,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180911155612'),
 ('20180919145935'),
 ('20181029165916'),
-('20181030194657');
+('20181030194657'),
+('20181108181434');
 
 

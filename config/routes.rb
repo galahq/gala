@@ -3,6 +3,9 @@
 LOCALES ||= Rails.application.config.i18n.available_locales
 LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/.freeze
 
+# Give React Router any suffix that doesn’t specify a format (with a .json, etc)
+REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/.freeze
+
 Rails.application.routes.draw do
   concern :has_statistics do
     resource :statistics, only: %i[show]
@@ -67,6 +70,8 @@ Rails.application.routes.draw do
 
     resources :pages, only: %i[create]
 
+    resources :quizzes, only: %i[index create]
+
     resource :settings, module: 'cases', only: %i[edit update]
 
     resources :taggings, only: %i[create destroy], param: :tag_name
@@ -80,7 +85,9 @@ Rails.application.routes.draw do
   end
 
   scope 'cases' do
-    get ':case_slug/*react_router_location', to: 'cases#show'
+    get ':case_slug/*react_router_location',
+        to: 'cases#show', format: false,
+        react_router_location: REACT_ROUTER_LOCATION_REGEX
   end
 
   namespace 'catalog' do
@@ -90,7 +97,9 @@ Rails.application.routes.draw do
 
     resources :libraries, only: %i[index]
 
-    get '*react_router_location', action: :home
+    get '*react_router_location',
+        action: :home, format: false,
+        react_router_location: REACT_ROUTER_LOCATION_REGEX
   end
 
   resources :comment_threads, only: %i[show destroy] do
@@ -139,7 +148,7 @@ Rails.application.routes.draw do
 
   resource :profile, controller: :readers, only: %i[show edit update]
 
-  resources :quizzes, only: %i[show] do
+  resources :quizzes, only: %i[show update destroy] do
     resources :submissions, only: %i[index create]
   end
 

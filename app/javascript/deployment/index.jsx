@@ -17,8 +17,9 @@ import type { IntentType } from '@blueprintjs/core'
 
 import { Orchard } from 'shared/orchard'
 import { chooseContentItem } from 'shared/lti'
+import { validatedQuestions } from 'suggested_quizzes/helpers'
 
-import type { ID, Quiz, Question } from './types'
+import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
 type Props = {
   id: string,
@@ -29,29 +30,16 @@ type Props = {
     callbackUrl: string,
   },
   selectedQuizId: ?ID,
-  recommendedQuizzes: { [id: string]: Quiz },
+  suggestedQuizzes: { [id: string]: CustomizedQuiz },
   returnUrl?: string,
   returnData?: string,
 }
 
 type State = {
   selectedQuizId: ?ID,
-  customQuestions: { [id: string]: Question[] },
+  customQuestions: { [id: string]: DraftQuestion[] },
   answersNeeded: 1 | 2,
 }
-
-const questionHasError = (question: Question) =>
-  !question.content ||
-  (question.options.length === 0
-    ? question.correctAnswer === '' || question.correctAnswer == null
-    : !question.options.some(
-      (option: string) => option === question.correctAnswer
-    ))
-
-const validated = map((question: Question) => ({
-  ...question,
-  hasError: questionHasError(question),
-}))
 
 class Deployment extends React.Component<Props, State> {
   _needsPretest = () => {
@@ -71,16 +59,18 @@ class Deployment extends React.Component<Props, State> {
       ...state,
       customQuestions: {
         ...customQuestions,
-        [`${selectedQuizId}`]: validated(customQuestions[`${selectedQuizId}`]),
+        [`${selectedQuizId}`]: validatedQuestions(
+          customQuestions[`${selectedQuizId}`]
+        ),
       },
     }
     this.setState(validatedState)
     return !validatedState.customQuestions[`${selectedQuizId}`].some(
-      (question: Question) => question.hasError
+      (question: DraftQuestion) => question.hasError
     )
   }
 
-  _displayToast = (error: string, intent: IntentType = Intent.WARNING) => {
+  _displayToast = (error: string, intent: IntentType = Intent.DANGER) => {
     Toaster.show({
       message: error,
       intent,
@@ -98,7 +88,10 @@ class Deployment extends React.Component<Props, State> {
     }))
   }
 
-  handleChangeCustomQuestions = (quizId: ID, customQuestions: Question[]) => {
+  handleChangeCustomQuestions = (
+    quizId: ID,
+    customQuestions: DraftQuestion[]
+  ) => {
     this.setState((state: State) => ({
       ...state,
       customQuestions: { ...state.customQuestions, [quizId]: customQuestions },
@@ -136,8 +129,8 @@ class Deployment extends React.Component<Props, State> {
     super(props)
 
     const customQuestions = map(
-      (quiz: Quiz) => quiz.customQuestions,
-      props.recommendedQuizzes
+      (quiz: CustomizedQuiz) => quiz.customQuestions,
+      props.suggestedQuizzes
     )
     this.state = {
       selectedQuizId: props.selectedQuizId,
@@ -147,22 +140,22 @@ class Deployment extends React.Component<Props, State> {
   }
 
   render () {
-    const { caseData, recommendedQuizzes } = this.props
+    const { caseData, suggestedQuizzes } = this.props
     const { selectedQuizId, customQuestions } = this.state
     return (
       <>
         <div className="pt-dark" style={{ padding: '0 12px' }}>
           {selectedQuizId == null ? (
             <QuizSelector
-              recommendedQuizzes={recommendedQuizzes}
+              suggestedQuizzes={suggestedQuizzes}
               customQuestions={customQuestions}
               onSelect={this.handleSelectQuiz}
             />
           ) : (
             <QuizDetails
-              quiz={recommendedQuizzes[`${selectedQuizId}`]}
+              quiz={suggestedQuizzes[`${selectedQuizId}`]}
               customQuestions={customQuestions[`${selectedQuizId}`]}
-              onChangeCustomQuestions={(newCustomQuestions: Question[]) =>
+              onChangeCustomQuestions={(newCustomQuestions: DraftQuestion[]) =>
                 this.handleChangeCustomQuestions(
                   selectedQuizId,
                   newCustomQuestions

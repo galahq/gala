@@ -23,6 +23,7 @@ export type State = {
   podcastsById: PodcastsState,
   quiz: QuizState,
   statistics: StatisticsState,
+  suggestedQuizzes: SuggestedQuizzesState,
   ui: UIState,
 }
 
@@ -73,10 +74,7 @@ export type QuizNecessity<Pre: boolean, Post: boolean> = {
   needsPosttest: Post,
 }
 
-export type QuizState = QuizNecessity<boolean, boolean> & {
-  id?: string,
-  questions?: Question[],
-}
+export type QuizState = QuizNecessity<boolean, boolean> & $Shape<Quiz>
 
 export type ReaderState = {
   canUpdateCase: boolean,
@@ -90,6 +88,10 @@ export type StatisticsState =
   | {
       [trackableUri: string]: Statistics,
     }
+
+export type SuggestedQuizzesState = {
+  [id: string]: SuggestedQuiz,
+}
 
 export type UIState = {
   acceptingSelection: boolean,
@@ -215,6 +217,14 @@ export type Community = {
   global: boolean,
 }
 
+export type DraftQuestion = {
+  id: ?string,
+  content: string,
+  options: string[],
+  correctAnswer: string,
+  hasError?: boolean,
+}
+
 export type Edgenote = {
   attribution: string,
   altText: string,
@@ -328,7 +338,12 @@ export type Question = {
   id: string,
   content: string,
   options: string[],
-  correctAnswer?: string,
+  correctAnswer: string,
+}
+
+export type Quiz = {
+  id: string,
+  questions: Question[],
 }
 
 export type Reader = {
@@ -376,6 +391,12 @@ export type StatisticsData = {
   uniques: number,
   views: number,
   updatedAt: number,
+}
+
+export type SuggestedQuiz = {
+  param: string,
+  questions: DraftQuestion[],
+  title: string,
 }
 
 export type Tag = {
