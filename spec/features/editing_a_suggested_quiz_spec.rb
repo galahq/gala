@@ -30,6 +30,26 @@ feature 'Editing a suggested quiz' do
     expect(page).to have_content '3 Open Ended Questions'
   end
 
+  scenario 'it confirms before closing dialog if user has unsaved changes' do
+    quiz = create :quiz
+    reader.my_cases << quiz.case
+
+    visit case_path(quiz.case, edit: true)
+    click_on 'Pre/Post Assessment'
+    click_on quiz.title
+    click_on 'Add question'
+
+    dismiss_confirm 'Are you sure you want to close without saving?' do
+      click_on 'Close'
+    end
+    expect(page).to have_field 'Quiz title'
+
+    dismiss_confirm 'Are you sure you want to close without saving?' do
+      visit root_path
+    end
+    expect(page).to have_field 'Quiz title'
+  end
+
   context 'not in edit mode' do
     scenario 'it redirects to the overview' do
       quiz = create :quiz
