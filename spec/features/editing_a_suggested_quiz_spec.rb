@@ -29,4 +29,14 @@ feature 'Editing a suggested quiz' do
     click_on 'Pre/Post Assessment'
     expect(page).to have_content '3 Open Ended Questions'
   end
+
+  context 'not in edit mode' do
+    scenario 'it redirects to the overview' do
+      quiz = create :quiz
+      reader.my_cases << quiz.case
+
+      visit case_path(quiz.case) + '/suggested_quizzes'
+      expect(page).not_to have_content 'Suggested Quizzes'
+    end
+  end
 end
