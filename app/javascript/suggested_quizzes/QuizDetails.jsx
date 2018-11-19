@@ -6,7 +6,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Prompt } from 'react-router-dom'
 import styled from 'styled-components'
 import { Button, FormGroup, Intent, InputGroup } from '@blueprintjs/core'
 import * as R from 'ramda'
@@ -14,7 +13,11 @@ import * as R from 'ramda'
 import QuizCustomizer from 'deployment/QuizCustomizer'
 import { validatedQuestions } from 'suggested_quizzes/helpers'
 
-import { updateSuggestedQuiz, displayErrorToast } from 'redux/actions'
+import {
+  updateSuggestedQuiz,
+  displayErrorToast,
+  setUnsaved,
+} from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
 import type { RouterHistory } from 'react-router-dom'
@@ -48,11 +51,7 @@ function QuizDetails ({
   const [draftQuiz, setDraftQuiz] = React.useState(quiz)
   const { questions, title } = draftQuiz
 
-  const unblock = history.block(() => {
-    if (!R.equals(draftQuiz, quiz)) {
-      return 'Are you sure you want to close without saving?'
-    }
-  })
+  const unblock = blockRouting({ when: !R.equals(draftQuiz, quiz), history })
 
   function handleChangeTitle (e: SyntheticInputEvent<*>) {
     setDraftQuiz({ ...draftQuiz, title: e.target.value })
@@ -117,6 +116,13 @@ export default injectIntl(
     { updateSuggestedQuiz, displayErrorToast }
   )(QuizDetails)
 )
+
+function blockRouting ({ when: unsaved, history }) {
+  if (unsaved) setUnsaved()
+  return history.block(() => {
+    if (unsaved) return 'Are you sure you want to close without saving?'
+  })
+}
 
 const TitleField = styled(InputGroup).attrs({
   large: true,

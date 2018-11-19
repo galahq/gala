@@ -44,7 +44,7 @@ feature 'Editing a suggested quiz' do
     end
     expect(page).to have_field 'Quiz title'
 
-    dismiss_confirm 'Are you sure you want to close without saving?' do
+    dismiss_confirm do
       visit root_path
     end
     expect(page).to have_field 'Quiz title'
