@@ -204,6 +204,16 @@ es:
       replace_teaching_guide: Replace teaching guide
       save: Guardar
       stop_editing: Dejar de editar este caso
+      suggested_quizzes:
+        all_suggested_quizzes: All Suggested Quizzes
+        confirm_delete: Are you sure you want to delete this quiz?
+        delete_quiz: Delete Quiz
+        description: >
+          Include a suggested pre/post assessment that instructors can use when deploying your case.
+        error: Questions cannot be blank and correct answers are required.
+        pre_post_assessment: Pre/Post Assessment
+        suggest_an_assessment: Suggest an Assessment
+        title: Suggested Quizzes
       translator_name: Translator Name
       unfeature_case: Quitar de casos destacados
       unpublish_case: Annular la publicacion
@@ -794,11 +804,15 @@ es:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    new:
+      new_quiz: New Quiz
     quiz:
       multiple_choice_questions:
+        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
         one: "%{count} Multiple Choice Question"
         other: "%{count} Multiple Choice Questions"
       open_ended_questions:
+        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
         one: "%{count} Open Ended Question"
         other: "%{count} Open Ended Questions"
     show:
