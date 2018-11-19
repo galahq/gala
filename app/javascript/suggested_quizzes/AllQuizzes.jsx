@@ -130,18 +130,26 @@ const List = styled.ul`
 const ListItem = styled.li`
   align-items: baseline;
   display: flex;
-  width: 100%;
   justify-content: space-between;
+  margin-bottom: 0.5em;
+  padding: 0.25em 0.5em;
+  width: 100%;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
 `
 
 const QuizLink = styled(Link)`
   align-items: baseline;
   display: flex;
-  margin-bottom: 0.25em;
 `
 
 const QuizTitle = styled.span`
+  color: white;
   flex: 1;
+  font-weight: 500;
+  padding-right: 1em;
 `
 
 const Tag = styled.span.attrs({ className: 'pt-tag pt-minimal pt-large' })`
