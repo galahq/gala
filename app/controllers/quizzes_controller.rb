@@ -38,7 +38,7 @@ class QuizzesController < ApplicationController
   def destroy
     authorize @quiz.case, :update?
     @quiz.destroy!
-  end 
+  end
 
   private
 
