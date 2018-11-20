@@ -21,8 +21,8 @@ class Question < ApplicationRecord
   validates :correct_answer, inclusion: { in: ->(q) { q.options } },
                              if: ->(q) { !q.options.empty? }
 
-  scope :multiple_choice, -> { where Arel.sql 'cardinality(options) > 0' }
-  scope :open_ended, -> { where Arel.sql 'cardinality(options) = 0' }
+  scope :multiple_choice, -> { where ::Arel.sql 'cardinality(options) > 0' }
+  scope :open_ended, -> { where ::Arel.sql 'cardinality(options) = 0' }
 
   # A relation of questions that the reader, in the context of her active group,
   # hasn’t answered enough times. Whether “enough” is 1 or 2 depends on the
