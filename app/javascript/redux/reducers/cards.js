@@ -5,6 +5,7 @@
 
 import { EditorState, convertFromRaw } from 'draft-js'
 import { decorator } from 'draft/config'
+import produce from 'immer'
 
 // $FlowFixMe
 import {
@@ -33,6 +34,7 @@ import type {
   AddCommentThreadAction,
   RemoveCommentThreadAction,
   AddPodcastAction,
+  ReorderCardAction,
 } from 'redux/actions'
 
 const { forceSelection } = EditorState
@@ -43,6 +45,7 @@ type Action =
   | ApplySelectionAction
   | ReplaceCardAction
   | AddCardAction
+  | ReorderCardAction
   | RemoveCardAction
   | ParseAllCardsAction
   | AddCommentThreadAction
@@ -90,6 +93,14 @@ function cardsById (
           editorState: parseEditorStateFromPersistedCard(action.newCard),
         },
       }
+
+    case 'REORDER_CARD': {
+      const { id, destination } = action
+
+      return produce(state, draft => {
+        draft[id].position = destination + 1
+      })
+    }
 
     case 'REMOVE_CARD':
       return omit([action.id], state)

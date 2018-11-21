@@ -3,7 +3,10 @@
  * @flow
  */
 
-import { map, without, insert } from 'ramda'
+import { values, map, without, insert } from 'ramda'
+import produce from 'immer'
+
+import { reorder } from 'shared/functions'
 
 import type { PagesState } from 'redux/state'
 import type {
@@ -11,11 +14,16 @@ import type {
   AddPageAction,
   RemoveCardAction,
   AddCardAction,
+  ReorderCardAction,
 } from 'redux/actions'
 
 export default function pagesById (
   state: PagesState = ({ ...window.caseData.pages }: PagesState),
-  action: UpdatePageAction | AddPageAction | RemoveCardAction | AddCardAction
+  action: | UpdatePageAction
+    | AddPageAction
+    | RemoveCardAction
+    | AddCardAction
+    | ReorderCardAction
 ): PagesState {
   switch (action.type) {
     case 'UPDATE_PAGE':
@@ -44,6 +52,17 @@ export default function pagesById (
           cards: insert(position - 1, id, oldPage.cards),
         },
       }
+    }
+
+    case 'REORDER_CARD': {
+      const { id, destination } = action
+
+      return produce(state, draft => {
+        const page = values(draft).find(({ cards }) => cards.includes(id))
+        if (page == null) return
+
+        page.cards = reorder(page.cards.indexOf(id), destination, page.cards)
+      })
     }
 
     case 'REMOVE_CARD': {
