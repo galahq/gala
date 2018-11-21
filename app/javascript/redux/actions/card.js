@@ -30,10 +30,10 @@ export function addCard (pageId: string, data: Card): AddCardAction {
   return { type: 'ADD_CARD', pageId, data }
 }
 
-export function createCard (pageId: string, position: ?number): ThunkAction {
+export function createCard (pageId: string): ThunkAction {
   return async (dispatch: Dispatch) => {
     const data: Card = await Orchard.graft(`pages/${pageId}/cards`, {
-      card: { solid: true, position },
+      card: { solid: true },
     })
     dispatch(addCard(pageId, data))
   }

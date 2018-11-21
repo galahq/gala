@@ -3,7 +3,7 @@
  * @flow
  */
 
-import { values, map, without, insert } from 'ramda'
+import { values, map, without } from 'ramda'
 import produce from 'immer'
 
 import { reorder } from 'shared/functions'
@@ -45,13 +45,13 @@ export default function pagesById (
 
     case 'ADD_CARD': {
       const { pageId, data } = action
-      const { id, position } = data
+      const { id } = data
       const oldPage = state[pageId]
       return {
         ...state,
         [pageId]: {
           ...oldPage,
-          cards: insert(position - 1, id, oldPage.cards),
+          cards: [...oldPage.cards, id],
         },
       }
     }
