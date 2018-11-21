@@ -53,6 +53,7 @@ export type Action =
   | CardActions.ParseAllCardsAction
   | CardActions.RemoveCardAction
   | CardActions.ReplaceCardAction
+  | CardActions.ReorderCardAction
   | CardActions.SetCardsAction
   | CardActions.UpdateCardContentsAction
   | CaseActions.SetReaderEnrollmentAction

@@ -7,26 +7,36 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { DragDropContext } from 'react-beautiful-dnd'
 
-import { reorderCaseElements } from 'redux/actions'
+import { reorderCaseElements, reorderCard } from 'redux/actions'
 
 type Props = {
   children: React.Node,
   reorderCaseElements: typeof reorderCaseElements,
+  reorderCard: typeof reorderCard,
 }
 
-function GalaDragDropContext ({ children, reorderCaseElements }: Props) {
+function GalaDragDropContext ({
+  children,
+  reorderCaseElements,
+  reorderCard,
+}: Props) {
   function onDragEnd (result) {
-    const { type, source, destination } = result
+    const { draggableId, type, source, destination } = result
+
     switch (type) {
       case 'CaseElement': {
         if (!destination) return
 
         reorderCaseElements(source.index, destination.index)
-        return
+        break
       }
 
       case 'Page': {
-        console.log({ source, destination })
+        if (!destination) return
+
+        const [, cardId] = draggableId.split('/')
+        reorderCard(cardId, destination.index)
+        break
       }
     }
   }
@@ -36,5 +46,5 @@ function GalaDragDropContext ({ children, reorderCaseElements }: Props) {
 
 export default connect(
   null,
-  { reorderCaseElements }
+  { reorderCaseElements, reorderCard }
 )(GalaDragDropContext)

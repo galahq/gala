@@ -120,10 +120,11 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
 
     case 'cards':
       {
-        const editorState =
-          state.cardsById[id].editorState || EditorState.createEmpty()
+        const card = state.cardsById[id]
+        const editorState = card.editorState || EditorState.createEmpty()
         data = {
           card: {
+            position: card.position,
             rawContent: convertToRaw(editorState.getCurrentContent()),
           },
         }

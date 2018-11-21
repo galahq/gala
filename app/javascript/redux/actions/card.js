@@ -61,6 +61,19 @@ export function replaceCard (cardId: string, newCard: Card): ReplaceCardAction {
   return { type: 'REPLACE_CARD', cardId, newCard }
 }
 
+export type ReorderCardAction = {
+  type: 'REORDER_CARD',
+  id: string,
+  destination: number,
+}
+export function reorderCard (
+  id: string,
+  destination: number
+): ReorderCardAction {
+  setUnsaved()
+  return { type: 'REORDER_CARD', id, destination }
+}
+
 export type RemoveCardAction = {
   type: 'REMOVE_CARD',
   id: string,
