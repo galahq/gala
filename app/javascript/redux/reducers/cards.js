@@ -18,6 +18,7 @@ import {
   view,
   set,
   reduce,
+  values,
 } from 'ramda'
 
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
@@ -85,21 +86,19 @@ function cardsById (
       }
     }
 
-    case 'REPLACE_CARD':
-      return {
-        ...state,
-        [action.cardId]: {
-          ...action.newCard,
-          editorState: parseEditorStateFromPersistedCard(action.newCard),
-        },
-      }
+    case 'REPLACE_CARD': {
+      const { cardId, newCard } = action
+      return produce(state, draft => {
+        draft = updatePositions(draft, cardId, newCard.position)
+        draft[cardId] = newCard
+        draft[cardId].editorState = parseEditorStateFromPersistedCard(newCard)
+      })
+    }
 
     case 'REORDER_CARD': {
       const { id, destination } = action
 
-      return produce(state, draft => {
-        draft[id].position = destination + 1
-      })
+      return updatePositions(state, id, destination + 1)
     }
 
     case 'REMOVE_CARD':
@@ -247,4 +246,24 @@ function addCommentThreads (content: RawDraftContentState, card: Card) {
   )
 
   return reduce(setInlineStylesForComment, content, attached(commentThreads))
+}
+
+// NOTE: position is 1-indexed!
+function updatePositions (state, id, destination) {
+  return produce(state, draft => {
+    const card = draft[id]
+    const source = card.position
+
+    const otherCardsOnPage = values(draft).filter(c => {
+      return c.id !== card.id && c.pageId === card.pageId
+    })
+
+    otherCardsOnPage.forEach(other => {
+      const { position } = other
+      if (position > source && position <= destination) --other.position
+      if (position < source && position >= destination) ++other.position
+    })
+
+    card.position = destination
+  })
 }
