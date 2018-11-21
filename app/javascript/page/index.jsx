@@ -125,7 +125,7 @@ const AddCardButton = styled(Button).attrs({
   className: 'pt-minimal',
   icon: 'add',
 })`
-  margin-left: 1.5em;
+  margin: 1em 1.5em 0;
   opacity: 0.5;
   transition: opacity ease-out 0.1s;
 
