@@ -5,17 +5,27 @@
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { DragSource, DropTarget } from 'react-dnd'
-import { NavLink, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
+import { Draggable } from 'react-beautiful-dnd'
 
-import { ItemTypes } from 'shared/dndConfig'
 import Icon from 'utility/Icon'
+import {
+  Item,
+  Link,
+  Label,
+  Details,
+  ElementIcon,
+} from 'table_of_contents/shared'
 
 import { updateCaseElement, persistCaseElementReordering } from 'redux/actions'
 
-function getElementDataFrom (state) {
-  return ({ elementStore: store, elementId: id }) => {
+import type { ContextRouter } from 'react-router-dom'
+import type { State, CaseElement } from 'redux/state'
+
+type Element = { title: string, typeIcon: ?React.Node }
+function getElementDataFrom (state: State) {
+  return ({ elementStore: store, elementId: id }): Element => {
     const { title, iconSlug } = state[store][id]
     const typeIcon = iconSlug && <Icon filename={iconSlug} />
 
@@ -23,114 +33,68 @@ function getElementDataFrom (state) {
   }
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
-class TableOfContentsElement extends React.Component<*> {
-  render () {
-    const {
-      position,
-      element,
-      connectDragSource,
-      connectDropTarget,
-      isDragging,
-      editing,
-      readOnly,
-    } = this.props
-    return (
-      <NavLink
-        className="c-toc__link"
-        activeClassName="c-toc__link--active"
-        to={`/${position}`}
-        style={{ opacity: isDragging ? 0 : 1 }}
-      >
-        {connectDragSource(
-          connectDropTarget(
-            <li className="c-toc__item">
-              <div className="c-toc__item-data">
-                <div className="c-toc__number">
-                  {editing && !readOnly ? (
-                    <span className="pt-icon pt-icon-drag-handle-horizontal" />
-                  ) : (
-                    position
-                  )}
-                </div>
-                <div className="c-toc__title">
-                  {element.title || (
-                    <FormattedMessage id="caseElements.new.untitled" />
-                  )}
-                </div>
-                <div className="c-toc__icon">{element.typeIcon}</div>
-              </div>
-            </li>
-          )
-        )}
-      </NavLink>
-    )
+type OwnProps = {|
+  ...ContextRouter,
+  caseElement: CaseElement,
+  position: number,
+  readOnly: boolean,
+|}
+function mapStateToProps (state: State, { caseElement, position }: OwnProps) {
+  return {
+    caseElement,
+    position,
+    element: getElementDataFrom(state)(caseElement),
+    editing: state.edit.inProgress,
   }
 }
 
-const DraggableTableOfContentsElement = DropTarget(
-  ItemTypes.CASE_ELEMENT,
-  {
-    canDrop () {
-      return false
-    },
-    hover (props, monitor) {
-      const { id: draggedId } = monitor.getItem()
-      const { id: overId } = props
+type Props = {
+  ...OwnProps,
+  caseElement: CaseElement,
+  element: Element,
+  editing: boolean,
+}
+function TableOfContentsElement ({
+  caseElement,
+  position,
+  element,
+  editing,
+  readOnly,
+}: Props) {
+  return (
+    <Draggable
+      draggableId={caseElement.id}
+      index={position}
+      isDragDisabled={readOnly || !editing}
+    >
+      {(provided, snapshot) => (
+        <Item ref={provided.innerRef} {...provided.draggableProps}>
+          <Link isDragging={snapshot.isDragging} to={`/${position + 1}`}>
+            <Label {...provided.dragHandleProps}>
+              {editing && !readOnly ? (
+                <span className="pt-icon pt-icon-drag-handle-horizontal" />
+              ) : (
+                position + 1
+              )}
+            </Label>
 
-      if (draggedId !== overId) {
-        const { index: overIndex } = props.findElement(overId)
-        props.updateCaseElement(draggedId, overIndex)
-      }
-    },
-  },
-  connect => ({
-    connectDropTarget: connect.dropTarget(),
-  })
-)(
-  DragSource(
-    ItemTypes.CASE_ELEMENT,
-    {
-      canDrag (props) {
-        return props.editing && !props.readOnly
-      },
-      beginDrag (props) {
-        return {
-          id: props.id,
-          originalIndex: props.findElement(props.id).index,
-        }
-      },
-      endDrag (props, monitor) {
-        const { id: droppedId, originalIndex } = monitor.getItem()
-        const { index: droppedIndex } = props.findElement(droppedId)
-        const didDrop = monitor.didDrop()
+            <Details>
+              {element.title || (
+                <FormattedMessage id="caseElements.new.untitled" />
+              )}
 
-        if (didDrop) {
-          props.persistCaseElementReordering(droppedId, droppedIndex)
-        } else {
-          props.updateCaseElement(droppedId, originalIndex)
-        }
-      },
-    },
-    (connect, monitor) => ({
-      connectDragSource: connect.dragSource(),
-      isDragging: monitor.isDragging(),
-    })
-  )(TableOfContentsElement)
-)
+              <ElementIcon>{element.typeIcon}</ElementIcon>
+            </Details>
+          </Link>
+        </Item>
+      )}
+    </Draggable>
+  )
+}
 
 export default withRouter(
   connect(
-    (state, { element, position }) => ({
-      ...element,
-      position,
-      element: getElementDataFrom(state)(element),
-      findElement: id => {
-        const { caseElements } = state.caseData
-        return { element, index: caseElements.findIndex(e => e.id === id) }
-      },
-      editing: state.edit.inProgress,
-    }),
+    mapStateToProps,
     { updateCaseElement, persistCaseElementReordering }
-  )(DraggableTableOfContentsElement)
+  )(TableOfContentsElement)
 )

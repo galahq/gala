@@ -7,6 +7,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { Button } from '@blueprintjs/core'
+import { Draggable, Droppable } from 'react-beautiful-dnd'
 
 import { updatePage, createCard } from 'redux/actions'
 import DetailsForm from 'page/DetailsForm'
@@ -34,39 +35,49 @@ const Page = (props: Props) => {
   let { id, title, cards } = page
 
   return (
-    <article>
-      <section className="pt-dark section Page-meta">
-        {editing ? (
-          <DetailsForm
-            page={page}
-            onChange={data => updatePage(id, data)}
-            onDelete={deleteElement}
-          />
-        ) : (
-          <h1>{title}</h1>
-        )}
-      </section>
+    <Droppable droppableId={`pages/${id}`} type="Page">
+      {({ placeholder, innerRef: droppableRef }) => (
+        <div ref={droppableRef}>
+          <article>
+            <section className="pt-dark section Page-meta">
+              {editing ? (
+                <DetailsForm
+                  page={page}
+                  onChange={data => updatePage(id, data)}
+                  onDelete={deleteElement}
+                />
+              ) : (
+                <h1>{title}</h1>
+              )}
+            </section>
 
-      {cards.map((cardId, i) => (
-        <React.Fragment key={i}>
-          {props.editing && (
-            <CreateCardLink pageId={id} i={i} createCard={createCard} />
-          )}
-          <Section>
-            <Card id={cardId} />
-            <Edgenotes cardId={cardId} />
-          </Section>
-        </React.Fragment>
-      ))}
+            {cards.map((cardId, i) => (
+              <Draggable key={cardId} draggableId={`cards/${cardId}`} index={i}>
+                {({
+                  innerRef: draggableRef,
+                  draggableProps,
+                  dragHandleProps,
+                }) => (
+                  <Section ref={draggableRef} {...draggableProps}>
+                    <Card id={cardId} dragHandleProps={dragHandleProps} />
+                    <Edgenotes cardId={cardId} />
+                  </Section>
+                )}
+              </Draggable>
+            ))}
 
-      {props.editing && (
-        <CreateCardLink
-          pageId={id}
-          key={`create-last`}
-          createCard={createCard}
-        />
+            {props.editing && (
+              <CreateCardLink
+                pageId={id}
+                key={`create-last`}
+                createCard={createCard}
+              />
+            )}
+          </article>
+          {placeholder}
+        </div>
       )}
-    </article>
+    </Droppable>
   )
 }
 
@@ -80,7 +91,7 @@ const Section = styled.section`
   grid-column-gap: 1em;
   grid-template-columns: repeat(2, 23em) repeat(2, minmax(min-content, 1fr));
   grid-template-rows: repeat(100, auto) repeat(100, [highlighted] auto);
-  margin: 1em;
+  margin: 1em 1em 0;
   transition: grid-template-columns 0.3s;
 
   @media screen and (max-width: 1600px) {
@@ -114,7 +125,7 @@ const AddCardButton = styled(Button).attrs({
   className: 'pt-minimal',
   icon: 'add',
 })`
-  margin-left: 1.5em;
+  margin: 1em 1.5em 0;
   opacity: 0.5;
   transition: opacity ease-out 0.1s;
 
@@ -125,11 +136,10 @@ const AddCardButton = styled(Button).attrs({
 
 class CreateCardLink extends React.Component<{
   pageId: string,
-  i?: number,
   createCard: typeof createCard,
 }> {
   handleCreateCard = () => {
-    this.props.createCard(this.props.pageId, this.props.i + 1)
+    this.props.createCard(this.props.pageId)
   }
 
   render () {

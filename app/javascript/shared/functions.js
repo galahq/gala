@@ -33,3 +33,14 @@ export function ensureHttp (url: string) {
   if (url.match(/^https?:\/\//)) return url
   return `http://${url}`
 }
+
+export function reorder<T> (
+  sourceIndex: number,
+  destinationIndex: number,
+  array: T[]
+): T[] {
+  const newArray = [...array]
+  const [element] = newArray.splice(sourceIndex, 1)
+  newArray.splice(destinationIndex, 0, element)
+  return newArray
+}
