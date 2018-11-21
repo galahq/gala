@@ -15,6 +15,7 @@ import type {
   RemoveCardAction,
   AddCardAction,
   ReorderCardAction,
+  ReplaceCardAction,
 } from 'redux/actions'
 
 export default function pagesById (
@@ -24,6 +25,7 @@ export default function pagesById (
     | RemoveCardAction
     | AddCardAction
     | ReorderCardAction
+    | ReplaceCardAction
 ): PagesState {
   switch (action.type) {
     case 'UPDATE_PAGE':
@@ -62,6 +64,22 @@ export default function pagesById (
         if (page == null) return
 
         page.cards = reorder(page.cards.indexOf(id), destination, page.cards)
+      })
+    }
+
+    case 'REPLACE_CARD': {
+      const {
+        cardId,
+        newCard: { pageId, position },
+      } = action
+
+      return produce(state, draft => {
+        const page = draft[pageId]
+        page.cards = reorder(
+          page.cards.indexOf(cardId),
+          position - 1,
+          page.cards
+        )
       })
     }
 
