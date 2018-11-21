@@ -20,6 +20,29 @@ const state = {
 }
 
 describe('pagesById reducer', () => {
+  describe('AddCardAction', () => {
+    test('works', () => {
+      const action = { type: 'ADD_CARD', pageId: 1, data: { id: 10 }}
+
+      expect(reduce(state, action)).toEqual({
+        '1': {
+          id: '1',
+          cards: ['1', '2', '3', '10'],
+          position: 1,
+          title: 'Introduction',
+          url: 'pages/1',
+        },
+        '2': {
+          id: '2',
+          cards: ['4', '5', '6'],
+          position: 2,
+          title: 'Conclusion',
+          url: 'pages/2',
+        },
+      })
+    })
+  })
+
   describe('ReorderCardAction', () => {
     test('works', () => {
       const action = { type: 'REORDER_CARD', id: '2', destination: 0 }
