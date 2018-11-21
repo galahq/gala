@@ -136,11 +136,10 @@ const AddCardButton = styled(Button).attrs({
 
 class CreateCardLink extends React.Component<{
   pageId: string,
-  i?: number,
   createCard: typeof createCard,
 }> {
   handleCreateCard = () => {
-    this.props.createCard(this.props.pageId, this.props.i + 1)
+    this.props.createCard(this.props.pageId)
   }
 
   render () {
