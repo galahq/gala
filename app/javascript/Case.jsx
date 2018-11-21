@@ -24,6 +24,7 @@ import ErrorBoundary from 'utility/ErrorBoundary'
 import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
 import { Provider as ContentItemSelectionContextProvider } from 'deployment/contentItemSelectionContext'
+import GalaDragDropContext from 'shared/GalaDragDropContext'
 
 import type { State } from 'redux/state'
 
@@ -132,30 +133,32 @@ class Case extends React.Component<{
     return (
       <ErrorBoundary>
         <DocumentTitle title={`${kicker} — Gala`}>
-          <Router basename={basename}>
-            <ContentItemSelectionContextProvider>
-              <div id="Case">
-                <StatusBar />
-                <Switch>
-                  <Route exact path="/" component={CaseOverview} />
-                  <Route
-                    path={needsPretest ? '/*' : 'miss'}
-                    component={PreTest}
-                  />
-                  <Route
-                    path={hasQuiz ? '/quiz/' : 'miss'}
-                    component={PostTest}
-                  />
-                  <Route path="/conversation" component={Conversation} />
-                  <Route
-                    path={editing ? '/suggested_quizzes' : 'miss'}
-                    component={SuggestedQuizzes}
-                  />
-                  <Route path="/:position/" component={CaseElement} />
-                </Switch>
-              </div>
-            </ContentItemSelectionContextProvider>
-          </Router>
+          <GalaDragDropContext>
+            <Router basename={basename}>
+              <ContentItemSelectionContextProvider>
+                <div id="Case">
+                  <StatusBar />
+                  <Switch>
+                    <Route exact path="/" component={CaseOverview} />
+                    <Route
+                      path={needsPretest ? '/*' : 'miss'}
+                      component={PreTest}
+                    />
+                    <Route
+                      path={hasQuiz ? '/quiz/' : 'miss'}
+                      component={PostTest}
+                    />
+                    <Route path="/conversation" component={Conversation} />
+                    <Route
+                      path={editing ? '/suggested_quizzes' : 'miss'}
+                      component={SuggestedQuizzes}
+                    />
+                    <Route path="/:position/" component={CaseElement} />
+                  </Switch>
+                </div>
+              </ContentItemSelectionContextProvider>
+            </Router>
+          </GalaDragDropContext>
         </DocumentTitle>
       </ErrorBoundary>
     )

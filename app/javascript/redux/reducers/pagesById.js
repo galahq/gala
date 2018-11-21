@@ -3,7 +3,10 @@
  * @flow
  */
 
-import { map, without, insert } from 'ramda'
+import { values, map, without } from 'ramda'
+import produce from 'immer'
+
+import { reorder } from 'shared/functions'
 
 import type { PagesState } from 'redux/state'
 import type {
@@ -11,11 +14,18 @@ import type {
   AddPageAction,
   RemoveCardAction,
   AddCardAction,
+  ReorderCardAction,
+  ReplaceCardAction,
 } from 'redux/actions'
 
 export default function pagesById (
   state: PagesState = ({ ...window.caseData.pages }: PagesState),
-  action: UpdatePageAction | AddPageAction | RemoveCardAction | AddCardAction
+  action: | UpdatePageAction
+    | AddPageAction
+    | RemoveCardAction
+    | AddCardAction
+    | ReorderCardAction
+    | ReplaceCardAction
 ): PagesState {
   switch (action.type) {
     case 'UPDATE_PAGE':
@@ -35,15 +45,42 @@ export default function pagesById (
 
     case 'ADD_CARD': {
       const { pageId, data } = action
-      const { id, position } = data
+      const { id } = data
       const oldPage = state[pageId]
       return {
         ...state,
         [pageId]: {
           ...oldPage,
-          cards: insert(position - 1, id, oldPage.cards),
+          cards: [...oldPage.cards, id],
         },
       }
+    }
+
+    case 'REORDER_CARD': {
+      const { id, destination } = action
+
+      return produce(state, draft => {
+        const page = values(draft).find(({ cards }) => cards.includes(id))
+        if (page == null) return
+
+        page.cards = reorder(page.cards.indexOf(id), destination, page.cards)
+      })
+    }
+
+    case 'REPLACE_CARD': {
+      const {
+        cardId,
+        newCard: { pageId, position },
+      } = action
+
+      return produce(state, draft => {
+        const page = draft[pageId]
+        page.cards = reorder(
+          page.cards.indexOf(cardId),
+          position - 1,
+          page.cards
+        )
+      })
     }
 
     case 'REMOVE_CARD': {

@@ -8,6 +8,7 @@ import type {
   ClearUnsavedAction,
   ToggleEditingAction,
   UpdateCaseAction,
+  ReorderCardAction,
   UpdateCardContentsAction,
   UpdatePageAction,
   UpdatePodcastAction,
@@ -21,6 +22,7 @@ type Action =
   | ClearUnsavedAction
   | ToggleEditingAction
   | UpdateCaseAction
+  | ReorderCardAction
   | UpdateCardContentsAction
   | UpdatePageAction
   | UpdatePodcastAction
@@ -69,6 +71,7 @@ function edit (state: ?EditState, action: Action): EditState {
         },
       }
 
+    case 'REORDER_CARD':
     case 'UPDATE_CARD_CONTENTS':
       return {
         ...state,

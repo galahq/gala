@@ -5,6 +5,7 @@
 
 import { EditorState, convertFromRaw } from 'draft-js'
 import { decorator } from 'draft/config'
+import produce from 'immer'
 
 // $FlowFixMe
 import {
@@ -17,6 +18,7 @@ import {
   view,
   set,
   reduce,
+  values,
 } from 'ramda'
 
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
@@ -33,6 +35,7 @@ import type {
   AddCommentThreadAction,
   RemoveCommentThreadAction,
   AddPodcastAction,
+  ReorderCardAction,
 } from 'redux/actions'
 
 const { forceSelection } = EditorState
@@ -43,6 +46,7 @@ type Action =
   | ApplySelectionAction
   | ReplaceCardAction
   | AddCardAction
+  | ReorderCardAction
   | RemoveCardAction
   | ParseAllCardsAction
   | AddCommentThreadAction
@@ -82,14 +86,20 @@ function cardsById (
       }
     }
 
-    case 'REPLACE_CARD':
-      return {
-        ...state,
-        [action.cardId]: {
-          ...action.newCard,
-          editorState: parseEditorStateFromPersistedCard(action.newCard),
-        },
-      }
+    case 'REPLACE_CARD': {
+      const { cardId, newCard } = action
+      return produce(state, draft => {
+        draft = updatePositions(draft, cardId, newCard.position)
+        draft[cardId] = newCard
+        draft[cardId].editorState = parseEditorStateFromPersistedCard(newCard)
+      })
+    }
+
+    case 'REORDER_CARD': {
+      const { id, destination } = action
+
+      return updatePositions(state, id, destination + 1)
+    }
 
     case 'REMOVE_CARD':
       return omit([action.id], state)
@@ -236,4 +246,24 @@ function addCommentThreads (content: RawDraftContentState, card: Card) {
   )
 
   return reduce(setInlineStylesForComment, content, attached(commentThreads))
+}
+
+// NOTE: position is 1-indexed!
+function updatePositions (state, id, destination) {
+  return produce(state, draft => {
+    const card = draft[id]
+    const source = card.position
+
+    const otherCardsOnPage = values(draft).filter(c => {
+      return c.id !== card.id && c.pageId === card.pageId
+    })
+
+    otherCardsOnPage.forEach(other => {
+      const { position } = other
+      if (position > source && position <= destination) --other.position
+      if (position < source && position >= destination) ++other.position
+    })
+
+    card.position = destination
+  })
 }

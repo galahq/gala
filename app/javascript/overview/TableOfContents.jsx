@@ -6,135 +6,122 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { Link, withRouter } from 'react-router-dom'
-import HTML5Backend from 'react-dnd-html5-backend'
-import { DropTarget, DragDropContext } from 'react-dnd'
-import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
+import { Droppable } from 'react-beautiful-dnd'
 
 import { createPage, createPodcast, createActivity } from 'redux/actions'
 
-import { ItemTypes } from 'shared/dndConfig'
 import TableOfContentsElement from './TableOfContentsElement'
+import {
+  Title,
+  OuterContainer,
+  Container,
+  NoElements,
+  List,
+  Actions,
+  AddButton,
+  AssessmentButton,
+} from 'table_of_contents/shared'
 
 import PostTestLink from 'quiz/PostTestLink'
 
-import type { State } from 'redux/state'
+import type { State, CaseElement } from 'redux/state'
 
 function mapStateToProps ({ caseData, edit, quiz }: State) {
   return {
     caseSlug: caseData.slug,
-    elements: caseData.caseElements,
+    caseElements: caseData.caseElements,
     disabled: !caseData.reader,
     editing: edit.inProgress,
     hasQuiz: !!quiz.questions && quiz.questions.length > 0,
   }
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
-class TableOfContents extends React.Component<*> {
-  render () {
-    const {
-      caseSlug,
-      editing,
-      elements,
-      disabled,
-      connectDropTarget,
-      onSidebar,
-      createPage,
-      createPodcast,
-      createActivity,
-      hasQuiz,
-    } = this.props
-    return (
+type Props = {
+  caseSlug: string,
+  createActivity: typeof createActivity,
+  createPage: typeof createPage,
+  createPodcast: typeof createPodcast,
+  disabled: boolean,
+  editing: boolean,
+  caseElements: CaseElement[],
+  hasQuiz: boolean,
+  onSidebar: boolean,
+}
+
+function TableOfContents ({
+  caseSlug,
+  createActivity,
+  createPage,
+  createPodcast,
+  disabled,
+  editing,
+  caseElements,
+  hasQuiz,
+  onSidebar,
+}: Props) {
+  return (
+    <OuterContainer>
       <Container>
-        <nav className={`c-toc pt-dark ${disabled && 'c-toc--disabled'}`}>
-          <h2 className="c-toc__header">
-            <FormattedMessage id="cases.show.toc" />
-          </h2>
+        <Title>
+          <FormattedMessage id="cases.show.toc" />
+        </Title>
 
-          {(elements && elements.length > 0) || editing || (
-            <NoElements>
-              <FormattedMessage id="cases.edit.noElements" />
-            </NoElements>
-          )}
+        {(caseElements && caseElements.length > 0) || editing || (
+          <NoElements>
+            <FormattedMessage id="cases.edit.noElements" />
+          </NoElements>
+        )}
 
-          {connectDropTarget(
-            <ol className="c-toc__list">
-              {elements.map((element, index) => (
+        <Droppable droppableId="table-of-contents" type="CaseElement">
+          {(provided, snapshot) => (
+            <List
+              ref={provided.innerRef}
+              isDraggingOver={snapshot.isDraggingOver}
+            >
+              {caseElements.map((caseElement, index) => (
                 <TableOfContentsElement
-                  element={element}
-                  key={element.id}
-                  position={index + 1}
+                  caseElement={caseElement}
+                  key={caseElement.id}
+                  position={index}
                   readOnly={onSidebar}
                 />
               ))}
+
               {editing && (
-                <div
-                  className={`c-toc__actions pt-button-group pt-fill ${
-                    onSidebar ? 'pt-vertical' : ''
-                  }`}
-                >
-                  <button
-                    type="button"
-                    className="pt-button pt-icon-add"
-                    onClick={() => createPage(caseSlug)}
-                  >
+                <Actions vertical={onSidebar}>
+                  <AddButton onClick={() => createPage(caseSlug)}>
                     <FormattedMessage id="activerecord.models.page" />
-                  </button>
-                  <button
-                    type="button"
-                    className="pt-button pt-icon-add"
-                    onClick={() => createPodcast(caseSlug)}
-                  >
+                  </AddButton>
+                  <AddButton onClick={() => createPodcast(caseSlug)}>
                     <FormattedMessage id="activerecord.models.podcast" />
-                  </button>
-                  <button
-                    type="button"
-                    className="pt-button pt-icon-add"
-                    onClick={() => createActivity(caseSlug)}
-                  >
+                  </AddButton>
+                  <AddButton onClick={() => createActivity(caseSlug)}>
                     <FormattedMessage id="activerecord.models.activity" />
-                  </button>
-                </div>
+                  </AddButton>
+                </Actions>
               )}
-            </ol>
+
+              {provided.placeholder}
+            </List>
           )}
+        </Droppable>
 
-          {hasQuiz && <PostTestLink />}
-        </nav>
-
-        {editing && (
-          <AssessmentButton to="/suggested_quizzes">
-            <FormattedMessage id="cases.edit.suggestedQuizzes.prePostAssessment" />
-          </AssessmentButton>
-        )}
+        {hasQuiz && <PostTestLink />}
       </Container>
-    )
-  }
-}
 
-const DragDropTableOfContents = DragDropContext(HTML5Backend)(
-  DropTarget(ItemTypes.CASE_ELEMENT, { drop: () => {} }, connect => ({
-    connectDropTarget: connect.dropTarget(),
-  }))(TableOfContents)
-)
+      {editing && (
+        <AssessmentButton to="/suggested_quizzes">
+          <FormattedMessage id="cases.edit.suggestedQuizzes.prePostAssessment" />
+        </AssessmentButton>
+      )}
+    </OuterContainer>
+  )
+}
 
 export default withRouter(
   connect(
     mapStateToProps,
     { createPage, createPodcast, createActivity }
-  )(DragDropTableOfContents)
+  )(TableOfContents)
 )
-
-const Container = styled.div.attrs({ className: 'pt-dark' })``
-
-const NoElements = styled.p`
-  margin: 0.5em;
-  opacity: 0.5;
-`
-
-const AssessmentButton = styled(Link).attrs({
-  className: 'pt-button pt-fill pt-icon-properties pt-intent-success',
-})`
-  margin-top: 1em;
-`

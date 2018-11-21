@@ -3,8 +3,9 @@
  */
 
 import { Orchard } from 'shared/orchard'
+import { reorder } from 'shared/functions'
 
-import type { ThunkAction, Dispatch } from 'redux/actions'
+import type { ThunkAction, Dispatch, GetState } from 'redux/actions'
 import type { CaseElement } from 'redux/state'
 
 export type UpdateCaseElementAction = {
@@ -31,14 +32,37 @@ export function updateCaseElements (data: {
   return { type: 'UPDATE_CASE_ELEMENTS', data }
 }
 
+export function reorderCaseElements (
+  sourceIndex: number,
+  destinationIndex: number
+): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const {
+      caseData: { caseElements },
+    } = getState()
+
+    const element = caseElements[sourceIndex]
+
+    dispatch(
+      updateCaseElements({
+        caseElements: reorder(sourceIndex, destinationIndex, caseElements),
+      })
+    )
+
+    dispatch(persistCaseElementReordering(element, destinationIndex))
+  }
+}
+
 export function persistCaseElementReordering (
-  id: string,
-  index: number
+  caseElement: CaseElement,
+  destinationIndex: number
 ): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const caseElements = (await Orchard.espalier(`case_elements/${id}`, {
-      case_element: { position: index + 1 },
-    }): CaseElement[])
+    const caseElements = await Orchard.espalier(
+      `case_elements/${caseElement.id}`,
+      { case_element: { position: destinationIndex + 1 }}
+    )
+
     dispatch(updateCaseElements({ caseElements }))
   }
 }
