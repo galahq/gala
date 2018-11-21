@@ -44,16 +44,13 @@ export default function pagesById (
       }
 
     case 'ADD_CARD': {
-      const { pageId, data } = action
-      const { id } = data
-      const oldPage = state[pageId]
-      return {
-        ...state,
-        [pageId]: {
-          ...oldPage,
-          cards: [...oldPage.cards, id],
-        },
-      }
+      const {
+        pageId,
+        data: { id },
+      } = action
+      return produce(state, draft => {
+        draft[pageId].cards.push(`${id}`)
+      })
     }
 
     case 'REORDER_CARD': {
