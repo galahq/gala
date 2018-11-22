@@ -34,6 +34,10 @@ export const List = styled.ol`
   padding: 0;
   width: 100%;
 
+  #Sidebar & {
+    width: 224px;
+  }
+
   ${p =>
     p.isDraggingOver &&
     css`

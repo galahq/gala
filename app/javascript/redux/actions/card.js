@@ -2,13 +2,13 @@
  * @flow
  */
 
-import { setUnsaved, displayToast } from 'redux/actions'
+import { createPage, setUnsaved, displayToast } from 'redux/actions'
 
 import { Orchard } from 'shared/orchard'
 import { Intent } from '@blueprintjs/core'
 import { EditorState } from 'draft-js'
 
-import type { ThunkAction, Dispatch } from 'redux/actions'
+import type { ThunkAction, Dispatch, GetState } from 'redux/actions'
 import type { CardsState, Card, Citation } from 'redux/state'
 
 export type SetCardsAction = { type: 'SET_CARDS', cards: CardsState }
@@ -74,11 +74,52 @@ export function reorderCard (
   return { type: 'REORDER_CARD', id, destination }
 }
 
+export function moveCardToNewPage (id: string, pageIndex: number): ThunkAction {
+  return async (dispatch: Dispatch, getState: GetState) => {
+    const {
+      caseData: { slug },
+    } = getState()
+
+    dispatch(removeCard(id))
+    const page = await dispatch(createPage(slug, { position: pageIndex + 1 }))
+    return dispatch(moveCardToPage(id, page.param))
+  }
+}
+
+export function moveCardToExistingPage (
+  id: string,
+  draggableId: string
+): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const [, caseElementId] = draggableId.split('/')
+    const caseElement = getState().caseData.caseElements.find(
+      e => e.param === caseElementId
+    )
+    if (caseElement == null) return
+
+    const { elementType, elementId } = caseElement
+
+    if (elementType === 'Page') {
+      dispatch(removeCard(id))
+      return dispatch(moveCardToPage(id, elementId))
+    }
+  }
+}
+
+function moveCardToPage (cardId, pageId): ThunkAction {
+  return async (dispatch: Dispatch) => {
+    console.log(`moveCardToPage(${cardId}, ${pageId})`)
+    const card = await Orchard.espalier(`cards/${cardId}`, { card: { pageId }})
+    return dispatch(addCard(pageId, card))
+  }
+}
+
 export type RemoveCardAction = {
   type: 'REMOVE_CARD',
   id: string,
 }
 export function removeCard (id: string): RemoveCardAction {
+  console.log(`removeCard(${id})`)
   return { type: 'REMOVE_CARD', id }
 }
 

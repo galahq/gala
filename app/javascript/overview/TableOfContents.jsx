@@ -73,7 +73,7 @@ function TableOfContents ({
           </NoElements>
         )}
 
-        <Droppable droppableId="table-of-contents" type="CaseElement">
+        <Droppable droppableId="table-of-contents" isCombineEnabled={onSidebar}>
           {(provided, snapshot) => (
             <List
               ref={provided.innerRef}

@@ -166,6 +166,7 @@ export type CaseElement = {
   elementStore: CaseElementStore,
   elementType: string,
   id: string,
+  param: string,
   position: number,
 }
 

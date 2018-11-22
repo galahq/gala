@@ -63,7 +63,7 @@ function TableOfContentsElement ({
 }: Props) {
   return (
     <Draggable
-      draggableId={caseElement.id}
+      draggableId={`caseElements/${caseElement.id}`}
       index={position}
       isDragDisabled={readOnly || !editing}
     >

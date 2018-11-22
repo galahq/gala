@@ -14,11 +14,15 @@ export function addPage (data: Page): AddPageAction {
   return { type: 'ADD_PAGE', data }
 }
 
-export function createPage (caseSlug: string): ThunkAction {
+export function createPage (
+  caseSlug: string,
+  data: $Shape<Page> = {}
+): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const data: Page = await Orchard.graft(`cases/${caseSlug}/pages`, {})
-    dispatch(addPage(data))
-    dispatch(createCard(data.id))
+    const page: Page = await Orchard.graft(`cases/${caseSlug}/pages`, data)
+    dispatch(addPage(page))
+    if (!data.position) dispatch(createCard(page.id))
+    return page
   }
 }
 
