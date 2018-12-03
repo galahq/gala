@@ -841,6 +841,8 @@ es:
     try_again: Intente cambiar tu búsqueda.
   submissions:
     new:
+      a_few_questions: >
+        Before you study this case, please answer a few questions to demonstrate your current level of knowledge.
       before_you_get_started: Before you get started
       check_your_understanding: Check your understanding
       post_case_quiz: Post-case quiz
@@ -848,6 +850,7 @@ es:
         Please answer the following questions to demonstrate your current level of knowledge.
       please_take_this_after_engaging_with_all_elements: >
         After you have engaged with all elements of the case, please take this post-test to check your understanding.
+      take_pre_quiz: Take Pre-Quiz
     show:
       correct_answers_are_below: >
         The correct answers are shown below, highlighted green, so you may check your work.
