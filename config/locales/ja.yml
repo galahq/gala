@@ -1,4 +1,16 @@
 ja:
+  activemodel:
+    attributes:
+      confirm_deletion_form:
+        kicker_confirmation: Confirmation of case title
+    errors:
+      models:
+        confirm_deletion_form:
+          attributes:
+            kicker_confirmation:
+              match: does not match the expected value
+    models:
+      confirm_deletion_form: confirmation
   activerecord:
     attributes:
       case:
@@ -154,6 +166,14 @@ ja:
     new:
       untitled: タイトルなし
   cases:
+    deletions:
+      new:
+        are_you_sure: Are you sure you want to delete this case?
+        confirm_deletion: Confirm Deletion
+        this_action_cannot_be_undone: |
+          This action _cannot_ be undone. This will permanently delete the
+          case, its elements, Edgenotes, comments, forums, quizzes, and
+          quiz submissions.
     edit:
       add_authors: 著者を追加
       author_institution: 著者の大学・学部
@@ -179,6 +199,16 @@ ja:
       replace_teaching_guide: Replace teaching guide
       save: 保存
       stop_editing: 編集を停止する
+      suggested_quizzes:
+        all_suggested_quizzes: All Suggested Quizzes
+        confirm_delete: Are you sure you want to delete this quiz?
+        delete_quiz: Delete Quiz
+        description: >
+          Include a suggested pre/post assessment that instructors can use when deploying your case.
+        error: Questions cannot be blank and correct answers are required.
+        pre_post_assessment: Pre/Post Assessment
+        suggest_an_assessment: Suggest an Assessment
+        title: Suggested Quizzes
       translator_name: 翻訳者の名前
       unfeature_case: 注目の事例研究から除去する
       unpublish_case: 非公開にする
@@ -574,6 +604,9 @@ ja:
       ol: "Block style: Ordered list item."
       ul: "Block style: Unordered list item."
     help: Help
+    label:
+      confirm_deletion_form:
+        kicker_confirmation: Please type in the title of the case to confirm
     less:
       read_more: 続きを読む
     list:
@@ -595,6 +628,8 @@ ja:
       save: '%{model} を保存します'
       submit: 保存する
       update: 更新する
+      confirm_deletion_form:
+        create: I’m sure I want to delete this case
   icons:
     activity:
       calculate: Calculate
@@ -743,10 +778,14 @@ ja:
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
+    new:
+      new_quiz: New Quiz
     quiz:
       multiple_choice_questions:
+        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
         other: "%{count} Multiple Choice Questions"
       open_ended_questions:
+        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
         other: "%{count} Open Ended Questions"
     show:
       the_correct_answer_is: >
