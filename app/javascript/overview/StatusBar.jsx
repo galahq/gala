@@ -85,14 +85,20 @@ function StatusBar ({
                 : null,
           ],
           [
-            editing || {
-              className: selecting && 'pt-intent-success',
-              message: 'deployments.new.teachThisCase',
-              icon: 'follower',
-              onClick: selecting
-                ? () => onSelect(caseSlug)
-                : () => (window.location = links.teach),
-            },
+            editing
+              ? {
+                message: 'editorships.new.addEditor',
+                icon: 'new-person',
+                onClick: () => (window.location = links.newEditorship),
+              }
+              : {
+                className: selecting && 'pt-intent-success',
+                message: 'deployments.new.teachThisCase',
+                icon: 'follower',
+                onClick: selecting
+                  ? () => onSelect(caseSlug)
+                  : () => (window.location = links.teach),
+              },
 
             !selecting &&
               editable &&
