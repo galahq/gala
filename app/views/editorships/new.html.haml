@@ -27,3 +27,7 @@
 
         = f.submit I18n.t('editorships.new.add_editor'),
                    class: %w[pt-button pt-intent-success]
+
+  - unless @case.editorships.empty?
+    .admin-card__sidebar.pt-dark.spaced--compact
+      = render 'list', editorships: @case.editorships

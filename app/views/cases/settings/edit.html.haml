@@ -17,20 +17,7 @@
       = render 'featured_form', kase: @case
 
   .admin-card__sidebar.pt-dark.spaced--compact
-    %h2.deployments__group= t '.case_editors'
-
-    - @editorships.sort_by(&:editor_name).each do |editorship|
-      .editorship.non-spaced
-        %span.pt-tag.pt-minimal= editorship.editor_name
-        - unless editorship.editor == current_reader
-          = form_with url: editorship_path(editorship),
-                      method: :delete, local: true do |f|
-            = f.button '',
-                       aria: { label: I18n.t('editorships.destroy.remove') },
-                       class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated],
-                       data: { confirm: I18n.t('editorships.destroy.are_you_sure',
-                                               name: editorship.editor_name) }
-
+    = render 'editorships/list', editorships: @editorships
 
     .admin-card__sidebar__actions
       = link_to new_case_editorship_path @case do
