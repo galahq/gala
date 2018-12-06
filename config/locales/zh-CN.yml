@@ -220,7 +220,6 @@ zh-CN:
       create_a_case: 新建案例
     settings:
       edit:
-        case_editors: 案例作者
         change_library: 更换案例库
         change_url: 更改案例链接
         edit_case_settings: 编辑案例设置
@@ -507,6 +506,8 @@ zh-CN:
       are_you_sure: |
         您确定要移除 %{name} 作为此案例编辑的身份吗？
       remove: 删除合作者
+    list:
+      case_editors: Case editors
     new:
       add_editor: 新增合作者
       create_collaboratively: 邀请他人与你合作写这个案例
