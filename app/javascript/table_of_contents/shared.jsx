@@ -14,9 +14,7 @@ export const Title = styled.h2`
   margin: 1.6em 0 0.8em 0;
 `
 
-export const OuterContainer = styled.div.attrs({ className: 'pt-dark' })`
-  position: relative;
-`
+export const OuterContainer = styled.div.attrs({ className: 'pt-dark' })``
 
 export const Container = styled.nav.attrs(p => ({
   className: `c-toc ${p.disabled ? 'c-toc--disabled' : ''}`,
