@@ -53,9 +53,9 @@ function StatusBar ({
     <ContentItemSelectionContextConsumer>
       {({ selecting, onSelect }) => {
         const groups = [
-          pathname === '/'
-            ? [
-              {
+          [
+            pathname === '/'
+              ? {
                 message: 'catalog.catalog',
                 icon: 'home',
                 onClick: () =>
@@ -63,21 +63,20 @@ function StatusBar ({
                     /cases.*/,
                     ''
                   )),
-              },
-              {
-                disabled: !commentable || !reader || !reader.enrollment,
-                message: 'comments.index.conversation',
-                icon: 'chat',
-                onClick: () => history.push('/conversation'),
-              },
-            ]
-            : [
-              {
+              }
+              : {
                 message: 'cases.show.backToOverview',
                 icon: 'arrow-left',
                 onClick: () => history.push('/'),
               },
-            ],
+
+            {
+              disabled: !commentable || !reader || !reader.enrollment,
+              message: 'comments.index.conversation',
+              icon: 'chat',
+              onClick: () => history.push('/conversation'),
+            },
+          ],
           [
             editing
               ? { message: 'cases.edit.justChangeTheText' }
@@ -86,14 +85,20 @@ function StatusBar ({
                 : null,
           ],
           [
-            editing || {
-              className: selecting && 'pt-intent-success',
-              message: 'deployments.new.teachThisCase',
-              icon: 'follower',
-              onClick: selecting
-                ? () => onSelect(caseSlug)
-                : () => (window.location = links.teach),
-            },
+            editing
+              ? {
+                message: 'editorships.new.addEditor',
+                icon: 'new-person',
+                onClick: () => (window.location = links.newEditorship),
+              }
+              : {
+                className: selecting && 'pt-intent-success',
+                message: 'deployments.new.teachThisCase',
+                icon: 'follower',
+                onClick: selecting
+                  ? () => onSelect(caseSlug)
+                  : () => (window.location = links.teach),
+              },
 
             !selecting &&
               editable &&

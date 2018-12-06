@@ -9,6 +9,7 @@ module Cases
     attribute :reader, if: :reader_signed_in?
     attribute :statistics, if: :reader_signed_in?
 
+    link(:new_editorship) { new_case_editorship_path object }
     link(:new_translation) { new_case_translation_path object }
     link(:settings) { edit_case_settings_path object }
     link(:taggings) { case_taggings_path object }
