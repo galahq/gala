@@ -31,7 +31,10 @@
         %thead
           %td
           %td= t 'activerecord.attributes.case.case_title'
-          %td= t 'activerecord.attributes.case.slug'
+          - if current_reader.has_role? :editor
+            %td First Editor
+          - else
+            %td= t 'activerecord.attributes.case.slug'
           %td= t 'activerecord.attributes.case.locale'
           %td= t 'activerecord.attributes.case.library'
           %td= t 'activerecord.attributes.case.published'
@@ -57,9 +60,12 @@
                         = localize kase.featured_at.to_date
                   = kase.title
 
-              %td
-                = link_to case_path kase do
-                  %code= kase.slug
+              - if current_reader.has_role? :editor
+                %td= kase.editorships.first&.editor_name
+              - else
+                %td
+                  = link_to case_path kase do
+                    %code= kase.slug
 
               %td= Translation.language_name kase.locale
 
