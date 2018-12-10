@@ -175,11 +175,13 @@ export const UnconnectedBillboardTitle = ({
   )
 }
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updateCase, displayErrorToast }
 )(UnconnectedBillboardTitle)
 
+// $FlowFixMe
 export const CoverImageContainer = styled.div.attrs({
   className: 'BillboardTitle pt-dark',
 })`

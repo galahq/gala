@@ -77,6 +77,7 @@ function Podcast ({
   )
 }
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updatePodcast, displayErrorToast }

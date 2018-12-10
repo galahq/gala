@@ -85,6 +85,7 @@ const Item = SortableElement(
   )
 )
 
+// $FlowFixMe
 const Container = SortableContainer(
   ({ newItem, items, render, onChange }: ContainerProps<*>) => (
     <div>

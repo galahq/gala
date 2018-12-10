@@ -99,6 +99,7 @@ const Lock = ({
   </>
 )
 
+// $FlowFixMe
 export default connect(mapStateToProps, mapDispatchToProps)(Lock)
 
 /**

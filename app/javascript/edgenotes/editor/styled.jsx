@@ -16,6 +16,7 @@ export const Overlay = styled.div`
   z-index: 1;
 `
 
+// $FlowFixMe
 export const EditButton = styled(Button).attrs({
   intent: Intent.SUCCESS,
   icon: 'edit',
@@ -28,6 +29,7 @@ export const EditButton = styled(Button).attrs({
   box-shadow: 0 0 10px white;
 `
 
+// $FlowFixMe
 export const Dialog = styled(BaseDialog)`
   width: 772px;
 
@@ -38,6 +40,7 @@ export const Dialog = styled(BaseDialog)`
     `};
 `
 
+// $FlowFixMe
 export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
   align-items: flex-start;
   display: flex;

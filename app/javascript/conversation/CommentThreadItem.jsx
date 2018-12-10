@@ -159,6 +159,7 @@ const CommentThreadItem = ({
     </ConversationMetadata>
   </CommentThreadLink>
 )
+// $FlowFixMe
 export default withRouter(
   injectIntl(connect(mapStateToProps, mapDispatchToProps)(CommentThreadItem))
 )

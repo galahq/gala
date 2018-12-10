@@ -48,6 +48,7 @@ class ResponseForm extends React.Component<
     const { editorState } = this.state
     if (reader == null) return null
     return (
+      // $FlowFixMe
       <Container ref={(el: HTMLDivElement) => (this.container = el)}>
         <Identicon width={32} reader={reader} />
         <Input>
@@ -105,6 +106,7 @@ const Container = styled.div`
   }
 `
 
+// $FlowFixMe
 export const EmptyResponseFormContainer = styled(Container)`
   border-top: none;
   padding: 1px;

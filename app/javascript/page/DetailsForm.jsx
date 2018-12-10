@@ -69,6 +69,7 @@ const DetailsForm = ({
 )
 export default DetailsForm
 
+// $FlowFixMe
 const Container = styled.fieldset.attrs({ className: 'pt-card' })`
   background-color: rgba(37, 57, 75, 0.5) !important;
   border: 1px solid white;
