@@ -3,6 +3,8 @@
  * @flow
  */
 
+import produce from 'immer'
+
 import type { EditState, ReaderState } from 'redux/state'
 import type {
   ClearUnsavedAction,
@@ -10,10 +12,13 @@ import type {
   UpdateCaseAction,
   ReorderCardAction,
   UpdateCardContentsAction,
+  RemoveCardAction,
   UpdatePageAction,
   UpdatePodcastAction,
   UpdateEdgenoteAction,
+  RemoveEdgenoteAction,
   UpdateSuggestedQuizAction,
+  RemoveSuggestedQuizAction,
   EnqueueLockForDeletionAction,
   RemoveLockFromDeletionQueueAction,
 } from 'redux/actions'
@@ -24,10 +29,13 @@ type Action =
   | UpdateCaseAction
   | ReorderCardAction
   | UpdateCardContentsAction
+  | RemoveCardAction
   | UpdatePageAction
   | UpdatePodcastAction
   | UpdateEdgenoteAction
+  | RemoveEdgenoteAction
   | UpdateSuggestedQuizAction
+  | RemoveSuggestedQuizAction
   | EnqueueLockForDeletionAction
   | RemoveLockFromDeletionQueueAction
 
@@ -46,102 +54,74 @@ function edit (state: ?EditState, action: Action): EditState {
     }
   }
 
-  switch (action.type) {
-    case 'CLEAR_UNSAVED':
-      return {
-        ...state,
-        changed: false,
-        unsavedChanges: {},
-      }
+  return produce(state, draft => {
+    switch (action.type) {
+      case 'CLEAR_UNSAVED':
+        draft.changed = false
+        draft.unsavedChanges = {}
+        break
 
-    case 'TOGGLE_EDITING':
-      return {
-        ...state,
-        inProgress: !state.inProgress,
-      }
+      case 'TOGGLE_EDITING':
+        draft.inProgress = !draft.inProgress
+        break
 
-    case 'UPDATE_CASE':
-      if (action.needsSaving === false) return state
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          caseData: true,
-        },
-      }
+      case 'UPDATE_CASE':
+        if (action.needsSaving === false) break
+        draft.changed = true
+        draft.unsavedChanges.caseData = true
+        break
 
-    case 'REORDER_CARD':
-    case 'UPDATE_CARD_CONTENTS':
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`cards/${action.id}`]: true,
-        },
-      }
+      case 'REORDER_CARD':
+      case 'UPDATE_CARD_CONTENTS':
+        draft.changed = true
+        draft.unsavedChanges[`cards/${action.id}`] = true
+        break
 
-    case 'UPDATE_PAGE':
-      if (action.needsSaving === false) return state
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`pages/${action.id}`]: true,
-        },
-      }
+      case 'REMOVE_CARD':
+        delete draft.unsavedChanges[`cards/${action.id}`]
+        break
 
-    case 'UPDATE_PODCAST':
-      if (action.needsSaving === false) return state
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`podcasts/${action.id}`]: true,
-        },
-      }
+      case 'UPDATE_PAGE':
+        if (action.needsSaving === false) break
+        draft.changed = true
+        draft.unsavedChanges[`pages/${action.id}`] = true
+        break
 
-    case 'UPDATE_EDGENOTE':
-      if (action.needsSaving === false) return state
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`edgenotes/${action.slug}`]: true,
-        },
-      }
+      case 'UPDATE_PODCAST':
+        if (action.needsSaving === false) break
+        draft.changed = true
+        draft.unsavedChanges[`podcasts/${action.id}`] = true
+        break
 
-    case 'UPDATE_SUGGESTED_QUIZ':
-      return {
-        ...state,
-        changed: true,
-        unsavedChanges: {
-          ...state.unsavedChanges,
-          [`quizzes/${action.param}`]: true,
-        },
-      }
+      case 'UPDATE_EDGENOTE':
+        if (action.needsSaving === false) break
+        draft.changed = true
+        draft.unsavedChanges[`edgenotes/${action.slug}`] = true
+        break
 
-    case 'ENQUEUE_LOCK_FOR_DELETION':
-      return {
-        ...state,
-        locksToDelete: [...state.locksToDelete, action.gid],
-      }
+      case 'REMOVE_EDGENOTE':
+        delete draft.unsavedChanges[`edgenotes/${action.slug}`]
+        break
 
-    case 'REMOVE_LOCK_FROM_DELETION_QUEUE': {
-      const { gid } = action
-      return {
-        ...state,
-        locksToDelete: state.locksToDelete.filter(toDelete => toDelete !== gid),
+      case 'UPDATE_SUGGESTED_QUIZ':
+        draft.changed = true
+        draft.unsavedChanges[`quizzes/${action.param}`] = true
+        break
+
+      case 'REMOVE_SUGGESTED_QUIZ':
+        delete draft.unsavedChanges[`quizzes/${action.param}`]
+        break
+
+      case 'ENQUEUE_LOCK_FOR_DELETION':
+        draft.locksToDelete.push(action.gid)
+        break
+
+      case 'REMOVE_LOCK_FROM_DELETION_QUEUE': {
+        draft.locksToDelete.splice(draft.locksToDelete.indexOf(action.gid), 1)
+        break
       }
     }
-
-    default:
-      return state
-  }
+  })
 }
 
 export default edit

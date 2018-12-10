@@ -22,6 +22,7 @@
   "plugins": ["babel", "import", "react", "jsx-a11y", "flowtype"],
   "rules": {
     "no-debugger": 0,
+    "indent": 0,
     "babel/semi": [2, "never"],
     "flowtype/semi": [2, "never"],
     "valid-typeof": 0,
@@ -46,8 +47,8 @@
     "react/prefer-es6-class": 2,
     "react/prefer-stateless-function": 2,
     "react/jsx-handler-names": 2,
-    "react/jsx-indent": [2, 2],
-    "react/jsx-indent-props": [2, 2],
+    "react/jsx-indent": 0,
+    "react/jsx-indent-props": 0,
     "react/jsx-key": 2,
     "react/jsx-max-props-per-line": [2, { "maximum": 1, "when": "multiline" }],
     "react/jsx-no-bind": [
