@@ -8,6 +8,7 @@
 
 const React = require('react')
 
+// $FlowFixMe
 const CompLibrary = require('../../core/CompLibrary.js')
 const MarkdownBlock = CompLibrary.MarkdownBlock /* Used to read markdown */
 const Container = CompLibrary.Container
@@ -27,6 +28,7 @@ function pageUrl (page, language) {
   return siteConfig.baseUrl + (language ? language + '/' : '') + page
 }
 
+// $FlowFixMe
 class Button extends React.Component {
   render () {
     return (
@@ -39,6 +41,7 @@ class Button extends React.Component {
   }
 }
 
+// $FlowFixMe
 Button.defaultProps = {
   target: '_self',
 }
@@ -72,6 +75,7 @@ const PromoSection = props => (
   </div>
 )
 
+// $FlowFixMe
 class HomeSplash extends React.Component {
   render () {
     let language = this.props.language || ''
@@ -97,12 +101,15 @@ class HomeSplash extends React.Component {
 const Block = props => (
   <Container
     padding={['bottom', 'top']}
+    // $FlowFixMe
     id={props.id}
+    // $FlowFixMe
     background={props.background}
   >
     <GridBlock
       align={props.centered && 'center'}
       contents={props.children}
+      // $FlowFixMe
       layout={props.layout}
     />
   </Container>
@@ -163,6 +170,7 @@ const Description = props => (
   </div>
 )
 
+// $FlowFixMe
 class Index extends React.Component {
   render () {
     let language = this.props.language || ''

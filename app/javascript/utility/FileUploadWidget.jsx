@@ -54,6 +54,7 @@ const FileUploadWidget = ({
 
 export default FileUploadWidget
 
+// $FlowFixMe
 export const PositionedFileUploadWidget = styled(FileUploadWidget)`
   position: absolute;
   top: 10px;

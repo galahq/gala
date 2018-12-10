@@ -45,6 +45,7 @@ const EdgenotesCard = ({ edgenoteSlugs, oldStyle }) => {
   )
 }
 
+// $FlowFixMe
 export default connect(mapStateToProps, () => ({}))(EdgenotesCard)
 
 export function getEdgenoteSlugs (editorState: EditorState): string[] {

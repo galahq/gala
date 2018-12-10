@@ -46,4 +46,5 @@ const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   </ContentItemSelectionContextConsumer>
 )
 
+// $FlowFixMe
 export default connect(mapStateToProps, { enrollReader })(EnrollForm)

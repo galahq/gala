@@ -22,6 +22,7 @@ import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 import withGetEdgenote from './withGetEdgenote'
 import { applySmartTypography } from 'shared/draftHelpers'
 
+import type { DragHandleProps } from 'react-beautiful-dnd'
 import type { ContextRouter } from 'react-router-dom'
 import type { DraftHandleValue } from 'draft-js/lib/DraftHandleValue'
 
@@ -33,6 +34,7 @@ import type { State, Citation } from 'redux/state'
  */
 type OwnProps = {|
   ...ContextRouter,
+  dragHandleProps: DragHandleProps,
   id: string,
   nonNarrative: boolean,
   title?: React.Node,
@@ -199,6 +201,7 @@ function mergeProps (
   }
 }
 
+// $FlowFixMe
 export default withRouter(
   connect(
     // $FlowFixMe

@@ -174,6 +174,7 @@ class Case extends React.Component<{
   }
 }
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   {

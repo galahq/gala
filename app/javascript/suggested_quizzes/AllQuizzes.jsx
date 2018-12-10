@@ -36,7 +36,9 @@ function AllQuizzes ({
   onCreateQuiz,
   quizzes,
 }: Props) {
-  useEffect(() => fetchSuggestedQuizzes(), [])
+  useEffect(() => {
+    fetchSuggestedQuizzes()
+  }, [])
 
   function handleDeleteQuiz (param) {
     if (

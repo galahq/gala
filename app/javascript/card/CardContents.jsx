@@ -10,7 +10,6 @@ import { injectIntl } from 'react-intl'
 
 import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
-import { Draggable } from 'react-beautiful-dnd'
 
 import { commentThreadsOpen } from 'shared/routes'
 import { getStyleMap } from 'draft/config'
@@ -272,7 +271,7 @@ const Card = styled.div`
 
   & .c-edgenote-entity {
     ${p =>
-    p.editable &&
+      p.editable &&
       css`
         pointer-events: none;
       `};

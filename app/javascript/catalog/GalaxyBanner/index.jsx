@@ -21,6 +21,7 @@ const GalaxyBanner = () => (
 )
 export default GalaxyBanner
 
+// $FlowFixMe
 const Container = styled.aside.attrs({ className: 'pt-card pt-elevation-3' })`
   align-items: center;
   background-color: #02284b;
