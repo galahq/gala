@@ -56,6 +56,7 @@ class Less extends React.Component<
             <InnerContainer
               open={open}
               height={this._getHeight()}
+              // $FlowFixMe
               ref={(ref: HTMLElement) => (this._innerContainer = ref)}
               onClick={this.handleOpen}
             >

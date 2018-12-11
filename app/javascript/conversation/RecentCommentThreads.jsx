@@ -55,6 +55,7 @@ const RecentCommentThreads = ({
     </ScrollView>
   </Container>
 )
+// $FlowFixMe
 export default connect(mapStateToProps, () => ({}))(RecentCommentThreads)
 
 const Container = styled.div`

@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components'
 import { FormattedDate } from 'react-intl'
 import Markdown from 'utility/Markdown'
 
+// $FlowFixMe
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
   className: 'pt-breadcrumbs',
 })`

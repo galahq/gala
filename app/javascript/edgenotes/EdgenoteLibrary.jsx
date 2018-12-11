@@ -120,6 +120,7 @@ class EdgenoteLibrary extends React.Component<Props> {
     )
   }
 }
+// $FlowFixMe
 export default connect(mapStateToProps, { createEdgenote, deleteEdgenote })(
   injectIntl(EdgenoteLibrary)
 )

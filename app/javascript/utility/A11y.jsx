@@ -137,6 +137,7 @@ class ActiveFocusContainer extends React.Component<{
   priority: number,
   children: React.Node,
 }> {
+  // $FlowFixMe
   static activeFocusContainers = new SortedList()
   containerElement: ?HTMLDivElement
 

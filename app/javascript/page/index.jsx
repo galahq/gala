@@ -81,6 +81,7 @@ const Page = (props: Props) => {
   )
 }
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updatePage, createCard }

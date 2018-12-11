@@ -52,6 +52,7 @@ const CatalogToolbar = ({ author, history, instructor }: Props) => (
   </ContentItemSelectionContextConsumer>
 )
 
+// $FlowFixMe
 export default withRouter(CatalogToolbar)
 
 class SearchField extends React.Component<

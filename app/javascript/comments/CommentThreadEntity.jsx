@@ -46,6 +46,7 @@ const CommentThreadEntity = ({ onClick, children }) => {
   )
 }
 
+// $FlowFixMe
 export default withRouter(
   connect(mapStateToProps, null, mergeProps)(CommentThreadEntity)
 )

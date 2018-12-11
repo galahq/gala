@@ -133,4 +133,5 @@ const EditorDialog = ({
   )
 }
 
+// $FlowFixMe
 export default withExpansion(EditorDialog)
