@@ -62,6 +62,7 @@ function cancelScrollEvent (e: WheelEvent) {
   return false
 }
 
+// $FlowFixMe
 const ScrollViewDiv = styled.div.attrs({ className: 'ScrollView' })`
   max-height: ${({ maxHeightOffset }) =>
     `calc(100vh - (${maxHeightOffset}))` || '100vh'};

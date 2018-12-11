@@ -37,6 +37,7 @@ const state = {
   ui,
 }
 
+// $FlowFixMe
 const reducer = combineReducers(state)
 
 export default reducer

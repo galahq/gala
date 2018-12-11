@@ -8,6 +8,7 @@ import type { QuizState } from 'redux/state'
 import type { RecordQuizSubmissionAction } from 'redux/actions'
 
 const getInitialQuizState = (): QuizState =>
+  // $FlowFixMe
   (window.caseData.quiz: QuizState) || {
     needsPretest: false,
     needsPosttest: false,

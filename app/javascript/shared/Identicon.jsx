@@ -34,6 +34,7 @@ export const identiconStyle = ({
   }
 `
 
+// $FlowFixMe
 const IdenticonDiv = styled.div.attrs({
   'aria-label': ({ presentational, text }) => (presentational ? null : text),
   'aria-hidden': ({ presentational }) => (presentational ? 'true' : null),

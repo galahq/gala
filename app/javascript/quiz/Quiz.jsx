@@ -87,6 +87,7 @@ export function providesQuiz<P> (
 
     render () {
       return (
+        // $FlowFixMe
         <QuizPresenter
           answers={this.state.quizState}
           canSubmit={this._canSubmit()}
@@ -98,5 +99,6 @@ export function providesQuiz<P> (
     }
   }
 
+  // $FlowFixMe
   return connect(mapStateToProps, { submitQuiz })(QuizProvider)
 }

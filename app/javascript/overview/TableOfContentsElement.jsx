@@ -92,6 +92,7 @@ function TableOfContentsElement ({
   )
 }
 
+// $FlowFixMe
 export default withRouter(
   connect(
     mapStateToProps,

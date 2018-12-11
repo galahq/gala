@@ -47,6 +47,7 @@ export const CaseRow = styled.div`
   transition-property: background, border;
 `
 
+// $FlowFixMe
 export const CaseLinkRow = styled(CaseRow.withComponent('a'))`
   &:hover {
     background-color: #415e77;
@@ -80,6 +81,7 @@ export const Element = ({
   )
 }
 
+// $FlowFixMe
 export const ElementImage = styled.div.attrs({ role: 'presentation' })`
   width: 36px;
   height: 36px;

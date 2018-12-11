@@ -80,6 +80,7 @@ class CitationSpan extends React.Component<Props> {
   }
 }
 
+// $FlowFixMe
 const CitationEntity = connect(
   mapStateToProps,
   mapDispatchToProps
