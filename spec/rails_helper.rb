@@ -17,6 +17,8 @@ require 'clowne/rspec'
 
 Capybara.server = :puma
 
+require 'webdrivers' unless ENV['CI']
+
 Capybara.register_driver :chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chrome_options: { args: %w[window-size=1440,900] }
