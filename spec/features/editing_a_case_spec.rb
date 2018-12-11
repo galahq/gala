@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 feature 'Editing a case' do
-  let!(:kase) { create :case_with_elements }
   let!(:reader) { create :reader, :editor }
 
   before { login_as reader }
 
   context 'adding a card' do
     scenario 'is possible' do
+      kase = create :case_with_edgenotes
       visit case_path(kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
@@ -23,6 +23,7 @@ feature 'Editing a case' do
 
   context 'changing a card' do
     scenario 'is possible' do
+      kase = create :case_with_edgenotes
       visit case_path(kase) + '/1'
       click_button 'Edit this case'
       expect(page).to have_content 'To edit this case, just change the text'
@@ -43,6 +44,7 @@ feature 'Editing a case' do
 
     context 'by adding and removing Edgenotes' do
       scenario 'is possible' do
+        kase = create :case_with_elements
         visit case_path(kase) + '/1'
         click_button 'Edit this case'
 
@@ -91,6 +93,7 @@ feature 'Editing a case' do
     end
 
     context 'with a comment thread' do
+      let!(:kase) { create :case_with_edgenotes }
       let!(:global_forum) { kase.forums.find_by community: nil }
       let!(:comment_thread) do
         card = kase.pages.first.cards.first
@@ -159,6 +162,7 @@ feature 'Editing a case' do
 
   context 'removing a card' do
     scenario 'is possible' do
+      kase = create :case_with_edgenotes
       visit case_path(kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
@@ -179,6 +183,7 @@ feature 'Editing a case' do
 
   context 'at the same time as someone else' do
     scenario 'the elements they’re editing are locked' do
+      kase = create :case_with_edgenotes
       other_reader = create :reader, :editor
 
       visit case_path(kase, edit: true)
