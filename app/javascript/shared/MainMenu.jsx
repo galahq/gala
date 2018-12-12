@@ -53,12 +53,12 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
             </Menu>
           }
         >
-          <Row
+          <ButtonRow
             aria-label={formatMessage({ id: 'readers.form.accountOptions' })}
           >
             <Identicon reader={reader} />
             <CaretDown />
-          </Row>
+          </ButtonRow>
         </Popover>
       </Row>
     ) : (
@@ -96,12 +96,13 @@ const CaretDown = styled.span.attrs({
   margin-left: 8px;
   color: rgba(255, 255, 255, 0.5);
 `
-const Row = styled.div.attrs({
-  role: 'button',
-  tabIndex: '0',
-  onKeyPress: () => acceptKeyboardClick,
-})`
+const Row = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
 `
+const ButtonRow = styled(Row).attrs({
+  role: 'button',
+  tabindex: '0',
+  onKeyPress: () => acceptKeyboardClick,
+})``

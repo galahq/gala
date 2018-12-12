@@ -8,6 +8,8 @@ Rails.application.configure do
                       .map { |fname| File.basename fname, '.yml' }
                       .map(&:to_sym)
   config.i18n.available_locales = ([:en] + available_locales).uniq
+
+  config.i18n.fallbacks = %i[en]
 end
 
 module Translation

@@ -114,6 +114,7 @@ function mapStateToProps ({ caseData }: State) {
     caseSlug: caseData.slug,
   }
 }
+// $FlowFixMe
 const Tracker = connect(
   mapStateToProps,
   () => ({})

@@ -91,6 +91,7 @@ class Statistics extends React.Component<Props> {
   }
 }
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   { loadStatistics }

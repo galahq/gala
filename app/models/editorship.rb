@@ -4,6 +4,8 @@
 # ability to edit it. That Reader association is called {editor} to distinguish
 # it from the readers connected to a case through {Enrollment}s
 class Editorship < ApplicationRecord
+  default_scope -> { order :created_at }
+
   attribute :editor_email, :string
 
   belongs_to :case, inverse_of: :editorships

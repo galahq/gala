@@ -45,4 +45,5 @@ const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) => (
   </Link>
 )
 
+// $FlowFixMe
 export default connect(mapStateToProps, { acceptSelection })(CommentThreadsTag)

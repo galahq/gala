@@ -14,10 +14,10 @@ export const Title = styled.h2`
   margin: 1.6em 0 0.8em 0;
 `
 
-export const OuterContainer = styled.div.attrs({ className: 'pt-dark' })`
-  position: relative;
-`
+// $FlowFixMe
+export const OuterContainer = styled.div.attrs({ className: 'pt-dark' })``
 
+// $FlowFixMe
 export const Container = styled.nav.attrs(p => ({
   className: `c-toc ${p.disabled ? 'c-toc--disabled' : ''}`,
 }))``
@@ -47,6 +47,7 @@ export const List = styled.ol`
 
 export const Item = styled.li``
 
+// $FlowFixMe
 export const Link = styled(NavLink)`
   color: #ebeae4;
   display: flex;
@@ -90,10 +91,12 @@ export const Details = styled.div`
   }
 `
 
+// $FlowFixMe
 export const ElementIcon = styled(Label)`
   padding-right: 0.5em;
 `
 
+// $FlowFixMe
 export const Actions = styled.div.attrs({
   className: props =>
     `c-toc__actions pt-button-group pt-fill ${
@@ -101,11 +104,13 @@ export const Actions = styled.div.attrs({
     }`,
 })``
 
+// $FlowFixMe
 export const AddButton = styled.button.attrs({
   type: 'button',
   className: 'pt-button pt-icon-add',
 })``
 
+// $FlowFixMe
 export const AssessmentButton = styled(Link).attrs({
   className: 'pt-button pt-fill pt-icon-properties pt-intent-success',
 })`

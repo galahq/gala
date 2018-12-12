@@ -87,6 +87,7 @@ const TeachingGuide = ({
   )
 }
 
+// $FlowFixMe
 export default connect(mapStateToProps, { deleteTeachingGuide, updateCase })(
   TeachingGuide
 )

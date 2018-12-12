@@ -29,7 +29,12 @@ function LibraryInfo ({ history, slug }: Props) {
     }
   }
 
-  React.useEffect(fetchLibraryInfo, [slug])
+  React.useEffect(
+    () => {
+      fetchLibraryInfo()
+    },
+    [slug]
+  )
 
   if (library == null) return null
 
@@ -52,6 +57,7 @@ function LibraryInfo ({ history, slug }: Props) {
     </DocumentTitle>
   )
 }
+// $FlowFixMe
 export default withRouter(LibraryInfo)
 
 const RightFloatLogoContainer = styled.div`

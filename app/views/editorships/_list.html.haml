@@ -1,6 +1,6 @@
 %h2.deployments__group= t '.case_editors'
 
-- editorships.sort_by(&:editor_name).each do |editorship|
+- editorships.select(&:persisted?).sort_by(&:editor_name).each do |editorship|
   .editorship.non-spaced
     %span.pt-tag.pt-minimal= editorship.editor_name
     - unless editorship.editor == current_reader

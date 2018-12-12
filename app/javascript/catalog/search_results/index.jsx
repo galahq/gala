@@ -57,7 +57,7 @@ function SearchResults ({
             <FormattedMessage id="search.results" />
           </SectionTitle>
 
-          {loading.cases || resultsLoading ? null : cases.length === 0 ? (
+          {loading.cases || resultsLoading ? null : caseSlugs.length === 0 ? (
             <NoSearchResults />
           ) : (
             <CaseList cases={results} readerIsEditor={readerIsEditor} />

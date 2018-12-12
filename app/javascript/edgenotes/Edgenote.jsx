@@ -180,6 +180,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
               )}
 
               {embedded || (
+                // $FlowFixMe
                 <Statistics
                   inline
                   key={`edgenotes/${slug}`}
@@ -196,6 +197,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
               >
                 {this.renderQuotationSection() || this.renderImageSection()}
 
+                {/* $FlowFixMe */}
                 <Expansion contents={contents} expansion={expansion} />
 
                 <Caption
@@ -330,12 +332,14 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
 export const EdgenoteFigure = BaseEdgenoteFigure
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps
 )(withExpansion(EdgenoteFigure))
 
+// $FlowFixMe
 const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
   position: relative;
   margin: 0 0 1em;
@@ -372,6 +376,7 @@ const Body = styled.div`
 
 const LinkBody = Body.withComponent('a')
 
+// $FlowFixMe
 const DownloadButton = styled.button.attrs({
   className: 'pt-button',
 })`

@@ -207,6 +207,7 @@ class SelectedCommentThread extends React.Component<
     )
   }
 }
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -11,10 +11,14 @@ module Orchard
           click_button 'Sign in'
         end
 
-        def logout
+        def logout(locale: :en)
           visit root_path
-          find('#reader-icon').click
-          click_link 'Sign out'
+
+          options = I18n.t('readers.form.account_options', locale: locale)
+          find("[aria-label='#{options}']").click
+
+          click_on I18n.t('devise.sessions.destroy.sign_out',
+                          locale: locale)
         end
       end
     end
