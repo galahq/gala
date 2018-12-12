@@ -6,7 +6,7 @@ feature 'Using a non-English locale' do
   scenario 'the catalog and case pages load' do
     reader = create :reader, locale: :fr, password: 'secret'
     case_study = create :case_with_elements
-    # case_study.tag 'water'
+    case_study.tag 'water'
 
     login_as reader
 
