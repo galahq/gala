@@ -33,7 +33,7 @@ Promise.all([
   import(`react-intl/locale-data/${locale.substring(0, 2)}`),
   loadMessages(locale),
 ]).then(([localeData, messages]) => {
-  addLocaleData(localeData)
+  addLocaleData(localeData.default)
 
   if (container != null) {
     ReactDOM.render(
