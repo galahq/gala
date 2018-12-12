@@ -15,5 +15,9 @@ feature 'Using a non-English locale' do
 
     click_on case_study.pages.first.title
     expect(page).to have_button 'Retour au résumé'
+
+    # Somehow, not doing this leaves the interface in French for later tests
+    reader.update locale: :en
+    logout
   end
 end
