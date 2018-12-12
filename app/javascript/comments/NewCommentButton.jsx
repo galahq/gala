@@ -92,6 +92,7 @@ const NewCommentButton = ({
   </Container>
 )
 
+// $FlowFixMe
 export default connect(mapStateToProps, { acceptSelection })(NewCommentButton)
 
 const UniquenessWarning = () => (

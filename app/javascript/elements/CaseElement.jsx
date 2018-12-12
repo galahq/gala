@@ -156,6 +156,7 @@ class CaseElement extends React.Component<{
   }
 }
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   { deleteElement }

@@ -14,8 +14,11 @@ import {
   filter,
   where,
   omit,
+  // $FlowFixMe
   lensPath,
+  // $FlowFixMe
   view,
+  // $FlowFixMe
   set,
   reduce,
   values,
@@ -208,6 +211,7 @@ function sortCommentThreads<T: { start: ?number, blockIndex: ?number }> (
 
 function parseEditorStateFromPersistedCard (card: Card) {
   const content = card.rawContent
+  // $FlowFixMe
   if (content == null) return EditorState.createEmpty(decorator)
 
   const contentWithCommentThreads = addCommentThreads(content, card)

@@ -54,4 +54,5 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
   )
 }
 
+// $FlowFixMe
 export default connect(mapStateToProps)(CaseOverview)

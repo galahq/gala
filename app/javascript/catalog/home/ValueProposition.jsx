@@ -43,6 +43,7 @@ const ValueProposition = () => (
 )
 export default ValueProposition
 
+// $FlowFixMe
 const Container = styled.aside.attrs({ className: 'pt-dark' })`
   color: white;
   display: grid;

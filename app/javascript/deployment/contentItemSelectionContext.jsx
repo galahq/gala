@@ -12,7 +12,9 @@ import { submitForm } from 'shared/lti'
 import { Orchard, CSRF } from 'shared/orchard'
 
 const defaultContext = { selecting: false, onSelect: (caseSlug: string) => {} }
-const { Provider: BaseProvider, Consumer } = React.createContext(defaultContext)
+const { Provider: BaseProvider, Consumer } = React.createContext<
+  typeof defaultContext
+>(defaultContext)
 
 type ContentItemSelectionParams = {
   lti_uid: string,

@@ -156,6 +156,7 @@ function StatusBar ({
   )
 }
 
+// $FlowFixMe
 export default withRouter(
   connect(
     mapStateToProps,

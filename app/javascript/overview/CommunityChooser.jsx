@@ -130,6 +130,7 @@ export const UnconnectedCommunityChooser = injectIntl(
   }
 )
 
+// $FlowFixMe
 export default connect(mapStateToProps, { updateActiveCommunity })(
   UnconnectedCommunityChooser
 )

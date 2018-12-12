@@ -55,6 +55,7 @@ class ErrorBoundary extends React.Component<
   }
 }
 export default ErrorBoundary
+// $FlowFixMe
 const Container = styled.div.attrs({ className: 'pt-dark' })`
   margin-top: 40px;
 

@@ -26,7 +26,12 @@ export default function useSearchResults (
     setCaseSlugs(results)
   }
 
-  React.useEffect(fetchResults, [location.pathname, location.search])
+  React.useEffect(
+    () => {
+      fetchResults()
+    },
+    [location.pathname, location.search]
+  )
 
   return [caseSlugs, loading]
 }

@@ -173,11 +173,13 @@ const Billboard = ({
   </Container>
 )
 
+// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updateCase }
 )(Billboard)
 
+// $FlowFixMe
 export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
 `

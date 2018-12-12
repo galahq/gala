@@ -23,45 +23,41 @@ import {
   AssessmentButton,
 } from 'table_of_contents/shared'
 
-import PretestOverlay from 'quiz/PretestOverlay'
 import PostTestLink from 'quiz/PostTestLink'
 
 import type { State, CaseElement } from 'redux/state'
 
 function mapStateToProps ({ caseData, edit, quiz }: State) {
   return {
-    caseElements: caseData.caseElements,
     caseSlug: caseData.slug,
+    caseElements: caseData.caseElements,
     disabled: !caseData.reader,
     editing: edit.inProgress,
     hasQuiz: !!quiz.questions && quiz.questions.length > 0,
-    needsPretest: quiz.needsPretest,
   }
 }
 
 type Props = {
-  caseElements: CaseElement[],
   caseSlug: string,
   createActivity: typeof createActivity,
   createPage: typeof createPage,
   createPodcast: typeof createPodcast,
   disabled: boolean,
   editing: boolean,
+  caseElements: CaseElement[],
   hasQuiz: boolean,
-  needsPretest: boolean,
   onSidebar: boolean,
 }
 
 function TableOfContents ({
-  caseElements,
   caseSlug,
   createActivity,
   createPage,
   createPodcast,
   disabled,
   editing,
+  caseElements,
   hasQuiz,
-  needsPretest,
   onSidebar,
 }: Props) {
   return (
@@ -111,8 +107,7 @@ function TableOfContents ({
           )}
         </Droppable>
 
-        {needsPretest && <PretestOverlay />}
-        {!needsPretest && hasQuiz && <PostTestLink />}
+        {hasQuiz && <PostTestLink />}
       </Container>
 
       {editing && (
@@ -124,6 +119,7 @@ function TableOfContents ({
   )
 }
 
+// $FlowFixMe
 export default withRouter(
   connect(
     mapStateToProps,

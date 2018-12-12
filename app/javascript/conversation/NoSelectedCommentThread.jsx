@@ -31,6 +31,7 @@ const NoSelectedCommentThread = ({ name, description }) => (
     )}
   </Container>
 )
+// $FlowFixMe
 export default connect(mapStateToProps, () => ({}))(NoSelectedCommentThread)
 
 const Container = styled.div.attrs({ className: 'pt-running-text' })`
