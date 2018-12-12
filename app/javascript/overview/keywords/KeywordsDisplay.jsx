@@ -23,18 +23,21 @@ const KeywordsDisplay = ({ tags }: Props) => (
         .map(({ name, displayName }) => (
           <CategoryTag
             key={name}
-            category={displayName}
+            category={name}
+            label={displayName}
             href={categoryQueryPath(name)}
           />
         ))}
     </div>
 
     <div className="pt-dark">
-      {tags.filter(tag => !tag.category).map(({ name, displayName }) => (
-        <KeywordTag key={name} href={categoryQueryPath(name)}>
-          {displayName}
-        </KeywordTag>
-      ))}
+      {tags
+        .filter(tag => !tag.category)
+        .map(({ name, displayName }) => (
+          <KeywordTag key={name} href={categoryQueryPath(name)}>
+            {displayName}
+          </KeywordTag>
+        ))}
     </div>
   </>
 )
@@ -52,7 +55,7 @@ const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
   padding: 0.5em 1em !important;
 
   &::before {
-    content: '${p => p.category}';
+    content: '${p => p.name}';
     text-transform: capitalize;
   }
 
