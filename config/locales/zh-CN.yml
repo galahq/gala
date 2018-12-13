@@ -450,6 +450,13 @@ zh-CN:
       quiz_details: Quiz Details
       sample_answer: "Sample Answer:"
   devise:
+    providers:
+      google_oauth2: Google
+      lti: Canvas
+    registrations:
+      edit:
+        we_need_your_current_password_to_confirm_your_changes: >
+          We need your current password to confirm your changes.
     sessions:
       destroy:
         sign_out: 退出登陆
@@ -459,7 +466,7 @@ zh-CN:
       links:
         sign_up_for_a_free_account: 注册免费账户
       minimum_password_length:
-        other: '（最少%{count}个字符）'
+        other: "%{count} characters minimum"
   edgenotes:
     destroy:
       delete: 删除此侧注。
