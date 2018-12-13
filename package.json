@@ -118,6 +118,7 @@
     "flow-bin": "0.87.0",
     "flow-inspect": "^1.0.1",
     "jest": "^23.6.0",
+    "jest-fetch-mock": "^2.0.1",
     "prettier": "^1.15.2",
     "regenerator-runtime": "^0.12.1",
     "webpack-bundle-analyzer": "^3.0.3",
@@ -125,6 +126,8 @@
     "webpack-dev-server": "^3.1.10"
   },
   "jest": {
-    "modulePaths": ["<rootDir>/app/javascript"]
+    "modulePaths": [
+      "<rootDir>/app/javascript"
+    ]
   }
 }

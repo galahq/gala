@@ -7,10 +7,6 @@ import * as R from 'ramda'
 import qs from 'qs'
 import uuid from 'uuid/v4'
 
-type ErrorResponse = {
-  [string]: string[],
-}
-
 export class Orchard {
   static harvest (endpoint: string, params: ?Object = null): Promise<any> {
     const query = params
@@ -65,10 +61,9 @@ export class Orchard {
         ...CSRF.header(),
       }),
     })
-    return fetch(r)
+    return fetch(r).then(handleResponse)
   }
 }
-
 window.Orchard = Orchard
 
 function resolve (endpoint: string) {
@@ -103,16 +98,52 @@ function getMetaContent (key: string): ?string {
   return meta && meta.getAttribute('content')
 }
 
-function handleResponse (response: Response): Promise<any> {
+export class OrchardError extends Error {
+  url: string
+
+  constructor (response: Response, message: ?string) {
+    super(message || `${response.status} ${response.statusText}`)
+    this.url = response.url
+    this.name = 'OrchardError'
+  }
+}
+
+export class OrchardInputError extends OrchardError {
+  constructor (response: Response, message: string) {
+    super(response, message)
+    this.name = 'OrchardInputError'
+  }
+}
+
+export async function handleResponse (response: Response) {
   if (response.ok) {
-    return response.json().catch(() => Promise.resolve(true))
+    return handleSuccessfulResponse(response)
   } else {
-    return response.json().then((errorResponse: ErrorResponse) => {
-      const errorMessages = formatErrors(errorResponse)
-      let e = Error(errorMessages)
-      e.name = 'OrchardError'
-      throw e
-    })
+    return handleUnsuccessfulResponse(response)
+  }
+}
+
+async function handleSuccessfulResponse (response: Response): Promise<any> {
+  try {
+    const contentType = response.headers.get('Content-Type')
+    if (contentType != null) {
+      if (contentType.match('application/json')) {
+        return await response.json()
+      } else {
+        return await response.text()
+      }
+    }
+  } catch {
+    throw new OrchardError(response, 'Malformed response')
+  }
+}
+
+async function handleUnsuccessfulResponse (response: Response) {
+  if (response.status === 422) {
+    const errorResponse = await response.json()
+    throw new OrchardInputError(response, formatErrors(errorResponse))
+  } else {
+    throw new OrchardError(response)
   }
 }
 
@@ -122,10 +153,16 @@ function formatAttributeName (name: string) {
     .replace(/./, (letter, i) => (i === 0 ? letter.toUpperCase() : letter))
 }
 
+type ErrorResponse = {
+  [string]: string[],
+}
+
 export function formatErrors (errorResponse: ErrorResponse): string {
   return R.flatten(
     R.map(([key, values]) => {
-      if (!Array.isArray(values)) { return `${formatAttributeName(key)} ${values}.` }
+      if (!Array.isArray(values)) {
+        return `${formatAttributeName(key)} ${values}.`
+      }
       return R.map(value => `${formatAttributeName(key)} ${value}.`, values)
     }, R.toPairs(errorResponse))
   ).join('\n')
