@@ -32,6 +32,7 @@ export const CatalogSection = styled.section`
     css`
       background-color: #415e77;
       border: 1px solid #2b4d67;
+      border-radius: 3px;
     `};
 `
 
