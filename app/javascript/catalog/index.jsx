@@ -85,7 +85,6 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     Orchard.harvest('profile')
       .then(reader => this.setState({ reader }))
       .catch(e => {
-        debugger
         if (!(e instanceof OrchardError && e.status === 401)) throw e
       })
       .then(() =>
@@ -193,6 +192,10 @@ const Window = styled.div`
 
   @media (max-width: 700px) {
     grid-template: 'value-proposition' 'sidebar' 'banner' 'main' auto / 100%;
+
+    & .devise-card {
+      margin: auto;
+    }
   }
 `
 

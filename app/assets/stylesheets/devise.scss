@@ -1,0 +1,61 @@
+@import 'globals';
+
+.devise-card {
+  background-color: #EDE7FF;
+  border-top: 6px solid #8464DD;
+  color: #563E9C;
+  margin-bottom: 3em;
+  max-width: 100%;
+  width: 22em;
+
+  h2 {
+    color: inherit;
+    font-family: $sansFont;
+    font-size: 20px;
+    line-height: 20px;
+    margin-bottom: 0.5em;
+
+    & ~ h2,
+    & ~ form h2 {
+      margin-top: 1em;
+    }
+  }
+
+  .pt-form-group {
+    margin-bottom: 0.5em;
+  }
+
+  .pt-text-muted,
+  .pt-form-helper-text {
+    color: hsl(255, 12%, 42%);
+  }
+
+  .devise-links {
+    margin-top: 0.75em;
+
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .pt-callout.pt-intent-danger {
+    color: black;
+  }
+}
+
+.pt-button[class*="pt-icon-"].oauth-icon-google {
+  display: inline-block;
+  line-height: 21px;
+
+  &::before {
+    display: inline-block;
+    content: " ";
+    background-image: image_url('google-logo.svg');
+    background-size: 16px 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 3px;
+    margin-bottom: -3px;
+  }
+}
+

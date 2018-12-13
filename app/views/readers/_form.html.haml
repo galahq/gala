@@ -1,46 +1,49 @@
-.dialog.devise
+.pt-card.pt-elevation-4.devise-card
   %h2= t '.my_account'
   = form_for reader, url: :profile, builder: BlueprintFormBuilder do |f|
-    .pt-control-group.pt-fill
-      = f.label :name, class: "pt-label" do
-        = t 'activerecord.attributes.reader.name'
-        = f.text_field :name, class: "pt-input pt-fill", autofocus: true, tabindex: 1
+    = f.errors
 
-    = f.label :locale, class: "pt-label" do
-      = t 'activerecord.attributes.reader.locale'
-      .pt-select
-        = f.select :locale, options_for_select(locale_names, current_reader.locale), {}, tabindex: 2
+    = f.form_group :name
 
-    = f.label :email, class: "pt-label" do
-      = t 'activerecord.attributes.user.email'
-      = f.email_field :email, class: "pt-input pt-fill", tabindex: 3
+    = f.form_group :locale do |f, error_classes|
+      .pt-select.pt-fill{ class: error_classes }
+        = f.select :locale, options_for_select(locale_names, I18n.locale)
+
+    = f.form_group :email do |f, error_classes|
+      = f.email_field :email, class: (%w[pt-input pt-fill] + error_classes),
+                              spellcheck: false
 
     .reader-image-input
-      = f.label :image, class: "pt-label" do
-        = t 'activerecord.attributes.reader.image'
-        = f.file_field :image, class: %i[pt-fill], direct_upload: true,
-                               tabindex: 4
+      - helper = t 'helpers.attachments.max_size.ruby',
+                   size: number_to_human_size(2.megabytes)
+      = f.form_group :image, helper_text: helper do |f|
+        = f.file_field :image, class: %w[pt-fill], direct_upload: true
 
       %img{ src: reader.image_url }
-    = t 'helpers.attachments.max_size.ruby',
-      size: number_to_human_size(2.megabytes)
 
     %h2= t '.notification_settings'
+
     %div{ style: 'padding-bottom: 1em'}
       = f.check_box :send_reply_notifications
 
-    .actions
-      = f.submit t('.save'), class: "o-button pt-button pt-intent-primary"
+    = f.submit t('.save'), class: %w[pt-intent-primary]
 
   - if reader.created_password
-    %p=link_to t('devise.passwords.edit.change_my_password'), edit_reader_registration_path
+    .devise-links
+      %p
+        =link_to t('devise.passwords.edit.change_my_password'),
+                 edit_reader_registration_path
   - else
     %h2= t '.create_a_password'
-    = form_for reader, url: :profile do |f|
-      %p.pt-text-muted= t '.you_have_not_created_a_password', provider: reader.providers.first.capitalize
-      = f.label :password, class: 'pt-label' do
-        = t 'activerecord.attributes.user.password'
-        = f.password_field :password, class: 'pt-input pt-fill'
-      = f.submit t('.create_a_password'), class: 'o-button pt-button'
+    = form_for reader, url: :profile, builder: BlueprintFormBuilder do |f|
+      %p.pt-text-muted
+        = t '.you_have_not_created_a_password',
+            provider: I18n.t("devise.providers.#{reader.providers.first}")
+
+      = f.form_group :password do |f, error_classes|
+        = f.password_field :password,
+                           class: %w[pt-input pt-fill] + error_classes
+
+      = f.submit t('.create_a_password'), class: %w[pt-intent-none]
 
 = javascript_pack_tag 'file_upload'
