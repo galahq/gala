@@ -4,12 +4,14 @@
  */
 
 import React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 import TableOfContents from './TableOfContents'
 import Billboard from './Billboard'
 import EnrollForm from './EnrollForm'
 import Tracker from 'utility/Tracker'
+import { SignInFormContainer } from 'utility/SignInForm'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { State, ReaderState } from 'redux/state'
@@ -30,9 +32,15 @@ function mapStateToProps ({ caseData, edit }: State): StateProps {
 type Props = StateProps & ContextRouter
 const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
   return (
-    <div id="CaseOverview" className={`window ${editing ? 'editing' : ''}`}>
+    <Container editing={editing}>
       <Billboard />
       <aside className="CaseOverviewRight">
+        {signInForm != null ? (
+          <SignInFormContainer formContents={signInForm} />
+        ) : reader && !reader.enrollment ? (
+          <EnrollForm />
+        ) : null}
+        <TableOfContents />
         {location.pathname === '/' && (
           <Tracker
             timerState="RUNNING"
@@ -40,19 +48,19 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
             targetParameters={{ name: 'read_overview' }}
           />
         )}
-        {signInForm != null ? (
-          <div
-            className="dialog"
-            dangerouslySetInnerHTML={{ __html: signInForm }}
-          />
-        ) : reader && !reader.enrollment ? (
-          <EnrollForm />
-        ) : null}
-        <TableOfContents />
       </aside>
-    </div>
+    </Container>
   )
 }
 
 // $FlowFixMe
 export default connect(mapStateToProps)(CaseOverview)
+
+const Container = styled.div.attrs(p => ({
+  id: 'CaseOverview',
+  className: `window ${p.editing ? 'editing' : ''}`,
+}))`
+  & .devise-card {
+    width: auto;
+  }
+`

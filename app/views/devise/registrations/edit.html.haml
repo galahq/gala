@@ -1,42 +1,28 @@
 - content_for :title, I18n.t('devise.passwords.edit.change_your_password')
 
 
-.dialog.devise
+.pt-card.pt-elevation-4.devise-card
   %h2=t 'devise.passwords.edit.change_your_password'
 
   =form_for(resource, as: resource_name, url: registration_path(resource_name),
+                      builder: BlueprintFormBuilder,
                       html: { method: :put }) do |f|
-    = devise_error_messages!
+    = f.errors
 
-    - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-      %div
-        = t '.currently_waiting_confirmation_for_email',
-            email: resource.unconfirmed_email
-
-    = f.label :password, class: "pt-label" do
-      = t 'activerecord.attributes.user.password'
-      = f.password_field :password, class: "pt-input pt-fill",
+    = f.form_group :password do |f, error_classes|
+      = f.password_field :password, class: %w[pt-input pt-fill] + error_classes,
                                     autocomplete: "off"
 
-    = f.label :password_confirmation, class: "pt-label" do
-      = t 'activerecord.attributes.user.password_confirmation'
-      = f.password_field :password_confirmation, class: "pt-input pt-fill",
-                                                 autocomplete: "off"
+    = f.form_group :password_confirmation do |f, error_classes|
+      = f.password_field :password_confirmation,
+                         class: %w[pt-input pt-fill] + error_classes,
+                         autocomplete: "off"
 
-    = f.label :current_password, class: "pt-label" do
-      = t 'activerecord.attributes.user.current_password'
-      %br
-      %span.pt-text-muted
-        = t '.we_need_your_current_password_to_confirm_your_changes'
-      = f.password_field :current_password, class: "pt-input pt-fill",
-                                            autocomplete: "off"
+    - helper = t '.we_need_your_current_password_to_confirm_your_changes'
+    = f.form_group :current_password, helper_text: helper do |f, error_classes|
+      = f.password_field :current_password,
+                         class: %w[pt-input pt-fill] + error_classes,
+                         autocomplete: "off"
 
-    .actions
-      = f.submit t('devise.passwords.edit.change_my_password'),
-                 class: "o-button pt-button pt-intent-primary"
-
--#.dialog.devise
-  -#%h2= t'.cancel_my_account'
-
-  -#%p Unhappy?
-  -#= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
+    = f.submit t('devise.passwords.edit.change_my_password'),
+               class: %w[pt-intent-primary]

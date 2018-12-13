@@ -24,6 +24,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   # Creates a callout listing the form’s errors if there are any
   def errors
     return if @object.errors.empty?
+
     classes = %w[pt-callout pt-intent-danger pt-icon-error form__callout]
     @template.content_tag :div, class: classes do
       contents = ''.html_safe
@@ -53,8 +54,15 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def submit(*args, **kwargs)
-    class_argument = kwargs.delete(:class) || []
-    classes = %i[pt-button pt-intent-success].append(class_argument)
+    class_argument = Array(kwargs.delete(:class)) || []
+    classes = %w[pt-button]
+
+    if !class_argument.delete('pt-intent-none') &&
+       !class_argument.one?(/^pt-intent/)
+      classes.push('pt-intent-success')
+    end
+
+    classes.push(*class_argument)
     super(*args, kwargs.merge(class: classes))
   end
 
@@ -91,7 +99,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def normalized_object_name
-    @object_name.tr('[', '.').delete(']')
+    @object_name.to_s.tr('[', '.').delete(']')
   end
 
   def form_content(method, placeholder, helper_text)
@@ -128,7 +136,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def error_header
-    @template.content_tag :h5 do
+    @template.content_tag :h5, class: %w[pt-callout-title] do
       I18n.translate 'errors.template.header',
                      model: @object.model_name.human.downcase,
                      count: @object.errors.count

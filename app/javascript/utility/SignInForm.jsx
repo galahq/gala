@@ -7,25 +7,22 @@ import * as React from 'react'
 
 import { Orchard } from 'shared/orchard'
 
-class SignInForm extends React.Component<{}, { form: string | null }> {
-  state = { form: null }
+export default function SignInForm () {
+  const [formContents, setFormContents] = React.useState<string | null>(null)
 
-  componentDidMount () {
-    Orchard.harvest('readers/sign_in').then(({ form }) =>
-      this.setState({ form })
-    )
-  }
+  React.useEffect(() => {
+    Orchard.harvest('readers/sign_in').then(({ form }) => setFormContents(form))
+  }, [])
 
-  render () {
-    return (
-      this.state.form && (
-        <aside
-          className="dialog"
-          dangerouslySetInnerHTML={{ __html: this.state.form }}
-        />
-      )
-    )
-  }
+  return formContents && <SignInFormContainer formContents={formContents} />
 }
 
-export default SignInForm
+type Props = { formContents: string }
+export function SignInFormContainer ({ formContents }: Props) {
+  return (
+    <aside
+      className="pt-card pt-elevation-4 devise-card"
+      dangerouslySetInnerHTML={{ __html: formContents }}
+    />
+  )
+}
