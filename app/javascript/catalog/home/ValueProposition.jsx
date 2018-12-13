@@ -15,30 +15,32 @@ const ValueProposition = () => (
       <FormattedMessage id="catalog.openAccessLearningTools" />
     </h1>
 
-    <div className="pt-callout pt-icon-new-link pt-intent-danger">
+    <Block icon="new-link" theme="red">
       <h2 className="pt-callout-title">
         <FormattedMessage id="catalog.impactfulCases" />
       </h2>
       <p>
         <FormattedMessage id="catalog.findACase" />
       </p>
-    </div>
-    <div className="pt-callout pt-intent-success pt-icon-git-new-branch">
+    </Block>
+
+    <Block icon="git-new-branch" theme="green">
       <h2 className="pt-callout-title">
         <FormattedMessage id="catalog.innovativeTeaching" />
       </h2>
       <p>
         <FormattedMessage id="catalog.improveYourCommunication" />
       </p>
-    </div>
-    <div className="pt-callout pt-intent-primary pt-icon-exchange">
+    </Block>
+
+    <Block icon="exchange" theme="blue">
       <h2 className="pt-callout-title">
         <FormattedMessage id="catalog.inclusiveCommunity" />
       </h2>
       <p>
         <FormattedMessage id="catalog.joinTheCommunity" />
       </p>
-    </div>
+    </Block>
   </Container>
 )
 export default ValueProposition
@@ -75,5 +77,32 @@ const Container = styled.aside.attrs({ className: 'pt-dark' })`
   h1,
   p {
     margin-bottom: 0;
+  }
+`
+
+const intents = {
+  red: 'pt-intent-danger',
+  green: 'pt-intent-success',
+  blue: 'pt-intent-primary',
+}
+
+const contrastColors = {
+  red: 'hsl(20, 93%, 78%)',
+  green: 'hsl(145, 76%, 73%)',
+  blue: 'hsl(275, 100%, 87%)',
+}
+
+const Block = styled.div.attrs(({ theme, icon }) => ({
+  className: `pt-callout ${intents[theme]} pt-icon-${icon}`,
+}))`
+  padding: 1.25em;
+
+  &::before {
+    top: 17px !important;
+  }
+
+  &::before,
+  .pt-callout-title {
+    color: ${p => contrastColors[p.theme]} !important;
   }
 `
