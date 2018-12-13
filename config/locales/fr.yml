@@ -469,6 +469,13 @@ fr:
       quiz_details: Quiz Details
       sample_answer: "Sample Answer:"
   devise:
+    providers:
+      google_oauth2: Google
+      lti: Canvas
+    registrations:
+      edit:
+        we_need_your_current_password_to_confirm_your_changes: >
+          We need your current password to confirm your changes.
     sessions:
       destroy:
         sign_out: Déconnexion
@@ -478,8 +485,8 @@ fr:
       links:
         sign_up_for_a_free_account: Inscription gratuite
       minimum_password_length:
-        one: (%{count} caractère minimum)
-        other: (%{count} caractères minimum)
+        one: "%{count} character minimum"
+        other: "%{count} characters minimum"
   edgenotes:
     destroy:
       delete: Supprimer cette Edgenote.
