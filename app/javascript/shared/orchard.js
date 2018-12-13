@@ -99,11 +99,13 @@ function getMetaContent (key: string): ?string {
 }
 
 export class OrchardError extends Error {
+  status: number
   url: string
 
   constructor (response: Response, message: ?string) {
     super(message || `${response.status} ${response.statusText}`)
     this.url = response.url
+    this.status = response.status
     this.name = 'OrchardError'
   }
 }
