@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
 import ErrorBoundary from 'utility/ErrorBoundary'
-import { Orchard } from 'shared/orchard'
+import { Orchard, OrchardError } from 'shared/orchard'
 import {
   Provider as ContentItemSelectionContextProvider,
   Consumer as ContentItemSelectionContextConsumer,
@@ -65,8 +65,8 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
         `${intl.formatMessage({ id: 'enrollments.destroy.areYouSure' })}${
           options.displayBetaWarning
             ? `\n\n${intl.formatMessage({
-              id: 'enrollments.destroy.youWillNeedAnotherInvitation',
-            })}`
+                id: 'enrollments.destroy.youWillNeedAnotherInvitation',
+              })}`
             : ''
         }`
       )
@@ -84,7 +84,10 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
   componentDidMount () {
     Orchard.harvest('profile')
       .then(reader => this.setState({ reader }))
-      .catch(e => e.name === 'OrchardError' && this.setState({ reader: null }))
+      .catch(e => {
+        debugger
+        if (!(e instanceof OrchardError && e.status === 401)) throw e
+      })
       .then(() =>
         this.setState(({ loading }) => ({
           loading: { ...loading, reader: false },
@@ -101,9 +104,9 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     )
     Orchard.harvest('enrollments')
       .then(enrollments => this.setState({ enrollments }))
-      .catch(
-        e => e.name === 'OrchardError' && this.setState({ enrollments: [] })
-      )
+      .catch(e => {
+        if (!(e instanceof OrchardError && e.status === 401)) throw e
+      })
     Orchard.harvest('tags').then(tags => this.setState({ tags }))
     Orchard.harvest('catalog/libraries').then(libraries =>
       this.setState({ libraries })
