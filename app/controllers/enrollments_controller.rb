@@ -18,20 +18,17 @@ class EnrollmentsController < ApplicationController
   # @route [POST] `/cases/case-slug/enrollment`
   def create
     authorize @enrollment
-
-    if @enrollment.save
-      head :created
-    else
-      head :unprocessable_entity
-    end
+    @enrollment.save!
+    head :no_content
   end
 
   # @route [DELETE] `/cases/case-slug/enrollment`
   def destroy
-    head :no_content && return unless @enrollment
+    head :not_found && return unless @enrollment
 
     authorize @enrollment
     @enrollment.destroy
+    head :no_content
   end
 
   private

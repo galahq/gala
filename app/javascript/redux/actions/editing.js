@@ -11,9 +11,14 @@ import {
 
 import { Intent } from '@blueprintjs/core'
 import { EditorState, convertToRaw } from 'draft-js'
-import { Orchard } from 'shared/orchard'
+import { Orchard, OrchardError, OrchardInputError } from 'shared/orchard'
 
-import type { Dispatch, ThunkAction, GetState } from 'redux/actions'
+import type {
+  Dispatch,
+  ThunkAction,
+  GetState,
+  DisplayErrorToastOptions,
+} from 'redux/actions'
 import type { State } from 'redux/state'
 
 export type ToggleEditingAction = { type: 'TOGGLE_EDITING' }
@@ -36,19 +41,15 @@ export function toggleEditing (): ThunkAction {
 
 export function saveChanges (): ThunkAction {
   return (dispatch: Dispatch) => {
-    dispatch(silentlySave())
-      .then(() =>
-        dispatch(
-          displayToast({
-            message: 'Saved successfully',
-            icon: 'tick',
-            intent: Intent.SUCCESS,
-          })
-        )
+    dispatch(silentlySave()).then(() =>
+      dispatch(
+        displayToast({
+          message: 'Saved successfully',
+          icon: 'tick',
+          intent: Intent.SUCCESS,
+        })
       )
-      .catch(e => {
-        debugger
-      })
+    )
   }
 }
 
@@ -63,8 +64,9 @@ function silentlySave (): ThunkAction {
           endpoint === 'caseData' ? `cases/${state.caseData.slug}` : endpoint,
           state
         ).catch(e => {
-          dispatch(displayErrorToast(e.message))
-          throw e
+          handleError(e, (...args) => {
+            dispatch(displayErrorToast(...args))
+          })
         })
       )
     ).then(() => {
@@ -182,6 +184,27 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
   }
 
   return Orchard.espalier(endpoint, data)
+}
+
+function handleError (
+  e: Error,
+  displayErrorMessage: (string, ?DisplayErrorToastOptions) => any
+) {
+  if (e instanceof OrchardInputError) {
+    displayErrorMessage(e.message)
+    return
+  } else if (e instanceof OrchardError) {
+    switch (e.status) {
+      case 404:
+        return
+      case 409:
+      case 423:
+        displayErrorMessage(e.message)
+        return
+    }
+  }
+  displayErrorMessage(e.message, { suggestReload: true })
+  throw e
 }
 
 export function setUnsaved () {

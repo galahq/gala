@@ -51,9 +51,9 @@ export function togglePublished (): ThunkAction {
 
 export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
   return async (dispatch: Dispatch) => {
-    const enrollment = await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
+    await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
 
-    dispatch(setReaderEnrollment(!!enrollment))
+    dispatch(setReaderEnrollment(true))
     dispatch(fetchCommunities(caseSlug))
     dispatch(fetchCommentThreads(caseSlug))
   }
