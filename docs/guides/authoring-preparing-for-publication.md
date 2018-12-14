@@ -35,9 +35,8 @@ URL slugs must be globally unique and are first-come-first-served.
 ## Create a suggested assessment
 
 When other users deploy your case, they’ll have the opportunity to create a custom pre-/post-quiz, but many people would rather use one that you suggest.
-We are working on a more streamlined workflow for creating a suggested quiz, but for now this is the procedure.
-Follow the instructions above to [create a review deployment](#invite-reviewers-to-read-through-your-case) and customize that quiz’s deployment with your quiz.
-Send an invite link to us at hello@learnmsc.com, and we will set it as a suggested assessment for your case.
+You can add a suggested assessment by clicking the “Pre/Post Assessment” button visible under your case’s table of contents while editing.
+You can configure one or more suggested assessments with any number of multiple choice and free response questions.
 
 ## Finally, publish
 
