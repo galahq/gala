@@ -224,7 +224,6 @@ zh-TW:
       create_a_case: Create a Case
     settings:
       edit:
-        case_editors: Case editors
         change_library: Change library
         change_url: Change URL
         edit_case_settings: Edit case settings
@@ -456,6 +455,13 @@ zh-TW:
       quiz_details: Quiz Details
       sample_answer: "Sample Answer:"
   devise:
+    providers:
+      google_oauth2: Google
+      lti: Canvas
+    registrations:
+      edit:
+        we_need_your_current_password_to_confirm_your_changes: >
+          We need your current password to confirm your changes.
     sessions:
       destroy:
         sign_out: 退出登陸
@@ -465,7 +471,7 @@ zh-TW:
       links:
         sign_up_for_a_free_account: 注冊免費賬戶
       minimum_password_length:
-        other: '（最少%{count}個字符）'
+        other: "%{count} characters minimum"
   edgenotes:
     destroy:
       delete: Delete this Edgenote.
@@ -512,6 +518,8 @@ zh-TW:
       are_you_sure: |
         Are you sure you want to remove %{name} as an editor of this case?
       remove: Remove Collaborator
+    list:
+      case_editors: Case editors
     new:
       add_editor: Add Collaborator
       create_collaboratively: Collaborate on your case
@@ -817,8 +825,6 @@ zh-TW:
     try_again: 請試試輸入其他關鍵詞。
   submissions:
     new:
-      a_few_questions: >
-        Before you study this case, please answer a few questions to demonstrate your current level of knowledge.
       before_you_get_started: Before you get started
       check_your_understanding: Check your understanding
       post_case_quiz: Post-case quiz
@@ -826,7 +832,6 @@ zh-TW:
         Please answer the following questions to demonstrate your current level of knowledge.
       please_take_this_after_engaging_with_all_elements: >
         After you have engaged with all elements of the case, please take this post-test to check your understanding.
-      take_pre_quiz: Take Pre-Quiz
     show:
       correct_answers_are_below: >
         The correct answers are shown below, highlighted green, so you may check your work.

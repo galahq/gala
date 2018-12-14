@@ -220,7 +220,6 @@ zh-CN:
       create_a_case: 新建案例
     settings:
       edit:
-        case_editors: 案例作者
         change_library: 更换案例库
         change_url: 更改案例链接
         edit_case_settings: 编辑案例设置
@@ -451,6 +450,13 @@ zh-CN:
       quiz_details: Quiz Details
       sample_answer: "Sample Answer:"
   devise:
+    providers:
+      google_oauth2: Google
+      lti: Canvas
+    registrations:
+      edit:
+        we_need_your_current_password_to_confirm_your_changes: >
+          We need your current password to confirm your changes.
     sessions:
       destroy:
         sign_out: 退出登陆
@@ -460,7 +466,7 @@ zh-CN:
       links:
         sign_up_for_a_free_account: 注册免费账户
       minimum_password_length:
-        other: '（最少%{count}个字符）'
+        other: "%{count} characters minimum"
   edgenotes:
     destroy:
       delete: 删除此侧注。
@@ -507,6 +513,8 @@ zh-CN:
       are_you_sure: |
         您确定要移除 %{name} 作为此案例编辑的身份吗？
       remove: 删除合作者
+    list:
+      case_editors: Case editors
     new:
       add_editor: 新增合作者
       create_collaboratively: 邀请他人与你合作写这个案例
@@ -812,8 +820,6 @@ zh-CN:
     try_again: 请试试输入其他关键词。
   submissions:
     new:
-      a_few_questions: >
-        Before you study this case, please answer a few questions to demonstrate your current level of knowledge.
       before_you_get_started: Before you get started
       check_your_understanding: Check your understanding
       post_case_quiz: Post-case quiz
@@ -821,7 +827,6 @@ zh-CN:
         Please answer the following questions to demonstrate your current level of knowledge.
       please_take_this_after_engaging_with_all_elements: >
         After you have engaged with all elements of the case, please take this post-test to check your understanding.
-      take_pre_quiz: Take Pre-Quiz
     show:
       correct_answers_are_below: >
         The correct answers are shown below, highlighted green, so you may check your work.
