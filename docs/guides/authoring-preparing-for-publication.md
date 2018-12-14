@@ -9,8 +9,17 @@ Once you’ve finished writing your narrative and embedding media elements, ther
 
 You can deploy your case without publishing it in order to receive feedback from reviewers.
 In your case’s toolbar when you’re not in edit mode, click “Deploy this Case.”
+
+![A screenshot of the Deploy button.](./assets/deploy-button-screenshot.png)
+
 Create a new study group for your reviewers—you might call it _Reviewers_.
+
+![A screenshot of the creation form.](./assets/create-study-group-screenshot.png)
+
 Then, from your “Deployments” index, you can copy the invite link and send it to anyone you wish.
+
+![A screenshot of the deployments index](./assets/deployments-index-screenshot.png)
+
 That link will allow those who follow it to read your case before it is published, and it will add them to a private forum where they can comment on your case.
 
 This is also the way to use a case while keeping it private.
