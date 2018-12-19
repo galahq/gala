@@ -10,7 +10,7 @@ type Props = {
   list: React.Node[],
   truncate?: { after: number, with: React.Node },
 }
-export function FormattedList({ list, truncate }: Props): React.Node {
+export function FormattedList ({ list, truncate }: Props): React.Node {
   if (truncate != null && list.length > truncate.after) {
     const firstN = list.slice(0, truncate.after)
     return (

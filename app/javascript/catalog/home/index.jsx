@@ -79,7 +79,6 @@ function Home ({
 
           <Main>
             <Features
-              readerIsEditor={readerIsEditor}
               featuredCases={
                 selecting ? [...enrolledCases, ...featuredCases] : featuredCases
               }
@@ -106,12 +105,11 @@ function Home ({
               </React.Suspense>
             )}
 
-            {tags &&
-              tags.length > 0 && (
-                <>
-                  <Categories tags={tags} />
-                  <Keywords tags={tags} />
-                </>
+            {tags && tags.length > 0 && (
+              <>
+                <Categories tags={tags} />
+                <Keywords tags={tags} />
+              </>
             )}
 
             <Libraries libraries={libraries} />
