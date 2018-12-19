@@ -81,7 +81,7 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     )
   }
 
-  componentDidMount () {
+  componentDidMount() {
     Orchard.harvest('profile')
       .then(reader => this.setState({ reader }))
       .catch(e => {
@@ -112,7 +112,7 @@ export class Catalog extends React.Component<{ intl: IntlShape }, State> {
     )
   }
 
-  render () {
+  render() {
     const basename = window.location.pathname.match(/^(\/\w{2}(-\w{2})?)?\//)[0]
     return (
       <ErrorBoundary>
@@ -216,15 +216,6 @@ const ContentItemSelectionInProgressWindow = styled(Window)`
     grid-template: 'value-proposition' 'banner' 'main' auto / 100%;
   }
 
-  & ${FeaturesGrid} {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 300px minmax(230px, 1fr);
-  }
-
-  & ${FeatureTitle} {
-    font-size: 1.1em;
-  }
-
   & ${NaturalResourcesGrid}, & ${GlobalSystemsGrid} {
     flex-direction: row;
 
@@ -246,7 +237,7 @@ const ConnectedWindow = ({ children }) => (
   </ContentItemSelectionContextConsumer>
 )
 
-function normalize<T: {}> (array: T[], key: $Keys<T>): { [string]: T } {
+function normalize<T: {}>(array: T[], key: $Keys<T>): { [string]: T } {
   return array.reduce((table, element) => {
     table[element[key]] = element
     return table
