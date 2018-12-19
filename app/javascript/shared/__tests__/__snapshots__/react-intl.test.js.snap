@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormattedList can truncate when the list is too long 1`] = `
+<span>
+  1
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.middle"
+  />
+  2
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.middle"
+  />
+  etc.
+</span>
+`;
+
+exports[`FormattedList doesn’t truncate if the list is short enough 1`] = `
+<span>
+  1
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.start"
+  />
+  2
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.middle"
+  />
+  3
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.end"
+  />
+  4
+</span>
+`;
+
+exports[`FormattedList works with one item 1`] = `
+<span>
+  1
+</span>
+`;
+
+exports[`FormattedList works with three items 1`] = `
+<span>
+  1
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.start"
+  />
+  2
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.end"
+  />
+  3
+</span>
+`;
+
+exports[`FormattedList works with two items 1`] = `
+<span>
+  1
+  <div
+    data-component="FormattedMessage"
+    id="helpers.list.two"
+  />
+  2
+</span>
+`;
+
+exports[`FormattedList works with zero items 1`] = `<span />`;
