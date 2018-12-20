@@ -191,6 +191,7 @@ export const Container = styled.div`
   min-height: 300px;
 
   ${SidebarContainer} & {
+    margin-bottom: 1em;
     min-height: unset;
   }
 `

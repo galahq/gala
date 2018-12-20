@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
@@ -27,7 +28,7 @@ const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   <ContentItemSelectionContextConsumer>
     {({ selecting }) =>
       selecting || (
-        <div className="CaseOverview--enroll-form">
+        <Container>
           <h2>
             <FormattedMessage id="enrollments.new.enrollInThisCase" />
           </h2>
@@ -35,16 +36,27 @@ const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
             <FormattedMessage id="enrollments.new.enrollForEasyAccess" />
           </p>
           <button
-            className="o-button pt-button"
+            className="pt-button pt-intent-primary"
             onClick={() => enrollReader(readerId, caseSlug)}
           >
             <FormattedMessage id="enrollments.new.enroll" />
           </button>
-        </div>
+        </Container>
       )
     }
   </ContentItemSelectionContextConsumer>
 )
 
 // $FlowFixMe
-export default connect(mapStateToProps, { enrollReader })(EnrollForm)
+export default connect(
+  mapStateToProps,
+  { enrollReader }
+)(EnrollForm)
+
+const Container = styled.div.attrs({
+  className: 'devise-card pt-card pt-elevation-3',
+})`
+  border-width: 0 0 5px;
+  padding: 20px;
+  width: unset;
+`
