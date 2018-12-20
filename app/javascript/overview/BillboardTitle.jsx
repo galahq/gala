@@ -17,6 +17,7 @@ import LibraryLogo from './LibraryLogo'
 import AuthorsList from './AuthorsList'
 import { PositionedFileUploadWidget } from 'utility/FileUploadWidget'
 import * as TitleCard from 'shared/TitleCard'
+import { Container as SidebarContainer } from 'elements/Sidebar'
 
 import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
@@ -188,4 +189,8 @@ export default connect(
 export const Container = styled.div`
   display: grid;
   min-height: 300px;
+
+  ${SidebarContainer} & {
+    min-height: unset;
+  }
 `
