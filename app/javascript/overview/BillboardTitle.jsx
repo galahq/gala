@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 import ActiveStorageProvider from 'react-activestorage-provider'
@@ -186,19 +186,3 @@ export default connect(
 )(UnconnectedBillboardTitle)
 
 export const Container = styled.div``
-
-// $FlowFixMe
-export const CoverImageContainer = styled.div.attrs({
-  className: 'BillboardTitle pt-dark',
-})`
-  ${({ src }) => css`
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)),
-      url(${src});
-  `};
-
-  ${({ children }) =>
-    React.Children.count(children) === 0 &&
-    css`
-      padding-top: 2em;
-    `};
-`

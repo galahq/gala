@@ -221,7 +221,7 @@ export const Question = styled.span`
   font-family: ${p => p.theme.sansFont};
 
   font-size: 26px;
-  line-height: 27px;
+  line-height: 28px;
 
   ${FeaturesCell} & {
     @media (max-width: 1300px) {
