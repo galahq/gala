@@ -65,7 +65,7 @@ const RightFloatLogoContainer = styled.div`
   float: right;
   width: 67px;
   height: 116px;
-  margin: -10px 0 10px 10px;
+  margin: -10px 20px 10px 0;
   pointer-events: none;
 `
 const Description = styled.p`
