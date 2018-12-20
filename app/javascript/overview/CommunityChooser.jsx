@@ -20,6 +20,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { acceptKeyboardClick } from 'shared/keyboard'
 import { updateActiveCommunity } from 'redux/actions'
 
+import { Container as MagicLinkContainer } from 'magic_link/shared'
+
 import type { IntlShape } from 'react-intl'
 import type { State, Community } from 'redux/state'
 
@@ -152,6 +154,11 @@ const Bar = styled.div`
   padding: 5px;
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
   text-align: center;
+
+  ${MagicLinkContainer} & {
+    margin-top: 1em;
+    width: 100%;
+  }
 `
 
 const CommunityMenu = styled(Menu)`
