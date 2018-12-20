@@ -185,4 +185,7 @@ export default connect(
   { updateCase, displayErrorToast }
 )(UnconnectedBillboardTitle)
 
-export const Container = styled.div``
+export const Container = styled.div`
+  display: grid;
+  min-height: 300px;
+`
