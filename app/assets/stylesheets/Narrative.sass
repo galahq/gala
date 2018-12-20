@@ -10,6 +10,7 @@
 
   h1, h2, h3, h4, h5, h6
     color: $white
+    font-weight: 500
     margin: 20px 20px 0 20px
 
     @media screen and (min-width: $mobileCutoff)
@@ -61,38 +62,17 @@
       text-decoration: underline
 
 .Card
-  font-family: $serifFont
-  font-weight: 400
-
-
-.Card table
-  width: 100%
-  border-spacing: 0
-  font-size: 80%
-  line-height: 1.3
-
-  th,
-  td
-    padding: 0.8em
-    vertical-align: center
-    text-align: left
-
-  th
-    font-weight: inherit
-    letter-spacing: 1px
-    font-feature-settings: "smcp"
-    -webkit-font-feature-settings: "smcp"
-
-  tbody tr:first-child td
-    box-shadow: inset 0 1px 0 0 $black
-
-.Card
-  font-size: 19px
-  line-height: 19pt
   background-color: $white
   border-radius: 2pt
+  font-family: $serifFont
+  font-size: 19px
+  font-weight: 400
+  line-height: 19pt
   padding: 1.2em 2.4em
   position: relative
+  -webkit-hyphens: auto
+  -moz-hyphens: auto
+  hyphens: auto
 
   @media screen and (max-width: $mobileCutoff)
     padding: 0.1em 0.7em
@@ -140,47 +120,15 @@
       &:hover
         background-color: inherit
 
-  .Card-delete-option
-    top: 0.25em
-    right: 0.5em
-
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0
-
-.nonCard
-  position: relative
-
-  a:not([data-edgenote]):hover
-    text-decoration: underline
-
-  .Card-delete-option
-    top: -.2em
-    right: -7em
-    background-color: $white
-    padding: .1em .25em
-
-.Card-delete-option
-  color: $red !important
-  font-family: $sansFont
-  font-size: 80%
-  position: absolute
-
-.Card-create
-  font-family: $sansFont
-  margin-left: 2em
-  color: $yellow
-
-  &:hover
-    background-color: transparent
-    color: $umichMaize
-    text-decoration: underline
 
 .nextLink
   margin-left: 1em
   padding: 0.5em 0 2em 0
   display: block
-  font-family: $headlineFont
-  font-weight: 600
+  font-family: $sansFont
+  font-weight: 500
   color: $umichMaize
   text-decoration: none
 
@@ -197,13 +145,6 @@ footer h2
   text-align: center
   padding: 1em 0 2em 0
   color: $white
-
-.Card
-  font-family: $serifFont
-  font-weight: 400
-  -webkit-hyphens: auto
-  -moz-hyphens: auto
-  hyphens: auto
 
 .citation
   position: relative

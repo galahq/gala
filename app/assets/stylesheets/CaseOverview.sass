@@ -17,22 +17,6 @@
 
     margin: 1em
 
-    .Card.BillboardSnippet
-      border-top-left-radius: 0
-      border-top-right-radius: 0
-      padding: 0.75em 2em 1em 2em
-
-      @media screen and (max-width: $mobileCutoff)
-        padding: 1em
-
-      .c-BillboardSnippet__dek
-        font-style: italic
-        font-family: $headlineFont
-        font-size: 1em
-        font-weight: 600
-        margin: 1em 0
-        line-height: 19pt
-
   .CaseOverviewRight
     +flex($fg: 0, $fs: 1, $fb: 20em)
     @media screen and (max-width: $mobileCutoff)
@@ -40,30 +24,8 @@
 
     min-width: 15em
     & > *
-      margin: 1em
+      margin: 1rem
 
-.BillboardTitle
-  background-size: cover
-  background-position: center
-  border-radius: 2pt 2pt 0 0
-  padding: 1em 2em
-  padding-top: 10em
-  overflow: hidden
-
-  h1
-    font-size: 1.5em
-    color: $white
-    line-height: 1.1
-    margin-bottom: 0.4em
-    span.c-kicker
-      display: block
-      font-size: 0.6em
-      text-transform: uppercase
-      letter-spacing: 1px
-      font-family: $sansFont
-      margin-bottom: 0.6em
-
-.BillboardTitle,
 .PodcastPlayer .artwork,
 .EdgenoteDisplay
   position: relative
@@ -83,40 +45,3 @@
   bottom: 0.5rem
   right: 0.75rem
   margin: 0
-
-.c-photo-credit
-  text-transform: uppercase
-  letter-spacing: 0.25px
-  color: rgba($white, 0.5)
-  font-weight: 500
-  max-width: 18em
-
-.flag-links
-  font-family: $sansFont
-  font-size: 12pt
-
-  a
-    margin-right: 0.5em
-
-.flag-links__icon
-  position: relative
-  bottom: -2px
-
-.CaseOverview--enroll-form
-  border-bottom: 5px solid $darkPurple
-  background-color: $purple
-  color: $white
-  padding: 1.1em
-
-  h2
-    font-family: $sansFont
-    color: $white
-    font-size: 1.2em
-    margin: 0
-    line-height: 1.1
-
-  p
-    margin: 0.5em 0
-
-  .o-button.pt-button
-    color: $darkPurple
