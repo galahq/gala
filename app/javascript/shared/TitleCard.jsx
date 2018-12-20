@@ -131,6 +131,11 @@ export const Container = styled.div`
     border-radius: 3px;
   }
 
+  ${SidebarContainer} & {
+    border-radius: 3px;
+    border-bottom: 4px solid #6ACB72;
+  }
+
   ${grid.twoColumn}
 
   ${secondRow(

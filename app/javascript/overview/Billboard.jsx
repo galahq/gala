@@ -90,9 +90,8 @@ const Billboard = ({
             onBeginEditing={onBeginEditing}
             onFinishEditing={onFinishEditing}
           />
-          {editing || <CommunityChooser />}
 
-          <div className="Card BillboardSnippet pt-light">
+          <Card>
             <Dek>
               <EditableText
                 multiline
@@ -139,7 +138,7 @@ const Billboard = ({
             <TeachingGuide />
 
             <TranslationLinks languages={otherAvailableLocales} />
-          </div>
+          </Card>
 
           {(caseData.latitude || editing) && (
             <MapView
@@ -182,6 +181,11 @@ export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
 `
 
+const Card = styled.div.attrs({ className: 'Card' })`
+  border-top: 4px solid #6acb72;
+  border-radius: 0 0 3px 3px;
+`
+
 const Dek = styled.h3`
   color: #000000;
   font-family: ${p => p.theme.sansFont};
@@ -189,4 +193,8 @@ const Dek = styled.h3`
   font-weight: 500;
   line-height: 25px;
   margin: 20px 0;
+
+  @media (max-width: 513px) {
+    margin: 5px 0 15px;
+  }
 `

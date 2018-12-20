@@ -23,7 +23,7 @@ import { updateActiveCommunity } from 'redux/actions'
 import type { IntlShape } from 'react-intl'
 import type { State, Community } from 'redux/state'
 
-type OwnProps = {| rounded?: boolean, white?: boolean, disabled?: boolean |}
+type OwnProps = {| rounded?: boolean, disabled?: boolean |}
 
 type StateProps = {|
   activeCommunity: ?Community,
@@ -50,23 +50,19 @@ export const UnconnectedCommunityChooser = injectIntl(
     activeCommunity,
     communities,
     rounded,
-    white,
     disabled,
     caseSlug,
     updateActiveCommunity,
     intl,
   }: Props) => {
+    if (!activeCommunity) return null
+
     const activeCommunityPresent = (communities || []).some(
       x => activeCommunity && x.id === activeCommunity.id
     )
     const anyCommunitiesPresent = communities && communities.length > 0
     return (
-      <Bar
-        empty={!activeCommunity}
-        rounded={rounded}
-        white={white}
-        disabled={disabled}
-      >
+      <Bar rounded={rounded} disabled={disabled}>
         {activeCommunity && (
           <Popover
             position={rounded ? Position.BOTTOM_LEFT : Position.BOTTOM}
@@ -99,7 +95,6 @@ export const UnconnectedCommunityChooser = injectIntl(
             }
           >
             <CommunityName
-              white={white}
               disabled={!anyCommunitiesPresent}
               onClick={acceptKeyboardClick}
             >
@@ -111,15 +106,18 @@ export const UnconnectedCommunityChooser = injectIntl(
                 intent={Intent.DANGER}
                 position={rounded ? Position.TOP_LEFT : Position.TOP}
               >
-                <span>
+                <>
                   <span
                     className={`pt-icon pt-icon-${communityIcon(
                       activeCommunity,
-                      { disabled: !activeCommunityPresent }
+                      {
+                        disabled: !activeCommunityPresent,
+                      }
                     )}`}
-                  />&#8196;
-                  {activeCommunity.name}
-                </span>
+                  />
+                  &#8196;
+                  <span>{activeCommunity.name}</span>
+                </>
               </Tooltip>
               {disabled || !anyCommunitiesPresent ? '' : ' ▾'}
             </CommunityName>
@@ -131,9 +129,10 @@ export const UnconnectedCommunityChooser = injectIntl(
 )
 
 // $FlowFixMe
-export default connect(mapStateToProps, { updateActiveCommunity })(
-  UnconnectedCommunityChooser
-)
+export default connect(
+  mapStateToProps,
+  { updateActiveCommunity }
+)(UnconnectedCommunityChooser)
 
 function communityIcon (
   { global, name }: Community,
@@ -145,18 +144,14 @@ function communityIcon (
 }
 
 const Bar = styled.div`
-  background-color: ${({ white }) => (white ? '#EBEAE4' : '#373566')};
+  background-color: hsla(255, 100%, 95%);
+  border-bottom: 4px solid #8764ea;
+  border-radius: ${({ rounded }) => (rounded ? '3px' : '0')};
   font-size: 10pt;
   line-height: 1.2;
-  text-align: center;
-  width: 100%;
-  padding: ${({ empty }) => (empty ? '0' : '5px')};
-  border-bottom-width: 4px;
-  border-bottom-style: solid;
-  border-bottom-color: ${({ empty }) => (empty ? '#6acb72' : '#8764ea')};
-  border-radius: ${({ rounded, white }) =>
-    white ? '2pt' : rounded ? '0 0 2pt 2pt' : '0'};
+  padding: 5px;
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
+  text-align: center;
 `
 
 const CommunityMenu = styled(Menu)`
@@ -177,14 +172,14 @@ const CommunityName = styled.a.attrs({
   font-weight: bold;
   display: inline-block;
 
-  color: ${({ white }) => (white ? '#373566' : '#d4c5ff')} !important;
+  color: hsl(255, 43%, 43%) !important;
 
   &:focus,
   &:hover {
     outline: none;
-    color: ${({ disabled }) => (disabled ? 'inhert' : 'white !important')};
+    color: inhert;
 
-    & > span {
+    & .pt-icon + span {
       text-decoration: ${({ disabled }) => (disabled ? '' : 'underline')};
     }
   }

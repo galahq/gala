@@ -56,7 +56,7 @@ const NewCommentButton = ({
         selectionNotUnique ? (
           <UniquenessWarning />
         ) : (
-          <CommunityChooser white disabled />
+          <CommunityChooser rounded disabled />
         )
       }
     >
@@ -65,8 +65,8 @@ const NewCommentButton = ({
           !acceptingSelection
             ? 'edit'
             : !selectionPending
-              ? 'text-highlight'
-              : 'manually-entered-data'
+            ? 'text-highlight'
+            : 'manually-entered-data'
         }
         disabled={
           (acceptingSelection && !selectionPending) || selectionNotUnique
@@ -83,8 +83,7 @@ const NewCommentButton = ({
       </StyledButton>
     </FlexTooltip>
 
-    {acceptingSelection &&
-      !selectionPending && (
+    {acceptingSelection && !selectionPending && (
       <CancelButton onClick={() => acceptSelection(false)}>
         <FormattedMessage id="helpers.cancel" />
       </CancelButton>
@@ -93,7 +92,10 @@ const NewCommentButton = ({
 )
 
 // $FlowFixMe
-export default connect(mapStateToProps, { acceptSelection })(NewCommentButton)
+export default connect(
+  mapStateToProps,
+  { acceptSelection }
+)(NewCommentButton)
 
 const UniquenessWarning = () => (
   <div style={{ padding: '6px 12px' }}>

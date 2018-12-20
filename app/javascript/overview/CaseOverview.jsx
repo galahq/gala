@@ -12,6 +12,7 @@ import Billboard from './Billboard'
 import EnrollForm from './EnrollForm'
 import Tracker from 'utility/Tracker'
 import { SignInFormContainer } from 'utility/SignInForm'
+import CommunityChooser from 'overview/CommunityChooser'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { State, ReaderState } from 'redux/state'
@@ -39,7 +40,9 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
           <SignInFormContainer formContents={signInForm} />
         ) : reader && !reader.enrollment ? (
           <EnrollForm />
-        ) : null}
+        ) : (
+          <CommunityChooser rounded />
+        )}
         <TableOfContents />
         {location.pathname === '/' && (
           <Tracker
