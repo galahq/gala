@@ -58,7 +58,7 @@ export default FileUploadWidget
 export const PositionedFileUploadWidget = styled(FileUploadWidget)`
   position: absolute;
   top: 10px;
-  right: 10px;
+  left: 10px;
 `
 
 const HiddenFileUpload = styled.input.attrs({ type: 'file' })`

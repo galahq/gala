@@ -11,6 +11,7 @@ import styled, { css } from 'styled-components'
 
 import { FormattedList } from 'shared/react-intl'
 import { FeaturesCell } from 'catalog/home/shared'
+import { Container as BillboardTitleContainer } from 'overview/BillboardTitle'
 
 import type { Author } from 'redux/state'
 
@@ -52,7 +53,7 @@ export default TitleCard
 const grid = {
   oneColumn: css`
     grid-template-areas: 'image' 'title' 'authors';
-    grid-template-columns: auto;
+    grid-template-columns: auto !important;
     grid-template-rows: 100px auto auto;
   `,
   twoColumn: css`
@@ -69,20 +70,30 @@ function secondRow (style) {
   `
 }
 
-function secondRowOrEvery (style) {
+function smallScreen (style) {
   return css`
     @media (max-width: 900px) {
       ${style}
     }
+  `
+}
 
+function inSmallFeatureCell (style) {
+  return css`
     ${secondRow(style)}
+
+    ${FeaturesCell} & {
+      @media (max-width: 900px) {
+        ${style}
+      }
+    }
   `
 }
 
 function whenImageAbove (style) {
   return css`
-    @media (max-width: 900px) {
-      ${style}
+    ${FeaturesCell} & {
+      ${smallScreen(style)}
     }
 
     ${secondRow(css`
@@ -90,22 +101,30 @@ function whenImageAbove (style) {
         ${style}
       }
 
-      @media (max-width: 900px) {
-        ${style}
-      }
+      ${smallScreen(style)}
     `)}
+
+    ${BillboardTitleContainer} & {
+      ${smallScreen(style)}
+    }
   `
 }
 
-const Container = styled.div`
+export const Container = styled.div`
   background-color: hsl(209, 83%, 90%);
-  border-radius: 3px;
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.2),
-    0 2px 6px 0 rgba(0, 0, 0, 0.2);
   display: grid;
   height: 100%;
   overflow: hidden;
+  position: relative;
   width: 100%;
+
+  border-radius: 3px 3px 0 0;
+
+  ${FeaturesCell} & {
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.2),
+      0 2px 6px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
 
   ${grid.twoColumn}
 
@@ -118,7 +137,7 @@ const Container = styled.div`
   ${whenImageAbove(grid.oneColumn)}
 `
 
-const Image = styled.div`
+export const Image = styled.div.attrs({ className: 'pt-dark' })`
   background-color: hsl(209, 53%, 76%);
   background-image: ${p => css`url(${p.src})`};
   background-position: center;
@@ -129,6 +148,7 @@ const Image = styled.div`
   justify-content: flex-end;
   min-height: 100px;
   min-width: 100px;
+  position: relative;
 
   box-shadow: inset -1px 0 0 hsla(0, 0%, 0%, 0.2);
 
@@ -137,27 +157,39 @@ const Image = styled.div`
   `)}
 `
 
-const PhotoCredit = styled.cite`
-  color: hsla(0, 0%, 100%, 0.6);
+export const PhotoCredit = styled.cite`
+  color: hsla(0, 0%, 100%, 0.7);
   font-size: 9px;
   font-style: normal;
+  font-weight: 500;
   line-height: 11px;
   margin: 3px 5px;
   text-align: end;
+  text-shadow: 0 0 10px hsla(0, 0%, 0%, 0.5);
   text-transform: uppercase;
+
+  .pt-editable-text-placeholder > .pt-editable-text-content {
+    color: hsla(0, 0%, 100%, 0.7);
+  }
 `
 
-const Title = styled.h1`
+export const Title = styled.h1`
   grid-area: title;
 
   margin: 30px;
 
-  ${secondRowOrEvery(css`
+  ${inSmallFeatureCell(css`
     margin: 20px;
   `)}
+
+  ${BillboardTitleContainer} & {
+    ${smallScreen(css`
+      margin: 20px;
+    `)}
+  }
 `
 
-const Kicker = styled.span`
+export const Kicker = styled.span`
   color: hsl(209, 57%, 39%);
   display: block;
   font-family: ${p => p.theme.sansFont};
@@ -166,26 +198,35 @@ const Kicker = styled.span`
   margin: -1px 0 10px;
 `
 
-const Question = styled.span`
+export const Question = styled.span`
   color: hsl(209, 52%, 24%);
   display: block;
   font-family: ${p => p.theme.sansFont};
 
   font-size: 26px;
-  line-height: 26px;
+  line-height: 27px;
 
-  @media (max-width: 1300px) {
-    font-size: 22px;
-    line-height: 24px;
+  ${FeaturesCell} & {
+    @media (max-width: 1300px) {
+      font-size: 22px;
+      line-height: 24px;
+    }
   }
 
-  ${secondRowOrEvery(css`
-    font-size: 16px;
-    line-height: 17px;
+  ${inSmallFeatureCell(css`
+    font-size: 18px;
+    line-height: 19px;
   `)}
+
+  ${BillboardTitleContainer} & {
+    ${smallScreen(css`
+      font-size: 22px;
+      line-height: 24px;
+    `)}
+  }
 `
 
-const Authors = styled.div`
+export const Authors = styled.div`
   align-self: last baseline;
   color: hsl(209, 63%, 35%);
   font-size: 14px;
@@ -198,7 +239,14 @@ const Authors = styled.div`
     margin: 0 20px 20px;
   `)}
 
-  @media (max-width: 900px) {
-    display: none;
+  ${smallScreen(css`
+    margin: 0 20px 20px;
+  `)}
+
+  ${FeaturesCell} & {
+    ${smallScreen(css`
+      display: none;
+    `)}
+    }
   }
 `

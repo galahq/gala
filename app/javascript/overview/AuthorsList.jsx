@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { acceptKeyboardClick } from 'shared/keyboard'
 
-import { Intent, Position, Tooltip } from '@blueprintjs/core'
+import { Intent, Tooltip } from '@blueprintjs/core'
 import { FormattedMessage } from 'react-intl'
 
 import AuthorsListForm from './AuthorsListForm'
@@ -66,7 +66,7 @@ class AuthorsList extends React.Component<
           {isButton ? (
             <FormattedMessage id="cases.edit.addAuthors" />
           ) : (
-            <p>
+            <div>
               <FormattedList
                 list={authors.map(a => (
                   <AuthorName key={a.name} author={a} canEdit={canEdit} />
@@ -81,11 +81,13 @@ class AuthorsList extends React.Component<
                     values={{ count: translators.length }}
                   />
                   <FormattedList
-                    list={translators.map(t => <span key={t}>{t}</span>)}
+                    list={translators.map(t => (
+                      <span key={t}>{t}</span>
+                    ))}
                   />
                 </em>
               )}
-            </p>
+            </div>
           )}
         </div>
         {canEdit && (
@@ -129,6 +131,6 @@ const AuthorName = ({
 const StyledTooltip = styled(Tooltip).attrs({
   className: 'pt-tooltip-indicator',
 })`
-  border-bottom-color: #ffffffaa;
+  border-bottom-color: hsl(209, 52%, 24%, 0.8);
   vertical-align: baseline;
 `
