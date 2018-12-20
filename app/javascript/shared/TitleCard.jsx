@@ -13,6 +13,7 @@ import { FormattedList } from 'shared/react-intl'
 import { FeaturesCell } from 'catalog/home/shared'
 import { Container as BillboardTitleContainer } from 'overview/BillboardTitle'
 import { Container as SidebarContainer } from 'elements/Sidebar'
+import { Container as MagicLinkContainer } from 'magic_link/shared'
 
 import type { Author } from 'redux/state'
 
@@ -125,7 +126,8 @@ export const Container = styled.div`
 
   border-radius: 3px 3px 0 0;
 
-  ${FeaturesCell} & {
+  ${FeaturesCell} &,
+  ${MagicLinkContainer} & {
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.2),
       0 2px 6px 0 rgba(0, 0, 0, 0.2);
     border-radius: 3px;
