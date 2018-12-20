@@ -23,9 +23,7 @@ import { updateCase } from 'redux/actions'
 
 import type { State, Case, Tag, Viewport } from 'redux/state'
 
-const MapView = asyncComponent(() =>
-  import('map_view').then(m => m.default)
-)
+const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
@@ -95,7 +93,7 @@ const Billboard = ({
           {editing || <CommunityChooser />}
 
           <div className="Card BillboardSnippet pt-light">
-            <h3 className="c-BillboardSnippet__dek">
+            <Dek>
               <EditableText
                 multiline
                 value={dek}
@@ -108,7 +106,7 @@ const Billboard = ({
                 onCancel={onFinishEditing}
                 onConfirm={onFinishEditing}
               />
-            </h3>
+            </Dek>
 
             <Less
               startOpen={!summary || summary.length < 500}
@@ -182,4 +180,13 @@ export default connect(
 // $FlowFixMe
 export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
+`
+
+const Dek = styled.h3`
+  color: #000000;
+  font-family: ${p => p.theme.sansFont};
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 25px;
+  margin: 20px 0;
 `
