@@ -12,6 +12,7 @@ import styled, { css } from 'styled-components'
 import { FormattedList } from 'shared/react-intl'
 import { FeaturesCell } from 'catalog/home/shared'
 import { Container as BillboardTitleContainer } from 'overview/BillboardTitle'
+import { Container as SidebarContainer } from 'elements/Sidebar'
 
 import type { Author } from 'redux/state'
 
@@ -90,7 +91,7 @@ function inSmallFeatureCell (style) {
   `
 }
 
-function whenImageAbove (style) {
+function whenOneColumn (style) {
   return css`
     ${FeaturesCell} & {
       ${smallScreen(style)}
@@ -106,6 +107,10 @@ function whenImageAbove (style) {
 
     ${BillboardTitleContainer} & {
       ${smallScreen(style)}
+    }
+
+    ${SidebarContainer} & {
+      ${style}
     }
   `
 }
@@ -134,7 +139,7 @@ export const Container = styled.div`
     `
   )}
 
-  ${whenImageAbove(grid.oneColumn)}
+  ${whenOneColumn(grid.oneColumn)}
 `
 
 export const Image = styled.div.attrs({ className: 'pt-dark' })`
@@ -152,7 +157,7 @@ export const Image = styled.div.attrs({ className: 'pt-dark' })`
 
   box-shadow: inset -1px 0 0 hsla(0, 0%, 0%, 0.2);
 
-  ${whenImageAbove(css`
+  ${whenOneColumn(css`
     box-shadow: inset 0 -1px 0 hsla(0, 0%, 0%, 0.2);
   `)}
 `
@@ -187,6 +192,10 @@ export const Title = styled.h1`
       margin: 20px;
     `)}
   }
+
+  ${SidebarContainer} & {
+    margin: 10px;
+  }
 `
 
 export const Kicker = styled.span`
@@ -196,6 +205,14 @@ export const Kicker = styled.span`
   font-size: 16px;
   line-height: 17px;
   margin: -1px 0 10px;
+
+  ${SidebarContainer} & {
+    color: hsl(209, 52%, 24%);
+    font-size: 14px;
+    letter-spacing: 0.2;
+    line-height: 15px;
+    margin: 0;
+  }
 `
 
 export const Question = styled.span`
@@ -224,6 +241,10 @@ export const Question = styled.span`
       line-height: 24px;
     `)}
   }
+
+  ${SidebarContainer} & {
+    display: none;
+  }
 `
 
 export const Authors = styled.div`
@@ -248,5 +269,8 @@ export const Authors = styled.div`
       display: none;
     `)}
     }
+  }
+  ${SidebarContainer} & {
+    display: none;
   }
 `
