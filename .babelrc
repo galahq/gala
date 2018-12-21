@@ -4,7 +4,8 @@
       "plugins": ["@babel/transform-react-jsx-source"]
     },
     "test": {
-      "presets": ["@babel/preset-env"]
+      "presets": ["@babel/preset-env"],
+      "plugins": ["babel-plugin-dynamic-import-node"]
     }
   },
   "presets": [
