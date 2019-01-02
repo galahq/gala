@@ -55,7 +55,7 @@ const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
   padding: 0.5em 1em !important;
 
   &::before {
-    content: '${p => p.name}';
+    content: '${p => p.label}';
     text-transform: capitalize;
   }
 
