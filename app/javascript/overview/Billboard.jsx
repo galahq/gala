@@ -190,7 +190,6 @@ const Card = styled.div.attrs({ className: 'Card' })`
 `
 
 const Dek = styled.h3`
-  color: #000000;
   font-family: ${p => p.theme.sansFont};
   font-size: 20px;
   font-weight: 500;
@@ -199,5 +198,7 @@ const Dek = styled.h3`
 
   @media (max-width: 513px) {
     margin: 5px 0 15px;
+    font-size: 18px;
+    line-height: 21px;
   }
 `
