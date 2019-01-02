@@ -12,7 +12,6 @@ import { EditableText } from '@blueprintjs/core'
 import Lock from 'utility/Lock'
 import Less from 'utility/Less'
 import BillboardTitle from './BillboardTitle'
-import CommunityChooser from './CommunityChooser'
 import LearningObjectives from './LearningObjectives'
 import CaseKeywords from './CaseKeywords'
 import TranslationLinks from './TranslationLinks'
@@ -184,6 +183,10 @@ export const Container = styled.section.attrs({ className: 'Billboard' })`
 const Card = styled.div.attrs({ className: 'Card' })`
   border-top: 4px solid #6acb72;
   border-radius: 0 0 3px 3px;
+
+  @media (max-width: 513px) {
+    padding: 20px;
+  }
 `
 
 const Dek = styled.h3`
