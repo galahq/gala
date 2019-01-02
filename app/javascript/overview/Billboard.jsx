@@ -23,9 +23,7 @@ import { updateCase } from 'redux/actions'
 
 import type { State, Case, Tag, Viewport } from 'redux/state'
 
-const MapView = asyncComponent(() =>
-  import('map_view').then(m => m.default)
-)
+const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
 function mapStateToProps ({ edit, caseData }: State) {
   const {
@@ -92,10 +90,9 @@ const Billboard = ({
             onBeginEditing={onBeginEditing}
             onFinishEditing={onFinishEditing}
           />
-          {editing || <CommunityChooser />}
 
-          <div className="Card BillboardSnippet pt-light">
-            <h3 className="c-BillboardSnippet__dek">
+          <Card>
+            <Dek>
               <EditableText
                 multiline
                 value={dek}
@@ -108,7 +105,7 @@ const Billboard = ({
                 onCancel={onFinishEditing}
                 onConfirm={onFinishEditing}
               />
-            </h3>
+            </Dek>
 
             <Less
               startOpen={!summary || summary.length < 500}
@@ -141,7 +138,7 @@ const Billboard = ({
             <TeachingGuide />
 
             <TranslationLinks languages={otherAvailableLocales} />
-          </div>
+          </Card>
 
           {(caseData.latitude || editing) && (
             <MapView
@@ -182,4 +179,22 @@ export default connect(
 // $FlowFixMe
 export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
+`
+
+const Card = styled.div.attrs({ className: 'Card' })`
+  border-top: 4px solid #6acb72;
+  border-radius: 0 0 3px 3px;
+`
+
+const Dek = styled.h3`
+  color: #000000;
+  font-family: ${p => p.theme.sansFont};
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 25px;
+  margin: 20px 0;
+
+  @media (max-width: 513px) {
+    margin: 5px 0 15px;
+  }
 `

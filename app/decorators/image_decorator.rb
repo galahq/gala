@@ -2,16 +2,16 @@
 
 # Optimize, resize, and prepare urls for attached images
 class ImageDecorator < ApplicationDecorator
-  DARK_BLUE_PIXEL =
+  BLUE_PIXEL =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU' \
-    'lEQVR42mOUtY/7DwAC9gG7VNK2ygAAAABJRU5ErkJggg=='
+    'lEQVR42mNceOhRPQAHFwLGnBKLQwAAAABJRU5ErkJggg== '
 
   RED_PIXEL =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAFoEvQfAAAABG' \
     'dBTUEAALGPC/xhBQAAAA1JREFUCB1juOtg/x8ABbYCXHCMAk8AAAAASUVORK5CYII='
 
   def resized_path(**options)
-    return DARK_BLUE_PIXEL unless attached?
+    return BLUE_PIXEL unless attached?
     return RED_PIXEL unless variable?
     polymorphic_path resized(options), only_path: true
   end

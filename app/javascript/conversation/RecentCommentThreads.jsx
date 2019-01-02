@@ -10,7 +10,6 @@ import { injectIntl } from 'react-intl'
 
 import { NonIdealState } from '@blueprintjs/core'
 
-import { CoverImageContainer } from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
 import CommentThreadItem from 'conversation/CommentThreadItem'
 import NewUnattachedCommentButton from 'conversation/NewUnattachedCommentButton'
@@ -35,7 +34,7 @@ const RecentCommentThreads = ({
   mostRecentCommentThreads,
 }) => (
   <Container>
-    <CoverImageContainer src={coverUrl} />
+    <CoverImage src={coverUrl} />
     <Shadow>
       <CommunityChooser />
     </Shadow>
@@ -56,7 +55,10 @@ const RecentCommentThreads = ({
   </Container>
 )
 // $FlowFixMe
-export default connect(mapStateToProps, () => ({}))(RecentCommentThreads)
+export default connect(
+  mapStateToProps,
+  () => ({})
+)(RecentCommentThreads)
 
 const Container = styled.div`
   flex: 1;
@@ -69,6 +71,16 @@ const Container = styled.div`
   @media (max-width: 1000px) {
     width: calc(30vw - 16px);
   }
+`
+
+const CoverImage = styled.div`
+  background-color: hsl(209, 53%, 76%);
+  background-image: url(${p => p.src});
+  background-position: center;
+  background-size: cover;
+  border-radius: 3px 3px 0 0;
+  height: 50px;
+  position: relative; /* new stacking context lifts it above Shadow */
 `
 
 const Shadow = styled.div`
