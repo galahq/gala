@@ -255,7 +255,7 @@ export const Question = styled.span`
 `
 
 export const Authors = styled.div`
-  align-self: last baseline;
+  align-self: flex-end;
   color: hsl(209, 63%, 35%);
   font-size: 14px;
   grid-area: authors;
