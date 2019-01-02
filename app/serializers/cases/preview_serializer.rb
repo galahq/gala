@@ -3,8 +3,9 @@
 module Cases
   # A subset of case data
   class PreviewSerializer < ApplicationSerializer
-    attributes :cover_url, :dek, :featured_at, :kicker, :latitude, :longitude,
-               :photo_credit, :published_at, :slug, :small_cover_url, :title
+    attributes :authors, :cover_url, :dek, :featured_at, :kicker, :latitude,
+               :longitude, :photo_credit, :published_at, :slug,
+               :small_cover_url, :title
 
     has_many :tags
 

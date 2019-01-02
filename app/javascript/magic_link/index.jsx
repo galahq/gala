@@ -36,5 +36,8 @@ const Button = styled.button.attrs({
   className: 'pt-button pt-large pt-intent-success',
   type: 'submit',
 })`
+  box-shadow: 0 0 2px white, 0 0 1px 4px #80ff8933, 0 0 5px 7px #92ec9933 !important;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   margin: 2em;
 `

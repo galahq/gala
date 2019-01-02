@@ -1,16 +1,17 @@
 @import 'globals';
 
 .devise-card {
-  background-color: #EDE7FF;
-  border-top: 6px solid #8464DD;
-  color: #563E9C;
+  background-color: hsl(255, 100%, 95%);
+  border-color: hsl(255, 64%, 63%);
+  border-style: solid;
+  border-width: 6px 0 0;
+  color: hsl(255, 43%, 43%);
   margin-bottom: 3em;
   max-width: 100%;
   width: 22em;
 
   h2 {
     color: inherit;
-    font-family: $sansFont;
     font-size: 20px;
     line-height: 20px;
     margin-bottom: 0.5em;

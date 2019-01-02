@@ -6,7 +6,22 @@ import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { intersperse } from 'ramda'
 
-export const FormattedList = ({ list }: { list: React.Node[] }): React.Node => {
+type Props = {
+  list: React.Node[],
+  truncate?: { after: number, with: React.Node },
+}
+export function FormattedList ({ list, truncate }: Props): React.Node {
+  if (truncate != null && list.length > truncate.after) {
+    const firstN = list.slice(0, truncate.after)
+    return (
+      <span>
+        {intersperse(<FormattedMessage id="helpers.list.middle" />, firstN)}
+        <FormattedMessage id="helpers.list.middle" />
+        {truncate.with}
+      </span>
+    )
+  }
+
   switch (list.length) {
     case 0:
       return <span />

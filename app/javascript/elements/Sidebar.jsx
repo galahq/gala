@@ -1,5 +1,10 @@
-/* @flow */
+/**
+ * @flow
+ * @providesModule Sidebar
+ */
+
 import React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import BillboardTitle from 'overview/BillboardTitle'
@@ -15,7 +20,7 @@ function mapStateToProps (state) {
 
 const Sidebar = ({ editing, readerEnrolled, location }) => {
   return (
-    <aside id="Sidebar" data-active={location.pathname}>
+    <Container data-active={location.pathname}>
       <BillboardTitle minimal />
       {editing || <CommunityChooser rounded />}
       <TableOfContents onSidebar />
@@ -25,8 +30,10 @@ const Sidebar = ({ editing, readerEnrolled, location }) => {
           <EnrollForm />
         </div>
       )}
-    </aside>
+    </Container>
   )
 }
 
 export default withRouter(connect(mapStateToProps)(Sidebar))
+
+export const Container = styled.aside.attrs({ id: 'Sidebar' })``
