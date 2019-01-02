@@ -19,7 +19,6 @@ function TranslationLinks ({ languages }: TranslationLinksProps) {
     return (
       <Container>
         <FormattedMessage id="cases.show.otherLanguages" />
-        <br />
         <List>
           {Object.keys(languages).map(lx => {
             const { name, link } = languages[lx]
@@ -41,11 +40,11 @@ export default TranslationLinks
 const Container = styled.div`
   font-family: ${p => p.theme.sansFont};
   font-size: 12pt;
-  margin-top: 1em;
+  line-height: 1.2;
+  margin-top: 1.5em;
 `
 
 const List = styled.ul`
-  display: inline;
   padding: 0;
 
   li {
