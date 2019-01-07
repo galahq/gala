@@ -8,6 +8,8 @@
 </div>
 </header>
 
+<%= render 'application/unsupported_browser' %>
+
 <% if flash[:notice] || flash[:alert] %>
   <% if flash[:notice] %>
     <div class="flash flash-notice"><%= flash[:notice] %></div>
