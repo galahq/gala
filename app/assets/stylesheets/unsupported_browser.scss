@@ -1,0 +1,10 @@
+#unsupported-browser {
+  .pt-callout.pt-intent-danger {
+    background-color: hsl(4, 66%, 92%) !important;
+
+    & > p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
