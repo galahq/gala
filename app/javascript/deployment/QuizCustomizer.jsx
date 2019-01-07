@@ -5,177 +5,67 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { append, update, remove } from 'ramda'
 
 import { Button, Intent, InputGroup, Radio } from '@blueprintjs/core'
 
 import type { DraftQuestion } from './types'
 
 import { hotkeyDispatch } from 'shared/keyboard'
+import { useArray, useControllableFocus } from 'utility/hooks'
 
 type Props = {
   customQuestions: DraftQuestion[],
   onChange: (DraftQuestion[]) => void,
 }
-const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
-  const handleAddQuestion = () =>
-    onChange(
-      append(
-        {
-          id: null,
-          content: '',
-          options: [],
-          correctAnswer: '',
-          hasError: false,
-        },
-        customQuestions
-      )
-    )
 
-  const handleRemoveQuestion = (i: number) =>
-    onChange(remove(i, 1, customQuestions))
+function QuizCustomizer ({ customQuestions, onChange }: Props) {
+  const [
+    questions,
+    onAppendQuestion,
+    onUpdateQuestion,
+    onRemoveQuestion,
+  ] = useArray<DraftQuestion>({
+    array: customQuestions,
+    setArray: onChange,
+    defaultElement: {
+      id: null,
+      content: '',
+      options: [],
+      correctAnswer: '',
+      hasError: false,
+    },
+  })
 
-  const handleEditQuestionContent = (i: number, content: string) =>
-    onChange(update(i, { ...customQuestions[i], content }, customQuestions))
+  const [questionRef, focusLastQuestion] = useControllableFocus()
+  const [addQuestionButtonRef, focusAddQuestionButton] = useControllableFocus()
 
-  const handleEditQuestionOptions = (i: number, options: string[]) =>
-    onChange(update(i, { ...customQuestions[i], options }, customQuestions))
+  function handleAppendQuestion () {
+    onAppendQuestion()
+    focusLastQuestion()
+  }
 
-  const handleAddQuestionOption = (i: number) =>
-    handleEditQuestionOptions(i, append('', customQuestions[i].options))
-
-  const handleRemoveQuestionOption = (questionIx: number, optionIx: number) =>
-    handleEditQuestionOptions(
-      questionIx,
-      remove(optionIx, 1, customQuestions[questionIx].options)
-    )
-
-  const handleEditQuestionOption = (
-    questionIx: number,
-    optionIx: number,
-    content: string
-  ) =>
-    handleEditQuestionOptions(
-      questionIx,
-      update(optionIx, content, customQuestions[questionIx].options)
-    )
-
-  const handleEditQuestionAnswer = (i: number, correctAnswer: string) =>
-    onChange(
-      update(
-        i,
-        { ...customQuestions[i], hasError: false, correctAnswer },
-        customQuestions
-      )
-    )
+  function handleRemoveQuestion (i) {
+    onRemoveQuestion(i)
+    if (i === questions.length - 1) focusLastQuestion()
+    if (questions.length === 1) focusAddQuestionButton()
+  }
 
   return (
     <div>
-      {customQuestions.map((question: DraftQuestion, questionIx: number) => {
-        const { content, options, correctAnswer } = question
-        return (
-          <PaddedItem key={questionIx}>
-            <QuestionInputGroup
-              autoFocus
-              intent={question.hasError ? Intent.DANGER : null}
-              value={content}
-              placeholder="Question text"
-              type="text"
-              leftIcon={options.length > 0 ? 'properties' : 'comment'}
-              rightElement={
-                content ? (
-                  <Button
-                    className="pt-minimal"
-                    icon="add"
-                    onClick={_ => handleAddQuestionOption(questionIx)}
-                  >
-                    Add option
-                  </Button>
-                ) : (
-                  <Button
-                    className="pt-minimal"
-                    icon="delete"
-                    onClick={_ => handleRemoveQuestion(questionIx)}
-                  >
-                    Delete question
-                  </Button>
-                )
-              }
-              onKeyDown={hotkeyDispatch({
-                Enter: () => {
-                  if (content) handleAddQuestionOption(questionIx)
-                },
-              })}
-              onChange={(e: SyntheticInputEvent<*>) =>
-                handleEditQuestionContent(questionIx, e.target.value)
-              }
-            />
-
-            {options.length > 0 ? (
-              options.map((option: string, optionIx: number) => (
-                <div className="pt-control-group pt-fill" key={optionIx}>
-                  <GroupedRadio
-                    value={option}
-                    checked={option !== '' && option === correctAnswer}
-                    className="pt-fixed"
-                    onChange={(e: SyntheticInputEvent<*>) => {
-                      if (e.target.checked) {
-                        handleEditQuestionAnswer(questionIx, option)
-                      }
-                    }}
-                  />
-                  <InputGroup
-                    autoFocus
-                    value={option}
-                    placeholder="Option text"
-                    type="text"
-                    rightElement={
-                      <Button
-                        intent={Intent.DANGER}
-                        className="pt-minimal"
-                        icon="delete"
-                        onClick={_ =>
-                          handleRemoveQuestionOption(questionIx, optionIx)
-                        }
-                      />
-                    }
-                    onKeyDown={hotkeyDispatch({
-                      Enter: () => {
-                        if (option) handleAddQuestionOption(questionIx)
-                      },
-                      Backspace: () => {
-                        if (option === '') {
-                          handleRemoveQuestionOption(questionIx, optionIx)
-                        } else {
-                          return true
-                        }
-                      },
-                    })}
-                    onChange={(e: SyntheticInputEvent<*>) =>
-                      handleEditQuestionOption(
-                        questionIx,
-                        optionIx,
-                        e.target.value
-                      )
-                    }
-                  />
-                </div>
-              ))
-            ) : (
-              <RubricTextArea
-                value={correctAnswer}
-                onChange={e =>
-                  handleEditQuestionAnswer(questionIx, e.currentTarget.value)
-                }
-              />
-            )}
-          </PaddedItem>
-        )
-      })}
+      {questions.map((question: DraftQuestion, i: number) => (
+        <QuestionCustomizer
+          key={i}
+          ref={questionRef}
+          question={question}
+          onUpdate={value => onUpdateQuestion(i, value)}
+          onRemove={() => handleRemoveQuestion(i)}
+        />
+      ))}
       <FlushButton
+        elementRef={addQuestionButtonRef}
         alone={customQuestions.length === 0}
         icon="add"
-        onClick={handleAddQuestion}
+        onClick={handleAppendQuestion}
       >
         Add question
       </FlushButton>
@@ -184,6 +74,162 @@ const QuizCustomizer = ({ customQuestions, onChange }: Props) => {
 }
 
 export default QuizCustomizer
+
+function QuestionCustomizer ({ question, onUpdate, onRemove }, componentRef) {
+  const { content, correctAnswer, hasError } = question
+
+  function handleEditContent (content: string) {
+    onUpdate({ ...question, content })
+  }
+
+  function handleEditOptions (options: string[]) {
+    onUpdate({ ...question, options })
+  }
+
+  function handleEditAnswer (correctAnswer: string) {
+    onUpdate({ ...question, hasError: false, correctAnswer })
+  }
+
+  const [options, onAppendOption, onUpdateOption, onRemoveOption] = useArray({
+    array: question.options,
+    setArray: handleEditOptions,
+    defaultElement: '',
+  })
+
+  const [questionRef, focusQuestion] = useControllableFocus()
+  const [optionRef, focusLastOption] = useControllableFocus()
+
+  function setQuestionRef (value) {
+    questionRef(value)
+    componentRef(value)
+  }
+
+  function handleAppendOption () {
+    onAppendOption()
+    focusLastOption()
+  }
+
+  function handleRemoveOption (i) {
+    onRemoveOption(i)
+    if (i === options.length - 1) focusLastOption()
+    if (options.length === 1) focusQuestion()
+  }
+
+  return (
+    <PaddedItem>
+      <QuestionInputGroup
+        inputRef={setQuestionRef}
+        intent={hasError ? Intent.DANGER : null}
+        value={content}
+        placeholder="Question text"
+        type="text"
+        leftIcon={options.length > 0 ? 'properties' : 'comment'}
+        rightElement={
+          content ? (
+            <Button
+              className="pt-minimal"
+              icon="add"
+              onClick={handleAppendOption}
+            >
+              Add option
+            </Button>
+          ) : (
+            <Button className="pt-minimal" icon="delete" onClick={onRemove}>
+              Delete question
+            </Button>
+          )
+        }
+        onKeyDown={hotkeyDispatch({
+          Enter: () => {
+            if (content) handleAppendOption()
+          },
+          Backspace: () => {
+            if (content === '') {
+              onRemove()
+            } else {
+              return true
+            }
+          },
+        })}
+        onChange={(e: SyntheticInputEvent<*>) =>
+          handleEditContent(e.target.value)
+        }
+      />
+
+      {options.length > 0 ? (
+        options.map((option: string, i: number) => (
+          <OptionCustomizer
+            key={i}
+            ref={optionRef}
+            option={option}
+            checked={option !== '' && option === correctAnswer}
+            onAdd={handleAppendOption}
+            onChange={value => onUpdateOption(i, value)}
+            onCheck={() => handleEditAnswer(option)}
+            onRemove={() => handleRemoveOption(i)}
+          />
+        ))
+      ) : (
+        <RubricTextArea
+          value={correctAnswer}
+          onChange={e => handleEditAnswer(e.currentTarget.value)}
+        />
+      )}
+    </PaddedItem>
+  )
+}
+
+// $FlowFixMe
+QuestionCustomizer = React.forwardRef(QuestionCustomizer) // eslint-disable-line no-func-assign
+
+function OptionCustomizer (
+  { option, checked, onAdd, onChange, onCheck, onRemove },
+  ref
+) {
+  return (
+    <div className="pt-control-group pt-fill">
+      <GroupedRadio
+        value={option}
+        checked={checked}
+        className="pt-fixed"
+        onChange={(e: SyntheticInputEvent<*>) => {
+          if (e.target.checked) onCheck()
+        }}
+      />
+
+      <InputGroup
+        inputRef={ref}
+        value={option}
+        placeholder="Option text"
+        type="text"
+        rightElement={
+          <Button
+            intent={Intent.DANGER}
+            className="pt-minimal"
+            icon="delete"
+            onClick={onRemove}
+          />
+        }
+        onKeyDown={hotkeyDispatch({
+          Enter: () => {
+            if (option) onAdd()
+          },
+          Backspace: () => {
+            if (option === '') {
+              onRemove()
+            } else {
+              return true
+            }
+          },
+        })}
+        onChange={(e: SyntheticInputEvent<*>) => onChange(e.target.value)}
+      />
+    </div>
+  )
+}
+
+// $FlowFixMe
+OptionCustomizer = React.forwardRef(OptionCustomizer) // eslint-disable-line no-func-assign
 
 const FlushButton = styled(Button)`
   margin-top: ${({ alone }: { alone: boolean }) => (alone ? '0.5em' : '0')};
