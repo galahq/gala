@@ -1,0 +1,18 @@
+#unsupported-browser{ style: 'display: none' }
+  .pt-callout.pt-intent-danger.pt-icon-error
+    %h1.pt-callout-title Unsupported Browser
+
+    :markdown
+      Unfortunately, Gala does not support Internet Explorer and may not work as
+      intended. Please try [Mozilla Firefox](https://www.mozilla.org/firefox/)
+      or [Google Chrome](https://www.google.com/chrome/).
+
+:javascript
+  try {
+    if (navigator.userAgent.match(/MSIE|Trident/)) {
+      var warning = document.getElementById('unsupported-browser')
+      warning.style.display = "block"
+    }
+  }
+  catch(e) { /* Ignore errors */ }
+
