@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { Button, FormGroup, Intent, InputGroup } from '@blueprintjs/core'
 import * as R from 'ramda'
 
-import QuizCustomizer from 'deployment/QuizCustomizer'
+import QuizCustomizer from 'quiz/customizer'
 import { validatedQuestions } from 'suggested_quizzes/helpers'
 
 import {
