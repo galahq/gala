@@ -6,7 +6,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import QuizCustomizer from './QuizCustomizer'
+import QuizCustomizer from 'quiz/customizer'
 import { QuestionType } from './QuizCard'
 
 import type { DraftQuestion, CustomizedQuiz } from './types'
