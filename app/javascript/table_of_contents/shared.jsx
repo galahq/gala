@@ -60,7 +60,7 @@ export const Link = styled(NavLink)`
           color: #ebeae4 !important;
         `
       : css`
-          &:hover,
+          a&:hover,
           &[aria-current] {
             background-color: #29394a;
             color: #ebeae4 !important;
