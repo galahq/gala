@@ -45,6 +45,7 @@ function mapStateToProps (state: State, { caseElement, position }: OwnProps) {
     position,
     element: getElementDataFrom(state)(caseElement),
     editing: state.edit.inProgress,
+    loggedIn: !!state.caseData.reader,
   }
 }
 
@@ -53,6 +54,7 @@ type Props = {
   caseElement: CaseElement,
   element: Element,
   editing: boolean,
+  loggedIn: boolean,
 }
 function TableOfContentsElement ({
   caseElement,
@@ -60,6 +62,7 @@ function TableOfContentsElement ({
   element,
   editing,
   readOnly,
+  loggedIn,
 }: Props) {
   return (
     <Draggable
@@ -69,7 +72,11 @@ function TableOfContentsElement ({
     >
       {(provided, snapshot) => (
         <Item ref={provided.innerRef} {...provided.draggableProps}>
-          <Link isDragging={snapshot.isDragging} to={`/${position + 1}`}>
+          <Link
+            isDragging={snapshot.isDragging}
+            to={loggedIn ? `/${position + 1}` : undefined}
+            as={loggedIn ? undefined : 'div'}
+          >
             <Label {...provided.dragHandleProps}>
               {editing && !readOnly ? (
                 <span className="pt-icon pt-icon-drag-handle-horizontal" />
