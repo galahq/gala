@@ -15,12 +15,12 @@ class PagesController < ApplicationController
   # @route [POST] `/cases/case-slug/pages`
   def create
     @page = Page.new page_params
-    @page.build_case_element case: @case
+    @page.build_case_element case: @case, position: params[:page][:position]
 
     authorize @page
 
     if @page.save
-      render @page
+      render json: @page
     else
       render json: @page.errors, status: :unprocessable_entity
     end
@@ -55,6 +55,6 @@ class PagesController < ApplicationController
   end
 
   def page_params
-    params[:page].permit(:title, :position, :icon_slug)
+    params[:page].permit(:title, :icon_slug)
   end
 end

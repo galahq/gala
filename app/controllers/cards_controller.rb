@@ -28,10 +28,13 @@ class CardsController < ApplicationController
   def update
     authorize @card
 
-    if @card.update(card_params)
-      render @card
+    form = UpdateCardForm.new card: @card
+    form.assign_attributes card_params
+
+    if form.save
+      render form.card
     else
-      render json: @card.errors, status: :unprocessable_entity
+      render json: form.errors, status: :unprocessable_entity
     end
   end
 
@@ -57,7 +60,8 @@ class CardsController < ApplicationController
     Sv.hash_of(
       position: Sv.scalar,
       solid: Sv.scalar,
-      raw_content: raw_draft_content_state
+      raw_content: raw_draft_content_state,
+      page_id: Sv.scalar
     ).(params.require(:card))
   end
 

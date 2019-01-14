@@ -35,7 +35,7 @@ const Page = (props: Props) => {
   let { id, title, cards } = page
 
   return (
-    <Droppable droppableId={`pages/${id}`} type="Page">
+    <Droppable droppableId={`pages/${id}`}>
       {({ placeholder, innerRef: droppableRef }) => (
         <div ref={droppableRef}>
           <article>

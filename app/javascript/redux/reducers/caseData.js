@@ -4,6 +4,7 @@
  */
 
 import update from 'immutability-helper'
+import { insert } from 'ramda'
 
 import type {
   UpdateCaseAction,
@@ -70,7 +71,11 @@ export default function caseData (
       const { caseElement } = action.data
       return {
         ...state,
-        caseElements: [...state.caseElements, caseElement],
+        caseElements: insert(
+          caseElement.position - 1,
+          caseElement,
+          state.caseElements
+        ),
       }
     }
 
