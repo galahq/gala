@@ -53,4 +53,10 @@ class Community < ApplicationRecord
   def global?
     group.nil?
   end
+
+  # The group memberships for this community’s group
+  # @return [ActiveRecord::Relation<GroupMembership>]
+  def memberships
+    group.group_memberships
+  end
 end
