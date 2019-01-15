@@ -36,4 +36,8 @@ class GlobalCommunity
   def forums
     Forum.where community_id: nil
   end
+
+  def memberships
+    GroupMembership.none
+  end
 end
