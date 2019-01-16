@@ -2,24 +2,19 @@
 
 # @see Comment
 class CommentPolicy < ApplicationPolicy
+  def initialize(user, record,
+                 forum_policy = ForumPolicy.new(user, record.forum))
+    super(user, record)
+    @forum_policy = forum_policy
+  end
+
   def destroy?
-    editor? || (author? && in_global_community?) || admin_for_comment_group?
+    user_can_moderate_forum?
   end
 
   private
 
-  def author?
-    user.my_cases.include?(record.forum.case)
-  end
-
-  def in_global_community?
-    record.community.global?
-  end
-
-  def admin_for_comment_group?
-    record.community.memberships
-          .merge(user.group_memberships)
-          .merge(GroupMembership.admin)
-          .exists?
+  def user_can_moderate_forum?
+    @forum_policy.moderate?
   end
 end
