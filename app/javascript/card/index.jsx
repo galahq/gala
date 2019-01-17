@@ -74,8 +74,8 @@ function mapStateToProps (
   const selectedCommentThread = anyCommentsOpen?.params.threadId
 
   const activeCommunity = state.caseData.reader?.activeCommunity
-  const activeCommunityPresent = state.communities.some(
-    x => activeCommunity && x.id === activeCommunity.id
+  const activeCommunityPresent = state.forums.some(
+    forum => activeCommunity && forum.community.param === activeCommunity.param
   )
 
   return {

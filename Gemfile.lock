@@ -239,6 +239,7 @@ GEM
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
     jmespath (1.4.0)
+    json (2.1.0)
     jsonapi-renderer (0.2.0)
     jwt (2.1.0)
     kaminari (1.1.1)
@@ -384,6 +385,9 @@ GEM
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
       rspec-mocks (~> 3.8.0)
+    rspec-composable_json_matchers (1.1.1)
+      json (~> 2.0)
+      rspec (~> 3.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.2)
@@ -549,6 +553,7 @@ DEPENDENCIES
   redis (~> 3.0)
   rolify
   rspec
+  rspec-composable_json_matchers
   rspec-rails
   rspec-retry
   rspec_junit_formatter

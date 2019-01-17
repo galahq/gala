@@ -51,6 +51,7 @@ feature 'Viewing a case' do
           expect(find_link(invited_community.name)).to have_selector '.pt-icon-cross'
 
           click_link(published_case.pages.first.title)
+          sleep 1
           click_link(invited_community.name)
           find('.pt-menu-item', text: GlobalCommunity.instance.name).click
           expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
