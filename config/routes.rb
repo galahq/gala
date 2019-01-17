@@ -51,8 +51,6 @@ Rails.application.routes.draw do
 
     resources :comment_threads, only: %i[index create]
 
-    resources :communities, only: %i[index]
-
     get 'confirm_deletion', to: 'cases/deletions#new'
     post 'confirm_deletion', to: 'cases/deletions#create'
 
@@ -61,6 +59,8 @@ Rails.application.routes.draw do
     resources :editorships, only: %i[new create]
 
     resource :enrollment, only: %i[create destroy]
+
+    resources :forums, only: %i[index]
 
     resource :library, module: 'cases', only: %i[update]
 

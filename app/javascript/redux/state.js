@@ -15,9 +15,9 @@ export type State = {
   caseData: CaseDataState,
   commentsById: CommentsState,
   commentThreadsById: CommentThreadsState,
-  communities: CommunitiesState,
   edgenotesBySlug: EdgenotesState,
   edit: EditState,
+  forums: ForumsState,
   locks: LocksState,
   pagesById: PagesState,
   podcastsById: PodcastsState,
@@ -41,8 +41,6 @@ export type CommentsState = {
   [commentId: string]: Comment,
 }
 
-export type CommunitiesState = Community[]
-
 export type EdgenotesState = {
   [edgenoteSlug: string]: Edgenote,
 }
@@ -56,6 +54,8 @@ export type EditState = {
     [modelSlashId: string]: boolean,
   },
 }
+
+export type ForumsState = Forum[]
 
 export type LocksState = {
   [gid: string]: Lock,
@@ -211,7 +211,7 @@ export type CommentThread = {
 }
 
 export type Community = {
-  id: string | null,
+  param: string | null,
   name: string,
   description: string,
   active: boolean,
@@ -261,6 +261,12 @@ export type Enrollment = {
   id: string,
   status: 'student' | 'instructor' | 'treatment',
   caseSlug: string,
+}
+
+export type Forum = {
+  param: string,
+  moderateable: boolean,
+  community: Community,
 }
 
 export type Library = {

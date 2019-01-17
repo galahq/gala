@@ -9,9 +9,9 @@ import cardsById from './cards'
 import caseData from './caseData'
 import commentsById from './commentsById'
 import commentThreadsById from './commentThreadsById'
-import communities from './communities'
 import edgenotesBySlug from './edgenotesBySlug'
 import edit from './edit'
+import forums from './forums'
 import locks from './locks'
 import pagesById from './pagesById'
 import podcastsById from './podcastsById'
@@ -25,9 +25,9 @@ const state = {
   caseData,
   commentsById,
   commentThreadsById,
-  communities,
   edgenotesBySlug,
   edit,
+  forums,
   locks,
   pagesById,
   podcastsById,

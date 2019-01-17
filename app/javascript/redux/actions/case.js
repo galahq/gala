@@ -5,7 +5,7 @@
 import {
   setUnsaved,
   clearUnsaved,
-  fetchCommunities,
+  fetchForums,
   fetchCommentThreads,
 } from 'redux/actions'
 
@@ -54,7 +54,7 @@ export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
     await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
 
     dispatch(setReaderEnrollment(true))
-    dispatch(fetchCommunities(caseSlug))
+    dispatch(fetchForums(caseSlug))
     dispatch(fetchCommentThreads(caseSlug))
   }
 }
