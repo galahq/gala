@@ -52,6 +52,7 @@ feature 'Viewing a case' do
 
           click_link(published_case.pages.first.title)
           click_link(invited_community.name)
+          sleep 1
           find('.pt-menu-item', text: GlobalCommunity.instance.name).click
           expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
         end

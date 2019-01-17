@@ -9,9 +9,9 @@ import * as CaseActions from './case.js'
 import * as CaseElementActions from './caseElement.js'
 import * as CommentActions from './comment.js'
 import * as CommentThreadActions from './commentThread.js'
-import * as CommunityActions from './community.js'
 import * as EdgenoteActions from './edgenote.js'
 import * as EditingActions from './editing.js'
+import * as ForumActions from './forum.js'
 import * as LockActions from './lock.js'
 import * as PageActions from './page.js'
 import * as PodcastActions from './podcast.js'
@@ -31,6 +31,7 @@ export * from './community.js'
 export * from './edgenote.js'
 export * from './editing.js'
 export * from './editsChannel.js'
+export * from './forum.js'
 export * from './lock.js'
 export * from './page.js'
 export * from './podcast.js'
@@ -70,7 +71,6 @@ export type Action =
   | CommentThreadActions.RemoveCommentThreadAction
   | CommentThreadActions.SetCommentThreadsByIdAction
   | CommentThreadActions.SetMostRecentCommentThreadsAction
-  | CommunityActions.SetCommunitiesAction
   | EdgenoteActions.ActivateEdgenoteAction
   | EdgenoteActions.AddEdgenoteAction
   | EdgenoteActions.HighlightEdgenoteAction
@@ -78,6 +78,7 @@ export type Action =
   | EdgenoteActions.UpdateEdgenoteAction
   | EditingActions.ClearUnsavedAction
   | EditingActions.ToggleEditingAction
+  | ForumActions.SetForumsAction
   | LockActions.SetLocksAction
   | LockActions.AddLockAction
   | LockActions.EnqueueLockForDeletionAction

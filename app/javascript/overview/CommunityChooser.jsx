@@ -32,10 +32,10 @@ type StateProps = {|
   communities: Community[],
   caseSlug: string,
 |}
-function mapStateToProps ({ caseData, communities }: State) {
+function mapStateToProps ({ caseData, forums }: State) {
   const { reader, slug: caseSlug } = caseData
   return {
-    communities,
+    communities: forums.map(forum => forum.community),
     caseSlug,
     activeCommunity: reader?.enrollment && reader?.activeCommunity,
   }
@@ -60,7 +60,7 @@ export const UnconnectedCommunityChooser = injectIntl(
     if (!activeCommunity) return null
 
     const activeCommunityPresent = (communities || []).some(
-      x => activeCommunity && x.id === activeCommunity.id
+      community => activeCommunity && community.param === activeCommunity.param
     )
     const anyCommunitiesPresent = communities && communities.length > 0
     return (
@@ -81,14 +81,14 @@ export const UnconnectedCommunityChooser = injectIntl(
                 </Instructions>
                 {(communities || []).map(c => (
                   <MenuItem
-                    key={c.id || 'null'}
+                    key={c.param || 'null'}
                     icon={communityIcon(c)}
                     className={c.active ? 'pt-active pt-intent-primary' : ''}
                     text={c.name}
                     onClick={() => {
                       updateActiveCommunity &&
                         caseSlug &&
-                        updateActiveCommunity(caseSlug, c.id)
+                        updateActiveCommunity(caseSlug, c.param)
                     }}
                     onKeyPress={acceptKeyboardClick}
                   />

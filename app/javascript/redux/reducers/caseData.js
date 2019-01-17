@@ -4,6 +4,7 @@
  */
 
 import update from 'immutability-helper'
+import produce from 'immer'
 
 import type {
   UpdateCaseAction,
@@ -13,7 +14,7 @@ import type {
   RemoveElementAction,
   AddPageAction,
   AddPodcastAction,
-  SetCommunitiesAction,
+  SetForumsAction,
   ToggleEditingAction,
 } from 'redux/actions'
 
@@ -27,7 +28,7 @@ type Action =
   | RemoveElementAction
   | AddPageAction
   | AddPodcastAction
-  | SetCommunitiesAction
+  | SetForumsAction
   | ToggleEditingAction
 
 export default function caseData (
@@ -83,16 +84,16 @@ export default function caseData (
         ],
       }
 
-    case 'SET_COMMUNITIES': {
-      return {
-        ...state,
-        reader: {
-          ...state.reader,
-          activeCommunity:
-            action.communities.find(x => x.active) ||
-            (state.reader ? state.reader.activeCommunity : null),
-        },
-      }
+    case 'SET_FORUMS': {
+      const activeCommunity = action.forums
+        .map(forum => forum.community)
+        .find(community => community.active)
+
+      return produce<CaseDataState>(state, draft => {
+        if (activeCommunity && draft.reader) {
+          draft.reader.activeCommunity = activeCommunity
+        }
+      })
     }
 
     case 'TOGGLE_EDITING':
