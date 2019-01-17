@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# @see Forum
 class ForumsController < ApplicationController
   def index
     kase = Case.friendly.find params[:case_slug]
