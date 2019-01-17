@@ -5,6 +5,26 @@ require 'rails_helper'
 RSpec.describe ForumPolicy, type: :policy do
   subject { described_class }
 
+  describe 'Scope' do
+    it 'includes the forums the reader can participate in' do
+      reader = create :reader
+      kase = create :case
+      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
+
+      create :enrollment, case: kase, reader: reader
+
+      my_group = create :group, name: 'My Group'
+      create :group_membership, :admin, group: my_group, reader: reader
+
+      create :deployment, group: my_group, case: kase
+      my_forum = kase.forums.merge(my_group.community.forums).first
+
+      scope = ForumPolicy::Scope.new(reader, Forum).resolve
+
+      expect(scope).to include global_forum, my_forum
+    end
+  end
+
   permissions :moderate? do
     it 'denies a normal reader from moderating forums' do
       reader = build :reader

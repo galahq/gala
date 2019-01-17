@@ -2,6 +2,15 @@
 
 # @see Forum
 class ForumPolicy < ApplicationPolicy
+  # What forums can a user participate in?
+  class Scope < Scope
+    def resolve
+      scope.where(community: user.communities)
+           .or(GlobalCommunity.instance.forums)
+    end
+  end
+
+
   # Someone who can moderate a forum can delete others' comments in it
   def moderate?
     editor? || (author? && in_global_community?) || group_admin?

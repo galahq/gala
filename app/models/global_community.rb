@@ -6,8 +6,16 @@
 # @see Community
 class GlobalCommunity
   include Singleton
+  include Serializable
+  extend ActiveModel::Naming
+
+  serialize_with CommunitySerializer
 
   alias read_attribute_for_serialization send
+
+  def self.model_name
+    Community.model_name
+  end
 
   def to_partial_path
     'communities/community'
@@ -20,6 +28,8 @@ class GlobalCommunity
   def id
     nil
   end
+
+  alias to_param id
 
   def name
     I18n.t 'activerecord.models.global_community'

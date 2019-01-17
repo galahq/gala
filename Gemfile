@@ -100,6 +100,7 @@ group :development, :test do
   gem 'capybara'
   gem 'guard-rspec'
   gem 'rspec'
+  gem 'rspec-composable_json_matchers'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'
