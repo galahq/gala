@@ -11,7 +11,7 @@ import DocumentTitle from 'react-document-title'
 import {
   parseAllCards,
   fetchCommentThreads,
-  fetchCommunities,
+  fetchForums,
   toggleEditing,
   subscribeToActiveForumChannel,
   subscribeToEditsChannel,
@@ -73,7 +73,7 @@ class Case extends React.Component<{
   basename: string,
   parseAllCards: typeof parseAllCards,
   fetchCommentThreads: typeof fetchCommentThreads,
-  fetchCommunities: typeof fetchCommunities,
+  fetchForums: typeof fetchForums,
   toggleEditing: typeof toggleEditing,
   subscribeToActiveForumChannel: typeof subscribeToActiveForumChannel,
   subscribeToEditsChannel: typeof subscribeToEditsChannel,
@@ -110,7 +110,7 @@ class Case extends React.Component<{
       loadComments,
       caseSlug,
       fetchCommentThreads,
-      fetchCommunities,
+      fetchForums,
       toggleEditing,
     } = this.props
 
@@ -118,7 +118,7 @@ class Case extends React.Component<{
 
     if (loadComments) {
       fetchCommentThreads(caseSlug)
-      fetchCommunities(caseSlug)
+      fetchForums(caseSlug)
     }
 
     if (this._shouldStartInEditMode()) {
@@ -180,7 +180,7 @@ export default connect(
   {
     parseAllCards,
     fetchCommentThreads,
-    fetchCommunities,
+    fetchForums,
     toggleEditing,
     subscribeToActiveForumChannel,
     subscribeToEditsChannel,
