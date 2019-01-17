@@ -35,7 +35,8 @@ module Cases
 
     def reader
       ActiveModel::Serializer
-        .for(current_user).as_json
+        .for(current_user, scope: view_context, scope_name: :view_context)
+        .as_json
         .merge can_update_case: Pundit.policy(current_user, object).update?,
                enrollment: instance_options[:enrollment]
     end
