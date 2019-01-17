@@ -14,6 +14,7 @@ require 'capybara/rails'
 require 'capybara/rspec'
 
 require 'clowne/rspec'
+require 'rspec/composable_json_matchers/setup'
 
 Capybara.server = :puma
 
@@ -76,6 +77,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :request
 
   config.before(:all, type: :feature) do
     Capybara.server = :puma, { Silent: true }
