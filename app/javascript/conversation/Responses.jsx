@@ -10,18 +10,21 @@ import styled from 'styled-components'
 import { groupWith } from 'ramda'
 
 import Identicon from 'shared/Identicon'
-import { StyledComment } from 'conversation/shared'
-import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
+import {
+  StyledComment,
+  SmallGreyText,
+  ConversationTimestamp,
+} from 'conversation/shared'
 
 import { deleteComment } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
 import type { State, Comment } from 'redux/state'
 
-function mapStateToProps ({ caseData }: State) {
-  const { reader } = caseData
+function mapStateToProps ({ forums }: State) {
   return {
-    readerCanDeleteComments: reader?.canUpdateCase,
+    readerCanDeleteComments: forums.find(forum => forum.community.active)
+      ?.moderateable,
   }
 }
 
@@ -42,6 +45,7 @@ type Props = {
   readerCanDeleteComments: boolean,
   responses: Comment[],
 }
+
 const Responses = ({
   deleteComment,
   intl,
@@ -50,49 +54,61 @@ const Responses = ({
 }: Props) => {
   if (responses.length === 0) return null
   const timeGroups = groupComments(responses)
+
   return (
     <Container>
       {timeGroups.map(readerGroups => {
         const firstTimestamp = readerGroups[0][0].timestamp
-        return [
-          <Timestamp key={firstTimestamp}>
-            <ConversationTimestamp value={firstTimestamp} />
-          </Timestamp>,
-          readerGroups.map(comments => (
-            <ResponseGroup
-              key={`${comments[0].reader.name} ${comments[0].timestamp}`}
-            >
-              <SmallGreyText>{comments[0].reader.name}</SmallGreyText>
-              {comments.map(comment => (
-                <Response key={comment.id}>
-                  <SpeechBubble>
-                    <StyledComment markdown={comment.content} />
-                  </SpeechBubble>
-                  {readerCanDeleteComments && (
-                    <DeleteButton
-                      aria-label={intl.formatMessage({
-                        id: 'comments.destroy.deleteComment',
-                      })}
-                      onClick={() => deleteComment(comment.id)}
-                    />
-                  )}
-                </Response>
-              ))}
-              <Identicon
-                presentational
-                key={comments[0].reader.hashKey}
-                width={32}
-                reader={comments[0].reader}
-              />
-            </ResponseGroup>
-          )),
-        ]
+
+        return (
+          <>
+            <Timestamp>
+              <ConversationTimestamp value={firstTimestamp} />
+            </Timestamp>
+
+            {readerGroups.map(comments => (
+              <ResponseGroup
+                key={`${comments[0].reader.name} ${comments[0].timestamp}`}
+              >
+                <SmallGreyText>{comments[0].reader.name}</SmallGreyText>
+
+                {comments.map(comment => (
+                  <Response key={comment.id}>
+                    <SpeechBubble>
+                      <StyledComment markdown={comment.content} />
+                    </SpeechBubble>
+
+                    {readerCanDeleteComments && (
+                      <DeleteButton
+                        aria-label={intl.formatMessage({
+                          id: 'comments.destroy.deleteComment',
+                        })}
+                        onClick={() => deleteComment(comment.id)}
+                      />
+                    )}
+                  </Response>
+                ))}
+
+                <Identicon
+                  presentational
+                  key={comments[0].reader.hashKey}
+                  width={32}
+                  reader={comments[0].reader}
+                />
+              </ResponseGroup>
+            ))}
+          </>
+        )
       })}
     </Container>
   )
 }
+
 export default injectIntl(
-  connect(mapStateToProps, { deleteComment })(Responses)
+  connect(
+    mapStateToProps,
+    { deleteComment }
+  )(Responses)
 )
 
 const Container = styled.div``

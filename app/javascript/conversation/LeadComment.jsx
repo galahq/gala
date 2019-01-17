@@ -42,13 +42,13 @@ type OwnProps = {
 }
 
 function mapStateToProps (
-  { caseData, commentThreadsById }: State,
+  { commentThreadsById, forums }: State,
   { threadId }: OwnProps
 ) {
-  const { reader } = caseData
   const thread = commentThreadsById[threadId]
   return {
-    readerCanDeleteComments: reader?.canUpdateCase,
+    readerCanDeleteComments: forums.find(forum => forum.community.active)
+      ?.moderateable,
     threadDetached: thread.start == null || thread.blockIndex == null,
   }
 }
@@ -97,8 +97,7 @@ const LeadComment = ({
       <cite>{reader.name}</cite>
     </LeadCommenter>
 
-    {page != null &&
-      inSituPath != null && (
+    {page != null && inSituPath != null && (
       <CommentThreadLocation>
         {threadDetached && (
           <Callout>
@@ -146,8 +145,7 @@ const LeadComment = ({
           <SmallGreyText>
             <ConversationTimestamp value={leadComment.timestamp} />
           </SmallGreyText>
-          {readerCanDeleteComments &&
-            responseCount === 0 && (
+          {readerCanDeleteComments && responseCount === 0 && (
             <DeleteButton
               aria-label={intl.formatMessage({
                 id: 'commentThreads.destroy.deleteCommentThread',
