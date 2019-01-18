@@ -33,13 +33,14 @@ class Comment < ApplicationRecord
     card = comment_thread.card
     comment_thread.collocutors.each do |other_reader|
       next if other_reader == reader
+
       ReplyNotification.create reader: other_reader,
                                notifier: reader,
                                comment: self,
                                comment_thread: comment_thread,
                                card: card,
-                               case: card.case,
-                               page: card.element
+                               case: forum.case,
+                               page: card&.element
     end
   end
 end
