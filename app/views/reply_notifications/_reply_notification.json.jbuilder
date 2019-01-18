@@ -12,6 +12,9 @@ end
 json.case do
   json.extract! reply_notification.case, :slug, :kicker
 end
-json.element do
-  json.extract! reply_notification.page.case_element, :position
+
+unless reply_notification.page.nil?
+  json.element do
+    json.extract! reply_notification.page.case_element, :position
+  end
 end
