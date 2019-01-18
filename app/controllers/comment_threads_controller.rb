@@ -89,7 +89,7 @@ class CommentThreadsController < ApplicationController
   end
 
   def conversation_comment_thread_url(comment_thread)
-    "#{case_url(comment_thread.card.case.slug)}" \
+    "#{case_url(comment_thread.forum.case.slug)}" \
       "/conversation/#{comment_thread.id}"
   end
 end
