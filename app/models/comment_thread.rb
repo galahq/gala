@@ -17,11 +17,11 @@ class CommentThread < ApplicationRecord
 
   # The comment threads that are visible to a given reader
   # @return [ActiveRecord::Relation<CommentThread>]
-  def self.visible_to_reader(r)
-    where(locale: I18n.locale.to_s)
-      .where('comment_threads.comments_count > 0 OR
-      comment_threads.reader_id = ?',
-             r.id)
+  def self.visible_to_reader(reader)
+    where(
+      'comment_threads.comments_count > 0 OR comment_threads.reader_id = ?',
+      reader.id
+    )
   end
 
   # The reader participants in this comment thread
