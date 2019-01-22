@@ -37,6 +37,9 @@ feature 'Editing a comment' do
             .perform
         click_button 'Save'
       end
+
+      expect(page).to have_no_content comment.content
+      expect(page).to have_content 'This is a great world!'
     end
   end
 end
