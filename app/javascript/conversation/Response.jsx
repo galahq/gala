@@ -14,7 +14,7 @@ import CommentEditor from 'conversation/CommentEditor'
 import { StyledComment } from 'conversation/shared'
 
 import { useToggle } from 'utility/hooks'
-import { deleteComment } from 'redux/actions'
+import { deleteComment, updateComment } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
 import type { State, Comment } from 'redux/state'
@@ -24,6 +24,7 @@ type Props = {
   intl: IntlShape,
   readerCanDeleteComments: boolean,
   readerCanEditComment: boolean,
+  updateComment: typeof updateComment,
 }
 
 function mapStateToProps (
@@ -42,6 +43,7 @@ function Response ({
   intl,
   readerCanDeleteComments,
   readerCanEditComment,
+  updateComment,
 }: Props) {
   const [editing, toggleEditing] = useToggle()
   const [editorState, setEditorState] = useState(
@@ -65,6 +67,7 @@ function Response ({
             aria-label={intl.formatMessage({
               id: 'comments.edit.saveComment',
             })}
+            onClick={() => updateComment(comment.id, editorState)}
           >
             <FormattedMessage id="helpers.save" />
           </SaveButton>
@@ -103,7 +106,7 @@ function Response ({
 export default injectIntl(
   connect(
     mapStateToProps,
-    { deleteComment }
+    { deleteComment, updateComment }
   )(Response)
 )
 
