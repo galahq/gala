@@ -70,6 +70,32 @@ export function createComment (
   }
 }
 
+export function updateComment (
+  id: string,
+  editorState: EditorState
+): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const content: string = draftToMarkdown(
+      convertToRaw(editorState.getCurrentContent())
+    )
+
+    const originalContent = getState().commentsById[id].content
+
+    if (content.trim() === '' || content === originalContent) return
+
+    Orchard.espalier(`comments/${id}`, { comment: { content }}).catch(
+      (error: Error) => {
+        dispatch(
+          displayToast({
+            message: `Error saving: ${error.message}`,
+            intent: Intent.WARNING,
+          })
+        )
+      }
+    )
+  }
+}
+
 export type RemoveCommentAction = {
   type: 'REMOVE_COMMENT',
   id: string,
