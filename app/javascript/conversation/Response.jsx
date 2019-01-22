@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { injectIntl, FormattedMessage, FormattedRelative } from 'react-intl'
 import styled from 'styled-components'
 import { EditorState, convertFromRaw } from 'draft-js'
 import { markdownToDraft } from 'markdown-draft-js'
@@ -103,6 +103,18 @@ function Response ({
         <>
           <SpeechBubble>
             <StyledComment markdown={comment.content} />
+            {comment.timestamp !== comment.updatedAt && (
+              <Edited>
+                <FormattedMessage
+                  id="comments.comment.edited"
+                  values={{
+                    someTimeAgo: (
+                      <FormattedRelative value={comment.updatedAt} />
+                    ),
+                  }}
+                />
+              </Edited>
+            )}
           </SpeechBubble>
 
           {readerCanEditComment && (
@@ -153,6 +165,11 @@ const SpeechBubble = styled.blockquote`
   padding: 7px 16px;
   line-height: 1.3;
   display: inline-block;
+`
+
+const Edited = styled.span`
+  font-size: 13px;
+  opacity: 0.7;
 `
 
 const InputGroup = styled.div`

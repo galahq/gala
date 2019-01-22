@@ -195,6 +195,7 @@ export type Comment = {
     hashKey: string,
   },
   timestamp: string,
+  updatedAt: string,
 }
 
 export type CommentThread = {

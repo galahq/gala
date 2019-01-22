@@ -2,7 +2,7 @@
 
 # @see Comment
 class CommentSerializer < ApplicationSerializer
-  attributes :id, :content, :timestamp, :comment_thread_id
+  attributes :id, :content, :timestamp, :updated_at, :comment_thread_id
   attribute :attachments
 
   belongs_to :reader, serializer: Readers::IdenticonSerializer

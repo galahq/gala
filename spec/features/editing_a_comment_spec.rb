@@ -40,6 +40,13 @@ feature 'Editing a comment' do
 
       expect(page).to have_no_content comment.content
       expect(page).to have_content 'This is a great world!'
+      expect(page).to have_content 'edited'
+
+      Capybara.using_session :other do
+        expect(page).to have_no_content comment.content
+        expect(page).to have_content 'This is a great world!'
+        expect(page).to have_content 'edited'
+      end
     end
   end
 end
