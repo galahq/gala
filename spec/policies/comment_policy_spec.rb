@@ -5,6 +5,20 @@ require 'rails_helper'
 RSpec.describe CommentPolicy, type: :policy do
   subject { described_class }
 
+  permissions :update? do
+    it 'denies a reader from updating someone else’s comment' do
+      reader = build :reader
+      comment = build :comment
+      expect(subject).not_to permit reader, comment
+    end
+
+    it 'allows a reader from updating their comment' do
+      reader = build :reader
+      comment = build :comment, reader: reader
+      expect(subject).to permit reader, comment
+    end
+  end
+
   permissions :destroy? do
     it 'denies a reader from deleting a comment if they cannot moderate the ' \
        'comment’s forum' do
