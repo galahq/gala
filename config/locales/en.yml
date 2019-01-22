@@ -302,6 +302,8 @@ en:
   comments:
     destroy:
       delete_comment: Delete comment
+    edit:
+      edit_comment: Edit comment
     index:
       all_comments: All comments
       conversation: Conversation
