@@ -32,14 +32,14 @@ feature 'Moderating a comment thread' do
   it 'is possible to delete a comment as an editor' do
     visit comment_thread_path comment_thread
     accept_confirm 'Are you sure' do
-      within '.SelectedCommentThread' do
+      within '[data-testid="SelectedCommentThread"]' do
         find('blockquote', text: 'Second comment').hover
         find('[aria-label="Delete comment"]').click
       end
     end
     expect(page).not_to have_content 'Second comment'
     accept_confirm 'Are you sure' do
-      within '.SelectedCommentThread' do
+      within '[data-testid="SelectedCommentThread"]' do
         find('blockquote', text: 'First comment').hover
         find('[aria-label="Delete comment thread"]').click
       end

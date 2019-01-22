@@ -25,8 +25,18 @@ feature 'Editing a comment' do
         expect(page).to have_content comment.content
       end
 
-      find('blockquote', text: comment.content).hover
-      click_button 'Edit comment'
+      within '[data-testid="SelectedCommentThread"]' do
+        find('blockquote', text: comment.content).hover
+        click_button 'Edit comment'
+
+        field = find('.public-DraftEditor-content', text: comment.content).click
+        page.driver.browser.action.
+          # Not to match content even if cursor is at beginning/end of input
+          send_keys(:backspace, :delete)
+            .send_keys('This is a great world!')
+            .perform
+        click_button 'Save'
+      end
     end
   end
 end
