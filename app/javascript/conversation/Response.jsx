@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
@@ -50,6 +50,16 @@ function Response ({
     EditorState.createWithContent(
       convertFromRaw(markdownToDraft(comment.content))
     )
+  )
+
+  // Leave editing mode in response to a change to comment.content
+  // which will be triggered by a broadcast on ForumChannel after we
+  // save changes.
+  useEffect(
+    () => {
+      if (editing) toggleEditing()
+    },
+    [comment.content]
   )
 
   return (
