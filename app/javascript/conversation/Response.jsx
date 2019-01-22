@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import { EditorState, convertFromRaw } from 'draft-js'
 import { markdownToDraft } from 'markdown-draft-js'
 
+import { Button } from '@blueprintjs/core'
 import CommentEditor from 'conversation/CommentEditor'
 import { StyledComment } from 'conversation/shared'
 
@@ -73,14 +74,30 @@ function Response ({
             />
           </Input>
 
-          <SaveButton
+          <Button
+            aria-label={intl.formatMessage({
+              id: 'helpers.cancel',
+            })}
+            onClick={() => {
+              toggleEditing()
+              setEditorState(
+                EditorState.createWithContent(
+                  convertFromRaw(markdownToDraft(comment.content))
+                )
+              )
+            }}
+          >
+            <FormattedMessage id="helpers.cancel" />
+          </Button>
+
+          <Button
             aria-label={intl.formatMessage({
               id: 'comments.edit.saveComment',
             })}
             onClick={() => updateComment(comment.id, editorState)}
           >
             <FormattedMessage id="helpers.save" />
-          </SaveButton>
+          </Button>
         </InputGroup>
       ) : (
         <>
@@ -174,8 +191,6 @@ const EditButton = styled.button.attrs({
     opacity: 1;
   }
 `
-
-const SaveButton = styled.button.attrs({ className: 'pt-button' })``
 
 const Spacer = styled.div`
   flex: 999;
