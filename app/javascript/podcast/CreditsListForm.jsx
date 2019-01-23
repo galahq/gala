@@ -102,7 +102,10 @@ class CreditsListForm extends React.Component<Props, CreditsListFormState> {
   }
 }
 
-export default connect(undefined, { displayToast })(CreditsListForm)
+export default connect(
+  undefined,
+  { displayToast }
+)(CreditsListForm)
 
 function formStateClean ({ guests, hosts }: CreditsListFormState): boolean {
   return areObjectsCompact(guests) && isCompact(hosts)

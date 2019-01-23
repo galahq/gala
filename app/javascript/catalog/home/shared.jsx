@@ -17,4 +17,3 @@ export const FeaturesCell = styled.li`
     }
   }
 `
-

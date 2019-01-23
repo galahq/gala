@@ -1,1 +1,15 @@
-<svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 1.5l23 23m0-23l-23 23" stroke-linecap="round" stroke="#02284B" stroke-linejoin="round" fill="none" fill-rule="evenodd"/></svg>
+;<svg
+  width="26"
+  height="26"
+  viewBox="0 0 26 26"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M1.5 1.5l23 23m0-23l-23 23"
+    stroke-linecap="round"
+    stroke="#02284B"
+    stroke-linejoin="round"
+    fill="none"
+    fill-rule="evenodd"
+  />
+</svg>

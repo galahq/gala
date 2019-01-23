@@ -73,7 +73,9 @@ class CreditsList extends React.Component<
                   values={{ count: hosts.length }}
                 />{' '}
                 <FormattedList
-                  list={hosts.map(h => <span key={h}>{h}</span>)}
+                  list={hosts.map(h => (
+                    <span key={h}>{h}</span>
+                  ))}
                 />
               </em>
             </>

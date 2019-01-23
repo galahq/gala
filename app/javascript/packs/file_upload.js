@@ -40,16 +40,17 @@ addEventListener('direct-upload:initialize', ({ target, detail }) => {
   target.insertAdjacentHTML(
     'beforebegin',
     html`
-        <div>
-          Uploading ${file.name}...
-          <div class="pt-progress-bar pt-intent-primary">
-            <div
-              id="direct-upload-progress-${id}"
-              class="pt-progress-meter"
-              style="width: 0%"
-            />
-          </div>
-        </div>`
+      <div>
+        Uploading ${file.name}...
+        <div class="pt-progress-bar pt-intent-primary">
+          <div
+            id="direct-upload-progress-${id}"
+            class="pt-progress-meter"
+            style="width: 0%"
+          />
+        </div>
+      </div>
+    `
   )
 })
 

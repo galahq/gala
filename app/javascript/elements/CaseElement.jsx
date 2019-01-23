@@ -42,9 +42,9 @@ function mapStateToProps (state: State, { match, location }) {
     editing: state.edit.inProgress,
     next: nextElement
       ? {
-        title: state[nextElementStore][nextElementId].title,
-        position: `${position + 2}`,
-      }
+          title: state[nextElementStore][nextElementId].title,
+          position: `${position + 2}`,
+        }
       : undefined,
     id: elementId,
     url,
@@ -182,9 +182,9 @@ const ConditionalNextLink = connect(
   (state: State, ownProps: { next: NextProps }) => {
     const postTestNext = state.quiz.needsPosttest
       ? {
-        title: 'Check your understanding',
-        position: 'quiz',
-      }
+          title: 'Check your understanding',
+          position: 'quiz',
+        }
       : null
     return {
       next: ownProps.next || postTestNext,
