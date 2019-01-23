@@ -178,6 +178,9 @@ const InputGroup = styled.div`
 `
 
 const Input = styled.div.attrs({ className: 'pt-input' })`
+  height: auto;
+  margin-bottom: 6px;
+  padding: 5px 10px;
   width: 100%;
 
   &:focus-within {
