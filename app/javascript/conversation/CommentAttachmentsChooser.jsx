@@ -28,8 +28,8 @@ const CommentAttachmentsChooser = ({ attachments, onChange }: Props) => {
             attachment.state === 'finished'
               ? 1
               : attachment.state === 'uploading'
-                ? attachment.progress / 100
-                : 0
+              ? attachment.progress / 100
+              : 0
           return (
             <Tag
               minimal

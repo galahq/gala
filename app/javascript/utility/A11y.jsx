@@ -38,7 +38,7 @@ export const LabelForScreenReaders = styled.div`
     width: initial;
 
     ${p =>
-    p.visibleBelowMaxWidth ||
+      p.visibleBelowMaxWidth ||
       css`
         html:not(.pt-focus-disabled) & {
           background-color: black;

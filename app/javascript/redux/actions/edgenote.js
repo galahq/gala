@@ -97,13 +97,12 @@ function uploadOrDetach (
           displayToast({ ...progressBarToastProps(progress), onDismiss }, key)
         ),
     })
-    .then(
-      blobId =>
-        blobId
-          ? {
+    .then(blobId =>
+      blobId
+        ? {
             [attribute]: blobId,
           }
-          : {}
+        : {}
     )
 }
 

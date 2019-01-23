@@ -151,9 +151,9 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     const ConditionalLink = isALink ? LinkBody : Body
     const conditionalHoverCallbacks = isALink
       ? {
-        onMouseEnter: onMouseOver,
-        onMouseLeave: onMouseOut,
-      }
+          onMouseEnter: onMouseOver,
+          onMouseLeave: onMouseOut,
+        }
       : {}
 
     return (

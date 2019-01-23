@@ -34,7 +34,7 @@ export const Embed = styled.div`
     p.ratio &&
     css`
       position: relative;
-      padding-bottom: ${100 * p.ratio[1] / p.ratio[0]}%;
+      padding-bottom: ${(100 * p.ratio[1]) / p.ratio[0]}%;
       height: 0;
 
       iframe {

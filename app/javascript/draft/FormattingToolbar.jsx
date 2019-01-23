@@ -125,7 +125,10 @@ FormattingToolbar.defaultProps = {
   actions: {},
 }
 
-export default connect(null, { displayToast })(injectIntl(FormattingToolbar))
+export default connect(
+  null,
+  { displayToast }
+)(injectIntl(FormattingToolbar))
 
 const ButtonGroup = styled.div.attrs({
   className: ({ active }) =>
