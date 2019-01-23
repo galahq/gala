@@ -3,7 +3,7 @@
 module Readers
   # Serialize the bits you need for an identicon
   class IdenticonSerializer < ApplicationSerializer
-    attributes :image_url, :hash_key, :name
+    attributes :id, :image_url, :hash_key, :name
 
     def initialize(*props)
       super(*props)
