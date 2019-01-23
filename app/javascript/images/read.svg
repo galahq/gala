@@ -1,17 +1,1 @@
-;<svg
-  width="30"
-  height="30"
-  viewBox="0 0 30 30"
-  xmlns="http://www.w3.org/2000/svg"
->
-  <g
-    stroke-linecap="round"
-    stroke="#EBEAE4"
-    stroke-linejoin="round"
-    fill="none"
-    fill-rule="evenodd"
-  >
-    <path d="M1.71 1.71h26.954v26.954H1.711V1.711zm11.72 20.165H5.227m11.718-3H5.227m11.718-4H5.227m11.718-3H5.227m11.718-4H8.742" />
-    <path d="M20.46 20.46h4.688v4.688h-4.687v-4.687zm0-8.202h4.688v5.86h-4.687v-5.86zm0-7.031h4.688v4.687h-4.687V5.227z" />
-  </g>
-</svg>
+<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><g stroke-linecap="round" stroke="#EBEAE4" stroke-linejoin="round" fill="none" fill-rule="evenodd"><path d="M1.71 1.71h26.954v26.954H1.711V1.711zm11.72 20.165H5.227m11.718-3H5.227m11.718-4H5.227m11.718-3H5.227m11.718-4H8.742"/><path d="M20.46 20.46h4.688v4.688h-4.687v-4.687zm0-8.202h4.688v5.86h-4.687v-5.86zm0-7.031h4.688v4.687h-4.687V5.227z"/></g></svg>
