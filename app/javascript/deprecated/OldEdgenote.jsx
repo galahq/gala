@@ -1,4 +1,7 @@
-/* @flow */
+/*
+ * @noflow
+ **/
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
