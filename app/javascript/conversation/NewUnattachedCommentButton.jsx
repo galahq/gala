@@ -28,7 +28,7 @@ const NewUnattachedCommentButton = ({
   <NewUnattachedButtonContainer>
     <FormattedMessage id="comments.index.joinTheConversation" />
     <button
-      className="pt-button pt-intent-primary pt-icon-edit"
+      className="pt-button pt-intent-primary pt-icon-annotation"
       onClick={() =>
         createUnattachedCommentThread().then(id =>
           history.push(`/conversation/${id}`)
