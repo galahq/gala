@@ -1,1 +1,23 @@
-<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><g transform="translate(1 1)" stroke="#000" stroke-width=".8" fill="none" fill-rule="evenodd"><path d="M3.211 10.516c1.674-2.966 6.077-2.845 7.612-.01"/><ellipse cx="4.229" cy="4.958" rx=".875" ry=".875"/><circle cx="9.479" cy="4.958" r=".875"/><ellipse cx="7" cy="7" rx="6.708" ry="6.708"/><path d="M3.211 10.516c1.674-2.966 6.077-2.845 7.612-.01"/><ellipse cx="4.229" cy="4.958" rx=".875" ry=".875"/><circle cx="9.479" cy="4.958" r=".875"/><ellipse cx="7" cy="7" rx="6.708" ry="6.708"/></g></svg>
+;<svg
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g
+    transform="translate(1 1)"
+    stroke="#000"
+    stroke-width=".8"
+    fill="none"
+    fill-rule="evenodd"
+  >
+    <path d="M3.211 10.516c1.674-2.966 6.077-2.845 7.612-.01" />
+    <ellipse cx="4.229" cy="4.958" rx=".875" ry=".875" />
+    <circle cx="9.479" cy="4.958" r=".875" />
+    <ellipse cx="7" cy="7" rx="6.708" ry="6.708" />
+    <path d="M3.211 10.516c1.674-2.966 6.077-2.845 7.612-.01" />
+    <ellipse cx="4.229" cy="4.958" rx=".875" ry=".875" />
+    <circle cx="9.479" cy="4.958" r=".875" />
+    <ellipse cx="7" cy="7" rx="6.708" ry="6.708" />
+  </g>
+</svg>

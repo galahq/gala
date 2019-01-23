@@ -81,9 +81,11 @@ const EdgenoteSpan = ({
   )
 }
 
-const EdgenoteEntity = connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-  EdgenoteSpan
-)
+const EdgenoteEntity = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
+)(EdgenoteSpan)
 
 // $FlowFixMe
 export default withRouter(EdgenoteEntity)

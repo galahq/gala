@@ -78,8 +78,8 @@ function uploadBlob (file: File, onProgress?: number => mixed): Promise<string> 
       }
     )
 
-    upload.create(
-      (error, blob) => (error ? reject(error) : resolve(blob.signed_id))
+    upload.create((error, blob) =>
+      error ? reject(error) : resolve(blob.signed_id)
     )
   })
 }

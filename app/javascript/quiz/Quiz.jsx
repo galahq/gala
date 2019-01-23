@@ -9,6 +9,8 @@ import { submitQuiz } from 'redux/actions'
 
 import type { State } from 'redux/state'
 
+import type { Question } from 'redux/state'
+
 function mapStateToProps (state: State) {
   const { id, questions, needsPretest, needsPosttest } = state.quiz
   const { reader } = state.caseData
@@ -22,8 +24,6 @@ function mapStateToProps (state: State) {
     questions,
   }
 }
-
-import type { Question } from 'redux/state'
 
 type QuizProps = {
   id: number,
@@ -62,10 +62,12 @@ export function providesQuiz<P> (
       if (!submissionNeeded) return false
       if (isInstructor) return false
 
-      return questions.map(x => x.id).every(x => {
-        const answer = quizState[x]
-        return answer && answer.trim().length > 0
-      })
+      return questions
+        .map(x => x.id)
+        .every(x => {
+          const answer = quizState[x]
+          return answer && answer.trim().length > 0
+        })
     }
 
     handleChange = (questionId: string, e: SyntheticInputEvent<*>) => {
@@ -100,5 +102,8 @@ export function providesQuiz<P> (
   }
 
   // $FlowFixMe
-  return connect(mapStateToProps, { submitQuiz })(QuizProvider)
+  return connect(
+    mapStateToProps,
+    { submitQuiz }
+  )(QuizProvider)
 }

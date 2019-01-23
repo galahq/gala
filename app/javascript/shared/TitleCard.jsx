@@ -149,6 +149,7 @@ export const Container = styled.div`
   ${whenOneColumn(grid.oneColumn)}
 `
 
+// $FlowFixMe
 export const Image = styled.div.attrs({ className: 'pt-dark' })`
   background-color: hsl(209, 53%, 76%);
   background-image: ${p => css`url(${p.src})`};

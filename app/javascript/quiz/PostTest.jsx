@@ -170,9 +170,8 @@ class PostTest extends React.Component<
     Orchard.harvest(`quizzes/${id}`).then((quiz: Quiz) =>
       Orchard.harvest(`quizzes/${id}/submissions`).then(
         ({ submissions }: Submissions) => {
-          const lastSubmission = values(submissions).reduce(
-            (max, submission) =>
-              max.createdAt >= submission.createdAt ? max : submission
+          const lastSubmission = values(submissions).reduce((max, submission) =>
+            max.createdAt >= submission.createdAt ? max : submission
           )
 
           this.setState({

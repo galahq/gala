@@ -88,9 +88,10 @@ const TeachingGuide = ({
 }
 
 // $FlowFixMe
-export default connect(mapStateToProps, { deleteTeachingGuide, updateCase })(
-  TeachingGuide
-)
+export default connect(
+  mapStateToProps,
+  { deleteTeachingGuide, updateCase }
+)(TeachingGuide)
 
 const Container = styled.div`
   font-family: ${p => p.theme.sansFont};
