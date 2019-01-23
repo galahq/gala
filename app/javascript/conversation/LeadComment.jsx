@@ -25,7 +25,7 @@ import { styles } from 'draft/config'
 
 import type { IntlShape } from 'react-intl'
 import type { Dispatch } from 'redux/actions'
-import type { State, Page, Comment } from 'redux/state'
+import type { State, ReaderState, Page, Comment } from 'redux/state'
 
 type OwnProps = {
   cardPosition: ?number,
@@ -42,7 +42,7 @@ type OwnProps = {
 }
 
 function mapStateToProps (
-  { commentThreadsById, forums }: State,
+  { commentThreadsById, forums, caseData }: State,
   { threadId }: OwnProps
 ) {
   const thread = commentThreadsById[threadId]
@@ -50,9 +50,14 @@ function mapStateToProps (
     readerCanDeleteComments: forums.find(forum => forum.community.active)
       ?.moderateable,
     threadDetached: thread.start == null || thread.blockIndex == null,
+    currentReader: caseData.reader,
   }
 }
-type StateProps = { readerCanDeleteComments: boolean, threadDetached: boolean }
+type StateProps = {
+  readerCanDeleteComments: boolean,
+  threadDetached: boolean,
+  currentReader: ?ReaderState,
+}
 
 function mapDispatchToProps (
   dispatch: Dispatch,
@@ -77,6 +82,7 @@ type Props = OwnProps & StateProps & DispatchProps
 
 const LeadComment = ({
   cardPosition,
+  currentReader,
   handleDeleteThread,
   inSitu,
   inSituPath,
@@ -142,9 +148,20 @@ const LeadComment = ({
     {leadComment ? (
       <LeadCommentContents>
         <Row>
-          <SmallGreyText>
-            <ConversationTimestamp value={leadComment.timestamp} />
-          </SmallGreyText>
+          <div>
+            <SmallGreyText>
+              <ConversationTimestamp value={leadComment.timestamp} />
+            </SmallGreyText>
+            {currentReader && leadComment.reader.id === currentReader.id && (
+              <EditButton
+                aria-label={intl.formatMessage({
+                  id: 'comments.edit.editComment',
+                })}
+              >
+                <FormattedMessage id="helpers.edit" />
+              </EditButton>
+            )}
+          </div>
           {readerCanDeleteComments && responseCount === 0 && (
             <DeleteButton
               aria-label={intl.formatMessage({
@@ -154,11 +171,9 @@ const LeadComment = ({
             />
           )}
         </Row>
-
         <blockquote>
           <StyledComment markdown={leadComment.content} />
         </blockquote>
-
         {leadComment.attachments?.length > 0 && (
           <AttachmentsSection>
             <SmallGreyText>
@@ -238,6 +253,19 @@ const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+`
+
+const EditButton = styled.button.attrs({
+  className: 'pt-button pt-minimal pt-intent-primary',
+})`
+  &:hover {
+    background: none !important;
+    text-decoration: underline !important;
+  }
+
+  &:focus {
+    outline-offset: -3px;
+  }
 `
 
 const DeleteButton = styled.button.attrs({
