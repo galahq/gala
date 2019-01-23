@@ -171,8 +171,8 @@ const Window = styled.div`
   display: grid;
   grid-gap: 0 1rem;
   grid-template:
-    'sidebar value-proposition'
-    'sidebar banner'
+    'sidebar value-proposition' minmax(0, auto)
+    'sidebar banner' minmax(0, auto)
     'sidebar main' min-content / 19em calc(100% - 19em - 1em);
   min-height: 100%;
   position: relative;
@@ -181,8 +181,8 @@ const Window = styled.div`
 
   @media (max-width: 1100px) {
     grid-template:
-      'sidebar value-proposition'
-      'sidebar banner'
+      'sidebar value-proposition' minmax(0, auto)
+      'sidebar banner' minmax(0, auto)
       'sidebar main' min-content / 15em calc(100% - 15em - 1em);
   }
 
