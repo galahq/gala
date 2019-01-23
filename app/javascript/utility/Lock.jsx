@@ -67,40 +67,41 @@ const Lock = ({
 }: Props) => (
   <>
     {children({ locked, onBeginEditing, onFinishEditing })}
-    {visible &&
-      locked &&
-      lock && (
-        <>
-          <LockOverlay />
-          <LockDetails>
-            <div className="pt-callout pt-intent-danger pt-icon-lock">
-              <h5 className="pt-callout-title">
-                <FormattedMessage id="locks.lock.thisSectionIsLocked" />
-              </h5>
-              <p>
-                <FormattedMessage
-                  id="locks.lock.details"
-                  values={{
-                    name: lock.reader.name,
-                    someTimeAgo: <FormattedRelative value={lock.createdAt} />,
-                  }}
-                />
-              </p>
-              <button
-                className="pt-button pt-intent-danger"
-                onClick={onEditAnyway}
-              >
-                <FormattedMessage id="locks.destroy.editAnyway" />
-              </button>
-            </div>
-          </LockDetails>
-        </>
+    {visible && locked && lock && (
+      <>
+        <LockOverlay />
+        <LockDetails>
+          <div className="pt-callout pt-intent-danger pt-icon-lock">
+            <h5 className="pt-callout-title">
+              <FormattedMessage id="locks.lock.thisSectionIsLocked" />
+            </h5>
+            <p>
+              <FormattedMessage
+                id="locks.lock.details"
+                values={{
+                  name: lock.reader.name,
+                  someTimeAgo: <FormattedRelative value={lock.createdAt} />,
+                }}
+              />
+            </p>
+            <button
+              className="pt-button pt-intent-danger"
+              onClick={onEditAnyway}
+            >
+              <FormattedMessage id="locks.destroy.editAnyway" />
+            </button>
+          </div>
+        </LockDetails>
+      </>
     )}
   </>
 )
 
 // $FlowFixMe
-export default connect(mapStateToProps, mapDispatchToProps)(Lock)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Lock)
 
 /**
  * STYLED COMPONENTS

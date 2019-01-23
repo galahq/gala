@@ -30,9 +30,9 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   const { href, contents } =
     key != null
       ? (editorState
-        .getCurrentContent()
-        .getEntity(key)
-        .getData(): { href: string, contents: string })
+          .getCurrentContent()
+          .getEntity(key)
+          .getData(): { href: string, contents: string })
       : { href: '', contents: '' }
 
   return { editorState, href, contents }

@@ -16,11 +16,11 @@ describe('questionHasError', () => {
     ${{ id: null, content: 'What is?', options: ['A', 'B'], correctAnswer: 'A' }} | ${false}
     ${{ id: null, content: 'What is?', options: [''], correctAnswer: '' }}        | ${true}
   `(
-  'returns $hasError when question is { content: $question.content, options: $question.options, correctAnswer: $question.correctAnswer }',
-  ({ question, hasError }) => {
-    expect(questionHasError(question)).toEqual(hasError)
-  }
-)
+    'returns $hasError when question is { content: $question.content, options: $question.options, correctAnswer: $question.correctAnswer }',
+    ({ question, hasError }) => {
+      expect(questionHasError(question)).toEqual(hasError)
+    }
+  )
 })
 
 describe('validatedQuestions', () => {

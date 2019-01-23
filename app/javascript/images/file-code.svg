@@ -1,7 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 25">
-  <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-    <polygon points="19.5 23.5 .5 23.5 .5 .5 13.5 .5 19.5 6.5"/>
-    <polyline points="13.5 .5 13.5 6.5 19.5 6.5"/>
-    <path d="M8.5762 9.0947C5.2502 9.0947 9.0512 13.3687 5.2502 14.3197M8.5762 19.5439C5.2502 19.5439 9.0512 15.2699 5.2502 14.3189M11.4258 9.0947C14.7498 9.0947 10.9508 13.3687 14.7498 14.3197M11.4258 19.5439C14.7498 19.5439 10.9508 15.2699 14.7498 14.3189"/>
+;<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="16"
+  height="16"
+  viewBox="0 0 20 25"
+>
+  <g
+    fill="none"
+    fill-rule="evenodd"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <polygon points="19.5 23.5 .5 23.5 .5 .5 13.5 .5 19.5 6.5" />
+    <polyline points="13.5 .5 13.5 6.5 19.5 6.5" />
+    <path d="M8.5762 9.0947C5.2502 9.0947 9.0512 13.3687 5.2502 14.3197M8.5762 19.5439C5.2502 19.5439 9.0512 15.2699 5.2502 14.3189M11.4258 9.0947C14.7498 9.0947 10.9508 13.3687 14.7498 14.3197M11.4258 19.5439C14.7498 19.5439 10.9508 15.2699 14.7498 14.3189" />
   </g>
 </svg>

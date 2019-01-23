@@ -1,3 +1,7 @@
+/*
+ * @noflow
+ **/
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
@@ -91,8 +95,9 @@ class OldEdgenoteFigure extends React.Component {
               className={selected ? 'focus' : ''}
               dangerouslySetInnerHTML={{ __html: caption }}
             />
-            {editing &&
-              style === 'v1' && <button onClick={upgrade}>Upgrade</button>}
+            {editing && style === 'v1' && (
+              <button onClick={upgrade}>Upgrade</button>
+            )}
           </div>
         </Link>
       </aside>

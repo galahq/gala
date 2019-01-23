@@ -1,1 +1,23 @@
-<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><g transform="translate(.75 1.083)" stroke-width=".8" stroke="#000" fill="none" fill-rule="evenodd"><path d="M11.87 6.917S9.791 9.542 7.226 9.542 2.582 6.917 2.582 6.917 4.66 4.292 7.226 4.292c2.564 0 4.644 2.625 4.644 2.625z"/><ellipse cx="7.226" cy="6.917" rx="1.458" ry="1.458"/><circle stroke-dasharray="4.510000228881836,2.410000085830688" cx="7.25" cy="6.917" r="6.708"/></g></svg>
+;<svg
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g
+    transform="translate(.75 1.083)"
+    stroke-width=".8"
+    stroke="#000"
+    fill="none"
+    fill-rule="evenodd"
+  >
+    <path d="M11.87 6.917S9.791 9.542 7.226 9.542 2.582 6.917 2.582 6.917 4.66 4.292 7.226 4.292c2.564 0 4.644 2.625 4.644 2.625z" />
+    <ellipse cx="7.226" cy="6.917" rx="1.458" ry="1.458" />
+    <circle
+      stroke-dasharray="4.510000228881836,2.410000085830688"
+      cx="7.25"
+      cy="6.917"
+      r="6.708"
+    />
+  </g>
+</svg>

@@ -48,7 +48,11 @@ const CommentThreadEntity = ({ onClick, children }) => {
 
 // $FlowFixMe
 export default withRouter(
-  connect(mapStateToProps, null, mergeProps)(CommentThreadEntity)
+  connect(
+    mapStateToProps,
+    null,
+    mergeProps
+  )(CommentThreadEntity)
 )
 
 function getFirstThreadId (leaf: DraftEditorLeaf): ?string {

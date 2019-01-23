@@ -36,4 +36,5 @@ const Sidebar = ({ editing, readerEnrolled, location }) => {
 
 export default withRouter(connect(mapStateToProps)(Sidebar))
 
+// $FlowFixMe
 export const Container = styled.aside.attrs({ id: 'Sidebar' })``

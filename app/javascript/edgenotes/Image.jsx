@@ -56,11 +56,11 @@ const Image = ({
   return (
     <Container>
       {src && imageComponent}
-      {src &&
-        photoCredit && (
+      {src && photoCredit && (
         <PhotoCredit>
           <LabelForScreenReaders>
-            <FormattedMessage id="activerecord.attributes.edgenote.photoCredit" />:
+            <FormattedMessage id="activerecord.attributes.edgenote.photoCredit" />
+            :
           </LabelForScreenReaders>
           {photoCredit}
         </PhotoCredit>

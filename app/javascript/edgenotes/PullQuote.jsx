@@ -87,8 +87,7 @@ const Attribution = ({ name }) =>
         lineHeight: 1,
       }}
     >
-      {name &&
-        !name.trim().startsWith('—') && (
+      {name && !name.trim().startsWith('—') && (
         <FormattedMessage id="support.quote.attributionPrefix" />
       )}
       {name}

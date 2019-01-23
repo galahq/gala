@@ -121,9 +121,10 @@ class EdgenoteLibrary extends React.Component<Props> {
   }
 }
 // $FlowFixMe
-export default connect(mapStateToProps, { createEdgenote, deleteEdgenote })(
-  injectIntl(EdgenoteLibrary)
-)
+export default connect(
+  mapStateToProps,
+  { createEdgenote, deleteEdgenote }
+)(injectIntl(EdgenoteLibrary))
 
 const Table = styled.table.attrs({ className: 'pt-html-table pt-small' })`
   width: 100%;

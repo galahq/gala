@@ -40,9 +40,12 @@ const NewUnattachedCommentButton = ({
   </NewUnattachedButtonContainer>
 )
 
-export default connect(null, {
-  createUnattachedCommentThread,
-})(withRouter(NewUnattachedCommentButton))
+export default connect(
+  null,
+  {
+    createUnattachedCommentThread,
+  }
+)(withRouter(NewUnattachedCommentButton))
 
 const NewUnattachedButtonContainer = styled.div`
   padding: 14px 18px;

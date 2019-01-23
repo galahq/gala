@@ -72,9 +72,9 @@ function mapDispatchToProps (
   const inSitu = /cards/.test(location.pathname)
   const hoverHandlers = inSitu
     ? {
-      handleMouseEnter: () => dispatch(hoverCommentThread(id)),
-      handleMouseLeave: () => dispatch(hoverCommentThread(null)),
-    }
+        handleMouseEnter: () => dispatch(hoverCommentThread(id)),
+        handleMouseLeave: () => dispatch(hoverCommentThread(null)),
+      }
     : {}
   return {
     ...hoverHandlers,
@@ -161,7 +161,12 @@ const CommentThreadItem = ({
 )
 // $FlowFixMe
 export default withRouter(
-  injectIntl(connect(mapStateToProps, mapDispatchToProps)(CommentThreadItem))
+  injectIntl(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(CommentThreadItem)
+  )
 )
 
 const ConversationMetadata = styled.div`

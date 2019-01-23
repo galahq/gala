@@ -61,13 +61,12 @@ const Expansion = ({ contents, expansion }: Props) => {
       />
     </EmbedContainer>
   ) : (
-    preview &&
-      preview.title && (
+    preview && preview.title && (
       <Container>
         {!!imageUrl ||
-            (preview.images instanceof Array && (
-              <Image src={preview.images[0]} />
-            ))}
+          (preview.images instanceof Array && (
+            <Image src={preview.images[0]} />
+          ))}
         {!!caption || (
           <Text>
             <Title>{preview.title}</Title>

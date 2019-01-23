@@ -56,19 +56,19 @@ function StatusBar ({
           [
             pathname === '/'
               ? {
-                message: 'catalog.catalog',
-                icon: 'home',
-                onClick: () =>
-                  (window.location = window.location.pathname.replace(
-                    /cases.*/,
-                    ''
-                  )),
-              }
+                  message: 'catalog.catalog',
+                  icon: 'home',
+                  onClick: () =>
+                    (window.location = window.location.pathname.replace(
+                      /cases.*/,
+                      ''
+                    )),
+                }
               : {
-                message: 'cases.show.backToOverview',
-                icon: 'arrow-left',
-                onClick: () => history.push('/'),
-              },
+                  message: 'cases.show.backToOverview',
+                  icon: 'arrow-left',
+                  onClick: () => history.push('/'),
+                },
 
             {
               disabled: !commentable || !reader || !reader.enrollment,
@@ -81,72 +81,72 @@ function StatusBar ({
             editing
               ? { message: 'cases.edit.justChangeTheText' }
               : !published
-                ? { message: 'cases.show.notYetPublished' }
-                : null,
+              ? { message: 'cases.show.notYetPublished' }
+              : null,
           ],
           [
             editing
               ? {
-                message: 'editorships.new.addEditor',
-                icon: 'new-person',
-                onClick: () => (window.location = links.newEditorship),
-              }
+                  message: 'editorships.new.addEditor',
+                  icon: 'new-person',
+                  onClick: () => (window.location = links.newEditorship),
+                }
               : {
-                className: selecting && 'pt-intent-success',
-                message: 'deployments.new.teachThisCase',
-                icon: 'follower',
-                onClick: selecting
-                  ? () => onSelect(caseSlug)
-                  : () => (window.location = links.teach),
-              },
+                  className: selecting && 'pt-intent-success',
+                  message: 'deployments.new.teachThisCase',
+                  icon: 'follower',
+                  onClick: selecting
+                    ? () => onSelect(caseSlug)
+                    : () => (window.location = links.teach),
+                },
 
             !selecting &&
               editable &&
               (edited
                 ? {
-                  disabled: !edited,
-                  message: 'cases.edit.save',
-                  icon: 'floppy-disk',
-                  onClick: saveChanges,
-                }
+                    disabled: !edited,
+                    message: 'cases.edit.save',
+                    icon: 'floppy-disk',
+                    onClick: saveChanges,
+                  }
                 : {
-                  message: editing
-                    ? 'cases.edit.stopEditing'
-                    : 'cases.edit.edit',
-                  icon: editing ? 'cross' : 'edit',
-                  onClick: toggleEditing,
-                }),
+                    message: editing
+                      ? 'cases.edit.stopEditing'
+                      : 'cases.edit.edit',
+                    icon: editing ? 'cross' : 'edit',
+                    onClick: toggleEditing,
+                  }),
 
             !selecting &&
               editable && {
-              message: 'cases.edit.options',
-              icon: 'cog',
-              submenu: [
-                edited
-                  ? null
-                  : {
-                    message: 'cases.settings.edit.editCaseSettings',
-                    icon: 'settings',
+                message: 'cases.edit.options',
+                icon: 'cog',
+                submenu: [
+                  edited
+                    ? null
+                    : {
+                        message: 'cases.settings.edit.editCaseSettings',
+                        icon: 'settings',
+                        onClick: () => {
+                          window.location = links.settings
+                        },
+                      },
+                  {
+                    message: 'translations.new.translateThisCase',
+                    icon: 'translate',
                     onClick: () => {
-                      window.location = links.settings
+                      window.location = links.newTranslation
                     },
                   },
-                {
-                  message: 'translations.new.translateThisCase',
-                  icon: 'translate',
-                  onClick: () => {
-                    window.location = links.newTranslation
+                  {
+                    message: published
+                      ? 'cases.edit.unpublishCase'
+                      : 'cases.edit.publishCase',
+                    icon: published ? 'lock' : 'upload',
+                    onClick: togglePublished,
                   },
-                },
-                {
-                  message: published
-                    ? 'cases.edit.unpublishCase'
-                    : 'cases.edit.publishCase',
-                  icon: published ? 'lock' : 'upload',
-                  onClick: togglePublished,
-                },
-              ],
-            },
+                ],
+              },
           ],
         ]
         if (!groups.some(x => x)) return null

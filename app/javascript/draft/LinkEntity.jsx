@@ -1,3 +1,6 @@
+/*
+ * @noflow
+ **/
 import React from 'react'
 
 const LinkEntity = ({ contentState, entityKey, children }) => {
