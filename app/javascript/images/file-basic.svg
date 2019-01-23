@@ -1,18 +1,6 @@
-;<svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="16"
-  height="16"
-  viewBox="0 0 18 25"
->
-  <g
-    fill="none"
-    fill-rule="evenodd"
-    stroke="currentColor"
-    stroke-width="1.75"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  >
-    <polygon points="17.5 23.5 .5 23.5 .5 .5 11.5 .5 17.5 6.5" />
-    <polyline points="11.5 .5 11.5 6.5 17.5 6.5" />
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 25">
+  <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="17.5 23.5 .5 23.5 .5 .5 11.5 .5 17.5 6.5"/>
+    <polyline points="11.5 .5 11.5 6.5 17.5 6.5"/>
   </g>
 </svg>
