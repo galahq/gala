@@ -7,9 +7,9 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import { Button } from '@blueprintjs/core'
-import { EditorState, convertFromRaw } from 'draft-js'
-import { markdownToDraft } from 'markdown-draft-js'
+import { Button, Intent } from '@blueprintjs/core'
+import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
+import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js'
 
 import CommentEditor from 'conversation/CommentEditor'
 
@@ -31,11 +31,17 @@ type DispatchProps = {
 
 type Props = OwnProps & DispatchProps
 
+function editorStateFromMarkdown (md: string) {
+  return EditorState.createWithContent(convertFromRaw(markdownToDraft(md)))
+}
+
+function markdownFromEditorState (eS: EditorState) {
+  return draftToMarkdown(convertToRaw(eS.getCurrentContent()))
+}
+
 function EditCommentForm ({ comment, intl, setEditing, updateComment }: Props) {
   const [editorState, setEditorState] = useState(
-    EditorState.createWithContent(
-      convertFromRaw(markdownToDraft(comment.content))
-    )
+    editorStateFromMarkdown(comment.content)
   )
 
   // Leave editing mode in response to a change to comment.content
@@ -50,12 +56,12 @@ function EditCommentForm ({ comment, intl, setEditing, updateComment }: Props) {
 
   function handleCancel () {
     setEditing(false)
-    setEditorState(
-      EditorState.createWithContent(
-        convertFromRaw(markdownToDraft(comment.content))
-      )
-    )
+    setEditorState(editorStateFromMarkdown(comment.content))
   }
+
+  const newContent = markdownFromEditorState(editorState)
+  const saveDisabled =
+    comment.content === newContent || newContent.trim() === ''
 
   return (
     <InputGroup>
@@ -76,6 +82,7 @@ function EditCommentForm ({ comment, intl, setEditing, updateComment }: Props) {
         aria-label={intl.formatMessage({
           id: 'comments.edit.saveComment',
         })}
+        disabled={saveDisabled}
         onClick={() => updateComment(comment.id, editorState)}
       >
         <FormattedMessage id="helpers.save" />
