@@ -20,18 +20,20 @@ import { deleteComment, updateComment } from 'redux/actions'
 import type { IntlShape } from 'react-intl'
 import type { State, Comment } from 'redux/state'
 
-type Props = {
+type OwnProps = {
   comment: Comment,
   intl: IntlShape,
-  readerCanDeleteComments: boolean,
+}
+
+type StateProps = {
+  readerCanDeleteComments: ?boolean,
   readerCanEditComment: boolean,
-  updateComment: typeof updateComment,
 }
 
 function mapStateToProps (
   { caseData: { reader }, forums }: State,
-  { comment }: Props
-) {
+  { comment }: OwnProps
+): StateProps {
   return {
     readerCanDeleteComments: forums.find(forum => forum.community.active)
       ?.moderateable,
@@ -39,8 +41,16 @@ function mapStateToProps (
   }
 }
 
+type DispatchProps = {
+  deleteComment: typeof deleteComment,
+  updateComment: typeof updateComment,
+}
+
+type Props = StateProps & DispatchProps & OwnProps
+
 function Response ({
   comment,
+  deleteComment,
   intl,
   readerCanDeleteComments,
   readerCanEditComment,
