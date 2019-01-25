@@ -3,13 +3,20 @@
  * @flow
  */
 
-import * as React from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { EditorState, convertFromRaw } from 'draft-js'
+import { markdownToDraft } from 'markdown-draft-js'
 
-import { deleteComment } from 'redux/actions'
+import { Button } from '@blueprintjs/core'
+import { injectIntl, FormattedMessage, FormattedRelative } from 'react-intl'
+
+import { useToggle } from 'utility/hooks'
+import { deleteComment, updateComment } from 'redux/actions'
+
+import CommentEditor from 'conversation/CommentEditor'
 
 import {
   StyledComment,
@@ -19,7 +26,7 @@ import {
 
 import type { IntlShape } from 'react-intl'
 import type { Dispatch } from 'redux/actions'
-import type { State, ReaderState, Page, Comment } from 'redux/state'
+import type { State, ReaderState, Comment } from 'redux/state'
 
 type OwnProps = {
   intl: IntlShape,
@@ -47,6 +54,7 @@ function mapStateToProps ({
 
 type DispatchProps = {
   handleDeleteThread: (SyntheticMouseEvent<*>) => Promise<any>,
+  updateComment: typeof updateComment,
 }
 
 function mapDispatchToProps (
@@ -56,68 +64,125 @@ function mapDispatchToProps (
   return {
     handleDeleteThread: (e: SyntheticMouseEvent<*>) =>
       dispatch(deleteComment(id)).then(() => onCancel(e)),
+    updateComment: (...args) => dispatch(updateComment(...args)),
   }
 }
 
 type Props = OwnProps & StateProps & DispatchProps
 
-const LeadComment = ({
+function LeadComment ({
   currentReader,
   handleDeleteThread,
   intl,
   leadComment,
   readerCanDeleteComments,
   responseCount,
-}: Props) => (
-  <>
-    {leadComment ? (
-      <LeadCommentContents>
-        <Row>
-          <div>
-            <SmallGreyText>
-              <ConversationTimestamp value={leadComment.timestamp} />
-            </SmallGreyText>
-            {currentReader && leadComment.reader.id === currentReader.id && (
-              <EditButton
-                aria-label={intl.formatMessage({
-                  id: 'comments.edit.editComment',
-                })}
-              >
-                <FormattedMessage id="helpers.edit" />
-              </EditButton>
-            )}
-          </div>
-          {readerCanDeleteComments && responseCount === 0 && (
-            <DeleteButton
+  updateComment,
+}: Props) {
+  const [editing, toggleEditing] = useToggle()
+  const [editorState, setEditorState] = useState(
+    EditorState.createWithContent(
+      convertFromRaw(markdownToDraft(leadComment.content))
+    ) || null
+  )
+
+  useEffect(
+    () => {
+      if (editing) toggleEditing()
+    },
+    [leadComment.content]
+  )
+
+  return editing ? (
+    <>
+      <InputGroup>
+        <Input>
+          <CommentEditor editorState={editorState} onChange={setEditorState} />
+        </Input>
+
+        <Button
+          aria-label={intl.formatMessage({ id: 'helpers.cancel' })}
+          onClick={() => {
+            toggleEditing()
+            setEditorState(
+              EditorState.createWithContent(
+                convertFromRaw(markdownToDraft(leadComment.content))
+              )
+            )
+          }}
+        >
+          <FormattedMessage id="helpers.cancel" />
+        </Button>
+
+        <Button
+          aria-label={intl.formatMessage({
+            id: 'comments.edit.saveComment',
+          })}
+          onClick={() => updateComment(leadComment.id, editorState)}
+        >
+          <FormattedMessage id="helpers.save" />
+        </Button>
+      </InputGroup>
+    </>
+  ) : (
+    <LeadCommentContents>
+      <Row>
+        <div>
+          <SmallGreyText>
+            <ConversationTimestamp value={leadComment.timestamp} />
+          </SmallGreyText>
+          {currentReader && leadComment.reader.id === currentReader.id && (
+            <EditButton
               aria-label={intl.formatMessage({
-                id: 'commentThreads.destroy.deleteCommentThread',
+                id: 'comments.edit.editComment',
               })}
-              onClick={handleDeleteThread}
-            />
+              onClick={toggleEditing}
+            >
+              <FormattedMessage id="helpers.edit" />
+            </EditButton>
           )}
-        </Row>
-        <blockquote>
-          <StyledComment markdown={leadComment.content} />
-        </blockquote>
-        {leadComment.attachments?.length > 0 && (
-          <AttachmentsSection>
-            <SmallGreyText>
-              <FormattedMessage id="activerecord.attributes.comment.attachments" />
-            </SmallGreyText>
-            <ul>
-              {leadComment.attachments.map((attachment, i) => (
-                <li className="pt-tag pt-minimal pt-interactive" key={i}>
-                  <a href={attachment.url}>{attachment.name}</a>
-                </li>
-              ))}
-            </ul>
-          </AttachmentsSection>
+        </div>
+        {readerCanDeleteComments && responseCount === 0 && (
+          <DeleteButton
+            aria-label={intl.formatMessage({
+              id: 'commentThreads.destroy.deleteCommentThread',
+            })}
+            onClick={handleDeleteThread}
+          />
         )}
-      </LeadCommentContents>
-    ) : (
-    )}
-  </>
-)
+      </Row>
+      <blockquote>
+        <StyledComment markdown={leadComment.content} />
+        {leadComment.timestamp !== leadComment.updatedAt && (
+          <Edited>
+            <FormattedMessage
+              id="comments.comment.edited"
+              values={{
+                someTimeAgo: (
+                  <FormattedRelative value={leadComment.updatedAt} />
+                ),
+              }}
+            />
+          </Edited>
+        )}
+      </blockquote>
+      {leadComment.attachments?.length > 0 && (
+        <AttachmentsSection>
+          <SmallGreyText>
+            <FormattedMessage id="activerecord.attributes.comment.attachments" />
+          </SmallGreyText>
+          <ul>
+            {leadComment.attachments.map((attachment, i) => (
+              <li className="pt-tag pt-minimal pt-interactive" key={i}>
+                <a href={attachment.url}>{attachment.name}</a>
+              </li>
+            ))}
+          </ul>
+        </AttachmentsSection>
+      )}
+    </LeadCommentContents>
+  )
+}
 
 export default injectIntl(
   connect(
@@ -125,6 +190,38 @@ export default injectIntl(
     mapDispatchToProps
   )(LeadComment)
 )
+
+const Edited = styled.span`
+  font-size: 13px;
+  opacity: 0.7;
+`
+
+const InputGroup = styled.div`
+  flex-grow: 1;
+  margin: 6px 0 0 44px;
+`
+
+const Input = styled.div.attrs({ className: 'pt-input' })`
+  height: auto;
+  margin-bottom: 6px;
+  padding: 5px 10px;
+  width: 100%;
+
+  &:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 1px #7351d4, 0 0 0 3px rgba(115, 81, 212, 0.3),
+      inset 0 1px 1px rgba(16, 22, 26, 0.2);
+  }
+
+  & .public-DraftEditorPlaceholder-root {
+    margin-bottom: -18px;
+    pointer-events: none;
+    opacity: 0.6;
+    &.public-DraftEditorPlaceholder-hasFocus {
+      opacity: 0.3;
+    }
+  }
+`
 
 const LeadCommentContents = styled.div`
   margin: 20px 0 50px;
