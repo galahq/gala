@@ -286,8 +286,13 @@ fr:
       page_n: Page {pageNumber, number}
       text_changed: The text being discussed has changed since this conversation started.
   comments:
+    comment:
+      edited: (edited {someTimeAgo})
     destroy:
       delete_comment: Supprimer le commentaire
+    edit:
+      edit_comment: Edit comment
+      save_comment: Save comment
     index:
       all_comments: Tous les commentaires
       conversation: Conversation
