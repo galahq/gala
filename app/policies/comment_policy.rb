@@ -8,6 +8,10 @@ class CommentPolicy < ApplicationPolicy
     @forum_policy = forum_policy
   end
 
+  def update?
+    record.reader == user
+  end
+
   def destroy?
     user_can_moderate_forum?
   end
