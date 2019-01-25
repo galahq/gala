@@ -94,36 +94,34 @@ function LeadComment ({
   )
 
   return editing ? (
-    <>
-      <InputGroup>
-        <Input>
-          <CommentEditor editorState={editorState} onChange={setEditorState} />
-        </Input>
+    <InputGroup>
+      <Input>
+        <CommentEditor editorState={editorState} onChange={setEditorState} />
+      </Input>
 
-        <Button
-          aria-label={intl.formatMessage({ id: 'helpers.cancel' })}
-          onClick={() => {
-            toggleEditing()
-            setEditorState(
-              EditorState.createWithContent(
-                convertFromRaw(markdownToDraft(leadComment.content))
-              )
+      <Button
+        aria-label={intl.formatMessage({ id: 'helpers.cancel' })}
+        onClick={() => {
+          toggleEditing()
+          setEditorState(
+            EditorState.createWithContent(
+              convertFromRaw(markdownToDraft(leadComment.content))
             )
-          }}
-        >
-          <FormattedMessage id="helpers.cancel" />
-        </Button>
+          )
+        }}
+      >
+        <FormattedMessage id="helpers.cancel" />
+      </Button>
 
-        <Button
-          aria-label={intl.formatMessage({
-            id: 'comments.edit.saveComment',
-          })}
-          onClick={() => updateComment(leadComment.id, editorState)}
-        >
-          <FormattedMessage id="helpers.save" />
-        </Button>
-      </InputGroup>
-    </>
+      <Button
+        aria-label={intl.formatMessage({
+          id: 'comments.edit.saveComment',
+        })}
+        onClick={() => updateComment(leadComment.id, editorState)}
+      >
+        <FormattedMessage id="helpers.save" />
+      </Button>
+    </InputGroup>
   ) : (
     <LeadCommentContents>
       <Row>
