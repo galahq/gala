@@ -4,29 +4,14 @@
  */
 
 import * as React from 'react'
-import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { groupWith } from 'ramda'
 
+import Response from 'conversation/Response'
 import Identicon from 'shared/Identicon'
-import {
-  StyledComment,
-  SmallGreyText,
-  ConversationTimestamp,
-} from 'conversation/shared'
+import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
 
-import { deleteComment } from 'redux/actions'
-
-import type { IntlShape } from 'react-intl'
-import type { State, Comment } from 'redux/state'
-
-function mapStateToProps ({ forums }: State) {
-  return {
-    readerCanDeleteComments: forums.find(forum => forum.community.active)
-      ?.moderateable,
-  }
-}
+import type { Comment } from 'redux/state'
 
 const ms = x => new Date(x).getTime()
 
@@ -40,18 +25,10 @@ const groupComments = comments =>
   groupWith(closeEnoughTimestamps, comments).map(groupWith(sameReader))
 
 type Props = {
-  deleteComment: typeof deleteComment,
-  intl: IntlShape,
-  readerCanDeleteComments: boolean,
   responses: Comment[],
 }
 
-const Responses = ({
-  deleteComment,
-  intl,
-  readerCanDeleteComments,
-  responses,
-}: Props) => {
+const Responses = ({ responses }: Props) => {
   if (responses.length === 0) return null
   const timeGroups = groupComments(responses)
 
@@ -73,20 +50,7 @@ const Responses = ({
                 <SmallGreyText>{comments[0].reader.name}</SmallGreyText>
 
                 {comments.map(comment => (
-                  <Response key={comment.id}>
-                    <SpeechBubble>
-                      <StyledComment markdown={comment.content} />
-                    </SpeechBubble>
-
-                    {readerCanDeleteComments && (
-                      <DeleteButton
-                        aria-label={intl.formatMessage({
-                          id: 'comments.destroy.deleteComment',
-                        })}
-                        onClick={() => deleteComment(comment.id)}
-                      />
-                    )}
-                  </Response>
+                  <Response key={comment.id} comment={comment} />
                 ))}
 
                 <Identicon
@@ -104,12 +68,7 @@ const Responses = ({
   )
 }
 
-export default injectIntl(
-  connect(
-    mapStateToProps,
-    { deleteComment }
-  )(Responses)
-)
+export default Responses
 
 const Container = styled.div``
 
@@ -138,32 +97,5 @@ const ResponseGroup = styled.div`
   & .Identicon {
     position: absolute;
     bottom: 0;
-  }
-`
-
-const Response = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  width: 100%;
-`
-
-const SpeechBubble = styled.blockquote`
-  margin: 6px 0 0 44px;
-  border: none;
-  background-color: #d9d8d3;
-  border-radius: 16px;
-  max-width: 500px;
-  padding: 7px 16px;
-  line-height: 1.3;
-`
-
-const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
-})`
-  transition: opacity 0.2s;
-  opacity: 0;
-  ${Response}:hover & {
-    opacity: 1;
   }
 `

@@ -18,7 +18,7 @@ class Comment < ApplicationRecord
 
   validates :content, presence: true
 
-  after_create { CommentBroadcastJob.perform_now self }
+  after_save { CommentBroadcastJob.perform_now self }
   after_create_commit { CommentThreadBroadcastJob.perform_later comment_thread }
   after_create_commit :send_notifications_of_reply
 
@@ -33,13 +33,14 @@ class Comment < ApplicationRecord
     card = comment_thread.card
     comment_thread.collocutors.each do |other_reader|
       next if other_reader == reader
+
       ReplyNotification.create reader: other_reader,
                                notifier: reader,
                                comment: self,
                                comment_thread: comment_thread,
                                card: card,
-                               case: card.case,
-                               page: card.element
+                               case: forum.case,
+                               page: card&.element
     end
   end
 end

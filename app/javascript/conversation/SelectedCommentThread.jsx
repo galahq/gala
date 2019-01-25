@@ -11,7 +11,10 @@ import { Link, Redirect } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import { isMobile } from 'react-device-detect'
 
+import LeadCommenter from 'conversation/LeadCommenter'
+import CommentThreadLocation from 'conversation/CommentThreadLocation'
 import LeadComment from 'conversation/LeadComment'
+import FirstPostForm from 'conversation/FirstPostForm'
 import Responses from 'conversation/Responses'
 import ResponseForm, {
   EmptyResponseFormContainer,
@@ -37,6 +40,7 @@ type StateProps =
       commentThreadFound: true,
       activeReader: ?Reader,
       cardPosition: ?number,
+      detached: boolean,
       inSituPath: ?string,
       leadComment: ?Comment,
       leadCommenter: { hashKey: string, imageUrl: ?string, name: string },
@@ -70,11 +74,14 @@ function mapStateToProps (
   const page = pageId != null ? pagesById[pageId] : null
   const inSituPath =
     cardId && page && `/${page.position}/cards/${cardId}/comments/${threadId}`
+  const detached =
+    commentThread.start == null || commentThread.blockIndex == null
 
   return {
     commentThreadFound: true,
     activeReader,
     cardPosition,
+    detached,
     inSituPath,
     leadComment,
     leadCommenter,
@@ -153,6 +160,7 @@ class SelectedCommentThread extends React.Component<
 
     const {
       cardPosition,
+      detached,
       heightOffset,
       inSituPath,
       handleDeleteThread,
@@ -178,19 +186,33 @@ class SelectedCommentThread extends React.Component<
                   <FormattedMessage id="comments.index.allComments" />
                 </AllCommentsButton>
               </LabelForScreenReaders>
-              <LeadComment
+
+              <LeadCommenter reader={leadCommenter} />
+              <CommentThreadLocation
                 cardPosition={cardPosition}
+                detached={detached}
                 inSitu={inSitu}
                 inSituPath={inSituPath}
-                leadComment={leadComment}
                 originalHighlightText={originalHighlightText}
                 page={page}
-                reader={leadCommenter}
-                responseCount={responses.length}
-                threadId={threadId}
-                onCancel={handleDeleteThread}
               />
-              <Responses responses={responses} />
+
+              {leadComment ? (
+                <>
+                  <LeadComment
+                    leadComment={leadComment}
+                    responseCount={responses.length}
+                    onCancel={handleDeleteThread}
+                  />
+                  <Responses responses={responses} />
+                </>
+              ) : (
+                <FirstPostForm
+                  key="3"
+                  threadId={threadId}
+                  onCancel={handleDeleteThread}
+                />
+              )}
             </CommentsContainer>
           </ScrollView>
 
@@ -213,7 +235,7 @@ export default connect(
   mapDispatchToProps
 )(SelectedCommentThread)
 
-const Container = styled.div.attrs({ className: 'SelectedCommentThread' })`
+const Container = styled.div.attrs({ 'data-testid': 'SelectedCommentThread' })`
   flex: 1;
   max-width: 633px;
   min-width: 370px;
