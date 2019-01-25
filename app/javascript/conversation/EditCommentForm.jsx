@@ -78,7 +78,7 @@ function EditCommentForm ({ comment, intl, setEditing, updateComment }: Props) {
         <FormattedMessage id="helpers.cancel" />
       </Button>
 
-      <Button
+      <EditButton
         aria-label={intl.formatMessage({
           id: 'comments.edit.saveComment',
         })}
@@ -86,7 +86,7 @@ function EditCommentForm ({ comment, intl, setEditing, updateComment }: Props) {
         onClick={() => updateComment(comment.id, editorState)}
       >
         <FormattedMessage id="helpers.save" />
-      </Button>
+      </EditButton>
     </InputGroup>
   )
 }
@@ -123,4 +123,8 @@ const Input = styled.div.attrs({ className: 'pt-input' })`
       opacity: 0.3;
     }
   }
+`
+
+const EditButton = styled(Button).attrs({ intent: Intent.PRIMARY })`
+  margin-left: 0.25em;
 `
