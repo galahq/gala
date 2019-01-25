@@ -24,20 +24,26 @@ feature 'Editing a comment' do
         expect(page).to have_content comment.content
       end
 
-      click_button 'Edit comment'
-      expect(page).to have_field 'Comment text', with: comment.content
+      within '[data-testid="SelectedCommentThread"]' do
+        find('blockquote', text: comment.content).hover
+        click_button 'Edit comment'
 
-      fill_in 'Comment text', with: 'Hello World!'
-      click_button 'Save'
+        field = find('.public-DraftEditor-content', text: comment.content).click
+        page.driver.browser.action.
+          send_keys(:backspace, :delete)
+            .send_keys('Hello World!')
+            .perform
+        click_button 'Save'
+      end
 
       expect(page).to have_no_content comment.content
       expect(page).to have_content 'Hello World!'
-      expect(page).to have_content 'Edited'
+      expect(page).to have_content 'edited'
 
       Capybara.using_session :other do
         expect(page).to have_no_content comment.content
         expect(page).to have_content 'Hello World!'
-        expect(page).to have_content 'Edited'
+        expect(page).to have_content 'edited'
       end
     end
   end
