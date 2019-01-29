@@ -2,7 +2,7 @@
  * @providesModule ResponseForm
  * @flow
  */
-import React, { useRef, useState, useEffect, useLayoutEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Identicon from 'shared/Identicon'
 import CommentEditor from 'conversation/CommentEditor'
@@ -33,7 +33,6 @@ function ResponseForm ({
 
   useEffect(
     () => {
-      console.log('this effect')
       setEditorState(editorStateFromProps)
     },
     [threadId, editorStateFromProps]
