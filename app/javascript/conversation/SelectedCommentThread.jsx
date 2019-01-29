@@ -140,7 +140,7 @@ function SelectedCommentThread (props: Props) {
     const sameThread = prevProps.threadId === threadId
     const addingResponse = prevProps.responses.length < responses.length
     const activeReaderCommentedLast =
-      responses[responses.length - 1].reader.id === activeReader.id
+      responses[responses.length - 1]?.reader.id === activeReader.id
 
     return sameThread && addingResponse && activeReaderCommentedLast
   }
