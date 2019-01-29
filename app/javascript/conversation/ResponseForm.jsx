@@ -2,14 +2,9 @@
  * @providesModule ResponseForm
  * @flow
  */
-
-import * as React from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-
-import { EditorState } from 'draft-js'
-
 import Identicon from 'shared/Identicon'
-
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
 import type {
@@ -17,74 +12,71 @@ import type {
   StateProps,
   DispatchProps,
 } from 'conversation/commentFormConnector'
-
 type Props = {
   ...CommentFormProps,
   ...StateProps,
   ...DispatchProps,
   onResize: number => mixed,
 }
+function ResponseForm ({
+  editorState: editorStateFromProps,
+  intl,
+  threadId,
+  reader,
+  onSaveChanges,
+  onSubmitComment,
+  onResize,
+}: Props) {
+  const containerRef = useRef<HTMLDivElement>(null)
 
-class ResponseForm extends React.Component<
-  Props,
-  { editorState: EditorState }
-> {
-  state = { editorState: this.props.editorState }
+  const [editorState, setEditorState] = useState(editorStateFromProps)
 
-  container: ?HTMLDivElement
+  useEffect(
+    () => {
+      setEditorState(editorStateFromProps)
+    },
+    [threadId, editorStateFromProps]
+  )
 
-  componentDidUpdate (prevProps: Props) {
-    if (
-      prevProps.threadId !== this.props.threadId ||
-      prevProps.editorState !== this.props.editorState
-    ) {
-      this.setState({ editorState: this.props.editorState })
-    }
-    this._updateHeight()
+  function updateHeight () {
+    const height = containerRef.current?.offsetHeight
+    height && onResize(height)
   }
 
-  render () {
-    const { onSubmitComment, intl, reader } = this.props
-    const { editorState } = this.state
-    if (reader == null) return null
-    return (
-      // $FlowFixMe
-      <Container ref={(el: HTMLDivElement) => (this.container = el)}>
-        <Identicon width={32} reader={reader} />
-        <Input>
-          <CommentEditor
-            editorState={editorState}
-            onChange={this.handleChange}
-            onBlur={this.handleBlur}
-          />
-        </Input>
-        <SendButton
-          aria-label={intl.formatMessage({
-            id: 'comments.new.respond',
-          })}
-          className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
-          disabled={
-            editorState
-              .getCurrentContent()
-              .getPlainText()
-              .trim() === ''
-          }
-          onClick={() => onSubmitComment(editorState, [])}
+  useEffect(() => {
+    updateHeight()
+  })
+
+  if (reader == null) return null
+
+  return (
+    // $FlowFixMe
+    <Container ref={containerRef}>
+      <Identicon width={32} reader={reader} />
+      <Input>
+        <CommentEditor
+          editorState={editorState}
+          onChange={eS => setEditorState(eS)}
+          onBlur={() => onSaveChanges(editorState)}
         />
-      </Container>
-    )
-  }
-
-  handleChange = editorState => this.setState({ editorState })
-  handleBlur = () => this.props.onSaveChanges(this.state.editorState)
-
-  _updateHeight = () => {
-    const height = this.container?.offsetHeight
-    height && this.props.onResize(height)
-  }
+      </Input>
+      <SendButton
+        aria-label={intl.formatMessage({
+          id: 'comments.new.respond',
+        })}
+        className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
+        disabled={
+          editorState
+            .getCurrentContent()
+            .getPlainText()
+            .trim() === ''
+        }
+        onClick={() => onSubmitComment(editorState, [])}
+      />
+    </Container>
+  )
 }
 export default commentFormConnector(ResponseForm)
-
 const Container = styled.div`
   flex-shrink: 0;
   background-color: #ebeae4;
@@ -94,24 +86,20 @@ const Container = styled.div`
   align-items: flex-end;
   padding: 11px;
   position: relative;
-
   & .Identicon {
     margin-bottom: 1px;
   }
-
   @media (max-width: 700px) {
     margin: 0 6px;
     bottom: 0;
     width: calc(100vw - 12px);
   }
 `
-
 // $FlowFixMe
 export const EmptyResponseFormContainer = styled(Container)`
   border-top: none;
   padding: 1px;
 `
-
 const Input = styled.div.attrs({ className: 'pt-card' })`
   background-color: white;
   border-radius: 20px;
@@ -123,13 +111,11 @@ const Input = styled.div.attrs({ className: 'pt-card' })`
   overflow: auto;
   font-size: 14px;
   line-height: 1.3;
-
   &:focus-within {
     outline: none;
     box-shadow: 0 0 0 1px #7351d4, 0 0 0 3px rgba(115, 81, 212, 0.3),
       inset 0 1px 1px rgba(16, 22, 26, 0.2);
   }
-
   & .public-DraftEditorPlaceholder-root {
     margin-bottom: -18px;
     pointer-events: none;
@@ -139,7 +125,6 @@ const Input = styled.div.attrs({ className: 'pt-card' })`
     }
   }
 `
-
 const SendButton = styled.button`
   position: absolute;
   right: 16px;

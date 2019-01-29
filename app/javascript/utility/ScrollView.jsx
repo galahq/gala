@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 class ScrollView extends React.Component<{
   maxHeightOffset: string,
-  innerRef: HTMLDivElement => any,
+  innerRef: (?HTMLDivElement) => any,
   children: React.Node,
 }> {
   static defaultProps = { innerRef: (_: HTMLDivElement) => {} }

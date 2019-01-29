@@ -3,7 +3,7 @@
  * @flow
  */
 
-import * as React from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 
@@ -24,6 +24,7 @@ import ScrollView from 'utility/ScrollView'
 import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 
 import { deleteCommentThread } from 'redux/actions'
+import usePrevious from 'utility/hooks/usePrevious'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { Dispatch } from 'redux/actions'
@@ -117,118 +118,124 @@ function mapDispatchToProps (
 
 type Props = {| ...OwnProps, ...StateProps, ...DispatchProps |}
 
-class SelectedCommentThread extends React.Component<
-  Props,
-  { formHeight: number }
-> {
-  state = { formHeight: 57 }
+function SelectedCommentThread (props: Props) {
+  const [formHeight, setFormHeight] = useState(57)
+  const scrollViewRef = useRef<HTMLDivElement>(null)
 
-  scrollView: ?HTMLDivElement
+  const prevProps = usePrevious(props)
 
-  handleFormResize = (formHeight: number) => this.setState({ formHeight })
-
-  componentDidUpdate (prevProps) {
+  function activeReaderJustCommented () {
+    // Guard for type refinement
     if (
-      !this.props.commentThreadFound ||
+      !props.commentThreadFound ||
+      !prevProps ||
       !prevProps.commentThreadFound ||
-      !this.props.activeReader
+      !props.activeReader
     ) {
-      return
+      return false
     }
-    const { threadId, responses, activeReader } = this.props
-    if (
-      prevProps.threadId === threadId &&
-      prevProps.responses.length < responses.length &&
-      responses[responses.length - 1].reader.id === activeReader.id &&
-      this.scrollView != null
-    ) {
-      this.scrollView.scrollTop = this.scrollView.scrollHeight
-    }
+
+    const { threadId, responses, activeReader } = props
+
+    const sameThread = prevProps.threadId === threadId
+    const addingResponse = prevProps.responses.length < responses.length
+    const activeReaderCommentedLast =
+      responses[responses.length - 1]?.reader.id === activeReader.id
+
+    return sameThread && addingResponse && activeReaderCommentedLast
   }
 
-  render () {
-    const { inSitu, match, location } = this.props
-    const threadId = match.params.threadId || ''
-    const backPath = location.pathname.replace(new RegExp(`/${threadId}$`), '')
-    if (!this.props.commentThreadFound) {
-      return inSitu ? (
-        <Redirect replace to={backPath} />
-      ) : (
-        <NoSelectedCommentThread />
-      )
+  useEffect(() => {
+    if (activeReaderJustCommented() && scrollViewRef.current != null) {
+      scrollViewRef.current.scrollTop = scrollViewRef.current.scrollHeight
     }
+  })
 
-    const {
-      cardPosition,
-      detached,
-      heightOffset,
-      inSituPath,
-      handleDeleteThread,
-      leadComment,
-      leadCommenter,
-      originalHighlightText,
-      page,
-      responses,
-    } = this.props
-    const { formHeight } = this.state
-    return (
-      <Container inSitu={inSitu}>
-        <FocusContainer priority={2}>
-          <ScrollView
-            innerRef={scrollView => (this.scrollView = scrollView)}
-            maxHeightOffset={`${heightOffset}px + ${
-              leadComment == null ? 0 : formHeight
-            }px + ${isMobile ? 80 : 0}px`}
-          >
-            <CommentsContainer>
-              <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
-                <AllCommentsButton replace to={backPath}>
-                  <FormattedMessage id="comments.index.allComments" />
-                </AllCommentsButton>
-              </LabelForScreenReaders>
+  // $FlowFixMe
+  const handleFormResize = useCallback((height: number) => {
+    setFormHeight(height)
+  }, [])
 
-              <LeadCommenter reader={leadCommenter} />
-              <CommentThreadLocation
-                cardPosition={cardPosition}
-                detached={detached}
-                inSitu={inSitu}
-                inSituPath={inSituPath}
-                originalHighlightText={originalHighlightText}
-                page={page}
-              />
+  const { inSitu, match, location } = props
+  const threadId = match.params.threadId || ''
+  const backPath = location.pathname.replace(new RegExp(`/${threadId}$`), '')
 
-              {leadComment ? (
-                <>
-                  <LeadComment
-                    leadComment={leadComment}
-                    responseCount={responses.length}
-                    onCancel={handleDeleteThread}
-                  />
-                  <Responses responses={responses} />
-                </>
-              ) : (
-                <FirstPostForm
-                  key="3"
-                  threadId={threadId}
-                  onCancel={handleDeleteThread}
-                />
-              )}
-            </CommentsContainer>
-          </ScrollView>
-
-          {leadComment != null ? (
-            <ResponseForm
-              threadId={threadId}
-              onResize={this.handleFormResize}
-            />
-          ) : (
-            <EmptyResponseFormContainer />
-          )}
-        </FocusContainer>
-      </Container>
+  if (!props.commentThreadFound) {
+    return inSitu ? (
+      <Redirect replace to={backPath} />
+    ) : (
+      <NoSelectedCommentThread />
     )
   }
+
+  const {
+    cardPosition,
+    detached,
+    handleDeleteThread,
+    heightOffset,
+    inSituPath,
+    leadComment,
+    leadCommenter,
+    originalHighlightText,
+    page,
+    responses,
+  } = props
+
+  return (
+    <Container inSitu={inSitu}>
+      <FocusContainer priority={2}>
+        <ScrollView
+          innerRef={el => (scrollViewRef.current = el || null)}
+          maxHeightOffset={`${heightOffset}px + ${
+            leadComment == null ? 0 : formHeight
+          }px + ${isMobile ? 80 : 0}px`}
+        >
+          <CommentsContainer>
+            <LabelForScreenReaders visibleBelowMaxWidth={inSitu ? 1279 : 699}>
+              <AllCommentsButton replace to={backPath}>
+                <FormattedMessage id="comments.index.allComments" />
+              </AllCommentsButton>
+            </LabelForScreenReaders>
+
+            <LeadCommenter reader={leadCommenter} />
+            <CommentThreadLocation
+              cardPosition={cardPosition}
+              detached={detached}
+              inSitu={inSitu}
+              inSituPath={inSituPath}
+              originalHighlightText={originalHighlightText}
+              page={page}
+            />
+
+            {leadComment ? (
+              <>
+                <LeadComment
+                  leadComment={leadComment}
+                  responseCount={responses.length}
+                  onCancel={handleDeleteThread}
+                />
+                <Responses responses={responses} />
+              </>
+            ) : (
+              <FirstPostForm
+                key="3"
+                threadId={threadId}
+                onCancel={handleDeleteThread}
+              />
+            )}
+          </CommentsContainer>
+        </ScrollView>
+
+        {leadComment != null ? (
+          <ResponseForm threadId={threadId} onResize={handleFormResize} />
+        ) : (
+          <EmptyResponseFormContainer />
+        )}
+      </FocusContainer>
+    </Container>
+  )
 }
+
 // $FlowFixMe
 export default connect(
   mapStateToProps,
