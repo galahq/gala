@@ -2,22 +2,28 @@
  * @providesModule ResponseForm
  * @flow
  */
+
 import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { getDefaultKeyBinding } from 'draft-js'
+
 import Identicon from 'shared/Identicon'
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
+
 import type {
   CommentFormProps,
   StateProps,
   DispatchProps,
 } from 'conversation/commentFormConnector'
+
 type Props = {
   ...CommentFormProps,
   ...StateProps,
   ...DispatchProps,
   onResize: number => mixed,
 }
+
 function ResponseForm ({
   editorState: editorStateFromProps,
   intl,
@@ -27,10 +33,9 @@ function ResponseForm ({
   onSubmitComment,
   onResize,
 }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
+  // Reset local contents state if we change to another thread or are reset by
+  // our parent.
   const [editorState, setEditorState] = useState(editorStateFromProps)
-
   useEffect(
     () => {
       setEditorState(editorStateFromProps)
@@ -38,13 +43,12 @@ function ResponseForm ({
     [threadId, editorStateFromProps]
   )
 
-  function updateHeight () {
+  // Callback with the element’s height every time we rerender so the
+  // scroll-view preceding this input can be resized.
+  const containerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
     const height = containerRef.current?.offsetHeight
     height && onResize(height)
-  }
-
-  useEffect(() => {
-    updateHeight()
   })
 
   if (reader == null) return null
@@ -53,13 +57,16 @@ function ResponseForm ({
     // $FlowFixMe
     <Container ref={containerRef}>
       <Identicon width={32} reader={reader} />
+
       <Input>
         <CommentEditor
           editorState={editorState}
+          keyBindingFn={submitCommentOnEnter}
           onChange={eS => setEditorState(eS)}
           onBlur={() => onSaveChanges(editorState)}
         />
       </Input>
+
       <SendButton
         aria-label={intl.formatMessage({
           id: 'comments.new.respond',
@@ -75,8 +82,19 @@ function ResponseForm ({
       />
     </Container>
   )
+
+  function submitCommentOnEnter (e: SyntheticKeyboardEvent<*>) {
+    if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      onSubmitComment(editorState, [])
+      return 'noop'
+    }
+
+    return getDefaultKeyBinding(e)
+  }
 }
+
 export default commentFormConnector(ResponseForm)
+
 const Container = styled.div`
   flex-shrink: 0;
   background-color: #ebeae4;
@@ -95,11 +113,13 @@ const Container = styled.div`
     width: calc(100vw - 12px);
   }
 `
+
 // $FlowFixMe
 export const EmptyResponseFormContainer = styled(Container)`
   border-top: none;
   padding: 1px;
 `
+
 const Input = styled.div.attrs({ className: 'pt-card' })`
   background-color: white;
   border-radius: 20px;
@@ -125,6 +145,7 @@ const Input = styled.div.attrs({ className: 'pt-card' })`
     }
   }
 `
+
 const SendButton = styled.button`
   position: absolute;
   right: 16px;
