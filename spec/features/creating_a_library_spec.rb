@@ -15,7 +15,7 @@ feature 'Creating a library', javascript: false do
     fill_in 'Background Color', with: '#00274c'
     fill_in 'Foreground Color', with: '#ffcb05'
     attach_file File.absolute_path('./app/assets/images/gala-logo.svg'),
-                name: 'library[logo]', make_visible: true
+                name: 'library[logo]'
     click_button 'Create Library'
 
     expect(page).to have_content 'successfully created'
