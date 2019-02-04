@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Adding a collaborator' do
+feature 'Adding a collaborator', javascript: false do
   let!(:reader) { create :reader }
   let!(:case_study) do
     create(:case).tap { |c| reader.my_cases << c }
@@ -14,8 +14,7 @@ feature 'Adding a collaborator' do
     scenario 'is possible' do
       collaborator = create :reader
 
-      visit case_path case_study
-      click_on 'Edit this case'
+      visit edit_case_settings_path case_study
       click_on 'Add Collaborator'
 
       fill_in 'Collaborator’s Email', with: collaborator.email
@@ -28,8 +27,7 @@ feature 'Adding a collaborator' do
 
   context 'without an account' do
     scenario 'shows an error message' do
-      visit case_path case_study
-      click_on 'Edit this case'
+      visit edit_case_settings_path case_study
       click_on 'Add Collaborator'
 
       fill_in 'Collaborator’s Email', with: 'nonexistantuser@email.com'

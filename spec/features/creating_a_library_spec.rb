@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Creating a library' do
+feature 'Creating a library', javascript: false do
   let(:reader) { create :reader, :editor }
 
   before { login_as reader }

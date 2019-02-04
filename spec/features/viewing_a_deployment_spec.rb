@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Viewing a deployment' do
+feature 'Viewing a deployment', javascript: false do
   it 'shows the quiz details, the enrolled readers, and their engagement' do
     reader = create :reader
     group = create :group

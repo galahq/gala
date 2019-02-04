@@ -83,6 +83,12 @@ RSpec.configure do |config|
     Capybara.server = :puma, { Silent: true }
   end
 
+  config.around(:each, type: :feature, javascript: false) do |example|
+    Capybara.current_driver = :rack_test
+    example.run
+    Capybara.use_default_driver
+  end
+
   config.after(:each) do |example|
     if defined?(page) && example.exception
       save_screenshot
