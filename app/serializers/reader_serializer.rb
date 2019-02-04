@@ -7,6 +7,11 @@ class ReaderSerializer < ApplicationSerializer
 
   has_one :active_community
 
+  def initialize(*props)
+    super(*props)
+    self.object = object.decorate
+  end
+
   def roles
     Role.all.each_with_object({}) do |role, hash|
       hash[role.name] = object.roles.include? role
