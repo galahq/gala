@@ -22,6 +22,9 @@ function handleKeyCommand (command: string, editorState: EditorState) {
     this.onChange(newState) // `this` is the Editor component
     return 'handled'
   }
+
+  if (command === 'noop') return 'handled'
+
   return 'not-handled'
 }
 
@@ -37,19 +40,23 @@ const styleMapWithCode = {
   },
 }
 
+type Props = {|
+  editorState: EditorState,
+  innerRef: (?Editor) => any,
+  intl: IntlShape,
+  keyBindingFn?: (e: SyntheticKeyboardEvent<*>) => ?string,
+  onChange: EditorState => any,
+  onBlur: (SyntheticEvent<*>) => any,
+|}
+
 const CommentEditor = ({
   editorState,
   innerRef,
   intl,
+  keyBindingFn,
   onChange,
   onBlur,
-}: {|
-  editorState: EditorState,
-  innerRef: (?Editor) => any,
-  intl: IntlShape,
-  onChange: EditorState => any,
-  onBlur: (SyntheticEvent<*>) => any,
-|}) => (
+}: Props) => (
   <StyledCommentContainer
     hidePlaceholder={
       !editorState.getCurrentContent().hasText() &&
@@ -62,13 +69,14 @@ const CommentEditor = ({
   >
     <Editor
       ref={innerRef}
+      customStyleMap={styleMapWithCode}
       editorState={editorState}
+      handleKeyCommand={handleKeyCommand}
+      keyBindingFn={keyBindingFn}
       placeholder={intl.formatMessage({ id: 'comments.new.write' })}
       plugins={[linkifyPlugin]}
-      customStyleMap={styleMapWithCode}
-      handleKeyCommand={handleKeyCommand} // eslint-disable-line
-      onChange={onChange}
       onBlur={onBlur}
+      onChange={onChange}
     />
   </StyledCommentContainer>
 )
