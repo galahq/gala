@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Editing a library' do
+feature 'Editing a library', javascript: false do
   let(:reader) { create :reader }
   let!(:library) { reader.libraries.create attributes_for :library }
 
