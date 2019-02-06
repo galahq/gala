@@ -57,6 +57,7 @@ class Community < ApplicationRecord
   # The group memberships for this community’s group
   # @return [ActiveRecord::Relation<GroupMembership>]
   def memberships
+    return GroupMembership.none if global?
     group.group_memberships
   end
 end
