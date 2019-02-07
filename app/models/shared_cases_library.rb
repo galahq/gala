@@ -41,6 +41,10 @@ class SharedCasesLibrary
     nil
   end
 
+  def to_model
+    self
+  end
+
   def to_partial_path
     'libraries/library'
   end
