@@ -14,6 +14,8 @@
 #
 # @see GenericDeployment GenericDeployment: this model’s null object
 class Deployment < ApplicationRecord
+  default_scope { order created_at: :desc }
+
   attribute :answers_needed, :integer, default: 0
   attribute :key, :string, default: -> { SecureRandom.urlsafe_base64 }
 
@@ -22,6 +24,12 @@ class Deployment < ApplicationRecord
   belongs_to :quiz, optional: true
 
   has_many :readers, through: :group
+  has_many :enrollments, ->(this) { where(reader: this.readers) },
+           through: :case
+
+  has_one :community, through: :group
+  has_one :forum, ->(this) { where case: this.case },
+          through: :community, source: :forums
 
   accepts_nested_attributes_for :group
 

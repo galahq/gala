@@ -20,12 +20,15 @@ class Community < ApplicationRecord
   has_many :invitations, dependent: :destroy
   # One forum for each case the community is discussing
   has_many :forums, dependent: :destroy
+  has_many :group_memberships, through: :group
 
   after_save :ensure_forum_exists_for_every_case, if: :universal
 
   delegate :comment_threads, to: :forum
 
   scope :universal, -> { where(universal: true) }
+
+  alias_method :memberships, :group_memberships
 
   # The communities that have an active forum associated with them
   # @return [ActiveRecord::Relation<Community>]
@@ -52,12 +55,5 @@ class Community < ApplicationRecord
   # @return [Boolean]
   def global?
     group.nil?
-  end
-
-  # The group memberships for this community’s group
-  # @return [ActiveRecord::Relation<GroupMembership>]
-  def memberships
-    return GroupMembership.none if global?
-    group.group_memberships
   end
 end
