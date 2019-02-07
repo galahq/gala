@@ -25,6 +25,7 @@ class Card < ApplicationRecord
 
   acts_as_list scope: %i[element_id element_type]
 
+  delegate :case_element, to: :element
   delegate :paragraphs, to: :raw_content
 
   # @return [Numeric, nil]

@@ -11,11 +11,15 @@
 # @see GlobalGroup GlobalGroup: this model’s null object
 class Group < ApplicationRecord
   include Mobility
+
+  default_scope { order created_at: :desc }
+
   translates :name, fallbacks: true
 
   has_many :group_memberships, dependent: :destroy
   has_many :readers, through: :group_memberships
   has_many :deployments, dependent: :destroy
+  has_many :cases, through: :deployments
 
   has_one :community, dependent: :destroy
 

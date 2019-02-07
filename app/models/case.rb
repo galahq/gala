@@ -35,6 +35,8 @@ class Case < ApplicationRecord
   include Taggable
   extend FriendlyId
 
+  default_scope { ordered }
+
   attribute :authors, :json, default: []
   attribute :commentable, default: true
   attribute :learning_objectives, :json, default: []
@@ -51,7 +53,7 @@ class Case < ApplicationRecord
   has_many :active_locks, class_name: 'Lock'
   has_many :cards
   has_many :case_elements, -> { order position: :asc }, dependent: :destroy
-  has_many :comment_threads, dependent: :destroy
+  has_many :comment_threads, through: :cards, dependent: :destroy
   has_many :comments, through: :comment_threads
   has_many :deployments, dependent: :destroy
   has_many :edgenotes, dependent: :destroy
@@ -138,14 +140,6 @@ class Case < ApplicationRecord
 
   def translation_set
     Case.where(translation_base_id: translation_base_id)
-  end
-
-  def comment_threads
-    CommentThread.where(card: cards)
-  end
-
-  def comments
-    Comment.where(comment_thread: comment_threads)
   end
 
   def library
