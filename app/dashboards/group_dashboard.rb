@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class GroupDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -17,7 +19,7 @@ class GroupDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     context_id: Field::String,
-    name: Field::String.with_options(searchable: false),
+    name: Field::String.with_options(searchable: false)
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -25,35 +27,35 @@ class GroupDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :name,
-    :readers,
-    :cases,
-    :created_at,
+  COLLECTION_ATTRIBUTES = %i[
+    name
+    readers
+    cases
+    created_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :name,
-    :context_id,
-    :deployments,
-    :group_memberships,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    name
+    context_id
+    deployments
+    group_memberships
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :group_memberships,
-    :readers,
-    :deployments,
-    :community,
-    :context_id,
-    :name,
+  FORM_ATTRIBUTES = %i[
+    group_memberships
+    readers
+    deployments
+    community
+    context_id
+    name
   ].freeze
 
   def display_resource(group)

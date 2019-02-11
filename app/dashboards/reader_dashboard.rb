@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class ReaderDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -18,13 +20,13 @@ class ReaderDashboard < Administrate::BaseDashboard
     answers: Field::HasMany,
     quizzes: Field::HasMany,
     invitations: Field::HasMany,
-    invited_communities: Field::HasMany.with_options(class_name: "Community"),
-    group_communities: Field::HasMany.with_options(class_name: "Community"),
+    invited_communities: Field::HasMany.with_options(class_name: 'Community'),
+    group_communities: Field::HasMany.with_options(class_name: 'Community'),
     comment_threads: Field::HasMany,
     comments: Field::HasMany,
-    events: Field::HasMany.with_options(class_name: "Ahoy::Event"),
+    events: Field::HasMany.with_options(class_name: 'Ahoy::Event'),
     editorships: Field::HasMany,
-    my_cases: Field::HasMany.with_options(class_name: "Case"),
+    my_cases: Field::HasMany.with_options(class_name: 'Case'),
     managerships: Field::HasMany,
     libraries: Field::HasMany,
     image_attachment: Field::HasOne,
@@ -53,7 +55,7 @@ class ReaderDashboard < Administrate::BaseDashboard
     unconfirmed_email: Field::String,
     created_password: Field::Boolean,
     send_reply_notifications: Field::Boolean,
-    active_community: Field::BelongsTo.with_options(class_name: "Community")
+    active_community: Field::BelongsTo.with_options(class_name: 'Community')
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -61,45 +63,45 @@ class ReaderDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :name,
-    :email,
-    :editorships,
-    :enrollments,
+  COLLECTION_ATTRIBUTES = %i[
+    name
+    email
+    editorships
+    enrollments
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :name,
-    :email,
-    :sign_in_count,
-    :current_sign_in_at,
-    :created_at,
-    :locale,
-    :created_password,
-    :send_reply_notifications,
-    :active_community,
-    :editorships,
-    :enrollments,
-    :submissions,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    name
+    email
+    sign_in_count
+    current_sign_in_at
+    created_at
+    locale
+    created_password
+    send_reply_notifications
+    active_community
+    editorships
+    enrollments
+    submissions
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :id,
-    :name,
-    :email,
-    :sign_in_count,
-    :current_sign_in_at,
-    :created_at,
-    :locale,
-    :created_password,
-    :send_reply_notifications,
-    :active_community,
+  FORM_ATTRIBUTES = %i[
+    id
+    name
+    email
+    sign_in_count
+    current_sign_in_at
+    created_at
+    locale
+    created_password
+    send_reply_notifications
+    active_community
   ].freeze
 
   def display_resource(reader)

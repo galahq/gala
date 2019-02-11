@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class LibraryDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -10,7 +12,7 @@ class LibraryDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     cases: Field::HasMany,
     managerships: Field::HasMany,
-    managers: Field::HasMany.with_options(class_name: "Reader"),
+    managers: Field::HasMany.with_options(class_name: 'Reader'),
     logo_attachment: Field::HasOne,
     logo_blob: Field::HasOne,
     id: Field::Number,
@@ -24,7 +26,7 @@ class LibraryDashboard < Administrate::BaseDashboard
     url: Field::String.with_options(searchable: false),
     name: Field::String.with_options(searchable: false),
     cases_count: Field::Number,
-    visible_in_catalog_at: Field::DateTime,
+    visible_in_catalog_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -32,48 +34,48 @@ class LibraryDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :name,
-    :cases,
-    :managerships,
-    :visible_in_catalog_at
+  COLLECTION_ATTRIBUTES = %i[
+    name
+    cases
+    managerships
+    visible_in_catalog_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :slug,
-    :name,
-    :description,
-    :url,
-    :background_color,
-    :foreground_color,
-    :visible_in_catalog_at,
-    :cases,
-    :managerships,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    slug
+    name
+    description
+    url
+    background_color
+    foreground_color
+    visible_in_catalog_at
+    cases
+    managerships
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :cases,
-    :managerships,
-    :managers,
-    :logo_attachment,
-    :logo_blob,
-    :slug,
-    :logo_url,
-    :background_color,
-    :foreground_color,
-    :description,
-    :url,
-    :name,
-    :cases_count,
-    :visible_in_catalog_at,
+  FORM_ATTRIBUTES = %i[
+    cases
+    managerships
+    managers
+    logo_attachment
+    logo_blob
+    slug
+    logo_url
+    background_color
+    foreground_color
+    description
+    url
+    name
+    cases_count
+    visible_in_catalog_at
   ].freeze
 
   def display_resource(library)

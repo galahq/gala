@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class CommunityDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -16,7 +18,7 @@ class CommunityDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     description: Field::String.with_options(searchable: false),
-    universal: Field::Boolean,
+    universal: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -24,37 +26,37 @@ class CommunityDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :group,
-    :invitations,
-    :forums,
-    :id,
+  COLLECTION_ATTRIBUTES = %i[
+    group
+    invitations
+    forums
+    id
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :group,
-    :invitations,
-    :forums,
-    :id,
-    :name,
-    :created_at,
-    :updated_at,
-    :description,
-    :universal,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    group
+    invitations
+    forums
+    id
+    name
+    created_at
+    updated_at
+    description
+    universal
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :group,
-    :invitations,
-    :forums,
-    :name,
-    :description,
-    :universal,
+  FORM_ATTRIBUTES = %i[
+    group
+    invitations
+    forums
+    name
+    description
+    universal
   ].freeze
 
   # Overwrite this method to customize how communities are displayed

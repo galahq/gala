@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class Ahoy::EventDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -9,12 +11,12 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     visit: Field::BelongsTo,
-    user: Field::BelongsTo.with_options(class_name: "Reader"),
+    user: Field::BelongsTo.with_options(class_name: 'Reader'),
     id: Field::Number,
     user_id: Field::Number,
     name: Field::String,
     properties: Field::String.with_options(searchable: false),
-    time: Field::DateTime,
+    time: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -22,11 +24,11 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :user,
-    :name,
-    :properties,
-    :time
+  COLLECTION_ATTRIBUTES = %i[
+    user
+    name
+    properties
+    time
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -37,7 +39,7 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :properties,
-    :time,
+    :time
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -49,6 +51,6 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
     :user_id,
     :name,
     :properties,
-    :time,
+    :time
   ].freeze
 end

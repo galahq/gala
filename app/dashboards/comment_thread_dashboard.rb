@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class CommentThreadDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -11,7 +13,7 @@ class CommentThreadDashboard < Administrate::BaseDashboard
     card: Field::BelongsTo,
     case: Field::BelongsTo,
     case_id: Field::Number,
-    collocutors: Field::HasMany.with_options(class_name: "Reader"),
+    collocutors: Field::HasMany.with_options(class_name: 'Reader'),
     comments: Field::HasMany,
     comments_count: Field::Number,
     community: Field::BelongsTo,
@@ -21,7 +23,7 @@ class CommentThreadDashboard < Administrate::BaseDashboard
     locale: Field::String,
     original_highlight_text: Field::String,
     reader: Field::BelongsTo,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -29,41 +31,41 @@ class CommentThreadDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :case,
-    :card,
-    :community,
-    :collocutors,
-    :comments,
+  COLLECTION_ATTRIBUTES = %i[
+    case
+    card
+    community
+    collocutors
+    comments
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :case,
-    :card,
-    :community,
-    :forum,
-    :original_highlight_text,
-    :locale,
-    :comments,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    case
+    card
+    community
+    forum
+    original_highlight_text
+    locale
+    comments
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :card,
-    :forum,
-    :reader,
-    :comments,
-    :case_id,
-    :original_highlight_text,
-    :locale,
-    :comments_count,
+  FORM_ATTRIBUTES = %i[
+    card
+    forum
+    reader
+    comments
+    case_id
+    original_highlight_text
+    locale
+    comments_count
   ].freeze
 
   # Overwrite this method to customize how comment threads are displayed

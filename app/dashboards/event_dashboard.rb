@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class Ahoy::EventDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -9,12 +11,12 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     visit: Field::BelongsTo,
-    user: Field::BelongsTo.with_options(class_name: "Reader"),
+    user: Field::BelongsTo.with_options(class_name: 'Reader'),
     id: Field::Number,
     user_id: Field::Number,
     name: Field::String,
     properties: Field::String.with_options(searchable: false),
-    time: Field::DateTime,
+    time: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -22,35 +24,35 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :user,
-    :name,
-    :properties,
-    :time
+  COLLECTION_ATTRIBUTES = %i[
+    user
+    name
+    properties
+    time
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :visit,
-    :user,
-    :id,
-    :user_id,
-    :name,
-    :properties,
-    :time,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    visit
+    user
+    id
+    user_id
+    name
+    properties
+    time
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :visit,
-    :user,
-    :user_id,
-    :name,
-    :properties,
-    :time,
+  FORM_ATTRIBUTES = %i[
+    visit
+    user
+    user_id
+    name
+    properties
+    time
   ].freeze
 
   # Overwrite this method to customize how events are displayed

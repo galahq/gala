@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class CaseDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -9,7 +11,7 @@ class CaseDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     acknowledgements: Field::Text,
-    active_locks: Field::HasMany.with_options(class_name: "Lock"),
+    active_locks: Field::HasMany.with_options(class_name: 'Lock'),
     audience: Field::Text,
     authors: Field::String.with_options(searchable: false),
     cards: Field::HasMany,
@@ -23,7 +25,7 @@ class CaseDashboard < Administrate::BaseDashboard
     dek: Field::Text,
     deployments: Field::HasMany,
     edgenotes: Field::HasMany,
-    editors: Field::HasMany.with_options(class_name: "Reader"),
+    editors: Field::HasMany.with_options(class_name: 'Reader'),
     editorships: Field::HasMany,
     enrollments: Field::HasMany,
     featured_at: Field::DateTime,
@@ -33,7 +35,7 @@ class CaseDashboard < Administrate::BaseDashboard
     latitude: Field::Number.with_options(decimals: 2),
     learning_objectives: Field::String.with_options(searchable: false),
     library: Field::BelongsTo
-      .with_options(searchable: true, searchable_field: :name),
+                    .with_options(searchable: true, searchable_field: :name),
     locale: Field::Text,
     lock: Field::HasOne,
     longitude: Field::Number.with_options(decimals: 2),
@@ -45,18 +47,18 @@ class CaseDashboard < Administrate::BaseDashboard
     readers: Field::HasMany,
     roles: Field::HasMany,
     slug: Field::Text,
-    slugs: Field::HasMany.with_options(class_name: "FriendlyId::Slug"),
+    slugs: Field::HasMany.with_options(class_name: 'FriendlyId::Slug'),
     summary: Field::Text,
     taggings: Field::HasMany,
     tags: Field::HasMany,
     teaching_guide_attachment: Field::HasOne,
     teaching_guide_blob: Field::HasOne,
     title: Field::Text,
-    translation_base: Field::BelongsTo.with_options(class_name: "Case"),
+    translation_base: Field::BelongsTo.with_options(class_name: 'Case'),
     translation_base_id: Field::Number,
     translators: Field::String.with_options(searchable: false),
     updated_at: Field::DateTime,
-    zoom: Field::Number.with_options(decimals: 2),
+    zoom: Field::Number.with_options(decimals: 2)
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -64,14 +66,14 @@ class CaseDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :cover_image,
-    :kicker,
-    :locale,
-    :case_elements,
-    :enrollments,
-    :deployments,
-    :comments,
+  COLLECTION_ATTRIBUTES = %i[
+    cover_image
+    kicker
+    locale
+    case_elements
+    enrollments
+    deployments
+    comments
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -90,7 +92,7 @@ class CaseDashboard < Administrate::BaseDashboard
     :editorships,
     :enrollments,
     :deployments,
-    :comments,
+    :comments
 
     # :tags,
     # :translation_base,
@@ -130,7 +132,7 @@ class CaseDashboard < Administrate::BaseDashboard
     :translation_base,
     :editorships,
     :deployments,
-    :enrollments,
+    :enrollments
 
     # :lock,
     # :taggings,
