@@ -63,6 +63,8 @@ gem 'sass-rails', '~> 5.0'
 gem 'webpacker', '>= 4.0.x'
 
 # Logging and Monitoring
+gem 'administrate'
+gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'

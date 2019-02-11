@@ -11,6 +11,8 @@ class Submission < ApplicationRecord
   belongs_to :quiz
   belongs_to :reader
 
+  has_one :case, through: :quiz
+
   has_many :answers, dependent: :destroy
 
   def self.create(answers:, quiz:, reader:)
@@ -42,5 +44,9 @@ class Submission < ApplicationRecord
   # @return [String]
   def answer(to_question_id:)
     answers.find { |a| a.question_id == to_question_id }.try(:content) || ''
+  end
+
+  def case_completion
+    answers.first&.case_completion
   end
 end
