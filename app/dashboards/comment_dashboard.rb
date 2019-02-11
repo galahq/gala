@@ -14,7 +14,7 @@ class CommentDashboard < Administrate::BaseDashboard
     comment_thread: Field::BelongsTo,
     community: Field::BelongsTo
       .with_options(searchable: true, searchable_field: :name),
-    content: Field::String,
+    content: Field::Text,
     created_at: Field::DateTime,
     id: Field::Number,
     position: Field::Number,
@@ -41,6 +41,7 @@ class CommentDashboard < Administrate::BaseDashboard
     :id,
     :reader,
     :content,
+    :attachments,
     :community,
     :case,
     :comment_thread,
@@ -54,10 +55,10 @@ class CommentDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :reader,
     :comment_thread,
-    :attachments_attachments,
-    :attachments_blobs,
-    :position,
     :content,
+    :attachments,
+    :created_at,
+    :updated_at,
   ].freeze
 
   # Overwrite this method to customize how comments are displayed
