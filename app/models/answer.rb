@@ -23,6 +23,11 @@ class Answer < ApplicationRecord
     where reader: reader
   end
 
+  def correct
+    return nil if question.open_ended?
+    self[:correct]
+  end
+
   private
 
   # In case the correct answer to the question is changed after this answer was
