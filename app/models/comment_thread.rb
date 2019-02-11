@@ -9,6 +9,8 @@
 # @attr locale [Iso639_1Code] which translation of the case this comment thread
 #   is attached to.
 class CommentThread < ApplicationRecord
+  default_scope { order(updated_at: :desc) }
+
   belongs_to :card, touch: true, optional: true
   belongs_to :forum, touch: true
   belongs_to :reader

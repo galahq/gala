@@ -51,10 +51,7 @@ class ForumDashboard < Administrate::BaseDashboard
     :comment_threads,
   ].freeze
 
-  # Overwrite this method to customize how forums are displayed
-  # across all pages of the admin dashboard.
-  #
-  # def display_resource(forum)
-  #   "Forum ##{forum.id}"
-  # end
+  def display_resource(forum)
+    "Forum: #{forum.community.name} on #{forum.case.kicker}"
+  end
 end
