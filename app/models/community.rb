@@ -28,7 +28,7 @@ class Community < ApplicationRecord
 
   scope :universal, -> { where(universal: true) }
 
-  alias_method :memberships, :group_memberships
+  alias memberships group_memberships
 
   # The communities that have an active forum associated with them
   # @return [ActiveRecord::Relation<Community>]

@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class CommentDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -10,16 +12,16 @@ class CommentDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     attachments: Field::ActiveStorage,
     case: Field::BelongsTo
-      .with_options(searchable: true, searchable_field: :kicker),
+                    .with_options(searchable: true, searchable_field: :kicker),
     comment_thread: Field::BelongsTo,
     community: Field::BelongsTo
-      .with_options(searchable: true, searchable_field: :name),
+                    .with_options(searchable: true, searchable_field: :name),
     content: Field::Text,
     created_at: Field::DateTime,
     id: Field::Number,
     position: Field::Number,
     reader: Field::BelongsTo,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -27,38 +29,38 @@ class CommentDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :reader,
-    :content,
-    :community,
-    :case,
-    :created_at,
+  COLLECTION_ATTRIBUTES = %i[
+    reader
+    content
+    community
+    case
+    created_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :reader,
-    :content,
-    :attachments,
-    :community,
-    :case,
-    :comment_thread,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    reader
+    content
+    attachments
+    community
+    case
+    comment_thread
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :reader,
-    :comment_thread,
-    :content,
-    :attachments,
-    :created_at,
-    :updated_at,
+  FORM_ATTRIBUTES = %i[
+    reader
+    comment_thread
+    content
+    attachments
+    created_at
+    updated_at
   ].freeze
 
   # Overwrite this method to customize how comments are displayed

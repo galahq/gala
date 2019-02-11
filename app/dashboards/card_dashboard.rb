@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class CardDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -18,7 +20,7 @@ class CardDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     solid: Field::Boolean,
-    raw_content: Field::String.with_options(searchable: false),
+    raw_content: Field::String.with_options(searchable: false)
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -26,41 +28,41 @@ class CardDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :lock,
-    :case,
-    :element,
-    :comment_threads,
+  COLLECTION_ATTRIBUTES = %i[
+    lock
+    case
+    element
+    comment_threads
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :lock,
-    :case,
-    :element,
-    :comment_threads,
-    :id,
-    :position,
-    :page_id,
-    :created_at,
-    :updated_at,
-    :solid,
-    :raw_content,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    lock
+    case
+    element
+    comment_threads
+    id
+    position
+    page_id
+    created_at
+    updated_at
+    solid
+    raw_content
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :lock,
-    :case,
-    :element,
-    :comment_threads,
-    :position,
-    :page_id,
-    :solid,
-    :raw_content,
+  FORM_ATTRIBUTES = %i[
+    lock
+    case
+    element
+    comment_threads
+    position
+    page_id
+    solid
+    raw_content
   ].freeze
 
   def display_resource(card)
