@@ -7,6 +7,9 @@ class Forum < ApplicationRecord
   belongs_to :community
 
   has_many :comment_threads, dependent: :destroy
+  has_many :comments, through: :comment_threads
+
+  has_one :group, through: :community
 
   def community
     super || GlobalCommunity.instance

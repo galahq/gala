@@ -30,6 +30,29 @@ Rails.application.routes.draw do
 
   resources :activities, only: %i[update destroy]
 
+  namespace :admin do
+    namespace :ahoy do
+      resources :events
+    end
+
+    resources :answers
+    resources :cases
+    resources :comment_threads
+    resources :comments
+    resources :deployments
+    resources :editorships
+    resources :enrollments
+    resources :forums
+    resources :group_memberships
+    resources :groups
+    resources :questions
+    resources :quizzes
+    resources :readers
+    resources :submissions
+
+    root to: "cases#index"
+  end
+
   namespace 'authentication_strategies' do
     namespace 'config' do
       get :lti

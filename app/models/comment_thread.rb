@@ -9,11 +9,18 @@
 # @attr locale [Iso639_1Code] which translation of the case this comment thread
 #   is attached to.
 class CommentThread < ApplicationRecord
+  default_scope { order(updated_at: :desc) }
+
   belongs_to :card, touch: true, optional: true
   belongs_to :forum, touch: true
   belongs_to :reader
 
   has_many :comments, dependent: :destroy
+  has_many :collocutors, -> { unscope(:order).distinct },
+           through: :comments, source: :reader
+
+  has_one :case, through: :forum
+  has_one :community, through: :forum
 
   # The comment threads that are visible to a given reader
   # @return [ActiveRecord::Relation<CommentThread>]
@@ -24,7 +31,8 @@ class CommentThread < ApplicationRecord
     )
   end
 
-  # The reader participants in this comment thread
+  # The reader participants in this comment thread, ordered by their first
+  # comment in this thread
   # @return [Array<Reader>]
   def collocutors
     comments.map(&:reader).uniq

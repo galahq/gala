@@ -16,14 +16,15 @@ class Comment < ApplicationRecord
 
   has_many_attached :attachments
 
+  has_one :forum, through: :comment_thread
+  has_one :case, through: :forum
+  has_one :community, through: :forum
+
   validates :content, presence: true
 
   after_save { CommentBroadcastJob.perform_now self }
   after_create_commit { CommentThreadBroadcastJob.perform_later comment_thread }
   after_create_commit :send_notifications_of_reply
-
-  delegate :forum, to: :comment_thread
-  delegate :community, to: :forum
 
   private
 
