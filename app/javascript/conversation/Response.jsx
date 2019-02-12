@@ -60,7 +60,7 @@ function Response ({
         <>
           <SpeechBubble>
             <StyledComment markdown={comment.content} />
-            {comment.timestamp !== comment.updatedAt && (
+            {comment.edited && (
               <Edited>
                 <FormattedMessage
                   id="comments.comment.edited"

@@ -4,6 +4,7 @@
 class CommentSerializer < ApplicationSerializer
   attributes :id, :content, :timestamp, :updated_at, :comment_thread_id
   attribute :attachments
+  attribute :edited?, key: :edited
 
   belongs_to :reader, serializer: Readers::IdenticonSerializer
 

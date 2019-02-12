@@ -102,7 +102,7 @@ function LeadComment ({
       </Row>
       <blockquote>
         <StyledComment markdown={leadComment.content} />
-        {leadComment.timestamp !== leadComment.updatedAt && (
+        {leadComment.edited && (
           <Edited>
             <FormattedMessage
               id="comments.comment.edited"
