@@ -78,6 +78,7 @@ RSpec.configure do |config|
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include ActiveSupport::Testing::TimeHelpers
 
   config.before(:all, type: :feature) do
     Capybara.server = :puma, { Silent: true }
