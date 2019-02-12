@@ -24,13 +24,15 @@ feature 'Editing a comment' do
         expect(page).to have_content comment.content
       end
 
+      travel 10.minutes
+
       within '[data-testid="SelectedCommentThread"]' do
         find('blockquote', text: comment.content).hover
         click_button 'Edit comment'
 
-        field = find('.public-DraftEditor-content', text: comment.content).click
-        page.driver.browser.action.
-          send_keys(:backspace, :delete)
+        find('.public-DraftEditor-content', text: comment.content).click
+        page.driver.browser.action
+            .send_keys(:backspace, :delete)
             .send_keys('Hello World!')
             .perform
         click_button 'Save'
@@ -55,7 +57,6 @@ feature 'Editing a comment' do
       create :enrollment, reader: reader, case: kase
       forum = kase.forums.first
       thread = create :comment_thread, forum: forum
-      _lead_comment = create :comment, comment_thread: thread
       comment = create :comment, reader: reader, comment_thread: thread
 
       login_as reader
@@ -70,11 +71,13 @@ feature 'Editing a comment' do
         expect(page).to have_content comment.content
       end
 
+      travel 10.minutes
+
       within '[data-testid="SelectedCommentThread"]' do
         find('blockquote', text: comment.content).hover
         click_button 'Edit comment'
 
-        field = find('.public-DraftEditor-content', text: comment.content).click
+        find('.public-DraftEditor-content', text: comment.content).click
         page.driver.browser.action.
           # Not to match content even if cursor is at beginning/end of input
           send_keys(:backspace, :delete)

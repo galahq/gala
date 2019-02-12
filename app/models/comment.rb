@@ -26,6 +26,10 @@ class Comment < ApplicationRecord
   after_create_commit { CommentThreadBroadcastJob.perform_later comment_thread }
   after_create_commit :send_notifications_of_reply
 
+  def edited?
+    updated_at - created_at > 1.minute
+  end
+
   private
 
   # Send a notification over ActionCable to participants in the thread other
