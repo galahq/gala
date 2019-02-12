@@ -186,6 +186,7 @@ export type Comment = {
   }[],
   commentThreadId: number,
   content: string,
+  edited: boolean,
   id: string,
   reader: {
     id: string,
