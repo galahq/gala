@@ -18,7 +18,7 @@ Community.create name: 'CaseLog', universal: true, description: <<~DESCRIPTION
   exercise? Tell us about it.
   DESCRIPTION
 
-if DEV_MOCK_AUTH_HASH
+if defined? DEV_MOCK_AUTH_HASH
   auth = AuthenticationStrategy.from_omniauth DEV_MOCK_AUTH_HASH
   reader = auth.reader
 
