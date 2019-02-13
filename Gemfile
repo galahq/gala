@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '>= 5.2.1', '< 5.3'
+gem 'rails', '5.2.2'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
@@ -119,4 +119,4 @@ group :test do
   gem 'webdrivers', require: false
 end
 
-ruby '2.5.0'
+ruby '2.6.1'
