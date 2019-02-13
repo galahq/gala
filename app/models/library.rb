@@ -13,7 +13,7 @@ class Library < ApplicationRecord
   include Mobility
   extend FriendlyId
 
-  HEX_COLOR = /\A#\h{6}\z/
+  HEX_COLOR = /\A#\h{6}\z/.freeze
 
   attribute :background_color, :text, default: '#000000'
   attribute :foreground_color, :text, default: '#ffffff'
@@ -31,8 +31,7 @@ class Library < ApplicationRecord
             format: { with: HEX_COLOR }, allow_blank: true
   validates :logo, size: { less_than: 2.megabytes,
                            message: 'cannot be larger than 2 MB' },
-                   content_type: { in: %w[image/png image/svg+xml],
-                                   message: 'must be PNG or SVG' }
+                   content_type: { in: %w[image/png], message: 'must be PNG' }
   validates :name, presence: true
 
   scope :ordered, -> { order cases_count: :desc }
@@ -40,6 +39,7 @@ class Library < ApplicationRecord
 
   def self.find(id)
     return SharedCasesLibrary.instance if id.blank?
+
     super(id)
   end
 end
