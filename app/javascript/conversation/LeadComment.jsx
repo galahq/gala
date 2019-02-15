@@ -11,6 +11,7 @@ import { injectIntl, FormattedMessage, FormattedRelative } from 'react-intl'
 import { deleteComment } from 'redux/actions'
 
 import EditCommentForm from 'conversation/EditCommentForm'
+import AttachmentPreviews from 'conversation/AttachmentPreviews'
 import {
   StyledComment,
   ConversationTimestamp,
@@ -71,15 +72,19 @@ function LeadComment ({
 }: Props) {
   const [editing, setEditing] = useState(false)
 
+  const previews: any = leadComment.attachments.filter(a => a.representable)
+  const attachments = leadComment.attachments.filter(a => !a.representable)
+
   return editing ? (
     <EditCommentForm comment={leadComment} setEditing={setEditing} />
   ) : (
-    <LeadCommentContents>
+    <LeadCommentContents className="clearfix">
       <Row>
         <div>
           <SmallGreyText>
             <ConversationTimestamp value={leadComment.timestamp} />
           </SmallGreyText>
+
           {currentReader && leadComment.reader.id === currentReader.id && (
             <EditButton
               aria-label={intl.formatMessage({
@@ -91,6 +96,7 @@ function LeadComment ({
             </EditButton>
           )}
         </div>
+
         {readerCanDeleteComments && responseCount === 0 && (
           <DeleteButton
             aria-label={intl.formatMessage({
@@ -100,8 +106,12 @@ function LeadComment ({
           />
         )}
       </Row>
+
       <blockquote>
+        <AttachmentPreviews attachments={previews} />
+
         <StyledComment markdown={leadComment.content} />
+
         {leadComment.edited && (
           <Edited>
             <FormattedMessage
@@ -115,13 +125,15 @@ function LeadComment ({
           </Edited>
         )}
       </blockquote>
-      {leadComment.attachments?.length > 0 && (
+
+      {attachments.length > 0 && (
         <AttachmentsSection>
           <SmallGreyText>
             <FormattedMessage id="activerecord.attributes.comment.attachments" />
           </SmallGreyText>
+
           <ul>
-            {leadComment.attachments.map((attachment, i) => (
+            {attachments.map((attachment, i) => (
               <li className="pt-tag pt-minimal pt-interactive" key={i}>
                 <a href={attachment.url}>{attachment.name}</a>
               </li>

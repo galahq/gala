@@ -183,6 +183,11 @@ export type Comment = {
   attachments: {
     name: string,
     url: string,
+    representable: boolean,
+    size?: {
+      width: number,
+      height: number,
+    },
   }[],
   commentThreadId: number,
   content: string,
