@@ -1089,7 +1089,8 @@ CREATE TABLE readers (
     unconfirmed_email character varying,
     created_password boolean DEFAULT true,
     send_reply_notifications boolean DEFAULT true,
-    active_community_id integer
+    active_community_id integer,
+    persona character varying
 );
 
 
@@ -2952,6 +2953,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180919145935'),
 ('20181029165916'),
 ('20181030194657'),
-('20181108181434');
+('20181108181434'),
+('20190219154939');
 
 

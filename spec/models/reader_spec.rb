@@ -5,6 +5,12 @@ require 'rails_helper'
 RSpec.describe Reader, type: :model do
   subject { build :reader }
 
+  it do
+    should define_enum_for(:persona)
+      .with_values(learner: 'learner', teacher: 'teacher', writer: 'writer')
+      .backed_by_column_of_type(:string)
+  end
+
   it 'records that a user chose a password when they set it directly' do
     subject.created_password = false
     subject.save

@@ -21,6 +21,12 @@
 class Reader < ApplicationRecord
   default_scope { order(:name) }
 
+  enum persona: {
+    learner: 'learner',
+    teacher: 'teacher',
+    writer: 'writer'
+  }
+
   has_many :authentication_strategies, dependent: :destroy
 
   has_many :enrollments, -> { includes(:case) }, dependent: :destroy
@@ -75,6 +81,7 @@ class Reader < ApplicationRecord
   # @return [Community, GlobalCommunity]
   def active_community
     return GlobalCommunity.instance if active_community_id.nil?
+
     Community.find(active_community_id)
   end
 
@@ -104,6 +111,7 @@ class Reader < ApplicationRecord
   # @deprecated
   def ensure_authentication_token
     return unless authentication_token.blank?
+
     self.authentication_token = generate_authentication_token
   end
 
