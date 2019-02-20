@@ -3,6 +3,7 @@
 module AuthenticationStrategies
   # Handle successful OAuth authentication
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+    include AfterSignInPath
     include MagicLink
 
     skip_before_action :verify_authenticity_token
@@ -14,7 +15,7 @@ module AuthenticationStrategies
       if @authentication_strategy.persisted?
         sign_in @reader
         link_reader if following_magic_link?
-        redirect_to after_linking_redirect_path || root_path
+        redirect_to after_sign_in_path_for @reader
       else
         session['devise.google_data'] = request.env['omniauth.auth']
                                                .except(:extra)

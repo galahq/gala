@@ -1,0 +1,59 @@
+.personas {
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 0 25px;
+  width: 100%;
+
+  &__welcome {
+    max-width: 700px;
+  }
+
+  &__headline {
+    font-size: 28px;
+  }
+
+  &__choices {
+    display: grid;
+    grid-gap: 25px;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 50px 0;
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__choice {
+    border-style: solid;
+    border-width: 6px 0 0;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      color: inherit;
+      font-size: 20px;
+    }
+
+    p {
+      flex: 1;
+    }
+
+    &--learner {
+      background-color: hsl(255, 100%, 95%);
+      border-color: hsl(255, 64%, 63%);
+      color: hsl(255, 43%, 43%);
+    }
+
+    &--teacher {
+      background-color: hsl(5, 100%, 94%);
+      border-color: hsl(5, 65%, 53%);
+      color: hsl(5, 83%, 37%);
+    }
+
+    &--writer {
+      background-color: hsl(160, 50%, 90%);
+      border-color: hsl(128, 60%, 42%);
+      color: hsl(131, 75%, 26%);
+    }
+  }
+}

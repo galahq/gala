@@ -76,12 +76,6 @@ class ApplicationController < ActionController::Base
     store_location_for(:user, request.url) if request.format == :html
   end
 
-  def after_sign_in_path_for(resource_or_scope)
-    path = request.env['omniauth.origin']
-    path ||= stored_location_for(resource_or_scope)
-    path || signed_in_root_path(resource_or_scope)
-  end
-
   def authority_forbidden(_error)
     render file: Rails.root.join('public', '403.html'),
            status: 403, layout: false

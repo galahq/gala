@@ -36,4 +36,8 @@ module MagicLink
   rescue LinkerService::SessionStrategy::MissingDeploymentError
     nil
   end
+
+  def just_linked_user?
+    @linker.present?
+  end
 end

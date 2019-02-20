@@ -8,7 +8,13 @@ feature 'Signing in with Google' do
   context 'without a password' do
     scenario 'is possible' do
       find('.oauth-icon-google').click
-      expect(page).to have_content 'Cases you enroll in'
+
+      expect(page).to have_content 'Welcome to Gala'
+      click_button 'Choose', match: :first
+
+      expect(page).to have_content 'Cases you enroll in will be presented here'
+
+      expect(Reader.last.persona).to eq 'learner'
     end
 
     scenario 'user can create a password' do
