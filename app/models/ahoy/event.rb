@@ -30,7 +30,7 @@ module Ahoy
     # @param kase [Case]
     # @return [ActiveRecord::Relation<Ahoy::Event>]
     def self.for_case(kase)
-      where_properties caseSlug: kase.slug
+      where_properties case_slug: kase.slug
     end
   end
 end
