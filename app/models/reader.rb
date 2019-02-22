@@ -179,6 +179,10 @@ class Reader < ApplicationRecord
     I18n.with_locale(locale) { super notification, *args }
   end
 
+  def acknowledged_spotlights
+    spotlight_acknowledgements.pluck(:spotlight_key)
+  end
+
   private
 
   def set_created_password

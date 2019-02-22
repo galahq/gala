@@ -34,4 +34,13 @@ RSpec.describe Reader, type: :model do
     expect(subject.communities).to include(invited_community,
                                            group.community)
   end
+
+  describe '#acknowledged_spotlights' do
+    it 'lists the spotlight keys that the reader has acknowledgements' do
+      reader = create :reader
+      create :spotlight_acknowledgement, reader: reader, spotlight_key: 'yep'
+
+      expect(reader.acknowledged_spotlights).to eq(%w[yep])
+    end
+  end
 end
