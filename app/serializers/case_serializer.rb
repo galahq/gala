@@ -3,8 +3,8 @@
 # @see Case
 class CaseSerializer < Cases::PreviewSerializer
   attributes :acknowledgements, :audience, :commentable, :learning_objectives,
-             :other_available_locales, :summary, :teaching_guide_url,
-             :translators, :zoom
+             :summary, :teaching_guide_url, :translators, :zoom
+  attribute :other_available_locales
 
   belongs_to :library
 
@@ -14,4 +14,8 @@ class CaseSerializer < Cases::PreviewSerializer
   has_many_by_id :edgenotes
   has_many_by_id :pages
   has_many_by_id :podcasts
+
+  def other_available_locales
+    object.other_available_locales(for_reader: current_user)
+  end
 end

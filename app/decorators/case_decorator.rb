@@ -29,11 +29,14 @@ class CaseDecorator < ApplicationDecorator
 
   def teaching_guide_url
     return nil unless teaching_guide.attached?
+
     polymorphic_path teaching_guide, only_path: true
   end
 
-  def other_available_locales
+  def other_available_locales(for_reader:)
     translations.each_with_object({}) do |kase, table|
+      next unless Pundit.policy(for_reader, kase).show?
+
       table[kase.locale] = {
         link: polymorphic_path(kase, only_path: true),
         name: Translation.language_name(kase.locale)
