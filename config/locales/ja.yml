@@ -280,8 +280,13 @@ ja:
       page_n: 第{pageNumber, number}ページ
       text_changed: The text being discussed has changed since this conversation started.
   comments:
+    comment:
+      edited: (edited {someTimeAgo})
     destroy:
       delete_comment: コメントを削除
+    edit:
+      edit_comment: Edit comment
+      save_comment: Save comment
     index:
       all_comments: すべてのコメント
       conversation: 会話
