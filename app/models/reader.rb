@@ -28,6 +28,7 @@ class Reader < ApplicationRecord
   }
 
   has_many :authentication_strategies, dependent: :destroy
+  has_many :spotlight_acknowledgements, dependent: :destroy
 
   has_many :enrollments, -> { includes(:case) }, dependent: :destroy
   has_many :enrolled_cases, through: :enrollments, source: :case

@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe Reader, type: :model do
   subject { build :reader }
 
+  it { should have_many :spotlight_acknowledgements }
+
   it do
     should define_enum_for(:persona)
       .with_values(learner: 'learner', teacher: 'teacher', writer: 'writer')

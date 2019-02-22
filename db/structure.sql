@@ -1201,6 +1201,38 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: spotlight_acknowledgements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE spotlight_acknowledgements (
+    id bigint NOT NULL,
+    reader_id bigint,
+    spotlight_key character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: spotlight_acknowledgements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE spotlight_acknowledgements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: spotlight_acknowledgements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE spotlight_acknowledgements_id_seq OWNED BY spotlight_acknowledgements.id;
+
+
+--
 -- Name: submissions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1570,6 +1602,13 @@ ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regcl
 
 
 --
+-- Name: spotlight_acknowledgements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY spotlight_acknowledgements ALTER COLUMN id SET DEFAULT nextval('spotlight_acknowledgements_id_seq'::regclass);
+
+
+--
 -- Name: submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1878,6 +1917,14 @@ ALTER TABLE ONLY roles
 
 ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: spotlight_acknowledgements spotlight_acknowledgements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY spotlight_acknowledgements
+    ADD CONSTRAINT spotlight_acknowledgements_pkey PRIMARY KEY (id);
 
 
 --
@@ -2452,6 +2499,13 @@ CREATE INDEX index_roles_on_name_and_resource_type_and_resource_id ON roles USIN
 
 
 --
+-- Name: index_spotlight_acknowledgements_on_reader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_spotlight_acknowledgements_on_reader_id ON spotlight_acknowledgements USING btree (reader_id);
+
+
+--
 -- Name: index_submissions_on_quiz_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2673,6 +2727,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY comment_threads
     ADD CONSTRAINT fk_rails_76abda4dc1 FOREIGN KEY (card_id) REFERENCES cards(id);
+
+
+--
+-- Name: spotlight_acknowledgements fk_rails_791e6e568c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY spotlight_acknowledgements
+    ADD CONSTRAINT fk_rails_791e6e568c FOREIGN KEY (reader_id) REFERENCES readers(id);
 
 
 --
@@ -2954,6 +3016,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181029165916'),
 ('20181030194657'),
 ('20181108181434'),
-('20190219154939');
+('20190219154939'),
+('20190222195858');
 
 
