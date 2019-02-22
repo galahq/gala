@@ -14,19 +14,23 @@ class DeploymentsController < ApplicationController
   decorates_assigned :deployments, with: DeploymentsDecorator
   decorates_assigned :deployment
 
+  # @route [GET] `/deployments`
   def index; end
 
+  # @route [GET] `/deployments/1`
   def show
     authorize @deployment
     @progressions = Kaminari.paginate_array(@deployment.reader_progressions)
                             .page(params[:page]).per(10)
   end
 
+  # @route [GET] `/deployments/new`
   def new
     @deployment ||= Deployment.new case: selected_case
     prepare_for_form
   end
 
+  # @route [POST] `/deployments`
   def create
     service = DeployCaseService.new deployment_params, current_reader
     @deployment = service.call
@@ -81,7 +85,11 @@ class DeploymentsController < ApplicationController
   end
 
   def selected_case
-    Case.friendly.find params[:case_slug]
+    if params.key? :case_slug
+      Case.friendly.find(params[:case_slug])
+    elsif params.key? :deployment
+      Case.find(params.dig(:deployment, :case_id))
+    end
   rescue ActiveRecord::RecordNotFound
     nil
   end
