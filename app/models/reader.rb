@@ -19,6 +19,8 @@
 #
 # @see AnonymousUser AnonymousUser: this model’s null object
 class Reader < ApplicationRecord
+  include Onboarding
+
   default_scope { order(:name) }
 
   enum persona: {
@@ -28,7 +30,6 @@ class Reader < ApplicationRecord
   }
 
   has_many :authentication_strategies, dependent: :destroy
-  has_many :spotlight_acknowledgements, dependent: :destroy
 
   has_many :enrollments, -> { includes(:case) }, dependent: :destroy
   has_many :enrolled_cases, through: :enrollments, source: :case
@@ -177,10 +178,6 @@ class Reader < ApplicationRecord
   # Overridden from Devise for I18n
   def send_devise_notification(notification, *args)
     I18n.with_locale(locale) { super notification, *args }
-  end
-
-  def acknowledged_spotlights
-    spotlight_acknowledgements.pluck(:spotlight_key)
   end
 
   private
