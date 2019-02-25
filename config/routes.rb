@@ -185,6 +185,8 @@ Rails.application.routes.draw do
 
   resources :search, only: %i[index]
 
+  resources :spotlight_acknowledgements, only: %i[create]
+
   resources :tags, only: %i[index]
 
   devise_for :readers, skip: :omniauth_callbacks, controllers: {
