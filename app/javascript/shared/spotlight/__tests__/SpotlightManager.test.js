@@ -139,6 +139,17 @@ describe('SpotlightManager', () => {
   })
 
   describe('#acknowledge', () => {
+    it('sets a spotlight invisible when it is acknowledged', () => {
+      const manager = new SpotlightManager(['a'])
+
+      let set = jest.fn()
+      manager.subscribe({ key: 'a' }, set)
+      manager.acknowledge('a')
+
+      expect(set).toHaveBeenNthCalledWith(1, true)
+      expect(set).toHaveBeenNthCalledWith(2, false)
+    })
+
     it('sets the next highest priority unacknowledged spotlight visible when one is acknowledged', () => {
       const manager = new SpotlightManager(['a', 'b'])
 
