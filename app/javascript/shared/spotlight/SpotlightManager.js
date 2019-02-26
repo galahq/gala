@@ -62,9 +62,9 @@ export default class SpotlightManager {
   }
 
   _notifySubscribers () {
-    if (!this._visible || this._visible === this._current) return
+    if (this._visible === this._current) return
 
-    this._visible.setVisibility(true)
+    this._visible && this._visible.setVisibility(true)
     this._current && this._current.setVisibility(false)
     this._current = this._visible
   }
