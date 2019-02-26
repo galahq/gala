@@ -9,7 +9,7 @@
 
 import { Orchard } from 'shared/orchard'
 
-type SubscriberOptions = { key: string }
+type SubscriberOptions = { key: string, ref: { current: Node } }
 type Subscriber = SubscriberOptions & {
   setVisibility: boolean => mixed,
 }
@@ -25,20 +25,25 @@ export default class SpotlightManager {
       key => this._subscribers[key] && this._subscribers[key].length > 0
     )
 
-    if (activeKey) return this._subscribers[activeKey][0]
+    if (activeKey) {
+      return this._subscribers[activeKey].sort(byDocumentPosition)[0]
+    }
   }
 
   constructor (unacknowledgedKeys: string[]) {
     this.unacknowledgedKeys = unacknowledgedKeys
   }
 
-  subscribe ({ key }: SubscriberOptions, setVisibility: boolean => mixed) {
-    this._subscribersForKey(key).push({ key, setVisibility })
+  subscribe ({ key, ref }: SubscriberOptions, setVisibility: boolean => mixed) {
+    this._subscribersForKey(key).push({ key, ref, setVisibility })
     this._notifySubscribers()
   }
 
-  unsubscribe ({ key }: SubscriberOptions) {
-    this._subscribersForKey(key).pop()
+  unsubscribe ({ key, ref }: SubscriberOptions) {
+    this._subscribers[key] = this._subscribersForKey(key).filter(
+      s => s.ref.current !== ref.current
+    )
+
     this._notifySubscribers()
   }
 
@@ -69,4 +74,11 @@ export default class SpotlightManager {
       spotlight_acknowledgement: { spotlight_key: key },
     })
   }
+}
+
+function byDocumentPosition (a: Subscriber, b: Subscriber) {
+  const relativePosition = a.ref.current.compareDocumentPosition(b.ref.current)
+  if (relativePosition & Node.DOCUMENT_POSITION_FOLLOWING) return -1
+  if (relativePosition & Node.DOCUMENT_POSITION_PRECEDING) return 1
+  return 0
 }
