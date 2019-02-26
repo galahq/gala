@@ -1,5 +1,5 @@
 /**
- * @flow
+ * @noflow
  */
 
 import SpotlightManager from '../SpotlightManager'
@@ -9,6 +9,10 @@ import { Orchard } from 'shared/orchard'
 jest.mock('shared/orchard')
 
 describe('SpotlightManager', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+  })
+
   describe('#constructor', () => {
     it('is initialized with unacknowledged spotlights', () => {
       const manager = new SpotlightManager(['test_dummy'])
@@ -58,6 +62,29 @@ describe('SpotlightManager', () => {
       expect(current).toEqual('a')
     })
 
+    it('prioritizes spotlights with the same key by their document position', () => {
+      const manager = new SpotlightManager(['a'])
+
+      document.body.innerHTML = `
+        <div id="a1"></div>
+        <div id="a2"></div>
+      `
+
+      const setA2 = jest.fn()
+      manager.subscribe(
+        { key: 'a', ref: { current: document.getElementById('a2') }},
+        setA2
+      )
+      const setA1 = jest.fn()
+      manager.subscribe(
+        { key: 'a', ref: { current: document.getElementById('a1') }},
+        setA1
+      )
+
+      expect(setA2).toHaveBeenNthCalledWith(1, true)
+      expect(setA2).toHaveBeenNthCalledWith(2, false)
+      expect(setA1).toHaveBeenCalledWith(true)
+    })
   })
 
   describe('#unsubscribe', () => {
@@ -65,15 +92,50 @@ describe('SpotlightManager', () => {
       const manager = new SpotlightManager(['a', 'b', 'c'])
 
       let current = ''
-      manager.subscribe({ key: 'a' }, visible => visible && (current = 'a'))
-      manager.subscribe({ key: 'b' }, visible => visible && (current = 'b'))
-      manager.subscribe({ key: 'c' }, visible => visible && (current = 'c'))
-      manager.unsubscribe({ key: 'b' })
-      manager.unsubscribe({ key: 'a' })
+
+      manager.subscribe(
+        { key: 'a', ref: {}},
+        visible => visible && (current = 'a')
+      )
+      manager.subscribe(
+        { key: 'b', ref: {}},
+        visible => visible && (current = 'b')
+      )
+      manager.subscribe(
+        { key: 'c', ref: {}},
+        visible => visible && (current = 'c')
+      )
+
+      manager.unsubscribe({ key: 'b', ref: {}})
+      manager.unsubscribe({ key: 'a', ref: {}})
 
       expect(current).toEqual('c')
     })
 
+    it('removes the correct spotlight when there are more than one with a key', () => {
+      const manager = new SpotlightManager(['a'])
+
+      document.body.innerHTML = `
+        <div id="a1"></div>
+        <div id="a2"></div>
+      `
+
+      let current = ''
+      manager.subscribe(
+        { key: 'a', ref: { current: document.getElementById('a1') }},
+        visible => visible && (current = 'a1')
+      )
+      manager.subscribe(
+        { key: 'a', ref: { current: document.getElementById('a2') }},
+        visible => visible && (current = 'a2')
+      )
+      manager.unsubscribe({
+        key: 'a',
+        ref: { current: document.getElementById('a1') },
+      })
+
+      expect(current).toEqual('a2')
+    })
   })
 
   describe('#acknowledge', () => {
