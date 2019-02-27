@@ -5,14 +5,16 @@
 
   .personas__choices
     - %i[learner teacher writer].each do |persona|
-      .pt-card.pt-elevation-4.personas__choice{ class: "personas__choice--#{persona}" }
+      .pt-card.pt-elevation-4.personas__choice{ class: "persona--#{persona}" }
         %h2{ id: "persona-#{persona}-title" }= t "personas.#{persona}.title"
         %p= t "personas.#{persona}.description"
 
         = form_with url: profile_persona_path, method: :put, local: true do |f|
           = f.hidden_field :persona, value: persona
 
-          - intents = { learner: 'primary', teacher: 'danger', writer: 'success' }
+          - intents = { learner: 'primary',
+                        teacher: 'warning',
+                        writer: 'success' }
           = f.submit 'Choose',
                      'class' => "pt-button pt-intent-#{intents[persona]}",
                      'aria-labelledby' => "persona-#{persona}-title"
