@@ -37,23 +37,28 @@
     p {
       flex: 1;
     }
+  }
+}
 
-    &--learner {
-      background-color: hsl(255, 100%, 95%);
-      border-color: hsl(255, 64%, 63%);
-      color: hsl(255, 43%, 43%);
-    }
+.persona {
+  &--learner {
+    background: hsl(255, 100%, 95%) !important;
+    border-color: hsl(255, 64%, 63%);
+    color: hsl(255, 43%, 43%) !important;
+    fill: hsl(255, 100%, 95%);
+  }
 
-    &--teacher {
-      background-color: hsl(5, 100%, 94%);
-      border-color: hsl(5, 65%, 53%);
-      color: hsl(5, 83%, 37%);
-    }
+  &--teacher {
+    background: hsl(36, 100%, 94%) !important;
+    border-color: hsl(36, 85%, 51%);
+    color: hsl(36, 100%, 32%) !important;
+    fill: hsl(36, 100%, 95%);
+  }
 
-    &--writer {
-      background-color: hsl(160, 50%, 90%);
-      border-color: hsl(128, 60%, 42%);
-      color: hsl(131, 75%, 26%);
-    }
+  &--writer {
+    background: hsl(160, 50%, 91%) !important;
+    border-color: hsl(128, 60%, 42%);
+    color: hsl(131, 75%, 26%) !important;
+    fill: hsl(160, 50%, 90%);
   }
 }
