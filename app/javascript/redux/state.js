@@ -323,6 +323,8 @@ export type Page = {
   url: string,
 }
 
+export type Persona = 'learner' | 'teacher' | 'writer'
+
 export type Podcast = {
   artworkUrl: string,
   audioUrl: string,
@@ -370,6 +372,7 @@ export type Reader = {
   imageUrl: ?string,
   initials: string,
   name: string,
+  persona: Persona,
   roles: {
     editor: boolean,
     invisible: boolean,
