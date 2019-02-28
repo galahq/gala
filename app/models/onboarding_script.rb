@@ -35,21 +35,39 @@ end
 # Specifies what to do to onboard a reader who wants to learn with cases
 class LearnerOnboardingScript < OnboardingScript
   def self.all_spotlights
-    super + %w[catalog_search catalog_keywords comment]
+    super + [
+      'catalog_search',    # Search box on the catalog page
+      'catalog_keywords',  # TODO
+      'community_chooser', # When enrolled, when there’s more than one community
+      'comment'            # Respond button on a card
+    ]
   end
 end
 
 # Specifies what to do to onboard a reader who wants to teach with cases
 class TeacherOnboardingScript < OnboardingScript
   def self.all_spotlights
-    super + %w[catalog_search catalog_keywords caselog deploy add_quiz
-               invite_learners]
+    super + [
+      'catalog_search',   # see above
+      'catalog_keywords', # see above
+      'caselog',          # over conversation button of a published case
+      'deploy',           # toolbar button
+      'add_quiz',         # on the deployments page
+      'invite_learners'   # on the deployments page
+    ]
   end
 end
 
 # Specifies what to do to onboard a reader who wants to write their own cases
 class WriterOnboardingScript < OnboardingScript
   def self.all_spotlights
-    super + %w[my_cases_button publish_button]
+    super + [
+      'my_cases',          # toolbar button on catalog page
+      'add_collaborators', # toolbar button
+      'publish',           # over “options” button, for “when you’re finished”
+      'caselog',           # see above
+      'add_edgenote',      # editor toolbar button
+      'add_citation'       # editor toolbar button
+    ]
   end
 end

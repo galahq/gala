@@ -19,3 +19,8 @@
                      'class' => "pt-button pt-intent-#{intents[persona]}",
                      'aria-labelledby' => "persona-#{persona}-title"
 
+  %p.personas__skip
+    = link_to t('.ill_figure_it_out'), root_path
+    %br
+    = t '.you_can_opt_in_later'
+

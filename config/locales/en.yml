@@ -854,15 +854,17 @@ en:
       pageSettings: Page Settings
   personas:
     edit:
+      ill_figure_it_out: I prefer to figure it out by myself
       tell_us_about_yourself: >
         Tell us about yourself so we can personalize your experience. You’ll
         always have access to all features, but how do you think you’ll use Gala
-        most?
+        first?
       welcome: Welcome to Gala
+      you_can_opt_in_later: (You can opt in later from Account Settings.)
     learner:
       title: Learn From Cases
       description: >
-        I want to learn about complex problems of environmental science and
+        I want to study real world cases and cutting-edge science for
         sustainability.
     teacher:
       title: Teach With Cases
@@ -873,7 +875,7 @@ en:
       title: Write My Own Cases
       description: >
         I want to create teaching tools with powerful stories, engaging media,
-        and interactive exercises.
+        and interactive features.
   podcasts:
     destroy:
       delete_podcast: Delete Podcast
