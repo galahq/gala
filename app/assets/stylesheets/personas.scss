@@ -38,6 +38,23 @@
       flex: 1;
     }
   }
+
+  &__skip {
+    color: hsl(210, 54%, 86%);
+
+    a {
+      color: inherit;
+      transition: color 0.1s ease-out;
+
+      &:hover {
+        color: white;
+      }
+
+      &::after {
+        content: ' ›';
+      }
+    }
+  }
 }
 
 .persona {
