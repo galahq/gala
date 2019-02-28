@@ -2,7 +2,7 @@
 
 # @see Reader
 class ReaderSerializer < ApplicationSerializer
-  attributes :id, :name, :image_url, :email, :initials, :hash_key,
+  attributes :id, :name, :image_url, :email, :initials, :hash_key, :persona,
              :unacknowledged_spotlights
   attribute :roles
 
