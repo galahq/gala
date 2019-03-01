@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
+import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 
 import type { Tag } from 'redux/state'
 
@@ -25,6 +26,7 @@ const Categories = ({ tags }: Props) => {
           <NaturalResourceLink tag={get('biosphere')} />
         </NaturalResourcesGrid>
       </Section>
+
       <Section title="globalSystems">
         <GlobalSystemsGrid>
           <GlobalSystemLink tag={get('food')} />
@@ -40,7 +42,13 @@ export default Categories
 const Section = ({ children, title }) => (
   <CatalogSection solid>
     <SectionTitle>
-      <FormattedMessage id={`catalog.${title}`} />
+      <TranslatedSpotlight placement="top" spotlightKey="catalog_categories">
+        {({ ref }) => (
+          <span ref={ref}>
+            <FormattedMessage id={`catalog.${title}`} />
+          </span>
+        )}
+      </TranslatedSpotlight>
     </SectionTitle>
     {children}
   </CatalogSection>

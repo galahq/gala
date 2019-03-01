@@ -36,10 +36,10 @@ end
 class LearnerOnboardingScript < OnboardingScript
   def self.all_spotlights
     super + [
-      'catalog_search',    # Search box on the catalog page
-      'catalog_keywords',  # TODO
-      'community_chooser', # When enrolled, when there’s more than one community
-      'comment'            # Respond button on a card
+      'catalog_search',      # Search box on the catalog page
+      'catalog_categories',  # Natural Resources header
+      'community_chooser',   # When enrolled, if there’s more than one community
+      'comment'              # Respond button on a card
     ]
   end
 end
@@ -48,12 +48,12 @@ end
 class TeacherOnboardingScript < OnboardingScript
   def self.all_spotlights
     super + [
-      'catalog_search',   # see above
-      'catalog_keywords', # see above
-      'caselog',          # over conversation button of a published case
-      'deploy',           # toolbar button
-      'add_quiz',         # on the deployments page
-      'invite_learners'   # on the deployments page
+      'catalog_search',     # see above
+      'catalog_categories', # see above
+      'caselog',            # over conversation button of a published case
+      'deploy',             # toolbar button
+      'add_quiz',           # on the deployments page
+      'invite_learners'     # on the deployments page
     ]
   end
 end
