@@ -13,6 +13,8 @@ import { Portal } from '@blueprintjs/core'
 import mergeRefs from 'utility/mergeRefs'
 import useSpotlightManager from './useSpotlightManager'
 
+import type { Placement } from 'react-popper'
+
 const ROTATIONS = {
   top: -90,
   right: 0,
@@ -22,11 +24,17 @@ const ROTATIONS = {
 
 type Props = {
   children: ({ ref: any }) => React.Node,
-  content: string,
+  content: React.Node,
+  placement: Placement,
   spotlightKey: string,
 }
 
-export default function Spotlight ({ children, content, spotlightKey }: Props) {
+export default function Spotlight ({
+  children,
+  content,
+  placement,
+  spotlightKey,
+}: Props) {
   const {
     onAcknowledge,
     ref: spotlightTargetRef,
@@ -51,7 +59,7 @@ export default function Spotlight ({ children, content, spotlightKey }: Props) {
 
       {visible && (
         <Portal>
-          <Popper placement="auto" modifiers={popperOptions}>
+          <Popper placement={placement} modifiers={popperOptions}>
             {({ ref, style, placement, arrowProps }) => (
               <Popover ref={ref} style={style}>
                 <Arrow
@@ -80,6 +88,8 @@ export default function Spotlight ({ children, content, spotlightKey }: Props) {
     </Manager>
   )
 }
+
+Spotlight.defaultProps = { placement: 'auto' }
 
 const INTENTS = {
   learner: 'primary',
