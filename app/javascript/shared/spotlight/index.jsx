@@ -9,6 +9,7 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { Manager, Reference, Popper } from 'react-popper'
 import { Portal } from '@blueprintjs/core'
+import { useTransition, animated } from 'react-spring'
 
 import mergeRefs from 'utility/mergeRefs'
 import useSpotlightManager from './useSpotlightManager'
@@ -20,6 +21,11 @@ const ROTATIONS = {
   right: 0,
   bottom: 90,
   left: 180,
+}
+
+const POPPER_OPTIONS = {
+  preventOverflow: { boundariesElement: 'window' },
+  offset: { offset: '0, 16px' },
 }
 
 type Props = {
@@ -43,10 +49,11 @@ export default function Spotlight ({
 
   const persona = window.reader?.persona || 'reader'
 
-  const popperOptions = {
-    preventOverflow: { boundariesElement: 'window' },
-    offset: { offset: '0, 16px' },
-  }
+  const transitions = useTransition(visible, null, {
+    from: { opacity: 0, transform: 'scale(0.1)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    leave: { opacity: 0, transform: 'scale(0.1)' },
+  })
 
   return (
     <Manager>
@@ -57,33 +64,42 @@ export default function Spotlight ({
         }}
       </Reference>
 
-      {visible && (
-        <Portal>
-          <Popper placement={placement} modifiers={popperOptions}>
-            {({ ref, style, placement, arrowProps }) => (
-              <Popover ref={ref} style={style}>
-                <Arrow
-                  persona={persona}
-                  placement={placement}
-                  {...arrowProps}
-                />
+      {transitions.map(
+        ({ item, props: animatedStyles }) =>
+          item && (
+            <Portal>
+              <Popper placement={placement} modifiers={POPPER_OPTIONS}>
+                {({ ref, style: positionStyles, placement, arrowProps }) => (
+                  <div ref={ref} style={positionStyles}>
+                    <Popover
+                      placement={placement}
+                      arrowStyles={arrowProps.style}
+                      style={animatedStyles}
+                    >
+                      <Arrow
+                        persona={persona}
+                        placement={placement}
+                        {...arrowProps}
+                      />
 
-                <Content persona={persona} popperPlacement={placement}>
-                  <Text>
-                    <Icon iconName="double-chevron-right" />
-                    {content}
-                  </Text>
+                      <Content persona={persona} popperPlacement={placement}>
+                        <Text>
+                          <Icon iconName="double-chevron-right" />
+                          {content}
+                        </Text>
 
-                  <Actions>
-                    <Button persona={persona} onClick={onAcknowledge}>
-                      Got it!
-                    </Button>
-                  </Actions>
-                </Content>
-              </Popover>
-            )}
-          </Popper>
-        </Portal>
+                        <Actions>
+                          <Button persona={persona} onClick={onAcknowledge}>
+                            Got it!
+                          </Button>
+                        </Actions>
+                      </Content>
+                    </Popover>
+                  </div>
+                )}
+              </Popper>
+            </Portal>
+          )
       )}
     </Manager>
   )
@@ -97,12 +113,26 @@ const INTENTS = {
   writer: 'success',
 }
 
-const Popover = styled.div.attrs({
+const Popover = styled(animated.div).attrs({
   className: 'pt-popover pt-popover-content-sizing',
 })`
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2) !important;
+  transform-origin: ${transformOrigin};
 `
+
+function transformOrigin ({ arrowStyles, placement }) {
+  switch (placement) {
+    case 'top':
+      return `${arrowStyles.left + ARROW_SIZE / 2}px calc(100% + 10px)`
+    case 'right':
+      return `-10px ${arrowStyles.top + ARROW_SIZE / 2}px`
+    case 'bottom':
+      return `${arrowStyles.left + ARROW_SIZE / 2}px -10px`
+    case 'left':
+      return `calc(100% + 10px) ${arrowStyles.top + ARROW_SIZE / 2}px`
+  }
+}
 
 const Content = styled.div.attrs(p => ({
   className: `pt-popover-content personas__choice personas__choice--learner persona--${
@@ -116,6 +146,7 @@ const Content = styled.div.attrs(p => ({
     `}
 `
 
+const ARROW_SIZE = 30
 function Arrow ({ style, persona, placement }, ref) {
   return (
     <span
@@ -127,7 +158,7 @@ function Arrow ({ style, persona, placement }, ref) {
       }}
     >
       <svg
-        viewBox="0 0 30 30"
+        viewBox={`0 0 ${ARROW_SIZE} ${ARROW_SIZE}`}
         style={{ transform: `rotate(${ROTATIONS[placement]}deg)` }}
       >
         <path

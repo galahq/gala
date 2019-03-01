@@ -9896,6 +9896,13 @@ react-sortable-hoc@^0.8.4:
     invariant "^2.2.1"
     prop-types "^15.5.7"
 
+react-spring@^8.0.9:
+  version "8.0.9"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-8.0.9.tgz#2cf54fe168802986940c16e42fed277d7a2ff8f6"
+  integrity sha512-ii1NhZnKifyser174wH5uJJmGQUdqxl4Fs0ilXXUjKmJbaHF1Cmxv8aabTUh2MzRQ2/tx54JBiF4GTKTinnCzw==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+
 react-testing-library@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-6.0.0.tgz#81edfcfae8a795525f48685be9bf561df45bb35d"
