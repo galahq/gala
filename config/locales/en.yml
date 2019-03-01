@@ -942,6 +942,11 @@ en:
     search: Search
     search_cases: Search Cases...
     try_again: Try searching for something else.
+  spotlights:
+    catalog_categories: >
+      Cases are also grouped by topic. Click on a category to explore.
+    catalog_search: >
+      The easiest way to find a case about a specific topic is to search.
   submissions:
     new:
       before_you_get_started: Before you get started
