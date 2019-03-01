@@ -89,6 +89,10 @@ en:
         name: Full Name
         password: Password
         password_confirmation: Password confirmation
+        persona:
+          learner: Learning from cases
+          teacher: Teaching with cases
+          writer: Writing my own cases
         remember_created_at: Remember created at
         remember_me: Remember me
         reset_password_sent_at: Reset password sent at
@@ -124,6 +128,7 @@ en:
             correct_answer:
               inclusion: "is not included in the list of possible answers"
     models:
+      account_settings: Account settings
       activity: Activity
       case: Case
       cases:
@@ -910,9 +915,16 @@ en:
       account_options: Account options
       choose_an_image: Choose a profile image
       create_a_password: Create a password
-      my_account: Account Settings
+      my_account: Account settings
       notification_settings: Notification settings
-      save: 'Update profile'
+      profile_settings: Profile settings
+      save_persona: Save help preferences
+      save_profile: Update profile
+      save_notification_preference: Save notification preferences
+      show_me_tips_about: Show me helpful tips about
+      tips_for_using_gala: Tips for using Gala
+      we_show_tips: >
+        We can show contextual tips about features that are relevant to you.
       you_have_not_created_a_password: >
         Because you first signed in using %{provider}, you never created a
         password. If you create one now, you will be able to use it, or
