@@ -44,6 +44,17 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def radio_button(method, value, **options)
+    without_field_error_wrapper do
+      @template.content_tag :label, class: %i[pt-control pt-radio] do
+        content = ''.html_safe
+        content << super(method, value, options)
+        content << @template.content_tag(:span, '', class: %i[pt-control-indicator])
+        content << default_label_text([method, value].join('.'))
+      end
+    end
+  end
+
   # Creates a blueprint style file input
   def file_field(method, **kwargs)
     without_field_error_wrapper do
