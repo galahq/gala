@@ -55,6 +55,20 @@ export default function Spotlight ({
     leave: { opacity: 0, transform: 'scale(0.1)' },
   })
 
+  React.useEffect(
+    () => {
+      const el = spotlightTargetRef.current
+      if (el instanceof HTMLElement && visible) {
+        el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        })
+      }
+    },
+    [visible]
+  )
+
   return (
     <Manager>
       <Reference>
@@ -70,7 +84,7 @@ export default function Spotlight ({
             <Portal>
               <Popper placement={placement} modifiers={POPPER_OPTIONS}>
                 {({ ref, style: positionStyles, placement, arrowProps }) => (
-                  <div ref={ref} style={positionStyles}>
+                  <PositionedContainer ref={ref} style={positionStyles}>
                     <Popover
                       placement={placement}
                       arrowStyles={arrowProps.style}
@@ -95,7 +109,7 @@ export default function Spotlight ({
                         </Actions>
                       </Content>
                     </Popover>
-                  </div>
+                  </PositionedContainer>
                 )}
               </Popper>
             </Portal>
@@ -112,6 +126,10 @@ const INTENTS = {
   teacher: 'warning',
   writer: 'success',
 }
+
+const PositionedContainer = styled.div`
+  z-index: 1000;
+`
 
 const Popover = styled(animated.div).attrs({
   className: 'pt-popover pt-popover-content-sizing',
