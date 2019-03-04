@@ -14,13 +14,27 @@ type Subscriber = SubscriberOptions & {
   setVisibility: boolean => mixed,
 }
 
+type Options = { enabled?: boolean }
+
 export default class SpotlightManager {
   unacknowledgedKeys: string[]
 
+  get enabled () {
+    return this._enabled
+  }
+
+  set enabled (value: boolean) {
+    this._enabled = value
+    this._notifySubscribers()
+  }
+
   _current: ?Subscriber
+  _enabled: boolean = true
   _subscribers: { [key: string]: Subscriber[] } = {}
 
   get _visible () {
+    if (!this.enabled) return undefined
+
     const activeKey = this.unacknowledgedKeys.find(
       key => this._subscribers[key] && this._subscribers[key].length > 0
     )
@@ -30,8 +44,9 @@ export default class SpotlightManager {
     }
   }
 
-  constructor (unacknowledgedKeys: string[]) {
+  constructor (unacknowledgedKeys: string[], { enabled = true }: Options = {}) {
     this.unacknowledgedKeys = unacknowledgedKeys
+    this._enabled = enabled
   }
 
   subscribe ({ key, ref }: SubscriberOptions, setVisibility: boolean => mixed) {
