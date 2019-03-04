@@ -19,6 +19,42 @@ describe('SpotlightManager', () => {
 
       expect(manager.unacknowledgedKeys).toEqual(['test_dummy'])
     })
+
+    it('defaults to being enabled', () => {
+      const manager = new SpotlightManager([])
+
+      expect(manager.enabled).toBeTruthy()
+    })
+
+    it('can be initialized with a starting enabled state', () => {
+      const manager = new SpotlightManager([], { enabled: false })
+
+      expect(manager.enabled).toBeFalsy()
+    })
+  })
+
+  describe('#enabled', () => {
+    it('sets a spotlight visible only after the SpotlightManager has been enabled', () => {
+      const manager = new SpotlightManager(['test_dummy'], { enabled: false })
+
+      const setVisibility = jest.fn()
+      manager.subscribe({ key: 'test_dummy' }, setVisibility)
+      expect(setVisibility).not.toHaveBeenCalledWith(true)
+
+      manager.enabled = true
+      expect(setVisibility).toHaveBeenCalledWith(true)
+    })
+
+    it('sets a spotlight invisible when the SpotlightManager has been disabled', () => {
+      const manager = new SpotlightManager(['test_dummy'])
+
+      const setVisibility = jest.fn()
+      manager.subscribe({ key: 'test_dummy' }, setVisibility)
+      manager.enabled = false
+
+      expect(setVisibility).toHaveBeenNthCalledWith(1, true)
+      expect(setVisibility).toHaveBeenNthCalledWith(2, false)
+    })
   })
 
   describe('#subscribe', () => {
