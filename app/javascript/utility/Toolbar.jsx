@@ -11,7 +11,7 @@ import { omit } from 'ramda'
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
 
 import { MaxWidthContainer } from 'utility/styledComponents'
-import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
+import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 
 import type { IntlShape } from 'react-intl'
 
@@ -191,20 +191,3 @@ const Item = styled(Button).attrs({
 const StyledMenu = styled(Menu)`
   font-size: 90%;
 `
-
-type MaybeSpotlightProps = {
-  children: ({ ref: any }) => React.Node,
-  spotlightKey: ?string,
-}
-
-function MaybeSpotlight ({ children, spotlightKey }: MaybeSpotlightProps) {
-  if (spotlightKey != null) {
-    return (
-      <TranslatedSpotlight spotlightKey={spotlightKey}>
-        {children}
-      </TranslatedSpotlight>
-    )
-  } else {
-    return children({ ref: () => {} })
-  }
-}
