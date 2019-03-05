@@ -14,6 +14,7 @@ gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-canonical-host'
 gem 'redis', '~> 3.0'
+gem 'sidekiq'
 
 # Models
 gem 'active_storage_validations'
