@@ -947,6 +947,9 @@ en:
       Cases are also grouped by topic. Click on a category to explore.
     catalog_search: >
       The easiest way to find a case about a specific topic is to search.
+    comment: >
+      You can leave a comment or ask a question about a specific part of the
+      case by clicking here.
   submissions:
     new:
       before_you_get_started: Before you get started
