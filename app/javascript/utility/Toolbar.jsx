@@ -11,20 +11,23 @@ import { omit } from 'ramda'
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
 
 import { MaxWidthContainer } from 'utility/styledComponents'
+import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 
 import type { IntlShape } from 'react-intl'
 
 type BarButton = {|
   className?: string,
   disabled?: boolean,
+  icon: string,
   message?: string,
   onClick: () => any,
-  icon: string,
+  spotlightKey?: string,
 |}
 type BarMessage = {| message: string |}
 type BarMenu = {|
   message?: string,
   icon: string,
+  spotlightKey?: string,
   submenu: Array<BarButton>,
 |}
 type BarComponent = {|
@@ -55,9 +58,19 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
             {group.map((element, j) => {
               if (element == null) return null
 
+              const spotlightKey = element.spotlightKey
+                ? element.spotlightKey
+                : undefined
+
               return element.component != null ? (
+                /**
+                 * BarComponent -- an arbitrary custom component
+                 */
                 React.cloneElement(element.component, { key: j })
               ) : element.submenu != null ? (
+                /**
+                 * BarMenu -- a button with a dropdown menu of other buttons
+                 */
                 <Popover
                   key={j}
                   position={Position.BOTTOM_RIGHT}
@@ -78,11 +91,35 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                     </StyledMenu>
                   }
                 >
-                  <Item key={j} text={t(element.message)} {...pass(element)} />
+                  <MaybeSpotlight spotlightKey={spotlightKey}>
+                    {({ ref }) => (
+                      <Item
+                        key={j}
+                        elementRef={ref}
+                        text={t(element.message)}
+                        {...pass(element)}
+                      />
+                    )}
+                  </MaybeSpotlight>
                 </Popover>
               ) : element.onClick != null ? (
-                <Item key={j} text={t(element.message)} {...pass(element)} />
+                /**
+                 * BarButton -- a clickable button
+                 */
+                <MaybeSpotlight spotlightKey={spotlightKey}>
+                  {({ ref }) => (
+                    <Item
+                      key={j}
+                      elementRef={ref}
+                      text={t(element.message)}
+                      {...pass(element)}
+                    />
+                  )}
+                </MaybeSpotlight>
               ) : (
+                /**
+                 * BarMessage -- just translated text
+                 */
                 <span key={j}>{t(element.message)}</span>
               )
             })}
@@ -154,3 +191,20 @@ const Item = styled(Button).attrs({
 const StyledMenu = styled(Menu)`
   font-size: 90%;
 `
+
+type MaybeSpotlightProps = {
+  children: ({ ref: any }) => React.Node,
+  spotlightKey: ?string,
+}
+
+function MaybeSpotlight ({ children, spotlightKey }: MaybeSpotlightProps) {
+  if (spotlightKey != null) {
+    return (
+      <TranslatedSpotlight spotlightKey={spotlightKey}>
+        {children}
+      </TranslatedSpotlight>
+    )
+  } else {
+    return children({ ref: () => {} })
+  }
+}
