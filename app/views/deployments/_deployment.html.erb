@@ -21,13 +21,15 @@
     <div class="deployment__actions">
       <%= deployment.quiz_link %>
 
-      <button
-        class="deployment__open-invite pt-button pt-small pt-minimal
-               pt-icon-new-person"
-        data-action="deployments--invite-drawer#open"
-      >
-        <%= t '.invite_learners' %>
-      </button>
+      <%= spotlight :invite_learners, placement: 'top' do %>
+        <button
+          class="deployment__open-invite pt-button pt-small pt-minimal
+                 pt-icon-new-person"
+          data-action="deployments--invite-drawer#open"
+        >
+          <%= t '.invite_learners' %>
+        </button>
+      <% end %>
 
       <button
         class="deployment__close-invite pt-button pt-small pt-minimal

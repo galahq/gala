@@ -90,6 +90,7 @@ function StatusBar ({
                   message: 'editorships.new.addEditor',
                   icon: 'new-person',
                   onClick: () => (window.location = links.newEditorship),
+                  spotlightKey: 'add_collaborators',
                 }
               : {
                   className: selecting && 'pt-intent-success',
@@ -98,6 +99,7 @@ function StatusBar ({
                   onClick: selecting
                     ? () => onSelect(caseSlug)
                     : () => (window.location = links.teach),
+                  spotlightKey: 'deploy',
                 },
 
             !selecting &&
@@ -146,6 +148,7 @@ function StatusBar ({
                     onClick: togglePublished,
                   },
                 ],
+                spotlightKey: 'publish',
               },
           ],
         ]

@@ -30,13 +30,16 @@ const CatalogToolbar = ({ author, history, instructor }: Props) => (
               icon: 'home',
               onClick: () => history.push('/'),
             },
+
             selecting || {
               message: author
                 ? 'myCases.index.myCases'
                 : 'cases.new.createACase',
               icon: 'annotation',
               onClick: () => (window.location = '/my_cases'),
+              spotlightKey: 'my_cases',
             },
+
             selecting || {
               message: instructor
                 ? 'deployments.index.myDeployments'
