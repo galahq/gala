@@ -89,6 +89,7 @@ const ACTIONS: Action[] = [
     icon: 'add-column-right',
     call: toggleEdgenote,
     active: entityTypeEquals('EDGENOTE'),
+    spotlightKey: 'add_edgenote',
   },
 
   {
@@ -96,6 +97,7 @@ const ACTIONS: Action[] = [
     icon: 'bookmark',
     call: async (eS, props) => addCitationEntity(eS, props),
     active: blockTypeEquals('unordered-list-item'),
+    spotlightKey: 'add_citation',
   },
 ]
 
