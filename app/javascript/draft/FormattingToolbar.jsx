@@ -19,6 +19,8 @@ import {
   addCitationEntity,
 } from './helpers'
 
+import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
+
 import type { IntlShape } from 'react-intl'
 
 type Action = {
@@ -26,7 +28,9 @@ type Action = {
   icon: string | React.Node,
   call: (editorState: EditorState, props: Props) => Promise<EditorState>,
   active: (editorState: EditorState) => boolean,
+  spotlightKey?: string,
 }
+
 type ActionName =
   | 'italic'
   | 'code'
@@ -44,42 +48,49 @@ const ACTIONS: Action[] = [
     call: async eS => RichUtils.toggleInlineStyle(eS, 'ITALIC'),
     active: eS => eS.getCurrentInlineStyle().has('ITALIC'),
   },
+
   {
     name: 'code',
     icon: 'code',
     call: async eS => RichUtils.toggleInlineStyle(eS, 'CODE'),
     active: eS => eS.getCurrentInlineStyle().has('CODE'),
   },
+
   {
     name: 'header',
     icon: 'header',
     call: async eS => RichUtils.toggleBlockType(eS, 'header-two'),
     active: blockTypeEquals('header-two'),
   },
+
   {
     name: 'blockquote',
     icon: 'citation',
     call: async eS => RichUtils.toggleBlockType(eS, 'blockquote'),
     active: blockTypeEquals('blockquote'),
   },
+
   {
     name: 'ol',
     icon: 'numbered-list',
     call: async eS => RichUtils.toggleBlockType(eS, 'ordered-list-item'),
     active: blockTypeEquals('ordered-list-item'),
   },
+
   {
     name: 'ul',
     icon: 'properties',
     call: async eS => RichUtils.toggleBlockType(eS, 'unordered-list-item'),
     active: blockTypeEquals('unordered-list-item'),
   },
+
   {
     name: 'addEdgenoteEntity',
     icon: 'add-column-right',
     call: toggleEdgenote,
     active: entityTypeEquals('EDGENOTE'),
   },
+
   {
     name: 'addCitationEntity',
     icon: 'bookmark',
@@ -96,25 +107,38 @@ type Props = {
   intl: IntlShape,
   onChange: EditorState => mixed,
 }
+
 const FormattingToolbar = (props: Props) => {
   const { actions, editorState, intl, onChange } = props
   return (
     <ButtonGroup>
       {ACTIONS.filter(action => actions[action.name] !== false).map(action => {
         const messageId = `helpers.formatting.${action.name}`
+        const spotlightKey = action.spotlightKey
+          ? action.spotlightKey
+          : undefined
+
         return (
-          <Button
+          <MaybeSpotlight
             key={action.name}
-            icon={action.icon}
-            active={action.active(editorState)}
-            aria-label={intl.formatMessage({ id: messageId })}
-            title={intl.formatMessage({ id: messageId })}
-            onClick={async (e: SyntheticMouseEvent<*>) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onChange(await action.call(editorState, props))
-            }}
-          />
+            placement="bottom"
+            spotlightKey={spotlightKey}
+          >
+            {({ ref }) => (
+              <Button
+                elementRef={ref}
+                icon={action.icon}
+                active={action.active(editorState)}
+                aria-label={intl.formatMessage({ id: messageId })}
+                title={intl.formatMessage({ id: messageId })}
+                onClick={async (e: SyntheticMouseEvent<*>) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  onChange(await action.call(editorState, props))
+                }}
+              />
+            )}
+          </MaybeSpotlight>
         )
       })}
     </ButtonGroup>
