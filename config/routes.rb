@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'sidekiq/web'
+
 LOCALES ||= Rails.application.config.i18n.available_locales
 LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/.freeze
 
@@ -196,4 +198,8 @@ Rails.application.routes.draw do
       omniauth_callbacks: 'authentication_strategies/omniauth_callbacks'
     }
   )
+
+  authenticate :reader, ->(reader) { reader.has_role? :editor } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 end
