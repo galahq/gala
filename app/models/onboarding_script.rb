@@ -52,8 +52,9 @@ class TeacherOnboardingScript < OnboardingScript
       'catalog_categories', # see above
       'caselog',            # over conversation button of a published case
       'deploy',             # toolbar button
+      'invite_learners',    # on the deployments page
       'add_quiz',           # on the deployments page
-      'invite_learners'     # on the deployments page
+      'deployment_details'  # on the deployments page, over N enrolled
     ]
   end
 end

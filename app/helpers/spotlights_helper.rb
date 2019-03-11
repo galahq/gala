@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SpotlightsHelper
   def spotlight(key, placement: nil, &block)
     data = {
@@ -8,11 +10,11 @@ module SpotlightsHelper
     }
 
     if block_is_haml? block
-      haml_tag :div, data: data do
+      haml_tag :span, data: data do
         capture_haml(&block)
       end
     else
-      content_tag :div, data: data do
+      content_tag :span, data: data do
         capture(&block)
       end
     end

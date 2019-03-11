@@ -10,11 +10,15 @@
         <%= deployment.case.kicker %>
       </span>
 
-      <%= link_to deployment,
-                  class: %w[pt-button pt-small pt-minimal pt-icon-people] do %>
-        <%= t '.n_enrolled',
-              count: reader_counts_by_deployment_id[deployment.id]
-        %>
+      <%= spotlight :deployment_details, placement: 'top' do %>
+        <%= link_to(
+              deployment,
+              class: %w[pt-button pt-small pt-minimal pt-icon-people]
+            ) do %>
+          <%= t '.n_enrolled',
+                count: reader_counts_by_deployment_id[deployment.id]
+          %>
+        <% end %>
       <% end %>
     </div>
 
