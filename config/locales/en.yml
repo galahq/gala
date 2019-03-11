@@ -943,6 +943,17 @@ en:
     search_cases: Search Cases...
     try_again: Try searching for something else.
   spotlights:
+    add_citation: >
+      Add a citation by clicking here.
+    add_collaborators: >
+      You and another Gala user can edit your case at the same time
+      if you invite that person by clicking here.
+    add_edgenote: >
+      Attach a media resource by adding an Edgenote to a key phrase by
+      selecting it and clicking here.
+    add_quiz: >
+      You can administer a comprehension quiz at the end of the case, and
+      optionally pair it with an identical pretest.
     catalog_categories: >
       Cases are also grouped by topic. Click on a category to explore.
     catalog_search: >
@@ -950,6 +961,17 @@ en:
     comment: >
       You can leave a comment or ask a question about a specific part of the
       case by clicking here.
+    deploy: >
+      If this case looks right, send it to your students by “deploying” it.
+    deployment_details: >
+      See your group’s progress and their performance on your comprehension
+      quiz by clicking here.
+    invite_learners: >
+      Send your group a “magic link” that they can follow and enroll
+      automatically.
+    publish: >
+      When you’re finished writing your case, you can publish it from the
+      Options menu.
   submissions:
     new:
       before_you_get_started: Before you get started
