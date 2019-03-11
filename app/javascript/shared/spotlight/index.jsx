@@ -153,14 +153,12 @@ function transformOrigin ({ arrowStyles, placement }) {
 }
 
 const Content = styled.div.attrs(p => ({
-  className: `pt-popover-content personas__choice personas__choice--learner persona--${
-    p.persona
-  }`,
+  className: `pt-popover-content personas__choice persona--${p.persona}`,
 }))`
   ${p =>
     p.popperPlacement === 'bottom' &&
     css`
-      border-width: 0 0 6px;
+      border-width: 0 0 6px !important;
     `}
 `
 
