@@ -91,7 +91,10 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                     </StyledMenu>
                   }
                 >
-                  <MaybeSpotlight spotlightKey={spotlightKey}>
+                  <MaybeSpotlight
+                    spotlightKey={spotlightKey}
+                    placement="bottom"
+                  >
                     {({ ref }) => (
                       <Item
                         key={j}
@@ -106,7 +109,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarButton -- a clickable button
                  */
-                <MaybeSpotlight spotlightKey={spotlightKey}>
+                <MaybeSpotlight spotlightKey={spotlightKey} placement="bottom">
                   {({ ref }) => (
                     <Item
                       key={j}
@@ -163,7 +166,7 @@ const MaxWidthFlexContainer = styled(MaxWidthContainer)`
   }
 `
 const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
-  height: 36px;
+  height: 36px !important;
   margin: 0 8px;
   flex: 1;
   white-space: nowrap;
