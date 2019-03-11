@@ -2,32 +2,34 @@
 <html lang="<%= I18n.locale %>" prefix="og: http://ogp.me/ns#">
   <head>
     <meta charset="utf-8">
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
-    <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
-
-    <%= render 'application/reader_javascript_tag' %>
-    <%= render 'application/fonts' %>
 
     <title>
       <% if content_for? :title %><%= content_for :title %> — <% end %>
       Gala
     </title>
+
     <%= favicon_link_tag 'https://msc-gala.imgix.net/favicon_gala.png' %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
 
+    <%= render 'application/reader_javascript_tag' %>
+    <%= javascript_tag do %>
+      window.i18n = { locale: '<%=I18n.locale%>' }
+    <% end %>
+
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
+    <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
     <%= javascript_pack_tag 'runtime' %>
     <%= javascript_pack_tag 'vendor' %>
-    <%= javascript_pack_tag 'controllers' %>
-    <%= javascript_pack_tag 'onboarding' %>
+
     <%= javascript_pack_tag 'styles' %>
     <%= stylesheet_pack_tag 'styles' %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_tag do %>
-      window.i18n = {}
-      window.i18n.locale = '<%=I18n.locale%>'
-    <% end %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= render 'application/fonts' %>
+
+    <%= javascript_pack_tag 'controllers' %>
+    <%= javascript_pack_tag 'onboarding' %>
+    <%= javascript_include_tag 'application' %>
 
     <meta property="og:site_name" content="Gala" />
     <% if content_for? :head %><%= content_for :head %><% end %>
