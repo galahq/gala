@@ -123,7 +123,7 @@ const FormattingToolbar = (props: Props) => {
         return (
           <MaybeSpotlight
             key={action.name}
-            placement="bottom"
+            placement="top"
             spotlightKey={spotlightKey}
           >
             {({ ref }) => (

@@ -148,7 +148,7 @@ function StatusBar ({
                     onClick: togglePublished,
                   },
                 ],
-                spotlightKey: 'publish',
+                spotlightKey: editing ? 'publish' : undefined,
               },
           ],
         ]

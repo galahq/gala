@@ -62,7 +62,7 @@ function ThievingSpotlight ({ children, content, placement, spotlightKey }) {
       spotlightKey={spotlightKey}
     >
       {({ ref }) => (
-        <div
+        <span
           ref={mergeRefs(ref, targetRef)}
           dangerouslySetInnerHTML={{ __html: '' }}
         />
