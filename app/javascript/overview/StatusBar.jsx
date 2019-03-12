@@ -16,16 +16,21 @@ import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
-  let { edit, caseData } = state
-  let { inProgress } = edit
-  let { commentable, links, publishedAt, reader, slug } = caseData
-  let { pathname } = location
+  const { edit, caseData } = state
+  const { inProgress } = edit
+  const { commentable, links, publishedAt, reader, slug } = caseData
+  const { pathname } = location
+  const activeCommunity = reader?.activeCommunity
+
+  const caselogSpotlightNeeded = activeCommunity?.name === 'CaseLog'
+
   return {
     editable: edit.possible,
     editing: inProgress,
     edited: edit.changed,
     published: !!publishedAt,
     caseSlug: slug,
+    caselogSpotlightNeeded,
     links,
     commentable,
     pathname,
@@ -35,6 +40,7 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
 }
 
 function StatusBar ({
+  caselogSpotlightNeeded,
   caseSlug,
   commentable,
   editable,
@@ -70,11 +76,12 @@ function StatusBar ({
                   onClick: () => history.push('/'),
                 },
 
-            {
+            pathname === '/conversation' || {
               disabled: !commentable || !reader || !reader.enrollment,
               message: 'comments.index.conversation',
               icon: 'chat',
               onClick: () => history.push('/conversation'),
+              spotlightKey: caselogSpotlightNeeded ? 'caselog' : undefined,
             },
           ],
           [
