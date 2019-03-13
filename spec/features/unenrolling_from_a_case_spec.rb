@@ -10,6 +10,8 @@ feature 'Unenrolling from a case' do
     kase.enrollments.create(reader: reader)
 
     login_as reader
+    visit root_path
+
     find('[aria-label="Edit enrolled cases"]').click
     accept_confirm /\AAre you sure you want to unenroll in this case\?\Z/ do
       find('[aria-label="Unenroll from this case"]').click
@@ -24,6 +26,8 @@ feature 'Unenrolling from a case' do
     kase.enrollments.create(reader: reader)
 
     login_as reader
+    visit root_path
+
     find('[aria-label="Edit enrolled cases"]').click
     accept_confirm 'Because this case is not published, you will need another invitation to reenroll.' do
       find('[aria-label="Unenroll from this case"]').click

@@ -10,10 +10,14 @@ module AfterSignInPath
 
     # A user who has just signed in for the first time should follow the
     # onboarding path
-    return edit_profile_persona_path if user.sign_in_count == 1
+    return edit_profile_persona_path if needs_persona_prompt? user
 
     # A user who clicked sign in from a page other than the root should be
     # returned to where they were
     stored_location_for(:user) || root_path
+  end
+
+  def needs_persona_prompt?(user)
+    user.sign_in_count == 1 && user.persona.blank?
   end
 end

@@ -30,6 +30,8 @@ module MagicLink
   end
 
   def link_reader!(reader)
+    reader.update persona: :learner
+
     strategy = LinkerService::SessionStrategy.new session, reader
     @linker = LinkerService.new strategy
     @linker.call
