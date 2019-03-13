@@ -22,7 +22,8 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
   const { pathname } = location
   const activeCommunity = reader?.activeCommunity
 
-  const caselogSpotlightNeeded = activeCommunity?.name === 'CaseLog'
+  const caselogSpotlightNeeded =
+    activeCommunity?.name === 'CaseLog' && publishedAt != null
 
   return {
     editable: edit.possible,
@@ -55,6 +56,7 @@ function StatusBar ({
   history,
   reader,
 }) {
+  console.log({ reader })
   return (
     <ContentItemSelectionContextConsumer>
       {({ selecting, onSelect }) => {
@@ -76,14 +78,21 @@ function StatusBar ({
                   onClick: () => history.push('/'),
                 },
 
-            pathname === '/conversation' || {
+            !pathname.startsWith('/conversation') && {
               disabled: !commentable || !reader || !reader.enrollment,
               message: 'comments.index.conversation',
               icon: 'chat',
               onClick: () => history.push('/conversation'),
-              spotlightKey: caselogSpotlightNeeded ? 'caselog' : undefined,
+              spotlightKey: caselogSpotlightNeeded
+                ? reader.persona === 'writer' && editable
+                  ? 'first-caselog'
+                  : 'caselog'
+                : pathname.match(/^\/\d/)
+                ? 'conversation_view'
+                : undefined,
             },
           ],
+
           [
             editing
               ? { message: 'cases.edit.justChangeTheText' }
@@ -91,6 +100,7 @@ function StatusBar ({
               ? { message: 'cases.show.notYetPublished' }
               : null,
           ],
+
           [
             editing
               ? {

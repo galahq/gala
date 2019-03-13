@@ -36,10 +36,11 @@ end
 class LearnerOnboardingScript < OnboardingScript
   def self.all_spotlights
     super + [
-      'catalog_search',      # Search box on the catalog page
-      'catalog_categories',  # Natural Resources header
-      'community_chooser',   # When enrolled, if there’s more than one community
-      'comment'              # Respond button on a card
+      'catalog_search',     # search box on the catalog page
+      'catalog_categories', # natural resources header
+      'comment',            # respond button on a card
+      'community_chooser',  # when enrolled, if there’s more than one community
+      'conversation_view'   # over conversation button
     ]
   end
 end
@@ -50,7 +51,7 @@ class TeacherOnboardingScript < OnboardingScript
     super + [
       'catalog_search',     # see above
       'catalog_categories', # see above
-      'caselog',            # over conversation button of a published case
+      'caselog',            # over conversation button
       'deploy',             # toolbar button
       'invite_learners',    # on the deployments page
       'add_quiz',           # on the deployments page
@@ -63,10 +64,9 @@ end
 class WriterOnboardingScript < OnboardingScript
   def self.all_spotlights
     super + [
-      'my_cases',          # toolbar button on catalog page
       'add_collaborators', # toolbar button
       'publish',           # over “options” button, for “when you’re finished”
-      'caselog',           # see above
+      'first-caselog',     # see above
       'add_edgenote',      # editor toolbar button
       'add_citation'       # editor toolbar button
     ]
