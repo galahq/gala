@@ -20,7 +20,10 @@ feature 'Viewing a case' do
         create :case_with_elements, :published
       end
 
-      before { login_as user }
+      before do
+        login_as user
+        visit root_path
+      end
 
       scenario 'is accessible' do
         click_link published_case.title
@@ -46,11 +49,11 @@ feature 'Viewing a case' do
 
           visit case_path published_case
           click_button 'Enroll'
+          click_link(published_case.pages.first.title)
           expect(page).to have_content invited_community.name.to_s
           find_link(invited_community.name).hover
           expect(find_link(invited_community.name)).to have_selector '.pt-icon-cross'
 
-          click_link(published_case.pages.first.title)
           sleep 1
           click_link(invited_community.name)
           find('.pt-menu-item', text: GlobalCommunity.instance.name).click
@@ -61,7 +64,11 @@ feature 'Viewing a case' do
 
     context 'a forthcoming case' do
       let!(:forthcoming_case) { create :case }
-      before { login_as user }
+
+      before do
+        login_as user
+        visit root_path
+      end
 
       scenario 'is not accessible' do
         expect(page).not_to have_content forthcoming_case.title
@@ -74,7 +81,10 @@ feature 'Viewing a case' do
 
     context 'that case' do
       let(:forthcoming_case) { enrollment.case }
-      before { login_as enrollment.reader }
+      before do
+        login_as enrollment.reader
+        visit root_path
+      end
 
       scenario 'is accessible' do
         expect(find('[data-test-id="enrollments"]'))
@@ -89,7 +99,10 @@ feature 'Viewing a case' do
     let(:user) { create :reader, :editor }
     let!(:any_case) { create :case_with_elements, :in_catalog }
 
-    before { login_as user }
+    before do
+      login_as user
+      visit root_path
+    end
 
     scenario 'statistics are visible' do
       click_link any_case.kicker

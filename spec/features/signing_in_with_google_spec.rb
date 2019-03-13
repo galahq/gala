@@ -20,7 +20,7 @@ feature 'Signing in with Google' do
     scenario 'user can create a password' do
       find('.oauth-icon-google').click
       find('[aria-label="Account options"]').click
-      click_link 'My account'
+      click_link 'Account settings'
       fill_in 'Password', with: 'new password'
       click_button 'Create a password'
 

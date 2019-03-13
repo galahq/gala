@@ -11,18 +11,18 @@ feature 'Following a magic link' do
 
     scenario 'while not logged in' do
       visit magic_link_path key: deployment.key
-      click_button 'Let’s get started!'
+      click_on 'Let’s get started!'
       login_as reader
+      click_on 'Conversation'
       expect(page).to have_content deployment.group.name
-      expect(page).not_to have_content 'Enroll in this case'
     end
 
     scenario 'while logged in' do
       login_as reader
       visit magic_link_path key: deployment.key
-      click_button 'Let’s get started!'
+      click_on 'Let’s get started!'
+      click_on 'Conversation'
       expect(page).to have_content deployment.group.name
-      expect(page).not_to have_content 'Enroll in this case'
     end
 
     scenario 'and a previous enrollment' do
@@ -33,17 +33,18 @@ feature 'Following a magic link' do
                         status: :instructor
       quiz_deployment = create :deployment, :with_pretest, case: kase
       visit magic_link_path key: quiz_deployment.key
-      click_button 'Let’s get started!'
+      click_on 'Let’s get started!'
+      click_on 'Conversation'
       expect(page).to have_content quiz_deployment.group.name
-      expect(page).not_to have_content 'Enroll in this case'
-      click_link 'Check your understanding'
+      click_on 'Overview'
+      click_on 'Check your understanding'
       expect(page).to have_content 'Post-case quiz'
     end
   end
 
   scenario 'creating an account' do
     visit magic_link_path key: deployment.key
-    click_button 'Let’s get started!'
+    click_on 'Let’s get started!'
 
     click_on 'Sign up'
     expect(page).to have_content 'Email can’t be blank'
@@ -53,7 +54,7 @@ feature 'Following a magic link' do
     fill_in 'Email', with: reader.email
     fill_in 'Password', with: reader.password, match: :first
     fill_in 'Password confirmation', with: reader.password
-    click_button 'Sign up'
+    click_on 'Sign up'
 
     Capybara.reset_sessions!
 
@@ -62,17 +63,17 @@ feature 'Following a magic link' do
 
     fill_in 'Email', with: reader.email
     fill_in 'Password', with: reader.password
-    click_button 'Sign in'
+    click_on 'Sign in'
 
+    click_on 'Conversation'
     expect(page).to have_content deployment.group.name
-    expect(page).not_to have_content 'Enroll in this case'
   end
 
   scenario 'signing in with Google' do
     visit magic_link_path key: deployment.key
-    click_button 'Let’s get started!'
+    click_on 'Let’s get started!'
     find('.oauth-icon-google').click
+    click_on 'Conversation'
     expect(page).to have_content deployment.group.name
-    expect(page).not_to have_content 'Enroll in this case'
   end
 end
