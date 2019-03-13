@@ -58,7 +58,7 @@ export default function Spotlight ({
   React.useEffect(
     () => {
       const el = spotlightTargetRef.current
-      if (el instanceof HTMLElement && visible) {
+      if (visible && el instanceof HTMLElement && el.scrollIntoView) {
         el.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
