@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import styled, { css } from 'styled-components'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
 
 import { InputGroup } from '@blueprintjs/core'
@@ -13,6 +13,7 @@ import { InputGroup } from '@blueprintjs/core'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 import Toolbar from 'utility/Toolbar'
 import { getSearchPath } from 'catalog/search_results/SearchForm'
+import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 
 import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
@@ -29,13 +30,16 @@ const CatalogToolbar = ({ author, history, instructor }: Props) => (
               icon: 'home',
               onClick: () => history.push('/'),
             },
+
             selecting || {
               message: author
                 ? 'myCases.index.myCases'
                 : 'cases.new.createACase',
               icon: 'annotation',
               onClick: () => (window.location = '/my_cases'),
+              spotlightKey: 'my_cases',
             },
+
             selecting || {
               message: instructor
                 ? 'deployments.index.myDeployments'
@@ -78,27 +82,32 @@ class SearchField extends React.Component<
 
   render () {
     return (
-      <FormCoveringToolbarOnMobile
-        active={this.state.active}
-        onSubmit={this.handleSubmit}
-      >
-        <InputGroup
-          inputRef={el => (this.input = el)}
-          className="pt-round"
-          leftIcon="search"
-          rightElement={
-            <button
-              className="pt-button pt-minimal pt-icon-arrow-right"
-              onClick={this.handleSubmit}
+      <TranslatedSpotlight spotlightKey="catalog_search">
+        {({ ref }) => (
+          <FormCoveringToolbarOnMobile
+            active={this.state.active}
+            onSubmit={this.handleSubmit}
+            ref={ref}
+          >
+            <InputGroup
+              inputRef={el => (this.input = el)}
+              className="pt-round"
+              leftIcon="search"
+              rightElement={
+                <button
+                  className="pt-button pt-minimal pt-icon-arrow-right"
+                  onClick={this.handleSubmit}
+                />
+              }
+              placeholder={this.props.intl.formatMessage({
+                id: 'search.searchCases',
+              })}
+              onFocus={() => this.setState({ active: true })}
+              onBlur={() => this.setState({ active: false })}
             />
-          }
-          placeholder={this.props.intl.formatMessage({
-            id: 'search.searchCases',
-          })}
-          onFocus={() => this.setState({ active: true })}
-          onBlur={() => this.setState({ active: false })}
-        />
-      </FormCoveringToolbarOnMobile>
+          </FormCoveringToolbarOnMobile>
+        )}
+      </TranslatedSpotlight>
     )
   }
 }

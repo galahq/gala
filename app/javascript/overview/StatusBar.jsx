@@ -16,16 +16,22 @@ import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'redux/state'
 
 function mapStateToProps (state: State, { location, history }: ContextRouter) {
-  let { edit, caseData } = state
-  let { inProgress } = edit
-  let { commentable, links, publishedAt, reader, slug } = caseData
-  let { pathname } = location
+  const { edit, caseData } = state
+  const { inProgress } = edit
+  const { commentable, links, publishedAt, reader, slug } = caseData
+  const { pathname } = location
+  const activeCommunity = reader?.activeCommunity
+
+  const caselogSpotlightNeeded =
+    activeCommunity?.name === 'CaseLog' && publishedAt != null
+
   return {
     editable: edit.possible,
     editing: inProgress,
     edited: edit.changed,
     published: !!publishedAt,
     caseSlug: slug,
+    caselogSpotlightNeeded,
     links,
     commentable,
     pathname,
@@ -35,6 +41,7 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
 }
 
 function StatusBar ({
+  caselogSpotlightNeeded,
   caseSlug,
   commentable,
   editable,
@@ -49,6 +56,7 @@ function StatusBar ({
   history,
   reader,
 }) {
+  console.log({ reader })
   return (
     <ContentItemSelectionContextConsumer>
       {({ selecting, onSelect }) => {
@@ -70,13 +78,21 @@ function StatusBar ({
                   onClick: () => history.push('/'),
                 },
 
-            {
+            !pathname.startsWith('/conversation') && {
               disabled: !commentable || !reader || !reader.enrollment,
               message: 'comments.index.conversation',
               icon: 'chat',
               onClick: () => history.push('/conversation'),
+              spotlightKey: caselogSpotlightNeeded
+                ? reader.persona === 'writer' && editable
+                  ? 'first-caselog'
+                  : 'caselog'
+                : pathname.match(/^\/\d/)
+                ? 'conversation_view'
+                : undefined,
             },
           ],
+
           [
             editing
               ? { message: 'cases.edit.justChangeTheText' }
@@ -84,12 +100,14 @@ function StatusBar ({
               ? { message: 'cases.show.notYetPublished' }
               : null,
           ],
+
           [
             editing
               ? {
                   message: 'editorships.new.addEditor',
                   icon: 'new-person',
                   onClick: () => (window.location = links.newEditorship),
+                  spotlightKey: 'add_collaborators',
                 }
               : {
                   className: selecting && 'pt-intent-success',
@@ -98,6 +116,7 @@ function StatusBar ({
                   onClick: selecting
                     ? () => onSelect(caseSlug)
                     : () => (window.location = links.teach),
+                  spotlightKey: 'deploy',
                 },
 
             !selecting &&
@@ -146,6 +165,7 @@ function StatusBar ({
                     onClick: togglePublished,
                   },
                 ],
+                spotlightKey: editing ? 'publish' : undefined,
               },
           ],
         ]

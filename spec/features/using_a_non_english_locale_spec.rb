@@ -9,6 +9,7 @@ feature 'Using a non-English locale' do
     case_study.tag 'water'
 
     login_as reader
+    visit root_path
 
     click_on case_study.title
     expect(page).to have_content 'TABLE DES MATIÈRES'

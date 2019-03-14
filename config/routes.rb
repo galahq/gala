@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     resources :readers
     resources :submissions
 
-    root to: "cases#index"
+    root to: 'cases#index'
   end
 
   namespace 'authentication_strategies' do
@@ -171,7 +171,9 @@ Rails.application.routes.draw do
 
   resources :podcasts, only: %i[update destroy], concerns: :has_statistics
 
-  resource :profile, controller: :readers, only: %i[show edit update]
+  resource :profile, controller: :readers, only: %i[show edit update] do
+    resource :persona, only: %i[edit update]
+  end
 
   resources :quizzes, only: %i[show update destroy] do
     resources :submissions, only: %i[index create]
@@ -182,6 +184,8 @@ Rails.application.routes.draw do
   end
 
   resources :search, only: %i[index]
+
+  resources :spotlight_acknowledgements, only: %i[create]
 
   resources :tags, only: %i[index]
 

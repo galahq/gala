@@ -9,7 +9,7 @@ feature 'Signing up' do
 
   before { visit new_reader_registration_path }
 
-  scenario 'with valid email and password', javascript: false do
+  scenario 'with valid email and password' do
     fill_in 'Name', with: name
     fill_in 'Email', with: email
     fill_in 'Password', with: password, match: :first
@@ -24,6 +24,13 @@ feature 'Signing up' do
     fill_in 'Email', with: email
     fill_in 'Password', with: password
     click_button 'Sign in'
-    expect(page).to have_content 'Signed in successfully'
+
+    expect(page).to have_content 'Welcome to Gala'
+    click_button 'Choose', match: :first
+
+    expect(page).to have_content 'Cases you enroll in will be presented here'
+
+    reader.reload
+    expect(reader.persona).to eq 'learner'
   end
 end
