@@ -20,7 +20,10 @@ import {
 import { withRouter, matchPath } from 'react-router-dom'
 import { commentThreadsOpen, commentsOpen } from 'shared/routes'
 import withGetEdgenote from './withGetEdgenote'
-import { applySmartTypography } from 'shared/draftHelpers'
+import {
+  applySmartTypography,
+  handleCustomKeyBindings,
+} from 'shared/draftHelpers'
 
 import type { DragHandleProps } from 'react-beautiful-dnd'
 import type { ContextRouter } from 'react-router-dom'
@@ -144,6 +147,7 @@ export type CardProps = {|
   ...DispatchProps,
   addCommentThread: () => Promise<any>,
   onChange: EditorState => void,
+  keyBindingFn: SyntheticKeyboardEvent => string,
   handleKeyCommand: string => DraftHandleValue,
   handleBeforeInput: (string, EditorState) => DraftHandleValue,
   getEdgenote: () => Promise<string>,
@@ -172,8 +176,12 @@ function mergeProps (
     ...dispatchProps,
 
     onChange,
-    handleKeyCommand: (command: string) => {
-      let newState = RichUtils.handleKeyCommand(editorState, command)
+
+    handleKeyCommand: (command: string, editorState: EditorState) => {
+      const newState =
+        RichUtils.handleKeyCommand(editorState, command) ||
+        handleCustomKeyBindings(editorState, command)
+
       if (newState == null) return 'not-handled'
 
       onChange(newState)
