@@ -1,8 +1,7 @@
 <%= javascript_tag do %>
   window.reader = <% if reader_signed_in? %>
   <%= raw ActiveModel::Serializer.for(
-        current_reader.decorate,
-        scope: controller.view_context, scope_name: :view_context
+        current_reader.decorate, view_context: controller.view_context
       ).to_json %>
   <% else %>
   undefined;
