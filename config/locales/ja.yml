@@ -88,6 +88,10 @@ ja:
         name: 姓名
         password: パスワード
         password_confirmation: パスワード（確認用）
+        persona:
+          learner: Learning from cases
+          teacher: Teaching with cases
+          writer: Writing my own cases
         remember_created_at: ログイン記憶時刻
         remember_me: ログインを記憶する
         reset_password_sent_at: パスワードリセット送信時刻
@@ -122,6 +126,7 @@ ja:
             correct_answer:
               inclusion: "は選択肢の一覧にありません"
     models:
+      account_settings: Account settings
       activity: アクティビティ
       case: 場合
       cases:
@@ -777,6 +782,25 @@ ja:
   pages:
     edit:
       pageSettings: Page Settings
+  personas:
+    edit:
+      ill_figure_it_out: I prefer to figure it out by myself
+      tell_us_about_yourself: >
+        Tell us about yourself so we can personalize your experience. You’ll always have access to all features, but how do you think you’ll use Gala first?
+      welcome: Welcome to Gala
+      you_can_opt_in_later: (You can opt in later from Account Settings.)
+    learner:
+      title: Learn From Cases
+      description: >
+        I want to study real world cases and cutting-edge science for sustainability.
+    teacher:
+      title: Teach With Cases
+      description: >
+        I want to find case studies to deploy in my classroom, company, or community.
+    writer:
+      title: Write My Own Cases
+      description: >
+        I want to create teaching tools with powerful stories, engaging media, and interactive features.
   podcasts:
     destroy:
       delete_podcast: Delete Podcast
@@ -808,9 +832,16 @@ ja:
       account_options: アカウントのオプション
       choose_an_image: プロフィール画像を選択
       create_a_password: パスワードを選ぶ
-      my_account: マイアカウント
+      my_account: Account settings
       notification_settings: 通知の設定
-      save: 'プロフィールの変化を保存'
+      profile_settings: Profile settings
+      save_persona: Save help preferences
+      save_profile: Update profile
+      save_notification_preference: Save notification preferences
+      show_me_tips_about: Show me helpful tips about
+      tips_for_using_gala: Tips for using Gala
+      we_show_tips: >
+        We can show contextual tips about features that are relevant to you.
       you_have_not_created_a_password: >
         初めて%{provider}でサインインしましたので、パスワードをまだ選びませんでした。選んだら、今後%{provider}とパスワードと両方でサインイン可能性があります。
   search:
@@ -824,6 +855,37 @@ ja:
     search: 検索
     search_cases: Search Cases...
     try_again: 他のキーワードを検索してみてください。
+  spotlights:
+    add_citation: >
+      Add a citation by clicking here.
+    add_collaborators: >
+      Invite another Gala user to work with you on your case by clicking here.
+    add_edgenote: >
+      Attach a media resource by linking an Edgenote to the text.
+    add_quiz: >
+      You can administer a comprehension quiz at the end of the case, and optionally pair it with an identical pretest.
+    caselog: >
+      Look here for insights from other instructors who’ve taught this case, and share your expertise after you teach it.
+    catalog_categories: >
+      Cases are also grouped by general topic. Click on a category to explore.
+    catalog_search: >
+      The easiest way to find a case about a specific topic is to search.
+    comment: >
+      You can leave a comment or ask a question about a specific part of the case by clicking here.
+    community_chooser: >
+      Your active community can be changed here.
+    conversation_view: >
+      See all the conversations your community is having about this case from the conversation view.
+    deploy: >
+      If this case looks like a good fit, send it to your students by deploying it.
+    deployment_details: >
+      See your group’s progress and their scores on your comprehension quiz by clicking here.
+    first-caselog: >
+      When other instructors teach your case, CaseLog will be available as a forum to share best practices. Consider writing the initial post.
+    invite_learners: >
+      Send your group a “magic link” that will let them enroll automatically.
+    publish: >
+      When you’re finished writing your case, you can publish it from the Options menu.
   submissions:
     new:
       before_you_get_started: Before you get started
