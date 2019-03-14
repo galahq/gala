@@ -6,7 +6,9 @@
 
 :ruby
   billboard_data = {
-    case_data: ActiveModel::Serializer.for(deployment.case).to_json,
+    case_data: ActiveModel::Serializer
+      .for(deployment.case, view_context: controller.view_context)
+      .to_json,
     group_data: deployment.group.slice(:name).to_json,
     deployment_key: deployment.key
   }
