@@ -16,7 +16,7 @@ Community.create name: 'CaseLog', universal: true, description: <<~DESCRIPTION
   the choices you made and why you made them. Did you structure your classroom
   discussion in a particular way? Did you employ an interesting simulation or
   exercise? Tell us about it.
-  DESCRIPTION
+DESCRIPTION
 
 if defined? DEV_MOCK_AUTH_HASH
   auth = AuthenticationStrategy.from_omniauth DEV_MOCK_AUTH_HASH
@@ -24,7 +24,6 @@ if defined? DEV_MOCK_AUTH_HASH
 
   reader.add_role :editor
   reader.add_role :invisible
-  reader.add_role :instructor
 end
 
 10.times { FactoryBot.create :case_with_elements, :published }
