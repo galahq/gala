@@ -27,8 +27,6 @@ class ApplicationSerializer < ActiveModel::Serializer
   attribute(:table) { object.model_name.plural }
   attribute(:param) { object.to_param }
 
-  delegate :render, :reader_signed_in?, :current_user, to: :view_context
-
   def self.has_many_by_id(relation, options = {})
     has_many relation do |serializer|
       serializer.by_id object.send(relation), options
@@ -38,7 +36,24 @@ class ApplicationSerializer < ActiveModel::Serializer
   def by_id(collection, options = {})
     collection.each_with_object(UntransformableHash.new) do |element, hash|
       hash[element.to_param.freeze] =
-        ActiveModel::Serializer.for(element, options).as_json
+        ActiveModel::Serializer
+        .for(element, view_context: view_context, **options)
+        .as_json
     end
+  end
+
+  # view_context must be provided for render to be used
+  delegate :render, to: :view_context, allow_nil: true
+
+  def reader_signed_in?
+    return false unless view_context.present?
+
+    view_context.reader_signed_in?
+  end
+
+  def current_user
+    return AnonymousUser.new unless view_context.present?
+
+    view_context.current_user
   end
 end

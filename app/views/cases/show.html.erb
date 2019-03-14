@@ -7,10 +7,10 @@
 <%=javascript_tag do %>
   window.caseData = <%=
   raw ActiveModel::Serializer.for(
-      @case, serializer: Cases::ShowSerializer,
-             scope: controller.view_context, scope_name: :view_context,
-             deployment: @deployment, enrollment: @enrollment
-    )
+    @case,
+    serializer: Cases::ShowSerializer, view_context: controller.view_context,
+    deployment: @deployment, enrollment: @enrollment
+  )
     .to_json
   %>
 <% end %>
