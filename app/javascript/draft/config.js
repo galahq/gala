@@ -114,3 +114,5 @@ export const decorator = new CompositeDecorator([
     component: LinkEntity,
   },
 ])
+
+export { keyBindingFn } from 'shared/draftHelpers'

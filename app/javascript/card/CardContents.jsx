@@ -12,7 +12,7 @@ import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
 
 import { commentThreadsOpen } from 'shared/routes'
-import { getStyleMap } from 'draft/config'
+import { getStyleMap, keyBindingFn } from 'draft/config'
 
 import asyncComponent from 'utility/asyncComponent'
 
@@ -156,7 +156,9 @@ class CardContents extends React.Component<Props, State> {
                     onChange={onChange}
                   />
                 )}
+
                 {title}
+
                 <FocusContainer
                   active={!!(theseCommentThreadsOpen && acceptingSelection)}
                   priority={100}
@@ -168,6 +170,7 @@ class CardContents extends React.Component<Props, State> {
                     readOnly={readOnly}
                     customStyleMap={styleMap}
                     editorState={editorState}
+                    keyBindingFn={keyBindingFn}
                     handleKeyCommand={handleKeyCommand}
                     handleBeforeInput={handleBeforeInput}
                     onFocus={editable ? onBeginEditing : () => {}}
