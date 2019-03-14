@@ -5,6 +5,14 @@ require 'rails_helper'
 RSpec.describe Reader, type: :model do
   subject { build :reader }
 
+  it { should have_many :spotlight_acknowledgements }
+
+  it do
+    should define_enum_for(:persona)
+      .with_values(learner: 'learner', teacher: 'teacher', writer: 'writer')
+      .backed_by_column_of_type(:string)
+  end
+
   it 'records that a user chose a password when they set it directly' do
     subject.created_password = false
     subject.save
@@ -25,5 +33,14 @@ RSpec.describe Reader, type: :model do
 
     expect(subject.communities).to include(invited_community,
                                            group.community)
+  end
+
+  describe '#acknowledged_spotlights' do
+    it 'lists the spotlight keys that the reader has acknowledgements' do
+      reader = create :reader
+      create :spotlight_acknowledgement, reader: reader, spotlight_key: 'yep'
+
+      expect(reader.acknowledged_spotlights).to eq(%w[yep])
+    end
   end
 end

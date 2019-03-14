@@ -6,10 +6,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { Link } from 'react-router-dom'
 
 import { acceptSelection } from 'redux/actions'
 
-import { Link } from 'react-router-dom'
+import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 
 import type { State } from 'redux/state'
 
@@ -29,20 +30,28 @@ function mapStateToProps (
 }
 
 const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) => (
-  <Link
-    replace
-    to={`${match.url}/cards/${cardId}/comments`}
-    className="CommentThreads__banner"
-    onClick={() => {
-      count === 0 && acceptSelection()
-    }}
-  >
-    {count > 0 ? (
-      <FormattedMessage id="comments.index.nResponses.js" values={{ count }} />
-    ) : (
-      <FormattedMessage id="comments.new.respond" />
+  <TranslatedSpotlight spotlightKey="comment">
+    {({ ref }) => (
+      <Link
+        replace
+        innerRef={ref}
+        to={`${match.url}/cards/${cardId}/comments`}
+        className="CommentThreads__banner"
+        onClick={() => {
+          count === 0 && acceptSelection()
+        }}
+      >
+        {count > 0 ? (
+          <FormattedMessage
+            id="comments.index.nResponses.js"
+            values={{ count }}
+          />
+        ) : (
+          <FormattedMessage id="comments.new.respond" />
+        )}
+      </Link>
     )}
-  </Link>
+  </TranslatedSpotlight>
 )
 
 // $FlowFixMe

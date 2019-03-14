@@ -1,0 +1,26 @@
+.personas
+  .personas__welcome.pt-dark.pt-running-text
+    %h1.personas__headline= t '.welcome'
+    %p= t '.tell_us_about_yourself'
+
+  .personas__choices
+    - %i[learner teacher writer].each do |persona|
+      .pt-card.pt-elevation-4.personas__choice{ class: "persona--#{persona}" }
+        %h2{ id: "persona-#{persona}-title" }= t "personas.#{persona}.title"
+        %p= t "personas.#{persona}.description"
+
+        = form_with url: profile_persona_path, method: :put, local: true do |f|
+          = f.hidden_field :persona, value: persona
+
+          - intents = { learner: 'primary',
+                        teacher: 'warning',
+                        writer: 'success' }
+          = f.submit 'Choose',
+                     'class' => "pt-button pt-intent-#{intents[persona]}",
+                     'aria-labelledby' => "persona-#{persona}-title"
+
+  %p.personas__skip
+    = link_to t('.ill_figure_it_out'), root_path
+    %br
+    = t '.you_can_opt_in_later'
+

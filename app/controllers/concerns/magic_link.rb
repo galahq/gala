@@ -30,10 +30,16 @@ module MagicLink
   end
 
   def link_reader!(reader)
+    reader.update persona: :learner
+
     strategy = LinkerService::SessionStrategy.new session, reader
     @linker = LinkerService.new strategy
     @linker.call
   rescue LinkerService::SessionStrategy::MissingDeploymentError
     nil
+  end
+
+  def just_linked_user?
+    @linker.present?
   end
 end
