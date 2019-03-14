@@ -60,6 +60,7 @@ class Reader < ApplicationRecord
   has_one_attached :image
 
   before_update :set_created_password, if: :encrypted_password_changed?
+  after_save :invite_to_caselog, if: -> { persona.in? %w[writer teacher] }
 
   validates :image, size: { less_than: 2.megabytes,
                             message: 'cannot be larger than 2 MB' },
@@ -76,7 +77,7 @@ class Reader < ApplicationRecord
   def self.from_omniauth(auth)
     find_or_create_by!(email: auth.email) do |reader|
       reader.attributes = auth.reader_attributes
-      reader.add_role :instructor if auth.instructor?
+      reader.invite_to_caselog if auth.instructor?
     end
   end
 
@@ -129,24 +130,8 @@ class Reader < ApplicationRecord
     @hash_key ||= Digest::SHA256.hexdigest(email)
   end
 
-  # Overrides :add_role from 'rolify' in order to add the reader to CaseLog when
-  # they are made an instructor
-  def add_role(name, *rest)
-    role = super name, *rest
-    return role unless name.to_sym == :instructor
-
+  def invite_to_caselog
     invited_communities << Community.case_log
-    role
-  end
-
-  # Overrides :remove_role from 'rolify' to remove the reader’s invitation to
-  # CaseLog when they are made not an instructor
-  def remove_role(name, *rest)
-    relation = super name, *rest
-    return relation unless name.to_sym == :instructor
-
-    invitations.where(community: Community.case_log).each(&:destroy)
-    relation
   end
 
   # Whether or not the given quiz belongs to this author

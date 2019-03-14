@@ -20,7 +20,6 @@ class PersonasController < ApplicationController
   # @route [PUT] `/profile/persona`
   def update
     current_reader.update persona: params[:persona]
-
     redirect_to after_set_persona_path
   end
 
