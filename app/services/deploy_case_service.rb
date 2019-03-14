@@ -44,6 +44,6 @@ class DeployCaseService
   end
 
   def invite_reader_to_caselog
-    reader.add_role :instructor
+    reader.invite_to_caselog
   end
 end
