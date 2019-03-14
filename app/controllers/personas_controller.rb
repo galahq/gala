@@ -19,13 +19,19 @@ class PersonasController < ApplicationController
   #
   # @route [PUT] `/profile/persona`
   def update
-    current_reader.update persona: params[:persona]
+    current_reader.update persona: persona
     redirect_to after_set_persona_path
   end
 
   private
 
+  def persona
+    params[:persona]
+  end
+
   def after_set_persona_path
+    return my_cases_path if persona == 'writer'
+
     stored_location_for(:user) || root_path
   end
 end
