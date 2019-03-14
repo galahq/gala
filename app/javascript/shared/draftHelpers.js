@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { EditorState, Modifier } from 'draft-js'
+import { EditorState, Modifier, getDefaultKeyBinding } from 'draft-js'
 
 export function getSelectionText (editorState: EditorState): string {
   const selection = editorState.getSelection()
@@ -68,5 +68,25 @@ export function applySmartTypography (
       break
     case '.':
       if (preceding(2) === '..') return insert('…', { replacing: 2 })
+  }
+}
+
+const GALA_KEYBINDING_SOFT_NEWLINE = 'gala-keybinding-soft-newline'
+
+export function keyBindingFn (e: SyntheticKeyboardEvent<*>): ?string {
+  if (e.key === 'Enter' && e.shiftKey) {
+    return GALA_KEYBINDING_SOFT_NEWLINE
+  }
+
+  return getDefaultKeyBinding(e)
+}
+
+export function handleCustomKeyBindings (
+  editorState: EditorState,
+  command: string
+) {
+  switch (command) {
+    case GALA_KEYBINDING_SOFT_NEWLINE:
+      return addCharacterAtSelection(editorState)('\n')
   }
 }
