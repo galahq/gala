@@ -21,6 +21,10 @@ class PersonasController < ApplicationController
   def update
     current_reader.update persona: params[:persona]
 
+    if current_reader.persona == 'teacher' || current_reader.persona == 'writer'
+      invite_reader_to_caselog(current_reader)
+    end
+
     redirect_to after_set_persona_path
   end
 
@@ -28,5 +32,9 @@ class PersonasController < ApplicationController
 
   def after_set_persona_path
     stored_location_for(:user) || root_path
+  end
+
+  def invite_reader_to_caselog(reader)
+    reader.add_role :instructor
   end
 end
