@@ -60,6 +60,7 @@ class Reader < ApplicationRecord
   has_one_attached :image
 
   before_update :set_created_password, if: :encrypted_password_changed?
+  after_save :invite_to_caselog, if: -> { persona.in? %w[writer teacher] }
 
   validates :image, size: { less_than: 2.megabytes,
                             message: 'cannot be larger than 2 MB' },

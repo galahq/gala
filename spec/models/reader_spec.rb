@@ -13,6 +13,18 @@ RSpec.describe Reader, type: :model do
       .backed_by_column_of_type(:string)
   end
 
+  it 'gets access to CaseLog if its persona is teacher' do
+    subject.persona = 'teacher'
+    subject.save
+    expect(subject.communities).to include Community.case_log
+  end
+
+  it 'gets access to CaseLog if its persona is writer' do
+    subject.persona = 'writer'
+    subject.save
+    expect(subject.communities).to include Community.case_log
+  end
+
   it 'records that a user chose a password when they set it directly' do
     subject.created_password = false
     subject.save
