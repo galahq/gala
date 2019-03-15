@@ -2,8 +2,6 @@
 
 import { handleResponse, OrchardError, OrchardInputError } from '../orchard'
 
-global.fetch = require('jest-fetch-mock')
-
 describe('Orchard (API service)', () => {
   describe('handleResponse', () => {
     it('resolves parsed JSON from a successful JSON res', async () => {

@@ -1,0 +1,26 @@
+{
+  "app/javascript/*.jsx": {
+    "type": "component",
+    "template": [
+      "/**",
+      " * @providesModule {basename|camelcase|capitalize}",
+      " * @flow",
+      " */",
+      "",
+      "import * as React from 'react'",
+      "",
+      "function {basename|camelcase|capitalize} () {",
+      "  return <div />",
+      "}",
+      "",
+      "export default {basename|camelcase|capitalize}"
+    ],
+    "alternate": "{dirname}/__tests__/{basename}.test.js"
+  },
+
+  "app/javascript/*.js": {
+    "type": "javascript",
+    "template": ["/**", " * @flow", " */", ""],
+    "alternate": "{dirname}/__tests__/{basename}.test.js"
+  }
+}
