@@ -92,6 +92,11 @@ group :development do
   gem 'yard'
   gem 'yard-activerecord'
   gem 'yard-activesupport-concern'
+
+  gem 'flamegraph'
+  gem 'memory_profiler'
+  gem 'rack-mini-profiler'
+  gem 'stackprof'
 end
 
 group :development, :test do
