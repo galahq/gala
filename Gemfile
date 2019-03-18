@@ -20,7 +20,7 @@ gem 'sidekiq'
 gem 'active_storage_validations'
 gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
                     ref: '2811810'
-gem 'clowne'
+gem 'clowne', '0.2.0'
 gem 'clowne_active_storage'
 gem 'draper'
 gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git',
