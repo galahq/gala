@@ -20,7 +20,7 @@ class PagesController < ApplicationController
     authorize @page
 
     if @page.save
-      render @page
+      render json: @page
     else
       render json: @page.errors, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class PagesController < ApplicationController
     authorize @page
 
     if @page.update(page_params)
-      render @page
+      render json: @page
     else
       render json: @page.errors, status: :unprocessable_entity
     end
