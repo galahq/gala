@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '5.2.2.1'
+gem 'rails', '6.0.0.beta3'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
@@ -51,7 +51,9 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
-gem 'active_model_serializers', '~> 0.10.0'
+gem 'active_model_serializers',
+    git: 'https://github.com/rails-api/active_model_serializers',
+    branch: '0-10-stable'
 gem 'haml'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.0'
@@ -70,7 +72,7 @@ gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
 gem 'sentry-raven'
-gem 'skylight'
+gem 'skylight', '>= 4.0.x'
 gem 'table_print'
 
 # Services
@@ -82,7 +84,7 @@ group :development do
   gem 'listen'
   # Spring speeds up development by keeping your application running in the
   # background. Read more: https://github.com/rails/spring
-  gem 'bullet'
+  gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
   gem 'letter_opener'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
