@@ -192,7 +192,7 @@ GEM
       activesupport
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
-    clowne (1.0.0)
+    clowne (0.2.0)
     clowne_active_storage (0.1.0)
       clowne
       rails
@@ -578,7 +578,7 @@ DEPENDENCIES
   bootsnap
   bullet!
   capybara
-  clowne
+  clowne (= 0.2.0)
   clowne_active_storage
   connection_pool
   dalli
