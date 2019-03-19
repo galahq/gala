@@ -54,9 +54,9 @@ gem 'mobility'
 gem 'active_model_serializers',
     git: 'https://github.com/rails-api/active_model_serializers',
     branch: '0-10-stable'
-gem 'haml'
+gem 'haml', git: 'https://github.com/haml/haml' # until > 5.0.4
 gem 'inline_svg'
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', git: 'https://github.com/rails/jbuilder' # until > 2.8.0
 gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj'
