@@ -9,7 +9,7 @@
 
   = f.form_group :password do |f, error_classes|
     = f.password_field :password, class: (%w[pt-input pt-fill] + error_classes),
-                       autocomplete: "off"
+                                  autocomplete: "current-password"
 
   - if devise_mapping.rememberable?
     .pt-form-group

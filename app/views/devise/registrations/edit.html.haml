@@ -11,18 +11,18 @@
 
     = f.form_group :password do |f, error_classes|
       = f.password_field :password, class: %w[pt-input pt-fill] + error_classes,
-                                    autocomplete: "off"
+                                    autocomplete: "new-password"
 
     = f.form_group :password_confirmation do |f, error_classes|
       = f.password_field :password_confirmation,
                          class: %w[pt-input pt-fill] + error_classes,
-                         autocomplete: "off"
+                         autocomplete: "new-password"
 
     - helper = t '.we_need_your_current_password_to_confirm_your_changes'
     = f.form_group :current_password, helper_text: helper do |f, error_classes|
       = f.password_field :current_password,
                          class: %w[pt-input pt-fill] + error_classes,
-                         autocomplete: "off"
+                         autocomplete: "current-password"
 
     = f.submit t('devise.passwords.edit.change_my_password'),
                class: %w[pt-intent-primary]

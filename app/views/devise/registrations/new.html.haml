@@ -25,12 +25,12 @@
       = f.form_group :password, in_parens: min_length do |f, error_classes|
         = f.password_field :password,
                            class: (%w[pt-input pt-fill] + error_classes),
-                           autocomplete: "off"
+                           autocomplete: "new-password"
 
       = f.form_group :password_confirmation do |f, error_classes|
         = f.password_field :password_confirmation,
                            class: %w[pt-input pt-fill] + error_classes,
-                           autocomplete: "off"
+                           autocomplete: "new-password"
 
       = f.submit t('.sign_up'), class: %w[pt-intent-primary]
 
