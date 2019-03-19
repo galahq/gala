@@ -3,11 +3,15 @@
  */
 
 const { environment } = require('@rails/webpacker')
+const { flatten } = require('ramda')
 
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 //   .BundleAnalyzerPlugin
 //
 // environment.plugins.append('BundleAnalyzer', new BundleAnalyzerPlugin())
+
+const nodeModules = environment.loaders.get('nodeModules')
+nodeModules.exclude = flatten([nodeModules.exclude, /mapbox-gl/])
 
 environment.loaders.get(
   'file'
