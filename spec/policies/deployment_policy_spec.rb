@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe DeploymentPolicy do
-  let(:reader_context) { DeploymentPolicy::UserContext.new build :reader }
-  let(:editor) { DeploymentPolicy::UserContext.new build :reader, :editor }
+  let(:reader_context) { DeploymentPolicy::UserContext.new create :reader }
+  let(:editor) { DeploymentPolicy::UserContext.new create :reader, :editor }
 
-  let(:deployment) { build :deployment }
+  let(:deployment) { create :deployment }
 
   subject { described_class }
 
