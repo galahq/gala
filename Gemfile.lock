@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/cbothner/markerb
-  revision: a7e663676bf3a9d8d74c16f1d8394a9ec0a5e626
+  revision: 197a5e26c3297eca4601dc658ccfd3cd01ca24ea
   specs:
     markerb (1.1.0)
 
