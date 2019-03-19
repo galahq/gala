@@ -191,18 +191,18 @@ feature 'Editing a case' do
       Capybara.using_session 'other' do
         login_as other_reader
         visit case_path(kase, edit: true)
-        find('h1', text: kase.title).click
+        find('.pt-editable-text', text: kase.kicker).click
       end
 
-      find('h1', text: kase.title).hover
+      find('.pt-editable-text', text: kase.kicker).hover
       expect(page).to have_content 'This section is locked'
       click_button 'Edit Anyway'
 
       expect(kase).not_to have_content 'This section is locked'
-      find('h1', text: kase.title).click
+      find('.pt-editable-text', text: kase.kicker).click
 
       Capybara.using_session 'other' do
-        find('h1', text: kase.title).hover
+        find('.pt-editable-text', text: kase.kicker).hover
         expect(page).to have_content 'This section is locked'
       end
     end

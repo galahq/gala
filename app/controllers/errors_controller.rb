@@ -3,7 +3,7 @@
 # Handle errors
 class ErrorsController < ActionController::Base
   def self.method_name(code)
-    Rack::Utils::HTTP_STATUS_CODES[code].parameterize.underscore
+    Rack::Utils::HTTP_STATUS_CODES[code].encode('utf-8').parameterize.underscore
   end
 
   layout 'window'

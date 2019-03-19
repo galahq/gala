@@ -20,7 +20,7 @@ class PodcastsController < ApplicationController
     authorize @podcast
 
     if @podcast.save
-      render @podcast.decorate
+      render json: @podcast.decorate
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class PodcastsController < ApplicationController
     authorize @podcast
 
     if @podcast.update(podcast_params)
-      render @podcast.decorate
+      render json: @podcast.decorate
     else
       render json: @podcast.errors, status: :unprocessable_entity
     end

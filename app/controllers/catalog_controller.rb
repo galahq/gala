@@ -6,11 +6,11 @@ class CatalogController < ApplicationController
 
   decorates_assigned :cases
 
+  layout 'with_header'
+
   # @route [GET] `/`
   def home
     @cases = policy_scope(Case)
              .ordered
-
-    render layout: 'with_header'
   end
 end

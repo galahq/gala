@@ -18,7 +18,7 @@ class CardsController < ApplicationController
     authorize @card
 
     if @card.save
-      render @card
+      render json: @card
     else
       render json: @card.errors, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class CardsController < ApplicationController
     authorize @card
 
     if @card.update(card_params)
-      render @card
+      render json: @card
     else
       render json: @card.errors, status: :unprocessable_entity
     end
