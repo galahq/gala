@@ -57,7 +57,7 @@ gem 'active_model_serializers',
 gem 'haml'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.0'
-gem 'markerb'
+gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj'
 gem 'oj_mimic_json'
