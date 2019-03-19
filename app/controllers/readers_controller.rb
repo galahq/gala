@@ -34,8 +34,10 @@ class ReadersController < ApplicationController
     respond_to do |format|
       if @reader.update(reader_params)
         bypass_sign_in @reader if reader_params.key? :password
+
         format.html do
-          redirect_to edit_profile_path, notice: successfully_updated(:account_settings)
+          redirect_to edit_profile_path,
+                      notice: successfully_updated(:account_settings)
         end
         format.json { render :show, status: :ok, location: profile_path }
       else
@@ -64,14 +66,16 @@ class ReadersController < ApplicationController
   end
 
   def reader_params
-    unless defined? @reader_can_set_password
-      @reader_can_set_password = @reader && !@reader.created_password
-    end
-
     permitted = %i[name initials email locale send_reply_notifications
                    active_community_id image persona]
-    permitted << :password if @reader_can_set_password
+
+    permitted << :password if reader_can_set_password_this_request
 
     params.require(:reader).permit(*permitted)
+  end
+
+  def reader_can_set_password_this_request
+    @reader_can_set_password_this_request ||=
+      @reader && !@reader.created_password
   end
 end

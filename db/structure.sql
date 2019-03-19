@@ -2818,6 +2818,14 @@ ALTER TABLE ONLY quizzes
 
 
 --
+-- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY active_storage_attachments
+    ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES active_storage_blobs(id);
+
+
+--
 -- Name: cards fk_rails_c5d03ef31a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3017,6 +3025,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181030194657'),
 ('20181108181434'),
 ('20190219154939'),
-('20190222195858');
+('20190222195858'),
+('20190319130136');
 
 

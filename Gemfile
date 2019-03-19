@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '5.2.2.1'
+gem 'rails', '6.0.0.beta3'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
@@ -20,7 +20,7 @@ gem 'sidekiq'
 gem 'active_storage_validations'
 gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
                     ref: '2811810'
-gem 'clowne'
+gem 'clowne', '0.2.0'
 gem 'clowne_active_storage'
 gem 'draper'
 gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git',
@@ -51,11 +51,13 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
-gem 'active_model_serializers', '~> 0.10.0'
-gem 'haml'
+gem 'active_model_serializers',
+    git: 'https://github.com/rails-api/active_model_serializers',
+    branch: '0-10-stable'
+gem 'haml', git: 'https://github.com/haml/haml' # until > 5.0.4
 gem 'inline_svg'
-gem 'jbuilder', '~> 2.0'
-gem 'markerb'
+gem 'jbuilder', git: 'https://github.com/rails/jbuilder' # until > 2.8.0
+gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj'
 gem 'oj_mimic_json'
@@ -70,7 +72,7 @@ gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
 gem 'sentry-raven'
-gem 'skylight'
+gem 'skylight', '>= 4.0.x'
 gem 'table_print'
 
 # Services
@@ -82,7 +84,7 @@ group :development do
   gem 'listen'
   # Spring speeds up development by keeping your application running in the
   # background. Read more: https://github.com/rails/spring
-  gem 'bullet'
+  gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
   gem 'letter_opener'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
