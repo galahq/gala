@@ -21,6 +21,13 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 
 
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -375,7 +382,8 @@ CREATE TABLE comment_threads (
     card_id integer,
     reader_id integer,
     forum_id integer,
-    comments_count integer
+    comments_count integer,
+    key character varying
 );
 
 
@@ -2142,6 +2150,13 @@ CREATE INDEX index_comment_threads_on_forum_id ON comment_threads USING btree (f
 
 
 --
+-- Name: index_comment_threads_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_comment_threads_on_key ON comment_threads USING btree (key);
+
+
+--
 -- Name: index_comment_threads_on_reader_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3026,6 +3041,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181108181434'),
 ('20190219154939'),
 ('20190222195858'),
-('20190319130136');
+('20190319130136'),
+('20190320160900');
 
 
