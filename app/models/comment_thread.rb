@@ -11,6 +11,8 @@
 class CommentThread < ApplicationRecord
   default_scope { order(updated_at: :desc) }
 
+  attribute :key, :string, default: -> { SecureRandom.uuid }
+
   belongs_to :card, touch: true, optional: true
   belongs_to :forum, touch: true
   belongs_to :reader
