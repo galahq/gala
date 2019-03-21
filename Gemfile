@@ -77,6 +77,7 @@ gem 'skylight', '>= 4.0.x'
 gem 'table_print'
 
 # Services
+gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
 

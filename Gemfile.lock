@@ -250,6 +250,7 @@ GEM
       activemodel-serializers-xml (>= 1.0)
       activesupport (>= 5.0)
       request_store (>= 1.0)
+    email_reply_parser (0.5.9)
     equalizer (0.0.11)
     errbase (0.1.1)
     erubi (1.8.0)
@@ -606,6 +607,7 @@ DEPENDENCIES
   devise-i18n
   doc_to_dash!
   draper
+  email_reply_parser
   factory_bot_rails
   faker
   flamegraph

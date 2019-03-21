@@ -5,7 +5,11 @@
 class RepliesMailbox < ApplicationMailbox
   # @route [reply+thread-key@mailbox.learngala.com]
   def process
-    Comment.create!(reader: reader, comment_thread: thread, content: content)
+    Comment.create!(
+      reader: reader,
+      comment_thread: thread,
+      content: clean_content
+    )
   end
 
   private
@@ -17,6 +21,10 @@ class RepliesMailbox < ApplicationMailbox
 
   def reader
     Reader.find_by! email: mail.from.first
+  end
+
+  def clean_content
+    EmailReplyParser.parse_reply(content)
   end
 
   def content
