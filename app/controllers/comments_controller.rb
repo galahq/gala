@@ -11,6 +11,8 @@ class CommentsController < ApplicationController
     @comment = @comment_thread.comments.build(comment_params)
     @comment.reader = current_reader
 
+    authorize @comment
+
     if @comment.save
       render json: @comment
     else

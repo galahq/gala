@@ -5,8 +5,11 @@ class ForumPolicy < ApplicationPolicy
   # What forums can a user participate in?
   class Scope < Scope
     def resolve
-      scope.where(community: user.communities)
-           .or(GlobalCommunity.instance.forums)
+      scope.joins(:case).where(
+        case: user.enrolled_cases,
+        id: scope.where(community: user.communities)
+                 .or(GlobalCommunity.instance.forums)
+      )
     end
   end
 

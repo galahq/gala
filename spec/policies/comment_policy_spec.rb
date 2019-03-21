@@ -5,6 +5,32 @@ require 'rails_helper'
 RSpec.describe CommentPolicy, type: :policy do
   subject { described_class }
 
+  permissions :create? do
+    it 'prevents a reader from creating a comment if they cannot show the ' \
+       'comment’s forum' do
+      reader = build_stubbed :reader
+      comment = build_stubbed :comment
+
+      forum_policy = instance_double ForumPolicy
+      allow(forum_policy).to receive(:show?).and_return(false)
+
+      policy = described_class.new(reader, comment, forum_policy)
+      expect(policy.create?).to be_falsey
+    end
+
+    it 'allows a reader to create a comment if they can show the ' \
+       'comment’s forum' do
+      reader = build_stubbed :reader
+      comment = build_stubbed :comment
+
+      forum_policy = instance_double ForumPolicy
+      allow(forum_policy).to receive(:show?).and_return(true)
+
+      policy = described_class.new(reader, comment, forum_policy)
+      expect(policy.create?).to be_truthy
+    end
+  end
+
   permissions :update? do
     it 'denies a reader from updating someone else’s comment' do
       reader = build :reader
