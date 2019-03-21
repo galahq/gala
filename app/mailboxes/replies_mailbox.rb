@@ -5,11 +5,13 @@
 class RepliesMailbox < ApplicationMailbox
   # @route [reply+thread-key@mailbox.learngala.com]
   def process
-    Comment.create!(
+    comment = Comment.new(
       reader: reader,
       comment_thread: thread,
       content: clean_content
     )
+
+    comment.save! if Pundit.policy(reader, comment).create?
   end
 
   private
