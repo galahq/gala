@@ -4,6 +4,12 @@ require 'rails_helper'
 
 RSpec.describe CommentThread, type: :model do
   context '#key' do
+    it 'validates the presence of key' do
+      thread = build_stubbed :comment_thread, key: nil
+
+      expect(thread).not_to be_valid
+    end
+
     it 'is unguessable' do
       thread = build_stubbed :comment_thread
 
