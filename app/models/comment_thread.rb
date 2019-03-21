@@ -24,6 +24,8 @@ class CommentThread < ApplicationRecord
   has_one :case, through: :forum
   has_one :community, through: :forum
 
+  validates :key, presence: true
+
   # The comment threads that are visible to a given reader
   # @return [ActiveRecord::Relation<CommentThread>]
   def self.visible_to_reader(reader)
