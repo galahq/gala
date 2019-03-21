@@ -8,6 +8,10 @@ class CommentPolicy < ApplicationPolicy
     @forum_policy = forum_policy
   end
 
+  def create?
+    user_can_read_forum?
+  end
+
   def update?
     record.reader == user
   end
@@ -17,6 +21,10 @@ class CommentPolicy < ApplicationPolicy
   end
 
   private
+
+  def user_can_read_forum?
+    @forum_policy.show?
+  end
 
   def user_can_moderate_forum?
     @forum_policy.moderate?
