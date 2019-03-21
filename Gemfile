@@ -6,6 +6,7 @@ gem 'rails', '6.0.0.beta3'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
+gem 'aws-sdk-sns', '>= 1.9.0', require: false
 gem 'bootsnap', require: false
 gem 'connection_pool'
 gem 'dalli'
