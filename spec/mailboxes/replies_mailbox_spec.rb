@@ -16,6 +16,32 @@ RSpec.describe RepliesMailbox, type: :mailbox do
     expect(comment.content).to eq 'Yeah I agree.'
   end
 
+  it 'trims signatures and quoted text from the reply notification' do
+    reader = create :reader
+    thread = create :comment_thread
+    reader.enrollments.create case: thread.case
+
+    receive_response <<~EMAIL, reader: reader, thread: thread
+      Yeah I agree.
+
+      > On Mar 20, 2019, at 12:00, Pearl Zhu Zeng <hello@learngala.com> wrote:
+      >
+      > This is cool.
+    EMAIL
+
+    comment = thread.comments.last
+    expect(comment.content).to eq 'Yeah I agree.'
+
+    receive_response <<~EMAIL, reader: reader, thread: thread
+      Yeah I agree.
+
+      -- CLB
+    EMAIL
+
+    comment = thread.comments.last
+    expect(comment.content).to eq 'Yeah I agree.'
+  end
+
   def receive_response(message, reader:, thread:)
     receive_inbound_email_from_mail(
       to: "reply+#{thread.key}@mailbox.learngala.com",
