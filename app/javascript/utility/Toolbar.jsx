@@ -66,14 +66,19 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarComponent -- an arbitrary custom component
                  */
+
                 React.cloneElement(element.component, { key: j })
               ) : element.submenu != null ? (
                 /**
                  * BarMenu -- a button with a dropdown menu of other buttons
                  */
+
                 <Popover
                   key={j}
                   position={Position.BOTTOM_RIGHT}
+                  modifiers={{
+                    preventOverflow: { boundariesElement: 'window' },
+                  }}
                   content={
                     <StyledMenu>
                       {element.submenu &&
@@ -109,6 +114,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarButton -- a clickable button
                  */
+
                 <MaybeSpotlight spotlightKey={spotlightKey} placement="bottom">
                   {({ ref }) => (
                     <Item
@@ -123,6 +129,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarMessage -- just translated text
                  */
+
                 <span key={j}>{t(element.message)}</span>
               )
             })}
