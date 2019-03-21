@@ -23,6 +23,74 @@ RSpec.describe ForumPolicy, type: :policy do
 
       expect(scope).to include global_forum, my_forum
     end
+
+    it 'includes no forums if the user is not enrolled in the case' do
+      reader = create :reader
+      kase = create :case
+      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
+
+      my_group = create :group, name: 'My Group'
+      create :group_membership, :admin, group: my_group, reader: reader
+
+      create :deployment, group: my_group, case: kase
+      my_forum = kase.forums.merge(my_group.community.forums).first
+
+      scope = ForumPolicy::Scope.new(reader, Forum).resolve
+
+      expect(scope).not_to include global_forum, my_forum
+    end
+  end
+
+  permissions :show? do
+    it 'allows a reader who is enrolled in the case to read the Global ' \
+       'Community’s forum' do
+      reader = create :reader
+      kase = create :case
+      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
+
+      create :enrollment, case: kase, reader: reader
+
+      expect(subject).to permit reader, global_forum
+    end
+
+    it 'allows a reader who is enrolled in the case to read the forum of a ' \
+       'community they belong to' do
+      reader = create :reader
+      kase = create :case
+
+      create :enrollment, case: kase, reader: reader
+
+      my_group = create :group, name: 'My Group'
+      create :group_membership, :admin, group: my_group, reader: reader
+
+      create :deployment, group: my_group, case: kase
+      my_forum = kase.forums.merge(my_group.community.forums).first
+
+      expect(subject).to permit reader, my_forum
+    end
+
+    it 'does not allow a reader who is enrolled to read the forum of a '\
+       'different community' do
+      reader = create :reader
+      kase = create :case
+
+      create :enrollment, case: kase, reader: reader
+
+      other_group = create :group, name: 'My Group'
+      create :deployment, group: other_group, case: kase
+      other_forum = kase.forums.merge(other_group.community.forums).first
+
+      expect(subject).not_to permit reader, other_forum
+    end
+
+    it 'does not allow a reader who is not enrolled to read the Global ' \
+       'Community’s forum' do
+      reader = create :reader
+      kase = create :case
+      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
+
+      expect(subject).not_to permit reader, global_forum
+    end
   end
 
   permissions :moderate? do
@@ -92,7 +160,7 @@ RSpec.describe ForumPolicy, type: :policy do
       kase = build :case
       forum = build :forum, case: kase
 
-        expect(subject).not_to permit admin, forum
+      expect(subject).not_to permit admin, forum
     end
 
     it 'allows editors to moderate any forum' do
