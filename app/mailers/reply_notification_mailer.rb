@@ -6,20 +6,38 @@ class ReplyNotificationMailer < ApplicationMailer
 
   def notify(notification)
     @notification = notification
-    reader = @notification.reader
     return unless reader.send_reply_notifications
 
     attach_cover_image
 
-    mail(to: reader.name_and_email,
-         from: from_header,
-         subject: subject_header) do |format|
+    send_mail do |format|
       format.text
       format.html
     end
   end
 
   private
+
+  def reader
+    @notification.reader
+  end
+
+  def attach_cover_image
+    return unless @notification.case.cover_image.attached?
+
+    kase = CaseDecorator.decorate @notification.case
+    attachments.inline['cover'] = kase.cover_image_attachment
+  end
+
+  def send_mail(&block)
+    mail(
+      to: reader.name_and_email,
+      from: from_header,
+      reply_to: reply_to_header,
+      subject: subject_header,
+      &block
+    )
+  end
 
   # Build the from header. We’re setting the from name to the name of the
   # reader whose comment triggered the notification, but the from address
@@ -34,16 +52,16 @@ class ReplyNotificationMailer < ApplicationMailer
   # Every notification of a reply to the same original comment will have the
   # same subject so that they can be threaded
   def subject_header
-    comment_thread = @notification.comment_thread
     "RE: [#{@notification.case.kicker}] " \
-      "“#{comment_thread.comments.first.content.truncate(40)}” " \
-      "(##{comment_thread.id})"
+      "“#{thread.comments.first.content.truncate(40)}” " \
+      "(##{thread.id})"
   end
 
-  def attach_cover_image
-    return unless @notification.case.cover_image.attached?
+  def reply_to_header
+    "reply+#{thread.key}@mailbox.learngala.com"
+  end
 
-    kase = CaseDecorator.decorate @notification.case
-    attachments.inline['cover'] = kase.cover_image_attachment
+  def thread
+    @notification.comment_thread
   end
 end
