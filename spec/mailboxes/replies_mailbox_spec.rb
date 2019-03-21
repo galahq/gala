@@ -42,6 +42,22 @@ RSpec.describe RepliesMailbox, type: :mailbox do
     expect(comment.content).to eq 'Yeah I agree.'
   end
 
+  it 'does not post a comment by a reader who’s not allowed' do
+    reader = create :reader
+    thread = create :comment_thread
+
+    receive_response <<~EMAIL, reader: reader, thread: thread
+      Yeah I agree.
+
+      > On Mar 20, 2019, at 12:00, Pearl Zhu Zeng <hello@learngala.com> wrote:
+      >
+      > This is cool.
+    EMAIL
+
+    comment = thread.comments.last
+    expect(comment).not_to be_present
+  end
+
   def receive_response(message, reader:, thread:)
     receive_inbound_email_from_mail(
       to: "reply+#{thread.key}@mailbox.learngala.com",
