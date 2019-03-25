@@ -21,6 +21,13 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 
 
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -55,6 +62,39 @@ CREATE AGGREGATE tsvector_agg(tsvector) (
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE action_mailbox_inbound_emails (
+    id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    message_id character varying NOT NULL,
+    message_checksum character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: action_mailbox_inbound_emails_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE action_mailbox_inbound_emails_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: action_mailbox_inbound_emails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE action_mailbox_inbound_emails_id_seq OWNED BY action_mailbox_inbound_emails.id;
+
 
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
@@ -375,7 +415,8 @@ CREATE TABLE comment_threads (
     card_id integer,
     reader_id integer,
     forum_id integer,
-    comments_count integer
+    comments_count integer,
+    key character varying
 );
 
 
@@ -1385,6 +1426,13 @@ ALTER SEQUENCE visits_id_seq OWNED BY visits.id;
 
 
 --
+-- Name: action_mailbox_inbound_emails id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY action_mailbox_inbound_emails ALTER COLUMN id SET DEFAULT nextval('action_mailbox_inbound_emails_id_seq'::regclass);
+
+
+--
 -- Name: active_storage_attachments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1661,6 +1709,14 @@ CREATE MATERIALIZED VIEW cases_search_index AS
      LEFT JOIN cards ON ((cards.case_id = cases.id)))
   GROUP BY cases.id
   WITH NO DATA;
+
+
+--
+-- Name: action_mailbox_inbound_emails action_mailbox_inbound_emails_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY action_mailbox_inbound_emails
+    ADD CONSTRAINT action_mailbox_inbound_emails_pkey PRIMARY KEY (id);
 
 
 --
@@ -1960,6 +2016,13 @@ ALTER TABLE ONLY visits
 
 
 --
+-- Name: index_action_mailbox_inbound_emails_uniqueness; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_action_mailbox_inbound_emails_uniqueness ON action_mailbox_inbound_emails USING btree (message_id, message_checksum);
+
+
+--
 -- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2139,6 +2202,13 @@ CREATE INDEX index_comment_threads_on_case_id ON comment_threads USING btree (ca
 --
 
 CREATE INDEX index_comment_threads_on_forum_id ON comment_threads USING btree (forum_id);
+
+
+--
+-- Name: index_comment_threads_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_comment_threads_on_key ON comment_threads USING btree (key);
 
 
 --
@@ -3026,6 +3096,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181108181434'),
 ('20190219154939'),
 ('20190222195858'),
-('20190319130136');
+('20190319130136'),
+('20190320160900'),
+('20190320215448');
 
 

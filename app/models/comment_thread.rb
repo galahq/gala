@@ -11,6 +11,8 @@
 class CommentThread < ApplicationRecord
   default_scope { order(updated_at: :desc) }
 
+  attribute :key, :string, default: -> { SecureRandom.uuid }
+
   belongs_to :card, touch: true, optional: true
   belongs_to :forum, touch: true
   belongs_to :reader
@@ -21,6 +23,8 @@ class CommentThread < ApplicationRecord
 
   has_one :case, through: :forum
   has_one :community, through: :forum
+
+  validates :key, presence: true
 
   # The comment threads that are visible to a given reader
   # @return [ActiveRecord::Relation<CommentThread>]

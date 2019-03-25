@@ -8,6 +8,8 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'action_mailbox/test_helper'
+
 require 'devise'
 
 require 'capybara/rails'
@@ -81,11 +83,12 @@ Shoulda::Matchers.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.include FactoryBot::Syntax::Methods
-  config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
+  config.include ActionMailbox::TestHelper, type: :mailbox
+  config.include ActiveSupport::Testing::TimeHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
-  config.include ActiveSupport::Testing::TimeHelpers
+  config.include FactoryBot::Syntax::Methods
+  config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
   config.before(:all, type: :feature) do
     Capybara.server = :puma, { Silent: true }
@@ -103,6 +106,14 @@ RSpec.configure do |config|
       Rails.logger.info page.driver.browser.manage.logs.get('browser')
                             .map(&:as_json).awesome_inspect
     end
+  end
+
+  config.around(:each, type: :mailbox) do |example|
+    old_adapter = ActiveJob::Base.queue_adapter
+    ActiveJob::Base.queue_adapter = :test
+    example.run
+  ensure
+    ActiveJob::Base.queue_adapter = old_adapter
   end
 
   config.use_transactional_fixtures = true
