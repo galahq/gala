@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
+  # Prepare the ingress controller used to receive mail
+  # config.action_mailbox.ingress = :amazon
+
   # Settings specified here will take precedence over those in
   # config/application.rb.
 
@@ -103,6 +106,8 @@ Rails.application.configure do
   else
     config.action_mailer.raise_delivery_errors = false
   end
+
+  config.action_mailbox.ingress = :amazon
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
