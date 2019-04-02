@@ -11,4 +11,6 @@ class ReadingList < ApplicationRecord
   has_many :cases, through: :reading_list_items
 
   validates :title, presence: true
+
+  alias items reading_list_items
 end

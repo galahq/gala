@@ -1,0 +1,27 @@
+- title = I18n.t 'reading_lists.show.document_title', title: @reading_list.title
+- content_for :title, title
+
+.admin.md-container.pt-dark
+  %header.md-header
+    %h1.admin__title
+      = @reading_list.title
+
+  %aside.md-master
+    .pt-callout
+      .pt-running-text
+        = raw markdown @reading_list.description
+
+  %main.md-detail
+    - @reading_list.items.each do |item|
+      - kase = item.case.decorate
+
+      .reading-list-item
+        %img.admin__table__thumbnail{ src: kase.small_cover_url,
+                                      role: 'presentation' }
+
+        = link_to case_path kase do
+          %span.admin__table__slug= kase.short_title
+          = kase.title
+
+        .reading-list-item__notes.pt-running-text
+          = raw markdown item.notes
