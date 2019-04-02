@@ -39,9 +39,8 @@ class Community < ApplicationRecord
   # Instructors are automatically invited to this instructors-only community,
   # which is added in db/seeds but really must exist.
   def self.case_log
-    case_log = order(:created_at).find_by %(name @> '{"en": "CaseLog"}'::jsonb)
-    case_log ||= create(name: 'CaseLog')
-    case_log
+    @case_log ||= order(:created_at).find_by %(name @> '{"en": "CaseLog"}'::jsonb)
+    @case_log ||= create(name: 'CaseLog')
   end
 
   # Universal communities need to have a forum on all Cases
