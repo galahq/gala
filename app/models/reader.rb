@@ -131,6 +131,8 @@ class Reader < ApplicationRecord
   end
 
   def invite_to_caselog
+    return if invited_communities.include? Community.case_log
+
     invited_communities << Community.case_log
   end
 
