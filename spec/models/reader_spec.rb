@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Reader, type: :model do
   subject { build :reader }
 
+  it { should have_many(:reading_lists).dependent(:destroy) }
   it { should have_many :spotlight_acknowledgements }
 
   it do
