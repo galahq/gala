@@ -929,6 +929,9 @@ en:
         Because you first signed in using %{provider}, you never created a
         password. If you create one now, you will be able to use it, or
         %{provider}, to sign in.
+  reading_lists:
+    show:
+      document_title: '%{title} — Reading List'
   search:
     didnt_match: Your search didn’t match any cases.
     full_text_search: Full text search...

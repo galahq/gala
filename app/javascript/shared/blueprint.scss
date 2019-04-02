@@ -1,37 +1,37 @@
 $icon-font-path: '~@blueprintjs/icons/resources/icons';
 $pt-line-height: 1.22;
 
-$white: #FDFDFA;
+$white: hsl(60, 43%, 99%);
 
-$dark-gray1: #01182E;
-$dark-gray2: #0D2338;
-$dark-gray3: #1B3043;
-$dark-gray4: #25394B;
-$dark-gray5: #314354;
+$dark-gray1: hsl(209, 96%, 9%);
+$dark-gray2: hsl(209, 62%, 14%);
+$dark-gray3: hsl(209, 43%, 18%);
+$dark-gray4: hsl(208, 34%, 22%);
+$dark-gray5: hsl(209, 26%, 26%);
 
-$gray1: #5D6B77;
-$gray2: #737F89;
-$gray3: #8B949C;
-$gray4: #ADB3B7;
-$gray5: #C5C9CB;
+$gray1: hsl(208, 12%, 42%);
+$gray2: hsl(207, 9%, 49%);
+$gray3: hsl(208, 8%, 58%);
+$gray4: hsl(204, 6%, 70%);
+$gray5: hsl(200, 5%, 78%);
 
-$light-gray1: #D4D7D6;
-$light-gray2: #DEE0DF;
-$light-gray3: #E7E8E6;
-$light-gray4: #F1F0ED;
-$light-gray5: #FAF9F5;
+$light-gray1: hsl(160, 4%, 84%);
+$light-gray2: hsl(150, 3%, 87%);
+$light-gray3: hsl(90, 4%, 91%);
+$light-gray4: hsl(45, 12%, 94%);
+$light-gray5: hsl(48, 33%, 97%);
 
-$blue1: #563E9C;
-$blue2: #6344BC;
-$blue3: #7351D4;
-$blue4: #8464DD;
-$blue5: #9C80EA;
+$blue1: hsl(255, 43%, 43%);
+$blue2: hsl(256, 47%, 50%);
+$blue3: hsl(256, 60%, 57%);
+$blue4: hsl(256, 64%, 63%);
+$blue5: hsl(256, 72%, 71%);
 
-$green1: #277A2E;
-$green2: #348A3B;
-$green3: #419D48;
-$green4: #50B458;
-$green5: #6ACB72;
+$green1: hsl(125, 52%, 32%);
+$green2: hsl(125, 45%, 37%);
+$green3: hsl(125, 41%, 44%);
+$green4: hsl(125, 40%, 51%);
+$green5: hsl(125, 48%, 61%);
 
 @import '~@blueprintjs/icons/src/blueprint-icons';
 @import '~@blueprintjs/core/src/blueprint';
@@ -86,7 +86,7 @@ input[type="submit"].pt-button:empty {
 .pt-dark [class*="pt-intent-"],
 [class*="pt-intent-"] .pt-dark {
   .pt-tag:not(.pt-minimal):not([class*="pt-intent-"]) {
-    background-color: #FAF9F5;
+    background-color: hsl(48, 33%, 97%);
   }
 }
 
@@ -105,19 +105,19 @@ input[type="submit"].pt-button:empty {
 }
 
 .pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
-  color: #01182E;
+  color: hsl(209, 96%, 9%);
 
   &:before {
-    color: #5D6B77 !important;
+    color: hsl(208, 12%, 42%) !important;
   }
 }
 
 .pt-dark {
   .pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
-    color: #FAF9F5;
+    color: hsl(48, 33%, 97%);
 
     &::before {
-      color: #C5C9CB !important;
+      color: hsl(200, 5%, 78%) !important;
     }
   }
 }
@@ -154,4 +154,11 @@ button > svg > title {
 
 .pt-callout .pt-callout-title {
   font-size: 16px !important;
+}
+
+.pt-dark .pt-callout {
+  background-color: hsl(209, 31%, 39%);
+}
+.pt-callout p:last-child {
+  margin-bottom: 0;
 }

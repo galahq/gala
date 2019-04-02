@@ -183,6 +183,8 @@ Rails.application.routes.draw do
     resources :roles, only: %i[create destroy]
   end
 
+  resources :reading_lists, only: %i[show], param: :uuid
+
   resources :search, only: %i[index]
 
   resources :spotlight_acknowledgements, only: %i[create]
