@@ -13,11 +13,9 @@ json.case_data do
   json.extract! deployment.case, :title
   json.kicker deployment.case.short_title
   json.cover_url deployment.case.decorate.cover_url
-  json.callback_url do
-    authentication_strategy_lti_omniauth_callback_url(
-      case_slug: deployment.case.slug
-    )
-  end
+  json.callback_url authentication_strategy_lti_omniauth_callback_url(
+    case_slug: deployment.case.slug
+  )
 end
 
 json.selected_quiz_id deployment.quiz.id if deployment.quiz
