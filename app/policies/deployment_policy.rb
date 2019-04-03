@@ -27,6 +27,7 @@ class DeploymentPolicy < ApplicationPolicy
   end
 
   def update?
+    return true if editor?
     return true if selection_params_valid?
 
     show?
@@ -35,7 +36,6 @@ class DeploymentPolicy < ApplicationPolicy
   private
 
   def selection_params_valid?
-    return true if editor?
     return false unless user.try(:selection_params)
 
     user.selection_params['context_id'] == record.group.context_id

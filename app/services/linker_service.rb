@@ -20,14 +20,14 @@ class LinkerService
   private
 
   def create_group_membership
-    return unless reader
+    return unless reader.present?
     return if reader.group_memberships.exists? group: group
 
     reader.group_memberships.create group: group, status: membership_status
   end
 
   def create_case_enrollment
-    return unless kase && reader
+    return unless [kase, reader].all?(&:present?)
 
     Enrollment.upsert reader_id: reader.id,
                       case_id: kase.id,
@@ -45,7 +45,7 @@ class LinkerService
   class LTIStrategy
     def initialize(launch_params)
       @launch_params = launch_params
-      ensure_deployment_exists
+      ensure_deployment_exists if kase.present?
     end
 
     def reader
