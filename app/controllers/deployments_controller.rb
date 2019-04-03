@@ -7,7 +7,7 @@ class DeploymentsController < ApplicationController
   before_action :authenticate_reader!, only: %i[show new create]
   before_action :set_deployments, only: %i[index new create]
   before_action :set_deployment, only: %i[show edit update]
-  after_action :clear_content_item_selection_params, only: [:edit]
+  after_action :clear_content_item_selection_params, only: %i[update]
 
   layout 'admin'
 
