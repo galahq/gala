@@ -12,6 +12,7 @@ import Billboard from './Billboard'
 import EnrollForm from './EnrollForm'
 import Tracker from 'utility/Tracker'
 import { SignInFormContainer } from 'utility/SignInForm'
+import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { State, ReaderState } from 'redux/state'
@@ -32,24 +33,28 @@ function mapStateToProps ({ caseData, edit }: State): StateProps {
 type Props = StateProps & ContextRouter
 const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
   return (
-    <Container editing={editing}>
-      <Billboard />
-      <aside className="CaseOverviewRight">
-        {signInForm != null ? (
-          <SignInFormContainer formContents={signInForm} />
-        ) : reader && !reader.enrollment ? (
-          <EnrollForm />
-        ) : null}
-        <TableOfContents />
-        {location.pathname === '/' && (
-          <Tracker
-            timerState="RUNNING"
-            targetKey={`overview`}
-            targetParameters={{ name: 'read_overview' }}
-          />
-        )}
-      </aside>
-    </Container>
+    <ContentItemSelectionContextConsumer>
+      {({ selecting }) => (
+        <Container editing={editing}>
+          <Billboard />
+          <aside className="CaseOverviewRight">
+            {signInForm != null && !selecting ? (
+              <SignInFormContainer formContents={signInForm} />
+            ) : reader && !reader.enrollment ? (
+              <EnrollForm />
+            ) : null}
+            <TableOfContents />
+            {location.pathname === '/' && (
+              <Tracker
+                timerState="RUNNING"
+                targetKey={`overview`}
+                targetParameters={{ name: 'read_overview' }}
+              />
+            )}
+          </aside>
+        </Container>
+      )}
+    </ContentItemSelectionContextConsumer>
   )
 }
 

@@ -66,7 +66,7 @@ function Home ({
     <ContentItemSelectionContextConsumer>
       {({ selecting }) => (
         <>
-          {loading.reader || !!reader || <ValueProposition />}
+          {loading.reader || !!reader || selecting || <ValueProposition />}
 
           {selecting || (
             <Sidebar
