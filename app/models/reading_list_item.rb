@@ -9,4 +9,8 @@ class ReadingListItem < ApplicationRecord
   belongs_to :reading_list
 
   acts_as_list scope: :reading_list
+
+  def enrolled?(reader)
+    reader.enrollment_for_case(self.case)
+  end
 end

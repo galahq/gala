@@ -1,36 +1,47 @@
 - title = I18n.t 'reading_lists.show.document_title', title: @reading_list.title
 - content_for :title, title
 
-.admin.md-container.pt-dark
-  %header.md-header
+.admin.md-container.reading-list
+  %header.md-header.pt-dark
     %h1.admin__title
       = @reading_list.title
 
   %aside.md-master
-    .pt-callout.reading-list__info
-      .pt-running-text
-        = raw markdown @reading_list.description
+    .pt-dark
+      .pt-callout.reading-list__info
+        .pt-running-text
+          = raw markdown @reading_list.description
 
-        .reading-list__info__reader
-          = identicon @reading_list.reader
-          = @reading_list.reader.name
+          .reading-list__info__reader
+            = identicon @reading_list.reader
+            = @reading_list.reader.name
 
-    %button.pt-button.pt-intent-success.pt-icon-add Save Reading List
+    - if reader_signed_in?
+      %button.pt-button.pt-intent-success.pt-icon-add Save Reading List
 
-  %main.md-detail
-    .reading-list
-      - @reading_list.items.each do |item|
-        - kase = item.case.decorate
+    - else
+      .pt-card.pt-elevation-4.devise-card
+        = render 'devise/sessions/sign_in', resource: Reader.new
 
-        .reading-list-item
-          %img.admin__table__thumbnail{ src: kase.small_cover_url,
-                                        role: 'presentation' }
+  %main.md-detail.pt-dark
+    - @reading_list.items.each do |item|
+      - kase = item.case.decorate
 
-          = link_to case_path kase do
-            %span.admin__table__slug= kase.short_title
-            = kase.title
+      .reading-list-item
+        %img.admin__table__thumbnail{ src: kase.small_cover_url,
+                                      role: 'presentation' }
 
-          %button.pt-button.pt-icon-plus Enroll
+        = link_to case_path kase do
+          %span.admin__table__slug= kase.short_title
+          = kase.title
 
-          .reading-list-item__notes.pt-running-text
-            = raw markdown item.notes
+        - if reader_signed_in?
+          - if item.enrolled?(current_user)
+            .reading-list-item__enrolled
+              %span.pt-icon.pt-icon-tick
+              Enrolled
+          - else
+            %button.pt-button.pt-icon-plus Enroll
+
+        .reading-list-item__notes.pt-running-text
+          = raw markdown item.notes
