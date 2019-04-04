@@ -1,11 +1,35 @@
+.reading-list {
+  max-width: 60em;
+
+  &__info {
+    margin-bottom: 16px;
+
+    &__reader{
+      display: flex;
+      align-items: baseline;
+
+      * {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
 .reading-list-item {
   align-items: center;
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: min-content auto;
+  grid-template-columns: min-content auto min-content;
 
   &__notes {
-    grid-column-end: span 2;
+    border-left: 4px solid #456482;
+    grid-column-end: span 3;
     margin-bottom: 32px;
+    max-width: 50em;
+    padding-left: 8px;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
   }
 }
