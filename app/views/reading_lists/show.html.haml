@@ -7,21 +7,30 @@
       = @reading_list.title
 
   %aside.md-master
-    .pt-callout
+    .pt-callout.reading-list__info
       .pt-running-text
         = raw markdown @reading_list.description
 
+        .reading-list__info__reader
+          = identicon @reading_list.reader
+          = @reading_list.reader.name
+
+    %button.pt-button.pt-intent-success.pt-icon-add Save Reading List
+
   %main.md-detail
-    - @reading_list.items.each do |item|
-      - kase = item.case.decorate
+    .reading-list
+      - @reading_list.items.each do |item|
+        - kase = item.case.decorate
 
-      .reading-list-item
-        %img.admin__table__thumbnail{ src: kase.small_cover_url,
-                                      role: 'presentation' }
+        .reading-list-item
+          %img.admin__table__thumbnail{ src: kase.small_cover_url,
+                                        role: 'presentation' }
 
-        = link_to case_path kase do
-          %span.admin__table__slug= kase.short_title
-          = kase.title
+          = link_to case_path kase do
+            %span.admin__table__slug= kase.short_title
+            = kase.title
 
-        .reading-list-item__notes.pt-running-text
-          = raw markdown item.notes
+          %button.pt-button.pt-icon-plus Enroll
+
+          .reading-list-item__notes.pt-running-text
+            = raw markdown item.notes
