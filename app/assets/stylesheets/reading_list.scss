@@ -13,6 +13,17 @@
       }
     }
   }
+
+  &__tag {
+    color: hsl(210, 64%, 86%);
+    display: inline-block;
+    font-size: 14px;
+
+    .pt-icon {
+      margin-right: 4px;
+    }
+  }
+
 }
 
 .reading-list-item {
@@ -21,17 +32,8 @@
   grid-gap: 16px;
   grid-template-columns: min-content auto 77px;
 
-  &__enrolled {
-    font-size: 14px;
-    text-align: center;
-
-    .pt-icon {
-      margin-right: 4px;
-    }
-  }
-
   &__notes {
-    border-left: 4px solid #456482;
+    border-left: 4px solid hsl(210, 31%, 39%);
     grid-column-end: span 3;
     margin-bottom: 32px;
     max-width: 45em;

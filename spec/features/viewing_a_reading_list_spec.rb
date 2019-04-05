@@ -11,7 +11,8 @@ feature 'Viewing a reading list' do
       'Cat Case' => 'Cats are really cool.'
     )
 
-    login
+    reader = create :reader
+    login_as reader
 
     visit reading_list_path(list)
 
@@ -22,6 +23,16 @@ feature 'Viewing a reading list' do
     expect(page).to have_content 'Wolves are cool.'
     expect(page).to have_content 'Cat Case'
     expect(page).to have_content 'Cats are really cool'
+
+    click_on 'Enroll', match: :first
+    expect(page).to have_content('Enrolled')
+    reader.reload
+    expect(reader.enrolled_cases.where(kicker: 'Wolf Case')).to exist
+
+    click_on 'Save Reading List'
+    expect(page).to have_content 'Reading List Saved'
+    reader.reload
+    expect(reader.saved_reading_lists).to include list
   end
 
   def create_reading_list(kwargs)

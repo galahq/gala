@@ -9,7 +9,11 @@ end %>
     </h1>
   </header>
 
-  <aside class="md-master">
+  <aside
+    class="md-master"
+    data-controller="reading-list"
+    data-reading-list-id="<%= @reading_list.id %>"
+  >
     <div class="pt-dark">
       <div class="pt-callout reading-list__info">
         <div class="pt-running-text">
@@ -23,9 +27,23 @@ end %>
       </div>
 
       <% if reader_signed_in? %>
-        <button class="pt-button pt-intent-success pt-icon-add">
+        <% saved = @reading_list.saved_by?(current_reader) %>
+
+        <button
+          class="pt-button pt-intent-success pt-icon-add <%= 'hidden' if saved %>"
+          data-action="reading-list#save"
+          data-target="reading-list.saveButton"
+        >
           Save Reading List
         </button>
+
+        <div
+          class="reading-list__tag <%= 'hidden' unless saved %>"
+          data-target="reading-list.savedTag"
+        >
+          <span class="pt-icon pt-icon-tick"></span>
+          Reading List Saved
+        </div>
       <% else %>
         <div class="pt-card pt-elevation-4 devise-card">
           <%= render 'devise/sessions/sign_in', resource: Reader.new %>
@@ -58,10 +76,10 @@ end %>
         <% end %>
 
         <% if reader_signed_in? %>
-          <% enrolled = item.enrolled?(current_user) %>
+          <% enrolled = item.enrolled?(current_reader) %>
 
           <div
-            class=" reading-list-item__enrolled <%= 'hidden' unless enrolled %>"
+            class="reading-list__tag <%= 'hidden' unless enrolled %>"
             data-target="reading-list-item.enrolledTag"
           >
             <span class="pt-icon pt-icon-tick"></span>

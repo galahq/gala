@@ -183,7 +183,9 @@ Rails.application.routes.draw do
     resources :roles, only: %i[create destroy]
   end
 
-  resources :reading_lists, only: %i[show], param: :uuid
+  resources :reading_lists, only: %i[show], param: :uuid do
+    resource :save, only: %i[create], controller: :reading_list_saves
+  end
 
   resources :search, only: %i[index]
 
