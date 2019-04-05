@@ -15,4 +15,8 @@ class ReadingList < ApplicationRecord
   validates :title, presence: true
 
   alias items reading_list_items
+
+  def saved_by?(reader)
+    reading_list_saves.where(reader: reader).any?
+  end
 end
