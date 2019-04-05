@@ -7,6 +7,8 @@
 class ReadingList < ApplicationRecord
   belongs_to :reader
 
+  has_many :reading_list_saves, dependent: :destroy
+
   has_many :reading_list_items, dependent: :destroy
   has_many :cases, through: :reading_list_items
 

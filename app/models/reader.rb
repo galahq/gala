@@ -58,6 +58,9 @@ class Reader < ApplicationRecord
   has_many :libraries, through: :managerships
 
   has_many :reading_lists, dependent: :destroy
+  has_many :reading_list_saves, dependent: :destroy
+  has_many :saved_reading_lists,
+           through: :reading_list_saves, source: :reading_list
 
   has_one_attached :image
 
