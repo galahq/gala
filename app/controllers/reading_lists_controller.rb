@@ -12,6 +12,9 @@ class ReadingListsController < ApplicationController
   private
 
   def set_reading_list
-    @reading_list = ReadingList.find(params[:uuid])
+    @reading_list =
+      ReadingList
+      .includes(reading_list_items: [case: [cover_image_attachment: :blob]])
+      .find(params[:uuid])
   end
 end
