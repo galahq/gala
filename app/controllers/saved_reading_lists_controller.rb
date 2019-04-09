@@ -5,6 +5,12 @@ class SavedReadingListsController < ApplicationController
   before_action :authenticate_reader!
 
   def index
-    render json: current_reader.saved_reading_lists
+    render json: saved_reading_lists
+  end
+
+  private
+
+  def saved_reading_lists
+    current_reader.saved_reading_lists.includes(:cases)
   end
 end
