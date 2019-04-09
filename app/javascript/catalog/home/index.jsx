@@ -6,6 +6,8 @@
 import * as React from 'react'
 import { values } from 'ramda'
 
+import { CatalogDataContext } from 'catalog/catalogData'
+import { ReaderDataContext } from 'catalog/readerData'
 import ValueProposition from 'catalog/home/ValueProposition'
 import Sidebar from 'catalog/home/Sidebar'
 import Features from 'catalog/home/Features'
@@ -16,49 +18,15 @@ import Libraries from 'catalog/home/Libraries'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 import { useDocumentTitle } from 'utility/hooks'
 
-import type { Case, Enrollment, Library, Reader, Tag } from 'redux/state'
-import type { Loading } from 'catalog'
-
 // $FlowFixMe
 const MapView = React.lazy(() => import('map_view'))
 
-type Props = {
-  loading: Loading,
-  reader: ?Reader,
-  cases: { [string]: Case },
-  enrollments: Enrollment[],
-  features: string[],
-  tags: Tag[],
-  readerIsEditor: boolean,
-  onDeleteEnrollment: (
-    slug: string,
-    options: { displayBetaWarning?: boolean }
-  ) => any,
-  libraries: Library[],
-}
-
-function Home ({
-  loading,
-  reader,
-  onDeleteEnrollment,
-  readerIsEditor,
-  cases,
-  tags,
-  libraries,
-  enrollments,
-  features,
-}: Props) {
-  // $FlowFixMe
-  const enrolledCases = React.useMemo(
-    () => enrollments.map(e => cases[e.caseSlug]).filter(x => !!x),
-    [cases, enrollments]
+function Home () {
+  const [{ cases, tags, loading: casesLoading }] = React.useContext(
+    CatalogDataContext
   )
 
-  // $FlowFixMe
-  const featuredCases = React.useMemo(
-    () => features.map(slug => cases[slug]).filter(x => !!x),
-    [features, cases]
-  )
+  const { reader, loading: readerLoading } = React.useContext(ReaderDataContext)
 
   useDocumentTitle('Gala')
 
@@ -66,25 +34,14 @@ function Home ({
     <ContentItemSelectionContextConsumer>
       {({ selecting }) => (
         <>
-          {loading.reader || !!reader || selecting || <ValueProposition />}
+          {readerLoading || !!reader || selecting || <ValueProposition />}
 
-          {selecting || (
-            <Sidebar
-              loading={loading}
-              reader={reader}
-              enrolledCases={enrolledCases}
-              onDeleteEnrollment={onDeleteEnrollment}
-            />
-          )}
+          {selecting || <Sidebar />}
 
           <Main>
-            <Features
-              featuredCases={
-                selecting ? [...enrolledCases, ...featuredCases] : featuredCases
-              }
-            />
+            <Features selecting={selecting} />
 
-            {loading.cases || (
+            {casesLoading || (
               // $FlowFixMe
               <React.Suspense
                 fallback={
@@ -107,12 +64,12 @@ function Home ({
 
             {tags && tags.length > 0 && (
               <>
-                <Categories tags={tags} />
-                <Keywords tags={tags} />
+                <Categories />
+                <Keywords />
               </>
             )}
 
-            <Libraries libraries={libraries} />
+            <Libraries />
           </Main>
         </>
       )}

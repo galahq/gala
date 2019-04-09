@@ -7,14 +7,15 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
+import { CatalogDataContext } from 'catalog/catalogData'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 
-import type { Tag } from 'redux/state'
+const Categories = () => {
+  const [{ tags }] = React.useContext(CatalogDataContext)
 
-type Props = { tags: Tag[] }
-const Categories = ({ tags }: Props) => {
   const get = name => tags.find(t => t.name === name)
+
   return (
     <>
       <Section title="naturalResources">
