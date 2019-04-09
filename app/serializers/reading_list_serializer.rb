@@ -6,6 +6,6 @@ class ReadingListSerializer < ApplicationSerializer
   attribute :case_slugs
 
   def case_slugs
-    object.cases.pluck(:slug)
+    object.cases.map(&:slug)
   end
 end
