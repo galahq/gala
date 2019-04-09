@@ -187,6 +187,8 @@ Rails.application.routes.draw do
     resource :save, only: %i[create], controller: :reading_list_saves
   end
 
+  resources :saved_reading_lists, only: %i[index]
+
   resources :search, only: %i[index]
 
   resources :spotlight_acknowledgements, only: %i[create]
