@@ -6,47 +6,33 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { ReaderDataContext } from 'catalog/readerData'
 import { Element, ElementImage } from 'catalog/shared'
-import Enrollments from 'catalog/home/Enrollments'
+import MyLibrary from 'catalog/home/MyLibrary'
 import SignInForm from 'utility/SignInForm'
 import { identiconStyle } from 'shared/Identicon'
 
-import type { Case, Reader } from 'redux/state'
-import type { Loading } from 'catalog'
-import typeof Catalog from 'catalog'
+const Sidebar = () => {
+  const { reader, loading: readerLoading } = React.useContext(ReaderDataContext)
 
-type Props = {
-  loading: Loading,
-  reader: ?Reader,
-  enrolledCases: Case[],
-  onDeleteEnrollment: $PropertyType<Catalog, 'handleDeleteEnrollment'>,
+  return (
+    <Container>
+      {readerLoading ? null : reader == null ? (
+        <SignInForm />
+      ) : (
+        <div className="pt-dark">
+          <IdentigradientElement
+            image={reader.imageUrl}
+            text={reader.name}
+            href="/profile/edit"
+            hashKey={reader.hashKey}
+          />
+          <MyLibrary />
+        </div>
+      )}
+    </Container>
+  )
 }
-const Sidebar = ({
-  loading,
-  reader,
-  enrolledCases,
-  onDeleteEnrollment,
-}: Props) => (
-  <Container>
-    {loading.reader ? null : reader == null ? (
-      <SignInForm />
-    ) : (
-      <div className="pt-dark">
-        <IdentigradientElement
-          image={reader.imageUrl}
-          text={reader.name}
-          href="/profile/edit"
-          hashKey={reader.hashKey}
-        />
-        <Enrollments
-          loading={loading}
-          enrolledCases={enrolledCases}
-          onDeleteEnrollment={onDeleteEnrollment}
-        />
-      </div>
-    )}
-  </Container>
-)
 
 export default Sidebar
 

@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import styled, { css } from 'styled-components'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
 
 import { InputGroup } from '@blueprintjs/core'
@@ -14,47 +14,57 @@ import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/cont
 import Toolbar from 'utility/Toolbar'
 import { getSearchPath } from 'catalog/search_results/SearchForm'
 import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
+import { ReaderDataContext } from 'catalog/readerData'
 
 import type { IntlShape } from 'react-intl'
 import type { ContextRouter } from 'react-router-dom'
 
-type Props = {| ...ContextRouter, author?: boolean, instructor?: boolean |}
-const CatalogToolbar = ({ author, history, instructor }: Props) => (
-  <ContentItemSelectionContextConsumer>
-    {({ selecting }) => (
-      <Toolbar
-        groups={[
-          [
-            {
-              message: 'catalog.catalog',
-              icon: 'home',
-              onClick: () => history.push('/'),
-            },
+type Props = {| ...ContextRouter |}
 
-            selecting || {
-              message: author
-                ? 'myCases.index.myCases'
-                : 'cases.new.createACase',
-              icon: 'annotation',
-              onClick: () => (window.location = '/my_cases'),
-              spotlightKey: 'my_cases',
-            },
+const CatalogToolbar = ({ history }: Props) => {
+  const {
+    roles: { author, instructor },
+  } = React.useContext(ReaderDataContext)
 
-            selecting || {
-              message: instructor
-                ? 'deployments.index.myDeployments'
-                : 'deployments.index.deployACase',
-              icon: 'follower',
-              onClick: () => (window.location = '/deployments'),
-            },
-          ],
-          [],
-          [{ component: <Search /> }],
-        ]}
-      />
-    )}
-  </ContentItemSelectionContextConsumer>
-)
+  return (
+    <ContentItemSelectionContextConsumer>
+      {({ selecting }) => (
+        <Toolbar
+          groups={[
+            [
+              {
+                message: 'catalog.catalog',
+                icon: 'home',
+                onClick: () => history.push('/'),
+              },
+
+              selecting || {
+                message: author
+                  ? 'myCases.index.myCases'
+                  : 'cases.new.createACase',
+                icon: 'annotation',
+                onClick: () => (window.location = '/my_cases'),
+                spotlightKey: 'my_cases',
+              },
+
+              selecting || {
+                message: instructor
+                  ? 'deployments.index.myDeployments'
+                  : 'deployments.index.deployACase',
+                icon: 'follower',
+                onClick: () => (window.location = '/deployments'),
+              },
+            ],
+
+            [],
+
+            [{ component: <Search /> }],
+          ]}
+        />
+      )}
+    </ContentItemSelectionContextConsumer>
+  )
+}
 
 // $FlowFixMe
 export default withRouter(CatalogToolbar)
