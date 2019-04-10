@@ -379,6 +379,16 @@ export type Reader = {
   },
 }
 
+export type ReadingList = {
+  caseSlugs: string[],
+  description: string,
+  links: {
+    self: string,
+  },
+  param: string,
+  title: string,
+}
+
 export type ReplyToThreadNotification = {
   notifier: {
     // instance of Reader
