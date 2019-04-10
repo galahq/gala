@@ -283,6 +283,7 @@ en:
     learn_more: Learn more
     meet_stakeholders: >
       Meet different stakeholders and dive deep with a multimodal narrative.
+    my_library: My Library
     natural_resources: Natural Resources
     open_access_learning_tools:
       Open access learning tools for sustainability science
@@ -932,6 +933,11 @@ en:
   reading_lists:
     show:
       document_title: '%{title} — Reading List'
+  saved_reading_lists:
+    destroy:
+      remove_list: Remove reading list from library
+    index:
+      saved_reading_lists: Saved Reading Lists
   search:
     didnt_match: Your search didn’t match any cases.
     full_text_search: Full text search...

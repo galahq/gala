@@ -26,22 +26,22 @@ function MyLibrary ({ intl }: Props) {
   const [editing, toggleEditing] = useToggle(false)
 
   const [
-    { cases, enrollments, loading: casesLoading },
+    { cases, enrollments, loading: casesLoading, savedReadingLists },
     updateCatalogData,
   ] = React.useContext(CatalogDataContext)
 
   const enrolledCases = enrollments.map(e => cases[e.caseSlug])
 
   async function onDeleteEnrollment (slug, { displayBetaWarning }) {
-    const message = `${intl.formatMessage({
-      id: 'enrollments.destroy.areYouSure',
-    })}${
-      displayBetaWarning
-        ? `\n\n${intl.formatMessage({
-            id: 'enrollments.destroy.youWillNeedAnotherInvitation',
-          })}`
-        : ''
-    }`
+    const message = `
+      ${intl.formatMessage({ id: 'enrollments.destroy.areYouSure' })}
+      ${
+        displayBetaWarning
+          ? `${intl.formatMessage({
+              id: 'enrollments.destroy.youWillNeedAnotherInvitation',
+            })}`
+          : ''
+      }`
 
     if (!window.confirm(message)) return
 
@@ -56,7 +56,7 @@ function MyLibrary ({ intl }: Props) {
     <div>
       <CaseRow baseline>
         <SidebarSectionTitle>
-          <FormattedMessage id="enrollments.index.enrolledCases" />
+          <FormattedMessage id="catalog.myLibrary" />
         </SidebarSectionTitle>
         <SidebarButton
           aria-label={
@@ -67,6 +67,46 @@ function MyLibrary ({ intl }: Props) {
           icon={editing ? 'tick' : 'cog'}
           onClick={toggleEditing}
         />
+      </CaseRow>
+
+      <CaseRow baseline>
+        <SidebarSubsectionTitle>
+          <FormattedMessage id="savedReadingLists.index.savedReadingLists" />
+        </SidebarSubsectionTitle>
+      </CaseRow>
+
+      <UnstyledUL>
+        {savedReadingLists.map(({ param, title, caseSlugs, links } = {}) => {
+          const images = caseSlugs.map(slug => cases[slug].smallCoverUrl)
+
+          return (
+            <UnstyledLI key={param}>
+              <Element
+                images={images}
+                text={title}
+                href={editing ? null : links.self}
+                rightElement={
+                  editing && (
+                    <SidebarButton
+                      intent={Intent.DANGER}
+                      aria-label={intl.formatMessage({
+                        id: 'savedReadingLists.destroy.removeList',
+                      })}
+                      icon="cross"
+                      onClick={() => {}}
+                    />
+                  )
+                }
+              />
+            </UnstyledLI>
+          )
+        })}
+      </UnstyledUL>
+
+      <CaseRow baseline>
+        <SidebarSubsectionTitle>
+          <FormattedMessage id="enrollments.index.enrolledCases" />
+        </SidebarSubsectionTitle>
       </CaseRow>
 
       <UnstyledUL data-test-id="enrollments">
@@ -109,6 +149,13 @@ export default injectIntl(MyLibrary)
 
 const SidebarSectionTitle = styled(SectionTitle)`
   margin: 24px 0.5em 2px 0;
+`
+
+const SidebarSubsectionTitle = styled(SectionTitle).attrs({ as: 'h3' })`
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  margin: 8px 0.5em 2px 0;
+  text-transform: capitalize;
 `
 
 const SidebarButton = styled(Button).attrs({

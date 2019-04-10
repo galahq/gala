@@ -60,13 +60,16 @@ export const CaseLinkRow = styled(CaseRow.withComponent('a'))`
 
 type ElementProps = {
   image?: ?string,
+  images?: ?(string[]),
   className?: ?string,
   text: string,
   href?: ?string,
   rightElement?: *,
 }
+
 export const Element = ({
   image,
+  images,
   text,
   href,
   rightElement,
@@ -75,10 +78,22 @@ export const Element = ({
   const ElementContainer = href == null ? CaseRow : CaseLinkRow
   return (
     <ElementContainer href={href} className={className}>
-      <ElementImage src={image} />
+      {images ? <ElementImages srcs={images} /> : <ElementImage src={image} />}
+
       <ElementText>{text}</ElementText>
+
       {rightElement}
     </ElementContainer>
+  )
+}
+
+function ElementImages ({ srcs }) {
+  return (
+    <ElementImagesContainer>
+      {srcs.slice(0, 3).map(src => (
+        <ElementImage key={src} src={src} />
+      ))}
+    </ElementImagesContainer>
   )
 }
 
@@ -91,6 +106,30 @@ export const ElementImage = styled.div.attrs({ role: 'presentation' })`
   background-size: cover;
   background-position: center;
 `
+
+const ElementImagesContainer = styled.div`
+  height: 36px;
+  position: relative;
+  width: calc(36px + ${p => (React.Children.count(p.children) - 1) * 5}px);
+
+  & > ${ElementImage} {
+    box-shadow: 0 0 0 2px #35536f;
+    position: absolute;
+    top: 0;
+    z-index: 3;
+  }
+
+  & > ${ElementImage}:nth-child(2) {
+    left: 5px;
+    z-index: 2;
+  }
+
+  & > ${ElementImage}:nth-child(3) {
+    left: 10px;
+    z-index: 1;
+  }
+`
+
 export const ElementText = styled.span`
   color: #ebeae4;
   flex: 1;

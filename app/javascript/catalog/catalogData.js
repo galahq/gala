@@ -7,7 +7,7 @@ import { useImmer } from 'use-immer'
 
 import { Orchard, OrchardError } from 'shared/orchard'
 
-import type { Case, Enrollment, Library, Tag } from 'redux/state'
+import type { Case, Enrollment, Library, ReadingList, Tag } from 'redux/state'
 
 export type CatalogData = {
   loading: boolean,
@@ -16,6 +16,7 @@ export type CatalogData = {
   features: string[],
   tags: Tag[],
   libraries: Library[],
+  savedReadingLists: ReadingList[],
 }
 
 function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
@@ -66,6 +67,14 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
     )
   }, [])
 
+  React.useEffect(() => {
+    Orchard.harvest('saved_reading_lists').then(lists =>
+      update(draft => {
+        draft.savedReadingLists = lists
+      })
+    )
+  }, [])
+
   return [data, update]
 }
 
@@ -81,6 +90,7 @@ function getDefaultCatalogData () {
     features: [],
     tags: [],
     libraries: [],
+    savedReadingLists: [],
   }
 }
 
