@@ -52,102 +52,126 @@ function MyLibrary ({ intl }: Props) {
     })
   }
 
-  return casesLoading ? null : enrolledCases.length > 0 ? (
+  if (casesLoading) return null
+
+  return (
     <div>
       <CaseRow baseline>
         <SidebarSectionTitle>
           <FormattedMessage id="catalog.myLibrary" />
         </SidebarSectionTitle>
-        <SidebarButton
-          aria-label={
-            editing
-              ? intl.formatMessage({ id: 'enrollments.index.finishEditing' })
-              : intl.formatMessage({ id: 'enrollments.index.editEnrolled' })
-          }
-          icon={editing ? 'tick' : 'cog'}
-          onClick={toggleEditing}
-        />
-      </CaseRow>
 
-      <CaseRow baseline>
-        <SidebarSubsectionTitle>
-          <FormattedMessage id="savedReadingLists.index.savedReadingLists" />
-        </SidebarSubsectionTitle>
-      </CaseRow>
-
-      <UnstyledUL>
-        {savedReadingLists.map(({ param, title, caseSlugs, links } = {}) => {
-          const images = caseSlugs.map(slug => cases[slug].smallCoverUrl)
-
-          return (
-            <UnstyledLI key={param}>
-              <Element
-                images={images}
-                text={title}
-                href={editing ? null : links.self}
-                rightElement={
-                  editing && (
-                    <SidebarButton
-                      intent={Intent.DANGER}
-                      aria-label={intl.formatMessage({
-                        id: 'savedReadingLists.destroy.removeList',
-                      })}
-                      icon="cross"
-                      onClick={() => {}}
-                    />
-                  )
-                }
-              />
-            </UnstyledLI>
-          )
-        })}
-      </UnstyledUL>
-
-      <CaseRow baseline>
-        <SidebarSubsectionTitle>
-          <FormattedMessage id="enrollments.index.enrolledCases" />
-        </SidebarSubsectionTitle>
-      </CaseRow>
-
-      <UnstyledUL data-test-id="enrollments">
-        {enrolledCases.map(
-          ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
-            slug && (
-              <UnstyledLI key={slug}>
-                <Element
-                  image={smallCoverUrl}
-                  text={kicker}
-                  href={editing ? null : links.self}
-                  rightElement={
-                    editing && (
-                      <SidebarButton
-                        intent={Intent.DANGER}
-                        aria-label={intl.formatMessage({
-                          id: 'enrollments.destroy.unenroll',
-                        })}
-                        icon="cross"
-                        onClick={() =>
-                          onDeleteEnrollment(slug, {
-                            displayBetaWarning: !publishedAt,
-                          })
-                        }
-                      />
-                    )
-                  }
-                />
-              </UnstyledLI>
-            )
+        {(enrolledCases.length === 0 && savedReadingLists.length === 0) || (
+          <SidebarButton
+            aria-label={
+              editing
+                ? intl.formatMessage({ id: 'enrollments.index.finishEditing' })
+                : intl.formatMessage({ id: 'enrollments.index.editEnrolled' })
+            }
+            icon={editing ? 'tick' : 'cog'}
+            onClick={toggleEditing}
+          />
         )}
-      </UnstyledUL>
+      </CaseRow>
+
+      {enrolledCases.length === 0 && savedReadingLists.length === 0 ? (
+        <EnrollmentInstructions />
+      ) : (
+        <>
+          <CaseRow baseline>
+            <SidebarSubsectionTitle>
+              <FormattedMessage id="savedReadingLists.index.savedReadingLists" />
+            </SidebarSubsectionTitle>
+
+            <SidebarButton
+              aria-label={intl.formatMessage({
+                id: 'readingLists.new.newList',
+              })}
+              icon="add"
+              onClick={() => {}}
+            />
+          </CaseRow>
+
+          <UnstyledUL>
+            {savedReadingLists.map(
+              ({ param, title, caseSlugs, links } = {}) => {
+                const images = caseSlugs.map(slug => cases[slug].smallCoverUrl)
+
+                return (
+                  <UnstyledLI key={param}>
+                    <Element
+                      images={images}
+                      text={title}
+                      href={editing ? null : links.self}
+                      rightElement={
+                        editing && (
+                          <SidebarButton
+                            intent={Intent.DANGER}
+                            aria-label={intl.formatMessage({
+                              id: 'savedReadingLists.destroy.removeList',
+                            })}
+                            icon="cross"
+                            onClick={() => {}}
+                          />
+                        )
+                      }
+                    />
+                  </UnstyledLI>
+                )
+              }
+            )}
+          </UnstyledUL>
+
+          {enrolledCases.length === 0 || (
+            <>
+              <CaseRow baseline>
+                <SidebarSubsectionTitle>
+                  <FormattedMessage id="enrollments.index.enrolledCases" />
+                </SidebarSubsectionTitle>
+              </CaseRow>
+
+              <UnstyledUL data-test-id="enrollments">
+                {enrolledCases.map(
+                  ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
+                    slug && (
+                      <UnstyledLI key={slug}>
+                        <Element
+                          image={smallCoverUrl}
+                          text={kicker}
+                          href={editing ? null : links.self}
+                          rightElement={
+                            editing && (
+                              <SidebarButton
+                                intent={Intent.DANGER}
+                                aria-label={intl.formatMessage({
+                                  id: 'enrollments.destroy.unenroll',
+                                })}
+                                icon="cross"
+                                onClick={() =>
+                                  onDeleteEnrollment(slug, {
+                                    displayBetaWarning: !publishedAt,
+                                  })
+                                }
+                              />
+                            )
+                          }
+                        />
+                      </UnstyledLI>
+                    )
+                )}
+              </UnstyledUL>
+            </>
+          )}
+        </>
+      )}
     </div>
-  ) : (
-    <EnrollmentInstructions />
   )
 }
 
 export default injectIntl(MyLibrary)
 
 const SidebarSectionTitle = styled(SectionTitle)`
+  flex: 1;
   margin: 24px 0.5em 2px 0;
 `
 

@@ -931,6 +931,8 @@ en:
         password. If you create one now, you will be able to use it, or
         %{provider}, to sign in.
   reading_lists:
+    new:
+      new_list: New Reading List
     show:
       document_title: '%{title} — Reading List'
   saved_reading_lists:
