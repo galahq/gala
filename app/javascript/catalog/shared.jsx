@@ -87,6 +87,8 @@ export const Element = ({
   )
 }
 
+const ELEMENT_IMAGES_OFFSET = 6
+
 function ElementImages ({ srcs }) {
   return (
     <ElementImagesContainer>
@@ -110,22 +112,29 @@ export const ElementImage = styled.div.attrs({ role: 'presentation' })`
 const ElementImagesContainer = styled.div`
   height: 36px;
   position: relative;
-  width: calc(36px + ${p => (React.Children.count(p.children) - 1) * 5}px);
+  margin-left: -${2 * ELEMENT_IMAGES_OFFSET}px;
+  width: calc(36px + ${2 * ELEMENT_IMAGES_OFFSET}px);
 
   & > ${ElementImage} {
     box-shadow: 0 0 0 2px #35536f;
     position: absolute;
     top: 0;
+  }
+
+  & > ${ElementImage}:nth-child(1) {
+    left: ${2 * ELEMENT_IMAGES_OFFSET}px;
     z-index: 3;
   }
 
   & > ${ElementImage}:nth-child(2) {
-    left: 5px;
+    left: ${ELEMENT_IMAGES_OFFSET}px;
+    opacity: 0.8;
     z-index: 2;
   }
 
   & > ${ElementImage}:nth-child(3) {
-    left: 10px;
+    left: 0px;
+    opacity: 0.6;
     z-index: 1;
   }
 `
