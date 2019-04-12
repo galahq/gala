@@ -389,6 +389,12 @@ export type ReadingList = {
   title: string,
 }
 
+export type ReadingListItem = {
+  caseSlug: string,
+  notes: string,
+  param: string,
+}
+
 export type ReplyToThreadNotification = {
   notifier: {
     // instance of Reader
