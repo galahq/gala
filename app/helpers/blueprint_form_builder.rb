@@ -113,15 +113,13 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     @object_name.to_s.tr('[', '.').delete(']')
   end
 
-  def form_content(method, placeholder, helper_text)
+  def form_content(method, placeholder, helper_text, &block)
     @template.content_tag :div, class: 'pt-form-content' do
       contents = ''.html_safe
 
       error_classes = error_classes(method)
       contents << if block_given?
-                    @template.capture_haml do
-                      yield self, error_classes
-                    end
+                    capture_yielding self, error_classes, &block
                   else
                     classes = %w[pt-input pt-fill] + error_classes
                     text_field(method, class: classes, placeholder: placeholder)
@@ -133,6 +131,18 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
       end
 
       contents
+    end
+  end
+
+  def capture_yielding(*args)
+    if is_haml?
+      @template.capture_haml do
+        yield(*args)
+      end
+    else
+      @template.capture do
+        yield(*args)
+      end
     end
   end
 

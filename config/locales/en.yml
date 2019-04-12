@@ -103,6 +103,9 @@ en:
         unconfirmed_email: Unconfirmed email
         unlock_token: Unlock token
         updated_at: Updated at
+      reading_list:
+        title: Title
+        description: Description
       shared_cases_library:
         description: >
           These cases were shared by Gala users.
@@ -148,6 +151,7 @@ en:
       page: Page
       podcast: Podcast
       reader: Reader
+      reading_list: Reading List
       shared_cases_library: Shared Cases
     persistance:
       messages:
