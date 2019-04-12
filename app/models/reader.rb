@@ -60,6 +60,7 @@ class Reader < ApplicationRecord
   has_many :reading_lists, dependent: :destroy
   has_many :reading_list_saves, dependent: :destroy
   has_many :saved_reading_lists,
+           -> { includes(reading_list_items: :case) },
            through: :reading_list_saves, source: :reading_list
 
   has_one_attached :image
