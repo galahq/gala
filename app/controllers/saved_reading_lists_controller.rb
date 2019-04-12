@@ -11,6 +11,6 @@ class SavedReadingListsController < ApplicationController
   private
 
   def saved_reading_lists
-    current_reader.saved_reading_lists.includes(:cases)
+    current_reader.saved_reading_lists
   end
 end
