@@ -4,7 +4,9 @@
  */
 
 import * as React from 'react'
+import { omit } from 'ramda'
 import ReadingListItems from 'reading_list/ReadingListItems'
+import CaseChooser from 'reading_list/CaseChooser'
 
 import { Orchard } from 'shared/orchard'
 import { normalize } from 'shared/functions'
@@ -22,6 +24,8 @@ function ReadingListEditor () {
     ReadingListItem[]
   >([])
 
+  const unselectedCases = omit(readingListItems.map(x => x.caseSlug), cases)
+
   return (
     <>
       <ReadingListItems
@@ -29,8 +33,20 @@ function ReadingListEditor () {
         items={readingListItems}
         onSetItems={setReadingListItems}
       />
+      <CaseChooser cases={unselectedCases} onSelect={handleAddCase} />
     </>
   )
+
+  function handleAddCase (caseSlug: string) {
+    setReadingListItems(value => [
+      ...value,
+      {
+        caseSlug,
+        notes: '',
+        param: '',
+      },
+    ])
+  }
 }
 
 export default ReadingListEditor
