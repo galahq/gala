@@ -88,7 +88,8 @@ function MyLibrary ({ intl }: Props) {
                 id: 'readingLists.new.newList',
               })}
               icon="add"
-              onClick={() => {}}
+              role="link"
+              onClick={() => (window.location = '/reading_lists/new')}
             />
           </CaseRow>
 
