@@ -6,6 +6,7 @@ import * as React from 'react'
 import { useImmer } from 'use-immer'
 
 import { Orchard, OrchardError } from 'shared/orchard'
+import { normalize } from 'shared/functions'
 
 import type { Case, Enrollment, Library, ReadingList, Tag } from 'redux/state'
 
@@ -106,11 +107,4 @@ export function CatalogDataContextProvider ({
       {children}
     </CatalogDataContext.Provider>
   )
-}
-
-function normalize<T: {}> (array: T[], key: $Keys<T>): { [string]: T } {
-  return array.reduce((table, element) => {
-    table[element[key]] = element
-    return table
-  }, ({}: { [string]: T }))
 }

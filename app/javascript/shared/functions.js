@@ -44,3 +44,10 @@ export function reorder<T> (
   newArray.splice(destinationIndex, 0, element)
   return newArray
 }
+
+export function normalize<T: {}> (array: T[], key: $Keys<T>): { [string]: T } {
+  return array.reduce((table, element) => {
+    table[element[key]] = element
+    return table
+  }, ({}: { [string]: T }))
+}
