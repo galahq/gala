@@ -11,6 +11,8 @@
         <%= f.text_area :description,
                         rows: 8, class: %i[pt-fill pt-input] + error_classes %>
       <% end %>
+
+      <%= f.submit %>
     </div>
 
     <div class="md-detail">
@@ -19,8 +21,6 @@
         data-target="reading-list.editor"
         data-reading-list-slugs="<%= reading_list.case_slugs.to_json %>"
       ></div>
-
-      <%= f.submit %>
     </div>
   </div>
 <% end %>

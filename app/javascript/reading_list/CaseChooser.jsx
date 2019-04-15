@@ -4,6 +4,7 @@
  */
 
 import * as React from 'react'
+import styled from 'styled-components'
 import { Button, InputGroup } from '@blueprintjs/core'
 
 import { Element } from 'catalog/shared'
@@ -34,7 +35,7 @@ function CaseChooser ({ cases, onSelect }: Props) {
 
   return (
     <>
-      <h2>Add a Case</h2>
+      <Heading>Add a Case</Heading>
       <div className="pt-card">
         <form onSubmit={handleSearch}>
           <InputGroup
@@ -51,7 +52,7 @@ function CaseChooser ({ cases, onSelect }: Props) {
           />
         </form>
 
-        <h3>{query ? 'Search Results' : 'Enrolled Cases'}</h3>
+        <Subheading>{query ? 'Search Results' : 'Enrolled Cases'}</Subheading>
 
         {choosableCases.map(caseData => {
           if (caseData == null) return null
@@ -91,3 +92,13 @@ function CaseChooser ({ cases, onSelect }: Props) {
 }
 
 export default CaseChooser
+
+const Heading = styled.h2`
+  font-size: 20px;
+`
+
+const Subheading = styled.h3`
+  font-size: 18px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+`
