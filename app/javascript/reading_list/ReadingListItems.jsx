@@ -17,17 +17,24 @@ type Props = {
   cases: { string: Case },
   intl: IntlShape,
   items: ReadingListItem[],
+  lastItemRef: any => void,
   onSetItems: (ReadingListItem[]) => void,
 }
 
-function ReadingListItems ({ cases, intl, items, onSetItems }: Props) {
+function ReadingListItems ({
+  cases,
+  intl,
+  items,
+  lastItemRef,
+  onSetItems,
+}: Props) {
   return (
     <Container>
       {items.map(item => {
         const caseData = cases[item.caseSlug]
 
         return (
-          <Item key={item.caseSlug}>
+          <Item ref={lastItemRef} key={item.caseSlug}>
             <Element
               image={caseData?.smallCoverUrl}
               text={caseData?.kicker}
@@ -70,7 +77,7 @@ const Container = styled.ul`
   padding: 0;
 `
 
-const Item = styled.li.attrs({ className: 'pt-card' })`
+const Item = styled.li.attrs({ className: 'pt-card', tabIndex: '0' })`
   margin-bottom: 32px;
 
   &:last-child {
