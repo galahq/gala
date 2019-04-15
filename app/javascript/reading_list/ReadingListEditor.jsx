@@ -10,6 +10,7 @@ import CaseChooser from 'reading_list/CaseChooser'
 
 import { Orchard } from 'shared/orchard'
 import { normalize } from 'shared/functions'
+import { useControllableFocus } from 'utility/hooks'
 
 import type { Case, ReadingListItem } from 'redux/state'
 
@@ -24,6 +25,8 @@ function ReadingListEditor () {
     ReadingListItem[]
   >([])
 
+  const [lastItemRef, focusLastItem] = useControllableFocus()
+
   const unselectedCases = omit(readingListItems.map(x => x.caseSlug), cases)
 
   return (
@@ -31,8 +34,10 @@ function ReadingListEditor () {
       <ReadingListItems
         cases={cases}
         items={readingListItems}
+        lastItemRef={lastItemRef}
         onSetItems={setReadingListItems}
       />
+
       <CaseChooser cases={unselectedCases} onSelect={handleAddCase} />
     </>
   )
@@ -46,6 +51,8 @@ function ReadingListEditor () {
         param: '',
       },
     ])
+
+    focusLastItem()
   }
 }
 
