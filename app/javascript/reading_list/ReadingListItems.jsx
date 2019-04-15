@@ -6,18 +6,21 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Button, FormGroup, Intent } from '@blueprintjs/core'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { Element } from 'catalog/shared'
 
+import type { IntlShape } from 'react-intl'
 import type { Case, ReadingListItem } from 'redux/state'
 
 type Props = {
   cases: { string: Case },
+  intl: IntlShape,
   items: ReadingListItem[],
   onSetItems: (ReadingListItem[]) => void,
 }
 
-function ReadingListItems ({ cases, items, onSetItems }: Props) {
+function ReadingListItems ({ cases, intl, items, onSetItems }: Props) {
   return (
     <Container>
       {items.map(item => {
@@ -29,11 +32,29 @@ function ReadingListItems ({ cases, items, onSetItems }: Props) {
               image={caseData?.smallCoverUrl}
               text={caseData?.kicker}
               rightElement={
-                <Button minimal intent={Intent.DANGER} icon="trash" />
+                <Button
+                  minimal
+                  aria-label={intl.formatMessage({
+                    id: 'readingListItems.destroy.removeCase',
+                  })}
+                  intent={Intent.DANGER}
+                  icon="trash"
+                />
               }
             />
-            <FormGroup label={'Notes'}>
-              <textarea className="pt-input pt-fill" value={item.notes} />
+            <FormGroup
+              label={
+                <FormattedMessage id="activerecord.attributes.readingListItem.notes" />
+              }
+            >
+              <textarea
+                aria-label={intl.formatMessage(
+                  { id: 'readingListItems.edit.notesAboutCase' },
+                  { case: caseData?.kicker }
+                )}
+                className="pt-input pt-fill"
+                value={item.notes}
+              />
             </FormGroup>
           </Item>
         )
@@ -42,7 +63,7 @@ function ReadingListItems ({ cases, items, onSetItems }: Props) {
   )
 }
 
-export default ReadingListItems
+export default injectIntl(ReadingListItems)
 
 const Container = styled.ul`
   list-style: none;

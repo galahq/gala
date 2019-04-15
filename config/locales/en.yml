@@ -106,6 +106,8 @@ en:
       reading_list:
         title: Title
         description: Description
+      reading_list_item:
+        notes: Notes
       shared_cases_library:
         description: >
           These cases were shared by Gala users.
@@ -665,6 +667,7 @@ en:
   forms:
     required: required
   helpers:
+    add: Add
     attachments:
       file_type:
         ruby: "Accepted file types: %{types}."
@@ -939,6 +942,15 @@ en:
       new_list: New Reading List
     show:
       document_title: '%{title} — Reading List'
+  reading_list_items:
+    destroy:
+      remove_case: Remove case from this reading list.
+    edit:
+      notes_about_case: Notes about "{case}".
+    new:
+      add_case: Add a Case
+      add_this_case: Add Case "{case}".
+      search_for_a_case_to_add: Search for a case to add...
   saved_reading_lists:
     destroy:
       remove_list: Remove reading list from library
