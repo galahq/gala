@@ -6,18 +6,21 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Button, InputGroup } from '@blueprintjs/core'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { Element } from 'catalog/shared'
 import { Orchard } from 'shared/orchard'
 
+import type { IntlShape } from 'react-intl'
 import type { Case, Enrollment } from 'redux/state'
 
 type Props = {
   cases: { string: Case },
+  intl: IntlShape,
   onSelect: string => void,
 }
 
-function CaseChooser ({ cases, onSelect }: Props) {
+function CaseChooser ({ cases, intl, onSelect }: Props) {
   const [enrollments, setEnrollments] = React.useState<Enrollment[]>([])
 
   React.useEffect(() => {
@@ -35,7 +38,9 @@ function CaseChooser ({ cases, onSelect }: Props) {
 
   return (
     <>
-      <Heading>Add a Case</Heading>
+      <Heading>
+        <FormattedMessage id="readingListItems.new.addCase" />
+      </Heading>
       <div className="pt-card">
         <form onSubmit={handleSearch}>
           <InputGroup
@@ -48,11 +53,19 @@ function CaseChooser ({ cases, onSelect }: Props) {
                 type="submit"
               />
             }
-            placeholder="Search"
+            placeholder={intl.formatMessage({
+              id: 'readingListItems.new.searchForACaseToAdd',
+            })}
           />
         </form>
 
-        <Subheading>{query ? 'Search Results' : 'Enrolled Cases'}</Subheading>
+        <Subheading>
+          {query ? (
+            <FormattedMessage id="search.results" />
+          ) : (
+            <FormattedMessage id="enrollments.index.enrolledCases" />
+          )}
+        </Subheading>
 
         {choosableCases.map(caseData => {
           if (caseData == null) return null
@@ -65,10 +78,16 @@ function CaseChooser ({ cases, onSelect }: Props) {
               rightElement={
                 <Button
                   minimal
+                  aria-label={intl.formatMessage(
+                    {
+                      id: 'readingListItems.new.addThisCase',
+                    },
+                    { case: caseData.kicker }
+                  )}
                   icon="plus"
                   onClick={() => onSelect(caseData.slug)}
                 >
-                  Add
+                  <FormattedMessage id="helpers.add" />
                 </Button>
               }
             />
@@ -91,7 +110,7 @@ function CaseChooser ({ cases, onSelect }: Props) {
   }
 }
 
-export default CaseChooser
+export default injectIntl(CaseChooser)
 
 const Heading = styled.h2`
   font-size: 20px;
@@ -101,4 +120,5 @@ const Subheading = styled.h3`
   font-size: 18px;
   margin-top: 24px;
   margin-bottom: 16px;
+  text-transform: capitalize;
 `
