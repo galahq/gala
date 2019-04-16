@@ -5,8 +5,10 @@
 
 import * as React from 'react'
 import { omit } from 'ramda'
+
 import ReadingListItems from 'reading_list/ReadingListItems'
 import CaseChooser from 'reading_list/CaseChooser'
+import HiddenFormInputs from 'reading_list/HiddenFormInputs'
 
 import { Orchard } from 'shared/orchard'
 import { normalize } from 'shared/functions'
@@ -39,6 +41,8 @@ function ReadingListEditor () {
       />
 
       <CaseChooser cases={unselectedCases} onSelect={handleAddCase} />
+
+      <HiddenFormInputs items={readingListItems} />
     </>
   )
 
