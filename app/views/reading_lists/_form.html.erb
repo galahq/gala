@@ -19,7 +19,9 @@
       <div
         data-controller="reading-list"
         data-target="reading-list.editor"
-        data-reading-list-slugs="<%= reading_list.case_slugs.to_json %>"
+        data-reading-list-items="<%= ActiveModel::Serializer.for(
+          reading_list.items
+        ).to_json %>"
       ></div>
     </div>
   </div>

@@ -10,6 +10,8 @@ class ReadingListItem < ApplicationRecord
 
   acts_as_list scope: :reading_list
 
+  delegate :slug, to: :case, prefix: true
+
   def enrolled?(reader)
     reader.enrollment_for_case(self.case)
   end

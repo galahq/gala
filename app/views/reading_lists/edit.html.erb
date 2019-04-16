@@ -1,0 +1,9 @@
+<% content_for(:title) { I18n.t 'reading_lists.edit.edit_list' } %>
+
+<div class="admin reading-list pt-dark">
+  <h1 class="admin__title">
+    <%= t '.edit_list' %>
+  </h1>
+
+  <%= render 'form', reading_list: @reading_list %>
+</div>
