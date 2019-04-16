@@ -11,7 +11,9 @@ describe('HiddenFormInputs', () => {
   it('has no visible content', () => {
     const items = [{ caseSlug: 'mi-wolves', notes: 'Cool!', param: '' }]
 
-    const form = renderForm(<HiddenFormInputs items={items} />)
+    const form = renderForm(
+      <HiddenFormInputs initialItems={[]} items={items} />
+    )
 
     expect(form.firstChild).not.toBeVisible()
     expect(form.firstChild).not.toHaveTextContent(/./)
@@ -23,7 +25,9 @@ describe('HiddenFormInputs', () => {
       { caseSlug: 'model-t', notes: 'v important', param: '3' },
     ]
 
-    const form = renderForm(<HiddenFormInputs items={items} />)
+    const form = renderForm(
+      <HiddenFormInputs initialItems={[]} items={items} />
+    )
 
     expect(form).toHaveFormValues({
       'reading_list[reading_list_items_attributes][0][case_slug]': 'mi-wolves',
@@ -38,13 +42,34 @@ describe('HiddenFormInputs', () => {
     })
   })
 
-  xit('has the right form values when an existing item was deleted', () => {
-    // TODO: item 3 removed
-    const form = renderForm(<></>) // TODO: decide API
+  it('has the right form values when an existing item was deleted', () => {
+    const initialItems = [{ caseSlug: 'mi-wolves', notes: 'Cool!', param: '3' }]
+    const items = []
+    const form = renderForm(
+      <HiddenFormInputs initialItems={initialItems} items={items} />
+    )
 
     expect(form).toHaveFormValues({
       'reading_list[reading_list_items_attributes][0][id]': '3',
       'reading_list[reading_list_items_attributes][0][_destroy]': 'true',
+    })
+  })
+
+  it('has the right form values when both adding and deleting', () => {
+    const initialItems = [{ caseSlug: 'mi-wolves', notes: 'Cool!', param: '3' }]
+    const items = [{ caseSlug: 'model-t', notes: 'v important', param: '' }]
+    const form = renderForm(
+      <HiddenFormInputs initialItems={initialItems} items={items} />
+    )
+
+    expect(form).toHaveFormValues({
+      'reading_list[reading_list_items_attributes][0][case_slug]': 'model-t',
+      'reading_list[reading_list_items_attributes][0][notes]': 'v important',
+      'reading_list[reading_list_items_attributes][0][id]': '',
+      'reading_list[reading_list_items_attributes][0][position]': '1',
+
+      'reading_list[reading_list_items_attributes][1][id]': '3',
+      'reading_list[reading_list_items_attributes][1][_destroy]': 'true',
     })
   })
 })
