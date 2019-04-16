@@ -59,7 +59,7 @@ class ReadingListsController < ApplicationController
   def reading_list_params
     params.require(:reading_list).permit(
       :title, :description,
-      reading_list_items_attributes: %i[id position notes _destroy]
+      reading_list_items_attributes: %i[id position notes case_slug _destroy]
     )
   end
 end
