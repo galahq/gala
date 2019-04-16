@@ -4,6 +4,7 @@
  */
 
 import * as React from 'react'
+import produce from 'immer'
 import styled from 'styled-components'
 import { Button, FormGroup, Intent } from '@blueprintjs/core'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -30,7 +31,7 @@ function ReadingListItems ({
 }: Props) {
   return (
     <Container>
-      {items.map(item => {
+      {items.map((item, index) => {
         const caseData = cases[item.caseSlug]
 
         return (
@@ -46,6 +47,13 @@ function ReadingListItems ({
                   })}
                   intent={Intent.DANGER}
                   icon="trash"
+                  onClick={() => {
+                    onSetItems(
+                      produce(items, draft => {
+                        draft.splice(index, 1)
+                      })
+                    )
+                  }}
                 />
               }
             />
@@ -61,6 +69,13 @@ function ReadingListItems ({
                 )}
                 className="pt-input pt-fill"
                 value={item.notes}
+                onChange={e => {
+                  onSetItems(
+                    produce(items, draft => {
+                      draft[index].notes = e.target.value
+                    })
+                  )
+                }}
               />
             </FormGroup>
           </Item>
