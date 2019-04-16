@@ -46,7 +46,7 @@ function ReadingListEditor ({ initialItems }: Props) {
 
       <CaseChooser cases={unselectedCases} onSelect={handleAddCase} />
 
-      <HiddenFormInputs items={readingListItems} />
+      <HiddenFormInputs initialItems={initialItems} items={readingListItems} />
     </>
   )
 
