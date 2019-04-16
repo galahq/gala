@@ -9,10 +9,13 @@ class ReadingList < ApplicationRecord
 
   has_many :reading_list_saves, dependent: :destroy
 
-  has_many :reading_list_items, -> { includes :case }, dependent: :destroy
+  has_many :reading_list_items, -> { includes :case },
+           inverse_of: :reading_list, dependent: :destroy
   has_many :cases, through: :reading_list_items
 
   validates :title, presence: true
+
+  accepts_nested_attributes_for :reading_list_items, allow_destroy: true
 
   alias items reading_list_items
 

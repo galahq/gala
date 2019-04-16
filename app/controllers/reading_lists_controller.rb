@@ -30,6 +30,17 @@ class ReadingListsController < ApplicationController
     set_reading_list
   end
 
+  # @route [PUT/PATCH] `/reading_lists/:uuid`
+  def update
+    set_reading_list
+
+    if @reading_list.update reading_list_params
+      redirect_to @reading_list
+    else
+      render :edit
+    end
+  end
+
   private
 
   def set_reading_list
@@ -40,6 +51,9 @@ class ReadingListsController < ApplicationController
   end
 
   def reading_list_params
-    params.require(:reading_list).permit(:title, :description)
+    params.require(:reading_list).permit(
+      :title, :description,
+      reading_list_items_attributes: %i[id position notes _destroy]
+    )
   end
 end
