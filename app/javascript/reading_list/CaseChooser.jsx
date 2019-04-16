@@ -38,7 +38,7 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
 
   return (
     <>
-      <div className="pt-card">
+      <Container>
         <Heading>
           <FormattedMessage id="readingListItems.new.addCase" />
         </Heading>
@@ -94,7 +94,7 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
             />
           )
         })}
-      </div>
+      </Container>
     </>
   )
 
@@ -112,6 +112,12 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
 }
 
 export default injectIntl(CaseChooser)
+
+const Container = styled.div.attrs({ className: 'pt-card' })`
+  &:not(:first-child) {
+    margin-top: 64px;
+  }
+`
 
 const Heading = styled.h2`
   font-size: 20px;
