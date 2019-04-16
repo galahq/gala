@@ -36,7 +36,7 @@ function HiddenFormInputs ({ items }: Props): React.Node[] {
         readOnly
         name={`reading_list[reading_list_items_attributes][${index}][position]`}
         type="hidden"
-        value={index}
+        value={index + 1}
       />
     </React.Fragment>
   ))

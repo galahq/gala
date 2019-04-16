@@ -34,7 +34,7 @@ class ReadingListsController < ApplicationController
   def update
     set_reading_list
 
-    if @reading_list.update reading_list_params
+    if update_reading_list
       redirect_to @reading_list
     else
       render :edit
@@ -48,6 +48,12 @@ class ReadingListsController < ApplicationController
       ReadingList
       .includes(reading_list_items: [case: [cover_image_attachment: :blob]])
       .find(params[:uuid])
+  end
+
+  def update_reading_list
+    ReadingListItem.acts_as_list_no_update do
+      @reading_list.update reading_list_params
+    end
   end
 
   def reading_list_params
