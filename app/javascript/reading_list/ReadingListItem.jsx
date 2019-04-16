@@ -12,6 +12,7 @@ import { FormattedMessage } from 'react-intl'
 import { Element as CatalogElement } from 'catalog/shared'
 
 import type { IntlShape } from 'react-intl'
+import type { DraggableProps, DragHandleProps } from 'react-beautiful-dnd'
 import type { Case, ReadingListItem as ReadingListItemT } from 'redux/state'
 
 type Props = {
@@ -20,14 +21,23 @@ type Props = {
   item: ReadingListItemT,
   onChange: ReadingListItemT => void,
   onDelete: () => void,
+  ...DraggableProps,
+  ...DragHandleProps,
 }
 
 function ReadingListItem (
-  { caseData, intl, item, onChange, onDelete }: Props,
+  {
+    caseData,
+    intl,
+    item,
+    onChange,
+    onDelete,
+    ...draggableAndHandleProps
+  }: Props,
   ref
 ) {
   return (
-    <Item ref={ref}>
+    <Item ref={ref} {...draggableAndHandleProps}>
       <CatalogElement
         image={caseData?.smallCoverUrl}
         text={caseData?.kicker || ''}
@@ -73,10 +83,6 @@ export default React.forwardRef(ReadingListItem)
 
 const Item = styled.li.attrs({ className: 'pt-card', tabIndex: '0' })`
   margin-bottom: 32px;
-
-  &:last-child {
-    margin-bottom: 64px;
-  }
 
   & .pt-form-group:last-child {
     margin-bottom: 0;
