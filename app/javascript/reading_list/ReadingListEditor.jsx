@@ -16,7 +16,11 @@ import { useControllableFocus } from 'utility/hooks'
 
 import type { Case, ReadingListItem } from 'redux/state'
 
-function ReadingListEditor () {
+type Props = {
+  initialItems: ReadingListItem[],
+}
+
+function ReadingListEditor ({ initialItems }: Props) {
   const [cases, setCases] = React.useState<{ [string]: Case }>({})
 
   React.useEffect(() => {
@@ -25,7 +29,7 @@ function ReadingListEditor () {
 
   const [readingListItems, setReadingListItems] = React.useState<
     ReadingListItem[]
-  >([])
+  >(initialItems)
 
   const [lastItemRef, focusLastItem] = useControllableFocus()
 

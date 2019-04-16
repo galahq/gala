@@ -22,13 +22,17 @@ export default class extends Controller {
     return this.data.get('id')
   }
 
+  get items () {
+    return JSON.parse(this.data.get('items'))
+  }
+
   async connect () {
     const messages = await this._loadIntlData()
 
     render(
       <ErrorBoundary>
         <IntlProvider locale={locale} messages={messages}>
-          <ReadingListEditor />
+          <ReadingListEditor initialItems={this.items} />
         </IntlProvider>
       </ErrorBoundary>,
       this.editorTarget

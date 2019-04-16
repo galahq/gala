@@ -25,6 +25,11 @@ class ReadingListsController < ApplicationController
     end
   end
 
+  # @route [GET] `/reading_lists/:uuid/edit`
+  def edit
+    set_reading_list
+  end
+
   private
 
   def set_reading_list
