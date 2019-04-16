@@ -38,10 +38,11 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
 
   return (
     <>
-      <Heading>
-        <FormattedMessage id="readingListItems.new.addCase" />
-      </Heading>
       <div className="pt-card">
+        <Heading>
+          <FormattedMessage id="readingListItems.new.addCase" />
+        </Heading>
+
         <form onSubmit={handleSearch}>
           <InputGroup
             className="pt-round"
