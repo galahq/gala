@@ -28,7 +28,7 @@ function HiddenFormInputs ({ items }: Props): React.Node[] {
       />
       <input
         readOnly
-        name={`reading_list[reading_list_items_attributes][${index}][param]`}
+        name={`reading_list[reading_list_items_attributes][${index}][id]`}
         type="hidden"
         value={param}
       />

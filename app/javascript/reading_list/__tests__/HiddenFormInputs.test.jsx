@@ -28,12 +28,12 @@ describe('HiddenFormInputs', () => {
     expect(form).toHaveFormValues({
       'reading_list[reading_list_items_attributes][0][case_slug]': 'mi-wolves',
       'reading_list[reading_list_items_attributes][0][notes]': 'Cool!',
-      'reading_list[reading_list_items_attributes][0][param]': '',
+      'reading_list[reading_list_items_attributes][0][id]': '',
       'reading_list[reading_list_items_attributes][0][position]': '0',
 
       'reading_list[reading_list_items_attributes][1][case_slug]': 'model-t',
       'reading_list[reading_list_items_attributes][1][notes]': 'v important',
-      'reading_list[reading_list_items_attributes][1][param]': '3',
+      'reading_list[reading_list_items_attributes][1][id]': '3',
       'reading_list[reading_list_items_attributes][1][position]': '1',
     })
   })
@@ -43,7 +43,7 @@ describe('HiddenFormInputs', () => {
     const form = renderForm(<></>) // TODO: decide API
 
     expect(form).toHaveFormValues({
-      'reading_list[reading_list_items_attributes][0][param]': '3',
+      'reading_list[reading_list_items_attributes][0][id]': '3',
       'reading_list[reading_list_items_attributes][0][_destroy]': 'true',
     })
   })
