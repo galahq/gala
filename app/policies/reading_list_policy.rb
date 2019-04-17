@@ -5,4 +5,8 @@ class ReadingListPolicy < ApplicationPolicy
   def update?
     user.reading_lists.include? record
   end
+
+  def destroy?
+    update?
+  end
 end
