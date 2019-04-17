@@ -1,0 +1,17 @@
+<% saved = reading_list.saved_by? current_reader %>
+
+<button
+  class="pt-button pt-intent-success pt-icon-add <%= 'hidden' if saved %>"
+  data-action="reading-list#save"
+  data-target="reading-list.saveButton"
+>
+  <%= t '.save_reading_list' %>
+</button>
+
+<div
+  class="reading-list__tag <%= 'hidden' unless saved %>"
+  data-target="reading-list.savedTag"
+>
+  <span class="pt-icon pt-icon-tick"></span>
+  <%= t '.reading_list_saved' %>
+</div>
