@@ -938,6 +938,11 @@ en:
         password. If you create one now, you will be able to use it, or
         %{provider}, to sign in.
   reading_lists:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to delete this reading list? If you do, it will be
+        removed from the libraries of anyone you’ve shared it with.
+      delete: Delete Reading List
     edit:
       edit_list: Edit Reading List
     new:

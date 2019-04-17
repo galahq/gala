@@ -24,6 +24,10 @@
     }
   }
 
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .reading-list-item {
