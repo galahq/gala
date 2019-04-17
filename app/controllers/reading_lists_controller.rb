@@ -28,11 +28,13 @@ class ReadingListsController < ApplicationController
   # @route [GET] `/reading_lists/:uuid/edit`
   def edit
     set_reading_list
+    authorize @reading_list
   end
 
   # @route [PUT/PATCH] `/reading_lists/:uuid`
   def update
     set_reading_list
+    authorize @reading_list
 
     if update_reading_list
       redirect_to @reading_list
