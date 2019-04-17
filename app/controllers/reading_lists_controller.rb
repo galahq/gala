@@ -43,6 +43,13 @@ class ReadingListsController < ApplicationController
     end
   end
 
+  # @route [DELETE] `/reading_lists/:uuid`
+  def destroy
+    set_reading_list
+    @reading_list.destroy
+    redirect_to root_path
+  end
+
   private
 
   def set_reading_list
