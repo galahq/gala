@@ -15,6 +15,8 @@ class ReadingList < ApplicationRecord
 
   validates :title, presence: true
 
+  after_save :add_to_readers_saved_reading_lists
+
   accepts_nested_attributes_for :reading_list_items, allow_destroy: true
 
   alias items reading_list_items
@@ -25,5 +27,11 @@ class ReadingList < ApplicationRecord
 
   def saved_by?(reader)
     reading_list_saves.where(reader: reader).any?
+  end
+
+  private
+
+  def add_to_readers_saved_reading_lists
+    reader.saved_reading_lists << self unless saved_by?(reader)
   end
 end
