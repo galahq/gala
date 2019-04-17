@@ -32,26 +32,6 @@ function MyLibrary ({ intl }: Props) {
 
   const enrolledCases = enrollments.map(e => cases[e.caseSlug])
 
-  async function onDeleteEnrollment (slug, { displayBetaWarning }) {
-    const message = `
-      ${intl.formatMessage({ id: 'enrollments.destroy.areYouSure' })}
-      ${
-        displayBetaWarning
-          ? `${intl.formatMessage({
-              id: 'enrollments.destroy.youWillNeedAnotherInvitation',
-            })}`
-          : ''
-      }`
-
-    if (!window.confirm(message)) return
-
-    await Orchard.prune(`cases/${slug}/enrollment`)
-
-    updateCatalogData(draft => {
-      draft.enrollments = draft.enrollments.filter(e => e.caseSlug !== slug)
-    })
-  }
-
   if (casesLoading) return null
 
   return (
@@ -60,18 +40,6 @@ function MyLibrary ({ intl }: Props) {
         <SidebarSectionTitle>
           <FormattedMessage id="catalog.myLibrary" />
         </SidebarSectionTitle>
-
-        {(enrolledCases.length === 0 && savedReadingLists.length === 0) || (
-          <SidebarButton
-            aria-label={
-              editing
-                ? intl.formatMessage({ id: 'enrollments.index.finishEditing' })
-                : intl.formatMessage({ id: 'enrollments.index.editEnrolled' })
-            }
-            icon={editing ? 'tick' : 'cog'}
-            onClick={toggleEditing}
-          />
-        )}
       </CaseRow>
 
       {enrolledCases.length === 0 && savedReadingLists.length === 0 ? (
@@ -80,7 +48,7 @@ function MyLibrary ({ intl }: Props) {
         <>
           <CaseRow baseline>
             <SidebarSubsectionTitle>
-              <FormattedMessage id="savedReadingLists.index.savedReadingLists" />
+              <FormattedMessage id="readingLists.index.readingLists" />
             </SidebarSubsectionTitle>
 
             <SidebarButton
@@ -104,18 +72,6 @@ function MyLibrary ({ intl }: Props) {
                       images={images}
                       text={title}
                       href={editing ? null : links.self}
-                      rightElement={
-                        editing && (
-                          <SidebarButton
-                            intent={Intent.DANGER}
-                            aria-label={intl.formatMessage({
-                              id: 'savedReadingLists.destroy.removeList',
-                            })}
-                            icon="cross"
-                            onClick={() => {}}
-                          />
-                        )
-                      }
                     />
                   </UnstyledLI>
                 )
@@ -129,6 +85,23 @@ function MyLibrary ({ intl }: Props) {
                 <SidebarSubsectionTitle>
                   <FormattedMessage id="enrollments.index.enrolledCases" />
                 </SidebarSubsectionTitle>
+
+                {(enrolledCases.length === 0 &&
+                  savedReadingLists.length === 0) || (
+                  <SidebarButton
+                    aria-label={
+                      editing
+                        ? intl.formatMessage({
+                            id: 'enrollments.index.finishEditing',
+                          })
+                        : intl.formatMessage({
+                            id: 'enrollments.index.editEnrolled',
+                          })
+                    }
+                    icon={editing ? 'tick' : 'cog'}
+                    onClick={toggleEditing}
+                  />
+                )}
               </CaseRow>
 
               <UnstyledUL data-test-id="enrollments">
@@ -167,6 +140,26 @@ function MyLibrary ({ intl }: Props) {
       )}
     </div>
   )
+
+  async function onDeleteEnrollment (slug, { displayBetaWarning }) {
+    const message = `
+      ${intl.formatMessage({ id: 'enrollments.destroy.areYouSure' })}
+      ${
+        displayBetaWarning
+          ? `${intl.formatMessage({
+              id: 'enrollments.destroy.youWillNeedAnotherInvitation',
+            })}`
+          : ''
+      }`
+
+    if (!window.confirm(message)) return
+
+    await Orchard.prune(`cases/${slug}/enrollment`)
+
+    updateCatalogData(draft => {
+      draft.enrollments = draft.enrollments.filter(e => e.caseSlug !== slug)
+    })
+  }
 }
 
 export default injectIntl(MyLibrary)

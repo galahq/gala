@@ -50,6 +50,13 @@ export default class extends Controller {
     this.savedTagTarget.classList.remove('hidden')
   }
 
+  async unsave () {
+    await Orchard.prune(`/reading_lists/${this.id}/save`)
+
+    this.saveButtonTarget.classList.remove('hidden')
+    this.savedTagTarget.classList.add('hidden')
+  }
+
   async _loadIntlData () {
     const intlData = [
       import(`react-intl/locale-data/${locale.substring(0, 2)}`),
