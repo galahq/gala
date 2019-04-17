@@ -185,7 +185,7 @@ Rails.application.routes.draw do
 
   resources :reading_lists, only: %i[show new create edit update destroy],
                             param: :uuid do
-    resource :save, only: %i[create], controller: :reading_list_saves
+    resource :save, only: %i[create destroy], controller: :reading_list_saves
   end
 
   resources :saved_reading_lists, only: %i[index]

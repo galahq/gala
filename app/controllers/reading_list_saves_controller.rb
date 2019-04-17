@@ -10,6 +10,13 @@ class ReadingListSavesController < ApplicationController
     head :no_content
   end
 
+  # @route [DELETE] `/reading_lists/:uuid/save
+  def destroy
+    save = current_reader.reading_list_saves.find_by(reading_list: reading_list)
+    save&.destroy
+    head :no_content
+  end
+
   private
 
   def reading_list

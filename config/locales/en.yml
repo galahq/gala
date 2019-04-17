@@ -949,8 +949,13 @@ en:
       delete: Delete Reading List
     edit:
       edit_list: Edit Reading List
+    index:
+      reading_lists: Reading Lists
     new:
       new_list: New Reading List
+    save_button:
+      reading_list_saved: Reading List Saved
+      save_reading_list: Save Reading List
     show:
       document_title: '%{title} — Reading List'
   reading_list_items:
@@ -965,8 +970,6 @@ en:
   saved_reading_lists:
     destroy:
       remove_list: Remove reading list from library
-    index:
-      saved_reading_lists: Saved Reading Lists
   search:
     didnt_match: Your search didn’t match any cases.
     full_text_search: Full text search...
