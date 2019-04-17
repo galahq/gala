@@ -31,4 +31,14 @@ RSpec.describe ReadingListPolicy do
       expect(subject).to permit reader, owned_list
     end
   end
+
+  permissions :destroy? do
+    it 'does not allow a reader to delete someone else’s list' do
+      expect(subject).not_to permit reader, other_list
+    end
+
+    it 'allows a reader to delete her own list' do
+      expect(subject).to permit reader, owned_list
+    end
+  end
 end
