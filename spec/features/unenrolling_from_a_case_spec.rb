@@ -13,7 +13,7 @@ feature 'Unenrolling from a case' do
     visit root_path
 
     find('[aria-label="Edit enrolled cases"]').click
-    accept_confirm /\AAre you sure you want to unenroll in this case\?\Z/ do
+    accept_confirm 'Are you sure you want to unenroll in this case?' do
       find('[aria-label="Unenroll from this case"]').click
     end
     page.driver.browser.navigate.refresh
