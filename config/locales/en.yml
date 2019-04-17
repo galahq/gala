@@ -938,6 +938,10 @@ en:
         password. If you create one now, you will be able to use it, or
         %{provider}, to sign in.
   reading_lists:
+    actions:
+      sharing_instructions: >
+        Share your reading list with anyone you’d like by copying the link and
+        sending it to them.
     destroy:
       are_you_sure: >
         Are you sure you want to delete this reading list? If you do, it will be
