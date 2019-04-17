@@ -2,6 +2,7 @@
 
 # @see ReadingList
 class ReadingListsController < ApplicationController
+  before_action :authenticate_reader!, only: %i[new create edit update destroy]
   layout 'admin'
 
   # @route [GET] `/reading_lists/:uuid`
