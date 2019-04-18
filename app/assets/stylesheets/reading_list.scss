@@ -1,3 +1,5 @@
+@import "_globals";
+
 .reading-list {
   max-width: 80rem;
 
@@ -33,20 +35,45 @@
 }
 
 .reading-list-item {
-  align-items: center;
   display: grid;
+  grid-auto-flow: dense;
   grid-gap: 16px;
+
+  align-items: center;
   grid-template-columns: min-content auto 77px;
+  @media (max-width: $mobileCutoff) {
+    align-items: flex-start;
+    grid-template-columns: min-content auto;
+  }
+
+  &__case-link {
+    @media (max-width: $mobileCutoff) {
+      grid-column: 2 / span 1;
+    }
+  }
 
   &__notes {
     border-left: 4px solid hsl(210, 31%, 39%);
-    grid-column-end: span 3;
-    margin-bottom: 32px;
     max-width: 45em;
     padding-left: 8px;
 
+    grid-column: 1 / span 3;
+    margin-bottom: 32px;
+    @media (max-width: $mobileCutoff) {
+      grid-column: 1 / span 2;
+      margin-bottom: 0px;
+    }
+
     p:last-child {
       margin-bottom: 0;
+    }
+  }
+
+  &__action {
+    @media (max-width: $mobileCutoff) {
+      grid-column: 1 / span 2;
+      grid-row: 3;
+      margin-bottom: 64px;
     }
   }
 }
