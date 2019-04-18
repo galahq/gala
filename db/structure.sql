@@ -1165,6 +1165,86 @@ CREATE TABLE readers_roles (
 
 
 --
+-- Name: reading_list_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE reading_list_items (
+    id bigint NOT NULL,
+    notes text DEFAULT ''::text NOT NULL,
+    "position" integer NOT NULL,
+    reading_list_id uuid,
+    case_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: reading_list_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE reading_list_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reading_list_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE reading_list_items_id_seq OWNED BY reading_list_items.id;
+
+
+--
+-- Name: reading_list_saves; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE reading_list_saves (
+    id bigint NOT NULL,
+    reader_id bigint,
+    reading_list_id uuid,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: reading_list_saves_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE reading_list_saves_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reading_list_saves_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE reading_list_saves_id_seq OWNED BY reading_list_saves.id;
+
+
+--
+-- Name: reading_lists; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE reading_lists (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    title character varying DEFAULT ''::character varying NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    reader_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: reply_notifications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1636,6 +1716,20 @@ ALTER TABLE ONLY readers ALTER COLUMN id SET DEFAULT nextval('readers_id_seq'::r
 
 
 --
+-- Name: reading_list_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_items ALTER COLUMN id SET DEFAULT nextval('reading_list_items_id_seq'::regclass);
+
+
+--
+-- Name: reading_list_saves id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_saves ALTER COLUMN id SET DEFAULT nextval('reading_list_saves_id_seq'::regclass);
+
+
+--
 -- Name: reply_notifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1949,6 +2043,30 @@ ALTER TABLE ONLY quizzes
 
 ALTER TABLE ONLY readers
     ADD CONSTRAINT readers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reading_list_items reading_list_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_items
+    ADD CONSTRAINT reading_list_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reading_list_saves reading_list_saves_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_saves
+    ADD CONSTRAINT reading_list_saves_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reading_lists reading_lists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_lists
+    ADD CONSTRAINT reading_lists_pkey PRIMARY KEY (id);
 
 
 --
@@ -2548,6 +2666,48 @@ CREATE INDEX index_readers_roles_on_reader_id_and_role_id ON readers_roles USING
 
 
 --
+-- Name: index_reading_list_items_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reading_list_items_on_case_id ON reading_list_items USING btree (case_id);
+
+
+--
+-- Name: index_reading_list_items_on_reading_list_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reading_list_items_on_reading_list_id ON reading_list_items USING btree (reading_list_id);
+
+
+--
+-- Name: index_reading_list_saves_on_reader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reading_list_saves_on_reader_id ON reading_list_saves USING btree (reader_id);
+
+
+--
+-- Name: index_reading_list_saves_on_reader_id_and_reading_list_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reading_list_saves_on_reader_id_and_reading_list_id ON reading_list_saves USING btree (reader_id, reading_list_id);
+
+
+--
+-- Name: index_reading_list_saves_on_reading_list_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reading_list_saves_on_reading_list_id ON reading_list_saves USING btree (reading_list_id);
+
+
+--
+-- Name: index_reading_lists_on_reader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reading_lists_on_reader_id ON reading_lists USING btree (reader_id);
+
+
+--
 -- Name: index_reply_notifications_on_reader_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2816,6 +2976,14 @@ ALTER TABLE ONLY pages
 
 
 --
+-- Name: reading_list_items fk_rails_7fe921b5b7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_items
+    ADD CONSTRAINT fk_rails_7fe921b5b7 FOREIGN KEY (reading_list_id) REFERENCES reading_lists(id);
+
+
+--
 -- Name: cards fk_rails_8ed9cff919; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2829,6 +2997,14 @@ ALTER TABLE ONLY cards
 
 ALTER TABLE ONLY taggings
     ADD CONSTRAINT fk_rails_8fbac4c978 FOREIGN KEY (case_id) REFERENCES cases(id);
+
+
+--
+-- Name: reading_list_saves fk_rails_916bc40468; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_saves
+    ADD CONSTRAINT fk_rails_916bc40468 FOREIGN KEY (reader_id) REFERENCES readers(id);
 
 
 --
@@ -2896,6 +3072,14 @@ ALTER TABLE ONLY active_storage_attachments
 
 
 --
+-- Name: reading_lists fk_rails_c5ca6ed199; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_lists
+    ADD CONSTRAINT fk_rails_c5ca6ed199 FOREIGN KEY (reader_id) REFERENCES readers(id);
+
+
+--
 -- Name: cards fk_rails_c5d03ef31a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2960,11 +3144,27 @@ ALTER TABLE ONLY podcasts
 
 
 --
+-- Name: reading_list_saves fk_rails_e9316a2e94; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_saves
+    ADD CONSTRAINT fk_rails_e9316a2e94 FOREIGN KEY (reading_list_id) REFERENCES reading_lists(id);
+
+
+--
 -- Name: submissions fk_rails_ea35513632; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY submissions
     ADD CONSTRAINT fk_rails_ea35513632 FOREIGN KEY (reader_id) REFERENCES readers(id);
+
+
+--
+-- Name: reading_list_items fk_rails_efeaa2af93; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_list_items
+    ADD CONSTRAINT fk_rails_efeaa2af93 FOREIGN KEY (case_id) REFERENCES cases(id);
 
 
 --
@@ -3098,6 +3298,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190222195858'),
 ('20190319130136'),
 ('20190320160900'),
-('20190320215448');
+('20190320215448'),
+('20190402133633'),
+('20190402133819'),
+('20190405162440');
 
 

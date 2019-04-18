@@ -18,7 +18,7 @@ export class Orchard {
     return fetch(r).then(handleResponse)
   }
 
-  static graft (endpoint: string, params: Object): Promise<any> {
+  static graft (endpoint: string, params: Object = {}): Promise<any> {
     const body = JSON.stringify(params)
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
@@ -35,7 +35,7 @@ export class Orchard {
   }
 
   // Train a fruit tree to grow into a desired figure.
-  static espalier (endpoint: string, params: ?Object): Promise<any> {
+  static espalier (endpoint: string, params: Object = {}): Promise<any> {
     const body = JSON.stringify(params)
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',

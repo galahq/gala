@@ -2,7 +2,7 @@
 
 # A reader’s response to the case
 #
-# @attr content [RawDraftContentState]
+# @attr content [String] markdown formatted content
 class Comment < ApplicationRecord
   include Mobility
 

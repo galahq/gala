@@ -7,25 +7,36 @@ import React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
+import { CatalogDataContext } from 'catalog/catalogData'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import { FeaturesCell as Cell } from 'catalog/home/shared'
 import TitleCard from 'shared/TitleCard'
 
-import type { Case } from 'redux/state'
+type Props = { selecting: boolean }
 
-type Props = { featuredCases: Case[] }
+function Featured ({ selecting }: Props) {
+  const [{ cases: allCases, enrollments, features }] = React.useContext(
+    CatalogDataContext
+  )
 
-function Featured ({ featuredCases }: Props) {
-  const cases = six(featuredCases)
+  let slugs = features
+  if (selecting) {
+    const enrolledSlugs = enrollments.map(e => e.caseSlug)
+    slugs = [...enrolledSlugs, ...slugs]
+  }
+
+  const cases = six(slugs).map(slug => allCases[slug])
 
   return (
     <CatalogSection solid>
       <SectionTitle>
         <FormattedMessage id="features.index.featuredCases" />
       </SectionTitle>
+
       <Grid>
         {cases.map((kase, i) => {
           if (kase == null) return <Cell />
+
           const {
             authors,
             coverUrl,
@@ -35,6 +46,7 @@ function Featured ({ featuredCases }: Props) {
             slug,
             title,
           } = kase
+
           return (
             <CaseBlock
               authors={authors}
