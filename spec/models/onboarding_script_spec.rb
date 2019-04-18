@@ -7,19 +7,19 @@ RSpec.describe OnboardingScript do
     it 'returns the right subclass based on the given reader' do
       reader = build :reader, persona: nil
       expect(OnboardingScript.for(reader))
-        .to be_an_instance_of OnboardingScript
+        .to be_an_instance_of OnboardingScript::Base
 
       reader.persona = :learner
       expect(OnboardingScript.for(reader))
-        .to be_a LearnerOnboardingScript
+        .to be_a OnboardingScript::Learner
 
       reader.persona = :teacher
       expect(OnboardingScript.for(reader))
-        .to be_a TeacherOnboardingScript
+        .to be_a OnboardingScript::Teacher
 
       reader.persona = :writer
       expect(OnboardingScript.for(reader))
-        .to be_a WriterOnboardingScript
+        .to be_a OnboardingScript::Writer
     end
   end
 end
@@ -50,9 +50,9 @@ RSpec.shared_examples 'an OnboardingScript' do
 end
 
 [
-  LearnerOnboardingScript,
-  TeacherOnboardingScript,
-  WriterOnboardingScript
+  OnboardingScript::Learner,
+  OnboardingScript::Teacher,
+  OnboardingScript::Writer
 ].each do |klass|
   RSpec.describe klass do
     it_behaves_like 'an OnboardingScript'
