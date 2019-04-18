@@ -8,6 +8,8 @@ import * as React from 'react'
 import { Route } from 'react-router-dom'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
+import { CatalogDataContext } from 'catalog/catalogData'
+import { ReaderDataContext } from 'catalog/readerData'
 import CaseList from 'catalog/search_results/CaseList'
 import LibraryInfo from 'catalog/search_results/LibraryInfo'
 import SearchForm from 'catalog/search_results/SearchForm'
@@ -21,21 +23,19 @@ import { useDocumentTitle } from 'utility/hooks'
 
 import type { ContextRouter } from 'react-router-dom'
 import type { IntlShape } from 'react-intl'
-import type { State } from 'catalog'
 
 type Props = {
   ...ContextRouter,
-  ...State,
-  readerIsEditor: boolean,
   intl: IntlShape,
 }
-function SearchResults ({
-  cases,
-  intl,
-  loading,
-  location,
-  readerIsEditor,
-}: Props) {
+function SearchResults ({ intl, location }: Props) {
+  const [{ cases, loading: casesLoading }] = React.useContext(
+    CatalogDataContext
+  )
+  const {
+    roles: { editor },
+  } = React.useContext(ReaderDataContext)
+
   useDocumentTitle(`${intl.formatMessage({ id: 'search.results' })} — Gala`)
 
   const [caseSlugs, resultsLoading] = useSearchResults(location)
@@ -57,10 +57,10 @@ function SearchResults ({
             <FormattedMessage id="search.results" />
           </SectionTitle>
 
-          {loading.cases || resultsLoading ? null : caseSlugs.length === 0 ? (
+          {casesLoading || resultsLoading ? null : caseSlugs.length === 0 ? (
             <NoSearchResults />
           ) : (
-            <CaseList cases={results} readerIsEditor={readerIsEditor} />
+            <CaseList cases={results} readerIsEditor={editor} />
           )}
         </CatalogSection>
       </Main>

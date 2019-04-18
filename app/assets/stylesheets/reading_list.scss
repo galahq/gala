@@ -1,0 +1,52 @@
+.reading-list {
+  max-width: 80rem;
+
+  &__info {
+    margin-bottom: 16px;
+
+    &__reader{
+      display: flex;
+      align-items: baseline;
+
+      * {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  &__tag {
+    color: hsl(210, 64%, 86%);
+    display: inline-block;
+    font-size: 14px;
+
+    .pt-icon {
+      margin-right: 4px;
+    }
+  }
+
+  &__actions {
+    align-items: baseline;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+}
+
+.reading-list-item {
+  align-items: center;
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: min-content auto 77px;
+
+  &__notes {
+    border-left: 4px solid hsl(210, 31%, 39%);
+    grid-column-end: span 3;
+    margin-bottom: 32px;
+    max-width: 45em;
+    padding-left: 8px;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

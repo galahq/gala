@@ -57,6 +57,12 @@ class Reader < ApplicationRecord
   has_many :managerships, dependent: :destroy, foreign_key: 'manager_id'
   has_many :libraries, through: :managerships
 
+  has_many :reading_lists, dependent: :destroy
+  has_many :reading_list_saves, dependent: :destroy
+  has_many :saved_reading_lists,
+           -> { includes(reading_list_items: :case) },
+           through: :reading_list_saves, source: :reading_list
+
   has_one_attached :image
 
   before_update :set_created_password, if: :encrypted_password_changed?

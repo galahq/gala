@@ -6,13 +6,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
-import { CatalogSection, SectionTitle } from 'catalog/shared'
 import { Link } from 'react-router-dom'
 
-import type { Library as LibraryT } from 'redux/state'
+import { CatalogDataContext } from 'catalog/catalogData'
+import { CatalogSection, SectionTitle } from 'catalog/shared'
 
-type Props = { libraries: LibraryT[] }
-const Libraries = ({ libraries }: Props) => {
+const Libraries = () => {
+  const [{ libraries }] = React.useContext(CatalogDataContext)
+
   if (libraries.length < 3) return null
 
   return (

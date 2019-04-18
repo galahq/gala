@@ -1,0 +1,28 @@
+<%= form_for reading_list, builder: BlueprintFormBuilder do |f| %>
+  <div class="md-title">
+    <%= f.errors %>
+  </div>
+
+  <div class="md-container">
+    <div class="md-master">
+      <%= f.form_group :title %>
+
+      <%= f.form_group :description do |f, error_classes| %>
+        <%= f.text_area :description,
+                        rows: 8, class: %i[pt-fill pt-input] + error_classes %>
+      <% end %>
+
+      <%= f.submit %>
+    </div>
+
+    <div class="md-detail">
+      <div
+        data-controller="reading-list"
+        data-target="reading-list.editor"
+        data-reading-list-items="<%= ActiveModel::Serializer.for(
+          reading_list.items
+        ).to_json %>"
+      ></div>
+    </div>
+  </div>
+<% end %>

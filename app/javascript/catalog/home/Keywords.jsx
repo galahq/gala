@@ -7,13 +7,13 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
+import { CatalogDataContext } from 'catalog/catalogData'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import { groupKeywords } from './helpers'
 
-import type { Tag } from 'redux/state'
+const Keywords = () => {
+  const [{ tags }] = React.useContext(CatalogDataContext)
 
-type Props = { tags: Tag[] }
-const Keywords = ({ tags }: Props) => {
   const keywordGroups = groupKeywords(tags)
 
   return (
@@ -38,8 +38,7 @@ const Columns = styled.div`
   margin-top: 1em;
 `
 
-type GroupProps = { keywords: Tag[] }
-const Group = ({ keywords }: GroupProps) => {
+const Group = ({ keywords }) => {
   return (
     keywords.length > 0 && (
       <GroupContainer>

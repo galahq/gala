@@ -138,3 +138,7 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
+
+# Stub old Rails module that Shoulda::Matchers depends on ATM
+class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end
+raise 'workaround unnecessary?' if Shoulda::Matchers::VERSION != '4.0.1'
