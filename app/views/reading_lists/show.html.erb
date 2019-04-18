@@ -58,7 +58,7 @@ end %>
           src="<%= kase.small_cover_url %>"
         />
 
-        <%= link_to case_path kase do %>
+        <%= link_to case_path(kase), class: "reading-list-item__case-link" do %>
           <span class="admin__table__slug">
             <%= kase.short_title %>
           </span>
@@ -69,21 +69,23 @@ end %>
         <% if reader_signed_in? %>
           <% enrolled = item.enrolled?(current_reader) %>
 
-          <div
-            class="reading-list__tag <%= 'hidden' unless enrolled %>"
-            data-target="reading-list-item.enrolledTag"
-          >
-            <span class="pt-icon pt-icon-tick"></span>
-            Enrolled
-          </div>
+          <div class="reading-list-item__action">
+            <div
+              class="reading-list__tag <%= 'hidden' unless enrolled %>"
+              data-target="reading-list-item.enrolledTag"
+            >
+              <span class="pt-icon pt-icon-tick"></span>
+              Enrolled
+            </div>
 
-          <button
-            class="pt-button pt-icon-plus <%= 'hidden' if enrolled %>"
-            data-action="reading-list-item#enroll"
-            data-target="reading-list-item.enrollButton"
-          >
-            Enroll
-          </button>
+            <button
+              class="pt-button pt-icon-plus <%= 'hidden' if enrolled %>"
+              data-action="reading-list-item#enroll"
+              data-target="reading-list-item.enrollButton"
+            >
+              Enroll
+            </button>
+          </div>
         <% end %>
 
         <div class="reading-list-item__notes pt-running-text">
