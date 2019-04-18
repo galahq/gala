@@ -1,0 +1,33 @@
+version: v1.0
+
+name: Docusaurus Deploy
+
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Setup
+    task:
+      jobs:
+        - name: yarn
+          commands:
+          - checkout
+          - cd docs/website
+          - cache restore docusaurus-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),docusaurus-node-modules-$SEMAPHORE_GIT_BRANCH,docusaurus-node-modules-master
+          - sem-version node 10.7.0
+          - yarn install --ignore-engines
+          - cache store docusaurus-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock) node_modules
+
+  - name: Deploy
+    task:
+      jobs:
+        - name: Deploy
+          commands:
+          - checkout
+          - cd docs/website
+          - sem-version node 10.7.0
+          - cache restore docusaurus-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),docusaurus-node-modules-$SEMAPHORE_GIT_BRANCH,docusaurus-node-modules-master
+          - bash ./bin/deploy.sh
+
