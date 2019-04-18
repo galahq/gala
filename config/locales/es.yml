@@ -102,6 +102,11 @@ es:
         unconfirmed_email: Email no confirmado
         unlock_token: Código de desbloqueo
         updated_at: Fecha de actualización
+      reading_list:
+        title: Title
+        description: Description
+      reading_list_item:
+        notes: Notes
       shared_cases_library:
         description: >
           These cases were shared by Gala users.
@@ -147,6 +152,7 @@ es:
       page: Page
       podcast: Podcast
       reader: Reader
+      reading_list: Reading List
       shared_cases_library: Casos compartidos
     persistance:
       messages:
@@ -270,6 +276,7 @@ es:
     learn_more: Más información
     meet_stakeholders: >
       Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
+    my_library: My Library
     natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
     propose_a_case: Propose a Case
@@ -624,6 +631,7 @@ es:
   forms:
     required: required
   helpers:
+    add: Add
     attachments:
       file_type:
         ruby: "Accepted file types: %{types}."
@@ -872,6 +880,37 @@ es:
         We can show contextual tips about features that are relevant to you.
       you_have_not_created_a_password: >
         Porque iniciaste tú primera sesión con %{provider}, no creaste una contraseña. Si creas una contraseña, podrás usarla o %{provider} para iniciar la sesión.
+  reading_lists:
+    actions:
+      sharing_instructions: >
+        Share your reading list with anyone you’d like by copying the link and sending it to them.
+    destroy:
+      are_you_sure: >
+        Are you sure you want to delete this reading list? If you do, it will be removed from the libraries of anyone you’ve shared it with.
+      delete: Delete Reading List
+    edit:
+      edit_list: Edit Reading List
+    index:
+      reading_lists: Reading Lists
+    new:
+      new_list: New Reading List
+    save_button:
+      reading_list_saved: Reading List Saved
+      save_reading_list: Save Reading List
+    show:
+      document_title: '%{title} — Reading List'
+  reading_list_items:
+    destroy:
+      remove_case: Remove case from this reading list.
+    edit:
+      notes_about_case: Notes about "{case}".
+    new:
+      add_case: Add a Case
+      add_this_case: Add Case "{case}".
+      search_for_a_case_to_add: Search for a case to add...
+  saved_reading_lists:
+    destroy:
+      remove_list: Remove reading list from library
   search:
     didnt_match: Tu búsqueda no ha generado resultados.
     full_text_search: Full text search...
