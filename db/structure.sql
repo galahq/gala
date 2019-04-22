@@ -1172,10 +1172,10 @@ CREATE TABLE reading_list_items (
     id bigint NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
     "position" integer NOT NULL,
-    reading_list_id uuid,
     case_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    reading_list_id bigint
 );
 
 
@@ -1205,9 +1205,9 @@ ALTER SEQUENCE reading_list_items_id_seq OWNED BY reading_list_items.id;
 CREATE TABLE reading_list_saves (
     id bigint NOT NULL,
     reader_id bigint,
-    reading_list_id uuid,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    reading_list_id bigint
 );
 
 
@@ -1235,13 +1235,33 @@ ALTER SEQUENCE reading_list_saves_id_seq OWNED BY reading_list_saves.id;
 --
 
 CREATE TABLE reading_lists (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    uuid uuid DEFAULT gen_random_uuid() NOT NULL,
     title character varying DEFAULT ''::character varying NOT NULL,
     description text DEFAULT ''::text NOT NULL,
     reader_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: reading_lists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE reading_lists_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reading_lists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE reading_lists_id_seq OWNED BY reading_lists.id;
 
 
 --
@@ -1727,6 +1747,13 @@ ALTER TABLE ONLY reading_list_items ALTER COLUMN id SET DEFAULT nextval('reading
 --
 
 ALTER TABLE ONLY reading_list_saves ALTER COLUMN id SET DEFAULT nextval('reading_list_saves_id_seq'::regclass);
+
+
+--
+-- Name: reading_lists id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reading_lists ALTER COLUMN id SET DEFAULT nextval('reading_lists_id_seq'::regclass);
 
 
 --
@@ -2708,6 +2735,13 @@ CREATE INDEX index_reading_lists_on_reader_id ON reading_lists USING btree (read
 
 
 --
+-- Name: index_reading_lists_on_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reading_lists_on_uuid ON reading_lists USING btree (uuid);
+
+
+--
 -- Name: index_reply_notifications_on_reader_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3301,6 +3335,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190320215448'),
 ('20190402133633'),
 ('20190402133819'),
-('20190405162440');
+('20190405162440'),
+('20190422154229');
 
 

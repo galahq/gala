@@ -58,7 +58,7 @@ class ReadingListsController < ApplicationController
     @reading_list =
       ReadingList
       .includes(reading_list_items: [case: [cover_image_attachment: :blob]])
-      .find(params[:uuid])
+      .find_by_uuid(params[:uuid])
   end
 
   def update_reading_list
