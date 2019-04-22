@@ -5,6 +5,8 @@
 # @attr title [String]
 # @attr description [String]
 class ReadingList < ApplicationRecord
+  attribute :uuid, :string, default: -> { SecureRandom.uuid }
+
   belongs_to :reader
 
   has_many :reading_list_saves, dependent: :destroy
@@ -20,6 +22,10 @@ class ReadingList < ApplicationRecord
   accepts_nested_attributes_for :reading_list_items, allow_destroy: true
 
   alias items reading_list_items
+
+  def to_param
+    uuid
+  end
 
   def case_slugs
     items.map(&:case).map(&:slug)
