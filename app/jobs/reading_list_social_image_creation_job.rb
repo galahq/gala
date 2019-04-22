@@ -10,7 +10,12 @@ class ReadingListSocialImageCreationJob < ActiveJob::Base
 
   def perform(reading_list)
     @reading_list = reading_list
-    @reading_list.social_image.attach io: image, filename: 'social.jpg'
+
+    if cover_images.any?
+      @reading_list.social_image.attach io: image, filename: 'social.jpg'
+    else
+      @reading_list.social_image.detach
+    end
   end
 
   private
@@ -28,9 +33,11 @@ class ReadingListSocialImageCreationJob < ActiveJob::Base
 
   def cover_images
     @cover_images = cases.map do |kase|
+      next unless kase.cover_image.attached?
+
       decorator = ImageDecorator.decorate(kase.cover_image)
       readable_file decorator.resized_file(options)
-    end
+    end.compact
   end
 
   def readable_file(contents)

@@ -102,6 +102,8 @@ end %>
   %>" />
   <meta property="og:type" content="article" />
   <meta property="og:description" content="<%= reading_list.description %>" />
-  <meta property="og:image" content="<%= reading_list.social_image_url %>" />
+  <% if reading_list.social_image_url %>
+    <meta property="og:image" content="<%= reading_list.social_image_url %>" />
+  <% end %>
   <meta property="article:author" content="<%= reading_list.reader.name %>" />
 <% end %>
