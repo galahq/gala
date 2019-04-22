@@ -10,7 +10,7 @@ gem 'aws-sdk-sns', '>= 1.9.0', require: false
 gem 'bootsnap', require: false
 gem 'connection_pool'
 gem 'dalli'
-gem 'mini_magick'
+gem 'image_processing', '~> 1.2'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-canonical-host'
@@ -77,6 +77,7 @@ gem 'skylight', '>= 4.0.x'
 gem 'table_print'
 
 # Services
+gem 'case_grid', git: 'https://github.com/cbothner/case_grid'
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'

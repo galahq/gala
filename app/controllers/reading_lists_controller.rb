@@ -3,7 +3,12 @@
 # @see ReadingList
 class ReadingListsController < ApplicationController
   before_action :authenticate_reader!, only: %i[new create edit update destroy]
+
   layout 'admin'
+
+  decorates_assigned :reading_list, context: ->(controller) do
+    { host: controller.request.host_with_port }
+  end
 
   # @route [GET] `/reading_lists/:uuid`
   def show
@@ -62,9 +67,11 @@ class ReadingListsController < ApplicationController
   end
 
   def update_reading_list
-    ReadingListItem.acts_as_list_no_update do
+    return unless ReadingListItem.acts_as_list_no_update do
       @reading_list.update reading_list_params
     end
+
+    @reading_list.update_social_image
   end
 
   def reading_list_params
