@@ -248,13 +248,13 @@ es:
           <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
     show:
       back_to_overview: Resumen
-      download_teaching_guide: Download teaching guide
+      download_teaching_guide: Descarga la guía didáctica
       end: Fin
       forthcoming: A venir
       next: "Próximo: "
       not_yet_published: Este caso aún no ha sido publicado
       other_languages: "Este caso también está disponible en los siguientes idiomas: "
-      toc: Tabla de Contenido
+      toc: Tabla de Contenidos
   catalog:
     catalog: Catálogo
     choose_for_yourself: Tú vas a elegir
