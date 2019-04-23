@@ -899,6 +899,7 @@ es:
       save_reading_list: Save Reading List
     show:
       document_title: '%{title} — Reading List'
+      sharable_title: '%{title}: A Reading List of Case Studies on Gala'
   reading_list_items:
     destroy:
       remove_case: Remove case from this reading list.
