@@ -9,9 +9,6 @@ RSpec.describe 'Announcements index' do
 
     reader = create :reader
 
-    allow(class_double(Announcement))
-      .to receive(:for_reader).with(reader).and_return [announcement]
-
     sign_in reader
     get announcements_path
 
@@ -21,6 +18,17 @@ RSpec.describe 'Announcements index' do
         content: 'Announcing announcements',
         url: 'example.com'
       )
+    )
+  end
+
+  it 'works when no reader is signed in' do
+    create :announcement,
+           content: 'Announcing announcements', visible_logged_out: true
+
+    get announcements_path
+
+    expect(response.body).to be_json including(
+      including(content: 'Announcing announcements')
     )
   end
 end

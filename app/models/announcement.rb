@@ -9,14 +9,17 @@
 class Announcement < ApplicationRecord
   time_for_a_boolean :deactivated
 
-  scope :deactivated, -> { where 'deactivated_at <= ?', Time.zone.now }
   scope :active, -> do
     where 'deactivated_at IS NULL OR deactivated_at > ?', Time.zone.now
   end
+  scope :deactivated, -> { where 'deactivated_at <= ?', Time.zone.now }
+  scope :visible_logged_out, -> { where visible_logged_out: true }
 
-  def self.for_reader(reader)
-    return active if reader.seen_announcements_created_before.nil?
+  def self.for_user(user)
+    return active.visible_logged_out unless user.persisted?
 
-    active.where 'created_at > ?', reader.seen_announcements_created_before
+    return active if user.seen_announcements_created_before.nil?
+
+    active.where 'created_at > ?', user.seen_announcements_created_before
   end
 end
