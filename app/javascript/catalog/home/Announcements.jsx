@@ -8,9 +8,11 @@ import styled from 'styled-components'
 import { Orchard } from 'shared/orchard'
 
 import { CatalogDataContext } from 'catalog/catalogData'
+import { ReaderDataContext } from 'catalog/readerData'
 
 export default function Announcements () {
   const [{ announcements }, update] = React.useContext(CatalogDataContext)
+  const { reader } = React.useContext(ReaderDataContext)
 
   if (announcements.length === 0) return null
 
@@ -22,12 +24,14 @@ export default function Announcements () {
         <a href={announcement.url}>{announcement.content}</a>
       </InnerContainer>
 
-      <Dismiss>
-        <button
-          className="pt-button pt-minimal pt-icon-cross pt-intent-primary"
-          onClick={handleDismissAnnouncement}
-        />
-      </Dismiss>
+      {reader != null && (
+        <Dismiss>
+          <button
+            className="pt-button pt-minimal pt-icon-cross pt-intent-primary"
+            onClick={handleDismissAnnouncement}
+          />
+        </Dismiss>
+      )}
     </Container>
   )
 
