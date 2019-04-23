@@ -99,11 +99,20 @@ end %>
 <%= content_for :head do %>
   <meta property="og:title" content="<%=
     I18n.t 'reading_lists.show.sharable_title', title: reading_list.title
-  %>" />
-  <meta property="og:type" content="article" />
-  <meta property="og:description" content="<%= reading_list.description %>" />
+  %>">
+  <meta name="twitter:title" content="<%=
+    I18n.t 'reading_lists.show.sharable_title', title: reading_list.title
+  %>">
+
+  <meta property="og:type" content="article">
+
+  <meta property="og:description" content="<%= reading_list.description %>">
+  <meta name="twitter:description" content="<%= reading_list.description %>">
+
   <% if reading_list.social_image_url %>
-    <meta property="og:image" content="<%= reading_list.social_image_url %>" />
+    <meta property="og:image" content="<%= reading_list.social_image_url %>">
+    <meta name="twitter:image" content="<%= reading_list.social_image_url %>">
   <% end %>
-  <meta property="article:author" content="<%= reading_list.reader.name %>" />
+
+  <meta property="article:author" content="<%= reading_list.reader.name %>">
 <% end %>
