@@ -50,6 +50,9 @@ Rails.application.routes.draw do
     resources :questions
     resources :quizzes
     resources :readers
+    resources :reading_list_items
+    resources :reading_list_saves
+    resources :reading_lists
     resources :submissions
 
     root to: 'cases#index'
