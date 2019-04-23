@@ -9,6 +9,10 @@ class AnonymousUser
     nil
   end
 
+  def persisted?
+    false
+  end
+
   def locale
     I18n.locale
   end

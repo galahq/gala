@@ -4,7 +4,7 @@
 class AnnouncementsController < ApplicationController
   # @route [GET] `/announcements`
   def index
-    announcements = Announcement.for_reader current_user
+    announcements = Announcement.for_user current_user
     render json: announcements
   end
 end
