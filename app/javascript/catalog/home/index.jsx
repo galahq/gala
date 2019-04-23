@@ -9,6 +9,7 @@ import { values } from 'ramda'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
 import ValueProposition from 'catalog/home/ValueProposition'
+import Announcements from 'catalog/home/Announcements'
 import Sidebar from 'catalog/home/Sidebar'
 import Features from 'catalog/home/Features'
 import Categories from 'catalog/home/Categories'
@@ -37,6 +38,8 @@ function Home () {
           {readerLoading || !!reader || selecting || <ValueProposition />}
 
           {selecting || <Sidebar />}
+
+          <Announcements />
 
           <Main>
             <Features selecting={selecting} />
