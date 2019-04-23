@@ -36,11 +36,13 @@ export default function Announcements () {
   )
 
   async function handleDismissAnnouncement () {
-    if (announcements.length === 0) return null
+    if (announcement == null) return
 
     await Orchard.graft(`announcements/${announcement.param}/dismissal`)
 
     update(draft => {
+      if (draft.announcements[0]?.param !== announcement.param) return
+
       draft.announcements.shift()
     })
   }
