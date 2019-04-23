@@ -58,7 +58,9 @@ Rails.application.routes.draw do
     root to: 'cases#index'
   end
 
-  resources :announcements, only: %i[index]
+  resources :announcements, only: %i[index] do
+    resource :dismissal, module: 'announcements', only: %i[create]
+  end
 
   namespace 'authentication_strategies' do
     namespace 'config' do
