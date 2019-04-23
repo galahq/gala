@@ -5,17 +5,19 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { CatalogDataContext } from 'catalog/catalogData'
 
 export default function Announcements () {
+  const [{ announcements }] = React.useContext(CatalogDataContext)
+
+  if (announcements.length === 0) return null
+
+  const [announcement] = announcements
+
   return (
     <Container>
       <InnerContainer>
-        <a href="https://google.com">
-          Join us for a chat with Kevin Savetz and Steve Meretzky about
-          developing video games for Infocom in the 1980s. Join us for a chat
-          with Kevin Savetz and Steve Meretzky about developing video games for
-          Infocom in the 1980s.
-        </a>
+        <a href={announcement.url}>{announcement.content}</a>
       </InnerContainer>
 
       <Dismiss>

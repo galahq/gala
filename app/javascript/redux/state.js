@@ -108,6 +108,12 @@ export type UIState = {
 // Model Objects
 export type Element = Page | Podcast
 
+export type Announcement = {
+  param: string,
+  content: string,
+  url: string,
+}
+
 export type Author = { name: string, institution: string }
 
 export type Byline = {
