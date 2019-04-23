@@ -8,4 +8,9 @@
 # @attr deactivated_at [TimeWithZone]
 class Announcement < ApplicationRecord
   time_for_a_boolean :deactivated
+
+  scope :deactivated, -> { where 'deactivated_at <= ?', Time.zone.now }
+  scope :active, -> do
+    where 'deactivated_at IS NULL OR deactivated_at > ?', Time.zone.now
+  end
 end
