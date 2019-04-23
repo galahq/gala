@@ -1165,7 +1165,8 @@ CREATE TABLE readers (
     created_password boolean DEFAULT true,
     send_reply_notifications boolean DEFAULT true,
     active_community_id integer,
-    persona character varying
+    persona character varying,
+    seen_announcements_created_before timestamp without time zone
 );
 
 
@@ -3386,6 +3387,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190402133819'),
 ('20190405162440'),
 ('20190422154229'),
-('20190423195511');
+('20190423195511'),
+('20190423203000');
 
 
