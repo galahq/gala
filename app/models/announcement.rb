@@ -13,4 +13,10 @@ class Announcement < ApplicationRecord
   scope :active, -> do
     where 'deactivated_at IS NULL OR deactivated_at > ?', Time.zone.now
   end
+
+  def self.for_reader(reader)
+    return active if reader.seen_announcements_created_before.nil?
+
+    active.where 'created_at > ?', reader.seen_announcements_created_before
+  end
 end
