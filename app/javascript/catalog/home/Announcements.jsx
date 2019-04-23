@@ -5,10 +5,12 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { Orchard } from 'shared/orchard'
+
 import { CatalogDataContext } from 'catalog/catalogData'
 
 export default function Announcements () {
-  const [{ announcements }] = React.useContext(CatalogDataContext)
+  const [{ announcements }, update] = React.useContext(CatalogDataContext)
 
   if (announcements.length === 0) return null
 
@@ -21,10 +23,23 @@ export default function Announcements () {
       </InnerContainer>
 
       <Dismiss>
-        <button className="pt-button pt-minimal pt-icon-cross pt-intent-primary" />
+        <button
+          className="pt-button pt-minimal pt-icon-cross pt-intent-primary"
+          onClick={handleDismissAnnouncement}
+        />
       </Dismiss>
     </Container>
   )
+
+  async function handleDismissAnnouncement () {
+    if (announcements.length === 0) return null
+
+    await Orchard.graft(`announcements/${announcement.param}/dismissal`)
+
+    update(draft => {
+      draft.announcements.shift()
+    })
+  }
 }
 
 // $FlowFixMe
