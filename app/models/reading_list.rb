@@ -15,6 +15,8 @@ class ReadingList < ApplicationRecord
            inverse_of: :reading_list, dependent: :destroy
   has_many :cases, through: :reading_list_items
 
+  has_one_attached :social_image
+
   validates :title, presence: true
 
   after_save :add_to_readers_saved_reading_lists
@@ -33,6 +35,10 @@ class ReadingList < ApplicationRecord
 
   def saved_by?(reader)
     reading_list_saves.where(reader: reader).any?
+  end
+
+  def update_social_image
+    ReadingListSocialImageCreationJob.perform_later self
   end
 
   private

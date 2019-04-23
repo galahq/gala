@@ -7,6 +7,15 @@ GIT
       railties
 
 GIT
+  remote: https://github.com/cbothner/case_grid
+  revision: 9fe614cadadc466bc8442e9b523d60983f3f3cc4
+  specs:
+    case_grid (0.1.0)
+      rcomposite
+      rmagick
+      zeitwerk
+
+GIT
   remote: https://github.com/cbothner/markerb
   revision: 197a5e26c3297eca4601dc658ccfd3cd01ca24ea
   specs:
@@ -298,6 +307,9 @@ GEM
       railties (>= 3.0.0)
     i18n_yaml_sorter (0.2.0)
     ice_nine (0.11.2)
+    image_processing (1.9.0)
+      mini_magick (>= 4.9.3, < 5)
+      ruby-vips (>= 2.0.13, < 3)
     ims-lti (1.1.13)
       builder
       oauth (>= 0.4.5, < 0.6)
@@ -450,6 +462,8 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    rcomposite (0.3.1)
+      rmagick (>= 2.0.0)
     redcarpet (3.4.0)
     redis (3.3.5)
     referer-parser (0.3.0)
@@ -459,6 +473,7 @@ GEM
     responders (2.4.1)
       actionpack (>= 4.2.0, < 6.0)
       railties (>= 4.2.0, < 6.0)
+    rmagick (3.1.0)
     rolify (5.2.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
@@ -489,6 +504,8 @@ GEM
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
     ruby-oembed (0.12.0)
+    ruby-vips (2.0.13)
+      ffi (~> 1.9)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
     safely_block (0.2.1)
@@ -598,6 +615,7 @@ DEPENDENCIES
   bootsnap
   bullet!
   capybara
+  case_grid!
   clowne (= 0.2.0)
   clowne_active_storage
   connection_pool
@@ -619,6 +637,7 @@ DEPENDENCIES
   http_accept_language
   i18n_generators
   i18n_yaml_sorter
+  image_processing (~> 1.2)
   ims-lti
   inline_svg
   jbuilder!
@@ -629,7 +648,6 @@ DEPENDENCIES
   markerb!
   memoist
   memory_profiler
-  mini_magick
   mobility
   multi_json
   oj
