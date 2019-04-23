@@ -1,26 +1,26 @@
 <% content_for :title do
-  I18n.t 'reading_lists.show.document_title', title: @reading_list.title
+  I18n.t 'reading_lists.show.document_title', title: reading_list.title
 end %>
 
 <div class="admin md-container reading-list">
   <header class="md-header pt-dark">
     <h1 class="admin__title">
-      <%= @reading_list.title %>
+      <%= reading_list.title %>
     </h1>
   </header>
 
   <aside
     class="md-master"
     data-controller="reading-list"
-    data-reading-list-id="<%= @reading_list.id %>"
+    data-reading-list-id="<%= reading_list.id %>"
   >
     <div class="pt-dark">
       <div class="pt-callout reading-list__info">
         <div class="pt-running-text">
-          <%= raw markdown @reading_list.description %>
+          <%= raw markdown reading_list.description %>
 
           <div class="reading-list__info__reader">
-            <%= identicon @reading_list.reader %> <%= @reading_list.reader.name
+            <%= identicon reading_list.reader %> <%= reading_list.reader.name
             %>
           </div>
         </div>
@@ -29,11 +29,11 @@ end %>
 
     <% if reader_signed_in? %>
       <div class="pt-dark">
-        <% if @reading_list.reader == current_reader %>
-          <%= render 'actions', reading_list: @reading_list %>
+        <% if reading_list.reader == current_reader %>
+          <%= render 'actions', reading_list: reading_list %>
         <% else %>
           <%= render 'save_button',
-                     reading_list: @reading_list, reader: current_reader %>
+                     reading_list: reading_list, reader: current_reader %>
         <% end %>
       </div>
     <% else %>
@@ -44,7 +44,7 @@ end %>
   </aside>
 
   <main class="md-detail pt-dark">
-    <% @reading_list.items.each do |item| %>
+    <% reading_list.items.each do |item| %>
       <% kase = item.case.decorate %>
 
       <div
@@ -95,3 +95,15 @@ end %>
     <% end %>
   </main>
 </div>
+
+<%= content_for :head do %>
+  <meta property="og:title" content="<%=
+    I18n.t 'reading_lists.show.sharable_title', title: reading_list.title
+  %>" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="<%= reading_list.description %>" />
+  <% if reading_list.social_image_url %>
+    <meta property="og:image" content="<%= reading_list.social_image_url %>" />
+  <% end %>
+  <meta property="article:author" content="<%= reading_list.reader.name %>" />
+<% end %>

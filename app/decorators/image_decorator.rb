@@ -13,16 +13,14 @@ class ImageDecorator < ApplicationDecorator
   def resized_path(**options)
     return BLUE_PIXEL unless attached?
     return RED_PIXEL unless variable?
+
     polymorphic_path resized(options), only_path: true
   end
 
   def resized_file(**options)
     return nil unless attached?
-    # rubocop:disable Security/Open
-    open(resized(options).processed.service_url).read
-    # rubocop:enable Security/Open
-  rescue ArgumentError
-    nil
+
+    resized(options).processed.blob.download
   end
 
   private
@@ -34,6 +32,7 @@ class ImageDecorator < ApplicationDecorator
 
   def optimizations
     return jpeg_optimizations if jpeg?
+
     base_optimizations
   end
 
@@ -51,12 +50,14 @@ class ImageDecorator < ApplicationDecorator
 
   def resize_options(width, height)
     return {} if width.blank?
+
     height ||= width
     { resize: "#{width}x#{height}^" }
   end
 
   def jpeg?
     return false unless attached?
+
     content_type.include? 'jpeg'
   end
 end
