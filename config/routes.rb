@@ -58,6 +58,8 @@ Rails.application.routes.draw do
     root to: 'cases#index'
   end
 
+  resources :announcements, only: %i[index]
+
   namespace 'authentication_strategies' do
     namespace 'config' do
       get :lti
