@@ -198,6 +198,40 @@ ALTER SEQUENCE ahoy_events_id_seq OWNED BY ahoy_events.id;
 
 
 --
+-- Name: announcements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE announcements (
+    id bigint NOT NULL,
+    content text,
+    url character varying,
+    visible_logged_out boolean,
+    deactivated_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: announcements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE announcements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: announcements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE announcements_id_seq OWNED BY announcements.id;
+
+
+--
 -- Name: answers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1554,6 +1588,13 @@ ALTER TABLE ONLY ahoy_events ALTER COLUMN id SET DEFAULT nextval('ahoy_events_id
 
 
 --
+-- Name: announcements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY announcements ALTER COLUMN id SET DEFAULT nextval('announcements_id_seq'::regclass);
+
+
+--
 -- Name: answers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1862,6 +1903,14 @@ ALTER TABLE ONLY active_storage_blobs
 
 ALTER TABLE ONLY ahoy_events
     ADD CONSTRAINT ahoy_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: announcements announcements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY announcements
+    ADD CONSTRAINT announcements_pkey PRIMARY KEY (id);
 
 
 --
@@ -3336,6 +3385,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190402133633'),
 ('20190402133819'),
 ('20190405162440'),
-('20190422154229');
+('20190422154229'),
+('20190423195511');
 
 
