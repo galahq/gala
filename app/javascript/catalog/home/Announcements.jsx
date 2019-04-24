@@ -5,12 +5,15 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
-import { Orchard } from 'shared/orchard'
+import { injectIntl } from 'react-intl'
 
+import { Orchard } from 'shared/orchard'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
 
-export default function Announcements () {
+import type { IntlShape } from 'react-intl'
+
+function Announcements ({ intl }: { intl: IntlShape }) {
   const [{ announcements }, update] = React.useContext(CatalogDataContext)
   const { reader } = React.useContext(ReaderDataContext)
 
@@ -27,6 +30,9 @@ export default function Announcements () {
       {reader != null && (
         <Dismiss>
           <button
+            aria-label={intl.formatMessage({
+              id: 'announcements.dismissals.create.dismissAnnouncement',
+            })}
             className="pt-button pt-minimal pt-icon-cross pt-intent-primary"
             onClick={handleDismissAnnouncement}
           />
@@ -47,6 +53,8 @@ export default function Announcements () {
     })
   }
 }
+
+export default injectIntl(Announcements)
 
 // $FlowFixMe
 const Container = styled.aside.attrs({
