@@ -13,6 +13,8 @@ ja:
       confirm_deletion_form: confirmation
   activerecord:
     attributes:
+      announcement:
+        deactivated_at: Deactivated at (UTC)
       case:
         acknowledgements: 謝辞
         authors: 作者
@@ -164,6 +166,10 @@ ja:
     show:
       download: ダウンロード
       instructions: 説明
+  announcements:
+    dismissals:
+      create:
+        dismiss_announcement: Dismiss Announcement
   cards:
     edit:
       citation_added: |
