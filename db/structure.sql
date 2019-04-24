@@ -2267,6 +2267,20 @@ CREATE INDEX index_ahoy_events_on_visit_id_and_name ON ahoy_events USING btree (
 
 
 --
+-- Name: index_announcements_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_announcements_on_created_at ON announcements USING btree (created_at);
+
+
+--
+-- Name: index_announcements_on_deactivated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_announcements_on_deactivated_at ON announcements USING btree (deactivated_at);
+
+
+--
 -- Name: index_answers_on_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3388,6 +3402,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190405162440'),
 ('20190422154229'),
 ('20190423195511'),
-('20190423203000');
+('20190423203000'),
+('20190424134031');
 
 
