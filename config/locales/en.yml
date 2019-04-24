@@ -13,6 +13,8 @@ en:
       confirm_deletion_form: confirmation
   activerecord:
     attributes:
+      announcement:
+        deactivated_at: Deactivated at (UTC)
       case:
         acknowledgements: Acknowledgements
         authors: Authors
