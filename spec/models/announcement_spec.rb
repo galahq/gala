@@ -20,8 +20,12 @@ RSpec.describe Announcement, type: :model do
       a2 = create :announcement, deactivated_at: 1.week.since
       a3 = create :announcement, deactivated_at: nil
 
-      expect(Announcement.active).not_to include a1
       expect(Announcement.active).to include a2, a3
+      expect(Announcement.active).not_to include a1
+
+      travel_to 2.weeks.since
+      expect(Announcement.active).to include a3
+      expect(Announcement.active).not_to include a1, a2
     end
   end
 
