@@ -168,6 +168,10 @@ en:
     show:
       download: Download
       instructions: Instructions
+  announcements:
+    dismissals:
+      create:
+        dismiss_announcement: Dismiss Announcement
   cards:
     edit:
       citation_added: |
