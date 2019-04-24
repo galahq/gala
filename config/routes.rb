@@ -37,6 +37,7 @@ Rails.application.routes.draw do
       resources :events
     end
 
+    resources :announcements
     resources :answers
     resources :cases
     resources :comment_threads
