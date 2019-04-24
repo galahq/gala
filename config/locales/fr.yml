@@ -13,6 +13,8 @@ fr:
       confirm_deletion_form: confirmation
   activerecord:
     attributes:
+      announcement:
+        deactivated_at: Deactivated at (UTC)
       case:
         acknowledgements: Remerciements
         authors: Authors
@@ -165,6 +167,10 @@ fr:
     show:
       download: Télécharger
       instructions: Instructions
+  announcements:
+    dismissals:
+      create:
+        dismiss_announcement: Dismiss Announcement
   cards:
     edit:
       citation_added: |
