@@ -198,6 +198,40 @@ ALTER SEQUENCE ahoy_events_id_seq OWNED BY ahoy_events.id;
 
 
 --
+-- Name: announcements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE announcements (
+    id bigint NOT NULL,
+    content text,
+    url character varying,
+    visible_logged_out boolean,
+    deactivated_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: announcements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE announcements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: announcements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE announcements_id_seq OWNED BY announcements.id;
+
+
+--
 -- Name: answers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1131,7 +1165,8 @@ CREATE TABLE readers (
     created_password boolean DEFAULT true,
     send_reply_notifications boolean DEFAULT true,
     active_community_id integer,
-    persona character varying
+    persona character varying,
+    seen_announcements_created_before timestamp without time zone
 );
 
 
@@ -1554,6 +1589,13 @@ ALTER TABLE ONLY ahoy_events ALTER COLUMN id SET DEFAULT nextval('ahoy_events_id
 
 
 --
+-- Name: announcements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY announcements ALTER COLUMN id SET DEFAULT nextval('announcements_id_seq'::regclass);
+
+
+--
 -- Name: answers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1862,6 +1904,14 @@ ALTER TABLE ONLY active_storage_blobs
 
 ALTER TABLE ONLY ahoy_events
     ADD CONSTRAINT ahoy_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: announcements announcements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY announcements
+    ADD CONSTRAINT announcements_pkey PRIMARY KEY (id);
 
 
 --
@@ -2214,6 +2264,20 @@ CREATE INDEX index_ahoy_events_on_user_id_and_name ON ahoy_events USING btree (u
 --
 
 CREATE INDEX index_ahoy_events_on_visit_id_and_name ON ahoy_events USING btree (visit_id, name);
+
+
+--
+-- Name: index_announcements_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_announcements_on_created_at ON announcements USING btree (created_at);
+
+
+--
+-- Name: index_announcements_on_deactivated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_announcements_on_deactivated_at ON announcements USING btree (deactivated_at);
 
 
 --
@@ -3336,6 +3400,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190402133633'),
 ('20190402133819'),
 ('20190405162440'),
-('20190422154229');
+('20190422154229'),
+('20190423195511'),
+('20190423203000'),
+('20190424134031');
 
 

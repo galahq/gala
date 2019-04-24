@@ -37,6 +37,7 @@ Rails.application.routes.draw do
       resources :events
     end
 
+    resources :announcements
     resources :answers
     resources :cases
     resources :comment_threads
@@ -56,6 +57,10 @@ Rails.application.routes.draw do
     resources :submissions
 
     root to: 'cases#index'
+  end
+
+  resources :announcements, only: %i[index] do
+    resource :dismissal, module: 'announcements', only: %i[create]
   end
 
   namespace 'authentication_strategies' do

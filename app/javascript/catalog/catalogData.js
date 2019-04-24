@@ -8,20 +8,36 @@ import { useImmer } from 'use-immer'
 import { Orchard, OrchardError } from 'shared/orchard'
 import { normalize } from 'shared/functions'
 
-import type { Case, Enrollment, Library, ReadingList, Tag } from 'redux/state'
+import type {
+  Announcement,
+  Case,
+  Enrollment,
+  Library,
+  ReadingList,
+  Tag,
+} from 'redux/state'
 
 export type CatalogData = {
   loading: boolean,
+  announcements: Announcement[],
   cases: { [string]: Case },
   enrollments: Enrollment[],
   features: string[],
-  tags: Tag[],
   libraries: Library[],
   savedReadingLists: ReadingList[],
+  tags: Tag[],
 }
 
 function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
   const [data, update] = useImmer(getDefaultCatalogData())
+
+  React.useEffect(() => {
+    Orchard.harvest('announcements').then(announcements => {
+      update(draft => {
+        draft.announcements = announcements
+      })
+    })
+  }, [])
 
   React.useEffect(() => {
     Orchard.harvest('cases').then(cases =>
@@ -30,14 +46,6 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
         draft.loading = false
       })
     )
-  }, [])
-
-  React.useEffect(() => {
-    Orchard.harvest('cases/features').then(({ features }) => {
-      update(draft => {
-        draft.features = features
-      })
-    })
   }, [])
 
   React.useEffect(() => {
@@ -53,11 +61,11 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
   }, [])
 
   React.useEffect(() => {
-    Orchard.harvest('tags').then(tags =>
+    Orchard.harvest('cases/features').then(({ features }) => {
       update(draft => {
-        draft.tags = tags
+        draft.features = features
       })
-    )
+    })
   }, [])
 
   React.useEffect(() => {
@@ -76,6 +84,14 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
     )
   }, [])
 
+  React.useEffect(() => {
+    Orchard.harvest('tags').then(tags =>
+      update(draft => {
+        draft.tags = tags
+      })
+    )
+  }, [])
+
   return [data, update]
 }
 
@@ -86,12 +102,13 @@ export const CatalogDataContext = React.createContext<
 function getDefaultCatalogData () {
   return {
     loading: true,
+    announcements: [],
     cases: {},
     enrollments: [],
     features: [],
-    tags: [],
     libraries: [],
     savedReadingLists: [],
+    tags: [],
   }
 }
 
