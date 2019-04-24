@@ -3,6 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe Announcement, type: :model do
+  describe 'default_scope' do
+    it 'orders active announcements oldest to newest, then inactive ones by ' \
+       'deactivated_at, most recent first' do
+      d2 = create :announcement, created_at: 4.weeks.ago,
+                                 deactivated_at: 3.weeks.ago
+      a2 = create :announcement, created_at: 2.weeks.ago
+      d1 = create :announcement, created_at: 1.week.ago,
+                                 deactivated_at: 3.days.ago
+      a1 = create :announcement, created_at: 3.weeks.ago
+      a3 = create :announcement, created_at: 1.week.ago,
+                                 deactivated_at: 1.week.since
+
+      expect(Announcement.all.map(&:id)).to eq [a1, a2, a3, d1, d2].map(&:id)
+    end
+  end
+
   describe '::deactivated' do
     it 'returns the right announcements' do
       a1 = create :announcement, deactivated_at: 1.week.ago
