@@ -7,6 +7,8 @@
 # @attr visible_logged_out [Boolean]
 # @attr deactivated_at [TimeWithZone]
 class Announcement < ApplicationRecord
+  default_scope { order 'deactivated_at DESC NULLS FIRST, created_at ASC' }
+
   time_for_a_boolean :deactivated
 
   scope :active, -> do
