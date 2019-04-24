@@ -15,6 +15,7 @@ RSpec.describe 'Announcement dismissal create' do
 
     reader.reload
 
-    expect(reader.seen_announcements_created_before).to eq creation_time
+    expect(reader.seen_announcements_created_before)
+      .to be_within(1.second).of(creation_time)
   end
 end
