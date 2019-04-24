@@ -13,6 +13,8 @@ fr:
       confirm_deletion_form: confirmation
   activerecord:
     attributes:
+      announcement:
+        deactivated_at: Deactivated at (UTC)
       case:
         acknowledgements: Remerciements
         authors: Authors
@@ -165,6 +167,10 @@ fr:
     show:
       download: Télécharger
       instructions: Instructions
+  announcements:
+    dismissals:
+      create:
+        dismiss_announcement: Dismiss Announcement
   cards:
     edit:
       citation_added: |
@@ -899,6 +905,7 @@ fr:
       save_reading_list: Save Reading List
     show:
       document_title: '%{title} — Reading List'
+      sharable_title: '%{title}: A Reading List of Case Studies on Gala'
   reading_list_items:
     destroy:
       remove_case: Remove case from this reading list.
