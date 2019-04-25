@@ -27,6 +27,7 @@ blocks:
       jobs:
         - name: Deploy
           commands:
+          - sudo pip install awscli
           - checkout
           - cd docs/website
           - sem-version node 10.7.0
