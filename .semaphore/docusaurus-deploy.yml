@@ -22,6 +22,8 @@ blocks:
 
   - name: Deploy
     task:
+      secrets:
+        - name: aws
       jobs:
         - name: Deploy
           commands:
