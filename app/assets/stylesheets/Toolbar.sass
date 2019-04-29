@@ -1,12 +1,13 @@
 .Toolbar
   &__bar
-    width: 100%
     background-color: #1d3f5e
-    border-color: #1d3f5e
-    border-width: 2px
-    border-style: solid
     border-bottom-color: #193c5b
+    border-color: #1d3f5e
+    border-style: solid
+    border-width: 2px
     font: 90% 'tenso'
+    overflow-x: auto
+    width: 100%
 
     & .MaxWidthContainer
       display: flex
@@ -16,6 +17,9 @@
     margin: 0 8px
     flex: 1
     white-space: nowrap
+
+    &:empty
+      margin: 0
 
     &:nth-child(2)
       flex: 0
