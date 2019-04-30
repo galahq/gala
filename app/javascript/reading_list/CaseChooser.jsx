@@ -33,8 +33,8 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
   const [results, setResults] = React.useState<string[]>([])
 
   const choosableCases = query
-    ? results.map(slug => cases[slug])
-    : enrollments.map(enrollment => cases[enrollment.caseSlug])
+    ? results.map(slug => cases[slug]).filter(Boolean)
+    : enrollments.map(enrollment => cases[enrollment.caseSlug]).filter(Boolean)
 
   return (
     <>
@@ -64,13 +64,13 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
           {query ? (
             <FormattedMessage id="search.results" />
           ) : (
-            <FormattedMessage id="enrollments.index.enrolledCases" />
+            choosableCases.length > 0 && (
+              <FormattedMessage id="enrollments.index.enrolledCases" />
+            )
           )}
         </Subheading>
 
         {choosableCases.map(caseData => {
-          if (caseData == null) return null
-
           return (
             <Element
               key={caseData.slug}
