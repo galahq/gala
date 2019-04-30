@@ -42,101 +42,92 @@ function MyLibrary ({ intl }: Props) {
         </SidebarSectionTitle>
       </CaseRow>
 
-      {enrolledCases.length === 0 && savedReadingLists.length === 0 ? (
-        <EnrollmentInstructions />
-      ) : (
-        <>
-          <CaseRow baseline>
-            <SidebarSubsectionTitle>
-              <FormattedMessage id="readingLists.index.readingLists" />
-            </SidebarSubsectionTitle>
+      <CaseRow baseline>
+        <SidebarSubsectionTitle>
+          <FormattedMessage id="readingLists.index.readingLists" />
+        </SidebarSubsectionTitle>
 
-            <SidebarButton
-              aria-label={intl.formatMessage({
-                id: 'readingLists.new.newList',
-              })}
-              icon="add"
-              role="link"
-              onClick={() => (window.location = '/reading_lists/new')}
-            />
-          </CaseRow>
+        <SidebarButton
+          aria-label={intl.formatMessage({
+            id: 'readingLists.new.newList',
+          })}
+          icon="add"
+          role="link"
+          onClick={() => (window.location = '/reading_lists/new')}
+        />
+      </CaseRow>
 
-          <UnstyledUL>
-            {savedReadingLists.map(
-              ({ param, title, caseSlugs, links } = {}) => {
-                const images = caseSlugs.map(slug => cases[slug].smallCoverUrl)
+      <UnstyledUL>
+        {savedReadingLists.map(({ param, title, caseSlugs, links } = {}) => {
+          const images = caseSlugs.map(slug => cases[slug].smallCoverUrl)
 
-                return (
-                  <UnstyledLI key={param}>
-                    <Element
-                      images={images}
-                      text={title}
-                      href={editing ? null : links.self}
-                    />
-                  </UnstyledLI>
-                )
-              }
-            )}
-          </UnstyledUL>
+          return (
+            <UnstyledLI key={param}>
+              <Element
+                images={images}
+                text={title}
+                href={editing ? null : links.self}
+              />
+            </UnstyledLI>
+          )
+        })}
+      </UnstyledUL>
 
-          {enrolledCases.length === 0 || (
-            <>
-              <CaseRow baseline>
-                <SidebarSubsectionTitle>
-                  <FormattedMessage id="enrollments.index.enrolledCases" />
-                </SidebarSubsectionTitle>
+      <CaseRow baseline>
+        <SidebarSubsectionTitle>
+          <FormattedMessage id="enrollments.index.enrolledCases" />
+        </SidebarSubsectionTitle>
 
-                {(enrolledCases.length === 0 &&
-                  savedReadingLists.length === 0) || (
-                  <SidebarButton
-                    aria-label={
-                      editing
-                        ? intl.formatMessage({
-                            id: 'enrollments.index.finishEditing',
+        {(enrolledCases.length === 0 && savedReadingLists.length === 0) || (
+          <SidebarButton
+            aria-label={
+              editing
+                ? intl.formatMessage({
+                    id: 'enrollments.index.finishEditing',
+                  })
+                : intl.formatMessage({
+                    id: 'enrollments.index.editEnrolled',
+                  })
+            }
+            icon={editing ? 'tick' : 'cog'}
+            onClick={toggleEditing}
+          />
+        )}
+      </CaseRow>
+
+      <UnstyledUL data-test-id="enrollments">
+        {enrolledCases.map(
+          ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
+            slug && (
+              <UnstyledLI key={slug}>
+                <Element
+                  image={smallCoverUrl}
+                  text={kicker}
+                  href={editing ? null : links.self}
+                  rightElement={
+                    editing && (
+                      <SidebarButton
+                        intent={Intent.DANGER}
+                        aria-label={intl.formatMessage({
+                          id: 'enrollments.destroy.unenroll',
+                        })}
+                        icon="cross"
+                        onClick={() =>
+                          onDeleteEnrollment(slug, {
+                            displayBetaWarning: !publishedAt,
                           })
-                        : intl.formatMessage({
-                            id: 'enrollments.index.editEnrolled',
-                          })
-                    }
-                    icon={editing ? 'tick' : 'cog'}
-                    onClick={toggleEditing}
-                  />
-                )}
-              </CaseRow>
-
-              <UnstyledUL data-test-id="enrollments">
-                {enrolledCases.map(
-                  ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
-                    slug && (
-                      <UnstyledLI key={slug}>
-                        <Element
-                          image={smallCoverUrl}
-                          text={kicker}
-                          href={editing ? null : links.self}
-                          rightElement={
-                            editing && (
-                              <SidebarButton
-                                intent={Intent.DANGER}
-                                aria-label={intl.formatMessage({
-                                  id: 'enrollments.destroy.unenroll',
-                                })}
-                                icon="cross"
-                                onClick={() =>
-                                  onDeleteEnrollment(slug, {
-                                    displayBetaWarning: !publishedAt,
-                                  })
-                                }
-                              />
-                            )
-                          }
-                        />
-                      </UnstyledLI>
+                        }
+                      />
                     )
-                )}
-              </UnstyledUL>
-            </>
-          )}
-        </>
+                  }
+                />
+              </UnstyledLI>
+            )
+        )}
+      </UnstyledUL>
+
+      {enrolledCases.length === 0 && savedReadingLists.length === 0 && (
+        <EnrollmentInstructions />
       )}
     </div>
   )
