@@ -2351,6 +2351,13 @@ CREATE INDEX index_case_elements_on_case_id ON case_elements USING btree (case_i
 
 
 --
+-- Name: index_case_elements_on_element_id_and_element_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_case_elements_on_element_id_and_element_type ON case_elements USING btree (element_id, element_type);
+
+
+--
 -- Name: index_case_elements_on_element_type_and_element_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2519,6 +2526,13 @@ CREATE INDEX index_editorships_on_case_id ON editorships USING btree (case_id);
 
 
 --
+-- Name: index_editorships_on_case_id_and_editor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_editorships_on_case_id_and_editor_id ON editorships USING btree (case_id, editor_id);
+
+
+--
 -- Name: index_editorships_on_editor_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2530,6 +2544,13 @@ CREATE INDEX index_editorships_on_editor_id ON editorships USING btree (editor_i
 --
 
 CREATE INDEX index_enrollments_on_case_id ON enrollments USING btree (case_id);
+
+
+--
+-- Name: index_enrollments_on_case_id_and_reader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_enrollments_on_case_id_and_reader_id ON enrollments USING btree (case_id, reader_id);
 
 
 --
@@ -2607,6 +2628,13 @@ CREATE INDEX index_groups_on_context_id ON groups USING btree (context_id);
 --
 
 CREATE INDEX index_invitations_on_community_id ON invitations USING btree (community_id);
+
+
+--
+-- Name: index_invitations_on_community_id_and_reader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_invitations_on_community_id_and_reader_id ON invitations USING btree (community_id, reader_id);
 
 
 --
@@ -2754,6 +2782,13 @@ CREATE UNIQUE INDEX index_readers_on_reset_password_token ON readers USING btree
 --
 
 CREATE INDEX index_readers_roles_on_reader_id_and_role_id ON readers_roles USING btree (reader_id, role_id);
+
+
+--
+-- Name: index_readers_roles_on_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_readers_roles_on_role_id ON readers_roles USING btree (role_id);
 
 
 --
@@ -3403,6 +3438,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190422154229'),
 ('20190423195511'),
 ('20190423203000'),
-('20190424134031');
+('20190424134031'),
+('20190501151722');
 
 
