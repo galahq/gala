@@ -40,8 +40,10 @@ class ContentState
       data.transform_values(&:as_json)
     end
 
-    def entities_of_type(type)
-      data.values.select { |entity| entity.type == type }
+    def grep(type: nil)
+      return data.entries if type.blank?
+
+      data.entries.select { |(_key, entity)| entity.type.to_s == type.to_s }
     end
   end
 end
