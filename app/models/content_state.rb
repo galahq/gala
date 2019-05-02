@@ -4,24 +4,22 @@
 class ContentState
   attr_reader :blocks, :entity_map
 
-  delegate :entities_of_type, to: :entity_map
-
   def self.for(data)
     return new unless data.respond_to? :key?
 
     data = data.with_indifferent_access
     return new unless %i[blocks entityMap].all? { |key| data&.key? key }
 
-    new blocks: data[:blocks].map { |block| Block.new block },
+    new blocks: BlockList.for(data[:blocks]),
         entity_map: EntityMap.new(data[:entityMap])
   end
 
   def self.with_text(*text)
-    blocks = text.flatten.map { |t| Block.new text: t }
+    blocks = BlockList.for(text.flatten.map { |t| { text: t } })
     new blocks: blocks
   end
 
-  def initialize(blocks: [Block.new], entity_map: EntityMap.new)
+  def initialize(blocks: BlockList.new, entity_map: EntityMap.new)
     @blocks = blocks
     @entity_map = entity_map
   end
@@ -42,8 +40,13 @@ class ContentState
     add_edgenote_entity edgenote, key: key
   end
 
-  def edgenote_slugs
-    entities_of_type('EDGENOTE').map(&:data).map { |data| data['slug'] }
+  def entities(type: nil)
+    entity_map.grep(type: type)
+              .sort_by do |(key, _entity)|
+                blocks.range_for_entity(key)
+              end
+              .map(&:second)
+              .map(&:data)
   end
 
   def data
