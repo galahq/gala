@@ -8,8 +8,9 @@
 class CaseElement < ApplicationRecord
   include Trackable
 
-  belongs_to :case, touch: true
-  belongs_to :element, polymorphic: true, dependent: :destroy
+  belongs_to :case, inverse_of: :case_elements, touch: true
+  belongs_to :element, dependent: :destroy,
+                       inverse_of: :case_element, polymorphic: true
 
   acts_as_list scope: :case
 

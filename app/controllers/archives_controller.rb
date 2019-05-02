@@ -14,6 +14,9 @@ class ArchivesController < ApplicationController
   private
 
   def set_case
-    @case = Case.friendly.find(params[:case_slug])
+    @case = Case.friendly
+                .includes(:cards, :edgenotes, case_elements: :element)
+                .find(params[:case_slug])
+                .decorate
   end
 end

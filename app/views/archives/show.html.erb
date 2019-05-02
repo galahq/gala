@@ -25,12 +25,20 @@
 
 <!-- Elements -->
 
-<% @case.case_elements.map(&:element).each do |element| %>
+<% @case.elements.each do |element| %>
   <h2><%= element.title %></h2>
 
   <% element.cards.each do |card| %>
     <% card.paragraphs.each do |paragraph| %>
       <p><%= paragraph %></p>
+
+      <aside>
+        <% card.edgenotes.each do |edgenote| %>
+          <figure>
+            <%= edgenote.caption %>
+          </figure>
+        <% end %>
+      </aside>
     <% end %>
   <% end %>
 <% end %>

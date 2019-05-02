@@ -2,9 +2,14 @@
 
 # @see Case
 class CaseDecorator < ApplicationDecorator
+  decorates_association :case_elements
   decorates_association :edgenotes
   decorates_association :podcasts
   decorates_association :library
+
+  def elements
+    case_elements.map(&:element)
+  end
 
   def short_title
     kicker.tap { |k| return 'Untitled Case' unless k.present? }
