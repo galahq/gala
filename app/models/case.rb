@@ -52,7 +52,8 @@ class Case < ApplicationRecord
 
   has_many :active_locks, class_name: 'Lock'
   has_many :cards
-  has_many :case_elements, -> { order position: :asc }, dependent: :destroy
+  has_many :case_elements, -> { order position: :asc },
+           dependent: :destroy, inverse_of: :case
   has_many :comment_threads, through: :cards, dependent: :destroy
   has_many :comments, through: :comment_threads
   has_many :deployments, dependent: :destroy
@@ -144,6 +145,7 @@ class Case < ApplicationRecord
 
   def library
     return SharedCasesLibrary.instance if library_id.nil?
+
     super
   end
 
