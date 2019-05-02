@@ -7,6 +7,6 @@ class PageDecorator < ApplicationDecorator
   def cards
     object.case.cards.select do |card|
       card.element_type == 'Page' && card.element_id = object.id
-    end.map(&:decorate)
+    end.map(&:decorate).sort_by(&:position)
   end
 end
