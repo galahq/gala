@@ -4,6 +4,8 @@
 class ContentState
   attr_reader :blocks, :entity_map
 
+  delegate :entities_of_type, to: :entity_map
+
   def self.for(data)
     return new unless data.respond_to? :key?
 
@@ -11,7 +13,7 @@ class ContentState
     return new unless %i[blocks entityMap].all? { |key| data&.key? key }
 
     new blocks: data[:blocks].map { |block| Block.new block },
-        entity_map: data[:entityMap]
+        entity_map: EntityMap.new(data[:entityMap])
   end
 
   def self.with_text(*text)
@@ -19,7 +21,7 @@ class ContentState
     new blocks: blocks
   end
 
-  def initialize(blocks: [Block.new], entity_map: {})
+  def initialize(blocks: [Block.new], entity_map: EntityMap.new)
     @blocks = blocks
     @entity_map = entity_map
   end
@@ -38,6 +40,10 @@ class ContentState
     key = SecureRandom.hex(16)
     add_entity_range range, key: key
     add_edgenote_entity edgenote, key: key
+  end
+
+  def edgenote_slugs
+    entities_of_type('EDGENOTE').map(&:data).map { |data| data['slug'] }
   end
 
   def data
