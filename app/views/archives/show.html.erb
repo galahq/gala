@@ -4,10 +4,18 @@
 
 <h1><%= @case.kicker %> – <%= @case.title %></h1>
 
-<p>
-  <%= t 'activerecord.attributes.case.authors' %>:
-  <%= @case.authors.map { |a| a['name'] }.to_sentence %>
-</p>
+<dl>
+  <dt><%= t 'activerecord.attributes.case.authors' %></dt>
+  <dd><%= @case.authors.map { |a| a['name'] }.to_sentence %></dd>
+
+  <% unless @case.translators.empty? %>
+    <dt>
+      <%= t 'activerecord.attributes.case.translators',
+            count: @case.translators.count %>
+    </dt>
+    <dd><%= @case.translators.to_sentence %></dd>
+  <% end %>
+</dl>
 
 <h2><%= t '.overview' %></h2>
 
@@ -16,12 +24,14 @@
 <h3><%= t 'activerecord.attributes.case.summary' %></h3>
 <p><%= @case.summary %></p>
 
-<h3><%= t 'activerecord.attributes.case.learning_objectives' %></h3>
-<ul>
-  <% @case.learning_objectives.each do |objective| %>
-    <li><%= objective %></li>
-  <% end %>
-</ul>
+<% unless @case.learning_objectives.blank? %>
+  <h3><%= t 'activerecord.attributes.case.learning_objectives' %></h3>
+  <ul>
+    <% @case.learning_objectives.each do |objective| %>
+      <li><%= objective %></li>
+    <% end %>
+  </ul>
+<% end %>
 
 <!-- Elements -->
 
@@ -31,28 +41,28 @@
   <% element.cards.each do |card| %>
     <% card.paragraphs.each do |paragraph| %>
       <p><%= paragraph %></p>
-
-      <aside>
-        <% card.edgenotes.each do |edgenote| %>
-          <figure>
-            <% unless edgenote.image_thumbnail_url.blank? %>
-              <%= image_tag edgenote.image_thumbnail_url %>
-            <% end %>
-
-            <dt>
-              <%= edgenote.print_attribute :pull_quote %>
-              <%= edgenote.print_attribute :attribution %>
-              <%= edgenote.print_attribute :alt_text %>
-              <%= edgenote.print_attribute :caption %>
-              <%= edgenote.print_attribute :photo_credit %>
-              <%= edgenote.print_attribute :website_url %>
-              <%= edgenote.print_attribute :audio_url %>
-              <%= edgenote.print_attribute :file_url %>
-            </dt>
-          </figure>
-        <% end %>
-      </aside>
     <% end %>
+
+    <aside>
+      <% card.edgenotes.each do |edgenote| %>
+        <figure>
+          <% unless edgenote.image_thumbnail_url.blank? %>
+            <%= image_tag edgenote.image_thumbnail_url %>
+          <% end %>
+
+          <dt>
+            <%= edgenote.print_attribute :pull_quote %>
+            <%= edgenote.print_attribute :attribution %>
+            <%= edgenote.print_attribute :alt_text %>
+            <%= edgenote.print_attribute :caption %>
+            <%= edgenote.print_attribute :photo_credit %>
+            <%= edgenote.print_attribute :website_url %>
+            <%= edgenote.print_attribute :audio_url %>
+            <%= edgenote.print_attribute :file_url %>
+          </dt>
+        </figure>
+      <% end %>
+    </aside>
   <% end %>
 <% end %>
 
