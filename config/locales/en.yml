@@ -28,6 +28,7 @@ en:
         locale: Language
         location: Case location
         published: Published
+        summary: Summary
         slug: Case URL
         teaching_guide: Teaching guide
         title: Question
@@ -187,6 +188,9 @@ en:
     new:
       untitled: Untitled
   cases:
+    archives:
+      show:
+        overview: Overview
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
