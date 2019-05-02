@@ -1,0 +1,38 @@
+<main class="pt-card pt-running-text">
+
+<!-- Case Overview -->
+
+<h1><%= @case.kicker %> – <%= @case.title %></h1>
+
+<p>
+  <%= t 'activerecord.attributes.case.authors' %>:
+  <%= @case.authors.map { |a| a['name'] }.to_sentence %>
+</p>
+
+<h2><%= t '.overview' %></h2>
+
+<p><%= @case.dek %></p>
+
+<h3><%= t 'activerecord.attributes.case.summary' %></h3>
+<p><%= @case.summary %></p>
+
+<h3><%= t 'activerecord.attributes.case.learning_objectives' %></h3>
+<ul>
+  <% @case.learning_objectives.each do |objective| %>
+    <li><%= objective %></li>
+  <% end %>
+</ul>
+
+<!-- Elements -->
+
+<% @case.case_elements.map(&:element).each do |element| %>
+  <h2><%= element.title %></h2>
+
+  <% element.cards.each do |card| %>
+    <% card.paragraphs.each do |paragraph| %>
+      <p><%= paragraph %></p>
+    <% end %>
+  <% end %>
+<% end %>
+
+</main>
