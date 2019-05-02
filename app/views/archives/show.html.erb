@@ -2,6 +2,8 @@
 
 <!-- Case Overview -->
 
+<%= image_tag @case.cover_url %>
+
 <h1><%= @case.kicker %> – <%= @case.title %></h1>
 
 <dl>
@@ -42,6 +44,17 @@
     <% card.paragraphs.each do |paragraph| %>
       <p><%= paragraph %></p>
     <% end %>
+
+    <ul class="citations">
+      <% card.citations.each do |citation| %>
+        <li>
+          <%= citation["contents"] %>
+          <% unless citation["href"].blank? %>
+            (<%= citation["href"] %>)
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
 
     <aside>
       <% card.edgenotes.each do |edgenote| %>

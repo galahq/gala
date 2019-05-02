@@ -644,4 +644,6 @@ figure {
   page-break-inside: avoid;
 }
 
-
+.citations {
+  list-style-type: circle;
+}

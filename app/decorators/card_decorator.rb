@@ -15,4 +15,8 @@ class CardDecorator < ApplicationDecorator
   def edgenote_slugs
     raw_content.entities(type: :EDGENOTE).map { |e| e[:slug] }
   end
+
+  def citations
+    raw_content.entities(type: :CITATION)
+  end
 end
