@@ -7,6 +7,6 @@ class CardDecorator < ApplicationDecorator
   def edgenotes
     object.case.edgenotes.select do |edgenote|
       raw_content.edgenote_slugs.include? edgenote.slug
-    end
+    end.map(&:decorate)
   end
 end

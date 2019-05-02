@@ -35,7 +35,20 @@
       <aside>
         <% card.edgenotes.each do |edgenote| %>
           <figure>
-            <%= edgenote.caption %>
+            <% unless edgenote.image_thumbnail_url.blank? %>
+              <%= image_tag edgenote.image_thumbnail_url %>
+            <% end %>
+
+            <dt>
+              <%= edgenote.print_attribute :pull_quote %>
+              <%= edgenote.print_attribute :attribution %>
+              <%= edgenote.print_attribute :alt_text %>
+              <%= edgenote.print_attribute :caption %>
+              <%= edgenote.print_attribute :photo_credit %>
+              <%= edgenote.print_attribute :website_url %>
+              <%= edgenote.print_attribute :audio_url %>
+              <%= edgenote.print_attribute :file_url %>
+            </dt>
           </figure>
         <% end %>
       </aside>
