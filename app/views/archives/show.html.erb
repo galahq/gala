@@ -17,6 +17,9 @@
     </dt>
     <dd><%= @case.translators.to_sentence %></dd>
   <% end %>
+
+  <dt><%= t 'activerecord.attributes.case.slug' %></dt>
+  <dd><%= link_to case_url @case %></dd>
 </dl>
 
 <h2><%= t '.overview' %></h2>
