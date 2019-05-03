@@ -50,7 +50,7 @@
         <li>
           <%= citation["contents"] %>
           <% unless citation["href"].blank? %>
-            (<%= citation["href"] %>)
+            (<%= link_to citation["href"] %>)
           <% end %>
         </li>
       <% end %>
@@ -69,9 +69,9 @@
             <%= edgenote.print_attribute :alt_text %>
             <%= edgenote.print_attribute :caption %>
             <%= edgenote.print_attribute :photo_credit %>
-            <%= edgenote.print_attribute :website_url %>
-            <%= edgenote.print_attribute :audio_url %>
-            <%= edgenote.print_attribute :file_url %>
+            <%= edgenote.print_attribute(:website_url) { |url| link_to url } %>
+            <%= edgenote.print_attribute(:audio_url) { |url| link_to url } %>
+            <%= edgenote.print_attribute(:file_url) { |url| link_to url } %>
           </dt>
         </figure>
       <% end %>

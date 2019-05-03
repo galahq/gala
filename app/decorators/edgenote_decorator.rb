@@ -30,11 +30,14 @@ class EdgenoteDecorator < ApplicationDecorator
   end
 
   def print_attribute(attribute)
-    return if send(attribute).blank?
+    value = send attribute
+    return if value.blank?
+
+    value = yield value if block_given?
 
     [
       h.content_tag(:dt, h.t("activerecord.attributes.edgenote.#{attribute}")),
-      h.content_tag(:dd, send(attribute))
+      h.content_tag(:dd, value)
     ].join('').html_safe
   end
 
