@@ -590,7 +590,6 @@ GEM
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
-    wkhtmltopdf-binary (0.12.4)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.18)
@@ -692,7 +691,6 @@ DEPENDENCIES
   web-console
   webdrivers
   webpacker (>= 4.0.x)
-  wkhtmltopdf-binary
   yard
   yard-activerecord
   yard-activesupport-concern
