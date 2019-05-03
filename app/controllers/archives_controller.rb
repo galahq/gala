@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Render PDF archives of cases
 class ArchivesController < ApplicationController
   EAGER_LOADING_CONFIG = [
     :cards,
