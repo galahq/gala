@@ -9,8 +9,7 @@
 html {
 	font-family:sans-serif;
 	-ms-text-size-adjust:100%;
-	-webkit-text-size-adjust:100%
-  -webkit-print-color-adjust: exact;
+	-webkit-text-size-adjust:100%;
 }
 body {
 	margin:0
@@ -631,6 +630,21 @@ a:active {
 /**
  * Custom styles
  */
+
+header {
+  background-color: #02284b;
+  border-radius: 3px;
+  box-shadow: inset 0 -5px #35536f;
+  margin-bottom: 1em;
+  padding: 1em;
+}
+
+header img {
+  border-color: #02284b;
+  height: 34px;
+  margin-bottom: -1px;
+  width: 67px;
+}
 
 aside {
   margin: 0 2em 1em;
