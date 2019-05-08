@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 options = {
-  dpi: 300
+  dpi: 300,
+  margin_left: '1.5in',
+  margin_right: '1.5in'
 }
 
 Rails.application.config
