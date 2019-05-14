@@ -41,21 +41,19 @@ class Case
 
     def html
       renderer.render(
-        template: SOURCE_VIEW_PATH,
-        layout: 'print',
+        SOURCE_VIEW_PATH,
+        layout: 'layouts/print.html.erb',
         assigns: { case: case_study }
       )
     end
 
     def renderer
       defaults = {
-        http_host: root_url.host,
-        port: root_url.port,
+        http_host: "#{root_url.host}:#{root_url.port}",
         https: root_url.scheme == 'https',
         'action_dispatch.request.path_parameters' => {
           controller: 'cases',
-          action: 'show',
-          locale: 'en'
+          action: 'show'
         }
       }
       ApplicationController.renderer.with_defaults(defaults).new
