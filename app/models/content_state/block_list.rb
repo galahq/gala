@@ -21,7 +21,9 @@ class ContentState
       array.each_with_index do |block, block_index|
         block.entity_ranges.each do |range|
           if range[:key].to_s == key.to_s
-            return Range.new(block_index, range[:offset], range[:length])
+            return ContentState::Range.new(
+              block_index, range[:offset], range[:length]
+            )
           end
         end
       end
