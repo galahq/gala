@@ -351,6 +351,37 @@ ALTER SEQUENCE cards_id_seq OWNED BY cards.id;
 
 
 --
+-- Name: case_archives; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE case_archives (
+    id bigint NOT NULL,
+    case_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: case_archives_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE case_archives_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: case_archives_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE case_archives_id_seq OWNED BY case_archives.id;
+
+
+--
 -- Name: case_elements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1617,6 +1648,13 @@ ALTER TABLE ONLY cards ALTER COLUMN id SET DEFAULT nextval('cards_id_seq'::regcl
 
 
 --
+-- Name: case_archives id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY case_archives ALTER COLUMN id SET DEFAULT nextval('case_archives_id_seq'::regclass);
+
+
+--
 -- Name: case_elements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1944,6 +1982,14 @@ ALTER TABLE ONLY authentication_strategies
 
 ALTER TABLE ONLY cards
     ADD CONSTRAINT cards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: case_archives case_archives_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY case_archives
+    ADD CONSTRAINT case_archives_pkey PRIMARY KEY (id);
 
 
 --
@@ -2341,6 +2387,13 @@ CREATE INDEX index_cards_on_element_type_and_element_id ON cards USING btree (el
 --
 
 CREATE INDEX index_cards_on_page_id ON cards USING btree (page_id);
+
+
+--
+-- Name: index_case_archives_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_case_archives_on_case_id ON case_archives USING btree (case_id);
 
 
 --
@@ -2965,6 +3018,14 @@ ALTER TABLE ONLY cases
 
 
 --
+-- Name: case_archives fk_rails_0a47f951ed; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY case_archives
+    ADD CONSTRAINT fk_rails_0a47f951ed FOREIGN KEY (case_id) REFERENCES cases(id);
+
+
+--
 -- Name: locks fk_rails_18e2ec121a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3439,6 +3500,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190423195511'),
 ('20190423203000'),
 ('20190424134031'),
-('20190501151722');
+('20190501151722'),
+('20190514190157');
 
 
