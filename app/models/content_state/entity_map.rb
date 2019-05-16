@@ -28,6 +28,8 @@ class ContentState
 
     attr_reader :data
 
+    delegate :[], to: :data
+
     def initialize(data = {})
       @data = data.transform_values { |hash| Entity.new(hash) }
     end

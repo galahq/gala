@@ -85,8 +85,10 @@ describe ContentState do
 
     it 'adds the edgenote entity' do
       content_state.add_edgenote edgenote, range: valid_range
-      expect(content_state.entity_map).to satisfy 'have matching entity' do |v|
-        v.any? { |_key, value| value[:data] == { 'slug' => edgenote.slug } }
+      expect(content_state.entity_map).to satisfy 'have matching entity' do |em|
+        em.grep(type: :EDGENOTE).any? do |(_key, entity)|
+          entity.data == { 'slug' => edgenote.slug }
+        end
       end
     end
 

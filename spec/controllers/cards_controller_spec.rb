@@ -73,7 +73,7 @@ RSpec.describe CardsController, type: :controller do
       card.reload
       expect(card.raw_content.blocks.first.data['inlineStyleRanges'].count)
         .to eq 2
-      expect(card.raw_content.entity_map.dig('0', 'type')).to eq 'EDGENOTE'
+      expect(card.raw_content.entity_map.data['0'].type).to eq 'EDGENOTE'
     end
 
     it 'does not allow :raw_content to have comment threads baked in' do
