@@ -22,7 +22,11 @@ class ArchivesController < ApplicationController
   end
 
   def refresh_archive
-    @case.refresh_archive! root_url: request.protocol + request.host_with_port
+    @case.refresh_archive! root_url: root_url
+  end
+
+  def root_url
+    request.protocol + request.host_with_port + '/'
   end
 
   def redirect_to_download
