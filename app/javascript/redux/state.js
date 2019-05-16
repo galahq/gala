@@ -146,6 +146,7 @@ export type Case = {
   learningObjectives: string[],
   library: Library,
   links: {
+    archive: string,
     newEditorship: string,
     newTranslation: string,
     self: string,
