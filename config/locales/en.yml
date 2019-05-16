@@ -169,6 +169,11 @@ en:
     show:
       download: Download
       instructions: Instructions
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
   announcements:
     dismissals:
       create:
