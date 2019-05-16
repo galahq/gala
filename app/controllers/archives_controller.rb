@@ -18,7 +18,7 @@ class ArchivesController < ApplicationController
   private
 
   def set_case
-    @case = Case.friendly.find(params[:case_slug])
+    @case = Case.friendly.find(params[:case_slug]).decorate
   end
 
   def refresh_archive
