@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 import { EditableText } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 
 import Lock from 'utility/Lock'
 import Less from 'utility/Less'
@@ -170,7 +171,7 @@ const Billboard = ({
 
           {readerSignedIn && (
             <MinimalLink href={caseData.links.archive}>
-              Printable Archive
+              <FormattedMessage id="archives.show.printableArchive" />
             </MinimalLink>
           )}
         </>
