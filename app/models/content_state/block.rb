@@ -32,11 +32,12 @@ class ContentState
     end
 
     def entity_ranges
-      data[:entityRanges]
+      data[:entityRanges].map(&:with_indifferent_access)
     end
 
     def add_entity_range(key, length:, offset:)
       return self unless valid_range? length: length, offset: offset
+
       data[:entityRanges] << { key: key, length: length, offset: offset }
     end
 
