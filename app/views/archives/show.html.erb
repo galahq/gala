@@ -1,0 +1,35 @@
+<% content_for :title do %>
+  <%= I18n.t('archives.show.archive_pending') %>
+  —
+  <%= @case.short_title %>
+<% end %>
+
+
+<div class="window admin">
+  <div class="admin-card pt-card pt-elevation-2">
+    <%= link_to case_path @case do %>
+      <div
+         class="case-cover-card-top"
+         style="background-image: url(<%= @case.cover_url %>)"
+       >
+         <span class="admin__table__slug">
+           <%= @case.short_title %>
+         </span>
+      </div>
+    <% end %>
+
+    <div>
+      <h1 class="admin__title">
+        <%= t '.archive_pending' %>
+      </h1>
+
+      <p>
+        <%= t('.please_wait_while_your_case_is_being_archived') %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  window.setTimeout(function () { location.reload() }, 2000)
+</script>

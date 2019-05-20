@@ -82,6 +82,8 @@ Rails.application.routes.draw do
 
     resources :activities, only: %i[create]
 
+    resource :archive, only: %i[show]
+
     resources :comment_threads, only: %i[index create]
 
     get 'confirm_deletion', to: 'cases/deletions#new'

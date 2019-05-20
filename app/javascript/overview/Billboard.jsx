@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 import { EditableText } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 
 import Lock from 'utility/Lock'
 import Less from 'utility/Less'
@@ -24,12 +25,13 @@ import type { State, Case, Tag, Viewport } from 'redux/state'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
-function mapStateToProps ({ edit, caseData }: State) {
+function mapStateToProps ({ caseData, edit }: State) {
   const {
     baseCoverUrl,
     dek,
     learningObjectives,
     otherAvailableLocales,
+    reader,
     slug,
     summary,
     tags,
@@ -44,6 +46,7 @@ function mapStateToProps ({ edit, caseData }: State) {
     editing: edit.inProgress,
     learningObjectives,
     otherAvailableLocales,
+    readerSignedIn: !!reader,
     slug,
     summary,
     taggingsPath: links.taggings,
@@ -59,6 +62,7 @@ type Props = {
   editing: boolean,
   learningObjectives: string[],
   otherAvailableLocales: $PropertyType<Case, 'otherAvailableLocales'>,
+  readerSignedIn: boolean,
   slug: string,
   summary: string,
   taggingsPath: string,
@@ -74,6 +78,7 @@ const Billboard = ({
   editing,
   learningObjectives,
   otherAvailableLocales,
+  readerSignedIn,
   slug,
   summary,
   taggingsPath,
@@ -163,6 +168,12 @@ const Billboard = ({
             tags={tags}
             onChange={(tags: Tag[]) => updateCase({ tags })}
           />
+
+          {readerSignedIn && (
+            <MinimalLink href={caseData.links.archive}>
+              <FormattedMessage id="archives.show.printableArchive" />
+            </MinimalLink>
+          )}
         </>
       )}
     </Lock>
@@ -200,5 +211,15 @@ const Dek = styled.h3`
     margin: 5px 0 15px;
     font-size: 18px;
     line-height: 21px;
+  }
+`
+
+const MinimalLink = styled.a`
+  color: #c8dbef;
+  font-size: 14px;
+  padding: 10px;
+
+  &:hover {
+    color: white;
   }
 `

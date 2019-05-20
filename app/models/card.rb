@@ -55,6 +55,7 @@ class Card < ApplicationRecord
   # @param range [ContentState::Range]
   def add_edgenote(edgenote, range:)
     return false if edgenote.case.present? && edgenote.case != self.case
+
     edgenote.update case: self.case unless edgenote.case.present?
     raw_content.add_edgenote edgenote, range: range
   end

@@ -10,16 +10,16 @@ class ContentState
     data = data.with_indifferent_access
     return new unless %i[blocks entityMap].all? { |key| data&.key? key }
 
-    new blocks: data[:blocks].map { |block| Block.new block },
-        entity_map: data[:entityMap]
+    new blocks: BlockList.for(data[:blocks]),
+        entity_map: EntityMap.new(data[:entityMap])
   end
 
   def self.with_text(*text)
-    blocks = text.flatten.map { |t| Block.new text: t }
+    blocks = BlockList.for(text.flatten.map { |t| { text: t } })
     new blocks: blocks
   end
 
-  def initialize(blocks: [Block.new], entity_map: {})
+  def initialize(blocks: BlockList.new, entity_map: EntityMap.new)
     @blocks = blocks
     @entity_map = entity_map
   end
@@ -38,6 +38,15 @@ class ContentState
     key = SecureRandom.hex(16)
     add_entity_range range, key: key
     add_edgenote_entity edgenote, key: key
+  end
+
+  def entities(type: nil)
+    entity_map.grep(type: type)
+              .sort_by do |(key, _entity)|
+                blocks.range_for_entity(key)
+              end
+              .map(&:second)
+              .map(&:data)
   end
 
   def data
