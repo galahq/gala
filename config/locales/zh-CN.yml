@@ -28,6 +28,7 @@ zh-CN:
         locale: Language
         location: 案例发生地
         published: 已发布
+        summary: Summary
         slug: 案例链接
         teaching_guide: Teaching guide
         title: 探究问题
@@ -165,6 +166,12 @@ zh-CN:
     show:
       download: 下载
       instructions: 说明
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -183,6 +190,9 @@ zh-CN:
     new:
       untitled: 未命名
   cases:
+    archives:
+      show:
+        overview: 返回案例主页
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
