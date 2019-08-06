@@ -1,7 +1,7 @@
 ---
 id: authoring-getting-started
-title: Getting Started Authoring a Case
-sidebar_label: Getting Started
+title: Getting Started Authoring on Gala
+sidebar_label: Getting Started on Gala
 ---
 
 With Gala’s tools for authors, anyone can create a media-rich, immersive teaching case to communicate a complex sustainability topic.
