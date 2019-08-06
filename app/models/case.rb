@@ -52,7 +52,8 @@ class Case < ApplicationRecord
 
   has_many :active_locks, class_name: 'Lock'
   has_many :cards
-  has_many :case_elements, -> { order position: :asc }, dependent: :destroy
+  has_many :case_elements, -> { order position: :asc },
+           dependent: :destroy, inverse_of: :case
   has_many :comment_threads, through: :cards, dependent: :destroy
   has_many :comments, through: :comment_threads
   has_many :deployments, dependent: :destroy
@@ -69,6 +70,8 @@ class Case < ApplicationRecord
   has_many :podcasts,
            through: :case_elements, source: :element, source_type: 'Podcast'
 
+  has_one :archive, class_name: 'Case::Archive', dependent: :destroy
+
   has_one_attached :cover_image
   has_one_attached :teaching_guide
 
@@ -84,6 +87,9 @@ class Case < ApplicationRecord
   validates :slug, presence: true, uniqueness: true,
                    format: { with: /\A[a-z0-9-]+\Z/ },
                    length: { maximum: 100 }
+
+  delegate :fresh?, :pdf,
+           to: :archive, prefix: true, allow_nil: true
 
   time_for_a_boolean :featured
   time_for_a_boolean :published
@@ -111,6 +117,15 @@ class Case < ApplicationRecord
               END
     SQL
     where(id: scope)
+  end
+
+  def archive_needs_refresh?
+    archive.nil? || archive.needs_refresh?
+  end
+
+  def refresh_archive!(root_url:)
+    create_archive if archive.nil?
+    archive.refresh!(root_url: root_url)
   end
 
   # Universal communities and the global community (`community_id == nil`) need
@@ -144,6 +159,7 @@ class Case < ApplicationRecord
 
   def library
     return SharedCasesLibrary.instance if library_id.nil?
+
     super
   end
 

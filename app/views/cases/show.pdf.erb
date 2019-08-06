@@ -1,0 +1,96 @@
+<!--
+This view is not rendered from a controller. Instead it is rendered into a
+PDF by the Case::Pdf model using pdfkit (wkhtmltopdf under the hood).
+-->
+
+<main class="pt-card pt-running-text">
+
+<!-- Case Overview -->
+
+<%= image_tag @case.cover_url %>
+
+<h1><%= @case.kicker %> – <%= @case.title %></h1>
+
+<dl>
+  <dt><%= t 'activerecord.attributes.case.authors' %></dt>
+  <dd><%= @case.authors.map { |a| a['name'] }.to_sentence %></dd>
+
+  <% unless @case.translators.empty? %>
+    <dt>
+      <%= t 'activerecord.attributes.case.translators',
+            count: @case.translators.count %>
+    </dt>
+    <dd><%= @case.translators.to_sentence %></dd>
+  <% end %>
+
+  <dt><%= t 'activerecord.attributes.case.slug' %></dt>
+  <dd><%= link_to nil, case_url(@case.slug) %></dd>
+</dl>
+
+<h2><%= t '.overview' %></h2>
+
+<p><%= @case.dek %></p>
+
+<h3><%= t 'activerecord.attributes.case.summary' %></h3>
+<p><%= @case.summary %></p>
+
+<% unless @case.learning_objectives.blank? %>
+  <h3><%= t 'activerecord.attributes.case.learning_objectives' %></h3>
+  <ul>
+    <% @case.learning_objectives.each do |objective| %>
+      <li><%= objective %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<!-- Elements -->
+
+<% @case.elements.each do |element| %>
+  <h2><%= element.title %></h2>
+
+  <% element.cards.each do |card| %>
+    <% card.paragraphs.each do |paragraph| %>
+      <p><%= paragraph %></p>
+    <% end %>
+
+    <ul class="citations">
+      <% card.citations.each do |citation| %>
+        <li>
+          <%= citation["contents"] %>
+          <% unless citation["href"].blank? %>
+            (<%= link_to nil, citation["href"] %>)
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+
+    <aside>
+      <% card.edgenotes.each do |edgenote| %>
+        <figure>
+          <% unless edgenote.image_thumbnail_url.blank? %>
+            <%= image_tag edgenote.image_thumbnail_url %>
+          <% end %>
+
+          <dt>
+            <%= edgenote.print_attribute :pull_quote %>
+            <%= edgenote.print_attribute :attribution %>
+            <%= edgenote.print_attribute :alt_text %>
+            <%= edgenote.print_attribute :caption %>
+            <%= edgenote.print_attribute :photo_credit %>
+            <%= edgenote.print_attribute(:website_url) do |url|
+              link_to nil, url
+            end %>
+            <%= edgenote.print_attribute(:audio_url) do |url|
+              link_to nil, url
+            end %>
+            <%= edgenote.print_attribute(:file_url) do |url|
+              link_to nil, url
+            end %>
+          </dt>
+        </figure>
+      <% end %>
+    </aside>
+  <% end %>
+<% end %>
+
+</main>

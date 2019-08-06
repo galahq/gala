@@ -407,6 +407,7 @@ GEM
       addressable
       nokogiri
     orm_adapter (0.5.0)
+    pdfkit (0.8.4.1)
     pg (0.21.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -656,6 +657,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-lti!
   opengraph_parser
+  pdfkit
   pg (~> 0.18)
   pry-byebug
   pry-rails
