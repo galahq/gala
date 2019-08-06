@@ -6,7 +6,8 @@ module Element
   extend ActiveSupport::Concern
 
   included do
-    has_one :case_element, as: :element, dependent: :destroy, required: true
+    has_one :case_element, as: :element, dependent: :destroy,
+                           inverse_of: :element, required: true
 
     after_save -> { case_element.touch if case_element.persisted? }
   end

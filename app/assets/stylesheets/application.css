@@ -13,4 +13,5 @@
  *= require axioms
  *= require_tree .
  *= require_self
+ *= stub print
  */
