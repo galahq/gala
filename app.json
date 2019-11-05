@@ -1,7 +1,7 @@
 {
   "name": "gala",
   "scripts": {
-    "postdeploy": "rails db:structure:load db:seed"
+    "postdeploy": "bundle exec rails db:structure:load db:seed"
   },
   "env": {
     "LTI_KEY": {

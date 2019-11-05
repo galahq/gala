@@ -94,7 +94,6 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console'
 
-  gem 'doc_to_dash', git: 'https://github.com/pchaganti/doc_to_dash'
   gem 'yard'
   gem 'yard-activerecord'
   gem 'yard-activesupport-concern'
