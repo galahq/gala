@@ -55,14 +55,6 @@ GIT
       activerecord (>= 4.0.0)
 
 GIT
-  remote: https://github.com/pchaganti/doc_to_dash
-  revision: 44029a791b3b6f9bd79a79fa50a08b9c77a8407a
-  specs:
-    doc_to_dash (0.0.9)
-      nokogiri
-      sqlite3
-
-GIT
   remote: https://github.com/rails-api/active_model_serializers
   revision: 6fb4f7b1119dc1b0f0318250de54f3aa3fc83f11
   branch: 0-10-stable
@@ -554,7 +546,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.0)
     stackprof (0.2.12)
     statsd-ruby (1.4.0)
     table_print (1.5.6)
@@ -624,7 +615,6 @@ DEPENDENCIES
   database_cleaner
   devise (~> 4.1)
   devise-i18n
-  doc_to_dash!
   draper
   email_reply_parser
   factory_bot_rails
