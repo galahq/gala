@@ -36,6 +36,11 @@ type State = {
   openPin: string,
 }
 
+alert(`${process.env.MapboxAccessToken}`);
+
+const token = "pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY2oyOWZ2bGNuMDI1MDMybzVoc2Ntb3kwYiJ9.QA8nck8XiK5dxF6R7M_HAg";
+
+
 class MapViewController extends React.Component<Props, State> {
   // handleChangeViewport is fired when the component first mounts, but we
   // don’t want to create a lock until the user clicks
@@ -275,6 +280,7 @@ class MapView extends React.Component<{
         scrollZoom={acceptingScroll}
         onClick={onClickMap}
         onViewportChange={onViewportChange}
+        mapboxApiAccessToken={token}
       >
         {cases.map(kase =>
           kase.latitude && kase.longitude ? (

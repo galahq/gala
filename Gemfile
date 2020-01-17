@@ -10,7 +10,8 @@ gem 'aws-sdk-sns', '>= 1.9.0', require: false
 gem 'bootsnap', require: false
 gem 'connection_pool'
 gem 'dalli'
-gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.9.3'
+#gem 'mini_magick'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-canonical-host'
@@ -76,9 +77,9 @@ gem 'lograge'
 gem 'sentry-raven'
 gem 'skylight', '>= 4.0.x'
 gem 'table_print'
-
-# Services
-gem 'case_grid', git: 'https://github.com/cbothner/case_grid'
+#
+# # Services
+#gem 'case_grid', git: 'https://github.com/cbothner/case_grid'
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
@@ -94,7 +95,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console'
 
-  gem 'doc_to_dash', git: 'https://github.com/pchaganti/doc_to_dash'
+  gem 'doc_to_dash' #, git: 'https://github.com/pchaganti/doc_to_dash'
   gem 'yard'
   gem 'yard-activerecord'
   gem 'yard-activesupport-concern'

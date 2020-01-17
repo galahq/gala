@@ -40,3 +40,10 @@ localhost.key
 /storage
 
 spec/examples.txt
+
+.env
+.DS_Store
+.*OLD
+.*.OLD
+.*ORIG
+.env.dev

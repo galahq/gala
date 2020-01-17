@@ -96,7 +96,7 @@ class Case < ApplicationRecord
 
   resourcify
 
-  scope :published, -> { where.not(published_at: nil) }
+scope :published, -> { where.not(published_at: nil) }
   scope :ordered,
         -> do
           order(Arel.sql(<<~SQL.squish))
@@ -105,6 +105,12 @@ class Case < ApplicationRecord
             cases.updated_at DESC
           SQL
         end
+        # -> do
+        #   order(Arel.sql(<<~SQL.squish))
+        #     cases.featured_at DESC NULLS LAST,
+        #     cases.updated_at DESC
+        #   SQL
+        # end
 
   def self.with_locale_or_fallback(locale)
     locale = ::ActiveRecord::Base.connection.quote locale
