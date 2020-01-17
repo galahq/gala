@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateVisits < ActiveRecord::Migration
+class CreateVisits < ActiveRecord::Migration[5.0]
   def change
     create_table :visits do |t|
       t.string :visit_token
