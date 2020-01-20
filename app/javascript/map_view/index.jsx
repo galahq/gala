@@ -36,8 +36,6 @@ type State = {
   openPin: string,
 }
 
-alert(`${process.env.MapboxAccessToken}`);
-
 const token = "MAPBOX_TOKEN_REMOVED";
 
 
