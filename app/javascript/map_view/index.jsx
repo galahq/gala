@@ -36,8 +36,6 @@ type State = {
   openPin: string,
 }
 
-alert(`${process.env.MapboxAccessToken}`);
-
 const token = "pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY2oyOWZ2bGNuMDI1MDMybzVoc2Ntb3kwYiJ9.QA8nck8XiK5dxF6R7M_HAg";
 
 
