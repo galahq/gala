@@ -509,7 +509,8 @@ CREATE TABLE public.cases (
     published_at timestamp without time zone,
     featured_at timestamp without time zone,
     locale text NOT NULL,
-    translation_base_id bigint
+    translation_base_id bigint,
+    library_id bigint
 );
 
 
@@ -3463,6 +3464,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190514190157'),
 ('20191216183145'),
 ('20191216183612'),
-('20191216184100');
+('20191216184100'),
+('20200121175241');
 
 

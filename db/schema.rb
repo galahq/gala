@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_14_190157) do
+ActiveRecord::Schema.define(version: 2019_12_16_184100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -143,7 +143,6 @@ ActiveRecord::Schema.define(version: 2019_05_14_190157) do
   end
 
   create_table "cases", id: :serial, force: :cascade do |t|
-    t.boolean "published", default: false
     t.hstore "title_i18n"
     t.text "slug", null: false
     t.string "authors", default: [], array: true
@@ -153,15 +152,18 @@ ActiveRecord::Schema.define(version: 2019_05_14_190157) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "cover_url"
-    t.date "publication_date"
-    t.integer "catalog_position", default: 0, null: false
     t.text "short_title"
     t.hstore "translators", default: {}, null: false
     t.hstore "kicker_i18n"
     t.hstore "dek_i18n"
     t.text "photo_credit"
+    t.datetime "published_at"
+    t.datetime "featured_at"
+    t.text "locale", null: false
+    t.bigint "translation_base_id"
     t.index ["slug"], name: "index_cases_on_slug", unique: true
     t.index ["tags"], name: "index_cases_on_tags", using: :gin
+    t.index ["translation_base_id"], name: "index_cases_on_translation_base_id"
   end
 
   create_table "comment_threads", id: :serial, force: :cascade do |t|
@@ -582,6 +584,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_190157) do
   add_foreign_key "answers", "readers"
   add_foreign_key "answers", "submissions"
   add_foreign_key "cards", "pages"
+  add_foreign_key "cases", "cases", column: "translation_base_id"
   add_foreign_key "comment_threads", "cards"
   add_foreign_key "comment_threads", "cases"
   add_foreign_key "comment_threads", "forums"
