@@ -119,7 +119,7 @@ function whenOneColumn (style) {
 export const Container = styled.div`
   background-color: hsl(209, 83%, 90%);
   display: grid;
-  height: 100%;
+  height: 50vh;
   overflow: hidden;
   position: relative;
   width: 100%;

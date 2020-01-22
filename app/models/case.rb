@@ -37,7 +37,7 @@ class Case < ApplicationRecord
 
   default_scope { ordered }
 
-  #attribute :authors, :json, default: []
+  attribute :authors, :json, default: []
   attribute :commentable, default: true
   attribute :learning_objectives, :json, default: []
   attribute :locale, :string, default: -> { I18n.locale }
