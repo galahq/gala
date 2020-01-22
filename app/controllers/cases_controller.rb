@@ -59,7 +59,6 @@ class CasesController < ApplicationController
   # @route [POST] `/cases`
   def create
     @case = current_reader.my_cases.build create_case_params
-    byebug
     if @case.save
       redirect_to edit_case_path(@case), notice: successfully_created
     else
