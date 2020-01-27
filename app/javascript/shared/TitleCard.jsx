@@ -119,7 +119,7 @@ function whenOneColumn (style) {
 export const Container = styled.div`
   background-color: hsl(209, 83%, 90%);
   display: grid;
-  height: 50vh;
+  height: 100%;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -131,6 +131,10 @@ export const Container = styled.div`
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.2),
       0 2px 6px 0 rgba(0, 0, 0, 0.2);
     border-radius: 3px;
+  }
+
+  ${MagicLinkContainer} & {
+    height: unset;
   }
 
   ${SidebarContainer} & {
