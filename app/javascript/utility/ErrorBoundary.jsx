@@ -99,6 +99,7 @@ class InfoBox extends React.Component<
     )
   }
 }
+
 const InfoBoxContainer = styled.div`
   margin: 16px;
 `
