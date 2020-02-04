@@ -42,7 +42,7 @@ class Case < ApplicationRecord
   attribute :learning_objectives, :json, default: []
   attribute :locale, :string, default: -> { I18n.locale }
   attribute :slug, :string, default: -> { SecureRandom.uuid }
-  #attribute :translators, :json, default: []
+  attribute :translators, :json, default: []
   friendly_id :slug, use: %i[history]
 
   belongs_to :library, optional: true, counter_cache: true
