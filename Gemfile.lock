@@ -230,6 +230,10 @@ GEM
     doc_to_dash (0.0.10)
       nokogiri
       sqlite3
+    dotenv (2.7.5)
+    dotenv-rails (2.7.5)
+      dotenv (= 2.7.5)
+      railties (>= 3.2, < 6.1)
     draper (3.1.0)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -597,6 +601,7 @@ DEPENDENCIES
   devise (~> 4.1)
   devise-i18n
   doc_to_dash
+  dotenv-rails
   draper
   email_reply_parser
   factory_bot_rails
