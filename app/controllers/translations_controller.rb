@@ -8,7 +8,8 @@ class TranslationsController < ApplicationController
   layout 'admin'
 
   # @route [GET] `/cases/slug/translations/new`
-  def new; end
+  def new
+  end
 
   # @route [POST] `/cases/slug/translations`
   def create

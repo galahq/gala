@@ -9,27 +9,28 @@
 
 Gala is a platform for the collaborative study of media-rich teaching cases.
 
-## Install
+## Install and Setup
 
-We’re using Vagrant, which lets developers spin up virtual machines with all the
-right configuration to develop Gala. Install Vagrant (>= 1.8.7 recommended, so
-you can `vagrant plugin install vagrant-fsnotify`), and then
+You will need to have the following prerequisites installed locally in order to run Gala:
 
-1.  `vagrant up`
-1.  In one terminal window or tmux pane: `vagrant ssh -c 'cd /vagrant && foreman start'`.
-1.  In another, `vagrant fsnotify`
-1.  Browse to http://localhost:3000/
-1.  Click “Sign in with Google” to access the developer editor account
+ - Ruby 2.6.1
+ - Rails v6.0.0.beta3
+ - Redis
 
-## https://localhost
+If you do not yet have Redis installed, follow instructions for your local platform to install Redis and be sure that Redis is up and running locally.
 
-When developing the LTI tool provider components of Gala, it is useful to be able to use https with the development server. This is how to set that up.
+Clone the Gala codebase to your local machine:
 
-1.  Do this in the vagrant instance. Generate a self-signed certificate: `openssl req -new -newkey rsa:2048 -sha1 -days 365 -nodes -x509 -keyout localhost.key -out localhost.crt`
-1.  Trust the certificate in your vagrant instance: `sudo cp localhost.crt /etc/ssl/cert && sudo cp localhost.key /etc/ssl/private && sudo c_rehash`
-1.  Trust the certificate on your host machine using Keychain Access. Drag `localhost.crt` into the app, then Get Info and choose Always Trust.
-1.  Start the development servers with `LOCALHOST_SSL=true foreman start`
-1.  Browse to https://localhost:3000 (http will not work)
+    git clone git@github.com:galahq/gala.git
+
+Install the required Ruby gems:
+
+    bundle install
+
+Create your local database:
+
+    rake db:create
+
 
 ## Cron jobs
 
