@@ -15,6 +15,7 @@ You will need to have the following prerequisites installed locally in order to 
 
  - Ruby 2.6.1
  - Rails v6.0.0.beta3
+ - PostgreSQL >= v9.6.17 ([Postgres.app](https://postgresapp.com/) is recommended as a one-click install for MacOS)
  - Redis
 
 If you do not yet have Redis installed, follow instructions for your local platform to install Redis and be sure that Redis is up and running locally.
@@ -27,10 +28,14 @@ Install the required Ruby gems:
 
     bundle install
 
-Create your local database:
+Install the required node packages:
 
-    rake db:create
+    yarn install
 
+Create and seed your development and test databases:
+
+    rails db:setup
+    rails db:test:prepare
 
 ## Cron jobs
 
