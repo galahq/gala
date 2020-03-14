@@ -24,7 +24,7 @@ blocks:
           commands:
           - checkout
           - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
-          - sem-version node 10.7.0
+          - sem-version node 12.5.0
           - yarn install --ignore-engines
           - cache store node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock) node_modules
 
@@ -42,7 +42,7 @@ blocks:
           - checkout
 
           - sem-version ruby 2.6.1
-          - sem-version node 10.7.0
+          - sem-version node 12.5.0
           - sem-service start postgres
 
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
