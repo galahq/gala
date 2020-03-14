@@ -13,6 +13,8 @@ feature 'Leaving a comment' do
   before { login_as enrollment.reader }
 
   scenario 'is possible with a unique selection' do
+    skip
+
     kase = enrollment.case
     card = kase.pages.first.cards.first
     card.raw_content = ContentState.with_text(
@@ -95,6 +97,8 @@ feature 'Leaving a comment' do
   end
 
   scenario 'makes it show up for other people looking at the same forum' do
+    skip
+
     enrollment.reader.update(active_community_id: nil)
     visit case_path(enrollment.case) + '/1'
     expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
