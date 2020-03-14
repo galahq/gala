@@ -23,23 +23,27 @@ Capybara.server = :puma
 require 'webdrivers' unless ENV['CI']
 
 Capybara.register_driver :chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chrome_options: { args: %w[window-size=1440,900] }
-  )
-  Capybara::Selenium::Driver.new app,
-                                 browser: :chrome,
-                                 desired_capabilities: capabilities
+  Capybara::Selenium::Driver.load_selenium
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
+    opts.args << '--disable-site-isolation-trials'
+    opts.args << '--window-size=1440,900'
+  end
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
 Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chrome_options: { args: %w[headless disable-gpu window-size=1440,900] }
-  )
-
-  Capybara::Selenium::Driver.new app,
-                                 browser: :chrome,
-                                 desired_capabilities: capabilities
+  Capybara::Selenium::Driver.load_selenium
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+    opts.args << '--disable-gpu' if Gem.win_platform?
+    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
+    opts.args << '--disable-site-isolation-trials'
+    opts.args << '--window-size=1440,900'
+  end
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
+
 Capybara.default_driver = ENV['NOT_HEADLESS'] ? :chrome : :headless_chrome
 
 Capybara.configure do |config|
@@ -138,7 +142,3 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
-
-# Stub old Rails module that Shoulda::Matchers depends on ATM
-class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end
-raise 'workaround unnecessary?' if Shoulda::Matchers::VERSION != '4.0.1'

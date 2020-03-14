@@ -47,7 +47,7 @@
     "draft-js-plugins-editor": "^2.1.1",
     "file-loader": "^2.0.0",
     "history": "^4.6.1",
-    "immer": "^1.8.2",
+    "immer": "1.8.2",
     "immutability-helper": "^2.9.0",
     "intl": "^1.2.5",
     "json-loader": "^0.5.7",

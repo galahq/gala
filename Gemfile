@@ -53,9 +53,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
-gem 'active_model_serializers',
-    git: 'https://github.com/rails-api/active_model_serializers',
-    branch: '0-10-stable'
+gem 'active_model_serializers', '0.10.9'
 gem 'haml', git: 'https://github.com/haml/haml' # until > 5.0.4
 gem 'inline_svg'
 gem 'jbuilder', git: 'https://github.com/rails/jbuilder' # until > 2.8.0
