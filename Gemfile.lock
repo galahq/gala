@@ -46,17 +46,6 @@ GIT
       activerecord (>= 4.0.0)
 
 GIT
-  remote: https://github.com/rails-api/active_model_serializers
-  revision: 6b093c965f75f87d5bbf0510e64b5193f4c6f157
-  branch: 0-10-stable
-  specs:
-    active_model_serializers (0.10.10)
-      actionpack (>= 4.1, < 6.1)
-      activemodel (>= 4.1, < 6.1)
-      case_transform (>= 0.2)
-      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
-
-GIT
   remote: https://github.com/rails/jbuilder
   revision: bec0d6c840c3486ee589d5de0ba9c348ccbc27ee
   specs:
@@ -110,6 +99,11 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_model_serializers (0.10.9)
+      actionpack (>= 4.1, < 6)
+      activemodel (>= 4.1, < 6)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     active_storage_validations (0.8.5)
       rails (>= 5.2.0)
     activejob (6.0.0.beta3)
@@ -580,7 +574,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers!
+  active_model_serializers (= 0.10.9)
   active_storage_validations
   acts_as_list!
   administrate
