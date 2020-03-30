@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '6.0.0.beta3'
+gem 'rails', '6.0.2.2'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
@@ -10,7 +10,7 @@ gem 'aws-sdk-sns', '>= 1.9.0', require: false
 gem 'bootsnap', require: false
 gem 'connection_pool'
 gem 'dalli'
-gem 'image_processing', '~> 1.9.3'
+gem 'image_processing'
 #gem 'mini_magick'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.12.2'
@@ -53,7 +53,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.9'
+gem 'active_model_serializers'
 gem 'haml', git: 'https://github.com/haml/haml' # until > 5.0.4
 gem 'inline_svg'
 gem 'jbuilder', git: 'https://github.com/rails/jbuilder' # until > 2.8.0
