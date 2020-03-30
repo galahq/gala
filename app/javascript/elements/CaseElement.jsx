@@ -106,7 +106,7 @@ class CaseElement extends React.Component<{
 
     const redirectToOverview = <Redirect to="/" />
 
-    if (!reader) return redirectToOverview
+  //  if (!reader) return redirectToOverview
 
     const models = { Page, Podcast }
     const Child = models[model]
