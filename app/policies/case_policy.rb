@@ -26,7 +26,7 @@ class CasePolicy < ApplicationPolicy
     record.published? ||
       user.enrollment_for_case(record).present? ||
       user.my_cases.include?(record) ||
-      editor? 
+      editor?
   end
 
   def update?

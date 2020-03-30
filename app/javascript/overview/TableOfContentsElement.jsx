@@ -74,8 +74,10 @@ function TableOfContentsElement ({
         <Item ref={provided.innerRef} {...provided.draggableProps}>
           <Link
             isDragging={snapshot.isDragging}
-            to={loggedIn ? `/${position + 1}` : undefined}
-            as={loggedIn ? undefined : 'div'}
+            // to={loggedIn ? `/${position + 1}` : undefined}
+            // as={loggedIn ? undefined : 'div'}
+            to={`/${position + 1}`}
+            as={undefined}
           >
             <Label {...provided.dragHandleProps}>
               {editing && !readOnly ? (

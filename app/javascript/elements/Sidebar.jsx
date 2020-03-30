@@ -11,25 +11,37 @@ import BillboardTitle from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
 import TableOfContents from 'overview/TableOfContents'
 import EnrollForm from 'overview/EnrollForm'
+import { SignInFormContainer } from 'utility/SignInForm'
 
+
+type StateProps = {
+  signInForm: ?string
+}
 function mapStateToProps (state) {
-  return {
-    readerEnrolled: !!state.caseData.reader.enrollment,
+  if (state.caseData.reader) {
+    return {
+      readerEnrolled: !!state.caseData.reader.enrollment,
+      signInForm: window.caseData.signInForm
+    }
+  }
+  else {
+    return {
+      signInForm: window.caseData.signInForm
+    }
   }
 }
 
-const Sidebar = ({ editing, readerEnrolled, location }) => {
+const Sidebar = ({ editing, readerEnrolled, location, signInForm }) => {
   return (
     <Container data-active={location.pathname}>
       <BillboardTitle minimal />
       {editing || <CommunityChooser rounded />}
       <TableOfContents onSidebar />
-
-      {readerEnrolled || (
-        <div style={{ paddingTop: '1em' }}>
-          <EnrollForm />
-        </div>
-      )}
+      {signInForm != null ? (
+        <SignInFormContainer formContents={signInForm} />
+      ) : reader && !reader.enrollment ? (
+        <EnrollForm />
+      ) : null}
     </Container>
   )
 }
