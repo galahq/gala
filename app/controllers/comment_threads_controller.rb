@@ -16,7 +16,7 @@ class CommentThreadsController < ApplicationController
             .visible_to_reader(current_reader)
             .includes(:card, comments: [:reader, attachments_attachments: :blob])
 
-    render json: @comment_threads, serializer: CommentThreads::IndexSerializer,
+    render json: @comment_threads, serializer: CommentThreads::IndexSerializer, root: '',
            case: @case, forum: @forum
   end
 

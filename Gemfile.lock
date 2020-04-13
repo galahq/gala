@@ -577,7 +577,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers
+  active_model_serializers (= 0.10.10)
   active_storage_validations
   acts_as_list!
   administrate
