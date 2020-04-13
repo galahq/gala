@@ -17,6 +17,7 @@ import { SignInFormContainer } from 'utility/SignInForm'
 type StateProps = {
   signInForm: ?string
 }
+
 function mapStateToProps (state) {
   if (state.caseData.reader) {
     return {
@@ -37,7 +38,7 @@ const Sidebar = ({ editing, readerEnrolled, location, signInForm }) => {
       <BillboardTitle minimal />
       {editing || <CommunityChooser rounded />}
       <TableOfContents onSidebar />
-      {reader && !reader.enrollment ? (
+      {!readerEnrolled ? (
         <EnrollForm />
       ) : null}
     </Container>
