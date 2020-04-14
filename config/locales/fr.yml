@@ -17,7 +17,7 @@ fr:
         deactivated_at: Deactivated at (UTC)
       case:
         acknowledgements: Remerciements
-        authors: Authors
+        authors: Auteurs
         case_title: Case title
         featured: Ajoutée aux études phares
         featured_at: Featured at
@@ -28,6 +28,7 @@ fr:
         locale: Language
         location: Emplacement de l’étude de cas
         published: Published
+        summary: Summary
         slug: URL de l’étude de cas
         teaching_guide: Teaching guide
         title: Question
@@ -167,6 +168,12 @@ fr:
     show:
       download: Télécharger
       instructions: Instructions
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -186,6 +193,9 @@ fr:
     new:
       untitled: Untitled
   cases:
+    archives:
+      show:
+        overview: Retour au résumé
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
