@@ -38,7 +38,7 @@ const Sidebar = ({ editing, readerEnrolled, location, signInForm }) => {
       <BillboardTitle minimal />
       {editing || <CommunityChooser rounded />}
       <TableOfContents onSidebar />
-      {!readerEnrolled ? (
+      {reader && !readerEnrolled ? (
         <EnrollForm />
       ) : null}
     </Container>
