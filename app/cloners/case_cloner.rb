@@ -10,7 +10,11 @@ class CaseCloner < Clowne::Cloner
   finalize do |source, record, locale:, slug: SecureRandom.uuid, **|
     record.locale = locale
     record.slug = slug
-    record.title = "#{Translation.language_name(locale)}: #{record.title}"
+    if source.locale == record.locale
+      record.title = "COPY: #{record.title}"
+    else
+      record.title = "#{Translation.language_name(locale)}: #{record.title}"
+    end
     record.translators = ['—']
 
     if source.cover_image.attached? && source.cover_image.blob
