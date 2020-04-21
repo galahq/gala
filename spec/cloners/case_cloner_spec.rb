@@ -22,6 +22,18 @@ RSpec.describe CaseCloner, type: :cloner do
     expect(clone.translators).to eq ['—']
   end
 
+  it 'sets case title for translation case' do
+    kase.title = "My Rspec Test Case"
+    clone = described_class.partial_apply(:finalize, kase, locale: :fr)
+    expect(clone.title).to eq "Français: #{kase.title}"
+  end
+
+  it 'sets case title for non-translation case' do
+    kase.title = "My Rspec Test Case"
+    clone = described_class.partial_apply(:finalize, kase, locale: :en)
+    expect(clone.title).to eq "COPY: #{kase.title}"
+  end
+
   it 'copies all the case_elements' do
     kase = create :case_with_edgenotes, locale: :en
 

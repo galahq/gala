@@ -44,9 +44,7 @@ class CasesController < ApplicationController
   def show
     authenticate_reader! unless @case.published
     authorize @case
-
     set_group_and_deployment
-
     respond_to do |format|
       format.html { render layout: 'with_header' }
       format.json do
@@ -76,9 +74,7 @@ class CasesController < ApplicationController
   # @route [PATCH/PUT] `/cases/slug`
   def update
     authorize @case
-
     set_group_and_deployment
-
     if @case.update(update_case_params)
       render json: @case, serializer: Cases::ShowSerializer,
              deployment: @deployment, enrollment: @enrollment
@@ -90,11 +86,16 @@ class CasesController < ApplicationController
   # @route [DELETE] `/cases/slug`
   def destroy
     redirect_to case_confirm_deletion_path @case and return
-
     authorize @case
     @case.destroy!
     redirect_to my_cases_path, notice: successfully_destroyed
   end
+
+  def copy
+    CaseCloneJob.perform_later @case, locale: case_locale
+    redirect_to case_path @case, case_locale: case_locale
+  end
+
 
   private
 
