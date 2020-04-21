@@ -1,4 +1,8 @@
 ja:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
   activemodel:
     attributes:
       confirm_deletion_form:
@@ -28,6 +32,7 @@ ja:
         locale: Language
         location: 場所
         published: 公開された
+        summary: Summary
         slug: 事例研究のURL
         teaching_guide: Teaching guide
         title: 質問
@@ -166,6 +171,12 @@ ja:
     show:
       download: ダウンロード
       instructions: 説明
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -183,6 +194,9 @@ ja:
     new:
       untitled: タイトルなし
   cases:
+    archives:
+      show:
+        overview: 概要に戻る
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
