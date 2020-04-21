@@ -1,4 +1,8 @@
 fr:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
   activemodel:
     attributes:
       confirm_deletion_form:
