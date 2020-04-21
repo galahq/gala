@@ -18,7 +18,7 @@ FactoryBot.define do
   factory :card do
     association :element, factory: :page
     raw_content do
-      blocks = generate_blocks Faker::Hipster.paragraphs(rand(1..3))
+      blocks = generate_blocks Faker::Hipster.paragraphs(number: rand(1..3))
       {
         entityMap: {},
         blocks: blocks
