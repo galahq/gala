@@ -18,6 +18,6 @@ class EdgenoteCloner < Clowne::Cloner
     if _source.image.attached? && _source.image.blob
       record.image.attach(_source.image.blob)
     end
-    record.save!
+    record.save validate: false
   end
 end
