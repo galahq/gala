@@ -119,6 +119,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
   gem 'dotenv-rails'
+  gem 'rubocop-faker'
 end
 
 # To seed the database for Heroku review apps, this is included in production

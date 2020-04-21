@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :case do
-    kicker { Faker::Hipster.words(2).join(' ').titlecase }
+    kicker { Faker::Hipster.words(number: 2).join(' ').titlecase }
     title { Faker::Hipster.sentence }
     dek { Faker::Hipster.sentence }
     commentable { true }

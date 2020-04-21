@@ -9,7 +9,7 @@ FactoryBot.define do
     options { [] }
 
     trait :multiple_choice do
-      options { Faker::Lorem.sentences(4) }
+      options { Faker::Lorem.sentences(number: 4) }
       after :build do |this|
         this.correct_answer = this.options.sample
       end
