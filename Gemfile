@@ -54,7 +54,7 @@ gem 'mobility'
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.10'
-gem 'haml', git: 'https://github.com/haml/haml' # until > 5.0.4
+gem 'haml', '>=5.1.2' #git: 'https://github.com/haml/haml' # until > 5.0.4
 gem 'inline_svg'
 gem 'jbuilder', git: 'https://github.com/rails/jbuilder' # until > 2.8.0
 gem 'markerb', git: 'https://github.com/cbothner/markerb'

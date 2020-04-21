@@ -4,7 +4,7 @@
 module ApplicationHelper
   def parent_layout(layout)
     @view_flow.set(:layout, output_buffer)
-    self.output_buffer = render(file: "layouts/#{layout}")
+    self.output_buffer = render :template => "layouts/#{layout}"
   end
 
   # Helpers for content_for blocks in view layouts

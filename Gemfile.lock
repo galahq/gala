@@ -30,14 +30,6 @@ GIT
       uniform_notifier (~> 1.11)
 
 GIT
-  remote: https://github.com/haml/haml
-  revision: 598f2b3a364b5601c844db79bf04b387061a396d
-  specs:
-    haml (5.1.2)
-      temple (>= 0.8.0)
-      tilt
-
-GIT
   remote: https://github.com/norman/friendly_id.git
   revision: a29e7d7cc280d7d46c181f58fabd7cc9be67eefe
   ref: a29e7d
@@ -273,6 +265,9 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    haml (5.1.2)
+      temple (>= 0.8.0)
+      tilt
     hashie (4.1.0)
     http_accept_language (2.1.1)
     i18n (1.8.2)
@@ -627,7 +622,7 @@ DEPENDENCIES
   friendly_id!
   groupdate
   guard-rspec
-  haml!
+  haml (>= 5.1.2)
   http_accept_language
   i18n_generators
   i18n_yaml_sorter
