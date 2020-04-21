@@ -223,4 +223,7 @@ Rails.application.routes.draw do
   authenticate :reader, ->(reader) { reader.has_role? :editor } do
     mount Sidekiq::Web => '/sidekiq'
   end
+
+  post 'admin/cases/:id/copy', to: "admin/cases#copy", as: 'copy_admin_case'
+
 end
