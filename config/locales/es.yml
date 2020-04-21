@@ -1,4 +1,8 @@
 es:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
   activemodel:
     attributes:
       confirm_deletion_form:
@@ -28,6 +32,7 @@ es:
         locale: Language
         location: Ubicación del caso
         published: Published
+        summary: Summary
         slug: Case URL
         teaching_guide: Teaching guide
         title: Question
@@ -167,6 +172,12 @@ es:
     show:
       download: Download
       instructions: Instructions
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -186,6 +197,9 @@ es:
     new:
       untitled: Untitled
   cases:
+    archives:
+      show:
+        overview: Resumen
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
