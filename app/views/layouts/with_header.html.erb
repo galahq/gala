@@ -1,7 +1,7 @@
 <header class="header">
   <div class="header__container">
     <%= link_to root_path, id: "gala-logo" do %>
-      <%= inline_svg 'gala-logo.svg' %>
+      <%= inline_svg_tag 'gala-logo.svg' %>
     <% end %>
     <div id="main-menu-app" class="pt-dark"></div>
     <%= javascript_pack_tag 'main-menu', async: true %>
