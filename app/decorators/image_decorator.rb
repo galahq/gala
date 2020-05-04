@@ -14,7 +14,7 @@ class ImageDecorator < ApplicationDecorator
     return BLUE_PIXEL unless attached?
     return RED_PIXEL unless variable?
 
-    polymorphic_path resized(options), only_path: true
+    polymorphic_url resized(options), only_path: false
   end
 
   def resized_file(**options)

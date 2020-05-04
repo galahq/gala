@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+Rails.application.routes.default_url_options = { host: 'www.learngala.com' }
+
 Rails.application.configure do
   # Prepare the ingress controller used to receive mail
   # config.action_mailbox.ingress = :amazon
