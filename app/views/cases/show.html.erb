@@ -18,6 +18,7 @@
 <%=javascript_pack_tag "case"%>
 
 <%= content_for :head do %>
+  <meta name="twitter:card" content="summary"></meta>
   <meta property="og:title" content="<%= "#{@case.kicker}: #{@case.title}" %>" />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="<%= case_url @case %>" />
