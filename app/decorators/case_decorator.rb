@@ -24,7 +24,8 @@ class CaseDecorator < ApplicationDecorator
   end
 
   def open_graph_cover_url
-    ImageDecorator.decorate(cover_image).resized_url({ width: 1200, height: 1200 })
+    "#{ENV['BASE_URL']}#{cover_url width: 1200, height: 1200}"
+    #ImageDecorator.decorate(cover_image).resized_url({ width: 1200, height: 1200 })
   end
 
   # cover_image as a File for attachment to an email
