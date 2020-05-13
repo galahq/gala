@@ -27,6 +27,7 @@
 
 
 - content_for :head do
+  %meta{ name: 'twitter:card', content: 'summary'}
   %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
          href: profile_path(format: :json) }
   %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
