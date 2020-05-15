@@ -34,13 +34,16 @@ localhost.key
 /.yardoc/
 /doc/
 
+/db_dumps
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
 /storage
 
 spec/examples.txt
-
+.OLD
+*.*.OLD
 .env
 .DS_Store
 .*OLD
