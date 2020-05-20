@@ -12,6 +12,6 @@ class PodcastCloner < ElementCloner
     if source.audio.attached? && source.audio.blob
       record.audio.attach(source.audio.blob)
     end
-    record.save!
+    record.save validate: false
   end
 end

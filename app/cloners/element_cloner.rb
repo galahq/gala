@@ -17,7 +17,7 @@ class ElementCloner < Clowne::Cloner
         end
       end
 
-      record.save!
+      record.save validate: false
     end
   end
 end

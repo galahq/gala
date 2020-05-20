@@ -7,7 +7,7 @@ class CardCloner < Clowne::Cloner
       record.case = kase
       clone = ContentStateCloner.call source.raw_content, kase: kase
       record.raw_content = clone
-      record.save!
+      record.save validate: false
     end
   end
 end
