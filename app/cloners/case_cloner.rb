@@ -23,7 +23,7 @@ class CaseCloner < Clowne::Cloner
     if source.teaching_guide.attached? && source.teaching_guide.blob
       record.teaching_guide.attach(source.teaching_guide.blob)
     end
-    record.save!
+    record.save validate: false
     source.case_elements.each do |case_element|
       element = case_element.element
       element.class.cloner_class.call(element, kase: record)
