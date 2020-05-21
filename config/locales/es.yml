@@ -249,6 +249,7 @@ es:
       unfeature_case: Quitar de casos destacados
       unpublish_case: Annular la publicacion
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: Todos los casos
       locations: Ubicaciones
