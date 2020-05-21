@@ -154,6 +154,7 @@ export type Case = {
     taggings: string,
     teach: string,
     teachingGuide: string,
+    newCopy: string
   },
   longitude: ?number,
   otherAvailableLocales: { [string]: { link: string, name: string } },

@@ -4,7 +4,7 @@
 class CaseCloneJob < ApplicationJob
   def perform(kase, locale:, cloner: CaseCloner)
     ActiveRecord::Base.transaction do
-      cloner.call(kase, locale: locale)
+      operation = cloner.call(kase, locale: locale)
     end
   end
 end

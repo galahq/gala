@@ -16,6 +16,7 @@ module Cases
     link(:taggings) { case_taggings_path object }
     link(:teach) { new_deployment_path case_slug: object.slug }
     link(:teaching_guide) { case_attachment_path object, :teaching_guide }
+    link(:new_copy) { copy_case_path object  }
 
     def kicker
       object.kicker

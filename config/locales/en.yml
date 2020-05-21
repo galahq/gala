@@ -251,6 +251,7 @@ en:
       unfeature_case: Remove from featured cases
       unpublish_case: Unpublish this case
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: All cases
       locations: Site locations
