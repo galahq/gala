@@ -244,6 +244,7 @@ ja:
       unfeature_case: 注目の事例研究から除去する
       unpublish_case: 非公開にする
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: すべての事例研究
       locations: 場所
