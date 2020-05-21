@@ -249,6 +249,7 @@ fr:
       unfeature_case: Enlever celle-ci des études phares
       unpublish_case: Annuler la publication de cette étude de cas
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: Toutes les études de cas
       locations: Emplacements des sites
