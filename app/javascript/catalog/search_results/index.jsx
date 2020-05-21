@@ -36,7 +36,8 @@ function SearchResults ({ intl, location }: Props) {
     roles: { editor },
   } = React.useContext(ReaderDataContext)
 
-  useDocumentTitle(`${intl.formatMessage({ id: 'search.results' })} — Gala`)
+  // useDocumentTitle(`${intl.formatMessage({ id: 'search.results' })} — Gala`)
+  useDocumentTitle('Gala');
 
   const [caseSlugs, resultsLoading] = useSearchResults(location)
   const results = caseSlugs.map(slug => cases[slug]).filter(Boolean)

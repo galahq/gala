@@ -158,6 +158,12 @@ function StatusBar ({
                     },
                   },
                   {
+                    message: 'cases.edit.copyThisCase',
+                    icon: 'duplicate',
+                    onClick: () => {
+                      window.location = links.newCopy
+                    },
+                  },                  {
                     message: published
                       ? 'cases.edit.unpublishCase'
                       : 'cases.edit.publishCase',

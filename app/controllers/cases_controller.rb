@@ -92,8 +92,9 @@ class CasesController < ApplicationController
   end
 
   def copy
-    CaseCloneJob.perform_later @case, locale: case_locale
-    redirect_to case_path @case, case_locale: case_locale
+    current_case = case_for_copy(params[:id])
+    @case = CaseCloneJob.perform_now current_case, locale: current_case.locale
+    redirect_to case_path @case, case_locale: @case.locale
   end
 
 
@@ -103,6 +104,10 @@ class CasesController < ApplicationController
   def set_case
     @case = Case.friendly.includes(*CASE_EAGER_LOADING_CONFIG)
                 .find(slug).decorate
+  end
+
+  def case_for_copy(id)
+          Case.friendly.find id
   end
 
   def slug
