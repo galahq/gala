@@ -864,10 +864,10 @@ zh-CN:
       notification_settings: Notification settings
       profile_settings: Profile settings
       save_persona: Save help preferences
-      save_profile: Update profile
+      save_profile: 更新个人信息
       save_notification_preference: Save notification preferences
       show_me_tips_about: Show me helpful tips about
-      tips_for_using_gala: Tips for using Gala
+      tips_for_using_gala: 使用Gala 的提示
       we_show_tips: >
         We can show contextual tips about features that are relevant to you.
       you_have_not_created_a_password: >
