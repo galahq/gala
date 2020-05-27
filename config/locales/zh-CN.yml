@@ -90,7 +90,7 @@ zh-CN:
         image: 图片
         last_sign_in_at: 最后登录于
         last_sign_in_ip: 最后登录的 IP
-        locale: Preferred language
+        locale: 首选语言
         locked_at: 锁定于
         name: 全名
         password: 密码
@@ -137,7 +137,7 @@ zh-CN:
             correct_answer:
               inclusion: "不包括在可能的答案列表中"
     models:
-      account_settings: Account settings
+      account_settings: 帐户设置
       activity: 活动
       case: 案例
       cases:
@@ -157,7 +157,7 @@ zh-CN:
       page: 页
       podcast: 广播节目
       reader: 读者
-      reading_list: Reading List
+      reading_list: 阅读清单
       shared_cases_library: 共享案例
     persistance:
       messages:
@@ -633,9 +633,9 @@ zh-CN:
         ruby: "Accepted file types: %{types}."
       max_size:
         ruby: File size must be under %{size}.
-        js: File size must be under {mb} MB.
+        js: 文件大小必须小于 {mb} MB。
     cancel: 取消
-    choose_an_image: Choose an Image
+    choose_an_image: 选择图片
     close: 关闭
     copy: 复制
     edit: 编辑
@@ -860,7 +860,7 @@ zh-CN:
       account_options: 账户选项
       choose_an_image: Choose a profile image
       create_a_password: 设置密码
-      my_account: Account settings
+      my_account: 帐户设置
       notification_settings: Notification settings
       profile_settings: Profile settings
       save_persona: Save help preferences
@@ -913,7 +913,7 @@ zh-CN:
     refine: 细化搜索
     results: 搜索结果
     search: 搜索
-    search_cases: Search Cases...
+    search_cases: 案例搜索...
     try_again: 请试试输入其他关键词。
   spotlights:
     add_citation: >
