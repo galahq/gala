@@ -278,7 +278,7 @@ zh-CN:
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
       运用案例来进行关于当代可持续发展问题的教学。在Gala平台上你能轻松找到寓教于乐的可用于课堂或公众教育教学的材料。
-    global_systems: Global Systems
+    global_systems: 全球系统
     impactful_cases: 运用案例
     improve_your_communication: >
       将你的多媒体案例发表到Gala平台上，用Gala清晰而易于使用的界面帮助教学者在美好的用户体验中更好地理解复杂的问题。
@@ -288,12 +288,12 @@ zh-CN:
       从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
     join_conversation: >
       参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
-    keywords: Keywords
+    keywords: 关键词
     learn_more: 了解更多
     meet_stakeholders: >
       在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
     my_library: My Library
-    natural_resources: Natural Resources
+    natural_resources: 自然资源
     open_access_learning_tools: 致力于可持续发展的开源型教学平台
     propose_a_case: 提出一个案例提案
     shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
@@ -460,7 +460,7 @@ zh-CN:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      my_deployments: My Deployments
+      my_deployments: 我的案例运用
       new_deployment: 新建案例运用
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
@@ -714,7 +714,7 @@ zh-CN:
       library_managers: Library Managers
     index:
       create_a_new_library: Create a New Library
-      libraries: Libraries
+      libraries: 案例库
       libraries_on_gala: >
         Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
       on_home_page: On Home Page
