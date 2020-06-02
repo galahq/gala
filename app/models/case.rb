@@ -157,7 +157,8 @@ class Case < ApplicationRecord
 
   # The cases that represent translations of this case
   def translations
-    translation_set.where.not(id: id)
+    results = translation_set.where.not(id: id)
+    results.where.not(locale: locale)
   end
 
   def translation_set
