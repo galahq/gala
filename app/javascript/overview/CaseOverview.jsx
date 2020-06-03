@@ -38,9 +38,7 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
         <Container editing={editing}>
           <Billboard />
           <aside className="CaseOverviewRight">
-            {signInForm != null && !selecting ? (
-              <SignInFormContainer formContents={signInForm} />
-            ) : reader && !reader.enrollment ? (
+            {reader && !reader.enrollment ? (
               <EnrollForm />
             ) : null}
             <TableOfContents />
