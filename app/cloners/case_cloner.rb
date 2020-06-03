@@ -13,8 +13,8 @@ class CaseCloner < Clowne::Cloner
       record.title = "COPY: #{record.title}"
     else
       record.title = "#{Translation.language_name(locale)}: #{record.title}"
+      record.translators = ['—']
     end
-    record.translators = ['—']
 
     if source.cover_image.attached?
       if source.cover_image.blob
