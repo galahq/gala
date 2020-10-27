@@ -279,6 +279,7 @@ es:
   catalog:
     catalog: Catálogo
     choose_for_yourself: Tú vas a elegir
+    create_a_case: Propose a Case
     enrollments_instruction: >
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     find_a_case: >
@@ -300,7 +301,6 @@ es:
     my_library: My Library
     natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: Propose a Case
     shortcut_experience: Aplicar principios para mejorar en la práctica.
   comment_threads:
     destroy:
@@ -937,8 +937,8 @@ es:
     didnt_match: Tu búsqueda no ha generado resultados.
     full_text_search: Full text search...
     no_results: Sin resultados
-    propose_a_case: >
-      Si tienes un estudio de caso (o una buena idea para un estudio de caso) que te gustaría ver en Gala, escríbanos. Juntos podemos crear un recurso de enseñanza sobre el ambiente y sostenibilidad más comprensivo.
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: Limitar busqueda
     results: Resultados de busqueda
     search: Buscar
