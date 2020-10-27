@@ -274,6 +274,7 @@ ja:
   catalog:
     catalog: 目録
     choose_for_yourself: 自分で選択する
+    create_a_case: Propose a Case
     enrollments_instruction: >
       登録する事例研究は、簡単に見つけられるようにここに表示されます。
     find_a_case: >
@@ -295,7 +296,6 @@ ja:
     my_library: My Library
     natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: Propose a Case
     shortcut_experience: 原則を実践することで経験を得ることができます。
   comment_threads:
     destroy:
@@ -909,8 +909,8 @@ ja:
     didnt_match: 検索はどの事例研究にも一致しませんでした。
     full_text_search: Full text search...
     no_results: 検索結果なし
-    propose_a_case: >
-      あなたがGalaを見たいと思う事件研究（またはそれについての良いアイデア）がある場合は、お問い合わせください。一緒に、環境と持続可能性について教えるための最も完全なリソースを作ることができます。
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: 詳細検索
     results: 検索結果
     search: 検索
