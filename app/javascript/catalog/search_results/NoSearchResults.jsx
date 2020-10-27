@@ -24,13 +24,13 @@ const NoSearchResults = injectIntl(({ intl }) => (
     action={
       <div style={{ textAlign: 'center' }}>
         <p>
-          <FormattedMessage id="search.proposeACase" />
+          <FormattedMessage id="search.authorACase" />
         </p>
         <a
           className="pt-button pt-intent-primary pt-icon-annotation"
-          href="http://www.teachmsc.org/action/make/proposal"
+          href="https://docs.learngala.com/docs/authoring-getting-started.html"
         >
-          <FormattedMessage id="catalog.proposeACase" />
+          <FormattedMessage id="catalog.createACase" />
         </a>
       </div>
     }
