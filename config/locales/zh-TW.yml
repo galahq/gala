@@ -278,6 +278,7 @@ zh-TW:
   catalog:
     catalog: 案例目錄
     choose_for_yourself: 我的學習我做主
+    create_a_case: Propose a Case
     enrollments_instruction: >
       選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。
     find_a_case: >
@@ -299,7 +300,6 @@ zh-TW:
     my_library: My Library
     natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: Propose a Case
     shortcut_experience: 通過案例學習獲取將所學知識運用於實踐的捷徑。
   comment_threads:
     destroy:
@@ -913,8 +913,8 @@ zh-TW:
     didnt_match: 抱歉，沒有找到你所搜索的案例。
     full_text_search: Full text search...
     no_results: 沒有可顯示的搜索結果
-    propose_a_case: >
-      或者，如果你有希望收入到Gala的案例，或關於案例的設想，請與我們聯系。讓我們一起為環境和可持續發展領域提供更多更有效的學習資源。
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: 細化搜索
     results: 搜索結果
     search: 搜索
