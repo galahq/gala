@@ -38,7 +38,7 @@ const Container = styled.a`
   position: absolute;
   top: 0;
   width: 67px;
-  height: 110px;
+  height: 80px;
   background-color: ${({ backgroundColor }) => backgroundColor};
   border-bottom: 6px solid ${({ foregroundColor }) => foregroundColor};
   border-bottom-left-radius: 4px;
@@ -49,7 +49,7 @@ const Container = styled.a`
   transition: box-shadow ease-out 0.1s, background ease-out 0.1s;
 
   ${TitleCardContainer} & {
-    left: 20px;
+    left: 10px;
   }
 
   &[href]:hover,
