@@ -8,17 +8,17 @@
 const React = require('react')
 
 class Footer extends React.Component {
-  docUrl (doc, language) {
+  docUrl(doc, language) {
     const baseUrl = this.props.config.baseUrl
     return baseUrl + 'docs/' + (language ? language + '/' : '') + doc
   }
 
-  pageUrl (doc, language) {
+  pageUrl(doc, language) {
     const baseUrl = this.props.config.baseUrl
     return baseUrl + (language ? language + '/' : '') + doc
   }
 
-  render () {
+  render() {
     const currentYear = new Date().getFullYear()
     return (
       <footer className="nav-footer" id="footer">
@@ -58,24 +58,6 @@ class Footer extends React.Component {
           </div>
 
           <div>
-            <h5>Community</h5>
-            <a
-              href="http://www.teachmsc.org/"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Michigan Sustainability Cases
-            </a>
-            <a
-              href="http://seas.umich.edu"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              School of Environment and Sustainability
-            </a>
-          </div>
-
-          <div>
             <h5>More</h5>
             <a
               href="https://twitter.com/learnmsc"
@@ -98,18 +80,6 @@ class Footer extends React.Component {
             </a>
           </div>
         </section>
-
-        <a
-          href="http://www.teachmsc.org/"
-          target="_blank"
-          rel="noreferrer noopener"
-          className="fbOpenSource"
-        >
-          <img
-            src={this.props.config.baseUrl + 'img/msc-logo.svg'}
-            alt="Michigan Sustainability Cases"
-          />
-        </a>
         <section className="copyright">{this.props.config.copyright}</section>
       </footer>
     )
