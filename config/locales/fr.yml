@@ -279,6 +279,7 @@ fr:
   catalog:
     catalog: Catalogue
     choose_for_yourself: Faites votre choix
+    create_a_case: Propose a Case
     enrollments_instruction: >
       Les études de cas dans lesquels vous vous inscriverez seront affichée ici pour un accès rapide.
     find_a_case: >
@@ -300,7 +301,6 @@ fr:
     my_library: My Library
     natural_resources: Natural Resources
     open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: Propose a Case
     shortcut_experience: Appliquez les principes pour améliorer la pratique.
   comment_threads:
     destroy:
@@ -937,8 +937,8 @@ fr:
     didnt_match: Votre recherche n’a correspondu à aucune étude de cas.
     full_text_search: Full text search...
     no_results: Aucun résultat trouvé
-    propose_a_case: >
-      Auriez-vous une étude de cas à nous proposer? Contactez-nous. Ensemble, nous pourrions construir la ressource la plus complète pour l’enseignement dans les domaines de l’environnement et la durabilité.
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: Affiner la recherche
     results: Résultats de la recherche
     search: Rechercher
