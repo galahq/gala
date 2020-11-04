@@ -17,10 +17,10 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 import type { ContextRouter } from 'react-router-dom'
 
 type Props = {| ...ContextRouter, slug: string |}
-function LibraryInfo ({ history, slug }: Props) {
+function LibraryInfo({ history, slug }: Props) {
   const [library, setLibrary] = React.useState(null)
 
-  async function fetchLibraryInfo () {
+  async function fetchLibraryInfo() {
     try {
       const data = await Orchard.harvest(`libraries/${slug}`)
       setLibrary(data)
@@ -29,12 +29,9 @@ function LibraryInfo ({ history, slug }: Props) {
     }
   }
 
-  React.useEffect(
-    () => {
-      fetchLibraryInfo()
-    },
-    [slug]
-  )
+  React.useEffect(() => {
+    fetchLibraryInfo()
+  }, [slug])
 
   if (library == null) return null
 
@@ -64,7 +61,7 @@ const RightFloatLogoContainer = styled.div`
   position: relative;
   float: right;
   width: 67px;
-  height: 116px;
+  height: 90px;
   margin: -10px 20px 10px 0;
   pointer-events: none;
 `
