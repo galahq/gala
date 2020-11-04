@@ -133,4 +133,4 @@ group :test do
   gem 'webdrivers', require: false
 end
 
-ruby '2.6.1'
+ruby '2.6.6'
