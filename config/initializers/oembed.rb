@@ -42,5 +42,6 @@ unless naive_oembed_url.blank?
   naive << 'https://*.maps.arcgis.com/apps/webappviewer/*'
   naive << 'https://*.maps.arcgis.com/apps/View/*'
   naive << 'https://plot.ly/~*/*.embed'
+  naive << 'https://*.shinyapps.io/*'
   OEmbed::Providers.register naive
 end
