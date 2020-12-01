@@ -279,7 +279,7 @@ es:
   catalog:
     catalog: Catálogo
     choose_for_yourself: Tú vas a elegir
-    create_a_case: Propose a Case
+    create_a_case: Create a Case
     enrollments_instruction: >
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     find_a_case: >
