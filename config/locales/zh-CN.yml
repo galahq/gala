@@ -274,7 +274,7 @@ zh-CN:
   catalog:
     catalog: 案例目录
     choose_for_yourself: 我的学习我做主
-    create_a_case: Propose a Case
+    create_a_case: 新建案例
     enrollments_instruction: >
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
