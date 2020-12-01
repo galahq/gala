@@ -284,7 +284,7 @@ en:
   catalog:
     catalog: Catalog
     choose_for_yourself: Choose for yourself
-    create_a_case: Propose a Case
+    create_a_case: Create a Case
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
     find_a_case: >
