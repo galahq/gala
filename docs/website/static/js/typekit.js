@@ -1,11 +1,11 @@
-;(function (d) {
+;(function(d) {
   var config = {
-      kitId: 'adn1xoi',
+      kitId: 'jvg2ega',
       scriptTimeout: 3000,
       async: true,
     },
     h = d.documentElement,
-    t = setTimeout(function () {
+    t = setTimeout(function() {
       h.className = h.className.replace(/\bwf-loading\b/g, '') + ' wf-inactive'
     }, config.scriptTimeout),
     tk = d.createElement('script'),
@@ -15,7 +15,7 @@
   h.className += ' wf-loading'
   tk.src = 'https://use.typekit.net/' + config.kitId + '.js'
   tk.async = true
-  tk.onload = tk.onreadystatechange = function () {
+  tk.onload = tk.onreadystatechange = function() {
     a = this.readyState
     if (f || (a && a != 'complete' && a != 'loaded')) return
     f = true
