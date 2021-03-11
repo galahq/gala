@@ -13,8 +13,8 @@ Gala is a platform for the collaborative study of media-rich teaching cases.
 
 You will need to have the following prerequisites installed locally in order to run Gala:
 
- - Ruby 2.6.1
- - Rails v6.0.0.beta3
+ - Ruby 2.6.6
+ - Rails v6.0.2.2
  - PostgreSQL >= v9.6.17 ([Postgres.app](https://postgresapp.com/) is recommended as a one-click install for MacOS)
  - Redis
 
