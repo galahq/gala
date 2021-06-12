@@ -48,6 +48,7 @@ RSpec.describe CaseCloner, type: :cloner do
 
     expect(first_card(clone).paragraphs).to eq first_card(kase).paragraphs
     expect(first_card(clone).case).to eq clone
+    expect(clone.translation_base_id).to eq(clone.id)
   end
 
   private
