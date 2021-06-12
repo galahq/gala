@@ -5,6 +5,7 @@ class CaseCloner < Clowne::Cloner
   include_associations :editorships#, :taggings
 
   nullify :published_at
+  nullify :translation_base_id
 
   finalize do |source, record, locale:, slug: SecureRandom.uuid, **|
     record.locale = locale
@@ -29,7 +30,6 @@ class CaseCloner < Clowne::Cloner
       element = case_element.element
       element.class.cloner_class.call(element, kase: record)
     end
-
   end
 end
 
