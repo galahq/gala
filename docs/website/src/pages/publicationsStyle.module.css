@@ -1,0 +1,12 @@
+.publications li {
+    margin-bottom: var(--ifm-heading-margin-bottom)
+}
+
+.publications li h4{
+margin-bottom:0;
+}
+
+.citation {
+    font-size: 80%;
+    font-style: italic;
+}
