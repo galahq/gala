@@ -5,13 +5,13 @@ class CaseCloner < Clowne::Cloner
   include_associations :editorships#, :taggings
 
   nullify :published_at
-  nullify :translation_base_id
 
   finalize do |source, record, locale:, slug: SecureRandom.uuid, **|
     record.locale = locale
     record.slug = slug
     if source.locale == record.locale
       record.title = "COPY: #{record.title}"
+      record.translation_base_id = nil
     else
       record.title = "#{Translation.language_name(locale)}: #{record.title}"
       record.translators = ['—']

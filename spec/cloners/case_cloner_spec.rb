@@ -48,7 +48,18 @@ RSpec.describe CaseCloner, type: :cloner do
 
     expect(first_card(clone).paragraphs).to eq first_card(kase).paragraphs
     expect(first_card(clone).case).to eq clone
+  end
+
+  it "clears translaton base id when not translating" do
+    kase = create :case_with_edgenotes, locale: :en
+    clone = described_class.call kase, locale: :en
     expect(clone.translation_base_id).to eq(clone.id)
+  end
+
+  it "sets translation base id when translating" do
+    kase = create :case_with_edgenotes, locale: :en
+    clone = described_class.call kase, locale: :fr
+    expect(clone.translation_base_id).to eq(kase.id)
   end
 
   private
