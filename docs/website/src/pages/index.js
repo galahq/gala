@@ -1,17 +1,17 @@
-import React from "react";
-import Layout from "@theme/Layout";
-import Link from "@docusaurus/Link";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import useBaseUrl from "@docusaurus/useBaseUrl";
-import home from "./home.module.css";
-import Feed from "../components/feed";
-import Card from "../components/card";
-import { Timeline } from "react-twitter-widgets";
+import React from 'react'
+import Layout from '@theme/Layout'
+import Link from '@docusaurus/Link'
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import home from './home.module.css'
+import Feed from '../components/feed'
+import Card from '../components/card'
+import { Timeline } from 'react-twitter-widgets'
 
 const features = [
   {
-    title: "Create and Innovate",
-    imageUrl: "img/create.svg",
+    title: 'Create and Innovate',
+    imageUrl: 'img/create.svg',
     description: (
       <>
         The Gala learning environment makes it fast and easy for anyone to make
@@ -19,11 +19,11 @@ const features = [
         readers. Dynamically integrate content from around the web, including
         videos, podcasts, maps and data tools.
       </>
-    )
+    ),
   },
   {
-    title: "Teach and share",
-    imageUrl: "img/share.svg",
+    title: 'Teach and share',
+    imageUrl: 'img/share.svg',
     description: (
       <>
         Gala cases thrive in classroom, community, and remote learning settings.
@@ -31,11 +31,11 @@ const features = [
         one in our growing list of case libraries. Institutions with a series of
         cases can create their own libraries.
       </>
-    )
+    ),
   },
   {
-    title: "Collaborate and adapt",
-    imageUrl: "img/community.svg",
+    title: 'Collaborate and adapt',
+    imageUrl: 'img/community.svg',
     description: (
       <>
         Gala is built to encourage prototyping, review, and iterative
@@ -43,76 +43,78 @@ const features = [
         solicit feedback with inline comments before publishing and sharing with
         wider communities.
       </>
-    )
-  }
-];
+    ),
+  },
+]
 
 const about = {
   description:
-    "The Gala initiative seeks to make sustainability learning more grounded, dynamic, and collaborative. We built the Gala learning environment to make the best teaching cases on sustainability, emphasizing openness, experimentation, and collaboration across the world.",
-  imageURL: ""
-};
+    'The Gala initiative seeks to make sustainability learning more grounded, dynamic, and collaborative. We built the Gala learning environment to make the best teaching cases on sustainability, emphasizing openness, experimentation, and collaboration across the world.',
+  imageURL: '',
+}
 
 const examples = [
   {
-    hed: "Data in Context",
-    dek: "MBDH Learning Innovation Fellows",
+    hed: 'Data Skills for Future Economies',
+    dek: 'MBDH Learning Innovation Fellows',
     body:
-      "Student fellows from across the midwest region work with faculty to create innovative interactive data analysis activities that nest within sustainability science case studies. They design, prototype, and pilot these features in classrooms within the Midwest Big Data Hub (MBDH) network.",
+      'Student fellows from across the midwest region’s colleges, vocational schools, and universities work with faculty to create innovative interactive data analysis activities that nest within sustainability science case studies. They design, prototype, and pilot these features in classrooms or professional learning communities within the Midwest Big Data Hub (MBDH) network, part of a four year, $4 million award from the National Science Foundation.',
 
-    image: "mbdh.png",
+    image: 'mbdh.png',
     moreLink:
-      "https://midwestbigdatahub.org/mbdh-learning-innovation-fellows-program/",
-    caseLink: ""
+      'https://midwestbigdatahub.org/mbdh-learning-innovation-fellows-program/',
+    caseLink: '',
   },
   {
-    hed: "Enhancing Experiential Learning",
+    hed: 'Enhancing Ecology Learning',
     dek:
-      "Online Content for Experiential Learning of Tropical Systems (OCELOTS)",
+      'Online Content for Experiential Learning of Tropical Systems (OCELOTS)',
     body:
-      "OCELOTS is an international network of tropical ecologists, educators, media specialists, instructional designers and database engineers exploring best practices in research-based modules for teaching tropical biology and conservation. Members of the network have integrated interactive data applications into cases to create online labs, used video and sound to capture place-based experiences, and pioneered collaborative online “networkshops” to exchange feedback on cases in progress.",
-    image: "ocelots.png",
-    moreLink: "",
-    caseLink: "https://www.learngala.com/catalog/libraries/ocelots"
+      'OCELOTS is an international network of tropical ecologists, educators, media specialists, instructional designers and database engineers exploring best practices in research-based modules for teaching tropical biology and conservation. Funded by a National Science Foundation Grant (RCN-UBE proposal ID: 2120141), members of the network have integrated interactive data applications into cases to create online labs, used video and sound to capture place-based experiences, and pioneered collaborative online “networkshops” to exchange feedback on cases in progress.',
+    image: 'ocelots.png',
+    moreLink: '',
+    caseLink: 'https://www.learngala.com/catalog/libraries/ocelots',
   },
   {
-    hed: "Grounded Engagement",
-    dek: "U-M SEAS Environmental Justice Education",
+    hed: 'Grounded Engagement',
+    dek: 'U-M SEAS Environmental Justice Education',
     body:
-      "Cases in this library have been created in the University of Michigan's Environmental Justice Certificate and Masters Degree programs, by a combination of students, faculty and professionals in advocacy, policy and research sectors. Each case addresses an environmental justice topic, from ableism in the environmentalist movement to indigenous rights and resource development.",
-    image: "ej.png",
-    moreLink: "",
+      "Cases in this library have been created in the University of Michigan's Environmental Justice Certificate and Masters Degree programs, by a combination of students, faculty and alumni and other professionals in advocacy, policy and research sectors. Each case addresses an environmental justice topic, from ableism in the environmentalist movement to indigenous rights and resource development.",
+    image: 'ej.png',
+    moreLink: '',
     caseLink:
-      "https://www.learngala.com/catalog/libraries/um-seas-environmental-justice"
+      'https://www.learngala.com/catalog/libraries/um-seas-environmental-justice',
   },
   {
-    hed: "Adapting Case-Based Teaching for Sustainability",
-    dek: "Michigan Sustainability Cases",
+    hed: 'Adapting Case-Based Teaching for an Emerging Field',
+    dek: 'Michigan Sustainability Cases',
     body:
-      "Michigan Sustainability Cases center on real-world problems with multiple possible solutions. They are co-designed by teams of students and faculty from across the University of Michigan campus, in partnership with practitioners from various sectors. As the very first and one of the finest libraries on gala, they seek both to transform case based learning itself, and to widen participation in solving environment and sustainability challenges.",
-    image: "msc.png",
+      'Michigan Sustainability Cases center on real-world problems with multiple possible solutions. They are co-designed by teams of students and faculty from across the University of Michigan campus, in partnership with practitioners from various sectors. As the very first and one of the finest libraries on gala, they seek both to transform case based learning itself, and to widen participation in solving environment and sustainability challenges.',
+    image: 'msc.png',
     moreLink:
-      "https://crlt.umich.edu/michigan-sustainability-cases-initiative-adapting-case-based-teaching-innovative-sustainability",
-    caseLink: "https://www.learngala.com/catalog/libraries/michigan"
+      'https://crlt.umich.edu/michigan-sustainability-cases-initiative-adapting-case-based-teaching-innovative-sustainability',
+    caseLink: 'https://www.learngala.com/catalog/libraries/michigan',
   },
   {
-    hed: "Sustainable Development",
-    dek: "Sustainability and Development MasterTrack™ Certificate",
+    hed: 'Sustainability and Development for Global Learners',
+    dek: 'Sustainability and Development MasterTrack™ Certificate',
     body:
-      "Focused on the United Nations’ Sustainable Development goals, this online masters program has students analyze three Gala cases and synthesize their lessons for sustainability and development, before creating their own cases and developing an instructional component for the case of your choosing with a faculty member.",
-    image: "sdgs.png",
+      'This collection focuses on the United Nations’ Sustainable Development goals, this online masters program has students analyze three Gala cases and synthesize their lessons for sustainability and development, before creating their own cases and developing an instructional component for the case of your choosing with a faculty member.',
+    image: 'sdgs.png',
     moreLink:
-      "https://online.umich.edu/series/sustainability-and-development-mastertrack-certificate/"
+      'https://online.umich.edu/series/sustainability-and-development-mastertrack-certificate/',
   },
   {
-    hed: "A lab but for stories",
-    dek: "Detroit River Story Lab",
-    body: "",
-    image: "detroitriver.png",
+    hed:
+      'Secondary Education for Sustainability: Curricular Environmental Partnerships',
+    dek: 'The Dow Innovation Fellows Program at CEDER',
+    body:
+      'The Dow Innovation Teacher Fellowship (DITF), sponsored by the Dow Company Foundation, aims to provide educators with more support on their journey to become better stewards of the environment. DITF is implemented through the University of Michigan’s Center for Education Design, Evaluation, and Research (CEDER). DITF supports the education of teachers in the Saginaw-Midland-Bay City tricity area of Michigan on sustainability education methods, through professional development opportunities. The program integrates sustainability across school subjects, to support development of new Gala cases and adaptation of existing cases as interdisciplinary sustainability learning units in middle and high school classrooms using project and place-based pedagogical methods.',
+    image: 'ditf.png',
     moreLink:
-      "https://detroit.umich.edu/news-stories/detroit-river-story-lab-receives-carbon-neutrality-grant/"
-  }
-];
+      'https://soe.umich.edu/news/secondary-teachers-invited-apply-dow-innovation-teacher-fellowship',
+  },
+]
 
 function Features() {
   return (
@@ -123,11 +125,11 @@ function Features() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 function Feature({ imageUrl, title, description }) {
-  const imgUrl = useBaseUrl(imageUrl);
+  const imgUrl = useBaseUrl(imageUrl)
   return (
     <div className={`col col--4 ${home.feature}`}>
       {imgUrl && (
@@ -138,7 +140,7 @@ function Feature({ imageUrl, title, description }) {
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
-  );
+  )
 }
 
 function About() {
@@ -150,7 +152,7 @@ function About() {
           <p>{about.description}</p>
           <ul>
             <li>
-              <Link to={useBaseUrl("publications/")}>Publications</Link>
+              <Link to={useBaseUrl('publications/')}>Publications</Link>
             </li>
           </ul>
         </div>
@@ -160,7 +162,7 @@ function About() {
             <Feed />
           </div>
           <div className={home.moreButton}>
-            <Link className="button button--link" to={useBaseUrl("blog/")}>
+            <Link className="button button--link" to={useBaseUrl('blog/')}>
               More
             </Link>
           </div>
@@ -170,19 +172,19 @@ function About() {
           <div className={home.twitterWrapper}>
             <Timeline
               dataSource={{
-                sourceType: "profile",
-                screenName: "learnmsc"
+                sourceType: 'profile',
+                screenName: 'learnmsc',
               }}
               options={{
-                height: "400",
-                chrome: "noheader, nofooter"
+                height: '400',
+                chrome: 'noheader, nofooter',
               }}
             />
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function Examples() {
@@ -199,7 +201,7 @@ function Examples() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function CallToAction() {
@@ -207,28 +209,28 @@ function CallToAction() {
     <div className={home.callToActionContainer}>
       <img
         className={home.callToActionImage}
-        src={require("@site/static/img/gala-background.png").default}
+        src={require('@site/static/img/gala-background.png').default}
       />
       <div className={home.callToActionWrapper}>
         <div className={home.callToActionInnerContainer}>
           <h3>Ready to get started?</h3>
           <p>
-            The best way to get to know Gala is to dive in and{" "}
-            <a href="https://www.learngala.com/my_cases">create a pilot case</a>{" "}
+            The best way to get to know Gala is to dive in and{' '}
+            <a href="https://www.learngala.com/my_cases">create a pilot case</a>{' '}
             or <a href="https://www.learngala.com">browse some cases</a> in our
-            libraries. You can also check out the{" "}
-            <Link to={useBaseUrl("docs/")}>quick start guide</Link> for a basic
+            libraries. You can also check out the{' '}
+            <Link to={useBaseUrl('docs/')}>quick start guide</Link> for a basic
             how-to.
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default function Home() {
-  const context = useDocusaurusContext();
-  const { siteConfig = {} } = context;
+  const context = useDocusaurusContext()
+  const { siteConfig = {} } = context
   return (
     <Layout
       title={`About ${siteConfig.title}`}
@@ -248,7 +250,7 @@ export default function Home() {
               </a>
 
               <Link
-                to={useBaseUrl("docs/")}
+                to={useBaseUrl('docs/')}
                 className={`button ${home.secondaryHeaderButton}`}
               >
                 Quick Start Guide
@@ -274,5 +276,5 @@ export default function Home() {
         </div>
       </main>
     </Layout>
-  );
+  )
 }
