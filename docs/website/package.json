@@ -22,14 +22,15 @@
     "file-loader": "^6.2.0",
     "prism-react-renderer": "^1.2.1",
     "react": "^17.0.1",
+
     "react-dom": "^17.0.1",
     "url-loader": "^4.1.1",
     "react-twitter-widgets": "^1.10.0"
   },
   "browserslist": {
     "production": [
-      ">0.5%",
-      "not dead",
+      ">0.2%",
+      "not ie <= 11",
       "not op_mini all"
     ],
     "development": [
