@@ -1,0 +1,167 @@
+/* stylelint-disable docusaurus/copyright-header */
+
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.bodyWrapper {
+  --ifm-spacing-horizontal: 2.25rem;
+  hyphens: auto;
+}
+
+/* header */
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryHeaderButton {
+  color: var(--ifm-color-primary) !important;
+}
+
+.secondaryHeaderButton {
+  border: 1px solid var(--ifm-hero-text-color);
+}
+
+.secondaryHeaderButton:hover {
+  background-color: var(--ifm-color-primary-light);
+}
+
+@media screen and (max-width: 966px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.heroButtonContainer {
+  display: inline-block;
+}
+
+/* sections */
+.section {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+section:nth-child(1) {
+  background-color: var(--ifm-color-secondary);
+  text-align: center;
+  hyphens: auto;
+}
+
+section:nth-child(2) {
+  background-color: var(--ifm-color-secondary-lightest);
+}
+
+section:nth-child(2) h3 {
+  text-align: left;
+}
+
+section:nth-child(3) {
+  padding-bottom: 3em;
+}
+
+section:nth-child(4) {
+  padding-top: 0;
+  background-color: var(--ifm-color-primary-darker);
+  justify-content: center;
+}
+
+/* features */
+.featureImage {
+  height: 200px;
+  width: 200px;
+}
+
+/* about */
+@media (max-width: 997px) {
+  .aboutWrapper > * > div {
+    margin-bottom: 2.25rem;
+  }
+  .twitterWrapper {
+    max-width: 400px;
+  }
+}
+
+.newsWrapper li {
+  margin-bottom: 0.5rem;
+}
+
+/* examples */
+.examplesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .examplesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 704px) {
+  .examplesGrid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* call to action */
+.callToActionContainer {
+  position: relative;
+}
+
+.callToActionContainer .callToActionImage {
+  opacity: 0.4;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.callToActionContainer .callToActionWrapper {
+  width: 100%;
+  position: absolute;
+  top: 30%;
+}
+
+.callToActionContainer .callToActionInnerContainer {
+  margin: auto;
+  width: 50%;
+  padding: 1.2rem 1rem;
+  border: none;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-size: 110%;
+  background-color: white;
+}
+
+@media (max-width: 704px) {
+  .callToActionContainer .callToActionInnerContainer {
+    width: 90%;
+  }
+  .callToActionContainer .callToActionImage {
+    position: static;
+    margin-bottom: -2rem;
+  }
+
+  .callToActionContainer .callToActionWrapper {
+    position: static;
+  }
+}
+
+.callToActionContainer a {
+  background: var(--ifm-color-secondary);
+}
+
+.moreButtonAlignRight {
+  text-align: left;
+}
+
+.moreButton a::after {
+  content: " ›";
+}
