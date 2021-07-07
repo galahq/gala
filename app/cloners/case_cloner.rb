@@ -11,6 +11,7 @@ class CaseCloner < Clowne::Cloner
     record.slug = slug
     if source.locale == record.locale
       record.title = "COPY: #{record.title}"
+      record.translation_base_id = nil
     else
       record.title = "#{Translation.language_name(locale)}: #{record.title}"
       record.translators = ['—']
@@ -29,7 +30,6 @@ class CaseCloner < Clowne::Cloner
       element = case_element.element
       element.class.cloner_class.call(element, kase: record)
     end
-
   end
 end
 
