@@ -124,6 +124,16 @@ function PublicationsPage() {
   function Publications() {
     return (
       <div className={publicationsStyle.publications}>
+        <div className="row">
+          <div className="col col--10">
+            <p>
+              Our initiative has long prioritized the open access publication of
+              cases and data about case use in relevant journals. If you have
+              difficulty finding any of our publications please don’t hesitate
+              to reach out to us at hello@learngala.
+            </p>
+          </div>
+        </div>
         <ul>
           {publications.map((pub, index) => (
             <li key={index}>
