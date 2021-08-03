@@ -8,7 +8,7 @@ module.exports = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'https://msc-gala.imgix.net/favicon_gala.png',
   organizationName: 'galahq', // Usually your GitHub org/user name.
-  projectName: 'gala', // Usually your repo name.
+  projectName: 'gala-docs', // Usually your repo name.
 
   customFields: {
     fonts: {
