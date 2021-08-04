@@ -55,10 +55,3 @@ blocks:
         - name: RSpec - feature tests
           commands:
             - bundle exec rspec spec/features
-promotions:
-  - name: Docusaurus Deploy
-    pipeline_file: docusaurus-deploy.yml
-    auto_promote_on:
-      - result: passed
-        branch:
-          - master
