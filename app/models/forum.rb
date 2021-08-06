@@ -12,6 +12,6 @@ class Forum < ApplicationRecord
   has_one :group, through: :community
 
   def community
-    super || GlobalCommunity.instance
+    super
   end
 end

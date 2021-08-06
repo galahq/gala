@@ -16,28 +16,7 @@ RSpec.describe 'Forums index' do
     get "/cases/#{kase.slug}/forums.json"
 
     expect(response.body).to be_json including(
-      including(community: including(
-        param: nil,
-        name: 'Global Community',
-        description: '',
-        global: true
-      )),
       including(community: including(name: 'My Group'))
-    )
-  end
-
-  it 'marks the active community' do
-    kase = create :case
-    reader = create :reader
-    create :enrollment, case: kase, reader: reader
-
-    reader.update active_community_id: nil # Global Community
-
-    sign_in reader
-    get "/cases/#{kase.slug}/forums.json"
-
-    expect(response.body).to be_json including(
-      including(community: including(name: 'Global Community', active: true))
     )
   end
 
@@ -59,10 +38,6 @@ RSpec.describe 'Forums index' do
     get "/cases/#{kase.slug}/forums.json"
 
     expect(response.body).to be_json including(
-      including(
-        community: including(name: 'Global Community'),
-        moderateable: true
-      ),
       including(
         community: including(name: 'My Group'),
         moderateable: true

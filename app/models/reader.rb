@@ -87,16 +87,13 @@ class Reader < ApplicationRecord
     end
   end
 
-  # @return [Community, GlobalCommunity]
+  # @return Community or nil
   def active_community
-    return GlobalCommunity.instance if active_community_id.nil?
-
-    Community.find(active_community_id)
+    Community.find_by(id: active_community_id)
   end
 
   # A reader’s communities include those she has a {GroupMembership} in and an
-  # {Invitation} to. This relation does not include the {GlobalCommunity}, but
-  # all readers are a member therein.
+  # {Invitation} to.
   # @return [ActiveRecord::Relation<Community>]
   def communities
     query = Community

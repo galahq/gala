@@ -53,11 +53,6 @@ feature 'Viewing a case' do
           expect(page).to have_content invited_community.name.to_s
           find_link(invited_community.name).hover
           expect(find_link(invited_community.name)).to have_selector '.pt-icon-cross'
-
-          sleep 1
-          click_link(invited_community.name)
-          find('.pt-menu-item', text: GlobalCommunity.instance.name).click
-          expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
         end
       end
     end

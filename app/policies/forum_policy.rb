@@ -8,24 +8,24 @@ class ForumPolicy < ApplicationPolicy
       scope.joins(:case).where(
         case: user.enrolled_cases,
         id: scope.where(community: user.communities)
-                 .or(GlobalCommunity.instance.forums)
       )
     end
   end
 
   # Someone who can moderate a forum can delete others' comments in it
   def moderate?
-    editor? || (author? && in_global_community?) || group_admin?
+    puts record.community.name
+    puts 'moderate'
+    puts editor?
+    puts author?
+    puts group_admin?
+    editor? || author? || group_admin?
   end
 
   private
 
   def author?
     user.my_cases.include?(record.case)
-  end
-
-  def in_global_community?
-    record.community.global?
   end
 
   def group_admin?

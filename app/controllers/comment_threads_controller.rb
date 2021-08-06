@@ -9,7 +9,7 @@ class CommentThreadsController < ApplicationController
 
   # @route [GET] `/cases/case-slug/comment_threads`
   def index
-    @forum = current_reader.active_community.forums.find_by(case: @case)
+    @forum = current_reader.active_community&.forums&.find_by(case: @case)
     @comment_threads = CommentThread.none if @forum.nil?
     @comment_threads ||=
       @forum.comment_threads
@@ -80,7 +80,7 @@ class CommentThreadsController < ApplicationController
 
   def active_forum
     kase = @case || @card.case
-    current_reader.active_community.forums.find_by case: kase
+    current_reader.active_community&.forums&.find_by case: kase
   end
 
   def comment_thread_params

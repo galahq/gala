@@ -135,13 +135,10 @@ class Case < ApplicationRecord
     archive.refresh!(root_url: root_url)
   end
 
-  # Universal communities and the global community (`community_id == nil`) need
-  # to have a forum on all cases.
+  # Universal communities need to have a forum on all cases.
   def create_forum_for_universal_communities
-    Forum.create case: self
-
     Community.universal.find_each do |community|
-      community.forums.create case: self
+      #community.forums.create case: self
     end
   end
 
