@@ -11,7 +11,4 @@ class Forum < ApplicationRecord
 
   has_one :group, through: :community
 
-  def community
-    super
-  end
 end

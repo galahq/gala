@@ -51,9 +51,4 @@ class Community < ApplicationRecord
     end
   end
 
-  # Is this Community-conforming model the {GlobalCommunity}?
-  # @return [Boolean]
-  def global?
-    group.nil?
-  end
 end

@@ -138,7 +138,7 @@ class Case < ApplicationRecord
   # Universal communities need to have a forum on all cases.
   def create_forum_for_universal_communities
     Community.universal.find_each do |community|
-      #community.forums.create case: self
+      community.forums.create case: self
     end
   end
 

@@ -14,11 +14,6 @@ class ForumPolicy < ApplicationPolicy
 
   # Someone who can moderate a forum can delete others' comments in it
   def moderate?
-    puts record.community.name
-    puts 'moderate'
-    puts editor?
-    puts author?
-    puts group_admin?
     editor? || author? || group_admin?
   end
 
