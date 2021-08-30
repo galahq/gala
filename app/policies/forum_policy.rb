@@ -14,7 +14,7 @@ class ForumPolicy < ApplicationPolicy
 
   # Someone who can moderate a forum can delete others' comments in it
   def moderate?
-    editor? || author? || group_admin?
+    editor? || group_admin?
   end
 
   private

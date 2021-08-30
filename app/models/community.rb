@@ -9,7 +9,6 @@
 # @attr description [Translated<String>]
 # @attr universal [Boolean] universal communities have Forums for every case
 #
-# @see GlobalCommunity GlobalCommunity: this model’s null object
 class Community < ApplicationRecord
   include Mobility
 

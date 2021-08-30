@@ -6,8 +6,13 @@ feature 'Leaving a comment' do
   let!(:enrollment) { create :enrollment }
   let!(:global_forum) { enrollment.case.forums.find_by community: nil }
   let!(:private_forum) do
+    ## A private forum is only available to a reader when it's been deployed to them
     private_forum = create :forum, :with_community, case: enrollment.case
     enrollment.reader.invitations.create community: private_forum.community
+    group = create :group
+    group.readers << enrollment.reader
+    create :deployment, case: enrollment.case, group: group
+    private_forum
   end
 
   before { login_as enrollment.reader }
@@ -57,11 +62,11 @@ feature 'Leaving a comment' do
   end
 
   scenario 'is not possible with a non-unique selection' do
-    card = enrollment.case.pages.first.cards.first
+    card = private_forum.case.pages.first.cards.first
     card.raw_content = ContentState.with_text('apple ' * 50)
     card.save
 
-    visit case_path(enrollment.case) + '/1'
+    visit case_path(private_forum.case) + '/1'
     click_link 'Respond', match: :first
     first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
     first_paragraph.double_click
@@ -92,7 +97,7 @@ feature 'Leaving a comment' do
       original_highlight_text: first_letter,
       reader: other_reader,
       locale: I18n.locale,
-      forum: global_forum
+      forum: private_forum
     )
   end
 

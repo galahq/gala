@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :comment_thread do
-    association :forum
+    association :forum, :with_community
     association :reader
   end
 end

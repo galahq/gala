@@ -9,7 +9,6 @@ RSpec.describe ForumPolicy, type: :policy do
     it 'includes the forums the reader can participate in' do
       reader = create :reader
       kase = create :case
-      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
 
       create :enrollment, case: kase, reader: reader
 
@@ -21,13 +20,12 @@ RSpec.describe ForumPolicy, type: :policy do
 
       scope = ForumPolicy::Scope.new(reader, Forum).resolve
 
-      expect(scope).to include global_forum, my_forum
+      expect(scope).to include my_forum
     end
 
     it 'includes no forums if the user is not enrolled in the case' do
       reader = create :reader
       kase = create :case
-      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
 
       my_group = create :group, name: 'My Group'
       create :group_membership, :admin, group: my_group, reader: reader
@@ -37,22 +35,11 @@ RSpec.describe ForumPolicy, type: :policy do
 
       scope = ForumPolicy::Scope.new(reader, Forum).resolve
 
-      expect(scope).not_to include global_forum, my_forum
+      expect(scope).not_to include my_forum
     end
   end
 
   permissions :show? do
-    it 'allows a reader who is enrolled in the case to read the Global ' \
-       'Community’s forum' do
-      reader = create :reader
-      kase = create :case
-      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
-
-      create :enrollment, case: kase, reader: reader
-
-      expect(subject).to permit reader, global_forum
-    end
-
     it 'allows a reader who is enrolled in the case to read the forum of a ' \
        'community they belong to' do
       reader = create :reader
@@ -83,33 +70,13 @@ RSpec.describe ForumPolicy, type: :policy do
       expect(subject).not_to permit reader, other_forum
     end
 
-    it 'does not allow a reader who is not enrolled to read the Global ' \
-       'Community’s forum' do
-      reader = create :reader
-      kase = create :case
-      global_forum = kase.forums.merge(GlobalCommunity.instance.forums).first
-
-      expect(subject).not_to permit reader, global_forum
-    end
   end
 
   permissions :moderate? do
     it 'denies a normal reader from moderating forums' do
       reader = build :reader
-      forum = build :forum
+      forum = build :forum, :with_community
       expect(subject).not_to permit reader, forum
-    end
-
-    it 'permits case authors to moderate the global community forum ' \
-       'for their case' do
-      kase = create :case
-
-      author = build :reader
-      kase.editorships.create editor: author
-
-      forum = build :forum, case: kase
-
-      expect(subject).to permit author, forum
     end
 
     it 'denies case authors from moderating non-global forums ' \
@@ -124,7 +91,7 @@ RSpec.describe ForumPolicy, type: :policy do
       expect(subject).not_to permit author, forum
     end
 
-    it 'denies case authors from moderating the global community forum ' \
+    it 'denies case authors from moderating' \
        'on someone else’s case' do
       kase = create :case
 
@@ -135,7 +102,7 @@ RSpec.describe ForumPolicy, type: :policy do
       kase2 = create :case
       kase2.editorships.create editor: author2
 
-      forum = build :forum, case: kase2
+      forum = build :forum, :with_community, case: kase2
 
       expect(subject).not_to permit author, forum
     end
@@ -158,7 +125,7 @@ RSpec.describe ForumPolicy, type: :policy do
       create :group_membership, :admin, group: group, reader: admin
 
       kase = build :case
-      forum = build :forum, case: kase
+      forum = build :forum, :with_community, case: kase
 
       expect(subject).not_to permit admin, forum
     end

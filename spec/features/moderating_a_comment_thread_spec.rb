@@ -4,7 +4,6 @@ require 'rails_helper'
 
 feature 'Moderating a comment thread' do
   let!(:enrollment) { create :enrollment, reader: create(:reader, :editor) }
-  let!(:global_forum) { enrollment.case.forums.find_by community: nil }
   let!(:other_reader) { create :reader }
   let!(:comment_thread) do
     first_card = enrollment.case.pages.first.cards.first
@@ -13,7 +12,7 @@ feature 'Moderating a comment thread' do
       original_highlight_text: first_letter,
       reader: other_reader,
       locale: I18n.locale,
-      forum: global_forum
+      forum: create(:forum, :with_community)
     )
   end
 

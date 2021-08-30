@@ -89,7 +89,7 @@ class Reader < ApplicationRecord
 
   # @return Community or nil
   def active_community
-    Community.find_by(id: active_community_id)
+    Community.find_by(id: active_community_id) || group_communities&.last
   end
 
   # A reader’s communities include those she has a {GroupMembership} in and an

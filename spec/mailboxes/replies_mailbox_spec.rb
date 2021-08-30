@@ -6,6 +6,7 @@ RSpec.describe RepliesMailbox, type: :mailbox do
   it 'creates a new comment from the email contents' do
     reader = create :reader
     thread = create :comment_thread
+    deployment = create :deployment, case: thread.case
     reader.enrollments.create case: thread.case
 
     receive_response 'Yeah I agree.', reader: reader, thread: thread
