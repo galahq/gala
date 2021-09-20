@@ -182,8 +182,10 @@ feature 'Leaving a comment' do
       expect(email.text_part.body.to_s).to match 'Test reply'
       expect(email.html_part.body.to_s).to match 'Test reply'
 
-      link = email.text_part.body.match(%r{Reply online.+//[^/]+(/.+)\)})[1]
-      visit link
+      capy_email = Capybara::Node::Simple.new(email.html_part.body.to_s)
+      link = capy_email.find_link("Reply online")
+      expect(capy_email).to have_link("Reply online")
+      visit link[:href].sub("http://localhost:3000","")
       expect(page).to have_content 'Test reply'
     end
 
