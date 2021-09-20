@@ -50,9 +50,7 @@ module ApplicationHelper
   end
 
   def md_button_to(text, href)
-    raw <<~MD
-      <span class="o-button">[#{text}](#{href})</span>
-MD
+    raw(markdown("<span class='o-button'>[#{text}](#{href})</span>"))
   end
 
   def markdown(md)
