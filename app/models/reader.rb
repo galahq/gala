@@ -72,6 +72,7 @@ class Reader < ApplicationRecord
                             message: 'cannot be larger than 2 MB' },
                     content_type: { in: %w[image/png image/jpeg],
                                     message: 'must be JPEG or PNG' }
+  validates :terms_of_service, acceptance: true
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
          :trackable, :validatable, :confirmable
