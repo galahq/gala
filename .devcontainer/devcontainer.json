@@ -1,0 +1,49 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.191.1/containers/ruby-rails-postgres
+{
+	"name": "Gala",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		// fixes a bug with Terminal not working on recent Safari versions
+		"terminal.integrated.gpuAcceleration": "off"
+		// ,
+		// "sqltools.connections": [
+		// 	{
+		// 		"name": "Rails Database",
+		// 		"driver": "PostgresSQL",
+		// 		"previewLimit": 50,
+		// 		"server": "localhost",
+		// 		"port": 30928,
+
+		// 		// update this to match config/database.yml
+		// 		"database": "orchard_development",
+		// 		"username": "postgres",
+		// 		"password": "delphi"
+		// 	}
+		// ]
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"dunn.redis",
+		"mutantdino.resourcemonitor",
+		"rebornix.ruby"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [3000, 3306],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash .devcontainer/setup",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode",
+
+	"features": {
+		"github-cli": "latest"
+	}
+}

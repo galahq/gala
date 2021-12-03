@@ -63,8 +63,11 @@ gem 'oj'
 gem 'oj_mimic_json'
 gem 'pdfkit'
 gem 'redcarpet'
-gem 'sass-rails', '~> 5.0'
-gem 'webpacker', '>= 4.0.x'
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 6.0.0'
+gem "sassc", '~> 2.4.0'
+
+gem 'webpacker', '~> 5.3.0'
 
 # Logging and Monitoring
 gem 'administrate'
@@ -133,4 +136,4 @@ group :test do
   gem 'webdrivers', require: false
 end
 
-ruby '2.6.6'
+ruby '2.6.9'

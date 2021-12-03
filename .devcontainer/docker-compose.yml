@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        VARIANT: 2.6.6
+        NODE_VERSION: "16"
+
+    environment:
+      REDIS_URL: "redis://redis:6379"
+
+    volumes:
+      # Forwards the local Docker socket to the container.
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Use a named volume for the source code
+      - workspace:/workspace
+      # Persist VS Code extensions between rebuilds
+      - vscode-extensions:/root/.vscode-server/extensions
+      # And/or for VS Code Insiders
+      - vscode-extensions-insiders:/root/.vscode-server-insiders/extensions
+
+    user: vscode
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    # network_mode: service:mysql
+
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: vscode
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  redis:
+    image: redis:6.2.5
+    volumes:
+      - "redis-data:/data"
+
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: delphi
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+      - ./db/dev-seeding:/docker-entrypoint-initdb.d
+
+    # Add "forwardPorts": ["3306"] to **devcontainer.json** to forward MySQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+    # Add "forwardPorts": ["3306"] to **devcontainer.json** to forward MySQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+
+volumes:
+  workspace:
+  postgres-data:
+  redis-data:
+  es-data:
+  vscode-extensions:
+  vscode-extensions-insiders:
