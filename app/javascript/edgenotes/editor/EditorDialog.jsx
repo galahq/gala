@@ -110,7 +110,7 @@ const EditorDialog = ({
         <div className="pt-dialog-footer-actions">
           <a
             className="pt-button pt-icon-help"
-            href="https://docs.learngala.com/docs/authoring-embedding-media.html"
+            href="https://docs.learngala.com/docs"
             target="_blank"
             rel="noopener noreferrer"
             style={{ marginLeft: 0 }}

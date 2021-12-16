@@ -28,7 +28,7 @@ const NoSearchResults = injectIntl(({ intl }) => (
         </p>
         <a
           className="pt-button pt-intent-primary pt-icon-annotation"
-          href="https://docs.learngala.com/docs/authoring-getting-started.html"
+          href="https://docs.learngala.com/docs/"
         >
           <FormattedMessage id="catalog.createACase" />
         </a>
