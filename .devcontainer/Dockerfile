@@ -1,7 +1,7 @@
 # Fortunately the debian-based Ruby container from dockerhub _is_ available for arm64 (and a zillion other architectures)
 
 # [Choice] Ruby version: 3, 3.0, 2, 2.7, 2.6
-ARG VARIANT=2.6.6
+ARG VARIANT=2.7
 FROM mcr.microsoft.com/vscode/devcontainers/ruby:0-${VARIANT}
 
 # Default value to allow debug server to serve content over GitHub Codespace's port forwarding service
