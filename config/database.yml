@@ -64,6 +64,11 @@ development:
 test:
   <<: *default
   database: orchard_test
+  ## when remote
+  username: postgres
+  password: delphi
+  host: postgres
+  port: 5432
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
