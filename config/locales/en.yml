@@ -283,7 +283,6 @@ en:
       toc: Table of Contents
   catalog:
     catalog: Catalog
-    choose_for_yourself: Your library
     create_a_case: Create a Case
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
@@ -301,7 +300,6 @@ en:
       Gala modules perform well in classroom, community, and remote learning settings. 
       Publish your case and share it as widely as you like. Institutions can create 
       libraries with multiple cases.
-
     keywords: Keywords
     learn_more: Learn more
     my_library: My Library
@@ -319,6 +317,7 @@ en:
       welcome_back_title: Welcome back
       welcome_back_message: Find a case by browsing or searching from this page, check out the {guideLink}
        and create your own case, or {newsLink}.
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
