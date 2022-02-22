@@ -283,7 +283,7 @@ en:
       toc: Table of Contents
   catalog:
     catalog: Catalog
-    choose_for_yourself: Choose for yourself
+    choose_for_yourself: Your library
     create_a_case: Create a Case
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
@@ -301,16 +301,12 @@ en:
       Gala modules perform well in classroom, community, and remote learning settings. 
       Publish your case and share it as widely as you like. Institutions can create 
       libraries with multiple cases.
-    join_conversation: >
-      Join the conversation by asking questions
-      and paying your learning forward.
+
     keywords: Keywords
     learn_more: Learn more
-    meet_stakeholders: >
-      Meet different stakeholders and dive deep with a multimodal narrative.
     my_library: My Library
     natural_resources: Natural Resources
-    shortcut_experience: Apply principles to improve practice.
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
     welcome_message:
       about_link_text: learn more about us
       guide_link_text: quick start guide

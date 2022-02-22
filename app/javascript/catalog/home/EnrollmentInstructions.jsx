@@ -14,16 +14,12 @@ const EnrollmentInstructions = () => (
     </h5>
     <ul>
       <li>
-        <FormattedMessage id="catalog.meetStakeholders" />
+        <FormattedMessage id="catalog.enrollmentsInstruction" />
       </li>
       <li>
-        <FormattedMessage id="catalog.shortcutExperience" />
-      </li>
-      <li>
-        <FormattedMessage id="catalog.joinConversation" />
+        <FormattedMessage id="catalog.readingListInstruction" />
       </li>
     </ul>
-    <FormattedMessage id="catalog.enrollmentsInstruction" />
   </Container>
 )
 
