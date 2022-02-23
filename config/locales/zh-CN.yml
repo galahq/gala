@@ -273,30 +273,34 @@ zh-CN:
       toc: 目录
   catalog:
     catalog: 案例目录
-    choose_for_yourself: 我的学习我做主
     create_a_case: 新建案例
     enrollments_instruction: >
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
-      运用案例来进行关于当代可持续发展问题的教学。在Gala平台上你能轻松找到寓教于乐的可用于课堂或公众教育教学的材料。
+      Gala makes it quick and easy to create a case or adapt an existing learning module. Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
     global_systems: 全球系统
-    impactful_cases: 运用案例
+    impactful_cases: Create and Innovate
     improve_your_communication: >
-      将你的多媒体案例发表到Gala平台上，用Gala清晰而易于使用的界面帮助教学者在美好的用户体验中更好地理解复杂的问题。
-    inclusive_community: 展开探讨
-    innovative_teaching: 创新教学
+      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together and solicit feedback with inline comments before publishing and sharing.
+    inclusive_community: Teach and Share
+    innovative_teaching: Collaborate and Adapt
     join_the_community: >
-      从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
-    join_conversation: >
-      参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
+      Gala modules perform well in classroom, community, and remote learning settings. Publish your case and share it as widely as you like. Institutions can create libraries with multiple cases.
     keywords: 关键词
     learn_more: 了解更多
-    meet_stakeholders: >
-      在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
     my_library: My Library
     natural_resources: 自然资源
-    open_access_learning_tools: 致力于可持续发展的开源型教学平台
-    shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    welcome_message:
+      about_link_text: learn more about us
+      guide_link_text: quick start guide
+      news_link_text: see what we're up to
+      to_get_started: >
+        We built Gala to make sustainability learning more grounded, dynamic, and collaborative, and we can’t do it without you. To get started, find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {aboutLink}.
+      welcome_title: Open tools for sustainability learning
+      welcome_back_title: Welcome back
+      welcome_back_message: Find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {newsLink}.
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: 删除整个话题讨论
