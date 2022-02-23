@@ -278,30 +278,34 @@ es:
       toc: Tabla de Contenidos
   catalog:
     catalog: Catálogo
-    choose_for_yourself: Tú vas a elegir
     create_a_case: Create a Case
     enrollments_instruction: >
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     find_a_case: >
-      Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+      Gala makes it quick and easy to create a case or adapt an existing learning module. Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
     global_systems: Global Systems
-    impactful_cases: Impactful Cases
+    impactful_cases: Create and Innovate
     improve_your_communication: >
-      Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
-    inclusive_community: Inclusive Community
-    innovative_teaching: Innovative Teaching
+      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together and solicit feedback with inline comments before publishing and sharing.
+    inclusive_community: Teach and Share
+    innovative_teaching: Collaborate and Adapt
     join_the_community: >
-      Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
-    join_conversation: >
-      Súmete a la conversación, preguntá, y compartí tu conomiciento.
+      Gala modules perform well in classroom, community, and remote learning settings. Publish your case and share it as widely as you like. Institutions can create libraries with multiple cases.
     keywords: Keywords
     learn_more: Más información
-    meet_stakeholders: >
-      Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
     my_library: My Library
     natural_resources: Natural Resources
-    open_access_learning_tools: Open access learning tools for sustainability science
-    shortcut_experience: Aplicar principios para mejorar en la práctica.
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    welcome_message:
+      about_link_text: learn more about us
+      guide_link_text: quick start guide
+      news_link_text: see what we're up to
+      to_get_started: >
+        We built Gala to make sustainability learning more grounded, dynamic, and collaborative, and we can’t do it without you. To get started, find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {aboutLink}.
+      welcome_title: Open tools for sustainability learning
+      welcome_back_title: Welcome back
+      welcome_back_message: Find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {newsLink}.
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
