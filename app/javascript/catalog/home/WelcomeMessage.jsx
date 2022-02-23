@@ -19,7 +19,7 @@ function WelcomeMessage(props) {
         id="catalog.welcomeMessage.toGetStarted"
         values={{
           guideLink: (
-            <a href="https://docs.learngala.com/">
+            <a href="https://docs.learngala.com/docs">
               <FormattedMessage
                 id="catalog.welcomeMessage.guideLinkText"
                 defaultMessage="quick start guide"
