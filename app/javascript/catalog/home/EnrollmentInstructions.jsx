@@ -10,20 +10,16 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 const EnrollmentInstructions = () => (
   <Container>
     <h5>
-      <FormattedMessage id="catalog.chooseForYourself" />
+      <FormattedMessage id="catalog.yourLibrary" />
     </h5>
     <ul>
       <li>
-        <FormattedMessage id="catalog.meetStakeholders" />
+        <FormattedMessage id="catalog.enrollmentsInstruction" />
       </li>
       <li>
-        <FormattedMessage id="catalog.shortcutExperience" />
-      </li>
-      <li>
-        <FormattedMessage id="catalog.joinConversation" />
+        <FormattedMessage id="catalog.readingListInstruction" />
       </li>
     </ul>
-    <FormattedMessage id="catalog.enrollmentsInstruction" />
   </Container>
 )
 

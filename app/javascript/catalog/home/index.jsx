@@ -18,11 +18,12 @@ import { Main, CatalogSection } from 'catalog/shared'
 import Libraries from 'catalog/home/Libraries'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 import { useDocumentTitle } from 'utility/hooks'
+import WelcomeMessage from 'catalog/home/WelcomeMessage'
 
 // $FlowFixMe
 const MapView = React.lazy(() => import('map_view'))
 
-function Home () {
+function Home() {
   const [{ cases, tags, loading: casesLoading }] = React.useContext(
     CatalogDataContext
   )
@@ -35,6 +36,7 @@ function Home () {
     <ContentItemSelectionContextConsumer>
       {({ selecting }) => (
         <>
+          <WelcomeMessage reader={reader} />
           {readerLoading || !!reader || selecting || <ValueProposition />}
 
           {selecting || <Sidebar />}

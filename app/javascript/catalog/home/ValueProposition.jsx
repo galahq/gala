@@ -11,11 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 const ValueProposition = () => (
   <Container>
-    <h1>
-      <FormattedMessage id="catalog.openAccessLearningTools" />
-    </h1>
-
-    <Block icon="new-link" theme="red">
+    <Block icon="add-row-bottom" theme="red">
       <h2 className="pt-callout-title">
         <FormattedMessage id="catalog.impactfulCases" />
       </h2>
@@ -24,7 +20,7 @@ const ValueProposition = () => (
       </p>
     </Block>
 
-    <Block icon="git-new-branch" theme="green">
+    <Block icon="social-media" theme="green">
       <h2 className="pt-callout-title">
         <FormattedMessage id="catalog.innovativeTeaching" />
       </h2>
@@ -33,7 +29,7 @@ const ValueProposition = () => (
       </p>
     </Block>
 
-    <Block icon="exchange" theme="blue">
+    <Block icon="git-new-branch" theme="blue">
       <h2 className="pt-callout-title">
         <FormattedMessage id="catalog.inclusiveCommunity" />
       </h2>
