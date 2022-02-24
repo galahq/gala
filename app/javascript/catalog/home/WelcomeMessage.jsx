@@ -89,6 +89,7 @@ const Container = styled.aside.attrs({ className: 'pt-dark' })`
     font-size: 170%;
     grid-column: 1 / -1;
     margin-bottom: 0.5rem;
+    hyphens: none;
   }
 
   a {
