@@ -64,7 +64,8 @@ const EdgenoteForm = ({
           />
         )}
         {...commonProps}
-        onChange={(edgenote: Edgenote) => onChange(edgenote)}
+        onChange={(edgenote: Edgenote) => { onChange(edgenote)}
+        }
       />
 
       {/* ~~~---~~~ */}
@@ -109,7 +110,7 @@ const EdgenoteForm = ({
         }
         {...commonProps}
       />
-      
+
       <Field
         name="altText"
         label="activerecord.attributes.edgenote.altText"

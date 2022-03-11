@@ -60,14 +60,14 @@ class EdgenoteEditor extends React.Component<Props, State> {
     },
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     Object.keys(this.state.changesToAttachments).forEach(key => {
       const attachment = this.state.changesToAttachments[key]
       attachment && attachment.cleanup()
     })
   }
 
-  render () {
+  render() {
     const { intl, setVisibility, visibility } = this.props
     const { changesToAttachments, contents, open } = this.state
     return (
@@ -121,6 +121,8 @@ class EdgenoteEditor extends React.Component<Props, State> {
     }))
   }
 
+  //const showSubmitWarning = (contents, attachments ) => (contents.attribution || contents.photoCredit) && !attachments.imageUrl
+
   handleSubmit = () => {
     const {
       slug,
@@ -130,7 +132,17 @@ class EdgenoteEditor extends React.Component<Props, State> {
       displayErrorToast,
     } = this.props
     const { contents, changesToAttachments } = this.state
-
+    if (
+      Boolean(
+        (contents.photoCredit.length == 0 || contents.altText == null) &&
+          (changesToAttachments.imageUrl != null || contents.imageUrl != null)
+      )
+    ) {
+      //warn if true
+      window.confirm("your photo is bad because stuff isn't there...")
+    }
+    console.log(contents)
+    console.log(changesToAttachments)
     this._close()
       .then(() => updateLinkExpansionVisibility(slug, visibility))
       .then(() =>
@@ -154,10 +166,11 @@ class EdgenoteEditor extends React.Component<Props, State> {
   _reset = () => this.setState({ contents: this.props.contents })
 }
 export default compose(
-  connect(
-    null,
-    { changeEdgenote, updateLinkExpansionVisibility, displayErrorToast }
-  ),
+  connect(null, {
+    changeEdgenote,
+    updateLinkExpansionVisibility,
+    displayErrorToast,
+  }),
   withVisibilityChanges,
   injectIntl
 )(EdgenoteEditor)
