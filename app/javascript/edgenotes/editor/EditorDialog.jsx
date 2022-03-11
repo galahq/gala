@@ -15,6 +15,7 @@ import withExpansion from 'edgenotes/expansion/withExpansion'
 import EdgenoteForm from './EdgenoteForm'
 import EdgenotePreview from './EdgenotePreview'
 import ExpansionVisibilityForm from './ExpansionVisibilityForm'
+import Attachment from './Attachment'
 
 import type { IntlShape } from 'react-intl'
 import type { Edgenote } from 'redux/state'
