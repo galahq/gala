@@ -133,7 +133,7 @@ group :test do
   gem 'database_cleaner'
   gem 'rspec-retry'
   gem 'shoulda-matchers'
-  gem 'webdrivers', require: false
+  gem 'capybara-screenshot'
 end
 
 ruby '2.7.5'

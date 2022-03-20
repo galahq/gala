@@ -18,38 +18,9 @@ require 'capybara/rspec'
 require 'clowne/rspec'
 require 'rspec/composable_json_matchers/setup'
 
-Capybara.server = :puma
+require "selenium-webdriver"
 
-require 'webdrivers' unless ENV['CI']
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.args << '--disable-site-isolation-trials'
-    opts.args << '--window-size=1440,900'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
-Capybara.register_driver :headless_chrome do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--headless'
-    opts.args << '--disable-gpu' if Gem.win_platform?
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.args << '--disable-site-isolation-trials'
-    opts.args << '--window-size=1440,900'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
-Capybara.default_driver = ENV['NOT_HEADLESS'] ? :chrome : :headless_chrome
-
-Capybara.configure do |config|
-  config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']
-end
-Capybara.enable_aria_label = true
+require 'capybara-screenshot/rspec'
 
 class Ahoy::Store
   def exclude?
@@ -93,24 +64,6 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
-
-  config.before(:all, type: :feature) do
-    Capybara.server = :puma, { Silent: true }
-  end
-
-  config.around(:each, type: :feature, javascript: false) do |example|
-    Capybara.current_driver = :rack_test
-    example.run
-    Capybara.use_default_driver
-  end
-
-  config.after(:each) do |example|
-    if defined?(page) && example.exception
-      save_screenshot
-      Rails.logger.info page.driver.browser.manage.logs.get('browser')
-                            .map(&:as_json).awesome_inspect
-    end
-  end
 
   config.around(:each, type: :mailbox) do |example|
     old_adapter = ActiveJob::Base.queue_adapter
