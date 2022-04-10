@@ -161,6 +161,7 @@ fr:
         created: "%{model} créé(e) aves succès."
         destroyed: "%{model} supprimé(e) avec succès."
         updated: "%{model} mis à jour avec succès."
+        copied: "Copying %{model}...refresh your library in a few moments to see your new case."
   activities:
     destroy:
       delete_activity: Delete Activity
