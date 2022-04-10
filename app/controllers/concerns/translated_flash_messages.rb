@@ -11,7 +11,7 @@
 #   # => 'Case successfully created'
 #
 module TranslatedFlashMessages
-  ACTION_NAMES = %i[created updated destroyed].freeze
+  ACTION_NAMES = %i[created updated destroyed copied].freeze
 
   extend ActiveSupport::Concern
 
