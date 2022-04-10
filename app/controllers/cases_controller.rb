@@ -94,7 +94,7 @@ class CasesController < ApplicationController
   def copy
     current_case = case_for_copy(params[:id])
     CaseCloneJob.perform_later current_case, locale: current_case.locale
-    redirect_to my_cases_path, alert: "Copying… refresh your library in a few moments to see your new case"
+    redirect_to my_cases_path, alert: 'Copying...refresh your library in a few moments to see your new case'
   end
 
   private
