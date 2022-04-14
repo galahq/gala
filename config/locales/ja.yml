@@ -160,6 +160,7 @@ ja:
         created: "%{model}が正常に作成されました。"
         destroyed: "%{model}が正常に削除されました。"
         updated: "%{model}が正常に便新されました。"
+        copied: "Copying %{model}...refresh your library in a few moments to see your new case."
   activities:
     destroy:
       delete_activity: アクティビティを削除

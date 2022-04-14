@@ -159,6 +159,7 @@ zh-CN:
         created: "%{model} 创建成功。"
         destroyed: "%{model} 删除成功。"
         updated: "%{model} 更新成功。"
+        copied: "Copying %{model}...refresh your library in a few moments to see your new case."
   activities:
     destroy:
       delete_activity: 删除该练习
