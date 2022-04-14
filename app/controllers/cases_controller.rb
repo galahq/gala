@@ -93,10 +93,9 @@ class CasesController < ApplicationController
 
   def copy
     current_case = case_for_copy(params[:id])
-    @case = CaseCloneJob.perform_now current_case, locale: current_case.locale
-    redirect_to case_path @case, case_locale: @case.locale
+    CaseCloneJob.perform_later current_case, locale: current_case.locale
+    redirect_to my_cases_path, notice: successfully_copied
   end
-
 
   private
 

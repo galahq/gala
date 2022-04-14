@@ -160,6 +160,7 @@ zh-TW:
         created: "%{model} successfully created."
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
+        copied: "Copying %{model}...refresh your library in a few moments to see your new case."
   activities:
     destroy:
       delete_activity: Delete Activity
