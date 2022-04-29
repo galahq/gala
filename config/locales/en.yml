@@ -96,6 +96,7 @@ en:
         name: Full Name
         password: Password
         password_confirmation: Password confirmation
+        terms_of_service: 'I accept the Terms of Service'
         persona:
           learner: Learning from cases
           teacher: Teaching with cases
