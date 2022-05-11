@@ -55,9 +55,17 @@ services:
     # Add "forwardPorts": ["3306"] to **devcontainer.json** to forward MySQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
-  selenium:
-    image: selenium/standalone-chrome
-    network_mode: "host"
+  web:
+    environment:
+      HUB_URL: http://chrome:4444/wd/hub # <-- Add the HUB_URL environment variable
+    depends_on:
+      - chrome # <-- Link to the chrome container
+    # ...
+
+  chrome:
+    image: selenium/standalone-chrome:3.141.59-zirconium # this version should match that of the selenium-webdriver gem (see Gemfile)
+    volumes:
+      - /dev/shm:/dev/shm
 
 volumes:
   workspace:

@@ -136,4 +136,4 @@ group :test do
   gem 'capybara-screenshot'
 end
 
-ruby '2.7.5'
+ruby '2.7.6'
