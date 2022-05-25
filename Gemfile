@@ -56,7 +56,7 @@ gem 'mobility'
 gem 'active_model_serializers', '0.10.10'
 gem 'haml', '>=5.1.2' #git: 'https://github.com/haml/haml' # until > 5.0.4
 gem 'inline_svg'
-gem 'jbuilder', git: 'https://github.com/rails/jbuilder' # until > 2.8.0
+gem 'jbuilder', git: 'https://github.com/rails/jbuilder', branch: :main # until > 2.8.0
 gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj'
@@ -119,7 +119,7 @@ group :development, :test do
   gem 'rspec-composable_json_matchers'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 4.1'
   gem 'spring-commands-rspec'
   gem 'dotenv-rails'
   gem 'rubocop-faker'

@@ -65,6 +65,25 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
+  config.before(:each, type: :feature) do |example|
+    options = Selenium::WebDriver::Chrome::Options.new
+    driver = Selenium::WebDriver.for :remote, url: "http://ff/wd/hub", capabilities: [options, Selenium::WebDriver::Remote::Capabilities.firefox]
+    Capybara.server = :puma # Until your setup is working
+    Capybara.server_host = '0.0.0.0'
+    Capybara.server_port = 4000
+    Capybara.run_server = true
+    Capybara.app_host = 'http://app:4000'
+
+    # Configure Capybara
+    Capybara.configure do |config|
+      config.default_driver         = driver
+      config.javascript_driver      = driver
+    end
+    Capybara.javascript_driver = driver
+    Capybara.current_driver = driver
+
+  end
+
   config.around(:each, type: :mailbox) do |example|
     old_adapter = ActiveJob::Base.queue_adapter
     ActiveJob::Base.queue_adapter = :test
@@ -95,3 +114,4 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
+
