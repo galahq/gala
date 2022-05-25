@@ -56,7 +56,7 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
   ff:
-    image: selenium/standalone-firefox:4.1.4-20220427
+    image: selenium/standalone-firefox:4.1
     container_name: firefox-browser
 
 volumes:
