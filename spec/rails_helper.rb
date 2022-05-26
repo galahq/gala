@@ -57,6 +57,8 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+
+
 RSpec.configure do |config|
   config.include ActionMailbox::TestHelper, type: :mailbox
   config.include ActiveSupport::Testing::TimeHelpers
@@ -66,18 +68,11 @@ RSpec.configure do |config|
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
   config.before(:each, type: :feature) do |example|
-    options = Selenium::WebDriver::Chrome::Options.new
-    driver = Selenium::WebDriver.for :remote, url: "http://firefox:4444/wd/hub"
+    driver = Selenium::WebDriver.for :remote, url: "http://selenium-chrome:4444/wd/hub"
     Capybara.server = :puma # Until your setup is working
     Capybara.server_host = '0.0.0.0'
-    Capybara.server_port = 4000
-    Capybara.app_host = 'http://app:4000'
-
-    # Configure Capybara
-    Capybara.configure do |config|
-      config.default_driver         = driver
-      config.javascript_driver      = driver
-    end
+    Capybara.server_port = 3000
+    Capybara.app_host = 'http://app:3000'
     Capybara.javascript_driver = driver
     Capybara.current_driver = driver
 
