@@ -67,11 +67,10 @@ RSpec.configure do |config|
 
   config.before(:each, type: :feature) do |example|
     options = Selenium::WebDriver::Chrome::Options.new
-    driver = Selenium::WebDriver.for :remote, url: "http://ff:4444/wd/hub", capabilities: [options, Selenium::WebDriver::Remote::Capabilities.firefox]
+    driver = Selenium::WebDriver.for :remote, url: "http://ff:4444/wd/hub"
     Capybara.server = :puma # Until your setup is working
     Capybara.server_host = '0.0.0.0'
     Capybara.server_port = 4000
-    Capybara.run_server = true
     Capybara.app_host = 'http://app:4000'
 
     # Configure Capybara
