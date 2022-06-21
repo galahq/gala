@@ -114,7 +114,7 @@ const EdgenoteForm = ({
       <Field
         name="altText"
         label="activerecord.attributes.edgenote.altText"
-        intent={'pt-intent-danger'}
+        intent={contents.altText.length ? 'pt-intent-success' : 'pt-intent-danger'}
         helperText={
           <Markdown
             source={intl.formatMessage({
@@ -122,6 +122,7 @@ const EdgenoteForm = ({
             })}
           />
         }
+
         render={props => <TextArea {...props} />}
         {...commonProps}
       />
@@ -129,8 +130,8 @@ const EdgenoteForm = ({
       <Field
         name="photoCredit"
         label="activerecord.attributes.edgenote.photoCredit"
+        intent={contents.photoCredit.length ? 'pt-intent-success' : 'pt-intent-danger'}
         render={props => <Input {...props} />}
-        intent={'pt-intent-danger'}
         helperText={
           <Markdown
             source={intl.formatMessage({
