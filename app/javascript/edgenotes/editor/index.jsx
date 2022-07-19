@@ -121,8 +121,6 @@ class EdgenoteEditor extends React.Component<Props, State> {
     }))
   }
 
-  //const showSubmitWarning = (contents, attachments ) => (contents.attribution || contents.photoCredit) && !attachments.imageUrl
-
   handleSubmit = () => {
     const {
       slug,
@@ -132,47 +130,24 @@ class EdgenoteEditor extends React.Component<Props, State> {
       displayErrorToast,
     } = this.props
     const { contents, changesToAttachments } = this.state
-    if (contents.altText == null) {
-      contents.altText = ''
-    } //altText initializes as null but is empty string when modified and deleted
-    const showWarning = Boolean(
-      (contents.photoCredit.length == 0 || contents.altText.length == 0) &&
-        Attachment.truthy(changesToAttachments.imageUrl)
-    )
-    let warningMessage = ''
-    if (
-      showWarning &&
-      contents.altText.length == 0 &&
-      showWarning &&
-      contents.photoCredit.length == 0
-    ) {
-      warningMessage =
-        'Add an image without an accesible caption or attribution?'
-    } else if (showWarning && contents.altText.length == 0) {
-      warningMessage = 'Add an image without an accesible caption?'
-    } else if (showWarning && contents.photoCredit.length == 0) {
-      warningMessage = 'Add an image without an attribution?'
-    }
-    // warning message fires
-    if (!showWarning || (showWarning && window.confirm(warningMessage))) {
-      this._close()
-        .then(() => updateLinkExpansionVisibility(slug, visibility))
-        .then(() =>
-          changeEdgenote(
-            slug,
-            ({
-              ...contents,
-              ...changesToAttachments,
-            }: $FlowIssue)
-          )
+
+    this._close()
+      .then(() => updateLinkExpansionVisibility(slug, visibility))
+      .then(() =>
+        changeEdgenote(
+          slug,
+          ({
+            ...contents,
+            ...changesToAttachments,
+          }: $FlowIssue)
         )
-        .then(this._reset)
-        .then(this.props.onClose)
-        .catch(e => {
-          displayErrorToast(e.message)
-          this.setState({ open: true })
-        })
-    }
+      )
+      .then(this._reset)
+      .then(this.props.onClose)
+      .catch(e => {
+        displayErrorToast(e.message)
+        this.setState({ open: true })
+      })
   }
 
   _close = () => new Promise(resolve => this.setState({ open: false }, resolve))
