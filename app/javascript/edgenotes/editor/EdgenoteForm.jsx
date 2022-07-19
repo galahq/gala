@@ -110,11 +110,11 @@ const EdgenoteForm = ({
         }
         {...commonProps}
       />
-      {/* altText starts as null instead of as an empty string*/}
+      {/* altText initializes as null but is empty string when modified and deleted */}
       <Field
         name="altText"
         label="activerecord.attributes.edgenote.altText"
-        intent={(contents.altText && !!contents.altText.length) ? 'pt-intent-success' : 'pt-intent-danger'}
+        intent={(contents.altText && !!contents.altText.length) ? '' : 'pt-intent-danger'}
         helperText={
           <Markdown
             source={intl.formatMessage({
@@ -130,7 +130,7 @@ const EdgenoteForm = ({
       <Field
         name="photoCredit"
         label="activerecord.attributes.edgenote.photoCredit"
-        intent={!!contents.photoCredit.length ? 'pt-intent-success' : 'pt-intent-danger'}
+        intent={!!contents.photoCredit.length ? '' : 'pt-intent-danger'}
         render={props => <Input {...props} />}
         helperText={
           <Markdown
@@ -328,6 +328,7 @@ const shouldDisable = (
   caption: false,
   
 })
+
 
 const Row = styled.div`
   display: flex;
