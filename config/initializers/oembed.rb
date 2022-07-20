@@ -34,6 +34,15 @@ sketchfab << 'https://sketchfab.com/models/*'
 sketchfab << 'https://sketchfab.com/*/folders/*'
 OEmbed::Providers.register sketchfab
 
+
+datastudio = OEmbed::Provider.new 'http://datastudio.google.com/oembed'
+datastudio << 'https://datastudio.google.com/*'
+OEmbed::Providers.register datastudio
+
+observable = OEmbed::Provider.new 'https://api.observablehq.com/oembed'
+observable << 'https://observablehq.com/embed/*'
+OEmbed::Providers.register observable
+
 naive_oembed_url = Rails.application.credentials.dig :naive_oembed_url
 unless naive_oembed_url.blank?
   naive = OEmbed::Provider.new naive_oembed_url
