@@ -119,7 +119,7 @@ group :development, :test do
   gem 'rspec-composable_json_matchers'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
-  gem 'selenium-webdriver', '~> 4.1'
+  gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
   gem 'dotenv-rails'
   gem 'rubocop-faker'

@@ -57,6 +57,24 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+Capybara.register_driver :selenium do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument("--headless")
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--allow-insecure-localhost')
+  options.add_argument('--ignore-certificate-errors')
+  options.add_argument('--disable-web-security')
+  options.add_argument('--disable-gpu')
+  options.add_argument('--allow-running-insecure-content')
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    url: "http://selenium-chrome:4444/wd/hub",
+    capabilities: [options]
+  )
+end
 
 
 RSpec.configure do |config|
@@ -68,14 +86,13 @@ RSpec.configure do |config|
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
   config.before(:each, type: :feature) do |example|
-    driver = Selenium::WebDriver.for :remote, url: "http://selenium-chrome:4444/wd/hub"
-    Capybara.server = :puma # Until your setup is working
-    Capybara.server_host = '0.0.0.0'
-    Capybara.server_port = 3000
-    Capybara.app_host = 'http://app:3000'
-    Capybara.javascript_driver = driver
-    Capybara.current_driver = driver
-
+      Capybara.server = :puma # Until your setup is working
+      Capybara.server_host = '0.0.0.0'
+      Capybara.server_port = 3000
+      Capybara.app_host = 'http://app:3000'
+      Capybara.javascript_driver = :selenium
+      Capybara.current_driver = :selenium
+      Capybara.page.current_window.resize_to(1600, 1200)
   end
 
   config.around(:each, type: :mailbox) do |example|

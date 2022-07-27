@@ -57,10 +57,11 @@ services:
 
 
   selenium-chrome:
-    image: selenium/standalone-chrome:4.1
+    image: seleniarm/standalone-chromium
     shm_size: 2gb
+    privileged: true
     ports:
-      4444:4444
+      - 4444:4444
     volumes:
       - /dev/shm:/dev/shm
     restart: always

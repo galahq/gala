@@ -11,7 +11,9 @@ Gala is a platform for the collaborative study of media-rich teaching cases.
 
 ## Install and Setup
 
-You will need to have the following prerequisites installed locally in order to run Gala:
+Gala supports running in remote containers with Visual Studio Code and Docker Desktop.
+
+To run locally, You will need to have the following prerequisites installed locally in order to run Gala:
 
  - Ruby 2.6.6
  - Rails v6.0.2.2
@@ -36,6 +38,12 @@ Create and seed your development and test databases:
 
     rails db:setup
     rails db:test:prepare
+
+If you need ping for troubleshooting the container, install with: sudo apt update && sudo apt install iputils-ping
+
+## Unit Tests
+
+Javascript unit tests use the Remote Selenium driver.  Docker configures a proper container.  To troubleshoot this container, enter 'curl selenium-chrome:4444/status' at the console and confirm you get back the 'Selenium Grid ready.' message.  Consider restarting the container if not.
 
 ## Cron jobs
 
