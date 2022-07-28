@@ -32,10 +32,8 @@
                            class: %w[pt-input pt-fill] + error_classes,
                            autocomplete: "new-password"
       
-      = link_to 'Review Terms and Conditions', 'https://www.learngala.com/'
       = f.check_box :terms_of_service
       
-
       = f.submit t('.sign_up'), class: %w[pt-intent-primary]
 
       %a.pt-button.pt-icon-log-in.oauth-icon-google{role: 'button',
@@ -43,3 +41,4 @@
         = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
 
     = render "devise/shared/links"
+

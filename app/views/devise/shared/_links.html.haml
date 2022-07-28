@@ -1,4 +1,6 @@
 %ul.devise-links
+  %li= link_to t('.review_policies'), 'https://www.learngala.com/'
+  
   - if controller_name != 'sessions' && controller_name != 'catalog' && controller_name != 'cases'
     %li= link_to t('.sign_in'), new_session_path(resource_name)
 
