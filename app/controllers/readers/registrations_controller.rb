@@ -71,7 +71,7 @@ module Readers
     # If you have extra params to permit, append them to the sanitizer.
     def configure_account_update_params
       devise_parameter_sanitizer.permit(:account_update,
-                                        keys: %i[name initials locale])
+                                        keys: %i[name initials locale terms_of_service])
     end
 
     # The path used after sign up.
