@@ -96,7 +96,6 @@ en:
         name: Full Name
         password: Password
         password_confirmation: Password confirmation
-        terms_of_service: 'I accept the Terms of Service'
         persona:
           learner: Learning from cases
           teacher: Teaching with cases
@@ -108,6 +107,7 @@ en:
         send_reply_notifications:
           Notify me when someone replies to a comment I wrote
         sign_in_count: Sign in count
+        terms_of_service: I accept the Gala Terms of Service and Privacy Policy
         unconfirmed_email: Unconfirmed email
         unlock_token: Unlock token
         updated_at: Updated at
@@ -541,6 +541,7 @@ en:
     shared:
       links:
         sign_up_for_a_free_account: Sign up for a free account
+        review_policies: Review Gala terms and policies
       minimum_password_length:
         one: "%{count} character minimum"
         other: "%{count} characters minimum"
