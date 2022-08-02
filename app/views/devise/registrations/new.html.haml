@@ -31,8 +31,8 @@
         = f.password_field :password_confirmation,
                            class: %w[pt-input pt-fill] + error_classes,
                            autocomplete: "new-password"
-      
-      = f.check_box :terms_of_service
+      .pt-form_group
+        = f.check_box :terms_of_service
       
       = f.submit t('.sign_up'), class: %w[pt-intent-primary]
 
