@@ -89,6 +89,8 @@ class Case < ApplicationRecord
                    format: { with: /\A[a-z0-9-]+\Z/ },
                    length: { maximum: 100 }
 
+  validates :license_confirmation, acceptance: true
+
   delegate :fresh?, :pdf,
            to: :archive, prefix: true, allow_nil: true
 
