@@ -58,15 +58,11 @@ class CasesController < ApplicationController
   def create
     @case = current_reader.my_cases.build create_case_params
 
-    unless create_case_params['license_confirmation'].present?
-      redirect_to my_cases_path, alert: 'You must check the license confirmation box first to confirm (UPDATE ME)' and return
-    end
-
     if @case.save
       redirect_to edit_case_path(@case), notice: successfully_created
     else
       @case.errors.delete(:slug)
-      render :new
+      redirect_to my_cases_path, alert: 'You must check the license confirmation box first to confirm (UPDATE ME)' and return
     end
   end
 
