@@ -45,6 +45,7 @@ const EMBED_RATIOS: { [string]: [number, number] } = {
   'youtube.com': [16, 9],
   'datastudio.google.com': [1, 1],
   'observablehq.com': [16, 9],
+  'crowdsignal.com': [1, 1],
 }
 
 const Expansion = ({ contents, expansion }: Props) => {
