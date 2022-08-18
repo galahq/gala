@@ -42,6 +42,10 @@ observable = OEmbed::Provider.new 'https://api.observablehq.com/oembed'
 observable << 'https://observablehq.com/embed/*'
 OEmbed::Providers.register observable
 
+crowdsignal = OEmbed::Provider.new 'https://api.crowdsignal.com/oembed'
+crowdsignal << 'https://*.survey.fm/*'
+OEmbed::Providers.register crowdsignal
+
 naive_oembed_url = Rails.application.credentials.dig :naive_oembed_url
 unless naive_oembed_url.blank?
   naive = OEmbed::Provider.new naive_oembed_url
