@@ -302,8 +302,8 @@ fr:
       guide_link_text: quick start guide
       news_link_text: see what we're up to
       to_get_started: >
-        We built Gala to make sustainability learning more grounded, dynamic, and collaborative, and we can’t do it without you. To get started, find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {aboutLink}.
-      welcome_title: Open tools for sustainability learning
+        We built Gala to make learning more grounded, dynamic, and collaborative, and we can’t do it without you. To get started, find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {aboutLink}.
+      welcome_title: Open tools for collaborative learning
       welcome_back_title: Welcome back
       welcome_back_message: Find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {newsLink}.
     your_library: Your library
@@ -851,7 +851,7 @@ fr:
     learner:
       title: Learn From Cases
       description: >
-        I want to study real world cases and cutting-edge science for sustainability.
+        I want to study real world cases and cutting-edge science in an open environment.
     teacher:
       title: Teach With Cases
       description: >
