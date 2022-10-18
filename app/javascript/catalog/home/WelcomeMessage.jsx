@@ -112,7 +112,7 @@ const Container = styled.aside.attrs({ className: 'pt-dark' })`
     display: inline-block;
     position: relative;
     bottom: 1px;
-    margins: 0px;
+    padding-left: 0px;
   }
 
   ul > li {
@@ -128,17 +128,17 @@ const Container = styled.aside.attrs({ className: 'pt-dark' })`
 
     hyphens: none;
     display: inline;
-    margin-right: 0.7rem;
+    margin-right: 1.7rem;
   }
 
   @media (max-width: 800px) {
     h1 {
       display: block;
       margin-right: 0rem;
+      margin-bottom: 0rem;
     }
 
     ul {
-      margin-left: none;
     }
   }
 
