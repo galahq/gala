@@ -46,6 +46,13 @@ function Home() {
           <Main>
             <Features selecting={selecting} />
 
+            <Libraries />
+            {tags && tags.length > 0 && (
+              <>
+                <Keywords />
+                <Categories />
+              </>
+            )}
             {casesLoading || (
               // $FlowFixMe
               <React.Suspense
@@ -66,15 +73,6 @@ function Home() {
                 />
               </React.Suspense>
             )}
-
-            {tags && tags.length > 0 && (
-              <>
-                <Categories />
-                <Keywords />
-              </>
-            )}
-
-            <Libraries />
           </Main>
         </>
       )}
