@@ -298,14 +298,16 @@ fr:
     natural_resources: Natural Resources
     reading_list_instruction: You can group and share multiple cases by creating a reading list.
     welcome_message:
-      about_link_text: learn more about us
-      guide_link_text: quick start guide
-      news_link_text: see what we're up to
+      about_button_text: About Gala
+      how_button_text: How-to
+      news_button_text: News
       to_get_started: >
-        We built Gala to make learning more grounded, dynamic, and collaborative, and we can’t do it without you. To get started, find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {aboutLink}.
+        {createAccount} to get started, or find a case by searching or browsing below.
+      create_account: Create an account
       welcome_title: Open tools for collaborative learning
       welcome_back_title: Welcome back
-      welcome_back_message: Find a case by browsing or searching from this page, check out the {guideLink} and create your own case, or {newsLink}.
+      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
+      create_case: create a case
     your_library: Your library
   comment_threads:
     destroy:
