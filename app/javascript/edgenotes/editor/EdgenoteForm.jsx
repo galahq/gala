@@ -64,7 +64,8 @@ const EdgenoteForm = ({
           />
         )}
         {...commonProps}
-        onChange={(edgenote: Edgenote) => onChange(edgenote)}
+        onChange={(edgenote: Edgenote) => { onChange(edgenote)}
+        }
       />
 
       {/* ~~~---~~~ */}
@@ -82,6 +83,7 @@ const EdgenoteForm = ({
         name="attribution"
         label="activerecord.attributes.edgenote.attribution"
         render={props => <Input {...props} />}
+        helperText=<Markdown>put an attribution</Markdown>
         {...commonProps}
       />
 
@@ -108,10 +110,11 @@ const EdgenoteForm = ({
         }
         {...commonProps}
       />
-
+      {/* altText initializes as null but is empty string when modified and deleted */}
       <Field
         name="altText"
         label="activerecord.attributes.edgenote.altText"
+        intent={(contents.altText && !!contents.altText.length) ? '' : 'pt-intent-danger'}
         helperText={
           <Markdown
             source={intl.formatMessage({
@@ -119,6 +122,7 @@ const EdgenoteForm = ({
             })}
           />
         }
+
         render={props => <TextArea {...props} />}
         {...commonProps}
       />
@@ -126,7 +130,15 @@ const EdgenoteForm = ({
       <Field
         name="photoCredit"
         label="activerecord.attributes.edgenote.photoCredit"
+        intent={!!contents.photoCredit.length ? '' : 'pt-intent-danger'}
         render={props => <Input {...props} />}
+        helperText={
+          <Markdown
+            source={intl.formatMessage({
+              id: 'edgenotes.edit.photoCreditGuidelines',
+            })}
+          />
+        }
         {...commonProps}
       />
 
@@ -161,7 +173,7 @@ const EdgenoteForm = ({
             value={value || 'file-basic'}
             {...props}
             onChange={iconSlug =>
-              onChange(({ target: { value: iconSlug }}: $FlowIssue))
+              onChange(({ target: { value: iconSlug } }: $FlowIssue))
             }
           />
         )}
@@ -198,6 +210,7 @@ type CommonFieldProps = {
   label?: string,
   helperText?: React.Node,
   placeholder?: string,
+  intent?: string,
 }
 
 type FieldProps = CommonFieldProps & {
@@ -220,12 +233,14 @@ const Field = ({
   name,
   placeholder,
   render,
+  intent,
 }: FieldProps) => (
   <FormGroup
     disabled={disabled[name]}
     helperText={helperText}
     label={label && intl.formatMessage({ id: label })}
     labelFor={name}
+    className={intent}
   >
     {render({
       disabled: disabled[name],
@@ -311,7 +326,9 @@ const shouldDisable = (
   iconSlug: !Attachment.truthy(contents.fileUrl),
 
   caption: false,
+  
 })
+
 
 const Row = styled.div`
   display: flex;

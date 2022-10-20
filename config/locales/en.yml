@@ -557,7 +557,7 @@ en:
       video_slug: "YouTube video slug: "
     edit:
       alt_text_guidelines: >
-        Image descriptions are important to ensure that learners who use screen
+        Image descriptions ensure that learners using screen
         readers are able to learn from your Edgenote. Describe using natural
         language what is pictured and why it is important. Check out
         [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en)
@@ -574,6 +574,10 @@ en:
       highlight:
         Allow this Edgenote to take up the full width of the page
       paste_a_link: Paste a link
+      photo_credit_guidelines: > 
+        Add author and license information. 
+        [This guide](https://docs.learngala.com/docs/authoring-finding-media) 
+        has more about licensing, attribution, and finding copright-free images.
       preview: Edgenote preview
       pull_a_quote: Pull a quote
       remove: Remove

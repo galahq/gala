@@ -60,14 +60,14 @@ class EdgenoteEditor extends React.Component<Props, State> {
     },
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     Object.keys(this.state.changesToAttachments).forEach(key => {
       const attachment = this.state.changesToAttachments[key]
       attachment && attachment.cleanup()
     })
   }
 
-  render () {
+  render() {
     const { intl, setVisibility, visibility } = this.props
     const { changesToAttachments, contents, open } = this.state
     return (
@@ -154,10 +154,11 @@ class EdgenoteEditor extends React.Component<Props, State> {
   _reset = () => this.setState({ contents: this.props.contents })
 }
 export default compose(
-  connect(
-    null,
-    { changeEdgenote, updateLinkExpansionVisibility, displayErrorToast }
-  ),
+  connect(null, {
+    changeEdgenote,
+    updateLinkExpansionVisibility,
+    displayErrorToast,
+  }),
   withVisibilityChanges,
   injectIntl
 )(EdgenoteEditor)
