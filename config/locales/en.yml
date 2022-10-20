@@ -167,6 +167,7 @@ en:
         created: "%{model} successfully created."
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
+        copied: "Copying %{model}...refresh your library in a few moments to see your new case."
   activities:
     destroy:
       delete_activity: Delete Activity
@@ -283,7 +284,6 @@ en:
       toc: Table of Contents
   catalog:
     catalog: Catalog
-    choose_for_yourself: Choose for yourself
     create_a_case: Create a Case
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
@@ -301,28 +301,23 @@ en:
       Gala modules perform well in classroom, community, and remote learning settings. 
       Publish your case and share it as widely as you like. Institutions can create 
       libraries with multiple cases.
-    join_conversation: >
-      Join the conversation by asking questions
-      and paying your learning forward.
     keywords: Keywords
     learn_more: Learn more
-    meet_stakeholders: >
-      Meet different stakeholders and dive deep with a multimodal narrative.
     my_library: My Library
     natural_resources: Natural Resources
-    shortcut_experience: Apply principles to improve practice.
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
     welcome_message:
-      about_link_text: learn more about us
-      guide_link_text: quick start guide
-      news_link_text: see what we're up to
-      to_get_started: >
-        We built Gala to make sustainability learning more grounded, dynamic, and collaborative, 
-        and we can’t do it without you. To get started, find a case by browsing or searching from this page, 
-        check out the {guideLink} and create your own case, or {aboutLink}.
-      welcome_title: Open tools for sustainability learning
+      about_button_text: About Gala
+      how_button_text: How-to
+      news_button_text: News
+      to_get_started: > 
+        {createAccount} to get started, or find a case by searching or browsing below.  
+      create_account: Create an account
+      welcome_title: Open tools for collaborative learning
       welcome_back_title: Welcome back
-      welcome_back_message: Find a case by browsing or searching from this page, check out the {guideLink}
-       and create your own case, or {newsLink}.
+      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
+      create_case: create a case
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
@@ -909,8 +904,7 @@ en:
     learner:
       title: Learn From Cases
       description: >
-        I want to study real world cases and cutting-edge science for
-        sustainability.
+        I want to study real world cases and cutting-edge science in an open environment.
     teacher:
       title: Teach With Cases
       description: >
