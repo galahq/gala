@@ -592,9 +592,6 @@ en:
       use_preview_image: Include an image in the the link preview
       upload_an_audio_file: Upload an audio file
       write_a_caption: Write a caption
-      no_caption_or_attribution: Add an image without an accessible caption or attribution?
-      no_caption: Add an image without an accesible caption?
-      no_attribution: Add an image without an attribution?
     index:
       attach: Attach this Edgenote.
       reattach_instructions: >
