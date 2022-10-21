@@ -23,7 +23,8 @@
       .pt-dark
         = form_with model: Case.new, local: true do |f|
           = f.check_box :license_confirmation
-          = f.label :license_confirmation, 'I confirm my agreement with the license for Gala (UPDATE ME)'
+          = f.label :license_confirmation do
+            I confirm my agreement with the license for Gala (UPDATE ME) #{link_to 'Placeholder Link Title', '#'}
           .div
           = f.submit I18n.t('my_cases.index.new_case'),
                      class: 'pt-button pt-intent-success pt-icon-add'
