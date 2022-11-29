@@ -53,7 +53,7 @@ class ReplyNotificationMailer < ApplicationMailer
   # same subject so that they can be threaded
   def subject_header
     "RE: [#{@notification.case.kicker}] " \
-      "“#{thread.comments.first.content.truncate(40)}” " \
+      "“#{thread.comments&.first&.content&.truncate(40)}” " \
       "(##{thread.id})"
   end
 
