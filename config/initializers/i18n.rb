@@ -52,6 +52,7 @@ module Translation
     tl: 'Wikang Tagalog',
     yo: 'Èdè Yorùbá',
     mai: 'मैथिली',
+    ml: 'മലയാളം',
     uz: 'oʻzbekcha',
     sd: 'سنڌي',
     am: 'አማርኛ',
