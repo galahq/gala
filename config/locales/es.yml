@@ -97,6 +97,7 @@ es:
         password: Contraseña
         password_confirmation: Confirmación de la contraseña
         persona:
+          one: 'Persona'
           learner: Learning from cases
           teacher: Teaching with cases
           writer: Writing my own cases
