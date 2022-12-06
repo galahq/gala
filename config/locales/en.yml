@@ -97,6 +97,7 @@ en:
         password: Password
         password_confirmation: Password confirmation
         persona:
+          one: 'Persona'
           learner: Learning from cases
           teacher: Teaching with cases
           writer: Writing my own cases

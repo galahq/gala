@@ -91,6 +91,7 @@ zh-TW:
         password: 密碼
         password_confirmation: 密碼確認
         persona:
+          one: 'Persona'
           learner: Learning from cases
           teacher: Teaching with cases
           writer: Writing my own cases
