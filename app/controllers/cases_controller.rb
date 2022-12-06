@@ -57,11 +57,12 @@ class CasesController < ApplicationController
   # @route [POST] `/cases`
   def create
     @case = current_reader.my_cases.build create_case_params
+
     if @case.save
       redirect_to edit_case_path(@case), notice: successfully_created
     else
       @case.errors.delete(:slug)
-      render :new
+      redirect_to my_cases_path, alert: 'You must check the license confirmation box first to confirm (UPDATE ME)' and return
     end
   end
 
@@ -121,7 +122,7 @@ class CasesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def create_case_params
-    params.require(:case).permit(:locale)
+    params.require(:case).permit(:locale, :license_confirmation)
   end
 
   def update_case_params
