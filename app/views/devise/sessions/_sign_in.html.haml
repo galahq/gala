@@ -11,11 +11,11 @@
     = f.password_field :password, class: (%w[pt-input pt-fill] + error_classes),
                                   autocomplete: "current-password"
 
-  - if devise_mapping.rememberable?
-    .pt-form-group
-      = f.check_box :remember_me
   .pt-form_group
     = f.check_box :terms_of_service
+    - if devise_mapping.rememberable?
+      = f.check_box :remember_me
+
 
   = f.submit t('devise.sessions.new.sign_in'), class: %w[pt-intent-primary]
   %a.pt-button.pt-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
