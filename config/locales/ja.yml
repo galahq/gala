@@ -91,6 +91,7 @@ ja:
         password: パスワード
         password_confirmation: パスワード（確認用）
         persona:
+          one: 'Persona'
           learner: Learning from cases
           teacher: Teaching with cases
           writer: Writing my own cases
