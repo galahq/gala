@@ -2,11 +2,11 @@ en:
   administrate:
     actions:
       confirm:
-        copy: Are you sure you want to make a copy of this case?
+        copy: Are you sure you want to make a copy of this module?
   activemodel:
     attributes:
       confirm_deletion_form:
-        kicker_confirmation: Confirmation of case title
+        kicker_confirmation: Confirmation of module title
     errors:
       models:
         confirm_deletion_form:
@@ -22,7 +22,7 @@ en:
       case:
         acknowledgements: Acknowledgements
         authors: Authors
-        case_title: Case title
+        case_title: Module title
         featured: Featured
         featured_at: Featured at
         kicker: Short title
@@ -30,10 +30,10 @@ en:
         library: Library
         library_id: Library
         locale: Language
-        location: Case location
+        location: Module location
         published: Published
         summary: Summary
-        slug: Case URL
+        slug: Module URL
         teaching_guide: Teaching guide
         title: Question
         translators:
@@ -43,7 +43,7 @@ en:
       comment:
         attachments: Attachments
       deployment:
-        case_id: Case
+        case_id: Module
         group_id: Study Group
         group_attributes:
           name: Group Name
@@ -97,9 +97,9 @@ en:
         password: Password
         password_confirmation: Password confirmation
         persona:
-          learner: Learning from cases
-          teacher: Teaching with cases
-          writer: Writing my own cases
+          learner: Learning from modules
+          teacher: Teaching with modules
+          writer: Writing my own modules
         remember_created_at: Remember created at
         remember_me: Remember me
         reset_password_sent_at: Reset password sent at
@@ -117,7 +117,7 @@ en:
         notes: Notes
       shared_cases_library:
         description: >
-          These cases were shared by Gala users.
+          These modules were shared by Gala users.
     errors:
       messages:
         record_invalid: "Validation failed: %{errors}"
@@ -142,9 +142,9 @@ en:
     models:
       account_settings: Account settings
       activity: Activity
-      case: Case
+      case: Module
       cases:
-        setting: Case Settings
+        setting: Module Settings
         feature: Featured status
       comment: Comment
       comment_thread: Comment thread
@@ -161,13 +161,13 @@ en:
       podcast: Podcast
       reader: Reader
       reading_list: Reading List
-      shared_cases_library: Shared Cases
+      shared_cases_library: Shared Modules
     persistance:
       messages:
         created: "%{model} successfully created."
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
-        copied: "Copying %{model}...refresh your library in a few moments to see your new case."
+        copied: "Copying %{model}...refresh your library in a few moments to see your new module."
   activities:
     destroy:
       delete_activity: Delete Activity
@@ -178,7 +178,7 @@ en:
     show:
       archive_pending: Archive in Progress
       please_wait_while_your_case_is_being_archived: |
-        Please wait while a printable archive of this case is created...
+        Please wait while a printable archive of this module is created...
       printable_archive: Printable Archive
   announcements:
     dismissals:
@@ -204,22 +204,22 @@ en:
         overview: Overview
     deletions:
       new:
-        are_you_sure: Are you sure you want to delete this case?
+        are_you_sure: Are you sure you want to delete this module?
         confirm_deletion: Confirm Deletion
         this_action_cannot_be_undone: |
           This action _cannot_ be undone. This will permanently delete the
-          case, its elements, Edgenotes, comments, forums, quizzes, and
+          module, its elements, Edgenotes, comments, forums, quizzes, and
           quiz submissions.
     edit:
       add_authors: Add authors
       author_institution: Author Institution
       author_name: Author Name
       change_cover_image: Change cover image
-      edit: Edit this case
+      edit: Edit this module
       editing_authors: Editing Authors and Translators
-      feature_case: Feature this case
+      feature_case: Feature this module
       just_change_the_text: |
-        To edit this case, just change the text. We’ll save your work
+        To edit this module, just change the text. We’ll save your work
         automatically.
       map:
         instructions: |
@@ -230,44 +230,44 @@ en:
         zoom_in: Zoom in
         zoom_out: Zoom out
       missed_something: Please delete any unused author or translator rows.
-      no_elements: This case has no elements.
+      no_elements: This module has no elements.
       options: Options
-      publish_case: Publish this case
+      publish_case: Publish this module
       remove_teaching_guide: Remove teaching guide
       replace_teaching_guide: Replace teaching guide
       save: Save
-      stop_editing: Stop editing this case
+      stop_editing: Stop editing this module
       suggested_quizzes:
         all_suggested_quizzes: All Suggested Quizzes
         confirm_delete: Are you sure you want to delete this quiz?
         delete_quiz: Delete Quiz
         description: >
           Include a suggested pre/post assessment that instructors can
-          use when deploying your case.
+          use when deploying your module.
         error: Questions cannot be blank and correct answers are required.
         pre_post_assessment: Pre/Post Assessment
         suggest_an_assessment: Suggest an Assessment
         title: Suggested Quizzes
       translator_name: Translator Name
-      unfeature_case: Remove from featured cases
-      unpublish_case: Unpublish this case
+      unfeature_case: Remove from featured modules
+      unpublish_case: Unpublish this module
       upload_teaching_guide: Upload teaching guide
-      copy_this_case: Copy this case
+      copy_this_case: Copy this module
     index:
-      all_cases: All cases
+      all_cases: All modules
       locations: Site locations
     new:
-      create_a_case: Create a Case
+      create_a_case: Create a Module
     settings:
       edit:
         change_library: Change library
         change_url: Change URL
-        edit_case_settings: Edit case settings
+        edit_case_settings: Edit module settings
       featured_form:
         change_featured_time: Change time
       slug_form:
         changing_url_leaves_your_old_url_available_for_anyone_else: >
-          If you change your case’s URL, your old URL will redirect to your new
+          If you change your module’s URL, your old URL will redirect to your new
           one. However, if someone else takes your old URL, the redirect will be
           overridden.
         lowercase_letters_and_numbers_separated_by_hyphens_html: >
@@ -279,44 +279,44 @@ en:
       end: End
       forthcoming: Forthcoming
       next: "Next: "
-      not_yet_published: This case is not yet published
-      other_languages: "This case is also available in these languages: "
+      not_yet_published: This module is not yet published
+      other_languages: "This module is also available in these languages: "
       toc: Table of Contents
   catalog:
     catalog: Catalog
-    create_a_case: Create a Case
+    create_a_case: Create a Module
     enrollments_instruction: >
-      Cases you enroll in will be presented here for easy access.
+      Modules you enroll in will be presented here for easy access.
     find_a_case: >
-      Gala makes it quick and easy to create a case or adapt an existing learning module. 
+      Gala makes it quick and easy to create a module or adapt an existing learning module. 
       Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
     global_systems: Global Systems
     impactful_cases: Create and Innovate
     improve_your_communication: >
-      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together 
+      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot modules together 
       and solicit feedback with inline comments before publishing and sharing.
     inclusive_community: Teach and Share
     innovative_teaching: Collaborate and Adapt
     join_the_community: >
       Gala modules perform well in classroom, community, and remote learning settings. 
-      Publish your case and share it as widely as you like. Institutions can create 
-      libraries with multiple cases.
+      Publish your module and share it as widely as you like. Institutions can create 
+      libraries with multiple modules.
     keywords: Keywords
     learn_more: Learn more
     my_library: My Library
     natural_resources: Natural Resources
-    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    reading_list_instruction: You can group and share multiple modules by creating a reading list.
     welcome_message:
       about_button_text: About Gala
       how_button_text: How-to
       news_button_text: News
       to_get_started: > 
-        {createAccount} to get started, or find a case by searching or browsing below.  
+        {createAccount} to get started, or find a module by searching or browsing below.  
       create_account: Create an account
       welcome_title: Open tools for collaborative learning
       welcome_back_title: Welcome back
-      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
-      create_case: create a case
+      welcome_back_message: Find a module by searching or browsing below, or {createCase}.
+      create_case: create a module
     your_library: Your library
   comment_threads:
     destroy:
@@ -353,7 +353,7 @@ en:
       no_comments: No comments
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on
-        this case. Switch to a different discussion group or be the first to
+        this module. Switch to a different discussion group or be the first to
         leave a comment.
     new:
       add_attachment: Add Attachment
@@ -370,7 +370,7 @@ en:
       choose_a_community: Choose a community
       instructions: >
         You’ll see the discussion taking place in the community you choose.
-      not_discussing: Your active community is not discussing this case
+      not_discussing: Your active community is not discussing this module
   date:
     abbr_day_names:
     - Sun
@@ -476,47 +476,47 @@ en:
       n_enrolled: "%{count} enrolled"
       invite_learners: Invite Learners
       invite_link: |
-        Invite link for the deployment of the case “%{case_kicker}”
+        Invite link for the deployment of the module “%{case_kicker}”
         in the group “%{group_name}”
     enrolled_learners:
-      case_completion: Percent of Case Completed
+      case_completion: Percent of Module Completed
       posttest: Posttest Score
       pretest: Pretest Score
     form:
-      select_a_case: Select a Case...
+      select_a_case: Select a Module...
       select_a_group: Select a Group...
     helpers:
       all_study_groups: All Study Groups
       create_a_new_study_group: Create a New Study Group...
     index:
-      deploy_a_case: Deploy a Case
+      deploy_a_case: Deploy a Module
       find_a_case_then_click_teach_this_case: |
-        Once you’ve found a case that will suit your needs, click the “Deploy
-        this Case” button in the top right of its Overview page.
+        Once you’ve found a module that will suit your needs, click the “Deploy
+        this Module” button in the top right of its Overview page.
       instructions: |
-        Gala makes it easy to teach a case in a group of any size: a classroom,
-        a workshop, a town, or a team. When you deploy a case
+        Gala makes it easy to teach a module in a group of any size: a classroom,
+        a workshop, a town, or a team. When you deploy a module
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
       my_deployments: My Deployments
       new_deployment: New Deployment
       once_youve_deployed: |
-        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        Once you’ve deployed a module, you’ll be able to add a quiz and invite
         learners from this page.
-      teach_with_cases: Teach with Cases
-      youre_not_teaching_any_cases: You’re not teaching any cases yet
+      teach_with_cases: Teach with Modules
+      youre_not_teaching_any_cases: You’re not teaching any modules yet
     invite_drawer:
       invite_instructions_html: |
         <b>Invite Link:</b> Send someone this link to invite them to study this
-        case with you. They’ll see any quiz you’ve chosen and be able to
+        modules with you. They’ll see any quiz you’ve chosen and be able to
         participate in your private forum.
     new:
       active_deployments: Active Deployments
       instructions: |
-        Deploy this case in a group of any size: a classroom, a workshop, a
+        Deploy this module in a group of any size: a classroom, a workshop, a
         town, or a team. You’ll get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      teach_this_case: Deploy this Case
+      teach_this_case: Deploy this Module
     show:
       deployment_of: Deployment of “%{kase}”
       deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
@@ -590,7 +590,7 @@ en:
     index:
       attach: Attach this Edgenote.
       reattach_instructions: >
-        The Edgenotes that belong to this case but that are not attached to any
+        The Edgenotes that belong to this module but that are not attached to any
         card are listed below. They can be reattached or deleted if they are no
         longer needed. Or, you can create a brand new Edgenote and deal with
         these later.
@@ -604,35 +604,35 @@ en:
   editorships:
     destroy:
       are_you_sure: |
-        Are you sure you want to remove %{name} as an editor of this case?
+        Are you sure you want to remove %{name} as an editor of this module?
       remove: Remove Collaborator
     list:
-      case_editors: Case editors
+      case_editors: Module editors
     new:
       add_editor: Add Collaborator
-      create_collaboratively: Collaborate on your case
+      create_collaboratively: Collaborate on your module
       instructions: |
         Add someone else as an editor by entering the email they’ve used to
         create an account on Gala. That person will have the same access to this
-        case that you do, so be sure only to invite people you trust.
+        module that you do, so be sure only to invite people you trust.
   enrollments:
     destroy:
-      are_you_sure: Are you sure you want to unenroll in this case?
-      unenroll: Unenroll from this case
+      are_you_sure: Are you sure you want to unenroll in this module?
+      unenroll: Unenroll from this module
       you_will_need_another_invitation: >
         Because this case is not published, you will need
         another invitation to reenroll.
     index:
-      edit_enrolled: Edit enrolled cases
-      enrolled_cases: Enrolled cases
+      edit_enrolled: Edit enrolled modules
+      enrolled_cases: Enrolled modules
       finish_editing: Finish editing
     new:
       enroll: Enroll
       enroll_for_easy_access: >
-        If this case catches your eye, enroll to study and discuss it in our
-        global community of learners. You can easily find the cases you’re
+        If this module catches your eye, enroll to study and discuss it in our
+        global community of learners. You can easily find the modules you’re
         enrolled in on the home page.
-      enroll_in_this_case: Enroll in this case
+      enroll_in_this_case: Enroll in this module
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -678,19 +678,19 @@ en:
         other: "%{count} errors prevented this %{model} from being saved"
   features:
     index:
-      featured_cases: Featured cases
+      featured_cases: Featured modules
     create:
       this_case_is_not_featured: >
-        This case is not featured. Feature it to have it displayed on Gala’s
-        front page when it is one of the six most recently featured cases that
+        This module is not featured. Feature it to have it displayed on Gala’s
+        front page when it is one of the six most recently featured modules that
         a reader is not already enrolled in.
-      feature_case: Feature this case
+      feature_case: Feature this module
     destroy:
       this_case_was_featured_on: >
-        This case was featured on %{date}. It will be displayed on Gala’s front
-        page when it is one of the six most recently featured cases that a
+        This module was featured on %{date}. It will be displayed on Gala’s front
+        page when it is one of the six most recently featured modules that a
         reader is not already enrolled in.
-      unfeature_case: Remove from featured cases
+      unfeature_case: Remove from featured modules
   forms:
     required: required
   helpers:
@@ -719,7 +719,7 @@ en:
     help: Help
     label:
       confirm_deletion_form:
-        kicker_confirmation: Please type in the title of the case to confirm
+        kicker_confirmation: Please type in the title of the module to confirm
     less:
       read_more: Read more
     list:
@@ -743,7 +743,7 @@ en:
       submit: Submit
       update: Update %{model}
       confirm_deletion_form:
-        create: I’m sure I want to delete this case
+        create: I’m sure I want to delete this module
   icons:
     activity:
       calculate: Calculate
@@ -777,8 +777,8 @@ en:
   libraries:
     destroy:
       are_you_sure: >
-        Are you sure you wish to delete this library? All cases that belong to
-        it will return to the “Shared Cases Library.”
+        Are you sure you wish to delete this library? All modules that belong to
+        it will return to the “Shared Modules Library.”
       delete_library: Delete Library
     edit:
       edit_library: Edit Library
@@ -787,9 +787,9 @@ en:
       create_a_new_library: Create a New Library
       libraries: Libraries
       libraries_on_gala: >
-        Gala hosts cases from many different libraries as well as those that
-        independent scholars have published themselves. How a case study becomes
-        included in a library differs, but in all cases the library managers
+        Gala hosts modules from many different libraries as well as those that
+        independent scholars have published themselves. How a module becomes
+        included in a library differs, but in all modules the library managers
         have confirmed its quality.
       on_home_page: On Home Page
   locks:
@@ -813,31 +813,31 @@ en:
       instructions: >
         Add someone else as a manager of this library by entering the email
         they’ve used to create an account on Gala. That person will be able to
-        edit this library’s attributes, change which cases are included, and
+        edit this library’s attributes, change which modules are included, and
         add or remove other users as managers.
       invite_someone_to_manage_this_library: >
         Invite Someone to Manage this Library
   my_cases:
     index:
       confirm_delete: >
-        Are you sure you wish to delete this case? This action cannot be undone.
-      create_a_case: Create a Case
-      delete_case: Delete case.
-      edit_case: Edit case.
-      edit_case_settings: Edit case settings.
+        Are you sure you wish to delete this module? This action cannot be undone.
+      create_a_case: Create a Module
+      delete_case: Delete module.
+      edit_case: Edit module.
+      edit_case_settings: Edit module settings.
       featured: Featured
-      my_cases: My Cases
-      new_case: New Case
+      my_cases: My Modules
+      new_case: New Module
       once_youve_created: >
-        Once you’ve created a case or been added as a collaborator on someone
+        Once you’ve created a module or been added as a collaborator on someone
         else’s, you’ll see it here.
-      publish_a_case: Publish a Case
+      publish_a_case: Publish a Module
       put_your_own_cases_on_gala: >
-        Put your case on Gala and enrich your teaching with integrated
+        Put your module on Gala and enrich your teaching with integrated
         discussion, curated media, and embedded assessments.
-        You keep the rights to the cases you publish on Gala and we make them
+        You keep the rights to the modules you publish on Gala and we make them
         easy to deploy in and beyond the classroom.
-      youre_not_authoring_any_cases: You’re not authoring any cases yet
+      youre_not_authoring_any_cases: You’re not authoring any modules yet
   notifications:
     replied_to_your_comment: >
       %{notifier} replied to your comment on “%{case_kicker}.”
@@ -902,16 +902,16 @@ en:
       welcome: Welcome to Gala
       you_can_opt_in_later: (You can opt in later from Account Settings.)
     learner:
-      title: Learn From Cases
+      title: Learn From Modules
       description: >
-        I want to study real world cases and cutting-edge science in an open environment.
+        I want to study real world modules and cutting-edge science in an open environment.
     teacher:
-      title: Teach With Cases
+      title: Teach With Modules
       description: >
-        I want to find case studies to deploy in my classroom, company, or
+        I want to find learning modules to deploy in my classroom, company, or
         community.
     writer:
-      title: Write My Own Cases
+      title: Write My Own Modules
       description: >
         I want to create teaching tools with powerful stories, engaging media,
         and interactive features.
@@ -984,79 +984,79 @@ en:
       save_reading_list: Save Reading List
     show:
       document_title: '%{title} — Reading List'
-      sharable_title: '%{title}: A Reading List of Case Studies on Gala'
+      sharable_title: '%{title}: A Reading List of Learing Modules on Gala'
   reading_list_items:
     destroy:
-      remove_case: Remove case from this reading list.
+      remove_case: Remove module from this reading list.
     edit:
       notes_about_case: Notes about "{case}".
     new:
-      add_case: Add a Case
-      add_this_case: Add Case "{case}".
-      search_for_a_case_to_add: Search for a case to add...
+      add_case: Add a Module
+      add_this_case: Add Module "{case}".
+      search_for_a_case_to_add: Search for a module to add...
   saved_reading_lists:
     destroy:
       remove_list: Remove reading list from library
   search:
-    didnt_match: Your search didn’t match any cases.
+    didnt_match: Your search didn’t match any modules.
     full_text_search: Full text search...
     no_results: No search results
     author_a_case: >
-      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
+      If you have an idea for a module on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: Refine search
     results: Search results
     search: Search
-    search_cases: Search Cases...
+    search_cases: Search Modules...
     try_again: Try searching for something else.
   spotlights:
     add_citation: >
       Add a citation by clicking here.
     add_collaborators: >
-      Invite another Gala user to work with you on your case by clicking here.
+      Invite another Gala user to work with you on your module by clicking here.
     add_edgenote: >
       Attach a media resource by linking an Edgenote to the text.
     add_quiz: >
-      You can administer a comprehension quiz at the end of the case, and
+      You can administer a comprehension quiz at the end of the module, and
       optionally pair it with an identical pretest.
     caselog: >
-      Look here for insights from other instructors who’ve taught this case,
+      Look here for insights from other instructors who’ve taught this module,
       and share your expertise after you teach it.
     catalog_categories: >
-      Cases are also grouped by general topic. Click on a category to explore.
+      Modules are also grouped by general topic. Click on a category to explore.
     catalog_search: >
-      The easiest way to find a case about a specific topic is to search.
+      The easiest way to find a module about a specific topic is to search.
     comment: >
       You can leave a comment or ask a question about a specific part of the
-      case by clicking here.
+      module by clicking here.
     community_chooser: >
       Your active community can be changed here.
     conversation_view: >
-      See all the conversations your community is having about this case from
+      See all the conversations your community is having about this module from
       the conversation view.
     deploy: >
-      If this case looks like a good fit, send it to your students by deploying
+      If this module looks like a good fit, send it to your students by deploying
       it.
     deployment_details: >
       See your group’s progress and their scores on your comprehension quiz by
       clicking here.
     first-caselog: >
-      When other instructors teach your case, CaseLog will be available as a
+      When other instructors teach your module, CaseLog will be available as a
       forum to share best practices. Consider writing the initial post.
     invite_learners: >
       Send your group a “magic link” that will let them enroll automatically.
     publish: >
-      When you’re finished writing your case, you can publish it from the
+      When you’re finished writing your module, you can publish it from the
       Options menu.
   submissions:
     new:
       before_you_get_started: Before you get started
       check_your_understanding: Check your understanding
-      post_case_quiz: Post-case quiz
+      post_case_quiz: Post-module quiz
       please_answer: >
         Please answer the following questions to demonstrate your current level
         of knowledge.
       please_take_this_after_engaging_with_all_elements: >
-        After you have engaged with all elements of the case, please take this
+        After you have engaged with all elements of the module, please take this
         post-test to check your understanding.
     show:
       correct_answers_are_below: >
@@ -1084,17 +1084,17 @@ en:
     pm: pm
   translations:
     new:
-      create_translation: Copy Case for Translation
+      create_translation: Copy Module for Translation
       dont_see_your_language_html: >
         Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact
         us</a> and we’ll add it.
       make_a_copy_of_your_case_then_change_the_text: >
-        Translate your case into another language. We will make a copy of your
-        case so you can simply change the text in place. If someone else will be
-        translating your case on your behalf, add that person as a collaborator
+        Translate your module into another language. We will make a copy of your
+        module so you can simply change the text in place. If someone else will be
+        translating your module on your behalf, add that person as a collaborator
         after making the copy.
-      translate_this_case: Translate this case
+      translate_this_case: Translate this module
     show:
       please_wait_while_your_case_is_being_copied_for_translation: >
-        Please wait while your case is being copied...
+        Please wait while your module is being copied...
       translation_pending: Translation Pending
