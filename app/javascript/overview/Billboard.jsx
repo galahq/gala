@@ -25,7 +25,7 @@ import type { State, Case, Tag, Viewport } from 'redux/state'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
-function mapStateToProps ({ caseData, edit }: State) {
+function mapStateToProps({ caseData, edit }: State) {
   const {
     baseCoverUrl,
     dek,
@@ -101,7 +101,7 @@ const Billboard = ({
                 multiline
                 value={dek}
                 disabled={!editing}
-                placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
+                placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this module."
                 onChange={value => {
                   updateCase({ dek: value })
                 }}
@@ -120,7 +120,7 @@ const Billboard = ({
                   multiline
                   value={summary}
                   disabled={!editing}
-                  placeholder="Summarize the case in a short paragraph."
+                  placeholder="Summarize the module in a short paragraph."
                   onChange={value => updateCase({ summary: value })}
                   onEdit={onBeginEditing}
                   onCancel={onFinishEditing}
@@ -181,10 +181,7 @@ const Billboard = ({
 )
 
 // $FlowFixMe
-export default connect(
-  mapStateToProps,
-  { updateCase }
-)(Billboard)
+export default connect(mapStateToProps, { updateCase })(Billboard)
 
 // $FlowFixMe
 export const Container = styled.section.attrs({ className: 'Billboard' })`
