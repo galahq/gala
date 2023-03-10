@@ -177,7 +177,7 @@ Rails.application.routes.draw do
 
   resources :managerships, only: %i[destroy]
 
-  resources :my_cases, only: %i[index]
+  resources :my_cases, path: :my_modules, only: %i[index]
 
   resources :pages, only: %i[update destroy] do
     resources :cards, only: %i[create]
