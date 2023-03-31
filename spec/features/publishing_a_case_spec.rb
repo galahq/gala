@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Publishing a case' do
+feature 'Publishing a module' do
   let!(:kase) { create :case }
   let!(:reader) { create :reader, :editor }
 
@@ -12,18 +12,18 @@ feature 'Publishing a case' do
 
     accept_confirm 'Are you sure you want to change the publication status?' do
       click_button 'Options'
-      click_link 'Publish this case'
+      click_link 'Publish this module'
     end
     sleep(1)
     page.driver.browser.navigate.refresh
-    expect(page).not_to have_content 'This case is not yet published'
+    expect(page).not_to have_content 'This module is not yet published'
 
     accept_confirm 'Are you sure you want to change the publication status?' do
       click_button 'Options'
-      click_link 'Unpublish this case'
+      click_link 'Unpublish this module'
     end
     sleep(1)
     page.driver.browser.navigate.refresh
-    expect(page).to have_content 'This case is not yet published'
+    expect(page).to have_content 'This module is not yet published'
   end
 end

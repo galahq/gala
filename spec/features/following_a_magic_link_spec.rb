@@ -38,7 +38,7 @@ feature 'Following a magic link' do
       expect(page).to have_content quiz_deployment.group.name
       click_on 'Overview'
       click_on 'Check your understanding'
-      expect(page).to have_content 'Post-case quiz'
+      expect(page).to have_content 'Post-module quiz'
     end
   end
 

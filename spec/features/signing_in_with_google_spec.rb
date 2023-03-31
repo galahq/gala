@@ -12,7 +12,7 @@ feature 'Signing in with Google' do
       expect(page).to have_content 'Welcome to Gala'
       click_button 'Choose', match: :first
 
-      expect(page).to have_content 'Cases you enroll in will be presented here'
+      expect(page).to have_content 'Modules you enroll in will be presented here'
 
       expect(Reader.last.persona).to eq 'learner'
     end
@@ -29,7 +29,7 @@ feature 'Signing in with Google' do
       fill_in 'Email', with: Reader.take.email
       fill_in 'Password', with: 'new password'
       click_button 'Sign in'
-      expect(page).to have_content 'Cases you enroll in'
+      expect(page).to have_content 'Modules you enroll in'
     end
   end
 end
