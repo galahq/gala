@@ -11,7 +11,7 @@ Gala is a platform for the collaborative study of media-rich teaching cases.
 
 ## Install and Setup
 
-[Visual Studio Code users read below](#visual-studio-code)
+[A Visual Studio Code dev container option is available](#visual-studio-code-dev-container)
 
 You will need to have the following prerequisites installed locally in order to run Gala:
 
@@ -39,7 +39,7 @@ Create and seed your development and test databases:
     rails db:setup
     rails db:test:prepare
 
-## Visual Studio Code
+## Visual Studio Code Dev Container
 
 If you have `docker` running - I use [colima](https://github.com/abiosoft/colima) on macOS - you can quickly bring up the project in a dev container.
 
