@@ -620,7 +620,7 @@ en:
       are_you_sure: Are you sure you want to unenroll in this module?
       unenroll: Unenroll from this module
       you_will_need_another_invitation: >
-        Because this case is not published, you will need
+        Because this module is not published, you will need
         another invitation to reenroll.
     index:
       edit_enrolled: Edit enrolled modules
