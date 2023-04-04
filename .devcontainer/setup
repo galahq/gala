@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# create vscode user
+createuser -h localhost -U postgres --superuser vscode
