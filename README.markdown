@@ -11,6 +11,8 @@ Gala is a platform for the collaborative study of media-rich teaching cases.
 
 ## Install and Setup
 
+[Visual Studio Code users read below](#visual-studio-code)
+
 You will need to have the following prerequisites installed locally in order to run Gala:
 
  - Ruby 2.6.6
@@ -36,6 +38,16 @@ Create and seed your development and test databases:
 
     rails db:setup
     rails db:test:prepare
+
+## Visual Studio Code
+
+If you have `docker` running - I use [colima](https://github.com/abiosoft/colima) on macOS - you can quickly bring up the project in a dev container.
+
+  - Install the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension
+  - Open this project in Visual Studio Code
+  - Click the "Reopen in Container" button that appears, or use the command "Dev Containers: Reopen in Container"
+  - Once built, start a new terminal in VSCode, and use `bin/setup` to install dependencies, setup the database.
+
 
 ## Cron jobs
 
