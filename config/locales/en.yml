@@ -508,7 +508,7 @@ en:
     invite_drawer:
       invite_instructions_html: |
         <b>Invite Link:</b> Send someone this link to invite them to study this
-        modules with you. They’ll see any quiz you’ve chosen and be able to
+        module with you. They’ll see any quiz you’ve chosen and be able to
         participate in your private forum.
     new:
       active_deployments: Active Deployments

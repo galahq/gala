@@ -39,7 +39,7 @@ feature 'Creating a new deployment' do
     it 'shows an error message' do
       kase = create :case, :published
       visit case_path kase
-      click_on 'Deploy this Case'
+      click_on 'Deploy this Module'
       click_on 'Create Deployment'
       expect(page).to have_content 'Group name can’t be blank'
 
@@ -49,10 +49,10 @@ feature 'Creating a new deployment' do
       expect(page).to have_content 'Deployment successfully created'
 
       visit case_path kase
-      click_on 'Deploy this Case'
+      click_on 'Deploy this Module'
       select 'My Study Group', from: 'Study Group'
       click_on 'Create Deployment'
-      expect(page).to have_content 'Case has already been deployed in this study group'
+      expect(page).to have_content 'Module has already been deployed in this study group'
     end
   end
 end
