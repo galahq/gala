@@ -1,4 +1,8 @@
 zh-TW:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
   activemodel:
     attributes:
       confirm_deletion_form:
@@ -28,6 +32,7 @@ zh-TW:
         locale: Language
         location: 案例發生地
         published: Published
+        summary: Summary
         slug: Case URL
         teaching_guide: Teaching guide
         title: Question
@@ -168,6 +173,12 @@ zh-TW:
     show:
       download: Download
       instructions: Instructions
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -187,6 +198,9 @@ zh-TW:
     new:
       untitled: Untitled
   cases:
+    archives:
+      show:
+        overview: 返回案例主頁
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
@@ -236,6 +250,7 @@ zh-TW:
       unfeature_case: 取消設置此案例為明星案例
       unpublish_case: 取消發表該案例
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: 全部案例
       locations: 案例地點
@@ -264,30 +279,36 @@ zh-TW:
       toc: 目錄
   catalog:
     catalog: 案例目錄
-    choose_for_yourself: 我的學習我做主
+    create_a_case: Create a Case
     enrollments_instruction: >
       選擇一些案例參與學習，在這裡將會顯示進入你正在學習案例的快捷方式。
     find_a_case: >
-      Find a case about contemporary sustainability issues to study or to teach as they are unfolding. It’s now easy to find engaging teaching materials for use in classrooms and for public education.
+      Gala makes it quick and easy to create a case or adapt an existing learning module. Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
     global_systems: Global Systems
-    impactful_cases: Impactful Cases
+    impactful_cases: Create and Innovate
     improve_your_communication: >
-      Improve your ability to communicate complex topics by adding your own case study to Gala. Your media-rich cases and Gala’s immersive user interface will delight instructors and learners.
-    inclusive_community: Inclusive Community
-    innovative_teaching: Innovative Teaching
+      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together and solicit feedback with inline comments before publishing and sharing.
+    inclusive_community: Teach and Share
+    innovative_teaching: Collaborate and Adapt
     join_the_community: >
-      Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
-    join_conversation: >
-      參與到案例論壇中，分享你的所學，提出你的疑問，並幫助其他學員共同進步。
+      Gala modules perform well in classroom, community, and remote learning settings. Publish your case and share it as widely as you like. Institutions can create libraries with multiple cases.
     keywords: Keywords
     learn_more: 了解更多
-    meet_stakeholders: >
-      在案例中與不同利益相關者相遇，並通過多媒體學習材料深入了解各種觀點。
     my_library: My Library
     natural_resources: Natural Resources
-    open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: Propose a Case
-    shortcut_experience: 通過案例學習獲取將所學知識運用於實踐的捷徑。
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    welcome_message:
+      about_button_text: About Gala
+      how_button_text: How-to
+      news_button_text: News
+      to_get_started: >
+        {createAccount} to get started, or find a case by searching or browsing below.
+      create_account: Create an account
+      welcome_title: Open tools for collaborative learning
+      welcome_back_title: Welcome back
+      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
+      create_case: create a case
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
@@ -510,7 +531,7 @@ zh-TW:
       video_slug: "YouTube video slug: "
     edit:
       alt_text_guidelines: >
-        Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
+        Image descriptions ensure that learners using screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
       attach_an_image: Attach an image
       attach_a_file: Attach a file
       choose_audio_file: Choose audio file...
@@ -521,6 +542,8 @@ zh-TW:
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
       highlight: Allow this Edgenote to take up the full width of the page
       paste_a_link: Paste a link
+      photo_credit_guidelines: >
+        Add author and license information. [This guide](https://docs.learngala.com/docs/authoring-finding-media) has more about licensing, attribution, and finding copright-free images.
       preview: Edgenote preview
       pull_a_quote: Pull a quote
       remove: Remove
@@ -812,7 +835,7 @@ zh-TW:
     learner:
       title: Learn From Cases
       description: >
-        I want to study real world cases and cutting-edge science for sustainability.
+        I want to study real world cases and cutting-edge science in an open environment.
     teacher:
       title: Teach With Cases
       description: >
@@ -900,8 +923,8 @@ zh-TW:
     didnt_match: 抱歉，沒有找到你所搜索的案例。
     full_text_search: Full text search...
     no_results: 沒有可顯示的搜索結果
-    propose_a_case: >
-      或者，如果你有希望收入到Gala的案例，或關於案例的設想，請與我們聯系。讓我們一起為環境和可持續發展領域提供更多更有效的學習資源。
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: 細化搜索
     results: 搜索結果
     search: 搜索

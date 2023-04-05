@@ -1,4 +1,8 @@
 zh-CN:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
   activemodel:
     attributes:
       confirm_deletion_form:
@@ -28,6 +32,7 @@ zh-CN:
         locale: Language
         location: 案例发生地
         published: 已发布
+        summary: Summary
         slug: 案例链接
         teaching_guide: Teaching guide
         title: 探究问题
@@ -85,7 +90,7 @@ zh-CN:
         image: 图片
         last_sign_in_at: 最后登录于
         last_sign_in_ip: 最后登录的 IP
-        locale: Preferred language
+        locale: 首选语言
         locked_at: 锁定于
         name: 全名
         password: 密码
@@ -133,7 +138,7 @@ zh-CN:
             correct_answer:
               inclusion: "不包括在可能的答案列表中"
     models:
-      account_settings: Account settings
+      account_settings: 帐户设置
       activity: 活动
       case: 案例
       cases:
@@ -153,7 +158,7 @@ zh-CN:
       page: 页
       podcast: 广播节目
       reader: 读者
-      reading_list: Reading List
+      reading_list: 阅读清单
       shared_cases_library: 共享案例
     persistance:
       messages:
@@ -167,6 +172,12 @@ zh-CN:
     show:
       download: 下载
       instructions: 说明
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -185,6 +196,9 @@ zh-CN:
     new:
       untitled: 未命名
   cases:
+    archives:
+      show:
+        overview: 返回案例主页
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
@@ -232,6 +246,7 @@ zh-CN:
       unfeature_case: 取消设置此案例为明星案例
       unpublish_case: 取消发表该案例
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: 全部案例
       locations: 案例地点
@@ -260,30 +275,36 @@ zh-CN:
       toc: 目录
   catalog:
     catalog: 案例目录
-    choose_for_yourself: 我的学习我做主
+    create_a_case: 新建案例
     enrollments_instruction: >
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
-      运用案例来进行关于当代可持续发展问题的教学。在Gala平台上你能轻松找到寓教于乐的可用于课堂或公众教育教学的材料。
-    global_systems: Global Systems
-    impactful_cases: 运用案例
+      Gala makes it quick and easy to create a case or adapt an existing learning module. Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
+    global_systems: 全球系统
+    impactful_cases: Create and Innovate
     improve_your_communication: >
-      将你的多媒体案例发表到Gala平台上，用Gala清晰而易于使用的界面帮助教学者在美好的用户体验中更好地理解复杂的问题。
-    inclusive_community: 展开探讨
-    innovative_teaching: 创新教学
+      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together and solicit feedback with inline comments before publishing and sharing.
+    inclusive_community: Teach and Share
+    innovative_teaching: Collaborate and Adapt
     join_the_community: >
-      从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
-    join_conversation: >
-      参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
-    keywords: Keywords
+      Gala modules perform well in classroom, community, and remote learning settings. Publish your case and share it as widely as you like. Institutions can create libraries with multiple cases.
+    keywords: 关键词
     learn_more: 了解更多
-    meet_stakeholders: >
-      在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
     my_library: My Library
-    natural_resources: Natural Resources
-    open_access_learning_tools: 致力于可持续发展的开源型教学平台
-    propose_a_case: 提出一个案例提案
-    shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
+    natural_resources: 自然资源
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    welcome_message:
+      about_button_text: About Gala
+      how_button_text: How-to
+      news_button_text: News
+      to_get_started: >
+        {createAccount} to get started, or find a case by searching or browsing below.
+      create_account: Create an account
+      welcome_title: Open tools for collaborative learning
+      welcome_back_title: Welcome back
+      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
+      create_case: create a case
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: 删除整个话题讨论
@@ -447,7 +468,7 @@ zh-CN:
         a workshop, a town, or a team. When you deploy a case
         to a study group, you get a private forum for collaborative annotation
         and the option to configure a pre-/post-quiz.
-      my_deployments: My Deployments
+      my_deployments: 我的案例运用
       new_deployment: 新建案例运用
       once_youve_deployed: |
         Once you’ve deployed a case, you’ll be able to add a quiz and invite
@@ -505,7 +526,7 @@ zh-CN:
       video_slug: "YouTube视频链接："
     edit:
       alt_text_guidelines: >
-        Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
+        Image descriptions ensure that learners using screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
       attach_an_image: 加入图片
       attach_a_file: Attach a file
       choose_audio_file: 选择一个音频文件
@@ -516,6 +537,8 @@ zh-CN:
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
       highlight: Allow this Edgenote to take up the full width of the page
       paste_a_link: 粘贴链接
+      photo_credit_guidelines: >
+        Add author and license information. [This guide](https://docs.learngala.com/docs/authoring-finding-media) has more about licensing, attribution, and finding copright-free images.
       preview: 侧边注预览
       pull_a_quote: 引用文章或音频选段
       remove: 删除
@@ -620,9 +643,9 @@ zh-CN:
         ruby: "Accepted file types: %{types}."
       max_size:
         ruby: File size must be under %{size}.
-        js: File size must be under {mb} MB.
+        js: 文件大小必须小于 {mb} MB。
     cancel: 取消
-    choose_an_image: Choose an Image
+    choose_an_image: 选择图片
     close: 关闭
     copy: 复制
     edit: 编辑
@@ -701,7 +724,7 @@ zh-CN:
       library_managers: Library Managers
     index:
       create_a_new_library: Create a New Library
-      libraries: Libraries
+      libraries: 案例库
       libraries_on_gala: >
         Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
       on_home_page: On Home Page
@@ -807,7 +830,7 @@ zh-CN:
     learner:
       title: Learn From Cases
       description: >
-        I want to study real world cases and cutting-edge science for sustainability.
+        I want to study real world cases and cutting-edge science in an open environment.
     teacher:
       title: Teach With Cases
       description: >
@@ -847,14 +870,14 @@ zh-CN:
       account_options: 账户选项
       choose_an_image: Choose a profile image
       create_a_password: 设置密码
-      my_account: Account settings
+      my_account: 帐户设置
       notification_settings: Notification settings
       profile_settings: Profile settings
       save_persona: Save help preferences
-      save_profile: Update profile
+      save_profile: 更新个人信息
       save_notification_preference: Save notification preferences
       show_me_tips_about: Show me helpful tips about
-      tips_for_using_gala: Tips for using Gala
+      tips_for_using_gala: 使用Gala 的提示
       we_show_tips: >
         We can show contextual tips about features that are relevant to you.
       you_have_not_created_a_password: >
@@ -895,12 +918,12 @@ zh-CN:
     didnt_match: 抱歉，没有找到你所搜索的案例。
     full_text_search: Full text search...
     no_results: 没有可显示的搜索结果
-    propose_a_case: >
-      或者，如果你有希望收入到Gala的案例，或关于案例的设想，请与我们联系。让我们一起为环境和可持续发展领域提供更多更有效的学习资源。
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: 细化搜索
     results: 搜索结果
     search: 搜索
-    search_cases: Search Cases...
+    search_cases: 案例搜索...
     try_again: 请试试输入其他关键词。
   spotlights:
     add_citation: >
