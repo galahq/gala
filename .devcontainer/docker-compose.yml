@@ -8,6 +8,7 @@ services:
 
     environment:
       REDIS_URL: "redis://redis:6379"
+      USE_SELENIUM_SIDECAR: "true"
 
     volumes:
       # the current working directory from the Mac
@@ -16,8 +17,15 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
 
-    network_mode: service:postgres
-
+  selenium:
+    # selenium doesn't have universal containers, so if you are on Intel,
+    # change this to selenium/standalone-chrome:latest
+    image: seleniarm/standalone-chromium:latest
+    shm_size: '2g'
+    environment:
+      SE_NODE_MAX_SESSIONS: 4
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+    network_mode: service:app
 
   redis:
     image: redis:6.2.5
@@ -31,6 +39,8 @@ services:
       POSTGRES_PASSWORD: wibble
     volumes:
       - "pgsql-data:/var/lib/postgresql/data"
+
+    network_mode: service:app
 
 volumes:
   pgsql-data:

@@ -44,7 +44,27 @@ Capybara.register_driver :headless_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
-Capybara.default_driver = ENV['NOT_HEADLESS'] ? :chrome : :headless_chrome
+Capybara.register_driver :docker_sidecar do |app|
+  Capybara::Selenium::Driver.load_selenium
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+    opts.args << '--disable-gpu'
+    opts.args << '--disable-site-isolation-trials'
+    opts.args << '--window-size=1440,900'
+  end
+  Capybara::Selenium::Driver.new(app, browser: :remote, options: browser_options)
+end
+
+if ENV['USE_SELENIUM_SIDECAR']
+  # running inside a devcontainer or similar, see .devcontainer/docker-compose.yml
+  Capybara.default_driver = :docker_sidecar
+elsif ENV['NOT_HEADLESS']
+  # if you want to see what is going on
+  Capybara.default_driver = :chrome
+else
+  # the default
+  CAPYBARA.default_driver = :headless_chrome
+end
 
 Capybara.configure do |config|
   config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']
