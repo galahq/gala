@@ -1,0 +1,8 @@
+.pt-card.pt-elevation-4.devise-card.account-settings
+  %h1.account-settings__title= t '.my_account'
+
+  %div
+    = form_with model: reader, url: update_tos_reader_url(reader), method: :post do |f|
+      = f.errors
+      = f.check_box :terms_of_service
+      = f.submit t('.update_tos'), class: %w[pt-intent-primary]

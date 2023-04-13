@@ -3,7 +3,8 @@
 # @see Reader
 class ReadersController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_reader, only: %i[show edit update destroy]
+  before_action :set_reader, only: %i[show edit update destroy edit_tos update_tos]
+  skip_before_action :confirm_tos, only: %i[edit_tos update_tos]
   layout 'window'
 
   # @route [GET] `/readers`
@@ -49,6 +50,19 @@ class ReadersController < ApplicationController
     end
   end
 
+  def edit_tos
+    authorize @reader
+  end
+
+  def update_tos
+    authorize @reader
+    if @reader.update(tos_params)
+      redirect_to root_url, notice: 'Successfully accepted TOS'
+    else
+      render :edit_tos, status: :unprocessable_entity
+    end
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -72,6 +86,10 @@ class ReadersController < ApplicationController
     permitted << :password if reader_can_set_password_this_request
 
     params.require(:reader).permit(*permitted)
+  end
+
+  def tos_params
+    params.require(:reader).permit(:terms_of_service)
   end
 
   def reader_can_set_password_this_request
