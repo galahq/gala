@@ -4,7 +4,7 @@
 class ReadersController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_reader, only: %i[show edit update destroy edit_tos update_tos]
-  skip_before_action :confirm_tos, only: %i[edit_tos update_tos]
+  skip_before_action :confirm_tos, only: %i[edit update edit_tos update_tos]
   layout 'window'
 
   # @route [GET] `/readers`

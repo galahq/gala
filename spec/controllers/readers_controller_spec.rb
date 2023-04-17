@@ -28,5 +28,24 @@ RSpec.describe ReadersController, type: :controller do
         expect(reader.valid_password?(pass)).to be true
       end
     end
+
+    context 'edit tos' do
+      it 'visits :terms_of_service form' do
+        reader = create :reader, terms_of_service: nil
+        sign_in reader
+        get :edit, params: { use_route: 'readers/edit_tos', id: reader.id }
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'accepts :terms_of_service' do
+        reader = create :reader, terms_of_service: nil
+        sign_in reader
+        terms_of_service = '1'
+        put :update_tos, params: { id: reader, reader: { terms_of_service: terms_of_service } }
+        reader.reload
+        expect(reader.terms_of_service).to eq 1
+      end
+
+    end
   end
 end
