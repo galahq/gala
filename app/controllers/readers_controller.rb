@@ -57,7 +57,8 @@ class ReadersController < ApplicationController
   def update_tos
     authorize @reader
     if @reader.update(tos_params)
-      redirect_to root_url, notice: 'Successfully accepted TOS'
+      flash[:notice] = 'Successfully accepted TOS'
+      redirect_to_forwarding_location_or(root_url)
     else
       render :edit_tos, status: :unprocessable_entity
     end
