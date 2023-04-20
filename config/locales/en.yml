@@ -111,6 +111,7 @@ en:
         unconfirmed_email: Unconfirmed email
         unlock_token: Unlock token
         updated_at: Updated at
+        terms_of_service: 'I Accept Terms of Service'
       reading_list:
         title: Title
         description: Description
@@ -964,6 +965,12 @@ en:
         Because you first signed in using %{provider}, you never created a
         password. If you create one now, you will be able to use it, or
         %{provider}, to sign in.
+    edit_tos:
+      accept_tos: Accept Terms of Service
+      terms_of_service_text: This is a placeholder Terms of Service setup by Alex in the translationf file.  I'm just typing
+        stuff now to give more content but obviously this will need to be updated at some point with final language etc
+      terms_of_service_title: Terms of Service
+      terms_of_service: Accept Terms of Service
   reading_lists:
     actions:
       sharing_instructions: >

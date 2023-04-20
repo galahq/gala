@@ -1,9 +1,10 @@
-.pt-card.pt-elevation-4
-  %h1.account-settings__title= t '.terms_of_service'
-
+.pt-card.pt-elevation-4.devise-card.terms_of_service
+  %h1.account-settings__title= t '.terms_of_service_title'
+  %div
+    = t('.terms_of_service_text')
+  %br
   %div
     = form_for @reader, url: update_tos_reader_url(@reader), method: :post, builder: BlueprintFormBuilder do |f|
       = f.check_box :terms_of_service
-      = f.label 'I accept the Terms of Service'
       %div
       = f.submit t('.accept_tos'), class: %w[pt-intent-primary]
