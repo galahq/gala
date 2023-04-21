@@ -1,7 +1,8 @@
 .pt-card.pt-elevation-4.devise-card.terms-of-service.pt-form-group
   %h2.account-settings__title= t '.terms_of_service_title'
-  %div.pt-card.terms-text
-    = t('.terms_of_service_text')
+  %div.pt-card.terms-text-area
+    :markdown
+      #{render file: "config/locales/terms_of_service/terms_of_service_en.md"}
   %div
     = form_for @reader, url: update_tos_reader_url(@reader), method: :post, builder: BlueprintFormBuilder do |f|
       = f.check_box :terms_of_service
