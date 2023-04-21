@@ -99,3 +99,104 @@ Through the PROGRAM, You will have the ability to access and/or use content crea
 The PROGRAM enables you to create and share Your content such as educational materials through the PROGRAM's authoring tools, including the Open Author tool ("Content"), with the PROGRAM and its users. You retain all intellectual property rights in, and are responsible for the Content You create and share. 
 
 To the extent that you provide Content, you grant the PROGRAM and MICHIGAN the right to use and distribute Content under an approved license you agree to when uploading Content. This license includes granting the PROGRAM and MICHIGAN the right to use Content with their registered students, on-campus learners, or other learners independent of the PROGRAM. Nothing in this Agreement shall restrict other legal rights the PROGRAM may have to Content, for example under other licenses. We reserve the right to remove or modify Content for any reason, including Content that we believe violates this Agreement or other policies including our Privacy Policy (about.learngala.com/policies).
+
+---
+
+
+### Gala Privacy Policy
+
+*Date last updated: 4/21/2023*
+
+#### OVERVIEW
+
+The Regents of the University of Michigan ("Michigan") are making the Materials (as defined below) available to You ("You" or "Your") through the Gala open learning environment website located at www.learngala.com ("PROGRAM"). This Privacy Policy applies to the PROGRAM and data, videos, images, text, calculators, and related materials provided through or in connection with the PROGRAM ("PROGRAM Materials"). This Privacy Policy details the ways in which Your personal data may be collected, secured, shared, and used when You interact with PROGRAM or the PROGRAM Materials. 
+
+This Privacy Policy does not cover the privacy practices of third parties, such as the practices of third-party social networking services, or our partners. In addition, our service may contain links to the websites or services of third parties. Such third-party services and websites operate independently of the PROGRAM and each has its own privacy and security practices. We encourage You to review their policies before submitting any information to them.
+
+#### THE INFORMATION WE COLLECT
+
+User-provided information -- We collect and store information You provide when engaging with the PROGRAM, or when contacting us directly for other purposes or through other methods, such as over email. Information You provide generally will include:
+
+- Your name, email address, username, password, and other registration information;
+
+- Information You provide us when You contact us for help; and
+
+- Transaction-related information, such as when You create or submit learning modules or comments in a discussion forum, or otherwise use features in the PROGRAM that rely on user input; 
+
+Automatically Collected Information -- In addition, the PROGRAM may collect certain information automatically, such as the type of device You use, the IP address of Your device, Your operating system, the type of Internet browsers You use, location data or sites used to access/leave each page, and information about the way You use the PROGRAM, including Your digital interactions with the PROGRAM and the date, time, and length of Your visits. This information may be collected through the use of cookies and web beacons and is automatically stored in log files each time You visit the PROGRAM and log into the PROGRAM. Cookies administered by the PROGRAM are used to identify a user across page loads during a session and are therefore necessary for an integrated user experience. Some of this automatically collected data may be linked to user-provided information.
+
+Information Provided by Others -- We may receive information collected by other organizations that are using the PROGRAM. Additionally, PROGRAM may be integrated with third-party learning management systems and platforms using the Learning Tools Interoperability® (LTI) standard (collectively, "LTI Applications"). For LTI Applications, we may receive information collected by learning management system (LMS) providers through LTI-enabled transfers or from the organizations and LMS providers directly. LTI-enabled transfers occur automatically when using the LTI Application through Your LMS and include account information (username and/or email address connected to the account) linked to the LMS You are using to access the LTI Application. The automatic transfer of account information is necessary to provide a fully integrated and seamless user experience between the LMS and LTI Application.
+
+Information provided by others may include all of the same categories listed in the "User-Provided Information" and "Automatically Collected Information" sections above.
+
+The User-Provided Information, Automatically Collected Information, and Information Provided by Others described above shall be collectively referred to as "Application Data."
+
+#### HOW YOUR INFORMATION IS USED
+
+Michigan uses Application Data collected through the PROGRAM  to enhance the PROGRAM's performance and user experience and for other legitimate educational interests or as required by law. Michigan does not sell or rent Your personal data.
+
+Michigan may use Application Data:
+
+- To provide You with the PROGRAM: We use Your information for the purpose of providing You with access to the PROGRAM and the PROGRAM Materials. 
+
+- To respond to technical support questions: We use Your information to help us respond to a request for help, initiated by You, with using the PROGRAM. 
+
+- To provide PROGRAM-related announcements and updates: When You register to become a registered user of the PROGRAM, we use the email address provided during account creation (or any other email address You may specify within Your Registered User account) to deliver important PROGRAM-related announcements to You. Examples of PROGRAM-related announcements include email verification during registration, requests for password reset, important security or server maintenance updates, upgrades, new releases or policy changes, and future offerings of PROGRAM Materials. 
+
+- To provide and publish anonymous, non-personal, aggregate statistics: We may use the information we collect to calculate and publish anonymous, non-personal, aggregate statistics for either the general user base or to the contributors of the PROGRAM Material in order to provide insights about usage of the PROGRAM Materials that they contributed. We publish this data in aggregate form only, and do not publish any personally identifiable information (PII) in connection with this use.
+
+- For internal reporting and analysis: We use information gathered from log files, cookies, and the like to improve the PROGRAM, analyze trends, administer the site, track the movements of users around the site, and gather aggregate information about our users as a whole.
+
+- For research purposes: We may use information as part of a research project, in order to expand the body of knowledge about digitally-mediated learning. In these cases, our research methodology will be reviewed by the University of Michigan Institutional Review Board and we will continue to uphold the commitments made in this document.
+
+- To satisfy legal, regulatory, and contractual obligations.
+
+#### HOW YOUR INFORMATION IS SHARED
+
+Michigan will only disclose Your personal data in the following cases:
+
+- Disclosure to government officials, as required by law, such as to comply with a subpoena, court order or similar legal process or when we believe in good faith that disclosure is necessary to protect our rights (including in legal proceedings), protect Your safety or the safety of others, investigate fraud, or respond to a government request; and
+
+- Disclosure to trusted service providers who work on our behalf, who do not have an independent use of the information we disclose to them, and have agreed to adhere to the rules set forth in this privacy statement.
+
+#### HOW YOUR INFORMATION IS SECURED
+
+We are concerned about safeguarding the confidentiality of Your information. We provide physical, administrative, and technical safeguards to protect information we process and maintain. For example, we limit access to this information to authorized employees and contractors who need to know that information in order to operate, develop or improve the PROGRAM. Please be aware that, although we endeavor to provide reasonable security for information we process and maintain, no security system can prevent all potential security breaches. 
+
+#### DATA RETENTION POLICY, MANAGING YOUR INFORMATION
+
+The PROGRAM administers cookies to identify a user across page loads during a session and provide an integrated user experience. These cookies may be blocked through settings in Your browser, but doing so would affect the functioning of the PROGRAM.
+
+Additionally, we may use Cookies to count visits and traffic sources in order to measure and improve the performance of the PROGRAM. You may find out more about managing [cookies through Your browser](https://policies.google.com/technologies/managing). Opting out of or blocking cookies may impact performance.
+
+We will retain User-Provided Information for as long as You use the PROGRAM and for a reasonable time thereafter.
+
+If You would like us to access, update, correct, or delete User-Provided Information that You have provided via the PROGRAM, please contact us at <privacy@umich.edu> and hello@learngala.com, and reference the PROGRAM in Your email. We will respond in a reasonable time. Please note that some or all of the information we collect may be required in order for the PROGRAM to function properly, and we may be required to retain certain information by law.
+
+If You do not want us to contact You with marketing communications or other information regarding updates to PROGRAM Materials (or if You agreed to be contacted for such purposes at the time the Application Data was collected by us but You no longer wish to be contacted or have Your information used in such a way), You can let us know by following the unsubscribe instructions on any communications sent to You. You can also unsubscribe at any time by contacting us at hello@learngala.com. Please note that if You have registered an account on the PROGRAM, opting out of receiving marketing messages will not apply to Application Data provided to us as a result of signing up to use the PROGRAM, and we reserve the right to send You certain communications relating to Your account, Your registration, and Your use of the PROGRAM, such as messages relating to account management, customer service and system maintenance. These transactional account messages will thus be unaffected if You choose to opt-out of marketing communications.
+
+#### Your Personal Choices
+
+Accessing and Editing Your Personal Information. As noted above, Registered Users may view, edit, and/or delete certain information they have submitted to the PROGRAM; that information is available for editing via the link[  ](https://www.oercommons.org/profile/edit)www.learngala.com/profile/edit.
+
+Editing / Deleting Your Account. You may contact the PROGRAM at any time, by emailing the support desk at hello@learngala.com, to request that Your PII be removed from the PROGRAM, or to request that Your Registered User account be permanently deleted; for fastest processing, please include the phrase "PII Request" in the subject line and in the body of Your message.
+
+#### CHILDREN UNDER THE AGE OF 13
+
+We do not use the PROGRAM to knowingly cater or market to children under the age of 13. If a parent or guardian believes that the data about his or her child is incorrect, he or she should contact hello@learngala.com. A detailed description of Michigan's approach to COPPA can be found at [Notice Specific to Persons Under the Age of 13 or Their Parents or Guardians](https://umich.edu/about/privacy-statement/#coppa). 
+
+#### CHANGES TO THIS PRIVACY POLICY
+
+This Privacy Policy may be updated from time to time for any reason. You are advised to consult this Privacy Policy regularly for any changes. The last revision date is posted at the top of this Privacy Policy.
+
+#### YOUR CONSENT
+
+By using the Services, You are consenting to Michigan and its partners to process information collected as set forth in this Privacy Policy now and as amended. "Processing," means using or touching information in any way, including, but not limited to, collecting, storing, deleting, using, combining and disclosing information, all of which activities will take place in the United States. If You reside outside the U.S., Your information will be transferred to the U.S. where it will be processed and stored under U.S. privacy standards. By using the PROGRAM and providing information to us, You consent to such transfer to, and processing in, the US.
+
+#### NOTE FOR THOSE LOCATED IN THE EUROPEAN UNION (EU)
+
+If You reside or are located in the EU, You may have additional rights over the personal data that we collect, as defined under the General Data Protection Regulation (GDPR). A detailed description of these rights and Michigan's approach to GDPR compliance can be found in [Michigan's Notice Specific to Persons in the EU](https://umich.edu/about/privacy-statement/#eu). Additionally, all requests concerning access to PII or use restrictions, as well as further inquiries about data use and retention, can be submitted to <privacy@umich.edu> and hello@learngala.com by referencing the PROGRAM in your email.
+
+#### CONTACT US
+
+If You have any questions regarding privacy while using the PROGRAM, or have questions about our practices, please contact us via email at hello@learngala.com. You may also submit general data privacy inquiries to Michigan's Privacy Office at <privacy@umich.edu>.

@@ -111,7 +111,7 @@ en:
         unconfirmed_email: Unconfirmed email
         unlock_token: Unlock token
         updated_at: Updated at
-        terms_of_service: 'I accept the Terms of Service'
+        terms_of_service: 'I accept the Terms of Service and Privacy Policy'
       reading_list:
         title: Title
         description: Description
@@ -967,7 +967,7 @@ en:
         %{provider}, to sign in.
     edit_tos:
       accept_tos: Continue
-      terms_of_service_title: Please read and accept the updated Gala Terms of Service agreement
+      terms_of_service_title: Please read and accept the Gala Terms of Service and Privacy Policy
   reading_lists:
     actions:
       sharing_instructions: >
