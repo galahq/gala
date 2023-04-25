@@ -28,7 +28,5 @@ RSpec.describe ReadersController, type: :controller do
         expect(reader.valid_password?(pass)).to be true
       end
     end
-
-    
   end
 end
