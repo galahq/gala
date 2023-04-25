@@ -56,8 +56,7 @@ class ReadersController < ApplicationController
 
   def update_tos
     authorize @reader
-
-    if tos_params[:terms_of_service].present? && tos_params[:terms_of_service] == 1 # they checked the box
+    if tos_params['terms_of_service'].present? && tos_params['terms_of_service'].to_i == 1 # they checked the box
       @reader.terms_of_service = Rails.application.config.current_terms_of_service
       @reader.save
       flash[:notice] = 'Successfully accepted TOS'
