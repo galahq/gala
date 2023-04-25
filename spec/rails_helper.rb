@@ -110,7 +110,9 @@ RSpec.configure do |config|
       Rails.logger.info page.driver.browser.manage.logs.get('browser')
                             .map(&:as_json).awesome_inspect
     end
-    
+  end
+
+  config.before(:each) do |example|
     Rails.application.config.current_terms_of_service = 1
   end
 
