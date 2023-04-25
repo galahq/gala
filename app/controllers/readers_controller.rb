@@ -57,12 +57,13 @@ class ReadersController < ApplicationController
   def update_tos
     authorize @reader
 
-    if tos_params[:terms_of_service].present? # they checked the box
+    if tos_params[:terms_of_service].present? && tos_params[:terms_of_service] == 1 # they checked the box
       @reader.terms_of_service = Rails.application.config.current_terms_of_service
       @reader.save
       flash[:notice] = 'Successfully accepted TOS'
       redirect_to_forwarding_location_or(root_url)
     else
+      flash[:alert] = 'You must accept the terms of service'
       render :edit_tos, status: :unprocessable_entity
     end
   end
