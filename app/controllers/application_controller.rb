@@ -93,7 +93,7 @@ class ApplicationController < ActionController::Base
   end
 
   def confirm_tos
-    unless current_user.terms_of_service.present? && current_user.terms_of_service > 0
+    unless current_user.terms_of_service.present? && current_user.terms_of_service >= Rails.application.config.current_terms_of_service
       store_forwarding_location
       redirect_to edit_tos_reader_path(current_user), alert: 'You Must Accept The Terms Of Service'
     end
