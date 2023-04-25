@@ -8,7 +8,7 @@ RSpec.describe 'Reader' do
     it 'visits :terms_of_service form' do
       reader = create :reader, terms_of_service: nil
       sign_in reader
-      get edit_tos_reader_path(reader), params: { use_route: 'readers/edit_tos', id: reader.id }
+      get edit_tos_reader_path(reader)
       expect(response).to have_http_status(:success)
     end
 
