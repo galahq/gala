@@ -17,10 +17,24 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 
 
 --
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track planning and execution statistics of all SQL statements executed';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
@@ -54,7 +68,7 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
@@ -1190,7 +1204,8 @@ CREATE TABLE public.readers (
     send_reply_notifications boolean DEFAULT true,
     active_community_id integer,
     persona character varying,
-    seen_announcements_created_before timestamp without time zone
+    seen_announcements_created_before timestamp without time zone,
+    terms_of_service integer DEFAULT 0
 );
 
 
@@ -3494,6 +3509,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190423203000'),
 ('20190424134031'),
 ('20190501151722'),
-('20190514190157');
+('20190514190157'),
+('20230412003331');
 
 
