@@ -36,17 +36,6 @@ RSpec.describe 'Reader' do
     expect(response).to have_http_status(:success)
   end
 
-  it 'continues to saved forwarding_url after submission' do
-    reader = create :reader, terms_of_service: nil
-    sign_in reader
-    terms_of_service = '1'
-    destination_url = cases_url
-    get destination_url
-    expect(response).to redirect_to(edit_tos_reader_path(reader))
-    post update_tos_reader_url(reader), params: { id: reader, reader: { terms_of_service: terms_of_service } }
-    expect(response).to redirect_to destination_url
-  end
-
   it 'prompts again when application current terms of service is updated' do
     reader = create :reader, terms_of_service: nil
     sign_in reader

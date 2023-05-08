@@ -60,7 +60,16 @@ class ReadersController < ApplicationController
       @reader.terms_of_service = Rails.application.config.current_terms_of_service
       @reader.save
       flash[:notice] = 'Successfully accepted TOS'
-      redirect_to_forwarding_location_or(root_url)
+      session["user_return_to"] = nil
+      if @reader.sign_in_count == 1 && @reader.persona.blank?
+        redirect_to edit_profile_persona_path
+      elsif session['forwarding_url']
+        url = session['forwarding_url']
+        session['forwarding_url'] = nil
+        redirect_to url
+      else
+        redirect_to root_url
+      end
     else
       flash[:alert] = 'You must accept the terms of service'
       render :edit_tos, status: :unprocessable_entity

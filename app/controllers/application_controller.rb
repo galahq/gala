@@ -94,19 +94,13 @@ class ApplicationController < ActionController::Base
 
   def confirm_tos
     unless current_user.terms_of_service.present? && current_user.terms_of_service >= Rails.application.config.current_terms_of_service
-      store_forwarding_location
+      save_forwarding_url
       redirect_to edit_tos_reader_path(current_user), alert: 'You Must Accept The Terms Of Service'
     end
   end
 
-  # Redirects to stored location (or to the default).
-  def redirect_to_forwarding_location_or(default)
-    redirect_to(session[:forwarding_url] || default)
-    session.delete(:forwarding_url)
+  def save_forwarding_url
+    session[:forwarding_url] = session[:user_return_to]
   end
 
-  # Stores the URL trying to be accessed.
-  def store_forwarding_location
-    session[:forwarding_url] = request.original_url if request.get?
-  end
 end
