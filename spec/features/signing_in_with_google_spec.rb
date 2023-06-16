@@ -8,7 +8,7 @@ feature 'Signing in with Google' do
   context 'without a password' do
     scenario 'is possible' do
       find('.oauth-icon-google').click
-      check 'reader[terms_of_service]'
+      check 'reader[terms_of_service]', allow_label_click: true
       click_button 'Continue'
 
       expect(page).to have_content 'Welcome to Gala'
@@ -21,7 +21,7 @@ feature 'Signing in with Google' do
 
     scenario 'user can create a password' do
       find('.oauth-icon-google').click
-      check 'reader[terms_of_service]'
+      check 'reader[terms_of_service]', allow_label_click: true
       click_button 'Continue'
       find('[aria-label="Account options"]').click
       click_link 'Account settings'
