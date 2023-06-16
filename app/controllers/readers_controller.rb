@@ -2,6 +2,9 @@
 
 # @see Reader
 class ReadersController < ApplicationController
+  include MagicLink
+  include AfterSignInPath
+
   before_action :authenticate_reader!
   before_action :set_reader,
                 only: %i[show edit update destroy edit_tos update_tos]
@@ -61,12 +64,8 @@ class ReadersController < ApplicationController
       @reader.update_attribute :terms_of_service,
                                Rails.application.config.current_terms_of_service
       session.delete('user_return_to')
-      url = if @reader.sign_in_count == 1 && @reader.persona.blank?
-              edit_profile_persona_path
-            else
-              session.delete('forwarding_url') || root_url
-            end
-      redirect_to url, notice: t('readers.edit_tos.accepted')
+      redirect_to after_sign_in_path_for(@reader),
+                  notice: t('readers.edit_tos.accepted')
     else
       flash[:alert] = t('readers.edit_tos.must_accept')
       render :edit_tos, status: :unprocessable_entity
