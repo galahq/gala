@@ -58,7 +58,7 @@ class ReadersController < ApplicationController
     authorize @reader
   end
 
-  def update_tos
+  def update_tos # rubocop:disable Metrics/AbcSize
     authorize @reader
     if tos_params['terms_of_service'].to_i == 1 # they checked the box
       @reader.update_attribute :terms_of_service,
