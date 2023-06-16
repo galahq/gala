@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
   before_action :set_raven_context
-  before_action :confirm_tos, if: :reader_signed_in?
+  before_action :confirm_tos, if: :reader_signed_in?, unless: :devise_controller?
 
   delegate :successful?, to: :response
 
@@ -93,14 +93,9 @@ class ApplicationController < ActionController::Base
   end
 
   def confirm_tos
-    unless current_user.terms_of_service.present? && current_user.terms_of_service >= Rails.application.config.current_terms_of_service
-      save_forwarding_url
-      redirect_to edit_tos_reader_path(current_user), alert: 'You Must Accept The Terms Of Service'
-    end
+    return if current_user.terms_of_service.to_i >= Rails.application.config.current_terms_of_service
+    session[:forwarding_url] = session.delete(:user_return_to)
+    redirect_to edit_tos_reader_path(current_user),
+                alert: t('readers.edit_tos.must_accept')
   end
-
-  def save_forwarding_url
-    session[:forwarding_url] = session[:user_return_to]
-  end
-
 end

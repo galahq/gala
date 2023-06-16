@@ -3,7 +3,8 @@
 # @see Reader
 class ReadersController < ApplicationController
   before_action :authenticate_reader!
-  before_action :set_reader, only: %i[show edit update destroy edit_tos update_tos]
+  before_action :set_reader,
+                only: %i[show edit update destroy edit_tos update_tos]
   skip_before_action :confirm_tos, only: %i[edit update edit_tos update_tos]
   layout 'window'
 
@@ -56,22 +57,18 @@ class ReadersController < ApplicationController
 
   def update_tos
     authorize @reader
-    if tos_params['terms_of_service'].present? && tos_params['terms_of_service'].to_i == 1 # they checked the box
-      @reader.terms_of_service = Rails.application.config.current_terms_of_service
-      @reader.save
-      flash[:notice] = 'Successfully accepted TOS'
-      session["user_return_to"] = nil
-      if @reader.sign_in_count == 1 && @reader.persona.blank?
-        redirect_to edit_profile_persona_path
-      elsif session['forwarding_url']
-        url = session['forwarding_url']
-        session['forwarding_url'] = nil
-        redirect_to url
-      else
-        redirect_to root_url
-      end
+    if tos_params['terms_of_service'].to_i == 1 # they checked the box
+      @reader.update_attribute :terms_of_service,
+                              Rails.application.config.current_terms_of_service
+      session.delete('user_return_to')
+      url = if @reader.sign_in_count == 1 && @reader.persona.blank?
+              edit_profile_persona_path
+            else
+              session.delete('forwarding_url') || root_url
+            end
+      redirect_to url, notice: t('readers.edit_tos.accepted')
     else
-      flash[:alert] = 'You must accept the terms of service'
+      flash[:alert] = t('readers.edit_tos.must_accept')
       render :edit_tos, status: :unprocessable_entity
     end
   end
