@@ -54,7 +54,7 @@ import type { Dispatch } from 'redux/actions'
 import type { ILinkExpansion } from './expansion/LinkExpansion'
 
 type OwnProps = { slug: string, i: number }
-function mapStateToProps (state: State, { slug }: OwnProps) {
+function mapStateToProps(state: State, { slug }: OwnProps) {
   return {
     editing: state.edit.inProgress,
     selected: slug === state.ui.highlightedEdgenote,
@@ -63,7 +63,7 @@ function mapStateToProps (state: State, { slug }: OwnProps) {
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { slug }: OwnProps) {
+function mapDispatchToProps(dispatch: Dispatch, { slug }: OwnProps) {
   return {
     activate: () => dispatch(activateEdgenote(slug)),
     deactivate: () => dispatch(activateEdgenote(null)),
@@ -73,7 +73,7 @@ function mapDispatchToProps (dispatch: Dispatch, { slug }: OwnProps) {
   }
 }
 
-function mergeProps (stateProps, dispatchProps, ownProps) {
+function mergeProps(stateProps, dispatchProps, ownProps) {
   return {
     ...stateProps,
     ...dispatchProps,
@@ -115,7 +115,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     onChange: () => {},
   }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate(prevProps: Props) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
 
@@ -129,7 +129,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     }
   }
 
-  render () {
+  render() {
     const {
       contents,
       active,
@@ -233,7 +233,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     )
   }
 
-  renderQuotationSection () {
+  renderQuotationSection() {
     const { contents } = this.props
 
     if (contents == null) return null
@@ -252,7 +252,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     )
   }
 
-  renderImageSection () {
+  renderImageSection() {
     const { contents, expansion } = this.props
 
     if (contents == null || expansion.hasEmbed) return null
@@ -278,7 +278,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     )
   }
 
-  renderDownloadSection () {
+  renderDownloadSection() {
     const { contents, activate } = this.props
     if (!contents) return null
 
@@ -297,7 +297,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     )
   }
 
-  renderCallToAction () {
+  renderCallToAction() {
     const { contents, expansion } = this.props
 
     if (contents == null || !!contents.fileUrl) return null
@@ -324,7 +324,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     )
   }
 
-  _reduxProps () {
+  _reduxProps() {
     const { active, activate, deactivate, selected } = this.props
     return { active, activate, deactivate, selected }
   }
@@ -343,7 +343,7 @@ export default connect(
 const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
   position: relative;
   margin: 0 0 1em;
-
+  overflow-wrap: anywhere;
   @media screen and (max-width: 1300px) {
     margin-top: 1em;
   }
