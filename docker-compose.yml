@@ -16,6 +16,27 @@ services:
       - .:/app/
       - node_modules:/app/node_modules
 
+  # sidekiq:
+  #   depends_on:
+  #     - 'postgres'
+  #     - 'redis'
+  #   build: .
+  #   command: sidekiq -C config/sidekiq.yml.erb
+  #   volumes:
+  #     - '.:/app'
+  #   env_file:
+  #     - '.env'
+
+  # cable:
+  #   depends_on:
+  #     - redis
+  #   build: .
+  #   command: puma -p 28080 cable/config.ru
+  #   ports:
+  #     - '28080:28080'
+  #   volumes:
+  #     - '.:/app'
+
   db:
     image: postgres:13
     environment:
