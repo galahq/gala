@@ -15,7 +15,7 @@ import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/cont
 import type { ContextRouter } from 'react-router-dom'
 import type { State } from 'redux/state'
 
-function mapStateToProps (state: State, { location, history }: ContextRouter) {
+function mapStateToProps(state: State, { location, history }: ContextRouter) {
   const { edit, caseData } = state
   const { inProgress } = edit
   const { commentable, links, publishedAt, reader, slug } = caseData
@@ -40,7 +40,7 @@ function mapStateToProps (state: State, { location, history }: ContextRouter) {
   }
 }
 
-function StatusBar ({
+function StatusBar({
   caselogSpotlightNeeded,
   caseSlug,
   commentable,
@@ -56,7 +56,6 @@ function StatusBar ({
   history,
   reader,
 }) {
-  console.log({ reader })
   return (
     <ContentItemSelectionContextConsumer>
       {({ selecting, onSelect }) => {
@@ -163,7 +162,8 @@ function StatusBar ({
                     onClick: () => {
                       window.location = links.newCopy
                     },
-                  },                  {
+                  },
+                  {
                     message: published
                       ? 'cases.edit.unpublishCase'
                       : 'cases.edit.publishCase',
@@ -184,12 +184,9 @@ function StatusBar ({
 
 // $FlowFixMe
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      toggleEditing,
-      saveChanges,
-      togglePublished,
-    }
-  )(StatusBar)
+  connect(mapStateToProps, {
+    toggleEditing,
+    saveChanges,
+    togglePublished,
+  })(StatusBar)
 )
