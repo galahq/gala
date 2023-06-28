@@ -1,0 +1,48 @@
+version: '3.9'
+services:
+  web:
+    build: ./
+    command: foreman start -f Procfile.dev 
+    ports:
+      - '3000:3000'
+      - '3035:3035'
+    depends_on:
+      - db
+      - redis
+      # - sidekiq
+      # - selenium
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: gala
+      POSTGRES_PASSWORD: alpine
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+
+  # sidekiq:
+  #   build:
+  #     context: .
+  #     dockerfile: web
+  #   image: myapp_sidekiq
+  #   command: bundle exec sidekiq
+  #   depends_on:
+  #     - db
+  #     - redis
+
+  # selenium:
+  #   image: selenium/standalone-chrome:latest
+  #   ports:
+  #     - '4444:4444'
+
+
+
+volumes:
+  db-data:
