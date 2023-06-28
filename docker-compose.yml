@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3'
 services:
   web:
     build: ./
@@ -6,24 +6,28 @@ services:
     ports:
       - '3000:3000'
       - '3035:3035'
+    # restart: always
     depends_on:
       - db
       - redis
       # - sidekiq
       # - selenium
+    volumes:
+      - .:/app/
+      - node_modules:/app/node_modules
 
   db:
-    image: postgres:latest
+    image: postgres:13
     environment:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine
     ports:
       - '5432:5432'
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data/
 
   redis:
-    image: redis:latest
+    image: redis:6
     ports:
       - '6379:6379'
 
@@ -46,3 +50,4 @@ services:
 
 volumes:
   db-data:
+  node_modules:
