@@ -2,41 +2,19 @@ version: '3'
 services:
   web:
     build: ./
-    command: foreman start -f Procfile.dev 
+    stdin_open: true
+    tty: true
+    command: foreman start -f Procfile.dev
     ports:
       - '3000:3000'
       - '3035:3035'
-    # restart: always
     depends_on:
       - db
       - redis
-      # - sidekiq
-      # - selenium
+      - sidekiq
     volumes:
-      - .:/app/
+      - .:/app
       - node_modules:/app/node_modules
-
-  # sidekiq:
-  #   depends_on:
-  #     - 'postgres'
-  #     - 'redis'
-  #   build: .
-  #   command: sidekiq -C config/sidekiq.yml.erb
-  #   volumes:
-  #     - '.:/app'
-  #   env_file:
-  #     - '.env'
-
-  # cable:
-  #   depends_on:
-  #     - redis
-  #   build: .
-  #   command: puma -p 28080 cable/config.ru
-  #   ports:
-  #     - '28080:28080'
-  #   volumes:
-  #     - '.:/app'
-
   db:
     image: postgres:13
     environment:
@@ -45,30 +23,12 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - db-data:/var/lib/postgresql/data/
-
+      - db_data:/var/lib/postgresql/data/
   redis:
     image: redis:6
     ports:
       - '6379:6379'
-
-  # sidekiq:
-  #   build:
-  #     context: .
-  #     dockerfile: web
-  #   image: myapp_sidekiq
-  #   command: bundle exec sidekiq
-  #   depends_on:
-  #     - db
-  #     - redis
-
-  # selenium:
-  #   image: selenium/standalone-chrome:latest
-  #   ports:
-  #     - '4444:4444'
-
-
-
 volumes:
-  db-data:
+  db_data:
   node_modules:
+
