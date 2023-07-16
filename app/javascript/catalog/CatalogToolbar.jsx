@@ -44,7 +44,7 @@ const CatalogToolbar = ({ history }: Props) => {
                   : 'cases.new.createACase',
                 icon: 'annotation',
                 onClick: () => (window.location = '/my_modules'),
-                spotlightKey: 'my_cases',
+                spotlightKey: 'my_modules',
               },
 
               selecting || {
