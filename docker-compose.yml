@@ -6,8 +6,8 @@ services:
     tty: true
     command: foreman start -f Procfile.dev
     ports:
-      - '3000:3000'
-      - '3035:3035'
+      - 3000:3000
+      - 3035:3035
     depends_on:
       - db
       - redis
@@ -16,8 +16,8 @@ services:
       - node_modules:/app/node_modules
   worker:
     <<: *web
-    image: web:latest
-    command: bundle exec sidekiq
+    image: gala_web:latest
+    command: bundle exec sidekiq -c 1
     ports: []
   db:
     image: postgres:13
@@ -25,13 +25,22 @@ services:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes:
       - db_data:/var/lib/postgresql/data/
   redis:
     image: redis:6
     ports:
-      - '6379:6379'
+      - 6379:6379
+
+
+  selenium:
+    image: seleniarm/standalone-chromium:latest
+    shm_size: '2g'
+    environment:
+      SE_NODE_MAX_SESSIONS: 4
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+
 volumes:
   db_data:
   node_modules:
