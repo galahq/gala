@@ -18,38 +18,9 @@ require 'capybara/rspec'
 require 'clowne/rspec'
 require 'rspec/composable_json_matchers/setup'
 
-Capybara.server = :puma
+require "selenium-webdriver"
 
-require 'webdrivers' unless ENV['CI']
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.args << '--disable-site-isolation-trials'
-    opts.args << '--window-size=1440,900'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
-Capybara.register_driver :headless_chrome do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--headless'
-    opts.args << '--disable-gpu' if Gem.win_platform?
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.args << '--disable-site-isolation-trials'
-    opts.args << '--window-size=1440,900'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
-Capybara.default_driver = ENV['NOT_HEADLESS'] ? :chrome : :headless_chrome
-
-Capybara.configure do |config|
-  config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']
-end
-Capybara.enable_aria_label = true
+require 'capybara-screenshot/rspec'
 
 class Ahoy::Store
   def exclude?
@@ -86,6 +57,56 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+# Capybara.register_driver :selenium do |app|
+#   options = Selenium::WebDriver::Chrome::Options.new
+#   options.add_argument("--headless")
+#   options.add_argument('--no-sandbox')
+#   options.add_argument('--disable-dev-shm-usage')
+#   options.add_argument('--allow-insecure-localhost')
+#   options.add_argument('--ignore-certificate-errors')
+#   options.add_argument('--disable-web-security')
+#   options.add_argument('--disable-gpu')
+#   options.add_argument('--allow-running-insecure-content')
+
+#   Capybara::Selenium::Driver.new(
+#     app,
+#     browser: :chrome,
+#     url: "http://selenium-chrome:4444/wd/hub",
+#     capabilities: [options]
+#   )
+# end
+
+
+# Capybara.register_driver :selenium do |app|
+#   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+#     'goog:chromeOptions' => {
+#       args: ['--headless', '--disable-gpu', '--window-size=1600,1200']
+#     }
+#   )
+
+#   Capybara::Selenium::Driver.new(app, browser: :chrome, url: "http://selenium-chrome:4444/wd/hub", desired_capabilities: capabilities)
+# end
+# Capybara.default_driver = :selenium
+
+Capybara.register_driver :selenium do |app|
+  Capybara::Selenium::Driver.load_selenium
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+    opts.args << '--disable-gpu'
+    opts.args << '--disable-site-isolation-trials'
+    opts.args << '--window-size=1440,900'
+  end
+  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://selenium:4444/wd/hub", options: browser_options)
+end
+Capybara.default_driver = :selenium
+
+
+selenium_app_host = ENV.fetch("SELENIUM_APP_HOST") do
+  Socket.ip_address_list
+        .find(&:ipv4_private?)
+        .ip_address
+end
+
 RSpec.configure do |config|
   config.include ActionMailbox::TestHelper, type: :mailbox
   config.include ActiveSupport::Testing::TimeHelpers
@@ -94,22 +115,17 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
-  config.before(:all, type: :feature) do
-    Capybara.server = :puma, { Silent: true }
-  end
+  puts "Selenium host: #{selenium_app_host}"
+  Capybara.server_host = selenium_app_host
+  Capybara.server_port = 4000
 
-  config.around(:each, type: :feature, javascript: false) do |example|
-    Capybara.current_driver = :rack_test
-    example.run
-    Capybara.use_default_driver
-  end
 
-  config.after(:each) do |example|
-    if defined?(page) && example.exception
-      save_screenshot
-      Rails.logger.info page.driver.browser.manage.logs.get('browser')
-                            .map(&:as_json).awesome_inspect
-    end
+  config.before(:each, type: :feature) do |example|
+      Capybara.server = :puma # Until your setup is working
+      Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+      Capybara.javascript_driver = :selenium
+      Capybara.current_driver = :selenium
+      # Capybara.page.current_window.resize_to(1600, 1200)
   end
 
   config.around(:each, type: :mailbox) do |example|
