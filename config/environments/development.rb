@@ -7,6 +7,12 @@ Rails.application.configure do
 
   config.web_console.whitelisted_ips = '10.0.2.2'
 
+  # Check if we use Docker to allow docker ip through web-console
+  if File.file?('/.dockerenv') == true
+    host_ip = `/sbin/ip route|awk '/default/ { print $3 }'`.strip
+    config.web_console.whitelisted_ips = host_ip
+  end
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
