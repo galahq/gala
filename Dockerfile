@@ -25,17 +25,18 @@ RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc
 COPY Gemfile Gemfile.lock ./
 RUN bundle install --jobs 20 --retry 5
 
+# Install all node modules
+COPY package.json yarn.lock ./
+RUN yarn install
+
 # Copy everything else
 COPY . ./
 
 # Clear any local package files that might get copied
-RUN yarn install
 RUN rails tmp:clear log:clear
 
 # default entrypoint
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000
 
 # TODO need to precompile assets for production

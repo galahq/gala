@@ -57,37 +57,6 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-# Capybara.register_driver :selenium do |app|
-#   options = Selenium::WebDriver::Chrome::Options.new
-#   options.add_argument("--headless")
-#   options.add_argument('--no-sandbox')
-#   options.add_argument('--disable-dev-shm-usage')
-#   options.add_argument('--allow-insecure-localhost')
-#   options.add_argument('--ignore-certificate-errors')
-#   options.add_argument('--disable-web-security')
-#   options.add_argument('--disable-gpu')
-#   options.add_argument('--allow-running-insecure-content')
-
-#   Capybara::Selenium::Driver.new(
-#     app,
-#     browser: :chrome,
-#     url: "http://selenium-chrome:4444/wd/hub",
-#     capabilities: [options]
-#   )
-# end
-
-
-# Capybara.register_driver :selenium do |app|
-#   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-#     'goog:chromeOptions' => {
-#       args: ['--headless', '--disable-gpu', '--window-size=1600,1200']
-#     }
-#   )
-
-#   Capybara::Selenium::Driver.new(app, browser: :chrome, url: "http://selenium-chrome:4444/wd/hub", desired_capabilities: capabilities)
-# end
-# Capybara.default_driver = :selenium
-
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.load_selenium
   browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
@@ -95,17 +64,20 @@ Capybara.register_driver :selenium do |app|
     opts.args << '--disable-gpu'
     opts.args << '--disable-site-isolation-trials'
     opts.args << '--window-size=1440,900'
+    opts.args << '--disable-dev-shm-usage'
+    opts.args << '--allow-insecure-localhost'
+    opts.args << '--ignore-certificate-errors'
+    opts.args << '--disable-web-security'
+    opts.args << '--allow-running-insecure-content'
   end
   Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://selenium:4444/wd/hub", options: browser_options)
 end
+
 Capybara.default_driver = :selenium
 
-
-selenium_app_host = ENV.fetch("SELENIUM_APP_HOST") do
-  Socket.ip_address_list
+selenium_app_host = Socket.ip_address_list
         .find(&:ipv4_private?)
         .ip_address
-end
 
 RSpec.configure do |config|
   config.include ActionMailbox::TestHelper, type: :mailbox
@@ -115,17 +87,14 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
-  puts "Selenium host: #{selenium_app_host}"
   Capybara.server_host = selenium_app_host
   Capybara.server_port = 4000
 
-
   config.before(:each, type: :feature) do |example|
-      Capybara.server = :puma # Until your setup is working
-      Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-      Capybara.javascript_driver = :selenium
-      Capybara.current_driver = :selenium
-      # Capybara.page.current_window.resize_to(1600, 1200)
+    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+    Capybara.server = :puma, { Silent: false, Threads: '1:1' }
+    Capybara.javascript_driver = :selenium
+    Capybara.current_driver = :selenium
   end
 
   config.around(:each, type: :mailbox) do |example|
