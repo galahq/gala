@@ -97,7 +97,7 @@ Capybara.default_driver = if File.file?('/.dockerenv')
   Webdrivers::Chromedriver.required_version = "113.0.5672.63"
   :selenium
 else
-  Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+  Webdrivers::Chromedriver.required_version = "114.0.5735.90" unless ENV["CI"]
   :headless_chrome
 end
 
