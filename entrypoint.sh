@@ -2,12 +2,15 @@
 
 set -e
 
-# Check for pending migrations
-echo "Checking for pending migrations..."
-# TODO should we run migrations in the container?
+if [ "$RAILS_ENV" = "development" ]; then
+  if [ ! -f /tmp/seeded.txt ] && [ "$1" = "foreman" ]; then
+    touch /tmp/seeded.txt
+    bundle exec rails db:seed
+  fi
+fi
 
 if [ -f tmp/pids/server.pid ]; then
-  rm tmp/pids/server.pid
+  rm -f tmp/pids/server.pid
 fi
 
 exec bundle exec "$@"

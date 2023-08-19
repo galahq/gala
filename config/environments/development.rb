@@ -5,8 +5,6 @@ Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.web_console.whitelisted_ips = '10.0.2.2'
-
   # Check if we use Docker to allow docker ip through web-console
   if File.file?('/.dockerenv') == true
     host_ip = `/sbin/ip route|awk '/default/ { print $3 }'`.strip

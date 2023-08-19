@@ -22,6 +22,8 @@ require "selenium-webdriver"
 
 require 'capybara-screenshot/rspec'
 
+require 'webdrivers'
+
 class Ahoy::Store
   def exclude?
     false
@@ -57,6 +59,24 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+Capybara.register_driver :headless_chrome do |app|
+  Capybara::Selenium::Driver.load_selenium
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+    opts.args << '--disable-gpu' if Gem.win_platform?
+    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
+    opts.args << '--disable-site-isolation-trials'
+    opts.args << '--window-size=1440,900'
+  end
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+end
+
+# Add support for Headless Chrome screenshots.
+Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
+  driver.browser.save_screenshot(path)
+end
+
+
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.load_selenium
   browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
@@ -73,11 +93,24 @@ Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://selenium:4444/wd/hub", options: browser_options)
 end
 
-Capybara.default_driver = :selenium
+Capybara.default_driver = if File.file?('/.dockerenv')
+  Webdrivers::Chromedriver.required_version = "113.0.5672.63"
+  :selenium
+else
+  Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+  :headless_chrome
+end
 
-selenium_app_host = Socket.ip_address_list
-        .find(&:ipv4_private?)
-        .ip_address
+
+
+Capybara.configure do |config|
+  config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']
+end
+Capybara.enable_aria_label = true
+
+app_host = Socket.ip_address_list
+            .find(&:ipv4_private?)
+            .ip_address
 
 RSpec.configure do |config|
   config.include ActionMailbox::TestHelper, type: :mailbox
@@ -87,14 +120,15 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
-  Capybara.server_host = selenium_app_host
+  Capybara.server_host = app_host
   Capybara.server_port = 4000
 
   config.before(:each, type: :feature) do |example|
     Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-    Capybara.server = :puma, { Silent: false, Threads: '1:1' }
-    Capybara.javascript_driver = :selenium
-    Capybara.current_driver = :selenium
+    Capybara.use_default_driver
+    Capybara.server = :puma, { Silent: true}
+    Capybara.javascript_driver = Capybara.default_driver
+    Capybara.current_driver = Capybara.default_driver
   end
 
   config.around(:each, type: :mailbox) do |example|

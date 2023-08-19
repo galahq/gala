@@ -131,7 +131,7 @@ group :test do
   gem 'rspec-retry'
   gem 'shoulda-matchers'
   gem 'capybara-screenshot'
-  gem 'webdrivers'
+  gem 'webdrivers', require: false
 end
 
 ruby '2.6.6'

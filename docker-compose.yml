@@ -9,9 +9,6 @@ services:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
-      RACK_ENV: development
-      WEB_CONCURRENCY: 1
-      PORT: 3000
     ports:
       - 3000:3000
       - 3035:3035
