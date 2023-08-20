@@ -108,9 +108,7 @@ Capybara.configure do |config|
 end
 Capybara.enable_aria_label = true
 
-app_host = Socket.ip_address_list
-            .find(&:ipv4_private?)
-            .ip_address
+app_host = Socket.ip_address_list.find(&:ipv4_private?).ip_address
 
 RSpec.configure do |config|
   config.include ActionMailbox::TestHelper, type: :mailbox
