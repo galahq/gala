@@ -127,10 +127,10 @@ gem 'factory_bot_rails'
 gem 'faker'
 
 group :test do
+  gem 'capybara-screenshot'
   gem 'database_cleaner'
   gem 'rspec-retry'
   gem 'shoulda-matchers'
-  gem 'capybara-screenshot'
   gem 'webdrivers', require: false
 end
 
