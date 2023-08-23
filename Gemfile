@@ -137,4 +137,7 @@ group :test do
   gem 'webdrivers', require: false
 end
 
+# gem to install wkhtmltopdf for pdfkit
+gem 'wkhtmltopdf-binary'
+
 ruby '2.7.6'
