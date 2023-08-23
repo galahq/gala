@@ -18,6 +18,7 @@ services:
     volumes:
       - .:/app
       - node_modules:/app/node_modules
+      - /app/tmp/cache
   worker:
     <<: *web
     image: gala_web:latest
@@ -38,7 +39,7 @@ services:
     ports:
       - 6379:6379
   # selenium:
-  #   image: seleniarm/standalone-chromium
+  #   image: seleniarm/standalone-chromium:latest
   #   shm_size: 2gb
   #   environment:
   #     SE_NODE_MAX_SESSIONS: 1
