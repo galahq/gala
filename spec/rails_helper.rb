@@ -67,6 +67,8 @@ Capybara.register_driver :headless_chrome do |app|
     # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
     opts.args << '--disable-site-isolation-trials'
     opts.args << '--window-size=1440,900'
+    opts.args << '--disable-dev-shm-usage'
+    opts.args << '--disable-build-check'
   end
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
@@ -89,15 +91,14 @@ Capybara.register_driver :selenium do |app|
     opts.args << '--ignore-certificate-errors'
     opts.args << '--disable-web-security'
     opts.args << '--allow-running-insecure-content'
+    opts.args << '--disable-build-check'
   end
   Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://selenium:4444/wd/hub", options: browser_options)
 end
 
 Capybara.default_driver = if File.file?('/.dockerenv')
-  Webdrivers::Chromedriver.required_version = "113.0.5672.63"
   :selenium
 else
-  Webdrivers::Chromedriver.required_version = "114.0.5735.90" unless ENV["CI"]
   :headless_chrome
 end
 

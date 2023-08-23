@@ -15,17 +15,17 @@ Gala is a platform for the collaborative study of media-rich teaching cases.
 - Ruby 2.6.6
 - Node 12.5
 
-#### Using RVM
+#### Using rbenv
 
-1. `rvm install 2.6.6`
-2. `rvm use 2.6.6@gala --create` 
+1. `rbenv install 2.7.6`
+2. `rbenv shell 2.7.6`
 3. `gem install bundler`
 4. `bundle install`
 
-#### Using NVM
+#### Using nodenv
 
-1. `nvm install 12.5`
-2. `nvm use 12.5`
+1. `nodenv install 12.5.0`
+2. `nodenv shell 12.5.0`
 3. `npm install yarn`
 4. `yarn`
 

@@ -7,8 +7,7 @@ Rails.application.configure do
 
   # Check if we use Docker to allow docker ip through web-console
   if File.file?('/.dockerenv') == true
-    host_ip = `/sbin/ip route|awk '/default/ { print $3 }'`.strip
-    config.web_console.whitelisted_ips = host_ip
+    config.web_console.whitelisted_ips = '192.168.0.0/16'
   end
 
   # In the development environment your application's code is reloaded on
