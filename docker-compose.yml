@@ -5,7 +5,7 @@ services:
     stdin_open: true
     tty: true
     command: foreman start -f Procfile.dev
-    environment:
+    environment: &env
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
@@ -22,7 +22,10 @@ services:
   worker:
     <<: *web
     image: gala_web
-    command: bundle exec sidekiq -c 1
+    command: bundle exec sidekiq
+    environment:
+      <<: *env
+      SIDEKIQ_CONCURRENCY: 1
     ports: []
   db:
     image: postgres:13
