@@ -21,7 +21,7 @@ services:
       - /app/tmp/cache
   worker:
     <<: *web
-    image: gala_web:latest
+    image: gala_web
     command: bundle exec sidekiq -c 1
     ports: []
   db:
@@ -39,8 +39,8 @@ services:
     ports:
       - 6379:6379
   # selenium:
-  #   image: seleniarm/standalone-chromium:latest
-  #   shm_size: 2gb
+  #   image: seleniarm/standalone-chromium
+  #   shm_size: 4gb
   #   environment:
   #     SE_NODE_MAX_SESSIONS: 1
   #   ports:

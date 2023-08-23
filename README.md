@@ -12,8 +12,8 @@ Gala is a platform for the collaborative study of media-rich teaching cases.
 ## Dependencies
 
 - Docker
-- Ruby 2.6.6
-- Node 12.5
+- Ruby 2.7.6
+- Node 12.5.0
 
 #### Using rbenv
 

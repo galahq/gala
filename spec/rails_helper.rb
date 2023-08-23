@@ -59,57 +59,31 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-Capybara.register_driver :headless_chrome do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--headless'
-    opts.args << '--disable-gpu' if Gem.win_platform?
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.args << '--disable-site-isolation-trials'
-    opts.args << '--window-size=1440,900'
-    opts.args << '--disable-dev-shm-usage'
-    opts.args << '--disable-build-check'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
-# Add support for Headless Chrome screenshots.
-Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
-  driver.browser.save_screenshot(path)
-end
-
-
 Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--headless'
-    opts.args << '--disable-gpu'
-    opts.args << '--disable-site-isolation-trials'
-    opts.args << '--window-size=1440,900'
-    opts.args << '--disable-dev-shm-usage'
-    opts.args << '--allow-insecure-localhost'
-    opts.args << '--ignore-certificate-errors'
-    opts.args << '--disable-web-security'
-    opts.args << '--allow-running-insecure-content'
-    opts.args << '--disable-build-check'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://selenium:4444/wd/hub", options: browser_options)
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument("--headless")
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--allow-insecure-localhost')
+  options.add_argument('--ignore-certificate-errors')
+  options.add_argument('--disable-web-security')
+  options.add_argument('--disable-gpu')
+  options.add_argument('--allow-running-insecure-content')
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    url: File.file?('/.dockerenv') ? "http://selenium:4444/wd/hub" : nil,
+    capabilities: [options]
+  )
 end
 
-Capybara.default_driver = if File.file?('/.dockerenv')
-  :selenium
-else
-  :headless_chrome
-end
-
-
+Capybara.default_driver = :selenium
 
 Capybara.configure do |config|
   config.save_path = ENV['CIRCLE_ARTIFACTS'] if ENV['CIRCLE_ARTIFACTS']
 end
 Capybara.enable_aria_label = true
-
-app_host = Socket.ip_address_list.find(&:ipv4_private?).ip_address
 
 RSpec.configure do |config|
   config.include ActionMailbox::TestHelper, type: :mailbox
@@ -119,7 +93,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Orchard::Integration::TestHelpers::Authentication, type: :feature
 
-  Capybara.server_host = app_host
+  Capybara.server_host = Socket.ip_address_list.find(&:ipv4_private?).ip_address
   Capybara.server_port = 4000
 
   config.before(:each, type: :feature) do |example|
@@ -128,6 +102,7 @@ RSpec.configure do |config|
     Capybara.server = :puma, { Silent: true}
     Capybara.javascript_driver = Capybara.default_driver
     Capybara.current_driver = Capybara.default_driver
+    Capybara.page.current_window.resize_to(1600, 1200)
   end
 
   config.around(:each, type: :mailbox) do |example|
