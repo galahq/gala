@@ -368,7 +368,7 @@ const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
         `
       case 'bottom':
         return css`
-           grid-row: highlighted ${p => p.i + 1};
+          grid-row: highlighted ${p => p.i + 1};
           grid-column: 1 / 3;
           margin-top: 1em;
 

@@ -16,7 +16,7 @@ class ChangeEdgenoteHighlightedToLayout < ActiveRecord::Migration[6.0]
     execute <<-SQL
       ALTER TABLE edgenotes
       ALTER COLUMN highlighted TYPE boolean
-      USING CASE WHEN highlighted = 1 THEN TRUE ELSE FALSE END;
+      USING CASE WHEN highlighted = 1 THEN TRUE ELSE FALSE END
     SQL
     change_column_default :edgenotes, :highlighted, from: nil, to: false
   end
