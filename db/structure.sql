@@ -615,7 +615,7 @@ CREATE TABLE public.edgenotes (
     card_id integer,
     style integer DEFAULT 0,
     alt_text character varying,
-    highlighted boolean DEFAULT false,
+    layout integer DEFAULT 0,
     attribution text DEFAULT ''::text,
     audio_url text DEFAULT ''::text,
     call_to_action text DEFAULT ''::text,
@@ -3494,6 +3494,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190423203000'),
 ('20190424134031'),
 ('20190501151722'),
-('20190514190157');
+('20190514190157'),
+('20230830042848');
 
 

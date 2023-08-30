@@ -9,7 +9,7 @@
 import * as React from 'react'
 import * as R from 'ramda'
 import { FormattedMessage } from 'react-intl'
-import { Button, Intent, Switch } from '@blueprintjs/core'
+import { Button, Intent, RadioGroup, Radio } from '@blueprintjs/core'
 import { Dialog, Body, Column, Separator } from './styled'
 import withExpansion from 'edgenotes/expansion/withExpansion'
 import EdgenoteForm from './EdgenoteForm'
@@ -61,7 +61,7 @@ const EditorDialog = ({
     <Dialog
       canEscapeKeyClose={false}
       canOutsideClickClose={false}
-      highlighted={contents.highlighted}
+      layout={contents.layout}
       icon="edit"
       isOpen={open}
       title={intl.formatMessage({ id: 'edgenotes.edit.editEdgenote' })}
@@ -80,23 +80,42 @@ const EditorDialog = ({
 
         <Separator />
 
-        <Column sticky highlighted={contents.highlighted}>
+        <Column sticky layout={contents.layout}>
           <EdgenotePreview
             contents={contents}
             changesToAttachments={changesToAttachments}
             expansion={expansionWithVisibilityChanges}
           />
 
-          <Switch
-            checked={contents.highlighted}
-            label={<FormattedMessage id="edgenotes.edit.highlight" />}
-            onChange={() =>
+          <RadioGroup
+            label={<FormattedMessage id="edgenotes.edit.layoutLabel" />}
+            selectedValue={contents.layout}
+            onChange={(e) =>
               onChangeContents({
                 ...contents,
-                highlighted: !contents.highlighted,
+                layout: e.currentTarget.value,
               })
             }
-          />
+          >
+            <Radio
+              label={intl.formatMessage({
+                id: 'edgenotes.edit.layoutOptions.right',
+              })}
+              value="right"
+            />
+            <Radio
+              label={intl.formatMessage({
+                id: 'edgenotes.edit.layoutOptions.bottom',
+              })}
+              value="bottom"
+            />
+            <Radio
+              label={intl.formatMessage({
+                id: 'edgenotes.edit.layoutOptions.bottomFullWidth',
+              })}
+              value="bottom_full_width"
+            />
+          </RadioGroup>
 
           <ExpansionVisibilityForm
             contents={contentsWithAttachmentChanges}
