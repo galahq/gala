@@ -63,14 +63,6 @@ export const Column = styled.div`
         top: 1em;
       }
     `};
-
-  ${p =>
-    p.layout === "bottom_full_width" &&
-    css`
-      @media (min-width: 600px) {
-        width: 200%;
-      }
-    `};
 `
 
 export const Separator = styled.div`
