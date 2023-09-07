@@ -4,9 +4,9 @@
 class DeploymentsController < ApplicationController
   include SelectionParams
 
-  before_action :authenticate_reader!, only: %i[index show new create]
+  before_action :authenticate_reader!, only: %i[index show new create destroy]
   before_action :set_deployments, only: %i[index new create]
-  before_action :set_deployment, only: %i[show edit update]
+  before_action :set_deployment, only: %i[show edit update destroy]
   after_action :clear_content_item_selection_params, only: %i[update]
 
   layout 'admin'
@@ -60,6 +60,15 @@ class DeploymentsController < ApplicationController
       render json: { redirect: helpers.focus_deployment_quiz_path(@deployment) }
     else
       render json: result.errors, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    authorize @deployment
+    if @deployment.destroy
+      redirect_to deployments_url, notice: 'Successfully destroyed deployment'
+    else
+      redirect_to deployments_url, alert: 'Failed to destroy deployment'
     end
   end
 
