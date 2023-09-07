@@ -18,7 +18,7 @@ type OwnProps = {
   type: string,
 }
 
-function mapStateToProps (
+function mapStateToProps(
   { caseData, edit, locks }: State,
   { type, param }: OwnProps
 ) {
@@ -31,7 +31,7 @@ function mapStateToProps (
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
+function mapDispatchToProps(dispatch: Dispatch, { type, param }: OwnProps) {
   return {
     onBeginEditing: () => {
       dispatch(createLock(type, param))
@@ -98,10 +98,7 @@ const Lock = ({
 )
 
 // $FlowFixMe
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Lock)
+export default connect(mapStateToProps, mapDispatchToProps)(Lock)
 
 /**
  * STYLED COMPONENTS
@@ -127,7 +124,7 @@ const LockDetails = styled.div.attrs({ className: 'pt-card pt-elevation-4' })`
   left: 50%;
   opacity: 0;
   position: absolute;
-  top: 50%;
+  top: 20%;
   transform: translate(-50%, -50%);
   transition: 0.2s ease-out opacity 0.1s;
   width: 300px;
