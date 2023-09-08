@@ -65,6 +65,7 @@ gem 'pdfkit'
 gem 'redcarpet'
 gem 'sass-rails', '~> 5.0'
 gem 'webpacker', '>= 4.0.x'
+gem 'wkhtmltopdf-heroku', '2.12.6.0'
 
 # Logging and Monitoring
 gem 'administrate'
