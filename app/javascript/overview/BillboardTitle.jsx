@@ -21,7 +21,7 @@ import { Container as SidebarContainer } from 'elements/Sidebar'
 
 import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
-function mapStateToProps ({ edit, caseData }: State) {
+function mapStateToProps({ edit, caseData }: State) {
   const {
     slug,
     kicker,
@@ -149,7 +149,7 @@ export const UnconnectedBillboardTitle = ({
               multiline
               value={title}
               disabled={!editing || minimal}
-              placeholder="What is the central question of the case?"
+              placeholder="What is the central question of the module?"
               onChange={value => updateCase({ title: value })}
               onEdit={onBeginEditing}
               onCancel={onFinishEditing}
@@ -181,10 +181,9 @@ export const UnconnectedBillboardTitle = ({
 }
 
 // $FlowFixMe
-export default connect(
-  mapStateToProps,
-  { updateCase, displayErrorToast }
-)(UnconnectedBillboardTitle)
+export default connect(mapStateToProps, { updateCase, displayErrorToast })(
+  UnconnectedBillboardTitle
+)
 
 export const Container = styled.div`
   display: grid;

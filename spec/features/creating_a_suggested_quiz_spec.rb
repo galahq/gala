@@ -40,7 +40,7 @@ feature 'Creating a suggested quiz' do
     Capybara.using_session :other do
       login_as other_reader
       visit case_path case_study
-      click_on 'Deploy this Case'
+      click_on 'Deploy this Module'
 
       select 'Create a New Study Group', from: 'Study Group'
       fill_in 'Group Name', with: 'My Study Group'
@@ -50,7 +50,7 @@ feature 'Creating a suggested quiz' do
     end
   end
 
-  scenario 'is not possible when the user can’t edit the case' do
+  scenario 'is not possible when the user can’t edit the module' do
     visit case_path case_study
     expect(page).not_to have_content 'Pre/Post Assessment'
 

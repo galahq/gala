@@ -12,7 +12,7 @@ class CaseDecorator < ApplicationDecorator
   end
 
   def short_title
-    kicker.tap { |k| return 'Untitled Case' unless k.present? }
+    kicker.tap { |k| return 'Untitled Module' unless k.present? }
   end
 
   def cover_url(options = { width: 1280, height: 540 })

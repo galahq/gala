@@ -69,7 +69,7 @@ feature 'Leaving a comment' do
     expect(page).to have_content 'Please select a few more words.'
   end
 
-  scenario 'is not possible when your active community is not discussing the case' do
+  scenario 'is not possible when your active community is not discussing the module' do
     other_community = create :community
     enrollment.reader.update active_community_id: other_community.id
 
@@ -78,7 +78,7 @@ feature 'Leaving a comment' do
     community_chooser = find('a', text: other_community.name).native
     page.driver.browser.action.move_to(community_chooser).perform
     expect(page)
-      .to have_content 'Your active community is not discussing this case'
+      .to have_content 'Your active community is not discussing this module'
 
     expect(page).not_to have_content 'RESPOND'
   end
@@ -202,7 +202,7 @@ feature 'Leaving a comment' do
     end
   end
 
-  context 'as an author of the case' do
+  context 'as an author of the module' do
     it 'doesn’t lock the card you’re commenting on' do
       kase = enrollment.case
       card = kase.pages.first.cards.first

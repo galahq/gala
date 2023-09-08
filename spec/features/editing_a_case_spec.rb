@@ -13,7 +13,7 @@ feature 'Editing a case' do
       visit case_path(kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
-      click_button 'Edit this case'
+      click_button 'Edit this module'
       click_button('Add card', match: :first)
       sleep(1)
       page.driver.browser.navigate.refresh
@@ -25,8 +25,8 @@ feature 'Editing a case' do
     scenario 'is possible' do
       kase = create :case_with_edgenotes
       visit case_path(kase) + '/1'
-      click_button 'Edit this case'
-      expect(page).to have_content 'To edit this case, just change the text'
+      click_button 'Edit this module'
+      expect(page).to have_content 'To edit this module, just change the text'
 
       first_paragraph = find('.DraftEditor-root div[data-block]', match: :first)
       first_paragraph.click
@@ -46,7 +46,7 @@ feature 'Editing a case' do
       scenario 'is possible' do
         kase = create :case_with_elements
         visit case_path(kase) + '/1'
-        click_button 'Edit this case'
+        click_button 'Edit this module'
 
         # Try to attach an edgenote without a selection and expect an error
         edgenote_button = find('button[aria-label*="edgenote"]', match: :first)
@@ -113,8 +113,8 @@ feature 'Editing a case' do
         visit case_path(kase) + '/1'
         expect(page).to have_content 'RESPOND'
 
-        click_button 'Edit this case'
-        expect(page).to have_content 'To edit this case, just change the text'
+        click_button 'Edit this module'
+        expect(page).to have_content 'To edit this module, just change the text'
 
         first_paragraph = find('.DraftEditor-root div[data-block]',
                                match: :first).native
@@ -140,7 +140,7 @@ feature 'Editing a case' do
 
         expect(page).to have_selector 'span.c-comment-thread-entity'
 
-        click_on 'Edit this case'
+        click_on 'Edit this module'
         find('.c-comment-thread-entity', match: :first).click
         page.driver.browser.action
             .send_keys('new text added')
@@ -168,7 +168,7 @@ feature 'Editing a case' do
       visit case_path(kase) + '/1'
       expect(page).to have_selector('.Card', count: 5)
 
-      click_button 'Edit this case'
+      click_button 'Edit this module'
       accept_confirm(
         'Are you sure you want to delete this card and its associated comments?'
       ) do

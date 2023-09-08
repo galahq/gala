@@ -12,7 +12,7 @@ feature 'Citing your sources with a citation entity' do
 
   scenario 'is possible' do
     visit case_path(case_study)
-    click_on 'Edit this case'
+    click_on 'Edit this module'
 
     within '.c-toc' do
       click_on 'Page'
@@ -33,7 +33,7 @@ feature 'Citing your sources with a citation entity' do
     end
 
     click_on 'Save'
-    click_on 'Stop editing this case'
+    click_on 'Stop editing this module'
 
     find('[data-test-id=CitationEntity]').click
     within '[data-test-id=CitationTooltip]' do

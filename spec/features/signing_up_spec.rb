@@ -28,7 +28,7 @@ feature 'Signing up' do
     expect(page).to have_content 'Welcome to Gala'
     click_button 'Choose', match: :first
 
-    expect(page).to have_content 'Cases you enroll in will be presented here'
+    expect(page).to have_content 'Modules you enroll in will be presented here'
 
     reader.reload
     expect(reader.persona).to eq 'learner'
