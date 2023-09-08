@@ -56,16 +56,18 @@ gem 'mobility'
 gem 'active_model_serializers', '0.10.10'
 gem 'haml', '>=5.1.2' #git: 'https://github.com/haml/haml' # until > 5.0.4
 gem 'inline_svg'
-gem 'jbuilder', git: 'https://github.com/rails/jbuilder' # until > 2.8.0
+gem 'jbuilder', git: 'https://github.com/rails/jbuilder', branch: :main
 gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'pdfkit'
 gem 'redcarpet'
-gem 'sass-rails', '~> 5.0'
-gem 'webpacker', '>= 4.0.x'
-gem 'wkhtmltopdf-heroku', '2.12.6.0'
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 6.0.0'
+gem 'sassc', '~> 2.4.0'
+
+gem 'webpacker', '~> 5.3.0'
 
 # Logging and Monitoring
 gem 'administrate'
@@ -128,10 +130,14 @@ gem 'factory_bot_rails'
 gem 'faker'
 
 group :test do
+  gem 'capybara-screenshot'
   gem 'database_cleaner'
   gem 'rspec-retry'
   gem 'shoulda-matchers'
   gem 'webdrivers', require: false
 end
 
-ruby '2.6.6'
+# gem to install wkhtmltopdf for pdfkit
+gem 'wkhtmltopdf-binary'
+
+ruby '2.7.6'
