@@ -536,7 +536,13 @@ ja:
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
-      highlight: Allow this Edgenote to take up the full width of the page
+      layout_label: Edgenote Layout
+      layout_position_label: Position and width
+      layout_elements_label: Preview elements
+      layout_options:
+        right: Small (right-side margin)
+        bottom: Card-width (below card)
+        bottom_full_width: Full-width (below card)
       paste_a_link: Paste a link
       photo_credit_guidelines: >
         Add author and license information. [This guide](https://docs.learngala.com/docs/authoring-finding-media) has more about licensing, attribution, and finding copright-free images.
