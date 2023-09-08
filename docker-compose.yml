@@ -16,9 +16,9 @@ services:
       - db
       - redis
     volumes:
-      - .:/app
-      - node_modules:/app/node_modules
-      - /app/tmp/cache
+      - ./:/app/
+      - /app/node_modules/
+      - /app/tmp/cache/
   worker:
     <<: *web
     image: gala_web
@@ -52,5 +52,3 @@ services:
   #     - /dev/shm:/dev/shm
 volumes:
   db_data:
-  node_modules:
-
