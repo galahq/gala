@@ -44,6 +44,6 @@ class EdgenoteDecorator < ApplicationDecorator
   private
 
   def thumbnail_width
-    highlighted ? '2500' : '640'
+    bottom_full_width? ? '2500' : '640'
   end
 end
