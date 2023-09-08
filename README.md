@@ -9,33 +9,38 @@
 
 Gala is a platform for the collaborative study of media-rich teaching cases.
 
-## Install and Setup
+## Dependencies
 
-You will need to have the following prerequisites installed locally in order to run Gala:
+- Docker
+- Ruby 2.7.6
+- Node 12.5.0
 
- - Ruby 2.6.6
- - Rails v6.0.2.2
- - PostgreSQL >= v9.6.17 ([Postgres.app](https://postgresapp.com/) is recommended as a one-click install for MacOS)
- - Redis
+#### Using rbenv
 
-If you do not yet have Redis installed, follow instructions for your local platform to install Redis and be sure that Redis is up and running locally.
+1. `rbenv install 2.7.6`
+2. `rbenv shell 2.7.6`
+3. `gem install bundler`
+4. `bundle install`
 
-Clone the Gala codebase to your local machine:
+#### Using nodenv
 
-    git clone git@github.com:galahq/gala.git
+1. `nodenv install 12.5.0`
+2. `nodenv shell 12.5.0`
+3. `npm install yarn`
+4. `yarn`
 
-Install the required Ruby gems:
 
-    bundle install
+## Getting started
 
-Install the required node packages:
+- `docker compose up` to start the app
+- `bundle exec rspec` to run the Ruby tests
+- `yarn test` to run the Javascript tests
 
-    yarn install
+#### Other useful commands
 
-Create and seed your development and test databases:
-
-    rails db:setup
-    rails db:test:prepare
+- `docker-compose run web bash` to get a shell inside the web container
+- `docker volume rm gala_db_data` to delete the database volume
+- `docker compose up --build` to rebuild the containers
 
 ## Cron jobs
 
