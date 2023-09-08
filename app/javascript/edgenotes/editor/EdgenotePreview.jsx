@@ -62,4 +62,9 @@ const Card = styled.div.attrs({ className: 'pt-card pt-dark pt-elevation-3' })`
   & .edge {
     width: auto;
   }
+
+  figure {
+    margin-top: 1rem !important;
+  }
+
 `
