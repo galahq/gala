@@ -7,7 +7,7 @@
 # `v2` Edgenotes have a clean design which looks less like a textbook than `v1`,
 # which is deprecated.
 #
-# @attr highlighted [Boolean] whether the Edgenote should be full width
+# @attr layout [enum] position and width of the edgenote
 # @attr slug [String] a unique, URL-safe identifier
 # @attr style [:v1, :v2] deprecated `v1` or new-style `v2`
 # @attr caption [String]
@@ -30,6 +30,7 @@ class Edgenote < ApplicationRecord
   friendly_id :slug
 
   enum style: { v1: 0, v2: 1 }
+  enum layout: { right: 0, bottom_full_width: 1, bottom: 2 }
 
   belongs_to :case, touch: true
 
