@@ -8,7 +8,7 @@
 
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Switch } from '@blueprintjs/core'
+import { Switch, FormGroup } from '@blueprintjs/core'
 import LinkExpansion from 'edgenotes/expansion/LinkExpansion'
 import Attachment from 'edgenotes/editor/Attachment'
 
@@ -60,31 +60,37 @@ const ExpansionVisibilityForm = ({
 
   return (
     <>
-      {visible.embed && (
-        <Switch
-          checked={checked.embed}
-          label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
-          onChange={() => setVisibility('noEmbed', checked.embed)}
-        />
-      )}
+      <FormGroup
+        label={<FormattedMessage id={'edgenotes.edit.layoutElementsLabel'} />}
+      >
+        {visible.embed && (
+          <Switch
+            checked={checked.embed}
+            label={<FormattedMessage id="edgenotes.edit.useEmbed" />}
+            onChange={() => setVisibility('noEmbed', checked.embed)}
+          />
+        )}
 
-      {visible.image && (
-        <Switch
-          checked={checked.image}
-          disabled={disabled.image}
-          label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
-          onChange={() => setVisibility('noImage', checked.image)}
-        />
-      )}
+        {visible.image && (
+          <Switch
+            checked={checked.image}
+            disabled={disabled.image}
+            label={<FormattedMessage id="edgenotes.edit.usePreviewImage" />}
+            onChange={() => setVisibility('noImage', checked.image)}
+          />
+        )}
 
-      {visible.description && (
-        <Switch
-          checked={checked.description}
-          disabled={disabled.description}
-          label={<FormattedMessage id="edgenotes.edit.usePreviewDescription" />}
-          onChange={() => setVisibility('noDescription', checked.description)}
-        />
-      )}
+        {visible.description && (
+          <Switch
+            checked={checked.description}
+            disabled={disabled.description}
+            label={
+              <FormattedMessage id="edgenotes.edit.usePreviewDescription" />
+            }
+            onChange={() => setVisibility('noDescription', checked.description)}
+          />
+        )}
+      </FormGroup>
     </>
   )
 }

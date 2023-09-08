@@ -9,7 +9,7 @@
 import * as React from 'react'
 import * as R from 'ramda'
 import { FormattedMessage } from 'react-intl'
-import { Button, Intent, RadioGroup, Radio } from '@blueprintjs/core'
+import { Button, FormGroup, Intent, RadioGroup, Radio } from '@blueprintjs/core'
 import { Dialog, Body, Column, Separator } from './styled'
 import withExpansion from 'edgenotes/expansion/withExpansion'
 import EdgenoteForm from './EdgenoteForm'
@@ -86,11 +86,13 @@ const EditorDialog = ({
             changesToAttachments={changesToAttachments}
             expansion={expansionWithVisibilityChanges}
           />
-
+          <h5>
+            <FormattedMessage id={'edgenotes.edit.layoutLabel'} />
+          </h5>
           <RadioGroup
-            label={<FormattedMessage id="edgenotes.edit.layoutLabel" />}
+            label={<FormattedMessage id="edgenotes.edit.layoutPositionLabel" />}
             selectedValue={contents.layout}
-            onChange={(e) =>
+            onChange={e =>
               onChangeContents({
                 ...contents,
                 layout: e.currentTarget.value,
