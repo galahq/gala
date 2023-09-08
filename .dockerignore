@@ -1,0 +1,25 @@
+# ignore all logfiles and tempfiles
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+
+# environment normalization
+/.bundle
+/vendor/bundle
+
+# test sqlite databases
+/db/*.sqlite3*
+
+# should use env vars instead of encrypted messages
+config/master.key
+
+# ignore byebug command history file
+.byebug_history
+
+# node_modules
+node_modules
+
+# assets
+public
