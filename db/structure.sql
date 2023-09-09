@@ -1191,7 +1191,7 @@ CREATE TABLE public.readers (
     active_community_id integer,
     persona character varying,
     seen_announcements_created_before timestamp without time zone,
-    terms_of_service integer
+    terms_of_service integer DEFAULT 0
 );
 
 
