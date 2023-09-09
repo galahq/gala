@@ -1,5 +1,5 @@
 ---
-:concurrency: 5
+:concurrency: <%= ENV['SIDEKIQ_CONCURRENCY'] || 5 %>
 :queues:
   - active_storage_analysis
   - active_storage_purge

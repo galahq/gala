@@ -95,7 +95,7 @@ class ApplicationController < ActionController::Base
   end
 
   def confirm_tos
-    return if current_user.terms_of_service.to_i ==
+    return if current_user.terms_of_service.to_i >=
               Rails.application.config.current_terms_of_service
     session[:forwarding_url] = session.delete(:user_return_to)
     redirect_to edit_tos_reader_path(current_user),

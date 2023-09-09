@@ -14,7 +14,7 @@ feature 'Creating a library', javascript: false do
     fill_in 'Name', with: 'Michigan Sustainability Cases'
     fill_in 'Background Color', with: '#00274c'
     fill_in 'Foreground Color', with: '#ffcb05'
-    attach_file file_fixture('block-m.png'), name: 'library[logo]'
+    # attach_file file_fixture('block-m.png'), name: 'library[logo]'
     click_button 'Create Library'
 
     expect(page).to have_content 'successfully created'

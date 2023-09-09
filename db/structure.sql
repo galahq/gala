@@ -17,10 +17,25 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 
 
 --
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track planning and execution statistics of all SQL statements executed';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
 
 --
 -- Name: jsonb_path_to_tsvector(jsonb, text[]); Type: FUNCTION; Schema: public; Owner: -
@@ -53,7 +68,7 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
@@ -614,7 +629,7 @@ CREATE TABLE public.edgenotes (
     card_id integer,
     style integer DEFAULT 0,
     alt_text character varying,
-    highlighted boolean DEFAULT false,
+    layout integer DEFAULT 0,
     attribution text DEFAULT ''::text,
     audio_url text DEFAULT ''::text,
     call_to_action text DEFAULT ''::text,
@@ -1190,7 +1205,7 @@ CREATE TABLE public.readers (
     active_community_id integer,
     persona character varying,
     seen_announcements_created_before timestamp without time zone,
-    terms_of_service integer DEFAULT 0
+    terms_of_service integer
 );
 
 
@@ -3495,6 +3510,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190424134031'),
 ('20190501151722'),
 ('20190514190157'),
-('20230412003331');
+('20230412003331'),
+('20230830042848');
 
 
