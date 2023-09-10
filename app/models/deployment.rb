@@ -21,7 +21,7 @@ class Deployment < ApplicationRecord
 
   belongs_to :case
   belongs_to :group
-  belongs_to :quiz, optional: true
+  belongs_to :quiz, optional: true, dependent: :destroy
 
   has_many :readers, through: :group
   has_many :enrollments, ->(this) { where(reader: this.readers) },
@@ -29,7 +29,7 @@ class Deployment < ApplicationRecord
 
   has_one :community, through: :group
   has_one :forum, ->(this) { where case: this.case },
-          through: :community, source: :forums
+          through: :community, source: :forums, dependent: :destroy
 
   accepts_nested_attributes_for :group
 
