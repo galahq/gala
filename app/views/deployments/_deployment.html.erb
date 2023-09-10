@@ -43,8 +43,8 @@
         <%= t 'helpers.close' %>
       </button>
 
-      <%= link_to deployment, method: :delete do %>
-        Destroy4
+      <%= link_to deployment, class: "pt-button pt-small pt-minimal pt-icon-cross", method: :delete, :data => {:confirm => 'Are you sure?'} do %>
+        Destroy
       <% end %>
       
     </div>
