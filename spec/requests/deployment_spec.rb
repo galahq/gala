@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe "/deployments", type: :request do
-  fit "destroys a deployment" do
+  it "destroys a deployment" do
     kase = create :case
     reader = create :reader, :editor
     create :enrollment, case: kase, reader: reader
