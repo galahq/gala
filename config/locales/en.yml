@@ -479,6 +479,7 @@ en:
       invite_link: |
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
+      destroy: Delete Deployment
     enrolled_learners:
       case_completion: Percent of Case Completed
       posttest: Posttest Score
