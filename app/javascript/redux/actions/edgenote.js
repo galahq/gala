@@ -45,7 +45,7 @@ const filterParams: $FlowIssue = R.pick([
   'content',
   'file',
   'format',
-  'highlighted',
+  'layout',
   'iconSlug',
   'image',
   'photoCredit',

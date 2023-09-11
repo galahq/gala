@@ -144,7 +144,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     } = this.props
     if (contents == null) return null
 
-    const { slug, caption, pullQuote, highlighted } = contents
+    const { slug, caption, pullQuote, layout } = contents
 
     const isALink = !editing && expansion.actsAsLink
 
@@ -161,7 +161,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
         data-test-id="edgenote"
         id={slug}
         i={i}
-        highlighted={highlighted}
+        layout={layout}
         {...conditionalHoverCallbacks}
       >
         <Lock type="Edgenote" param={slug}>
@@ -352,17 +352,32 @@ const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
     grid-column: 1 / span 2;
   }
 
-  ${p =>
-    p.highlighted &&
-    css`
-      grid-row: highlighted ${p => p.i + 1};
-      grid-column: 1 / -1;
-      margin-top: 1em;
+  ${p => (() => {
+    switch (p.layout) {
+      case 'right':
+        return
+      case 'bottom_full_width':
+        return css`
+          grid-row: highlighted ${p => p.i + 1};
+          grid-column: 1 / -1;
+          margin-top: 1em;
 
-      @media screen and (max-width: 1300px) {
-        grid-row: unset;
+          @media screen and (max-width: 1300px) {
+            grid-row: unset;
+          }
+        `
+      case 'bottom':
+        return css`
+          grid-row: highlighted ${p => p.i + 1};
+          grid-column: 1 / 3;
+          margin-top: 1em;
+
+          @media screen and (max-width: 1300px) {
+            grid-row: unset;
+          }
+        `
       }
-    `};
+  })()}
 `
 
 const Body = styled.div`

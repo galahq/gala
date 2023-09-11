@@ -32,12 +32,6 @@ export const EditButton = styled(Button).attrs({
 // $FlowFixMe
 export const Dialog = styled(BaseDialog)`
   width: 772px;
-
-  ${p =>
-    p.highlighted &&
-    css`
-      width: 1150px;
-    `};
 `
 
 // $FlowFixMe
@@ -67,14 +61,6 @@ export const Column = styled.div`
       @media (min-width: 600px) {
         position: sticky;
         top: 1em;
-      }
-    `};
-
-  ${p =>
-    p.highlighted &&
-    css`
-      @media (min-width: 600px) {
-        width: 200%;
       }
     `};
 `

@@ -251,7 +251,7 @@ export type Edgenote = {
   embedCode: string,
   fileUrl: string,
   format: string,
-  highlighted: boolean,
+  layout: string,
   iconSlug: ?string,
   imageUrl: string,
   imageThumbnailUrl: string,
