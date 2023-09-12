@@ -480,6 +480,7 @@ en:
         Invite link for the deployment of the case “%{case_kicker}”
         in the group “%{group_name}”
       destroy: Delete Deployment
+      are_you_sure:  Are you sure?
     enrolled_learners:
       case_completion: Percent of Case Completed
       posttest: Posttest Score
