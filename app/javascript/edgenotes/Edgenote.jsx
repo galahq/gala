@@ -343,7 +343,7 @@ export default connect(
 const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
   position: relative;
   margin: 0 0 1em;
-
+  overflow-wrap: anywhere;
   @media screen and (max-width: 1300px) {
     margin-top: 1em;
   }
