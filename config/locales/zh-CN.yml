@@ -514,7 +514,11 @@ zh-CN:
       edit_edgenote: 编辑侧边注
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
-      highlight: Allow this Edgenote to take up the full width of the page
+      layout_label: Layout
+      layout_options:
+        right: Right side (default)
+        bottom: Card width
+        bottom_full_width: Full width
       paste_a_link: 粘贴链接
       preview: 侧边注预览
       pull_a_quote: 引用文章或音频选段

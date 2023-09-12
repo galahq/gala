@@ -69,7 +69,7 @@ class EdgenotesController < ApplicationController
                                      :photo_credit, :slug, :style, :pull_quote,
                                      :attribution, :call_to_action,
                                      :audio, :youtube_slug, :statistics,
-                                     :alt_text, :highlighted, :icon_slug, :file)
+                                     :alt_text, :layout, :icon_slug, :file)
   end
 
   def set_cors_headers
