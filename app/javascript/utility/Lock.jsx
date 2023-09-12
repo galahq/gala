@@ -127,7 +127,7 @@ const LockDetails = styled.div.attrs({ className: 'pt-card pt-elevation-4' })`
   left: 50%;
   opacity: 0;
   position: absolute;
-  top: 50%;
+  top: 20%;
   transform: translate(-50%, -50%);
   transition: 0.2s ease-out opacity 0.1s;
   width: 300px;
