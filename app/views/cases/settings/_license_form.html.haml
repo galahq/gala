@@ -1,0 +1,9 @@
+= form_for kase, url: case_settings_path(kase),
+                  builder: BlueprintFormBuilder do |f|
+  = f.form_group :license do |f, error_classes|
+    .pt-control-group
+      .pt-select.pt-fill{class: error_classes}
+        = f.select :license, kase.available_licenses.map { |l| [l['name'], l['id']]  },
+                    include_blank: false
+      = f.submit I18n.t('cases.settings.edit.change_license'),
+                  class: %w[pt-button pt-intent-success]

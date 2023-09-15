@@ -14,6 +14,7 @@
       %h1.admin__title= t '.edit_case_settings'
       = render 'slug_form', kase: @case
       = render 'library_form', kase: @case, libraries: @libraries
+      = render 'license_form', kase: @case
       = render 'featured_form', kase: @case
 
   .admin-card__sidebar.pt-dark.spaced--compact

@@ -44,7 +44,7 @@ module Cases
     end
 
     def case_settings_params
-      params.require(:case).permit(:slug)
+      params.require(:case).permit(:slug, :license)
     end
   end
 end

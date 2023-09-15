@@ -40,6 +40,7 @@ en:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
           one: Translator
+        license: License
       comment:
         attachments: Attachments
       deployment:
@@ -264,6 +265,7 @@ en:
       edit:
         change_library: Change library
         change_url: Change URL
+        change_license: Change license
         edit_case_settings: Edit case settings
       featured_form:
         change_featured_time: Change time
