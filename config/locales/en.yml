@@ -975,8 +975,8 @@ en:
     edit_tos:
       accept_tos: Continue
       terms_of_service_title: Please read and accept the Gala Terms of Service and Privacy Policy
-      must_accept: You must accept the Terms of Service.
-      accepted: You have accepted the Terms of Service.
+      must_accept: You must accept the Terms of Service and Privacy Policy to continue.
+      accepted: You have accepted the Terms of Service and Privacy Policy.
   reading_lists:
     actions:
       sharing_instructions: >
