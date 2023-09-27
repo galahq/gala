@@ -18,15 +18,22 @@
 
       :markdown
         #{t '.put_your_own_cases_on_gala'}
+      .pt-callout.pt-icon-hand-right
+        = t '.publish_with_a_creative_commons_license'
+        .my-cases__link
+          = link_to 'Learn more ›', 'https://docs.learngala.com/docs/'
+        
 
     - if reader_signed_in?
       .pt-dark
         = form_with model: Case.new, local: true do |f|
-          = f.submit I18n.t('my_cases.index.new_case'),
-                     class: 'pt-button pt-intent-success pt-icon-add'
-          .pt-select
-            = f.select :locale, options_for_select(locale_names,
-                                                   current_user.locale)
+         
+          .spaced
+            = f.submit I18n.t('my_cases.index.new_case'),
+                      class: 'pt-button pt-intent-success pt-icon-add my-cases__v-align-top'
+            .pt-select
+              = f.select :locale, options_for_select(locale_names,
+                                                    current_user.locale)
     - else
       .pt-card.pt-elevation-4.devise-card
         = render 'devise/sessions/sign_in', resource: Reader.new

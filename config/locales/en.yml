@@ -843,11 +843,10 @@ en:
         Once you’ve created a case or been added as a collaborator on someone
         else’s, you’ll see it here.
       publish_a_case: Publish a Case
+      publish_with_a_creative_commons_license: >
+        When you publish a module on Gala you agree to distribute it with a Creative Commons license.
       put_your_own_cases_on_gala: >
-        Put your case on Gala and enrich your teaching with integrated
-        discussion, curated media, and embedded assessments.
-        You keep the rights to the cases you publish on Gala and we make them
-        easy to deploy in and beyond the classroom.
+        Put your case on Gala and share it with our growing Open Educational Resources community and the world. 
       youre_not_authoring_any_cases: You’re not authoring any cases yet
   notifications:
     replied_to_your_comment: >
