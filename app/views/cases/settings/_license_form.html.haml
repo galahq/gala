@@ -8,7 +8,7 @@
                     include_blank: false
       = f.submit I18n.t('cases.settings.edit.change_license'),
                   class: %w[pt-button pt-intent-success], id: 'case_license_submit'
-    %a.pt-button.pt-minimal.license(href='https://docs.learngala.com/docs/general-licensing' target='_blank')
+    %a.pt-button.pt-minimal.license.pt-icon-help(href='https://docs.learngala.com/docs/general-licensing' target='_blank')
       = I18n.t('cases.settings.edit.learn_more_license')
 :javascript
   function handleSubmit() {
