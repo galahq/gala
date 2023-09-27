@@ -31,6 +31,7 @@ module Cases
 
     def set_case
       @case = Case.friendly.find(params[:case_slug]).decorate
+      @case.licensor current_reader
       authorize @case
     end
 

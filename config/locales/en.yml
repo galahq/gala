@@ -266,6 +266,8 @@ en:
         change_library: Change library
         change_url: Change URL
         change_license: Change license
+        change_license_confirmation: Changing your license from All Rights Reserved is irreversible. Are you sure you want to proceed?
+        learn_more_license: Learn more about license options
         edit_case_settings: Edit case settings
       featured_form:
         change_featured_time: Change time

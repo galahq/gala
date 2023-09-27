@@ -11,9 +11,14 @@ module Licensable
     }
   end
 
-  def available_licenses
+  def licensor(reader)
+    @reader = reader
+  end
+
+  def available_licenses(reader = nil)
+    return LICENSES if grandfathered_license? || @reader&.has_role?(:editor)
     LICENSES.select do |o|
-      grandfathered_license? || o['active'] == true
+       o['active'] == true
     end
   end
 
