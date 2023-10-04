@@ -27,6 +27,20 @@ RSpec.describe Case, type: :model do
     expect(subject).to_not be_valid
   end
 
+  it 'is not valid with an invalid license' do
+    subject.license = 'cc_by_nc'
+    expect(subject).to be_valid
+
+    subject.license = 'cc_by_nc_nd'
+    expect(subject).to be_valid
+
+    subject.license = 'all_rights_reserved'
+    expect(subject).to_not be_valid
+
+    subject.license = 'asdf'
+    expect(subject).to_not be_valid
+  end
+
   context 'in translation' do
     subject { build :case }
 

@@ -33,6 +33,7 @@ class Case < ApplicationRecord
   include Comparable
   include Lockable
   include Taggable
+  include Licensable
   extend FriendlyId
 
   default_scope { ordered }

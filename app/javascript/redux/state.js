@@ -145,6 +145,7 @@ export type Case = {
   latitude: ?number,
   learningObjectives: string[],
   library: Library,
+  licenseConfig: LicenseConfig,
   links: {
     archive: string,
     newEditorship: string,
@@ -295,6 +296,13 @@ export type Library = {
   links: {
     self: string,
   },
+}
+
+export type LicenseConfig = {
+  id: string,
+  name: string,
+  active: boolean,
+  url: string,
 }
 
 export type LinkExpansionVisibility = {

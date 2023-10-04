@@ -8,6 +8,7 @@ FactoryBot.define do
     password { 'secret' }
     locale { 'en' }
     confirmed_at { Time.zone.now }
+    terms_of_service { 1 }
 
     trait :francophone do
       locale { 'fr' }

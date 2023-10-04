@@ -174,6 +174,13 @@ const Billboard = ({
               <FormattedMessage id="archives.show.printableArchive" />
             </MinimalLink>
           )}
+
+          <MinimalLink
+            href={caseData.licenseConfig.url}
+            target='_blank'
+          >
+            {caseData.licenseConfig.name}
+          </MinimalLink>
         </>
       )}
     </Lock>

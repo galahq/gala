@@ -65,6 +65,8 @@ feature 'Following a magic link' do
     fill_in 'Email', with: reader.email
     fill_in 'Password', with: reader.password
     click_on 'Sign in'
+    check 'reader[terms_of_service]', allow_label_click: true
+    click_button 'Continue'
 
     click_on 'Conversation'
     expect(page).to have_content deployment.group.name
@@ -74,6 +76,8 @@ feature 'Following a magic link' do
     visit magic_link_path key: deployment.key
     click_on 'Let’s get started!'
     find('.oauth-icon-google').click
+    check 'reader[terms_of_service]', allow_label_click: true
+    click_button 'Continue'
     click_on 'Conversation'
     expect(page).to have_content deployment.group.name
   end

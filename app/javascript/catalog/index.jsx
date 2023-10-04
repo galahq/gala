@@ -82,9 +82,9 @@ const Window = styled.div`
   display: grid;
   grid-gap: 0 1rem;
   grid-template:
+    'sidebar banner' minmax(0, auto)
     'sidebar welcome-message' minmax(0, auto)
     'sidebar value-proposition' minmax(0, auto)
-    'sidebar banner' minmax(0, auto)
     'sidebar main' min-content / 19em calc(100% - 19em - 1em);
   min-height: 100%;
   position: relative;
@@ -93,14 +93,14 @@ const Window = styled.div`
 
   @media (max-width: 1100px) {
     grid-template:
+      'sidebar banner' minmax(0, auto)
       'sidebar welcome-message' minmax(0, auto)
       'sidebar value-proposition' minmax(0, auto)
-      'sidebar banner' minmax(0, auto)
       'sidebar main' min-content / 15em calc(100% - 15em - 1em);
   }
 
   @media (max-width: 700px) {
-    grid-template: 'welcome-message' 'value-proposition' 'sidebar' 'banner' 'main' auto / 100%;
+    grid-template: 'banner' 'welcome-message' 'value-proposition' 'sidebar' 'main' auto / 100%;
 
     & .devise-card {
       margin: auto;
@@ -110,21 +110,21 @@ const Window = styled.div`
 
 const ContentItemSelectionInProgressWindow = styled(Window)`
   grid-template:
+    'banner'
     'welcome-message'
     'value-proposition'
-    'banner'
     'main' min-content / 100%;
 
   @media (max-width: 1100px) {
     grid-template:
-      'welcome-message'
-      'value-proposition'
       'banner'
+      'welcome-message'
+      'value-proposition'  
       'main' min-content / 100%;
   }
 
   @media (max-width: 700px) {
-    grid-template: 'welcome-message' 'value-proposition' 'banner' 'main' auto / 100%;
+    grid-template: 'banner' 'welcome-message' 'value-proposition' 'main' auto / 100%;
   }
 
   & ${NaturalResourcesGrid}, & ${GlobalSystemsGrid} {

@@ -2,8 +2,9 @@
 
 # @see Case
 class CaseSerializer < Cases::PreviewSerializer
-  attributes :acknowledgements, :audience, :commentable, :learning_objectives,
-             :summary, :teaching_guide_url, :translators, :zoom
+  attributes :acknowledgements, :audience, :commentable, :license_config,
+             :learning_objectives, :summary, :teaching_guide_url, :translators,
+             :zoom
   attribute :other_available_locales
 
   belongs_to :library

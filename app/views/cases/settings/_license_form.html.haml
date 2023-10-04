@@ -1,0 +1,27 @@
+= form_for kase, url: case_settings_path(kase),
+                  builder: BlueprintFormBuilder,
+                  html: { onsubmit: 'return handleSubmit();' } do |f|
+  = f.form_group :license do |f, error_classes|
+    .pt-control-group
+      .pt-select.pt-fill{class: error_classes}
+        = f.select :license, kase.available_licenses.map { |l| [l['name'], l['id']]  },
+                    include_blank: false
+      = f.submit I18n.t('cases.settings.edit.change_license'),
+                  class: %w[pt-button pt-intent-success], id: 'case_license_submit'
+    %a.pt-button.pt-minimal.license.pt-icon-help(href='https://docs.learngala.com/docs/general-licensing' target='_blank')
+      = I18n.t('cases.settings.edit.learn_more_license')
+:javascript
+  function handleSubmit() {
+    if (#{current_user.has_role?(:editor)}) return true;
+    var originalValue = '#{kase.license}';
+    var newValue = document.querySelector('#case_license').value;
+    if (originalValue === 'all_rights_reserved' && originalValue !== newValue) {
+      if (confirm('#{I18n.t('cases.settings.edit.change_license_confirmation')}')) {
+        return true;
+      } else {
+        setTimeout(function(){document.querySelector('#case_license_submit').disabled = false;},100);
+        return false;
+      }
+    }
+    return true;
+  }

@@ -1,0 +1,13 @@
+licenses:
+  - id: all_rights_reserved
+    name: All Rights Reserved
+    active: false
+    url: https://creativecommons.org/faq/#what-is-copyright-and-why-does-it-matter
+  - id: cc_by_nc
+    name: Creative Commons Attribution-NonCommercial 4.0 International
+    active: true
+    url: https://creativecommons.org/licenses/by-nc/4.0/
+  - id: cc_by_nc_nd
+    name: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+    active: true
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
