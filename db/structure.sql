@@ -436,7 +436,8 @@ CREATE TABLE public.cases (
     learning_objectives jsonb DEFAULT '""'::jsonb,
     summary text DEFAULT ''::text,
     title text DEFAULT ''::text,
-    translators jsonb DEFAULT '""'::jsonb
+    translators jsonb DEFAULT '""'::jsonb,
+    license character varying DEFAULT 'cc_by_nc'::character varying NOT NULL
 );
 
 
@@ -1190,7 +1191,8 @@ CREATE TABLE public.readers (
     send_reply_notifications boolean DEFAULT true,
     active_community_id integer,
     persona character varying,
-    seen_announcements_created_before timestamp without time zone
+    seen_announcements_created_before timestamp without time zone,
+    terms_of_service integer DEFAULT 0
 );
 
 
@@ -3495,6 +3497,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190424134031'),
 ('20190501151722'),
 ('20190514190157'),
-('20230830042848');
+('20230412003331'),
+('20230830042848'),
+('20230915154708');
 
 

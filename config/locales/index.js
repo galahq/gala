@@ -3,7 +3,7 @@
  * @noflow
  */
 
-import { chain, map, toPairs, fromPairs } from 'ramda'
+import { chain, map, toPairs, fromPairs, mergeAll } from 'ramda'
 import camelize from 'camelize'
 
 // Convert from deeply nested locale object to a flat object with dot
@@ -22,6 +22,10 @@ const flattenObj = obj => {
 }
 
 export default (async function (locale) {
+  const fallbackMessages = await import(`./en.yml`)
   const messages = await import(`./${locale}.yml`)
-  return flattenObj(messages[locale])
+  return mergeAll([
+    flattenObj(fallbackMessages['en']),
+    flattenObj(messages[locale]),
+  ])
 })

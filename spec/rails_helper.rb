@@ -105,6 +105,10 @@ RSpec.configure do |config|
     Capybara.page.current_window.resize_to(1600, 1200)
   end
 
+  config.before(:each) do |example|
+    Rails.application.config.current_terms_of_service = 1
+  end
+
   config.around(:each, type: :mailbox) do |example|
     old_adapter = ActiveJob::Base.queue_adapter
     ActiveJob::Base.queue_adapter = :test

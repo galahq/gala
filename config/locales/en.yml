@@ -40,6 +40,7 @@ en:
           js: "{count, plural, one {Translator} other {Translators} }: "
           other: Translators
           one: Translator
+        license: License
       comment:
         attachments: Attachments
       deployment:
@@ -111,6 +112,7 @@ en:
         unconfirmed_email: Unconfirmed email
         unlock_token: Unlock token
         updated_at: Updated at
+        terms_of_service: 'I accept the Terms of Service and Privacy Policy'
       reading_list:
         title: Title
         description: Description
@@ -263,6 +265,9 @@ en:
       edit:
         change_library: Change library
         change_url: Change URL
+        change_license: Change license
+        change_license_confirmation: Changing your license from All Rights Reserved is irreversible. Are you sure you want to proceed?
+        learn_more_license: Learn more about license options
         edit_case_settings: Edit case settings
       featured_form:
         change_featured_time: Change time
@@ -832,17 +837,17 @@ en:
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
       featured: Featured
+      learn_more: Learn more
       my_cases: My Cases
       new_case: New Case
       once_youve_created: >
         Once you’ve created a case or been added as a collaborator on someone
         else’s, you’ll see it here.
       publish_a_case: Publish a Case
+      publish_with_a_creative_commons_license: >
+        When you publish a module on Gala you agree to distribute it with a Creative Commons license.
       put_your_own_cases_on_gala: >
-        Put your case on Gala and enrich your teaching with integrated
-        discussion, curated media, and embedded assessments.
-        You keep the rights to the cases you publish on Gala and we make them
-        easy to deploy in and beyond the classroom.
+        Put your case on Gala and share it with our growing Open Educational Resources community and the world. 
       youre_not_authoring_any_cases: You’re not authoring any cases yet
   notifications:
     replied_to_your_comment: >
@@ -969,6 +974,11 @@ en:
         Because you first signed in using %{provider}, you never created a
         password. If you create one now, you will be able to use it, or
         %{provider}, to sign in.
+    edit_tos:
+      accept_tos: Continue
+      terms_of_service_title: Please read and accept the Gala Terms of Service and Privacy Policy
+      must_accept: You must accept the Terms of Service and Privacy Policy to continue.
+      accepted: You have accepted the Terms of Service and Privacy Policy.
   reading_lists:
     actions:
       sharing_instructions: >

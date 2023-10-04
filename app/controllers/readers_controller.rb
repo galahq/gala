@@ -2,8 +2,13 @@
 
 # @see Reader
 class ReadersController < ApplicationController
+  include MagicLink
+  include AfterSignInPath
+
   before_action :authenticate_reader!
-  before_action :set_reader, only: %i[show edit update destroy]
+  before_action :set_reader,
+                only: %i[show edit update destroy edit_tos update_tos]
+  skip_before_action :confirm_tos, only: %i[edit update edit_tos update_tos]
   layout 'window'
 
   # @route [GET] `/readers`
@@ -49,6 +54,24 @@ class ReadersController < ApplicationController
     end
   end
 
+  def edit_tos
+    authorize @reader
+  end
+
+  def update_tos # rubocop:disable Metrics/AbcSize
+    authorize @reader
+    if tos_params['terms_of_service'].to_i == 1 # they checked the box
+      @reader.update_attribute :terms_of_service,
+                               Rails.application.config.current_terms_of_service
+      session.delete(:user_return_to)
+      redirect_to after_sign_in_path_for(@reader),
+                  notice: t('readers.edit_tos.accepted')
+    else
+      flash[:alert] = t('readers.edit_tos.must_accept')
+      render :edit_tos, status: :unprocessable_entity
+    end
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -72,6 +95,10 @@ class ReadersController < ApplicationController
     permitted << :password if reader_can_set_password_this_request
 
     params.require(:reader).permit(*permitted)
+  end
+
+  def tos_params
+    params.require(:reader).permit(:terms_of_service)
   end
 
   def reader_can_set_password_this_request

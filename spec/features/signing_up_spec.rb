@@ -24,6 +24,8 @@ feature 'Signing up' do
     fill_in 'Email', with: email
     fill_in 'Password', with: password
     click_button 'Sign in'
+    check 'reader[terms_of_service]', allow_label_click: true
+    click_button 'Continue'
 
     expect(page).to have_content 'Welcome to Gala'
     click_button 'Choose', match: :first
