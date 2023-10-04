@@ -5,6 +5,7 @@ module Readers
   class SessionsController < Devise::SessionsController
     include AfterSignInPath
     include MagicLink
+    include CleanupLocks
     # before_action :configure_sign_in_params, only: [:create]
 
     respond_to :html, :json, '*/*'
@@ -20,17 +21,17 @@ module Readers
     # @route [POST] `/resource/sign_in`
     def create
       super do
+        enqueue_cleanup_locks_job
         link_reader if following_magic_link?
       end
     end
 
     # @method destroy
     # @route [DELETE] `/resource/sign_out`
-    # ```
-    # def destroy
-    #   super
-    # end
-    # ```
+    def destroy
+      enqueue_cleanup_locks_job
+      super
+    end
 
     protected
 

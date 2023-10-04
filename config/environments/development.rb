@@ -7,7 +7,10 @@ Rails.application.configure do
 
   # Check if we use Docker to allow docker ip through web-console
   if File.file?('/.dockerenv') == true
-    config.web_console.whitelisted_ips = '192.168.0.0/16'
+    ip_address = Socket.ip_address_list.find(&:ipv4_private?).ip_address
+    ip_obj = IPAddr.new(ip_address.to_s)
+    cidr_notation = "#{ip_obj.to_s}/#{ip_obj.to_range.to_a.size.to_s(2).count('1')}"
+    config.web_console.whitelisted_ips = cidr_notation
   end
 
   # In the development environment your application's code is reloaded on
@@ -22,6 +25,8 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   config.public_file_server.enabled
+
+  config.active_job.queue_adapter = :sidekiq
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.

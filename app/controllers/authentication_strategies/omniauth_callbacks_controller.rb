@@ -5,6 +5,7 @@ module AuthenticationStrategies
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     include AfterSignInPath
     include MagicLink
+    include CleanupLocks
 
     skip_before_action :verify_authenticity_token
     before_action :set_authentication_strategy, except: [:failure]
@@ -14,6 +15,7 @@ module AuthenticationStrategies
     def google
       if @authentication_strategy.persisted?
         sign_in @reader
+        enqueue_cleanup_locks_job
         link_reader if following_magic_link?
         redirect_to after_sign_in_path_for @reader
       else
@@ -27,6 +29,7 @@ module AuthenticationStrategies
     def lti
       if @authentication_strategy.persisted?
         sign_in @reader
+        enqueue_cleanup_locks_job
 
         linker = LinkerService.new LinkerService::LTIStrategy.new params
         linker.call
