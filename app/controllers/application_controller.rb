@@ -12,6 +12,9 @@ class ApplicationController < ActionController::Base
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
   before_action :set_raven_context
+  before_action :confirm_tos,
+                if: :reader_signed_in?,
+                unless: :devise_controller?
 
   delegate :successful?, to: :response
 
@@ -89,5 +92,13 @@ class ApplicationController < ActionController::Base
   def set_raven_context
     Raven.user_context(email: current_reader.email) if reader_signed_in?
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  end
+
+  def confirm_tos
+    return if current_user.terms_of_service.to_i >=
+              Rails.application.config.current_terms_of_service
+    session[:forwarding_url] = session.delete(:user_return_to)
+    redirect_to edit_tos_reader_path(current_user),
+                alert: t('readers.edit_tos.must_accept')
   end
 end

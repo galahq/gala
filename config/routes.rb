@@ -194,6 +194,10 @@ Rails.application.routes.draw do
   end
 
   resources :readers, only: %i[index] do
+    member do
+      get :edit_tos
+      post :update_tos
+    end
     resources :roles, only: %i[create destroy]
   end
 

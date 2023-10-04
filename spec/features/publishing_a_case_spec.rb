@@ -10,7 +10,7 @@ feature 'Publishing a case' do
     login_as reader
     visit case_path kase
 
-    accept_confirm 'Are you sure you want to change the publication status?' do
+    accept_confirm /Are you sure you want to change the publish status/ do
       click_button 'Options'
       click_link 'Publish this case'
     end
@@ -18,7 +18,7 @@ feature 'Publishing a case' do
     page.driver.browser.navigate.refresh
     expect(page).not_to have_content 'This case is not yet published'
 
-    accept_confirm 'Are you sure you want to change the publication status?' do
+    accept_confirm /Are you sure you want to change the publish status/ do
       click_button 'Options'
       click_link 'Unpublish this case'
     end
