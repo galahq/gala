@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :lock do
-    reader_id { FactoryBot.create(:reader).id }
-    case_id { FactoryBot.create(:case).id }
+    association :lockable, factory: :case
+    association :reader
     created_at { Time.now }
     updated_at { Time.now }
 
