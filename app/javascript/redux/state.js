@@ -303,9 +303,6 @@ export type LicenseConfig = {
   name: string,
   active: boolean,
   url: string,
-  icon: string,
-  iconPath: string,
-  description: string,
 }
 
 export type LinkExpansionVisibility = {

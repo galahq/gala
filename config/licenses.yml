@@ -2,21 +2,12 @@ licenses:
   - id: all_rights_reserved
     name: All Rights Reserved
     active: false
-    url:
-    icon:
-    description: |
-      This is the grandfathered in license for existing content on this site. All rights are reserved by the author.
+    url: https://creativecommons.org/faq/#what-is-copyright-and-why-does-it-matter
   - id: cc_by_nc
     name: Creative Commons Attribution-NonCommercial 4.0 International
     active: true
     url: https://creativecommons.org/licenses/by-nc/4.0/
-    icon: cc-by-nc.png
-    description: |
-      This license lets others remix, adapt, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don't have to license their derivative works on the same terms.
   - id: cc_by_nc_nd
     name: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
     active: true
     url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-    icon: cc-by-nc-nd.png
-    description: |
-      This license is the most restrictive of the six Creative Commons licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.

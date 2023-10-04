@@ -27,10 +27,6 @@ module Licensable
   end
 
   def license_config
-    conf = LICENSES.find { |o| o['id'] == license }
-    conf['icon_path'] = ActionController::Base.helpers.asset_path(
-      "licenses/#{conf['icon']}"
-    ) rescue nil
-    conf
+    LICENSES.find { |o| o['id'] == license }
   end
 end

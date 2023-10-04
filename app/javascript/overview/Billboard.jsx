@@ -172,7 +172,7 @@ const Billboard = ({
 
             <MinimalLink
               href={caseData.licenseConfig.url}
-              alt={caseData.licenseConfig.description}
+              target='_blank'
             >
               {caseData.licenseConfig.name}
             </MinimalLink>
