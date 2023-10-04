@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
 # Provides a method to enqueue a CleanupLocksJob to unlock resources
 # associated with the current reader
 module CleanupLocks
