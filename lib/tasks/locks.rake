@@ -5,6 +5,5 @@ namespace :locks do
     destroy_after = ENV['DESTROY_AFTER'] || 8.hours.to_i
 
     CleanupLocksJob.perform_later(reader_id: reader_id, destroy_after: destroy_after)
-    puts 'CleanupLocksJob enqueued successfully!'
   end
 end
