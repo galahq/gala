@@ -26,7 +26,7 @@ module AuthenticationStrategies
     end
 
     # @route [GET, POST] `/authentication_strategies/auth/lti/callback`
-    def lti
+    def lti # rubocop:disable Metrics/AbcSize
       if @authentication_strategy.persisted?
         sign_in @reader
         enqueue_cleanup_locks_job

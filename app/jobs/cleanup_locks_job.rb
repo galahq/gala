@@ -29,8 +29,8 @@ class CleanupLocksJob < ApplicationJob
     resource.unlock
     BroadcastEdit.to(lock, type: :destroy, session_id: nil)
   rescue StandardError => e
-    Rails.logger.error <<~EOS
+    Rails.logger.error <<~ERROR_MESSAGE
       Failed to unlock Resource: #{resource.inspect} with Error: #{e.message}
-    EOS
+    ERROR_MESSAGE
   end
 end
