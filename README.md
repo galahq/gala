@@ -51,3 +51,5 @@ equivalent to run `rake indices:refresh` as frequently as makes sense.
 
 To send a weekly report of usage data, run `rake emails:send_weekly_report` once
 per week.
+
+Run `rake locks:enqueue_cleanup` hourly to delete locks older than 8 hours.
