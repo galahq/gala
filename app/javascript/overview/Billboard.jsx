@@ -88,97 +88,101 @@ const Billboard = ({
 }: Props) => (
   <Container>
     <Lock type="Case" param={slug}>
-      {({ onBeginEditing, onFinishEditing }) => {
-        return (
-          <>
-            <BillboardTitle
-              onBeginEditing={onBeginEditing}
-              onFinishEditing={onFinishEditing} />
+      {({ onBeginEditing, onFinishEditing }) => (
+        <>
+          <BillboardTitle
+            onBeginEditing={onBeginEditing}
+            onFinishEditing={onFinishEditing}
+          />
 
-            <Card>
-              <Dek>
+          <Card>
+            <Dek>
+              <EditableText
+                multiline
+                value={dek}
+                disabled={!editing}
+                placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
+                onChange={value => {
+                  updateCase({ dek: value })
+                }}
+                onEdit={onBeginEditing}
+                onCancel={onFinishEditing}
+                onConfirm={onFinishEditing}
+              />
+            </Dek>
+
+            <Less
+              startOpen={!summary || summary.length < 500}
+              disabled={editing}
+            >
+              <div style={{ margin: 0 }}>
                 <EditableText
                   multiline
-                  value={dek}
+                  value={summary}
                   disabled={!editing}
-                  placeholder="In one concise sentence, provide background and an intriguing twist: get a student to read this case."
-                  onChange={value => {
-                    updateCase({ dek: value })
-                  } }
+                  placeholder="Summarize the case in a short paragraph."
+                  onChange={value => updateCase({ summary: value })}
                   onEdit={onBeginEditing}
                   onCancel={onFinishEditing}
-                  onConfirm={onFinishEditing} />
-              </Dek>
+                  onConfirm={onFinishEditing}
+                />
+              </div>
+            </Less>
 
-              <Less
-                startOpen={!summary || summary.length < 500}
-                disabled={editing}
-              >
-                <div style={{ margin: 0 }}>
-                  <EditableText
-                    multiline
-                    value={summary}
-                    disabled={!editing}
-                    placeholder="Summarize the case in a short paragraph."
-                    onChange={value => updateCase({ summary: value })}
-                    onEdit={onBeginEditing}
-                    onCancel={onFinishEditing}
-                    onConfirm={onFinishEditing} />
-                </div>
-              </Less>
-
-              <LearningObjectives
-                editing={editing}
-                learningObjectives={learningObjectives}
-                onChange={value => {
-                  updateCase({ learningObjectives: value })
-                  onBeginEditing()
-                } }
-                onStopChanging={onFinishEditing} />
-
-              <TeachingGuide />
-
-              <TranslationLinks languages={otherAvailableLocales} />
-            </Card>
-
-            {(caseData.latitude || editing) && (
-              <MapView
-                cases={[caseData]}
-                editing={editing}
-                height={300}
-                startingViewport={{
-                  latitude: caseData.latitude || 0,
-                  longitude: caseData.longitude || 0,
-                  zoom: caseData.zoom || 1,
-                }}
-                title={{ id: 'activerecord.attributes.case.location' }}
-                onBeginEditing={onBeginEditing}
-                onViewportChange={(viewport: Viewport) => updateCase(viewport)}
-                onFinishEditing={onFinishEditing} />
-            )}
-
-            <CaseKeywords
+            <LearningObjectives
               editing={editing}
-              key={taggingsPath}
-              taggingsPath={taggingsPath}
-              tags={tags}
-              onChange={(tags: Tag[]) => updateCase({ tags })} />
+              learningObjectives={learningObjectives}
+              onChange={value => {
+                updateCase({ learningObjectives: value })
+                onBeginEditing()
+              }}
+              onStopChanging={onFinishEditing}
+            />
 
-            {readerSignedIn && (
-              <MinimalLink href={caseData.links.archive}>
-                <FormattedMessage id="archives.show.printableArchive" />
-              </MinimalLink>
-            )}
+            <TeachingGuide />
 
-            <MinimalLink
-              href={caseData.licenseConfig.url}
-              target='_blank'
-            >
-              {caseData.licenseConfig.name}
+            <TranslationLinks languages={otherAvailableLocales} />
+          </Card>
+
+          {(caseData.latitude || editing) && (
+            <MapView
+              cases={[caseData]}
+              editing={editing}
+              height={300}
+              startingViewport={{
+                latitude: caseData.latitude || 0,
+                longitude: caseData.longitude || 0,
+                zoom: caseData.zoom || 1,
+              }}
+              title={{ id: 'activerecord.attributes.case.location' }}
+              onBeginEditing={onBeginEditing}
+              onViewportChange={(viewport: Viewport) => updateCase(viewport)}
+              onFinishEditing={onFinishEditing}
+            />
+          )}
+
+          <CaseKeywords
+            editing={editing}
+            key={taggingsPath}
+            taggingsPath={taggingsPath}
+            tags={tags}
+            onChange={(tags: Tag[]) => updateCase({ tags })}
+          />
+
+          {readerSignedIn && (
+            <MinimalLink href={caseData.links.archive}>
+              <FormattedMessage id="archives.show.printableArchive" />
             </MinimalLink>
-          </>
-        )
-      }}
+          )}
+
+          <MinimalLink
+            href={caseData.licenseConfig.url}
+            target='_blank'
+          >
+            {caseData.licenseConfig.name}
+          </MinimalLink>
+        </>
+      )}
     </Lock>
   </Container>
 )
