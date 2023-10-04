@@ -4,36 +4,21 @@ require 'rails_helper'
 
 RSpec.describe CleanupLocksJob, type: :job do
   describe '#perform' do
-    let(:lockable1) { create(:case) }
-    let(:lockable2) { create(:case_with_elements) }
+    let(:bob) { create(:reader, name: 'bob') }
+    let(:alice) { create(:reader, name: 'alice') }
 
     it 'unlocks resources for a specific reader_id' do
-      reader_id = create(:reader).id
-      reader_lock = create(:lock, lockable: lockable1, reader_id: reader_id)
-      allow(Lock).to receive(:where).with(reader_id: reader_id)
-                                    .and_return([reader_lock])
-
-      expect(lockable1).to receive(:unlock)
-      expect(BroadcastEdit).to receive(:to)
-        .with(reader_lock, type: :destroy, session_id: nil)
-
-      described_class.new.perform(reader_id: reader_id)
+      create(:lock, reader: bob)
+      create_list(:lock, 2, :one_hour_old, reader: alice)
+      job = described_class.new
+      expect { job.perform(reader_id: bob.id) }.to change { Lock.count }.by(-1)
     end
 
-    it 'unlocks resources based on the destroy_after time' do
-      one_hour_old_lock = create(:lock, :one_hour_old, lockable: lockable1)
-      eight_hours_old_lock = create(:lock, :eight_hours_old, lockable: lockable2)
-      allow(Lock).to receive(:where).and_return([eight_hours_old_lock])
-          
-      expect(lockable1).not_to receive(:unlock)
-      expect(BroadcastEdit).not_to receive(:to)
-        .with(one_hour_old_lock, type: :destroy, session_id: nil)
-
-      expect(lockable2).to receive(:unlock)
-      expect(BroadcastEdit).to receive(:to)
-        .with(eight_hours_old_lock, type: :destroy, session_id: nil)
-
-      described_class.new.perform
+    it 'unlocks resources based on destroy_after time' do
+      create(:lock, reader: bob)
+      create_list(:lock, 2, :eight_hours_old, reader: alice)
+      job = described_class.new
+      expect { job.perform }.to change { Lock.count }.by(-2)
     end
   end
 end

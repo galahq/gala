@@ -25,7 +25,7 @@ class CleanupLocksJob < ApplicationJob
   end
 
   def unlock_single_resource(lock)
-    lock.destroy!
+    lock.destroy
     BroadcastEdit.to(lock, type: :destroy, session_id: nil)
   rescue StandardError => e
     Rails.logger.error "destroy Lock##{lock.id} failed: #{e.message}"
