@@ -16,5 +16,11 @@ RSpec.describe "/deployments", type: :request do
     sign_in reader
 
     expect{delete deployment_url(@deployment)}.to change(Deployment, :count).by(-1)
+      .and change(Group, :count).by(-1)
+      .and change(Enrollment, :count).by(-1)
+ 
+    expect(reader.active_community_id).to be_a_kind_of(Integer)
+    reader.reload
+    expect(reader.active_community_id).to be(nil)
   end
 end
