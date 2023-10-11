@@ -24,6 +24,7 @@ class Library < ApplicationRecord
   has_many :cases, dependent: :nullify
   has_many :managerships, dependent: :destroy
   has_many :managers, through: :managerships
+  has_many :requests, class_name: 'CaseLibraryRequest', dependent: :destroy
 
   has_one_attached :logo
 

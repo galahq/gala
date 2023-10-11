@@ -72,6 +72,10 @@ class Case < ApplicationRecord
   has_many :podcasts,
            through: :case_elements, source: :element, source_type: 'Podcast'
 
+  has_many :case_library_requests, dependent: :destroy
+  has_one :active_case_library_request, -> { where(status: 'pending') },
+          class_name: 'CaseLibraryRequest', dependent: :destroy
+
   has_one :archive, class_name: 'Case::Archive', dependent: :destroy
 
   has_one_attached :cover_image

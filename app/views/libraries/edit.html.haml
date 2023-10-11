@@ -23,9 +23,29 @@
                        data: { confirm: I18n.t('managerships.destroy.are_you_sure',
                                                name: managership.manager_name) }
 
-
     .admin-card__sidebar__actions
       = link_to new_library_managership_path library do
         %span.pt-tag.pt-intent-success
           %span.pt-icon.pt-icon-add
           %span= t 'managerships.new.add_manager'
+
+    %h2.deployments__group= t '.case_library_requests'
+
+    - @pending_requests.each do |req|
+      .editorship
+        %span.pt-tag.pt-minimal
+          = raw "<a href='#{case_path(req.case)}' target='_blank'><b>#{req.case.kicker}</b></a> requested by <b>#{req.requester.name}</b></br>"
+          = form_with model: req, url: case_library_request_path(req),
+                      method: :put, local: true do |f|
+            = f.hidden_field :status, value: req.class.statuses[:accepted]
+            = f.button I18n.t('library_requests.edit.accept'),
+                      aria: { label: I18n.t('library_requests.edit.accept') },
+                      class: %w[pt-button pt-small pt-minimal pt-intent-success pt-icon-add pt-unsaturated],
+                      data: { confirm: I18n.t('library_requests.edit.are_you_sure_accept') }
+          = form_with model: req, url: case_library_request_path(req),
+                      method: :put, local: true do |f|
+            = f.hidden_field :status, value: req.class.statuses[:rejected]
+            = f.button I18n.t('library_requests.edit.reject'),
+                      aria: { label: I18n.t('library_requests.edit.reject') },
+                      class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-delete pt-unsaturated],
+                      data: { confirm: I18n.t('library_requests.edit.are_you_sure_reject') }

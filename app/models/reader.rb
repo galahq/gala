@@ -129,6 +129,12 @@ class Reader < ApplicationRecord
     enrollments.find { |e| e.case.id == c.id }
   end
 
+  # @return [CaseLibraryRequest]
+  def request_for_case(c)
+    managerships.joins(:library => {:requests => :case})
+                .where('cases.id = ?', c.id).first
+  end
+
   # A hash of the reader’s email used to calculate her Identicon without leaking
   # her private email to other users clever enough to open the browser inspector
   # @return [String]

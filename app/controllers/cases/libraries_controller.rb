@@ -9,8 +9,15 @@ module Cases
     def update
       set_case
       set_library
-      @case.update library_id: @library.id
-      redirect_to edit_case_settings_path(@case), notice: successfully_updated
+      if policy(@library).update?
+        @case.update(library_id: @library.id)
+        redirect_to edit_case_settings_path(@case), notice: successfully_updated
+      else
+        @case.create_active_case_library_request(library: @library,
+                                                 requester: current_reader)
+        redirect_to edit_case_settings_path(@case),
+            notice: t('.created_library_request')
+      end
     end
 
     private
@@ -22,7 +29,6 @@ module Cases
 
     def set_library
       @library = Library.find params.dig(:case, :library_id)
-      authorize @library
     end
   end
 end

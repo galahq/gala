@@ -409,6 +409,40 @@ ALTER SEQUENCE public.case_elements_id_seq OWNED BY public.case_elements.id;
 
 
 --
+-- Name: case_library_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.case_library_requests (
+    id bigint NOT NULL,
+    case_id bigint,
+    library_id bigint,
+    requester_id bigint,
+    status character varying DEFAULT 'pending'::character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: case_library_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.case_library_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: case_library_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.case_library_requests_id_seq OWNED BY public.case_library_requests.id;
+
+
+--
 -- Name: cases; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1657,6 +1691,13 @@ ALTER TABLE ONLY public.case_elements ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: case_library_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.case_library_requests ALTER COLUMN id SET DEFAULT nextval('public.case_library_requests_id_seq'::regclass);
+
+
+--
 -- Name: cases id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1993,6 +2034,14 @@ ALTER TABLE ONLY public.case_archives
 
 ALTER TABLE ONLY public.case_elements
     ADD CONSTRAINT case_elements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: case_library_requests case_library_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.case_library_requests
+    ADD CONSTRAINT case_library_requests_pkey PRIMARY KEY (id);
 
 
 --
@@ -2410,6 +2459,27 @@ CREATE INDEX index_case_elements_on_element_id_and_element_type ON public.case_e
 --
 
 CREATE INDEX index_case_elements_on_element_type_and_element_id ON public.case_elements USING btree (element_type, element_id);
+
+
+--
+-- Name: index_case_library_requests_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_case_library_requests_on_case_id ON public.case_library_requests USING btree (case_id);
+
+
+--
+-- Name: index_case_library_requests_on_library_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_case_library_requests_on_library_id ON public.case_library_requests USING btree (library_id);
+
+
+--
+-- Name: index_case_library_requests_on_requester_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_case_library_requests_on_requester_id ON public.case_library_requests USING btree (requester_id);
 
 
 --
@@ -3029,6 +3099,14 @@ ALTER TABLE ONLY public.locks
 
 
 --
+-- Name: case_library_requests fk_rails_1ce2cc5c10; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.case_library_requests
+    ADD CONSTRAINT fk_rails_1ce2cc5c10 FOREIGN KEY (library_id) REFERENCES public.libraries(id);
+
+
+--
 -- Name: managerships fk_rails_3617778c6a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3082,6 +3160,14 @@ ALTER TABLE ONLY public.answers
 
 ALTER TABLE ONLY public.communities
     ADD CONSTRAINT fk_rails_44a9601cb3 FOREIGN KEY (group_id) REFERENCES public.groups(id);
+
+
+--
+-- Name: case_library_requests fk_rails_4b890746d8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.case_library_requests
+    ADD CONSTRAINT fk_rails_4b890746d8 FOREIGN KEY (requester_id) REFERENCES public.readers(id);
 
 
 --
@@ -3309,6 +3395,14 @@ ALTER TABLE ONLY public.editorships
 
 
 --
+-- Name: case_library_requests fk_rails_d03a43e779; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.case_library_requests
+    ADD CONSTRAINT fk_rails_d03a43e779 FOREIGN KEY (case_id) REFERENCES public.cases(id);
+
+
+--
 -- Name: group_memberships fk_rails_d05778f88b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3499,6 +3593,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190514190157'),
 ('20230412003331'),
 ('20230830042848'),
-('20230915154708');
+('20230915154708'),
+('20231011161246');
 
 
