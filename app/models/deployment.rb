@@ -16,7 +16,7 @@
 class Deployment < ApplicationRecord
   default_scope { order created_at: :desc }
 
-  after_destroy :check_group_for_deletion
+  after_destroy :cleanup
 
   attribute :answers_needed, :integer, default: 0
   attribute :key, :string, default: -> { SecureRandom.urlsafe_base64 }
@@ -71,12 +71,14 @@ class Deployment < ApplicationRecord
     answers_needed - quiz.number_of_responses_from(reader) >= 1
   end
 
-  def check_group_for_deletion
+  def cleanup
+    # Readers belong to an active community which is set at deployment creation with a db constraint
+    # against the community.  This value must be nulled out first
+    Reader.where(active_community_id: self.community.id).update_all({active_community_id: nil})
+
+    Enrollment.where(case_id: self.case.id).destroy_all
+
     if self.group.deployments.size == 0
-      # Readers belong to an active community which is set at deployment creation with a db constraint
-      # against the community.  This value must be nulled out first
-      Reader.where(active_community_id: self.community.id).update_all({active_community_id: nil})
-      Enrollment.where(case_id: self.case.id).destroy_all
       self.group.destroy
     end
   end
