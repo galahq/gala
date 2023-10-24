@@ -66,9 +66,9 @@ class DeploymentsController < ApplicationController
   def destroy
     authorize @deployment
     if @deployment.destroy
-      redirect_to deployments_url, notice: 'Successfully destroyed deployment'
+      redirect_to deployments_url, notice: 'Successfully deleted deployment'
     else
-      redirect_to deployments_url, alert: 'Failed to destroy deployment'
+      redirect_to deployments_url, alert: 'Failed to delete deployment'
     end
   end
 
