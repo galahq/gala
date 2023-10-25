@@ -19,7 +19,7 @@ class CaseLibraryRequestsController < ApplicationController
       @request.update! status: request_params[:status]
       @request.case.update! library: @request.library if @request.accepted?
     end
-    redirect_to edit_library_path(@request.library),
+    redirect_to management_library_path(@request.library),
                 notice: successfully_updated 
   end
 

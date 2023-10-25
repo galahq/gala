@@ -36,6 +36,17 @@ function MyLibrary ({ intl }: Props) {
 
   return (
     <div>
+
+      <CaseRow baseline>
+        <SidebarSectionTitle>
+          <h4>Manage library</h4>
+        </SidebarSectionTitle>
+      </CaseRow>
+
+      <CaseRow baseline>
+        <a class="pt-dark pt-button pt-minimal" href="/libraries/michigan-sustainaility-cases-2/management">michigan-sustainaility-cases-2</a>
+      </CaseRow>
+
       <CaseRow baseline>
         <SidebarSectionTitle>
           <FormattedMessage id="catalog.myLibrary" />

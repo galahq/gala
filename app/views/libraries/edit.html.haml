@@ -24,7 +24,7 @@
                                                name: managership.manager_name) }
 
     .admin-card__sidebar__actions
-      = link_to new_library_managership_path library do
+      = link_to new_library_managership_path @library do
         %span.pt-tag.pt-intent-success
           %span.pt-icon.pt-icon-add
           %span= t 'managerships.new.add_manager'

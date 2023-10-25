@@ -801,6 +801,7 @@ en:
       edit_library: Edit Library
       library_managers: Library Managers
       case_library_requests: Library Requests
+      requested_by: Requested by <b>%{name}</b>
     index:
       create_a_new_library: Create a New Library
       libraries: Libraries

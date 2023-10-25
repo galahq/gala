@@ -10,7 +10,6 @@ import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
 import ValueProposition from 'catalog/home/ValueProposition'
 import Announcements from 'catalog/home/Announcements'
-import LibraryRequests from 'catalog/home/LibraryRequests'
 import Sidebar from 'catalog/home/Sidebar'
 import Features from 'catalog/home/Features'
 import Categories from 'catalog/home/Categories'
@@ -43,7 +42,6 @@ function Home() {
           {selecting || <Sidebar />}
 
           <Announcements />
-          <LibraryRequests />
 
           <Main>
             <Features selecting={selecting} />

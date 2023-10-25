@@ -169,6 +169,9 @@ Rails.application.routes.draw do
   resources :libraries, param: :slug,
                         only: %i[index show create edit update destroy] do
     resources :managerships, only: %i[new create]
+    member do
+      get :management
+    end
   end
 
   resources :case_library_requests, only: %i[index update destroy]

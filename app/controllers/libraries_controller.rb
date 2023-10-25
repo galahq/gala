@@ -4,8 +4,8 @@
 class LibrariesController < ApplicationController
   before_action :authenticate_reader!, only: %i[create edit update destroy]
   before_action :set_libraries, only: %i[index create]
-  before_action :set_library, only: %i[show edit update destroy]
-  before_action :set_requests, only: %i[edit]
+  before_action :set_library, only: %i[show edit update destroy management]
+  before_action :set_requests, only: %i[edit management]
 
   layout 'admin'
 
@@ -45,7 +45,7 @@ class LibrariesController < ApplicationController
   def update
     authorize @library
     if @library.update library_params
-      redirect_to libraries_url, notice: successfully_updated
+      redirect_to management_library_path(@library), notice: successfully_updated
     else
       render :edit
     end
@@ -56,6 +56,13 @@ class LibrariesController < ApplicationController
     authorize @library
     @library.destroy
     redirect_to libraries_url, notice: successfully_destroyed
+  end
+
+  # @route [GET] `/libraries/slug/management`
+  def management
+    authorize @library, :update?
+    @cases = @library.cases.decorate
+    @requests = @requests.pending
   end
 
   private
