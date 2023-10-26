@@ -24,7 +24,6 @@ export type CatalogData = {
   enrollments: Enrollment[],
   features: string[],
   libraries: Library[],
-  libraryRequests: any[],
   savedReadingLists: ReadingList[],
   tags: Tag[],
 }
@@ -78,14 +77,6 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
   }, [])
 
   React.useEffect(() => {
-    Orchard.harvest('case_library_requests').then(requests =>
-      update(draft => {
-        draft.libraryRequests = requests
-      })
-    )
-  }, [])
-
-  React.useEffect(() => {
     Orchard.harvest('saved_reading_lists').then(lists =>
       update(draft => {
         draft.savedReadingLists = lists
@@ -116,7 +107,6 @@ function getDefaultCatalogData () {
     enrollments: [],
     features: [],
     libraries: [],
-    libraryRequests: [],
     savedReadingLists: [],
     tags: [],
   }
