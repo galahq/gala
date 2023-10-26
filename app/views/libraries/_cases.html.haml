@@ -1,0 +1,57 @@
+- if cases.empty?
+  .spaced
+  .pt-form-group.pt-tag.pt-minimal= t 'libraries.edit.no_cases'
+- else
+  %table.admin__table.pt-html-table.my-cases__table
+    %thead
+      %td
+      %td= t 'activerecord.attributes.case.case_title'
+      %td= t 'activerecord.attributes.case.slug'
+      %td= t 'activerecord.attributes.case.published'
+      %td
+      %td
+      %td
+
+    %tbody
+      - cases.each do |kase|
+        %tr
+          %td
+            %img.admin__table__thumbnail{ src: kase.small_cover_url,
+                                          role: 'presentation' }
+
+          %td
+            = link_to case_path kase do
+              %span.admin__table__slug
+                = kase.short_title
+                - if kase.featured?
+                  %span.pt-tag.pt-minimal.pt-intent-success
+                    = succeed ':' do
+                      = t '.featured'
+                    = localize kase.featured_at.to_date
+              = kase.title
+
+            %td
+              = link_to case_path kase do
+                %code= kase.slug
+
+          %td{title: kase.published_at}
+            - if kase.published?
+              = localize kase.published_at.to_date, format: :long
+            - else
+              —
+
+          %td
+            = link_to '', edit_case_path(kase),
+                      aria: { label: t('.edit_case') },
+                      class: 'pt-button pt-minimal pt-icon-edit'
+
+          %td
+            = link_to '', edit_case_settings_path(kase),
+                      aria: { label: t('.edit_case_settings') },
+                      class: 'pt-button pt-minimal pt-icon-cog'
+
+          %td
+            = link_to '', case_confirm_deletion_path(kase),
+                      class: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
+                      aria: { label: t('.delete_case') }
+

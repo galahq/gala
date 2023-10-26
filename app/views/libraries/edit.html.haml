@@ -1,126 +1,22 @@
 - content_for :title do
   = I18n.t('libraries.edit.edit_library')
-  = library.name
+  = @library.name
 
 .libmanager.admin
-  .col1
+  %section.col1
     .admin-card.pt-card.pt-elevation-2
-      %div
-        %h1.admin__title= t 'libraries.edit.edit_library'
-        = render 'form', library: library
-    
+      %h1.admin__title= t 'libraries.edit.edit_library'
+      = render 'form', library: @library
+
     .admin-card__sidebar.pt-dark.spaced--compact
       %h2.deployments__group= t 'libraries.edit.library_managers'
-
-      - library.managerships.sort_by(&:manager_name).each do |managership|
-        .editorship.non-spaced
-          %span.pt-tag.pt-minimal= managership.manager_name
-          - unless managership.manager == current_reader
-            = form_with url: managership_path(managership),
-                        method: :delete, local: true do |f|
-              = f.button '',
-                        aria: { label: I18n.t('managerships.destroy.remove') },
-                        class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated],
-                        data: { confirm: I18n.t('managerships.destroy.are_you_sure',
-                                                name: managership.manager_name) }
-
-      .admin-card__sidebar__actions
-        = link_to new_library_managership_path library do
-          %span.pt-tag.pt-intent-success
-            %span.pt-icon.pt-icon-add
-            %span= t 'managerships.new.add_manager'
+      = render 'managerships', library: @library
 
   %main.col2.md-detail.pt-dark
     %h2.deployments__group= t 'libraries.edit.case_library_requests'
-    - if not @requests.empty?
-      %br
-      .pt-form-group.pt-tag.pt-minimal= t 'libraries.edit.no_requests'
-    - else
-      .librequests
-        - @requests.each do |request|
-          - kase = request.case.decorate
-          .request.pt-tag.pt-minimal
-            .pt-form-group
-              .case-cover-card-top.cover{ style: "background-image: url(#{kase.cover_url})" }
-                = link_to case_path kase do
-                  %span.admin__table__slug
-                    = kase.short_title
-              = link_to case_path kase do
-                .title
-                  = kase.title
-            .pt-form-group.pt-tag.pt-minimal= raw t('libraries.edit.requested_by', {name: request.requester.name})
-            .pt-form-group
-              = form_with model: request, url: case_library_request_path(request),
-                          method: :put, local: true do |f|
-                = f.hidden_field :status, value: request.class.statuses[:accepted]
-                = f.button I18n.t('library_requests.edit.accept'),
-                          aria: { label: I18n.t('library_requests.edit.accept') },
-                          class: %w[pt-button pt-intent-success pt-icon-add],
-                          data: { confirm: I18n.t('library_requests.edit.are_you_sure_accept') }
-              = form_with model: request, url: case_library_request_path(request),
-                          method: :put, local: true do |f|
-                = f.hidden_field :status, value: request.class.statuses[:rejected]
-                = f.button I18n.t('library_requests.edit.reject'),
-                          aria: { label: I18n.t('library_requests.edit.reject') },
-                          class: %w[pt-button pt-intent-warning pt-icon-delete],
-                          data: { confirm: I18n.t('library_requests.edit.are_you_sure_reject') }
+    = render 'requests', requests: @requests
+    .spaced
 
-    %br
     %h2.deployments__group= t 'libraries.edit.library_cases'
-    - if not @cases.empty?
-      %br
-      .pt-form-group.pt-tag.pt-minimal= t 'libraries.edit.no_cases'
-    - else
-      %table.admin__table.pt-html-table.my-cases__table
-        %thead
-          %td
-          %td= t 'activerecord.attributes.case.case_title'
-          %td= t 'activerecord.attributes.case.slug'
-          %td= t 'activerecord.attributes.case.published'
-          %td
-          %td
-          %td
-
-        %tbody
-          -@cases.each do |kase|
-            %tr
-              %td
-                %img.admin__table__thumbnail{ src: kase.small_cover_url,
-                                              role: 'presentation' }
-
-              %td
-                = link_to case_path kase do
-                  %span.admin__table__slug
-                    = kase.short_title
-                    - if kase.featured?
-                      %span.pt-tag.pt-minimal.pt-intent-success
-                        = succeed ':' do
-                          = t '.featured'
-                        = localize kase.featured_at.to_date
-                  = kase.title
-
-                %td
-                  = link_to case_path kase do
-                    %code= kase.slug
-
-              %td{title: kase.published_at}
-                - if kase.published?
-                  = localize kase.published_at.to_date, format: :long
-                - else
-                  —
-
-              %td
-                = link_to '', edit_case_path(kase),
-                          aria: { label: t('.edit_case') },
-                          class: 'pt-button pt-minimal pt-icon-edit'
-
-              %td
-                = link_to '', edit_case_settings_path(kase),
-                          aria: { label: t('.edit_case_settings') },
-                          class: 'pt-button pt-minimal pt-icon-cog'
-
-              %td
-                = link_to '', case_confirm_deletion_path(kase),
-                          class: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
-                          aria: { label: t('.delete_case') }
+    = render 'cases', cases: @cases
 

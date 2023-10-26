@@ -37,14 +37,14 @@ function MyLibrary ({ intl }: Props) {
   return (
     <div>
 
+      {/* TODO hit API to get list of libraries you manage */}
       <CaseRow baseline>
         <SidebarSectionTitle>
           <h4>Manage library</h4>
         </SidebarSectionTitle>
       </CaseRow>
-
       <CaseRow baseline>
-        <a class="pt-dark pt-button pt-minimal" href="/libraries/michigan-sustainaility-cases-2/management">michigan-sustainaility-cases-2</a>
+        <a class="pt-dark pt-button pt-minimal" href="/libraries/michigan-sustainaility-cases-2/edit">michigan-sustainaility-cases-2</a>
       </CaseRow>
 
       <CaseRow baseline>
