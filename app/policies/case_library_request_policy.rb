@@ -13,7 +13,7 @@ class CaseLibraryRequestPolicy < ApplicationPolicy
   end
 
   def update?
-    case_policy.update? || editor?
+    case_policy.show? || editor?
   end
 
   def destroy?
