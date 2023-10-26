@@ -5,7 +5,6 @@ class LibrariesController < ApplicationController
   before_action :authenticate_reader!, only: %i[create edit update destroy]
   before_action :set_libraries, only: %i[index create]
   before_action :set_library, only: %i[show edit update destroy]
-  before_action :set_requests, only: %i[edit]
 
   layout 'admin'
 
@@ -38,7 +37,7 @@ class LibrariesController < ApplicationController
   def edit
     authorize @library
     @cases = @library.cases.decorate
-    @requests = @requests.pending
+    @requests = @library.requests.pending
   end
 
   # @route [PUT/PATCH] `/libraries/slug`
@@ -70,10 +69,6 @@ class LibrariesController < ApplicationController
     end
 
     @library = Library.friendly.find params[:slug]
-  end
-
-  def set_requests
-    @requests = policy_scope(CaseLibraryRequest)
   end
 
   def library_params
