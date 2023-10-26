@@ -40,3 +40,48 @@
     margin-bottom: 0;
   }
 }
+
+
+.libmanager {
+  display: flex;
+
+  .col1 {
+    flex: 1; /* 1/4 of the width */
+  }
+
+  .col2 {
+    flex: 3; /* 3/4 of the width */
+
+    .librequests {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+
+      .request {
+        margin: 5px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 250px;
+
+        .cover {
+          margin: unset;
+        }
+
+        .title {
+          font-size: 14px;
+          margin: 5px;
+        }
+
+        button {
+          margin-top: 10px;
+          width: 100%;
+        }
+
+      }
+    }
+
+  }
+}
