@@ -7,5 +7,7 @@ class LibrarySerializer < ApplicationSerializer
   link(:self) do
     object.catalog_path
   end
-  link(:edit) { edit_library_path(object) }
+  link(:edit) do
+    object.edit_path
+  end
 end

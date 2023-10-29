@@ -23,6 +23,11 @@ class LibraryDecorator < ApplicationDecorator
     LibrarySerializer
   end
 
+  def edit_path
+    return nil if object == SharedCasesLibrary.instance
+    edit_library_path object
+  end
+
   def pending_request_count
     object.requests.pending.count
   end

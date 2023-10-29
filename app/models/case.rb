@@ -102,6 +102,7 @@ class Case < ApplicationRecord
 
   resourcify
 
+  scope :shared, -> { where(library_id: nil) }
   scope :published, -> { where.not(published_at: nil) }
   scope :ordered,
         -> do
