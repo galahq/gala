@@ -26,7 +26,7 @@ function MyLibrary ({ intl }: Props) {
   const [editing, toggleEditing] = useToggle(false)
 
   const [
-    { cases, enrollments, loading: casesLoading, savedReadingLists },
+    { cases, enrollments, managerships, loading: casesLoading, savedReadingLists },
     updateCatalogData,
   ] = React.useContext(CatalogDataContext)
 
@@ -34,18 +34,34 @@ function MyLibrary ({ intl }: Props) {
 
   if (casesLoading) return null
 
+  const pendingRequest = (count) => count === 0 ? null : <PendingRequests>( {count} )</PendingRequests>
+
   return (
     <div>
+      {managerships.length > 0 && (
+        <>
+          <CaseRow baseline>
+            <SidebarSubsectionTitle>
+              <FormattedMessage id="libraries.edit.libraryManagement" />
+            </SidebarSubsectionTitle>
+          </CaseRow>
 
-      {/* TODO hit API to get list of libraries you manage */}
-      <CaseRow baseline>
-        <SidebarSectionTitle>
-          <h4>Manage library</h4>
-        </SidebarSectionTitle>
-      </CaseRow>
-      <CaseRow baseline>
-        <a class="pt-dark pt-button pt-minimal" href="/libraries/michigan-sustainaility-cases-2/edit">michigan-sustainaility-cases-2</a>
-      </CaseRow>
+          <UnstyledUL>
+            {managerships.map(({ name, links, param, logoUrl, pendingRequestCount } = {}) => {
+              return (
+                <UnstyledLI key={param}>
+                  <Element
+                    image={logoUrl}
+                    text={name}
+                    href={links.edit}
+                    rightElement={pendingRequest(pendingRequestCount)}
+                  />
+                </UnstyledLI>
+              )
+            })}
+          </UnstyledUL>
+        </>
+      )}
 
       <CaseRow baseline>
         <SidebarSectionTitle>
@@ -193,4 +209,9 @@ const UnstyledLI = styled.li`
   display: block;
   margin: 0;
   padding: 0;
+`
+
+const PendingRequests = styled.span`
+  margin-right: 0.5em;
+  font-weight: 700;
 `

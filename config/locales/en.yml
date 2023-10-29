@@ -798,13 +798,14 @@ en:
         it will return to the “Shared Cases Library.”
       delete_library: Delete Library
     edit:
+      library_management: Library Management
       edit_library: Edit Library
       library_managers: Library Managers
       library_cases: Library Cases
       case_library_requests: Library Requests
       requested_by: Requested by <b>%{name}</b>
-      no_requests: No requests yet.
-      no_cases: No cases yet.
+      no_requests: No requests yet
+      no_cases: No cases yet
     index:
       create_a_new_library: Create a New Library
       libraries: Libraries

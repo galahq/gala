@@ -22,4 +22,8 @@ class LibraryDecorator < ApplicationDecorator
   def serializer_class
     LibrarySerializer
   end
+
+  def pending_request_count
+    object.requests.pending.count
+  end
 end

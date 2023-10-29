@@ -10,6 +10,11 @@ class ManagershipsController < ApplicationController
 
   decorates_assigned :library
 
+  def index
+    @libraries = current_reader.libraries
+    render json: @libraries.decorate
+  end
+
   # @param [GET] /libraries/slug/managerships/new
   def new
     authorize @library, :update?

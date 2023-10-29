@@ -177,7 +177,7 @@ Rails.application.routes.draw do
 
   resource :magic_link, only: %i[show create]
 
-  resources :managerships, only: %i[destroy]
+  resources :managerships, only: %i[index destroy]
 
   resources :my_cases, only: %i[index]
 
