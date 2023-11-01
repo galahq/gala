@@ -3,17 +3,20 @@
 module Cases
   # Confirm the user’s intent to delete a case by asking them to type its title
   class DeletionsController < ApplicationController
+    before_action :authenticate_reader!
     before_action :set_case
 
     layout 'admin'
 
     # @route [GET] `/cases/slug/confirm_deletion`
     def new
+      authorize @case, :destroy?
       @confirm_deletion_form = ConfirmDeletionForm.new case: @case
     end
 
     # @route [POST] `/cases/slug/confirm_deletion`
     def create
+      authorize @case, :destroy?
       @confirm_deletion_form = ConfirmDeletionForm.new form_params
 
       if @confirm_deletion_form.save

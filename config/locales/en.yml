@@ -806,6 +806,8 @@ en:
       requested_by: Requested by <b>%{name}</b>
       no_requests: No requests yet
       no_cases: No cases yet
+      remove_case_from_library: Remove case from library
+      confirm_remove_case_from_library: Are you sure you want to remove case ’%{name}’ from the library?
     index:
       create_a_new_library: Create a New Library
       libraries: Libraries

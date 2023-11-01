@@ -11,7 +11,8 @@ module Cases
       set_library
       if policy(@library).update?
         @case.update library_id: @library.id
-        redirect_to edit_case_settings_path(@case), notice: successfully_updated
+        redirect_back fallback_location: edit_case_settings_path(@case),
+                      notice: successfully_updated
       else
         @case.create_active_case_library_request(library: @library,
                                                  requester: current_reader)

@@ -56,6 +56,7 @@ class Reader < ApplicationRecord
 
   has_many :managerships, dependent: :destroy, foreign_key: 'manager_id'
   has_many :libraries, through: :managerships
+  has_many :managed_cases, through: :libraries, source: :cases
 
   has_many :reading_lists, dependent: :destroy
   has_many :reading_list_saves, dependent: :destroy
