@@ -34,7 +34,7 @@ function MyLibrary ({ intl }: Props) {
 
   if (casesLoading) return null
 
-  const pendingRequest = (count) => count === 0 ? null : <PendingRequests>( {count} )</PendingRequests>
+  const pendingRequest = (count) => count === 0 ? null : <PendingRequests className='pt-tag pt-interactive pt-round pt-intent-primary'>{count}</PendingRequests>
 
   return (
     <div>
@@ -213,5 +213,5 @@ const UnstyledLI = styled.li`
 
 const PendingRequests = styled.span`
   margin-right: 0.5em;
-  font-weight: 700;
+
 `
