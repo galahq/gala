@@ -11,6 +11,10 @@ FactoryBot.define do
       catalog_position { :featured }
     end
 
+    trait :unpublished do
+      published_at { nil }
+    end
+
     trait :published do
       library
       published_at { rand(30).minutes.ago }

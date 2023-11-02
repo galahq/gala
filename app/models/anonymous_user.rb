@@ -34,6 +34,11 @@ class AnonymousUser
   end
 
   # @return [ActiveRecord::Relation<Case>] an empty relation
+  def managed_cases
+    Case.none
+  end
+
+  # @return [ActiveRecord::Relation<Case>] an empty relation
   def cases
     Case.none
   end
