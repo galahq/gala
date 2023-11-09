@@ -75,7 +75,7 @@ export default injectIntl(Catalog)
 
 const Container = styled.div`
   min-height: 100%;
-  width: 100vw;
+
   overflow: hidden;
 `
 const Window = styled.div`
