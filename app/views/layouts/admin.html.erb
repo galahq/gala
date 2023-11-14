@@ -15,9 +15,9 @@
       <%= form_with url: '/catalog/search', local: true, method: :get do %>
         <div class="pt-input-group pt-round">
           <span class="pt-icon pt-icon-search"></span>
-          <input class="pt-input" name="q" placeholder="<%= I18n.t('search.search_cases') %>" type="text">
+          <input class="pt-input" name="q" role="search" aria-label="Search Cases" placeholder="<%= I18n.t('search.search_cases') %>" type="text">
             <span class="pt-input-action">
-              <button type="submit" class="pt-button pt-minimal pt-icon-arrow-right"></button>
+              <button type="submit" aria-label="Submit search" class="pt-button pt-minimal pt-icon-arrow-right"></button>
             </span>
           </input>
         </div>

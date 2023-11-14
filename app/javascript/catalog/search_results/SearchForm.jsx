@@ -50,6 +50,10 @@ function SearchForm ({ history, intl, params }: Props) {
         <FormGroup>
           <InputGroup
             className="pt-fill"
+            aria-label={intl.formatMessage({
+              id: 'search.fullTextSearch',
+            })}
+            role="search"
             leftIcon="search"
             placeholder={intl.formatMessage({
               id: 'search.fullTextSearch',
