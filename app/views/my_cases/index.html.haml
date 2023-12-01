@@ -15,7 +15,6 @@
                   aria: { label: I18n.t('helpers.help') },
                   target: '_blank', rel: 'noopener noreferrer' do
           -# Empty
-
       :markdown
         #{t '.put_your_own_cases_on_gala'}
       .pt-callout.pt-icon-hand-right
@@ -51,6 +50,7 @@
           %td= t 'activerecord.attributes.case.locale'
           %td= t 'activerecord.attributes.case.library'
           %td= t 'activerecord.attributes.case.published'
+          %td= t 'my_cases.index.case_stats'
           %td
           %td
           %td
@@ -91,6 +91,11 @@
                   —
 
               %td
+                = link_to '', edit_case_settings_path(kase),
+                          aria: { label: t('.case_stats') },
+                          class: 'pt-button pt-minimal pt-icon-series-search'
+
+              %td
                 = link_to '', edit_case_path(kase),
                           aria: { label: t('.edit_case') },
                           class: 'pt-button pt-minimal pt-icon-edit'
@@ -104,6 +109,8 @@
                 = link_to '', case_confirm_deletion_path(kase),
                           class: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
                           aria: { label: t('.delete_case') }
+              
+              
 
     - else
       .pt-non-ideal-state
