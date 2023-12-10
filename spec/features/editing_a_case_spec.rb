@@ -96,7 +96,6 @@ feature 'Editing a case' do
 
     context 'with a comment thread' do
       let!(:kase) { create :case_with_edgenotes }
-      let!(:enrollment) {create(:enrollment, case: kase, reader: reader)}
 
       let(:group) {create(:group, name: 'My Group')}
       let!(:group_membership) {create(:group_membership, group: group, reader: reader)}
@@ -110,6 +109,8 @@ feature 'Editing a case' do
           locale: I18n.locale,
           forum: kase.forums.first
         )
+
+        let!(:enrollment) {create(:enrollment, case: kase, reader: reader)}
       end
 
       scenario 'does not cause the comment thread to shift' do
