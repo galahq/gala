@@ -96,11 +96,11 @@ feature 'Editing a case' do
 
     context 'with a comment thread' do
       let!(:kase) { create :case_with_edgenotes }
-      let!(:enrollment) {create :enrollment, case: kase, reader: reader}
+      let!(:enrollment) {create(:enrollment, case: kase, reader: reader)}
 
-      let!{:group} {create :group, name: 'My Group'}
-      let!(:group_membership) {create :group_membership, group: group, reader: reader}
-      let!(:deployment) {create :deployment, group: group, case: kase}
+      let!{:group} {create(:group, name: 'My Group')}
+      let!(:group_membership) {create(:group_membership, group: group, reader: reader)}
+      let!(:deployment) {create(:deployment, group: group, case: kase)}
       
       let!(:comment_thread) do
         card = kase.pages.first.cards.first
