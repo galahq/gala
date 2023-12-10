@@ -96,20 +96,23 @@ feature 'Editing a case' do
 
     context 'with a comment thread' do
       let!(:kase) { create :case_with_edgenotes }
-      let!(:global_forum) { kase.forums.find_by community: nil }
+      create :enrollment, case: kase, reader: reader
+
+      group = create :group, name: 'My Group'
+      create :group_membership, group: group, reader: reader
+      create :deployment, group: group, case: kase
+      
       let!(:comment_thread) do
         card = kase.pages.first.cards.first
         card.comment_threads.create(
           original_highlight_text: card.paragraphs.first[-20..-1],
           reader: reader,
           locale: I18n.locale,
-          forum: global_forum
+          forum: kase.forums.first
         )
       end
 
       scenario 'does not cause the comment thread to shift' do
-        visit case_path(kase)
-        click_button 'Enroll'
         visit case_path(kase) + '/1'
         expect(page).to have_content 'RESPOND'
 
@@ -134,8 +137,6 @@ feature 'Editing a case' do
 
       scenario 'detaches the comment thread if its text is changed' do
         comment_thread.comments.create! content: 'Test comment', reader: reader
-        visit case_path kase
-        click_on 'Enroll'
         visit case_path(kase) + '/1'
 
         expect(page).to have_selector 'span.c-comment-thread-entity'
