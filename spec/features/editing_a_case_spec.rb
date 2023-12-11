@@ -110,8 +110,9 @@ feature 'Editing a case' do
           forum: kase.forums.first
         )
 
-        let!(:enrollment) {create(:enrollment, case: kase, reader: reader)}
       end
+
+      let!(:enrollment) {create(:enrollment, case: kase, reader: reader)}
 
       scenario 'does not cause the comment thread to shift' do
         visit case_path(kase) + '/1'
