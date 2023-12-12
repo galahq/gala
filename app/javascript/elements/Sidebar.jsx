@@ -10,8 +10,6 @@ import { withRouter } from 'react-router'
 import BillboardTitle from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
 import TableOfContents from 'overview/TableOfContents'
-import EnrollForm from 'overview/EnrollForm'
-import { SignInFormContainer } from 'utility/SignInForm'
 
 
 type StateProps = {
@@ -32,15 +30,12 @@ function mapStateToProps (state) {
   }
 }
 
-const Sidebar = ({ editing, readerEnrolled, location, signInForm }) => {
+const Sidebar = ({ editing, location}) => {
   return (
     <Container data-active={location.pathname}>
       <BillboardTitle minimal />
       {editing || <CommunityChooser rounded />}
       <TableOfContents onSidebar />
-      {reader && !readerEnrolled ? (
-        <EnrollForm />
-      ) : null}
     </Container>
   )
 }
