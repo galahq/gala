@@ -112,7 +112,7 @@ feature 'Editing a case' do
 
       end
 
-      let!(:enrollment) {create(:enrollment, case: kase, reader: reader)}
+      let!(:enrollment) {create(:enrollment, case: kase, reader: reader, active_group: group)}
 
       scenario 'does not cause the comment thread to shift' do
         visit case_path(kase) + '/1'
