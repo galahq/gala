@@ -13,6 +13,7 @@ import { injectIntl } from 'react-intl'
 import { MenuItem } from '@blueprintjs/core'
 import { MultiSelect } from '@blueprintjs/select'
 import { Orchard } from 'shared/orchard'
+import { LabelForScreenReaders } from 'utility/A11y'
 
 import type { IntlShape } from 'react-intl'
 import type { Tag } from 'redux/state'
@@ -54,62 +55,67 @@ class KeywordsChooser extends React.Component<Props, State> {
     const { intl, onChange, taggingsManager, tags } = this.props
     return (
       <div className="pt-dark">
-        <MultiSelect
-          resetOnSelect
-          //
-          items={this.state.items}
-          selectedItems={tags}
-          //
-          itemRenderer={this.renderMenuItem}
-          noResults={
-            <MenuItem
-              disabled={true}
-              text={intl.formatMessage({
-                id:
-                  this.state.query.length > 0
-                    ? 'tags.new.pressEnter'
-                    : 'helpers.loading',
-              })}
-            />
-          }
-          tagRenderer={tag => (
-            <Capitalized tag={tag}>{tag.displayName}</Capitalized>
-          )}
-          popoverProps={{
-            className: 'keywords-chooser__popover',
-            minimal: true,
-          }}
-          //
-          tagInputProps={{
-            leftIcon: 'tag',
-            inputProps: { onFocus: this._loadKeywords },
-            onAdd: values => {
-              if (this.state.items.length > 0) return
+        <label htmlFor="keywordSelect" className="pt-callout">
+          Select one or more tags that describe the subject of your case
+        </label>
+          <MultiSelect
+            id="keywordSelect"
+            resetOnSelect
+            //
+            items={this.state.items}
+            selectedItems={tags}
+            //
+            itemRenderer={this.renderMenuItem}
+            noResults={
+              <MenuItem
+                disabled={true}
+                text={intl.formatMessage({
+                  id:
+                    this.state.query.length > 0
+                      ? 'tags.new.pressEnter'
+                      : 'helpers.loading',
+                })}
+              />
+            }
+            tagRenderer={tag => (
+              <Capitalized tag={tag}>{tag.displayName}</Capitalized>
+            )}
+            popoverProps={{
+              className: 'keywords-chooser__popover',
+              minimal: true,
+            }}
+            //
+            tagInputProps={{
+              leftIcon: 'tag',
+              inputProps: { onFocus: this._loadKeywords },
+              onAdd: values => {
+                if (this.state.items.length > 0) return
+                this.setState({ query: '' }, () => {
+                  values.forEach(v => taggingsManager && taggingsManager.add(v))
+                  onChange([
+                    ...tags,
+                    ...values.map(name => ({ name, displayName: name })),
+                  ])
+                })
+                return true
+              },
+              onInputChange: ({ target: { value }}) =>
+                this.setState({ query: value }, this.loadKeywords),
+              onRemove: ({ props: { tag }}) => {
+                taggingsManager && taggingsManager.remove(tag.name)
+                onChange(R.without([tag], tags))
+              },
+            }}
+            onItemSelect={tag =>
               this.setState({ query: '' }, () => {
-                values.forEach(v => taggingsManager && taggingsManager.add(v))
-                onChange([
-                  ...tags,
-                  ...values.map(name => ({ name, displayName: name })),
-                ])
+                taggingsManager && taggingsManager.add(tag.name)
+                onChange([...tags, tag])
+                this._loadKeywords()
               })
-              return true
-            },
-            onInputChange: ({ target: { value }}) =>
-              this.setState({ query: value }, this.loadKeywords),
-            onRemove: ({ props: { tag }}) => {
-              taggingsManager && taggingsManager.remove(tag.name)
-              onChange(R.without([tag], tags))
-            },
-          }}
-          onItemSelect={tag =>
-            this.setState({ query: '' }, () => {
-              taggingsManager && taggingsManager.add(tag.name)
-              onChange([...tags, tag])
-              this._loadKeywords()
-            })
-          }
-        />
+            }
+          />
       </div>
+      
     )
   }
 
