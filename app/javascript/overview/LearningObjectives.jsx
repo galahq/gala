@@ -58,4 +58,4 @@ const Label = styled.h3`
   font-weight: 500;
 `
 
-const ObjectiveInput = createSortableInput({ placeholder: 'Objective' })
+const ObjectiveInput = createSortableInput({ placeholder: 'Objective', 'aria-label': 'Input learning objectives' })
