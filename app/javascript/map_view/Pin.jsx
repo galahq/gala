@@ -25,7 +25,7 @@ class Pin extends React.Component<{
   render () {
     const { kase, isOpen, className } = this.props
     return (
-      <div className={className}>
+      <div className={className} >
         <Tooltip
           isOpen={isOpen || false}
           content={
@@ -48,7 +48,7 @@ class Pin extends React.Component<{
             )
           }
         >
-          <PinIcon interactive={!!kase} onClick={this.handleClick} />
+          <PinIcon interactive={!!kase} aria-label={kase.kicker} onClick={this.handleClick} />
         </Tooltip>
       </div>
     )
