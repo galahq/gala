@@ -12,15 +12,16 @@
 
     %div
       %h1.admin__title= t '.case_stats'
-      %div 
-        Date Created:
-        = @case.created_at
-      %div 
-        Date Published:
-        = @case.published_at
-      %div 
-        Number of Reads from Users with Acounts:
-        = @case.events.size
-      %div 
-        Number of Deployments:
-        = @case.deployments.size
+      %ul
+        %li
+          Created:
+          = @case.created_at.strftime("%B %d, %Y")
+        %li 
+          Published:
+          = @case.published_at.strftime("%B %d, %Y")
+        %li
+          Total Reads (signed-in users):
+          = @case.events.size
+        %li 
+          Total Deployments:
+          = @case.deployments.size
