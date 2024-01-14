@@ -9,4 +9,7 @@ class CaseLibraryRequest < ApplicationRecord
                  accepted: 'accepted',
                  rejected: 'rejected' }
 
+  after_create_commit do
+    library.managers.each {|m| LibraryRequestMailer.notify(self, m).deliver_later }
+  end
 end

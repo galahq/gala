@@ -1,0 +1,11 @@
+<% headline one_liner "#{@request.requester.name} sent you a Library Request" %>
+<% background_image_url attachments['cover'].url if attachments['cover'] %>
+
+<%= md_button_to "Review Library Request",
+                 edit_library_url(@request.library) %>
+
+<% email_footer <<-FOOTER
+You are receiving this email because someone requested their case be accepted
+in a library you manage on Gala.
+FOOTER
+%>
