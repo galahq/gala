@@ -801,8 +801,8 @@ en:
       library_management: Library Management
       edit_library: Edit Library
       library_managers: Library Managers
-      library_cases: Library Cases
-      case_library_requests: Library Requests
+      library_cases: Cases
+      case_library_requests: Requests
       requested_by: Requested by <b>%{name}</b>
       no_requests: No requests yet
       no_cases: No cases yet
