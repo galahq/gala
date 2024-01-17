@@ -12,16 +12,23 @@
 
     %div
       %h1.admin__title= t '.case_stats'
-      %ul
-        %li
-          Created:
-          = @case.created_at.strftime("%B %d, %Y")
-        %li 
-          Published:
-          = @case.published_at.strftime("%B %d, %Y")
-        %li
-          Total Reads (signed-in users):
-          = @case.events.size
-        %li 
-          Total Deployments:
-          = @case.deployments.size
+      %div
+        %ul
+          %li
+            %span.stat-label Created:
+            = @case.created_at.strftime("%B %d, %Y")
+          %li 
+            %span.stat-label Published:
+            = @case.published_at.strftime("%B %d, %Y")
+          %li
+            %span.stat-label Total Reads:
+            = @case.events.size
+            
+          %li 
+            %span.stat-label Total Deployments:
+            = @case.deployments.size
+      .pt-callout.pt-icon-info-sign.form__callout
+        Totals only count users that were signed-in to Gala when viewing the case.
+
+      %table
+
