@@ -6,6 +6,7 @@ class LibraryRequestMailer < ApplicationMailer
   def notify(request, manager)
     @request = request
     @manager = manager
+    @case = CaseDecorator.decorate @request.case
 
     attach_cover_image
 
@@ -22,10 +23,9 @@ class LibraryRequestMailer < ApplicationMailer
   end
 
   def attach_cover_image
-    return unless @request.case.cover_image.attached?
+    return unless @case.cover_image.attached?
 
-    kase = CaseDecorator.decorate @request.case
-    attachments.inline['cover'] = kase.cover_image_attachment
+    attachments.inline['cover'] = @case.cover_image_attachment
   end
 
   def send_mail(&block)
@@ -51,7 +51,7 @@ class LibraryRequestMailer < ApplicationMailer
   # Every notification of a reply to the same original request will have the
   # same subject so that they can be threaded
   def subject_header
-    "#{@request.library.name} has a new Library Request"
+    "You have a new Library Request"
   end
 
   def reply_to_header
