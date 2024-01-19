@@ -38,6 +38,13 @@ function MyLibrary ({ intl }: Props) {
 
   return (
     <div>
+
+      <CaseRow baseline>
+        <SidebarSectionTitle>
+          <FormattedMessage id="catalog.myLibrary" />
+        </SidebarSectionTitle>
+      </CaseRow>
+
       {managerships.length > 0 && (
         <>
           <CaseRow baseline>
@@ -62,12 +69,6 @@ function MyLibrary ({ intl }: Props) {
           </UnstyledUL>
         </>
       )}
-
-      <CaseRow baseline>
-        <SidebarSectionTitle>
-          <FormattedMessage id="catalog.myLibrary" />
-        </SidebarSectionTitle>
-      </CaseRow>
 
       <CaseRow baseline>
         <SidebarSubsectionTitle>
