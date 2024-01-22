@@ -62,6 +62,7 @@ function MyLibrary ({ intl }: Props) {
                     text={name}
                     href={links.edit}
                     rightElement={pendingRequest(pendingRequestCount)}
+                    wide={true}
                   />
                 </UnstyledLI>
               )
