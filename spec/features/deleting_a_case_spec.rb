@@ -6,10 +6,10 @@ feature 'Deleting a case' do
   let!(:reader) { create :reader }
 
   let!(:kase) do
-    create(:case_with_elements).tap { |c| reader.my_cases << c }
+    create(:case, :unpublished).tap { |c| reader.my_cases << c }
   end
 
-  before(:each) { login_as reader }
+  before { login_as reader }
 
   scenario 'is possible' do
     visit my_cases_path

@@ -17,15 +17,18 @@ class CasePolicy < ApplicationPolicy
       if editor?
         scope.all
       else
-        scope.merge(user.my_cases)
+        scope.where id: user.my_cases.pluck(:id) +
+                        user.managed_cases.pluck(:id)
       end
     end
   end
 
-  def show?
+  def show? # rubocop:disable Metrics/AbcSize
     record.published? ||
-      user.enrollment_for_case(record).present? ||
       user.my_cases.include?(record) ||
+      user.enrollment_for_case(record).present? ||
+      user.request_for_case(record).present? ||
+      update? ||
       editor?
   end
 
@@ -36,7 +39,7 @@ class CasePolicy < ApplicationPolicy
 
   def destroy?
     return false if record.published?
-    user.my_cases.include?(record) || editor?
+    user.my_cases.include?(record) || update? || editor?
   end
 
   def admin_scope

@@ -295,7 +295,9 @@ export type Library = {
   foregroundColor: string,
   links: {
     self: string,
+    edit: string,
   },
+  pending_request_count: number,
 }
 
 export type LicenseConfig = {

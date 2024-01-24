@@ -8,3 +8,13 @@
                      include_blank: t('activerecord.models.shared_cases_library')
         = f.submit I18n.t('cases.settings.edit.change_library'),
                    class: %w[pt-button pt-intent-success]
+  - if kase.active_case_library_request.present?
+    = form_with url: case_library_request_path(kase.active_case_library_request),
+                method: :delete, local: true do |f|
+      %div.case-slug-preview.request
+        = raw I18n.t('library_requests.new.pending',
+                     name: kase.active_case_library_request.library.name)
+        = f.button '',
+                  aria: { label: I18n.t('library_requests.destroy.remove') },
+                  class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-cross pt-unsaturated]
+

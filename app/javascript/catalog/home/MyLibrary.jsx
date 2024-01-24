@@ -26,7 +26,7 @@ function MyLibrary ({ intl }: Props) {
   const [editing, toggleEditing] = useToggle(false)
 
   const [
-    { cases, enrollments, loading: casesLoading, savedReadingLists },
+    { cases, enrollments, managerships, loading: casesLoading, savedReadingLists },
     updateCatalogData,
   ] = React.useContext(CatalogDataContext)
 
@@ -34,13 +34,42 @@ function MyLibrary ({ intl }: Props) {
 
   if (casesLoading) return null
 
+  const pendingRequest = (count) => count === 0 ? null : <PendingRequests className='pt-tag pt-interactive pt-round pt-intent-primary'>{count}</PendingRequests>
+
   return (
     <div>
+
       <CaseRow baseline>
         <SidebarSectionTitle>
           <FormattedMessage id="catalog.myLibrary" />
         </SidebarSectionTitle>
       </CaseRow>
+
+      {managerships.length > 0 && (
+        <>
+          <CaseRow baseline>
+            <SidebarSubsectionTitle>
+              <FormattedMessage id="libraries.edit.libraryManagement" />
+            </SidebarSubsectionTitle>
+          </CaseRow>
+
+          <UnstyledUL>
+            {managerships.map(({ name, links, param, logoUrl, pendingRequestCount } = {}) => {
+              return (
+                <UnstyledLI key={param}>
+                  <Element
+                    image={logoUrl}
+                    text={name}
+                    href={links.edit}
+                    rightElement={pendingRequest(pendingRequestCount)}
+                    wide={true}
+                  />
+                </UnstyledLI>
+              )
+            })}
+          </UnstyledUL>
+        </>
+      )}
 
       <CaseRow baseline>
         <SidebarSubsectionTitle>
@@ -182,4 +211,9 @@ const UnstyledLI = styled.li`
   display: block;
   margin: 0;
   padding: 0;
+`
+
+const PendingRequests = styled.span`
+  margin-right: 0.5em;
+
 `

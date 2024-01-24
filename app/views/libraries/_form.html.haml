@@ -27,6 +27,9 @@
       }".html_safe
 
     = f.form_group :logo, helper_text: logo_helper_text do |f, error_classes|
+      - if f.object.logo.attached?
+        = image_tag f.object.logo.variant(resize_to_limit: [50, 50]),
+                    class: 'logo'
       = f.file_field :logo, class: %i[pt-fill] + error_classes,
                             direct_upload: true,
                             accept: 'image/png'

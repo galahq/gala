@@ -60,4 +60,12 @@ class SharedCasesLibrary
   def managers
     Reader.all
   end
+
+  def requests
+    CaseLibraryRequest.none
+  end
+
+  def cases
+    Case.shared
+  end
 end
