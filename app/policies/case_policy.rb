@@ -23,7 +23,7 @@ class CasePolicy < ApplicationPolicy
     end
   end
 
-  def show?
+  def show? # rubocop:disable Metrics/AbcSize
     record.published? ||
       user.my_cases.include?(record) ||
       user.enrollment_for_case(record).present? ||

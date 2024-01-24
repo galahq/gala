@@ -132,7 +132,7 @@ class Reader < ApplicationRecord
 
   # @return [CaseLibraryRequest]
   def request_for_case(c)
-    managerships.joins(:library => {:requests => :case})
+    managerships.joins(library: { requests: :case })
                 .where('cases.id = ?', c.id).first
   end
 

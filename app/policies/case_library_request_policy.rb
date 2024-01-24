@@ -2,6 +2,7 @@
 
 # @see CaseLibraryRequest
 class CaseLibraryRequestPolicy < ApplicationPolicy
+  # What requests can this user see?
   class Scope < Scope
     def resolve
       if editor?

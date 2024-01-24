@@ -4,11 +4,11 @@ module Cases
   # The library a given case belongs to
   class LibrariesController < ApplicationController
     before_action :authenticate_reader!
+    before_action :set_case, only: %i[update]
+    before_action :set_library, only: %i[update]
 
     # @param [PATCH/PUT] `/cases/case-slug/library`
     def update
-      set_case
-      set_library
       if policy(@library).update?
         @case.update library_id: @library.id
         redirect_back fallback_location: edit_case_settings_path(@case),
@@ -17,7 +17,7 @@ module Cases
         @case.create_active_case_library_request(library: @library,
                                                  requester: current_reader)
         redirect_to edit_case_settings_path(@case),
-            notice: t('.created_library_request')
+                    notice: t('.created_library_request')
       end
     end
 

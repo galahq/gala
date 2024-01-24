@@ -2,7 +2,6 @@
 
 # @see LibraryRequestMailer
 class LibraryRequestMailer < ApplicationMailer
-
   def notify(request, manager)
     @request = request
     @manager = manager
@@ -51,11 +50,10 @@ class LibraryRequestMailer < ApplicationMailer
   # Every notification of a reply to the same original request will have the
   # same subject so that they can be threaded
   def subject_header
-    "You have a new Library Request"
+    'You have a new Library Request'
   end
 
   def reply_to_header
     "reply+#{@request.library.slug}@mailbox.learngala.com"
   end
-
 end

@@ -5,7 +5,6 @@ class CaseLibraryRequestsController < ApplicationController
   before_action :authenticate_reader!
   before_action :set_request, only: %i[update destroy]
 
-
   # @route [GET] `/case_library_requests`
   def index
     @requests = policy_scope(CaseLibraryRequest)
@@ -20,7 +19,7 @@ class CaseLibraryRequestsController < ApplicationController
       @request.case.update! library: @request.library if @request.accepted?
     end
     redirect_to edit_library_path(@request.library),
-                notice: successfully_updated 
+                notice: successfully_updated
   end
 
   # @route [DELETE] `/case_library_requests/id`
@@ -40,5 +39,4 @@ class CaseLibraryRequestsController < ApplicationController
   def request_params
     params.require(:case_library_request).permit(:status)
   end
-
 end
