@@ -4,7 +4,9 @@
 # Only library managers can accept or reject a request.
 # Any author can initiate a request.
 class CaseLibraryRequest < ApplicationRecord
-  enum status: { pending: 'pending', accepted: 'accepted', rejected: 'rejected' }
+  enum status: { pending: 'pending',
+                 accepted: 'accepted',
+                 rejected: 'rejected' }
 
   belongs_to :case
   belongs_to :library
