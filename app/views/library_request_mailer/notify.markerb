@@ -1,0 +1,15 @@
+<% headline one_liner "#{@case.short_title}" %>
+<% background_image_url attachments['cover'].url if attachments['cover'] %>
+
+<strong><%= @request.requester.name %></strong> has requested to add the case
+<strong><%= @case.title %></strong> to the
+<strong><%= @request.library.name %></strong> library.
+
+<%= md_button_to "Review Library Request",
+                 edit_library_url(@request.library) %>
+
+<% email_footer <<-FOOTER
+You are receiving this email because someone requested their case be added to a
+library you manage on Gala.
+FOOTER
+%>

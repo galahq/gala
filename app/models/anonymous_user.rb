@@ -28,6 +28,16 @@ class AnonymousUser
     nil
   end
 
+  # @return [nil]
+  def request_for_case(_c)
+    nil
+  end
+
+  # @return [ActiveRecord::Relation<Case>] an empty relation
+  def managed_cases
+    Case.none
+  end
+
   # @return [ActiveRecord::Relation<Case>] an empty relation
   def cases
     Case.none

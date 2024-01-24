@@ -65,6 +65,7 @@ type ElementProps = {
   text: string,
   href?: ?string,
   rightElement?: *,
+  wide?: Boolean,
 }
 
 export const Element = ({
@@ -74,11 +75,13 @@ export const Element = ({
   href,
   rightElement,
   className,
+  wide
 }: ElementProps) => {
   const ElementContainer = href == null ? CaseRow : CaseLinkRow
+  console.log(wide)
   return (
     <ElementContainer href={href} className={className}>
-      {images ? <ElementImages srcs={images} /> : <ElementImage src={image} />}
+      {images ? <ElementImages srcs={images} /> : <ElementImage src={image} wide={wide} />}
 
       <ElementText>{text}</ElementText>
 
@@ -89,7 +92,7 @@ export const Element = ({
 
 const ELEMENT_IMAGES_OFFSET = 6
 
-function ElementImages ({ srcs }) {
+function ElementImages({ srcs }) {
   return (
     <ElementImagesContainer>
       {srcs.slice(0, 3).map(src => (
@@ -101,7 +104,7 @@ function ElementImages ({ srcs }) {
 
 // $FlowFixMe
 export const ElementImage = styled.div.attrs({ role: 'presentation' })`
-  width: 36px;
+  width: ${props => props.wide ? "56px" : "36px"};
   height: 36px;
   border-radius: 2px;
   background-image: ${({ src }) => `url(${src})`};

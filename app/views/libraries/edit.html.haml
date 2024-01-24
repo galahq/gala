@@ -1,31 +1,22 @@
 - content_for :title do
   = I18n.t('libraries.edit.edit_library')
-  = library.name
+  = @library.name
 
-.window.admin
-  .admin-card.pt-card.pt-elevation-2
-    %div
-      %h1.admin__title= t '.edit_library'
+.libmanager.admin
+  %section.col1
+    .admin-card.pt-card.pt-elevation-2
+      %h1.admin__title= t 'libraries.edit.edit_library'
       = render 'form', library: @library
 
-  .admin-card__sidebar.pt-dark.spaced--compact
-    %h2.deployments__group= t '.library_managers'
+    .admin-card__sidebar.pt-dark.spaced--compact
+      %h2.deployments__group= t 'libraries.edit.library_managers'
+      = render 'managerships', library: @library
 
-    - @managerships.sort_by(&:manager_name).each do |managership|
-      .editorship.non-spaced
-        %span.pt-tag.pt-minimal= managership.manager_name
-        - unless managership.manager == current_reader
-          = form_with url: managership_path(managership),
-                      method: :delete, local: true do |f|
-            = f.button '',
-                       aria: { label: I18n.t('managerships.destroy.remove') },
-                       class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated],
-                       data: { confirm: I18n.t('managerships.destroy.are_you_sure',
-                                               name: managership.manager_name) }
+  %main.col2.md-detail.pt-dark
+    %h2.deployments__group= t 'libraries.edit.case_library_requests'
+    = render 'requests', requests: @requests
+    .spaced
 
+    %h2.deployments__group= t 'libraries.edit.library_cases'
+    = render 'cases', cases: @cases
 
-    .admin-card__sidebar__actions
-      = link_to new_library_managership_path library do
-        %span.pt-tag.pt-intent-success
-          %span.pt-icon.pt-icon-add
-          %span= t 'managerships.new.add_manager'

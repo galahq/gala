@@ -171,11 +171,13 @@ Rails.application.routes.draw do
     resources :managerships, only: %i[new create]
   end
 
+  resources :case_library_requests, only: %i[index update destroy]
+
   resources :locks, only: %i[create destroy]
 
   resource :magic_link, only: %i[show create]
 
-  resources :managerships, only: %i[destroy]
+  resources :managerships, only: %i[index destroy]
 
   resources :my_cases, only: %i[index]
 

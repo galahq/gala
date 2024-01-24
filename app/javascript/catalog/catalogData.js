@@ -24,6 +24,7 @@ export type CatalogData = {
   enrollments: Enrollment[],
   features: string[],
   libraries: Library[],
+  managerships: Library[],
   savedReadingLists: ReadingList[],
   tags: Tag[],
 }
@@ -92,6 +93,14 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
     )
   }, [])
 
+  React.useEffect(() => {
+    Orchard.harvest('managerships').then(managerships =>
+      update(draft => {
+        draft.managerships = managerships
+      })
+    )
+  }, [])
+
   return [data, update]
 }
 
@@ -107,6 +116,7 @@ function getDefaultCatalogData () {
     enrollments: [],
     features: [],
     libraries: [],
+    managerships: [],
     savedReadingLists: [],
     tags: [],
   }

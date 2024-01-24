@@ -36,8 +36,7 @@ module Cases
     end
 
     def set_libraries
-      @libraries = LibraryPolicy::AdminScope.new(current_reader, Library)
-                                            .resolve
+      @libraries = Library.all.ordered
     end
 
     def set_editorships

@@ -1,0 +1,17 @@
+- library.managerships.sort_by(&:manager_name).each do |managership|
+  .editorship.non-spaced
+    %span.pt-tag.pt-minimal= managership.manager_name
+    - unless managership.manager == current_reader
+      = form_with url: managership_path(managership),
+                  method: :delete, local: true do |f|
+        = f.button '',
+                  aria: { label: I18n.t('managerships.destroy.remove') },
+                  class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated],
+                  data: { confirm: I18n.t('managerships.destroy.are_you_sure',
+                                          name: managership.manager_name) }
+
+.admin-card__sidebar__actions
+  = link_to new_library_managership_path library do
+    %span.pt-tag.pt-intent-success
+      %span.pt-icon.pt-icon-add
+      %span= t 'managerships.new.add_manager'

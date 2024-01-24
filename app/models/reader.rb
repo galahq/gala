@@ -56,6 +56,7 @@ class Reader < ApplicationRecord
 
   has_many :managerships, dependent: :destroy, foreign_key: 'manager_id'
   has_many :libraries, through: :managerships
+  has_many :managed_cases, through: :libraries, source: :cases
 
   has_many :reading_lists, dependent: :destroy
   has_many :reading_list_saves, dependent: :destroy
@@ -127,6 +128,12 @@ class Reader < ApplicationRecord
   # @return [Enrollment]
   def enrollment_for_case(c)
     enrollments.find { |e| e.case.id == c.id }
+  end
+
+  # @return [CaseLibraryRequest]
+  def request_for_case(c)
+    managerships.joins(library: { requests: :case })
+                .where('cases.id = ?', c.id).first
   end
 
   # A hash of the reader’s email used to calculate her Identicon without leaking

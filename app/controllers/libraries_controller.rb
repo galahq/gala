@@ -36,14 +36,15 @@ class LibrariesController < ApplicationController
   # @route [GET] `/libraries/slug/edit`
   def edit
     authorize @library
-    @managerships = @library.managerships
+    @cases = @library.cases.decorate
+    @requests = @library.requests.pending
   end
 
   # @route [PUT/PATCH] `/libraries/slug`
   def update
     authorize @library
     if @library.update library_params
-      redirect_to libraries_url, notice: successfully_updated
+      redirect_to edit_library_path(@library), notice: successfully_updated
     else
       render :edit
     end
