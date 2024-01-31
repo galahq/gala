@@ -47,7 +47,7 @@ crowdsignal << 'https://*.survey.fm/*'
 OEmbed::Providers.register crowdsignal
 
 matterport = OEmbed::Provider.new 'https://my.matterport.com/api/v1/models/oembed/'
-matterport << 'https://my.matterport.com/show/*'
+matterport << 'https://*.matterport.com/show/*'
 OEmbed::Providers.register matterport
 
 naive_oembed_url = Rails.application.credentials.dig :naive_oembed_url
