@@ -46,6 +46,10 @@ crowdsignal = OEmbed::Provider.new 'https://api.crowdsignal.com/oembed'
 crowdsignal << 'https://*.survey.fm/*'
 OEmbed::Providers.register crowdsignal
 
+matterport = OEmbed::Provider.new 'https://my.matterport.com/api/v1/models/oembed/'
+matterport << 'https://my.matterport.com/show/*'
+OEmbed::Providers.register matterport
+
 naive_oembed_url = Rails.application.credentials.dig :naive_oembed_url
 unless naive_oembed_url.blank?
   naive = OEmbed::Provider.new naive_oembed_url

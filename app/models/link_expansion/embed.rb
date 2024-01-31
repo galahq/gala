@@ -4,7 +4,7 @@ class LinkExpansion
   # OEmbed resource
   class Embed
     def self.for(url, with_visibility:)
-      new(url, with_visibility)
+      instance = new(url, with_visibility)
     rescue OEmbed::NotFound, OEmbed::UnknownResponse
       {}
     end
