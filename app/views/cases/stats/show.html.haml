@@ -23,10 +23,57 @@
           %li
             %span.stat-label Total Reads:
             = @case.events.size
-            
           %li 
             %span.stat-label Total Deployments:
             = @case.deployments.size
+          
+        %table.admin__table.pt-html-table
+          %thead
+            %tr
+              %th(scope="col")='Event'
+              %th(scope="col")='All Time'
+              %th(scope="col")='Last Year'
+              %th(scope="col")='Last 6 Months'
+              %th(scope="col")='Avg Visit Duration'
+          %tbody
+            %tr
+              %td Reader Visits Case Overview
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 12.months.ago..).size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 6.months.ago..).size
+              %td= duration(Ahoy::Event.for_case(@case).where_properties(name: 'read_overview'))
+            %tr
+              %td Reader Reads a Card
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_card').size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_card').where(time: 12.months.ago..).size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_card').where(time: 6.months.ago..).size
+              %td= duration(Ahoy::Event.for_case(@case).where_properties(name: 'read_card'))
+            %tr
+              %td Reader Engages With Endnote
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').where(time: 12.months.ago..).size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').where(time: 6.months.ago..).size
+              %td= duration(Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote'))
+            %tr
+              %td Reader listens to a podcast
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 12.months.ago..).size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 6.months.ago..).size
+              %td= duration(Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast'))
+            %tr
+              %td Reader visits a CaseElement page
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_element').size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_element').where(time: 12.months.ago..).size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_element').where(time: 6.months.ago..).size
+              %td= duration(Ahoy::Event.for_case(@case).where_properties(name: 'visit_element'))
+            %tr
+              %td Reader reads a quiz
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz').size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz').where(time: 12.months.ago..).size
+              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz').where(time: 6.months.ago..).size
+              %td= duration(Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz'))
+        
+
       .pt-callout.pt-icon-info-sign.form__callout
         Totals only count users that were signed-in to Gala when viewing the case.
 
