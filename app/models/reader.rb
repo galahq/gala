@@ -177,6 +177,11 @@ class Reader < ApplicationRecord
 
   # Overridden from Devise for I18n
   def send_devise_notification(notification, *args)
+    locale = if I18n.available_locales.include?(self.locale.to_sym)
+      self.locale
+    else
+      I18n.default_locale
+    end
     I18n.with_locale(locale) { super notification, *args }
   end
 
