@@ -230,3 +230,51 @@ export function addCitationEntity (
     contentStateWithCircle
   )
 }
+
+export async function toggleMath (
+  editorState: EditorState,
+  { displayToast, intl }: ToolbarProps
+) {
+  if (entityTypeEquals('MATH')(editorState)) {
+    return removeSelectedEntity(editorState)
+  }
+
+  if (editorState.getSelection().isCollapsed()) {
+    displayToast({
+      icon: 'error',
+      intent: Intent.WARNING,
+      message: (
+        <span
+          className="pt-dark"
+          dangerouslySetInnerHTML={{
+            __html: intl.formatMessage({
+              id: 'cards.edit.mathInstructions',
+            }),
+          }}
+        />
+      ),
+    })
+    return editorState
+  }
+
+  displayToast({
+    icon: 'tick',
+    intent: Intent.SUCCESS,
+    message: (
+      <span
+        className="pt-dark"
+        dangerouslySetInnerHTML={{
+          __html: intl.formatMessage({
+            id: 'cards.edit.mathAdded',
+          }),
+        }}
+      />
+    ),
+  })
+
+  return addEntity({
+    type: 'MATH',
+    mutability: 'MUTABLE',
+    data: { },
+  }, editorState)
+}

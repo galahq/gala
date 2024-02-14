@@ -17,6 +17,7 @@ import {
   entityTypeEquals,
   toggleEdgenote,
   addCitationEntity,
+  toggleMath,
 } from './helpers'
 
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
@@ -40,6 +41,7 @@ type ActionName =
   | 'header'
   | 'addEdgenoteEntity'
   | 'addCitationEntity'
+  | 'addMathEntity'
 
 const ACTIONS: Action[] = [
   {
@@ -98,6 +100,14 @@ const ACTIONS: Action[] = [
     call: async (eS, props) => addCitationEntity(eS, props),
     active: blockTypeEquals('unordered-list-item'),
     spotlightKey: 'add_citation',
+  },
+
+  {
+    name: 'addMathEntity',
+    icon: 'function',
+    call: toggleMath,
+    active: entityTypeEquals('MATH'),
+    spotlightKey: 'add_math',
   },
 ]
 
