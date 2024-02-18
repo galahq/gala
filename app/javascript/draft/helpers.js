@@ -80,6 +80,7 @@ const getEntitySelectionState = (
   selectionState: SelectionState,
   entityKey: string
 ) => {
+  console.log("getEntitySelectionState called")
   const selectionKey = selectionState.getAnchorKey()
   const selectionOffset = selectionState.getAnchorOffset()
   const block = contentState.getBlockForKey(selectionKey)
@@ -151,6 +152,7 @@ export const entityTypeEquals = (type: string) => (
 }
 
 type ToolbarProps = {
+  cardId: string,
   displayToast: displayToast,
   getEdgenote: ?() => Promise<string>,
   intl: IntlShape,
@@ -233,48 +235,68 @@ export function addCitationEntity (
 
 export async function toggleMath (
   editorState: EditorState,
-  { displayToast, intl }: ToolbarProps
+  props: ToolbarProps
 ) {
   if (entityTypeEquals('MATH')(editorState)) {
     return removeSelectedEntity(editorState)
   }
 
-  if (editorState.getSelection().isCollapsed()) {
-    displayToast({
-      icon: 'error',
-      intent: Intent.WARNING,
-      message: (
-        <span
-          className="pt-dark"
-          dangerouslySetInnerHTML={{
-            __html: intl.formatMessage({
-              id: 'cards.edit.mathInstructions',
-            }),
-          }}
-        />
-      ),
-    })
-    return editorState
-  }
+  console.log("toggleMath props: ", { props })
 
-  displayToast({
-    icon: 'tick',
-    intent: Intent.SUCCESS,
-    message: (
-      <span
-        className="pt-dark"
-        dangerouslySetInnerHTML={{
-          __html: intl.formatMessage({
-            id: 'cards.edit.mathAdded',
-          }),
-        }}
-      />
-    ),
+  let selection = editorState.getSelection()
+
+  const collapsedSelection: SelectionState = selection.merge({
+    anchorOffset: selection.getEndOffset(),
+    focusOffset: selection.getEndOffset(),
   })
+
+  const contentStateWithZWS = Modifier.insertText(
+    editorState.getCurrentContent(),
+    collapsedSelection,
+    '\u200B' // Insert a zero-width space
+  )
+
+  const zwsSelection: SelectionState = collapsedSelection.merge({
+    anchorOffset: collapsedSelection.focusOffset,
+    focusOffset: collapsedSelection.focusOffset + 1,
+  })
+
+  // if (editorState.getSelection().isCollapsed()) {
+  //   displayToast({
+  //     icon: 'error',
+  //     intent: Intent.WARNING,
+  //     message: (
+  //       <span
+  //         className="pt-dark"
+  //         dangerouslySetInnerHTML={{
+  //           __html: intl.formatMessage({
+  //             id: 'cards.edit.mathInstructions',
+  //           }),
+  //         }}
+  //       />
+  //     ),
+  //   })
+  //   return editorState
+  // }
+
+  // displayToast({
+  //   icon: 'tick',
+  //   intent: Intent.SUCCESS,
+  //   message: (
+  //     <span
+  //       className="pt-dark"
+  //       dangerouslySetInnerHTML={{
+  //         __html: intl.formatMessage({
+  //           id: 'cards.edit.mathAdded',
+  //         }),
+  //       }}
+  //     />
+  //   ),
+  // })
 
   return addEntity({
     type: 'MATH',
     mutability: 'MUTABLE',
-    data: { },
-  }, editorState)
+    data: { cardId: props.cardId },
+  }, editorState, zwsSelection, contentStateWithZWS)
 }

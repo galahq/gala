@@ -105,7 +105,7 @@ const ACTIONS: Action[] = [
   {
     name: 'addMathEntity',
     icon: 'function',
-    call: toggleMath,
+    call: async (eS, props) => toggleMath(eS, props),
     active: entityTypeEquals('MATH'),
     spotlightKey: 'add_math',
   },
@@ -113,6 +113,7 @@ const ACTIONS: Action[] = [
 
 type Props = {
   actions: { [ActionName]: boolean },
+  cardId: string,
   displayToast: typeof displayToast,
   editorState: EditorState,
   getEdgenote: ?() => Promise<string>,
