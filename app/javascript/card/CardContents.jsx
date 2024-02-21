@@ -175,7 +175,7 @@ class CardContents extends React.Component<Props, State> {
                     keyBindingFn={keyBindingFn}
                     handleKeyCommand={handleKeyCommand}
                     handleBeforeInput={handleBeforeInput}
-                    onFocus={editable ? onBeginEditing : () => {}}
+                    onFocus={editable ? onBeginEditing : (e) => console.log(e)}
                     onChange={onChange}
                     onBlur={editable ? onFinishEditing : () => {}}
                   />

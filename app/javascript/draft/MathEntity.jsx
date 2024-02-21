@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { EditorState, SelectionState, DraftOffsetKey } from 'draft-js'
 import Tex2SVG from "react-hook-mathjax"
 import { connect } from 'react-redux'
-import { updateCardContents } from 'redux/actions'
+import { updateCardContents, applySelection } from 'redux/actions'
 import type { State } from 'redux/state'
 
 function mapStateToProps (
@@ -20,12 +20,14 @@ function mapStateToProps (
 
 function mapDispatchToProps (dispatch) {
   return {
-    updateCardContents: (cardId, newEditorState) => dispatch(updateCardContents(cardId, newEditorState)),
+    applySelection: (cardId, selectionState) => dispatch(applySelection(cardId, selectionState)),
   }
 }
 
 export function MathSpan (props) {
-  const { decoratedText, entityKey, contentState, children, state, offsetKey, onChange, updateCardContents, location } = props
+  console.log(props)
+  const { decoratedText, offsetKey, contentState, entityKey, applySelection, state } = props
+  window.currentState = state
 
   const [error, setError] = useState(null)
   if (error) {
@@ -33,88 +35,53 @@ export function MathSpan (props) {
   }
 
   function handleClick () {
+    console.log({ offsetKey })
+    // Extract the blockKey from the offsetKey
     const blockKey = offsetKey.split('-')[0]
     const { cardId } = contentState.getEntity(entityKey).getData()
+    // console.log({ cardId, state })
     const card = state.cardsById[cardId]
-    const editorState = card?.editorState || EditorState.createEmpty()
+    // console.log({ card })
+    const editorState = card.editorState
+    // console.log({ blockKey, editorState })
+
+    // const contentState = editorState.getCurrentContent()
+    // console.log({ contentState, contentStateProps })
     const block = contentState.getBlockForKey(blockKey)
+    console.log({ block })
+
+    // const entity = contentState.getEntity(entityKey)
+    // console.log({ entityKey })
+    // console.log({ props })
+
+    // const { cardId } = contentState.getEntity(entityKey).getData()
 
     const targetRange = new SelectionState({
       anchorKey: blockKey,
-      anchorOffset: 0,
+      anchorOffset: 3,
       focusKey: blockKey,
       focusOffset: block.getLength(),
     })
-
-    const newEditorState = EditorState.forceSelection(editorState, targetRange)
-    updateCardContents(cardId, newEditorState) // Dispatch the action here
-    console.log("handleClick called")
+    console.log({ targetRange })
+    applySelection(cardId, targetRange)
+    // window.newEditorState = EditorState.forceSelection(editorState, targetRange)
+    // console.log({ newEditorState })
   }
 
-  function handleSvgClick (event) {
-    const offsetKey = event.target.getAttribute('data-offset-key')
-    const { blockKey, decoratorKey, leafKey } = DraftOffsetKey.decode(offsetKey)
-    const { block, start, end } = contentState.getBlockForKey(blockKey).getEntityRanges(
-      (value) => value === this.props.entityKey,
-      (start, end) => ({ start, end })
-    )[decoratorKey]
-
-    const selection = SelectionState.createEmpty(blockKey)
-      .set('anchorOffset', start)
-      .set('focusOffset', end)
-
-    const { cardId } = contentState.getEntity(entityKey).getData()
-    const card = state.cardsById[cardId]
-    const editorState = card?.editorState || EditorState.createEmpty()
-    const eS = EditorState.forceSelection(editorState, selection)
-    updateCardContents(cardId, eS)
-  }
-
-  // function handleClick () {
-  //   console.log({ offsetKey })
-  //   // Extract the blockKey from the offsetKey
-  //   const blockKey = offsetKey.split('-')[0]
-  //   const { cardId } = contentState.getEntity(entityKey).getData()
-  //   // console.log({ cardId, state })
-  //   const card = state.cardsById[cardId]
-  //   // console.log({ card })
-  //   const editorState = card.editorState
-  //   // console.log({ blockKey, editorState })
-
-  //   // const contentState = editorState.getCurrentContent()
-  //   // console.log({ contentState, contentStateProps })
-  //   const block = contentState.getBlockForKey(blockKey)
-  //   console.log({ block })
-
-  //   // const entity = contentState.getEntity(entityKey)
-  //   // console.log({ entityKey })
-  //   // console.log({ props })
-
-  //   // const { cardId } = contentState.getEntity(entityKey).getData()
-
-  //   const targetRange = new SelectionState({
-  //     anchorKey: blockKey,
-  //     anchorOffset: 0,
-  //     focusKey: blockKey,
-  //     focusOffset: block.getLength(),
-  //   })
-  //   console.log({ targetRange })
-  //   window.newEditorState = EditorState.forceSelection(editorState, targetRange)
-  //   console.log({ newEditorState })
-  // }
+  const { content } = contentState.getEntity(entityKey).getData()
+  console.log(content)
 
   return (
-    <span
-      data-offset-key={offsetKey}
-      onClick={handleSvgClick}
-    >
-      <Tex2SVG
-        latex={decoratedText}
-        display="block"
-        onSuccess={() => setError(null)}
-        onError={setError}
-      />
-    </span>
+    <button zIndex={400} tabIndex={0} onClick={handleClick}>
+      &nbsp;
+        <Tex2SVG
+          latex={content || decoratedText}
+          display="inline"
+          onSuccess={() => setError(null)}
+          onError={setError}
+        />
+      &nbsp;
+    </button>
   )
 }
 

@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { RichUtils, Modifier, EditorState, SelectionState } from 'draft-js'
+import { RichUtils, Modifier, EditorState, SelectionState, AtomicBlockUtils } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
 import { Intent } from '@blueprintjs/core'
 
@@ -44,6 +44,39 @@ export function addEntity (
   selection: SelectionState = editorState.getSelection(),
   contentState: ContentState = editorState.getCurrentContent()
 ) {
+  if (type === 'MATH') {
+    const examples = [
+      '\\int_a^bu\\frac{d^2v}{dx^2}\\,dx\n' +
+      '=\\left.u\\frac{dv}{dx}\\right|_a^b\n' +
+      '-\\int_a^b\\frac{du}{dx}\\frac{dv}{dx}\\,dx',
+
+      'P(E) = {n \\choose k} p^k (1-p)^{ n-k} ',
+
+      '\\tilde f(\\omega)=\\frac{1}{2\\pi}\n' +
+      '\\int_{-\\infty}^\\infty f(x)e^{-i\\omega x}\\,dx',
+
+      '\\frac{1}{(\\sqrt{\\phi \\sqrt{5}}-\\phi) e^{\\frac25 \\pi}} =\n' +
+      '1+\\frac{e^{-2\\pi}} {1+\\frac{e^{-4\\pi}} {1+\\frac{e^{-6\\pi}}\n' +
+      '{1+\\frac{e^{-8\\pi}} {1+\\ldots} } } }',
+    ]
+    const contentState = editorState.getCurrentContent()
+    const nextFormula = Math.floor(Math.random() * examples.length)
+    const contentStateWithEntity = contentState.createEntity(
+      type,
+      mutability,
+      {
+        ...data,
+        content: examples[nextFormula],
+      }
+    )
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
+    const newEditorState = EditorState.set(
+      editorState,
+      { currentContent: contentStateWithEntity }
+    )
+    return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
+  }
+
   const contentStateWithEntity = contentState.createEntity(
     type,
     mutability,
@@ -55,6 +88,7 @@ export function addEntity (
     selection,
     entityKey
   )
+
   const editorStateWithEntity = EditorState.push(
     editorState,
     contentStateWithEntityApplied,
@@ -235,68 +269,48 @@ export function addCitationEntity (
 
 export async function toggleMath (
   editorState: EditorState,
-  props: ToolbarProps
+  { cardId, displayToast, intl }: ToolbarProps
 ) {
   if (entityTypeEquals('MATH')(editorState)) {
     return removeSelectedEntity(editorState)
   }
 
-  console.log("toggleMath props: ", { props })
+  if (editorState.getSelection().isCollapsed()) {
+    displayToast({
+      icon: 'error',
+      intent: Intent.WARNING,
+      message: (
+        <span
+          className="pt-dark"
+          dangerouslySetInnerHTML={{
+            __html: intl.formatMessage({
+              id: 'cards.edit.mathInstructions',
+            }),
+          }}
+        />
+      ),
+    })
+    return editorState
+  }
 
-  let selection = editorState.getSelection()
-
-  const collapsedSelection: SelectionState = selection.merge({
-    anchorOffset: selection.getEndOffset(),
-    focusOffset: selection.getEndOffset(),
+  displayToast({
+    icon: 'tick',
+    intent: Intent.SUCCESS,
+    message: (
+      <span
+        className="pt-dark"
+        dangerouslySetInnerHTML={{
+          __html: intl.formatMessage({
+            id: 'cards.edit.mathAdded',
+          }),
+        }}
+      />
+    ),
   })
-
-  const contentStateWithZWS = Modifier.insertText(
-    editorState.getCurrentContent(),
-    collapsedSelection,
-    '\u200B' // Insert a zero-width space
-  )
-
-  const zwsSelection: SelectionState = collapsedSelection.merge({
-    anchorOffset: collapsedSelection.focusOffset,
-    focusOffset: collapsedSelection.focusOffset + 1,
-  })
-
-  // if (editorState.getSelection().isCollapsed()) {
-  //   displayToast({
-  //     icon: 'error',
-  //     intent: Intent.WARNING,
-  //     message: (
-  //       <span
-  //         className="pt-dark"
-  //         dangerouslySetInnerHTML={{
-  //           __html: intl.formatMessage({
-  //             id: 'cards.edit.mathInstructions',
-  //           }),
-  //         }}
-  //       />
-  //     ),
-  //   })
-  //   return editorState
-  // }
-
-  // displayToast({
-  //   icon: 'tick',
-  //   intent: Intent.SUCCESS,
-  //   message: (
-  //     <span
-  //       className="pt-dark"
-  //       dangerouslySetInnerHTML={{
-  //         __html: intl.formatMessage({
-  //           id: 'cards.edit.mathAdded',
-  //         }),
-  //       }}
-  //     />
-  //   ),
-  // })
 
   return addEntity({
     type: 'MATH',
-    mutability: 'MUTABLE',
-    data: { cardId: props.cardId },
-  }, editorState, zwsSelection, contentStateWithZWS)
+    mutability: 'IMMUTABLE',
+    data: { cardId },
+  }, editorState)
 }
