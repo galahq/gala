@@ -62,9 +62,7 @@ class Case
     def options
       {
         root_url: root_url.to_s,
-        protocol: root_url.scheme,
-        footer_left: @case_study.license_config['name'],
-        footer_font_size: 8
+        protocol: root_url.scheme
       }
     end
   end
