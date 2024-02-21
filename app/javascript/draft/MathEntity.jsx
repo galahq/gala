@@ -64,19 +64,18 @@ export function MathSpan (props) {
     })
   }
 
-  // To select the MATH entity, click right before or after the entity.
+  // To select the MATH entity, click right before or after the equation.
   return (
-    <>
+    <button onClick={handleClick}>
       &nbsp;
       <Tex2SVG
         latex={decoratedText}
         display="inline"
         onSuccess={() => setError(null)}
         onError={setError}
-        onClick={handleClick}
       />
       &nbsp;
-    </>
+    </button>
   )
 }
 
