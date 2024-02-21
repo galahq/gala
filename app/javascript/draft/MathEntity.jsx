@@ -1,20 +1,24 @@
 /**
  * @providesModule MathEntity
- * @noflow
+ * @flow
  */
 
 import React, { useState } from 'react'
-import { EditorState, SelectionState, DraftOffsetKey } from 'draft-js'
+import { EditorState, SelectionState } from 'draft-js'
 import Tex2SVG from "react-hook-mathjax"
 import { connect } from 'react-redux'
-import { updateCardContents, applySelection } from 'redux/actions'
+import { applySelection } from 'redux/actions'
 import type { State } from 'redux/state'
 
 function mapStateToProps (
-  state: State
+  state: State,
+  { decoratedText, offsetKey, contentState, entityKey }
 ) {
+  const { cardId } = contentState.getEntity(entityKey).getData()
   return {
-    state,
+    cardId,
+    editInProgress: state.edit.inProgress,
+    editorState: state.cardsById[cardId]?.editorState || EditorState.createEmpty(),
   }
 }
 
@@ -24,67 +28,62 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+// $FlowFixMe
 export function MathSpan (props) {
-  console.log(props)
-  const { decoratedText, offsetKey, contentState, entityKey, applySelection, state } = props
-  window.currentState = state
+  const { decoratedText, offsetKey, contentState, entityKey, applySelection, editInProgress, cardId } = props
 
   const [error, setError] = useState(null)
   if (error) {
     return null
   }
 
+  /**
+  * Dispatches the target selection when the user clicks on the MATH entity.
+  * Problem is the MATH entity is an SVG instead of text, it's not recommend.
+  * For more info on the problem see:
+  * https://draftjs.org/docs/advanced-topics-block-components/
+  */
   function handleClick () {
-    console.log({ offsetKey })
+    if (!editInProgress) {
+      return
+    }
     // Extract the blockKey from the offsetKey
     const blockKey = offsetKey.split('-')[0]
-    const { cardId } = contentState.getEntity(entityKey).getData()
-    // console.log({ cardId, state })
-    const card = state.cardsById[cardId]
-    // console.log({ card })
-    const editorState = card.editorState
-    // console.log({ blockKey, editorState })
-
-    // const contentState = editorState.getCurrentContent()
-    // console.log({ contentState, contentStateProps })
     const block = contentState.getBlockForKey(blockKey)
-    console.log({ block })
-
-    // const entity = contentState.getEntity(entityKey)
-    // console.log({ entityKey })
-    // console.log({ props })
-
-    // const { cardId } = contentState.getEntity(entityKey).getData()
-
-    const targetRange = new SelectionState({
-      anchorKey: blockKey,
-      anchorOffset: 3,
-      focusKey: blockKey,
-      focusOffset: block.getLength(),
+    block.findEntityRanges(character => {
+      const e = character.getEntity()
+      return e === entityKey
+    }, (start, end) => {
+      const selection = new SelectionState({
+        anchorKey: blockKey,
+        anchorOffset: start,
+        focusKey: blockKey,
+        focusOffset: end,
+      })
+      applySelection(cardId, selection)
     })
-    console.log({ targetRange })
-    applySelection(cardId, targetRange)
-    // window.newEditorState = EditorState.forceSelection(editorState, targetRange)
-    // console.log({ newEditorState })
   }
 
-  const { content } = contentState.getEntity(entityKey).getData()
-  console.log(content)
-
+  // To select the MATH entity, click right before or after the entity.
   return (
-    <button zIndex={400} tabIndex={0} onClick={handleClick}>
+    <>
       &nbsp;
-        <Tex2SVG
-          latex={content || decoratedText}
-          display="inline"
-          onSuccess={() => setError(null)}
-          onError={setError}
-        />
+      <Tex2SVG
+        latex={decoratedText}
+        display="inline"
+        onSuccess={() => setError(null)}
+        onError={setError}
+        onClick={handleClick}
+      />
       &nbsp;
-    </button>
+    </>
   )
 }
 
-const MathEntity = connect(mapStateToProps, mapDispatchToProps)(MathSpan)
+// $FlowFixMe
+const MathEntity = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MathSpan)
 
 export default MathEntity

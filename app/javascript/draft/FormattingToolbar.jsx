@@ -111,7 +111,7 @@ const ACTIONS: Action[] = [
   },
 ]
 
-type Props = {
+export type Props = {
   actions: { [ActionName]: boolean },
   cardId: string,
   displayToast: typeof displayToast,

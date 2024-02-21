@@ -5,15 +5,13 @@
  */
 
 import React from 'react'
-import { RichUtils, Modifier, EditorState, SelectionState, AtomicBlockUtils } from 'draft-js'
+import { RichUtils, Modifier, EditorState, SelectionState } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
 import { Intent } from '@blueprintjs/core'
 
-import type { IntlShape } from 'react-intl'
 import type { ContentState } from 'draft-js'
 import type { DraftEntityMutability } from 'draft-js/lib/DraftEntityMutability'
-
-import typeof { displayToast } from 'redux/actions'
+import type { Props as ToolbarProps } from 'draft/FormattingToolbar'
 
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
@@ -44,39 +42,6 @@ export function addEntity (
   selection: SelectionState = editorState.getSelection(),
   contentState: ContentState = editorState.getCurrentContent()
 ) {
-  if (type === 'MATH') {
-    const examples = [
-      '\\int_a^bu\\frac{d^2v}{dx^2}\\,dx\n' +
-      '=\\left.u\\frac{dv}{dx}\\right|_a^b\n' +
-      '-\\int_a^b\\frac{du}{dx}\\frac{dv}{dx}\\,dx',
-
-      'P(E) = {n \\choose k} p^k (1-p)^{ n-k} ',
-
-      '\\tilde f(\\omega)=\\frac{1}{2\\pi}\n' +
-      '\\int_{-\\infty}^\\infty f(x)e^{-i\\omega x}\\,dx',
-
-      '\\frac{1}{(\\sqrt{\\phi \\sqrt{5}}-\\phi) e^{\\frac25 \\pi}} =\n' +
-      '1+\\frac{e^{-2\\pi}} {1+\\frac{e^{-4\\pi}} {1+\\frac{e^{-6\\pi}}\n' +
-      '{1+\\frac{e^{-8\\pi}} {1+\\ldots} } } }',
-    ]
-    const contentState = editorState.getCurrentContent()
-    const nextFormula = Math.floor(Math.random() * examples.length)
-    const contentStateWithEntity = contentState.createEntity(
-      type,
-      mutability,
-      {
-        ...data,
-        content: examples[nextFormula],
-      }
-    )
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-    const newEditorState = EditorState.set(
-      editorState,
-      { currentContent: contentStateWithEntity }
-    )
-    return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
-  }
-
   const contentStateWithEntity = contentState.createEntity(
     type,
     mutability,
@@ -114,7 +79,6 @@ const getEntitySelectionState = (
   selectionState: SelectionState,
   entityKey: string
 ) => {
-  console.log("getEntitySelectionState called")
   const selectionKey = selectionState.getAnchorKey()
   const selectionOffset = selectionState.getAnchorOffset()
   const block = contentState.getBlockForKey(selectionKey)
@@ -185,12 +149,6 @@ export const entityTypeEquals = (type: string) => (
   )
 }
 
-type ToolbarProps = {
-  cardId: string,
-  displayToast: displayToast,
-  getEdgenote: ?() => Promise<string>,
-  intl: IntlShape,
-}
 export async function toggleEdgenote (
   editorState: EditorState,
   { displayToast, getEdgenote, intl }: ToolbarProps
