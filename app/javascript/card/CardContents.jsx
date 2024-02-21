@@ -133,7 +133,6 @@ class CardContents extends React.Component<Props, State> {
     // This object contains the default options, more info at:
     // http://docs.mathjax.org/en/latest/options/output/svg.html
     const mathJaxOptions = {
-
       svg: {
         scale: 1, // global scaling factor for all expressions
         minScale: 0.5, // smallest scaling factor to use
