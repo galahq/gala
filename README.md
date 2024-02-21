@@ -33,12 +33,25 @@ Gala is a platform for the collaborative study of media-rich teaching cases.
 ## Getting started
 
 - `docker compose up` to start the app
+- `docker compose down` to stop the app
 - `bundle exec rspec` to run the Ruby tests
 - `yarn test` to run the Javascript tests
 
+### Updating dependencies
+
+When you update dependencies be sure to run these commands locally first
+- `bundle install` to install Ruby dependencies
+- `yarn` to install Javascript dependencies
+
+Then you can run `docker compose up --build` to rebuild the containers with the new dependencies.
+
+If you update Javascript dependencies, you'll need to additionally run `docker compose run web yarn` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
+
+
 #### Other useful commands
 
-- `docker-compose run web bash` to get a shell inside the web container
+- `docker compose run web yarn` to install new JS dependencies in the web container
+- `docker compose run web bash` to get a shell inside the web container
 - `docker volume rm gala_db_data` to delete the database volume
 - `docker compose up --build` to rebuild the containers
 
