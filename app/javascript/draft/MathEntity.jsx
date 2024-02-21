@@ -28,8 +28,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-// $FlowFixMe
-export function MathSpan (props) {
+function MathComponent (props) {
   const { decoratedText, offsetKey, contentState, entityKey, applySelection, editInProgress, cardId } = props
 
   const [error, setError] = useState(null)
@@ -83,6 +82,6 @@ export function MathSpan (props) {
 const MathEntity = connect(
   mapStateToProps,
   mapDispatchToProps
-)(MathSpan)
+)(MathComponent)
 
 export default MathEntity
