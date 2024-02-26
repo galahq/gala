@@ -17,24 +17,24 @@
           %li
             %span.stat-label Created:
             = @case.created_at.strftime("%B %d, %Y")
-          %li
-            %span.stat-label Updated:
-            = @case.updated_at.strftime("%B %d, %Y")
           %li 
             %span.stat-label Published:
             = @case.published_at.strftime("%B %d, %Y")
+          %li
+            %span.stat-label Last Updated:
+            = @case.updated_at.strftime("%B %d, %Y")
           
         %table.admin__table.pt-html-table
           %thead
             %tr
-              %th(scope="col")='Event'
+              %th(scope="col")='Activity'
               %th(scope="col")='Last Seven Days'
-              %th(scope="col")='Last 6 Months'
-              %th(scope="col")='Last Year'
+              %th(scope="col")='Last Six Months'
+              %th(scope="col")='Last 12 Months'
               %th(scope="col")='All Time'
           %tbody
             %tr
-              %td Deployed
+              %td Deployments
               %td= @case.deployments.where(created_at: 7.days.ago..).size
               %td= @case.deployments.where(created_at: 6.months.ago..).size
               %td= @case.deployments.where(created_at: 12.months.ago..).size
@@ -46,13 +46,13 @@
               %td= Ahoy::Event.for_case(@case).where(time: 12.months.ago..).size
               %td= Ahoy::Event.for_case(@case).size
             %tr
-              %td Reader Visits Case Overview
+              %td Case Overview Visits
               %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 7.days.ago..).size
               %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 6.months.ago..).size
               %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 12.months.ago..).size
               %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').size
             %tr
-              %td Reader Listens to a podcast
+              %td Podcast Listens
               %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 7.days.ago..).size
               %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 6.months.ago..).size
               %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 12.months.ago..).size
@@ -83,7 +83,7 @@
             -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').size
 
       .pt-callout.pt-icon-info-sign.form__callout
-        Totals only count users that were signed-in to Gala when viewing the case.
+        Totals only count users that were signed-in to Gala when viewing the case. Readers' browser settings may impact the accuracy of these counts.
 
       %table
 
