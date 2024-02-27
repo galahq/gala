@@ -10,6 +10,7 @@ import EdgenoteEntity from './EdgenoteEntity'
 import CitationEntity from './CitationEntity'
 import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
+import RevealableEntity from './RevealableEntity'
 
 export const styles = {
   smallCaps: {
@@ -57,7 +58,7 @@ type StyleMapArgs = {
   hoveredCommentThread: ?string,
   selectedCommentThread: ?string,
 }
-export function getStyleMap ({
+export function getStyleMap({
   commentable,
   theseCommentThreadsOpen,
   hoveredCommentThread,
@@ -80,7 +81,7 @@ export function getStyleMap ({
   }
 }
 
-function getFindEntityFunction (type) {
+function getFindEntityFunction(type) {
   return (contentBlock, callback, contentState) => {
     contentBlock.findEntityRanges(character => {
       const entityKey = character.getEntity()
@@ -92,7 +93,7 @@ function getFindEntityFunction (type) {
   }
 }
 
-function findCommentThreadEntity (contentBlock, cb) {
+function findCommentThreadEntity(contentBlock, cb) {
   contentBlock.findStyleRanges(character => character.hasStyle('THREAD'), cb)
 }
 
@@ -113,6 +114,10 @@ export const decorator = new CompositeDecorator([
     strategy: getFindEntityFunction('LINK'),
     component: LinkEntity,
   },
+  {
+    strategy: getFindEntityFunction('REVEALABLE'),
+    component: EdgenoteEntity
+  }
 ])
 
 export { keyBindingFn } from 'shared/draftHelpers'

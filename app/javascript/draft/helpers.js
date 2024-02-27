@@ -18,7 +18,7 @@ import typeof { displayToast } from 'redux/actions'
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
 // which gives a grey background.
-export function addShadowSelection (editorState: EditorState): EditorState {
+export function addShadowSelection(editorState: EditorState): EditorState {
   if (!editorState.getSelection().isCollapsed()) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -26,7 +26,7 @@ export function addShadowSelection (editorState: EditorState): EditorState {
   }
 }
 
-export function removeShadowSelection (editorState: EditorState): EditorState {
+export function removeShadowSelection(editorState: EditorState): EditorState {
   if (editorState.getCurrentInlineStyle().has('SELECTION')) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -34,7 +34,7 @@ export function removeShadowSelection (editorState: EditorState): EditorState {
   }
 }
 
-export function addEntity (
+export function addEntity(
   {
     type,
     mutability,
@@ -63,7 +63,7 @@ export function addEntity (
   return editorStateWithEntity
 }
 
-export function addEdgenoteEntity (
+export function addEdgenoteEntity(
   slug: string,
   editorState: EditorState
 ): EditorState {
@@ -73,6 +73,10 @@ export function addEdgenoteEntity (
     data: { slug },
   }
   return addEntity(edgenoteEntityProps, editorState)
+}
+
+export function addRevealableEntity() {
+  return addEntity()
 }
 
 const getEntitySelectionState = (
@@ -101,7 +105,7 @@ const getEntitySelectionState = (
   return entitySelection
 }
 
-export function removeSelectedEntity (editorState: EditorState) {
+export function removeSelectedEntity(editorState: EditorState) {
   const entityKey = getSelectedEntityKey(editorState)
   if (entityKey == null) return editorState
 
@@ -120,7 +124,7 @@ export function removeSelectedEntity (editorState: EditorState) {
   return EditorState.push(editorState, withoutEntity, 'apply-entity')
 }
 
-export function getSelectedEntityKey (editorState: EditorState) {
+export function getSelectedEntityKey(editorState: EditorState) {
   const selection = editorState.getSelection()
   return editorState
     .getCurrentContent()
@@ -155,7 +159,7 @@ type ToolbarProps = {
   getEdgenote: ?() => Promise<string>,
   intl: IntlShape,
 }
-export async function toggleEdgenote (
+export async function toggleEdgenote(
   editorState: EditorState,
   { displayToast, getEdgenote, intl }: ToolbarProps
 ) {
@@ -186,7 +190,7 @@ export async function toggleEdgenote (
   return getEdgenote().then(slug => addEdgenoteEntity(slug, editorState))
 }
 
-export function addCitationEntity (
+export function addCitationEntity(
   editorState: EditorState,
   { displayToast, intl }: ToolbarProps
 ) {
@@ -224,7 +228,7 @@ export function addCitationEntity (
   })
 
   return addEntity(
-    { type: 'CITATION', mutability: 'IMMUTABLE', data: {}},
+    { type: 'CITATION', mutability: 'IMMUTABLE', data: {} },
     editorState,
     circleSelection,
     contentStateWithCircle
