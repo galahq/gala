@@ -10,7 +10,6 @@ import { injectIntl } from 'react-intl'
 
 import { Editor, EditorState } from 'draft-js'
 import { Route } from 'react-router-dom'
-import { MathJaxProvider } from "react-hook-mathjax"
 
 import { commentThreadsOpen } from 'shared/routes'
 import { getStyleMap, keyBindingFn } from 'draft/config'
@@ -130,29 +129,8 @@ class CardContents extends React.Component<Props, State> {
       selectedCommentThread,
     })
 
-    // This object contains the default options, more info at:
-    // http://docs.mathjax.org/en/latest/options/output/svg.html
-    const mathJaxOptions = {
-      svg: {
-        scale: 1, // global scaling factor for all expressions
-        minScale: 0.5, // smallest scaling factor to use
-        mtextInheritFont: false, // true to make mtext elements use surrounding font
-        merrorInheritFont: true, // true to make merror text use surrounding font
-        mathmlSpacing: false, // true for MathML spacing rules, false for TeX rules
-        skipAttributes: {}, // RFDa and other attributes NOT to copy to the output
-        exFactor: 0.5, // default size of ex in em units
-        displayAlign: 'center', // default for indentalign when set to 'auto'
-        displayIndent: '0', // default for indentshift when set to 'auto'
-        fontCache: 'local', // or 'global' or 'none'
-        localID: null, // ID to use for local font cache (for single equation processing)
-        internalSpeechTitles: true, // insert <title> tags with speech content
-        titleID: 0, // initial id number to use for aria-labeledby titles
-      },
-    }
-
     return (
       <Container>
-        <MathJaxProvider options={mathJaxOptions} />
         <Card
           ref={el => (this.cardRef = el)}
           className={this._getClassNames()}

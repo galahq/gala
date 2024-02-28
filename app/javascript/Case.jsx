@@ -7,6 +7,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
+import { MathJaxProvider } from 'react-hook-mathjax'
 
 import {
   parseAllCards,
@@ -130,33 +131,42 @@ class Case extends React.Component<{
 
   render () {
     const { kicker, basename, needsPretest, hasQuiz, editing } = this.props
+    const mathJaxOptions = {
+      menuOptions: {
+        settings: {
+          zoom: 'Click',
+        },
+      },
+    }
     return (
       <ErrorBoundary>
         <DocumentTitle title={`${kicker} — Gala`}>
           <GalaDragDropContext>
             <Router basename={basename}>
-              <ContentItemSelectionContextProvider>
-                <div id="Case">
-                  <StatusBar />
-                  <Switch>
-                    <Route exact path="/" component={CaseOverview} />
-                    <Route
-                      path={needsPretest ? '/*' : 'miss'}
-                      component={PreTest}
-                    />
-                    <Route
-                      path={hasQuiz ? '/quiz/' : 'miss'}
-                      component={PostTest}
-                    />
-                    <Route path="/conversation" component={Conversation} />
-                    <Route
-                      path={editing ? '/suggested_quizzes' : 'miss'}
-                      component={SuggestedQuizzes}
-                    />
-                    <Route path="/:position/" component={CaseElement} />
-                  </Switch>
-                </div>
-              </ContentItemSelectionContextProvider>
+              <MathJaxProvider options={mathJaxOptions}>
+                <ContentItemSelectionContextProvider>
+                  <div id="Case">
+                    <StatusBar />
+                    <Switch>
+                      <Route exact path="/" component={CaseOverview} />
+                      <Route
+                        path={needsPretest ? '/*' : 'miss'}
+                        component={PreTest}
+                      />
+                      <Route
+                        path={hasQuiz ? '/quiz/' : 'miss'}
+                        component={PostTest}
+                      />
+                      <Route path="/conversation" component={Conversation} />
+                      <Route
+                        path={editing ? '/suggested_quizzes' : 'miss'}
+                        component={SuggestedQuizzes}
+                      />
+                      <Route path="/:position/" component={CaseElement} />
+                    </Switch>
+                  </div>
+                </ContentItemSelectionContextProvider>
+              </MathJaxProvider>
             </Router>
           </GalaDragDropContext>
         </DocumentTitle>

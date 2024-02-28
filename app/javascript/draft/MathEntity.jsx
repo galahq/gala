@@ -9,6 +9,7 @@ import Tex2SVG from "react-hook-mathjax"
 import { connect } from 'react-redux'
 import { applySelection } from 'redux/actions'
 import type { State } from 'redux/state'
+import styled from 'styled-components'
 
 function mapStateToProps (
   state: State,
@@ -65,7 +66,7 @@ function MathComponent (props) {
 
   // To select the MATH entity, click right before or after the equation.
   return (
-    <button onClick={handleClick}>
+    <MathWrapper onClick={handleClick}>
       &nbsp;
       <Tex2SVG
         latex={decoratedText}
@@ -74,7 +75,7 @@ function MathComponent (props) {
         onError={setError}
       />
       &nbsp;
-    </button>
+    </MathWrapper>
   )
 }
 
@@ -85,3 +86,8 @@ const MathEntity = connect(
 )(MathComponent)
 
 export default MathEntity
+
+const MathWrapper = styled.button`
+border: solid 1px grey;
+cursor: zoom-in;
+`
