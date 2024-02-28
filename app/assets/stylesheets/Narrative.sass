@@ -89,7 +89,7 @@
   & > div > .DraftEditor-root div[data-block]
     margin: 1em 0
 
-  .DraftEditor-root a:not(.c-edgenote-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
+  .DraftEditor-root a:not(.c-edgenote-entity)a:not(.c-revealable-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
     color: $darkGreen
 
     &:hover
@@ -123,6 +123,29 @@
 
       &:hover
         background-color: inherit
+
+  a.c-revealable-entity
+    text-decoration: none
+    &:after
+      content: ' ⌕'
+    span
+      text-decoration: none
+      text-shadow: 0 0 6px $black
+      color: transparent
+
+    &--reveal
+      span
+        text-shadow: none
+        color: $black
+      &:after
+        content: ' ⌕'
+      &:hover
+        border-bottom: 1px solid $black
+        transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+
+    &:hover
+      border-bottom: 1px solid $black
+      transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
 
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0

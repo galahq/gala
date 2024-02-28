@@ -17,6 +17,7 @@ import {
   entityTypeEquals,
   toggleEdgenote,
   addCitationEntity,
+  toggleRevealableEntity,
 } from './helpers'
 
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
@@ -40,6 +41,7 @@ type ActionName =
   | 'header'
   | 'addEdgenoteEntity'
   | 'addCitationEntity'
+  | 'addRevealableEntity'
 
 const ACTIONS: Action[] = [
   {
@@ -98,6 +100,14 @@ const ACTIONS: Action[] = [
     call: async (eS, props) => addCitationEntity(eS, props),
     active: blockTypeEquals('unordered-list-item'),
     spotlightKey: 'add_citation',
+  },
+
+  {
+    name: 'addRevealableEntity',
+    icon: 'search-template',
+    call: async (eS, props) => toggleRevealableEntity(eS, props),
+    active: entityTypeEquals('REVEALABLE'),
+    spotlightKey: 'add_revealable',
   },
 ]
 

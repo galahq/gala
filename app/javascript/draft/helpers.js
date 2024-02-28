@@ -230,3 +230,38 @@ export function addCitationEntity (
     contentStateWithCircle
   )
 }
+
+// TODO add i18n key and pass cardId to the entity after the MathEntity changes
+// are implemented
+export async function toggleRevealableEntity (
+  editorState: EditorState,
+  { displayToast, intl }: ToolbarProps
+) {
+  if (entityTypeEquals('REVEALABLE')(editorState)) {
+    return removeSelectedEntity(editorState)
+  }
+
+  if (editorState.getSelection().isCollapsed()) {
+    displayToast({
+      icon: 'error',
+      intent: Intent.WARNING,
+      message: (
+        <span
+          className="pt-dark"
+          dangerouslySetInnerHTML={{
+            __html: intl.formatMessage({
+              id: 'edgenotes.new.makeSelectionHtml',
+            }),
+          }}
+        />
+      ),
+    })
+    return editorState
+  }
+
+  return addEntity({
+    type: 'REVEALABLE',
+    mutability: 'MUTABLE',
+    data: { cardId: undefined },
+  }, editorState)
+}

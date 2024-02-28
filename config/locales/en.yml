@@ -726,6 +726,7 @@ en:
     formatting:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
+      add_revealable_entity: "Add revealable to selection."
       blockquote: "Block style: Quotation."
       bold: "Inline style: Bold."
       code: "Inline style: Code."
