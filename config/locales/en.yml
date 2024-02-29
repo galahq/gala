@@ -195,6 +195,11 @@ en:
         Citation added. Click the <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
         edit.
+      make_revealable_selection: |
+        Please select the phrase that you would like to make revealable,
+        then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-search-template"></span> Add
+        Revealable</span> button.
       citation_text: Title
       citation_url: URL
       write_something: Write something...
@@ -1062,6 +1067,8 @@ en:
       Invite another Gala user to work with you on your case by clicking here.
     add_edgenote: >
       Attach a media resource by linking an Edgenote to the text.
+    add_revealable: >
+      Attach revealable text.
     add_quiz: >
       You can administer a comprehension quiz at the end of the case, and
       optionally pair it with an identical pretest.

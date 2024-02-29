@@ -250,7 +250,7 @@ export async function toggleRevealableEntity (
           className="pt-dark"
           dangerouslySetInnerHTML={{
             __html: intl.formatMessage({
-              id: 'edgenotes.new.makeSelectionHtml',
+              id: 'cards.edit.makeRevealableSelection',
             }),
           }}
         />
