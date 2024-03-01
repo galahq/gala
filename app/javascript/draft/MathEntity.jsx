@@ -66,15 +66,16 @@ function MathComponent (props) {
 
   // To select the MATH entity, click right before or after the equation.
   return (
-    <MathWrapper onClick={handleClick}>
-      &nbsp;
-      <Tex2SVG
-        latex={decoratedText}
-        display="inline"
-        onSuccess={() => setError(null)}
-        onError={setError}
-      />
-      &nbsp;
+    <MathWrapper editing={editInProgress} onClick={handleClick}>
+      <CursorTarget>
+        <Tex2SVG
+          latex={decoratedText}
+          display="inline"
+          style={""}
+          onSuccess={() => setError(null)}
+          onError={setError}
+        />
+      </CursorTarget>
     </MathWrapper>
   )
 }
@@ -86,8 +87,26 @@ const MathEntity = connect(
 )(MathComponent)
 
 export default MathEntity
-
 const MathWrapper = styled.button`
-border: solid 1px grey;
+  border: solid 1px #c0bca9;
+  border-radius: 3px;
+  padding: 8px;
+  overflow-x: auto;
+  max-width: 656px;
+  @media (max-width: 1440px) {
+    max-width: 500px;
+  }
+  ${({ editing }) => editing && `
+    &:hover {
+      cursor: text;
+      }`}
+
+  &>button {
+    background-color: red;
+  }
+`
+
+const CursorTarget = styled.div`
 cursor: zoom-in;
+
 `
