@@ -40,47 +40,26 @@
               %td= @case.deployments.where(created_at: 12.months.ago..).size
               %td= @case.deployments.size
             %tr
-              %td Total Reader Activity
-              %td= Ahoy::Event.for_case(@case).where(time: 7.days.ago..).size
-              %td= Ahoy::Event.for_case(@case).where(time: 6.months.ago..).size
-              %td= Ahoy::Event.for_case(@case).where(time: 12.months.ago..).size
-              %td= Ahoy::Event.for_case(@case).size
+              %td Unique Visits to a CaseElement page (any page beyond the overview)
+              %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 7.days.ago..).group(:user_id).count.keys.count
+              %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 6.months.ago..).group(:user_id).count.keys.count
+              %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 12.months.ago..).group(:user_id).count.keys.count
+              %td= @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys.count
             %tr
               %td Case Overview Visits
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 7.days.ago..).size
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 6.months.ago..).size
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').where(time: 12.months.ago..).size
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_overview').size
-            %tr
-              %td Podcast Listens
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 7.days.ago..).size
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 6.months.ago..).size
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').where(time: 12.months.ago..).size
-              %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_podcast').size  
-            -# %tr
-            -#   %td Visits a CaseElement page
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_element').where(time: 7.days.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_element').where(time: 6.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_element').where(time: 12.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_element').size
-            -# %tr
-            -#   %td Reads a quiz
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz').where(time: 7.days.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz').where(time: 6.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz').where(time: 12.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_quiz').size
-            -# %tr
-            -#   %td Reads a Card
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_card').where(time: 7.days.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_card').where(time: 6.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_card').where(time: 12.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'read_card').size
-            -# %tr
-            -#   %td Engages With Endnote
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').where(time: 7.days.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').where(time: 6.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').where(time: 12.months.ago..).size
-            -#   %td= Ahoy::Event.for_case(@case).where_properties(name: 'visit_edgenote').size
+              %td= @case.events.interesting.where_properties(name: 'read_overview').where(time: 7.days.ago..).size
+              %td= @case.events.interesting.where_properties(name: 'read_overview').where(time: 6.months.ago..).size
+              %td= @case.events.interesting.where_properties(name: 'read_overview').where(time: 12.months.ago..).size
+              %td= @case.events.interesting.where_properties(name: 'read_overview').size
+
+            - @case.podcasts.each do |podcast|
+              - podcast_listen_events = Ahoy::Event.interesting.where_properties(podcast_id: podcast.id)
+              %tr
+                %td Podcast Listen - #{podcast.title}
+                %td= podcast_listen_events.where(time: 7.days.ago..).size
+                %td= podcast_listen_events.where(time: 6.months.ago..).size
+                %td= podcast_listen_events.where(time: 12.months.ago..).size
+                %td= podcast_listen_events.size
 
       .pt-callout.pt-icon-info-sign.form__callout
         Totals only count users that were signed-in to Gala when viewing the case. Readers' browser settings may impact the accuracy of these counts.
