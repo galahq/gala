@@ -48,6 +48,8 @@ class Edgenote < ApplicationRecord
                     content_type: { in: %w[image/png image/jpeg],
                                     message: 'must be JPEG or PNG' }
 
+  validate :validate_website_url
+
   before_create :ensure_slug_set
 
   def self.policy_class
@@ -78,5 +80,14 @@ class Edgenote < ApplicationRecord
 
   def ensure_slug_set
     self.slug ||= SecureRandom.uuid
+  end
+
+  def validate_website_url
+    return if website_url.blank?
+
+    uri = URI.parse(website_url)
+    errors.add(:website_url, 'must be a valid URL') unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+  rescue URI::InvalidURIError
+    errors.add(:website_url, 'must be a valid URL')
   end
 end
