@@ -107,6 +107,5 @@ const MathWrapper = styled.button`
 `
 
 const CursorTarget = styled.div`
-cursor: zoom-in;
-
+ cursor: zoom-in;
 `
