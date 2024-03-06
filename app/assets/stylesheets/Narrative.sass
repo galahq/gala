@@ -125,31 +125,23 @@
         background-color: inherit
 
   a.c-revealable-entity
+    display: inline-block
     text-decoration: none
     border-bottom: 1px dotted $black
     transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-    // &:after
-    //   content: ' ⌕'
+
     span
       text-decoration: none
       text-shadow: 0 0 6px $black
       color: transparent
 
     &--reveal
+      display: inline-block
       border-bottom: 1px dotted $black
       transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
       span
         text-shadow: none
         color: $black
-      // &:after
-      //   content: ' ⌕'
-      &:hover
-        // border-bottom: 1px solid $black
-        // transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-
-    &:hover
-      // border-bottom: 1px solid $black
-      // transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
 
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0
