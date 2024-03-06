@@ -124,11 +124,18 @@
       &:hover
         background-color: inherit
 
-  a.c-revealable-entity
+a.c-revealable-entity
     display: inline-block
+    font-family: $serifFont
+    font-weight: 400
+    font-size: 19px
     text-decoration: none
-    border-bottom: 1px dotted $black
     transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+    border: 1px dotted $black
+    text-align: left
+    -webkit-hyphens: auto
+    -moz-hyphens: auto
+    hyphens: auto
 
     span
       text-decoration: none
@@ -136,12 +143,17 @@
       color: transparent
 
     &--reveal
+      border: 1px dotted $black
       display: inline-block
-      border-bottom: 1px dotted $black
+      text-align: left
       transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+      font-family: $serifFont
+      font-weight: 400
+      font-size: 19px
       span
         text-shadow: none
         color: $black
+        
 
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0
