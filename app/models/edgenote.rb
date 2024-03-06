@@ -86,7 +86,9 @@ class Edgenote < ApplicationRecord
     return if website_url.blank?
 
     uri = URI.parse(website_url)
-    errors.add(:website_url, 'must be a valid URL') unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    if !(uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS))
+      errors.add(:website_url, 'must be a valid URL')
+    end
   rescue URI::InvalidURIError
     errors.add(:website_url, 'must be a valid URL')
   end
