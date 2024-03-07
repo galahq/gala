@@ -31,29 +31,30 @@ function RevealableSpan (props) {
     setReveal(!reveal)
   }
 
-  // TODO see if this is doing what i think its doing
-  const srProps = {
-    ariaHidden: !reveal,
+  function onKeyDown (event) {
+    console.log({ event })
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onClick()
+    }
+  }
+
+  const conditionalProps = {}
+  if (!editInProgress) {
+    conditionalProps.tabIndex = 0
   }
 
   return (
     // eslint-disable-next-line
     <a role="button"
-       tabIndex="0"
        aria-label="Reveal the answer"
-       {...srProps}
-       className={`pt-button pt-minimal c-revealable-entity${reveal ? '--reveal' : ''}`}
+       className={`c-revealable-entity${reveal ? '--reveal' : ''} ${editInProgress ? 'editing' : ''}`}
        onClick={onClick}
-       onKeyDown={(event) => {
-        // Trigger the onClick event when Enter or Space is pressed
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault()
-          onClick()
-        }
-      }}
+       onKeyDown={onKeyDown}
+       {...conditionalProps}
     >
       {children.map(child =>
-        React.cloneElement(child, { forceSelection: true })
+        React.cloneElement(child, { forceSelection: true, ariaHidden: !reveal })
       )}
     </a>
   )

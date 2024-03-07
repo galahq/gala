@@ -125,7 +125,6 @@
         background-color: inherit
 
   a.c-revealable-entity
-    display: inline-block
     text-decoration: none
     border-bottom: 1px dotted $black
     transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
@@ -136,12 +135,14 @@
       color: transparent
 
     &--reveal
-      display: inline-block
       border-bottom: 1px dotted $black
       transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
       span
         text-shadow: none
         color: $black
+
+    &--reveal.editing
+      cursor: text
 
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0
