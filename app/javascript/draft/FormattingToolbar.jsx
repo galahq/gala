@@ -18,6 +18,7 @@ import {
   toggleEdgenote,
   addCitationEntity,
   toggleMath,
+  toggleRevealableEntity,
 } from './helpers'
 
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
@@ -42,6 +43,7 @@ type ActionName =
   | 'addEdgenoteEntity'
   | 'addCitationEntity'
   | 'addMathEntity'
+  | 'addRevealableEntity'
 
 const ACTIONS: Action[] = [
   {
@@ -108,6 +110,14 @@ const ACTIONS: Action[] = [
     call: async (eS, props) => toggleMath(eS, props),
     active: entityTypeEquals('MATH'),
     spotlightKey: 'add_math',
+  },
+
+  {
+    name: 'addRevealableEntity',
+    icon: 'search-template',
+    call: async (eS, props) => toggleRevealableEntity(eS, props),
+    active: entityTypeEquals('REVEALABLE'),
+    spotlightKey: 'add_revealable',
   },
 ]
 

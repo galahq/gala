@@ -200,6 +200,11 @@ en:
         To add math to your case, select the text you want to turn into a math
         equation, then click the <span class="pt-tag">
         <span class="pt-icon pt-icon-function"></span> Math</span> button.
+      make_revealable_selection: |
+        Please select the phrase that you would like to make revealable,
+        then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-search-template"></span> Add
+        Revealable</span> button.
       citation_text: Title
       citation_url: URL
       write_something: Write something...
@@ -732,6 +737,7 @@ en:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
       add_math_entity: "Add math to selection."
+      add_revealable_entity: "Add revealable to selection."
       blockquote: "Block style: Quotation."
       bold: "Inline style: Bold."
       code: "Inline style: Code."
@@ -1067,6 +1073,8 @@ en:
       Invite another Gala user to work with you on your case by clicking here.
     add_edgenote: >
       Attach a media resource by linking an Edgenote to the text.
+    add_revealable: >
+      Attach revealable text.
     add_quiz: >
       You can administer a comprehension quiz at the end of the case, and
       optionally pair it with an identical pretest.

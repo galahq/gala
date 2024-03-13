@@ -272,3 +272,36 @@ export async function toggleMath (
     data: { cardId },
   }, editorState)
 }
+
+export async function toggleRevealableEntity (
+  editorState: EditorState,
+  { cardId, displayToast, intl }: ToolbarProps
+) {
+  if (entityTypeEquals('REVEALABLE')(editorState)) {
+    return removeSelectedEntity(editorState)
+  }
+
+  if (editorState.getSelection().isCollapsed()) {
+    displayToast({
+      icon: 'error',
+      intent: Intent.WARNING,
+      message: (
+        <span
+          className="pt-dark"
+          dangerouslySetInnerHTML={{
+            __html: intl.formatMessage({
+              id: 'cards.edit.makeRevealableSelection',
+            }),
+          }}
+        />
+      ),
+    })
+    return editorState
+  }
+
+  return addEntity({
+    type: 'REVEALABLE',
+    mutability: 'MUTABLE',
+    data: { cardId },
+  }, editorState)
+}

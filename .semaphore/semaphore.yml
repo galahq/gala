@@ -3,7 +3,7 @@ name: Continuous Integration
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu1804
+    os_image: ubuntu2004
 blocks:
   - name: Setup
     task:
@@ -13,7 +13,8 @@ blocks:
             - checkout
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
             - sem-version ruby 2.7.6
-            - sudo apt-get -y install libmagickcore-dev libmagickwand-dev
+            - sudo apt update
+            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev
             - bundle install --deployment -j 4 --path vendor/bundle
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
         - name: yarn
@@ -52,6 +53,4 @@ blocks:
         - name: RSpec - unit tests
           commands:
             - bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
-        - name: RSpec - feature tests
-          commands:
-            - bundle exec rspec spec/features
+

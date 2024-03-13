@@ -89,7 +89,7 @@
   & > div > .DraftEditor-root div[data-block]
     margin: 1em 0
 
-  .DraftEditor-root a:not(.c-edgenote-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
+  .DraftEditor-root a:not(.c-edgenote-entity)a:not(.c-revealable-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
     color: $darkGreen
 
     &:hover
@@ -117,12 +117,48 @@
       box-shadow: inset 0 -0.35em 0 $lightGreen
       border-bottom: 1px solid $lightGreen
       transition: background 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-
       background-color: inherit
       cursor: initial
 
       &:hover
         background-color: inherit
+
+a.c-revealable-entity
+    display: inline-block
+    font-family: $serifFont
+    font-weight: 400
+    font-size: 19px
+    text-decoration: none
+    transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+    border: 1px dotted $black
+    text-align: left
+    -webkit-hyphens: auto
+    -moz-hyphens: auto
+    hyphens: auto
+
+    span
+      text-decoration: none
+      text-shadow: 0 0 6px $black
+      color: transparent
+
+    &--reveal
+      border: 1px dotted $black
+      display: inline-block
+      text-align: left
+      transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
+      font-family: $serifFont
+      font-weight: 400
+      font-size: 19px
+      span
+        text-shadow: none
+        color: $black
+        
+
+    &--reveal.editing
+      cursor: text
+
+    &--reveal.editing
+      cursor: text
 
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0

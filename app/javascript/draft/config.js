@@ -11,6 +11,7 @@ import CitationEntity from './CitationEntity'
 import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
 import MathEntity from './MathEntity'
+import RevealableEntity from './RevealableEntity'
 
 export const styles = {
   smallCaps: {
@@ -117,6 +118,10 @@ export const decorator = new CompositeDecorator([
   {
     strategy: getFindEntityFunction('MATH'),
     component: MathEntity,
+  },
+  {
+    strategy: getFindEntityFunction('REVEALABLE'),
+    component: RevealableEntity,
   },
 ])
 
