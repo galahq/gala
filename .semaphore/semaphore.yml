@@ -16,7 +16,6 @@ blocks:
             - sudo apt update
             - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev
             - bundle install --deployment -j 4 --path vendor/bundle
-            - sudo gem install ffi
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
         - name: yarn
           commands:
