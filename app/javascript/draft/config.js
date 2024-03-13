@@ -10,6 +10,7 @@ import EdgenoteEntity from './EdgenoteEntity'
 import CitationEntity from './CitationEntity'
 import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
+import MathEntity from './MathEntity'
 import RevealableEntity from './RevealableEntity'
 
 export const styles = {
@@ -113,6 +114,10 @@ export const decorator = new CompositeDecorator([
   {
     strategy: getFindEntityFunction('LINK'),
     component: LinkEntity,
+  },
+  {
+    strategy: getFindEntityFunction('MATH'),
+    component: MathEntity,
   },
   {
     strategy: getFindEntityFunction('REVEALABLE'),

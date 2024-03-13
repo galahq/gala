@@ -150,9 +150,12 @@ class CardContents extends React.Component<Props, State> {
                       blockquote: false,
                       addEdgenoteEntity: !nonNarrative,
                       addCitationEntity: !nonNarrative,
+                      addMathEntity: !nonNarrative,
                     }}
                     editorState={editorState}
                     getEdgenote={getEdgenote}
+                    cardId={id}
+                    editable={editable}
                     onChange={onChange}
                   />
                 )}

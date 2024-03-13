@@ -50,3 +50,6 @@ spec/examples.txt
 .*.OLD
 .*ORIG
 .env.dev
+
+# Ignore vscode settings
+/.vscode

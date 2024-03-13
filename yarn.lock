@@ -9554,6 +9554,11 @@ react-google-analytics@^0.2.0:
   resolved "https://registry.yarnpkg.com/react-google-analytics/-/react-google-analytics-0.2.0.tgz#1a0b090a633051c9ad3ae05ccb4768174c2a0380"
   integrity sha1-GgsJCmMwUcmtOuBcy0doF0wqA4A=
 
+react-hook-mathjax@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-hook-mathjax/-/react-hook-mathjax-2.0.5.tgz#bd15e5cca38cd6c3a2564b68a380beaf9f6814cd"
+  integrity sha512-AtOWIhrVGpO5dVplEZWf8G8Z6kGyxpNH5Xc7MPIdOm/d/o+s13ZMta+YClsZpFGbhAccpoHyeZ59YJE1IelMLQ==
+
 react-intl@^2.2.3:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-2.9.0.tgz#c97c5d17d4718f1575fdbd5a769f96018a3b1843"
