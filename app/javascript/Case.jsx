@@ -132,9 +132,11 @@ class Case extends React.Component<{
   render () {
     const { kicker, basename, needsPretest, hasQuiz, editing } = this.props
     const mathJaxOptions = {
-      menuOptions: {
-        settings: {
-          zoom: 'Click',
+      options: {
+        menuOptions: {
+          settings: {
+            zoom: 'Click',
+          },
         },
       },
     }
