@@ -248,7 +248,7 @@ GEM
       i18n (>= 1.6, < 2)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.15.4)
+    ffi (1.16.3)
     flamegraph (0.9.5)
     foreman (0.87.0)
     formatador (0.2.5)
@@ -629,6 +629,7 @@ DEPENDENCIES
   email_reply_parser
   factory_bot_rails
   faker
+  ffi (~> 1.15, >= 1.15.5)
   flamegraph
   foreman
   friendly_id!
