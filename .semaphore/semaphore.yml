@@ -13,7 +13,7 @@ blocks:
             - checkout
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
             - sem-version ruby 2.7.6
-            - sudo apt-get -y install libmagickcore-dev libmagickwand-dev
+            - sudo apt-get -y install libmagickcore-dev libmagickwand-dev libffi-dev
             - bundle install --deployment -j 4 --path vendor/bundle
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
         - name: yarn
