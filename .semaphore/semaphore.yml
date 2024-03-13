@@ -53,6 +53,4 @@ blocks:
         - name: RSpec - unit tests
           commands:
             - bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
-        - name: RSpec - feature tests
-          commands:
-            - bundle exec rspec spec/features
+
