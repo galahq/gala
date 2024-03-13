@@ -581,9 +581,9 @@ en:
       alt_text_guidelines: >
         Image descriptions ensure that learners using screen
         readers are able to learn from your Edgenote. Describe using natural
-        language what is pictured and why it is important. Check out
-        [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en)
-        on Twitter for some practical examples.
+        language what is pictured and why it is important. See  
+        [this guide](https://docs.learngala.com/docs/authoring-accessibility#images)
+        for more information.
       attach_an_image: Attach an image
       attach_a_file: Attach a file
       choose_audio_file: Choose audio file...
@@ -591,8 +591,7 @@ en:
       choose_file: Choose file...
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
-        You can link to a website, or embed something directly in your Edgenote.
-        Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
+        You can link to a website, or embed something directly in your Edgenote. See [this guide](https://docs.learngala.com/docs/authoring-embedding-media#1-links) and [this list](https://docs.learngala.com/docs/authoring-embeds) of embeddable media sources for more information. 
       layout_label: Edgenote Layout
       layout_position_label: Position and width
       layout_elements_label: Preview elements
