@@ -17,6 +17,7 @@ import {
   entityTypeEquals,
   toggleEdgenote,
   addCitationEntity,
+  toggleMath,
   toggleRevealableEntity,
 } from './helpers'
 
@@ -41,6 +42,7 @@ type ActionName =
   | 'header'
   | 'addEdgenoteEntity'
   | 'addCitationEntity'
+  | 'addMathEntity'
   | 'addRevealableEntity'
 
 const ACTIONS: Action[] = [
@@ -103,6 +105,14 @@ const ACTIONS: Action[] = [
   },
 
   {
+    name: 'addMathEntity',
+    icon: 'function',
+    call: async (eS, props) => toggleMath(eS, props),
+    active: entityTypeEquals('MATH'),
+    spotlightKey: 'add_math',
+  },
+
+  {
     name: 'addRevealableEntity',
     icon: 'search-template',
     call: async (eS, props) => toggleRevealableEntity(eS, props),
@@ -111,8 +121,9 @@ const ACTIONS: Action[] = [
   },
 ]
 
-type Props = {
+export type Props = {
   actions: { [ActionName]: boolean },
+  cardId: string,
   displayToast: typeof displayToast,
   editorState: EditorState,
   getEdgenote: ?() => Promise<string>,

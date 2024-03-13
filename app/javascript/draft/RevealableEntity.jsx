@@ -35,14 +35,19 @@ function RevealableComponent (props) {
     }
   }
 
+  const conditionalProps = {}
+  if (!editInProgress) {
+    conditionalProps.tabIndex = 0
+  }
+
   return (
     // eslint-disable-next-line
     <a role="button"
-       tabIndex="0"
        aria-label="Reveal the answer"
        className={`pt-button pt-minimal c-revealable-entity${reveal ? '--reveal' : ''}`}
        onClick={onClick}
        onKeyDown={onKeyDown}
+       {...conditionalProps}
     >
       {children.map((child, index) =>
         <span key={index} aria-hidden={!reveal}>

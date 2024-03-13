@@ -9,11 +9,9 @@ import { RichUtils, Modifier, EditorState, SelectionState } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
 import { Intent } from '@blueprintjs/core'
 
-import type { IntlShape } from 'react-intl'
 import type { ContentState } from 'draft-js'
 import type { DraftEntityMutability } from 'draft-js/lib/DraftEntityMutability'
-
-import typeof { displayToast } from 'redux/actions'
+import type { Props as ToolbarProps } from 'draft/FormattingToolbar'
 
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
@@ -55,6 +53,7 @@ export function addEntity (
     selection,
     entityKey
   )
+
   const editorStateWithEntity = EditorState.push(
     editorState,
     contentStateWithEntityApplied,
@@ -150,11 +149,6 @@ export const entityTypeEquals = (type: string) => (
   )
 }
 
-type ToolbarProps = {
-  displayToast: displayToast,
-  getEdgenote: ?() => Promise<string>,
-  intl: IntlShape,
-}
 export async function toggleEdgenote (
   editorState: EditorState,
   { displayToast, getEdgenote, intl }: ToolbarProps
@@ -231,11 +225,57 @@ export function addCitationEntity (
   )
 }
 
-// TODO add i18n key and pass cardId to the entity after the MathEntity changes
-// are implemented
+export async function toggleMath (
+  editorState: EditorState,
+  { cardId, displayToast, intl }: ToolbarProps
+) {
+  if (entityTypeEquals('MATH')(editorState)) {
+    return removeSelectedEntity(editorState)
+  }
+
+  if (editorState.getSelection().isCollapsed()) {
+    displayToast({
+      icon: 'error',
+      intent: Intent.WARNING,
+      message: (
+        <span
+          className="pt-dark"
+          dangerouslySetInnerHTML={{
+            __html: intl.formatMessage({
+              id: 'cards.edit.mathInstructions',
+            }),
+          }}
+        />
+      ),
+    })
+    return editorState
+  }
+
+  displayToast({
+    icon: 'tick',
+    intent: Intent.SUCCESS,
+    message: (
+      <span
+        className="pt-dark"
+        dangerouslySetInnerHTML={{
+          __html: intl.formatMessage({
+            id: 'cards.edit.mathAdded',
+          }),
+        }}
+      />
+    ),
+  })
+
+  return addEntity({
+    type: 'MATH',
+    mutability: 'IMMUTABLE',
+    data: { cardId },
+  }, editorState)
+}
+
 export async function toggleRevealableEntity (
   editorState: EditorState,
-  { displayToast, intl }: ToolbarProps
+  { cardId, displayToast, intl }: ToolbarProps
 ) {
   if (entityTypeEquals('REVEALABLE')(editorState)) {
     return removeSelectedEntity(editorState)
@@ -262,6 +302,6 @@ export async function toggleRevealableEntity (
   return addEntity({
     type: 'REVEALABLE',
     mutability: 'MUTABLE',
-    data: { cardId: undefined },
+    data: { cardId },
   }, editorState)
 }

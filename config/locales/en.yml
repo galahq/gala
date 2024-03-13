@@ -195,6 +195,11 @@ en:
         Citation added. Click the <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
         edit.
+      math_added: Math added.
+      math_instructions: |
+        To add math to your case, select the text you want to turn into a math
+        equation, then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-function"></span> Math</span> button.
       make_revealable_selection: |
         Please select the phrase that you would like to make revealable,
         then click the <span class="pt-tag">
@@ -731,6 +736,7 @@ en:
     formatting:
       add_citation_entity: "Add citation here."
       add_edgenote_entity: "Add edgenote to selection."
+      add_math_entity: "Add math to selection."
       add_revealable_entity: "Add revealable to selection."
       blockquote: "Block style: Quotation."
       bold: "Inline style: Bold."
