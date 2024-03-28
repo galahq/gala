@@ -39,21 +39,25 @@ function RevealableComponent (props) {
   if (!editInProgress) {
     conditionalProps.tabIndex = 0
   }
+console.log(children[0].props.text)
+console.log(children)
+
+const hiddenText = children.map(child => child.props.text)
 
   return (
     // eslint-disable-next-line
     <a role="button"
-       aria-label="Reveal the answer"
        className={`pt-button pt-minimal c-revealable-entity${reveal ? '--reveal' : ''}`}
+       aria-label={"This text is hidden, click to reveal"}
        onClick={onClick}
        onKeyDown={onKeyDown}
        {...conditionalProps}
     >
-      {children.map((child, index) =>
-        <span key={index} aria-hidden={!reveal}>
+      <span aria-live="assertive" aria-hidden={!reveal}>{children.map((child, index) =>
+        <span key={index} >
           {React.cloneElement(child, { forceSelection: true })}
         </span>
-      )}
+      )}</span>
     </a>
   )
 }
