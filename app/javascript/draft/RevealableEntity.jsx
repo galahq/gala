@@ -42,8 +42,6 @@ function RevealableComponent (props) {
 console.log(children[0].props.text)
 console.log(children)
 
-const hiddenText = children.map(child => child.props.text)
-
   return (
     // eslint-disable-next-line
     <a role="button"
