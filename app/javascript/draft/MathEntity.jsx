@@ -96,6 +96,9 @@ const MathWrapper = styled.button`
   @media (max-width: 1440px) {
     max-width: 500px;
   }
+  @media (max-width: 800px) {
+    max-width: 200px;
+  }
   ${({ editing }) => editing && `
     &:hover {
       cursor: text;
