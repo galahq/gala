@@ -1,40 +1,29 @@
 name: ci
- 
+
 on:
   workflow_dispatch:
   pull_request:
- 
+
 jobs:
   ci:
     name: Build and run tests with containers
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
 
-      - name: Build Docker image
+      - name: Build Docker images
         run: |
-          DOCKER_BUILDKIT=1 docker build -t gala_web .
+          docker-compose build
 
-      - uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: false
-          cache-from: type=gha,scope=${{ github.repository }}
-          cache-to: type=gha,mode=max,scope=${{ github.repository }}
-          tags: gala_web
-
-      - name: Docker Compose up
+      - name: Run with Docker Compose
         run: docker-compose up -d
-
-      - name: List running Docker containers
-        run: docker ps
-
-      - name: Run Tests
-        run: |
-          docker exec -e RAILS_ENV=test gala_web_1 bundle exec rails db:test:prepare
-          docker exec -e RAILS_ENV=test gala_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
+      
+      - name: Run tests
+        run: docker exec -e RAILS_ENV=test gala_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
 
       - name: Docker Compose down
         run: docker-compose down
