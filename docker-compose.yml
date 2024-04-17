@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   web: &web
-    build: ./
+    build:
+      context: ./
+    image: gala_web
     stdin_open: true
     tty: true
     command: foreman start -f Procfile.dev
