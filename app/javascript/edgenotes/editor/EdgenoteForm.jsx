@@ -64,7 +64,7 @@ const EdgenoteForm = ({
           />
         )}
         {...commonProps}
-        onChange={(edgenote: Edgenote) => { onChange(edgenote)}
+        onChange={(edgenote: Edgenote) => { onChange(edgenote) }
         }
       />
 
@@ -83,7 +83,13 @@ const EdgenoteForm = ({
         name="attribution"
         label="activerecord.attributes.edgenote.attribution"
         render={props => <Input {...props} />}
-        helperText=<Markdown>put an attribution</Markdown>
+        helperText={
+          <Markdown
+            source={intl.formatMessage({
+              id: 'edgenotes.edit.attribution',
+            })}
+          />
+        }
         {...commonProps}
       />
 
@@ -114,7 +120,7 @@ const EdgenoteForm = ({
       <Field
         name="altText"
         label="activerecord.attributes.edgenote.altText"
-        intent={(contents.altText && !!contents.altText.length) ? '' : 'pt-intent-danger'}
+        intent={(contents.photoCredit && contents.photoCredit.length) ? Intent.NONE : Intent.DANGER}
         helperText={
           <Markdown
             source={intl.formatMessage({
@@ -130,7 +136,7 @@ const EdgenoteForm = ({
       <Field
         name="photoCredit"
         label="activerecord.attributes.edgenote.photoCredit"
-        intent={!!contents.photoCredit.length ? '' : 'pt-intent-danger'}
+        intent={(contents.photoCredit && contents.photoCredit.length) ? Intent.NONE : Intent.DANGER}
         render={props => <Input {...props} />}
         helperText={
           <Markdown
@@ -173,7 +179,7 @@ const EdgenoteForm = ({
             value={value || 'file-basic'}
             {...props}
             onChange={iconSlug =>
-              onChange(({ target: { value: iconSlug } }: $FlowIssue))
+              onChange(({ target: { value: iconSlug }}: $FlowIssue))
             }
           />
         )}
@@ -326,9 +332,8 @@ const shouldDisable = (
   iconSlug: !Attachment.truthy(contents.fileUrl),
 
   caption: false,
-  
-})
 
+})
 
 const Row = styled.div`
   display: flex;

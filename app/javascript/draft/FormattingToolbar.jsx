@@ -100,7 +100,7 @@ const ACTIONS: Action[] = [
     name: 'addCitationEntity',
     icon: 'bookmark',
     call: async (eS, props) => addCitationEntity(eS, props),
-    active: blockTypeEquals('unordered-list-item'),
+    active: entityTypeEquals('CITATION'),
     spotlightKey: 'add_citation',
   },
 
