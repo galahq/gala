@@ -15,6 +15,7 @@ jobs:
           docker compose run -e RAILS_ENV=test web bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
 
       - if: always()
+        name: Commit status
         uses: ouzi-dev/commit-status-updater@v1.1.0
         with:
           name: "Run tests"
