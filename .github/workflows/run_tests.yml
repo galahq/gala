@@ -1,0 +1,20 @@
+name: Run tests
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build docker containers and run tests
+        run: |
+          docker compose run -e RAILS_ENV=test web bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
+
+      - if: always()
+        uses: ouzi-dev/commit-status-updater@v1.1.0
+        with:
+          name: "Run tests"
+          status: "${{ job.status }}"
