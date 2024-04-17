@@ -1,0 +1,41 @@
+name: ci
+ 
+on:
+  workflow_dispatch:
+  pull_request:
+ 
+jobs:
+  ci:
+    name: Build and run tests with containers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: galahq/gala:latest
+
+      - name: Docker Compose up
+        run: docker-compose up -d
+
+      - name: List running Docker containers
+        run: docker ps
+
+      - name: Run Tests
+        run: docker exec -e RAILS_ENV=test app_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
+
+      - name: Docker Compose down
+        run: docker-compose down
+
+      - if: always()
+        uses: ouzi-dev/commit-status-updater@v1.1.0
+        with:
+          name: Test
+          status: "${{ job.status }}"
