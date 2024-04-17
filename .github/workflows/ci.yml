@@ -34,7 +34,9 @@ jobs:
         run: docker ps
 
       - name: Run Tests
-        run: docker exec -e RAILS_ENV=test gala_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
+        run: |
+          docker exec -e RAILS_ENV=test gala_web_1 bundle exec rails db:test:prepare
+          docker exec -e RAILS_ENV=test gala_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
 
       - name: Docker Compose down
         run: docker-compose down
