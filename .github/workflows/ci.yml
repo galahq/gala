@@ -20,7 +20,12 @@ jobs:
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: galahq/gala:latest
+          tags: gala_web
+
+      - name: Docker Compose pull and build
+        run: |
+            docker-compose pull --ignore-pull-failures
+            docker-compose build
 
       - name: Docker Compose up
         run: docker-compose up -d
@@ -29,7 +34,7 @@ jobs:
         run: docker ps
 
       - name: Run Tests
-        run: docker exec -e RAILS_ENV=test app_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
+        run: docker exec -e RAILS_ENV=test gala_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
 
       - name: Docker Compose down
         run: docker-compose down
