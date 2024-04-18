@@ -23,7 +23,7 @@ services:
       - /app/tmp/cache/
   worker:
     <<: *web
-    image: gala_web
+    image: gala_web:latest
     command: bundle exec sidekiq
     environment:
       <<: *env
