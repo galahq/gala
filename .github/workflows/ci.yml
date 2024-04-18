@@ -23,7 +23,9 @@ jobs:
         run: docker-compose up -d
       
       - name: Run tests
-        run: docker exec -e RAILS_ENV=test gala_web_1 bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
+        run: |
+          docker exec -e RAILS_ENV=test gala_web_1 bash -c "bundle exec rails db:test:prepare && \
+          bundle exec rspec --exclude-pattern=\"**/features/*_spec.rb\""
 
       - name: Docker Compose down
         run: docker-compose down
