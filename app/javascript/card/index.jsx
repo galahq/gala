@@ -173,17 +173,6 @@ function mergeProps (
 
   const onChange = editable ? onChangeContents : onMakeSelectionForComment
 
-  const addCommentThread = async () => {
-    if (!editable && !editorState.getSelection().isCollapsed()) {
-      const threadId: string = await createCommentThread(
-        ownProps.id,
-        editorState
-      )
-      const match = matchPath(location.pathname, commentThreadsOpen())
-      match && history.replace(`${match.url}/${threadId}`)
-    }
-  }
-
   // Flow fails to infer exactness when exact objects are spread
   // https://github.com/facebook/flow/issues/2405
   // $FlowFixMe
@@ -213,7 +202,16 @@ function mergeProps (
       return 'handled'
     },
 
-    addCommentThread,
+    addCommentThread: async () => {
+      if (!editable && !editorState.getSelection().isCollapsed()) {
+        const threadId: string = await createCommentThread(
+          ownProps.id,
+          editorState
+        )
+        const match = matchPath(location.pathname, commentThreadsOpen())
+        match && history.replace(`${match.url}/${threadId}`)
+      }
+    },
   }
 }
 
