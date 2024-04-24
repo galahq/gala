@@ -123,7 +123,6 @@ function mapDispatchToProps (
       dispatch(updateCardContents(id, eS))
     },
 
-    // TODO figure out how to fix the conditional in the commented out code
     onMakeSelectionForComment: (eS: EditorState) => {
       console.log("onMakeSelectionForComment called")
       const selection = eS.getSelection()
@@ -131,10 +130,9 @@ function mapDispatchToProps (
 
       let updatedSelectionState = selection
 
-      // // Check if the selection is collapsed or spans multiple blocks
+      // TODO do we actually need this?
+      //
       // if (selection.isCollapsed() || selection.getStartKey() !== selection.getEndKey()) {
-      //   // If collapsed, create an empty selection at the anchor key
-      //   // If spans multiple blocks, maintain the original selection
       //   updatedSelectionState = SelectionState.createEmpty(selection.getAnchorKey())
       // }
 
@@ -197,14 +195,6 @@ function mergeProps (
     onChange,
 
     handleKeyCommand: (command: string, editorState: EditorState) => {
-      // enter == split-block
-      // add a comment on enter key press
-      if (stateProps.theseCommentThreadsOpen && command === "split-block") {
-        console.log("addCommentThread called")
-        addCommentThread()
-        return 'handled'
-      }
-
       const newState =
         RichUtils.handleKeyCommand(editorState, command) ||
         handleCustomKeyBindings(editorState, command)
