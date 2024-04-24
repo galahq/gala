@@ -74,6 +74,7 @@ export function applySmartTypography (
 const GALA_KEYBINDING_SOFT_NEWLINE = 'gala-keybinding-soft-newline'
 
 export function keyBindingFn (e: SyntheticKeyboardEvent<*>): ?string {
+  console.log("keyBindingFn e.key = ", e.key)
   if (e.key === 'Enter' && e.shiftKey) {
     return GALA_KEYBINDING_SOFT_NEWLINE
   }
@@ -85,6 +86,7 @@ export function handleCustomKeyBindings (
   editorState: EditorState,
   command: string
 ) {
+  console.log("customKeyBindingCommand = ", command)
   switch (command) {
     case GALA_KEYBINDING_SOFT_NEWLINE:
       return addCharacterAtSelection(editorState)('\n')

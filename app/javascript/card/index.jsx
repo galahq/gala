@@ -123,15 +123,23 @@ function mapDispatchToProps (
       dispatch(updateCardContents(id, eS))
     },
 
+    // TODO figure out how to fix the conditional in the commented out code
     onMakeSelectionForComment: (eS: EditorState) => {
+      console.log("onMakeSelectionForComment called")
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-      const selectionState =
-        selection.isCollapsed() ||
-        selection.getStartKey() !== selection.getEndKey()
-          ? SelectionState.createEmpty(selection.getAnchorKey())
-          : selection
-      dispatch(applySelection(id, selectionState))
+
+      let updatedSelectionState = selection
+
+      // // Check if the selection is collapsed or spans multiple blocks
+      // if (selection.isCollapsed() || selection.getStartKey() !== selection.getEndKey()) {
+      //   // If collapsed, create an empty selection at the anchor key
+      //   // If spans multiple blocks, maintain the original selection
+      //   updatedSelectionState = SelectionState.createEmpty(selection.getAnchorKey())
+      // }
+
+      // Apply the updated selection state
+      dispatch(applySelection(id, updatedSelectionState))
     },
 
     createCommentThread: (cardId: string, eS: EditorState) =>
@@ -167,6 +175,17 @@ function mergeProps (
 
   const onChange = editable ? onChangeContents : onMakeSelectionForComment
 
+  const addCommentThread = async () => {
+    if (!editable && !editorState.getSelection().isCollapsed()) {
+      const threadId: string = await createCommentThread(
+        ownProps.id,
+        editorState
+      )
+      const match = matchPath(location.pathname, commentThreadsOpen())
+      match && history.replace(`${match.url}/${threadId}`)
+    }
+  }
+
   // Flow fails to infer exactness when exact objects are spread
   // https://github.com/facebook/flow/issues/2405
   // $FlowFixMe
@@ -178,6 +197,14 @@ function mergeProps (
     onChange,
 
     handleKeyCommand: (command: string, editorState: EditorState) => {
+      // enter == split-block
+      // add a comment on enter key press
+      if (stateProps.theseCommentThreadsOpen && command === "split-block") {
+        console.log("addCommentThread called")
+        addCommentThread()
+        return 'handled'
+      }
+
       const newState =
         RichUtils.handleKeyCommand(editorState, command) ||
         handleCustomKeyBindings(editorState, command)
@@ -196,16 +223,7 @@ function mergeProps (
       return 'handled'
     },
 
-    addCommentThread: async () => {
-      if (!editable && !editorState.getSelection().isCollapsed()) {
-        const threadId: string = await createCommentThread(
-          ownProps.id,
-          editorState
-        )
-        const match = matchPath(location.pathname, commentThreadsOpen())
-        match && history.replace(`${match.url}/${threadId}`)
-      }
-    },
+    addCommentThread,
   }
 }
 
