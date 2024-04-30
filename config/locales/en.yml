@@ -281,6 +281,16 @@ en:
     stats:
       show:
         case_stats: Case Stats
+        created: Created
+        published: "Published:"
+        last_updated: "Last Updated:"
+        deployments: "Deployments"
+        visits: Unique Visits
+        podcast_listens: Podcast Listens - %{podcast_title}
+        disclaimer: >
+          Totals count only users that were signed-in to Gala when viewing the case. 
+          'Unique Visits' counts readers who viewed a page beyond the overview page of your case.
+          Readers' browser settings may impact the accuracy of these counts.
     settings:
       edit:
         change_library: Change library
@@ -908,7 +918,7 @@ en:
   my_cases:
     index:
       case_stats: Case Stats
-      confirm_delete: >
+      confirm_delete: 
         Are you sure you wish to delete this case? This action cannot be undone.
       create_a_case: Create a Case
       delete_case: Delete case.
