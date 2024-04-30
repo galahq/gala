@@ -15,13 +15,13 @@
       %div
         %ul
           %li
-            %span.stat-label Created:
+            %span.stat-label= t '.created'
             = @case.created_at.strftime("%B %d, %Y")
           %li 
-            %span.stat-label Published:
+            %span.stat-label= t '.published'
             = @case.published_at.strftime("%B %d, %Y")
           %li
-            %span.stat-label Last Updated:
+            %span.stat-label= t '.last_updated'
             = @case.updated_at.strftime("%B %d, %Y")
           
         %table.admin__table.pt-html-table
@@ -34,35 +34,28 @@
               %th(scope="col")='All Time'
           %tbody
             %tr
-              %td Deployments
+              %td= t '.deployments'
               %td= @case.deployments.where(created_at: 7.days.ago..).size
               %td= @case.deployments.where(created_at: 6.months.ago..).size
               %td= @case.deployments.where(created_at: 12.months.ago..).size
               %td= @case.deployments.size
             %tr
-              %td Unique Visits to a CaseElement page (any page beyond the overview)
+              %td= t '.visits'
               %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 7.days.ago..).group(:user_id).count.keys.count
               %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 6.months.ago..).group(:user_id).count.keys.count
               %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 12.months.ago..).group(:user_id).count.keys.count
               %td= @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys.count
-            %tr
-              %td Case Overview Visits
-              %td= @case.events.interesting.where_properties(name: 'read_overview').where(time: 7.days.ago..).size
-              %td= @case.events.interesting.where_properties(name: 'read_overview').where(time: 6.months.ago..).size
-              %td= @case.events.interesting.where_properties(name: 'read_overview').where(time: 12.months.ago..).size
-              %td= @case.events.interesting.where_properties(name: 'read_overview').size
-
+          
             - @case.podcasts.each do |podcast|
               - podcast_listen_events = Ahoy::Event.interesting.where_properties(podcast_id: podcast.id)
               %tr
-                %td Podcast Listen - #{podcast.title}
+                %td= t ('.podcast_listens'), podcast_title: podcast.title
                 %td= podcast_listen_events.where(time: 7.days.ago..).size
                 %td= podcast_listen_events.where(time: 6.months.ago..).size
                 %td= podcast_listen_events.where(time: 12.months.ago..).size
                 %td= podcast_listen_events.size
 
-      .pt-callout.pt-icon-info-sign.form__callout
-        Totals only count users that were signed-in to Gala when viewing the case. Readers' browser settings may impact the accuracy of these counts.
+      .pt-callout.pt-icon-info-sign.form__callout= t '.disclaimer'
 
       %table
 
