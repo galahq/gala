@@ -124,20 +124,9 @@ function mapDispatchToProps (
     },
 
     onMakeSelectionForComment: (eS: EditorState) => {
-      console.log("onMakeSelectionForComment called")
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-
-      let updatedSelectionState = selection
-
-      // TODO do we actually need this?
-      //
-      // if (selection.isCollapsed() || selection.getStartKey() !== selection.getEndKey()) {
-      //   updatedSelectionState = SelectionState.createEmpty(selection.getAnchorKey())
-      // }
-
-      // Apply the updated selection state
-      dispatch(applySelection(id, updatedSelectionState))
+      dispatch(applySelection(id, selection))
     },
 
     createCommentThread: (cardId: string, eS: EditorState) =>

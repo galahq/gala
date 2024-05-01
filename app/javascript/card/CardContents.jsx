@@ -129,7 +129,7 @@ class CardContents extends React.Component<Props, State> {
       selectedCommentThread,
     })
 
-    function keyBindingA11YFn (e: SyntheticKeyboardEvent<*>) {
+    function keyBindingFnWithOverrides (e: SyntheticKeyboardEvent<*>) {
       if (theseCommentThreadsOpen && acceptingSelection && e.key === 'Enter') {
         addCommentThread()
         return
@@ -181,7 +181,7 @@ class CardContents extends React.Component<Props, State> {
                     readOnly={readOnly}
                     customStyleMap={styleMap}
                     editorState={editorState}
-                    keyBindingFn={keyBindingA11YFn}
+                    keyBindingFn={keyBindingFnWithOverrides}
                     handleKeyCommand={handleKeyCommand}
                     handleBeforeInput={handleBeforeInput}
                     onFocus={editable ? onBeginEditing : () => {}}
