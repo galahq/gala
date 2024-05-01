@@ -126,12 +126,7 @@ function mapDispatchToProps (
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-      const selectionState =
-        selection.isCollapsed() ||
-        selection.getStartKey() !== selection.getEndKey()
-          ? SelectionState.createEmpty(selection.getAnchorKey())
-          : selection
-      dispatch(applySelection(id, selectionState))
+      dispatch(applySelection(id, selection))
     },
 
     createCommentThread: (cardId: string, eS: EditorState) =>
