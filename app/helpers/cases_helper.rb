@@ -15,10 +15,15 @@ module CasesHelper
   def locales_to_sentence(locales = [])
     if locales.present?
       locales.map{|locale| 
-      Translation.language_name(locale)
-    }.sort.to_sentence
+      tr = Translation.language_name(locale)
+      if tr
+        "#{tr} (#{locale})"
+      else
+        ""
+      end
+    }&.compact&.to_sentence
     else
-      "Unknown"
+      ""
     end
 
   end
