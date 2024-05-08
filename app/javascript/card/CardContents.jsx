@@ -129,12 +129,12 @@ class CardContents extends React.Component<Props, State> {
       selectedCommentThread,
     })
 
-    function keyBindingFnWithOverrides (e: SyntheticKeyboardEvent<*>) {
+    function keyBindingFnWithOverrides (e: SyntheticKeyboardEvent<*>): ?string {
       if (theseCommentThreadsOpen && acceptingSelection && e.key === 'Enter') {
         addCommentThread()
         return
       }
-      keyBindingFn(e)
+      return keyBindingFn(e)
     }
 
     return (
