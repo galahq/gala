@@ -1,0 +1,37 @@
+name: ci
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  ci:
+    name: Build and run tests with containers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Build Docker images
+        run: |
+          docker-compose build
+
+      - name: Run with Docker Compose
+        run: docker-compose up -d
+      
+      - name: Run tests
+        run: |
+          docker exec -e RAILS_ENV=test gala_web_1 bash -c "bundle exec rails db:test:prepare && \
+          bundle exec rspec --exclude-pattern=\"**/features/*_spec.rb\""
+
+      - name: Docker Compose down
+        run: docker-compose down
+
+      - if: always()
+        uses: ouzi-dev/commit-status-updater@v1.1.0
+        with:
+          name: Test
+          status: "${{ job.status }}"

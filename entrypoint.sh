@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$RAILS_ENV" = "development" ] && [ -z "$SIDEKIQ_CONCURRENCY" ]; then
+if [[ "$RAILS_ENV" == "development" || "$RAILS_ENV" == "test" ]] && [[ -z "$SIDEKIQ_CONCURRENCY" ]]; then
   count=$(bundle exec rails runner "puts Case.count")
   if [ "${count//$'\n'/}" -eq 0 ]; then
     bundle exec rails db:environment:set RAILS_ENV=development
