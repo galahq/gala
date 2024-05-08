@@ -269,6 +269,7 @@ en:
         last_updated: "Last Updated:"
         deployments: "Deployments"
         visits: Unique Visits
+        locales: Locales
         podcast_listens: Podcast Listens - %{podcast_title}
         disclaimer: >
           Totals count only users that were signed-in to Gala when viewing the case. 

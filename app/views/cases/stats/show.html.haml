@@ -45,7 +45,12 @@
               %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 6.months.ago..).group(:user_id).count.keys.count
               %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 12.months.ago..).group(:user_id).count.keys.count
               %td= @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys.count
-          
+            %tr
+              %td= t '.locales'
+              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').where(time: 7.days.ago..).group(:user_id).count.keys).pluck(:locale))
+              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').where(time: 6.months.ago..).group(:user_id).count.keys).pluck(:locale))
+              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').where(time: 12.months.ago..).group(:user_id).count.keys).pluck(:locale))
+              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys).pluck(:locale))          
             - @case.podcasts.each do |podcast|
               - podcast_listen_events = Ahoy::Event.interesting.where_properties(podcast_id: podcast.id)
               %tr
