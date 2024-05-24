@@ -33,7 +33,7 @@ CREATE FUNCTION public.jsonb_path_to_tsvector(jsondata jsonb, path_elems text[],
   BEGIN
     SELECT INTO tsv
       coalesce(
-        tsvector_agg(to_tsvector(data #>> path_elems)),
+        public.tsvector_agg(to_tsvector(data #>> path_elems)),
         to_tsvector('')
       )
     FROM jsonb_array_elements(jsondata) AS data;
