@@ -126,7 +126,7 @@ class CaseElement extends React.Component<{
         })}
       >
         <Sidebar editing={editing} />
-        <main id="top" className={`main s-CaseElement__${model}`}>
+        <main id="top" tabIndex={-1} className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
             {Child ? (
               <Child id={id} deleteElement={deleteElement} />
@@ -166,7 +166,7 @@ type NextProps = ?{ title: string, position: string }
 
 const NextLink = ({ next }: { next: NextProps }) =>
   next ? (
-    <Link className="nextLink" to={`/${next.position}`}>
+    <Link className="nextLink" onClick={focusTop} to={`/${next.position}`}>
       <FormattedMessage id="cases.show.next" />
       {next.title}
     </Link>
@@ -192,3 +192,8 @@ const ConditionalNextLink = connect(
   },
   () => ({})
 )(NextLink)
+
+function focusTop (e) {
+  // document.getElementById('top').scrollIntoView({ block: 'start', behavior: 'smooth' })
+  document.getElementById('top').focus(focusVisible=false)
+}
