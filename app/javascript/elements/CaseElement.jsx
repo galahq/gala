@@ -157,7 +157,7 @@ class CaseElement extends React.Component<{
           'has-comments-open': commentsOpen,
         })}
       >
-        <Sidebar editing={editing} tabIndex={-1}/>
+        <Sidebar editing={editing} />
         <main id="top" ref={topRef} className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
             {Child ? (
