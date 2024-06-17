@@ -110,6 +110,38 @@ class CaseElement extends React.Component<{
 
     const models = { Page, Podcast }
     const Child = models[model]
+    const topRef = React.createRef()
+    const NextLink = ({ next }: { next: NextProps }) =>
+      next ? (
+        <Link className="nextLink" onClick={focusTop} to={`/${next.position}`}>
+          <FormattedMessage id="cases.show.next" />
+          {next.title}
+        </Link>
+      ) : (
+        <footer>
+          <h2>
+            <FormattedMessage id="cases.show.end" />
+          </h2>
+        </footer>
+      )
+
+    const ConditionalNextLink = connect(
+      (state: State, ownProps: { next: NextProps }) => {
+        const postTestNext = state.quiz.needsPosttest
+          ? {
+              title: 'Check your understanding',
+              position: 'quiz',
+            }
+          : null
+        return {
+          next: ownProps.next || postTestNext,
+        }
+      },
+      () => ({})
+    )(NextLink)
+    const focusTop = () => {
+      topRef.current.focus({focusVisible: false})
+    }
     const deleteElement = () => {
       this.props
         .deleteElement(url, position)
@@ -125,8 +157,8 @@ class CaseElement extends React.Component<{
           'has-comments-open': commentsOpen,
         })}
       >
-        <Sidebar editing={editing} />
-        <main id="top" tabIndex={-1} className={`main s-CaseElement__${model}`}>
+        <Sidebar editing={editing} tabIndex={-1}/>
+        <main id="top" ref={topRef} className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
             {Child ? (
               <Child id={id} deleteElement={deleteElement} />
@@ -164,36 +196,4 @@ export default connect(
 
 type NextProps = ?{ title: string, position: string }
 
-const NextLink = ({ next }: { next: NextProps }) =>
-  next ? (
-    <Link className="nextLink" onClick={focusTop} to={`/${next.position}`}>
-      <FormattedMessage id="cases.show.next" />
-      {next.title}
-    </Link>
-  ) : (
-    <footer>
-      <h2>
-        <FormattedMessage id="cases.show.end" />
-      </h2>
-    </footer>
-  )
 
-const ConditionalNextLink = connect(
-  (state: State, ownProps: { next: NextProps }) => {
-    const postTestNext = state.quiz.needsPosttest
-      ? {
-          title: 'Check your understanding',
-          position: 'quiz',
-        }
-      : null
-    return {
-      next: ownProps.next || postTestNext,
-    }
-  },
-  () => ({})
-)(NextLink)
-
-function focusTop (e) {
-  // document.getElementById('top').scrollIntoView({ block: 'start', behavior: 'smooth' })
-  document.getElementById('top').focus(focusVisible=false)
-}
