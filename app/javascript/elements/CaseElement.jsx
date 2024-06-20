@@ -76,6 +76,7 @@ class CaseElement extends React.Component<{
   constructor (props) {
     super(props)
     this._scrollToTop = () => window.scrollTo(0, 0)
+    this.topRef = React.createRef()
   }
 
   componentDidMount () {
@@ -87,7 +88,6 @@ class CaseElement extends React.Component<{
       this._scrollToTop()
     }
   }
-
   render () {
     const {
       kicker,
@@ -110,10 +110,9 @@ class CaseElement extends React.Component<{
 
     const models = { Page, Podcast }
     const Child = models[model]
-    const topRef = React.createRef()
     const NextLink = ({ next }: { next: NextProps }) =>
       next ? (
-        <Link className="nextLink" onClick={focusTop} to={`/${next.position}`}>
+        <Link className="nextLink" onClick={focusTop} tabIndex={0} to={`/${next.position}`}>
           <FormattedMessage id="cases.show.next" />
           {next.title}
         </Link>
@@ -139,8 +138,9 @@ class CaseElement extends React.Component<{
       },
       () => ({})
     )(NextLink)
+
     const focusTop = () => {
-      topRef.current.focus({focusVisible: false})
+      this.topRef.current && this.topRef.current.focus()
     }
     const deleteElement = () => {
       this.props
@@ -158,7 +158,7 @@ class CaseElement extends React.Component<{
         })}
       >
         <Sidebar editing={editing} />
-        <main id="top" ref={topRef} className={`main s-CaseElement__${model}`}>
+        <main id="top" ref={this.topRef} tabIndex={-1} className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
             {Child ? (
               <Child id={id} deleteElement={deleteElement} />

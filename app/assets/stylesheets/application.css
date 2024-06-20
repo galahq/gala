@@ -15,3 +15,7 @@
  *= require_self
  *= stub print
  */
+
+ .main:focus:not(.focus-visible) {
+    outline: none; 
+  }
