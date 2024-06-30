@@ -31,7 +31,8 @@ const Sidebar = () => {
           <MyLibrary />
         </div>
       )}
-      <Blog/>
+      <hr></hr>
+      <Blog />
     </Container>
   )
 }
