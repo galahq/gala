@@ -16,11 +16,9 @@ export default function Blog() {
   }, [])
 
   function handle_feed(doc) {
-    console.log('handle_feed called')
     for (let i = 0; i < doc.querySelectorAll('item').length; i++) {
       let item = doc.querySelectorAll('item')[i]
       let title = item.querySelector('title').textContent
-      console.log(`title: ${title}, ${i}`)
       let link = item.querySelector('link').textContent
       let pubDate = truncate(item.querySelector('pubDate').textContent, 4)
       let description = item
