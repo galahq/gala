@@ -1,0 +1,40 @@
+@import _globals
+@import _flexbox
+@import _columns
+
+.blog
+    > h3
+        color: $white
+        margin-right: 2em
+    > p 
+        text-align: center
+        > a
+            width: 100%
+            color: #D0E6FB
+ue
+.feedElement
+    display: flex
+    flex-direction: column
+    color: $white
+    outline-style: solid
+    outline-width: 1px
+    outline-color: $darkBlue
+    margin-bottom: 1em
+    border-radius: 2px
+    padding: 1em
+
+.dateAndLink
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    color: #F1F1F1
+    > .date
+        flex-direction: left
+    > .link > a
+        flex-direction: right
+        color: #F1F1F1
+
+.moreLink
+    background: $darkBlue
+    padding: 3px
+    border-radius: 2px

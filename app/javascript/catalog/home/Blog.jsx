@@ -25,7 +25,7 @@ export default function Blog() {
       let pubDate = truncate(item.querySelector('pubDate').textContent, 4)
       let description = item
         .querySelector('description')
-        .textContent.slice(0, 75)
+        .textContent.slice(0, 100)
       setFeed(feed => [...feed, { title, link, pubDate, description }])
     }
   }
@@ -37,60 +37,51 @@ export default function Blog() {
       .join(' ')
   }
 
-  const blog_styles = {
-    display: 'flex',
-    flexDirection: 'column',
-    color: 'white',
+  function FeedElement({ title, link, pubDate, description }) {
+    return (
+      <div className='feedElement'>
+        <b>{title}</b>
+        
+        <p>  {description}...</p> 
+        <p>
+          <small
+            className='dateAndLink'
+          >
+            <span className='date'>{pubDate}</span>
+            <span className='link'>
+              <a href={link}>Read more</a>
+            </span>
+          </small>
+        </p>
+        </div>
+    )
   }
   function RenderedFeed({ feed }) {
     return feed.map(
       (item, index) =>
         index < 4 && (
-          <div style={blog_styles} key={index}>
-            <b>{item.title}</b>
-            <p>
-              <small
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginRight: '2em',
-                  color: '#F1F1F1',
-                }}
-              >
-                <div style={{ flexDirection: 'left' }}>{item.pubDate}</div>
-                <div style={{ flexDirection: 'right' }}>
-                  <a href={item.link} style={{ color: 'white' }}>Read more</a>
-                </div>
-              </small>
-            </p>
-            <p style={{ color: '#FFFFF', paddingBottom: '1em' }}>
-              {item.description}...
-            </p>
-          </div>
+          <FeedElement
+            key={index}
+            title={item.title}
+            link={item.link}
+            pubDate={item.pubDate}
+            description={item.description}
+          />
         )
     )
   }
 
   return (
     <>
-      <div style={blog_styles}>
-        <h3 style={{ color: 'white' }}>Recent Updates</h3>
-        <RenderedFeed feed={feed} />
+      <div className='blog'>
+        <h3>Recent Updates</h3>
+        <RenderedFeed className='feed' feed={feed} />
         <p>
           <a
             href="https://docs.learngala.com/blog"
-            style={{
-              margin: 'auto',
-              color: 'white',
-              outlineStyle: 'solid',
-              outlineWidth: '1px',
-              outlineColor: 'white',
-              outlineOffset: '2px',
-            }}
-          ><div style={{ textAlign: 'center'}}>
+            className='moreLink'
+          >
             See all
-          </div>
           </a>
         </p>
       </div>
