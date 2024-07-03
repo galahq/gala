@@ -7,13 +7,13 @@ import InfoComponent2 from 'catalog/home/InfoComponent2'
 export default function InfoPanel() {
     return (
         <div className="infoPanel">
-            <div className='infoBox'>
+            <div className='infoBox' id='infoBoxLeft'>
             <InfoComponent1 />
             </div>
-            <div className='infoBox' id='middle'>
+            <div className='infoBox' id='infoBoxMiddle'>
             <InfoComponent2 />
             </div>
-            <div className='infoBox'>
+            <div className='infoBox' id='infoBoxRight'>
             <Blog />
             </div>
         </div>

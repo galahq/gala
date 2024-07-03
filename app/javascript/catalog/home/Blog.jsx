@@ -23,7 +23,7 @@ export default function Blog() {
       setFeed(feed => [...feed, {title, link}])
     }
   }
-    function FeedElement({ title, link, pubDate, description }) {
+    function FeedElement({ title, link}) {
     return (
       <div>
         <a
@@ -58,14 +58,15 @@ export default function Blog() {
       <div className='blog'>
         <h4>Recent Updates</h4>
         <RenderedFeed className='feed' feed={feed} />
-        <p>
-          <a
+        <div class='moreLink'>
+          <a 
             href="https://docs.learngala.com/blog"
-            className='moreLink'
           >
+        <p style={{textAlign: 'center'}}>
             See all
-          </a>
         </p>
+          </a>
+          </div>
       </div>
     </>
   )

@@ -10,17 +10,21 @@
     column-gap: 1.75em
     padding-bottom: 1em
 .infoBox
-    padding: 2px
+    padding: 4px
     flex: 1 1 0
     min-width: 0
-    outline:
-        style: solid
-        color: $darkBlue
-        width: 2px
     border-radius: 2px
-    text-overflow: ellipsis
+    text-overflow: ellipsis  // Not working
     overflow: hidden
     white-space: nowrap
+    color: $white
+
+    &#infoBoxRight
+        background: #686000
+    &#infoBoxLeft
+        background: #7c5f41
+    &#infoBoxMiddle
+        background: #3b4569
 .blog
     > h3
         color: $white
@@ -30,19 +34,12 @@
         > a
             width: 100%
             color: #D0E6FB
-.feedElement
-    display: flex
-    flex-direction: column
+.feedLink
     color: $white
-    outline-style: solid
-    outline-width: 1px
-    outline-color: $darkBlue
-    margin-bottom: 1em
-    border-radius: 2px
-    padding: 1em
 
 
 .moreLink
     background: $darkBlue
-    padding: 3px
+    margin: 1em
     border-radius: 2px
+    width: 100%
