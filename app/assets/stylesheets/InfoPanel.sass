@@ -1,0 +1,48 @@
+@import _globals
+@import _flexbox
+@import _columns
+
+.infoPanel
+    display: flex
+    flex-direction: row
+    min-width: 0
+    justify-content: space-between
+    column-gap: 1.75em
+    padding-bottom: 1em
+.infoBox
+    padding: 2px
+    flex: 1 1 0
+    min-width: 0
+    outline:
+        style: solid
+        color: $darkBlue
+        width: 2px
+    border-radius: 2px
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
+.blog
+    > h3
+        color: $white
+        margin-right: 2em
+    > p 
+        text-align: center
+        > a
+            width: 100%
+            color: #D0E6FB
+.feedElement
+    display: flex
+    flex-direction: column
+    color: $white
+    outline-style: solid
+    outline-width: 1px
+    outline-color: $darkBlue
+    margin-bottom: 1em
+    border-radius: 2px
+    padding: 1em
+
+
+.moreLink
+    background: $darkBlue
+    padding: 3px
+    border-radius: 2px
