@@ -2,6 +2,25 @@
 @import _flexbox
 @import _columns
 
+.infoPanel
+    display: flex
+    flex-direction: row
+    min-width: 0
+    justify-content: space-between
+    column-gap: 1.75em
+    padding-bottom: 1em
+.infoBox
+    padding: 2px
+    flex: 1 1 0
+    min-width: 0
+    outline:
+        style: solid
+        color: $darkBlue
+        width: 2px
+    border-radius: 2px
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
 .blog
     > h3
         color: $white
@@ -11,7 +30,6 @@
         > a
             width: 100%
             color: #D0E6FB
-ue
 .feedElement
     display: flex
     flex-direction: column
@@ -23,16 +41,6 @@ ue
     border-radius: 2px
     padding: 1em
 
-.dateAndLink
-    display: flex
-    flex-direction: row
-    justify-content: space-between
-    color: #F1F1F1
-    > .date
-        flex-direction: left
-    > .link > a
-        flex-direction: right
-        color: #F1F1F1
 
 .moreLink
     background: $darkBlue

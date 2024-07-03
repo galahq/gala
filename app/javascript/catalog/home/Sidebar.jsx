@@ -9,7 +9,6 @@ import styled from 'styled-components'
 import { ReaderDataContext } from 'catalog/readerData'
 import { Element, ElementImage } from 'catalog/shared'
 import MyLibrary from 'catalog/home/MyLibrary'
-import Blog from 'catalog/home/Blog'
 import SignInForm from 'utility/SignInForm'
 import { identiconStyle } from 'shared/Identicon'
 
@@ -32,7 +31,6 @@ const Sidebar = () => {
         </div>
       )}
       <hr></hr>
-      <Blog />
     </Container>
   )
 }

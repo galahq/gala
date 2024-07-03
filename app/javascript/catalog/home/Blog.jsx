@@ -20,59 +20,43 @@ export default function Blog() {
       let item = doc.querySelectorAll('item')[i]
       let title = item.querySelector('title').textContent
       let link = item.querySelector('link').textContent
-      let pubDate = truncate(item.querySelector('pubDate').textContent, 4)
-      let description = item
-        .querySelector('description')
-        .textContent.slice(0, 100)
-      setFeed(feed => [...feed, { title, link, pubDate, description }])
+      setFeed(feed => [...feed, {title, link}])
     }
   }
-  function truncate(str, no_words) {
-    // Split the input string into an array of words using the space character (" ") as the delimiter, then extract a portion of the array containing the specified number of words using the splice method, and finally join the selected words back into a single string with spaces between them
-    return str
-      .split(' ')
-      .splice(0, no_words)
-      .join(' ')
-  }
-
-  function FeedElement({ title, link, pubDate, description }) {
+    function FeedElement({ title, link, pubDate, description }) {
     return (
-      <div className='feedElement'>
-        <b>{title}</b>
-        
-        <p>  {description}...</p> 
-        <p>
-          <small
-            className='dateAndLink'
-          >
-            <span className='date'>{pubDate}</span>
-            <span className='link'>
-              <a href={link}>Read more</a>
-            </span>
-          </small>
-        </p>
-        </div>
+      <div>
+        <a
+          href={link}
+          className='feedLink'
+        >
+          {title}
+        </a>
+      </div>
     )
   }
   function RenderedFeed({ feed }) {
-    return feed.map(
+    return (<>
+    <ul>
+    {feed.map(
       (item, index) =>
         index < 4 && (
+          <li key={index}>
           <FeedElement
             key={index}
             title={item.title}
             link={item.link}
-            pubDate={item.pubDate}
-            description={item.description}
           />
-        )
-    )
+          </li>
+    ))}
+    </ul>
+    </>)
   }
 
   return (
     <>
       <div className='blog'>
-        <h3>Recent Updates</h3>
+        <h4>Recent Updates</h4>
         <RenderedFeed className='feed' feed={feed} />
         <p>
           <a
