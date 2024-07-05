@@ -1,21 +1,44 @@
 import * as React from 'react'
 import Blog from 'catalog/home/Blog'
-import InfoComponent1 from 'catalog/home/InfoComponent1'
-import InfoComponent2 from 'catalog/home/InfoComponent2'
+import { CatalogSection, SectionTitle } from 'catalog/shared'
+import styled from 'styled-components'
 
 
 export default function InfoPanel() {
     return (
-        <div className="infoPanel">
-            <div className='infoBox' id='infoBoxLeft'>
-            <InfoComponent1 />
-            </div>
-            <div className='infoBox' id='infoBoxMiddle'>
-            <InfoComponent2 />
-            </div>
-            <div className='infoBox' id='infoBoxRight'>
-            <Blog />
-            </div>
-        </div>
+        <PanelContainer>
+                <PanelSection solid>
+                    <SectionTitle>Get Started</SectionTitle>
+                    <Blog />
+                </PanelSection>
+                <PanelSection solid>
+                    <SectionTitle>Community</SectionTitle>
+                    <Blog />
+                </PanelSection>
+                <PanelSection solid>
+                    <SectionTitle>News & Updates</SectionTitle>
+                    <Blog />
+                </PanelSection>
+        </PanelContainer> 
     )
 }
+
+const PanelContainer = styled.div`
+    display: grid;
+    grid: auto-flow / 1fr 1fr 1fr;
+    grid-gap: .5rem;
+`
+
+const PanelSection= styled(CatalogSection)`
+    padding: .5rem;
+    
+    a {
+        color: white;
+       
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+`
+

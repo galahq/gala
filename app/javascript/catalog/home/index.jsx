@@ -45,7 +45,7 @@ function Home() {
           <Announcements />
 
           <Main>
-          <InfoPanel/>
+            <InfoPanel/>
             <Features selecting={selecting} />
 
             <Libraries />
