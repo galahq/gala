@@ -28,19 +28,23 @@ export default function Blog() {
     
   return (
     <>
-      <div className='blog'>
-        <h2>Recent Updates</h2>
-        <RenderedFeed className='feed' feed={feed} />
-        <div class='moreLink'>
+      {(feed.length > 0)  ? 
+      (<div>
+        <RenderedFeed feed={feed} />
+        <div>
           <a 
             href="https://docs.learngala.com/blog"
           >
-        <p style={{textAlign: 'center'}}>
-            See all
+        <p style={{textAlign: 'right'}}>
+            See all {" ›"}
         </p>
           </a>
           </div>
-      </div>
+      </div>)
+      :
+      <div>
+        <a href='https://about.learngala.com/blog'>Find Gala news and updates here.</a>
+      </div> }
     </>
   )
 }
@@ -50,7 +54,6 @@ function FeedElement({ title, link}) {
     <div>
       <a
         href={link}
-        className='feedLink'
       >
         {title}
       </a>
