@@ -30,15 +30,19 @@ const PanelContainer = styled.div`
 `
 
 const PanelSection= styled(CatalogSection)`
-    padding: .5rem;
+    padding: 1rem;
+    background-color: rgba(66,158,74,.25);
     
     a {
         color: white;
-       
     }
 
     a:hover {
         text-decoration: underline;
+    }
+
+    li {
+        margin-bottom: .3rem;
     }
 `
 
