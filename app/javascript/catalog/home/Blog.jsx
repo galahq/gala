@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import { FormattedMessage } from 'react-intl'
 
 export default function Blog() {
   const [feed, setFeed] = useState([])
@@ -36,7 +37,7 @@ export default function Blog() {
             href="https://docs.learngala.com/blog"
           >
         <p style={{textAlign: 'right'}}>
-            See all {" ›"}
+        <FormattedMessage id="catalog.infoPanel.blogPanel.seeAll"/> {" ›"}
         </p>
           </a>
           </div>

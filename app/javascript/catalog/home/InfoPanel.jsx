@@ -2,21 +2,22 @@ import * as React from 'react'
 import Blog from 'catalog/home/Blog'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import styled from 'styled-components'
+import { FormattedMessage } from 'react-intl'
 
 
 export default function InfoPanel() {
     return (
         <PanelContainer>
                 <PanelSection solid>
-                    <SectionTitle>Get Started</SectionTitle>
+                    <SectionTitle><FormattedMessage id="catalog.infoPanel.getStarted"/></SectionTitle>
                     <Blog />
                 </PanelSection>
                 <PanelSection solid>
-                    <SectionTitle>Community</SectionTitle>
+                    <SectionTitle><FormattedMessage id="catalog.infoPanel.community"/></SectionTitle>
                     <Blog />
                 </PanelSection>
                 <PanelSection solid>
-                    <SectionTitle>News & Updates</SectionTitle>
+                    <SectionTitle><FormattedMessage id="catalog.infoPanel.newsAndUpdates"/></SectionTitle>
                     <Blog />
                 </PanelSection>
         </PanelContainer> 
@@ -43,6 +44,7 @@ const PanelSection= styled(CatalogSection)`
 
     li {
         margin-bottom: .3rem;
+        color: white;
     }
 `
 
