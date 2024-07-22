@@ -27,7 +27,13 @@ export default function InfoPanel() {
 const PanelContainer = styled.div`
     display: grid;
     grid: auto-flow / 1fr 1fr 1fr;
-    grid-gap: .5rem;
+    grid-gap: 1em 1.5em;
+
+    @media (max-width: 1000px) {
+        grid-template-columns: 1fr;
+        grid-gap: 0.5em; 
+    }
+
 `
 
 const PanelSection= styled(CatalogSection)`
