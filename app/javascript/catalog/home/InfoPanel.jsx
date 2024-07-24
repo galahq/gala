@@ -28,10 +28,11 @@ const PanelContainer = styled.div`
     display: grid;
     grid: auto-flow / 1fr 1fr 1fr;
     grid-gap: 1em 1.5em;
+    margin-bottom: 1em;
 
     @media (max-width: 1000px) {
         grid-template-columns: 1fr;
-        grid-gap: 0.5em; 
+
     }
 
 `
@@ -39,6 +40,7 @@ const PanelContainer = styled.div`
 const PanelSection= styled(CatalogSection)`
     padding: 1rem;
     background-color: rgba(66,158,74,.25);
+    margin: 0;
     
     a {
         color: white;
