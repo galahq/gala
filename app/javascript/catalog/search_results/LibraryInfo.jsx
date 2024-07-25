@@ -34,8 +34,15 @@ function LibraryInfo({ history, slug }: Props) {
   }, [slug])
 
   if (library == null) return null
-
   const { name, description, url } = library
+
+  const parsedDescription = parseDescription(description);
+  
+  function parseDescription(description) {  
+    if (description==null) return ""
+    else if (description.includes('\n')) return description.split('\n').map((paragraph)=><p>{paragraph}</p>)
+    else return description;
+}
 
   return (
     <DocumentTitle title={`${name} — Gala`}>
@@ -44,7 +51,7 @@ function LibraryInfo({ history, slug }: Props) {
           <LibraryLogo library={library} />
         </RightFloatLogoContainer>
         <SectionTitle>{name}</SectionTitle>
-        <Description>{description}</Description>
+        <Description>{parsedDescription}</Description>
         {url && (
           <LearnMore href={url}>
             <FormattedMessage id="catalog.learnMore" /> ›
@@ -65,7 +72,7 @@ const RightFloatLogoContainer = styled.div`
   margin: -10px 20px 10px 0;
   pointer-events: none;
 `
-const Description = styled.p`
+const Description = styled.div`
   color: #ebeae4;
   margin-bottom: 0.5em;
 `
