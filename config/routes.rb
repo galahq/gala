@@ -158,7 +158,7 @@ Rails.application.routes.draw do
     resource :link_expansion, module: 'edgenotes', only: %i[show update]
   end
 
-  resources :editorships, only: %i[destroy]
+  resources :editorships, only: %i[index destroy]
 
   resources :enrollments, only: %i[index]
 

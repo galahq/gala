@@ -8,6 +8,13 @@ class EditorshipsController < ApplicationController
 
   layout 'admin'
 
+  def index
+    @editorships = current_reader.editorships.includes(:case)
+    editorships_data = @editorships.map { |editorship| { editorship: editorship, case_slug: editorship.case.slug } }
+    render json: editorships_data
+  end
+
+
   # @param [GET] /cases/slug/editorships/new
   def new
     authorize @case, :update?
