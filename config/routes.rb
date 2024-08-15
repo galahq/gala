@@ -159,6 +159,7 @@ Rails.application.routes.draw do
   end
 
   resources :editorships, only: %i[index destroy]
+  get 'editorships/recent', to: 'editorships#recent'
 
   resources :enrollments, only: %i[index]
 

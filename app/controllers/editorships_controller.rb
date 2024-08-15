@@ -14,6 +14,15 @@ class EditorshipsController < ApplicationController
     render json: editorships_data
   end
 
+  # [GET] /editorships/recent
+  # Returns the most recently edited CASE, not editorship
+  def recent 
+    @editorships = current_reader.editorships.includes(:case)
+    cases = @editorships.map { |editorship| editorship.case if editorship.case.published_at == nil}
+    recents = cases.sort_by(&:updated_at).reverse.last(3)
+    render json: {cases: recents} if recents
+  end
+
 
   # @param [GET] /cases/slug/editorships/new
   def new

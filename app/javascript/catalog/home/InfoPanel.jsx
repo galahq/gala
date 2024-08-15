@@ -1,5 +1,6 @@
 import * as React from 'react'
 import Blog from 'catalog/home/Blog'
+import GetStarted from 'catalog/home/GetStarted'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
@@ -10,7 +11,7 @@ export default function InfoPanel() {
         <PanelContainer>
                 <PanelSection solid>
                     <SectionTitle><FormattedMessage id="catalog.infoPanel.getStarted"/></SectionTitle>
-                    <Blog />
+                    <GetStarted />
                 </PanelSection>
                 <PanelSection solid>
                     <SectionTitle><FormattedMessage id="catalog.infoPanel.community"/></SectionTitle>

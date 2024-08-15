@@ -320,6 +320,11 @@ en:
     inclusive_community: Teach and Share
     info_panel:
       get_started: Get Started
+      text:
+        new_case: Create a new case
+        read_docs: Read the docs
+        jump_in: 'Jump back in! Continue editing:'
+        no_current: 'You have no current cases.'
       community: Community
       news_and_updates: News & Updates
       blog: blog
