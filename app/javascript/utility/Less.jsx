@@ -105,7 +105,7 @@ const InnerContainer = styled.div`
     bottom: 0px;
     height: ${({ open }: InnerContainerProps) => (open ? '0' : '30%')};
     width: 100%;
-    background: linear-gradient(rgba(128, 128, 128, 0), rgba(128, 128, 128, 1));
+    background: linear-gradient(rgba(140, 140, 140, 0), rgba(140, 140, 140, 1));
     transition: background 0.2s ease-out;
   }
 `
