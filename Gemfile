@@ -15,7 +15,7 @@ gem 'image_processing'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.12.2'
 gem 'rack-canonical-host'
-gem 'redis', '~> 3.0'
+gem 'redis', '~> 5.0'
 gem 'sidekiq'
 
 # Models
