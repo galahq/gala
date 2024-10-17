@@ -3,8 +3,9 @@
 namespace :test do
   desc 'Run RSpec without feature specs'
   task unit: :environment do
+    env = "RAILS_ENV=test"
     system(
-      "RAILS_ENV=test bundle exec rspec --exclude-pattern='**/features/*_spec.rb'"
+      "#{env} bundle exec rspec --exclude-pattern='**/features/*_spec.rb'"
     )
   end
 end
