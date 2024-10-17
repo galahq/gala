@@ -68,7 +68,6 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
 
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
