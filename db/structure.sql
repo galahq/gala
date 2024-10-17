@@ -44,16 +44,16 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 CREATE FUNCTION public.jsonb_path_to_tsvector(jsondata jsonb, path_elems text[], OUT tsv tsvector) RETURNS tsvector
     LANGUAGE plpgsql IMMUTABLE
     AS $$
-      BEGIN
-        SELECT INTO tsv
-          COALESCE(
-            public.tsvector_agg(to_tsvector(data #>> path_elems)),
-            to_tsvector('')
-          )
-        FROM jsonb_array_elements(jsondata) AS data;
-        RETURN;
-      END;
-      $$;
+        BEGIN
+          SELECT INTO tsv
+            COALESCE(
+              public.tsvector_agg(to_tsvector(data #>> path_elems)),
+              to_tsvector('')
+            )
+          FROM jsonb_array_elements(jsondata) AS data;
+          RETURN;
+        END;
+        $$;
 
 
 --
@@ -68,7 +68,7 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
