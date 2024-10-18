@@ -28,7 +28,7 @@ services:
       SIDEKIQ_CONCURRENCY: 1
     ports: []
   db:
-    image: postgres:13
+    image: postgres:16
     environment:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine

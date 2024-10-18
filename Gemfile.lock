@@ -411,8 +411,6 @@ GEM
       rack (>= 1.0.0, < 3)
     rack-mini-profiler (2.0.1)
       rack (>= 1.2.0)
-    rack-protection (2.0.8.1)
-      rack
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -449,7 +447,10 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.5.0)
-    redis (3.3.5)
+    redis (5.3.0)
+      redis-client (>= 0.22.0)
+    redis-client (0.22.2)
+      connection_pool
     regexp_parser (2.4.0)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -528,11 +529,10 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (4.3.0)
       activesupport (>= 4.2.0)
-    sidekiq (5.2.8)
-      connection_pool (~> 2.2, >= 2.2.2)
-      rack (< 2.1.0)
-      rack-protection (>= 1.5.0)
-      redis (>= 3.3.5, < 5)
+    sidekiq (6.5.5)
+      connection_pool (>= 2.2.2)
+      rack (~> 2.0)
+      redis (>= 4.5.0)
     skylight (4.2.3)
       skylight-core (= 4.2.3)
     skylight-core (4.2.3)
@@ -668,7 +668,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (= 6.0.2.2)
   redcarpet
-  redis (~> 3.0)
+  redis (~> 5.0)
   rolify
   rspec
   rspec-composable_json_matchers

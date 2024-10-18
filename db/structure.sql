@@ -17,10 +17,24 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 
 
 --
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track planning and execution statistics of all SQL statements executed';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
@@ -30,16 +44,16 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 CREATE FUNCTION public.jsonb_path_to_tsvector(jsondata jsonb, path_elems text[], OUT tsv tsvector) RETURNS tsvector
     LANGUAGE plpgsql IMMUTABLE
     AS $$
-  BEGIN
-    SELECT INTO tsv
-      coalesce(
-        tsvector_agg(to_tsvector(data #>> path_elems)),
-        to_tsvector('')
-      )
-    FROM jsonb_array_elements(jsondata) AS data;
-    RETURN;
-  END;
-$$;
+        BEGIN
+          SELECT INTO tsv
+            COALESCE(
+              public.tsvector_agg(to_tsvector(data #>> path_elems)),
+              to_tsvector('')
+            )
+          FROM jsonb_array_elements(jsondata) AS data;
+          RETURN;
+        END;
+        $$;
 
 
 --
@@ -54,7 +68,6 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
 
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
@@ -3594,6 +3607,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230412003331'),
 ('20230830042848'),
 ('20230915154708'),
-('20231011161246');
+('20231011161246'),
+('20241011080359');
 
 
