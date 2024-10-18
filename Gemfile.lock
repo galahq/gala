@@ -248,7 +248,7 @@ GEM
       i18n (>= 1.6, < 2)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.16.3)
+    ffi (1.15.4)
     flamegraph (0.9.5)
     foreman (0.87.0)
     formatador (0.2.5)
@@ -411,6 +411,8 @@ GEM
       rack (>= 1.0.0, < 3)
     rack-mini-profiler (2.0.1)
       rack (>= 1.2.0)
+    rack-protection (2.0.8.1)
+      rack
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -447,10 +449,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.5.0)
-    redis (5.3.0)
-      redis-client (>= 0.22.0)
-    redis-client (0.22.2)
-      connection_pool
+    redis (3.3.5)
     regexp_parser (2.4.0)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -500,7 +499,7 @@ GEM
       parser (>= 3.1.1.0)
     rubocop-faker (1.0.0)
       rubocop (>= 0.74)
-    ruby-oembed (0.16.1)
+    ruby-oembed (0.12.0)
     ruby-progressbar (1.11.0)
     ruby-vips (2.0.17)
       ffi (~> 1.9)
@@ -529,10 +528,11 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (4.3.0)
       activesupport (>= 4.2.0)
-    sidekiq (6.5.5)
-      connection_pool (>= 2.2.2)
-      rack (~> 2.0)
-      redis (>= 4.5.0)
+    sidekiq (5.2.8)
+      connection_pool (~> 2.2, >= 2.2.2)
+      rack (< 2.1.0)
+      rack-protection (>= 1.5.0)
+      redis (>= 3.3.5, < 5)
     skylight (4.2.3)
       skylight-core (= 4.2.3)
     skylight-core (4.2.3)
@@ -629,7 +629,6 @@ DEPENDENCIES
   email_reply_parser
   factory_bot_rails
   faker
-  ffi (~> 1.15, >= 1.15.5)
   flamegraph
   foreman
   friendly_id!
@@ -668,7 +667,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (= 6.0.2.2)
   redcarpet
-  redis (~> 5.0)
+  redis (~> 3.0)
   rolify
   rspec
   rspec-composable_json_matchers
