@@ -449,7 +449,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.5.0)
-    redis (4.8.1)
+    redis (4.1.0)
     regexp_parser (2.4.0)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -667,7 +667,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (= 6.0.2.2)
   redcarpet
-  redis (~> 4.0)
+  redis (= 4.1)
   rolify
   rspec
   rspec-composable_json_matchers
