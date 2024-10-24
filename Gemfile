@@ -12,14 +12,17 @@ gem 'connection_pool'
 gem 'dalli'
 gem 'image_processing'
 #gem 'mini_magick'
-gem 'pg', '~> 0.18'
+gem 'nio4r', '~> 2.x'
+gem 'pg', '1.4'
 gem 'puma', '~> 3.12.2'
 gem 'rack-canonical-host'
-gem 'redis', '~> 5.0'
+gem 'redis', '~> 3.0'
 gem 'sidekiq'
+gem 'sqlite3', '~> 1.5' # Adjust version as necessary
+gem 'msgpack', '1.3.3'
 
 # Models
-gem 'active_storage_validations'
+gem 'active_storage_validations', '0.8.8'
 gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
                     ref: '2811810'
 gem 'clowne', '0.2.0'
@@ -76,7 +79,7 @@ gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
 gem 'sentry-raven'
-gem 'skylight', '>= 4.0.x'
+gem 'skylight', '4.1.0'
 gem 'table_print'
 #
 # # Services
