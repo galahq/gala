@@ -38,17 +38,8 @@ services:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
       - db_data:/var/lib/postgresql/data/
   redis:
-    image: redis:6
+    image: redis:7.2
     ports:
       - 6379:6379
-  # selenium:
-  #   image: seleniarm/standalone-chromium
-  #   shm_size: 4gb
-  #   environment:
-  #     SE_NODE_MAX_SESSIONS: 1
-  #   ports:
-  #     - 4444:4444
-  #   volumes:
-  #     - /dev/shm:/dev/shm
 volumes:
   db_data:

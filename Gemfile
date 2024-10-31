@@ -7,19 +7,19 @@ gem 'rails', '6.0.2.2'
 # Infrastructure
 gem 'aws-sdk-s3', require: false
 gem 'aws-sdk-sns', '>= 1.9.0', require: false
-gem 'bootsnap', require: false
+gem 'bootsnap', '~> 1.10.3', '>= 1.10.3'
 gem 'connection_pool'
 gem 'dalli'
 gem 'image_processing'
 #gem 'mini_magick'
-gem 'nio4r', '~> 2.x'
+gem 'nio4r', '~> 2.5.8'
 gem 'pg', '1.4'
 gem 'puma', '~> 3.12.2'
 gem 'rack-canonical-host'
-gem 'redis', '~> 3.0'
+gem 'redis', '4.0.2'
 gem 'sidekiq'
 gem 'sqlite3', '~> 1.5' # Adjust version as necessary
-gem 'msgpack', '1.3.3'
+gem 'msgpack', '~> 1.4'
 
 # Models
 gem 'active_storage_validations', '0.8.8'
@@ -79,7 +79,7 @@ gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
 gem 'sentry-raven'
-gem 'skylight', '4.1.0'
+gem 'skylight', '5.0.0'
 gem 'table_print'
 #
 # # Services
@@ -144,4 +144,4 @@ end
 # gem to install wkhtmltopdf for pdfkit
 gem 'wkhtmltopdf-binary'
 
-ruby '2.7.6'
+ruby '2.7.7'

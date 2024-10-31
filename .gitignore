@@ -23,6 +23,7 @@ node_modules/
 
 app/assets/javascripts/react
 /public/packs
+/public/assets/
 /node_modules
 
 localhost.crt
