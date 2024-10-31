@@ -1,11 +1,11 @@
 version: '3'
 services:
-  web: &web
-    build: ./
+  web:
+    build: .
     stdin_open: true
     tty: true
     command: foreman start -f Procfile.dev
-    environment: &env
+    environment:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
@@ -13,20 +13,30 @@ services:
       - 3000:3000
       - 3035:3035
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - ./:/app/
       - /app/node_modules/
       - /app/tmp/cache/
   worker:
-    <<: *web
-    image: gala_web
+    build: .
     command: bundle exec sidekiq
     environment:
-      <<: *env
-      SIDEKIQ_CONCURRENCY: 1
-    ports: []
+      DATABASE_URL: postgres://gala:alpine@db:5432/gala
+      REDIS_URL: redis://redis:6379/1
+      RAILS_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./:/app/
+      - /app/node_modules/
+      - /app/tmp/cache/
   db:
     image: postgres:16
     environment:
@@ -35,8 +45,12 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
       - db_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gala"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   redis:
     image: redis:7.2
     ports:

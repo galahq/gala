@@ -7,6 +7,11 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     html_tag
   end
 
+  # Define the is_haml? method
+  def is_haml?
+    @template.respond_to?(:is_haml?) && @template.is_haml?
+  end
+
   # Creates a label, input, and helper text that are colored red together when
   # there is an error in the field.
   def form_group(method, label: nil, in_parens: nil, placeholder: nil,

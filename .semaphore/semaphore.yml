@@ -12,7 +12,7 @@ blocks:
           commands:
             - checkout
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
-            - sem-version ruby 2.7.6
+            - sem-version ruby 2.7.7
             - sudo apt update
             - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev
             - bundle install --deployment -j 4 --path vendor/bundle

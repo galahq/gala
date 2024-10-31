@@ -7,7 +7,7 @@ gem 'rails', '6.0.2.2'
 # Infrastructure
 gem 'aws-sdk-s3', require: false
 gem 'aws-sdk-sns', '>= 1.9.0', require: false
-gem 'bootsnap', '~> 1.10.3', '>= 1.10.3'
+gem 'bootsnap', '~> 1.10.3', '>= 1.10.3', require: false
 gem 'connection_pool'
 gem 'dalli'
 gem 'image_processing'
@@ -18,7 +18,7 @@ gem 'puma', '~> 3.12.2'
 gem 'rack-canonical-host'
 gem 'redis', '4.0.2'
 gem 'sidekiq'
-gem 'sqlite3', '~> 1.5' # Adjust version as necessary
+gem 'sqlite3', '1.5'
 gem 'msgpack', '~> 1.4'
 
 # Models
@@ -53,7 +53,6 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility'
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.10'
@@ -145,3 +144,6 @@ end
 gem 'wkhtmltopdf-binary'
 
 ruby '2.7.7'
+
+gem 'net-protocol', '~> 0.2.2'
+gem 'mobility', '0.8.10'

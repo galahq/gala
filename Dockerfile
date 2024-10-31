@@ -3,6 +3,9 @@ FROM ruby:2.7.7
 RUN apt-get update && apt-get install -y \
   build-essential curl postgresql-client python
 
+RUN gem update --system 3.3.22
+RUN gem install bundler -v 2.4.22
+
 # install node and yarn
 RUN mkdir /usr/local/nvm
 ENV NVM_DIR /usr/local/nvm
