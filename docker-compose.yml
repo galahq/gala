@@ -2,6 +2,7 @@ version: '3'
 services:
   web:
     build: .
+    image: gala_web:latest
     stdin_open: true
     tty: true
     command: foreman start -f Procfile.dev
@@ -18,12 +19,12 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./:/app/
-      - /app/node_modules/
-      - /app/tmp/cache/
+      - ./:/rails/
+      - /rails/node_modules/
+      - /rails/tmp/cache/
 
   worker:
-    build: .
+    image: gala_web:latest
     command: bundle exec sidekiq
     environment:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
@@ -35,9 +36,9 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./:/app/
-      - /app/node_modules/
-      - /app/tmp/cache/
+      - ./:/rails/
+      - /rails/node_modules/
+      - /rails/tmp/cache/
 
   db:
     image: postgres:16
