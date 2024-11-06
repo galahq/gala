@@ -26,7 +26,7 @@ Rails.application.configure do
 
   config.public_file_server.enabled
 
-  config.active_job.queue_adapter = :sidekiq
+  config.active_job.queue_adapter = :inline
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.

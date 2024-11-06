@@ -13,7 +13,7 @@ class TranslationsController < ApplicationController
   # @route [POST] `/cases/slug/translations`
   def create
     head :unprocessable_entity && return unless case_locale.present?
-    CaseCloneJob.perform_later @case, locale: case_locale
+    CaseCloneJob.perform_now @case, locale: case_locale
     redirect_to case_translation_path @case, case_locale: case_locale
   end
 

@@ -12,7 +12,7 @@ class ReplyNotification < ApplicationRecord
   belongs_to :page, optional: true
   belongs_to :card, optional: true
 
-  after_create_commit { ReplyNotificationBroadcastJob.perform_later self }
+  after_create_commit { ReplyNotificationBroadcastJob.perform_now self }
   after_create_commit { ReplyNotificationMailer.notify(self).deliver_later }
 
   def message

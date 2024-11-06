@@ -19,7 +19,7 @@ class Case
 
     def refresh!(root_url:)
       touch
-      CaseArchiveRefreshJob.perform_later(self, root_url: root_url)
+      CaseArchiveRefreshJob.perform_now(self, root_url: root_url)
     end
   end
 end

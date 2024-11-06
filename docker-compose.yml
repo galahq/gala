@@ -7,14 +7,12 @@ services:
     command: foreman start -f Procfile.dev
     environment: &env
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
-      REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
     ports:
       - 3000:3000
       - 3035:3035
     depends_on:
       - db
-      - redis
     volumes:
       - ./:/app/
       - /app/node_modules/
@@ -37,18 +35,5 @@ services:
     volumes:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
       - db_data:/var/lib/postgresql/data/
-  redis:
-    image: redis:6
-    ports:
-      - 6379:6379
-  # selenium:
-  #   image: seleniarm/standalone-chromium
-  #   shm_size: 4gb
-  #   environment:
-  #     SE_NODE_MAX_SESSIONS: 1
-  #   ports:
-  #     - 4444:4444
-  #   volumes:
-  #     - /dev/shm:/dev/shm
 volumes:
   db_data:
