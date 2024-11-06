@@ -12,9 +12,11 @@ gem 'connection_pool'
 gem 'dalli'
 gem 'image_processing'
 #gem 'mini_magick'
-gem 'pg', '~> 1.4'
+gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.12.2'
 gem 'rack-canonical-host'
+gem 'redis', '~> 3.0'
+gem 'sidekiq'
 
 # Models
 gem 'active_storage_validations'
