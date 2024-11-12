@@ -38,7 +38,7 @@ class ReadingList < ApplicationRecord
   end
 
   def update_social_image
-    ReadingListSocialImageCreationJob.perform_now self
+    ReadingListSocialImageCreationJob.perform_later self
   end
 
   private

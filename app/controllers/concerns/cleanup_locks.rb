@@ -9,6 +9,6 @@ module CleanupLocks
 
   def enqueue_cleanup_locks_job
     return unless current_reader.present?
-    CleanupLocksJob.perform_now(reader_id: current_reader.id)
+    CleanupLocksJob.perform_later(reader_id: current_reader.id)
   end
 end
