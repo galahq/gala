@@ -17,6 +17,7 @@ import LearningObjectives from './LearningObjectives'
 import CaseKeywords from './CaseKeywords'
 import TranslationLinks from './TranslationLinks'
 import TeachingGuide from './TeachingGuide'
+import Sparqler from './Sparqler'
 
 import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
@@ -184,6 +185,7 @@ const Billboard = ({
         </>
       )}
     </Lock>
+    <Sparqler />
   </Container>
 )
 

@@ -141,4 +141,6 @@ end
 # gem to install wkhtmltopdf for pdfkit
 gem 'wkhtmltopdf-binary'
 
+gem 'sparql-client'
+
 ruby '2.7.6'
