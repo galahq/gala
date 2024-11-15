@@ -17,14 +17,6 @@ services:
       - ./:/app/
       - /app/node_modules/
       - /app/tmp/cache/
-  worker:
-    <<: *web
-    image: gala_web
-    command: bundle exec sidekiq
-    environment:
-      <<: *env
-      SIDEKIQ_CONCURRENCY: 1
-    ports: []
   db:
     image: postgres:16
     environment:

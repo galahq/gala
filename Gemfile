@@ -15,8 +15,9 @@ gem 'image_processing'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.12.2'
 gem 'rack-canonical-host'
-gem 'redis', '~> 3.0'
-gem 'sidekiq'
+# currently not used
+gem 'redis', '~> 3.0', require: false
+gem 'sidekiq', require: false
 
 # Models
 gem 'active_storage_validations'
