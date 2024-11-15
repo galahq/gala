@@ -324,6 +324,15 @@ en:
       Publish your case and share it as widely as you like. Institutions can create 
       libraries with multiple cases.
     keywords: Keywords
+    wikidata:
+      link_wikidata: Link Wikidata
+      wikidata_instructions: Enter a Wikidata QID to create a resource listing from Wikidata on the case overview page.
+      software: Software
+      hardware: Hardware
+      grants: Grants
+      works: Works
+      add: Add
+      wikidata_placeholder: Enter Wikidata QID
     learn_more: Learn more
     my_library: My Dashboard
     natural_resources: Natural Resources

@@ -22,6 +22,7 @@ import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
 import type { State, Case, Tag, Viewport } from 'redux/state'
+import LinkWikidata from './LinkWikidata'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
@@ -162,6 +163,14 @@ const Billboard = ({
           )}
 
           <CaseKeywords
+            editing={editing}
+            key={taggingsPath}
+            taggingsPath={taggingsPath}
+            tags={tags}
+            onChange={(tags: Tag[]) => updateCase({ tags })}
+          />
+
+          <LinkWikidata
             editing={editing}
             key={taggingsPath}
             taggingsPath={taggingsPath}
