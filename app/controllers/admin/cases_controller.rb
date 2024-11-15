@@ -6,8 +6,14 @@ module Admin
 
     def copy
       current_case = find_resource(params[:id])
-      @case = CaseCloneJob.perform_later current_case, locale: current_case.locale
-      redirect_to admin_case_path @case, case_locale: @case.locale
+      @case = CaseCloneJob.perform_later(
+        current_case,
+        locale: current_case.locale
+      )
+      redirect_to(
+        admin_case_path(@case),
+        case_locale: @case.locale
+      )
     end
 
 
