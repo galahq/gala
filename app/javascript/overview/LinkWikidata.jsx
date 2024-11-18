@@ -43,10 +43,12 @@ class LinkWikidata extends React.Component<Props> {
                 <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
             </div>
 
-            <AddWikidata editing={true} title="software" />
-            <AddWikidata editing={true} title="hardware" />
-            <AddWikidata editing={true} title="grants" />
-            <AddWikidata editing={true} title="works" />
+            <div className="wikidata-container">
+                <AddWikidata editing={true} title="software" />
+                <AddWikidata editing={true} title="hardware" />
+                <AddWikidata editing={true} title="grants" />
+                <AddWikidata editing={true} title="works" />
+            </div>
         </Container>
       </CatalogSection>
     )
@@ -68,7 +70,14 @@ const Container = styled.div`
   .wikidata-instructions {
     font-size: 13px;
     color: #EBEAE3;
-    opacity: 0.6;
+    opacity: 0.8;
     margin-top: -8px;
+    margin-bottom: 12px;
+  }
+
+  .wikidata-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 `

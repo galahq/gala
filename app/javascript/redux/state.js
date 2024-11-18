@@ -122,6 +122,13 @@ export type Byline = {
   acknowledgements: string,
 }
 
+export type Wikidata = {
+  software: string[],
+  hardware: string[],
+  grants: string[],
+  works: string[],
+}
+
 export type Card = {
   commentThreads: ?(CommentThread[]),
   editorState: ?EditorState,
@@ -155,7 +162,7 @@ export type Case = {
     taggings: string,
     teach: string,
     teachingGuide: string,
-    newCopy: string
+    newCopy: string,
   },
   longitude: ?number,
   otherAvailableLocales: { [string]: { link: string, name: string } },
