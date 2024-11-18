@@ -316,6 +316,7 @@ GEM
       addressable (~> 2.7)
     letter_opener (1.7.0)
       launchy (~> 2.2)
+    link_header (0.0.8)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -353,6 +354,8 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nenv (0.3.0)
+    net-http-persistent (4.0.4)
+      connection_pool (~> 2.2)
     nio4r (2.5.4)
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
@@ -448,6 +451,8 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rdf (3.2.12)
+      link_header (~> 0.0, >= 0.0.8)
     redcarpet (3.5.0)
     redis (3.3.5)
     regexp_parser (2.4.0)
@@ -537,6 +542,9 @@ GEM
       skylight-core (= 4.2.3)
     skylight-core (4.2.3)
       activesupport (>= 4.2.0)
+    sparql-client (3.2.2)
+      net-http-persistent (~> 4.0, >= 4.0.2)
+      rdf (~> 3.2, >= 3.2.11)
     spring (2.1.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
@@ -684,6 +692,7 @@ DEPENDENCIES
   shoulda-matchers
   sidekiq
   skylight (>= 4.0.x)
+  sparql-client
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)

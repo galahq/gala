@@ -8,6 +8,10 @@ import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import SortableList, { createSortableInput } from '../utility/SortableList'
 import type { Wikidata } from 'redux/state'
+import { Intent, Callout } from '@blueprintjs/core'
+
+
+import { Orchard } from 'shared/orchard'
 
 type Props = {
   editing: boolean,
@@ -25,13 +29,57 @@ const AddWikidata = ({ editing, title }: Props): React.Node => {
         grants: [],
         works: [],
     })
+    const [results, setResults] = React.useState(null)
+    const [error, setError] = React.useState(null)
+    const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
 
-    const handleChange = (items: Array<string>) => {
+    const handleChange = React.useCallback((items: Array<string>) => {
+        console.log(items)
         setState(prevState => ({
             ...prevState,
             [title]: items,
         }))
+    }, [title])
+
+    const handleBlur = React.useCallback((event) => {
+        const qId = event.target.value;
+
+        if (isValidQId(qId)) {
+            makeQuery(qId)
+        }
+    }, [])
+
+    const isValidQId = (id) => {
+        if (!id.startsWith('Q')) {
+          return false
+        } else {
+          return true
+        }
     }
+
+    const makeQuery = (id) => {
+        Orchard.harvest('sparql/' + id.trim())
+          .then((resp) => {
+            if (Array.isArray(resp) && resp.length === 0) {
+              setError('No results found')
+              setResults(null)
+              setInputIntent(Intent.DANGER)
+            } else {
+              setResults(resp)
+              setError(null)
+              setInputIntent(Intent.SUCCESS)
+            }
+          })
+          .catch((err) => {
+            setError(err.message)
+            setResults(null)
+            setInputIntent(Intent.DANGER)
+          })
+    }
+
+    const renderInput = React.useCallback((props) => (
+        <WikiDataInput {...props} intent={inputIntent} onBlur={handleBlur} />
+    ), [handleBlur])
 
     if (!editing || !isValidWikidataKey(title)) return null
 
@@ -47,9 +95,15 @@ const AddWikidata = ({ editing, title }: Props): React.Node => {
                     dark
                     items={items}
                     newItem=""
-                    render={WikiDataInput}
+                    render={renderInput}
                     onChange={handleChange}
                 />
+                {error && <Callout intent={Intent.DANGER} title="Error">{error}</Callout>}
+                {results && (
+                    <Callout intent={Intent.SUCCESS} title="Results">
+                    <pre>{JSON.stringify(results, null, 2)}</pre>
+                    </Callout>
+                )}
             </div>
         </Container>
     )
@@ -74,13 +128,6 @@ const Container = styled.div`
         opacity: 0.6;
         margin-top: -8px;
     }
-`
-
-const AddButton = styled.button.attrs({
-    className: 'pt-button pt-intent-success',
-})`
-    margin-top: 0.5em;
-    width: 44px;
 `
 
 const WikiDataInput = createSortableInput({
