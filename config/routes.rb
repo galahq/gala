@@ -28,7 +28,7 @@ Rails.application.routes.draw do
                                to: redirect('%{path}.%{format}')
   get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%{path}')
 
-  get 'sparql/:qid', to: 'sparql#show', as: 'sparql_query'
+  get 'sparql/:schema/:qid', to: 'sparql#show', as: 'sparql_query'
 
   root to: 'catalog#home'
 
