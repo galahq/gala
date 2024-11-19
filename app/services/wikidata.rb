@@ -7,7 +7,7 @@ require 'json'
 examples:
 - researchers: Q937 (Albert Einstein)
 - software: Q28865 (Python), Q61080677 (HDF5), Q161053 (Ruby)
-- hardware: Q122851721 (Raspberry Pi 5)
+- hardware: Q122851721 (Raspberry Pi 5), Q78982844 (MacBook Pro 16-inch)
 - grants: Q123128273 (RAISE: Neighborhood Environments as Socio-Techno-bio Systems)
 - works: Q58260882 (The written works of Philip and Iona Mayer )
 =end
