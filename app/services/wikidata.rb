@@ -111,7 +111,7 @@ class Wikidata
     Rails.logger.info "Wikidata query: \n#{sparql_query}"
     results = @client.query(sparql_query)
     Rails.logger.info "Wikidata query results: #{results.inspect}"
-
+    return nil if results.empty?
     build_info_box(results)
   rescue StandardError => e
     Rails.logger.error "Error in Wikidata call method: #{e.message}"

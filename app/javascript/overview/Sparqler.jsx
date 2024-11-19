@@ -1,6 +1,6 @@
 /* @flow */
 import React, { useState, useEffect } from "react"
-import { InputGroup, Button, Intent, Callout, MenuItem } from "@blueprintjs/core"
+import { InputGroup, Button, Intent, Callout, MenuItem, Spinner } from "@blueprintjs/core"
 import { Select } from "@blueprintjs/select"
 import { Orchard } from "shared/orchard"
 
@@ -19,31 +19,33 @@ const Sparqler = () => {
     results: null,
     error: null,
     inputIntent: Intent.NONE,
+    loading: false,
   })
 
-  const { qId, schema, results, error, inputIntent } = state
+  const { qId, schema, results, error, inputIntent, loading } = state
 
   const updateState = (updates) => setState((prev) => ({ ...prev, ...updates }))
 
   const isValidQId = (id) => id.trim().startsWith("Q")
 
   const makeQuery = (id, schema) => {
+    updateState({ loading: true })
     Orchard.harvest(`sparql/${schema}/${id.trim()}`)
       .then((resp) => {
         if (Array.isArray(resp) && resp.length === 0) {
-          updateState({ error: "No results found", results: null, inputIntent: Intent.DANGER })
+          updateState({ error: "No results found", results: null, inputIntent: Intent.DANGER, loading: false })
         } else {
-          updateState({ results: resp, error: null, inputIntent: Intent.SUCCESS })
+          updateState({ results: resp, error: null, inputIntent: Intent.SUCCESS, loading: false })
         }
       })
       .catch((err) => {
-        updateState({ error: err.message, results: null, inputIntent: Intent.DANGER })
+        updateState({ error: err.message, results: null, inputIntent: Intent.DANGER, loading: false })
       })
   }
 
   const handleInputChange = (e) => updateState({ qId: e.target.value })
   const handleSchemaChange = (newSchema) => updateState({ schema: newSchema })
-  const handleClear = () => updateState({ qId: "", results: null, error: null, inputIntent: Intent.NONE })
+  const handleClear = () => updateState({ qId: "", results: null, error: null, inputIntent: Intent.NONE, loading: false })
 
   useEffect(() => {
     if (qId.trim() && isValidQId(qId)) {
@@ -66,7 +68,7 @@ const Sparqler = () => {
   return (
     <div>
       <h2 className="pt-dark">Wikidata</h2>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
         <Select
           items={Object.keys(SCHEMAS)}
           itemRenderer={renderSchemaItem}
@@ -76,10 +78,12 @@ const Sparqler = () => {
           <Button text={SCHEMAS[schema]} rightIcon="caret-down" />
         </Select>
         <InputGroup
+          fill
           placeholder="Enter Q ID"
           value={qId}
           intent={inputIntent}
-          style={{ marginLeft: "10px" }}
+          style={{ marginLeft: "10px", flexGrow: 1 }}
+          rightElement={loading && <Spinner intent={Intent.PRIMARY} small={true} />}
           onChange={handleInputChange}
         />
         <Button text="Clear" style={{ marginLeft: "10px" }} onClick={handleClear} />
