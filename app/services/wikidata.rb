@@ -21,7 +21,7 @@ class Wikidata
     :researchers => <<-SPARQL,
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
       PREFIX wd: <http://www.wikidata.org/entity/>
-      PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+      PREFIX wdt: <http://www.wikidata.org/prop/direct/å>
 
       SELECT ?entity ?entityLabel ?discipline ?disciplineLabel ?occupation ?occupationLabel ?orcid ?scopus WHERE {
         BIND(wd:%{qid} AS ?entity)
@@ -124,9 +124,10 @@ class Wikidata
     info_box = { 'entity' => '', 'entityLabel' => '', 'properties' => [] }
     results.each do |solution|
       solution.each_binding do |key, value|
-        if key.to_s == 'entity'
+        case key.to_s
+        when 'entity'
           info_box['entity'] = value.to_s
-        elsif key.to_s == 'entityLabel'
+        when 'entityLabel'
           info_box['entityLabel'] = value.to_s
         else
           info_box['properties'] << { key.to_s => value.to_s }
