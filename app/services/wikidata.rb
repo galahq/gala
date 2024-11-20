@@ -21,7 +21,7 @@ class Wikidata
     :researchers => <<-SPARQL,
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
       PREFIX wd: <http://www.wikidata.org/entity/>
-      PREFIX wdt: <http://www.wikidata.org/prop/direct/å>
+      PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
       SELECT ?entity ?entityLabel ?discipline ?disciplineLabel ?occupation ?occupationLabel ?orcid ?scopus WHERE {
         BIND(wd:%{qid} AS ?entity)
