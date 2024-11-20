@@ -18,11 +18,12 @@ type Props = {
 }
 
 const isValidWikidataKey = (key: string): boolean => {
-    return ['software', 'hardware', 'grants', 'works'].includes(key)
+    return ['researchers', 'software', 'hardware', 'grants', 'works'].includes(key)
 }
 
 const AddWikidata = ({ editing, schema }: Props): React.Node => {
     const [state, setState] = React.useState<Wikidata>({
+        researchers: [],
         software: [],
         hardware: [],
         grants: [],

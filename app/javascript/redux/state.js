@@ -123,6 +123,7 @@ export type Byline = {
 }
 
 export type Wikidata = {
+  researchers: string[],
   software: string[],
   hardware: string[],
   grants: string[],

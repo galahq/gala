@@ -213,7 +213,7 @@ export function createSortableInput({
                         loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
                             <>
                                 <div>
-                                    <a target="_blank" style={{ fontSize: '16px', color: 'white', display: 'flex', flexDirection: 'row', alignItems: 'center' }} href={results.entity} className="pt-minimal pt-dark .modifier pt-align-left" tabindex="0" rel="noreferrer">
+                                    <a target="_blank" style={{ fontSize: '16px', color: 'white', display: 'flex', flexDirection: 'row', alignItems: 'center' }} href={results.entity} className="pt-minimal pt-dark pt-align-left" rel="noreferrer">
                                     <span style={{ textDecoration: 'underline', display: 'inline-block', maxWidth: '510px' }} className="pt-text-overflow-ellipsis">
                                         {results.entityLabel}
                                     </span>
