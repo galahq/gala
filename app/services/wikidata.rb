@@ -40,13 +40,22 @@ class Wikidata
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-      SELECT ?entity ?entityLabel ?developer ?developerLabel ?programmingLanguage ?programmingLanguageLabel ?softwareVersion WHERE {
+      SELECT ?entity ?entityLabel ?developer ?developerLabel ?platform ?platformLabel ?programmingLanguage ?programmingLanguageLabel ?operatingSystem ?operatingSystemLabel ?sourceCodeRepository ?officialWebsite ?copyrightLicense ?copyrightLicenseLabel ?inception ?softwareVersion ?follows ?followsLabel ?genre ?genreLabel ?userManual WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q341 wd:Q7397 wd:Q1639024 wd:Q21127166 wd:Q21129801 wd:Q24529812 wd:Q9143 }
         OPTIONAL { ?entity wdt:P178 ?developer . }
+        OPTIONAL { ?entity wdt:P400 ?platform . }
         OPTIONAL { ?entity wdt:P277 ?programmingLanguage . }
+        OPTIONAL { ?entity wdt:P306 ?operatingSystem . }
+        OPTIONAL { ?entity wdt:P1324 ?sourceCodeRepository . }
+        OPTIONAL { ?entity wdt:P856 ?officialWebsite . }
+        OPTIONAL { ?entity wdt:P275 ?copyrightLicense . }
+        OPTIONAL { ?entity wdt:P571 ?inception . }
         OPTIONAL { ?entity wdt:P348 ?softwareVersion . }
+        OPTIONAL { ?entity wdt:P156 ?follows . }
+        OPTIONAL { ?entity wdt:P136 ?genre . }
+        OPTIONAL { ?entity wdt:P2078 ?userManual . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       }
       LIMIT 1
