@@ -14,14 +14,14 @@ import SortableWikidataList, { createSortableInput } from './SortableWikidataLis
 
 type Props = {
   editing: boolean,
-  title: string
+  schema: string
 }
 
 const isValidWikidataKey = (key: string): boolean => {
     return ['software', 'hardware', 'grants', 'works'].includes(key)
 }
 
-const AddWikidata = ({ editing, title }: Props): React.Node => {
+const AddWikidata = ({ editing, schema }: Props): React.Node => {
     const [state, setState] = React.useState<Wikidata>({
         software: [],
         hardware: [],
@@ -33,12 +33,11 @@ const AddWikidata = ({ editing, title }: Props): React.Node => {
     // const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
 
     const handleChange = React.useCallback((items: Array<string>) => {
-        console.log(items)
         setState(prevState => ({
             ...prevState,
-            [title]: items,
+            [schema]: items,
         }))
-    }, [title])
+    }, [schema])
 
     // const handleBlur = React.useCallback((id) => {
     //     const qId = id
@@ -79,25 +78,25 @@ const AddWikidata = ({ editing, title }: Props): React.Node => {
     //       })
     // }
 
-    // const renderInput = React.useCallback((props) => (
-    //     <WikiDataInput {...props} intent={inputIntent} />
-    // ), [results])
+    const renderInput = React.useCallback((props) => (
+        <WikiDataInput {...props} schema={schema} />
+    ), [schema])
 
-    if (!editing || !isValidWikidataKey(title)) return null
+    if (!editing || !isValidWikidataKey(schema)) return null
 
-    const items = state[title] || []
+    const items = state[schema] || []
 
     return (
         <Container>
             <div className="pt-dark">
                 <div className="wikidata-title">
-                    <FormattedMessage id={`catalog.wikidata.${title}`} />
+                    <FormattedMessage id={`catalog.wikidata.${schema}`} />
                 </div>
                 <SortableWikidataList
                     dark
                     items={items}
                     newItem=""
-                    render={WikiDataInput}
+                    render={renderInput}
                     onChange={handleChange}
                 />
             </div>

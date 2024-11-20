@@ -63,6 +63,8 @@ type ChildProps<Item> = {
 
   // A function which takes a modified copy of the child to replace it.
   onChangeItem: Item => void,
+
+  schema: string,
 }
 
 const Handle = SortableHandle(() => (
@@ -135,6 +137,7 @@ export function createSortableInput({
       intl,
       item,
       onChangeItem,
+      schema,
     }: ChildProps<string> & { intl: IntlShape }) => {
       const [value, setValue] = React.useState(item)
       const [results, setResults] = React.useState(null)
@@ -182,7 +185,7 @@ export function createSortableInput({
       }
 
       const makeQuery = (id) => {
-        Orchard.harvest("sparql/" + id.trim())
+        Orchard.harvest(`sparql/${schema}/${id.trim()}`)
           .then((resp) => {
             if (Array.isArray(resp) && resp.length === 0) {
               setError("No results found")
@@ -208,7 +211,26 @@ export function createSortableInput({
                 <div className="person-container">
                     {
                         loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
-                            <><div>{results[0]?.researcherLabel}</div><div>{results[0]?.disciplineLabel}</div></>
+                            <>
+                                <div>
+                                    <a target="_blank" style={{ fontSize: '16px', color: 'white', display: 'flex', flexDirection: 'row', alignItems: 'center' }} href={results.entity} className="pt-minimal pt-dark .modifier pt-align-left" tabindex="0" rel="noreferrer">
+                                    <span style={{ textDecoration: 'underline', display: 'inline-block', maxWidth: '510px' }} className="pt-text-overflow-ellipsis">
+                                        {results.entityLabel}
+                                    </span>
+                                    <span className="pt-icon-standard pt-icon-caret-right pt-align-right"></span>
+                                    </a>
+                                </div>
+                                {
+                                    results.properties.map((prop) => {
+                                        const [key, value] = Object.entries(prop)[0]
+                                        return (
+                                            <span style={{ fontSize: '12px', fontWeight: 500, color: '#DADBD9' }} key={key}>
+                                                <span>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
+                                            </span>
+                                        )
+                                    })
+                                }
+                            </>
                         )
                     }
                 </div>
@@ -220,11 +242,6 @@ export function createSortableInput({
           </WikiDataContainer>
         )
       }
-
-    //   // Maybe use an input group?
-    //   if (loading) {
-    //     return <WikiDataContainer><div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div></WikiDataContainer>
-    //   }
 
       return (
         <InputGroup
@@ -267,14 +284,17 @@ const WikiDataContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    position: absolute;
+    top: 1%;
+    right: 6%;
     gap: 4px;
     opacity: 0.5;
     height: fit-content
   }
 
   .person-container {
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 16px;
+    margin-bottom: 16px;
   }
 
   .spinner-container {

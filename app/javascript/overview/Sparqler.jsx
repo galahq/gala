@@ -1,87 +1,95 @@
-/**
- * @providesModule Sparqler
- * @flow
- */
+/* @flow */
+import React, { useState, useEffect } from "react"
+import { InputGroup, Button, Intent, Callout, MenuItem, Spinner } from "@blueprintjs/core"
+import { Select } from "@blueprintjs/select"
+import { Orchard } from "shared/orchard"
 
-import * as React from "react"
-import { useState } from "react"
-import { InputGroup, Button, Intent, Callout } from '@blueprintjs/core'
+const SCHEMAS = {
+  researchers: "Researchers",
+  software: "Software",
+  hardware: "Hardware",
+  grants: "Grants",
+  works: "Works",
+}
 
-import { Orchard } from 'shared/orchard'
+const Sparqler = () => {
+  const [state, setState] = useState({
+    qId: "",
+    schema: Object.keys(SCHEMAS)[0],
+    results: null,
+    error: null,
+    inputIntent: Intent.NONE,
+    loading: false,
+  })
 
-const Sparqler = (props) => {
-  const [qId, setQId] = useState('')
-  const [results, setResults] = useState(null)
-  const [error, setError] = useState(null)
-  const [inputIntent, setInputIntent] = useState(Intent.NONE)
+  const { qId, schema, results, error, inputIntent, loading } = state
 
-  const handleInputChange = (event) => {
-    setQId(event.target.value)
-  }
+  const updateState = (updates) => setState((prev) => ({ ...prev, ...updates }))
 
-  const handleBlur = () => {
-    if (isValidQId(qId)) {
-      makeQuery(qId)
-    }
-  }
+  const isValidQId = (id) => id.trim().startsWith("Q")
 
-  const isValidQId = (id) => {
-    if (!id.startsWith('Q')) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  const makeQuery = (id) => {
-    Orchard.harvest('sparql/' + id.trim())
+  const makeQuery = (id, schema) => {
+    updateState({ loading: true })
+    Orchard.harvest(`sparql/${schema}/${id.trim()}`)
       .then((resp) => {
         if (Array.isArray(resp) && resp.length === 0) {
-          setError('No results found')
-          setResults(null)
-          setInputIntent(Intent.DANGER)
+          updateState({ error: "No results found", results: null, inputIntent: Intent.DANGER, loading: false })
         } else {
-          setResults(resp)
-          setError(null)
-          setInputIntent(Intent.SUCCESS)
+          updateState({ results: resp, error: null, inputIntent: Intent.SUCCESS, loading: false })
         }
       })
       .catch((err) => {
-        setError(err.message)
-        setResults(null)
-        setInputIntent(Intent.DANGER)
+        updateState({ error: err.message, results: null, inputIntent: Intent.DANGER, loading: false })
       })
   }
 
-  React.useEffect(() => {
-    if (qId.trim() === '') {
-      return
+  const handleInputChange = (e) => updateState({ qId: e.target.value })
+  const handleSchemaChange = (newSchema) => updateState({ schema: newSchema })
+  const handleClear = () => updateState({ qId: "", results: null, error: null, inputIntent: Intent.NONE, loading: false })
+
+  useEffect(() => {
+    if (qId.trim() && isValidQId(qId)) {
+      makeQuery(qId, schema)
+    } else if (qId.trim() && !isValidQId(qId)) {
+      updateState({ error: "Invalid Q ID", results: null, inputIntent: Intent.DANGER })
     }
-    if (!isValidQId(qId)) {
-      setError("Invalid Q ID")
-      setResults(null)
-      setInputIntent(Intent.DANGER)
-      return
-    }
-    makeQuery(qId)
-  }, [qId])
+  }, [qId, schema])
+
+  const renderSchemaItem = (schema, { handleClick, modifiers }) => (
+    <MenuItem key={schema} text={SCHEMAS[schema]} active={modifiers.active} onClick={handleClick} />
+  )
+
+  const Feedback = ({ intent, title, children }) => (
+    <Callout intent={intent} title={title}>
+      {children}
+    </Callout>
+  )
 
   return (
     <div>
-      <h2 className="pt-dark">Researcher</h2>
-      <InputGroup
-        placeholder="Enter Q ID"
-        value={qId}
-        intent={inputIntent}
-        onChange={handleInputChange}
-        onBlur={handleBlur}
-      />
-      {error && <Callout intent={Intent.DANGER} title="Error">{error}</Callout>}
-      {results && (
-        <Callout intent={Intent.SUCCESS} title="Results">
-          <pre>{JSON.stringify(results, null, 2)}</pre>
-        </Callout>
-      )}
+      <h2 className="pt-dark">Wikidata</h2>
+      <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+        <Select
+          items={Object.keys(SCHEMAS)}
+          itemRenderer={renderSchemaItem}
+          filterable={false}
+          onItemSelect={handleSchemaChange}
+        >
+          <Button text={SCHEMAS[schema]} rightIcon="caret-down" />
+        </Select>
+        <InputGroup
+          fill
+          placeholder="Enter Q ID"
+          value={qId}
+          intent={inputIntent}
+          style={{ marginLeft: "10px", flexGrow: 1 }}
+          rightElement={loading && <Spinner intent={Intent.PRIMARY} small={true} />}
+          onChange={handleInputChange}
+        />
+        <Button text="Clear" style={{ marginLeft: "10px" }} onClick={handleClear} />
+      </div>
+      {error && <Feedback intent={Intent.DANGER} title="Error">{error}</Feedback>}
+      {results && <Feedback intent={Intent.SUCCESS} title="Results"><pre>{JSON.stringify(results, null, 2)}</pre></Feedback>}
     </div>
   )
 }

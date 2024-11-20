@@ -44,10 +44,10 @@ class LinkWikidata extends React.Component<Props> {
             </div>
 
             <div className="wikidata-container">
-                <AddWikidata editing={true} title="software" />
-                <AddWikidata editing={true} title="hardware" />
-                <AddWikidata editing={true} title="grants" />
-                <AddWikidata editing={true} title="works" />
+                <AddWikidata editing={true} schema="software" />
+                <AddWikidata editing={true} schema="hardware" />
+                <AddWikidata editing={true} schema="grants" />
+                <AddWikidata editing={true} schema="works" />
             </div>
         </Container>
       </CatalogSection>
