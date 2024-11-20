@@ -6,12 +6,11 @@
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import SortableList, { createSortableInput } from '../utility/SortableList'
 import type { Wikidata } from 'redux/state'
 import { Intent, Callout } from '@blueprintjs/core'
 
-
 import { Orchard } from 'shared/orchard'
+import SortableWikidataList, { createSortableInput } from './SortableWikidataList'
 
 type Props = {
   editing: boolean,
@@ -29,9 +28,9 @@ const AddWikidata = ({ editing, title }: Props): React.Node => {
         grants: [],
         works: [],
     })
-    const [results, setResults] = React.useState(null)
-    const [error, setError] = React.useState(null)
-    const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
+    // const [results, setResults] = React.useState(null)
+    // const [error, setError] = React.useState(null)
+    // const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
 
     const handleChange = React.useCallback((items: Array<string>) => {
         console.log(items)
@@ -41,45 +40,48 @@ const AddWikidata = ({ editing, title }: Props): React.Node => {
         }))
     }, [title])
 
-    const handleBlur = React.useCallback((event) => {
-        const qId = event.target.value;
+    // const handleBlur = React.useCallback((id) => {
+    //     const qId = id
 
-        if (isValidQId(qId)) {
-            makeQuery(qId)
-        }
-    }, [])
+    //     if (isValidQId(qId)) {
+    //         makeQuery(qId)
+    //     }
+    // }, [])
 
-    const isValidQId = (id) => {
-        if (!id.startsWith('Q')) {
-          return false
-        } else {
-          return true
-        }
-    }
+    // const isValidQId = (id) => {
+    //     if (!id.startsWith('Q')) {
+    //       return false
+    //     } else {
+    //       return true
+    //     }
+    // }
 
-    const makeQuery = (id) => {
-        Orchard.harvest('sparql/' + id.trim())
-          .then((resp) => {
-            if (Array.isArray(resp) && resp.length === 0) {
-              setError('No results found')
-              setResults(null)
-              setInputIntent(Intent.DANGER)
-            } else {
-              setResults(resp)
-              setError(null)
-              setInputIntent(Intent.SUCCESS)
-            }
-          })
-          .catch((err) => {
-            setError(err.message)
-            setResults(null)
-            setInputIntent(Intent.DANGER)
-          })
-    }
+    // const makeQuery = (id) => {
+    //     Orchard.harvest('sparql/' + id.trim())
+    //       .then((resp) => {
+    //         if (Array.isArray(resp) && resp.length === 0) {
+    //           setError('No results found')
+    //           setInputIntent(Intent.DANGER)
+    //         } else {
+    //             setResults((prevResults) => ({
+    //                 ...prevResults,
+    //                 [id]: resp,
+    //               }))
+    //               console.log(results)
+    //           setError(null)
+    //           setInputIntent(Intent.SUCCESS)
+    //         }
+    //       })
+    //       .catch((err) => {
+    //         setError(err.message)
+    //         setResults(null)
+    //         setInputIntent(Intent.DANGER)
+    //       })
+    // }
 
-    const renderInput = React.useCallback((props) => (
-        <WikiDataInput {...props} intent={inputIntent} onBlur={handleBlur} />
-    ), [handleBlur])
+    // const renderInput = React.useCallback((props) => (
+    //     <WikiDataInput {...props} intent={inputIntent} />
+    // ), [results])
 
     if (!editing || !isValidWikidataKey(title)) return null
 
@@ -91,19 +93,13 @@ const AddWikidata = ({ editing, title }: Props): React.Node => {
                 <div className="wikidata-title">
                     <FormattedMessage id={`catalog.wikidata.${title}`} />
                 </div>
-                <SortableList
+                <SortableWikidataList
                     dark
                     items={items}
                     newItem=""
-                    render={renderInput}
+                    render={WikiDataInput}
                     onChange={handleChange}
                 />
-                {error && <Callout intent={Intent.DANGER} title="Error">{error}</Callout>}
-                {results && (
-                    <Callout intent={Intent.SUCCESS} title="Results">
-                    <pre>{JSON.stringify(results, null, 2)}</pre>
-                    </Callout>
-                )}
             </div>
         </Container>
     )

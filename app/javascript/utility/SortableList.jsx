@@ -57,8 +57,6 @@ type ChildProps<Item> = {
   // The index of this child in the array (for numbering, etc.)
   index: number,
 
-  onBlur?: (SyntheticInputEvent<HTMLInputElement>) => void,
-
   // A function which takes a modified copy of the child to replace it.
   onChangeItem: Item => void,
 }
@@ -133,7 +131,6 @@ export function createSortableInput ({
     intl,
     item,
     onChangeItem,
-    onBlur,
   }: ChildProps<string> & { intl: IntlShape }) => (
     <input
       className="pt-input"
@@ -142,7 +139,6 @@ export function createSortableInput ({
       {...props}
       value={item}
       onChange={(e: SyntheticInputEvent<*>) => onChangeItem(e.target.value)}
-      onBlur={onBlur}
     />
   )
   return injectIntl(SortableInput)

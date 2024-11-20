@@ -7,9 +7,9 @@ import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
-import KeywordsChooser from './keywords/KeywordsChooser'
-import KeywordsDisplay from './keywords/KeywordsDisplay'
-import TaggingsManager from './keywords/TaggingsManager'
+import KeywordsChooser from '../overview/keywords/KeywordsChooser'
+import KeywordsDisplay from '../overview/keywords/KeywordsDisplay'
+import TaggingsManager from '../overview/keywords/TaggingsManager'
 import { Icon, IconSize } from '@blueprintjs/core'
 import styled from 'styled-components'
 

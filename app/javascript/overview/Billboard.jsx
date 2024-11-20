@@ -23,7 +23,7 @@ import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
 import type { State, Case, Tag, Viewport } from 'redux/state'
-import LinkWikidata from './LinkWikidata'
+import LinkWikidata from '../wikidata/LinkWikidata'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
@@ -194,7 +194,6 @@ const Billboard = ({
         </>
       )}
     </Lock>
-    <Sparqler />
   </Container>
 )
 
