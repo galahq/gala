@@ -115,17 +115,18 @@ const Container = SortableContainer(
   )
 )
 
-const SortableWikidataList = (props: Props<*>) => (
-  <Container
-    {...props}
-    useDragHandle={true}
-    transitionDuration={100}
-    helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
-    onSortEnd={({ oldIndex, newIndex }) =>
-      props.onChange(arrayMove(props.items, oldIndex, newIndex))
-    }
-  />
-)
+const SortableWikidataList = (props: Props<*>) => {
+  return (
+    <Container
+      {...props}
+      useDragHandle={true}
+      transitionDuration={100}
+      helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
+      onSortEnd={({ oldIndex, newIndex }) =>
+        props.onChange(arrayMove(props.items, oldIndex, newIndex))
+      }
+    />)
+  }
 
 export default SortableWikidataList
 

@@ -24,6 +24,7 @@ export type State = {
   quiz: QuizState,
   statistics: StatisticsState,
   suggestedQuizzes: SuggestedQuizzesState,
+  wikidataLinks: WikiDataLinksState,
   ui: UIState,
 }
 
@@ -43,6 +44,10 @@ export type CommentsState = {
 
 export type EdgenotesState = {
   [edgenoteSlug: string]: Edgenote,
+}
+
+export type WikiDataLinksState = {
+  [slug: string]: WikidataLinks,
 }
 
 export type EditState = {
@@ -122,6 +127,7 @@ export type Byline = {
   acknowledgements: string,
 }
 
+// TODO remove this type once the Wikidata API is implemented
 export type Wikidata = {
   researchers: string[],
   software: string[],
@@ -129,6 +135,12 @@ export type Wikidata = {
   grants: string[],
   works: string[],
 }
+
+export type WikidataLink = {
+
+}
+
+export type WikidataLinks = WikidataLink[]
 
 export type Card = {
   commentThreads: ?(CommentThread[]),

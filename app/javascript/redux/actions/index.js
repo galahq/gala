@@ -20,6 +20,7 @@ import * as SelectionActions from './selection.js'
 import * as StatisticsActions from './statistics.js'
 import * as SuggestedQuizActions from './suggestedQuizzes.js'
 import * as ToastActions from './toast.js'
+import * as WikidataLinksActions from './wikidataLinks.js'
 
 export * from './activity.js'
 export * from './card.js'
@@ -40,6 +41,7 @@ export * from './selection.js'
 export * from './statistics.js'
 export * from './suggestedQuizzes.js'
 export * from './toast.js'
+export * from './wikidataLinks.js'
 
 export type GetState = () => State
 export type PromiseAction = Promise<Action>
@@ -98,3 +100,4 @@ export type Action =
   | SuggestedQuizActions.RemoveSuggestedQuizAction
   | ToastActions.DisplayToastAction
   | ToastActions.DismissToastAction
+  | WikidataLinksActions.SyncWikidataLinksAction

@@ -29,55 +29,14 @@ const AddWikidata = ({ editing, schema }: Props): React.Node => {
         grants: [],
         works: [],
     })
-    // const [results, setResults] = React.useState(null)
-    // const [error, setError] = React.useState(null)
-    // const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
 
     const handleChange = React.useCallback((items: Array<string>) => {
+        console.log(`AddWikidata, items: ${items}`)
         setState(prevState => ({
             ...prevState,
             [schema]: items,
         }))
     }, [schema])
-
-    // const handleBlur = React.useCallback((id) => {
-    //     const qId = id
-
-    //     if (isValidQId(qId)) {
-    //         makeQuery(qId)
-    //     }
-    // }, [])
-
-    // const isValidQId = (id) => {
-    //     if (!id.startsWith('Q')) {
-    //       return false
-    //     } else {
-    //       return true
-    //     }
-    // }
-
-    // const makeQuery = (id) => {
-    //     Orchard.harvest('sparql/' + id.trim())
-    //       .then((resp) => {
-    //         if (Array.isArray(resp) && resp.length === 0) {
-    //           setError('No results found')
-    //           setInputIntent(Intent.DANGER)
-    //         } else {
-    //             setResults((prevResults) => ({
-    //                 ...prevResults,
-    //                 [id]: resp,
-    //               }))
-    //               console.log(results)
-    //           setError(null)
-    //           setInputIntent(Intent.SUCCESS)
-    //         }
-    //       })
-    //       .catch((err) => {
-    //         setError(err.message)
-    //         setResults(null)
-    //         setInputIntent(Intent.DANGER)
-    //       })
-    // }
 
     const renderInput = React.useCallback((props) => (
         <WikiDataInput {...props} schema={schema} />

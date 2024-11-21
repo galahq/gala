@@ -17,12 +17,11 @@ import LearningObjectives from './LearningObjectives'
 import CaseKeywords from './CaseKeywords'
 import TranslationLinks from './TranslationLinks'
 import TeachingGuide from './TeachingGuide'
-import Sparqler from './Sparqler'
 
 import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
-import type { State, Case, Tag, Viewport } from 'redux/state'
+import type { State, Case, Tag, Viewport, WikidataLinks } from 'redux/state'
 import LinkWikidata from '../wikidata/LinkWikidata'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
@@ -173,10 +172,7 @@ const Billboard = ({
 
           <LinkWikidata
             editing={editing}
-            key={taggingsPath}
-            taggingsPath={taggingsPath}
-            tags={tags}
-            onChange={(tags: Tag[]) => updateCase({ tags })}
+            // onChange={(wikidataLinks: WikidataLinks[]) => updateCase({ tags })}
           />
 
           {readerSignedIn && (
