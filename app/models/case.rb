@@ -66,6 +66,7 @@ class Case < ApplicationRecord
   has_many :quizzes, dependent: :destroy
   has_many :readers, through: :enrollments
   has_many :reading_list_items, dependent: :destroy
+  has_many :wikidata_links, dependent: :destroy
 
   has_many :pages,
            through: :case_elements, source: :element, source_type: 'Page'
