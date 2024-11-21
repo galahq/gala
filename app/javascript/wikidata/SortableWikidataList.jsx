@@ -225,7 +225,7 @@ export function createSortableInput ({
                         loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
                             <>
                                 <div>
-                                    <a target="_blank" style={{ fontSize: '14px', color: '#EBEAE4', display: 'flex', flexDirection: 'row', alignItems: 'center', textTransform: 'uppercase'}} href={results.entity} className="pt-minimal pt-dark pt-align-left" rel="noreferrer">
+                                    <a target="_blank" style={{fontWeight: '500', fontSize: '14px', color: '#EBEAE4', display: 'flex', flexDirection: 'row', alignItems: 'center'}} href={results.entity} className="pt-minimal pt-dark pt-align-left" rel="noreferrer">
                                     <span style={{ textDecoration: 'underline', display: 'inline-block', maxWidth: '510px' }} className="pt-text-overflow-ellipsis">
                                         {results.entityLabel}&nbsp;›
                                     </span>
@@ -236,7 +236,7 @@ export function createSortableInput ({
                                     results.properties.map((prop) => {
                                         const [key, value] = Object.entries(prop)[0]
                                         return (
-                                            <span style={{ fontSize: '12px', fontWeight: 500, color: '#DADBD9' }} key={key}>
+                                            <span style={{ fontSize: '12px', fontWeight: 400, color: '#DADBD9' }} key={key}>
                                                 <span>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
                                             </span>
                                         )
@@ -290,7 +290,6 @@ export function createSortableInput ({
   }
 
 const WikiDataContainer = styled.div`
-  font: tenso, greek-and-cyrillic-fallback, vdl-v7gothic, source-han-sans-simplified-c, source-han-sans-traditional;
   display: flex;
   flex-direction: column;
   background: #415E77;
