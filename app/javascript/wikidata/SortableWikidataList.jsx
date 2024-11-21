@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { Button, Intent, Icon, Spinner, InputGroup } from '@blueprintjs/core'
+import { Button, Intent, Icon, Spinner, InputGroup, Callout } from '@blueprintjs/core'
 import {
   SortableContainer,
   SortableElement,
@@ -129,7 +129,7 @@ const SortableWikidataList = (props: Props<*>) => (
 
 export default SortableWikidataList
 
-export function createSortableInput({
+export function createSortableInput ({
     placeholderId,
     ...props
   }: { placeholderId?: string } = {}) {
@@ -180,6 +180,12 @@ export function createSortableInput({
         }
       }
 
+      const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          handleBlur()
+        }
+      }
+
       const isValidQId = (id) => {
         return id.startsWith("Q")
       }
@@ -187,6 +193,7 @@ export function createSortableInput({
       const makeQuery = (id) => {
         Orchard.harvest(`sparql/${schema}/${id.trim()}`)
           .then((resp) => {
+            console.log(resp)
             if (Array.isArray(resp) && resp.length === 0) {
               setError("No results found")
               setInputIntent(Intent.DANGER)
@@ -198,8 +205,13 @@ export function createSortableInput({
             }
           })
           .catch((err) => {
-            setError(err.message)
+            if (err.response && err.response.status === 404) {
+              setError("Entity not found")
+            } else {
+              setError(err.message)
+            }
             setResults(null)
+            setLoading(false)
             setInputIntent(Intent.DANGER)
           })
       }
@@ -244,15 +256,33 @@ export function createSortableInput({
       }
 
       return (
-        <InputGroup
-          type="text"
-          placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
-          {...props}
-          value={value}
-        rightElement={loading && value !== "" && <Spinner intent={Intent.PRIMARY} small={true} />}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
+        error ? (
+          <Callout intent={Intent.DANGER} icon={null}>
+            <InputGroup
+              type="text"
+              placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
+              {...props}
+              value={value}
+              rightElement={loading && value !== "" && <Spinner intent={Intent.PRIMARY} small={true} />}
+              style={{ borderColor: error ? 'red' : 'inherit' }}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+            />
+          </Callout>
+        ) : (
+          <InputGroup
+            type="text"
+            placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
+            {...props}
+            value={value}
+            rightElement={loading && value !== "" && <Spinner intent={Intent.PRIMARY} small={true} />}
+            style={{ borderColor: error ? 'red' : 'inherit' }}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+          />
+        )
       )
     }
 

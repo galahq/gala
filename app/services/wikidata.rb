@@ -109,7 +109,7 @@ class Wikidata
   }
 
   PROPERTY_ORDER = {
-    researchers: %w[entity entityLabel discipline disciplineLabel occupation occupationLabel orcid scopus],
+    researchers: %w[entity entityLabel disciplineLabel occupationLabel orcid scopus],
     software: %w[entity entityLabel developerLabel programmingLanguageLabel copyrightLicenseLabel],
     hardware: %w[entity entityLabel manufacturerLabel modelLabel],
     grants: %w[entity entityLabel funderLabel recipientLabel],
@@ -134,10 +134,10 @@ class Wikidata
     Rails.logger.error "Error in Wikidata call method: #{e.message}"
     raise
   end
-  
+
 
   private
-  
+
   def camel_case_to_title_case(camel_case)
     camel_case.gsub(/([A-Z])/, ' \1').split.map(&:capitalize).join(' ')
   end

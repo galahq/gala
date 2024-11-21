@@ -1,7 +1,14 @@
 FROM ruby:2.7.6
 
 RUN apt-get update && apt-get install -y \
-  build-essential curl postgresql-client python
+  build-essential curl gnupg2
+
+# Add PostgreSQL APT repository
+RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+RUN apt-get update && apt-get install -y \
+  build-essential curl postgresql-client-16 python
 
 # install node and yarn
 RUN mkdir /usr/local/nvm

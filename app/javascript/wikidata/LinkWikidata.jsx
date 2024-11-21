@@ -44,6 +44,7 @@ class LinkWikidata extends React.Component<Props> {
             </div>
 
             <div className="wikidata-container">
+                <AddWikidata editing={true} schema="researchers" />
                 <AddWikidata editing={true} schema="software" />
                 <AddWikidata editing={true} schema="hardware" />
                 <AddWikidata editing={true} schema="grants" />
