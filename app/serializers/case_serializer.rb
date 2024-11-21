@@ -10,12 +10,12 @@ class CaseSerializer < Cases::PreviewSerializer
   belongs_to :library
 
   has_many :case_elements
+  has_many :wikidata_links
 
   has_many_by_id :cards
   has_many_by_id :edgenotes
   has_many_by_id :pages
   has_many_by_id :podcasts
-  has_many_by_id :wikidata_links
 
   def other_available_locales
     object.other_available_locales(for_reader: current_user)
