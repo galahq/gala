@@ -225,11 +225,11 @@ export function createSortableInput ({
                         loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
                             <>
                                 <div>
-                                    <a target="_blank" style={{ fontSize: '16px', color: 'white', display: 'flex', flexDirection: 'row', alignItems: 'center' }} href={results.entity} className="pt-minimal pt-dark pt-align-left" rel="noreferrer">
+                                    <a target="_blank" style={{ fontSize: '14px', color: '#EBEAE4', display: 'flex', flexDirection: 'row', alignItems: 'center', textTransform: 'uppercase'}} href={results.entity} className="pt-minimal pt-dark pt-align-left" rel="noreferrer">
                                     <span style={{ textDecoration: 'underline', display: 'inline-block', maxWidth: '510px' }} className="pt-text-overflow-ellipsis">
-                                        {results.entityLabel}
+                                        {results.entityLabel}&nbsp;›
                                     </span>
-                                    <span className="pt-icon-standard pt-icon-caret-right pt-align-right"></span>
+
                                     </a>
                                 </div>
                                 {
@@ -247,7 +247,7 @@ export function createSortableInput ({
                     }
                 </div>
                 <div className="wikidata-logo-container">
-                    <Icon color="black" icon="graph" iconSize={14} />
+                    <Icon color="rgba(235, 234, 228, 0.5)" icon="graph" iconSize={14} />
                     <span className="wikidata-text">Wikidata</span>
                 </div>
             </div>
@@ -290,6 +290,7 @@ export function createSortableInput ({
   }
 
 const WikiDataContainer = styled.div`
+  font: tenso, greek-and-cyrillic-fallback, vdl-v7gothic, source-han-sans-simplified-c, source-han-sans-traditional;
   display: flex;
   flex-direction: column;
   background: #415E77;
@@ -306,8 +307,9 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-text {
-    color: rgb(0, 0, 0);
-    font-size: 14px;
+    color: rgba(235, 234, 228, 0.5);
+    text-transform: uppercase;
+    font-size: 12px;
   }
 
   .wikidata-logo-container {
