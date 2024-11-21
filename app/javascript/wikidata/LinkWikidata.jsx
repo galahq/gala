@@ -5,6 +5,7 @@
 
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
+import type { Case, WikidataLink } from 'redux/state'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import { Icon, IconSize } from '@blueprintjs/core'
@@ -13,10 +14,15 @@ import styled from 'styled-components'
 import AddWikidata from './AddWikidata'
 
 type Props = {
-  editing: boolean
+  editing: boolean,
+  updateCase: any,
+  caseData: Case,
+  wikidataLinks: WikidataLink[],
 }
-const LinkWikidata = (props) => {
-  const { editing } = props
+const LinkWikidata = (props: Props) => {
+  const { editing, updateCase, caseData, wikidataLinks } = props
+  console.log('caseData:', caseData)
+  console.log('wikidataLinks:', wikidataLinks)
   if (!editing) return null
 
   return (
@@ -34,11 +40,11 @@ const LinkWikidata = (props) => {
           </div>
 
           <div className="wikidata-container">
-              <AddWikidata editing={true} schema="researchers" />
-              <AddWikidata editing={true} schema="software" />
-              <AddWikidata editing={true} schema="hardware" />
-              <AddWikidata editing={true} schema="grants" />
-              <AddWikidata editing={true} schema="works" />
+            <AddWikidata editing={true} schema="researchers" />
+            <AddWikidata editing={true} schema="software" />
+            <AddWikidata editing={true} schema="hardware" />
+            <AddWikidata editing={true} schema="grants" />
+            <AddWikidata editing={true} schema="works" />
           </div>
       </Container>
     </CatalogSection>

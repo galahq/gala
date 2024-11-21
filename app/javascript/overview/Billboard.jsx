@@ -21,7 +21,7 @@ import TeachingGuide from './TeachingGuide'
 import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
-import type { State, Case, Tag, Viewport, WikidataLinks } from 'redux/state'
+import type { State, Case, Tag, Viewport, WikidataLink } from 'redux/state'
 import LinkWikidata from '../wikidata/LinkWikidata'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
@@ -38,6 +38,7 @@ function mapStateToProps ({ caseData, edit }: State) {
     tags,
     links,
     teachingGuideUrl,
+    wikidataLinks,
   } = caseData
 
   return {
@@ -53,6 +54,7 @@ function mapStateToProps ({ caseData, edit }: State) {
     taggingsPath: links.taggings,
     tags,
     teachingGuideUrl,
+    wikidataLinks,
   }
 }
 
@@ -69,6 +71,7 @@ type Props = {
   taggingsPath: string,
   tags: Tag[],
   teachingGuideUrl: string,
+  wikidataLinks: WikidataLink,
   updateCase: typeof updateCase,
 }
 
@@ -85,8 +88,11 @@ const Billboard = ({
   taggingsPath,
   tags,
   teachingGuideUrl,
+  wikidataLinks,
   updateCase,
-}: Props) => (
+}: Props) => {
+  console.log("Billboard, caseData: ", caseData)
+  return (
   <Container>
     <Lock type="Case" param={slug}>
       {({ onBeginEditing, onFinishEditing }) => (
@@ -172,7 +178,9 @@ const Billboard = ({
 
           <LinkWikidata
             editing={editing}
-            // onChange={(wikidataLinks: WikidataLinks[]) => updateCase({ tags })}
+            updateCase={(wikidataLinks: WikidataLink[]) => updateCase({ wikidataLinks })}
+            wikidataLinks={wikidataLinks}
+            caseData={caseData}
           />
 
           {readerSignedIn && (
@@ -192,6 +200,7 @@ const Billboard = ({
     </Lock>
   </Container>
 )
+}
 
 // $FlowFixMe
 export default connect(

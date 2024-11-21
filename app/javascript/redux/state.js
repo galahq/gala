@@ -24,7 +24,6 @@ export type State = {
   quiz: QuizState,
   statistics: StatisticsState,
   suggestedQuizzes: SuggestedQuizzesState,
-  wikidataLinks: WikiDataLinksState,
   ui: UIState,
 }
 
@@ -44,10 +43,6 @@ export type CommentsState = {
 
 export type EdgenotesState = {
   [edgenoteSlug: string]: Edgenote,
-}
-
-export type WikiDataLinksState = {
-  [slug: string]: WikidataLinks,
 }
 
 export type EditState = {
@@ -137,10 +132,16 @@ export type Wikidata = {
 }
 
 export type WikidataLink = {
-
+  id: ?number,
+  objectType: string,
+  objectId: number,
+  caseId: number,
+  schema: string,
+  qid: string,
+  position: number,
+  createdAt: string,
+  updatedAt: string,
 }
-
-export type WikidataLinks = WikidataLink[]
 
 export type Card = {
   commentThreads: ?(CommentThread[]),
@@ -188,6 +189,7 @@ export type Case = {
   teachingGuideUrl: ?string,
   title: string,
   zoom: ?number,
+  wikidataLinks: WikidataLink[],
 } & Byline
 
 export type CaseElement = {
