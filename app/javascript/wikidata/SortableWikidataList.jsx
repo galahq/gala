@@ -4,7 +4,14 @@
  */
 
 import * as React from 'react'
-import { Button, Intent, Icon, Spinner, InputGroup, Callout } from '@blueprintjs/core'
+import {
+  Button,
+  Intent,
+  Icon,
+  Spinner,
+  InputGroup,
+  Callout,
+} from '@blueprintjs/core'
 import {
   SortableContainer,
   SortableElement,
@@ -98,6 +105,7 @@ const Container = SortableContainer(
       {items.map((item, i) => (
         <Item
           key={i}
+          schema={item.schema}
           index={i}
           item={item}
           render={render}
@@ -116,6 +124,7 @@ const Container = SortableContainer(
 )
 
 const SortableWikidataList = (props: Props<*>) => {
+  console.log('SortableWikidataList props', props)
   return (
     <Container
       {...props}
@@ -125,176 +134,205 @@ const SortableWikidataList = (props: Props<*>) => {
       onSortEnd={({ oldIndex, newIndex }) =>
         props.onChange(arrayMove(props.items, oldIndex, newIndex))
       }
-    />)
-  }
+    />
+  )
+}
 
 export default SortableWikidataList
 
 export function createSortableInput ({
-    placeholderId,
-    ...props
-  }: { placeholderId?: string } = {}) {
-    const SortableInput = ({
-      intl,
-      item,
-      onChangeItem,
-      schema,
-    }: ChildProps<string> & { intl: IntlShape }) => {
-      const [value, setValue] = React.useState(item)
-      const [results, setResults] = React.useState(null)
-      const [error, setError] = React.useState(null)
-      const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
-      const [typing, setTyping] = React.useState(false)
-      const [loading, setLoading] = React.useState(false)
+  placeholderId,
+  ...props
+}: { placeholderId?: string } = {}) {
+  // let item = {
+  //   id: 2,
+  //   objectType: 'Case',
+  //   objectId: 5,
+  //   caseId: 5,
+  //   schema: 'researchers',
+  //   qid: 'Q937',
+  //   position: 0,
+  //   createdAt: '2024-11-21T21:54:07.663Z',
+  //   updatedAt: '2024-11-21T21:54:07.663Z',
+  // }
 
-      React.useEffect(() => {
-        if (!typing) {
-          if (!item) {
-            setValue('')
-            setResults(null)
-            setError(null)
-            setInputIntent(Intent.NONE)
-          } else {
-            setValue(item)
-            setError(null)
-            setInputIntent(Intent.NONE)
-            setLoading(true)
-            if (isValidQId(item)) {
-              makeQuery(item)
-            }
+  const SortableInput = ({
+    intl,
+    item,
+    onChangeItem,
+    schema,
+  }: ChildProps<string> & { intl: IntlShape }) => {
+    const [value, setValue] = React.useState(item)
+    const [results, setResults] = React.useState(null)
+    const [error, setError] = React.useState(null)
+    const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
+    const [typing, setTyping] = React.useState(false)
+    const [loading, setLoading] = React.useState(false)
+
+    React.useEffect(() => {
+      if (!typing) {
+        if (!item) {
+          setValue('')
+          setResults(null)
+          setError(null)
+          setInputIntent(Intent.NONE)
+        } else {
+          setValue(item)
+          setError(null)
+          setInputIntent(Intent.NONE)
+          setLoading(true)
+          if (isValidQId(item)) {
+            makeQuery(item)
           }
         }
-        setTyping(false)
-      }, [item])
-
-      const handleChange = (e) => {
-        const newValue = e.target.value
-        setTyping(true)
-        setValue(newValue)
-        onChangeItem(newValue)
       }
+      setTyping(false)
+    }, [item])
 
-      const handleBlur = () => {
-        setLoading(true)
-        if (isValidQId(value)) {
-          makeQuery(value)
-        }
+    const handleChange = e => {
+      const newValue = e.target.value
+      setTyping(true)
+      setValue(newValue)
+      onChangeItem(newValue)
+    }
+
+    const handleBlur = () => {
+      setLoading(true)
+      if (isValidQId(value)) {
+        makeQuery(value)
       }
+    }
 
-      const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-          handleBlur()
-        }
+    const handleKeyDown = e => {
+      if (e.key === 'Enter') {
+        handleBlur()
       }
+    }
 
-      const isValidQId = (id) => {
-        return id.startsWith("Q")
-      }
+    const isValidQId = id => {
+      return id.startsWith('Q')
+    }
 
-      const makeQuery = (id) => {
-        Orchard.harvest(`sparql/${schema}/${id.trim()}`)
-          .then((resp) => {
-            console.log(resp)
-            if (Array.isArray(resp) && resp.length === 0) {
-              setError("No results found")
-              setInputIntent(Intent.DANGER)
-            } else {
-              setResults(resp)
-              setLoading(false)
-              setError(null)
-              setInputIntent(Intent.SUCCESS)
-            }
-          })
-          .catch((err) => {
-            if (err.response && err.response.status === 404) {
-              setError("Entity not found")
-            } else {
-              setError(err.message)
-            }
-            setResults(null)
-            setLoading(false)
+    const makeQuery = id => {
+      Orchard.harvest(`sparql/${schema}/${id.trim()}`)
+        .then(resp => {
+          console.log(resp)
+          if (resp.status !== 200) {
+            setError('No results found')
             setInputIntent(Intent.DANGER)
-          })
-      }
+          } else {
+            setResults(resp)
+            setLoading(false)
+            setError(null)
+            setInputIntent(Intent.SUCCESS)
+          }
+        })
+        .catch(err => {
+          if (err.response && err.response.status === 404) {
+            setError('Entity not found')
+          } else {
+            setError(err.message)
+          }
+          setResults(null)
+          setLoading(false)
+          setInputIntent(Intent.DANGER)
+        })
+    }
 
-      if (value !== "" && results) {
-        return (
-          <WikiDataContainer>
-            <div className="data-container">
-                <div className="person-container">
-                    {
-                        loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
-                            <>
-                                <div>
-                                    <a target="_blank" style={{ fontSize: '16px', color: 'white', display: 'flex', flexDirection: 'row', alignItems: 'center' }} href={results.entity} className="pt-minimal pt-dark pt-align-left" rel="noreferrer">
-                                    <span style={{ textDecoration: 'underline', display: 'inline-block', maxWidth: '510px' }} className="pt-text-overflow-ellipsis">
-                                        {results.entityLabel}
-                                    </span>
-                                    <span className="pt-icon-standard pt-icon-caret-right pt-align-right"></span>
-                                    </a>
-                                </div>
-                                {
-                                    results.properties.map((prop) => {
-                                        const [key, value] = Object.entries(prop)[0]
-                                        return (
-                                            <span style={{ fontSize: '12px', fontWeight: 500, color: '#DADBD9' }} key={key}>
-                                                <span>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
-                                            </span>
-                                        )
-                                    })
-                                }
-                            </>
-                        )
-                    }
-                </div>
-                <div className="wikidata-logo-container">
-                    <Icon color="black" icon="graph" iconSize={14} />
-                    <span className="wikidata-text">Wikidata</span>
-                </div>
-            </div>
-          </WikiDataContainer>
-        )
-      }
-
+    if (value !== '' && results) {
       return (
-        error ? (
-          <Callout intent={Intent.DANGER} icon={null}>
-            <InputGroup
-              type="text"
-              placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
-              {...props}
-              value={value}
-              rightElement={loading && value !== "" && <Spinner intent={Intent.PRIMARY} small={true} />}
-              style={{ borderColor: error ? 'red' : 'inherit' }}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-            />
-          </Callout>
-        ) : (
-          <InputGroup
-            type="text"
-            placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
-            {...props}
-            value={value}
-            rightElement={loading && value !== "" && <Spinner intent={Intent.PRIMARY} small={true} />}
-            style={{ borderColor: error ? 'red' : 'inherit' }}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-          />
-        )
+        <WikiDataContainer>
+          <div className="data-container">
+            <div className="person-container">
+              {loading ? (
+                <div className="spinner-container">
+                  <Spinner intent={Intent.PRIMARY} small={true} />
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <a
+                      target="_blank"
+                      href={results.entity}
+                      className="wikidata-title pt-minimal pt-dark pt-align-left"
+                      rel="noreferrer"
+                    >
+                      <span className="pt-text-overflow-ellipsis wikidata-link">
+                        {results.entityLabel}&nbsp;
+                      </span>
+                      ›
+                    </a>
+                  </div>
+                  {results.properties.map(prop => {
+                    const [key, value] = Object.entries(prop)[0]
+                    return (
+                      <span className="wikidata-details-text" key={key}>
+                        <span style={{ fontWeight: 700 }}>{key}:</span> {value}{' '}
+                        &nbsp;&nbsp;&nbsp;
+                      </span>
+                    )
+                  })}
+                </>
+              )}
+            </div>
+            <div className="wikidata-logo-container">
+              <Icon
+                color="rgba(235, 234, 228, 0.5)"
+                icon="graph"
+                iconSize={14}
+              />
+              <span className="wikidata-text">Wikidata</span>
+            </div>
+          </div>
+        </WikiDataContainer>
       )
     }
 
-    return injectIntl(SortableInput)
+    return error ? (
+      <Callout intent={Intent.DANGER} icon={null}>
+        <InputGroup
+          type="text"
+          placeholder={
+            placeholderId && intl.formatMessage({ id: placeholderId })
+          }
+          {...props}
+          value={value}
+          rightElement={
+            loading &&
+            value !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
+          }
+          style={{ borderColor: error ? 'red' : 'inherit' }}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+        />
+      </Callout>
+    ) : (
+      <InputGroup
+        type="text"
+        placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
+        {...props}
+        value={value}
+        rightElement={
+          loading &&
+          value !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
+        }
+        style={{ borderColor: error ? 'red' : 'inherit' }}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+      />
+    )
   }
+
+  return injectIntl(SortableInput)
+}
 
 const WikiDataContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background: #415E77;
-  padding: 4px 16px;
+  background: #415e77;
+  padding: 4px 20px;
   border-width: 1px;
   border-style: solid;
   border-color: rgb(0, 0, 0, 0.22);
@@ -307,8 +345,9 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-text {
-    color: rgb(0, 0, 0);
-    font-size: 14px;
+    color: rgba(235, 234, 228, 0.5);
+    text-transform: uppercase;
+    font-size: 12px;
   }
 
   .wikidata-logo-container {
@@ -316,11 +355,11 @@ const WikiDataContainer = styled.div`
     flex-direction: row;
     align-items: center;
     position: absolute;
-    top: 1%;
-    right: 6%;
+    top: 3%;
+    right: 7%;
     gap: 4px;
     opacity: 0.5;
-    height: fit-content
+    height: fit-content;
   }
 
   .person-container {
@@ -331,5 +370,26 @@ const WikiDataContainer = styled.div`
   .spinner-container {
     display: flex;
     align-items: center;
+  }
+
+  .wikidata-title {
+    color: #ebeae4;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .wikidata-link {
+    text-decoration: underline;
+    display: inline-block;
+    max-width: 510px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .wikidata-details-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(218, 219, 217, 0.7);
   }
 `

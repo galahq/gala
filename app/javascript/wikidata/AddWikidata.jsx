@@ -6,22 +6,25 @@
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import type { Wikidata } from 'redux/state'
-import { Intent, Callout } from '@blueprintjs/core'
-
-import { Orchard } from 'shared/orchard'
+import type { Wikidata, Case, WikidataLink } from 'redux/state'
 import SortableWikidataList, { createSortableInput } from './SortableWikidataList'
 
 type Props = {
   editing: boolean,
   schema: string
-}
+} & {
+    editing: boolean,
+    onChange: (wikidataLinks: WikidataLink[]) => mixed,
+    wikidataLinks: WikidataLink[],
+    caseData: Case,
+  }
 
 const isValidWikidataKey = (key: string): boolean => {
     return ['researchers', 'software', 'hardware', 'grants', 'works'].includes(key)
 }
 
-const AddWikidata = ({ editing, schema }: Props): React.Node => {
+const AddWikidata = ({ editing, schema, onChange, wikidataLinks }: Props): React.Node => {
+    console.log("AddWikidata wikidataLinks", wikidataLinks)
     const [state, setState] = React.useState<Wikidata>({
         researchers: [],
         software: [],
@@ -30,7 +33,7 @@ const AddWikidata = ({ editing, schema }: Props): React.Node => {
         works: [],
     })
 
-    const handleChange = React.useCallback((items: Array<string>) => {
+    const handleChange = React.useCallback((items: Array<string>): void => {
         console.log(`AddWikidata, items: ${items}`)
         setState(prevState => ({
             ...prevState,
@@ -38,13 +41,13 @@ const AddWikidata = ({ editing, schema }: Props): React.Node => {
         }))
     }, [schema])
 
-    const renderInput = React.useCallback((props) => (
+    const renderInput = React.useCallback((props: any): React.Node => (
         <WikiDataInput {...props} schema={schema} />
     ), [schema])
 
     if (!editing || !isValidWikidataKey(schema)) return null
 
-    const items = state[schema] || []
+    const items = wikidataLinks || [] // state[schema] || []
 
     return (
         <Container>
@@ -75,6 +78,7 @@ const Container = styled.div`
         color: #EBEAE3;
         font-size: 14px;
         font-weight: 700;
+        margin-bottom: 2px;
     }
 
     .wikidata-instructions {

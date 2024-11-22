@@ -178,9 +178,9 @@ const Billboard = ({
 
           <LinkWikidata
             editing={editing}
-            updateCase={(wikidataLinks: WikidataLink[]) => updateCase({ wikidataLinks })}
-            wikidataLinks={wikidataLinks}
+            wikidataLinks={caseData.wikidataLinks}
             caseData={caseData}
+            onChange={(wikidataLinks: WikidataLink[]) => updateCase({ wikidataLinks })}
           />
 
           {readerSignedIn && (
