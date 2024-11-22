@@ -227,8 +227,8 @@ export function createSortableInput ({
                                 <div>
                                     <a target="_blank" href={results.entity} className="wikidata-title pt-minimal pt-dark pt-align-left" rel="noreferrer">
                                     <span className="pt-text-overflow-ellipsis wikidata-link">
-                                        {results.entityLabel}&nbsp;
-                                    </span>›
+                                        {results.entityLabel}&nbsp;›
+                                    </span>
                                     </a>
                                 </div>
                                 {
@@ -337,6 +337,15 @@ const WikiDataContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+
+  .wikidata-title > span {
+    text-decoration: none;
+  }
+
+  .wikidata-title:hover {
+    text-decoration: underline;
+    color: #EBEAE4;
   }
 
   .wikidata-link {
