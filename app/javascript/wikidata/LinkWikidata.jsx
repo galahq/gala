@@ -7,53 +7,44 @@ import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
-import KeywordsChooser from '../overview/keywords/KeywordsChooser'
-import KeywordsDisplay from '../overview/keywords/KeywordsDisplay'
-import TaggingsManager from '../overview/keywords/TaggingsManager'
-import { Icon, IconSize } from '@blueprintjs/core'
+import { Icon, Button } from '@blueprintjs/core'
 import styled from 'styled-components'
 
-import type { Tag } from 'redux/state'
 import AddWikidata from './AddWikidata'
+import WikidataDialog from './WikidataDialog'
 
 type Props = {
   editing: boolean,
-  onChange: (Tag[]) => mixed,
-  taggingsPath: string,
-  tags: Tag[],
 }
-class LinkWikidata extends React.Component<Props> {
-  taggingsManager = new TaggingsManager(this.props.taggingsPath)
+const LinkWikidata = ({ editing }: Props) => {
+  const schemas = ['researchers', 'software', 'hardware', 'grants', 'works']
+  const [openDialog, setOpenDialog] = React.useState(false)
+  if (!editing) return null
 
-  render () {
-    const { editing, onChange, tags } = this.props
-    if (tags.length === 0 && !editing) return null
+  return (
+    <CatalogSection>
+      <Container>
+        <SectionTitle>
+          <div className="wikidata-title">
+            <FormattedMessage id="catalog.wikidata.linkWikidata" />
+            <Icon icon="info-sign" style={{ cursor: 'pointer' }} iconSize={14} onClick={() => setOpenDialog(true)} />
+          </div>
+        </SectionTitle>
 
-    return (
-      <CatalogSection>
-        <Container>
-            <SectionTitle>
-                <div className="wikidata-title">
-                    <FormattedMessage id="catalog.wikidata.linkWikidata" />
-                    <Icon icon="info-sign" iconSize={14} />
-                </div>
-            </SectionTitle>
+        <WikidataDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
 
-            <div className="wikidata-instructions">
-                <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
-            </div>
+        <div className="wikidata-instructions">
+          <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
+        </div>
 
-            <div className="wikidata-container">
-                <AddWikidata editing={true} schema="researchers" />
-                <AddWikidata editing={true} schema="software" />
-                <AddWikidata editing={true} schema="hardware" />
-                <AddWikidata editing={true} schema="grants" />
-                <AddWikidata editing={true} schema="works" />
-            </div>
-        </Container>
-      </CatalogSection>
-    )
-  }
+        <div className="wikidata-container">
+          {
+            schemas.map((schema) => (<AddWikidata key={schema} editing={editing} schema={schema} />))
+          }
+        </div>
+      </Container>
+    </CatalogSection>
+  )
 }
 
 export default LinkWikidata

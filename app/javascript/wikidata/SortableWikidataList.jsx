@@ -225,19 +225,18 @@ export function createSortableInput ({
                         loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
                             <>
                                 <div>
-                                    <a target="_blank" style={{fontWeight: '500', fontSize: '14px', color: '#EBEAE4', display: 'flex', flexDirection: 'row', alignItems: 'center'}} href={results.entity} className="pt-minimal pt-dark pt-align-left" rel="noreferrer">
-                                    <span style={{ textDecoration: 'underline', display: 'inline-block', maxWidth: '510px' }} className="pt-text-overflow-ellipsis">
-                                        {results.entityLabel}&nbsp;›
-                                    </span>
-
+                                    <a target="_blank" href={results.entity} className="wikidata-title pt-minimal pt-dark pt-align-left" rel="noreferrer">
+                                    <span className="pt-text-overflow-ellipsis wikidata-link">
+                                        {results.entityLabel}&nbsp;
+                                    </span>›
                                     </a>
                                 </div>
                                 {
                                     results.properties.map((prop) => {
                                         const [key, value] = Object.entries(prop)[0]
                                         return (
-                                            <span style={{ fontSize: '12px', fontWeight: 400, color: '#DADBD9' }} key={key}>
-                                                <span>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
+                                            <span className="wikidata-details-text" key={key}>
+                                                <span style={{ fontWeight: 700 }}>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
                                             </span>
                                         )
                                     })
@@ -293,7 +292,7 @@ const WikiDataContainer = styled.div`
   display: flex;
   flex-direction: column;
   background: #415E77;
-  padding: 4px 16px;
+  padding: 4px 20px;
   border-width: 1px;
   border-style: solid;
   border-color: rgb(0, 0, 0, 0.22);
@@ -316,8 +315,8 @@ const WikiDataContainer = styled.div`
     flex-direction: row;
     align-items: center;
     position: absolute;
-    top: 1%;
-    right: 6%;
+    top: 3%;
+    right: 7%;
     gap: 4px;
     opacity: 0.5;
     height: fit-content
@@ -331,5 +330,26 @@ const WikiDataContainer = styled.div`
   .spinner-container {
     display: flex;
     align-items: center;
+  }
+
+  .wikidata-title {
+    color: #EBEAE4;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .wikidata-link {
+    text-decoration: underline;
+    display: inline-block;
+    max-width: 510px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .wikidata-details-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(218, 219, 217, 0.7);
   }
 `

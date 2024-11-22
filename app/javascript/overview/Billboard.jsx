@@ -173,10 +173,6 @@ const Billboard = ({
 
           <LinkWikidata
             editing={editing}
-            key={taggingsPath}
-            taggingsPath={taggingsPath}
-            tags={tags}
-            onChange={(tags: Tag[]) => updateCase({ tags })}
           />
 
           {readerSignedIn && (
