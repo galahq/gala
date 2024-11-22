@@ -14,6 +14,7 @@ module Cases
     link(:new_translation) { new_case_translation_path object }
     link(:settings) { edit_case_settings_path object }
     link(:taggings) { case_taggings_path object }
+    link(:wikidata_links) { case_wikidata_links_path object }
     link(:teach) { new_deployment_path case_slug: object.slug }
     link(:teaching_guide) { case_attachment_path object, :teaching_guide }
     link(:new_copy) { copy_case_path object  }

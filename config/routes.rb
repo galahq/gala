@@ -117,9 +117,7 @@ Rails.application.routes.draw do
 
     resources :translations, only: %i[new create show], param: :case_locale
 
-    resources :wikidata_links, only: %i[create] do
-      put '/', to: 'wikidata_links#sync'
-    end
+    resources :wikidata_links, only: %i[create destroy]
 
     collection do
       resources :features, module: 'cases', param: :case_slug,
