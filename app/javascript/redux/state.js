@@ -174,6 +174,7 @@ export type Case = {
     self: string,
     settings: string,
     taggings: string,
+    wikidataLinks: string,
     teach: string,
     teachingGuide: string,
     newCopy: string,

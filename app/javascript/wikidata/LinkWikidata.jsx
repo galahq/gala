@@ -16,11 +16,11 @@ import WikidataDialog from './WikidataDialog'
 
 type Props = {
   editing: boolean,
+  wikidataLinksPath: string,
   onChange: (wikidataLinks: WikidataLink[]) => mixed,
-  wikidataLinks: WikidataLink[],
-  caseData: Case,
+  wikidataLinks: WikidataLink[]
 }
-const LinkWikidata = ({ editing, wikidataLinks, onChange }: Props) => {
+const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath }: Props) => {
   const schemas = ['researchers', 'software', 'hardware', 'grants', 'works']
   console.log("wikidataLinks", wikidataLinks)
   const [openDialog, setOpenDialog] = React.useState(false)
