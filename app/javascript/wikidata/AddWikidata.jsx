@@ -43,7 +43,7 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks, caseData }: Pro
         <WikiDataInput {...props} schema={schema} index={index} />
     ), [schema])
 
-    if (!editing || !isValidWikidataKey(schema)) return null
+    if (!isValidWikidataKey(schema)) return null
 
     const items = state[schema].length === 0 ? wikidataLinks.filter(link => link.schema === schema).map(item => item.qid) : state[schema] || []
 
@@ -55,6 +55,7 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks, caseData }: Pro
                 </div>
                 <SortableWikidataList
                     dark
+                    editing={editing}
                     items={items}
                     newItem="" // Ensure newItem is an empty string
                     render={(props, index) => renderInput(props, index)}

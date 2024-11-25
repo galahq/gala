@@ -39,6 +39,7 @@ type ContainerProps<Item> = {
   render: React.ComponentType<Item>,
   onChange: (Item[]) => void,
   caseData: Case,
+  editing: boolean,
   schema: string, // Add schema to ContainerProps
 }
 
@@ -63,6 +64,10 @@ type Props<Item> = {
   dark?: boolean,
 
   caseData: Case,
+
+  editing: boolean,
+
+  schema: string,
 }
 
 // The props with which the `render` props of SortableList will be called
@@ -79,6 +84,10 @@ type ChildProps<Item> = {
   schema: string,
 
   caseData: Case,
+
+  editing: boolean,
+
+  position: number,
 }
 
 const Handle = SortableHandle(() => (
@@ -89,25 +98,29 @@ const Handle = SortableHandle(() => (
 ))
 
 const Item = SortableElement(
-  ({ item, index, render: Render, onChangeItem, onRemove, caseData }: ItemProps<*>) => (
+  ({ item, index, render: Render, onChangeItem, onRemove, caseData, editing, position }: ItemProps<*>) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
-      <Handle />
+      {
+        editing && <Handle />
+      }
 
-      <Render item={item} index={index} caseData={caseData} onChangeItem={onChangeItem} />
+      <Render item={item} index={index} position={position} caseData={caseData} editing={editing} onChangeItem={onChangeItem} />
 
-      <Button
+      {
+        editing && <Button
         className="pt-fixed"
         intent={Intent.DANGER}
         icon="delete"
         onClick={onRemove}
-      />
+        />
+      }
     </div>
   )
 )
 
 // $FlowFixMe
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange, caseData, schema, ...rest }: ContainerProps<*>) => {
+  ({ newItem, items, render, onChange, caseData, schema, editing, ...rest }: ContainerProps<*>) => {
     console.log("Container Props:", { newItem, items, render, onChange, schema })
     console.log("rest props", rest)
     return (
@@ -117,8 +130,10 @@ const Container = SortableContainer(
             key={i}
             schema={schema} // Pass schema prop here
             index={i}
+            position={i}
             item={item}
             render={render}
+            editing={editing}
             caseData={caseData}
             onChangeItem={item => {
               console.log(`Item changed at index ${i}`, item)
@@ -127,22 +142,26 @@ const Container = SortableContainer(
             onRemove={() => {
               console.log(`Item removed at index ${i}`, items[i])
               console.log("item", item)
-              Orchard.prune(`/cases/${caseData.slug}/wikidata_links/${item}`).then(resp => {
-                console.log(resp)
-              })
-              .catch(e => console.log(e))
+              if (item !== '') {
+                Orchard.prune(`/cases/${caseData.slug}/wikidata_links/${item}`).then(resp => {
+                  console.log(resp)
+                })
+                .catch(e => console.log(e))
+              }
               return onChange(remove(i, 1, items))
             }}
           />
         ))}
-        <Button
-          intent={Intent.SUCCESS}
-          icon="add"
-          text="Add"
-          onClick={_ => {
-            return onChange(append(newItem, items))
-          }}
-        />
+        {
+          editing && <Button
+              intent={Intent.SUCCESS}
+              icon="add"
+              text="Add"
+              onClick={_ => {
+                return onChange(append(newItem, items))
+              }}
+          />
+        }
       </div>
     )
   }
@@ -176,6 +195,8 @@ export function createSortableInput ({
     onChangeItem,
     schema,
     caseData,
+    editing,
+    position,
   }: ChildProps<string> & { intl: IntlShape }) => {
     const [value, setValue] = React.useState(item)
     const [results, setResults] = React.useState(null)
@@ -255,50 +276,18 @@ export function createSortableInput ({
     }
 
     const addWikidataLinks = qid => {
-      Orchard.graft(`/cases/${caseData.slug}/wikidata_links`, { schema, qid, position: 0 })
+      Orchard.graft(`/cases/${caseData.slug}/wikidata_links`, { schema, qid, position })
         .then(resp => {
           console.log(resp)
         })
         .catch(e => console.log(e))
     }
 
-      if (value !== "" && results) {
-        return (
-          <WikiDataContainer>
-            <div className="data-container">
-                <div className="person-container">
-                    {
-                        loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
-                            <>
-                                <div>
-                                    <a target="_blank" rel="noopener noreferrer" href={results.entity} className="wikidata-title pt-minimal pt-dark pt-align-left" rel="noreferrer">
-                                    <span className="pt-text-overflow-ellipsis wikidata-link">
-                                        {results.entityLabel}&nbsp;›
-                                    </span>
-                                    </a>
-                                </div>
-                                {
-                                    results.properties.map((prop) => {
-                                        const [key, value] = Object.entries(prop)[0]
-                                        return (
-                                            <span className="wikidata-details-text" key={key}>
-                                                <span style={{ fontWeight: 700 }}>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
-                                            </span>
-                                        )
-                                    })
-                                }
-                            </>
-                        )
-                    }
-                </div>
-                <div className="wikidata-logo-container">
-                    <Icon color="rgba(235, 234, 228, 0.5)" icon="graph" iconSize={14} />
-                    <span className="wikidata-text">Wikidata</span>
-                </div>
-            </div>
-          </WikiDataContainer>
-        )
-      }
+    if (!editing && loading) {
+      return (<div>
+          <Spinner intent={Intent.PRIMARY} small={true} />
+        </div>)
+    }
 
     if (value !== '' && results) {
       return (
@@ -336,7 +325,7 @@ export function createSortableInput ({
                 </>
               )}
             </div>
-            <div className="wikidata-logo-container">
+            <div className="wikidata-logo-container" style={{ right: editing ? '7%' : '2%' }}>
               <Icon
                 color="rgba(235, 234, 228, 0.5)"
                 icon="graph"
@@ -392,7 +381,7 @@ export function createSortableInput ({
 const WikiDataContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background: #415E77;
+  background: #415e77;
   padding: 4px 20px;
   border-width: 1px;
   border-style: solid;
@@ -417,7 +406,6 @@ const WikiDataContainer = styled.div`
     align-items: center;
     position: absolute;
     top: 3%;
-    right: 7%;
     gap: 4px;
     opacity: 0.5;
     height: fit-content;
@@ -434,19 +422,10 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-title {
-    color: #EBEAE4;
+    color: #ebeae4;
     display: flex;
     flex-direction: row;
     align-items: center;
-  }
-
-  .wikidata-title > span {
-    text-decoration: none;
-  }
-
-  .wikidata-title:hover {
-    text-decoration: underline;
-    color: #EBEAE4;
   }
 
   .wikidata-link {

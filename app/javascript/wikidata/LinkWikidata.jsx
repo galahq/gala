@@ -26,29 +26,27 @@ type Props = {
 const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath, intl }: Props) => {
   const schemas = ['researchers', 'software', 'hardware', 'grants', 'works']
   const [openDialog, setOpenDialog] = React.useState(false)
-  if (!editing) return null
 
   return (
     <CatalogSection>
       <Container>
-        <SectionTitle>
-          <div className="wikidata-title">
-            <FormattedMessage id="catalog.wikidata.linkWikidata" />
-            <InfoButton
-              icon="info-sign"
-              aria-label={intl.formatMessage({
-                id: 'catalog.wikidata.wikidataDialogTitle',
-              })}
-              onClick={() => setOpenDialog(true)}
-            />
-          </div>
-        </SectionTitle>
-
-        <WikidataDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
-
-        <div className="wikidata-instructions">
-          <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
-        </div>
+        {
+          editing && <>
+            <SectionTitle>
+            <div className="wikidata-title">
+              <FormattedMessage id="catalog.wikidata.linkWikidata" />
+              <InfoButton
+                icon="info-sign"
+                aria-label={intl.formatMessage({
+                  id: 'catalog.wikidata.wikidataDialogTitle',
+                })}
+                onClick={() => setOpenDialog(true)} />
+            </div>
+          </SectionTitle><WikidataDialog openDialog={openDialog} setOpenDialog={setOpenDialog} /><div className="wikidata-instructions">
+              <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
+            </div>
+          </>
+        }
 
         <div className="wikidata-container">
           {
