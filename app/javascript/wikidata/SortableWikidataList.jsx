@@ -262,6 +262,44 @@ export function createSortableInput ({
         .catch(e => console.log(e))
     }
 
+      if (value !== "" && results) {
+        return (
+          <WikiDataContainer>
+            <div className="data-container">
+                <div className="person-container">
+                    {
+                        loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
+                            <>
+                                <div>
+                                    <a target="_blank" rel="noopener noreferrer" href={results.entity} className="wikidata-title pt-minimal pt-dark pt-align-left" rel="noreferrer">
+                                    <span className="pt-text-overflow-ellipsis wikidata-link">
+                                        {results.entityLabel}&nbsp;›
+                                    </span>
+                                    </a>
+                                </div>
+                                {
+                                    results.properties.map((prop) => {
+                                        const [key, value] = Object.entries(prop)[0]
+                                        return (
+                                            <span className="wikidata-details-text" key={key}>
+                                                <span style={{ fontWeight: 700 }}>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
+                                            </span>
+                                        )
+                                    })
+                                }
+                            </>
+                        )
+                    }
+                </div>
+                <div className="wikidata-logo-container">
+                    <Icon color="rgba(235, 234, 228, 0.5)" icon="graph" iconSize={14} />
+                    <span className="wikidata-text">Wikidata</span>
+                </div>
+            </div>
+          </WikiDataContainer>
+        )
+      }
+
     if (value !== '' && results) {
       return (
         <WikiDataContainer>
@@ -354,7 +392,7 @@ export function createSortableInput ({
 const WikiDataContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background: #415e77;
+  background: #415E77;
   padding: 4px 20px;
   border-width: 1px;
   border-style: solid;
@@ -396,10 +434,19 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-title {
-    color: #ebeae4;
+    color: #EBEAE4;
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+
+  .wikidata-title > span {
+    text-decoration: none;
+  }
+
+  .wikidata-title:hover {
+    text-decoration: underline;
+    color: #EBEAE4;
   }
 
   .wikidata-link {

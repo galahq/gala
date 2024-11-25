@@ -4,12 +4,14 @@
  */
 
 import * as React from 'react'
-import { FormattedMessage } from 'react-intl'
-import type { Case, WikidataLink } from 'redux/state'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import { Icon, Button } from '@blueprintjs/core'
 import styled from 'styled-components'
+
+import type { Case, WikidataLink } from 'redux/state'
+import type { IntlShape } from 'react-intl'
 
 import AddWikidata from './AddWikidata'
 import WikidataDialog from './WikidataDialog'
@@ -18,9 +20,10 @@ type Props = {
   editing: boolean,
   wikidataLinksPath: string,
   onChange: (wikidataLinks: WikidataLink[]) => mixed,
-  wikidataLinks: WikidataLink[]
+  wikidataLinks: WikidataLink[],
+  intl: IntlShape,
 }
-const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath }: Props) => {
+const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath, intl }: Props) => {
   const schemas = ['researchers', 'software', 'hardware', 'grants', 'works']
   const [openDialog, setOpenDialog] = React.useState(false)
   if (!editing) return null
@@ -31,7 +34,13 @@ const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath }: P
         <SectionTitle>
           <div className="wikidata-title">
             <FormattedMessage id="catalog.wikidata.linkWikidata" />
-            <Icon icon="info-sign" style={{ cursor: 'pointer' }} iconSize={14} onClick={() => setOpenDialog(true)} />
+            <InfoButton
+              icon="info-sign"
+              aria-label={intl.formatMessage({
+                id: 'catalog.wikidata.wikidataDialogTitle',
+              })}
+              onClick={() => setOpenDialog(true)}
+            />
           </div>
         </SectionTitle>
 
@@ -51,7 +60,7 @@ const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath }: P
   )
 }
 
-export default LinkWikidata
+export default injectIntl(LinkWikidata)
 
 const Container = styled.div`
   display: flex;
@@ -75,5 +84,21 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
+  }
+
+  .wikidata-info-sign {
+    background: rgba(139,148,156,.15);
+  }
+`
+
+const InfoButton = styled(Button).attrs({
+  className: 'pt-minimal pt-button--baseline-aligned',
+})`
+  color: inherit;
+  z-index: 1;
+
+  svg {
+    fill: #EBEAE3;
+    opacity:0.7;
   }
 `
