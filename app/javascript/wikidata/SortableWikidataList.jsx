@@ -19,7 +19,7 @@ import {
   arrayMove,
 } from 'react-sortable-hoc'
 import { injectIntl } from 'react-intl'
-import type { WikidataLink, Case } from 'redux/state'
+import type { WikidataLink } from 'redux/state'
 
 import { append, update, remove } from 'ramda'
 
@@ -34,11 +34,11 @@ type ItemProps<Item> = ChildProps<Item> & {
   onRemove: () => void,
 }
 type ContainerProps<Item> = {
-  items: Item[],
-  newItem: Item,
+  items: WikidataLink[],
+  newItem: WikidataLink,
   render: React.ComponentType<Item>,
-  onChange: (Item[]) => void,
-  caseData: Case,
+  onChange: (WikidataLink[]) => void,
+  wikidataLinksPath: string,
   editing: boolean,
   schema: string, // Add schema to ContainerProps
 }
@@ -50,20 +50,20 @@ type Props<Item> = {
 
   // An array of items that make up the SortableList. Each element will be
   // passed to children as item so that its contents may be rendered.
-  items: Item[],
+  items: WikidataLink[],
 
   // An example of a "blank" or "new" item to be added when the user presses the
   // "Add item" button
-  newItem: Item,
+  newItem: WikidataLink,
 
   // Your chance to handle any change to the list. You will be called with a
   // changed copy of items.
-  onChange: (Item[]) => void,
+  onChange: (WikidataLink[]) => void,
 
   // So the elements don’t change theme while being dragged
   dark?: boolean,
 
-  caseData: Case,
+  wikidataLinksPath: string,
 
   editing: boolean,
 
@@ -73,17 +73,17 @@ type Props<Item> = {
 // The props with which the `render` props of SortableList will be called
 type ChildProps<Item> = {
   // The item that this child should render
-  item: Item,
+  item: WikidataLink,
 
   // The index of this child in the array (for numbering, etc.)
   index: number,
 
   // A function which takes a modified copy of the child to replace it.
-  onChangeItem: Item => void,
+  onChangeItem: WikidataLink => void,
 
   schema: string,
 
-  caseData: Case,
+  wikidataLinksPath: string,
 
   editing: boolean,
 
@@ -98,13 +98,13 @@ const Handle = SortableHandle(() => (
 ))
 
 const Item = SortableElement(
-  ({ item, index, render: Render, onChangeItem, onRemove, caseData, editing, position }: ItemProps<*>) => (
+  ({ item, index, render: Render, onChangeItem, onRemove, wikidataLinksPath, editing, position }: ItemProps<*>) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
       {
         editing && <Handle />
       }
 
-      <Render item={item} index={index} position={position} caseData={caseData} editing={editing} onChangeItem={onChangeItem} />
+      <Render item={item} index={index} position={position} wikidataLinksPath={wikidataLinksPath} editing={editing} onChangeItem={onChangeItem} />
 
       {
         editing && <Button
@@ -120,7 +120,7 @@ const Item = SortableElement(
 
 // $FlowFixMe
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange, caseData, schema, editing, ...rest }: ContainerProps<*>) => {
+  ({ newItem, items, render, onChange, schema, editing, wikidataLinksPath, ...rest }: ContainerProps<*>) => {
     console.log("Container Props:", { newItem, items, render, onChange, schema })
     console.log("rest props", rest)
     return (
@@ -134,7 +134,7 @@ const Container = SortableContainer(
             item={item}
             render={render}
             editing={editing}
-            caseData={caseData}
+            wikidataLinksPath={wikidataLinksPath}
             onChangeItem={item => {
               console.log(`Item changed at index ${i}`, item)
               return onChange(update(i, item, items))
@@ -142,8 +142,8 @@ const Container = SortableContainer(
             onRemove={() => {
               console.log(`Item removed at index ${i}`, items[i])
               console.log("item", item)
-              if (item !== '') {
-                Orchard.prune(`/cases/${caseData.slug}/wikidata_links/${item}`).then(resp => {
+              if (item.qid !== '') {
+                Orchard.prune(`${wikidataLinksPath}/${item.qid}`).then(resp => {
                   console.log(resp)
                 })
                 .catch(e => console.log(e))
@@ -180,7 +180,7 @@ const SortableWikidataList = (props: Props<*>) => {
         const orderedItems = arrayMove(props.items, oldIndex, newIndex)
         props.onChange(orderedItems)
         orderedItems.map((item, i) => {
-          Orchard.graft(`/cases/${props.caseData.slug}/wikidata_links`, { qid: item, schema: props.schema, position: i })
+          Orchard.graft(props.wikidataLinksPath, { qid: item.qid, schema: props.schema, position: i })
             .then(resp => {
               console.log(resp)
             })
@@ -203,36 +203,33 @@ export function createSortableInput ({
     item,
     onChangeItem,
     schema,
-    caseData,
+    wikidataLinksPath,
     editing,
     position,
-  }: ChildProps<string> & { intl: IntlShape }) => {
-    const [value, setValue] = React.useState(item)
+  }: ChildProps<WikidataLink> & { intl: IntlShape }) => {
+    const [value, setValue] = React.useState(item.qid)
     const [results, setResults] = React.useState(null)
     const [error, setError] = React.useState(null)
-    const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
     const [typing, setTyping] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
 
     React.useEffect(() => {
       if (!typing) {
-        if (!item) {
+        if (!item.qid) {
           setValue("")
           setResults(null)
           setError(null)
-          setInputIntent(Intent.NONE)
         } else {
           setError(null)
-          setInputIntent(Intent.NONE)
-          if (isValidQId(item) && results === null) {
+          if (isValidQId(item.qid) && results === null) {
             setLoading(true)
-            setValue(item)
-            makeQuery(item)
+            setValue(item.qid)
+            makeQuery(item.qid)
           }
         }
       }
       setTyping(false)
-    }, [item])
+    }, [item.qid])
 
     const handleChange = e => {
       const newValue = e.target.value
@@ -244,7 +241,7 @@ export function createSortableInput ({
       setLoading(true)
       if (isValidQId(value)) {
         makeQuery(value)
-        onChangeItem(value)
+        onChangeItem({ ...item, qid: value })
         addWikidataLinks(value)
       }
     }
@@ -264,12 +261,10 @@ export function createSortableInput ({
         .then(resp => {
           if (resp == null) {
             setError('No results found')
-            setInputIntent(Intent.DANGER)
           } else {
             setResults(resp)
             setLoading(false)
             setError(null)
-            setInputIntent(Intent.SUCCESS)
           }
         })
         .catch(err => {
@@ -280,12 +275,11 @@ export function createSortableInput ({
           }
           setResults(null)
           setLoading(false)
-          setInputIntent(Intent.DANGER)
         })
     }
 
     const addWikidataLinks = qid => {
-      Orchard.graft(`/cases/${caseData.slug}/wikidata_links`, { schema, qid, position })
+      Orchard.graft(wikidataLinksPath, { schema, qid, position })
         .then(resp => {
           console.log(resp)
         })

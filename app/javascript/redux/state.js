@@ -122,25 +122,10 @@ export type Byline = {
   acknowledgements: string,
 }
 
-// TODO remove this type once the Wikidata API is implemented
-export type Wikidata = {
-  researchers: string[],
-  software: string[],
-  hardware: string[],
-  grants: string[],
-  works: string[],
-}
-
 export type WikidataLink = {
-  id: ?number,
-  objectType: string,
-  objectId: number,
-  caseId: number,
   schema: string,
   qid: string,
   position: number,
-  createdAt: string,
-  updatedAt: string,
 }
 
 export type Card = {

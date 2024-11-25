@@ -6,70 +6,52 @@
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import type { Wikidata, Case, WikidataLink } from 'redux/state'
+import type { WikidataLink } from 'redux/state'
 import SortableWikidataList, { createSortableInput } from './SortableWikidataList'
 
 type Props = {
   editing: boolean,
-  schema: string
-} & {
-    editing: boolean,
-    onChange: (wikidataLinks: WikidataLink[]) => mixed,
-    wikidataLinks: WikidataLink[],
-    caseData: Case,
-  }
-
-const isValidWikidataKey = (key: string): boolean => {
-    return ['researchers', 'software', 'hardware', 'grants', 'works'].includes(key)
+  schema: string,
+  editing: boolean,
+  onChange: (wikidataLinks: WikidataLink[]) => mixed,
+  wikidataLinks: WikidataLink[],
+  wikidataLinksPath: string,
 }
 
-const AddWikidata = ({ editing, schema, onChange, wikidataLinks, caseData }: Props): React.Node => {
-    const [state, setState] = React.useState<Wikidata>({
-        researchers: [],
-        software: [],
-        hardware: [],
-        grants: [],
-        works: [],
-    })
+const AddWikidata = ({ editing, schema, onChange, wikidataLinks, wikidataLinksPath }: Props): React.Node => {
+  const items = wikidataLinks.filter(link => link.schema === schema)
 
-    const handleChange = React.useCallback((items: Array<string>): void => {
-        setState(prevState => ({
-            ...prevState,
-            [schema]: items,
-        }))
-    }, [schema])
+  const handleChange = (updates: WikidataLink[]) => {
+    const updatedLinks = [
+      ...wikidataLinks.filter(link => link.schema !== schema),
+      ...updates,
+    ]
+    onChange(updatedLinks)
+  }
 
-    const renderInput = React.useCallback((props: any, index: number): React.Node => (
-        <WikiDataInput {...props} schema={schema} index={index} />
-    ), [schema])
+  if (!editing && items.length === 0) {
+    return null
+  }
 
-    if (!isValidWikidataKey(schema)) return null
-
-    const items = state[schema].length === 0 ? wikidataLinks.filter(link => link.schema === schema).map(item => item.qid) : state[schema] || []
-
-    if (!editing && items.length === 0) {
-        return null
-    }
-
-    return (
-        <Container>
-            <div className="pt-dark">
-                <div className="wikidata-title">
-                    <FormattedMessage id={`catalog.wikidata.${schema}`} />
-                </div>
-                <SortableWikidataList
-                    dark
-                    editing={editing}
-                    items={items}
-                    newItem="" // Ensure newItem is an empty string
-                    render={(props, index) => renderInput(props, index)}
-                    caseData={caseData}
-                    schema={schema}
-                    onChange={handleChange}
-                />
-            </div>
-        </Container>
-    )
+  return (
+    <Container>
+      <div className="pt-dark">
+        <div className="wikidata-title">
+          <FormattedMessage id={`catalog.wikidata.${schema}`} />
+        </div>
+        <SortableWikidataList
+          dark
+          editing={editing}
+          items={items}
+          newItem={{ qid: '', schema, position: items.length }}
+          render={(props, index) => <WikiDataInput {...props} schema={schema} index={index} />}
+          wikidataLinksPath={wikidataLinksPath}
+          schema={schema}
+          onChange={handleChange}
+        />
+      </div>
+    </Container>
+  )
 }
 
 const Container = styled.div`

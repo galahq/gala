@@ -39,10 +39,12 @@ export default function caseData (
   switch (action.type) {
     case 'UPDATE_CASE':
     case 'UPDATE_CASE_ELEMENTS':
-      return {
+      const newCaseData = {
         ...state,
         ...action.data,
       }
+      console.log("newCaseData", newCaseData)
+      return newCaseData
 
     case 'SET_READER_ENROLLMENT':
       return {

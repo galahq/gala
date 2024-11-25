@@ -40,7 +40,8 @@ const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath, int
                 aria-label={intl.formatMessage({
                   id: 'catalog.wikidata.wikidataDialogTitle',
                 })}
-                onClick={() => setOpenDialog(true)} />
+                onClick={() => setOpenDialog(true)}
+              />
             </div>
           </SectionTitle><WikidataDialog openDialog={openDialog} setOpenDialog={setOpenDialog} /><div className="wikidata-instructions">
               <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
@@ -50,7 +51,7 @@ const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath, int
 
         <div className="wikidata-container">
           {
-            schemas.map((schema) => (<AddWikidata key={schema} editing={editing} schema={schema} wikidataLinks={wikidataLinks} caseData={caseData} onChange={onChange} />))
+            schemas.map((schema) => (<AddWikidata key={schema} editing={editing} schema={schema} wikidataLinks={wikidataLinks} wikidataLinksPath={wikidataLinksPath} onChange={onChange} />))
           }
         </div>
       </Container>

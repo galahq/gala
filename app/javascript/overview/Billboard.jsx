@@ -37,6 +37,7 @@ function mapStateToProps ({ caseData, edit }: State) {
     tags,
     links,
     teachingGuideUrl,
+    wikidataLinks,
   } = caseData
 
   return {
@@ -53,6 +54,7 @@ function mapStateToProps ({ caseData, edit }: State) {
     wikidataLinksPath: links.wikidataLinks,
     tags,
     teachingGuideUrl,
+    wikidataLinks,
   }
 }
 
@@ -70,6 +72,7 @@ type Props = {
   wikidataLinksPath: string,
   tags: Tag[],
   teachingGuideUrl: string,
+  wikidataLinks: WikidataLink[],
   updateCase: typeof updateCase,
 }
 
@@ -87,6 +90,7 @@ const Billboard = ({
   wikidataLinksPath,
   tags,
   teachingGuideUrl,
+  wikidataLinks,
   updateCase,
 }: Props) => (
   <Container>
@@ -176,8 +180,8 @@ const Billboard = ({
             editing={editing}
             key={wikidataLinksPath}
             wikidataLinksPath={wikidataLinksPath}
-            wikidataLinks={caseData.wikidataLinks}
-            onChange={(wikidataLinks: WikidataLink[]) => updateCase({ wikidataLinks })}
+            wikidataLinks={wikidataLinks}
+            onChange={(wikidataLinks: WikidataLink[]) => updateCase({ wikidataLinks }, false)}
           />
 
           {readerSignedIn && (
