@@ -23,8 +23,7 @@ const isValidWikidataKey = (key: string): boolean => {
     return ['researchers', 'software', 'hardware', 'grants', 'works'].includes(key)
 }
 
-const AddWikidata = ({ editing, schema, onChange, wikidataLinks }: Props): React.Node => {
-    console.log("AddWikidata wikidataLinks", wikidataLinks)
+const AddWikidata = ({ editing, schema, onChange, wikidataLinks, caseData }: Props): React.Node => {
     const [state, setState] = React.useState<Wikidata>({
         researchers: [],
         software: [],
@@ -34,7 +33,6 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks }: Props): React
     })
 
     const handleChange = React.useCallback((items: Array<string>): void => {
-        console.log(`AddWikidata, items: ${items}`)
         setState(prevState => ({
             ...prevState,
             [schema]: items,
@@ -47,7 +45,7 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks }: Props): React
 
     if (!editing || !isValidWikidataKey(schema)) return null
 
-    const items = wikidataLinks || [] // state[schema] || []
+    const items = state[schema].length === 0 ? wikidataLinks.filter(link => link.schema === schema).map(item => item.qid) : state[schema] || [] // state[schema] || []
 
     return (
         <Container>
@@ -60,6 +58,7 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks }: Props): React
                     items={items}
                     newItem=""
                     render={renderInput}
+                    caseData={caseData}
                     onChange={handleChange}
                 />
             </div>

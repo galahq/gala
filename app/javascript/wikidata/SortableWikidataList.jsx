@@ -19,6 +19,7 @@ import {
   arrayMove,
 } from 'react-sortable-hoc'
 import { injectIntl } from 'react-intl'
+import type { WikidataLink, Case } from 'redux/state'
 
 import { append, update, remove } from 'ramda'
 
@@ -37,6 +38,7 @@ type ContainerProps<Item> = {
   newItem: Item,
   render: React.ComponentType<Item>,
   onChange: (Item[]) => void,
+  caseData: Case,
 }
 
 // Use SortableList as a component with these props:
@@ -58,6 +60,8 @@ type Props<Item> = {
 
   // So the elements don’t change theme while being dragged
   dark?: boolean,
+
+  caseData: Case,
 }
 
 // The props with which the `render` props of SortableList will be called
@@ -72,6 +76,8 @@ type ChildProps<Item> = {
   onChangeItem: Item => void,
 
   schema: string,
+
+  caseData: Case,
 }
 
 const Handle = SortableHandle(() => (
@@ -82,11 +88,11 @@ const Handle = SortableHandle(() => (
 ))
 
 const Item = SortableElement(
-  ({ item, index, render: Render, onChangeItem, onRemove }: ItemProps<*>) => (
+  ({ item, index, render: Render, onChangeItem, onRemove, caseData }: ItemProps<*>) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
       <Handle />
 
-      <Render item={item} index={index} onChangeItem={onChangeItem} />
+      <Render item={item} index={index} onChangeItem={onChangeItem} caseData={caseData} />
 
       <Button
         className="pt-fixed"
@@ -100,27 +106,39 @@ const Item = SortableElement(
 
 // $FlowFixMe
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange }: ContainerProps<*>) => (
-    <div>
-      {items.map((item, i) => (
-        <Item
-          key={i}
-          schema={item.schema}
-          index={i}
-          item={item}
-          render={render}
-          onChangeItem={item => onChange(update(i, item, items))}
-          onRemove={() => onChange(remove(i, 1, items))}
+  ({ newItem, items, render, onChange, caseData }: ContainerProps<*>) => {
+    console.log("Container Props:", { newItem, items, render, onChange })
+    return (
+      <div>
+        {items.map((item, i) => (
+          <Item
+            key={i}
+            schema={item.schema}
+            index={i}
+            item={item}
+            render={render}
+            caseData={caseData}
+            onChangeItem={item => {
+              console.log(`Item changed at index ${i}`, item)
+              return onChange(update(i, item, items))
+            }}
+            onRemove={() => {
+              console.log(`Item removed at index ${i}`, items[i])
+              return onChange(remove(i, 1, items))
+            }}
+          />
+        ))}
+        <Button
+          intent={Intent.SUCCESS}
+          icon="add"
+          text="Add"
+          onClick={_ => {
+            return onChange(append(newItem, items))
+          }}
         />
-      ))}
-      <Button
-        intent={Intent.SUCCESS}
-        icon="add"
-        text="Add"
-        onClick={_ => onChange(append(newItem, items))}
-      />
-    </div>
-  )
+      </div>
+    )
+  }
 )
 
 const SortableWikidataList = (props: Props<*>) => {
@@ -161,6 +179,7 @@ export function createSortableInput ({
     item,
     onChangeItem,
     schema,
+    caseData
   }: ChildProps<string> & { intl: IntlShape }) => {
     const [value, setValue] = React.useState(item)
     const [results, setResults] = React.useState(null)
@@ -172,16 +191,16 @@ export function createSortableInput ({
     React.useEffect(() => {
       if (!typing) {
         if (!item) {
-          setValue('')
+          setValue("")
           setResults(null)
           setError(null)
           setInputIntent(Intent.NONE)
         } else {
-          setValue(item)
           setError(null)
           setInputIntent(Intent.NONE)
-          setLoading(true)
           if (isValidQId(item)) {
+            setLoading(true)
+            setValue(item)
             makeQuery(item)
           }
         }
@@ -193,13 +212,14 @@ export function createSortableInput ({
       const newValue = e.target.value
       setTyping(true)
       setValue(newValue)
-      onChangeItem(newValue)
     }
 
     const handleBlur = () => {
       setLoading(true)
       if (isValidQId(value)) {
         makeQuery(value)
+        onChangeItem(value)
+        addWikidataLinks(value)
       }
     }
 
@@ -213,11 +233,10 @@ export function createSortableInput ({
       return id.startsWith('Q')
     }
 
-    const makeQuery = id => {
-      Orchard.harvest(`sparql/${schema}/${id.trim()}`)
+    const makeQuery = qid => {
+      Orchard.harvest(`sparql/${schema}/${qid.trim()}`)
         .then(resp => {
-          console.log(resp)
-          if (resp.status !== 200) {
+          if (resp == null) {
             setError('No results found')
             setInputIntent(Intent.DANGER)
           } else {
@@ -237,6 +256,14 @@ export function createSortableInput ({
           setLoading(false)
           setInputIntent(Intent.DANGER)
         })
+    }
+
+    const addWikidataLinks = qid => {
+      Orchard.graft(`/cases/${caseData.slug}/wikidata_links`, { schema, qid, position: 0 })
+        .then(resp => {
+          console.log(resp)
+        })
+        .catch(e => console.log(e))
     }
 
     if (value !== '' && results) {

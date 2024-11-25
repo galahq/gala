@@ -22,7 +22,6 @@ type Props = {
 }
 const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath }: Props) => {
   const schemas = ['researchers', 'software', 'hardware', 'grants', 'works']
-  console.log("wikidataLinks", wikidataLinks)
   const [openDialog, setOpenDialog] = React.useState(false)
   if (!editing) return null
 
