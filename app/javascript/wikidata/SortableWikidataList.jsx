@@ -176,8 +176,17 @@ const SortableWikidataList = (props: Props<*>) => {
       transitionDuration={100}
       helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
       schema={props.schema}
-      onSortEnd={({ oldIndex, newIndex }) =>
-        props.onChange(arrayMove(props.items, oldIndex, newIndex))
+      onSortEnd={({ oldIndex, newIndex }) => {
+        const orderedItems = arrayMove(props.items, oldIndex, newIndex)
+        props.onChange(orderedItems)
+        orderedItems.map((item, i) => {
+          Orchard.graft(`/cases/${props.caseData.slug}/wikidata_links`, { qid: item, schema: props.schema, position: i })
+            .then(resp => {
+              console.log(resp)
+            })
+            .catch(e => console.log(e))
+        })
+        }
       } // Pass schema prop to Container
     />
   )
