@@ -39,13 +39,13 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks, caseData }: Pro
         }))
     }, [schema])
 
-    const renderInput = React.useCallback((props: any): React.Node => (
-        <WikiDataInput {...props} schema={schema} />
+    const renderInput = React.useCallback((props: any, index: number): React.Node => (
+        <WikiDataInput {...props} schema={schema} index={index} />
     ), [schema])
 
     if (!editing || !isValidWikidataKey(schema)) return null
 
-    const items = state[schema].length === 0 ? wikidataLinks.filter(link => link.schema === schema).map(item => item.qid) : state[schema] || [] // state[schema] || []
+    const items = state[schema].length === 0 ? wikidataLinks.filter(link => link.schema === schema).map(item => item.qid) : state[schema] || []
 
     return (
         <Container>
@@ -56,9 +56,10 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks, caseData }: Pro
                 <SortableWikidataList
                     dark
                     items={items}
-                    newItem=""
-                    render={renderInput}
+                    newItem="" // Ensure newItem is an empty string
+                    render={(props, index) => renderInput(props, index)}
                     caseData={caseData}
+                    schema={schema}
                     onChange={handleChange}
                 />
             </div>

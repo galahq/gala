@@ -39,6 +39,7 @@ type ContainerProps<Item> = {
   render: React.ComponentType<Item>,
   onChange: (Item[]) => void,
   caseData: Case,
+  schema: string, // Add schema to ContainerProps
 }
 
 // Use SortableList as a component with these props:
@@ -92,7 +93,7 @@ const Item = SortableElement(
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
       <Handle />
 
-      <Render item={item} index={index} onChangeItem={onChangeItem} caseData={caseData} />
+      <Render item={item} index={index} caseData={caseData} onChangeItem={onChangeItem} />
 
       <Button
         className="pt-fixed"
@@ -106,14 +107,15 @@ const Item = SortableElement(
 
 // $FlowFixMe
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange, caseData }: ContainerProps<*>) => {
-    console.log("Container Props:", { newItem, items, render, onChange })
+  ({ newItem, items, render, onChange, caseData, schema, ...rest }: ContainerProps<*>) => {
+    console.log("Container Props:", { newItem, items, render, onChange, schema })
+    console.log("rest props", rest)
     return (
       <div>
         {items.map((item, i) => (
           <Item
             key={i}
-            schema={item.schema}
+            schema={schema} // Pass schema prop here
             index={i}
             item={item}
             render={render}
@@ -124,6 +126,11 @@ const Container = SortableContainer(
             }}
             onRemove={() => {
               console.log(`Item removed at index ${i}`, items[i])
+              console.log("item", item)
+              Orchard.prune(`/cases/${caseData.slug}/wikidata_links/${item}`).then(resp => {
+                console.log(resp)
+              })
+              .catch(e => console.log(e))
               return onChange(remove(i, 1, items))
             }}
           />
@@ -149,9 +156,10 @@ const SortableWikidataList = (props: Props<*>) => {
       useDragHandle={true}
       transitionDuration={100}
       helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
+      schema={props.schema}
       onSortEnd={({ oldIndex, newIndex }) =>
         props.onChange(arrayMove(props.items, oldIndex, newIndex))
-      }
+      } // Pass schema prop to Container
     />
   )
 }
@@ -162,24 +170,12 @@ export function createSortableInput ({
   placeholderId,
   ...props
 }: { placeholderId?: string } = {}) {
-  // let item = {
-  //   id: 2,
-  //   objectType: 'Case',
-  //   objectId: 5,
-  //   caseId: 5,
-  //   schema: 'researchers',
-  //   qid: 'Q937',
-  //   position: 0,
-  //   createdAt: '2024-11-21T21:54:07.663Z',
-  //   updatedAt: '2024-11-21T21:54:07.663Z',
-  // }
-
   const SortableInput = ({
     intl,
     item,
     onChangeItem,
     schema,
-    caseData
+    caseData,
   }: ChildProps<string> & { intl: IntlShape }) => {
     const [value, setValue] = React.useState(item)
     const [results, setResults] = React.useState(null)
@@ -229,8 +225,8 @@ export function createSortableInput ({
       }
     }
 
-    const isValidQId = id => {
-      return id.startsWith('Q')
+    const isValidQId = (id) => {
+      return typeof id === 'string' && id.startsWith("Q")
     }
 
     const makeQuery = qid => {
@@ -280,9 +276,9 @@ export function createSortableInput ({
                   <div>
                     <a
                       target="_blank"
+                      rel="noopener noreferrer"
                       href={results.entity}
                       className="wikidata-title pt-minimal pt-dark pt-align-left"
-                      rel="noreferrer"
                     >
                       <span className="pt-text-overflow-ellipsis wikidata-link">
                         {results.entityLabel}&nbsp;
