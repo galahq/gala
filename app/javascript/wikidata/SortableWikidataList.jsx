@@ -224,7 +224,7 @@ export function createSortableInput ({
         } else {
           setError(null)
           setInputIntent(Intent.NONE)
-          if (isValidQId(item)) {
+          if (isValidQId(item) && results === null) {
             setLoading(true)
             setValue(item)
             makeQuery(item)

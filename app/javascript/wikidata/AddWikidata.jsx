@@ -47,6 +47,10 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks, caseData }: Pro
 
     const items = state[schema].length === 0 ? wikidataLinks.filter(link => link.schema === schema).map(item => item.qid) : state[schema] || []
 
+    if (!editing && items.length === 0) {
+        return null
+    }
+
     return (
         <Container>
             <div className="pt-dark">
