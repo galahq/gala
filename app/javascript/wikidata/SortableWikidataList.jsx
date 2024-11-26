@@ -163,7 +163,7 @@ const Container = SortableContainer(
               if (item.qid !== '') {
                 Orchard.prune(`${wikidataLinksPath}/${item.qid}`)
                   .then(resp => {
-                    console.log(resp)
+                    queriedQids.delete(item.qid)
                   })
                   .catch(e => console.log(e))
               }
