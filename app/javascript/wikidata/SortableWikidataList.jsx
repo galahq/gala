@@ -240,6 +240,11 @@ export function createSortableInput ({
       if (!typing && item.qid && !item.data && !queriedQids.has(item.qid)) {
         makeQuery(item.qid)
       }
+
+      if (queriedQids.has(item.qid)) {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.entryExists' }))
+      }
+
       setTyping(false)
     }, [item.qid])
 
