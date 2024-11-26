@@ -325,7 +325,7 @@ en:
       libraries with multiple cases.
     keywords: Keywords
     wikidata:
-      link_wikidata: Link Wikidata
+      link_wikidata: Wikidata Links
       wikidata_instructions: Enter a Wikidata QID to create a resource listing from Wikidata on the case overview page.
       researchers: Researchers
       software: Software
