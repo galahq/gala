@@ -250,17 +250,17 @@ export function createSortableInput ({
     }
 
     const handleBlur = () => {
-      if (isValidQId(value) && value !== item.qid && !queriedQids.has(value)) {
-        setLoading(true)
-        queriedQids.add(value)
-        makeQuery(value)
-        onChangeItem({ ...item, qid: value })
-        Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
-          .then(resp => {
-            console.log(resp)
-          })
-          .catch(e => console.log(e))
+      if (!isValidQId(value)) {
+        setError('Invalid QID')
+        return
       }
+      setError(null)
+      onChangeItem({ ...item, qid: value })
+      Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
+        .then(resp => {
+          console.log(resp)
+        })
+        .catch(e => console.log(e))
     }
 
     const handleKeyDown = e => {
@@ -277,20 +277,12 @@ export function createSortableInput ({
       setLoading(true)
       Orchard.harvest(`sparql/${schema}/${qid.trim()}`)
         .then((resp: SparqlResult) => {
-          if (resp == null) {
-            setError('No results found')
-          } else {
-            item.data = resp
-            setError(null)
-            onChangeItem({ ...item, qid, data: resp })
-          }
+          item.data = resp
+          setError(null)
+          onChangeItem({ ...item, qid, data: resp })
         })
         .catch(err => {
-          if (err.response && err.response.status === 404) {
-            setError('Entity not found')
-          } else {
-            setError(err.message)
-          }
+          setError(err.message)
           delete item.data
         })
         .finally(() => {
@@ -299,6 +291,10 @@ export function createSortableInput ({
     }
 
     const results = item.data
+
+    if (!editing && !loading && !results) {
+      return null
+    }
 
     if (!editing && loading) {
       return (
@@ -378,6 +374,7 @@ export function createSortableInput ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
         />
+        <span>{error}</span>
       </Callout>
     ) : (
       <InputGroup
