@@ -160,7 +160,8 @@ const Container = SortableContainer(
               return onChange(update(i, item, items))
             }}
             onRemove={() => {
-              if (item.qid !== '') {
+              const itemsQidList = items.map(item => item.qid)
+              if (item.qid !== '' && itemsQidList.length === 1) {
                 Orchard.prune(`${wikidataLinksPath}/${item.qid}`)
                   .then(resp => {
                     queriedQids.delete(item.qid)
@@ -237,7 +238,6 @@ export function createSortableInput ({
 
     React.useEffect(() => {
       if (!typing && item.qid && !item.data && !queriedQids.has(item.qid)) {
-        queriedQids.add(item.qid)
         makeQuery(item.qid)
       }
       setTyping(false)
@@ -250,11 +250,15 @@ export function createSortableInput ({
     }
 
     const handleBlur = () => {
-      if (!isValidQId(value)) {
-        setError('Invalid QID')
+      if (value === '') {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.emptyQid' }))
         return
       }
-      setError(null)
+      if (!isValidQId(value)) {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.invalidQid' }))
+        return
+      }
+
       onChangeItem({ ...item, qid: value })
       Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
         .then(resp => {
@@ -279,6 +283,7 @@ export function createSortableInput ({
         .then((resp: SparqlResult) => {
           item.data = resp
           setError(null)
+          queriedQids.add(qid)
           onChangeItem({ ...item, qid, data: resp })
         })
         .catch(err => {
@@ -368,7 +373,7 @@ export function createSortableInput ({
             loading &&
             value !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
           }
-          style={{ borderColor: error ? 'red' : 'inherit' }}
+          style={{ borderColor: error ? 'red' : 'inherit', marginBottom: '4px' }}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
