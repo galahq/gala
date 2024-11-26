@@ -126,6 +126,16 @@ export type WikidataLink = {
   schema: string,
   qid: string,
   position: number,
+  data?: SparqlResult,
+}
+
+export type SparqlResult = {
+  entity: string,
+  entityLabel: string,
+  schema: string,
+  properties: {
+    [string]: string,
+  }[],
 }
 
 export type Card = {

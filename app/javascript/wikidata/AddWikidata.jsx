@@ -7,7 +7,9 @@ import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import type { WikidataLink } from 'redux/state'
-import SortableWikidataList, { createSortableInput } from './SortableWikidataList'
+import SortableWikidataList, {
+  createSortableInput,
+} from './SortableWikidataList'
 
 type Props = {
   editing: boolean,
@@ -18,7 +20,13 @@ type Props = {
   wikidataLinksPath: string,
 }
 
-const AddWikidata = ({ editing, schema, onChange, wikidataLinks, wikidataLinksPath }: Props): React.Node => {
+const AddWikidata = ({
+  editing,
+  schema,
+  onChange,
+  wikidataLinks,
+  wikidataLinksPath,
+}: Props): React.Node => {
   const items = wikidataLinks.filter(link => link.schema === schema)
 
   const handleChange = (updates: WikidataLink[]) => {
@@ -44,7 +52,9 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks, wikidataLinksPa
           editing={editing}
           items={items}
           newItem={{ qid: '', schema, position: items.length }}
-          render={(props, index) => <WikiDataInput {...props} schema={schema} index={index} />}
+          render={(props, index) => (
+            <WikiDataInput {...props} schema={schema} index={index} />
+          )}
           wikidataLinksPath={wikidataLinksPath}
           schema={schema}
           onChange={handleChange}
@@ -55,29 +65,29 @@ const AddWikidata = ({ editing, schema, onChange, wikidataLinks, wikidataLinksPa
 }
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  .wikidata-title {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #ebeae3;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
 
-    .wikidata-title {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #EBEAE3;
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 2px;
-    }
-
-    .wikidata-instructions {
-        font-size: 13px;
-        color: #EBEAE3;
-        opacity: 0.6;
-        margin-top: -8px;
-    }
+  .wikidata-instructions {
+    font-size: 13px;
+    color: #ebeae3;
+    opacity: 0.6;
+    margin-top: -8px;
+  }
 `
 
 const WikiDataInput = createSortableInput({
-    placeholderId: 'catalog.wikidata.wikidataPlaceholder',
+  placeholderId: 'catalog.wikidata.wikidataPlaceholder',
 })
 
 export default AddWikidata

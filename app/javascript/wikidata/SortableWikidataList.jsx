@@ -19,7 +19,7 @@ import {
   arrayMove,
 } from 'react-sortable-hoc'
 import { injectIntl } from 'react-intl'
-import type { WikidataLink } from 'redux/state'
+import type { WikidataLink, SparqlResult } from 'redux/state'
 
 import { append, update, remove } from 'ramda'
 
@@ -98,31 +98,52 @@ const Handle = SortableHandle(() => (
 ))
 
 const Item = SortableElement(
-  ({ item, index, render: Render, onChangeItem, onRemove, wikidataLinksPath, editing, position }: ItemProps<*>) => (
+  ({
+    item,
+    index,
+    render: Render,
+    onChangeItem,
+    onRemove,
+    wikidataLinksPath,
+    editing,
+    position,
+  }: ItemProps<*>) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
-      {
-        editing && <Handle />
-      }
+      {editing && <Handle />}
 
-      <Render item={item} index={index} position={position} wikidataLinksPath={wikidataLinksPath} editing={editing} onChangeItem={onChangeItem} />
+      <Render
+        item={item}
+        index={index}
+        position={position}
+        wikidataLinksPath={wikidataLinksPath}
+        editing={editing}
+        onChangeItem={onChangeItem}
+      />
 
-      {
-        editing && <Button
-        className="pt-fixed"
-        intent={Intent.DANGER}
-        icon="delete"
-        onClick={onRemove}
+      {editing && (
+        <Button
+          className="pt-fixed"
+          intent={Intent.DANGER}
+          icon="delete"
+          onClick={onRemove}
         />
-      }
+      )}
     </div>
   )
 )
 
 // $FlowFixMe
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange, schema, editing, wikidataLinksPath, ...rest }: ContainerProps<*>) => {
-    console.log("Container Props:", { newItem, items, render, onChange, schema })
-    console.log("rest props", rest)
+  ({
+    newItem,
+    items,
+    render,
+    onChange,
+    schema,
+    editing,
+    wikidataLinksPath,
+    ...rest
+  }: ContainerProps<*>) => {
     return (
       <div>
         {items.map((item, i) => (
@@ -136,39 +157,36 @@ const Container = SortableContainer(
             editing={editing}
             wikidataLinksPath={wikidataLinksPath}
             onChangeItem={item => {
-              console.log(`Item changed at index ${i}`, item)
               return onChange(update(i, item, items))
             }}
             onRemove={() => {
-              console.log(`Item removed at index ${i}`, items[i])
-              console.log("item", item)
               if (item.qid !== '') {
-                Orchard.prune(`${wikidataLinksPath}/${item.qid}`).then(resp => {
-                  console.log(resp)
-                })
-                .catch(e => console.log(e))
+                Orchard.prune(`${wikidataLinksPath}/${item.qid}`)
+                  .then(resp => {
+                    console.log(resp)
+                  })
+                  .catch(e => console.log(e))
               }
               return onChange(remove(i, 1, items))
             }}
           />
         ))}
-        {
-          editing && <Button
-              intent={Intent.SUCCESS}
-              icon="add"
-              text="Add"
-              onClick={_ => {
-                return onChange(append(newItem, items))
-              }}
+        {editing && (
+          <Button
+            intent={Intent.SUCCESS}
+            icon="add"
+            text="Add"
+            onClick={_ => {
+              return onChange(append(newItem, items))
+            }}
           />
-        }
+        )}
       </div>
     )
   }
 )
 
 const SortableWikidataList = (props: Props<*>) => {
-  console.log('SortableWikidataList props', props)
   return (
     <Container
       {...props}
@@ -180,19 +198,24 @@ const SortableWikidataList = (props: Props<*>) => {
         const orderedItems = arrayMove(props.items, oldIndex, newIndex)
         props.onChange(orderedItems)
         orderedItems.map((item, i) => {
-          Orchard.graft(props.wikidataLinksPath, { qid: item.qid, schema: props.schema, position: i })
+          Orchard.graft(props.wikidataLinksPath, {
+            qid: item.qid,
+            schema: props.schema,
+            position: i,
+          })
             .then(resp => {
               console.log(resp)
             })
             .catch(e => console.log(e))
         })
-        }
-      } // Pass schema prop to Container
+      }} // Pass schema prop to Container
     />
   )
 }
 
 export default SortableWikidataList
+
+const queriedQids = new Set()
 
 export function createSortableInput ({
   placeholderId,
@@ -208,25 +231,14 @@ export function createSortableInput ({
     position,
   }: ChildProps<WikidataLink> & { intl: IntlShape }) => {
     const [value, setValue] = React.useState(item.qid)
-    const [results, setResults] = React.useState(null)
     const [error, setError] = React.useState(null)
     const [typing, setTyping] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
 
     React.useEffect(() => {
-      if (!typing) {
-        if (!item.qid) {
-          setValue("")
-          setResults(null)
-          setError(null)
-        } else {
-          setError(null)
-          if (isValidQId(item.qid) && results === null) {
-            setLoading(true)
-            setValue(item.qid)
-            makeQuery(item.qid)
-          }
-        }
+      if (!typing && item.qid && !item.data && !queriedQids.has(item.qid)) {
+        queriedQids.add(item.qid)
+        makeQuery(item.qid)
       }
       setTyping(false)
     }, [item.qid])
@@ -238,11 +250,16 @@ export function createSortableInput ({
     }
 
     const handleBlur = () => {
-      setLoading(true)
-      if (isValidQId(value)) {
+      if (isValidQId(value) && value !== item.qid && !queriedQids.has(value)) {
+        setLoading(true)
+        queriedQids.add(value)
         makeQuery(value)
         onChangeItem({ ...item, qid: value })
-        addWikidataLinks(value)
+        Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
+          .then(resp => {
+            console.log(resp)
+          })
+          .catch(e => console.log(e))
       }
     }
 
@@ -252,19 +269,20 @@ export function createSortableInput ({
       }
     }
 
-    const isValidQId = (id) => {
-      return typeof id === 'string' && id.startsWith("Q")
+    const isValidQId = id => {
+      return typeof id === 'string' && id.startsWith('Q')
     }
 
     const makeQuery = qid => {
+      setLoading(true)
       Orchard.harvest(`sparql/${schema}/${qid.trim()}`)
-        .then(resp => {
+        .then((resp: SparqlResult) => {
           if (resp == null) {
             setError('No results found')
           } else {
-            setResults(resp)
-            setLoading(false)
+            item.data = resp
             setError(null)
+            onChangeItem({ ...item, qid, data: resp })
           }
         })
         .catch(err => {
@@ -273,23 +291,21 @@ export function createSortableInput ({
           } else {
             setError(err.message)
           }
-          setResults(null)
+          delete item.data
+        })
+        .finally(() => {
           setLoading(false)
         })
     }
 
-    const addWikidataLinks = qid => {
-      Orchard.graft(wikidataLinksPath, { schema, qid, position })
-        .then(resp => {
-          console.log(resp)
-        })
-        .catch(e => console.log(e))
-    }
+    const results = item.data
 
     if (!editing && loading) {
-      return (<div>
+      return (
+        <div>
           <Spinner intent={Intent.PRIMARY} small={true} />
-        </div>)
+        </div>
+      )
     }
 
     if (value !== '' && results) {
@@ -328,7 +344,10 @@ export function createSortableInput ({
                 </>
               )}
             </div>
-            <div className="wikidata-logo-container" style={{ right: editing ? '7%' : '2%' }}>
+            <div
+              className="wikidata-logo-container"
+              style={{ right: editing ? '7%' : '2%' }}
+            >
               <Icon
                 color="rgba(235, 234, 228, 0.5)"
                 icon="graph"

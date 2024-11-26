@@ -23,36 +23,54 @@ type Props = {
   wikidataLinks: WikidataLink[],
   intl: IntlShape,
 }
-const LinkWikidata = ({ editing, wikidataLinks, onChange, wikidataLinksPath, intl }: Props) => {
+const LinkWikidata = ({
+  editing,
+  wikidataLinks,
+  onChange,
+  wikidataLinksPath,
+  intl,
+}: Props) => {
   const schemas = ['researchers', 'software', 'hardware', 'grants', 'works']
   const [openDialog, setOpenDialog] = React.useState(false)
 
   return (
     <CatalogSection>
       <Container>
-        {
-          editing && <>
+        {editing && (
+          <>
             <SectionTitle>
-            <div className="wikidata-title">
-              <FormattedMessage id="catalog.wikidata.linkWikidata" />
-              <InfoButton
-                icon="info-sign"
-                aria-label={intl.formatMessage({
-                  id: 'catalog.wikidata.wikidataDialogTitle',
-                })}
-                onClick={() => setOpenDialog(true)}
-              />
-            </div>
-          </SectionTitle><WikidataDialog openDialog={openDialog} setOpenDialog={setOpenDialog} /><div className="wikidata-instructions">
+              <div className="wikidata-title">
+                <FormattedMessage id="catalog.wikidata.linkWikidata" />
+                <InfoButton
+                  icon="info-sign"
+                  aria-label={intl.formatMessage({
+                    id: 'catalog.wikidata.wikidataDialogTitle',
+                  })}
+                  onClick={() => setOpenDialog(true)}
+                />
+              </div>
+            </SectionTitle>
+            <WikidataDialog
+              openDialog={openDialog}
+              setOpenDialog={setOpenDialog}
+            />
+            <div className="wikidata-instructions">
               <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
             </div>
           </>
-        }
+        )}
 
         <div className="wikidata-container">
-          {
-            schemas.map((schema) => (<AddWikidata key={schema} editing={editing} schema={schema} wikidataLinks={wikidataLinks} wikidataLinksPath={wikidataLinksPath} onChange={onChange} />))
-          }
+          {schemas.map(schema => (
+            <AddWikidata
+              key={schema}
+              editing={editing}
+              schema={schema}
+              wikidataLinks={wikidataLinks}
+              wikidataLinksPath={wikidataLinksPath}
+              onChange={onChange}
+            />
+          ))}
         </div>
       </Container>
     </CatalogSection>
@@ -73,7 +91,7 @@ const Container = styled.div`
 
   .wikidata-instructions {
     font-size: 13px;
-    color: #EBEAE3;
+    color: #ebeae3;
     opacity: 0.8;
     margin-top: -8px;
     margin-bottom: 12px;
@@ -86,7 +104,7 @@ const Container = styled.div`
   }
 
   .wikidata-info-sign {
-    background: rgba(139,148,156,.15);
+    background: rgba(139, 148, 156, 0.15);
   }
 `
 
@@ -97,7 +115,7 @@ const InfoButton = styled(Button).attrs({
   z-index: 1;
 
   svg {
-    fill: #EBEAE3;
-    opacity:0.7;
+    fill: #ebeae3;
+    opacity: 0.7;
   }
 `
