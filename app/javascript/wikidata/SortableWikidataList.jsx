@@ -236,7 +236,7 @@ export function createSortableInput ({
                                         const [key, value] = Object.entries(prop)[0]
                                         return (
                                             <span className="wikidata-details-text" key={key}>
-                                                <span style={{ fontWeight: 700 }}>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
+                                                <span style={{ fontWeight: 400 }}>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
                                             </span>
                                         )
                                     })
@@ -245,9 +245,11 @@ export function createSortableInput ({
                         )
                     }
                 </div>
-                <div className="wikidata-logo-container">
-                    <Icon color="rgba(235, 234, 228, 0.5)" icon="graph" iconSize={14} />
-                    <span className="wikidata-text">Wikidata</span>
+                <div className="wikidata-logo-container"> 
+                  <div style={{width: '18px'}}>
+                      {<WikidataLogo />}
+                  </div>
+                  <span className="wikidata-text">Wikidata</span>
                 </div>
             </div>
           </WikiDataContainer>
@@ -287,6 +289,15 @@ export function createSortableInput ({
 
     return injectIntl(SortableInput)
   }
+
+  const WikidataLogo = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 10">
+      <rect y=".01" width="4.6" height="10" fill="rgba(235,234,228,0.5)"/>
+      <rect x="5.95" width="2.23" height="10" fill="rgba(235,234,228,0.5)"/>
+      <rect x="9.57" width="4.6" height="10" fill="rgba(235,234,228,0.5)"/>
+      <rect x="15.61" width="2.2" height="10" fill="rgba(235,234,228,0.5)"/>
+    </svg>
+  )
 
 const WikiDataContainer = styled.div`
   display: flex;
@@ -358,7 +369,7 @@ const WikiDataContainer = styled.div`
 
   .wikidata-details-text {
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 500;
     color: rgb(218, 219, 217, 0.7);
   }
 `

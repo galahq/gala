@@ -7,7 +7,7 @@ import * as React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
-import { Icon, Button } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import AddWikidata from './AddWikidata'
