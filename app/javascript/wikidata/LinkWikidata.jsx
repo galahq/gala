@@ -5,13 +5,10 @@
 
 import * as React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 import { CatalogSection, SectionTitle } from 'catalog/shared'
-import { Button } from '@blueprintjs/core'
 import styled from 'styled-components'
-
 import AddWikidata from './AddWikidata'
-import WikidataDialog from './WikidataDialog'
+
 
 type Props = {
   editing: boolean,
@@ -27,20 +24,11 @@ const LinkWikidata = ({ editing, intl }: Props) => {
         <SectionTitle>
           <div className="wikidata-title">
             <FormattedMessage id="catalog.wikidata.linkWikidata" />
-            <InfoButton
-              icon="info-sign"
-              aria-label={intl.formatMessage({
-                id: 'catalog.wikidata.wikidataDialogTitle',
-              })}
-              onClick={() => setOpenDialog(true)}
-            />
           </div>
         </SectionTitle>
 
-        <WikidataDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
-
         <div className="wikidata-instructions">
-          <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
+          <FormattedMessage id="catalog.wikidata.wikidataInstructions" /><LearnMoreLink target="_blank" href="https://docs.learngala.com/docs/authoring-adding-rich-metadata">Learn more ›</LearnMoreLink>
         </div>
 
         <div className="wikidata-container">
@@ -84,14 +72,12 @@ const Container = styled.div`
   }
 `
 
-const InfoButton = styled(Button).attrs({
-  className: 'pt-minimal pt-button--baseline-aligned',
-})`
-  color: inherit;
-  z-index: 1;
+const LearnMoreLink = styled.a`
+padding-left: .5rem;
+color: #6ACB72;
 
-  svg {
-    fill: #EBEAE3;
-    opacity:0.7;
-  }
+&:hover {
+  text-decoration: underline;
+  color: #6ACB72;
+}
 `
