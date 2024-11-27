@@ -157,6 +157,7 @@ const Container = SortableContainer(
             editing={editing}
             wikidataLinksPath={wikidataLinksPath}
             onChangeItem={item => {
+              console.log('item', item)
               return onChange(update(i, item, items))
             }}
             onRemove={() => {
@@ -241,10 +242,6 @@ export function createSortableInput ({
         makeQuery(item.qid)
       }
 
-      if (queriedQids.has(item.qid)) {
-        setError(intl.formatMessage({ id: 'catalog.wikidata.entryExists' }))
-      }
-
       setTyping(false)
     }, [item.qid])
 
@@ -254,7 +251,7 @@ export function createSortableInput ({
       setValue(newValue)
     }
 
-    const handleBlur = () => {
+    const handleBlur = async () => {
       if (value === '') {
         setError(intl.formatMessage({ id: 'catalog.wikidata.emptyQid' }))
         return
@@ -264,12 +261,19 @@ export function createSortableInput ({
         return
       }
 
-      onChangeItem({ ...item, qid: value })
-      Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
+      if (queriedQids.has(value)) {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.entryExists' }))
+        return
+      }
+
+      const queryResp = await makeQuery(value)
+      if (queryResp) {
+        Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
         .then(resp => {
           console.log(resp)
         })
         .catch(e => console.log(e))
+      }
     }
 
     const handleKeyDown = e => {
@@ -282,22 +286,25 @@ export function createSortableInput ({
       return typeof id === 'string' && id.startsWith('Q')
     }
 
-    const makeQuery = qid => {
-      setLoading(true)
-      Orchard.harvest(`sparql/${schema}/${qid.trim()}`)
-        .then((resp: SparqlResult) => {
-          item.data = resp
-          setError(null)
-          queriedQids.add(qid)
-          onChangeItem({ ...item, qid, data: resp })
-        })
-        .catch(err => {
-          setError(err.message)
-          delete item.data
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+    const makeQuery = async qid => {
+      try {
+        setLoading(true)
+
+        const resp: SparqlResult = await Orchard.harvest(`sparql/${schema}/${qid.trim()}`)
+
+        item.data = resp
+        setError(null)
+        queriedQids.add(qid)
+
+        onChangeItem({ ...item, qid, data: resp })
+        return resp
+      } catch (err) {
+        setError(err.message)
+        delete item.data
+        return null
+      } finally {
+        setLoading(false)
+      }
     }
 
     const results = item.data
@@ -353,7 +360,7 @@ export function createSortableInput ({
               className="wikidata-logo-container"
               style={{ right: editing ? '7%' : '2%' }}
             >
-                <div style={{width: '18px'}}>
+                <div style={{ width: '18px' }}>
                     {<WikidataLogo />}
                 </div>
               <span className="wikidata-text">Wikidata</span>
