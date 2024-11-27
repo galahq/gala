@@ -341,6 +341,7 @@ en:
       invalid_qid: Invalid QID
       empty_qid: You must enter a value for QID
       entry_exists: This entry already exists
+      404_error: This QID does not exist or belongs to a different category
     learn_more: Learn more
     my_library: My Dashboard
     natural_resources: Natural Resources

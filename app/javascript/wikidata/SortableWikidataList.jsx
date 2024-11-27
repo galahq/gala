@@ -246,7 +246,7 @@ export function createSortableInput ({
     }, [item.qid])
 
     const handleChange = e => {
-      const newValue = e.target.value
+      const newValue = e.target.value.toUpperCase()
       setTyping(true)
       setValue(newValue)
     }
@@ -283,7 +283,8 @@ export function createSortableInput ({
     }
 
     const isValidQId = id => {
-      return typeof id === 'string' && id.startsWith('Q')
+      const pattern = /^[A-Za-z][0-9]+$/
+      return typeof id === 'string' && (id.startsWith('Q') || id.startsWith('q')) && id.length > 1 && pattern.test(id)
     }
 
     const makeQuery = async qid => {
@@ -299,6 +300,11 @@ export function createSortableInput ({
         onChangeItem({ ...item, qid, data: resp })
         return resp
       } catch (err) {
+        if (err.status === 404) {
+          setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
+          return null
+        }
+
         setError(err.message)
         delete item.data
         return null
