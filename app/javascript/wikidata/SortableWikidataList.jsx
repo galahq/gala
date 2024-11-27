@@ -345,14 +345,16 @@ export function createSortableInput ({
                       <span className="wikidata-separator">›</span>
                     </a>
                   </div>
-                  {results.properties.map((prop, i) => {
-                    const [key, value] = Object.entries(prop)[0]
-                    return (
-                      <span className="wikidata-details-text" key={`${key}-${i}`}>
-                        <span style={{ fontWeight: 400 }}>{key}:</span> {value}
-                      </span>
-                    )
-                  })}
+                  <div className="wikidata-details-section">
+                    {results.properties.map((prop, i) => {
+                      const [key, value] = Object.entries(prop)[0]
+                      return (
+                        <span className="wikidata-details-text" key={`${key}-${i}`}>
+                          <span style={{ fontWeight: 400 }}>{key}:</span> {value}
+                        </span>
+                      )
+                    })}
+                  </div>
                 </>
               )}
             </div>
@@ -468,10 +470,13 @@ const WikiDataContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    &:hover {
+      color: #6ACB72;
+    }
   }
 
   .wikidata-link {
-    text-decoration: underline;
     display: inline-block;
     max-width: 510px;
     font-weight: 700;
@@ -479,7 +484,7 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-separator {
-    margin-left: 4px;
+    margin-left: 2px;
   }
 
   .wikidata-details-text {
@@ -492,5 +497,10 @@ const WikiDataContainer = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+  }
+
+  .wikidata-details-section {
+    line-height: normal;
+    margin-top: 8px;
   }
 `
