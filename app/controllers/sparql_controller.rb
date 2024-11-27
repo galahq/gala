@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
+# @see Wikidata
 class SparqlController < ApplicationController
+  # @route [GET] `/sparql/:schema/:qid`
   def show
-    schema = params[:schema]
-    qid = params[:qid]
-    Rails.logger.info "SparqlController show method invoked with schema: #{schema}, QID: #{qid}"
-    wikidata = Wikidata.new(schema, qid)
+    wikidata = Wikidata.new params[:schema], params[:qid]
     result = wikidata.call
     head :not_found and return if result.nil?
     render json: result

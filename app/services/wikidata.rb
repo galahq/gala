@@ -12,8 +12,6 @@ examples:
 - works: Q58260882 (The written works of Philip and Iona Mayer )
 =end
 
-
-
 class Wikidata
   ENDPOINT = 'https://query.wikidata.org/sparql'
 
@@ -116,6 +114,8 @@ class Wikidata
     works: %w[entity entityLabel authorLabel titleLabel publicationDate]
   }
 
+  attr_reader :sparql_query, :data
+
   def initialize(schema, qid)
     @client = SPARQL::Client.new(ENDPOINT)
     @schema = schema.downcase.to_sym
@@ -123,18 +123,39 @@ class Wikidata
   end
 
   def call
-    Rails.logger.info "Wikidata call method invoked with schema: #{@schema}, QID: #{@qid}"
-    sparql_query = SCHEMAS[@schema] % { qid: @qid }
-    Rails.logger.info "Wikidata query: \n#{sparql_query}"
-    results = @client.query(sparql_query)
-    Rails.logger.info "Wikidata query results: #{results.inspect}"
-    return nil if results.empty?
-    build_info_box(results)
+    @sparql_query = SCHEMAS[@schema] % { qid: @qid }
+    result = @client.query(sparql_query)
+    return nil if result.empty?
+    property_order = PROPERTY_ORDER[@schema]
+
+    @data = {}.tap do |json|
+      json['entity'] = ''
+      json['entityLabel'] = ''
+      json['schema'] = @schema
+      json['properties'] = []
+
+      result.each do |solution|
+        property_order.each do |property|
+          value = solution[property.to_sym].to_s
+          next if value.nil?
+
+          case property
+          when 'entity'
+            json['entity'] = value
+          when 'entityLabel'
+            json['entityLabel'] = value
+          else
+            json['properties'] << {
+              camel_case_to_title_case(property.split('Label')[0]) => value
+            }
+          end
+        end
+      end
+    end
   rescue StandardError => e
     Rails.logger.error "Error in Wikidata call method: #{e.message}"
     raise
   end
-
 
   private
 
@@ -142,26 +163,4 @@ class Wikidata
     camel_case.gsub(/([A-Z])/, ' \1').split.map(&:capitalize).join(' ')
   end
 
-  def build_info_box(results)
-    info_box = { 'entity' => '', 'entityLabel' => '', 'schema' => @schema, 'properties' => [] }
-    property_order = PROPERTY_ORDER[@schema]
-
-    results.each do |solution|
-      property_order.each do |property|
-        value = solution[property.to_sym]
-        next if value.nil?
-
-        case property
-        when 'entity'
-          info_box['entity'] = value.to_s
-        when 'entityLabel'
-          info_box['entityLabel'] = value.to_s
-        else
-          info_box['properties'] << { camel_case_to_title_case(property.split('Label')[0]) => value.to_s }
-        end
-      end
-    end
-
-    info_box.to_json
-  end
 end
