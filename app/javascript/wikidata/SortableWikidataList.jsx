@@ -4,7 +4,14 @@
  */
 
 import * as React from 'react'
-import { Button, Intent, Icon, Spinner, InputGroup, Callout } from '@blueprintjs/core'
+import {
+  Button,
+  Intent,
+  Icon,
+  Spinner,
+  InputGroup,
+  Callout,
+} from '@blueprintjs/core'
 import {
   SortableContainer,
   SortableElement,
@@ -12,6 +19,7 @@ import {
   arrayMove,
 } from 'react-sortable-hoc'
 import { injectIntl } from 'react-intl'
+import type { WikidataLink, SparqlResult } from 'redux/state'
 
 import { append, update, remove } from 'ramda'
 
@@ -26,10 +34,13 @@ type ItemProps<Item> = ChildProps<Item> & {
   onRemove: () => void,
 }
 type ContainerProps<Item> = {
-  items: Item[],
-  newItem: Item,
+  items: WikidataLink[],
+  newItem: WikidataLink,
   render: React.ComponentType<Item>,
-  onChange: (Item[]) => void,
+  onChange: (WikidataLink[]) => void,
+  wikidataLinksPath: string,
+  editing: boolean,
+  schema: string, // Add schema to ContainerProps
 }
 
 // Use SortableList as a component with these props:
@@ -39,32 +50,44 @@ type Props<Item> = {
 
   // An array of items that make up the SortableList. Each element will be
   // passed to children as item so that its contents may be rendered.
-  items: Item[],
+  items: WikidataLink[],
 
   // An example of a "blank" or "new" item to be added when the user presses the
   // "Add item" button
-  newItem: Item,
+  newItem: WikidataLink,
 
   // Your chance to handle any change to the list. You will be called with a
   // changed copy of items.
-  onChange: (Item[]) => void,
+  onChange: (WikidataLink[]) => void,
 
   // So the elements don’t change theme while being dragged
   dark?: boolean,
+
+  wikidataLinksPath: string,
+
+  editing: boolean,
+
+  schema: string,
 }
 
 // The props with which the `render` props of SortableList will be called
 type ChildProps<Item> = {
   // The item that this child should render
-  item: Item,
+  item: WikidataLink,
 
   // The index of this child in the array (for numbering, etc.)
   index: number,
 
   // A function which takes a modified copy of the child to replace it.
-  onChangeItem: Item => void,
+  onChangeItem: WikidataLink => void,
 
   schema: string,
+
+  wikidataLinksPath: string,
+
+  editing: boolean,
+
+  position: number,
 }
 
 const Handle = SortableHandle(() => (
@@ -75,219 +98,307 @@ const Handle = SortableHandle(() => (
 ))
 
 const Item = SortableElement(
-  ({ item, index, render: Render, onChangeItem, onRemove }: ItemProps<*>) => (
+  ({
+    item,
+    index,
+    render: Render,
+    onChangeItem,
+    onRemove,
+    wikidataLinksPath,
+    editing,
+    position,
+  }: ItemProps<*>) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
-      <Handle />
+      {editing && <Handle />}
 
-      <Render item={item} index={index} onChangeItem={onChangeItem} />
-
-      <Button
-        className="pt-fixed"
-        intent={Intent.DANGER}
-        icon="delete"
-        onClick={onRemove}
+      <Render
+        item={item}
+        index={index}
+        position={position}
+        wikidataLinksPath={wikidataLinksPath}
+        editing={editing}
+        onChangeItem={onChangeItem}
       />
+
+      {editing && (
+        <Button
+          className="pt-fixed"
+          intent={Intent.DANGER}
+          icon="delete"
+          onClick={onRemove}
+        />
+      )}
     </div>
   )
 )
 
 // $FlowFixMe
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange }: ContainerProps<*>) => (
-    <div>
-      {items.map((item, i) => (
-        <Item
-          key={i}
-          index={i}
-          item={item}
-          render={render}
-          onChangeItem={item => onChange(update(i, item, items))}
-          onRemove={() => onChange(remove(i, 1, items))}
-        />
-      ))}
-      <Button
-        intent={Intent.SUCCESS}
-        icon="add"
-        text="Add"
-        onClick={_ => onChange(append(newItem, items))}
-      />
-    </div>
-  )
+  ({
+    newItem,
+    items,
+    render,
+    onChange,
+    schema,
+    editing,
+    wikidataLinksPath,
+    ...rest
+  }: ContainerProps<*>) => {
+    return (
+      <div>
+        {items.map((item, i) => (
+          <Item
+            key={i}
+            schema={schema} // Pass schema prop here
+            index={i}
+            position={i}
+            item={item}
+            render={render}
+            editing={editing}
+            wikidataLinksPath={wikidataLinksPath}
+            onChangeItem={item => {
+              return onChange(update(i, item, items))
+            }}
+            onRemove={() => {
+              const itemsQidList = items.map(item => item.qid)
+              if (item.qid !== '' && itemsQidList.length === 1) {
+                Orchard.prune(`${wikidataLinksPath}/${item.qid}`)
+                  .then(resp => {
+                    queriedQids.delete(item.qid)
+                  })
+                  .catch(e => console.log(e))
+              }
+              return onChange(remove(i, 1, items))
+            }}
+          />
+        ))}
+        {editing && (
+          <Button
+            intent={Intent.SUCCESS}
+            icon="add"
+            text="Add"
+            onClick={_ => {
+              return onChange(append(newItem, items))
+            }}
+          />
+        )}
+      </div>
+    )
+  }
 )
 
-const SortableWikidataList = (props: Props<*>) => (
-  <Container
-    {...props}
-    useDragHandle={true}
-    transitionDuration={100}
-    helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
-    onSortEnd={({ oldIndex, newIndex }) =>
-      props.onChange(arrayMove(props.items, oldIndex, newIndex))
-    }
-  />
-)
+const SortableWikidataList = (props: Props<*>) => {
+  return (
+    <Container
+      {...props}
+      useDragHandle={true}
+      transitionDuration={100}
+      helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
+      schema={props.schema}
+      onSortEnd={({ oldIndex, newIndex }) => {
+        const orderedItems = arrayMove(props.items, oldIndex, newIndex)
+        props.onChange(orderedItems)
+        orderedItems.map((item, i) => {
+          Orchard.graft(props.wikidataLinksPath, {
+            qid: item.qid,
+            schema: props.schema,
+            position: i,
+          })
+            .then(resp => {
+              console.log(resp)
+            })
+            .catch(e => console.log(e))
+        })
+      }} // Pass schema prop to Container
+    />
+  )
+}
 
 export default SortableWikidataList
 
+const queriedQids = new Set()
+
 export function createSortableInput ({
-    placeholderId,
-    ...props
-  }: { placeholderId?: string } = {}) {
-    const SortableInput = ({
-      intl,
-      item,
-      onChangeItem,
-      schema,
-    }: ChildProps<string> & { intl: IntlShape }) => {
-      const [value, setValue] = React.useState(item)
-      const [results, setResults] = React.useState(null)
-      const [error, setError] = React.useState(null)
-      const [inputIntent, setInputIntent] = React.useState(Intent.NONE)
-      const [typing, setTyping] = React.useState(false)
-      const [loading, setLoading] = React.useState(false)
+  placeholderId,
+  ...props
+}: { placeholderId?: string } = {}) {
+  const SortableInput = ({
+    intl,
+    item,
+    onChangeItem,
+    schema,
+    wikidataLinksPath,
+    editing,
+    position,
+  }: ChildProps<WikidataLink> & { intl: IntlShape }) => {
+    const [value, setValue] = React.useState(item.qid)
+    const [error, setError] = React.useState(null)
+    const [typing, setTyping] = React.useState(false)
+    const [loading, setLoading] = React.useState(false)
 
-      React.useEffect(() => {
-        if (!typing) {
-          if (!item) {
-            setValue('')
-            setResults(null)
-            setError(null)
-            setInputIntent(Intent.NONE)
-          } else {
-            setValue(item)
-            setError(null)
-            setInputIntent(Intent.NONE)
-            setLoading(true)
-            if (isValidQId(item)) {
-              makeQuery(item)
-            }
-          }
-        }
-        setTyping(false)
-      }, [item])
-
-      const handleChange = (e) => {
-        const newValue = e.target.value
-        setTyping(true)
-        setValue(newValue)
-        onChangeItem(newValue)
+    React.useEffect(() => {
+      if (!typing && item.qid && !item.data && !queriedQids.has(item.qid)) {
+        makeQuery(item.qid)
       }
 
-      const handleBlur = () => {
-        setLoading(true)
-        if (isValidQId(value)) {
-          makeQuery(value)
-        }
+      if (queriedQids.has(item.qid)) {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.entryExists' }))
       }
 
-      const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-          handleBlur()
-        }
+      setTyping(false)
+    }, [item.qid])
+
+    const handleChange = e => {
+      const newValue = e.target.value
+      setTyping(true)
+      setValue(newValue)
+    }
+
+    const handleBlur = () => {
+      if (value === '') {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.emptyQid' }))
+        return
+      }
+      if (!isValidQId(value)) {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.invalidQid' }))
+        return
       }
 
-      const isValidQId = (id) => {
-        return id.startsWith("Q")
-      }
+      onChangeItem({ ...item, qid: value })
+      Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
+        .then(resp => {
+          console.log(resp)
+        })
+        .catch(e => console.log(e))
+    }
 
-      const makeQuery = (id) => {
-        Orchard.harvest(`sparql/${schema}/${id.trim()}`)
-          .then((resp) => {
-            console.log(resp)
-            if (Array.isArray(resp) && resp.length === 0) {
-              setError("No results found")
-              setInputIntent(Intent.DANGER)
-            } else {
-              setResults(resp)
-              setLoading(false)
-              setError(null)
-              setInputIntent(Intent.SUCCESS)
-            }
-          })
-          .catch((err) => {
-            if (err.response && err.response.status === 404) {
-              setError("Entity not found")
-            } else {
-              setError(err.message)
-            }
-            setResults(null)
-            setLoading(false)
-            setInputIntent(Intent.DANGER)
-          })
+    const handleKeyDown = e => {
+      if (e.key === 'Enter') {
+        handleBlur()
       }
+    }
 
-      if (value !== "" && results) {
-        return (
-          <WikiDataContainer>
-            <div className="data-container">
-                <div className="person-container">
-                    {
-                        loading ? (<div className="spinner-container"><Spinner intent={Intent.PRIMARY} small={true} /></div>) : (
-                            <>
-                                <div>
-                                    <a target="_blank" href={results.entity} className="wikidata-title pt-minimal pt-dark pt-align-left" rel="noreferrer">
-                                    <span className="pt-text-overflow-ellipsis wikidata-link">
-                                        {results.entityLabel}&nbsp;›
-                                    </span>
-                                    </a>
-                                </div>
-                                {
-                                    results.properties.map((prop) => {
-                                        const [key, value] = Object.entries(prop)[0]
-                                        return (
-                                            <span className="wikidata-details-text" key={key}>
-                                                <span style={{ fontWeight: 400 }}>{key}:</span> {value} &nbsp;&nbsp;&nbsp;
-                                            </span>
-                                        )
-                                    })
-                                }
-                            </>
-                        )
-                    }
-                </div>
-                <div className="wikidata-logo-container"> 
-                  <div style={{width: '18px'}}>
-                      {<WikidataLogo />}
-                  </div>
-                  <span className="wikidata-text">Wikidata</span>
-                </div>
-            </div>
-          </WikiDataContainer>
-        )
-      }
+    const isValidQId = id => {
+      return typeof id === 'string' && id.startsWith('Q')
+    }
 
+    const makeQuery = qid => {
+      setLoading(true)
+      Orchard.harvest(`sparql/${schema}/${qid.trim()}`)
+        .then((resp: SparqlResult) => {
+          item.data = resp
+          setError(null)
+          queriedQids.add(qid)
+          onChangeItem({ ...item, qid, data: resp })
+        })
+        .catch(err => {
+          setError(err.message)
+          delete item.data
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+
+    const results = item.data
+
+    if (!editing && !loading && !results) {
+      return null
+    }
+
+    if (!editing && loading) {
       return (
-        error ? (
-          <Callout intent={Intent.DANGER} icon={null}>
-            <InputGroup
-              type="text"
-              placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
-              {...props}
-              value={value}
-              rightElement={loading && value !== "" && <Spinner intent={Intent.PRIMARY} small={true} />}
-              style={{ borderColor: error ? 'red' : 'inherit' }}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-            />
-          </Callout>
-        ) : (
-          <InputGroup
-            type="text"
-            placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
-            {...props}
-            value={value}
-            rightElement={loading && value !== "" && <Spinner intent={Intent.PRIMARY} small={true} />}
-            style={{ borderColor: error ? 'red' : 'inherit' }}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-          />
-        )
+        <div>
+          <Spinner intent={Intent.PRIMARY} small={true} />
+        </div>
       )
     }
 
-    return injectIntl(SortableInput)
+    if (value !== '' && results) {
+      return (
+        <WikiDataContainer>
+          <div className="data-container">
+            <div className="person-container">
+              {loading ? (
+                <div className="spinner-container">
+                  <Spinner intent={Intent.PRIMARY} small={true} />
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={results.entity}
+                      className="wikidata-title pt-minimal pt-dark pt-align-left"
+                    >
+                      <span className="pt-text-overflow-ellipsis wikidata-link">
+                        {results.entityLabel}
+                      </span>
+                      <span className="wikidata-separator">›</span>
+                    </a>
+                  </div>
+                  {results.properties.map((prop, i) => {
+                    const [key, value] = Object.entries(prop)[0]
+                    return (
+                      <span className="wikidata-details-text" key={`${key}-${i}`}>
+                        <span style={{ fontWeight: 400 }}>{key}:</span> {value}
+                      </span>
+                    )
+                  })}
+                </>
+              )}
+            </div>
+            <div
+              className="wikidata-logo-container"
+              style={{ right: editing ? '7%' : '2%' }}
+            >
+                <div style={{width: '18px'}}>
+                    {<WikidataLogo />}
+                </div>
+              <span className="wikidata-text">Wikidata</span>
+            </div>
+          </div>
+        </WikiDataContainer>
+      )
+    }
+
+    return error ? (
+      <Callout intent={Intent.DANGER} icon={null}>
+        <InputGroup
+          type="text"
+          placeholder={
+            placeholderId && intl.formatMessage({ id: placeholderId })
+          }
+          {...props}
+          value={value}
+          rightElement={
+            loading &&
+            value !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
+          }
+          style={{ borderColor: error ? 'red' : 'inherit', marginBottom: '4px' }}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+        />
+        <span>{error}</span>
+      </Callout>
+    ) : (
+      <InputGroup
+        type="text"
+        placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
+        {...props}
+        value={value}
+        rightElement={
+          loading &&
+          value !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
+        }
+        style={{ borderColor: error ? 'red' : 'inherit' }}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+      />
+    )
   }
 
   const WikidataLogo = () => (
@@ -299,10 +410,13 @@ export function createSortableInput ({
     </svg>
   )
 
+  return injectIntl(SortableInput)
+}
+
 const WikiDataContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background: #415E77;
+  background: #415e77;
   padding: 4px 20px;
   border-width: 1px;
   border-style: solid;
@@ -327,10 +441,9 @@ const WikiDataContainer = styled.div`
     align-items: center;
     position: absolute;
     top: 3%;
-    right: 7%;
     gap: 4px;
     opacity: 0.5;
-    height: fit-content
+    height: fit-content;
   }
 
   .person-container {
@@ -344,19 +457,10 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-title {
-    color: #EBEAE4;
+    color: #ebeae4;
     display: flex;
     flex-direction: row;
     align-items: center;
-  }
-
-  .wikidata-title > span {
-    text-decoration: none;
-  }
-
-  .wikidata-title:hover {
-    text-decoration: underline;
-    color: #EBEAE4;
   }
 
   .wikidata-link {
@@ -367,9 +471,19 @@ const WikiDataContainer = styled.div`
     font-size: 16px;
   }
 
+  .wikidata-separator {
+    margin-left: 4px;
+  }
+
   .wikidata-details-text {
     font-size: 14px;
     font-weight: 500;
     color: rgb(218, 219, 217, 0.7);
+    display: inline-block;
+    margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 `

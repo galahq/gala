@@ -17,13 +17,11 @@ import LearningObjectives from './LearningObjectives'
 import CaseKeywords from './CaseKeywords'
 import TranslationLinks from './TranslationLinks'
 import TeachingGuide from './TeachingGuide'
-import Sparqler from './Sparqler'
-
+import LinkWikidata from '../wikidata/LinkWikidata'
 import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
-import type { State, Case, Tag, Viewport } from 'redux/state'
-import LinkWikidata from '../wikidata/LinkWikidata'
+import type { State, Case, Tag, Viewport, WikidataLink } from 'redux/state'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
@@ -39,6 +37,7 @@ function mapStateToProps ({ caseData, edit }: State) {
     tags,
     links,
     teachingGuideUrl,
+    wikidataLinks,
   } = caseData
 
   return {
@@ -52,8 +51,10 @@ function mapStateToProps ({ caseData, edit }: State) {
     slug,
     summary,
     taggingsPath: links.taggings,
+    wikidataLinksPath: links.wikidataLinks,
     tags,
     teachingGuideUrl,
+    wikidataLinks,
   }
 }
 
@@ -68,8 +69,10 @@ type Props = {
   slug: string,
   summary: string,
   taggingsPath: string,
+  wikidataLinksPath: string,
   tags: Tag[],
   teachingGuideUrl: string,
+  wikidataLinks: WikidataLink[],
   updateCase: typeof updateCase,
 }
 
@@ -84,8 +87,10 @@ const Billboard = ({
   slug,
   summary,
   taggingsPath,
+  wikidataLinksPath,
   tags,
   teachingGuideUrl,
+  wikidataLinks,
   updateCase,
 }: Props) => (
   <Container>
@@ -173,6 +178,10 @@ const Billboard = ({
 
           <LinkWikidata
             editing={editing}
+            key={wikidataLinksPath}
+            wikidataLinksPath={wikidataLinksPath}
+            wikidataLinks={wikidataLinks}
+            onChange={(wikidataLinks: WikidataLink[]) => updateCase({ wikidataLinks }, false)}
           />
 
           {readerSignedIn && (

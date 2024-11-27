@@ -122,12 +122,20 @@ export type Byline = {
   acknowledgements: string,
 }
 
-export type Wikidata = {
-  researchers: string[],
-  software: string[],
-  hardware: string[],
-  grants: string[],
-  works: string[],
+export type WikidataLink = {
+  schema: string,
+  qid: string,
+  position: number,
+  data?: SparqlResult,
+}
+
+export type SparqlResult = {
+  entity: string,
+  entityLabel: string,
+  schema: string,
+  properties: {
+    [string]: string,
+  }[],
 }
 
 export type Card = {
@@ -161,6 +169,7 @@ export type Case = {
     self: string,
     settings: string,
     taggings: string,
+    wikidataLinks: string,
     teach: string,
     teachingGuide: string,
     newCopy: string,
@@ -176,6 +185,7 @@ export type Case = {
   teachingGuideUrl: ?string,
   title: string,
   zoom: ?number,
+  wikidataLinks: WikidataLink[],
 } & Byline
 
 export type CaseElement = {

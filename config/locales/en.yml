@@ -338,6 +338,9 @@ en:
       about_wikidata: >
         In this section, you can connect various resources by using Wikidata QIDs. A QID (or “Query ID”) is a unique identifier assigned to every item in Wikidata, an open knowledge base that serves as a centralized hub of structured data. Wikidata collects and connects information on a wide range of topics, making it accessible and reusable across many platforms and applications.
         By entering a Wikidata QID, you create a dynamic resource listing on the case overview page, enriching the case study with valuable, interconnected information. For each section of the case study, you can add links to supporting materials, tools, and relevant individuals. This approach builds a network of connections that breaks down information silos, allowing users to see relationships across data points, access supporting materials in context, and gain deeper insights.
+      invalid_qid: Invalid QID
+      empty_qid: You must enter a value for QID
+      entry_exists: This entry already exists
     learn_more: Learn more
     my_library: My Dashboard
     natural_resources: Natural Resources

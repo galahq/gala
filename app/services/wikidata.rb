@@ -143,7 +143,7 @@ class Wikidata
   end
 
   def build_info_box(results)
-    info_box = { 'entity' => '', 'entityLabel' => '', 'properties' => [] }
+    info_box = { 'entity' => '', 'entityLabel' => '', 'schema' => @schema, 'properties' => [] }
     property_order = PROPERTY_ORDER[@schema]
 
     results.each do |solution|
