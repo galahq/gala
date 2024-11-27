@@ -38,7 +38,7 @@ const LinkWikidata = ({
               <FormattedMessage id="catalog.wikidata.linkWikidata" />
             </div>
           </SectionTitle><div className="wikidata-instructions">
-              <FormattedMessage id="catalog.wikidata.wikidataInstructions" /><LearnMoreLink target="_blank" href="https://docs.learngala.com/docs/authoring-adding-rich-metadata">Learn more ›</LearnMoreLink>
+              <FormattedMessage id="catalog.wikidata.wikidataInstructions" /><LearnMoreLink target="_blank" href="https://docs.learngala.com/docs/authoring-adding-rich-metadata"><span className='learn-more-text'>Learn more</span> ›</LearnMoreLink>
             </div></>
         }
 
@@ -69,6 +69,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
+    font-weight: 700;
   }
 
   .wikidata-instructions {
@@ -92,10 +93,16 @@ const Container = styled.div`
 
 const LearnMoreLink = styled.a`
 padding-left: .5rem;
-color: #6ACB72;
+color: white;
+
+.learn-more-text {
+  text-decoration: underline;
+}
 
 &:hover {
-  text-decoration: underline;
+  .learn-more-text {
+    text-decoration: underline;
+  }
   color: #6ACB72;
 }
 `
