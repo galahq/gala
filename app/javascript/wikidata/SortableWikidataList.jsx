@@ -354,7 +354,7 @@ export function createSortableInput ({
                   <div className="wikidata-details-section">
                     {results.properties.map((prop, i) => {
                       const [key, value] = Object.entries(prop)[0]
-                      return (
+                      return value && (
                         <span className="wikidata-details-text" key={`${key}-${i}`}>
                           <span style={{ fontWeight: 400 }}>{key}:</span> {value}
                         </span>
