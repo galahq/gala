@@ -123,6 +123,7 @@ export type Byline = {
 }
 
 export type WikidataLink = {
+  id?: string,
   schema: string,
   qid: string,
   position: number,

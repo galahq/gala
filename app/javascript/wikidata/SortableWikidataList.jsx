@@ -4,14 +4,9 @@
  */
 
 import * as React from 'react'
-import {
-  Button,
-  Intent,
-  Icon,
-  Spinner,
-  InputGroup,
-  Callout,
-} from '@blueprintjs/core'
+import { Button, Intent, InputGroup } from '@blueprintjs/core'
+import { Callout } from '@blueprintjs/core/lib/esm/components/callout/callout'
+import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner'
 import {
   SortableContainer,
   SortableElement,
@@ -149,7 +144,7 @@ const Container = SortableContainer(
         {items.map((item, i) => (
           <Item
             key={i}
-            schema={schema} // Pass schema prop here
+            schema={schema}
             index={i}
             position={i}
             item={item}
@@ -160,11 +155,10 @@ const Container = SortableContainer(
               return onChange(update(i, item, items))
             }}
             onRemove={() => {
-              const itemsQidList = items.map(item => item.qid)
-              if (item.qid !== '' && itemsQidList.length === 1) {
-                Orchard.prune(`${wikidataLinksPath}/${item.qid}`)
+              if (item.id) {
+                Orchard.prune(`${wikidataLinksPath}/${item.id}`)
                   .then(resp => {
-                    queriedQids.delete(item.qid)
+                    queryQueue.delete(item.qid.trim())
                   })
                   .catch(e => console.log(e))
               }
@@ -209,14 +203,26 @@ const SortableWikidataList = (props: Props<*>) => {
             })
             .catch(e => console.log(e))
         })
-      }} // Pass schema prop to Container
+      }}
     />
   )
 }
 
 export default SortableWikidataList
 
-const queriedQids = new Set()
+const queryQueue = new Map()
+function enqueueQuery (schema: string, qid: string): Promise<SparqlResult> {
+  qid = qid.trim()
+  if (queryQueue.has(qid)) {
+    const existingPromise = queryQueue.get(qid)
+    if (existingPromise) {
+      return existingPromise
+    }
+  }
+  const newPromise = Orchard.harvest(`sparql/${schema}/${qid}`)
+  queryQueue.set(qid, newPromise)
+  return newPromise
+}
 
 export function createSortableInput ({
   placeholderId,
@@ -231,45 +237,59 @@ export function createSortableInput ({
     editing,
     position,
   }: ChildProps<WikidataLink> & { intl: IntlShape }) => {
-    const [value, setValue] = React.useState(item.qid)
+    const [qid, setQid] = React.useState(item.qid)
     const [error, setError] = React.useState(null)
-    const [typing, setTyping] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
 
     React.useEffect(() => {
-      if (!typing && item.qid && !item.data && !queriedQids.has(item.qid)) {
-        makeQuery(item.qid)
+      if (item.qid && !item.data && isValidQId(item.qid)) {
+        handleQuery(item.qid)
       }
-
-      if (queriedQids.has(item.qid)) {
-        setError(intl.formatMessage({ id: 'catalog.wikidata.entryExists' }))
-      }
-
-      setTyping(false)
     }, [item.qid])
 
+    const handleQuery = qid => {
+      setLoading(true)
+      enqueueQuery(schema, item.qid)
+        .then((resp: SparqlResult) => {
+          item.data = resp
+          setError(null)
+          onChangeItem({ ...item, data: resp })
+        })
+        .catch(err => {
+          setError(err.message)
+          delete item.data
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+
     const handleChange = e => {
-      const newValue = e.target.value
-      setTyping(true)
-      setValue(newValue)
+      const qid = e.target.value
+      setQid(qid)
     }
 
     const handleBlur = () => {
-      if (value === '') {
+      if (qid === '') {
         setError(intl.formatMessage({ id: 'catalog.wikidata.emptyQid' }))
         return
       }
-      if (!isValidQId(value)) {
+      if (!isValidQId(qid)) {
         setError(intl.formatMessage({ id: 'catalog.wikidata.invalidQid' }))
         return
       }
-
-      onChangeItem({ ...item, qid: value })
-      Orchard.graft(wikidataLinksPath, { schema, qid: value, position })
-        .then(resp => {
-          console.log(resp)
-        })
-        .catch(e => console.log(e))
+      if (queryQueue.has(item.qid)) {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.entryExists' }))
+      }
+      handleQuery(qid)
+      onChangeItem({ ...item, qid })
+      if (!item.id || item.position !== position) {
+        Orchard.graft(wikidataLinksPath, { schema, qid, position })
+          .then(resp => {
+            console.log(resp)
+          })
+          .catch(e => console.log(e))
+      }
     }
 
     const handleKeyDown = e => {
@@ -280,24 +300,6 @@ export function createSortableInput ({
 
     const isValidQId = id => {
       return typeof id === 'string' && id.startsWith('Q')
-    }
-
-    const makeQuery = qid => {
-      setLoading(true)
-      Orchard.harvest(`sparql/${schema}/${qid.trim()}`)
-        .then((resp: SparqlResult) => {
-          item.data = resp
-          setError(null)
-          queriedQids.add(qid)
-          onChangeItem({ ...item, qid, data: resp })
-        })
-        .catch(err => {
-          setError(err.message)
-          delete item.data
-        })
-        .finally(() => {
-          setLoading(false)
-        })
     }
 
     const results = item.data
@@ -314,7 +316,7 @@ export function createSortableInput ({
       )
     }
 
-    if (value !== '' && results) {
+    if (qid !== '' && results) {
       return (
         <WikiDataContainer>
           <div className="data-container">
@@ -341,7 +343,10 @@ export function createSortableInput ({
                   {results.properties.map((prop, i) => {
                     const [key, value] = Object.entries(prop)[0]
                     return (
-                      <span className="wikidata-details-text" key={`${key}-${i}`}>
+                      <span
+                        className="wikidata-details-text"
+                        key={`${key}-${i}`}
+                      >
                         <span style={{ fontWeight: 400 }}>{key}:</span> {value}
                       </span>
                     )
@@ -353,9 +358,7 @@ export function createSortableInput ({
               className="wikidata-logo-container"
               style={{ right: editing ? '7%' : '2%' }}
             >
-                <div style={{width: '18px'}}>
-                    {<WikidataLogo />}
-                </div>
+              <div style={{ width: '18px' }}>{<WikidataLogo />}</div>
               <span className="wikidata-text">Wikidata</span>
             </div>
           </div>
@@ -371,12 +374,15 @@ export function createSortableInput ({
             placeholderId && intl.formatMessage({ id: placeholderId })
           }
           {...props}
-          value={value}
+          value={qid}
           rightElement={
             loading &&
-            value !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
+            qid !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
           }
-          style={{ borderColor: error ? 'red' : 'inherit', marginBottom: '4px' }}
+          style={{
+            borderColor: error ? 'red' : 'inherit',
+            marginBottom: '4px',
+          }}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
@@ -388,10 +394,10 @@ export function createSortableInput ({
         type="text"
         placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
         {...props}
-        value={value}
+        value={qid}
         rightElement={
           loading &&
-          value !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
+          qid !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
         }
         style={{ borderColor: error ? 'red' : 'inherit' }}
         onChange={handleChange}
@@ -403,10 +409,10 @@ export function createSortableInput ({
 
   const WikidataLogo = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 10">
-      <rect y=".01" width="4.6" height="10" fill="rgba(235,234,228,0.5)"/>
-      <rect x="5.95" width="2.23" height="10" fill="rgba(235,234,228,0.5)"/>
-      <rect x="9.57" width="4.6" height="10" fill="rgba(235,234,228,0.5)"/>
-      <rect x="15.61" width="2.2" height="10" fill="rgba(235,234,228,0.5)"/>
+      <rect y=".01" width="4.6" height="10" fill="rgba(235,234,228,0.5)" />
+      <rect x="5.95" width="2.23" height="10" fill="rgba(235,234,228,0.5)" />
+      <rect x="9.57" width="4.6" height="10" fill="rgba(235,234,228,0.5)" />
+      <rect x="15.61" width="2.2" height="10" fill="rgba(235,234,228,0.5)" />
     </svg>
   )
 
