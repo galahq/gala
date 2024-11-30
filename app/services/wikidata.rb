@@ -29,7 +29,7 @@ class Wikidata
         OPTIONAL { ?entity wdt:P101 ?discipline . }
         OPTIONAL { ?entity wdt:P496 ?orcid . }
         OPTIONAL { ?entity wdt:P1153 ?scopus . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
     SPARQL
@@ -54,7 +54,7 @@ class Wikidata
         OPTIONAL { ?entity wdt:P156 ?follows . }
         OPTIONAL { ?entity wdt:P136 ?genre . }
         OPTIONAL { ?entity wdt:P2078 ?userManual . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
     SPARQL
@@ -69,7 +69,7 @@ class Wikidata
         VALUES ?instance { wd:Q3966 wd:Q55990535 }
         OPTIONAL { ?entity wdt:P176 ?manufacturer . }
         OPTIONAL { ?entity wdt:P1072 ?model . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
     SPARQL
@@ -84,7 +84,7 @@ class Wikidata
         VALUES ?instance { wd:Q230788 }
         OPTIONAL { ?entity wdt:P8324 ?funder . }
         OPTIONAL { ?entity wdt:P8323 ?recipient . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
     SPARQL
@@ -100,7 +100,7 @@ class Wikidata
         OPTIONAL { ?entity wdt:P50 ?author . }
         OPTIONAL { ?entity wdt:P1476 ?title . }
         OPTIONAL { ?entity wdt:P577 ?publicationDate . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
     SPARQL
@@ -116,14 +116,15 @@ class Wikidata
 
   attr_reader :sparql_query, :data
 
-  def initialize(schema, qid)
+  def initialize(schema, qid, locale = 'en')
     @client = SPARQL::Client.new(ENDPOINT)
     @schema = schema.downcase.to_sym
     @qid = qid
+    @locale = locale
   end
 
   def call
-    @sparql_query = SCHEMAS[@schema] % { qid: @qid }
+    @sparql_query = SCHEMAS[@schema] % { qid: @qid, locale: @locale }
     result = @client.query(sparql_query)
     return nil if result.empty?
     property_order = PROPERTY_ORDER[@schema]
@@ -152,12 +153,36 @@ class Wikidata
         end
       end
     end
+
+    @data['json_ld'] = generate_json_ld
+    @data
   rescue StandardError => e
     Rails.logger.error "Error in Wikidata call method: #{e.message}"
     raise
   end
 
+  def sparql_query
+    @sparql_query ||= SCHEMAS[@schema] % { qid: @qid, locale: @locale }
+  end
+
   private
+
+  def generate_json_ld(data = @data)
+    {
+      "@context": "https://schema.org",
+      "@type": "Thing",
+      "name": data['entityLabel'],
+      "identifier": data['entity'],
+      "additionalProperty": data['properties'].map do |property|
+        key, value = property.first
+        {
+          "@type": "PropertyValue",
+          "name": key,
+          "value": value
+        }
+      end
+    }
+  end
 
   def camel_case_to_title_case(camel_case)
     camel_case.gsub(/([A-Z])/, ' \1').split.map(&:capitalize).join(' ')
