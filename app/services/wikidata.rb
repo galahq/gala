@@ -137,6 +137,7 @@ class Wikidata
   def call
     @sparql_query = SCHEMAS[@schema] % { qid: @qid, locale: @locale }
     result = @client.query(sparql_query)
+    Rails.logger.info "Wikidata query: #{@sparql_query}"
     return nil if result.empty?
     property_order = PROPERTY_ORDER[@schema]
 

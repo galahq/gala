@@ -18,8 +18,10 @@ class WikidataLinksController < ApplicationController
     wikidata_link = @case.wikidata_links.find_or_initialize_by(
       schema: link_params[:schema], qid: link_params[:qid])
 
-    if wikidata_link.update(
-      link_params.merge(record_type: 'Case', record_id: @case.id))
+    wikidata_link.assign_attributes(link_params.merge(record_type: 'Case', record_id: @case.id))
+    wikidata_link.fetch_and_update_data!
+
+    if wikidata_link.save
       render json: wikidata_link,
              status: wikidata_link.new_record? ? :created : :ok
     else
