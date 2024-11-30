@@ -66,12 +66,14 @@ class Case < ApplicationRecord
   has_many :quizzes, dependent: :destroy
   has_many :readers, through: :enrollments
   has_many :reading_list_items, dependent: :destroy
-  has_many :wikidata_links, -> { order position: :asc }, dependent: :destroy
 
   has_many :pages,
            through: :case_elements, source: :element, source_type: 'Page'
   has_many :podcasts,
            through: :case_elements, source: :element, source_type: 'Podcast'
+
+  has_many :wikidata_links, -> { order(position: :asc) },
+           as: :record, dependent: :destroy, inverse_of: :record
 
   has_many :case_library_requests, dependent: :destroy
   has_one :active_case_library_request, -> { where(status: 'pending') },

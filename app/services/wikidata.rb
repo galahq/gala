@@ -2,6 +2,7 @@
 
 require 'sparql/client'
 require 'json'
+require 'date'
 
 =begin
 examples:
@@ -20,8 +21,9 @@ class Wikidata
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+      PREFIX schema: <http://schema.org/>
 
-      SELECT ?entity ?entityLabel ?discipline ?disciplineLabel ?occupation ?occupationLabel ?orcid ?scopus WHERE {
+      SELECT ?entity ?entityLabel ?discipline ?disciplineLabel ?occupation ?occupationLabel ?orcid ?scopus ?dateModified WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q5 }
@@ -29,6 +31,7 @@ class Wikidata
         OPTIONAL { ?entity wdt:P101 ?discipline . }
         OPTIONAL { ?entity wdt:P496 ?orcid . }
         OPTIONAL { ?entity wdt:P1153 ?scopus . }
+        OPTIONAL { ?entity schema:dateModified ?dateModified . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
@@ -37,8 +40,9 @@ class Wikidata
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+      PREFIX schema: <http://schema.org/>
 
-      SELECT ?entity ?entityLabel ?developerLabel ?programmingLanguageLabel ?copyrightLicenseLabel ?developer ?platform ?platformLabel ?programmingLanguage ?operatingSystem ?operatingSystemLabel ?sourceCodeRepository ?officialWebsite ?copyrightLicense ?inception ?softwareVersion ?follows ?followsLabel ?genre ?genreLabel ?userManual WHERE {
+      SELECT ?entity ?entityLabel ?developerLabel ?programmingLanguageLabel ?copyrightLicenseLabel ?developer ?platform ?platformLabel ?programmingLanguage ?operatingSystem ?operatingSystemLabel ?sourceCodeRepository ?officialWebsite ?copyrightLicense ?inception ?softwareVersion ?follows ?followsLabel ?genre ?genreLabel ?userManual ?dateModified WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q341 wd:Q7397 wd:Q1639024 wd:Q21127166 wd:Q21129801 wd:Q24529812 wd:Q9143 }
@@ -54,6 +58,7 @@ class Wikidata
         OPTIONAL { ?entity wdt:P156 ?follows . }
         OPTIONAL { ?entity wdt:P136 ?genre . }
         OPTIONAL { ?entity wdt:P2078 ?userManual . }
+        OPTIONAL { ?entity schema:dateModified ?dateModified . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
@@ -62,13 +67,15 @@ class Wikidata
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+      PREFIX schema: <http://schema.org/>
 
-      SELECT ?entity ?entityLabel ?manufacturer ?manufacturerLabel ?model ?modelLabel WHERE {
+      SELECT ?entity ?entityLabel ?manufacturer ?manufacturerLabel ?model ?modelLabel ?dateModified WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q3966 wd:Q55990535 }
         OPTIONAL { ?entity wdt:P176 ?manufacturer . }
         OPTIONAL { ?entity wdt:P1072 ?model . }
+        OPTIONAL { ?entity schema:dateModified ?dateModified . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
@@ -77,13 +84,15 @@ class Wikidata
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+      PREFIX schema: <http://schema.org/>
 
-      SELECT ?entity ?entityLabel ?funder ?funderLabel ?recipient ?recipientLabel WHERE {
+      SELECT ?entity ?entityLabel ?funder ?funderLabel ?recipient ?recipientLabel ?dateModified WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q230788 }
         OPTIONAL { ?entity wdt:P8324 ?funder . }
         OPTIONAL { ?entity wdt:P8323 ?recipient . }
+        OPTIONAL { ?entity schema:dateModified ?dateModified . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
@@ -92,14 +101,16 @@ class Wikidata
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+      PREFIX schema: <http://schema.org/>
 
-      SELECT ?entity ?entityLabel ?author ?authorLabel ?title ?titleLabel ?publicationDate WHERE {
+      SELECT ?entity ?entityLabel ?author ?authorLabel ?title ?titleLabel ?publicationDate ?dateModified WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q47461344 }
         OPTIONAL { ?entity wdt:P50 ?author . }
         OPTIONAL { ?entity wdt:P1476 ?title . }
         OPTIONAL { ?entity wdt:P577 ?publicationDate . }
+        OPTIONAL { ?entity schema:dateModified ?dateModified . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
       LIMIT 1
@@ -107,11 +118,11 @@ class Wikidata
   }
 
   PROPERTY_ORDER = {
-    researchers: %w[entity entityLabel disciplineLabel occupationLabel orcid scopus],
-    software: %w[entity entityLabel developerLabel programmingLanguageLabel copyrightLicenseLabel],
-    hardware: %w[entity entityLabel manufacturerLabel modelLabel],
-    grants: %w[entity entityLabel funderLabel recipientLabel],
-    works: %w[entity entityLabel authorLabel titleLabel publicationDate]
+    researchers: %w[entity entityLabel disciplineLabel occupationLabel orcid scopus dateModified],
+    software: %w[entity entityLabel developerLabel programmingLanguageLabel copyrightLicenseLabel dateModified],
+    hardware: %w[entity entityLabel manufacturerLabel modelLabel dateModified],
+    grants: %w[entity entityLabel funderLabel recipientLabel dateModified],
+    works: %w[entity entityLabel authorLabel titleLabel publicationDate dateModified]
   }
 
   attr_reader :sparql_query, :data
@@ -145,6 +156,8 @@ class Wikidata
             json['entity'] = value
           when 'entityLabel'
             json['entityLabel'] = value
+          when 'dateModified'
+            json['dateModified'] = humanize_date(value)
           else
             json['properties'] << {
               camel_case_to_title_case(property.split('Label')[0]) => value
@@ -165,15 +178,13 @@ class Wikidata
     @sparql_query ||= SCHEMAS[@schema] % { qid: @qid, locale: @locale }
   end
 
-  private
-
-  def generate_json_ld(data = @data)
+  def generate_json_ld
     {
       "@context": "https://schema.org",
       "@type": "Thing",
-      "name": data['entityLabel'],
-      "identifier": data['entity'],
-      "additionalProperty": data['properties'].map do |property|
+      "name": @data['entityLabel'],
+      "identifier": @data['entity'],
+      "additionalProperty": @data['properties'].map do |property|
         key, value = property.first
         {
           "@type": "PropertyValue",
@@ -186,6 +197,10 @@ class Wikidata
 
   def camel_case_to_title_case(camel_case)
     camel_case.gsub(/([A-Z])/, ' \1').split.map(&:capitalize).join(' ')
+  end
+
+  def humanize_date(date_string)
+    DateTime.parse(date_string).strftime('%B %d, %Y')
   end
 
 end

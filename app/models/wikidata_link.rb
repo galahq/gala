@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class WikidataLink < ApplicationRecord
-  belongs_to :case
+  belongs_to :record,
+             polymorphic: true, inverse_of: :wikidata_links
 
-  validates :object_type, presence: true
-  validates :object_id, presence: true
+  validates :record_type, presence: true
+  validates :record_id, presence: true
   validates :schema, presence: true
   validates :qid, presence: true
 end

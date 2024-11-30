@@ -1640,12 +1640,13 @@ ALTER SEQUENCE public.visits_id_seq OWNED BY public.visits.id;
 
 CREATE TABLE public.wikidata_links (
     id bigint NOT NULL,
-    object_type character varying NOT NULL,
-    object_id bigint NOT NULL,
-    case_id bigint NOT NULL,
-    schema character varying NOT NULL,
+    record_type character varying NOT NULL,
+    record_id bigint NOT NULL,
     qid character varying NOT NULL,
+    schema character varying NOT NULL,
     "position" integer DEFAULT 0 NOT NULL,
+    cached_json jsonb DEFAULT '{}'::jsonb,
+    last_synced_at timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -3108,17 +3109,10 @@ CREATE UNIQUE INDEX index_visits_on_visit_token ON public.visits USING btree (vi
 
 
 --
--- Name: index_wikidata_links_on_case_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_wikidata_links_on_record_type_and_record_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_wikidata_links_on_case_id ON public.wikidata_links USING btree (case_id);
-
-
---
--- Name: index_wikidata_links_on_object_type_and_object_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_wikidata_links_on_object_type_and_object_id ON public.wikidata_links USING btree (object_type, object_id);
+CREATE INDEX index_wikidata_links_on_record_type_and_record_id ON public.wikidata_links USING btree (record_type, record_id);
 
 
 --
