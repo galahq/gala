@@ -1,7 +1,8 @@
 FROM ruby:2.7.6
 
 RUN apt-get update && apt-get install -y \
-  build-essential curl postgresql-client python
+  build-essential curl postgresql-client python \
+  libjemalloc2 libvips sqlite3 
 
 # install node and yarn
 RUN mkdir /usr/local/nvm
@@ -20,6 +21,8 @@ RUN mkdir -p /app
 WORKDIR /app
 
 RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc
+RUN gem update --system 3.3.22
+RUN gem install bundler:2.4.19
 COPY Gemfile Gemfile.lock ./
 RUN bundle install --jobs 20 --retry 5
 
@@ -29,6 +32,8 @@ RUN yarn install
 COPY . ./
 
 RUN rails tmp:clear log:clear
+
+RUN rake assets:precompile
 
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000

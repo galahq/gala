@@ -4,7 +4,7 @@ require 'sidekiq'
 require 'openssl'
 
 def redis_configuration
-  redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }
+  redis_url = ENV.fetch("REDIS_URL") { "redis://redis:6379/1" }
 
   # ensure we use TLS if `rediss://` is in the URL
   if redis_url.start_with?("rediss://")
@@ -14,10 +14,11 @@ def redis_configuration
         # for custom CA file, specify it here:
         # ca_file: Rails.root.join("config/certs/AmazonRootCA1.pem").to_s,
         verify_mode: OpenSSL::SSL::VERIFY_NONE
-      }
+      },
+      timeout: 2
     }
   else
-    { url: redis_url }
+    { url: redis_url, timeout: 2 }
   end
 end
 

@@ -2,21 +2,26 @@
 
 source 'https://rubygems.org'
 
+ruby '2.7.6'
+
 gem 'rails', '6.0.2.2'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
 gem 'aws-sdk-sns', '>= 1.9.0', require: false
-gem 'bootsnap', require: false
+gem 'bootsnap', '~> 1.7.5', require: false
 gem 'connection_pool'
 gem 'dalli'
 gem 'image_processing'
 #gem 'mini_magick'
-gem 'pg', '~> 0.18'
-gem 'puma', '~> 3.12.2'
+gem 'pg', '~> 1.2.3'
+gem 'puma', '~> 4'
 gem 'rack-canonical-host'
-gem 'redis', '~> 3.0'
-gem 'sidekiq'
+gem 'redis', '~> 5'
+gem 'sidekiq', '~> 6'
+gem 'nio4r', '~> 2.5.8'
+gem 'msgpack', '~> 1.4.2'
+gem 'sqlite3', '~> 1.3'
 
 # Models
 gem 'active_storage_validations'
@@ -50,7 +55,7 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility'
+gem 'mobility', '0.8.13'
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.10'
@@ -90,7 +95,7 @@ group :development do
   gem 'listen'
   # Spring speeds up development by keeping your application running in the
   # background. Read more: https://github.com/rails/spring
-  gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
+  # gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
   gem 'letter_opener'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -140,5 +145,3 @@ end
 
 # gem to install wkhtmltopdf for pdfkit
 gem 'wkhtmltopdf-binary'
-
-ruby '2.7.6'

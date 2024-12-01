@@ -28,7 +28,7 @@ services:
       SIDEKIQ_CONCURRENCY: 1
     ports: []
   db:
-    image: postgres:16
+    image: postgres:16.4
     environment:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine
@@ -41,14 +41,5 @@ services:
     image: redis:6
     ports:
       - 6379:6379
-  # selenium:
-  #   image: seleniarm/standalone-chromium
-  #   shm_size: 4gb
-  #   environment:
-  #     SE_NODE_MAX_SESSIONS: 1
-  #   ports:
-  #     - 4444:4444
-  #   volumes:
-  #     - /dev/shm:/dev/shm
 volumes:
   db_data:

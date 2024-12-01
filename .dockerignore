@@ -23,3 +23,10 @@ node_modules
 
 # assets
 public
+
+Dockerfile
+# Dockerfile and all dot extensions
+Dockerfile*
+
+.envrc
+.env.local
