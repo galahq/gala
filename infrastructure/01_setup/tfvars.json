@@ -1,0 +1,5 @@
+{
+  "tfstate_bucket_name": "gala-terraform-state",
+  "tfstate_lock_dynamodb_name": "gala_terraform_lock",
+  "profile": "np"
+}

@@ -1,0 +1,9 @@
+{
+  "profile": "np",
+  "secret_name": "GalaSecret",
+  "certificate_domain": "natepapes.com",
+  "certificate_sans": [
+    "gala872473fdd9a7903e.natepapes.com"
+  ],
+  "certificate_state": "USE"
+}

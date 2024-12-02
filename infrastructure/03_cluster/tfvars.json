@@ -1,0 +1,31 @@
+{
+  "aws_region": "us-east-1",
+  "profile": "np",
+  "env_name": "gala",
+  "certificate_domain": "natepapes.com",
+
+  "app_vpc_cidr_block": "172.16.0.0/16",
+  "app_public_subnets": ["172.16.1.0/24", "172.16.2.0/24"],
+  "availability_zones": ["c", "d"],
+
+  "ingress_sources": ["0.0.0.0/0"],
+
+  "lb_ingress_sources_with_labels": {
+    "0.0.0.0/0": "world wide web"
+  },
+
+  "secret_name": "GalaSecret",
+
+  "ec2_instance_type": "t2.small",
+  "instance_subnet": "public",
+  "instance_key_pair_name": "gala",
+
+  "ecr_repository_name_backend": "gala-backend",
+  "ecr_repository_name_frontend": "gala-frontend",
+
+  "ecs_cluster_name": "gala",
+  "ecs_ami_name": "amzn2-ami-ecs-hvm-*-x86_64-ebs",
+
+  "backend_tag": "latest",
+  "frontend_tag": "latest"
+}

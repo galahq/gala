@@ -1,0 +1,2 @@
+Rails 6 Dockfiles:
+- https://github.com/x1wins/CW-OVP/blob/master/Dockerfile

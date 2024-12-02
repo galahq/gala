@@ -27,13 +27,21 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle install --jobs 20 --retry 5
 
 COPY package.json yarn.lock ./
-RUN yarn install
+RUN yarn install --check-files
 
 COPY . ./
 
-RUN rails tmp:clear log:clear
+# Set environment variables
+ARG RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_SERVE_STATIC_FILES ${RAILS_SERVE_STATIC_FILES}
 
-RUN rake assets:precompile
+ARG RAILS_ENV=production
+ENV RAILS_ENV ${RAILS_ENV}
+
+# Precompile assets
+RUN SECRET_KEY_BASE=DQtqBFNPcdmMyE7xmYXwnbDcYn6AQVeL33HQbCTGqhcVXKMDMKUfzCBFT8Kz4PECKSR4BzTWeJcHMRCj5tA5sr5bkBq2bKFvmWGfg2cR5pSBd8VW3FRkUNsxV4NBYmzn \
+  DATABASE_URL=postgresql://does/not/matter \
+  bundle exec rake assets:precompile
 
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000

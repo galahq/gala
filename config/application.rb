@@ -22,6 +22,9 @@ module Orchard
 
     config.active_record.schema_format = :sql
 
-    config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
+    # Conditionally insert Rack::Deflater middleware if ActionDispatch::Static is present
+    if defined?(ActionDispatch::Static)
+      config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
+    end
   end
 end
