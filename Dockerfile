@@ -1,8 +1,8 @@
-FROM ruby:2.7.6-slim
+FROM ruby:2.7.6
 
 RUN apt-get update && apt-get install -y \
   build-essential curl postgresql-client python \
-  libjemalloc2 libvips sqlite3 git
+  libjemalloc2 libvips sqlite3
 
 # install node and yarn
 RUN mkdir /usr/local/nvm

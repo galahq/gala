@@ -55,6 +55,14 @@ resource "aws_ecs_task_definition" "backend" {
       {
         "name": "AWS_SECRET_ACCESS_KEY",
         "value": "${jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["aws_secret_access_key"]}"
+      },
+      {
+        "name": "AWS_REGION",
+        "value": "${var.aws_region}"
+      },
+      {
+        "name": "AWS_BUCKET_NAME",
+        "value": "${jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["aws_bucket_name"]}"
       }
     ],
     "essential": true,
