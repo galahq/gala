@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# do not move forward on any errors
+set -e
+
+export AWS_PROFILE=np
+
+# if -skip-build is passed, skip the build step
+if [ "$1" != "-skip-build" ]; then
+  docker login -u AWS -p $(aws ecr get-login-password --region us-east-1 --profile np) 173028465699.dkr.ecr.us-east-1.amazonaws.com
+  docker build -t latest .
+  docker tag latest 173028465699.dkr.ecr.us-east-1.amazonaws.com/gala-backend
+  docker push 173028465699.dkr.ecr.us-east-1.amazonaws.com/gala-backend
+fi
+
+region=us-east-1
+cluster=gala
+service=gala-backend
+worker_service=gala-backend-worker
+
+echo "forcing new deployments of $service, $worker_service"
+
+echo "deploying $service"
+aws ecs update-service --region $region \
+                       --cluster $cluster \
+                       --service $service \
+                       --force-new-deployment \
+                       --no-cli-pager
+
+echo "deploying $worker_service"
+aws ecs update-service --region $region \
+                       --cluster $cluster \
+                       --service $worker_service \
+                       --force-new-deployment \
+                       --no-cli-pager
