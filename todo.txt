@@ -9,3 +9,5 @@ Features:
 - add sentry for error tracking
 - add mapbox for maps
 - add lti for learning tools
+- get stickness for websockets to work
+- get image uploading to work
