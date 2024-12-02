@@ -25,7 +25,7 @@ module Orchard
     config.middleware.use Rack::Deflater
 
     # Conditionally insert Rack::Deflater middleware if ActionDispatch::Static is present
-    # if Rails.configuration.public_file_server.enabled && defined?(ActionDispatch::Static)
+    # if Rails.configuration.public_file_server.enabled
     #   config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
     # end
   end
