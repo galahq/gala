@@ -45,8 +45,8 @@ resource "aws_ecs_task_definition" "backend_worker" {
         "value": "${jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["base_url"]}"
       },
       {
-        "name": "MEMCACHED_URL",
-        "value": "memcached://${aws_elasticache_cluster.memcached.cache_nodes.0.address}:11211"
+        "name": "SIDEKIQ_CONCURRENCY",
+        "value": "1"
       },
       {
         "name": "AWS_ACCESS_KEY_ID",

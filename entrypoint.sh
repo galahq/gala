@@ -1,5 +1,15 @@
 #!/bin/bash
 
+RAILS_ENV="${RAILS_ENV:-development}"
+echo "********** RAILS_ENV=$RAILS_ENV"
+
+
+# Enable jemalloc for reduced memory usage and latency.
+if [ -f /usr/lib/*/libjemalloc.so.2 ]; then
+  export LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2) $LD_PRELOAD"
+fi
+
+
 if [ "$RAILS_ENV" = "development" ] && [ -z "$SIDEKIQ_CONCURRENCY" ]; then
   count=$(bundle exec rails runner "puts Case.count")
   if [ "${count//$'\n'/}" -eq 0 ]; then
@@ -13,4 +23,4 @@ if [ -f tmp/pids/server.pid ]; then
   rm -f tmp/pids/server.pid
 fi
 
-exec bundle exec "$@"
+exec "$@"
