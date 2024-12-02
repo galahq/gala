@@ -16,7 +16,7 @@
 
   "secret_name": "GalaSecret",
 
-  "ec2_instance_type": "t2.small",
+  "ec2_instance_type": "t2.micro",
   "instance_subnet": "public",
   "instance_key_pair_name": "gala",
 

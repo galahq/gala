@@ -269,9 +269,8 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    haml (6.3.0)
-      temple (>= 0.8.2)
-      thor
+    haml (5.1.2)
+      temple (>= 0.8.0)
       tilt
     hashie (5.0.0)
     http_accept_language (2.1.1)
@@ -668,7 +667,7 @@ DEPENDENCIES
   friendly_id!
   groupdate
   guard-rspec
-  haml (>= 5.1.2)
+  haml (= 5.1.2)
   http_accept_language
   i18n_generators
   i18n_yaml_sorter

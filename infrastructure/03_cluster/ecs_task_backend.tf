@@ -25,7 +25,7 @@ resource "aws_ecs_task_definition" "backend" {
         "value": "production"
       },
       {
-        "name": "REDIS_CONNECTION",
+        "name": "REDIS_URL",
         "value": "redis://${aws_elasticache_cluster.default.cache_nodes.0.address}:6379"
       },
       {
@@ -47,6 +47,14 @@ resource "aws_ecs_task_definition" "backend" {
       {
         "name": "BASE_URL",
         "value": "${jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["base_url"]}"
+      },
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "value": "${jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["aws_access_key_id"]}"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "value": "${jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["aws_secret_access_key"]}"
       }
     ],
     "essential": true,

@@ -59,7 +59,7 @@ gem 'mobility', '0.8.13'
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.10'
-gem 'haml', '>=5.1.2' #git: 'https://github.com/haml/haml' # until > 5.0.4
+gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', git: 'https://github.com/rails/jbuilder', branch: :main
 gem 'markerb', git: 'https://github.com/cbothner/markerb'

@@ -1,2 +1,11 @@
 Rails 6 Dockfiles:
-- https://github.com/x1wins/CW-OVP/blob/master/Dockerfile
+- https://github.com/x1wins/CW-OVP/blob/master/
+- https://github.com/rubygems/rubygems.org/blob/master/Dockerfile
+- https://github.com/somleng/somleng/blob/develop/Dockerfile
+- https://github.com/YaleSTC/reservations/blob/master/Dockerfile.prod
+
+Features:
+- add sending emails vias SES
+- add sentry for error tracking
+- add mapbox for maps
+- add lti for learning tools

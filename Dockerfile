@@ -39,7 +39,7 @@ ARG RAILS_ENV=production
 ENV RAILS_ENV ${RAILS_ENV}
 
 # Precompile assets
-RUN SECRET_KEY_BASE=DQtqBFNPcdmMyE7xmYXwnbDcYn6AQVeL33HQbCTGqhcVXKMDMKUfzCBFT8Kz4PECKSR4BzTWeJcHMRCj5tA5sr5bkBq2bKFvmWGfg2cR5pSBd8VW3FRkUNsxV4NBYmzn \
+RUN SECRET_KEY_BASE=1 \
   DATABASE_URL=postgresql://does/not/matter \
   bundle exec rake assets:precompile
 
