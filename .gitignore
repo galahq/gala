@@ -53,3 +53,27 @@ spec/examples.txt
 
 # Ignore vscode settings
 /.vscode
+
+# terraform
+# Ignore Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Ignore Terraform plan files
+*.tfplan
+
+# Ignore Terraform crash logs
+crash.log
+
+# Ignore Terraform override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore Terraform configuration files
+.terraformrc
+terraform.rc
+
+# Ignore Terraform directories
+.terraform/

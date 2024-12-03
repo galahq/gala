@@ -22,7 +22,7 @@ class Comment < ApplicationRecord
 
   validates :content, presence: true
 
-  after_save { CommentBroadcastJob.perform_later self }
+  after_save { CommentBroadcastJob.perform_now self }
   after_create_commit { CommentThreadBroadcastJob.perform_later comment_thread }
   after_create_commit :send_notifications_of_reply
 

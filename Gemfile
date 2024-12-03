@@ -2,22 +2,27 @@
 
 source 'https://rubygems.org'
 
+ruby file: '.ruby-version'
+
 gem 'rails', '6.0.2.2'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
 gem 'aws-sdk-sns', '>= 1.9.0', require: false
-gem 'bootsnap', require: false
+gem 'bootsnap', '~> 1.7.5', require: false
 gem 'connection_pool'
 gem 'dalli'
 gem 'image_processing'
 #gem 'mini_magick'
-gem 'pg', '~> 0.18'
-gem 'puma', '~> 3.12.2'
+gem 'pg', '~> 1.2.3'
+gem 'puma', '~> 4'
 gem 'rack-canonical-host'
-# currently not used
-gem 'redis', '~> 3.0', require: false
-gem 'sidekiq', require: false
+gem 'redis', '4.5.0'
+gem 'sidekiq', '~> 6.0.0'
+gem 'nio4r', '~> 2.5.8'
+gem 'msgpack', '~> 1.4.2'
+gem 'sqlite3', '~> 1.3'
+gem 'sparql-client'
 
 # Models
 gem 'active_storage_validations'
@@ -51,11 +56,11 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility'
+gem 'mobility', '0.8.13'
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.10'
-gem 'haml', '>=5.1.2' #git: 'https://github.com/haml/haml' # until > 5.0.4
+gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', git: 'https://github.com/rails/jbuilder', branch: :main
 gem 'markerb', git: 'https://github.com/cbothner/markerb'
@@ -91,7 +96,7 @@ group :development do
   gem 'listen'
   # Spring speeds up development by keeping your application running in the
   # background. Read more: https://github.com/rails/spring
-  gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
+  # gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
   gem 'letter_opener'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -141,7 +146,3 @@ end
 
 # gem to install wkhtmltopdf for pdfkit
 gem 'wkhtmltopdf-binary'
-
-gem 'sparql-client'
-
-ruby '2.7.6'

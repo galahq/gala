@@ -6,7 +6,7 @@ module Admin
 
     def copy
       current_case = find_resource(params[:id])
-      @case = CaseCloneJob.perform_later(
+      @case = CaseCloneJob.perform_now(
         current_case,
         locale: current_case.locale
       )

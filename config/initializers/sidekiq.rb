@@ -1,19 +1,30 @@
 # frozen_string_literal: true
 
-# This file is used to configure Sidekiq with Redis.
-# Redis is no longer a dependency, experimenting using :inline for now.
+def redis_configuration
+  redis_url = ENV.fetch("REDIS_URL") { "redis://redis:6379/1" }
 
-=begin
+  # ensure we use TLS if `rediss://` is in the URL
+  if redis_url.start_with?("rediss://")
+    {
+      url: redis_url,
+      ssl_params: {
+        # for custom CA file, specify it here:
+        # ca_file: Rails.root.join("config/certs/AmazonRootCA1.pem").to_s,
+        verify_mode: OpenSSL::SSL::VERIFY_NONE
+      },
+      timeout: 2
+    }
+  else
+    { url: redis_url, timeout: 2 }
+  end
+end
 
-require 'sidekiq'
-
-# server
+# sidekiq, server
 Sidekiq.configure_server do |config|
-  config.redis = { url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } }
-end
-# client
-Sidekiq.configure_client do |config|
-  config.redis = { url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } }
+  config.redis = redis_configuration
 end
 
-=end
+# sidekiq, client
+Sidekiq.configure_client do |config|
+  config.redis = redis_configuration
+end

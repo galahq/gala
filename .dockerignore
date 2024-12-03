@@ -1,25 +1,43 @@
-# ignore all logfiles and tempfiles
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+# Ignore log files
+log/*
 
+# Ignore temp files
+tmp/*
 
-# environment normalization
-/.bundle
-/vendor/bundle
+# Ignore PID files
+*.pid
 
-# test sqlite databases
-/db/*.sqlite3*
-
-# should use env vars instead of encrypted messages
+# Ignore config secrets
 config/master.key
+config/credentials.yml.enc
 
-# ignore byebug command history file
-.byebug_history
+# Ignore uploaded files
+storage/*
 
-# node_modules
-node_modules
+# Ignore the database files
+db/*.sqlite3
+db/*.sqlite3-journal
 
-# assets
-public
+# Ignore bundler cache
+vendor/bundle
+
+# Ignore node_modules
+node_modules/
+
+# Ignore test artifacts and coverage
+coverage/
+spec/reports/
+test/reports/
+
+# Ignore git files
+.git
+.gitignore
+
+# Ignore Dockerfiles
+Dockerfile
+Dockerfile.dev
+Dockerfile.*
+
+# Ignore other development tools
+.env
+.env.*

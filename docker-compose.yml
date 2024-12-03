@@ -1,24 +1,51 @@
-version: '3'
+version: '3.9'
+x-build: &default-build
+  dockerfile: Dockerfile.next
+  context: .
+  target: builder
+  args:
+    RAILS_ENV: "development"
+    VERSION: ${VERSION:-unknown}
+
 services:
-  web: &web
-    build: ./
+  web:
+    build: *default-build
     stdin_open: true
     tty: true
-    command: foreman start -f Procfile.dev
+    command: bundle exec foreman start -f Procfile.dev
     environment: &env
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
+      REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: 1
+      RAILS_MAX_THREADS: 1
+      RAILS_SERVE_STATIC_FILES: 1
+      VERSION: ${VERSION:-unknown}
     ports:
       - 3000:3000
       - 3035:3035
     depends_on:
       - db
+      # - redis
     volumes:
-      - ./:/app/
-      - /app/node_modules/
-      - /app/tmp/cache/
+      - .:/app
+      - /app/node_modules
+      - /app/tmp/cache
+  # worker:
+  #   build: *default-build
+  #   stdin_open: true
+  #   tty: true
+  #   command: bundle exec sidekiq
+  #   environment:
+  #     <<: *env
+  #     SIDEKIQ_CONCURRENCY: 1
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   volumes:
+  #     - .:/app
   db:
-    image: postgres:16
+    image: postgres:16.4
     environment:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine
@@ -26,6 +53,10 @@ services:
       - 5432:5432
     volumes:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
-      - db_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data
+  # redis:
+  #   image: redis:6
+  #   ports:
+  #     - 6379:6379
 volumes:
   db_data:

@@ -22,6 +22,6 @@ module Orchard
 
     config.active_record.schema_format = :sql
 
-    config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
+    config.middleware.use Rack::Deflater
   end
 end

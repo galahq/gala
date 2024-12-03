@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-Rails.application.routes.default_url_options = { host: 'www.learngala.com' }
+ENV['BASE_URL'] ||= 'www.learngala.com'
+
+Rails.application.routes.default_url_options = { host: ENV['BASE_URL'] }
 
 Rails.application.configure do
   # Prepare the ingress controller used to receive mail
@@ -51,10 +53,11 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
-  config.action_cable.url = 'wss://www.learngala.com/cable'
+  config.action_cable.url = "wss://#{ENV['BASE_URL']}/cable"
   config.action_cable.allowed_request_origins = %w[
     http://www.learngala.com
     https://www.learngala.com
+    ENV['BASE_URL']
   ]
 
   # Store uploaded files on the local file system (see config/storage.yml for
@@ -73,19 +76,30 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  config.cache_store = :dalli_store,
-                       (ENV['MEMCACHIER_SERVERS'] || '').split(','),
-                       { username: ENV['MEMCACHIER_USERNAME'],
-                         password: ENV['MEMCACHIER_PASSWORD'],
-                         failover: true,
-                         socket_timeout: 1.5,
-                         socket_failure_delay: 0.2,
-                         down_retry_delay: 60,
-                         pool_size: ENV.fetch('RAILS_MAX_THREADS') { 5 }.to_i }
+  if ENV['MEMCACHIER_SERVERS'].present?
+    # heroku memcachier
+    config.cache_store = :dalli_store,
+                        (ENV['MEMCACHIER_SERVERS'] || '').split(','),
+                        { username: ENV['MEMCACHIER_USERNAME'],
+                          password: ENV['MEMCACHIER_PASSWORD'],
+                          failover: true,
+                          socket_timeout: 1.5,
+                          socket_failure_delay: 0.2,
+                          down_retry_delay: 60,
+                          pool_size: ENV.fetch('RAILS_MAX_THREADS') { 5 }.to_i }
+  elsif ENV['MEMCACHED_URL'].present?
+    config.cache_store = :dalli_store,
+                        ["#{ENV['MEMCACHED_URL']}"],
+                        { failover: true,
+                          socket_timeout: 1.5,
+                          socket_failure_delay: 0.2,
+                          down_retry_delay: 60,
+                          pool_size: ENV.fetch('RAILS_MAX_THREADS') { 5 }.to_i }
+  end
 
   # Use a real queuing backend for Active Job (and separate queues per
   # environment)
-  config.active_job.queue_adapter = :inline
+  config.active_job.queue_adapter = :sidekiq
 
   config.action_mailer.perform_caching = false
 
@@ -94,7 +108,7 @@ Rails.application.configure do
   # raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { host: 'www.learngala.com' }
+  config.action_mailer.default_url_options = { host: ENV['BASE_URL'] }
 
   if ENV['SES_SMTP_USERNAME'] && ENV['SES_SMTP_PASSWORD']
     config.action_mailer.smtp_settings = {
