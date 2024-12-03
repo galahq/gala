@@ -69,8 +69,6 @@ ENV RAILS_ENV=${RAILS_ENV}
 ARG version=unknown
 ENV VERSION=${version}
 
-ENV SECRET_KEY_BASE=dummy
-
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000
 

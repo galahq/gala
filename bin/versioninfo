@@ -2,6 +2,8 @@
 
 set -eu  # do not proceed on error
 
-commit=$(git rev-parse --short HEAD)
-date=$(date '+%Y%m%d%H%M%S')
-echo "$date-$commit"
+# commit=$(git rev-parse --short HEAD)
+# date=$(date '+%Y%m%d%H%M%S')
+# echo "$date-$commit"
+
+echo "$(date '+%Y.%m.%dT%H%M')-$(git rev-parse --short HEAD)"
