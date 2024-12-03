@@ -29,3 +29,7 @@ Migrate away from Heroku to AWS ECS:
 - github actions for CI/CD
 - optimze Dockefile for faster builds and smaller images
 - remove compile true in webpacker.yml
+- investigatw rate limiting using aws waf
+- convert flow to typescript
+- migrate from webpacker to esbuild
+- upgrade rails incrementely to 7.2 and ruby to 3.1

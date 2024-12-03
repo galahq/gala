@@ -1,16 +1,14 @@
 # Stage 1: Base with build dependencies
-FROM ruby:2.7.6-slim as builder
+ARG RUBY_VERSION=2.7.6
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS builder
 
-ARG RAILS_ENV=production
-ENV RAILS_ENV=${RAILS_ENV}
-ARG version=unknown
-ENV VERSION=${version}
+WORKDIR /app
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential curl postgresql-client python \
-  libjemalloc2 libvips sqlite3 git \
-  pkg-config libpq-dev \
+  libjemalloc2 sqlite3 git \
+  pkg-config libpq-dev imagemagick shared-mime-info \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -26,7 +24,10 @@ RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g yarn
 
-WORKDIR /app
+ARG RAILS_ENV=production
+ENV RAILS_ENV=${RAILS_ENV}
+ARG version=unknown
+ENV VERSION=${version}
 
 # Install gems and node modules
 RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc
@@ -34,7 +35,7 @@ RUN gem update --system 3.3.22
 RUN gem install bundler:2.4.19
 # RUN bundle config set --local without 'development test'
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --jobs 20 --retry 5
+RUN bundle install --jobs $(nproc) --retry 2
 
 COPY package.json yarn.lock ./
 RUN yarn install --check-files
@@ -49,11 +50,11 @@ RUN if [ "$RAILS_ENV" != "development" ]; then \
     fi
 
 # Stage 2: Slim runtime image
-FROM ruby:2.7.6-slim
+FROM builder
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  libjemalloc2 libvips sqlite3 pkg-config libpq-dev \
+  libjemalloc2 sqlite3 pkg-config libpq-dev imagemagick shared-mime-info \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 

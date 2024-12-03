@@ -124,6 +124,10 @@ resource "aws_ecs_service" "backend" {
     container_name   = "${var.env_name}-backend"
     container_port   = "3000"
   }
+
+  placement_constraints {
+    type       = "distinctInstance"
+  }
 }
 
 resource "aws_lb_listener_rule" "backend" {

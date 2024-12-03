@@ -87,4 +87,8 @@ resource "aws_ecs_service" "backend_worker" {
   deployment_minimum_healthy_percent = 100
 
   task_definition = "${aws_ecs_task_definition.backend_worker.family}:${max("${aws_ecs_task_definition.backend_worker.revision}", "${data.aws_ecs_task_definition.backend_worker.revision}")}"
+
+  placement_constraints {
+    type       = "distinctInstance"
+  }
 }
