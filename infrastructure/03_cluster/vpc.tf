@@ -54,28 +54,3 @@ resource "aws_route_table_association" "app_public" {
   subnet_id      = element(aws_subnet.app_public.*.id,count.index)
   route_table_id = aws_route_table.app_public.id
 }
-
-resource "aws_wafv2_rule_group" "rate_limit_rule" {
-  name     = "${var.env_name}-rate-limit-rule"
-  scope    = "REGIONAL"
-  capacity = 50
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "RateLimitRuleGroup"
-    sampled_requests_enabled   = true
-  }
-}
-
-resource "aws_wafv2_web_acl" "web_acl" {
-  name     = "${var.env_name}-web-acl"
-  scope    = "REGIONAL"
-
-  default_action {
-    allow {}
-  }
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "WebACL"
-    sampled_requests_enabled   = true
-  }
-}
