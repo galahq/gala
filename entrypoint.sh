@@ -23,4 +23,7 @@ if [ -f tmp/pids/server.pid ]; then
   rm -f tmp/pids/server.pid
 fi
 
+# Write the version to a file
+echo "${VERSION:-unknown}" > /app/tmp/version
+
 exec "$@"

@@ -133,7 +133,7 @@
     "stylelint": "^9.10.1",
     "stylelint-color-format": "^0.2.0",
     "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-dev-server": "^3.1.10",
+    "webpack-dev-server": "^3.11.2",
     "yaml-jest": "^1.0.5"
   }
 }

@@ -17,12 +17,20 @@ resource "aws_ecs_task_definition" "backend" {
     ],
     "environment": [
       {
-        "name": "RAILS_LOG_TO_STDOUT",
-        "value": "true"
-      },
-      {
         "name": "RAILS_ENV",
         "value": "production"
+      },
+            {
+        "name": "RAILS_LOG_TO_STDOUT",
+        "value": "1"
+      },
+      {
+        "name": "RAILS_SERVE_STATIC_FILES",
+        "value": "1"
+      },
+      {
+        "name": "WEB_CONCURRENCY",
+        "value": "2"
       },
       {
         "name": "REDIS_URL",
@@ -35,14 +43,6 @@ resource "aws_ecs_task_definition" "backend" {
       {
         "name": "SECRET_KEY_BASE",
         "value": "${jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["secret_key_base"]}"
-      },
-      {
-        "name": "RAILS_LOG_TO_STDOUT",
-        "value": "1"
-      },
-      {
-        "name": "RAILS_SERVE_STATIC_FILES",
-        "value": "1"
       },
       {
         "name": "BASE_URL",

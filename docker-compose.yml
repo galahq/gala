@@ -1,7 +1,15 @@
-version: '3'
+version: '3.9'
+x-build: &default-build
+  dockerfile: Dockerfile.next
+  context: .
+  target: builder
+  args:
+    RAILS_ENV: "development"
+    VERSION: ${VERSION:-unknown}
+
 services:
-  web: &web
-    build: ./
+  web:
+    build: *default-build
     stdin_open: true
     tty: true
     command: bundle exec foreman start -f Procfile.dev
@@ -9,6 +17,7 @@ services:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
+      VERSION: ${VERSION:-unknown}
     ports:
       - 3000:3000
       - 3035:3035
@@ -16,17 +25,23 @@ services:
       - db
       - redis
     volumes:
-      - ./:/app/
-      - /app/node_modules/
-      - /app/tmp/cache/
+      - .:/app:cached # Mount local codebase
+      - /app/node_modules
+      - /app/tmp/cache
   worker:
-    <<: *web
-    image: gala_web
+    build: *default-build
+    stdin_open: true
+    tty: true
     command: bundle exec sidekiq
     environment:
       <<: *env
       SIDEKIQ_CONCURRENCY: 1
-    ports: []
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app:cached # Mount local codebase
+      - /app/node_modules
   db:
     image: postgres:16.4
     environment:
@@ -36,7 +51,7 @@ services:
       - 5432:5432
     volumes:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
-      - db_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data
   redis:
     image: redis:6
     ports:

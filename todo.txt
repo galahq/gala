@@ -4,6 +4,20 @@ Rails 6 Dockfiles:
 - https://github.com/somleng/somleng/blob/develop/Dockerfile
 - https://github.com/YaleSTC/reservations/blob/master/Dockerfile.prod
 
+Known working images:
+- 	
+Image
+December 02, 2024, 17:58:35 (UTC-05)
+sha256:8ab60f0cb9b55c490aa7851d1795ec33257f6671c61c5f9f094f06a73111191f
+-
+Image
+December 02, 2024, 17:28:42 (UTC-05)
+sha256:a14d5110034070202752527142f99a7894f198906daa5f889123d915f95e3df3
+-
+Image
+December 02, 2024, 14:06:55 (UTC-05)
+sha256:f047189fc9594c52646126c67762366
+
 Migrate away from Heroku to AWS ECS:
 - add sending emails vias SES
 - add sentry for error tracking

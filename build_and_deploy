@@ -1,33 +1,50 @@
 #!/bin/bash
 
-# do not move forward on any errors
+# Exit immediately if a command exits with a non-zero status
 set -e
 
+# Set environment variables
 export AWS_PROFILE=np
-
-# if -skip-build is passed, skip the build step
-if [ "$1" != "-skip-build" ]; then
-  docker login -u AWS -p $(aws ecr get-login-password --region us-east-1 --profile np) 173028465699.dkr.ecr.us-east-1.amazonaws.com
-  docker build -t latest .
-  docker tag latest 173028465699.dkr.ecr.us-east-1.amazonaws.com/gala-backend
-  docker push 173028465699.dkr.ecr.us-east-1.amazonaws.com/gala-backend
-fi
-
 region=us-east-1
 cluster=gala
 service=gala-backend
 worker_service=gala-backend-worker
+repository_url=173028465699.dkr.ecr.us-east-1.amazonaws.com/gala-backend
 
-echo "forcing new deployments of $service, $worker_service"
+# Check if the build step should be skipped
+if [ "$1" != "-skip-build" ]; then
+  # Retrieve version info
+  v="$(versioninfo)"
 
-echo "deploying $service"
+  # Log in to AWS ECR
+  docker login -u AWS -p "$(aws ecr get-login-password --region $region --profile $AWS_PROFILE)" $repository_url
+
+  # Build the Docker image and tag it with the repository name
+  docker build -f Dockerfile.next --build-arg version="$v" -t $repository_url:latest .
+
+  # Tag the image with both 'latest' and version-specific tags
+  docker tag $repository_url:latest $repository_url:$v
+  docker tag $repository_url:latest $repository_url:next
+
+  # Push both tags to ECR
+  docker push $repository_url:latest
+  docker push $repository_url:$v
+  docker push $repository_url:next
+fi
+
+# Force new deployments of services
+echo "Forcing new deployments of $service and $worker_service"
+
+# Deploy backend service
+echo "Deploying $service"
 aws ecs update-service --region $region \
                        --cluster $cluster \
                        --service $service \
                        --force-new-deployment \
                        --no-cli-pager
 
-echo "deploying $worker_service"
+# Deploy worker service
+echo "Deploying $worker_service"
 aws ecs update-service --region $region \
                        --cluster $cluster \
                        --service $worker_service \

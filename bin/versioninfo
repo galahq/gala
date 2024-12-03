@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -eu  # do not proceed on error
+
+commit=$(git rev-parse --short HEAD)
+date=$(date '+%Y%m%d%H%M%S')
+echo "$date-$commit"

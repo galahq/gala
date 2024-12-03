@@ -1,0 +1,77 @@
+# Stage 1: Base with build dependencies
+FROM ruby:2.7.6-slim as builder
+
+ARG RAILS_ENV=production
+ENV RAILS_ENV=${RAILS_ENV}
+ARG version=unknown
+ENV VERSION=${version}
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  build-essential curl postgresql-client python \
+  libjemalloc2 libvips sqlite3 git \
+  pkg-config libpq-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js and Yarn
+RUN mkdir /usr/local/nvm
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 12.5.0
+RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+RUN npm install -g yarn
+
+WORKDIR /app
+
+# Install gems and node modules
+RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc
+RUN gem update --system 3.3.22
+RUN gem install bundler:2.4.19
+# RUN bundle config set --local without 'development test'
+COPY Gemfile Gemfile.lock ./
+RUN bundle install --jobs 20 --retry 5
+
+COPY package.json yarn.lock ./
+RUN yarn install --check-files
+
+# Copy application code and precompile assets
+COPY . ./
+
+RUN if [ "$RAILS_ENV" != "development" ]; then \
+    SECRET_KEY_BASE=dummy \
+    DATABASE_URL=postgresql://does/not/matter \
+    bundle exec rake assets:precompile; \
+    fi
+
+# Stage 2: Slim runtime image
+FROM ruby:2.7.6-slim
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  libjemalloc2 libvips sqlite3 pkg-config libpq-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy only necessary files from the build stage
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /app /app
+
+# Set environment variables
+ARG RAILS_ENV=production
+ENV RAILS_ENV=${RAILS_ENV}
+ARG version=unknown
+ENV VERSION=${version}
+
+ENV SECRET_KEY_BASE=dummy
+
+ENTRYPOINT ["./entrypoint.sh"]
+EXPOSE 3000
+
+CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
