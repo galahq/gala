@@ -51,7 +51,7 @@ const AddWikidata = ({
           dark
           editing={editing}
           items={items}
-          newItem={{ qid: '', schema, position: items.length }}
+          newItem={{ id: '', qid: '', schema, position: items.length }}
           render={(props, index) => (
             <WikiDataInput {...props} schema={schema} index={index} />
           )}
