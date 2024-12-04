@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '2.7.6'
+ruby file: '.ruby-version'
 
 gem 'rails', '6.0.2.2'
 
@@ -30,8 +30,7 @@ gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
 gem 'clowne', '0.2.0'
 gem 'clowne_active_storage'
 gem 'draper'
-gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git',
-                   ref: 'a29e7d'
+gem 'friendly_id', '5.2.3'
 gem 'kaminari'
 gem 'memoist'
 gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'
@@ -42,7 +41,8 @@ gem 'devise', '~> 4.1'
 gem 'devise-i18n'
 gem 'ims-lti'
 gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', '0.8.0'
+gem 'omniauth-oauth2', '1.6.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
 gem 'rolify'

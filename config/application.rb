@@ -23,10 +23,5 @@ module Orchard
     config.active_record.schema_format = :sql
 
     config.middleware.use Rack::Deflater
-
-    # Conditionally insert Rack::Deflater middleware if ActionDispatch::Static is present
-    # if Rails.configuration.public_file_server.enabled
-    #   config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
-    # end
   end
 end

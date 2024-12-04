@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RAILS_ENV="${RAILS_ENV:-development}"
-echo "********** RAILS_ENV=$RAILS_ENV"
+echo "********** RAILS_ENV=$RAILS_ENV **********"
 
 
 # Enable jemalloc for reduced memory usage and latency.
@@ -19,11 +19,7 @@ if [ "$RAILS_ENV" = "development" ] && [ -z "$SIDEKIQ_CONCURRENCY" ]; then
   fi
 fi
 
-if [ -f tmp/pids/server.pid ]; then
-  rm -f tmp/pids/server.pid
-fi
 
-# Write the version to a file
-echo "${VERSION:-unknown}" > /app/tmp/version
+rm -f /gala/tmp/pids/server.pid
 
 exec "$@"

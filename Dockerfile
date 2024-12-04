@@ -21,8 +21,8 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g yarn
 
-RUN mkdir -p /app
-WORKDIR /app
+RUN mkdir -p /gala
+WORKDIR /gala
 
 RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc
 RUN gem update --system 3.3.22
