@@ -23,13 +23,13 @@ Migrate away from Heroku to AWS ECS:
 - add sentry for error tracking
 - add mapbox for maps
 - add lti for learning tools
-- get stickness for websockets to work
+- get stickness for websockets to work (works already i think)
 - get image uploading to work
 - setup cron for refeshing materialized views
 - github actions for CI/CD
 - optimze Dockefile for faster builds and smaller images
-- remove compile true in webpacker.yml
+- remove compile true in webpacker.yml (works)
 - investigatw rate limiting using aws waf
 - convert flow to typescript
 - migrate from webpacker to esbuild
-- upgrade rails incrementely to 7.2 and ruby to 3.1
+- upgrade rails incrementely to 7.2 and ruby to 3.2.2

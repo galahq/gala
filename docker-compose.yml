@@ -5,7 +5,9 @@ x-build: &default-build
   target: build
   args:
     RAILS_ENV: "development"
-    VERSION: ${VERSION:-unknown}
+    VERSION: ${VERSION:-next}
+    RAILS_LOG_TO_STDOUT: "true"
+    WEB_CONCURRENCY: 2
 
 services:
   web:
@@ -17,7 +19,7 @@ services:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
-      VERSION: ${VERSION:-unknown}
+      VERSION: ${VERSION:-next}
     ports:
       - 3000:3000
       - 3035:3035
@@ -28,6 +30,7 @@ services:
       - .:/gala:cached
       - /gala/node_modules
       - /gala/tmp/cache
+    entrypoint: ["./entrypoint.sh"]
   worker:
     build: *default-build
     stdin_open: true
@@ -41,6 +44,7 @@ services:
       - redis
     volumes:
       - .:/gala:cached
+    entrypoint: ["./entrypoint.sh"]
   db:
     image: postgres:16.4
     environment:

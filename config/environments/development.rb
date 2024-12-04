@@ -10,7 +10,7 @@ Rails.application.configure do
     ip_address = Socket.ip_address_list.find(&:ipv4_private?).ip_address
     ip_obj = IPAddr.new(ip_address.to_s)
     cidr_notation = "#{ip_obj.to_s}/#{ip_obj.to_range.to_a.size.to_s(2).count('1')}"
-    config.web_console.whitelisted_ips = cidr_notation
+    config.web_console.allowed_ips = cidr_notation
   end
 
   # In the development environment your application's code is reloaded on

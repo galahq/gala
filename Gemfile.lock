@@ -400,7 +400,7 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
-    pdfkit (0.8.7.3)
+    pdfkit (0.8.4.1)
     pg (1.2.3)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -604,7 +604,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    wkhtmltopdf-binary (0.12.6.8)
+    wkhtmltopdf-binary (0.12.6.6)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.37)
@@ -678,7 +678,7 @@ DEPENDENCIES
   omniauth-lti!
   omniauth-oauth2 (= 1.6.0)
   opengraph_parser
-  pdfkit
+  pdfkit (= 0.8.4.1)
   pg (~> 1.2.3)
   pry-byebug
   pry-rails
@@ -715,7 +715,7 @@ DEPENDENCIES
   web-console
   webdrivers
   webpacker (~> 5.3.0)
-  wkhtmltopdf-binary
+  wkhtmltopdf-binary (= 0.12.6.6)
   yard
   yard-activerecord
   yard-activesupport-concern

@@ -66,7 +66,8 @@ gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj'
 gem 'oj_mimic_json'
-gem 'pdfkit'
+gem 'pdfkit', '0.8.4.1'
+gem 'wkhtmltopdf-binary', '0.12.6.6' # likely need to update this for heroku-22 stack
 gem 'redcarpet'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 6.0.0'
@@ -142,6 +143,3 @@ group :test do
   gem 'shoulda-matchers'
   gem 'webdrivers', require: false
 end
-
-# gem to install wkhtmltopdf for pdfkit
-gem 'wkhtmltopdf-binary'

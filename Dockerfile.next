@@ -1,80 +1,86 @@
-# Stage 1: Base with build dependencies
+# syntax = docker/dockerfile:1
+
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
+# And also make sure NODE_VERSION matches the Node version in .node-version
 
 ARG RUBY_VERSION=2.7.6
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+ARG NODE_VERSION=12.5.0
+ARG VERSION=next
 
-RUN echo 'cache bust 1'
+# slim base image =============================================================
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /gala
 
-# Install build dependencies
 RUN apt-get update -qq \
     && apt-get install -y --no-install-recommends \
-    curl postgresql-client  \
+    curl libpq5 \
     libjemalloc2 sqlite3 git \
-    pkg-config libpq-dev imagemagick shared-mime-info \
-    libxrender1 libxext6 libfontconfig1 libx11-6 \
+    imagemagick shared-mime-info \
+    libxrender1 libxext6 libfontconfig1 libx11-6 wkhtmltopdf \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 ARG RAILS_ENV=production
 ENV RAILS_ENV=${RAILS_ENV}
-ARG version=unknown
-ENV VERSION=${version}
+
+ENV VERSION=${VERSION}
+
+ARG NODE_VERSION
+ENV NODE_VERSION=${NODE_VERSION}
 
 ENV BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle"
 
+# build/development image ======================================================
 FROM base AS build
 
-# Install packages needed to build gems
+ENV NVM_DIR="/usr/local/nvm" \
+    NODE_VERSION=${NODE_VERSION}
+ENV PATH "${NVM_DIR}"/versions/node/v"${NODE_VERSION}"/bin:$PATH
+
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git pkg-config python && \
+    apt-get install --no-install-recommends -y build-essential git python pkg-config libpq-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install Node.js and Yarn
-RUN mkdir /usr/local/nvm
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 12.5.0
-RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
-    && . $NVM_DIR/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
+RUN mkdir "${NVM_DIR}" \
+    && curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm install "${NODE_VERSION}" \
+    && nvm alias default "${NODE_VERSION}" \
     && nvm use default
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+
 RUN npm install -g yarn
 
 COPY package.json yarn.lock ./
 RUN yarn install --check-files
 
-# Install gems and node modules
-COPY .ruby-version ./
-RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc
-RUN gem update --system 3.3.22
-RUN gem install bundler:2.4.19
-# RUN bundle config set --local without 'development test'
-COPY Gemfile Gemfile.lock ./
-RUN bundle install --jobs 4 --retry 2 \
-  && rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
-  && bundle exec bootsnap precompile --gemfile
+RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc \
+    && gem update --system 3.3.22 \
+    && gem install bundler:2.4.19
 
-# Copy application code and precompile assets
-COPY . .
-
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/
-
-RUN if [ "$RAILS_ENV" != "development" ]; then \
-    SECRET_KEY_BASE=dummy \
-    DATABASE_URL=postgresql://does/not/matter \
-    bundle exec rake assets:precompile; \
+RUN if [ "${RAILS_ENV}" = "production" ]; then \
+    bundle config set --local without 'development test'; \
     fi
 
-# Final stage for app image
+COPY .ruby-version Gemfile Gemfile.lock ./
+RUN bundle install --jobs $(nproc) --retry 2 \
+    && rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
+    && bundle exec bootsnap precompile --gemfile
+
+COPY . .
+RUN bundle exec bootsnap precompile app/
+
+# production image =============================================================
 FROM base
 
-# Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+COPY --from=build /usr/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 COPY --from=build /gala /gala
+
+RUN SECRET_KEY_BASE=dummy \
+    DATABASE_URL=postgresql://does/not/matter \
+    bundle exec rake assets:precompile
 
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000
