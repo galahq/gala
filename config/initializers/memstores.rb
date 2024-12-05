@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dalli'
+require 'redis'
 
 options = {
   failover: true,
@@ -25,3 +26,5 @@ if Rails.env.development?
 else
   Rails.application.config.cache_store = :dalli_store, servers, options
 end
+
+$redis = Redis.new(url: ENV["REDIS_URL"], ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE })

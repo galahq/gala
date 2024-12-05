@@ -21,10 +21,10 @@ end
 
 # sidekiq, server
 Sidekiq.configure_server do |config|
-  config.redis = redis_configuration
+  config.redis = { client: $redis }
 end
 
 # sidekiq, client
 Sidekiq.configure_client do |config|
-  config.redis = redis_configuration
+  config.redis = { client: $redis }
 end
