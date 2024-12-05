@@ -2,10 +2,9 @@ version: '3.8'
 x-build: &default-build
   dockerfile: Dockerfile
   context: .
-  target: build
   args:
     RAILS_ENV: "development"
-    VERSION: ${VERSION:-next}
+    VERSION: ${VERSION:-future}
     RAILS_LOG_TO_STDOUT: "true"
     WEB_CONCURRENCY: 2
 
@@ -54,7 +53,7 @@ services:
       - 5432:5432
     volumes:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
-      - db_data:/var/lib/postgresql/data
+      - db_data_production:/var/lib/postgresql/data
   redis:
     image: redis:6
     ports:

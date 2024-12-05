@@ -3,7 +3,7 @@
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 # And also make sure NODE_VERSION matches the Node version in .node-version
 
-ARG RUBY_VERSION=2.7.6
+ARG RUBY_VERSION=3.2.2
 ARG NODE_VERSION=12.5.0
 ARG VERSION=next
 

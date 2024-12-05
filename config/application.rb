@@ -22,6 +22,8 @@ module Orchard
 
     config.active_record.schema_format = :sql
 
-    config.middleware.use Rack::Deflater
+    unless ENV['SIDEKIQ_CONCURRENCY'].present?
+      config.middleware.use Rack::Deflater
+    end
   end
 end
