@@ -56,7 +56,7 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility', '0.8.13'
+gem 'mobility', '0.8.10'
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.10'
@@ -82,8 +82,8 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
-gem 'sentry-raven'
-gem 'skylight', '>= 4.0.x'
+gem 'sentry-raven', '3.0.0'
+gem 'skylight', '~> 4.0'
 gem 'table_print'
 #
 # # Services

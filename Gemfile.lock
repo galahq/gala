@@ -343,8 +343,8 @@ GEM
     mini_magick (4.13.2)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.2)
-    mobility (0.8.13)
+    minitest (5.25.4)
+    mobility (0.8.10)
       i18n (>= 0.6.10, < 2)
       request_store (~> 1.0)
     msgpack (1.4.5)
@@ -548,7 +548,7 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.1.0)
-    sentry-raven (3.1.2)
+    sentry-raven (3.0.0)
       faraday (>= 1.0)
     shellany (0.0.1)
     shoulda-matchers (5.3.0)
@@ -558,8 +558,10 @@ GEM
       rack (~> 2.0)
       rack-protection (>= 2.0.0)
       redis (>= 4.1.0)
-    skylight (6.1.0.beta)
-      activesupport (>= 5.2.0)
+    skylight (4.3.2)
+      skylight-core (= 4.3.2)
+    skylight-core (4.3.2)
+      activesupport (>= 4.2.0)
     sparql-client (3.2.2)
       net-http-persistent (~> 4.0, >= 4.0.2)
       rdf (~> 3.2, >= 3.2.11)
@@ -680,7 +682,7 @@ DEPENDENCIES
   markerb!
   memoist
   memory_profiler
-  mobility (= 0.8.13)
+  mobility (= 0.8.10)
   msgpack (~> 1.4.2)
   multi_json
   nio4r (~> 2.5.8)
@@ -713,10 +715,10 @@ DEPENDENCIES
   sass-rails (~> 6.0.0)
   sassc (~> 2.4.0)
   selenium-webdriver
-  sentry-raven
+  sentry-raven (= 3.0.0)
   shoulda-matchers
   sidekiq (~> 6.0.0)
-  skylight (>= 4.0.x)
+  skylight (~> 4.0)
   sparql-client
   spring
   spring-commands-rspec
