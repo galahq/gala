@@ -152,7 +152,6 @@ const Container = SortableContainer(
             editing={editing}
             wikidataLinksPath={wikidataLinksPath}
             onChangeItem={item => {
-              console.log('item', item)
               return onChange(update(i, item, items))
             }}
             onRemove={() => {
@@ -293,12 +292,10 @@ export function createSortableInput ({
 
       const result = await handleQuery(qid)
 
-      if (result) {
-        onChangeItem({ ...item, qid })
+      if (result && (!item.id || item.position !== position)) {
+        const apiResponse = await Orchard.graft(wikidataLinksPath, { schema, qid, position })
 
-        if (!item.id || item.position !== position) {
-          await Orchard.graft(wikidataLinksPath, { schema, qid, position })
-        }
+        onChangeItem({ ...item, qid, id: apiResponse.id })
       }
     }
 
@@ -313,112 +310,104 @@ export function createSortableInput ({
       return typeof id === 'string' && (id.startsWith('Q') || id.startsWith('q')) && id.length > 1 && pattern.test(id)
     }
 
-    const results = item.data
+    const results: SparqlResult = item.data
 
-    if (!editing && !loading && !results) {
-      return null
-    }
+    const state = getRenderState({ editing, loading, results, qid })
 
-    if (!editing && loading) {
-      return (
-        <div>
-          <Spinner intent={Intent.PRIMARY} small={true} />
-        </div>
-      )
-    }
-
-    if (qid !== '' && results) {
-      return (
-        <WikiDataContainer>
-          <div className="data-container">
-            <div className="person-container">
-              {loading ? (
-                <div className="spinner-container">
-                  <Spinner intent={Intent.PRIMARY} small={true} />
-                </div>
-              ) : (
-                <>
-                  <div>
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={results.entity}
-                      className="wikidata-title pt-minimal pt-dark pt-align-left"
-                    >
-                      <span className="pt-text-overflow-ellipsis wikidata-link">
-                        {results.entityLabel}
-                      </span>
-                      <span className="wikidata-separator">›</span>
-                    </a>
-                  </div>
-                  <div className="wikidata-details-section">
-                    {results.properties.map((prop, i) => {
-                      const [key, value] = Object.entries(prop)[0]
-                      return value && (
-                        <span className="wikidata-details-text" key={`${key}-${i}`}>
-                          <span style={{ fontWeight: 400 }}>{key}:</span> {value}
-                        </span>
-                      )
-                    })}
-                  </div>
-                </>
-              )}
-            </div>
-            <div
-              className="wikidata-logo-container"
-              style={{ right: editing ? '7%' : '2%' }}
-            >
-                <div style={{ width: '18px' }}>
-                    {<WikidataLogo />}
-                </div>
-              <span className="wikidata-text">Wikidata</span>
-            </div>
+    switch (state) {
+      case RenderState.IDLE:
+        return null
+      case RenderState.LOADING:
+        return (
+          <div>
+            <Spinner intent={Intent.PRIMARY} small={true} />
           </div>
-        </WikiDataContainer>
-      )
+        )
+      case RenderState.SHOW_STATE:
+        return (<ShowState
+          loading={loading}
+          results={results}
+          editing={editing}
+        />)
+      case RenderState.EDIT_STATE:
+        return (editing && (
+          <EditState
+            qid={qid}
+            error={error}
+            intl={intl}
+            placeholderId={placeholderId}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            handleKeyDown={handleKeyDown}
+            loading={loading}
+            props={props}
+          />
+        ))
     }
+  }
 
-    return error ? (
-      <Callout intent={Intent.DANGER} icon={null}>
-        <InputGroup
-          type="text"
-          placeholder={
-            placeholderId && intl.formatMessage({ id: placeholderId })
-          }
-          {...props}
-          value={qid}
-          rightElement={
-            loading &&
-            qid !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
-          }
-          style={{
-            borderColor: error ? 'red' : 'inherit',
-            marginBottom: '4px',
-          }}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-        />
-        <span>{error}</span>
-      </Callout>
-    ) : (
+  return injectIntl(SortableInput)
+}
+
+const RenderState = {
+  IDLE: "IDLE",
+  LOADING: "LOADING",
+  SHOW_STATE: "SHOW_STATE",
+  EDIT_STATE: "EDIT_STATE",
+}
+
+const getRenderState = ({ editing, loading, results, qid }) => {
+  if (!editing && !loading && !results) {
+    return RenderState.IDLE
+  }
+  if (!editing && loading) {
+    return RenderState.LOADING
+  }
+  if (qid && results) {
+    return RenderState.SHOW_STATE
+  }
+  if (editing) {
+    return RenderState.EDIT_STATE
+  }
+  return RenderState.IDLE
+}
+
+const EditState = ({
+  qid,
+  error,
+  intl,
+  placeholderId,
+  handleChange,
+  handleBlur,
+  handleKeyDown,
+  loading,
+  props,
+}) => {
+  return (
+    <Callout intent={error ? Intent.DANGER : Intent.NONE} icon={null}>
       <InputGroup
         type="text"
         placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
-        {...props}
         value={qid}
+        style={{ borderColor: error ? "red" : "inherit", marginBottom: '4px' }}
         rightElement={
-          loading &&
-          qid !== '' && <Spinner intent={Intent.PRIMARY} small={true} />
+          loading && qid !== "" && <Spinner intent={Intent.PRIMARY} small={true} />
         }
-        style={{ borderColor: error ? 'red' : 'inherit' }}
         onChange={handleChange}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
+        {...props}
       />
-    )
-  }
+      <span>{error}</span>
+    </Callout>
+  )
+}
 
+const ShowState = ({
+  loading,
+  results,
+  editing,
+}) => {
   const WikidataLogo = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 10">
       <rect y=".01" width="4.6" height="10" fill="rgba(235,234,228,0.5)" />
@@ -427,8 +416,56 @@ export function createSortableInput ({
       <rect x="15.61" width="2.2" height="10" fill="rgba(235,234,228,0.5)" />
     </svg>
   )
-
-  return injectIntl(SortableInput)
+    return (
+      <WikiDataContainer>
+        <div className="data-container">
+          <div className="person-container">
+            {loading ? (
+              <div className="spinner-container">
+                <Spinner intent={Intent.PRIMARY} small={true} />
+              </div>
+            ) : (
+              <>
+                <div>
+                  <a
+                    href={results.entity}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="wikidata-title pt-minimal pt-dark pt-align-left"
+                  >
+                    <span className="pt-text-overflow-ellipsis wikidata-link">
+                      {results.entityLabel}
+                    </span>
+                    <span className="wikidata-separator">›</span>
+                  </a>
+                </div>
+                <div className="wikidata-details-section">
+                  {results.properties.map((prop, i) => {
+                    const [key, value] = Object.entries(prop)[0];
+                    return (
+                      value && (
+                        <span
+                          className="wikidata-details-text"
+                          key={`${key}-${i}`}
+                        >
+                          <span style={{ fontWeight: 400 }}>{key}:</span> {value}
+                        </span>
+                      )
+                    )
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+          <div className="wikidata-logo-container" style={{ right: editing ? '7%' : '2%' }}>
+            <div style={{ width: "18px" }}>
+              <WikidataLogo />
+            </div>
+            <span className="wikidata-text">Wikidata</span>
+          </div>
+        </div>
+      </WikiDataContainer>
+    )
 }
 
 const WikiDataContainer = styled.div`
