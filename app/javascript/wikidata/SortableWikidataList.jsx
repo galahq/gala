@@ -389,7 +389,7 @@ const EditState = ({
         type="text"
         placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
         value={qid}
-        style={{ borderColor: error ? "red" : "inherit", marginBottom: '4px' }}
+        style={{ borderColor: error ? "red" : "inherit", marginBottom: error ? '3px' : '1px' }}
         rightElement={
           loading && qid !== "" && <Spinner intent={Intent.PRIMARY} small={true} />
         }
