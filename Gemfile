@@ -11,7 +11,7 @@ gem 'aws-sdk-s3', require: false
 gem 'aws-sdk-sns', '>= 1.9.0', require: false
 gem 'bootsnap', '~> 1.7.5', require: false
 gem 'connection_pool'
-gem 'dalli'
+gem 'dalli', '2.7.10'
 gem 'image_processing'
 #gem 'mini_magick'
 gem 'pg', '~> 1.2.3'
