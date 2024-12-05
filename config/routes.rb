@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'sidekiq/web'
+
 LOCALES ||= Rails.application.config.i18n.available_locales
 LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/.freeze
 
@@ -232,9 +234,9 @@ Rails.application.routes.draw do
     }
   )
 
-  # authenticate :reader, ->(reader) { reader.has_role? :editor } do
-  #   mount Sidekiq::Web => '/sidekiq'
-  # end
+  authenticate :reader, ->(reader) { reader.has_role? :editor } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   post 'admin/cases/:id/copy', to: "admin/cases#copy", as: 'copy_admin_case'
 
