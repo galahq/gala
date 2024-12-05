@@ -1,11 +1,12 @@
-version: '3.9'
+version: '3.8'
 x-build: &default-build
-  dockerfile: Dockerfile.next
+  dockerfile: Dockerfile
   context: .
-  target: builder
   args:
     RAILS_ENV: "development"
-    VERSION: ${VERSION:-unknown}
+    VERSION: ${VERSION:-future}
+    RAILS_LOG_TO_STDOUT: "true"
+    WEB_CONCURRENCY: 2
 
 services:
   web:
@@ -17,10 +18,7 @@ services:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
-      RAILS_LOG_TO_STDOUT: 1
-      RAILS_MAX_THREADS: 1
-      RAILS_SERVE_STATIC_FILES: 1
-      VERSION: ${VERSION:-unknown}
+      VERSION: ${VERSION:-next}
     ports:
       - 3000:3000
       - 3035:3035
@@ -28,22 +26,24 @@ services:
       - db
       # - redis
     volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/tmp/cache
-  # worker:
-  #   build: *default-build
-  #   stdin_open: true
-  #   tty: true
-  #   command: bundle exec sidekiq
-  #   environment:
-  #     <<: *env
-  #     SIDEKIQ_CONCURRENCY: 1
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   volumes:
-  #     - .:/app
+      - .:/gala:cached
+      - /gala/node_modules
+      - /gala/tmp/cache
+    entrypoint: ["./entrypoint.sh"]
+  worker:
+    build: *default-build
+    stdin_open: true
+    tty: true
+    command: bundle exec sidekiq
+    environment:
+      <<: *env
+      SIDEKIQ_CONCURRENCY: 1
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/gala:cached
+    entrypoint: ["./entrypoint.sh"]
   db:
     image: postgres:16.4
     environment:
@@ -54,9 +54,9 @@ services:
     volumes:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
       - db_data:/var/lib/postgresql/data
-  # redis:
-  #   image: redis:6
-  #   ports:
-  #     - 6379:6379
+  redis:
+    image: redis:6
+    ports:
+      - 6379:6379
 volumes:
   db_data:

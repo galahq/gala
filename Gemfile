@@ -31,8 +31,7 @@ gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list.git',
 gem 'clowne', '0.2.0'
 gem 'clowne_active_storage'
 gem 'draper'
-gem 'friendly_id', git: 'https://github.com/norman/friendly_id.git',
-                   ref: 'a29e7d'
+gem 'friendly_id', '5.2.3'
 gem 'kaminari'
 gem 'memoist'
 gem 'time_for_a_boolean', git: 'https://github.com/calebthompson/time_for_a_boolean'
@@ -43,7 +42,8 @@ gem 'devise', '~> 4.1'
 gem 'devise-i18n'
 gem 'ims-lti'
 gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', '0.8.0'
+gem 'omniauth-oauth2', '1.6.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
 gem 'rolify'
@@ -67,7 +67,8 @@ gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj'
 gem 'oj_mimic_json'
-gem 'pdfkit'
+gem 'pdfkit', '0.8.4.1'
+gem 'wkhtmltopdf-binary', '0.12.6.6' # likely need to update this for heroku-22 stack
 gem 'redcarpet'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 6.0.0'
@@ -144,5 +145,4 @@ group :test do
   gem 'webdrivers', require: false
 end
 
-# gem to install wkhtmltopdf for pdfkit
-gem 'wkhtmltopdf-binary'
+gem "dockerfile-rails", ">= 1.6", :group => :development
