@@ -101,12 +101,11 @@ resource "aws_lb_target_group" "backend" {
     healthy_threshold   = "3"
     interval            = "30"
     protocol            = "HTTP"
-    matcher             = "404,301,302,200"
+    matcher             = "301,302,200"
     timeout             = "3"
-    path                = "/api/healthcheck"
+    path                = "/health_check.json"
     unhealthy_threshold = "2"
   }
-
 }
 
 resource "aws_ecs_service" "backend" {
@@ -146,3 +145,4 @@ resource "aws_lb_listener_rule" "backend" {
     }
   }
 }
+

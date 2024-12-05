@@ -18,7 +18,12 @@ Image
 December 02, 2024, 14:06:55 (UTC-05)
 sha256:f047189fc9594c52646126c67762366
 
+Project that produces Dockerfiles
+- https://github.com/fly-apps/dockerfile-rails?tab=readme-ov-file
+
+
 Migrate away from Heroku to AWS ECS:
+- handle db migrations
 - add sending emails vias SES
 - add sentry for error tracking
 - add mapbox for maps

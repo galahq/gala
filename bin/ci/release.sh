@@ -1,14 +1,17 @@
-#!/bin/bash
+#!/bin/bash -e
 
-# do not move forward on any errors
-set -e
+# 6-2024.12.04T2103-7d9147bf, latest
 
-export AWS_PROFILE=np
+pushd "$PROJECT_ROOT"
+trap 'popd' EXIT
 
-version="$(incr)-$(versioninfo)"
+version="$(gitdate.sh)"
+semver="$(semver.sh read)"
+
 backend_dir="$PROJECT_ROOT"
 tag_base="gala-backend"
 version_tag="$tag_base:$version"
+semver_tag="$tag_base:$semver"
 latest_tag="$tag_base:latest"
 
 region=us-east-1
@@ -27,7 +30,7 @@ if [ "$1" != "-skip-build" ]; then
               $account.dkr.ecr.$region.amazonaws.com
 
   docker build -f Dockerfile \
-              --build-arg version="$version" \
+              --build-arg version="$semver" \
               -t $version_tag \
               $backend_dir
 
@@ -35,8 +38,10 @@ if [ "$1" != "-skip-build" ]; then
 
   ID=$(docker images | grep $tag_base | head -n 1 | awk '{print $3}')
   docker tag $ID $account.dkr.ecr.$region.amazonaws.com/$version_tag
+  docker tag $ID $account.dkr.ecr.$region.amazonaws.com/$semver_tag
   docker tag $ID $account.dkr.ecr.$region.amazonaws.com/$latest_tag
   docker push $account.dkr.ecr.$region.amazonaws.com/$version_tag
+  docker push $account.dkr.ecr.$region.amazonaws.com/$semver_tag
   docker push $account.dkr.ecr.$region.amazonaws.com/$latest_tag
 fi
 
@@ -55,3 +60,5 @@ aws ecs update-service --region $region \
                        --service $worker_service \
                        --force-new-deployment \
                        --no-cli-pager
+
+popd

@@ -1,18 +1,23 @@
-FROM ruby:2.7.6-slim
+FROM ruby:2.7.6
 
-ARG version
-ENV VERSION=${version}
+ENV BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    NVM_DIR="/usr/local/nvm" \
+    NODE_VERSION="12.5.0"
 
-RUN apt-get update && apt-get install -y \
-  build-essential curl postgresql-client python \
-  libjemalloc2 libvips sqlite3 git \
-  pkg-config libpq-dev
+WORKDIR /gala
+
+RUN apt-get update -qq && apt-get install -y --fix-missing \
+    build-essential curl postgresql-client python \
+    libjemalloc2 libvips sqlite3 git \
+    pkg-config libpq-dev \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+COPY .ruby-version package.json yarn.lock ./
 
 # install node and yarn
-RUN mkdir /usr/local/nvm
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 12.5.0
-RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
+RUN mkdir $NVM_DIR \
+    && curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
     && . $NVM_DIR/nvm.sh \
     && nvm install $NODE_VERSION \
     && nvm alias default $NODE_VERSION \
@@ -21,20 +26,21 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g yarn
 
-RUN mkdir -p /gala
-WORKDIR /gala
+RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc \
+    && gem update --system 3.3.22 \
+    && gem install bundler:2.4.19
 
-RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc
-RUN gem update --system 3.3.22
-RUN gem install bundler:2.4.19
 COPY Gemfile Gemfile.lock ./
 # RUN bundle config set --local without 'development test'
-RUN bundle install --jobs 20 --retry 5
+RUN bundle install --jobs 20 --retry 2 \
+    && rm -rf ~/.bundle/ $BUNDLE_PATH/ruby/*/cache $BUNDLE_PATH/ruby/*/bundler/gems/*/.git \
+    && bundle exec bootsnap precompile --gemfile
 
-COPY package.json yarn.lock ./
 RUN yarn install --check-files
 
 COPY . ./
+
+RUN bundle exec bootsnap precompile app/
 
 ARG RAILS_ENV=production
 ENV RAILS_ENV=${RAILS_ENV}
@@ -42,6 +48,9 @@ ENV RAILS_ENV=${RAILS_ENV}
 RUN SECRET_KEY_BASE=DQtqBFNPcdmMyE7xmYXwnbDcYn6AQVeL33HQbCTGqhcVXKMDMKUfzCBFT8Kz4PECKSR4BzTWeJcHMRCj5tA5sr5bkBq2bKFvmWGfg2cR5pSBd8VW3FRkUNsxV4NBYmzn \
     DATABASE_URL=postgresql://does/not/matter \
     bundle exec rake assets:precompile
+
+ARG version
+ENV VERSION=${version}
 
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000

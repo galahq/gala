@@ -22,7 +22,6 @@ RUN apt-get update -qq \
 
 ARG RAILS_ENV=production
 ENV RAILS_ENV=${RAILS_ENV}
-
 ENV VERSION=${VERSION}
 
 ARG NODE_VERSION
@@ -34,34 +33,38 @@ ENV BUNDLE_DEPLOYMENT="1" \
 # build/development image ======================================================
 FROM base AS build
 
-ENV NVM_DIR="/usr/local/nvm" \
-    NODE_VERSION=${NODE_VERSION}
-ENV PATH "${NVM_DIR}"/versions/node/v"${NODE_VERSION}"/bin:$PATH
-
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git python pkg-config libpq-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
+ENV NVM_DIR="/usr/local/nvm" \
+    NODE_VERSION=${NODE_VERSION}
+
+ENV PATH "${NVM_DIR}"/versions/node/v"${NODE_VERSION}"/bin:$PATH
+
+COPY package.json yarn.lock ./
 RUN mkdir "${NVM_DIR}" \
     && curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
     && . "${NVM_DIR}/nvm.sh" \
     && nvm install "${NODE_VERSION}" \
     && nvm alias default "${NODE_VERSION}" \
-    && nvm use default
+    && nvm use default \
+    && npm install -g yarn \
+    && yarn install --check-files
 
-
-RUN npm install -g yarn
-
-COPY package.json yarn.lock ./
-RUN yarn install --check-files
+# RUN if ["${RAIL_ENV}" = "production"]; then \ 
+#     SECRET_KEY_BASE=DQtqBFNPcdmMyE7xmYXwnbDcYn6AQVeL33HQbCTGqhcVXKMDMKUfzCBFT8Kz4PECKSR4BzTWeJcHMRCj5tA5sr5bkBq2bKFvmWGfg2cR5pSBd8VW3FRkUNsxV4NBYmzn \
+#     DATABASE_URL=postgresql://does/not/matter \
+#     bundle exec rake assets:precompile; \
+#     fi
 
 RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc \
     && gem update --system 3.3.22 \
     && gem install bundler:2.4.19
 
-RUN if [ "${RAILS_ENV}" = "production" ]; then \
-    bundle config set --local without 'development test'; \
-    fi
+# RUN if [ "${RAILS_ENV}" = "production" ]; then \
+#     bundle config set --local without 'development test'; \
+#     fi
 
 COPY .ruby-version Gemfile Gemfile.lock ./
 RUN bundle install --jobs $(nproc) --retry 2 \
@@ -71,17 +74,24 @@ RUN bundle install --jobs $(nproc) --retry 2 \
 COPY . .
 RUN bundle exec bootsnap precompile app/
 
-# production image =============================================================
-FROM base
-
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /usr/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
-COPY --from=build /gala /gala
-
-RUN SECRET_KEY_BASE=dummy \
+RUN if ["${RAIL_ENV}" = "production"]; then \ 
+    SECRET_KEY_BASE=DQtqBFNPcdmMyE7xmYXwnbDcYn6AQVeL33HQbCTGqhcVXKMDMKUfzCBFT8Kz4PECKSR4BzTWeJcHMRCj5tA5sr5bkBq2bKFvmWGfg2cR5pSBd8VW3FRkUNsxV4NBYmzn \
     DATABASE_URL=postgresql://does/not/matter \
-    bundle exec rake assets:precompile
+    bundle exec rake assets:precompile; \
+    fi
 
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000
 CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
+
+
+# production image =============================================================
+# FROM base
+
+# COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+# COPY --from=build /usr/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
+# COPY --from=build /gala /gala
+
+# ENTRYPOINT ["./entrypoint.sh"]
+# EXPOSE 3000
+# CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]

@@ -236,4 +236,6 @@ Rails.application.routes.draw do
 
   post 'admin/cases/:id/copy', to: "admin/cases#copy", as: 'copy_admin_case'
 
+  get 'health_check', to: 'health_check#index'
+
 end

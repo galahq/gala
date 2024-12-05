@@ -143,3 +143,5 @@ group :test do
   gem 'shoulda-matchers'
   gem 'webdrivers', require: false
 end
+
+gem "dockerfile-rails", ">= 1.6", :group => :development
