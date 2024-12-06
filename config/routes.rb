@@ -28,7 +28,9 @@ Rails.application.routes.draw do
                                to: redirect('%{path}.%{format}')
   get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%{path}')
 
-  get 'sparql/:schema/:qid', to: 'sparql#show', as: 'sparql_query'
+  get 'sparql/:schema/:qid', to: 'sparql#show', as: 'sparql_canned_query'
+  get 'sparql', to: 'sparql#index', as: 'sparql_search'
+
 
   root to: 'catalog#home'
 
@@ -239,7 +241,5 @@ Rails.application.routes.draw do
   end
 
   post 'admin/cases/:id/copy', to: "admin/cases#copy", as: 'copy_admin_case'
-
-  get 'health_check', to: 'health_check#index'
 
 end
