@@ -4,9 +4,16 @@
 class SparqlController < ApplicationController
   # @route [GET] `/sparql/:schema/:qid`
   def show
-    wikidata = Wikidata.new params[:schema], params[:qid],  current_reader.locale
-    Rails.logger.info "Wikidata query: #{wikidata.sparql_query}"
-    result = wikidata.call
+    wikidata = Wikidata.new current_reader.locale
+    result = wikidata.canned_query params[:schema], params[:qid]
+    head :not_found and return if result.nil?
+    render json: result
+  end
+
+  # @route [GET] `/sparql?query
+  def index
+    wikidata = Wikidata.new current_reader.locale
+    result = wikidata.search params[:query]
     head :not_found and return if result.nil?
     render json: result
   end

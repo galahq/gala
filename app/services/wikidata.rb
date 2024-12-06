@@ -125,26 +125,24 @@ class Wikidata
     works: %w[entity entityLabel authorLabel titleLabel publicationDate dateModified]
   }
 
-  attr_reader :sparql_query, :data
+  attr_reader :locale
 
-  def initialize(schema, qid, locale = 'en')
+  def initialize(locale = 'en')
     @client = SPARQL::Client.new(ENDPOINT)
-    @schema = schema.downcase.to_sym
-    @qid = qid
     @locale = locale
   end
 
-  def call
-    @sparql_query = SCHEMAS[@schema] % { qid: @qid, locale: @locale }
+  def canned_query(schema, qid)
+    sparql_query = SCHEMAS[schema.to_sym] % { qid: qid, locale: @locale }
     result = @client.query(sparql_query)
-    Rails.logger.info "Wikidata query: #{@sparql_query}"
+    Rails.logger.info "Wikidata query: #{sparql_query}"
     return nil if result.empty?
-    property_order = PROPERTY_ORDER[@schema]
+    property_order = PROPERTY_ORDER[schema.to_sym]
 
-    @data = {}.tap do |json|
+    data = {}.tap do |json|
       json['entity'] = ''
       json['entityLabel'] = ''
-      json['schema'] = @schema
+      json['schema'] = schema
       json['properties'] = []
 
       result.each do |solution|
@@ -168,24 +166,68 @@ class Wikidata
       end
     end
 
-    @data['json_ld'] = generate_json_ld
-    @data
+    data['json_ld'] = generate_json_ld data
+    data
   rescue StandardError => e
     Rails.logger.error "Error in Wikidata call method: #{e.message}"
     raise
   end
 
-  def sparql_query
-    @sparql_query ||= SCHEMAS[@schema] % { qid: @qid, locale: @locale }
+  def search(partial_label)
+    partial_label = partial_label.downcase
+
+    sparql_query = <<-SPARQL
+      PREFIX wikibase: <http://wikiba.se/ontology#>
+      PREFIX mwapi: <https://www.mediawiki.org/ontology#API/>
+      PREFIX schema: <http://schema.org/>
+      PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+      SELECT ?item ?itemLabel ?description ?image ?instanceLabel WHERE {
+        SERVICE wikibase:mwapi {
+          bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                         wikibase:api "EntitySearch";
+                         mwapi:search "#{partial_label}";
+                         mwapi:language "en";
+                         mwapi:limit "20".
+          ?item wikibase:apiOutputItem mwapi:item.
+        }
+
+        ?item rdfs:label ?itemLabel.
+        FILTER(LANG(?itemLabel) = "en")
+
+        OPTIONAL { ?item schema:description ?description. FILTER(LANG(?description) = "en") }
+        OPTIONAL { ?item wdt:P31 ?instance. ?instance rdfs:label ?instanceLabel. FILTER(LANG(?instanceLabel) = "en") }
+        OPTIONAL { ?item wdt:P18 ?image }  # Fetch image if available
+      }
+    SPARQL
+
+    Rails.logger.info "Wikidata query with mwapi: #{sparql_query}"
+
+    results = @client.query(sparql_query)
+    results.map do |result|
+      {
+        qid: result[:item].to_s.split('/').last,
+        label: result[:itemLabel].to_s,
+        description: result[:description]&.to_s,
+        instance: result[:instanceLabel]&.to_s,
+        image: result[:image]&.to_s
+      }
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error in Wikidata search method: #{e.message}"
+    raise
   end
 
-  def generate_json_ld
+  private
+
+  def generate_json_ld(data)
     {
       "@context": "https://schema.org",
       "@type": "Thing",
-      "name": @data['entityLabel'],
-      "identifier": @data['entity'],
-      "additionalProperty": @data['properties'].map do |property|
+      "name": data['entityLabel'],
+      "identifier": data['entity'],
+      "additionalProperty": data['properties'].map do |property|
         key, value = property.first
         {
           "@type": "PropertyValue",
