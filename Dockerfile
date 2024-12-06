@@ -45,8 +45,8 @@ COPY . ./
 ARG rails_env=development
 ENV RAILS_ENV=${rails_env}
 
-ARG version
-ENV VERSION=${version}
+ARG release
+ENV RELEASE=${release}
 
 ENV RAILS_LOG_TO_STDOUT=true \
     RAILS_SERVE_STATIC_FILES=true

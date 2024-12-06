@@ -31,7 +31,7 @@ if [ "$1" != "-skip-build" ]; then
 
   docker build -f Dockerfile \
                -t "$version_tag" \
-               --build-arg version="$semver" \
+               --build-arg release="$semver" \
                --build-arg rails_env=production \
               "$backend_dir"
 

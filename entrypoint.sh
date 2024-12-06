@@ -19,6 +19,8 @@ if [ "$RAILS_ENV" = "development" ] && [ -z "$SIDEKIQ_CONCURRENCY" ]; then
   fi
 fi
 
+bundle exec rails db:migrate
+
 rm -f tmp/pids/server.pid
 
 exec "$@"

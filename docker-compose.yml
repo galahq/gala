@@ -4,7 +4,7 @@ x-build: &default-build
   context: .
   args:
     rails_env: "development"
-    version: ${VERSION:-future}
+    release: ${RELEASE:-future}
 
 services:
   web:
