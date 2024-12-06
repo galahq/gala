@@ -72,15 +72,15 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  if ENV['MEMCACHED_URL'].present?
-    config.cache_store = :dalli_store,
-                        ["#{ENV['MEMCACHED_URL']}"],
-                        { failover: true,
-                          socket_timeout: 1.5,
-                          socket_failure_delay: 0.2,
-                          down_retry_delay: 60,
-                          pool_size: ENV.fetch('RAILS_MAX_THREADS') { 5 }.to_i }
-  end
+  # if ENV['MEMCACHED_URL'].present?
+  #   config.cache_store = :dalli_store,
+  #                       ["#{ENV['MEMCACHED_URL']}"],
+  #                       { failover: true,
+  #                         socket_timeout: 1.5,
+  #                         socket_failure_delay: 0.2,
+  #                         down_retry_delay: 60,
+  #                         pool_size: ENV.fetch('RAILS_MAX_THREADS') { 5 }.to_i }
+  # end
 
   # Use a real queuing backend for Active Job (and separate queues per
   # environment)
