@@ -22,7 +22,7 @@ worker_service=gala-backend-worker
 
 # if -skip-build is passed, skip the build step
 if [ "$1" != "-skip-build" ]; then
-  echo "version is $version"
+  echo "release $semver, version $version"
   echo "building $version_tag container for version $version"
 
   docker login -u AWS \
