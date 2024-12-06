@@ -124,9 +124,7 @@ resource "aws_ecs_service" "backend" {
     container_port   = "3000"
   }
 
-  placement_constraints {
-    type       = "distinctInstance"
-  }
+  availability_zone_rebalancing = "ENABLED"
 }
 
 resource "aws_lb_listener_rule" "backend" {

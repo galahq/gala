@@ -11,7 +11,7 @@ gem 'aws-sdk-s3', require: false
 gem 'aws-sdk-sns', '>= 1.9.0', require: false
 gem 'bootsnap', '~> 1.7.5', require: false
 gem 'connection_pool'
-gem 'dalli'
+gem 'dalli', '2.7.10'
 gem 'image_processing'
 #gem 'mini_magick'
 gem 'pg', '~> 1.2.3'
@@ -22,6 +22,7 @@ gem 'sidekiq', '~> 6.0.0'
 gem 'nio4r', '~> 2.5.8'
 gem 'msgpack', '~> 1.4.2'
 gem 'sqlite3', '~> 1.3'
+gem 'sparql-client'
 
 # Models
 gem 'active_storage_validations'
@@ -55,7 +56,7 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility', '0.8.13'
+gem 'mobility', '0.8.10'
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.10'
@@ -81,8 +82,8 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
-gem 'sentry-raven'
-gem 'skylight', '>= 4.0.x'
+gem 'sentry-raven', '3.0.0'
+gem 'skylight', '~> 4.0'
 gem 'table_print'
 #
 # # Services

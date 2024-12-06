@@ -47,9 +47,11 @@ ENV RAILS_ENV=${rails_env}
 
 RUN bundle exec bootsnap precompile app/
 
-RUN SECRET_KEY_BASE=DQtqBFNPcdmMyE7xmYXwnbDcYn6AQVeL33HQbCTGqhcVXKMDMKUfzCBFT8Kz4PECKSR4BzTWeJcHMRCj5tA5sr5bkBq2bKFvmWGfg2cR5pSBd8VW3FRkUNsxV4NBYmzn \
+RUN if [ "$RAILS_ENV" != "development" ]; then \
+    SECRET_KEY_BASE=1 \
     DATABASE_URL=postgresql://does/not/matter \
-    bundle exec rake assets:precompile
+    bundle exec rake assets:precompile; \
+    fi
 
 ARG version
 ENV VERSION=${version}
