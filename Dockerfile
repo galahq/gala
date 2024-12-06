@@ -1,3 +1,5 @@
+# syntax = docker/dockerfile:1
+
 FROM ruby:2.7.6
 
 ENV BUNDLE_DEPLOYMENT="1" \
@@ -22,8 +24,8 @@ RUN mkdir $NVM_DIR \
     && nvm install $NODE_VERSION \
     && nvm alias default $NODE_VERSION \
     && nvm use default
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g yarn
 
 RUN echo "gem: --no-rdoc --no-ri" > /etc/gemrc \
@@ -40,10 +42,10 @@ RUN yarn install --check-files
 
 COPY . ./
 
-RUN bundle exec bootsnap precompile app/
+ARG rails_env=development
+ENV RAILS_ENV=${rails_env}
 
-ARG RAILS_ENV=production
-ENV RAILS_ENV=${RAILS_ENV}
+RUN bundle exec bootsnap precompile app/
 
 RUN SECRET_KEY_BASE=DQtqBFNPcdmMyE7xmYXwnbDcYn6AQVeL33HQbCTGqhcVXKMDMKUfzCBFT8Kz4PECKSR4BzTWeJcHMRCj5tA5sr5bkBq2bKFvmWGfg2cR5pSBd8VW3FRkUNsxV4NBYmzn \
     DATABASE_URL=postgresql://does/not/matter \

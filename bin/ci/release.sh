@@ -6,7 +6,7 @@ pushd "$PROJECT_ROOT"
 trap 'popd' EXIT
 
 version="$(gitdate.sh)"
-semver="$(semver.sh read)"
+semver="$(semver.sh build save)"
 
 backend_dir="$PROJECT_ROOT"
 tag_base="gala-backend"
@@ -30,16 +30,17 @@ if [ "$1" != "-skip-build" ]; then
               $account.dkr.ecr.$region.amazonaws.com
 
   docker build -f Dockerfile \
-              --build-arg version="$semver" \
-              -t $version_tag \
-              $backend_dir
+               -t "$version_tag" \
+               --build-arg version="$semver" \
+               --build-arg rails_env=production \
+              "$backend_dir"
 
   echo "built $version_tag"
 
   ID=$(docker images | grep $tag_base | head -n 1 | awk '{print $3}')
-  docker tag $ID $account.dkr.ecr.$region.amazonaws.com/$version_tag
-  docker tag $ID $account.dkr.ecr.$region.amazonaws.com/$semver_tag
-  docker tag $ID $account.dkr.ecr.$region.amazonaws.com/$latest_tag
+  docker tag "$ID" "$account.dkr.ecr.$region.amazonaws.com/$version_tag"
+  docker tag "$ID" "$account.dkr.ecr.$region.amazonaws.com/$semver_tag"
+  docker tag "$ID" "$account.dkr.ecr.$region.amazonaws.com/$latest_tag"
   docker push $account.dkr.ecr.$region.amazonaws.com/$version_tag
   docker push $account.dkr.ecr.$region.amazonaws.com/$semver_tag
   docker push $account.dkr.ecr.$region.amazonaws.com/$latest_tag

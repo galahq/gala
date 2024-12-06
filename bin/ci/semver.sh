@@ -40,8 +40,7 @@ new_version="$major.$minor.$build"
 # Optionally save the new version to the file
 if [[ $2 == "save" ]]; then
   echo "$new_version" > "$version_file"
-  echo "Saved version: $new_version"
 fi
 
 # Output the new version
-echo "New version: $new_version"
+echo "$new_version"

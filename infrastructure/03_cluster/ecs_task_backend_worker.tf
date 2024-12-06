@@ -88,7 +88,5 @@ resource "aws_ecs_service" "backend_worker" {
 
   task_definition = "${aws_ecs_task_definition.backend_worker.family}:${max("${aws_ecs_task_definition.backend_worker.revision}", "${data.aws_ecs_task_definition.backend_worker.revision}")}"
 
-  placement_constraints {
-    type       = "distinctInstance"
-  }
+  availability_zone_rebalancing = "ENABLED"
 }
