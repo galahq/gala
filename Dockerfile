@@ -54,8 +54,8 @@ ENV RAILS_LOG_TO_STDOUT=true \
 RUN if [ "$RAILS_ENV" != "development" ]; then \
     SECRET_KEY_BASE=1 \
     DATABASE_URL=postgresql://does/not/matter \
-    bundle exec rake assets:precompile; \
-    fi
+    bundle exec rails assets:precompile; \
+fi
 
 RUN bundle exec bootsnap precompile app/
 

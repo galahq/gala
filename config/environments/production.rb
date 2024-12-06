@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-<<<<<<< HEAD
-=======
 ENV['BASE_URL'] ||= 'www.learngala.com'
 
->>>>>>> 1d4a964c901c6a4510dbec0cf368ca2607badf92
 Rails.application.routes.default_url_options = { host: ENV['BASE_URL'] }
 
 Rails.application.configure do
@@ -58,11 +55,8 @@ Rails.application.configure do
   # Action Cable endpoint configuration
   config.action_cable.url = "wss://#{ENV['BASE_URL']}/cable"
   config.action_cable.allowed_request_origins = %w[
-<<<<<<< HEAD
-=======
     http://www.learngala.com
     https://www.learngala.com
->>>>>>> 1d4a964c901c6a4510dbec0cf368ca2607badf92
     ENV['BASE_URL']
   ]
 
