@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+<<<<<<< HEAD
+=======
+ENV['BASE_URL'] ||= 'www.learngala.com'
+
+>>>>>>> 1d4a964c901c6a4510dbec0cf368ca2607badf92
 Rails.application.routes.default_url_options = { host: ENV['BASE_URL'] }
 
 Rails.application.configure do
@@ -53,6 +58,11 @@ Rails.application.configure do
   # Action Cable endpoint configuration
   config.action_cable.url = "wss://#{ENV['BASE_URL']}/cable"
   config.action_cable.allowed_request_origins = %w[
+<<<<<<< HEAD
+=======
+    http://www.learngala.com
+    https://www.learngala.com
+>>>>>>> 1d4a964c901c6a4510dbec0cf368ca2607badf92
     ENV['BASE_URL']
   ]
 
@@ -72,7 +82,18 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  # if ENV['MEMCACHED_URL'].present?
+  # if ENV['MEMCACHIER_SERVERS'].present?
+  #   # heroku memcachier
+  #   config.cache_store = :dalli_store,
+  #                       (ENV['MEMCACHIER_SERVERS'] || '').split(','),
+  #                       { username: ENV['MEMCACHIER_USERNAME'],
+  #                         password: ENV['MEMCACHIER_PASSWORD'],
+  #                         failover: true,
+  #                         socket_timeout: 1.5,
+  #                         socket_failure_delay: 0.2,
+  #                         down_retry_delay: 60,
+  #                         pool_size: ENV.fetch('RAILS_MAX_THREADS') { 5 }.to_i }
+  # elsif ENV['MEMCACHED_URL'].present?
   #   config.cache_store = :dalli_store,
   #                       ["#{ENV['MEMCACHED_URL']}"],
   #                       { failover: true,

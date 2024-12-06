@@ -29,4 +29,13 @@
   <% @case.authors.each do |author| %>
     <meta property="article:author" content="<%= author %>" />
   <% end %>
+
+  <% @case.wikidata_links.each do |wikidata_link| %>
+    <% next if wikidata_link.cached_json['json_ld'].blank? %>
+    <script type="application/ld+json">
+      <%= JSON.pretty_generate(wikidata_link.cached_json['json_ld']).html_safe %>
+    </script>
+  <% end %>
+
 <% end %>
+

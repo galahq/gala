@@ -389,7 +389,7 @@ const EditState = ({
         type="text"
         placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
         value={qid}
-        style={{ borderColor: error ? "red" : "inherit", marginBottom: '4px' }}
+        style={{ borderColor: error ? "red" : "inherit", marginBottom: error ? '3px' : '1px' }}
         rightElement={
           loading && qid !== "" && <Spinner intent={Intent.PRIMARY} small={true} />
         }
@@ -441,7 +441,7 @@ const ShowState = ({
                 </div>
                 <div className="wikidata-details-section">
                   {results.properties.map((prop, i) => {
-                    const [key, value] = Object.entries(prop)[0];
+                    const [key, value] = Object.entries(prop)[0]
                     return (
                       value && (
                         <span

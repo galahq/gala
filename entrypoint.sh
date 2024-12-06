@@ -19,7 +19,6 @@ if [ "$RAILS_ENV" = "development" ] && [ -z "$SIDEKIQ_CONCURRENCY" ]; then
   fi
 fi
 
-
-rm -f /gala/tmp/pids/server.pid
+rm -f tmp/pids/server.pid
 
 exec "$@"
