@@ -3,10 +3,8 @@ x-build: &default-build
   dockerfile: Dockerfile
   context: .
   args:
-    RAILS_ENV: "development"
-    VERSION: ${VERSION:-future}
-    RAILS_LOG_TO_STDOUT: "true"
-    WEB_CONCURRENCY: 2
+    rails_env: "development"
+    version: ${VERSION:-future}
 
 services:
   web:
@@ -18,13 +16,14 @@ services:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
-      VERSION: ${VERSION:-next}
+      RAILS_LOG_TO_STDOUT: 1
+      WEB_CONCURRENCY: 2
     ports:
       - 3000:3000
       - 3035:3035
     depends_on:
       - db
-      # - redis
+      - redis
     volumes:
       - .:/gala:cached
       - /gala/node_modules
@@ -53,10 +52,10 @@ services:
       - 5432:5432
     volumes:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
-      - db_data:/var/lib/postgresql/data
+      - db_data_future:/var/lib/postgresql/data
   redis:
     image: redis:6
     ports:
       - 6379:6379
 volumes:
-  db_data:
+  db_data_future:

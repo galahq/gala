@@ -45,7 +45,11 @@ COPY . ./
 ARG rails_env=development
 ENV RAILS_ENV=${rails_env}
 
-RUN bundle exec bootsnap precompile app/
+ARG version
+ENV VERSION=${version}
+
+ENV RAILS_LOG_TO_STDOUT=true \
+    RAILS_SERVE_STATIC_FILES=true
 
 RUN if [ "$RAILS_ENV" != "development" ]; then \
     SECRET_KEY_BASE=1 \
@@ -53,8 +57,7 @@ RUN if [ "$RAILS_ENV" != "development" ]; then \
     bundle exec rake assets:precompile; \
     fi
 
-ARG version
-ENV VERSION=${version}
+RUN bundle exec bootsnap precompile app/
 
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000

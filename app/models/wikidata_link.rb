@@ -10,7 +10,7 @@ class WikidataLink < ApplicationRecord
   validates :qid, presence: true
 
   def fetch_and_update_data!
-    wikidata_data = Wikidata.new(schema, qid, I18n.locale).call
+    wikidata_data = Wikidata.new(I18n.locale).canned_query(schema, qid)
     update!(
       cached_json: wikidata_data,
       last_synced_at: Time.current

@@ -33,15 +33,25 @@ const LinkWikidata = ({
   return (
     <CatalogSection>
       <Container>
-        {
-          editing && <><SectionTitle>
-            <div className="wikidata-title">
-              <FormattedMessage id="catalog.wikidata.linkWikidata" />
+        {editing && (
+          <>
+            <SectionTitle>
+              <div className="wikidata-title">
+                <FormattedMessage id="catalog.wikidata.linkWikidata" />
+              </div>
+            </SectionTitle>
+            <div className="wikidata-instructions">
+              <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
+              <LearnMoreLink
+                target="_blank"
+                href="https://docs.learngala.com/docs/authoring-adding-rich-metadata"
+              >
+                <span className="learn-more-text">Learn more</span> ›
+              </LearnMoreLink>
             </div>
-          </SectionTitle><div className="wikidata-instructions">
-              <FormattedMessage id="catalog.wikidata.wikidataInstructions" /><LearnMoreLink target="_blank" href="https://docs.learngala.com/docs/authoring-adding-rich-metadata"><span className='learn-more-text'>Learn more</span> ›</LearnMoreLink>
-            </div></>
-        }
+            <Sparqler />
+          </>
+        )}
 
         <div className="wikidata-container">
           {schemas.map(schema => (
@@ -55,7 +65,6 @@ const LinkWikidata = ({
             />
           ))}
         </div>
-        <Sparqler />
       </Container>
     </CatalogSection>
   )
@@ -94,17 +103,17 @@ const Container = styled.div`
 `
 
 const LearnMoreLink = styled.a`
-padding-left: .5rem;
-color: white;
+  padding-left: 0.5rem;
+  color: white;
 
-.learn-more-text {
-  text-decoration: underline;
-}
-
-&:hover {
   .learn-more-text {
     text-decoration: underline;
   }
-  color: #6ACB72;
-}
+
+  &:hover {
+    .learn-more-text {
+      text-decoration: underline;
+    }
+    color: #6acb72;
+  }
 `
