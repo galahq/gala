@@ -12,7 +12,7 @@ import type { WikidataLink } from 'redux/state'
 import type { IntlShape } from 'react-intl'
 
 import AddWikidata from './AddWikidata'
-import Sparqler from './Sparqler'
+import { SearchWikidata } from './SearchWikidata'
 
 type Props = {
   editing: boolean,
@@ -49,7 +49,7 @@ const LinkWikidata = ({
                 <span className="learn-more-text">Learn more</span> ›
               </LearnMoreLink>
             </div>
-            <Sparqler />
+            <SearchWikidata />
           </>
         )}
 
