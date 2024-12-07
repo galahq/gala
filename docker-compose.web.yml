@@ -1,0 +1,41 @@
+version: '3.8'
+x-build: &default-build
+  dockerfile: Dockerfile
+  context: .
+  args:
+    rails_env: "development"
+    release: ${RELEASE:-future}
+
+services:
+  web:
+    build: *default-build
+    stdin_open: true
+    tty: true
+    command: bundle exec foreman start -f Procfile.dev
+    environment: &env
+      DATABASE_URL: postgres://gala:alpine@db:5432/gala
+      RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: 1
+      WEB_CONCURRENCY: 2
+    ports:
+      - 3000:3000
+      - 3035:3035
+    depends_on:
+      - db
+    volumes:
+      - .:/gala:cached
+      - /gala/node_modules
+      - /gala/tmp/cache
+    entrypoint: ["./entrypoint.sh"]
+  db:
+    image: postgres:16.4
+    environment:
+      POSTGRES_USER: gala
+      POSTGRES_PASSWORD: alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
+      - db_data_future:/var/lib/postgresql/data
+volumes:
+  db_data_future:

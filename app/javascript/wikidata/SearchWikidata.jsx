@@ -1,5 +1,5 @@
 /* @flow */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   InputGroup,
   Button,
@@ -20,7 +20,7 @@ export const SearchWikidata = () => {
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const runQuery = async (query) => {
+  const runQuery = async query => {
     setLoading(true)
     try {
       const response = await Orchard.harvest('sparql', { query: query.trim() })
@@ -34,11 +34,26 @@ export const SearchWikidata = () => {
     }
   }
 
-  const debouncedRunQuery = debounce(runQuery, 500)
+  const debouncedRunQuery = useCallback(debounce(runQuery, 300), [])
 
-  const handleQueryChange = (e) => {
+  const handleQueryChange = e => {
     setQuery(e.target.value)
-    debouncedRunQuery(e.target.value)
+    if (query.length > 3) {
+      debouncedRunQuery(e.target.value)
+    }
+  }
+
+  const handleClear = () => {
+    setQuery('')
+    setResults([])
+  }
+
+  const copyToClipboard = item => {
+    console.log(item)
+    navigator.clipboard
+      .writeText(item.qid)
+      .then(() => console.log('Copied to clipboard:', item.qid))
+      .catch(err => console.error('Failed to copy:', err))
   }
 
   return (
@@ -47,12 +62,28 @@ export const SearchWikidata = () => {
         placeholder: 'Search Wikidata',
         value: query,
         onChange: handleQueryChange,
+        rightElement: query && (
+          <Button
+            minimal
+            icon="cross"
+            title="Clear search"
+            onClick={handleClear}
+          />
+        ),
       }}
       items={results}
-      itemRenderer={(item, { handleClick }) => (
-        <MenuItem key={item} text={item} onClick={handleClick} />
+      itemRenderer={(item, { handleClick, index }) => (
+        <MenuItem
+          key={`${item.qid}-${index}`}
+          label={item.description}
+          text={`${item.label} (${item.qid})`}
+          onClick={e => {
+            handleClick(e)
+            copyToClipboard(item)
+          }}
+        />
       )}
-      inputValueRenderer={(item) => item}
+      inputValueRenderer={item => item}
       closeOnSelect={true}
       initialContent={<MenuItem disabled text="Type to search" />}
       noResults={
@@ -67,7 +98,7 @@ export const SearchWikidata = () => {
       }
       popoverProps={{ minimal: true }}
       openOnKeyDown={true}
-      onItemSelect={(item) => console.log(item)}
+      onItemSelect={item => console.log(item)}
     >
       <InputGroup>
         <Button>Search</Button>
@@ -75,11 +106,3 @@ export const SearchWikidata = () => {
     </Suggest>
   )
 }
-
-// const SCHEMAS = {
-//   researchers: "Researchers",
-//   software: "Software",
-//   hardware: "Hardware",
-//   grants: "Grants",
-//   works: "Works",
-// }

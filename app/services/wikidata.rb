@@ -3,6 +3,7 @@
 require 'sparql/client'
 require 'json'
 require 'date'
+require 'active_support/core_ext/string/inflections'
 
 =begin
 examples:
@@ -23,14 +24,14 @@ class Wikidata
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
 
-      SELECT ?entity ?entityLabel ?discipline ?disciplineLabel ?occupation ?occupationLabel ?orcid ?scopus ?dateModified WHERE {
+      SELECT ?entity ?entityLabel ?discipline ?disciplineLabel ?occupation ?occupationLabel ?ORCID ?SCOPUS ?dateModified WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q5 }
         OPTIONAL { ?entity wdt:P106 ?occupation . }
         OPTIONAL { ?entity wdt:P101 ?discipline . }
-        OPTIONAL { ?entity wdt:P496 ?orcid . }
-        OPTIONAL { ?entity wdt:P1153 ?scopus . }
+        OPTIONAL { ?entity wdt:P496 ?ORCID. }
+        OPTIONAL { ?entity wdt:P1153 ?SCOPUS . }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
@@ -103,13 +104,14 @@ class Wikidata
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
 
-      SELECT ?entity ?entityLabel ?author ?authorLabel ?title ?titleLabel ?publicationDate ?dateModified WHERE {
+      SELECT ?entity ?entityLabel ?author ?authorLabel ?title ?titleLabel ?publicationDate ?DOI ?dateModified WHERE {
         BIND(wd:%{qid} AS ?entity)
         ?entity wdt:P31/wdt:P279* ?instance .
         VALUES ?instance { wd:Q47461344 }
         OPTIONAL { ?entity wdt:P50 ?author . }
         OPTIONAL { ?entity wdt:P1476 ?title . }
         OPTIONAL { ?entity wdt:P577 ?publicationDate . }
+        OPTIONAL { ?entity wdt:P356 ?doi . }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
         SERVICE wikibase:label { bd:serviceParam wikibase:language "%{locale},en". }
       }
@@ -118,11 +120,11 @@ class Wikidata
   }
 
   PROPERTY_ORDER = {
-    researchers: %w[entity entityLabel disciplineLabel occupationLabel orcid scopus dateModified],
+    researchers: %w[entity entityLabel disciplineLabel occupationLabel ORCID SCOPUS dateModified],
     software: %w[entity entityLabel developerLabel programmingLanguageLabel copyrightLicenseLabel dateModified],
     hardware: %w[entity entityLabel manufacturerLabel modelLabel dateModified],
     grants: %w[entity entityLabel funderLabel recipientLabel dateModified],
-    works: %w[entity entityLabel authorLabel titleLabel publicationDate dateModified]
+    works: %w[entity entityLabel authorLabel titleLabel publicationDate DOI dateModified]
   }
 
   attr_reader :locale
@@ -152,14 +154,14 @@ class Wikidata
 
           case property
           when 'entity'
-            json['entity'] = value
+            json['entity'] = value.split('/').last
           when 'entityLabel'
             json['entityLabel'] = value
           when 'dateModified'
             json['dateModified'] = humanize_date(value)
           else
             json['properties'] << {
-              camel_case_to_title_case(property.split('Label')[0]) => value
+              humanize_sparql_subject(property.split('Label')[0]) => value
             }
           end
         end
@@ -187,9 +189,9 @@ class Wikidata
         SERVICE wikibase:mwapi {
           bd:serviceParam wikibase:endpoint "www.wikidata.org";
                          wikibase:api "EntitySearch";
-                         mwapi:search "#{partial_label}";
+                         mwapi:search "%{query}";
                          mwapi:language "en";
-                         mwapi:limit "20".
+                         mwapi:limit "10".
           ?item wikibase:apiOutputItem mwapi:item.
         }
 
@@ -198,10 +200,11 @@ class Wikidata
 
         OPTIONAL { ?item schema:description ?description. FILTER(LANG(?description) = "en") }
         OPTIONAL { ?item wdt:P31 ?instance. ?instance rdfs:label ?instanceLabel. FILTER(LANG(?instanceLabel) = "en") }
-        OPTIONAL { ?item wdt:P18 ?image }  # Fetch image if available
+        OPTIONAL { ?item wdt:P18 ?image }
       }
     SPARQL
 
+    sparql_query = sparql_query % { query: partial_label }
     Rails.logger.info "Wikidata query with mwapi: #{sparql_query}"
 
     results = @client.query(sparql_query)
@@ -238,12 +241,16 @@ class Wikidata
     }
   end
 
-  def camel_case_to_title_case(camel_case)
-    camel_case.gsub(/([A-Z])/, ' \1').split.map(&:capitalize).join(' ')
-  end
-
   def humanize_date(date_string)
     DateTime.parse(date_string).strftime('%B %d, %Y')
+  end
+
+  def humanize_sparql_subject(subject)
+    if subject == subject.upcase
+      subject
+    else
+      subject.gsub(/([a-z])([A-Z])/, '\1 \2').humanize
+    end
   end
 
 end
