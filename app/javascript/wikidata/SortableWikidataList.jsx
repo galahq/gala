@@ -254,7 +254,7 @@ export function createSortableInput ({
         const resp: SparqlResult = await enqueueQuery(schema, qid)
         item.data = resp
         setError(null)
-        onChangeItem({ ...item, data: resp })
+        // onChangeItem({ ...item, data: resp })
 
         return resp
       } catch (err) {

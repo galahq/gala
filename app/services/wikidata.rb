@@ -154,7 +154,7 @@ class Wikidata
 
           case property
           when 'entity'
-            json['entity'] = value.split('/').last
+            json['entity'] = value
           when 'entityLabel'
             json['entityLabel'] = value
           when 'dateModified'
