@@ -22,6 +22,7 @@ export const SearchWikidata = () => {
 
   const runQuery = async query => {
     setLoading(true)
+    setResults([])
     try {
       const response = await Orchard.harvest('sparql', { query: query.trim() })
       console.log(response)
