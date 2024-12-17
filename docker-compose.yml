@@ -1,14 +1,24 @@
-version: '3'
+version: '3.8'
+
 services:
-  web: &web
-    build: ./
-    stdin_open: true
-    tty: true
-    command: foreman start -f Procfile.dev
-    environment: &env
+  web:
+    image: gala_web:latest
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        rails_env: development
+        secret_key_base: dummy
+    command: bundle exec foreman start -f Procfile.dev
+    environment:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/1
       RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: 1
+      WEB_CONCURRENCY: 1
+      SIDEKIQ_CONCURRENCY: 1
+      SKYLIGHT_DISABLE_DEV_WARNING: true
+      DOCKER_DEV: 1
     ports:
       - 3000:3000
       - 3035:3035
@@ -16,19 +26,19 @@ services:
       - db
       - redis
     volumes:
-      - ./:/app/
-      - /app/node_modules/
-      - /app/tmp/cache/
-  worker:
-    <<: *web
-    image: gala_web
-    command: bundle exec sidekiq
-    environment:
-      <<: *env
-      SIDEKIQ_CONCURRENCY: 1
-    ports: []
+      - .:/gala:delegated
+      - node_modules:/gala/node_modules
+      - build_cache:/gala/tmp/cache
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 4G
+        reservations:
+          cpus: "2"
+          memory: 2G
   db:
-    image: postgres:13
+    image: postgres:16.4
     environment:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine
@@ -36,19 +46,12 @@ services:
       - 5432:5432
     volumes:
       - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
-      - db_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data
   redis:
-    image: redis:6
+    image: redis:7
     ports:
       - 6379:6379
-  # selenium:
-  #   image: seleniarm/standalone-chromium
-  #   shm_size: 4gb
-  #   environment:
-  #     SE_NODE_MAX_SESSIONS: 1
-  #   ports:
-  #     - 4444:4444
-  #   volumes:
-  #     - /dev/shm:/dev/shm
 volumes:
   db_data:
+  node_modules:
+  build_cache:

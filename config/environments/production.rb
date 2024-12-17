@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
-Rails.application.routes.default_url_options = { host: 'www.learngala.com' }
+IS_STAGING = ENV['BASE_URL'].present? &&
+             ENV['BASE_URL'].include?('staging')
+
+Rails.application.routes.default_url_options = if IS_STAGING
+  { host: 'msc-gala-staging.herokuapp.com' }
+else
+  { host: 'www.learngala.com' }
+end
 
 Rails.application.configure do
   # Prepare the ingress controller used to receive mail
@@ -21,6 +28,7 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+  config.action_controller.enable_fragment_cache_logging = true
 
   # Ensures that a master key has been made available in either
   # ENV["RAILS_MASTER_KEY"] or in config/master.key. This key is used to decrypt
@@ -72,16 +80,11 @@ Rails.application.configure do
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
 
-  # Use a different cache store in production.
-  config.cache_store = :dalli_store,
-                       (ENV['MEMCACHIER_SERVERS'] || '').split(','),
-                       { username: ENV['MEMCACHIER_USERNAME'],
-                         password: ENV['MEMCACHIER_PASSWORD'],
-                         failover: true,
-                         socket_timeout: 1.5,
-                         socket_failure_delay: 0.2,
-                         down_retry_delay: 60,
-                         pool_size: ENV.fetch('RAILS_MAX_THREADS') { 5 }.to_i }
+  config.cache_store = :redis_cache_store, {
+    url: ENV.fetch("REDIS_URL") { "redis://redis:6379/1" },
+    namespace: 'gala:cache',
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+  }
 
   # Use a real queuing backend for Active Job (and separate queues per
   # environment)
