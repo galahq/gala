@@ -96,7 +96,11 @@ Rails.application.configure do
   # raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { host: 'www.learngala.com' }
+  config.action_mailer.default_url_options = if IS_STAGING
+    { host: 'msc-gala-staging.herokuapp.com' }
+  else
+    { host: 'www.learngala.com' }
+  end
 
   if ENV['SES_SMTP_USERNAME'] && ENV['SES_SMTP_PASSWORD']
     config.action_mailer.smtp_settings = {
