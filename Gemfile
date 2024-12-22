@@ -14,7 +14,7 @@ gem 'connection_pool'
 gem 'image_processing', '~> 1.12'
 gem 'net-http'
 gem 'pg', '>= 1.1', '< 2.0' # PostgreSQL 16 compatibility
-gem 'puma', '~> 5.6' # Upgraded Puma for performance and security
+gem "puma", ">= 5.6.9" # Upgraded Puma for performance and security
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5' # Redis 6 compatibility
 gem 'sidekiq', '~> 7.0'
@@ -37,6 +37,7 @@ gem 'virtus'
 gem 'devise', '~> 4.8' # Updated for Rails 6.1 compatibility
 gem 'devise-i18n'
 gem 'ims-lti'
+gem 'omniauth', '>= 2.0.0'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
@@ -62,7 +63,7 @@ gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj', '~> 3.13'
 gem 'oj_mimic_json'
-gem 'pdfkit'
+gem "pdfkit", ">= 0.8.7.2"
 gem 'redcarpet'
 gem 'sass-rails', '~> 6.0.0'
 gem 'sassc', '~> 2.4.0'
