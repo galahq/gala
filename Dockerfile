@@ -46,18 +46,18 @@ RUN echo "gem: --no-document" > /etc/gemrc \
 
 COPY . ./
 
-# precompile the app directory if not in development
 ARG rails_env=development
 ENV RAILS_ENV=${rails_env}
-ARG secret_key_base=dummy
+ARG secret_key_base=placeholder
 ENV SECRET_KEY_BASE=${secret_key_base}
 
 ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
+# precompile the app directory if not in development
 RUN if [ "$RAILS_ENV" != "development" ]; then \
     bundle exec bootsnap precompile app/; \
-    DATABASE_URL=postgresql://dummy/dummy \
+    DATABASE_URL=postgresql://placeholder/placeholder \
     bundle exec rails assets:precompile; \
     fi
 

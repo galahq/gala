@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-IS_STAGING = ENV['BASE_URL'].present? &&
-             ENV['BASE_URL'].include?('staging')
+# BASE_URL for production and staging:
+#  production: https://www.learngala.com
+#     staging: https://msc-gala-staging.herokuapp.com
+ENV['IS_STAGING'] = ENV['BASE_URL'].present? &&
+                    ENV['BASE_URL'].include?('staging').to_s
 
-Rails.application.routes.default_url_options = if IS_STAGING
-  { host: 'msc-gala-staging.herokuapp.com' }
-else
-  { host: 'www.learngala.com' }
-end
+BASE_URL_HOST = ENV['BASE_URL']&.gsub(%r{^https?://}, '')
+
+Rails.application.routes.default_url_options = { host: BASE_URL_HOST }
 
 Rails.application.configure do
   # Prepare the ingress controller used to receive mail
@@ -81,7 +82,8 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   config.cache_store = :redis_cache_store, {
-    url: ENV.fetch("REDIS_URL") { "redis://redis:6379/1" },
+    url: ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' },
+    namespace: 'cache',
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   }
 
@@ -96,11 +98,7 @@ Rails.application.configure do
   # raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = if IS_STAGING
-    { host: 'msc-gala-staging.herokuapp.com' }
-  else
-    { host: 'www.learngala.com' }
-  end
+  config.action_mailer.default_url_options = { host: BASE_URL_HOST }
 
   if ENV['SES_SMTP_USERNAME'] && ENV['SES_SMTP_PASSWORD']
     config.action_mailer.smtp_settings = {

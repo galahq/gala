@@ -67,6 +67,11 @@ gem 'redcarpet'
 gem 'sass-rails', '~> 6.0.0'
 gem 'sassc', '~> 2.4.0'
 
+# `galahq/case_grid` is not working and needs an update to fix this error:
+# NoMethodError (undefined method `matte=' for {dimension} DirectClass...
+# disabling the gem for now
+# gem 'case_grid', git: 'https://github.com/galahq/case_grid'
+
 gem 'webpacker', '~> 5.4' # Latest 5.x version for Rails 6
 
 # Logging and Monitoring

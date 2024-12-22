@@ -5,14 +5,6 @@ Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # Check if we use Docker to allow docker ip through web-console
-  if ENV['DOCKER_DEV'].present?
-    ip_address = Socket.ip_address_list.find(&:ipv4_private?).ip_address
-    ip_obj = IPAddr.new(ip_address.to_s)
-    cidr_notation = "#{ip_obj.to_s}/#{ip_obj.to_range.to_a.size.to_s(2).count('1')}"
-    config.web_console.allowed_ips = cidr_notation
-  end
-
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -35,7 +27,8 @@ Rails.application.configure do
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :redis_cache_store, {
-      url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" },
+      url: ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' },
+      namespace: 'cache',
       ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
     }
   else
@@ -94,5 +87,8 @@ Rails.application.configure do
 
   # Allow all hosts
   config.hosts.clear
+
+  # Allow web console from all IPs
+  config.web_console.allowed_ips = '0.0.0.0/0'
 
 end
