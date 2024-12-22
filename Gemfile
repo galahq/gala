@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 ruby '2.7.6'
 
-gem 'rails', '~> 6.1.7' # Latest Rails 6.1
+gem 'rails', '~> 6.1.7'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
@@ -13,12 +13,12 @@ gem 'bootsnap', '>= 1.9.3', require: false
 gem 'connection_pool'
 gem 'image_processing', '~> 1.12'
 gem 'net-http'
-gem 'pg', '>= 1.1', '< 2.0' # PostgreSQL 16 compatibility
-gem 'puma', '~> 5.6' # Upgraded Puma for performance and security
+gem 'pg', '>= 1.1', '< 2.0'
+gem 'puma', '>= 5.6.9'
 gem 'rack-canonical-host'
-gem 'redis', '~> 4.5' # Redis 6 compatibility
+gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
-gem 'sqlite3', '~> 1.6.0' # Updated for Rails 6.1 compatibility
+gem 'sqlite3', '~> 1.6.0'
 gem 'wkhtmltopdf-binary' # Installs wkhtmltopdf for PDF generation
 
 # Models
@@ -34,9 +34,10 @@ gem 'time_for_a_boolean', '~> 0.2.2'
 gem 'virtus'
 
 # Authentication and Authorization
-gem 'devise', '~> 4.8' # Updated for Rails 6.1 compatibility
+gem 'devise', '~> 4.8'
 gem 'devise-i18n'
 gem 'ims-lti'
+gem 'omniauth', '>= 2.0.0'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
@@ -54,15 +55,15 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.12' # Minor update
+gem 'active_model_serializers', '0.10.12'
 gem 'haml', '5.1.2'
 gem 'inline_svg'
-gem 'jbuilder', '~> 2.11' # Updated gem release
+gem 'jbuilder', '~> 2.11'
 gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj', '~> 3.13'
 gem 'oj_mimic_json'
-gem 'pdfkit'
+gem 'pdfkit', '>= 0.8.7.2'
 gem 'redcarpet'
 gem 'sass-rails', '~> 6.0.0'
 gem 'sassc', '~> 2.4.0'
@@ -81,7 +82,7 @@ gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1'
-gem 'skylight', '~> 5.2' # Updated for Rails 6.1 compatibility
+gem 'skylight', '~> 5.2'
 gem 'table_print'
 
 # Services
@@ -124,7 +125,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-composable_json_matchers'
-  gem 'rspec-rails', '~> 5.1' # Updated for Rails 6.1
+  gem 'rspec-rails', '~> 5.1'
   gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
