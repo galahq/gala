@@ -15,7 +15,7 @@ module Orchard
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    # Initialize configuration defaults for originally generated Rails version.
+    # review new_framework_defaults_6_1.rb before changing load_defaults to 6.1
     config.load_defaults 6.0
 
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }

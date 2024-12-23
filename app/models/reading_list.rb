@@ -38,7 +38,9 @@ class ReadingList < ApplicationRecord
   end
 
   def update_social_image
-    ReadingListSocialImageCreationJob.perform_later self
+    # TODO: Fix following gem to make ReadingListSocialImageCreationJob work
+    # https://github.com/galahq/case_grid
+    # ReadingListSocialImageCreationJob.perform_later self
   end
 
   private

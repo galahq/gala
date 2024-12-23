@@ -1,25 +1,14 @@
-# ignore all logfiles and tempfiles
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+.git
+.vscode
 
-
-# environment normalization
-/.bundle
-/vendor/bundle
-
-# test sqlite databases
+vendor/bundle/*
+log/*
+tmp/*
+node_modules
 /db/*.sqlite3*
-
-# should use env vars instead of encrypted messages
 config/master.key
-
-# ignore byebug command history file
 .byebug_history
 
-# node_modules
-node_modules
+.DS_Store
+coverage
 
-# assets
-public
