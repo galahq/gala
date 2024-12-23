@@ -14,11 +14,12 @@ services:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/0
       RAILS_ENV: development
-      RAILS_LOG_TO_STDOUT: 1
+      RAILS_LOG_TO_STDOUT: true
+      RAILS_SERVE_STATIC_FILES: true
       WEB_CONCURRENCY: 1
       SIDEKIQ_CONCURRENCY: 1
       SKYLIGHT_DISABLE_DEV_WARNING: true
-      DOCKER_DEV: 1
+      DOCKER_DEV: true
     ports:
       - 3000:3000
       - 3035:3035
