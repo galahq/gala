@@ -30,7 +30,7 @@ function mapStateToProps (state) {
   }
 }
 
-const Sidebar = ({ editing, readerEnrolled, location, signInForm }) => {
+const Sidebar = ({ editing, location}) => {
   return (
     <Container data-active={location.pathname}>
       <BillboardTitle minimal />
