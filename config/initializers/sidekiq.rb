@@ -1,10 +1,28 @@
-require 'sidekiq'
+# frozen_string_literal: true
 
-# server
-Sidekiq.configure_server do |config|
-  config.redis = { url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } }
+def redis_configuration
+  redis_url = ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' }
+  ssl_params = if URI(redis_url).scheme == 'rediss'
+                 { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+               else
+                 {}
+               end
+
+  {
+    url: redis_url,
+    ssl_params: ssl_params,
+    timeout: 5,
+    reconnect_attempts: 1,
+    network_timeout: 5
+  }
 end
-# client
+
+# Sidekiq server configuration
+Sidekiq.configure_server do |config|
+  config.redis = redis_configuration
+end
+
+# Sidekiq client configuration
 Sidekiq.configure_client do |config|
-  config.redis = { url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } }
+  config.redis = redis_configuration
 end

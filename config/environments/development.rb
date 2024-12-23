@@ -5,14 +5,6 @@ Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # Check if we use Docker to allow docker ip through web-console
-  if File.file?('/.dockerenv') == true
-    ip_address = Socket.ip_address_list.find(&:ipv4_private?).ip_address
-    ip_obj = IPAddr.new(ip_address.to_s)
-    cidr_notation = "#{ip_obj.to_s}/#{ip_obj.to_range.to_a.size.to_s(2).count('1')}"
-    config.web_console.whitelisted_ips = cidr_notation
-  end
-
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -30,19 +22,20 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  # if Rails.root.join('tmp', 'caching-dev.txt').exist?
-  #   config.action_controller.perform_caching = true
-  #   config.action_controller.enable_fragment_cache_logging = true
-  #
-  #   config.cache_store = :memory_store
-  #   config.public_file_server.headers = {
-  #     'Cache-Control' => "public, max-age=#{2.days.to_i}"
-  #   }
-  # else
-  #   config.action_controller.perform_caching = false
-  #
-  #   config.cache_store = :null_store
-  # end
+  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+    config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
+
+    config.cache_store = :redis_cache_store, {
+      url: ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' },
+      namespace: 'cache',
+      ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+    }
+  else
+    config.action_controller.perform_caching = false
+
+    config.cache_store = :null_store
+  end
 
   config.action_mailer.delivery_method = :letter_opener
 
@@ -86,9 +79,16 @@ Rails.application.configure do
   #   Bullet.console = true
   # end
 
-  # if ENV['LOCALHOST_SSL'].present?
-  #   logger           = ActiveSupport::Logger.new(STDOUT)
-  #   logger.formatter = config.log_formatter
-  #   config.logger = ActiveSupport::TaggedLogging.new(logger)
-  # end
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
+
+  # Allow all hosts
+  config.hosts.clear
+
+  # Allow web console from all IPs
+  config.web_console.allowed_ips = '0.0.0.0/0'
+
 end

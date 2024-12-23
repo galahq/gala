@@ -26,7 +26,10 @@ class ArchivesController < ApplicationController
   end
 
   def root_url
-    request.protocol + request.host_with_port + '/'
+    url = request.protocol + request.host_with_port + '/'
+    # fixes archive generation running docker network locally
+    url.gsub!('localhost', 'web') if ENV['DOCKER_DEV'].present?
+    url
   end
 
   def redirect_to_download
