@@ -20,6 +20,7 @@ services:
       SIDEKIQ_CONCURRENCY: 1
       SKYLIGHT_DISABLE_DEV_WARNING: true
       DOCKER_DEV: true
+      BASE_URL: http://localhost:3000
     ports:
       - 3000:3000
       - 3035:3035
