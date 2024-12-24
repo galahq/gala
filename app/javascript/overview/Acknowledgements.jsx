@@ -24,19 +24,19 @@ class Acknowledgements extends React.Component<
     }))
   }
 
-  render () {
+  render() {
     const { contents, intl } = this.props
     if (!contents) return null
     const acknowledgements = intl.formatMessage({
       id: 'activerecord.attributes.case.acknowledgements',
     })
     return [
-      <AcknowledgementsButton
+      <div><AcknowledgementsButton
         key="1"
         aria-label={acknowledgements}
         title={acknowledgements}
         onClick={this.handleClick}
-      />,
+      >Acknowledgements</AcknowledgementsButton></div>,
       <Dialog
         key="2"
         title={acknowledgements}
@@ -62,9 +62,17 @@ export default injectIntl(Acknowledgements)
 
 const AcknowledgementsButton = styled(Button).attrs({
   className: 'pt-minimal pt-small pt-button--baseline-aligned',
-  icon: 'more',
+  rightIcon: 'more',
 })`
-  margin-left: 0.25em;
+  transform: translate(-7px);
+  margin-top: .2rem;
+span {
+  color: #5e6c78;
+}
+
+svg {
+  transform: translate(-3px, 1px);
+}
 `
 
 const AcknowledgementsContents = styled.p.attrs({
