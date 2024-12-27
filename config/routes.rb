@@ -91,8 +91,6 @@ Rails.application.routes.draw do
     get 'confirm_deletion', to: 'cases/deletions#new'
     post 'confirm_deletion', to: 'cases/deletions#create'
 
-    # get 'copy', to: 'cases#copy'
-
     resources :edgenotes, only: %i[create]
 
     resources :editorships, only: %i[new create]
