@@ -1,9 +1,9 @@
 # @see Archive
 class ArchiveCloner < Clowne::Cloner
-  include_attached :pdf
+  include_associations :pdf
 
-  finalize do |source, record, kase:, **|
-    record.case = kase
+  finalize do |source, record, params:|
+    record.case = params[:kase]
     if source.pdf.attached? && source.pdf.blob
       record.pdf.attach(source.pdf.blob)
     end

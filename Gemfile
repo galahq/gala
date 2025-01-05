@@ -24,10 +24,10 @@ gem 'wkhtmltopdf-binary' # Installs wkhtmltopdf for PDF generation
 # Models
 gem 'active_storage_validations'
 gem 'acts_as_list', '~> 0.9.10'
-gem 'clowne', '0.2.0'
+gem 'clowne'
 gem 'clowne_active_storage'
 gem 'draper'
-gem 'friendly_id', '~> 5.2.3'
+gem 'friendly_id'
 gem 'kaminari'
 gem 'memoist'
 gem 'time_for_a_boolean', '~> 0.2.2'
@@ -91,7 +91,7 @@ gem 'ruby-oembed'
 
 # To seed the database for Heroku review apps, this is included in production
 gem 'factory_bot_rails'
-gem 'faker', '~> 2.19'
+gem 'faker'
 
 group :development do
   gem 'foreman'
@@ -129,6 +129,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
   gem 'dotenv-rails'
+  gem 'rubocop'
   gem 'rubocop-faker'
 end
 

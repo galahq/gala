@@ -2,5 +2,5 @@
 
 # @see Page
 class PageCloner < ElementCloner
-  include_association :cards, params: true
+  include_associations :cards, params: true
 end

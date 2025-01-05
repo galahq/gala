@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
 class CaseCloner < Clowne::Cloner
-  #include_attached :cover_image
-  include_associations :editorships#, :taggings
-
+  include_associations :editorships
   nullify :published_at
 
-  finalize do |source, record, locale:, slug: SecureRandom.uuid, **|
-    record.locale = locale
-    record.slug = slug
+  finalize do |source, record, params:|
+    record.locale = params[:locale]
+    record.slug = params[:slug] || SecureRandom.uuid
     if source.locale == record.locale
       record.title = "COPY: #{record.title}"
       record.translation_base_id = nil
     else
-      record.title = "#{Translation.language_name(locale)}: #{record.title}"
+      record.title = "#{Translation.language_name(params[:locale])}: #{record.title}"
       record.translators = ['—']
     end
 

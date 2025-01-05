@@ -7,31 +7,31 @@ class ImageDecorator < ApplicationDecorator
     'lEQVR42mNceOhRPQAHFwLGnBKLQwAAAABJRU5ErkJggg== '
 
   RED_PIXEL =
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAFoEvQfAAAABG' \
+    'data:image/png;base64,iVBORw0KGgoAAAEAAAABCAYAAAFoEvQfAAAABG' \
     'dBTUEAALGPC/xhBQAAAA1JREFUCB1juOtg/x8ABbYCXHCMAk8AAAAASUVORK5CYII='
 
   def resized_path(**options)
     return BLUE_PIXEL unless attached?
     return RED_PIXEL unless variable?
 
-    polymorphic_path resized(options), only_path: false
+    polymorphic_path(resized(**options), only_path: false)
   end
 
   def resized_url(**options)
-    polymorphic_url resized(options), only_path: false
+    polymorphic_url(resized(**options), only_path: false)
   end
 
   def resized_file(**options)
     return nil unless attached?
 
-    resized(options).processed.blob.download
+    resized(**options).processed.blob.download
   end
 
   private
 
   def resized(width: nil, height: nil, **options)
-    transforms = resize_options(width, height).merge options.merge optimizations
-    variant transforms
+    transforms = resize_options(width, height).merge(options).merge(optimizations)
+    variant(transforms)
   end
 
   def optimizations
@@ -42,21 +42,18 @@ class ImageDecorator < ApplicationDecorator
 
   def jpeg_optimizations
     base_optimizations
-      .merge 'sampling-factor': '4:2:0',
-             quality: '85',
-             colorspace: 'sRGB',
-             interlace: 'line' # Must be last to work
+      .merge(saver: { strip: true, quality: 85, interlace: true })
   end
 
   def base_optimizations
-    { strip: true }
+    { saver: { strip: true } }
   end
 
   def resize_options(width, height)
     return {} if width.blank?
 
     height ||= width
-    { resize: "#{width}x#{height}^" }
+    { resize_to_limit: [width, height] }
   end
 
   def jpeg?
