@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-FROM registry.docker.com/library/ruby:2.7.6 AS builder
+FROM registry.docker.com/library/ruby:3.1.6-bookworm AS builder
 
 WORKDIR /gala
 
@@ -14,7 +14,7 @@ ENV BUNDLE_DEPLOYMENT="true" \
 
 # install builder dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget gnupg2 build-essential curl python \
+    wget gnupg2 build-essential curl python3 \
     libvips git pkg-config libpq-dev lsb-release \
     && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
     && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
@@ -36,7 +36,7 @@ RUN mkdir -p $NVM_DIR \
     && yarn install --check-files
 
 # install gems
-RUN echo "gem: --no-document" /etc/gemrc \
+RUN echo "gem: --no-document" > /etc/gemrc \
     && gem update --system 3.3.22 \
     && gem install bundler:2.4.19 \
     && bundle install --jobs 20 --retry 2 \

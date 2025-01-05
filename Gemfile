@@ -2,9 +2,9 @@
 
 source 'https://rubygems.org'
 
-ruby '2.7.6'
+ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
 
-gem 'rails', '~> 6.1.7'
+gem 'rails', '~> 7.0'
 
 # Infrastructure
 gem 'aws-sdk-s3', require: false
@@ -54,7 +54,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility'
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.12'
+gem 'active_model_serializers', '0.10.13'
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'

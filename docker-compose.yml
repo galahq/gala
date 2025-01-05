@@ -31,14 +31,6 @@ services:
       - .:/gala:delegated
       - node_modules:/gala/node_modules
       - build_cache:/gala/tmp/cache
-    deploy:
-      resources:
-        limits:
-          cpus: "4"
-          memory: 4G
-        reservations:
-          cpus: "2"
-          memory: 2G
   db:
     image: postgres:16.4
     environment:
