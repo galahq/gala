@@ -4,7 +4,7 @@ class CaseCloner < Clowne::Cloner
   include_associations :editorships
   nullify :published_at
 
-  finalize do |source, record, params:|
+  finalize do |source, record, **params|
     record.locale = params[:locale]
     record.slug = params[:slug] || SecureRandom.uuid
     if source.locale == record.locale

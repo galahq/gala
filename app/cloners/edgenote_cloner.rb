@@ -5,7 +5,7 @@ class EdgenoteCloner < Clowne::Cloner
   include_associations :link_expansion_visibility
   nullify :slug
 
-  finalize do |source, record, params:|
+  finalize do |source, record, **params|
     record.case = params[:kase]
     if source.audio.attached? && source.audio.blob
       record.audio.attach(source.audio.blob)
