@@ -16,7 +16,7 @@ class CaseDecorator < ApplicationDecorator
   end
 
   def cover_url(options = { width: 1280, height: 540 })
-    ImageDecorator.decorate(cover_image).resized_path(options)
+    ImageDecorator.decorate(cover_image).resized_path(**options)
   end
 
   def small_cover_url

@@ -2,7 +2,7 @@
 
 # @see Podcast
 class PodcastCloner < ElementCloner
-  include_associations :card, params: true
+  include_associations :card
 
   finalize do |source, record, params:|
     if source.artwork.attached? && source.artwork.blob

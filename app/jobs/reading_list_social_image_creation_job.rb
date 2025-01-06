@@ -36,7 +36,7 @@ class ReadingListSocialImageCreationJob < ActiveJob::Base
       next unless kase.cover_image.attached?
 
       decorator = ImageDecorator.decorate(kase.cover_image)
-      readable_file decorator.resized_file(options)
+      readable_file decorator.resized_file(**options)
     end.compact
   end
 
