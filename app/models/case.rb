@@ -138,7 +138,7 @@ class Case < ApplicationRecord
 
   def refresh_archive!(root_url:)
     create_archive if archive.nil?
-    archive.refresh!(root_url: root_url)
+    archive.refresh! root_url: root_url
   end
 
   # Universal communities and the global community (`community_id == nil`) need
