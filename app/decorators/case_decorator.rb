@@ -20,7 +20,7 @@ class CaseDecorator < ApplicationDecorator
   end
 
   def small_cover_url
-    cover_url width: 200, height: 200, sharpen: '0x1'
+    cover_url width: 200, height: 200
   end
 
   def open_graph_cover_url
