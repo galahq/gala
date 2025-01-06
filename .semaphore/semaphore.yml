@@ -3,7 +3,7 @@ name: Continuous Integration
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu2004
+    os_image: ubuntu2204
 blocks:
   - name: Setup
     task:
@@ -12,9 +12,9 @@ blocks:
           commands:
             - checkout
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
-            - sem-version ruby 2.7.6
+            - sem-version ruby 3.1.6
             - sudo apt update
-            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev
+            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips
             - bundle install --deployment -j 4 --path vendor/bundle
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
         - name: yarn
@@ -34,7 +34,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - sem-version ruby 2.7.6
+          - sem-version ruby 3.1.6
           - sem-version node 12.5.0
           - sem-service start postgres
           - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
