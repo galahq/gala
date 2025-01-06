@@ -51,7 +51,7 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility'
+gem 'mobility' #, '1.2.9' # https://github.com/shioyama/mobility/issues/666
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.13'
