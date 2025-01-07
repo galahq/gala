@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'barnes'
 
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers: a minimum and maximum.
@@ -37,7 +36,3 @@ preload_app!
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
-
-before_fork do
-  Barnes.start
-end
