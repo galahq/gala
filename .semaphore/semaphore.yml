@@ -42,8 +42,8 @@ blocks:
           - bundle install --deployment --path vendor/bundle
           - cat /dev/null > config/database.yml
           - 'bundle pristine puma'
-          - 'bundle exec rake db:setup'
-          - 'bundle exec rake db:test:prepare'
+          - 'bundle exec rake db:setup RAILS_ENV=''test'''
+          - 'bundle exec rake db:test:prepare RAILS_ENV=''test'''
       jobs:
         - name: Jest
           commands:
