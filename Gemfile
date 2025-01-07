@@ -2,7 +2,9 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
+#ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
+
+ruby '3.1.6'
 
 gem 'rails', '~> 7.0'
 
@@ -78,7 +80,6 @@ gem 'webpacker', '5.4.4'
 gem 'administrate', '~> 0.17.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print'
-gem 'barnes'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1'  # sentry-ruby
 gem 'skylight', '~> 5.2'
