@@ -72,7 +72,7 @@ gem 'sassc', '~> 2.4.0'
 # disabling the gem for now
 # gem 'case_grid', git: 'https://github.com/galahq/case_grid'
 
-gem 'webpacker', '~> 5.4' # Latest 5.x version for Rails 6
+gem 'webpacker', '5.4.4'
 
 # Logging and Monitoring
 gem 'administrate', '~> 0.17.0'
@@ -100,7 +100,7 @@ group :development do
   gem 'bullet', '>= 6.1.1'
   gem 'letter_opener'
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
   gem 'web-console', '>= 4.1.0'
 
   gem 'doc_to_dash'
@@ -124,7 +124,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-composable_json_matchers'
-  gem 'rspec-rails', '~> 5.1'
+  gem 'rspec-rails'
   gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'
   gem 'spring-commands-rspec'

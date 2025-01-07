@@ -28,6 +28,10 @@ class CaseCloner < Clowne::Cloner
       element = case_element.element
       element.class.cloner_class.call(element, kase: record)
     end
+
+    source.edgenotes.each do |edgenote|
+      EdgenoteCloner.call(edgenote, kase: record)
+    end
   end
 end
 
