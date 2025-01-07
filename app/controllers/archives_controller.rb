@@ -22,8 +22,7 @@ class ArchivesController < ApplicationController
   end
 
   def refresh_archive
-    kase = Case.friendly.find(params[:case_slug])
-    kase.refresh_archive! root_url: root_url
+    @case.refresh_archive! root_url: root_url
   end
 
   def root_url
