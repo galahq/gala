@@ -7,9 +7,9 @@ ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
 gem 'rails', '~> 7.0'
 
 # Infrastructure
-gem 'aws-sdk-s3', require: false
-gem 'aws-sdk-sns', '>= 1.9.0', require: false
-gem 'bootsnap', '>= 1.9.3', require: false
+gem 'aws-sdk-s3'
+gem 'aws-sdk-sns', '>= 1.9.0'
+gem 'bootsnap', '>= 1.9.3'
 gem 'connection_pool'
 gem 'image_processing', '~> 1.12'
 gem 'net-http'
@@ -18,7 +18,7 @@ gem 'puma', '>= 5.6.9'
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
-gem 'wkhtmltopdf-binary' # Installs wkhtmltopdf for PDF generation
+gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
 
 # Models
 gem 'active_storage_validations'
