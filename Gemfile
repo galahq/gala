@@ -7,7 +7,7 @@ ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
 gem 'rails', '~> 7.0'
 
 # Infrastructure
-gem 'aws-sdk-s3'
+gem 'aws-sdk-s3', require: false
 gem 'aws-sdk-sns', '>= 1.9.0'
 gem 'bootsnap', '>= 1.9.3'
 gem 'connection_pool'
