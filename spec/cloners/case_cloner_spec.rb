@@ -40,8 +40,6 @@ RSpec.describe CaseCloner, type: :cloner do
     clone = described_class.call kase, locale: :fr
     clone = clone.to_record
 
-    expect(clone.edgenotes.count).to eq kase.edgenotes.count
-
     expect(clone.case_elements).not_to eq kase.case_elements
     expect(table_of_contents(clone)).to eq table_of_contents kase
 

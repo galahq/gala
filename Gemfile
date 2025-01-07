@@ -18,7 +18,6 @@ gem 'puma', '>= 5.6.9'
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
-gem 'sqlite3', '~> 1.6.0'
 gem 'wkhtmltopdf-binary' # Installs wkhtmltopdf for PDF generation
 
 # Models
@@ -113,6 +112,7 @@ group :development do
   gem 'memory_profiler'
   gem 'rack-mini-profiler'
   gem 'stackprof'
+  gem 'sqlite3', '~> 1.6.0'
 end
 
 group :development, :test do
