@@ -9,8 +9,7 @@ ruby '3.1.6'
 gem 'rails', '~> 7.0'
 
 # Infrastructure
-gem 'aws-sdk-s3', require: false
-gem 'aws-sdk-sns', '>= 1.9.0'
+gem 'aws-sdk-s3'
 gem 'bootsnap', '>= 1.9.3'
 gem 'connection_pool'
 gem 'image_processing', '~> 1.12'
