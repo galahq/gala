@@ -120,7 +120,7 @@ group :development, :test do
   gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
 
-  gem 'capybara', '~> 3.39'
+  gem 'capybara'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-composable_json_matchers'

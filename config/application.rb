@@ -16,7 +16,7 @@ module Orchard
     # -- all .rb files in that directory are automatically loaded.
 
     # review new_framework_defaults_6_1.rb before changing load_defaults to 6.1
-    config.load_defaults 6.0
+    config.load_defaults 7.0
     config.active_support.cache_format_version = 7.0
 
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }

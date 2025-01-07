@@ -31,7 +31,7 @@ module Cases
       return quiz_necessity unless deployment.quiz.present?
 
       options = { serializer: Quizzes::UnsubmittedSerializer }
-      quiz = ActiveModel::Serializer.for(deployment.quiz, options).as_json
+      quiz = ActiveModel::Serializer.for(deployment.quiz, **options).as_json
       quiz_necessity.merge(quiz)
     end
 
