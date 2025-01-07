@@ -14,7 +14,7 @@ blocks:
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
             - sem-version ruby 3.1.6
             - sudo apt update
-            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev libssl1.1
+            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev
             - bundle install --deployment -j 4 --path vendor/bundle
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
         - name: yarn
@@ -41,6 +41,7 @@ blocks:
           - 'cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master'
           - bundle install --deployment --path vendor/bundle
           - cat /dev/null > config/database.yml
+          - 'bundle pristine puma'
           - 'bundle exec rake db:setup'
           - 'bundle exec rake db:test:prepare'
       jobs:
