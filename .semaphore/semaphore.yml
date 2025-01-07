@@ -53,4 +53,4 @@ blocks:
             - 'bundle exec rake factory_bot:lint RAILS_ENV=''test'''
         - name: RSpec - unit tests
           commands:
-            - bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
+            - 'bundle exec rake test:unit RAILS_ENV=''test'''
