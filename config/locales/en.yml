@@ -23,6 +23,7 @@ en:
         acknowledgements: Acknowledgements
         authors: Authors
         case_title: Case title
+        date: Accessed
         featured: Featured
         featured_at: Featured at
         kicker: Short title
@@ -318,6 +319,13 @@ en:
       Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together 
       and solicit feedback with inline comments before publishing and sharing.
     inclusive_community: Teach and Share
+    info_panel:
+      get_started: Get Started
+      community: Community
+      news_and_updates: News & Updates
+      blog: blog
+      blog_panel: 
+        see_all: See all
     innovative_teaching: Collaborate and Adapt
     join_the_community: >
       Gala modules perform well in classroom, community, and remote learning settings. 
