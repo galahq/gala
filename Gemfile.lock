@@ -682,6 +682,7 @@ DEPENDENCIES
   rails (~> 7.0)
   redcarpet
   redis (~> 4.5)
+  rexml
   rolify
   rspec
   rspec-composable_json_matchers

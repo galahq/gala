@@ -64,6 +64,7 @@ gem 'oj', '~> 3.13'
 gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
 gem 'redcarpet'
+gem 'rexml'
 gem 'sass-rails', '~> 6.0.0'
 gem 'sassc', '~> 2.4.0'
 
@@ -80,7 +81,7 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes'
 gem 'lograge'
-gem 'sentry-raven', '~> 3.1'
+gem 'sentry-raven', '~> 3.1'  # sentry-ruby
 gem 'skylight', '~> 5.2'
 gem 'table_print'
 
