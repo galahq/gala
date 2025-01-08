@@ -711,7 +711,7 @@ DEPENDENCIES
   yard-activesupport-concern
 
 RUBY VERSION
-   ruby 3.1.6p260
+   ruby 3.1.6
 
 BUNDLED WITH
    2.4.19
