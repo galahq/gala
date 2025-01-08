@@ -96,8 +96,9 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    acts_as_list (0.9.10)
-      activerecord (>= 3.0)
+    acts_as_list (1.2.4)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     administrate (0.17.0)
@@ -209,7 +210,6 @@ GEM
       request_store (>= 1.0)
       ruby2_keywords
     email_reply_parser (0.5.10)
-    equalizer (0.0.11)
     errbase (0.2.0)
     erubi (1.13.1)
     factory_bot (6.5.0)
@@ -281,18 +281,18 @@ GEM
     json (2.9.1)
     jsonapi-renderer (0.2.2)
     jwt (2.2.1)
-    kaminari (1.2.0)
+    kaminari (1.2.2)
       activesupport (>= 4.1.0)
-      kaminari-actionview (= 1.2.0)
-      kaminari-activerecord (= 1.2.0)
-      kaminari-core (= 1.2.0)
-    kaminari-actionview (1.2.0)
+      kaminari-actionview (= 1.2.2)
+      kaminari-activerecord (= 1.2.2)
+      kaminari-core (= 1.2.2)
+    kaminari-actionview (1.2.2)
       actionview
-      kaminari-core (= 1.2.0)
-    kaminari-activerecord (1.2.0)
+      kaminari-core (= 1.2.2)
+    kaminari-activerecord (1.2.2)
       activerecord
-      kaminari-core (= 1.2.0)
-    kaminari-core (1.2.0)
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
     launchy (2.5.0)
       addressable (~> 2.7)
@@ -335,8 +335,6 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nenv (0.3.0)
-    net-http (0.6.0)
-      uri
     net-imap (0.5.5)
       date
       net-protocol
@@ -404,9 +402,9 @@ GEM
       activesupport (>= 3.0.0)
     racc (1.8.1)
     rack (2.2.10)
-    rack-canonical-host (0.2.3)
+    rack-canonical-host (1.3.0)
       addressable (> 0, < 3)
-      rack (>= 1.0.0, < 3)
+      rack (>= 1.6, < 4)
     rack-mini-profiler (2.0.1)
       rack (>= 1.2.0)
     rack-proxy (0.7.7)
@@ -510,8 +508,6 @@ GEM
     rubyzip (2.4.1)
     safely_block (0.3.0)
       errbase (>= 0.1.1)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -547,9 +543,9 @@ GEM
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.2.2)
-      actionpack (>= 4.0)
-      activesupport (>= 4.0)
+    sprockets-rails (3.5.2)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
       sprockets (>= 3.0.0)
     sqlite3 (1.6.9)
       mini_portile2 (~> 2.8.0)
@@ -559,7 +555,7 @@ GEM
     temple (0.10.3)
     thor (1.3.2)
     thread_safe (0.3.6)
-    tilt (2.0.10)
+    tilt (2.5.0)
     time_for_a_boolean (0.2.2)
       activerecord
       railties
@@ -570,12 +566,10 @@ GEM
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uniform_notifier (1.16.0)
-    uri (1.0.2)
-    virtus (1.0.5)
+    virtus (2.0.0)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
-      equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -614,13 +608,13 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (= 0.10.13)
   active_storage_validations
-  acts_as_list (~> 0.9.10)
+  acts_as_list
   administrate (~> 0.17.0)
   administrate-field-active_storage
   ahoy_matey
   awesome_print
   aws-sdk-s3
-  bootsnap (>= 1.9.3)
+  bootsnap
   bullet (>= 6.1.1)
   capybara
   capybara-screenshot
@@ -646,7 +640,7 @@ DEPENDENCIES
   http_accept_language
   i18n_generators
   i18n_yaml_sorter
-  image_processing (~> 1.12)
+  image_processing
   ims-lti
   inline_svg
   jbuilder (~> 2.11)
@@ -659,7 +653,6 @@ DEPENDENCIES
   memory_profiler
   mobility
   multi_json
-  net-http
   oj (~> 3.13)
   oj_mimic_json
   omniauth-facebook
@@ -687,8 +680,7 @@ DEPENDENCIES
   rubocop
   rubocop-faker
   ruby-oembed
-  sass-rails (~> 6.0.0)
-  sassc (~> 2.4.0)
+  sassc-rails (~> 2.1, >= 2.1.2)
   selenium-webdriver
   sentry-raven (~> 3.1)
   shoulda-matchers (~> 4.5)
@@ -697,14 +689,15 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   spring-watcher-listen
+  sprockets-rails (~> 3.5, >= 3.5.2)
   sqlite3 (~> 1.6.0)
   stackprof
   table_print
-  time_for_a_boolean (~> 0.2.2)
+  time_for_a_boolean
   virtus
   web-console (>= 4.1.0)
   webdrivers
-  webpacker (= 5.4.4)
+  webpacker (~> 5.4)
   wkhtmltopdf-heroku (= 3.0.0)
   yard
   yard-activerecord

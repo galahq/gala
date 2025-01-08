@@ -2,18 +2,15 @@
 
 source 'https://rubygems.org'
 
-#ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
-
-ruby '3.1.6'
+ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
 
 gem 'rails', '~> 7.0'
 
 # Infrastructure
 gem 'aws-sdk-s3'
-gem 'bootsnap', '>= 1.9.3'
+gem 'bootsnap'
 gem 'connection_pool'
-gem 'image_processing', '~> 1.12'
-gem 'net-http'
+gem 'image_processing'
 gem 'pg', '>= 1.1', '< 2.0'
 gem 'puma', '>= 5.6.9'
 gem 'rack-canonical-host'
@@ -26,14 +23,14 @@ gem 'wkhtmltopdf-heroku', '3.0.0'
 
 # Models
 gem 'active_storage_validations'
-gem 'acts_as_list', '~> 0.9.10'
+gem 'acts_as_list'
 gem 'clowne'
 gem 'clowne_active_storage'
 gem 'draper'
 gem 'friendly_id'
 gem 'kaminari'
 gem 'memoist'
-gem 'time_for_a_boolean', '~> 0.2.2'
+gem 'time_for_a_boolean'
 gem 'virtus'
 
 # Authentication and Authorization
@@ -68,22 +65,22 @@ gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
 gem 'redcarpet'
 gem 'rexml'
-gem 'sass-rails', '~> 6.0.0'
-gem 'sassc', '~> 2.4.0'
 
 # `galahq/case_grid` is not working and needs an update to fix this error:
 # NoMethodError (undefined method `matte=' for {dimension} DirectClass...
 # disabling the gem for now
 # gem 'case_grid', git: 'https://github.com/galahq/case_grid'
 
-gem 'webpacker', '5.4.4'
+gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
+gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
+gem 'webpacker', '~> 5.4'
 
 # Logging and Monitoring
 gem 'administrate', '~> 0.17.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'lograge'
-gem 'sentry-raven', '~> 3.1'  # sentry-ruby
+gem 'sentry-raven', '~> 3.1' # sentry-ruby
 gem 'skylight', '~> 5.2'
 gem 'table_print'
 
@@ -114,8 +111,8 @@ group :development do
   gem 'flamegraph'
   gem 'memory_profiler'
   gem 'rack-mini-profiler'
-  gem 'stackprof'
   gem 'sqlite3', '~> 1.6.0'
+  gem 'stackprof'
 end
 
 group :development, :test do
@@ -125,16 +122,16 @@ group :development, :test do
   gem 'pry-rails'
 
   gem 'capybara'
+  gem 'dotenv-rails'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-composable_json_matchers'
-  gem 'rspec-rails'
   gem 'rspec_junit_formatter'
-  gem 'selenium-webdriver'
-  gem 'spring-commands-rspec'
-  gem 'dotenv-rails'
+  gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-faker'
+  gem 'selenium-webdriver'
+  gem 'spring-commands-rspec'
 end
 
 group :test do
