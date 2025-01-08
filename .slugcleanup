@@ -1,0 +1,9 @@
+node_modules
+tmp
+log
+spec
+test
+.git
+doc
+docs
+coverage
