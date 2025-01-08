@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-FROM registry.docker.com/library/ruby:3.2.6-bookworm AS builder
+FROM registry.docker.com/library/ruby:3.1.6-bookworm AS builder
 
 WORKDIR /gala
 
@@ -15,7 +15,7 @@ ENV BUNDLE_DEPLOYMENT="true" \
 # install builder dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget gnupg2 build-essential curl python3 \
-    libvips git pkg-config libpq-dev lsb-release \
+    libvips git pkg-config libpq-dev libjemalloc-dev lsb-release \
     && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
     && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && apt-get update && apt-get install -y postgresql-client-16 \

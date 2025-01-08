@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.2.6 on debian 12, ubuntu 22, heroku-22
+ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
 
 gem 'rails', '~> 7.0'
 

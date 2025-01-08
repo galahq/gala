@@ -24,3 +24,16 @@ public/packs/ # Webpacker packs folder if you're precompiling
 README.md
 .rspec
 *.md # Other markdown files like CHANGELOG.md or CONTRIBUTING.md
+
+# Ignore test files
+/test
+/spec
+
+# Ignore documentation
+/docs
+/README.md
+
+# Ignore local development files
+/.env
+/.git
+/.gitignore
