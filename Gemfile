@@ -2,7 +2,9 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
+#ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
+
+ruby '3.1.6'
 
 gem 'rails', '~> 7.0'
 
@@ -17,9 +19,7 @@ gem 'puma', '>= 5.6.9'
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
-
-gem 'wkhtmltopdf-heroku', '3.0.0'
-# gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
+gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
 
 # Models
 gem 'active_storage_validations'
@@ -37,8 +37,8 @@ gem 'virtus'
 gem 'devise', '~> 4.8'
 gem 'devise-i18n'
 gem 'ims-lti'
+gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-oauth2', '1.6.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
 gem 'rolify'
@@ -51,7 +51,7 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility' # , '1.2.9' # https://github.com/shioyama/mobility/issues/666
+gem 'mobility' #, '1.2.9' # https://github.com/shioyama/mobility/issues/666
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.13'
@@ -81,7 +81,6 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1'  # sentry-ruby
-gem 'skylight', '~> 5.2'
 gem 'skylight', '~> 5.2'
 gem 'table_print'
 
@@ -121,7 +120,6 @@ group :development, :test do
   # console
   gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
-  gem 'pry', '>= 0.14.1' # Update pry to a compatible version
 
   gem 'capybara'
   gem 'guard-rspec'
