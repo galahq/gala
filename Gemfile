@@ -17,7 +17,9 @@ gem 'puma', '>= 5.6.9'
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
-gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
+
+gem 'wkhtmltopdf-heroku', '3.0.0'
+# gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
 
 # Models
 gem 'active_storage_validations'
@@ -80,6 +82,7 @@ gem 'awesome_print'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1'  # sentry-ruby
 gem 'skylight', '~> 5.2'
+gem 'skylight', '~> 5.2'
 gem 'table_print'
 
 # Services
@@ -118,6 +121,7 @@ group :development, :test do
   # console
   gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
+  gem 'pry', '>= 0.14.1' # Update pry to a compatible version
 
   gem 'capybara'
   gem 'guard-rspec'

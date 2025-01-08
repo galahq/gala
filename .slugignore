@@ -1,0 +1,26 @@
+# Exclude test and development files
+test/
+spec/
+features/
+log/
+tmp/
+coverage/
+doc/
+docs/
+
+# Exclude local development tools and configs
+.git/
+.env
+.env.* # Exclude any environment-specific .env files
+*.sqlite3 # Ignore SQLite database files if you're using PostgreSQL in production
+*.swp # Ignore temporary files created by text editors like Vim
+
+# Exclude non-essential assets
+node_modules/ # Typically included via `yarn` or `npm` during the build process
+public/assets/ # Precompiled by Rails and does not need to be in the repo
+public/packs/ # Webpacker packs folder if you're precompiling
+
+# Exclude documentation and unnecessary files
+README.md
+.rspec
+*.md # Other markdown files like CHANGELOG.md or CONTRIBUTING.md
