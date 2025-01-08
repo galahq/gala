@@ -129,29 +129,45 @@ a.c-revealable-entity
     font-weight: 400
     font-size: 19px
     text-decoration: none
-    transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-    border: 1px dotted $black
     text-align: left
     -webkit-hyphens: auto
     -moz-hyphens: auto
     hyphens: auto
 
-    span
-      text-decoration: none
-      text-shadow: 0 0 6px $black
+    
+    span.mask
       color: transparent
+      background: #01182d
+      opacity: 0.8
+      text-decoration: none
+      //box-shadow: inset  2px 0px 0px 0px #6ACB72
+      display: inline-block
+      min-width: 40px
+
+      &:hover
+        background: #01182d
+        opacity: 0.7
+
+      &:before
+        position: absolute
+        transform: translate(4px, 3px)
+        line-height: 1
+        color: #6ACB72
+        //content: ' ? '
+        font-weight: 600
 
     &--reveal
-      border: 1px dotted $black
+      color: #01182db0
       display: inline-block
       text-align: left
-      transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
       font-family: $serifFont
-      font-weight: 400
-      font-size: 19px
-      span
-        text-shadow: none
-        color: $black
+     
+
+      span.mask
+        background: transparent
+        transition: background 0.20s
+        border-bottom: solid 1px #01182d
+        
         
 
     &--reveal.editing

@@ -6,14 +6,15 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import type { State } from 'redux/state'
+import { Icon } from '@blueprintjs/core'
 
-function mapStateToProps (state: State) {
+function mapStateToProps(state: State) {
   return {
     editInProgress: state.edit.inProgress,
   }
 }
 
-function RevealableComponent (props) {
+function RevealableComponent(props) {
   const { editInProgress, children } = props
   const [reveal, setReveal] = useState(false)
 
@@ -21,14 +22,14 @@ function RevealableComponent (props) {
     setReveal(editInProgress)
   }, [editInProgress])
 
-  function onClick () {
+  function onClick() {
     if (editInProgress) {
       return true
     }
     setReveal(!reveal)
   }
 
-  function onKeyDown (event) {
+  function onKeyDown(event) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
       onClick()
@@ -39,23 +40,30 @@ function RevealableComponent (props) {
   if (!editInProgress) {
     conditionalProps.tabIndex = 0
   }
-console.log(children[0].props.text)
-console.log(children)
 
   return (
     // eslint-disable-next-line
     <a role="button"
-       className={`pt-button pt-minimal c-revealable-entity${reveal ? '--reveal' : ''}`}
-       aria-label={"This text is hidden, click to reveal"}
-       onClick={onClick}
-       onKeyDown={onKeyDown}
-       {...conditionalProps}
+      title="Click to reveal"
+      className={`c-revealable-entity${reveal ? '--reveal' : ''}`}
+      aria-label={"This text is hidden, click to reveal"}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      {...conditionalProps}
     >
-      <span aria-live="assertive" aria-hidden={!reveal}>{children.map((child, index) =>
-        <span key={index} >
-          {React.cloneElement(child, { forceSelection: true })}
-        </span>
-      )}</span>
+      <span className="mask" aria-live="assertive" aria-hidden={!reveal}>
+        <Icon style={{
+          color: '#6ACB72',
+          position: 'absolute',
+          transform: 'translate(4px, 4px)',
+          visibility: reveal ? 'hidden' : 'visible',
+        }}
+          icon="caret-down" iconSize={14} />
+        {children.map((child, index) =>
+          <span key={index}>
+            {React.cloneElement(child, { forceSelection: true })}
+          </span>
+        )}</span>
     </a>
   )
 }
@@ -66,3 +74,4 @@ const RevealableEntity = connect(
 )(RevealableComponent)
 
 export default RevealableEntity
+
