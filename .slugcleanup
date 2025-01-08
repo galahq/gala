@@ -3,7 +3,6 @@ test/
 spec/
 features/
 log/
-tmp/
 coverage/
 doc/
 
@@ -13,9 +12,6 @@ doc/
 .env.*
 *.sqlite3
 *.swp
-
-# Exclude non-essential assets
-node_modules/
 
 # Exclude documentation and unnecessary files
 README.md
@@ -37,6 +33,8 @@ README.md
 
 /var/lib/apt/lists/*
 /var/cache/apt/archives
- ~/.bundle/
-/usr/local/bundle/ruby/*/cache
-/usr/local/bundle/ruby/*/bundler/gems/*/.git 
+
+/usr/lib/python3.10
+/usr/lib/python3.10/*
+/usr/lib/perl
+/usr/lib/perl/*
