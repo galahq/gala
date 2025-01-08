@@ -2,9 +2,7 @@
 
 source 'https://rubygems.org'
 
-#ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
-
-ruby '3.1.6'
+ruby file: '.ruby-version' # 3.2.6 on debian 12, ubuntu 22, heroku-22
 
 gem 'rails', '~> 7.0'
 
@@ -51,7 +49,7 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility' #, '1.2.9' # https://github.com/shioyama/mobility/issues/666
+gem 'mobility' # , '1.2.9' # https://github.com/shioyama/mobility/issues/666
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.13'

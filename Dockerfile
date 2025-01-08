@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-FROM registry.docker.com/library/ruby:3.1.6-bookworm AS builder
+FROM registry.docker.com/library/ruby:3.2.6-bookworm AS builder
 
 WORKDIR /gala
 
