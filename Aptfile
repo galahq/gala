@@ -1,7 +1,0 @@
-libvips-dev
-libjemalloc2
-https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
-fontconfig
-libxrender1
-libxext6
-xfonts-75dpi
