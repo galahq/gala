@@ -19,8 +19,10 @@ gem 'puma', '>= 5.6.9'
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
-#gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
+
+# heroku binary helpers
 gem 'wkhtmltopdf-heroku', '3.0.0'
+#gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
 
 # Models
 gem 'active_storage_validations'
