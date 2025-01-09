@@ -23,7 +23,7 @@ checks:
 plugins:
   rubocop:
     enabled: true
-    channel: "rubocop-1-24"  # ruby 3.1.6 support
+    channel: "rubocop-1-24"  # ruby 3.2.6 support
   eslint:
     enabled: true
 exclude_patterns:

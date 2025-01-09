@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.1.6 on debian 12, ubuntu 22, heroku-22
+ruby file: '.ruby-version' # 3.2.6
 
 gem 'rails', '~> 7.0'
 
@@ -11,15 +11,14 @@ gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'connection_pool'
 gem 'image_processing'
-gem 'pg', '>= 1.1', '< 2.0'
-gem 'puma', '>= 5.6.9'
+gem 'pg'
+gem 'puma'
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
 
 # heroku binary helpers
 gem 'wkhtmltopdf-heroku', '3.0.0'
-#gem 'wkhtmltopdf-binary' # easiest way to install `wkhtmltopdf` on heroku
 
 # Models
 gem 'active_storage_validations'
@@ -51,7 +50,7 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility' #, '1.2.9' # https://github.com/shioyama/mobility/issues/666
+gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
 gem 'active_model_serializers', '0.10.13'

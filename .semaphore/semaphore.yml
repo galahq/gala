@@ -12,7 +12,7 @@ blocks:
           commands:
             - checkout
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
-            - sem-version ruby 3.1.6
+            - sem-version ruby 3.2.6
             - sudo apt update
             - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev
             - bundle install --deployment -j 4 --path vendor/bundle
@@ -34,7 +34,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - sem-version ruby 3.1.6
+          - sem-version ruby 3.2.6
           - sem-version node 12.5.0
           - sem-service start postgres
           - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'

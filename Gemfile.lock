@@ -660,11 +660,11 @@ DEPENDENCIES
   omniauth-lti!
   opengraph_parser
   pdfkit (>= 0.8.7.2)
-  pg (>= 1.1, < 2.0)
+  pg
   pry (~> 0.14.1)
   pry-byebug
   pry-rails
-  puma (>= 5.6.9)
+  puma
   pundit
   rack-canonical-host
   rack-mini-profiler
