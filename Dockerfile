@@ -13,8 +13,8 @@ ENV BUNDLE_DEPLOYMENT="true" \
     RAILS_SERVE_STATIC_FILES="true"
 
 # install builder dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget gnupg2 build-essential curl python3 \
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+    wget gnupg2 build-essential curl python3 wkhtmltopdf \
     libvips git pkg-config libpq-dev libjemalloc-dev lsb-release zlib1g-dev \
     && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
     && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \

@@ -17,9 +17,6 @@ gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
 
-# heroku binary helpers
-gem 'wkhtmltopdf-heroku', '3.0.0'
-
 # Models
 gem 'active_storage_validations'
 gem 'acts_as_list'

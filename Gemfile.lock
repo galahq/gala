@@ -591,7 +591,6 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    wkhtmltopdf-heroku (3.0.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.24)
@@ -699,7 +698,6 @@ DEPENDENCIES
   web-console (>= 4.1.0)
   webdrivers
   webpacker (~> 5.4)
-  wkhtmltopdf-heroku (= 3.0.0)
   yard
   yard-activerecord
   yard-activesupport-concern
