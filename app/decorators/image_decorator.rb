@@ -2,13 +2,15 @@
 
 # Optimize, resize, and prepare urls for attached images
 class ImageDecorator < ApplicationDecorator
-  BLUE_PIXEL =
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU' \
-    'lEQVR42mNceOhRPQAHFwLGnBKLQwAAAABJRU5ErkJggg== '
+  BLUE_PIXEL = <<~ENCODING.gsub(/\s+/, '')
+    data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU
+    lEQVR42mNceOhRPQAHFwLGnBKLQwAAAABJRU5ErkJggg==
+  ENCODING
 
-  RED_PIXEL =
-    'data:image/png;base64,iVBORw0KGgoAAAEAAAABCAYAAAFoEvQfAAAABG' \
-    'dBTUEAALGPC/xhBQAAAA1JREFUCB1juOtg/x8ABbYCXHCMAk8AAAAASUVORK5CYII='
+  RED_PIXEL = <<~ENCODING.gsub(/\s+/, '')
+    data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAFoEvQfAAAABG
+    dBTUEAALGPC/xhBQAAAA1JREFUCB1juOtg/x8ABbYCXHCMAk8AAAAASUVORK5CYII=
+  ENCODING
 
   def resized_path(**options)
     return BLUE_PIXEL unless attached?
@@ -46,7 +48,12 @@ class ImageDecorator < ApplicationDecorator
 
   def jpeg_optimizations
     base_optimizations
-      .merge(saver: { strip: true, quality: 85, interlace: true })
+      .merge(saver: {
+               'sampling-factor': 4,
+               quality: 85,
+               colorspace: 'sRGB',
+               interlace: 'line'
+             })
   end
 
   def base_optimizations
@@ -63,6 +70,6 @@ class ImageDecorator < ApplicationDecorator
   def jpeg?
     return false unless attached?
 
-    content_type.include? 'jpeg'
+    content_type.include?('jpeg')
   end
 end

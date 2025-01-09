@@ -23,7 +23,7 @@ checks:
 plugins:
   rubocop:
     enabled: true
-    channel: "rubocop-1-24"  # ruby 3.2.6 support
+    channel: "rubocop-1-56-3"  # https://github.com/codeclimate/codeclimate-rubocop/tree/channel/rubocop-1-56-3
   eslint:
     enabled: true
 exclude_patterns:
