@@ -17,7 +17,7 @@
       window.i18n = { locale: '<%=I18n.locale%>' }
     <% end %>
 
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
+    <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
     <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
     <%= javascript_pack_tag 'runtime' %>
     <%= javascript_pack_tag 'vendor' %>
