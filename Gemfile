@@ -120,6 +120,7 @@ group :development, :test do
   # console
   gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
+  gem 'pry', '~> 0.14.1'
 
   gem 'capybara'
   gem 'dotenv-rails'
