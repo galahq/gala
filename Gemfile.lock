@@ -101,7 +101,7 @@ GEM
       activesupport (>= 6.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    administrate (0.17.0)
+    administrate (0.15.0)
       actionpack (>= 5.0)
       actionview (>= 5.0)
       activerecord (>= 5.0)
@@ -609,7 +609,7 @@ DEPENDENCIES
   active_model_serializers (= 0.10.13)
   active_storage_validations
   acts_as_list
-  administrate (~> 0.17.0)
+  administrate
   administrate-field-active_storage
   ahoy_matey
   awesome_print
