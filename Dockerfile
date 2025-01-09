@@ -56,8 +56,8 @@ ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # precompile the app directory if not in development
 RUN if [ "$RAILS_ENV" != "development" ]; then \
+    export DATABASE_URL=postgresql://placeholder/placeholder; \
     bundle exec bootsnap precompile app/; \
-    DATABASE_URL=postgresql://placeholder/placeholder \
     bundle exec rails assets:precompile; \
     fi
 
