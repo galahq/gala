@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   web:
-    image: gala_web_sidekiq_heroku22:latest
+    image: gala_web_sidekiq_heroku20:latest
     build:
-      dockerfile: Dockerfile.heroku22
+      dockerfile: Dockerfile
       context: .
       args:
         rails_env: development

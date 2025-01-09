@@ -5,6 +5,8 @@ RAILS_ENV="${RAILS_ENV:-development}"
 # Enable jemalloc for reduced memory usage and latency.
 if [ -f /usr/lib/*/libjemalloc.so.2 ]; then
   export LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2) $LD_PRELOAD"
+  export MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true,stats_print:true"
+  export RUBY_YJIT_ENABLE="1"
 fi
 
 if [ "$RAILS_ENV" = "development" ]; then
