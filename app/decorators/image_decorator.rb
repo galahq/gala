@@ -29,8 +29,9 @@ class ImageDecorator < ApplicationDecorator
 
   private
 
-  def resized(width: nil, height: nil, **options)
+  def resized(width: nil, height: nil, sharpen: nil, **options)
     transforms = resize_options(width, height).merge(options).merge(optimizations)
+    transforms[:sharpen] = { sigma: sharpen } if sharpen
     variant(transforms)
   end
 
