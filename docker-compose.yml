@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   web:
     image: gala_ruby3-2_rails7-0_bookworm:latest

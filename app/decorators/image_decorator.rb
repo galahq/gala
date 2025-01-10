@@ -49,7 +49,7 @@ class ImageDecorator < ApplicationDecorator
   def jpeg_optimizations
     base_optimizations
       .merge(saver: {
-               'sampling-factor': 4,
+               'sampling-factor': '4:2:0',
                quality: 85,
                colorspace: 'sRGB',
                interlace: 'line'
@@ -60,11 +60,11 @@ class ImageDecorator < ApplicationDecorator
     { saver: { strip: true } }
   end
 
-  def resize_options(width, height)
+  def resize_options(width, height = nil)
     return {} if width.blank?
 
     height ||= width
-    { resize_to_limit: [width, height] }
+    { resize_to_limit: [width.to_i, height.to_i] }
   end
 
   def jpeg?
