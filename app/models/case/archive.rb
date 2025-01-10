@@ -7,7 +7,7 @@ class Case
     has_one_attached :pdf
 
     def needs_refresh?
-      updated_at.before?(self.case.updated_at)
+      updated_at.before?(self.case.max_updated_at)
     end
 
     # The archive is fresh if the PDF is ready to be downloaded. It can be
