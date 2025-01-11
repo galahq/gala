@@ -39,7 +39,9 @@ Rails.application.routes.draw do
 
     resources :announcements
     resources :answers
-    resources :cases
+    resources :cases do
+      post 'copy', on: :member
+    end
     resources :comment_threads
     resources :comments
     resources :deployments
@@ -234,5 +236,4 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  post 'admin/cases/:slug/copy', to: 'admin/cases#copy', as: 'copy_admin_case'
 end

@@ -3,18 +3,16 @@
 module Admin
   class CasesController < Admin::ApplicationController
 
-
     def copy
-      current_case = find_resource(params[:id])
-      @case = CaseCloneJob.perform_now current_case, locale: current_case.locale
-      redirect_to admin_case_path @case, case_locale: @case.locale
+      kase = find_resource(params[:id])
+      @case = CaseCloneJob.perform_now(kase, locale: kase.locale)
+      @case = @case.to_record
+      redirect_to admin_case_path(@case)
     end
-
-
-    private
 
     def find_resource(param)
-      Case.friendly.find param
+      Case.friendly.find(param)
     end
+
   end
 end
