@@ -2,8 +2,8 @@ version: v1.0
 name: Continuous Integration
 agent:
   machine:
-    type: e2-standard-2
-    os_image: ubuntu2204
+    type: e1-standard-2
+    os_image: ubuntu2004
 blocks:
   - name: Setup
     task:
@@ -12,9 +12,9 @@ blocks:
           commands:
             - checkout
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
-            - sem-version ruby 3.2.6
+            - sem-version ruby 2.7.6
             - sudo apt update
-            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev
+            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev
             - bundle install --deployment -j 4 --path vendor/bundle
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
         - name: yarn
@@ -34,23 +34,22 @@ blocks:
       prologue:
         commands:
           - checkout
-          - sem-version ruby 3.2.6
+          - sem-version ruby 2.7.6
           - sem-version node 12.5.0
           - sem-service start postgres
           - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
           - 'cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master'
           - bundle install --deployment --path vendor/bundle
           - cat /dev/null > config/database.yml
-          - bundle pristine puma
-          - bundle exec rake db:setup
-          - bundle exec rake db:test:prepare
+          - 'bundle exec rake db:setup'
+          - 'bundle exec rake db:test:prepare'
       jobs:
         - name: Jest
           commands:
             - yarn test
         - name: FactoryBot Lint
           commands:
-            - bundle exec rake factory_bot:lint
+            - 'bundle exec rake factory_bot:lint RAILS_ENV=''test'''
         - name: RSpec - unit tests
           commands:
-            - bundle exec rake test:unit
+            - bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
