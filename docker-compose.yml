@@ -14,7 +14,7 @@ services:
       RAILS_ENV: development
       RAILS_LOG_TO_STDOUT: true
       RAILS_SERVE_STATIC_FILES: true
-      WEB_CONCURRENCY: 1
+      WEB_CONCURRENCY: 2
       SIDEKIQ_CONCURRENCY: 1
       SKYLIGHT_DISABLE_DEV_WARNING: true
       DOCKER_DEV: true
@@ -43,6 +43,8 @@ services:
     image: redis:7
     ports:
       - 6379:6379
+    volumes:
+      - /null
 volumes:
   db_data:
   node_modules:

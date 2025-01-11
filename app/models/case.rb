@@ -85,7 +85,7 @@ class Case < ApplicationRecord
   after_save -> {
     update_columns translation_base_id: id if translation_base_id.blank?
   }
-  after_commit -> { RefreshIndicesJob.perform_later }, on: %i[create destroy]
+  after_commit -> { RefreshIndicesJob.perform_later }, on: %i[update destroy]
 
   validates :cover_image, size: { less_than: 2.megabytes,
                                   message: 'cannot be larger than 2 MB' },

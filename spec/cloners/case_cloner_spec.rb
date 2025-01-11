@@ -44,16 +44,22 @@ RSpec.describe CaseCloner, type: :cloner do
     expect(table_of_contents(clone)).to eq table_of_contents kase
 
     expect(clone.edgenotes.map(&:slug)).not_to eq kase.edgenotes.map(&:slug)
-    expect(clone.edgenotes.map(&:website_url).to_set)
-      .to eq kase.edgenotes.map(&:website_url).to_set
+
+    # Create a hash of website_urls to compare instead of relying on order
+    source_urls = kase.edgenotes.map(&:website_url).sort
+    cloned_urls = clone.edgenotes.map(&:website_url).sort
+    expect(cloned_urls).to eq source_urls
 
     expect(first_card(clone).paragraphs).to eq first_card(kase).paragraphs
     expect(first_card(clone).case).to eq clone
 
     # Ensure Edgenote objects are cloned and attached properly
     expect(clone.edgenotes.count).to eq kase.edgenotes.count
-    clone.edgenotes.each_with_index do |edgenote, index|
-      expect(edgenote.website_url).to eq kase.edgenotes[index].website_url
+
+    # Compare edgenotes by matching their website_urls
+    kase.edgenotes.each do |source_edgenote|
+      matching_clone = clone.edgenotes.find { |e| e.website_url == source_edgenote.website_url }
+      expect(matching_clone).to be_present
     end
   end
 

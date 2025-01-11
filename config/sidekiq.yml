@@ -1,21 +1,8 @@
 ---
 :concurrency: <%= ENV['SIDEKIQ_CONCURRENCY'] || 5 %>
-:verbose: false
-:timeout: 30
-:max_retries: 5
-:dead_max_jobs_saved: 10000
-:dead_timeout: 180
-:poll_interval: 15
 :queues:
   - active_storage_analysis
   - active_storage_purge
   - ahoy
   - default
   - mailers
-:schedule:
-  RefreshIndicesJob:
-    cron: "*/15 * * * *"
-    class: RefreshIndicesJob
-    queue: low
-    description: "Rebuild `cases_search_index` materialized view"
-
