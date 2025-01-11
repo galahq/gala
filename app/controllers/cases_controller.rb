@@ -91,8 +91,9 @@ class CasesController < ApplicationController
     redirect_to my_cases_path, notice: successfully_destroyed
   end
 
+  # @route [GET] `/cases/slug/copy`
   def copy
-    current_case = case_for_copy(params[:id])
+    current_case = Case.friendly.find(slug)
     CaseCloneJob.perform_later current_case, locale: current_case.locale
     redirect_to my_cases_path, notice: successfully_copied
   end
@@ -103,10 +104,6 @@ class CasesController < ApplicationController
   def set_case
     @case = Case.friendly.includes(*CASE_EAGER_LOADING_CONFIG)
                 .find(slug).decorate
-  end
-
-  def case_for_copy(id)
-          Case.friendly.find id
   end
 
   def slug

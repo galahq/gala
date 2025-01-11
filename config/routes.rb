@@ -75,7 +75,7 @@ Rails.application.routes.draw do
 
   resources :case_elements, only: %i[update]
 
-  get 'cases/:id/copy', to: "cases#copy", as: 'copy_case'
+  get 'cases/:slug/copy', to: 'cases#copy', as: 'copy_case'
 
   resources :cases, only: %i[index show create edit update destroy],
                     param: :slug do
@@ -234,6 +234,5 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  post 'admin/cases/:id/copy', to: "admin/cases#copy", as: 'copy_admin_case'
-
+  post 'admin/cases/:slug/copy', to: 'admin/cases#copy', as: 'copy_admin_case'
 end

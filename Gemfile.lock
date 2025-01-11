@@ -219,7 +219,6 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.17.1)
-    ffi (1.17.1-x86_64-darwin)
     flamegraph (0.9.5)
     foreman (0.87.0)
     formatador (1.1.0)
@@ -344,8 +343,6 @@ GEM
     nio4r (2.7.4)
     nokogiri (1.18.1)
       mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-darwin)
       racc (~> 1.4)
     notiffany (0.1.3)
       nenv (~> 0.1)
@@ -546,7 +543,6 @@ GEM
       sprockets (>= 3.0.0)
     sqlite3 (1.6.9)
       mini_portile2 (~> 2.8.0)
-    sqlite3 (1.6.9-x86_64-darwin)
     stackprof (0.2.15)
     table_print (1.5.6)
     temple (0.10.3)
@@ -599,7 +595,6 @@ GEM
 
 PLATFORMS
   ruby
-  x86_64-darwin-19
 
 DEPENDENCIES
   active_model_serializers (= 0.10.13)
