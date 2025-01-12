@@ -22,8 +22,8 @@ blocks:
             
             # Setup Ruby
             - sem-version ruby 3.2.6
-            - gem update --system 3.3.22
-            - gem install bundler:2.4.19
+            - gem update --system 3.3.22 --no-document
+            - gem install bundler:2.4.19 --no-document
             
             # Install system dependencies
             - sudo apt-get update
@@ -58,11 +58,11 @@ blocks:
           - cat /dev/null > config/database.yml
           - bundle exec rake db:drop db:create db:schema:load
           - bundle exec rake db:test:prepare
-          - bundle exec rails assets:precompile
           
       jobs:
         - name: RSpec & Jest
           commands:
+            - bundle exec rails assets:precompile
             - bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb" --format progress --color
             - yarn test
             
