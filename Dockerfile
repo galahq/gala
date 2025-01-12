@@ -36,7 +36,7 @@ RUN mkdir -p $NVM_DIR \
     && yarn install --check-files
 
 # install gems
-RUN echo "gem: --no-document" /etc/gemrc \
+RUN echo "gem: --no-document" > /etc/gemrc \
     && gem update --system 3.3.22 \
     && gem install bundler:2.4.19 \
     && bundle install --jobs 20 --retry 2 \

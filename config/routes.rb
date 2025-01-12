@@ -91,8 +91,6 @@ Rails.application.routes.draw do
     get 'confirm_deletion', to: 'cases/deletions#new'
     post 'confirm_deletion', to: 'cases/deletions#create'
 
-    # get 'copy', to: 'cases#copy'
-
     resources :edgenotes, only: %i[create]
 
     resources :editorships, only: %i[new create]
@@ -124,9 +122,9 @@ Rails.application.routes.draw do
   end
 
   scope 'cases' do
-    get ':case_slug/*react_router_location',
+    get ':case_slug(/:react_router_location)',
         to: 'cases#show', format: false,
-        react_router_location: REACT_ROUTER_LOCATION_REGEX
+        constraints: { react_router_location: REACT_ROUTER_LOCATION_REGEX }
   end
 
   namespace 'catalog' do

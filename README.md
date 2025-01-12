@@ -21,7 +21,7 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 
 1. `rbenv install 2.7.6`
 2. `rbenv shell 2.7.6`
-3. `gem install bundler`
+3. `gem install bundler -v 2.4.19`
 4. `bundle install`
 
 #### Using nodenv

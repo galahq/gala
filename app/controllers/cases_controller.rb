@@ -22,6 +22,9 @@ class CasesController < ApplicationController
   ].freeze
 
   before_action :authenticate_reader!, except: %i[index show]
+  before_action :validate_react_router_location,
+                only: %i[show],
+                if: -> { params[:react_router_location].present? }
   before_action :set_case, only: %i[show edit update destroy]
   before_action -> { verify_lock_on @case }, only: %i[update destroy]
 
@@ -98,6 +101,15 @@ class CasesController < ApplicationController
   end
 
   private
+
+  # Validates the case path.
+  #
+  # Example:
+  # * Valid URL: /cases/valid-case/1
+  # * Invalid URL: /cases/valid-case/1/3/2/11/6/4/3/2/13/15
+  def validate_react_router_location
+    redirect_to '/404' if params[:react_router_location].split('/').size > 1
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_case

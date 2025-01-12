@@ -78,7 +78,6 @@ export const Element = ({
   wide
 }: ElementProps) => {
   const ElementContainer = href == null ? CaseRow : CaseLinkRow
-  console.log(wide)
   return (
     <ElementContainer href={href} className={className}>
       {images ? <ElementImages srcs={images} /> : <ElementImage src={image} wide={wide} />}
