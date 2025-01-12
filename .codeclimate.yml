@@ -22,8 +22,8 @@ checks:
     enabled: false
 plugins:
   rubocop:
-    enabled: true
-    channel: "rubocop-1-24"
+    enabled: true 
+    channel: "rubocop-1-69"
   eslint:
     enabled: true
 exclude_patterns:
