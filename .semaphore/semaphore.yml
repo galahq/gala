@@ -14,9 +14,12 @@ blocks:
             - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
             - sem-version ruby 3.2.6
             - sudo apt update
-            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev
-            - bundle config --delete deployment
-            - bundle install --jobs 4 --path vendor/bundle
+            - bundle config build.nokogiri --use-system-libraries
+            - bundle config build.ffi --enable-system-libffi
+            - bundle config --local deployment true
+            - bundle config --local path vendor/bundle
+            - bundle install -j 4
+            - bundle clean --force
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
         - name: yarn
           commands:
@@ -40,8 +43,14 @@ blocks:
           - sem-service start postgres
           - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
           - 'cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master'
-          - bundle install --jobs 4 --path vendor/bundle
+          - bundle config --local deployment true
+          - bundle config --local path vendor/bundle
+          - bundle install -j 4
           - cat /dev/null > config/database.yml
+          - bundle pristine nokogiri
+          - bundle pristine ffi
+          - bundle pristine bootsnap
+          - bundle pristine puma
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
       jobs:
