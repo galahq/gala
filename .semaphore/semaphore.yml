@@ -11,8 +11,6 @@ global_job_config:
       value: test
     - name: DATABASE_URL
       value: 'postgresql://postgres@localhost/test?encoding=utf8'
-    - name: PGVERSION
-      value: '16.4'
 
 blocks:
   - name: Setup
@@ -29,16 +27,8 @@ blocks:
             
             # Install system dependencies
             - sudo apt-get update
-            - sudo apt-get install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev wkhtmltopdf postgresql-common
-            
-            # Setup Postgres 16
-            - sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-            - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-            - sudo apt-get update
-            - sudo apt-get install -y postgresql-16 postgresql-client-16
-            - sudo systemctl start postgresql
-            - sudo -u postgres createuser --superuser $USER
-            
+            - sudo apt-get install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev postgresql-common
+
             # Bundle install with caching
             - BUNDLE_JOBS=4
             - BUNDLE_RETRY=3
@@ -61,13 +51,14 @@ blocks:
           - checkout
           - sem-version ruby 3.2.6
           - sem-version node 12.5.0
+          - sem-service start postgres
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)
           - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)
           - bundle install --deployment --path vendor/bundle
-          - sudo systemctl start postgresql
-          
-          # Database setup
+          - cat /dev/null > config/database.yml
           - bundle exec rake db:drop db:create db:schema:load
+          - bundle exec rake db:test:prepare
+          - bundle exec rails assets:precompile
           
       jobs:
         - name: RSpec & Jest
