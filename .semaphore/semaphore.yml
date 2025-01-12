@@ -2,133 +2,79 @@ version: v1.0
 name: Continuous Integration
 agent:
   machine:
-    type: e2-standard-2
+    type: e1-standard-2
     os_image: ubuntu2204
 
 global_job_config:
-  prologue:
-    commands:
-      - checkout
-      - sem-version ruby 3.2.6
+  env_vars:
+    - name: RAILS_ENV
+      value: test
+    - name: DATABASE_URL
+      value: 'postgresql://postgres@localhost/test?encoding=utf8'
+    - name: PGVERSION
+      value: '16.4'
 
 blocks:
   - name: Setup
-    dependencies: []
     task:
       jobs:
-        - name: bundle
+        - name: Bundle & Yarn
           commands:
-            # Cache keys for dependencies
-            - export BUNDLE_PATH=vendor/bundle
-            - export GEM_CACHE_KEY="gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)"
-            - export GEM_CACHE_FALLBACK="gems-$SEMAPHORE_GIT_BRANCH-,gems-main-"
+            - checkout
             
-            # Restore cache in order of specificity
-            - cache restore $GEM_CACHE_KEY
-            - cache restore $GEM_CACHE_FALLBACK
+            # Setup Ruby
+            - sem-version ruby 3.2.6
+            - gem update --system 3.3.22
+            - gem install bundler:2.4.19
             
-            # Setup PostgreSQL 16
+            # Install system dependencies
+            - sudo apt-get update
+            - sudo apt-get install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev wkhtmltopdf postgresql-common
+            
+            # Setup Postgres 16
             - sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
             - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-            - sudo apt update
+            - sudo apt-get update
+            - sudo apt-get install -y postgresql-16 postgresql-client-16
+            - sudo systemctl start postgresql
+            - sudo -u postgres createuser --superuser $USER
             
-            # Bundle configuration
-            - bundle config build.nokogiri --use-system-libraries
-            - bundle config build.ffi --enable-system-libffi
-            - bundle config --local deployment true
-            - bundle config --local path $BUNDLE_PATH
+            # Bundle install with caching
+            - BUNDLE_JOBS=4
+            - BUNDLE_RETRY=3
+            - bundle config set deployment true
+            - bundle config set path vendor/bundle
+            - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)
+            - bundle install
+            - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
             
-            # Install and cache gems
-            - bundle install -j 4
-            - bundle clean --force
-            - cache store $GEM_CACHE_KEY $BUNDLE_PATH
-
-        - name: yarn
-          commands:
-            # Cache keys for node modules
-            - export NODE_MODULES_CACHE_KEY="node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)"
-            - export NODE_MODULES_CACHE_FALLBACK="node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-main"
-            
-            # Restore cache in order of specificity
-            - cache restore $NODE_MODULES_CACHE_KEY
-            - cache restore $NODE_MODULES_CACHE_FALLBACK
-            
-            # Install node and dependencies
+            # Yarn install with caching
             - sem-version node 12.5.0
-            - yarn install --ignore-engines --frozen-lockfile
-            
-            # Store cache
-            - cache store $NODE_MODULES_CACHE_KEY node_modules
+            - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)
+            - yarn install --ignore-engines
+            - cache store node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock) node_modules
 
   - name: Tests
-    dependencies: ["Setup"]
     task:
-      env_vars:
-        - name: DATABASE_URL
-          value: 'postgresql://postgres@localhost/test?encoding=utf8'
-        - name: RAILS_ENV
-          value: test
-        - name: RAILS_LOG_LEVEL
-          value: debug
-        - name: DISABLE_DATABASE_ENVIRONMENT_CHECK
-          value: '1'
-        - name: PGVERSION
-          value: '16.4'
-        - name: BUNDLE_PATH
-          value: vendor/bundle
-      
       prologue:
         commands:
+          - checkout
           - sem-version ruby 3.2.6
           - sem-version node 12.5.0
-          
-          # Restore caches
-          - cache restore "gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)"
-          - cache restore "node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)"
-          
-          # Start and verify PostgreSQL
-          - sem-service start postgres 16
-          - sudo -u postgres psql -c "SELECT version();"
-          - sudo -u postgres psql -c "SHOW max_connections;"
-          - sudo -u postgres psql -c "SHOW shared_buffers;"
-          - pg_isready -h localhost
-          
-          # Bundle setup
-          - bundle config --local deployment true
-          - bundle config --local path $BUNDLE_PATH
-          - bundle install -j 4
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)
+          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)
+          - bundle install --deployment --path vendor/bundle
+          - sudo systemctl start postgresql
           
           # Database setup
-          - cat /dev/null > config/database.yml
-          - |
-            echo "
-            test:
-              adapter: postgresql
-              encoding: unicode
-              pool: 5
-              database: test
-              username: postgres
-              host: localhost
-            " > config/database.yml
+          - bundle exec rake db:drop db:create db:schema:load
           
-          # Rebuild native extensions
-          - bundle pristine nokogiri ffi bootsnap puma
-          
-          # Database preparation with timeouts
-          - timeout 300 bundle exec rake db:drop db:create --trace
-          - timeout 300 bundle exec rake db:schema:load --trace
-          - timeout 300 bundle exec rake db:seed --trace
-          - bundle exec rake db:test:prepare
-
       jobs:
-        - name: Jest
+        - name: RSpec & Jest
           commands:
+            - bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb" --format progress --color
             - yarn test
-        
-        - name: FactoryBot Lint
+            
+        - name: Factory Bot Lint
           commands:
             - bundle exec rake factory_bot:lint
-        
-        - name: RSpec - unit tests
-          commands:
-            - bundle exec rake test:unit
