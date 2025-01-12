@@ -75,7 +75,7 @@ to display a collection of resources in an HTML table.
         <% if valid_action? :copy, collection_presenter.resource_name %>
           <td><%= link_to(
             t("administrate.actions.copy"),
-            copy_admin_case_path(resource),
+            [:copy, namespace, resource],
             method: :post,
             class: "action-copy",
             data: { confirm: t("administrate.actions.confirm.copy") }

@@ -11,7 +11,6 @@ services:
     environment:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/0
-      RAILS_ENV: development
       RAILS_LOG_TO_STDOUT: true
       RAILS_SERVE_STATIC_FILES: true
       WEB_CONCURRENCY: 2
@@ -19,6 +18,7 @@ services:
       SKYLIGHT_DISABLE_DEV_WARNING: true
       DOCKER_DEV: true
       BASE_URL: http://localhost:3000
+      PORT: 3000
     ports:
       - 3000:3000
       - 3035:3035
@@ -43,8 +43,6 @@ services:
     image: redis:7
     ports:
       - 6379:6379
-    volumes:
-      - /null
 volumes:
   db_data:
   node_modules:
