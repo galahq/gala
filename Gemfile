@@ -71,7 +71,7 @@ gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
 gem 'webpacker', '~> 5.4'
 
 # Logging and Monitoring
-gem 'administrate'
+gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'lograge'
