@@ -10,8 +10,10 @@ class Podcast < ApplicationRecord
   include Lockable
   include Trackable
 
+  # @!method card
+  #   @api private
+  #   Prefer {cards}
   has_one :card, as: :element, dependent: :destroy, required: true
-  has_many :cards, as: :element, dependent: :destroy
 
   has_one_attached :artwork
   has_one_attached :audio
@@ -20,6 +22,10 @@ class Podcast < ApplicationRecord
 
   validates :artwork, content_type: { in: %w[image/png image/jpeg],
                                       message: 'must be JPEG or PNG' }
+
+  def cards
+    [card]
+  end
 
   def credits_list=(credits_list)
     self.credits = if credits_list.is_a?(CreditsList)
@@ -31,7 +37,12 @@ class Podcast < ApplicationRecord
 
   def credits_list
     if credits
-      CreditsList.new(YAML.load(credits))
+      raw_credits = YAML.safe_load(credits,
+                                   permitted_classes: [
+                                     Symbol,
+                                     ActiveSupport::HashWithIndifferentAccess
+                                   ])
+      CreditsList.new(raw_credits)
     else
       CreditsList.new
     end
