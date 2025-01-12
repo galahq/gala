@@ -2,7 +2,7 @@
 
 module.exports = {
   modulePathIgnorePatterns: [
-    '<rootDir>/vendor/'
+    '<rootDir>/vendor/',
   ],
   moduleFileExtensions: ['js', 'jsx', 'json', 'yml'],
   modulePaths: ['<rootDir>/app/javascript'],
