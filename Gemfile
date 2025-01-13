@@ -33,7 +33,8 @@ gem 'devise', '~> 4.8'
 gem 'devise-i18n'
 gem 'ims-lti'
 gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', '0.8.0'
+gem 'omniauth-oauth2', '1.6.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
 gem 'rolify'
@@ -60,6 +61,9 @@ gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
 gem 'redcarpet'
 gem 'rexml'
+
+# wikidata integration
+gem 'sparql-client'
 
 # `galahq/case_grid` is not working and needs an update to fix this error:
 # NoMethodError (undefined method `matte=' for {dimension} DirectClass...

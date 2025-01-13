@@ -23,6 +23,8 @@ module Orchard
 
     config.active_record.schema_format = :sql
 
-    config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
+    unless ENV['SIDEKIQ_CONCURRENCY'].present?
+      config.middleware.use Rack::Deflater
+    end
   end
 end
