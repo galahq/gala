@@ -81,7 +81,6 @@ module Translation
     bgc: 'हरयाणवी',
     hu: 'Magyar Nyelv',
     hne: 'छत्तिसगढी़',
-    ml: 'മലയാളം',
     el: 'Ελληνικά',
     ny: 'Chichewa',
     dcc: 'دکنی',

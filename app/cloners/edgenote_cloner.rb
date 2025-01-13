@@ -2,21 +2,22 @@
 
 # @see Edgenote
 class EdgenoteCloner < Clowne::Cloner
-  include_attached :audio, :image
-  include_associations :link_expansion_visibility
+  include_association :link_expansion_visibility
 
   nullify :slug
 
-  finalize do |_source, record, kase:, **|
+  finalize do |source, record, params|
+    kase = params.fetch(:kase)
     record.case = kase
-    if _source.audio.attached? && _source.audio.blob
-      record.audio.attach(_source.audio.blob)
+
+    if source.audio.attached? && source.audio.blob
+      record.audio.attach(source.audio.blob)
     end
-    if _source.file.attached? && _source.file.blob
-      record.file.attach(_source.file.blob)
+    if source.file.attached? && source.file.blob
+      record.file.attach(source.file.blob)
     end
-    if _source.image.attached? && _source.image.blob
-      record.image.attach(_source.image.blob)
+    if source.image.attached? && source.image.blob
+      record.image.attach(source.image.blob)
     end
     record.save validate: false
   end

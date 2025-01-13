@@ -2,55 +2,70 @@ version: v1.0
 name: Continuous Integration
 agent:
   machine:
-    type: e1-standard-2
-    os_image: ubuntu2004
+    type: e2-standard-2
+    os_image: ubuntu2204
+
+global_job_config:
+  env_vars:
+    - name: RAILS_ENV
+      value: test
+    - name: DATABASE_URL
+      value: 'postgresql://postgres@localhost/test?encoding=utf8'
+
 blocks:
   - name: Setup
     task:
       jobs:
-        - name: bundle
+        - name: Bundle & Yarn
           commands:
             - checkout
-            - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
-            - sem-version ruby 2.7.6
-            - sudo apt update
-            - sudo apt install -y libmagickcore-dev libmagickwand-dev libffi-dev
-            - bundle install --deployment -j 4 --path vendor/bundle
+            
+            # Setup Ruby
+            - sem-version ruby 3.2.6
+            - gem update --system 3.3.22 --no-document
+            - gem install bundler:2.4.19 --no-document
+            
+            # Install system dependencies
+            - sudo apt-get update
+            - sudo apt-get install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev postgresql-common
+
+            # Bundle install with caching
+            - BUNDLE_JOBS=4
+            - BUNDLE_RETRY=3
+            - bundle config set deployment true
+            - bundle config set path vendor/bundle
+            - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)
+            - bundle install
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
-        - name: yarn
-          commands:
-            - checkout
-            - 'cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master'
+            
+            # Yarn install with caching
             - sem-version node 12.5.0
+            - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)
             - yarn install --ignore-engines
             - cache store node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock) node_modules
+
   - name: Tests
     task:
-      env_vars:
-        - name: DATABASE_URL
-          value: 'postgresql://postgres@localhost/test?encoding=utf8'
-        - name: RAILS_ENV
-          value: test
       prologue:
         commands:
           - checkout
-          - sem-version ruby 2.7.6
+          - sem-version ruby 3.2.6
           - sem-version node 12.5.0
           - sem-service start postgres
-          - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-'
-          - 'cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master'
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)
+          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)
           - bundle install --deployment --path vendor/bundle
           - cat /dev/null > config/database.yml
-          - 'bundle exec rake db:setup'
-          - 'bundle exec rake db:test:prepare'
+          - bundle exec rake db:drop db:create db:schema:load
+          - bundle exec rake db:test:prepare
+          
       jobs:
-        - name: Jest
+        - name: RSpec & Jest
           commands:
+            - bundle exec rails assets:precompile
+            - bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb" --format progress --color
             - yarn test
-        - name: FactoryBot Lint
+            
+        - name: Factory Bot Lint
           commands:
-            - 'bundle exec rake factory_bot:lint RAILS_ENV=''test'''
-        - name: RSpec - unit tests
-          commands:
-            - bundle exec rspec --exclude-pattern="**/features/*_spec.rb"
-
+            - bundle exec rake factory_bot:lint

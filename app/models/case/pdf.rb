@@ -3,16 +3,16 @@
 class Case
   # A PDF archive of a case and all its pages, podcasts, and edgenotes
   class Pdf
-    SOURCE_VIEW_PATH = 'cases/show.pdf.erb'
+    SOURCE_VIEW_PATH = 'cases/pdf'
 
     EAGER_LOADING_CONFIG = [
       :cards,
-      edgenotes: [
+      { edgenotes: [
         audio_attachment: :blob,
         file_attachment: :blob,
         image_attachment: :blob
-      ],
-      case_elements: :element
+      ] },
+      { case_elements: :element }
     ].freeze
 
     attr_reader :case_study, :root_url
@@ -29,10 +29,7 @@ class Case
     private
 
     def preload_associations(case_study)
-      ActiveRecord::Associations::Preloader
-        .new.preload(case_study, EAGER_LOADING_CONFIG)
-
-      case_study
+      Case.includes(EAGER_LOADING_CONFIG).find(case_study.id)
     end
 
     def generate_pdf
@@ -42,7 +39,7 @@ class Case
     def html
       renderer.render(
         SOURCE_VIEW_PATH,
-        layout: 'layouts/print.html.erb',
+        layout: 'print',
         assigns: { case: case_study }
       )
     end

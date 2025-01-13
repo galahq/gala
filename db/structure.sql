@@ -68,7 +68,6 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 SET default_tablespace = '';
 
-
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
 --
@@ -146,7 +145,7 @@ CREATE TABLE public.active_storage_blobs (
     content_type character varying,
     metadata text,
     byte_size bigint NOT NULL,
-    checksum character varying NOT NULL,
+    checksum character varying,
     created_at timestamp without time zone NOT NULL,
     service_name character varying NOT NULL
 );
@@ -587,7 +586,7 @@ CREATE TABLE public.comments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     "position" integer,
-    content jsonb DEFAULT '""'::jsonb
+    content jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -616,11 +615,11 @@ ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
 
 CREATE TABLE public.communities (
     id integer NOT NULL,
-    name jsonb,
+    name jsonb DEFAULT '{}'::jsonb,
     group_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description jsonb DEFAULT '""'::jsonb,
+    description jsonb DEFAULT '{}'::jsonb,
     universal boolean DEFAULT false
 );
 
@@ -903,7 +902,7 @@ CREATE TABLE public.groups (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     context_id character varying,
-    name jsonb DEFAULT '""'::jsonb
+    name jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -973,9 +972,9 @@ CREATE TABLE public.libraries (
     foreground_color character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description jsonb,
-    url jsonb,
-    name jsonb,
+    description jsonb DEFAULT '{}'::jsonb,
+    url jsonb DEFAULT '{}'::jsonb,
+    name jsonb DEFAULT '{}'::jsonb,
     cases_count integer DEFAULT 0,
     visible_in_catalog_at timestamp without time zone
 );
@@ -1180,7 +1179,7 @@ CREATE TABLE public.questions (
     options character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    content jsonb DEFAULT '""'::jsonb
+    content jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -1584,7 +1583,7 @@ CREATE TABLE public.tags (
     id bigint NOT NULL,
     category boolean DEFAULT false NOT NULL,
     name character varying NOT NULL,
-    display_name jsonb,
+    display_name jsonb DEFAULT '{}'::jsonb,
     taggings_count integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -1662,6 +1661,43 @@ CREATE SEQUENCE public.visits_id_seq
 --
 
 ALTER SEQUENCE public.visits_id_seq OWNED BY public.visits.id;
+
+
+--
+-- Name: wikidata_links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.wikidata_links (
+    id bigint NOT NULL,
+    record_type character varying NOT NULL,
+    record_id bigint NOT NULL,
+    qid character varying NOT NULL,
+    schema character varying NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    cached_json jsonb DEFAULT '{}'::jsonb,
+    last_synced_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: wikidata_links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wikidata_links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wikidata_links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wikidata_links_id_seq OWNED BY public.wikidata_links.id;
 
 
 --
@@ -1970,6 +2006,13 @@ ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id
 --
 
 ALTER TABLE ONLY public.visits ALTER COLUMN id SET DEFAULT nextval('public.visits_id_seq'::regclass);
+
+
+--
+-- Name: wikidata_links id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata_links ALTER COLUMN id SET DEFAULT nextval('public.wikidata_links_id_seq'::regclass);
 
 
 --
@@ -2357,6 +2400,14 @@ ALTER TABLE ONLY public.tags
 
 ALTER TABLE ONLY public.visits
     ADD CONSTRAINT visits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: wikidata_links wikidata_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata_links
+    ADD CONSTRAINT wikidata_links_pkey PRIMARY KEY (id);
 
 
 --
@@ -3109,6 +3160,13 @@ CREATE UNIQUE INDEX index_visits_on_visit_token ON public.visits USING btree (vi
 
 
 --
+-- Name: index_wikidata_links_on_record_type_and_record_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_wikidata_links_on_record_type_and_record_id ON public.wikidata_links USING btree (record_type, record_id);
+
+
+--
 -- Name: questions fk_rails_0238c45a86; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3670,7 +3728,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230915154708'),
 ('20231011161246'),
 ('20241011080359'),
+('20241120211444'),
 ('20241217024113'),
-('20241217024114');
+('20241217024114'),
+('20250105235632'),
+('20250106003337');
 
 

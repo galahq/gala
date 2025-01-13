@@ -2,9 +2,9 @@
 
 I18n.locale = :en
 
-%i[editor invisible instructor].map { |role| Role.create name: role }
+%i[editor invisible instructor].map { |role| Role.find_or_create_by name: role }
 
-Community.create name: 'CaseLog', universal: true, description: <<~DESCRIPTION
+Community.find_or_create_by name: 'CaseLog', universal: true, description: <<~DESCRIPTION
   CaseLog is a community of practice for instructors teaching with cases on
   Gala. Case studies, like all forms of engaged learning, work best when they’re
   tuned for your specific audience. As you and your teaching team prepare to use

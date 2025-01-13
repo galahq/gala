@@ -9,11 +9,14 @@ RSpec.describe Edgenotes::AttachmentsController do
 
   before do
     data = {
-      io: StringIO.new('Hello world!'),
-      filename: 'hello.txt',
-      content_type: 'text/plain'
+      io: StringIO.new(Base64.decode64(
+                         ImageDecorator::BLUE_PIXEL.split(',')[1]
+                       )),
+      filename: 'image.png',
+      content_type: 'image/png'
     }
-    edgenote.image.attach data
+
+    edgenote.image.attach(data)
 
     sign_in reader
   end

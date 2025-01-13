@@ -16,7 +16,6 @@ class AttachmentsController < ApplicationController
 
   # Define how to find your model
   def self.model(code)
-    private
     define_method :set_model do
       @model = instance_exec(&code)
     end

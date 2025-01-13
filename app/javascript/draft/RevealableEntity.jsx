@@ -39,8 +39,6 @@ function RevealableComponent (props) {
   if (!editInProgress) {
     conditionalProps.tabIndex = 0
   }
-console.log(children[0].props.text)
-console.log(children)
 
   return (
     // eslint-disable-next-line

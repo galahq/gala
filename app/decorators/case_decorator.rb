@@ -16,11 +16,11 @@ class CaseDecorator < ApplicationDecorator
   end
 
   def cover_url(options = { width: 1280, height: 540 })
-    ImageDecorator.decorate(cover_image).resized_path(options)
+    ImageDecorator.decorate(cover_image).resized_path(**options)
   end
 
   def small_cover_url
-    cover_url width: 200, height: 200, sharpen: '0x1'
+    cover_url width: 200, height: 200, sharpen: 1.0
   end
 
   def open_graph_cover_url

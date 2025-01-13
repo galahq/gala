@@ -35,7 +35,7 @@ class DeployCaseService
   end
 
   def enroll_reader_as_instructor
-    Enrollment.upsert enrollment_params
+    Enrollment.upsert(**enrollment_params)
   end
 
   def enrollment_params

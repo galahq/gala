@@ -58,7 +58,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   # Creates a blueprint style file input
   def file_field(method, **kwargs)
     without_field_error_wrapper do
-      with_blueprint_file_input method, kwargs do |options|
+      with_blueprint_file_input method, **kwargs do |options|
         super(method, options)
       end
     end
