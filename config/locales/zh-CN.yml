@@ -1,4 +1,8 @@
 zh-CN:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
   activemodel:
     attributes:
       confirm_deletion_form:
@@ -28,12 +32,15 @@ zh-CN:
         locale: Language
         location: 案例发生地
         published: 已发布
+        summary: Summary
         slug: 案例链接
         teaching_guide: Teaching guide
         title: 探究问题
         translators:
-          js: "翻译："
+          js: "{count, plural, one {Translator} other {Translators} }: "
           other: 翻译
+          one: Translator
+        license: License
       comment:
         attachments: Attachments
       deployment:
@@ -99,11 +106,13 @@ zh-CN:
         remember_me: 记住登录信息
         reset_password_sent_at: 重置密码发送于
         reset_password_token: 密码重置令牌
-        send_reply_notifications: 当有人回复我的评论时，请通知我。
+        send_reply_notifications:
+          - Notify me when someone replies to a comment I wrote
         sign_in_count: 登录次数
         unconfirmed_email: 未确认邮件
         unlock_token: 帐户解锁令牌
         updated_at: 更新于
+        terms_of_service: 'I accept the Terms of Service and Privacy Policy'
       reading_list:
         title: Title
         description: Description
@@ -136,9 +145,11 @@ zh-CN:
       account_settings: Account settings
       activity: 活动
       case: 案例
+      case_library_request: Library request
       cases:
         setting: 案例设置
         feature: 推荐设置
+        library: Library
       comment: 评论
       comment_thread: 评论
       deployment: 案例教学
@@ -167,6 +178,12 @@ zh-CN:
     show:
       download: 下载
       instructions: 说明
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -176,6 +193,16 @@ zh-CN:
       citation_added: |
         注释已添加。单击 <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> 引注标记</span>进行编辑。
+      math_added: Math added.
+      math_instructions: |
+        To add math to your case, select the text you want to turn into a math
+        equation, then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-function"></span> Math</span> button.
+      make_revealable_selection: |
+        Please select the phrase that you would like to make revealable,
+        then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-search-template"></span> Add
+        Revealable</span> button.
       citation_text: Title
       citation_url: URL
       write_something: 添加内容
@@ -185,6 +212,13 @@ zh-CN:
     new:
       untitled: 未命名
   cases:
+    archives:
+      show:
+        overview: Overview
+    libraries:
+      update:
+        created_library_request: >
+          Your request has been sent to the library managers for approval.
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
@@ -232,6 +266,7 @@ zh-CN:
       unfeature_case: 取消设置此案例为明星案例
       unpublish_case: 取消发表该案例
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: 全部案例
       locations: 案例地点
@@ -241,6 +276,9 @@ zh-CN:
       edit:
         change_library: 更换案例库
         change_url: 更改案例链接
+        change_license: Change license
+        change_license_confirmation: Changing your license from All Rights Reserved is irreversible. Are you sure you want to proceed?
+        learn_more_license: Learn more about license options
         edit_case_settings: 编辑案例设置
       featured_form:
         change_featured_time: 更改时间
@@ -260,7 +298,7 @@ zh-CN:
       toc: 目录
   catalog:
     catalog: 案例目录
-    choose_for_yourself: 我的学习我做主
+    create_a_case: Create a Case
     enrollments_instruction: >
       选择一些案例参与学习，在这里将会显示进入你正在学习案例的快捷方式。
     find_a_case: >
@@ -273,17 +311,23 @@ zh-CN:
     innovative_teaching: 创新教学
     join_the_community: >
       从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
-    join_conversation: >
-      参与到案例论坛中，分享你的所学，提出你的疑问，并帮助其他学员共同进步。
     keywords: Keywords
     learn_more: 了解更多
-    meet_stakeholders: >
-      在案例中与不同利益相关者相遇，并通过多媒体学习材料深入了解各种观点。
     my_library: My Library
     natural_resources: Natural Resources
-    open_access_learning_tools: 致力于可持续发展的开源型教学平台
-    propose_a_case: 提出一个案例提案
-    shortcut_experience: 通过案例学习获取将所学知识运用于实践的捷径。
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    welcome_message:
+      about_button_text: About Gala
+      how_button_text: How-to
+      news_button_text: News
+      to_get_started: >
+        {createAccount} to get started, or find a case by searching or browsing below.
+      create_account: Create an account
+      welcome_title: Open tools for collaborative learning
+      welcome_back_title: Welcome back
+      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
+      create_case: create a case
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: 删除整个话题讨论
@@ -291,6 +335,7 @@ zh-CN:
       n_comment_threads:
         js: "{count, number} {count, plural, one {thread} other {threads}}"
         other: "%{count} threads"
+        one: 1 thread
     new:
       new_comment_thread: 发起新的话题讨论
     show:
@@ -314,6 +359,7 @@ zh-CN:
       n_responses:
         js: "{count, number} {count, plural, one {comment} other {comments}}"
         other: "%{count} comments"
+        one: 1 comment
       no_comments: 暂无评论
       nobody_has_left_a_comment: >
         {communityName} 该讨论组中没有人发起关于这个案例的讨论。发起讨论或切换到另一个讨论组。
@@ -508,6 +554,7 @@ zh-CN:
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
       attach_an_image: 加入图片
       attach_a_file: Attach a file
+      attribution: Put an attribution
       choose_audio_file: 选择一个音频文件
       choose_image: 选择图片
       choose_file: Choose file...
@@ -515,11 +562,15 @@ zh-CN:
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
       layout_label: Layout
+      layout_position_label: Position and width
+      layout_elements_label: Preview elements
       layout_options:
         right: Right side (default)
         bottom: Card width
         bottom_full_width: Full width
       paste_a_link: 粘贴链接
+      photo_credit_guidelines: >
+        Add author and license information. [This guide](https://docs.learngala.com/docs/authoring-finding-media) has more about licensing, attribution, and finding copright-free images.
       preview: 侧边注预览
       pull_a_quote: 引用文章或音频选段
       remove: 删除
@@ -571,7 +622,7 @@ zh-CN:
     messages:
       accepted: 必须是可被接受的
       blank: 不能为空字符
-      confirmation: 与确认值不匹配
+      confirmation: doesn’t match %{attribute}
       empty: 不能留空
       equal_to: 必须等于 %{count}
       even: 必须为双数
@@ -633,6 +684,8 @@ zh-CN:
     formatting:
       add_citation_entity: "添加引用"
       add_edgenote_entity: "Add edgenote to selection."
+      add_math_entity: "Add math to selection."
+      add_revealable_entity: "Add revealable to selection."
       blockquote: "Block style: Quotation."
       bold: "Inline style: Bold."
       code: "Inline style: Code."
@@ -701,8 +754,16 @@ zh-CN:
         Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
       delete_library: Delete Library
     edit:
+      library_management: Library Management
       edit_library: Edit Library
       library_managers: Library Managers
+      library_cases: Cases
+      case_library_requests: Requests
+      requested_by: Requested by <b>%{name}</b>
+      no_requests: No requests yet
+      no_cases: No cases yet
+      remove_case_from_library: Remove case from library
+      confirm_remove_case_from_library: Are you sure you want to remove case ’%{name}’ from the library?
     index:
       create_a_new_library: Create a New Library
       libraries: Libraries
@@ -731,6 +792,20 @@ zh-CN:
         Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
       invite_someone_to_manage_this_library: >
         Invite Someone to Manage this Library
+  library_requests:
+    new:
+      pending: <b>%{name}</b> request is pending
+    destroy:
+      remove: Remove request
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+    edit:
+      accept: Accept
+      reject: Reject
+      are_you_sure_accept: >
+        Are you sure you want to accept this request? The case will be added to your library.
+      are_you_sure_reject: >
+        Are you sure you want to reject this request? The case will not be added to your library.
   my_cases:
     index:
       confirm_delete: >
@@ -740,11 +815,14 @@ zh-CN:
       edit_case: 编辑该案例
       edit_case_settings: 编辑案例设置
       featured: 明星
+      learn_more: Learn more
       my_cases: 我的案例
       new_case: 新建案例
       once_youve_created: >
         Once you’ve created a case or been added as a collaborator on someone else’s, you’ll see it here.
       publish_a_case: 发表案例
+      publish_with_a_creative_commons_license: >
+        When you publish a module on Gala you agree to distribute it with a Creative Commons license.
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and embedded assessments. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
       youre_not_authoring_any_cases: You’re not authoring any cases yet
@@ -829,8 +907,9 @@ zh-CN:
       uploadPodcast: Upload Podcast
     show:
       with_host:
-        js: "主持人"
+        js: "with {count, plural, one {host} other {hosts}}"
         other: 主持人
+        one: with host
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
@@ -838,11 +917,13 @@ zh-CN:
       new_quiz: New Quiz
     quiz:
       multiple_choice_questions:
-        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
+        one: "%{count} Multiple Choice Question"
         other: "%{count} Multiple Choice Questions"
+        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
       open_ended_questions:
-        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
+        one: "%{count} Open Ended Question"
         other: "%{count} Open Ended Questions"
+        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
@@ -863,6 +944,11 @@ zh-CN:
         We can show contextual tips about features that are relevant to you.
       you_have_not_created_a_password: >
         因为你首次登陆时使用的是%{provider}，并没有设置密码。你现在可以通过设置密码来用于下次登陆，或者继续使用%{provider}进行登陆。
+    edit_tos:
+      accept_tos: Continue
+      terms_of_service_title: Please read and accept the Gala Terms of Service and Privacy Policy
+      must_accept: You must accept the Terms of Service and Privacy Policy to continue.
+      accepted: You have accepted the Terms of Service and Privacy Policy.
   reading_lists:
     actions:
       sharing_instructions: >
@@ -899,8 +985,8 @@ zh-CN:
     didnt_match: 抱歉，没有找到你所搜索的案例。
     full_text_search: Full text search...
     no_results: 没有可显示的搜索结果
-    propose_a_case: >
-      或者，如果你有希望收入到Gala的案例，或关于案例的设想，请与我们联系。让我们一起为环境和可持续发展领域提供更多更有效的学习资源。
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: 细化搜索
     results: 搜索结果
     search: 搜索
@@ -913,6 +999,8 @@ zh-CN:
       Invite another Gala user to work with you on your case by clicking here.
     add_edgenote: >
       Attach a media resource by linking an Edgenote to the text.
+    add_revealable: >
+      Attach revealable text.
     add_quiz: >
       You can administer a comprehension quiz at the end of the case, and optionally pair it with an identical pretest.
     caselog: >
