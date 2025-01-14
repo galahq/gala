@@ -1,8 +1,8 @@
 services:
   web:
-    image: gala_ruby3-2_rails7-0_bookworm:latest
+    image: gala_ruby3-2_rails7-0_heroku22:latest
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.heroku22
       context: .
       args:
         rails_env: development
