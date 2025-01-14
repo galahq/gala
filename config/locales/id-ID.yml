@@ -1,0 +1,1076 @@
+id:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
+  activemodel:
+    attributes:
+      confirm_deletion_form:
+        kicker_confirmation: Confirmation of case title
+    errors:
+      models:
+        confirm_deletion_form:
+          attributes:
+            kicker_confirmation:
+              match: does not match the expected value
+    models:
+      confirm_deletion_form: confirmation
+  activerecord:
+    attributes:
+      announcement:
+        deactivated_at: Deactivated at (UTC)
+      case:
+        acknowledgements: Acknowledgements
+        authors: Authors
+        case_title: Case title
+        featured: Featured
+        featured_at: Featured at
+        kicker: Short title
+        learning_objectives: Learning objectives
+        library: Library
+        library_id: Library
+        locale: Language
+        location: Case location
+        published: Published
+        summary: Summary
+        slug: Case URL
+        teaching_guide: Teaching guide
+        title: Question
+        translators:
+          js: "{count, plural, one {Translator} other {Translators} }: "
+          other: Translators
+          one: Translator
+        license: License
+      comment:
+        attachments: Attachments
+      deployment:
+        case_id: Case
+        group_id: Study Group
+        group_attributes:
+          name: Group Name
+      edgenote:
+        alt_text: Image description for accessibility
+        attribution: Attribution
+        call_to_action: Call to action
+        caption: Caption
+        icon_slug: Attachment icon
+        photo_credit: Photo credit
+        pull_quote: Pull quote
+      editorship:
+        editor: Your collaborator’s account
+        editor_email: Collaborator’s Email
+      library:
+        background_color: Background Color
+        description: Description
+        foreground_color: Foreground Color
+        logo: Logo
+        name: Name
+        url: Library Website
+        visible_in_catalog: Listed on Gala’s Home Page
+        website: Website
+      managership:
+        manager: The manager’s account
+        manager_email: Manager’s Email
+      page:
+        iconSlug: Table of Contents Icon
+        title: Title
+      question:
+        content: Content
+        correct_answer: Correct answer
+        options: Options
+      reader:
+        confirmation_sent_at: Confirmation sent at
+        confirmation_token: Confirmation token
+        confirmed_at: Confirmed at
+        created_at: Created at
+        current_password: Current password
+        current_sign_in_at: Current sign in at
+        current_sign_in_ip: Current sign in IP
+        email: Email
+        encrypted_password: Encrypted password
+        failed_attempts: Failed attempts
+        image: Image
+        last_sign_in_at: Last sign in at
+        last_sign_in_ip: Last sign in IP
+        locale: Preferred language
+        locked_at: Locked at
+        name: Full Name
+        password: Password
+        password_confirmation: Password confirmation
+        persona:
+          one: 'Persona'
+          learner: Learning from cases
+          teacher: Teaching with cases
+          writer: Writing my own cases
+        remember_created_at: Remember created at
+        remember_me: Remember me
+        reset_password_sent_at: Reset password sent at
+        reset_password_token: Reset password token
+        send_reply_notifications:
+          - Notify me when someone replies to a comment I wrote
+        sign_in_count: Sign in count
+        unconfirmed_email: Unconfirmed email
+        unlock_token: Unlock token
+        updated_at: Updated at
+        terms_of_service: 'I accept the Terms of Service and Privacy Policy'
+      reading_list:
+        title: Title
+        description: Description
+      reading_list_item:
+        notes: Notes
+      shared_cases_library:
+        description: >
+          These cases were shared by Gala users.
+    errors:
+      messages:
+        record_invalid: "Validation failed: %{errors}"
+        restrict_dependent_destroy:
+          has_many: "Cannot delete record because dependent %{record} exist"
+          has_one: "Cannot delete record because a dependent %{record} exists"
+      models:
+        deployment:
+          attributes:
+            case_id:
+              taken: has already been deployed in this study group
+        editorship:
+          attributes:
+            editor:
+              required: |
+                could not be found. Please ensure your collaborator has created
+                an account with the email you have entered.
+        question:
+          attributes:
+            correct_answer:
+              inclusion: "is not included in the list of possible answers"
+    models:
+      account_settings: Account settings
+      activity: Activity
+      case: Case
+      case_library_request: Library request
+      cases:
+        setting: Case Settings
+        feature: Featured status
+        library: Library
+      comment: Comment
+      comment_thread: Comment thread
+      deployment: Deployment
+      edgenote: Edgenote
+      editorship: Editorship
+      enrollment: Enrollment
+      global_community: Global Community
+      group: Group
+      group_membership: Group Membership
+      library: Library
+      managership: Managership
+      page: Page
+      podcast: Podcast
+      reader: Reader
+      reading_list: Reading List
+      shared_cases_library: Shared Cases
+    persistance:
+      messages:
+        created: "%{model} successfully created."
+        destroyed: "%{model} successfully deleted."
+        updated: "%{model} successfully updated."
+        copied: "Copying %{model}...refresh your library in a few moments to see your new case."
+  activities:
+    destroy:
+      delete_activity: Delete Activity
+    show:
+      download: Download
+      instructions: Instructions
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
+  announcements:
+    dismissals:
+      create:
+        dismiss_announcement: Dismiss Announcement
+  cards:
+    edit:
+      citation_added: |
+        Citation added. Click the <span class="pt-tag pt-intent-success">
+        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        edit.
+      math_added: Math added.
+      math_instructions: |
+        To add math to your case, select the text you want to turn into a math
+        equation, then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-function"></span> Math</span> button.
+      make_revealable_selection: |
+        Please select the phrase that you would like to make revealable,
+        then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-search-template"></span> Add
+        Revealable</span> button.
+      citation_text: Title
+      citation_url: URL
+      write_something: Write something...
+    show:
+      open_citation: Open citation.
+  case_elements:
+    new:
+      untitled: Untitled
+  cases:
+    archives:
+      show:
+        overview: Overview
+    libraries:
+      update:
+        created_library_request: >
+          Your request has been sent to the library managers for approval.
+    deletions:
+      new:
+        are_you_sure: Are you sure you want to delete this case?
+        confirm_deletion: Confirm Deletion
+        this_action_cannot_be_undone: |
+          This action _cannot_ be undone. This will permanently delete the
+          case, its elements, Edgenotes, comments, forums, quizzes, and
+          quiz submissions.
+    edit:
+      add_authors: Add authors
+      author_institution: Author Institution
+      author_name: Author Name
+      change_cover_image: Change cover image
+      edit: Edit this case
+      editing_authors: Editing Authors and Translators
+      feature_case: Feature this case
+      just_change_the_text: |
+        To edit this case, just change the text. We’ll save your work
+        automatically.
+      map:
+        instructions: |
+          Drag the map to position the pin, change the zoom to give context,
+          then click “Set”
+        reset: Reset
+        set: Set
+        zoom_in: Zoom in
+        zoom_out: Zoom out
+      missed_something: Please delete any unused author or translator rows.
+      no_elements: This case has no elements.
+      options: Options
+      publish_case: Publish this case
+      remove_teaching_guide: Remove teaching guide
+      replace_teaching_guide: Replace teaching guide
+      save: Save
+      stop_editing: Stop editing this case
+      suggested_quizzes:
+        all_suggested_quizzes: All Suggested Quizzes
+        confirm_delete: Are you sure you want to delete this quiz?
+        delete_quiz: Delete Quiz
+        description: >
+          Include a suggested pre/post assessment that instructors can use when deploying your case.
+        error: Questions cannot be blank and correct answers are required.
+        pre_post_assessment: Pre/Post Assessment
+        suggest_an_assessment: Suggest an Assessment
+        title: Suggested Quizzes
+      translator_name: Translator Name
+      unfeature_case: Remove from featured cases
+      unpublish_case: Unpublish this case
+      upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
+    index:
+      all_cases: All cases
+      locations: Site locations
+    new:
+      create_a_case: Create a Case
+    settings:
+      edit:
+        change_library: Change library
+        change_url: Change URL
+        change_license: Change license
+        change_license_confirmation: Changing your license from All Rights Reserved is irreversible. Are you sure you want to proceed?
+        learn_more_license: Learn more about license options
+        edit_case_settings: Edit case settings
+      featured_form:
+        change_featured_time: Change time
+      slug_form:
+        changing_url_leaves_your_old_url_available_for_anyone_else: >
+          If you change your case’s URL, your old URL will redirect to your new one. However, if someone else takes your old URL, the redirect will be overridden.
+        lowercase_letters_and_numbers_separated_by_hyphens_html: >
+          <b>Format:</b> lowercase letters and numbers separated by hyphens,<br />100 characters maximum
+    show:
+      back_to_overview: Overview
+      download_teaching_guide: Download teaching guide
+      end: End
+      forthcoming: Forthcoming
+      next: "Next: "
+      not_yet_published: This case is not yet published
+      other_languages: "This case is also available in these languages: "
+      toc: Table of Contents
+  catalog:
+    catalog: Catalog
+    create_a_case: Create a Case
+    enrollments_instruction: >
+      Cases you enroll in will be presented here for easy access.
+    find_a_case: >
+      Gala makes it quick and easy to create a case or adapt an existing learning module. Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
+    global_systems: Global Systems
+    impactful_cases: Create and Innovate
+    improve_your_communication: >
+      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together and solicit feedback with inline comments before publishing and sharing.
+    inclusive_community: Teach and Share
+    innovative_teaching: Collaborate and Adapt
+    join_the_community: >
+      Gala modules perform well in classroom, community, and remote learning settings. Publish your case and share it as widely as you like. Institutions can create libraries with multiple cases.
+    keywords: Keywords
+    learn_more: Learn more
+    my_library: My Dashboard
+    natural_resources: Natural Resources
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    welcome_message:
+      about_button_text: About Gala
+      how_button_text: How-to
+      news_button_text: News
+      to_get_started: >
+        {createAccount} to get started, or find a case by searching or browsing below.
+      create_account: Create an account
+      welcome_title: Open tools for collaborative learning
+      welcome_back_title: Welcome back
+      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
+      create_case: create a case
+    your_library: Your library
+  comment_threads:
+    destroy:
+      delete_comment_thread: Delete comment thread
+    index:
+      n_comment_threads:
+        js: "{count, number} {count, plural, one {thread} other {threads}}"
+        other: "%{count} threads"
+        one: 1 thread
+    new:
+      new_comment_thread: New comment thread...
+    show:
+      card_n: Card {cardPosition}
+      comments_on_page: Comments on “{title}”
+      comments_on_page_number: Comments on Page {position, number}
+      page_n: Page {pageNumber, number}
+      text_changed: The text being discussed has changed since this conversation started.
+  comments:
+    comment:
+      edited: (edited {someTimeAgo})
+    destroy:
+      delete_comment: Delete comment
+    edit:
+      edit_comment: Edit comment
+      save_comment: Save comment
+    index:
+      all_comments: All comments
+      conversation: Conversation
+      join_the_conversation: Join the conversation
+      n_responses:
+        js: "{count, number} {count, plural, one {comment} other {comments}}"
+        other: "%{count} comments"
+        one: 1 comment
+      no_comments: No comments
+      nobody_has_left_a_comment: >
+        Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
+    new:
+      add_attachment: Add Attachment
+      respond: Respond
+      respond_here: Respond Here
+      select: Select a few words
+      selection_not_unique: >
+        The words you have selected appear more than once. Please select a few more words.
+      write: Write a reply...
+      write_new: New Comment Thread
+  communities:
+    index:
+      choose_a_community: Choose a community
+      instructions: >
+        You’ll see the discussion taking place in the community you choose.
+      not_discussing: Your active community is not discussing this case
+  date:
+    abbr_day_names:
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
+    abbr_month_names:
+      -
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
+    day_names:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+    formats:
+      default: "%Y-%m-%d"
+      long: "%B %d, %Y"
+      short: "%b %d"
+    month_names:
+      -
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    order:
+      - :year
+      - :month
+      - :day
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        other: about %{count} hours
+      about_x_months:
+        other: about %{count} months
+      about_x_years:
+        other: about %{count} years
+      almost_x_years:
+        other: almost %{count} years
+      half_a_minute: half a minute
+      less_than_x_minutes:
+        other: less than %{count} minutes
+      less_than_x_seconds:
+        other: less than %{count} seconds
+      over_x_years:
+        other: over %{count} years
+      x_days:
+        other: "%{count} days"
+      x_minutes:
+        other: "%{count} minutes"
+      x_months:
+        other: "%{count} months"
+      x_seconds:
+        other: "%{count} seconds"
+    prompts:
+      day: Day
+      hour: Hour
+      minute: Minute
+      month: Month
+      second: Seconds
+      year: Year
+  deployments:
+    edit:
+      edit_embedded_assessment: Edit embedded assessment
+    deployment:
+      add_quiz: Add Quiz
+      edit_quiz: Edit Quiz
+      n_enrolled: "%{count} enrolled"
+      invite_learners: Invite Learners
+      invite_link: |
+        Invite link for the deployment of the case “%{case_kicker}”
+        in the group “%{group_name}”
+    enrolled_learners:
+      case_completion: Percent of Case Completed
+      posttest: Posttest Score
+      pretest: Pretest Score
+    form:
+      select_a_case: Select a Case...
+      select_a_group: Select a Group...
+    helpers:
+      all_study_groups: All Study Groups
+      create_a_new_study_group: Create a New Study Group...
+    index:
+      deploy_a_case: Deploy a Case
+      find_a_case_then_click_teach_this_case: |
+        Once you’ve found a case that will suit your needs, click the “Deploy
+        this Case” button in the top right of its Overview page.
+      instructions: |
+        Gala makes it easy to teach a case in a group of any size: a classroom,
+        a workshop, a town, or a team. When you deploy a case
+        to a study group, you get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      my_deployments: My Deployments
+      new_deployment: New Deployment
+      once_youve_deployed: |
+        Once you’ve deployed a case, you’ll be able to add a quiz and invite
+        learners from this page.
+      teach_with_cases: Teach with Cases
+      youre_not_teaching_any_cases: You’re not teaching any cases yet
+    invite_drawer:
+      invite_instructions_html: |
+        <b>Invite Link:</b> Send someone this link to invite them to study this
+        case with you. They’ll see any quiz you’ve chosen and be able to
+        participate in your private forum.
+    new:
+      active_deployments: Active Deployments
+      instructions: |
+        Deploy this case in a group of any size: a classroom, a workshop, a
+        town, or a team. You’ll get a private forum for collaborative annotation
+        and the option to configure a pre-/post-quiz.
+      teach_this_case: Deploy this Case
+    show:
+      deployment_of: Deployment of “%{kase}”
+      deployment_of_html: Deployment of “<a href="%{kase_path}">%{kase}</a>”
+      download_all_quiz_submissions: Download All Quiz Submissions
+      enrolled_learners: Enrolled Learners
+      no_quiz_assigned: No Quiz Assigned
+      quiz_details: Quiz Details
+      sample_answer: "Sample Answer:"
+  devise:
+    providers:
+      google_oauth2: Google
+      lti: Canvas
+    registrations:
+      edit:
+        we_need_your_current_password_to_confirm_your_changes: >
+          We need your current password to confirm your changes.
+    sessions:
+      destroy:
+        sign_out: Sign out
+      new:
+        sign_in: Sign in
+    shared:
+      links:
+        sign_up_for_a_free_account: Sign up for a free account
+      minimum_password_length:
+        other: "%{count} characters minimum"
+  edgenotes:
+    destroy:
+      delete: Delete this Edgenote.
+    edgenote:
+      caption: "Caption: "
+      download_file: Download file
+      has_audio: This edgenote has an audio clip.
+      jump_to_edgenote: Jump to Edgenote
+      pull_quote: "Quotation: "
+      return_to_narrative: Return to narrative
+      video_slug: "YouTube video slug: "
+    edit:
+      alt_text_guidelines: >
+        Image descriptions ensure that learners using screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. See [this guide](https://docs.learngala.com/docs/authoring-accessibility#images) for more information.
+      attach_an_image: Attach an image
+      attach_a_file: Attach a file
+      attribution: Put an attribution
+      choose_audio_file: Choose audio file...
+      choose_image: Choose image...
+      choose_file: Choose file...
+      edit_edgenote: Edit Edgenote
+      embed_or_external_link: >
+        You can link to a website, or embed something directly in your Edgenote. See [this guide](https://docs.learngala.com/docs/authoring-embedding-media#1-links) and [this list](https://docs.learngala.com/docs/authoring-embeds) of embeddable media sources for more information.
+      layout_label: Edgenote Layout
+      layout_position_label: Position and width
+      layout_elements_label: Preview elements
+      layout_options:
+        right: Small (right-side margin)
+        bottom: Card-width (below card)
+        bottom_full_width: Full-width (below card)
+      paste_a_link: Paste a link
+      photo_credit_guidelines: >
+        Add author and license information. [This guide](https://docs.learngala.com/docs/authoring-finding-media) has more about licensing, attribution, and finding copright-free images.
+      preview: Edgenote preview
+      pull_a_quote: Pull a quote
+      remove: Remove
+      save_edgenote: Save Edgenote
+      use_embed: Embed a widget from this website
+      use_preview_description: Include a description in the link preview
+      use_preview_image: Include an image in the the link preview
+      upload_an_audio_file: Upload an audio file
+      write_a_caption: Write a caption
+    index:
+      attach: Attach this Edgenote.
+      reattach_instructions: >
+        The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
+    new:
+      make_selection_html: >
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
+      new_edgenote: New Edgenote
+  editorships:
+    destroy:
+      are_you_sure: |
+        Are you sure you want to remove %{name} as an editor of this case?
+      remove: Remove Collaborator
+    list:
+      case_editors: Case editors
+    new:
+      add_editor: Add Collaborator
+      create_collaboratively: Collaborate on your case
+      instructions: |
+        Add someone else as an editor by entering the email they’ve used to
+        create an account on Gala. That person will have the same access to this
+        case that you do, so be sure only to invite people you trust.
+  enrollments:
+    destroy:
+      are_you_sure: Are you sure you want to unenroll in this case?
+      unenroll: Unenroll from this case
+      you_will_need_another_invitation: >
+        Because this case is not published, you will need another invitation to reenroll.
+    index:
+      edit_enrolled: Edit enrolled cases
+      enrolled_cases: Enrolled cases
+      finish_editing: Finish editing
+    new:
+      enroll: Enroll
+      enroll_for_easy_access: >
+        If this case catches your eye, enroll to study and discuss it in our global community of learners. You can easily find the cases you’re enrolled in on the home page.
+      enroll_in_this_case: Enroll in this case
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      accepted: must be accepted
+      blank: can’t be blank
+      confirmation: doesn’t match %{attribute}
+      empty: can’t be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not included in the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      model_invalid: "Validation failed: %{errors}"
+      not_a_number: is not a number
+      not_an_integer: must be an integer
+      not_found: "not found"
+      not_locked: "was not locked"
+      not_saved:
+        other: "%{count} errors prohibited this %{resource} from being saved:"
+      odd: must be odd
+      other_than: must be other than %{count}
+      present: must be blank
+      required: must exist
+      taken: has already been taken
+      too_long:
+        other: is too long (maximum is %{count} characters)
+      too_short:
+        other: is too short (minimum is %{count} characters)
+      wrong_length:
+        other: is the wrong length (should be %{count} characters)
+    template:
+      body: 'There were problems with the following fields:'
+      header:
+        other: "%{count} errors prevented this %{model} from being saved"
+  features:
+    index:
+      featured_cases: Featured cases
+    create:
+      this_case_is_not_featured: >
+        This case is not featured. Feature it to have it displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      feature_case: Feature this case
+    destroy:
+      this_case_was_featured_on: >
+        This case was featured on %{date}. It will be displayed on Gala’s front page when it is one of the six most recently featured cases that a reader is not already enrolled in.
+      unfeature_case: Remove from featured cases
+  forms:
+    required: required
+  helpers:
+    add: Add
+    attachments:
+      file_type:
+        ruby: "Accepted file types: %{types}."
+      max_size:
+        ruby: File size must be under %{size}.
+        js: File size must be under {mb} MB.
+    cancel: Cancel
+    choose_an_image: Choose an Image
+    close: Close
+    copy: Copy
+    edit: Edit
+    formatting:
+      add_citation_entity: "Add citation here."
+      add_edgenote_entity: "Add edgenote to selection."
+      add_math_entity: "Add math to selection."
+      add_revealable_entity: "Add revealable to selection."
+      blockquote: "Block style: Quotation."
+      bold: "Inline style: Bold."
+      code: "Inline style: Code."
+      header: "Block style: Header."
+      italic: "Inline style: Italic."
+      ol: "Block style: Ordered list item."
+      ul: "Block style: Unordered list item."
+    help: Help
+    label:
+      confirm_deletion_form:
+        kicker_confirmation: Please type in the title of the case to confirm
+    less:
+      read_more: Read more
+    list:
+      end: ', and '
+      middle: ', '
+      start: ', '
+      two: ' and '
+    loading: Loading...
+    n_a: N/A
+    page_entries_info:
+      more_pages:
+        display_entries: >
+          Displaying %{entry_name} <b>%{first}&nbsp;–&nbsp;%{last}</b> of <b>%{total}</b> in total
+    save: Save
+    select:
+      prompt: Please select
+    submit:
+      create: Create %{model}
+      save: Save %{model}
+      submit: Submit
+      update: Update %{model}
+      confirm_deletion_form:
+        create: I’m sure I want to delete this case
+  icons:
+    activity:
+      calculate: Calculate
+      consider: Consider
+      discuss: Discuss
+      evaluate: Evaluate
+      explore: Explore
+      role_play: Role Play
+      write: Write
+    file:
+      audio: Audio
+      basic: Basic
+      code: Code
+      data: Data
+      image: Image
+      model: Model
+      shapes: Shapes
+      spreadsheet: Spreadsheet
+      tasks: Tasks
+      text: Text
+      video: Video
+  layouts:
+    mailer:
+      you_are_receiving_this_email_because_you_are_a_user_of_gala:
+        html: >
+          You are receiving this email because you are a user of <a style="color: #828c9a" href="https://www.learngala.com/">Gala</a>.
+        text: >
+          You are receiving this email because you are a user of Gala (https://www.learngala.com).
+  libraries:
+    destroy:
+      are_you_sure: >
+        Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
+      delete_library: Delete Library
+    edit:
+      library_management: Library Management
+      edit_library: Edit Library
+      library_managers: Library Managers
+      library_cases: Cases
+      case_library_requests: Requests
+      requested_by: Requested by <b>%{name}</b>
+      no_requests: No requests yet
+      no_cases: No cases yet
+      remove_case_from_library: Remove case from library
+      confirm_remove_case_from_library: Are you sure you want to remove case ’%{name}’ from the library?
+    index:
+      create_a_new_library: Create a New Library
+      libraries: Libraries
+      libraries_on_gala: >
+        Gala hosts cases from many different libraries as well as those that independent scholars have published themselves. How a case study becomes included in a library differs, but in all cases the library managers have confirmed its quality.
+      on_home_page: On Home Page
+  locks:
+    destroy:
+      edit_anyway: Edit Anyway
+    lock:
+      details: |
+        {name} is editing this section as of {someTimeAgo}. If you proceed,
+        their changes may be lost.
+      this_section_is_locked: This section is locked.
+  magic_link:
+    show:
+      lets_get_started: Let’s get started!
+  managerships:
+    destroy:
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+      remove: Remove Manager
+    new:
+      add_manager: Add Manager
+      instructions: >
+        Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
+      invite_someone_to_manage_this_library: >
+        Invite Someone to Manage this Library
+  library_requests:
+    new:
+      pending: <b>%{name}</b> request is pending
+    destroy:
+      remove: Remove request
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+    edit:
+      accept: Accept
+      reject: Reject
+      are_you_sure_accept: >
+        Are you sure you want to accept this request? The case will be added to your library.
+      are_you_sure_reject: >
+        Are you sure you want to reject this request? The case will not be added to your library.
+  my_cases:
+    index:
+      confirm_delete: >
+        Are you sure you wish to delete this case? This action cannot be undone.
+      create_a_case: Create a Case
+      delete_case: Delete case.
+      edit_case: Edit case.
+      edit_case_settings: Edit case settings.
+      featured: Featured
+      learn_more: Learn more
+      my_cases: My Cases
+      new_case: New Case
+      once_youve_created: >
+        Once you’ve created a case or been added as a collaborator on someone else’s, you’ll see it here.
+      publish_a_case: Publish a Case
+      publish_with_a_creative_commons_license: >
+        When you publish a module on Gala you agree to distribute it with a Creative Commons license.
+      put_your_own_cases_on_gala: >
+        Put your case on Gala and share it with our growing Open Educational Resources community and the world.
+      youre_not_authoring_any_cases: You’re not authoring any cases yet
+  notifications:
+    replied_to_your_comment: >
+      %{notifier} replied to your comment on “%{case_kicker}.”
+  number:
+    currency:
+      format:
+        delimiter: ","
+        format: "%u%n"
+        precision: 2
+        separator: "."
+        significant: false
+        strip_insignificant_zeros: false
+        unit: "$"
+    format:
+      delimiter: ","
+      precision: 3
+      separator: "."
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: "%n %u"
+        units:
+          billion: Billion
+          million: Million
+          quadrillion: Quadrillion
+          thousand: Thousand
+          trillion: Trillion
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: "%n %u"
+        units:
+          byte:
+            other: Bytes
+          gb: GB
+          kb: KB
+          mb: MB
+          tb: TB
+    percentage:
+      format:
+        delimiter: ''
+        format: "%n%"
+    precision:
+      format:
+        delimiter: ''
+  pages:
+    edit:
+      pageSettings: Page Settings
+  personas:
+    edit:
+      ill_figure_it_out: I prefer to figure it out by myself
+      tell_us_about_yourself: >
+        Tell us about yourself so we can personalize your experience. You’ll always have access to all features, but how do you think you’ll use Gala first?
+      welcome: Welcome to Gala
+      you_can_opt_in_later: (You can opt in later from Account Settings.)
+    learner:
+      title: Learn From Cases
+      description: >
+        I want to study real world cases and cutting-edge science in an open environment.
+    teacher:
+      title: Teach With Cases
+      description: >
+        I want to find case studies to deploy in my classroom, company, or community.
+    writer:
+      title: Write My Own Cases
+      description: >
+        I want to create teaching tools with powerful stories, engaging media, and interactive features.
+  podcasts:
+    destroy:
+      delete_podcast: Delete Podcast
+    edit:
+      addGuests: Add Guests
+      uploadArtwork: Upload Artwork
+      uploadPodcast: Upload Podcast
+    show:
+      with_host:
+        js: "with {count, plural, one {host} other {hosts}}"
+        other: with hosts
+        one: with host
+  pundit:
+    not_authorized: You are not authorized to perform this action.
+  quizzes:
+    new:
+      new_quiz: New Quiz
+    quiz:
+      multiple_choice_questions:
+        one: "%{count} Multiple Choice Question"
+        other: "%{count} Multiple Choice Questions"
+        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
+      open_ended_questions:
+        one: "%{count} Open Ended Question"
+        other: "%{count} Open Ended Questions"
+        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
+    show:
+      the_correct_answer_is: >
+        The correct answer to the question “{question}” is “{answer}”
+  readers:
+    form:
+      account_options: Account options
+      choose_an_image: Choose a profile image
+      create_a_password: Create a password
+      my_account: Account settings
+      notification_settings: Notification settings
+      profile_settings: Profile settings
+      save_persona: Save help preferences
+      save_profile: Update profile
+      save_notification_preference: Save notification preferences
+      show_me_tips_about: Show me helpful tips about
+      tips_for_using_gala: Tips for using Gala
+      we_show_tips: >
+        We can show contextual tips about features that are relevant to you.
+      you_have_not_created_a_password: >
+        Because you first signed in using %{provider}, you never created a password. If you create one now, you will be able to use it, or %{provider}, to sign in.
+    edit_tos:
+      accept_tos: Continue
+      terms_of_service_title: Please read and accept the Gala Terms of Service and Privacy Policy
+      must_accept: You must accept the Terms of Service and Privacy Policy to continue.
+      accepted: You have accepted the Terms of Service and Privacy Policy.
+  reading_lists:
+    actions:
+      sharing_instructions: >
+        Share your reading list with anyone you’d like by copying the link and sending it to them.
+    destroy:
+      are_you_sure: >
+        Are you sure you want to delete this reading list? If you do, it will be removed from the libraries of anyone you’ve shared it with.
+      delete: Delete Reading List
+    edit:
+      edit_list: Edit Reading List
+    index:
+      reading_lists: Reading Lists
+    new:
+      new_list: New Reading List
+    save_button:
+      reading_list_saved: Reading List Saved
+      save_reading_list: Save Reading List
+    show:
+      document_title: '%{title} — Reading List'
+      sharable_title: '%{title}: A Reading List of Case Studies on Gala'
+  reading_list_items:
+    destroy:
+      remove_case: Remove case from this reading list.
+    edit:
+      notes_about_case: Notes about "{case}".
+    new:
+      add_case: Add a Case
+      add_this_case: Add Case "{case}".
+      search_for_a_case_to_add: Search for a case to add...
+  saved_reading_lists:
+    destroy:
+      remove_list: Remove reading list from library
+  search:
+    didnt_match: Your search didn’t match any cases.
+    full_text_search: Full text search...
+    no_results: No search results
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
+    refine: Refine search
+    results: Search results
+    search: Search
+    search_cases: Search Cases...
+    try_again: Try searching for something else.
+  spotlights:
+    add_citation: >
+      Add a citation by clicking here.
+    add_collaborators: >
+      Invite another Gala user to work with you on your case by clicking here.
+    add_edgenote: >
+      Attach a media resource by linking an Edgenote to the text.
+    add_revealable: >
+      Attach revealable text.
+    add_quiz: >
+      You can administer a comprehension quiz at the end of the case, and optionally pair it with an identical pretest.
+    caselog: >
+      Look here for insights from other instructors who’ve taught this case, and share your expertise after you teach it.
+    catalog_categories: >
+      Cases are also grouped by general topic. Click on a category to explore.
+    catalog_search: >
+      The easiest way to find a case about a specific topic is to search.
+    comment: >
+      You can leave a comment or ask a question about a specific part of the case by clicking here.
+    community_chooser: >
+      Your active community can be changed here.
+    conversation_view: >
+      See all the conversations your community is having about this case from the conversation view.
+    deploy: >
+      If this case looks like a good fit, send it to your students by deploying it.
+    deployment_details: >
+      See your group’s progress and their scores on your comprehension quiz by clicking here.
+    first-caselog: >
+      When other instructors teach your case, CaseLog will be available as a forum to share best practices. Consider writing the initial post.
+    invite_learners: >
+      Send your group a “magic link” that will let them enroll automatically.
+    publish: >
+      When you’re finished writing your case, you can publish it from the Options menu.
+  submissions:
+    new:
+      before_you_get_started: Before you get started
+      check_your_understanding: Check your understanding
+      post_case_quiz: Post-case quiz
+      please_answer: >
+        Please answer the following questions to demonstrate your current level of knowledge.
+      please_take_this_after_engaging_with_all_elements: >
+        After you have engaged with all elements of the case, please take this post-test to check your understanding.
+    show:
+      correct_answers_are_below: >
+        The correct answers are shown below, highlighted green, so you may check your work.
+      thank_you: Thank you for your submission.
+  support:
+    array:
+      last_word_connector: ", and "
+      two_words_connector: " and "
+      words_connector: ", "
+    quote:
+      begin: '“'
+      end: '”'
+      attribution_prefix: "— "
+  tags:
+    new:
+      pressEnter: No results. Press Enter to create a new keyword.
+  time:
+    am: am
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+    pm: pm
+  translations:
+    new:
+      create_translation: Copy Case for Translation
+      dont_see_your_language_html: >
+        Don’t see your language? <a href="mailto:msc-contact@umich.edu">Contact us</a> and we’ll add it.
+      make_a_copy_of_your_case_then_change_the_text: >
+        Translate your case into another language. We will make a copy of your case so you can simply change the text in place. If someone else will be translating your case on your behalf, add that person as a collaborator after making the copy.
+      translate_this_case: Translate this case
+    show:
+      please_wait_while_your_case_is_being_copied_for_translation: >
+        Please wait while your case is being copied...
+      translation_pending: Translation Pending
