@@ -596,11 +596,6 @@ GEM
 PLATFORMS
   arm64-darwin-23
   ruby
-<<<<<<< Updated upstream
-  x86_64-darwin-23
-  x86_64-linux
-=======
->>>>>>> Stashed changes
 
 DEPENDENCIES
   active_model_serializers (= 0.10.13)
