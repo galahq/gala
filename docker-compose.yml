@@ -1,8 +1,9 @@
 services:
   web:
-    image: gala_ruby3-2_rails7-0_heroku22:latest
+    image: gala_ruby3-2_rails7-0:latest
+    platform: linux/amd64
     build:
-      dockerfile: Dockerfile.heroku22
+      dockerfile: Dockerfile
       context: .
       args:
         rails_env: development
@@ -46,4 +47,8 @@ services:
 volumes:
   db_data:
   node_modules:
+<<<<<<< Updated upstream
   build_cache:
+=======
+  build_cache:
+>>>>>>> Stashed changes
