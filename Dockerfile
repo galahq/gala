@@ -1,24 +1,21 @@
 # syntax = docker/dockerfile:1
 
-FROM --platform=linux/amd64 registry.docker.com/library/ruby:3.2.6-bookworm AS builder
+FROM ruby:3.2.6
 
 WORKDIR /gala
 
 # environment variables
-ENV BUNDLE_DEPLOYMENT="true" \
-    BUNDLE_PATH="/usr/local/bundle" \
+ENV BUNDLE_PATH="/usr/local/bundle" \
     NVM_DIR="/usr/local/nvm" \
     NODE_VERSION="12.5.0" \
     RAILS_LOG_TO_STDOUT="true" \
     RAILS_SERVE_STATIC_FILES="true"
 
 # install builder dependencies
-RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
     wget gnupg2 build-essential curl python3 wkhtmltopdf \
-    libvips git pkg-config libpq-dev libjemalloc-dev lsb-release zlib1g-dev \
-    && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-    && apt-get update && apt-get install -y postgresql-client-16 \
+    libvips git pkg-config libjemalloc-dev lsb-release zlib1g-dev \
+    libffi-dev libyaml-dev libreadline-dev libssl-dev postgresql-client libpq-dev gcc make \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
