@@ -47,8 +47,4 @@ services:
 volumes:
   db_data:
   node_modules:
-<<<<<<< Updated upstream
   build_cache:
-=======
-  build_cache:
->>>>>>> Stashed changes
