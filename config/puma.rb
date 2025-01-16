@@ -7,7 +7,7 @@
 # Puma starts a configurable number of processes (workers) and each process
 # serves each request in a thread from an internal thread pool.
 
-port ENV.fetch('PORT') { 3000 }
+port ENV.fetch('PORT', 3000)
 
 # The ideal number of threads per worker depends both on how much time the
 # application spends waiting for IO operations and on how much you wish to
@@ -24,7 +24,8 @@ port ENV.fetch('PORT') { 3000 }
 # Any libraries that use a connection pool or another resource pool should
 # be configured to provide at least as many connections as the number of
 # threads. This includes Active Record's `pool` parameter in `database.yml`.
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+workers Integer(ENV.fetch('WEB_CONCURRENCY', 2))
+threads_count = Integer(ENV.fetch('RAILS_MAX_THREADS', 5))
 threads threads_count, threads_count
 
 # Specifies the number of `workers` to boot in clustered mode.
@@ -42,7 +43,14 @@ threads threads_count, threads_count
 # This directive tells Puma to first boot the application and load code
 # before forking the application. This takes advantage of Copy On Write
 # process behavior so workers use less memory.
-# preload_app!
+preload_app!
+
+rackup DefaultRackup
+environment ENV.fetch('RAILS_ENV', 'development')
+
+on_worker_boot do
+  ActiveRecord::Base.establish_connection
+end
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart

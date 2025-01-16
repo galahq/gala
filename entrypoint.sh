@@ -3,8 +3,10 @@
 # enable jemalloc and yjit for reduced memory usage and latency.
 if [ -f /usr/lib/*/libjemalloc.so.2 ]; then
   export LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2) $LD_PRELOAD"
-  export MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true,stats_print:false"
-  export RUBY_YJIT_ENABLE="1"
+  export MALLOC_CONF="dirty_decay_ms:1000,muzzy_decay_ms:1000,background_thread:true,narenas:2,stats_print:false"
+  export RUBY_YJIT_ENABLE=1
+  export RUBY_YJIT_SIZE_THRESHOLD=30
+  export RUBY_YJIT_MAX_SIZE=50
 fi
 
 if [ "$RAILS_ENV" = "development" ]; then
