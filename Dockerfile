@@ -1,24 +1,21 @@
 # syntax = docker/dockerfile:1
 
-FROM registry.docker.com/library/ruby:2.7.6 AS builder
+FROM ruby:3.2.6
 
 WORKDIR /gala
 
 # environment variables
-ENV BUNDLE_DEPLOYMENT="true" \
-    BUNDLE_PATH="/usr/local/bundle" \
+ENV BUNDLE_PATH="/usr/local/bundle" \
     NVM_DIR="/usr/local/nvm" \
     NODE_VERSION="12.5.0" \
     RAILS_LOG_TO_STDOUT="true" \
     RAILS_SERVE_STATIC_FILES="true"
 
 # install builder dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget gnupg2 build-essential curl python \
-    libvips git pkg-config libpq-dev lsb-release \
-    && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-    && apt-get update && apt-get install -y postgresql-client-16 \
+RUN apt-get update && apt-get install -y \
+    wget gnupg2 build-essential curl python3 wkhtmltopdf \
+    libvips git pkg-config libjemalloc-dev lsb-release zlib1g-dev \
+    libffi-dev libyaml-dev libreadline-dev libssl-dev postgresql-client libpq-dev gcc make \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
@@ -36,7 +33,7 @@ RUN mkdir -p $NVM_DIR \
     && yarn install --check-files
 
 # install gems
-RUN echo "gem: --no-document" /etc/gemrc \
+RUN echo "gem: --no-document" > /etc/gemrc \
     && gem update --system 3.3.22 \
     && gem install bundler:2.4.19 \
     && bundle install --jobs 20 --retry 2 \
@@ -56,8 +53,8 @@ ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # precompile the app directory if not in development
 RUN if [ "$RAILS_ENV" != "development" ]; then \
+    export DATABASE_URL=postgresql://placeholder/placeholder; \
     bundle exec bootsnap precompile app/; \
-    DATABASE_URL=postgresql://placeholder/placeholder \
     bundle exec rails assets:precompile; \
     fi
 

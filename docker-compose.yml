@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   web:
-    image: gala_web_sidekiq_dev:latest
+    image: gala_ruby3-2_rails7-0:latest
+    platform: linux/amd64
     build:
       dockerfile: Dockerfile
       context: .
@@ -13,14 +12,14 @@ services:
     environment:
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/0
-      RAILS_ENV: development
       RAILS_LOG_TO_STDOUT: true
       RAILS_SERVE_STATIC_FILES: true
-      WEB_CONCURRENCY: 1
+      WEB_CONCURRENCY: 2
       SIDEKIQ_CONCURRENCY: 1
       SKYLIGHT_DISABLE_DEV_WARNING: true
       DOCKER_DEV: true
       BASE_URL: http://localhost:3000
+      PORT: 3000
     ports:
       - 3000:3000
       - 3035:3035
@@ -31,14 +30,6 @@ services:
       - .:/gala:delegated
       - node_modules:/gala/node_modules
       - build_cache:/gala/tmp/cache
-    deploy:
-      resources:
-        limits:
-          cpus: "4"
-          memory: 4G
-        reservations:
-          cpus: "2"
-          memory: 2G
   db:
     image: postgres:16.4
     environment:

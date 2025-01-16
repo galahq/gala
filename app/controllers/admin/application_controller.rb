@@ -21,6 +21,10 @@ module Admin
     #   params[:per_page] || 20
     # end
 
+    def namespace
+      super.to_sym
+    end
+
     # Disable new, edit, and destroy actions
     def valid_action?(name, resource = resource_class)
       disabled_actions.exclude?(name.to_s) && super

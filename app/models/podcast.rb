@@ -23,7 +23,6 @@ class Podcast < ApplicationRecord
   validates :artwork, content_type: { in: %w[image/png image/jpeg],
                                       message: 'must be JPEG or PNG' }
 
-
   def cards
     [card]
   end
@@ -38,7 +37,12 @@ class Podcast < ApplicationRecord
 
   def credits_list
     if credits
-      CreditsList.new(YAML.load(credits))
+      raw_credits = YAML.safe_load(credits,
+                                   permitted_classes: [
+                                     Symbol,
+                                     ActiveSupport::HashWithIndifferentAccess
+                                   ])
+      CreditsList.new(raw_credits)
     else
       CreditsList.new
     end

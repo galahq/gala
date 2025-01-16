@@ -104,24 +104,17 @@ class Case < ApplicationRecord
 
   scope :shared, -> { where(library_id: nil) }
   scope :published, -> { where.not(published_at: nil) }
-  scope :ordered,
-        -> do
-          order(Arel.sql(<<~SQL.squish))
-            cases.featured_at DESC NULLS LAST,
-            cases.published_at DESC NULLS LAST,
-            cases.updated_at DESC
-          SQL
-        end
-        # -> do
-        #   order(Arel.sql(<<~SQL.squish))
-        #     cases.featured_at DESC NULLS LAST,
-        #     cases.updated_at DESC
-        #   SQL
-        # end
+  scope :ordered, -> do
+    order Arel.sql <<~SQL.squish
+      cases.featured_at DESC NULLS LAST,
+      cases.published_at DESC NULLS LAST,
+      cases.updated_at DESC
+    SQL
+  end
 
   def self.with_locale_or_fallback(locale)
     locale = ::ActiveRecord::Base.connection.quote locale
-    scope = select('DISTINCT ON (cases.translation_base_id) cases.id') \
+    scope = select('DISTINCT ON (cases.translation_base_id) cases.id')
             .reorder(Arel.sql(<<~SQL.squish))
               cases.translation_base_id,
               CASE WHEN (locale = #{locale}) THEN 0
@@ -132,13 +125,14 @@ class Case < ApplicationRecord
     where(id: scope)
   end
 
+
   def archive_needs_refresh?
     archive.nil? || archive.needs_refresh?
   end
 
   def refresh_archive!(root_url:)
     create_archive if archive.nil?
-    archive.refresh!(root_url: root_url)
+    archive.refresh! root_url: root_url
   end
 
   # Universal communities and the global community (`community_id == nil`) need
@@ -175,6 +169,19 @@ class Case < ApplicationRecord
     return SharedCasesLibrary.instance if library_id.nil?
 
     super
+  end
+
+  def max_updated_at
+    result = self.class.connection.select_one <<~SQL
+      select max(updated_at) as max_updated_at from (
+        select updated_at from case_elements where case_id = #{id}
+        union all
+        select updated_at from cards where case_id = #{id}
+        union all
+        select updated_at from edgenotes where case_id = #{id}
+      ) as combined
+    SQL
+    [updated_at, result['max_updated_at']].max
   end
 
   # This is to conform with Lockable

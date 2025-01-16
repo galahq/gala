@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SpotlightsHelper
-  def spotlight(key, placement: nil, &block)
+  def spotlight(key, placement = nil, &block)
     data = {
       'controller' => 'spotlight',
       'spotlight-key' => key,

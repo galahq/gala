@@ -7,10 +7,10 @@ class EdgenoteDecorator < ApplicationDecorator
     object.format
   end
 
-  def image_url(transforms = {})
+  def image_url(**transforms)
     return nil unless image.attached?
 
-    ImageDecorator.decorate(image).resized_path transforms
+    ImageDecorator.decorate(image).resized_path(**transforms)
   end
 
   def image_thumbnail_url

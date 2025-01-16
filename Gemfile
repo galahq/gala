@@ -2,35 +2,30 @@
 
 source 'https://rubygems.org'
 
-ruby '2.7.6'
+ruby file: '.ruby-version' # 3.2.6
 
-gem 'rails', '~> 6.1.7'
+gem 'rails', '~> 7.0'
 
 # Infrastructure
-gem 'aws-sdk-s3', require: false
-gem 'aws-sdk-sns', '>= 1.9.0', require: false
-gem 'bootsnap', '>= 1.9.3', require: false
+gem 'aws-sdk-s3'
+gem 'bootsnap'
 gem 'connection_pool'
-gem 'image_processing', '~> 1.12'
-gem 'net-http'
-gem 'pg', '>= 1.1', '< 2.0'
-gem 'puma', '>= 5.6.9'
+gem 'image_processing'
+gem 'pg', '1.5.0'
+gem 'puma'
 gem 'rack-canonical-host'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
-gem 'sqlite3', '~> 1.6.0'
-gem 'wkhtmltopdf-binary' # Installs wkhtmltopdf for PDF generation
 
 # Models
 gem 'active_storage_validations'
-gem 'acts_as_list', '~> 0.9.10'
-gem 'clowne', '0.2.0'
-gem 'clowne_active_storage'
+gem 'acts_as_list'
+gem 'clowne'
 gem 'draper'
-gem 'friendly_id', '~> 5.2.3'
+gem 'friendly_id'
 gem 'kaminari'
 gem 'memoist'
-gem 'time_for_a_boolean', '~> 0.2.2'
+gem 'time_for_a_boolean'
 gem 'virtus'
 
 # Authentication and Authorization
@@ -51,10 +46,10 @@ gem 'groupdate'
 gem 'http_accept_language'
 gem 'i18n_generators'
 gem 'i18n_yaml_sorter', group: :development
-gem 'mobility'
+gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.12'
+gem 'active_model_serializers', '0.10.13'
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'
@@ -64,23 +59,23 @@ gem 'oj', '~> 3.13'
 gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
 gem 'redcarpet'
-gem 'sass-rails', '~> 6.0.0'
-gem 'sassc', '~> 2.4.0'
+gem 'rexml'
 
 # `galahq/case_grid` is not working and needs an update to fix this error:
 # NoMethodError (undefined method `matte=' for {dimension} DirectClass...
 # disabling the gem for now
 # gem 'case_grid', git: 'https://github.com/galahq/case_grid'
 
-gem 'webpacker', '~> 5.4' # Latest 5.x version for Rails 6
+gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
+gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
+gem 'webpacker', '~> 5.4'
 
 # Logging and Monitoring
-gem 'administrate', '~> 0.17.0'
+gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print'
-gem 'barnes'
 gem 'lograge'
-gem 'sentry-raven', '~> 3.1'
+gem 'sentry-raven', '~> 3.1' # sentry-ruby
 gem 'skylight', '~> 5.2'
 gem 'table_print'
 
@@ -91,7 +86,7 @@ gem 'ruby-oembed'
 
 # To seed the database for Heroku review apps, this is included in production
 gem 'factory_bot_rails'
-gem 'faker', '~> 2.19'
+gem 'faker'
 
 group :development do
   gem 'foreman'
@@ -100,7 +95,7 @@ group :development do
   gem 'bullet', '>= 6.1.1'
   gem 'letter_opener'
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
   gem 'web-console', '>= 4.1.0'
 
   gem 'doc_to_dash'
@@ -111,6 +106,7 @@ group :development do
   gem 'flamegraph'
   gem 'memory_profiler'
   gem 'rack-mini-profiler'
+  gem 'sqlite3', '~> 1.6.0'
   gem 'stackprof'
 end
 
@@ -119,17 +115,19 @@ group :development, :test do
   # console
   gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
+  gem 'pry', '~> 0.14.1'
 
-  gem 'capybara', '~> 3.39'
+  gem 'capybara'
+  gem 'dotenv-rails'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-composable_json_matchers'
-  gem 'rspec-rails', '~> 5.1'
   gem 'rspec_junit_formatter'
+  gem 'rspec-rails'
+  gem 'rubocop'
+  gem 'rubocop-faker'
   gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
-  gem 'dotenv-rails'
-  gem 'rubocop-faker'
 end
 
 group :test do
