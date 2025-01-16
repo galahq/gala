@@ -3,8 +3,8 @@
 # BASE_URL for production and staging:
 #  production: https://www.learngala.com
 #     staging: https://msc-gala-staging.herokuapp.com
-ENV['IS_STAGING'] = ENV['BASE_URL'].present? &&
-                    ENV['BASE_URL'].include?('staging').to_s
+ENV['IS_STAGING'] = (ENV['BASE_URL'].present? &&
+                     ENV['BASE_URL'].include?('staging')).to_s
 
 BASE_URL_HOST = ENV['BASE_URL']&.gsub(%r{^https?://}, '')
 
@@ -71,10 +71,11 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
   # secure cookies.
-  config.force_ssl = true
+  config.force_ssl = true unless ENV['DOCKER_DEV'].present?
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
+  config.logger = Logger.new(STDOUT)
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.

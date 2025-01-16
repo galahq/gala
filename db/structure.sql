@@ -68,7 +68,6 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 SET default_tablespace = '';
 
-
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
 --
@@ -146,7 +145,7 @@ CREATE TABLE public.active_storage_blobs (
     content_type character varying,
     metadata text,
     byte_size bigint NOT NULL,
-    checksum character varying NOT NULL,
+    checksum character varying,
     created_at timestamp without time zone NOT NULL,
     service_name character varying NOT NULL
 );
@@ -587,7 +586,7 @@ CREATE TABLE public.comments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     "position" integer,
-    content jsonb DEFAULT '""'::jsonb
+    content jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -616,11 +615,11 @@ ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
 
 CREATE TABLE public.communities (
     id integer NOT NULL,
-    name jsonb,
+    name jsonb DEFAULT '{}'::jsonb,
     group_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description jsonb DEFAULT '""'::jsonb,
+    description jsonb DEFAULT '{}'::jsonb,
     universal boolean DEFAULT false
 );
 
@@ -903,7 +902,7 @@ CREATE TABLE public.groups (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     context_id character varying,
-    name jsonb DEFAULT '""'::jsonb
+    name jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -973,9 +972,9 @@ CREATE TABLE public.libraries (
     foreground_color character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description jsonb,
-    url jsonb,
-    name jsonb,
+    description jsonb DEFAULT '{}'::jsonb,
+    url jsonb DEFAULT '{}'::jsonb,
+    name jsonb DEFAULT '{}'::jsonb,
     cases_count integer DEFAULT 0,
     visible_in_catalog_at timestamp without time zone
 );
@@ -1180,7 +1179,7 @@ CREATE TABLE public.questions (
     options character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    content jsonb DEFAULT '""'::jsonb
+    content jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -1584,7 +1583,7 @@ CREATE TABLE public.tags (
     id bigint NOT NULL,
     category boolean DEFAULT false NOT NULL,
     name character varying NOT NULL,
-    display_name jsonb,
+    display_name jsonb DEFAULT '{}'::jsonb,
     taggings_count integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -3671,6 +3670,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231011161246'),
 ('20241011080359'),
 ('20241217024113'),
-('20241217024114');
+('20241217024114'),
+('20250105235632'),
+('20250106003337');
 
 

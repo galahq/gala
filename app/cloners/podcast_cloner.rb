@@ -2,10 +2,9 @@
 
 # @see Podcast
 class PodcastCloner < ElementCloner
-  include_attached :artwork, :audio
   include_association :card, params: true
 
-  finalize do |source, record, kase:, **|
+  finalize do |source, record, **_params|
     if source.artwork.attached? && source.artwork.blob
       record.artwork.attach(source.artwork.blob)
     end

@@ -92,6 +92,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                   }
                 >
                   <MaybeSpotlight
+                    key={spotlightKey}
                     spotlightKey={spotlightKey}
                     placement="bottom"
                   >

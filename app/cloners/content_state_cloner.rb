@@ -2,7 +2,9 @@
 
 # @see ContentState
 class ContentStateCloner < Clowne::Cloner
-  finalize do |_source, record, kase:, **|
+  finalize do |_source, record, params|
+    kase = params.fetch(:kase)
+
     unless record.entity_map.blank?
       record.entity_map.transform_values! do |entity|
         next entity unless entity.type.to_s == 'EDGENOTE'

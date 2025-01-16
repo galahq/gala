@@ -23,7 +23,7 @@ class CaseElement < ApplicationRecord
   # The filter parameters used to find the corresponding {Ahoy::Event}s
   # @see Trackable#event_properties
   def event_properties
-    { case_slug: this.case.slug,
+    { case_slug: self.case.slug,
       element_type: element_type,
       element_id: element_id }
   end

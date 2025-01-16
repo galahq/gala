@@ -11,7 +11,7 @@ class PodcastDecorator < ApplicationDecorator
   end
 
   def artwork_url(transforms = { width: 950, height: 384 })
-    ImageDecorator.decorate(artwork).resized_path transforms
+    ImageDecorator.decorate(artwork).resized_path(**transforms)
   end
 
   def audio_url
