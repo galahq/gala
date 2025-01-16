@@ -41,6 +41,7 @@ gem 'rolify'
 # Events
 gem 'ahoy_matey'
 gem 'groupdate'
+gem 'barnes'
 
 # Localization
 gem 'http_accept_language'
