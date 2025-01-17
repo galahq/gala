@@ -8,14 +8,17 @@ gem 'rails', '~> 7.0'
 
 # Infrastructure
 gem 'aws-sdk-s3'
-gem 'bootsnap'
+gem 'bootsnap',  require: false
 gem 'connection_pool'
+gem 'get_process_mem'
 gem 'image_processing'
 gem 'pg', '1.5.0'
 gem 'puma'
 gem 'rack-canonical-host'
+gem 'rack-attack'
 gem 'redis', '~> 4.5'
 gem 'sidekiq', '~> 7.0'
+#gem 'redis-client' # New Redis client, faster than redis-rb
 
 # Models
 gem 'active_storage_validations'
@@ -74,7 +77,6 @@ gem 'webpacker', '~> 5.4'
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
-gem 'awesome_print'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1' # sentry-ruby
 gem 'skylight', '~> 5.2'
@@ -98,6 +100,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen'
   gem 'web-console', '>= 4.1.0'
+  gem 'awesome_print'
 
   gem 'doc_to_dash'
   gem 'yard'

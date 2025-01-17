@@ -1,52 +1,77 @@
 # frozen_string_literal: true
 
-# Logs memory usage statistics in production environment
 
-def puma_web_process?
-  `ps -p #{Process.pid} -o command=`.include?('puma') rescue false
-end
+module MemoryMonitor
+  extend self
 
-def format_memory(mb)
-  if mb > 1024
-    "%.2f GB" % (mb / 1024.0)
-  else
-    "%.2f MB" % mb
+  def check_memory
+    memory = GetProcessMem.new.mb
+    if memory > 900
+      Rails.logger.warn "Memory usage high: #{memory}MB"
+      GC.start
+      GC.compact
+    end
   end
 end
 
-def using_jemalloc?
-  ENV['LD_PRELOAD']&.include?('libjemalloc.so') ||
-    `ldd /proc/#{Process.pid}/exe 2>/dev/null`&.include?('libjemalloc.so') rescue false
-end
-
-# Print memory allocator info on startup
-if puma_web_process?
-  allocator = using_jemalloc? ? "\033[32mJEMALLOC ✓\033[0m" : "\033[31mDefault Ruby GC ✗\033[0m"
-  puts "\n\033[34m=== Memory Allocator ===\033[0m"
-  puts "▸ Using: #{allocator}"
-  puts "▸ LD_PRELOAD: #{ENV['LD_PRELOAD'] || 'not set'}"
-  puts "▸ MALLOC_CONF: #{ENV['MALLOC_CONF'] || 'not set'}\n\n"
-end
-
-if defined?(JEMALLOC) && puma_web_process?
+if defined?(Rails::Server)
   Thread.new do
     loop do
       sleep 30
-      memory = GetProcessMem.new
-      rss = memory.mb
-      gc_stats = GC.stat
-
-      puts "\n\033[34m=== Memory Stats (PID: #{Process.pid}) ===\033[0m"
-      puts "\033[32m▸ RSS Memory: #{format_memory(rss)}"
-      puts "▸ Objects: #{gc_stats[:total_allocated_objects].to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\\1,')}"
-      puts "▸ GC Count: #{gc_stats[:count]}"
-      puts "▸ Major GC: #{gc_stats[:major_gc_count]}"
-      puts "▸ Minor GC: #{gc_stats[:minor_gc_count]}\033[0m\n"
+      MemoryMonitor.check_memory
     end
   end
-else
-  puts "JEMALLOC monitoring skipped for process #{Process.pid} (not a Puma web process)"
 end
+
+
+
+##### Logs memory usage statistics in production environment
+
+# def puma_web_process?
+#   `ps -p #{Process.pid} -o command=`.include?('puma') rescue false
+# end
+
+# def format_memory(mb)
+#   if mb > 1024
+#     "%.2f GB" % (mb / 1024.0)
+#   else
+#     "%.2f MB" % mb
+#   end
+# end
+
+# def using_jemalloc?
+#   ENV['LD_PRELOAD']&.include?('libjemalloc.so') ||
+#     `ldd /proc/#{Process.pid}/exe 2>/dev/null`&.include?('libjemalloc.so') rescue false
+# end
+
+# # Print memory allocator info on startup
+# if puma_web_process?
+#   allocator = using_jemalloc? ? "\033[32mJEMALLOC ✓\033[0m" : "\033[31mDefault Ruby GC ✗\033[0m"
+#   puts "\n\033[34m=== Memory Allocator ===\033[0m"
+#   puts "▸ Using: #{allocator}"
+#   puts "▸ LD_PRELOAD: #{ENV['LD_PRELOAD'] || 'not set'}"
+#   puts "▸ MALLOC_CONF: #{ENV['MALLOC_CONF'] || 'not set'}\n\n"
+# end
+
+# if defined?(JEMALLOC) && puma_web_process?
+#   Thread.new do
+#     loop do
+#       sleep 30
+#       memory = GetProcessMem.new
+#       rss = memory.mb
+#       gc_stats = GC.stat
+
+#       puts "\n\033[34m=== Memory Stats (PID: #{Process.pid}) ===\033[0m"
+#       puts "\033[32m▸ RSS Memory: #{format_memory(rss)}"
+#       puts "▸ Objects: #{gc_stats[:total_allocated_objects].to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\\1,')}"
+#       puts "▸ GC Count: #{gc_stats[:count]}"
+#       puts "▸ Major GC: #{gc_stats[:major_gc_count]}"
+#       puts "▸ Minor GC: #{gc_stats[:minor_gc_count]}\033[0m\n"
+#     end
+#   end
+# else
+#   puts "JEMALLOC monitoring skipped for process #{Process.pid} (not a Puma web process)"
+# end
 
 # if defined?(Rack::MiniProfiler)
 #   Rack::MiniProfiler.config.position = 'bottom-right'

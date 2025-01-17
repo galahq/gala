@@ -1,7 +1,7 @@
 services:
   web:
-    image: gala_ruby3-2_rails7-0:latest
-    platform: linux/amd64
+    image: gala_ruby3-2_rails7-0-x86_64:latest
+    mem_limit: 1g
     build:
       dockerfile: Dockerfile
       context: .

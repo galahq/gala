@@ -6,7 +6,7 @@ module ApplicationCable
 
     def connect
       self.current_reader = find_verified_reader
-      self.last_active_at = Time.now
+      self.last_active_at = Time.current
       start_cleanup_timer
     end
 
@@ -16,7 +16,7 @@ module ApplicationCable
     end
 
     def received(data)
-      self.last_active_at = Time.now
+      self.last_active_at = Time.current
       super
     end
 
@@ -32,7 +32,7 @@ module ApplicationCable
     end
 
     def connection_inactive?
-      Time.now - last_active_at > 30.minutes
+      Time.current - last_active_at > 30.minutes
     end
 
     def find_verified_reader
@@ -43,3 +43,4 @@ module ApplicationCable
     end
   end
 end
+

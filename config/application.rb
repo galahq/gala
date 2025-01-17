@@ -23,6 +23,9 @@ module Orchard
 
     config.active_record.schema_format = :sql
 
+    # Add Rack::Attack to the middleware stack
+    config.middleware.use Rack::Attack
+
     config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
   end
 end

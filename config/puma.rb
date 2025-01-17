@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'puma_worker_killer'
+require 'barnes'
 
-# PumaWorkerKiller Configuration
+# Memory and Monitoring Configuration
 PumaWorkerKiller.enable_rolling_restart
 PumaWorkerKiller.config do |config|
   config.ram = 1024 # 1GB RAM
@@ -14,27 +15,66 @@ end
 
 PumaWorkerKiller.start
 
-# Puma Configuration
-port ENV.fetch('PORT', 3000)
-threads_count = ENV.fetch("RAILS_MAX_THREADS", 5).to_i
-threads threads_count, threads_count
-workers ENV.fetch("WEB_CONCURRENCY", 2).to_i
+# Puma server configuration
+workers ENV.fetch("WEB_CONCURRENCY") { 2 }
+max_threads_count = ENV.fetch("RAILS_MAX_THREADS") { 3 }
+min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
+threads min_threads_count, max_threads_count
 
+# Use the `preload_app!` method when specifying a `workers` number.
 preload_app!
-nakayoshi_fork
+
+# Worker configuration
+worker_timeout 30
+nakayoshi_fork true
 wait_for_less_busy_worker 0.001
 
+# Lifecycle hooks
 before_fork do
-  ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
-  Redis.current.disconnect! if defined?(Redis)
+  GC.compact
 end
 
 on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
-  Redis.current = Redis.new(url: ENV['REDIS_URL']) if defined?(Redis)
-end
 
-plugin :tmp_restart
+  # Initialize Barnes metrics for this worker
+  Barnes.start do |stats|
+    # Basic Ruby metrics
+    stats.gauge('ruby.heap_slots.live', GC.stat[:heap_live_slots])
+    stats.gauge('ruby.heap_slots.free', GC.stat[:heap_free_slots])
+    stats.gauge('ruby.heap_slots.total', GC.stat[:heap_slots])
+
+    # Memory metrics
+    memory = GetProcessMem.new
+    stats.gauge('memory.rss', memory.bytes.to_i)
+    stats.gauge('memory.mb', memory.mb.round(2))
+
+    # GC metrics
+    gc_stats = GC.stat
+    stats.gauge('gc.count', gc_stats[:count])
+    stats.gauge('gc.major_count', gc_stats[:major_gc_count])
+    stats.gauge('gc.minor_count', gc_stats[:minor_gc_count])
+
+    # Thread metrics
+    stats.gauge('threads.count', Thread.list.count)
+    stats.gauge('threads.busy', Thread.list.count { |thread| thread.status == "run" })
+
+    # Sidekiq metrics if running
+    if defined?(Sidekiq)
+      stats.gauge('sidekiq.processes', Sidekiq::ProcessSet.new.size)
+      stats.gauge('sidekiq.queues', Sidekiq::Queue.all.sum(&:size))
+    end
+
+    # Redis connection pool metrics
+    if defined?(Redis) && Redis.respond_to?(:current) && Redis.current.respond_to?(:connection)
+      pool = Redis.current.connection.fetch(:id)
+      if pool.respond_to?(:available)
+        stats.gauge('redis.pool.available', pool.available)
+        stats.gauge('redis.pool.used', pool.size - pool.available)
+      end
+    end
+  end
+end
 
 
 

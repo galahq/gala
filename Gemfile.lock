@@ -409,6 +409,8 @@ GEM
       activesupport (>= 3.0.0)
     racc (1.8.1)
     rack (2.2.10)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
     rack-canonical-host (1.3.0)
       addressable (> 0, < 3)
       rack (>= 1.6, < 4)
@@ -641,6 +643,7 @@ DEPENDENCIES
   flamegraph
   foreman
   friendly_id
+  get_process_mem
   groupdate
   guard-rspec
   haml (= 5.1.2)
@@ -674,6 +677,7 @@ DEPENDENCIES
   puma
   puma_worker_killer (~> 1.0)
   pundit
+  rack-attack
   rack-canonical-host
   rack-mini-profiler
   rails (~> 7.0)
