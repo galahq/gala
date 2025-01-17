@@ -27,7 +27,7 @@ preload_app!
 # Worker configuration
 worker_timeout 30
 nakayoshi_fork true
-wait_for_less_busy_worker 0.001
+# wait_for_less_busy_worker 0.001
 
 # Lifecycle hooks
 before_fork do
