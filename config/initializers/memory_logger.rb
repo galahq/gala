@@ -14,6 +14,20 @@ def format_memory(mb)
   end
 end
 
+def using_jemalloc?
+  ENV['LD_PRELOAD']&.include?('libjemalloc.so') ||
+    `ldd /proc/#{Process.pid}/exe 2>/dev/null`&.include?('libjemalloc.so') rescue false
+end
+
+# Print memory allocator info on startup
+if puma_web_process?
+  allocator = using_jemalloc? ? "\033[32mJEMALLOC ✓\033[0m" : "\033[31mDefault Ruby GC ✗\033[0m"
+  puts "\n\033[34m=== Memory Allocator ===\033[0m"
+  puts "▸ Using: #{allocator}"
+  puts "▸ LD_PRELOAD: #{ENV['LD_PRELOAD'] || 'not set'}"
+  puts "▸ MALLOC_CONF: #{ENV['MALLOC_CONF'] || 'not set'}\n\n"
+end
+
 if defined?(JEMALLOC) && puma_web_process?
   Thread.new do
     loop do

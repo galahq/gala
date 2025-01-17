@@ -1,14 +1,53 @@
 # # frozen_string_literal: true
 
-workers ENV.fetch("WEB_CONCURRENCY") { 2 }
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i
+
+
+# Puma configuration file
+
+# Set the default port
+port ENV.fetch('PORT', 3000)
+
+# Match threads with RAILS_MAX_THREADS config var
+threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads threads_count, threads_count
 
+# Match workers with WEB_CONCURRENCY config var
+workers ENV.fetch("WEB_CONCURRENCY", 1)
+
+# Preload the app for better memory usage with copy-on-write
 preload_app!
 
-rackup DefaultRackup
-port ENV.fetch("PORT") { 3000 }
-environment ENV.fetch("RAILS_ENV") { "development" }
+# Optimize for copy-on-write memory usage
+nakayoshi_fork
+
+# Better request distribution
+wait_for_less_busy_worker 0.001
+
+# Clean up connections
+before_fork do
+  ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
+end
+
+on_worker_boot do
+  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+end
+
+# Allow puma to be restarted by `bin/rails restart` command
+plugin :tmp_restart
+
+
+
+
+
+# workers ENV.fetch("WEB_CONCURRENCY") { 2 }
+# threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i
+# threads threads_count, threads_count
+
+# preload_app!
+
+# rackup DefaultRackup
+# port ENV.fetch("PORT") { 3000 }
+# environment ENV.fetch("RAILS_ENV") { "development" }
 
 
 # # This configuration file will be evaluated by Puma. The top-level methods that
