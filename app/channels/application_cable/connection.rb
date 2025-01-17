@@ -1,27 +1,38 @@
 # frozen_string_literal: true
 
 module ApplicationCable
-  # Handles WebSocket connections for Action Cable, managing reader authentication
-  # and connection lifecycle.
   class Connection < ActionCable::Connection::Base
-    identified_by :current_reader
+    identified_by :current_reader, :last_active_at
 
     def connect
       self.current_reader = find_verified_reader
+      self.last_active_at = Time.now
       start_cleanup_timer
+    end
+
+    def disconnect
+      @cleanup_timer&.shutdown
+      super
+    end
+
+    def received(data)
+      self.last_active_at = Time.now
+      super
     end
 
     private
 
     def start_cleanup_timer
-      # Check every 30 minutes and close if inactive
-      Rails.application.executor.wrap do
-        @cleanup_timer = Thread.new do
-          sleep 30.minutes
-          Rails.logger.info { "Closing connection for #{current_reader&.id}" }
-          close
-        end
+      @cleanup_timer&.shutdown # Clean up any existing timer
+      @cleanup_timer = Concurrent::TimerTask.new(execution_interval: 10.minutes) do
+        Rails.logger.info { "Checking connection for #{current_reader&.id}" }
+        close if connection_inactive?
       end
+      @cleanup_timer.execute
+    end
+
+    def connection_inactive?
+      Time.now - last_active_at > 30.minutes
     end
 
     def find_verified_reader
