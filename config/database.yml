@@ -19,7 +19,7 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 3) %>
+  pool: <%= ENV.fetch("WEB_CONCURRENCY", 2).to_i * ENV.fetch("RAILS_MAX_THREADS", 5).to_i %>
   url: <%= ENV.fetch("DATABASE_URL") { "postgres://gala:alpine@db:5432/gala" }  %>
 
 development:

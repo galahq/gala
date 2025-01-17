@@ -139,3 +139,5 @@ group :test do
   gem 'shoulda-matchers', '~> 4.5'
   gem 'webdrivers', require: false
 end
+
+gem "puma_worker_killer", "~> 1.0"

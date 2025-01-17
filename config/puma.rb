@@ -1,38 +1,39 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 
+require 'puma_worker_killer'
 
+# PumaWorkerKiller Configuration
+PumaWorkerKiller.enable_rolling_restart
+PumaWorkerKiller.config do |config|
+  config.ram = 1024 # 1GB RAM
+  config.frequency = 30 # Check memory every 30 seconds
+  config.percent_usage = 0.90 # Restart if memory exceeds 90%
+  config.rolling_restart_frequency = 6 * 3600 # Restart all workers every 6 hours
+  config.pre_term = ->(worker) { Rails.logger.info("Terminating worker #{worker.pid} for memory usage") }
+end
 
-# Puma configuration file
+PumaWorkerKiller.start
 
-# Set the default port
+# Puma Configuration
 port ENV.fetch('PORT', 3000)
-
-# Match threads with RAILS_MAX_THREADS config var
-threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
+threads_count = ENV.fetch("RAILS_MAX_THREADS", 5).to_i
 threads threads_count, threads_count
+workers ENV.fetch("WEB_CONCURRENCY", 2).to_i
 
-# Match workers with WEB_CONCURRENCY config var
-workers ENV.fetch("WEB_CONCURRENCY", 1)
-
-# Preload the app for better memory usage with copy-on-write
 preload_app!
-
-# Optimize for copy-on-write memory usage
 nakayoshi_fork
-
-# Better request distribution
 wait_for_less_busy_worker 0.001
 
-# Clean up connections
 before_fork do
   ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
+  Redis.current.disconnect! if defined?(Redis)
 end
 
 on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+  Redis.current = Redis.new(url: ENV['REDIS_URL']) if defined?(Redis)
 end
 
-# Allow puma to be restarted by `bin/rails restart` command
 plugin :tmp_restart
 
 
