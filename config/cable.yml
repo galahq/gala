@@ -12,6 +12,8 @@ test:
 production:
   adapter: redis
   channel_prefix: orchard_production
+  worker_pool_size: 4
+  max_connections: 1000
   url: <%= ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' } %>
   ssl_params: {
     verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>

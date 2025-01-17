@@ -11,6 +11,12 @@ module ApplicationCable
 
     private
 
+    # Add periodic cleanup
+    periodic_timers.push(every: 3600) do
+      # Cleanup old connections
+      transmit(type: 'ping')
+    end
+
     def find_verified_reader
       if (verified_user = env['warden'].user)
         verified_user
