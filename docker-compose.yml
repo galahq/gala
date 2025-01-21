@@ -16,7 +16,6 @@ services:
       RAILS_SERVE_STATIC_FILES: true
       WEB_CONCURRENCY: 2
       SIDEKIQ_CONCURRENCY: 1
-      SKYLIGHT_DISABLE_DEV_WARNING: true
       DOCKER_DEV: true
       BASE_URL: http://localhost:3000
       PORT: 3000

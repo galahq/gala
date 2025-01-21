@@ -18,19 +18,15 @@ preload_app!
 
 before_fork do
   PumaWorkerKiller.config do |config|
-    config.ram                       = 512  # mb
+    config.ram                       = 1024  # mb
     config.frequency                 = 10    # seconds
     config.percent_usage             = 0.98
-    config.rolling_restart_frequency = 300  #6 * 3600 # every 6 hours
+    config.rolling_restart_frequency = 6.hours.to_i
+    config.reaper_status_logs = true
+    config.pre_term = -> (worker) { puts "🛑 SIGTERM-inated PID##{worker.pid}" }
   end
   PumaWorkerKiller.start
   Barnes.start
 end
-
-# on_worker_boot do
-#   ActiveSupport.on_load(:active_record) do
-#     ActiveRecord::Base.establish_connection
-#   end
-# end
 
 plugin :tmp_restart
