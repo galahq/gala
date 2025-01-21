@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'barnes'
 require 'puma_worker_killer'
 
 persistent_timeout ENV.fetch('PERSISTENT_TIMEOUT') { 20 }.to_i
@@ -15,21 +16,21 @@ workers     ENV.fetch('WEB_CONCURRENCY') { 2 }.to_i
 
 preload_app!
 
-
 before_fork do
   PumaWorkerKiller.config do |config|
-    config.ram                       = 1024  # mb
-    config.frequency                 = 30    # seconds
+    config.ram                       = 512  # mb
+    config.frequency                 = 10    # seconds
     config.percent_usage             = 0.98
-    config.rolling_restart_frequency = 6 * 3600 # every 6 hours
+    config.rolling_restart_frequency = 300  #6 * 3600 # every 6 hours
   end
   PumaWorkerKiller.start
+  Barnes.start
 end
 
-on_worker_boot do
-  ActiveSupport.on_load(:active_record) do
-    ActiveRecord::Base.establish_connection
-  end
-end
+# on_worker_boot do
+#   ActiveSupport.on_load(:active_record) do
+#     ActiveRecord::Base.establish_connection
+#   end
+# end
 
 plugin :tmp_restart

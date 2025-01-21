@@ -79,7 +79,7 @@ gem 'awesome_print'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1' # sentry-ruby
 gem 'table_print'
-gem 'barnes'
+gem 'barnes', require: false
 
 # Services
 gem 'email_reply_parser'
