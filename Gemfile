@@ -13,8 +13,10 @@ gem 'connection_pool'
 gem 'image_processing'
 gem 'pg', '1.5.0'
 gem 'puma'
+gem 'puma_worker_killer'
+gem 'rack-attack'
 gem 'rack-canonical-host'
-gem 'redis', '~> 4.5'
+gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.0'
 
 # Models
@@ -33,7 +35,7 @@ gem 'devise', '~> 4.8'
 gem 'devise-i18n'
 gem 'ims-lti'
 gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', '0.8.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
 gem 'rolify'
@@ -49,7 +51,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.13'
+gem 'active_model_serializers', '0.10.13' # consider jsonapi-serializer
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'
@@ -76,8 +78,8 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1' # sentry-ruby
-gem 'skylight', '~> 5.2'
 gem 'table_print'
+gem 'barnes'
 
 # Services
 gem 'email_reply_parser'
