@@ -9,11 +9,7 @@
     </title>
 
     <%= favicon_link_tag 'favicon_gala.png' %>
-
-    <%# CSRF is this breaking the catalog caching? %>
     <%= csrf_meta_tags %>
-    <%# CSRF end %>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
 
     <%= render 'application/reader_javascript_tag' %>
@@ -21,11 +17,8 @@
       window.i18n = { locale: '<%=I18n.locale%>' }
     <% end %>
 
-    <%# CDN can these be npm installed? %>
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
     <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
-    <%# CDN end%>
-
     <%= javascript_pack_tag 'runtime' %>
     <%= javascript_pack_tag 'vendor' %>
 
