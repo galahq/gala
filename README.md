@@ -1,10 +1,8 @@
 # Gala
 
-[![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/master/LICENSE)
-[![GitHub release badge.](https://img.shields.io/github/release/galahq/gala.svg)](https://github.com/galahq/gala/releases)
+[![Build Status](https://gala.semaphoreci.com/badges/gala/branches/main.svg?style=shields&key=20c5d16c-4ccf-4a1c-9d94-fa81d9b0224e)](https://gala.semaphoreci.com/projects/gala)
+[![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/main/LICENSE)
 [![Greenkeeper badge.](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
-
-
 
 Gala is a platform for authoring, teaching, and sharing media-rich teaching cases and modules.
 
