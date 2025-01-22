@@ -3,8 +3,6 @@
 # BASE_URL for production and staging:
 #  production: https://www.learngala.com
 #     staging: https://msc-gala-staging.herokuapp.com
-ENV['IS_STAGING'] = (ENV['BASE_URL'].present? &&
-                     ENV['BASE_URL'].include?('staging')).to_s
 
 BASE_URL_HOST = ENV['BASE_URL']&.gsub(%r{^https?://}, '')
 

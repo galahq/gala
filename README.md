@@ -1,13 +1,10 @@
 # Gala
 
-[![GitHub release badge.](https://img.shields.io/github/release/galahq/gala.svg)](https://github.com/galahq/gala/releases)
-![Github commits (since latest release)](https://img.shields.io/github/commits-since/galahq/gala/latest.svg)
-[![CircleCI badge.](https://img.shields.io/circleci/project/github/galahq/gala.svg)](https://circleci.com/gh/galahq/gala)
+[![Build Status](https://gala.semaphoreci.com/badges/gala/branches/main.svg?style=shields&key=20c5d16c-4ccf-4a1c-9d94-fa81d9b0224e)](https://gala.semaphoreci.com/projects/gala)
+[![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/main/LICENSE)
 [![Greenkeeper badge.](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
-[![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/master/LICENSE)
-[![View performance data on Skylight](https://badges.skylight.io/status/6Lds8pYSmCCl.svg?token=iomUc36sW5dvvuE2S9OWuezy1Svv-0WsgxAAVzY1PTA)](https://www.skylight.io/app/applications/6Lds8pYSmCCl)
 
-Gala is a platform for authoring, teaching, and sharing media-rich teaching cases and modules.  
+Gala is a platform for authoring, teaching, and sharing media-rich teaching cases and modules.
 
 Gala is free to use at www.learngala.com and we encourage you to join the community there. A guide getting started with Gala as a user and more information about features can be found at [docs.learngala.com/docs](https://docs.learngala.com/docs).
 
@@ -39,7 +36,7 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 
 - `docker compose up` to start the app
 - `docker compose down` to stop the app
-- `bundle exec rspec` to run the Ruby tests
+- `bundle exec rake test:unit` to run the Ruby tests
 - `yarn test` to run the Javascript tests
 
 ### Updating dependencies
