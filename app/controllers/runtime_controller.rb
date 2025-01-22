@@ -102,25 +102,46 @@ class RuntimeController < ApplicationController
   end
 
   def collect_process_number
-    counts = {
-      puma: `ps aux | grep [p]uma | wc -l`.strip.to_i,
-      sidekiq: `ps aux | grep [s]idekiq | wc -l`.strip.to_i
-    }
+    if ENV['DYNO'] # Check if running on Heroku
+      # Use environment variables or Heroku-specific methods
+      counts = {
+        puma: ENV['WEB_CONCURRENCY'].to_i || 0,
+        sidekiq: Sidekiq::ProcessSet.new.size
+      }
+    else
+      counts = {
+        puma: `ps aux | grep [p]uma | wc -l`.strip.to_i,
+        sidekiq: `ps aux | grep [s]idekiq | wc -l`.strip.to_i
+      }
+    end
     total = counts.values.sum
     "#{total} (Puma: #{counts[:puma]}, Sidekiq: #{counts[:sidekiq]})"
   end
 
   def collect_process_memory
-    memory = {
-      puma: `ps aux | grep [p]uma | awk '{sum += $6} END {print sum}'`.strip.to_i,
-      sidekiq: `ps aux | grep [s]idekiq | awk '{sum += $6} END {print sum}'`.strip.to_i
-    }
+    if ENV['DYNO'] # Check if running on Heroku
+      # Use process memory from GetProcessMem gem or similar
+      memory = {
+        puma: get_memory_for_type('web'),
+        sidekiq: get_memory_for_type('worker')
+      }
+    else
+      memory = {
+        puma: `ps aux | grep [p]uma | awk '{sum += $6} END {print sum}'`.strip.to_i,
+        sidekiq: `ps aux | grep [s]idekiq | awk '{sum += $6} END {print sum}'`.strip.to_i
+      }
+    end
 
     total = memory.values.sum
 
     "Total: #{format_memory(total / 1024.0)} " \
     "Puma: #{format_memory(memory[:puma] / 1024.0)}, " \
     "Sidekiq: #{format_memory(memory[:sidekiq] / 1024.0)})"
+  end
+
+  def get_memory_for_type(dyno_type)
+    return 0 unless ENV['DYNO']&.start_with?(dyno_type)
+    GetProcessMem.new.bytes.to_i / 1024 # Convert to KB
   end
 
   def check_jemalloc_for_pid
@@ -258,12 +279,26 @@ class RuntimeController < ApplicationController
   end
 
   def collect_jemalloc_stats
-    return nil unless defined?(Memory::Profiler)
+    return nil unless check_jemalloc_for_pid.include?('enabled')
 
-    stats = Memory::Profiler.stats
-    "allocated: #{format_memory(stats[:allocated] / 1024)}, " \
-    "retained: #{format_memory(stats[:retained] / 1024)}, " \
-    "fragmentation: #{stats[:fragmentation_ratio].round(2)}"
+    begin
+      # Use mallctl to get stats directly from jemalloc
+      stats = {}
+      IO.popen("MALLOC_CONF=stats_print:true #{RbConfig.ruby} -e 'exit'", err: [:child, :out]) do |io|
+        output = io.read
+        stats[:allocated] = output[/current_allocated_bytes:\s+(\d+)/, 1].to_i
+        stats[:active] = output[/active_bytes:\s+(\d+)/, 1].to_i
+        stats[:resident] = output[/resident_bytes:\s+(\d+)/, 1].to_i
+        stats[:mapped] = output[/mapped_bytes:\s+(\d+)/, 1].to_i
+      end
+
+      "allocated: #{format_memory(stats[:allocated] / 1024.0 / 1024.0)}, " \
+      "active: #{format_memory(stats[:active] / 1024.0 / 1024.0)}, " \
+      "resident: #{format_memory(stats[:resident] / 1024.0 / 1024.0)}, " \
+      "mapped: #{format_memory(stats[:mapped] / 1024.0 / 1024.0)}"
+    rescue StandardError => e
+      "Error: #{e.message}"
+    end
   end
 
   def collect_rate_limited_count
