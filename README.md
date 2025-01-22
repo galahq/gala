@@ -36,7 +36,7 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 
 - `docker compose up` to start the app
 - `docker compose down` to stop the app
-- `bundle exec rspec` to run the Ruby tests
+- `bundle exec rake test:unit` to run the Ruby tests
 - `yarn test` to run the Javascript tests
 
 ### Updating dependencies

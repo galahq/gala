@@ -1,6 +1,6 @@
 services:
   web:
-    image: gala_ruby3-2_rails7-0:latest
+    image: gala_ruby3-2_rails7-0x_1:latest
     platform: linux/amd64
     build:
       dockerfile: Dockerfile
