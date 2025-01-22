@@ -8,7 +8,7 @@ class RuntimeController < ApplicationController
   end
 
   def stats
-    response.headers["Content-Type"] = "text/html"
+    response.headers['Content-Type'] = 'text/html'
     render html: generate_stats_text.html_safe
   end
 
@@ -66,7 +66,7 @@ class RuntimeController < ApplicationController
         </div>
       </div>
       <script>
-        let countdown = 30;
+        let countdown = 10;
         setInterval(() => {
           countdown--;
           document.getElementById('countdown').textContent = countdown;
@@ -130,22 +130,21 @@ class RuntimeController < ApplicationController
     # Check libraries loaded by the current process
     ldd_output = `ldd #{executable_path} 2>/dev/null`
 
-    if ldd_output.include?("libjemalloc.so")
-      version = `ldconfig -p | grep libjemalloc.so | head -n1`.split.last rescue "version unknown"
+    if ldd_output.include?('libjemalloc.so')
+      version = `ldconfig -p | grep libjemalloc.so | head -n1`.split.last rescue 'version unknown'
       "enabled (#{version})"
     else
       # Double check maps file for dynamic loading
-      maps = File.read("/proc/#{pid}/maps") rescue ""
-      if maps.include?("libjemalloc.so")
-        "enabled (dynamically loaded)"
+      maps = File.read("/proc/#{pid}/maps") rescue ''
+      if maps.include?('libjemalloc.so')
+        'enabled (dynamically loaded)'
       else
-        "disabled"
+        'disabled'
       end
     end
   rescue StandardError => e
     "check failed: #{e.message}"
   end
-
 
   def os_version
     case RbConfig::CONFIG['host_os']
@@ -169,7 +168,7 @@ class RuntimeController < ApplicationController
   def collect_ruby_stats
     gc_stats = GC.stat
     {
-      ruby_engine: "#{RUBY_ENGINE} #{RUBY_VERSION}p#{(RUBY_PATCHLEVEL rescue nil)}",
+      ruby_engine: "#{RUBY_ENGINE} #{RUBY_VERSION}p#{RUBY_PATCHLEVEL rescue nil}",
       ruby_platform: RUBY_PLATFORM,
       ruby_patchlevel: RUBY_PATCHLEVEL,
       yjit_enabled: RubyVM::YJIT.enabled?,
@@ -269,7 +268,8 @@ class RuntimeController < ApplicationController
 
   def collect_rate_limited_count
     return 0 unless defined?(Rack::Attack)
-    Sidekiq.redis { |redis| redis.keys("rack::attack:*").count }
+
+    Sidekiq.redis { |redis| redis.keys('rack::attack:*').count }
   end
 
   def collect_cache_stats
@@ -278,7 +278,7 @@ class RuntimeController < ApplicationController
     misses = stats[:misses].to_i
     total = hits + misses
 
-    ratio = total > 0 ? (hits.to_f / total * 100).round(2) : 0
+    ratio = total.positive? ? (hits.to_f / total * 100).round(2) : 0
     "#{hits} hits / #{misses} misses (#{ratio}% hit ratio)"
   end
 
@@ -304,9 +304,9 @@ class RuntimeController < ApplicationController
   end
 
   def format_section(data)
-    return %Q(<span style="color: #f44747;">  ERROR: #{data[:error]}</span>) if data[:error]
+    return %(<span style="color: #f44747;">  ERROR: #{data[:error]}</span>) if data[:error]
 
-    %Q(  <dl style="
+    %(  <dl style="
       margin: 0;
       padding: 0;
       display: grid;
@@ -315,8 +315,9 @@ class RuntimeController < ApplicationController
     ">
       #{data.map do |key, value|
         next if value.nil?
+
         label = key.to_s.tr('_', ' ').upcase
-        %Q(    <dt style="
+        %(    <dt style="
           color: #888888;
           grid-column: 1;
           padding: 2px 0;
@@ -342,15 +343,15 @@ class RuntimeController < ApplicationController
   end
 
   def pg_version
-    execute("SHOW server_version").first["server_version"]
+    execute('SHOW server_version').first['server_version']
   end
 
   def active_connections
-    execute("SELECT count(*) FROM pg_stat_activity").first["count"]
+    execute('SELECT count(*) FROM pg_stat_activity').first['count']
   end
 
   def max_connections
-    execute("SHOW max_connections").first["max_connections"]
+    execute('SHOW max_connections').first['max_connections']
   end
 
   def connection_stats
@@ -365,7 +366,7 @@ class RuntimeController < ApplicationController
   end
 
   def database_size
-    size = execute("SELECT pg_database_size(current_database())").first["pg_database_size"]
+    size = execute('SELECT pg_database_size(current_database())').first['pg_database_size']
     format_memory(size / 1024.0 / 1024.0)
   end
 
@@ -376,14 +377,15 @@ class RuntimeController < ApplicationController
         sum(heap_blks_hit + heap_blks_read) as total
       FROM pg_statio_user_tables
     SQL
-    hits = result.first["hits"].to_f
-    total = result.first["total"].to_f
-    return 0.0 if total == 0
+    hits = result.first['hits'].to_f
+    total = result.first['total'].to_f
+    return 0.0 if total.zero?
+
     "#{((hits / total) * 100).round(2)}%"
   end
 
   def deadlocks
-    execute(<<-SQL).first["deadlocks"]
+    execute(<<-SQL).first['deadlocks']
       SELECT deadlocks
       FROM pg_stat_database
       WHERE datname = current_database()
@@ -391,7 +393,7 @@ class RuntimeController < ApplicationController
   end
 
   def conflicts
-    execute(<<-SQL).first["conflicts"]
+    execute(<<-SQL).first['conflicts']
       SELECT conflicts
       FROM pg_stat_database
       WHERE datname = current_database()
@@ -399,8 +401,9 @@ class RuntimeController < ApplicationController
   end
 
   def oldest_transaction_age
-    age = execute("SELECT extract(epoch from max(now() - xact_start)) as age FROM pg_stat_activity").first["age"]
-    return "N/A" unless age
+    age = execute('SELECT extract(epoch from max(now() - xact_start)) as age FROM pg_stat_activity').first['age']
+    return 'N/A' unless age
+
     "#{age.to_i} seconds"
   end
 
@@ -432,7 +435,7 @@ class RuntimeController < ApplicationController
       percentage = (ruby_memory_kb.to_f / total_memory_kb * 100).round(2)
       "#{format_memory(ruby_memory_kb / 1024.0)} of #{format_memory(total_memory_kb / 1024.0)} (#{percentage}%)"
     else
-      "Unsupported OS"
+      'Unsupported OS'
     end
   rescue StandardError => e
     "Error calculating memory: #{e.message}"
@@ -448,7 +451,7 @@ class RuntimeController < ApplicationController
     {
       connections: connections.count,
       # channels: collect_channel_stats(connections),
-      adapter: pubsub_adapter.class.name.demodulize,
+      adapter: pubsub_adapter.class.name.demodulize
     }.compact
   end
 end
