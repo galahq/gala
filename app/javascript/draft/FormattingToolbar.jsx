@@ -47,6 +47,12 @@ type ActionName =
 
 const ACTIONS: Action[] = [
   {
+    name: 'header',
+    icon: 'header',
+    call: async eS => RichUtils.toggleBlockType(eS, 'header-two'),
+    active: blockTypeEquals('header-two'),
+  },
+  {
     name: 'italic',
     icon: 'italic',
     call: async eS => RichUtils.toggleInlineStyle(eS, 'ITALIC'),
@@ -59,14 +65,7 @@ const ACTIONS: Action[] = [
     call: async eS => RichUtils.toggleInlineStyle(eS, 'CODE'),
     active: eS => eS.getCurrentInlineStyle().has('CODE'),
   },
-
-  {
-    name: 'header',
-    icon: 'header',
-    call: async eS => RichUtils.toggleBlockType(eS, 'header-two'),
-    active: blockTypeEquals('header-two'),
-  },
-
+  
   {
     name: 'blockquote',
     icon: 'citation',
