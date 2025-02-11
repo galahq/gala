@@ -36,6 +36,7 @@ RUN mkdir -p $NVM_DIR \
 RUN echo "gem: --no-document" > /etc/gemrc \
     && gem update --system 3.3.22 \
     && gem install bundler:2.4.19 \
+    && bundle config build.sassc --disable-march-tune-native \
     && bundle install --jobs 20 --retry 2 \
     && rm -rf ~/.bundle/ $BUNDLE_PATH/ruby/*/cache $BUNDLE_PATH/ruby/*/bundler/gems/*/.git \
     && gem cleanup all \
