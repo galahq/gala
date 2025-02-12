@@ -20,30 +20,40 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
   }, [editInProgress])
 
   const handleClick = e => {
-    e.preventDefault()
-    if (!editInProgress) {
-      setIsRevealed(!isRevealed)
+    if (editInProgress) {
+      return
     }
+    
+    e.preventDefault()
+    setIsRevealed(!isRevealed)
   }
 
   const handleKeyDown = e => {
+    if (editInProgress) {
+      return
+    }
+
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
       handleClick(e)
     }
   }
 
+  const interactiveProps = editInProgress ? {} : {
+    role: "button",
+    onClick: handleClick,
+    onKeyDown: handleKeyDown,
+    tabIndex: 0
+  }
+
   return (
     <div 
-      role="button"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      className={`revealable-entity ${isRevealed ? 'revealable-entity--revealed' : ''}`}
+      {...interactiveProps}
+      className={`revealable-entity ${isRevealed ? 'revealable-entity--revealed' : ''} ${editInProgress ? 'revealable-entity--editing' : ''}`}
       aria-expanded={isRevealed}
-      tabIndex={editInProgress ? -1 : 0}
     >
       {/* Hidden text for screen readers when content is not revealed */}
-      {!isRevealed && (
+      {!isRevealed && !editInProgress && (
         <span className="sr-only">
           This text is hidden, press Enter or Space to reveal
         </span>
@@ -51,9 +61,9 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
 
       <span 
         className="revealable-entity__content"
-        aria-hidden={!isRevealed}
+        aria-hidden={!isRevealed && !editInProgress}
       >
-        {!isRevealed && (
+        {!isRevealed && !editInProgress && (
           <Icon
             icon="caret-down"
             className="revealable-entity__icon"
