@@ -120,45 +120,75 @@
       background-color: inherit
       cursor: initial
 
-      &:hover
-        background-color: inherit
+.revealable-entity
+  display: inline-block
+  font-family: $serifFont
+  font-weight: 400
+  font-size: 19px
+  text-decoration: none
+  text-align: left
+  cursor: pointer
+  background: none
+  border: none
+  padding: 0
+  position: relative
+  -webkit-hyphens: auto
+  -moz-hyphens: auto
+  hyphens: auto
 
-a.c-revealable-entity
+  &:focus
+    outline: 2px solid #6ACB72
+    outline-offset: 2px
+
+  &__content
     display: inline-block
-    font-family: $serifFont
-    font-weight: 400
-    font-size: 19px
-    text-decoration: none
-    transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-    border: 1px dotted $black
-    text-align: left
-    -webkit-hyphens: auto
-    -moz-hyphens: auto
-    hyphens: auto
-
-    span
-      text-decoration: none
-      text-shadow: 0 0 6px $black
+    position: relative
+    min-width: 40px
+    
+    &[aria-hidden="true"]
       color: transparent
+      background: rgba(1, 24, 45, 0.8)
+      border-radius: 3px
+      user-select: none
 
-    &--reveal
-      border: 1px dotted $black
-      display: inline-block
-      text-align: left
-      transition: border 0.15s cubic-bezier(0.33, 0.66, 0.66, 1)
-      font-family: $serifFont
-      font-weight: 400
-      font-size: 19px
-      span
-        text-shadow: none
-        color: $black
-        
+      &:hover
+        background: rgba(1, 24, 45, 0.7)
 
-    &--reveal.editing
-      cursor: text
+  &__icon
+    position: absolute
+    top: 4px
+    left: 4px
+    color: #6ACB72
+    width: 14px
+    height: 14px
 
-    &--reveal.editing
-      cursor: text
+  &--revealed
+    .revealable-entity__content
+      color: rgba(1, 24, 45, 0.7)
+      background: #2839491a
+      
+
+  &--editing
+    cursor: text
+    
+    .revealable-entity__content
+      color: rgba(1, 24, 45, 0.7)
+      background: #2839491a
+      
+      &[aria-hidden="true"]
+        background: transparent
+        text-decoration: none
+
+.sr-only
+  position: absolute
+  width: 1px
+  height: 1px
+  padding: 0
+  margin: -1px
+  overflow: hidden
+  clip: rect(0, 0, 0, 0)
+  white-space: nowrap
+  border: 0    
 
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0

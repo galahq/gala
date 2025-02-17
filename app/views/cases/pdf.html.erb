@@ -28,6 +28,9 @@ PDF by the Case::Pdf model using pdfkit (wkhtmltopdf under the hood).
 
   <dt><%= t 'activerecord.attributes.case.license' %></dt>
   <dd><%= link_to @case.license_config['name'], @case.license_config['url'] %></dd>
+
+   <dt><%= t 'activerecord.attributes.case.date_archived' %></dt>
+   <dd><%= Date.today.strftime("%B %d, %Y") %></dd>
 </dl>
 
 <h2><%= t '.overview' %></h2>

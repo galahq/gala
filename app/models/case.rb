@@ -184,7 +184,7 @@ class Case < ApplicationRecord
         select updated_at from edgenotes where case_id = #{id}
       ) as combined
     SQL
-    [updated_at, result['max_updated_at']].max
+    [updated_at, result['max_updated_at']].compact.max
   end
 
   # This is to conform with Lockable

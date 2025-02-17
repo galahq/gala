@@ -11,10 +11,12 @@ gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'connection_pool'
 gem 'image_processing'
-gem 'pg'
+gem 'pg', '~> 1.5.4'
 gem 'puma'
+gem 'puma_worker_killer'
+gem 'rack-attack'
 gem 'rack-canonical-host'
-gem 'redis', '~> 4.5'
+gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.0'
 
 # Models
@@ -34,7 +36,6 @@ gem 'devise-i18n'
 gem 'ims-lti'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2', '0.8.0'
-gem 'omniauth-oauth2', '1.6.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
 gem 'rolify'
@@ -50,7 +51,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.13'
+gem 'active_model_serializers', '0.10.13' # consider jsonapi-serializer
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'
@@ -61,9 +62,6 @@ gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
 gem 'redcarpet'
 gem 'rexml'
-
-# wikidata integration
-gem 'sparql-client'
 
 # `galahq/case_grid` is not working and needs an update to fix this error:
 # NoMethodError (undefined method `matte=' for {dimension} DirectClass...
@@ -80,13 +78,14 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1' # sentry-ruby
-gem 'skylight', '~> 5.2'
 gem 'table_print'
+gem 'barnes', require: false
 
 # Services
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
+gem 'sparql-client'
 
 # To seed the database for Heroku review apps, this is included in production
 gem 'factory_bot_rails'

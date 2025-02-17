@@ -3,64 +3,88 @@
  * @flow
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, memo } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import type { State } from 'redux/state'
+import { Icon } from '@blueprintjs/core'
 
-function mapStateToProps (state: State) {
-  return {
-    editInProgress: state.edit.inProgress,
-  }
-}
+const mapStateToProps = state => ({
+  editInProgress: state.edit.inProgress,
+})
 
-function RevealableComponent (props) {
-  const { editInProgress, children } = props
-  const [reveal, setReveal] = useState(false)
+const RevealableComponent = memo(({ editInProgress, children }) => {
+  const [isRevealed, setIsRevealed] = useState(false)
 
   useEffect(() => {
-    setReveal(editInProgress)
+    setIsRevealed(editInProgress)
   }, [editInProgress])
 
-  function onClick () {
+  const handleClick = e => {
     if (editInProgress) {
-      return true
+      return
     }
-    setReveal(!reveal)
+    
+    e.preventDefault()
+    setIsRevealed(!isRevealed)
   }
 
-  function onKeyDown (event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      onClick()
+  const handleKeyDown = e => {
+    if (editInProgress) {
+      return
+    }
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleClick(e)
     }
   }
 
-  const conditionalProps = {}
-  if (!editInProgress) {
-    conditionalProps.tabIndex = 0
+  const interactiveProps = editInProgress ? {} : {
+    role: "button",
+    onClick: handleClick,
+    onKeyDown: handleKeyDown,
+    tabIndex: 0
   }
 
   return (
-    // eslint-disable-next-line
-    <a role="button"
-       className={`pt-button pt-minimal c-revealable-entity${reveal ? '--reveal' : ''}`}
-       aria-label={"This text is hidden, click to reveal"}
-       onClick={onClick}
-       onKeyDown={onKeyDown}
-       {...conditionalProps}
+    <div 
+      {...interactiveProps}
+      className={`revealable-entity ${isRevealed ? 'revealable-entity--revealed' : ''} ${editInProgress ? 'revealable-entity--editing' : ''}`}
+      aria-expanded={isRevealed}
     >
-      <span aria-live="assertive" aria-hidden={!reveal}>{children.map((child, index) =>
-        <span key={index} >
-          {React.cloneElement(child, { forceSelection: true })}
+      {/* Hidden text for screen readers when content is not revealed */}
+      {!isRevealed && !editInProgress && (
+        <span className="sr-only">
+          This text is hidden, press Enter or Space to reveal
         </span>
-      )}</span>
-    </a>
+      )}
+
+      <span 
+        className="revealable-entity__content"
+        aria-hidden={!isRevealed && !editInProgress}
+      >
+        {!isRevealed && !editInProgress && (
+          <Icon
+            icon="caret-down"
+            className="revealable-entity__icon"
+            aria-hidden="true"
+          />
+        )}
+        {React.Children.map(children, (child, index) => (
+          <span key={index}>
+            {React.cloneElement(child, { forceSelection: true })}
+          </span>
+        ))}
+      </span>
+    </div>
   )
+})
+
+RevealableComponent.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node).isRequired,
+  editInProgress: PropTypes.bool.isRequired,
 }
 
-// $FlowFixMe
-const RevealableEntity = connect(
-  mapStateToProps
-)(RevealableComponent)
+RevealableComponent.displayName = 'RevealableComponent'
 
-export default RevealableEntity
+export default connect(mapStateToProps)(RevealableComponent)

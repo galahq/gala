@@ -239,4 +239,7 @@ Rails.application.routes.draw do
   end
 
   post 'admin/cases/:id/copy', to: "admin/cases#copy", as: 'copy_admin_case'
+
+  get 'runtime/stats', to: 'runtime#stats'
+
 end
