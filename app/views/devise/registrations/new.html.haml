@@ -33,9 +33,9 @@
                            autocomplete: "new-password"
 
       = f.submit t('.sign_up'), class: %w[pt-intent-primary]
-
-      %a.pt-button.pt-icon-log-in.oauth-icon-google{role: 'button',
-        href: omniauth_authorize_path('authentication_strategy', 'google')}
-        = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
+      - if ENV['TEMPORARY_UNCONFIRMED_ACCESS'] == 'false'
+        %a.pt-button.pt-icon-log-in.oauth-icon-google{role: 'button',
+          href: omniauth_authorize_path('authentication_strategy', 'google')}
+          = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
 
     = render "devise/shared/links"

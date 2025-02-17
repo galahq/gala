@@ -9,5 +9,6 @@
                 target: '_blank', rel: 'noopener noreferrer'
       = link_to 'Open Source', 'https://github.com/galahq/gala',
                 target: '_blank', rel: 'noopener noreferrer'
-      %a{ href: "https://github.com/galahq/gala/releases/tag/#{ENV['RELEASE']}" }
-        = ENV['RELEASE']
+      - if ENV['RELEASE'].present?
+        %a.footer__release{ href: "https://github.com/galahq/gala/releases/tag/#{ENV['RELEASE']}" }
+          = ENV['RELEASE']

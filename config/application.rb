@@ -9,6 +9,16 @@ require 'csv'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Set release version
+ENV['RELEASE'] = 'v2.2.0' # TODO: experiment doing github releases again
+# Determine if we're in staging environment
+ENV['STAGING'] = (ENV['BASE_URL']&.include?('staging')).to_s
+# Allow temporary unconfirmed access in staging or development
+ENV['TEMPORARY_UNCONFIRMED_ACCESS'] ||=
+  (ENV['STAGING'] == 'true' || Rails.env.development?).to_s
+
+puts [ENV['RELEASE'], ENV['STAGING'], ENV['TEMPORARY_UNCONFIRMED_ACCESS']].inspect
+
 module Orchard
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -25,8 +35,6 @@ module Orchard
     unless ENV['SIDEKIQ_CONCURRENCY'].present?
       config.middleware.use Rack::Deflater
     end
-
-    ENV['RELEASE'] = 'v2.2.0' # TODO: experiment doing github releases again
 
   end
 end
