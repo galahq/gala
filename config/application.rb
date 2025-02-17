@@ -25,5 +25,8 @@ module Orchard
     unless ENV['SIDEKIQ_CONCURRENCY'].present?
       config.middleware.use Rack::Deflater
     end
+
+    ENV['RELEASE'] = 'v2.2.0' # TODO: experiment doing github releases again
+
   end
 end
