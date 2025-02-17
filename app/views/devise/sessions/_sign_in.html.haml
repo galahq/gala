@@ -20,5 +20,10 @@
     %a.pt-button.pt-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
       href: omniauth_authorize_path('authentication_strategy', 'google') }
       = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
+  - else
+    %a.pt-button.pt-icon-log-in.oauth-icon-google.pt-disabled{ role: 'button', tabindex: '-1',
+      href: 'javascript:void(0)',
+      style: 'pointer-events: none; opacity: 0.6;' }
+      = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
 
 = render "devise/shared/links"
