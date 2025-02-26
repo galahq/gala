@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
 import { Button } from '@blueprintjs/core'
-import { EditorState, RichUtils } from 'draft-js'
+import { EditorState, RichUtils, Modifier } from 'draft-js'
 
 import { displayToast } from 'redux/actions'
 import {
@@ -19,11 +19,15 @@ import {
   addCitationEntity,
   toggleMath,
   toggleRevealableEntity,
+  toggleSubscript,
+  toggleSuperscript,
 } from './helpers'
 
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 
 import type { IntlShape } from 'react-intl'
+import SubscriptIcon from './icons/SubscriptIcon'
+import SuperscriptIcon from './icons/SuperscriptIcon'
 
 type Action = {
   name: ActionName,
@@ -44,6 +48,8 @@ type ActionName =
   | 'addCitationEntity'
   | 'addMathEntity'
   | 'addRevealableEntity'
+  | 'subscript'
+  | 'superscript'
 
 const ACTIONS: Action[] = [
   {
@@ -117,6 +123,20 @@ const ACTIONS: Action[] = [
     call: async (eS, props) => toggleRevealableEntity(eS, props),
     active: entityTypeEquals('REVEALABLE'),
     spotlightKey: 'add_revealable',
+  },
+
+  {
+    name: 'subscript',
+    icon: <SubscriptIcon />,
+    call: toggleSubscript,
+    active: entityTypeEquals('SUBSCRIPT'),
+  },
+
+  {
+    name: 'superscript',
+    icon: <SuperscriptIcon />,
+    call: toggleSuperscript,
+    active: entityTypeEquals('SUPERSCRIPT'),
   },
 ]
 

@@ -12,6 +12,8 @@ import LinkEntity from './LinkEntity'
 import CommentThreadEntity from 'comments/CommentThreadEntity'
 import MathEntity from './MathEntity'
 import RevealableEntity from './RevealableEntity'
+import SubscriptEntity from './SubscriptEntity'
+import SuperscriptEntity from './SuperscriptEntity'
 
 export const styles = {
   smallCaps: {
@@ -51,6 +53,11 @@ export const styles = {
     textShadow: 'none',
     color: 'white',
   },
+
+  SUBSCRIPT: {
+    verticalAlign: 'sub',
+    fontSize: '0.75em'
+  }
 }
 
 type StyleMapArgs = {
@@ -122,6 +129,14 @@ export const decorator = new CompositeDecorator([
   {
     strategy: getFindEntityFunction('REVEALABLE'),
     component: RevealableEntity,
+  },
+  {
+    strategy: getFindEntityFunction('SUBSCRIPT'),
+    component: SubscriptEntity,
+  },
+  {
+    strategy: getFindEntityFunction('SUPERSCRIPT'),
+    component: SuperscriptEntity,
   },
 ])
 
