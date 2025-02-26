@@ -27,7 +27,7 @@ blocks:
             
             # Install system dependencies
             - sudo apt-get update
-            - sudo apt-get install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev postgresql-common
+            - DEBIAN_FRONTEND=noninteractive sudo apt-get install -y libmagickcore-dev libmagickwand-dev libffi-dev libvips libssl-dev postgresql-common
 
             # Bundle install with caching
             - BUNDLE_JOBS=4
