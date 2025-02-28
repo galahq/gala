@@ -51,8 +51,8 @@ type ActionName =
   | 'subscript'
   | 'superscript'
 
-const MoreButtons = ({ editorState, onChange, intl }) => {
-  const moreButtonActions = [
+const scriptButtons = ({ editorState, onChange, intl }) => {
+  const scriptButtonActions = [
     {
       name: 'subscript',
       icon: <SubscriptIcon />,
@@ -65,24 +65,11 @@ const MoreButtons = ({ editorState, onChange, intl }) => {
       call: toggleSuperscript,
       active: entityTypeEquals('SUPERSCRIPT'),
     },
-    {
-      name: 'blockquote',
-      icon: 'citation',
-      call: async eS => RichUtils.toggleBlockType(eS, 'blockquote'),
-      active: blockTypeEquals('blockquote'),
-    },
-    {
-      name: 'addMathEntity',
-      icon: 'function',
-      call: async (eS, props) => toggleMath(eS, props),
-      active: entityTypeEquals('MATH'),
-      spotlightKey: 'add_math',
-    },
   ]
 
   return (
     <ButtonGroup style={{ margin: '2px' }}>
-      {moreButtonActions.map(action => {
+      {scriptButtonActions.map(action => {
         const messageId = `helpers.formatting.${action.name}`
         return (
           <Button
@@ -123,6 +110,27 @@ const ACTIONS: Action[] = [
     active: eS => eS.getCurrentInlineStyle().has('CODE'),
   },
   {
+    name: 'scripts',
+    call: async eS => eS,
+    active: eS => entityTypeEquals('SUBSCRIPT')(eS) || entityTypeEquals('SUPERSCRIPT')(eS),
+    customButton: (props) => (
+      <Popover
+        content={<scriptButtons {...props} />}
+        position={Position.BOTTOM}
+        minimal
+      >
+        <Button
+          icon={<SuperscriptIcon />}
+          active={props.active}
+          aria-label={props.intl.formatMessage({ id: 'helpers.formatting.script' })}
+          title={props.intl.formatMessage({ id: 'helpers.formatting.script' })}
+          className="pt-button-small pt-button pt-small"
+          style={{ padding: '0px' }}
+        />
+      </Popover>
+    ),
+  },
+  {
     name: 'ol',
     icon: 'numbered-list',
     call: async eS => RichUtils.toggleBlockType(eS, 'ordered-list-item'),
@@ -133,6 +141,13 @@ const ACTIONS: Action[] = [
     icon: 'properties',
     call: async eS => RichUtils.toggleBlockType(eS, 'unordered-list-item'),
     active: blockTypeEquals('unordered-list-item'),
+  },
+  {
+    name: 'blockquote',
+    icon: 'citation',
+    call: async eS => RichUtils.toggleBlockType(eS, 'blockquote'),
+    active: blockTypeEquals('blockquote'),
+    className: 'margin-right',
   },
   {
     name: 'addEdgenoteEntity',
@@ -156,25 +171,11 @@ const ACTIONS: Action[] = [
     spotlightKey: 'add_revealable',
   },
   {
-    name: 'more',
-    call: async eS => eS,
-    active: eS => entityTypeEquals('SUBSCRIPT')(eS) || entityTypeEquals('SUPERSCRIPT')(eS),
-    customButton: (props) => (
-      <Popover
-        content={<MoreButtons {...props} />}
-        position={Position.BOTTOM}
-        minimal
-      >
-        <Button
-          icon="caret-down"
-          active={props.active}
-          aria-label={props.intl.formatMessage({ id: 'helpers.formatting.more' })}
-          title={props.intl.formatMessage({ id: 'helpers.formatting.more' })}
-          className="pt-small"
-          style={{ height: '100%' }}
-        />
-      </Popover>
-    ),
+    name: 'addMathEntity',
+    icon: 'function',
+    call: async (eS, props) => toggleMath(eS, props),
+    active: entityTypeEquals('MATH'),
+    spotlightKey: 'add_math',
   },
 ]
 
@@ -220,6 +221,7 @@ const FormattingToolbar = (props: Props) => {
                     active={action.active(editorState)}
                     aria-label={intl.formatMessage({ id: messageId })}
                     title={intl.formatMessage({ id: messageId })}
+                    className={action.className}
                     onClick={async (e: SyntheticMouseEvent<*>) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -248,6 +250,9 @@ const ButtonGroup = styled.div.attrs({
   className: ({ active }) =>
     `pt-button-group pt-minimal pt-small ${active ? 'pt-intent-primary' : ''}`,
 })`
-  
   margin: 0 0 3px -6px;
+
+  .margin-right {
+    margin-right: 12px;
+  }
 `
