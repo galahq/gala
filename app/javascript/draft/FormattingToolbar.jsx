@@ -78,6 +78,7 @@ const ScriptButtons = ({ editorState, onChange, intl }) => {
             active={action.active(editorState)}
             aria-label={intl.formatMessage({ id: messageId })}
             title={intl.formatMessage({ id: messageId })}
+            className="pt-button pt-minimal pt-small"
             onClick={async (e) => {
               e.preventDefault()
               e.stopPropagation()
@@ -118,14 +119,17 @@ const ACTIONS: Action[] = [
         content={<ScriptButtons {...props} />}
         position={Position.BOTTOM}
         minimal
+        className="pt-button-group"
+        targetTagName="div"
       >
         <Button
           icon={<SuperscriptIcon />}
           active={props.active}
           aria-label={props.intl.formatMessage({ id: 'helpers.formatting.script' })}
           title={props.intl.formatMessage({ id: 'helpers.formatting.script' })}
-          className="pt-button-small pt-button pt-small"
-          style={{ padding: '0px' }}
+          className="pt-button pt-minimal pt-small"
+          elementRef={props.elementRef}
+          style={{ margin: '0 1px', padding: '0px'}}
         />
       </Popover>
     ),
