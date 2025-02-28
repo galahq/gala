@@ -290,6 +290,10 @@ const Card = styled.div`
         pointer-events: none;
       `};
   }
+
+  & blockquote {
+    margin-top: 19px;
+  }
 `
 
 const DeleteCardButton = styled.button.attrs({
