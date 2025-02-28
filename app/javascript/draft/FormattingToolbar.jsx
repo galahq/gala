@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
 import { Button, Popover, Position } from '@blueprintjs/core'
-import { EditorState, RichUtils, Modifier } from 'draft-js'
+import { EditorState, RichUtils } from 'draft-js'
 
 import { displayToast } from 'redux/actions'
 import {
@@ -51,7 +51,7 @@ type ActionName =
   | 'subscript'
   | 'superscript'
 
-const scriptButtons = ({ editorState, onChange, intl }) => {
+const ScriptButtons = ({ editorState, onChange, intl }) => {
   const scriptButtonActions = [
     {
       name: 'subscript',
@@ -115,7 +115,7 @@ const ACTIONS: Action[] = [
     active: eS => entityTypeEquals('SUBSCRIPT')(eS) || entityTypeEquals('SUPERSCRIPT')(eS),
     customButton: (props) => (
       <Popover
-        content={<scriptButtons {...props} />}
+        content={<ScriptButtons {...props} />}
         position={Position.BOTTOM}
         minimal
       >
