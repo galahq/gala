@@ -159,6 +159,8 @@ class CardContents extends React.Component<Props, State> {
                       addEdgenoteEntity: !nonNarrative,
                       addCitationEntity: !nonNarrative,
                       addMathEntity: !nonNarrative,
+                      subscript: true,
+                      superscript: true,
                     }}
                     editorState={editorState}
                     getEdgenote={getEdgenote}

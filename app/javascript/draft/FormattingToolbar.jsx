@@ -197,7 +197,7 @@ const ButtonGroup = styled.div.attrs({
   margin: 0 0 3px -6px;
 
   .margin-right {
-    margin-right: 14px;
+    margin-right: 12px;
   }
 
   .custom-icon {
