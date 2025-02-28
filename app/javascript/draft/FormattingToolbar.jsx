@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
-import { Button, Popover, Position } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 import { EditorState, RichUtils } from 'draft-js'
 
 import { displayToast } from 'redux/actions'
@@ -51,46 +51,6 @@ type ActionName =
   | 'subscript'
   | 'superscript'
 
-const ScriptButtons = ({ editorState, onChange, intl }) => {
-  const scriptButtonActions = [
-    {
-      name: 'subscript',
-      icon: <SubscriptIcon />,
-      call: toggleSubscript,
-      active: entityTypeEquals('SUBSCRIPT'),
-    },
-    {
-      name: 'superscript',
-      icon: <SuperscriptIcon />,
-      call: toggleSuperscript,
-      active: entityTypeEquals('SUPERSCRIPT'),
-    },
-  ]
-
-  return (
-    <ButtonGroup style={{ margin: '2px' }}>
-      {scriptButtonActions.map(action => {
-        const messageId = `helpers.formatting.${action.name}`
-        return (
-          <Button
-            key={action.name}
-            icon={action.icon}
-            active={action.active(editorState)}
-            aria-label={intl.formatMessage({ id: messageId })}
-            title={intl.formatMessage({ id: messageId })}
-            className="pt-button pt-minimal pt-small"
-            onClick={async (e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onChange(await action.call(editorState))
-            }}
-          />
-        )
-      })}
-    </ButtonGroup>
-  )
-}
-
 const ACTIONS: Action[] = [
   {
     name: 'header',
@@ -111,30 +71,6 @@ const ACTIONS: Action[] = [
     active: eS => eS.getCurrentInlineStyle().has('CODE'),
   },
   {
-    name: 'scripts',
-    call: async eS => eS,
-    active: eS => entityTypeEquals('SUBSCRIPT')(eS) || entityTypeEquals('SUPERSCRIPT')(eS),
-    customButton: (props) => (
-      <Popover
-        content={<ScriptButtons {...props} />}
-        position={Position.BOTTOM}
-        minimal
-        className="pt-button-group"
-        targetTagName="div"
-      >
-        <Button
-          icon={<SuperscriptIcon />}
-          active={props.active}
-          aria-label={props.intl.formatMessage({ id: 'helpers.formatting.script' })}
-          title={props.intl.formatMessage({ id: 'helpers.formatting.script' })}
-          className="pt-button pt-minimal pt-small"
-          elementRef={props.elementRef}
-          style={{ margin: '0 1px', padding: '0px'}}
-        />
-      </Popover>
-    ),
-  },
-  {
     name: 'ol',
     icon: 'numbered-list',
     call: async eS => RichUtils.toggleBlockType(eS, 'ordered-list-item'),
@@ -145,6 +81,20 @@ const ACTIONS: Action[] = [
     icon: 'properties',
     call: async eS => RichUtils.toggleBlockType(eS, 'unordered-list-item'),
     active: blockTypeEquals('unordered-list-item'),
+  },
+  {
+    name: 'subscript',
+    icon: <SubscriptIcon />,
+    call: toggleSubscript,
+    active: entityTypeEquals('SUBSCRIPT'),
+    className: 'custom-icon',
+  },
+  {
+    name: 'superscript',
+    icon: <SuperscriptIcon />,
+    call: toggleSuperscript,
+    active: entityTypeEquals('SUPERSCRIPT'),
+    className: 'custom-icon',
   },
   {
     name: 'blockquote',
@@ -209,16 +159,7 @@ const FormattingToolbar = (props: Props) => {
               placement="top"
               spotlightKey={spotlightKey}
             >
-              {({ ref }) => 
-                action.customButton ? (
-                  action.customButton({
-                    elementRef: ref,
-                    active: action.active(editorState),
-                    editorState,
-                    onChange,
-                    intl
-                  })
-                ) : (
+              {({ ref }) => (
                   <Button
                     elementRef={ref}
                     icon={action.icon}
@@ -232,8 +173,7 @@ const FormattingToolbar = (props: Props) => {
                       onChange(await action.call(editorState, props))
                     }}
                   />
-                )
-              }
+                )}    
             </MaybeSpotlight>
           )
         })}
@@ -257,6 +197,10 @@ const ButtonGroup = styled.div.attrs({
   margin: 0 0 3px -6px;
 
   .margin-right {
-    margin-right: 12px;
+    margin-right: 14px;
+  }
+
+  .custom-icon {
+    padding: 0px;
   }
 `
