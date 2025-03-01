@@ -20,9 +20,6 @@ function mapStateToProps (
   return {
     cardId,
     editInProgress: state.edit.inProgress,
-    // Check if this card is currently being edited by checking if it has a selection
-    isEditing: state.edit.inProgress && 
-      card?.editorState?.getSelection().getHasFocus(),
     editorState: card?.editorState || EditorState.createEmpty(),
   }
 }
@@ -50,7 +47,6 @@ function MathComponent (props) {
     entityKey, 
     applySelection, 
     editInProgress,
-    isEditing,
     cardId
   } = props
 
@@ -63,22 +59,12 @@ function MathComponent (props) {
     return null
   }
 
-  /**
-   * Handles zoom window close by ensuring focus is properly managed
-   */
   const handleZoomClose = React.useCallback((event) => {
     event.preventDefault()
     mathRef.current?.focus()
   }, [])
 
-  /**
-   * Dispatches the target selection when the user clicks on the MATH entity.
-   * Problem is the MATH entity is an SVG instead of text, it's not recommended.
-   * For more info on the problem see:
-   * https://draftjs.org/docs/advanced-topics-block-components/
-   */
   function handleClick (event) {
-    // Only allow selection if we're in edit mode
     if (!editInProgress || isSelecting) {
       return
     }
@@ -92,26 +78,25 @@ function MathComponent (props) {
       const blockKey = offsetKey.split('-')[0]
       const block = contentState.getBlockForKey(blockKey)
       
-      // Create selection synchronously
-      let start = 0, end = 0
+      // Find entity range
+      let entityRange = null
       block.findEntityRanges(
         character => character.getEntity() === entityKey,
-        (_start, _end) => {
-          start = _start
-          end = _end
+        (start, end) => {
+          entityRange = { start, end }
         }
       )
 
-      const selection = new SelectionState({
-        anchorKey: blockKey,
-        anchorOffset: start,
-        focusKey: blockKey,
-        focusOffset: end,
-        hasFocus: true
-      })
+      if (entityRange) {
+        const selection = new SelectionState({
+          anchorKey: blockKey,
+          anchorOffset: entityRange.start,
+          focusKey: blockKey,
+          focusOffset: entityRange.end
+        })
 
-      // Apply selection synchronously
-      applySelection(cardId, selection)
+        applySelection(cardId, selection)
+      }
 
     } catch (err) {
       console.error('Error selecting math entity:', err)
@@ -123,10 +108,8 @@ function MathComponent (props) {
   function handleKeyDown(event) {
     if (editInProgress) return
     
-    // Handle Enter or Space key
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
-      // Trigger MathJax zoom programmatically
       const mjxContainer = mathRef.current?.querySelector('mjx-container')
       if (mjxContainer) {
         mjxContainer.dispatchEvent(new MouseEvent('click', {
@@ -138,7 +121,6 @@ function MathComponent (props) {
     }
   }
 
-  // To select the MATH entity, click right before or after the equation.
   return (
     <MathWrapper 
       ref={mathRef}
@@ -148,21 +130,21 @@ function MathComponent (props) {
       tabIndex={0}
       role="button"
     >
-        <MathJaxWrapper
-          ref={texRef}
-          latex={decoratedText}
-          display="inline"
-          style={{}}
-          onSuccess={() => setError(null)}
-          onError={setError}
-          onZoomClose={handleZoomClose}
-          options={{
-            enableMenu: !editInProgress,
-            settings: {
-              zoom: editInProgress ? 'None' : 'Click'
-            }
-          }}
-        />
+      <MathJaxWrapper
+        ref={texRef}
+        latex={decoratedText}
+        display="inline"
+        style={{}}
+        onSuccess={() => setError(null)}
+        onError={setError}
+        onZoomClose={handleZoomClose}
+        options={{
+          enableMenu: !editInProgress,
+          settings: {
+            zoom: editInProgress ? 'None' : 'Click'
+          }
+        }}
+      />
     </MathWrapper>
   )
 }
@@ -198,10 +180,13 @@ const MathWrapper = styled.button`
     max-width: 200px;
   }
   
-  ${({ editing }) => editing && `
-    &:hover {
-      cursor: text;
-    }`}
+  ${({ editing }) => editing ? `
+    cursor: text;
+    }
+  ` : `
+    cursor: zoom-in;
+    }
+  `}
 
   &>button {
     background: none;
