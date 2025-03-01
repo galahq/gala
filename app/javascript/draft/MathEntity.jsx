@@ -29,6 +29,15 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+// Create a wrapper component that handles the ref forwarding
+const MathJaxWrapper = React.forwardRef(function MathJaxWrapper(props, ref) {
+  return (
+    <div ref={ref}>
+      <Tex2SVG {...props} />
+    </div>
+  )
+})
+
 function MathComponent (props) {
   const { decoratedText, offsetKey, contentState, entityKey, applySelection, editInProgress, cardId } = props
 
@@ -127,7 +136,7 @@ function MathComponent (props) {
       role="button"
     >
       <CursorTarget editing={editInProgress}>
-        <Tex2SVG
+        <MathJaxWrapper
           ref={texRef}
           latex={decoratedText}
           display="inline"
@@ -135,7 +144,6 @@ function MathComponent (props) {
           onSuccess={() => setError(null)}
           onError={setError}
           onZoomClose={handleZoomClose}
-          // Disable MathJax menu and zoom when editing
           options={{
             enableMenu: !editInProgress,
             settings: {
