@@ -715,6 +715,8 @@ es:
       header: "Encabezado."
       italic: "Texto en cursiva."
       ol: "Enumerar lista."
+      subscript: "Inline style: Subscript."
+      superscript: "Inline style: Superscript."
       ul: "Lista no numerada."
     help: Help
     label:
