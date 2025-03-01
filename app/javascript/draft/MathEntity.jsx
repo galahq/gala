@@ -33,16 +33,31 @@ function MathComponent (props) {
   const { decoratedText, offsetKey, contentState, entityKey, applySelection, editInProgress, cardId } = props
 
   const [error, setError] = useState(null)
+  const mathRef = React.useRef(null)
+
   if (error) {
     return null
   }
 
   /**
-  * Dispatches the target selection when the user clicks on the MATH entity.
-  * Problem is the MATH entity is an SVG instead of text, it's not recommend.
-  * For more info on the problem see:
-  * https://draftjs.org/docs/advanced-topics-block-components/
-  */
+   * Handles zoom window close by ensuring focus is properly managed
+   */
+  const handleZoomClose = React.useCallback((event) => {
+    // Prevent the default focus behavior
+    event.preventDefault()
+    
+    // If we have a ref to our math container, focus it instead
+    if (mathRef.current) {
+      mathRef.current.focus()
+    }
+  }, [])
+
+  /**
+   * Dispatches the target selection when the user clicks on the MATH entity.
+   * Problem is the MATH entity is an SVG instead of text, it's not recommended.
+   * For more info on the problem see:
+   * https://draftjs.org/docs/advanced-topics-block-components/
+   */
   function handleClick () {
     if (!editInProgress) {
       return
@@ -66,14 +81,20 @@ function MathComponent (props) {
 
   // To select the MATH entity, click right before or after the equation.
   return (
-    <MathWrapper editing={editInProgress} onClick={handleClick}>
+    <MathWrapper 
+      ref={mathRef}
+      editing={editInProgress} 
+      onClick={handleClick}
+      tabIndex={0} // Make the wrapper focusable
+    >
       <CursorTarget>
         <Tex2SVG
           latex={decoratedText}
           display="inline"
-          style={""}
+          style={{}}
           onSuccess={() => setError(null)}
           onError={setError}
+          onZoomClose={handleZoomClose} // Add handler for zoom close
         />
       </CursorTarget>
     </MathWrapper>
@@ -88,27 +109,40 @@ const MathEntity = connect(
 
 export default MathEntity
 const MathWrapper = styled.button`
-  border: solid 1px #c0bca9;
-  border-radius: 3px;
-  padding: 8px;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
   overflow-x: auto;
   max-width: 656px;
+  
+  appearance: none;
+  -webkit-appearance: none;
+  
+  vertical-align: middle;
+  
+  font-size: 0.7em;
+  line-height: inherit;
+  
   @media (max-width: 1440px) {
     max-width: 500px;
   }
   @media (max-width: 800px) {
     max-width: 200px;
   }
+  
   ${({ editing }) => editing && `
     &:hover {
       cursor: text;
-      }`}
+    }`}
 
   &>button {
-    background-color: red;
+    background: none;
   }
 `
 
 const CursorTarget = styled.div`
- cursor: zoom-in;
+  cursor: zoom-in;
+  display: inline-block;
+  vertical-align: middle;
 `
