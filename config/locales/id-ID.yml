@@ -698,6 +698,8 @@ id:
       header: "Block style: Header."
       italic: "Inline style: Italic."
       ol: "Block style: Ordered list item."
+      subscript: "Inline style: Subscript."
+      superscript: "Inline style: Superscript."
       ul: "Block style: Unordered list item."
     help: Help
     label:
