@@ -155,10 +155,12 @@ class CardContents extends React.Component<Props, State> {
                     actions={{
                       code: false,
                       header: true,
-                      blockquote: false,
+                      blockquote: true,
                       addEdgenoteEntity: !nonNarrative,
                       addCitationEntity: !nonNarrative,
                       addMathEntity: !nonNarrative,
+                      subscript: true,
+                      superscript: true,
                     }}
                     editorState={editorState}
                     getEdgenote={getEdgenote}
@@ -289,6 +291,10 @@ const Card = styled.div`
       css`
         pointer-events: none;
       `};
+  }
+
+  & blockquote {
+    margin-top: 19px;
   }
 `
 

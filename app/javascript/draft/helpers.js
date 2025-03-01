@@ -305,3 +305,35 @@ export async function toggleRevealableEntity (
     data: { cardId },
   }, editorState)
 }
+
+export async function toggleSubscript (editorState: EditorState) {
+  if (entityTypeEquals('SUBSCRIPT')(editorState)) {
+    return removeSelectedEntity(editorState)
+  }
+
+  if (editorState.getSelection().isCollapsed()) {
+    return editorState
+  }
+
+  return addEntity({
+    type: 'SUBSCRIPT',
+    mutability: 'MUTABLE',
+    data: {},
+  }, editorState)
+}
+
+export async function toggleSuperscript (editorState: EditorState) {
+  if (entityTypeEquals('SUPERSCRIPT')(editorState)) {
+    return removeSelectedEntity(editorState)
+  }
+
+  if (editorState.getSelection().isCollapsed()) {
+    return editorState
+  }
+
+  return addEntity({
+    type: 'SUPERSCRIPT',
+    mutability: 'MUTABLE',
+    data: {},
+  }, editorState)
+}
