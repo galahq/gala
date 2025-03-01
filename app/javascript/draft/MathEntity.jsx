@@ -39,7 +39,15 @@ const MathJaxWrapper = React.forwardRef(function MathJaxWrapper(props, ref) {
 })
 
 function MathComponent (props) {
-  const { decoratedText, offsetKey, contentState, entityKey, applySelection, editInProgress, cardId } = props
+  const { 
+    decoratedText, 
+    offsetKey, 
+    contentState, 
+    entityKey, 
+    applySelection, 
+    editInProgress, 
+    cardId
+  } = props
 
   const [error, setError] = useState(null)
   const mathRef = useRef(null)
@@ -78,7 +86,6 @@ function MathComponent (props) {
       const blockKey = offsetKey.split('-')[0]
       const block = contentState.getBlockForKey(blockKey)
       
-      // Create a promise that resolves with the selection
       const selectionPromise = new Promise(resolve => {
         block.findEntityRanges(character => {
           const e = character.getEntity()
@@ -94,14 +101,11 @@ function MathComponent (props) {
         })
       })
 
-      // Wait for the selection to be created and then apply it
       const selection = await selectionPromise
       await applySelection(cardId, selection)
 
     } catch (err) {
-      if (!err.message?.includes('409')) {
-        console.error('Error selecting math entity:', err)
-      }
+      console.error('Error selecting math entity:', err)
     } finally {
       setIsSelecting(false)
     }
