@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { EditorState, SelectionState } from 'draft-js'
 import Tex2SVG from "react-hook-mathjax"
 import { connect } from 'react-redux'
@@ -33,7 +33,8 @@ function MathComponent (props) {
   const { decoratedText, offsetKey, contentState, entityKey, applySelection, editInProgress, cardId } = props
 
   const [error, setError] = useState(null)
-  const mathRef = React.useRef(null)
+  const mathRef = useRef(null)
+  const [isSelecting, setIsSelecting] = useState(false)
 
   if (error) {
     return null
@@ -43,13 +44,8 @@ function MathComponent (props) {
    * Handles zoom window close by ensuring focus is properly managed
    */
   const handleZoomClose = React.useCallback((event) => {
-    // Prevent the default focus behavior
     event.preventDefault()
-    
-    // If we have a ref to our math container, focus it instead
-    if (mathRef.current) {
-      mathRef.current.focus()
-    }
+    mathRef.current?.focus()
   }, [])
 
   /**
@@ -58,25 +54,47 @@ function MathComponent (props) {
    * For more info on the problem see:
    * https://draftjs.org/docs/advanced-topics-block-components/
    */
-  function handleClick () {
-    if (!editInProgress) {
+  async function handleClick (event) {
+    if (!editInProgress || isSelecting) {
       return
     }
-    // Extract the blockKey from the offsetKey
-    const blockKey = offsetKey.split('-')[0]
-    const block = contentState.getBlockForKey(blockKey)
-    block.findEntityRanges(character => {
-      const e = character.getEntity()
-      return e === entityKey
-    }, (start, end) => {
-      const selection = new SelectionState({
-        anchorKey: blockKey,
-        anchorOffset: start,
-        focusKey: blockKey,
-        focusOffset: end,
+
+    try {
+      setIsSelecting(true)
+      
+      event.stopPropagation()
+      event.preventDefault()
+      
+      const blockKey = offsetKey.split('-')[0]
+      const block = contentState.getBlockForKey(blockKey)
+      
+      // Create a promise that resolves with the selection
+      const selectionPromise = new Promise(resolve => {
+        block.findEntityRanges(character => {
+          const e = character.getEntity()
+          return e === entityKey
+        }, (start, end) => {
+          const selection = new SelectionState({
+            anchorKey: blockKey,
+            anchorOffset: start,
+            focusKey: blockKey,
+            focusOffset: end,
+          })
+          resolve(selection)
+        })
       })
-      applySelection(cardId, selection)
-    })
+
+      // Wait for the selection to be created and then apply it
+      const selection = await selectionPromise
+      await applySelection(cardId, selection)
+
+    } catch (err) {
+      if (!err.message?.includes('409')) {
+        console.error('Error selecting math entity:', err)
+      }
+    } finally {
+      setIsSelecting(false)
+    }
   }
 
   // To select the MATH entity, click right before or after the equation.
@@ -85,16 +103,23 @@ function MathComponent (props) {
       ref={mathRef}
       editing={editInProgress} 
       onClick={handleClick}
-      tabIndex={0} // Make the wrapper focusable
+      tabIndex={0}
     >
-      <CursorTarget>
+      <CursorTarget editing={editInProgress}>
         <Tex2SVG
           latex={decoratedText}
           display="inline"
           style={{}}
           onSuccess={() => setError(null)}
           onError={setError}
-          onZoomClose={handleZoomClose} // Add handler for zoom close
+          onZoomClose={handleZoomClose}
+          // Disable MathJax menu and zoom when editing
+          options={{
+            enableMenu: !editInProgress,
+            settings: {
+              zoom: editInProgress ? 'None' : 'Click'
+            }
+          }}
         />
       </CursorTarget>
     </MathWrapper>
@@ -115,13 +140,14 @@ const MathWrapper = styled.button`
   margin: 0;
   overflow-x: auto;
   max-width: 656px;
+  position: relative;
+  display: inline-block;
   
   appearance: none;
   -webkit-appearance: none;
   
   vertical-align: middle;
-  
-  font-size: 0.7em;
+  font-size: 0.8em;
   line-height: inherit;
   
   @media (max-width: 1440px) {
@@ -139,10 +165,23 @@ const MathWrapper = styled.button`
   &>button {
     background: none;
   }
+
+  /* Style the MathJax container to not interfere with clicks */
+  & .MJX-TEX {
+    pointer-events: ${props => props.editing ? 'none' : 'auto'};
+  }
+
+  & mjx-container {
+    position: relative;
+    z-index: 0;
+    pointer-events: ${props => props.editing ? 'none' : 'auto'};
+  }
 `
 
 const CursorTarget = styled.div`
-  cursor: zoom-in;
+  cursor: ${props => props.editing ? 'text' : 'zoom-in'};
   display: inline-block;
   vertical-align: middle;
+  position: relative;
+  z-index: 1;
 `
