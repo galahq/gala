@@ -12,7 +12,6 @@ import { Intent } from '@blueprintjs/core'
 import type { ContentState } from 'draft-js'
 import type { DraftEntityMutability } from 'draft-js/lib/DraftEntityMutability'
 import type { Props as ToolbarProps } from 'draft/FormattingToolbar'
-import SuperscriptEntity from './SuperscriptEntity'
 
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
@@ -307,7 +306,7 @@ export async function toggleRevealableEntity (
   }, editorState)
 }
 
-export async function toggleSubscript(editorState: EditorState) {
+export async function toggleSubscript (editorState: EditorState) {
   if (entityTypeEquals('SUBSCRIPT')(editorState)) {
     return removeSelectedEntity(editorState)
   }
@@ -323,7 +322,7 @@ export async function toggleSubscript(editorState: EditorState) {
   }, editorState)
 }
 
-export async function toggleSuperscript(editorState: EditorState) {
+export async function toggleSuperscript (editorState: EditorState) {
   if (entityTypeEquals('SUPERSCRIPT')(editorState)) {
     return removeSelectedEntity(editorState)
   }

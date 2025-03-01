@@ -56,8 +56,8 @@ export const styles = {
 
   SUBSCRIPT: {
     verticalAlign: 'sub',
-    fontSize: '0.75em'
-  }
+    fontSize: '0.75em',
+  },
 }
 
 type StyleMapArgs = {
