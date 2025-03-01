@@ -16,10 +16,15 @@ function mapStateToProps (
   { contentState, entityKey }
 ) {
   const { cardId } = contentState.getEntity(entityKey).getData()
+  const card = state.cardsById[cardId]
+  const lockKey = `Card/${cardId}`
   return {
     cardId,
     editInProgress: state.edit.inProgress,
-    editorState: state.cardsById[cardId]?.editorState || EditorState.createEmpty(),
+    // Check if we have a valid lock
+    hasValidLock: state.edit.inProgress && 
+      state.locks[lockKey]?.reader?.param === `${state.caseData.reader?.id || ''}`,
+    editorState: card?.editorState || EditorState.createEmpty(),
   }
 }
 
@@ -45,7 +50,8 @@ function MathComponent (props) {
     contentState, 
     entityKey, 
     applySelection, 
-    editInProgress, 
+    editInProgress,
+    hasValidLock, 
     cardId
   } = props
 
@@ -73,7 +79,8 @@ function MathComponent (props) {
    * https://draftjs.org/docs/advanced-topics-block-components/
    */
   async function handleClick (event) {
-    if (!editInProgress || isSelecting) {
+    // Only proceed if we have a valid lock and are in edit mode
+    if (!hasValidLock || !editInProgress || isSelecting) {
       return
     }
 
