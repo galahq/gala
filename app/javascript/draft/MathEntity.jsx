@@ -13,7 +13,7 @@ import styled from 'styled-components'
 
 function mapStateToProps (
   state: State,
-  { decoratedText, offsetKey, contentState, entityKey }
+  { contentState, entityKey }
 ) {
   const { cardId } = contentState.getEntity(entityKey).getData()
   return {
@@ -139,7 +139,6 @@ function MathComponent (props) {
       tabIndex={0}
       role="button"
     >
-      <CursorTarget editing={editInProgress}>
         <MathJaxWrapper
           ref={texRef}
           latex={decoratedText}
@@ -155,7 +154,6 @@ function MathComponent (props) {
             }
           }}
         />
-      </CursorTarget>
     </MathWrapper>
   )
 }
@@ -210,12 +208,4 @@ const MathWrapper = styled.button`
     z-index: 0;
     pointer-events: ${props => props.editing ? 'none' : 'auto'};
   }
-`
-
-const CursorTarget = styled.div`
-  cursor: ${props => props.editing ? 'text' : 'zoom-in'};
-  display: inline-block;
-  vertical-align: middle;
-  position: relative;
-  z-index: 1;
 `
