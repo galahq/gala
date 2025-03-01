@@ -17,13 +17,12 @@ function mapStateToProps (
 ) {
   const { cardId } = contentState.getEntity(entityKey).getData()
   const card = state.cardsById[cardId]
-  const lockKey = `Card/${cardId}`
   return {
     cardId,
     editInProgress: state.edit.inProgress,
-    // Check if we have a valid lock
-    hasValidLock: state.edit.inProgress && 
-      state.locks[lockKey]?.reader?.param === `${state.caseData.reader?.id || ''}`,
+    // Check if this card is currently being edited by checking if it has a selection
+    isEditing: state.edit.inProgress && 
+      card?.editorState?.getSelection().getHasFocus(),
     editorState: card?.editorState || EditorState.createEmpty(),
   }
 }
@@ -51,7 +50,7 @@ function MathComponent (props) {
     entityKey, 
     applySelection, 
     editInProgress,
-    hasValidLock, 
+    isEditing,
     cardId
   } = props
 
@@ -78,9 +77,9 @@ function MathComponent (props) {
    * For more info on the problem see:
    * https://draftjs.org/docs/advanced-topics-block-components/
    */
-  async function handleClick (event) {
-    // Only proceed if we have a valid lock and are in edit mode
-    if (!hasValidLock || !editInProgress || isSelecting) {
+  function handleClick (event) {
+    // Only allow selection if we're in edit mode
+    if (!editInProgress || isSelecting) {
       return
     }
 
@@ -93,23 +92,26 @@ function MathComponent (props) {
       const blockKey = offsetKey.split('-')[0]
       const block = contentState.getBlockForKey(blockKey)
       
-      const selectionPromise = new Promise(resolve => {
-        block.findEntityRanges(character => {
-          const e = character.getEntity()
-          return e === entityKey
-        }, (start, end) => {
-          const selection = new SelectionState({
-            anchorKey: blockKey,
-            anchorOffset: start,
-            focusKey: blockKey,
-            focusOffset: end,
-          })
-          resolve(selection)
-        })
+      // Create selection synchronously
+      let start = 0, end = 0
+      block.findEntityRanges(
+        character => character.getEntity() === entityKey,
+        (_start, _end) => {
+          start = _start
+          end = _end
+        }
+      )
+
+      const selection = new SelectionState({
+        anchorKey: blockKey,
+        anchorOffset: start,
+        focusKey: blockKey,
+        focusOffset: end,
+        hasFocus: true
       })
 
-      const selection = await selectionPromise
-      await applySelection(cardId, selection)
+      // Apply selection synchronously
+      applySelection(cardId, selection)
 
     } catch (err) {
       console.error('Error selecting math entity:', err)
