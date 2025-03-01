@@ -35,6 +35,7 @@ function MathComponent (props) {
   const [error, setError] = useState(null)
   const mathRef = useRef(null)
   const [isSelecting, setIsSelecting] = useState(false)
+  const texRef = useRef(null)
 
   if (error) {
     return null
@@ -97,16 +98,37 @@ function MathComponent (props) {
     }
   }
 
+  function handleKeyDown(event) {
+    if (editInProgress) return
+    
+    // Handle Enter or Space key
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      // Trigger MathJax zoom programmatically
+      const mjxContainer = mathRef.current?.querySelector('mjx-container')
+      if (mjxContainer) {
+        mjxContainer.dispatchEvent(new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        }))
+      }
+    }
+  }
+
   // To select the MATH entity, click right before or after the equation.
   return (
     <MathWrapper 
       ref={mathRef}
       editing={editInProgress} 
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       tabIndex={0}
+      role="button"
     >
       <CursorTarget editing={editInProgress}>
         <Tex2SVG
+          ref={texRef}
           latex={decoratedText}
           display="inline"
           style={{}}
