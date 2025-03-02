@@ -88,18 +88,26 @@ function MathComponent (props) {
       )
 
       if (entityRange) {
+        // Clear any existing selection first
+        window.getSelection().removeAllRanges()
+
         const selection = new SelectionState({
           anchorKey: blockKey,
           anchorOffset: entityRange.start,
-          focusKey: blockKey,
-          focusOffset: entityRange.end
+          focusKey: blockKey, 
+          focusOffset: entityRange.end,
+          hasFocus: true,
+          isBackward: false
         })
 
-        applySelection(cardId, selection)
+        // Ensure we have a valid selection before applying
+        if (selection.getHasFocus()) {
+          applySelection(cardId, selection)
+        }
       }
 
     } catch (err) {
-      console.error('Error selecting math entity:', err)
+      console.error('Error selecting math entity:', err) 
     } finally {
       setIsSelecting(false)
     }
