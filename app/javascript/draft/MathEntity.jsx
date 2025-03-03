@@ -47,13 +47,33 @@ function MathComponent (props) {
     entityKey, 
     applySelection, 
     editInProgress,
-    cardId
+    cardId,
+    editorState
   } = props
 
   const [error, setError] = useState(null)
   const mathRef = useRef(null)
   const [isSelecting, setIsSelecting] = useState(false)
   const texRef = useRef(null)
+
+  const isSelected = React.useMemo(() => {
+    const selection = editorState.getSelection()
+    if (!selection.getHasFocus()) return false
+    
+    const blockKey = offsetKey.split('-')[0]
+    const block = contentState.getBlockForKey(blockKey)
+    
+    let entityIsSelected = false
+    block.findEntityRanges(
+      character => character.getEntity() === entityKey,
+      (start, end) => {
+        entityIsSelected = selection.getStartOffset() <= end && 
+                         selection.getEndOffset() >= start &&
+                         selection.getAnchorKey() === blockKey
+      }
+    )
+    return entityIsSelected
+  }, [editorState, contentState, entityKey, offsetKey])
 
   if (error) {
     return null
@@ -140,7 +160,8 @@ function MathComponent (props) {
   return (
     <MathWrapper 
       ref={mathRef}
-      editing={editInProgress} 
+      editing={editInProgress}
+      selected={isSelected}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
@@ -174,7 +195,7 @@ const MathEntity = connect(
 export default MathEntity
 const MathWrapper = styled.button`
   border: none;
-  background-color: #e5e4dc;
+  background-color: rgba(174, 179, 183, .5);
   padding: 8px;
   border-radius: 4px;
   margin: 0;
@@ -198,13 +219,18 @@ const MathWrapper = styled.button`
     max-width: 200px;
   }
   
-  ${({ editing }) => editing ? `
-    cursor: text;
+  ${({ editing, selected }) => {
+    if (editing) {
+      return `
+        cursor: text;
+        background-color: ${selected ? '#d5d4cc' : '#e5e4dc'};
+      `
     }
-  ` : `
-    cursor: zoom-in;
-    }
-  `}
+    return `
+      cursor: zoom-in;
+      background-color: #e5e4dc;
+    `
+  }}
 
   &>button {
     background: none;
