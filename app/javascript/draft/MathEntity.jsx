@@ -174,11 +174,13 @@ const MathEntity = connect(
 export default MathEntity
 const MathWrapper = styled.button`
   border: none;
-  background: none;
-  padding: 0;
+  background-color: #e5e4dc;
+  padding: 8px;
+  border-radius: 4px;
   margin: 0;
   overflow-x: auto;
   max-width: 656px;
+  min-height: 62px;
   position: relative;
   display: inline-block;
   
