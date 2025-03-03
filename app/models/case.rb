@@ -85,6 +85,9 @@ class Case < ApplicationRecord
   after_save -> {
     update_columns translation_base_id: id if translation_base_id.blank?
   }
+  after_save :refresh_indices, if: -> {
+    saved_change_to_title? || saved_change_to_kicker? || saved_change_to_dek?
+  }
 
   validates :cover_image, size: { less_than: 2.megabytes,
                                   message: 'cannot be larger than 2 MB' },
@@ -182,6 +185,10 @@ class Case < ApplicationRecord
       ) as combined
     SQL
     [updated_at, result['max_updated_at']].max
+  end
+
+  def refresh_indices
+    RefreshIndicesJob.perform_later
   end
 
   # This is to conform with Lockable
