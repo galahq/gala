@@ -88,26 +88,34 @@ function MathComponent (props) {
       )
 
       if (entityRange) {
-        // Clear any existing selection first
-        window.getSelection().removeAllRanges()
-
-        const selection = new SelectionState({
-          anchorKey: blockKey,
+        // Create and verify selection before applying
+        const selection = SelectionState.createEmpty(blockKey).merge({
           anchorOffset: entityRange.start,
-          focusKey: blockKey, 
           focusOffset: entityRange.end,
           hasFocus: true,
           isBackward: false
         })
 
-        // Ensure we have a valid selection before applying
-        if (selection.getHasFocus()) {
+        // Only apply if we have a valid selection
+        if (selection.getAnchorKey() === blockKey && 
+            selection.getFocusKey() === blockKey) {
+          // Create a new range for the DOM selection
+          const range = document.createRange()
+          const element = mathRef.current
+          
+          if (element) {
+            range.selectNodeContents(element)
+            const domSelection = window.getSelection()
+            domSelection.removeAllRanges()
+            domSelection.addRange(range)
+          }
+          
           applySelection(cardId, selection)
         }
       }
 
     } catch (err) {
-      console.error('Error selecting math entity:', err) 
+      console.error('Error selecting math entity:', err)
     } finally {
       setIsSelecting(false)
     }
