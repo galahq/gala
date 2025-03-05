@@ -1,14 +1,14 @@
 <div class="reading-list__actions">
   <%= link_to edit_reading_list_path(reading_list),
-              class: %i[pt-button pt-icon-edit] do %>
+              class: %i[bp3-button bp3-icon-edit] do %>
     <%= t 'reading_lists.edit.edit_list' %>
   <% end %>
 
   <%= button_to reading_list_path(reading_list), method: :delete,
                 aria: { label: I18n.t('reading_lists.destroy.delete') },
                 data: { confirm: I18n.t('reading_lists.destroy.are_you_sure') },
-                class: %i[pt-button pt-minimal pt-intent-danger
-                          pt-icon-trash] do %><% end %>
+                class: %i[bp3-button bp3-minimal bp3-intent-danger
+                          bp3-icon-trash] do %><% end %>
 </div>
 
 <p class="reading-list__tag">

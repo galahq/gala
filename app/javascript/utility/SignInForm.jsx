@@ -21,7 +21,7 @@ type Props = { formContents: string }
 export function SignInFormContainer ({ formContents }: Props) {
   return (
     <aside
-      className="pt-card pt-elevation-4 devise-card"
+      className="bp3-card bp3-elevation-4 devise-card"
       dangerouslySetInnerHTML={{ __html: formContents }}
     />
   )

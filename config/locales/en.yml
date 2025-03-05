@@ -193,18 +193,18 @@ en:
   cards:
     edit:
       citation_added: |
-        Citation added. Click the <span class="pt-tag pt-intent-success">
-        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        Citation added. Click the <span class="bp3-tag bp3-intent-success">
+        <span class="bp3-icon bp3-icon-ring"></span> Citation Marker</span> to
         edit.
       math_added: Math added.
       math_instructions: |
         To add math to your case, select the text you want to turn into a math
-        equation, then click the <span class="pt-tag">
-        <span class="pt-icon pt-icon-function"></span> Math</span> button.
+        equation, then click the <span class="bp3-tag">
+        <span class="bp3-icon bp3-icon-function"></span> Math</span> button.
       make_revealable_selection: |
         Please select the phrase that you would like to make revealable,
-        then click the <span class="pt-tag">
-        <span class="pt-icon pt-icon-search-template"></span> Add
+        then click the <span class="bp3-tag">
+        <span class="bp3-icon bp3-icon-search-template"></span> Add
         Revealable</span> button.
       citation_text: Title
       citation_url: URL
@@ -625,8 +625,8 @@ en:
     new:
       make_selection_html: >
         Please select the phrase that you would like to attach an Edgenote to,
-        then click the <span class="pt-tag">
-        <span class="pt-icon pt-icon-add-column-right"></span> Add
+        then click the <span class="bp3-tag">
+        <span class="bp3-icon bp3-icon-add-column-right"></span> Add
         Edgenote</span> button.
       new_edgenote: New Edgenote
   editorships:

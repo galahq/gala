@@ -81,7 +81,7 @@ class CreditsList extends React.Component<
             </>
           ) : (
             canEdit && (
-              <button className="pt-button pt-icon-people">
+              <button className="bp3-button bp3-icon-people">
                 <FormattedMessage id="podcasts.edit.addGuests" />
               </button>
             )

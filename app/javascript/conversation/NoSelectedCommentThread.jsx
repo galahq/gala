@@ -37,7 +37,7 @@ export default connect(
   () => ({})
 )(NoSelectedCommentThread)
 
-const Container = styled.div.attrs({ className: 'pt-running-text' })`
+const Container = styled.div.attrs({ className: 'bp3-running-text' })`
   flex: 1;
   max-width: 633px;
   height: calc(100vh - 140px);

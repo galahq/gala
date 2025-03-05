@@ -9,7 +9,7 @@ import Markdown from 'utility/Markdown'
 
 // $FlowFixMe
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
-  className: 'pt-breadcrumbs',
+  className: 'bp3-breadcrumbs',
 })`
   display: flex;
   align-items: baseline;
@@ -50,7 +50,7 @@ const TruncatingLI = styled.li`
     `};
 `
 
-const StyledBreadcrumbLink = styled.a.attrs({ className: 'pt-breadcrumb' })`
+const StyledBreadcrumbLink = styled.a.attrs({ className: 'bp3-breadcrumb' })`
   font-size: 14px;
   ${({ quotation }) =>
     quotation &&

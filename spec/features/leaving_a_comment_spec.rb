@@ -111,7 +111,7 @@ feature 'Leaving a comment' do
 
     click_link GlobalCommunity.instance.name
     expect(page).to have_content private_forum.community.name
-    find('.pt-menu-item', text: private_forum.community.name).click
+    find('.bp3-menu-item', text: private_forum.community.name).click
     expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
     comment_thread.comments.create(
       content: 'Test comment',
@@ -120,7 +120,7 @@ feature 'Leaving a comment' do
     expect(first('.CommentThreads__banner')).to have_content 'RESPOND'
 
     click_link private_forum.community.name
-    find('.pt-menu-item', text: GlobalCommunity.instance.name).click
+    find('.bp3-menu-item', text: GlobalCommunity.instance.name).click
     expect(first('.CommentThreads__banner')).to have_content '2 COMMENTS'
     sleep(1)
     comment_thread.comments.create(

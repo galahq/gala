@@ -15,10 +15,10 @@ export default class extends Controller {
   validate () {
     const { classList } = this.formGroupTarget
     if (this.isValid()) {
-      classList.remove('pt-intent-danger')
+      classList.remove('bp3-intent-danger')
       this.submitTarget.disabled = false
     } else {
-      classList.add('pt-intent-danger')
+      classList.add('bp3-intent-danger')
       this.submitTarget.disabled = true
     }
   }

@@ -5,7 +5,7 @@
   = f.hidden_field :case_id
 
   = f.form_group :group_id do |f|
-    .pt-select.pt-fill
+    .bp3-select.bp3-fill
       = f.select :group_id, options_for_group_select,
                  {include_blank: t('.select_a_group')},
                  data: { action: 'select-new#toggleFormVisibility' }
@@ -15,6 +15,6 @@
       = f.form_group :name do |f, err|
         = f.text_field :name, disabled: true,
                               data: { target: 'select-new.input' },
-                              class: %w[pt-input pt-fill] + err
+                              class: %w[bp3-input bp3-fill] + err
 
-  = f.submit class: %w[pt-button pt-intent-primary]
+  = f.submit class: %w[bp3-button bp3-intent-primary]

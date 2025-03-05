@@ -66,7 +66,7 @@ function Podcast ({
         {editing && (
           <button
             type="button"
-            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
+            className="c-delete-element bp3-button bp3-intent-danger bp3-icon-trash"
             onClick={deleteElement}
           >
             <FormattedMessage id="podcasts.destroy.deletePodcast" />
@@ -112,7 +112,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
       displayErrorToast,
     } = this.props
     return (
-      <div className="PodcastPlayer pt-dark">
+      <div className="PodcastPlayer bp3-dark">
         <Lock type="Podcast" param={id}>
           {({ onBeginEditing, onFinishEditing }) => (
             <>

@@ -144,7 +144,7 @@ class Deployment extends React.Component<Props, State> {
     const { selectedQuizId, customQuestions } = this.state
     return (
       <>
-        <div className="pt-dark" style={{ padding: '0 12px' }}>
+        <div className="bp3-dark" style={{ padding: '0 12px' }}>
           {selectedQuizId == null ? (
             <QuizSelector
               suggestedQuizzes={suggestedQuizzes}

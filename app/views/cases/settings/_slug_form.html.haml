@@ -6,18 +6,18 @@
   = f.form_group :slug, data: { controller: 'cases--settings--slug',
                                 target: 'cases--settings--slug.formGroup'},
                         helper_text: slug_format do |f, error_classes|
-    .pt-callout.pt-icon-hand-right.form__callout
+    .bp3-callout.bp3-icon-hand-right.form__callout
       = t('.changing_url_leaves_your_old_url_available_for_anyone_else')
 
-    .pt-control-group
-      .pt-input-group.pt-fill{class: error_classes}
-        %span.pt-icon.pt-icon-link
-        = f.text_field :slug, class: %w[pt-input],
+    .bp3-control-group
+      .bp3-input-group.bp3-fill{class: error_classes}
+        %span.bp3-icon.bp3-icon-link
+        = f.text_field :slug, class: %w[bp3-input],
                               placeholder: 'example-slug',
                               data: { target: 'cases--settings--slug.input',
                                       action: 'input->cases--settings--slug#update' }
       = f.submit I18n.t('cases.settings.edit.change_url'),
-                 class: %w[pt-button pt-intent-success],
+                 class: %w[bp3-button bp3-intent-success],
                  data: { target: 'cases--settings--slug.submit' }
     %p.case-slug-preview
       https://www.learngala.com/cases/

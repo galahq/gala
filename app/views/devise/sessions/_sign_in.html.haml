@@ -4,19 +4,19 @@
            builder: BlueprintFormBuilder do |f|
 
   = f.form_group :email do |f, error_classes|
-    = f.email_field :email, class: (%w[pt-input pt-fill] + error_classes),
+    = f.email_field :email, class: (%w[bp3-input bp3-fill] + error_classes),
                             spellcheck: false
 
   = f.form_group :password do |f, error_classes|
-    = f.password_field :password, class: (%w[pt-input pt-fill] + error_classes),
+    = f.password_field :password, class: (%w[bp3-input bp3-fill] + error_classes),
                                   autocomplete: "current-password"
 
   - if devise_mapping.rememberable?
-    .pt-form-group
+    .bp3-form-group
       = f.check_box :remember_me
 
-  = f.submit t('devise.sessions.new.sign_in'), class: %w[pt-intent-primary]
-  %a.pt-button.pt-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
+  = f.submit t('devise.sessions.new.sign_in'), class: %w[bp3-intent-primary]
+  %a.bp3-button.bp3-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
     href: omniauth_authorize_path('authentication_strategy', 'google') }
     = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
 

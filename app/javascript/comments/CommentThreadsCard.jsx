@@ -207,7 +207,7 @@ const CommentThreadsWindow = styled.div`
   }
 `
 
-const Header = styled.div.attrs({ className: 'pt-dark' })`
+const Header = styled.div.attrs({ className: 'bp3-dark' })`
   background-color: #493092;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -223,7 +223,7 @@ const Header = styled.div.attrs({ className: 'pt-dark' })`
 `
 
 const CloseButton = styled(Link).attrs({
-  className: 'pt-button pt-minimal pt-icon-cross pt-small',
+  className: 'bp3-button bp3-minimal bp3-icon-cross bp3-small',
 })`
   margin: -2px 2px 0;
   &:before {

@@ -1,7 +1,7 @@
 - content_for :title, I18n.t('devise.registrations.new.sign_up')
 
 %div
-  .pt-card.pt-elevation-4.devise-card
+  .bp3-card.bp3-elevation-4.devise-card
     %h2= t('.sign_up')
 
     = form_for resource,
@@ -13,28 +13,28 @@
       = f.form_group :name
 
       = f.form_group :locale do |f, error_classes|
-        .pt-select.pt-fill{ class: error_classes }
+        .bp3-select.bp3-fill{ class: error_classes }
           = f.select :locale, options_for_select(locale_names, I18n.locale)
 
       = f.form_group :email do |f, error_classes|
-        = f.email_field :email, class: (%w[pt-input pt-fill] + error_classes),
+        = f.email_field :email, class: (%w[bp3-input bp3-fill] + error_classes),
                                 spellcheck: false
 
       - min_length = t 'devise.shared.minimum_password_length',
                        count: @minimum_password_length
       = f.form_group :password, in_parens: min_length do |f, error_classes|
         = f.password_field :password,
-                           class: (%w[pt-input pt-fill] + error_classes),
+                           class: (%w[bp3-input bp3-fill] + error_classes),
                            autocomplete: "new-password"
 
       = f.form_group :password_confirmation do |f, error_classes|
         = f.password_field :password_confirmation,
-                           class: %w[pt-input pt-fill] + error_classes,
+                           class: %w[bp3-input bp3-fill] + error_classes,
                            autocomplete: "new-password"
 
-      = f.submit t('.sign_up'), class: %w[pt-intent-primary]
+      = f.submit t('.sign_up'), class: %w[bp3-intent-primary]
 
-      %a.pt-button.pt-icon-log-in.oauth-icon-google{role: 'button',
+      %a.bp3-button.bp3-icon-log-in.oauth-icon-google{role: 'button',
         href: omniauth_authorize_path('authentication_strategy', 'google')}
         = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
 

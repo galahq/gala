@@ -5,7 +5,7 @@
 
 
 .window.admin
-  .admin-card.pt-card.pt-elevation-2
+  .admin-card.bp3-card.bp3-elevation-2
     = link_to edit_library_url library do
       .library-cover-card-top{ style: library.define_color_variables }
         %span.admin__table__slug= library.name
@@ -20,10 +20,10 @@
 
 
         = f.form_group :manager_email do |f, error_classes|
-          .pt-input-group.pt-fill{ class: error_classes }
-            %span.pt-icon.pt-icon-envelope
+          .bp3-input-group.bp3-fill{ class: error_classes }
+            %span.bp3-icon.bp3-icon-envelope
             = f.email_field :manager_email,
-                            class: %w[pt-input]
+                            class: %w[bp3-input]
 
         = f.submit I18n.t('managerships.new.add_manager'),
-                   class: %w[pt-button pt-intent-success]
+                   class: %w[bp3-button bp3-intent-success]

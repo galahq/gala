@@ -56,7 +56,7 @@ function edgenotePreviewProps (contents, changesToAttachments) {
   }
 }
 
-const Card = styled.div.attrs({ className: 'pt-card pt-dark pt-elevation-3' })`
+const Card = styled.div.attrs({ className: 'bp3-card bp3-dark bp3-elevation-3' })`
   margin-bottom: 2rem;
 
   & .edge {

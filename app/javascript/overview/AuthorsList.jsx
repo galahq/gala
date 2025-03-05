@@ -56,7 +56,7 @@ class AuthorsList extends React.Component<
       <>
         {/* eslint-disable-next-line */}
         <div
-          className={isButton ? 'pt-button pt-icon-people' : ''}
+          className={isButton ? 'bp3-button bp3-icon-people' : ''}
           tabIndex={canEdit ? '0' : null} // eslint-disable-line
           role={canEdit ? 'button' : null}
           style={{ cursor: canEdit ? 'pointer' : null }}
@@ -129,7 +129,7 @@ const AuthorName = ({
 }
 
 const StyledTooltip = styled(Tooltip).attrs({
-  className: 'pt-tooltip-indicator',
+  className: 'bp3-tooltip-indicator',
 })`
   border-bottom-color: hsl(209, 52%, 24%, 0.8);
   vertical-align: baseline;

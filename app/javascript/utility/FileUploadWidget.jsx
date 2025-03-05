@@ -43,7 +43,7 @@ const FileUploadWidget = ({
         upload.state === 'uploading' && (
           <ProgressBar key={upload.id}>
             <div
-              className="pt-progress-meter"
+              className="bp3-progress-meter"
               style={{ width: `${upload.progress}%` }}
             />
           </ProgressBar>
@@ -70,11 +70,11 @@ const HiddenFileUpload = styled.input.attrs({ type: 'file' })`
 `
 
 const UploadButton = styled.span.attrs({
-  className: 'pt-button pt-icon-cloud-upload',
+  className: 'bp3-button bp3-icon-cloud-upload',
 })``
 
 const ProgressBar = styled.div.attrs({
-  className: 'pt-progress-bar pt-intent-success',
+  className: 'bp3-progress-bar bp3-intent-success',
 })`
   position: absolute;
   top: 0;

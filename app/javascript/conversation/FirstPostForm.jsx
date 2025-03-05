@@ -108,7 +108,7 @@ class FirstPostForm extends React.Component<Props, State> {
 }
 export default commentFormConnector(FirstPostForm)
 
-const Input = styled.div.attrs({ className: 'pt-card pt-elevation-1' })`
+const Input = styled.div.attrs({ className: 'bp3-card bp3-elevation-1' })`
   align-items: stretch;
   background-color: white;
   display: flex;
@@ -136,9 +136,9 @@ const Options = styled.div`
   margin-top: 8px;
 `
 
-const Button = styled.button.attrs({ className: 'pt-button' })``
+const Button = styled.button.attrs({ className: 'bp3-button' })``
 const SubmitButton = styled.button.attrs({
-  className: 'pt-button pt-intent-primary',
+  className: 'bp3-button bp3-intent-primary',
 })`
   margin-left: 8px;
 `

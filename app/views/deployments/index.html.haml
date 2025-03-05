@@ -1,32 +1,32 @@
 - content_for :title, I18n.t('deployments.index.teach_with_cases')
 
 
-.admin.md-container.pt-dark
+.admin.md-container.bp3-dark
   %header.md-header
     %h1.admin__title= t '.teach_with_cases'
 
   %aside.md-master.spaced
     %h2.admin__title= t '.deploy_a_case'
-    .pt-running-text= raw markdown t '.instructions'
+    .bp3-running-text= raw markdown t '.instructions'
 
-    .pt-callout.pt-icon-hand-right
+    .bp3-callout.bp3-icon-hand-right
       = t '.find_a_case_then_click_teach_this_case'
 
     = form_with url: '/catalog/search', local: true, method: :get do
-      .pt-input-group.pt-round
-        %span.pt-icon.pt-icon-search
-        %input.pt-input{ type: 'text', name: 'q',
+      .bp3-input-group.bp3-round
+        %span.bp3-icon.bp3-icon-search
+        %input.bp3-input{ type: 'text', name: 'q',
                          placeholder: I18n.t('search.search_cases') }
-          %span.pt-input-action
-            %button.pt-button.pt-minimal.pt-icon-arrow-right(type="submit")
+          %span.bp3-input-action
+            %button.bp3-button.bp3-minimal.bp3-icon-arrow-right(type="submit")
 
   %main.md-detail
     - if deployments.empty?
-      .pt-non-ideal-state
-        .pt-non-ideal-state-visual.pt-non-ideal-state-icon
-          %span.pt-icon.pt-icon-folder-open
-        %h3.pt-non-ideal-state-title= t '.youre_not_teaching_any_cases'
-        .pt-non-ideal-state-description= t '.once_youve_deployed'
+      .bp3-non-ideal-state
+        .bp3-non-ideal-state-visual.bp3-non-ideal-state-icon
+          %span.bp3-icon.bp3-icon-folder-open
+        %h3.bp3-non-ideal-state-title= t '.youre_not_teaching_any_cases'
+        .bp3-non-ideal-state-description= t '.once_youve_deployed'
 
     -else
       .spaced

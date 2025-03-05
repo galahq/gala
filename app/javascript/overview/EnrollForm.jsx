@@ -36,7 +36,7 @@ const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
             <FormattedMessage id="enrollments.new.enrollForEasyAccess" />
           </p>
           <button
-            className="pt-button pt-intent-primary"
+            className="bp3-button bp3-intent-primary"
             onClick={() => enrollReader(readerId, caseSlug)}
           >
             <FormattedMessage id="enrollments.new.enroll" />
@@ -54,7 +54,7 @@ export default connect(
 )(EnrollForm)
 
 const Container = styled.div.attrs({
-  className: 'devise-card pt-card pt-elevation-3',
+  className: 'devise-card bp3-card bp3-elevation-3',
 })`
   border-width: 0 0 5px;
   padding: 20px;

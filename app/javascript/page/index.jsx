@@ -39,7 +39,7 @@ const Page = (props: Props) => {
       {({ placeholder, innerRef: droppableRef }) => (
         <div ref={droppableRef}>
           <article>
-            <section className="pt-dark section Page-meta">
+            <section className="bp3-dark section Page-meta">
               {editing ? (
                 <DetailsForm
                   page={page}
@@ -123,7 +123,7 @@ const Section = styled.section`
 `
 
 const AddCardButton = styled(Button).attrs({
-  className: 'pt-minimal',
+  className: 'bp3-minimal',
   icon: 'add',
 })`
   margin: 1em 1.5em 0;
@@ -145,7 +145,7 @@ class CreateCardLink extends React.Component<{
 
   render () {
     return (
-      <div className="pt-dark">
+      <div className="bp3-dark">
         <AddCardButton text="Add card" onClick={this.handleCreateCard} />
       </div>
     )

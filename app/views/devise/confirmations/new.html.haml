@@ -13,10 +13,10 @@
   = f.form_group :email do |f, error_classes| 
     - value = resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email
     = f.email_field :email,
-                    value: value, class: %w[pt-input pt-fill] + error_classes, 
+                    value: value, class: %w[bp3-input bp3-fill] + error_classes, 
                     spellcheck: false
 
   = f.submit t('.resend_confirmation_instructions'),
-             class: %w[pt-intent-primary]
+             class: %w[bp3-intent-primary]
 
 = render "devise/shared/links" 

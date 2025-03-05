@@ -154,7 +154,7 @@ export const Container = styled.div`
 `
 
 // $FlowFixMe
-export const Image = styled.div.attrs({ className: 'pt-dark' })`
+export const Image = styled.div.attrs({ className: 'bp3-dark' })`
   background-color: hsl(209, 53%, 76%);
   background-image: ${p => css`url(${p.src})`};
   background-position: center;
@@ -185,7 +185,7 @@ export const PhotoCredit = styled.cite`
   text-shadow: 0 0 10px hsla(0, 0%, 0%, 0.5);
   text-transform: uppercase;
 
-  .pt-editable-text-placeholder > .pt-editable-text-content {
+  .bp3-editable-text-placeholder > .bp3-editable-text-content {
     color: hsla(0, 0%, 100%, 0.7);
   }
 `

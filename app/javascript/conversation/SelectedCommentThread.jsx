@@ -295,7 +295,7 @@ const CommentsContainer = styled.div`
 `
 
 const AllCommentsButton = styled(Link).attrs({
-  className: 'pt-button pt-minimal pt-icon-arrow-left',
+  className: 'bp3-button bp3-minimal bp3-icon-arrow-left',
 })`
   margin: -10px 0 15px -32px;
 `

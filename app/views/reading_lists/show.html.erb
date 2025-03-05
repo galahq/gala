@@ -3,7 +3,7 @@
 end %>
 
 <div class="admin md-container reading-list">
-  <header class="md-header pt-dark">
+  <header class="md-header bp3-dark">
     <h1 class="admin__title">
       <%= reading_list.title %>
     </h1>
@@ -14,9 +14,9 @@ end %>
     data-controller="reading-list"
     data-reading-list-id="<%= reading_list.id %>"
   >
-    <div class="pt-dark">
-      <div class="pt-callout reading-list__info">
-        <div class="pt-running-text">
+    <div class="bp3-dark">
+      <div class="bp3-callout reading-list__info">
+        <div class="bp3-running-text">
           <%= raw markdown reading_list.description %>
 
           <div class="reading-list__info__reader">
@@ -28,7 +28,7 @@ end %>
     </div>
 
     <% if reader_signed_in? %>
-      <div class="pt-dark">
+      <div class="bp3-dark">
         <% if reading_list.reader == current_reader %>
           <%= render 'actions', reading_list: reading_list %>
         <% else %>
@@ -37,13 +37,13 @@ end %>
         <% end %>
       </div>
     <% else %>
-      <div class="pt-card pt-elevation-4 devise-card">
+      <div class="bp3-card bp3-elevation-4 devise-card">
         <%= render 'devise/sessions/sign_in', resource: Reader.new %>
       </div>
     <% end %>
   </aside>
 
-  <main class="md-detail pt-dark">
+  <main class="md-detail bp3-dark">
     <% reading_list.items.each do |item| %>
       <% kase = item.case.decorate %>
 
@@ -74,12 +74,12 @@ end %>
               class="reading-list__tag <%= 'hidden' unless enrolled %>"
               data-target="reading-list-item.enrolledTag"
             >
-              <span class="pt-icon pt-icon-tick"></span>
+              <span class="bp3-icon bp3-icon-tick"></span>
               Enrolled
             </div>
 
             <button
-              class="pt-button pt-icon-plus <%= 'hidden' if enrolled %>"
+              class="bp3-button bp3-icon-plus <%= 'hidden' if enrolled %>"
               data-action="reading-list-item#enroll"
               data-target="reading-list-item.enrollButton"
             >
@@ -88,7 +88,7 @@ end %>
           </div>
         <% end %>
 
-        <div class="reading-list-item__notes pt-running-text">
+        <div class="reading-list-item__notes bp3-running-text">
           <%= raw markdown item.notes %>
         </div>
       </div>

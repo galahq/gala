@@ -1,23 +1,23 @@
-<nav class="Toolbar__bar pt-dark">
+<nav class="Toolbar__bar bp3-dark">
   <div class="MaxWidthContainer">
-    <div class="Toolbar__group pt-navbar-group">
+    <div class="Toolbar__group bp3-navbar-group">
       <%= link_to t('catalog.catalog'), root_path,
-                  class: 'pt-button pt-minimal pt-icon-home' %>
+                  class: 'bp3-button bp3-minimal bp3-icon-home' %>
       <%= link_to my_cases_nav_button_text, my_cases_path,
-                  class: 'pt-button pt-minimal pt-icon-annotation' %>
+                  class: 'bp3-button bp3-minimal bp3-icon-annotation' %>
       <%= link_to deployments_nav_button_text, deployments_path,
-                  class: 'pt-button pt-minimal pt-icon-follower' %>
+                  class: 'bp3-button bp3-minimal bp3-icon-follower' %>
     </div>
 
-    <div class="Toolbar__group pt-navbar-group"></div>
+    <div class="Toolbar__group bp3-navbar-group"></div>
 
-    <div class="Toolbar__group pt-navbar-group">
+    <div class="Toolbar__group bp3-navbar-group">
       <%= form_with url: '/catalog/search', local: true, method: :get do %>
-        <div class="pt-input-group pt-round">
-          <span class="pt-icon pt-icon-search"></span>
-          <input class="pt-input" name="q" placeholder="<%= I18n.t('search.search_cases') %>" type="text">
-            <span class="pt-input-action">
-              <button type="submit" class="pt-button pt-minimal pt-icon-arrow-right"></button>
+        <div class="bp3-input-group bp3-round">
+          <span class="bp3-icon bp3-icon-search"></span>
+          <input class="bp3-input" name="q" placeholder="<%= I18n.t('search.search_cases') %>" type="text">
+            <span class="bp3-input-action">
+              <button type="submit" class="bp3-button bp3-minimal bp3-icon-arrow-right"></button>
             </span>
           </input>
         </div>

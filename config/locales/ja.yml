@@ -175,7 +175,7 @@ ja:
   cards:
     edit:
       citation_added: |
-        出典表記付いた。<span class="pt-tag pt-intent-success"><span class="pt-icon pt-icon-ring"></span>出典店</span>をクリックして、編集できる。
+        出典表記付いた。<span class="bp3-tag bp3-intent-success"><span class="bp3-icon bp3-icon-ring"></span>出典店</span>をクリックして、編集できる。
       citation_text: Title
       citation_url: URL
       write_something: 何かをお書き下さい...
@@ -536,7 +536,7 @@ ja:
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
       make_selection_html: >
-        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="bp3-tag"> <span class="bp3-icon bp3-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: Edgenoteを登録
   editorships:
     destroy:

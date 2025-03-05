@@ -81,7 +81,7 @@ function TableOfContentsElement ({
           >
             <Label {...provided.dragHandleProps}>
               {editing && !readOnly ? (
-                <span className="pt-icon pt-icon-drag-handle-horizontal" />
+                <span className="bp3-icon bp3-icon-drag-handle-horizontal" />
               ) : (
                 position + 1
               )}

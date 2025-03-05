@@ -5,18 +5,18 @@
     = f.form_group :name
 
     = f.form_group :description do |f, error_classes|
-      = f.text_area :description, class: %i[pt-input pt-fill] + error_classes
+      = f.text_area :description, class: %i[bp3-input bp3-fill] + error_classes
 
     = f.form_group :url
 
     .row
       = f.form_group :background_color do |f, error_classes|
         = f.color_field :background_color,
-                        class: %i[pt-input pt-fill] + error_classes
+                        class: %i[bp3-input bp3-fill] + error_classes
 
       = f.form_group :foreground_color do |f, error_classes|
         = f.color_field :foreground_color,
-                        class: %i[pt-input pt-fill] + error_classes
+                        class: %i[bp3-input bp3-fill] + error_classes
 
     :ruby
       logo_helper_text = "#{
@@ -30,7 +30,7 @@
       - if f.object.logo.attached?
         = image_tag f.object.logo.variant(resize_to_limit: [50, 50]),
                     class: 'logo'
-      = f.file_field :logo, class: %i[pt-fill] + error_classes,
+      = f.file_field :logo, class: %i[bp3-fill] + error_classes,
                             direct_upload: true,
                             accept: 'image/png'
 

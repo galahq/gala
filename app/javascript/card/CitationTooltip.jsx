@@ -48,7 +48,7 @@ function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
       key &&
         !(
           document.documentElement &&
-          document.documentElement.classList.contains('pt-focus-disabled')
+          document.documentElement.classList.contains('bp3-focus-disabled')
         ) &&
         (window.location.hash = `citation-marker-${key}`)
     },
@@ -61,7 +61,7 @@ class CitationTooltip extends React.Component<*> {
     key &&
       !(
         document.documentElement &&
-        document.documentElement.classList.contains('pt-focus-disabled')
+        document.documentElement.classList.contains('bp3-focus-disabled')
       ) &&
       (window.location.hash = `citation-${key}`)
   }
@@ -201,12 +201,12 @@ const Grid = styled.div`
   }
 `
 
-const Field = styled.input.attrs({ className: 'pt-input' })`
+const Field = styled.input.attrs({ className: 'bp3-input' })`
   margin-top: 0.25em;
 `
 
 const Button = styled.button.attrs({
-  className: 'pt-button',
+  className: 'bp3-button',
   type: 'button',
 })`
   margin-top: 0.25em;

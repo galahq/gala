@@ -3,14 +3,14 @@
   —
   = deployment.group.name
 
-.admin.md-container.pt-dark
+.admin.md-container.bp3-dark
   %header.md-header
-    %ul.pt-breadcrumbs
+    %ul.bp3-breadcrumbs
       %li
-        = link_to deployments_path, class: %w[pt-breadcrumb] do
+        = link_to deployments_path, class: %w[bp3-breadcrumb] do
           = t 'deployments.index.my_deployments'
       %li
-        %a.pt-breadcrumb.pt-disabled= deployment.group.name
+        %a.bp3-breadcrumb.bp3-disabled= deployment.group.name
 
     %h1.admin__title
       = t '.deployment_of_html', kase: deployment.case.short_title,
@@ -24,26 +24,26 @@
     %h2.admin__title= t '.quiz_details'
 
     - if !deployment.posttest_assigned?
-      %span.pt-tag.pt-minimal.pt-large= t '.no_quiz_assigned'
+      %span.bp3-tag.bp3-minimal.bp3-large= t '.no_quiz_assigned'
       = link_to edit_deployment_path(deployment),
-                class: %w[pt-button pt-icon-plus] do
+                class: %w[bp3-button bp3-icon-plus] do
         = t 'deployments.deployment.add_quiz'
 
     - else
-      .quiz-details.pt-card.pt-running-text
+      .quiz-details.bp3-card.bp3-running-text
         .quiz-details__metadata
           .quiz-details__counts
-            %span.pt-tag.pt-minimal.pt-large
+            %span.bp3-tag.bp3-minimal.bp3-large
               = t 'quizzes.quiz.multiple_choice_questions',
                   count: deployment.quiz.questions.multiple_choice.count
 
-            %span.pt-tag.pt-minimal.pt-large
+            %span.bp3-tag.bp3-minimal.bp3-large
               = t 'quizzes.quiz.open_ended_questions',
                   count: deployment.quiz.questions.open_ended.count
 
           .quiz-details__actions
             = link_to edit_deployment_path(deployment),
-                      class: %w[pt-button pt-icon-edit] do
+                      class: %w[bp3-button bp3-icon-edit] do
               = t 'deployments.deployment.edit_quiz'
 
         %hr
@@ -67,5 +67,5 @@
                                   progressions: @progressions
     - if deployment.posttest_assigned?
       = link_to deployment_submissions_path(deployment, format: :csv),
-                class: %i[pt-button pt-icon-download] do
+                class: %i[bp3-button bp3-icon-download] do
         = t '.download_all_quiz_submissions'

@@ -13,7 +13,7 @@
       <%= spotlight :deployment_details, placement: 'top' do %>
         <%= link_to(
               deployment,
-              class: %w[pt-button pt-small pt-minimal pt-icon-people]
+              class: %w[bp3-button bp3-small bp3-minimal bp3-icon-people]
             ) do %>
           <%= t '.n_enrolled',
                 count: reader_counts_by_deployment_id[deployment.id]
@@ -27,8 +27,8 @@
 
       <%= spotlight :invite_learners, placement: 'top' do %>
         <button
-          class="deployment__open-invite pt-button pt-small pt-minimal
-                 pt-icon-new-person"
+          class="deployment__open-invite bp3-button bp3-small bp3-minimal
+                 bp3-icon-new-person"
           data-action="deployments--invite-drawer#open"
         >
           <%= t '.invite_learners' %>
@@ -36,8 +36,8 @@
       <% end %>
 
       <button
-        class="deployment__close-invite pt-button pt-small pt-minimal
-               pt-icon-cross"
+        class="deployment__close-invite bp3-button bp3-small bp3-minimal
+               bp3-icon-cross"
         data-action="deployments--invite-drawer#close"
       >
         <%= t 'helpers.close' %>

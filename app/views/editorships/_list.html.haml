@@ -2,12 +2,12 @@
 
 - editorships.select(&:persisted?).sort_by(&:editor_name).each do |editorship|
   .editorship.non-spaced
-    %span.pt-tag.pt-minimal= editorship.editor_name
+    %span.bp3-tag.bp3-minimal= editorship.editor_name
     - unless editorship.editor == current_reader
       = form_with url: editorship_path(editorship),
                   method: :delete, local: true do |f|
         = f.button '',
                    aria: { label: I18n.t('editorships.destroy.remove') },
-                   class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated],
+                   class: %w[bp3-button bp3-small bp3-minimal bp3-intent-danger bp3-icon-small-cross bp3-unsaturated],
                    data: { confirm: I18n.t('editorships.destroy.are_you_sure',
                                            name: editorship.editor_name) }

@@ -176,8 +176,8 @@ es:
   cards:
     edit:
       citation_added: |
-        Citation added. Click the <span class="pt-tag pt-intent-success">
-        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        Citation added. Click the <span class="bp3-tag bp3-intent-success">
+        <span class="bp3-icon bp3-icon-ring"></span> Citation Marker</span> to
         edit.
       citation_text: Title
       citation_url: URL
@@ -555,7 +555,7 @@ es:
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
       make_selection_html: >
-        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="bp3-tag"> <span class="bp3-icon bp3-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: New Edgenote
   editorships:
     destroy:

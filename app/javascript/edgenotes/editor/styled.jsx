@@ -35,7 +35,7 @@ export const Dialog = styled(BaseDialog)`
 `
 
 // $FlowFixMe
-export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
+export const Body = styled.div.attrs({ className: 'bp3-dialog-body' })`
   align-items: flex-start;
   display: flex;
   flex-flow: row;

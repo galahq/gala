@@ -5,7 +5,7 @@
 
 
 .window.admin
-  .admin-card.pt-card.pt-elevation-2
+  .admin-card.bp3-card.bp3-elevation-2
     - if @case
       .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
         %span.admin__table__slug= @case.short_title
@@ -16,10 +16,10 @@
     = render 'form', deployment: @deployment
 
   - unless @deployments.empty?
-    .admin-card__sidebar.pt-dark.spaced--compact
+    .admin-card__sidebar.bp3-dark.spaced--compact
       %h2.deployments__group= t '.active_deployments'
 
       - @deployments.sort_by{ |d| d.group.name }.each do |deployment|
         .deployment
           = link_to deployment.group.name, focus_deployment_path(deployment),
-                    class: %w[pt-tag pt-minimal]
+                    class: %w[bp3-tag bp3-minimal]

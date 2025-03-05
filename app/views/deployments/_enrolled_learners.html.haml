@@ -1,4 +1,4 @@
-%table.admin__table.pt-html-table(data-target="enrolled-learners")
+%table.admin__table.bp3-html-table(data-target="enrolled-learners")
   %thead
     %th(scope="col")= t 'activerecord.attributes.reader.name'
     - if deployment.pretest_assigned?
@@ -15,7 +15,7 @@
         - if deployment.pretest_assigned?
           %td
             - if progression.pretest_submitted?
-              %span.pt-icon.pt-icon-tick
+              %span.bp3-icon.bp3-icon-tick
               = progression.pretest_submission.score
 
         %td= number_to_percentage progression.completed_fraction * 100,
@@ -24,7 +24,7 @@
         - if deployment.pretest_assigned?
           %td
             - if progression.posttest_submitted?
-              %span.pt-icon.pt-icon-tick
+              %span.bp3-icon.bp3-icon-tick
               = progression.posttest_submission.score
 
   %tfoot

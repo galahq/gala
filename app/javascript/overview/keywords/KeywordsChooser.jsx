@@ -53,7 +53,7 @@ class KeywordsChooser extends React.Component<Props, State> {
   render () {
     const { intl, onChange, taggingsManager, tags } = this.props
     return (
-      <div className="pt-dark">
+      <div className="bp3-dark">
         <MultiSelect
           resetOnSelect
           //

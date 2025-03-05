@@ -4,15 +4,15 @@
 
 .libmanager.admin
   %section.col1
-    .admin-card.pt-card.pt-elevation-2
+    .admin-card.bp3-card.bp3-elevation-2
       %h1.admin__title= t 'libraries.edit.edit_library'
       = render 'form', library: @library
 
-    .admin-card__sidebar.pt-dark.spaced--compact
+    .admin-card__sidebar.bp3-dark.spaced--compact
       %h2.deployments__group= t 'libraries.edit.library_managers'
       = render 'managerships', library: @library
 
-  %main.col2.md-detail.pt-dark
+  %main.col2.md-detail.bp3-dark
     %h2.deployments__group= t 'libraries.edit.case_library_requests'
     = render 'requests', requests: @requests
     .spaced

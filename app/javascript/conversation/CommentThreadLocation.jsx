@@ -83,7 +83,7 @@ const Container = styled.div`
   margin: 18px 0 28px;
 `
 
-const Callout = styled.div.attrs({ className: 'pt-callout pt-icon-error' })`
+const Callout = styled.div.attrs({ className: 'bp3-callout bp3-icon-error' })`
   line-height: 1.3;
   font-weight: 400;
   margin-bottom: 1em;

@@ -1,11 +1,11 @@
 .personas
-  .personas__welcome.pt-dark.pt-running-text
+  .personas__welcome.bp3-dark.bp3-running-text
     %h1.personas__headline= t '.welcome'
     %p= t '.tell_us_about_yourself'
 
   .personas__choices
     - %i[learner teacher writer].each do |persona|
-      .pt-card.pt-elevation-4.personas__choice{ class: "persona--#{persona}" }
+      .bp3-card.bp3-elevation-4.personas__choice{ class: "persona--#{persona}" }
         %h2{ id: "persona-#{persona}-title" }= t "personas.#{persona}.title"
         %p= t "personas.#{persona}.description"
 
@@ -16,7 +16,7 @@
                         teacher: 'warning',
                         writer: 'success' }
           = f.submit 'Choose',
-                     'class' => "pt-button pt-intent-#{intents[persona]}",
+                     'class' => "bp3-button bp3-intent-#{intents[persona]}",
                      'aria-labelledby' => "persona-#{persona}-title"
 
   %p.personas__skip

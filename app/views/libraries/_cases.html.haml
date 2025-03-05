@@ -1,8 +1,8 @@
 - if cases.empty?
   .spaced
-  .pt-form-group.pt-tag.pt-minimal= t 'libraries.edit.no_cases'
+  .bp3-form-group.bp3-tag.bp3-minimal= t 'libraries.edit.no_cases'
 - else
-  %table.admin__table.pt-html-table.my-cases__table
+  %table.admin__table.bp3-html-table.my-cases__table
     %thead
       %td
       %td= t 'activerecord.attributes.case.case_title'
@@ -24,7 +24,7 @@
               %span.admin__table__slug
                 = kase.short_title
                 - if kase.featured?
-                  %span.pt-tag.pt-minimal.pt-intent-success
+                  %span.bp3-tag.bp3-minimal.bp3-intent-success
                     = succeed ':' do
                       = t 'my_cases.index.featured'
                     = localize kase.featured_at.to_date
@@ -43,12 +43,12 @@
           %td
             = link_to '', edit_case_path(kase),
                       aria: { label: I18n.t('my_cases.index.edit_case') },
-                      class: 'pt-button pt-minimal pt-icon-edit'
+                      class: 'bp3-button bp3-minimal bp3-icon-edit'
 
           %td
             = link_to '', edit_case_settings_path(kase),
                       aria: { label: I18n.t('my_cases.index.edit_case_settings') },
-                      class: 'pt-button pt-minimal pt-icon-cog'
+                      class: 'bp3-button bp3-minimal bp3-icon-cog'
 
           %td
             = form_with model: kase, url: case_library_path(kase),
@@ -56,6 +56,6 @@
               = f.hidden_field :library_id, value: nil
               = f.button '',
                         aria: { label: I18n.t('libraries.edit.remove_case_from_library') },
-                        class: %w[pt-button pt-minimal pt-intent-warning pt-icon-small-cross],
+                        class: %w[bp3-button bp3-minimal bp3-intent-warning bp3-icon-small-cross],
                         data: { confirm: I18n.t('libraries.edit.confirm_remove_case_from_library', name: kase.kicker) }
 

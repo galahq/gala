@@ -61,7 +61,7 @@ class Statistics extends React.Component<Props> {
         <p
           className={`o-${
             inline ? 'tag' : 'bottom-right'
-          } c-statistics pt-skeleton`}
+          } c-statistics bp3-skeleton`}
         >
           Loading...
         </p>

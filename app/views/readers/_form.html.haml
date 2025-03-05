@@ -1,4 +1,4 @@
-.pt-card.pt-elevation-4.devise-card.account-settings
+.bp3-card.bp3-elevation-4.devise-card.account-settings
   %h1.account-settings__title= t '.my_account'
 
   %div
@@ -9,22 +9,22 @@
       = f.form_group :name
 
       = f.form_group :locale do |f, error_classes|
-        .pt-select.pt-fill{ class: error_classes }
+        .bp3-select.bp3-fill{ class: error_classes }
           = f.select :locale, options_for_select(locale_names, I18n.locale)
 
       = f.form_group :email do |f, error_classes|
-        = f.email_field :email, class: (%w[pt-input pt-fill] + error_classes),
+        = f.email_field :email, class: (%w[bp3-input bp3-fill] + error_classes),
                                 spellcheck: false
 
       .reader-image-input
         - helper = t 'helpers.attachments.max_size.ruby',
                      size: number_to_human_size(2.megabytes)
         = f.form_group :image, helper_text: helper do |f|
-          = f.file_field :image, class: %w[pt-fill], direct_upload: true
+          = f.file_field :image, class: %w[bp3-fill], direct_upload: true
 
         %img{ src: reader.image_url }
 
-      = f.submit t('.save_profile'), class: %w[pt-intent-primary]
+      = f.submit t('.save_profile'), class: %w[bp3-intent-primary]
 
     - if reader.created_password
       .devise-links
@@ -34,15 +34,15 @@
     - else
       %h2= t '.create_a_password'
       = form_for reader, url: :profile, builder: BlueprintFormBuilder do |f|
-        %p.pt-text-muted
+        %p.bp3-text-muted
           = t '.you_have_not_created_a_password',
               provider: I18n.t("devise.providers.#{reader.providers.first}")
 
         = f.form_group :password do |f, error_classes|
           = f.password_field :password,
-                             class: %w[pt-input pt-fill] + error_classes
+                             class: %w[bp3-input bp3-fill] + error_classes
 
-        = f.submit t('.create_a_password'), class: %w[pt-intent-none]
+        = f.submit t('.create_a_password'), class: %w[bp3-intent-none]
 
   %div
     %h2= t '.tips_for_using_gala'
@@ -53,7 +53,7 @@
         = f.radio_button :persona, 'learner'
         = f.radio_button :persona, 'teacher'
         = f.radio_button :persona, 'writer'
-      = f.submit t(".save_persona"), class: %w[pt-intent-primary]
+      = f.submit t(".save_persona"), class: %w[bp3-intent-primary]
 
     %hr
 
@@ -64,6 +64,6 @@
       %div{ style: 'padding-bottom: 1em'}
         = f.check_box :send_reply_notifications
 
-      = f.submit t('.save_notification_preference'), class: %w[pt-intent-primary]
+      = f.submit t('.save_notification_preference'), class: %w[bp3-intent-primary]
 
     = javascript_pack_tag 'file_upload'

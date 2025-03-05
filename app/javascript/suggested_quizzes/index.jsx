@@ -27,7 +27,7 @@ function SuggestedQuizzes ({ createSuggestedQuiz, history, match }: Props) {
       <Route component={CaseOverview} />
       <Dialog
         isOpen={!!match}
-        className="pt-dark"
+        className="bp3-dark"
         title={<FormattedMessage id="cases.edit.suggestedQuizzes.title" />}
         style={{ top: '10%', width: '100%', maxWidth: 800 }}
         onClose={e => {

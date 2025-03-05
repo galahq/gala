@@ -71,7 +71,7 @@ function ResponseForm ({
         aria-label={intl.formatMessage({
           id: 'comments.new.respond',
         })}
-        className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
+        className="bp3-button bp3-small bp3-minimal bp3-intent-primary bp3-icon-upload"
         disabled={
           editorState
             .getCurrentContent()
@@ -120,7 +120,7 @@ export const EmptyResponseFormContainer = styled(Container)`
   padding: 1px;
 `
 
-const Input = styled.div.attrs({ className: 'pt-card' })`
+const Input = styled.div.attrs({ className: 'bp3-card' })`
   background-color: white;
   border-radius: 20px;
   margin-left: 10px;

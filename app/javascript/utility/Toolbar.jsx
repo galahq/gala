@@ -136,7 +136,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
 
 export default injectIntl(Toolbar)
 
-const Bar = styled.div.attrs({ className: ({ light }) => light || 'pt-dark' })`
+const Bar = styled.div.attrs({ className: ({ light }) => light || 'bp3-dark' })`
   width: 100%;
   overflow: auto;
 
@@ -166,7 +166,7 @@ const MaxWidthFlexContainer = styled(MaxWidthContainer)`
     justify-content: flex-end;
   }
 `
-const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
+const Group = styled.div.attrs({ className: 'bp3-navbar-group' })`
   height: 36px !important;
   margin: 0 8px;
   flex: 1;
@@ -176,7 +176,7 @@ const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
     canBeIconsOnly
       ? css`
           @media screen and (max-width: 513px) {
-            & .pt-button {
+            & .bp3-button {
               &:before {
                 margin-right: 0;
               }
@@ -189,7 +189,7 @@ const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
       : ''};
 `
 const Item = styled(Button).attrs({
-  className: p => p.className || 'pt-minimal',
+  className: p => p.className || 'bp3-minimal',
 })``
 
 const StyledMenu = styled(Menu)`

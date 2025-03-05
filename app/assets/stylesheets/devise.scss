@@ -22,12 +22,12 @@
     }
   }
 
-  .pt-form-group {
+  .bp3-form-group {
     margin-bottom: 0.5em;
   }
 
-  .pt-text-muted,
-  .pt-form-helper-text {
+  .bp3-text-muted,
+  .bp3-form-helper-text {
     color: hsl(255, 12%, 42%);
   }
 
@@ -39,7 +39,7 @@
     }
   }
 
-  .pt-callout.pt-intent-danger {
+  .bp3-callout.bp3-intent-danger {
     color: black;
   }
 }
@@ -48,7 +48,7 @@
   width: 16em;
 }
 
-.pt-button[class*="pt-icon-"].oauth-icon-google {
+.bp3-button[class*="bp3-icon-"].oauth-icon-google {
   display: inline-block;
   line-height: 21px;
 

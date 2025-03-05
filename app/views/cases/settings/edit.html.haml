@@ -5,7 +5,7 @@
 
 
 .window.admin
-  .admin-card.pt-card.pt-elevation-2
+  .admin-card.bp3-card.bp3-elevation-2
     = link_to case_path @case do
       .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
         %span.admin__table__slug= @case.short_title
@@ -17,11 +17,11 @@
       = render 'license_form', kase: @case
       = render 'featured_form', kase: @case
 
-  .admin-card__sidebar.pt-dark.spaced--compact
+  .admin-card__sidebar.bp3-dark.spaced--compact
     = render 'editorships/list', editorships: @editorships
 
     .admin-card__sidebar__actions
       = link_to new_case_editorship_path @case do
-        %span.pt-tag.pt-intent-success
-          %span.pt-icon.pt-icon-add
+        %span.bp3-tag.bp3-intent-success
+          %span.bp3-icon.bp3-icon-add
           %span= t 'editorships.new.add_editor'

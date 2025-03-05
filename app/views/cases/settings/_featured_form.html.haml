@@ -6,15 +6,15 @@
     = form_with model: kase, url: feature_path(kase),
                 local: true, builder: BlueprintFormBuilder do |f|
       = f.form_group :featured_at do |f, error_classes|
-        .pt-control-group
-          .pt-input-group.pt-fill{class: error_classes}
-            %span.pt-icon.pt-icon-star
-            = f.datetime_local_field :featured_at, class: %w[pt-input]
+        .bp3-control-group
+          .bp3-input-group.bp3-fill{class: error_classes}
+            %span.bp3-icon.bp3-icon-star
+            = f.datetime_local_field :featured_at, class: %w[bp3-input]
           = f.submit t('.change_featured_time'),
-                     class: %w[pt-button pt-intent-success]
+                     class: %w[bp3-button bp3-intent-success]
     = form_with url: feature_path(kase), method: :delete, local: true do |f|
       = f.submit I18n.t('features.destroy.unfeature_case'),
-                 class: %w[pt-button pt-intent-danger]
+                 class: %w[bp3-button bp3-intent-danger]
 
 - else
   - if policy(:'cases/feature').create?
@@ -23,4 +23,4 @@
     = form_with url: features_path, local: true do |f|
       = hidden_field_tag :case_slug, kase.slug
       = f.submit I18n.t('features.create.feature_case'),
-                 class: %w[pt-button pt-intent-success]
+                 class: %w[bp3-button bp3-intent-success]

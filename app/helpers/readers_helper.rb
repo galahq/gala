@@ -15,13 +15,13 @@ module ReadersHelper
       button_to 'Remove role', reader_role_path(reader, role),
                 remote: true,
                 method: :delete,
-                class: %w[pt-button pt-intent-primary],
+                class: %w[bp3-button bp3-intent-primary],
                 data: { role_id: role.id }
     else
       button_to "Make #{role.name}", reader_roles_path(reader),
                 remote: true,
                 params: { role: { id: role.id } },
-                class: 'pt-button',
+                class: 'bp3-button',
                 data: { role_id: role.id }
     end
   end

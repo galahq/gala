@@ -25,7 +25,7 @@ const EnrollmentInstructions = () => (
 
 export default injectIntl(EnrollmentInstructions)
 
-const Container = styled.div.attrs({ className: 'pt-callout' })`
+const Container = styled.div.attrs({ className: 'bp3-callout' })`
   margin-top: 1.5em;
   line-height: 1.4;
 `

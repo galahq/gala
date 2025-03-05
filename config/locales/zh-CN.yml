@@ -174,8 +174,8 @@ zh-CN:
   cards:
     edit:
       citation_added: |
-        注释已添加。单击 <span class="pt-tag pt-intent-success">
-        <span class="pt-icon pt-icon-ring"></span> 引注标记</span>进行编辑。
+        注释已添加。单击 <span class="bp3-tag bp3-intent-success">
+        <span class="bp3-icon bp3-icon-ring"></span> 引注标记</span>进行编辑。
       citation_text: Title
       citation_url: URL
       write_something: 添加内容
@@ -535,7 +535,7 @@ zh-CN:
         The Edgenotes that belong to this case but that are not attached to any card are listed below. They can be reattached or deleted if they are no longer needed. Or, you can create a brand new Edgenote and deal with these later.
     new:
       make_selection_html: >
-        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="pt-tag"> <span class="pt-icon pt-icon-add-column-right"></span> Add Edgenote</span> button.
+        Please select the phrase that you would like to attach an Edgenote to, then click the <span class="bp3-tag"> <span class="bp3-icon bp3-icon-add-column-right"></span> Add Edgenote</span> button.
       new_edgenote: 新的测边注
   editorships:
     destroy:

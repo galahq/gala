@@ -4,7 +4,7 @@
   = @case.short_title
 
 .window.admin
-  .admin-card.pt-card.pt-elevation-2
+  .admin-card.bp3-card.bp3-elevation-2
     = link_to case_path @case do
       .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
         %span.admin__table__slug
@@ -12,7 +12,7 @@
 
     %div
       %h1.admin__title= t '.are_you_sure'
-      .pt-running-text= raw markdown t '.this_action_cannot_be_undone'
+      .bp3-running-text= raw markdown t '.this_action_cannot_be_undone'
 
     = form_for @confirm_deletion_form, url: case_confirm_deletion_path,
                data: { controller: 'confirmation' },
@@ -22,7 +22,7 @@
       - if @confirm_deletion_form.needs_confirmation?
         = f.form_group :kicker_confirmation do |f, error_classes|
           = f.text_field :kicker_confirmation,
-                         class: %w[pt-input pt-fill] + error_classes,
+                         class: %w[bp3-input bp3-fill] + error_classes,
                          data: { action: 'input->confirmation#check',
                                  expected: @confirm_deletion_form.case.kicker }
       - else
@@ -30,5 +30,5 @@
 
 
       = f.submit disabled: @confirm_deletion_form.needs_confirmation?,
-                 class: %i[pt-fill pt-intent-danger],
+                 class: %i[bp3-fill bp3-intent-danger],
                  data: { target: 'confirmation.submit' }

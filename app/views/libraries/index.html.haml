@@ -1,22 +1,22 @@
 - content_for :title, I18n.t('libraries.index.libraries')
 
 .admin.md-container
-  %header.md-header.pt-dark
+  %header.md-header.bp3-dark
     %h1.admin__title
       = t '.libraries'
 
   %aside.md-master.spaced
     - if policy(Library).create?
-      .pt-card
+      .bp3-card
         %h2.admin__title= t '.create_a_new_library'
         = render 'form'
 
-    .pt-dark
-      .pt-callout.pt-icon-git-push
+    .bp3-dark
+      .bp3-callout.bp3-icon-git-push
         = t '.libraries_on_gala'
 
-  %main.md-detail.pt-dark
-    %table.admin__table.pt-html-table.libraries__table
+  %main.md-detail.bp3-dark
+    %table.admin__table.bp3-html-table.libraries__table
       %thead
         %th(scope="col")=# Logo
         %th(scope="col")= t 'activerecord.attributes.library.name'
@@ -35,13 +35,13 @@
             %td
               = library.name
               - if policy(Library).create? && library.visible_in_catalog?
-                %span.pt-tag.pt-minimal.pt-intent-success
+                %span.bp3-tag.bp3-minimal.bp3-intent-success
                   = t '.on_home_page'
 
             %td
               - unless library.url.blank?
                 = link_to library.url,
-                          class: %i[pt-button pt-minimal pt-icon-share],
+                          class: %i[bp3-button bp3-minimal bp3-icon-share],
                           aria: { label: I18n.t('activerecord.attributes.library.website') },
                           target: 'blank' do
                   -# Empty
@@ -54,18 +54,18 @@
             %td
               = link_to pluralize(library.cases_count, 'case'),
                         library.catalog_path,
-                        class: %i[pt-button pt-icon-book library-button]
+                        class: %i[bp3-button bp3-icon-book library-button]
 
             %td
               - if policy(library).update?
                 = link_to edit_library_path(library),
-                          class: %i[pt-button pt-minimal pt-icon-cog],
+                          class: %i[bp3-button bp3-minimal bp3-icon-cog],
                           aria: { label: I18n.t('helpers.edit') } do
                   -# Empty
             %td
               - if policy(library).destroy?
                 = button_to library_path(library), method: :delete,
                           data: { confirm: I18n.t('libraries.destroy.are_you_sure') },
-                          class: %i[pt-button pt-minimal pt-intent-danger pt-icon-trash],
+                          class: %i[bp3-button bp3-minimal bp3-intent-danger bp3-icon-trash],
                           aria: { label: I18n.t('libraries.destroy.delete_library') } do
                   -# Empty

@@ -1,7 +1,7 @@
 <% saved = reading_list.saved_by? current_reader %>
 
 <button
-  class="pt-button pt-intent-success pt-icon-add <%= 'hidden' if saved %>"
+  class="bp3-button bp3-intent-success bp3-icon-add <%= 'hidden' if saved %>"
   data-action="reading-list#save"
   data-target="reading-list.saveButton"
 >
@@ -13,13 +13,13 @@
   data-target="reading-list.savedTag"
 >
   <div class="reading-list__tag">
-    <span class="pt-icon pt-icon-tick"></span>
+    <span class="bp3-icon bp3-icon-tick"></span>
     <%= t '.reading_list_saved' %>
   </div>
 
   <button
-    class="pt-button pt-minimal pt-intent-danger pt-icon-cross
-           pt-button--baseline-aligned"
+    class="bp3-button bp3-minimal bp3-intent-danger bp3-icon-cross
+           bp3-button--baseline-aligned"
     aria-label="<%= I18n.t('saved_reading_lists.destroy.remove_list') %>"
     data-action="reading-list#unsave"
   ></button>

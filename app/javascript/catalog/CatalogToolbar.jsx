@@ -101,11 +101,11 @@ class SearchField extends React.Component<
           >
             <InputGroup
               inputRef={el => (this.input = el)}
-              className="pt-round"
+              className="bp3-round"
               leftIcon="search"
               rightElement={
                 <button
-                  className="pt-button pt-minimal pt-icon-arrow-right"
+                  className="bp3-button bp3-minimal bp3-icon-arrow-right"
                   onClick={this.handleSubmit}
                 />
               }

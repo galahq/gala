@@ -1,7 +1,7 @@
 - content_for :title, I18n.t('devise.passwords.edit.change_your_password')
 
 
-.pt-card.pt-elevation-4.devise-card
+.bp3-card.bp3-elevation-4.devise-card
   %h2=t 'devise.passwords.edit.change_your_password'
 
   =form_for(resource, as: resource_name, url: registration_path(resource_name),
@@ -10,19 +10,19 @@
     = f.errors
 
     = f.form_group :password do |f, error_classes|
-      = f.password_field :password, class: %w[pt-input pt-fill] + error_classes,
+      = f.password_field :password, class: %w[bp3-input bp3-fill] + error_classes,
                                     autocomplete: "new-password"
 
     = f.form_group :password_confirmation do |f, error_classes|
       = f.password_field :password_confirmation,
-                         class: %w[pt-input pt-fill] + error_classes,
+                         class: %w[bp3-input bp3-fill] + error_classes,
                          autocomplete: "new-password"
 
     - helper = t '.we_need_your_current_password_to_confirm_your_changes'
     = f.form_group :current_password, helper_text: helper do |f, error_classes|
       = f.password_field :current_password,
-                         class: %w[pt-input pt-fill] + error_classes,
+                         class: %w[bp3-input bp3-fill] + error_classes,
                          autocomplete: "current-password"
 
     = f.submit t('devise.passwords.edit.change_my_password'),
-               class: %w[pt-intent-primary]
+               class: %w[bp3-intent-primary]

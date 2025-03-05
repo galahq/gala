@@ -192,7 +192,7 @@ export default connect(
 
 const ButtonGroup = styled.div.attrs({
   className: ({ active }) =>
-    `pt-button-group pt-minimal pt-small ${active ? 'pt-intent-primary' : ''}`,
+    `bp3-button-group bp3-minimal bp3-small ${active ? 'bp3-intent-primary' : ''}`,
 })`
   margin: 0 0 3px -6px;
 

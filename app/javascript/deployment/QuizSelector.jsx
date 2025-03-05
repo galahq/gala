@@ -21,7 +21,7 @@ const QuizSelector = ({
   onSelect,
 }: Props) => (
   <Container>
-    <div className="pt-callout pt-icon-help" style={{ lineHeight: 1.2 }}>
+    <div className="bp3-callout bp3-icon-help" style={{ lineHeight: 1.2 }}>
       <h5>Assessment options</h5>
       See how well your students are learning. You can administer a
       comprehension quiz at the end of the case, and optionally pair it with an

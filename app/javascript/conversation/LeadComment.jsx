@@ -134,7 +134,7 @@ function LeadComment ({
 
           <ul>
             {attachments.map((attachment, i) => (
-              <li className="pt-tag pt-minimal pt-interactive" key={i}>
+              <li className="bp3-tag bp3-minimal bp3-interactive" key={i}>
                 <a href={attachment.url}>{attachment.name}</a>
               </li>
             ))}
@@ -180,7 +180,7 @@ const Row = styled.div`
 `
 
 const EditButton = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-intent-primary',
+  className: 'bp3-button bp3-minimal bp3-intent-primary',
 })`
   &:hover {
     background: none !important;
@@ -193,7 +193,7 @@ const EditButton = styled.button.attrs({
 `
 
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
+  className: 'bp3-button bp3-intent-danger bp3-icon-trash bp3-minimal',
 })`
   transition: opacity 0.2s;
   opacity: 0;

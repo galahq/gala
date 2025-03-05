@@ -33,7 +33,7 @@ const MagicLink = ({ deploymentKey }: Props) => {
 export default MagicLink
 
 const Button = styled.button.attrs({
-  className: 'pt-button pt-large pt-intent-success',
+  className: 'bp3-button bp3-large bp3-intent-success',
   type: 'submit',
 })`
   box-shadow: 0 0 2px white, 0 0 1px 4px #80ff8933, 0 0 5px 7px #92ec9933 !important;

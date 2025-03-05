@@ -73,12 +73,12 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
       <Dialog
         isOpen={editing}
         icon="edit"
-        className="pt-dark"
+        className="bp3-dark"
         title={intl.formatMessage({ id: 'cases.edit.editingAuthors' })}
         style={{ width: 700 }}
         onClose={this.handleCancel}
       >
-        <div className="pt-dialog-body">
+        <div className="bp3-dialog-body">
           <SectionTitle>
             <FormattedMessage id="activerecord.attributes.case.authors" />
           </SectionTitle>
@@ -104,13 +104,13 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
             <FormattedMessage id="activerecord.attributes.case.acknowledgements" />
           </SectionTitle>
           <textarea
-            className="pt-input pt-fill"
+            className="bp3-input bp3-fill"
             value={acknowledgements}
             onChange={this.handleChangeAcknowledgements}
           />
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
             <Button text="Cancel" onClick={this.handleCancel} />
             <Button
               intent={Intent.SUCCESS}
@@ -144,7 +144,7 @@ type AuthorInputProps = {
 const BaseAuthorInput = ({ intl, item, onChangeItem }: AuthorInputProps) => (
   <span style={{ display: 'flex' }}>
     <input
-      className="pt-input"
+      className="bp3-input"
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorName' })}
       value={item.name}
@@ -154,7 +154,7 @@ const BaseAuthorInput = ({ intl, item, onChangeItem }: AuthorInputProps) => (
     />
 
     <input
-      className="pt-input"
+      className="bp3-input"
       style={{ flexGrow: 1 }}
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorInstitution' })}

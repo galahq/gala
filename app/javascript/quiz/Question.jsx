@@ -34,11 +34,11 @@ const Question = ({
       />
     </div>
   ) : (
-    <label className="pt-label" htmlFor={id}>
+    <label className="bp3-label" htmlFor={id}>
       {content}
       <textarea
         name={id}
-        className="pt-input pt-fill"
+        className="bp3-input bp3-fill"
         dir="auto"
         disabled={!!correctAnswer}
         value={selectedAnswer}
@@ -52,7 +52,7 @@ export default Question
 
 function toRadioProps (option: string, correctAnswer: ?string): IOptionProps {
   return {
-    className: option === correctAnswer ? 'pt-intent-success' : '',
+    className: option === correctAnswer ? 'bp3-intent-success' : '',
     disabled: !!correctAnswer,
     label: option,
     value: option,
@@ -60,7 +60,7 @@ function toRadioProps (option: string, correctAnswer: ?string): IOptionProps {
 }
 
 const StyledRadioGroup = styled(RadioGroup)`
-  & label.pt-intent-success {
+  & label.bp3-intent-success {
     color: #348a3b;
     font-weight: 600;
   }
