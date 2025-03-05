@@ -1,5 +1,5 @@
 $icon-font-path: '~@blueprintjs/icons/resources/icons';
-$pt-line-height: 1.22;
+$bp3-line-height: 1.22;
 
 $white: hsl(60, 43%, 99%);
 
@@ -33,8 +33,8 @@ $green3: hsl(125, 41%, 44%);
 $green4: hsl(125, 40%, 51%);
 $green5: hsl(125, 48%, 61%);
 
-@import '~@blueprintjs/icons/src/blueprint-icons';
-@import '~@blueprintjs/core/src/blueprint';
+@import '~@blueprintjs/core/lib/css/blueprint.css';
+@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
 
 h1, h2, h3, h4, h5, h6 {
   line-height: unset;
@@ -45,53 +45,53 @@ h1, h2, h3, h4, h5, h6 {
   outline-offset: 2px;
 }
 
-.pt-toast-container {
+.bp3-toast-container {
   z-index: 500;
 }
 
-.pt-editable-text.pt-disabled {
+.bp3-editable-text.bp3-disabled {
   display: inline !important;
   cursor: inherit;
 }
 
-.pt-button {
+.bp3-button {
   margin: 0;
 }
 
-.pt-button.pt-button--baseline-aligned {
+.bp3-button.bp3-button--baseline-aligned {
   display: inline-block;
   text-align: center;
 }
 
-input[type="submit"].pt-button:empty {
+input[type="submit"].bp3-button:empty {
   padding: 5px 10px;
 }
 
-.pt-input {
+.bp3-input {
   -webkit-appearance: none;
 }
 
-.pt-toast-message {
-  .pt-progress-bar {
+.bp3-toast-message {
+  .bp3-progress-bar {
     margin-top: 5px;
   }
 }
 
-.pt-control {
+.bp3-control {
   input {
     position: absolute !important;
   }
 }
 
-.pt-dark [class*="pt-intent-"],
-[class*="pt-intent-"] .pt-dark {
-  .pt-tag:not(.pt-minimal):not([class*="pt-intent-"]) {
+.bp3-dark [class*="bp3-intent-"],
+[class*="bp3-intent-"] .bp3-dark {
+  .bp3-tag:not(.bp3-minimal):not([class*="bp3-intent-"]) {
     background-color: hsl(48, 33%, 97%);
   }
 }
 
-.pt-tag {
-  .pt-icon {
+.bp3-tag {
+  .bp3-icon {
     margin: 0 0.25em;
 
     &:first-child {
@@ -104,7 +104,7 @@ input[type="submit"].pt-button:empty {
   }
 }
 
-.pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
+.bp3-button.bp3-minimal.bp3-unsaturated[class*="bp3-intent-"]:not(:hover) {
   color: hsl(209, 96%, 9%);
 
   &:before {
@@ -112,8 +112,8 @@ input[type="submit"].pt-button:empty {
   }
 }
 
-.pt-dark {
-  .pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
+.bp3-dark {
+  .bp3-button.bp3-minimal.bp3-unsaturated[class*="bp3-intent-"]:not(:hover) {
     color: hsl(48, 33%, 97%);
 
     &::before {
@@ -122,27 +122,27 @@ input[type="submit"].pt-button:empty {
   }
 }
 
-.pt-tag-input input {
+.bp3-tag-input input {
   font-size: 100%;
   margin-left: 1px;
   margin-bottom: 6px;
 }
 
 
-.pt-popover.pt-multi-select-popover {
+.bp3-popover.bp3-multi-select-popover {
   max-height: 30em;
   overflow: auto;
 }
 
-.pt-label .pt-file-input {
+.bp3-label .bp3-file-input {
   margin-top: 5px;
 }
 
-.pt-icon-drag-handle-horizontal {
+.bp3-icon-drag-handle-horizontal {
   cursor: ns-resize;
 }
 
-.pt-form-group .pt-label .pt-file-input {
+.bp3-form-group .bp3-label .bp3-file-input {
   margin-top: 0;
 }
 
@@ -152,13 +152,13 @@ button > svg > title {
   pointer-events: none;
 }
 
-.pt-callout .pt-callout-title {
+.bp3-callout .bp3-callout-title {
   font-size: 16px !important;
 }
 
-.pt-dark .pt-callout {
+.bp3-dark .bp3-callout {
   background-color: hsl(209, 31%, 39%);
 }
-.pt-callout p:last-child {
+.bp3-callout p:last-child {
   margin-bottom: 0;
 }

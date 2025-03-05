@@ -56,13 +56,13 @@ class ErrorBoundary extends React.Component<
 }
 export default ErrorBoundary
 // $FlowFixMe
-const Container = styled.div.attrs({ className: 'pt-dark' })`
+const Container = styled.div.attrs({ className: 'bp3-dark' })`
   margin-top: 40px;
 
-  & .pt-non-ideal-state {
+  & .bp3-non-ideal-state {
     max-width: 800px;
 
-    & .pt-non-ideal-state-description {
+    & .bp3-non-ideal-state-description {
       width: 100%;
     }
   }
