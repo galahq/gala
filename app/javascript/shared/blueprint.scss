@@ -33,8 +33,8 @@ $green3: hsl(125, 41%, 44%);
 $green4: hsl(125, 40%, 51%);
 $green5: hsl(125, 48%, 61%);
 
-@import '~@blueprintjs/core/lib/css/blueprint.css';
-@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
+@import '~@blueprintjs/icons/src/blueprint-icons';
+@import '~@blueprintjs/core/src/blueprint';
 
 h1, h2, h3, h4, h5, h6 {
   line-height: unset;
