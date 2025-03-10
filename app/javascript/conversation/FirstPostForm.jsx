@@ -56,7 +56,7 @@ class FirstPostForm extends React.Component<Props, State> {
           <>
             <Input onClick={this.handleFocusEditor}>
               <FormattingToolbar
-                actions={{ addEdgenoteEntity: false, addCitationEntity: false, addMathEntity: false, addRevealableEntity: false, code: false }}
+                actions={{ addEdgenoteEntity: false, addCitationEntity: false, addMathEntity: false, addRevealableEntity: false, code: false, subscript: false, superscript: false}}
                 editorState={editorState}
                 onChange={this.handleChange}
               />
