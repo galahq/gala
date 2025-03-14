@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-# A case study in Gala with attributes for the case’s “metadata” (the catalog or
-# overview information) and associations for all the case’s constituent parts.
+# A case study in Gala with attributes for the case's "metadata" (the catalog or
+# overview information) and associations for all the case's constituent parts.
 #
 # @attr slug [String] the URL param (managed by friendly_id)
 # @attr locale [Iso639_1Code] the language the case is written in
 #
 # @attr kicker [String] a two or three word tagline for the case.
 #   This comes from newspapers: the little mini-headline appearing above the hed
-#   to which continuations of the article refer (e.g. “from CORRUPTION, A1”)
-# @attr title [String] the case’s title, in the form of a question
+#   to which continuations of the article refer (e.g. "from CORRUPTION, A1")
+# @attr title [String] the case's title, in the form of a question
 # @attr dek [String] a one-sentence teaser which appears in larger
 #   text above the summary
 # @attr authors [{name: String, institution?: String}]
-# @attr translators [Array<String>] the translators’ names, if any
-# @attr acknowledgements [String] a place for the authors’ gratitude
+# @attr translators [Array<String>] the translators' names, if any
+# @attr acknowledgements [String] a place for the authors' gratitude
 #
-# @attr photo_credit [String] attribution for the {cover_url}’s rights holder
+# @attr photo_credit [String] attribution for the {cover_url}'s rights holder
 # @attr latitude [Numeric] where the case takes place
 # @attr longitude [Numeric] where the case takes place
 # @attr zoom [Numeric] the default zoom level for the site location map (mapbox)
@@ -90,6 +90,12 @@ class Case < ApplicationRecord
   }
   after_save :refresh_indices, if: -> {
     saved_change_to_title? || saved_change_to_kicker? || saved_change_to_dek?
+  }
+  after_save :sync_to_wikidata, if: -> {
+    published? && (saved_change_to_published_at? ||
+                  saved_change_to_title? ||
+                  saved_change_to_authors? ||
+                  saved_change_to_locale?)
   }
 
   validates :cover_image, size: { less_than: 2.megabytes,
@@ -197,5 +203,12 @@ class Case < ApplicationRecord
   # This is to conform with Lockable
   def case
     self
+  end
+
+  private
+
+  # Trigger Wikidata sync for published cases
+  def sync_to_wikidata
+    WikidataCaseSyncJob.perform_later(id)
   end
 end
