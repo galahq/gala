@@ -10,7 +10,7 @@ import {
 import { Suggest } from '@blueprintjs/select'
 import { Orchard } from 'shared/orchard'
 import { debounce } from 'lodash'
-
+import styled from 'styled-components'
 export const SearchWikidata = () => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
@@ -82,8 +82,8 @@ export const SearchWikidata = () => {
             : 'Failed to copy to clipboard'}
         </Callout>
       )}
-      <div style={{marginBottom: '12px', width: '100%'}}>
-        <Suggest
+      
+        <StyledSuggest
           inputProps={{
             placeholder: 'Search Wikidata',
             value: query,
@@ -134,8 +134,14 @@ export const SearchWikidata = () => {
           openOnKeyDown={true}
           onItemSelect={item => console.log(item)}
         >
-        </Suggest>
-      </div>
+        </StyledSuggest>
+      
     </>
   )
 }
+
+const StyledSuggest = styled(Suggest)`
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 12px;
+`
