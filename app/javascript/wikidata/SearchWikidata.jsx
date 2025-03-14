@@ -1,19 +1,10 @@
 /* @flow */
-import React, { useState, useEffect, useCallback } from 'react'
-import {
-  InputGroup,
-  Button,
-  Intent,
-  Card,
-  Elevation,
-  Spinner,
-  Callout,
-  MenuItem,
-} from '@blueprintjs/core'
-import { Select, Suggest } from '@blueprintjs/select'
+import React, { useState, useCallback } from 'react'
+import { InputGroup, Button, MenuItem } from '@blueprintjs/core'
 import { Orchard } from 'shared/orchard'
-import styled from 'styled-components'
 import { debounce } from 'lodash'
+
+import { Select, Suggest } from '@blueprintjs/select'
 
 export const SearchWikidata = () => {
   const [query, setQuery] = useState('')
