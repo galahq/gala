@@ -10,6 +10,7 @@ class CaseSerializer < Cases::PreviewSerializer
   belongs_to :library
 
   has_many :case_elements
+  has_many :wikidata_links
 
   has_many_by_id :cards
   has_many_by_id :edgenotes
