@@ -19,11 +19,15 @@ import {
   addCitationEntity,
   toggleMath,
   toggleRevealableEntity,
+  toggleSubscript,
+  toggleSuperscript,
 } from './helpers'
 
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 
 import type { IntlShape } from 'react-intl'
+import SubscriptIcon from './icons/SubscriptIcon'
+import SuperscriptIcon from './icons/SuperscriptIcon'
 
 type Action = {
   name: ActionName,
@@ -44,6 +48,8 @@ type ActionName =
   | 'addCitationEntity'
   | 'addMathEntity'
   | 'addRevealableEntity'
+  | 'subscript'
+  | 'superscript'
 
 const ACTIONS: Action[] = [
   {
@@ -58,35 +64,45 @@ const ACTIONS: Action[] = [
     call: async eS => RichUtils.toggleInlineStyle(eS, 'ITALIC'),
     active: eS => eS.getCurrentInlineStyle().has('ITALIC'),
   },
-
   {
     name: 'code',
     icon: 'code',
     call: async eS => RichUtils.toggleInlineStyle(eS, 'CODE'),
     active: eS => eS.getCurrentInlineStyle().has('CODE'),
   },
-  
-  {
-    name: 'blockquote',
-    icon: 'citation',
-    call: async eS => RichUtils.toggleBlockType(eS, 'blockquote'),
-    active: blockTypeEquals('blockquote'),
-  },
-
   {
     name: 'ol',
     icon: 'numbered-list',
     call: async eS => RichUtils.toggleBlockType(eS, 'ordered-list-item'),
     active: blockTypeEquals('ordered-list-item'),
   },
-
   {
     name: 'ul',
     icon: 'properties',
     call: async eS => RichUtils.toggleBlockType(eS, 'unordered-list-item'),
     active: blockTypeEquals('unordered-list-item'),
   },
-
+  {
+    name: 'subscript',
+    icon: <SubscriptIcon />,
+    call: toggleSubscript,
+    active: entityTypeEquals('SUBSCRIPT'),
+    className: 'custom-icon',
+  },
+  {
+    name: 'superscript',
+    icon: <SuperscriptIcon />,
+    call: toggleSuperscript,
+    active: entityTypeEquals('SUPERSCRIPT'),
+    className: 'custom-icon',
+  },
+  {
+    name: 'blockquote',
+    icon: 'citation',
+    call: async eS => RichUtils.toggleBlockType(eS, 'blockquote'),
+    active: blockTypeEquals('blockquote'),
+    className: 'margin-right',
+  },
   {
     name: 'addEdgenoteEntity',
     icon: 'add-column-right',
@@ -94,7 +110,6 @@ const ACTIONS: Action[] = [
     active: entityTypeEquals('EDGENOTE'),
     spotlightKey: 'add_edgenote',
   },
-
   {
     name: 'addCitationEntity',
     icon: 'bookmark',
@@ -102,21 +117,19 @@ const ACTIONS: Action[] = [
     active: entityTypeEquals('CITATION'),
     spotlightKey: 'add_citation',
   },
-
-  {
-    name: 'addMathEntity',
-    icon: 'function',
-    call: async (eS, props) => toggleMath(eS, props),
-    active: entityTypeEquals('MATH'),
-    spotlightKey: 'add_math',
-  },
-
   {
     name: 'addRevealableEntity',
     icon: 'search-template',
     call: async (eS, props) => toggleRevealableEntity(eS, props),
     active: entityTypeEquals('REVEALABLE'),
     spotlightKey: 'add_revealable',
+  },
+  {
+    name: 'addMathEntity',
+    icon: 'function',
+    call: async (eS, props) => toggleMath(eS, props),
+    active: entityTypeEquals('MATH'),
+    spotlightKey: 'add_math',
   },
 ]
 
@@ -133,37 +146,38 @@ export type Props = {
 const FormattingToolbar = (props: Props) => {
   const { actions, editorState, intl, onChange } = props
   return (
-    <ButtonGroup>
-      {ACTIONS.filter(action => actions[action.name] !== false).map(action => {
-        const messageId = `helpers.formatting.${action.name}`
-        const spotlightKey = action.spotlightKey
-          ? action.spotlightKey
-          : undefined
+      <ButtonGroup>
+        {ACTIONS.filter(action => actions[action.name] !== false).map(action => {
+          const messageId = `helpers.formatting.${action.name}`
+          const spotlightKey = action.spotlightKey
+            ? action.spotlightKey
+            : undefined
 
-        return (
-          <MaybeSpotlight
-            key={action.name}
-            placement="top"
-            spotlightKey={spotlightKey}
-          >
-            {({ ref }) => (
-              <Button
-                elementRef={ref}
-                icon={action.icon}
-                active={action.active(editorState)}
-                aria-label={intl.formatMessage({ id: messageId })}
-                title={intl.formatMessage({ id: messageId })}
-                onClick={async (e: SyntheticMouseEvent<*>) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  onChange(await action.call(editorState, props))
-                }}
-              />
-            )}
-          </MaybeSpotlight>
-        )
-      })}
-    </ButtonGroup>
+          return (
+            <MaybeSpotlight
+              key={action.name}
+              placement="top"
+              spotlightKey={spotlightKey}
+            >
+              {({ ref }) => (
+                  <Button
+                    elementRef={ref}
+                    icon={action.icon}
+                    active={action.active(editorState)}
+                    aria-label={intl.formatMessage({ id: messageId })}
+                    title={intl.formatMessage({ id: messageId })}
+                    className={action.className}
+                    onClick={async (e: SyntheticMouseEvent<*>) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onChange(await action.call(editorState, props))
+                    }}
+                  />
+                )}    
+            </MaybeSpotlight>
+          )
+        })}
+      </ButtonGroup>
   )
 }
 
@@ -181,4 +195,12 @@ const ButtonGroup = styled.div.attrs({
     `pt-button-group pt-minimal pt-small ${active ? 'pt-intent-primary' : ''}`,
 })`
   margin: 0 0 3px -6px;
+
+  .margin-right {
+    margin-right: 12px;
+  }
+
+  .custom-icon {
+    padding: 0px;
+  }
 `
