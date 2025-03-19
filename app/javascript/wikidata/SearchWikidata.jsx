@@ -1,15 +1,22 @@
 /* @flow */
 import React, { useState, useCallback } from 'react'
-import { InputGroup, Button, MenuItem } from '@blueprintjs/core'
+import {
+  Button,
+  Intent,
+  Spinner,
+  Callout,
+  MenuItem,
+} from '@blueprintjs/core'
+import { Suggest } from '@blueprintjs/select'
 import { Orchard } from 'shared/orchard'
 import { debounce } from 'lodash'
-
-import { Select, Suggest } from '@blueprintjs/select'
 
 export const SearchWikidata = () => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
+  const [copyStatus, setCopyStatus] = useState(null)
+  const [copiedItem, setCopiedItem] = useState(null)
 
   const runQuery = async query => {
     setLoading(true)
@@ -41,60 +48,94 @@ export const SearchWikidata = () => {
   }
 
   const copyToClipboard = item => {
-    console.log(item)
     navigator.clipboard
       .writeText(item.qid)
-      .then(() => console.log('Copied to clipboard:', item.qid))
-      .catch(err => console.error('Failed to copy:', err))
+      .then(() => {
+        setCopiedItem(item)
+        setCopyStatus('success')
+      })
+      .catch(err => {
+        console.error('Failed to copy:', err)
+        setCopyStatus('error')
+      })
   }
 
+  const handleInputFocus = () => {
+    if (copyStatus) {
+      setCopyStatus(null)
+      setCopiedItem(null)
+    }
+  }
+
+  const WIKIDATA_URL = 'https://www.wikidata.org/wiki/'
+
   return (
-    <Suggest
-      inputProps={{
-        placeholder: 'Search Wikidata',
-        value: query,
-        onChange: handleQueryChange,
-        rightElement: query && (
-          <Button
-            minimal
-            icon="cross"
-            title="Clear search"
-            onClick={handleClear}
-          />
-        ),
-      }}
-      items={results}
-      itemRenderer={(item, { handleClick, index }) => (
-        <MenuItem
-          key={`${item.qid}-${index}`}
-          label={item.description}
-          text={`${item.label} (${item.qid})`}
-          onClick={e => {
-            handleClick(e)
-            copyToClipboard(item)
-          }}
-        />
+    <>
+      {copyStatus && (
+        <Callout
+          intent={copyStatus === 'success' ? Intent.SUCCESS : Intent.DANGER}
+          style={{ marginBottom: '10px' }}
+          className="pt-dark"
+        >
+          {copyStatus === 'success'
+            ? <>Copied <a href={`${WIKIDATA_URL}${copiedItem.qid}`} className="pt-text-link pt-dark" target="_blank" rel="noopener noreferrer">{copiedItem.label} ({copiedItem.qid})</a> to clipboard!</>
+            : 'Failed to copy to clipboard'}
+        </Callout>
       )}
-      inputValueRenderer={item => item}
-      closeOnSelect={true}
-      initialContent={<MenuItem disabled text="Type to search" />}
-      noResults={
-        <MenuItem
-          disabled
-          text={
-            query && !loading && results.length === 0
-              ? 'No results'
-              : 'Loading...'
+      <div style={{ marginBottom: '12px', width: '100%' }}>
+        <Suggest
+          inputProps={{
+            placeholder: 'Search Wikidata',
+            value: query,
+            onChange: handleQueryChange,
+            onFocus: handleInputFocus,
+            rightElement: query && (
+              <Button
+                minimal
+                icon="cross"
+                title="Clear search"
+                onClick={handleClear}
+              />
+            ),
+          }}
+          items={results}
+          itemRenderer={(item, { handleClick, index }) => (
+            <MenuItem
+              key={`${item.qid}-${index}`}
+              label={item.description}
+              text={`${item.label} (${item.qid})`}
+              onClick={e => {
+                handleClick(e)
+                copyToClipboard(item)
+              }}
+            />
+          )}
+          inputValueRenderer={item => item}
+          closeOnSelect={true}
+          initialContent={<MenuItem disabled text="Type to search" />}
+          noResults={
+            <MenuItem
+              disabled
+              text={
+                loading ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Spinner className="pt-small" intent="primary" />
+                    <span>Searching...</span>
+                  </div>
+                ) : query && results.length === 0 ? (
+                  'No results'
+                ) : (
+                  'Type to search'
+                )
+              }
+            />
           }
-        />
-      }
-      popoverProps={{ minimal: true }}
-      openOnKeyDown={true}
-      onItemSelect={item => console.log(item)}
-    >
-      <InputGroup>
-        <Button>Search</Button>
-      </InputGroup>
-    </Suggest>
+          popoverProps={{ minimal: true }}
+          openOnKeyDown={true}
+          onItemSelect={item => console.log(item)}
+        >
+        </Suggest>
+      </div>
+    </>
   )
 }
