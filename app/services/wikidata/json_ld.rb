@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Wikidata
+  # Handles JSON-LD formatting and generation for Wikidata entities
   module JsonLd
     SCHEMA_TYPE_MAPPING = {
       'Q5' => 'Person',
@@ -28,72 +31,122 @@ module Wikidata
       'P276' => 'contentLocation'
     }
 
+    # Generate JSON-LD representation of entity data
+    # @param entity_data [Hash] Processed entity data
+    # @param locale [String] Language code for labels (default: 'en')
+    # @return [Hash] JSON-LD formatted data
     def self.generate(entity_data, locale = 'en')
-      return {} if entity_data.nil? || !entity_data.is_a?(Hash)
+      return nil if entity_data.nil? || entity_data.empty?
 
-      entity_id = entity_data['id']
-      entity_label = entity_data.dig('labels', locale, 'value') || entity_id
-      entity_description = entity_data.dig('descriptions', locale, 'value')
-
-      schema_type = determine_schema_type(entity_data)
-
-      json_ld = {
-        "@context": "https://schema.org",
-        "@type": schema_type,
-        "@id": "https://www.wikidata.org/wiki/#{entity_id}",
-        "name": entity_label,
-        "description": entity_description,
-        "identifier": entity_id
+      context = {
+        '@context' => {
+          '@vocab' => 'https://schema.org/',
+          'wdt' => 'http://www.wikidata.org/prop/direct/',
+          'wd' => 'http://www.wikidata.org/entity/'
+        }
       }
 
-      add_claims_to_json_ld(json_ld, entity_data, locale)
+      # Add basic JSON-LD structure
+      json_ld = {
+        '@type' => entity_data['type'] || 'Thing',
+        '@id' => "wd:#{entity_data['id']}"
+      }
 
-      json_ld
+      # Add all other properties
+      entity_data.each do |key, value|
+        next if ['@type', '@id', '@context'].include?(key)
+
+        # Handle arrays
+        json_ld[key] = if value.is_a?(Array)
+                         value.map do |v|
+                           v.to_s.start_with?('Q') ? "wd:#{v}" : v
+                         end
+                       else
+                         value.to_s.start_with?('Q') ? "wd:#{value}" : value
+                       end
+      end
+
+      # Merge context and data
+      context.merge(json_ld)
     end
 
+    # Format SPARQL query results into JSON-LD format
+    # @param results [Hash] Raw SPARQL query results
+    # @param schema [Symbol] Schema type for the query
+    # @return [Hash] Formatted JSON-LD data
     def self.format_sparql_results(results, schema)
-      return {} unless results && results['results'] && results['results']['bindings'].any?
+      return nil unless results && results['results'] && results['results']['bindings']
 
-      binding = results['results']['bindings'].first
-      formatted = {}
+      bindings = results['results']['bindings']
+      return nil if bindings.empty?
 
-      ordered_properties = QueryBuilder::PROPERTY_ORDER[schema.to_sym] || []
+      # Convert the first result into JSON-LD format
+      entity_data = {}
 
-      binding.each do |key, value|
-        formatted[key] = value['value']
+      bindings.each do |binding|
+        binding.each do |key, value|
+          # Skip if the value is not present
+          next unless value['value']
+
+          # Convert property keys to camelCase
+          property = key.to_s.camelize(:lower)
+
+          # Handle different value types
+          processed_value = case value['type']
+                            when 'uri'
+                              if value['value'].include?('entity/')
+                                value['value'].split('/').last
+                              else
+                                value['value']
+                              end
+                            when 'literal'
+                              if value['datatype']&.include?('dateTime')
+                                Wikidata.humanize_date(value['value'])
+                              else
+                                value['value']
+                              end
+                            else
+                              value['value']
+                            end
+
+          # Store the processed value
+          if entity_data[property].is_a?(Array)
+            entity_data[property] << processed_value unless entity_data[property].include?(processed_value)
+          elsif entity_data[property]
+            entity_data[property] = [entity_data[property], processed_value].uniq
+          else
+            entity_data[property] = processed_value
+          end
+        end
       end
 
-      if formatted['dateModified']
-        formatted['dateModified'] = Utils.humanize_date(formatted['dateModified'])
-      end
-
-      if formatted['publicationDate']
-        formatted['publicationDate'] = Utils.humanize_date(formatted['publicationDate'])
-      end
-
-      if formatted['entity']
-        entity_id = formatted['entity'].split('/').last
-        formatted['entity'] = entity_id
-      end
-
-      formatted
+      generate(entity_data)
     end
 
+    # Format search results into a simplified JSON-LD format
+    # @param results [Hash] Raw SPARQL search results
+    # @return [Hash] Formatted search results
     def self.format_search_results(results)
-      return [] unless results && results['results'] && results['results']['bindings'].any?
+      return nil unless results && results['results'] && results['results']['bindings']
 
-      results['results']['bindings'].map do |binding|
-        item = {
-          'id' => binding['item']['value'].split('/').last,
-          'label' => binding['itemLabel']['value']
-        }
+      bindings = results['results']['bindings']
+      return nil if bindings.empty?
 
-        item['description'] = binding['description']['value'] if binding['description']
-        item['image'] = binding['image']['value'] if binding['image']
-        item['instance'] = binding['instanceLabel']['value'] if binding['instanceLabel']
-
-        item
+      formatted_results = bindings.map do |binding|
+        {
+          '@type' => 'Entity',
+          '@id' => binding['item']&.dig('value')&.split('/')&.last,
+          'name' => binding['itemLabel']&.dig('value'),
+          'description' => binding['itemDescription']&.dig('value'),
+          'score' => binding['score']&.dig('value')&.to_f
+        }.compact
       end
+
+      {
+        '@context' => 'https://schema.org',
+        '@type' => 'ItemList',
+        'itemListElement' => formatted_results
+      }
     end
 
     private
@@ -108,9 +161,7 @@ module Wikidata
         next unless claim['mainsnak']&.dig('datavalue', 'value', 'id')
 
         instance_id = claim['mainsnak']['datavalue']['value']['id']
-        if SCHEMA_TYPE_MAPPING.key?(instance_id)
-          return SCHEMA_TYPE_MAPPING[instance_id]
-        end
+        return SCHEMA_TYPE_MAPPING[instance_id] if SCHEMA_TYPE_MAPPING.key?(instance_id)
       end
 
       'CreativeWork'
@@ -146,21 +197,21 @@ module Wikidata
 
       return if values.empty?
 
-      case schema_property
-      when 'author'
-        json_ld[schema_property.to_sym] = values.map do |value|
-          { "@type": "Person", "name": value }
-        end
-      when 'keywords'
-        json_ld[schema_property.to_sym] = values.join(', ')
-      when 'contentLocation'
-        json_ld[schema_property.to_sym] = {
-          "@type": "Place",
-          "name": values.first
-        }
-      else
-        json_ld[schema_property.to_sym] = values.length == 1 ? values.first : values
-      end
+      json_ld[schema_property.to_sym] = case schema_property
+                                        when 'author'
+                                          values.map do |value|
+                                            { "@type": 'Person', "name": value }
+                                          end
+                                        when 'keywords'
+                                          values.join(', ')
+                                        when 'contentLocation'
+                                          {
+                                            "@type": 'Place',
+                                            "name": values.first
+                                          }
+                                        else
+                                          values.length == 1 ? values.first : values
+                                        end
     end
 
     def self.process_additional_property(additional_props, property_id, statements, locale)
@@ -171,7 +222,7 @@ module Wikidata
       return if values.empty?
 
       additional_props << {
-        "@type": "PropertyValue",
+        "@type": 'PropertyValue',
         "name": property_id,
         "value": values.length == 1 ? values.first : values
       }
