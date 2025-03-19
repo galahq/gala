@@ -253,4 +253,62 @@ class Wikidata
     end
   end
 
+=begin
+Reference from Gerd: https://www.wikidata.org/wiki/EntitySchema:E469
+
+
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# Example SPARQL query: SELECT ?p { VALUES ?p { wd:Q130407462 }}
+# Example SPARQL query: SELECT ?gcs WHERE { ?gcs wdt:P1433 wd:Q130549584 . }
+
+START = @<GalaCaseStudy>
+
+<GalaCaseStudy> EXTRA wdt:P31 {
+    wdt:P31 [ wd:Q155207 ] ;      # Instance of: case study
+    wdt:P1476 rdf:langString? ;   # title
+    wdt:P921 IRI+ ;               # main subject
+    wdt:P2093 xsd:string* ;       # author name string
+    wdt:P50 IRI* ;                # author
+    wdt:P407 IRI ;                # Language of work or name
+    wdt:P953 IRI+ ;               # full work available at URL
+    wdt:P1433 [ wd:Q130549584 ] ; # Published in: Gala
+    wdt:P571 xsd:dateTime? ;      # Inception
+    wdt:P577 xsd:dateTime? ;      # Publication date
+    wdt:P5017 xsd:dateTime? ;     # Last update
+    wdt:P276 @<Location>*  ;      # Location
+    wdt:P6216 [ wd:Q50423863 ] ;  # Copyright status: copyrighted
+    wdt:P275 @<License> ;
+    # part of P:361 -> Gala library: we need an entity for this
+}
+
+<Location> EXTRA wdt:P31 {
+  wdt:P31 [ wd:Q2221906 ] ?
+}
+
+<License> EXTRA wdt:P31 {
+  wdt:P31 [ wd:Q79719 ] ?
+}
+
+
+=end
+
+
+
+  class SyncService
+
+
+
+    def initialize
+      @client = SPARQL::Client.new(ENDPOINT)
+    end
+  end
+
+
 end

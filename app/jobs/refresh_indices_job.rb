@@ -5,7 +5,8 @@ class RefreshIndicesJob < ApplicationJob
   queue_as :default
 
   def perform
-    Rails.application.load_tasks
-    ::Rake::Task['indices:refresh'].invoke
+    ActiveRecord::Base.connection.execute <<~SQL
+      REFRESH MATERIALIZED VIEW cases_search_index;
+    SQL
   end
 end

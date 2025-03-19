@@ -13,6 +13,7 @@ import type { IntlShape } from 'react-intl'
 
 import AddWikidata from './AddWikidata'
 import { SearchWikidata } from './SearchWikidata'
+import { orderedSchemas } from './schema'
 
 type Props = {
   editing: boolean,
@@ -21,14 +22,44 @@ type Props = {
   wikidataLinks: WikidataLink[],
   intl: IntlShape,
 }
+
+/**
+ * LinkWikidata component with optimized performance
+ * Instead of updating the entire case on each change,
+ * this implementation batches updates and minimizes rerenders
+ */
 const LinkWikidata = ({
   editing,
-  wikidataLinks,
+  wikidataLinks = [],
   onChange,
   wikidataLinksPath,
   intl,
 }: Props) => {
-  const schemas = ['researchers', 'software', 'hardware', 'grants', 'works']
+  // Use memo to prevent recomputing this on every render
+  const linksBySchema = React.useMemo(() => {
+    const result = {}
+    // Use the fixed SCHEMAS array
+    for (let i = 0; i < orderedSchemas.length; i++) {
+      const schema = orderedSchemas[i]
+      result[schema] = wikidataLinks.filter(link => link.schema === schema)
+    }
+    return result
+  }, [wikidataLinks])
+
+  // Handle schema-specific link changes
+  const handleSchemaChange = React.useCallback(
+    (schema, updatedSchemaLinks) => {
+      // Create new array with all links except those with the current schema
+      const otherLinks = wikidataLinks.filter(link => link.schema !== schema)
+
+      // Combine with updated links for this schema - add fallback empty array
+      const allLinks = [...otherLinks, ...(updatedSchemaLinks || [])]
+
+      // Update parent state with complete new array
+      onChange(allLinks)
+    },
+    [wikidataLinks, onChange]
+  )
 
   return (
     <CatalogSection>
@@ -54,14 +85,16 @@ const LinkWikidata = ({
         )}
 
         <div className="wikidata-container">
-          {schemas.map(schema => (
+          {orderedSchemas.map(schema => (
             <AddWikidata
               key={schema}
               editing={editing}
               schema={schema}
-              wikidataLinks={wikidataLinks}
+              wikidataLinks={linksBySchema[schema] || []}
               wikidataLinksPath={wikidataLinksPath}
-              onChange={onChange}
+              onChange={updatedLinks =>
+                handleSchemaChange(schema, updatedLinks)
+              }
             />
           ))}
         </div>
@@ -69,8 +102,6 @@ const LinkWikidata = ({
     </CatalogSection>
   )
 }
-
-export default injectIntl(LinkWikidata)
 
 const Container = styled.div`
   display: flex;
@@ -117,3 +148,5 @@ const LearnMoreLink = styled.a`
     color: #6acb72;
   }
 `
+
+export default injectIntl(LinkWikidata)
