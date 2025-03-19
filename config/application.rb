@@ -19,6 +19,10 @@ ENV['STAGING'] = (ENV['BASE_URL']&.include?('staging')).to_s
 ENV['TEMPORARY_UNCONFIRMED_ACCESS'] ||=
   (ENV['STAGING'] == 'true').to_s
 
+if defined?(Rails::Server)
+  require "ruby-lsp/rails"
+end
+
 module Orchard
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

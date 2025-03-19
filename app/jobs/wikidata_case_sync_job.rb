@@ -9,9 +9,10 @@ class WikidataCaseSyncJob < ApplicationJob
   queue_as :default
 
   # @param kase_id [Integer] the ID of the Case to sync
+  # @return [String, nil] The Wikidata QID of the synced entity, or nil if sync couldn't be performed
   def perform(kase_id)
     kase = Case.find_by(id: kase_id)
-    return unless kase && kase.published?
+    return nil unless kase && kase.published?
 
     Rails.logger.info "Syncing Case ##{kase_id} to Wikidata"
 
@@ -21,9 +22,10 @@ class WikidataCaseSyncJob < ApplicationJob
     begin
       # Use our new Client facade to trigger the sync
       client = Wikidata::Client.new(locale)
-      client.sync_case(kase)
+      qid = client.sync_case(kase)
 
-      Rails.logger.info "Successfully synced Case ##{kase_id} to Wikidata"
+      Rails.logger.info "Successfully synced Case ##{kase_id} to Wikidata with QID: #{qid}"
+      qid
     rescue StandardError => e
       Rails.logger.error "Error syncing Case ##{kase_id} to Wikidata: #{e.message}"
       Rails.logger.error e.backtrace.join("\n")
