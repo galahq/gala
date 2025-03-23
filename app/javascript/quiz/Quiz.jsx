@@ -33,7 +33,10 @@ type QuizProps = {
   answers: QuizState,
   isInstructor: boolean,
 }
+
 type QuizState = { [questionId: string]: string }
+
+// this is what is prompting the pretest
 type QuizDelegateProps = {
   canSubmit: boolean,
   onChange: (questionId: string, e: SyntheticInputEvent<*>) => void,
@@ -56,8 +59,10 @@ export function providesQuiz<P> (
     state = { submitting: false, quizState: {}}
 
     _canSubmit = () => {
+      // this is what enables or disables the submission button
       const { submissionNeeded, isInstructor, questions } = this.props
       const { submitting, quizState } = this.state
+      console.log({ submissionNeeded, isInstructor, questions, submitting, quizState })
       if (submitting) return false
       if (!submissionNeeded) return false
       if (isInstructor) return false

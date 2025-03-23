@@ -54,18 +54,24 @@ class Deployment < ApplicationRecord
     answers_needed >= 2
   end
 
+  def hide_pretest?(reader)
+    (!quiz || reader.enrollment_for_case(self.case).instructor?) &&
+      Rails.env.production?
+  end
+
   def reader_needs_pretest?(reader)
-    return false unless quiz
-    return false if reader.enrollment_for_case(self.case).instructor?
+    return false if hide_pretest?(reader)
+
     answers_needed - quiz.number_of_responses_from(reader) >= 2
   end
 
   def posttest_assigned?
-    answers_needed >= 1
+    answers_needed.positive? && quiz.present?
   end
 
   def reader_needs_posttest?(reader)
     return false unless quiz
+
     answers_needed - quiz.number_of_responses_from(reader) >= 1
   end
 end
