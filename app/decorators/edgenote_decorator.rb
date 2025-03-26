@@ -26,7 +26,7 @@ class EdgenoteDecorator < ApplicationDecorator
   def file_url
     return nil unless file.attached?
 
-    polymorphic_path file, only_path: true
+    polymorphic_url file, host: h.request.host_with_port
   end
 
   def print_attribute(attribute)
