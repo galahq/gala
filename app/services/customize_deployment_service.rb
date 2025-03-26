@@ -35,15 +35,20 @@ class CustomizeDeploymentService
   end
 
   def should_use_existing_quiz(quiz, with_customizations)
-    return false unless quiz # Can’t use existing if there isn’t one
+    return false unless quiz # Can't use existing if there isn't one
     return true if @author_identifier.author.quiz? quiz # Can mutate their own
+
     with_customizations.empty? # Copy on write (only copy if needed)
   end
 
   def create_quiz_from_template(template_id)
-    Quiz.create! case: @deployment.case,
-                 template_id: template_id,
-                 customized: true
+    template_quiz = Quiz.create! case: @deployment.case,
+                                 template_id: template_id,
+                                 customized: true
+    template_quiz.reload
+    puts "Template Quiz ID: #{template_quiz.id}"
+    puts "Template Quiz Case ID: #{template_quiz.case_id}"
+    template_quiz
   end
 
   def customize_quiz(custom_questions)

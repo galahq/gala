@@ -23,6 +23,8 @@
   %main.md-detail
     %h2.admin__title= t '.quiz_details'
 
+    -# TODO check why this isn't isn't true after adding a new deployment that
+    -# has default quiz assigned
     - if !deployment.posttest_assigned?
       %span.pt-tag.pt-minimal.pt-large= t '.no_quiz_assigned'
       = link_to edit_deployment_path(deployment),
