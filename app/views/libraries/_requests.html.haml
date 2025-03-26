@@ -11,7 +11,7 @@
             = link_to case_path kase do
               %span.admin__table__slug
                 = kase.short_title
-        .pt-form-group.pt-tag.pt-minimal= raw t('libraries.edit.requested_by', {name: request.requester.name})
+        .pt-form-group.pt-tag.pt-minimal= raw t('libraries.edit.requested_by', name: request.requester.name)
         .pt-form-group
           = form_with model: request, url: case_library_request_path(request),
                       method: :put, local: true do |f|
