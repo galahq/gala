@@ -54,3 +54,4 @@ spec/examples.txt
 
 # Ignore vscode settings
 /.vscode
+infrastructure

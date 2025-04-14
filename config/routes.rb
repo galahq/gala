@@ -28,6 +28,10 @@ Rails.application.routes.draw do
                                to: redirect('%{path}.%{format}')
   get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%{path}')
 
+  get 'sparql/:schema/:qid', to: 'sparql#show', as: 'sparql_canned_query'
+  get 'sparql', to: 'sparql#index', as: 'sparql_search'
+
+
   root to: 'catalog#home'
 
   resources :activities, only: %i[update destroy]
@@ -114,6 +118,8 @@ Rails.application.routes.draw do
     resources :taggings, only: %i[create destroy], param: :tag_name
 
     resources :translations, only: %i[new create show], param: :case_locale
+
+    resources :wikidata_links, only: %i[create destroy]
 
     collection do
       resources :features, module: 'cases', param: :case_slug,
