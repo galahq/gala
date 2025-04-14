@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { Button, Intent, InputGroup } from '@blueprintjs/core'
+import { Button, Intent, InputGroup, Tooltip } from '@blueprintjs/core'
 import { Callout } from '@blueprintjs/core/lib/esm/components/callout/callout'
 import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner'
 import {
@@ -20,7 +20,7 @@ import { append, update, remove } from 'ramda'
 
 import { Orchard } from 'shared/orchard'
 
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import type { IntlShape } from 'react-intl'
 
@@ -55,7 +55,7 @@ type Props<Item> = {
   // changed copy of items.
   onChange: (WikidataLink[]) => void,
 
-  // So the elements don’t change theme while being dragged
+  // So the elements don't change theme while being dragged
   dark?: boolean,
 
   wikidataLinksPath: string,
@@ -140,7 +140,7 @@ const Container = SortableContainer(
     ...rest
   }: ContainerProps<*>) => {
     return (
-      <div>
+      <div style={editing ? {} : { display: 'inline-flex' }}>
         {items.map((item, i) => (
           <Item
             key={i}
@@ -211,7 +211,7 @@ const SortableWikidataList = (props: Props<*>) => {
 export default SortableWikidataList
 
 const queryQueue = new Map()
-function enqueueQuery (schema: string, qid: string): Promise<SparqlResult> {
+function enqueueQuery(schema: string, qid: string): Promise<SparqlResult> {
   qid = qid.trim()
   if (queryQueue.has(qid)) {
     const existingPromise = queryQueue.get(qid)
@@ -224,7 +224,7 @@ function enqueueQuery (schema: string, qid: string): Promise<SparqlResult> {
   return newPromise
 }
 
-export function createSortableInput ({
+export function createSortableInput({
   placeholderId,
   ...props
 }: { placeholderId?: string } = {}) {
@@ -240,6 +240,13 @@ export function createSortableInput ({
     const [qid, setQid] = React.useState(item.qid)
     const [error, setError] = React.useState(null)
     const [loading, setLoading] = React.useState(false)
+    const mountedRef = React.useRef(true)
+
+    React.useEffect(() => {
+      return () => {
+        mountedRef.current = false
+      }
+    }, [])
 
     React.useEffect(() => {
       if (item.qid && !item.data && isValidQId(item.qid)) {
@@ -252,12 +259,16 @@ export function createSortableInput ({
         setLoading(true)
 
         const resp: SparqlResult = await enqueueQuery(schema, qid)
+        if (!mountedRef.current) return
+        
         item.data = resp
         setError(null)
         // onChangeItem({ ...item, data: resp })
 
         return resp
       } catch (err) {
+        if (!mountedRef.current) return
+        
         if (err.status === 404) {
           setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
           return
@@ -267,7 +278,9 @@ export function createSortableInput ({
 
         return null
       } finally {
-        setLoading(false)
+        if (mountedRef.current) {
+          setLoading(false)
+        }
       }
     }
 
@@ -327,30 +340,21 @@ export function createSortableInput ({
       case RenderState.IDLE:
         return null
       case RenderState.LOADING:
-        return (
-          <div>
-            <Spinner intent={Intent.PRIMARY} small={true} />
-          </div>
-        )
       case RenderState.SHOW_STATE:
-        return (
-          <ShowState loading={loading} results={results} editing={editing} />
-        )
+        return <ShowState loading={loading} results={results} editing={editing} />
       case RenderState.EDIT_STATE:
-        return (
-          editing && (
-            <EditState
-              qid={qid}
-              error={error}
-              intl={intl}
-              placeholderId={placeholderId}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              handleKeyDown={handleKeyDown}
-              loading={loading}
-              props={props}
-            />
-          )
+        return editing && (
+          <EditState
+            qid={qid}
+            error={error}
+            intl={intl}
+            placeholderId={placeholderId}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            handleKeyDown={handleKeyDown}
+            loading={loading}
+            props={props}
+          />
         )
     }
   }
@@ -366,11 +370,11 @@ const RenderState = {
 }
 
 const getRenderState = ({ editing, loading, results, qid }) => {
-  if (!editing && !loading && !results) {
-    return RenderState.IDLE
-  }
-  if (!editing && loading) {
+  if (loading) {
     return RenderState.LOADING
+  }
+  if (!editing && !results) {
+    return RenderState.IDLE
   }
   if (qid && results) {
     return RenderState.SHOW_STATE
@@ -425,51 +429,50 @@ const ShowState = ({ loading, results, editing }) => {
       <rect x="15.61" width="2.2" height="10" fill="rgba(235,234,228,0.5)" />
     </svg>
   )
-  return (
-    <WikiDataContainer>
+
+  if (loading) {
+    return (
+      <div>
+        <WikidataTag isLoading={true}>
+          <span>Loading...</span>
+        </WikidataTag>
+      </div>
+    )
+  }
+
+  return editing ? (
+    <WikiDataContainer editing={editing}>
       <div className="data-container">
         <div className="person-container">
-          {loading ? (
-            <div className="spinner-container">
-              <Spinner intent={Intent.PRIMARY} small={true} />
-            </div>
-          ) : (
-            <>
-              <div>
-                <a
-                  href={results.entity}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="wikidata-title pt-minimal pt-dark pt-align-left"
-                >
-                  <span className="pt-text-overflow-ellipsis wikidata-link">
-                    {results.entityLabel}
-                  </span>
-                  <span className="wikidata-separator">›</span>
-                </a>
-              </div>
-              <div className="wikidata-details-section">
-                {results.properties.map((prop, i) => {
-                  const [key, value] = Object.entries(prop)[0]
-                  return (
-                    value && (
-                      <span
-                        className="wikidata-details-text"
-                        key={`${key}-${i}`}
-                      >
-                        <span style={{ fontWeight: 400 }}>{key}:</span> {value}
-                      </span>
-                    )
-                  )
-                })}
-              </div>
-            </>
-          )}
+          <div>
+            <a
+              href={results.entity}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="wikidata-title pt-minimal pt-dark pt-align-left"
+            >
+              <span className="pt-text-overflow-ellipsis wikidata-link">
+                {results.entityLabel}
+              </span>
+              <span className="wikidata-separator">›</span>
+            </a>
+          </div>
+          <div className="wikidata-details-section">
+            {results.properties.map((prop, i) => {
+              const [key, value] = Object.entries(prop)[0]
+              return (
+                value && (
+                  <div key={`${key}-${i}-${value}`}>
+                    <span className="wikidata-details-text">
+                      <span style={{ fontWeight: 400 }}>{key}:</span> {value}
+                    </span>
+                  </div>
+                )
+              )
+            })}
+          </div>
         </div>
-        <div
-          className="wikidata-logo-container"
-          style={{ right: editing ? '7%' : '2%' }}
-        >
+        <div className="wikidata-logo-container" style={{ right: '7%' }}>
           <div style={{ width: '18px' }}>
             <WikidataLogo />
           </div>
@@ -477,18 +480,118 @@ const ShowState = ({ loading, results, editing }) => {
         </div>
       </div>
     </WikiDataContainer>
+  ) : (
+    <div>
+      <StyledTooltip
+        content={
+          <WikiDataContainer editing={editing}>
+            <div className="data-container">
+              <div className="person-container">
+                <div>
+                  <span className="wikidata-title pt-minimal pt-dark pt-align-left">
+                    <span className="pt-text-overflow-ellipsis">
+                      {results.entityLabel}
+                    </span>
+                    <span className="wikidata-separator"></span>
+                  </span>
+                </div>
+                <div className="wikidata-details-section">
+                  {results.properties.map((prop, i) => {
+                    const [key, value] = Object.entries(prop)[0]
+                    return (
+                      value && (
+                        <div key={`${key}-${i}-${value}`}>
+                          <span className="wikidata-details-text">
+                            <span style={{ fontWeight: 400 }}>{key}:</span> {value}
+                          </span>
+                        </div>
+                      )
+                    )
+                  })}
+                </div>
+              </div>
+              <div className="wikidata-logo-container" style={{ right: '7%' }}>
+                <div style={{ width: '18px' }}>
+                  <WikidataLogo />
+                </div>
+                <span className="wikidata-link">Wikidata</span>
+              </div>
+            </div>
+          </WikiDataContainer>
+        }>
+        <a href={results.entity} target="_blank" rel="noopener noreferrer">
+          <WikidataTag isLoading={false}>
+            {results.entityLabel}
+          </WikidataTag>
+        </a>
+      </StyledTooltip>
+    </div>
   )
 }
 
-const WikiDataContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+const editingStyles = css`
   background: #415e77;
+  border: 1px solid rgb(0, 0, 0, 0.22);
   padding: 4px 20px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgb(0, 0, 0, 0.22);
+  
+  .wikidata-title {
+    color: #ebeae4;
+    &:hover {
+      color: #6acb72;
+    }
+  }
+
+  .wikidata-details-text {
+    color: rgb(218, 219, 217, 0.7);
+  }
+
+  .wikidata-text {
+    color: rgba(235, 234, 228, 0.5);
+  }
+
+  svg rect {
+    fill: rgba(235, 234, 228, 0.5);
+  }
+`
+
+const viewingStyles = css`
+  color: #01182d;
+
+  .wikidata-title {
+    color: #01182d;
+    background-color: #6acb72;
+    padding: 0px 4px;
+    font-weight: 400;
+  }
+
+  .wikidata-details-text {
+    margin-left: 4px;
+    color: #01182d;
+  }
+
+  .wikidata-text {
+    color: #01182d;
+  }
+
+  .wikidata-link {
+    font-weight: 300;
+    font-size: 11px;
+  }
+
+  svg rect {
+    fill: #01182d;
+  }
+`
+
+const WikiDataContainer = styled.div`
+  display: block;
+  flex-direction: column;
+  
+ 
   height: 100%;
+  ${props => props.editing && editingStyles}
+  ${props => !props.editing && viewingStyles}
+  
 
   .data-container {
     display: flex;
@@ -497,7 +600,6 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-text {
-    color: rgba(235, 234, 228, 0.5);
     text-transform: uppercase;
     font-size: 12px;
   }
@@ -524,21 +626,15 @@ const WikiDataContainer = styled.div`
   }
 
   .wikidata-title {
-    color: #ebeae4;
     display: flex;
     flex-direction: row;
     align-items: center;
-
-    &:hover {
-      color: #6acb72;
-    }
   }
 
   .wikidata-link {
     display: inline-block;
     max-width: 510px;
     font-weight: 700;
-    font-size: 16px;
   }
 
   .wikidata-separator {
@@ -548,7 +644,6 @@ const WikiDataContainer = styled.div`
   .wikidata-details-text {
     font-size: 14px;
     font-weight: 500;
-    color: rgb(218, 219, 217, 0.7);
     display: inline-block;
     margin-right: 10px;
     white-space: nowrap;
@@ -560,5 +655,43 @@ const WikiDataContainer = styled.div`
   .wikidata-details-section {
     line-height: normal;
     margin-top: 8px;
+    display: block;
   }
+`
+
+const WikidataTag = styled.span.attrs(({ isLoading }) => ({
+  className: `pt-tag ${isLoading ? 'pt-skeleton' : ''}`,
+  role: 'link',
+  tabIndex: 0,
+  'aria-label': isLoading ? 'Loading Wikidata item' : 'View Wikidata entry'
+}))`
+  margin: 0 0.5em 0.5em 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  outline: none;
+  
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(45, 114, 210, 0.6);
+  }
+
+  &:hover {
+    background-color:rgb(206, 210, 212);
+  }
+
+  &.pt-skeleton {
+    min-width: 100px;
+    height: 20px;
+    display: inline-block;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+`
+
+const StyledTooltip = styled(Tooltip)`
+  border-bottom-color: hsl(209, 52%, 24%, 0.8);
+  vertical-align: baseline;
 `
