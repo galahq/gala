@@ -44,7 +44,7 @@ const AddWikidata = ({
   return (
     <Container>
       <div className="pt-dark">
-        <div className="wikidata-title">
+        <div className="wikidata-item-title">
           <FormattedMessage id={`catalog.wikidata.${schema}`} />
         </div>
         <SortableWikidataList
@@ -68,13 +68,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  .wikidata-title {
+  .wikidata-item-title {
     display: flex;
     align-items: center;
     gap: 6px;
     color: #ebeae3;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 400;
     margin-bottom: 2px;
   }
 

@@ -64,13 +64,14 @@ const LinkWikidata = ({
   return (
     <CatalogSection>
       <Container>
-        {editing && (
-          <>
-            <SectionTitle>
+      <SectionTitle>
               <div className="wikidata-title">
                 <FormattedMessage id="catalog.wikidata.linkWikidata" />
               </div>
             </SectionTitle>
+        {editing && (
+          <>
+           
             <div className="wikidata-instructions">
               <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
               <LearnMoreLink
@@ -84,7 +85,7 @@ const LinkWikidata = ({
           </>
         )}
 
-        <div className="wikidata-container">
+        <div className="wikidata-container" style={editing ? { gap: '24px' } : {gap: '4px' }}>
           {orderedSchemas.map(schema => (
             <AddWikidata
               key={schema}
@@ -125,7 +126,6 @@ const Container = styled.div`
   .wikidata-container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
   }
 
   .wikidata-info-sign {
