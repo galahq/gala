@@ -116,7 +116,7 @@ class DeploymentsController < ApplicationController
   def customized_deployment_params
     params.require(:deployment).permit(
       :answers_needed, :quiz_id,
-      custom_questions: [:id, :content, :correct_answer, options: []]
+      custom_questions: [:id, :content, :correct_answer, { options: [] }]
     )
           .to_h
           .symbolize_keys

@@ -11,18 +11,12 @@ class CustomizeDeploymentService
   def customize(answers_needed: 0, quiz_id: nil, custom_questions: [])
     ActiveRecord::Base.transaction do
       @deployment.answers_needed = answers_needed
-      return @deployment.tap(&:save!) if answers_needed.zero?
-
-      # There will be a quiz administered
-      @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
-      return @deployment.tap(&:save!) if custom_questions.empty?
-
-      # The quiz has custom questions
-      customize_quiz custom_questions
+      if quiz_id.present?
+        @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
+        customize_quiz custom_questions unless custom_questions.empty?
+      end
       @deployment.tap(&:save!)
     end
-  rescue ActiveRecord::RecordInvalid => invalid
-    invalid.record
   end
 
   private
