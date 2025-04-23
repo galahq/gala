@@ -26,6 +26,9 @@ body
 
 .main
   flex: 0 1 90rem
+  &:focus
+    &:not(.focus-visible)
+      outline: none
 
 .header
   background-color: $umichBlue
