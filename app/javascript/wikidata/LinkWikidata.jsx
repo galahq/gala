@@ -12,7 +12,7 @@ import type { WikidataLink } from 'redux/state'
 import type { IntlShape } from 'react-intl'
 
 import AddWikidata from './AddWikidata'
-import { SearchWikidata } from './SearchWikidata'
+import SearchWikidata from './SearchWikidata'
 import { orderedSchemas } from './schema'
 
 type Props = {
