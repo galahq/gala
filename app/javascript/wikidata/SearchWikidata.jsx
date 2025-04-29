@@ -27,7 +27,7 @@ const StyledControlGroup = styled(ControlGroup)`
   }
 `
 
-const SearchWikidata = ({ intl }) => {
+const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
@@ -35,34 +35,67 @@ const SearchWikidata = ({ intl }) => {
   const [selectedSchema, setSelectedSchema] = useState(orderedSchemas[0])
   const [isOpen, setIsOpen] = useState(false)
   const [detailedItem, setDetailedItem] = useState(null)
+  const [error, setError] = useState(null)
 
-  const runQuery = async query => {
+  const isValidQid = (id) => {
+    const pattern = /^[A-Za-z][0-9]+$/
+    return (
+      typeof id === 'string' &&
+      (id.startsWith('Q') || id.startsWith('q')) &&
+      id.length > 1 &&
+      pattern.test(id)
+    )
+  }
+
+  const runQuery = async (query) => {
     setLoading(true)
     setResults([])
+    setError(null)
     try {
-      const response = await Orchard.harvest('sparql', { query: query.trim() })
-      console.log(response)
-      setResults(response) // Assuming `response` contains results
+      if (isValidQid(query)) {
+        // If it's a QID, fetch directly
+        const response = await Orchard.harvest(`sparql/${selectedSchema}/${query.toUpperCase()}`)
+        if (response) {
+          setResults([{
+            qid: query.toUpperCase(),
+            label: response.entityLabel,
+            description: response.properties.find(p => p.description)?.description || '',
+          }])
+        } else {
+          setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
+        }
+      } else if (query.length > 2) {
+        // Regular search
+        const response = await Orchard.harvest('sparql', { query: query.trim() })
+        setResults(response)
+      }
     } catch (error) {
       setResults([])
+      if (error.status === 404) {
+        setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
+      } else {
+        setError(error.message)
+      }
       console.log('error', error)
     } finally {
       setLoading(false)
     }
   }
 
-  const debouncedRunQuery = useCallback(debounce(runQuery, 300), [])
+  const debouncedRunQuery = useCallback(debounce(runQuery, 300), [selectedSchema])
 
-  const handleQueryChange = e => {
-    setQuery(e.target.value)
-    if (query.length > 3) {
-      debouncedRunQuery(e.target.value)
+  const handleQueryChange = (e) => {
+    const value = e.target.value
+    setQuery(value)
+    if (value.length > 2) {
+      debouncedRunQuery(value)
     }
   }
 
   const handleClear = () => {
     setQuery('')
     setResults([])
+    setError(null)
   }
 
   const handleSchemaSelect = (schema) => {
@@ -93,7 +126,7 @@ const SearchWikidata = ({ intl }) => {
 
   return (
     <>
-      <div style={{ marginBottom: '12px', width: '100%' }}>
+      <div style={{ marginBottom: '12px'}}>
         <Button
           icon="add"
           title="Add"
@@ -145,7 +178,7 @@ const SearchWikidata = ({ intl }) => {
               <Suggest
                 inputProps={{
                   style: { width: '400px' },
-                  placeholder: 'Search Wikidata',
+                  placeholder: 'Search Wikidata or enter QID (e.g. Q937)',
                   value: query,
                   onChange: handleQueryChange,
                   onFocus: handleInputFocus,
@@ -175,10 +208,9 @@ const SearchWikidata = ({ intl }) => {
                   captureDismiss: true,
                   usePortal: false,
                   popoverClassName: 'wikidata-suggest-popover',
-                  targetProps: { style: { width: '100%' } }
+                  targetProps: { style: { width: '100%' } },
                 }}
-
-                initialContent={<MenuItem disabled text="Type to search" />}
+                initialContent={<MenuItem disabled text="Type to search or enter QID" />}
                 noResults={
                   <MenuItem
                     disabled
@@ -188,10 +220,12 @@ const SearchWikidata = ({ intl }) => {
                           <Spinner className="pt-small" intent="primary" />
                           <span>Searching...</span>
                         </div>
+                      ) : error ? (
+                        error
                       ) : query && results.length === 0 ? (
                         'No results'
                       ) : (
-                        'Type to search'
+                        'Type to search or enter QID'
                       )
                     }
                   />
@@ -203,7 +237,7 @@ const SearchWikidata = ({ intl }) => {
 
             {selectedItem && (
               <div className="pt-card pt-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
-                <h5>Selected {schemasMap[selectedSchema]}</h5>
+                <h5>{schemasMap[selectedSchema]}</h5>
                 <p>
                   <strong>{selectedItem.label}</strong> ({selectedItem.qid})
                   <br />
@@ -243,6 +277,24 @@ const SearchWikidata = ({ intl }) => {
                 intent={Intent.SUCCESS}
                 text={intl.formatMessage({ id: 'helpers.save' })}
                 disabled={!selectedItem}
+                onClick={async () => {
+                  try {
+                    const response = await Orchard.graft(wikidataLinksPath, {
+                      qid: selectedItem.qid,
+                      schema: selectedSchema,
+                      position: 0,
+                    })
+                    if (onChange) {
+                      onChange(response)
+                    }
+                    setIsOpen(false)
+                    setQuery('')
+                    setSelectedItem(null)
+                    setDetailedItem(null)
+                  } catch (error) {
+                    console.error('Error creating Wikidata link:', error)
+                  }
+                }}
               />
             </div>
           </div>
