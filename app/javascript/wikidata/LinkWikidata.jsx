@@ -81,7 +81,13 @@ const LinkWikidata = ({
                 <span className="learn-more-text">Learn more</span> ›
               </LearnMoreLink>
             </div>
-            <SearchWikidata />
+            <SearchWikidata 
+              wikidataLinksPath={wikidataLinksPath} 
+              onChange={(newLink) => {
+                const updatedLinks = [...wikidataLinks, newLink]
+                onChange(updatedLinks)
+              }}
+            />
           </>
         )}
 
