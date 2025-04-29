@@ -31,7 +31,7 @@
   <% end %>
 
   <% @case.wikidata_links.each do |wikidata_link| %>
-    <% next if wikidata_link.cached_json['json_ld'].blank? %>
+    <% next if wikidata_link.cached_json.nil? || wikidata_link.cached_json['json_ld'].blank? %>
     <script type="application/ld+json">
       <%= JSON.pretty_generate(wikidata_link.cached_json['json_ld']).html_safe %>
     </script>
