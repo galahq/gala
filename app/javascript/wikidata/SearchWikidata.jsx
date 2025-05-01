@@ -36,6 +36,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [detailedItem, setDetailedItem] = useState(null)
   const [error, setError] = useState(null)
+  const [schemaError, setSchemaError] = useState(null)
 
   const isValidQid = (id) => {
     const pattern = /^[A-Za-z][0-9]+$/
@@ -51,6 +52,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
     setLoading(true)
     setResults([])
     setError(null)
+    setSchemaError(null)
     try {
       if (isValidQid(query)) {
         // If it's a QID, fetch directly
@@ -100,6 +102,9 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
 
   const handleSchemaSelect = (schema) => {
     setSelectedSchema(schema)
+    if (query && selectedItem) {
+      fetchDetailedItem(selectedItem.qid)
+    }
   }
 
   const handleItemSelect = (item) => {
@@ -117,8 +122,14 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
     try {
       const response = await Orchard.harvest(`sparql/${selectedSchema}/${qid}`)
       setDetailedItem(response)
+      if (!response) {
+        setSchemaError(intl.formatMessage({ id: 'catalog.wikidata.schemaMismatch' }))
+      } else {
+        setSchemaError(null)
+      }
     } catch (error) {
       console.error('Error fetching detailed item:', error)
+      setSchemaError(intl.formatMessage({ id: 'catalog.wikidata.schemaMismatch' }))
     }
   }
 
@@ -243,6 +254,11 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   <br />
                   {selectedItem.description}
                 </p>
+                {schemaError && (
+                  <div className="pt-callout pt-intent-danger" style={{ marginTop: '10px', marginBottom: '10px' }}>
+                    {schemaError}
+                  </div>
+                )}
                 {detailedItem?.properties && (
                   <div className="wikidata-details-section">
                     {detailedItem.properties.map((prop, i) => {
@@ -276,7 +292,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
               <Button
                 intent={Intent.SUCCESS}
                 text={intl.formatMessage({ id: 'helpers.save' })}
-                disabled={!selectedItem}
+                disabled={!selectedItem || schemaError}
                 onClick={async () => {
                   try {
                     const response = await Orchard.graft(wikidataLinksPath, {
