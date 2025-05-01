@@ -343,6 +343,7 @@ en:
       empty_qid: You must enter a value for QID
       entry_exists: This entry already exists
       404_error: This QID does not exist or belongs to a different category
+      schema_mismatch: The Wikidata item you selected doesn't match this item type. Select a different item type or Wikidata item.
     learn_more: Learn more
     my_library: My Dashboard
     natural_resources: Natural Resources
