@@ -14,8 +14,7 @@ class CustomizeDeploymentService
       if quiz_id.present?
         @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
         customize_quiz custom_questions unless custom_questions.empty?
-      elsif answers_needed > 0
-        # Create a new quiz when no template is provided but answers are needed
+      elsif answers_needed.positive?
         @deployment.quiz = Quiz.create!(
           case: @deployment.case,
           customized: true,
@@ -25,6 +24,8 @@ class CustomizeDeploymentService
       end
       @deployment.tap(&:save!)
     end
+  rescue ActiveRecord::RecordInvalid => e
+    e.record
   end
 
   private

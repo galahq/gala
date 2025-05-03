@@ -32,6 +32,8 @@ class Quiz < ApplicationRecord
 
   scope :suggested, -> { where author_id: nil, lti_uid: nil }
 
+  validate :must_have_at_least_one_question
+
   # A relation of quizzes that the reader, in the context of her active group,
   # hasn’t answered enough times. Whether “enough” is 1 or 2 depends on the
   # instructor’s choice, per {Deployment}.
@@ -60,12 +62,12 @@ class Quiz < ApplicationRecord
   # The quizzes from which this quiz inherits its shared questions.
   # @return [ActiveRecord::Relation<Quiz>]
   def ancestors
-    @ancestors ||= Quiz.where <<~SQL.squish
+    @ancestors ||= Quiz.where(<<~SQL.squish, quiz_id: id)
       id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
             SELECT id, template_id
               FROM quizzes
-             WHERE id = #{id}
+             WHERE id = :quiz_id
           UNION ALL
             SELECT quizzes.id, quizzes.template_id
               FROM template_quizzes, quizzes
@@ -93,5 +95,13 @@ class Quiz < ApplicationRecord
   def number_of_responses_from(reader)
     answers.merge(reader.answers).group(:question_id).count(:question_id)
            .values.min || 0
+  end
+
+  private
+
+  def must_have_at_least_one_question
+    return if custom_questions.any? || (template.present? && template.questions.any?)
+
+    errors.add(:base, 'Quiz must have at least one question (either custom or inherited)')
   end
 end
