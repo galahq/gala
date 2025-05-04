@@ -32,10 +32,8 @@ class Quiz < ApplicationRecord
 
   scope :suggested, -> { where author_id: nil, lti_uid: nil }
 
-  validate :must_have_at_least_one_question
-
   # A relation of quizzes that the reader, in the context of her active group,
-  # hasn’t answered enough times. Whether “enough” is 1 or 2 depends on the
+  # hasn’t answered enough times. Whether ”enough” is 1 or 2 depends on the
   # instructor’s choice, per {Deployment}.
   # @return [ActiveRecord::Relation<Quiz>]
   def self.requiring_response_from(reader)
