@@ -97,8 +97,6 @@ class Quiz < ApplicationRecord
            .values.min || 0
   end
 
-  private
-
   def must_have_at_least_one_question
     return if custom_questions.any? || (template.present? && template.questions.any?)
 

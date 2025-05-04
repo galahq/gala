@@ -20,7 +20,24 @@ class QuizzesController < ApplicationController
   # @route [POST] `/cases/slug/quizzes`
   def create
     authorize @case, :update?
-    render json: @case.quizzes.create
+
+    ActiveRecord::Base.transaction do
+      @quiz = @case.quizzes.build(title: quiz_params[:title])
+      @quiz.save!
+
+      QuizUpdater.new(@quiz).update(
+        'questions' => quiz_params[:questions]
+      )
+
+      @quiz.must_have_at_least_one_question
+      raise ActiveRecord::Rollback if @quiz.errors.any?
+    end
+
+    if @quiz.errors.empty?
+      render json: @quiz
+    else
+      render json: @quiz.errors, status: :unprocessable_entity
+    end
   end
 
   # @route [PUT|PATCH] `/quizzes/1`
@@ -51,8 +68,6 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(
-      :title, questions: [:id, :content, :correct_answer, { options: [] }]
-    )
+    params.permit(:title, questions: [:id, :content, :correct_answer, { options: [] }])
   end
 end
