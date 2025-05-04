@@ -76,7 +76,6 @@ function QuizDetails ({
         intl.formatMessage({ id: 'cases.edit.suggestedQuizzes.error' })
       )
     } else {
-      console.log('handleSave', { id, draftQuiz })
       if (id === "new") {
         createSuggestedQuiz(draftQuiz)
       } else {
