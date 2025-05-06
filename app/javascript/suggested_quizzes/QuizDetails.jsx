@@ -70,6 +70,18 @@ function QuizDetails ({
       questions: validatedQuestions(draftQuiz.questions),
     }
 
+    // Check for empty title
+    if (!title || title.trim() === '') {
+      displayErrorToast('Quiz title cannot be empty')
+      return
+    }
+
+    // Check for empty questions
+    if (validatedQuiz.questions.length === 0) {
+      displayErrorToast('Quiz must have at least one question')
+      return
+    }
+
     if (validatedQuiz.questions.some(question => !!question.hasError)) {
       setDraftQuiz(validatedQuiz)
       displayErrorToast(
