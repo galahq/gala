@@ -65,21 +65,21 @@ function QuizDetails ({
   }
 
   function handleSave () {
-    let validatedQuiz = {
-      ...draftQuiz,
-      questions: validatedQuestions(draftQuiz.questions),
-    }
-
-    // Check for empty title
+    // Check for empty title first
     if (!title || title.trim() === '') {
       displayErrorToast('Quiz title cannot be empty')
       return
     }
 
-    // Check for empty questions
-    if (validatedQuiz.questions.length === 0) {
+
+    if (draftQuiz.questions.length === 0) {
       displayErrorToast('Quiz must have at least one question')
       return
+    }
+
+    let validatedQuiz = {
+      ...draftQuiz,
+      questions: validatedQuestions(draftQuiz.questions),
     }
 
     if (validatedQuiz.questions.some(question => !!question.hasError)) {
