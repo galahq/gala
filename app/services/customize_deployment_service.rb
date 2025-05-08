@@ -14,9 +14,18 @@ class CustomizeDeploymentService
       if quiz_id.present?
         @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
         customize_quiz custom_questions unless custom_questions.empty?
+      elsif answers_needed.positive?
+        @deployment.quiz = Quiz.create!(
+          case: @deployment.case,
+          customized: true,
+          **@author_identifier.quiz_attributes
+        )
+        customize_quiz custom_questions unless custom_questions.empty?
       end
       @deployment.tap(&:save!)
     end
+  rescue ActiveRecord::RecordInvalid => e
+    e.record
   end
 
   private
@@ -29,8 +38,9 @@ class CustomizeDeploymentService
   end
 
   def should_use_existing_quiz(quiz, with_customizations)
-    return false unless quiz # Can’t use existing if there isn’t one
+    return false unless quiz # Can't use existing if there isn't one
     return true if @author_identifier.author.quiz? quiz # Can mutate their own
+
     with_customizations.empty? # Copy on write (only copy if needed)
   end
 

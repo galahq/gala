@@ -55,6 +55,10 @@ class Deployment extends React.Component<Props, State> {
 
     if (selectedQuizId == null) return true
 
+    if (!customQuestions[`${selectedQuizId}`] || customQuestions[`${selectedQuizId}`].length === 0) {
+      return false
+    }
+
     const validatedState = {
       ...state,
       customQuestions: {

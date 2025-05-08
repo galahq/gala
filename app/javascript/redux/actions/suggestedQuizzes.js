@@ -43,15 +43,29 @@ function setSuggestedQuizzes (
   return { type: 'SET_SUGGESTED_QUIZZES', quizzes }
 }
 
-export function createSuggestedQuiz (): ThunkAction {
+export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const { slug } = getState().caseData
-    return Orchard.graft(`cases/${slug}/quizzes`, {}).then(
-      (quiz: SuggestedQuiz) => {
-        dispatch(addSuggestedQuiz(quiz.param, quiz))
-        return quiz.param
+    return Orchard.graft(`cases/${slug}/quizzes`, { ...quiz, id: null, param: null }).then(
+      (newQuiz: SuggestedQuiz) => {
+        dispatch(fetchSuggestedQuizzes())
+        dispatch(
+          displayToast({
+            intent: Intent.SUCCESS,
+            icon: 'tick-circle',
+            message: 'Quiz successfully created',
+          })
+        )
+        return newQuiz.param
       }
     )
+  }
+}
+
+export function newSuggestedQuiz (): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    dispatch(addSuggestedQuiz("new", { param: "new", questions: [], title: "New Quiz" }))
+    return Promise.resolve("new")
   }
 }
 
@@ -60,7 +74,7 @@ export type AddSuggestedQuizAction = {
   param: string,
   data: SuggestedQuiz,
 }
-function addSuggestedQuiz (
+export function addSuggestedQuiz (
   param: string,
   data: SuggestedQuiz
 ): AddSuggestedQuizAction {

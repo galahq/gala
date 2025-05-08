@@ -14,6 +14,7 @@ import QuizCustomizer from 'quiz/customizer'
 import { validatedQuestions } from 'suggested_quizzes/helpers'
 
 import {
+  createSuggestedQuiz,
   updateSuggestedQuiz,
   displayErrorToast,
   setUnsaved,
@@ -39,6 +40,7 @@ type Props = OwnProps & {
   history: RouterHistory,
   quiz: SuggestedQuiz,
   updateSuggestedQuiz: typeof updateSuggestedQuiz,
+  createSuggestedQuiz: typeof createSuggestedQuiz,
 }
 function QuizDetails ({
   displayErrorToast,
@@ -47,6 +49,7 @@ function QuizDetails ({
   intl,
   quiz,
   updateSuggestedQuiz,
+  createSuggestedQuiz,
 }: Props) {
   const [draftQuiz, setDraftQuiz] = React.useState(quiz)
   const { questions, title } = draftQuiz
@@ -62,6 +65,18 @@ function QuizDetails ({
   }
 
   function handleSave () {
+    // Check for empty title first
+    if (!title || title.trim() === '') {
+      displayErrorToast('Quiz title cannot be empty')
+      return
+    }
+
+
+    if (draftQuiz.questions.length === 0) {
+      displayErrorToast('Quiz must have at least one question')
+      return
+    }
+
     let validatedQuiz = {
       ...draftQuiz,
       questions: validatedQuestions(draftQuiz.questions),
@@ -73,7 +88,11 @@ function QuizDetails ({
         intl.formatMessage({ id: 'cases.edit.suggestedQuizzes.error' })
       )
     } else {
-      updateSuggestedQuiz(id, draftQuiz)
+      if (id === "new") {
+        createSuggestedQuiz(draftQuiz)
+      } else {
+        updateSuggestedQuiz(id, draftQuiz)
+      }
       unblock()
       history.replace('/suggested_quizzes/')
     }
@@ -113,7 +132,7 @@ function QuizDetails ({
 export default injectIntl(
   connect(
     mapStateToProps,
-    { updateSuggestedQuiz, displayErrorToast }
+    { updateSuggestedQuiz, createSuggestedQuiz, displayErrorToast }
   )(QuizDetails)
 )
 
