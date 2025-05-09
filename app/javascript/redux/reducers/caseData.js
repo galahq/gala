@@ -31,6 +31,7 @@ type Action =
   | SetForumsAction
   | ToggleEditingAction
 
+// TODO this is how the inital caseData state is set
 export default function caseData (
   state: CaseDataState = ({ ...window.caseData }: CaseDataState),
   action: Action
