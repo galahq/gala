@@ -166,16 +166,6 @@ const Container = SortableContainer(
             }}
           />
         ))}
-        {editing && (
-          <Button
-            intent={Intent.SUCCESS}
-            icon="add"
-            text="Add"
-            onClick={_ => {
-              return onChange(append(newItem, items))
-            }}
-          />
-        )}
       </div>
     )
   }

@@ -148,7 +148,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
 
         <Dialog
           isOpen={isOpen}
-          title="Add a Wikidata item"
+          title="Add a Wikidata Item"
           className="pt-dark"
           onClose={() => setIsOpen(false)}
         >
