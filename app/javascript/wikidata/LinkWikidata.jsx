@@ -92,18 +92,21 @@ const LinkWikidata = ({
         )}
 
         <div className="wikidata-container" style={editing ? { gap: '24px' } : {gap: '4px' }}>
-          {orderedSchemas.map(schema => (
-            <AddWikidata
-              key={schema}
-              editing={editing}
-              schema={schema}
-              wikidataLinks={linksBySchema[schema] || []}
-              wikidataLinksPath={wikidataLinksPath}
-              onChange={updatedLinks =>
-                handleSchemaChange(schema, updatedLinks)
-              }
-            />
-          ))}
+          {orderedSchemas.map(schema => {
+            const schemaLinks = linksBySchema[schema] || []
+            return schemaLinks.length > 0 ? (
+              <AddWikidata
+                key={schema}
+                editing={editing}
+                schema={schema}
+                wikidataLinks={schemaLinks}
+                wikidataLinksPath={wikidataLinksPath}
+                onChange={updatedLinks =>
+                  handleSchemaChange(schema, updatedLinks)
+                }
+              />
+            ) : null
+          })}
         </div>
       </Container>
     </CatalogSection>
