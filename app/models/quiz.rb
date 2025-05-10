@@ -30,7 +30,7 @@ class Quiz < ApplicationRecord
   belongs_to :case
   belongs_to :template, class_name: 'Quiz', optional: true
 
-  scope :suggested, -> { where author_id: nil, lti_uid: nil }
+  scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil) }
 
   # A relation of quizzes that the reader, in the context of her active group,
   # hasn’t answered enough times. Whether ”enough” is 1 or 2 depends on the

@@ -26,6 +26,7 @@ if @suggested_quizzes
     @suggested_quizzes.each do |quiz|
       json.set! quiz.id do
         json.extract! quiz, :id
+        json.title quiz.title
 
         if current_reader == quiz.author ||
            current_reader.lti_uid == quiz.lti_uid

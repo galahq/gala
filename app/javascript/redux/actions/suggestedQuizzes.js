@@ -62,9 +62,9 @@ export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
   }
 }
 
-export function newSuggestedQuiz (): ThunkAction {
+export function newSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
-    dispatch(addSuggestedQuiz("new", { param: "new", questions: [], title: "New Quiz" }))
+    dispatch(addSuggestedQuiz("new", { ...quiz, param: "new" }))
     return Promise.resolve("new")
   }
 }
@@ -112,6 +112,6 @@ export type RemoveSuggestedQuizAction = {
   type: 'REMOVE_SUGGESTED_QUIZ',
   param: string,
 }
-function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
+export function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
   return { type: 'REMOVE_SUGGESTED_QUIZ', param }
 }

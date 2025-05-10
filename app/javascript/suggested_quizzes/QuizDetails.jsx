@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { Button, FormGroup, Intent, InputGroup } from '@blueprintjs/core'
-import * as R from 'ramda'
 
 import QuizCustomizer from 'quiz/customizer'
 import { validatedQuestions } from 'suggested_quizzes/helpers'
@@ -17,7 +16,7 @@ import {
   createSuggestedQuiz,
   updateSuggestedQuiz,
   displayErrorToast,
-  setUnsaved,
+  removeSuggestedQuiz,
 } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
@@ -54,8 +53,6 @@ function QuizDetails ({
   const [draftQuiz, setDraftQuiz] = React.useState(quiz)
   const { questions, title } = draftQuiz
 
-  const unblock = blockRouting({ when: !R.equals(draftQuiz, quiz), history })
-
   function handleChangeTitle (e: SyntheticInputEvent<*>) {
     setDraftQuiz({ ...draftQuiz, title: e.target.value })
   }
@@ -65,37 +62,29 @@ function QuizDetails ({
   }
 
   function handleSave () {
-    // Check for empty title first
-    if (!title || title.trim() === '') {
-      displayErrorToast('Quiz title cannot be empty')
-      return
-    }
-
-
-    if (draftQuiz.questions.length === 0) {
-      displayErrorToast('Quiz must have at least one question')
-      return
-    }
-
     let validatedQuiz = {
       ...draftQuiz,
       questions: validatedQuestions(draftQuiz.questions),
     }
-
-    if (validatedQuiz.questions.some(question => !!question.hasError)) {
-      setDraftQuiz(validatedQuiz)
-      displayErrorToast(
-        intl.formatMessage({ id: 'cases.edit.suggestedQuizzes.error' })
-      )
+    setDraftQuiz(validatedQuiz)
+    if (id === "new") {
+        createSuggestedQuiz(draftQuiz).then(() => {
+          removeSuggestedQuiz(id)
+          history.replace('/suggested_quizzes/')
+        }).catch((error) => {
+          displayErrorToast(error.message)
+        })
     } else {
-      if (id === "new") {
-        createSuggestedQuiz(draftQuiz)
-      } else {
-        updateSuggestedQuiz(id, draftQuiz)
-      }
-      unblock()
+      updateSuggestedQuiz(id, draftQuiz)
       history.replace('/suggested_quizzes/')
     }
+  }
+
+  function handleCancel () {
+    if (id === "new") {
+      removeSuggestedQuiz(id)
+    }
+    history.replace(window.location.href + '/suggested_quizzes/')
   }
 
   return (
@@ -120,6 +109,9 @@ function QuizDetails ({
 
       <div className="pt-dialog-footer">
         <div className="pt-dialog-footer-actions">
+          <Button style={{ marginRight: '10px' }} onClick={handleCancel}>
+            <FormattedMessage id="helpers.cancel" defaultMessage="Cancel" />
+          </Button>
           <Button intent={Intent.PRIMARY} onClick={handleSave}>
             <FormattedMessage id="helpers.save" />
           </Button>
@@ -135,13 +127,6 @@ export default injectIntl(
     { updateSuggestedQuiz, createSuggestedQuiz, displayErrorToast }
   )(QuizDetails)
 )
-
-function blockRouting ({ when: unsaved, history }) {
-  if (unsaved) setUnsaved()
-  return history.block(() => {
-    if (unsaved) return 'Are you sure you want to close without saving?'
-  })
-}
 
 const TitleField = styled(InputGroup).attrs({
   large: true,
