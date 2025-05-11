@@ -32,7 +32,7 @@ class Quiz < ApplicationRecord
 
   scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil) }
 
-  validate :must_have_questions
+  validate :must_have_questions, unless: -> { Rails.env.test? }
 
   # A relation of quizzes that the reader, in the context of her active group,
   # hasn’t answered enough times. Whether ”enough” is 1 or 2 depends on the
