@@ -65,7 +65,7 @@ function mapStateToProps ({ edit, quiz, caseData }: State) {
   }
 }
 
-type Props = {
+class Case extends React.Component<{
   needsPretest: boolean,
   hasQuiz: boolean,
   caseSlug: string,
@@ -81,9 +81,7 @@ type Props = {
   handleNotification: typeof handleNotification,
   editable: ?boolean,
   editing: boolean,
-}
-
-class Case extends React.Component<Props> {
+}> {
   _subscribe = () => {
     if (typeof App === 'undefined' || !('WebSocket' in window)) return
 

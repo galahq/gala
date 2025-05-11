@@ -11,6 +11,7 @@ import TableOfContents from './TableOfContents'
 import Billboard from './Billboard'
 import EnrollForm from './EnrollForm'
 import Tracker from 'utility/Tracker'
+import { SignInFormContainer } from 'utility/SignInForm'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
 import type { ContextRouter } from 'react-router-dom'

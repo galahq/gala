@@ -106,12 +106,9 @@ class CaseElement extends React.Component<{
 
     const redirectToOverview = <Redirect to="/" />
 
-    if (!reader) return redirectToOverview
+  //  if (!reader) return redirectToOverview
 
-    const models = {
-      Page: PageBlock,
-      Podcast: PodcastBlock,
-    }
+    const models = { Page, Podcast }
     const Child = models[model]
     const deleteElement = () => {
       this.props
@@ -128,7 +125,7 @@ class CaseElement extends React.Component<{
           'has-comments-open': commentsOpen,
         })}
       >
-        <SidebarBlock editing={editing} />
+        <Sidebar editing={editing} />
         <main id="top" className={`main s-CaseElement__${model}`}>
           <DocumentTitle title={`${kicker} — ${title} — Gala`}>
             {Child ? (
@@ -140,7 +137,7 @@ class CaseElement extends React.Component<{
 
           <Route
             path={`/:position/edgenotes/:edgenoteSlug`}
-            component={EdgenoteContentsBlock}
+            component={EdgenoteContents}
           />
           <ConditionalNextLink next={next} />
         </main>

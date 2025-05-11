@@ -54,7 +54,7 @@ export const Link = styled(NavLink)`
   flex-direction: row;
 
   ${p =>
-    p['data-is-dragging']
+    p.isDragging
       ? css`
           background-color: #29394a !important;
           color: #ebeae4 !important;

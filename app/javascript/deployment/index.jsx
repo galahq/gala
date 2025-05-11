@@ -59,25 +59,19 @@ class Deployment extends React.Component<Props, State> {
       return false
     }
 
-    const validatedQuestionsList = validatedQuestions(customQuestions[`${selectedQuizId}`])
-    const hasErrors = validatedQuestionsList.some(
+    const validatedState = {
+      ...state,
+      customQuestions: {
+        ...customQuestions,
+        [`${selectedQuizId}`]: validatedQuestions(
+          customQuestions[`${selectedQuizId}`]
+        ),
+      },
+    }
+    this.setState(validatedState)
+    return !validatedState.customQuestions[`${selectedQuizId}`].some(
       (question: DraftQuestion) => question.hasError
     )
-
-    // Update state in next tick to avoid render-time state updates
-    if (!hasErrors) {
-      setTimeout(() => {
-        this.setState({
-          ...state,
-          customQuestions: {
-            ...customQuestions,
-            [`${selectedQuizId}`]: validatedQuestionsList,
-          },
-        })
-      }, 0)
-    }
-
-    return !hasErrors
   }
 
   _displayToast = (error: string, intent: IntentType = Intent.DANGER) => {
