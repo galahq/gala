@@ -41,6 +41,7 @@ type Props = OwnProps & {
   quiz: SuggestedQuiz,
   updateSuggestedQuiz: typeof updateSuggestedQuiz,
   createSuggestedQuiz: typeof createSuggestedQuiz,
+  removeSuggestedQuiz: typeof removeSuggestedQuiz,
 }
 function QuizDetails ({
   displayErrorToast,
@@ -50,6 +51,7 @@ function QuizDetails ({
   quiz,
   updateSuggestedQuiz,
   createSuggestedQuiz,
+  removeSuggestedQuiz,
 }: Props) {
   const [draftQuiz, setDraftQuiz] = React.useState(quiz)
   const { questions, title } = draftQuiz
@@ -71,13 +73,18 @@ function QuizDetails ({
     if (id === "new") {
         createSuggestedQuiz(draftQuiz).then(() => {
           removeSuggestedQuiz(id)
-          history.replace('/suggested_quizzes/')
+          history.push('/suggested_quizzes/')
         }).catch((error) => {
           displayErrorToast(error.message)
         })
     } else {
       updateSuggestedQuiz(id, draftQuiz)
-      history.replace('/suggested_quizzes/')
+        .then(() => {
+          history.push('/suggested_quizzes/')
+        })
+        .catch((error) => {
+          displayErrorToast(error.message)
+        })
     }
   }
 
@@ -85,7 +92,7 @@ function QuizDetails ({
     if (id === "new") {
       removeSuggestedQuiz(id)
     }
-    history.replace(window.location.href + '/suggested_quizzes/')
+    history.push('/suggested_quizzes/')
   }
 
   return (
@@ -125,7 +132,7 @@ function QuizDetails ({
 export default injectIntl(
   connect(
     mapStateToProps,
-    { updateSuggestedQuiz, createSuggestedQuiz, displayErrorToast }
+    { updateSuggestedQuiz, createSuggestedQuiz, displayErrorToast, removeSuggestedQuiz }
   )(withRouter(QuizDetails))
 )
 

@@ -21,19 +21,9 @@ class QuizzesController < ApplicationController
   def create
     authorize @case, :update?
 
-    ActiveRecord::Base.transaction do
-      @quiz = @case.quizzes.build(title: quiz_params[:title])
-      @quiz.save!
+    @quiz = @case.quizzes.build(title: quiz_params[:title])
 
-      QuizUpdater.new(@quiz).update(
-        'questions' => quiz_params[:questions]
-      )
-
-      @quiz.must_have_at_least_one_question
-      raise ActiveRecord::Rollback if @quiz.errors.any?
-    end
-
-    if @quiz.errors.empty?
+    if QuizUpdater.new(@quiz).upsert 'questions' => quiz_params[:questions]
       render json: @quiz
     else
       render json: @quiz.errors, status: :unprocessable_entity
@@ -44,7 +34,7 @@ class QuizzesController < ApplicationController
   def update
     authorize @quiz.case
 
-    if QuizUpdater.new(@quiz).update quiz_params
+    if QuizUpdater.new(@quiz).update 'questions' => quiz_params[:questions]
       render json: @quiz
     else
       render json: @quiz.errors, status: :unprocessable_entity

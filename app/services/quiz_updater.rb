@@ -20,6 +20,17 @@ class QuizUpdater
     upsert_questions questions
   end
 
+  def upsert(quiz_params)
+    quiz.save validate: false
+    ActiveRecord::Base.transaction do
+      update quiz_params
+      quiz.save!
+      quiz.errors.none?
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    false
+  end
+
   private
 
   def upsert_questions(questions)

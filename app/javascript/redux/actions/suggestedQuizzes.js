@@ -48,7 +48,7 @@ export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
     const { slug } = getState().caseData
     return Orchard.graft(`cases/${slug}/quizzes`, { ...quiz, id: null, param: null }).then(
       (newQuiz: SuggestedQuiz) => {
-        dispatch(fetchSuggestedQuizzes())
+        dispatch(addSuggestedQuiz(newQuiz.param, {...newQuiz }))
         dispatch(
           displayToast({
             intent: Intent.SUCCESS,

@@ -32,6 +32,8 @@ class Quiz < ApplicationRecord
 
   scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil) }
 
+  validate :must_have_questions
+
   # A relation of quizzes that the reader, in the context of her active group,
   # hasn’t answered enough times. Whether ”enough” is 1 or 2 depends on the
   # instructor’s choice, per {Deployment}.
@@ -95,8 +97,10 @@ class Quiz < ApplicationRecord
            .values.min || 0
   end
 
-  def must_have_at_least_one_question
-    return if custom_questions.any? || (template.present? && template.questions.any?)
+  private
+
+  def must_have_questions
+    return if custom_questions.any? || (template.present? && template.questions.exists?)
 
     errors.add(:base, 'Quiz must have at least one question (either custom or inherited)')
   end
