@@ -8,11 +8,23 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Icon } from '@blueprintjs/core'
 
-const mapStateToProps = state => ({
+import type { State } from 'redux/state'
+import type { Node } from 'react'
+
+type Props = {
+  editInProgress: boolean,
+  children: Node,
+}
+
+type StateProps = {|
+  editInProgress: boolean,
+|}
+
+const mapStateToProps = (state: State): StateProps => ({
   editInProgress: state.edit.inProgress,
 })
 
-const RevealableComponent = memo(({ editInProgress, children }) => {
+const RevealableComponent = memo(({ editInProgress, children }: Props) => {
   const [isRevealed, setIsRevealed] = useState(false)
 
   useEffect(() => {
@@ -23,7 +35,6 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
     if (editInProgress) {
       return
     }
-    
     e.preventDefault()
     setIsRevealed(!isRevealed)
   }
@@ -43,11 +54,11 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
     role: "button",
     onClick: handleClick,
     onKeyDown: handleKeyDown,
-    tabIndex: 0
+    tabIndex: 0,
   }
 
   return (
-    <div 
+    <div
       {...interactiveProps}
       className={`revealable-entity ${isRevealed ? 'revealable-entity--revealed' : ''} ${editInProgress ? 'revealable-entity--editing' : ''}`}
       aria-expanded={isRevealed}
@@ -59,7 +70,7 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
         </span>
       )}
 
-      <span 
+      <span
         className="revealable-entity__content"
         aria-hidden={!isRevealed && !editInProgress}
       >
@@ -87,4 +98,5 @@ RevealableComponent.propTypes = {
 
 RevealableComponent.displayName = 'RevealableComponent'
 
-export default connect(mapStateToProps)(RevealableComponent)
+// Export the connected component
+export default (connect(mapStateToProps)(RevealableComponent): React$ComponentType<{children: Node}>)

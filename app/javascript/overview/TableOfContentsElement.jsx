@@ -73,9 +73,7 @@ function TableOfContentsElement ({
       {(provided, snapshot) => (
         <Item ref={provided.innerRef} {...provided.draggableProps}>
           <Link
-            isDragging={snapshot.isDragging}
-            // to={loggedIn ? `/${position + 1}` : undefined}
-            // as={loggedIn ? undefined : 'div'}
+            data-is-dragging={snapshot.isDragging}
             to={`/${position + 1}`}
             as={undefined}
           >

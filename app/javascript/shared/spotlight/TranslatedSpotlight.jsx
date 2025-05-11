@@ -26,7 +26,7 @@ function TranslatedSpotlight ({ children, placement, spotlightKey }: Props) {
       placement={placement}
       spotlightKey={spotlightKey}
     >
-      {children}
+      {({ ref }) => children({ ref })}
     </Spotlight>
   )
 }

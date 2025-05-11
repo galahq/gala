@@ -50,7 +50,7 @@ function SuggestedQuizzes ({ newSuggestedQuiz, history, match }: Props) {
             render={({ history }) => (
               <AllQuizzes
                 onCreateQuiz={() => {
-                  newSuggestedQuiz({ param: "new", questions: [], title: "New Quiz" }).then(quizId => {
+                  newSuggestedQuiz({ param: "new", questions: [], title: "" }).then(quizId => {
                     history.push(`/suggested_quizzes/${quizId}`)
                   })
                 }}

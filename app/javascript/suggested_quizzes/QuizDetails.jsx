@@ -5,6 +5,7 @@
 
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { Button, FormGroup, Intent, InputGroup } from '@blueprintjs/core'
@@ -125,7 +126,7 @@ export default injectIntl(
   connect(
     mapStateToProps,
     { updateSuggestedQuiz, createSuggestedQuiz, displayErrorToast }
-  )(QuizDetails)
+  )(withRouter(QuizDetails))
 )
 
 const TitleField = styled(InputGroup).attrs({

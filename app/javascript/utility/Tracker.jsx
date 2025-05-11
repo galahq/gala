@@ -21,36 +21,23 @@ type TrackerProps = {
   instantaneous?: boolean,
   innerRef?: (?HTMLSpanElement) => any,
 }
-type TrackerState = {
-  durationSoFar: number,
-  timeArrived: number,
-}
 
-class BaseTracker extends React.Component<TrackerProps, TrackerState> {
-  state = {
-    durationSoFar: 0,
-    timeArrived: Date.now(),
-  }
+// type LogCallback = (duration: number) => void
+// type TimeSinceArrivalCallback = () => number
 
-  _startTimer = () => {
-    this.setState({ timeArrived: Date.now() })
-    window.addEventListener('beforeunload', this._stopTimer)
-  }
+function Tracker ({
+  caseSlug,
+  targetKey,
+  targetParameters,
+  timerState,
+  instantaneous,
+  innerRef,
+}: TrackerProps) {
+  const [durationSoFar, setDurationSoFar] = React.useState<number>(0)
+  const [timeArrived, setTimeArrived] = React.useState<number>(Date.now())
+  const timerStateRef = React.useRef<TimerState>(timerState)
 
-  _pauseTimer = () => {
-    this.setState({ durationSoFar: this._timeSinceArrival(this.state) })
-  }
-
-  _stopTimer = () => {
-    window.removeEventListener('beforeunload', this._stopTimer)
-    const duration = this._timeSinceArrival(this.state)
-    if (duration > 0) this._log(duration)
-    this.setState({ durationSoFar: 0 })
-  }
-
-  _log = (duration: number) => {
-    const { targetParameters, caseSlug, instantaneous } = this.props
-
+  const log = React.useMemo<(duration: number) => void>(() => (duration) => {
     const loggedDuration = instantaneous ? 3000 : duration
     if (loggedDuration >= 3000) {
       ;(window.ahoy: Ahoy).track(targetParameters.name, {
@@ -59,54 +46,57 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
         duration: loggedDuration,
       })
     }
-  }
+  }, [targetParameters, caseSlug, instantaneous])
 
-  _timeSinceArrival (state: TrackerState) {
-    const thisSegment =
-      this.props.timerState === 'RUNNING' ? Date.now() - state.timeArrived : 0
-    return state.durationSoFar + thisSegment
-  }
+  const timeSinceArrival = React.useMemo<() => number>(() => () => {
+    const thisSegment = timerStateRef.current === 'RUNNING' ? Date.now() - timeArrived : 0
+    return durationSoFar + thisSegment
+  }, [durationSoFar, timeArrived])
 
-  componentDidMount = () => {
-    if (this.props.timerState === 'RUNNING') this._startTimer()
-  }
+  React.useEffect(() => {
+    timerStateRef.current = timerState
+  }, [timerState])
 
-  componentDidUpdate (prevProps: TrackerProps) {
-    if (
-      prevProps.timerState === this.props.timerState &&
-      prevProps.targetKey === this.props.targetKey
-    ) {
-      return
+  const handleBeforeUnload = React.useCallback((): void => {
+    const duration = timeSinceArrival()
+    if (duration > 0) {
+      log(duration)
     }
+  }, [timeSinceArrival, log])
 
-    if (prevProps.targetKey !== this.props.targetKey) {
-      this._stopTimer()
-      this._startTimer()
-      return
+  React.useEffect(() => {
+    if (timerState === 'RUNNING') {
+      setTimeArrived(Date.now())
+      window.addEventListener('beforeunload', handleBeforeUnload)
     }
-
-    switch (this.props.timerState) {
-      case 'RUNNING':
-        this._startTimer()
-        break
-
-      case 'PAUSED':
-        this._pauseTimer()
-        break
-
-      case 'STOPPED':
-        this._stopTimer()
-        break
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
     }
-  }
+  }, [timerState, handleBeforeUnload])
 
-  componentWillUnmount () {
-    this._stopTimer()
-  }
+  React.useEffect(() => {
+    if (timerState === 'PAUSED') {
+      setDurationSoFar(timeSinceArrival())
+    }
+  }, [timerState, timeSinceArrival])
 
-  render () {
-    return <span ref={this.props.innerRef} />
-  }
+  React.useEffect(() => {
+    if (timerState === 'STOPPED') {
+      const duration = timeSinceArrival()
+      if (duration > 0) {
+        log(duration)
+      }
+      setDurationSoFar(0)
+    }
+  }, [timerState, timeSinceArrival, log])
+
+  React.useEffect(() => {
+    return () => {
+      handleBeforeUnload()
+    }
+  }, [handleBeforeUnload])
+
+  return <span ref={innerRef} />
 }
 
 function mapStateToProps ({ caseData }: State) {
@@ -114,12 +104,12 @@ function mapStateToProps ({ caseData }: State) {
     caseSlug: caseData.slug,
   }
 }
+
 // $FlowFixMe
-const Tracker = connect(
+export default connect(
   mapStateToProps,
   () => ({})
-)(BaseTracker)
-export default Tracker
+)(Tracker)
 
 // Specializations
 //
