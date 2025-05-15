@@ -92,7 +92,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                   }
                 >
                   <MaybeSpotlight
-                    key={spotlightKey}
+                    key={`${j}-${spotlightKey || 'spotlight'}`}
                     spotlightKey={spotlightKey}
                     placement="bottom"
                   >
@@ -110,7 +110,11 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarButton -- a clickable button
                  */
-                <MaybeSpotlight spotlightKey={spotlightKey} placement="bottom">
+                <MaybeSpotlight 
+                  key={`${j}-${spotlightKey || 'spotlight'}`}
+                  spotlightKey={spotlightKey} 
+                  placement="bottom"
+                >
                   {({ ref }) => (
                     <Item
                       key={j}
