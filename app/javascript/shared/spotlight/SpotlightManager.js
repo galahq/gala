@@ -8,6 +8,7 @@
  */
 
 import { Orchard } from 'shared/orchard'
+import { OrchardError } from 'shared/orchard'
 
 type SubscriberOptions = { key: string, ref: { current: Node } }
 type Subscriber = SubscriberOptions & {
@@ -87,6 +88,11 @@ export default class SpotlightManager {
   _createAcknowledgement (key: string) {
     Orchard.graft('spotlight_acknowledgements', {
       spotlight_acknowledgement: { spotlight_key: key },
+    }).catch(error => {
+      // Ignore malformed response error since we expect an empty response
+      if (!(error instanceof OrchardError) || error.message !== 'Malformed response') {
+        throw error
+      }
     })
   }
 }
