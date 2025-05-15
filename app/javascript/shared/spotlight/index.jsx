@@ -79,9 +79,9 @@ export default function Spotlight ({
       </Reference>
 
       {transitions.map(
-        ({ item, props: animatedStyles }) =>
+        ({ item, props: animatedStyles, key }) =>
           item && (
-            <Portal>
+            <Portal key={key}>
               <Popper placement={placement} modifiers={POPPER_OPTIONS}>
                 {({ ref, style: positionStyles, placement, arrowProps }) => (
                   <PositionedContainer ref={ref} style={positionStyles}>
