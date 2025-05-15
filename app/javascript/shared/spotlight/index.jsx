@@ -87,8 +87,10 @@ export default function Spotlight ({
                   <PositionedContainer ref={ref} style={positionStyles}>
                     <Popover
                       placement={placement}
-                      arrowStyles={arrowProps.style}
-                      style={animatedStyles}
+                      style={{
+                        ...animatedStyles,
+                        transformOrigin: transformOrigin({ arrowStyles: arrowProps.style, placement })
+                      }}
                     >
                       <Arrow
                         persona={persona}
@@ -136,7 +138,6 @@ const Popover = styled(animated.div).attrs({
 })`
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2) !important;
-  transform-origin: ${transformOrigin};
 `
 
 function transformOrigin ({ arrowStyles, placement }) {
