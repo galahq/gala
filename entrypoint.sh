@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # enable jemalloc for reduced memory usage and latency.
-if [ -f /usr/lib/*/libjemalloc.so.2 ]; then
-  export LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2) $LD_PRELOAD"
-  export MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true,stats_print:false"
-fi
+for jemalloc in /usr/lib/*/libjemalloc.so.2; do
+  if [ -f "$jemalloc" ]; then
+    export LD_PRELOAD="$jemalloc $LD_PRELOAD"
+    export MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true,stats_print:false"
+  fi
+done
 
 if [ "$RAILS_ENV" = "development" ]; then
   if [ ! -f /tmp/.seeded ]; then

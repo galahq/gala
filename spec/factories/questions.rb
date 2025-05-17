@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :question do
+    # Use the regular quiz factory since validation is disabled during linting
     association :quiz
 
     content { Faker::Lorem.question }

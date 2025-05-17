@@ -18,7 +18,7 @@ class Group < ApplicationRecord
 
   has_many :group_memberships, dependent: :destroy
   has_many :readers, through: :group_memberships
-  has_many :deployments, dependent: :destroy
+  has_many :deployments, dependent: :destroy, inverse_of: :group
   has_many :cases, through: :deployments
 
   has_one :community, dependent: :destroy

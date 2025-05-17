@@ -43,15 +43,29 @@ function setSuggestedQuizzes (
   return { type: 'SET_SUGGESTED_QUIZZES', quizzes }
 }
 
-export function createSuggestedQuiz (): ThunkAction {
+export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const { slug } = getState().caseData
-    return Orchard.graft(`cases/${slug}/quizzes`, {}).then(
-      (quiz: SuggestedQuiz) => {
-        dispatch(addSuggestedQuiz(quiz.param, quiz))
-        return quiz.param
+    return Orchard.graft(`cases/${slug}/quizzes`, { ...quiz, id: null, param: null }).then(
+      (newQuiz: SuggestedQuiz) => {
+        dispatch(addSuggestedQuiz(newQuiz.param, { ...newQuiz }))
+        dispatch(
+          displayToast({
+            intent: Intent.SUCCESS,
+            icon: 'tick-circle',
+            message: 'Quiz successfully created',
+          })
+        )
+        return newQuiz.param
       }
     )
+  }
+}
+
+export function newSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
+  return (dispatch: Dispatch, getState: GetState) => {
+    dispatch(addSuggestedQuiz("new", { ...quiz, param: "new" }))
+    return Promise.resolve("new")
   }
 }
 
@@ -60,7 +74,7 @@ export type AddSuggestedQuizAction = {
   param: string,
   data: SuggestedQuiz,
 }
-function addSuggestedQuiz (
+export function addSuggestedQuiz (
   param: string,
   data: SuggestedQuiz
 ): AddSuggestedQuizAction {
@@ -98,6 +112,6 @@ export type RemoveSuggestedQuizAction = {
   type: 'REMOVE_SUGGESTED_QUIZ',
   param: string,
 }
-function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
+export function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
   return { type: 'REMOVE_SUGGESTED_QUIZ', param }
 }

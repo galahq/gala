@@ -15,7 +15,7 @@ class Question < ApplicationRecord
   translates :content, fallbacks: true
 
   has_many :answers
-  belongs_to :quiz
+  belongs_to :quiz, inverse_of: :custom_questions
 
   validates :content, presence: true
   validates :correct_answer, inclusion: { in: ->(q) { q.options } },

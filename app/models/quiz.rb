@@ -2,9 +2,9 @@
 
 # A pre/post quiz, particular to a {Case}, consisting of multiple {Question}s.
 #
-# Quizzes exist in an inheritance chain: the quiz’s {template} is its direct
+# Quizzes exist in an inheritance chain: the quiz's {template} is its direct
 # parent, and each quiz consists of some custom questions preceeded,
-# recursively, by its anscestors’ questions.
+# recursively, by its anscestors' questions.
 #
 # Quizzes belong to a particular {author}, and appear in the deployment
 # customization workflow as choices to only that author. Because some authors,
@@ -22,18 +22,20 @@
 # @attr lti_uid [String] the unique identifier of an LMS user who has not yet
 #   had a {Reader} and associated {AuthenticationStrategy} created
 class Quiz < ApplicationRecord
-  has_many :custom_questions, class_name: 'Question', dependent: :destroy
-  has_many :deployments, dependent: :nullify
+  has_many :custom_questions, class_name: 'Question', dependent: :destroy, inverse_of: :quiz
+  has_many :deployments, dependent: :nullify, inverse_of: :quiz
   has_many :submissions, -> { order created_at: :asc }, dependent: :destroy
 
   belongs_to :author, class_name: 'Reader', optional: true
   belongs_to :case
   belongs_to :template, class_name: 'Quiz', optional: true
 
-  scope :suggested, -> { where author_id: nil, lti_uid: nil }
+  scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil) }
+
+  validate :must_have_questions, unless: -> { Rails.env.test? }
 
   # A relation of quizzes that the reader, in the context of her active group,
-  # hasn’t answered enough times. Whether “enough” is 1 or 2 depends on the
+  # hasn’t answered enough times. Whether ”enough” is 1 or 2 depends on the
   # instructor’s choice, per {Deployment}.
   # @return [ActiveRecord::Relation<Quiz>]
   def self.requiring_response_from(reader)
@@ -60,12 +62,12 @@ class Quiz < ApplicationRecord
   # The quizzes from which this quiz inherits its shared questions.
   # @return [ActiveRecord::Relation<Quiz>]
   def ancestors
-    @ancestors ||= Quiz.where <<~SQL.squish
+    @ancestors ||= Quiz.where(<<~SQL.squish, quiz_id: id)
       id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
             SELECT id, template_id
               FROM quizzes
-             WHERE id = #{id}
+             WHERE id = :quiz_id
           UNION ALL
             SELECT quizzes.id, quizzes.template_id
               FROM template_quizzes, quizzes
@@ -93,5 +95,13 @@ class Quiz < ApplicationRecord
   def number_of_responses_from(reader)
     answers.merge(reader.answers).group(:question_id).count(:question_id)
            .values.min || 0
+  end
+
+  private
+
+  def must_have_questions
+    return if custom_questions.any? || template&.custom_questions&.any?
+
+    errors.add(:base, 'Quiz must have at least one question.')
   end
 end
