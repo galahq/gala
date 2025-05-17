@@ -57,7 +57,7 @@ class Case < ApplicationRecord
            dependent: :destroy, inverse_of: :case
   has_many :comment_threads, through: :cards, dependent: :destroy
   has_many :comments, through: :comment_threads
-  has_many :deployments, dependent: :destroy
+  has_many :deployments, dependent: :destroy, inverse_of: :case
   has_many :edgenotes, dependent: :destroy
   has_many :editorships, dependent: :destroy
   has_many :editors, through: :editorships, class_name: 'Reader'

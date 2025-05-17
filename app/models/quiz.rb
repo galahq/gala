@@ -2,9 +2,9 @@
 
 # A pre/post quiz, particular to a {Case}, consisting of multiple {Question}s.
 #
-# Quizzes exist in an inheritance chain: the quiz’s {template} is its direct
+# Quizzes exist in an inheritance chain: the quiz's {template} is its direct
 # parent, and each quiz consists of some custom questions preceeded,
-# recursively, by its anscestors’ questions.
+# recursively, by its anscestors' questions.
 #
 # Quizzes belong to a particular {author}, and appear in the deployment
 # customization workflow as choices to only that author. Because some authors,
@@ -22,8 +22,8 @@
 # @attr lti_uid [String] the unique identifier of an LMS user who has not yet
 #   had a {Reader} and associated {AuthenticationStrategy} created
 class Quiz < ApplicationRecord
-  has_many :custom_questions, class_name: 'Question', dependent: :destroy
-  has_many :deployments, dependent: :nullify
+  has_many :custom_questions, class_name: 'Question', dependent: :destroy, inverse_of: :quiz
+  has_many :deployments, dependent: :nullify, inverse_of: :quiz
   has_many :submissions, -> { order created_at: :asc }, dependent: :destroy
 
   belongs_to :author, class_name: 'Reader', optional: true
@@ -100,7 +100,7 @@ class Quiz < ApplicationRecord
   private
 
   def must_have_questions
-    return if custom_questions.any? || (template.present? && template.questions.exists?)
+    return if custom_questions.any? || template&.custom_questions&.any?
 
     errors.add(:base, 'Quiz must have at least one question.')
   end

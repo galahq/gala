@@ -55,6 +55,7 @@ class Deployment extends React.Component<Props, State> {
 
     if (selectedQuizId == null) return true
 
+    // TODO: adress the case where an instrcture can select a Suggested Quiz without adding custom questions
     if (!customQuestions[`${selectedQuizId}`] || customQuestions[`${selectedQuizId}`].length === 0) {
       return false
     }
