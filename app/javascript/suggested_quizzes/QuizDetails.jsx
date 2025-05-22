@@ -79,12 +79,7 @@ function QuizDetails ({
         })
     } else {
       updateSuggestedQuiz(id, draftQuiz)
-        .then(() => {
-          history.push('/suggested_quizzes/')
-        })
-        .catch((error) => {
-          displayErrorToast(error.message)
-        })
+      history.push('/suggested_quizzes/')
     }
   }
 

@@ -100,7 +100,7 @@ class Quiz < ApplicationRecord
   private
 
   def must_have_questions
-    return if custom_questions.any? || (template.present? && template.questions.exists?)
+    return if (template.present? && template.custom_questions.any?) || custom_questions.any?
 
     errors.add(:base, 'Quiz must have at least one question.')
   end

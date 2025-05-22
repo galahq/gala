@@ -21,8 +21,8 @@ class QuizUpdater
   end
 
   def upsert(quiz_params)
-    quiz.save validate: false
     ActiveRecord::Base.transaction do
+      quiz.save validate: false
       update quiz_params
       quiz.save!
       quiz.errors.none?

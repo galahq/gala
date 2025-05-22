@@ -58,6 +58,6 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.permit(:title, questions: [:id, :content, :correct_answer, { options: [] }])
+    params.require(:quiz).permit(:title, questions: [:id, :content, :correct_answer, { options: [] }])
   end
 end
