@@ -33,6 +33,7 @@ class QuizzesController < ApplicationController
   def update
     authorize @quiz.case
 
+    @quiz.update title: quiz_params[:title] if quiz_params[:title].present?
     if QuizUpdater.new(@quiz).update 'questions' => quiz_params[:questions]
       render json: @quiz
     else

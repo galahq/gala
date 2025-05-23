@@ -9,8 +9,7 @@ class QuizUpdater
   end
 
   def update(quiz_params)
-    quiz_params = quiz_params.to_h.transform_keys(&:to_s)
-    questions = quiz_params.delete 'questions'
+    quiz_params, questions = extract_quiz_and_questions(quiz_params)
 
     quiz.update quiz_params
 
@@ -25,26 +24,29 @@ class QuizUpdater
   end
 
   def upsert(quiz_params)
-    quiz_params = quiz_params.to_h.transform_keys(&:to_s)
-    questions = quiz_params.delete 'questions'
+    _quiz_params, questions = extract_quiz_and_questions(quiz_params)
     ActiveRecord::Base.transaction do
       quiz.save validate: false
       questions.each do |question|
-        # Convert question to hash with string keys, then extract only the permitted attributes
-        question_hash = question.to_h.transform_keys(&:to_s)
-        question_attrs = question_hash.slice(*question_attributes)
-        quiz.custom_questions.create! question_attrs
+        quiz.custom_questions.create! extract_question_attributes(question)
       end
-      # Reload the association so the validation can see the newly created questions
-      quiz.custom_questions.reload
-      quiz.save!
+      quiz.reload.save!
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error "===========> Record invalid: #{e.message}"
+  rescue ActiveRecord::RecordInvalid => _e
     false
   end
 
   private
+
+  def extract_quiz_and_questions(quiz_params)
+    quiz_params = quiz_params.to_h.transform_keys(&:to_s)
+    questions = quiz_params.delete 'questions'
+    [quiz_params, questions]
+  end
+
+  def extract_question_attributes(question)
+    question.to_h.transform_keys(&:to_s).slice(*question_attributes)
+  end
 
   def question_attributes
     %w[id content correct_answer options]
@@ -57,9 +59,7 @@ class QuizUpdater
   end
 
   def upsert_question(question)
-    # Convert question to hash with string keys, then extract only the permitted attributes
-    question_hash = question.to_h.transform_keys(&:to_s)
-    question_attrs = question_hash.slice(*question_attributes)
+    question_attrs = extract_question_attributes(question)
 
     if question_attrs['id'].present?
       Question.find(question_attrs['id']).update! question_attrs
