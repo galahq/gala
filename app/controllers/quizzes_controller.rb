@@ -20,10 +20,9 @@ class QuizzesController < ApplicationController
   # @route [POST] `/cases/slug/quizzes`
   def create
     authorize @case, :update?
-
     @quiz = @case.quizzes.build(title: quiz_params[:title])
 
-    if QuizUpdater.new(@quiz).upsert 'questions' => quiz_params[:questions]
+    if QuizUpdater.new(@quiz).upsert 'questions' => permitted_questions
       render json: @quiz
     else
       render json: @quiz.errors, status: :unprocessable_entity
@@ -59,5 +58,9 @@ class QuizzesController < ApplicationController
 
   def quiz_params
     params.require(:quiz).permit(:title, questions: [:id, :content, :correct_answer, { options: [] }])
+  end
+
+  def permitted_questions
+    params.permit(questions: [:id, :content, :correct_answer, { options: [] }])[:questions]
   end
 end

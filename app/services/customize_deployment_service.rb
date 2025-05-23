@@ -14,13 +14,18 @@ class CustomizeDeploymentService
       if quiz_id.present?
         @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
         customize_quiz custom_questions unless custom_questions.empty?
+        # Ensure quiz is valid after customization
+        @deployment.quiz.save! unless custom_questions.empty?
       elsif answers_needed.positive?
-        @deployment.quiz = Quiz.create!(
+        @deployment.quiz = Quiz.new(
           case: @deployment.case,
           customized: true,
           **@author_identifier.quiz_attributes
         )
+        @deployment.quiz.save!(validate: false)
         customize_quiz custom_questions unless custom_questions.empty?
+        # Validate the quiz after questions are added
+        @deployment.quiz.save!
       end
       @deployment.tap(&:save!)
     end
@@ -45,9 +50,14 @@ class CustomizeDeploymentService
   end
 
   def create_quiz_from_template(template_id)
-    Quiz.create! case: @deployment.case,
-                 template_id: template_id,
-                 customized: true
+    quiz = Quiz.new(
+      case: @deployment.case,
+      template_id: template_id,
+      customized: true,
+      **@author_identifier.quiz_attributes
+    )
+    quiz.save!(validate: false)
+    quiz
   end
 
   def customize_quiz(custom_questions)

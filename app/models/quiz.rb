@@ -30,13 +30,13 @@ class Quiz < ApplicationRecord
   belongs_to :case
   belongs_to :template, class_name: 'Quiz', optional: true
 
-  scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil) }
+  scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil).group(:id) }
 
-  validate :must_have_questions, unless: -> { Rails.env.test? }
+  validate :must_have_questions
 
   # A relation of quizzes that the reader, in the context of her active group,
-  # hasn’t answered enough times. Whether ”enough” is 1 or 2 depends on the
-  # instructor’s choice, per {Deployment}.
+  # hasn't answered enough times. Whether "enough" is 1 or 2 depends on the
+  # instructor's choice, per {Deployment}.
   # @return [ActiveRecord::Relation<Quiz>]
   def self.requiring_response_from(reader)
     where(id: reader.deployments.select(:quiz_id))

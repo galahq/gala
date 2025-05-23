@@ -69,6 +69,13 @@ function QuizDetails ({
       ...draftQuiz,
       questions: validatedQuestions(draftQuiz.questions),
     }
+    if (validatedQuiz.questions.some(question => !!question.hasError)) {
+      setDraftQuiz(validatedQuiz)
+      displayErrorToast(
+        intl.formatMessage({ id: 'cases.edit.suggestedQuizzes.error' })
+      )
+      return
+    }
     setDraftQuiz(validatedQuiz)
     if (id === "new") {
         createSuggestedQuiz(draftQuiz).then(() => {
