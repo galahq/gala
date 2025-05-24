@@ -3,6 +3,7 @@
 json.key_format! camelize: :lower
 
 json.id deployment.id
+json.answers_needed deployment.answers_needed
 
 if selection_params
   json.return_url selection_params['return_url']
