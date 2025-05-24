@@ -12,44 +12,52 @@ class QuizUpdater
     quiz_params, questions = extract_quiz_and_questions(quiz_params)
 
     ActiveRecord::Base.transaction do
-      # For new quizzes, we need to save first before adding questions
-      if quiz.new_record?
-        # Set attributes but don't save yet
-        quiz.assign_attributes(quiz_params) if quiz_params.present?
-
-        if questions&.any?
-          # Save without validation to create the record
-          quiz.skip_validation = true
-          quiz.save!
-          quiz.skip_validation = false
-
-          # Now add the questions
-          sync_questions(questions)
-
-          # Validate the complete quiz
-          quiz.reload
-        end
-        # Save with validation - will fail if no questions
-        quiz.save!
-      else
-        # Existing quiz - normal update flow
-        quiz.update!(quiz_params) if quiz_params.present?
-
-        unless questions.nil?
-          sync_questions(questions)
-          quiz.reload
-          quiz.save!
-        end
-      end
+      quiz.new_record? ? handle_new_quiz(quiz_params, questions) : handle_existing_quiz(quiz_params, questions)
     end
 
     true
   rescue ActiveRecord::RecordInvalid => e
-    quiz.errors.add(:base, e.message) unless quiz.errors.any?
+    add_error_message(e)
     false
   end
 
   private
+
+  def handle_new_quiz(quiz_params, questions)
+    assign_quiz_attributes(quiz_params)
+
+    if questions&.any?
+      save_without_validation
+      process_questions(questions)
+    end
+
+    quiz.save! # Final save with validation
+  end
+
+  def handle_existing_quiz(quiz_params, questions)
+    quiz.update!(quiz_params) if quiz_params.present?
+    process_questions(questions) unless questions.nil?
+  end
+
+  def assign_quiz_attributes(quiz_params)
+    quiz.assign_attributes(quiz_params) if quiz_params.present?
+  end
+
+  def save_without_validation
+    quiz.skip_validation = true
+    quiz.save!
+    quiz.skip_validation = false
+  end
+
+  def process_questions(questions)
+    sync_questions(questions)
+    quiz.reload
+    quiz.save!
+  end
+
+  def add_error_message(error)
+    quiz.errors.add(:base, error.message) unless quiz.errors.any?
+  end
 
   def extract_quiz_and_questions(quiz_params)
     quiz_params = quiz_params.to_h.with_indifferent_access
@@ -62,19 +70,22 @@ class QuizUpdater
   end
 
   def sync_questions(questions)
-    # Get IDs of questions to keep
+    delete_removed_questions(questions)
+    quiz.reload
+    update_or_create_questions(questions)
+  end
+
+  def delete_removed_questions(questions)
     question_ids_to_keep = questions.map { |q| q[:id] }.compact
 
-    # Delete questions not in the new set
     if question_ids_to_keep.empty?
-      # If no IDs provided, delete all questions
       quiz.custom_questions.destroy_all
     else
-      # Delete only questions not in the keep list
       quiz.custom_questions.where.not(id: question_ids_to_keep).destroy_all
     end
+  end
 
-    # Create or update questions
+  def update_or_create_questions(questions)
     questions.each do |question_data|
       question_attrs = extract_question_attributes(question_data)
 
