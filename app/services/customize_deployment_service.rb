@@ -11,42 +11,66 @@ class CustomizeDeploymentService
   def customize(answers_needed: 0, quiz_id: nil, custom_questions: [])
     ActiveRecord::Base.transaction do
       @deployment.answers_needed = answers_needed
-      if quiz_id.present?
-        @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
-        customize_quiz custom_questions unless custom_questions.empty?
-        # Ensure quiz is valid after customization
-        @deployment.quiz.save! unless custom_questions.empty?
-      elsif answers_needed.positive?
-        @deployment.quiz = Quiz.new(
-          case: @deployment.case,
-          customized: true,
-          **@author_identifier.quiz_attributes
-        )
-        @deployment.quiz.save!(validate: false)
-        customize_quiz custom_questions unless custom_questions.empty?
-        # Validate the quiz after questions are added
-        @deployment.quiz.save!
+
+      if answers_needed.positive?
+        @deployment.quiz = find_or_create_quiz(quiz_id, custom_questions)
+
+        # Apply custom questions if provided
+        if custom_questions.any?
+          quiz_params = { questions: custom_questions }
+          unless QuizUpdater.new(@deployment.quiz).update(quiz_params)
+            raise ActiveRecord::RecordInvalid, @deployment.quiz
+          end
+        end
       end
-      @deployment.tap(&:save!)
+
+      @deployment.save!
     end
+
+    @deployment
   rescue ActiveRecord::RecordInvalid => e
     e.record
   end
 
   private
 
-  def get_quiz(quiz_id, with_customizations:)
-    quiz = Quiz.where(id: quiz_id).try(:first)
-    return quiz if should_use_existing_quiz quiz, with_customizations
+  def find_or_create_quiz(quiz_id, custom_questions)
+    if quiz_id.present?
+      existing_quiz = Quiz.find_by(id: quiz_id)
 
-    create_quiz_from_template quiz_id
+      # Use existing quiz if author owns it or it's a suggested quiz with no customizations
+      if existing_quiz && can_use_existing_quiz?(existing_quiz, custom_questions)
+        existing_quiz
+      else
+        create_quiz_from_template(quiz_id)
+      end
+    else
+      create_new_quiz
+    end
   end
 
-  def should_use_existing_quiz(quiz, with_customizations)
-    return false unless quiz # Can't use existing if there isn't one
-    return true if @author_identifier.author.quiz? quiz # Can mutate their own
+  def can_use_existing_quiz?(quiz, custom_questions)
+    # Author can always modify their own quiz
+    return true if @author_identifier.author&.quiz?(quiz)
 
-    with_customizations.empty? # Copy on write (only copy if needed)
+    # LTI user can modify their own quiz (matched by lti_uid)
+    return true if @author_identifier.lti_uid.present? && quiz.lti_uid == @author_identifier.lti_uid
+
+    # For suggested quizzes (no author), only reuse if no customizations are being added
+    return custom_questions.empty? if quiz.author_id.nil? && quiz.lti_uid.nil?
+
+    # Otherwise, don't reuse
+    false
+  end
+
+  def create_new_quiz
+    quiz = Quiz.new(
+      case: @deployment.case,
+      customized: true,
+      **@author_identifier.quiz_attributes
+    )
+    quiz.save_without_validation!
+    quiz
   end
 
   def create_quiz_from_template(template_id)
@@ -56,18 +80,12 @@ class CustomizeDeploymentService
       customized: true,
       **@author_identifier.quiz_attributes
     )
-    quiz.save!(validate: false)
+    quiz.save_without_validation!
     quiz
   end
 
-  def customize_quiz(custom_questions)
-    quiz_params = @author_identifier.quiz_attributes
-                                    .merge questions: custom_questions
-    QuizUpdater.new(@deployment.quiz).update quiz_params
-  end
-
   # Since deployment customization from an LTI ContentItemSelection request
-  # can happen before the instructor’s {Reader} account has been created, we
+  # can happen before the instructor's {Reader} account has been created, we
   # have to identify the author of a {Quiz} by {author_id} and {lti_uid} in
   # concert. {author_id} takes precedence if set; we fall back to {lti_uid}
   # (when creating and when finding quizzes) if not.
