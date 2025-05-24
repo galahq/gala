@@ -20,42 +20,73 @@ RSpec.describe QuizUpdater, type: :model do
       expect(quiz.title).to eq 'new title'
     end
 
-    it 'adds new questions' do
-      question = attributes_for :question, content: "What's your favorite food?"
-      subject.update 'questions' => [question]
-      expect(quiz.questions.i18n.where(content: "What's your favorite food?"))
-        .to exist
+    it 'replaces all questions with new ones' do
+      # Start with 1 question from factory
+      original_count = quiz.custom_questions.count
+      expect(original_count).to be > 0
+
+      question_attrs = { content: { en: "What's your favorite food?" }, correct_answer: 'Pizza', options: [] }
+      subject.update 'questions' => [question_attrs]
+
+      quiz.custom_questions.reload
+      expect(quiz.custom_questions.count).to eq(1)
+      expect(quiz.custom_questions.first.content['en']).to eq("What's your favorite food?")
     end
 
     it 'changes existing questions' do
-      question = quiz.questions.first.attributes
-      question['content'] = "What's your name?"
-      subject.update 'questions' => [question]
-      expect(quiz.questions.i18n.where(content: "What's your name?"))
-        .to exist
+      existing_question = quiz.custom_questions.first
+      question_attrs = existing_question.attributes.merge(
+        'content' => { 'en' => "What's your name?" }
+      )
+      subject.update 'questions' => [question_attrs]
 
-      question['content'] = 'How old are you?'
-      subject.update 'questions' => [question]
-      expect(quiz.questions.i18n.where(content: "What's your name?"))
-        .not_to exist
+      quiz.custom_questions.reload
+      expect(quiz.custom_questions.first.content['en']).to eq("What's your name?")
+
+      question_attrs['content'] = { 'en' => 'How old are you?' }
+      subject.update 'questions' => [question_attrs]
+
+      quiz.custom_questions.reload
+      expect(quiz.custom_questions.first.content['en']).to eq('How old are you?')
     end
 
     it 'deletes questions that are not included anymore' do
-      expect(quiz.questions).not_to be_empty
+      # Create a quiz with a template so it passes validation even with no custom questions
+      template_quiz = create :quiz, case: quiz.case
+      quiz.update!(template: template_quiz)
+
+      expect(quiz.custom_questions).not_to be_empty
       subject.update 'questions' => []
-      expect(quiz.questions).to be_empty
+      quiz.reload
+      expect(quiz.custom_questions).to be_empty
     end
 
     it 'saves the quiz' do
+      question_attrs = { content: { en: 'Test question' }, correct_answer: 'Test answer', options: [] }
       subject.update 'title' => 'New title',
-                     'questions' => [attributes_for(:question)]
+                     'questions' => [question_attrs]
+
+      quiz.reload
+      expect(quiz.title).to eq('New title')
+      expect(quiz.custom_questions.count).to eq(1)
       expect(quiz).not_to have_changes_to_save
     end
 
     it 'does nothing if parameters are omitted' do
+      # Capture the initial state
+      original_title = quiz.title
+      original_questions = quiz.custom_questions.map do |q|
+        { content: q.content, correct_answer: q.correct_answer, options: q.options }
+      end
+
       subject.update({})
-      expect(quiz.saved_changes?).to be_falsey
-      expect(quiz.questions.map(&:saved_changes?)).not_to include true
+
+      # Verify nothing changed
+      expect(quiz.reload.title).to eq(original_title)
+      new_questions = quiz.custom_questions.map do |q|
+        { content: q.content, correct_answer: q.correct_answer, options: q.options }
+      end
+      expect(new_questions).to eq(original_questions)
     end
   end
 end

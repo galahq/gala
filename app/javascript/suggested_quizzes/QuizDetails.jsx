@@ -5,18 +5,19 @@
 
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { Button, FormGroup, Intent, InputGroup } from '@blueprintjs/core'
-import * as R from 'ramda'
 
 import QuizCustomizer from 'quiz/customizer'
 import { validatedQuestions } from 'suggested_quizzes/helpers'
 
 import {
+  createSuggestedQuiz,
   updateSuggestedQuiz,
   displayErrorToast,
-  setUnsaved,
+  removeSuggestedQuiz,
 } from 'redux/actions'
 
 import type { IntlShape } from 'react-intl'
@@ -39,6 +40,8 @@ type Props = OwnProps & {
   history: RouterHistory,
   quiz: SuggestedQuiz,
   updateSuggestedQuiz: typeof updateSuggestedQuiz,
+  createSuggestedQuiz: typeof createSuggestedQuiz,
+  removeSuggestedQuiz: typeof removeSuggestedQuiz,
 }
 function QuizDetails ({
   displayErrorToast,
@@ -47,11 +50,11 @@ function QuizDetails ({
   intl,
   quiz,
   updateSuggestedQuiz,
+  createSuggestedQuiz,
+  removeSuggestedQuiz,
 }: Props) {
   const [draftQuiz, setDraftQuiz] = React.useState(quiz)
   const { questions, title } = draftQuiz
-
-  const unblock = blockRouting({ when: !R.equals(draftQuiz, quiz), history })
 
   function handleChangeTitle (e: SyntheticInputEvent<*>) {
     setDraftQuiz({ ...draftQuiz, title: e.target.value })
@@ -62,6 +65,12 @@ function QuizDetails ({
   }
 
   function handleSave () {
+    // Check if there are any questions
+    if (!draftQuiz.questions || draftQuiz.questions.length === 0) {
+      displayErrorToast('Quiz must have at least one question.')
+      return
+    }
+
     let validatedQuiz = {
       ...draftQuiz,
       questions: validatedQuestions(draftQuiz.questions),
@@ -72,11 +81,31 @@ function QuizDetails ({
       displayErrorToast(
         intl.formatMessage({ id: 'cases.edit.suggestedQuizzes.error' })
       )
-    } else {
-      updateSuggestedQuiz(id, draftQuiz)
-      unblock()
-      history.replace('/suggested_quizzes/')
+      return
     }
+
+    setDraftQuiz(validatedQuiz)
+    if (id === "new") {
+        createSuggestedQuiz(draftQuiz).then(() => {
+          removeSuggestedQuiz(id)
+          history.push('/suggested_quizzes/')
+        }).catch((error) => {
+          displayErrorToast(error.message)
+        })
+    } else {
+      updateSuggestedQuiz(id, draftQuiz).then(() => {
+        history.push('/suggested_quizzes/')
+      }).catch((error) => {
+        displayErrorToast(error.message)
+      })
+    }
+  }
+
+  function handleCancel () {
+    if (id === "new") {
+      removeSuggestedQuiz(id)
+    }
+    history.push('/suggested_quizzes/')
   }
 
   return (
@@ -101,6 +130,9 @@ function QuizDetails ({
 
       <div className="pt-dialog-footer">
         <div className="pt-dialog-footer-actions">
+          <Button style={{ marginRight: '10px' }} onClick={handleCancel}>
+            <FormattedMessage id="helpers.cancel" defaultMessage="Cancel" />
+          </Button>
           <Button intent={Intent.PRIMARY} onClick={handleSave}>
             <FormattedMessage id="helpers.save" />
           </Button>
@@ -113,16 +145,9 @@ function QuizDetails ({
 export default injectIntl(
   connect(
     mapStateToProps,
-    { updateSuggestedQuiz, displayErrorToast }
-  )(QuizDetails)
+    { updateSuggestedQuiz, createSuggestedQuiz, displayErrorToast, removeSuggestedQuiz }
+  )(withRouter(QuizDetails))
 )
-
-function blockRouting ({ when: unsaved, history }) {
-  if (unsaved) setUnsaved()
-  return history.block(() => {
-    if (unsaved) return 'Are you sure you want to close without saving?'
-  })
-}
 
 const TitleField = styled(InputGroup).attrs({
   large: true,
