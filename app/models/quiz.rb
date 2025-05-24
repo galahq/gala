@@ -32,7 +32,11 @@ class Quiz < ApplicationRecord
 
   scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil).group(:id) }
 
+  # Always validate that questions exist
   validate :must_have_questions
+
+  # Temporary attribute to skip validation during deployment customization
+  attr_accessor :skip_validation
 
   # A relation of quizzes that the reader, in the context of her active group,
   # hasn't answered enough times. Whether "enough" is 1 or 2 depends on the
@@ -97,9 +101,18 @@ class Quiz < ApplicationRecord
            .values.min || 0
   end
 
+  # Save without validation - only for use in deployment customization
+  def save_without_validation!
+    self.skip_validation = true
+    save!(validate: false)
+  ensure
+    self.skip_validation = false
+  end
+
   private
 
   def must_have_questions
+    return if skip_validation
     return if (template.present? && template.custom_questions.any?) || custom_questions.any?
 
     errors.add(:base, 'Quiz must have at least one question.')

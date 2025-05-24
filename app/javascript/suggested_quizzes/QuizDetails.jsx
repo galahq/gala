@@ -65,10 +65,17 @@ function QuizDetails ({
   }
 
   function handleSave () {
+    // Check if there are any questions
+    if (!draftQuiz.questions || draftQuiz.questions.length === 0) {
+      displayErrorToast('Quiz must have at least one question.')
+      return
+    }
+
     let validatedQuiz = {
       ...draftQuiz,
       questions: validatedQuestions(draftQuiz.questions),
     }
+
     if (validatedQuiz.questions.some(question => !!question.hasError)) {
       setDraftQuiz(validatedQuiz)
       displayErrorToast(
@@ -76,6 +83,7 @@ function QuizDetails ({
       )
       return
     }
+
     setDraftQuiz(validatedQuiz)
     if (id === "new") {
         createSuggestedQuiz(draftQuiz).then(() => {
@@ -85,8 +93,11 @@ function QuizDetails ({
           displayErrorToast(error.message)
         })
     } else {
-      updateSuggestedQuiz(id, draftQuiz)
-      history.push('/suggested_quizzes/')
+      updateSuggestedQuiz(id, draftQuiz).then(() => {
+        history.push('/suggested_quizzes/')
+      }).catch((error) => {
+        displayErrorToast(error.message)
+      })
     }
   }
 

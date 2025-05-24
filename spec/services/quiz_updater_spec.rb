@@ -20,12 +20,14 @@ RSpec.describe QuizUpdater, type: :model do
       expect(quiz.title).to eq 'new title'
     end
 
-    it 'replaces questions with new ones' do
-      question_attrs = { content: { en: "What's your favorite food?" }, correct_answer: 'Pizza', options: [] }
+    it 'replaces all questions with new ones' do
+      # Start with 1 question from factory
+      original_count = quiz.custom_questions.count
+      expect(original_count).to be > 0
 
+      question_attrs = { content: { en: "What's your favorite food?" }, correct_answer: 'Pizza', options: [] }
       subject.update 'questions' => [question_attrs]
 
-      # The update method replaces all questions, so we expect exactly 1 question
       quiz.custom_questions.reload
       expect(quiz.custom_questions.count).to eq(1)
       expect(quiz.custom_questions.first.content['en']).to eq("What's your favorite food?")
@@ -55,6 +57,7 @@ RSpec.describe QuizUpdater, type: :model do
 
       expect(quiz.custom_questions).not_to be_empty
       subject.update 'questions' => []
+      quiz.reload
       expect(quiz.custom_questions).to be_empty
     end
 
@@ -70,9 +73,20 @@ RSpec.describe QuizUpdater, type: :model do
     end
 
     it 'does nothing if parameters are omitted' do
+      # Capture the initial state
+      original_title = quiz.title
+      original_questions = quiz.custom_questions.map do |q|
+        { content: q.content, correct_answer: q.correct_answer, options: q.options }
+      end
+
       subject.update({})
-      expect(quiz.saved_changes?).to be_falsey
-      expect(quiz.custom_questions.map(&:saved_changes?)).not_to include true
+
+      # Verify nothing changed
+      expect(quiz.reload.title).to eq(original_title)
+      new_questions = quiz.custom_questions.map do |q|
+        { content: q.content, correct_answer: q.correct_answer, options: q.options }
+      end
+      expect(new_questions).to eq(original_questions)
     end
   end
 end

@@ -11,67 +11,78 @@ class QuizUpdater
   def update(quiz_params)
     quiz_params, questions = extract_quiz_and_questions(quiz_params)
 
-    quiz.update quiz_params
-
-    return if questions.nil?
-
-    delete_questions_not_included_in questions
-    upsert_questions questions
-
-    # Reload the association so the validation can see the newly created questions
-    quiz.custom_questions.reload
-    quiz.save!
-  end
-
-  def upsert(quiz_params)
-    _quiz_params, questions = extract_quiz_and_questions(quiz_params)
     ActiveRecord::Base.transaction do
-      quiz.save validate: false
-      questions.each do |question|
-        quiz.custom_questions.create! extract_question_attributes(question)
+      # For new quizzes, we need to save first before adding questions
+      if quiz.new_record?
+        # Set attributes but don't save yet
+        quiz.assign_attributes(quiz_params) if quiz_params.present?
+
+        if questions&.any?
+          # Save without validation to create the record
+          quiz.skip_validation = true
+          quiz.save!
+          quiz.skip_validation = false
+
+          # Now add the questions
+          sync_questions(questions)
+
+          # Validate the complete quiz
+          quiz.reload
+        end
+        # Save with validation - will fail if no questions
+        quiz.save!
+      else
+        # Existing quiz - normal update flow
+        quiz.update!(quiz_params) if quiz_params.present?
+
+        unless questions.nil?
+          sync_questions(questions)
+          quiz.reload
+          quiz.save!
+        end
       end
-      quiz.reload.save!
     end
-  rescue ActiveRecord::RecordInvalid => _e
+
+    true
+  rescue ActiveRecord::RecordInvalid => e
+    quiz.errors.add(:base, e.message) unless quiz.errors.any?
     false
   end
 
   private
 
   def extract_quiz_and_questions(quiz_params)
-    quiz_params = quiz_params.to_h.transform_keys(&:to_s)
-    questions = quiz_params.delete 'questions'
+    quiz_params = quiz_params.to_h.with_indifferent_access
+    questions = quiz_params.delete(:questions)
     [quiz_params, questions]
   end
 
   def extract_question_attributes(question)
-    question.to_h.transform_keys(&:to_s).slice(*question_attributes)
+    question.to_h.with_indifferent_access.slice(:id, :content, :correct_answer, :options)
   end
 
-  def question_attributes
-    %w[id content correct_answer options]
-  end
+  def sync_questions(questions)
+    # Get IDs of questions to keep
+    question_ids_to_keep = questions.map { |q| q[:id] }.compact
 
-  def upsert_questions(questions)
-    questions.each do |question|
-      upsert_question question
-    end
-  end
-
-  def upsert_question(question)
-    question_attrs = extract_question_attributes(question)
-
-    if question_attrs['id'].present?
-      Question.find(question_attrs['id']).update! question_attrs
+    # Delete questions not in the new set
+    if question_ids_to_keep.empty?
+      # If no IDs provided, delete all questions
+      quiz.custom_questions.destroy_all
     else
-      quiz.custom_questions.create! question_attrs
+      # Delete only questions not in the keep list
+      quiz.custom_questions.where.not(id: question_ids_to_keep).destroy_all
     end
-  end
 
-  def delete_questions_not_included_in(questions)
-    question_ids = questions.map { |q| q['id'] }
-    quiz.custom_questions.each do |old_question|
-      old_question.destroy unless question_ids.include? old_question.id
+    # Create or update questions
+    questions.each do |question_data|
+      question_attrs = extract_question_attributes(question_data)
+
+      if question_attrs[:id].present?
+        quiz.custom_questions.find(question_attrs[:id]).update!(question_attrs)
+      else
+        quiz.custom_questions.create!(question_attrs)
+      end
     end
   end
 end

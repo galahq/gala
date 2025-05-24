@@ -55,8 +55,6 @@ class Deployment extends React.Component<Props, State> {
 
     if (selectedQuizId == null) return true
 
-    //const deploymentHasNoCustomQuestions = customQuestions[`${selectedQuizId}`].length === 0
-
     if (!customQuestions[`${selectedQuizId}`]) {
       return false
     }

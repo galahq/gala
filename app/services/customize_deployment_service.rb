@@ -80,7 +80,7 @@ class CustomizeDeploymentService
     end
 
     def author
-      @author ||= Reader.find author_id
+      @author ||= Reader.find_by(id: author_id)
     end
 
     def quiz_attributes
