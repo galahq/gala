@@ -74,13 +74,13 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
 
 export default injectIntl(MainMenu)
 
-const HelpButton = injectIntl(styled.a.attrs({
+const HelpButton = injectIntl(styled.a.attrs(p => ({
   className: 'pt-button pt-minimal pt-icon-help',
   href: 'https://docs.learngala.com',
   target: '_blank',
   rel: 'noopener noreferrer',
-  'aria-label': p => p.intl.formatMessage({ id: 'helpers.help' }),
-})`
+  'aria-label': p.intl.formatMessage({ id: 'helpers.help' }),
+}))`
   margin-right: 1.5em;
   opacity: 0.5;
   transition: opacity 0.1s ease-out;
