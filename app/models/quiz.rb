@@ -30,11 +30,17 @@ class Quiz < ApplicationRecord
   belongs_to :case
   belongs_to :template, class_name: 'Quiz', optional: true
 
-  scope :suggested, -> { where author_id: nil, lti_uid: nil }
+  scope :suggested, -> { joins(:custom_questions).where(author_id: nil, lti_uid: nil).group(:id) }
+
+  # Always validate that questions exist
+  validate :must_have_questions
+
+  # Temporary attribute to skip validation during deployment customization
+  attr_accessor :skip_validation
 
   # A relation of quizzes that the reader, in the context of her active group,
-  # hasn’t answered enough times. Whether “enough” is 1 or 2 depends on the
-  # instructor’s choice, per {Deployment}.
+  # hasn't answered enough times. Whether "enough" is 1 or 2 depends on the
+  # instructor's choice, per {Deployment}.
   # @return [ActiveRecord::Relation<Quiz>]
   def self.requiring_response_from(reader)
     where(id: reader.deployments.select(:quiz_id))
@@ -60,12 +66,12 @@ class Quiz < ApplicationRecord
   # The quizzes from which this quiz inherits its shared questions.
   # @return [ActiveRecord::Relation<Quiz>]
   def ancestors
-    @ancestors ||= Quiz.where <<~SQL.squish
+    @ancestors ||= Quiz.where(<<~SQL.squish, quiz_id: id)
       id IN (
         WITH RECURSIVE template_quizzes(id, template_id) AS (
             SELECT id, template_id
               FROM quizzes
-             WHERE id = #{id}
+             WHERE id = :quiz_id
           UNION ALL
             SELECT quizzes.id, quizzes.template_id
               FROM template_quizzes, quizzes
@@ -93,5 +99,22 @@ class Quiz < ApplicationRecord
   def number_of_responses_from(reader)
     answers.merge(reader.answers).group(:question_id).count(:question_id)
            .values.min || 0
+  end
+
+  # Save without validation - only for use in deployment customization
+  def save_without_validation!
+    self.skip_validation = true
+    save!(validate: false)
+  ensure
+    self.skip_validation = false
+  end
+
+  private
+
+  def must_have_questions
+    return if skip_validation
+    return if (template.present? && template.custom_questions.any?) || custom_questions.any?
+
+    errors.add(:base, 'Quiz must have at least one question.')
   end
 end

@@ -9,7 +9,7 @@ RSpec.describe CustomizeDeploymentService do
   let(:reader) { create :reader }
   let(:lti_uid) { 'test_lti_uid' }
   let(:service) { described_class.new(deployment, reader.id, lti_uid) }
-  let(:default_quiz) { create :quiz, case: kase, author_id: nil, lti_uid: nil }
+  let(:default_quiz) { create :quiz, :suggested, case: kase }
   let(:custom_questions) do
     [
       { content: { en: 'Question 1' }, correct_answer: 'Answer 1', options: ['Answer 1', 'Wrong 1'] },
@@ -39,18 +39,26 @@ RSpec.describe CustomizeDeploymentService do
     end
 
     context 'when answers_needed is positive with a quiz_id' do
-      let!(:quiz_for_test) { create :quiz, case: kase, author_id: nil, lti_uid: nil }
-      let(:result) { service.customize(answers_needed: 1, quiz_id: quiz_for_test.id) }
+      let!(:quiz_for_test) { create :quiz, :suggested, case: kase }
 
-      include_examples 'sets deployment properties', 1
+      include_examples 'sets deployment properties', 1 do
+        let(:result) { service.customize(answers_needed: 1, quiz_id: quiz_for_test.id) }
+      end
 
-      it 'sets the quiz' do
+      it 'reuses the suggested quiz when no customizations' do
+        result = service.customize(answers_needed: 1, quiz_id: quiz_for_test.id)
         expect(result.quiz).to eq(quiz_for_test)
+      end
+
+      it 'creates new quiz from template when customizations are added' do
+        result = service.customize(answers_needed: 1, quiz_id: quiz_for_test.id, custom_questions: custom_questions)
+        expect(result.quiz).not_to eq(quiz_for_test)
+        expect(result.quiz.template_id).to eq(quiz_for_test.id)
       end
     end
 
     context 'with custom questions' do
-      let!(:quiz_for_custom) { create :quiz, case: kase, author_id: nil, lti_uid: nil }
+      let!(:quiz_for_custom) { create :quiz, :suggested, case: kase }
 
       it 'creates a new customized quiz' do
         expect do
@@ -114,7 +122,7 @@ RSpec.describe CustomizeDeploymentService do
         let(:another_author_quiz) { create :quiz, case: kase, author_id: another_reader.id }
 
         before do
-          allow_any_instance_of(CustomizeDeploymentService).to receive(:should_use_existing_quiz)
+          allow_any_instance_of(CustomizeDeploymentService).to receive(:can_use_existing_quiz?)
             .with(another_author_quiz, anything).and_return(false)
         end
 
@@ -129,29 +137,47 @@ RSpec.describe CustomizeDeploymentService do
 
       context 'with LTI identification' do
         let(:lti_service) { described_class.new(deployment, nil, lti_uid) }
-        let(:lti_quiz) { create :quiz, case: kase, author_id: nil, lti_uid: lti_uid }
-        let!(:lti_default_quiz) { create :quiz, case: kase, author_id: nil, lti_uid: nil }
+        let(:lti_quiz) { create :quiz, :lti, case: kase, lti_uid: lti_uid }
+        let!(:lti_default_quiz) { create :quiz, :suggested, case: kase }
 
         before do
           author_identifier_class = CustomizeDeploymentService::AuthorIdentifier
           allow_any_instance_of(author_identifier_class).to receive(:author).and_return(nil)
-
-          allow_any_instance_of(CustomizeDeploymentService).to receive(:should_use_existing_quiz)
-            .and_call_original
-          allow_any_instance_of(CustomizeDeploymentService).to receive(:should_use_existing_quiz)
-            .with(lti_quiz, anything).and_return(true)
-          allow_any_instance_of(CustomizeDeploymentService).to receive(:should_use_existing_quiz)
-            .with(lti_default_quiz, anything).and_return(false)
         end
 
         it 'reuses existing quiz when lti_uid matches' do
+          # Ensure the quiz has the correct lti_uid
+          expect(lti_quiz.lti_uid).to eq(lti_uid)
+          expect(lti_quiz.author_id).to be_nil
+
+          # LTI user can reuse their own quiz
+          initial_count = Quiz.count
+          result = lti_service.customize(answers_needed: 1, quiz_id: lti_quiz.id)
+          expect(result.quiz).to eq(lti_quiz)
+          expect(Quiz.count).to eq(initial_count)
+        end
+
+        it 'reuses suggested quiz when no customizations are added' do
+          # LTI user should reuse suggested quiz if not adding customizations
           expect do
-            result = lti_service.customize(answers_needed: 1, quiz_id: lti_quiz.id)
-            expect(result.quiz).to eq(lti_quiz)
+            result = lti_service.customize(answers_needed: 1, quiz_id: lti_default_quiz.id)
+            expect(result.quiz).to eq(lti_default_quiz)
           end.not_to change(Quiz, :count)
         end
 
-        it 'creates quiz with lti_uid attribution when no author_id present' do
+        it 'creates new quiz when lti_uid does not match and customizations are added' do
+          # When LTI user customizes a suggested quiz, they get a new quiz with their lti_uid
+          # But only if they add customizations
+          expect do
+            result = lti_service.customize(answers_needed: 1, quiz_id: lti_default_quiz.id,
+                                           custom_questions: custom_questions)
+            expect(result.quiz.id).not_to eq(lti_default_quiz.id)
+            expect(result.quiz.template_id).to eq(lti_default_quiz.id)
+            expect(result.quiz.lti_uid).to eq(lti_uid)
+          end.to change(Quiz, :count).by(1)
+        end
+
+        it 'creates quiz with lti_uid attribution when adding custom questions' do
           lti_question = [{ content: { en: 'LTI Question' }, correct_answer: 'Answer', options: %w[Answer Wrong] }]
 
           expect do
