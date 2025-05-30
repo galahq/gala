@@ -72,6 +72,9 @@ class Case < ApplicationRecord
   has_many :podcasts,
            through: :case_elements, source: :element, source_type: 'Podcast'
 
+  has_many :wikidata_links, -> { order(position: :asc) },
+           as: :record, dependent: :destroy, inverse_of: :record
+
   has_many :case_library_requests, dependent: :destroy
   has_one :active_case_library_request, -> { where(status: 'pending') },
           class_name: 'CaseLibraryRequest', dependent: :destroy
@@ -184,7 +187,7 @@ class Case < ApplicationRecord
         select updated_at from edgenotes where case_id = #{id}
       ) as combined
     SQL
-    [updated_at, result['max_updated_at']].max
+    [updated_at, result['max_updated_at']].compact.max
   end
 
   def refresh_indices
