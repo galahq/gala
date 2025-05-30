@@ -17,7 +17,7 @@ type Props = {
   withPretest: boolean,
   withPosttest: boolean,
   onTogglePretest: () => void,
-  onDeselect: () => void,
+  onTogglePosttest: () => void,
   onSubmit: () => void,
 }
 
@@ -26,7 +26,7 @@ const Toolbar = ({
   withPretest,
   withPosttest,
   onTogglePretest,
-  onDeselect,
+  onTogglePosttest,
   onSubmit,
 }: Props) => {
   const { coverUrl, kicker } = caseData
@@ -47,8 +47,7 @@ const Toolbar = ({
         <Switch
           checked={withPosttest}
           label="Use post-test"
-          disabled={!withPosttest}
-          onChange={onDeselect}
+          onChange={onTogglePosttest}
         />
 
         <button
