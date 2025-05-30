@@ -146,7 +146,7 @@ class Deployment extends React.Component<Props, State> {
     )
     this.state = {
       selectedQuizId: props.selectedQuizId,
-      answersNeeded: props.answersNeeded || 1,
+      answersNeeded: props.answersNeeded || 2,
       customQuestions,
     }
   }
