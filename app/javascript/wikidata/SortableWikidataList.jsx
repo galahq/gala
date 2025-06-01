@@ -248,24 +248,40 @@ export function createSortableInput({
       try {
         setLoading(true)
 
-        const resp: SparqlResult = await enqueueQuery(schema, qid)
+        const resp = await enqueueQuery(schema, qid)
         if (!mountedRef.current) return
         
-        item.data = resp
-        setError(null)
-        // onChangeItem({ ...item, data: resp })
-
-        return resp
+        // Ensure we have valid data before updating
+        if (resp && resp.entityLabel) {
+          const formattedData = {
+            entityLabel: resp.entityLabel,
+            properties: resp.properties || [],
+            entity: `https://www.wikidata.org/wiki/${qid}`,
+            json_ld: resp.json_ld
+          }
+          
+          // Update state and trigger re-render
+          setError(null)
+          onChangeItem({ 
+            ...item, 
+            data: formattedData,
+            qid: qid.toUpperCase()
+          })
+          return formattedData
+        } else {
+          setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
+          delete item.data
+          return null
+        }
       } catch (err) {
         if (!mountedRef.current) return
         
         if (err.status === 404) {
           setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
-          return
+        } else {
+          setError(err.message)
         }
-        setError(err.message)
         delete item.data
-
         return null
       } finally {
         if (mountedRef.current) {

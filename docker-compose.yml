@@ -1,5 +1,5 @@
 services:
-  web:
+  web: &app_base
     image: gala_ruby3-2_rails7-0x_1:latest
     platform: linux/amd64
     build:
@@ -34,6 +34,11 @@ services:
       - .:/gala:delegated
       - node_modules:/gala/node_modules
       - build_cache:/gala/tmp/cache
+
+  worker:
+    <<: *app_base
+    command: bundle exec sidekiq
+    ports: [] # Remove ports if not needed for worker
   db:
     image: postgres:16.4
     environment:

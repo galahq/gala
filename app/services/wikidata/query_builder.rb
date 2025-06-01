@@ -31,16 +31,16 @@ module Wikidata
 
     def self.build_case_to_wikidata_properties(kase, locale = 'en')
       {
-        'P31' => 'Q155207', # Instance of: case study
-        'P1476' => { value: kase.title, type: :string }, # Title
+        'P31' => 'Q155207',                                                                # Instance of: case study
+        'P1476' => { value: kase.title, type: :string },                                   # Title
         'P2093' => kase.authors.map { |author| { value: author['name'], type: :string } }, # Author name strings
-        'P407' => Utils.map_locale_to_language_qid(locale), # Language of work
-        'P953' => { value: case_url(kase), type: :string }, # Full work available at URL
-        'P1433' => 'Q130549584', # Published in: Gala
-        'P577' => { value: Utils.format_datetime(kase.published_at), type: :time }, # Publication date
-        'P5017' => { value: Utils.format_datetime(kase.updated_at), type: :time },  # Last update
-        'P6216' => 'Q50423863', # Copyright status: copyrighted
-        'P275' => Utils.map_license_to_qid(kase.license) # License
+        'P407' => Utils.map_locale_to_language_qid(locale),                                # Language of work
+        'P953' => { value: case_url(kase), type: :string },                                # Full work available at URL
+        'P1433' => 'Q130549584',                                                           # Published in: Gala
+        'P577' => { value: Utils.format_datetime(kase.published_at), type: :time },        # Publication date
+        'P5017' => { value: Utils.format_datetime(kase.updated_at), type: :time },         # Last update
+        'P6216' => 'Q50423863',                                                            # Copyright status: copyrighted
+        'P275' => Utils.map_license_to_qid(kase.license)                                   # License
       }.compact
     end
 
@@ -64,19 +64,43 @@ module Wikidata
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-      SELECT ?entity ?entityLabel ?discipline ?disciplineLabel ?occupation ?occupationLabel ?ORCID ?SCOPUS ?dateModified WHERE {
+      SELECT DISTINCT ?entity ?entityLabel ?occupationLabel ?disciplineLabel ?ORCID ?SCOPUS ?dateModified WHERE {
         BIND(wd:%<qid>s AS ?entity)
-        ?entity wdt:P31/wdt:P279* ?instance .
-        VALUES ?instance { wd:Q5 }
-        OPTIONAL { ?entity wdt:P106 ?occupation . }
-        OPTIONAL { ?entity wdt:P101 ?discipline . }
-        OPTIONAL { ?entity wdt:P496 ?ORCID. }
+        {
+          # Match researchers by instance
+          ?entity wdt:P31/wdt:P279* ?instance .
+          VALUES ?instance { wd:Q5 }  # human
+        }
+        UNION
+        {
+          # Match by occupation
+          ?entity wdt:P106 ?occupation .
+          VALUES ?occupation {#{' '}
+            wd:Q1650915    # researcher
+            wd:Q1622272    # university teacher
+            wd:Q169470     # scientist
+          }
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P106 ?occupation .
+          ?occupation rdfs:label ?occupationLabel .
+          FILTER(LANG(?occupationLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P101 ?discipline .
+          ?discipline rdfs:label ?disciplineLabel .
+          FILTER(LANG(?disciplineLabel) = "%<locale>s")
+        }
+        OPTIONAL { ?entity wdt:P496 ?ORCID . }
         OPTIONAL { ?entity wdt:P1153 ?SCOPUS . }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "%<locale>s,en". }
+      #{'  '}
+        # Get the entity label in the current locale
+        ?entity rdfs:label ?entityLabel .
+        FILTER(LANG(?entityLabel) = "%<locale>s")
       }
-      LIMIT 1
     SPARQL
 
     SOFTWARE_TEMPLATE = <<-SPARQL
@@ -84,27 +108,54 @@ module Wikidata
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-      SELECT ?entity ?entityLabel ?developerLabel ?programmingLanguageLabel ?copyrightLicenseLabel ?developer ?platform ?platformLabel ?programmingLanguage ?operatingSystem ?operatingSystemLabel ?sourceCodeRepository ?officialWebsite ?copyrightLicense ?inception ?softwareVersion ?follows ?followsLabel ?genre ?genreLabel ?userManual ?dateModified WHERE {
+      SELECT DISTINCT ?entity ?entityLabel ?developerLabel ?programmingLanguageLabel ?copyrightLicenseLabel ?dateModified WHERE {
         BIND(wd:%<qid>s AS ?entity)
-        ?entity wdt:P31/wdt:P279* ?instance .
-        VALUES ?instance { wd:Q341 wd:Q7397 wd:Q1639024 wd:Q21127166 wd:Q21129801 wd:Q24529812 wd:Q9143 }
-        OPTIONAL { ?entity wdt:P178 ?developer . }
-        OPTIONAL { ?entity wdt:P400 ?platform . }
-        OPTIONAL { ?entity wdt:P277 ?programmingLanguage . }
-        OPTIONAL { ?entity wdt:P306 ?operatingSystem . }
-        OPTIONAL { ?entity wdt:P1324 ?sourceCodeRepository . }
-        OPTIONAL { ?entity wdt:P856 ?officialWebsite . }
-        OPTIONAL { ?entity wdt:P275 ?copyrightLicense . }
-        OPTIONAL { ?entity wdt:P571 ?inception . }
-        OPTIONAL { ?entity wdt:P348 ?softwareVersion . }
-        OPTIONAL { ?entity wdt:P156 ?follows . }
-        OPTIONAL { ?entity wdt:P136 ?genre . }
-        OPTIONAL { ?entity wdt:P2078 ?userManual . }
+        {
+          # Match by instance
+          ?entity wdt:P31/wdt:P279* ?instance .
+          VALUES ?instance {
+            wd:Q341       # software
+            wd:Q7397      # software product
+            wd:Q1639024   # software library
+            wd:Q21127166  # software tool
+            wd:Q21129801  # application software
+            wd:Q24529812  # software suite
+            wd:Q9143      # programming tool
+          }
+        }
+        UNION
+        {
+          # Match by programming language used
+          ?entity wdt:P277 ?programmingLanguage .
+        }
+        UNION
+        {
+          # Match by software license
+          ?entity wdt:P275 ?copyrightLicense .
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P178 ?developer .
+          ?developer rdfs:label ?developerLabel .
+          FILTER(LANG(?developerLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P277 ?programmingLanguage .
+          ?programmingLanguage rdfs:label ?programmingLanguageLabel .
+          FILTER(LANG(?programmingLanguageLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P275 ?copyrightLicense .
+          ?copyrightLicense rdfs:label ?copyrightLicenseLabel .
+          FILTER(LANG(?copyrightLicenseLabel) = "%<locale>s")
+        }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "%<locale>s,en". }
+      #{'  '}
+        # Get the entity label in the current locale
+        ?entity rdfs:label ?entityLabel .
+        FILTER(LANG(?entityLabel) = "%<locale>s")
       }
-      LIMIT 1
     SPARQL
 
     HARDWARE_TEMPLATE = <<-SPARQL
@@ -112,17 +163,67 @@ module Wikidata
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-      SELECT ?entity ?entityLabel ?manufacturer ?manufacturerLabel ?model ?modelLabel ?dateModified WHERE {
+      SELECT ?entity ?entityLabel ?manufacturerLabel ?modelLabel ?dateModified WHERE {
         BIND(wd:%<qid>s AS ?entity)
-        ?entity wdt:P31/wdt:P279* ?instance .
-        VALUES ?instance { wd:Q3966 wd:Q55990535 }
-        OPTIONAL { ?entity wdt:P176 ?manufacturer . }
-        OPTIONAL { ?entity wdt:P1072 ?model . }
+        {
+          # Match items that are instances of our target types
+          ?entity wdt:P31/wdt:P279* ?instance .
+          VALUES ?instance {
+            wd:Q3966      # computing platform
+            wd:Q55990535  # computer hardware
+            wd:Q3918      # computer
+            wd:Q5741755   # model series
+            wd:Q205663    # laptop
+            wd:Q16338     # computer model
+            wd:Q11019     # machine
+            wd:Q42178     # medical equipment
+            wd:Q1418916   # scientific instrument
+            wd:Q1406782   # medical device
+            wd:Q7946      # medical imaging
+            wd:Q865950    # medical imaging technique
+            wd:Q1130681   # medical test
+            wd:Q1057068   # medical procedure
+          }
+        }
+        UNION
+        {
+          # Match items that are subclasses of our target types
+          ?entity wdt:P279+ ?class .
+          VALUES ?class {
+            wd:Q7946      # medical imaging
+            wd:Q865950    # medical imaging technique
+            wd:Q1130681   # medical test
+            wd:Q1057068   # medical procedure
+          }
+        }
+        UNION
+        {
+          # Also match the exact types themselves
+          VALUES ?entity {
+            wd:Q7946      # medical imaging
+            wd:Q865950    # medical imaging technique
+            wd:Q1130681   # medical test
+            wd:Q1057068   # medical procedure
+          }
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P176 ?manufacturer .
+          ?manufacturer rdfs:label ?manufacturerLabel .
+          FILTER(LANG(?manufacturerLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P31 ?model .
+          ?model rdfs:label ?modelLabel .
+          FILTER(LANG(?modelLabel) = "%<locale>s")
+        }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "%<locale>s,en". }
+      #{'  '}
+        # Get the entity label in the current locale
+        ?entity rdfs:label ?entityLabel .
+        FILTER(LANG(?entityLabel) = "%<locale>s")
       }
-      LIMIT 1
     SPARQL
 
     GRANTS_TEMPLATE = <<-SPARQL
@@ -130,17 +231,37 @@ module Wikidata
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-      SELECT ?entity ?entityLabel ?funder ?funderLabel ?recipient ?recipientLabel ?dateModified WHERE {
+      SELECT ?entity ?entityLabel ?funderLabel ?recipientLabel ?fundedBy ?fundedByLabel ?dateModified WHERE {
         BIND(wd:%<qid>s AS ?entity)
-        ?entity wdt:P31/wdt:P279* ?instance .
-        VALUES ?instance { wd:Q230788 }
-        OPTIONAL { ?entity wdt:P8324 ?funder . }
-        OPTIONAL { ?entity wdt:P8323 ?recipient . }
+        {
+          ?entity wdt:P31/wdt:P279* ?instance .
+          VALUES ?instance { wd:Q230788 }
+        }
+        UNION
+        {
+          # Also match items that are funded by grants
+          ?entity wdt:P11814 ?fundedBy .
+          ?fundedBy rdfs:label ?fundedByLabel .
+          FILTER(LANG(?fundedByLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P8324 ?funder .
+          ?funder rdfs:label ?funderLabel .
+          FILTER(LANG(?funderLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P8323 ?recipient .
+          ?recipient rdfs:label ?recipientLabel .
+          FILTER(LANG(?recipientLabel) = "%<locale>s")
+        }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "%<locale>s,en". }
+      #{'  '}
+        # Get the entity label in the current locale
+        ?entity rdfs:label ?entityLabel .
+        FILTER(LANG(?entityLabel) = "%<locale>s")
       }
-      LIMIT 1
     SPARQL
 
     WORKS_TEMPLATE = <<-SPARQL
@@ -148,19 +269,50 @@ module Wikidata
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-      SELECT ?entity ?entityLabel ?author ?authorLabel ?title ?titleLabel ?publicationDate ?DOI ?dateModified WHERE {
+      SELECT ?entity ?entityLabel ?authorLabel ?titleLabel ?publicationDate ?DOI ?dateModified WHERE {
         BIND(wd:%<qid>s AS ?entity)
-        ?entity wdt:P31/wdt:P279* ?instance .
-        VALUES ?instance { wd:Q47461344 }
-        OPTIONAL { ?entity wdt:P50 ?author . }
-        OPTIONAL { ?entity wdt:P1476 ?title . }
+        {
+          # Match scholarly articles
+          ?entity wdt:P31/wdt:P279* ?instance .
+          VALUES ?instance {
+            wd:Q47461344   # scholarly article
+            wd:Q13442814   # scientific article
+            wd:Q571        # book
+            wd:Q191067     # article
+            wd:Q1980247    # chapter
+          }
+        }
+        UNION
+        {
+          # Match by DOI
+          ?entity wdt:P356 ?doi .
+        }
+        UNION
+        {
+          # Match by author and publication date
+          ?entity wdt:P50 ?author ;
+                 wdt:P577 ?publicationDate .
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P50 ?author .
+          ?author rdfs:label ?authorLabel .
+          FILTER(LANG(?authorLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P1476 ?title .
+          ?title rdfs:label ?titleLabel .
+          FILTER(LANG(?titleLabel) = "%<locale>s")
+        }
         OPTIONAL { ?entity wdt:P577 ?publicationDate . }
-        OPTIONAL { ?entity wdt:P356 ?doi . }
+        OPTIONAL { ?entity wdt:P356 ?DOI . }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "%<locale>s,en". }
+      #{'  '}
+        # Get the entity label in the current locale
+        ?entity rdfs:label ?entityLabel .
+        FILTER(LANG(?entityLabel) = "%<locale>s")
       }
-      LIMIT 1
     SPARQL
 
     CASE_STUDY_TEMPLATE = <<-SPARQL
@@ -168,19 +320,52 @@ module Wikidata
       PREFIX wd: <http://www.wikidata.org/entity/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX schema: <http://schema.org/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-      SELECT ?entity ?entityLabel ?author ?authorLabel ?title ?titleLabel ?publicationDate ?license ?licenseLabel ?dateModified WHERE {
+      SELECT ?entity ?entityLabel ?authorLabel ?titleLabel ?publicationDate ?licenseLabel ?dateModified WHERE {
         BIND(wd:%<qid>s AS ?entity)
-        ?entity wdt:P31/wdt:P279* ?instance .
-        VALUES ?instance { wd:Q155207 }
-        OPTIONAL { ?entity wdt:P2093 ?author . }
-        OPTIONAL { ?entity wdt:P1476 ?title . }
+        {
+          # Match by instance
+          ?entity wdt:P31/wdt:P279* ?instance .
+          VALUES ?instance {
+            wd:Q155207     # case study
+            wd:Q1713326    # teaching case
+          }
+        }
+        UNION
+        {
+          # Match by genre
+          ?entity wdt:P136 ?genre .
+          VALUES ?genre { wd:Q155207 }  # case study
+        }
+        UNION
+        {
+          # Match by author and title
+          ?entity wdt:P2093 ?author ;
+                 wdt:P1476 ?title .
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P2093 ?author .
+          ?author rdfs:label ?authorLabel .
+          FILTER(LANG(?authorLabel) = "%<locale>s")
+        }
+        OPTIONAL {#{' '}
+          ?entity wdt:P1476 ?title .
+          ?title rdfs:label ?titleLabel .
+          FILTER(LANG(?titleLabel) = "%<locale>s")
+        }
         OPTIONAL { ?entity wdt:P577 ?publicationDate . }
-        OPTIONAL { ?entity wdt:P275 ?license . }
+        OPTIONAL {#{' '}
+          ?entity wdt:P275 ?license .
+          ?license rdfs:label ?licenseLabel .
+          FILTER(LANG(?licenseLabel) = "%<locale>s")
+        }
         OPTIONAL { ?entity schema:dateModified ?dateModified . }
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "%<locale>s,en". }
+      #{'  '}
+        # Get the entity label in the current locale
+        ?entity rdfs:label ?entityLabel .
+        FILTER(LANG(?entityLabel) = "%<locale>s")
       }
-      LIMIT 1
     SPARQL
 
     SEARCH_TEMPLATE = <<-SPARQL
@@ -189,24 +374,87 @@ module Wikidata
       PREFIX schema: <http://schema.org/>
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      PREFIX wd: <http://www.wikidata.org/entity/>
 
-      SELECT ?item ?itemLabel ?description ?image ?instanceLabel WHERE {
+      SELECT DISTINCT ?item ?itemLabel ?description ?image ?instanceLabel ?score WHERE {
         SERVICE wikibase:mwapi {
           bd:serviceParam wikibase:endpoint "www.wikidata.org";
                          wikibase:api "EntitySearch";
                          mwapi:search "%<query>s";
                          mwapi:language "en";
-                         mwapi:limit "10".
+                         mwapi:limit "20".
           ?item wikibase:apiOutputItem mwapi:item.
+          ?num wikibase:apiOrdinal true.
         }
 
         ?item rdfs:label ?itemLabel.
         FILTER(LANG(?itemLabel) = "en")
 
-        OPTIONAL { ?item schema:description ?description. FILTER(LANG(?description) = "en") }
-        OPTIONAL { ?item wdt:P31 ?instance. ?instance rdfs:label ?instanceLabel. FILTER(LANG(?instanceLabel) = "en") }
+        # Get instance types
+        OPTIONAL {
+          ?item wdt:P31 ?directInstance.
+          ?directInstance rdfs:label ?instanceLabel.
+          FILTER(LANG(?instanceLabel) = "en")
+        }
+        OPTIONAL {
+          ?item wdt:P31/wdt:P279* ?instance.
+          VALUES ?instance {#{' '}
+            wd:Q3966      # computing platform
+            wd:Q55990535  # computer hardware
+            wd:Q3918      # computer
+            wd:Q5741755   # model series
+            wd:Q205663    # laptop
+            wd:Q16338     # computer model
+            wd:Q11019     # machine
+            wd:Q42178     # medical equipment
+            wd:Q1418916   # scientific instrument
+            wd:Q1406782   # medical device
+            wd:Q7946      # medical imaging
+            wd:Q865950    # medical imaging technique
+            wd:Q1130681   # medical test
+            wd:Q1057068   # medical procedure
+          }
+        }
+
+        OPTIONAL {
+          ?item schema:description ?description.
+          FILTER(LANG(?description) = "en")
+        }
         OPTIONAL { ?item wdt:P18 ?image }
+
+        BIND(1/xsd:float(?num) AS ?score)
       }
+      ORDER BY DESC(?score)
+      LIMIT 10
     SPARQL
+
+    class << self
+      def property_order(schema)
+        # Extract variables from the SELECT clause of the corresponding template
+        template = get_template(schema)
+        return [] unless template
+
+        # Find the SELECT line and extract variables
+        select_line = template.lines.find { |line| line.strip.start_with?('SELECT') }
+        return [] unless select_line
+
+        # Extract variable names (without ? prefix) and remove Label suffix
+        variables = select_line.scan(/\?(\w+)/).flatten
+        variables.reject { |v| v.end_with?('Label') || v == 'entity' || v == 'dateModified' }
+      end
+
+      private
+
+      def get_template(schema)
+        case schema.to_sym
+        when :researchers then RESEARCHERS_TEMPLATE
+        when :software then SOFTWARE_TEMPLATE
+        when :hardware then HARDWARE_TEMPLATE
+        when :grants then GRANTS_TEMPLATE
+        when :works then WORKS_TEMPLATE
+        when :case_study then CASE_STUDY_TEMPLATE
+        end
+      end
+    end
   end
 end

@@ -375,10 +375,9 @@ end
 Wikidata.initialize!
 
 # Require all component files
-require_relative 'wikidata/json_ld_generator'
-require_relative 'wikidata/client'
-require_relative 'wikidata/query_templates'
-require_relative 'wikidata/query_service'
+# require_relative 'wikidata/client'
+# require_relative 'wikidata/query_templates'
+# require_relative 'wikidata/query_service'
 
 # Define the Wikidata module namespace
 module Wikidata

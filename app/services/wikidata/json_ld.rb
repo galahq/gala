@@ -82,11 +82,18 @@ module Wikidata
 
       # Convert the first result into JSON-LD format
       entity_data = {}
+      properties = []
+
+      # Get the property order for this schema
+      ordered_properties = QueryBuilder.property_order(schema)
 
       bindings.each do |binding|
         binding.each do |key, value|
           # Skip if the value is not present
           next unless value['value']
+
+          # Skip raw QIDs (properties that are just Q followed by numbers)
+          next if key != 'entity' && !key.end_with?('Label') && value['value'].match?(/^Q\d+$/)
 
           # Convert property keys to camelCase
           property = key.to_s.camelize(:lower)
@@ -95,7 +102,11 @@ module Wikidata
           processed_value = case value['type']
                             when 'uri'
                               if value['value'].include?('entity/')
-                                value['value'].split('/').last
+                                # Don't include raw QIDs in processed values
+                                qid = value['value'].split('/').last
+                                next if qid.match?(/^Q\d+$/)
+
+                                qid
                               else
                                 value['value']
                               end
@@ -109,18 +120,49 @@ module Wikidata
                               value['value']
                             end
 
+          # Skip if we ended up with a QID
+          next if processed_value.to_s.match?(/^Q\d+$/)
+
           # Store the processed value
-          if entity_data[property].is_a?(Array)
-            entity_data[property] << processed_value unless entity_data[property].include?(processed_value)
-          elsif entity_data[property]
-            entity_data[property] = [entity_data[property], processed_value].uniq
-          else
+          if key == 'entityLabel'
             entity_data[property] = processed_value
+          else
+            # Skip only internal properties
+            next if %w[entity dateModified].include?(key)
+
+            # Format property for display
+            display_key = if key.end_with?('Label')
+                            # Remove 'Label' suffix and humanize
+                            Wikidata.humanize_sparql_subject(key.chomp('Label'))
+                          else
+                            Wikidata.humanize_sparql_subject(key)
+                          end
+
+            # Only add if we have a value and it's not already in properties
+            if processed_value.present? && !properties.any? { |p| p.values.first == processed_value }
+              properties << { display_key => processed_value }
+            end
           end
         end
       end
 
-      generate(entity_data)
+      # Sort properties according to the schema's property order
+      if ordered_properties.any?
+        properties.sort_by! do |prop|
+          key = prop.keys.first.downcase.gsub(/\s+/, '')
+          ordered_properties.index(key) || Float::INFINITY
+        end
+      end
+
+      # Generate JSON-LD
+      json_ld = generate(entity_data)
+
+      # Return formatted data for frontend
+      {
+        'entityLabel' => entity_data['entityLabel'],
+        'properties' => properties,
+        'json_ld' => json_ld
+      }
     end
 
     # Format search results into a simplified JSON-LD format
@@ -134,19 +176,19 @@ module Wikidata
 
       formatted_results = bindings.map do |binding|
         {
-          '@type' => 'Entity',
-          '@id' => binding['item']&.dig('value')&.split('/')&.last,
-          'name' => binding['itemLabel']&.dig('value'),
-          'description' => binding['itemDescription']&.dig('value'),
-          'score' => binding['score']&.dig('value')&.to_f
+          '@type' => 'SearchResult',
+          'qid' => binding['item']&.dig('value')&.split('/')&.last,
+          'label' => binding['itemLabel']&.dig('value'),
+          'description' => binding['description']&.dig('value'),
+          'image' => binding['image']&.dig('value'),
+          'instanceLabel' => binding['instanceLabel']&.dig('value'),
+          'score' => binding['score']&.dig('value')&.to_f,
+          'isValidType' => binding['instance']&.dig('value').present?
         }.compact
       end
 
-      {
-        '@context' => 'https://schema.org',
-        '@type' => 'ItemList',
-        'itemListElement' => formatted_results
-      }
+      # Remove duplicates by QID while keeping the first occurrence
+      formatted_results.uniq { |result| result['qid'] }
     end
 
     private

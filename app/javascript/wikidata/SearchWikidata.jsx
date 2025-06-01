@@ -69,7 +69,18 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
       } else if (query.length > 2) {
         // Regular search
         const response = await Orchard.harvest('sparql', { query: query.trim() })
-        setResults(response)
+        
+        // Deduplicate results by QID
+        const uniqueResults = response.reduce((acc, current) => {
+          const x = acc.find(item => item.qid === current.qid)
+          if (!x) {
+            return acc.concat([current])
+          } else {
+            return acc
+          }
+        }, [])
+        
+        setResults(uniqueResults)
       }
     } catch (error) {
       setResults([])
@@ -203,10 +214,10 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   ),
                 }}
                 items={results}
-                itemRenderer={(item, { handleClick, modifiers }) => (
+                itemRenderer={(item, { handleClick, modifiers, index }) => (
                   <MenuItem
                     {...modifiers}
-                    key={item.qid}
+                    key={`${item.qid}-${index}`}
                     label={item.description && item.description.length > 40 ? `${item.description.slice(0, 40)}...` : item.description}
                     text={`${item.label}`}
                     onClick={handleClick}
