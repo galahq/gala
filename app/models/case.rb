@@ -97,6 +97,13 @@ class Case < ApplicationRecord
                   saved_change_to_authors? ||
                   saved_change_to_locale?)
   }
+  after_save :sync_wikidata_links, if: -> {
+    published? && (saved_change_to_title? ||
+                  saved_change_to_dek? ||
+                  saved_change_to_authors? ||
+                  saved_change_to_locale? ||
+                  saved_change_to_license?)
+  }
 
   validates :cover_image, size: { less_than: 2.megabytes,
                                   message: 'cannot be larger than 2 MB' },
@@ -136,7 +143,6 @@ class Case < ApplicationRecord
     SQL
     where(id: scope)
   end
-
 
   def archive_needs_refresh?
     archive.nil? || archive.needs_refresh?
@@ -210,5 +216,12 @@ class Case < ApplicationRecord
   # Trigger Wikidata sync for published cases
   def sync_to_wikidata
     WikidataCaseSyncJob.perform_later(id)
+  end
+
+  # Trigger sync of all associated Wikidata links
+  def sync_wikidata_links
+    wikidata_links.each do |link|
+      WikidataLinkSyncJob.perform_later(link.id)
+    end
   end
 end
