@@ -2,6 +2,7 @@
  * @flow
  */
 
+import React from 'react'
 import styled, { css } from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
@@ -47,8 +48,10 @@ export const List = styled.ol`
 
 export const Item = styled.li``
 
+const StyledNavLink = ({ isDragging, ...props }) => <NavLink {...props} />
+
 // $FlowFixMe
-export const Link = styled(NavLink)`
+export const Link = styled(StyledNavLink)`
   color: #ebeae4;
   display: flex;
   flex-direction: row;
