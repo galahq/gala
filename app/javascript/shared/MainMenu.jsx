@@ -101,8 +101,8 @@ const Row = styled.div`
   align-items: center;
   cursor: pointer;
 `
-const ButtonRow = styled(Row).attrs({
+const ButtonRow = styled(Row).attrs(()=>({
   role: 'button',
   tabindex: '0',
   onKeyPress: () => acceptKeyboardClick,
-})``
+}))``

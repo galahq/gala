@@ -35,12 +35,12 @@ export const identiconStyle = ({
 `
 
 // $FlowFixMe
-const IdenticonDiv = styled.div.attrs({
-  'aria-label': ({ presentational, text }) => (presentational ? null : text),
-  'aria-hidden': ({ presentational }) => (presentational ? 'true' : null),
-  role: ({ presentational }) => (presentational ? 'presentational' : null),
+const IdenticonDiv = styled.div.attrs(props => ({
+  'aria-label': props.presentational ? null : props.text,
+  'aria-hidden': props.presentational ? 'true' : null,
+  role: props.presentational ? 'presentational' : null,
   className: 'Identicon',
-})`
+}))`
   width: ${({ width }) => `${width}px`};
   height: ${({ width }) => `${width}px`};
   border-radius: 2px;
@@ -69,4 +69,5 @@ const Identicon = ({
     className={className}
   />
 )
+
 export default Identicon

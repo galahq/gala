@@ -140,7 +140,9 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
 
 export default injectIntl(Toolbar)
 
-const Bar = styled.div.attrs({ className: ({ light }) => light || 'pt-dark' })`
+const Bar = styled.div.attrs(props => ({
+  className: props.light || 'pt-dark'
+}))`
   width: 100%;
   overflow: auto;
 
@@ -170,7 +172,9 @@ const MaxWidthFlexContainer = styled(MaxWidthContainer)`
     justify-content: flex-end;
   }
 `
-const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
+const Group = styled.div.attrs(() => ({
+  className: 'pt-navbar-group'
+}))`
   height: 36px !important;
   margin: 0 8px;
   flex: 1;
@@ -192,9 +196,9 @@ const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
         `
       : ''};
 `
-const Item = styled(Button).attrs({
-  className: p => p.className || 'pt-minimal',
-})``
+const Item = styled(Button).attrs(props => ({
+  className: props.className || 'pt-minimal'
+}))``
 
 const StyledMenu = styled(Menu)`
   font-size: 90%;
