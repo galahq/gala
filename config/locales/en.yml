@@ -325,6 +325,26 @@ en:
       Publish your case and share it as widely as you like. Institutions can create 
       libraries with multiple cases.
     keywords: Keywords
+    wikidata:
+      link_wikidata: Wikidata Links
+      find_item: Find a Wikidata item
+      find_item_instructions: >
+        Every Wikidata item has a unique identifier called a QID. You can locate an item from the search box by entering its QID or its name.
+      wikidata_instructions: Add rich metadata by linking Wikidata entries to your case.
+      researchers: Researchers
+      software: Software
+      hardware: Hardware
+      grants: Grants
+      works: Works
+      add: Add
+      wikidata_placeholder: Enter Wikidata QID
+      about_wikidata: >
+        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs. Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting information on a wide range of topics and making it discoverable, accessible, and reusable. 
+      invalid_qid: Invalid QID
+      empty_qid: You must enter a value for QID
+      entry_exists: This entry already exists
+      404_error: This QID does not exist or belongs to a different category
+      schema_mismatch: The Wikidata item you selected doesn't match this item type. Select a different item type or Wikidata item.
     learn_more: Learn more
     my_library: My Dashboard
     natural_resources: Natural Resources
