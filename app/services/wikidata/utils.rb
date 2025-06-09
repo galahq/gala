@@ -3,7 +3,7 @@ module Wikidata
     def self.humanize_date(date_string)
       date_string = date_string.gsub(/^\+/, '') if date_string.start_with?('+')
       DateTime.parse(date_string).strftime('%B %d, %Y')
-    rescue
+    rescue StandardError
       date_string
     end
 
@@ -20,7 +20,12 @@ module Wikidata
     def self.format_claim_value(value)
       case value
       when String
-        { type: 'string', value: value }
+        # Check if it's a QID (entity reference)
+        if value.match?(/^Q\d+$/)
+          { type: 'wikibase-entityid', value: { id: value } }
+        else
+          { type: 'string', value: value }
+        end
       when Hash
         case value[:type]
         when :string
@@ -42,7 +47,7 @@ module Wikidata
               calendarmodel: 'http://www.wikidata.org/entity/Q1985727'
             }
           }
-        when :wikibase-entityid
+        when :wikibase_entityid
           { type: 'wikibase-entityid', value: { id: value[:value].to_s } }
         else
           { type: 'string', value: value[:value].to_s }
@@ -79,7 +84,7 @@ module Wikidata
         'ru' => 'Q7737',   # Russian
         'zh' => 'Q7850',   # Chinese
         'ja' => 'Q5287',   # Japanese
-        'ar' => 'Q13955',  # Arabic
+        'ar' => 'Q13955' # Arabic
       }
 
       language_qid_map[locale] || 'Q1860'

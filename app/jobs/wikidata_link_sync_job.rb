@@ -40,32 +40,37 @@ class WikidataLinkSyncJob < ApplicationJob
     kase ||= wikidata_link.record
     locale = kase.locale || 'en'
 
-    # Ensure we have a valid OAuth token
-    Wikidata.ensure_valid_token
+    # Ensure we have a valid session
+    Wikidata.ensure_logged_in
 
     # Map case overview fields to Wikidata properties
     properties = Wikidata::SyncService.case_to_wikidata_properties(kase, locale)
 
     # Add claims to the Wikidata entity
-    Wikidata.add_claims(wikidata_link.qid, properties)
+    success = Wikidata.add_claims(wikidata_link.qid, properties)
 
-    # Fetch updated entity data for caching
-    entity_data = Wikidata.get_entity(wikidata_link.qid)
-    json_ld = Wikidata.generate_json_ld(entity_data)
+    if success
+      # Fetch updated entity data for caching
+      entity_data = Wikidata.get_entity(wikidata_link.qid, locale)
+      json_ld = Wikidata.generate_json_ld(entity_data, locale)
 
-    # Update the cached information
-    cache_data = {
-      'entityLabel' => kase.title,
-      'properties' => Wikidata::SyncService.format_properties_for_cache(properties),
-      'json_ld' => json_ld
-    }
+      # Update the cached information
+      cache_data = {
+        'entityLabel' => kase.title,
+        'properties' => Wikidata::SyncService.format_properties_for_cache(properties),
+        'json_ld' => json_ld
+      }
 
-    # Update the wikidata_link with new cached data
-    wikidata_link.update!(
-      cached_json: cache_data,
-      last_synced_at: Time.current
-    )
+      # Update the wikidata_link with new cached data
+      wikidata_link.update!(
+        cached_json: cache_data,
+        last_synced_at: Time.current
+      )
 
-    Rails.logger.info "Successfully synced WikidataLink ##{wikidata_link.id} with case overview fields"
+      Rails.logger.info "Successfully synced WikidataLink ##{wikidata_link.id} with case overview fields"
+    else
+      Rails.logger.error "Failed to add properties to Wikidata entity #{wikidata_link.qid}"
+      raise StandardError, "Failed to add properties to Wikidata entity #{wikidata_link.qid}"
+    end
   end
 end

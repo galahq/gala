@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 namespace :wikidata do
-  desc 'Sync all published cases with Wikidata'
+  desc 'Sync all published cases with Wikidata (DRY RUN by default - use REAL_RUN=true to execute)'
   task sync_all_cases: :environment do
-    puts "Starting sync of all published cases to Wikidata..."
+    dry_run = ENV['REAL_RUN'] != 'true'
+
+    if dry_run
+      puts 'DRY RUN: Starting sync of all published cases to Wikidata...'
+      puts 'This is a DRY RUN - no actual changes will be made to Wikidata.'
+      puts 'To perform real sync, run: rake wikidata:sync_all_cases REAL_RUN=true'
+    else
+      puts 'REAL RUN: Starting sync of all published cases to Wikidata...'
+      puts 'WARNING: This will make actual changes to Wikidata!'
+    end
 
     cases = Case.published
     total = cases.count
@@ -22,18 +31,16 @@ namespace :wikidata do
       puts "[#{index + 1}/#{total}] Syncing Case ##{kase.id}: #{kase.title}"
 
       begin
-        qid = WikidataCaseSyncJob.perform_now(kase.id)
+        qid = WikidataCaseSyncJob.perform_now(kase.id, dry_run: dry_run)
         if qid
           puts "  ✓ Successfully synced to Wikidata entity: #{qid}"
 
-          if qid.start_with?('Q') && !qid.include?('-')
-            puts "  Entity URL: https://www.wikidata.org/wiki/#{qid}"
-          end
+          puts "  Entity URL: https://www.wikidata.org/wiki/#{qid}" if qid.start_with?('Q') && !qid.include?('-')
 
           results[:success] += 1
           results[:details] << { id: kase.id, title: kase.title, status: 'success', qid: qid }
         else
-          puts "  ✗ Sync failed - no QID returned."
+          puts '  ✗ Sync failed - no QID returned.'
           results[:failure] += 1
           results[:details] << { id: kase.id, title: kase.title, status: 'failure', error: 'No QID returned' }
         end
@@ -55,12 +62,14 @@ namespace :wikidata do
     puts "Detailed report saved to: #{report_file}"
   end
 
-  desc 'Sync a specific case with Wikidata by ID'
+  desc 'Sync a specific case with Wikidata by ID (DRY RUN by default - use REAL_RUN=true to execute)'
   task :sync_case, [:kase_id] => :environment do |_, args|
     kase_id = args[:kase_id]
+    dry_run = ENV['REAL_RUN'] != 'true'
 
     if kase_id.blank?
-      puts "Error: Please provide a case ID. Example: rake wikidata:sync_case[123]"
+      puts 'Error: Please provide a case ID. Example: rake wikidata:sync_case[123]'
+      puts 'For real sync: rake wikidata:sync_case[123] REAL_RUN=true'
       next
     end
 
@@ -71,14 +80,19 @@ namespace :wikidata do
       next
     end
 
-    if !kase.published?
-      puts "Warning: Case ##{kase_id} is not published, but will be synced anyway."
+    puts "Warning: Case ##{kase_id} is not published, but will be synced anyway." unless kase.published?
+
+    if dry_run
+      puts "DRY RUN: Syncing Case ##{kase.id}: #{kase.title}..."
+      puts 'This is a DRY RUN - no actual changes will be made to Wikidata.'
+      puts "To perform real sync, run: rake wikidata:sync_case[#{kase_id}] REAL_RUN=true"
+    else
+      puts "REAL RUN: Syncing Case ##{kase.id}: #{kase.title}..."
+      puts 'WARNING: This will make actual changes to Wikidata!'
     end
 
-    puts "Syncing Case ##{kase.id}: #{kase.title}..."
-
     begin
-      qid = WikidataCaseSyncJob.perform_now(kase.id)
+      qid = WikidataCaseSyncJob.perform_now(kase.id, dry_run: dry_run)
       if qid
         puts "✓ Successfully synced Case ##{kase.id} to Wikidata"
         puts "  Entity ID: #{qid}"
@@ -87,16 +101,14 @@ namespace :wikidata do
         if qid.start_with?('Q') && !qid.include?('-')
           puts "  Wikidata URL: https://www.wikidata.org/wiki/#{qid}"
         else
-          puts "  Note: This is a local identifier used for development/testing."
+          puts '  Note: This is a local identifier used for development/testing.'
         end
 
         # Check if a self link was created
         self_link = WikidataLink.find_self_link(kase.id)
-        if self_link
-          puts "  Self link created with ID: #{self_link.id}"
-        end
+        puts "  Self link created with ID: #{self_link.id}" if self_link
       else
-        puts "✗ Sync failed - no QID returned."
+        puts '✗ Sync failed - no QID returned.'
       end
     rescue StandardError => e
       puts "✗ Error syncing Case ##{kase.id}: #{e.message}"
@@ -106,7 +118,7 @@ namespace :wikidata do
 
   desc 'Refresh cached Wikidata information for all links'
   task refresh_cached_wikidata: :environment do
-    puts "Refreshing cached Wikidata information..."
+    puts 'Refreshing cached Wikidata information...'
 
     # Get both regular case links and self links
     case_links = WikidataLink.where(record_type: 'Case')
@@ -122,15 +134,15 @@ namespace :wikidata do
     failure = 0
 
     all_links.each_with_index do |link, index|
-      link_type = link.self_link? ? "self" : link.record_type
-      entity_type = link.real_wikidata_entity? ? "Wikidata" : "local"
+      link_type = link.self_link? ? 'self' : link.record_type
+      entity_type = link.real_wikidata_entity? ? 'Wikidata' : 'local'
       puts "[#{index + 1}/#{total}] Refreshing data for #{link_type} #{entity_type} link ##{link.id} (#{link.qid})"
       begin
         if link.fetch_and_update_data!
-          puts "  ✓ Successfully refreshed data."
+          puts '  ✓ Successfully refreshed data.'
           success += 1
         else
-          puts "  ✗ Failed to refresh data."
+          puts '  ✗ Failed to refresh data.'
           failure += 1
         end
       rescue StandardError => e
@@ -146,7 +158,7 @@ namespace :wikidata do
 
   desc 'Refresh only stale Wikidata links (older than 1 day)'
   task refresh_stale: :environment do
-    puts "Refreshing stale Wikidata links (not updated in the last 24 hours)..."
+    puts 'Refreshing stale Wikidata links (not updated in the last 24 hours)...'
 
     stale_links = WikidataLink.stale
     total = stale_links.count
@@ -157,13 +169,13 @@ namespace :wikidata do
       refreshed = WikidataLink.refresh_stale!
       puts "Successfully refreshed #{refreshed} out of #{total} links."
     else
-      puts "No stale links found."
+      puts 'No stale links found.'
     end
   end
 
   desc 'List all self-type Wikidata links'
   task list_self_links: :environment do
-    puts "Listing all self-type Wikidata links..."
+    puts 'Listing all self-type Wikidata links...'
 
     self_links = WikidataLink.where(record_type: 'self')
     total = self_links.count
@@ -180,27 +192,27 @@ namespace :wikidata do
       puts
 
       puts "ID\tQID\t\tRecord ID\tSchema\t\tLast Synced\t\tEntity Label"
-      puts "-" * 100
+      puts '-' * 100
 
       self_links.each do |link|
-        entity_type = link.real_wikidata_entity? ? "[WIKIDATA]" : "[LOCAL]"
+        entity_type = link.real_wikidata_entity? ? '[WIKIDATA]' : '[LOCAL]'
         puts "#{link.id}\t#{link.qid}\t#{link.record_id}\t\t#{link.schema}\t#{link.last_synced_at&.strftime('%Y-%m-%d %H:%M')}\t#{entity_type} #{link.entity_label}"
       end
 
       puts "\nNote: Local entities are for development/testing only."
-      puts "Real Wikidata entities can be viewed at https://www.wikidata.org/wiki/[QID]"
+      puts 'Real Wikidata entities can be viewed at https://www.wikidata.org/wiki/[QID]'
     else
-      puts "No self links found."
+      puts 'No self links found.'
     end
   end
 
   desc 'Manual lookup of an entity by QID and schema'
-  task :lookup, [:schema, :qid] => :environment do |_, args|
+  task :lookup, %i[schema qid] => :environment do |_, args|
     schema = args[:schema]
     qid = args[:qid]
 
     if schema.blank? || qid.blank?
-      puts "Error: Please provide both schema and QID. Example: rake wikidata:lookup[researchers,Q937]"
+      puts 'Error: Please provide both schema and QID. Example: rake wikidata:lookup[researchers,Q937]'
       next
     end
 
@@ -224,16 +236,16 @@ namespace :wikidata do
       puts "\nProperties:"
       if entity_data['claims'].present?
         entity_data['claims'].each do |property_id, statements|
-          if statements.present? && statements.first.present?
-            statement = statements.first
-            if statement['mainsnak'] && statement['mainsnak']['datavalue']
-              value = extract_value_from_statement(statement['mainsnak'])
-              puts "  #{property_id}: #{value}"
-            end
+          next unless statements.present? && statements.first.present?
+
+          statement = statements.first
+          if statement['mainsnak'] && statement['mainsnak']['datavalue']
+            value = extract_value_from_statement(statement['mainsnak'])
+            puts "  #{property_id}: #{value}"
           end
         end
       else
-        puts "  No properties found."
+        puts '  No properties found.'
       end
 
       # Check if this entity exists as a self link
@@ -243,9 +255,7 @@ namespace :wikidata do
 
         if self_link.record_type == 'self' && self_link.record_id
           kase = Case.find_by(id: self_link.record_id)
-          if kase
-            puts "Case: #{kase.title} (#{kase.id})"
-          end
+          puts "Case: #{kase.title} (#{kase.id})" if kase
         end
       end
 
@@ -258,7 +268,7 @@ namespace :wikidata do
 
   # Helper method to extract value from a statement
   def extract_value_from_statement(mainsnak)
-    return "No value" unless mainsnak['datavalue']
+    return 'No value' unless mainsnak['datavalue']
 
     datavalue = mainsnak['datavalue']
     case datavalue['type']
@@ -276,16 +286,16 @@ namespace :wikidata do
     end
   end
 
-  desc "Authenticate with Wikidata in the background using client credentials"
+  desc 'Authenticate with Wikidata in the background using client credentials'
   task authenticate: :environment do
-    puts "Attempting to authenticate with Wikidata using client credentials..."
+    puts 'Attempting to authenticate with Wikidata using client credentials...'
 
     token_manager = Wikidata::TokenManager.new
     token = token_manager.get_token_with_client_credentials
 
     if token
-      puts "✅ Successfully authenticated with Wikidata"
-      puts "Access token stored in Redis"
+      puts '✅ Successfully authenticated with Wikidata'
+      puts 'Access token stored in Redis'
 
       # Test the token with a simple API call
       client = Wikidata::Client.new(token)
@@ -294,17 +304,17 @@ namespace :wikidata do
       if entity
         puts "✅ Successfully fetched test entity: #{entity.dig('labels', 'en', 'value')}"
       else
-        puts "❌ Failed to fetch test entity"
+        puts '❌ Failed to fetch test entity'
       end
     else
-      puts "❌ Failed to authenticate with Wikidata"
-      puts "Make sure your client_id and client_secret are configured correctly in the environment."
+      puts '❌ Failed to authenticate with Wikidata'
+      puts 'Make sure your client_id and client_secret are configured correctly in the environment.'
     end
   end
 
-  desc "Test the current Wikidata authentication"
+  desc 'Test the current Wikidata authentication'
   task test: :environment do
-    puts "Testing current Wikidata authentication..."
+    puts 'Testing current Wikidata authentication...'
 
     client = Wikidata::Client.new
     entity = client.get_entity('Q42') # Douglas Adams
@@ -312,36 +322,36 @@ namespace :wikidata do
     if entity
       puts "✅ Successfully authenticated and fetched test entity: #{entity.dig('labels', 'en', 'value')}"
     else
-      puts "❌ Authentication test failed - could not fetch test entity"
+      puts '❌ Authentication test failed - could not fetch test entity'
       puts "Try running 'rake wikidata:authenticate' first"
     end
   end
 
-  desc "Clear all stored Wikidata tokens"
+  desc 'Clear all stored Wikidata tokens'
   task clear_tokens: :environment do
-    puts "Clearing all stored Wikidata tokens..."
+    puts 'Clearing all stored Wikidata tokens...'
 
     token_manager = Wikidata::TokenManager.new
     token_manager.clear_tokens
 
-    puts "✅ All tokens cleared from Redis"
+    puts '✅ All tokens cleared from Redis'
   end
 
   # New tasks for Sidekiq job testing
 
-  desc "Queue the Wikidata authentication job in Sidekiq"
+  desc 'Queue the Wikidata authentication job in Sidekiq'
   task queue_auth_job: :environment do
-    puts "Queueing WikidataAuthenticationJob in Sidekiq..."
+    puts 'Queueing WikidataAuthenticationJob in Sidekiq...'
     job_id = WikidataAuthenticationJob.perform_later.job_id
     puts "✅ Job queued with ID: #{job_id}"
-    puts "Check Sidekiq dashboard or logs for results"
+    puts 'Check Sidekiq dashboard or logs for results'
   end
 
-  desc "Queue the refresh stale Wikidata links job in Sidekiq"
+  desc 'Queue the refresh stale Wikidata links job in Sidekiq'
   task queue_refresh_job: :environment do
-    puts "Queueing RefreshStaleWikidataLinksJob in Sidekiq..."
+    puts 'Queueing RefreshStaleWikidataLinksJob in Sidekiq...'
     job_id = RefreshStaleWikidataLinksJob.perform_later.job_id
     puts "✅ Job queued with ID: #{job_id}"
-    puts "Check Sidekiq dashboard or logs for results"
+    puts 'Check Sidekiq dashboard or logs for results'
   end
 end

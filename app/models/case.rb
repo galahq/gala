@@ -91,13 +91,8 @@ class Case < ApplicationRecord
   after_save :refresh_indices, if: -> {
     saved_change_to_title? || saved_change_to_kicker? || saved_change_to_dek?
   }
-  after_save :sync_to_wikidata, if: -> {
-    published? && (saved_change_to_published_at? ||
-                  saved_change_to_title? ||
-                  saved_change_to_authors? ||
-                  saved_change_to_locale?)
-  }
-  after_save :sync_wikidata_links, if: -> {
+
+  after_commit :sync_to_wikidata, if: -> {
     published? && (saved_change_to_title? ||
                   saved_change_to_dek? ||
                   saved_change_to_authors? ||
