@@ -141,14 +141,15 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
         <Button
           icon="add"
           title="Add"
-          text="Add"
           intent={Intent.SUCCESS}
           onClick={() => setIsOpen(prev => !prev)}
-        />
+        >
+          <FormattedMessage id="catalog.wikidata.add" />
+        </Button>
 
         <Dialog
           isOpen={isOpen}
-          title="Add a Wikidata Item"
+          title={intl.formatMessage({ id: 'catalog.wikidata.addDialogTitle' })}
           className="pt-dark"
           onClose={() => setIsOpen(false)}
         >
@@ -160,7 +161,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
               <div className="pt-callout pt-dark pt-icon-hand-right">
                 <FormattedMessage id="catalog.wikidata.findItemInstructions" />
               </div>
-              <SectionTitle>Choose an item type</SectionTitle>
+              <SectionTitle><FormattedMessage id="catalog.wikidata.chooseItemType" /></SectionTitle>
               <div style={{ width: '200px' }}>
                 <Select
                   className="pt-select pt-fill pt-dark"
@@ -187,12 +188,12 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   />
                 </Select>
               </div>
-              <SectionTitle>Find a Wikidata item</SectionTitle>
+              <SectionTitle><FormattedMessage id="catalog.wikidata.findItem" /></SectionTitle>
               <div style={{ width: '400px' }}>
                 <Suggest
                   inputProps={{
                     style: { width: '400px' },
-                    placeholder: 'Search Wikidata or enter QID (e.g. Q937)',
+                    placeholder: intl.formatMessage({ id: 'catalog.wikidata.findItemPlaceholder' }),
                     value: query,
                     onChange: handleQueryChange,
                     onFocus: handleInputFocus,
@@ -200,7 +201,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                       <Button
                         minimal
                         icon="cross"
-                        title="Clear search"
+                        title={intl.formatMessage({ id: 'catalog.wikidata.clearSearch' })}
                         onClick={handleClear}
                       />
                     ),

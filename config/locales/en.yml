@@ -337,9 +337,15 @@ en:
       grants: Grants
       works: Works
       add: Add
+      add_dialog_title: Add a Wikidata Item
+      choose_item_type: Choose an item type
+      find_item_placeholder: Search Wikidata or enter QID (e.g. Q937)
+      clear_search: Clear search
       wikidata_placeholder: Enter Wikidata QID
       about_wikidata: >
-        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs. Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting information on a wide range of topics and making it discoverable, accessible, and reusable. 
+        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs. 
+        Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting 
+        information on a wide range of topics and making it discoverable, accessible, and reusable. 
       invalid_qid: Invalid QID
       empty_qid: You must enter a value for QID
       entry_exists: This entry already exists
