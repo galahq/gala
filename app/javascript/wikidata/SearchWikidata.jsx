@@ -167,9 +167,10 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   className="pt-select pt-fill pt-dark"
                   filterable={false}
                   items={orderedSchemas}
-                  itemRenderer={(item, { handleClick, modifiers }) => (
+                  itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
                     <MenuItem
-                      {...modifiers}
+                      active={active}
+                      disabled={disabled}
                       key={item}
                       text={schemasMap[item]}
                       onClick={handleClick}
@@ -207,9 +208,10 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                     ),
                   }}
                   items={results}
-                  itemRenderer={(item, { handleClick, modifiers }) => (
+                  itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
                     <MenuItem
-                      {...modifiers}
+                      active={active}
+                      disabled={disabled}
                       key={item.qid}
                       label={item.description && item.description.length > 40 ? `${item.description.slice(0, 40)}...` : item.description}
                       text={`${item.label}`}
