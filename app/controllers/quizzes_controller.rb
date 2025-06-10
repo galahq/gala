@@ -20,22 +20,14 @@ class QuizzesController < ApplicationController
   # @route [POST] `/cases/slug/quizzes`
   def create
     authorize @case, :update?
-    # Suggested quizzes should not have an author - they're available to all instructors
-    @quiz = @case.quizzes.build(author_id: nil, lti_uid: nil, title: quiz_params[:title])
-
-    # Use QuizUpdater to handle the creation with questions
-    if QuizUpdater.new(@quiz).update(quiz_params)
-      render json: @quiz
-    else
-      render json: @quiz.errors, status: :unprocessable_entity
-    end
+    render json: @case.quizzes.create
   end
 
   # @route [PUT|PATCH] `/quizzes/1`
   def update
     authorize @quiz.case
 
-    if QuizUpdater.new(@quiz).update(quiz_params)
+    if QuizUpdater.new(@quiz).update quiz_params
       render json: @quiz
     else
       render json: @quiz.errors, status: :unprocessable_entity
@@ -59,6 +51,8 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:title, questions: [:id, :content, :correct_answer, { options: [] }])
+    params.require(:quiz).permit(
+      :title, questions: [:id, :content, :correct_answer, options: []]
+    )
   end
 end

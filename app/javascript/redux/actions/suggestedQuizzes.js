@@ -43,36 +43,15 @@ function setSuggestedQuizzes (
   return { type: 'SET_SUGGESTED_QUIZZES', quizzes }
 }
 
-export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
+export function createSuggestedQuiz (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const { slug } = getState().caseData
-    // Wrap the quiz data in a 'quiz' key as expected by Rails
-    const quizData = {
-      quiz: {
-        title: quiz.title,
-        questions: quiz.questions,
-      },
-    }
-    return Orchard.graft(`cases/${slug}/quizzes`, quizData).then(
-      (newQuiz: SuggestedQuiz) => {
-        dispatch(addSuggestedQuiz(newQuiz.param, { ...newQuiz }))
-        dispatch(
-          displayToast({
-            intent: Intent.SUCCESS,
-            icon: 'tick-circle',
-            message: 'Quiz successfully created',
-          })
-        )
-        return newQuiz.param
+    return Orchard.graft(`cases/${slug}/quizzes`, {}).then(
+      (quiz: SuggestedQuiz) => {
+        dispatch(addSuggestedQuiz(quiz.param, quiz))
+        return quiz.param
       }
     )
-  }
-}
-
-export function newSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
-    dispatch(addSuggestedQuiz("new", { ...quiz, param: "new" }))
-    return Promise.resolve("new")
   }
 }
 
@@ -81,7 +60,7 @@ export type AddSuggestedQuizAction = {
   param: string,
   data: SuggestedQuiz,
 }
-export function addSuggestedQuiz (
+function addSuggestedQuiz (
   param: string,
   data: SuggestedQuiz
 ): AddSuggestedQuizAction {
@@ -96,38 +75,8 @@ export type UpdateSuggestedQuizAction = {
 export function updateSuggestedQuiz (
   param: string,
   data: SuggestedQuiz
-): ThunkAction {
-  return (dispatch: Dispatch) => {
-    // Update Redux state immediately for optimistic UI
-    dispatch({ type: 'UPDATE_SUGGESTED_QUIZ', param, data })
-
-    // Wrap the quiz data in a 'quiz' key as expected by Rails
-    const quizData = {
-      quiz: {
-        title: data.title,
-        questions: data.questions,
-      },
-    }
-
-    // Persist to backend
-    return Orchard.espalier(`quizzes/${param}`, quizData).then(
-      (updatedQuiz: SuggestedQuiz) => {
-        // Update with server response
-        dispatch({ type: 'UPDATE_SUGGESTED_QUIZ', param: updatedQuiz.param, data: updatedQuiz })
-        dispatch(
-          displayToast({
-            intent: Intent.SUCCESS,
-            icon: 'tick-circle',
-            message: 'Quiz successfully updated',
-          })
-        )
-      }
-    ).catch((error) => {
-      // Revert on error
-      dispatch(fetchSuggestedQuizzes())
-      throw error
-    })
-  }
+): UpdateSuggestedQuizAction {
+  return { type: 'UPDATE_SUGGESTED_QUIZ', param, data }
 }
 
 export function deleteSuggestedQuiz (param: string): ThunkAction {
@@ -149,6 +98,6 @@ export type RemoveSuggestedQuizAction = {
   type: 'REMOVE_SUGGESTED_QUIZ',
   param: string,
 }
-export function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
+function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
   return { type: 'REMOVE_SUGGESTED_QUIZ', param }
 }

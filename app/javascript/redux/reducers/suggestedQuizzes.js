@@ -32,10 +32,6 @@ export default function suggestedQuizzes (
       }, {})
 
     case 'ADD_SUGGESTED_QUIZ':
-      return {
-        ...state,
-        [action.param]: action.data,
-      }
     case 'UPDATE_SUGGESTED_QUIZ':
       return {
         ...state,

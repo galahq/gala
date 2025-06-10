@@ -63,7 +63,7 @@ function QuizCustomizer ({ customQuestions, onChange }: Props) {
 
       <FlushButton
         elementRef={addQuestionButtonRef}
-        className={customQuestions.length === 0 ? 'alone' : ''}
+        alone={customQuestions.length === 0}
         icon="add"
         onClick={handleAppendQuestion}
       >
@@ -76,9 +76,6 @@ function QuizCustomizer ({ customQuestions, onChange }: Props) {
 export default QuizCustomizer
 
 const FlushButton = styled(Button)`
+  margin-top: ${({ alone }: { alone: boolean }) => (alone ? '0.5em' : '0')};
   margin-left: -17px;
-
-  &.alone {
-    margin-top: 0.5em;
-  }
 `

@@ -1,8 +1,14 @@
----
-:concurrency: <%= ENV['SIDEKIQ_CONCURRENCY'] || 5 %>
+:concurrency: 5
 :queues:
   - active_storage_analysis
   - active_storage_purge
   - ahoy
   - default
   - mailers
+
+:scheduler:
+  :dynamic: true
+  :enabled: false
+  :schedule:
+    WikidataAuthenticationJob:
+      every: "1m"

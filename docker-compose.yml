@@ -1,5 +1,5 @@
 services:
-  web:
+  web: &app_base
     image: gala_ruby3-2_rails7-0x_1:latest
     platform: linux/amd64
     build:
@@ -18,8 +18,12 @@ services:
       SIDEKIQ_CONCURRENCY: 1
       RUBY_YJIT_ENABLE: 1
       DOCKER_DEV: true
+      TEMPORARY_UNCONFIRMED_ACCESS: false
       BASE_URL: http://localhost:3000
       PORT: 3000
+      WIKIDATA_OAUTH2_ACCESS_TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJmMTE2OTg0NTMxMjg2OTY3ODk0MjY4MGJlMzVlZDNjNyIsImp0aSI6IjYzMDNmNzhhNGY2NWVlOWI5M2MxOWM2NzJjNmY4OGNmZTQwOTlmMmJmMmFlYjBjMTdhZjljNWIxYmQ2MmVlODZiM2JjNjVjZDBiMWM0YjEwIiwiaWF0IjoxNzQxOTkzNzMwLjg5MzYwNywibmJmIjoxNzQxOTkzNzMwLjg5MzYwOSwiZXhwIjozMzI5ODkwMjUzMC44ODk2NSwic3ViIjoiNzc4ODU2OTkiLCJpc3MiOiJodHRwczovL21ldGEud2lraW1lZGlhLm9yZyIsInJhdGVsaW1pdCI6eyJyZXF1ZXN0c19wZXJfdW5pdCI6NTAwMCwidW5pdCI6IkhPVVIifSwic2NvcGVzIjpbImJhc2ljIiwiaGlnaHZvbHVtZSIsImltcG9ydCIsImVkaXRwYWdlIiwiZWRpdG15Y3NzanMiLCJlZGl0bXlvcHRpb25zIiwiY3JlYXRlZWRpdG1vdmVwYWdlIiwidXBsb2FkZmlsZSIsInVwbG9hZGVkaXRtb3ZlZmlsZSIsInBhdHJvbCIsInJvbGxiYWNrIiwiYmxvY2t1c2VycyIsInZpZXdkZWxldGVkIiwidmlld3Jlc3RyaWN0ZWRsb2dzIiwiZGVsZXRlIiwicHJvdGVjdCIsInZpZXdteXdhdGNobGlzdCIsImVkaXRteXdhdGNobGlzdCIsInByaXZhdGVpbmZvIiwibWVyZ2VoaXN0b3J5Iiwic2hvcnRlbnVybHMiXX0.ikMTQCFczLAftaRPUtoSPnANAr5bVC_YDUwfHQyBgLQrXcfj5pmxEjSpvIAKm_o361mjGPLn2_gGxdPYCZ_nosdj13TXXK7NzlDrvPjBpCSBis2t0OriC-fblLHZaZX8nBgxAXVGQgQ82Y-IcWWkQmpJsjN2Ivx7Rj4fukLSFv5D2zaRDawj1JjO97rOy-9qErvPom99tUP3kMA5pQBm2w3R8EQjVjve_msFm0nfpibwRbV6CegEghLajILGpBV86JCSVSy3gxqr_ckkeDk0XcQ7T9ZwwIZUIMO1ILddYScoNDTOEKYACb0RwYzhOjM2XFEdh58mEy9BEwpmyOSLiqNz75gS_nAlhD6oJkDJ57ntpJjochXNO4j-s9mq67ciI3NW3GiLYxoAIFd944n1CmYhjmOq8DrcLJ-n5xuOed0o1gPhhu3fGEkqe-YbyLWoCt0MrtEbuVAA51Rlc4WqWAfhexQjQBuxQJAvmOPyfC7EJstf0ojOkp2tEJwCMIYv7R86jtBWgkaLYOyqz0DH08n9FAtYKo_TxFBuUfVUNvRFci1GztcJxaUWXQSifrrUMbSQB7_k_lS3O0riZ3zxwRmsA4T8dDbUtpUM-9KIX0AtDjRXMhDI0udC47WrOqs1RqQ7Y5IUCVXYpEVi6nJjAu_wRe2V2lCStkG7J_HMIrw
+      WIKIDATA_OAUTH2_CLIENT_ID: f1169845312869678942680be35ed3c7
+      WIKIDATA_OAUTH2_CLIENT_SECRET: b7ec3f25388a444041fea2138652841de7535fc9
     ports:
       - 3000:3000
       - 3035:3035
@@ -30,6 +34,11 @@ services:
       - .:/gala:delegated
       - node_modules:/gala/node_modules
       - build_cache:/gala/tmp/cache
+
+  worker:
+    <<: *app_base
+    command: bundle exec sidekiq
+    ports: [] # Remove ports if not needed for worker
   db:
     image: postgres:16.4
     environment:

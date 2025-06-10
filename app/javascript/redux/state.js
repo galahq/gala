@@ -122,6 +122,23 @@ export type Byline = {
   acknowledgements: string,
 }
 
+export type WikidataLink = {
+  id?: string,
+  schema: string,
+  qid: string,
+  position: number,
+  data?: SparqlResult,
+}
+
+export type SparqlResult = {
+  entity: string,
+  entityLabel: string,
+  schema: string,
+  properties: {
+    [string]: string,
+  }[],
+}
+
 export type Card = {
   commentThreads: ?(CommentThread[]),
   editorState: ?EditorState,
@@ -153,9 +170,10 @@ export type Case = {
     self: string,
     settings: string,
     taggings: string,
+    wikidataLinks: string,
     teach: string,
     teachingGuide: string,
-    newCopy: string
+    newCopy: string,
   },
   longitude: ?number,
   otherAvailableLocales: { [string]: { link: string, name: string } },
@@ -168,6 +186,7 @@ export type Case = {
   teachingGuideUrl: ?string,
   title: string,
   zoom: ?number,
+  wikidataLinks: WikidataLink[],
 } & Byline
 
 export type CaseElement = {

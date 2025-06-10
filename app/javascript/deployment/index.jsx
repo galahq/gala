@@ -22,24 +22,23 @@ import { validatedQuestions } from 'suggested_quizzes/helpers'
 import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
 type Props = {
-  id: ID,
+  id: string,
   caseData: {
     kicker: string,
     title: string,
     coverUrl: string,
     callbackUrl: string,
   },
-  suggestedQuizzes: { [string]: CustomizedQuiz },
   selectedQuizId: ?ID,
+  suggestedQuizzes: { [id: string]: CustomizedQuiz },
   returnUrl?: string,
   returnData?: string,
-  answersNeeded: number,
 }
 
 type State = {
   selectedQuizId: ?ID,
-  answersNeeded: number,
-  customQuestions: { [string]: DraftQuestion[] },
+  customQuestions: { [id: string]: DraftQuestion[] },
+  answersNeeded: 1 | 2,
 }
 
 class Deployment extends React.Component<Props, State> {
@@ -55,10 +54,6 @@ class Deployment extends React.Component<Props, State> {
     const { selectedQuizId, customQuestions } = state
 
     if (selectedQuizId == null) return true
-
-    if (!customQuestions[`${selectedQuizId}`]) {
-      return false
-    }
 
     const validatedState = {
       ...state,
@@ -90,13 +85,6 @@ class Deployment extends React.Component<Props, State> {
     this.setState((state: State) => ({
       ...state,
       answersNeeded: state.answersNeeded === 1 ? 2 : 1,
-    }))
-  }
-
-  handleTogglePosttest = () => {
-    this.setState((state: State) => ({
-      ...state,
-      answersNeeded: state.answersNeeded > 0 ? 0 : 1,
     }))
   }
 
@@ -146,14 +134,14 @@ class Deployment extends React.Component<Props, State> {
     )
     this.state = {
       selectedQuizId: props.selectedQuizId,
-      answersNeeded: props.answersNeeded || 2,
+      answersNeeded: 2,
       customQuestions,
     }
   }
 
   render () {
     const { caseData, suggestedQuizzes } = this.props
-    const { selectedQuizId, customQuestions, answersNeeded } = this.state
+    const { selectedQuizId, customQuestions } = this.state
     return (
       <>
         <div className="pt-dark" style={{ padding: '0 12px' }}>
@@ -161,9 +149,7 @@ class Deployment extends React.Component<Props, State> {
             <QuizSelector
               suggestedQuizzes={suggestedQuizzes}
               customQuestions={customQuestions}
-              selectedQuizId={selectedQuizId}
               onSelect={this.handleSelectQuiz}
-              onChangeCustomQuestions={this.handleChangeCustomQuestions}
             />
           ) : (
             <QuizDetails
@@ -181,11 +167,11 @@ class Deployment extends React.Component<Props, State> {
         </div>
 
         <Toolbar
+          withPretest={this._needsPretest()}
+          withPosttest={this._needsPosttest()}
           caseData={caseData}
-          withPretest={answersNeeded === 2}
-          withPosttest={answersNeeded > 0}
           onTogglePretest={this.handleTogglePretest}
-          onTogglePosttest={this.handleTogglePosttest}
+          onDeselect={() => this.handleSelectQuiz(null)}
           onSubmit={this.handleSubmit}
         />
       </>

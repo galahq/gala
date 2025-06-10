@@ -11,81 +11,49 @@ class CustomizeDeploymentService
   def customize(answers_needed: 0, quiz_id: nil, custom_questions: [])
     ActiveRecord::Base.transaction do
       @deployment.answers_needed = answers_needed
+      return @deployment.tap(&:save!) if answers_needed.zero?
 
-      if answers_needed.positive?
-        @deployment.quiz = find_or_create_quiz(quiz_id, custom_questions)
+      # There will be a quiz administered
+      @deployment.quiz = get_quiz quiz_id, with_customizations: custom_questions
+      return @deployment.tap(&:save!) if custom_questions.empty?
 
-        # Apply custom questions if provided
-        if custom_questions.any?
-          quiz_params = { questions: custom_questions }
-          unless QuizUpdater.new(@deployment.quiz).update(quiz_params)
-            raise ActiveRecord::RecordInvalid, @deployment.quiz
-          end
-        end
-      end
-
-      @deployment.save!
+      # The quiz has custom questions
+      customize_quiz custom_questions
+      @deployment.tap(&:save!)
     end
-
-    @deployment
-  rescue ActiveRecord::RecordInvalid => e
-    e.record
+  rescue ActiveRecord::RecordInvalid => invalid
+    invalid.record
   end
 
   private
 
-  def find_or_create_quiz(quiz_id, custom_questions)
-    if quiz_id.present?
-      existing_quiz = Quiz.find_by(id: quiz_id)
+  def get_quiz(quiz_id, with_customizations:)
+    quiz = Quiz.where(id: quiz_id).try(:first)
+    return quiz if should_use_existing_quiz quiz, with_customizations
 
-      # Use existing quiz if author owns it or it's a suggested quiz with no customizations
-      if existing_quiz && can_use_existing_quiz?(existing_quiz, custom_questions)
-        existing_quiz
-      else
-        create_quiz_from_template(quiz_id)
-      end
-    else
-      create_new_quiz
-    end
+    create_quiz_from_template quiz_id
   end
 
-  def can_use_existing_quiz?(quiz, custom_questions)
-    # Author can always modify their own quiz
-    return true if @author_identifier.author&.quiz?(quiz)
-
-    # LTI user can modify their own quiz (matched by lti_uid)
-    return true if @author_identifier.lti_uid.present? && quiz.lti_uid == @author_identifier.lti_uid
-
-    # For suggested quizzes (no author), only reuse if no customizations are being added
-    return custom_questions.empty? if quiz.author_id.nil? && quiz.lti_uid.nil?
-
-    # Otherwise, don't reuse
-    false
-  end
-
-  def create_new_quiz
-    quiz = Quiz.new(
-      case: @deployment.case,
-      customized: true,
-      **@author_identifier.quiz_attributes
-    )
-    quiz.save_without_validation!
-    quiz
+  def should_use_existing_quiz(quiz, with_customizations)
+    return false unless quiz # Can’t use existing if there isn’t one
+    return true if @author_identifier.author.quiz? quiz # Can mutate their own
+    with_customizations.empty? # Copy on write (only copy if needed)
   end
 
   def create_quiz_from_template(template_id)
-    quiz = Quiz.new(
-      case: @deployment.case,
-      template_id: template_id,
-      customized: true,
-      **@author_identifier.quiz_attributes
-    )
-    quiz.save_without_validation!
-    quiz
+    Quiz.create! case: @deployment.case,
+                 template_id: template_id,
+                 customized: true
+  end
+
+  def customize_quiz(custom_questions)
+    quiz_params = @author_identifier.quiz_attributes
+                                    .merge questions: custom_questions
+    QuizUpdater.new(@deployment.quiz).update quiz_params
   end
 
   # Since deployment customization from an LTI ContentItemSelection request
-  # can happen before the instructor's {Reader} account has been created, we
+  # can happen before the instructor’s {Reader} account has been created, we
   # have to identify the author of a {Quiz} by {author_id} and {lti_uid} in
   # concert. {author_id} takes precedence if set; we fall back to {lti_uid}
   # (when creating and when finding quizzes) if not.
@@ -98,7 +66,7 @@ class CustomizeDeploymentService
     end
 
     def author
-      @author ||= Reader.find_by(id: author_id)
+      @author ||= Reader.find author_id
     end
 
     def quiz_attributes

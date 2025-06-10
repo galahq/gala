@@ -14,14 +14,14 @@ import AllQuizzes from 'suggested_quizzes/AllQuizzes'
 import QuizDetails from 'suggested_quizzes/QuizDetails'
 import CaseOverview from 'overview/CaseOverview'
 
-import { newSuggestedQuiz } from 'redux/actions'
+import { createSuggestedQuiz } from 'redux/actions'
 
 import type { ContextRouter } from 'react-router-dom'
 
 type Props = ContextRouter & {
-  newSuggestedQuiz: typeof newSuggestedQuiz,
+  createSuggestedQuiz: typeof createSuggestedQuiz,
 }
-function SuggestedQuizzes ({ newSuggestedQuiz, history, match }: Props) {
+function SuggestedQuizzes ({ createSuggestedQuiz, history, match }: Props) {
   return (
     <Container>
       <Route component={CaseOverview} />
@@ -49,11 +49,11 @@ function SuggestedQuizzes ({ newSuggestedQuiz, history, match }: Props) {
             path="/suggested_quizzes"
             render={({ history }) => (
               <AllQuizzes
-                onCreateQuiz={() => {
-                  newSuggestedQuiz({ param: "new", questions: [], title: "" }).then(quizId => {
-                    history.push(`/suggested_quizzes/${quizId}`)
-                  })
-                }}
+                onCreateQuiz={() =>
+                  createSuggestedQuiz().then(id =>
+                    history.push(`/suggested_quizzes/${id}`)
+                  )
+                }
               />
             )}
           />
@@ -65,7 +65,7 @@ function SuggestedQuizzes ({ newSuggestedQuiz, history, match }: Props) {
 
 export default connect(
   null,
-  { newSuggestedQuiz }
+  { createSuggestedQuiz }
 )(SuggestedQuizzes)
 
 const Container = styled.div`

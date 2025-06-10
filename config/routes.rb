@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require 'sidekiq/web'
+require 'sidekiq-scheduler/web'
 
 LOCALES ||= Rails.application.config.i18n.available_locales
 LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/.freeze
 
-# Give React Router any suffix that doesn’t specify a format (with a .json, etc)
+# Give React Router any suffix that doesn't specify a format (with a .json, etc)
 REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/.freeze
 
 Rails.application.routes.draw do
@@ -27,6 +28,10 @@ Rails.application.routes.draw do
   get ':locale/*path.:format', locale: LOCALE_REGEX,
                                to: redirect('%{path}.%{format}')
   get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%{path}')
+
+  get 'sparql/:schema/:qid', to: 'sparql#show', as: 'sparql_canned_query'
+  get 'sparql', to: 'sparql#index', as: 'sparql_search'
+
 
   root to: 'catalog#home'
 
@@ -114,6 +119,8 @@ Rails.application.routes.draw do
     resources :taggings, only: %i[create destroy], param: :tag_name
 
     resources :translations, only: %i[new create show], param: :case_locale
+
+    resources :wikidata_links, only: %i[create destroy]
 
     collection do
       resources :features, module: 'cases', param: :case_slug,

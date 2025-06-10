@@ -120,16 +120,11 @@ class BaseEdgenoteFigure extends React.Component<Props> {
       const { contents } = this.props
 
       const url = contents?.websiteUrl || contents?.fileUrl
-      try {
-        if (url) {
-          new URL(url)
-          window.open(url, '_blank')
-          setTimeout(() => {
-            this.props.deactivate()
-          }, 300)
-        }
-      } catch (e) {
-        console.warn('Invalid URL:', url)
+      if (url) {
+        window.open(url, '_blank')
+        setTimeout(() => {
+          this.props.deactivate()
+        }, 300)
       }
     }
   }

@@ -3,7 +3,6 @@
 json.key_format! camelize: :lower
 
 json.id deployment.id
-json.answers_needed deployment.answers_needed
 
 if selection_params
   json.return_url selection_params['return_url']
@@ -27,7 +26,6 @@ if @suggested_quizzes
     @suggested_quizzes.each do |quiz|
       json.set! quiz.id do
         json.extract! quiz, :id
-        json.title quiz.title
 
         if current_reader == quiz.author ||
            current_reader.lti_uid == quiz.lti_uid

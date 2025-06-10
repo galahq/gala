@@ -18,6 +18,7 @@ gem 'rack-attack'
 gem 'rack-canonical-host'
 gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.0'
+gem 'sidekiq-scheduler'
 
 # Models
 gem 'active_storage_validations'
@@ -34,6 +35,7 @@ gem 'virtus'
 gem 'devise', '~> 4.8'
 gem 'devise-i18n'
 gem 'ims-lti'
+gem 'mediawiki_api'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2', '0.8.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
@@ -76,10 +78,10 @@ gem 'webpacker', '~> 5.4'
 gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print'
+gem 'barnes', require: false
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1' # sentry-ruby
 gem 'table_print'
-gem 'barnes', require: false
 
 # Services
 gem 'email_reply_parser'
@@ -115,9 +117,9 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
+  gem 'pry', '~> 0.14.1'
   gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
-  gem 'pry', '~> 0.14.1'
 
   gem 'capybara'
   gem 'dotenv-rails'
