@@ -15,11 +15,7 @@ ENV BUNDLE_PATH="/usr/local/bundle" \
 RUN apt-get update && apt-get install -y \
     wget gnupg2 build-essential curl python3 wkhtmltopdf \
     libvips git pkg-config libjemalloc-dev lsb-release zlib1g-dev \
-    libffi-dev libyaml-dev libreadline-dev libssl-dev gcc make \
-    && sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' \
-    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-    && apt-get update \
-    && apt-get install -y postgresql-client-16 libpq-dev \
+    libffi-dev libyaml-dev libreadline-dev libssl-dev postgresql-client libpq-dev gcc make \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 

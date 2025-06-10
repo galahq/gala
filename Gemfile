@@ -85,7 +85,6 @@ gem 'barnes', require: false
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
-gem 'sparql-client'
 
 # To seed the database for Heroku review apps, this is included in production
 gem 'factory_bot_rails'
