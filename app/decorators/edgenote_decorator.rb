@@ -26,7 +26,8 @@ class EdgenoteDecorator < ApplicationDecorator
   def file_url
     return nil unless file.attached?
 
-    polymorphic_path file, only_path: true
+    polymorphic_url file, host: h.request&.host_with_port ||
+                                Rails.application.routes.default_url_options[:host]
   end
 
   def print_attribute(attribute)
