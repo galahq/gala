@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
-require 'sidekiq'
-require 'sidekiq-scheduler'
-require 'sidekiq/web'
-require 'sidekiq-scheduler/web'
-
-def redis_configuration # rubocop:disable Metrics/MethodLength
+def redis_configuration
   redis_url = ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' }
   ssl_params = if URI(redis_url).scheme == 'rediss'
                  { verify_mode: OpenSSL::SSL::VERIFY_NONE }

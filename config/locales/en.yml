@@ -327,10 +327,7 @@ en:
     keywords: Keywords
     wikidata:
       link_wikidata: Wikidata Links
-      find_item: Find a Wikidata item
-      find_item_instructions: >
-        Every Wikidata item has a unique identifier called a QID. You can locate an item from the search box by entering its QID or its name.
-      wikidata_instructions: Add rich metadata by linking Wikidata entries to your case.
+      wikidata_instructions: Enter a Wikidata QID to create a resource listing from Wikidata on the case overview page.
       researchers: Researchers
       software: Software
       hardware: Hardware
@@ -338,8 +335,10 @@ en:
       works: Works
       add: Add
       wikidata_placeholder: Enter Wikidata QID
+      wikidata_dialog_title: About Wikidata
       about_wikidata: >
-        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs. Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting information on a wide range of topics and making it discoverable, accessible, and reusable. 
+        In this section, you can connect various resources by using Wikidata QIDs. A QID (or “Query ID”) is a unique identifier assigned to every item in Wikidata, an open knowledge base that serves as a centralized hub of structured data. Wikidata collects and connects information on a wide range of topics, making it accessible and reusable across many platforms and applications.
+        By entering a Wikidata QID, you create a dynamic resource listing on the case overview page, enriching the case study with valuable, interconnected information. For each section of the case study, you can add links to supporting materials, tools, and relevant individuals. This approach builds a network of connections that breaks down information silos, allowing users to see relationships across data points, access supporting materials in context, and gain deeper insights.
       invalid_qid: Invalid QID
       empty_qid: You must enter a value for QID
       entry_exists: This entry already exists

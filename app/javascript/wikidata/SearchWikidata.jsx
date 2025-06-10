@@ -69,18 +69,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
       } else if (query.length > 2) {
         // Regular search
         const response = await Orchard.harvest('sparql', { query: query.trim() })
-        
-        // Deduplicate results by QID
-        const uniqueResults = response.reduce((acc, current) => {
-          const x = acc.find(item => item.qid === current.qid)
-          if (!x) {
-            return acc.concat([current])
-          } else {
-            return acc
-          }
-        }, [])
-        
-        setResults(uniqueResults)
+        setResults(response)
       }
     } catch (error) {
       setResults([])
@@ -148,7 +137,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
 
   return (
     <>
-      <div style={{ marginBottom: '12px' }}>
+      <div style={{ marginBottom: '12px'}}>
         <Button
           icon="add"
           title="Add"
@@ -165,12 +154,9 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
         >
           <div className="pt-dialog-body">
             <StyledControlGroup
-              label={<FormattedMessage id="catalog.wikidata.findItem" />}
+              label='Find a Wikidata item'
               className="pt-vertical"
             >
-              <div className="pt-callout pt-dark pt-icon-hand-right">
-                <FormattedMessage id="catalog.wikidata.findItemInstructions" />
-              </div>
               <SectionTitle>Choose an item type</SectionTitle>
               <div style={{ width: '200px' }}>
                 <Select
@@ -200,63 +186,63 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
               </div>
               <SectionTitle>Find a Wikidata item</SectionTitle>
               <div style={{ width: '400px' }}>
-                <Suggest
-                  inputProps={{
-                    style: { width: '400px' },
-                    placeholder: 'Search Wikidata or enter QID (e.g. Q937)',
-                    value: query,
-                    onChange: handleQueryChange,
-                    onFocus: handleInputFocus,
-                    rightElement: query && (
-                      <Button
-                        minimal
-                        icon="cross"
-                        title="Clear search"
-                        onClick={handleClear}
-                      />
-                    ),
-                  }}
-                  items={results}
-                  itemRenderer={(item, { handleClick, modifiers }) => (
-                    <MenuItem
-                      {...modifiers}
-                      key={item.qid}
-                      label={item.description && item.description.length > 40 ? `${item.description.slice(0, 40)}...` : item.description}
-                      text={`${item.label}`}
-                      onClick={handleClick}
+              <Suggest
+                inputProps={{
+                  style: { width: '400px' },
+                  placeholder: 'Search Wikidata or enter QID (e.g. Q937)',
+                  value: query,
+                  onChange: handleQueryChange,
+                  onFocus: handleInputFocus,
+                  rightElement: query && (
+                    <Button
+                      minimal
+                      icon="cross"
+                      title="Clear search"
+                      onClick={handleClear}
                     />
-                  )}
-                  inputValueRenderer={item => item}
-                  closeOnSelect={false}
-                  popoverProps={{
-                    minimal: true,
-                    captureDismiss: true,
-                    usePortal: false,
-                    popoverClassName: 'wikidata-suggest-popover',
-                    targetProps: { style: { width: '100%' } },
-                  }}
-                  initialContent={<MenuItem disabled text="Type to search or enter QID" />}
-                  noResults={
-                    <MenuItem
-                      disabled
-                      text={
-                        loading ? (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <Spinner className="pt-small" intent="primary" />
-                            <span>Searching...</span>
-                          </div>
-                        ) : error ? (
-                          error
-                        ) : query && results.length === 0 ? (
-                          'No results'
-                        ) : (
-                          'Type to search or enter QID'
-                        )
-                      }
-                    />
-                  }
-                  onItemSelect={handleItemSelect}
-                />
+                  ),
+                }}
+                items={results}
+                itemRenderer={(item, { handleClick, modifiers }) => (
+                  <MenuItem
+                    {...modifiers}
+                    key={item.qid}
+                    label={item.description && item.description.length > 40 ? `${item.description.slice(0, 40)}...` : item.description}
+                    text={`${item.label}`}
+                    onClick={handleClick}
+                  />
+                )}
+                inputValueRenderer={item => item}
+                closeOnSelect={false}
+                popoverProps={{
+                  minimal: true,
+                  captureDismiss: true,
+                  usePortal: false,
+                  popoverClassName: 'wikidata-suggest-popover',
+                  targetProps: { style: { width: '100%' } },
+                }}
+                initialContent={<MenuItem disabled text="Type to search or enter QID" />}
+                noResults={
+                  <MenuItem
+                    disabled
+                    text={
+                      loading ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <Spinner className="pt-small" intent="primary" />
+                          <span>Searching...</span>
+                        </div>
+                      ) : error ? (
+                        error
+                      ) : query && results.length === 0 ? (
+                        'No results'
+                      ) : (
+                        'Type to search or enter QID'
+                      )
+                    }
+                  />
+                }
+                onItemSelect={handleItemSelect}
+              />
               </div>
             </StyledControlGroup>
 

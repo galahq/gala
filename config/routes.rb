@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require 'sidekiq/web'
-require 'sidekiq-scheduler/web'
 
 LOCALES ||= Rails.application.config.i18n.available_locales
 LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/.freeze
 
-# Give React Router any suffix that doesn't specify a format (with a .json, etc)
+# Give React Router any suffix that doesn’t specify a format (with a .json, etc)
 REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/.freeze
 
 Rails.application.routes.draw do

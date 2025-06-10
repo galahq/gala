@@ -7,7 +7,6 @@ import * as React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import styled from 'styled-components'
-import { Popover, Position } from '@blueprintjs/core'
 
 import type { WikidataLink } from 'redux/state'
 import type { IntlShape } from 'react-intl'
@@ -23,18 +22,6 @@ type Props = {
   wikidataLinks: WikidataLink[],
   intl: IntlShape,
 }
-
-const PopoverContent = styled.div`
-  padding: 1em;
-  max-width: 400px;
-
-  .learn-more-link {
-    &:after {
-      content: '›';
-      margin-left: 0.25rem;
-    }
-  }
-`
 
 /**
  * LinkWikidata component with optimized performance
@@ -74,39 +61,26 @@ const LinkWikidata = ({
     [wikidataLinks, onChange]
   )
 
-  if (!editing && wikidataLinks.length === 0) {
-    return null
-  }
-
   return (
     <CatalogSection>
       <Container>
-        <SectionTitle>
-          <div className="wikidata-title pt-dark">
-            <FormattedMessage id="catalog.wikidata.linkWikidata" />
-            <Popover
-              content={
-                <PopoverContent>
-                  <FormattedMessage id="catalog.wikidata.aboutWikidata" />
-                  <a 
-                    href="https://www.wikidata.org/wiki/Wikidata:Introduction" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="learn-more-link"
-                  >
-                    <FormattedMessage id="catalog.learnMore" />
-                  </a>
-                </PopoverContent>
-              }
-              position={Position.RIGHT}
-              className="pt-dark"
-            >
-              <button className="pt-button pt-minimal pt-icon-help" aria-label="Help" />
-            </Popover>
-          </div>
-        </SectionTitle>
+      <SectionTitle>
+              <div className="wikidata-title">
+                <FormattedMessage id="catalog.wikidata.linkWikidata" />
+              </div>
+            </SectionTitle>
         {editing && (
           <>
+           
+            <div className="wikidata-instructions">
+              <FormattedMessage id="catalog.wikidata.wikidataInstructions" />
+              <LearnMoreLink
+                target="_blank"
+                href="https://docs.learngala.com/docs/authoring-adding-rich-metadata"
+              >
+                <span className="learn-more-text">Learn more</span> ›
+              </LearnMoreLink>
+            </div>
             <SearchWikidata 
               wikidataLinksPath={wikidataLinksPath} 
               onChange={(newLink) => {
@@ -150,6 +124,14 @@ const Container = styled.div`
     font-weight: 700;
   }
 
+  .wikidata-instructions {
+    font-size: 13px;
+    color: #ebeae3;
+    opacity: 0.8;
+    margin-top: -8px;
+    margin-bottom: 12px;
+  }
+
   .wikidata-container {
     display: flex;
     flex-direction: column;
@@ -157,6 +139,22 @@ const Container = styled.div`
 
   .wikidata-info-sign {
     background: rgba(139, 148, 156, 0.15);
+  }
+`
+
+const LearnMoreLink = styled.a`
+  padding-left: 0.5rem;
+  color: white;
+
+  .learn-more-text {
+    text-decoration: underline;
+  }
+
+  &:hover {
+    .learn-more-text {
+      text-decoration: underline;
+    }
+    color: #6acb72;
   }
 `
 
