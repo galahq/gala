@@ -11,3 +11,7 @@ licenses:
     name: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
     active: true
     url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  - id: cc_by_sa
+    name: Creative Commons Attribution-ShareAlike 4.0 International
+    active: true
+    url: https://creativecommons.org/licenses/by-sa/4.0/
