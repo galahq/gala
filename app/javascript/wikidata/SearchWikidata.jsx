@@ -21,9 +21,34 @@ const SectionTitle = styled.h5`
   }
 `
 
+const MenuItemContent = styled.div`
+  display: flex;
+  width: 440px;
+  overflow: hidden;
+  
+  .item-label {
+    flex: 3;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 8px;
+  }
+  
+  .item-description {
+    flex: 2;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+`
+
 const StyledControlGroup = styled(ControlGroup)`
   .wikidata-suggest-popover {
-    min-width: 500px;
+    min-width: 460px;
   }
 `
 
@@ -162,7 +187,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                 <FormattedMessage id="catalog.wikidata.findItemInstructions" />
               </div>
               <SectionTitle><FormattedMessage id="catalog.wikidata.chooseItemType" /></SectionTitle>
-              <div style={{ width: '200px' }}>
+              <div style={{ width: '180px' }}>
                 <Select
                   className="pt-select pt-fill pt-dark"
                   filterable={false}
@@ -213,8 +238,14 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                       active={active}
                       disabled={disabled}
                       key={item.qid}
-                      label={item.description && item.description.length > 40 ? `${item.description.slice(0, 40)}...` : item.description}
-                      text={`${item.label}`}
+                      text={
+                        <MenuItemContent>
+                          <span className="item-label">{item.label}</span>
+                          {item.description && (
+                            <span className="item-description">{item.description}</span>
+                          )}
+                        </MenuItemContent>
+                      }
                       onClick={handleClick}
                     />
                   )}
