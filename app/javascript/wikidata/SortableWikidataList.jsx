@@ -444,7 +444,7 @@ const ShowState = ({ loading, results, editing }) => {
               <span className="pt-text-overflow-ellipsis wikidata-link">
                 {results.entityLabel}
               </span>
-              <span className="wikidata-separator">›</span>
+              <span className="wikidata-separator"></span>
             </a>
           </div>
           <div className="wikidata-details-section">
