@@ -10,10 +10,10 @@ class SparqlController < ApplicationController
     render json: result
   end
 
-  # @route [GET] `/sparql?query
+  # @route [GET] `/sparql?query&schema`
   def index
     wikidata = Wikidata.new I18n.locale
-    result = wikidata.search params[:query]
+    result = wikidata.search params[:query], params[:schema]
     head :not_found and return if result.nil?
     render json: result
   end

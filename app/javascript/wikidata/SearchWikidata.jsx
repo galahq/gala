@@ -92,8 +92,11 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
           setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
         }
       } else if (query.length > 2) {
-        // Regular search
-        const response = await Orchard.harvest('sparql', { query: query.trim() })
+        // Regular search with schema filtering
+        const response = await Orchard.harvest('sparql', { 
+          query: query.trim(),
+          schema: selectedSchema
+        })
         setResults(response)
       }
     } catch (error) {
@@ -127,6 +130,9 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
 
   const handleSchemaSelect = (schema) => {
     setSelectedSchema(schema)
+    if (query && query.length > 2) {
+      runQuery(query)
+    }
     if (query && selectedItem) {
       fetchDetailedItem(selectedItem.qid)
     }

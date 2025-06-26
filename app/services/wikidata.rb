@@ -4,6 +4,7 @@ require 'sparql/client'
 require 'json'
 require 'date'
 require 'active_support/core_ext/string/inflections'
+require 'set'
 
 =begin
 examples:
@@ -175,8 +176,34 @@ class Wikidata
     raise
   end
 
-  def search(partial_label)
+  # Search Wikidata for entities matching the given label
+  # @param partial_label [String] The search term to look for
+  # @param schema [String, nil] Optional schema type to filter results. 
+  #   Valid values: 'researchers', 'software', 'hardware', 'grants', 'works'
+  #   When provided, only returns entities that match the schema's instance types
+  # @return [Array<Hash>] Array of search results with qid, label, description, instance, and image
+  def search(partial_label, schema = nil)
     partial_label = partial_label.downcase
+
+    # Define instance types for each schema
+    schema_instances = {
+      researchers: ['wd:Q5'],
+      software: ['wd:Q341', 'wd:Q7397', 'wd:Q1639024', 'wd:Q21127166', 'wd:Q21129801', 'wd:Q24529812', 'wd:Q9143'],
+      hardware: ['wd:Q3966', 'wd:Q55990535'],
+      grants: ['wd:Q230788'],
+      works: ['wd:Q47461344']
+    }
+
+    # Build the instance filter if schema is provided
+    instance_filter = ''
+    if schema && schema_instances[schema.to_sym]
+      instances = schema_instances[schema.to_sym]
+      instance_values = instances.map { |i| i }.join(' ')
+      instance_filter = <<-SPARQL
+        ?item wdt:P31/wdt:P279* ?instance .
+        VALUES ?instance { #{instance_values} }
+      SPARQL
+    end
 
     sparql_query = <<-SPARQL
       PREFIX wikibase: <http://wikiba.se/ontology#>
@@ -185,18 +212,20 @@ class Wikidata
       PREFIX wdt: <http://www.wikidata.org/prop/direct/>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-      SELECT ?item ?itemLabel ?description ?image ?instanceLabel WHERE {
+      SELECT DISTINCT ?item ?itemLabel ?description ?image ?instanceLabel WHERE {
         SERVICE wikibase:mwapi {
           bd:serviceParam wikibase:endpoint "www.wikidata.org";
                          wikibase:api "EntitySearch";
                          mwapi:search "%{query}";
                          mwapi:language "en";
-                         mwapi:limit "10".
+                         mwapi:limit "20".
           ?item wikibase:apiOutputItem mwapi:item.
         }
 
         ?item rdfs:label ?itemLabel.
         FILTER(LANG(?itemLabel) = "en")
+
+        #{instance_filter}
 
         OPTIONAL { ?item schema:description ?description. FILTER(LANG(?description) = "en") }
         OPTIONAL { ?item wdt:P31 ?instance. ?instance rdfs:label ?instanceLabel. FILTER(LANG(?instanceLabel) = "en") }
@@ -208,15 +237,22 @@ class Wikidata
     Rails.logger.info "Wikidata query with mwapi: #{sparql_query}"
 
     results = @client.query(sparql_query)
+    
+    # Deduplicate results by QID, keeping the first occurrence of each
+    seen_qids = Set.new
     results.map do |result|
+      qid = result[:item].to_s.split('/').last
+      next if seen_qids.include?(qid)
+      seen_qids.add(qid)
+      
       {
-        qid: result[:item].to_s.split('/').last,
+        qid: qid,
         label: result[:itemLabel].to_s,
         description: result[:description]&.to_s,
         instance: result[:instanceLabel]&.to_s,
         image: result[:image]&.to_s
       }
-    end
+    end.compact
   rescue StandardError => e
     Rails.logger.error "Error in Wikidata search method: #{e.message}"
     raise
