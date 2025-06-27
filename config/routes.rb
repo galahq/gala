@@ -3,10 +3,10 @@
 require 'sidekiq/web'
 
 LOCALES ||= Rails.application.config.i18n.available_locales
-LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join("|")}/.freeze
+LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join('|')}/
 
 # Give React Router any suffix that doesn’t specify a format (with a .json, etc)
-REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/.freeze
+REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/
 
 Rails.application.routes.draw do
   concern :has_statistics do
@@ -25,8 +25,11 @@ Rails.application.routes.draw do
   get '/read/497/(*x)', to: redirect('/cases/mi-wolves')
 
   get ':locale/*path.:format', locale: LOCALE_REGEX,
-                               to: redirect('%{path}.%{format}')
-  get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%{path}')
+                               to: redirect('%<path>s.%<format>s')
+  get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%<path>s')
+
+  get 'sparql/:schema/:qid', to: 'sparql#show', as: 'sparql_canned_query'
+  get 'sparql', to: 'sparql#index', as: 'sparql_search'
 
   root to: 'catalog#home'
 
@@ -232,8 +235,7 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  post 'admin/cases/:id/copy', to: "admin/cases#copy", as: 'copy_admin_case'
+  post 'admin/cases/:id/copy', to: 'admin/cases#copy', as: 'copy_admin_case'
 
   get 'runtime/stats', to: 'runtime#stats'
-
 end

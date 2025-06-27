@@ -76,15 +76,16 @@ gem 'webpacker', '~> 5.4'
 gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print'
+gem 'barnes', require: false
 gem 'lograge'
 gem 'sentry-raven', '~> 3.1' # sentry-ruby
 gem 'table_print'
-gem 'barnes', require: false
 
 # Services
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
+gem 'sparql-client'
 
 # To seed the database for Heroku review apps, this is included in production
 gem 'factory_bot_rails'
@@ -115,9 +116,9 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
+  gem 'pry', '~> 0.14.1'
   gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
-  gem 'pry', '~> 0.14.1'
 
   gem 'capybara'
   gem 'dotenv-rails'
