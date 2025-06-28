@@ -98,6 +98,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
           latitude,
           longitude,
           zoom,
+          wikidataLinks,
         } = state.caseData
         data = {
           case: {
@@ -114,6 +115,7 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
             latitude,
             longitude,
             zoom,
+            wikidataLinks,
             coverUrl: baseCoverUrl,
           },
         }
