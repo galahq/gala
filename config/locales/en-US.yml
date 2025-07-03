@@ -321,7 +321,7 @@ en-US:
       link_wikidata: Wikidata Links
       find_item: Find a Wikidata item
       find_item_instructions: >
-        Every Wikidata item has a unique identifier called a QID. You can locate an item from the search box by entering its QID or its name.
+        Every Wikidata item has a unique identifier called a QID. You can locate an item from the search box by entering its QID or its name. Can't find an item? Add an entry to Wikidata [here](https://www.wikidata.org/wiki/Special:NewItem).
       wikidata_instructions: Add rich metadata by linking Wikidata entries to your case.
       researchers: Researchers
       software: Software
