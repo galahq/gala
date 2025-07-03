@@ -662,6 +662,7 @@ es:
       bold: "Texto en negrita."
       code: "Inline style: Code."
       header: "Encabezado."
+      subheading: "Subencabezado."
       italic: "Texto en cursiva."
       ol: "Enumerar lista."
       ul: "Lista no numerada."

@@ -155,6 +155,7 @@ class CardContents extends React.Component<Props, State> {
                     actions={{
                       code: false,
                       header: true,
+                      subheading: true,
                       blockquote: true,
                       addEdgenoteEntity: !nonNarrative,
                       addCitationEntity: !nonNarrative,

@@ -44,6 +44,7 @@ type ActionName =
   | 'ol'
   | 'ul'
   | 'header'
+  | 'subheading'
   | 'addEdgenoteEntity'
   | 'addCitationEntity'
   | 'addMathEntity'
@@ -54,9 +55,15 @@ type ActionName =
 const ACTIONS: Action[] = [
   {
     name: 'header',
-    icon: 'header',
+    icon: 'header-one',
     call: async eS => RichUtils.toggleBlockType(eS, 'header-two'),
     active: blockTypeEquals('header-two'),
+  },
+  {
+    name: 'subheading',
+    icon: 'header-two',
+    call: async eS => RichUtils.toggleBlockType(eS, 'header-three'),
+    active: blockTypeEquals('header-three'),
   },
   {
     name: 'italic',

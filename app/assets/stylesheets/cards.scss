@@ -32,4 +32,13 @@
       -webkit-font-feature-settings: "smcp" !important;
     }
   }
+  
+  /* Specific styling for subheadings (h3) */
+ h2 {
+  font-size: larger;
+ }
+ 
+  h3 {
+    font-size: large;
+  }
 }
