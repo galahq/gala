@@ -14,6 +14,7 @@ import { Orchard } from 'shared/orchard'
 import { debounce } from 'lodash'
 import { orderedSchemas, schemasMap } from './schema'
 import styled from 'styled-components'
+import Markdown from 'utility/Markdown'
 
 const SectionTitle = styled.h5`
   &:not(:first-child) {
@@ -190,7 +191,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
               className="pt-vertical"
             >
               <div className="pt-callout pt-dark pt-icon-hand-right">
-                <FormattedMessage id="catalog.wikidata.findItemInstructions" />
+                <Markdown source={intl.formatMessage({ id: 'catalog.wikidata.findItemInstructions' })} />
               </div>
               <SectionTitle><FormattedMessage id="catalog.wikidata.chooseItemType" /></SectionTitle>
               <div style={{ width: '180px' }}>
