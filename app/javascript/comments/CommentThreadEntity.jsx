@@ -24,13 +24,17 @@ function mergeProps (
   _,
   { children, history, match }
 ) {
+  // fix 404 when changing the history
+  const basePath = match.url.split('/comments/')[0]
+  const url =
+    cardId != null && commentThreadId
+      ? `${basePath}/comments/${commentThreadId}`
+      : ''
+
   return {
     onClick: () => {
-      !cardId ||
-        disabled ||
-        history.replace(
-          `${match.url}/cards/${cardId}/comments/${commentThreadId}`
-        )
+      if (!cardId || disabled || url === '') return
+      history.replace(url)
     },
     children:
       children.length > 0 &&
@@ -39,8 +43,21 @@ function mergeProps (
 }
 
 const CommentThreadEntity = ({ onClick, children }) => {
+  const handleKeyDown = (e: SyntheticKeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
-    <span className="c-comment-thread-entity" onClick={onClick}>
+    <span
+      className="c-comment-thread-entity"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+    >
       {children}
     </span>
   )

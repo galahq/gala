@@ -6,6 +6,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { getDefaultKeyBinding } from 'draft-js'
+import { FormattedMessage } from 'react-intl'
 
 import Identicon from 'shared/Identicon'
 import CommentEditor from 'conversation/CommentEditor'
@@ -36,6 +37,7 @@ function ResponseForm ({
   // Reset local contents state if we change to another thread or are reset by
   // our parent.
   const [editorState, setEditorState] = useState(editorStateFromProps)
+  const [isSaving, setIsSaving] = useState(false)
   useEffect(
     () => {
       setEditorState(editorStateFromProps)
@@ -51,7 +53,23 @@ function ResponseForm ({
     height && onResize(height)
   })
 
+  // clear saving indicator once the editor is flushed
+  useEffect(() => {
+    if (
+      isSaving &&
+      editorStateFromProps.getCurrentContent().hasText() === false
+    ) {
+      // throttle the submit button to avoid spamming w/ dupes
+      setTimeout(() => setIsSaving(false), 1000)
+    }
+  }, [editorStateFromProps, isSaving])
+
   if (reader == null) return null
+
+  function handleSubmit () {
+    setIsSaving(true)
+    onSubmitComment(editorState, [])
+  }
 
   return (
     // $FlowFixMe
@@ -71,21 +89,26 @@ function ResponseForm ({
         aria-label={intl.formatMessage({
           id: 'comments.new.respond',
         })}
-        className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
+        className={`pt-button pt-small pt-minimal pt-intent-primary ${
+          isSaving ? '' : 'pt-icon-upload'
+        }`}
         disabled={
+          isSaving ||
           editorState
             .getCurrentContent()
             .getPlainText()
             .trim() === ''
         }
-        onClick={() => onSubmitComment(editorState, [])}
-      />
+        onClick={handleSubmit}
+      >
+        {isSaving && <FormattedMessage id="comments.edit.saving" />}
+      </SendButton>
     </Container>
   )
 
   function submitCommentOnEnter (e: SyntheticKeyboardEvent<*>) {
     if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-      onSubmitComment(editorState, [])
+      !isSaving && handleSubmit()
       return 'noop'
     }
 

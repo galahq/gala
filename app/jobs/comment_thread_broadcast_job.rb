@@ -2,6 +2,8 @@
 
 # @see CommentThread
 class CommentThreadBroadcastJob < ActiveJob::Base
+  retry_on StandardError
+
   def perform(comment_thread)
     ForumChannel.broadcast_to(
       comment_thread.forum,

@@ -391,6 +391,7 @@ en:
     edit:
       edit_comment: Edit comment
       save_comment: Save comment
+      saving: Saving...
     index:
       all_comments: All comments
       conversation: Conversation
