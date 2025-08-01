@@ -6,7 +6,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { EditorState, RichUtils, SelectionState } from 'draft-js'
+import { EditorState, RichUtils } from 'draft-js'
 
 import CardContents from './CardContents'
 
@@ -142,7 +142,7 @@ export type CardProps = {|
   ...DispatchProps,
   addCommentThread: () => Promise<any>,
   onChange: EditorState => void,
-  keyBindingFn: SyntheticKeyboardEvent => string,
+  keyBindingFn: SyntheticKeyboardEvent<*> => string,
   handleKeyCommand: string => DraftHandleValue,
   handleBeforeInput: (string, EditorState) => DraftHandleValue,
   getEdgenote: () => Promise<string>,

@@ -46,14 +46,14 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    if params[:locale]
-      I18n.locale = params[:locale]
-    elsif reader_signed_in? && !current_reader.locale.blank?
-      I18n.locale = current_reader.locale
-    else
-      I18n.locale = http_accept_language
-                    .compatible_language_from I18n.available_locales
-    end
+    I18n.locale = if params[:locale]
+                    params[:locale]
+                  elsif reader_signed_in? && !current_reader.locale.blank?
+                    current_reader.locale
+                  else
+                    http_accept_language
+                      .compatible_language_from I18n.available_locales
+                  end
   rescue I18n::InvalidLocale
     I18n.locale = :en
   end
@@ -97,6 +97,7 @@ class ApplicationController < ActionController::Base
   def confirm_tos
     return if current_user.terms_of_service.to_i >=
               Rails.application.config.current_terms_of_service
+
     session[:forwarding_url] = session.delete(:user_return_to)
     redirect_to edit_tos_reader_path(current_user),
                 alert: t('readers.edit_tos.must_accept')

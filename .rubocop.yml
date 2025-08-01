@@ -1,5 +1,9 @@
 AllCops:
   TargetRubyVersion: 3.2
+Style/FormatStringToken:
+  Enabled: false
+Style/RedundantFreeze:
+  Enabled: false
 Style/AndOr:
   Enabled: false
 Style/AsciiComments:
@@ -61,17 +65,12 @@ Layout/ClassStructure:
       - after_rollback
   ExpectedOrder:
       - module_inclusion
-      - inner_class
-      - overrides
       - constants
-      - attributes
-      - enum
-      - associations
-      - validations
-      - hooks
+      - association
+      - public_attribute_macros
+      - macros
       - public_class_methods
       - initializer
       - public_methods
       - protected_methods
       - private_methods
-      - memoize
