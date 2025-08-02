@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # @see CommentThread
-class CommentThreadBroadcastJob < ActiveJob::Base
-  retry_on StandardError
+class CommentThreadBroadcastJob < ApplicationJob
+  queue_as :critical
 
   def perform(comment_thread)
     ForumChannel.broadcast_to(

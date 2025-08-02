@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 # Broadcast edits to a case
-class EditBroadcastJob < ActiveJob::Base
+class EditBroadcastJob < ApplicationJob
+  queue_as :high
+
   def perform(watchable, case_slug:, cached_params:, type:, session_id:)
     @watchable = maybe_decorated watchable
     @case_slug = case_slug

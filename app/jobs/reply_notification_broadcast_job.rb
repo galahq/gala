@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 # @see ReplyNotification
-class ReplyNotificationBroadcastJob < ActiveJob::Base
+class ReplyNotificationBroadcastJob < ApplicationJob
+  queue_as :critical
+
   def perform(notification)
     ReaderNotificationsChannel
       .broadcast_to notification.reader,
