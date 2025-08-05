@@ -34,8 +34,9 @@ function ResponseForm ({
   onSubmitComment,
   onResize,
 }: Props) {
-  // Completely isolate local editor state from Redux to prevent websocket interference
+  // Local state management
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
+  const [isSaving, setIsSaving] = useState(false)
   const prevThreadId = useRef(threadId)
 
   // Only reset editor when thread actually changes
@@ -44,12 +45,13 @@ function ResponseForm ({
       if (prevThreadId.current !== threadId) {
         setEditorState(EditorState.createEmpty())
         prevThreadId.current = threadId
+        setIsSaving(false) // Reset saving state on thread change
       }
     },
     [threadId]
   )
 
-  // Callback with the element's height every time we rerender so the
+  // Callback with the element’s height every time we rerender so the
   // scroll-view preceding this input can be resized.
   const containerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -57,13 +59,25 @@ function ResponseForm ({
     height && onResize(height)
   })
 
-  function handleSubmitComment () {
-    onSubmitComment(editorState, [])
-    // Properly clear editor content while maintaining cursor position
-    setEditorState(clearEditorContent(editorState))
+  async function handleSubmitComment () {
+    if (isSaving || editorState.getCurrentContent().getPlainText().trim() === '') {
+      return // Prevent duplicate submissions or empty comments
+    }
+
+    try {
+      setIsSaving(true)
+      await onSubmitComment(editorState, [])
+      setEditorState(clearEditorContent(editorState))
+    } catch (error) {
+      console.error('Error submitting comment:', error)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   if (reader == null) return null
+
+  const ariaLabel = intl.formatMessage({ id: `${isSaving ? 'comments.edit.saving' : 'comments.new.respond'}` })
 
   return (
     // $FlowFixMe
@@ -74,17 +88,16 @@ function ResponseForm ({
         <CommentEditor
           editorState={editorState}
           keyBindingFn={submitCommentOnEnter}
-          onChange={setEditorState}
+          onChange={eS => setEditorState(eS)}
           onBlur={() => onSaveChanges(editorState)}
         />
       </Input>
 
       <SendButton
-        aria-label={intl.formatMessage({
-          id: 'comments.new.respond',
-        })}
+        aria-label={ariaLabel}
         className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
         disabled={
+          isSaving ||
           editorState
             .getCurrentContent()
             .getPlainText()
@@ -96,7 +109,7 @@ function ResponseForm ({
   )
 
   function submitCommentOnEnter (e: SyntheticKeyboardEvent<*>) {
-    if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey && !isSaving) {
       handleSubmitComment()
       return 'noop'
     }
