@@ -5,12 +5,11 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { getDefaultKeyBinding, EditorState } from 'draft-js'
+import { getDefaultKeyBinding } from 'draft-js'
 
 import Identicon from 'shared/Identicon'
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
-import { clearEditorContent } from 'draft/helpers'
 
 import type {
   CommentFormProps,
@@ -34,21 +33,14 @@ function ResponseForm ({
   onSubmitComment,
   onResize,
 }: Props) {
-  // Local state management
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
-  const [isSaving, setIsSaving] = useState(false)
-  const prevThreadId = useRef(threadId)
-
-  // Only reset editor when thread actually changes
+  // Reset local contents state if we change to another thread or are reset by
+  // our parent.
+  const [editorState, setEditorState] = useState(editorStateFromProps)
   useEffect(
     () => {
-      if (prevThreadId.current !== threadId) {
-        setEditorState(EditorState.createEmpty())
-        prevThreadId.current = threadId
-        setIsSaving(false) // Reset saving state on thread change
-      }
+      setEditorState(editorStateFromProps)
     },
-    [threadId]
+    [threadId, editorStateFromProps]
   )
 
   // Callback with the element’s height every time we rerender so the
@@ -59,31 +51,14 @@ function ResponseForm ({
     height && onResize(height)
   })
 
-  async function handleSubmitComment () {
-    if (isSaving || editorState.getCurrentContent().getPlainText().trim() === '') {
-      return // Prevent duplicate submissions or empty comments
-    }
-
-    try {
-      setIsSaving(true)
-      await onSubmitComment(editorState, [])
-      setEditorState(clearEditorContent(editorState))
-    } catch (error) {
-      console.error('Error submitting comment:', error)
-    } finally {
-      setIsSaving(false)
-    }
-  }
+  const [isSaving, setIsSaving] = useState(false)
 
   if (reader == null) return null
-
-  const ariaLabel = intl.formatMessage({ id: `${isSaving ? 'comments.edit.saving' : 'comments.new.respond'}` })
 
   return (
     // $FlowFixMe
     <Container ref={containerRef}>
       <Identicon width={32} reader={reader} />
-
       <Input>
         <CommentEditor
           editorState={editorState}
@@ -94,8 +69,10 @@ function ResponseForm ({
       </Input>
 
       <SendButton
-        aria-label={ariaLabel}
-        className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
+        aria-label={intl.formatMessage({ id: 'comments.new.respond' })}
+        className={`pt-button pt-small pt-minimal pt-intent-primary ${
+          isSaving ? '' : 'pt-icon-upload'
+        }`}
         disabled={
           isSaving ||
           editorState
@@ -109,8 +86,13 @@ function ResponseForm ({
   )
 
   function submitCommentOnEnter (e: SyntheticKeyboardEvent<*>) {
-    if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey && !isSaving) {
-      handleSubmitComment()
+    if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      // throttle submissions by 1 second
+      !isSaving && onSubmitComment(editorState, [])
+      setIsSaving(true)
+      setTimeout(() => {
+        setIsSaving(false)
+      }, 1000)
       return 'noop'
     }
 

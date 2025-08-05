@@ -15,14 +15,10 @@ end
 
 # pop jobs from redis
 Sidekiq.configure_server do |config|
-  config.redis = redis_configuration.merge(
-    size: 10 # worker connection pool size
-  )
+  config.redis = redis_configuration
 end
 
 # push jobs to redis
 Sidekiq.configure_client do |config|
-  config.redis = redis_configuration.merge(
-    size: 2 # enqueue connection pool size
-  )
+  config.redis = redis_configuration
 end
