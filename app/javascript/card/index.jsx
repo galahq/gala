@@ -6,7 +6,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { EditorState, RichUtils } from 'draft-js'
+import { EditorState, RichUtils, SelectionState } from 'draft-js'
 
 import CardContents from './CardContents'
 
@@ -126,7 +126,38 @@ function mapDispatchToProps (
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-      dispatch(applySelection(id, selection))
+
+      // Check if this selection is for a Math entity or other entity type
+      // If it's a precise entity selection, pass it through unchanged
+      const contentState = eS.getCurrentContent()
+      const blockKey = selection.getAnchorKey()
+      const block = contentState.getBlockForKey(blockKey)
+
+      let isEntitySelection = false
+      if (!selection.isCollapsed() &&
+          selection.getStartKey() === selection.getEndKey()) {
+        // Check if this selection exactly matches an entity range
+        block.findEntityRanges(
+          char => char.getEntity() != null,
+          (start, end) => {
+            if (selection.getStartOffset() === start &&
+                selection.getEndOffset() === end) {
+              isEntitySelection = true
+            }
+          }
+        )
+      }
+
+      // For entity selections (like Math), pass through unchanged
+      // For other selections, use protective logic
+      const selectionState = isEntitySelection
+        ? selection
+        : selection.isCollapsed() ||
+          selection.getStartKey() !== selection.getEndKey()
+          ? SelectionState.createEmpty(selection.getAnchorKey())
+          : selection
+
+      dispatch(applySelection(id, selectionState))
     },
 
     createCommentThread: (cardId: string, eS: EditorState) =>

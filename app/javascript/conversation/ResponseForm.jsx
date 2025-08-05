@@ -5,12 +5,12 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { getDefaultKeyBinding } from 'draft-js'
-import { FormattedMessage } from 'react-intl'
+import { getDefaultKeyBinding, EditorState } from 'draft-js'
 
 import Identicon from 'shared/Identicon'
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
+import { clearEditorContent } from 'draft/helpers'
 
 import type {
   CommentFormProps,
@@ -34,18 +34,22 @@ function ResponseForm ({
   onSubmitComment,
   onResize,
 }: Props) {
-  // Reset local contents state if we change to another thread or are reset by
-  // our parent.
-  const [editorState, setEditorState] = useState(editorStateFromProps)
-  const [isSaving, setIsSaving] = useState(false)
+  // Completely isolate local editor state from Redux to prevent websocket interference
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
+  const prevThreadId = useRef(threadId)
+
+  // Only reset editor when thread actually changes
   useEffect(
     () => {
-      setEditorState(editorStateFromProps)
+      if (prevThreadId.current !== threadId) {
+        setEditorState(EditorState.createEmpty())
+        prevThreadId.current = threadId
+      }
     },
-    [threadId, editorStateFromProps]
+    [threadId]
   )
 
-  // Callback with the element’s height every time we rerender so the
+  // Callback with the element's height every time we rerender so the
   // scroll-view preceding this input can be resized.
   const containerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -53,23 +57,13 @@ function ResponseForm ({
     height && onResize(height)
   })
 
-  // clear saving indicator once the editor is flushed
-  useEffect(() => {
-    if (
-      isSaving &&
-      editorStateFromProps.getCurrentContent().hasText() === false
-    ) {
-      // throttle the submit button to avoid spamming w/ dupes
-      setTimeout(() => setIsSaving(false), 1000)
-    }
-  }, [editorStateFromProps, isSaving])
+  function handleSubmitComment () {
+    onSubmitComment(editorState, [])
+    // Properly clear editor content while maintaining cursor position
+    setEditorState(clearEditorContent(editorState))
+  }
 
   if (reader == null) return null
-
-  function handleSubmit () {
-    setIsSaving(true)
-    onSubmitComment(editorState, [])
-  }
 
   return (
     // $FlowFixMe
@@ -80,7 +74,7 @@ function ResponseForm ({
         <CommentEditor
           editorState={editorState}
           keyBindingFn={submitCommentOnEnter}
-          onChange={eS => setEditorState(eS)}
+          onChange={setEditorState}
           onBlur={() => onSaveChanges(editorState)}
         />
       </Input>
@@ -89,26 +83,21 @@ function ResponseForm ({
         aria-label={intl.formatMessage({
           id: 'comments.new.respond',
         })}
-        className={`pt-button pt-small pt-minimal pt-intent-primary ${
-          isSaving ? '' : 'pt-icon-upload'
-        }`}
+        className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
         disabled={
-          isSaving ||
           editorState
             .getCurrentContent()
             .getPlainText()
             .trim() === ''
         }
-        onClick={handleSubmit}
-      >
-        {isSaving && <FormattedMessage id="comments.edit.saving" />}
-      </SendButton>
+        onClick={() => handleSubmitComment()}
+      />
     </Container>
   )
 
   function submitCommentOnEnter (e: SyntheticKeyboardEvent<*>) {
     if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-      !isSaving && handleSubmit()
+      handleSubmitComment()
       return 'noop'
     }
 

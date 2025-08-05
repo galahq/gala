@@ -8,6 +8,7 @@ import { EditorState, convertToRaw } from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
 import { Intent } from '@blueprintjs/core'
 import { Orchard } from 'shared/orchard'
+import { clearEditorContent } from 'draft/helpers'
 
 import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
 import type { CommentsState, Comment } from 'redux/state'
@@ -57,7 +58,9 @@ export function createComment (
       comment: { content, attachments: attachmentIds },
     })
       .then(() => {
-        dispatch(changeCommentInProgress(threadId, EditorState.createEmpty()))
+        // Clear the comment in progress with proper SelectionState management
+        const emptyState = clearEditorContent(EditorState.createEmpty())
+        dispatch(changeCommentInProgress(threadId, emptyState))
       })
       .catch((error: Error) => {
         dispatch(
