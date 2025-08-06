@@ -19,6 +19,8 @@ module Cases
         format.json do
           render json: {
             caseCreatedAt: @case.created_at,
+            casePublishedAt: @case.published_at,
+            caseUpdatedAt: @case.updated_at,
             deployments: {
               allTime: @case.deployments.size,
               customRange: get_deployments_count
@@ -43,6 +45,8 @@ module Cases
       
       render json: {
         caseCreatedAt: @case.created_at,
+        casePublishedAt: @case.published_at,
+        caseUpdatedAt: @case.updated_at,
         deployments: {
           allTime: @case.deployments.size,
           customRange: get_deployments_count
@@ -86,7 +90,26 @@ module Cases
       if date_range_params[:start_date] && date_range_params[:end_date]
         start_date = Date.parse(date_range_params[:start_date])
         end_date = Date.parse(date_range_params[:end_date])
-        @case.deployments.where(created_at: start_date.beginning_of_day..end_date.end_of_day).size
+        
+        # Debug: Log the date range being processed
+        Rails.logger.info "Deployments date range: #{start_date} to #{end_date}"
+        Rails.logger.info "Date range params: #{date_range_params.inspect}"
+        
+        # Debug: Log all deployments and their creation dates
+        all_deployments = @case.deployments
+        Rails.logger.info "All deployments count: #{all_deployments.count}"
+        all_deployments.each do |deployment|
+          Rails.logger.info "Deployment #{deployment.id} created at: #{deployment.created_at}"
+        end
+        
+        # Use inclusive date range to ensure we capture the full end date
+        filtered_deployments = @case.deployments.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+        Rails.logger.info "Filtered deployments count: #{filtered_deployments.count}"
+        filtered_deployments.each do |deployment|
+          Rails.logger.info "Filtered deployment #{deployment.id} created at: #{deployment.created_at}"
+        end
+        
+        filtered_deployments.size
       else
         @case.deployments.size
       end
@@ -100,6 +123,11 @@ module Cases
       if date_range_params[:start_date] && date_range_params[:end_date]
         start_date = Date.parse(date_range_params[:start_date])
         end_date = Date.parse(date_range_params[:end_date])
+        
+        # Debug: Log the date range being processed
+        Rails.logger.info "Visits date range: #{start_date} to #{end_date}"
+        
+        # Use inclusive date range to ensure we capture the full end date
         @case.events.interesting.where_properties(name: 'visit_element')
              .where(time: start_date.beginning_of_day..end_date.end_of_day)
              .group(:user_id).count.keys.count
@@ -117,6 +145,11 @@ module Cases
       if date_range_params[:start_date] && date_range_params[:end_date]
         start_date = Date.parse(date_range_params[:start_date])
         end_date = Date.parse(date_range_params[:end_date])
+        
+        # Debug: Log the date range being processed
+        Rails.logger.info "Locales date range: #{start_date} to #{end_date}"
+        
+        # Use inclusive date range to ensure we capture the full end date
         user_ids = @case.events.interesting.where_properties(name: 'visit_element')
                        .where(time: start_date.beginning_of_day..end_date.end_of_day)
                        .group(:user_id).count.keys
@@ -138,6 +171,11 @@ module Cases
             customRange: if date_range_params[:start_date] && date_range_params[:end_date]
                           start_date = Date.parse(date_range_params[:start_date])
                           end_date = Date.parse(date_range_params[:end_date])
+                          
+                          # Debug: Log the date range being processed
+                          Rails.logger.info "Podcast #{podcast.id} date range: #{start_date} to #{end_date}"
+                          
+                          # Use inclusive date range to ensure we capture the full end date
                           podcast_listen_events.where(time: start_date.beginning_of_day..end_date.end_of_day).size
                         else
                           podcast_listen_events.size

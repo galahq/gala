@@ -7,7 +7,7 @@ import * as React from 'react'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { Orchard } from 'shared/orchard'
+import { CSRF, sessionId } from 'shared/orchard'
 import { Popover, Position, Button } from '@blueprintjs/core'
 import { DateRangePicker } from '@blueprintjs/datetime'
 
@@ -270,8 +270,7 @@ const DisclaimerSection = ({ intl }) => (
   </div>
 )
 
-// Move loadStats outside component to avoid dependency issues
-const loadStats = async (caseSlug: string, dateRange: DateRange, setLoading: Function, setError: Function, setStatsData: Function) => {
+const loadStats = async (caseSlug: string, dateRange: DateRange, setLoading: Function, setError: Function, setStatsData: Function, currentRequestRef: any) => {
   setLoading(true)
   setError(null)
   
@@ -284,20 +283,79 @@ const loadStats = async (caseSlug: string, dateRange: DateRange, setLoading: Fun
       return
     }
     
-    const response = await Orchard.harvest(`cases/${caseSlug}/stats`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        start_date: dateRange.start.toISOString().split('T')[0],
-        end_date: dateRange.end.toISOString().split('T')[0],
-      }),
+    // Create cache key for this request
+    const cacheKey = `${caseSlug}-${dateRange.start.toISOString().split('T')[0]}-${dateRange.end.toISOString().split('T')[0]}`
+    
+    // Debug: Log the date range being sent
+    
+    // Check if we have cached data
+    if (loadStats.cache && loadStats.cache[cacheKey]) {
+      console.log('Using cached data for:', cacheKey)
+      setStatsData(loadStats.cache[cacheKey])
+      setLoading(false)
+      return
+    }
+    
+    // Cancel previous request if it exists
+    if (currentRequestRef.current) {
+      currentRequestRef.current.abort()
+    }
+    
+    // Create AbortController for this request
+    const abortController = new AbortController()
+    currentRequestRef.current = abortController
+    
+    // Use custom fetch instead of Orchard.harvest since it doesn't support PATCH
+    const body = JSON.stringify({
+      start_date: new Date(dateRange.start.getTime() - dateRange.start.getTimezoneOffset() * 60000).toISOString().split('T')[0],
+      end_date: new Date(dateRange.end.getTime() - dateRange.end.getTimezoneOffset() * 60000).toISOString().split('T')[0],
     })
+    
+    const r = new Request(`/cases/${caseSlug}/stats`, {
+      credentials: 'same-origin',
+      method: 'PATCH',
+      body,
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Session-ID': sessionId(),
+        ...CSRF.header(),
+      }),
+      signal: abortController.signal,
+    })
+    
+    const response = await fetch(r).then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`)
+      }
+      return response.json()
+    })
+    
+    // Check if request was cancelled
+    if (abortController.signal.aborted) {
+      return
+    }
+    
+    // Cache the response
+    if (!loadStats.cache) {
+      loadStats.cache = {}
+    }
+    loadStats.cache[cacheKey] = response
+    
+    // Limit cache size to prevent memory issues
+    const cacheKeys = Object.keys(loadStats.cache)
+    if (cacheKeys.length > 10) {
+      const oldestKey = cacheKeys[0]
+      delete loadStats.cache[oldestKey]
+    }
     
     setStatsData(response)
     setLoading(false)
   } catch (error) {
+    // Don't set error if request was cancelled
+    if (error.name === 'AbortError') {
+      return
+    }
     console.error('Error loading stats:', error)
     setError('Failed to load statistics. Please try again.')
     setLoading(false)
@@ -307,32 +365,6 @@ const loadStats = async (caseSlug: string, dateRange: DateRange, setLoading: Fun
 type DateRange = {
   start: Date,
   end: Date,
-}
-
-type StatsData = {
-  caseCreatedAt: string,
-  casePublishedAt: ?string,
-  caseUpdatedAt: string,
-  deployments: {
-    allTime: number,
-    customRange: number,
-  },
-  visits: {
-    allTime: number,
-    customRange: number,
-  },
-  locales: {
-    allTime: string,
-    customRange: string,
-  },
-  podcasts: Array<{
-    id: number,
-    title: string,
-    listens: {
-      allTime: number,
-      customRange: number,
-    },
-  }>,
 }
 
 type Props = {
@@ -352,6 +384,9 @@ const StatsPage = ({ intl, caseSlug }: Props) => {
   const [dateRange, setDateRange] = useState<DateRange>(defaultRange)
   const [loadStatsTimeout, setLoadStatsTimeout] = useState<?TimeoutID>(null)
   const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false)
+
+  // Track current request to prevent multiple simultaneous requests
+  const currentRequestRef = useRef(null)
 
   const handleDateRangeChange = useCallback((dateRange: DateRange | Date[]) => {
     // BlueprintJS DateRangePicker returns an array [startDate, endDate]
@@ -409,8 +444,7 @@ const StatsPage = ({ intl, caseSlug }: Props) => {
 
   // Load stats on mount
   useEffect(() => {
-    console.log('StatsPage componentDidMount')
-    loadStats(caseSlug, dateRange, setLoading, setError, setStatsData)
+    loadStats(caseSlug, dateRange, setLoading, setError, setStatsData, currentRequestRef)
   }, []) // Empty dependency array
 
   // Load stats when date range changes
@@ -423,7 +457,7 @@ const StatsPage = ({ intl, caseSlug }: Props) => {
         clearTimeout(loadStatsTimeout)
       }
       const timeout = setTimeout(() => {
-        loadStats(caseSlug, dateRange, setLoading, setError, setStatsData)
+        loadStats(caseSlug, dateRange, setLoading, setError, setStatsData, currentRequestRef)
       }, 500) // 500ms delay
       setLoadStatsTimeout(timeout)
     }
