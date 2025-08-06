@@ -3,6 +3,10 @@
   —
   = @case.short_title
 
+- content_for :javascript do
+  :javascript
+    window.caseSlug = "#{@case.slug}";
+  = javascript_pack_tag 'stats'
 
 .window.admin
   .admin-card.pt-card.pt-elevation-2
@@ -10,57 +14,5 @@
       .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }
         %span.admin__table__slug= @case.short_title
 
-    %div
-      %h1.admin__title= t '.case_stats'
-      %div
-        %ul
-          %li
-            %span.stat-label= t '.created'
-            = @case.created_at.strftime("%B %d, %Y")
-          %li 
-            %span.stat-label= t '.published'
-            = @case.published_at.strftime("%B %d, %Y")
-          %li
-            %span.stat-label= t '.last_updated'
-            = @case.updated_at.strftime("%B %d, %Y")
-          
-        %table.admin__table.pt-html-table
-          %thead
-            %tr
-              %th(scope="col")='Activity'
-              %th(scope="col")='Last Seven Days'
-              %th(scope="col")='Last Six Months'
-              %th(scope="col")='Last 12 Months'
-              %th(scope="col")='All Time'
-          %tbody
-            %tr
-              %td= t '.deployments'
-              %td= @case.deployments.where(created_at: 7.days.ago..).size
-              %td= @case.deployments.where(created_at: 6.months.ago..).size
-              %td= @case.deployments.where(created_at: 12.months.ago..).size
-              %td= @case.deployments.size
-            %tr
-              %td= t '.visits'
-              %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 7.days.ago..).group(:user_id).count.keys.count
-              %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 6.months.ago..).group(:user_id).count.keys.count
-              %td= @case.events.interesting.where_properties(name: 'visit_element').where(time: 12.months.ago..).group(:user_id).count.keys.count
-              %td= @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys.count
-            %tr
-              %td= t '.locales'
-              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').where(time: 7.days.ago..).group(:user_id).count.keys).pluck(:locale))
-              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').where(time: 6.months.ago..).group(:user_id).count.keys).pluck(:locale))
-              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').where(time: 12.months.ago..).group(:user_id).count.keys).pluck(:locale))
-              %td= locales_to_sentence(Reader.where(id:  @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys).pluck(:locale))          
-            - @case.podcasts.each do |podcast|
-              - podcast_listen_events = Ahoy::Event.interesting.where_properties(podcast_id: podcast.id)
-              %tr
-                %td= t ('.podcast_listens'), podcast_title: podcast.title
-                %td= podcast_listen_events.where(time: 7.days.ago..).size
-                %td= podcast_listen_events.where(time: 6.months.ago..).size
-                %td= podcast_listen_events.where(time: 12.months.ago..).size
-                %td= podcast_listen_events.size
-
-      .pt-callout.pt-icon-info-sign.form__callout= t '.disclaimer'
-
-      %table
+    #stats-container
 

@@ -292,6 +292,15 @@ en:
           Totals count only users that were signed-in to Gala when viewing the case. 
           'Unique Visits' counts readers who viewed a page beyond the overview page of your case.
           Readers' browser settings may impact the accuracy of these counts.
+        date_range: Date Range
+        reset: Reset
+        apply: Apply
+        loading: Loading statistics...
+        no_data: No statistics available
+        activity: Activity
+        all_time: All Time
+        custom_range: Custom Range
+        case_info: Case Information
     settings:
       edit:
         change_library: Change library

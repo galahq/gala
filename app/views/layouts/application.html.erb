@@ -33,6 +33,7 @@
 
     <meta property="og:site_name" content="Gala" />
     <% if content_for? :head %><%= content_for :head %><% end %>
+    <% if content_for? :javascript %><%= content_for :javascript %><% end %>
   </head>
 
   <body>
