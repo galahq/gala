@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 # @see Comment
-class CommentBroadcastJob < ActiveJob::Base
+class CommentBroadcastJob < ApplicationJob
+  queue_as :critical
+
   def perform(comment)
     ForumChannel.broadcast_to comment.forum,
                               comment: render_comment(comment)

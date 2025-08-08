@@ -13,7 +13,7 @@ Bundler.require(*Rails.groups)
 ENV['RELEASE'] = 'v2.2.0' # TODO: experiment doing github releases again
 
 # Determine if we're in staging environment
-ENV['STAGING'] = (ENV['BASE_URL']&.include?('staging')).to_s
+ENV['STAGING'] = ENV['BASE_URL']&.include?('staging').to_s
 
 # Allow temporary unconfirmed access in staging or development
 ENV['TEMPORARY_UNCONFIRMED_ACCESS'] ||=
@@ -32,8 +32,8 @@ module Orchard
 
     config.active_record.schema_format = :sql
 
-    unless ENV['SIDEKIQ_CONCURRENCY'].present?
-      config.middleware.use Rack::Deflater
-    end
+    # Use compression middleware only in web (Puma) processes
+    # Sidekiq.server? is true when running inside a Sidekiq process
+    config.middleware.use Rack::Deflater unless defined?(Sidekiq) && Sidekiq.server?
   end
 end

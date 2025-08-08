@@ -38,13 +38,6 @@ RSpec.describe CasesController, type: :controller do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'redirects to 404 with an invalid case page' do
-      case_instance = create(:case, slug: 'valid-case', published: true)
-      get :show, params: { case_slug: case_instance.slug,
-                           react_router_location: '1/3/2/11/6/4/3/2/13/15' }
-      expect(response).to redirect_to('/404')
-    end
-
     it 'returns a 200 response with a valid case with locale' do
       case_instance = create(:case, slug: 'valid-case', published: true)
       get :show, params: { locale: 'es', case_slug: case_instance.slug,

@@ -3,10 +3,10 @@
 require 'sidekiq/web'
 
 LOCALES ||= Rails.application.config.i18n.available_locales
-LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join('|')}/
+LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join('|')}/.freeze
 
 # Give React Router any suffix that doesn’t specify a format (with a .json, etc)
-REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/
+REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/.freeze
 
 Rails.application.routes.draw do
   concern :has_statistics do
@@ -25,8 +25,8 @@ Rails.application.routes.draw do
   get '/read/497/(*x)', to: redirect('/cases/mi-wolves')
 
   get ':locale/*path.:format', locale: LOCALE_REGEX,
-                               to: redirect('%<path>s.%<format>s')
-  get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%<path>s')
+                               to: redirect('%{path}.%{format}')
+  get ':locale/*path', locale: LOCALE_REGEX, to: redirect('%{path}')
 
   get 'sparql/:schema/:qid', to: 'sparql#show', as: 'sparql_canned_query'
   get 'sparql', to: 'sparql#index', as: 'sparql_search'
@@ -127,9 +127,9 @@ Rails.application.routes.draw do
   end
 
   scope 'cases' do
-    get ':case_slug(/:react_router_location)',
+    get ':case_slug(/*react_router_location)',
         to: 'cases#show', format: false,
-        constraints: { react_router_location: REACT_ROUTER_LOCATION_REGEX }
+        react_router_location: REACT_ROUTER_LOCATION_REGEX
   end
 
   namespace 'catalog' do
