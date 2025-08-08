@@ -51,6 +51,7 @@ function ResponseForm ({
     height && onResize(height)
   })
 
+  // Throttle submissions by 1 second
   const [isSaving, setIsSaving] = useState(false)
 
   if (reader == null) return null
@@ -62,7 +63,7 @@ function ResponseForm ({
       <Input>
         <CommentEditor
           editorState={editorState}
-          keyBindingFn={submitCommentOnEnter}
+          keyBindingFn={keyBindingFn}
           onChange={eS => setEditorState(eS)}
           onBlur={() => onSaveChanges(editorState)}
         />
@@ -80,22 +81,23 @@ function ResponseForm ({
             .getPlainText()
             .trim() === ''
         }
-        onClick={() => handleSubmitComment()}
+        onClick={submitComment}
       />
     </Container>
   )
 
-  function submitCommentOnEnter (e: SyntheticKeyboardEvent<*>) {
+  function submitComment () {
+    if (isSaving) return
+    onSubmitComment(editorState, [])
+    setIsSaving(true)
+    setTimeout(() => setIsSaving(false), 1000)
+  }
+
+  function keyBindingFn (e: SyntheticKeyboardEvent<*>) {
     if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-      // throttle submissions by 1 second
-      !isSaving && onSubmitComment(editorState, [])
-      setIsSaving(true)
-      setTimeout(() => {
-        setIsSaving(false)
-      }, 1000)
+      submitComment()
       return 'noop'
     }
-
     return getDefaultKeyBinding(e)
   }
 }

@@ -126,36 +126,37 @@ function mapDispatchToProps (
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-
-      // Check if this selection is for a Math entity or other entity type
-      // If it's a precise entity selection, pass it through unchanged
       const contentState = eS.getCurrentContent()
       const blockKey = selection.getAnchorKey()
       const block = contentState.getBlockForKey(blockKey)
 
-      let isEntitySelection = false
-      if (!selection.isCollapsed() &&
-          selection.getStartKey() === selection.getEndKey()) {
-        // Check if this selection exactly matches an entity range
-        block.findEntityRanges(
-          char => char.getEntity() != null,
-          (start, end) => {
-            if (selection.getStartOffset() === start &&
-                selection.getEndOffset() === end) {
-              isEntitySelection = true
-            }
-          }
-        )
-      }
+      // Check if selection contains any entities - if so, prevent comment creation
+      // to avoid wrapping entities in CommentThreadEntity which breaks functionality
+      const hasEntityInSelection = !selection.isCollapsed() &&
+        selection.getStartKey() === selection.getEndKey() &&
+        (() => {
+          const selectionStart = selection.getStartOffset()
+          const selectionEnd = selection.getEndOffset()
+          let foundEntity = false
 
-      // For entity selections (like Math), pass through unchanged
-      // For other selections, use protective logic
-      const selectionState = isEntitySelection
-        ? selection
-        : selection.isCollapsed() ||
-          selection.getStartKey() !== selection.getEndKey()
-          ? SelectionState.createEmpty(selection.getAnchorKey())
-          : selection
+          block.findEntityRanges(
+            char => char.getEntity() != null,
+            (start, end) => {
+              // check if entity overlaps with selection
+              if (!(end <= selectionStart || start >= selectionEnd)) {
+                foundEntity = true
+              }
+            }
+          )
+
+          return foundEntity
+        })()
+
+      const selectionState = hasEntityInSelection ||
+        selection.isCollapsed() ||
+        selection.getStartKey() !== selection.getEndKey()
+        ? SelectionState.createEmpty(selection.getAnchorKey())
+        : selection
 
       dispatch(applySelection(id, selectionState))
     },
