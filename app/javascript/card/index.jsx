@@ -126,7 +126,39 @@ function mapDispatchToProps (
     onMakeSelectionForComment: (eS: EditorState) => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
-      dispatch(applySelection(id, selection))
+      const contentState = eS.getCurrentContent()
+      const blockKey = selection.getAnchorKey()
+      const block = contentState.getBlockForKey(blockKey)
+
+      // Check if selection contains any entities - if so, prevent comment creation
+      // to avoid wrapping entities in CommentThreadEntity which breaks functionality
+      const hasEntityInSelection = !selection.isCollapsed() &&
+        selection.getStartKey() === selection.getEndKey() &&
+        (() => {
+          const selectionStart = selection.getStartOffset()
+          const selectionEnd = selection.getEndOffset()
+          let foundEntity = false
+
+          block.findEntityRanges(
+            char => char.getEntity() != null,
+            (start, end) => {
+              // check if entity overlaps with selection
+              if (!(end <= selectionStart || start >= selectionEnd)) {
+                foundEntity = true
+              }
+            }
+          )
+
+          return foundEntity
+        })()
+
+      const selectionState = hasEntityInSelection ||
+        selection.isCollapsed() ||
+        selection.getStartKey() !== selection.getEndKey()
+        ? SelectionState.createEmpty(selection.getAnchorKey())
+        : selection
+
+      dispatch(applySelection(id, selectionState))
     },
 
     createCommentThread: (cardId: string, eS: EditorState) =>
@@ -142,7 +174,7 @@ export type CardProps = {|
   ...DispatchProps,
   addCommentThread: () => Promise<any>,
   onChange: EditorState => void,
-  keyBindingFn: SyntheticKeyboardEvent => string,
+  keyBindingFn: SyntheticKeyboardEvent<*> => string,
   handleKeyCommand: string => DraftHandleValue,
   handleBeforeInput: (string, EditorState) => DraftHandleValue,
   getEdgenote: () => Promise<string>,

@@ -337,3 +337,38 @@ export async function toggleSuperscript (editorState: EditorState) {
     data: {},
   }, editorState)
 }
+
+export function clearEditorContent (editorState: EditorState): EditorState {
+  const contentState = editorState.getCurrentContent()
+  const firstBlock = contentState.getFirstBlock()
+  const lastBlock = contentState.getLastBlock()
+
+  // Create selection that spans all content
+  const fullSelection = SelectionState.createEmpty(firstBlock.getKey()).merge({
+    anchorOffset: 0,
+    focusKey: lastBlock.getKey(),
+    focusOffset: lastBlock.getLength(),
+    hasFocus: true,
+    isBackward: false,
+  })
+
+  // Remove all content
+  const clearedContentState = Modifier.removeRange(
+    contentState,
+    fullSelection,
+    'backward'
+  )
+
+  // Create new editor state and move cursor to beginning
+  const clearedEditorState = EditorState.push(
+    editorState,
+    clearedContentState,
+    'remove-range'
+  )
+
+  // Ensure cursor is at the beginning
+  return EditorState.forceSelection(
+    clearedEditorState,
+    SelectionState.createEmpty(clearedContentState.getFirstBlock().getKey())
+  )
+}

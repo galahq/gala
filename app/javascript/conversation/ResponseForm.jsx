@@ -51,44 +51,53 @@ function ResponseForm ({
     height && onResize(height)
   })
 
+  // Throttle submissions by 1 second
+  const [isSaving, setIsSaving] = useState(false)
+
   if (reader == null) return null
 
   return (
     // $FlowFixMe
     <Container ref={containerRef}>
       <Identicon width={32} reader={reader} />
-
       <Input>
         <CommentEditor
           editorState={editorState}
-          keyBindingFn={submitCommentOnEnter}
+          keyBindingFn={keyBindingFn}
           onChange={eS => setEditorState(eS)}
           onBlur={() => onSaveChanges(editorState)}
         />
       </Input>
 
       <SendButton
-        aria-label={intl.formatMessage({
-          id: 'comments.new.respond',
-        })}
-        className="pt-button pt-small pt-minimal pt-intent-primary pt-icon-upload"
+        aria-label={intl.formatMessage({ id: 'comments.new.respond' })}
+        className={`pt-button pt-small pt-minimal pt-intent-primary ${
+          isSaving ? '' : 'pt-icon-upload'
+        }`}
         disabled={
+          isSaving ||
           editorState
             .getCurrentContent()
             .getPlainText()
             .trim() === ''
         }
-        onClick={() => onSubmitComment(editorState, [])}
+        onClick={submitComment}
       />
     </Container>
   )
 
-  function submitCommentOnEnter (e: SyntheticKeyboardEvent<*>) {
+  function submitComment () {
+    if (isSaving) return
+    onSubmitComment(editorState, [])
+    setIsSaving(true)
+    setTimeout(() => setIsSaving(false), 1000)
+  }
+
+  function keyBindingFn (e: SyntheticKeyboardEvent<*>) {
     if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-      onSubmitComment(editorState, [])
+      submitComment()
       return 'noop'
     }
-
     return getDefaultKeyBinding(e)
   }
 }

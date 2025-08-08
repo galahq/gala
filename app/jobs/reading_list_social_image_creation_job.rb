@@ -2,7 +2,9 @@
 
 # Create an OpenGraph image for a reading list by tiling its cases’ cover
 # images.
-class ReadingListSocialImageCreationJob < ActiveJob::Base
+class ReadingListSocialImageCreationJob < ApplicationJob
+  queue_as :default
+
   before_perform :setup
   after_perform :cleanup
 

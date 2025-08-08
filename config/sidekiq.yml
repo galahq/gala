@@ -1,8 +1,22 @@
 ---
-:concurrency: <%= ENV['SIDEKIQ_CONCURRENCY'] || 5 %>
+# Concurrency based on heroku dyno type:
+# Standard-1X (512MB): 5 threads
+# Standard-2X (1GB): 10 threads
+# Performance-M (2.5GB): 25 threads
+# Performance-L (14GB): 50 threads
+:concurrency: <%= case ENV['DYNO']
+       when /.*\.performance-l\./; 50
+       when /.*\.performance-m\./; 25
+       when /.*\.standard-2x\./; 10
+       else; ENV.fetch('SIDEKIQ_CONCURRENCY', 5).to_i
+       end %>
+:timeout: 25
+:verbose: true
 :queues:
-  - active_storage_analysis
-  - active_storage_purge
-  - ahoy
-  - default
-  - mailers
+  - [critical, 1, { timeout: 10 }]
+  - [high, 2, { timeout: 15 }]
+  - [default, 3, { timeout: 25 }]
+  - [mailers, 4, { timeout: 30 }]
+  - [active_storage_analysis, 4, { timeout: 30 }]
+  - [active_storage_purge, 4, { timeout: 30 }]
+  - [ahoy, 5, { timeout: 30 }]
