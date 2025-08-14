@@ -8,7 +8,7 @@
     window.caseSlug = "#{@case.slug}";
   = javascript_pack_tag 'stats'
 
-.window.admin
+.window.admin.stats-page
   .admin-card.pt-card.pt-elevation-2
     = link_to case_path @case do
       .case-cover-card-top{ style: "background-image: url(#{@case.cover_url})" }

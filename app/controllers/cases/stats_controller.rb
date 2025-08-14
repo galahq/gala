@@ -17,24 +17,7 @@ module Cases
       respond_to do |format|
         format.html
         format.json do
-          render json: {
-            caseCreatedAt: @case.created_at,
-            casePublishedAt: @case.published_at,
-            caseUpdatedAt: @case.updated_at,
-            deployments: {
-              allTime: @case.deployments.size,
-              customRange: get_deployments_count
-            },
-            visits: {
-              allTime: get_visits_count,
-              customRange: get_visits_count_with_range
-            },
-            locales: {
-              allTime: get_locales_string,
-              customRange: get_locales_string_with_range
-            },
-            podcasts: get_podcasts_data
-          }
+          render json: get_case_stats
         end
       end
     end
@@ -43,24 +26,7 @@ module Cases
     def update
       set_case
       
-      render json: {
-        caseCreatedAt: @case.created_at,
-        casePublishedAt: @case.published_at,
-        caseUpdatedAt: @case.updated_at,
-        deployments: {
-          allTime: @case.deployments.size,
-          customRange: get_deployments_count
-        },
-        visits: {
-          allTime: get_visits_count,
-          customRange: get_visits_count_with_range
-        },
-        locales: {
-          allTime: get_locales_string,
-          customRange: get_locales_string_with_range
-        },
-        podcasts: get_podcasts_data
-      }
+      render json: get_case_stats
     end
 
     private
@@ -86,103 +52,8 @@ module Cases
       @deployment = @group.deployment_for_case @case
     end
 
-    def get_deployments_count
-      if date_range_params[:start_date] && date_range_params[:end_date]
-        start_date = Date.parse(date_range_params[:start_date])
-        end_date = Date.parse(date_range_params[:end_date])
-        
-        # Debug: Log the date range being processed
-        Rails.logger.info "Deployments date range: #{start_date} to #{end_date}"
-        Rails.logger.info "Date range params: #{date_range_params.inspect}"
-        
-        # Debug: Log all deployments and their creation dates
-        all_deployments = @case.deployments
-        Rails.logger.info "All deployments count: #{all_deployments.count}"
-        all_deployments.each do |deployment|
-          Rails.logger.info "Deployment #{deployment.id} created at: #{deployment.created_at}"
-        end
-        
-        # Use inclusive date range to ensure we capture the full end date
-        filtered_deployments = @case.deployments.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
-        Rails.logger.info "Filtered deployments count: #{filtered_deployments.count}"
-        filtered_deployments.each do |deployment|
-          Rails.logger.info "Filtered deployment #{deployment.id} created at: #{deployment.created_at}"
-        end
-        
-        filtered_deployments.size
-      else
-        @case.deployments.size
-      end
-    end
-
-    def get_visits_count
-      @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys.count
-    end
-
-    def get_visits_count_with_range
-      if date_range_params[:start_date] && date_range_params[:end_date]
-        start_date = Date.parse(date_range_params[:start_date])
-        end_date = Date.parse(date_range_params[:end_date])
-        
-        # Debug: Log the date range being processed
-        Rails.logger.info "Visits date range: #{start_date} to #{end_date}"
-        
-        # Use inclusive date range to ensure we capture the full end date
-        @case.events.interesting.where_properties(name: 'visit_element')
-             .where(time: start_date.beginning_of_day..end_date.end_of_day)
-             .group(:user_id).count.keys.count
-      else
-        get_visits_count
-      end
-    end
-
-    def get_locales_string
-      user_ids = @case.events.interesting.where_properties(name: 'visit_element').group(:user_id).count.keys
-      Reader.where(id: user_ids).pluck(:locale).compact.uniq.to_sentence
-    end
-
-    def get_locales_string_with_range
-      if date_range_params[:start_date] && date_range_params[:end_date]
-        start_date = Date.parse(date_range_params[:start_date])
-        end_date = Date.parse(date_range_params[:end_date])
-        
-        # Debug: Log the date range being processed
-        Rails.logger.info "Locales date range: #{start_date} to #{end_date}"
-        
-        # Use inclusive date range to ensure we capture the full end date
-        user_ids = @case.events.interesting.where_properties(name: 'visit_element')
-                       .where(time: start_date.beginning_of_day..end_date.end_of_day)
-                       .group(:user_id).count.keys
-        Reader.where(id: user_ids).pluck(:locale).compact.uniq.to_sentence
-      else
-        get_locales_string
-      end
-    end
-
-    def get_podcasts_data
-      @case.podcasts.map do |podcast|
-        podcast_listen_events = Ahoy::Event.interesting.where_properties(podcast_id: podcast.id)
-        
-        {
-          id: podcast.id,
-          title: podcast.title,
-          listens: {
-            allTime: podcast_listen_events.size,
-            customRange: if date_range_params[:start_date] && date_range_params[:end_date]
-                          start_date = Date.parse(date_range_params[:start_date])
-                          end_date = Date.parse(date_range_params[:end_date])
-                          
-                          # Debug: Log the date range being processed
-                          Rails.logger.info "Podcast #{podcast.id} date range: #{start_date} to #{end_date}"
-                          
-                          # Use inclusive date range to ensure we capture the full end date
-                          podcast_listen_events.where(time: start_date.beginning_of_day..end_date.end_of_day).size
-                        else
-                          podcast_listen_events.size
-                        end
-          }
-        }
-      end
+    def get_case_stats
+      CaseStatsService.new(@case, date_range_params).call
     end
 
     def date_range_params

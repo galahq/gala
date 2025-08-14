@@ -49,6 +49,14 @@ div.window.window-admin
   .pt-navbar
     margin-bottom: 1em
 
+  // Override for stats page to fix toolbar spacing
+  &.stats-page 
+    .Toolbar__bar
+      margin-bottom: 0
+    
+    .Toolbar__group
+      margin: 0 8px !important
+
   &--centered
     margin: 0 auto
     max-width: 30em

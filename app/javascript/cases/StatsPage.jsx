@@ -16,6 +16,32 @@ import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
 
 import type { IntlShape } from 'react-intl'
 
+type StatsData = {
+  caseCreatedAt: string,
+  casePublishedAt: string,
+  caseUpdatedAt: string,
+  deployments: {
+    allTime: number,
+    customRange: number
+  },
+  visits: {
+    allTime: number,
+    customRange: number
+  },
+  locales: {
+    allTime: string,
+    customRange: string
+  },
+  podcasts: Array<{
+    id: number,
+    title: string,
+    listens: {
+      allTime: number,
+      customRange: number
+    }
+  }>
+}
+
 const StatsContainer = styled.div`
   padding: 20px;
 `
@@ -208,7 +234,7 @@ const CaseInfoSection = ({ intl, statsData }) => (
             defaultMessage: "Created"
           })}:
         </strong>
-        <br />
+        {" "}
         {statsData?.caseCreatedAt ? new Date(statsData.caseCreatedAt).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -224,7 +250,7 @@ const CaseInfoSection = ({ intl, statsData }) => (
             defaultMessage: "Published"
           })}:
         </strong>
-        <br />
+        {" "}
         {statsData?.casePublishedAt ? new Date(statsData.casePublishedAt).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -240,7 +266,7 @@ const CaseInfoSection = ({ intl, statsData }) => (
             defaultMessage: "Last Updated"
           })}:
         </strong>
-        <br />
+        {" "}
         {statsData?.caseUpdatedAt ? new Date(statsData.caseUpdatedAt).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
