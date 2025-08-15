@@ -5,8 +5,8 @@ require 'puma_worker_killer'
 
 environment ENV.fetch('RAILS_ENV', 'production')
 workers ENV.fetch('WEB_CONCURRENCY', 2).to_i
-max_threads_count = ENV.fetch('MAX_RAILS_THREADS', 5).to_i
-min_threads_count = ENV.fetch('MIN_RAILS_THREADS', 5).to_i
+max_threads_count = ENV.fetch('RAILS_MAX_THREADS', 5).to_i
+min_threads_count = ENV.fetch('RAILS_MIN_THREADS', 5).to_i
 threads min_threads_count, max_threads_count
 
 # https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server
