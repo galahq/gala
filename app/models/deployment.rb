@@ -16,12 +16,14 @@
 class Deployment < ApplicationRecord
   default_scope { order created_at: :desc }
 
+  after_destroy :cleanup
+
   attribute :answers_needed, :integer, default: 0
   attribute :key, :string, default: -> { SecureRandom.urlsafe_base64 }
 
   belongs_to :case
   belongs_to :group
-  belongs_to :quiz, optional: true
+  belongs_to :quiz, optional: true, dependent: :destroy
 
   has_many :readers, through: :group
   has_many :enrollments, ->(this) { where(reader: this.readers) },
@@ -29,7 +31,7 @@ class Deployment < ApplicationRecord
 
   has_one :community, through: :group
   has_one :forum, ->(this) { where case: this.case },
-          through: :community, source: :forums
+          through: :community, source: :forums, dependent: :destroy
 
   accepts_nested_attributes_for :group
 
@@ -67,5 +69,17 @@ class Deployment < ApplicationRecord
   def reader_needs_posttest?(reader)
     return false unless quiz
     answers_needed - quiz.number_of_responses_from(reader) >= 1
+  end
+
+  def cleanup
+    # Readers belong to an active community which is set at deployment creation with a db constraint
+    # against the community.  This value must be nulled out first
+    Reader.where(active_community_id: self.community.id).update_all({active_community_id: nil})
+
+    Enrollment.where(case_id: self.case.id).destroy_all
+
+    if self.group.deployments.size == 0
+      self.group.destroy
+    end
   end
 end
