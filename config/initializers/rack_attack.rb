@@ -2,7 +2,7 @@
 
 is_staging = ENV['BASE_URL'].present? && ENV['BASE_URL'].include?('staging')
 
-Rack::Attack.enabled = Rails.env.production? && !is_staging
+Rack::Attack.enabled = false # Rails.env.production? && !is_staging
 
 Rack::Attack.cache.store = Rails.cache
 
