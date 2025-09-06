@@ -1,14 +1,17 @@
 #!/bin/bash
 
 # enable jemalloc for reduced memory usage and latency.
-if [ -f /usr/lib/*/libjemalloc.so.2 ]; then
-  export LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2) $LD_PRELOAD"
-  export MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true,stats_print:false"
+if [ -f "/usr/lib/*/libjemalloc.so.2" ]; then
+  LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2) $LD_PRELOAD"
+  MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true,stats_print:false"
 fi
 
+export LD_PRELOAD=${LD_PRELOAD-''}
+export MALLOC_CONF=${MALLOC_CONF-''}
+
 if [ "$RAILS_ENV" = "development" ]; then
-  if [ ! -f /tmp/.seeded ]; then
-    touch /tmp/.seeded
+  if [ ! -f "tmp/seeded.txt" ]; then
+    touch "tmp/seeded.txt"
     count=$(bundle exec rails runner "puts Case.count" | tail -n 1)
     if [ "$count" -eq "0" ]; then
       bundle exec rails db:environment:set
