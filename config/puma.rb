@@ -66,15 +66,15 @@ bind "tcp://0.0.0.0:#{ENV.fetch('PORT', 3000)}"
 preload_app!
 
 before_fork do
-  PumaWorkerKiller.config do |c|
-    c.ram                       = 850 # 850MB (accounting for YJIT overhead)
-    c.frequency                 = 15.minutes.to_i
-    c.percent_usage             = 0.80
-    c.rolling_restart_frequency = 24.hours.to_i
-    c.reaper_status_logs        = true # telemetry to Heroku
-  end
+  # PumaWorkerKiller.config do |c|
+  #   c.ram                       = 850 # 850MB (accounting for YJIT overhead)
+  #   c.frequency                 = 15.minutes.to_i
+  #   c.percent_usage             = 0.80
+  #   c.rolling_restart_frequency = 24.hours.to_i
+  #   c.reaper_status_logs        = true # telemetry to Heroku
+  # end
 
-  PumaWorkerKiller.start
+  # PumaWorkerKiller.start
   Barnes.start
 end
 

@@ -61,6 +61,8 @@ class ApplicationPolicy
     private
 
     def editor?
+      return true if Rails.env.development?
+
       user.has_cached_role? :editor
     end
   end
@@ -68,6 +70,8 @@ class ApplicationPolicy
   private
 
   def editor?
+    return true if Rails.env.development?
+
     user.has_cached_role? :editor
   end
 end
