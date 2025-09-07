@@ -45,6 +45,7 @@ module Cases
     end
 
     def stats_rows
+      query_type = params[:type].presence
       from_param = params[:from].presence
       to_param = params[:to].presence
 
@@ -68,7 +69,7 @@ module Cases
           COUNT(DISTINCT enrollments.id) AS enrollments_count,
           string_agg(DISTINCT COALESCE(editors.name, editors.email), ', ') AS authors_names,
           string_agg(DISTINCT COALESCE(managers.name, managers.email), ', ') AS managers_names,
-          string_agg(DISTINCT COALESCE(translations.locale, ''), ', ') AS locales
+          string_agg(DISTINCT translations.locale, ', ') AS locales
         FROM cases
         LEFT JOIN libraries ON libraries.id = cases.library_id
         LEFT JOIN edgenotes ON edgenotes.case_id = cases.id
@@ -83,7 +84,7 @@ module Cases
         LEFT JOIN readers AS managers ON managers.id = managerships.manager_id
         LEFT JOIN cases AS translations ON (translations.translation_base_id = cases.translation_base_id OR translations.id = cases.id) AND translations.locale IS NOT NULL AND translations.locale != cases.locale
         WHERE cases.id = ?
-        GROUP BY cases.id, cases.slug, cases.published_at, libraries.name
+        GROUP BY cases.id, cases.slug, cases.published_at, COALESCE(libraries.name->>'en', libraries.name::text)
       SQL
 
       # Simple query for events with date filtering
@@ -102,42 +103,57 @@ module Cases
 
       by_event_sql = <<~SQL
         SELECT
-          COALESCE(event_counts.name, all_names.name) AS name,
-          COALESCE(event_counts.count, 0) AS count,
-          COALESCE(event_counts.countries, '') AS countries,
-          COALESCE(event_counts.locales, '') AS locales
-        FROM (VALUES #{event_names.map { |n| "('#{n}')" }.join(', ')}) AS all_names(name)
-        LEFT JOIN (
-          SELECT
-            ahoy_events.name,
-            COUNT(*) AS count,
-            string_agg(DISTINCT COALESCE(visits.country, ''), ' ') AS countries,
-            string_agg(DISTINCT COALESCE(readers.locale, ''), ' ') AS locales
-          FROM ahoy_events
-          LEFT JOIN visits ON visits.id = ahoy_events.visit_id
-          LEFT JOIN readers ON readers.id = ahoy_events.user_id
-          WHERE ahoy_events.properties->>'case_slug' = ?
-          #{date_filter}
-          GROUP BY ahoy_events.name
-        ) AS event_counts ON event_counts.name = all_names.name
-        ORDER BY name
+          readers.locale,
+          #{event_names.map { |name| "COALESCE(SUM(CASE WHEN ahoy_events.name = '#{name}' THEN 1 ELSE 0 END), 0) AS #{name}_count" }.join(', ')},
+          string_agg(DISTINCT COALESCE(visits.country, ''), ' ') AS countries
+        FROM ahoy_events
+        LEFT JOIN visits ON visits.id = ahoy_events.visit_id
+        LEFT JOIN readers ON readers.id = ahoy_events.user_id
+        WHERE ahoy_events.properties->>'case_slug' = ?
+        AND readers.locale IS NOT NULL
+        #{date_filter}
+        GROUP BY readers.locale
+        ORDER BY readers.locale
       SQL
 
-      # Execute queries
-      by_associations = ActiveRecord::Base.connection.exec_query(
-        ActiveRecord::Base.sanitize_sql_array([by_associations_sql, @case.id])
-      ).first
+      sanitized_assoc_sql = ActiveRecord::Base.sanitize_sql_array([by_associations_sql, @case.id])
+      File.write(Rails.root.join('by_associations_sql.sql'), sanitized_assoc_sql)
+      sanitized_event_sql = ActiveRecord::Base.sanitize_sql_array([by_event_sql, @case.slug])
+      File.write(Rails.root.join('by_event_sql.sql'), sanitized_event_sql)
 
-      by_event = ActiveRecord::Base.connection.exec_query(
-        ActiveRecord::Base.sanitize_sql_array([by_event_sql, @case.slug])
-      ).to_a
+      if query_type == 'by_associations'
+        by_associations = ActiveRecord::Base.connection.exec_query(sanitized_assoc_sql).first
+        return { by_associations: [by_associations].flatten.compact, by_event: [] }
+      elsif query_type == 'by_event'
+        by_event_result = ActiveRecord::Base.connection.exec_query(sanitized_event_sql)
+        by_event = if by_event_result.empty?
+                     []
+                   else
+                     by_event_result.map do |row|
+                       event_counts = event_names.index_with { |name| row["#{name}_count"] || 0 }
+                       { 'locale' => row['locale'], 'countries' => row['countries'] || '' }.merge(event_counts)
+                     end
+                   end
+        return { by_associations: [], by_event: by_event.flatten.compact }
+      end
 
-      {
-        by_associations: [by_associations].compact,
-        by_event: by_event
-      }
+      # Execute both queries by default
+      by_associations = ActiveRecord::Base.connection.exec_query(sanitized_assoc_sql).first
+      by_event_result = ActiveRecord::Base.connection.exec_query(sanitized_event_sql)
+
+      # Transform pivoted result for both
+      by_event = if by_event_result.empty?
+                   []
+                 else
+                   by_event_result.map do |row|
+                     event_counts = event_names.index_with { |name| row["#{name}_count"] || 0 }
+                     { 'locale' => row['locale'], 'countries' => row['countries'] || '' }.merge(event_counts)
+                   end
+                 end
+
+      { by_associations: [by_associations].flatten.compact, by_event: by_event.flatten.compact }
     rescue StandardError => e
-      [{ error: e.class.name, message: e.message }]
+      { error: e.class.name, message: e.message }
     end
   end
 end

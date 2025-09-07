@@ -70,10 +70,18 @@ export default class extends Controller {
       // highlight initial active shortcut once the DOM is painted
       setTimeout(() => this.highlightActiveShortcut(), 0)
     }
-    this.rangeChangedHandler = () => this.apply()
+    this.rangeChangedHandler = () => {
+      this.currentQuery = 'by_event'
+      this.apply()
+    }
     document.addEventListener('stats-range-changed', this.rangeChangedHandler)
 
-    // Initial load
+    // Load associations once
+    this.currentQuery = 'by_associations'
+    this.load()
+
+    // Initial events load
+    this.currentQuery = 'by_event'
     this.apply()
   }
 
@@ -162,7 +170,7 @@ export default class extends Controller {
 
   renderLoading() {
     const eventsEl = document.getElementById('stats-events')
-    const countryEl = document.getElementById('stats-country-grid')
+    const associationsEl = document.getElementById('stats-associations')
 
     const Skeleton = ({ lines = 4 }) => (
       <div className="pt-card" style={{ padding: '12px' }}>
@@ -181,28 +189,12 @@ export default class extends Controller {
     )
 
     if (eventsEl) ReactDOM.render(<Skeleton lines={8} />, eventsEl)
-    if (countryEl) ReactDOM.render(<Skeleton lines={10} />, countryEl)
-  }
-
-  humanizeEventName(name) {
-    const nameMap = {
-      visit_page: 'Page Views',
-      visit_element: 'Element Views',
-      read_quiz: 'Quiz Views',
-      read_overview: 'Overview Reads',
-      read_card: 'Card Reads',
-      visit_podcast: 'Podcast Plays',
-      visit_edgenote: 'Edgenote Views',
-      write_comment: 'Comments',
-      write_comment_thread: 'Discussions',
-      write_quiz_submission: 'Quiz Submissions',
-    }
-    return nameMap[name] || name
+    if (associationsEl) ReactDOM.render(<Skeleton lines={10} />, associationsEl)
   }
 
   renderError(error) {
     const eventsEl = document.getElementById('stats-events')
-    const countryEl = document.getElementById('stats-country-grid')
+    const associationsEl = document.getElementById('stats-associations')
 
     const errorTitle = 'Unable to Load Stats'
     const errorDescription =
@@ -230,7 +222,7 @@ export default class extends Controller {
       )
     }
 
-    if (countryEl) {
+    if (associationsEl) {
       ReactDOM.render(
         <NonIdealState
           title={errorTitle}
@@ -238,7 +230,7 @@ export default class extends Controller {
           visual="error"
           action={errorAction}
         />,
-        countryEl
+        associationsEl
       )
     }
   }
@@ -249,7 +241,7 @@ export default class extends Controller {
     const to = this.toTarget && this.toTarget.value
     if (from) params.set('from', from)
     if (to) params.set('to', to)
-    if (this.currentQuery) params.set('query', this.currentQuery)
+    if (this.currentQuery) params.set('type', this.currentQuery)
 
     const url = `${this.dataUrl}?${params.toString()}`
     return fetch(url, {
@@ -270,7 +262,7 @@ export default class extends Controller {
     }
 
     const eventsEl = document.getElementById('stats-events')
-    const countryEl = document.getElementById('stats-country-grid')
+    const associationsEl = document.getElementById('stats-associations')
 
     const byEvent = payload.by_event || []
     const byAssoc = payload.by_associations || []
@@ -279,7 +271,7 @@ export default class extends Controller {
       ReactDOM.render(<StatsResultsTable rows={byEvent} />, eventsEl)
     }
 
-    if (countryEl) {
+    if (associationsEl) {
       const Stat = ({ label, value }) => (
         <div style={{ display: 'flex', gap: '6px' }}>
           <span className="pt-text-muted" style={{ flex: '0 0 auto' }}>
@@ -331,7 +323,7 @@ export default class extends Controller {
         </div>
       )
 
-      ReactDOM.render(<CountryGrid />, countryEl)
+      ReactDOM.render(<CountryGrid />, associationsEl)
     }
   }
 
