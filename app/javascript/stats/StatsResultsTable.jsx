@@ -2,7 +2,7 @@
 import React from 'react'
 import { NonIdealState } from '@blueprintjs/core'
 
-export default function StatsResultsTable ({ rows /* array of objects */ }) {
+export default function StatsResultsTable({ rows /* array of objects */ }) {
   if (!rows || rows.length === 0) {
     return (
       <div
@@ -10,7 +10,7 @@ export default function StatsResultsTable ({ rows /* array of objects */ }) {
         style={{ marginTop: '12px', padding: '12px' }}
       >
         <NonIdealState
-          icon="chart"
+          visual="chart"
           title="No Event Data"
           description="No events have been recorded for this case yet."
         />

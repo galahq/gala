@@ -3,7 +3,6 @@
  */
 
 import { Controller } from 'stimulus'
-// import mapboxgl from 'mapbox-gl'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { NonIdealState } from '@blueprintjs/core'
@@ -13,7 +12,10 @@ import StatsResultsTable from '../stats/StatsResultsTable'
 export default class extends Controller {
   static targets = ['from', 'to']
 
-  connect() {
+  connect () {
+    // Prevent recursive calls during initialization
+    this.isInitializing = true
+    this.isFetching = false
     const dataUrl = this.element.dataset.url
     this.publishedAt = this.element.dataset.published_at
 
@@ -70,22 +72,32 @@ export default class extends Controller {
       // highlight initial active shortcut once the DOM is painted
       setTimeout(() => this.highlightActiveShortcut(), 0)
     }
+
+    // Set up event listener with guard against recursive calls
     this.rangeChangedHandler = () => {
+      // Don't respond to events during initialization or while already fetching
+      if (this.isInitializing || this.isFetching) return
+
       this.currentQuery = 'by_event'
       this.apply()
     }
-    document.addEventListener('stats-range-changed', this.rangeChangedHandler)
 
-    // Load associations once
-    this.currentQuery = 'by_associations'
-    this.load()
-
-    // Initial events load
-    this.currentQuery = 'by_event'
-    this.apply()
+    // Load initial datasets before setting up event listener
+    this.fetchAndRenderBoth().then(() => {
+      // Only set up the event listener after initial load completes
+      this.isInitializing = false
+      document.addEventListener('stats-range-changed', this.rangeChangedHandler)
+    }).catch((error) => {
+      console.error('Initial data load failed:', error)
+      this.isInitializing = false
+      document.addEventListener('stats-range-changed', this.rangeChangedHandler)
+    })
   }
 
-  apply() {
+  apply () {
+    // Prevent overlapping requests
+    if (this.isFetching) return
+
     // Enforce date constraints: from >= published_at, from <= to
     if (this.fromTarget && this.publishedAt) {
       if (this.fromTarget.value < this.publishedAt) {
@@ -120,16 +132,16 @@ export default class extends Controller {
     window.history.replaceState({}, '', `${url.pathname}?${params.toString()}`)
     // Update shortcut highlighting to reflect current range
     this.highlightActiveShortcut()
-    this.load()
+    this.fetchAndRenderBoth()
   }
 
-  isoDate(d) {
+  isoDate (d) {
     // Normalize to UTC date string to match values written by the picker
     // (StatsDateRangePicker writes hidden inputs via toISOString().slice(0, 10))
     return d ? d.toISOString().slice(0, 10) : ''
   }
 
-  highlightActiveShortcut() {
+  highlightActiveShortcut () {
     try {
       const ul = document.querySelector('.pt-daterangepicker-shortcuts')
       if (!ul) return
@@ -161,14 +173,28 @@ export default class extends Controller {
     }
   }
 
-  load() {
-    this.renderLoading()
-    this.fetchData()
-      .then(json => this.renderResults(json))
-      .catch(error => this.renderError(error))
+  async fetchAndRenderBoth () {
+    // Prevent overlapping requests
+    if (this.isFetching) return
+
+    this.isFetching = true
+    this.renderLoading('by_event')
+    this.renderLoading('by_associations')
+
+    try {
+      const [events, associations] = await Promise.all([
+        this.fetchData('by_event'),
+        this.fetchData('by_associations'),
+      ])
+      this.renderResults({ by_event: events, by_associations: associations })
+    } catch (error) {
+      this.renderError(error)
+    } finally {
+      this.isFetching = false
+    }
   }
 
-  renderLoading() {
+  renderLoading (requestedType) {
     const eventsEl = document.getElementById('stats-events')
     const associationsEl = document.getElementById('stats-associations')
 
@@ -188,11 +214,17 @@ export default class extends Controller {
       </div>
     )
 
-    if (eventsEl) ReactDOM.render(<Skeleton lines={8} />, eventsEl)
-    if (associationsEl) ReactDOM.render(<Skeleton lines={10} />, associationsEl)
+    if (!requestedType || requestedType === 'by_event') {
+      if (eventsEl) ReactDOM.render(<Skeleton lines={8} />, eventsEl)
+    }
+    if (!requestedType || requestedType === 'by_associations') {
+      if (associationsEl) {
+        ReactDOM.render(<Skeleton lines={10} />, associationsEl)
+      }
+    }
   }
 
-  renderError(error) {
+  renderError (error) {
     const eventsEl = document.getElementById('stats-events')
     const associationsEl = document.getElementById('stats-associations')
 
@@ -204,9 +236,10 @@ export default class extends Controller {
     const errorAction = (
       <button
         className="pt-button pt-intent-primary"
-        onClick={() => this.load()}
+        disabled={this.isFetching}
+        onClick={() => this.fetchAndRenderBoth()}
       >
-        Try Again
+        {this.isFetching ? 'Loading...' : 'Try Again'}
       </button>
     )
 
@@ -235,34 +268,41 @@ export default class extends Controller {
     }
   }
 
-  fetchData() {
+  fetchData (requestedType) {
     const params = new URLSearchParams()
     const from = this.fromTarget && this.fromTarget.value
     const to = this.toTarget && this.toTarget.value
     if (from) params.set('from', from)
     if (to) params.set('to', to)
-    if (this.currentQuery) params.set('type', this.currentQuery)
+    if (requestedType) params.set('type', requestedType)
+    // Ensure by_associations hits the server each time even if URL otherwise stable
+    if (requestedType === 'by_associations') params.set('_', Date.now())
 
     const url = `${this.dataUrl}?${params.toString()}`
     return fetch(url, {
       credentials: 'same-origin',
       headers: { Accept: 'application/json' },
+      cache: 'no-store',
     }).then(async r => {
       if (r.ok) return r.json()
       const text = await r.text()
-      return [{ error: r.status, message: 'Request failed', url, body: text }]
+      throw new Error(`HTTP ${r.status}: ${text}`)
     })
   }
 
-  renderResults(payload) {
-    // Check if payload contains error
-    if (Array.isArray(payload) && payload.length > 0 && payload[0].error) {
-      this.renderError(payload[0])
+  renderResults (payload) {
+    // handle both fetch-error (array) and server error (object)
+    const serverError = payload && payload.error ? payload : null
+    if (serverError) {
+      this.renderError(serverError)
       return
     }
 
     const eventsEl = document.getElementById('stats-events')
     const associationsEl = document.getElementById('stats-associations')
+
+    // debug: surface payload in console to help diagnose rendering issues
+    console.debug('case-stats payload', { payload })
 
     const byEvent = payload.by_event || []
     const byAssoc = payload.by_associations || []
@@ -273,64 +313,87 @@ export default class extends Controller {
 
     if (associationsEl) {
       const Stat = ({ label, value }) => (
-        <div style={{ display: 'flex', gap: '6px' }}>
-          <span className="pt-text-muted" style={{ flex: '0 0 auto' }}>
-            {label}
-          </span>
-          <span className="pt-tag pt-minimal" style={{ flex: '0 0 auto' }}>
-            {value}
-          </span>
-        </div>
-      )
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <span className="pt-text-muted" style={{ flex: '0 0 auto' }}>
+              {label}
+            </span>
+            <span className="pt-tag pt-minimal" style={{ flex: '0 0 auto' }}>
+              {value}
+            </span>
+          </div>
+        )
 
-      const CountryGrid = () => (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '12px',
-          }}
-        >
-          {byAssoc.map((r, i) => (
-            <div key={i} className="pt-card pt-elevation-1">
-              <div className="pt-heading" style={{ marginBottom: '6px' }}>
-                {r.library_name || 'Associations'}
+      const AssociationsGrid = () => (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '12px',
+            }}
+          >
+            {byAssoc.length === 0 ? (
+              <div
+                className="pt-card pt-elevation-0"
+                style={{ padding: '12px' }}
+              >
+                <div className="pt-text-muted">No associations found.</div>
               </div>
-              <div style={{ display: 'grid', gap: '6px' }}>
-                <Stat label="Deployments" value={r.deployments_count} />
-                <Stat label="Enrollments" value={r.enrollments_count} />
-                <Stat label="Edgenotes" value={r.edgenotes_count} />
-                <Stat label="Cards" value={r.cards_count} />
-                <Stat label="Case elements" value={r.case_elements_count} />
-                <Stat label="Pages" value={r.pages_count} />
-                <Stat label="Podcasts" value={r.podcasts_count} />
-                <Stat label="Wikidata links" value={r.wikidata_links_count} />
-                {r.managers_names ? (
-                  <div style={{ display: 'grid', gap: '4px' }}>
-                    <span className="pt-text-muted">Manager names</span>
-                    <div className="pt-tag pt-minimal">{r.managers_names}</div>
+            ) : (
+              byAssoc.map((r, i) => (
+                <div key={i} className="pt-card pt-elevation-1">
+                  <div className="pt-heading" style={{ marginBottom: '6px' }}>
+                    {r.library_name || 'Associations'}
                   </div>
-                ) : null}
-                {r.authors_names ? (
-                  <div style={{ display: 'grid', gap: '4px' }}>
-                    <span className="pt-text-muted">Author names</span>
-                    <div className="pt-tag pt-minimal">{r.authors_names}</div>
+                  <div style={{ display: 'grid', gap: '6px' }}>
+                    <Stat label="Deployments" value={r.deployments_count} />
+                    <Stat label="Enrollments" value={r.enrollments_count} />
+                    <Stat label="Edgenotes" value={r.edgenotes_count} />
+                    <Stat label="Cards" value={r.cards_count} />
+                    <Stat label="Case elements" value={r.case_elements_count} />
+                    <Stat label="Pages" value={r.pages_count} />
+                    <Stat label="Podcasts" value={r.podcasts_count} />
+                    <Stat
+                      label="Wikidata links"
+                      value={r.wikidata_links_count}
+                    />
+                    {r.managers_names ? (
+                      <div style={{ display: 'grid', gap: '4px' }}>
+                        <span className="pt-text-muted">Manager names</span>
+                        <div className="pt-tag pt-minimal">
+                          {r.managers_names}
+                        </div>
+                      </div>
+                    ) : null}
+                    {r.authors_names ? (
+                      <div style={{ display: 'grid', gap: '4px' }}>
+                        <span className="pt-text-muted">Author names</span>
+                        <div className="pt-tag pt-minimal">
+                          {r.authors_names}
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            </div>
-          ))}
-        </div>
-      )
+                </div>
+              ))
+            )}
+          </div>
+        )
 
-      ReactDOM.render(<CountryGrid />, associationsEl)
+      ReactDOM.render(<AssociationsGrid />, associationsEl)
     }
   }
 
-  disconnect() {
-    document.removeEventListener(
-      'stats-range-changed',
-      this.rangeChangedHandler
-    )
+  disconnect () {
+    // Clean up event listener
+    if (this.rangeChangedHandler) {
+      document.removeEventListener(
+        'stats-range-changed',
+        this.rangeChangedHandler
+      )
+    }
+
+    // Reset flags to prevent issues if the controller is reconnected
+    this.isInitializing = false
+    this.isFetching = false
   }
 }
