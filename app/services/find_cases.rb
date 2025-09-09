@@ -14,12 +14,18 @@ class FindCases
   end
 
   def call
-    Case.ordered
-        .with_locale_or_fallback(@locale)
-        .merge(maybe_filter_by_library)
-        .merge(maybe_filter_by_tags)
-        .merge(maybe_filter_by_languages)
-        .merge(maybe_search_by_full_text)
+    base_scope = Case.ordered
+                     .merge(maybe_filter_by_library)
+                     .merge(maybe_filter_by_tags)
+                     .merge(maybe_filter_by_languages)
+                     .merge(maybe_search_by_full_text)
+    
+    # Only apply locale fallback if no specific language filter is applied
+    if @params[:languages].present?
+      base_scope
+    else
+      base_scope.with_locale_or_fallback(@locale)
+    end
   end
 
   private
