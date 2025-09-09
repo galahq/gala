@@ -2,7 +2,7 @@
 
 # Find {Case}s matching search parameters
 class FindCases
-  # @param params [{libraries?: string[], tags?: string[], q?: string}]
+  # @param params [{libraries?: string[], tags?: string[], languages?: string[], q?: string}]
   # @return [ActiveRecord::Relation<Case>]
   def self.by(params, locale:)
     new(params, locale: locale).call
@@ -18,6 +18,7 @@ class FindCases
         .with_locale_or_fallback(@locale)
         .merge(maybe_filter_by_library)
         .merge(maybe_filter_by_tags)
+        .merge(maybe_filter_by_languages)
         .merge(maybe_search_by_full_text)
   end
 
@@ -45,6 +46,12 @@ class FindCases
 
     Case.joins(taggings: [:tag])
         .where(taggings: { tags: { name: @params[:tags] } })
+  end
+
+  def maybe_filter_by_languages
+    return Case.all if @params[:languages].blank?
+
+    Case.where(locale: @params[:languages])
   end
 
   def maybe_search_by_full_text

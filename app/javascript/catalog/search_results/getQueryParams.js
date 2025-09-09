@@ -24,7 +24,7 @@ function coerceIntoArrayValues (params: {
 }
 
 function getQueryFromPathname (pathname: string): { [string]: string[] } {
-  return ['libraries', 'tags'].reduce((params, key) => {
+  return ['libraries', 'tags', 'languages'].reduce((params, key) => {
     const match = pathname.match(RegExp(`${key}/([0-9a-z%+-]+)`))
     if (!match) return params
     params[key] = [match[1]]
