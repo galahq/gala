@@ -21,14 +21,9 @@ module Cases
     # @param [GET] /cases/case-slug/stats
     def show
       set_case
-      set_libraries
-      set_editorships
       respond_to do |format|
-        format.html do
-          set_group_and_deployment
-          render :show
-        end
-        format.json { render json: stats_rows }
+        format.html { render :show }
+        format.json { render json: sql_query }
       end
     end
 
@@ -40,258 +35,151 @@ module Cases
       authorize @case
     end
 
-    def set_libraries
-      @libraries = LibraryPolicy::AdminScope.new(current_reader, Library)
-                                            .resolve
-    end
-
-    def set_editorships
-      @editorships = @case.editorships
-    end
-
-    def set_group_and_deployment
-      @enrollment = current_user.enrollment_for_case @case
-      @group = @enrollment.try(:active_group) || GlobalGroup.new
-      @deployment = @group.deployment_for_case @case
-    end
-
-    def stats_rows
-      query_type = params[:type].presence
-      date_range = parse_date_range
-
-      case query_type
-      when 'by_associations'
-        [associations]
-      when 'by_event'
-        events(date_range)
-      else
-        {
-          by_associations: [associations],
-          by_event: events(date_range)
-        }
-      end
-    rescue StandardError => e
-      { error: e.class.name, message: e.message }
-    end
-
-    def parse_date_range
-      from_param = params[:from].presence
-      to_param = params[:to].presence
-
-      from_date = from_param && (Date.parse(from_param) rescue nil)
-      to_date = to_param && (Date.parse(to_param).next_day rescue nil)
-
-      { from: from_date, to: to_date }
-    end
-
-    def associations
-      sql = <<~SQL
-        WITH case_data AS (
-          SELECT#{' '}
-            c.id as case_id,
-            c.slug as case_slug,
-            c.published_at as case_published_at,
-            CASE#{' '}
-              WHEN l.name IS NOT NULL THEN#{' '}
-                CASE#{' '}
-                  WHEN jsonb_typeof(l.name) = 'object' AND l.name->>'en' IS NOT NULL#{' '}
-                  THEN l.name->>'en'
-                  ELSE l.name::text
-                END
-              ELSE NULL
-            END as library_name
-          FROM cases c
-          LEFT JOIN libraries l ON l.id = c.library_id
-          WHERE c.id = #{@case.id}
+    def bindings
+      from_ts =
+        params[:from].present? ? Time.zone.parse(params[:from]) : nil
+      to_ts = params[:to].present? ? Time.zone.parse(params[:to]) : nil
+      from_ts ||= Time.zone.parse(@case.created_at)
+      to_ts ||= Time.zone.now.end_of_day
+      [
+        ActiveRecord::Relation::QueryAttribute.new(
+          'case_slug', @case.slug, ActiveRecord::Type::String.new
         ),
-        counts AS (
-          SELECT
-            COALESCE((SELECT COUNT(DISTINCT id) FROM edgenotes WHERE case_id = #{@case.id}), 0) as edgenotes_count,
-            COALESCE((SELECT COUNT(DISTINCT id) FROM cards WHERE case_id = #{@case.id}), 0) as cards_count,
-            COALESCE((SELECT COUNT(DISTINCT id) FROM case_elements WHERE case_id = #{@case.id}), 0) as case_elements_count,#{'                                                                                                                 '}
-            COALESCE((SELECT COUNT(DISTINCT element_id) FROM case_elements WHERE case_id = #{@case.id} AND element_type = 'Page'), 0) as pages_count,#{'                                                                                       '}
-            COALESCE((SELECT COUNT(DISTINCT element_id) FROM case_elements WHERE case_id = #{@case.id} AND element_type = 'Podcast'), 0) as podcasts_count,#{'                                                                                 '}
-            COALESCE((SELECT COUNT(DISTINCT id) FROM wikidata_links WHERE record_type = 'Case' AND record_id = #{@case.id}), 0) as wikidata_links_count,#{'                                                                                    '}
-            COALESCE((SELECT COUNT(DISTINCT id) FROM deployments WHERE case_id = #{@case.id}), 0) as deployments_count,
-            COALESCE((SELECT COUNT(DISTINCT id) FROM enrollments WHERE case_id = #{@case.id}), 0) as enrollments_count
+        ActiveRecord::Relation::QueryAttribute.new(
+          'from_ts', from_ts, ActiveRecord::Type::DateTime.new
         ),
-        authors AS (
-          SELECT string_agg(DISTINCT COALESCE(r.name, r.email), ', ') as authors_names
-          FROM editorships e
-          JOIN readers r ON r.id = e.editor_id
-          WHERE e.case_id = #{@case.id}
-        ),
-        managers AS (
-          SELECT string_agg(DISTINCT COALESCE(r.name, r.email), ', ') as managers_names
-          FROM managerships m
-          JOIN readers r ON r.id = m.manager_id
-          JOIN cases c ON c.library_id = m.library_id
-          WHERE c.id = #{@case.id}
-        ),
-        locales AS (
-          SELECT string_agg(DISTINCT c2.locale, ', ') as locales
-          FROM cases c1
-          JOIN cases c2 ON (c2.translation_base_id = c1.translation_base_id OR c2.id = c1.translation_base_id)
-          WHERE c1.id = #{@case.id}#{' '}
-            AND c2.locale IS NOT NULL#{' '}
-            AND c2.locale != c1.locale
+        ActiveRecord::Relation::QueryAttribute.new(
+          'to_ts', to_ts, ActiveRecord::Type::DateTime.new
         )
-        SELECT#{' '}
-          cd.case_id,
-          cd.case_slug,
-          cd.case_published_at,
-          cd.library_name,
-          co.edgenotes_count,
-          co.cards_count,
-          co.case_elements_count,
-          co.pages_count,
-          co.podcasts_count,
-          co.wikidata_links_count,
-          co.deployments_count,
-          co.enrollments_count,
-          COALESCE(a.authors_names, '') as authors_names,
-          COALESCE(m.managers_names, '') as managers_names,
-          COALESCE(l.locales, '') as locales
-        FROM case_data cd
-        CROSS JOIN counts co
-        LEFT JOIN authors a ON true
-        LEFT JOIN managers m ON true
-        LEFT JOIN locales l ON true
-      SQL
-
-      result = ActiveRecord::Base.connection.exec_query(sql).first
-
-      return {} unless result
-
-      {
-        'case_id' => result['case_id'],
-        'case_slug' => result['case_slug'],
-        'case_published_at' => result['case_published_at'],
-        'library_name' => result['library_name'],
-        'edgenotes_count' => result['edgenotes_count'] || 0,
-        'cards_count' => result['cards_count'] || 0,
-        'case_elements_count' => result['case_elements_count'] || 0,
-        'pages_count' => result['pages_count'] || 0,
-        'podcasts_count' => result['podcasts_count'] || 0,
-        'wikidata_links_count' => result['wikidata_links_count'] || 0,
-        'deployments_count' => result['deployments_count'] || 0,
-        'enrollments_count' => result['enrollments_count'] || 0,
-        'authors_names' => result['authors_names'] || '',
-        'managers_names' => result['managers_names'] || '',
-        'locales' => result['locales'] || ''
-      }
-    rescue StandardError => e
-      Rails.logger.error "Error in associations query: #{e.message}"
-      { error: e.class.name, message: e.message }
+      ]
     end
 
-    def events(date_range)
-      # Build date filter for ahoy events
-      ahoy_date_conditions = []
-      ahoy_date_conditions << "ahoy_events.time >= '#{date_range[:from]}'" if date_range[:from]
-      ahoy_date_conditions << "ahoy_events.time < '#{date_range[:to]}'" if date_range[:to]
-      date_filter = ahoy_date_conditions.any? ? "AND #{ahoy_date_conditions.join(' AND ')}" : ''
-
-      sql = <<~SQL
-        WITH ahoy_events_by_locale AS (
-          SELECT
-            readers.locale,
-            #{AHOY_EVENT_NAMES.map do |name|
-              "COALESCE(SUM(CASE WHEN ahoy_events.name = '#{name}' THEN 1 ELSE 0 END), 0) AS #{name}_count"
-            end.join(', ')},
-            string_agg(DISTINCT COALESCE(visits.country, ''), ' ') AS countries
-          FROM ahoy_events
-          LEFT JOIN visits ON visits.id = ahoy_events.visit_id
-          LEFT JOIN readers ON readers.id = ahoy_events.user_id
-          WHERE ahoy_events.properties->>'case_slug' = '#{@case.slug}'
-            AND readers.locale IS NOT NULL
-            #{date_filter}
-          GROUP BY readers.locale
-        ),
-        comment_counts AS (
-          SELECT#{' '}
-            r.locale,
-            COUNT(*) as write_comment_count
-          FROM comments c
-          JOIN readers r ON r.id = c.reader_id
-          JOIN comment_threads ct ON ct.id = c.comment_thread_id
-          JOIN forums f ON f.id = ct.forum_id
-          WHERE f.case_id = #{@case.id}
-            AND r.locale IS NOT NULL
-            #{date_range[:from] ? "AND c.created_at >= '#{date_range[:from]}'" : ''}
-            #{date_range[:to] ? "AND c.created_at < '#{date_range[:to]}'" : ''}
-          GROUP BY r.locale
-        ),
-        comment_thread_counts AS (
-          SELECT#{' '}
-            r.locale,
-            COUNT(*) as write_comment_thread_count
-          FROM comment_threads ct
-          JOIN readers r ON r.id = ct.reader_id
-          JOIN forums f ON f.id = ct.forum_id
-          WHERE f.case_id = #{@case.id}
-            AND r.locale IS NOT NULL
-            #{date_range[:from] ? "AND ct.created_at >= '#{date_range[:from]}'" : ''}
-            #{date_range[:to] ? "AND ct.created_at < '#{date_range[:to]}'" : ''}
-          GROUP BY r.locale
-        ),
-        submission_counts AS (
-          SELECT#{' '}
-            r.locale,
-            COUNT(*) as write_quiz_submission_count
-          FROM submissions s
-          JOIN readers r ON r.id = s.reader_id
-          JOIN quizzes q ON q.id = s.quiz_id
-          WHERE q.case_id = #{@case.id}
-            AND r.locale IS NOT NULL
-            #{date_range[:from] ? "AND s.created_at >= '#{date_range[:from]}'" : ''}
-            #{date_range[:to] ? "AND s.created_at < '#{date_range[:to]}'" : ''}
-          GROUP BY r.locale
-        ),
-        all_locales AS (
-          SELECT locale FROM ahoy_events_by_locale
-          UNION
-          SELECT locale FROM comment_counts
-          UNION
-          SELECT locale FROM comment_thread_counts
-          UNION
-          SELECT locale FROM submission_counts
-        )
-        SELECT#{' '}
-          al.locale,
-          COALESCE(ae.countries, '') as countries,
-          #{AHOY_EVENT_NAMES.map { |name| "COALESCE(ae.#{name}_count, 0) as #{name}" }.join(', ')},
-          COALESCE(cc.write_comment_count, 0) as write_comment,
-          COALESCE(ctc.write_comment_thread_count, 0) as write_comment_thread,
-          COALESCE(sc.write_quiz_submission_count, 0) as write_quiz_submission,
-          COALESCE(sc.write_quiz_submission_count, 0) as read_quiz
-        FROM all_locales al
-        LEFT JOIN ahoy_events_by_locale ae ON ae.locale = al.locale
-        LEFT JOIN comment_counts cc ON cc.locale = al.locale
-        LEFT JOIN comment_thread_counts ctc ON ctc.locale = al.locale
-        LEFT JOIN submission_counts sc ON sc.locale = al.locale
-        ORDER BY al.locale
-      SQL
-
-      # Execute the main query
-      results = ActiveRecord::Base.connection.exec_query(sql)
-
-      results.map do |row|
-        result = {
-          'locale' => row['locale'],
-          'countries' => row['countries'] || ''
-        }
-
-        # Add all event counts
-        ALL_EVENT_NAMES.each do |event_name|
-          result[event_name] = (row[event_name] || 0).to_i
-        end
-
-        result
-      end
-    rescue StandardError => e
-      Rails.logger.error "Error in events query: #{e.message}"
-      []
+    def sql_query
+      ActiveRecord::Base.connection.exec_query(
+        <<~SQL, 'Case Stats', bindings
+          WITH params(case_slug, from_ts, to_ts) AS (
+              VALUES ($1::text, $2::timestamp, $3::timestamp)
+          ), kase AS (
+              SELECT
+                c.id AS case_id,
+                c.slug AS case_slug,
+                c.translation_base_id AS translation_base_id,
+                c.library_id AS library_id,
+                c.locale,
+                c.published_at,
+                c.created_at,
+                c.updated_at,
+                c.title,
+                c.license
+              FROM cases c
+              CROSS JOIN params p
+              WHERE c.slug = p.case_slug
+              LIMIT 1
+            ),
+            friendly_slugs AS (
+              SELECT s.slug AS friendly_slug
+              FROM friendly_id_slugs s
+              CROSS JOIN kase k
+              WHERE s.sluggable_type = 'Case'
+                AND s.sluggable_id = k.case_id
+              ORDER BY s.id DESC
+              LIMIT 1
+            ),
+            translations AS (
+              SELECT
+                c.id AS translation_id,
+                c.slug AS translation_slug,
+                c.locale AS translation_locale,
+                c.published_at AS translation_published_at,
+                c.created_at AS translation_created_at,
+                c.updated_at AS translation_updated_at
+              FROM cases c
+              CROSS JOIN kase k
+              WHERE c.translation_base_id = k.case_id
+                AND c.locale <> k.locale
+            ),
+            deployments AS (
+              SELECT d.id AS deployment_id
+              FROM deployments d
+              CROSS JOIN kase k
+              CROSS JOIN params p
+              WHERE d.case_id = k.case_id
+                AND d.created_at BETWEEN p.from_ts AND p.to_ts
+            ),
+            events AS (
+              SELECT
+                e.id AS event_id,
+                e.visit_id AS event_visit_id,
+                e.user_id AS event_user_id,
+                e."time" AS event_time,
+                e.properties ->> 'case_slug' AS event_case_slug,
+                e.properties ->> 'element_type' AS element_type,
+                e.properties ->> 'element_id' AS element_id
+              FROM ahoy_events e
+              CROSS JOIN params p
+              WHERE e.properties ->> 'case_slug' = p.case_slug
+                AND e."time" BETWEEN p.from_ts AND p.to_ts
+            ),
+            interesting_readers AS (
+              SELECT DISTINCT r.id AS reader_id,
+                              r.locale AS locale
+              FROM events e
+              JOIN readers r ON r.id = e.event_user_id
+              LEFT JOIN readers_roles rr ON rr.reader_id = r.id
+              LEFT JOIN roles ro ON ro.id = rr.role_id
+              WHERE e.event_user_id IS NOT NULL
+                AND COALESCE(ro.name, '') <> 'invisible'
+            ),
+            visit_stats AS (
+              SELECT
+                MIN(e.event_time) AS first_event_at,
+                MAX(e.event_time) AS last_event_at,
+                COUNT(DISTINCT v.visitor_token) AS session_count,
+                COUNT(DISTINCT ir.reader_id) AS user_count
+              FROM events e
+              JOIN visits v ON v.id = e.event_visit_id
+              CROSS JOIN params p
+              LEFT JOIN interesting_readers ir
+                ON ir.reader_id = e.event_user_id
+              WHERE v.started_at BETWEEN p.from_ts AND p.to_ts
+            ),
+            by_events AS (
+              SELECT
+                v.country AS country,
+                string_agg(DISTINCT ir.locale, ' ') AS locales,
+                string_agg(DISTINCT t.translation_locale, ' ') AS translations,
+                COUNT(DISTINCT d.deployment_id) AS deployments_count,
+                MAX(vs.session_count) AS session_count,
+                MAX(vs.user_count) AS user_count,
+                MIN(e.event_time) AS first_event,
+                MAX(e.event_time) AS last_event,
+                MAX(k.published_at) AS published_at,
+                MAX(k.title) AS title,
+                MAX(k.locale) AS case_locale,
+                MAX(k.license) AS license,
+                MAX(k.updated_at) AS updated_at,
+                MAX(k.created_at) AS created_at,
+                COUNT(DISTINCT e.event_id) AS events_count,
+                COUNT(DISTINCT ir.reader_id) AS interesting_readers_count,
+                string_agg(DISTINCT fs.friendly_slug, ' ') AS friendly_slugs
+              FROM kase k
+              CROSS JOIN params p
+              LEFT JOIN friendly_slugs fs ON TRUE
+              LEFT JOIN translations t ON TRUE
+              LEFT JOIN events e
+                ON e.event_case_slug = k.case_slug
+                   AND e.event_time BETWEEN p.from_ts AND p.to_ts
+              LEFT JOIN visits v ON v.id = e.event_visit_id
+              LEFT JOIN deployments d ON TRUE
+              LEFT JOIN interesting_readers ir
+                ON ir.reader_id = e.event_user_id
+              LEFT JOIN visit_stats vs ON TRUE
+              GROUP BY v.country
+            )
+          SELECT *
+          FROM by_events;
+        SQL
+      ).to_a
     end
   end
 end

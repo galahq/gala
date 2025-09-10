@@ -275,8 +275,6 @@ export default class extends Controller {
     if (from) params.set('from', from)
     if (to) params.set('to', to)
     if (requestedType) params.set('type', requestedType)
-    // Ensure by_associations hits the server each time even if URL otherwise stable
-    if (requestedType === 'by_associations') params.set('_', Date.now())
 
     const url = `${this.dataUrl}?${params.toString()}`
     return fetch(url, {
