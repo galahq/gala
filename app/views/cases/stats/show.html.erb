@@ -3,7 +3,7 @@
 <% end %>
 
 <div class="window admin">
-  <div class="admin-card admin-card--wider pt-card pt-elevation-2">
+  <div class="admin-card admin-card--wide pt-card pt-elevation-2">
     <%= link_to case_path(@case) do %>
       <div class="case-cover-card-top" style="background-image: url(<%= @case.cover_url %>)">
         <span class="admin__table__slug"><%= @case.short_title %></span>
@@ -15,7 +15,6 @@
 
       <div style="display: flex; gap: 12px; align-items: flex-start;" class="mb-3">
         <div id="stats-range-picker" style="flex: 1 1 50%"></div>
-        <div id="stats-associations" style="flex: 1 1 50%; min-height: 220px"></div>
       </div>
 
       <div
