@@ -82,7 +82,7 @@ export default class extends Controller {
       this.apply()
     }
 
-    // Load initial datasets before setting up event listener
+    // Load initial dataset before setting up event listener
     this.fetchAndRenderBoth().then(() => {
       // Only set up the event listener after initial load completes
       this.isInitializing = false
@@ -179,14 +179,10 @@ export default class extends Controller {
 
     this.isFetching = true
     this.renderLoading('by_event')
-    this.renderLoading('by_associations')
 
     try {
-      const [events, associations] = await Promise.all([
-        this.fetchData('by_event'),
-        this.fetchData('by_associations'),
-      ])
-      this.renderResults({ by_event: events, by_associations: associations })
+      const events = await this.fetchData('by_event')
+      this.renderResults({ by_event: events })
     } catch (error) {
       this.renderError(error)
     } finally {
@@ -194,9 +190,8 @@ export default class extends Controller {
     }
   }
 
-  renderLoading (requestedType) {
+  renderLoading () {
     const eventsEl = document.getElementById('stats-events')
-    const associationsEl = document.getElementById('stats-associations')
 
     const Skeleton = ({ lines = 4 }) => (
       <div className="pt-card" style={{ padding: '12px' }}>
@@ -214,19 +209,11 @@ export default class extends Controller {
       </div>
     )
 
-    if (!requestedType || requestedType === 'by_event') {
-      if (eventsEl) ReactDOM.render(<Skeleton lines={8} />, eventsEl)
-    }
-    if (!requestedType || requestedType === 'by_associations') {
-      if (associationsEl) {
-        ReactDOM.render(<Skeleton lines={10} />, associationsEl)
-      }
-    }
+    if (eventsEl) ReactDOM.render(<Skeleton lines={8} />, eventsEl)
   }
 
   renderError (error) {
     const eventsEl = document.getElementById('stats-events')
-    const associationsEl = document.getElementById('stats-associations')
 
     const errorTitle = 'Unable to Load Stats'
     const errorDescription =
@@ -252,18 +239,6 @@ export default class extends Controller {
           action={errorAction}
         />,
         eventsEl
-      )
-    }
-
-    if (associationsEl) {
-      ReactDOM.render(
-        <NonIdealState
-          title={errorTitle}
-          description={errorDescription}
-          visual="error"
-          action={errorAction}
-        />,
-        associationsEl
       )
     }
   }
@@ -297,87 +272,14 @@ export default class extends Controller {
     }
 
     const eventsEl = document.getElementById('stats-events')
-    const associationsEl = document.getElementById('stats-associations')
 
     // debug: surface payload in console to help diagnose rendering issues
     console.debug('case-stats payload', { payload })
 
     const byEvent = payload.by_event || []
-    const byAssoc = payload.by_associations || []
 
     if (eventsEl) {
       ReactDOM.render(<StatsResultsTable rows={byEvent} />, eventsEl)
-    }
-
-    if (associationsEl) {
-      const Stat = ({ label, value }) => (
-          <div style={{ display: 'flex', gap: '6px' }}>
-            <span className="pt-text-muted" style={{ flex: '0 0 auto' }}>
-              {label}
-            </span>
-            <span className="pt-tag pt-minimal" style={{ flex: '0 0 auto' }}>
-              {value}
-            </span>
-          </div>
-        )
-
-      const AssociationsGrid = () => (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '12px',
-            }}
-          >
-            {byAssoc.length === 0 ? (
-              <div
-                className="pt-card pt-elevation-0"
-                style={{ padding: '12px' }}
-              >
-                <div className="pt-text-muted">No associations found.</div>
-              </div>
-            ) : (
-              byAssoc.map((r, i) => (
-                <div key={i} className="pt-card pt-elevation-1">
-                  <div className="pt-heading" style={{ marginBottom: '6px' }}>
-                    {r.library_name || 'Associations'}
-                  </div>
-                  <div style={{ display: 'grid', gap: '6px' }}>
-                    <Stat label="Deployments" value={r.deployments_count} />
-                    <Stat label="Enrollments" value={r.enrollments_count} />
-                    <Stat label="Edgenotes" value={r.edgenotes_count} />
-                    <Stat label="Cards" value={r.cards_count} />
-                    <Stat label="Case elements" value={r.case_elements_count} />
-                    <Stat label="Pages" value={r.pages_count} />
-                    <Stat label="Podcasts" value={r.podcasts_count} />
-                    <Stat
-                      label="Wikidata links"
-                      value={r.wikidata_links_count}
-                    />
-                    {r.managers_names ? (
-                      <div style={{ display: 'grid', gap: '4px' }}>
-                        <span className="pt-text-muted">Manager names</span>
-                        <div className="pt-tag pt-minimal">
-                          {r.managers_names}
-                        </div>
-                      </div>
-                    ) : null}
-                    {r.authors_names ? (
-                      <div style={{ display: 'grid', gap: '4px' }}>
-                        <span className="pt-text-muted">Author names</span>
-                        <div className="pt-tag pt-minimal">
-                          {r.authors_names}
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        )
-
-      ReactDOM.render(<AssociationsGrid />, associationsEl)
     }
   }
 
