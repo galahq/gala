@@ -317,6 +317,9 @@ id:
     join_the_community: >
       Gala modules perform well in classroom, community, and remote learning settings. Publish your case and share it as widely as you like. Institutions can create libraries with multiple cases.
     keywords: Keywords
+    languages:
+      Languages: Languages
+      noResults: No languages found
     wikidata:
       link_wikidata: Wikidata Links
       find_item: Find a Wikidata item
