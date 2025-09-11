@@ -138,6 +138,7 @@ Rails.application.routes.draw do
     end
 
     resources :libraries, only: %i[index]
+    resources :languages, only: %i[index]
 
     get '*react_router_location',
         action: :home, format: false,
