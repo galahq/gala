@@ -317,6 +317,9 @@ es:
     join_the_community: >
       Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
     keywords: Keywords
+    languages:
+      Languages: Languages
+      noResults: No languages found
     wikidata:
       link_wikidata: Wikidata Links
       find_item: Find a Wikidata item
