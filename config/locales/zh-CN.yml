@@ -313,6 +313,9 @@ zh-CN:
     join_the_community: >
       从多个方面和视角来考虑可持续发展相关问题。分享你的观点、听取他人的看法，并在交流中发现新的解决问题的方式。
     keywords: Keywords
+    languages:
+      Languages: Languages
+      noResults: No languages found
     wikidata:
       link_wikidata: Wikidata Links
       find_item: Find a Wikidata item
