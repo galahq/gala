@@ -8,6 +8,7 @@ module Cases
                :small_cover_url, :title
 
     has_many :tags
+    belongs_to :library
 
     link(:self) { case_path object }
 

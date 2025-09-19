@@ -18,7 +18,12 @@ const CaseList = ({ cases, readerIsEditor }: Props) => (
       return (
         <li key={kase.slug}>
           <CaseLinkRow href={kase.links.self}>
-            <Image src={kase.smallCoverUrl} />
+            <ImageContainer>
+              <Image src={kase.smallCoverUrl} />
+              {kase.library && (
+                <LibraryLogoOverlay src={kase.library.logoUrl} title={"In library: " + kase.library.name} alt={kase.library.name} />
+              )}
+            </ImageContainer>
             <Title>
               <Kicker>
                 {kase.kicker}
@@ -41,12 +46,18 @@ const UnstyledList = styled.ul`
   list-style: none;
 `
 
-const Image = styled.img.attrs({ role: 'presentation' })`
+const ImageContainer = styled.div`
+  position: relative;
   width: 50px;
   min-width: 50px;
   height: 50px;
-  border-radius: 2px;
   margin-right: 1em;
+`
+
+const Image = styled.img.attrs({ role: 'presentation' })`
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
   object-fit: cover;
 `
 
@@ -69,3 +80,16 @@ const Forthcoming = () => (
     <FormattedMessage id="cases.show.forthcoming" />
   </ForthcomingTag>
 )
+
+const LibraryLogoOverlay = styled.img`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  object-fit: contain;
+  background-color: rgba(16, 22, 26, .3);
+  padding: 1px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+`

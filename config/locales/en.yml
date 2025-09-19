@@ -121,7 +121,7 @@ en:
         notes: Notes
       shared_cases_library:
         description: >
-          These cases were shared by Gala users.
+          These cases were shared by Gala users. This is the default library and cases here are not subject to review by library managers. 
     errors:
       messages:
         record_invalid: "Validation failed: %{errors}"
