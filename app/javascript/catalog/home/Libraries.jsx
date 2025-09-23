@@ -56,7 +56,7 @@ const Grid = styled.div`
 
 const Library = ({ library }) => (
   <LibraryLink to={library.links.self}>
-    <img alt="" src={library.logoUrl} />
+    <img alt="" src={library.mediumLogoUrl} />
     {library.name}
   </LibraryLink>
 )

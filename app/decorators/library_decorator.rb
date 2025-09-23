@@ -13,10 +13,26 @@ class LibraryDecorator < ApplicationDecorator
     CSS
   end
 
-  def logo_url
+  def logo_url(options = {})
     return object.logo_url unless object.respond_to? :logo
     return nil unless logo.attached?
-    polymorphic_path logo, only_path: true
+    
+    ImageDecorator.decorate(logo).resized_path(**options)
+  end
+
+  # Small logo for search results and case list overlays (20x20px)
+  def small_logo_url
+    logo_url width: 20, height: 20
+  end
+
+  # Medium logo for library grid display (50x50px)
+  def medium_logo_url
+    logo_url width: 50, height: 50
+  end
+
+  # Large logo for library info pages and banners (100x100px)
+  def large_logo_url
+    logo_url width: 100, height: 100
   end
 
   def serializer_class

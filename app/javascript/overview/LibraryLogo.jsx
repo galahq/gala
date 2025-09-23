@@ -29,7 +29,7 @@ const LibraryLogo = ({
     }
     {...library}
   >
-    <Logo src={library.logoUrl} />
+    <Logo src={library.largeLogoUrl} />
   </Container>
 )
 export default LibraryLogo

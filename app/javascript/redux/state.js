@@ -310,6 +310,9 @@ export type Library = {
   description: string,
   url: string,
   logoUrl: string,
+  smallLogoUrl: string,
+  mediumLogoUrl: string,
+  largeLogoUrl: string,
   backgroundColor: string,
   foregroundColor: string,
   links: {

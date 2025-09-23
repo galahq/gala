@@ -21,7 +21,7 @@ const CaseList = ({ cases, readerIsEditor }: Props) => (
             <ImageContainer>
               <Image src={kase.smallCoverUrl} />
               {kase.library && (
-                <LibraryLogoOverlay src={kase.library.logoUrl} title={"In library: " + kase.library.name} alt={kase.library.name} />
+                <LibraryLogoOverlay src={kase.library.smallLogoUrl} title={"In library: " + kase.library.name} alt={kase.library.name} />
               )}
             </ImageContainer>
             <Title>
