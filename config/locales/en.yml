@@ -356,6 +356,8 @@ en:
       schema_mismatch: The Wikidata item you selected doesn't match this item type. Select a different item type or Wikidata item.
     learn_more: Learn more
     my_library: My Dashboard
+    myCases: My Cases
+    viewAllCases: View all ({count})
     natural_resources: Natural Resources
     reading_list_instruction: You can group and share multiple cases by creating a reading list.
     welcome_message:

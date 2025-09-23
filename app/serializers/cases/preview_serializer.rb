@@ -5,7 +5,7 @@ module Cases
   class PreviewSerializer < ApplicationSerializer
     attributes :authors, :cover_url, :dek, :featured_at, :kicker, :latitude,
                :longitude, :photo_credit, :published_at, :slug,
-               :small_cover_url, :title
+               :small_cover_url, :title, :updated_at
 
     has_many :tags
 

@@ -26,7 +26,7 @@ function MyLibrary ({ intl }: Props) {
   const [editing, toggleEditing] = useToggle(false)
 
   const [
-    { cases, enrollments, managerships, loading: casesLoading, savedReadingLists },
+    { cases, editorCases, enrollments, managerships, loading: casesLoading, savedReadingLists },
     updateCatalogData,
   ] = React.useContext(CatalogDataContext)
 
@@ -68,6 +68,43 @@ function MyLibrary ({ intl }: Props) {
               )
             })}
           </UnstyledUL>
+        </>
+      )}
+
+      {Object.keys(editorCases).length > 0 && (
+        <>
+          <CaseRow baseline>
+            <SidebarSubsectionTitle>
+              <FormattedMessage id="catalog.myCases" />
+            </SidebarSubsectionTitle>
+          </CaseRow>
+
+          <UnstyledUL>
+            {Object.values(editorCases)
+              .slice(0, 4)
+              .map(({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
+                slug && (
+                  <UnstyledLI key={slug}>
+                    <Element
+                      image={smallCoverUrl}
+                      text={kicker}
+                      href={links.self}
+                    />
+                  </UnstyledLI>
+                )
+              )}
+          </UnstyledUL>
+
+          {Object.keys(editorCases).length > 5 && (
+            <CaseRow baseline>
+              <ViewMoreLink href="/my_cases">
+                <FormattedMessage 
+                  id="catalog.viewAllCases" 
+                  values={{ count: Object.keys(editorCases).length }}
+                />
+              </ViewMoreLink>
+            </CaseRow>
+          )}
         </>
       )}
 
@@ -190,7 +227,7 @@ const SidebarSectionTitle = styled(SectionTitle)`
 `
 
 const SidebarSubsectionTitle = styled(SectionTitle).attrs({ as: 'h3' })`
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1px;
   margin: 8px 0.5em 2px 0;
   text-transform: capitalize;
@@ -216,4 +253,17 @@ const UnstyledLI = styled.li`
 const PendingRequests = styled.span`
   margin-right: 0.5em;
 
+`
+
+const ViewMoreLink = styled.a`
+  span {
+  color: #ebeae4;
+  text-decoration: none;
+  font-size: 14px;
+  font-style: italic;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
 `

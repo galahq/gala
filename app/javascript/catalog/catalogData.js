@@ -21,6 +21,7 @@ export type CatalogData = {
   loading: boolean,
   announcements: Announcement[],
   cases: { [string]: Case },
+  editorCases: { [string]: Case },
   enrollments: Enrollment[],
   features: string[],
   libraries: Library[],
@@ -101,6 +102,18 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
     )
   }, [])
 
+  React.useEffect(() => {
+    Orchard.harvest('my_cases')
+      .then(cases =>
+        update(draft => {
+          draft.editorCases = normalize(cases, 'slug')
+        })
+      )
+      .catch(e => {
+        if (!(e instanceof OrchardError && e.status === 401)) throw e
+      })
+  }, [])
+
   return [data, update]
 }
 
@@ -113,6 +126,7 @@ function getDefaultCatalogData () {
     loading: true,
     announcements: [],
     cases: {},
+    editorCases: {},
     enrollments: [],
     features: [],
     libraries: [],

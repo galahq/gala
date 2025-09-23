@@ -9,6 +9,11 @@ class MyCasesController < ApplicationController
 
   def index
     @cases = find_cases.decorate
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @cases, each_serializer: Cases::PreviewSerializer }
+    end
   end
 
   private
