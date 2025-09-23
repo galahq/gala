@@ -8,10 +8,11 @@ class EnrollmentsController < ApplicationController
   # @route [GET] `/enrollments`
   def index
     @enrollments = current_reader.enrollments
+                                .includes(active_group: :community)
 
     respond_to do |format|
       format.html { redirect_to root_path }
-      format.json
+      format.json { render json: @enrollments, each_serializer: EnrollmentSerializer }
     end
   end
 

@@ -30,9 +30,28 @@ function MyLibrary ({ intl }: Props) {
     updateCatalogData,
   ] = React.useContext(CatalogDataContext)
 
-  const enrolledCases = enrollments.map(e => cases[e.caseSlug])
+  // Group enrolled cases by discussion group
+  const enrolledCasesByGroup = enrollments
+    .filter(e => e.activeGroupId !== null) // Exclude Global Community enrollments
+    .reduce((groups, e) => {
+      const caseData = cases[e.caseSlug]
+      if (!caseData) return groups
+      
+      const groupName = e.groupName || e.communityName || 'Other Groups'
+      if (!groups[groupName]) {
+        groups[groupName] = []
+      }
+      groups[groupName].push({
+        ...caseData,
+        groupName: e.groupName,
+        communityName: e.communityName
+      })
+      return groups
+    }, {})
 
   if (casesLoading) return null
+
+  const totalEnrolledCases = Object.values(enrolledCasesByGroup).flat().length
 
   const pendingRequest = (count) => count === 0 ? null : <PendingRequests className='pt-tag pt-interactive pt-round pt-intent-primary'>{count}</PendingRequests>
 
@@ -144,7 +163,7 @@ function MyLibrary ({ intl }: Props) {
           <FormattedMessage id="enrollments.index.enrolledCases" />
         </SidebarSubsectionTitle>
 
-        {(enrolledCases.length === 0 && savedReadingLists.length === 0) || (
+        {(totalEnrolledCases === 0 && savedReadingLists.length === 0) || (
           <SidebarButton
             aria-label={
               editing
@@ -161,38 +180,47 @@ function MyLibrary ({ intl }: Props) {
         )}
       </CaseRow>
 
-      <UnstyledUL data-test-id="enrollments">
-        {enrolledCases.map(
-          ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
-            slug && (
-              <UnstyledLI key={slug}>
-                <Element
-                  image={smallCoverUrl}
-                  text={kicker}
-                  href={editing ? null : links.self}
-                  rightElement={
-                    editing && (
-                      <SidebarButton
-                        intent={Intent.DANGER}
-                        aria-label={intl.formatMessage({
-                          id: 'enrollments.destroy.unenroll',
-                        })}
-                        icon="cross"
-                        onClick={() =>
-                          onDeleteEnrollment(slug, {
-                            displayBetaWarning: !publishedAt,
-                          })
+      <div data-test-id="enrollments">
+        {Object.entries(enrolledCasesByGroup).map(([groupName, groupCases]) => (
+          <div key={groupName}>
+            <GroupHeader>
+              {groupName}
+            </GroupHeader>
+            <UnstyledUL>
+              {groupCases.map(
+                ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
+                  slug && (
+                    <UnstyledLI key={slug}>
+                      <Element
+                        image={smallCoverUrl}
+                        text={kicker}
+                        href={editing ? null : links.self}
+                        rightElement={
+                          editing && (
+                            <SidebarButton
+                              intent={Intent.DANGER}
+                              aria-label={intl.formatMessage({
+                                id: 'enrollments.destroy.unenroll',
+                              })}
+                              icon="cross"
+                              onClick={() =>
+                                onDeleteEnrollment(slug, {
+                                  displayBetaWarning: !publishedAt,
+                                })
+                              }
+                            />
+                          )
                         }
                       />
-                    )
-                  }
-                />
-              </UnstyledLI>
-            )
-        )}
-      </UnstyledUL>
+                    </UnstyledLI>
+                  )
+              )}
+            </UnstyledUL>
+          </div>
+        ))}
+      </div>
 
-      {enrolledCases.length === 0 && savedReadingLists.length === 0 && (
+      {totalEnrolledCases === 0 && savedReadingLists.length === 0 && (
         <EnrollmentInstructions />
       )}
     </div>
@@ -257,7 +285,7 @@ const PendingRequests = styled.span`
 
 const ViewMoreLink = styled.a`
   span {
-  color: #ebeae4;
+  color: #C7CCD6;
   text-decoration: none;
   font-size: 14px;
   font-style: italic;
@@ -266,4 +294,12 @@ const ViewMoreLink = styled.a`
     text-decoration: underline;
   }
 }
+`
+
+const GroupHeader = styled.div`
+  font-size: 14px;
+  color: #C7CCD6;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
 `
