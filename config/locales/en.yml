@@ -328,6 +328,9 @@ en:
     languages:
       Languages: Languages
       noResults: No languages found
+    libraries:
+      Libraries: Libraries
+      noResults: No libraries found
     wikidata:
       link_wikidata: Wikidata Links
       find_item: Find a Wikidata item

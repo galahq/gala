@@ -15,16 +15,10 @@ import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import KeywordsChooser from 'overview/keywords/KeywordsChooser'
 import LanguageChooser from './LanguageChooser'
+import LibraryChooser from './LibraryChooser'
 
-import type { IntlShape } from 'react-intl'
-import type { ContextRouter } from 'react-router-dom'
-import type { Query } from 'catalog/search_results/getQueryParams'
-import type { Tag } from 'redux/state'
 
-type Language = { code: string, name: string }
-
-type Props = {| ...ContextRouter, params: Query, intl: IntlShape |}
-function SearchForm ({ history, intl, params }: Props) {
+function SearchForm ({ history, intl, params, location }) {
   const queryFromUrl = (params.q || []).join(' ')
   const [query, setQuery] = React.useState(queryFromUrl)
   React.useEffect(() => setQuery(queryFromUrl), [params.query])
@@ -37,14 +31,27 @@ function SearchForm ({ history, intl, params }: Props) {
     createLanguageObjects(params.languages)
   )
 
-  function handleSubmit (e: SyntheticEvent<HTMLFormElement>) {
+  const [libraryObjects, setLibraryObjects] = React.useState(
+    createLibraryObjects(params.libraries)
+  )
+
+  // Check if we're on a library-specific page
+  const isLibraryPage = location.pathname.includes('/catalog/libraries/')
+
+  function handleSubmit (e) {
     e.preventDefault()
-    const searchPath = getSearchPath({
+    const searchParams = {
       q: query,
-      libraries: params.libraries,
       tags: tagObjects.map(tag => tag.name),
       languages: languageObjects.map(lang => lang.code),
-    })
+    }
+    
+    // Only include libraries if we're not on a library page
+    if (!isLibraryPage) {
+      searchParams.libraries = libraryObjects.map(lib => lib.slug)
+    }
+    
+    const searchPath = getSearchPath(searchParams)
     history.push(searchPath)
   }
 
@@ -75,6 +82,12 @@ function SearchForm ({ history, intl, params }: Props) {
           <LanguageChooser languages={languageObjects} onChange={setLanguageObjects} />
         </FormGroup>
 
+        {!isLibraryPage && (
+          <FormGroup label={<FormattedMessage id="catalog.libraries.Libraries" />}>
+            <LibraryChooser libraries={libraryObjects} onChange={setLibraryObjects} />
+          </FormGroup>
+        )}
+
         <SubmitButton>
           <FormattedMessage id="search.search" />
         </SubmitButton>
@@ -85,15 +98,19 @@ function SearchForm ({ history, intl, params }: Props) {
 
 export default injectIntl(withRouter(SearchForm))
 
-function createTagObjects (names: ?(string[])): Tag[] {
+function createTagObjects (names) {
   return names ? names.map(name => ({ name, displayName: name })) : []
 }
 
-function createLanguageObjects (codes: ?(string[])): Language[] {
+function createLanguageObjects (codes) {
   return codes ? codes.map(code => ({ code, name: code })) : []
 }
 
-export function getSearchPath (params: Object): string {
+function createLibraryObjects (slugs) {
+  return slugs ? slugs.map(slug => ({ slug, name: slug })) : []
+}
+
+export function getSearchPath (params) {
   return `/catalog/search?${qs.stringify(reject(isEmpty, params), {
     arrayFormat: 'brackets',
     encodeValuesOnly: true,
