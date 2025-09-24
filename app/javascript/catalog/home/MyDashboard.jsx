@@ -157,67 +157,69 @@ function MyDashboard ({ intl }: Props) {
         })}
       </UnstyledUL>
 
-      <CaseRow baseline>
-        <SidebarSubsectionTitle>
-          <FormattedMessage id="enrollments.index.enrolledCases" />
-        </SidebarSubsectionTitle>
+      {totalEnrolledCases > 0 && (
+        <>
+          <CaseRow baseline>
+            <SidebarSubsectionTitle>
+              <FormattedMessage id="enrollments.index.enrolledCases" />
+            </SidebarSubsectionTitle>
 
-        {(totalEnrolledCases === 0 && savedReadingLists.length === 0) || (
-          <SidebarButton
-            aria-label={
-              editing
-                ? intl.formatMessage({
-                    id: 'enrollments.index.finishEditing',
-                  })
-                : intl.formatMessage({
-                    id: 'enrollments.index.editEnrolled',
-                  })
-            }
-            icon={editing ? 'tick' : 'cog'}
-            onClick={toggleEditing}
-          />
-        )}
-      </CaseRow>
+            <SidebarButton
+              aria-label={
+                editing
+                  ? intl.formatMessage({
+                      id: 'enrollments.index.finishEditing',
+                    })
+                  : intl.formatMessage({
+                      id: 'enrollments.index.editEnrolled',
+                    })
+              }
+              icon={editing ? 'tick' : 'cog'}
+              onClick={toggleEditing}
+            />
+          </CaseRow>
 
-      <div data-test-id="enrollments">
-        {Object.entries(enrolledCasesByGroup).map(([groupName, groupCases]) => (
-          <div key={groupName}>
-            <GroupHeader>
-              {groupName}
-            </GroupHeader>
-            <UnstyledUL>
-              {groupCases.map(
-                ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
-                  slug && (
-                    <UnstyledLI key={slug}>
-                      <Element
-                        image={smallCoverUrl}
-                        text={kicker}
-                        href={editing ? null : links.self}
-                        rightElement={
-                          editing && (
-                            <SidebarButton
-                              intent={Intent.DANGER}
-                              aria-label={intl.formatMessage({
-                                id: 'enrollments.destroy.unenroll',
-                              })}
-                              icon="cross"
-                              onClick={() =>
-                                onDeleteEnrollment(slug, {
-                                  displayBetaWarning: !publishedAt,
-                                })
-                              }
-                            />
-                          )
-                        }
-                      />
-                    </UnstyledLI>
-                  )
-              )}
-            </UnstyledUL>
+          <div data-test-id="enrollments">
+            {Object.entries(enrolledCasesByGroup).map(([groupName, groupCases]) => (
+              <div key={groupName}>
+                <GroupHeader>
+                  {groupName}
+                </GroupHeader>
+                <UnstyledUL>
+                  {groupCases.map(
+                    ({ slug, smallCoverUrl, kicker, links, publishedAt } = {}) =>
+                      slug && (
+                        <UnstyledLI key={slug}>
+                          <Element
+                            image={smallCoverUrl}
+                            text={kicker}
+                            href={editing ? null : links.self}
+                            rightElement={
+                              editing && (
+                                <SidebarButton
+                                  intent={Intent.DANGER}
+                                  aria-label={intl.formatMessage({
+                                    id: 'enrollments.destroy.unenroll',
+                                  })}
+                                  icon="cross"
+                                  onClick={() =>
+                                    onDeleteEnrollment(slug, {
+                                      displayBetaWarning: !publishedAt,
+                                    })
+                                  }
+                                />
+                              )
+                            }
+                          />
+                        </UnstyledLI>
+                      )
+                  )}
+                </UnstyledUL>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
       {totalEnrolledCases === 0 && savedReadingLists.length === 0 && (
         <EnrollmentInstructions />
@@ -287,7 +289,6 @@ const ViewMoreLink = styled.a`
   color: #C7CCD6;
   text-decoration: none;
   font-size: 14px;
-  font-style: italic;
   
   &:hover {
     text-decoration: underline;
@@ -301,4 +302,5 @@ const GroupHeader = styled.div`
   margin: 0 0 6px 0;
   letter-spacing: 0.5px;
   text-transform: capitalize;
+  font-style: italic;
 `

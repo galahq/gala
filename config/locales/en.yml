@@ -844,7 +844,7 @@ en:
         it will return to the “Shared Cases Library.”
       delete_library: Delete Library
     edit:
-      library_management: Library Management
+      library_management: My Libraries
       edit_library: Edit Library
       library_managers: Library Managers
       library_cases: Cases
