@@ -1,5 +1,5 @@
 /**
- * @providesModule MyLibrary
+ * @providesModule MyDashboard
  * @flow
  */
 
@@ -22,7 +22,7 @@ type Props = {
   intl: IntlShape,
 }
 
-function MyLibrary ({ intl }: Props) {
+function MyDashboard ({ intl }: Props) {
   const [editing, toggleEditing] = useToggle(false)
 
   const [
@@ -49,7 +49,6 @@ function MyLibrary ({ intl }: Props) {
       return groups
     }, {})
 
-  if (casesLoading) return null
 
   const totalEnrolledCases = Object.values(enrolledCasesByGroup).flat().length
 
@@ -60,7 +59,7 @@ function MyLibrary ({ intl }: Props) {
 
       <CaseRow baseline>
         <SidebarSectionTitle>
-          <FormattedMessage id="catalog.myLibrary" />
+          <FormattedMessage id="catalog.myDashboard" />
         </SidebarSectionTitle>
       </CaseRow>
 
@@ -247,7 +246,7 @@ function MyLibrary ({ intl }: Props) {
   }
 }
 
-export default injectIntl(MyLibrary)
+export default injectIntl(MyDashboard)
 
 const SidebarSectionTitle = styled(SectionTitle)`
   flex: 1;

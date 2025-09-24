@@ -309,7 +309,7 @@ en:
     catalog: Catalog
     create_a_case: Create a Case
     enrollments_instruction: >
-      Cases you enroll in will be presented here for easy access.
+      Cases you enroll in or create will be presented here for easy access.
     find_a_case: >
       Gala makes it quick and easy to create a case or adapt an existing learning module. 
       Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
@@ -355,8 +355,8 @@ en:
       404_error: This QID does not exist or belongs to a different category
       schema_mismatch: The Wikidata item you selected doesn't match this item type. Select a different item type or Wikidata item.
     learn_more: Learn more
-    my_library: My Dashboard
-    myCases: My Cases
+    my_dashboard: My Dashboard
+    myCases: My Cases 
     viewAllCases: View all ({count})
     natural_resources: Natural Resources
     reading_list_instruction: You can group and share multiple cases by creating a reading list.
@@ -371,7 +371,7 @@ en:
       welcome_back_title: Welcome back
       welcome_back_message: Find a case by searching or browsing below, or {createCase}.
       create_case: create a case
-    your_library: Your library
+    your_library: Your Dashboard
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
