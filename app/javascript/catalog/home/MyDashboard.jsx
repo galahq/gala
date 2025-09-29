@@ -22,7 +22,7 @@ type Props = {
   intl: IntlShape,
 }
 
-function MyDashboard ({ intl }: Props) {
+function MyDashboard({ intl }: Props) {
   const [editing, toggleEditing] = useToggle(false)
 
   const [
@@ -36,7 +36,7 @@ function MyDashboard ({ intl }: Props) {
     .reduce((groups, e) => {
       const caseData = cases[e.caseSlug]
       if (!caseData) return groups
-      
+
       const groupName = e.groupName || e.communityName || 'Other Groups'
       if (!groups[groupName]) {
         groups[groupName] = []
@@ -88,7 +88,20 @@ function MyDashboard ({ intl }: Props) {
           </UnstyledUL>
         </>
       )}
+      <CaseRow baseline>
+        <SidebarSubsectionTitle>
+          <FormattedMessage id="readingLists.index.readingLists" />
+        </SidebarSubsectionTitle>
 
+        <SidebarButton
+          aria-label={intl.formatMessage({
+            id: 'readingLists.new.newList',
+          })}
+          icon="add"
+          role="link"
+          onClick={() => (window.location = '/reading_lists/new')}
+        />
+      </CaseRow>
       {Object.keys(editorCases).length > 0 && (
         <>
           <CaseRow baseline>
@@ -116,8 +129,8 @@ function MyDashboard ({ intl }: Props) {
           {Object.keys(editorCases).length > 5 && (
             <CaseRow baseline>
               <ViewMoreLink href="/my_cases">
-                <FormattedMessage 
-                  id="catalog.viewAllCases" 
+                <FormattedMessage
+                  id="catalog.viewAllCases"
                   values={{ count: Object.keys(editorCases).length }}
                 />
               </ViewMoreLink>
@@ -126,20 +139,6 @@ function MyDashboard ({ intl }: Props) {
         </>
       )}
 
-      <CaseRow baseline>
-        <SidebarSubsectionTitle>
-          <FormattedMessage id="readingLists.index.readingLists" />
-        </SidebarSubsectionTitle>
-
-        <SidebarButton
-          aria-label={intl.formatMessage({
-            id: 'readingLists.new.newList',
-          })}
-          icon="add"
-          role="link"
-          onClick={() => (window.location = '/reading_lists/new')}
-        />
-      </CaseRow>
 
       <UnstyledUL>
         {savedReadingLists.map(({ param, title, caseSlugs, links } = {}) => {
@@ -168,11 +167,11 @@ function MyDashboard ({ intl }: Props) {
               aria-label={
                 editing
                   ? intl.formatMessage({
-                      id: 'enrollments.index.finishEditing',
-                    })
+                    id: 'enrollments.index.finishEditing',
+                  })
                   : intl.formatMessage({
-                      id: 'enrollments.index.editEnrolled',
-                    })
+                    id: 'enrollments.index.editEnrolled',
+                  })
               }
               icon={editing ? 'tick' : 'cog'}
               onClick={toggleEditing}
@@ -227,15 +226,14 @@ function MyDashboard ({ intl }: Props) {
     </div>
   )
 
-  async function onDeleteEnrollment (slug, { displayBetaWarning }) {
+  async function onDeleteEnrollment(slug, { displayBetaWarning }) {
     const message = `
       ${intl.formatMessage({ id: 'enrollments.destroy.areYouSure' })}
-      ${
-        displayBetaWarning
-          ? `${intl.formatMessage({
-              id: 'enrollments.destroy.youWillNeedAnotherInvitation',
-            })}`
-          : ''
+      ${displayBetaWarning
+        ? `${intl.formatMessage({
+          id: 'enrollments.destroy.youWillNeedAnotherInvitation',
+        })}`
+        : ''
       }`
 
     if (!window.confirm(message)) return
