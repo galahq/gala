@@ -199,6 +199,9 @@ Rails.application.routes.draw do
     resources :submissions, only: %i[index create]
   end
 
+  get 'github_pages', to: 'github_pages#show'
+  get 'github_pages_assets/*path', to: 'github_pages#assets', as: :github_pages_assets
+
   resources :readers, only: %i[index] do
     member do
       get :edit_tos
