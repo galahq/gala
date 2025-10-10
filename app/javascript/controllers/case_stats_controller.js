@@ -44,12 +44,6 @@ export default class extends Controller {
       )
       const shortcuts = [
         { label: 'All time', dateRange: [minDate, end] },
-        { label: 'Today', dateRange: [end, end] },
-        { label: 'Yesterday', dateRange: [yesterday, yesterday] },
-        { label: 'Past week', dateRange: [startFromDays(7), end] },
-        { label: 'Past month', dateRange: [startFromDays(30), end] },
-        { label: 'Past 3 months', dateRange: [startFromDays(90), end] },
-        { label: 'Past 6 months', dateRange: [startFromDays(180), end] },
         { label: 'Past year', dateRange: [startFromDays(365), end] },
         { label: 'Past 2 years', dateRange: [startFromDays(730), end] },
       ]
@@ -63,7 +57,7 @@ export default class extends Controller {
           maxDate={maxDate}
           fromInputId="stats-from"
           toInputId="stats-to"
-          shortcuts={shortcuts}
+          shortcuts={false}
           initialRange={initialRange}
         />,
         pickerEl
