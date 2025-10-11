@@ -278,6 +278,20 @@ en:
       locations: Site locations
     new:
       create_a_case: Create a Case
+    stats:
+      show:
+        case_stats: Case Stats
+        created: Created
+        published: "Published:"
+        last_updated: "Last Updated:"
+        deployments: "Deployments"
+        visits: Unique Visits
+        locales: Locales
+        podcast_listens: Podcast Listens - %{podcast_title}
+        disclaimer: >
+          Totals count only users that were signed-in to Gala when viewing the case. 
+          'Unique Visits' counts readers who viewed a page beyond the overview page of your case.
+          Readers' browser settings may impact the accuracy of these counts.
     settings:
       edit:
         change_library: Change library
@@ -904,7 +918,8 @@ en:
         to your library.
   my_cases:
     index:
-      confirm_delete: >
+      case_stats: Case Stats
+      confirm_delete: 
         Are you sure you wish to delete this case? This action cannot be undone.
       create_a_case: Create a Case
       delete_case: Delete case.
@@ -1097,6 +1112,7 @@ en:
     results: Search results
     search: Search
     search_cases: Search Cases...
+    submit_search: Submit search
     try_again: Try searching for something else.
   spotlights:
     add_citation: >
