@@ -84,6 +84,17 @@ class CountryStatsService
         events_count: row['events_count'] || 0,
         first_event: row['first_event'],
         last_event: row['last_event'],
+        deployments_count: row['deployments_count'] || 0,
+        visit_podcast_count: row['visit_podcast_count'] || 0,
+        visit_edgenote_count: row['visit_edgenote_count'] || 0,
+        visit_page_count: row['visit_page_count'] || 0,
+        visit_element_count: row['visit_element_count'] || 0,
+        read_quiz_count: row['read_quiz_count'] || 0,
+        read_overview_count: row['read_overview_count'] || 0,
+        read_card_count: row['read_card_count'] || 0,
+        write_comment_count: row['write_comment_count'] || 0,
+        write_comment_thread_count: row['write_comment_thread_count'] || 0,
+        write_quiz_submission_count: row['write_quiz_submission_count'] || 0,
         percentile: get_percentile(visits, percentiles)
       }
     end
@@ -92,7 +103,9 @@ class CountryStatsService
       stats: stats.sort_by { |s| -s[:unique_visits] },
       percentiles: percentiles,
       total_visits: all_visits.sum,
-      country_count: stats.count
+      country_count: stats.count,
+      total_deployments: stats.sum { |s| s[:deployments_count] },
+      total_podcast_listens: stats.sum { |s| s[:visit_podcast_count] }
     }
   end
 

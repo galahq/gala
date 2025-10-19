@@ -1,15 +1,12 @@
 # AGENTS playbook for this repo
 
-## Init
-- Copy and load env: `cp .env.dev .env && direnv allow`【F:.envrc†L1-L5】
-- Use Procfile.dev via Foreman: `bundle exec foreman start -f Procfile.dev`【F:.foreman†L1】【F:Procfile.dev†L1-L3】
-- Install system deps: `libjemalloc2` from Aptfile【F:Aptfile†L1】
-- (Optional) Enable jemalloc tuning in .profile【F:.profile†L1-L6】
-
-## Build & Run
-- Dev: `docker compose up --build`【F:Dockerfile†L1-L66】【F:docker-compose.yml†L1-L33】
-- Stop: `docker compose down`
-- Container commands: `docker compose run web [command]`
+# Rules
+- never kill the docker processes running the app
+- never restart the app, tell the user if a restart is required
+- never run rails generate, console, or server commands automaticaly
+- never run docker compose or normal docker commands automatically
+- tests, rubocop and linters can be ran auotmatically
+- never change application dependency in the Gemfile or package.json
 
 ## Database
 - Schema init via mounting db/structure.sql on new volume【F:docker-compose.yml†L47-L49】

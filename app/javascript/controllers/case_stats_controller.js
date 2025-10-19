@@ -6,6 +6,7 @@ import { Controller } from 'stimulus'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { NonIdealState } from '@blueprintjs/core'
+import { getAccessibleTextColor } from '../utility/colors'
 import StatsDateRangePicker from '../stats/StatsDateRangePicker'
 import StatsMapWithLegend from '../stats/StatsMapWithLegend'
 import StatsTable from '../stats/StatsTable'
@@ -53,7 +54,7 @@ export default class extends Controller {
           maxDate={maxDate}
           fromInputId="stats-from"
           toInputId="stats-to"
-          shortcuts={false}
+          shortcuts={shortcuts}
           initialRange={initialRange}
         />,
         pickerEl
@@ -73,15 +74,23 @@ export default class extends Controller {
     }
 
     // Load initial dataset before setting up event listener
-    this.fetchAndRenderBoth().then(() => {
-      // Only set up the event listener after initial load completes
-      this.isInitializing = false
-      document.addEventListener('stats-range-changed', this.rangeChangedHandler)
-    }).catch((error) => {
-      console.error('Initial data load failed:', error)
-      this.isInitializing = false
-      document.addEventListener('stats-range-changed', this.rangeChangedHandler)
-    })
+    this.fetchAndRenderBoth()
+      .then(() => {
+        // Only set up the event listener after initial load completes
+        this.isInitializing = false
+        document.addEventListener(
+          'stats-range-changed',
+          this.rangeChangedHandler
+        )
+      })
+      .catch(error => {
+        console.error('Initial data load failed:', error)
+        this.isInitializing = false
+        document.addEventListener(
+          'stats-range-changed',
+          this.rangeChangedHandler
+        )
+      })
   }
 
   apply () {
@@ -185,23 +194,33 @@ export default class extends Controller {
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
       ReactDOM.render(
-        <div style={{
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#f9fafb',
-        }}>
+        <div
+          style={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#f9fafb',
+          }}
+        >
           <div style={{ textAlign: 'center' }}>
             <div className="pt-spinner pt-large">
               <div className="pt-spinner-svg-container">
                 <svg viewBox="0 0 100 100">
-                  <path className="pt-spinner-track" d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"></path>
-                  <path className="pt-spinner-head" d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"></path>
+                  <path
+                    className="pt-spinner-track"
+                    d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                  ></path>
+                  <path
+                    className="pt-spinner-head"
+                    d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                  ></path>
                 </svg>
               </div>
             </div>
-            <p style={{ marginTop: '20px', color: '#6b7280' }}>Loading statistics...</p>
+            <p style={{ marginTop: '20px', color: '#6b7280' }}>
+              Loading statistics...
+            </p>
           </div>
         </div>,
         mapEl
@@ -213,7 +232,10 @@ export default class extends Controller {
     if (tableEl) {
       ReactDOM.render(
         <div className="pt-card" style={{ padding: '20px', marginTop: '24px' }}>
-          <div className="pt-skeleton" style={{ height: '20px', width: '200px', marginBottom: '20px' }} />
+          <div
+            className="pt-skeleton"
+            style={{ height: '20px', width: '200px', marginBottom: '20px' }}
+          />
           <div className="pt-skeleton" style={{ height: '300px' }} />
         </div>,
         tableEl
@@ -241,12 +263,14 @@ export default class extends Controller {
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
       ReactDOM.render(
-        <div style={{
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+        <div
+          style={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <NonIdealState
             title={errorTitle}
             description={errorDescription}
@@ -311,8 +335,87 @@ export default class extends Controller {
       } else {
         ReactDOM.render(
           <div>
-            <div>Total Unique Visitors: <strong>{(summary.total_visits || 0).toLocaleString()}</strong></div>
-            <div>Countries: <strong>{summary.country_count || 0}</strong></div>
+            <div>
+              Total Unique Visitors:{' '}
+              <strong>{(summary.total_visits || 0).toLocaleString()}</strong>
+            </div>
+            <div>
+              Countries: <strong>{summary.country_count || 0}</strong>
+            </div>
+            <div>
+              Total Deployments:{' '}
+              <strong>
+                {(summary.total_deployments || 0).toLocaleString()}
+              </strong>
+            </div>
+            <div>
+              Podcast Listens:{' '}
+              <strong>
+                {(summary.total_podcast_listens || 0).toLocaleString()}
+              </strong>
+            </div>
+            {summary.case_published_at && (
+              <div>
+                Published: <strong>{summary.case_published_at}</strong>
+              </div>
+            )}
+
+            {/* Visitor Distribution */}
+            {summary.percentiles && summary.percentiles.length > 0 && (
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                  Visitor Distribution
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '2px',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  {summary.percentiles.map((p, i) => (
+                    <div key={i} style={{ position: 'relative' }}>
+                      <div
+                        style={{
+                          width: '40px',
+                          height: '24px',
+                          background: p.color,
+                          border: '1px solid #e5e7eb',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        title={`${p.percentile}th percentile: ${p.value} visitors`}
+                      >
+                        <span
+                          style={{
+                            fontSize: '10px',
+                            fontWeight: 'bold',
+                            color: getAccessibleTextColor(p.color),
+                            lineHeight: '1',
+                          }}
+                        >
+                          {p.value}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: '11px',
+                    marginTop: '4px',
+                    color: '#6b7280',
+                  }}
+                >
+                  <span>Low</span>
+                  <span>High</span>
+                </div>
+              </div>
+            )}
           </div>,
           summaryEl
         )
@@ -324,13 +427,15 @@ export default class extends Controller {
     if (mapEl) {
       if (formatted.length === 0) {
         ReactDOM.render(
-          <div style={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#f9fafb',
-          }}>
+          <div
+            style={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: '#f9fafb',
+            }}
+          >
             <NonIdealState
               title="No Data Available"
               description="No visitor data found for the selected date range."

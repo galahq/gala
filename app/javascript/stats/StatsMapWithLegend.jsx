@@ -1,6 +1,7 @@
 /* @flow */
 import React, { useState, useEffect, useRef } from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
+import { Button } from '@blueprintjs/core'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { getAccessibleTextColor } from '../utility/colors'
 
@@ -44,6 +45,11 @@ type Props = {
 
 export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
   const [hoveredCountry, setHoveredCountry] = useState(null)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [tooltipPosition, setTooltipPosition] = useState({
+    left: -1000,
+    top: -1000,
+  })
   const [mapLoaded, setMapLoaded] = useState(false)
   const [mapError, setMapError] = useState(false)
   const [viewport, setViewport] = useState({
@@ -52,6 +58,42 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
     zoom: 1.5,
   })
   const mapRef = useRef(null)
+  const tooltipRef = useRef(null)
+
+  // Position tooltip to follow mouse cursor, avoiding right edge overflow
+  useEffect(() => {
+    if (
+      hoveredCountry &&
+      mousePosition.x !== 0 &&
+      mousePosition.y !== 0 &&
+      tooltipRef.current &&
+      mapRef.current
+    ) {
+      const tooltip = tooltipRef.current
+      const mapInstance = mapRef.current.getMap()
+      const mapContainer = mapInstance.getContainer()
+      const mapRect = mapContainer.getBoundingClientRect()
+      const tooltipRect = tooltip.getBoundingClientRect()
+
+      const offset = 15
+      const tooltipWidth = tooltipRect.width
+
+      // Check if tooltip would overflow to the right
+      const wouldOverflowRight =
+        mousePosition.x + offset + tooltipWidth > mapRect.width
+
+      const left = wouldOverflowRight
+        ? mousePosition.x - offset - tooltipWidth // Position to the left
+        : mousePosition.x + offset // Position to the right
+
+      const newPosition = {
+        left,
+        top: mousePosition.y - offset,
+      }
+      console.log('Setting tooltip position:', newPosition)
+      setTooltipPosition(newPosition)
+    }
+  }, [hoveredCountry, mousePosition])
 
   // Clean up on unmount
   useEffect(() => {
@@ -117,9 +159,55 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
       const countryData = countries.find(c => c.name === countryName)
       console.log('Found country data:', countryData)
       setHoveredCountry(countryData)
+      setMousePosition({ x: event.point[0], y: event.point[1] })
     } else {
       setHoveredCountry(null)
+      setMousePosition({ x: 0, y: 0 })
     }
+  }
+
+  const onClick = event => {
+    const feature = event.features && event.features[0]
+    if (feature && mapRef.current) {
+      const countryName = feature.properties.name
+      const countryData = countries.find(c => c.name === countryName)
+      if (countryData) {
+        // Calculate centroid from the clicked point or use bbox if available
+        let centerLng, centerLat
+
+        if (feature.bbox) {
+          // Use bounding box center if available
+          const [minLng, minLat, maxLng, maxLat] = feature.bbox
+          centerLng = (minLng + maxLng) / 2
+          centerLat = (minLat + maxLat) / 2
+        } else {
+          // Fallback to clicked coordinates
+          centerLng = event.lngLat[0]
+          centerLat = event.lngLat[1]
+        }
+
+        // Fly to the country center with appropriate zoom
+        mapRef.current.flyTo({
+          center: [centerLng, centerLat],
+          zoom: 4,
+          duration: 2000,
+        })
+      }
+    }
+  }
+
+  const handleZoomIn = () => {
+    setViewport(prev => ({
+      ...prev,
+      zoom: Math.min(prev.zoom + 1, 20), // Max zoom level
+    }))
+  }
+
+  const handleZoomOut = () => {
+    setViewport(prev => ({
+      ...prev,
+      zoom: Math.max(prev.zoom - 1, 1), // Min zoom level
+    }))
   }
 
   if (mapError) {
@@ -174,6 +262,7 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
           }
         }}
         onHover={mapLoaded ? onHover : undefined}
+        onClick={mapLoaded ? onClick : undefined}
       >
         {mapLoaded && (
           <Source
@@ -185,6 +274,44 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
             <Layer {...lineLayer} />
           </Source>
         )}
+
+        {/* Zoom Controls */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2px',
+            zIndex: 1,
+          }}
+        >
+          <Button
+            minimal
+            small
+            icon="zoom-in"
+            style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              border: '1px solid #e5e7eb',
+              borderRadius: '4px',
+            }}
+            title="Zoom In"
+            onClick={handleZoomIn}
+          />
+          <Button
+            minimal
+            small
+            icon="zoom-out"
+            style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              border: '1px solid #e5e7eb',
+              borderRadius: '4px',
+            }}
+            title="Zoom Out"
+            onClick={handleZoomOut}
+          />
+        </div>
         {!mapLoaded && (
           <div
             style={{
@@ -262,29 +389,54 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
       {/* Hover tooltip */}
       {hoveredCountry && (
         <div
+          ref={tooltipRef}
           style={{
             position: 'absolute',
-            top: 10,
-            right: 10,
-            background: 'rgba(255, 255, 255, 0.95)',
-            padding: '12px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            minWidth: '200px',
+            left: tooltipPosition.left,
+            top: tooltipPosition.top,
+            background: 'rgba(0, 0, 0, 0.9)',
+            color: 'white',
+            padding: '8px 12px',
+            borderRadius: '6px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            fontSize: '12px',
+            pointerEvents: 'none',
+            whiteSpace: 'nowrap',
+            zIndex: 1000,
           }}
         >
-          <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+          <div
+            style={{
+              fontWeight: 'bold',
+              marginBottom: '4px',
+              fontSize: '13px',
+            }}
+          >
             {hoveredCountry.name}
           </div>
-          <div style={{ fontSize: '12px', color: '#4b5563' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                backgroundColor:
+                  percentiles.find(
+                    p =>
+                      Number(p.percentile) === Number(hoveredCountry.percentile)
+                  )?.color || '#f9fafb',
+                border: '1px solid rgba(255,255,255,0.3)',
+                flexShrink: 0,
+              }}
+            />
             <div>
-              Unique Visitors: {hoveredCountry.unique_visits.toLocaleString()}
-            </div>
-            <div>
-              Unique Users: {hoveredCountry.unique_users.toLocaleString()}
-            </div>
-            <div>
-              Total Events: {hoveredCountry.events_count.toLocaleString()}
+              <div style={{ fontWeight: '500' }}>
+                {hoveredCountry.unique_visits.toLocaleString()} visitors
+              </div>
+              <div style={{ fontSize: '11px', opacity: 0.8 }}>
+                {hoveredCountry.unique_users.toLocaleString()} users •{' '}
+                {hoveredCountry.events_count.toLocaleString()} events
+              </div>
             </div>
           </div>
         </div>
