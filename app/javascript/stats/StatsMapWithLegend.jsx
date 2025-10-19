@@ -61,14 +61,14 @@ export default function StatsMapWithLegend({ countries, percentiles }: Props) {
     }
   }, [])
 
-  // Create a map of ISO3 codes to colors
+  // Create a map of country names to colors
   const countryColors = {}
   countries.forEach(country => {
     const percentile = percentiles.find(
       p => Number(p.percentile) === Number(country.percentile)
     )
-    if (percentile && country.iso3) {
-      countryColors[country.iso3] = percentile.color
+    if (percentile && country.name) {
+      countryColors[country.name] = percentile.color
     }
   })
 
@@ -77,10 +77,10 @@ export default function StatsMapWithLegend({ countries, percentiles }: Props) {
   console.log('Percentiles data:', percentiles)
 
   // Create mapbox expression for country fills
-  const fillColorExpression = ['match', ['id']]
+  const fillColorExpression = ['match', ['get', 'name']]
 
-  Object.entries(countryColors).forEach(([iso3, color]) => {
-    fillColorExpression.push(iso3, color)
+  Object.entries(countryColors).forEach(([name, color]) => {
+    fillColorExpression.push(name, color)
   })
 
   // Default color for countries with no data
@@ -112,9 +112,9 @@ export default function StatsMapWithLegend({ countries, percentiles }: Props) {
     const feature = event.features && event.features[0]
     if (feature) {
       console.log('Hovered feature properties:', feature.properties)
-      const iso3 = feature.id
-      console.log('Looking for iso3:', iso3)
-      const countryData = countries.find(c => c.iso3 === iso3)
+      const countryName = feature.properties.name
+      console.log('Looking for country name:', countryName)
+      const countryData = countries.find(c => c.name === countryName)
       console.log('Found country data:', countryData)
       setHoveredCountry(countryData)
     } else {
