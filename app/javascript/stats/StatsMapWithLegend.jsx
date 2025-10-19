@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { getAccessibleTextColor } from '../utility/colors'
 
 // Import mapbox credentials - try window first, then use fallback
 const getMapboxToken = () => {
@@ -218,20 +219,29 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
           {percentiles.map((p, i) => (
-            <div key={i} style={{ textAlign: 'center' }}>
+            <div key={i} style={{ position: 'relative' }}>
               <div
                 style={{
                   width: '30px',
                   height: '20px',
                   background: p.color,
                   border: '1px solid #e5e7eb',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-              />
-              {(i === 0 || i === 5 || i === 10) && (
-                <div style={{ fontSize: '10px', marginTop: '2px' }}>
+              >
+                <span
+                  style={{
+                    fontSize: '9px',
+                    fontWeight: 'bold',
+                    color: getAccessibleTextColor(p.color),
+                    lineHeight: '1',
+                  }}
+                >
                   {p.value}
-                </div>
-              )}
+                </span>
+              </div>
             </div>
           ))}
         </div>
