@@ -20,7 +20,7 @@ const getMapboxToken = () => {
 }
 
 const MAPBOX_TOKEN = getMapboxToken()
-const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v10'
+const MAPBOX_STYLE = 'mapbox://styles/mapbox/dark-v10'
 
 type CountryData = {
   iso2: string,
@@ -126,7 +126,7 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
   })
 
   // Default color for countries with no data
-  fillColorExpression.push('#f9fafb')
+  fillColorExpression.push('#2a2a2a')
 
   console.log('Fill color expression:', fillColorExpression)
 
@@ -334,14 +334,20 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
           position: 'absolute',
           bottom: 20,
           left: 20,
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'rgba(42, 42, 42, 0.9)',
           padding: '12px',
           borderRadius: '8px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           fontSize: '12px',
         }}
       >
-        <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+        <div
+          style={{
+            fontWeight: 'bold',
+            marginBottom: '8px',
+            color: getAccessibleTextColor('#2a2a2a'),
+          }}
+        >
           Unique Visitors
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
@@ -378,7 +384,7 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
             justifyContent: 'space-between',
             fontSize: '10px',
             marginTop: '4px',
-            color: '#6b7280',
+            color: getAccessibleTextColor('#2a2a2a'),
           }}
         >
           <span>Low</span>

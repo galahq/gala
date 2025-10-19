@@ -112,9 +112,8 @@ class CountryStatsService
   def self.calculate_percentiles(values)
     return [] if values.empty?
 
-    # Calculate 11 percentiles from 0 to 100 (0, 10, 20, ..., 100)
-    (0..10).map do |i|
-      percentile = i * 10
+    # Calculate 5 percentiles from 0 to 100 (0, 25, 50, 75, 100)
+    [0, 25, 50, 75, 100].map do |percentile|
       index = (percentile / 100.0 * (values.length - 1)).round
       {
         percentile: percentile,
@@ -135,22 +134,25 @@ class CountryStatsService
   end
 
   def self.get_color_for_percentile(percentile)
-    # Blue shades from light grey (1%) to dark blue (99%)
+    # Custom blue shades for 5 percentiles
     colors = [
-      '#f0f0f0', # 0% - Light grey
-      '#e0e7ff', # 10% - Very light blue
-      '#c7d2fe', # 20%
-      '#a5b4fc', # 30%
-      '#818cf8', # 40%
-      '#6366f1', # 50%
-      '#4f46e5', # 60%
-      '#4338ca', # 70%
-      '#3730a3', # 80%
-      '#312e81', # 90%
-      '#1e1b4b'  # 100% - Dark blue
+      '#E2FDFF', # 0% - Very light cyan-blue
+      '#BFD7FF', # 25% - Light blue
+      '#9BB1FF', # 50% - Medium blue
+      '#788BFF', # 75% - Medium-dark blue
+      '#5465FF'  # 100% - Dark blue
     ]
 
-    index = (percentile / 10).to_i
+    # Map percentiles to color indices: 0->0, 25->1, 50->2, 75->3, 100->4
+    index = case percentile
+            when 0 then 0
+            when 25 then 1
+            when 50 then 2
+            when 75 then 3
+            when 100 then 4
+            else 0
+            end
+
     colors[index] || colors.first
   end
 end
