@@ -13,7 +13,7 @@ const getMapboxToken = () => {
     return window.MAPBOX_ACCESS_TOKEN
   }
   // Otherwise use the fallback token
-  //return "pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY2oyOWZ2bGNuMDI1MDMybzVoc2Ntb3kwYiJ9.QA8nck8XiK5dxF6R7M_HAg"
+  // return "pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY2oyOWZ2bGNuMDI1MDMybzVoc2Ntb3kwYiJ9.QA8nck8XiK5dxF6R7M_HAg"
   return 'pk.eyJ1IjoiZ2FsYS1kZXZlbG9wZXIiLCJhIjoiY21nNWZoODJwMDQ2NzJxb29zZDR5cGViayJ9.87zkTM932fb12m4NiKNbEw'
 }
 
@@ -41,10 +41,9 @@ type Props = {
   percentiles: Percentile[],
 }
 
-export default function StatsMapWithLegend({ countries, percentiles }: Props) {
+export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
   const [hoveredCountry, setHoveredCountry] = useState(null)
   const [mapLoaded, setMapLoaded] = useState(false)
-  const [sourceLoaded, setSourceLoaded] = useState(false)
   const [mapError, setMapError] = useState(false)
   const [viewport, setViewport] = useState({
     latitude: 20,
@@ -171,7 +170,6 @@ export default function StatsMapWithLegend({ countries, percentiles }: Props) {
           console.log('Source data event:', event)
           if (event.sourceId === 'countries') {
             console.log('Countries source loaded:', event.isSourceLoaded)
-            setSourceLoaded(event.isSourceLoaded)
           }
         }}
         onHover={mapLoaded ? onHover : undefined}

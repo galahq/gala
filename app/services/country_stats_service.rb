@@ -39,9 +39,9 @@ class CountryStatsService
     'BM' => 'BMU'
   }.freeze
 
-  # Country names mapping
+  # Country names mapping (matching GeoJSON names)
   COUNTRY_NAMES = {
-    'US' => 'United States', 'GB' => 'United Kingdom', 'CA' => 'Canada',
+    'US' => 'United States of America', 'GB' => 'United Kingdom', 'CA' => 'Canada',
     'AU' => 'Australia', 'DE' => 'Germany', 'FR' => 'France', 'IT' => 'Italy',
     'ES' => 'Spain', 'JP' => 'Japan', 'CN' => 'China', 'IN' => 'India',
     'BR' => 'Brazil', 'MX' => 'Mexico', 'RU' => 'Russia', 'KR' => 'South Korea',
