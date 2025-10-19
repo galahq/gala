@@ -43,7 +43,7 @@ type Props = {
   percentiles: Percentile[],
 }
 
-export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
+export default function StatsMapWithLegend({ countries, percentiles }: Props) {
   const [hoveredCountry, setHoveredCountry] = useState(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [tooltipPosition, setTooltipPosition] = useState({
@@ -196,6 +196,11 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
   }
 
   const onClick = event => {
+    // Clear table selection when user interacts with map
+    if (window.clearTableSelection) {
+      window.clearTableSelection()
+    }
+
     const feature = event.features && event.features[0]
     if (feature && mapRef.current) {
       const countryName = feature.properties.name
@@ -226,13 +231,21 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
   }
 
   const handleZoomIn = () => {
+    // Clear table selection when user uses zoom controls
+    if (window.clearTableSelection) {
+      window.clearTableSelection()
+    }
     setViewport(prev => ({
       ...prev,
-      zoom: Math.min(prev.zoom + 1, 20), // Max zoom level
+      zoom: Math.min(prev.zoom + 1, 5), // Max zoom level
     }))
   }
 
   const handleZoomOut = () => {
+    // Clear table selection when user uses zoom controls
+    if (window.clearTableSelection) {
+      window.clearTableSelection()
+    }
     setViewport(prev => ({
       ...prev,
       zoom: Math.max(prev.zoom - 1, 0), // Min zoom level is 0
@@ -450,7 +463,11 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
         longitude={viewport.longitude}
         zoom={viewport.zoom}
         maxZoom={5}
-        scrollZoom={false}
+        scrollZoom={true}
+        touchZoom={true}
+        doubleClickZoom={true}
+        dragRotate={false}
+        touchRotate={false}
         mapboxApiAccessToken={MAPBOX_TOKEN}
         interactiveLayerIds={mapLoaded ? ['country-fills'] : []}
         onViewportChange={setViewport}
@@ -586,70 +603,6 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
         )}
       </ReactMapGL>
 
-      {/* Legend */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 20,
-          left: 20,
-          background: 'rgba(42, 42, 42, 0.9)',
-          padding: '12px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          fontSize: '12px',
-        }}
-      >
-        <div
-          style={{
-            fontWeight: 'bold',
-            marginBottom: '8px',
-            color: getAccessibleTextColor('#2a2a2a'),
-          }}
-        >
-          Unique Visitors
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-          {percentiles.map((p, i) => (
-            <div key={i} style={{ position: 'relative' }}>
-              <div
-                style={{
-                  width: '30px',
-                  height: '20px',
-                  background: p.color,
-                  border: '1px solid #e5e7eb',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '9px',
-                    fontWeight: 'bold',
-                    color: getAccessibleTextColor(p.color),
-                    lineHeight: '1',
-                  }}
-                >
-                  {p.value}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontSize: '10px',
-            marginTop: '4px',
-            color: getAccessibleTextColor('#2a2a2a'),
-          }}
-        >
-          <span>Low</span>
-          <span>High</span>
-        </div>
-      </div>
-
       {/* Hover tooltip */}
       {hoveredCountry && (
         <div
@@ -664,6 +617,7 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
             borderRadius: '6px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             fontSize: '12px',
+            fontFamily: 'monospace',
             pointerEvents: 'none',
             whiteSpace: 'nowrap',
             zIndex: 1000,
@@ -676,7 +630,7 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
               fontSize: '13px',
             }}
           >
-            {hoveredCountry.name}
+            {hoveredCountry.iso3}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div

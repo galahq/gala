@@ -103,6 +103,18 @@ module Cases
       raw_data = sql_query
       formatted_data = CountryStatsService.format_country_stats(raw_data)
 
+      # Get translations separately
+      case_locales = @case.translation_set.pluck(:locale).uniq.sort do |a, b|
+        # Put base case locale first
+        if a == @case.locale && b != @case.locale
+          -1
+        elsif b == @case.locale && a != @case.locale
+          1
+        else
+          a <=> b
+        end
+      end.join(', ')
+
       {
         by_event: raw_data,
         formatted: formatted_data[:stats],
@@ -111,7 +123,8 @@ module Cases
           country_count: formatted_data[:country_count],
           total_deployments: formatted_data[:total_deployments],
           total_podcast_listens: formatted_data[:total_podcast_listens],
-          case_published_at: @case.published_at&.strftime('%B %d, %Y'),
+          case_published_at: @case.published_at&.strftime('%b %d, %Y'),
+          case_locales: case_locales,
           percentiles: formatted_data[:percentiles]
         }
       }
@@ -119,17 +132,22 @@ module Cases
 
     def generate_csv
       require 'csv'
-      data = CountryStatsService.format_country_stats(sql_query)[:stats]
+      result = CountryStatsService.format_country_stats(sql_query)
+      data = result[:stats]
+      percentiles = result[:percentiles]
 
       CSV.generate(headers: true) do |csv|
-        csv << ['Country', 'ISO2', 'ISO3', 'Unique Visits', 'Unique Users',
+        csv << ['Country', 'ISO Code', 'Percentile', 'Unique Visitors', 'Unique Users',
                 'Total Events', 'First Visit', 'Last Visit']
 
         data.each do |row|
+          # Convert percentile number to range format
+          percentile_range = get_percentile_range(row[:percentile], percentiles)
+
           csv << [
             row[:name],
-            row[:iso2],
             row[:iso3],
+            percentile_range,
             row[:unique_visits],
             row[:unique_users],
             row[:events_count],
@@ -138,6 +156,18 @@ module Cases
           ]
         end
       end
+    end
+
+    def get_percentile_range(percentile, percentiles)
+      return "#{percentile}%" if percentiles.empty?
+
+      # Find the index of this percentile in the percentiles array
+      percentile_index = percentiles.find_index { |p| p[:percentile] == percentile }
+      return "#{percentile}%" if percentile_index.nil?
+
+      # Get the next percentile for the range, or 100 if it's the last one
+      next_percentile = percentiles[percentile_index + 1]&.dig(:percentile) || 100
+      "#{percentile}-#{next_percentile}%"
     end
   end
 end

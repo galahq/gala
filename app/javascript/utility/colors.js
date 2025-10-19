@@ -34,5 +34,6 @@ export function getAccessibleTextColor (fillColor: string): string {
   const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
 
   // Return white text for dark backgrounds, black text for light backgrounds
-  return brightness > 128 ? '#000000' : '#ffffff'
+  // Using threshold of 160 to ensure darker blues get white text
+  return brightness > 160 ? '#000000' : '#ffffff'
 }

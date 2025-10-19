@@ -14,7 +14,7 @@ import StatsTable from '../stats/StatsTable'
 export default class extends Controller {
   static targets = ['from', 'to']
 
-  connect () {
+  connect() {
     // Prevent recursive calls during initialization
     this.isInitializing = true
     this.isFetching = false
@@ -93,7 +93,7 @@ export default class extends Controller {
       })
   }
 
-  apply () {
+  apply() {
     // Prevent overlapping requests
     if (this.isFetching) return
 
@@ -134,13 +134,13 @@ export default class extends Controller {
     this.fetchAndRenderBoth()
   }
 
-  isoDate (d) {
+  isoDate(d) {
     // Normalize to UTC date string to match values written by the picker
     // (StatsDateRangePicker writes hidden inputs via toISOString().slice(0, 10))
     return d ? d.toISOString().slice(0, 10) : ''
   }
 
-  highlightActiveShortcut () {
+  highlightActiveShortcut() {
     try {
       const ul = document.querySelector('.pt-daterangepicker-shortcuts')
       if (!ul) return
@@ -172,7 +172,7 @@ export default class extends Controller {
     }
   }
 
-  async fetchAndRenderBoth () {
+  async fetchAndRenderBoth() {
     // Prevent overlapping requests
     if (this.isFetching) return
 
@@ -189,7 +189,7 @@ export default class extends Controller {
     }
   }
 
-  renderLoading () {
+  renderLoading() {
     // Show loading skeleton in map area
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
@@ -227,6 +227,84 @@ export default class extends Controller {
       )
     }
 
+    // Show detailed skeleton in summary area
+    const summaryEl = document.getElementById('stats-summary')
+    if (summaryEl) {
+      ReactDOM.render(
+        <div style={{ fontSize: '14px', lineHeight: '1.4', color: '#000000' }}>
+          {/* 5 stats line items */}
+          <div
+            className="pt-skeleton"
+            style={{ height: '16px', width: '180px', marginBottom: '4px' }}
+          />
+          <div
+            className="pt-skeleton"
+            style={{ height: '16px', width: '120px', marginBottom: '4px' }}
+          />
+          <div
+            className="pt-skeleton"
+            style={{ height: '16px', width: '160px', marginBottom: '4px' }}
+          />
+          <div
+            className="pt-skeleton"
+            style={{ height: '16px', width: '140px', marginBottom: '4px' }}
+          />
+          <div
+            className="pt-skeleton"
+            style={{ height: '16px', width: '100px', marginBottom: '8px' }}
+          />
+
+          {/* Distribution section */}
+          <div style={{ marginTop: '4px' }}>
+            <div
+              className="pt-skeleton"
+              style={{ height: '14px', width: '120px', marginBottom: '4px' }}
+            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+              {/* 5 legend boxes */}
+              <div
+                className="pt-skeleton"
+                style={{ width: '40px', height: '24px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ width: '40px', height: '24px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ width: '40px', height: '24px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ width: '40px', height: '24px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ width: '40px', height: '24px' }}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginTop: '4px',
+              }}
+            >
+              <div
+                className="pt-skeleton"
+                style={{ height: '11px', width: '20px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '11px', width: '25px' }}
+              />
+            </div>
+          </div>
+        </div>,
+        summaryEl
+      )
+    }
+
     // Show skeleton in table area
     const tableEl = document.getElementById('stats-table')
     if (tableEl) {
@@ -243,7 +321,7 @@ export default class extends Controller {
     }
   }
 
-  renderError (error) {
+  renderError(error) {
     const errorTitle = 'Unable to Load Stats'
     const errorDescription =
       error.message ||
@@ -289,7 +367,7 @@ export default class extends Controller {
     }
   }
 
-  fetchData () {
+  fetchData() {
     const params = new URLSearchParams()
     const from = this.fromTarget && this.fromTarget.value
     const to = this.toTarget && this.toTarget.value
@@ -308,7 +386,7 @@ export default class extends Controller {
     })
   }
 
-  renderResults (payload) {
+  renderResults(payload) {
     // Handle error responses
     if (!payload || payload.error) {
       this.renderError(new Error(payload?.error || 'Invalid response'))
@@ -334,54 +412,121 @@ export default class extends Controller {
         )
       } else {
         ReactDOM.render(
-          <div>
-            <div>
-              Total Unique Visitors:{' '}
+          <div
+            style={{
+              fontSize: '14px',
+              lineHeight: '1.4',
+              color: '#000000',
+            }}
+          >
+            {/* Summary header with published date */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+                paddingBottom: '4px',
+                borderBottom: '1px solid #e5e7eb',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>Summary</span>
+              {summary.case_published_at && (
+                <strong>
+                  pub:{' '}
+                  {new Date(summary.case_published_at).toLocaleDateString(
+                    'en-US',
+                    {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    }
+                  )}
+                </strong>
+              )}
+            </div>
+
+            {/* Statistics */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '4px',
+              }}
+            >
+              <span>Total Unique Visitors</span>
               <strong>{(summary.total_visits || 0).toLocaleString()}</strong>
             </div>
-            <div>
-              Countries: <strong>{summary.country_count || 0}</strong>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '4px',
+              }}
+            >
+              <span>Countries</span>
+              <strong>{summary.country_count || 0}</strong>
             </div>
-            <div>
-              Total Deployments:{' '}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '4px',
+              }}
+            >
+              <span>Total Deployments</span>
               <strong>
                 {(summary.total_deployments || 0).toLocaleString()}
               </strong>
             </div>
-            <div>
-              Podcast Listens:{' '}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+              }}
+            >
+              <span>Podcast Listens</span>
               <strong>
                 {(summary.total_podcast_listens || 0).toLocaleString()}
               </strong>
             </div>
-            {summary.case_published_at && (
-              <div>
-                Published: <strong>{summary.case_published_at}</strong>
+
+            {/* Translations */}
+            {summary.case_locales && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span>Translations</span>
+                <strong>{summary.case_locales}</strong>
               </div>
             )}
 
             {/* Visitor Distribution */}
             {summary.percentiles && summary.percentiles.length > 0 && (
-              <div style={{ marginTop: '16px' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
-                  Visitor Distribution
+              <div style={{ marginTop: '4px' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>
+                  Percentile map
                 </div>
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '2px',
-                    flexWrap: 'wrap',
+                    gap: 0,
+                    border: '1px solid #000000',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
                   }}
                 >
                   {summary.percentiles.map((p, i) => (
-                    <div key={i} style={{ position: 'relative' }}>
+                    <div key={i} style={{ position: 'relative', flex: 1 }}>
                       <div
                         style={{
-                          width: '40px',
                           height: '24px',
                           background: p.color,
-                          border: '1px solid #e5e7eb',
+                          border: 'none',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -394,9 +539,10 @@ export default class extends Controller {
                             fontWeight: 'bold',
                             color: getAccessibleTextColor(p.color),
                             lineHeight: '1',
+                            fontFamily: 'monospace',
                           }}
                         >
-                          {p.value}
+                          {p.percentile}%
                         </span>
                       </div>
                     </div>
@@ -406,13 +552,13 @@ export default class extends Controller {
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    fontSize: '11px',
+                    fontSize: '14px',
                     marginTop: '4px',
-                    color: '#6b7280',
+                    color: '#000000',
                   }}
                 >
-                  <span>Low</span>
-                  <span>High</span>
+                  <span style={{ fontWeight: 'bold', font: "monospace" }}>low</span>
+                  <span style={{ fontWeight: 'bold', font: "monospace" }}>high</span>
                 </div>
               </div>
             )}
@@ -466,6 +612,7 @@ export default class extends Controller {
           <StatsTable
             data={formatted}
             caseSlug={caseSlug}
+            percentiles={summary.percentiles || []}
             onRowClick={country => this.handleCountrySelect(country)}
           />,
           tableEl
@@ -474,14 +621,14 @@ export default class extends Controller {
     }
   }
 
-  handleCountrySelect (country) {
+  handleCountrySelect(country) {
     // Trigger map to fly to the selected country
     if (window.mapFlyToCountry) {
       window.mapFlyToCountry(country.name)
     }
   }
 
-  disconnect () {
+  disconnect() {
     // Clean up event listener
     if (this.rangeChangedHandler) {
       document.removeEventListener(

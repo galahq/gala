@@ -1,6 +1,5 @@
 /* @flow */
 import React, { useState } from 'react'
-import { Icon } from '@blueprintjs/core'
 
 type CountryData = {
   iso2: string,
@@ -11,17 +10,33 @@ type CountryData = {
   events_count: number,
   first_event: ?string,
   last_event: ?string,
+  percentile: number,
+}
+
+type PercentileData = {
+  percentile: number,
+  value: number,
+  color: string,
 }
 
 type Props = {
   data: CountryData[],
   caseSlug: string,
+  percentiles?: PercentileData[],
   onRowClick?: (country: CountryData) => void,
+  onClearSelection?: () => void,
 }
 
-export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
+export default function StatsTable({
+  data,
+  caseSlug,
+  percentiles = [],
+  onRowClick,
+  onClearSelection,
+}: Props) {
   const [sortField, setSortField] = useState('unique_visits')
   const [sortDirection, setSortDirection] = useState('desc')
+  const [selectedRow, setSelectedRow] = useState(null)
 
   const handleSort = (field: string) => {
     if (field === sortField) {
@@ -32,7 +47,35 @@ export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
     }
   }
 
+  const handleRowClick = row => {
+    setSelectedRow(row)
+    if (onRowClick) {
+      onRowClick(row)
+    }
+  }
+
+  const clearSelection = () => {
+    setSelectedRow(null)
+  }
+
+  // Expose clearSelection function globally
+  React.useEffect(() => {
+    window.clearTableSelection = clearSelection
+    return () => {
+      delete window.clearTableSelection
+    }
+  }, [])
+
   const sortedData = [...data].sort((a, b) => {
+    // Always put unknown countries at the bottom
+    const aIsUnknown = !a.iso2 || a.name === 'Unknown'
+    const bIsUnknown = !b.iso2 || b.name === 'Unknown'
+
+    if (aIsUnknown && !bIsUnknown) return 1
+    if (!aIsUnknown && bIsUnknown) return -1
+    if (aIsUnknown && bIsUnknown) return 0
+
+    // Sort known countries normally
     const aVal = a[sortField] || 0
     const bVal = b[sortField] || 0
 
@@ -55,6 +98,20 @@ export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
     })
   }
 
+  const getPercentileRange = (percentile: number): string => {
+    if (percentiles.length === 0) return `${percentile}%`
+
+    // Find the index of this percentile in the percentiles array
+    const percentileIndex = percentiles.findIndex(
+      p => p.percentile === percentile
+    )
+    if (percentileIndex === -1) return `${percentile}%`
+
+    // Get the next percentile for the range, or 100 if it's the last one
+    const nextPercentile = percentiles[percentileIndex + 1]?.percentile || 100
+    return `${percentile}-${nextPercentile}%`
+  }
+
   const exportCSV = () => {
     const params = new URLSearchParams(window.location.search)
     const from = params.get('from') || ''
@@ -70,14 +127,12 @@ export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
 
   const SortIcon = ({ field }: { field: string }) => {
     if (field !== sortField) {
-      return <Icon icon="sort" size={12} style={{ opacity: 0.3 }} />
+      return <span style={{ opacity: 0.3, fontSize: '12px' }}>↕</span>
     }
     return (
-      <Icon
-        icon={sortDirection === 'asc' ? 'sort-asc' : 'sort-desc'}
-        size={12}
-        style={{ color: '#2d72d2' }}
-      />
+      <span style={{ color: '#2d72d2', fontSize: '12px', fontWeight: 'bold' }}>
+        {sortDirection === 'asc' ? '↑' : '↓'}
+      </span>
     )
   }
 
@@ -91,7 +146,7 @@ export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
           marginBottom: '16px',
         }}
       >
-        <h3 style={{ margin: 0 }}>Country Statistics</h3>
+        <h3 style={{ margin: 0, font: "monospace" }}>Traffic</h3>
         <button
           className="pt-button pt-intent-primary pt-icon-export"
           onClick={exportCSV}
@@ -118,7 +173,7 @@ export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
                   <SortIcon field="name" />
                 </div>
               </th>
-              <th>ISO Codes</th>
+              <th>ISO Code</th>
               <th
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('unique_visits')}
@@ -152,55 +207,112 @@ export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
                   <SortIcon field="events_count" />
                 </div>
               </th>
+              <th>Percentile</th>
               <th>First Visit</th>
               <th>Last Visit</th>
             </tr>
           </thead>
           <tbody>
-            {sortedData.map((row, index) => (
-              <tr
-                key={row.iso2 || index}
-                style={{ cursor: onRowClick ? 'pointer' : 'default' }}
-                onClick={() => onRowClick && onRowClick(row)}
-              >
-                <td>{row.name}</td>
-                <td>
-                  <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
-                    {row.iso2} / {row.iso3}
-                  </span>
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  {row.unique_visits.toLocaleString()}
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  {row.unique_users.toLocaleString()}
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  {row.events_count.toLocaleString()}
-                </td>
-                <td>{formatDate(row.first_event)}</td>
-                <td>{formatDate(row.last_event)}</td>
-              </tr>
-            ))}
+            {sortedData.map((row, index) => {
+              const isSelected = selectedRow && selectedRow.iso2 === row.iso2
+              const isUnknown = !row.iso2 || row.name === 'Unknown'
+              const isSelectable = onRowClick && !isUnknown
+
+              return (
+                <tr
+                  key={row.iso2 || index}
+                  style={{
+                    cursor: isSelectable ? 'pointer' : 'not-allowed',
+                    backgroundColor: isSelected ? '#7c3aed' : undefined, // Dark purple for selected
+                    color: isSelected ? 'white' : undefined, // White text for selected rows
+                  }}
+                  onClick={() => isSelectable && handleRowClick(row)}
+                  onMouseEnter={e => {
+                    if (!isSelected && isSelectable) {
+                      e.currentTarget.style.backgroundColor = '#e9d5ff' // Light purple for hover
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isSelected && isSelectable) {
+                      e.currentTarget.style.backgroundColor = ''
+                    }
+                  }}
+                >
+                  <td style={{ color: isSelected ? 'white' : undefined }}>
+                    {row.name}
+                  </td>
+                  <td style={{ color: isSelected ? 'white' : undefined }}>
+                    <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+                      {row.iso3 || ''}
+                    </span>
+                  </td>
+                  <td
+                    style={{
+                      textAlign: 'right',
+                      color: isSelected ? 'white' : undefined,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {row.unique_visits.toLocaleString()}
+                  </td>
+                  <td
+                    style={{
+                      textAlign: 'right',
+                      color: isSelected ? 'white' : undefined,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {row.unique_users.toLocaleString()}
+                  </td>
+                  <td
+                    style={{
+                      textAlign: 'right',
+                      color: isSelected ? 'white' : undefined,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {row.events_count.toLocaleString()}
+                  </td>
+                  <td
+                    style={{
+                      textAlign: 'center',
+                      color: isSelected ? 'white' : undefined,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {getPercentileRange(row.percentile)}
+                  </td>
+                  <td style={{ color: isSelected ? 'white' : undefined }}>
+                    {formatDate(row.first_event)}
+                  </td>
+                  <td style={{ color: isSelected ? 'white' : undefined }}>
+                    {formatDate(row.last_event)}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
           <tfoot>
             <tr style={{ fontWeight: 'bold' }}>
               <td>Total</td>
               <td>-</td>
-              <td style={{ textAlign: 'right' }}>
+              <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                 {data
                   .reduce((sum, r) => sum + r.unique_visits, 0)
                   .toLocaleString()}
               </td>
-              <td style={{ textAlign: 'right' }}>
+              <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                 {data
                   .reduce((sum, r) => sum + r.unique_users, 0)
                   .toLocaleString()}
               </td>
-              <td style={{ textAlign: 'right' }}>
+              <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                 {data
                   .reduce((sum, r) => sum + r.events_count, 0)
                   .toLocaleString()}
+              </td>
+              <td style={{ textAlign: 'center', fontFamily: 'monospace' }}>
+                -
               </td>
               <td>-</td>
               <td>-</td>

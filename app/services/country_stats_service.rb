@@ -36,7 +36,7 @@ class CountryStatsService
     'AM' => 'ARM', 'GE' => 'GEO', 'AZ' => 'AZE', 'UA' => 'UKR', 'BY' => 'BLR',
     'MD' => 'MDA', 'RS' => 'SRB', 'BA' => 'BIH', 'ME' => 'MNE', 'MK' => 'MKD',
     'AL' => 'ALB', 'XK' => 'XKX', 'IS' => 'ISL', 'GL' => 'GRL', 'FO' => 'FRO',
-    'BM' => 'BMU'
+    'BM' => 'BMU', 'CR' => 'CRI', 'PR' => 'PRI'
   }.freeze
 
   # Country names mapping (matching GeoJSON names)
@@ -60,7 +60,7 @@ class CountryStatsService
     'NZ' => 'New Zealand', 'IL' => 'Israel', 'AE' => 'United Arab Emirates',
     'SA' => 'Saudi Arabia', 'TR' => 'Turkey', 'UA' => 'Ukraine', 'PK' => 'Pakistan',
     'BD' => 'Bangladesh', 'LK' => 'Sri Lanka', 'NP' => 'Nepal',
-    'BM' => 'Bermuda'
+    'BM' => 'Bermuda', 'CR' => 'Costa Rica', 'PR' => 'Puerto Rico'
   }.freeze
 
   def self.format_country_stats(raw_stats)
@@ -112,19 +112,63 @@ class CountryStatsService
   def self.calculate_percentiles(values)
     return [] if values.empty?
 
-    # Calculate 5 percentiles from 0 to 100 (0, 25, 50, 75, 100)
-    [0, 25, 50, 75, 100].map do |percentile|
-      index = (percentile / 100.0 * (values.length - 1)).round
+    sorted_values = values.sort
+    min_val = sorted_values.first
+    max_val = sorted_values.last
+
+    # Calculate 5 percentiles ensuring unique values using averages
+    percentiles = [0, 25, 50, 75, 100].map do |percentile|
+      case percentile
+      when 0
+        # 0th percentile: minimum value
+        value = min_val
+      when 100
+        # 100th percentile: maximum value
+        value = max_val
+      else
+        # For intermediate percentiles, calculate average between percentile points
+        # This ensures we get unique values even with limited data
+        lower_percentile = percentile - 12.5
+        upper_percentile = percentile + 12.5
+
+        lower_index = (lower_percentile / 100.0 * (sorted_values.length - 1)).round
+        upper_index = (upper_percentile / 100.0 * (sorted_values.length - 1)).round
+
+        lower_val = sorted_values[lower_index] || min_val
+        upper_val = sorted_values[upper_index] || max_val
+
+        # Use average to ensure uniqueness
+        value = ((lower_val + upper_val) / 2.0).round
+      end
+
       {
         percentile: percentile,
-        value: values[index],
+        value: value,
         color: get_color_for_percentile(percentile)
       }
     end
+
+    # Final pass to ensure all values are unique by adjusting duplicates
+    ensure_unique_values(percentiles)
+  end
+
+  def self.ensure_unique_values(percentiles)
+    # Sort by percentile to process in order
+    sorted_percentiles = percentiles.sort_by { |p| p[:percentile] }
+
+    # Ensure uniqueness by incrementing duplicate values
+    (1...sorted_percentiles.length).each do |i|
+      current = sorted_percentiles[i]
+      previous = sorted_percentiles[i - 1]
+
+      current[:value] = previous[:value] + 1 if current[:value] <= previous[:value]
+    end
+
+    sorted_percentiles
   end
 
   def self.get_percentile(value, percentiles)
-    return 0 if value == 0
+    return 0 if value.zero?
 
     percentiles.reverse.each do |p|
       return p[:percentile] if value >= p[:value]
