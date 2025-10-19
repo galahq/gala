@@ -15,8 +15,8 @@
     <%= render 'application/reader_javascript_tag' %>
     <%= javascript_tag do %>
       window.i18n = { locale: '<%=I18n.locale%>' }
-      window.MAPBOX_ACCESS_TOKEN = '<%= ENV['MAPBOX_ACCESS_TOKEN'] %>'
-      window.MAPBOX_STYLE = '<%= ENV['MAPBOX_STYLE'] %>'
+      window.MAPBOX_ACCESS_TOKEN = '<%= ENV.fetch("MAPBOX_ACCESS_TOKEN", "pk.eyJ1IjoiZ2FsYS1kZXZlbG9wZXIiLCJhIjoiY21nNWZoODJwMDQ2NzJxb29zZDR5cGViayJ9.87zkTM932fb12m4NiKNbEw") %>'
+      window.MAPBOX_STYLE = '<%= ENV.fetch("MAPBOX_STYLE", "mapbox://styles/mapbox/light-v10") %>'
     <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>

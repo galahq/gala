@@ -13,10 +13,6 @@
     <div>
       <h1 class="admin__title"><%= t('.case_stats') %></h1>
 
-      <div style="display: flex; gap: 12px; align-items: flex-start;" class="mb-3">
-        <div id="stats-range-picker" style="flex: 1 1 50%"></div>
-      </div>
-
       <div
         data-controller="case-stats"
         data-url="<%= case_stats_path(@case) %>"
@@ -24,8 +20,36 @@
         <input type="hidden" id="stats-from" data-target="case-stats.from" />
         <input type="hidden" id="stats-to" data-target="case-stats.to" />
 
-        <div id="stats-events" style="min-height: 260px"></div>
-        <div id="stats-map" style="height: 380px; margin-top: 12px"></div>
+  <!-- Top section: Date picker and summary stats -->
+  <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 24px;">
+    <!-- Date picker -->
+    <div style="flex: 1;">
+      <div id="stats-range-picker"></div>
+    </div>
+
+    <!-- Summary stats -->
+    <div style="flex: 0 0 250px; padding: 16px; background: #f9fafb; border-radius: 8px;">
+      <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600;">Summary</h4>
+      <div id="stats-summary" style="font-size: 13px; color: #4b5563;">
+        <div class="pt-skeleton" style="height: 14px; width: 150px; margin-bottom: 8px;"></div>
+        <div class="pt-skeleton" style="height: 14px; width: 120px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map section (full width below date picker) -->
+  <div style="height: 500px; margin-bottom: 24px;">
+    <div id="stats-map" style="height: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+  </div>
+
+        <!-- Horizontal divider -->
+        <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;" />
+
+        <!-- Bottom section: Stats table -->
+        <div id="stats-table" style="margin-bottom: 24px;"></div>
+
+        <!-- Legacy events display (hidden by default) -->
+        <div id="stats-events" style="display: none;"></div>
       </div>
     </div>
   </div>

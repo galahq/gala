@@ -23,7 +23,8 @@ module Cases
       set_case
       respond_to do |format|
         format.html { render :show }
-        format.json { render json: { by_event: sql_query } }
+        format.json { render json: stats_data }
+        format.csv { send_data generate_csv, filename: "case-stats-#{@case.slug}-#{Date.current}.csv" }
       end
     end
 
@@ -82,6 +83,44 @@ module Cases
           ORDER BY unique_visits DESC NULLS LAST;
         SQL
       ).to_a
+    end
+
+    def stats_data
+      raw_data = sql_query
+      formatted_data = CountryStatsService.format_country_stats(raw_data)
+
+      {
+        by_event: raw_data,
+        formatted: formatted_data[:stats],
+        summary: {
+          total_visits: formatted_data[:total_visits],
+          country_count: formatted_data[:country_count],
+          percentiles: formatted_data[:percentiles]
+        }
+      }
+    end
+
+    def generate_csv
+      require 'csv'
+      data = CountryStatsService.format_country_stats(sql_query)[:stats]
+
+      CSV.generate(headers: true) do |csv|
+        csv << ['Country', 'ISO2', 'ISO3', 'Unique Visits', 'Unique Users',
+                'Total Events', 'First Visit', 'Last Visit']
+
+        data.each do |row|
+          csv << [
+            row[:name],
+            row[:iso2],
+            row[:iso3],
+            row[:unique_visits],
+            row[:unique_users],
+            row[:events_count],
+            row[:first_event]&.strftime('%Y-%m-%d %H:%M'),
+            row[:last_event]&.strftime('%Y-%m-%d %H:%M')
+          ]
+        end
+      end
     end
   end
 end

@@ -7,8 +7,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { NonIdealState } from '@blueprintjs/core'
 import StatsDateRangePicker from '../stats/StatsDateRangePicker'
-import StatsResultsTable from '../stats/StatsResultsTable'
-import StatsCountryMap from '../stats/StatsCountryMap'
+import StatsMapWithLegend from '../stats/StatsMapWithLegend'
+import StatsTable from '../stats/StatsTable'
 
 export default class extends Controller {
   static targets = ['from', 'to']
@@ -168,11 +168,11 @@ export default class extends Controller {
     if (this.isFetching) return
 
     this.isFetching = true
-    this.renderLoading('by_event')
+    this.renderLoading()
 
     try {
-      const events = await this.fetchData('by_event')
-      this.renderResults({ by_event: events })
+      const data = await this.fetchData()
+      this.renderResults(data)
     } catch (error) {
       this.renderError(error)
     } finally {
@@ -181,30 +181,47 @@ export default class extends Controller {
   }
 
   renderLoading () {
-    const eventsEl = document.getElementById('stats-events')
+    // Show loading skeleton in map area
+    const mapEl = document.getElementById('stats-map')
+    if (mapEl) {
+      ReactDOM.render(
+        <div style={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#f9fafb',
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div className="pt-spinner pt-large">
+              <div className="pt-spinner-svg-container">
+                <svg viewBox="0 0 100 100">
+                  <path className="pt-spinner-track" d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"></path>
+                  <path className="pt-spinner-head" d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"></path>
+                </svg>
+              </div>
+            </div>
+            <p style={{ marginTop: '20px', color: '#6b7280' }}>Loading statistics...</p>
+          </div>
+        </div>,
+        mapEl
+      )
+    }
 
-    const Skeleton = ({ lines = 4 }) => (
-      <div className="pt-card" style={{ padding: '12px' }}>
-        <div
-          className="pt-skeleton"
-          style={{ height: '16px', width: '40%', marginBottom: '12px' }}
-        />
-        {[...Array(lines)].map((_, i) => (
-          <div
-            key={i}
-            className="pt-skeleton"
-            style={{ height: '12px', marginBottom: '8px' }}
-          />
-        ))}
-      </div>
-    )
-
-    if (eventsEl) ReactDOM.render(<Skeleton lines={8} />, eventsEl)
+    // Show skeleton in table area
+    const tableEl = document.getElementById('stats-table')
+    if (tableEl) {
+      ReactDOM.render(
+        <div className="pt-card" style={{ padding: '20px', marginTop: '24px' }}>
+          <div className="pt-skeleton" style={{ height: '20px', width: '200px', marginBottom: '20px' }} />
+          <div className="pt-skeleton" style={{ height: '300px' }} />
+        </div>,
+        tableEl
+      )
+    }
   }
 
   renderError (error) {
-    const eventsEl = document.getElementById('stats-events')
-
     const errorTitle = 'Unable to Load Stats'
     const errorDescription =
       error.message ||
@@ -220,28 +237,42 @@ export default class extends Controller {
       </button>
     )
 
-    if (eventsEl) {
+    // Show error in map area
+    const mapEl = document.getElementById('stats-map')
+    if (mapEl) {
       ReactDOM.render(
-        <NonIdealState
-          title={errorTitle}
-          description={errorDescription}
-          visual="error"
-          action={errorAction}
-        />,
-        eventsEl
+        <div style={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <NonIdealState
+            title={errorTitle}
+            description={errorDescription}
+            visual="error"
+            action={errorAction}
+          />
+        </div>,
+        mapEl
       )
+    }
+
+    // Clear table area
+    const tableEl = document.getElementById('stats-table')
+    if (tableEl) {
+      ReactDOM.render(<div />, tableEl)
     }
   }
 
-  fetchData (requestedType) {
+  fetchData () {
     const params = new URLSearchParams()
     const from = this.fromTarget && this.fromTarget.value
     const to = this.toTarget && this.toTarget.value
     if (from) params.set('from', from)
     if (to) params.set('to', to)
-    if (requestedType) params.set('type', requestedType)
 
-    const url = `${this.dataUrl}?${params.toString()}`
+    const url = `${this.dataUrl}.json?${params.toString()}`
     return fetch(url, {
       credentials: 'same-origin',
       headers: { Accept: 'application/json' },
@@ -254,27 +285,83 @@ export default class extends Controller {
   }
 
   renderResults (payload) {
-    // handle both fetch-error (array) and server error (object)
-    const serverError = payload && payload.error ? payload : null
-    if (serverError) {
-      this.renderError(serverError)
+    // Handle error responses
+    if (!payload || payload.error) {
+      this.renderError(new Error(payload?.error || 'Invalid response'))
       return
     }
 
-    const eventsEl = document.getElementById('stats-events')
-
-    // debug: surface payload in console to help diagnose rendering issues
+    // Debug logging
     console.debug('case-stats payload', { payload })
 
-    const byEvent = payload.by_event || []
+    // Extract data with proper defaults
+    const formatted = payload.formatted || []
+    const summary = payload.summary || {}
 
-    if (eventsEl) {
-      ReactDOM.render(<StatsResultsTable rows={byEvent} />, eventsEl)
+    // Render summary stats
+    const summaryEl = document.getElementById('stats-summary')
+    if (summaryEl) {
+      if (formatted.length === 0) {
+        ReactDOM.render(
+          <div style={{ color: '#9ca3af' }}>
+            <div>No data available for selected period</div>
+          </div>,
+          summaryEl
+        )
+      } else {
+        ReactDOM.render(
+          <div>
+            <div>Total Unique Visitors: <strong>{(summary.total_visits || 0).toLocaleString()}</strong></div>
+            <div>Countries: <strong>{summary.country_count || 0}</strong></div>
+          </div>,
+          summaryEl
+        )
+      }
     }
 
+    // Render the map
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
-      ReactDOM.render(<StatsCountryMap rows={byEvent} />, mapEl)
+      if (formatted.length === 0) {
+        ReactDOM.render(
+          <div style={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#f9fafb',
+          }}>
+            <NonIdealState
+              title="No Data Available"
+              description="No visitor data found for the selected date range."
+              visual="geosearch"
+            />
+          </div>,
+          mapEl
+        )
+      } else {
+        ReactDOM.render(
+          <StatsMapWithLegend
+            countries={formatted}
+            percentiles={summary.percentiles || []}
+          />,
+          mapEl
+        )
+      }
+    }
+
+    // Render the table
+    const tableEl = document.getElementById('stats-table')
+    if (tableEl) {
+      if (formatted.length === 0) {
+        ReactDOM.render(<div />, tableEl)
+      } else {
+        const caseSlug = this.dataUrl.split('/')[2] // Extract case slug from URL
+        ReactDOM.render(
+          <StatsTable data={formatted} caseSlug={caseSlug} />,
+          tableEl
+        )
+      }
     }
   }
 
