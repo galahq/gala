@@ -95,6 +95,14 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
     }
   }, [hoveredCountry, mousePosition])
 
+  // Expose the country selection function globally
+  useEffect(() => {
+    window.mapFlyToCountry = handleCountrySelect
+    return () => {
+      delete window.mapFlyToCountry
+    }
+  }, [countries])
+
   // Clean up on unmount
   useEffect(() => {
     return () => {
@@ -210,6 +218,41 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
     }))
   }
 
+  const handleCountrySelect = (countryName: string) => {
+    if (!mapRef.current) return
+
+    // Get the map instance
+    const map = mapRef.current.getMap()
+
+    // Query for the country's feature to get its bounding box
+    const features = map.querySourceFeatures('countries', {
+      filter: ['==', 'name', countryName],
+    })
+
+    if (features && features.length > 0) {
+      const feature = features[0]
+      let centerLng, centerLat
+
+      if (feature.bbox) {
+        // Use bounding box center if available
+        const [minLng, minLat, maxLng, maxLat] = feature.bbox
+        centerLng = (minLng + maxLng) / 2
+        centerLat = (minLat + maxLat) / 2
+      } else {
+        // Fallback to clicked coordinates (this shouldn't happen for countries)
+        centerLng = 0
+        centerLat = 0
+      }
+
+      // Fly to the country center with appropriate zoom
+      mapRef.current.flyTo({
+        center: [centerLng, centerLat],
+        zoom: 4,
+        duration: 2000,
+      })
+    }
+  }
+
   if (mapError) {
     return (
       <div
@@ -250,6 +293,32 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
           console.log('Map loaded successfully')
           setMapLoaded(true)
           setMapError(false)
+
+          // Hide place name layers (cities, countries, etc.)
+          if (mapRef.current) {
+            const map = mapRef.current.getMap()
+            const style = map.getStyle()
+            const layers = style.layers || []
+
+            // Hide layers that contain place names but keep country fills working
+            layers.forEach(layer => {
+              const layerId = layer.id.toLowerCase()
+              // Hide text/symbol layers for places, but keep fill layers
+              if (
+                (layerId.includes('place') ||
+                  layerId.includes('poi') ||
+                  layerId.includes('country-label') ||
+                  layerId.includes('state-label') ||
+                  layerId.includes('city') ||
+                  layerId.includes('town') ||
+                  layerId.includes('village') ||
+                  layerId.includes('settlement')) &&
+                (layer.type === 'symbol' || layerId.includes('label'))
+              ) {
+                map.setLayoutProperty(layer.id, 'visibility', 'none')
+              }
+            })
+          }
         }}
         onError={error => {
           console.error('Map loading error:', error)
@@ -292,9 +361,10 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
             small
             icon="zoom-in"
             style={{
-              background: 'rgba(255, 255, 255, 0.9)',
+              background: 'rgba(42, 42, 42, 0.9)',
               border: '1px solid #e5e7eb',
               borderRadius: '4px',
+              color: getAccessibleTextColor('#2a2a2a'),
             }}
             title="Zoom In"
             onClick={handleZoomIn}
@@ -304,9 +374,10 @@ export default function StatsMapWithLegend ({ countries, percentiles }: Props) {
             small
             icon="zoom-out"
             style={{
-              background: 'rgba(255, 255, 255, 0.9)',
+              background: 'rgba(42, 42, 42, 0.9)',
               border: '1px solid #e5e7eb',
               borderRadius: '4px',
+              color: getAccessibleTextColor('#2a2a2a'),
             }}
             title="Zoom Out"
             onClick={handleZoomOut}

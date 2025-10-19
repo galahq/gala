@@ -16,9 +16,10 @@ type CountryData = {
 type Props = {
   data: CountryData[],
   caseSlug: string,
+  onRowClick?: (country: CountryData) => void,
 }
 
-export default function StatsTable({ data, caseSlug }: Props) {
+export default function StatsTable ({ data, caseSlug, onRowClick }: Props) {
   const [sortField, setSortField] = useState('unique_visits')
   const [sortDirection, setSortDirection] = useState('desc')
 
@@ -34,13 +35,13 @@ export default function StatsTable({ data, caseSlug }: Props) {
   const sortedData = [...data].sort((a, b) => {
     const aVal = a[sortField] || 0
     const bVal = b[sortField] || 0
-    
+
     if (typeof aVal === 'string') {
-      return sortDirection === 'asc' 
+      return sortDirection === 'asc'
         ? aVal.localeCompare(bVal)
         : bVal.localeCompare(aVal)
     }
-    
+
     return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
   })
 
@@ -58,12 +59,12 @@ export default function StatsTable({ data, caseSlug }: Props) {
     const params = new URLSearchParams(window.location.search)
     const from = params.get('from') || ''
     const to = params.get('to') || ''
-    
+
     let url = `/cases/${caseSlug}/stats.csv`
     if (from || to) {
       url += `?from=${from}&to=${to}`
     }
-    
+
     window.location.href = url
   }
 
@@ -100,14 +101,19 @@ export default function StatsTable({ data, caseSlug }: Props) {
       </div>
 
       <div style={{ overflowX: 'auto' }}>
-        <table className="pt-html-table pt-html-table-striped" style={{ width: '100%' }}>
+        <table
+          className="pt-html-table pt-html-table-striped"
+          style={{ width: '100%' }}
+        >
           <thead>
             <tr>
               <th
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('name')}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
                   Country
                   <SortIcon field="name" />
                 </div>
@@ -117,7 +123,9 @@ export default function StatsTable({ data, caseSlug }: Props) {
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('unique_visits')}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
                   Unique Visitors
                   <SortIcon field="unique_visits" />
                 </div>
@@ -126,7 +134,9 @@ export default function StatsTable({ data, caseSlug }: Props) {
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('unique_users')}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
                   Unique Users
                   <SortIcon field="unique_users" />
                 </div>
@@ -135,7 +145,9 @@ export default function StatsTable({ data, caseSlug }: Props) {
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('events_count')}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
                   Total Events
                   <SortIcon field="events_count" />
                 </div>
@@ -146,7 +158,11 @@ export default function StatsTable({ data, caseSlug }: Props) {
           </thead>
           <tbody>
             {sortedData.map((row, index) => (
-              <tr key={row.iso2 || index}>
+              <tr
+                key={row.iso2 || index}
+                style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                onClick={() => onRowClick && onRowClick(row)}
+              >
                 <td>{row.name}</td>
                 <td>
                   <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
@@ -172,13 +188,19 @@ export default function StatsTable({ data, caseSlug }: Props) {
               <td>Total</td>
               <td>-</td>
               <td style={{ textAlign: 'right' }}>
-                {data.reduce((sum, r) => sum + r.unique_visits, 0).toLocaleString()}
+                {data
+                  .reduce((sum, r) => sum + r.unique_visits, 0)
+                  .toLocaleString()}
               </td>
               <td style={{ textAlign: 'right' }}>
-                {data.reduce((sum, r) => sum + r.unique_users, 0).toLocaleString()}
+                {data
+                  .reduce((sum, r) => sum + r.unique_users, 0)
+                  .toLocaleString()}
               </td>
               <td style={{ textAlign: 'right' }}>
-                {data.reduce((sum, r) => sum + r.events_count, 0).toLocaleString()}
+                {data
+                  .reduce((sum, r) => sum + r.events_count, 0)
+                  .toLocaleString()}
               </td>
               <td>-</td>
               <td>-</td>

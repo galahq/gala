@@ -463,10 +463,21 @@ export default class extends Controller {
       } else {
         const caseSlug = this.dataUrl.split('/')[2] // Extract case slug from URL
         ReactDOM.render(
-          <StatsTable data={formatted} caseSlug={caseSlug} />,
+          <StatsTable
+            data={formatted}
+            caseSlug={caseSlug}
+            onRowClick={country => this.handleCountrySelect(country)}
+          />,
           tableEl
         )
       }
+    }
+  }
+
+  handleCountrySelect (country) {
+    // Trigger map to fly to the selected country
+    if (window.mapFlyToCountry) {
+      window.mapFlyToCountry(country.name)
     }
   }
 
