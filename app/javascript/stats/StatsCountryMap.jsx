@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react'
-import ReactMapGL, { Marker } from 'react-map-gl'
+import ReactMapGL, { Marker } from '@mapbox/react-map-gl'
 import { MAPBOX_TOKEN, MAPBOX_STYLE } from 'map_view'
 
 // Minimal ISO2 country centroids suitable for a first-pass visualization.
@@ -21,7 +21,7 @@ const CENTROIDS: { [iso2: string]: [number, number] } = {
   SG: [103.8198, 1.3521],
   CH: [8.2275, 46.8182],
   ID: [113.9213, -0.7893],
-  NG: [8.6753, 9.0820],
+  NG: [8.6753, 9.082],
 }
 type Row = {
   country: ?string,
@@ -29,14 +29,16 @@ type Row = {
 }
 type Props = { rows: Row[] }
 
-export default function StatsCountryMap ({ rows }: Props) {
-  const markers = (rows || []).map(r => {
-    const iso = (r.country || '').toUpperCase()
-    const coord = CENTROIDS[iso]
-    if (!coord) return null
-    const size = Math.max(6, Math.min(28, (r.unique_visits || 0) ** 0.5 * 6))
-    return { iso, coord, size, value: r.unique_visits || 0 }
-  }).filter(Boolean)
+export default function StatsCountryMap({ rows }: Props) {
+  const markers = (rows || [])
+    .map(r => {
+      const iso = (r.country || '').toUpperCase()
+      const coord = CENTROIDS[iso]
+      if (!coord) return null
+      const size = Math.max(6, Math.min(28, (r.unique_visits || 0) ** 0.5 * 6))
+      return { iso, coord, size, value: r.unique_visits || 0 }
+    })
+    .filter(Boolean)
 
   const viewport = {
     latitude: 20,
