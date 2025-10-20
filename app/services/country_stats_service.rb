@@ -38,7 +38,7 @@ class CountryStatsService
   }.freeze
 
   COUNTRY_NAMES = {
-    'US' => 'United States', 'GB' => 'United Kingdom', 'CA' => 'Canada',
+    'US' => 'United States of America', 'GB' => 'United Kingdom', 'CA' => 'Canada',
     'AU' => 'Australia', 'DE' => 'Germany', 'FR' => 'France', 'IT' => 'Italy',
     'ES' => 'Spain', 'JP' => 'Japan', 'CN' => 'China', 'IN' => 'India',
     'BR' => 'Brazil', 'MX' => 'Mexico', 'RU' => 'Russia', 'KR' => 'South Korea',
@@ -226,7 +226,7 @@ class CountryStatsService
   end
 
   def self.get_color_for_percentile(percentile)
-    colors = ['#E2FDFF', '#BFD7FF', '#9BB1FF', '#788BFF', '#5465FF']
+    colors = ['#DBEAFE', '#93C5FD', '#60A5FA', '#3B82F6', '#1D4ED8']
     case percentile
     when 0 then colors[0]
     when 25 then colors[1]
