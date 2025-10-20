@@ -30,11 +30,7 @@ end
 if Case.count == 0 && File.exist?(Rails.root.join('tmp/gala-prod-data.sql'))
   puts 'Importing production data...'
   system("PGPASSWORD=alpine psql -h db -U gala -d gala -f #{Rails.root.join('tmp/gala-prod-data.sql')} > /dev/null 2>&1")
-  ActiveRecord::Base.connection.reset_pk_sequence!('readers') rescue nil
-  ActiveRecord::Base.connection.reset_pk_sequence!('cases') rescue nil
-  ActiveRecord::Base.connection.reset_pk_sequence!('visits') rescue nil
-  ActiveRecord::Base.connection.reset_pk_sequence!('ahoy_events') rescue nil
-  puts 'Production data imported successfully!'
-  # Fallback to factory data if no production data
-  # 10.times { FactoryBot.create :case_with_elements, :published }
+  puts 'SQL data imported successfully!'
+else
+  10.times { FactoryBot.create :case_with_elements, :published }
 end

@@ -27,7 +27,7 @@ type Props = {
   onClearSelection?: () => void,
 }
 
-export default function StatsTable({
+export default function StatsTable ({
   data,
   caseSlug,
   percentiles = [],

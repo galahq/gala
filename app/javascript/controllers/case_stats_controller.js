@@ -8,13 +8,13 @@ import ReactDOM from 'react-dom'
 import { NonIdealState } from '@blueprintjs/core'
 import { getAccessibleTextColor } from '../utility/colors'
 import StatsDateRangePicker from '../stats/StatsDateRangePicker'
-import StatsMapWithLegend from '../stats/StatsMapWithLegend'
+import StatsMap from '../stats/StatsMap'
 import StatsTable from '../stats/StatsTable'
 
 export default class extends Controller {
   static targets = ['from', 'to']
 
-  connect() {
+  connect () {
     // Prevent recursive calls during initialization
     this.isInitializing = true
     this.isFetching = false
@@ -93,7 +93,7 @@ export default class extends Controller {
       })
   }
 
-  apply() {
+  apply () {
     // Prevent overlapping requests
     if (this.isFetching) return
 
@@ -134,13 +134,13 @@ export default class extends Controller {
     this.fetchAndRenderBoth()
   }
 
-  isoDate(d) {
+  isoDate (d) {
     // Normalize to UTC date string to match values written by the picker
     // (StatsDateRangePicker writes hidden inputs via toISOString().slice(0, 10))
     return d ? d.toISOString().slice(0, 10) : ''
   }
 
-  highlightActiveShortcut() {
+  highlightActiveShortcut () {
     try {
       const ul = document.querySelector('.pt-daterangepicker-shortcuts')
       if (!ul) return
@@ -172,7 +172,7 @@ export default class extends Controller {
     }
   }
 
-  async fetchAndRenderBoth() {
+  async fetchAndRenderBoth () {
     // Prevent overlapping requests
     if (this.isFetching) return
 
@@ -189,7 +189,7 @@ export default class extends Controller {
     }
   }
 
-  renderLoading() {
+  renderLoading () {
     // Show loading skeleton in map area
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
@@ -321,7 +321,7 @@ export default class extends Controller {
     }
   }
 
-  renderError(error) {
+  renderError (error) {
     const errorTitle = 'Unable to Load Stats'
     const errorDescription =
       error.message ||
@@ -367,7 +367,7 @@ export default class extends Controller {
     }
   }
 
-  fetchData() {
+  fetchData () {
     const params = new URLSearchParams()
     const from = this.fromTarget && this.fromTarget.value
     const to = this.toTarget && this.toTarget.value
@@ -386,7 +386,7 @@ export default class extends Controller {
     })
   }
 
-  renderResults(payload) {
+  renderResults (payload) {
     // Handle error responses
     if (!payload || payload.error) {
       this.renderError(new Error(payload?.error || 'Invalid response'))
@@ -482,7 +482,7 @@ export default class extends Controller {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: '8px',
+                marginBottom: '4px',
               }}
             >
               <span>Podcast Listens</span>
@@ -592,7 +592,7 @@ export default class extends Controller {
         )
       } else {
         ReactDOM.render(
-          <StatsMapWithLegend
+          <StatsMap
             countries={formatted}
             percentiles={summary.percentiles || []}
           />,
@@ -621,14 +621,14 @@ export default class extends Controller {
     }
   }
 
-  handleCountrySelect(country) {
+  handleCountrySelect (country) {
     // Trigger map to fly to the selected country
     if (window.mapFlyToCountry) {
       window.mapFlyToCountry(country.name)
     }
   }
 
-  disconnect() {
+  disconnect () {
     // Clean up event listener
     if (this.rangeChangedHandler) {
       document.removeEventListener(

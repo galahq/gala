@@ -60,7 +60,9 @@ class CountryStatsService
     'NZ' => 'New Zealand', 'IL' => 'Israel', 'AE' => 'United Arab Emirates',
     'SA' => 'Saudi Arabia', 'TR' => 'Turkey', 'UA' => 'Ukraine', 'PK' => 'Pakistan',
     'BD' => 'Bangladesh', 'LK' => 'Sri Lanka', 'NP' => 'Nepal',
-    'BM' => 'Bermuda', 'CR' => 'Costa Rica', 'PR' => 'Puerto Rico'
+    'BM' => 'Bermuda', 'CR' => 'Costa Rica', 'PR' => 'Puerto Rico',
+    'KZ' => 'Kazakhstan', 'RS' => 'Serbia', 'BN' => 'Brunei',
+    'SY' => 'Syria'
   }.freeze
 
   def self.format_country_stats(raw_stats)
