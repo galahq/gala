@@ -212,7 +212,7 @@ class CountryStatsService
     end
 
     (1...percentiles.length).each do |i|
-      percentiles[i][:value] = percentiles[i - 1][:value] + 1 if percentiles[i][:value] <= percentiles[i - 1][:value]
+      percentiles[i][:value] = percentiles[i - 1][:value] + 1 if percentiles[i][:value] < percentiles[i - 1][:value]
     end
 
     percentiles
