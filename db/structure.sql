@@ -1,8 +1,3 @@
-\restrict hdToB29gRaXvOsnryZi4qaregadRd0RBwkLDBjzZZgEjVPFvpcawKfabLos1UJ7
-
--- Dumped from database version 16.4 (Debian 16.4-1.pgdg120+2)
--- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg12+1)
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -72,8 +67,6 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 
 
 SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
@@ -217,8 +210,7 @@ CREATE TABLE public.ahoy_events (
     user_id integer,
     name character varying,
     properties jsonb,
-    "time" timestamp without time zone,
-    case_id integer
+    "time" timestamp without time zone
 );
 
 
@@ -2419,48 +2411,6 @@ ALTER TABLE ONLY public.wikidata_links
 
 
 --
--- Name: idx_ahoy_events_case_id_time; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ahoy_events_case_id_time ON public.ahoy_events USING btree (case_id, "time");
-
-
---
--- Name: idx_ahoy_events_case_slug_time; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ahoy_events_case_slug_time ON public.ahoy_events USING btree (((properties ->> 'case_slug'::text)), "time");
-
-
---
--- Name: idx_ahoy_events_user_id_time; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ahoy_events_user_id_time ON public.ahoy_events USING btree (user_id, "time");
-
-
---
--- Name: idx_deployments_case_created_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_deployments_case_created_at ON public.deployments USING btree (case_id, created_at);
-
-
---
--- Name: idx_readers_roles_reader_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_readers_roles_reader_id ON public.readers_roles USING btree (reader_id);
-
-
---
--- Name: idx_roles_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_roles_name ON public.roles USING btree (name);
-
-
---
 -- Name: index_action_mailbox_inbound_emails_uniqueness; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3652,8 +3602,6 @@ ALTER TABLE ONLY public.readers
 -- PostgreSQL database dump complete
 --
 
-\unrestrict hdToB29gRaXvOsnryZi4qaregadRd0RBwkLDBjzZZgEjVPFvpcawKfabLos1UJ7
-
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
@@ -3784,8 +3732,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241217024113'),
 ('20241217024114'),
 ('20250105235632'),
-('20250106003337'),
-('20250107000000'),
-('20250910152252');
+('20250106003337');
 
 

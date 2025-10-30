@@ -3,7 +3,7 @@
 module Cases
   # The stats for a {Case} include its slug, what library it is in, etc.
   class StatsController < ApplicationController
-    # before_action :authenticate_reader!
+    before_action :authenticate_reader!
 
     layout 'admin'
 
@@ -137,7 +137,7 @@ module Cases
       percentiles = result[:percentiles]
 
       CSV.generate(headers: true) do |csv|
-        csv << ['Country', 'ISO Code', 'Percentile', 'Unique Visitors', 'Unique Users',
+        csv << ['Country', 'Unique Visitors', 'Unique Users',
                 'Total Events', 'First Visit', 'Last Visit']
 
         data.each do |row|
@@ -146,8 +146,6 @@ module Cases
 
           csv << [
             row[:name],
-            row[:iso3],
-            percentile_range,
             row[:unique_visits],
             row[:unique_users],
             row[:events_count],
