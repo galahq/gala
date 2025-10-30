@@ -3,9 +3,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-const MAPBOX_DATA = window.MAPBOX_DATA || 'https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json'
-const MAPBOX_TOKEN = window.MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow'
-const MAPBOX_STYLE = window.MAPBOX_STYLE || 'mapbox://styles/mapbox/dark-v10'
+// Helper functions that read from window at runtime for easier testing, using:
+// document.dispatchEvent(new CustomEvent('stats-range-changed'))
+const getMapboxData = () => window.MAPBOX_DATA || 'https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json'
+const getMapboxToken = () => window.MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow'
+const getMapboxStyle = () => window.MAPBOX_STYLE || 'mapbox://styles/mapbox/dark-v10'
 const MAPBOX_DEFAULT_COLOR = '#2a2a2a'
 
 type CountryData = {
@@ -43,6 +45,9 @@ export default function StatsMap ({ countries, percentiles }: Props) {
     longitude: 0,
     zoom: 0.9,
   })
+  const [mapboxData] = useState(getMapboxData())
+  const [mapboxToken] = useState(getMapboxToken())
+  const [mapboxStyle] = useState(getMapboxStyle())
   const mapRef = useRef(null)
   const tooltipRef = useRef(null)
 
@@ -194,7 +199,7 @@ export default function StatsMap ({ countries, percentiles }: Props) {
     <div style={{ position: 'relative', height: '100%', width: '100%', cursor: 'default' }}>
       <ReactMapGL
         ref={mapRef}
-        mapStyle={MAPBOX_STYLE}
+        mapStyle={mapboxStyle}
         width="100%"
         height="100%"
         latitude={viewport.latitude}
@@ -211,7 +216,7 @@ export default function StatsMap ({ countries, percentiles }: Props) {
         dragPan={false}
         dragRotate={false}
         touchRotate={false}
-        mapboxApiAccessToken={MAPBOX_TOKEN}
+        mapboxApiAccessToken={mapboxToken}
         interactiveLayerIds={mapLoaded ? ['country-fills'] : []}
         onViewportChange={setViewport}
         onLoad={() => {
@@ -277,7 +282,7 @@ export default function StatsMap ({ countries, percentiles }: Props) {
           <Source
             id="countries"
             type="geojson"
-            data={MAPBOX_DATA}
+            data={mapboxData}
           >
             <Layer {...fillLayer} />
             <Layer {...lineLayer} />
