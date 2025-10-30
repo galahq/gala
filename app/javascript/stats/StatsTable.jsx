@@ -36,7 +36,6 @@ export default function StatsTable ({
 }: Props) {
   const [sortField, setSortField] = useState('unique_visits')
   const [sortDirection, setSortDirection] = useState('desc')
-  const [selectedRow, setSelectedRow] = useState(null)
 
   const handleSort = (field: string) => {
     if (field === sortField) {
@@ -46,25 +45,6 @@ export default function StatsTable ({
       setSortDirection('desc')
     }
   }
-
-  const handleRowClick = row => {
-    setSelectedRow(row)
-    if (onRowClick) {
-      onRowClick(row)
-    }
-  }
-
-  const clearSelection = () => {
-    setSelectedRow(null)
-  }
-
-  // Expose clearSelection function globally
-  React.useEffect(() => {
-    window.clearTableSelection = clearSelection
-    return () => {
-      delete window.clearTableSelection
-    }
-  }, [])
 
   const sortedData = [...data].sort((a, b) => {
     // Always put unknown countries at the bottom
@@ -96,20 +76,6 @@ export default function StatsTable ({
       month: 'short',
       day: 'numeric',
     })
-  }
-
-  const getPercentileRange = (percentile: number): string => {
-    if (percentiles.length === 0) return `${percentile}%`
-
-    // Find the index of this percentile in the percentiles array
-    const percentileIndex = percentiles.findIndex(
-      p => p.percentile === percentile
-    )
-    if (percentileIndex === -1) return `${percentile}%`
-
-    // Get the next percentile for the range, or 100 if it's the last one
-    const nextPercentile = percentiles[percentileIndex + 1]?.percentile || 100
-    return `${percentile}-${nextPercentile}%`
   }
 
   const exportCSV = () => {
@@ -173,7 +139,6 @@ export default function StatsTable ({
                   <SortIcon field="name" />
                 </div>
               </th>
-              <th>ISO Code</th>
               <th
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('unique_visits')}
@@ -207,95 +172,31 @@ export default function StatsTable ({
                   <SortIcon field="events_count" />
                 </div>
               </th>
-              <th>Percentile</th>
               <th>First Visit</th>
               <th>Last Visit</th>
             </tr>
           </thead>
           <tbody>
-            {sortedData.map((row, index) => {
-              const isSelected = selectedRow && selectedRow.iso2 === row.iso2
-              const isUnknown = !row.iso2 || row.name === 'Unknown'
-              const isSelectable = onRowClick && !isUnknown
-
-              return (
-                <tr
-                  key={row.iso2 || index}
-                  style={{
-                    cursor: isSelectable ? 'pointer' : 'not-allowed',
-                    backgroundColor: isSelected ? '#7c3aed' : undefined, // Dark purple for selected
-                    color: isSelected ? 'white' : undefined, // White text for selected rows
-                  }}
-                  onClick={() => isSelectable && handleRowClick(row)}
-                  onMouseEnter={e => {
-                    if (!isSelected && isSelectable) {
-                      e.currentTarget.style.backgroundColor = '#e9d5ff' // Light purple for hover
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (!isSelected && isSelectable) {
-                      e.currentTarget.style.backgroundColor = ''
-                    }
-                  }}
-                >
-                  <td style={{ color: isSelected ? 'white' : undefined }}>
-                    {row.name}
-                  </td>
-                  <td style={{ color: isSelected ? 'white' : undefined }}>
-                    <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
-                      {row.iso3 || ''}
-                    </span>
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      color: isSelected ? 'white' : undefined,
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    {row.unique_visits.toLocaleString()}
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      color: isSelected ? 'white' : undefined,
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    {row.unique_users.toLocaleString()}
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      color: isSelected ? 'white' : undefined,
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    {row.events_count.toLocaleString()}
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'center',
-                      color: isSelected ? 'white' : undefined,
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    {getPercentileRange(row.percentile)}
-                  </td>
-                  <td style={{ color: isSelected ? 'white' : undefined }}>
-                    {formatDate(row.first_event)}
-                  </td>
-                  <td style={{ color: isSelected ? 'white' : undefined }}>
-                    {formatDate(row.last_event)}
-                  </td>
-                </tr>
-              )
-            })}
+            {sortedData.map((row, index) => (
+              <tr key={row.iso2 || index}>
+                <td>{row.name}</td>
+                <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
+                  {row.unique_visits.toLocaleString()}
+                </td>
+                <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
+                  {row.unique_users.toLocaleString()}
+                </td>
+                <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
+                  {row.events_count.toLocaleString()}
+                </td>
+                <td>{formatDate(row.first_event)}</td>
+                <td>{formatDate(row.last_event)}</td>
+              </tr>
+            ))}
           </tbody>
           <tfoot>
             <tr style={{ fontWeight: 'bold' }}>
               <td>Total</td>
-              <td>-</td>
               <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                 {data
                   .reduce((sum, r) => sum + r.unique_visits, 0)
@@ -310,9 +211,6 @@ export default function StatsTable ({
                 {data
                   .reduce((sum, r) => sum + r.events_count, 0)
                   .toLocaleString()}
-              </td>
-              <td style={{ textAlign: 'center', fontFamily: 'monospace' }}>
-                -
               </td>
               <td>-</td>
               <td>-</td>

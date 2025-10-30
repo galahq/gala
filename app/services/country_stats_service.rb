@@ -100,50 +100,6 @@ class CountryStatsService
     { iso2: iso2, iso3: iso3, name: name }
   end
 
-  def self.format_country_stats(raw_stats)
-    all_visits = raw_stats.map { |r| r['unique_visits'] || 0 }.sort
-    return { stats: [], percentiles: [] } if all_visits.empty?
-
-    percentiles = calculate_percentiles(all_visits)
-
-    stats = raw_stats.map do |row|
-      country_info = resolve_country(row['country'])
-
-      visits = row['unique_visits'] || 0
-      {
-        iso2: country_info[:iso2],
-        iso3: country_info[:iso3],
-        name: country_info[:name],
-        unique_visits: visits,
-        unique_users: row['unique_users'] || 0,
-        events_count: row['events_count'] || 0,
-        first_event: row['first_event'],
-        last_event: row['last_event'],
-        deployments_count: row['deployments_count'] || 0,
-        visit_podcast_count: row['visit_podcast_count'] || 0,
-        visit_edgenote_count: row['visit_edgenote_count'] || 0,
-        visit_page_count: row['visit_page_count'] || 0,
-        visit_element_count: row['visit_element_count'] || 0,
-        read_quiz_count: row['read_quiz_count'] || 0,
-        read_overview_count: row['read_overview_count'] || 0,
-        read_card_count: row['read_card_count'] || 0,
-        write_comment_count: row['write_comment_count'] || 0,
-        write_comment_thread_count: row['write_comment_thread_count'] || 0,
-        write_quiz_submission_count: row['write_quiz_submission_count'] || 0,
-        percentile: get_percentile(visits, percentiles)
-      }
-    end
-
-    {
-      stats: stats.sort_by { |s| -s[:unique_visits] },
-      percentiles: percentiles,
-      total_visits: all_visits.sum,
-      country_count: stats.count,
-      total_deployments: stats.sum { |s| s[:deployments_count] },
-      total_podcast_listens: stats.sum { |s| s[:visit_podcast_count] }
-    }
-  end
-
   def self.merge_stats(raw_stats)
     merged = raw_stats.each_with_object({}) do |row, h|
       c = resolve_country(row['country'])
@@ -226,7 +182,15 @@ class CountryStatsService
   end
 
   def self.get_color_for_percentile(percentile)
-    colors = ['#DBEAFE', '#93C5FD', '#60A5FA', '#3B82F6', '#1D4ED8']
+    # Use shades of purple (base: #7c3aed / rgb(124, 58, 237))
+    # with alpha channel increasing from 0.2 to 1.0
+    colors = [
+      'rgba(124, 58, 237, 0.2)',
+      'rgba(124, 58, 237, 0.4)',
+      'rgba(124, 58, 237, 0.6)',
+      'rgba(124, 58, 237, 0.8)',
+      'rgba(124, 58, 237, 1.0)'
+    ]
     case percentile
     when 0 then colors[0]
     when 25 then colors[1]

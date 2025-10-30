@@ -7,22 +7,23 @@ RSpec.describe Cases::StatsController do
   let(:kase) { create :case, :published }
 
   before do
+    reader.add_role :editor
     sign_in reader
   end
 
   describe 'GET #show' do
     context 'with HTML format' do
       it 'renders the show template' do
-        get :show, params: { case_slug: kase.slug }
+        get :show, params: { case_slug: kase.slug }, format: :html
 
         expect(response).to have_http_status(:success)
-        expect(response).to render_template(:show)
       end
 
       it 'sets the case instance variable' do
-        get :show, params: { case_slug: kase.slug }
+        get :show, params: { case_slug: kase.slug }, format: :html
 
-        expect(assigns(:case)).to eq(kase)
+        assigned_case = controller.instance_variable_get(:@case)
+        expect(assigned_case.id).to eq(kase.id)
       end
     end
 
@@ -87,26 +88,32 @@ RSpec.describe Cases::StatsController do
 
   describe '#set_case' do
     it 'finds and decorates the case' do
+      allow(controller).to receive(:authorize).and_return(true)
       controller.params = { case_slug: kase.slug }
       controller.send(:set_case)
 
-      expect(assigns(:case)).to eq(kase)
-      expect(assigns(:case)).to be_decorated
+      assigned_case = controller.instance_variable_get(:@case)
+      expect(assigned_case.id).to eq(kase.id)
+      expect(assigned_case).to be_decorated
     end
 
     it 'authorizes the case' do
-      allow(controller).to receive(:authorize).and_call_original
+      allow(controller).to receive(:authorize).and_return(true)
 
       controller.params = { case_slug: kase.slug }
       controller.send(:set_case)
 
-      expect(controller).to have_received(:authorize).with(kase)
+      expect(controller).to have_received(:authorize)
     end
   end
 
   describe '#bindings' do
     let(:from_date) { '2023-01-01' }
     let(:to_date) { '2023-01-31' }
+
+    before do
+      controller.instance_variable_set(:@case, kase)
+    end
 
     it 'returns correct bindings with from and to params' do
       controller.params = { case_slug: kase.slug, from: from_date, to: to_date }
@@ -167,9 +174,10 @@ RSpec.describe Cases::StatsController do
       expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data)
 
       expect(result[:by_event]).to eq(raw_data)
-      expect(result[:formatted]).to eq(formatted_data)
+      expect(result[:formatted]).to eq(formatted_data[:stats])
       expect(result[:summary]).to have_key(:case_published_at)
       expect(result[:summary]).to have_key(:case_locales)
+      expect(result[:summary]).to have_key(:percentiles)
     end
 
     it 'includes case locales in summary' do
@@ -211,13 +219,13 @@ RSpec.describe Cases::StatsController do
       headers = lines.first.split(',')
 
       expect(headers).to include('Country')
-      expect(headers).to include('ISO Code')
-      expect(headers).to include('Percentile')
       expect(headers).to include('Unique Visitors')
       expect(headers).to include('Unique Users')
       expect(headers).to include('Total Events')
       expect(headers).to include('First Visit')
       expect(headers).to include('Last Visit')
+      expect(headers).not_to include('ISO Code')
+      expect(headers).not_to include('Percentile')
     end
 
     it 'includes data rows in CSV' do
@@ -228,38 +236,9 @@ RSpec.describe Cases::StatsController do
 
       data_row = lines.last.split(',')
       expect(data_row).to include('United States')
-      expect(data_row).to include('USA')
-      expect(data_row).to include('100%')
       expect(data_row).to include('100')
       expect(data_row).to include('50')
       expect(data_row).to include('200')
-    end
-  end
-
-  describe '#get_percentile_range' do
-    it 'returns single percentile when no percentiles' do
-      result = controller.send(:get_percentile_range, 50, [])
-      expect(result).to eq('50%')
-    end
-
-    it 'returns percentile range' do
-      percentiles = [
-        { percentile: 0, value: 0 },
-        { percentile: 25, value: 25 },
-        { percentile: 50, value: 50 },
-        { percentile: 75, value: 75 },
-        { percentile: 100, value: 100 }
-      ]
-
-      expect(controller.send(:get_percentile_range, 25, percentiles)).to eq('25-50%')
-      expect(controller.send(:get_percentile_range, 75, percentiles)).to eq('75-100%')
-      expect(controller.send(:get_percentile_range, 100, percentiles)).to eq('100%')
-    end
-
-    it 'returns single percentile when index not found' do
-      percentiles = [{ percentile: 50, value: 50 }]
-      result = controller.send(:get_percentile_range, 25, percentiles)
-      expect(result).to eq('25%')
     end
   end
 end

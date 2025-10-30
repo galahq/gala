@@ -20,7 +20,8 @@ module Cases
 
     # @param [GET] /cases/case-slug/stats
     def show
-      redirect_to '/403' unless current_reader.has_role? :editor
+      redirect_to '/403' and return unless current_reader.has_role? :editor
+
       set_case
       respond_to do |format|
         format.html { render :show }
@@ -40,7 +41,7 @@ module Cases
     def bindings
       from_ts =
         params[:from].present? ? Time.zone.parse(params[:from]) : nil
-      to_ts = params[:to].present? ? Time.zone.parse(params[:to]) : nil
+      to_ts = params[:to].present? ? Time.zone.parse(params[:to]).end_of_day : nil
       from_ts ||= @case.created_at
       to_ts ||= Time.zone.now.end_of_day
       [
@@ -135,16 +136,12 @@ module Cases
       require 'csv'
       result = CountryStatsService.format_country_stats(sql_query)
       data = result[:stats]
-      percentiles = result[:percentiles]
 
       CSV.generate(headers: true) do |csv|
         csv << ['Country', 'Unique Visitors', 'Unique Users',
                 'Total Events', 'First Visit', 'Last Visit']
 
         data.each do |row|
-          # Convert percentile number to range format
-          percentile_range = get_percentile_range(row[:percentile], percentiles)
-
           csv << [
             row[:name],
             row[:unique_visits],
@@ -155,18 +152,6 @@ module Cases
           ]
         end
       end
-    end
-
-    def get_percentile_range(percentile, percentiles)
-      return "#{percentile}%" if percentiles.empty?
-
-      # Find the index of this percentile in the percentiles array
-      percentile_index = percentiles.find_index { |p| p[:percentile] == percentile }
-      return "#{percentile}%" if percentile_index.nil?
-
-      # Get the next percentile for the range, or 100 if it's the last one
-      next_percentile = percentiles[percentile_index + 1]&.dig(:percentile) || 100
-      "#{percentile}-#{next_percentile}%"
     end
   end
 end

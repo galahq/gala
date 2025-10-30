@@ -1,9 +1,7 @@
 /* @flow */
 import React, { useState, useEffect, useRef } from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
-import { Button } from '@blueprintjs/core'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { getAccessibleTextColor } from '../utility/colors'
 
 // Import mapbox credentials - try window first, then use fallback
 const getMapboxToken = () => {
@@ -51,21 +49,30 @@ export default function StatsMap ({ countries, percentiles }: Props) {
   const [viewport, setViewport] = useState({
     latitude: 20,
     longitude: 0,
-    zoom: 0,
+    zoom: 0.9,
   })
   const mapRef = useRef(null)
   const tooltipRef = useRef(null)
 
   useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.getMap().on('move', () => {
-        const center = mapRef.current.getMap().getCenter()
+    if (mapRef.current && mapLoaded) {
+      const map = mapRef.current.getMap()
+      if (!map) return
+
+      const handleMove = () => {
+        const center = map.getCenter()
         if (Math.abs(center.lat) > 10) {
-          mapRef.current.getMap().setCenter([center.lng, Math.max(-10, Math.min(10, center.lat))])
+          map.setCenter([center.lng, Math.max(-10, Math.min(10, center.lat))])
         }
-      })
+      }
+      map.on('move', handleMove)
+      return () => {
+        if (map) {
+          map.off('move', handleMove)
+        }
+      }
     }
-  }, [])
+  }, [mapLoaded])
 
   // Calculate zoom level to fit bbox in viewport
   const calculateZoomForBbox = bbox => {
@@ -134,6 +141,16 @@ export default function StatsMap ({ countries, percentiles }: Props) {
   // Clean up on unmount
   useEffect(() => {
     return () => {
+      try {
+        if (mapRef.current) {
+          const map = mapRef.current.getMap()
+          if (map && map.remove) {
+            map.remove()
+          }
+        }
+      } catch (error) {
+        console.warn('Error cleaning up map:', error)
+      }
       setMapLoaded(false)
       setMapError(false)
     }
@@ -200,63 +217,6 @@ export default function StatsMap ({ countries, percentiles }: Props) {
       setHoveredCountry(null)
       setMousePosition({ x: 0, y: 0 })
     }
-  }
-
-  const onClick = event => {
-    // Clear table selection when user interacts with map
-    if (window.clearTableSelection) {
-      window.clearTableSelection()
-    }
-
-    const feature = event.features && event.features[0]
-    if (feature && mapRef.current) {
-      const countryName = feature.properties.name
-      const countryData = countries.find(c => c.name === countryName)
-      if (countryData) {
-        // Calculate centroid from the clicked point or use bbox if available
-        let centerLng, centerLat
-
-        if (feature.bbox) {
-          // Use bounding box center if available
-          const [minLng, minLat, maxLng, maxLat] = feature.bbox
-          centerLng = (minLng + maxLng) / 2
-          centerLat = (minLat + maxLat) / 2
-        } else {
-          // Fallback to clicked coordinates
-          centerLng = event.lngLat[0]
-          centerLat = event.lngLat[1]
-        }
-
-        // Fly to the country center with appropriate zoom
-        mapRef.current.flyTo({
-          center: [centerLng, centerLat],
-          zoom: 4,
-          duration: 2000,
-        })
-      }
-    }
-  }
-
-  const handleZoomIn = () => {
-    // Clear table selection when user uses zoom controls
-    if (window.clearTableSelection) {
-      window.clearTableSelection()
-    }
-    setViewport(prev => ({
-      ...prev,
-      zoom: Math.min(prev.zoom + 1, 5), // Max zoom level
-    }))
-  }
-
-  const handleZoomOut = () => {
-    // Clear table selection when user uses zoom controls
-    if (window.clearTableSelection) {
-      window.clearTableSelection()
-    }
-    setViewport(prev => ({
-      ...prev,
-      zoom: Math.max(prev.zoom - 1, 0), // Min zoom level is 0
-    }))
   }
 
   const handleCountrySelect = (countryName: string) => {
@@ -460,7 +420,7 @@ export default function StatsMap ({ countries, percentiles }: Props) {
   }
 
   return (
-    <div style={{ position: 'relative', height: '100%', width: '100%' }}>
+    <div style={{ position: 'relative', height: '100%', width: '100%', cursor: 'default' }}>
       <ReactMapGL
         ref={mapRef}
         mapStyle={MAPBOX_STYLE}
@@ -475,8 +435,9 @@ export default function StatsMap ({ countries, percentiles }: Props) {
         ]}
         maxZoom={5}
         scrollZoom={false}
-        touchZoom={true}
-        doubleClickZoom={true}
+        touchZoom={false}
+        doubleClickZoom={false}
+        dragPan={false}
         dragRotate={false}
         touchRotate={false}
         mapboxApiAccessToken={MAPBOX_TOKEN}
@@ -487,7 +448,7 @@ export default function StatsMap ({ countries, percentiles }: Props) {
           setMapLoaded(true)
           setMapError(false)
 
-          // Hide place name layers (cities, countries, etc.)
+          // Hide place name layers and customize Mapbox branding
           if (mapRef.current) {
             const map = mapRef.current.getMap()
             const style = map.getStyle()
@@ -519,6 +480,14 @@ export default function StatsMap ({ countries, percentiles }: Props) {
                 map.setLayoutProperty(layer.id, 'visibility', 'none')
               }
             })
+
+            // Make Mapbox logo darker/less visible
+            const mapContainer = map.getContainer()
+            const mapboxLogo = mapContainer.querySelector('.mapboxgl-ctrl-logo')
+            if (mapboxLogo) {
+              mapboxLogo.style.opacity = '0.2'
+              mapboxLogo.style.filter = 'brightness(0.3)'
+            }
           }
         }}
         onError={error => {
@@ -532,7 +501,6 @@ export default function StatsMap ({ countries, percentiles }: Props) {
           }
         }}
         onHover={mapLoaded ? onHover : undefined}
-        onClick={mapLoaded ? onClick : undefined}
       >
         {mapLoaded && (
           <Source
@@ -545,59 +513,6 @@ export default function StatsMap ({ countries, percentiles }: Props) {
           </Source>
         )}
 
-        {/* Zoom Controls */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '2px',
-            zIndex: 1,
-          }}
-        >
-          <Button
-            minimal
-            small
-            style={{
-              background: 'rgba(42, 42, 42, 0.9)',
-              borderRadius: '4px',
-              color: getAccessibleTextColor('#2a2a2a'),
-              fontSize: '16px',
-              fontWeight: 'bold',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            title="Zoom In"
-            onClick={handleZoomIn}
-          >
-            +
-          </Button>
-          <Button
-            minimal
-            small
-            style={{
-              background: 'rgba(42, 42, 42, 0.9)',
-              borderRadius: '4px',
-              color: getAccessibleTextColor('#2a2a2a'),
-              fontSize: '16px',
-              fontWeight: 'bold',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            title="Zoom Out"
-            onClick={handleZoomOut}
-          >
-            −
-          </Button>
-        </div>
         {!mapLoaded && (
           <div
             style={{
@@ -613,6 +528,86 @@ export default function StatsMap ({ countries, percentiles }: Props) {
           </div>
         )}
       </ReactMapGL>
+
+      {/* Legend - Percentile Map */}
+      {percentiles && percentiles.length > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            background: 'rgba(42, 42, 42, 1.0)',
+            padding: '12px',
+            borderRadius: '0 6px 0 0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            zIndex: 1,
+            minWidth: '200px',
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 'bold',
+              marginBottom: '8px',
+              fontSize: '12px',
+              color: '#ffffff',
+              fontFamily: 'monospace',
+            }}
+          >
+            Visitor Distribution
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0,
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '4px',
+              overflow: 'hidden',
+            }}
+          >
+            {percentiles.map((p, i) => (
+              <div key={i} style={{ position: 'relative', flex: 1 }}>
+                <div
+                  style={{
+                    height: '24px',
+                    background: p.color,
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  title={`${p.percentile}th percentile: ${p.value} visitors`}
+                >
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      fontWeight: 'bold',
+                      color: '#ffffff',
+                      lineHeight: '1',
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {p.percentile}%
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '11px',
+              marginTop: '6px',
+              color: '#ffffff',
+              fontFamily: 'monospace',
+            }}
+          >
+            <span style={{ fontWeight: 'bold' }}>low</span>
+            <span style={{ fontWeight: 'bold' }}>high</span>
+          </div>
+        </div>
+      )}
 
       {/* Hover tooltip */}
       {hoveredCountry && (

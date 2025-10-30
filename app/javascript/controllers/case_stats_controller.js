@@ -6,7 +6,6 @@ import { Controller } from 'stimulus'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { NonIdealState } from '@blueprintjs/core'
-import { getAccessibleTextColor } from '../utility/colors'
 import StatsDateRangePicker from '../stats/StatsDateRangePicker'
 import StatsMap from '../stats/StatsMap'
 import StatsTable from '../stats/StatsTable'
@@ -414,8 +413,8 @@ export default class extends Controller {
         ReactDOM.render(
           <div
             style={{
-              fontSize: '14px',
-              lineHeight: '1.4',
+              fontSize: '16px',
+              lineHeight: '1.6',
               color: '#000000',
             }}
           >
@@ -424,9 +423,10 @@ export default class extends Controller {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: '8px',
-                paddingBottom: '4px',
+                marginBottom: '12px',
+                paddingBottom: '8px',
                 borderBottom: '1px solid #e5e7eb',
+                fontSize: '17px',
               }}
             >
               <span style={{ fontWeight: 'bold' }}>Summary</span>
@@ -450,7 +450,7 @@ export default class extends Controller {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: '4px',
+                marginBottom: '8px',
               }}
             >
               <span>Total Unique Visitors</span>
@@ -460,7 +460,7 @@ export default class extends Controller {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: '4px',
+                marginBottom: '8px',
               }}
             >
               <span>Countries</span>
@@ -470,7 +470,7 @@ export default class extends Controller {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: '4px',
+                marginBottom: '8px',
               }}
             >
               <span>Total Deployments</span>
@@ -482,7 +482,7 @@ export default class extends Controller {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: '4px',
+                marginBottom: '8px',
               }}
             >
               <span>Podcast Listens</span>
@@ -504,64 +504,6 @@ export default class extends Controller {
               </div>
             )}
 
-            {/* Visitor Distribution */}
-            {summary.percentiles && summary.percentiles.length > 0 && (
-              <div style={{ marginTop: '4px' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>
-                  Percentile map
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0,
-                    border: '1px solid #000000',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {summary.percentiles.map((p, i) => (
-                    <div key={i} style={{ position: 'relative', flex: 1 }}>
-                      <div
-                        style={{
-                          height: '24px',
-                          background: p.color,
-                          border: 'none',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                        title={`${p.percentile}th percentile: ${p.value} visitors`}
-                      >
-                        <span
-                          style={{
-                            fontSize: '10px',
-                            fontWeight: 'bold',
-                            color: getAccessibleTextColor(p.color),
-                            lineHeight: '1',
-                            fontFamily: 'monospace',
-                          }}
-                        >
-                          {p.percentile}%
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    fontSize: '14px',
-                    marginTop: '4px',
-                    color: '#000000',
-                  }}
-                >
-                  <span style={{ fontWeight: 'bold', font: "monospace" }}>low</span>
-                  <span style={{ fontWeight: 'bold', font: "monospace" }}>high</span>
-                </div>
-              </div>
-            )}
           </div>,
           summaryEl
         )
@@ -591,8 +533,11 @@ export default class extends Controller {
           mapEl
         )
       } else {
+        const from = this.fromTarget && this.fromTarget.value
+        const to = this.toTarget && this.toTarget.value
         ReactDOM.render(
           <StatsMap
+            key={`map-${from}-${to}`}
             countries={formatted}
             percentiles={summary.percentiles || []}
           />,

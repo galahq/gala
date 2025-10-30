@@ -221,12 +221,12 @@ RSpec.describe CountryStatsService do
 
   describe '.get_color_for_percentile' do
     it 'returns correct colors for percentiles' do
-      expect(described_class.get_color_for_percentile(0)).to eq('#DBEAFE')
-      expect(described_class.get_color_for_percentile(25)).to eq('#93C5FD')
-      expect(described_class.get_color_for_percentile(50)).to eq('#60A5FA')
-      expect(described_class.get_color_for_percentile(75)).to eq('#3B82F6')
-      expect(described_class.get_color_for_percentile(100)).to eq('#1D4ED8')
-      expect(described_class.get_color_for_percentile(999)).to eq('#DBEAFE') # default
+      expect(described_class.get_color_for_percentile(0)).to eq('rgba(124, 58, 237, 0.2)')
+      expect(described_class.get_color_for_percentile(25)).to eq('rgba(124, 58, 237, 0.4)')
+      expect(described_class.get_color_for_percentile(50)).to eq('rgba(124, 58, 237, 0.6)')
+      expect(described_class.get_color_for_percentile(75)).to eq('rgba(124, 58, 237, 0.8)')
+      expect(described_class.get_color_for_percentile(100)).to eq('rgba(124, 58, 237, 1.0)')
+      expect(described_class.get_color_for_percentile(999)).to eq('rgba(124, 58, 237, 0.2)') # default
     end
   end
 end
