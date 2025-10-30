@@ -15,6 +15,8 @@
     <%= render 'application/reader_javascript_tag' %>
     <%= javascript_tag do %>
       window.i18n = { locale: '<%=I18n.locale%>' }
+      window.MAPBOX_ACCESS_TOKEN = '<%= ENV['MAPBOX_ACCESS_TOKEN'] %>'
+      window.MAPBOX_STYLE = '<%= ENV['MAPBOX_STYLE'] %>'
     <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>

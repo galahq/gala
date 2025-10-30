@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom'
 import { NonIdealState } from '@blueprintjs/core'
 import StatsDateRangePicker from '../stats/StatsDateRangePicker'
 import StatsResultsTable from '../stats/StatsResultsTable'
+import StatsCountryMap from '../stats/StatsCountryMap'
 
 export default class extends Controller {
   static targets = ['from', 'to']
@@ -37,11 +38,6 @@ export default class extends Controller {
         new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
       const initialRange = [minDate, end]
 
-      const yesterday = new Date(
-        end.getFullYear(),
-        end.getMonth(),
-        end.getDate() - 1
-      )
       const shortcuts = [
         { label: 'All time', dateRange: [minDate, end] },
         { label: 'Past year', dateRange: [startFromDays(365), end] },
@@ -274,6 +270,11 @@ export default class extends Controller {
 
     if (eventsEl) {
       ReactDOM.render(<StatsResultsTable rows={byEvent} />, eventsEl)
+    }
+
+    const mapEl = document.getElementById('stats-map')
+    if (mapEl) {
+      ReactDOM.render(<StatsCountryMap rows={byEvent} />, mapEl)
     }
   }
 

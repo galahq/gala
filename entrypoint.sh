@@ -21,6 +21,7 @@ if [ "$RAILS_ENV" = "development" ]; then
   if [ "$count" -eq "0" ]; then
     bundle exec rails db:environment:set
     bundle exec rails db:seed
+    bundle exec rails db:migrate
     bundle exec rails db:test:prepare
     bundle exec rake indices:refresh
   fi

@@ -2,11 +2,11 @@ class AddCaseStatsIdx < ActiveRecord::Migration[7.0]
   disable_ddl_transaction!
 
   def up
-    add_index :ahoy_events,
-              ["(properties ->> 'case_slug')", :time],
-              name: 'idx_ahoy_events_case_slug_time',
-              algorithm: :concurrently,
-              if_not_exists: true
+    # Expression index on JSONB property + timestamp must be created via raw SQL
+    execute <<~SQL
+      CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_ahoy_events_case_slug_time
+      ON ahoy_events ((properties ->> 'case_slug'), "time");
+    SQL
 
     add_index :ahoy_events,
               %i[user_id time],
@@ -34,10 +34,9 @@ class AddCaseStatsIdx < ActiveRecord::Migration[7.0]
   end
 
   def down
-    remove_index :ahoy_events,
-                 name: 'idx_ahoy_events_case_slug_time',
-                 algorithm: :concurrently,
-                 if_exists: true
+    execute <<~SQL
+      DROP INDEX CONCURRENTLY IF EXISTS idx_ahoy_events_case_slug_time;
+    SQL
 
     remove_index :ahoy_events,
                  name: 'idx_ahoy_events_user_id_time',

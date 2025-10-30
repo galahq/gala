@@ -23,7 +23,7 @@ module Cases
       set_case
       respond_to do |format|
         format.html { render :show }
-        format.json { render json: sql_query }
+        format.json { render json: { by_event: sql_query } }
       end
     end
 
@@ -39,7 +39,7 @@ module Cases
       from_ts =
         params[:from].present? ? Time.zone.parse(params[:from]) : nil
       to_ts = params[:to].present? ? Time.zone.parse(params[:to]) : nil
-      from_ts ||= Time.zone.parse(@case.created_at)
+      from_ts ||= @case.created_at
       to_ts ||= Time.zone.now.end_of_day
       [
         ActiveRecord::Relation::QueryAttribute.new(
@@ -59,41 +59,27 @@ module Cases
         <<~SQL, 'Case Stats', bindings
           WITH params(case_slug, from_ts, to_ts) AS (
             VALUES ($1::text, $2::timestamp, $3::timestamp)
-          ), kase AS (
-            SELECT c.id AS case_id, c.slug AS case_slug
-            FROM cases c
-            JOIN params p ON c.slug = p.case_slug
-            LIMIT 1
           )
           SELECT
-            v.country AS country,
-            MIN(e."time") AS first_event,
-            MAX(e."time") AS last_event,
-            COUNT(DISTINCT v.visitor_token) AS session_count,
-            COUNT(DISTINCT e.user_id) AS user_count,
-            MAX(dep.deployments_count) AS deployments_count,
-            COUNT(*) AS events_count
-          FROM kase k
+            v.country                                              AS country,
+            MIN(e."time")                                        AS first_event,
+            MAX(e."time")                                        AS last_event,
+            COUNT(DISTINCT v.visitor_token)                        AS unique_visits,
+            COUNT(DISTINCT e.user_id)                              AS unique_users,
+            COUNT(*)                                               AS events_count
+          FROM ahoy_events e
           JOIN params p ON TRUE
-          CROSS JOIN LATERAL (
-            SELECT COUNT(*)::bigint AS deployments_count
-            FROM deployments d
-            WHERE d.case_id = k.case_id
-              AND d.created_at BETWEEN p.from_ts AND p.to_ts
-          ) dep
-          JOIN ahoy_events e
-            ON (e.properties ->> 'case_slug') = k.case_slug
-           AND e."time" BETWEEN p.from_ts AND p.to_ts
-           AND e.user_id IS NOT NULL
-           AND NOT EXISTS (
-             SELECT 1
-             FROM readers_roles rr
-             JOIN roles ro ON ro.id = rr.role_id
-             WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
-           )
           JOIN visits v ON v.id = e.visit_id
+          WHERE (e.properties ->> 'case_slug') = p.case_slug
+            AND e."time" BETWEEN p.from_ts AND p.to_ts
+            AND NOT EXISTS (
+              SELECT 1
+              FROM readers_roles rr
+              JOIN roles ro ON ro.id = rr.role_id
+              WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
+            )
           GROUP BY v.country
-          ORDER BY events_count DESC NULLS LAST;
+          ORDER BY unique_visits DESC NULLS LAST;
         SQL
       ).to_a
     end
