@@ -20,6 +20,7 @@ module Cases
 
     # @param [GET] /cases/case-slug/stats
     def show
+      redirect_to '/403' unless current_reader.has_role? :editor
       set_case
       respond_to do |format|
         format.html { render :show }
