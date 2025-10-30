@@ -566,13 +566,6 @@ export default class extends Controller {
     }
   }
 
-  handleCountrySelect (country) {
-    // Trigger map to fly to the selected country
-    if (window.mapFlyToCountry) {
-      window.mapFlyToCountry(country.name)
-    }
-  }
-
   disconnect () {
     // Clean up event listener
     if (this.rangeChangedHandler) {
@@ -581,7 +574,6 @@ export default class extends Controller {
         this.rangeChangedHandler
       )
     }
-
     // Reset flags to prevent issues if the controller is reconnected
     this.isInitializing = false
     this.isFetching = false

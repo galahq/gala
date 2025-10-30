@@ -96,7 +96,7 @@ export default function StatsTable ({
       return <span style={{ opacity: 0.3, fontSize: '12px' }}>↕</span>
     }
     return (
-      <span style={{ color: '#2d72d2', fontSize: '12px', fontWeight: 'bold' }}>
+      <span style={{ color: 'rgb(100, 68, 187)', fontSize: '12px', fontWeight: 'bold' }}>
         {sortDirection === 'asc' ? '↑' : '↓'}
       </span>
     )

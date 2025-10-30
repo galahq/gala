@@ -15,8 +15,9 @@
     <%= render 'application/reader_javascript_tag' %>
     <%= javascript_tag do %>
       window.i18n = { locale: '<%=I18n.locale%>' }
-      window.MAPBOX_ACCESS_TOKEN = '<%= ENV.fetch("MAPBOX_ACCESS_TOKEN") %>'
-      window.MAPBOX_STYLE = '<%= ENV.fetch("MAPBOX_STYLE", "mapbox://styles/mapbox/dark-v10") %>'
+      window.MAPBOX_ACCESS_TOKEN = '<%= ENV.fetch("MAPBOX_ACCESS_TOKEN", "pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow") %>'
+      window.MAPBOX_STYLE = '<%= ENV.fetch("MAPBOX_STYLE", "mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14") %>'
+      window.MAPBOX_DATA = '<%= ENV.fetch("MAPBOX_DATA", "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json") %>'
     <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
