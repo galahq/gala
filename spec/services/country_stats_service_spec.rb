@@ -88,7 +88,8 @@ RSpec.describe CountryStatsService do
       result = described_class.format_country_stats([])
       expect(result).to eq({
                              stats: [],
-                             percentiles: [],
+                             bins: [],
+                             bin_count: 5,
                              total_visits: 0,
                              country_count: 0,
                              total_deployments: 0,
@@ -117,12 +118,24 @@ RSpec.describe CountryStatsService do
       expect(us_stat[:write_quiz_submission_count]).to eq(1)
     end
 
-    it 'calculates percentiles correctly' do
+    it 'calculates bins correctly' do
       result = described_class.format_country_stats(raw_stats)
 
-      expect(result[:percentiles].length).to eq(5)
-      expect(result[:percentiles].first[:percentile]).to eq(0)
-      expect(result[:percentiles].last[:percentile]).to eq(100)
+      expect(result[:bins].length).to eq(5)
+      expect(result[:bins].first[:bin]).to eq(0)
+      expect(result[:bins].first[:percentile]).to eq(0)
+      expect(result[:bins].last[:bin]).to eq(4)
+      expect(result[:bins].last[:percentile]).to eq(100)
+      expect(result[:bin_count]).to eq(5)
+    end
+
+    it 'accepts custom bin count' do
+      result = described_class.format_country_stats(raw_stats, 3)
+
+      expect(result[:bins].length).to eq(3)
+      expect(result[:bins].first[:bin]).to eq(0)
+      expect(result[:bins].last[:bin]).to eq(2)
+      expect(result[:bin_count]).to eq(3)
     end
   end
 
@@ -169,64 +182,65 @@ RSpec.describe CountryStatsService do
     end
   end
 
-  describe '.calculate_percentiles' do
+  describe '.calculate_bins' do
     it 'returns empty array for empty input' do
-      result = described_class.calculate_percentiles([])
+      result = described_class.calculate_bins([])
       expect(result).to eq([])
     end
 
-    it 'calculates percentiles for single value' do
-      result = described_class.calculate_percentiles([100])
+    it 'calculates bins for single value' do
+      result = described_class.calculate_bins([100])
 
       expect(result.length).to eq(5)
+      expect(result.first[:bin]).to eq(0)
       expect(result.first[:percentile]).to eq(0)
       expect(result.first[:value]).to eq(100)
+      expect(result.last[:bin]).to eq(4)
       expect(result.last[:percentile]).to eq(100)
       expect(result.last[:value]).to eq(100)
-      # For single value, all percentiles should be the same
-      expect(result.map { |p| p[:value] }).to all(eq(100))
+      # For single value, all bins should have the same value
+      expect(result.map { |b| b[:value] }).to all(eq(100))
     end
 
-    it 'calculates percentiles for multiple values' do
+    it 'calculates bins for multiple values' do
       values = [10, 20, 30, 40, 50]
-      result = described_class.calculate_percentiles(values)
+      result = described_class.calculate_bins(values)
 
       expect(result.length).to eq(5)
-      expect(result.map { |p| p[:percentile] }).to eq([0, 25, 50, 75, 100])
+      expect(result.map { |b| b[:bin] }).to eq([0, 1, 2, 3, 4])
+      expect(result.map { |b| b[:percentile] }).to eq([0, 25, 50, 75, 100])
+    end
+
+    it 'accepts custom bin count' do
+      values = [10, 20, 30, 40, 50]
+      result = described_class.calculate_bins(values, 3)
+
+      expect(result.length).to eq(3)
+      expect(result.map { |b| b[:bin] }).to eq([0, 1, 2])
+      expect(result.map { |b| b[:percentile] }).to eq([0, 50, 100])
     end
   end
 
-  describe '.get_percentile' do
-    let(:percentiles) do
+  describe '.get_bin' do
+    let(:bins) do
       [
-        { percentile: 0, value: 10 },
-        { percentile: 25, value: 25 },
-        { percentile: 50, value: 50 },
-        { percentile: 75, value: 75 },
-        { percentile: 100, value: 100 }
+        { bin: 0, percentile: 0, value: 10 },
+        { bin: 1, percentile: 25, value: 25 },
+        { bin: 2, percentile: 50, value: 50 },
+        { bin: 3, percentile: 75, value: 75 },
+        { bin: 4, percentile: 100, value: 100 }
       ]
     end
 
     it 'returns 0 for zero value' do
-      result = described_class.get_percentile(0, percentiles)
+      result = described_class.get_bin(0, bins)
       expect(result).to eq(0)
     end
 
-    it 'returns correct percentile' do
-      expect(described_class.get_percentile(30, percentiles)).to eq(25)
-      expect(described_class.get_percentile(80, percentiles)).to eq(75)
-      expect(described_class.get_percentile(5, percentiles)).to eq(0)
-    end
-  end
-
-  describe '.get_color_for_percentile' do
-    it 'returns correct colors for percentiles' do
-      expect(described_class.get_color_for_percentile(0)).to eq('rgba(124, 58, 237, 0.2)')
-      expect(described_class.get_color_for_percentile(25)).to eq('rgba(124, 58, 237, 0.4)')
-      expect(described_class.get_color_for_percentile(50)).to eq('rgba(124, 58, 237, 0.6)')
-      expect(described_class.get_color_for_percentile(75)).to eq('rgba(124, 58, 237, 0.8)')
-      expect(described_class.get_color_for_percentile(100)).to eq('rgba(124, 58, 237, 1.0)')
-      expect(described_class.get_color_for_percentile(999)).to eq('rgba(124, 58, 237, 0.2)') # default
+    it 'returns correct bin' do
+      expect(described_class.get_bin(30, bins)).to eq(1)
+      expect(described_class.get_bin(80, bins)).to eq(3)
+      expect(described_class.get_bin(5, bins)).to eq(0)
     end
   end
 end

@@ -373,6 +373,10 @@ export default class extends Controller {
     if (from) params.set('from', from)
     if (to) params.set('to', to)
 
+    // Add bin_count parameter (default 5, can be configured via window.STATS_BIN_COUNT)
+    const binCount = window.STATS_BIN_COUNT || 5
+    params.set('bin_count', binCount)
+
     const url = `${this.dataUrl}.json?${params.toString()}`
     return fetch(url, {
       credentials: 'same-origin',
@@ -539,7 +543,7 @@ export default class extends Controller {
           <StatsMap
             key={`map-${from}-${to}`}
             countries={formatted}
-            percentiles={summary.percentiles || []}
+            bins={summary.bins || []}
           />,
           mapEl
         )
@@ -557,7 +561,7 @@ export default class extends Controller {
           <StatsTable
             data={formatted}
             caseSlug={caseSlug}
-            percentiles={summary.percentiles || []}
+            bins={summary.bins || []}
             onRowClick={country => this.handleCountrySelect(country)}
           />,
           tableEl

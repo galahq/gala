@@ -2,13 +2,142 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { getAccessibleTextColor } from '../utility/colors'
 
 // Helper functions that read from window at runtime for easier testing, using:
 // document.dispatchEvent(new CustomEvent('stats-range-changed'))
 const getMapboxData = () => window.MAPBOX_DATA || 'https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json'
 const getMapboxToken = () => window.MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow'
-const getMapboxStyle = () => window.MAPBOX_STYLE || 'mapbox://styles/mapbox/dark-v10'
-const MAPBOX_DEFAULT_COLOR = '#2a2a2a'
+const getMapboxStyle = () => window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v10'
+const getMapboxDefaultColor = () => window.MAPBOX_DEFAULT_COLOR || '#2a2a2a'
+const getMapboxBaseColor = () => window.MAPBOX_BASE_COLOR || '#7c3aed'
+
+// Generate colors for bins based on base color and bin count
+const generateBinColors = (binCount, baseColor) => {
+  if (binCount === 0) return []
+  const rgb = hexToRgb(baseColor || '#7c3aed')
+  const colors = []
+  for (let i = 0; i < binCount; i++) {
+    // Prevent division by zero for single bin
+    const alpha = binCount === 1 ? 1.0 : 0.2 + (i / (binCount - 1)) * 0.8
+    colors.push(`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha.toFixed(2)})`)
+  }
+  return colors
+}
+
+// Convert hex color to RGB
+const hexToRgb = (hex) => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  } : { r: 124, g: 58, b: 237 } // Default purple
+}
+
+// Convert RGB to hex color
+const rgbToHex = (r, g, b) => {
+  const toHex = (n) => {
+    const hex = Math.round(n).toString(16)
+    return hex.length === 1 ? '0' + hex : hex
+  }
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`
+}
+
+window.updateMapboxSettings = (settings) => {
+  if (!settings) {
+    console.info('%cMapbox Settings Helper', 'color: #7c3aed; font-weight: bold; font-size: 14px')
+    console.info('Usage: window.updateMapboxSettings({ style, data, token, defaultColor, baseColor })')
+    console.info('\nAvailable options:')
+    console.table({
+      style: 'Mapbox style URL (e.g., "mapbox://styles/mapbox/light-v10")',
+      data: 'GeoJSON data URL for country boundaries',
+      token: 'Mapbox access token',
+      defaultColor: 'Hex color for countries with no data',
+      baseColor: 'Base hex color for visitor distribution gradient (e.g., "#7c3aed")',
+    })
+    console.info('\nExamples:')
+    console.info('  window.updateMapboxSettings({ style: "mapbox://styles/mapbox/light-v10" })')
+    console.info('  window.updateMapboxSettings({ data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson" })')
+    console.info('  window.updateMapboxSettings({ baseColor: "#ef4444" })')
+    return
+  }
+
+  const updates = []
+  if (settings.style) {
+    window.MAPBOX_STYLE_STATS = settings.style
+    updates.push(`style -> ${settings.style}`)
+  }
+  if (settings.data) {
+    window.MAPBOX_DATA = settings.data
+    updates.push(`data -> ${settings.data}`)
+  }
+  if (settings.token) {
+    window.MAPBOX_ACCESS_TOKEN = settings.token
+    updates.push(`token -> ${settings.token.substring(0, 20)}...`)
+  }
+  if (settings.defaultColor) {
+    window.MAPBOX_DEFAULT_COLOR = settings.defaultColor
+    updates.push(`defaultColor -> ${settings.defaultColor}`)
+  }
+  if (settings.baseColor) {
+    window.MAPBOX_BASE_COLOR = settings.baseColor
+    updates.push(`baseColor -> ${settings.baseColor}`)
+  }
+
+  if (updates.length === 0) {
+    console.warn('No valid settings provided. Use window.updateMapboxSettings() to see options.')
+    return
+  }
+
+  console.log('%cMapbox Settings Updated', 'color: #7c3aed; font-weight: bold')
+  updates.forEach(update => console.log(`  - ${update}`))
+  console.log('%cTriggering map refresh...', 'color: #10b981')
+
+  document.dispatchEvent(new CustomEvent('stats-range-changed'))
+}
+
+// Helper to update stats settings
+window.updateStatsSettings = (settings) => {
+  if (!settings) {
+    console.info('%cStats Settings Helper', 'color: #7c3aed; font-weight: bold; font-size: 14px')
+    console.info('Usage: window.updateStatsSettings({ binCount })')
+    console.info('\nAvailable options:')
+    console.table({
+      binCount: 'Number of color bins/buckets for visitor distribution (2-10, default: 5)',
+    })
+    console.info('\nExample:')
+    console.info('  window.updateStatsSettings({ binCount: 7 })')
+    return
+  }
+
+  const updates = []
+  if (settings.binCount !== undefined) {
+    const clamped = Math.max(2, Math.min(10, settings.binCount))
+    window.STATS_BIN_COUNT = clamped
+    updates.push(`binCount -> ${clamped}`)
+  }
+
+  if (updates.length === 0) {
+    console.warn('No valid settings provided. Use window.updateStatsSettings() to see options.')
+    return
+  }
+
+  console.log('%cStats Settings Updated', 'color: #7c3aed; font-weight: bold')
+  updates.forEach(update => console.log(`  - ${update}`))
+  console.log('%cTriggering data refresh...', 'color: #10b981')
+
+  document.dispatchEvent(new CustomEvent('stats-range-changed'))
+}
+
+// Log initialization info
+console.log('StatsMap initializing with:', {
+  token: getMapboxToken() ? `${getMapboxToken().substring(0, 20)}...` : 'none',
+  style: getMapboxStyle(),
+  data: getMapboxData(),
+  baseColor: getMapboxBaseColor(),
+  binCount: window.STATS_BIN_COUNT || 5,
+})
 
 type CountryData = {
   iso2: string,
@@ -17,21 +146,21 @@ type CountryData = {
   unique_visits: number,
   unique_users: number,
   events_count: number,
-  percentile: number,
+  bin: number,
 }
 
-type Percentile = {
+type Bin = {
+  bin: number,
   percentile: number,
   value: number,
-  color: string,
 }
 
 type Props = {
   countries: CountryData[],
-  percentiles: Percentile[],
+  bins: Bin[],
 }
 
-export default function StatsMap ({ countries, percentiles }: Props) {
+export default function StatsMap ({ countries, bins }: Props) {
   const [hoveredCountry, setHoveredCountry] = useState(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [tooltipPosition, setTooltipPosition] = useState({
@@ -48,8 +177,44 @@ export default function StatsMap ({ countries, percentiles }: Props) {
   const [mapboxData] = useState(getMapboxData())
   const [mapboxToken] = useState(getMapboxToken())
   const [mapboxStyle] = useState(getMapboxStyle())
+  const [baseColor] = useState(getMapboxBaseColor())
   const mapRef = useRef(null)
   const tooltipRef = useRef(null)
+
+  // Add timeout fallback to detect if map is stuck loading
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!mapLoaded && !mapError) {
+        console.error('Map loading timeout - map failed to load within 10 seconds')
+        console.log('Debug info:', {
+          token: mapboxToken ? `${mapboxToken.substring(0, 20)}...` : 'none',
+          style: mapboxStyle,
+          data: mapboxData,
+        })
+        setMapError(true)
+      }
+    }, 10000)
+
+    return () => clearTimeout(timeout)
+  }, [mapLoaded, mapError, mapboxToken, mapboxStyle, mapboxData])
+
+  // Generate colors based on bin count and base color
+  const binColors = generateBinColors(bins.length, baseColor)
+
+  // Calculate text colors for each bin based on background brightness
+  const rgb = hexToRgb(baseColor || '#7c3aed')
+  const binTextColors = bins.length > 0 ? binColors.map((_, i) => {
+    // Prevent division by zero for single bin
+    const alpha = bins.length === 1 ? 1.0 : 0.2 + (i / (bins.length - 1)) * 0.8
+    // For accessibility calculation, we simulate the color as if it were on a dark background
+    // Since our legend background is dark (#2a2a2a), we blend the color
+    const bgRgb = { r: 42, g: 42, b: 42 }
+    const blendedR = rgb.r * alpha + bgRgb.r * (1 - alpha)
+    const blendedG = rgb.g * alpha + bgRgb.g * (1 - alpha)
+    const blendedB = rgb.b * alpha + bgRgb.b * (1 - alpha)
+    const blendedHex = rgbToHex(blendedR, blendedG, blendedB)
+    return getAccessibleTextColor(blendedHex)
+  }) : []
 
   useEffect(() => {
     if (mapRef.current && mapLoaded) {
@@ -127,20 +292,22 @@ export default function StatsMap ({ countries, percentiles }: Props) {
   // Create a map of country names to colors
   const countryColors = {}
   countries.forEach(country => {
-    const percentile = percentiles.find(
-      p => Number(p.percentile) === Number(country.percentile)
-    )
-    if (percentile && country.name) {
-      countryColors[country.name] = percentile.color
+    if (country.name && typeof country.bin === 'number') {
+      countryColors[country.name] = binColors[country.bin] || binColors[0]
     }
   })
   // Create mapbox expression for country fills
   const fillColorExpression = ['match', ['get', 'name']]
-  Object.entries(countryColors).forEach(([name, color]) => {
-    fillColorExpression.push(name, color)
-  })
-  // Default color for countries with no data
-  fillColorExpression.push(MAPBOX_DEFAULT_COLOR)
+  const hasCountryData = Object.keys(countryColors).length > 0
+
+  if (hasCountryData) {
+    Object.entries(countryColors).forEach(([name, color]) => {
+      fillColorExpression.push(name, color)
+    })
+  }
+  // Default color for countries with no data (call the function to get the color string)
+  fillColorExpression.push(getMapboxDefaultColor())
+
   const fillLayer = {
     id: 'country-fills',
     type: 'fill',
@@ -305,8 +472,8 @@ export default function StatsMap ({ countries, percentiles }: Props) {
         )}
       </ReactMapGL>
 
-      {/* Legend - Percentile Map */}
-      {percentiles && percentiles.length > 0 && (
+      {/* Legend - Visitor Distribution */}
+      {bins && bins.length > 0 && (
         <div
           style={{
             position: 'absolute',
@@ -341,29 +508,29 @@ export default function StatsMap ({ countries, percentiles }: Props) {
               overflow: 'hidden',
             }}
           >
-            {percentiles.map((p, i) => (
+            {bins.map((b, i) => (
               <div key={i} style={{ position: 'relative', flex: 1 }}>
                 <div
                   style={{
                     height: '24px',
-                    background: p.color,
+                    background: binColors[i],
                     border: 'none',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
-                  title={`${p.percentile}th percentile: ${p.value} visitors`}
+                  title={`${b.percentile}th percentile: ${b.value} visitors`}
                 >
                   <span
                     style={{
                       fontSize: '10px',
                       fontWeight: 'bold',
-                      color: '#ffffff',
+                      color: binTextColors[i],
                       lineHeight: '1',
                       fontFamily: 'monospace',
                     }}
                   >
-                    {p.percentile}%
+                    {b.percentile}%
                   </span>
                 </div>
               </div>
@@ -421,10 +588,7 @@ export default function StatsMap ({ countries, percentiles }: Props) {
                 height: '12px',
                 borderRadius: '50%',
                 backgroundColor:
-                  percentiles.find(
-                    p =>
-                      Number(p.percentile) === Number(hoveredCountry.percentile)
-                  )?.color || '#f9fafb',
+                  binColors[hoveredCountry.bin] || binColors[0] || '#f9fafb',
                 border: '1px solid rgba(255,255,255,0.3)',
                 flexShrink: 0,
               }}

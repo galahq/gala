@@ -148,72 +148,56 @@ class CountryStatsService
     merged.values
   end
 
-  def self.calculate_percentiles(values)
+  def self.calculate_bins(values, bin_count = 5)
     return [] if values.empty?
 
     sorted = values.sort
     min_val = sorted.first
     max_val = sorted.last
 
-    percentiles = [0, 25, 50, 75, 100].map do |p|
-      case p
-      when 0 then { percentile: 0, value: min_val, color: get_color_for_percentile(0) }
-      when 100 then { percentile: 100, value: max_val, color: get_color_for_percentile(100) }
+    bins = (0...bin_count).map do |bin_idx|
+      percentile = (bin_idx * 100.0 / (bin_count - 1)).round
+      case bin_idx
+      when 0
+        { bin: 0, percentile: 0, value: min_val }
+      when bin_count - 1
+        { bin: bin_count - 1, percentile: 100, value: max_val }
       else
-        idx_low = ((p - 12.5) / 100.0 * (sorted.length - 1)).round
-        idx_high = ((p + 12.5) / 100.0 * (sorted.length - 1)).round
+        idx_low = ((percentile - (50.0 / (bin_count - 1))) / 100.0 * (sorted.length - 1)).round
+        idx_high = ((percentile + (50.0 / (bin_count - 1))) / 100.0 * (sorted.length - 1)).round
         val = ((sorted[idx_low] || min_val) + (sorted[idx_high] || max_val)) / 2.0
-        { percentile: p, value: val.round, color: get_color_for_percentile(p) }
+        { bin: bin_idx, percentile: percentile, value: val.round }
       end
     end
 
-    (1...percentiles.length).each do |i|
-      percentiles[i][:value] = percentiles[i - 1][:value] + 1 if percentiles[i][:value] < percentiles[i - 1][:value]
+    (1...bins.length).each do |i|
+      bins[i][:value] = bins[i - 1][:value] + 1 if bins[i][:value] < bins[i - 1][:value]
     end
 
-    percentiles
+    bins
   end
 
-  def self.get_percentile(value, percentiles)
+  def self.get_bin(value, bins)
     return 0 if value.zero?
 
-    percentiles.reverse.each { |p| return p[:percentile] if value >= p[:value] }
+    bins.reverse.each { |b| return b[:bin] if value >= b[:value] }
     0
   end
 
-  def self.get_color_for_percentile(percentile)
-    # Use shades of purple (base: #7c3aed / rgb(124, 58, 237))
-    # with alpha channel increasing from 0.2 to 1.0
-    colors = [
-      'rgba(124, 58, 237, 0.2)',
-      'rgba(124, 58, 237, 0.4)',
-      'rgba(124, 58, 237, 0.6)',
-      'rgba(124, 58, 237, 0.8)',
-      'rgba(124, 58, 237, 1.0)'
-    ]
-    case percentile
-    when 0 then colors[0]
-    when 25 then colors[1]
-    when 50 then colors[2]
-    when 75 then colors[3]
-    when 100 then colors[4]
-    else colors[0]
-    end
-  end
-
-  def self.format_country_stats(raw_stats)
+  def self.format_country_stats(raw_stats, bin_count = 5)
     merged_stats = merge_stats(raw_stats)
     all_visits = merged_stats.map { |r| r[:unique_visits] || 0 }.sort
-    percentiles = calculate_percentiles(all_visits)
+    bins = calculate_bins(all_visits, bin_count)
 
     formatted = merged_stats.map do |row|
       visits = row[:unique_visits] || 0
-      row.merge(percentile: get_percentile(visits, percentiles))
+      row.merge(bin: get_bin(visits, bins))
     end
 
     {
       stats: formatted.sort_by { |s| -s[:unique_visits] },
-      percentiles: percentiles,
+      bins: bins,
+      bin_count: bin_count,
       total_visits: all_visits.sum,
       country_count: formatted.size,
       total_deployments: formatted.sum { |s| s[:deployments_count] },

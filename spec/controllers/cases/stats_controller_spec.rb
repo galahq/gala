@@ -31,7 +31,7 @@ RSpec.describe Cases::StatsController do
       let(:mock_stats_data) do
         {
           by_event: [],
-          formatted: { stats: [], percentiles: [], total_visits: 0, country_count: 0, total_deployments: 0,
+          formatted: { stats: [], bins: [], bin_count: 5, total_visits: 0, country_count: 0, total_deployments: 0,
                        total_podcast_listens: 0 },
           summary: {
             total_visits: 0,
@@ -40,7 +40,8 @@ RSpec.describe Cases::StatsController do
             total_podcast_listens: 0,
             case_published_at: nil,
             case_locales: 'en',
-            percentiles: []
+            bins: [],
+            bin_count: 5
           }
         }
       end
@@ -153,7 +154,8 @@ RSpec.describe Cases::StatsController do
     let(:formatted_data) do
       {
         stats: [{ country: 'US', unique_visits: 100 }],
-        percentiles: [],
+        bins: [],
+        bin_count: 5,
         total_visits: 100,
         country_count: 1,
         total_deployments: 5,
@@ -168,19 +170,40 @@ RSpec.describe Cases::StatsController do
     end
 
     it 'calls sql_query and formats the data' do
+      controller.params = { case_slug: kase.slug }
       result = controller.send(:stats_data)
 
       expect(controller).to have_received(:sql_query)
-      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data)
+      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 5)
 
       expect(result[:by_event]).to eq(raw_data)
       expect(result[:formatted]).to eq(formatted_data[:stats])
       expect(result[:summary]).to have_key(:case_published_at)
       expect(result[:summary]).to have_key(:case_locales)
-      expect(result[:summary]).to have_key(:percentiles)
+      expect(result[:summary]).to have_key(:bins)
+      expect(result[:summary]).to have_key(:bin_count)
+    end
+
+    it 'accepts custom bin_count parameter' do
+      controller.params = { case_slug: kase.slug, bin_count: 3 }
+      controller.send(:stats_data)
+
+      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 3)
+    end
+
+    it 'clamps bin_count between 2 and 10' do
+      controller.params = { case_slug: kase.slug, bin_count: 1 }
+      controller.send(:stats_data)
+      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 2)
+
+      allow(CountryStatsService).to receive(:format_country_stats).and_return(formatted_data)
+      controller.params = { case_slug: kase.slug, bin_count: 15 }
+      controller.send(:stats_data)
+      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 10)
     end
 
     it 'includes case locales in summary' do
+      controller.params = { case_slug: kase.slug }
       allow(kase).to receive_message_chain(:translation_set, :pluck).and_return(%w[en fr])
 
       result = controller.send(:stats_data)
@@ -196,14 +219,15 @@ RSpec.describe Cases::StatsController do
         stats: [{
           name: 'United States',
           iso3: 'USA',
-          percentile: 100,
+          bin: 4,
           unique_visits: 100,
           unique_users: 50,
           events_count: 200,
           first_event: Time.zone.parse('2023-01-01'),
           last_event: Time.zone.parse('2023-01-31')
         }],
-        percentiles: [{ percentile: 100, value: 100 }]
+        bins: [{ bin: 4, percentile: 100, value: 100 }],
+        bin_count: 5
       }
     end
 

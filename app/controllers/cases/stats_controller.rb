@@ -103,7 +103,9 @@ module Cases
 
     def stats_data
       raw_data = sql_query
-      formatted_data = CountryStatsService.format_country_stats(raw_data)
+      bin_count = params[:bin_count].present? ? params[:bin_count].to_i : 5
+      bin_count = [[bin_count, 2].max, 10].min # Clamp between 2 and 10
+      formatted_data = CountryStatsService.format_country_stats(raw_data, bin_count)
 
       # Get translations separately
       case_locales = @case.translation_set.pluck(:locale).uniq.sort do |a, b|
@@ -127,7 +129,8 @@ module Cases
           total_podcast_listens: formatted_data[:total_podcast_listens],
           case_published_at: @case.published_at&.strftime('%b %d, %Y'),
           case_locales: case_locales,
-          percentiles: formatted_data[:percentiles]
+          bins: formatted_data[:bins],
+          bin_count: formatted_data[:bin_count]
         }
       }
     end
