@@ -4,19 +4,7 @@ module Cases
   # The stats for a {Case} include its slug, what library it is in, etc.
   class StatsController < ApplicationController
     before_action :authenticate_reader!
-
     layout 'admin'
-
-    AHOY_EVENT_NAMES = %w[
-      visit_page visit_element read_quiz read_overview read_card
-      visit_podcast visit_edgenote
-    ].freeze
-
-    DERIVED_EVENT_NAMES = %w[
-      write_comment write_comment_thread write_quiz_submission
-    ].freeze
-
-    ALL_EVENT_NAMES = (AHOY_EVENT_NAMES + DERIVED_EVENT_NAMES).freeze
 
     # @param [GET] /cases/case-slug/stats
     def show
@@ -72,16 +60,7 @@ module Cases
           COUNT(DISTINCT e.user_id)                                       AS unique_users,
           COUNT(*)                                                        AS events_count,
           MAX(dc.deployments_count)                                       AS deployments_count,
-          COUNT(distinct CASE WHEN e.name = 'visit_podcast' THEN 1 END)            AS visit_podcast_count,
-          COUNT(distinct CASE WHEN e.name = 'visit_edgenote' THEN 1 END)           AS visit_edgenote_count,
-          COUNT(distinct CASE WHEN e.name = 'visit_page' THEN 1 END)               AS visit_page_count,
-          COUNT(distinct CASE WHEN e.name = 'visit_element' THEN 1 END)            AS visit_element_count,
-          COUNT(distinct CASE WHEN e.name = 'read_quiz' THEN 1 END)                AS read_quiz_count,
-          COUNT(distinct CASE WHEN e.name = 'read_overview' THEN 1 END)            AS read_overview_count,
-          COUNT(distinct CASE WHEN e.name = 'read_card' THEN 1 END)                AS read_card_count,
-          COUNT(distinct CASE WHEN e.name = 'write_comment' THEN 1 END)            AS write_comment_count,
-          COUNT(distinct CASE WHEN e.name = 'write_comment_thread' THEN 1 END)     AS write_comment_thread_count,
-          COUNT(distinct CASE WHEN e.name = 'write_quiz_submission' THEN 1 END)    AS write_quiz_submission_count
+          COUNT(DISTINCT CASE WHEN e.name = 'visit_podcast' THEN e.id END) AS visit_podcast_count
         FROM ahoy_events e
         INNER JOIN cases c ON c.slug = e.properties ->> 'case_slug'
         INNER JOIN params p ON TRUE
@@ -99,7 +78,7 @@ module Cases
             FROM readers_roles rr
             JOIN roles ro ON ro.id = rr.role_id
             WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
-          )  -- interesting readers see {Reader.interesting}
+          )
         GROUP BY v.country, c.id
         ORDER BY unique_visits DESC NULLS LAST;
       SQL
@@ -112,8 +91,7 @@ module Cases
 
     def stats_data
       raw_data = sql_query
-      bin_count = 5 # Hard-coded to 5 bins
-      formatted_data = CountryStatsService.format_country_stats(raw_data, bin_count)
+      formatted_data = CountryStatsService.format_country_stats(raw_data)
 
       # Get translations separately
       case_locales = @case.translation_set.pluck(:locale).uniq.sort do |a, b|

@@ -178,15 +178,6 @@ class CountryStatsService
         events_count: 0,
         deployments_count: 0,
         visit_podcast_count: 0,
-        visit_edgenote_count: 0,
-        visit_page_count: 0,
-        visit_element_count: 0,
-        read_quiz_count: 0,
-        read_overview_count: 0,
-        read_card_count: 0,
-        write_comment_count: 0,
-        write_comment_thread_count: 0,
-        write_quiz_submission_count: 0,
         first_event: nil,
         last_event: nil
       }
@@ -196,15 +187,6 @@ class CountryStatsService
       h[key][:events_count] += row['events_count'] || 0
       h[key][:deployments_count] += row['deployments_count'] || 0
       h[key][:visit_podcast_count] += row['visit_podcast_count'] || 0
-      h[key][:visit_edgenote_count] += row['visit_edgenote_count'] || 0
-      h[key][:visit_page_count] += row['visit_page_count'] || 0
-      h[key][:visit_element_count] += row['visit_element_count'] || 0
-      h[key][:read_quiz_count] += row['read_quiz_count'] || 0
-      h[key][:read_overview_count] += row['read_overview_count'] || 0
-      h[key][:read_card_count] += row['read_card_count'] || 0
-      h[key][:write_comment_count] += row['write_comment_count'] || 0
-      h[key][:write_comment_thread_count] += row['write_comment_thread_count'] || 0
-      h[key][:write_quiz_submission_count] += row['write_quiz_submission_count'] || 0
       h[key][:first_event] ||= row['first_event']
       h[key][:last_event] = [h[key][:last_event], row['last_event']].compact.max
     end
@@ -258,9 +240,9 @@ class CountryStatsService
     bins.last[:bin] # If above max, put in last bin
   end
 
-  def self.format_country_stats(raw_stats, bin_count = 5)
+  def self.format_country_stats(raw_stats)
     merged_stats = merge_stats(raw_stats)
-    bin_count = 5 # Hard-coded to 5 bins
+    bin_count = 5 # Hard-coded to 5 bins for performance and simplicity
     all_visits = merged_stats.map { |r| r[:unique_visits] || 0 }.sort
     bins = calculate_bins(all_visits, bin_count)
 

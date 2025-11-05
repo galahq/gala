@@ -174,7 +174,7 @@ RSpec.describe Cases::StatsController do
       result = controller.send(:stats_data)
 
       expect(controller).to have_received(:sql_query)
-      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 5)
+      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data)
 
       expect(result[:by_event]).to eq(raw_data)
       expect(result[:formatted]).to eq(formatted_data[:stats])
@@ -182,24 +182,6 @@ RSpec.describe Cases::StatsController do
       expect(result[:summary]).to have_key(:case_locales)
       expect(result[:summary]).to have_key(:bins)
       expect(result[:summary]).to have_key(:bin_count)
-    end
-
-    it 'accepts custom bin_count parameter' do
-      controller.params = { case_slug: kase.slug, bin_count: 3 }
-      controller.send(:stats_data)
-
-      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 3)
-    end
-
-    it 'clamps bin_count between 2 and 10' do
-      controller.params = { case_slug: kase.slug, bin_count: 1 }
-      controller.send(:stats_data)
-      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 2)
-
-      allow(CountryStatsService).to receive(:format_country_stats).and_return(formatted_data)
-      controller.params = { case_slug: kase.slug, bin_count: 15 }
-      controller.send(:stats_data)
-      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data, 10)
     end
 
     it 'includes case locales in summary' do
