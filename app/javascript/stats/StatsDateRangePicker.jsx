@@ -53,6 +53,15 @@ function StatsDateRangePicker ({
 
   const [range, setRange] = useState(initialRange || translatedShortcuts[0].dateRange)
 
+  // Calculate the initial month to display the 'from' date
+  const getInitialMonth = (dateRange) => {
+    if (!dateRange || !dateRange[0]) return undefined
+    const fromDate = dateRange[0]
+    // Show the 'from' month first, second calendar will show the next month
+    const initialMonth = new Date(fromDate.getFullYear(), fromDate.getMonth(), 1)
+    return initialMonth
+  }
+
   // Determine which shortcut matches the current range
   const getSelectedShortcutIndex = (currentRange, shortcutsList) => {
     if (!currentRange || !shortcutsList || !Array.isArray(shortcutsList)) {
@@ -136,12 +145,12 @@ function StatsDateRangePicker ({
       minDate={minDate}
       maxDate={maxDate}
       allowSingleDayRange={true}
-      contiguousCalendarMonths={true}
+      contiguousCalendarMonths={false}
       shortcuts={translatedShortcuts}
       selectedShortcutIndex={
         selectedShortcutIndex >= 0 ? selectedShortcutIndex : undefined
       }
-      dayPickerProps={{ numberOfMonths: 2 }}
+      initialMonth={getInitialMonth(range)}
       onChange={handleChange}
     />
   )

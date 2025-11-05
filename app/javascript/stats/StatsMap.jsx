@@ -39,7 +39,7 @@ class MapErrorBoundary extends React.Component {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: '#f9fafb',
+            background: Colors.GRAY1,
             flexDirection: 'column',
             padding: '20px',
             textAlign: 'center',
@@ -47,7 +47,7 @@ class MapErrorBoundary extends React.Component {
         >
           <p
             style={{
-              color: '#ef4444',
+              color: Colors.DANGER,
               marginBottom: '10px',
               fontWeight: 'bold',
             }}
@@ -104,14 +104,14 @@ const getMapboxToken = () =>
   'pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow'
 const getMapboxStyle = () =>
   window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v10'
-const getMapboxDefaultColor = () => window.MAPBOX_DEFAULT_COLOR || Colors.BLACK
+const getMapboxDefaultColor = () => window.MAPBOX_DEFAULT_COLOR || Colors.DARK_GRAY3
 
 // Generate colors for bins using BlueprintJS indigo shades
 const getBinColors = binCount => {
   if (binCount === 0) return []
   if (binCount === 1) return [Colors.INDIGO5]
 
-  // BlueprintJS has INDIGO1 (lightest) through INDIGO5 (darkest)
+  // BlueprintJS has INDIGO1 (darkest) through INDIGO5 (lightest)
   // For more than 5 bins, we'll cycle through available shades
   const indigoShades = [
     Colors.INDIGO1,
@@ -129,78 +129,6 @@ const getBinColors = binCount => {
   }
   return colors
 }
-
-window.updateMapboxSettings = settings => {
-  if (!settings) {
-    console.info(
-      '%cMapbox Settings Helper',
-      'color: #7c3aed; font-weight: bold; font-size: 14px'
-    )
-    console.info(
-      'Usage: window.updateMapboxSettings({ style, data, token, defaultColor })'
-    )
-    console.info('\nAvailable options:')
-    console.table({
-      style: 'Mapbox style URL (e.g., "mapbox://styles/mapbox/light-v10")',
-      data: 'GeoJSON data URL for country boundaries',
-      token: 'Mapbox access token',
-      defaultColor: 'Hex color for countries with no data',
-    })
-    console.info('\nExamples:')
-    console.info(
-      '  window.updateMapboxSettings({ style: "mapbox://styles/mapbox/light-v10" })'
-    )
-    console.info(
-      '  window.updateMapboxSettings({ data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson" })'
-    )
-    return
-  }
-
-  const updates = []
-  if (settings.style) {
-    window.MAPBOX_STYLE_STATS = settings.style
-    updates.push(`style -> ${settings.style}`)
-  }
-  if (settings.data) {
-    window.MAPBOX_DATA = settings.data
-    updates.push(`data -> ${settings.data}`)
-  }
-  if (settings.token) {
-    window.MAPBOX_ACCESS_TOKEN = settings.token
-    updates.push(`token -> ${settings.token.substring(0, 20)}...`)
-  }
-  if (settings.defaultColor) {
-    window.MAPBOX_DEFAULT_COLOR = settings.defaultColor
-    updates.push(`defaultColor -> ${settings.defaultColor}`)
-  }
-
-  if (updates.length === 0) {
-    console.warn(
-      'No valid settings provided. Use window.updateMapboxSettings() to see options.'
-    )
-    return
-  }
-
-  console.log('%cMapbox Settings Updated', 'color: #7c3aed; font-weight: bold')
-  updates.forEach(update => console.log(`  - ${update}`))
-  console.log('%cTriggering map refresh...', 'color: #10b981')
-
-  document.dispatchEvent(new CustomEvent('stats-range-changed'))
-}
-
-// Helper to show stats settings (bin_count is now hard-coded to 5)
-window.updateStatsSettings = settings => {
-  console.info(
-    '%cStats Settings',
-    'color: #7c3aed; font-weight: bold; font-size: 14px'
-  )
-  console.info(
-    'Bin count is now hard-coded to 5 for performance and simplicity.'
-  )
-  console.info('No settings can be changed at runtime.')
-}
-
-// Initialization happens with self-hosted GeoJSON and Mapbox config
 
 type CountryData = {
   iso2: string,
@@ -253,26 +181,22 @@ function StatsMap ({ countries, bins, intl }: Props) {
   const mapRef = useRef(null)
   const tooltipRef = useRef(null)
 
-  // Fetch geojson data once with caching
+  // Fetch geojson data once with simple caching
   useEffect(() => {
-    const cacheKey = `mapbox-geojson-${mapboxDataUrl}`
+    const cacheKey = 'stats-map-geojson'
     const cachedData = localStorage.getItem(cacheKey)
-    const cacheExpiry = localStorage.getItem(`${cacheKey}-expiry`)
-    const isExpired = cacheExpiry && Date.now() > parseInt(cacheExpiry)
 
-    // Use cached data if available and not expired (24 hours)
-    if (cachedData && !isExpired) {
+    // Use cached data if available
+    if (cachedData) {
       try {
-        const parsedData = JSON.parse(cachedData)
-        setMapboxData(parsedData)
+        setMapboxData(JSON.parse(cachedData))
         return
       } catch (error) {
-        console.warn('Failed to parse cached GeoJSON data:', error)
         localStorage.removeItem(cacheKey)
-        localStorage.removeItem(`${cacheKey}-expiry`)
       }
     }
 
+    // Fetch and cache the data
     fetch(mapboxDataUrl)
       .then(response => {
         if (!response.ok) {
@@ -282,15 +206,10 @@ function StatsMap ({ countries, bins, intl }: Props) {
       })
       .then(data => {
         setMapboxData(data)
-        // Cache the data for 24 hours
         try {
           localStorage.setItem(cacheKey, JSON.stringify(data))
-          localStorage.setItem(
-            `${cacheKey}-expiry`,
-            (Date.now() + 24 * 60 * 60 * 1000).toString()
-          )
         } catch (error) {
-          console.warn('Failed to cache GeoJSON data:', error)
+          // Silently fail if localStorage is full or unavailable
         }
       })
       .catch(error => {
@@ -454,22 +373,22 @@ function StatsMap ({ countries, bins, intl }: Props) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#f9fafb',
+          background: Colors.GRAY1,
           flexDirection: 'column',
           padding: '20px',
           textAlign: 'center',
         }}
       >
         <p
-          style={{ color: '#ef4444', marginBottom: '10px', fontWeight: 'bold' }}
+          style={{ color: Colors.DANGER, marginBottom: '10px', fontWeight: 'bold' }}
         >
           Too Much Data
         </p>
-        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '15px' }}>
+        <p style={{ color: Colors.GRAY5, fontSize: '14px', marginBottom: '15px' }}>
           The selected date range contains too much data to display efficiently.
           Please choose a smaller date range.
         </p>
-        <p style={{ color: '#9ca3af', fontSize: '12px' }}>
+        <p style={{ color: Colors.GRAY5, fontSize: '12px' }}>
           Countries: {countries.length}
         </p>
       </div>
@@ -511,7 +430,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
       type: 'fill',
       source: 'countries',
       paint: {
-        'fill-color': '#cccccc', // Default color, will be updated by useEffect
+        'fill-color': Colors.GRAY1, // Default color, will be updated by useEffect
         'fill-opacity': [
           'case',
           ['boolean', ['get', 'hover'], false],
@@ -529,7 +448,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
       type: 'line',
       source: 'countries',
       paint: {
-        'line-color': Colors.WHITE,
+        'line-color': Colors.BLACK,
         'line-width': 0.2,
       },
     }),
@@ -553,10 +472,10 @@ function StatsMap ({ countries, bins, intl }: Props) {
     setMapError(false)
     setErrorMessage('')
     setMapLoaded(false)
-    // Clear cache and force re-fetch of data
-    const cacheKey = `mapbox-geojson-${mapboxDataUrl}`
+
+    // Clear cache and force re-fetch
+    const cacheKey = 'stats-map-geojson'
     localStorage.removeItem(cacheKey)
-    localStorage.removeItem(`${cacheKey}-expiry`)
 
     fetch(mapboxDataUrl)
       .then(response => {
@@ -567,15 +486,10 @@ function StatsMap ({ countries, bins, intl }: Props) {
       })
       .then(data => {
         setMapboxData(data)
-        // Re-cache the data
         try {
           localStorage.setItem(cacheKey, JSON.stringify(data))
-          localStorage.setItem(
-            `${cacheKey}-expiry`,
-            (Date.now() + 24 * 60 * 60 * 1000).toString()
-          )
         } catch (error) {
-          console.warn('Failed to re-cache GeoJSON data:', error)
+          // Silently fail if localStorage is full or unavailable
         }
       })
       .catch(error => {
@@ -593,25 +507,25 @@ function StatsMap ({ countries, bins, intl }: Props) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#f9fafb',
+          background: Colors.GRAY1,
           flexDirection: 'column',
           padding: '20px',
           textAlign: 'center',
         }}
       >
         <p
-          style={{ color: '#ef4444', marginBottom: '10px', fontWeight: 'bold' }}
+          style={{ color: Colors.DANGER, marginBottom: '10px', fontWeight: 'bold' }}
         >
           Unable to load map
         </p>
-        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '15px' }}>
+        <p style={{ color: Colors.GRAY5, fontSize: '14px', marginBottom: '15px' }}>
           {errorMessage ||
             'Please check your internet connection or disable ad blockers'}
         </p>
         <button
           style={{
             padding: '8px 16px',
-            backgroundColor: '#3b82f6',
+            backgroundColor: Colors.PRIMARY,
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -622,7 +536,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
         >
           Retry Loading Map
         </button>
-        <div style={{ fontSize: '12px', color: '#9ca3af' }}>
+        <div style={{ fontSize: '12px', color: Colors.GRAY5 }}>
           <p>Debug info:</p>
           <p>
             Token: {mapboxToken ? `${mapboxToken.substring(0, 20)}...` : 'none'}
@@ -872,7 +786,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
               justifyContent: 'space-between',
               fontSize: '11px',
               marginTop: '6px',
-              color: '#ffffff',
+              color: Colors.WHITE,
               fontFamily: 'monospace',
             }}
           >

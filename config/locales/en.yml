@@ -305,10 +305,10 @@ en:
         map_legend_title: Visitor Distribution
         map_legend_help_title: How Visitor Distribution Works
         map_legend_help_description: >
-          The map uses 5 color bins to categorize countries by visitor count. Bin boundaries are 
-          calculated at the 25th, 50th, 75th, and 100th percentiles of all visitor counts. 
-          Each country is colored based on where its visitor count falls within these ranges. 
-          Lighter shades represent higher visitor counts, darker shades represent lower counts.
+          Countries are grouped into 1-5 color bins based on visitor counts. The system automatically 
+          adapts: if you have 3 different visitor counts, you'll see 3 bins. For 5+ unique values, 
+          bins are placed at the 25th, 50th, 75th, and 100th percentiles of your data, ensuring 
+          each bin represents a meaningful range. Lighter indigo shades indicate higher visitor counts.
         map_legend_low: low
         map_legend_high: high
         map_tooltip_visitors: visitors
@@ -333,6 +333,7 @@ en:
         # Table section
         table_title: Traffic
         table_export_csv: Export CSV
+        table_rank: "#"
         table_country: Country
         table_unique_visitors: Unique Visitors
         table_unique_users: Unique Users
@@ -345,6 +346,16 @@ en:
         date_range_all_time: All time
         date_range_past_year: Past year
         date_range_past_2_years: Past 2 years
+      # CSV export
+      csv_filename: "case-stats-%{slug}-%{date}.csv"
+      csv:
+        country: Country
+        unique_visitors: Unique Visitors
+        unique_users: Unique Users
+        total_events: Total Events
+        first_visit: First Visit
+        last_visit: Last Visit
+        total: Total
     settings:
       edit:
         change_library: Change library
@@ -525,6 +536,7 @@ en:
       default: "%Y-%m-%d"
       long: "%B %d, %Y"
       short: "%b %d"
+      stats: "%b %d, %Y"
     month_names:
     -
     - January

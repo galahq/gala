@@ -15,7 +15,12 @@ module Cases
       respond_to do |format|
         format.html { render :show }
         format.json { render json: stats_data }
-        format.csv { send_data generate_csv, filename: "case-stats-#{@case.slug}-#{Date.current}.csv" }
+        format.csv do
+          filename = I18n.t('cases.stats.csv_filename',
+                            slug: @case.slug,
+                            date: Date.current.strftime('%Y-%m-%d'))
+          send_data generate_csv, filename: filename
+        end
       end
     end
 
@@ -23,7 +28,6 @@ module Cases
 
     def set_case
       @case = Case.friendly.find(params[:case_slug]).decorate
-      @case.licensor current_reader
       authorize @case
     end
 
@@ -113,7 +117,7 @@ module Cases
           country_count: formatted_data[:country_count],
           total_deployments: @case.deployments.count,
           total_podcast_listens: formatted_data[:total_podcast_listens],
-          case_published_at: @case.published_at&.strftime('%b %d, %Y'),
+          case_published_at: @case.published_at&.strftime(I18n.t('date.formats.stats')),
           case_locales: case_locales,
           bins: formatted_data[:bins],
           bin_count: formatted_data[:bin_count]
@@ -140,8 +144,14 @@ module Cases
       total_events = formatted_stats.sum { |r| r[:events_count] }
 
       CSV.generate(headers: true) do |csv|
-        csv << ['Country', 'Unique Visitors', 'Unique Users',
-                'Total Events', 'First Visit', 'Last Visit']
+        csv << [
+          I18n.t('cases.stats.csv.country'),
+          I18n.t('cases.stats.csv.unique_visitors'),
+          I18n.t('cases.stats.csv.unique_users'),
+          I18n.t('cases.stats.csv.total_events'),
+          I18n.t('cases.stats.csv.first_visit'),
+          I18n.t('cases.stats.csv.last_visit')
+        ]
 
         formatted_stats.each do |row|
           csv << [
@@ -156,7 +166,7 @@ module Cases
 
         # Add totals row
         csv << [
-          'Total',
+          I18n.t('cases.stats.csv.total'),
           total_visits,
           total_users,
           total_events,

@@ -32,7 +32,6 @@ export default class extends Controller {
     this.isInitializing = true
     this.isFetching = false
     this.lastRangeChange = 0
-    this.currentRequestId = 0
     const dataUrl = this.element.dataset.url
     this.publishedAt = this.element.dataset.published_at
 
@@ -99,6 +98,9 @@ export default class extends Controller {
       // Call apply directly without timeout to prevent potential race conditions
       this.apply()
     }
+
+    // Show loading state immediately before initial data fetch
+    this.renderLoading()
 
     // Load initial dataset before setting up event listener
     this.fetchAndRenderBoth()
@@ -666,6 +668,5 @@ export default class extends Controller {
     this.isInitializing = false
     this.isFetching = false
     this.lastRangeChange = 0
-    this.currentRequestId = 0
   }
 }

@@ -196,40 +196,42 @@ class CountryStatsService
 
   def self.calculate_bins(values, bin_count = 5)
     return [] if values.empty?
+    return [{ bin: 0, min: 0, max: values.first, label: "#{values.first}" }] if bin_count == 1
 
-    sorted = values.sort
+    sorted = values.sort.uniq
     min_val = sorted.first
     max_val = sorted.last
 
-    # Calculate bin boundaries based on percentiles
-    bin_boundaries = (0...bin_count).map do |bin_idx|
-      percentile = bin_count > 1 ? (bin_idx * 100.0 / (bin_count - 1)).round : 0
-      case bin_idx
-      when 0
-        min_val
-      when bin_count - 1
-        max_val
-      else
-        idx = ((percentile / 100.0) * (sorted.length - 1)).round
-        sorted[idx] || min_val
+    # For small datasets, use the actual values as boundaries
+    if bin_count <= sorted.length
+      # Calculate bin boundaries based on percentiles
+      bin_boundaries = (0...bin_count).map do |bin_idx|
+        percentile = (bin_idx * 100.0 / (bin_count - 1)).round
+        case bin_idx
+        when 0
+          min_val
+        when bin_count - 1
+          max_val
+        else
+          idx = ((percentile / 100.0) * (sorted.length - 1)).round
+          sorted[idx]
+        end
+      end.uniq
+
+      # Create bins with min/max ranges
+      bin_boundaries.each_with_index.map do |boundary, bin_idx|
+        min_range = bin_idx.zero? ? 0 : bin_boundaries[bin_idx - 1]
+        max_range = boundary
+        {
+          bin: bin_idx,
+          min: min_range,
+          max: max_range,
+          label: bin_idx == bin_boundaries.length - 1 ? "#{min_range}+" : "#{min_range}-#{max_range}"
+        }
       end
-    end
-
-    # Ensure boundaries are increasing
-    (1...bin_boundaries.length).each do |i|
-      bin_boundaries[i] = bin_boundaries[i - 1] + 1 if bin_boundaries[i] < bin_boundaries[i - 1]
-    end
-
-    # Create bins with min/max ranges
-    (0...bin_count).map do |bin_idx|
-      min_range = bin_idx.zero? ? 0 : bin_boundaries[bin_idx - 1]
-      max_range = bin_boundaries[bin_idx]
-      {
-        bin: bin_idx,
-        min: min_range,
-        max: max_range,
-        label: bin_idx == bin_count - 1 ? "#{min_range}+" : "#{min_range}-#{max_range}"
-      }
+    else
+      # Shouldn't happen with our new logic, but safety fallback
+      [{ bin: 0, min: 0, max: max_val, label: "0-#{max_val}" }]
     end
   end
 
@@ -242,9 +244,17 @@ class CountryStatsService
 
   def self.format_country_stats(raw_stats)
     merged_stats = merge_stats(raw_stats)
-    bin_count = 5 # Hard-coded to 5 bins for performance and simplicity
-    all_visits = merged_stats.map { |r| r[:unique_visits] || 0 }.sort
-    bins = calculate_bins(all_visits, bin_count)
+
+    # Get unique visit counts for bin calculation (need unique values only)
+    unique_visit_counts = merged_stats.map { |r| r[:unique_visits] || 0 }.sort.uniq
+
+    # Use fewer bins when there aren't enough unique values
+    # Max 5 bins, but use min(5, number of unique values)
+    max_bins = 5
+    bin_count = [unique_visit_counts.length, max_bins].min
+    bin_count = 1 if bin_count < 1 # Safety check
+
+    bins = calculate_bins(unique_visit_counts, bin_count)
 
     formatted = merged_stats.map do |row|
       visits = row[:unique_visits] || 0
@@ -255,7 +265,7 @@ class CountryStatsService
       stats: formatted.sort_by { |s| -s[:unique_visits] },
       bins: bins,
       bin_count: bin_count,
-      total_visits: all_visits.sum,
+      total_visits: merged_stats.sum { |s| s[:unique_visits] || 0 },
       country_count: formatted.size,
       total_deployments: formatted.sum { |s| s[:deployments_count] },
       total_podcast_listens: formatted.sum { |s| s[:visit_podcast_count] }

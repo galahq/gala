@@ -1,6 +1,6 @@
 /* @flow */
 import React, { useState } from 'react'
-import { Card, Button } from '@blueprintjs/core'
+import { Card, Button, Colors } from '@blueprintjs/core'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 type CountryData = {
@@ -12,25 +12,16 @@ type CountryData = {
   events_count: number,
   first_event: ?string,
   last_event: ?string,
-  bin: number,
-}
-
-type Bin = {
-  bin: number,
-  min: number,
-  max: number,
-  label: string,
 }
 
 type Props = {
   data: CountryData[],
   caseSlug: string,
-  bins?: Bin[],
   onRowClick?: (country: CountryData) => void,
   intl: any,
 }
 
-function StatsTable({ data, caseSlug, bins = [], onRowClick, intl }: Props) {
+function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
   const [sortField, setSortField] = useState('unique_visits')
   const [sortDirection, setSortDirection] = useState('desc')
 
@@ -97,7 +88,7 @@ function StatsTable({ data, caseSlug, bins = [], onRowClick, intl }: Props) {
     return (
       <span
         style={{
-          color: 'rgb(100, 68, 187)',
+          color: Colors.INDIGO5,
           fontSize: '12px',
           fontWeight: 'bold',
         }}
@@ -132,6 +123,9 @@ function StatsTable({ data, caseSlug, bins = [], onRowClick, intl }: Props) {
         >
           <thead>
             <tr>
+              <th style={{ width: '50px', textAlign: 'center' }}>
+                <FormattedMessage id="cases.stats.show.tableRank" />
+              </th>
               <th
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('name')}
@@ -187,6 +181,15 @@ function StatsTable({ data, caseSlug, bins = [], onRowClick, intl }: Props) {
           <tbody>
             {sortedData.map((row, index) => (
               <tr key={row.iso2 || index}>
+                <td
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: 'monospace',
+                    color: Colors.GRAY3,
+                  }}
+                >
+                  {index + 1}
+                </td>
                 <td>
                   {row.name ||
                     intl.formatMessage({
@@ -209,6 +212,7 @@ function StatsTable({ data, caseSlug, bins = [], onRowClick, intl }: Props) {
           </tbody>
           <tfoot>
             <tr style={{ fontWeight: 'bold' }}>
+              <td></td>
               <td>
                 <FormattedMessage id="cases.stats.show.tableTotal" />
               </td>
