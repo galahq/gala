@@ -305,9 +305,10 @@ en:
         map_legend_title: Visitor Distribution
         map_legend_help_title: How Visitor Distribution Works
         map_legend_help_description: >
-          Countries are grouped into 5 color categories based on visitor numbers using percentiles. 
-          This creates roughly equal-sized groups of countries. Lighter colors indicate more visitors, 
-          while darker colors show fewer visitors.
+          The map uses 5 color bins to categorize countries by visitor count. Bin boundaries are 
+          calculated at the 25th, 50th, 75th, and 100th percentiles of all visitor counts. 
+          Each country is colored based on where its visitor count falls within these ranges. 
+          Lighter shades represent higher visitor counts, darker shades represent lower counts.
         map_legend_low: low
         map_legend_high: high
         map_tooltip_visitors: visitors

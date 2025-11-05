@@ -36,15 +36,12 @@
 .PodcastPlayer, .edge
   @include recolor-statistics($white)
 
-// Purple styling for selected date range picker shortcuts
-.pt
-  .bp3-daterangepicker-shortcut-selected,
-  .bp3-daterangepicker-shortcut:hover
+// Purple styling for selected date range picker shortcuts (BlueprintJS v2)
+.pt-daterangepicker-shortcuts
+  .pt-menu-item.pt-active
     background-color: $purple !important
     color: $white !important
-
-  .bp3-daterangepicker-shortcut-selected
-    font-weight: bold
+    font-weight: 500
 
 // Stats page layout
 .c-stats-layout

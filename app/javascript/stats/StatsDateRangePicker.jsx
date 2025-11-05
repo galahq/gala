@@ -12,7 +12,7 @@ import { injectIntl } from 'react-intl'
 // - maxDate: Date for latest selectable day (usually today)
 // - fromInputId / toInputId: ids of hidden inputs that control the Stimulus map
 //   controller. We update their ISO8601 (YYYY-MM-DD) value on each change.
-function StatsDateRangePicker({
+function StatsDateRangePicker ({
   minDate: minDateProp,
   maxDate: maxDateProp,
   fromInputId = 'stats-from',
@@ -52,14 +52,12 @@ function StatsDateRangePicker({
   ]
 
   const [range, setRange] = useState(initialRange || translatedShortcuts[0].dateRange)
-  const [selectedShortcutIndex, setSelectedShortcutIndex] = useState(
-    initialShortcutIndex !== undefined ? initialShortcutIndex : 0
-  )
 
   // Determine which shortcut matches the current range
   const getSelectedShortcutIndex = (currentRange, shortcutsList) => {
-    if (!currentRange || !shortcutsList || !Array.isArray(shortcutsList))
+    if (!currentRange || !shortcutsList || !Array.isArray(shortcutsList)) {
       return -1
+    }
 
     const [currentFrom, currentTo] = currentRange
     const toIso = d => (d ? d.toISOString().slice(0, 10) : '')
@@ -76,19 +74,10 @@ function StatsDateRangePicker({
     return -1
   }
 
-  // Update selected shortcut when range changes
-  useEffect(() => {
-    const matchingIndex = getSelectedShortcutIndex(range, translatedShortcuts)
-    setSelectedShortcutIndex(
-      matchingIndex >= 0
-        ? matchingIndex
-        : initialShortcutIndex !== undefined
-        ? initialShortcutIndex
-        : 0
-    )
-  }, [range, translatedShortcuts, initialShortcutIndex])
+  // Calculate which shortcut matches the current range (-1 if none match)
+  const selectedShortcutIndex = getSelectedShortcutIndex(range, translatedShortcuts)
 
-  function updateHiddenInputs(nextRange) {
+  function updateHiddenInputs (nextRange) {
     const [from, to] = nextRange
     const fromIso = from ? from.toISOString().slice(0, 10) : ''
     const toIso = to ? to.toISOString().slice(0, 10) : ''
@@ -99,7 +88,7 @@ function StatsDateRangePicker({
     if (toInput) toInput.value = toIso
   }
 
-  function handleChange(nextRange) {
+  function handleChange (nextRange) {
     // If nextRange matches one of our shortcuts by day, use the exact
     // Date objects from the shortcut so Blueprint can keep it highlighted.
     let applied = nextRange
@@ -124,6 +113,21 @@ function StatsDateRangePicker({
     updateHiddenInputs(range)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Manually apply pt-active class to the selected shortcut since BlueprintJS v2 doesn't do it
+  // Only applies when a shortcut is actually selected (not custom date range)
+  useEffect(() => {
+    const shortcuts = document.querySelectorAll(
+      '.pt-daterangepicker-shortcuts .pt-menu-item'
+    )
+    shortcuts.forEach((shortcut, index) => {
+      if (selectedShortcutIndex >= 0 && index === selectedShortcutIndex) {
+        shortcut.classList.add('pt-active')
+      } else {
+        shortcut.classList.remove('pt-active')
+      }
+    })
+  }, [selectedShortcutIndex])
 
   return (
     <DateRangePicker
