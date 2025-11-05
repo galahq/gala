@@ -228,31 +228,11 @@ export default class extends Controller {
           ReactDOM.render(
             React.createElement(
               'div',
-              {
-                style: {
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  zIndex: 1000,
-                },
-              },
+              { className: 'c-stats-map__loading-overlay' },
               React.createElement(Spinner, { size: 50 }),
               React.createElement(
                 'div',
-                {
-                  style: {
-                    marginTop: '12px',
-                    color: '#6b7280',
-                    fontSize: '14px',
-                  },
-                },
+                { className: 'c-stats-map__loading-text pt-text-muted' },
                 'Loading map data...'
               )
             ),
@@ -264,30 +244,14 @@ export default class extends Controller {
       }
     }
 
-    // Show detailed skeleton in summary area
+    // Summary skeleton is handled by the view template - no need to re-render it
     const summaryEl = document.getElementById('stats-summary')
     if (summaryEl) {
       try {
         ReactDOM.render(
-          <div
-            style={{
-              fontSize: '14px',
-              lineHeight: '1.6',
-              color: '#000000',
-              height: '200px',
-            }}
-          >
+          <div className="c-stats-summary__content">
             {/* Summary header with published date */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '12px',
-                paddingBottom: '8px',
-                borderBottom: '1px solid #e5e7eb',
-                fontSize: '17px',
-              }}
-            >
+            <div className="c-stats-summary__header">
               <div
                 className="pt-skeleton"
                 style={{ height: '20px', width: '80px' }}
@@ -299,13 +263,7 @@ export default class extends Controller {
             </div>
 
             {/* Statistics */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
+            <div className="c-stats-summary__row">
               <div
                 className="pt-skeleton"
                 style={{ height: '16px', width: '140px' }}
@@ -315,13 +273,7 @@ export default class extends Controller {
                 style={{ height: '16px', width: '60px' }}
               />
             </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
+            <div className="c-stats-summary__row">
               <div
                 className="pt-skeleton"
                 style={{ height: '16px', width: '70px' }}
@@ -331,13 +283,7 @@ export default class extends Controller {
                 style={{ height: '16px', width: '30px' }}
               />
             </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
+            <div className="c-stats-summary__row">
               <div
                 className="pt-skeleton"
                 style={{ height: '16px', width: '120px' }}
@@ -347,13 +293,7 @@ export default class extends Controller {
                 style={{ height: '16px', width: '50px' }}
               />
             </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
+            <div className="c-stats-summary__row">
               <div
                 className="pt-skeleton"
                 style={{ height: '16px', width: '120px' }}
@@ -365,12 +305,7 @@ export default class extends Controller {
             </div>
 
             {/* Translations (optional) */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
+            <div className="c-stats-summary__row">
               <div
                 className="pt-skeleton"
                 style={{ height: '16px', width: '90px' }}
@@ -540,12 +475,8 @@ export default class extends Controller {
           ReactDOM.render(
             React.createElement(
               'div',
-              { style: { color: '#9ca3af' }},
-              React.createElement(
-                'div',
-                null,
-                'No data available for selected period'
-              )
+              { className: 'c-stats-summary__no-data' },
+              'No data available for selected period'
             ),
             summaryEl
           )
@@ -553,31 +484,12 @@ export default class extends Controller {
           ReactDOM.render(
             React.createElement(
               'div',
-              {
-                style: {
-                  fontSize: '16px',
-                  lineHeight: '1.6',
-                  color: '#000000',
-                },
-              },
+              { className: 'c-stats-summary__content' },
               // Summary header
               React.createElement(
                 'div',
-                {
-                  style: {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '12px',
-                    paddingBottom: '8px',
-                    borderBottom: '1px solid #e5e7eb',
-                    fontSize: '17px',
-                  },
-                },
-                React.createElement(
-                  'span',
-                  { style: { fontWeight: 'bold' }},
-                  'Summary'
-                ),
+                { className: 'c-stats-summary__header' },
+                React.createElement('span', null, 'Summary'),
                 summary.case_published_at &&
                   React.createElement(
                     'strong',
@@ -596,61 +508,37 @@ export default class extends Controller {
               // Statistics
               React.createElement(
                 'div',
-                {
-                  style: {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '8px',
-                  },
-                },
-                React.createElement('span', null, 'Total Unique Visitors'),
+                { className: 'c-stats-summary__row' },
+                React.createElement('span', { className: 'c-stats-summary__label' }, 'Total Unique Visitors'),
                 React.createElement(
-                  'strong',
-                  null,
+                  'span',
+                  { className: 'c-stats-summary__value' },
                   (summary.total_visits || 0).toLocaleString()
                 )
               ),
               React.createElement(
                 'div',
-                {
-                  style: {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '8px',
-                  },
-                },
-                React.createElement('span', null, 'Countries'),
-                React.createElement('strong', null, summary.country_count || 0)
+                { className: 'c-stats-summary__row' },
+                React.createElement('span', { className: 'c-stats-summary__label' }, 'Countries'),
+                React.createElement('span', { className: 'c-stats-summary__value' }, summary.country_count || 0)
               ),
               React.createElement(
                 'div',
-                {
-                  style: {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '8px',
-                  },
-                },
-                React.createElement('span', null, 'Total Deployments'),
+                { className: 'c-stats-summary__row' },
+                React.createElement('span', { className: 'c-stats-summary__label' }, 'Total Deployments'),
                 React.createElement(
-                  'strong',
-                  null,
+                  'span',
+                  { className: 'c-stats-summary__value' },
                   (summary.total_deployments || 0).toLocaleString()
                 )
               ),
               React.createElement(
                 'div',
-                {
-                  style: {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '8px',
-                  },
-                },
-                React.createElement('span', null, 'Podcast Listens'),
+                { className: 'c-stats-summary__row' },
+                React.createElement('span', { className: 'c-stats-summary__label' }, 'Podcast Listens'),
                 React.createElement(
-                  'strong',
-                  null,
+                  'span',
+                  { className: 'c-stats-summary__value' },
                   (summary.total_podcast_listens || 0).toLocaleString()
                 )
               ),
@@ -658,14 +546,9 @@ export default class extends Controller {
               summary.case_locales &&
                 React.createElement(
                   'div',
-                  {
-                    style: {
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                    },
-                  },
-                  React.createElement('span', null, 'Translations'),
-                  React.createElement('strong', null, summary.case_locales)
+                  { className: 'c-stats-summary__row' },
+                  React.createElement('span', { className: 'c-stats-summary__label' }, 'Translations'),
+                  React.createElement('span', { className: 'c-stats-summary__value' }, summary.case_locales)
                 )
             ),
             summaryEl
@@ -685,11 +568,7 @@ export default class extends Controller {
           const existingOverlay = mapEl.querySelector('.empty-overlay')
           if (!existingOverlay) {
             const overlayDiv = document.createElement('div')
-            overlayDiv.className = 'empty-overlay'
-            overlayDiv.style.cssText =
-              'position: absolute; top: 0; left: 0; right: 0; bottom: 0; ' +
-              'background: rgba(249, 250, 251, 0.9); display: flex; ' +
-              'align-items: center; justify-content: center; z-index: 1000;'
+            overlayDiv.className = 'empty-overlay c-stats-map__loading-overlay'
             mapEl.style.position = 'relative'
             mapEl.appendChild(overlayDiv)
 

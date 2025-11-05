@@ -43,39 +43,92 @@
     color: $white !important
     font-weight: 500
 
-// Stats page layout
+// Stats page layout - using BlueprintJS spacing and flexbox
 .c-stats-layout
   display: flex
   gap: 20px
   align-items: flex-start
-  margin-bottom: 24px
+  margin-bottom: 20px
 
 .c-stats-picker
   flex: 1
-  padding: 16px
-  background: #f9fafb
-  border-radius: 8px
-  border: 0.5px solid rgb(0, 0, 0)
 
 .c-stats-summary
   flex: 0 0 300px
-  padding: 16px
-  background: #f9fafb
-  border-radius: 8px
-  border: 0.5px solid rgb(0, 0, 0)
-  font-size: 13px
-  color: #4b5563
   min-height: 200px
+
+  &__skeleton
+    height: 14px
+    width: 150px
+    margin-bottom: 8px
+
+    &:first-child
+      height: 16px
+      width: 180px
+      margin-bottom: 12px
+
+    &:last-child
+      margin-bottom: 0
 
 .c-stats-map-container
   height: 500px
-  margin-bottom: 24px
+  margin-bottom: 20px
+  padding: 0 !important
+  overflow: hidden
 
 .c-stats-map
   height: 100%
-  border-radius: 8px
-  overflow: hidden
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+  width: 100%
 
 .c-stats-table-container
-  margin-bottom: 24px
+  margin-bottom: 20px
+
+// Loading overlay for map
+.c-stats-map__loading-overlay
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(255, 255, 255, 0.9)
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  z-index: 1000
+
+.c-stats-map__loading-text
+  margin-top: 12px
+  font-size: 14px
+
+// Summary stats content
+.c-stats-summary__content
+  font-size: 14px
+  line-height: 1.6
+
+.c-stats-summary__header
+  display: flex
+  justify-content: space-between
+  margin-bottom: 12px
+  padding-bottom: 8px
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15)
+  font-size: 15px
+  font-weight: bold
+
+.c-stats-summary__row
+  display: flex
+  justify-content: space-between
+  margin-bottom: 8px
+
+  &:last-child
+    margin-bottom: 0
+
+.c-stats-summary__label
+  font-weight: 500
+
+.c-stats-summary__value
+  font-weight: 600
+
+.c-stats-summary__no-data
+  color: rgba(92, 112, 128, 0.6)
+  font-style: italic
