@@ -2,64 +2,157 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { getAccessibleTextColor } from '../utility/colors'
+import {
+  Colors,
+  Popover,
+  Position,
+  Icon,
+  NonIdealState,
+} from '@blueprintjs/core'
+import { FormattedMessage, injectIntl } from 'react-intl'
+
+// Error Boundary Component
+class MapErrorBoundary extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = { hasError: false, error: null, errorInfo: null }
+  }
+
+  static getDerivedStateFromError (_error) {
+    return { hasError: true }
+  }
+
+  componentDidCatch (error, errorInfo) {
+    console.error('Map component error:', error, errorInfo)
+    this.setState({
+      error,
+      errorInfo,
+    })
+  }
+
+  render () {
+    if (this.state.hasError) {
+      return (
+        <div
+          style={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#f9fafb',
+            flexDirection: 'column',
+            padding: '20px',
+            textAlign: 'center',
+          }}
+        >
+          <p
+            style={{
+              color: '#ef4444',
+              marginBottom: '10px',
+              fontWeight: 'bold',
+            }}
+          >
+            Map Component Error
+          </p>
+          <p
+            style={{ color: '#6b7280', fontSize: '14px', marginBottom: '15px' }}
+          >
+            Something went wrong with the map component. Please try refreshing
+            the page.
+          </p>
+          <button
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginBottom: '15px',
+            }}
+            onClick={() => window.location.reload()}
+          >
+            Refresh Page
+          </button>
+          {process.env.NODE_ENV === 'development' && this.state.error && (
+            <details
+              style={{ fontSize: '12px', color: '#9ca3af', textAlign: 'left' }}
+            >
+              <summary style={{ cursor: 'pointer', marginBottom: '5px' }}>
+                Error Details
+              </summary>
+              <pre style={{ whiteSpace: 'pre-wrap', fontSize: '10px' }}>
+                {this.state.error.toString()}
+                <br />
+                {this.state.errorInfo && this.state.errorInfo.componentStack}
+              </pre>
+            </details>
+          )}
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
 
 // Helper functions that read from window at runtime for easier testing, using:
 // document.dispatchEvent(new CustomEvent('stats-range-changed'))
-const getMapboxData = () => window.MAPBOX_DATA || 'https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json'
-const getMapboxToken = () => window.MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow'
-const getMapboxStyle = () => window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v10'
-const getMapboxDefaultColor = () => window.MAPBOX_DEFAULT_COLOR || '#2a2a2a'
-const getMapboxBaseColor = () => window.MAPBOX_BASE_COLOR || '#7c3aed'
+const getMapboxData = () => window.MAPBOX_DATA || '/countries.geojson'
+const getMapboxToken = () =>
+  window.MAPBOX_ACCESS_TOKEN ||
+  'pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow'
+const getMapboxStyle = () =>
+  window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v10'
+const getMapboxDefaultColor = () => window.MAPBOX_DEFAULT_COLOR || Colors.BLACK
 
-// Generate colors for bins based on base color and bin count
-const generateBinColors = (binCount, baseColor) => {
+// Generate colors for bins using BlueprintJS indigo shades
+const getBinColors = binCount => {
   if (binCount === 0) return []
-  const rgb = hexToRgb(baseColor || '#7c3aed')
+  if (binCount === 1) return [Colors.INDIGO5]
+
+  // BlueprintJS has INDIGO1 (lightest) through INDIGO5 (darkest)
+  // For more than 5 bins, we'll cycle through available shades
+  const indigoShades = [
+    Colors.INDIGO1,
+    Colors.INDIGO2,
+    Colors.INDIGO3,
+    Colors.INDIGO4,
+    Colors.INDIGO5,
+  ]
+
   const colors = []
   for (let i = 0; i < binCount; i++) {
-    // Prevent division by zero for single bin
-    const alpha = binCount === 1 ? 1.0 : 0.2 + (i / (binCount - 1)) * 0.8
-    colors.push(`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha.toFixed(2)})`)
+    // Map bin index to indigo shade, cycling if needed
+    const shadeIndex = Math.min(i, indigoShades.length - 1)
+    colors.push(indigoShades[shadeIndex])
   }
   return colors
 }
 
-// Convert hex color to RGB
-const hexToRgb = (hex) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
-  } : { r: 124, g: 58, b: 237 } // Default purple
-}
-
-// Convert RGB to hex color
-const rgbToHex = (r, g, b) => {
-  const toHex = (n) => {
-    const hex = Math.round(n).toString(16)
-    return hex.length === 1 ? '0' + hex : hex
-  }
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`
-}
-
-window.updateMapboxSettings = (settings) => {
+window.updateMapboxSettings = settings => {
   if (!settings) {
-    console.info('%cMapbox Settings Helper', 'color: #7c3aed; font-weight: bold; font-size: 14px')
-    console.info('Usage: window.updateMapboxSettings({ style, data, token, defaultColor, baseColor })')
+    console.info(
+      '%cMapbox Settings Helper',
+      'color: #7c3aed; font-weight: bold; font-size: 14px'
+    )
+    console.info(
+      'Usage: window.updateMapboxSettings({ style, data, token, defaultColor })'
+    )
     console.info('\nAvailable options:')
     console.table({
       style: 'Mapbox style URL (e.g., "mapbox://styles/mapbox/light-v10")',
       data: 'GeoJSON data URL for country boundaries',
       token: 'Mapbox access token',
       defaultColor: 'Hex color for countries with no data',
-      baseColor: 'Base hex color for visitor distribution gradient (e.g., "#7c3aed")',
     })
     console.info('\nExamples:')
-    console.info('  window.updateMapboxSettings({ style: "mapbox://styles/mapbox/light-v10" })')
-    console.info('  window.updateMapboxSettings({ data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson" })')
-    console.info('  window.updateMapboxSettings({ baseColor: "#ef4444" })')
+    console.info(
+      '  window.updateMapboxSettings({ style: "mapbox://styles/mapbox/light-v10" })'
+    )
+    console.info(
+      '  window.updateMapboxSettings({ data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson" })'
+    )
     return
   }
 
@@ -80,13 +173,11 @@ window.updateMapboxSettings = (settings) => {
     window.MAPBOX_DEFAULT_COLOR = settings.defaultColor
     updates.push(`defaultColor -> ${settings.defaultColor}`)
   }
-  if (settings.baseColor) {
-    window.MAPBOX_BASE_COLOR = settings.baseColor
-    updates.push(`baseColor -> ${settings.baseColor}`)
-  }
 
   if (updates.length === 0) {
-    console.warn('No valid settings provided. Use window.updateMapboxSettings() to see options.')
+    console.warn(
+      'No valid settings provided. Use window.updateMapboxSettings() to see options.'
+    )
     return
   }
 
@@ -97,47 +188,19 @@ window.updateMapboxSettings = (settings) => {
   document.dispatchEvent(new CustomEvent('stats-range-changed'))
 }
 
-// Helper to update stats settings
-window.updateStatsSettings = (settings) => {
-  if (!settings) {
-    console.info('%cStats Settings Helper', 'color: #7c3aed; font-weight: bold; font-size: 14px')
-    console.info('Usage: window.updateStatsSettings({ binCount })')
-    console.info('\nAvailable options:')
-    console.table({
-      binCount: 'Number of color bins/buckets for visitor distribution (2-10, default: 5)',
-    })
-    console.info('\nExample:')
-    console.info('  window.updateStatsSettings({ binCount: 7 })')
-    return
-  }
-
-  const updates = []
-  if (settings.binCount !== undefined) {
-    const clamped = Math.max(2, Math.min(10, settings.binCount))
-    window.STATS_BIN_COUNT = clamped
-    updates.push(`binCount -> ${clamped}`)
-  }
-
-  if (updates.length === 0) {
-    console.warn('No valid settings provided. Use window.updateStatsSettings() to see options.')
-    return
-  }
-
-  console.log('%cStats Settings Updated', 'color: #7c3aed; font-weight: bold')
-  updates.forEach(update => console.log(`  - ${update}`))
-  console.log('%cTriggering data refresh...', 'color: #10b981')
-
-  document.dispatchEvent(new CustomEvent('stats-range-changed'))
+// Helper to show stats settings (bin_count is now hard-coded to 5)
+window.updateStatsSettings = settings => {
+  console.info(
+    '%cStats Settings',
+    'color: #7c3aed; font-weight: bold; font-size: 14px'
+  )
+  console.info(
+    'Bin count is now hard-coded to 5 for performance and simplicity.'
+  )
+  console.info('No settings can be changed at runtime.')
 }
 
-// Log initialization info
-console.log('StatsMap initializing with:', {
-  token: getMapboxToken() ? `${getMapboxToken().substring(0, 20)}...` : 'none',
-  style: getMapboxStyle(),
-  data: getMapboxData(),
-  baseColor: getMapboxBaseColor(),
-  binCount: window.STATS_BIN_COUNT || 5,
-})
+// Initialization happens with self-hosted GeoJSON and Mapbox config
 
 type CountryData = {
   iso2: string,
@@ -151,16 +214,24 @@ type CountryData = {
 
 type Bin = {
   bin: number,
-  percentile: number,
-  value: number,
+  min: number,
+  max: number,
+  label: string,
 }
 
 type Props = {
   countries: CountryData[],
   bins: Bin[],
+  intl: any,
 }
 
-export default function StatsMap ({ countries, bins }: Props) {
+/**
+ * StatsMap component displays country-level visitor statistics on an interactive map
+ * @param {CountryData[]} countries - Array of country statistics
+ * @param {Bin[]} bins - Color bins for visitor distribution
+ * @param {Object} intl - react-intl internationalization object
+ */
+function StatsMap ({ countries, bins, intl }: Props) {
   const [hoveredCountry, setHoveredCountry] = useState(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [tooltipPosition, setTooltipPosition] = useState({
@@ -169,52 +240,112 @@ export default function StatsMap ({ countries, bins }: Props) {
   })
   const [mapLoaded, setMapLoaded] = useState(false)
   const [mapError, setMapError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [viewport, setViewport] = useState({
     latitude: 20,
     longitude: 0,
     zoom: 0.9,
   })
-  const [mapboxData] = useState(getMapboxData())
+  const [mapboxDataUrl] = useState(getMapboxData())
+  const [mapboxData, setMapboxData] = useState(null)
   const [mapboxToken] = useState(getMapboxToken())
   const [mapboxStyle] = useState(getMapboxStyle())
-  const [baseColor] = useState(getMapboxBaseColor())
   const mapRef = useRef(null)
   const tooltipRef = useRef(null)
+
+  // Fetch geojson data once with caching
+  useEffect(() => {
+    const cacheKey = `mapbox-geojson-${mapboxDataUrl}`
+    const cachedData = localStorage.getItem(cacheKey)
+    const cacheExpiry = localStorage.getItem(`${cacheKey}-expiry`)
+    const isExpired = cacheExpiry && Date.now() > parseInt(cacheExpiry)
+
+    // Use cached data if available and not expired (24 hours)
+    if (cachedData && !isExpired) {
+      try {
+        const parsedData = JSON.parse(cachedData)
+        setMapboxData(parsedData)
+        return
+      } catch (error) {
+        console.warn('Failed to parse cached GeoJSON data:', error)
+        localStorage.removeItem(cacheKey)
+        localStorage.removeItem(`${cacheKey}-expiry`)
+      }
+    }
+
+    fetch(mapboxDataUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        return response.json()
+      })
+      .then(data => {
+        setMapboxData(data)
+        // Cache the data for 24 hours
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(data))
+          localStorage.setItem(
+            `${cacheKey}-expiry`,
+            (Date.now() + 24 * 60 * 60 * 1000).toString()
+          )
+        } catch (error) {
+          console.warn('Failed to cache GeoJSON data:', error)
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch geojson data:', error)
+        setErrorMessage(`Failed to load map data: ${error.message}`)
+        setMapError(true)
+      })
+  }, [mapboxDataUrl])
 
   // Add timeout fallback to detect if map is stuck loading
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!mapLoaded && !mapError) {
         console.error('Map loading timeout - map failed to load within 10 seconds')
-        console.log('Debug info:', {
-          token: mapboxToken ? `${mapboxToken.substring(0, 20)}...` : 'none',
-          style: mapboxStyle,
-          data: mapboxData,
-        })
+        setErrorMessage(
+          'Map loading timed out. This may be due to network issues, ad blockers, or invalid Mapbox configuration.'
+        )
         setMapError(true)
       }
-    }, 10000)
+    }, 20000)
 
     return () => clearTimeout(timeout)
-  }, [mapLoaded, mapError, mapboxToken, mapboxStyle, mapboxData])
+  }, [mapLoaded, mapError, mapboxToken, mapboxStyle, mapboxDataUrl])
 
-  // Generate colors based on bin count and base color
-  const binColors = generateBinColors(bins.length, baseColor)
+  // Generate colors based on bin count using indigo shades
+  const binColors = getBinColors(bins.length)
 
-  // Calculate text colors for each bin based on background brightness
-  const rgb = hexToRgb(baseColor || '#7c3aed')
-  const binTextColors = bins.length > 0 ? binColors.map((_, i) => {
-    // Prevent division by zero for single bin
-    const alpha = bins.length === 1 ? 1.0 : 0.2 + (i / (bins.length - 1)) * 0.8
-    // For accessibility calculation, we simulate the color as if it were on a dark background
-    // Since our legend background is dark (#2a2a2a), we blend the color
-    const bgRgb = { r: 42, g: 42, b: 42 }
-    const blendedR = rgb.r * alpha + bgRgb.r * (1 - alpha)
-    const blendedG = rgb.g * alpha + bgRgb.g * (1 - alpha)
-    const blendedB = rgb.b * alpha + bgRgb.b * (1 - alpha)
-    const blendedHex = rgbToHex(blendedR, blendedG, blendedB)
-    return getAccessibleTextColor(blendedHex)
-  }) : []
+  // Use white text for indigo colors on dark background
+  const binTextColors =
+    bins.length > 0 ? new Array(bins.length).fill(Colors.WHITE) : []
+
+  // Handle empty bins gracefully
+  if (bins.length === 0) {
+    return (
+      <div
+        style={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#f9fafb',
+        }}
+      >
+        <NonIdealState
+          title={intl.formatMessage({
+            id: 'cases.stats.show.errorNoDataTitle',
+          })}
+          description={intl.formatMessage({
+            id: 'cases.stats.show.errorNoDataDescription',
+          })}
+          visual="geosearch"
+        />
+      </div>
+    )
+  }
 
   useEffect(() => {
     if (mapRef.current && mapLoaded) {
@@ -266,78 +397,192 @@ export default function StatsMap ({ countries, bins }: Props) {
         left,
         top: mousePosition.y - offset,
       }
-      console.log('Setting tooltip position:', newPosition)
       setTooltipPosition(newPosition)
     }
   }, [hoveredCountry, mousePosition])
 
+  // Update map layer colors when countries or bins change
+  useEffect(() => {
+    if (mapRef.current && mapLoaded) {
+      const map = mapRef.current.getMap()
+      if (!map) return
+
+      try {
+        // Update the fill layer paint properties
+        if (map.getLayer('country-fills') && fillColorExpression) {
+          map.setPaintProperty(
+            'country-fills',
+            'fill-color',
+            fillColorExpression
+          )
+        }
+      } catch (error) {
+        console.error('Error updating map colors:', error)
+        // Don't set map error here as this might be a temporary issue
+      }
+    }
+  }, [countries, bins, mapLoaded, fillColorExpression, countryColors])
+
   // Clean up on unmount
   useEffect(() => {
     return () => {
-      try {
-        if (mapRef.current) {
-          const map = mapRef.current.getMap()
-          if (map && map.remove) {
-            map.remove()
-          }
-        }
-      } catch (error) {
-        console.warn('Error cleaning up map:', error)
-      }
       setMapLoaded(false)
       setMapError(false)
     }
   }, [])
 
   // Create a map of country names to colors
-  const countryColors = {}
-  countries.forEach(country => {
-    if (country.name && typeof country.bin === 'number') {
-      countryColors[country.name] = binColors[country.bin] || binColors[0]
-    }
-  })
-  // Create mapbox expression for country fills
-  const fillColorExpression = ['match', ['get', 'name']]
-  const hasCountryData = Object.keys(countryColors).length > 0
+  // Limit to prevent performance issues with large datasets
+  const maxCountries = 200
+  const limitedCountries = countries.slice(0, maxCountries)
 
-  if (hasCountryData) {
-    Object.entries(countryColors).forEach(([name, color]) => {
-      fillColorExpression.push(name, color)
+  if (countries.length > maxCountries) {
+    console.warn(
+      `Limiting countries from ${countries.length} to ${maxCountries} for performance`
+    )
+  }
+
+  // Safety check: if too many countries, show error instead of freezing
+  if (countries.length > 1000) {
+    console.error(
+      `Too many countries (${countries.length}), refusing to render for performance`
+    )
+    return (
+      <div
+        style={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#f9fafb',
+          flexDirection: 'column',
+          padding: '20px',
+          textAlign: 'center',
+        }}
+      >
+        <p
+          style={{ color: '#ef4444', marginBottom: '10px', fontWeight: 'bold' }}
+        >
+          Too Much Data
+        </p>
+        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '15px' }}>
+          The selected date range contains too much data to display efficiently.
+          Please choose a smaller date range.
+        </p>
+        <p style={{ color: '#9ca3af', fontSize: '12px' }}>
+          Countries: {countries.length}
+        </p>
+      </div>
+    )
+  }
+
+  const countryColors = React.useMemo(() => {
+    const colors = {}
+    limitedCountries.forEach(country => {
+      if (country.name && typeof country.bin === 'number') {
+        const binIndex = Math.min(country.bin, binColors.length - 1)
+        const color = binColors[binIndex] || binColors[0]
+        if (color) {
+          colors[country.name] = color
+        }
+      }
     })
-  }
-  // Default color for countries with no data (call the function to get the color string)
-  fillColorExpression.push(getMapboxDefaultColor())
+    return colors
+  }, [limitedCountries, binColors])
 
-  const fillLayer = {
-    id: 'country-fills',
-    type: 'fill',
-    source: 'countries',
-    paint: {
-      'fill-color': fillColorExpression,
-      'fill-opacity': ['case', ['boolean', ['get', 'hover'], false], 0.9, 0.7],
-    },
-  }
-  const lineLayer = {
-    id: 'country-borders',
-    type: 'line',
-    source: 'countries',
-    paint: {
-      'line-color': '#94a3b8',
-      'line-width': 0.5,
-    },
-  }
+  // Create mapbox expression for country fills using 'name' property
+  const fillColorExpression = React.useMemo(() => {
+    const expression = ['match', ['get', 'name']]
+    const hasCountryData = Object.keys(countryColors).length > 0
+
+    if (hasCountryData && binColors.length > 0) {
+      Object.entries(countryColors).forEach(([name, color]) => {
+        expression.push(name, color)
+      })
+    }
+    // Default color for countries with no data (call the function to get the color string)
+    expression.push(getMapboxDefaultColor())
+    return expression
+  }, [countryColors, binColors])
+
+  const fillLayer = React.useMemo(
+    () => ({
+      id: 'country-fills',
+      type: 'fill',
+      source: 'countries',
+      paint: {
+        'fill-color': '#cccccc', // Default color, will be updated by useEffect
+        'fill-opacity': [
+          'case',
+          ['boolean', ['get', 'hover'], false],
+          0.9,
+          0.7,
+        ],
+      },
+    }),
+    [] // No dependencies - layer config is stable
+  )
+
+  const lineLayer = React.useMemo(
+    () => ({
+      id: 'country-borders',
+      type: 'line',
+      source: 'countries',
+      paint: {
+        'line-color': Colors.WHITE,
+        'line-width': 0.2,
+      },
+    }),
+    []
+  )
 
   const onHover = event => {
     const feature = event.features && event.features[0]
     if (feature) {
       const countryName = feature.properties.name
-      const countryData = countries.find(c => c.name === countryName)
+      const countryData = limitedCountries.find(c => c.name === countryName)
       setHoveredCountry(countryData)
       setMousePosition({ x: event.point[0], y: event.point[1] })
     } else {
       setHoveredCountry(null)
       setMousePosition({ x: 0, y: 0 })
     }
+  }
+
+  const retryMapLoad = () => {
+    setMapError(false)
+    setErrorMessage('')
+    setMapLoaded(false)
+    // Clear cache and force re-fetch of data
+    const cacheKey = `mapbox-geojson-${mapboxDataUrl}`
+    localStorage.removeItem(cacheKey)
+    localStorage.removeItem(`${cacheKey}-expiry`)
+
+    fetch(mapboxDataUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        return response.json()
+      })
+      .then(data => {
+        setMapboxData(data)
+        // Re-cache the data
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(data))
+          localStorage.setItem(
+            `${cacheKey}-expiry`,
+            (Date.now() + 24 * 60 * 60 * 1000).toString()
+          )
+        } catch (error) {
+          console.warn('Failed to re-cache GeoJSON data:', error)
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch geojson data:', error)
+        setErrorMessage(`Failed to load map data: ${error.message}`)
+        setMapError(true)
+      })
   }
 
   if (mapError) {
@@ -350,20 +595,54 @@ export default function StatsMap ({ countries, bins }: Props) {
           justifyContent: 'center',
           background: '#f9fafb',
           flexDirection: 'column',
+          padding: '20px',
+          textAlign: 'center',
         }}
       >
-        <p style={{ color: '#ef4444', marginBottom: '10px' }}>
+        <p
+          style={{ color: '#ef4444', marginBottom: '10px', fontWeight: 'bold' }}
+        >
           Unable to load map
         </p>
-        <p style={{ color: '#6b7280', fontSize: '14px' }}>
-          Please check your internet connection or disable ad blockers
+        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '15px' }}>
+          {errorMessage ||
+            'Please check your internet connection or disable ad blockers'}
         </p>
+        <button
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            marginBottom: '15px',
+          }}
+          onClick={retryMapLoad}
+        >
+          Retry Loading Map
+        </button>
+        <div style={{ fontSize: '12px', color: '#9ca3af' }}>
+          <p>Debug info:</p>
+          <p>
+            Token: {mapboxToken ? `${mapboxToken.substring(0, 20)}...` : 'none'}
+          </p>
+          <p>Style: {mapboxStyle}</p>
+          <p>Data: {mapboxDataUrl}</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div style={{ position: 'relative', height: '100%', width: '100%', cursor: 'default' }}>
+    <div
+      style={{
+        position: 'relative',
+        height: '100%',
+        width: '100%',
+        cursor: 'default',
+      }}
+    >
       <ReactMapGL
         ref={mapRef}
         mapStyle={mapboxStyle}
@@ -387,7 +666,6 @@ export default function StatsMap ({ countries, bins }: Props) {
         interactiveLayerIds={mapLoaded ? ['country-fills'] : []}
         onViewportChange={setViewport}
         onLoad={() => {
-          console.log('Map loaded successfully')
           setMapLoaded(true)
           setMapError(false)
 
@@ -433,26 +711,41 @@ export default function StatsMap ({ countries, bins }: Props) {
             }
           }
         }}
+        onHover={mapLoaded ? onHover : undefined}
         onError={error => {
           console.error('Map loading error:', error)
+          let errorMessage = 'Unknown error'
+          if (error.error) {
+            errorMessage = error.error
+          } else if (error.message) {
+            errorMessage = error.message
+          } else if (typeof error === 'string') {
+            errorMessage = error
+          }
+
+          // Handle specific Mapbox source/layer errors
+          if (
+            errorMessage.includes('Source') &&
+            errorMessage.includes('cannot be removed')
+          ) {
+            errorMessage = 'Map data update conflict. Please refresh the page.'
+          }
+
+          setErrorMessage(
+            `Mapbox error: ${errorMessage}. Check your Mapbox token and internet connection.`
+          )
           setMapError(true)
         }}
-        onSourceData={event => {
-          console.log('Source data event:', event)
-          if (event.sourceId === 'countries') {
-            console.log('Countries source loaded:', event.isSourceLoaded)
-          }
-        }}
-        onHover={mapLoaded ? onHover : undefined}
       >
-        {mapLoaded && (
+        {mapLoaded && mapboxData && (
           <Source
+            key="countries-source"
             id="countries"
             type="geojson"
             data={mapboxData}
           >
-            <Layer {...fillLayer} />
-            <Layer {...lineLayer} />
+            <Layer key="country-fills" {...fillLayer} />
+            <Layer key="country-borders" {...lineLayer} />
           </Source>
         )}
 
@@ -492,49 +785,86 @@ export default function StatsMap ({ countries, bins }: Props) {
               fontWeight: 'bold',
               marginBottom: '8px',
               fontSize: '12px',
-              color: '#ffffff',
+              color: Colors.WHITE,
               fontFamily: 'monospace',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
             }}
           >
-            Visitor Distribution
+            <FormattedMessage id="cases.stats.show.mapLegendTitle" />
+            <Popover
+              position={Position.TOP}
+              content={
+                <div style={{ padding: '12px', maxWidth: '300px' }}>
+                  <h6 style={{ marginTop: 0, marginBottom: '8px' }}>
+                    <FormattedMessage id="cases.stats.show.mapLegendHelpTitle" />
+                  </h6>
+                  <p style={{ fontSize: '12px' }}>
+                    <FormattedMessage id="cases.stats.show.mapLegendHelpDescription" />
+                  </p>
+                </div>
+              }
+            >
+              <Icon
+                icon="info-sign"
+                style={{
+                  cursor: 'pointer',
+                  opacity: 0.8,
+                  fontSize: '10px',
+                }}
+              />
+            </Popover>
           </div>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: 0,
-              border: '1px solid rgba(255, 255, 255, 0.3)',
               borderRadius: '4px',
               overflow: 'hidden',
             }}
           >
-            {bins.map((b, i) => (
-              <div key={i} style={{ position: 'relative', flex: 1 }}>
-                <div
-                  style={{
-                    height: '24px',
-                    background: binColors[i],
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                  title={`${b.percentile}th percentile: ${b.value} visitors`}
-                >
-                  <span
+            {bins.map((b, i) => {
+              // Calculate border-radius for each bar to fill the rounded container
+              let borderRadius = '0'
+              if (bins.length === 1) {
+                borderRadius = '4px'
+              } else if (i === 0) {
+                borderRadius = '4px 0 0 4px'
+              } else if (i === bins.length - 1) {
+                borderRadius = '0 4px 4px 0'
+              }
+
+              return (
+                <div key={i} style={{ position: 'relative', flex: 1 }}>
+                  <div
                     style={{
-                      fontSize: '10px',
-                      fontWeight: 'bold',
-                      color: binTextColors[i],
-                      lineHeight: '1',
-                      fontFamily: 'monospace',
+                      height: '24px',
+                      background: binColors[i],
+                      border: 'none',
+                      borderRadius,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
+                    title={`${b.label} visitors`}
                   >
-                    {b.percentile}%
-                  </span>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 'bold',
+                        color: binTextColors[i],
+                        lineHeight: '1',
+                        fontFamily: 'monospace',
+                      }}
+                    >
+                      {b.label}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
           <div
             style={{
@@ -546,10 +876,14 @@ export default function StatsMap ({ countries, bins }: Props) {
               fontFamily: 'monospace',
             }}
           >
-            <span style={{ fontWeight: 'bold' }}>low</span>
-            <span style={{ fontWeight: 'bold' }}>high</span>
+          <span style={{ fontWeight: 'bold' }}>
+            <FormattedMessage id="cases.stats.show.mapLegendLow" />
+          </span>
+          <span style={{ fontWeight: 'bold' }}>
+            <FormattedMessage id="cases.stats.show.mapLegendHigh" />
+          </span>
           </div>
-        </div>
+      </div>
       )}
 
       {/* Hover tooltip */}
@@ -579,7 +913,7 @@ export default function StatsMap ({ countries, bins }: Props) {
               fontSize: '13px',
             }}
           >
-            {hoveredCountry.iso3}
+            {hoveredCountry.name}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div
@@ -588,23 +922,48 @@ export default function StatsMap ({ countries, bins }: Props) {
                 height: '12px',
                 borderRadius: '50%',
                 backgroundColor:
-                  binColors[hoveredCountry.bin] || binColors[0] || '#f9fafb',
+                  binColors.length > 0
+                    ? binColors[Math.min(hoveredCountry.bin || 0, binColors.length - 1)] || binColors[0]
+                    : '#f9fafb',
                 border: '1px solid rgba(255,255,255,0.3)',
                 flexShrink: 0,
               }}
             />
             <div>
               <div style={{ fontWeight: '500' }}>
-                {hoveredCountry.unique_visits.toLocaleString()} visitors
+                {hoveredCountry.unique_visits.toLocaleString()}{' '}
+                {intl.formatMessage({
+                  id: 'cases.stats.show.mapTooltipVisitors',
+                })}
               </div>
               <div style={{ fontSize: '11px', opacity: 0.8 }}>
-                {hoveredCountry.unique_users.toLocaleString()} users •{' '}
-                {hoveredCountry.events_count.toLocaleString()} events
+                {hoveredCountry.unique_users.toLocaleString()}{' '}
+                {intl.formatMessage({ id: 'cases.stats.show.mapTooltipUsers' })}{' '}
+                •{' '}
+                {hoveredCountry.events_count.toLocaleString()}{' '}
+                {intl.formatMessage({
+                  id: 'cases.stats.show.mapTooltipEvents',
+                })}
               </div>
             </div>
           </div>
         </div>
       )}
     </div>
+  )
+}
+
+// Memoize the component to prevent unnecessary re-renders
+const MemoizedStatsMap = React.memo(StatsMap)
+
+// Wrap with injectIntl and ErrorBoundary
+const StatsMapWithIntl = injectIntl(MemoizedStatsMap)
+
+// Wrap with ErrorBoundary and export
+export default function StatsMapWithErrorBoundary (props) {
+  return (
+    <MapErrorBoundary>
+      <StatsMapWithIntl {...props} />
+    </MapErrorBoundary>
   )
 }

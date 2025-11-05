@@ -35,3 +35,50 @@
 
 .PodcastPlayer, .edge
   @include recolor-statistics($white)
+
+// Purple styling for selected date range picker shortcuts
+.pt
+  .bp3-daterangepicker-shortcut-selected,
+  .bp3-daterangepicker-shortcut:hover
+    background-color: $purple !important
+    color: $white !important
+
+  .bp3-daterangepicker-shortcut-selected
+    font-weight: bold
+
+// Stats page layout
+.c-stats-layout
+  display: flex
+  gap: 20px
+  align-items: flex-start
+  margin-bottom: 24px
+
+.c-stats-picker
+  flex: 1
+  padding: 16px
+  background: #f9fafb
+  border-radius: 8px
+  border: 0.5px solid rgb(0, 0, 0)
+
+.c-stats-summary
+  flex: 0 0 300px
+  padding: 16px
+  background: #f9fafb
+  border-radius: 8px
+  border: 0.5px solid rgb(0, 0, 0)
+  font-size: 13px
+  color: #4b5563
+  min-height: 200px
+
+.c-stats-map-container
+  height: 500px
+  margin-bottom: 24px
+
+.c-stats-map
+  height: 100%
+  border-radius: 8px
+  overflow: hidden
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+
+.c-stats-table-container
+  margin-bottom: 24px

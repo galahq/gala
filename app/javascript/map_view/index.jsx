@@ -36,8 +36,8 @@ type State = {
   openPin: string,
 }
 
-export const MAPBOX_TOKEN = window.MAPBOX_ACCESS_TOKEN || "pk.eyJ1IjoiY2JvdGhuZXIiLCJhIjoiY21nNTNlOWM2MDBnazJqcHI3NGtlNjJ5diJ9.NSLz94UIqonNQKbD030jow"
-export const MAPBOX_STYLE = window.MAPBOX_STYLE || "mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14"
+export const MAPBOX_TOKEN = window.MAPBOX_ACCESS_TOKEN
+export const MAPBOX_STYLE = window.MAPBOX_STYLE
 
 class MapViewController extends React.Component<Props, State> {
   // handleChangeViewport is fired when the component first mounts, but we

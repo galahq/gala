@@ -3,63 +3,127 @@
 # Service to aggregate and format country statistics for the stats dashboard
 class CountryStatsService
   ISO2_TO_ISO3 = {
-    'US' => 'USA', 'GB' => 'GBR', 'CA' => 'CAN', 'AU' => 'AUS', 'DE' => 'DEU',
-    'FR' => 'FRA', 'IT' => 'ITA', 'ES' => 'ESP', 'JP' => 'JPN', 'CN' => 'CHN',
-    'IN' => 'IND', 'BR' => 'BRA', 'MX' => 'MEX', 'RU' => 'RUS', 'KR' => 'KOR',
-    'NL' => 'NLD', 'CH' => 'CHE', 'SE' => 'SWE', 'NO' => 'NOR', 'DK' => 'DNK',
-    'FI' => 'FIN', 'BE' => 'BEL', 'AT' => 'AUT', 'PL' => 'POL', 'CZ' => 'CZE',
-    'PT' => 'PRT', 'GR' => 'GRC', 'HU' => 'HUN', 'IE' => 'IRL', 'RO' => 'ROU',
-    'BG' => 'BGR', 'HR' => 'HRV', 'SK' => 'SVK', 'SI' => 'SVN', 'LT' => 'LTU',
-    'LV' => 'LVA', 'EE' => 'EST', 'LU' => 'LUX', 'MT' => 'MLT', 'CY' => 'CYP',
-    'AR' => 'ARG', 'CL' => 'CHL', 'CO' => 'COL', 'PE' => 'PER', 'VE' => 'VEN',
-    'UY' => 'URY', 'PY' => 'PRY', 'BO' => 'BOL', 'EC' => 'ECU', 'SR' => 'SUR',
-    'GY' => 'GUY', 'ZA' => 'ZAF', 'NG' => 'NGA', 'EG' => 'EGY', 'KE' => 'KEN',
-    'ET' => 'ETH', 'GH' => 'GHA', 'DZ' => 'DZA', 'MA' => 'MAR', 'TN' => 'TUN',
-    'LY' => 'LBY', 'SD' => 'SDN', 'UG' => 'UGA', 'TZ' => 'TZA', 'ZW' => 'ZWE',
-    'BW' => 'BWA', 'MZ' => 'MOZ', 'ZM' => 'ZMB', 'MW' => 'MWI', 'AO' => 'AGO',
-    'NA' => 'NAM', 'SN' => 'SEN', 'ML' => 'MLI', 'BF' => 'BFA', 'NE' => 'NER',
-    'TD' => 'TCD', 'MR' => 'MRT', 'GM' => 'GMB', 'GN' => 'GIN', 'SL' => 'SLE',
-    'LR' => 'LBR', 'CI' => 'CIV', 'TG' => 'TGO', 'BJ' => 'BEN', 'GW' => 'GNB',
-    'ER' => 'ERI', 'SO' => 'SOM', 'DJ' => 'DJI', 'KM' => 'COM', 'SC' => 'SYC',
-    'MG' => 'MDG', 'MU' => 'MUS', 'RE' => 'REU', 'TH' => 'THA', 'VN' => 'VNM',
-    'PH' => 'PHL', 'ID' => 'IDN', 'MY' => 'MYS', 'SG' => 'SGP', 'MM' => 'MMR',
-    'KH' => 'KHM', 'LA' => 'LAO', 'TL' => 'TLS', 'BN' => 'BRN', 'PG' => 'PNG',
-    'FJ' => 'FJI', 'SB' => 'SLB', 'VU' => 'VUT', 'NC' => 'NCL', 'PF' => 'PYF',
-    'NZ' => 'NZL', 'TW' => 'TWN', 'HK' => 'HKG', 'MO' => 'MAC', 'MN' => 'MNG',
-    'KP' => 'PRK', 'PK' => 'PAK', 'BD' => 'BGD', 'LK' => 'LKA', 'NP' => 'NPL',
-    'BT' => 'BTN', 'MV' => 'MDV', 'AF' => 'AFG', 'TJ' => 'TJK', 'KG' => 'KGZ',
-    'UZ' => 'UZB', 'TM' => 'TKM', 'KZ' => 'KAZ', 'IR' => 'IRN', 'IQ' => 'IRQ',
-    'SA' => 'SAU', 'YE' => 'YEM', 'OM' => 'OMN', 'AE' => 'ARE', 'QA' => 'QAT',
-    'KW' => 'KWT', 'BH' => 'BHR', 'IL' => 'ISR', 'JO' => 'JOR', 'LB' => 'LBN',
-    'SY' => 'SYR', 'PS' => 'PSE', 'TR' => 'TUR', 'AM' => 'ARM', 'GE' => 'GEO',
-    'AZ' => 'AZE', 'UA' => 'UKR', 'BY' => 'BLR', 'MD' => 'MDA', 'RS' => 'SRB',
-    'BA' => 'BIH', 'ME' => 'MNE', 'MK' => 'MKD', 'AL' => 'ALB', 'IS' => 'ISL',
-    'GL' => 'GRL', 'FO' => 'FRO', 'BM' => 'BMU', 'CR' => 'CRI', 'PR' => 'PRI'
+    'AD' => 'AND', 'AE' => 'ARE', 'AF' => 'AFG', 'AG' => 'ATG', 'AI' => 'AIA',
+    'AL' => 'ALB', 'AM' => 'ARM', 'AO' => 'AGO', 'AQ' => 'ATA', 'AR' => 'ARG',
+    'AS' => 'ASM', 'AT' => 'AUT', 'AU' => 'AUS', 'AW' => 'ABW', 'AX' => 'ALA',
+    'AZ' => 'AZE', 'BA' => 'BIH', 'BB' => 'BRB', 'BD' => 'BGD', 'BE' => 'BEL',
+    'BF' => 'BFA', 'BG' => 'BGR', 'BH' => 'BHR', 'BI' => 'BDI', 'BJ' => 'BEN',
+    'BL' => 'BLM', 'BM' => 'BMU', 'BN' => 'BRN', 'BO' => 'BOL', 'BQ' => 'BES',
+    'BR' => 'BRA', 'BS' => 'BHS', 'BT' => 'BTN', 'BV' => 'BVT', 'BW' => 'BWA',
+    'BY' => 'BLR', 'BZ' => 'BLZ', 'CA' => 'CAN', 'CC' => 'CCK', 'CD' => 'COD',
+    'CF' => 'CAF', 'CG' => 'COG', 'CH' => 'CHE', 'CI' => 'CIV', 'CK' => 'COK',
+    'CL' => 'CHL', 'CM' => 'CMR', 'CN' => 'CHN', 'CO' => 'COL', 'CR' => 'CRI',
+    'CU' => 'CUB', 'CV' => 'CPV', 'CW' => 'CUW', 'CX' => 'CXR', 'CY' => 'CYP',
+    'CZ' => 'CZE', 'DE' => 'DEU', 'DJ' => 'DJI', 'DK' => 'DNK', 'DM' => 'DMA',
+    'DO' => 'DOM', 'DZ' => 'DZA', 'EC' => 'ECU', 'EE' => 'EST', 'EG' => 'EGY',
+    'EH' => 'ESH', 'ER' => 'ERI', 'ES' => 'ESP', 'ET' => 'ETH', 'FI' => 'FIN',
+    'FJ' => 'FJI', 'FK' => 'FLK', 'FM' => 'FSM', 'FO' => 'FRO', 'FR' => 'FRA',
+    'GA' => 'GAB', 'GB' => 'GBR', 'GD' => 'GRD', 'GE' => 'GEO', 'GF' => 'GUF',
+    'GG' => 'GGY', 'GH' => 'GHA', 'GI' => 'GIB', 'GL' => 'GRL', 'GM' => 'GMB',
+    'GN' => 'GIN', 'GP' => 'GLP', 'GQ' => 'GNQ', 'GR' => 'GRC', 'GS' => 'SGS',
+    'GT' => 'GTM', 'GU' => 'GUM', 'GW' => 'GNB', 'GY' => 'GUY', 'HK' => 'HKG',
+    'HM' => 'HMD', 'HN' => 'HND', 'HR' => 'HRV', 'HT' => 'HTI', 'HU' => 'HUN',
+    'ID' => 'IDN', 'IE' => 'IRL', 'IL' => 'ISR', 'IM' => 'IMN', 'IN' => 'IND',
+    'IO' => 'IOT', 'IQ' => 'IRQ', 'IR' => 'IRN', 'IS' => 'ISL', 'IT' => 'ITA',
+    'JE' => 'JEY', 'JM' => 'JAM', 'JO' => 'JOR', 'JP' => 'JPN', 'KE' => 'KEN',
+    'KG' => 'KGZ', 'KH' => 'KHM', 'KI' => 'KIR', 'KM' => 'COM', 'KN' => 'KNA',
+    'KP' => 'PRK', 'KR' => 'KOR', 'KW' => 'KWT', 'KY' => 'CYM', 'KZ' => 'KAZ',
+    'LA' => 'LAO', 'LB' => 'LBN', 'LC' => 'LCA', 'LI' => 'LIE', 'LK' => 'LKA',
+    'LR' => 'LBR', 'LS' => 'LSO', 'LT' => 'LTU', 'LU' => 'LUX', 'LV' => 'LVA',
+    'LY' => 'LBY', 'MA' => 'MAR', 'MC' => 'MCO', 'MD' => 'MDA', 'ME' => 'MNE',
+    'MF' => 'MAF', 'MG' => 'MDG', 'MH' => 'MHL', 'MK' => 'MKD', 'ML' => 'MLI',
+    'MM' => 'MMR', 'MN' => 'MNG', 'MO' => 'MAC', 'MP' => 'MNP', 'MQ' => 'MTQ',
+    'MR' => 'MRT', 'MS' => 'MSR', 'MT' => 'MLT', 'MU' => 'MUS', 'MV' => 'MDV',
+    'MW' => 'MWI', 'MX' => 'MEX', 'MY' => 'MYS', 'MZ' => 'MOZ', 'NA' => 'NAM',
+    'NC' => 'NCL', 'NE' => 'NER', 'NF' => 'NFK', 'NG' => 'NGA', 'NI' => 'NIC',
+    'NL' => 'NLD', 'NO' => 'NOR', 'NP' => 'NPL', 'NR' => 'NRU', 'NU' => 'NIU',
+    'NZ' => 'NZL', 'OM' => 'OMN', 'PA' => 'PAN', 'PE' => 'PER', 'PF' => 'PYF',
+    'PG' => 'PNG', 'PH' => 'PHL', 'PK' => 'PAK', 'PL' => 'POL', 'PM' => 'SPM',
+    'PN' => 'PCN', 'PR' => 'PRI', 'PS' => 'PSE', 'PT' => 'PRT', 'PW' => 'PLW',
+    'PY' => 'PRY', 'QA' => 'QAT', 'RE' => 'REU', 'RO' => 'ROU', 'RS' => 'SRB',
+    'RU' => 'RUS', 'RW' => 'RWA', 'SA' => 'SAU', 'SB' => 'SLB', 'SC' => 'SYC',
+    'SD' => 'SDN', 'SE' => 'SWE', 'SG' => 'SGP', 'SH' => 'SHN', 'SI' => 'SVN',
+    'SJ' => 'SJM', 'SK' => 'SVK', 'SL' => 'SLE', 'SM' => 'SMR', 'SN' => 'SEN',
+    'SO' => 'SOM', 'SR' => 'SUR', 'SS' => 'SSD', 'ST' => 'STP', 'SV' => 'SLV',
+    'SX' => 'SXM', 'SY' => 'SYR', 'SZ' => 'SWZ', 'TC' => 'TCA', 'TD' => 'TCD',
+    'TF' => 'ATF', 'TG' => 'TGO', 'TH' => 'THA', 'TJ' => 'TJK', 'TK' => 'TKL',
+    'TL' => 'TLS', 'TM' => 'TKM', 'TN' => 'TUN', 'TO' => 'TON', 'TR' => 'TUR',
+    'TT' => 'TTO', 'TV' => 'TUV', 'TW' => 'TWN', 'TZ' => 'TZA', 'UA' => 'UKR',
+    'UG' => 'UGA', 'UM' => 'UMI', 'US' => 'USA', 'UY' => 'URY', 'UZ' => 'UZB',
+    'VA' => 'VAT', 'VC' => 'VCT', 'VE' => 'VEN', 'VG' => 'VGB', 'VI' => 'VIR',
+    'VN' => 'VNM', 'VU' => 'VUT', 'WF' => 'WLF', 'WS' => 'WSM', 'YE' => 'YEM',
+    'YT' => 'MYT', 'ZA' => 'ZAF', 'ZM' => 'ZMB', 'ZW' => 'ZWE'
   }.freeze
 
   COUNTRY_NAMES = {
-    'US' => 'United States of America', 'GB' => 'United Kingdom', 'CA' => 'Canada',
-    'AU' => 'Australia', 'DE' => 'Germany', 'FR' => 'France', 'IT' => 'Italy',
-    'ES' => 'Spain', 'JP' => 'Japan', 'CN' => 'China', 'IN' => 'India',
-    'BR' => 'Brazil', 'MX' => 'Mexico', 'RU' => 'Russia', 'KR' => 'South Korea',
-    'NL' => 'Netherlands', 'CH' => 'Switzerland', 'SE' => 'Sweden', 'NO' => 'Norway',
-    'DK' => 'Denmark', 'FI' => 'Finland', 'BE' => 'Belgium', 'AT' => 'Austria',
-    'PL' => 'Poland', 'CZ' => 'Czech Republic', 'PT' => 'Portugal', 'GR' => 'Greece',
-    'HU' => 'Hungary', 'IE' => 'Ireland', 'RO' => 'Romania', 'BG' => 'Bulgaria',
-    'HR' => 'Croatia', 'SK' => 'Slovakia', 'SI' => 'Slovenia', 'LT' => 'Lithuania',
-    'LV' => 'Latvia', 'EE' => 'Estonia', 'LU' => 'Luxembourg', 'MT' => 'Malta',
-    'CY' => 'Cyprus', 'AR' => 'Argentina', 'CL' => 'Chile', 'CO' => 'Colombia',
-    'PE' => 'Peru', 'VE' => 'Venezuela', 'UY' => 'Uruguay', 'PY' => 'Paraguay',
-    'BO' => 'Bolivia', 'EC' => 'Ecuador', 'ZA' => 'South Africa', 'NG' => 'Nigeria',
-    'EG' => 'Egypt', 'KE' => 'Kenya', 'ET' => 'Ethiopia', 'GH' => 'Ghana',
-    'TH' => 'Thailand', 'VN' => 'Vietnam', 'PH' => 'Philippines', 'ID' => 'Indonesia',
-    'MY' => 'Malaysia', 'SG' => 'Singapore', 'TW' => 'Taiwan', 'HK' => 'Hong Kong',
-    'NZ' => 'New Zealand', 'IL' => 'Israel', 'AE' => 'United Arab Emirates',
-    'SA' => 'Saudi Arabia', 'TR' => 'Turkey', 'UA' => 'Ukraine', 'PK' => 'Pakistan',
-    'BD' => 'Bangladesh', 'LK' => 'Sri Lanka', 'NP' => 'Nepal',
-    'BM' => 'Bermuda', 'CR' => 'Costa Rica', 'PR' => 'Puerto Rico',
-    'KZ' => 'Kazakhstan', 'RS' => 'Serbia', 'BN' => 'Brunei',
-    'SY' => 'Syria'
+    'AD' => 'Andorra', 'AE' => 'United Arab Emirates', 'AF' => 'Afghanistan',
+    'AG' => 'Antigua and Barbuda', 'AI' => 'Anguilla', 'AL' => 'Albania',
+    'AM' => 'Armenia', 'AO' => 'Angola', 'AQ' => 'Antarctica', 'AR' => 'Argentina',
+    'AS' => 'American Samoa', 'AT' => 'Austria', 'AU' => 'Australia', 'AW' => 'Aruba',
+    'AX' => 'Åland Islands', 'AZ' => 'Azerbaijan', 'BA' => 'Bosnia and Herzegovina',
+    'BB' => 'Barbados', 'BD' => 'Bangladesh', 'BE' => 'Belgium', 'BF' => 'Burkina Faso',
+    'BG' => 'Bulgaria', 'BH' => 'Bahrain', 'BI' => 'Burundi', 'BJ' => 'Benin',
+    'BL' => 'Saint Barthélemy', 'BM' => 'Bermuda', 'BN' => 'Brunei', 'BO' => 'Bolivia',
+    'BQ' => 'Bonaire, Sint Eustatius and Saba', 'BR' => 'Brazil', 'BS' => 'Bahamas',
+    'BT' => 'Bhutan', 'BV' => 'Bouvet Island', 'BW' => 'Botswana', 'BY' => 'Belarus',
+    'BZ' => 'Belize', 'CA' => 'Canada', 'CC' => 'Cocos (Keeling) Islands',
+    'CD' => 'Democratic Republic of the Congo', 'CF' => 'Central African Republic',
+    'CG' => 'Republic of the Congo', 'CH' => 'Switzerland', 'CI' => 'Ivory Coast',
+    'CK' => 'Cook Islands', 'CL' => 'Chile', 'CM' => 'Cameroon', 'CN' => 'China',
+    'CO' => 'Colombia', 'CR' => 'Costa Rica', 'CU' => 'Cuba', 'CV' => 'Cape Verde',
+    'CW' => 'Curaçao', 'CX' => 'Christmas Island', 'CY' => 'Cyprus', 'CZ' => 'Czech Republic',
+    'DE' => 'Germany', 'DJ' => 'Djibouti', 'DK' => 'Denmark', 'DM' => 'Dominica',
+    'DO' => 'Dominican Republic', 'DZ' => 'Algeria', 'EC' => 'Ecuador', 'EE' => 'Estonia',
+    'EG' => 'Egypt', 'EH' => 'Western Sahara', 'ER' => 'Eritrea', 'ES' => 'Spain',
+    'ET' => 'Ethiopia', 'FI' => 'Finland', 'FJ' => 'Fiji', 'FK' => 'Falkland Islands',
+    'FM' => 'Micronesia', 'FO' => 'Faroe Islands', 'FR' => 'France', 'GA' => 'Gabon',
+    'GB' => 'United Kingdom', 'GD' => 'Grenada', 'GE' => 'Georgia', 'GF' => 'French Guiana',
+    'GG' => 'Guernsey', 'GH' => 'Ghana', 'GI' => 'Gibraltar', 'GL' => 'Greenland',
+    'GM' => 'Gambia', 'GN' => 'Guinea', 'GP' => 'Guadeloupe', 'GQ' => 'Equatorial Guinea',
+    'GR' => 'Greece', 'GS' => 'South Georgia and the South Sandwich Islands',
+    'GT' => 'Guatemala', 'GU' => 'Guam', 'GW' => 'Guinea-Bissau', 'GY' => 'Guyana',
+    'HK' => 'Hong Kong', 'HM' => 'Heard Island and McDonald Islands', 'HN' => 'Honduras',
+    'HR' => 'Croatia', 'HT' => 'Haiti', 'HU' => 'Hungary', 'ID' => 'Indonesia',
+    'IE' => 'Ireland', 'IL' => 'Israel', 'IM' => 'Isle of Man', 'IN' => 'India',
+    'IO' => 'British Indian Ocean Territory', 'IQ' => 'Iraq', 'IR' => 'Iran',
+    'IS' => 'Iceland', 'IT' => 'Italy', 'JE' => 'Jersey', 'JM' => 'Jamaica',
+    'JO' => 'Jordan', 'JP' => 'Japan', 'KE' => 'Kenya', 'KG' => 'Kyrgyzstan',
+    'KH' => 'Cambodia', 'KI' => 'Kiribati', 'KM' => 'Comoros', 'KN' => 'Saint Kitts and Nevis',
+    'KP' => 'North Korea', 'KR' => 'South Korea', 'KW' => 'Kuwait', 'KY' => 'Cayman Islands',
+    'KZ' => 'Kazakhstan', 'LA' => 'Laos', 'LB' => 'Lebanon', 'LC' => 'Saint Lucia',
+    'LI' => 'Liechtenstein', 'LK' => 'Sri Lanka', 'LR' => 'Liberia', 'LS' => 'Lesotho',
+    'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'LV' => 'Latvia', 'LY' => 'Libya',
+    'MA' => 'Morocco', 'MC' => 'Monaco', 'MD' => 'Moldova', 'ME' => 'Montenegro',
+    'MF' => 'Saint Martin', 'MG' => 'Madagascar', 'MH' => 'Marshall Islands',
+    'MK' => 'North Macedonia', 'ML' => 'Mali', 'MM' => 'Myanmar', 'MN' => 'Mongolia',
+    'MO' => 'Macau', 'MP' => 'Northern Mariana Islands', 'MQ' => 'Martinique',
+    'MR' => 'Mauritania', 'MS' => 'Montserrat', 'MT' => 'Malta', 'MU' => 'Mauritius',
+    'MV' => 'Maldives', 'MW' => 'Malawi', 'MX' => 'Mexico', 'MY' => 'Malaysia',
+    'MZ' => 'Mozambique', 'NA' => 'Namibia', 'NC' => 'New Caledonia', 'NE' => 'Niger',
+    'NF' => 'Norfolk Island', 'NG' => 'Nigeria', 'NI' => 'Nicaragua', 'NL' => 'Netherlands',
+    'NO' => 'Norway', 'NP' => 'Nepal', 'NR' => 'Nauru', 'NU' => 'Niue', 'NZ' => 'New Zealand',
+    'OM' => 'Oman', 'PA' => 'Panama', 'PE' => 'Peru', 'PF' => 'French Polynesia',
+    'PG' => 'Papua New Guinea', 'PH' => 'Philippines', 'PK' => 'Pakistan', 'PL' => 'Poland',
+    'PM' => 'Saint Pierre and Miquelon', 'PN' => 'Pitcairn', 'PR' => 'Puerto Rico',
+    'PS' => 'Palestine', 'PT' => 'Portugal', 'PW' => 'Palau', 'PY' => 'Paraguay',
+    'QA' => 'Qatar', 'RE' => 'Réunion', 'RO' => 'Romania', 'RS' => 'Serbia', 'RU' => 'Russia',
+    'RW' => 'Rwanda', 'SA' => 'Saudi Arabia', 'SB' => 'Solomon Islands', 'SC' => 'Seychelles',
+    'SD' => 'Sudan', 'SE' => 'Sweden', 'SG' => 'Singapore', 'SH' => 'Saint Helena',
+    'SI' => 'Slovenia', 'SJ' => 'Svalbard and Jan Mayen', 'SK' => 'Slovakia',
+    'SL' => 'Sierra Leone', 'SM' => 'San Marino', 'SN' => 'Senegal', 'SO' => 'Somalia',
+    'SR' => 'Suriname', 'SS' => 'South Sudan', 'ST' => 'São Tomé and Príncipe',
+    'SV' => 'El Salvador', 'SX' => 'Sint Maarten', 'SY' => 'Syria', 'SZ' => 'Eswatini',
+    'TC' => 'Turks and Caicos Islands', 'TD' => 'Chad', 'TF' => 'French Southern Territories',
+    'TG' => 'Togo', 'TH' => 'Thailand', 'TJ' => 'Tajikistan', 'TK' => 'Tokelau',
+    'TL' => 'Timor-Leste', 'TM' => 'Turkmenistan', 'TN' => 'Tunisia', 'TO' => 'Tonga',
+    'TR' => 'Turkey', 'TT' => 'Trinidad and Tobago', 'TV' => 'Tuvalu', 'TW' => 'Taiwan',
+    'TZ' => 'Tanzania', 'UA' => 'Ukraine', 'UG' => 'Uganda',
+    'UM' => 'United States Minor Outlying Islands', 'US' => 'United States', 'UY' => 'Uruguay',
+    'UZ' => 'Uzbekistan', 'VA' => 'Vatican City', 'VC' => 'Saint Vincent and the Grenadines',
+    'VE' => 'Venezuela', 'VG' => 'British Virgin Islands', 'VI' => 'U.S. Virgin Islands',
+    'VN' => 'Vietnam', 'VU' => 'Vanuatu', 'WF' => 'Wallis and Futuna', 'WS' => 'Samoa',
+    'YE' => 'Yemen', 'YT' => 'Mayotte', 'ZA' => 'South Africa', 'ZM' => 'Zambia',
+    'ZW' => 'Zimbabwe'
   }.freeze
 
   # Precompute mappings for name lookups (first two words, lowercase)
@@ -97,18 +161,18 @@ class CountryStatsService
       end
     end
 
-    { iso2: iso2, iso3: iso3, name: name }
+    { iso2: iso2, iso3: iso3, name: name.presence || 'Unknown' }
   end
 
   def self.merge_stats(raw_stats)
     merged = raw_stats.each_with_object({}) do |row, h|
       c = resolve_country(row['country'])
-      key = c[:iso2] || row['country'] || 'Unknown'
+      key = c[:iso2] && ISO2_TO_ISO3.key?(c[:iso2]) ? c[:iso2] : 'Unknown'
 
       h[key] ||= {
-        iso2: c[:iso2],
-        iso3: c[:iso3],
-        name: c[:name],
+        iso2: key == 'Unknown' ? nil : c[:iso2],
+        iso3: key == 'Unknown' ? nil : c[:iso3],
+        name: key == 'Unknown' ? 'Unknown' : c[:name],
         unique_visits: 0,
         unique_users: 0,
         events_count: 0,
@@ -155,37 +219,48 @@ class CountryStatsService
     min_val = sorted.first
     max_val = sorted.last
 
-    bins = (0...bin_count).map do |bin_idx|
-      percentile = (bin_idx * 100.0 / (bin_count - 1)).round
+    # Calculate bin boundaries based on percentiles
+    bin_boundaries = (0...bin_count).map do |bin_idx|
+      percentile = bin_count > 1 ? (bin_idx * 100.0 / (bin_count - 1)).round : 0
       case bin_idx
       when 0
-        { bin: 0, percentile: 0, value: min_val }
+        min_val
       when bin_count - 1
-        { bin: bin_count - 1, percentile: 100, value: max_val }
+        max_val
       else
-        idx_low = ((percentile - (50.0 / (bin_count - 1))) / 100.0 * (sorted.length - 1)).round
-        idx_high = ((percentile + (50.0 / (bin_count - 1))) / 100.0 * (sorted.length - 1)).round
-        val = ((sorted[idx_low] || min_val) + (sorted[idx_high] || max_val)) / 2.0
-        { bin: bin_idx, percentile: percentile, value: val.round }
+        idx = ((percentile / 100.0) * (sorted.length - 1)).round
+        sorted[idx] || min_val
       end
     end
 
-    (1...bins.length).each do |i|
-      bins[i][:value] = bins[i - 1][:value] + 1 if bins[i][:value] < bins[i - 1][:value]
+    # Ensure boundaries are increasing
+    (1...bin_boundaries.length).each do |i|
+      bin_boundaries[i] = bin_boundaries[i - 1] + 1 if bin_boundaries[i] < bin_boundaries[i - 1]
     end
 
-    bins
+    # Create bins with min/max ranges
+    (0...bin_count).map do |bin_idx|
+      min_range = bin_idx.zero? ? 0 : bin_boundaries[bin_idx - 1]
+      max_range = bin_boundaries[bin_idx]
+      {
+        bin: bin_idx,
+        min: min_range,
+        max: max_range,
+        label: bin_idx == bin_count - 1 ? "#{min_range}+" : "#{min_range}-#{max_range}"
+      }
+    end
   end
 
   def self.get_bin(value, bins)
     return 0 if value.zero?
 
-    bins.reverse.each { |b| return b[:bin] if value >= b[:value] }
-    0
+    bins.each { |b| return b[:bin] if value >= b[:min] && value <= b[:max] }
+    bins.last[:bin] # If above max, put in last bin
   end
 
   def self.format_country_stats(raw_stats, bin_count = 5)
     merged_stats = merge_stats(raw_stats)
+    bin_count = 5 # Hard-coded to 5 bins
     all_visits = merged_stats.map { |r| r[:unique_visits] || 0 }.sort
     bins = calculate_bins(all_visits, bin_count)
 

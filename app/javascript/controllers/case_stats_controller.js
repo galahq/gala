@@ -1,74 +1,102 @@
-/**
- * @noflow
- */
+/** @jsx React.createElement */
+/* @flow */
 
 import { Controller } from 'stimulus'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { NonIdealState } from '@blueprintjs/core'
+import { NonIdealState, Spinner, Card } from '@blueprintjs/core'
+import { IntlProvider } from 'react-intl'
 import StatsDateRangePicker from '../stats/StatsDateRangePicker'
 import StatsMap from '../stats/StatsMap'
 import StatsTable from '../stats/StatsTable'
+import loadMessages from '../../../config/locales'
+
+// Get locale from window.i18n (set by Rails)
+const locale = (window.i18n && window.i18n.locale) || 'en'
 
 export default class extends Controller {
   static targets = ['from', 'to']
 
+  /**
+   * Initialize the case stats controller
+   * Sets up the date range picker and loads initial data
+   */
   connect () {
+    // Prevent multiple connections
+    if (this.isConnected) {
+      return
+    }
+    this.isConnected = true
+
     // Prevent recursive calls during initialization
     this.isInitializing = true
     this.isFetching = false
+    this.lastRangeChange = 0
+    this.currentRequestId = 0
     const dataUrl = this.element.dataset.url
     this.publishedAt = this.element.dataset.published_at
 
     this.dataUrl = dataUrl
 
+    // Load i18n messages and initialize
+    loadMessages(locale)
+      .then(messages => {
+        this.messages = messages
+        this.initializeDatePicker()
+        this.initializeEventListeners()
+      })
+      .catch(() => {
+        // Fallback to empty messages on error
+        this.messages = {}
+        this.initializeDatePicker()
+        this.initializeEventListeners()
+      })
+  }
+
+  initializeDatePicker () {
     // Mount React DateRangePicker once (outside controller element)
     const pickerEl = document.getElementById('stats-range-picker')
     if (pickerEl && !pickerEl.dataset.reactMounted) {
-      const minDate = this.publishedAt ? new Date(this.publishedAt) : new Date()
-      const maxDate = new Date()
+      try {
+        const minDate = this.publishedAt
+          ? new Date(this.publishedAt)
+          : new Date()
+        const maxDate = new Date()
 
-      const today = new Date()
-      const end = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-      )
-      const startFromDays = d =>
-        new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
-      const initialRange = [minDate, end]
-
-      const shortcuts = [
-        { label: 'All time', dateRange: [minDate, end] },
-        { label: 'Past year', dateRange: [startFromDays(365), end] },
-        { label: 'Past 2 years', dateRange: [startFromDays(730), end] },
-      ]
-
-      // store presets for matching/highlighting later
-      this.shortcuts = shortcuts
-
-      ReactDOM.render(
-        <StatsDateRangePicker
-          minDate={minDate}
-          maxDate={maxDate}
-          fromInputId="stats-from"
-          toInputId="stats-to"
-          shortcuts={shortcuts}
-          initialRange={initialRange}
-        />,
-        pickerEl
-      )
-      pickerEl.dataset.reactMounted = '1'
-      // highlight initial active shortcut once the DOM is painted
-      setTimeout(() => this.highlightActiveShortcut(), 0)
+        ReactDOM.render(
+          <IntlProvider locale={locale} messages={this.messages}>
+            <StatsDateRangePicker
+              className="pt"
+              minDate={minDate}
+              maxDate={maxDate}
+              fromInputId="stats-from"
+              toInputId="stats-to"
+              initialShortcutIndex={0}
+            />
+          </IntlProvider>,
+          pickerEl
+        )
+        pickerEl.dataset.reactMounted = '1'
+      } catch (error) {
+        console.error('Error mounting DateRangePicker:', error)
+      }
     }
+  }
 
-    // Set up event listener with guard against recursive calls
+  initializeEventListeners () {
+    // Set up event listener with guard against recursive calls and debouncing
     this.rangeChangedHandler = () => {
-      // Don't respond to events during initialization or while already fetching
-      if (this.isInitializing || this.isFetching) return
+      const now = Date.now()
+      // Debounce: ignore events that come too quickly (within 500ms to be more conservative)
+      if (now - this.lastRangeChange < 500) return
+      this.lastRangeChange = now
 
-      this.currentQuery = 'by_event'
+      // Don't respond to events during initialization or while already fetching
+      if (this.isInitializing || this.isFetching) {
+        return
+      }
+
+      // Call apply directly without timeout to prevent potential race conditions
       this.apply()
     }
 
@@ -92,45 +120,58 @@ export default class extends Controller {
       })
   }
 
+  /**
+   * Apply date range changes and fetch new data
+   * Validates dates and updates URL parameters
+   */
   apply () {
     // Prevent overlapping requests
-    if (this.isFetching) return
+    if (this.isFetching) {
+      return
+    }
 
-    // Enforce date constraints: from >= published_at, from <= to
-    if (this.fromTarget && this.publishedAt) {
-      if (this.fromTarget.value < this.publishedAt) {
-        this.fromTarget.value = this.publishedAt
+    try {
+      // Enforce date constraints: from >= published_at, from <= to
+      if (this.fromTarget && this.publishedAt) {
+        if (this.fromTarget.value < this.publishedAt) {
+          this.fromTarget.value = this.publishedAt
+        }
       }
-    }
-    if (this.fromTarget && this.toTarget && this.toTarget.value) {
-      if (this.fromTarget.value > this.toTarget.value) {
-        this.toTarget.value = this.fromTarget.value
+      if (this.fromTarget && this.toTarget && this.toTarget.value) {
+        if (this.fromTarget.value > this.toTarget.value) {
+          this.toTarget.value = this.fromTarget.value
+        }
       }
-    }
-    // Ensure "to" does not exceed today
-    if (this.toTarget) {
-      const today = new Date()
-      const yyyy = today.getFullYear()
-      const mm = String(today.getMonth() + 1).padStart(2, '0')
-      const dd = String(today.getDate()).padStart(2, '0')
-      const todayStr = `${yyyy}-${mm}-${dd}`
-      if (this.toTarget.value > todayStr) {
-        this.toTarget.value = todayStr
+      // Ensure "to" does not exceed today
+      if (this.toTarget) {
+        const today = new Date()
+        const yyyy = today.getFullYear()
+        const mm = String(today.getMonth() + 1).padStart(2, '0')
+        const dd = String(today.getDate()).padStart(2, '0')
+        const todayStr = yyyy + '-' + mm + '-' + dd
+        if (this.toTarget.value > todayStr) {
+          this.toTarget.value = todayStr
+        }
       }
+      // Sync URL query params (?from=YYYY-MM-DD&to=YYYY-MM-DD)
+      const url = new URL(window.location.href)
+      const params = url.searchParams
+      const from = this.fromTarget && this.fromTarget.value
+      const to = this.toTarget && this.toTarget.value
+      if (from) params.set('from', from)
+      else params.delete('from')
+      if (to) params.set('to', to)
+      else params.delete('to')
+      window.history.replaceState(
+        {},
+        '',
+        url.pathname + '?' + params.toString()
+      )
+      this.fetchAndRenderBoth()
+    } catch (error) {
+      console.error('Error in apply method:', error)
+      this.isFetching = false // Reset flag on error
     }
-    // Sync URL query params (?from=YYYY-MM-DD&to=YYYY-MM-DD)
-    const url = new URL(window.location.href)
-    const params = url.searchParams
-    const from = this.fromTarget && this.fromTarget.value
-    const to = this.toTarget && this.toTarget.value
-    if (from) params.set('from', from)
-    else params.delete('from')
-    if (to) params.set('to', to)
-    else params.delete('to')
-    window.history.replaceState({}, '', `${url.pathname}?${params.toString()}`)
-    // Update shortcut highlighting to reflect current range
-    this.highlightActiveShortcut()
-    this.fetchAndRenderBoth()
   }
 
   isoDate (d) {
@@ -139,38 +180,10 @@ export default class extends Controller {
     return d ? d.toISOString().slice(0, 10) : ''
   }
 
-  highlightActiveShortcut () {
-    try {
-      const ul = document.querySelector('.pt-daterangepicker-shortcuts')
-      if (!ul) return
-      const items = ul.querySelectorAll('li')
-      items.forEach(li =>
-        li.classList.remove('DayPicker-Day', 'DayPicker-Day--selected')
-      )
-
-      const fromVal = this.fromTarget && this.fromTarget.value
-      const toVal = this.toTarget && this.toTarget.value
-      if (!fromVal || !toVal || !Array.isArray(this.shortcuts)) return
-
-      let matchIdx = -1
-      for (let i = 0; i < this.shortcuts.length; i++) {
-        const [sf, st] = this.shortcuts[i].dateRange
-        if (this.isoDate(sf) === fromVal && this.isoDate(st) === toVal) {
-          matchIdx = i
-          break
-        }
-      }
-      if (matchIdx >= 0 && items[matchIdx]) {
-        items[matchIdx].classList.add(
-          'DayPicker-Day',
-          'DayPicker-Day--selected'
-        )
-      }
-    } catch (_) {
-      // ignore highlighting errors; do not block stats fetch
-    }
-  }
-
+  /**
+   * Fetch stats data and render all components
+   * Handles loading states, errors, and timeouts
+   */
   async fetchAndRenderBoth () {
     // Prevent overlapping requests
     if (this.isFetching) return
@@ -179,9 +192,18 @@ export default class extends Controller {
     this.renderLoading()
 
     try {
-      const data = await this.fetchData()
+      // Add shorter timeout to prevent hanging (15 seconds instead of 30)
+      const timeoutPromise = new Promise((resolve, reject) => {
+        setTimeout(
+          () => reject(new Error('Request timed out after 15 seconds')),
+          15000
+        )
+      })
+
+      const data = await Promise.race([this.fetchData(), timeoutPromise])
       this.renderResults(data)
     } catch (error) {
+      console.error('fetchAndRenderBoth error:', error)
       this.renderError(error)
     } finally {
       this.isFetching = false
@@ -189,134 +211,200 @@ export default class extends Controller {
   }
 
   renderLoading () {
-    // Show loading skeleton in map area
+    // Show loading spinner in map area
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
-      ReactDOM.render(
-        <div
-          style={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#f9fafb',
-          }}
-        >
-          <div style={{ textAlign: 'center' }}>
-            <div className="pt-spinner pt-large">
-              <div className="pt-spinner-svg-container">
-                <svg viewBox="0 0 100 100">
-                  <path
-                    className="pt-spinner-track"
-                    d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-                  ></path>
-                  <path
-                    className="pt-spinner-head"
-                    d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-            <p style={{ marginTop: '20px', color: '#6b7280' }}>
-              Loading statistics...
-            </p>
-          </div>
-        </div>,
-        mapEl
-      )
+      try {
+        // Don't unmount the map component during loading - let it handle its own loading state
+        // Just show a loading overlay on top of the existing map
+        const existingOverlay = mapEl.querySelector('.loading-overlay')
+        if (!existingOverlay) {
+          // Create overlay using React for consistency
+          const overlayDiv = document.createElement('div')
+          overlayDiv.className = 'loading-overlay'
+          mapEl.style.position = 'relative'
+          mapEl.appendChild(overlayDiv)
+
+          ReactDOM.render(
+            React.createElement(
+              'div',
+              {
+                style: {
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  zIndex: 1000,
+                },
+              },
+              React.createElement(Spinner, { size: 50 }),
+              React.createElement(
+                'div',
+                {
+                  style: {
+                    marginTop: '12px',
+                    color: '#6b7280',
+                    fontSize: '14px',
+                  },
+                },
+                'Loading map data...'
+              )
+            ),
+            overlayDiv
+          )
+        }
+      } catch (error) {
+        console.error('Error showing loading state for map:', error)
+      }
     }
 
     // Show detailed skeleton in summary area
     const summaryEl = document.getElementById('stats-summary')
     if (summaryEl) {
-      ReactDOM.render(
-        <div style={{ fontSize: '14px', lineHeight: '1.4', color: '#000000' }}>
-          {/* 5 stats line items */}
+      try {
+        ReactDOM.render(
           <div
-            className="pt-skeleton"
-            style={{ height: '16px', width: '180px', marginBottom: '4px' }}
-          />
-          <div
-            className="pt-skeleton"
-            style={{ height: '16px', width: '120px', marginBottom: '4px' }}
-          />
-          <div
-            className="pt-skeleton"
-            style={{ height: '16px', width: '160px', marginBottom: '4px' }}
-          />
-          <div
-            className="pt-skeleton"
-            style={{ height: '16px', width: '140px', marginBottom: '4px' }}
-          />
-          <div
-            className="pt-skeleton"
-            style={{ height: '16px', width: '100px', marginBottom: '8px' }}
-          />
-
-          {/* Distribution section */}
-          <div style={{ marginTop: '4px' }}>
+            style={{
+              fontSize: '14px',
+              lineHeight: '1.6',
+              color: '#000000',
+              height: '200px',
+            }}
+          >
+            {/* Summary header with published date */}
             <div
-              className="pt-skeleton"
-              style={{ height: '14px', width: '120px', marginBottom: '4px' }}
-            />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-              {/* 5 legend boxes */}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '12px',
+                paddingBottom: '8px',
+                borderBottom: '1px solid #e5e7eb',
+                fontSize: '17px',
+              }}
+            >
               <div
                 className="pt-skeleton"
-                style={{ width: '40px', height: '24px' }}
+                style={{ height: '20px', width: '80px' }}
               />
               <div
                 className="pt-skeleton"
-                style={{ width: '40px', height: '24px' }}
+                style={{ height: '20px', width: '120px' }}
+              />
+            </div>
+
+            {/* Statistics */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+              }}
+            >
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '140px' }}
               />
               <div
                 className="pt-skeleton"
-                style={{ width: '40px', height: '24px' }}
-              />
-              <div
-                className="pt-skeleton"
-                style={{ width: '40px', height: '24px' }}
-              />
-              <div
-                className="pt-skeleton"
-                style={{ width: '40px', height: '24px' }}
+                style={{ height: '16px', width: '60px' }}
               />
             </div>
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginTop: '4px',
+                marginBottom: '8px',
               }}
             >
               <div
                 className="pt-skeleton"
-                style={{ height: '11px', width: '20px' }}
+                style={{ height: '16px', width: '70px' }}
               />
               <div
                 className="pt-skeleton"
-                style={{ height: '11px', width: '25px' }}
+                style={{ height: '16px', width: '30px' }}
               />
             </div>
-          </div>
-        </div>,
-        summaryEl
-      )
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+              }}
+            >
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '120px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '50px' }}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+              }}
+            >
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '120px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '40px' }}
+              />
+            </div>
+
+            {/* Translations (optional) */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '90px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '80px' }}
+              />
+            </div>
+          </div>,
+          summaryEl
+        )
+      } catch (error) {
+        console.error('Error rendering loading state for summary:', error)
+      }
     }
 
     // Show skeleton in table area
     const tableEl = document.getElementById('stats-table')
     if (tableEl) {
-      ReactDOM.render(
-        <div className="pt-card" style={{ padding: '20px', marginTop: '24px' }}>
-          <div
-            className="pt-skeleton"
-            style={{ height: '20px', width: '200px', marginBottom: '20px' }}
-          />
-          <div className="pt-skeleton" style={{ height: '300px' }} />
-        </div>,
-        tableEl
-      )
+      try {
+        ReactDOM.render(
+          <Card style={{ padding: '20px', marginTop: '24px' }}>
+            <div
+              className="pt-skeleton"
+              style={{ height: '20px', width: '200px', marginBottom: '20px' }}
+            />
+            <div className="pt-skeleton" style={{ height: '300px' }} />
+          </Card>,
+          tableEl
+        )
+      } catch (error) {
+        console.error('Error rendering loading state for table:', error)
+      }
     }
   }
 
@@ -339,30 +427,38 @@ export default class extends Controller {
     // Show error in map area
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
-      ReactDOM.render(
-        <div
-          style={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <NonIdealState
-            title={errorTitle}
-            description={errorDescription}
-            visual="error"
-            action={errorAction}
-          />
-        </div>,
-        mapEl
-      )
+      try {
+        ReactDOM.render(
+          <div
+            style={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <NonIdealState
+              title={errorTitle}
+              description={errorDescription}
+              visual="error"
+              action={errorAction}
+            />
+          </div>,
+          mapEl
+        )
+      } catch (error) {
+        console.error('Error rendering error state for map:', error)
+      }
     }
 
     // Clear table area
     const tableEl = document.getElementById('stats-table')
     if (tableEl) {
-      ReactDOM.render(<div />, tableEl)
+      try {
+        ReactDOM.render(<div />, tableEl)
+      } catch (error) {
+        console.error('Error clearing table:', error)
+      }
     }
   }
 
@@ -373,11 +469,9 @@ export default class extends Controller {
     if (from) params.set('from', from)
     if (to) params.set('to', to)
 
-    // Add bin_count parameter (default 5, can be configured via window.STATS_BIN_COUNT)
-    const binCount = window.STATS_BIN_COUNT || 5
-    params.set('bin_count', binCount)
+    // bin_count is now hard-coded to 5 in the backend
 
-    const url = `${this.dataUrl}.json?${params.toString()}`
+    const url = this.dataUrl + '.json?' + params.toString()
     return fetch(url, {
       credentials: 'same-origin',
       headers: { Accept: 'application/json' },
@@ -385,201 +479,314 @@ export default class extends Controller {
     }).then(async r => {
       if (r.ok) return r.json()
       const text = await r.text()
-      throw new Error(`HTTP ${r.status}: ${text}`)
+      throw new Error('HTTP ' + r.status + ': ' + text)
     })
   }
 
   renderResults (payload) {
-    // Handle error responses
-    if (!payload || payload.error) {
-      this.renderError(new Error(payload?.error || 'Invalid response'))
-      return
+    // Extract data with proper defaults and validation
+    const formatted = Array.isArray(payload?.formatted) ? payload.formatted : []
+    const summary =
+      payload?.summary && typeof payload.summary === 'object'
+        ? payload.summary
+        : {}
+
+    try {
+      // Handle error responses
+      if (!payload || payload.error) {
+        this.renderError(new Error(payload?.error || 'Invalid response'))
+        return
+      }
+
+      // Debug logging
+      console.debug('case-stats payload', { payload })
+
+      // Safety check: limit data size to prevent freezing
+      if (formatted.length > 1000) {
+        this.renderError(
+          new Error(
+            'Too much data received (' +
+              formatted.length +
+              ' countries). Please choose a smaller date range.'
+          )
+        )
+        return
+      }
+
+      // Update the data - the components will handle updates via props
+      this.currentData = { formatted, summary }
+
+      // Render the components
+      this.renderComponents()
+    } catch (error) {
+      console.error('Error in renderResults setup:', error)
+      this.renderError(error)
+    } finally {
+      this.isFetching = false
     }
+  }
 
-    // Debug logging
-    console.debug('case-stats payload', { payload })
-
-    // Extract data with proper defaults
-    const formatted = payload.formatted || []
-    const summary = payload.summary || {}
+  renderComponents () {
+    const { formatted, summary } = this.currentData || {
+      formatted: [],
+      summary: {},
+    }
 
     // Render summary stats
     const summaryEl = document.getElementById('stats-summary')
     if (summaryEl) {
-      if (formatted.length === 0) {
-        ReactDOM.render(
-          <div style={{ color: '#9ca3af' }}>
-            <div>No data available for selected period</div>
-          </div>,
-          summaryEl
-        )
-      } else {
-        ReactDOM.render(
-          <div
-            style={{
-              fontSize: '16px',
-              lineHeight: '1.6',
-              color: '#000000',
-            }}
-          >
-            {/* Summary header with published date */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '12px',
-                paddingBottom: '8px',
-                borderBottom: '1px solid #e5e7eb',
-                fontSize: '17px',
-              }}
-            >
-              <span style={{ fontWeight: 'bold' }}>Summary</span>
-              {summary.case_published_at && (
-                <strong>
-                  pub:{' '}
-                  {new Date(summary.case_published_at).toLocaleDateString(
-                    'en-US',
-                    {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    }
-                  )}
-                </strong>
-              )}
-            </div>
-
-            {/* Statistics */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
-              <span>Total Unique Visitors</span>
-              <strong>{(summary.total_visits || 0).toLocaleString()}</strong>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
-              <span>Countries</span>
-              <strong>{summary.country_count || 0}</strong>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
-              <span>Total Deployments</span>
-              <strong>
-                {(summary.total_deployments || 0).toLocaleString()}
-              </strong>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-              }}
-            >
-              <span>Podcast Listens</span>
-              <strong>
-                {(summary.total_podcast_listens || 0).toLocaleString()}
-              </strong>
-            </div>
-
-            {/* Translations */}
-            {summary.case_locales && (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span>Translations</span>
-                <strong>{summary.case_locales}</strong>
-              </div>
-            )}
-
-          </div>,
-          summaryEl
-        )
+      try {
+        if (formatted.length === 0) {
+          ReactDOM.render(
+            React.createElement(
+              'div',
+              { style: { color: '#9ca3af' }},
+              React.createElement(
+                'div',
+                null,
+                'No data available for selected period'
+              )
+            ),
+            summaryEl
+          )
+        } else {
+          ReactDOM.render(
+            React.createElement(
+              'div',
+              {
+                style: {
+                  fontSize: '16px',
+                  lineHeight: '1.6',
+                  color: '#000000',
+                },
+              },
+              // Summary header
+              React.createElement(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '12px',
+                    paddingBottom: '8px',
+                    borderBottom: '1px solid #e5e7eb',
+                    fontSize: '17px',
+                  },
+                },
+                React.createElement(
+                  'span',
+                  { style: { fontWeight: 'bold' }},
+                  'Summary'
+                ),
+                summary.case_published_at &&
+                  React.createElement(
+                    'strong',
+                    null,
+                    'pub: ' +
+                      new Date(summary.case_published_at).toLocaleDateString(
+                        'en-US',
+                        {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        }
+                      )
+                  )
+              ),
+              // Statistics
+              React.createElement(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px',
+                  },
+                },
+                React.createElement('span', null, 'Total Unique Visitors'),
+                React.createElement(
+                  'strong',
+                  null,
+                  (summary.total_visits || 0).toLocaleString()
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px',
+                  },
+                },
+                React.createElement('span', null, 'Countries'),
+                React.createElement('strong', null, summary.country_count || 0)
+              ),
+              React.createElement(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px',
+                  },
+                },
+                React.createElement('span', null, 'Total Deployments'),
+                React.createElement(
+                  'strong',
+                  null,
+                  (summary.total_deployments || 0).toLocaleString()
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px',
+                  },
+                },
+                React.createElement('span', null, 'Podcast Listens'),
+                React.createElement(
+                  'strong',
+                  null,
+                  (summary.total_podcast_listens || 0).toLocaleString()
+                )
+              ),
+              // Translations
+              summary.case_locales &&
+                React.createElement(
+                  'div',
+                  {
+                    style: {
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                    },
+                  },
+                  React.createElement('span', null, 'Translations'),
+                  React.createElement('strong', null, summary.case_locales)
+                )
+            ),
+            summaryEl
+          )
+        }
+      } catch (error) {
+        console.error('Error rendering summary:', error)
       }
     }
 
-    // Render the map
+    // Render the map - keep it mounted and just update props
     const mapEl = document.getElementById('stats-map')
     if (mapEl) {
-      if (formatted.length === 0) {
-        ReactDOM.render(
-          <div
-            style={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: '#f9fafb',
-            }}
-          >
-            <NonIdealState
-              title="No Data Available"
-              description="No visitor data found for the selected date range."
-              visual="geosearch"
-            />
-          </div>,
-          mapEl
-        )
-      } else {
-        const from = this.fromTarget && this.fromTarget.value
-        const to = this.toTarget && this.toTarget.value
-        ReactDOM.render(
-          <StatsMap
-            key={`map-${from}-${to}`}
-            countries={formatted}
-            bins={summary.bins || []}
-          />,
-          mapEl
-        )
+      try {
+        if (formatted.length === 0) {
+          // Show empty state overlay
+          const existingOverlay = mapEl.querySelector('.empty-overlay')
+          if (!existingOverlay) {
+            const overlayDiv = document.createElement('div')
+            overlayDiv.className = 'empty-overlay'
+            overlayDiv.style.cssText =
+              'position: absolute; top: 0; left: 0; right: 0; bottom: 0; ' +
+              'background: rgba(249, 250, 251, 0.9); display: flex; ' +
+              'align-items: center; justify-content: center; z-index: 1000;'
+            mapEl.style.position = 'relative'
+            mapEl.appendChild(overlayDiv)
+
+            ReactDOM.render(
+              React.createElement(NonIdealState, {
+                title: 'No Data Available',
+                description:
+                  'No visitor data found for the selected date range.',
+                visual: 'geosearch',
+              }),
+              overlayDiv
+            )
+          }
+        } else {
+          // Remove empty state overlay
+          const emptyOverlay = mapEl.querySelector('.empty-overlay')
+          if (emptyOverlay) {
+            ReactDOM.unmountComponentAtNode(emptyOverlay)
+            emptyOverlay.remove()
+          }
+
+          // Remove loading overlay
+          const loadingOverlay = mapEl.querySelector('.loading-overlay')
+          if (loadingOverlay) {
+            ReactDOM.unmountComponentAtNode(loadingOverlay)
+            loadingOverlay.remove()
+          }
+
+          // Keep map mounted - just update props (React will handle efficient updates)
+          // Don't unmount the map component - this is the key fix for the performance bug
+          ReactDOM.render(
+            <IntlProvider locale={locale} messages={this.messages}>
+              {React.createElement(StatsMap, {
+                countries: formatted,
+                bins: summary.bins || [],
+              })}
+            </IntlProvider>,
+            mapEl
+          )
+        }
+      } catch (error) {
+        console.error('Error rendering map:', error)
       }
     }
 
     // Render the table
     const tableEl = document.getElementById('stats-table')
     if (tableEl) {
-      if (formatted.length === 0) {
-        ReactDOM.render(<div />, tableEl)
-      } else {
-        const caseSlug = this.dataUrl.split('/')[2] // Extract case slug from URL
-        ReactDOM.render(
-          <StatsTable
-            data={formatted}
-            caseSlug={caseSlug}
-            bins={summary.bins || []}
-            onRowClick={country => this.handleCountrySelect(country)}
-          />,
-          tableEl
-        )
+      try {
+        if (formatted.length === 0) {
+          ReactDOM.render(React.createElement('div'), tableEl)
+        } else {
+          const caseSlug = this.dataUrl.split('/')[2] // Extract case slug from URL
+          ReactDOM.render(
+            <IntlProvider locale={locale} messages={this.messages}>
+              {React.createElement(StatsTable, {
+                data: formatted,
+                caseSlug,
+                bins: summary.bins || [],
+                onRowClick: country => this.handleCountrySelect(country),
+              })}
+            </IntlProvider>,
+            tableEl
+          )
+        }
+      } catch (error) {
+        console.error('Error rendering table:', error)
+        ReactDOM.render(React.createElement('div'), tableEl)
       }
     }
   }
 
+  /**
+   * Handle country selection from the table
+   * Could be extended to zoom the map or filter data
+   */
+  handleCountrySelect (country) {
+    // Reserved for future functionality
+  }
+
+  /**
+   * Clean up when controller is disconnected
+   */
   disconnect () {
+    this.isConnected = false
     // Clean up event listener
     if (this.rangeChangedHandler) {
       document.removeEventListener(
         'stats-range-changed',
         this.rangeChangedHandler
       )
+      this.rangeChangedHandler = null
     }
     // Reset flags to prevent issues if the controller is reconnected
     this.isInitializing = false
     this.isFetching = false
+    this.lastRangeChange = 0
+    this.currentRequestId = 0
   }
 }

@@ -20,32 +20,31 @@
         <input type="hidden" id="stats-from" data-target="case-stats.from" />
         <input type="hidden" id="stats-to" data-target="case-stats.to" />
 
-  <!-- Top section: Date picker and summary stats -->
-  <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 24px;">
-    <!-- Date picker -->
-    <div style="flex: 1;">
-      <div id="stats-range-picker"></div>
-    </div>
-
-    <!-- Summary stats -->
-    <div style="flex: 0 0 300px; padding: 16px; background: #f9fafb; border-radius: 8px; border: 0.5px solid rgb(0, 0, 0);">
-      <div id="stats-summary" style="font-size: 13px; color: #4b5563;">
-        <div class="pt-skeleton" style="height: 14px; width: 150px; margin-bottom: 8px;"></div>
-        <div class="pt-skeleton" style="height: 14px; width: 120px;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Map section (full width below date picker) -->
-  <div style="height: 500px; margin-bottom: 24px;">
-    <div id="stats-map" style="height: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
-  </div>
-        <!-- Bottom section: Stats table -->
-        <div id="stats-table" style="margin-bottom: 24px;"></div>
-
-        <!-- Legacy events display (hidden by default) -->
-        <div id="stats-events" style="display: none;"></div>
-      </div>
-    </div>
-  </div>
-</div>
+        <!-- Top section: Date picker and summary stats -->
+        <div class="c-stats-layout">
+          <!-- Date picker -->
+          <div class="c-stats-picker">
+            <div id="stats-range-picker"></div>
+          </div>
+           <!-- Summary stats -->
+           <div class="c-stats-summary">
+             <div id="stats-summary">
+               <div class="pt-skeleton" style="height: 16px; width: 150px; margin-bottom: 12px;"></div>
+               <div class="pt-skeleton" style="height: 14px; width: 180px; margin-bottom: 8px;"></div>
+               <div class="pt-skeleton" style="height: 14px; width: 120px; margin-bottom: 8px;"></div>
+               <div class="pt-skeleton" style="height: 14px; width: 160px; margin-bottom: 8px;"></div>
+               <div class="pt-skeleton" style="height: 14px; width: 140px; margin-bottom: 8px;"></div>
+               <div class="pt-skeleton" style="height: 14px; width: 100px;"></div>
+             </div>
+           </div>
+        </div>
+         <!-- Map section (full width below date picker) -->
+         <div class="c-stats-map-container">
+           <div id="stats-map" class="c-stats-map"></div>
+         </div>
+          <!-- Bottom section: Stats table -->
+          <div id="stats-table" class="c-stats-table-container"></div>
+       </div>
+     </div>
+   </div>
+ </div>

@@ -20,9 +20,10 @@ module Cases
 
     # @param [GET] /cases/case-slug/stats
     def show
-      redirect_to '/403' and return unless current_reader.has_role? :editor
+      redirect_to '/403' and return unless current_reader&.has_role? :editor
 
       set_case
+      @sql_query = sql_query_sql
       respond_to do |format|
         format.html { render :show }
         format.json { render json: stats_data }
@@ -57,8 +58,8 @@ module Cases
       ]
     end
 
-    def sql_query
-      sql = <<~SQL
+    def sql_query_sql
+      <<~SQL
         WITH params(case_slug, from_ts, to_ts) AS (
           VALUES ($1::text, $2::timestamp, $3::timestamp)
         )
@@ -70,41 +71,48 @@ module Cases
           COUNT(DISTINCT v.visitor_token)                                 AS unique_visits,
           COUNT(DISTINCT e.user_id)                                       AS unique_users,
           COUNT(*)                                                        AS events_count,
-              COUNT(DISTINCT d.id)                                            AS deployments_count,
-              COUNT(CASE WHEN e.name = 'visit_podcast' THEN 1 END)         AS visit_podcast_count,
-              COUNT(CASE WHEN e.name = 'visit_edgenote' THEN 1 END)        AS visit_edgenote_count,
-              COUNT(CASE WHEN e.name = 'visit_page' THEN 1 END)            AS visit_page_count,
-              COUNT(CASE WHEN e.name = 'visit_element' THEN 1 END)         AS visit_element_count,
-              COUNT(CASE WHEN e.name = 'read_quiz' THEN 1 END)             AS read_quiz_count,
-              COUNT(CASE WHEN e.name = 'read_overview' THEN 1 END)         AS read_overview_count,
-              COUNT(CASE WHEN e.name = 'read_card' THEN 1 END)             AS read_card_count,
-              COUNT(CASE WHEN e.name = 'write_comment' THEN 1 END)         AS write_comment_count,
-              COUNT(CASE WHEN e.name = 'write_comment_thread' THEN 1 END)  AS write_comment_thread_count,
-              COUNT(CASE WHEN e.name = 'write_quiz_submission' THEN 1 END) AS write_quiz_submission_count
+          MAX(dc.deployments_count)                                       AS deployments_count,
+          COUNT(distinct CASE WHEN e.name = 'visit_podcast' THEN 1 END)            AS visit_podcast_count,
+          COUNT(distinct CASE WHEN e.name = 'visit_edgenote' THEN 1 END)           AS visit_edgenote_count,
+          COUNT(distinct CASE WHEN e.name = 'visit_page' THEN 1 END)               AS visit_page_count,
+          COUNT(distinct CASE WHEN e.name = 'visit_element' THEN 1 END)            AS visit_element_count,
+          COUNT(distinct CASE WHEN e.name = 'read_quiz' THEN 1 END)                AS read_quiz_count,
+          COUNT(distinct CASE WHEN e.name = 'read_overview' THEN 1 END)            AS read_overview_count,
+          COUNT(distinct CASE WHEN e.name = 'read_card' THEN 1 END)                AS read_card_count,
+          COUNT(distinct CASE WHEN e.name = 'write_comment' THEN 1 END)            AS write_comment_count,
+          COUNT(distinct CASE WHEN e.name = 'write_comment_thread' THEN 1 END)     AS write_comment_thread_count,
+          COUNT(distinct CASE WHEN e.name = 'write_quiz_submission' THEN 1 END)    AS write_quiz_submission_count
         FROM ahoy_events e
         INNER JOIN cases c ON c.slug = e.properties ->> 'case_slug'
-        LEFT JOIN deployments d ON d.case_id = c.id
         INNER JOIN params p ON TRUE
         INNER JOIN visits v ON v.id = e.visit_id
+        LEFT JOIN LATERAL (
+          SELECT COUNT(DISTINCT d.id) AS deployments_count
+          FROM deployments d
+          WHERE d.case_id = c.id
+        ) dc ON TRUE
         WHERE (e.properties ->> 'case_slug') = p.case_slug
           AND e."time" BETWEEN p.from_ts AND p.to_ts
+          AND v.country IS NOT NULL AND trim(v.country) != ''
           AND NOT EXISTS (
             SELECT 1
             FROM readers_roles rr
             JOIN roles ro ON ro.id = rr.role_id
             WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
-          )
-        GROUP BY v.country
-        ORDER BY unique_visits DESC NULLS LAST
+          )  -- interesting readers see {Reader.interesting}
+        GROUP BY v.country, c.id
+        ORDER BY unique_visits DESC NULLS LAST;
       SQL
+    end
 
+    def sql_query
+      sql = sql_query_sql
       ActiveRecord::Base.connection.exec_query(sql, 'Case Stats', bindings).to_a
     end
 
     def stats_data
       raw_data = sql_query
-      bin_count = params[:bin_count].present? ? params[:bin_count].to_i : 5
-      bin_count = [[bin_count, 2].max, 10].min # Clamp between 2 and 10
+      bin_count = 5 # Hard-coded to 5 bins
       formatted_data = CountryStatsService.format_country_stats(raw_data, bin_count)
 
       # Get translations separately
@@ -125,7 +133,7 @@ module Cases
         summary: {
           total_visits: formatted_data[:total_visits],
           country_count: formatted_data[:country_count],
-          total_deployments: formatted_data[:total_deployments],
+          total_deployments: @case.deployments.count,
           total_podcast_listens: formatted_data[:total_podcast_listens],
           case_published_at: @case.published_at&.strftime('%b %d, %Y'),
           case_locales: case_locales,
@@ -135,25 +143,48 @@ module Cases
       }
     end
 
+    def format_date(date)
+      return nil unless date
+      return nil unless date.respond_to?(:strftime)
+
+      date.strftime('%Y-%m-%d %H:%M')
+    rescue StandardError
+      nil
+    end
+
     def generate_csv
       require 'csv'
-      result = CountryStatsService.format_country_stats(sql_query)
-      data = result[:stats]
+      formatted_stats = stats_data[:formatted]
+
+      # Calculate totals
+      total_visits = formatted_stats.sum { |r| r[:unique_visits] }
+      total_users = formatted_stats.sum { |r| r[:unique_users] }
+      total_events = formatted_stats.sum { |r| r[:events_count] }
 
       CSV.generate(headers: true) do |csv|
         csv << ['Country', 'Unique Visitors', 'Unique Users',
                 'Total Events', 'First Visit', 'Last Visit']
 
-        data.each do |row|
+        formatted_stats.each do |row|
           csv << [
             row[:name],
             row[:unique_visits],
             row[:unique_users],
             row[:events_count],
-            row[:first_event]&.strftime('%Y-%m-%d %H:%M'),
-            row[:last_event]&.strftime('%Y-%m-%d %H:%M')
+            format_date(row[:first_event]),
+            format_date(row[:last_event])
           ]
         end
+
+        # Add totals row
+        csv << [
+          'Total',
+          total_visits,
+          total_users,
+          total_events,
+          nil,
+          nil
+        ]
       end
     end
   end

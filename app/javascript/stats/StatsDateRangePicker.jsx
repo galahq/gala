@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
+import { injectIntl } from 'react-intl'
 
 // We rely on Blueprint v2 <DateRangePicker>. The page already loads Blueprint
 // styles via the main styles pack.
@@ -11,20 +12,83 @@ import { DateRangePicker } from '@blueprintjs/datetime'
 // - maxDate: Date for latest selectable day (usually today)
 // - fromInputId / toInputId: ids of hidden inputs that control the Stimulus map
 //   controller. We update their ISO8601 (YYYY-MM-DD) value on each change.
-export default function StatsDateRangePicker ({
+function StatsDateRangePicker({
   minDate: minDateProp,
   maxDate: maxDateProp,
   fromInputId = 'stats-from',
   toInputId = 'stats-to',
   shortcuts,
   initialRange,
+  initialShortcutIndex,
+  className,
+  intl,
 }) {
   const minDate = minDateProp || new Date(2000, 0, 1)
   const maxDate = maxDateProp || new Date()
 
-  const [range, setRange] = useState(initialRange || [minDate, maxDate])
+  // Create shortcuts with translated labels
+  const today = new Date()
+  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const startFromDays = d =>
+    new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
 
-  function updateHiddenInputs (nextRange) {
+  const translatedShortcuts = [
+    {
+      label: intl.formatMessage({ id: 'cases.stats.show.dateRangeAllTime' }),
+      dateRange: [minDate, end],
+    },
+    {
+      label: intl.formatMessage({
+        id: 'cases.stats.show.dateRangePastYear',
+      }),
+      dateRange: [startFromDays(365), end],
+    },
+    {
+      label: intl.formatMessage({
+        id: 'cases.stats.show.dateRangePast2Years',
+      }),
+      dateRange: [startFromDays(730), end],
+    },
+  ]
+
+  const [range, setRange] = useState(initialRange || translatedShortcuts[0].dateRange)
+  const [selectedShortcutIndex, setSelectedShortcutIndex] = useState(
+    initialShortcutIndex !== undefined ? initialShortcutIndex : 0
+  )
+
+  // Determine which shortcut matches the current range
+  const getSelectedShortcutIndex = (currentRange, shortcutsList) => {
+    if (!currentRange || !shortcutsList || !Array.isArray(shortcutsList))
+      return -1
+
+    const [currentFrom, currentTo] = currentRange
+    const toIso = d => (d ? d.toISOString().slice(0, 10) : '')
+
+    for (let i = 0; i < shortcutsList.length; i++) {
+      const [shortcutFrom, shortcutTo] = shortcutsList[i].dateRange
+      if (
+        toIso(shortcutFrom) === toIso(currentFrom) &&
+        toIso(shortcutTo) === toIso(currentTo)
+      ) {
+        return i
+      }
+    }
+    return -1
+  }
+
+  // Update selected shortcut when range changes
+  useEffect(() => {
+    const matchingIndex = getSelectedShortcutIndex(range, translatedShortcuts)
+    setSelectedShortcutIndex(
+      matchingIndex >= 0
+        ? matchingIndex
+        : initialShortcutIndex !== undefined
+        ? initialShortcutIndex
+        : 0
+    )
+  }, [range, translatedShortcuts, initialShortcutIndex])
+
+  function updateHiddenInputs(nextRange) {
     const [from, to] = nextRange
     const fromIso = from ? from.toISOString().slice(0, 10) : ''
     const toIso = to ? to.toISOString().slice(0, 10) : ''
@@ -35,21 +99,19 @@ export default function StatsDateRangePicker ({
     if (toInput) toInput.value = toIso
   }
 
-  function handleChange (nextRange) {
+  function handleChange(nextRange) {
     // If nextRange matches one of our shortcuts by day, use the exact
     // Date objects from the shortcut so Blueprint can keep it highlighted.
     let applied = nextRange
-    if (Array.isArray(shortcuts)) {
-      const toIso = d => (d ? d.toISOString().slice(0, 10) : '')
-      const [nf, nt] = nextRange
-      const nfIso = toIso(nf)
-      const ntIso = toIso(nt)
-      for (let i = 0; i < shortcuts.length; i++) {
-        const [sf, st] = shortcuts[i].dateRange
-        if (toIso(sf) === nfIso && toIso(st) === ntIso) {
-          applied = shortcuts[i].dateRange
-          break
-        }
+    const toIso = d => (d ? d.toISOString().slice(0, 10) : '')
+    const [nf, nt] = nextRange
+    const nfIso = toIso(nf)
+    const ntIso = toIso(nt)
+    for (let i = 0; i < translatedShortcuts.length; i++) {
+      const [sf, st] = translatedShortcuts[i].dateRange
+      if (toIso(sf) === nfIso && toIso(st) === ntIso) {
+        applied = translatedShortcuts[i].dateRange
+        break
       }
     }
     setRange(applied)
@@ -65,14 +127,20 @@ export default function StatsDateRangePicker ({
 
   return (
     <DateRangePicker
+      className={className}
       value={range}
       minDate={minDate}
       maxDate={maxDate}
       allowSingleDayRange={true}
       contiguousCalendarMonths={true}
-      shortcuts={shortcuts || true}
+      shortcuts={translatedShortcuts}
+      selectedShortcutIndex={
+        selectedShortcutIndex >= 0 ? selectedShortcutIndex : undefined
+      }
       dayPickerProps={{ numberOfMonths: 2 }}
       onChange={handleChange}
     />
   )
 }
+
+export default injectIntl(StatsDateRangePicker)

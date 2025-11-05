@@ -1,5 +1,7 @@
 /* @flow */
 import React, { useState } from 'react'
+import { Card, Button } from '@blueprintjs/core'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 type CountryData = {
   iso2: string,
@@ -10,30 +12,25 @@ type CountryData = {
   events_count: number,
   first_event: ?string,
   last_event: ?string,
-  percentile: number,
+  bin: number,
 }
 
-type PercentileData = {
-  percentile: number,
-  value: number,
-  color: string,
+type Bin = {
+  bin: number,
+  min: number,
+  max: number,
+  label: string,
 }
 
 type Props = {
   data: CountryData[],
   caseSlug: string,
-  percentiles?: PercentileData[],
+  bins?: Bin[],
   onRowClick?: (country: CountryData) => void,
-  onClearSelection?: () => void,
+  intl: any,
 }
 
-export default function StatsTable ({
-  data,
-  caseSlug,
-  percentiles = [],
-  onRowClick,
-  onClearSelection,
-}: Props) {
+function StatsTable({ data, caseSlug, bins = [], onRowClick, intl }: Props) {
   const [sortField, setSortField] = useState('unique_visits')
   const [sortDirection, setSortDirection] = useState('desc')
 
@@ -48,8 +45,10 @@ export default function StatsTable ({
 
   const sortedData = [...data].sort((a, b) => {
     // Always put unknown countries at the bottom
-    const aIsUnknown = !a.iso2 || a.name === 'Unknown'
-    const bIsUnknown = !b.iso2 || b.name === 'Unknown'
+    const aIsUnknown =
+      !a.iso2 || a.name === 'Unknown' || !a.name || a.name.trim() === ''
+    const bIsUnknown =
+      !b.iso2 || b.name === 'Unknown' || !b.name || b.name.trim() === ''
 
     if (aIsUnknown && !bIsUnknown) return 1
     if (!aIsUnknown && bIsUnknown) return -1
@@ -96,14 +95,20 @@ export default function StatsTable ({
       return <span style={{ opacity: 0.3, fontSize: '12px' }}>↕</span>
     }
     return (
-      <span style={{ color: 'rgb(100, 68, 187)', fontSize: '12px', fontWeight: 'bold' }}>
+      <span
+        style={{
+          color: 'rgb(100, 68, 187)',
+          fontSize: '12px',
+          fontWeight: 'bold',
+        }}
+      >
         {sortDirection === 'asc' ? '↑' : '↓'}
       </span>
     )
   }
 
   return (
-    <div style={{ marginTop: '24px' }}>
+    <Card style={{ marginTop: '24px' }}>
       <div
         style={{
           display: 'flex',
@@ -112,13 +117,12 @@ export default function StatsTable ({
           marginBottom: '16px',
         }}
       >
-        <h3 style={{ margin: 0, font: "monospace" }}>Traffic</h3>
-        <button
-          className="pt-button pt-intent-primary pt-icon-export"
-          onClick={exportCSV}
-        >
-          Export CSV
-        </button>
+        <h3 style={{ margin: 0, font: 'monospace' }}>
+          <FormattedMessage id="cases.stats.show.tableTitle" />
+        </h3>
+        <Button intent="primary" icon="export" onClick={exportCSV}>
+          <FormattedMessage id="cases.stats.show.tableExportCsv" />
+        </Button>
       </div>
 
       <div style={{ overflowX: 'auto' }}>
@@ -135,7 +139,7 @@ export default function StatsTable ({
                 <div
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                  Country
+                  <FormattedMessage id="cases.stats.show.tableCountry" />
                   <SortIcon field="name" />
                 </div>
               </th>
@@ -146,7 +150,7 @@ export default function StatsTable ({
                 <div
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                  Unique Visitors
+                  <FormattedMessage id="cases.stats.show.tableUniqueVisitors" />
                   <SortIcon field="unique_visits" />
                 </div>
               </th>
@@ -157,7 +161,7 @@ export default function StatsTable ({
                 <div
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                  Unique Users
+                  <FormattedMessage id="cases.stats.show.tableUniqueUsers" />
                   <SortIcon field="unique_users" />
                 </div>
               </th>
@@ -168,18 +172,27 @@ export default function StatsTable ({
                 <div
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                  Total Events
+                  <FormattedMessage id="cases.stats.show.tableTotalEvents" />
                   <SortIcon field="events_count" />
                 </div>
               </th>
-              <th>First Visit</th>
-              <th>Last Visit</th>
+              <th>
+                <FormattedMessage id="cases.stats.show.tableFirstVisit" />
+              </th>
+              <th>
+                <FormattedMessage id="cases.stats.show.tableLastVisit" />
+              </th>
             </tr>
           </thead>
           <tbody>
             {sortedData.map((row, index) => (
               <tr key={row.iso2 || index}>
-                <td>{row.name}</td>
+                <td>
+                  {row.name ||
+                    intl.formatMessage({
+                      id: 'cases.stats.show.tableUnknownCountry',
+                    })}
+                </td>
                 <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                   {row.unique_visits.toLocaleString()}
                 </td>
@@ -196,7 +209,9 @@ export default function StatsTable ({
           </tbody>
           <tfoot>
             <tr style={{ fontWeight: 'bold' }}>
-              <td>Total</td>
+              <td>
+                <FormattedMessage id="cases.stats.show.tableTotal" />
+              </td>
               <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                 {data
                   .reduce((sum, r) => sum + r.unique_visits, 0)
@@ -218,6 +233,8 @@ export default function StatsTable ({
           </tfoot>
         </table>
       </div>
-    </div>
+    </Card>
   )
 }
+
+export default injectIntl(StatsTable)

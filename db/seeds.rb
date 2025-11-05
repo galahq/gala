@@ -27,9 +27,9 @@ if defined? DEV_MOCK_AUTH_HASH
 end
 
 # Import production data if available and database is empty
-if Case.count == 0 && File.exist?(Rails.root.join('tmp/gala-prod-data.sql'))
+if Case.count == 0 && File.exist?(Rails.root.join('tmp/gala.sql'))
   puts 'Importing production data...'
-  system("PGPASSWORD=alpine psql -h db -U gala -d gala -f #{Rails.root.join('tmp/gala-prod-data.sql')} > /dev/null 2>&1")
+  system("PGPASSWORD=alpine psql -h db -U gala -d gala -f #{Rails.root.join('tmp/gala.sql')} > /dev/null 2>&1")
   puts 'SQL data imported successfully!'
 else
   10.times { FactoryBot.create :case_with_elements, :published }
