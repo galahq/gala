@@ -15,7 +15,15 @@ ENV BUNDLE_PATH="/usr/local/bundle" \
 RUN apt-get update && apt-get install -y \
     wget gnupg2 build-essential curl python3 wkhtmltopdf \
     libvips git pkg-config libjemalloc-dev lsb-release zlib1g-dev \
-    libffi-dev libyaml-dev libreadline-dev libssl-dev postgresql-client libpq-dev gcc make \
+    libffi-dev libyaml-dev libreadline-dev libssl-dev libpq-dev gcc make \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
+
+# install PostgreSQL 16 client tools (pg_dump, psql) from PGDG to match server
+RUN wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && apt-get update \
+    && apt-get install -y postgresql-client-16 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 

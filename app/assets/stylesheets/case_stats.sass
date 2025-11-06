@@ -1,0 +1,60 @@
+@import _globals
+
+.pt-daterangepicker-shortcuts
+  .pt-menu-item.pt-active
+    background-color: $purple !important
+    color: $white !important
+    font-weight: 500
+
+.c-stats-layout
+  display: flex
+  gap: 20px
+  align-items: flex-start
+  margin-bottom: 20px
+  max-width: 1400px
+  width: 100%
+
+.c-stats-picker
+  flex: 1
+  min-width: 600px
+  max-width: 800px
+
+.c-stats-summary
+  flex: 0 0 300px
+  min-height: 200px
+
+.c-stats-map-container
+  height: 500px
+  margin-bottom: 20px
+  padding: 0 !important
+  overflow: hidden
+  max-width: 1400px
+  width: 100%
+
+.c-stats-map
+  height: 100%
+  width: 100%
+
+.c-stats-table-container
+  margin-bottom: 20px
+  max-width: 1400px
+  width: 100%
+  min-height: 400px
+
+// Loading overlay for map
+.c-stats-map__loading-overlay
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(255, 255, 255, 0.9)
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  z-index: 1000
+
+.c-stats-map__loading-text
+  margin-top: 12px
+  font-size: 14px

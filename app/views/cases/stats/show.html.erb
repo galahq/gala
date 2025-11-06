@@ -1,0 +1,43 @@
+<% content_for :title do %>
+  <%= I18n.t('cases.stats.show.case_stats') %> — <%= @case.short_title %>
+<% end %>
+
+<div class="window admin">
+  <div class="admin-card admin-card--wide pt-card pt-elevation-2">
+    <%= link_to case_path(@case) do %>
+      <div class="case-cover-card-top" style="background-image: url(<%= @case.cover_url %>)">
+        <span class="admin__table__slug"><%= @case.short_title %></span>
+      </div>
+    <% end %>
+
+    <div>
+      <h1 class="admin__title"><%= t('.case_stats') %></h1>
+
+      <div
+        data-controller="case-stats"
+        data-url="<%= case_stats_path(@case) %>"
+        data-published_at="<%= @case.published_at&.to_date %>">
+        <input type="hidden" id="stats-from" data-target="case-stats.from" />
+        <input type="hidden" id="stats-to" data-target="case-stats.to" />
+
+        <!-- Top section: Date picker and summary stats -->
+        <div class="c-stats-layout">
+          <!-- Date picker -->
+          <div class="c-stats-picker pt-card pt-elevation-1">
+            <div id="stats-range-picker"></div>
+          </div>
+           <!-- Summary stats -->
+           <div class="c-stats-summary pt-card pt-elevation-1">
+             <div id="stats-summary"></div>
+           </div>
+        </div>
+         <!-- Map section (full width below date picker) -->
+         <div class="c-stats-map-container pt-card pt-elevation-1">
+           <div id="stats-map" class="c-stats-map"></div>
+         </div>
+         <!-- Bottom section: Stats table -->
+         <div id="stats-table" class="c-stats-table-container"></div>
+       </div>
+     </div>
+   </div>
+ </div>
