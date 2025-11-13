@@ -177,6 +177,7 @@ class CardContents extends React.Component<Props, State> {
                   priority={100}
                 >
                   <Editor
+                    spellCheck={true}
                     placeholder={intl.formatMessage({
                       id: 'cards.edit.writeSomething',
                     })}
