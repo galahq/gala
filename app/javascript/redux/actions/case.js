@@ -32,8 +32,9 @@ export function togglePublished (): ThunkAction {
   return (dispatch: Dispatch, getState: GetState) => {
     const { caseData } = getState()
     const { slug, publishedAt, licenseConfig } = caseData
+    const licenseName = licenseConfig?.name || 'unknown'
     if (
-      window.confirm(`Are you sure you want to change the publish status of this module with the ${licenseConfig.name} license?`)
+      window.confirm(`Are you sure you want to change the publish status of this module with the ${licenseName} license?`)
     ) {
       Orchard.espalier(`cases/${slug}`, {
         case: { published: !publishedAt },
