@@ -162,7 +162,7 @@ export type Case = {
   latitude: ?number,
   learningObjectives: string[],
   library: Library,
-  licenseConfig: LicenseConfig,
+  licenseConfig: ?LicenseConfig,
   links: {
     archive: string,
     newEditorship: string,

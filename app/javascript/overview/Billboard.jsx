@@ -190,12 +190,14 @@ const Billboard = ({
             </MinimalLink>
           )}
 
-          <MinimalLink
-            href={caseData.licenseConfig.url}
-            target='_blank'
-          >
-            {caseData.licenseConfig.name}
-          </MinimalLink>
+          {caseData.licenseConfig && (
+            <MinimalLink
+              href={caseData.licenseConfig.url}
+              target='_blank'
+            >
+              {caseData.licenseConfig.name}
+            </MinimalLink>
+          )}
         </>
       )}
     </Lock>
