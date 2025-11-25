@@ -222,6 +222,7 @@ Rails.application.routes.draw do
 
   devise_for :readers, skip: :omniauth_callbacks, controllers: {
     confirmations: 'readers/confirmations',
+    passwords: 'readers/passwords',
     registrations: 'readers/registrations',
     sessions: 'readers/sessions'
   }

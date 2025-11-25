@@ -581,6 +581,10 @@ en:
     providers:
       google_oauth2: Google
       lti: Canvas
+    passwords:
+      new:
+        forgot_your_password: Forgot your password?
+        send_me_reset_password_instructions: Send me reset password instructions
     registrations:
       edit:
         we_need_your_current_password_to_confirm_your_changes: >
@@ -728,6 +732,9 @@ en:
       wrong_length:
         one: is the wrong length (should be 1 character)
         other: is the wrong length (should be %{count} characters)
+      google_oauth_user: >
+        This account was created with Google sign-in and doesn't have a password.
+        Please sign in with Google instead.
     template:
       body: 'There were problems with the following fields:'
       header:
