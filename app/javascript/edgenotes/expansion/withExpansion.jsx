@@ -11,15 +11,15 @@ import LinkExpansion, { NullLinkExpansion } from './LinkExpansion'
 import type { Edgenote } from 'redux/state'
 import type { ILinkExpansion } from './LinkExpansion'
 
-type BaseProps = { contents: Edgenote }
+type BaseProps = { contents: ?Edgenote }
 type State = { expansion: ILinkExpansion, url: string }
 export default function withExpansion<Props: BaseProps> (
   Component: React.ComponentType<{ ...Props, expansion: ILinkExpansion }>
 ): React.ComponentType<Props> {
   class WrapperComponent extends React.Component<Props, State> {
     state = {
-      expansion: new NullLinkExpansion(this.props.contents.websiteUrl),
-      url: this.props.contents.websiteUrl,
+      expansion: new NullLinkExpansion(this.props.contents?.websiteUrl),
+      url: this.props.contents?.websiteUrl || '',
     }
 
     componentDidMount () {
@@ -27,15 +27,21 @@ export default function withExpansion<Props: BaseProps> (
     }
 
     componentDidUpdate (prevProps: BaseProps, prevState: State) {
-      if (
-        prevProps.contents.updatedAt !== this.props.contents.updatedAt ||
-        prevState.url !== this.state.url
-      ) {
+      const contentsChanged =
+        !prevProps.contents !== !this.props.contents ||
+        (prevProps.contents &&
+          this.props.contents &&
+          (prevProps.contents.updatedAt !== this.props.contents.updatedAt ||
+            prevState.url !== this.state.url))
+
+      if (contentsChanged) {
         this._fetchExpansion()
       }
 
-      if (prevProps.contents.websiteUrl !== this.props.contents.websiteUrl) {
-        const url = this.props.contents.websiteUrl
+      if (
+        prevProps.contents?.websiteUrl !== this.props.contents?.websiteUrl
+      ) {
+        const url = this.props.contents?.websiteUrl || ''
         this.setState({ url })
       }
     }
@@ -45,6 +51,13 @@ export default function withExpansion<Props: BaseProps> (
     }
 
     _fetchExpansion () {
+      if (!this.props.contents) {
+        this.setState({
+          expansion: new NullLinkExpansion(''),
+          url: '',
+        })
+        return
+      }
       const { slug, updatedAt } = this.props.contents
       const { url } = this.state
       LinkExpansion.fetch({ slug, updatedAt, url }).then(expansion =>
