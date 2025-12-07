@@ -17,7 +17,8 @@ pidfile ENV.fetch('PIDFILE', 'tmp/pids/server.pid')
 worker_timeout 3600 if rails_env == 'development'
 worker_shutdown_timeout ENV.fetch('WORKER_SHUTDOWN_TIMEOUT', 15).to_i
 persistent_timeout ENV.fetch('PERSISTENT_TIMEOUT', 15).to_i
-enable_keep_alives(false) if respond_to?(:enable_keep_alives)
+# Keep-alives stay enabled so Router 2.0 can reuse sockets efficiently.
+# enable_keep_alives(false)  <-- remove this line
 
 # Standard-2X dynos expose two CPU cores; run two workers by default.
 web_concurrency = ENV.fetch('WEB_CONCURRENCY', 2).to_i

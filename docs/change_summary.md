@@ -27,6 +27,10 @@
   renders through `RuntimeStatsSerializer`, producing a stable JSON structure for
   environment/process/GC/object/cache/DB/Redis/Sidekiq/ActionCable metrics plus
   warning strings when thresholds are exceeded.
+- `config/puma.rb` now centralizes timeout tuning (worker shutdown + persistent
+  timeouts), disables keep-alives when supported, and defaults `WEB_CONCURRENCY`
+  to two workers to match Standard-2X dynos—giving the runtime more predictable
+  behavior in production.
 
 ## Bot Hardening
 - `config/initializers/rack_attack.rb` now blocks only after counting contiguous
