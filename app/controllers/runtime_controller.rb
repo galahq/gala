@@ -13,7 +13,10 @@ class RuntimeController < ApplicationController
   PROCESS_BOOTED_AT = Time.current
   PROCESS_START_MONOTONIC = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-  skip_before_action :verify_authenticity_token, raise: false
+  before_action :authenticate_reader!
+  before_action -> do
+    redirect_to '/403' if current_reader.nil? || !current_reader.has_role?(:editor)
+  end
 
   # @route [GET] `/runtime/stats`
   def stats
@@ -119,9 +122,7 @@ class RuntimeController < ApplicationController
   def cache_stats
     store = Rails.cache
     data = { store: store.class.name }
-    if store.respond_to?(:stats)
-      data[:stats] = store.stats
-    end
+    data[:stats] = store.stats if store.respond_to?(:stats)
     data
   rescue StandardError => e
     { store: Rails.cache.class.name, error: e.class.name, message: e.message }
@@ -143,6 +144,8 @@ class RuntimeController < ApplicationController
     ).merge(server: redis.connection[:host])
   rescue StandardError => e
     { error: e.class.name, message: e.message }
+  ensure
+    redis&.close if defined?(redis) && redis.respond_to?(:close)
   end
 
   def postgres_stats
@@ -194,9 +197,7 @@ class RuntimeController < ApplicationController
     pool_stats = data[:postgres] || {}
     size = (pool_stats[:size] || pool_stats['size']).to_i
     busy = (pool_stats[:busy] || pool_stats['busy']).to_i
-    if size.positive? && busy >= size
-      warnings << 'Postgres connection pool is saturated'
-    end
+    warnings << 'Postgres connection pool is saturated' if size.positive? && busy >= size
 
     warnings
   end
@@ -233,4 +234,3 @@ class RuntimeController < ApplicationController
     Array(server.connections).count
   end
 end
-
