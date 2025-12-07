@@ -39,6 +39,30 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 - `bundle exec rake test:unit` to run the Ruby tests
 - `yarn test` to run the Javascript tests
 
+## Running the CI test suite locally
+
+The CI workflow runs Ruby and Node tasks on the host while Postgres and Redis
+stay inside Docker. Those containers expose ports 5432 and 6379 to the host, so
+the default test database URL (`postgres://gala:alpine@localhost:5432/gala_test`)
+and Redis URL (`redis://localhost:6379/0`) work without extra configuration.
+
+1. Start the data services: `docker compose up -d db redis`.
+2. Ensure the Ruby (3.2.6) and Node (12.5.0) toolchains described above are
+   installed locally.
+3. Run `bin/run_ci_tests` to execute the same sequence that Semaphore runs. Use
+   `--skip-db` to keep the existing test database data if desired.
+
+If you need to run the individual steps manually, execute:
+
+```
+bundle exec rake db:drop db:create db:schema:load db:test:prepare
+bundle exec rails assets:precompile
+bundle exec rspec --exclude-pattern \
+  "spec/features/**/*_spec.rb" --format progress --color
+yarn test
+bundle exec rake factory_bot:lint
+```
+
 ### Updating dependencies
 
 When you update dependencies be sure to run these commands locally first

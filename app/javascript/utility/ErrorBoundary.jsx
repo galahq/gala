@@ -17,6 +17,14 @@ class ErrorBoundary extends React.Component<
   componentDidCatch (error: Error, info: { componentStack: string }) {
     this.setState({ hasError: true, error, info })
 
+    if (typeof sentryLog === 'function') {
+      sentryLog('error', 'React ErrorBoundary caught exception', {
+        name: error.name,
+        message: error.message,
+        componentStack: info.componentStack
+      })
+    }
+
     Sentry.withScope(scope => {
       Object.keys(info).forEach(key => {
         scope.setExtra(key, info[key])

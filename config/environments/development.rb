@@ -26,7 +26,7 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
   config.action_controller.enable_fragment_cache_logging = true
   config.cache_store = :redis_cache_store, {
-    url: ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' },
+    url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/0' },
     namespace: 'cache',
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   }

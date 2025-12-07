@@ -1,7 +1,7 @@
 development:
   adapter: redis
   channel_prefix: orchard_development
-  url: <%= ENV.fetch('REDIS_URL') { "redis://redis:6379/0" } %>
+  url: <%= ENV.fetch('REDIS_URL') { "redis://localhost:6379/0" } %>
   ssl_params: {
     verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
   }
@@ -12,7 +12,7 @@ test:
 production:
   adapter: redis
   channel_prefix: orchard_production
-  url: <%= ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' } %>
+  url: <%= ENV.fetch('REDIS_URL') { 'redis://localhost:6379/0' } %>
   ssl_params: {
     verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
   }

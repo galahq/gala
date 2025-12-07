@@ -11,6 +11,10 @@
     <%= favicon_link_tag 'favicon_gala.png' %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
+    <% mapbox_token = ENV['MapboxAccessToken'] || ENV['MAPBOX_ACCESS_TOKEN'] %>
+    <% if mapbox_token.present? %>
+      <meta name="mapbox-access-token" content="<%= mapbox_token %>"/>
+    <% end %>
 
     <%= render 'application/reader_javascript_tag' %>
     <%= javascript_tag do %>

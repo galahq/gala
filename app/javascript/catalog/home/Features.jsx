@@ -35,7 +35,7 @@ function Featured ({ selecting }: Props) {
 
       <Grid>
         {cases.map((kase, i) => {
-          if (kase == null) return <Cell />
+          if (kase == null) return <Cell key={`placeholder-${i}`} />
 
           const {
             authors,

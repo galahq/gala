@@ -80,7 +80,7 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   config.cache_store = :redis_cache_store, {
-    url: ENV.fetch('REDIS_URL') { 'redis://redis:6379/0' },
+    url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/0' },
     namespace: 'cache',
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   }

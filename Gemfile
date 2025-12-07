@@ -12,8 +12,7 @@ gem 'bootsnap'
 gem 'connection_pool'
 gem 'image_processing'
 gem 'pg', '~> 1.5.4'
-gem 'puma'
-gem 'puma_worker_killer'
+gem 'puma', '~> 7.1'
 gem 'rack-attack'
 gem 'rack-canonical-host'
 gem 'redis', '~> 5.0'
@@ -78,7 +77,10 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes', require: false
 gem 'lograge'
-gem 'sentry-raven', '~> 3.1' # sentry-ruby
+gem 'sentry-ruby', '~> 5.24'
+gem 'sentry-rails', '~> 5.24'
+gem 'sentry-sidekiq', '~> 5.24'
+gem 'vernier'
 gem 'table_print'
 
 # Services
