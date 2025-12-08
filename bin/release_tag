@@ -1,0 +1,235 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RELEASE_DIR="${ROOT_DIR}/docs/releases"
+
+usage() {
+  cat <<'USAGE'
+Usage: bin/release_tag <major|minor|patch> [--llm] [--dry-run]
+
+Options:
+  --llm      Attempt to draft release notes with the OpenAI API
+             (requires OPENAI_API_KEY and curl). Falls back to a
+             template when the API call fails.
+  --dry-run  Show the calculated version and target file, but do not
+             write anything to disk.
+  --help     Display this help text.
+USAGE
+}
+
+die() {
+  echo "release_tag: $*" >&2
+  exit 1
+}
+
+latest_release_version() {
+  local latest_file
+  latest_file="$(ls "${RELEASE_DIR}"/v*.md 2>/dev/null | sort -V | tail -n 1 || true)"
+  [[ -n "${latest_file}" ]] || die "no releases found under ${RELEASE_DIR}"
+  basename "${latest_file%.md}" | sed 's/^v//'
+}
+
+increment_version() {
+  local current part bump
+  current="$1"
+  bump="$2"
+  IFS='.' read -r major minor patch <<<"${current}"
+  major=$((10#${major}))
+  minor=$((10#${minor}))
+  patch=$((10#${patch}))
+  case "${bump}" in
+    major)
+      printf '%d.0.0' "$((major + 1))"
+      ;;
+    minor)
+      printf '%d.%d.0' "${major}" "$((minor + 1))"
+      ;;
+    patch)
+      printf '%d.%d.%d' "${major}" "${minor}" "$((patch + 1))"
+      ;;
+    *)
+      die "unknown bump type: ${bump}"
+      ;;
+  esac
+}
+
+git_log_since() {
+  local previous_tag
+  previous_tag="v$1"
+  if (cd "${ROOT_DIR}" &&
+      git rev-parse -q --verify "${previous_tag}" >/dev/null 2>&1); then
+    (cd "${ROOT_DIR}" && git log --oneline --no-merges "${previous_tag}..HEAD")
+  else
+    (cd "${ROOT_DIR}" && git log --oneline --no-merges -n 50)
+  fi
+}
+
+llm_release_notes() {
+  local version commit_log payload response content
+  version="$1"
+  commit_log="$2"
+  [[ -n "${OPENAI_API_KEY:-}" ]] || die "OPENAI_API_KEY must be set for --llm"
+  command -v curl >/dev/null || die "curl is required for --llm"
+  payload="$(
+    VERSION="${version}" COMMITS="${commit_log}" ruby <<'RUBY'
+require 'json'
+version = ENV.fetch('VERSION')
+commits = ENV.fetch('COMMITS')
+prompt = <<~PROMPT
+  Write release notes for #{version} based only on these commits:
+  #{commits}
+  Respond in this exact format:
+  SUMMARY: <single paragraph>
+  CHANGES:
+  - bullet one
+  - bullet two
+PROMPT
+body = {
+  model: 'gpt-4o-mini',
+  temperature: 0.2,
+  messages: [
+    { role: 'system',
+      content: 'You create terse, accurate release notes for engineers.' },
+    { role: 'user', content: prompt }
+  ]
+}
+puts JSON.dump(body)
+RUBY
+  )"
+  response="$(
+    curl -sS -X POST https://api.openai.com/v1/chat/completions \
+      -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+      -H "Content-Type: application/json" \
+      -d "${payload}"
+  )" || die "failed to contact OpenAI API"
+  content="$(
+    printf '%s' "${response}" | ruby <<'RUBY'
+require 'json'
+input = JSON.parse($stdin.read)
+choice = input.fetch('choices').fetch(0, {})
+message = choice.fetch('message', {})
+puts message.fetch('content', '').strip
+RUBY
+  )"
+  [[ -n "${content}" ]] || die "OpenAI response missing content"
+  printf '%s\n' "${content}"
+}
+
+write_release_template() {
+  local file exec_summary changes commit_log
+  file="$1"
+  exec_summary="$2"
+  changes="$3"
+  commit_log="$4"
+  cat >"${file}" <<EOF
+# v${NEW_VERSION}
+
+${exec_summary}
+
+## Changes
+
+${changes}
+
+## Recent commits (for reference)
+
+\`\`\`
+${commit_log}
+\`\`\`
+
+## GitHub release checklist
+
+1. Commit and push this release note.
+2. Tag the release with \`git tag v${NEW_VERSION} && git push origin v${NEW_VERSION}\`.
+3. Copy these notes into the GitHub release description.
+EOF
+}
+
+[[ $# -ge 1 ]] || { usage >&2; exit 1; }
+
+BUMP_TYPE=""
+USE_LLM=0
+DRY_RUN=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    major|minor|patch)
+      [[ -z "${BUMP_TYPE}" ]] || die "bump type already specified"
+      BUMP_TYPE="$1"
+      shift
+      ;;
+    --llm)
+      USE_LLM=1
+      shift
+      ;;
+    --dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    *)
+      die "unknown argument: $1"
+      ;;
+  esac
+done
+
+[[ -n "${BUMP_TYPE}" ]] || { usage >&2; exit 1; }
+[[ -d "${RELEASE_DIR}" ]] || die "missing release directory: ${RELEASE_DIR}"
+
+CURRENT_VERSION="$(latest_release_version)"
+NEW_VERSION="$(increment_version "${CURRENT_VERSION}" "${BUMP_TYPE}")"
+TARGET_FILE="${RELEASE_DIR}/v${NEW_VERSION}.md"
+
+if [[ "${DRY_RUN}" -eq 1 ]]; then
+  cat <<EOF
+Current version: v${CURRENT_VERSION}
+Next version   : v${NEW_VERSION}
+Target file    : ${TARGET_FILE}
+EOF
+  exit 0
+fi
+
+[[ ! -e "${TARGET_FILE}" ]] || die "release file already exists: ${TARGET_FILE}"
+
+COMMIT_LOG="$(git_log_since "${CURRENT_VERSION}")"
+
+EXEC_SUMMARY="TODO: Add a 1-2 sentence executive summary for v${NEW_VERSION}."
+CHANGES="- TODO: List notable changes."
+
+if [[ "${USE_LLM}" -eq 1 ]]; then
+  if CONTENT="$(llm_release_notes "v${NEW_VERSION}" "${COMMIT_LOG}")"; then
+    SUMMARY_LINE="$(
+      printf '%s\n' "${CONTENT}" |
+        awk '/^SUMMARY:/ {sub(/^SUMMARY:[[:space:]]*/, ""); print; exit}'
+    )"
+    CHANGE_LINES="$(
+      printf '%s\n' "${CONTENT}" |
+        awk 'BEGIN{capture=0}
+             /^CHANGES:/ {capture=1; next}
+             { if (capture) print }'
+    )"
+    if [[ -n "${SUMMARY_LINE}" ]]; then
+      EXEC_SUMMARY="${SUMMARY_LINE}"
+    fi
+    if [[ -n "${CHANGE_LINES}" ]]; then
+      CHANGES="${CHANGE_LINES}"
+    fi
+  else
+    echo "release_tag: falling back to template after LLM failure" >&2
+  fi
+fi
+
+write_release_template "${TARGET_FILE}" "${EXEC_SUMMARY}" "${CHANGES}" "${COMMIT_LOG}"
+
+cat <<EOF
+Created ${TARGET_FILE}
+
+Next steps:
+  - Populate the summary and change list (or rerun with --llm).
+  - Commit the release notes alongside related code.
+  - Tag the release once the commit is merged.
+EOF
+
