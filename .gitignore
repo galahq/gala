@@ -47,6 +47,7 @@ spec/examples.txt
 .OLD
 *.*.OLD
 .env
+.env.dev
 .DS_Store
 .*OLD
 .*.OLD

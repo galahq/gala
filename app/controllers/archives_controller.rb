@@ -10,9 +10,27 @@ class ArchivesController < ApplicationController
     set_case
     authorize @case
 
+    Rails.logger.info(
+      "ArchivesController#show " \
+      "case_slug=#{@case.slug} " \
+      "needs_refresh=#{@case.archive_needs_refresh?} " \
+      "archive_fresh=#{@case.archive_fresh?}"
+    )
+
     refresh_archive if @case.archive_needs_refresh?
 
-    redirect_to_download if @case.archive_fresh?
+    if @case.archive_fresh?
+      Rails.logger.info(
+        "ArchivesController#show redirect_to_download " \
+        "case_slug=#{@case.slug}"
+      )
+      redirect_to_download
+    else
+      Rails.logger.info(
+        "ArchivesController#show archive_not_ready " \
+        "case_slug=#{@case.slug}"
+      )
+    end
   end
 
   private
@@ -22,6 +40,10 @@ class ArchivesController < ApplicationController
   end
 
   def refresh_archive
+    Rails.logger.info(
+      "ArchivesController#refresh_archive enqueue " \
+      "case_slug=#{@case.slug}"
+    )
     @case.refresh_archive! root_url: root_url
   end
 

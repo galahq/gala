@@ -633,7 +633,7 @@ DEPENDENCIES
   aws-sdk-s3
   barnes
   bootsnap
-  bullet (>= 6.1.1)
+  bullet
   capybara
   capybara-screenshot
   clowne

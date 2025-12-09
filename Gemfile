@@ -94,10 +94,10 @@ gem 'factory_bot_rails'
 gem 'faker'
 
 group :development do
+  gem 'bullet'
   gem 'foreman'
   gem 'listen', '~> 3.7'
   # Spring speeds up development
-  gem 'bullet', '>= 6.1.1'
   gem 'letter_opener'
   gem 'spring'
   gem 'spring-watcher-listen'
