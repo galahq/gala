@@ -28,6 +28,14 @@ export function subscribeToActiveForumChannel (caseSlug: string): ThunkAction {
   return (dispatch: Dispatch) => {
     if (!('WebSocket' in window)) return
 
+    if (
+      App.forum != null &&
+      typeof App.forum.unsubscribe === 'function'
+    ) {
+      App.forum.unsubscribe()
+      delete App.forum
+    }
+
     App.forum = App.cable.subscriptions.create(
       {
         channel: 'ForumChannel',

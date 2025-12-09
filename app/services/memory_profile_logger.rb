@@ -14,7 +14,7 @@ class MemoryProfileLogger
         scope.set_extras(extra_context) if extra_context.present?
         scope.set_tags('memory_snapshot' => 'true', 'memory_label' => label)
 
-        Sentry.capture_message(label || SNAPSHOT_MESSAGE)
+        Sentry.capture_message(label || SNAPSHOT_MESSAGE, level: :info)
       end
     end
 
