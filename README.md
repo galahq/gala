@@ -99,19 +99,22 @@ per week.
 
 ## Releases
 
-Use `bin/release_tag` to bump the semantic version and scaffold the matching
-file under `docs/releases`:
+Use `bin/release_tag` to bump the semantic version, scaffold the release note,
+update `ENV['RELEASE']`, append to `node_modules/dashdash/CHANGES.md`, commit
+those files, and push the branch and annotated tag to `origin`:
 
 ```
 bin/release_tag patch      # v1.15.0 -> v1.15.1
 bin/release_tag minor      # v1.15.0 -> v1.16.0
 bin/release_tag major      # v1.15.0 -> v2.0.0
+bin/release_tag retag v1.15.2   # Move an existing tag to the current HEAD
 ```
 
 Pass `--dry-run` to preview the next version or `--llm` to attempt an
 auto-generated summary via the OpenAI API (requires `OPENAI_API_KEY` in the
 environment). The script always writes a markdown template so you can edit
-the note manually when the API is unavailable.
+the note manually when the API is unavailable. Use `--tag-message` to override
+the annotated tag text when creating or retagging a release.
 
 ## Gala external infra
 | Service | Purpose |

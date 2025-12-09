@@ -3,10 +3,15 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RELEASE_DIR="${ROOT_DIR}/docs/releases"
+APPLICATION_FILE="${ROOT_DIR}/config/application.rb"
+DASHDASH_CHANGELOG="${ROOT_DIR}/node_modules/dashdash/CHANGES.md"
+GIT_REMOTE="${GIT_REMOTE:-origin}"
 
 usage() {
   cat <<'USAGE'
-Usage: bin/release_tag <major|minor|patch> [--llm] [--dry-run]
+Usage:
+  bin/release_tag <major|minor|patch> [--llm] [--dry-run] [--tag-message TEXT]
+  bin/release_tag retag <version> [--tag-message TEXT]
 
 Options:
   --llm      Attempt to draft release notes with the OpenAI API
@@ -14,6 +19,9 @@ Options:
              template when the API call fails.
   --dry-run  Show the calculated version and target file, but do not
              write anything to disk.
+  --tag-message
+            Override the annotated tag message (defaults to
+            "Release vX.Y.Z").
   --help     Display this help text.
 USAGE
 }
@@ -31,7 +39,7 @@ latest_release_version() {
 }
 
 increment_version() {
-  local current part bump
+  local current bump
   current="$1"
   bump="$2"
   IFS='.' read -r major minor patch <<<"${current}"
@@ -63,6 +71,95 @@ git_log_since() {
   else
     (cd "${ROOT_DIR}" && git log --oneline --no-merges -n 50)
   fi
+}
+
+run_git() {
+  (cd "${ROOT_DIR}" && git "$@")
+}
+
+ensure_git_available() {
+  command -v git >/dev/null || die "git is required"
+}
+
+current_branch() {
+  run_git rev-parse --abbrev-ref HEAD
+}
+
+sanitize_version() {
+  local input="$1"
+  if [[ "${input}" =~ ^v?([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+    printf '%s' "${BASH_REMATCH[1]}"
+  else
+    die "invalid version string: ${input}"
+  fi
+}
+
+stage_release_artifacts() {
+  local file
+  for file in "${TARGET_FILE}" "${APPLICATION_FILE}" "${DASHDASH_CHANGELOG}"; do
+    if run_git check-ignore -q -- "${file}"; then
+      # Force-add ignored paths like node_modules/dashdash/CHANGES.md.
+      run_git add -f -- "${file}"
+    else
+      run_git add -- "${file}"
+    fi
+  done
+}
+
+commit_release_artifacts() {
+  local message
+  message="$1"
+  if run_git diff --cached --quiet; then
+    die "no staged changes to commit for ${message}"
+  fi
+  run_git commit -m "${message}"
+}
+
+tag_release_ref() {
+  local tag message
+  tag="$1"
+  message="$2"
+  run_git tag -fa "${tag}" -m "${message}"
+}
+
+push_release_commit_and_tag() {
+  local tag branch
+  tag="$1"
+  branch="$(current_branch)"
+  [[ "${branch}" != "HEAD" ]] || die "cannot push from detached HEAD"
+  run_git push "${GIT_REMOTE}" "${branch}"
+  run_git push --force "${GIT_REMOTE}" "refs/tags/${tag}"
+  printf '%s' "${branch}"
+}
+
+update_release_env_assignment() {
+  local file version
+  file="${APPLICATION_FILE}"
+  version="v${NEW_VERSION}"
+  [[ -f "${file}" ]] || \
+    die "missing release assignment file: ${file}"
+  FILE="${file}" VERSION="${version}" ruby <<'RUBY'
+file = ENV.fetch('FILE')
+version = ENV.fetch('VERSION')
+content = File.read(file)
+pattern = /(ENV\['RELEASE'\]\s*=\s*')v?\d+\.\d+\.\d+('.*)/
+abort "ENV['RELEASE'] assignment not found in #{file}" unless \
+  content.match?(pattern)
+updated = content.sub(pattern) { "#{$1}#{version}#{$2}" }
+File.write(file, updated)
+RUBY
+}
+
+append_dashdash_changelog() {
+  local file
+  file="${DASHDASH_CHANGELOG}"
+  [[ -f "${file}" ]] || \
+    die "missing dashdash changelog: ${file}"
+  {
+    printf '\n## v%s\n\n' "${NEW_VERSION}"
+    printf '%s\n\n' "${EXEC_SUMMARY}"
+    printf '%s\n' "${CHANGES}"
+  } >>"${file}"
 }
 
 llm_release_notes() {
@@ -104,9 +201,9 @@ RUBY
       -d "${payload}"
   )" || die "failed to contact OpenAI API"
   content="$(
-    printf '%s' "${response}" | ruby <<'RUBY'
+    RESPONSE_PAYLOAD="${response}" ruby <<'RUBY'
 require 'json'
-input = JSON.parse($stdin.read)
+input = JSON.parse(ENV.fetch('RESPONSE_PAYLOAD'))
 choice = input.fetch('choices').fetch(0, {})
 message = choice.fetch('message', {})
 puts message.fetch('content', '').strip
@@ -139,9 +236,9 @@ ${commit_log}
 
 ## GitHub release checklist
 
-1. Commit and push this release note.
-2. Tag the release with \`git tag v${NEW_VERSION} && git push origin v${NEW_VERSION}\`.
-3. Copy these notes into the GitHub release description.
+1. Copy these notes into the GitHub release description.
+2. Verify tag v${NEW_VERSION} exists on origin (\`git fetch --tags\`).
+3. Announce the release internally.
 EOF
 }
 
@@ -150,19 +247,39 @@ EOF
 BUMP_TYPE=""
 USE_LLM=0
 DRY_RUN=0
+MODE="bump"
+RETAG_VERSION=""
+TAG_MESSAGE_OVERRIDE=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     major|minor|patch)
       [[ -z "${BUMP_TYPE}" ]] || die "bump type already specified"
+      [[ "${MODE}" != "retag" ]] || die "cannot combine bump and retag"
       BUMP_TYPE="$1"
       shift
       ;;
+    retag)
+      [[ -z "${RETAG_VERSION}" ]] || die "retag already specified"
+      MODE="retag"
+      shift
+      [[ $# -gt 0 ]] || die "retag requires a version argument"
+      RETAG_VERSION="$1"
+      shift
+      ;;
+    --tag-message)
+      shift
+      [[ $# -gt 0 ]] || die "--tag-message requires a value"
+      TAG_MESSAGE_OVERRIDE="$1"
+      shift
+      ;;
     --llm)
+      [[ "${MODE}" == "bump" ]] || die "--llm is unavailable for retag"
       USE_LLM=1
       shift
       ;;
     --dry-run)
+      [[ "${MODE}" == "bump" ]] || die "--dry-run is unavailable for retag"
       DRY_RUN=1
       shift
       ;;
@@ -176,11 +293,35 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "${MODE}" == "retag" ]]; then
+  [[ -n "${RETAG_VERSION}" ]] || { usage >&2; exit 1; }
+  [[ -z "${BUMP_TYPE}" ]] || die "cannot specify bump type with retag"
+  ensure_git_available
+  [[ -d "${RELEASE_DIR}" ]] || die "missing release directory: ${RELEASE_DIR}"
+  NEW_VERSION="$(sanitize_version "${RETAG_VERSION}")"
+  TAG_NAME="v${NEW_VERSION}"
+  TAG_MESSAGE="${TAG_MESSAGE_OVERRIDE:-"Release ${TAG_NAME}"}"
+  [[ -f "${RELEASE_DIR}/${TAG_NAME}.md" ]] || \
+    die "release notes ${RELEASE_DIR}/${TAG_NAME}.md not found"
+  tag_release_ref "${TAG_NAME}" "${TAG_MESSAGE}"
+  BRANCH_PUSHED="$(push_release_commit_and_tag "${TAG_NAME}")"
+  cat <<EOF
+Retagged ${TAG_NAME} to HEAD on branch ${BRANCH_PUSHED} and pushed to ${GIT_REMOTE}.
+
+Tag message:
+${TAG_MESSAGE}
+EOF
+  exit 0
+fi
+
 [[ -n "${BUMP_TYPE}" ]] || { usage >&2; exit 1; }
 [[ -d "${RELEASE_DIR}" ]] || die "missing release directory: ${RELEASE_DIR}"
 
 CURRENT_VERSION="$(latest_release_version)"
 NEW_VERSION="$(increment_version "${CURRENT_VERSION}" "${BUMP_TYPE}")"
+TAG_NAME="v${NEW_VERSION}"
+COMMIT_MESSAGE="Release ${TAG_NAME}"
+TAG_MESSAGE="${TAG_MESSAGE_OVERRIDE:-${COMMIT_MESSAGE}}"
 TARGET_FILE="${RELEASE_DIR}/v${NEW_VERSION}.md"
 
 if [[ "${DRY_RUN}" -eq 1 ]]; then
@@ -192,6 +333,7 @@ EOF
   exit 0
 fi
 
+ensure_git_available
 [[ ! -e "${TARGET_FILE}" ]] || die "release file already exists: ${TARGET_FILE}"
 
 COMMIT_LOG="$(git_log_since "${CURRENT_VERSION}")"
@@ -223,13 +365,21 @@ if [[ "${USE_LLM}" -eq 1 ]]; then
 fi
 
 write_release_template "${TARGET_FILE}" "${EXEC_SUMMARY}" "${CHANGES}" "${COMMIT_LOG}"
+append_dashdash_changelog
+update_release_env_assignment
+stage_release_artifacts
+commit_release_artifacts "${COMMIT_MESSAGE}"
+tag_release_ref "${TAG_NAME}" "${TAG_MESSAGE}"
+BRANCH_PUSHED="$(push_release_commit_and_tag "${TAG_NAME}")"
 
 cat <<EOF
 Created ${TARGET_FILE}
+Committed and pushed ${COMMIT_MESSAGE} on branch ${BRANCH_PUSHED}.
+Tag ${TAG_NAME} pushed (force-updated) to ${GIT_REMOTE}.
 
 Next steps:
   - Populate the summary and change list (or rerun with --llm).
-  - Commit the release notes alongside related code.
-  - Tag the release once the commit is merged.
+  - Review node_modules/dashdash/CHANGES.md for the appended entry.
+  - Publish the GitHub release using docs/releases/${TAG_NAME}.md.
 EOF
 
