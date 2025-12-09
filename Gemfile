@@ -15,6 +15,7 @@ gem 'pg', '~> 1.5.4'
 gem 'puma', '~> 7.1'
 gem 'rack-attack'
 gem 'rack-canonical-host'
+gem 'rack-timeout'
 gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.0'
 
