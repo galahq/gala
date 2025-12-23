@@ -5,9 +5,14 @@ class CasePolicy < ApplicationPolicy
   # What cases can this user see in the library?
   class Scope < Scope
     def resolve
-      scope.where id: scope.published.pluck(:id) +
-                      user.my_cases.pluck(:id) +
-                      user.enrolled_cases.pluck(:id)
+      # Avoid plucking large ID arrays into Ruby; keep this as SQL subqueries.
+      published = scope.published.select(:id).reorder(nil)
+      my_cases = user.my_cases.select(:id).reorder(nil)
+      enrolled = user.enrolled_cases.select(:id).reorder(nil)
+
+      scope.where(id: published)
+           .or(scope.where(id: my_cases))
+           .or(scope.where(id: enrolled))
     end
   end
 
@@ -17,13 +22,16 @@ class CasePolicy < ApplicationPolicy
       if editor?
         scope.all
       else
-        scope.where id: user.my_cases.pluck(:id) +
-                        user.managed_cases.pluck(:id)
+        my_cases = user.my_cases.select(:id).reorder(nil)
+        managed = user.managed_cases.select(:id).reorder(nil)
+
+        scope.where(id: my_cases)
+             .or(scope.where(id: managed))
       end
     end
   end
 
-  def show? # rubocop:disable Metrics/AbcSize
+  def show?
     record.published? ||
       user.my_cases.include?(record) ||
       user.enrollment_for_case(record).present? ||
@@ -34,11 +42,13 @@ class CasePolicy < ApplicationPolicy
 
   def update?
     return true if user_can_update_library?
+
     admin_scope.where(id: record.id).exists?
   end
 
   def destroy?
     return false if record.published?
+
     user.my_cases.include?(record) || update? || editor?
   end
 
@@ -50,6 +60,7 @@ class CasePolicy < ApplicationPolicy
 
   def user_can_update_library?
     return false if record.library == SharedCasesLibrary.instance
+
     library_policy.update?
   end
 

@@ -1,22 +1,28 @@
 # frozen_string_literal: true
 
+require 'barnes'
+
 # Thread per process count allows context switching on IO-bound tasks for better CPU utilization.
-threads_count = ENV.fetch('RAILS_MAX_THREADS') { 3 }
+threads_count = ENV.fetch('RAILS_MAX_THREADS', 3).to_i
 threads(threads_count, threads_count)
 
 # Processes count, allows better CPU utilization when executing Ruby code.
 # Recommended to always run in at least one process so `rack-timeout` RACK_TERM_ON_TIMEOUT=1 can be used
 # https://devcenter.heroku.com/articles/h12-request-timeout-in-ruby-mri
-workers(ENV.fetch('WEB_CONCURRENCY') { 2 })
+workers_count = ENV.fetch('WEB_CONCURRENCY', 2).to_i
+workers(workers_count)
 
-# Support IPv6 by binding to host `::` in production instead of `0.0.0.0` and `::1` instead of `127.0.0.1` in development.
-host = ENV.fetch('RAILS_ENV') { 'development' } == 'production' ? '::' : '::1'
+bind "tcp://0.0.0.0:#{ENV.fetch('PORT', 3000)}"
 
-# PORT environment variable is set by Heroku in production.
-port(ENV.fetch('PORT') { 3000 }, host)
-
-# Allow Puma to be restarted by the `rails restart` command locally.
+# restart server with $ touch tmp/restart.txt
 plugin(:tmp_restart)
+
+preload_app!
+
+# Barnes plugin for memory profiling
+before_fork do
+  Barnes.start if Rails.env.production?
+end
 
 # Heroku strongly recommends upgrading to Puma 7+. If you cannot upgrade,
 # Please see the Puma 6 and prior configuration section below.
