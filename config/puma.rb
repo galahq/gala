@@ -24,6 +24,10 @@ before_fork do
   Barnes.start if Rails.env.production?
 end
 
+on_worker_boot do
+  MemoryProfiling.start if defined?(MemoryProfiling)
+end
+
 # Heroku strongly recommends upgrading to Puma 7+. If you cannot upgrade,
 # Please see the Puma 6 and prior configuration section below.
 #
