@@ -11,8 +11,6 @@ class CardDecorator < ApplicationDecorator
     edgenotes.map(&:decorate)
   end
 
-  private
-
   def find_edgenotes(missing_slugs)
     edgenote_slugs.filter_map do |slug|
       edgenote =
