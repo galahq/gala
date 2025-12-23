@@ -19,6 +19,7 @@ class Case
 
     def initialize(case_study, root_url:)
       @case_study = preload_associations(case_study).decorate
+      root_url = ensure_trailing_slash(root_url.to_s)
       @root_url = URI(root_url)
     end
 
@@ -28,12 +29,26 @@ class Case
 
     private
 
+    def ensure_trailing_slash(url)
+      url.end_with?('/') ? url : "#{url}/"
+    end
+
     def preload_associations(case_study)
       Case.includes(EAGER_LOADING_CONFIG).find(case_study.id)
     end
 
     def generate_pdf
-      PDFKit.new(html, options).to_pdf
+      kit = PDFKit.new(html, options)
+      kit.to_pdf
+    rescue PDFKit::ImproperWkhtmltopdfExitStatus => e
+      Rails.logger.error(
+        'Case::Pdf wkhtmltopdf_failed ' \
+        "case_id=#{case_study.id} case_slug=#{case_study.slug} " \
+        "root_url=#{root_url} " \
+        "wkhtmltopdf_command=#{kit&.command&.inspect} " \
+        "error=#{e.message}"
+      )
+      raise
     end
 
     def html
@@ -45,6 +60,8 @@ class Case
     end
 
     def renderer
+      ActionController::Base.asset_host = root_url.to_s.chomp('/')
+
       defaults = {
         http_host: "#{root_url.host}:#{root_url.port}",
         https: root_url.scheme == 'https',
@@ -59,7 +76,9 @@ class Case
     def options
       {
         root_url: root_url.to_s,
-        protocol: root_url.scheme
+        protocol: root_url.scheme,
+        load_error_handling: 'ignore',
+        load_media_error_handling: 'ignore'
       }
     end
   end
