@@ -99,12 +99,20 @@ class SearchField extends React.Component<
             onSubmit={this.handleSubmit}
             ref={ref}
           >
+
             <InputGroup
               inputRef={el => (this.input = el)}
               className="pt-round"
               leftIcon="search"
+              aria-label={this.props.intl.formatMessage({
+                id: 'search.searchCases',
+              })}
               rightElement={
                 <button
+                  type="button"
+                  aria-label={this.props.intl.formatMessage({
+                id: 'search.submitSearch',
+              })}
                   className="pt-button pt-minimal pt-icon-arrow-right"
                   onClick={this.handleSubmit}
                 />
