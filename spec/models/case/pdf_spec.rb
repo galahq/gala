@@ -63,9 +63,8 @@ RSpec.describe Case::Pdf do
       expect(Rails.logger).to receive(:error).with(
         include(
           'Case::Pdf wkhtmltopdf_failed',
-          'case_id=2703',
-          'case_slug=case-slug',
-          'wkhtmltopdf_command=["wkhtmltopdf", "--quiet"]'
+          'command=["wkhtmltopdf", "--quiet"]',
+          'error=Command failed'
         )
       )
 
