@@ -14,7 +14,7 @@ class Case
     # non-fresh if it needs refresh or if the refresh hasn’t finished processing
     def fresh?
       !needs_refresh? &&
-        pdf.attached? && pdf.created_at.after?(self.case.updated_at)
+        pdf.attached? && pdf.created_at.after?(self.case.max_updated_at)
     end
 
     def refresh!(root_url:)

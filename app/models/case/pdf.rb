@@ -4,6 +4,7 @@ class Case
   # A PDF archive of a case and all its pages, podcasts, and edgenotes
   class Pdf
     SOURCE_VIEW_PATH = 'cases/pdf'
+    MUTEX = Mutex.new
 
     EAGER_LOADING_CONFIG = [
       :cards,
@@ -38,17 +39,19 @@ class Case
     end
 
     def generate_pdf
-      kit = PDFKit.new(html, options)
+      rendered_html = render_html_thread_safe
+      kit = PDFKit.new(rendered_html, options)
       kit.to_pdf
     rescue PDFKit::ImproperWkhtmltopdfExitStatus => e
-      Rails.logger.error(
-        'Case::Pdf wkhtmltopdf_failed ' \
-        "case_id=#{case_study.id} case_slug=#{case_study.slug} " \
-        "root_url=#{root_url} " \
-        "wkhtmltopdf_command=#{kit&.command&.inspect} " \
-        "error=#{e.message}"
-      )
+      Rails.logger.error("Case::Pdf wkhtmltopdf_failed, error=#{e.message}")
       raise
+    end
+
+    def render_html_thread_safe
+      MUTEX.synchronize do
+        ActionController::Base.asset_host = root_url.to_s.chomp('/')
+        html
+      end
     end
 
     def html
@@ -60,8 +63,6 @@ class Case
     end
 
     def renderer
-      ActionController::Base.asset_host = root_url.to_s.chomp('/')
-
       defaults = {
         http_host: "#{root_url.host}:#{root_url.port}",
         https: root_url.scheme == 'https',
