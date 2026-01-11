@@ -129,3 +129,8 @@ the annotated tag text when creating or retagging a release.
 | [Semaphore CI](https://semaphoreci.com/) | Continuous integration |
 | [Github](https://github.com/) | Open source code management |
 
+## Project Documentation
+
+- Trailheads: see [docs/](docs/)
+- Agents playbook: see [AGENTS.md](AGENTS.md)
+

@@ -26,4 +26,34 @@ if defined? DEV_MOCK_AUTH_HASH
   reader.add_role :invisible
 end
 
-10.times { FactoryBot.create :case_with_elements, :published }
+if Rails.env.development?
+  10.times { FactoryBot.create :case_with_elements, :published } if Case.all.empty?
+
+  readers = 10.times.map { FactoryBot.create(:reader) }
+
+  COUNTRIES = %w[US US US CA CA GB GB DE FR IN AU BR JP MX ZA NG KE EG].freeze
+
+  Case.published.limit(5).each do |kase|
+    rand(1..3).times { FactoryBot.create(:deployment, case: kase) }
+
+    rand(50..150).times do
+      reader = readers.sample
+      country = COUNTRIES.sample
+      event_time = rand(365 * 2).days.ago + rand(24).hours
+
+      visit = FactoryBot.create(:visit,
+                                user: reader,
+                                country: country,
+                                started_at: event_time)
+
+      rand(1..5).times do
+        FactoryBot.create(:ahoy_event,
+                          visit: visit,
+                          user: reader,
+                          case_slug: kase.slug,
+                          name: %w[visit_case visit_page visit_podcast].sample,
+                          time: event_time + rand(30).minutes)
+      end
+    end
+  end
+end

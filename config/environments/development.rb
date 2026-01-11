@@ -85,4 +85,6 @@ Rails.application.configure do
   # Allow web console from all IPs
   config.web_console.allowed_ips = '0.0.0.0/0'
 
+  # Skip schema/structure dump post-migration in development to avoid pg_dump version mismatch
+  config.active_record.dump_schema_after_migration = false
 end

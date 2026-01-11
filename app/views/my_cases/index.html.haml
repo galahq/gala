@@ -50,7 +50,8 @@
           %td= t 'activerecord.attributes.case.locale'
           %td= t 'activerecord.attributes.case.library'
           %td= t 'activerecord.attributes.case.published'
-          %td= t 'my_cases.index.case_stats'
+          - if current_reader.has_role? :editor
+            %td= t 'my_cases.index.case_stats'
           %td
           %td
           %td
@@ -89,6 +90,12 @@
                   = localize kase.published_at.to_date, format: :long
                 - else
                   —
+
+              - if current_reader.has_role? :editor
+                %td
+                  = link_to '', case_stats_path(kase),
+                            aria: { label: t('.case_stats') },
+                            class: 'pt-button pt-minimal pt-icon-series-search'
 
               %td
                 = link_to '', case_stats_path(kase),
