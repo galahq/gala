@@ -23,7 +23,7 @@ type BarButton = {|
   onClick: () => any,
   spotlightKey?: string,
 |}
-type BarMessage = {| message: string |}
+type BarMessage = {| message: string, spotlightKey?: string |}
 type BarMenu = {|
   message?: string,
   icon: string,
@@ -33,11 +33,13 @@ type BarMenu = {|
 type BarComponent = {|
   message?: string,
   component: React.Element<*>,
+  spotlightKey?: string,
 |}
 type BarElement = BarButton | BarMessage | BarMenu | BarComponent
 type BarGroup = Array<?BarElement>
 
-const pass = omit(['message'])
+const pass = (element: BarButton | BarMenu) =>
+  omit(['message', 'spotlightKey'], element)
 
 type Props = {
   light?: boolean,
@@ -62,22 +64,25 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 ? element.spotlightKey
                 : undefined
 
-              return element.component != null ? (
+              if (element.component != null) {
                 /**
                  * BarComponent -- an arbitrary custom component
                  */
-                React.cloneElement(element.component, { key: j })
-              ) : element.submenu != null ? (
+                return React.cloneElement(element.component, { key: j })
+              }
+
+              if (element.submenu != null) {
                 /**
                  * BarMenu -- a button with a dropdown menu of other buttons
                  */
-                <Popover
-                  key={j}
-                  position={Position.BOTTOM_RIGHT}
-                  content={
-                    <StyledMenu>
-                      {element.submenu &&
-                        element.submenu.map(
+                const menuElement: BarMenu = (element: any)
+                return (
+                  <Popover
+                    key={j}
+                    position={Position.BOTTOM_RIGHT}
+                    content={
+                      <StyledMenu>
+                        {menuElement.submenu.map(
                           (item, k) =>
                             item && (
                               <MenuItem
@@ -88,44 +93,52 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                               />
                             )
                         )}
-                    </StyledMenu>
-                  }
-                >
+                      </StyledMenu>
+                    }
+                  >
+                    <MaybeSpotlight
+                      key={spotlightKey || j}
+                      spotlightKey={spotlightKey}
+                      placement="bottom"
+                    >
+                      {({ ref }) => (
+                        <Item
+                          elementRef={ref}
+                          text={t(menuElement.message)}
+                          {...pass(menuElement)}
+                        />
+                      )}
+                    </MaybeSpotlight>
+                  </Popover>
+                )
+              }
+
+              if (element.onClick != null) {
+                /**
+                 * BarButton -- a clickable button
+                 */
+                const buttonElement: BarButton = (element: any)
+                return (
                   <MaybeSpotlight
-                    key={spotlightKey}
+                    key={spotlightKey || j}
                     spotlightKey={spotlightKey}
                     placement="bottom"
                   >
                     {({ ref }) => (
                       <Item
-                        key={j}
                         elementRef={ref}
-                        text={t(element.message)}
-                        {...pass(element)}
+                        text={t(buttonElement.message)}
+                        {...pass(buttonElement)}
                       />
                     )}
                   </MaybeSpotlight>
-                </Popover>
-              ) : element.onClick != null ? (
-                /**
-                 * BarButton -- a clickable button
-                 */
-                <MaybeSpotlight spotlightKey={spotlightKey} placement="bottom">
-                  {({ ref }) => (
-                    <Item
-                      key={j}
-                      elementRef={ref}
-                      text={t(element.message)}
-                      {...pass(element)}
-                    />
-                  )}
-                </MaybeSpotlight>
-              ) : (
-                /**
-                 * BarMessage -- just translated text
-                 */
-                <span key={j}>{t(element.message)}</span>
-              )
+                )
+              }
+
+              /**
+               * BarMessage -- just translated text
+               */
+              return <span key={j}>{t(element.message)}</span>
             })}
           </Group>
         ))}
@@ -136,7 +149,9 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
 
 export default injectIntl(Toolbar)
 
-const Bar = styled.div.attrs({ className: ({ light }) => light || 'pt-dark' })`
+const Bar = styled.div.attrs(props => ({
+  className: props.light || 'pt-dark',
+}))`
   width: 100%;
   overflow: auto;
 
@@ -166,7 +181,7 @@ const MaxWidthFlexContainer = styled(MaxWidthContainer)`
     justify-content: flex-end;
   }
 `
-const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
+const Group = styled.div.attrs(() => ({ className: 'pt-navbar-group' }))`
   height: 36px !important;
   margin: 0 8px;
   flex: 1;
@@ -188,9 +203,9 @@ const Group = styled.div.attrs({ className: 'pt-navbar-group' })`
         `
       : ''};
 `
-const Item = styled(Button).attrs({
-  className: p => p.className || 'pt-minimal',
-})``
+const Item = styled(Button).attrs(props => ({
+  className: props.className || 'pt-minimal',
+}))``
 
 const StyledMenu = styled(Menu)`
   font-size: 90%;

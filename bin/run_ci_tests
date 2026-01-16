@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+SKIP_DB_RESET=0
+
+usage() {
+  echo "Usage: bin/run_ci_tests [--skip-db]"
+  echo "Runs the CI-equivalent test suite on the host."
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --skip-db)
+      SKIP_DB_RESET=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+export RAILS_ENV=test
+export NODE_ENV=test
+
+if [[ "$SKIP_DB_RESET" -eq 0 ]]; then
+  if ! bundle exec rails db:environment:set RAILS_ENV=test \
+    >/dev/null 2>&1; then
+    echo "Could not sync db environment metadata (likely first run)."
+  fi
+  bundle exec rake db:drop db:create \
+    db:schema:load db:test:prepare
+fi
+
+bundle exec rails assets:precompile
+
+RSPEC_OPTS=(
+  --exclude-pattern
+  "spec/features/**/*_spec.rb"
+  --format
+  progress
+  --color
+)
+bundle exec rspec "${RSPEC_OPTS[@]}"
+

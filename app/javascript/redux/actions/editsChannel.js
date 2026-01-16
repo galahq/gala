@@ -75,6 +75,14 @@ export function subscribeToEditsChannel (): A.ThunkAction {
 
     const { slug } = getState().caseData
 
+    if (
+      App.edits != null &&
+      typeof App.edits.unsubscribe === 'function'
+    ) {
+      App.edits.unsubscribe()
+      delete App.edits
+    }
+
     App.edits = App.cable.subscriptions.create(
       { channel: 'EditsChannel', case_slug: slug },
       {

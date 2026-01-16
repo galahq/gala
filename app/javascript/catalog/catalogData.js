@@ -29,6 +29,10 @@ export type CatalogData = {
   tags: Tag[],
 }
 
+function ignoreUnauthorized (e: OrchardError | Error) {
+  if (!(e instanceof OrchardError && e.status === 401)) throw e
+}
+
 function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
   const [data, update] = useImmer(getDefaultCatalogData())
 
@@ -56,9 +60,7 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
           draft.enrollments = enrollments
         })
       )
-      .catch(e => {
-        if (!(e instanceof OrchardError && e.status === 401)) throw e
-      })
+      .catch(ignoreUnauthorized)
   }, [])
 
   React.useEffect(() => {
@@ -78,11 +80,13 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
   }, [])
 
   React.useEffect(() => {
-    Orchard.harvest('saved_reading_lists').then(lists =>
-      update(draft => {
-        draft.savedReadingLists = lists
-      })
-    )
+    Orchard.harvest('saved_reading_lists')
+      .then(lists =>
+        update(draft => {
+          draft.savedReadingLists = lists
+        })
+      )
+      .catch(ignoreUnauthorized)
   }, [])
 
   React.useEffect(() => {
@@ -94,11 +98,13 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
   }, [])
 
   React.useEffect(() => {
-    Orchard.harvest('managerships').then(managerships =>
-      update(draft => {
-        draft.managerships = managerships
-      })
-    )
+    Orchard.harvest('managerships')
+      .then(managerships =>
+        update(draft => {
+          draft.managerships = managerships
+        })
+      )
+      .catch(ignoreUnauthorized)
   }, [])
 
   return [data, update]

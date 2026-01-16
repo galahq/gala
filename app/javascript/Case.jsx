@@ -51,6 +51,7 @@ function mapStateToProps ({ edit, quiz, caseData }: State) {
     hasQuiz: !!quiz.questions && quiz.questions.length > 0,
     caseSlug: caseData.slug,
     kicker: caseData.kicker,
+    hasReader: !!caseData.reader,
     loadComments: !!(
       caseData.commentable &&
       caseData.reader &&
@@ -70,6 +71,7 @@ class Case extends React.Component<{
   hasQuiz: boolean,
   caseSlug: string,
   kicker: string,
+  hasReader: boolean,
   loadComments: boolean,
   basename: string,
   parseAllCards: typeof parseAllCards,
@@ -83,7 +85,15 @@ class Case extends React.Component<{
   editing: boolean,
 }> {
   _subscribe = () => {
-    if (typeof App === 'undefined' || !('WebSocket' in window)) return
+    if (
+      typeof App === 'undefined' ||
+      !('WebSocket' in window) ||
+      !this.props.hasReader
+    ) {
+      return
+    }
+
+    this._unsubscribe()
 
     const {
       handleNotification,
@@ -103,6 +113,21 @@ class Case extends React.Component<{
 
     subscribeToEditsChannel()
     subscribeToActiveForumChannel(caseSlug)
+  }
+
+  _unsubscribe = () => {
+    if (typeof App === 'undefined') return
+
+    ;['readerNotification', 'edits', 'forum'].forEach(key => {
+      const subscription = App[key]
+      if (
+        subscription != null &&
+        typeof subscription.unsubscribe === 'function'
+      ) {
+        subscription.unsubscribe()
+        delete App[key]
+      }
+    })
   }
 
   componentDidMount () {
@@ -127,6 +152,10 @@ class Case extends React.Component<{
     }
 
     this._subscribe()
+  }
+
+  componentWillUnmount () {
+    this._unsubscribe()
   }
 
   render () {

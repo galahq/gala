@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-FROM ruby:3.2.6
+FROM ruby:3.2.9-bullseye
 
 WORKDIR /gala
 
@@ -13,9 +13,14 @@ ENV BUNDLE_PATH="/usr/local/bundle" \
 
 # install builder dependencies
 RUN apt-get update && apt-get install -y \
-    wget gnupg2 build-essential curl python3 wkhtmltopdf \
-    libvips git pkg-config libjemalloc-dev lsb-release zlib1g-dev \
-    libffi-dev libyaml-dev libreadline-dev libssl-dev postgresql-client libpq-dev gcc make \
+    wget gnupg2 build-essential curl python3 \
+    libvips git pkg-config libjemalloc-dev \
+    lsb-release zlib1g-dev \
+    libffi-dev libyaml-dev libreadline-dev \
+    libssl-dev postgresql-client \
+    libpq-dev gcc make \
+    wkhtmltopdf xfonts-75dpi xfonts-base \
+    fontconfig \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 

@@ -25,16 +25,22 @@ class ErrorsController < ActionController::Base
   end
 
   def report_dialog_options
+    return {} unless defined?(Sentry)
+
     {
-      'eventId' => Raven.last_event_id,
+      'eventId' => Sentry.last_event_id,
       'dsn' => sentry_dsn
-    }
+    }.compact
   end
   helper_method :report_dialog_options
 
   def sentry_dsn
-    return unless ENV['SENTRY_DSN'].present?
+    client = Sentry.get_current_client
+    dsn = client&.configuration&.dsn
+    return if dsn.nil?
 
-    ENV['SENTRY_DSN'].gsub %r{^https://([^:]+):[^@]+(.*)}, 'https://\1\2'
+    host_port = dsn.port ? "#{dsn.host}:#{dsn.port}" : dsn.host
+    path_segment = dsn.path.present? ? "/#{dsn.path}" : ''
+    "#{dsn.scheme}://#{dsn.public_key}@#{host_port}#{path_segment}/#{dsn.project_id}"
   end
 end
