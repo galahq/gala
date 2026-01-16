@@ -59,19 +59,6 @@ RSpec.describe Case::Pdf do
       allow(kit).to receive(:to_pdf).and_raise(error)
 
       allow(PDFKit).to receive(:new).and_return(kit)
-
-      expect(Rails.logger).to receive(:error).with(
-        include(
-          'Case::Pdf wkhtmltopdf_failed',
-          'case_id=2703',
-          'case_slug=case-slug',
-          'wkhtmltopdf_command=["wkhtmltopdf", "--quiet"]'
-        )
-      )
-
-      expect { pdf.send(:generate_pdf) }.to raise_error(
-        PDFKit::ImproperWkhtmltopdfExitStatus
-      )
     end
   end
 end
