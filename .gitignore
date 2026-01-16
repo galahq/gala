@@ -23,14 +23,15 @@
 node_modules/
 
 app/assets/javascripts/react
-/public/packs
 /node_modules
 
 localhost.crt
 localhost.key
 /public/packs
 /public/packs-test
-/node_modules
+/public/assets
+!public/robots.txt
+!public/favicon.ico
 
 /.yardoc/
 /doc/
@@ -46,6 +47,7 @@ spec/examples.txt
 .OLD
 *.*.OLD
 .env
+.env.dev
 .DS_Store
 .*OLD
 .*.OLD

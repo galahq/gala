@@ -10,14 +10,32 @@ require 'csv'
 Bundler.require(*Rails.groups)
 
 # Set release version
-ENV['RELEASE'] = 'v2.2.0' # TODO: experiment doing github releases again
+ENV['RELEASE'] = 'v1.15.3' # TODO: experiment doing github releases again
+
+# Normalize an env flag to string 'true'/'false', using a fallback block.
+def normalized_env_flag(value)
+  if value && !value.strip.empty?
+    value.to_s.downcase == 'true' ? 'true' : 'false'
+  else
+    yield ? 'true' : 'false'
+  end
+end
 
 # Determine if we're in staging environment
-ENV['STAGING'] = ENV['BASE_URL']&.include?('staging').to_s
+staging_env_source = ENV['STAGING']
+STAGING_ENV =
+  normalized_env_flag(staging_env_source) do
+    ENV['BASE_URL'].to_s.include?('staging')
+  end
+ENV['STAGING'] = STAGING_ENV
 
-# Allow temporary unconfirmed access in staging or development
-ENV['TEMPORARY_UNCONFIRMED_ACCESS'] ||=
-  (ENV['STAGING'] == 'true').to_s
+# Determine if temporary unconfirmed access is allowed
+temporary_access_source = ENV['TEMPORARY_UNCONFIRMED_ACCESS']
+TEMPORARY_UNCONFIRMED_ACCESS =
+  normalized_env_flag(temporary_access_source) do
+    STAGING_ENV == 'true'
+  end
+ENV['TEMPORARY_UNCONFIRMED_ACCESS'] = TEMPORARY_UNCONFIRMED_ACCESS
 
 module Orchard
   class Application < Rails::Application
@@ -27,6 +45,9 @@ module Orchard
 
     config.load_defaults 7.0
     config.active_support.cache_format_version = 7.0
+
+    config.x.staging_env = STAGING_ENV
+    config.x.temporary_unconfirmed_access = TEMPORARY_UNCONFIRMED_ACCESS
 
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
 

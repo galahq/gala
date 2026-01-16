@@ -11,13 +11,18 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 ## Dependencies
 
 - Docker
-- Ruby 3.2.6
+- Ruby 3.2.9
 - Node 12.5.0
+- jemalloc (via `Aptfile` + Docker, preloaded in `entrypoint.sh`)
+
+Deployments target the `heroku-22` stack declared in `app.json`, so the
+local Docker setup mirrors Heroku's libc/jemalloc behavior without extra
+configuration.
 
 #### Using rbenv
 
-1. `rbenv install 3.2.6`
-2. `rbenv shell 3.2.6`
+1. `rbenv install 3.2.9`
+2. `rbenv shell 3.2.9`
 3. `gem install bundler -v 2.4.19`
 4. `bundle install --jobs 4`
 
@@ -38,6 +43,30 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 - `docker compose down` to stop the app
 - `bundle exec rake test:unit` to run the Ruby tests
 - `yarn test` to run the Javascript tests
+
+## Running the CI test suite locally
+
+The CI workflow runs Ruby and Node tasks on the host while Postgres and Redis
+stay inside Docker. Those containers expose ports 5432 and 6379 to the host, so
+the default test database URL (`postgres://gala:alpine@localhost:5432/gala_test`)
+and Redis URL (`redis://localhost:6379/0`) work without extra configuration.
+
+1. Start the data services: `docker compose up -d db redis`.
+2. Ensure the Ruby (3.2.9) and Node (12.5.0) toolchains described above are
+   installed locally.
+3. Run `bin/run_ci_tests` to execute the same sequence that Semaphore runs. Use
+   `--skip-db` to keep the existing test database data if desired.
+
+If you need to run the individual steps manually, execute:
+
+```
+bundle exec rake db:drop db:create db:schema:load db:test:prepare
+bundle exec rails assets:precompile
+bundle exec rspec --exclude-pattern \
+  "spec/features/**/*_spec.rb" --format progress --color
+yarn test
+bundle exec rake factory_bot:lint
+```
 
 ### Updating dependencies
 
@@ -67,6 +96,25 @@ equivalent to run `bundle exec rake indices:refresh` as frequently as makes sens
 
 To send a weekly report of usage data, run `bundle exec rake emails:send_weekly_report` once
 per week.
+
+## Releases
+
+Use `bin/release_tag` to bump the semantic version, scaffold the release note,
+update `ENV['RELEASE']`, append to `node_modules/dashdash/CHANGES.md`, commit
+those files, and push the branch and annotated tag to `origin`:
+
+```
+bin/release_tag patch      # v1.15.0 -> v1.15.1
+bin/release_tag minor      # v1.15.0 -> v1.16.0
+bin/release_tag major      # v1.15.0 -> v2.0.0
+bin/release_tag retag v1.15.2   # Move an existing tag to the current HEAD
+```
+
+Pass `--dry-run` to preview the next version or `--llm` to attempt an
+auto-generated summary via the OpenAI API (requires `OPENAI_API_KEY` in the
+environment). The script always writes a markdown template so you can edit
+the note manually when the API is unavailable. Use `--tag-message` to override
+the annotated tag text when creating or retagging a release.
 
 ## Gala external infra
 | Service | Purpose |

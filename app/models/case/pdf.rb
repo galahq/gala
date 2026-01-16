@@ -4,6 +4,7 @@ class Case
   # A PDF archive of a case and all its pages, podcasts, and edgenotes
   class Pdf
     SOURCE_VIEW_PATH = 'cases/pdf'
+    MUTEX = Mutex.new
 
     EAGER_LOADING_CONFIG = [
       :cards,
@@ -19,6 +20,7 @@ class Case
 
     def initialize(case_study, root_url:)
       @case_study = preload_associations(case_study).decorate
+      root_url = ensure_trailing_slash(root_url.to_s)
       @root_url = URI(root_url)
     end
 
@@ -28,12 +30,28 @@ class Case
 
     private
 
+    def ensure_trailing_slash(url)
+      url.end_with?('/') ? url : "#{url}/"
+    end
+
     def preload_associations(case_study)
       Case.includes(EAGER_LOADING_CONFIG).find(case_study.id)
     end
 
     def generate_pdf
-      PDFKit.new(html, options).to_pdf
+      rendered_html = render_html_thread_safe
+      kit = PDFKit.new(rendered_html, options)
+      kit.to_pdf
+    rescue PDFKit::ImproperWkhtmltopdfExitStatus => e
+      Rails.logger.error("Case::Pdf wkhtmltopdf_failed, error=#{e.message}")
+      raise
+    end
+
+    def render_html_thread_safe
+      MUTEX.synchronize do
+        ActionController::Base.asset_host = root_url.to_s.chomp('/')
+        html
+      end
     end
 
     def html
@@ -59,7 +77,9 @@ class Case
     def options
       {
         root_url: root_url.to_s,
-        protocol: root_url.scheme
+        protocol: root_url.scheme,
+        load_error_handling: 'ignore',
+        load_media_error_handling: 'ignore'
       }
     end
   end

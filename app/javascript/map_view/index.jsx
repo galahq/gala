@@ -7,8 +7,8 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import Dimensions from 'react-dimensions'
 import ReactMapGL, { Marker } from 'react-map-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle } from 'catalog/shared'
@@ -36,8 +36,17 @@ type State = {
   openPin: string,
 }
 
-const token = "MAPBOX_TOKEN_REMOVED";
+const DEFAULT_MAPBOX_TOKEN =
+  'MAPBOX_TOKEN_REMOVED'
 
+function getMapboxToken (): string {
+  if (typeof document === 'undefined') return DEFAULT_MAPBOX_TOKEN
+  const meta = document.querySelector('meta[name="mapbox-access-token"]')
+  const envToken = meta && meta.getAttribute('content')
+  return envToken || DEFAULT_MAPBOX_TOKEN
+}
+
+const token = getMapboxToken()
 
 class MapViewController extends React.Component<Props, State> {
   // handleChangeViewport is fired when the component first mounts, but we
@@ -109,13 +118,17 @@ class MapViewController extends React.Component<Props, State> {
           </Instructions>
         )}
         <Container height={height}>
-          <AutosizedMapView
-            {...this.state}
-            cases={editing ? [] : cases}
-            onClickMap={this.handleClickMap}
-            onClickPin={this.handleClickPin}
-            onViewportChange={this.handleChangeViewport}
-          />
+          <MapViewport>
+            <MapView
+              {...this.state}
+              cases={editing ? [] : cases}
+              containerHeight="100%"
+              containerWidth="100%"
+              onClickMap={this.handleClickMap}
+              onClickPin={this.handleClickPin}
+              onViewportChange={this.handleChangeViewport}
+            />
+          </MapViewport>
           <PositionedSectionTitle>
             <FormattedMessage {...title} />
           </PositionedSectionTitle>
@@ -246,8 +259,8 @@ const PositionedPin = styled(Pin)`
 class MapView extends React.Component<{
   acceptingScroll: boolean,
   cases: Case[],
-  containerHeight: number,
-  containerWidth: number,
+  containerHeight: number | string,
+  containerWidth: number | string,
   openPin: string,
   viewport: Viewport,
   onClickMap: () => void,
@@ -276,9 +289,9 @@ class MapView extends React.Component<{
         longitude={longitude}
         zoom={zoom}
         scrollZoom={acceptingScroll}
+        mapboxApiAccessToken={token}
         onClick={onClickMap}
         onViewportChange={onViewportChange}
-        mapboxApiAccessToken={token}
       >
         {cases.map(kase =>
           kase.latitude && kase.longitude ? (
@@ -303,8 +316,10 @@ class MapView extends React.Component<{
   }
 }
 
-const AutosizedMapView = Dimensions()(MapView)
-
+const MapViewport = styled.div`
+  width: 100%;
+  height: 100%;
+`
 const Instructions = styled.div.attrs({
   className: 'pt-callout pt-intent-success pt-icon-locate',
 })`

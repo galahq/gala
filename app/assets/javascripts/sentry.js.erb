@@ -3,13 +3,12 @@
 Sentry.init({
   environment: '<%= Rails.env %>',
   dsn: 'https://da1bc9fe1d2e4fd89349d6ff82fca30e@sentry.io/1309103',
+  enableTracing: false,
   beforeSend(event) {
-    // Sanitize the event data to remove any non-serializable objects
     try {
       JSON.stringify(event)
       return event
     } catch (err) {
-      // If the event can't be stringified, try to clean it
       const sanitizedEvent = { ...event }
       if (sanitizedEvent.extra) {
         Object.keys(sanitizedEvent.extra).forEach(key => {
@@ -25,6 +24,19 @@ Sentry.init({
   }
 })
 
-Sentry.configureScope((scope) => {
-  if (window.reader != null) scope.setUser({ email: window.reader.email })
-})
+if (window.reader != null) {
+  const user = {
+    email: window.reader.email,
+    id: window.reader.id,
+  }
+
+  if (typeof Sentry.setUser === 'function') {
+    Sentry.setUser(user)
+  } else if (typeof Sentry.configureScope === 'function') {
+    Sentry.configureScope(scope => scope.setUser(user))
+  }
+}
+
+window.sentryLog = function sentryLog(level, message, extra = {}) {
+  Sentry.captureMessage(message, { level, extra })
+}

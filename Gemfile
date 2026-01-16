@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.2.6
+ruby file: '.ruby-version' # 3.2.9
 
 gem 'rails', '~> 7.0'
 
@@ -12,10 +12,10 @@ gem 'bootsnap'
 gem 'connection_pool'
 gem 'image_processing'
 gem 'pg', '~> 1.5.4'
-gem 'puma'
-gem 'puma_worker_killer'
+gem 'puma', '~> 7.1'
 gem 'rack-attack'
 gem 'rack-canonical-host'
+gem 'rack-timeout'
 gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.0'
 
@@ -78,7 +78,10 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes', require: false
 gem 'lograge'
-gem 'sentry-raven', '~> 3.1' # sentry-ruby
+gem 'sentry-ruby', '~> 5.24'
+gem 'sentry-rails', '~> 5.24'
+gem 'sentry-sidekiq', '~> 5.24'
+gem 'vernier'
 gem 'table_print'
 
 # Services
@@ -92,10 +95,10 @@ gem 'factory_bot_rails'
 gem 'faker'
 
 group :development do
+  gem 'bullet'
   gem 'foreman'
   gem 'listen', '~> 3.7'
   # Spring speeds up development
-  gem 'bullet', '>= 6.1.1'
   gem 'letter_opener'
   gem 'spring'
   gem 'spring-watcher-listen'
