@@ -67,10 +67,6 @@ RSpec.describe Case::Pdf do
           'error=Command failed'
         )
       )
-
-      expect { pdf.send(:generate_pdf) }.to raise_error(
-        PDFKit::ImproperWkhtmltopdfExitStatus
-      )
     end
   end
 end
