@@ -344,8 +344,11 @@ en:
         table_unknown_country: Unknown
         # Date range picker
         date_range_all_time: All time
+        date_range_past_7_days: Past 7 days
+        date_range_past_30_days: Past 30 days
         date_range_past_year: Past year
         date_range_past_2_years: Past 2 years
+
       # CSV export
       csv_filename: "case-stats-%{slug}-%{date}.csv"
       csv:

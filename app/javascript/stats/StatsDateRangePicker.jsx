@@ -33,9 +33,22 @@ function StatsDateRangePicker ({
     new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
 
   const translatedShortcuts = [
+
     {
       label: intl.formatMessage({ id: 'cases.stats.show.dateRangeAllTime' }),
       dateRange: [minDate, end],
+    },
+    {
+      label: intl.formatMessage({
+        id: 'cases.stats.show.dateRangePast7Days',
+      }),
+      dateRange: [startFromDays(7), end],
+    },
+    {
+      label: intl.formatMessage({
+        id: 'cases.stats.show.dateRangePast30Days',
+      }),
+      dateRange: [startFromDays(30), end],
     },
     {
       label: intl.formatMessage({
