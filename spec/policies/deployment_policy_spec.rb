@@ -57,4 +57,21 @@ RSpec.describe DeploymentPolicy do
       expect(subject).to permit editor, deployment
     end
   end
+
+  permissions :destroy? do
+    it 'does not allow an arbitrary reader to destroy a deployment' do
+      expect(subject).not_to permit reader_context, deployment
+    end
+
+    it 'allows an instructor to destroy her own deployment' do
+      create :group_membership, group: deployment.group,
+                                reader: reader_context.reader,
+                                status: :admin
+      expect(subject).to permit reader_context, deployment
+    end
+
+    it 'allows an editor to destroy any deployment' do
+      expect(subject).to permit editor, deployment
+    end
+  end
 end
