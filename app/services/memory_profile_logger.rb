@@ -30,4 +30,3 @@ class MemoryProfileLogger
     end
   end
 end
-

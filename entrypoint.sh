@@ -1,4 +1,8 @@
 #!/bin/bash
+set -euo pipefail
+
+export LD_PRELOAD="${LD_PRELOAD:-}"
+export MALLOC_CONF="${MALLOC_CONF:-}"
 
 # enable jemalloc for reduced memory usage and latency.
 if [ -f "/usr/lib/*/libjemalloc.so.2" ]; then

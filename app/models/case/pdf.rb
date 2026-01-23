@@ -4,6 +4,7 @@ class Case
   # A PDF archive of a case and all its pages, podcasts, and edgenotes
   class Pdf
     SOURCE_VIEW_PATH = 'cases/pdf'
+    MUTEX = Mutex.new
 
     EAGER_LOADING_CONFIG = [
       :cards,
