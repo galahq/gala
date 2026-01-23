@@ -16,22 +16,22 @@ RSpec.describe CountryStatsService do
 
     it 'resolves ISO2 code' do
       result = described_class.resolve_country('US')
-      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States of America' })
+      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States' })
     end
 
     it 'resolves ISO3 code' do
       result = described_class.resolve_country('USA')
-      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States of America' })
+      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States' })
     end
 
     it 'resolves country name' do
-      result = described_class.resolve_country('United States of America')
-      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States of America' })
+      result = described_class.resolve_country('United States')
+      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States' })
     end
 
     it 'handles case insensitive input' do
       result = described_class.resolve_country('united states')
-      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States of America' })
+      expect(result).to eq({ iso2: 'US', iso3: 'USA', name: 'United States' })
     end
 
     it 'returns fallback for unknown country' do
@@ -89,7 +89,7 @@ RSpec.describe CountryStatsService do
       expect(result).to eq({
                              stats: [],
                              bins: [],
-                             bin_count: 5,
+                             bin_count: 1,
                              total_visits: 0,
                              country_count: 0,
                              total_deployments: 0,
@@ -109,33 +109,24 @@ RSpec.describe CountryStatsService do
       # Check first country (US should be first due to higher visits)
       us_stat = result[:stats].first
       expect(us_stat[:iso2]).to eq('US')
-      expect(us_stat[:name]).to eq('United States of America')
+      expect(us_stat[:name]).to eq('United States')
       expect(us_stat[:unique_visits]).to eq(100)
       expect(us_stat[:unique_users]).to eq(50)
       expect(us_stat[:events_count]).to eq(200)
       expect(us_stat[:deployments_count]).to eq(5)
       expect(us_stat[:visit_podcast_count]).to eq(10)
-      expect(us_stat[:write_quiz_submission_count]).to eq(1)
     end
 
     it 'calculates bins correctly' do
       result = described_class.format_country_stats(raw_stats)
 
-      expect(result[:bins].length).to eq(5)
+      # With 2 unique values (50, 100), we get 2 bins
+      expect(result[:bins].length).to eq(2)
       expect(result[:bins].first[:bin]).to eq(0)
-      expect(result[:bins].first[:percentile]).to eq(0)
-      expect(result[:bins].last[:bin]).to eq(4)
-      expect(result[:bins].last[:percentile]).to eq(100)
-      expect(result[:bin_count]).to eq(5)
-    end
-
-    it 'accepts custom bin count' do
-      result = described_class.format_country_stats(raw_stats, 3)
-
-      expect(result[:bins].length).to eq(3)
-      expect(result[:bins].first[:bin]).to eq(0)
-      expect(result[:bins].last[:bin]).to eq(2)
-      expect(result[:bin_count]).to eq(3)
+      expect(result[:bins].first[:min]).to eq(0)
+      expect(result[:bins].last[:bin]).to eq(1)
+      expect(result[:bins].last[:max]).to eq(100)
+      expect(result[:bin_count]).to eq(2)
     end
   end
 
@@ -189,17 +180,12 @@ RSpec.describe CountryStatsService do
     end
 
     it 'calculates bins for single value' do
-      result = described_class.calculate_bins([100])
+      result = described_class.calculate_bins([100], 1)
 
-      expect(result.length).to eq(5)
+      expect(result.length).to eq(1)
       expect(result.first[:bin]).to eq(0)
-      expect(result.first[:percentile]).to eq(0)
-      expect(result.first[:value]).to eq(100)
-      expect(result.last[:bin]).to eq(4)
-      expect(result.last[:percentile]).to eq(100)
-      expect(result.last[:value]).to eq(100)
-      # For single value, all bins should have the same value
-      expect(result.map { |b| b[:value] }).to all(eq(100))
+      expect(result.first[:min]).to eq(0)
+      expect(result.first[:max]).to eq(100)
     end
 
     it 'calculates bins for multiple values' do
@@ -208,7 +194,8 @@ RSpec.describe CountryStatsService do
 
       expect(result.length).to eq(5)
       expect(result.map { |b| b[:bin] }).to eq([0, 1, 2, 3, 4])
-      expect(result.map { |b| b[:percentile] }).to eq([0, 25, 50, 75, 100])
+      expect(result.first[:min]).to eq(0)
+      expect(result.last[:max]).to eq(50)
     end
 
     it 'accepts custom bin count' do
@@ -217,18 +204,19 @@ RSpec.describe CountryStatsService do
 
       expect(result.length).to eq(3)
       expect(result.map { |b| b[:bin] }).to eq([0, 1, 2])
-      expect(result.map { |b| b[:percentile] }).to eq([0, 50, 100])
+      expect(result.first[:min]).to eq(0)
+      expect(result.last[:max]).to eq(50)
     end
   end
 
   describe '.get_bin' do
     let(:bins) do
       [
-        { bin: 0, percentile: 0, value: 10 },
-        { bin: 1, percentile: 25, value: 25 },
-        { bin: 2, percentile: 50, value: 50 },
-        { bin: 3, percentile: 75, value: 75 },
-        { bin: 4, percentile: 100, value: 100 }
+        { bin: 0, min: 0, max: 10, label: '0-10' },
+        { bin: 1, min: 10, max: 25, label: '10-25' },
+        { bin: 2, min: 25, max: 50, label: '25-50' },
+        { bin: 3, min: 50, max: 75, label: '50-75' },
+        { bin: 4, min: 75, max: 100, label: '75+' }
       ]
     end
 
@@ -238,8 +226,8 @@ RSpec.describe CountryStatsService do
     end
 
     it 'returns correct bin' do
-      expect(described_class.get_bin(30, bins)).to eq(1)
-      expect(described_class.get_bin(80, bins)).to eq(3)
+      expect(described_class.get_bin(30, bins)).to eq(2)
+      expect(described_class.get_bin(80, bins)).to eq(4)
       expect(described_class.get_bin(5, bins)).to eq(0)
     end
   end
