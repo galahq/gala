@@ -36,7 +36,7 @@ Rails.application.configure do
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   # NP 2025 - serving static files is enabled for serving mapbox assets for now
-  config.public_file_server.enabled = true || ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = ENV.fetch('RAILS_SERVE_STATIC_FILES', 'true') == 'true'
   config.public_file_server.headers = {
     'Cache-Control' => 'public, s-maxage=31536000, maxage=15552000',
     'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s
