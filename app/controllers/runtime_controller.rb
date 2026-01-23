@@ -13,10 +13,7 @@ class RuntimeController < ApplicationController
   PROCESS_BOOTED_AT = Time.current
   PROCESS_START_MONOTONIC = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-  before_action :authenticate_reader!
-  before_action -> do
-    redirect_to '/403' if current_reader.nil? || !current_reader.has_role?(:editor)
-  end
+  skip_before_action :verify_authenticity_token, raise: false
 
   # @route [GET] `/runtime/stats`
   def stats
@@ -144,8 +141,6 @@ class RuntimeController < ApplicationController
     ).merge(server: redis.connection[:host])
   rescue StandardError => e
     { error: e.class.name, message: e.message }
-  ensure
-    redis&.close if defined?(redis) && redis.respond_to?(:close)
   end
 
   def postgres_stats

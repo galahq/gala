@@ -15,11 +15,16 @@ Rack::Attack.blocklist('invalid-case-url-depth') do |req|
   numeric_depth = rest.take_while { |segment| segment.match?(/\A\d+\z/) }.size
   blocked = numeric_depth > 1
 
-  if blocked
-    Rails.logger.warn(
-      'Rack::Attack blocked malformed case path ' \
-      "(path=#{req.path}, ip=#{req.ip}, query=#{req.get_header('QUERY_STRING')}, " \
-      "ua=#{req.user_agent})"
+  if blocked && defined?(Sentry)
+    Sentry.capture_message(
+      'Rack::Attack blocked malformed case path',
+      level: :warning,
+      extra: {
+        path: req.path,
+        ip: req.ip,
+        query: req.get_header('QUERY_STRING'),
+        user_agent: req.user_agent
+      }
     )
   end
 
