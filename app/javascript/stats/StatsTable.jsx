@@ -1,6 +1,6 @@
 /* @flow */
-import React, { useState } from 'react'
-import { Card, Button, Colors } from '@blueprintjs/core'
+import React, { useState, useEffect } from 'react'
+import { Colors } from '@blueprintjs/core'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 type CountryData = {
@@ -81,6 +81,20 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
     window.location.href = url
   }
 
+  // Set up export button handler
+  useEffect(() => {
+    const exportBtn = document.getElementById('stats-table-export-btn')
+    if (exportBtn) {
+      const handleClick = () => {
+        exportCSV()
+      }
+      exportBtn.addEventListener('click', handleClick)
+      return () => {
+        exportBtn.removeEventListener('click', handleClick)
+      }
+    }
+  }, [caseSlug])
+
   const SortIcon = ({ field }: { field: string }) => {
     if (field !== sortField) {
       return <span style={{ opacity: 0.3, fontSize: '12px' }}>↕</span>
@@ -98,25 +112,23 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
     )
   }
 
-  return (
-    <Card style={{ marginTop: '24px' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '16px',
-        }}
-      >
-        <h3 style={{ margin: 0, font: 'monospace' }}>
-          <FormattedMessage id="cases.stats.show.tableTitle" />
-        </h3>
-        <Button intent="primary" icon="export" onClick={exportCSV}>
-          <FormattedMessage id="cases.stats.show.tableExportCsv" />
-        </Button>
-      </div>
+  // Set up export button handler
+  useEffect(() => {
+    const exportBtn = document.getElementById('stats-table-export-btn')
+    if (exportBtn) {
+      const handleClick = () => {
+        exportCSV()
+      }
+      exportBtn.addEventListener('click', handleClick)
+      return () => {
+        exportBtn.removeEventListener('click', handleClick)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [caseSlug])
 
-      <div style={{ overflowX: 'auto' }}>
+  return (
+    <div style={{ overflowX: 'auto' }}>
         <table
           className="pt-html-table pt-html-table-striped"
           style={{ width: '100%' }}
@@ -204,7 +216,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
           </tfoot>
         </table>
       </div>
-    </Card>
   )
 }
 

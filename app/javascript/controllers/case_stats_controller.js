@@ -36,6 +36,7 @@ export default class extends Controller {
     this.publishedAt = this.element.dataset.published_at
 
     this.dataUrl = dataUrl
+    this.allTimeStats = null
 
     // Load i18n messages and initialize
     loadMessages(locale)
@@ -102,8 +103,12 @@ export default class extends Controller {
     // Show loading state immediately before initial data fetch
     this.renderLoading()
 
-    // Load initial dataset before setting up event listener
-    this.fetchAndRenderBoth()
+    // Fetch all-time stats first (no date parameters)
+    this.fetchAllTimeStats()
+      .then(() => {
+        // Then load initial dataset with date range
+        return this.fetchAndRenderBoth()
+      })
       .then(() => {
         // Only set up the event listener after initial load completes
         this.isInitializing = false
@@ -252,18 +257,6 @@ export default class extends Controller {
       try {
         ReactDOM.render(
           <div className="c-stats-summary__content">
-            {/* Summary header */}
-            <div className="c-stats-summary__header">
-              <div
-                className="pt-skeleton"
-                style={{ height: '20px', width: '80px' }}
-              />
-              <div
-                className="pt-skeleton"
-                style={{ height: '16px', width: '180px' }}
-              />
-            </div>
-
             {/* Statistics */}
             <div className="c-stats-summary__row">
               <div
@@ -320,15 +313,27 @@ export default class extends Controller {
       try {
         ReactDOM.render(
           <div className="c-stats-information__content">
-            {/* Information header */}
-            <div className="c-stats-information__header">
+            {/* Information rows */}
+            <div className="c-stats-information__row">
               <div
                 className="pt-skeleton"
-                style={{ height: '20px', width: '100px' }}
+                style={{ height: '16px', width: '180px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '60px' }}
               />
             </div>
-
-            {/* Information rows */}
+            <div className="c-stats-information__row">
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '150px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '30px' }}
+              />
+            </div>
             <div className="c-stats-information__row">
               <div
                 className="pt-skeleton"
@@ -347,6 +352,16 @@ export default class extends Controller {
               <div
                 className="pt-skeleton"
                 style={{ height: '16px', width: '100px' }}
+              />
+            </div>
+            <div className="c-stats-information__row">
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '130px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '40px' }}
               />
             </div>
           </div>,
@@ -431,6 +446,48 @@ export default class extends Controller {
     }
   }
 
+  fetchAllTimeStats () {
+    // Fetch stats without date parameters to get all-time totals
+    const url = this.dataUrl + '.json'
+    return fetch(url, {
+      credentials: 'same-origin',
+      headers: { Accept: 'application/json' },
+      cache: 'no-store',
+    })
+      .then(async r => {
+        if (r.ok) return r.json()
+        const text = await r.text()
+        throw new Error('HTTP ' + r.status + ': ' + text)
+      })
+      .then(payload => {
+        const formatted = Array.isArray(payload?.formatted) ? payload.formatted : []
+        const summary =
+          payload?.summary && typeof payload.summary === 'object'
+            ? payload.summary
+            : {}
+        this.allTimeStats = {
+          total_visits: summary.total_visits || 0,
+          country_count: summary.country_count || 0,
+        }
+        // Store summary data for information section (case-level info that doesn't change)
+        if (!this.caseSummary) {
+          this.caseSummary = {
+            case_locales: summary.case_locales,
+            case_published_at: summary.case_published_at,
+            total_deployments: summary.total_deployments,
+          }
+        }
+        // Re-render information section with all-time stats
+        this.renderInformationSection()
+      })
+      .catch(error => {
+        console.error('Error fetching all-time stats:', error)
+        // Set defaults on error
+        this.allTimeStats = { total_visits: 0, country_count: 0 }
+        this.renderInformationSection()
+      })
+  }
+
   fetchData () {
     const params = new URLSearchParams()
     const from = this.fromTarget && this.fromTarget.value
@@ -485,6 +542,15 @@ export default class extends Controller {
       // Update the data - the components will handle updates via props
       this.currentData = { formatted, summary }
 
+      // Store case-level summary data (doesn't change with date range)
+      if (!this.caseSummary || summary.case_locales) {
+        this.caseSummary = {
+          case_locales: summary.case_locales,
+          case_published_at: summary.case_published_at,
+          total_deployments: summary.total_deployments,
+        }
+      }
+
       // Render the components
       this.renderComponents()
     } catch (error) {
@@ -492,6 +558,90 @@ export default class extends Controller {
       this.renderError(error)
     } finally {
       this.isFetching = false
+    }
+  }
+
+  renderInformationSection () {
+    // Use currentData summary if available, otherwise use stored caseSummary
+    const { summary } = this.currentData || { summary: {} }
+    const caseInfo = summary.case_locales
+      ? summary
+      : this.caseSummary || {}
+    const allTimeStats = this.allTimeStats || { total_visits: 0, country_count: 0 }
+
+    const informationEl = document.getElementById('stats-information')
+    if (informationEl) {
+      try {
+        ReactDOM.render(
+          React.createElement(
+            'div',
+            { className: 'c-stats-information__content' },
+            // All-time Unique Visitors
+            React.createElement(
+              'div',
+              { className: 'c-stats-information__row' },
+              React.createElement('span', { className: 'c-stats-information__label' }, 'Unique Visitors'),
+              React.createElement(
+                'span',
+                { className: 'c-stats-information__value' },
+                (allTimeStats.total_visits || 0).toLocaleString()
+              )
+            ),
+            // All-time Countries
+            React.createElement(
+              'div',
+              { className: 'c-stats-information__row' },
+              React.createElement('span', { className: 'c-stats-information__label' }, 'Countries'),
+              React.createElement(
+                'span',
+                { className: 'c-stats-information__value' },
+                allTimeStats.country_count || 0
+              )
+            ),
+            // Translations
+            caseInfo.case_locales &&
+              React.createElement(
+                'div',
+                { className: 'c-stats-information__row' },
+                React.createElement('span', { className: 'c-stats-information__label' }, 'Available Translations'),
+                React.createElement('span', { className: 'c-stats-information__value' }, caseInfo.case_locales)
+              ),
+            // Publication date
+            caseInfo.case_published_at &&
+              React.createElement(
+                'div',
+                { className: 'c-stats-information__row' },
+                React.createElement('span', { className: 'c-stats-information__label' }, 'Published'),
+                React.createElement(
+                  'span',
+                  { className: 'c-stats-information__value' },
+                  new Date(caseInfo.case_published_at).toLocaleDateString(
+                    'en-US',
+                    {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    }
+                  )
+                )
+              ),
+            // Total Deployments
+            React.createElement(
+              'div',
+              { className: 'c-stats-information__row' },
+              React.createElement('span', { className: 'c-stats-information__label' }, 'Total Deployments'),
+              React.createElement(
+                'span',
+                { className: 'c-stats-information__value' },
+                (caseInfo.total_deployments || 0).toLocaleString()
+              )
+            )
+          ),
+          informationEl
+        )
+      } catch (error) {
+        console.error('Error rendering information:', error)
+      }
     }
   }
 
@@ -543,18 +693,17 @@ export default class extends Controller {
             React.createElement(
               'div',
               { className: 'c-stats-summary__content' },
-              // Summary header
-              React.createElement(
-                'div',
-                { className: 'c-stats-summary__header' },
-                React.createElement('span', null, 'Key Stats'),
-                dateRangeText &&
+              // Summary header with date range
+              dateRangeText &&
+                React.createElement(
+                  'div',
+                  { className: 'c-stats-summary__header' },
                   React.createElement(
                     'span',
                     { style: { fontSize: '13px', fontWeight: 'normal', color: 'rgba(92, 112, 128, 0.8)' } },
                     dateRangeText
                   )
-              ),
+                ),
               // Statistics
               React.createElement(
                 'div',
@@ -576,16 +725,6 @@ export default class extends Controller {
               React.createElement(
                 'div',
                 { className: 'c-stats-summary__row' },
-                React.createElement('span', { className: 'c-stats-summary__label' }, 'Total Deployments'),
-                React.createElement(
-                  'span',
-                  { className: 'c-stats-summary__value' },
-                  (summary.total_deployments || 0).toLocaleString()
-                )
-              ),
-              React.createElement(
-                'div',
-                { className: 'c-stats-summary__row' },
                 React.createElement('span', { className: 'c-stats-summary__label' }, 'Podcast Listens'),
                 React.createElement(
                   'span',
@@ -603,60 +742,7 @@ export default class extends Controller {
     }
 
     // Render information section
-    const informationEl = document.getElementById('stats-information')
-    if (informationEl) {
-      try {
-        if (formatted.length === 0) {
-          ReactDOM.render(
-            React.createElement('div'),
-            informationEl
-          )
-        } else {
-          ReactDOM.render(
-            React.createElement(
-              'div',
-              { className: 'c-stats-information__content' },
-              // Information header
-              React.createElement(
-                'div',
-                { className: 'c-stats-information__header' },
-                React.createElement('span', null, 'Case Overview')
-              ),
-              // Translations
-              summary.case_locales &&
-                React.createElement(
-                  'div',
-                  { className: 'c-stats-information__row' },
-                  React.createElement('span', { className: 'c-stats-information__label' }, 'Available Translations'),
-                  React.createElement('span', { className: 'c-stats-information__value' }, summary.case_locales)
-                ),
-              // Publication date
-              summary.case_published_at &&
-                React.createElement(
-                  'div',
-                  { className: 'c-stats-information__row' },
-                  React.createElement('span', { className: 'c-stats-information__label' }, 'Published'),
-                  React.createElement(
-                    'span',
-                    { className: 'c-stats-information__value' },
-                    new Date(summary.case_published_at).toLocaleDateString(
-                      'en-US',
-                      {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      }
-                    )
-                  )
-                )
-            ),
-            informationEl
-          )
-        }
-      } catch (error) {
-        console.error('Error rendering information:', error)
-      }
-    }
+    this.renderInformationSection()
 
     // Render the map - keep it mounted and just update props
     const mapEl = document.getElementById('stats-map')

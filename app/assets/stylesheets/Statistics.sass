@@ -44,51 +44,97 @@
     font-weight: 500
 
 // Stats page layout - using BlueprintJS spacing and flexbox
-.c-stats-layout
-  display: flex
-  gap: 20px
-  align-items: flex-start
+.c-stats-filter-card
   margin-bottom: 20px
   max-width: 1400px
+  padding: 20px
+
+.c-stats-filter-card__heading
+  margin: 0 0 20px 0
+  font-size: 18px
+  font-weight: 600
+  color: rgba(16, 22, 26, 0.8)
+
+.c-stats-layout
+  display: flex
+  flex-direction: column
+  gap: 20px
+  align-items: flex-start
+
+  // On wider viewports, show date picker and summary side by side
+  @media (min-width: 1200px)
+    flex-direction: row
+    align-items: flex-start
 
 .c-stats-picker
   flex: 1
-  min-width: 600px
+  min-width: 300px
   max-width: 800px
+  width: 100%
+  padding: 20px
 
-.c-stats-summary-container
+  @media (min-width: 1200px)
+    flex: 1
+    min-width: 600px
+    max-width: 800px
+
+.c-stats-information__heading
+  margin: 0 0 20px 0
+  font-size: 18px
+  font-weight: 600
+  color: rgba(16, 22, 26, 0.8)
+
+.c-stats-information-container
   margin-bottom: 20px
   max-width: 1400px
 
-.c-stats-info-layout
-  display: flex
-  gap: 20px
-  align-items: flex-start
+.c-stats-information
+  min-height: 200px
+  max-width: 800px
 
 .c-stats-summary
-  flex: 1
+  flex: 0 0 auto
   min-height: 200px
   min-width: 300px
+  width: 100%
+  padding: 20px
 
-.c-stats-information
-  flex: 1
-  min-height: 200px
-  min-width: 300px
+  @media (min-width: 1200px)
+    flex: 0 0 400px
+    max-width: 400px
+
+.c-stats-map-table-card
+  margin-top: 20px
+  padding: 20px
+  max-width: 1400px
+
+.c-stats-map-table-header
+  margin-bottom: 16px
+
+.c-stats-map-table-title
+  margin: 0
+  font-family: monospace
+  font-size: 16px
+  font-weight: 600
 
 .c-stats-map-container
   height: 500px
   margin-bottom: 20px
   padding: 0 !important
   overflow: hidden
-  max-width: 1400px
+  width: 100%
 
 .c-stats-map
   height: 100%
   width: 100%
 
-.c-stats-table-container
+.c-stats-export-button-container
+  display: flex
+  justify-content: flex-end
   margin-bottom: 20px
-  max-width: 1400px
+
+.c-stats-table-container
+  width: 100%
   min-height: 400px
 
 // Loading overlay for map
@@ -116,12 +162,12 @@
 
 .c-stats-summary__header
   display: flex
-  justify-content: space-between
+  justify-content: flex-end
   margin-bottom: 12px
   padding-bottom: 8px
   border-bottom: 1px solid rgba(16, 22, 26, 0.15)
-  font-size: 15px
-  font-weight: bold
+  font-size: 13px
+  font-weight: normal
 
 .c-stats-summary__row
   display: flex
@@ -164,7 +210,7 @@
     margin-bottom: 0
 
 .c-stats-information__label
-  font-weight: 500
+  font-weight: 400
 
 .c-stats-information__value
   font-weight: 600
