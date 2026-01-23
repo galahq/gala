@@ -335,7 +335,6 @@ en:
         table_rank: "#"
         table_country: Country
         table_unique_visitors: Unique Visitors
-        table_unique_users: Unique Users
         table_total_events: Total Events
         table_first_visit: First Visit
         table_last_visit: Last Visit

@@ -20,16 +20,23 @@
         <input type="hidden" id="stats-from" data-target="case-stats.from" />
         <input type="hidden" id="stats-to" data-target="case-stats.to" />
 
-        <!-- Top section: Date picker and summary stats -->
+        <!-- Top section: Date picker -->
         <div class="c-stats-layout">
           <!-- Date picker -->
           <div class="c-stats-picker pt-card pt-elevation-1">
             <div id="stats-range-picker"></div>
           </div>
-           <!-- Summary stats -->
-           <div class="c-stats-summary pt-card pt-elevation-1">
-             <div id="stats-summary"></div>
-           </div>
+        </div>
+        <!-- Summary stats and information (below date picker) -->
+        <div class="c-stats-summary-container">
+          <div class="c-stats-info-layout">
+            <div class="c-stats-summary pt-card pt-elevation-1">
+              <div id="stats-summary"></div>
+            </div>
+            <div class="c-stats-information pt-card pt-elevation-1">
+              <div id="stats-information"></div>
+            </div>
+          </div>
         </div>
          <!-- Map section (full width below date picker) -->
          <div class="c-stats-map-container pt-card pt-elevation-1">

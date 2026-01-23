@@ -252,7 +252,7 @@ export default class extends Controller {
       try {
         ReactDOM.render(
           <div className="c-stats-summary__content">
-            {/* Summary header with published date */}
+            {/* Summary header */}
             <div className="c-stats-summary__header">
               <div
                 className="pt-skeleton"
@@ -260,7 +260,7 @@ export default class extends Controller {
               />
               <div
                 className="pt-skeleton"
-                style={{ height: '20px', width: '120px' }}
+                style={{ height: '16px', width: '180px' }}
               />
             </div>
 
@@ -306,22 +306,54 @@ export default class extends Controller {
               />
             </div>
 
-            {/* Translations (optional) */}
-            <div className="c-stats-summary__row">
+          </div>,
+          summaryEl
+        )
+      } catch (error) {
+        console.error('Error rendering loading state for summary:', error)
+      }
+    }
+
+    // Information skeleton
+    const informationEl = document.getElementById('stats-information')
+    if (informationEl) {
+      try {
+        ReactDOM.render(
+          <div className="c-stats-information__content">
+            {/* Information header */}
+            <div className="c-stats-information__header">
               <div
                 className="pt-skeleton"
-                style={{ height: '16px', width: '90px' }}
+                style={{ height: '20px', width: '100px' }}
+              />
+            </div>
+
+            {/* Information rows */}
+            <div className="c-stats-information__row">
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '150px' }}
               />
               <div
                 className="pt-skeleton"
                 style={{ height: '16px', width: '80px' }}
               />
             </div>
+            <div className="c-stats-information__row">
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '70px' }}
+              />
+              <div
+                className="pt-skeleton"
+                style={{ height: '16px', width: '100px' }}
+              />
+            </div>
           </div>,
-          summaryEl
+          informationEl
         )
       } catch (error) {
-        console.error('Error rendering loading state for summary:', error)
+        console.error('Error rendering loading state for information:', error)
       }
     }
 
@@ -469,6 +501,30 @@ export default class extends Controller {
       summary: {},
     }
 
+    // Get date range from picker
+    const from = this.fromTarget && this.fromTarget.value
+    const to = this.toTarget && this.toTarget.value
+
+    const formatDateRange = () => {
+      if (!from && !to) return ''
+      const formatDate = (dateStr) => {
+        if (!dateStr) return ''
+        return new Date(dateStr).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })
+      }
+      const fromFormatted = formatDate(from)
+      const toFormatted = formatDate(to)
+      if (fromFormatted && toFormatted) {
+        return `${fromFormatted} - ${toFormatted}`
+      }
+      return fromFormatted || toFormatted || ''
+    }
+
+    const dateRangeText = formatDateRange()
+
     // Render summary stats
     const summaryEl = document.getElementById('stats-summary')
     if (summaryEl) {
@@ -491,33 +547,26 @@ export default class extends Controller {
               React.createElement(
                 'div',
                 { className: 'c-stats-summary__header' },
-                React.createElement('span', null, 'Summary'),
-                summary.case_published_at &&
+                React.createElement('span', null, 'Key Stats'),
+                dateRangeText &&
                   React.createElement(
-                    'strong',
-                    null,
-                    'pub: ' +
-                      new Date(summary.case_published_at).toLocaleDateString(
-                        'en-US',
-                        {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        }
-                      )
+                    'span',
+                    { style: { fontSize: '13px', fontWeight: 'normal', color: 'rgba(92, 112, 128, 0.8)' } },
+                    dateRangeText
                   )
               ),
               // Statistics
               React.createElement(
                 'div',
                 { className: 'c-stats-summary__row' },
-                React.createElement('span', { className: 'c-stats-summary__label' }, 'Total Unique Visitors'),
+                React.createElement('span', { className: 'c-stats-summary__label' }, 'Unique Visitors'),
                 React.createElement(
                   'span',
                   { className: 'c-stats-summary__value' },
                   (summary.total_visits || 0).toLocaleString()
                 )
               ),
+              
               React.createElement(
                 'div',
                 { className: 'c-stats-summary__row' },
@@ -543,21 +592,69 @@ export default class extends Controller {
                   { className: 'c-stats-summary__value' },
                   (summary.total_podcast_listens || 0).toLocaleString()
                 )
-              ),
-              // Translations
-              summary.case_locales &&
-                React.createElement(
-                  'div',
-                  { className: 'c-stats-summary__row' },
-                  React.createElement('span', { className: 'c-stats-summary__label' }, 'Translations'),
-                  React.createElement('span', { className: 'c-stats-summary__value' }, summary.case_locales)
-                )
+              )
             ),
             summaryEl
           )
         }
       } catch (error) {
         console.error('Error rendering summary:', error)
+      }
+    }
+
+    // Render information section
+    const informationEl = document.getElementById('stats-information')
+    if (informationEl) {
+      try {
+        if (formatted.length === 0) {
+          ReactDOM.render(
+            React.createElement('div'),
+            informationEl
+          )
+        } else {
+          ReactDOM.render(
+            React.createElement(
+              'div',
+              { className: 'c-stats-information__content' },
+              // Information header
+              React.createElement(
+                'div',
+                { className: 'c-stats-information__header' },
+                React.createElement('span', null, 'Case Overview')
+              ),
+              // Translations
+              summary.case_locales &&
+                React.createElement(
+                  'div',
+                  { className: 'c-stats-information__row' },
+                  React.createElement('span', { className: 'c-stats-information__label' }, 'Available Translations'),
+                  React.createElement('span', { className: 'c-stats-information__value' }, summary.case_locales)
+                ),
+              // Publication date
+              summary.case_published_at &&
+                React.createElement(
+                  'div',
+                  { className: 'c-stats-information__row' },
+                  React.createElement('span', { className: 'c-stats-information__label' }, 'Published'),
+                  React.createElement(
+                    'span',
+                    { className: 'c-stats-information__value' },
+                    new Date(summary.case_published_at).toLocaleDateString(
+                      'en-US',
+                      {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      }
+                    )
+                  )
+                )
+            ),
+            informationEl
+          )
+        }
+      } catch (error) {
+        console.error('Error rendering information:', error)
       }
     }
 

@@ -148,28 +148,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
                   <SortIcon field="unique_visits" />
                 </div>
               </th>
-              <th
-                style={{ cursor: 'pointer', userSelect: 'none' }}
-                onClick={() => handleSort('unique_users')}
-              >
-                <div
-                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <FormattedMessage id="cases.stats.show.tableUniqueUsers" />
-                  <SortIcon field="unique_users" />
-                </div>
-              </th>
-              <th
-                style={{ cursor: 'pointer', userSelect: 'none' }}
-                onClick={() => handleSort('events_count')}
-              >
-                <div
-                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <FormattedMessage id="cases.stats.show.tableTotalEvents" />
-                  <SortIcon field="events_count" />
-                </div>
-              </th>
               <th>
                 <FormattedMessage id="cases.stats.show.tableFirstVisit" />
               </th>
@@ -199,12 +177,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
                 <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                   {row.unique_visits.toLocaleString()}
                 </td>
-                <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                  {row.unique_users.toLocaleString()}
-                </td>
-                <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                  {row.events_count.toLocaleString()}
-                </td>
                 <td>{formatDate(row.first_event)}</td>
                 <td>{formatDate(row.last_event)}</td>
               </tr>
@@ -224,11 +196,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
               <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                 {data
                   .reduce((sum, r) => sum + r.unique_users, 0)
-                  .toLocaleString()}
-              </td>
-              <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                {data
-                  .reduce((sum, r) => sum + r.events_count, 0)
                   .toLocaleString()}
               </td>
               <td>-</td>
