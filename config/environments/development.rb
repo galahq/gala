@@ -84,5 +84,4 @@ Rails.application.configure do
 
   # Allow web console from all IPs
   config.web_console.allowed_ips = '0.0.0.0/0'
-
 end

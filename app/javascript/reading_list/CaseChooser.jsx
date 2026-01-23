@@ -48,10 +48,17 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
             className="pt-round"
             leftIcon="search"
             name="q"
+            role="search"
+            aria-label={intl.formatMessage({
+              id: 'readingListItems.new.searchForACaseToAdd',
+            })}
             rightElement={
               <button
                 className="pt-button pt-minimal pt-icon-arrow-right"
                 type="submit"
+                aria-label={intl.formatMessage({
+              id: 'search.submitSearch',
+            })}
               />
             }
             placeholder={intl.formatMessage({
