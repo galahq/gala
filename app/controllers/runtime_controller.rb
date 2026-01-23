@@ -144,11 +144,8 @@ class RuntimeController < ApplicationController
     ).merge(server: redis.connection[:host])
   rescue StandardError => e
     { error: e.class.name, message: e.message }
-<<<<<<< HEAD
   ensure
     redis&.close if defined?(redis) && redis.respond_to?(:close)
-=======
->>>>>>> stats_merger
   end
 
   def postgres_stats
