@@ -10,7 +10,6 @@ services:
         secret_key_base: placeholder
     command: bundle exec foreman start -f Procfile.dev
     environment:
-      MAPBOX_ACCESS_TOKEN: ${MAPBOX_ACCESS_TOKEN}
       DATABASE_URL: postgres://gala:alpine@db:5432/gala
       REDIS_URL: redis://redis:6379/0
       RAILS_LOG_TO_STDOUT: true
@@ -36,13 +35,6 @@ services:
       - build_cache:/gala/tmp/cache
   db:
     image: postgres:16.4
-    platform: linux/amd64
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gala"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     environment:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine

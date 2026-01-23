@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-return if Rails.env.test? || Rails.env.development?
+return if Rails.env.test?
 
 begin
   require 'vernier'

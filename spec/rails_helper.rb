@@ -18,11 +18,9 @@ require 'capybara/rspec'
 require 'clowne/rspec'
 require 'rspec/composable_json_matchers/setup'
 
-require 'selenium-webdriver'
+require "selenium-webdriver"
 
 require 'capybara-screenshot/rspec'
-
-require 'shoulda-matchers'
 
 require 'webdrivers'
 
@@ -63,7 +61,7 @@ end
 
 Capybara.register_driver :selenium do |app|
   options = Selenium::WebDriver::Chrome::Options.new
-  options.add_argument('--headless')
+  options.add_argument("--headless")
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
   options.add_argument('--allow-insecure-localhost')
@@ -75,7 +73,7 @@ Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    url: File.file?('/.dockerenv') ? 'http://selenium:4444/wd/hub' : nil,
+    url: File.file?('/.dockerenv') ? "http://selenium:4444/wd/hub" : nil,
     capabilities: [options]
   )
 end
@@ -98,16 +96,16 @@ RSpec.configure do |config|
   Capybara.server_host = Socket.ip_address_list.find(&:ipv4_private?).ip_address
   Capybara.server_port = 4000
 
-  config.before(:each, type: :feature) do |_example|
+  config.before(:each, type: :feature) do |example|
     Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
     Capybara.use_default_driver
-    Capybara.server = :puma, { Silent: true }
+    Capybara.server = :puma, { Silent: true}
     Capybara.javascript_driver = Capybara.default_driver
     Capybara.current_driver = Capybara.default_driver
     Capybara.page.current_window.resize_to(1600, 1200)
   end
 
-  config.before(:each) do |_example|
+  config.before(:each) do |example|
     Rails.application.config.current_terms_of_service = 1
   end
 
