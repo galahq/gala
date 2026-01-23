@@ -32,6 +32,7 @@ done
 
 export RAILS_ENV=test
 export NODE_ENV=test
+export RUBYOPT='-W0'
 
 if [[ "$SKIP_DB_RESET" -eq 0 ]]; then
   if ! bundle exec rails db:environment:set RAILS_ENV=test \
