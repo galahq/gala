@@ -44,7 +44,7 @@
           %td
           %td= t 'activerecord.attributes.case.case_title'
           - if current_reader.has_role? :editor
-            %td First Editor
+            %td= t 'activerecord.attributes.case.first_editor'
           - else
             %td= t 'activerecord.attributes.case.slug'
           %td= t 'activerecord.attributes.case.locale'
@@ -91,11 +91,6 @@
                 - else
                   —
 
-              - if current_reader.has_role? :editor
-                %td
-                  = link_to '', case_stats_path(kase),
-                            aria: { label: t('.case_stats') },
-                            class: 'pt-button pt-minimal pt-icon-series-search'
 
               %td
                 = link_to '', case_stats_path(kase),
