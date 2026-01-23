@@ -10,7 +10,7 @@ require 'csv'
 Bundler.require(*Rails.groups)
 
 # Set release version
-ENV['RELEASE'] = 'v1.15.0' # TODO: experiment doing github releases again
+ENV['RELEASE'] = 'v1.15.3' # TODO: experiment doing github releases again
 
 # Normalize an env flag to string 'true'/'false', using a fallback block.
 def normalized_env_flag(value)

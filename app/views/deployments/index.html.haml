@@ -16,11 +16,9 @@
       .pt-input-group.pt-round
         %span.pt-icon.pt-icon-search
         %input.pt-input{ type: 'text', name: 'q',
-                         role: 'search',
-                         placeholder: I18n.t('search.search_cases'),
-                         'aria-label': I18n.t('search.search_cases')}
+                         placeholder: I18n.t('search.search_cases') }
           %span.pt-input-action
-            %button.pt-button.pt-minimal.pt-icon-arrow-right{type:"submit",'aria-label': I18n.t('search.submit_search')}
+            %button.pt-button.pt-minimal.pt-icon-arrow-right(type="submit")
 
   %main.md-detail
     - if deployments.empty?

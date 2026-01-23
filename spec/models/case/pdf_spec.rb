@@ -57,6 +57,8 @@ RSpec.describe Case::Pdf do
       error =
         PDFKit::ImproperWkhtmltopdfExitStatus.new(['wkhtmltopdf', '--quiet'])
       allow(kit).to receive(:to_pdf).and_raise(error)
+
+      allow(PDFKit).to receive(:new).and_return(kit)
     end
   end
 end

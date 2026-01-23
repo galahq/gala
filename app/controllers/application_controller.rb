@@ -46,14 +46,14 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = if params[:locale]
-                    params[:locale]
-                  elsif reader_signed_in? && !current_reader.locale.blank?
-                    current_reader.locale
-                  else
-                    http_accept_language
-                      .compatible_language_from I18n.available_locales
-                  end
+    if params[:locale]
+      I18n.locale = params[:locale]
+    elsif reader_signed_in? && !current_reader.locale.blank?
+      I18n.locale = current_reader.locale
+    else
+      I18n.locale = http_accept_language
+                    .compatible_language_from I18n.available_locales
+    end
   rescue I18n::InvalidLocale
     I18n.locale = :en
   end

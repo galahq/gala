@@ -114,8 +114,6 @@ Rails.application.routes.draw do
 
     resource :settings, module: 'cases', only: %i[edit update]
 
-    resource :stats, module: 'cases', only: %i[show]
-
     resources :taggings, only: %i[create destroy], param: :tag_name
 
     resources :translations, only: %i[new create show], param: :case_locale

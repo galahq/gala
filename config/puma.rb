@@ -21,7 +21,7 @@ preload_app!
 
 # Barnes plugin for memory profiling
 before_fork do
-  Barnes.start
+  Barnes.start if Rails.env.production?
 end
 
 on_worker_boot do

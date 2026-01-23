@@ -39,14 +39,19 @@ class Case
     end
 
     def generate_pdf
-      kit = PDFKit.new(html, options)
+      rendered_html = render_html_thread_safe
+      kit = PDFKit.new(rendered_html, options)
       kit.to_pdf
     rescue PDFKit::ImproperWkhtmltopdfExitStatus => e
-      command = kit.command.inspect
-      Rails.logger.error(
-        "Case::Pdf wkhtmltopdf_failed, command=#{command}, error=#{e.message}"
-      )
+      Rails.logger.error("Case::Pdf wkhtmltopdf_failed, error=#{e.message}")
       raise
+    end
+
+    def render_html_thread_safe
+      MUTEX.synchronize do
+        ActionController::Base.asset_host = root_url.to_s.chomp('/')
+        html
+      end
     end
 
     def html
