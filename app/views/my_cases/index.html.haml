@@ -91,11 +91,12 @@
                 - else
                   —
 
+              - if current_reader.has_role? :editor
+                %td
+                  = link_to '', case_stats_path(kase),
+                            aria: { label: t('.case_stats') },
+                            class: 'pt-button pt-minimal pt-icon-series-search'
 
-              %td
-                = link_to '', case_stats_path(kase),
-                          aria: { label: t('.case_stats') },
-                          class: 'pt-button pt-minimal pt-icon-series-search'
 
               %td
                 = link_to '', edit_case_path(kase),

@@ -210,7 +210,8 @@ CREATE TABLE public.ahoy_events (
     user_id integer,
     name character varying,
     properties jsonb,
-    "time" timestamp without time zone
+    "time" timestamp without time zone,
+    case_id integer
 );
 
 
@@ -2411,6 +2412,13 @@ ALTER TABLE ONLY public.wikidata_links
 
 
 --
+-- Name: idx_ahoy_events_case_id_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ahoy_events_case_id_time ON public.ahoy_events USING btree (case_id, "time");
+
+
+--
 -- Name: index_action_mailbox_inbound_emails_uniqueness; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3732,6 +3740,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241217024113'),
 ('20241217024114'),
 ('20250105235632'),
-('20250106003337');
+('20250106003337'),
+('20250107000000');
 
 

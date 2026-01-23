@@ -44,30 +44,6 @@ configuration.
 - `bundle exec rake test:unit` to run the Ruby tests
 - `yarn test` to run the Javascript tests
 
-## Running the CI test suite locally
-
-The CI workflow runs Ruby and Node tasks on the host while Postgres and Redis
-stay inside Docker. Those containers expose ports 5432 and 6379 to the host, so
-the default test database URL (`postgres://gala:alpine@localhost:5432/gala_test`)
-and Redis URL (`redis://localhost:6379/0`) work without extra configuration.
-
-1. Start the data services: `docker compose up -d db redis`.
-2. Ensure the Ruby (3.2.9) and Node (12.5.0) toolchains described above are
-   installed locally.
-3. Run `bin/run_ci_tests` to execute the same sequence that Semaphore runs. Use
-   `--skip-db` to keep the existing test database data if desired.
-
-If you need to run the individual steps manually, execute:
-
-```
-bundle exec rake db:drop db:create db:schema:load db:test:prepare
-bundle exec rails assets:precompile
-bundle exec rspec --exclude-pattern \
-  "spec/features/**/*_spec.rb" --format progress --color
-yarn test
-bundle exec rake factory_bot:lint
-```
-
 ### Updating dependencies
 
 When you update dependencies be sure to run these commands locally first
@@ -77,7 +53,6 @@ When you update dependencies be sure to run these commands locally first
 Then you can run `docker compose up --build` to rebuild the containers with the new dependencies.
 
 If you update Javascript dependencies, you'll need to additionally run `docker compose run web yarn` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
-
 
 #### Other useful commands
 
@@ -97,25 +72,6 @@ equivalent to run `bundle exec rake indices:refresh` as frequently as makes sens
 To send a weekly report of usage data, run `bundle exec rake emails:send_weekly_report` once
 per week.
 
-## Releases
-
-Use `bin/release_tag` to bump the semantic version, scaffold the release note,
-update `ENV['RELEASE']`, append to `node_modules/dashdash/CHANGES.md`, commit
-those files, and push the branch and annotated tag to `origin`:
-
-```
-bin/release_tag patch      # v1.15.0 -> v1.15.1
-bin/release_tag minor      # v1.15.0 -> v1.16.0
-bin/release_tag major      # v1.15.0 -> v2.0.0
-bin/release_tag retag v1.15.2   # Move an existing tag to the current HEAD
-```
-
-Pass `--dry-run` to preview the next version or `--llm` to attempt an
-auto-generated summary via the OpenAI API (requires `OPENAI_API_KEY` in the
-environment). The script always writes a markdown template so you can edit
-the note manually when the API is unavailable. Use `--tag-message` to override
-the annotated tag text when creating or retagging a release.
-
 ## Gala external infra
 | Service | Purpose |
 |---------|---------|
@@ -128,9 +84,4 @@ the annotated tag text when creating or retagging a release.
 | [Sentry](https://sentry.io/) | Error monitoring |
 | [Semaphore CI](https://semaphoreci.com/) | Continuous integration |
 | [Github](https://github.com/) | Open source code management |
-
-## Project Documentation
-
-- Trailheads: see [docs/](docs/)
-- Agents playbook: see [AGENTS.md](AGENTS.md)
 
