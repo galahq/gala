@@ -34,7 +34,8 @@ environment.config.merge({
         vendor: {
           chunks: 'initial',
           name: 'vendor',
-          test: /node_modules/,
+          // Only split JS from node_modules, not CSS
+          test: /[\\/]node_modules[\\/].*\.jsx?$/,
           enforce: true,
         },
       },
