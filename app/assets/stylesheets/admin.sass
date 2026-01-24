@@ -152,6 +152,31 @@ h2.admin__title
   max-width: 30em
   margin: 0 1em 2em
 
+.admin-card--wide
+  max-width: 100em
+
+.stats-controls
+  display: grid
+  grid-template-columns: auto 1fr auto
+  grid-gap: 10px
+  align-items: center
+
+// --- Stats page layout helpers ---
+.stats-grid
+  display: grid
+  grid-template-columns: minmax(320px, 1fr) 2fr
+  grid-gap: 24px
+
+.stats-pills
+  display: flex
+  gap: 12px
+  flex-wrap: wrap
+
+  .stat-pill
+    @extend .pt-tag
+    padding: 6px 10px
+    font-weight: 500
+
 
   &__sidebar
     margin: 0 1em

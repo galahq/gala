@@ -36,17 +36,8 @@ type State = {
   openPin: string,
 }
 
-const DEFAULT_MAPBOX_TOKEN =
-  'MAPBOX_TOKEN_REMOVED'
-
-function getMapboxToken (): string {
-  if (typeof document === 'undefined') return DEFAULT_MAPBOX_TOKEN
-  const meta = document.querySelector('meta[name="mapbox-access-token"]')
-  const envToken = meta && meta.getAttribute('content')
-  return envToken || DEFAULT_MAPBOX_TOKEN
-}
-
-const token = getMapboxToken()
+export const MAPBOX_TOKEN = window.MAPBOX_ACCESS_TOKEN
+export const MAPBOX_STYLE = window.MAPBOX_STYLE
 
 class MapViewController extends React.Component<Props, State> {
   // handleChangeViewport is fired when the component first mounts, but we
@@ -282,12 +273,13 @@ class MapView extends React.Component<{
     const { latitude, longitude, zoom } = viewport
     return (
       <ReactMapGL
-        mapStyle="mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14"
+        mapStyle={MAPBOX_STYLE}
         width={containerWidth}
         height={containerHeight}
         latitude={latitude}
         longitude={longitude}
         zoom={zoom}
+        mapboxApiAccessToken={MAPBOX_TOKEN}
         scrollZoom={acceptingScroll}
         mapboxApiAccessToken={token}
         onClick={onClickMap}

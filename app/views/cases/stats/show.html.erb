@@ -1,0 +1,64 @@
+<% content_for :title do %>
+  <%= I18n.t('cases.stats.show.case_stats') %> — <%= @case.short_title %>
+<% end %>
+
+<div class="window admin">
+  <div class="admin-card admin-card--wide pt-card pt-elevation-2">
+    <%= link_to case_path(@case) do %>
+      <div class="case-cover-card-top" style="background-image: url(<%= @case.cover_url %>)">
+        <span class="admin__table__slug"><%= @case.short_title %></span>
+      </div>
+    <% end %>
+
+    <div>
+      <h1 class="admin__title"><%= t('.case_stats') %></h1>
+
+      <div
+        data-controller="case-stats"
+        data-url="<%= case_stats_path(@case) %>"
+        data-published_at="<%= @case.published_at&.to_date %>">
+        <input type="hidden" id="stats-from" data-target="case-stats.from" />
+        <input type="hidden" id="stats-to" data-target="case-stats.to" />
+
+        <!-- Information section (case-level, above date picker) -->
+        <h2 class="c-stats-information__heading">Overview</h2>
+        <div class="c-stats-information-container">
+          <div class="c-stats-information pt-card pt-elevation-1">
+            <div id="stats-information"></div>
+          </div>
+        </div>
+        <!-- Date picker and summary stats -->
+          <h2 class="c-stats-filter-card__heading">Filter by date</h2>
+          <div class="c-stats-layout">
+            <div class="c-stats-picker pt-card pt-elevation-1">
+              <div id="stats-range-picker"></div>
+            </div>
+            <div class="c-stats-summary pt-card pt-elevation-1">
+              <div id="stats-summary"></div>
+            </div>
+          </div>
+          <!-- Map and table section -->
+          <div class="c-stats-map-table-card pt-card pt-elevation-1">
+            <div class="c-stats-map-table-header">
+              <h3 class="c-stats-map-table-title">
+                <%= I18n.t('cases.stats.show.table_title') %>
+              </h3>
+            </div>
+            <!-- Map section -->
+            <div class="c-stats-map-container">
+              <div id="stats-map" class="c-stats-map"></div>
+            </div>
+            <!-- Export button -->
+            <div class="c-stats-export-button-container">
+              <button class="pt-button pt-intent-primary pt-icon-export" id="stats-table-export-btn">
+                <%= I18n.t('cases.stats.show.table_export_csv') %>
+              </button>
+            </div>
+            <!-- Stats table -->
+            <div id="stats-table" class="c-stats-table-container"></div>
+          </div>
+
+       </div>
+     </div>
+   </div>
+ </div>
