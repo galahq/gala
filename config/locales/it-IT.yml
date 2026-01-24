@@ -26,6 +26,7 @@ it:
         date_archived: Archived on
         featured: Featured
         featured_at: Featured at
+        first_editor: First Editor
         kicker: Short title
         learning_objectives: Learning objectives
         library: Library
@@ -277,6 +278,77 @@ it:
       locations: Site locations
     new:
       create_a_case: Create a Case
+    stats:
+      show:
+        case_stats: Case Stats
+        created: Created
+        published: "Published:"
+        last_updated: "Last Updated:"
+        deployments: "Deployments"
+        visits: Unique Visits
+        locales: Locales
+        podcast_listens: Podcast Listens - %{podcast_title}
+        disclaimer: >
+          Totals count only users that were signed-in to Gala when viewing the case. 'Unique Visits' counts readers who viewed a page beyond the overview page of your case. Readers' browser settings may impact the accuracy of these counts.
+        #Summary section
+        summary_title: Overview
+        total_unique_visitors: Total Unique Visitors
+        countries: Countries
+        podcast_listens_short: Podcast Listens
+        translations: Translations
+        no_data: No data available for selected period
+        #Map section
+        map_legend_title: Visitor Distribution
+        map_legend_help_title: How Visitor Distribution Works
+        map_legend_help_description: >
+          Countries are grouped into 1-5 color bins based on visitor counts. The system automatically adapts: if you have 3 different visitor counts, you'll see 3 bins. For 5+ unique values, bins are placed at the 25th, 50th, 75th, and 100th percentiles of your data, ensuring each bin represents a meaningful range. Lighter indigo shades indicate higher visitor counts.
+        map_legend_low: low
+        map_legend_high: high
+        map_tooltip_visitors: visitors
+        map_tooltip_users: users
+        map_tooltip_events: events
+        #Loading states
+        loading_map_data: Loading map data...
+        loading_map: Loading map...
+        #Error states
+        error_title: Unable to Load Stats
+        error_description: An error occurred while loading the statistics data. Please try again.
+        error_try_again: Try Again
+        error_map_title: Unable to load map
+        error_map_description: Please check your internet connection or disable ad blockers
+        error_map_retry: Retry Loading Map
+        error_too_much_data_title: Too Much Data
+        error_too_much_data_description: >
+          The selected date range contains too much data to display efficiently. Please choose a smaller date range.
+        error_no_data_title: No Data Available
+        error_no_data_description: No visitor data found for the selected date range.
+        #Table section
+        table_title: Case Visits By Country
+        table_export_csv: Export CSV
+        table_rank: "#"
+        table_country: Country
+        table_unique_visitors: Unique Visitors
+        table_total_events: Total Events
+        table_first_visit: First Visit
+        table_last_visit: Last Visit
+        table_total: Total
+        table_unknown_country: Unknown
+        #Date range picker
+        date_range_all_time: All time
+        date_range_past_7_days: Past 7 days
+        date_range_past_30_days: Past 30 days
+        date_range_past_year: Past year
+        date_range_past_2_years: Past 2 years
+      #CSV export
+      csv_filename: "case-stats-%{slug}-%{date}.csv"
+      csv:
+        country: Country
+        unique_visitors: Unique Visitors
+        unique_users: Unique Users
+        total_events: Total Events
+        first_visit: First Visit
+        last_visit: Last Visit
+        total: Total
     settings:
       edit:
         change_library: Change library
@@ -445,6 +517,7 @@ it:
       default: "%Y-%m-%d"
       long: "%B %d, %Y"
       short: "%b %d"
+      stats: "%b %d, %Y"
     month_names:
       -
       - January
@@ -860,8 +933,8 @@ it:
         Are you sure you want to reject this request? The case will not be added to your library.
   my_cases:
     index:
-      confirm_delete: >
-        Are you sure you wish to delete this case? This action cannot be undone.
+      case_stats: Case Stats
+      confirm_delete: Are you sure you wish to delete this case? This action cannot be undone.
       create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: Edit case.
@@ -1044,6 +1117,7 @@ it:
     results: Search results
     search: Search
     search_cases: Search Cases...
+    submit_search: Submit search
     try_again: Try searching for something else.
   spotlights:
     add_citation: >
