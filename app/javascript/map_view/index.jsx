@@ -281,7 +281,6 @@ class MapView extends React.Component<{
         zoom={zoom}
         mapboxApiAccessToken={MAPBOX_TOKEN}
         scrollZoom={acceptingScroll}
-        mapboxApiAccessToken={token}
         onClick={onClickMap}
         onViewportChange={onViewportChange}
       >
