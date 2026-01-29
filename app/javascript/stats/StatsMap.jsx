@@ -320,28 +320,6 @@ function StatsMap ({ countries, bins, intl }: Props) {
     }
   }, [hoveredCountry, mousePosition])
 
-  // Update map layer colors when countries or bins change
-  useEffect(() => {
-    if (mapRef.current && mapLoaded) {
-      const map = mapRef.current.getMap()
-      if (!map) return
-
-      try {
-        // Update the fill layer paint properties
-        if (map.getLayer('country-fills') && fillColorExpression) {
-          map.setPaintProperty(
-            'country-fills',
-            'fill-color',
-            fillColorExpression
-          )
-        }
-      } catch (error) {
-        console.error('Error updating map colors:', error)
-        // Don't set map error here as this might be a temporary issue
-      }
-    }
-  }, [countries, bins, mapLoaded, fillColorExpression, countryColors])
-
   // Clean up on unmount
   useEffect(() => {
     return () => {
@@ -454,6 +432,27 @@ function StatsMap ({ countries, bins, intl }: Props) {
     }),
     []
   )
+
+    // Update map layer colors when countries or bins change
+    useEffect(() => {
+      if (mapRef.current && mapLoaded) {
+        const map = mapRef.current.getMap()
+        if (!map) return
+        try {
+          // Update the fill layer paint properties
+          if (map.getLayer('country-fills') && fillColorExpression) {
+            map.setPaintProperty(
+              'country-fills',
+              'fill-color',
+              fillColorExpression
+            )
+          }
+        } catch (error) {
+          console.error('Error updating map colors:', error)
+          // Don't set map error here as this might be a temporary issue
+        }
+      }
+    }, [countries, bins, mapLoaded, fillColorExpression, countryColors])
 
   const onHover = event => {
     const feature = event.features && event.features[0]
