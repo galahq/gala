@@ -571,9 +571,9 @@ function StatsMap ({ countries, bins, intl }: Props) {
         maxZoom={5}
         scrollZoom={false}
         touchZoom={false}
-        doubleClickZoom={false}
-        dragPan={false}
-        dragRotate={false}
+        doubleClickZoom={true}
+        dragPan={true}
+        dragRotate={true}
         touchRotate={false}
         mapboxApiAccessToken={mapboxToken}
         interactiveLayerIds={mapLoaded ? ['country-fills'] : []}

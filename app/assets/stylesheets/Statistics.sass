@@ -49,8 +49,10 @@
   max-width: 1400px
   padding: 20px
 
-.c-stats-filter-card__heading
-  margin: 0 0 20px 0
+// Stats page heading hierarchy: h2 for main sections, h3 for subsections
+.c-stats-filter-card__heading,
+.c-stats-information__heading
+  margin: 20px 0 10px 0
   font-size: 18px
   font-weight: 600
   color: rgba(16, 22, 26, 0.8)
@@ -61,10 +63,10 @@
   gap: 20px
   align-items: flex-start
 
-  // On wider viewports, show date picker and summary side by side
+  // On wider viewports, show date picker and summary side by side; match card heights
   @media (min-width: 1200px)
     flex-direction: row
-    align-items: flex-start
+    align-items: stretch
 
 .c-stats-picker
   flex: 1
@@ -78,30 +80,52 @@
     min-width: 600px
     max-width: 800px
 
-.c-stats-information__heading
-  margin: 0 0 20px 0
-  font-size: 18px
-  font-weight: 600
-  color: rgba(16, 22, 26, 0.8)
-
 .c-stats-information-container
   margin-bottom: 20px
   max-width: 1400px
 
+.c-stats-overview-layout
+  display: flex
+  flex-direction: column
+  gap: 20px
+  align-items: flex-start
+
+  // On wider viewports, show overview and tips side by side; match card heights
+  @media (min-width: 1000px)
+    flex-direction: row
+    align-items: stretch
+
 .c-stats-information
   min-height: 200px
+  min-width: 340px
   max-width: 800px
+  padding: 20px
+
+.c-stats-information__card-heading
+  margin: 0 0 12px 0
+  padding-bottom: 8px
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15)
+  font-size: 15px
+  font-weight: 600
+  color: rgba(16, 22, 26, 0.8)
+
+.c-stats-tips
+  flex: 0 0 auto
+  min-width: 300px
+  max-width: 400px
+
+  @media (min-width: 1000px)
+    flex: 0 0 350px
 
 .c-stats-summary
   flex: 0 0 auto
-  min-height: 200px
-  min-width: 300px
+
   width: 100%
   padding: 20px
 
   @media (min-width: 1200px)
-    flex: 0 0 400px
-    max-width: 400px
+    flex: 0 0 300px
+    max-width: 300px
 
 .c-stats-map-table-card
   margin-top: 20px
@@ -110,6 +134,18 @@
 
 .c-stats-map-table-header
   margin-bottom: 16px
+
+.c-stats-map-table__heading
+  margin: 0
+  font-size: 15px
+  font-weight: 600
+  color: rgba(16, 22, 26, 0.8)
+
+.c-stats-map-table__heading .c-stats-map-table__date-range
+  font-weight: 400
+  color: rgba(92, 112, 128, 0.9)
+  font-size: 14px
+  margin-left: 10px
 
 .c-stats-map-table-title
   margin: 0
@@ -161,13 +197,22 @@
   line-height: 1.6
 
 .c-stats-summary__header
-  display: flex
-  justify-content: flex-end
-  margin-bottom: 12px
+  margin: 0 0 12px 0
   padding-bottom: 8px
   border-bottom: 1px solid rgba(16, 22, 26, 0.15)
-  font-size: 13px
-  font-weight: normal
+  font-size: 15px
+  font-weight: 600
+
+  h3
+    margin: 0
+    font-size: 15px
+    font-weight: 600
+    color: rgba(16, 22, 26, 0.8)
+
+  .c-stats-summary__date-range
+    font-weight: 400
+    color: rgba(92, 112, 128, 0.9)
+    font-size: 14px
 
 .c-stats-summary__row
   display: flex
@@ -184,7 +229,7 @@
   font-weight: 600
 
 .c-stats-summary__no-data
-  color: rgba(92, 112, 128, 0.6)
+  color: rgba(28, 29, 29, 0.6)
   font-style: italic
 
 // Information section content

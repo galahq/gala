@@ -14,8 +14,20 @@ import loadMessages from '../../../config/locales'
 // Get locale from window.i18n (set by Rails)
 const locale = (window.i18n && window.i18n.locale) || 'en'
 
+// Convert snake_case to camelCase for locale key lookup (matches config/locales flattenObj)
+function toCamel (str) {
+  return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase())
+}
+
 export default class extends Controller {
   static targets = ['from', 'to']
+
+  // Look up case stats show message; key is snake_case suffix (e.g. 'filtered_stats')
+  msg (key) {
+    if (!this.messages) return key
+    const fullKey = `cases.stats.show.${toCamel(key)}`
+    return this.messages[fullKey] != null ? this.messages[fullKey] : key
+  }
 
   /**
    * Initialize the case stats controller
@@ -576,42 +588,12 @@ export default class extends Controller {
           React.createElement(
             'div',
             { className: 'c-stats-information__content' },
-            // All-time Unique Visitors
-            React.createElement(
-              'div',
-              { className: 'c-stats-information__row' },
-              React.createElement('span', { className: 'c-stats-information__label' }, 'Unique Visitors'),
-              React.createElement(
-                'span',
-                { className: 'c-stats-information__value' },
-                (allTimeStats.total_visits || 0).toLocaleString()
-              )
-            ),
-            // All-time Countries
-            React.createElement(
-              'div',
-              { className: 'c-stats-information__row' },
-              React.createElement('span', { className: 'c-stats-information__label' }, 'Countries'),
-              React.createElement(
-                'span',
-                { className: 'c-stats-information__value' },
-                allTimeStats.country_count || 0
-              )
-            ),
-            // Translations
-            caseInfo.case_locales &&
-              React.createElement(
-                'div',
-                { className: 'c-stats-information__row' },
-                React.createElement('span', { className: 'c-stats-information__label' }, 'Available Translations'),
-                React.createElement('span', { className: 'c-stats-information__value' }, caseInfo.case_locales)
-              ),
             // Publication date
             caseInfo.case_published_at &&
               React.createElement(
                 'div',
                 { className: 'c-stats-information__row' },
-                React.createElement('span', { className: 'c-stats-information__label' }, 'Published'),
+                React.createElement('span', { className: 'c-stats-information__label' }, this.msg('date_published')),
                 React.createElement(
                   'span',
                   { className: 'c-stats-information__value' },
@@ -625,17 +607,47 @@ export default class extends Controller {
                   )
                 )
               ),
+              // Translations
+            caseInfo.case_locales &&
+            React.createElement(
+              'div',
+              { className: 'c-stats-information__row' },
+              React.createElement('span', { className: 'c-stats-information__label' }, this.msg('available_translations')),
+              React.createElement('span', { className: 'c-stats-information__value' }, caseInfo.case_locales)
+            ),
             // Total Deployments
             React.createElement(
               'div',
               { className: 'c-stats-information__row' },
-              React.createElement('span', { className: 'c-stats-information__label' }, 'Total Deployments'),
+              React.createElement('span', { className: 'c-stats-information__label' }, this.msg('total_deployments')),
               React.createElement(
                 'span',
                 { className: 'c-stats-information__value' },
                 (caseInfo.total_deployments || 0).toLocaleString()
               )
-            )
+            ),
+            // All-time Unique Visitors
+            React.createElement(
+              'div',
+              { className: 'c-stats-information__row' },
+React.createElement('span', { className: 'c-stats-information__label' }, this.msg('table_unique_visitors')),
+                React.createElement(
+                  'span',
+                  { className: 'c-stats-information__value' },
+                  (allTimeStats.total_visits || 0).toLocaleString()
+                )
+              ),
+            // All-time Countries
+            React.createElement(
+              'div',
+              { className: 'c-stats-information__row' },
+              React.createElement('span', { className: 'c-stats-information__label' }, this.msg('countries')),
+              React.createElement(
+                'span',
+                { className: 'c-stats-information__value' },
+                allTimeStats.country_count || 0
+              )
+            ),
           ),
           informationEl
         )
@@ -684,7 +696,7 @@ export default class extends Controller {
             React.createElement(
               'div',
               { className: 'c-stats-summary__no-data' },
-              'No data available for selected period'
+              this.msg('no_data')
             ),
             summaryEl
           )
@@ -698,9 +710,10 @@ export default class extends Controller {
                 React.createElement(
                   'div',
                   { className: 'c-stats-summary__header' },
+                  React.createElement('h3', null, this.msg('filtered_stats')),
                   React.createElement(
                     'span',
-                    { style: { fontSize: '13px', fontWeight: 'normal', color: 'rgba(92, 112, 128, 0.8)' } },
+                    { className: 'c-stats-summary__date-range' },
                     dateRangeText
                   )
                 ),
@@ -708,7 +721,7 @@ export default class extends Controller {
               React.createElement(
                 'div',
                 { className: 'c-stats-summary__row' },
-                React.createElement('span', { className: 'c-stats-summary__label' }, 'Unique Visitors'),
+                React.createElement('span', { className: 'c-stats-summary__label' }, this.msg('table_unique_visitors')),
                 React.createElement(
                   'span',
                   { className: 'c-stats-summary__value' },
@@ -719,13 +732,13 @@ export default class extends Controller {
               React.createElement(
                 'div',
                 { className: 'c-stats-summary__row' },
-                React.createElement('span', { className: 'c-stats-summary__label' }, 'Countries'),
+                React.createElement('span', { className: 'c-stats-summary__label' }, this.msg('countries')),
                 React.createElement('span', { className: 'c-stats-summary__value' }, summary.country_count || 0)
               ),
               React.createElement(
                 'div',
                 { className: 'c-stats-summary__row' },
-                React.createElement('span', { className: 'c-stats-summary__label' }, 'Podcast Listens'),
+                React.createElement('span', { className: 'c-stats-summary__label' }, this.msg('podcast_listens_short')),
                 React.createElement(
                   'span',
                   { className: 'c-stats-summary__value' },
@@ -739,6 +752,12 @@ export default class extends Controller {
       } catch (error) {
         console.error('Error rendering summary:', error)
       }
+    }
+
+    // Update date range in map/table section to match Filtered Stats
+    const mapTableDateRangeEl = document.getElementById('stats-map-table-date-range')
+    if (mapTableDateRangeEl) {
+      mapTableDateRangeEl.textContent = dateRangeText ? ` ${dateRangeText}` : ''
     }
 
     // Render information section

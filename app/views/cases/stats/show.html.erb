@@ -21,14 +21,25 @@
         <input type="hidden" id="stats-to" data-target="case-stats.to" />
 
         <!-- Information section (case-level, above date picker) -->
-        <h2 class="c-stats-information__heading">Overview</h2>
+        <h2 class="c-stats-information__heading"><%= t('.overview') %></h2>
         <div class="c-stats-information-container">
-          <div class="c-stats-information pt-card pt-elevation-1">
-            <div id="stats-information"></div>
+          <div class="c-stats-overview-layout">
+            <div class="c-stats-information pt-card pt-elevation-1">
+              <h3 class="c-stats-information__card-heading"><%= t('.overview_stats') %></h3>
+              <div id="stats-information"></div>
+            </div>
+            <div class="c-stats-tips pt-callout pt-icon-info-sign">
+              <h5 class="pt-callout-title"><%= t('.about_visitors') %></h5>
+              <div class="pt-callout-content">
+                <p>
+                  <%= I18n.t('cases.stats.show.tips_description') %>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <!-- Date picker and summary stats -->
-          <h2 class="c-stats-filter-card__heading">Filter by date</h2>
+          <h2 class="c-stats-filter-card__heading"><%= t('.filter_by_date') %></h2>
           <div class="c-stats-layout">
             <div class="c-stats-picker pt-card pt-elevation-1">
               <div id="stats-range-picker"></div>
@@ -40,8 +51,9 @@
           <!-- Map and table section -->
           <div class="c-stats-map-table-card pt-card pt-elevation-1">
             <div class="c-stats-map-table-header">
-              <h3 class="c-stats-map-table-title">
+              <h3 class="c-stats-map-table__heading">
                 <%= I18n.t('cases.stats.show.table_title') %>
+                <span id="stats-map-table-date-range" class="c-stats-map-table__date-range"></span>
               </h3>
             </div>
             <!-- Map section -->
