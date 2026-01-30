@@ -205,11 +205,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
                   .reduce((sum, r) => sum + r.unique_visits, 0)
                   .toLocaleString()}
               </td>
-              <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                {data
-                  .reduce((sum, r) => sum + r.unique_users, 0)
-                  .toLocaleString()}
-              </td>
               <td>-</td>
               <td>-</td>
             </tr>
