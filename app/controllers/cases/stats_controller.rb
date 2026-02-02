@@ -35,7 +35,7 @@ module Cases
       from_ts =
         params[:from].present? ? Time.zone.parse(params[:from]) : nil
       to_ts = params[:to].present? ? Time.zone.parse(params[:to]).end_of_day : nil
-      from_ts ||= @case.created_at
+      from_ts ||= @case.published_at || @case.created_at
       to_ts ||= Time.zone.now.end_of_day
       [
         ActiveRecord::Relation::QueryAttribute.new(
@@ -76,7 +76,6 @@ module Cases
         ) dc ON TRUE
         WHERE (e.properties ->> 'case_slug') = p.case_slug
           AND e."time" BETWEEN p.from_ts AND p.to_ts
-          AND v.country IS NOT NULL AND trim(v.country) != ''
           AND NOT EXISTS (
             SELECT 1
             FROM readers_roles rr
