@@ -40,10 +40,10 @@ class ArchivesController < ApplicationController
     pdf = @case.archive_pdf
     return false unless pdf&.attached?
 
-    blob = pdf.blob
-    return true unless blob.service.name == :amazon
-    return true if blob.service.exist? blob.key
+    blob = pdf.blob.reload
+    return false unless blob.present? && blob.service.present?
 
-    false
+    chunk = blob.service.download_chunk(blob.key, range: 0..3)
+    chunk.start_with? '%PDF'
   end
 end

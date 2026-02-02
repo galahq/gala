@@ -81,20 +81,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
     window.location.href = url
   }
 
-  // Set up export button handler
-  useEffect(() => {
-    const exportBtn = document.getElementById('stats-table-export-btn')
-    if (exportBtn) {
-      const handleClick = () => {
-        exportCSV()
-      }
-      exportBtn.addEventListener('click', handleClick)
-      return () => {
-        exportBtn.removeEventListener('click', handleClick)
-      }
-    }
-  }, [caseSlug])
-
   const SortIcon = ({ field }: { field: string }) => {
     if (field !== sortField) {
       return <span style={{ opacity: 0.3, fontSize: '12px' }}>↕</span>
@@ -169,30 +155,68 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
             </tr>
           </thead>
           <tbody>
-            {sortedData.map((row, index) => (
-              <tr key={row.iso2 || index}>
-                <td
-                  style={{
-                    textAlign: 'center',
-                    fontFamily: 'monospace',
-                    color: Colors.GRAY3,
-                  }}
-                >
-                  {index + 1}
-                </td>
-                <td>
-                  {row.name ||
-                    intl.formatMessage({
-                      id: 'cases.stats.show.tableUnknownCountry',
-                    })}
-                </td>
-                <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                  {row.unique_visits.toLocaleString()}
-                </td>
-                <td>{formatDate(row.first_event)}</td>
-                <td>{formatDate(row.last_event)}</td>
-              </tr>
-            ))}
+            {(() => {
+              const knownCountries = sortedData.filter(
+                row => row.iso2 && row.name && row.name.trim() !== '' && row.name !== 'Unknown'
+              )
+              const unknownCountries = sortedData.filter(
+                row => !row.iso2 || !row.name || row.name.trim() === '' || row.name === 'Unknown'
+              )
+
+              const renderRow = (row, index) => (
+                <tr key={row.iso2 || `unknown-${index}`}>
+                  <td
+                    style={{
+                      textAlign: 'center',
+                      fontFamily: 'monospace',
+                      color: Colors.GRAY3,
+                    }}
+                  >
+                    {index + 1}
+                  </td>
+                  <td>
+                    {row.name && row.name.trim() !== '' && row.name !== 'Unknown'
+                      ? row.name
+                      : intl.formatMessage({
+                          id: 'cases.stats.show.tableUnknownCountry',
+                        })}
+                  </td>
+                  <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
+                    {row.unique_visits.toLocaleString()}
+                  </td>
+                  <td>{formatDate(row.first_event)}</td>
+                  <td>{formatDate(row.last_event)}</td>
+                </tr>
+              )
+
+              return (
+                <>
+                  {knownCountries.map((row, index) => renderRow(row, index))}
+                  {unknownCountries.length > 0 && (
+                    <>
+                      <tr>
+                        <td
+                          colSpan={5}
+                          style={{
+                            backgroundColor: Colors.LIGHT_GRAY4,
+                            fontWeight: 'bold',
+                            fontStyle: 'italic',
+                            color: Colors.GRAY1,
+                            paddingTop: '8px',
+                            paddingBottom: '8px',
+                          }}
+                        >
+                          <FormattedMessage id="cases.stats.show.tableUnknownLocation" defaultMessage="Unknown Location" />
+                        </td>
+                      </tr>
+                      {unknownCountries.map((row, index) =>
+                        renderRow(row, knownCountries.length + index)
+                      )}
+                    </>
+                  )}
+                </>
+              )
+            })()}
           </tbody>
           <tfoot>
             <tr style={{ fontWeight: 'bold' }}>
@@ -205,13 +229,8 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
                   .reduce((sum, r) => sum + r.unique_visits, 0)
                   .toLocaleString()}
               </td>
-              <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                {data
-                  .reduce((sum, r) => sum + r.unique_users, 0)
-                  .toLocaleString()}
-              </td>
-              <td>-</td>
-              <td>-</td>
+              <td></td>
+              <td></td>
             </tr>
           </tfoot>
         </table>
