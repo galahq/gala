@@ -131,21 +131,16 @@ module Cases
       nil
     end
 
-    def generate_csv # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def generate_csv
       require 'csv'
       formatted_stats = stats_data[:formatted]
 
-      # Calculate totals
       total_visits = formatted_stats.sum { |r| r[:unique_visits] }
-      total_users = formatted_stats.sum { |r| r[:unique_users] }
-      total_events = formatted_stats.sum { |r| r[:events_count] }
 
-      CSV.generate(headers: true) do |csv| # rubocop:disable Metrics/BlockLength
+      CSV.generate(headers: true) do |csv|
         csv << [
           I18n.t('cases.stats.csv.country'),
           I18n.t('cases.stats.csv.unique_visitors'),
-          I18n.t('cases.stats.csv.unique_users'),
-          I18n.t('cases.stats.csv.total_events'),
           I18n.t('cases.stats.csv.first_visit'),
           I18n.t('cases.stats.csv.last_visit')
         ]
@@ -154,8 +149,6 @@ module Cases
           csv << [
             row[:name],
             row[:unique_visits],
-            row[:unique_users],
-            row[:events_count],
             format_date(row[:first_event]),
             format_date(row[:last_event])
           ]
@@ -164,8 +157,6 @@ module Cases
         csv << [
           I18n.t('cases.stats.csv.total'),
           total_visits,
-          total_users,
-          total_events,
           nil,
           nil
         ]

@@ -826,11 +826,15 @@ React.createElement('span', { className: 'c-stats-information__label' }, this.ms
           ReactDOM.render(React.createElement('div'), tableEl)
         } else {
           const caseSlug = this.dataUrl.split('/')[2] // Extract case slug from URL
+          const from = this.fromTarget && this.fromTarget.value
+          const to = this.toTarget && this.toTarget.value
           ReactDOM.render(
             <IntlProvider locale={locale} messages={this.messages}>
               {React.createElement(StatsTable, {
                 data: formatted,
                 caseSlug,
+                from,
+                to,
                 bins: summary.bins || [],
                 onRowClick: country => this.handleCountrySelect(country),
               })}

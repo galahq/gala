@@ -17,11 +17,13 @@ type CountryData = {
 type Props = {
   data: CountryData[],
   caseSlug: string,
+  from?: string,
+  to?: string,
   onRowClick?: (country: CountryData) => void,
   intl: any,
 }
 
-function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
+function StatsTable ({ data, caseSlug, from, to, onRowClick, intl }: Props) {
   const [sortField, setSortField] = useState('unique_visits')
   const [sortDirection, setSortDirection] = useState('desc')
 
@@ -69,19 +71,18 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
   }
 
   const exportCSV = () => {
-    const params = new URLSearchParams(window.location.search)
-    const from = params.get('from') || ''
-    const to = params.get('to') || ''
-
     let url = `/cases/${caseSlug}/stats.csv`
     if (from || to) {
-      url += `?from=${from}&to=${to}`
+      const params = new URLSearchParams()
+      if (from) params.set('from', from)
+      if (to) params.set('to', to)
+      url += `?${params.toString()}`
     }
 
     window.location.href = url
   }
 
-  // Set up export button handler
+  // Set up export button handler (use current from/to so CSV matches filtered table data)
   useEffect(() => {
     const exportBtn = document.getElementById('stats-table-export-btn')
     if (exportBtn) {
@@ -93,7 +94,7 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
         exportBtn.removeEventListener('click', handleClick)
       }
     }
-  }, [caseSlug])
+  }, [caseSlug, from, to])
 
   const SortIcon = ({ field }: { field: string }) => {
     if (field !== sortField) {
@@ -111,21 +112,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
       </span>
     )
   }
-
-  // Set up export button handler
-  useEffect(() => {
-    const exportBtn = document.getElementById('stats-table-export-btn')
-    if (exportBtn) {
-      const handleClick = () => {
-        exportCSV()
-      }
-      exportBtn.addEventListener('click', handleClick)
-      return () => {
-        exportBtn.removeEventListener('click', handleClick)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [caseSlug])
 
   return (
     <div style={{ overflowX: 'auto' }}>
