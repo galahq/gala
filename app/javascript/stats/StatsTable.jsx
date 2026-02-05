@@ -36,6 +36,13 @@ function StatsTable ({ data, caseSlug, from, to, onRowClick, intl }: Props) {
     }
   }
 
+  const handleSortKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>, field: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleSort(field)
+    }
+  }
+
   const sortedData = [...data].sort((a, b) => {
     // Always put unknown countries at the bottom
     const aIsUnknown =
@@ -118,15 +125,22 @@ function StatsTable ({ data, caseSlug, from, to, onRowClick, intl }: Props) {
         <table
           className="pt-html-table pt-html-table-striped"
           style={{ width: '600px' }}
+          role="table"
+          aria-label={intl.formatMessage({ id: 'cases.stats.show.tableTitle' })}
         >
           <thead>
             <tr>
-              <th style={{ width: '50px', textAlign: 'center' }}>
+              <th scope="col" style={{ width: '50px', textAlign: 'center' }}>
                 <FormattedMessage id="cases.stats.show.tableRank" />
               </th>
               <th
+                scope="col"
+                role="button"
+                tabIndex={0}
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('name')}
+                onKeyDown={e => handleSortKeyDown(e, 'name')}
+                aria-sort={sortField === 'name' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
               >
                 <div
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
@@ -136,8 +150,13 @@ function StatsTable ({ data, caseSlug, from, to, onRowClick, intl }: Props) {
                 </div>
               </th>
               <th
+                scope="col"
+                role="button"
+                tabIndex={0}
                 style={{ cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => handleSort('unique_visits')}
+                onKeyDown={e => handleSortKeyDown(e, 'unique_visits')}
+                aria-sort={sortField === 'unique_visits' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
               >
                 <div
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
@@ -146,10 +165,10 @@ function StatsTable ({ data, caseSlug, from, to, onRowClick, intl }: Props) {
                   <SortIcon field="unique_visits" />
                 </div>
               </th>
-              <th>
+              <th scope="col">
                 <FormattedMessage id="cases.stats.show.tableFirstVisit" />
               </th>
-              <th>
+              <th scope="col">
                 <FormattedMessage id="cases.stats.show.tableLastVisit" />
               </th>
             </tr>
