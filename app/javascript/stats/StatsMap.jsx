@@ -135,8 +135,6 @@ type CountryData = {
   iso3: string,
   name: string,
   unique_visits: number,
-  unique_users: number,
-  events_count: number,
   bin: number,
 }
 
@@ -710,10 +708,10 @@ function StatsMap ({ countries, bins, intl }: Props) {
               position={Position.TOP}
               content={
                 <div style={{ padding: '12px', maxWidth: '300px' }}>
-                  <h6 style={{ marginTop: 0, marginBottom: '8px' }}>
+                  <h6 style={{ marginTop: 0, marginBottom: '8px', fontSize: '14px' }}>
                     <FormattedMessage id="cases.stats.show.mapLegendHelpTitle" />
                   </h6>
-                  <p style={{ fontSize: '12px' }}>
+                  <p style={{ fontSize: '14px' }}>
                     <FormattedMessage id="cases.stats.show.mapLegendHelpDescription" />
                   </p>
                 </div>
@@ -783,7 +781,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
             style={{
               display: 'flex',
               justifyContent: 'space-between',
-              fontSize: '11px',
+              fontSize: '12px',
               marginTop: '6px',
               color: Colors.WHITE,
               fontFamily: 'monospace',
@@ -812,7 +810,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
             padding: '8px 12px',
             borderRadius: '6px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-            fontSize: '12px',
+            fontSize: '14px',
             fontFamily: 'monospace',
             pointerEvents: 'none',
             whiteSpace: 'nowrap',
@@ -823,7 +821,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
             style={{
               fontWeight: 'bold',
               marginBottom: '4px',
-              fontSize: '13px',
+              fontSize: '14px',
             }}
           >
             {hoveredCountry.name}
@@ -842,22 +840,11 @@ function StatsMap ({ countries, bins, intl }: Props) {
                 flexShrink: 0,
               }}
             />
-            <div>
-              <div style={{ fontWeight: '500' }}>
-                {hoveredCountry.unique_visits.toLocaleString()}{' '}
-                {intl.formatMessage({
-                  id: 'cases.stats.show.mapTooltipVisitors',
-                })}
-              </div>
-              <div style={{ fontSize: '11px', opacity: 0.8 }}>
-                {hoveredCountry.unique_users.toLocaleString()}{' '}
-                {intl.formatMessage({ id: 'cases.stats.show.mapTooltipUsers' })}{' '}
-                •{' '}
-                {hoveredCountry.events_count.toLocaleString()}{' '}
-                {intl.formatMessage({
-                  id: 'cases.stats.show.mapTooltipEvents',
-                })}
-              </div>
+            <div style={{ fontWeight: '500' }}>
+              {hoveredCountry.unique_visits.toLocaleString()}{' '}
+              {intl.formatMessage({
+                id: 'cases.stats.show.mapTooltipVisitors',
+              })}
             </div>
           </div>
         </div>
