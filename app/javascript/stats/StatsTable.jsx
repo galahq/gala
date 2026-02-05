@@ -1,7 +1,8 @@
 /* @flow */
-import React, { useState, useEffect } from 'react'
-import { Colors } from '@blueprintjs/core'
+import React, { useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+
+import { Colors } from './colors'
 
 type CountryData = {
   iso2: string,
@@ -16,12 +17,10 @@ type CountryData = {
 
 type Props = {
   data: CountryData[],
-  caseSlug: string,
-  onRowClick?: (country: CountryData) => void,
   intl: any,
 }
 
-function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
+function StatsTable ({ data, intl }: Props) {
   const [sortField, setSortField] = useState('unique_visits')
   const [sortDirection, setSortDirection] = useState('desc')
 
@@ -49,7 +48,7 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
     const aVal = a[sortField] || 0
     const bVal = b[sortField] || 0
 
-    if (typeof aVal === 'string') {
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
       return sortDirection === 'asc'
         ? aVal.localeCompare(bVal)
         : bVal.localeCompare(aVal)
@@ -68,19 +67,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
     })
   }
 
-  const exportCSV = () => {
-    const params = new URLSearchParams(window.location.search)
-    const from = params.get('from') || ''
-    const to = params.get('to') || ''
-
-    let url = `/cases/${caseSlug}/stats.csv`
-    if (from || to) {
-      url += `?from=${from}&to=${to}`
-    }
-
-    window.location.href = url
-  }
-
   const SortIcon = ({ field }: { field: string }) => {
     if (field !== sortField) {
       return <span style={{ opacity: 0.3, fontSize: '12px' }}>↕</span>
@@ -97,21 +83,6 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
       </span>
     )
   }
-
-  // Set up export button handler
-  useEffect(() => {
-    const exportBtn = document.getElementById('stats-table-export-btn')
-    if (exportBtn) {
-      const handleClick = () => {
-        exportCSV()
-      }
-      exportBtn.addEventListener('click', handleClick)
-      return () => {
-        exportBtn.removeEventListener('click', handleClick)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [caseSlug])
 
   return (
     <div style={{ overflowX: 'auto' }}>

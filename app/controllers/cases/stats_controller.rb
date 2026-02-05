@@ -74,7 +74,7 @@ module Cases
           FROM deployments d
           WHERE d.case_id = c.id
         ) dc ON TRUE
-        WHERE (e.properties ->> 'case_slug') = p.case_slug
+        WHERE e.case_id = c.id
           AND e."time" BETWEEN p.from_ts AND p.to_ts
           AND NOT EXISTS (
             SELECT 1

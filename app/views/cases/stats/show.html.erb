@@ -17,60 +17,8 @@
         data-controller="case-stats"
         data-url="<%= case_stats_path(@case) %>"
         data-published_at="<%= @case.published_at&.to_date %>">
-        <input type="hidden" id="stats-from" data-target="case-stats.from" />
-        <input type="hidden" id="stats-to" data-target="case-stats.to" />
-
-        <!-- Information section (case-level, above date picker) -->
-        <h2 class="c-stats-information__heading"><%= t('.overview') %></h2>
-        <div class="c-stats-information-container">
-          <div class="c-stats-overview-layout">
-            <div class="c-stats-information pt-card pt-elevation-1">
-              <h3 class="c-stats-information__card-heading"><%= t('.overview_stats') %></h3>
-              <div id="stats-information"></div>
-            </div>
-            <div class="c-stats-tips pt-callout pt-icon-info-sign">
-              <h5 class="pt-callout-title"><%= t('.about_visitors') %></h5>
-              <div class="pt-callout-content">
-                <p>
-                  <%= I18n.t('cases.stats.show.tips_description') %>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Date picker and summary stats -->
-          <h2 class="c-stats-filter-card__heading"><%= t('.filter_by_date') %></h2>
-          <div class="c-stats-layout">
-            <div class="c-stats-picker pt-card pt-elevation-1">
-              <div id="stats-range-picker"></div>
-            </div>
-            <div class="c-stats-summary pt-card pt-elevation-1">
-              <div id="stats-summary"></div>
-            </div>
-          </div>
-          <!-- Map and table section -->
-          <div class="c-stats-map-table-card pt-card pt-elevation-1">
-            <div class="c-stats-map-table-header">
-              <h3 class="c-stats-map-table__heading">
-                <%= I18n.t('cases.stats.show.table_title') %>
-                <span id="stats-map-table-date-range" class="c-stats-map-table__date-range"></span>
-              </h3>
-            </div>
-            <!-- Map section -->
-            <div class="c-stats-map-container">
-              <div id="stats-map" class="c-stats-map"></div>
-            </div>
-            <!-- Export button -->
-            <div class="c-stats-export-button-container">
-              <button class="pt-button pt-intent-primary pt-icon-export" id="stats-table-export-btn">
-                <%= I18n.t('cases.stats.show.table_export_csv') %>
-              </button>
-            </div>
-            <!-- Stats table -->
-            <div id="stats-table" class="c-stats-table-container"></div>
-          </div>
-
-       </div>
-     </div>
-   </div>
- </div>
+        <!-- StatsPage React component mounts here -->
+      </div>
+    </div>
+  </div>
+</div>

@@ -261,12 +261,15 @@ class CountryStatsService
       row.merge(bin: get_bin(visits, bins))
     end
 
+    # Separate known countries from unknown for accurate counts
+    known_countries = formatted.reject { |s| s[:iso2].nil? }
+
     {
       stats: formatted.sort_by { |s| -s[:unique_visits] },
       bins: bins,
       bin_count: bin_count,
       total_visits: merged_stats.sum { |s| s[:unique_visits] || 0 },
-      country_count: formatted.size,
+      country_count: known_countries.size,
       total_deployments: formatted.sum { |s| s[:deployments_count] },
       total_podcast_listens: formatted.sum { |s| s[:visit_podcast_count] }
     }
