@@ -131,7 +131,7 @@ function StatsTable ({ data, caseSlug, onRowClick, intl }: Props) {
     <div style={{ overflowX: 'auto' }}>
         <table
           className="pt-html-table pt-html-table-striped"
-          style={{ width: '100%' }}
+          style={{ width: '600px' }}
         >
           <thead>
             <tr>

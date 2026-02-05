@@ -60,14 +60,15 @@
             <div class="c-stats-map-container">
               <div id="stats-map" class="c-stats-map"></div>
             </div>
-            <!-- Export button -->
-            <div class="c-stats-export-button-container">
-              <button class="pt-button pt-intent-primary pt-icon-export" id="stats-table-export-btn">
-                <%= I18n.t('cases.stats.show.table_export_csv') %>
-              </button>
+            <!-- Export button and stats table: button above on small screens, to the right on large -->
+            <div class="c-stats-table-export-layout">
+              <div class="c-stats-export-button-container">
+                <button class="pt-button pt-intent-primary pt-icon-export" id="stats-table-export-btn">
+                  <%= I18n.t('cases.stats.show.table_export_csv') %>
+                </button>
+              </div>
+              <div id="stats-table" class="c-stats-table-container"></div>
             </div>
-            <!-- Stats table -->
-            <div id="stats-table" class="c-stats-table-container"></div>
           </div>
 
        </div>
