@@ -1,3 +1,4 @@
+/* @flow */
 export function syncUrlParams (from: ?string, to: ?string): void {
   const url = new URL(window.location.href)
   const params = url.searchParams
