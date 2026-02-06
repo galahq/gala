@@ -14,9 +14,6 @@ const TRANSIENT_PATTERNS = [
   'style is not done loading',
 ]
 
-/**
- * Parse error from various Mapbox error formats and detect transient errors
- */
 export function parseMapError (error: any): ParsedError {
   let message = 'Unknown error'
 

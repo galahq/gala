@@ -10,9 +10,6 @@ type Props = {
   isRetrying?: boolean,
 }
 
-/**
- * Error state component with retry functionality
- */
 export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props): React$Node {
   const errorTitle = 'Unable to Load Stats'
   const errorDescription =
@@ -30,14 +27,7 @@ export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props):
   )
 
   return (
-    <div
-      style={{
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <div className="c-stats-centered">
       <NonIdealState
         title={errorTitle}
         description={errorDescription}

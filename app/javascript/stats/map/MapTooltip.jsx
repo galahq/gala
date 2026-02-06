@@ -1,6 +1,8 @@
 /* @flow */
 import * as React from 'react'
 
+import { Colors } from '../colors'
+
 type CountryData = {
   iso2: string,
   iso3: string,
@@ -19,9 +21,6 @@ type Props = {
   tooltipRef: { current: HTMLDivElement | null },
 }
 
-/**
- * Tooltip displayed when hovering over a country on the map
- */
 function MapTooltip ({
   country,
   position,
@@ -33,55 +32,27 @@ function MapTooltip ({
     binColors.length > 0
       ? binColors[Math.min(country.bin || 0, binColors.length - 1)] ||
         binColors[0]
-      : '#f9fafb'
+      : Colors.GRAY1
 
   return (
     <div
       ref={tooltipRef}
-      style={{
-        position: 'absolute',
-        left: position.left,
-        top: position.top,
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: 'white',
-        padding: '8px 12px',
-        borderRadius: '6px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-        fontSize: '12px',
-        fontFamily: 'monospace',
-        pointerEvents: 'none',
-        whiteSpace: 'nowrap',
-        zIndex: 1000,
-      }}
+      className="c-stats-map-tooltip"
+      style={{ left: position.left, top: position.top }}
     >
-      <div
-        style={{
-          fontWeight: 'bold',
-          marginBottom: '4px',
-          fontSize: '13px',
-        }}
-      >
+      <div className="c-stats-map-tooltip__country">
         {country.name}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <div
-          style={{
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
-            backgroundColor: binColor,
-            border: '1px solid rgba(255,255,255,0.3)',
-            flexShrink: 0,
-          }}
-        />
+      <div className="c-stats-map-tooltip__content">
+        <span className="c-stats-map-tooltip__color" style={{ backgroundColor: binColor }} />
         <div>
-          <div style={{ fontWeight: '500' }}>
+          <div className="c-stats-map-tooltip__visitors">
             {country.unique_visits.toLocaleString()}{' '}
             {intl.formatMessage({
               id: 'cases.stats.show.mapTooltipVisitors',
             })}
           </div>
-          <div style={{ fontSize: '11px', opacity: 0.8 }}>
+          <div className="c-stats-map-tooltip__details">
             {country.unique_users.toLocaleString()}{' '}
             {intl.formatMessage({ id: 'cases.stats.show.mapTooltipUsers' })} •{' '}
             {country.events_count.toLocaleString()}{' '}

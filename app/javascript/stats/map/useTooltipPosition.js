@@ -4,9 +4,6 @@ import { useState, useEffect } from 'react'
 type Position = { left: number, top: number }
 type MousePosition = { x: number, y: number }
 
-/**
- * Custom hook for calculating tooltip position relative to mouse cursor
- */
 export function useTooltipPosition (
   hoveredCountry: any,
   mousePosition: MousePosition,

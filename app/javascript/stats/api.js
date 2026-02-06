@@ -1,7 +1,4 @@
-/**
- * @flow
- * API module for stats data fetching
- */
+/* @flow */
 
 export type StatsPayload = {
   formatted: Array<Object>,
@@ -28,9 +25,6 @@ export type CaseSummary = {
   total_deployments?: number,
 }
 
-/**
- * Create a timeout promise that rejects after specified milliseconds
- */
 function createTimeoutPromise (timeoutMs: number): Promise<any> {
   return new Promise((resolve, reject) => {
     setTimeout(
@@ -40,9 +34,6 @@ function createTimeoutPromise (timeoutMs: number): Promise<any> {
   })
 }
 
-/**
- * Wrap a promise with a timeout
- */
 export function fetchWithTimeout<T> (
   promise: Promise<T>,
   timeoutMs: number = 15000
@@ -50,9 +41,6 @@ export function fetchWithTimeout<T> (
   return Promise.race([promise, createTimeoutPromise(timeoutMs)])
 }
 
-/**
- * Parse JSON response or throw error with status
- */
 async function parseResponse (response: Response): Promise<any> {
   if (response.ok) {
     return response.json()
@@ -61,10 +49,6 @@ async function parseResponse (response: Response): Promise<any> {
   throw new Error(`HTTP ${response.status}: ${text}`)
 }
 
-/**
- * Fetch stats data with optional date range parameters
- * @param signal - Optional AbortController signal to cancel the request
- */
 export async function fetchStats (
   dataUrl: string,
   params: { from?: string, to?: string } = {},
@@ -87,9 +71,6 @@ export async function fetchStats (
   return parseResponse(response)
 }
 
-/**
- * Fetch all-time stats (no date parameters)
- */
 export async function fetchAllTimeStats (dataUrl: string): Promise<StatsPayload> {
   const url = `${dataUrl}.json`
 
@@ -102,9 +83,6 @@ export async function fetchAllTimeStats (dataUrl: string): Promise<StatsPayload>
   return parseResponse(response)
 }
 
-/**
- * Extract all-time stats from payload
- */
 export function extractAllTimeStats (payload: StatsPayload): AllTimeStats {
   const summary = payload?.summary || {}
   return {
@@ -113,9 +91,6 @@ export function extractAllTimeStats (payload: StatsPayload): AllTimeStats {
   }
 }
 
-/**
- * Extract case summary from payload
- */
 export function extractCaseSummary (payload: StatsPayload): CaseSummary {
   const summary = payload?.summary || {}
   return {
@@ -125,9 +100,6 @@ export function extractCaseSummary (payload: StatsPayload): CaseSummary {
   }
 }
 
-/**
- * Validate payload and extract formatted data
- */
 export function validatePayload (payload: StatsPayload): {
   valid: boolean,
   error?: string,
@@ -149,7 +121,6 @@ export function validatePayload (payload: StatsPayload): {
       ? payload.summary
       : {}
 
-  // Safety check: limit data size to prevent freezing
   if (formatted.length > 10000) {
     return {
       valid: false,

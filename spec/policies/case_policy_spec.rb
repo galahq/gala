@@ -101,4 +101,36 @@ RSpec.describe CasePolicy do
       expect(subject).to permit editor, kase
     end
   end
+
+  permissions :stats? do
+    let(:library) { create :library }
+
+    before do
+      reader.save
+      kase.save
+    end
+
+    it 'denies an anonymous user' do
+      expect(subject).not_to permit anon, kase
+    end
+
+    it 'denies a normal user' do
+      expect(subject).not_to permit reader, kase
+    end
+
+    it 'allows a user with an editorship' do
+      kase.editorships.create editor: reader
+      expect(subject).to permit reader, kase
+    end
+
+    it 'allows a library manager' do
+      kase.update!(library: library)
+      reader.libraries << library
+      expect(subject).to permit reader, kase
+    end
+
+    it 'allows an editor' do
+      expect(subject).to permit editor, kase
+    end
+  end
 end

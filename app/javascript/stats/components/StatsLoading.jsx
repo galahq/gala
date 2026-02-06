@@ -3,9 +3,6 @@
 
 import React from 'react'
 
-/**
- * Loading overlay for the map component
- */
 export function MapLoadingOverlay (): React$Node {
   return (
     <div className="c-stats-map__loading-overlay">
@@ -33,9 +30,6 @@ export function MapLoadingOverlay (): React$Node {
   )
 }
 
-/**
- * Skeleton row component for loading states
- */
 function SkeletonRow ({
   labelWidth,
   valueWidth,
@@ -51,9 +45,6 @@ function SkeletonRow ({
   )
 }
 
-/**
- * Loading skeleton for the summary section
- */
 export function SummaryLoadingSkeleton (): React$Node {
   return (
     <div className="c-stats-summary__content">
@@ -65,9 +56,6 @@ export function SummaryLoadingSkeleton (): React$Node {
   )
 }
 
-/**
- * Skeleton row component for information section
- */
 function InformationSkeletonRow ({
   labelWidth,
   valueWidth,
@@ -83,9 +71,6 @@ function InformationSkeletonRow ({
   )
 }
 
-/**
- * Loading skeleton for the information section
- */
 export function InformationLoadingSkeleton (): React$Node {
   return (
     <div className="c-stats-information__content">
@@ -98,62 +83,44 @@ export function InformationLoadingSkeleton (): React$Node {
   )
 }
 
-/**
- * Loading skeleton for the table section
- */
 export function TableLoadingSkeleton (): React$Node {
   return (
-    <div className="pt-card" style={{ padding: '20px', marginTop: '24px', minWidth: '400px' }}>
-      <div
-        className="pt-skeleton"
-        style={{ height: '20px', width: '200px', minWidth: '200px', marginBottom: '20px' }}
-      />
-      <div className="pt-skeleton" style={{ height: '300px', minWidth: '100%' }} />
+    <div className="pt-card c-stats-skeleton-card">
+      <div className="pt-skeleton c-stats-skeleton--table-header" />
+      <div className="pt-skeleton c-stats-skeleton--table-body" />
     </div>
   )
 }
 
-/**
- * Full page loading skeleton for initial hydration
- * Shows a unified loading state to prevent multiple visual transitions
- */
 export function PageLoadingSkeleton (): React$Node {
   return (
     <div className="c-stats-page c-stats-page--loading">
-      <div className="pt-skeleton" style={{ height: '28px', width: '120px', minWidth: '120px', marginBottom: '16px' }} />
-      <div className="c-stats-information-container" style={{ minWidth: '600px' }}>
+      <div className="pt-skeleton c-stats-skeleton--page-title" />
+      <div className="c-stats-information-container">
         <div className="c-stats-overview-layout">
-          <div className="c-stats-information pt-card pt-elevation-1" style={{ minWidth: '300px' }}>
-            <div className="pt-skeleton" style={{ height: '20px', width: '140px', minWidth: '140px', marginBottom: '16px' }} />
+          <div className="c-stats-information pt-card pt-elevation-1">
+            <div className="pt-skeleton c-stats-skeleton--info-header" />
             <InformationLoadingSkeleton />
           </div>
-          <div className="pt-skeleton pt-callout" style={{ height: '120px', minWidth: '280px' }} />
+          <div className="pt-skeleton pt-callout c-stats-skeleton--callout" />
         </div>
       </div>
 
-      <div className="pt-skeleton" style={{ height: '28px', width: '150px', minWidth: '150px', marginTop: '32px', marginBottom: '16px' }} />
-      <div className="c-stats-layout" style={{ minWidth: '600px' }}>
-        <div className="pt-card pt-elevation-1" style={{ minHeight: '320px', minWidth: '400px' }}>
-          <div className="pt-skeleton" style={{ height: '100%', minHeight: '300px', minWidth: '380px' }} />
+      <div className="pt-skeleton c-stats-skeleton--section-title" />
+      <div className="c-stats-layout">
+        <div className="pt-card pt-elevation-1 c-stats-skeleton--map-card">
+          <div className="pt-skeleton c-stats-skeleton--map-content" />
         </div>
-        <div className="c-stats-summary pt-card pt-elevation-1" style={{ minWidth: '200px' }}>
+        <div className="c-stats-summary pt-card pt-elevation-1 c-stats-skeleton--summary-card">
           <SummaryLoadingSkeleton />
         </div>
       </div>
 
-      <div className="c-stats-map-table-card pt-card pt-elevation-1" style={{ marginTop: '24px', minWidth: '600px' }}>
-        <div className="pt-skeleton" style={{ height: '24px', width: '200px', minWidth: '200px', marginBottom: '16px' }} />
-        <div className="pt-skeleton" style={{ height: '400px', minWidth: '100%', marginBottom: '24px' }} />
-        <div className="pt-skeleton" style={{ height: '200px', minWidth: '100%' }} />
+      <div className="c-stats-map-table-card pt-card pt-elevation-1">
+        <div className="pt-skeleton c-stats-skeleton--map-table-header" />
+        <div className="pt-skeleton c-stats-skeleton--map-table-map" />
+        <div className="pt-skeleton c-stats-skeleton--map-table-table" />
       </div>
     </div>
   )
-}
-
-export default {
-  MapLoadingOverlay,
-  SummaryLoadingSkeleton,
-  InformationLoadingSkeleton,
-  TableLoadingSkeleton,
-  PageLoadingSkeleton,
 }

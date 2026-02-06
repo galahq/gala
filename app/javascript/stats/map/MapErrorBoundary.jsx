@@ -1,22 +1,74 @@
 /* @flow */
 import * as React from 'react'
+import { Button, Intent, NonIdealState } from '@blueprintjs/core'
 
-type Props = {
+type MapErrorStateProps = {
+  errorMessage: string,
+  mapboxToken: string,
+  mapboxStyle: string,
+  mapboxDataUrl: string,
+  onRetry: () => void,
+}
+
+export function MapErrorState ({
+  errorMessage,
+  mapboxToken,
+  mapboxStyle,
+  mapboxDataUrl,
+  onRetry,
+}: MapErrorStateProps): React.Node {
+  return (
+    <div className="c-stats-map-error">
+      <p className="c-stats-map-error__title">
+        Unable to load map
+      </p>
+      <p className="c-stats-map-error__message">
+        {errorMessage ||
+          'Please check your internet connection or disable ad blockers'}
+      </p>
+      <Button
+        intent={Intent.PRIMARY}
+        style={{ marginBottom: '15px' }}
+        onClick={onRetry}
+      >
+        Retry Loading Map
+      </Button>
+      <div className="c-stats-map-error__debug">
+        <p>Debug info:</p>
+        <p>Token: {mapboxToken ? `${mapboxToken.substring(0, 20)}...` : 'none'}</p>
+        <p>Style: {mapboxStyle}</p>
+        <p>Data: {mapboxDataUrl}</p>
+      </div>
+    </div>
+  )
+}
+
+type MapEmptyStateProps = {
+  intl: any,
+}
+
+export function MapEmptyState ({ intl }: MapEmptyStateProps): React.Node {
+  return (
+    <NonIdealState
+      title={intl.formatMessage({ id: 'cases.stats.show.errorNoDataTitle' })}
+      description={intl.formatMessage({ id: 'cases.stats.show.errorNoDataDescription' })}
+      visual="geosearch"
+    />
+  )
+}
+
+type MapErrorBoundaryProps = {
   children: React.Node,
 }
 
-type State = {
+type MapErrorBoundaryState = {
   hasError: boolean,
   error: ?Error,
   errorInfo: ?{ componentStack: string },
 }
 
-/**
- * Error boundary specifically for the map component.
- * Catches React errors and displays a friendly error message with refresh option.
- */
-class MapErrorBoundary extends React.Component<Props, State> {
-  constructor (props: Props) {
+class MapErrorBoundary extends React.Component<MapErrorBoundaryProps, MapErrorBoundaryState> {
+  constructor (props: MapErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false, error: null, errorInfo: null }
   }
@@ -36,55 +88,27 @@ class MapErrorBoundary extends React.Component<Props, State> {
   render (): React.Node {
     if (this.state.hasError) {
       return (
-        <div
-          style={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#394B59',
-            flexDirection: 'column',
-            padding: '20px',
-            textAlign: 'center',
-          }}
-        >
-          <p
-            style={{
-              color: '#DB3737',
-              marginBottom: '10px',
-              fontWeight: 'bold',
-            }}
-          >
+        <div className="c-stats-map-error">
+          <p className="c-stats-map-error__title">
             Map Component Error
           </p>
-          <p
-            style={{ color: '#6b7280', fontSize: '14px', marginBottom: '15px' }}
-          >
+          <p className="c-stats-map-error__message">
             Something went wrong with the map component. Please try refreshing
             the page.
           </p>
-          <button
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              marginBottom: '15px',
-            }}
+          <Button
+            intent={Intent.PRIMARY}
+            style={{ marginBottom: '15px' }}
             onClick={() => window.location.reload()}
           >
             Refresh Page
-          </button>
-          {process.env.NODE_ENV === 'development' && this.state.error && (
-            <details
-              style={{ fontSize: '12px', color: '#9ca3af', textAlign: 'left' }}
-            >
-              <summary style={{ cursor: 'pointer', marginBottom: '5px' }}>
+          </Button>
+          {this.state.error && (
+            <details className="c-stats-map-error__details">
+              <summary className="c-stats-map-error__details-summary">
                 Error Details
               </summary>
-              <pre style={{ whiteSpace: 'pre-wrap', fontSize: '10px' }}>
+              <pre className="c-stats-map-error__details-pre">
                 {this.state.error.toString()}
                 <br />
                 {this.state.errorInfo && this.state.errorInfo.componentStack}

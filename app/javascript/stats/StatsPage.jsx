@@ -1,18 +1,12 @@
 /** @jsx React.createElement */
 /* @flow */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React from 'react'
 import { IntlProvider } from 'react-intl'
 import ErrorBoundary from 'utility/ErrorBoundary'
-import {
-  fetchStats,
-  fetchAllTimeStats,
-  fetchWithTimeout,
-  extractAllTimeStats,
-  extractCaseSummary,
-  validatePayload,
-} from './api'
-import { formatDateRange, getTodayIso, validateDateRange, syncUrlParams, getUrlParams, parseLocalDate, formatLocalDate } from './utils'
+import { formatDateRange, parseLocalDate } from './dateHelpers'
+import { useDateRange } from './hooks/useDateRange'
+import { useStatsData } from './hooks/useStatsData'
 
 import StatsDateRangePicker from './StatsDateRangePicker'
 import StatsMap from './StatsMap'
@@ -27,24 +21,6 @@ import {
 } from './components/StatsLoading'
 import { StatsErrorState } from './components/StatsError'
 
-import type { AllTimeStats, CaseSummary } from './api'
-
-// Flow type declaration for AbortController (not built into Flow)
-declare class AbortController {
-  signal: { aborted: boolean, ... };
-  abort(): void;
-}
-
-type StatsData = {
-  formatted: Array<Object>,
-  summary: Object,
-}
-
-type DateRange = {
-  from: ?string,
-  to: ?string,
-}
-
 type Props = {
   dataUrl: string,
   publishedAt: ?string,
@@ -52,147 +28,24 @@ type Props = {
   locale: string,
 }
 
-/**
- * Main Stats Page component
- * Manages all state and renders the complete stats dashboard
- */
 function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$Node {
-  const [data, setData] = useState<?StatsData>(null)
-  const [allTimeStats, setAllTimeStats] = useState<?AllTimeStats>(null)
-  const [caseSummary, setCaseSummary] = useState<?CaseSummary>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
-  const isInitialLoadRef = useRef<boolean>(true)
-  const [error, setError] = useState<?Error>(null)
-  const [dateRange, setDateRange] = useState<DateRange>(() => {
-    const urlParams = getUrlParams()
-    return {
-      from: urlParams.from || null,
-      to: urlParams.to || null,
-    }
-  })
+  const { range: dateRange, setFromDates } = useDateRange({ publishedAt })
+  const {
+    data,
+    allTimeStats,
+    caseSummary,
+    isLoading,
+    isInitialLoad,
+    error,
+    retry,
+  } = useStatsData({ dataUrl, dateRange })
 
-  // Message lookup helper
   function msg (key: string): string {
     if (!messages) return key
-    // Convert snake_case to camelCase for i18n key lookup
     const camelKey = key.replace(/_([a-z])/g, (_, c) => c.toUpperCase())
     const fullKey = `cases.stats.show.${camelKey}`
     return messages[fullKey] != null ? messages[fullKey] : key
   }
-
-  // Track if allTimeStats has been fetched
-  const allTimeStatsFetched = useRef(false)
-
-  // Fetch all-time stats once on mount
-  useEffect(() => {
-    fetchAllTimeStats(dataUrl)
-      .then(payload => {
-        setAllTimeStats(extractAllTimeStats(payload))
-        setCaseSummary(extractCaseSummary(payload))
-        allTimeStatsFetched.current = true
-      })
-      .catch(err => {
-        console.error('Error fetching all-time stats:', err)
-        setAllTimeStats({ total_visits: 0, country_count: 0 })
-        allTimeStatsFetched.current = true
-      })
-  }, [dataUrl])
-
-  // Fetch filtered data when date range changes
-  // AbortController automatically cancels in-flight requests when deps change
-  useEffect(() => {
-    const abortController = new AbortController()
-
-    const fetchData = async () => {
-      setIsLoading(true)
-      setError(null)
-
-      try {
-        const params = {}
-        if (dateRange.from) params.from = dateRange.from
-        if (dateRange.to) params.to = dateRange.to
-
-        const payload = await fetchWithTimeout(
-          fetchStats(dataUrl, params, abortController.signal),
-          15000
-        )
-
-        const validation = validatePayload(payload)
-
-        if (!validation.valid) {
-          throw new Error(validation.error)
-        }
-
-        setData({
-          formatted: validation.formatted,
-          summary: validation.summary,
-        })
-
-        // Update case summary if available
-        if (validation.summary.case_locales) {
-          setCaseSummary(extractCaseSummary(payload))
-        }
-      } catch (err) {
-        // Ignore abort errors - they're expected when canceling stale requests
-        if (err.name === 'AbortError') {
-          return
-        }
-        console.error('Error fetching stats:', err)
-        setError(err)
-        setData(null)
-      } finally {
-        if (!abortController.signal.aborted) {
-          setIsLoading(false)
-          if (isInitialLoadRef.current) {
-            isInitialLoadRef.current = false
-            setIsInitialLoad(false)
-          }
-        }
-      }
-    }
-
-    fetchData()
-
-    // Cleanup: abort request when deps change or component unmounts
-    return () => abortController.abort()
-  }, [dataUrl, dateRange.from, dateRange.to])
-
-  // Handle date range changes from picker with debouncing to prevent rapid updates
-  const debounceRef = useRef(null)
-
-  const handleDateRangeChange = useCallback((from: ?Date, to: ?Date) => {
-    const fromStr = from ? formatLocalDate(from) : null
-    const toStr = to ? formatLocalDate(to) : null
-    const today = getTodayIso()
-
-    const validated = validateDateRange(fromStr, toStr, publishedAt, today)
-
-    // Clear any pending debounce
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current)
-    }
-
-    // Debounce the state update to prevent rapid-fire map updates
-    debounceRef.current = setTimeout(() => {
-      setDateRange({ from: validated.from, to: validated.to })
-      syncUrlParams(validated.from, validated.to)
-    }, 150)
-  }, [publishedAt])
-
-  // Clean up debounce timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current)
-      }
-    }
-  }, [])
-
-  const handleRetry = useCallback(() => {
-    // Trigger re-fetch by updating a dependency
-    setDateRange(prev => ({ ...prev }))
-  }, [])
 
   const formatted = data?.formatted || []
   const summary = data?.summary || {}
@@ -203,8 +56,11 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
 
   const minDate = publishedAt ? parseLocalDate(publishedAt) : new Date(2000, 0, 1)
   const maxDate = new Date()
+  const dateRangeValue = [
+    dateRange.from ? parseLocalDate(dateRange.from) : null,
+    dateRange.to ? parseLocalDate(dateRange.to) : null,
+  ]
 
-  // Show unified loading skeleton during initial page load
   if (isInitialLoad) {
     return (
       <IntlProvider locale={locale} messages={messages}>
@@ -214,6 +70,11 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
       </IntlProvider>
     )
   }
+
+  const showMinHeightMap = !hasData && !isLoading
+  const mapContainerClass = showMinHeightMap
+    ? 'c-stats-map-container c-stats-map-container--min'
+    : 'c-stats-map-container'
 
   return (
     <IntlProvider locale={locale} messages={messages}>
@@ -246,12 +107,8 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
                 className="pt"
                 minDate={minDate}
                 maxDate={maxDate}
-                initialRange={(() => {
-                  const f = dateRange.from
-                  const t = dateRange.to
-                  return f && t ? [parseLocalDate(f), parseLocalDate(t)] : undefined
-                })()}
-                onRangeChange={handleDateRangeChange}
+                value={dateRangeValue}
+                onRangeChange={setFromDates}
               />
             </div>
             <div className="c-stats-summary pt-card pt-elevation-1">
@@ -278,31 +135,24 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
               </h3>
             </div>
 
-            <div
-              className="c-stats-map-container"
-              style={!hasData && !isLoading ? { minHeight: '250px', height: '250px' } : undefined}
-            >
-              <div
-                className="c-stats-map"
-                style={!hasData && !isLoading ? { minHeight: '250px', height: '250px' } : undefined}
-              >
-                {error ? (
-                  <StatsErrorState
-                    error={error}
-                    isRetrying={isLoading}
-                    onRetry={handleRetry}
-                  />
-                ) : (
-                  <>
-                    <div style={{ height: '100%' }}>
-                      <StatsMap countries={formatted} bins={summary.bins || []} />
-                    </div>
-                    {isLoading && (
-                      <div className="c-stats-map__loading-wrapper">
-                        <MapLoadingOverlay />
-                      </div>
-                    )}
-                  </>
+            <div className={mapContainerClass}>
+              <div className="c-stats-map">
+                <div className="c-stats-map__inner">
+                  <StatsMap countries={formatted} bins={summary.bins || []} />
+                </div>
+                {error && (
+                  <div className="c-stats-map__overlay c-stats-map__overlay--error">
+                    <StatsErrorState
+                      error={error}
+                      isRetrying={isLoading}
+                      onRetry={retry}
+                    />
+                  </div>
+                )}
+                {isLoading && (
+                  <div className="c-stats-map__loading-wrapper">
+                    <MapLoadingOverlay />
+                  </div>
                 )}
               </div>
             </div>

@@ -1,8 +1,8 @@
 /* @flow */
-import React, { useState } from 'react'
+import React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Colors } from './colors'
+import { useStatsTable } from './hooks/useStatsTable'
 
 type CountryData = {
   iso2: string,
@@ -21,191 +21,116 @@ type Props = {
 }
 
 function StatsTable ({ data, intl }: Props) {
-  const [sortField, setSortField] = useState('unique_visits')
-  const [sortDirection, setSortDirection] = useState('desc')
-
-  const handleSort = (field: string) => {
-    if (field === sortField) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortDirection('desc')
-    }
-  }
-
-  const sortedData = [...data].sort((a, b) => {
-    // Always put unknown countries at the bottom
-    const aIsUnknown =
-      !a.iso2 || a.name === 'Unknown' || !a.name || a.name.trim() === ''
-    const bIsUnknown =
-      !b.iso2 || b.name === 'Unknown' || !b.name || b.name.trim() === ''
-
-    if (aIsUnknown && !bIsUnknown) return 1
-    if (!aIsUnknown && bIsUnknown) return -1
-    if (aIsUnknown && bIsUnknown) return 0
-
-    // Sort known countries normally
-    const aVal = a[sortField] || 0
-    const bVal = b[sortField] || 0
-
-    if (typeof aVal === 'string' && typeof bVal === 'string') {
-      return sortDirection === 'asc'
-        ? aVal.localeCompare(bVal)
-        : bVal.localeCompare(aVal)
-    }
-
-    return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
-  })
-
-  const formatDate = (dateStr: ?string) => {
-    if (!dateStr) return '-'
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
+  const {
+    sortDirection,
+    handleSort,
+    knownCountries,
+    unknownCountries,
+    totalVisits,
+    formatDate,
+    isActiveSortField,
+  } = useStatsTable(data)
 
   const SortIcon = ({ field }: { field: string }) => {
-    if (field !== sortField) {
-      return <span style={{ opacity: 0.3, fontSize: '12px' }}>↕</span>
+    if (!isActiveSortField(field)) {
+      return <span className="c-stats-table__sort-icon c-stats-table__sort-icon--inactive">↕</span>
     }
     return (
-      <span
-        style={{
-          color: Colors.INDIGO5,
-          fontSize: '12px',
-          fontWeight: 'bold',
-        }}
-      >
+      <span className="c-stats-table__sort-icon c-stats-table__sort-icon--active">
         {sortDirection === 'asc' ? '↑' : '↓'}
       </span>
     )
   }
 
+  const SortableHeaderCell = ({
+    field,
+    messageId,
+  }: {
+    field: string,
+    messageId: string,
+  }) => (
+    <th className="c-stats-table__sortable" onClick={() => handleSort(field)}>
+      <span className="c-stats-table__header">
+        <FormattedMessage id={messageId} />
+        <SortIcon field={field} />
+      </span>
+    </th>
+  )
+
+  const renderRow = (row: CountryData, index: number) => (
+    <tr key={row.iso2 || `unknown-${index}`}>
+      <td className="c-stats-table__rank">
+        {index + 1}
+      </td>
+      <td>
+        {row.name && row.name.trim() !== '' && row.name !== 'Unknown'
+          ? row.name
+          : intl.formatMessage({
+              id: 'cases.stats.show.tableUnknownCountry',
+            })}
+      </td>
+      <td className="c-stats-table__number">
+        {row.unique_visits.toLocaleString()}
+      </td>
+      <td>{formatDate(row.first_event)}</td>
+      <td>{formatDate(row.last_event)}</td>
+    </tr>
+  )
+
   return (
-    <div style={{ overflowX: 'auto' }}>
-        <table
-          className="pt-html-table pt-html-table-striped"
-          style={{ width: '100%' }}
-        >
-          <thead>
-            <tr>
-              <th style={{ width: '50px', textAlign: 'center' }}>
-                <FormattedMessage id="cases.stats.show.tableRank" />
-              </th>
-              <th
-                style={{ cursor: 'pointer', userSelect: 'none' }}
-                onClick={() => handleSort('name')}
-              >
-                <div
-                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <FormattedMessage id="cases.stats.show.tableCountry" />
-                  <SortIcon field="name" />
-                </div>
-              </th>
-              <th
-                style={{ cursor: 'pointer', userSelect: 'none' }}
-                onClick={() => handleSort('unique_visits')}
-              >
-                <div
-                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <FormattedMessage id="cases.stats.show.tableUniqueVisitors" />
-                  <SortIcon field="unique_visits" />
-                </div>
-              </th>
-              <th>
-                <FormattedMessage id="cases.stats.show.tableFirstVisit" />
-              </th>
-              <th>
-                <FormattedMessage id="cases.stats.show.tableLastVisit" />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {(() => {
-              const knownCountries = sortedData.filter(
-                row => row.iso2 && row.name && row.name.trim() !== '' && row.name !== 'Unknown'
-              )
-              const unknownCountries = sortedData.filter(
-                row => !row.iso2 || !row.name || row.name.trim() === '' || row.name === 'Unknown'
-              )
-
-              const renderRow = (row, index) => (
-                <tr key={row.iso2 || `unknown-${index}`}>
-                  <td
-                    style={{
-                      textAlign: 'center',
-                      fontFamily: 'monospace',
-                      color: Colors.GRAY3,
-                    }}
-                  >
-                    {index + 1}
-                  </td>
-                  <td>
-                    {row.name && row.name.trim() !== '' && row.name !== 'Unknown'
-                      ? row.name
-                      : intl.formatMessage({
-                          id: 'cases.stats.show.tableUnknownCountry',
-                        })}
-                  </td>
-                  <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                    {row.unique_visits.toLocaleString()}
-                  </td>
-                  <td>{formatDate(row.first_event)}</td>
-                  <td>{formatDate(row.last_event)}</td>
-                </tr>
-              )
-
-              return (
-                <>
-                  {knownCountries.map((row, index) => renderRow(row, index))}
-                  {unknownCountries.length > 0 && (
-                    <>
-                      <tr>
-                        <td
-                          colSpan={5}
-                          style={{
-                            backgroundColor: Colors.LIGHT_GRAY4,
-                            fontWeight: 'bold',
-                            fontStyle: 'italic',
-                            color: Colors.GRAY1,
-                            paddingTop: '8px',
-                            paddingBottom: '8px',
-                          }}
-                        >
-                          <FormattedMessage id="cases.stats.show.tableUnknownLocation" defaultMessage="Unknown Location" />
-                        </td>
-                      </tr>
-                      {unknownCountries.map((row, index) =>
-                        renderRow(row, knownCountries.length + index)
-                      )}
-                    </>
-                  )}
-                </>
-              )
-            })()}
-          </tbody>
-          <tfoot>
-            <tr style={{ fontWeight: 'bold' }}>
-              <td></td>
-              <td>
-                <FormattedMessage id="cases.stats.show.tableTotal" />
-              </td>
-              <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                {data
-                  .reduce((sum, r) => sum + r.unique_visits, 0)
-                  .toLocaleString()}
-              </td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+    <div className="c-stats-table__wrapper">
+      <table className="pt-html-table pt-html-table-striped c-stats-table">
+        <thead>
+          <tr>
+            <th className="c-stats-table__rank-header">
+              <FormattedMessage id="cases.stats.show.tableRank" />
+            </th>
+            <SortableHeaderCell
+              field="name"
+              messageId="cases.stats.show.tableCountry"
+            />
+            <SortableHeaderCell
+              field="unique_visits"
+              messageId="cases.stats.show.tableUniqueVisitors"
+            />
+            <th>
+              <FormattedMessage id="cases.stats.show.tableFirstVisit" />
+            </th>
+            <th>
+              <FormattedMessage id="cases.stats.show.tableLastVisit" />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {knownCountries.map((row, index) => renderRow(row, index))}
+          {unknownCountries.length > 0 && (
+            <>
+              <tr>
+                <td className="c-stats-table__unknown-header" colSpan={5}>
+                  <FormattedMessage id="cases.stats.show.tableUnknownLocation" defaultMessage="Unknown Location" />
+                </td>
+              </tr>
+              {unknownCountries.map((row, index) =>
+                renderRow(row, knownCountries.length + index)
+              )}
+            </>
+          )}
+        </tbody>
+        <tfoot>
+          <tr className="c-stats-table__total-row">
+            <td></td>
+            <td>
+              <FormattedMessage id="cases.stats.show.tableTotal" />
+            </td>
+            <td className="c-stats-table__total-number">
+              {totalVisits.toLocaleString()}
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   )
 }
 

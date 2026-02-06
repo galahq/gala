@@ -9,9 +9,6 @@ type GeoJsonState = {
   retry: () => void,
 }
 
-/**
- * Custom hook for fetching and caching GeoJSON data
- */
 export function useGeoJsonData (url: string): GeoJsonState {
   const [data, setData] = useState(null)
   const [error, setError] = useState<?string>(null)
@@ -21,7 +18,6 @@ export function useGeoJsonData (url: string): GeoJsonState {
     setIsLoading(true)
     setError(null)
 
-    // Try cache first unless skipping
     if (!skipCache) {
       const cachedData = localStorage.getItem(GEOJSON_CACHE_KEY)
       if (cachedData) {
@@ -48,7 +44,6 @@ export function useGeoJsonData (url: string): GeoJsonState {
         try {
           localStorage.setItem(GEOJSON_CACHE_KEY, JSON.stringify(fetchedData))
         } catch (e) {
-          // Silently fail if localStorage is full or unavailable
         }
       })
       .catch(err => {

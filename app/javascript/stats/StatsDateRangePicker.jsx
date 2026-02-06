@@ -1,15 +1,14 @@
 /* @flow */
 
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
 import { injectIntl } from 'react-intl'
-import { formatLocalDate } from './utils'
+import { formatLocalDate } from './dateHelpers'
 
 function StatsDateRangePicker ({
   minDate: minDateProp,
   maxDate: maxDateProp,
-  shortcuts,
-  initialRange,
+  value,
   onRangeChange,
   className,
   intl,
@@ -22,8 +21,7 @@ function StatsDateRangePicker ({
   const startFromDays = d =>
     new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
 
-  const translatedShortcuts = [
-
+  const translatedShortcuts = useMemo(() => ([
     {
       label: intl.formatMessage({ id: 'cases.stats.show.dateRangeAllTime' }),
       dateRange: [minDate, end],
@@ -52,9 +50,7 @@ function StatsDateRangePicker ({
       }),
       dateRange: [startFromDays(730), end],
     },
-  ]
-
-  const [range, setRange] = useState(initialRange || translatedShortcuts[0].dateRange)
+  ]), [intl, minDate, end])
 
   const getInitialMonth = (dateRange) => {
     if (!dateRange || !dateRange[0]) return undefined
@@ -82,52 +78,18 @@ function StatsDateRangePicker ({
     return -1
   }
 
-  const selectedShortcutIndex = getSelectedShortcutIndex(range, translatedShortcuts)
+  const selectedShortcutIndex = getSelectedShortcutIndex(value, translatedShortcuts)
 
   function handleChange (nextRange) {
-    let applied = nextRange
-    const toDateStr = d => (d ? formatLocalDate(d) : '')
-    const [nf, nt] = nextRange
-    const nfStr = toDateStr(nf)
-    const ntStr = toDateStr(nt)
-    for (let i = 0; i < translatedShortcuts.length; i++) {
-      const [sf, st] = translatedShortcuts[i].dateRange
-      if (toDateStr(sf) === nfStr && toDateStr(st) === ntStr) {
-        applied = translatedShortcuts[i].dateRange
-        break
-      }
-    }
-    setRange(applied)
-
     if (onRangeChange) {
-      onRangeChange(applied[0], applied[1])
+      onRangeChange(nextRange[0], nextRange[1])
     }
   }
-
-  useEffect(() => {
-    if (onRangeChange) {
-      onRangeChange(range[0], range[1])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    const shortcuts = document.querySelectorAll(
-      '.pt-daterangepicker-shortcuts .pt-menu-item'
-    )
-    shortcuts.forEach((shortcut, index) => {
-      if (selectedShortcutIndex >= 0 && index === selectedShortcutIndex) {
-        shortcut.classList.add('pt-active')
-      } else {
-        shortcut.classList.remove('pt-active')
-      }
-    })
-  }, [selectedShortcutIndex])
 
   return (
     <DateRangePicker
       className={className}
-      value={range}
+      value={value}
       minDate={minDate}
       maxDate={maxDate}
       allowSingleDayRange={true}
@@ -136,7 +98,7 @@ function StatsDateRangePicker ({
       selectedShortcutIndex={
         selectedShortcutIndex >= 0 ? selectedShortcutIndex : undefined
       }
-      initialMonth={getInitialMonth(range)}
+      initialMonth={getInitialMonth(value)}
       onChange={handleChange}
     />
   )

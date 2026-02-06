@@ -9,7 +9,6 @@ type LayerConfig = {
   paint: { [string]: mixed },
 }
 
-// Fill layer for country polygons
 export const createFillLayer = (): LayerConfig => ({
   id: 'country-fills',
   type: 'fill',
@@ -25,7 +24,6 @@ export const createFillLayer = (): LayerConfig => ({
   },
 })
 
-// Border layer for country outlines
 export const createLineLayer = (): LayerConfig => ({
   id: 'country-borders',
   type: 'line',
@@ -36,7 +34,6 @@ export const createLineLayer = (): LayerConfig => ({
   },
 })
 
-// Generate mapbox expression for country fill colors
 export function createFillColorExpression (
   countryColors: { [string]: string },
   defaultColor: string
@@ -47,7 +44,6 @@ export function createFillColorExpression (
     expression.push(name, color)
   })
 
-  // Default color for countries with no data
   expression.push(defaultColor)
   return expression
 }
