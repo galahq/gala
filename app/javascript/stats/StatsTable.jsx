@@ -123,8 +123,8 @@ function StatsTable ({ data, caseSlug, from, to, onRowClick, intl }: Props) {
   return (
     <div style={{ overflowX: 'auto' }}>
         <table
-          className="pt-html-table pt-html-table-striped"
-          style={{ width: '600px' }}
+          className="pt-html-table pt-html-table-striped c-stats-table"
+          style={{ width: '100%', maxWidth: '600px' }}
           role="table"
           aria-label={intl.formatMessage({ id: 'cases.stats.show.tableTitle' })}
         >

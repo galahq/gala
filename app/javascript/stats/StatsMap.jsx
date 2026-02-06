@@ -169,7 +169,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
   const [errorMessage, setErrorMessage] = useState('')
   const [viewport, setViewport] = useState({
     latitude: 20,
-    longitude: 0,
+    longitude: 15,
     zoom: 0.9,
   })
   const [mapboxDataUrl] = useState(getMapboxData())

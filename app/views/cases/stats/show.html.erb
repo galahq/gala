@@ -53,11 +53,9 @@
         </section>
 
         <section class="c-stats-map-table-card pt-card pt-elevation-1" aria-labelledby="stats-map-table-heading">
-          <div class="c-stats-map-table-header">
-            <h3 id="stats-map-table-heading" class="c-stats-map-table__heading">
-              <%= I18n.t('cases.stats.show.table_title') %>
-              <span id="stats-map-table-date-range" class="c-stats-map-table__date-range"></span>
-            </h3>
+          <div class="c-stats-map-table__header">
+            <h3 id="stats-map-table-heading" class="c-stats-map-table__heading"><%= I18n.t('cases.stats.show.table_title') %></h3>
+            <span id="stats-map-table-date-range" class="c-stats-map-table__date-range"></span>
           </div>
           <div class="c-stats-map-container">
             <div id="stats-map" class="c-stats-map" role="region" aria-label="<%= I18n.t('cases.stats.show.map_legend_title') %>"></div>
