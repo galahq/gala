@@ -46,10 +46,6 @@ class CasePolicy < ApplicationPolicy
     admin_scope.where(id: record.id).exists?
   end
 
-  def stats?
-    admin_scope.where(id: record.id).exists?
-  end
-
   def destroy?
     return false if record.published?
 

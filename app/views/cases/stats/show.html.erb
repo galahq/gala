@@ -16,7 +16,7 @@
       <div
         data-controller="case-stats"
         data-url="<%= case_stats_path(@case) %>"
-        data-published_at="<%= @case.published_at&.to_date %>">
+        data-min-date="<%= @min_date %>">
         <!-- StatsPage React component mounts here -->
       </div>
     </div>

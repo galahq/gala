@@ -13,71 +13,73 @@ RSpec.describe Cases::StatsController do
         sign_in reader
       end
 
-    context 'with HTML format' do
-      it 'renders the show template' do
-        get :show, params: { case_slug: kase.slug }, format: :html
+      context 'with HTML format' do
+        it 'renders the show template' do
+          get :show, params: { case_slug: kase.slug }, format: :html
 
-        expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'sets the case instance variable' do
+          get :show, params: { case_slug: kase.slug }, format: :html
+
+          assigned_case = controller.instance_variable_get(:@case)
+          expect(assigned_case.id).to eq(kase.id)
+        end
       end
 
-      it 'sets the case instance variable' do
-        get :show, params: { case_slug: kase.slug }, format: :html
-
-        assigned_case = controller.instance_variable_get(:@case)
-        expect(assigned_case.id).to eq(kase.id)
-      end
-    end
-
-    context 'with JSON format' do
-      let(:mock_stats_data) do
-        {
-          by_event: [],
-          formatted: { stats: [], bins: [], bin_count: 5, total_visits: 0, country_count: 0, total_deployments: 0,
-                       total_podcast_listens: 0 },
-          summary: {
-            total_visits: 0,
-            country_count: 0,
-            total_deployments: 0,
-            total_podcast_listens: 0,
-            case_published_at: nil,
-            case_locales: 'en',
-            bins: [],
-            bin_count: 5
+      context 'with JSON format' do
+        let(:mock_stats_data) do
+          {
+            summary: {
+              total_visits: 0,
+              country_count: 0,
+              total_podcast_listens: 0
+            },
+            countries: [],
+            bins: {
+              metric: 'unique_visits',
+              bin_count: 0,
+              bins: []
+            },
+            meta: {},
+            range: {}
           }
-        }
+        end
+
+        before do
+          allow(controller).to receive(:stats_data).and_return(mock_stats_data)
+        end
+
+        it 'returns JSON response' do
+          get :show, params: { case_slug: kase.slug }, format: :json
+
+          expect(response).to have_http_status(:success)
+          expect(response.content_type).to include('application/json')
+        end
+
+        it 'returns the correct JSON structure' do
+          get :show, params: { case_slug: kase.slug }, format: :json
+
+          json_response = JSON.parse(response.body)
+          expect(json_response).to have_key('summary')
+          expect(json_response).to have_key('countries')
+          expect(json_response).to have_key('bins')
+          expect(json_response).to have_key('meta')
+          expect(json_response).to have_key('range')
+        end
       end
 
-      before do
-        allow(controller).to receive(:stats_data).and_return(mock_stats_data)
+      context 'with CSV format' do
+        it 'returns CSV response' do
+          get :show, params: { case_slug: kase.slug }, format: :csv
+
+          expect(response).to have_http_status(:success)
+          expect(response.content_type).to include('text/csv')
+          expect(response.headers['Content-Disposition']).to include('attachment')
+          expect(response.headers['Content-Disposition']).to include('case-stats-')
+        end
       end
-
-      it 'returns JSON response' do
-        get :show, params: { case_slug: kase.slug }, format: :json
-
-        expect(response).to have_http_status(:success)
-        expect(response.content_type).to include('application/json')
-      end
-
-      it 'returns the correct JSON structure' do
-        get :show, params: { case_slug: kase.slug }, format: :json
-
-        json_response = JSON.parse(response.body)
-        expect(json_response).to have_key('by_event')
-        expect(json_response).to have_key('formatted')
-        expect(json_response).to have_key('summary')
-      end
-    end
-
-    context 'with CSV format' do
-      it 'returns CSV response' do
-        get :show, params: { case_slug: kase.slug }, format: :csv
-
-        expect(response).to have_http_status(:success)
-        expect(response.content_type).to include('text/csv')
-        expect(response.headers['Content-Disposition']).to include('attachment')
-        expect(response.headers['Content-Disposition']).to include('case-stats-')
-      end
-    end
     end
 
     context 'as a case editor' do
@@ -165,7 +167,7 @@ RSpec.describe Cases::StatsController do
       bindings = controller.send(:bindings)
 
       expect(bindings.length).to eq(3)
-      expect(bindings[0].value).to eq(kase.slug)
+      expect(bindings[0].value).to eq(kase.id)
       expect(bindings[1].value).to eq(Time.zone.parse(from_date))
       expect(bindings[2].value).to eq(Time.zone.parse(to_date).end_of_day)
     end
@@ -196,12 +198,22 @@ RSpec.describe Cases::StatsController do
     let(:raw_data) { [{ 'country' => 'US', 'unique_visits' => 100 }] }
     let(:formatted_data) do
       {
-        stats: [{ country: 'US', unique_visits: 100 }],
+        stats: [{
+          iso2: 'US',
+          iso3: 'USA',
+          name: 'United States',
+          unique_visits: 100,
+          unique_users: 50,
+          events_count: 200,
+          visit_podcast_count: 10,
+          first_event: Time.zone.parse('2023-01-01'),
+          last_event: Time.zone.parse('2023-01-31'),
+          bin: 4
+        }],
         bins: [],
         bin_count: 5,
         total_visits: 100,
         country_count: 1,
-        total_deployments: 5,
         total_podcast_listens: 10
       }
     end
@@ -217,58 +229,49 @@ RSpec.describe Cases::StatsController do
       result = controller.send(:stats_data)
 
       expect(controller).to have_received(:sql_query)
-      expect(CountryStatsService).to have_received(:format_country_stats).with(raw_data)
+      expect(CountryStatsService).to have_received(:format_country_stats)
+        .with(raw_data, include_stats: true, include_bins: true)
 
-      expect(result[:by_event]).to eq(raw_data)
-      expect(result[:formatted]).to eq(formatted_data[:stats])
-      expect(result[:summary]).to have_key(:case_published_at)
-      expect(result[:summary]).to have_key(:case_locales)
-      expect(result[:summary]).to have_key(:bins)
-      expect(result[:summary]).to have_key(:bin_count)
+      expect(result[:summary]).to have_key(:total_visits)
+      expect(result[:summary]).to have_key(:country_count)
+      expect(result[:summary]).to have_key(:total_podcast_listens)
+      expect(result[:countries]).to be_a(Array)
+      expect(result[:bins]).to have_key(:bins)
+      expect(result[:meta]).to have_key(:case)
+      expect(result[:range]).to have_key(:from)
     end
 
-    it 'includes case locales in summary' do
+    it 'includes case locales in meta' do
       controller.params = { case_slug: kase.slug }
       allow(kase).to receive_message_chain(:translation_set, :pluck).and_return(%w[en fr])
 
       result = controller.send(:stats_data)
 
-      expect(result[:summary][:case_locales]).to eq('en, fr')
+      expect(result[:meta][:case][:locales]).to eq(%w[en fr])
     end
   end
 
   describe '#generate_csv' do
     let(:raw_data) { [{ 'country' => 'US', 'unique_visits' => 100 }] }
-    let(:formatted_data) do
-      {
-        stats: [{
+    let(:countries) do
+      [{
+        country: {
           name: 'United States',
-          iso3: 'USA',
-          bin: 4,
+          iso3: 'USA'
+        },
+        metrics: {
           unique_visits: 100,
           unique_users: 50,
-          events_count: 200,
-          first_event: Time.zone.parse('2023-01-01'),
-          last_event: Time.zone.parse('2023-01-31')
-        }],
-        bins: [{ bin: 4, percentile: 100, value: 100 }],
-        bin_count: 5
-      }
+          events_count: 200
+        },
+        first_event: Time.zone.parse('2023-01-01'),
+        last_event: Time.zone.parse('2023-01-31')
+      }]
     end
 
     let(:mock_stats_data) do
       {
-        formatted: formatted_data[:stats],
-        summary: {
-          total_visits: 100,
-          country_count: 1,
-          total_deployments: 0,
-          total_podcast_listens: 0,
-          case_published_at: 'Jan 01, 2023',
-          case_locales: 'en',
-          bins: formatted_data[:bins],
-          bin_count: formatted_data[:bin_count]
-        }
+        countries: countries
       }
     end
 
@@ -312,49 +315,35 @@ RSpec.describe Cases::StatsController do
     end
 
     context 'with multiple countries' do
-      let(:formatted_data) do
-        {
-          stats: [
-            {
+      let(:countries) do
+        [
+          {
+            country: {
               name: 'United States',
-              iso3: 'USA',
-              bin: 4,
+              iso3: 'USA'
+            },
+            metrics: {
               unique_visits: 100,
               unique_users: 50,
-              events_count: 200,
-              first_event: Time.zone.parse('2023-01-01'),
-              last_event: Time.zone.parse('2023-01-31')
+              events_count: 200
             },
-            {
+            first_event: Time.zone.parse('2023-01-01'),
+            last_event: Time.zone.parse('2023-01-31')
+          },
+          {
+            country: {
               name: 'Canada',
-              iso3: 'CAN',
-              bin: 3,
+              iso3: 'CAN'
+            },
+            metrics: {
               unique_visits: 80,
               unique_users: 40,
-              events_count: 150,
-              first_event: Time.zone.parse('2023-01-05'),
-              last_event: Time.zone.parse('2023-01-25')
-            }
-          ],
-          bins: [{ bin: 4, percentile: 100, value: 100 }],
-          bin_count: 5
-        }
-      end
-
-      let(:mock_stats_data) do
-        {
-          formatted: formatted_data[:stats],
-          summary: {
-            total_visits: 180,
-            country_count: 2,
-            total_deployments: 0,
-            total_podcast_listens: 0,
-            case_published_at: 'Jan 01, 2023',
-            case_locales: 'en',
-            bins: formatted_data[:bins],
-            bin_count: formatted_data[:bin_count]
+              events_count: 150
+            },
+            first_event: Time.zone.parse('2023-01-05'),
+            last_event: Time.zone.parse('2023-01-25')
           }
-        }
+        ]
       end
 
       it 'includes all countries in CSV' do

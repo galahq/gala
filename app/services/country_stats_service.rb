@@ -242,7 +242,7 @@ class CountryStatsService
     bins.last[:bin] # If above max, put in last bin
   end
 
-  def self.format_country_stats(raw_stats)
+  def self.format_country_stats(raw_stats, include_stats: true, include_bins: true)
     merged_stats = merge_stats(raw_stats)
 
     # Get unique visit counts for bin calculation (need unique values only)
@@ -253,16 +253,25 @@ class CountryStatsService
     max_bins = 5
     bin_count = [unique_visit_counts.length, max_bins].min
     bin_count = 1 if bin_count < 1 # Safety check
+    bin_count = 0 unless include_bins
 
-    bins = calculate_bins(unique_visit_counts, bin_count)
+    bins = include_bins ? calculate_bins(unique_visit_counts, bin_count) : []
 
-    formatted = merged_stats.map do |row|
-      visits = row[:unique_visits] || 0
-      row.merge(bin: get_bin(visits, bins))
+    formatted = if include_stats
+      merged_stats.map do |row|
+        next_row = row.dup
+        if include_bins
+          visits = row[:unique_visits] || 0
+          next_row[:bin] = get_bin(visits, bins)
+        end
+        next_row
+      end
+    else
+      []
     end
 
     # Separate known countries from unknown for accurate counts
-    known_countries = formatted.reject { |s| s[:iso2].nil? }
+    known_countries = merged_stats.reject { |s| s[:iso2].nil? }
 
     {
       stats: formatted.sort_by { |s| -s[:unique_visits] },
@@ -270,8 +279,8 @@ class CountryStatsService
       bin_count: bin_count,
       total_visits: merged_stats.sum { |s| s[:unique_visits] || 0 },
       country_count: known_countries.size,
-      total_deployments: formatted.sum { |s| s[:deployments_count] },
-      total_podcast_listens: formatted.sum { |s| s[:visit_podcast_count] }
+      total_deployments: merged_stats.map { |s| s[:deployments_count] || 0 }.max || 0,
+      total_podcast_listens: merged_stats.sum { |s| s[:visit_podcast_count] || 0 }
     }
   end
 end

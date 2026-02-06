@@ -23,17 +23,22 @@ import { StatsErrorState } from './components/StatsError'
 
 type Props = {
   dataUrl: string,
-  publishedAt: ?string,
+  minDate: ?string,
   messages: { [string]: string },
   locale: string,
 }
 
-function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$Node {
-  const { range: dateRange, setFromDates } = useDateRange({ publishedAt })
+function StatsPage ({
+  dataUrl,
+  minDate,
+  messages,
+  locale,
+}: Props): React$Node {
+  const { range: dateRange, setFromDates } = useDateRange({ minDate })
   const {
     data,
     allTimeStats,
-    caseSummary,
+    meta,
     isLoading,
     isInitialLoad,
     error,
@@ -47,14 +52,27 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
     return messages[fullKey] != null ? messages[fullKey] : key
   }
 
-  const formatted = data?.formatted || []
   const summary = data?.summary || {}
-  const hasData = formatted.length > 0
+  const bins = data?.bins?.bins || []
+  const rawCountries = data?.countries || []
+  const countries = rawCountries.map(row => ({
+    iso2: row?.country?.iso2 || row?.iso2,
+    iso3: row?.country?.iso3 || row?.iso3,
+    name: row?.country?.name || row?.name,
+    unique_visits: row?.metrics?.unique_visits || 0,
+    unique_users: row?.metrics?.unique_users || 0,
+    events_count: row?.metrics?.events_count || 0,
+    visit_podcast_count: row?.metrics?.visit_podcast_count || 0,
+    first_event: row?.first_event,
+    last_event: row?.last_event,
+    bin: row?.bin,
+  }))
+  const hasData = countries.length > 0
   const dateRangeText = formatDateRange(dateRange.from, dateRange.to)
-  const caseInfo = summary.case_locales ? summary : caseSummary || {}
+  const caseInfo = (meta && meta.case) ? meta.case : {}
   const statsForInfo = allTimeStats || { total_visits: 0, country_count: 0 }
 
-  const minDate = publishedAt ? parseLocalDate(publishedAt) : new Date(2000, 0, 1)
+  const minDateValue = minDate ? parseLocalDate(minDate) : new Date(2000, 0, 1)
   const maxDate = new Date()
   const dateRangeValue = [
     dateRange.from ? parseLocalDate(dateRange.from) : null,
@@ -105,7 +123,7 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
             <div className="c-stats-picker pt-card pt-elevation-1">
               <StatsDateRangePicker
                 className="pt"
-                minDate={minDate}
+                minDate={minDateValue}
                 maxDate={maxDate}
                 value={dateRangeValue}
                 onRangeChange={setFromDates}
@@ -138,7 +156,10 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
             <div className={mapContainerClass}>
               <div className="c-stats-map">
                 <div className="c-stats-map__inner">
-                  <StatsMap countries={formatted} bins={summary.bins || []} />
+                  <StatsMap
+                    countries={countries}
+                    bins={bins}
+                  />
                 </div>
                 {error && (
                   <div className="c-stats-map__overlay c-stats-map__overlay--error">
@@ -170,7 +191,7 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
                 </div>
 
                 <div className="c-stats-table-container">
-                  <StatsTable data={formatted} />
+                  <StatsTable data={countries} />
                 </div>
               </>
             )}

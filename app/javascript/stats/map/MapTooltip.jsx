@@ -17,6 +17,7 @@ type Props = {
   country: CountryData,
   position: { left: number, top: number },
   binColors: string[],
+  color?: ?string,
   intl: any,
   tooltipRef: { current: HTMLDivElement | null },
 }
@@ -25,19 +26,21 @@ function MapTooltip ({
   country,
   position,
   binColors,
+  color,
   intl,
   tooltipRef,
 }: Props): React.Node {
-  const binColor =
+  const binColor = color || (
     binColors.length > 0
       ? binColors[Math.min(country.bin || 0, binColors.length - 1)] ||
         binColors[0]
       : Colors.GRAY1
+  )
 
   return (
     <div
       ref={tooltipRef}
-      className="c-stats-map-tooltip"
+      className="c-stats-map-tooltip pt-typography"
       style={{ left: position.left, top: position.top }}
     >
       <div className="c-stats-map-tooltip__country">

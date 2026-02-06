@@ -55,7 +55,36 @@ $stats-danger: #db3737
   @include recolor-statistics($white)
 
 .pt-daterangepicker-shortcuts
-  .pt-menu-item.pt-active
+  .pt-menu-item > .pt-fill
+    width: 100%
+    margin-right: 0
+
+.c-stats-date-shortcut-active-0
+  .pt-daterangepicker-shortcuts li:nth-child(1) > .pt-menu-item
+    background-color: $purple !important
+    color: $white !important
+    font-weight: 500
+
+.c-stats-date-shortcut-active-1
+  .pt-daterangepicker-shortcuts li:nth-child(2) > .pt-menu-item
+    background-color: $purple !important
+    color: $white !important
+    font-weight: 500
+
+.c-stats-date-shortcut-active-2
+  .pt-daterangepicker-shortcuts li:nth-child(3) > .pt-menu-item
+    background-color: $purple !important
+    color: $white !important
+    font-weight: 500
+
+.c-stats-date-shortcut-active-3
+  .pt-daterangepicker-shortcuts li:nth-child(4) > .pt-menu-item
+    background-color: $purple !important
+    color: $white !important
+    font-weight: 500
+
+.c-stats-date-shortcut-active-4
+  .pt-daterangepicker-shortcuts li:nth-child(5) > .pt-menu-item
     background-color: $purple !important
     color: $white !important
     font-weight: 500
@@ -142,6 +171,11 @@ $stats-danger: #db3737
 
 .c-stats-map-table-header
   margin-bottom: 16px
+  display: flex
+  align-items: center
+  justify-content: space-between
+  flex-wrap: wrap
+  gap: 12px
 
 .c-stats-map-table__heading
   margin: 0
@@ -154,6 +188,17 @@ $stats-danger: #db3737
   color: rgba(92, 112, 128, 0.9)
   font-size: 14px
   margin-left: 10px
+
+.c-stats-map-code-toggle
+  display: flex
+  align-items: center
+  gap: 8px
+  font-size: 12px
+  color: rgba(92, 112, 128, 0.9)
+
+.c-stats-map-code-toggle__label
+  font-weight: 600
+  letter-spacing: 0.02em
 
 .c-stats-map-container
   height: 500px
@@ -178,6 +223,32 @@ $stats-danger: #db3737
   height: 100%
   width: 100%
   cursor: default
+  font-family: var(--pt-font-family, #{$sansFont})
+
+  .mapboxgl-ctrl-bottom-left
+    left: 25px
+    opacity: 0.4
+
+  .mapboxgl-ctrl-bottom-right
+    position: absolute
+    z-index: 1
+    bottom: 0px
+    right: 28px
+    font-size: 9px
+    text-transform: uppercase
+    letter-spacing: 0.1px
+
+    .mapboxgl-ctrl-attrib
+      background-color: transparent
+
+    a
+      color: #5c748a
+
+      &:hover
+        color: #ebeae4
+
+      &:not(:last-child)
+        margin-right: 1em
 
 .c-stats-export-button-container
   display: flex
@@ -337,6 +408,22 @@ $stats-danger: #db3737
   @include stats-mono
   color: $stats-gray-3
 
+.c-stats-table__country-cell
+  display: flex
+  align-items: center
+  gap: 8px
+
+.c-stats-table__flag
+  width: 20px
+  height: 15px
+  object-fit: cover
+  border-radius: 2px
+  border: 1px solid rgba(16, 22, 26, 0.15)
+  background: rgba(255, 255, 255, 0.9)
+
+.c-stats-table__country-name
+  display: inline-block
+
 .c-stats-table__number
   text-align: right
   @include stats-mono
@@ -360,56 +447,68 @@ $stats-danger: #db3737
   position: absolute
   bottom: 0
   left: 0
-  background: rgba(42, 42, 42, 1.0)
+  background: rgba(255, 255, 255, 0.6)
   padding: 12px
   border-radius: 0 6px 0 0
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3)
-  z-index: 1
-  min-width: 200px
+  box-shadow: 0 2px 8px rgba(16, 22, 26, 0.12)
+  z-index: 3
+  min-width: 160px
+  width: 210px
+  max-width: calc(100vw - 24px)
 
 .c-stats-map-legend__title
   font-weight: bold
   margin-bottom: 8px
   font-size: 12px
-  color: #ffffff
-  @include stats-mono
+  color: rgba(16, 22, 26, 0.9)
   display: flex
   align-items: center
   gap: 6px
 
-.c-stats-map-legend__bins
+.c-stats-map-legend__stack
   display: flex
   align-items: center
   gap: 0
-  border-radius: 4px
-  overflow: hidden
+  border-radius: 10px
+  overflow: visible
+  height: 36px
+  box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.18)
+  border: 1px solid rgba(16, 22, 26, 0.45)
 
-.c-stats-map-legend__bin
-  position: relative
-  flex: 1
-
-.c-stats-map-legend__bar
-  height: 24px
-  border: none
+.c-stats-map-legend__segment
   display: flex
   align-items: center
   justify-content: center
+  height: 100%
+  font-size: 10px
+  font-weight: bold
+  line-height: 1
+  padding: 0 6px
+  min-width: 1%
+  text-shadow: 0 1px 2px rgba(16, 22, 26, 0.25)
 
 .c-stats-map-legend__label
   font-size: 10px
   font-weight: bold
   line-height: 1
-  @include stats-mono
+  white-space: nowrap
 
-.c-stats-map-legend__footer
-  @include stats-flex-between
-  font-size: 11px
-  margin-top: 6px
-  color: #ffffff
-  @include stats-mono
+.c-stats-map-legend__ranges
+  display: flex
+  align-items: flex-start
+  gap: 0
+  margin-top: 4px
+  overflow: visible
 
-.c-stats-map-legend__footer-label
-  font-weight: bold
+.c-stats-map-legend__range
+  text-align: center
+  font-size: 9px
+  font-weight: 600
+  line-height: 1
+  white-space: nowrap
+  padding: 0 4px
+  color: rgba(16, 22, 26, 0.7)
+
 
 .c-stats-map-legend__popover
   padding: 12px
@@ -429,13 +528,12 @@ $stats-danger: #db3737
 
 .c-stats-map-tooltip
   position: absolute
-  background: rgba(0, 0, 0, 0.9)
-  color: white
+  background: rgba(255, 255, 255, 0.95)
+  color: rgba(16, 22, 26, 0.95)
   padding: 8px 12px
   border-radius: 6px
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3)
+  box-shadow: 0 2px 8px rgba(16, 22, 26, 0.2)
   font-size: 12px
-  @include stats-mono
   pointer-events: none
   white-space: nowrap
   z-index: 1000
@@ -454,7 +552,7 @@ $stats-danger: #db3737
   width: 12px
   height: 12px
   border-radius: 50%
-  border: 1px solid rgba(255, 255, 255, 0.3)
+  border: 1px solid rgba(16, 22, 26, 0.2)
   flex-shrink: 0
 
 .c-stats-map-tooltip__visitors

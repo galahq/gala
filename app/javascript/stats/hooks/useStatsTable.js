@@ -3,9 +3,9 @@ import { useState, useMemo } from 'react'
 import { formatDate as formatDateValue } from '../dateHelpers'
 
 type CountryData = {
-  iso2: string,
-  iso3: string,
-  name: string,
+  iso2?: string,
+  iso3?: string,
+  name?: string,
   unique_visits: number,
   unique_users: number,
   events_count: number,

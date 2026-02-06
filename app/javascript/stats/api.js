@@ -1,28 +1,61 @@
 /* @flow */
 
+export type MetaPayload = {
+  case?: {
+    id?: number,
+    slug?: string,
+    published_at?: string,
+    locales?: Array<string>,
+    total_deployments?: number,
+  },
+  generated_at?: string,
+}
+
+export type BinsPayload = {
+  metric?: string,
+  bin_count?: number,
+  bins?: Array<Object>,
+}
+
+export type RangePayload = {
+  from?: string,
+  to?: string,
+  timezone?: string,
+}
+
+export type CountryPayload = {
+  country?: {
+    iso2?: string,
+    iso3?: string,
+    name?: string,
+  },
+  metrics?: {
+    unique_visits?: number,
+    unique_users?: number,
+    events_count?: number,
+    visit_podcast_count?: number,
+  },
+  first_event?: string,
+  last_event?: string,
+  bin?: number,
+}
+
 export type StatsPayload = {
-  formatted: Array<Object>,
-  summary: {
+  summary?: {
     total_visits?: number,
     country_count?: number,
     total_podcast_listens?: number,
-    bins?: Array<Object>,
-    case_locales?: string,
-    case_published_at?: string,
-    total_deployments?: number,
   },
+  countries?: Array<CountryPayload>,
+  bins?: BinsPayload,
+  meta?: MetaPayload,
+  range?: RangePayload,
   error?: string,
 }
 
 export type AllTimeStats = {
   total_visits: number,
   country_count: number,
-}
-
-export type CaseSummary = {
-  case_locales?: string,
-  case_published_at?: string,
-  total_deployments?: number,
 }
 
 function createTimeoutPromise (timeoutMs: number): Promise<any> {
@@ -72,15 +105,7 @@ export async function fetchStats (
 }
 
 export async function fetchAllTimeStats (dataUrl: string): Promise<StatsPayload> {
-  const url = `${dataUrl}.json`
-
-  const response = await fetch(url, {
-    credentials: 'same-origin',
-    headers: { Accept: 'application/json' },
-    cache: 'no-store',
-  })
-
-  return parseResponse(response)
+  return fetchStats(dataUrl, {})
 }
 
 export function extractAllTimeStats (payload: StatsPayload): AllTimeStats {
@@ -91,48 +116,70 @@ export function extractAllTimeStats (payload: StatsPayload): AllTimeStats {
   }
 }
 
-export function extractCaseSummary (payload: StatsPayload): CaseSummary {
-  const summary = payload?.summary || {}
-  return {
-    case_locales: summary.case_locales,
-    case_published_at: summary.case_published_at,
-    total_deployments: summary.total_deployments,
-  }
+export function extractMeta (payload: StatsPayload): MetaPayload {
+  return payload?.meta && typeof payload.meta === 'object' ? payload.meta : {}
 }
 
 export function validatePayload (payload: StatsPayload): {
   valid: boolean,
   error?: string,
-  formatted: Array<Object>,
+  countries: Array<Object>,
   summary: Object,
+  bins: Object,
+  meta: Object,
+  range: Object,
 } {
   if (!payload || payload.error) {
     return {
       valid: false,
       error: payload?.error || 'Invalid response',
-      formatted: [],
+      countries: [],
       summary: {},
+      bins: {},
+      meta: {},
+      range: {},
     }
   }
 
-  const formatted = Array.isArray(payload?.formatted) ? payload.formatted : []
+  const rawCountries = payload && payload.countries
+  const countries: Array<CountryPayload> =
+    Array.isArray(rawCountries)
+      ? ((rawCountries: any): Array<CountryPayload>)
+      : []
   const summary =
     payload?.summary && typeof payload.summary === 'object'
       ? payload.summary
       : {}
-
-  if (formatted.length > 10000) {
+  const bins =
+    payload?.bins && typeof payload.bins === 'object'
+      ? payload.bins
+      : {}
+  const meta =
+    payload?.meta && typeof payload.meta === 'object'
+      ? payload.meta
+      : {}
+  const range =
+    payload?.range && typeof payload.range === 'object'
+      ? payload.range
+      : {}
+  if (countries.length > 10000) {
     return {
       valid: false,
-      error: `Too much data received (${formatted.length} countries). Please choose a smaller date range.`,
-      formatted: [],
+      error: `Too much data received (${countries.length} countries). Please choose a smaller date range.`,
+      countries: [],
       summary: {},
+      bins: {},
+      meta: {},
+      range: {},
     }
   }
 
   return {
     valid: true,
-    formatted,
+    countries,
     summary,
+    bins,
+    meta,
+    range,
   }
 }

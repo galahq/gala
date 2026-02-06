@@ -6,8 +6,8 @@ import { formatDate } from '../dateHelpers'
 import StatsKeyValueList from './StatsKeyValueList'
 
 type CaseInfo = {
-  case_published_at?: string,
-  case_locales?: string,
+  published_at?: string,
+  locales?: Array<string>,
   total_deployments?: number,
 }
 
@@ -29,17 +29,19 @@ export function StatsInformation ({
 }: Props): React$Node {
   const rows = []
 
-  if (caseInfo.case_published_at) {
+  if (caseInfo.published_at) {
     rows.push({
       label: msg('date_published'),
-      value: formatDate(caseInfo.case_published_at, 'en-US'),
+      value: formatDate(caseInfo.published_at, 'en-US'),
     })
   }
 
-  if (caseInfo.case_locales != null) {
+  if (caseInfo.locales != null) {
     rows.push({
       label: msg('available_translations'),
-      value: caseInfo.case_locales || '',
+      value: Array.isArray(caseInfo.locales)
+        ? caseInfo.locales.join(', ')
+        : '',
     })
   }
 

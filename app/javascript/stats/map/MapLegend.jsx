@@ -14,15 +14,16 @@ type Props = {
   bins: Bin[],
   binColors: string[],
   binTextColors: string[],
+  binShares: number[],
 }
 
-function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
+function MapLegend ({ bins, binColors, binTextColors, binShares }: Props): React.Node {
   if (!bins || bins.length === 0) {
     return null
   }
 
   return (
-    <div className="c-stats-map-legend">
+    <div className="c-stats-map-legend pt-typography">
       <div className="c-stats-map-legend__title">
         <FormattedMessage id="cases.stats.show.mapLegendTitle" />
         <Popover
@@ -44,41 +45,59 @@ function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
         </Popover>
       </div>
 
-      <div className="c-stats-map-legend__bins">
+      <div className="c-stats-map-legend__stack">
         {bins.map((b, i) => {
-          let borderRadius = '0'
-          if (bins.length === 1) {
-            borderRadius = '4px'
-          } else if (i === 0) {
-            borderRadius = '4px 0 0 4px'
-          } else if (i === bins.length - 1) {
-            borderRadius = '0 4px 4px 0'
-          }
+          const share = binShares[i] || 0
+          const width = `${Math.max(share, 1)}%`
+          const rangeLabel = b.label || (
+            Number.isFinite(b.min) && Number.isFinite(b.max)
+              ? `${b.min}-${b.max}`
+              : ''
+          )
+          const borderRadius = bins.length === 1
+            ? '6px'
+            : i === 0
+              ? '6px 0 0 6px'
+              : i === bins.length - 1
+                ? '0 6px 6px 0'
+                : '0'
 
           return (
-            <div className="c-stats-map-legend__bin" key={i}>
-              <div
-                className="c-stats-map-legend__bar"
-                style={{ background: binColors[i], borderRadius }}
-                title={`${b.label} visitors`}
-              >
-                <span className="c-stats-map-legend__label" style={{ color: binTextColors[i] }}>
-                  {b.label}
-                </span>
-              </div>
+            <div
+              key={i}
+              className="c-stats-map-legend__segment"
+              style={{ background: binColors[i], width, borderRadius }}
+              title={`${rangeLabel || b.label} visitors (${share.toFixed(1)}%)`}
+            >
+              <span className="c-stats-map-legend__label" style={{ color: binTextColors[i] }}>
+                {share.toFixed(0)}%
+              </span>
+            </div>
+          )
+        })}
+      </div>
+      <div className="c-stats-map-legend__ranges">
+        {bins.map((b, i) => {
+          const rangeLabel = b.label || (
+            Number.isFinite(b.min) && Number.isFinite(b.max)
+              ? `${b.min}-${b.max}`
+              : ''
+          )
+          const share = binShares[i] || 0
+          const width = `${Math.max(share, 1)}%`
+          return (
+            <div
+              key={`range-${i}`}
+              className="c-stats-map-legend__range"
+              style={{ width }}
+              title={rangeLabel}
+            >
+              {rangeLabel}
             </div>
           )
         })}
       </div>
 
-      <div className="c-stats-map-legend__footer">
-        <span className="c-stats-map-legend__footer-label">
-          <FormattedMessage id="cases.stats.show.mapLegendLow" />
-        </span>
-        <span className="c-stats-map-legend__footer-label">
-          <FormattedMessage id="cases.stats.show.mapLegendHigh" />
-        </span>
-      </div>
     </div>
   )
 }

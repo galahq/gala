@@ -5,11 +5,17 @@ import {
   fetchAllTimeStats,
   fetchWithTimeout,
   extractAllTimeStats,
-  extractCaseSummary,
+  extractMeta,
   validatePayload,
 } from '../api'
 
-import type { AllTimeStats, CaseSummary } from '../api'
+import type {
+  AllTimeStats,
+  MetaPayload,
+  BinsPayload,
+  RangePayload,
+  CountryPayload,
+} from '../api'
 
 declare class AbortController {
   signal: { aborted: boolean, ... };
@@ -17,8 +23,11 @@ declare class AbortController {
 }
 
 type StatsData = {
-  formatted: Array<Object>,
+  countries: Array<CountryPayload>,
   summary: Object,
+  bins: BinsPayload,
+  meta: MetaPayload,
+  range: RangePayload,
 }
 
 type DateRange = {
@@ -34,17 +43,20 @@ type Params = {
 type UseStatsDataResult = {
   data: ?StatsData,
   allTimeStats: ?AllTimeStats,
-  caseSummary: ?CaseSummary,
+  meta: ?MetaPayload,
   isLoading: boolean,
   isInitialLoad: boolean,
   error: ?Error,
   retry: () => void,
 }
 
-export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResult {
+export function useStatsData ({
+  dataUrl,
+  dateRange,
+}: Params): UseStatsDataResult {
   const [data, setData] = useState<?StatsData>(null)
   const [allTimeStats, setAllTimeStats] = useState<?AllTimeStats>(null)
-  const [caseSummary, setCaseSummary] = useState<?CaseSummary>(null)
+  const [meta, setMeta] = useState<?MetaPayload>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
   const [error, setError] = useState<?Error>(null)
@@ -59,7 +71,7 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
     fetchAllTimeStats(dataUrl)
       .then(payload => {
         setAllTimeStats(extractAllTimeStats(payload))
-        setCaseSummary(extractCaseSummary(payload))
+        setMeta(extractMeta(payload))
       })
       .catch(err => {
         console.error('Error fetching all-time stats:', err)
@@ -80,7 +92,11 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
         if (dateRange.to) params.to = dateRange.to
 
         const payload = await fetchWithTimeout(
-          fetchStats(dataUrl, params, abortController.signal),
+          fetchStats(
+            dataUrl,
+            params,
+            abortController.signal
+          ),
           15000
         )
 
@@ -91,12 +107,15 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
         }
 
         setData({
-          formatted: validation.formatted,
+          countries: validation.countries,
           summary: validation.summary,
+          bins: validation.bins,
+          meta: validation.meta,
+          range: validation.range,
         })
 
-        if (validation.summary.case_locales) {
-          setCaseSummary(extractCaseSummary(payload))
+        if (validation.meta && Object.keys(validation.meta).length > 0) {
+          setMeta(validation.meta)
         }
       } catch (err) {
         if (err.name === 'AbortError') {
@@ -124,7 +143,7 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
   return {
     data,
     allTimeStats,
-    caseSummary,
+    meta,
     isLoading,
     isInitialLoad,
     error,

@@ -103,7 +103,7 @@ RSpec.describe CountryStatsService do
       expect(result[:stats].length).to eq(2)
       expect(result[:total_visits]).to eq(150)
       expect(result[:country_count]).to eq(2)
-      expect(result[:total_deployments]).to eq(7)
+      expect(result[:total_deployments]).to eq(5)
       expect(result[:total_podcast_listens]).to eq(15)
 
       # Check first country (US should be first due to higher visits)

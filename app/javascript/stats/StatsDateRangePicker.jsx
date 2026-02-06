@@ -79,6 +79,11 @@ function StatsDateRangePicker ({
   }
 
   const selectedShortcutIndex = getSelectedShortcutIndex(value, translatedShortcuts)
+  const activeShortcutClass =
+    selectedShortcutIndex >= 0
+      ? `c-stats-date-shortcut-active-${selectedShortcutIndex}`
+      : ''
+  const pickerClassName = [className, activeShortcutClass].filter(Boolean).join(' ')
 
   function handleChange (nextRange) {
     if (onRangeChange) {
@@ -88,16 +93,13 @@ function StatsDateRangePicker ({
 
   return (
     <DateRangePicker
-      className={className}
+      className={pickerClassName}
       value={value}
       minDate={minDate}
       maxDate={maxDate}
       allowSingleDayRange={true}
       contiguousCalendarMonths={false}
       shortcuts={translatedShortcuts}
-      selectedShortcutIndex={
-        selectedShortcutIndex >= 0 ? selectedShortcutIndex : undefined
-      }
       initialMonth={getInitialMonth(value)}
       onChange={handleChange}
     />

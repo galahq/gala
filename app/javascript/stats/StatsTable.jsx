@@ -3,11 +3,12 @@ import React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { useStatsTable } from './hooks/useStatsTable'
+import { useCountryFlags } from './hooks/useCountryFlags'
 
 type CountryData = {
-  iso2: string,
-  iso3: string,
-  name: string,
+  iso2?: string,
+  iso3?: string,
+  name?: string,
   unique_visits: number,
   unique_users: number,
   events_count: number,
@@ -30,6 +31,7 @@ function StatsTable ({ data, intl }: Props) {
     formatDate,
     isActiveSortField,
   } = useStatsTable(data)
+  const { getFlagUrl, getLocalizedName } = useCountryFlags(intl.locale)
 
   const SortIcon = ({ field }: { field: string }) => {
     if (!isActiveSortField(field)) {
@@ -57,17 +59,34 @@ function StatsTable ({ data, intl }: Props) {
     </th>
   )
 
-  const renderRow = (row: CountryData, index: number) => (
-    <tr key={row.iso2 || `unknown-${index}`}>
+  const renderRow = (row: CountryData, index: number) => {
+    const unknownLabel = intl.formatMessage({
+      id: 'cases.stats.show.tableUnknownCountry',
+    })
+    const fallbackName = row.name && row.name.trim() !== '' ? row.name : null
+    const localizedName = getLocalizedName(row.iso2, row.iso3, fallbackName)
+    const displayName = localizedName && localizedName.trim() !== '' && localizedName !== 'Unknown'
+      ? localizedName
+      : unknownLabel
+    const flagUrl = getFlagUrl(row.iso2, row.iso3)
+
+    return (
+      <tr key={row.iso2 || row.iso3 || `unknown-${index}`}>
       <td className="c-stats-table__rank">
         {index + 1}
       </td>
-      <td>
-        {row.name && row.name.trim() !== '' && row.name !== 'Unknown'
-          ? row.name
-          : intl.formatMessage({
-              id: 'cases.stats.show.tableUnknownCountry',
-            })}
+      <td className="c-stats-table__country-cell">
+        {flagUrl && displayName !== unknownLabel && (
+          <img
+            className="c-stats-table__flag"
+            src={flagUrl}
+            width="20"
+            height="15"
+            loading="lazy"
+            alt={`${displayName} flag`}
+          />
+        )}
+        <span className="c-stats-table__country-name">{displayName}</span>
       </td>
       <td className="c-stats-table__number">
         {row.unique_visits.toLocaleString()}
@@ -75,7 +94,8 @@ function StatsTable ({ data, intl }: Props) {
       <td>{formatDate(row.first_event)}</td>
       <td>{formatDate(row.last_event)}</td>
     </tr>
-  )
+    )
+  }
 
   return (
     <div className="c-stats-table__wrapper">

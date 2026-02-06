@@ -56,9 +56,9 @@ app/javascript/stats/
 
 ## Data Flow
 
-1. `case_stats_controller.js` mounts `StatsPage` with `dataUrl`, `publishedAt`, and i18n messages.
+1. `case_stats_controller.js` mounts `StatsPage` with `dataUrl`, `minDate`, and i18n messages.
 2. `useDateRange` initializes the range from URL params.
-   - If URL params are missing, it defaults to `publishedAt → today`.
+   - If URL params are missing, it defaults to `minDate → today`.
 3. `useStatsData` fetches:
    - All-time stats once on mount.
    - Filtered stats whenever the range changes.
