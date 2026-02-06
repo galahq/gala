@@ -10,7 +10,6 @@ import {
   MapTooltip,
   MapErrorState,
   MapEmptyState,
-  MapTooMuchDataState,
   useGeoJsonData,
   useTooltipPosition,
   parseMapError,
@@ -25,11 +24,9 @@ import {
   createFillColorExpression,
   DEFAULT_VIEWPORT,
   MAX_COUNTRIES,
-  MAX_COUNTRIES_HARD_LIMIT,
   MAP_LOAD_TIMEOUT,
 } from './map'
 
-// Config constants (initialized once)
 const MAPBOX_DATA_URL = getMapboxData()
 const MAPBOX_TOKEN = getMapboxToken()
 const MAPBOX_STYLE = getMapboxStyle()
@@ -57,9 +54,6 @@ type Props = {
   intl: any,
 }
 
-/**
- * StatsMap component displays country-level visitor statistics on an interactive map
- */
 function StatsMap ({ countries, bins, intl }: Props) {
   const [hoveredCountry, setHoveredCountry] = useState(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -70,15 +64,12 @@ function StatsMap ({ countries, bins, intl }: Props) {
   const mapRef = useRef(null)
   const tooltipRef = useRef<HTMLDivElement | null>(null)
 
-  // Custom hooks
   const { data: mapboxData, error: geoJsonError, retry: retryGeoJson } = useGeoJsonData(MAPBOX_DATA_URL)
   const tooltipPosition = useTooltipPosition(hoveredCountry, mousePosition, tooltipRef, mapRef)
 
-  // Generate colors based on bin count (safe even if bins.length === 0)
   const binColors = useMemo(() => getBinColors(bins.length), [bins.length])
   const binTextColors = useMemo(() => getBinTextColors(bins.length), [bins.length])
 
-  // Limit countries for performance
   const limitedCountries = useMemo(() => {
     if (countries.length > MAX_COUNTRIES) {
       console.warn(
@@ -88,7 +79,6 @@ function StatsMap ({ countries, bins, intl }: Props) {
     return countries.slice(0, MAX_COUNTRIES)
   }, [countries])
 
-  // Create country color mapping
   const countryColors = useMemo(() => {
     const colors = {}
     limitedCountries.forEach(country => {
@@ -103,7 +93,6 @@ function StatsMap ({ countries, bins, intl }: Props) {
     return colors
   }, [limitedCountries, binColors])
 
-  // Create fill color expression for mapbox
   const fillColorExpression = useMemo(() => {
     if (Object.keys(countryColors).length === 0 || binColors.length === 0) {
       return null
@@ -111,11 +100,9 @@ function StatsMap ({ countries, bins, intl }: Props) {
     return createFillColorExpression(countryColors, getMapboxDefaultColor())
   }, [countryColors, binColors])
 
-  // Layer configurations
   const fillLayer = useMemo(() => createFillLayer(), [])
   const lineLayer = useMemo(() => createLineLayer(), [])
 
-  // Handle geoJson loading errors
   useEffect(() => {
     if (geoJsonError) {
       setErrorMessage(geoJsonError)
@@ -123,7 +110,6 @@ function StatsMap ({ countries, bins, intl }: Props) {
     }
   }, [geoJsonError])
 
-  // Add timeout fallback to detect if map is stuck loading
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!mapLoaded && !mapError) {
@@ -138,18 +124,17 @@ function StatsMap ({ countries, bins, intl }: Props) {
     return () => clearTimeout(timeout)
   }, [mapLoaded, mapError])
 
-  // Update map layer colors when data changes
   useEffect(() => {
-    if (mapRef.current && mapLoaded && fillColorExpression) {
-      const map = mapRef.current.getMap()
-      if (!map) return
-      try {
-        if (map.getLayer('country-fills')) {
-          map.setPaintProperty('country-fills', 'fill-color', fillColorExpression)
-        }
-      } catch (error) {
-        console.error('Error updating map colors:', error)
+    if (!mapRef.current || !mapLoaded) return
+    const map = mapRef.current.getMap()
+    if (!map) return
+    try {
+      if (map.getLayer('country-fills')) {
+        const nextColor = fillColorExpression || getMapboxDefaultColor()
+        map.setPaintProperty('country-fills', 'fill-color', nextColor)
       }
+    } catch (error) {
+      console.error('Error updating map colors:', error)
     }
   }, [mapLoaded, fillColorExpression])
 
@@ -201,7 +186,6 @@ function StatsMap ({ countries, bins, intl }: Props) {
   const handleMapError = useCallback((error: any) => {
     console.warn('Map event error (may be transient):', error)
 
-    // Ignore errors after successful load (transient Mapbox errors during updates)
     if (mapLoaded) {
       console.warn('Ignoring post-load map error (transient)')
       return
@@ -219,36 +203,10 @@ function StatsMap ({ countries, bins, intl }: Props) {
     setMapError(true)
   }, [mapLoaded])
 
-  if (countries.length > MAX_COUNTRIES_HARD_LIMIT) {
-    console.error(
-      `Too many countries (${countries.length}), refusing to render for performance`
-    )
-    return <MapTooMuchDataState countryCount={countries.length} />
-  }
-
-  const hasData = bins.length > 0 && countries.length > 0
-
-  if (mapError) {
-    return (
-      <MapErrorState
-        errorMessage={errorMessage}
-        mapboxToken={MAPBOX_TOKEN}
-        mapboxStyle={MAPBOX_STYLE}
-        mapboxDataUrl={MAPBOX_DATA_URL}
-        onRetry={retryMapLoad}
-      />
-    )
-  }
+  const hasData = bins.length > 0 && limitedCountries.length > 0
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        height: '100%',
-        width: '100%',
-        cursor: 'default',
-      }}
-    >
+    <div className="c-stats-map-root">
       <ReactMapGL
         ref={mapRef}
         mapStyle={MAPBOX_STYLE}
@@ -288,22 +246,25 @@ function StatsMap ({ countries, bins, intl }: Props) {
         )}
 
         {!mapLoaded && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              color: '#6b7280',
-              fontSize: '14px',
-            }}
-          >
+          <div className="c-stats-map__loading-text c-stats-map__loading-text--center">
             Loading map...
           </div>
         )}
       </ReactMapGL>
 
-      {hasData && (
+      {mapError && (
+        <div className="c-stats-map__overlay c-stats-map__overlay--error">
+          <MapErrorState
+            errorMessage={errorMessage}
+            mapboxToken={MAPBOX_TOKEN}
+            mapboxStyle={MAPBOX_STYLE}
+            mapboxDataUrl={MAPBOX_DATA_URL}
+            onRetry={retryMapLoad}
+          />
+        </div>
+      )}
+
+      {hasData && !mapError && (
         <MapLegend
           bins={bins}
           binColors={binColors}
@@ -311,9 +272,13 @@ function StatsMap ({ countries, bins, intl }: Props) {
         />
       )}
 
-      {!hasData && mapLoaded && <MapEmptyState intl={intl} />}
+      {!hasData && mapLoaded && !mapError && (
+        <div className="c-stats-map__overlay c-stats-map__overlay--empty">
+          <MapEmptyState intl={intl} />
+        </div>
+      )}
 
-      {hoveredCountry && hasData && (
+      {hoveredCountry && hasData && !mapError && (
         <MapTooltip
           country={hoveredCountry}
           position={tooltipPosition}
@@ -326,17 +291,14 @@ function StatsMap ({ countries, bins, intl }: Props) {
   )
 }
 
-// Memoize and wrap with injectIntl
 const MemoizedStatsMap = React.memo(StatsMap)
 const StatsMapWithIntl = injectIntl(MemoizedStatsMap)
 
-// External props type (without intl which is injected)
 type ExternalProps = {
   countries: CountryData[],
   bins: Bin[],
 }
 
-// Wrap with ErrorBoundary and export
 export default function StatsMapWithErrorBoundary (props: ExternalProps) {
   return (
     <MapErrorBoundary>

@@ -2,7 +2,6 @@
 
 import { Colors } from '../colors'
 
-// Helper functions that read from window at runtime for easier testing
 export const getMapboxData = (): string =>
   window.MAPBOX_DATA || '/countries.geojson'
 
@@ -16,19 +15,13 @@ export const getMapboxStyle = (): string =>
 export const getMapboxDefaultColor = (): string =>
   window.MAPBOX_DEFAULT_COLOR || Colors.DARK_GRAY3
 
-// Initial viewport configuration
 export const DEFAULT_VIEWPORT = {
   latitude: 20,
   longitude: 0,
   zoom: 0.9,
 }
 
-// Performance limits
 export const MAX_COUNTRIES = 200
-export const MAX_COUNTRIES_HARD_LIMIT = 1000
-
-// Cache key for geojson data
 export const GEOJSON_CACHE_KEY = 'stats-map-geojson'
 
-// Map loading timeout in milliseconds
 export const MAP_LOAD_TIMEOUT = 20000

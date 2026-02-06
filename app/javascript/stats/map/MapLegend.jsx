@@ -3,8 +3,6 @@ import * as React from 'react'
 import { Popover, Position, Icon } from '@blueprintjs/core'
 import { FormattedMessage } from 'react-intl'
 
-import { Colors } from '../colors'
-
 type Bin = {
   bin: number,
   min: number,
@@ -18,76 +16,36 @@ type Props = {
   binTextColors: string[],
 }
 
-/**
- * Map legend showing visitor distribution color scale
- */
 function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
   if (!bins || bins.length === 0) {
     return null
   }
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        background: 'rgba(42, 42, 42, 1.0)',
-        padding: '12px',
-        borderRadius: '0 6px 0 0',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-        zIndex: 1,
-        minWidth: '200px',
-      }}
-    >
-      <div
-        style={{
-          fontWeight: 'bold',
-          marginBottom: '8px',
-          fontSize: '12px',
-          color: Colors.WHITE,
-          fontFamily: 'monospace',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-        }}
-      >
+    <div className="c-stats-map-legend">
+      <div className="c-stats-map-legend__title">
         <FormattedMessage id="cases.stats.show.mapLegendTitle" />
         <Popover
           position={Position.TOP}
           content={
-            <div style={{ padding: '12px', maxWidth: '300px' }}>
-              <h6 style={{ marginTop: 0, marginBottom: '8px' }}>
+            <div className="c-stats-map-legend__popover">
+              <h6 className="c-stats-map-legend__popover-heading">
                 <FormattedMessage id="cases.stats.show.mapLegendHelpTitle" />
               </h6>
-              <p style={{ fontSize: '12px' }}>
+              <p className="c-stats-map-legend__popover-text">
                 <FormattedMessage id="cases.stats.show.mapLegendHelpDescription" />
               </p>
             </div>
           }
         >
-          <Icon
-            icon="info-sign"
-            style={{
-              cursor: 'pointer',
-              opacity: 0.8,
-              fontSize: '10px',
-            }}
-          />
+          <span className="c-stats-map-legend__help-icon">
+            <Icon icon="info-sign" />
+          </span>
         </Popover>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0,
-          borderRadius: '4px',
-          overflow: 'hidden',
-        }}
-      >
+      <div className="c-stats-map-legend__bins">
         {bins.map((b, i) => {
-          // Calculate border-radius for each bar to fill the rounded container
           let borderRadius = '0'
           if (bins.length === 1) {
             borderRadius = '4px'
@@ -98,28 +56,13 @@ function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
           }
 
           return (
-            <div key={i} style={{ position: 'relative', flex: 1 }}>
+            <div className="c-stats-map-legend__bin" key={i}>
               <div
-                style={{
-                  height: '24px',
-                  background: binColors[i],
-                  border: 'none',
-                  borderRadius,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className="c-stats-map-legend__bar"
+                style={{ background: binColors[i], borderRadius }}
                 title={`${b.label} visitors`}
               >
-                <span
-                  style={{
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    color: binTextColors[i],
-                    lineHeight: '1',
-                    fontFamily: 'monospace',
-                  }}
-                >
+                <span className="c-stats-map-legend__label" style={{ color: binTextColors[i] }}>
                   {b.label}
                 </span>
               </div>
@@ -128,20 +71,11 @@ function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
         })}
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontSize: '11px',
-          marginTop: '6px',
-          color: Colors.WHITE,
-          fontFamily: 'monospace',
-        }}
-      >
-        <span style={{ fontWeight: 'bold' }}>
+      <div className="c-stats-map-legend__footer">
+        <span className="c-stats-map-legend__footer-label">
           <FormattedMessage id="cases.stats.show.mapLegendLow" />
         </span>
-        <span style={{ fontWeight: 'bold' }}>
+        <span className="c-stats-map-legend__footer-label">
           <FormattedMessage id="cases.stats.show.mapLegendHigh" />
         </span>
       </div>

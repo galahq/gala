@@ -6,12 +6,13 @@ RSpec.describe Cases::StatsController do
   let(:reader) { create :reader }
   let(:kase) { create :case, :published }
 
-  before do
-    reader.add_role :editor
-    sign_in reader
-  end
-
   describe 'GET #show' do
+    context 'as an editor' do
+      before do
+        reader.add_role :editor
+        sign_in reader
+      end
+
     context 'with HTML format' do
       it 'renders the show template' do
         get :show, params: { case_slug: kase.slug }, format: :html
@@ -75,6 +76,48 @@ RSpec.describe Cases::StatsController do
         expect(response.content_type).to include('text/csv')
         expect(response.headers['Content-Disposition']).to include('attachment')
         expect(response.headers['Content-Disposition']).to include('case-stats-')
+      end
+    end
+    end
+
+    context 'as a case editor' do
+      before do
+        kase.editorships.create editor: reader
+        sign_in reader
+      end
+
+      it 'renders the show template' do
+        get :show, params: { case_slug: kase.slug }, format: :html
+
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'as a library manager' do
+      let(:library) { create :library }
+
+      before do
+        kase.update!(library: library)
+        reader.libraries << library
+        sign_in reader
+      end
+
+      it 'renders the show template' do
+        get :show, params: { case_slug: kase.slug }, format: :html
+
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'when unauthorized' do
+      before do
+        sign_in reader
+      end
+
+      it 'redirects to 403' do
+        get :show, params: { case_slug: kase.slug }, format: :html
+
+        expect(response).to redirect_to '/403'
       end
     end
 

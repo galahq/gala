@@ -8,8 +8,6 @@ module Cases
 
     # @param [GET] /cases/case-slug/stats
     def show
-      redirect_to '/403' and return unless current_reader&.has_role? :editor
-
       set_case
       @sql_query = sql_query_sql
       respond_to do |format|
@@ -28,7 +26,7 @@ module Cases
 
     def set_case
       @case = Case.friendly.find(params[:case_slug]).decorate
-      authorize @case
+      authorize @case, :stats?
     end
 
     def bindings # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

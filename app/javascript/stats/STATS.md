@@ -1,104 +1,83 @@
 # Stats Feature Architecture
 
-## Overview
+## Purpose
 
-The case stats page displays visitor analytics for cases, including a world map visualization, date range filtering, summary statistics, and a country-level data table.
+The stats page shows visitor analytics for a case:
 
-## Architecture
+- date range filtering
+- summary metrics
+- map visualization
+- country table
+- CSV export
 
-The Stimulus controller (`case_stats_controller.js`) serves as a thin wrapper that mounts the React application. All UI logic is handled by `StatsPage.jsx`, which orchestrates the stats dashboard.
+## Entry Points
 
-### File Structure
+- `app/javascript/controllers/case_stats_controller.js`
+  - Thin Stimulus wrapper that mounts the React app.
+- `app/javascript/stats/StatsPage.jsx`
+  - Orchestrates data hooks and renders the UI.
+
+## File Structure
 
 ```
 app/javascript/stats/
-├── StatsPage.jsx           (340 lines) - Main orchestrator component
-├── StatsMap.jsx            (346 lines) - Interactive Mapbox map
-├── StatsTable.jsx          (212 lines) - Country data table with sorting
-├── StatsDateRangePicker.jsx (145 lines) - Date range selection
-├── api.js                  (167 lines) - API fetching with timeout/abort
-├── utils.js                (134 lines) - Date formatting, URL params
-├── colors.js               (42 lines)  - Color palette generation
+├── StatsPage.jsx             - Page composition + layout
+├── StatsMap.jsx              - Mapbox map and overlays (always mounted)
+├── StatsTable.jsx            - Country table
+├── StatsDateRangePicker.jsx  - Controlled Blueprint picker
+├── api.js                    - API fetching + payload validation
+├── colors.js                 - Bin palette for the map
+├── dateHelpers.js            - Date parsing/formatting/range validation
+├── urlParams.js              - URL query param sync for date range
+│
+├── hooks/
+│   ├── useDateRange.js       - URL-synced range state + debounce
+│   ├── useStatsData.js       - Fetching, loading, error, retry
+│   └── useStatsTable.js      - Sorting and formatting
 │
 ├── components/
-│   ├── StatsLoading.jsx    (159 lines) - Loading skeletons
-│   ├── StatsInformation.jsx (92 lines) - Stats info display
-│   ├── StatsSummary.jsx    (97 lines)  - Summary section
-│   └── StatsError.jsx      (51 lines)  - Error state component
+│   ├── StatsKeyValueList.jsx - Shared row list for summary + info
+│   ├── StatsLoading.jsx      - Skeleton + loading UI
+│   ├── StatsInformation.jsx  - Case metadata + all-time stats
+│   ├── StatsSummary.jsx      - Filtered stats summary
+│   └── StatsError.jsx        - Non-ideal state with retry
 │
 └── map/
-    ├── index.js            (24 lines)  - Barrel exports
-    ├── mapConfig.js        (34 lines)  - Mapbox configuration
-    ├── mapLayers.js        (53 lines)  - Layer definitions
-    ├── mapUtils.js         (39 lines)  - Error parsing utility
-    ├── useGeoJsonData.js   (73 lines)  - GeoJSON fetching hook
-    ├── useTooltipPosition.js (52 lines) - Tooltip positioning hook
-    ├── MapLegend.jsx       (152 lines) - Color legend component
-    ├── MapTooltip.jsx      (98 lines)  - Hover tooltip
-    ├── MapEmptyState.jsx   (37 lines)  - No data overlay
-    ├── MapErrorState.jsx   (76 lines)  - Error display
-    ├── MapErrorBoundary.jsx (102 lines) - Error boundary
-    └── MapTooMuchDataState.jsx (49 lines) - Data limit warning
-
-app/javascript/controllers/
-└── case_stats_controller.js (50 lines) - Thin Stimulus wrapper
+    ├── index.js              - Barrel exports
+    ├── mapConfig.js          - Mapbox runtime config
+    ├── mapLayers.js          - Layer definitions
+    ├── mapErrors.js          - Map error parsing
+    ├── useGeoJsonData.js     - GeoJSON fetching + caching
+    ├── useTooltipPosition.js - Tooltip positioning
+    ├── MapLegend.jsx         - Legend UI
+    ├── MapTooltip.jsx        - Tooltip UI
+    └── MapErrorBoundary.jsx  - Error boundary + map states
 ```
-
-## Key Components
-
-### StatsPage.jsx
-- Main orchestrator that fetches and distributes data
-- Manages date range state and URL parameter sync
-- Handles loading states with unified skeleton during initial load
-- Uses `AbortController` for request cancellation
-
-### StatsMap.jsx
-- Renders interactive Mapbox GL map with country-level choropleth
-- Uses custom hooks for concerns:
-  - `useGeoJsonData` - GeoJSON fetching with localStorage caching
-  - `useTooltipPosition` - Tooltip positioning calculations
-- Handles transient Mapbox errors gracefully
-- Always stays mounted to prevent unmount/remount issues
-
-### StatsTable.jsx
-- Sortable table of country statistics
-- Separates known countries from "Unknown" entries
-- Displays totals including unknown visits
-
-### StatsDateRangePicker.jsx
-- BlueprintJS DateRangePicker with shortcuts
-- Uses local date parsing to avoid timezone issues
-- Communicates via React props (not DOM events)
-
-## Custom Hooks
-
-### useGeoJsonData(url)
-Returns `{ data, error, isLoading, retry }` for GeoJSON fetching with:
-- localStorage caching
-- Retry functionality
-- Error handling
-
-### useTooltipPosition(hoveredCountry, mousePosition, tooltipRef, mapRef)
-Returns calculated `{ left, top }` position for tooltip, handling:
-- Viewport overflow detection
-- Mouse-relative positioning
-
-## Utilities
-
-### mapUtils.js
-- `parseMapError(error)` - Extracts error messages and detects transient errors
-
-### utils.js
-- `parseLocalDate(dateStr)` - Parses YYYY-MM-DD as local date (not UTC)
-- `formatLocalDate(date)` - Formats Date to YYYY-MM-DD in local time
-- `formatDateRange(from, to)` - Human-readable date range
-- `syncUrlParams(from, to)` - Updates URL without reload
-- `getUrlParams()` - Reads from/to from URL
 
 ## Data Flow
 
-1. `case_stats_controller.js` mounts `StatsPage` into the DOM
-2. `StatsPage` reads URL params and fetches initial data
-3. Data flows down to child components via props
-4. Date range changes trigger new fetches with request cancellation
-5. Map stays mounted throughout, receiving new data via props
+1. `case_stats_controller.js` mounts `StatsPage` with `dataUrl`, `publishedAt`, and i18n messages.
+2. `useDateRange` initializes the range from URL params.
+   - If URL params are missing, it defaults to `publishedAt → today`.
+3. `useStatsData` fetches:
+   - All-time stats once on mount.
+   - Filtered stats whenever the range changes.
+4. `StatsPage` renders the map, summary, and table using loading/error state.
+
+## Mapbox Constraints
+
+- The map must remain mounted to avoid Mapbox initialization errors.
+- Empty and error states are overlays, not replacements.
+- Layer colors update via `setPaintProperty` after the map loads.
+
+## Styling
+
+- Stats-specific styles live in `app/assets/stylesheets/Statistics.sass`.
+- Styled-components are not used in this feature.
+- Small shared layout rules are expressed with SASS mixins.
+
+## Key Helpers
+
+- `dateHelpers.formatDate` handles date-only strings and timestamps.
+- `urlParams.syncUrlParams` keeps the URL in sync with the picker.
+- `useStatsTable` keeps unknown countries sorted to the bottom.
