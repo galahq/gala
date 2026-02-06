@@ -43,7 +43,7 @@ class ArchivesController < ApplicationController
     blob = pdf.blob.reload
     return false unless blob.present? && blob.service.present?
 
-    chunk = blob.service.download_chunk(blob.key, range: 0..3)
-    chunk.start_with? '%PDF'
+    chunk = blob.service.download_chunk(blob.key, 0..3)
+    chunk.to_s.start_with?('%PDF')
   end
 end
