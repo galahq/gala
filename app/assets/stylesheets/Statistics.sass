@@ -89,6 +89,18 @@ $stats-danger: #db3737
     color: $white !important
     font-weight: 500
 
+.c-stats-picker
+  .pt-daterangepicker
+    @media (max-width: 639px)
+      flex-direction: column
+
+    > div:not(.pt-daterangepicker-shortcuts)
+      @media (max-width: 639px)
+        flex-direction: column
+        align-items: center
+        margin-top: 12px
+        border: none
+
 .c-stats-filter-card__heading,
 .c-stats-information__heading
   margin: 20px 0 10px 0
@@ -222,8 +234,14 @@ $stats-danger: #db3737
   position: relative
   height: 100%
   width: 100%
-  cursor: default
+  cursor: grab
   font-family: var(--pt-font-family, #{$sansFont})
+
+  .mapboxgl-canvas
+    cursor: grab !important
+
+    &:active
+      cursor: grabbing !important
 
   .mapboxgl-ctrl-bottom-left
     left: 25px
@@ -250,35 +268,34 @@ $stats-danger: #db3737
       &:not(:last-child)
         margin-right: 1em
 
+.c-stats-table-export-layout
+  display: flex
+  flex-direction: column
+  gap: 16px
+  align-items: flex-start
+
+  @media (min-width: 768px)
+    flex-direction: row-reverse
+    align-items: flex-start
+    gap: 20px
+
 .c-stats-export-button-container
   display: flex
   justify-content: flex-end
-  margin-bottom: 20px
+  flex-shrink: 0
+  width: 100%
+
+  @media (min-width: 768px)
+    width: auto
 
 .c-stats-table-container
+  flex: 1
+  min-width: 0
   width: 100%
   min-height: 400px
 
-.c-stats-map__loading-overlay
-  position: absolute
-  top: 0
-  left: 0
-  right: 0
-  bottom: 0
-  background: rgba(255, 255, 255, 0.9)
-  display: flex
-  align-items: center
-  justify-content: center
-  flex-direction: column
-  z-index: 1000
-
-.c-stats-map__loading-wrapper
-  position: absolute
-  top: 0
-  left: 0
-  right: 0
-  bottom: 0
-  z-index: 1000
+  @media (min-width: 768px)
+    flex: 1 1 auto
 
 .c-stats-map__loading-text
   margin-top: 12px
@@ -288,9 +305,23 @@ $stats-danger: #db3737
   position: absolute
   top: 50%
   left: 50%
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
   transform: translate(-50%, -50%)
   color: #6b7280
   margin-top: 0
+
+.c-stats-map-loading-state
+  width: 100%
+  height: 100%
+  min-height: 280px
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 10px
 
 .c-stats-map__overlay
   position: absolute
@@ -379,6 +410,21 @@ $stats-danger: #db3737
 
 .c-stats-table
   width: 100%
+  font-size: 13px
+
+  th,
+  td
+    padding: 6px 8px
+
+  @media (max-width: 639px)
+    table-layout: fixed
+
+  @media (min-width: 640px)
+    font-size: 14px
+
+    th,
+    td
+      padding: 8px 10px
 
 .c-stats-table__sort-icon
   font-size: 12px
@@ -409,9 +455,22 @@ $stats-danger: #db3737
   color: $stats-gray-3
 
 .c-stats-table__country-cell
+  min-width: 0
+  vertical-align: middle
+
+  @media (max-width: 639px)
+    vertical-align: top
+
+.c-stats-table__country-content
   display: flex
   align-items: center
   gap: 8px
+  min-width: 0
+  width: 100%
+
+  @media (max-width: 639px)
+    align-items: flex-start
+    gap: 6px
 
 .c-stats-table__flag
   width: 20px
@@ -419,10 +478,15 @@ $stats-danger: #db3737
   object-fit: cover
   border-radius: 2px
   border: 1px solid rgba(16, 22, 26, 0.15)
-  background: rgba(255, 255, 255, 0.9)
+  background: transparent
 
 .c-stats-table__country-name
-  display: inline-block
+  min-width: 0
+  overflow-wrap: anywhere
+  word-break: break-word
+
+  @media (max-width: 639px)
+    line-height: 1.3
 
 .c-stats-table__number
   text-align: right
@@ -447,20 +511,20 @@ $stats-danger: #db3737
   position: absolute
   bottom: 0
   left: 0
-  background: rgba(255, 255, 255, 0.6)
-  padding: 12px
-  border-radius: 0 6px 0 0
-  box-shadow: 0 2px 8px rgba(16, 22, 26, 0.12)
+  background: #10161A
+  padding: 8px
+  border-radius: 0 5px 0 0
+  box-shadow: 0 2px 8px rgba(16, 22, 26, 0.35)
   z-index: 3
-  min-width: 160px
-  width: 210px
-  max-width: calc(100vw - 24px)
+  min-width: 132px
+  width: 176px
+  max-width: calc(100vw - 16px)
 
 .c-stats-map-legend__title
   font-weight: bold
-  margin-bottom: 8px
+  margin-bottom: 6px
   font-size: 12px
-  color: rgba(16, 22, 26, 0.9)
+  color: rgba(255, 255, 255, 0.95)
   display: flex
   align-items: center
   gap: 6px
@@ -469,27 +533,28 @@ $stats-danger: #db3737
   display: flex
   align-items: center
   gap: 0
-  border-radius: 10px
+  border-radius: 8px
   overflow: visible
-  height: 36px
-  box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.18)
-  border: 1px solid rgba(16, 22, 26, 0.45)
+  height: 26px
+  background: #000000
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16)
+  border: 1px solid rgba(255, 255, 255, 0.18)
 
 .c-stats-map-legend__segment
   display: flex
   align-items: center
   justify-content: center
   height: 100%
-  font-size: 10px
-  font-weight: bold
+  font-size: 9px
+  font-weight: 800
   line-height: 1
-  padding: 0 6px
+  padding: 0 4px
   min-width: 1%
-  text-shadow: 0 1px 2px rgba(16, 22, 26, 0.25)
+  text-shadow: none
 
 .c-stats-map-legend__label
-  font-size: 10px
-  font-weight: bold
+  font-size: 9px
+  font-weight: 800
   line-height: 1
   white-space: nowrap
 
@@ -497,17 +562,17 @@ $stats-danger: #db3737
   display: flex
   align-items: flex-start
   gap: 0
-  margin-top: 4px
+  margin-top: 3px
   overflow: visible
 
 .c-stats-map-legend__range
   text-align: center
-  font-size: 9px
+  font-size: 8px
   font-weight: 600
   line-height: 1
   white-space: nowrap
-  padding: 0 4px
-  color: rgba(16, 22, 26, 0.7)
+  padding: 0 2px
+  color: rgba(243, 246, 249, 0.92)
 
 
 .c-stats-map-legend__popover
@@ -523,82 +588,95 @@ $stats-danger: #db3737
 
 .c-stats-map-legend__help-icon
   cursor: pointer
-  opacity: 0.8
-  font-size: 10px
+  opacity: 0.9
+  font-size: 8px
+  color: rgba(243, 246, 249, 0.92)
+  margin: 0 0 0 2px !important
+  min-height: 14px !important
+  min-width: 14px !important
+  padding: 0 !important
+  line-height: 1
+  background: transparent !important
+  box-shadow: none !important
+
+  &:hover,
+  &:focus
+    opacity: 1
+    color: #ffffff
+    background: rgba(255, 255, 255, 0.08) !important
 
 .c-stats-map-tooltip
   position: absolute
-  background: rgba(255, 255, 255, 0.95)
-  color: rgba(16, 22, 26, 0.95)
-  padding: 8px 12px
-  border-radius: 6px
-  box-shadow: 0 2px 8px rgba(16, 22, 26, 0.2)
-  font-size: 12px
+  background: rgba(23, 31, 39, 0.97)
+  color: rgba(243, 246, 249, 0.98)
+  border-radius: 8px
+  box-shadow: 0 6px 14px rgba(16, 22, 26, 0.35)
+  font-size: 10px
   pointer-events: none
-  white-space: nowrap
+  min-width: 168px
+  max-width: 210px
+  border: 1px solid rgba(138, 155, 168, 0.3)
+  overflow: hidden
   z-index: 1000
 
 .c-stats-map-tooltip__country
-  font-weight: bold
-  margin-bottom: 4px
-  font-size: 13px
+  font-weight: 700
+  font-size: 11px
+  line-height: 1.2
+  color: #ffffff
 
-.c-stats-map-tooltip__content
+.c-stats-map-tooltip__country-row
   display: flex
   align-items: center
+  gap: 5px
+  padding: 6px 8px
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35)
+
+.c-stats-map-tooltip__flag
+  width: 20px
+  height: 14px
+  object-fit: cover
+  border-radius: 2px
+  border: 1px solid rgba(243, 246, 249, 0.2)
+
+.c-stats-map-tooltip__metric-row
+  display: flex
+  align-items: center
+  justify-content: space-between
   gap: 6px
+  padding: 6px 8px 3px
 
-.c-stats-map-tooltip__color
-  width: 12px
-  height: 12px
-  border-radius: 50%
-  border: 1px solid rgba(16, 22, 26, 0.2)
-  flex-shrink: 0
+.c-stats-map-tooltip__metric-label
+  flex: 1 1 auto
+  font-size: 10px
+  font-weight: 600
+  line-height: 1.1
+  color: rgba(243, 246, 249, 0.84)
 
-.c-stats-map-tooltip__visitors
-  font-weight: 500
+.c-stats-map-tooltip__metric-pill
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  margin-left: auto
+  min-width: 24px
+  min-height: 24px
+  border-radius: 999px
+  padding: 0 7px
+  font-size: 13px
+  font-weight: 800
+  line-height: 1
+  border: 1px solid rgba(16, 22, 26, 0.22)
 
 .c-stats-map-tooltip__details
-  font-size: 11px
-  opacity: 0.8
+  font-size: 9px
+  font-weight: 500
+  padding: 0 8px 6px
+  color: rgba(243, 246, 249, 0.72)
 
-.c-stats-map-error
-  height: 100%
-  @include stats-center
-  flex-direction: column
-  padding: 20px
-  text-align: center
-  background-color: rgba(249, 250, 251, 0.95)
-
-.c-stats-map-error__title
-  color: $stats-danger
-  margin-bottom: 10px
-  font-weight: bold
-
-.c-stats-map-error__message
-  color: $stats-gray-5
-  font-size: 14px
-  margin-bottom: 15px
-
-.c-stats-map-error__debug
-  font-size: 12px
-  color: $stats-gray-5
-
-  p
-    margin: 0
-
-.c-stats-map-error__details
-  font-size: 12px
-  color: #9ca3af
-  text-align: left
-
-.c-stats-map-error__details-summary
-  cursor: pointer
-  margin-bottom: 5px
-
-.c-stats-map-error__details-pre
-  white-space: pre-wrap
-  font-size: 10px
+.c-stats-inline-loading
+  display: inline-flex
+  align-items: center
+  gap: 6px
 
 .c-stats-skeleton-card
   padding: 20px
@@ -615,52 +693,7 @@ $stats-danger: #db3737
   height: 300px
   min-width: 100%
 
-.c-stats-skeleton--page-title
-  height: 28px
-  width: 120px
-  min-width: 120px
-  margin-bottom: 16px
-
-.c-stats-skeleton--section-title
-  height: 28px
-  width: 150px
-  min-width: 150px
-  margin-top: 32px
-  margin-bottom: 16px
-
-.c-stats-skeleton--info-header
-  height: 20px
-  width: 140px
-  min-width: 140px
-  margin-bottom: 16px
-
-.c-stats-skeleton--callout
-  height: 120px
-  min-width: 280px
-
-.c-stats-skeleton--map-card
-  min-height: 320px
-  min-width: 400px
-
-.c-stats-skeleton--map-content
+.c-stats-skeleton--map
+  width: 100%
   height: 100%
-  min-height: 300px
-  min-width: 380px
-
-.c-stats-skeleton--summary-card
-  min-width: 200px
-
-.c-stats-skeleton--map-table-header
-  height: 24px
-  width: 200px
-  min-width: 200px
-  margin-bottom: 16px
-
-.c-stats-skeleton--map-table-map
-  height: 400px
-  min-width: 100%
-  margin-bottom: 24px
-
-.c-stats-skeleton--map-table-table
-  height: 200px
-  min-width: 100%
+  min-height: 100%

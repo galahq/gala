@@ -1,4 +1,3 @@
-/** @jsx React.createElement */
 /* @flow */
 
 import React from 'react'
@@ -15,18 +14,19 @@ type Props = {
   header?: React$Node,
 }
 
-export function StatsKeyValueList ({
+function StatsKeyValueList ({
   baseClassName,
   rows,
   className,
   header,
 }: Props): React$Node {
-  const containerClassName = className || `${baseClassName}__content`
+  const containerClass = className || `${baseClassName}__content`
+
   return (
-    <div className={containerClassName}>
+    <div className={containerClass}>
       {header}
       {rows.map((row, index) => (
-        <div className={`${baseClassName}__row`} key={index}>
+        <div className={`${baseClassName}__row`} key={`${row.label}-${index}`}>
           <span className={`${baseClassName}__label`}>{row.label}</span>
           <span className={`${baseClassName}__value`}>{row.value}</span>
         </div>

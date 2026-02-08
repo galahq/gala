@@ -27,7 +27,13 @@ if defined? DEV_MOCK_AUTH_HASH
 end
 
 if Rails.env.development?
-  10.times { FactoryBot.create :case_with_elements, published_at: rand(90..(365 * 3)).days.ago } if Case.all.empty?
+  if Case.all.empty?
+    10.times do
+      published_at = rand(90..(365 * 3)).days.ago
+      created_at = Array.new(5).fill(2).map.with_index { |n, i| n**(i + 1) }.sample.days.ago
+      FactoryBot.create :case_with_elements, published_at: published_at, created_at: created_at
+    end
+  end
 
   readers = 10.times.map { FactoryBot.create(:reader) }
 

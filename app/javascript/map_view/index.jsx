@@ -273,6 +273,7 @@ class MapView extends React.Component<{
     const { latitude, longitude, zoom } = viewport
     return (
       <ReactMapGL
+        cacheId="map-view"
         mapStyle={MAPBOX_STYLE}
         width={containerWidth}
         height={containerHeight}

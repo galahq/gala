@@ -1,0 +1,322 @@
+# frozen_string_literal: true
+
+module CountryReference
+  UNKNOWN_COUNTRY = { iso2: nil, iso3: nil, name: 'Unknown' }.freeze
+
+  COUNTRY_DATA = {
+    'AD' => { iso3: 'AND', name: 'Andorra' },
+    'AE' => { iso3: 'ARE', name: 'United Arab Emirates' },
+    'AF' => { iso3: 'AFG', name: 'Afghanistan' },
+    'AG' => { iso3: 'ATG', name: 'Antigua and Barbuda' },
+    'AI' => { iso3: 'AIA', name: 'Anguilla' },
+    'AL' => { iso3: 'ALB', name: 'Albania' },
+    'AM' => { iso3: 'ARM', name: 'Armenia' },
+    'AO' => { iso3: 'AGO', name: 'Angola' },
+    'AQ' => { iso3: 'ATA', name: 'Antarctica' },
+    'AR' => { iso3: 'ARG', name: 'Argentina' },
+    'AS' => { iso3: 'ASM', name: 'American Samoa' },
+    'AT' => { iso3: 'AUT', name: 'Austria' },
+    'AU' => { iso3: 'AUS', name: 'Australia' },
+    'AW' => { iso3: 'ABW', name: 'Aruba' },
+    'AX' => { iso3: 'ALA', name: 'Åland Islands' },
+    'AZ' => { iso3: 'AZE', name: 'Azerbaijan' },
+    'BA' => { iso3: 'BIH', name: 'Bosnia and Herzegovina' },
+    'BB' => { iso3: 'BRB', name: 'Barbados' },
+    'BD' => { iso3: 'BGD', name: 'Bangladesh' },
+    'BE' => { iso3: 'BEL', name: 'Belgium' },
+    'BF' => { iso3: 'BFA', name: 'Burkina Faso' },
+    'BG' => { iso3: 'BGR', name: 'Bulgaria' },
+    'BH' => { iso3: 'BHR', name: 'Bahrain' },
+    'BI' => { iso3: 'BDI', name: 'Burundi' },
+    'BJ' => { iso3: 'BEN', name: 'Benin' },
+    'BL' => { iso3: 'BLM', name: 'Saint Barthélemy' },
+    'BM' => { iso3: 'BMU', name: 'Bermuda' },
+    'BN' => { iso3: 'BRN', name: 'Brunei' },
+    'BO' => { iso3: 'BOL', name: 'Bolivia' },
+    'BQ' => { iso3: 'BES', name: 'Caribbean Netherlands' },
+    'BR' => { iso3: 'BRA', name: 'Brazil' },
+    'BS' => { iso3: 'BHS', name: 'Bahamas' },
+    'BT' => { iso3: 'BTN', name: 'Bhutan' },
+    'BV' => { iso3: 'BVT', name: 'Bouvet Island' },
+    'BW' => { iso3: 'BWA', name: 'Botswana' },
+    'BY' => { iso3: 'BLR', name: 'Belarus' },
+    'BZ' => { iso3: 'BLZ', name: 'Belize' },
+    'CA' => { iso3: 'CAN', name: 'Canada' },
+    'CC' => { iso3: 'CCK', name: 'Cocos (Keeling) Islands' },
+    'CD' => { iso3: 'COD', name: 'DR Congo' },
+    'CF' => { iso3: 'CAF', name: 'Central African Republic' },
+    'CG' => { iso3: 'COG', name: 'Republic of the Congo' },
+    'CH' => { iso3: 'CHE', name: 'Switzerland' },
+    'CI' => { iso3: 'CIV', name: "Côte d'Ivoire (Ivory Coast)" },
+    'CK' => { iso3: 'COK', name: 'Cook Islands' },
+    'CL' => { iso3: 'CHL', name: 'Chile' },
+    'CM' => { iso3: 'CMR', name: 'Cameroon' },
+    'CN' => { iso3: 'CHN', name: 'China' },
+    'CO' => { iso3: 'COL', name: 'Colombia' },
+    'CR' => { iso3: 'CRI', name: 'Costa Rica' },
+    'CU' => { iso3: 'CUB', name: 'Cuba' },
+    'CV' => { iso3: 'CPV', name: 'Cape Verde' },
+    'CW' => { iso3: 'CUW', name: 'Curaçao' },
+    'CX' => { iso3: 'CXR', name: 'Christmas Island' },
+    'CY' => { iso3: 'CYP', name: 'Cyprus' },
+    'CZ' => { iso3: 'CZE', name: 'Czechia' },
+    'DE' => { iso3: 'DEU', name: 'Germany' },
+    'DJ' => { iso3: 'DJI', name: 'Djibouti' },
+    'DK' => { iso3: 'DNK', name: 'Denmark' },
+    'DM' => { iso3: 'DMA', name: 'Dominica' },
+    'DO' => { iso3: 'DOM', name: 'Dominican Republic' },
+    'DZ' => { iso3: 'DZA', name: 'Algeria' },
+    'EC' => { iso3: 'ECU', name: 'Ecuador' },
+    'EE' => { iso3: 'EST', name: 'Estonia' },
+    'EG' => { iso3: 'EGY', name: 'Egypt' },
+    'EH' => { iso3: 'ESH', name: 'Western Sahara' },
+    'ER' => { iso3: 'ERI', name: 'Eritrea' },
+    'ES' => { iso3: 'ESP', name: 'Spain' },
+    'ET' => { iso3: 'ETH', name: 'Ethiopia' },
+    'FI' => { iso3: 'FIN', name: 'Finland' },
+    'FJ' => { iso3: 'FJI', name: 'Fiji' },
+    'FK' => { iso3: 'FLK', name: 'Falkland Islands' },
+    'FM' => { iso3: 'FSM', name: 'Micronesia' },
+    'FO' => { iso3: 'FRO', name: 'Faroe Islands' },
+    'FR' => { iso3: 'FRA', name: 'France' },
+    'GA' => { iso3: 'GAB', name: 'Gabon' },
+    'GB' => { iso3: 'GBR', name: 'United Kingdom' },
+    'GD' => { iso3: 'GRD', name: 'Grenada' },
+    'GE' => { iso3: 'GEO', name: 'Georgia' },
+    'GF' => { iso3: 'GUF', name: 'French Guiana' },
+    'GG' => { iso3: 'GGY', name: 'Guernsey' },
+    'GH' => { iso3: 'GHA', name: 'Ghana' },
+    'GI' => { iso3: 'GIB', name: 'Gibraltar' },
+    'GL' => { iso3: 'GRL', name: 'Greenland' },
+    'GM' => { iso3: 'GMB', name: 'Gambia' },
+    'GN' => { iso3: 'GIN', name: 'Guinea' },
+    'GP' => { iso3: 'GLP', name: 'Guadeloupe' },
+    'GQ' => { iso3: 'GNQ', name: 'Equatorial Guinea' },
+    'GR' => { iso3: 'GRC', name: 'Greece' },
+    'GS' => { iso3: 'SGS', name: 'South Georgia' },
+    'GT' => { iso3: 'GTM', name: 'Guatemala' },
+    'GU' => { iso3: 'GUM', name: 'Guam' },
+    'GW' => { iso3: 'GNB', name: 'Guinea-Bissau' },
+    'GY' => { iso3: 'GUY', name: 'Guyana' },
+    'HK' => { iso3: 'HKG', name: 'Hong Kong' },
+    'HM' => { iso3: 'HMD', name: 'Heard Island and McDonald Islands' },
+    'HN' => { iso3: 'HND', name: 'Honduras' },
+    'HR' => { iso3: 'HRV', name: 'Croatia' },
+    'HT' => { iso3: 'HTI', name: 'Haiti' },
+    'HU' => { iso3: 'HUN', name: 'Hungary' },
+    'ID' => { iso3: 'IDN', name: 'Indonesia' },
+    'IE' => { iso3: 'IRL', name: 'Ireland' },
+    'IL' => { iso3: 'ISR', name: 'Israel' },
+    'IM' => { iso3: 'IMN', name: 'Isle of Man' },
+    'IN' => { iso3: 'IND', name: 'India' },
+    'IO' => { iso3: 'IOT', name: 'British Indian Ocean Territory' },
+    'IQ' => { iso3: 'IRQ', name: 'Iraq' },
+    'IR' => { iso3: 'IRN', name: 'Iran' },
+    'IS' => { iso3: 'ISL', name: 'Iceland' },
+    'IT' => { iso3: 'ITA', name: 'Italy' },
+    'JE' => { iso3: 'JEY', name: 'Jersey' },
+    'JM' => { iso3: 'JAM', name: 'Jamaica' },
+    'JO' => { iso3: 'JOR', name: 'Jordan' },
+    'JP' => { iso3: 'JPN', name: 'Japan' },
+    'KE' => { iso3: 'KEN', name: 'Kenya' },
+    'KG' => { iso3: 'KGZ', name: 'Kyrgyzstan' },
+    'KH' => { iso3: 'KHM', name: 'Cambodia' },
+    'KI' => { iso3: 'KIR', name: 'Kiribati' },
+    'KM' => { iso3: 'COM', name: 'Comoros' },
+    'KN' => { iso3: 'KNA', name: 'Saint Kitts and Nevis' },
+    'KP' => { iso3: 'PRK', name: 'North Korea' },
+    'KR' => { iso3: 'KOR', name: 'South Korea' },
+    'KW' => { iso3: 'KWT', name: 'Kuwait' },
+    'KY' => { iso3: 'CYM', name: 'Cayman Islands' },
+    'KZ' => { iso3: 'KAZ', name: 'Kazakhstan' },
+    'LA' => { iso3: 'LAO', name: 'Laos' },
+    'LB' => { iso3: 'LBN', name: 'Lebanon' },
+    'LC' => { iso3: 'LCA', name: 'Saint Lucia' },
+    'LI' => { iso3: 'LIE', name: 'Liechtenstein' },
+    'LK' => { iso3: 'LKA', name: 'Sri Lanka' },
+    'LR' => { iso3: 'LBR', name: 'Liberia' },
+    'LS' => { iso3: 'LSO', name: 'Lesotho' },
+    'LT' => { iso3: 'LTU', name: 'Lithuania' },
+    'LU' => { iso3: 'LUX', name: 'Luxembourg' },
+    'LV' => { iso3: 'LVA', name: 'Latvia' },
+    'LY' => { iso3: 'LBY', name: 'Libya' },
+    'MA' => { iso3: 'MAR', name: 'Morocco' },
+    'MC' => { iso3: 'MCO', name: 'Monaco' },
+    'MD' => { iso3: 'MDA', name: 'Moldova' },
+    'ME' => { iso3: 'MNE', name: 'Montenegro' },
+    'MF' => { iso3: 'MAF', name: 'Saint Martin' },
+    'MG' => { iso3: 'MDG', name: 'Madagascar' },
+    'MH' => { iso3: 'MHL', name: 'Marshall Islands' },
+    'MK' => { iso3: 'MKD', name: 'North Macedonia' },
+    'ML' => { iso3: 'MLI', name: 'Mali' },
+    'MM' => { iso3: 'MMR', name: 'Myanmar' },
+    'MN' => { iso3: 'MNG', name: 'Mongolia' },
+    'MO' => { iso3: 'MAC', name: 'Macau' },
+    'MP' => { iso3: 'MNP', name: 'Northern Mariana Islands' },
+    'MQ' => { iso3: 'MTQ', name: 'Martinique' },
+    'MR' => { iso3: 'MRT', name: 'Mauritania' },
+    'MS' => { iso3: 'MSR', name: 'Montserrat' },
+    'MT' => { iso3: 'MLT', name: 'Malta' },
+    'MU' => { iso3: 'MUS', name: 'Mauritius' },
+    'MV' => { iso3: 'MDV', name: 'Maldives' },
+    'MW' => { iso3: 'MWI', name: 'Malawi' },
+    'MX' => { iso3: 'MEX', name: 'Mexico' },
+    'MY' => { iso3: 'MYS', name: 'Malaysia' },
+    'MZ' => { iso3: 'MOZ', name: 'Mozambique' },
+    'NA' => { iso3: 'NAM', name: 'Namibia' },
+    'NC' => { iso3: 'NCL', name: 'New Caledonia' },
+    'NE' => { iso3: 'NER', name: 'Niger' },
+    'NF' => { iso3: 'NFK', name: 'Norfolk Island' },
+    'NG' => { iso3: 'NGA', name: 'Nigeria' },
+    'NI' => { iso3: 'NIC', name: 'Nicaragua' },
+    'NL' => { iso3: 'NLD', name: 'Netherlands' },
+    'NO' => { iso3: 'NOR', name: 'Norway' },
+    'NP' => { iso3: 'NPL', name: 'Nepal' },
+    'NR' => { iso3: 'NRU', name: 'Nauru' },
+    'NU' => { iso3: 'NIU', name: 'Niue' },
+    'NZ' => { iso3: 'NZL', name: 'New Zealand' },
+    'OM' => { iso3: 'OMN', name: 'Oman' },
+    'PA' => { iso3: 'PAN', name: 'Panama' },
+    'PE' => { iso3: 'PER', name: 'Peru' },
+    'PF' => { iso3: 'PYF', name: 'French Polynesia' },
+    'PG' => { iso3: 'PNG', name: 'Papua New Guinea' },
+    'PH' => { iso3: 'PHL', name: 'Philippines' },
+    'PK' => { iso3: 'PAK', name: 'Pakistan' },
+    'PL' => { iso3: 'POL', name: 'Poland' },
+    'PM' => { iso3: 'SPM', name: 'Saint Pierre and Miquelon' },
+    'PN' => { iso3: 'PCN', name: 'Pitcairn Islands' },
+    'PR' => { iso3: 'PRI', name: 'Puerto Rico' },
+    'PS' => { iso3: 'PSE', name: 'Palestine' },
+    'PT' => { iso3: 'PRT', name: 'Portugal' },
+    'PW' => { iso3: 'PLW', name: 'Palau' },
+    'PY' => { iso3: 'PRY', name: 'Paraguay' },
+    'QA' => { iso3: 'QAT', name: 'Qatar' },
+    'RE' => { iso3: 'REU', name: 'Réunion' },
+    'RO' => { iso3: 'ROU', name: 'Romania' },
+    'RS' => { iso3: 'SRB', name: 'Serbia' },
+    'RU' => { iso3: 'RUS', name: 'Russia' },
+    'RW' => { iso3: 'RWA', name: 'Rwanda' },
+    'SA' => { iso3: 'SAU', name: 'Saudi Arabia' },
+    'SB' => { iso3: 'SLB', name: 'Solomon Islands' },
+    'SC' => { iso3: 'SYC', name: 'Seychelles' },
+    'SD' => { iso3: 'SDN', name: 'Sudan' },
+    'SE' => { iso3: 'SWE', name: 'Sweden' },
+    'SG' => { iso3: 'SGP', name: 'Singapore' },
+    'SH' => { iso3: 'SHN', name: 'Saint Helena, Ascension and Tristan da Cunha' },
+    'SI' => { iso3: 'SVN', name: 'Slovenia' },
+    'SJ' => { iso3: 'SJM', name: 'Svalbard and Jan Mayen' },
+    'SK' => { iso3: 'SVK', name: 'Slovakia' },
+    'SL' => { iso3: 'SLE', name: 'Sierra Leone' },
+    'SM' => { iso3: 'SMR', name: 'San Marino' },
+    'SN' => { iso3: 'SEN', name: 'Senegal' },
+    'SO' => { iso3: 'SOM', name: 'Somalia' },
+    'SR' => { iso3: 'SUR', name: 'Suriname' },
+    'SS' => { iso3: 'SSD', name: 'South Sudan' },
+    'ST' => { iso3: 'STP', name: 'São Tomé and Príncipe' },
+    'SV' => { iso3: 'SLV', name: 'El Salvador' },
+    'SX' => { iso3: 'SXM', name: 'Sint Maarten' },
+    'SY' => { iso3: 'SYR', name: 'Syria' },
+    'SZ' => { iso3: 'SWZ', name: 'Eswatini (Swaziland)' },
+    'TC' => { iso3: 'TCA', name: 'Turks and Caicos Islands' },
+    'TD' => { iso3: 'TCD', name: 'Chad' },
+    'TF' => { iso3: 'ATF', name: 'French Southern and Antarctic Lands' },
+    'TG' => { iso3: 'TGO', name: 'Togo' },
+    'TH' => { iso3: 'THA', name: 'Thailand' },
+    'TJ' => { iso3: 'TJK', name: 'Tajikistan' },
+    'TK' => { iso3: 'TKL', name: 'Tokelau' },
+    'TL' => { iso3: 'TLS', name: 'Timor-Leste' },
+    'TM' => { iso3: 'TKM', name: 'Turkmenistan' },
+    'TN' => { iso3: 'TUN', name: 'Tunisia' },
+    'TO' => { iso3: 'TON', name: 'Tonga' },
+    'TR' => { iso3: 'TUR', name: 'Turkey' },
+    'TT' => { iso3: 'TTO', name: 'Trinidad and Tobago' },
+    'TV' => { iso3: 'TUV', name: 'Tuvalu' },
+    'TW' => { iso3: 'TWN', name: 'Taiwan' },
+    'TZ' => { iso3: 'TZA', name: 'Tanzania' },
+    'UA' => { iso3: 'UKR', name: 'Ukraine' },
+    'UG' => { iso3: 'UGA', name: 'Uganda' },
+    'UM' => { iso3: 'UMI', name: 'United States Minor Outlying Islands' },
+    'US' => { iso3: 'USA', name: 'United States' },
+    'UY' => { iso3: 'URY', name: 'Uruguay' },
+    'UZ' => { iso3: 'UZB', name: 'Uzbekistan' },
+    'VA' => { iso3: 'VAT', name: 'Vatican City (Holy See)' },
+    'VC' => { iso3: 'VCT', name: 'Saint Vincent and the Grenadines' },
+    'VE' => { iso3: 'VEN', name: 'Venezuela' },
+    'VG' => { iso3: 'VGB', name: 'British Virgin Islands' },
+    'VI' => { iso3: 'VIR', name: 'United States Virgin Islands' },
+    'VN' => { iso3: 'VNM', name: 'Vietnam' },
+    'VU' => { iso3: 'VUT', name: 'Vanuatu' },
+    'WF' => { iso3: 'WLF', name: 'Wallis and Futuna' },
+    'WS' => { iso3: 'WSM', name: 'Samoa' },
+    'YE' => { iso3: 'YEM', name: 'Yemen' },
+    'YT' => { iso3: 'MYT', name: 'Mayotte' },
+    'ZA' => { iso3: 'ZAF', name: 'South Africa' },
+    'ZM' => { iso3: 'ZMB', name: 'Zambia' },
+    'ZW' => { iso3: 'ZWE', name: 'Zimbabwe' }
+  }.freeze
+
+  ISO2_TO_ISO3 = COUNTRY_DATA.transform_values { |country| country[:iso3] }.freeze
+  ISO3_TO_ISO2 = ISO2_TO_ISO3.invert.freeze
+
+  NAME_ALIASES_TO_ISO2 = {
+    'uk' => 'GB',
+    'united kingdom' => 'GB',
+    'england' => 'GB',
+    'scotland' => 'GB',
+    'wales' => 'GB',
+    'great britain' => 'GB',
+    'usa' => 'US',
+    'us' => 'US',
+    'u s a' => 'US',
+    'u s' => 'US',
+    'united states' => 'US',
+    'united states of america' => 'US'
+  }.freeze
+
+  module_function
+
+  def normalize_name(value)
+    normalized = value.to_s.strip
+    return nil if normalized.empty?
+
+    ascii = normalized.unicode_normalize(:nfkd).encode('ASCII', invalid: :replace, undef: :replace, replace: '')
+    candidate = ascii.downcase.gsub(/[^a-z0-9]+/, ' ').squeeze(' ').strip
+    candidate.empty? ? nil : candidate
+  end
+
+  NAME_TO_ISO2 = COUNTRY_DATA.each_with_object({}) do |(iso2, country), index|
+    normalized = normalize_name(country[:name])
+    index[normalized] = iso2 if normalized
+  end.merge(NAME_ALIASES_TO_ISO2).freeze
+
+  def resolve(value)
+    normalized = value.to_s.strip
+    return UNKNOWN_COUNTRY if unknown?(normalized)
+
+    upcased = normalized.upcase
+    if COUNTRY_DATA.key?(upcased)
+      data = COUNTRY_DATA.fetch(upcased)
+      return { iso2: upcased, iso3: data[:iso3], name: data[:name] }
+    end
+
+    if ISO3_TO_ISO2.key?(upcased)
+      iso2 = ISO3_TO_ISO2.fetch(upcased)
+      data = COUNTRY_DATA.fetch(iso2)
+      return { iso2: iso2, iso3: upcased, name: data[:name] }
+    end
+
+    name_key = normalize_name(normalized)
+    if name_key && NAME_TO_ISO2.key?(name_key)
+      iso2 = NAME_TO_ISO2.fetch(name_key)
+      data = COUNTRY_DATA.fetch(iso2)
+      return { iso2: iso2, iso3: data[:iso3], name: data[:name] }
+    end
+
+    { iso2: nil, iso3: nil, name: normalized }
+  end
+
+  def unknown?(value)
+    stripped = value.to_s.strip
+    stripped.empty? || stripped.casecmp('unknown').zero?
+  end
+end

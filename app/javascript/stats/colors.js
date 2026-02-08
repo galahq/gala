@@ -67,7 +67,7 @@ function getReadableTextColor (value: string): string {
   if (!isHexColor(value)) return Colors.DARK_GRAY3
   const [r, g, b] = hexToRgb(value).map(channel => channel / 255)
   const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
-  return luminance > 0.62 ? Colors.GRAY5 : Colors.WHITE
+  return luminance > 0.62 ? Colors.BLACK : Colors.WHITE
 }
 
 export function getBinColors (binCount: number): string[] {

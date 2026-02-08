@@ -3,80 +3,88 @@
 
 import { Controller } from 'stimulus'
 import React from 'react'
-import ReactDOM from 'react-dom'
-import StatsPage from '../stats/StatsPage'
-import loadMessages from '../../../config/locales'
+import { render, unmountComponentAtNode } from 'react-dom'
 
-const locale = (window.i18n && window.i18n.locale) || 'en'
-const messagesCache: Map<string, Promise<{ [string]: string }>> = new Map()
+import StatsRoot from '../stats'
 
-function loadMessagesForLocale (targetLocale: string): Promise<{ [string]: string }> {
-  if (messagesCache.has(targetLocale)) {
-    // $FlowFixMe Map#get is safe after has check
-    return messagesCache.get(targetLocale)
-  }
-  const promise = loadMessages(targetLocale).catch(error => {
-    console.warn('Failed to load locale messages:', error)
-    return {}
-  })
-  messagesCache.set(targetLocale, promise)
-  return promise
+function parseCount (value: ?string): number {
+  if (!value) return 0
+  const parsed = Number.parseInt(value, 10)
+  return Number.isFinite(parsed) ? parsed : 0
 }
 
-/**
- * Thin wrapper that mounts the StatsPage React component
- */
+function parseLocales (value: ?string): string[] {
+  if (!value) return []
+
+  try {
+    const parsed = JSON.parse(value)
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map(locale => (typeof locale === 'string' ? locale.trim() : ''))
+        .filter(Boolean)
+    }
+  } catch (_error) {
+    // Ignore parse errors and fall back to comma-delimited parsing.
+  }
+
+  return value
+    .split(',')
+    .map(locale => locale.trim())
+    .filter(Boolean)
+}
+
 export default class extends Controller {
   connect () {
-    if (this.hasMounted) {
-      return
-    }
+    if (this.hasMounted) return
     this.hasMounted = true
 
-    const dataUrl = this.element.dataset.url
-    if (!dataUrl) {
-      console.error('Stats controller missing data-url attribute')
-      return
+    const endpoint =
+      this.element.dataset.endpoint ||
+      window.location.pathname.replace(/\/$/, '')
+    const locale = this.element.dataset.locale || 'en'
+    const initialCase = {
+      link: this.element.dataset.link || '',
+      published_at: this.element.dataset.publishedAt || null,
+      min_date: this.element.dataset.minDate || null,
+      max_date: this.element.dataset.maxDate || null,
+      deployments_count: parseCount(this.element.dataset.deploymentsCount),
+      locales: parseLocales(this.element.dataset.locales),
     }
-
-    const minDate = this.element.dataset.minDate || null
-    loadMessagesForLocale(locale).then(messages => {
-      this.mountStatsPage(dataUrl, minDate, messages)
+    this.renderStats({
+      endpoint,
+      initialCase,
+      locale,
     })
   }
 
-  mountStatsPage (
-    dataUrl: string,
-    minDate: ?string,
-    messages: { [string]: string }
-  ) {
-    const node = this.element
-    const element = (
-      <StatsPage
-        dataUrl={dataUrl}
-        minDate={minDate}
-        messages={messages}
-        locale={locale}
-      />
-    )
-
-    if (ReactDOM.createRoot) {
-      if (!this.root) {
-        this.root = ReactDOM.createRoot(node)
-      }
-      this.root.render(element)
-    } else {
-      ReactDOM.render(element, node)
-    }
+  disconnect () {
+    unmountComponentAtNode(this.element)
+    this.hasMounted = false
   }
 
-  disconnect () {
-    if (this.root) {
-      this.root.unmount()
-      this.root = null
-    } else {
-      ReactDOM.unmountComponentAtNode(this.element)
-    }
-    this.hasMounted = false
+  renderStats ({
+    endpoint,
+    initialCase,
+    locale,
+  }: {
+    endpoint: string,
+    initialCase: {
+      link: string,
+      published_at: ?string,
+      min_date: ?string,
+      max_date: ?string,
+      deployments_count: number,
+      locales: string[],
+    },
+    locale: string,
+  }) {
+    render(
+      <StatsRoot
+        endpoint={endpoint}
+        initialCase={initialCase}
+        locale={locale}
+      />,
+      this.element
+    )
   }
 }

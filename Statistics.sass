@@ -1,0 +1,300 @@
+@import _globals
+
+.c-statistics
+  font-weight: 300
+  font-family: $sansFont
+  text-transform: uppercase
+  letter-spacing: 0.25px
+  display: flex
+  align-items: center
+  margin: 0 !important
+
+.c-statistics__icon
+  margin-left: .7em
+  margin-right: .2em
+
+  &--less-space
+    margin-left: .6em
+    margin-right: .1em
+
+@mixin recolor-statistics($color: $white)
+  .c-statistics
+    color: $color
+
+    &:hover
+      color: $color
+
+  .c-statistics__icon
+    path, circle, ellipse, polyline
+      stroke: $color
+
+.s-edgenote
+  .o-bottom-right
+    bottom: 0.2rem
+  @include recolor-statistics($yellow)
+
+.PodcastPlayer, .edge
+  @include recolor-statistics($white)
+
+.pt-daterangepicker-shortcuts
+  .pt-menu-item.pt-active
+    background-color: $purple !important
+    color: $white !important
+    font-weight: 500
+
+// Override BlueprintJS default styles for date picker, allowing the two calendars to stack for narrow viewports
+.c-stats-picker
+  .pt-daterangepicker
+    @media (max-width: 639px)
+      flex-direction: column
+    // Container that holds the two calendar month divs (sibling to .pt-daterangepicker-shortcuts)
+    > div:not(.pt-daterangepicker-shortcuts)
+      @media (max-width: 639px)
+        flex-direction: column
+        align-items: center
+        margin-top: 12px
+        border: none
+
+// Stats page layout - using BlueprintJS spacing and flexbox
+.c-stats-filter-card
+  margin-bottom: 20px
+  max-width: 1400px
+  padding: 20px
+
+// Stats page heading hierarchy: h2 for main sections, h3 for subsections
+.c-stats-filter-card__heading,
+.c-stats-information__heading
+  margin: 20px 0 10px 0
+  font-size: 18px
+  font-weight: 600
+  color: rgba(16, 22, 26, 0.8)
+
+.c-stats-layout
+  display: flex
+  flex-direction: column
+  gap: 20px
+  align-items: flex-start
+
+  // On wider viewports, show date picker and summary side by side; match card heights
+  @media (min-width: 1200px)
+    flex-direction: row
+    align-items: stretch
+
+.c-stats-picker
+  flex: 1
+  min-width: 280px
+  max-width: 800px
+  padding: 20px
+
+  @media (min-width: 640px)
+    min-width: 640px
+
+  @media (min-width: 1200px)
+    flex: 1
+    min-width: 600px
+    max-width: 800px
+
+.c-stats-information-container
+  margin-bottom: 20px
+  max-width: 1400px
+
+.c-stats-overview-layout
+  display: flex
+  flex-direction: column
+  gap: 20px
+  align-items: flex-start
+
+  // On wider viewports, show overview and tips side by side; match card heights
+  @media (min-width: 1000px)
+    flex-direction: row
+
+.c-stats-information
+  min-height: 200px
+  min-width: 340px
+  max-width: 800px
+  padding: 20px
+
+.c-stats-information__card-heading
+  margin: 0 0 12px 0
+  padding-bottom: 8px
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15)
+  font-size: 15px
+  font-weight: 600
+  color: rgba(16, 22, 26, 0.8)
+
+.c-stats-tips
+  flex: 0 0 auto
+  min-width: 300px
+  max-width: 400px
+
+  @media (min-width: 1000px)
+    flex: 0 auto
+
+.c-stats-summary
+  flex: auto
+  min-width: 340px
+  padding: 20px
+
+  @media (min-width: 1200px)
+    flex: 0 0 260px
+    max-width: 340px
+    min-width: 260px
+
+.c-stats-map-table-card
+  margin-top: 20px
+  padding: 20px
+  max-width: 1400px
+
+.c-stats-map-table__header
+  margin: 0 0 12px 0
+  padding-bottom: 8px
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15)
+  font-size: 15px
+  font-weight: 600
+
+  .c-stats-map-table__heading
+    font-size: 15px
+    font-weight: 600
+    color: rgba(16, 22, 26, 0.8)
+
+  .c-stats-map-table__date-range
+    font-weight: 400
+    color: rgba(92, 112, 128, 0.9)
+    font-size: 14px
+
+.c-stats-map-container
+  height: 500px
+  margin-bottom: 20px
+  padding: 0 !important
+  overflow: hidden
+  width: 100%
+
+  @media (max-width: 639px)
+    max-width: 340px
+    width: 100%
+    height: 280px
+    margin-left: auto
+    margin-right: auto
+
+.c-stats-map
+  height: 100%
+  width: 100%
+
+.c-stats-table-export-layout
+  display: flex
+  flex-direction: column
+  gap: 16px
+  align-items: flex-start
+
+  @media (min-width: 768px)
+    flex-direction: row-reverse
+    align-items: flex-start
+    gap: 20px
+
+.c-stats-table-container
+  flex: 1
+  min-width: 0
+  width: 100%
+  min-height: 400px
+
+  @media (min-width: 768px)
+    flex: 1 1 auto
+
+.c-stats-table
+  @media (max-width: 639px)
+    font-size: 13px
+
+.c-stats-export-button-container
+  display: flex
+  justify-content: flex-end
+  flex-shrink: 0
+
+  @media (min-width: 768px)
+    justify-content: flex-end
+
+// Loading overlay for map
+.c-stats-map__loading-overlay
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(255, 255, 255, 0.9)
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  z-index: 1000
+
+.c-stats-map__loading-text
+  margin-top: 12px
+  font-size: 14px
+
+// Summary stats content
+.c-stats-summary__content
+  font-size: 14px
+  line-height: 1.6
+
+.c-stats-summary__header
+  margin: 0 0 12px 0
+  padding-bottom: 8px
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15)
+  font-size: 15px
+  font-weight: 600
+
+  h3
+    margin: 0
+    font-size: 15px
+    font-weight: 600
+    color: rgba(16, 22, 26, 0.8)
+
+  .c-stats-summary__date-range
+    font-weight: 400
+    color: rgba(92, 112, 128, 0.9)
+    font-size: 14px
+
+.c-stats-summary__row
+  display: flex
+  justify-content: space-between
+  margin-bottom: 8px
+
+  &:last-child
+    margin-bottom: 0
+
+.c-stats-summary__label
+  font-weight: 400
+
+.c-stats-summary__value
+  font-weight: 600
+
+.c-stats-summary__no-data
+  color: rgba(28, 29, 29, 0.6)
+  font-style: italic
+
+// Information section content
+.c-stats-information__content
+  font-size: 14px
+  line-height: 1.6
+
+.c-stats-information__header
+  display: flex
+  justify-content: space-between
+  margin-bottom: 12px
+  padding-bottom: 8px
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15)
+  font-size: 15px
+  font-weight: bold
+
+.c-stats-information__row
+  display: flex
+  justify-content: space-between
+  margin-bottom: 8px
+
+  &:last-child
+    margin-bottom: 0
+
+.c-stats-information__label
+  font-weight: 400
+
+.c-stats-information__value
+  font-weight: 600

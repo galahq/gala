@@ -1,26 +1,23 @@
 # frozen_string_literal: true
 
 module Cases
-  # The stats for a {Case} include its slug, what library it is in, etc.
   class StatsController < ApplicationController
     before_action :authenticate_reader!
+    before_action :set_case
+
     layout 'admin'
 
-    # @param [GET] /cases/case-slug/stats
+    # @param [GET] /cases/:case_slug/stats
     def show
-      set_case
-      @sql_query = sql_query_sql
       respond_to do |format|
-        format.html do
-          @min_date = min_date
-          render :show
-        end
-        format.json { render json: stats_data }
+        format.html { render :show }
+        format.json { render json: { data: data_payload } }
         format.csv do
-          filename = I18n.t('cases.stats.csv_filename',
-                            slug: @case.slug,
-                            date: Date.current.strftime('%Y-%m-%d'))
-          send_data generate_csv, filename: filename
+          send_data(
+            generate_csv,
+            filename: csv_filename,
+            type: 'text/csv; charset=utf-8'
+          )
         end
       end
     end
@@ -29,199 +26,155 @@ module Cases
 
     def set_case
       @case = Case.friendly.find(params[:case_slug]).decorate
+      @stats_locales = stats_locales
       authorize @case, :update?
     end
 
-    def bindings
-      build_bindings(stats_range[:from_ts], stats_range[:to_ts])
+    def stats_locales
+      current_locale = @case.locale.to_s.strip
+      translation_locales =
+        Case.where(translation_base_id: @case.id)
+            .where.not(id: @case.id)
+            .where.not(locale: [nil, ''])
+            .pluck(:locale)
+            .map { |locale| locale.to_s.strip }
+
+      [current_locale, *translation_locales].reject(&:blank?).uniq
     end
 
-    def build_bindings(from_ts, to_ts)
+    def csv_filename
+      I18n.t(
+        'cases.stats.csv_filename',
+        slug: @case.slug,
+        date: Date.current.strftime('%Y-%m-%d')
+      )
+    end
+
+    def parse_date(value)
+      return nil if value.blank?
+
+      Date.iso8601(value.to_s)
+    rescue StandardError
+      Time.zone.parse(value.to_s)&.to_date
+    end
+
+    def stats_range
+      @stats_range ||= begin
+        from_date = parse_date(params[:from]) || @case.created_at.to_date
+        to_date = parse_date(params[:to]) || Time.zone.today
+        to_date = from_date if to_date < from_date
+        { from_date: from_date, to_date: to_date }
+      end
+    end
+
+    def bindings
       [
         ActiveRecord::Relation::QueryAttribute.new(
-          'case_id', @case.id, ActiveRecord::Type::Integer.new
+          'case_id',
+          @case.id,
+          ActiveRecord::Type::Integer.new
         ),
         ActiveRecord::Relation::QueryAttribute.new(
-          'from_ts', from_ts, ActiveRecord::Type::DateTime.new
+          'from_date',
+          stats_range[:from_date],
+          ActiveRecord::Type::Date.new
         ),
         ActiveRecord::Relation::QueryAttribute.new(
-          'to_ts', to_ts, ActiveRecord::Type::DateTime.new
+          'to_date',
+          stats_range[:to_date],
+          ActiveRecord::Type::Date.new
         )
       ]
     end
 
     def sql_query_sql
       <<~SQL
-        WITH params(case_id, from_ts, to_ts) AS (
-          VALUES ($1::bigint, $2::timestamp, $3::timestamp)
+        WITH params(case_id, from_date, to_date) AS (
+          VALUES ($1::bigint, $2::date, $3::date)
         )
         SELECT
-          v.country                                                       AS country,
-          MIN(e."time")                                                   AS first_event,
-          MAX(e."time")                                                   AS last_event,
-          COUNT(DISTINCT v.visitor_token)                                 AS unique_visits,
-          COUNT(DISTINCT e.user_id)                                       AS unique_users,
-          COUNT(*)                                                        AS events_count,
-          COUNT(*) FILTER (WHERE e.name = 'visit_podcast')                AS visit_podcast_count
+          COALESCE(NULLIF(BTRIM(v.country), ''), 'Unknown')              AS country,
+          MIN(e."time")                                                  AS first_event,
+          MAX(e."time")                                                  AS last_event,
+          COUNT(DISTINCT v.visitor_token)                                AS unique_visits,
+          COUNT(DISTINCT e.user_id) FILTER (WHERE e.user_id IS NOT NULL) AS unique_users,
+          COUNT(*)                                                       AS events_count,
+          COUNT(*) FILTER (WHERE e.name = 'visit_podcast')               AS visit_podcast_count
         FROM ahoy_events e
-        INNER JOIN cases c ON c.id = e.case_id
         INNER JOIN params p ON TRUE
-        INNER JOIN visits v ON v.id = e.visit_id
+        LEFT JOIN visits v ON v.id = e.visit_id
         WHERE e.case_id = p.case_id
-          AND e."time" BETWEEN p.from_ts AND p.to_ts
+          AND e."time"::date BETWEEN p.from_date AND p.to_date
           AND NOT EXISTS (
             SELECT 1
             FROM readers_roles rr
-            JOIN roles ro ON ro.id = rr.role_id
+            INNER JOIN roles ro ON ro.id = rr.role_id
             WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
           )
-        GROUP BY v.country
+        GROUP BY COALESCE(NULLIF(BTRIM(v.country), ''), 'Unknown')
         ORDER BY unique_visits DESC NULLS LAST;
       SQL
     end
 
     def sql_query
-      sql = sql_query_sql
       ActiveRecord::Base.connection.exec_query(
-        sql,
+        sql_query_sql,
         'Case Stats',
         bindings
       ).to_a
     end
 
-    def stats_data
-      formatted_data = stats_metrics
-      {
-        meta: meta_payload,
-        range: range_payload,
-        summary: summary_payload(formatted_data),
-        countries: countries_payload(formatted_data, include_bins: true),
-        bins: bins_payload(formatted_data)
-      }
+    def normalized_rows
+      @normalized_rows ||= CaseStatsService.format_country_stats(
+        sql_query,
+        include_stats: true
+      )[:stats] || []
     end
 
-    def case_locales
-      @case.translation_set.pluck(:locale).uniq.sort do |a, b|
-        if a == @case.locale && b != @case.locale
-          -1
-        elsif b == @case.locale && a != @case.locale
-          1
-        else
-          a <=> b
-        end
-      end
-    end
-
-    def case_published_at_iso
-      @case.published_at&.to_date&.iso8601
-    end
-
-    def deployments_count
-      @deployments_count ||= @case.deployments.count
-    end
-
-    def min_date
-      (@case.published_at || @case.created_at)&.to_date
-    end
-
-    def stats_range
-      @stats_range ||= begin
-        from_ts =
-          params[:from].present? ? Time.zone.parse(params[:from]) : nil
-        to_ts = params[:to].present? ? Time.zone.parse(params[:to]).end_of_day : nil
-        from_ts ||= @case.published_at || @case.created_at
-        to_ts ||= Time.zone.now.end_of_day
-        { from_ts: from_ts, to_ts: to_ts }
-      end
-    end
-
-    def range_payload
-      {
-        from: stats_range[:from_ts]&.iso8601,
-        to: stats_range[:to_ts]&.iso8601,
-        timezone: Time.zone.name
-      }
-    end
-
-    def meta_payload
-      {
-        case: {
-          id: @case.id,
-          slug: @case.slug,
-          published_at: case_published_at_iso,
-          locales: case_locales,
-          total_deployments: deployments_count
-        },
-        generated_at: Time.zone.now.iso8601
-      }
-    end
-
-    def summary_payload(formatted_data)
-      {
-        total_visits: formatted_data[:total_visits],
-        country_count: formatted_data[:country_count],
-        total_podcast_listens: formatted_data[:total_podcast_listens]
-      }
-    end
-
-    def countries_payload(formatted_data, include_bins:)
-      (formatted_data[:stats] || []).map do |row|
-        payload = {
+    def data_payload
+      normalized_rows.map do |row|
+        {
           country: {
             iso2: row[:iso2],
             iso3: row[:iso3],
             name: row[:name]
           },
           metrics: {
-            unique_visits: row[:unique_visits],
-            unique_users: row[:unique_users],
-            events_count: row[:events_count],
-            visit_podcast_count: row[:visit_podcast_count]
+            unique_visits: row[:unique_visits].to_i,
+            unique_users: row[:unique_users].to_i,
+            events_count: row[:events_count].to_i,
+            visit_podcast_count: row[:visit_podcast_count].to_i
           },
-          first_event: row[:first_event],
-          last_event: row[:last_event]
+          first_event: row[:first_event]&.iso8601,
+          last_event: row[:last_event]&.iso8601
         }
-        payload[:bin] = row[:bin] if include_bins
-        payload
       end
     end
 
-    def bins_payload(formatted_data)
-      {
-        metric: 'unique_visits',
-        bin_count: formatted_data[:bin_count],
-        bins: formatted_data[:bins]
-      }
-    end
+    def format_date(value)
+      return nil if value.blank?
 
-    def stats_metrics
-      raw_data = sql_query
-      CountryStatsService.format_country_stats(
-        raw_data,
-        include_stats: true,
-        include_bins: true
-      )
-    end
+      date =
+        if value.respond_to?(:strftime)
+          value
+        else
+          Time.zone.parse(value.to_s)
+        end
 
-    def format_date(date)
-      return nil unless date
-      return nil unless date.respond_to?(:strftime)
-
-      date.strftime('%Y-%m-%d %H:%M')
+      date&.strftime('%Y-%m-%d %H:%M')
     rescue StandardError
       nil
     end
 
-    def generate_csv # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def generate_csv # rubocop:disable Metrics/MethodLength
       require 'csv'
-      countries = stats_data[:countries] || []
 
-      # Calculate totals
-      total_visits = countries.sum { |r| r.dig(:metrics, :unique_visits) || 0 }
-      total_users = countries.sum { |r| r.dig(:metrics, :unique_users) || 0 }
-      total_events = countries.sum { |r| r.dig(:metrics, :events_count) || 0 }
+      rows = data_payload
+      total_visits = rows.sum { |row| row.dig(:metrics, :unique_visits).to_i }
+      total_users = rows.sum { |row| row.dig(:metrics, :unique_users).to_i }
+      total_events = rows.sum { |row| row.dig(:metrics, :events_count).to_i }
 
-      CSV.generate(headers: true) do |csv| # rubocop:disable Metrics/BlockLength
+      CSV.generate(headers: true) do |csv|
         csv << [
           I18n.t('cases.stats.csv.country'),
           I18n.t('cases.stats.csv.unique_visitors'),
@@ -231,7 +184,7 @@ module Cases
           I18n.t('cases.stats.csv.last_visit')
         ]
 
-        countries.each do |row|
+        rows.each do |row|
           csv << [
             row.dig(:country, :name),
             row.dig(:metrics, :unique_visits),

@@ -15,10 +15,13 @@
 
       <div
         data-controller="case-stats"
-        data-url="<%= case_stats_path(@case) %>"
-        data-min-date="<%= @min_date %>">
-        <!-- StatsPage React component mounts here -->
-      </div>
+        data-link="<%= case_path(@case) %>"
+        data-published-at="<%= @case.published_at&.to_date&.iso8601 %>"
+        data-min-date="<%= @case.created_at.to_date.iso8601 %>"
+        data-max-date="<%= Time.zone.now.to_date.iso8601 %>"
+        data-deployments-count="<%= @case.deployments.count %>"
+        data-locales="<%= (@stats_locales || []).to_json %>"
+      ></div>
     </div>
   </div>
 </div>

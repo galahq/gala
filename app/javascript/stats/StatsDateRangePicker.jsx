@@ -2,94 +2,82 @@
 
 import React, { useMemo } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
-import { injectIntl } from 'react-intl'
-import { formatLocalDate } from './dateHelpers'
+
+type Props = {
+  minDate: Date,
+  maxDate: Date,
+  value: [Date | null, Date | null],
+  onRangeChange: (from: ?Date, to: ?Date) => void,
+  formatLocalDate: (date: Date) => string,
+  t: (key: string) => string,
+  className?: string,
+}
 
 function StatsDateRangePicker ({
-  minDate: minDateProp,
-  maxDate: maxDateProp,
+  minDate,
+  maxDate,
   value,
   onRangeChange,
+  formatLocalDate,
+  t,
   className,
-  intl,
-}) {
-  const minDate = minDateProp || new Date(2000, 0, 1)
-  const maxDate = maxDateProp || new Date()
+}: Props): React$Node {
+  const today = new Date(maxDate)
+  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
-  const today = new Date()
-  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-  const startFromDays = d =>
-    new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
-
-  const translatedShortcuts = useMemo(() => ([
-    {
-      label: intl.formatMessage({ id: 'cases.stats.show.dateRangeAllTime' }),
-      dateRange: [minDate, end],
-    },
-    {
-      label: intl.formatMessage({
-        id: 'cases.stats.show.dateRangePast7Days',
-      }),
-      dateRange: [startFromDays(7), end],
-    },
-    {
-      label: intl.formatMessage({
-        id: 'cases.stats.show.dateRangePast30Days',
-      }),
-      dateRange: [startFromDays(30), end],
-    },
-    {
-      label: intl.formatMessage({
-        id: 'cases.stats.show.dateRangePastYear',
-      }),
-      dateRange: [startFromDays(365), end],
-    },
-    {
-      label: intl.formatMessage({
-        id: 'cases.stats.show.dateRangePast2Years',
-      }),
-      dateRange: [startFromDays(730), end],
-    },
-  ]), [intl, minDate, end])
-
-  const getInitialMonth = (dateRange) => {
-    if (!dateRange || !dateRange[0]) return undefined
-    const fromDate = dateRange[0]
-    return new Date(fromDate.getFullYear(), fromDate.getMonth(), 1)
+  const startFromDays = (days: number): Date => {
+    return new Date(
+      endOfDay.getFullYear(),
+      endOfDay.getMonth(),
+      endOfDay.getDate() - days + 1
+    )
   }
 
-  const getSelectedShortcutIndex = (currentRange, shortcutsList) => {
-    if (!currentRange || !shortcutsList || !Array.isArray(shortcutsList)) {
-      return -1
-    }
+  const shortcuts = useMemo(() => ([
+    {
+      label: t('date_range_all_time'),
+      dateRange: [minDate, endOfDay],
+    },
+    {
+      label: t('date_range_past_7_days'),
+      dateRange: [startFromDays(7), endOfDay],
+    },
+    {
+      label: t('date_range_past_30_days'),
+      dateRange: [startFromDays(30), endOfDay],
+    },
+    {
+      label: t('date_range_past_year'),
+      dateRange: [startFromDays(365), endOfDay],
+    },
+    {
+      label: t('date_range_past_2_years'),
+      dateRange: [startFromDays(730), endOfDay],
+    },
+  ]), [t, minDate, endOfDay])
 
-    const [currentFrom, currentTo] = currentRange
-    const toDateStr = d => (d ? formatLocalDate(d) : '')
+  const selectedShortcutIndex = useMemo(() => {
+    const [currentFrom, currentTo] = value
+    if (!currentFrom || !currentTo) return -1
 
-    for (let i = 0; i < shortcutsList.length; i++) {
-      const [shortcutFrom, shortcutTo] = shortcutsList[i].dateRange
-      if (
-        toDateStr(shortcutFrom) === toDateStr(currentFrom) &&
-        toDateStr(shortcutTo) === toDateStr(currentTo)
-      ) {
-        return i
-      }
-    }
-    return -1
-  }
+    const currentFromIso = formatLocalDate(currentFrom)
+    const currentToIso = formatLocalDate(currentTo)
 
-  const selectedShortcutIndex = getSelectedShortcutIndex(value, translatedShortcuts)
+    return shortcuts.findIndex(shortcut => {
+      const [shortcutFrom, shortcutTo] = shortcut.dateRange
+      return (
+        formatLocalDate(shortcutFrom) === currentFromIso &&
+        formatLocalDate(shortcutTo) === currentToIso
+      )
+    })
+  }, [value, shortcuts])
+
   const activeShortcutClass =
     selectedShortcutIndex >= 0
       ? `c-stats-date-shortcut-active-${selectedShortcutIndex}`
       : ''
-  const pickerClassName = [className, activeShortcutClass].filter(Boolean).join(' ')
 
-  function handleChange (nextRange) {
-    if (onRangeChange) {
-      onRangeChange(nextRange[0], nextRange[1])
-    }
-  }
+  const pickerClassName = [className, activeShortcutClass].filter(Boolean).join(' ')
 
   return (
     <DateRangePicker
@@ -98,12 +86,12 @@ function StatsDateRangePicker ({
       minDate={minDate}
       maxDate={maxDate}
       allowSingleDayRange={true}
+      singleMonthOnly={false}
       contiguousCalendarMonths={false}
-      shortcuts={translatedShortcuts}
-      initialMonth={getInitialMonth(value)}
-      onChange={handleChange}
+      shortcuts={shortcuts}
+      onChange={nextRange => onRangeChange(nextRange[0], nextRange[1])}
     />
   )
 }
 
-export default injectIntl(StatsDateRangePicker)
+export default StatsDateRangePicker
