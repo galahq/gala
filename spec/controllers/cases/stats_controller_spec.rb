@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Cases::StatsController do
+  render_views
+
   let(:reader) { create :reader }
   let(:kase) { create :case, :published }
 

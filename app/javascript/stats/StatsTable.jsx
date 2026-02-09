@@ -96,6 +96,7 @@ function StatsTable ({ rows, locale, formatDate, t }: Props): React$Node {
             <th className="c-stats-table__rank-header">{t('table_rank')}</th>
             <SortableHeader
               field="name"
+              enable={false}
               currentField={sortField}
               direction={sortDirection}
               label={t('table_country')}
@@ -111,6 +112,7 @@ function StatsTable ({ rows, locale, formatDate, t }: Props): React$Node {
             />
             <SortableHeader
               field="first_event"
+              enable={false}
               currentField={sortField}
               direction={sortDirection}
               label={t('table_first_visit')}
@@ -118,6 +120,7 @@ function StatsTable ({ rows, locale, formatDate, t }: Props): React$Node {
             />
             <SortableHeader
               field="last_event"
+              enable={false}
               currentField={sortField}
               direction={sortDirection}
               label={t('table_last_visit')}

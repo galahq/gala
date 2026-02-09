@@ -25,13 +25,18 @@ module Cases
     private
 
     def set_case
-      @case = Case.friendly.find(params[:case_slug]).decorate
+      @case = Case.friendly.find(case_slug_param).decorate
       @stats_locales = stats_locales
-      authorize @case, :update?
+      authorize @case, :stats?
+    end
+
+    def case_slug_param
+      params[:case_slug].presence || params[:slug]
     end
 
     def stats_locales
-      current_locale = @case.locale.to_s.strip
+      current_locale = @case.locale
+      current_locale = current_locale.to_s.strip if current_locale.present?
       translation_locales =
         Case.where(translation_base_id: @case.id)
             .where.not(id: @case.id)
@@ -39,7 +44,14 @@ module Cases
             .pluck(:locale)
             .map { |locale| locale.to_s.strip }
 
-      [current_locale, *translation_locales].reject(&:blank?).uniq
+      seen = {}
+      [current_locale, *translation_locales].each_with_object([]) do |locale, list|
+        key = locale.to_s
+        next if seen[key]
+
+        seen[key] = true
+        list << locale
+      end
     end
 
     def csv_filename
@@ -59,12 +71,11 @@ module Cases
     end
 
     def stats_range
-      @stats_range ||= begin
-        from_date = parse_date(params[:from]) || @case.created_at.to_date
-        to_date = parse_date(params[:to]) || Time.zone.today
-        to_date = from_date if to_date < from_date
-        { from_date: from_date, to_date: to_date }
-      end
+      from_date = parse_date(params[:from]) || @case.created_at.to_date
+      parsed_to_date = parse_date(params[:to])
+      to_date = parsed_to_date || Time.zone.today
+      to_date = from_date if parsed_to_date.present? && to_date < from_date
+      { from_date: from_date, to_date: to_date }
     end
 
     def bindings

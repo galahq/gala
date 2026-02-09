@@ -28,12 +28,17 @@ function normalizeEndpoint (endpoint: string): string {
   return `${trimmed}.json`
 }
 
-function compactParams (params: { [string]: mixed }): { [string]: mixed } {
-  return Object.keys(params).reduce((result, key) => {
-    const value = params[key]
-    if (value === null || value === undefined || value === '') return result
-    return { ...result, [key]: value }
-  }, {})
+function compactParams (params: { from?: ?string, to?: ?string }): {
+  [string]: string,
+} {
+  const result = {}
+  if (params.from != null && params.from !== '') {
+    result.from = params.from
+  }
+  if (params.to != null && params.to !== '') {
+    result.to = params.to
+  }
+  return result
 }
 
 export async function fetchCaseStats (

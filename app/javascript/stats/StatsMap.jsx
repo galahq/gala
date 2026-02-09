@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactMapGL, { Layer, NavigationControl, Source } from 'react-map-gl'
+
 import { NonIdealState, Popover, Position } from '@blueprintjs/core'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -33,25 +34,11 @@ type Props = {
   t: (key: string) => string,
 }
 
-const MAP_FIXED_ZOOM = 1.24
-const MAP_VIEW_BOUNDS = [
-  [-180, -44],
-  [180, 80],
-]
-
-function clamp (value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value))
-}
-
-function clampViewport (nextViewport: any) {
-  const [[west, south], [east, north]] = MAP_VIEW_BOUNDS
-
-  return {
-    ...nextViewport,
-    latitude: clamp(nextViewport.latitude || 0, south, north),
-    longitude: clamp(nextViewport.longitude || 0, west, east),
-    zoom: MAP_FIXED_ZOOM,
-  }
+const INITIAL_VIEWPORT = {
+  ...DEFAULT_VIEWPORT,
+  latitude: 0,
+  longitude: 0,
+  zoom: 0,
 }
 
 type HoveredCountry = {
@@ -263,13 +250,9 @@ function MapErrorState ({
 
 function StatsMap ({ rows, bins, t }: Props): React$Node {
   const mapRef = useRef(null)
-  const tooltipRef = useRef<?HTMLDivElement>(null)
+  const tooltipRef = useRef<HTMLDivElement | null>(null)
 
-  const [viewport, setViewport] = useState(() => clampViewport({
-    ...DEFAULT_VIEWPORT,
-    latitude: 26,
-    zoom: MAP_FIXED_ZOOM,
-  }))
+  const [viewport, setViewport] = useState(INITIAL_VIEWPORT)
   const [mapLoaded, setMapLoaded] = useState(false)
   const [mapReady, setMapReady] = useState(false)
   const [mapError, setMapError] = useState(false)
@@ -362,13 +345,14 @@ function StatsMap ({ rows, bins, t }: Props): React$Node {
   }, [bins, rows])
 
   useEffect(() => {
-    if (!mapRef.current || !hovered || !tooltipRef.current) return
+    if (!mapRef.current || !hovered) return
 
     const map = mapRef.current.getMap()
-    if (!map) return
+    const tooltipEl = tooltipRef.current
+    if (!map || !tooltipEl) return
 
     const mapRect = map.getContainer().getBoundingClientRect()
-    const tipRect = tooltipRef.current.getBoundingClientRect()
+    const tipRect = tooltipEl.getBoundingClientRect()
 
     setTooltipPosition(
       calculateTooltipPosition({
@@ -419,16 +403,13 @@ function StatsMap ({ rows, bins, t }: Props): React$Node {
   }, [defaultCountryColor, fillColorExpression, mapReady])
 
   const handleViewportChange = useCallback((nextViewport: any) => {
-    setViewport(clampViewport(nextViewport))
+    setViewport(nextViewport)
   }, [])
 
   const handleMapLoad = useCallback(() => {
     if (!mapRef.current) return
 
     const map = mapRef.current.getMap()
-    map.setMaxBounds(MAP_VIEW_BOUNDS)
-    map.setMinZoom(MAP_FIXED_ZOOM)
-    map.setMaxZoom(MAP_FIXED_ZOOM)
 
     setMapLoaded(true)
     setMapReady(false)
@@ -456,6 +437,7 @@ function StatsMap ({ rows, bins, t }: Props): React$Node {
 
   const handleMapError = useCallback(
     (error: any) => {
+      console.error('Map error:', error)
       if (mapLoaded) return
 
       const parsed = parseMapError(error)
@@ -538,16 +520,20 @@ function StatsMap ({ rows, bins, t }: Props): React$Node {
         latitude={viewport.latitude}
         longitude={viewport.longitude}
         zoom={viewport.zoom}
-        maxBounds={MAP_VIEW_BOUNDS}
-        minZoom={MAP_FIXED_ZOOM}
-        maxZoom={MAP_FIXED_ZOOM}
         mapStyle={getMapboxStyle()}
         mapboxApiAccessToken={getMapboxToken()}
         interactiveLayerIds={mapReady ? ['country-fills'] : []}
-        scrollZoom={false}
-        dragPan={true}
+        logoPosition="bottom-left"
+        fadeDuration={100}
+        trackResize={true}
+        bearingSnap={360}
+        pitchWithRotate={false}
         dragRotate={false}
-        touchRotate={false}
+        dragPan={true}
+        touchPitch={false}
+        doubleClickZoom={false}
+        antialias={true}
+        optimizeForTerrain={false}
         onViewportChange={handleViewportChange}
         onLoad={handleMapLoad}
         onError={handleMapError}

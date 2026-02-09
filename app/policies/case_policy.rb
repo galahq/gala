@@ -52,6 +52,10 @@ class CasePolicy < ApplicationPolicy
     user.my_cases.include?(record) || update? || editor?
   end
 
+  def stats?
+    update?
+  end
+
   def admin_scope
     AdminScope.new(user, record.class).resolve
   end

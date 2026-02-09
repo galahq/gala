@@ -61,6 +61,8 @@ const EMPTY_SUMMARY = {
   total_podcast_listens: 0,
 }
 
+const COUNTRY_DISPLAY_NAMES_CACHE: { [string]: any } = {}
+
 type CaseInfo = {
   link: string,
   published_at: ?string,
@@ -94,9 +96,29 @@ type State = {
   allTimeRows: Array<StatsCountryRow>,
   rangeRows: ?Array<StatsCountryRow>,
   bins: Array<StatsBin>,
-  flagsByIso2: { [string]: string },
   isRangeLoading: boolean,
   error: ?Error,
+}
+
+type StatsStoreState = State & {
+  isInitialLoading: boolean,
+}
+
+type InitArgs = {
+  endpoint: string,
+  locale: string,
+  messages: { [string]: string },
+  initialCase: CaseInfo,
+}
+
+type StatsActions = {
+  setDateRange: (from: ?Date, to: ?Date) => void,
+}
+
+type UseStatsStoreResult = {
+  state: StatsStoreState,
+  actions: StatsActions,
+  t: (key: string) => string,
 }
 
 type Action =
@@ -107,10 +129,6 @@ type Action =
   | {
       type: 'SET_DATE_RANGE',
       payload: DateRange,
-    }
-  | {
-      type: 'SET_FLAGS',
-      payload: { [string]: string },
     }
   | { type: 'FETCH_ALL_TIME_START' }
   | {
@@ -242,19 +260,90 @@ function buildSummary (rows: Array<StatsCountryRow>): StatsSummary {
   }
 }
 
+function buildLocaleCandidates (locale: string): string[] {
+  const normalized = typeof locale === 'string' ? locale.trim() : ''
+  const language = normalized.split(/[-_]/)[0]
+  const candidates = []
+
+  if (normalized) candidates.push(normalized)
+  if (language && candidates.indexOf(language) === -1) {
+    candidates.push(language)
+  }
+  if (candidates.indexOf('en') === -1) {
+    candidates.push('en')
+  }
+
+  return candidates
+}
+
+function displayNamesForLocale (locale: string): any {
+  const normalized = typeof locale === 'string' ? locale.trim() : ''
+  if (!normalized) return null
+
+  const cacheKey = normalized.toLowerCase()
+  if (Object.prototype.hasOwnProperty.call(COUNTRY_DISPLAY_NAMES_CACHE, cacheKey)) {
+    return COUNTRY_DISPLAY_NAMES_CACHE[cacheKey]
+  }
+
+  const intlApi = (Intl: any)
+  const DisplayNames = intlApi && intlApi.DisplayNames
+  if (typeof DisplayNames !== 'function') {
+    COUNTRY_DISPLAY_NAMES_CACHE[cacheKey] = null
+    return null
+  }
+
+  try {
+    COUNTRY_DISPLAY_NAMES_CACHE[cacheKey] = new DisplayNames([normalized], {
+      type: 'region',
+    })
+  } catch (_error) {
+    COUNTRY_DISPLAY_NAMES_CACHE[cacheKey] = null
+  }
+
+  return COUNTRY_DISPLAY_NAMES_CACHE[cacheKey]
+}
+
+function localizeCountryName (
+  iso2: ?string,
+  fallbackName: ?string,
+  locale: string
+): string {
+  const fallback = fallbackName || 'Unknown'
+  if (!iso2) return fallback
+
+  const code = iso2.toUpperCase()
+  const localeCandidates = buildLocaleCandidates(locale)
+
+  for (let index = 0; index < localeCandidates.length; index += 1) {
+    const displayNames = displayNamesForLocale(localeCandidates[index])
+    if (!displayNames || typeof displayNames.of !== 'function') continue
+
+    try {
+      const localized = displayNames.of(code)
+      if (typeof localized === 'string' && localized.trim()) {
+        const normalized = localized.trim()
+        if (normalized.toUpperCase() !== code) {
+          return normalized
+        }
+      }
+    } catch (_error) {
+      continue
+    }
+  }
+
+  return fallback
+}
+
 function hydrateFlags (
   rows: ?Array<StatsCountryRow>,
-  namesByIso2: { [string]: string }
+  locale: string
 ): ?Array<StatsCountryRow> {
   if (!rows) return null
 
   return rows.map(row => {
-    const lower = row.iso2 ? row.iso2.toLowerCase() : null
-    const localizedName = lower ? namesByIso2[lower] : null
-
     return {
       ...row,
-      name: localizedName || row.name || 'Unknown',
+      name: localizeCountryName(row.iso2, row.name, locale),
       flag_url: buildFlagUrl(row.iso2),
     }
   })
@@ -272,12 +361,6 @@ function reducer (state: State, action: Action): State {
       return {
         ...state,
         dateRange: action.payload,
-      }
-
-    case 'SET_FLAGS':
-      return {
-        ...state,
-        flagsByIso2: action.payload,
       }
 
     case 'FETCH_ALL_TIME_START':
@@ -436,46 +519,12 @@ function syncUrlParams (range: DateRange): void {
   window.history.replaceState({}, '', `${url.pathname}?${params.toString()}`)
 }
 
-async function fetchFlagsByLocale (
-  locale: string
-): Promise<{ [string]: string }> {
-  const language = (locale || 'en').split(/[-_]/)[0].toLowerCase()
-  if (language === 'en') return {}
-
-  const tryFetch = async targetLanguage => {
-    const response = await fetch(
-      `${FLAGCDN_BASE_URL}/${targetLanguage}/codes.json`
-    )
-    if (!response.ok) {
-      throw new Error(`Failed loading flags (${response.status})`)
-    }
-
-    const payload = await response.json()
-    return payload && typeof payload === 'object' ? payload : {}
-  }
-
-  try {
-    return await tryFetch(language)
-  } catch (_error) {
-    try {
-      return await tryFetch('en')
-    } catch (__error) {
-      return {}
-    }
-  }
-}
-
 function createInitialState ({
   endpoint,
   locale,
   messages,
   initialCase,
-}: {
-  endpoint: string,
-  locale: string,
-  messages: { [string]: string },
-  initialCase: CaseInfo,
-}): State {
+}: InitArgs): State {
   const minDate = normalizeIsoDateString(initialCase.min_date) || getTodayIso()
   const maxDate = normalizeIsoDateString(initialCase.max_date) || getTodayIso()
   const locales = Array.isArray(initialCase.locales)
@@ -504,7 +553,6 @@ function createInitialState ({
     allTimeRows: [],
     rangeRows: null,
     bins: [],
-    flagsByIso2: {},
     isRangeLoading: true,
     error: null,
   }
@@ -515,21 +563,15 @@ export function useStatsStore ({
   locale,
   messages,
   initialCase,
-}: {
-  endpoint: string,
-  locale: string,
-  messages: { [string]: string },
-  initialCase: CaseInfo,
-}) {
-  const [state, dispatch] = useReducer(
+}: InitArgs): UseStatsStoreResult {
+  const [state, dispatch] = useReducer<State, Action>(
     reducer,
-    {
+    createInitialState({
       endpoint,
       locale,
       messages,
       initialCase,
-    },
-    createInitialState
+    })
   )
   const hasFetchedAllTime = useRef(false)
 
@@ -543,24 +585,6 @@ export function useStatsStore ({
   useEffect(() => {
     syncUrlParams(state.dateRange)
   }, [state.dateRange.from, state.dateRange.to])
-
-  useEffect(() => {
-    let active = true
-
-    fetchFlagsByLocale(state.locale)
-      .then(namesByIso2 => {
-        if (!active) return
-        dispatch({ type: 'SET_FLAGS', payload: namesByIso2 })
-      })
-      .catch(() => {
-        if (!active) return
-        dispatch({ type: 'SET_FLAGS', payload: {}})
-      })
-
-    return () => {
-      active = false
-    }
-  }, [state.locale])
 
   useEffect(() => {
     let active = true
@@ -650,20 +674,17 @@ export function useStatsStore ({
     [state.caseInfo.min_date, state.caseInfo.max_date]
   )
 
-  const t = useCallback(
-    (key: string): string => {
-      return state.translations[key] || key
-    },
-    [state.translations]
-  )
+  const t: (key: string) => string = key => {
+    return state.translations[key] || key
+  }
 
   const rangeRowsWithFlags = useMemo(() => {
-    return hydrateFlags(state.rangeRows, state.flagsByIso2)
-  }, [state.rangeRows, state.flagsByIso2])
+    return hydrateFlags(state.rangeRows, state.locale)
+  }, [state.rangeRows, state.locale])
 
   const allTimeRowsWithFlags = useMemo(() => {
-    return hydrateFlags(state.allTimeRows, state.flagsByIso2) || []
-  }, [state.allTimeRows, state.flagsByIso2])
+    return hydrateFlags(state.allTimeRows, state.locale) || []
+  }, [state.allTimeRows, state.locale])
 
   return {
     state: {

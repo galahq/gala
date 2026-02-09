@@ -15,6 +15,7 @@
 
       <div
         data-controller="case-stats"
+        data-endpoint="<%= "#{case_path(@case)}/insights" %>"
         data-link="<%= case_path(@case) %>"
         data-published-at="<%= @case.published_at&.to_date&.iso8601 %>"
         data-min-date="<%= @case.created_at.to_date.iso8601 %>"

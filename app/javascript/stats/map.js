@@ -203,12 +203,18 @@ export function buildCountryColorMap (
   const binColors = getBinColors(binCount)
   const colorsByIso3 = {}
 
+  if (!binColors.length) {
+    return colorsByIso3
+  }
+
   rows.forEach(row => {
     const iso3 = normalizeIso3(row.iso3)
     if (!iso3) return
 
-    const bin = Number.isFinite(row.bin) ? row.bin : 0
-    const color = binColors[Math.min(bin, Math.max(0, binColors.length - 1))]
+    const bin =
+      typeof row.bin === 'number' && Number.isFinite(row.bin) ? row.bin : 0
+    const maxIndex = Math.max(0, binColors.length - 1)
+    const color = binColors[Math.min(bin, maxIndex)]
     if (color) {
       colorsByIso3[iso3] = color
     }
@@ -266,8 +272,8 @@ export function calculateTooltipPosition ({
   mapRect,
 }: {
   mouse: { x: number, y: number },
-  tooltipRect: DOMRect,
-  mapRect: DOMRect,
+  tooltipRect: ClientRect,
+  mapRect: ClientRect,
 }): { left: number, top: number } {
   const offset = 15
   const wouldOverflowRight =
