@@ -36,8 +36,6 @@ type CountryData = {
   iso3: string,
   name: string,
   unique_visits: number,
-  unique_users: number,
-  events_count: number,
   bin: number,
 }
 

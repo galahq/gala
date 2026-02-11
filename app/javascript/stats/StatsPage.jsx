@@ -126,13 +126,11 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
           </div>
 
           <div className="c-stats-map-table-card pt-card pt-elevation-1">
-            <div className="c-stats-map-table-header">
-              <h3 className="c-stats-map-table__heading">
-                {msg('table_title')}
-                {dateRangeText && (
-                  <span className="c-stats-map-table__date-range"> {dateRangeText}</span>
-                )}
-              </h3>
+            <div className="c-stats-map-table__header">
+              <h3 className="c-stats-map-table__heading">{msg('table_title')}</h3>
+              {dateRangeText && (
+                <span className="c-stats-map-table__date-range">{dateRangeText}</span>
+              )}
             </div>
 
             <div className={mapContainerClass}>
@@ -158,7 +156,7 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
             </div>
 
             {hasData && !isLoading && (
-              <>
+              <div className="c-stats-table-export-layout">
                 <div className="c-stats-export-button-container">
                   <a
                     download
@@ -172,7 +170,7 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
                 <div className="c-stats-table-container">
                   <StatsTable data={formatted} />
                 </div>
-              </>
+              </div>
             )}
 
             {isLoading && !hasData && (

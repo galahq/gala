@@ -8,8 +8,6 @@ type CountryData = {
   iso3: string,
   name: string,
   unique_visits: number,
-  unique_users: number,
-  events_count: number,
   bin: number,
 }
 
@@ -45,21 +43,11 @@ function MapTooltip ({
       </div>
       <div className="c-stats-map-tooltip__content">
         <span className="c-stats-map-tooltip__color" style={{ backgroundColor: binColor }} />
-        <div>
-          <div className="c-stats-map-tooltip__visitors">
-            {country.unique_visits.toLocaleString()}{' '}
-            {intl.formatMessage({
-              id: 'cases.stats.show.mapTooltipVisitors',
-            })}
-          </div>
-          <div className="c-stats-map-tooltip__details">
-            {country.unique_users.toLocaleString()}{' '}
-            {intl.formatMessage({ id: 'cases.stats.show.mapTooltipUsers' })} •{' '}
-            {country.events_count.toLocaleString()}{' '}
-            {intl.formatMessage({
-              id: 'cases.stats.show.mapTooltipEvents',
-            })}
-          </div>
+        <div className="c-stats-map-tooltip__visitors">
+          {country.unique_visits.toLocaleString()}{' '}
+          {intl.formatMessage({
+            id: 'cases.stats.show.mapTooltipVisitors',
+          })}
         </div>
       </div>
     </div>

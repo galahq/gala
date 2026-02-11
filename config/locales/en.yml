@@ -296,8 +296,8 @@ en:
         # Page section headings
         overview: Overview
         overview_stats: All Stats
-        filter_by_date: Filter by date
-        about_visitors: About 'Unique Visitors'
+        filter_by_date: Filter by Date
+        about_visitors: About Unique Visitors
         filtered_stats: Filtered Stats
         # Summary section
         summary_title: Overview
@@ -305,18 +305,16 @@ en:
         date_published: Date Published
         available_translations: Available Translations
         total_deployments: Total Deployments
-        countries: Countries        
+        countries: Visitor Countries
         podcast_listens_short: Podcast Listens
         translations: Translations
         no_data: No data available for selected period
         # Map section
         map_legend_title: Visitor Distribution
-        map_legend_help_title: How Visitor Distribution Works
+        map_legend_help_title: Visitor Distribution
         map_legend_help_description: >
-          Countries are grouped into 1-5 color bins based on visitor counts. The system automatically 
-          adapts: if you have 3 different visitor counts, you'll see 3 bins. For 5+ unique values, 
-          bins are placed at the 25th, 50th, 75th, and 100th percentiles of your data, ensuring 
-          each bin represents a meaningful range. Lighter indigo shades indicate higher visitor counts.
+          Countries are grouped into 1-5 shaded bins, based on visitor counts that automatically
+          adapt, depending on the range of unique visitors. Lighter indigo shades indicate higher visitor counts.
         map_legend_low: low
         map_legend_high: high
         map_tooltip_visitors: visitors

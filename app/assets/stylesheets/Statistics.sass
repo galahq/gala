@@ -79,10 +79,24 @@ $stats-danger: #db3737
 
 .c-stats-picker
   flex: 1
-  min-width: 300px
+  min-width: 280px
   max-width: 800px
   width: 100%
   padding: 20px
+
+  .pt-daterangepicker
+    @media (max-width: 639px)
+      flex-direction: column
+
+    > div:not(.pt-daterangepicker-shortcuts)
+      @media (max-width: 639px)
+        flex-direction: column
+        align-items: center
+        margin-top: 12px
+        border: none
+
+  @media (min-width: 640px)
+    min-width: 640px
 
   @media (min-width: 1200px)
     flex: 1
@@ -140,8 +154,12 @@ $stats-danger: #db3737
   padding: 20px
   max-width: 1400px
 
-.c-stats-map-table-header
-  margin-bottom: 16px
+.c-stats-map-table__header
+  margin: 0 0 12px 0
+  padding-bottom: 8px
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15)
+  font-size: 15px
+  font-weight: 600
 
 .c-stats-map-table__heading
   margin: 0
@@ -149,11 +167,10 @@ $stats-danger: #db3737
   font-weight: 600
   color: rgba(16, 22, 26, 0.8)
 
-.c-stats-map-table__heading .c-stats-map-table__date-range
+.c-stats-map-table__date-range
   font-weight: 400
   color: rgba(92, 112, 128, 0.9)
   font-size: 14px
-  margin-left: 10px
 
 .c-stats-map-container
   height: 500px
@@ -161,6 +178,13 @@ $stats-danger: #db3737
   padding: 0 !important
   overflow: hidden
   width: 100%
+
+  @media (max-width: 639px)
+    max-width: 340px
+    width: 100%
+    height: 280px
+    margin-left: auto
+    margin-right: auto
 
 .c-stats-map-container--min
   height: 250px
@@ -179,14 +203,34 @@ $stats-danger: #db3737
   width: 100%
   cursor: default
 
+.c-stats-table-export-layout
+  display: flex
+  flex-direction: column
+  gap: 16px
+  align-items: flex-start
+
+  @media (min-width: 768px)
+    flex-direction: row-reverse
+    align-items: flex-start
+    gap: 20px
+
+.c-stats-table-container
+  flex: 1
+  min-width: 0
+  width: 100%
+  min-height: 400px
+
+  @media (min-width: 768px)
+    flex: 1 1 auto
+
+.c-stats-table
+  @media (max-width: 639px)
+    font-size: 13px
+
 .c-stats-export-button-container
   display: flex
   justify-content: flex-end
-  margin-bottom: 20px
-
-.c-stats-table-container
-  width: 100%
-  min-height: 400px
+  flex-shrink: 0
 
 .c-stats-map__loading-overlay
   position: absolute
