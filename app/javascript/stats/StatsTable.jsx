@@ -24,8 +24,8 @@ function StatsTable ({ data, intl }: Props) {
   const {
     sortDirection,
     handleSort,
-    knownCountries,
-    unknownCountries,
+    countries,
+    uncountries,
     totalVisits,
     formatDate,
     isActiveSortField,
@@ -102,19 +102,7 @@ function StatsTable ({ data, intl }: Props) {
           </tr>
         </thead>
         <tbody>
-          {knownCountries.map((row, index) => renderRow(row, index))}
-          {unknownCountries.length > 0 && (
-            <>
-              <tr>
-                <td className="c-stats-table__unknown-header" colSpan={5}>
-                  <FormattedMessage id="cases.stats.show.tableUnknownLocation" defaultMessage="Unknown Location" />
-                </td>
-              </tr>
-              {unknownCountries.map((row, index) =>
-                renderRow(row, knownCountries.length + index)
-              )}
-            </>
-          )}
+          {countries.map((row, index) => renderRow(row, index))}
         </tbody>
         <tfoot>
           <tr className="c-stats-table__total-row">

@@ -19,8 +19,8 @@ type UseStatsTableResult = {
   sortField: string,
   sortDirection: SortDirection,
   handleSort: (field: string) => void,
-  knownCountries: CountryData[],
-  unknownCountries: CountryData[],
+  countries: CountryData[],
+  uncountries: CountryData[],
   totalVisits: number,
   formatDate: (dateStr: ?string) => string,
   isActiveSortField: (field: string) => boolean,
@@ -63,14 +63,14 @@ export function useStatsTable (data: CountryData[]): UseStatsTableResult {
     })
   }, [data, sortField, sortDirection])
 
-  const { knownCountries, unknownCountries } = useMemo(() => {
+  const { countries, uncountries } = useMemo(() => {
     const known = sortedData.filter(
       row => row.iso2 && row.name && row.name.trim() !== '' && row.name !== 'Unknown'
     )
     const unknown = sortedData.filter(
       row => !row.iso2 || !row.name || row.name.trim() === '' || row.name === 'Unknown'
     )
-    return { knownCountries: known, unknownCountries: unknown }
+    return { countries: known, uncountries: unknown }
   }, [sortedData])
 
   const totalVisits = useMemo(() => {
@@ -90,8 +90,8 @@ export function useStatsTable (data: CountryData[]): UseStatsTableResult {
     sortField,
     sortDirection,
     handleSort,
-    knownCountries,
-    unknownCountries,
+    countries,
+    uncountries,
     totalVisits,
     formatDate,
     isActiveSortField,
