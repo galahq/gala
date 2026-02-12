@@ -281,6 +281,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
           country={hoveredCountry}
           position={tooltipPosition}
           binColors={binColors}
+          binTextColors={binTextColors}
           intl={intl}
           tooltipRef={tooltipRef}
         />

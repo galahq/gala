@@ -13,10 +13,12 @@
     <div>
       <h1 class="admin__title"><%= t('.case_stats') %></h1>
 
+      <%= render 'overview' %>
+
       <div
         data-controller="case-stats"
         data-url="<%= case_stats_path(@case) %>"
-        data-published_at="<%= @case.published_at&.to_date %>">
+        data-min-date="<%= @min_date.iso8601 %>">
         <!-- StatsPage React component mounts here -->
       </div>
     </div>

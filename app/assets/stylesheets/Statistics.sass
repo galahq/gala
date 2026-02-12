@@ -55,7 +55,8 @@ $stats-danger: #db3737
   @include recolor-statistics($white)
 
 .pt-daterangepicker-shortcuts
-  .pt-menu-item.pt-active
+  .pt-menu-item.pt-active,
+  .pt-menu-item.active
     background-color: $purple !important
     color: $white !important
     font-weight: 500
@@ -140,9 +141,9 @@ $stats-danger: #db3737
     flex: 0 0 350px
 
 .c-stats-summary
-  flex: 0 0 auto
-
+  flex: 0 1 auto
   width: 100%
+  max-width: 340px
   padding: 20px
 
   @media (min-width: 1200px)
@@ -414,7 +415,7 @@ $stats-danger: #db3737
 .c-stats-map-legend__title
   font-weight: bold
   margin-bottom: 8px
-  font-size: 12px
+  font-size: 14px
   color: #ffffff
   @include stats-mono
   display: flex
@@ -440,14 +441,14 @@ $stats-danger: #db3737
   justify-content: center
 
 .c-stats-map-legend__label
-  font-size: 10px
+  font-size: 12px
   font-weight: bold
   line-height: 1
   @include stats-mono
 
 .c-stats-map-legend__footer
   @include stats-flex-between
-  font-size: 11px
+  font-size: 13px
   margin-top: 6px
   color: #ffffff
   @include stats-mono
@@ -464,49 +465,78 @@ $stats-danger: #db3737
   margin-bottom: 8px
 
 .c-stats-map-legend__popover-text
-  font-size: 12px
+  font-size: 14px
 
 .c-stats-map-legend__help-icon
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  width: 16px
+  height: 16px
+  border-radius: 999px
+  background: rgba(255, 255, 255, 0.2)
+  color: #f8fbff
   cursor: pointer
-  opacity: 0.8
-  font-size: 10px
+  opacity: 1
+  font-size: 12px
+
+  .pt-icon-standard
+    color: inherit
 
 .c-stats-map-tooltip
   position: absolute
-  background: rgba(0, 0, 0, 0.9)
-  color: white
-  padding: 8px 12px
+  background: rgba(19, 28, 35, 0.95)
+  color: #ffffff
   border-radius: 6px
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3)
-  font-size: 12px
+  font-size: 14px
   @include stats-mono
   pointer-events: none
-  white-space: nowrap
+  min-width: 172px
   z-index: 1000
+  overflow: hidden
 
 .c-stats-map-tooltip__country
-  font-weight: bold
-  margin-bottom: 4px
-  font-size: 13px
+  font-weight: 700
+  font-size: 14px
 
-.c-stats-map-tooltip__content
+.c-stats-map-tooltip__country-row
   display: flex
   align-items: center
   gap: 6px
+  padding: 8px 10px
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16)
 
-.c-stats-map-tooltip__color
-  width: 12px
-  height: 12px
-  border-radius: 50%
-  border: 1px solid rgba(255, 255, 255, 0.3)
-  flex-shrink: 0
+.c-stats-map-tooltip__flag
+  width: 20px
+  height: 14px
+  object-fit: cover
+  border-radius: 2px
+  border: 1px solid rgba(255, 255, 255, 0.24)
 
-.c-stats-map-tooltip__visitors
-  font-weight: 500
+.c-stats-map-tooltip__metric-row
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 8px
+  padding: 8px 10px
 
-.c-stats-map-tooltip__details
-  font-size: 11px
-  opacity: 0.8
+.c-stats-map-tooltip__metric-label
+  font-size: 12px
+  font-weight: 600
+  color: rgba(255, 255, 255, 0.88)
+
+.c-stats-map-tooltip__metric-pill
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  min-width: 28px
+  min-height: 24px
+  border-radius: 999px
+  padding: 0 8px
+  font-size: 14px
+  font-weight: 700
+  border: 1px solid rgba(16, 22, 26, 0.3)
 
 .c-stats-map-error
   height: 100%

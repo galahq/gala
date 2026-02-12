@@ -2,7 +2,6 @@
 /* @flow */
 
 import React from 'react'
-import { IntlProvider } from 'react-intl'
 import ErrorBoundary from 'utility/ErrorBoundary'
 import { formatDateRange, parseLocalDate } from './dateHelpers'
 import { useDateRange } from './hooks/useDateRange'
@@ -12,7 +11,6 @@ import StatsDateRangePicker from './StatsDateRangePicker'
 import StatsMap from './StatsMap'
 import StatsTable from './StatsTable'
 import { StatsSummary } from './components/StatsSummary'
-import { StatsInformation } from './components/StatsInformation'
 import {
   MapLoadingOverlay,
   SummaryLoadingSkeleton,
@@ -23,13 +21,13 @@ import { StatsErrorState } from './components/StatsError'
 
 type Props = {
   dataUrl: string,
-  publishedAt: ?string,
+  minDate: ?string,
   messages: { [string]: string },
   locale: string,
 }
 
-function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$Node {
-  const { range: dateRange, setFromDates } = useDateRange({ publishedAt })
+function StatsPage ({ dataUrl, minDate, messages, locale }: Props): React$Node {
+  const { range: dateRange, setFromDates } = useDateRange({ minDate })
   const {
     data,
     allTimeStats,
@@ -51,24 +49,24 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
   const summary = data?.summary || {}
   const hasData = formatted.length > 0
   const dateRangeText = formatDateRange(dateRange.from, dateRange.to)
-  const caseInfo = summary.case_locales ? summary : caseSummary || {}
+  const caseInfo = summary.case_locales
+    ? summary
+    : (caseSummary || {})
   const statsForInfo = allTimeStats || { total_visits: 0, country_count: 0 }
 
-  const minDate = publishedAt ? parseLocalDate(publishedAt) : new Date(2000, 0, 1)
+  const pickerMinDate = minDate ? parseLocalDate(minDate) : new Date(2000, 0, 1)
   const maxDate = new Date()
-  const dateRangeValue = [
-    dateRange.from ? parseLocalDate(dateRange.from) : null,
-    dateRange.to ? parseLocalDate(dateRange.to) : null,
-  ]
+
+  // Parse and clamp dates to be within valid bounds
+  const parsedFrom = dateRange.from ? parseLocalDate(dateRange.from) : null
+  const parsedTo = dateRange.to ? parseLocalDate(dateRange.to) : null
+  const clampedFrom = parsedFrom && parsedFrom < pickerMinDate ? pickerMinDate : parsedFrom
+  const clampedTo = parsedTo && parsedTo > maxDate ? maxDate : parsedTo
+
+  const dateRangeValue = [clampedFrom, clampedTo]
 
   if (isInitialLoad) {
-    return (
-      <IntlProvider locale={locale} messages={messages}>
-        <ErrorBoundary>
-          <PageLoadingSkeleton />
-        </ErrorBoundary>
-      </IntlProvider>
-    )
+    return <PageLoadingSkeleton />
   }
 
   const showMinHeightMap = !hasData && !isLoading
@@ -77,35 +75,13 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
     : 'c-stats-map-container'
 
   return (
-    <IntlProvider locale={locale} messages={messages}>
       <ErrorBoundary>
-        <div className="c-stats-page">
-          <h2 className="c-stats-information__heading">{msg('overview')}</h2>
-          <div className="c-stats-information-container">
-            <div className="c-stats-overview-layout">
-              <div className="c-stats-information pt-card pt-elevation-1">
-                <h3 className="c-stats-information__card-heading">{msg('overview_stats')}</h3>
-                <StatsInformation
-                  caseInfo={caseInfo}
-                  allTimeStats={statsForInfo}
-                  msg={msg}
-                />
-              </div>
-              <div className="c-stats-tips pt-callout pt-icon-info-sign">
-                <h5 className="pt-callout-title">{msg('about_visitors')}</h5>
-                <div className="pt-callout-content">
-                  <p>{msg('tips_description')}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <h2 className="c-stats-filter-card__heading">{msg('filter_by_date')}</h2>
           <div className="c-stats-layout">
             <div className="c-stats-picker pt-card pt-elevation-1">
               <StatsDateRangePicker
                 className="pt"
-                minDate={minDate}
+                minDate={pickerMinDate}
                 maxDate={maxDate}
                 value={dateRangeValue}
                 onRangeChange={setFromDates}
@@ -179,9 +155,7 @@ function StatsPage ({ dataUrl, publishedAt, messages, locale }: Props): React$No
               </div>
             )}
           </div>
-        </div>
       </ErrorBoundary>
-    </IntlProvider>
   )
 }
 

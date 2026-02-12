@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
 import { injectIntl } from 'react-intl'
 import { formatLocalDate } from './dateHelpers'
@@ -55,7 +55,15 @@ function StatsDateRangePicker ({
   const getInitialMonth = (dateRange) => {
     if (!dateRange || !dateRange[0]) return undefined
     const fromDate = dateRange[0]
-    return new Date(fromDate.getFullYear(), fromDate.getMonth(), 1)
+    const initialMonth = new Date(fromDate.getFullYear(), fromDate.getMonth(), 1)
+
+    // Clamp initialMonth to be within minDate and maxDate bounds
+    const minMonth = new Date(minDate.getFullYear(), minDate.getMonth(), 1)
+    const maxMonth = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1)
+
+    if (initialMonth < minMonth) return minMonth
+    if (initialMonth > maxMonth) return maxMonth
+    return initialMonth
   }
 
   const getSelectedShortcutIndex = (currentRange, shortcutsList) => {
@@ -79,6 +87,36 @@ function StatsDateRangePicker ({
   }
 
   const selectedShortcutIndex = getSelectedShortcutIndex(value, translatedShortcuts)
+
+  useEffect(() => {
+    const syncShortcutActiveClass = () => {
+      const items = document.querySelectorAll('.pt-daterangepicker-shortcuts .pt-menu-item')
+      if (!items || items.length === 0) return
+
+      items.forEach((item, index) => {
+        if (index === selectedShortcutIndex) {
+          item.classList.add('active')
+        } else {
+          item.classList.remove('active')
+        }
+      })
+    }
+
+    syncShortcutActiveClass()
+    const timeoutId = window.setTimeout(syncShortcutActiveClass, 0)
+    const observer = typeof window.MutationObserver === 'function'
+      ? new window.MutationObserver(syncShortcutActiveClass)
+      : null
+
+    if (observer) {
+      observer.observe(document.body, { childList: true, subtree: true })
+    }
+
+    return () => {
+      window.clearTimeout(timeoutId)
+      if (observer) observer.disconnect()
+    }
+  }, [selectedShortcutIndex, translatedShortcuts.length, value])
 
   function handleChange (nextRange) {
     if (onRangeChange) {

@@ -49,14 +49,14 @@ export function getTodayIso (): string {
 export function validateDateRange (
   from: ?string,
   to: ?string,
-  publishedAt: ?string,
+  minDate: ?string,
   today: string
 ): { from: ?string, to: ?string } {
   let validFrom = from
   let validTo = to
 
-  if (validFrom && publishedAt && validFrom < publishedAt) {
-    validFrom = publishedAt
+  if (validFrom && minDate && validFrom < minDate) {
+    validFrom = minDate
   }
 
   if (validFrom && validTo && validFrom > validTo) {

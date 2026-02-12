@@ -18,8 +18,8 @@ export const createFillLayer = (): LayerConfig => ({
     'fill-opacity': [
       'case',
       ['boolean', ['get', 'hover'], false],
-      0.9,
-      0.7,
+      0.95,
+      0.85,
     ],
   },
 })

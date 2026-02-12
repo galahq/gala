@@ -9,7 +9,7 @@ type DateRange = {
 }
 
 type Params = {
-  publishedAt: ?string,
+  minDate: ?string,
 }
 
 type UseDateRangeResult = {
@@ -17,7 +17,7 @@ type UseDateRangeResult = {
   setFromDates: (from: ?Date, to: ?Date) => void,
 }
 
-export function useDateRange ({ publishedAt }: Params): UseDateRangeResult {
+export function useDateRange ({ minDate }: Params): UseDateRangeResult {
   const [range, setRange] = useState<DateRange>(() => {
     const urlParams = getUrlParams()
     if (urlParams.from || urlParams.to) {
@@ -26,8 +26,8 @@ export function useDateRange ({ publishedAt }: Params): UseDateRangeResult {
         to: urlParams.to || null,
       }
     }
-    if (publishedAt) {
-      return { from: publishedAt, to: getTodayIso() }
+    if (minDate) {
+      return { from: minDate, to: getTodayIso() }
     }
     return { from: null, to: null }
   })
@@ -38,7 +38,7 @@ export function useDateRange ({ publishedAt }: Params): UseDateRangeResult {
     const fromStr = from ? formatLocalDate(from) : null
     const toStr = to ? formatLocalDate(to) : null
     const today = getTodayIso()
-    const validated = validateDateRange(fromStr, toStr, publishedAt, today)
+    const validated = validateDateRange(fromStr, toStr, minDate, today)
 
     if (debounceRef.current) {
       clearTimeout(debounceRef.current)
@@ -48,7 +48,7 @@ export function useDateRange ({ publishedAt }: Params): UseDateRangeResult {
       setRange(validated)
       syncUrlParams(validated.from, validated.to)
     }, 150)
-  }, [publishedAt])
+  }, [minDate])
 
   useEffect(() => {
     return () => {

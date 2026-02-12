@@ -27,11 +27,43 @@ module Cases
     def set_case
       @case = Case.friendly.find(case_slug_param).decorate
       @stats_locales = stats_locales
+      @min_date = @case.published_at&.to_date || @case.created_at.to_date
+      @initial_all_time_summary = all_time_summary
       authorize @case, :stats?
     end
 
     def case_slug_param
       params[:case_slug].presence || params[:slug]
+    end
+
+    def all_time_summary
+      result = ActiveRecord::Base.connection.exec_query(
+        all_time_summary_sql,
+        'All Time Summary',
+        [ActiveRecord::Relation::QueryAttribute.new('case_id', @case.id, ActiveRecord::Type::Integer.new)]
+      ).first || {}
+
+      {
+        total_visits: result['total_visits'].to_i,
+        country_count: result['country_count'].to_i
+      }
+    end
+
+    def all_time_summary_sql
+      <<~SQL
+        SELECT
+          COUNT(DISTINCT v.visitor_token) AS total_visits,
+          COUNT(DISTINCT COALESCE(NULLIF(BTRIM(v.country), ''), 'Unknown')) AS country_count
+        FROM ahoy_events e
+        LEFT JOIN visits v ON v.id = e.visit_id
+        WHERE e.case_id = $1
+          AND NOT EXISTS (
+            SELECT 1
+            FROM readers_roles rr
+            INNER JOIN roles ro ON ro.id = rr.role_id
+            WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
+          )
+      SQL
     end
 
     def stats_locales
@@ -71,7 +103,9 @@ module Cases
     end
 
     def stats_range
-      from_date = parse_date(params[:from]) || @case.created_at.to_date
+      lower_bound = @min_date || @case.created_at.to_date
+      from_date = parse_date(params[:from]) || lower_bound
+      from_date = lower_bound if from_date < lower_bound
       parsed_to_date = parse_date(params[:to])
       to_date = parsed_to_date || Time.zone.today
       to_date = from_date if parsed_to_date.present? && to_date < from_date
@@ -137,9 +171,15 @@ module Cases
 
     def normalized_rows
       @normalized_rows ||= CaseStatsService.format_country_stats(
-        sql_query,
-        include_stats: true
+        sql_query
       )[:stats] || []
+    end
+
+    def stats_service_class
+      return CaseStatsService if defined?(CaseStatsService)
+      return CountryStatsService if defined?(CountryStatsService)
+
+      raise NameError, 'CaseStatsService (or legacy CountryStatsService) is not defined'
     end
 
     def data_payload
@@ -177,20 +217,16 @@ module Cases
       nil
     end
 
-    def generate_csv # rubocop:disable Metrics/MethodLength
+    def generate_csv
       require 'csv'
 
       rows = data_payload
       total_visits = rows.sum { |row| row.dig(:metrics, :unique_visits).to_i }
-      total_users = rows.sum { |row| row.dig(:metrics, :unique_users).to_i }
-      total_events = rows.sum { |row| row.dig(:metrics, :events_count).to_i }
 
       CSV.generate(headers: true) do |csv|
         csv << [
           I18n.t('cases.stats.csv.country'),
           I18n.t('cases.stats.csv.unique_visitors'),
-          I18n.t('cases.stats.csv.unique_users'),
-          I18n.t('cases.stats.csv.total_events'),
           I18n.t('cases.stats.csv.first_visit'),
           I18n.t('cases.stats.csv.last_visit')
         ]
@@ -199,8 +235,6 @@ module Cases
           csv << [
             row.dig(:country, :name),
             row.dig(:metrics, :unique_visits),
-            row.dig(:metrics, :unique_users),
-            row.dig(:metrics, :events_count),
             format_date(row[:first_event]),
             format_date(row[:last_event])
           ]
@@ -209,8 +243,6 @@ module Cases
         csv << [
           I18n.t('cases.stats.csv.total'),
           total_visits,
-          total_users,
-          total_events,
           nil,
           nil
         ]

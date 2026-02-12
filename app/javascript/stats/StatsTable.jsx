@@ -103,6 +103,9 @@ function StatsTable ({ data, intl }: Props) {
         </thead>
         <tbody>
           {countries.map((row, index) => renderRow(row, index))}
+          {uncountries.map((row, index) =>
+            renderRow(row, countries.length + index)
+          )}
         </tbody>
         <tfoot>
           <tr className="c-stats-table__total-row">

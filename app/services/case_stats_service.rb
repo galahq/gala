@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Formats per-country rows from stats SQL for UI/API consumers.
 class CaseStatsService
   EMPTY_STATS = {
     unique_visits: 0,
@@ -11,15 +12,23 @@ class CaseStatsService
     last_event: nil
   }.freeze
 
-  def self.format_country_stats(raw_stats, include_stats: true)
+  ADD_KEYS = %i[
+    unique_visits
+    unique_users
+    events_count
+    deployments_count
+    visit_podcast_count
+  ].freeze
+
+  def self.format_country_stats(raw_stats)
     merged = merge_stats(raw_stats)
 
     {
-      stats: include_stats ? sort_stats(merged) : [],
-      total_visits: merged.sum { |r| r[:unique_visits] },
-      country_count: merged.count { |r| r[:iso2].present? },
-      total_deployments: merged.map { |r| r[:deployments_count] }.max.to_i,
-      total_podcast_listens: merged.sum { |r| r[:visit_podcast_count] }
+      stats: sort_stats(merged),
+      total_visits: merged.sum { |row| row[:unique_visits] },
+      country_count: merged.count,
+      total_deployments: merged.map { |row| row[:deployments_count] }.max.to_i,
+      total_podcast_listens: merged.sum { |row| row[:visit_podcast_count] }
     }
   end
 
@@ -34,11 +43,18 @@ class CaseStatsService
   end
 
   def self.resolve_country(input)
-    CountryReference.resolve(input)
+    country_reference_module.resolve(input)
   end
 
   def self.unknown_value?(value)
-    CountryReference.unknown?(value)
+    country_reference_module.unknown?(value)
+  end
+
+  def self.country_reference_module
+    return CountryReference if defined?(CountryReference)
+    return FindCountry if defined?(FindCountry)
+
+    raise NameError, 'CountryReference (or legacy FindCountry) is not defined'
   end
 
   def self.merge_key(country)
@@ -57,11 +73,7 @@ class CaseStatsService
   end
 
   def self.apply_row!(dst, src)
-    dst[:unique_visits] += src['unique_visits'].to_i
-    dst[:unique_users] += src['unique_users'].to_i
-    dst[:events_count] += src['events_count'].to_i
-    dst[:deployments_count] += src['deployments_count'].to_i
-    dst[:visit_podcast_count] += src['visit_podcast_count'].to_i
+    ADD_KEYS.each { |key| dst[key] += src[key.to_s].to_i }
     dst[:first_event] = min_time(dst[:first_event], src['first_event'])
     dst[:last_event] = max_time(dst[:last_event], src['last_event'])
   end
@@ -75,9 +87,10 @@ class CaseStatsService
   end
 
   def self.sort_stats(rows)
-    rows.sort_by { |r| [-r[:unique_visits], r[:name].to_s] }
+    rows.sort_by { |row| [-row[:unique_visits], row[:name].to_s] }
   end
 
   private_class_method :unknown_value?, :merge_key, :default_row,
-                       :apply_row!, :min_time, :max_time, :sort_stats
+                       :apply_row!, :min_time, :max_time, :sort_stats,
+                       :country_reference_module
 end

@@ -3,14 +3,14 @@
 import { Colors } from '../colors'
 
 export const getMapboxData = (): string =>
-  window.MAPBOX_DATA || 'mapbox://styles/mapbox/countries_boundaries_v1'
+  window.MAPBOX_DATA || 'mapbox://mapbox.country-boundaries-v1'
 
 export const getMapboxToken = (): string =>
   window.MAPBOX_ACCESS_TOKEN ||
   'MAPBOX_TOKEN_REMOVED'
 
 export const getMapboxStyle = (): string =>
-  window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v10'
+  window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v11'
 
 export const getMapboxDefaultColor = (): string =>
   window.MAPBOX_DEFAULT_COLOR || Colors.DARK_GRAY3
