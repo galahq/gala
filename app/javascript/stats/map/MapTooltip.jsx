@@ -79,7 +79,7 @@ function MapTooltip ({
         <span className="c-stats-map-tooltip__visitors">
           {country.unique_visits.toLocaleString()}
           {' '}
-          {intl.formatMessage({ id: 'cases.stats.show.mapTooltipVisitors' })}
+          {intl.formatMessage({ id: 'cases.stats.show.map_tooltip_visitors' })}
         </span>
       </div>
     </div>
