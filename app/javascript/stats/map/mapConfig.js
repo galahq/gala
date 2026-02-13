@@ -7,9 +7,12 @@ export const getMapboxData = (): string =>
 
 export const MAPBOX_VECTOR_COUNTRY_SOURCE_LAYER = 'country_boundaries'
 
-export const getMapboxToken = (): string =>
-  window.MAPBOX_ACCESS_TOKEN ||
-  'MAPBOX_TOKEN_REMOVED'
+export const getMapboxToken = (): string => {
+  if (!window.MAPBOX_ACCESS_TOKEN) {
+    console.warn('MAPBOX_ACCESS_TOKEN is not set. Map features may not work.')
+  }
+  return window.MAPBOX_ACCESS_TOKEN || ''
+}
 
 export const getMapboxStyle = (): string =>
   window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v10'
