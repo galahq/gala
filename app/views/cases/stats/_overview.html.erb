@@ -1,0 +1,48 @@
+<h2 id="stats-overview-heading" class="c-stats-information__heading"><%= t('cases.stats.show.overview') %></h2>
+<div class="c-stats-information-container" aria-labelledby="stats-overview-heading">
+  <div class="c-stats-overview-layout">
+    <div class="c-stats-information pt-card pt-elevation-1">
+      <h3 class="c-stats-information__card-heading">
+        <%= t('cases.stats.show.overview_stats') %>
+      </h3>
+
+      <div class="c-stats-information__content">
+        <% if @case.published_at.present? %>
+          <div class="c-stats-information__row">
+            <span class="c-stats-information__label"><%= t('cases.stats.show.date_published') %></span>
+            <span class="c-stats-information__value"><%= l(@case.published_at.to_date, format: :stats) %></span>
+          </div>
+        <% end %>
+
+        <% if @stats_locales.present? %>
+          <div class="c-stats-information__row">
+            <span class="c-stats-information__label"><%= t('cases.stats.show.available_translations') %></span>
+            <span class="c-stats-information__value"><%= @stats_locales.join(', ') %></span>
+          </div>
+        <% end %>
+
+        <div class="c-stats-information__row">
+          <span class="c-stats-information__label"><%= t('cases.stats.show.total_deployments') %></span>
+          <span class="c-stats-information__value"><%= number_with_delimiter(@case.deployments.count) %></span>
+        </div>
+
+        <div class="c-stats-information__row">
+          <span class="c-stats-information__label"><%= t('cases.stats.show.table_unique_visitors') %></span>
+          <span class="c-stats-information__value"><%= number_with_delimiter(@initial_all_time_summary[:total_visits].to_i) %></span>
+        </div>
+
+        <div class="c-stats-information__row">
+          <span class="c-stats-information__label"><%= t('cases.stats.show.countries') %></span>
+          <span class="c-stats-information__value"><%= @initial_all_time_summary[:country_count].to_i %></span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="c-stats-tips pt-callout pt-icon-info-sign" aria-labelledby="stats-about-visitors-heading">
+      <h3 id="stats-about-visitors-heading" class="pt-callout-title"><%= t('cases.stats.show.about_visitors') %></h3>
+      <div class="pt-callout-content">
+        <p><%= t('cases.stats.show.tips_description') %></p>
+      </div>
+    </aside>
+  </div>
+</div>

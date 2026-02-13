@@ -21,17 +21,19 @@ class ErrorBoundary extends React.Component<
       sentryLog('error', 'React ErrorBoundary caught exception', {
         name: error.name,
         message: error.message,
-        componentStack: info.componentStack
+        componentStack: info.componentStack,
       })
     }
 
-    Sentry.withScope(scope => {
-      Object.keys(info).forEach(key => {
-        scope.setExtra(key, info[key])
-      })
+    if (typeof Sentry !== 'undefined' && typeof Sentry.withScope === 'function') {
+      Sentry.withScope(scope => {
+        Object.keys(info).forEach(key => {
+          scope.setExtra(key, info[key])
+        })
 
-      Sentry.captureException(error)
-    })
+        Sentry.captureException(error)
+      })
+    }
   }
 
   render () {
@@ -48,7 +50,11 @@ class ErrorBoundary extends React.Component<
                 <Button
                   icon="comment"
                   intent={Intent.PRIMARY}
-                  onClick={() => Sentry.showReportDialog()}
+                  onClick={() => {
+                    if (typeof Sentry !== 'undefined' && typeof Sentry.showReportDialog === 'function') {
+                      Sentry.showReportDialog()
+                    }
+                  }}
                 >
                   Report feedback
                 </Button>
