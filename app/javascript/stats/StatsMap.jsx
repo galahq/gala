@@ -4,7 +4,8 @@ import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { injectIntl } from 'react-intl'
 
-import MapErrorBoundary from './map/MapErrorBoundary'
+import ErrorBoundary from 'utility/ErrorBoundary'
+import { Colors } from './colors'
 import {
   MapLegend,
   MapTooltip,
@@ -14,22 +15,49 @@ import {
   parseMapError,
   getBinColors,
   getBinTextColors,
-  getMapboxData,
-  getMapboxToken,
-  getMapboxStyle,
-  getMapboxDefaultColor,
   createFillLayer,
   createLineLayer,
   createFillColorExpression,
-  MAPBOX_VECTOR_COUNTRY_SOURCE_LAYER,
-  DEFAULT_VIEWPORT,
-  MAP_LOAD_TIMEOUT,
 } from './map'
+
+function getMapboxData (): string {
+  return window.MAPBOX_DATA || 'mapbox://mapbox.country-boundaries-v1'
+}
+
+function readMapboxToken (): ?string {
+  const value = window.MAPBOX_ACCESS_TOKEN
+  if (typeof value !== 'string') return null
+  const token = value.trim()
+  if (!token || token === 'MAPBOX_TOKEN_REMOVED' || token === 'CHANGEME') {
+    return null
+  }
+  return token
+}
+
+function getMapboxToken (): string {
+  return readMapboxToken() || 'MAPBOX_TOKEN_REMOVED'
+}
+
+function getMapboxStyle (): string {
+  return window.MAPBOX_STYLE_STATS || 'mapbox://styles/mapbox/dark-v11'
+}
+
+function getMapboxDefaultColor (): string {
+  return window.MAPBOX_DEFAULT_COLOR || Colors.DARK_GRAY3
+}
 
 const MAPBOX_DATA_URL = getMapboxData()
 const MAPBOX_TOKEN = getMapboxToken()
 const MAPBOX_STYLE = getMapboxStyle()
 const IS_VECTOR_SOURCE = MAPBOX_DATA_URL.startsWith('mapbox://')
+
+const DEFAULT_VIEWPORT = {
+  latitude: 20,
+  longitude: 0,
+  zoom: 0.9,
+}
+
+const MAP_LOAD_TIMEOUT = 20000
 
 type CountryData = {
   iso2: string,
@@ -305,25 +333,13 @@ function StatsMap ({ countries, bins, intl }: Props) {
             <Layer
               key="country-fills-vector"
               {...fillLayer}
-              {...{ 'source-layer': MAPBOX_VECTOR_COUNTRY_SOURCE_LAYER }}
+              {...{ 'source-layer': 'country_boundaries' }}
             />
             <Layer
               key="country-borders-vector"
               {...lineLayer}
-              {...{ 'source-layer': MAPBOX_VECTOR_COUNTRY_SOURCE_LAYER }}
+              {...{ 'source-layer': 'country_boundaries' }}
             />
-          </Source>
-        )}
-
-        {mapLoaded && !IS_VECTOR_SOURCE && mapboxData && (
-          <Source
-            key="countries-source-geojson"
-            id="countries"
-            type="geojson"
-            data={mapboxData}
-          >
-            <Layer key="country-fills-geojson" {...fillLayer} />
-            <Layer key="country-borders-geojson" {...lineLayer} />
           </Source>
         )}
 
@@ -365,6 +381,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
           country={hoveredCountry}
           position={tooltipPosition}
           binColors={binColors}
+          binTextColors={binTextColors}
           intl={intl}
           tooltipRef={tooltipRef}
         />
@@ -383,8 +400,8 @@ type ExternalProps = {
 
 export default function StatsMapWithErrorBoundary (props: ExternalProps) {
   return (
-    <MapErrorBoundary>
+    <ErrorBoundary>
       <StatsMapWithIntl {...props} />
-    </MapErrorBoundary>
+    </ErrorBoundary>
   )
 }
