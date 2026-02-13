@@ -1,5 +1,5 @@
-<h2 class="c-stats-information__heading"><%= t('cases.stats.show.overview') %></h2>
-<div class="c-stats-information-container">
+<h2 id="stats-overview-heading" class="c-stats-information__heading"><%= t('cases.stats.show.overview') %></h2>
+<div class="c-stats-information-container" aria-labelledby="stats-overview-heading">
   <div class="c-stats-overview-layout">
     <div class="c-stats-information pt-card pt-elevation-1">
       <h3 class="c-stats-information__card-heading">
@@ -38,11 +38,11 @@
       </div>
     </div>
 
-    <div class="c-stats-tips pt-callout pt-icon-info-sign">
-      <h5 class="pt-callout-title"><%= t('cases.stats.show.about_visitors') %></h5>
+    <aside class="c-stats-tips pt-callout pt-icon-info-sign" aria-labelledby="stats-about-visitors-heading">
+      <h3 id="stats-about-visitors-heading" class="pt-callout-title"><%= t('cases.stats.show.about_visitors') %></h3>
       <div class="pt-callout-content">
         <p><%= t('cases.stats.show.tips_description') %></p>
       </div>
-    </div>
+    </aside>
   </div>
 </div>

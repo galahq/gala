@@ -2,14 +2,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   fetchStats,
-  fetchAllTimeStats,
   fetchWithTimeout,
-  extractAllTimeStats,
-  extractCaseSummary,
   validatePayload,
 } from '../api'
-
-import type { AllTimeStats, CaseSummary } from '../api'
 
 declare class AbortController {
   signal: { aborted: boolean, ... };
@@ -33,8 +28,6 @@ type Params = {
 
 type UseStatsDataResult = {
   data: ?StatsData,
-  allTimeStats: ?AllTimeStats,
-  caseSummary: ?CaseSummary,
   isLoading: boolean,
   isInitialLoad: boolean,
   error: ?Error,
@@ -43,8 +36,6 @@ type UseStatsDataResult = {
 
 export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResult {
   const [data, setData] = useState<?StatsData>(null)
-  const [allTimeStats, setAllTimeStats] = useState<?AllTimeStats>(null)
-  const [caseSummary, setCaseSummary] = useState<?CaseSummary>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
   const [error, setError] = useState<?Error>(null)
@@ -54,18 +45,6 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
   const retry = useCallback(() => {
     setRefreshKey(prev => prev + 1)
   }, [])
-
-  useEffect(() => {
-    fetchAllTimeStats(dataUrl)
-      .then(payload => {
-        setAllTimeStats(extractAllTimeStats(payload))
-        setCaseSummary(extractCaseSummary(payload))
-      })
-      .catch(err => {
-        console.error('Error fetching all-time stats:', err)
-        setAllTimeStats({ total_visits: 0, country_count: 0 })
-      })
-  }, [dataUrl])
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -94,10 +73,6 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
           formatted: validation.formatted,
           summary: validation.summary,
         })
-
-        if (validation.summary.case_locales) {
-          setCaseSummary(extractCaseSummary(payload))
-        }
       } catch (err) {
         if (err.name === 'AbortError') {
           return
@@ -123,8 +98,6 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
 
   return {
     data,
-    allTimeStats,
-    caseSummary,
     isLoading,
     isInitialLoad,
     error,

@@ -3,7 +3,10 @@
 require 'json'
 
 # Resolves country values (ISO2, ISO3, and names) against configured reference data.
-class CountryReference
+class CountryReference # rubocop:disable Metrics/ClassLength
+  DATA_PATH = Rails.root.join('config/country_reference.json').freeze
+  CACHE_MUTEX = Mutex.new
+
   UNKNOWN_COUNTRY = { iso2: nil, iso3: nil, name: 'Unknown' }.freeze
 
   NAME_ALIASES_TO_ISO2 = {
@@ -21,7 +24,7 @@ class CountryReference
     'united states of america' => 'US'
   }.freeze
 
-  NORMALIZE_NAME = lambda do |value|
+  NORMALIZE_NAME = ->(value) do
     s = value.to_s.strip
     next nil if s.empty?
 
@@ -35,31 +38,61 @@ class CountryReference
     normalized.empty? ? nil : normalized
   end.freeze
 
-  raw_data = begin
-    country_reference_data
-  rescue StandardError
-    path = Rails.root.join('config/country_reference.json')
-    JSON.parse(File.read(path))
+  def self.load_reference_data
+    JSON.parse(File.read(DATA_PATH))
   end
 
-  COUNTRY_DATA = raw_data.each_with_object({}) do |(iso2, country), acc|
-    iso2_key = iso2.to_s.strip.upcase
-    next if iso2_key.empty? || !country.is_a?(Hash)
+  def self.build_country_data(raw_data) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    raw_data.each_with_object({}) do |(iso2, country), acc|
+      iso2_key = iso2.to_s.strip.upcase
+      next if iso2_key.empty? || !country.is_a?(Hash)
 
-    iso3 = (country['iso3'] || country[:iso3]).to_s.strip.upcase
-    name = (country['name'] || country[:name]).to_s.strip
-    next if iso3.empty? || name.empty?
+      iso3 = (country['iso3'] || country[:iso3]).to_s.strip.upcase
+      name = (country['name'] || country[:name]).to_s.strip
+      next if iso3.empty? || name.empty?
 
-    acc[iso2_key] = { iso3: iso3, name: name }.freeze
-  end.freeze
+      acc[iso2_key] = { iso3: iso3, name: name }.freeze
+    end.freeze
+  end
 
-  ISO2_TO_ISO3 = COUNTRY_DATA.transform_values { |country| country[:iso3] }.freeze
-  ISO3_TO_ISO2 = ISO2_TO_ISO3.invert.freeze
+  def self.build_name_to_iso2(country_data)
+    country_data.each_with_object({}) do |(iso2, country), acc|
+      key = NORMALIZE_NAME.call(country[:name])
+      acc[key] = iso2 if key
+    end.merge(NAME_ALIASES_TO_ISO2).freeze
+  end
 
-  NAME_TO_ISO2 = COUNTRY_DATA.each_with_object({}) do |(iso2, country), h|
-    key = NORMALIZE_NAME.call(country[:name])
-    h[key] = iso2 if key
-  end.merge(NAME_ALIASES_TO_ISO2).freeze
+  def self.build_reference_cache(raw_data)
+    country_data = build_country_data(raw_data)
+    iso2_to_iso3 = country_data.transform_values { |country| country[:iso3] }.freeze
+
+    {
+      country_data: country_data,
+      iso2_to_iso3: iso2_to_iso3,
+      iso3_to_iso2: iso2_to_iso3.invert.freeze,
+      name_to_iso2: build_name_to_iso2(country_data)
+    }.freeze
+  end
+
+  def self.reference_cache
+    return @reference_cache if @reference_cache
+
+    CACHE_MUTEX.synchronize do
+      @reference_cache ||= build_reference_cache(load_reference_data)
+    end
+  end
+
+  def self.country_data
+    reference_cache[:country_data]
+  end
+
+  def self.iso3_to_iso2
+    reference_cache[:iso3_to_iso2]
+  end
+
+  def self.name_to_iso2
+    reference_cache[:name_to_iso2]
+  end
 
   def self.normalize_name(value)
     NORMALIZE_NAME.call(value)
@@ -82,18 +115,18 @@ class CountryReference
 
   def self.resolve_codes(raw)
     up = raw.upcase
-    return from_iso2(up) if COUNTRY_DATA.key?(up)
-    return from_iso3(up) if ISO3_TO_ISO2.key?(up)
+    return from_iso2(up) if country_data.key?(up)
+    return from_iso3(up) if iso3_to_iso2.key?(up)
 
     from_name(raw)
   end
 
   def self.from_iso2(iso2)
-    [iso2, COUNTRY_DATA.fetch(iso2)[:iso3]]
+    [iso2, country_data.fetch(iso2)[:iso3]]
   end
 
   def self.from_iso3(iso3)
-    iso2 = ISO3_TO_ISO2.fetch(iso3)
+    iso2 = iso3_to_iso2.fetch(iso3)
     [iso2, iso3]
   end
 
@@ -101,16 +134,19 @@ class CountryReference
     key = normalize_name(raw)
     return [nil, nil] unless key
 
-    iso2 = NAME_TO_ISO2[key]
+    iso2 = name_to_iso2[key]
     return [nil, nil] unless iso2
 
-    [iso2, COUNTRY_DATA.fetch(iso2)[:iso3]]
+    [iso2, country_data.fetch(iso2)[:iso3]]
   end
 
   def self.build_result(iso2, iso3)
-    name = COUNTRY_DATA.fetch(iso2)[:name]
+    name = country_data.fetch(iso2)[:name]
     { iso2: iso2, iso3: iso3, name: name }
   end
 
-  private_class_method :resolve_codes, :from_iso2, :from_iso3, :from_name, :build_result
+  private_class_method :load_reference_data, :build_country_data, :build_name_to_iso2,
+                       :build_reference_cache, :reference_cache, :country_data, :iso3_to_iso2,
+                       :name_to_iso2, :resolve_codes, :from_iso2, :from_iso3, :from_name,
+                       :build_result
 end

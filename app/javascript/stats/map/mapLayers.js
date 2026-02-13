@@ -36,9 +36,10 @@ export const createLineLayer = (): LayerConfig => ({
 
 export function createFillColorExpression (
   countryColors: { [string]: string },
-  defaultColor: string
+  defaultColor: string,
+  featureProperty: string = 'name'
 ): mixed[] {
-  const expression = ['match', ['get', 'name']]
+  const expression = ['match', ['get', featureProperty]]
 
   Object.entries(countryColors).forEach(([name, color]) => {
     expression.push(name, color)

@@ -27,7 +27,7 @@ module Cases
     def set_case
       @case = Case.friendly.find(case_slug_param).decorate
       @stats_locales = stats_locales
-      @min_date = @case.published_at&.to_date || @case.created_at.to_date
+      @min_date = @case.created_at.to_date
       @initial_all_time_summary = all_time_summary
       authorize @case, :stats?
     end
@@ -37,33 +37,14 @@ module Cases
     end
 
     def all_time_summary
-      result = ActiveRecord::Base.connection.exec_query(
-        all_time_summary_sql,
-        'All Time Summary',
-        [ActiveRecord::Relation::QueryAttribute.new('case_id', @case.id, ActiveRecord::Type::Integer.new)]
-      ).first || {}
+      summary = stats_service_class.format_country_stats(
+        query_rows(from_date: @min_date, to_date: Time.zone.today)
+      )
 
       {
-        total_visits: result['total_visits'].to_i,
-        country_count: result['country_count'].to_i
+        total_visits: summary[:total_visits].to_i,
+        country_count: summary[:country_count].to_i
       }
-    end
-
-    def all_time_summary_sql
-      <<~SQL
-        SELECT
-          COUNT(DISTINCT v.visitor_token) AS total_visits,
-          COUNT(DISTINCT COALESCE(NULLIF(BTRIM(v.country), ''), 'Unknown')) AS country_count
-        FROM ahoy_events e
-        LEFT JOIN visits v ON v.id = e.visit_id
-        WHERE e.case_id = $1
-          AND NOT EXISTS (
-            SELECT 1
-            FROM readers_roles rr
-            INNER JOIN roles ro ON ro.id = rr.role_id
-            WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
-          )
-      SQL
     end
 
     def stats_locales
@@ -113,6 +94,10 @@ module Cases
     end
 
     def bindings
+      query_bindings(from_date: stats_range[:from_date], to_date: stats_range[:to_date])
+    end
+
+    def query_bindings(from_date:, to_date:)
       [
         ActiveRecord::Relation::QueryAttribute.new(
           'case_id',
@@ -121,12 +106,12 @@ module Cases
         ),
         ActiveRecord::Relation::QueryAttribute.new(
           'from_date',
-          stats_range[:from_date],
+          from_date,
           ActiveRecord::Type::Date.new
         ),
         ActiveRecord::Relation::QueryAttribute.new(
           'to_date',
-          stats_range[:to_date],
+          to_date,
           ActiveRecord::Type::Date.new
         )
       ]
@@ -162,10 +147,14 @@ module Cases
     end
 
     def sql_query
+      query_rows(from_date: stats_range[:from_date], to_date: stats_range[:to_date])
+    end
+
+    def query_rows(from_date:, to_date:)
       ActiveRecord::Base.connection.exec_query(
         sql_query_sql,
         'Case Stats',
-        bindings
+        query_bindings(from_date: from_date, to_date: to_date)
       ).to_a
     end
 

@@ -29,22 +29,8 @@ export type StatsPayload = {
     total_podcast_listens?: number,
     bins?: Array<StatsBin>,
     bin_count?: number,
-    case_locales?: string,
-    case_published_at?: string,
-    total_deployments?: number,
   },
   error?: string,
-}
-
-export type AllTimeStats = {
-  total_visits: number,
-  country_count: number,
-}
-
-export type CaseSummary = {
-  case_locales?: string,
-  case_published_at?: string,
-  total_deployments?: number,
 }
 
 type NormalizedStats = {
@@ -53,11 +39,8 @@ type NormalizedStats = {
     total_visits: number,
     country_count: number,
     total_podcast_listens: number,
-    total_deployments: number,
     bins: StatsBin[],
     bin_count: number,
-    case_locales?: string,
-    case_published_at?: string,
   },
 }
 
@@ -105,35 +88,6 @@ export async function fetchStats (
   })
 
   return parseResponse(response)
-}
-
-export async function fetchAllTimeStats (dataUrl: string): Promise<StatsPayload> {
-  const url = `${dataUrl}.json`
-
-  const response = await fetch(url, {
-    credentials: 'same-origin',
-    headers: { Accept: 'application/json' },
-    cache: 'no-store',
-  })
-
-  return parseResponse(response)
-}
-
-export function extractAllTimeStats (payload: StatsPayload): AllTimeStats {
-  const { summary } = normalizePayload(payload)
-  return {
-    total_visits: summary.total_visits || 0,
-    country_count: summary.country_count || 0,
-  }
-}
-
-export function extractCaseSummary (payload: StatsPayload): CaseSummary {
-  const { summary } = normalizePayload(payload)
-  return {
-    case_locales: summary.case_locales,
-    case_published_at: summary.case_published_at,
-    total_deployments: summary.total_deployments,
-  }
 }
 
 function parseNumber (value: mixed): number {
@@ -254,11 +208,8 @@ function normalizePayload (payload: StatsPayload): NormalizedStats {
         total_podcast_listens: parseNumber(summary.total_podcast_listens) || withBins.reduce((sum, row) => (
           sum + row.visit_podcast_count
         ), 0),
-        total_deployments: parseNumber(summary.total_deployments),
         bins,
         bin_count: parseNumber(summary.bin_count) || bins.length,
-        case_locales: parseStringOrNull(summary.case_locales) || undefined,
-        case_published_at: parseStringOrNull(summary.case_published_at) || undefined,
       },
     }
   }
@@ -274,11 +225,8 @@ function normalizePayload (payload: StatsPayload): NormalizedStats {
       total_visits: withBins.reduce((sum, row) => sum + row.unique_visits, 0),
       country_count: withBins.length,
       total_podcast_listens: withBins.reduce((sum, row) => sum + row.visit_podcast_count, 0),
-      total_deployments: parseNumber(summary.total_deployments),
       bins,
       bin_count: bins.length,
-      case_locales: parseStringOrNull(summary.case_locales) || undefined,
-      case_published_at: parseStringOrNull(summary.case_published_at) || undefined,
     },
   }
 }
@@ -301,15 +249,6 @@ export function validatePayload (payload: StatsPayload): {
   const normalized = normalizePayload(payload)
   const formatted = normalized.formatted
   const summary = normalized.summary
-
-  if (formatted.length > 10000) {
-    return {
-      valid: false,
-      error: `Too much data received (${formatted.length} countries). Please choose a smaller date range.`,
-      formatted: [],
-      summary: {},
-    }
-  }
 
   return {
     valid: true,

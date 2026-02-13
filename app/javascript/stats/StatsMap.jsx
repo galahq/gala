@@ -10,7 +10,6 @@ import {
   MapTooltip,
   MapErrorState,
   MapEmptyState,
-  useGeoJsonData,
   useTooltipPosition,
   parseMapError,
   getBinColors,
@@ -22,14 +21,15 @@ import {
   createFillLayer,
   createLineLayer,
   createFillColorExpression,
+  MAPBOX_VECTOR_COUNTRY_SOURCE_LAYER,
   DEFAULT_VIEWPORT,
-  MAX_COUNTRIES,
   MAP_LOAD_TIMEOUT,
 } from './map'
 
 const MAPBOX_DATA_URL = getMapboxData()
 const MAPBOX_TOKEN = getMapboxToken()
 const MAPBOX_STYLE = getMapboxStyle()
+const IS_VECTOR_SOURCE = MAPBOX_DATA_URL.startsWith('mapbox://')
 
 type CountryData = {
   iso2: string,
@@ -59,47 +59,87 @@ function StatsMap ({ countries, bins, intl }: Props) {
   const [mapError, setMapError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT)
+  const [mapboxData, setMapboxData] = useState(null)
+  const [geoJsonError, setGeoJsonError] = useState<?string>(null)
+  const [geoJsonReloadKey, setGeoJsonReloadKey] = useState(0)
   const mapRef = useRef(null)
   const tooltipRef = useRef<HTMLDivElement | null>(null)
 
-  const { data: mapboxData, error: geoJsonError, retry: retryGeoJson } = useGeoJsonData(MAPBOX_DATA_URL)
   const tooltipPosition = useTooltipPosition(hoveredCountry, mousePosition, tooltipRef, mapRef)
 
   const binColors = useMemo(() => getBinColors(bins.length), [bins.length])
   const binTextColors = useMemo(() => getBinTextColors(bins.length), [bins.length])
-
-  const limitedCountries = useMemo(() => {
-    if (countries.length > MAX_COUNTRIES) {
-      console.warn(
-        `Limiting countries from ${countries.length} to ${MAX_COUNTRIES} for performance`
-      )
-    }
-    return countries.slice(0, MAX_COUNTRIES)
-  }, [countries])
+  const featureMatchProperty = IS_VECTOR_SOURCE ? 'iso_3166_1_alpha_3' : 'name'
 
   const countryColors = useMemo(() => {
     const colors = {}
-    limitedCountries.forEach(country => {
-      if (country.name && typeof country.bin === 'number') {
+    countries.forEach(country => {
+      const iso3 = typeof country.iso3 === 'string'
+        ? country.iso3.toUpperCase()
+        : null
+      const matchValue = IS_VECTOR_SOURCE
+        ? iso3
+        : country.name
+
+      if (matchValue && typeof country.bin === 'number') {
         const binIndex = Math.min(country.bin, binColors.length - 1)
         const color = binColors[binIndex] || binColors[0]
         if (color) {
-          colors[country.name] = color
+          colors[matchValue] = color
         }
       }
     })
     return colors
-  }, [limitedCountries, binColors])
+  }, [countries, binColors])
 
   const fillColorExpression = useMemo(() => {
     if (Object.keys(countryColors).length === 0 || binColors.length === 0) {
       return null
     }
-    return createFillColorExpression(countryColors, getMapboxDefaultColor())
-  }, [countryColors, binColors])
+    return createFillColorExpression(
+      countryColors,
+      getMapboxDefaultColor(),
+      featureMatchProperty
+    )
+  }, [countryColors, binColors, featureMatchProperty])
 
   const fillLayer = useMemo(() => createFillLayer(), [])
   const lineLayer = useMemo(() => createLineLayer(), [])
+
+  useEffect(() => {
+    if (IS_VECTOR_SOURCE) {
+      setGeoJsonError(null)
+      setMapboxData(null)
+      return undefined
+    }
+
+    let cancelled = false
+    setGeoJsonError(null)
+    if (geoJsonReloadKey > 0) {
+      setMapboxData(null)
+    }
+
+    fetch(MAPBOX_DATA_URL)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        return response.json()
+      })
+      .then(data => {
+        if (cancelled) return
+        setMapboxData(data)
+      })
+      .catch(error => {
+        if (cancelled) return
+        console.error('Failed to fetch geojson data:', error)
+        setGeoJsonError(`Failed to load map data: ${error.message}`)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [geoJsonReloadKey])
 
   useEffect(() => {
     if (geoJsonError) {
@@ -140,8 +180,29 @@ function StatsMap ({ countries, bins, intl }: Props) {
     (event: any) => {
       const feature = event.features && event.features[0]
       if (feature) {
-        const countryName = feature.properties.name
-        const countryData = limitedCountries.find(c => c.name === countryName)
+        const properties = feature.properties || {}
+        const featureIso3 = String(properties.iso_3166_1_alpha_3 || '').toUpperCase()
+        const featureName = (
+          properties.name ||
+          properties.name_en ||
+          properties.admin
+        )
+        const normalizedFeatureName = String(featureName || '').trim().toLowerCase()
+
+        let countryData = null
+
+        if (IS_VECTOR_SOURCE && featureIso3) {
+          countryData = countries.find(
+            c => String(c.iso3 || '').toUpperCase() === featureIso3
+          )
+        }
+
+        if (!countryData && normalizedFeatureName) {
+          countryData = countries.find(
+            c => String(c.name || '').trim().toLowerCase() === normalizedFeatureName
+          )
+        }
+
         setHoveredCountry(countryData)
         setMousePosition({ x: event.point[0], y: event.point[1] })
       } else {
@@ -149,8 +210,13 @@ function StatsMap ({ countries, bins, intl }: Props) {
         setMousePosition({ x: 0, y: 0 })
       }
     },
-    [limitedCountries]
+    [countries]
   )
+
+  const retryGeoJson = useCallback(() => {
+    if (IS_VECTOR_SOURCE) return
+    setGeoJsonReloadKey(prev => prev + 1)
+  }, [])
 
   const retryMapLoad = useCallback(() => {
     setMapError(false)
@@ -166,10 +232,8 @@ function StatsMap ({ countries, bins, intl }: Props) {
     if (!mapRef.current) return
 
     const map = mapRef.current.getMap()
-    const hiddenLabelPattern = /place|poi|label|city|town|village|settlement|marine|water|ocean|sea|bay|gulf|lake|river/i
-
     ;(map.getStyle().layers || []).forEach(layer => {
-      if (hiddenLabelPattern.test(layer.id) && (layer.type === 'symbol' || layer.id.includes('label'))) {
+      if (layer.type === 'symbol') {
         map.setLayoutProperty(layer.id, 'visibility', 'none')
       }
     })
@@ -201,7 +265,7 @@ function StatsMap ({ countries, bins, intl }: Props) {
     setMapError(true)
   }, [mapLoaded])
 
-  const hasData = bins.length > 0 && limitedCountries.length > 0
+  const hasData = bins.length > 0 && countries.length > 0
 
   return (
     <div className="c-stats-map-root">
@@ -231,15 +295,35 @@ function StatsMap ({ countries, bins, intl }: Props) {
         onHover={mapLoaded && hasData ? onHover : undefined}
         onError={handleMapError}
       >
-        {mapLoaded && mapboxData && (
+        {mapLoaded && IS_VECTOR_SOURCE && (
           <Source
-            key="countries-source"
+            key="countries-source-vector"
+            id="countries"
+            type="vector"
+            url={MAPBOX_DATA_URL}
+          >
+            <Layer
+              key="country-fills-vector"
+              {...fillLayer}
+              {...{ 'source-layer': MAPBOX_VECTOR_COUNTRY_SOURCE_LAYER }}
+            />
+            <Layer
+              key="country-borders-vector"
+              {...lineLayer}
+              {...{ 'source-layer': MAPBOX_VECTOR_COUNTRY_SOURCE_LAYER }}
+            />
+          </Source>
+        )}
+
+        {mapLoaded && !IS_VECTOR_SOURCE && mapboxData && (
+          <Source
+            key="countries-source-geojson"
             id="countries"
             type="geojson"
             data={mapboxData}
           >
-            <Layer key="country-fills" {...fillLayer} />
-            <Layer key="country-borders" {...lineLayer} />
+            <Layer key="country-fills-geojson" {...fillLayer} />
+            <Layer key="country-borders-geojson" {...lineLayer} />
           </Source>
         )}
 
@@ -281,7 +365,6 @@ function StatsMap ({ countries, bins, intl }: Props) {
           country={hoveredCountry}
           position={tooltipPosition}
           binColors={binColors}
-          binTextColors={binTextColors}
           intl={intl}
           tooltipRef={tooltipRef}
         />

@@ -8,7 +8,6 @@ export {
   MapEmptyState,
 } from './MapErrorBoundary'
 
-export { useGeoJsonData } from './useGeoJsonData'
 export { useTooltipPosition } from './useTooltipPosition'
 
 export { parseMapError } from './mapErrors'

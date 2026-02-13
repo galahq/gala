@@ -318,8 +318,6 @@ en:
         map_legend_low: low
         map_legend_high: high
         map_tooltip_visitors: visitors
-        map_tooltip_users: users
-        map_tooltip_events: events
         # Loading states
         loading_map_data: Loading map data...
         loading_map: Loading map...
@@ -330,10 +328,6 @@ en:
         error_map_title: Unable to load map
         error_map_description: Please check your internet connection or disable ad blockers
         error_map_retry: Retry Loading Map
-        error_too_much_data_title: Too Much Data
-        error_too_much_data_description: >
-          The selected date range contains too much data to display efficiently. 
-          Please choose a smaller date range.
         error_no_data_title: No Data Available
         error_no_data_description: No visitor data found for the selected date range.
         # Table section

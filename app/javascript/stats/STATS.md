@@ -42,16 +42,15 @@ app/javascript/stats/
 │   ├── StatsSummary.jsx      - Filtered stats summary
 │   └── StatsError.jsx        - Non-ideal state with retry
 │
-└── map/
-    ├── index.js              - Barrel exports
-    ├── mapConfig.js          - Mapbox runtime config
-    ├── mapLayers.js          - Layer definitions
-    ├── mapErrors.js          - Map error parsing
-    ├── useGeoJsonData.js     - GeoJSON fetching + caching
-    ├── useTooltipPosition.js - Tooltip positioning
-    ├── MapLegend.jsx         - Legend UI
-    ├── MapTooltip.jsx        - Tooltip UI
-    └── MapErrorBoundary.jsx  - Error boundary + map states
+	└── map/
+	    ├── index.js              - Barrel exports
+	    ├── mapConfig.js          - Mapbox runtime config
+	    ├── mapLayers.js          - Layer definitions
+	    ├── mapErrors.js          - Map error parsing
+	    ├── useTooltipPosition.js - Tooltip positioning
+	    ├── MapLegend.jsx         - Legend UI
+	    ├── MapTooltip.jsx        - Tooltip UI
+	    └── MapErrorBoundary.jsx  - Error boundary + map states
 ```
 
 ## Data Flow
@@ -59,10 +58,9 @@ app/javascript/stats/
 1. `case_stats_controller.js` mounts `StatsPage` with `dataUrl`, `minDate`, and i18n messages.
 2. `useDateRange` initializes the range from URL params.
    - If URL params are missing, it defaults to `minDate → today`.
-3. `useStatsData` fetches:
-   - All-time stats once on mount.
-   - Filtered stats whenever the range changes.
+3. `useStatsData` fetches filtered stats whenever the range changes.
 4. `StatsPage` renders the map, summary, and table using loading/error state.
+5. `StatsMap` fetches GeoJSON for the country boundaries and applies bin colors.
 
 ## Mapbox Constraints
 

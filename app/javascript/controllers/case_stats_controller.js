@@ -37,7 +37,6 @@ export default class extends Controller {
               dataUrl={dataUrl}
               minDate={minDate}
               messages={messages}
-              locale={locale}
             />
           </IntlProvider>
         </ErrorBoundary>,

@@ -5,9 +5,9 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { useStatsTable } from './hooks/useStatsTable'
 
 type CountryData = {
-  iso2: string,
-  iso3: string,
-  name: string,
+  iso2?: ?string,
+  iso3?: ?string,
+  name?: ?string,
   unique_visits: number,
   unique_users: number,
   events_count: number,
@@ -24,22 +24,40 @@ function StatsTable ({ data, intl }: Props) {
   const {
     sortDirection,
     handleSort,
-    countries,
-    uncountries,
+    knownCountries,
+    unknownCountries,
     totalVisits,
     formatDate,
     isActiveSortField,
   } = useStatsTable(data)
+  const unknownLabel = intl.formatMessage({
+    id: 'cases.stats.show.tableUnknownCountry',
+  })
 
   const SortIcon = ({ field }: { field: string }) => {
     if (!isActiveSortField(field)) {
-      return <span className="c-stats-table__sort-icon c-stats-table__sort-icon--inactive">↕</span>
+      return (
+        <span
+          className="c-stats-table__sort-icon c-stats-table__sort-icon--inactive"
+          aria-hidden="true"
+        >
+          ↕
+        </span>
+      )
     }
     return (
-      <span className="c-stats-table__sort-icon c-stats-table__sort-icon--active">
+      <span
+        className="c-stats-table__sort-icon c-stats-table__sort-icon--active"
+        aria-hidden="true"
+      >
         {sortDirection === 'asc' ? '↑' : '↓'}
       </span>
     )
+  }
+
+  const ariaSortFor = (field: string): 'ascending' | 'descending' | 'none' => {
+    if (!isActiveSortField(field)) return 'none'
+    return sortDirection === 'asc' ? 'ascending' : 'descending'
   }
 
   const SortableHeaderCell = ({
@@ -49,40 +67,50 @@ function StatsTable ({ data, intl }: Props) {
     field: string,
     messageId: string,
   }) => (
-    <th className="c-stats-table__sortable" onClick={() => handleSort(field)}>
-      <span className="c-stats-table__header">
+    <th scope="col" className="c-stats-table__sortable" aria-sort={ariaSortFor(field)}>
+      <button
+        type="button"
+        className="c-stats-table__sortable-button"
+        onClick={() => handleSort(field)}
+      >
         <FormattedMessage id={messageId} />
         <SortIcon field={field} />
-      </span>
+      </button>
     </th>
   )
 
-  const renderRow = (row: CountryData, index: number) => (
-    <tr key={row.iso2 || `unknown-${index}`}>
-      <td className="c-stats-table__rank">
-        {index + 1}
-      </td>
-      <td>
-        {row.name && row.name.trim() !== '' && row.name !== 'Unknown'
-          ? row.name
-          : intl.formatMessage({
-              id: 'cases.stats.show.tableUnknownCountry',
-            })}
-      </td>
-      <td className="c-stats-table__number">
-        {row.unique_visits.toLocaleString()}
-      </td>
-      <td>{formatDate(row.first_event)}</td>
-      <td>{formatDate(row.last_event)}</td>
-    </tr>
-  )
+  const renderRow = (row: CountryData, index: number) => {
+    const hasKnownName = !!(row.name && row.name.trim() !== '' && row.name !== 'Unknown')
+    const displayName = hasKnownName ? row.name : unknownLabel
+
+    return (
+      <tr key={row.iso2 || row.iso3 || `unknown-${index}`}>
+        <td className="c-stats-table__rank">
+          {index + 1}
+        </td>
+        <td>{displayName}</td>
+        <td className="c-stats-table__number">
+          {row.unique_visits.toLocaleString()}
+        </td>
+        <td>{formatDate(row.first_event)}</td>
+        <td>{formatDate(row.last_event)}</td>
+      </tr>
+    )
+  }
 
   return (
     <div className="c-stats-table__wrapper">
-      <table className="pt-html-table pt-html-table-striped c-stats-table">
+      <table
+        className="pt-html-table pt-html-table-striped c-stats-table"
+        role="table"
+        aria-label={intl.formatMessage({
+          id: 'cases.stats.show.tableTitle',
+          defaultMessage: 'Filtered Case Visitors By Country',
+        })}
+      >
         <thead>
           <tr>
-            <th className="c-stats-table__rank-header">
+            <th scope="col" className="c-stats-table__rank-header">
               <FormattedMessage id="cases.stats.show.tableRank" />
             </th>
             <SortableHeaderCell
@@ -93,18 +121,18 @@ function StatsTable ({ data, intl }: Props) {
               field="unique_visits"
               messageId="cases.stats.show.tableUniqueVisitors"
             />
-            <th>
+            <th scope="col">
               <FormattedMessage id="cases.stats.show.tableFirstVisit" />
             </th>
-            <th>
+            <th scope="col">
               <FormattedMessage id="cases.stats.show.tableLastVisit" />
             </th>
           </tr>
         </thead>
         <tbody>
-          {countries.map((row, index) => renderRow(row, index))}
-          {uncountries.map((row, index) =>
-            renderRow(row, countries.length + index)
+          {knownCountries.map((row, index) => renderRow(row, index))}
+          {unknownCountries.map((row, index) =>
+            renderRow(row, knownCountries.length + index)
           )}
         </tbody>
         <tfoot>

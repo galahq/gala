@@ -15,7 +15,6 @@ type Props = {
   country: CountryData,
   position: { left: number, top: number },
   binColors: string[],
-  binTextColors: string[],
   intl: any,
   tooltipRef: { current: HTMLDivElement | null },
 }
@@ -35,7 +34,6 @@ function MapTooltip ({
   country,
   position,
   binColors,
-  binTextColors,
   intl,
   tooltipRef,
 }: Props): React.Node {
@@ -48,11 +46,6 @@ function MapTooltip ({
     colorIndex >= 0
       ? binColors[colorIndex] || binColors[0]
       : Colors.GRAY1
-
-  const binTextColor =
-    colorIndex >= 0
-      ? binTextColors[colorIndex] || binTextColors[0] || Colors.WHITE
-      : Colors.WHITE
 
   const countryName = country.name || 'Unknown'
   const flagUrl = buildFlagUrl(normalizeIso2(country.iso2))
@@ -81,15 +74,12 @@ function MapTooltip ({
           {countryName}
         </div>
       </div>
-      <div className="c-stats-map-tooltip__metric-row">
-        <span className="c-stats-map-tooltip__metric-label">
-          {intl.formatMessage({ id: 'cases.stats.show.tableUniqueVisitors' })}
-        </span>
-        <span
-          className="c-stats-map-tooltip__metric-pill"
-          style={{ backgroundColor: binColor, color: binTextColor }}
-        >
+      <div className="c-stats-map-tooltip__content">
+        <span className="c-stats-map-tooltip__color" style={{ backgroundColor: binColor }} />
+        <span className="c-stats-map-tooltip__visitors">
           {country.unique_visits.toLocaleString()}
+          {' '}
+          {intl.formatMessage({ id: 'cases.stats.show.mapTooltipVisitors' })}
         </span>
       </div>
     </div>

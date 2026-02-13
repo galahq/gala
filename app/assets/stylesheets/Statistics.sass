@@ -354,6 +354,9 @@ $stats-danger: #db3737
 .c-stats-table
   width: 100%
 
+  tbody td
+    line-height: 1.35
+
 .c-stats-table__sort-icon
   font-size: 12px
 
@@ -365,13 +368,23 @@ $stats-danger: #db3737
   font-weight: bold
 
 .c-stats-table__sortable
-  cursor: pointer
   user-select: none
 
-.c-stats-table__header
-  display: flex
+.c-stats-table__sortable-button
+  display: inline-flex
   align-items: center
   gap: 4px
+  border: 0
+  background: transparent
+  padding: 0
+  cursor: pointer
+  font: inherit
+  color: inherit
+  text-align: left
+
+  &:focus-visible
+    outline: 2px solid $stats-indigo-5
+    outline-offset: 2px
 
 .c-stats-table__rank-header
   width: 50px
@@ -514,29 +527,22 @@ $stats-danger: #db3737
   border-radius: 2px
   border: 1px solid rgba(255, 255, 255, 0.24)
 
-.c-stats-map-tooltip__metric-row
+.c-stats-map-tooltip__content
   display: flex
   align-items: center
-  justify-content: space-between
   gap: 8px
   padding: 8px 10px
 
-.c-stats-map-tooltip__metric-label
-  font-size: 12px
-  font-weight: 600
-  color: rgba(255, 255, 255, 0.88)
-
-.c-stats-map-tooltip__metric-pill
-  display: inline-flex
-  align-items: center
-  justify-content: center
-  min-width: 28px
-  min-height: 24px
+.c-stats-map-tooltip__color
+  width: 12px
+  height: 12px
   border-radius: 999px
-  padding: 0 8px
+  border: 1px solid rgba(255, 255, 255, 0.35)
+  flex-shrink: 0
+
+.c-stats-map-tooltip__visitors
   font-size: 14px
   font-weight: 700
-  border: 1px solid rgba(16, 22, 26, 0.3)
 
 .c-stats-map-error
   height: 100%

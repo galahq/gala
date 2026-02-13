@@ -10,7 +10,7 @@
       </div>
     <% end %>
 
-    <div>
+    <main id="stats-main">
       <h1 class="admin__title"><%= t('.case_stats') %></h1>
 
       <%= render 'overview' %>
@@ -21,6 +21,6 @@
         data-min-date="<%= @min_date.iso8601 %>">
         <!-- StatsPage React component mounts here -->
       </div>
-    </div>
+    </main>
   </div>
 </div>

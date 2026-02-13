@@ -23,15 +23,12 @@ type Props = {
   dataUrl: string,
   minDate: ?string,
   messages: { [string]: string },
-  locale: string,
 }
 
-function StatsPage ({ dataUrl, minDate, messages, locale }: Props): React$Node {
+function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
   const { range: dateRange, setFromDates } = useDateRange({ minDate })
   const {
     data,
-    allTimeStats,
-    caseSummary,
     isLoading,
     isInitialLoad,
     error,
@@ -49,10 +46,6 @@ function StatsPage ({ dataUrl, minDate, messages, locale }: Props): React$Node {
   const summary = data?.summary || {}
   const hasData = formatted.length > 0
   const dateRangeText = formatDateRange(dateRange.from, dateRange.to)
-  const caseInfo = summary.case_locales
-    ? summary
-    : (caseSummary || {})
-  const statsForInfo = allTimeStats || { total_visits: 0, country_count: 0 }
 
   const pickerMinDate = minDate ? parseLocalDate(minDate) : new Date(2000, 0, 1)
   const maxDate = new Date()
@@ -75,87 +68,87 @@ function StatsPage ({ dataUrl, minDate, messages, locale }: Props): React$Node {
     : 'c-stats-map-container'
 
   return (
-      <ErrorBoundary>
-          <h2 className="c-stats-filter-card__heading">{msg('filter_by_date')}</h2>
-          <div className="c-stats-layout">
-            <div className="c-stats-picker pt-card pt-elevation-1">
-              <StatsDateRangePicker
-                className="pt"
-                minDate={pickerMinDate}
-                maxDate={maxDate}
-                value={dateRangeValue}
-                onRangeChange={setFromDates}
-              />
+    <ErrorBoundary>
+      <h2 className="c-stats-filter-card__heading">{msg('filter_by_date')}</h2>
+      <div className="c-stats-layout">
+        <div className="c-stats-picker pt-card pt-elevation-1">
+          <StatsDateRangePicker
+            className="pt"
+            minDate={pickerMinDate}
+            maxDate={maxDate}
+            value={dateRangeValue}
+            onRangeChange={setFromDates}
+          />
+        </div>
+        <div className="c-stats-summary pt-card pt-elevation-1">
+          {isLoading ? (
+            <SummaryLoadingSkeleton />
+          ) : (
+            <StatsSummary
+              summary={summary}
+              dateRangeText={dateRangeText}
+              msg={msg}
+              hasData={hasData}
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="c-stats-map-table-card pt-card pt-elevation-1">
+        <div className="c-stats-map-table__header">
+          <h3 className="c-stats-map-table__heading">{msg('table_title')}</h3>
+          {dateRangeText && (
+            <span className="c-stats-map-table__date-range">{dateRangeText}</span>
+          )}
+        </div>
+
+        <div className={mapContainerClass}>
+          <div className="c-stats-map">
+            <div className="c-stats-map__inner">
+              <StatsMap countries={formatted} bins={summary.bins || []} />
             </div>
-            <div className="c-stats-summary pt-card pt-elevation-1">
-              {isLoading ? (
-                <SummaryLoadingSkeleton />
-              ) : (
-                <StatsSummary
-                  summary={summary}
-                  dateRangeText={dateRangeText}
-                  msg={msg}
-                  hasData={hasData}
+            {error && (
+              <div className="c-stats-map__overlay c-stats-map__overlay--error">
+                <StatsErrorState
+                  error={error}
+                  isRetrying={isLoading}
+                  onRetry={retry}
                 />
-              )}
-            </div>
-          </div>
-
-          <div className="c-stats-map-table-card pt-card pt-elevation-1">
-            <div className="c-stats-map-table__header">
-              <h3 className="c-stats-map-table__heading">{msg('table_title')}</h3>
-              {dateRangeText && (
-                <span className="c-stats-map-table__date-range">{dateRangeText}</span>
-              )}
-            </div>
-
-            <div className={mapContainerClass}>
-              <div className="c-stats-map">
-                <div className="c-stats-map__inner">
-                  <StatsMap countries={formatted} bins={summary.bins || []} />
-                </div>
-                {error && (
-                  <div className="c-stats-map__overlay c-stats-map__overlay--error">
-                    <StatsErrorState
-                      error={error}
-                      isRetrying={isLoading}
-                      onRetry={retry}
-                    />
-                  </div>
-                )}
-                {isLoading && (
-                  <div className="c-stats-map__loading-wrapper">
-                    <MapLoadingOverlay />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {hasData && !isLoading && (
-              <div className="c-stats-table-export-layout">
-                <div className="c-stats-export-button-container">
-                  <a
-                    download
-                    href={`${dataUrl}.csv?from=${dateRange.from || ''}&to=${dateRange.to || ''}`}
-                    className="pt-button pt-intent-primary pt-icon-export"
-                  >
-                    {msg('table_export_csv')}
-                  </a>
-                </div>
-
-                <div className="c-stats-table-container">
-                  <StatsTable data={formatted} />
-                </div>
               </div>
             )}
-
-            {isLoading && !hasData && (
-              <div className="c-stats-table-container">
-                <TableLoadingSkeleton />
+            {isLoading && (
+              <div className="c-stats-map__loading-wrapper">
+                <MapLoadingOverlay />
               </div>
             )}
           </div>
-      </ErrorBoundary>
+        </div>
+
+        {hasData && !isLoading && (
+          <div className="c-stats-table-export-layout">
+            <div className="c-stats-export-button-container">
+              <a
+                download
+                href={`${dataUrl}.csv?from=${dateRange.from || ''}&to=${dateRange.to || ''}`}
+                className="pt-button pt-intent-primary pt-icon-export"
+              >
+                {msg('table_export_csv')}
+              </a>
+            </div>
+
+            <div className="c-stats-table-container">
+              <StatsTable data={formatted} />
+            </div>
+          </div>
+        )}
+
+        {isLoading && !hasData && (
+          <div className="c-stats-table-container">
+            <TableLoadingSkeleton />
+          </div>
+        )}
+      </div>
+    </ErrorBoundary>
   )
 }
 

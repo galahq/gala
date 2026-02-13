@@ -3,9 +3,9 @@ import { useState, useMemo } from 'react'
 import { formatDate as formatDateValue } from '../dateHelpers'
 
 type CountryData = {
-  iso2: string,
-  iso3: string,
-  name: string,
+  iso2?: ?string,
+  iso3?: ?string,
+  name?: ?string,
   unique_visits: number,
   unique_users: number,
   events_count: number,
@@ -19,8 +19,8 @@ type UseStatsTableResult = {
   sortField: string,
   sortDirection: SortDirection,
   handleSort: (field: string) => void,
-  countries: CountryData[],
-  uncountries: CountryData[],
+  knownCountries: CountryData[],
+  unknownCountries: CountryData[],
   totalVisits: number,
   formatDate: (dateStr: ?string) => string,
   isActiveSortField: (field: string) => boolean,
@@ -63,14 +63,14 @@ export function useStatsTable (data: CountryData[]): UseStatsTableResult {
     })
   }, [data, sortField, sortDirection])
 
-  const { countries, uncountries } = useMemo(() => {
+  const { knownCountries, unknownCountries } = useMemo(() => {
     const known = sortedData.filter(
       row => row.iso2 && row.name && row.name.trim() !== '' && row.name !== 'Unknown'
     )
     const unknown = sortedData.filter(
       row => !row.iso2 || !row.name || row.name.trim() === '' || row.name === 'Unknown'
     )
-    return { countries: known, uncountries: unknown }
+    return { knownCountries: known, unknownCountries: unknown }
   }, [sortedData])
 
   const totalVisits = useMemo(() => {
@@ -90,8 +90,8 @@ export function useStatsTable (data: CountryData[]): UseStatsTableResult {
     sortField,
     sortDirection,
     handleSort,
-    countries,
-    uncountries,
+    knownCountries,
+    unknownCountries,
     totalVisits,
     formatDate,
     isActiveSortField,

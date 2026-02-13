@@ -43,23 +43,12 @@ class CaseStatsService
   end
 
   def self.resolve_country(input)
-    country_reference_module.resolve(input)
-  end
-
-  def self.unknown_value?(value)
-    country_reference_module.unknown?(value)
-  end
-
-  def self.country_reference_module
-    return CountryReference if defined?(CountryReference)
-    return FindCountry if defined?(FindCountry)
-
-    raise NameError, 'CountryReference (or legacy FindCountry) is not defined'
+    CountryReference.resolve(input)
   end
 
   def self.merge_key(country)
     return "iso2:#{country[:iso2]}" if country[:iso2].present?
-    return 'unknown' if unknown_value?(country[:name].to_s)
+    return 'unknown' if CountryReference.unknown?(country[:name].to_s)
 
     "name:#{country[:name].to_s.downcase}"
   end
@@ -90,7 +79,6 @@ class CaseStatsService
     rows.sort_by { |row| [-row[:unique_visits], row[:name].to_s] }
   end
 
-  private_class_method :unknown_value?, :merge_key, :default_row,
-                       :apply_row!, :min_time, :max_time, :sort_stats,
-                       :country_reference_module
+  private_class_method :merge_key, :default_row, :apply_row!,
+                       :min_time, :max_time, :sort_stats
 end
