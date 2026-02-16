@@ -1,9 +1,10 @@
 /* @flow */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
 import { injectIntl } from 'react-intl'
 import { formatLocalDate } from './dateHelpers'
+import { useDateRangeShortcutClassSync } from './hooks/useDateRangeShortcutClassSync'
 
 function StatsDateRangePicker ({
   minDate: minDateProp,
@@ -88,35 +89,7 @@ function StatsDateRangePicker ({
 
   const selectedShortcutIndex = getSelectedShortcutIndex(value, translatedShortcuts)
 
-  useEffect(() => {
-    const syncShortcutActiveClass = () => {
-      const items = document.querySelectorAll('.pt-daterangepicker-shortcuts .pt-menu-item')
-      if (!items || items.length === 0) return
-
-      items.forEach((item, index) => {
-        if (index === selectedShortcutIndex) {
-          item.classList.add('active')
-        } else {
-          item.classList.remove('active')
-        }
-      })
-    }
-
-    syncShortcutActiveClass()
-    const timeoutId = window.setTimeout(syncShortcutActiveClass, 0)
-    const observer = typeof window.MutationObserver === 'function'
-      ? new window.MutationObserver(syncShortcutActiveClass)
-      : null
-
-    if (observer) {
-      observer.observe(document.body, { childList: true, subtree: true })
-    }
-
-    return () => {
-      window.clearTimeout(timeoutId)
-      if (observer) observer.disconnect()
-    }
-  }, [selectedShortcutIndex, translatedShortcuts.length, value])
+  useDateRangeShortcutClassSync(selectedShortcutIndex)
 
   function handleChange (nextRange) {
     if (onRangeChange) {

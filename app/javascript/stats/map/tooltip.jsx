@@ -2,17 +2,10 @@
 import * as React from 'react'
 
 import { Colors } from '../colors'
-
-type CountryData = {
-  iso2?: ?string,
-  iso3?: ?string,
-  name?: ?string,
-  unique_visits: number,
-  bin: number,
-}
+import type { StatsCountryRow } from '../types'
 
 type Props = {
-  country: CountryData,
+  country: StatsCountryRow,
   position: { left: number, top: number },
   binColors: string[],
   binTextColors: string[],
@@ -55,12 +48,16 @@ function MapTooltip ({
 
   const countryName = country.name || 'Unknown'
   const flagUrl = buildFlagUrl(normalizeIso2(country.iso2))
+  const visitors = Number.isFinite(country.unique_visits)
+    ? country.unique_visits
+    : 0
 
   return (
     <div
       ref={tooltipRef}
-      className="c-stats-map-tooltip"
+      className="c-stats-map-tooltip pt-typography"
       style={{ left: position.left, top: position.top }}
+      role="tooltip"
     >
       <div className="c-stats-map-tooltip__country-row">
         {flagUrl && (
@@ -76,19 +73,17 @@ function MapTooltip ({
             }}
           />
         )}
-        <div className="c-stats-map-tooltip__country">
-          {countryName}
-        </div>
+        <div className="c-stats-map-tooltip__country">{countryName}</div>
       </div>
-      <div className="c-stats-map-tooltip__content">
-        <span className="c-stats-map-tooltip__label">
+      <div className="c-stats-map-tooltip__metric-row">
+        <span className="c-stats-map-tooltip__metric-label">
           {intl.formatMessage({ id: 'cases.stats.show.tableUniqueVisitors' })}
         </span>
         <span
-          className="c-stats-map-tooltip__value"
+          className="c-stats-map-tooltip__metric-pill"
           style={{ backgroundColor: binColor, color: binTextColor }}
         >
-          {country.unique_visits.toLocaleString()}
+          {visitors.toLocaleString()}
         </span>
       </div>
     </div>

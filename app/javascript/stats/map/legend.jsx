@@ -1,32 +1,33 @@
 /* @flow */
 import * as React from 'react'
-import { Popover, Position, Icon } from '@blueprintjs/core'
-import { FormattedMessage } from 'react-intl'
-
-type Bin = {
-  bin: number,
-  min: number,
-  max: number,
-  label: string,
-}
+import { Popover, Position } from '@blueprintjs/core'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import type { StatsBin } from '../types'
 
 type Props = {
-  bins: Bin[],
+  bins: StatsBin[],
   binColors: string[],
   binTextColors: string[],
+  intl: any,
 }
 
-function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
+function MapLegend ({
+  bins,
+  binColors,
+  binTextColors,
+  intl,
+}: Props): React.Node {
   if (!bins || bins.length === 0) {
     return null
   }
 
   return (
-    <div className="c-stats-map-legend">
+    <div className="c-stats-map-legend pt-typography">
       <div className="c-stats-map-legend__title">
         <FormattedMessage id="cases.stats.show.mapLegendTitle" />
         <Popover
-          position={Position.TOP}
+          position={Position.TOP_LEFT}
+          hoverOpenDelay={100}
           content={
             <div className="c-stats-map-legend__popover">
               <h6 className="c-stats-map-legend__popover-heading">
@@ -38,14 +39,20 @@ function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
             </div>
           }
         >
-          <span className="c-stats-map-legend__help-icon">
-            <Icon icon="info-sign" />
-          </span>
+          <button
+            type="button"
+            className="pt-button pt-minimal pt-small pt-icon-info-sign c-stats-map-legend__help-icon"
+            aria-label={intl.formatMessage({
+              id: 'cases.stats.show.mapLegendHelpTitle',
+            })}
+          />
         </Popover>
       </div>
 
-      <div className="c-stats-map-legend__bins">
+      <div className="c-stats-map-legend__stack">
         {bins.map((b, i) => {
+          const width = `${100 / bins.length}%`
+
           let borderRadius = '0'
           if (bins.length === 1) {
             borderRadius = '4px'
@@ -56,16 +63,22 @@ function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
           }
 
           return (
-            <div className="c-stats-map-legend__bin" key={i}>
-              <div
-                className="c-stats-map-legend__bar"
-                style={{ background: binColors[i], borderRadius }}
-                title={`${b.label} visitors`}
+            <div
+              key={i}
+              className="c-stats-map-legend__segment"
+              style={{
+                background: binColors[i],
+                borderRadius,
+                width,
+              }}
+              title={b.label}
+            >
+              <span
+                className="c-stats-map-legend__label"
+                style={{ color: binTextColors[i] }}
               >
-                <span className="c-stats-map-legend__label" style={{ color: binTextColors[i] }}>
-                  {b.label}
-                </span>
-              </div>
+                {b.label}
+              </span>
             </div>
           )
         })}
@@ -83,4 +96,4 @@ function MapLegend ({ bins, binColors, binTextColors }: Props): React.Node {
   )
 }
 
-export default React.memo<Props>(MapLegend)
+export default injectIntl(React.memo<Props>(MapLegend))

@@ -422,53 +422,54 @@ $stats-danger: #db3737
   padding: 12px
   border-radius: 0 6px 0 0
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3)
-  z-index: 1
+  z-index: 3
   min-width: 200px
 
 .c-stats-map-legend__title
   font-weight: bold
   margin-bottom: 8px
-  font-size: 14px
+  font-size: 12px
   color: #ffffff
   @include stats-mono
   display: flex
   align-items: center
   gap: 6px
 
-.c-stats-map-legend__bins
+.c-stats-map-legend__stack
   display: flex
   align-items: center
   gap: 0
   border-radius: 4px
   overflow: hidden
 
-.c-stats-map-legend__bin
-  position: relative
-  flex: 1
-
-.c-stats-map-legend__bar
-  height: 24px
-  border: none
+.c-stats-map-legend__segment
   display: flex
   align-items: center
   justify-content: center
+  height: 24px
+  font-size: 10px
+  font-weight: 700
+  line-height: 1
+  padding: 0 4px
+  min-width: 0
 
 .c-stats-map-legend__label
-  font-size: 12px
-  font-weight: bold
+  font-size: 10px
+  font-weight: 700
   line-height: 1
+  white-space: nowrap
   @include stats-mono
 
 .c-stats-map-legend__footer
-  @include stats-flex-between
-  font-size: 13px
+  display: flex
+  justify-content: space-between
   margin-top: 6px
   color: #ffffff
+  font-size: 12px
   @include stats-mono
 
 .c-stats-map-legend__footer-label
   font-weight: bold
-
 .c-stats-map-legend__popover
   padding: 12px
   max-width: 300px
@@ -478,7 +479,7 @@ $stats-danger: #db3737
   margin-bottom: 8px
 
 .c-stats-map-legend__popover-text
-  font-size: 14px
+  font-size: 12px
 
 .c-stats-map-legend__help-icon
   display: inline-flex
@@ -503,11 +504,10 @@ $stats-danger: #db3737
   border-radius: 6px
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3)
   font-size: 14px
-  @include stats-mono
   pointer-events: none
   min-width: 172px
-  z-index: 1000
   overflow: hidden
+  z-index: 1000
 
 .c-stats-map-tooltip__country
   font-weight: 700
@@ -527,67 +527,60 @@ $stats-danger: #db3737
   border-radius: 2px
   border: 1px solid rgba(255, 255, 255, 0.24)
 
-.c-stats-map-tooltip__content
+.c-stats-map-tooltip__metric-row
   display: flex
   align-items: center
+  justify-content: space-between
   gap: 8px
   padding: 8px 10px
 
-.c-stats-map-tooltip__label
+.c-stats-map-tooltip__metric-label
+  flex: 1 1 auto
   font-size: 12px
   font-weight: 600
   color: rgba(255, 255, 255, 0.88)
 
-.c-stats-map-tooltip__value
-  margin-left: auto
+.c-stats-map-tooltip__metric-pill
   display: inline-flex
   align-items: center
   justify-content: center
+  margin-left: auto
   min-width: 28px
   min-height: 24px
   border-radius: 999px
   padding: 0 8px
   font-size: 14px
   font-weight: 700
+  line-height: 1
   border: 1px solid rgba(16, 22, 26, 0.3)
 
 .c-stats-map-error
   height: 100%
-  @include stats-center
+  display: flex
+  align-items: center
+  justify-content: center
   flex-direction: column
   padding: 20px
   text-align: center
-  background-color: rgba(249, 250, 251, 0.95)
+  color: $stats-gray-5
 
 .c-stats-map-error__title
   color: $stats-danger
   margin-bottom: 10px
-  font-weight: bold
+  font-weight: 700
 
 .c-stats-map-error__message
-  color: $stats-gray-5
   font-size: 14px
+  margin-bottom: 15px
+
+.c-stats-map-error__retry
   margin-bottom: 15px
 
 .c-stats-map-error__debug
   font-size: 12px
-  color: $stats-gray-5
 
   p
     margin: 0
-
-.c-stats-map-error__details
-  font-size: 12px
-  color: #9ca3af
-  text-align: left
-
-.c-stats-map-error__details-summary
-  cursor: pointer
-  margin-bottom: 5px
-
-.c-stats-map-error__details-pre
-  white-space: pre-wrap
-  font-size: 10px
 
 .c-stats-skeleton-card
   padding: 20px

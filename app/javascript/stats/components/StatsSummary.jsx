@@ -2,25 +2,21 @@
 /* @flow */
 
 import React from 'react'
+import { injectIntl } from 'react-intl'
 import StatsKeyValueList from './StatsKeyValueList'
-
-type SummaryData = {
-  total_visits?: number,
-  country_count?: number,
-  total_podcast_listens?: number,
-}
+import type { StatsSummary as StatsSummaryData } from '../types'
 
 type Props = {
-  summary: SummaryData,
+  summary: StatsSummaryData,
   dateRangeText: string,
-  msg: (key: string) => string,
   hasData: boolean,
+  intl: any,
 }
 
-function NoDataState ({ msg }: { msg: (key: string) => string }): React$Node {
+function NoDataState ({ intl }: { intl: any }): React$Node {
   return (
     <div className="c-stats-summary__no-data">
-      {msg('no_data')}
+      {intl.formatMessage({ id: 'cases.stats.show.noData' })}
     </div>
   )
 }
@@ -28,31 +24,31 @@ function NoDataState ({ msg }: { msg: (key: string) => string }): React$Node {
 export function StatsSummary ({
   summary,
   dateRangeText,
-  msg,
   hasData,
+  intl,
 }: Props): React$Node {
   if (!hasData) {
-    return <NoDataState msg={msg} />
+    return <NoDataState intl={intl} />
   }
 
   const rows = [
     {
-      label: msg('table_unique_visitors'),
-      value: (summary.total_visits || 0).toLocaleString(),
+      label: intl.formatMessage({ id: 'cases.stats.show.tableUniqueVisitors' }),
+      value: summary.total_visits.toLocaleString(),
     },
     {
-      label: msg('countries'),
-      value: summary.country_count || 0,
+      label: intl.formatMessage({ id: 'cases.stats.show.countries' }),
+      value: summary.country_count,
     },
     {
-      label: msg('podcast_listens_short'),
-      value: (summary.total_podcast_listens || 0).toLocaleString(),
+      label: intl.formatMessage({ id: 'cases.stats.show.podcastListensShort' }),
+      value: summary.total_podcast_listens.toLocaleString(),
     },
   ]
 
   const header = dateRangeText ? (
     <div className="c-stats-summary__header">
-      <h3>{msg('filtered_stats')}</h3>
+      <h3>{intl.formatMessage({ id: 'cases.stats.show.filteredStats' })}</h3>
       <span className="c-stats-summary__date-range">{dateRangeText}</span>
     </div>
   ) : null
@@ -67,4 +63,4 @@ export function StatsSummary ({
   )
 }
 
-export default StatsSummary
+export default injectIntl(StatsSummary)

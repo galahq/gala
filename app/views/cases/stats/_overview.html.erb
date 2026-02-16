@@ -28,12 +28,12 @@
 
         <div class="c-stats-information__row">
           <span class="c-stats-information__label"><%= t('cases.stats.show.table_unique_visitors') %></span>
-          <span class="c-stats-information__value"><%= number_with_delimiter(@initial_all_time_summary[:total_visits].to_i) %></span>
+          <span class="c-stats-information__value"><%= number_with_delimiter(@all_time_summary[:total_visits].to_i) %></span>
         </div>
 
         <div class="c-stats-information__row">
           <span class="c-stats-information__label"><%= t('cases.stats.show.countries') %></span>
-          <span class="c-stats-information__value"><%= @initial_all_time_summary[:country_count].to_i %></span>
+          <span class="c-stats-information__value"><%= @all_time_summary[:country_count].to_i %></span>
         </div>
       </div>
     </div>
@@ -46,3 +46,4 @@
     </aside>
   </div>
 </div>
+

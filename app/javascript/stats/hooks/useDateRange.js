@@ -2,23 +2,19 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { validateDateRange, formatLocalDate, getTodayIso } from '../dateHelpers'
 import { getUrlParams, syncUrlParams } from '../urlParams'
-
-type DateRange = {
-  from: ?string,
-  to: ?string,
-}
+import type { StatsDateRange } from '../types'
 
 type Params = {
   minDate: ?string,
 }
 
 type UseDateRangeResult = {
-  range: DateRange,
+  range: StatsDateRange,
   setFromDates: (from: ?Date, to: ?Date) => void,
 }
 
 export function useDateRange ({ minDate }: Params): UseDateRangeResult {
-  const [range, setRange] = useState<DateRange>(() => {
+  const [range, setRange] = useState<StatsDateRange>(() => {
     const urlParams = getUrlParams()
     if (urlParams.from || urlParams.to) {
       return {

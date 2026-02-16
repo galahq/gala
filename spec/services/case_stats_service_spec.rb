@@ -2,6 +2,6 @@
 
 require 'rails_helper'
 
-RSpec.describe Cases::StatsController do
+RSpec.describe CaseStatsService do
   # TODO
 end

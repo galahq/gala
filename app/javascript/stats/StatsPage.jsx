@@ -2,6 +2,7 @@
 /* @flow */
 
 import React from 'react'
+import { injectIntl } from 'react-intl'
 import ErrorBoundary from 'utility/ErrorBoundary'
 import { formatDateRange, parseLocalDate } from './dateHelpers'
 import { useDateRange } from './hooks/useDateRange'
@@ -10,7 +11,7 @@ import { useStatsData } from './hooks/useStatsData'
 import StatsDateRangePicker from './StatsDateRangePicker'
 import StatsMap from './StatsMap'
 import StatsTable from './StatsTable'
-import { StatsSummary } from './components/StatsSummary'
+import StatsSummary from './components/StatsSummary'
 import {
   MapLoadingOverlay,
   SummaryLoadingSkeleton,
@@ -18,14 +19,18 @@ import {
   PageLoadingSkeleton,
 } from './components/StatsLoading'
 import { StatsErrorState } from './components/StatsError'
+import type {
+  StatsCountryRow,
+  StatsSummary as StatsSummaryData,
+} from './types'
 
 type Props = {
   dataUrl: string,
   minDate: ?string,
-  messages: { [string]: string },
+  intl: any,
 }
 
-function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
+function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
   const { range: dateRange, setFromDates } = useDateRange({ minDate })
   const {
     data,
@@ -35,15 +40,16 @@ function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
     retry,
   } = useStatsData({ dataUrl, dateRange })
 
-  function msg (key: string): string {
-    if (!messages) return key
-    const camelKey = key.replace(/_([a-z])/g, (_, c) => c.toUpperCase())
-    const fullKey = `cases.stats.show.${camelKey}`
-    return messages[fullKey] != null ? messages[fullKey] : key
-  }
-
-  const formatted = data?.formatted || []
-  const summary = data?.summary || {}
+  const formatted: StatsCountryRow[] = data ? data.formatted : []
+  const summary: StatsSummaryData = data
+    ? data.summary
+    : {
+        total_visits: 0,
+        country_count: 0,
+        total_podcast_listens: 0,
+        bins: [],
+        bin_count: 0,
+      }
   const hasData = formatted.length > 0
   const dateRangeText = formatDateRange(dateRange.from, dateRange.to)
 
@@ -69,7 +75,9 @@ function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
 
   return (
     <ErrorBoundary>
-      <h2 className="c-stats-filter-card__heading">{msg('filter_by_date')}</h2>
+      <h2 className="c-stats-filter-card__heading">
+        {intl.formatMessage({ id: 'cases.stats.show.filterByDate' })}
+      </h2>
       <div className="c-stats-layout">
         <div className="c-stats-picker pt-card pt-elevation-1">
           <StatsDateRangePicker
@@ -87,7 +95,6 @@ function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
             <StatsSummary
               summary={summary}
               dateRangeText={dateRangeText}
-              msg={msg}
               hasData={hasData}
             />
           )}
@@ -96,7 +103,9 @@ function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
 
       <div className="c-stats-map-table-card pt-card pt-elevation-1">
         <div className="c-stats-map-table__header">
-          <h3 className="c-stats-map-table__heading">{msg('table_title')}</h3>
+          <h3 className="c-stats-map-table__heading">
+            {intl.formatMessage({ id: 'cases.stats.show.tableTitle' })}
+          </h3>
           {dateRangeText && (
             <span className="c-stats-map-table__date-range">{dateRangeText}</span>
           )}
@@ -105,7 +114,7 @@ function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
         <div className={mapContainerClass}>
           <div className="c-stats-map">
             <div className="c-stats-map__inner">
-              <StatsMap countries={formatted} bins={summary.bins || []} />
+              <StatsMap countries={formatted} bins={summary.bins} />
             </div>
             {error && (
               <div className="c-stats-map__overlay c-stats-map__overlay--error">
@@ -132,7 +141,7 @@ function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
                 href={`${dataUrl}.csv?from=${dateRange.from || ''}&to=${dateRange.to || ''}`}
                 className="pt-button pt-intent-primary pt-icon-export"
               >
-                {msg('table_export_csv')}
+                {intl.formatMessage({ id: 'cases.stats.show.tableExportCsv' })}
               </a>
             </div>
 
@@ -152,4 +161,4 @@ function StatsPage ({ dataUrl, minDate, messages }: Props): React$Node {
   )
 }
 
-export default StatsPage
+export default injectIntl(StatsPage)

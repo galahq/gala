@@ -1,0 +1,6 @@
+<% require 'csv' %>
+<%= CSV.generate_line(stats_csv_headers) %>
+<% @csv_rows.each do |row| %>
+<%= CSV.generate_line(stats_csv_row(row)) %>
+<% end %>
+<%= CSV.generate_line(stats_csv_total_row(@csv_rows)) %>

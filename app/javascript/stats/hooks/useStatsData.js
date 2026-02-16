@@ -3,27 +3,26 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   fetchStats,
   fetchWithTimeout,
-  validatePayload,
 } from '../api'
+import type {
+  StatsData,
+  StatsDateRange,
+  StatsDateRangeParams,
+} from '../types'
 
 declare class AbortController {
-  signal: { aborted: boolean, ... };
+  signal: {
+    aborted: boolean,
+    addEventListener?: (event: 'abort', callback: () => mixed) => mixed,
+    removeEventListener?: (event: 'abort', callback: () => mixed) => mixed,
+    ...
+  };
   abort(): void;
-}
-
-type StatsData = {
-  formatted: Array<Object>,
-  summary: Object,
-}
-
-type DateRange = {
-  from: ?string,
-  to: ?string,
 }
 
 type Params = {
   dataUrl: string,
-  dateRange: DateRange,
+  dateRange: StatsDateRange,
 }
 
 type UseStatsDataResult = {
@@ -54,25 +53,16 @@ export function useStatsData ({ dataUrl, dateRange }: Params): UseStatsDataResul
       setError(null)
 
       try {
-        const params = {}
+        const params: StatsDateRangeParams = {}
         if (dateRange.from) params.from = dateRange.from
         if (dateRange.to) params.to = dateRange.to
 
-        const payload = await fetchWithTimeout(
+        const nextData = await fetchWithTimeout(
           fetchStats(dataUrl, params, abortController.signal),
           15000
         )
 
-        const validation = validatePayload(payload)
-
-        if (!validation.valid) {
-          throw new Error(validation.error)
-        }
-
-        setData({
-          formatted: validation.formatted,
-          summary: validation.summary,
-        })
+        setData(nextData)
       } catch (err) {
         if (err.name === 'AbortError') {
           return

@@ -3,20 +3,10 @@ import React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { useStatsTable } from './hooks/useStatsTable'
-
-type CountryData = {
-  iso2?: ?string,
-  iso3?: ?string,
-  name?: ?string,
-  unique_visits: number,
-  unique_users: number,
-  events_count: number,
-  first_event: ?string,
-  last_event: ?string,
-}
+import type { StatsCountryRow, StatsSortField } from './types'
 
 type Props = {
-  data: CountryData[],
+  data: StatsCountryRow[],
   intl: any,
 }
 
@@ -34,7 +24,7 @@ function StatsTable ({ data, intl }: Props) {
     id: 'cases.stats.show.tableUnknownCountry',
   })
 
-  const SortIcon = ({ field }: { field: string }) => {
+  const SortIcon = ({ field }: { field: StatsSortField }) => {
     if (!isActiveSortField(field)) {
       return (
         <span
@@ -55,7 +45,7 @@ function StatsTable ({ data, intl }: Props) {
     )
   }
 
-  const ariaSortFor = (field: string): 'ascending' | 'descending' | 'none' => {
+  const ariaSortFor = (field: StatsSortField): 'ascending' | 'descending' | 'none' => {
     if (!isActiveSortField(field)) return 'none'
     return sortDirection === 'asc' ? 'ascending' : 'descending'
   }
@@ -64,7 +54,7 @@ function StatsTable ({ data, intl }: Props) {
     field,
     messageId,
   }: {
-    field: string,
+    field: StatsSortField,
     messageId: string,
   }) => (
     <th scope="col" className="c-stats-table__sortable" aria-sort={ariaSortFor(field)}>
@@ -79,8 +69,8 @@ function StatsTable ({ data, intl }: Props) {
     </th>
   )
 
-  const renderRow = (row: CountryData, index: number) => {
-    const hasKnownName = !!(row.name && row.name.trim() !== '' && row.name !== 'Unknown')
+  const renderRow = (row: StatsCountryRow, index: number) => {
+    const hasKnownName = row.name.trim() !== '' && row.name !== 'Unknown'
     const displayName = hasKnownName ? row.name : unknownLabel
 
     return (

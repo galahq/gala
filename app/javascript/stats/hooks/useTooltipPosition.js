@@ -1,11 +1,12 @@
 /* @flow */
 import { useState, useEffect } from 'react'
+import type { StatsCountryRow } from '../types'
 
 type Position = { left: number, top: number }
 type MousePosition = { x: number, y: number }
 
 export function useTooltipPosition (
-  hoveredCountry: any,
+  hoveredCountry: ?StatsCountryRow,
   mousePosition: MousePosition,
   tooltipRef: { current: HTMLDivElement | null },
   mapRef: { current: { getMap: () => any } | null }
@@ -37,9 +38,11 @@ export function useTooltipPosition (
       ? mousePosition.x - offset - tooltipWidth
       : mousePosition.x + offset
 
+    const top = Math.max(10, mousePosition.y - offset)
+
     setTooltipPosition({
       left,
-      top: mousePosition.y - offset,
+      top,
     })
   }, [hoveredCountry, mousePosition, tooltipRef, mapRef])
 

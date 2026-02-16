@@ -3,6 +3,7 @@
 
 import React from 'react'
 import { NonIdealState } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 
 type Props = {
   error: ?Error,
@@ -11,10 +12,10 @@ type Props = {
 }
 
 export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props): React$Node {
-  const errorTitle = 'Unable to Load Stats'
-  const errorDescription =
-    error?.message ||
-    'An error occurred while loading the statistics data. Please try again.'
+  const errorTitle = <FormattedMessage id="cases.stats.show.errorTitle" />
+  const errorDescription = error?.message || (
+    <FormattedMessage id="cases.stats.show.errorDescription" />
+  )
 
   const errorAction = (
     <button
@@ -22,7 +23,7 @@ export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props):
       disabled={isRetrying}
       onClick={onRetry}
     >
-      {isRetrying ? 'Loading...' : 'Try Again'}
+      {isRetrying ? 'Loading...' : <FormattedMessage id="cases.stats.show.errorTryAgain" />}
     </button>
   )
 

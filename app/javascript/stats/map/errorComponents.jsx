@@ -1,6 +1,7 @@
 /* @flow */
 import * as React from 'react'
 import { Button, Intent, NonIdealState } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 
 type MapErrorStateProps = {
   errorMessage: string,
@@ -18,20 +19,21 @@ export function MapErrorState ({
   onRetry,
 }: MapErrorStateProps): React.Node {
   return (
-    <div className="c-stats-map-error">
+    <div className="c-stats-map-error" role="alert" aria-live="assertive">
       <p className="c-stats-map-error__title">
-        Unable to load map
+        <FormattedMessage id="cases.stats.show.errorMapTitle" />
       </p>
       <p className="c-stats-map-error__message">
-        {errorMessage ||
-          'Please check your internet connection or disable ad blockers'}
+        {errorMessage || (
+          <FormattedMessage id="cases.stats.show.errorMapDescription" />
+        )}
       </p>
       <Button
+        className="c-stats-map-error__retry"
         intent={Intent.PRIMARY}
-        style={{ marginBottom: '15px' }}
         onClick={onRetry}
       >
-        Retry Loading Map
+        <FormattedMessage id="cases.stats.show.errorMapRetry" />
       </Button>
       <div className="c-stats-map-error__debug">
         <p>Debug info:</p>

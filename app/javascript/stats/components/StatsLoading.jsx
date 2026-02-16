@@ -2,6 +2,7 @@
 /* @flow */
 
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 export function MapLoadingOverlay (): React$Node {
   return (
@@ -24,7 +25,7 @@ export function MapLoadingOverlay (): React$Node {
         </div>
       </div>
       <div className="c-stats-map__loading-text pt-text-muted">
-        Loading map data...
+        <FormattedMessage id="cases.stats.show.loadingMapData" />
       </div>
     </div>
   )

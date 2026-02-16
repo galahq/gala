@@ -36,7 +36,6 @@ export default class extends Controller {
             <StatsPage
               dataUrl={dataUrl}
               minDate={minDate}
-              messages={messages}
             />
           </IntlProvider>
         </ErrorBoundary>,
