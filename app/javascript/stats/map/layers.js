@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Colors } from '../colors'
+import { Colors } from './mapColors'
 
 type LayerConfig = {
   id: string,

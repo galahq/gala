@@ -1,4 +1,4 @@
-<% cache [@html_cache_key, @case.updated_at], expires_in: Cases::StatsController::CACHE_EXPIRES_IN do %>
+<% cache [@html_cache_key, @case.updated_at], expires_in: 24.hours do %>
 <h2>Cache key: <%= @html_cache_key %></h2>
 <% content_for :title do %>
   <%= I18n.t('cases.stats.show.case_stats') %> — <%= @case.short_title %>

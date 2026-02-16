@@ -1,5 +1,5 @@
 /* @flow */
-import { Colors } from '../colors'
+import { Colors } from './mapColors'
 
 function readWindowString (key: string, fallback: string): string {
   const value = (window: any)[key]

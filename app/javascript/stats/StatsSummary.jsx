@@ -3,8 +3,7 @@
 
 import React from 'react'
 import { injectIntl } from 'react-intl'
-import StatsKeyValueList from './StatsKeyValueList'
-import type { StatsSummary as StatsSummaryData } from '../types'
+import type { StatsSummary as StatsSummaryData } from './state/types'
 
 type Props = {
   summary: StatsSummaryData,
@@ -54,12 +53,15 @@ export function StatsSummary ({
   ) : null
 
   return (
-    <StatsKeyValueList
-      baseClassName="c-stats-summary"
-      rows={rows}
-      className="c-stats-summary__content"
-      header={header}
-    />
+    <div className="c-stats-summary__content">
+      {header}
+      {rows.map((row, index) => (
+        <div className="c-stats-summary__row" key={index}>
+          <span className="c-stats-summary__label">{row.label}</span>
+          <span className="c-stats-summary__value">{row.value}</span>
+        </div>
+      ))}
+    </div>
   )
 }
 

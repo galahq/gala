@@ -1,110 +1,100 @@
 # frozen_string_literal: true
 
-# Formats per-country rows from stats SQL for UI/API consumers.
+# Queries and formats per-country stats for a Case.
+# Encapsulates the stats SQL query, date range handling, data normalization, and caching.
+#
+# @example
+#   service = CaseStatsService.new(kase, from: '2024-01-01', to: '2024-12-31')
+#   service.country_stats  # => { stats: [...], total_visits: n, ... }
+#   service.api_data       # => formatted array for JSON response
+#   service.stats_rows     # => raw normalized rows for CSV
 class CaseStatsService
-  UNKNOWN_COUNTRY = 'Unknown'
-  NUMERIC_KEYS = %i[
-    unique_visits
-    unique_users
-    events_count
-    visit_podcast_count
-  ].freeze
-  DEFAULT_COUNTRY_STATS = {
-    unique_visits: 0,
-    unique_users: 0,
-    events_count: 0,
-    visit_podcast_count: 0,
-    first_event: nil,
-    last_event: nil
-  }.freeze
+  attr_reader :kase, :from_date, :to_date
 
-  def self.format_country_stats(raw_stats)
-    stats = sort_stats(merge_stats(raw_stats))
+  # @param kase [Case] The case to query stats for
+  # @param from [String, Date, nil] Start date (ISO8601 string or Date)
+  # @param to [String, Date, nil] End date (ISO8601 string or Date)
+  def initialize(kase, from: nil, to: nil)
+    @kase = kase
+    @from_date = resolve_from_date(from)
+    @to_date = resolve_to_date(to)
+  end
 
+  # @return [Hash] Aggregated country stats with totals (cached)
+  def country_stats
+    @country_stats ||= Rails.cache.fetch(cache_key, expires_in: 1.hours) do
+      Formatter.format_country_stats(query.execute)
+    end
+  end
+
+  # @return [String] Cache key for invalidation
+  def cache_key
+    @cache_key ||= "stats/data/#{kase.id}/#{from_date.iso8601}/#{to_date.iso8601}/#{event_version_key}"
+  end
+
+  # @return [Array<Hash>] Normalized stat rows (for CSV or iteration)
+  def stats_rows
+    country_stats[:stats]
+  end
+
+  # @return [Array<Hash>] Formatted data for API/JSON response
+  def api_data
+    stats_rows.map { |row| Formatter.api_row(row) }
+  end
+
+  # @return [Integer] Total unique visits across all countries
+  def total_visits
+    country_stats[:total_visits]
+  end
+
+  # @return [Integer] Number of distinct countries
+  def country_count
+    country_stats[:country_count]
+  end
+
+  # @return [Integer] Total podcast listens
+  def total_podcast_listens
+    country_stats[:total_podcast_listens]
+  end
+
+  # @return [Hash] Date range used for the query
+  def date_range
+    { from: from_date, to: to_date }
+  end
+
+  private
+
+  def query
+    @query ||= Query.new(kase, time_range)
+  end
+
+  def resolve_from_date(value)
+    parsed = parse_date(value)
+    [parsed, kase.created_at.to_date].compact.max
+  end
+
+  def resolve_to_date(value)
+    parsed = parse_date(value) || Date.current
+    [parsed, from_date].compact.max
+  end
+
+  def parse_date(value)
+    return nil if value.blank?
+    return value if value.is_a?(Date)
+
+    Date.iso8601(value.to_s)
+  rescue ArgumentError
+    nil
+  end
+
+  def time_range
     {
-      stats: stats,
-      total_visits: stats.sum { |row| row[:unique_visits] },
-      country_count: stats.length,
-      total_podcast_listens: stats.sum { |row| row[:visit_podcast_count] }
+      from_time: from_date.beginning_of_day,
+      to_time: (to_date + 1.day).beginning_of_day
     }
   end
 
-  def self.api_data(rows)
-    rows.map { |row| api_row(row) }
+  def event_version_key
+    Ahoy::Event.cache_key(kase: kase)
   end
-
-  def self.merge_stats(raw_stats)
-    raw_stats.each_with_object({}) do |row, acc|
-      country = resolve_country(row['country'])
-      key = merge_key(country)
-
-      acc[key] ||= default_row(country)
-      apply_row!(acc[key], row)
-    end.values
-  end
-
-  def self.resolve_country(input)
-    CountryReference.resolve(input)
-  end
-
-  def self.merge_key(country)
-    return "iso2:#{country[:iso2]}" if country[:iso2].present?
-
-    country_name = country[:name].presence || UNKNOWN_COUNTRY
-    return 'unknown' if CountryReference.unknown?(country_name)
-
-    "name:#{country_name.downcase}"
-  end
-
-  def self.default_row(country)
-    {
-      iso2: country[:iso2],
-      iso3: country[:iso3],
-      name: country[:name].presence || UNKNOWN_COUNTRY
-    }.merge(DEFAULT_COUNTRY_STATS)
-  end
-
-  def self.apply_row!(dst, src)
-    NUMERIC_KEYS.each { |key| dst[key] += src[key.to_s].to_i }
-    dst[:first_event] = min_time(dst[:first_event], src['first_event'])
-    dst[:last_event] = max_time(dst[:last_event], src['last_event'])
-  end
-
-  def self.min_time(left_time, right_time)
-    [left_time, right_time].compact.min
-  end
-
-  def self.max_time(left_time, right_time)
-    [left_time, right_time].compact.max
-  end
-
-  def self.sort_stats(rows)
-    rows.sort_by { |row| [-row[:unique_visits], row[:name].to_s] }
-  end
-
-  def self.api_row(row)
-    {
-      country: {
-        iso2: row[:iso2],
-        iso3: row[:iso3],
-        name: row[:name]
-      },
-      metrics: api_metrics(row),
-      first_event: row[:first_event]&.iso8601,
-      last_event: row[:last_event]&.iso8601
-    }
-  end
-
-  def self.api_metrics(row)
-    {
-      unique_visits: row[:unique_visits].to_i,
-      unique_users: row[:unique_users].to_i,
-      events_count: row[:events_count].to_i,
-      visit_podcast_count: row[:visit_podcast_count].to_i
-    }
-  end
-
-  private_class_method :merge_key, :default_row, :apply_row!,
-                       :min_time, :max_time, :sort_stats,
-                       :api_row, :api_metrics
 end

@@ -4,9 +4,8 @@ import React, { useMemo } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
 import { injectIntl } from 'react-intl'
 import { formatLocalDate } from './dateHelpers'
-import { useDateRangeShortcutClassSync } from './hooks/useDateRangeShortcutClassSync'
 
-function StatsDateRangePicker ({
+function DatePicker ({
   minDate: minDateProp,
   maxDate: maxDateProp,
   value,
@@ -89,8 +88,6 @@ function StatsDateRangePicker ({
 
   const selectedShortcutIndex = getSelectedShortcutIndex(value, translatedShortcuts)
 
-  useDateRangeShortcutClassSync(selectedShortcutIndex)
-
   function handleChange (nextRange) {
     if (onRangeChange) {
       onRangeChange(nextRange[0], nextRange[1])
@@ -115,4 +112,4 @@ function StatsDateRangePicker ({
   )
 }
 
-export default injectIntl(StatsDateRangePicker)
+export default injectIntl(DatePicker)
