@@ -1,175 +1,91 @@
 # frozen_string_literal: true
 
 module Cases
-  # The stats for a {Case} include its slug, what library it is in, etc.
+  # Provides stats dashboard for a Case, including per-country visit metrics.
+  # Supports HTML, JSON, and CSV response formats.
   class StatsController < ApplicationController
     before_action :authenticate_reader!
-    layout 'admin'
+    before_action :set_case
 
-    # @param [GET] /cases/case-slug/stats
+    # @param [GET] /cases/:case_slug/stats
     def show
-      redirect_to '/403' and return unless current_reader&.has_role? :editor
-
-      set_case
-      @sql_query = sql_query_sql
       respond_to do |format|
-        format.html { render :show }
-        format.json { render json: stats_data }
-        format.csv do
-          filename = I18n.t('cases.stats.csv_filename',
-                            slug: @case.slug,
-                            date: Date.current.strftime('%Y-%m-%d'))
-          send_data generate_csv, filename: filename
+        format.html do
+          if stale?(etag: overview_cache_key, last_modified: @case.updated_at.utc)
+            @cached_overview_html = cached_overview_html
+            render :show, layout: 'admin'
+          end
         end
+        format.json { render json: stats_serializer.as_json }
+        format.csv { prepare_csv_download }
       end
+    end
+
+    # @param [GET] /cases/:case_slug/stats/overview
+    # Returns just the overview partial HTML for AJAX refresh (always all-time stats)
+    def overview
+      # Invalidate the all-time overview cache so fresh data is rendered
+      Rails.cache.delete(overview_cache_key)
+
+      render partial: 'overview', locals: { overview: partial_locals }
     end
 
     private
 
     def set_case
       @case = Case.friendly.find(params[:case_slug]).decorate
-      authorize @case
+      authorize @case, :stats?
     end
 
-    def bindings # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-      from_ts =
-        params[:from].present? ? Time.zone.parse(params[:from]) : nil
-      to_ts = params[:to].present? ? Time.zone.parse(params[:to]).end_of_day : nil
-      from_ts ||= @case.created_at
-      to_ts ||= Time.zone.now.end_of_day
-      [
-        ActiveRecord::Relation::QueryAttribute.new(
-          'case_slug', @case.slug, ActiveRecord::Type::String.new
-        ),
-        ActiveRecord::Relation::QueryAttribute.new(
-          'from_ts', from_ts, ActiveRecord::Type::DateTime.new
-        ),
-        ActiveRecord::Relation::QueryAttribute.new(
-          'to_ts', to_ts, ActiveRecord::Type::DateTime.new
-        )
-      ]
+    # Service for date-filtered requests (JSON/CSV)
+    def stats_service
+      @stats_service ||= CaseStatsService.new(@case, from: params[:from], to: params[:to])
     end
 
-    def sql_query_sql
-      <<~SQL
-        WITH params(case_slug, from_ts, to_ts) AS (
-          VALUES ($1::text, $2::timestamp, $3::timestamp)
-        )
-        SELECT
-          v.country                                                       AS country,
-          MIN(e."time")                                                   AS first_event,
-          MAX(e."time")                                                   AS last_event,
-          MAX(c.published_at)                                             AS case_published_at,
-          COUNT(DISTINCT v.visitor_token)                                 AS unique_visits,
-          COUNT(DISTINCT e.user_id)                                       AS unique_users,
-          COUNT(*)                                                        AS events_count,
-          MAX(dc.deployments_count)                                       AS deployments_count,
-          COUNT(DISTINCT CASE WHEN e.name = 'visit_podcast' THEN e.id END) AS visit_podcast_count
-        FROM ahoy_events e
-        INNER JOIN cases c ON c.slug = e.properties ->> 'case_slug'
-        INNER JOIN params p ON TRUE
-        INNER JOIN visits v ON v.id = e.visit_id
-        LEFT JOIN LATERAL (
-          SELECT COUNT(DISTINCT d.id) AS deployments_count
-          FROM deployments d
-          WHERE d.case_id = c.id
-        ) dc ON TRUE
-        WHERE (e.properties ->> 'case_slug') = p.case_slug
-          AND e."time" BETWEEN p.from_ts AND p.to_ts
-          AND v.country IS NOT NULL AND trim(v.country) != ''
-          AND NOT EXISTS (
-            SELECT 1
-            FROM readers_roles rr
-            JOIN roles ro ON ro.id = rr.role_id
-            WHERE rr.reader_id = e.user_id AND ro.name = 'invisible'
-          )
-        GROUP BY v.country, c.id
-        ORDER BY unique_visits DESC NULLS LAST;
-      SQL
+    # Service for all-time stats (overview)
+    def all_time_stats_service
+      @all_time_stats_service ||= CaseStatsService.new(@case)
     end
 
-    def sql_query
-      sql = sql_query_sql
-      ActiveRecord::Base.connection.exec_query(sql, 'Case Stats', bindings).to_a
+    def stats_serializer
+      Cases::StatsSerializer.new(stats_service)
     end
 
-    def stats_data # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-      raw_data = sql_query
-      formatted_data = CountryStatsService.format_country_stats(raw_data)
-      case_locales = @case.translation_set.pluck(:locale).uniq.sort do |a, b|
-        if a == @case.locale && b != @case.locale
-          -1
-        elsif b == @case.locale && a != @case.locale
-          1
-        else
-          a <=> b
-        end
-      end.join(', ')
+    def overview_cache_key
+      "stats/overview/#{@case.id}/#{all_time_stats_service.event_version_key}"
+    end
 
-      {
-        by_event: raw_data,
-        formatted: formatted_data[:stats],
-        summary: {
-          total_visits: formatted_data[:total_visits],
-          country_count: formatted_data[:country_count],
-          total_deployments: @case.deployments.count,
-          total_podcast_listens: formatted_data[:total_podcast_listens],
-          case_published_at: @case.published_at&.strftime(I18n.t('date.formats.stats')),
-          case_locales: case_locales,
-          bins: formatted_data[:bins],
-          bin_count: formatted_data[:bin_count]
-        }
+    def cached_overview_html
+      Rails.cache.fetch(overview_cache_key, expires_in: 15.minutes) do
+        render_to_string(partial: 'overview', locals: { overview: partial_locals })
+      end
+    end
+
+    def partial_locals
+      @partial_locals ||= {
+        published_at: @case.published_at,
+        locales: [@case.locale, *@case.translation_set.pluck(:locale)].compact.uniq.to_a.join(', ') || '',
+        deployments: @case.deployments.count,
+        total_visits: all_time_stats_service.total_visits,
+        country_count: all_time_stats_service.country_count
       }
     end
 
-    def format_date(date)
-      return nil unless date
-      return nil unless date.respond_to?(:strftime)
+    def prepare_csv_download
+      @csv_rows = stats_service.stats_rows
 
-      date.strftime('%Y-%m-%d %H:%M')
-    rescue StandardError
-      nil
+      send_data render_to_string(template: 'cases/stats/show', formats: [:csv]),
+                type: 'text/csv; charset=utf-8',
+                filename: csv_filename,
+                disposition: 'attachment'
     end
 
-    def generate_csv # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-      require 'csv'
-      formatted_stats = stats_data[:formatted]
-
-      # Calculate totals
-      total_visits = formatted_stats.sum { |r| r[:unique_visits] }
-      total_users = formatted_stats.sum { |r| r[:unique_users] }
-      total_events = formatted_stats.sum { |r| r[:events_count] }
-
-      CSV.generate(headers: true) do |csv| # rubocop:disable Metrics/BlockLength
-        csv << [
-          I18n.t('cases.stats.csv.country'),
-          I18n.t('cases.stats.csv.unique_visitors'),
-          I18n.t('cases.stats.csv.unique_users'),
-          I18n.t('cases.stats.csv.total_events'),
-          I18n.t('cases.stats.csv.first_visit'),
-          I18n.t('cases.stats.csv.last_visit')
-        ]
-
-        formatted_stats.each do |row|
-          csv << [
-            row[:name],
-            row[:unique_visits],
-            row[:unique_users],
-            row[:events_count],
-            format_date(row[:first_event]),
-            format_date(row[:last_event])
-          ]
-        end
-
-        csv << [
-          I18n.t('cases.stats.csv.total'),
-          total_visits,
-          total_users,
-          total_events,
-          nil,
-          nil
-        ]
-      end
+    def csv_filename
+      I18n.t(
+        'cases.stats.csv_filename',
+        slug: @case.slug,
+        date: Date.current.strftime('%Y-%m-%d')
+      )
     end
   end
 end

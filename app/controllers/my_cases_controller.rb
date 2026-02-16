@@ -9,6 +9,7 @@ class MyCasesController < ApplicationController
 
   def index
     @cases = find_cases.decorate
+    @show_stats_column = @cases.any?
   end
 
   private
