@@ -277,31 +277,39 @@ RSpec.describe CaseStatsService do
   describe 'caching behavior' do
     subject(:service) { described_class.new(kase) }
 
+    # Use memory store for caching tests (test env uses null_store by default)
+    around do |example|
+      original_cache = Rails.cache
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      example.run
+    ensure
+      Rails.cache = original_cache
+    end
+
     before do
       create(:ahoy_event, visit: visit, user: reader, case_id: kase.id, name: 'visit_case', time: Time.current)
     end
 
-    it 'calls Rails.cache.fetch with the cache key' do
-      expect(Rails.cache).to receive(:fetch)
-        .with(service.cache_key, hash_including(:expires_in))
-        .and_call_original
-
+    it 'caches country_stats results' do
       service.country_stats
+
+      expect(Rails.cache.exist?(service.cache_key)).to be true
+    end
+
+    it 'returns cached data on subsequent calls' do
+      first_result = service.country_stats
+
+      new_service = described_class.new(kase)
+      second_result = new_service.country_stats
+
+      expect(second_result).to eq(first_result)
     end
 
     it 'memoizes country_stats within the same instance' do
       first_result = service.country_stats
       second_result = service.country_stats
 
-      expect(first_result).to equal(second_result) # Same object reference
-    end
-
-    it 'returns consistent data across service instances' do
-      first_result = service.country_stats
-      new_service = described_class.new(kase)
-      second_result = new_service.country_stats
-
-      expect(second_result).to eq(first_result)
+      expect(first_result).to equal(second_result)
     end
   end
 end

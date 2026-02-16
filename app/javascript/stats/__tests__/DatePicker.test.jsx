@@ -1,15 +1,34 @@
 /* @noflow */
 
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render, waitForElement } from 'react-testing-library'
 import { IntlProvider } from 'react-intl'
-
-jest.mock('@blueprintjs/datetime', () => ({
-  DateRangePicker: jest.fn(() => null),
-}))
 
 import { DateRangePicker } from '@blueprintjs/datetime'
 import DatePicker from '../DatePicker'
+
+jest.mock('@blueprintjs/datetime', () => {
+  const React = require('react')
+
+  return {
+    DateRangePicker: jest.fn((props) => (
+      <div className="pt-daterangepicker">
+        <div className="pt-daterangepicker-shortcuts">
+          {(props.shortcuts || []).map((shortcut, index) => (
+            <button
+              type="button"
+              className="pt-menu-item"
+              data-testid={`shortcut-${index}`}
+              key={shortcut.label}
+            >
+              {shortcut.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    )),
+  }
+})
 
 const messages = {
   'cases.stats.show.dateRangeAllTime': 'All time',
@@ -37,35 +56,41 @@ describe('DatePicker', () => {
     jest.clearAllMocks()
   })
 
-  it('sets selected shortcut index when range matches all-time shortcut', () => {
+  it('highlights all-time shortcut when range matches', async () => {
     const minDate = new Date(2020, 0, 1)
     const end = todayStart()
 
-    renderPicker({
+    const { getByTestId } = renderPicker({
       minDate,
       maxDate: end,
       value: [minDate, end],
     })
 
     expect(DateRangePicker).toHaveBeenCalled()
-    expect(DateRangePicker.mock.calls[0][0]).toMatchObject({
-      selectedShortcutIndex: 0,
-      value: [minDate, end],
+    expect(DateRangePicker.mock.calls[0][0]).toMatchObject({ value: [minDate, end] })
+    await waitForElement(() => {
+      const shortcut = getByTestId('shortcut-0')
+      if (!shortcut.classList.contains('pt-active')) {
+        throw new Error('shortcut is not active yet')
+      }
+      return shortcut
     })
+    expect(getByTestId('shortcut-1').classList.contains('pt-active')).toBe(false)
   })
 
-  it('passes undefined selected shortcut index for custom ranges', () => {
+  it('does not highlight a shortcut for custom ranges', () => {
     const from = new Date(2021, 0, 3)
     const to = new Date(2021, 0, 9)
 
-    renderPicker({
+    const { getByTestId } = renderPicker({
       minDate: new Date(2020, 0, 1),
       maxDate: todayStart(),
       value: [from, to],
     })
 
     expect(DateRangePicker).toHaveBeenCalled()
-    expect(DateRangePicker.mock.calls[0][0].selectedShortcutIndex).toBe(undefined)
+    expect(getByTestId('shortcut-0').classList.contains('pt-active')).toBe(false)
+    expect(getByTestId('shortcut-1').classList.contains('pt-active')).toBe(false)
   })
 
   it('forwards DateRangePicker changes to onRangeChange', () => {

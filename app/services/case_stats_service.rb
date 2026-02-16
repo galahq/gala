@@ -32,6 +32,10 @@ class CaseStatsService
     @cache_key ||= "stats/data/#{kase.id}/#{from_date.iso8601}/#{to_date.iso8601}/#{event_version_key}"
   end
 
+  def event_version_key
+    Ahoy::Event.cache_key(kase: kase)
+  end
+
   # @return [Array<Hash>] Normalized stat rows (for CSV or iteration)
   def stats_rows
     country_stats[:stats]
@@ -92,9 +96,5 @@ class CaseStatsService
       from_time: from_date.beginning_of_day,
       to_time: (to_date + 1.day).beginning_of_day
     }
-  end
-
-  def event_version_key
-    Ahoy::Event.cache_key(kase: kase)
   end
 end

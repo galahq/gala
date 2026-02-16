@@ -149,22 +149,28 @@ RSpec.describe Cases::StatsController, type: :controller do
   end
 
   describe 'caching integration' do
+    # Use memory store for caching tests (test env uses null_store by default)
+    around do |example|
+      original_cache = Rails.cache
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      example.run
+    ensure
+      Rails.cache = original_cache
+    end
+
     before do
       create(:ahoy_event, visit: visit, user: reader, case_id: kase.id,
                           name: 'visit_case', time: Time.current)
     end
 
-    it 'uses Rails.cache.fetch for stats data' do
-      expect(Rails.cache).to receive(:fetch)
-        .with(anything, hash_including(:expires_in))
-        .at_least(:once)
-        .and_call_original
-
+    it 'caches stats data in service' do
       get :show, params: { case_slug: kase.slug }, format: :json
+
+      service = CaseStatsService.new(kase)
+      expect(Rails.cache.exist?(service.cache_key)).to be true
     end
 
     it 'uses different cache keys for different date ranges' do
-      # Ensure case was created before these dates
       kase.update!(created_at: Date.new(2023, 1, 1))
 
       service1 = CaseStatsService.new(kase, from: '2024-01-01', to: '2024-06-30')

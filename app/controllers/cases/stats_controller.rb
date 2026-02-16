@@ -11,7 +11,7 @@ module Cases
     def show
       respond_to do |format|
         format.html do
-          if stale? etag: stats_service.cache_key, last_modified: @case.updated_at.utc
+          if stale?(etag: overview_cache_key, last_modified: @case.updated_at.utc)
             @cached_overview_html = cached_overview_html
             render :show, layout: 'admin'
           end
@@ -22,9 +22,9 @@ module Cases
     end
 
     # @param [GET] /cases/:case_slug/stats/overview
-    # Returns just the overview partial HTML for AJAX refresh
+    # Returns just the overview partial HTML for AJAX refresh (always all-time stats)
     def overview
-      # Invalidate cache to get fresh data
+      # Invalidate the all-time overview cache so fresh data is rendered
       Rails.cache.delete(overview_cache_key)
 
       render partial: 'overview', locals: { overview: partial_locals }
@@ -37,8 +37,14 @@ module Cases
       authorize @case, :stats?
     end
 
+    # Service for date-filtered requests (JSON/CSV)
     def stats_service
       @stats_service ||= CaseStatsService.new(@case, from: params[:from], to: params[:to])
+    end
+
+    # Service for all-time stats (overview)
+    def all_time_stats_service
+      @all_time_stats_service ||= CaseStatsService.new(@case)
     end
 
     def stats_serializer
@@ -46,11 +52,11 @@ module Cases
     end
 
     def overview_cache_key
-      "stats/overview/#{@case.id}/#{stats_service.cache_key}"
+      "stats/overview/#{@case.id}/#{all_time_stats_service.event_version_key}"
     end
 
     def cached_overview_html
-      Rails.cache.fetch(overview_cache_key, expires_in: 24.hours) do
+      Rails.cache.fetch(overview_cache_key, expires_in: 15.minutes) do
         render_to_string(partial: 'overview', locals: { overview: partial_locals })
       end
     end
@@ -60,8 +66,8 @@ module Cases
         published_at: @case.published_at,
         locales: [@case.locale, *@case.translation_set.pluck(:locale)].compact.uniq.to_a.join(', ') || '',
         deployments: @case.deployments.count,
-        total_visits: stats_service.total_visits,
-        country_count: stats_service.country_count
+        total_visits: all_time_stats_service.total_visits,
+        country_count: all_time_stats_service.country_count
       }
     end
 

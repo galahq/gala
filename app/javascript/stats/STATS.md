@@ -77,7 +77,7 @@ The frontend consumes:
 - API shape is explicit and stable from controller/service to frontend.
 - All-time overview query now runs only for HTML overview render, not JSON/CSV.
 - Date-range logic is centralized and easier to reason about.
-- Date picker shortcut selection now relies on component state (`selectedShortcutIndex`) without DOM observers.
+- Date picker shortcut selection now relies on computed index + scoped class sync (no MutationObserver).
 - Frontend Flow types now live close to state in `app/javascript/stats/state/types.js`.
 - Tooltip/legend behavior aligns with current requirements (visitors-focused, equal split bins).
 - Accessibility labels and semantic table/map regions are present.
@@ -124,7 +124,7 @@ Scores are 1 (low) to 5 (high).
 | --- | --- | --- |
 | Map subsystem (`MapContainer` + `MapView` + map helpers) | **3.7 / 5** | State slices and imperative boundaries are now explicit, but `MapView` is still a large mixed-responsibility render module. |
 | Page orchestration (`StatsPage` + `state/statsStore`) | **3.4 / 5** | Centralized reducer is good, but one component still coordinates URL sync, fetch lifecycle, retries, loading/error overlays, and section rendering. |
-| Date picker integration (`DatePicker`) | **2.3 / 5** | Uses value-derived shortcut selection with no DOM mutation side effects. |
+| Date picker integration (`DatePicker`) | **2.4 / 5** | Uses value-derived shortcut selection with a small scoped class sync effect (no observer). |
 | Table behavior (`StatsTable`) | **2.6 / 5** | Sort + known/unknown partitioning is straightforward but still mixed with rendering concerns. |
 | Data boundary (`http/statsResponse.js` + `http/statsHttp.js`) | **2.2 / 5** | Mostly clean; complexity comes from caching + abort/timeout plumbing. |
 | Backend controller/service path | **3.3 / 5** | Controller remains multi-responsibility, and test coverage still needs strengthening for long-term confidence. |
@@ -199,8 +199,8 @@ Ordered by impact-to-risk.
     - Added `map/mapColors.js` (map color system)
     - Removed `colors.js`
 - **PR7 (Date Picker State Simplification)**:
-  - Removed `syncShortcutActiveClass` and `MutationObserver`-based DOM syncing from `DatePicker.jsx`.
-  - Retained shortcut highlighting via `selectedShortcutIndex`.
+  - Removed `MutationObserver`-based DOM syncing from `DatePicker.jsx`.
+  - Retained shortcut highlighting via computed selected index + scoped class sync effect.
   - Simplified shortcut CSS to style only Blueprint’s `.pt-active` class.
   - Added `DatePicker` unit test coverage.
 - **PR8 (Map Presentation Consolidation)**:

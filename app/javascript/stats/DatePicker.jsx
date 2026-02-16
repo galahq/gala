@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
 import { injectIntl } from 'react-intl'
 import { formatLocalDate } from './dateHelpers'
@@ -15,6 +15,7 @@ function DatePicker ({
 }) {
   const minDate = minDateProp || new Date(2000, 0, 1)
   const maxDate = maxDateProp || new Date()
+  const pickerRootRef: { current: null | HTMLDivElement } = useRef(null)
 
   const today = new Date()
   const end = new Date(today.getFullYear(), today.getMonth(), today.getDate())
@@ -88,6 +89,20 @@ function DatePicker ({
 
   const selectedShortcutIndex = getSelectedShortcutIndex(value, translatedShortcuts)
 
+  useEffect(() => {
+    const root = pickerRootRef.current
+    if (!root) return
+
+    const shortcutItems = root.querySelectorAll('.pt-daterangepicker-shortcuts .pt-menu-item')
+
+    for (let i = 0; i < shortcutItems.length; i++) {
+      const item = shortcutItems[i]
+      if (item && item.classList) {
+        item.classList.toggle('pt-active', i === selectedShortcutIndex)
+      }
+    }
+  })
+
   function handleChange (nextRange) {
     if (onRangeChange) {
       onRangeChange(nextRange[0], nextRange[1])
@@ -95,20 +110,19 @@ function DatePicker ({
   }
 
   return (
-    <DateRangePicker
-      className={className}
-      value={value}
-      minDate={minDate}
-      maxDate={maxDate}
-      allowSingleDayRange={true}
-      contiguousCalendarMonths={false}
-      shortcuts={translatedShortcuts}
-      selectedShortcutIndex={
-        selectedShortcutIndex >= 0 ? selectedShortcutIndex : undefined
-      }
-      initialMonth={getInitialMonth(value)}
-      onChange={handleChange}
-    />
+    <div ref={pickerRootRef}>
+      <DateRangePicker
+        className={className}
+        value={value}
+        minDate={minDate}
+        maxDate={maxDate}
+        allowSingleDayRange={true}
+        contiguousCalendarMonths={false}
+        shortcuts={translatedShortcuts}
+        initialMonth={getInitialMonth(value)}
+        onChange={handleChange}
+      />
+    </div>
   )
 }
 

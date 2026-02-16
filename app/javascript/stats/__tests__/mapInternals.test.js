@@ -141,7 +141,7 @@ describe('stats/map/mapEngine', () => {
   })
 
   it('applies map load presentation tweaks', () => {
-    const logo = { style: {} }
+    const logo = { style: {}}
     const map = {
       getStyle: jest.fn(() => ({
         layers: [
