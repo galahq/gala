@@ -4,6 +4,7 @@
 module CasesHelper
   def translators_string(c)
     return '' if c.translators.empty?
+
     number = c.translators.count == 1 ? 'one' : 'many'
     "#{t ".translator.#{number}"}: #{c.translators.to_sentence}"
   end
@@ -14,17 +15,16 @@ module CasesHelper
 
   def locales_to_sentence(locales = [])
     if locales.present?
-      locales.map{|locale| 
-      tr = Translation.language_name(locale)
-      if tr
-        "#{tr} (#{locale})"
-      else
-        ""
-      end
-    }&.compact&.to_sentence
+      locales.map do |locale|
+        tr = Translation.language_name(locale)
+        if tr
+          "#{tr} (#{locale})"
+        else
+          ''
+        end
+      end&.compact&.to_sentence
     else
-      ""
+      ''
     end
-
   end
 end

@@ -17,8 +17,10 @@ module Ahoy
 
     belongs_to :visit, optional: true
     belongs_to :user, class_name: 'Reader', optional: true
+    belongs_to :case, class_name: 'Case', optional: true
 
     before_validation :populate_case_id
+    after_commit :broadcast_stats_updated, on: :create, if: :case_id?
 
     scope :interesting, -> { joins(:user).where <<~SQL.squish }
       readers.id NOT IN
@@ -35,15 +37,25 @@ module Ahoy
       where_properties case_slug: kase.slug
     end
 
-    private
+    # Generate a cache key based on the latest event ID for a case.
+    # Uses MAX(id) which is faster than COUNT(*) since id is indexed.
+    # @param kase [Case]
+    # @return [String] Cache key in format "Stats/CASE_ID/MAX_EVENT_ID"
+    def self.cache_key(kase:)
+      max_id = where(case_id: kase.id).maximum(:id) || 0
+      "Stats/#{kase.id}/#{max_id}"
+    end
 
     def populate_case_id
-      return if case_id.present?
+      self.case_id ||= Case.friendly.find(properties['case_slug']).id
+    rescue ActiveRecord::RecordNotFound
+      nil
+    end
 
-      slug = (properties || {})['case_slug']
-      return if slug.blank?
+    private
 
-      self.case_id = Case.where(slug: slug).limit(1).pick(:id)
+    def broadcast_stats_updated
+      StatsChannel.broadcast_stats_updated(case_id: case_id)
     end
   end
 end

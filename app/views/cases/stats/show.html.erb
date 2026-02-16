@@ -1,3 +1,5 @@
+<% cache [@html_cache_key, @case.updated_at], expires_in: Cases::StatsController::CACHE_EXPIRES_IN do %>
+<h2>Cache key: <%= @html_cache_key %></h2>
 <% content_for :title do %>
   <%= I18n.t('cases.stats.show.case_stats') %> — <%= @case.short_title %>
 <% end %>
@@ -10,17 +12,20 @@
       </div>
     <% end %>
 
-    <main id="stats-main">
       <h1 class="admin__title"><%= t('.case_stats') %></h1>
 
-      <%= render 'overview' %>
+      <div id="stats-overview">
+        <%= raw @cached_overview_html %>
+      </div>
 
       <div
         data-controller="case-stats"
         data-url="<%= case_stats_path(@case) %>"
-        data-min-date="<%= @min_date.iso8601 %>">
+        data-min-date="<%= @case.created_at.to_date.iso8601 %>"
+        data-case-id="<%= @case.id %>">
         <!-- StatsPage React component mounts here -->
       </div>
     </main>
   </div>
 </div>
+<% end %>

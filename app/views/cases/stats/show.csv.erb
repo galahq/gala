@@ -1,6 +1,21 @@
-<% require 'csv' %>
-<%= CSV.generate_line(stats_csv_headers) %>
-<% @csv_rows.each do |row| %>
-<%= CSV.generate_line(stats_csv_row(row)) %>
-<% end %>
-<%= CSV.generate_line(stats_csv_total_row(@csv_rows)) %>
+<%- headers = [
+  I18n.t('cases.stats.csv.country'),
+  I18n.t('cases.stats.csv.unique_visitors'),
+  I18n.t('cases.stats.csv.first_visit'),
+  I18n.t('cases.stats.csv.last_visit')
+] -%>
+<%= raw CSV.generate_line(headers) -%>
+<% @csv_rows.each do |row| -%>
+<%= raw CSV.generate_line([
+  row[:name],
+  row[:unique_visits].to_i,
+  row[:first_event]&.strftime('%Y-%m-%d %H:%M:%S'),
+  row[:last_event]&.strftime('%Y-%m-%d %H:%M:%S')
+]) -%>
+<% end -%>
+<%= raw CSV.generate_line([
+  I18n.t('cases.stats.csv.total'),
+  @csv_rows.sum { |r| r[:unique_visits].to_i },
+  nil,
+  nil
+]) -%>

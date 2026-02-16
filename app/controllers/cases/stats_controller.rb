@@ -5,10 +5,7 @@ module Cases
     before_action :authenticate_reader!
     before_action :set_case
 
-    STATS_PAGE_CACHE_TTL = 1.hour.freeze
-
-    layout 'admin'
-    helper Cases::StatsHelper
+    CACHE_EXPIRES_IN = 24.hours
 
     COUNTRY_STATS_SQL = <<~SQL.freeze
       SELECT
@@ -29,7 +26,7 @@ module Cases
       ) invisible_readers ON invisible_readers.reader_id = e.user_id
       WHERE e.case_id = $1
         AND e."time" >= $2
-        AND e."time" < $3
+        AND e."time" <= $3
         AND invisible_readers.reader_id IS NULL
       GROUP BY 1
       ORDER BY unique_visits DESC NULLS LAST
@@ -38,69 +35,74 @@ module Cases
     # @param [GET] /cases/:case_slug/stats
     def show
       respond_to do |format|
-        format.html { render_overview }
+        format.html do
+          if stale? etag: stats_cache_key, last_modified: @case.updated_at.utc
+            @cached_overview_html = cached_overview_html
+            render :show, layout: 'admin'
+          end
+        end
         format.json { render json: { data: data_payload } }
         format.csv { prepare_csv_download }
       end
     end
 
+    # @param [GET] /cases/:case_slug/stats/overview
+    # Returns just the overview partial HTML for AJAX refresh
+    def overview
+      # Invalidate cache to get fresh data
+      Rails.cache.delete(overview_cache_key)
+
+      render partial: 'overview', locals: { overview: partial_locals }
+    end
+
     private
 
     def set_case
-      @case = Case.friendly.find(case_slug_param).decorate
+      @case = Case.friendly.find(params[:case_slug]).decorate
       authorize @case, :stats?
     end
 
-    def render_overview
-      load_overview_data
-      render :show
+    # Builds a cache key with consistent structure:
+    # "stats/{namespace}/{case_id}/{version_key}"
+    # @param namespace [String] Cache namespace (e.g., 'overview', 'rows')
+    # @param version_key [String] Optional version identifier (defaults to stats_cache_key)
+    # @return [String]
+    def build_cache_key(namespace, version_key: nil)
+      version = version_key || stats_cache_key
+      "stats/#{namespace}/#{@case.id}/#{version}"
+    end
+
+    def stats_cache_key
+      @stats_cache_key ||= Ahoy::Event.cache_key(kase: @case)
+    end
+
+    def overview_cache_key
+      build_cache_key('overview')
+    end
+
+    def cached_overview_html
+      Rails.cache.fetch(overview_cache_key, expires_in: CACHE_EXPIRES_IN) do
+        render_to_string(partial: 'overview', locals: { overview: partial_locals })
+      end
+    end
+
+    def partial_locals
+      @partial_locals ||= {
+        published_at: @case.published_at,
+        locales: [@case.locale, *@case.translation_set.pluck(:locale)].compact.uniq.to_a.join(', ') || '',
+        deployments: @case.deployments.count,
+        total_visits: normalized_rows.sum { |row| row[:unique_visits] },
+        country_count: normalized_rows.length
+      }
     end
 
     def prepare_csv_download
       @csv_rows = normalized_rows
-      response.headers['Content-Type'] = 'text/csv; charset=utf-8'
-      response.headers['Content-Disposition'] =
-        ActionDispatch::Http::ContentDisposition.format(
-          disposition: 'attachment',
-          filename: csv_filename
-        )
-    end
 
-    def load_overview_data
-      @min_date = min_date
-      @stats_locales = stats_locales
-      @all_time_summary = all_time_summary
-    end
-
-    def case_slug_param
-      params[:case_slug].presence || params[:slug]
-    end
-
-    def min_date
-      @min_date ||= @case.created_at.to_date
-    end
-
-    def stats_locales
-      [
-        @case.locale,
-        *@case.translation_set.pluck(:locale)
-      ]
-        .compact.uniq.map(&:to_s)
-    end
-
-    def all_time_summary
-      Rails.cache.fetch(overview_summary_cache_key, expires_in: STATS_PAGE_CACHE_TTL) do
-        summary = CaseStatsService.format_country_stats(query_rows(all_time_range))
-        summary.slice(:total_visits, :country_count)
-      end
-    end
-
-    def overview_summary_cache_key
-      ['cases/stats/overview-summary', @case.id]
-    end
-
-    def all_time_range
-      build_time_range(min_date, Date.current)
+      send_data render_to_string(template: 'cases/stats/show', formats: [:csv]),
+                type: 'text/csv; charset=utf-8',
+                filename: csv_filename,
+                disposition: 'attachment'
     end
 
     def parse_date(value)
@@ -113,8 +115,8 @@ module Cases
 
     def stats_range
       @stats_range ||= begin
-        from_date = [parse_date(params[:from]) || min_date, min_date].max
-        to_date = [parse_date(params[:to]) || Date.current, from_date].max
+        from_date = [parse_date(params[:from]), @case.created_at.to_date].compact.max
+        to_date = [parse_date(params[:to]) || Date.current, from_date].compact.max
         build_time_range(from_date, to_date)
       end
     end
