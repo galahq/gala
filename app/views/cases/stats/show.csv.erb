@@ -5,12 +5,13 @@
   I18n.t('cases.stats.csv.last_visit')
 ] -%>
 <%= raw CSV.generate_line(headers) -%>
+<%- date_format = '%b %d, %Y' -%>
 <% @csv_rows.each do |row| -%>
 <%= raw CSV.generate_line([
   row[:name],
   row[:unique_visits].to_i,
-  row[:first_event]&.strftime('%Y-%m-%d %H:%M:%S'),
-  row[:last_event]&.strftime('%Y-%m-%d %H:%M:%S')
+  row[:first_event]&.strftime(date_format),
+  row[:last_event]&.strftime(date_format)
 ]) -%>
 <% end -%>
 <%= raw CSV.generate_line([
