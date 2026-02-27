@@ -45,5 +45,7 @@ class ArchivesController < ApplicationController
 
     chunk = blob.service.download_chunk(blob.key, 0..3)
     chunk.to_s.start_with?('%PDF')
+  rescue StandardError
+    false
   end
 end
