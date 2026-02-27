@@ -290,18 +290,27 @@ es:
         podcast_listens: Podcast Listens - %{podcast_title}
         disclaimer: >
           Totals count only users that were signed-in to Gala when viewing the case. 'Unique Visits' counts readers who viewed a page beyond the overview page of your case. Readers' browser settings may impact the accuracy of these counts.
+        #Page section headings
+        overview: Overview
+        overview_stats: All Stats
+        filter_by_date: Filter by Date
+        about_visitors: About Unique Visitors
+        filtered_stats: Filtered Stats
         #Summary section
         summary_title: Overview
         total_unique_visitors: Total Unique Visitors
-        countries: Countries
+        date_published: Date Published
+        available_translations: Available Translations
+        total_deployments: Total Deployments
+        countries: Visitor Countries
         podcast_listens_short: Podcast Listens
         translations: Translations
         no_data: No data available for selected period
         #Map section
         map_legend_title: Visitor Distribution
-        map_legend_help_title: How Visitor Distribution Works
+        map_legend_help_title: Visitor Distribution
         map_legend_help_description: >
-          Countries are grouped into 1-5 color bins based on visitor counts. The system automatically adapts: if you have 3 different visitor counts, you'll see 3 bins. For 5+ unique values, bins are placed at the 25th, 50th, 75th, and 100th percentiles of your data, ensuring each bin represents a meaningful range. Lighter indigo shades indicate higher visitor counts.
+          Countries are grouped into 1-5 shaded bins, based on visitor counts that automatically adapt, depending on the range of unique visitors. Lighter indigo shades indicate higher visitor counts.
         map_legend_low: low
         map_legend_high: high
         map_tooltip_visitors: visitors
@@ -323,8 +332,10 @@ es:
         error_no_data_title: No Data Available
         error_no_data_description: No visitor data found for the selected date range.
         #Table section
-        table_title: Case Visits By Country
+        table_title: Filtered Case Visitors By Country
         table_export_csv: Export CSV
+        tips_description: >
+          Unique Visitors is a count of readers who viewed a page of your case: A single reader viewing multiple pages, or returning to the case multiple times, will only be counted once. Country data is not available for all visits. These counts are an estimate and may be impacted by a user's browser settings and other factors.
         table_rank: "#"
         table_country: Country
         table_unique_visitors: Unique Visitors
