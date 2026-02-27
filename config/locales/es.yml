@@ -1,4 +1,8 @@
 es:
+  administrate:
+    actions:
+      confirm:
+        copy: Are you sure you want to make a copy of this case?
   activemodel:
     attributes:
       confirm_deletion_form:
@@ -19,8 +23,10 @@ es:
         acknowledgements: Reconocimientos
         authors: Authors
         case_title: Case title
+        date_archived: Archived on
         featured: Destacado
         featured_at: Featured at
+        first_editor: First Editor
         kicker: Short title
         learning_objectives: Objetivos de aprendizaje
         library: Library
@@ -28,13 +34,15 @@ es:
         locale: Language
         location: Ubicación del caso
         published: Published
+        summary: Summary
         slug: Case URL
         teaching_guide: Teaching guide
         title: Question
         translators:
           js: "{count, plural, one {Traductor(a)} other {Traductores} }: "
-          one: Traductor(a)
           other: Traductores
+          one: Traductor(a)
+        license: License
       comment:
         attachments: Attachments
       deployment:
@@ -100,11 +108,13 @@ es:
         remember_me: Recordarme
         reset_password_sent_at: Fecha de envío de código para contraseña
         reset_password_token: Código para restablecer contraseña
-        send_reply_notifications: Notify me when someone replies to a comment I wrote
+        send_reply_notifications:
+          - Notify me when someone replies to a comment I wrote
         sign_in_count: Cantidad de ingresos
         unconfirmed_email: Email no confirmado
         unlock_token: Código de desbloqueo
         updated_at: Fecha de actualización
+        terms_of_service: 'I accept the Terms of Service and Privacy Policy'
       reading_list:
         title: Title
         description: Description
@@ -138,9 +148,11 @@ es:
       account_settings: Account settings
       activity: Activity
       case: Case
+      case_library_request: Library request
       cases:
         setting: Case Settings
         feature: Featured status
+        library: Library
       comment: Comment
       comment_thread: Comment thread
       deployment: Deployment
@@ -169,6 +181,12 @@ es:
     show:
       download: Download
       instructions: Instructions
+  archives:
+    show:
+      archive_pending: Archive in Progress
+      please_wait_while_your_case_is_being_archived: |
+        Please wait while a printable archive of this case is created...
+      printable_archive: Printable Archive
   announcements:
     dismissals:
       create:
@@ -179,6 +197,16 @@ es:
         Citation added. Click the <span class="pt-tag pt-intent-success">
         <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
         edit.
+      math_added: Math added.
+      math_instructions: |
+        To add math to your case, select the text you want to turn into a math
+        equation, then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-function"></span> Math</span> button.
+      make_revealable_selection: |
+        Please select the phrase that you would like to make revealable,
+        then click the <span class="pt-tag">
+        <span class="pt-icon pt-icon-search-template"></span> Add
+        Revealable</span> button.
       citation_text: Title
       citation_url: URL
       write_something: Write something...
@@ -188,6 +216,13 @@ es:
     new:
       untitled: Untitled
   cases:
+    archives:
+      show:
+        overview: Overview
+    libraries:
+      update:
+        created_library_request: >
+          Your request has been sent to the library managers for approval.
     deletions:
       new:
         are_you_sure: Are you sure you want to delete this case?
@@ -237,15 +272,101 @@ es:
       unfeature_case: Quitar de casos destacados
       unpublish_case: Annular la publicacion
       upload_teaching_guide: Upload teaching guide
+      copy_this_case: Copy this case
     index:
       all_cases: Todos los casos
       locations: Ubicaciones
     new:
       create_a_case: Create a Case
+    stats:
+      show:
+        case_stats: Case Stats
+        created: Created
+        published: "Published:"
+        last_updated: "Last Updated:"
+        deployments: "Deployments"
+        visits: Unique Visits
+        locales: Locales
+        podcast_listens: Podcast Listens - %{podcast_title}
+        disclaimer: >
+          Totals count only users that were signed-in to Gala when viewing the case. 'Unique Visits' counts readers who viewed a page beyond the overview page of your case. Readers' browser settings may impact the accuracy of these counts.
+        #Page section headings
+        overview: Overview
+        overview_stats: All Stats
+        filter_by_date: Filter by Date
+        about_visitors: About Unique Visitors
+        filtered_stats: Filtered Stats
+        #Summary section
+        summary_title: Overview
+        total_unique_visitors: Total Unique Visitors
+        date_published: Date Published
+        available_translations: Available Translations
+        total_deployments: Total Deployments
+        countries: Visitor Countries
+        podcast_listens_short: Podcast Listens
+        translations: Translations
+        no_data: No data available for selected period
+        #Map section
+        map_legend_title: Visitor Distribution
+        map_legend_help_title: Visitor Distribution
+        map_legend_help_description: >
+          Countries are grouped into 1-5 shaded bins, based on visitor counts that automatically adapt, depending on the range of unique visitors. Lighter indigo shades indicate higher visitor counts.
+        map_legend_low: low
+        map_legend_high: high
+        map_tooltip_visitors: visitors
+        map_tooltip_users: users
+        map_tooltip_events: events
+        #Loading states
+        loading_map_data: Loading map data...
+        loading_map: Loading map...
+        #Error states
+        error_title: Unable to Load Stats
+        error_description: An error occurred while loading the statistics data. Please try again.
+        error_try_again: Try Again
+        error_map_title: Unable to load map
+        error_map_description: Please check your internet connection or disable ad blockers
+        error_map_retry: Retry Loading Map
+        error_too_much_data_title: Too Much Data
+        error_too_much_data_description: >
+          The selected date range contains too much data to display efficiently. Please choose a smaller date range.
+        error_no_data_title: No Data Available
+        error_no_data_description: No visitor data found for the selected date range.
+        #Table section
+        table_title: Filtered Case Visitors By Country
+        table_export_csv: Export CSV
+        tips_description: >
+          Unique Visitors is a count of readers who viewed a page of your case: A single reader viewing multiple pages, or returning to the case multiple times, will only be counted once. Country data is not available for all visits. These counts are an estimate and may be impacted by a user's browser settings and other factors.
+        table_rank: "#"
+        table_country: Country
+        table_unique_visitors: Unique Visitors
+        table_total_events: Total Events
+        table_first_visit: First Visit
+        table_last_visit: Last Visit
+        table_total: Total
+        table_unknown_country: Unknown
+        #Date range picker
+        date_range_all_time: All time
+        date_range_past_7_days: Past 7 days
+        date_range_past_30_days: Past 30 days
+        date_range_past_year: Past year
+        date_range_past_2_years: Past 2 years
+      #CSV export
+      csv_filename: "case-stats-%{slug}-%{date}.csv"
+      csv:
+        country: Country
+        unique_visitors: Unique Visitors
+        unique_users: Unique Users
+        total_events: Total Events
+        first_visit: First Visit
+        last_visit: Last Visit
+        total: Total
     settings:
       edit:
         change_library: Change library
         change_url: Change URL
+        change_license: Change license
+        change_license_confirmation: Changing your license from All Rights Reserved is irreversible. Are you sure you want to proceed?
+        learn_more_license: Learn more about license options
         edit_case_settings: Edit case settings
       featured_form:
         change_featured_time: Change time
@@ -265,7 +386,7 @@ es:
       toc: Tabla de Contenidos
   catalog:
     catalog: Catálogo
-    choose_for_yourself: Tú vas a elegir
+    create_a_case: Create a Case
     enrollments_instruction: >
       Casos en los que estás inscrito se presentarán aquí para su acceso facil.
     find_a_case: >
@@ -278,25 +399,58 @@ es:
     innovative_teaching: Innovative Teaching
     join_the_community: >
       Join conversations about sustainability issues that consider a wide range of perspectives. Share your own on our embedded forums, hear from others on our podcasts, and create your own unconventional solutions.
-    join_conversation: >
-      Súmete a la conversación, preguntá, y compartí tu conomiciento.
     keywords: Keywords
+    languages:
+      Languages: Languages
+      noResults: No languages found
+    wikidata:
+      link_wikidata: Wikidata Links
+      find_item: Find a Wikidata item
+      find_item_instructions: >
+        Every Wikidata item has a unique identifier called a QID. You can locate an item from the search box by entering its QID or its name. Can't find an item? Add an entry to Wikidata [here](https://www.wikidata.org/wiki/Special:NewItem).
+      wikidata_instructions: Add rich metadata by linking Wikidata entries to your case.
+      researchers: Researchers
+      software: Software
+      hardware: Hardware
+      grants: Grants
+      works: Works
+      add: Add
+      add_dialog_title: Add a Wikidata Item
+      choose_item_type: Choose an item type
+      find_item_placeholder: Search Wikidata or enter QID (e.g. Q937)
+      clear_search: Clear search
+      wikidata_placeholder: Enter Wikidata QID
+      about_wikidata: >
+        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs. Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting information on a wide range of topics and making it discoverable, accessible, and reusable.
+      invalid_qid: Invalid QID
+      empty_qid: You must enter a value for QID
+      entry_exists: This entry already exists
+      404_error: This QID does not exist or belongs to a different category
+      schema_mismatch: The Wikidata item you selected doesn't match this item type. Select a different item type or Wikidata item.
     learn_more: Más información
-    meet_stakeholders: >
-      Conocerás diferentes actores sociales y te sumergerás en una narrativa interactiva.
     my_library: My Library
     natural_resources: Natural Resources
-    open_access_learning_tools: Open access learning tools for sustainability science
-    propose_a_case: Propose a Case
-    shortcut_experience: Aplicar principios para mejorar en la práctica.
+    reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    welcome_message:
+      about_button_text: About Gala
+      how_button_text: How-to
+      news_button_text: News
+      to_get_started: >
+        {createAccount} to get started, or find a case by searching or browsing below.
+      create_account: Create an account
+      welcome_title: Open tools for collaborative learning
+      welcome_back_title: Welcome back
+      welcome_back_message: Find a case by searching or browsing below, or {createCase}.
+      create_case: create a case
+    your_library: Your library
   comment_threads:
     destroy:
       delete_comment_thread: Delete comment thread
     index:
       n_comment_threads:
         js: "{count, number} {count, plural, one {thread} other {threads}}"
-        one: 1 thread
         other: "%{count} threads"
+        one: 1 thread
     new:
       new_comment_thread: New comment thread...
     show:
@@ -319,8 +473,8 @@ es:
       join_the_conversation: Join the conversation
       n_responses:
         js: "{count, number} {count, plural, one {comment} other {comments}}"
-        one: 1 comment
         other: "%{count} comments"
+        one: 1 comment
       no_comments: No comments
       nobody_has_left_a_comment: >
         Nobody in the {communityName} discussion group has left a comment on this case. Switch to a different discussion group or be the first to leave a comment.
@@ -374,6 +528,7 @@ es:
       default: "%-d/%-m/%Y"
       long: "%-d de %B de %Y"
       short: "%-d de %b"
+      stats: "%b %d, %Y"
     month_names:
       -
       - enero
@@ -528,6 +683,7 @@ es:
         Image descriptions are important to ensure that learners who use screen readers are able to learn from your Edgenote. Describe using natural language what is pictured and why it is important. Check out [this thread](https://twitter.com/robothugscomic/status/949324465191694337?lang=en) on Twitter for some practical examples.
       attach_an_image: Attach an image
       attach_a_file: Attach a file
+      attribution: Put an attribution
       choose_audio_file: Choose audio file...
       choose_image: Choose image...
       choose_file: Choose file...
@@ -535,11 +691,15 @@ es:
       embed_or_external_link: >
         You can link to a website, or embed something directly in your Edgenote. Try YouTube, [amCharts](https://live.amcharts.com/), or even a tweet.
       layout_label: Layout
+      layout_position_label: Position and width
+      layout_elements_label: Preview elements
       layout_options:
         right: Right side (default)
         bottom: Card width
         bottom_full_width: Full width
       paste_a_link: Paste a link
+      photo_credit_guidelines: >
+        Add author and license information. [This guide](https://docs.learngala.com/docs/authoring-finding-media) has more about licensing, attribution, and finding copright-free images.
       preview: Edgenote preview
       pull_a_quote: Pull a quote
       remove: Remove
@@ -591,7 +751,7 @@ es:
     messages:
       accepted: debe ser aceptado
       blank: no puede estar en blanco
-      confirmation: no coincide
+      confirmation: doesn’t match %{attribute}
       empty: no puede estar vacío
       equal_to: debe ser igual a %{count}
       even: debe ser par
@@ -658,12 +818,16 @@ es:
     formatting:
       add_citation_entity: "Agregar cita aquí."
       add_edgenote_entity: "Agregar “Edgenote” a la selección."
+      add_math_entity: "Add math to selection."
+      add_revealable_entity: "Add revealable to selection."
       blockquote: "Citas."
       bold: "Texto en negrita."
       code: "Inline style: Code."
       header: "Encabezado."
       italic: "Texto en cursiva."
       ol: "Enumerar lista."
+      subscript: "Inline style: Subscript."
+      superscript: "Inline style: Superscript."
       ul: "Lista no numerada."
     help: Help
     label:
@@ -726,8 +890,16 @@ es:
         Are you sure you wish to delete this library? All cases that belong to it will return to the “Shared Cases Library.”
       delete_library: Delete Library
     edit:
+      library_management: Library Management
       edit_library: Edit Library
       library_managers: Library Managers
+      library_cases: Cases
+      case_library_requests: Requests
+      requested_by: Requested by <b>%{name}</b>
+      no_requests: No requests yet
+      no_cases: No cases yet
+      remove_case_from_library: Remove case from library
+      confirm_remove_case_from_library: Are you sure you want to remove case ’%{name}’ from the library?
     index:
       create_a_new_library: Create a New Library
       libraries: Libraries
@@ -756,20 +928,37 @@ es:
         Add someone else as a manager of this library by entering the email they’ve used to create an account on Gala. That person will be able to edit this library’s attributes, change which cases are included, and add or remove other users as managers.
       invite_someone_to_manage_this_library: >
         Invite Someone to Manage this Library
+  library_requests:
+    new:
+      pending: <b>%{name}</b> request is pending
+    destroy:
+      remove: Remove request
+      are_you_sure: >
+        Are you sure you want to remove %{name} as a manager of this library?
+    edit:
+      accept: Accept
+      reject: Reject
+      are_you_sure_accept: >
+        Are you sure you want to accept this request? The case will be added to your library.
+      are_you_sure_reject: >
+        Are you sure you want to reject this request? The case will not be added to your library.
   my_cases:
     index:
-      confirm_delete: >
-        Are you sure you wish to delete this case? This action cannot be undone.
+      case_stats: Case Stats
+      confirm_delete: Are you sure you wish to delete this case? This action cannot be undone.
       create_a_case: Create a Case
       delete_case: Delete case.
       edit_case: Edit case.
       edit_case_settings: Edit case settings.
       featured: Destacado
+      learn_more: Learn more
       my_cases: My Cases
       new_case: New Case
       once_youve_created: >
         Once you’ve created a case or been added as a collaborator on someone else’s, you’ll see it here.
       publish_a_case: Publicar este caso
+      publish_with_a_creative_commons_license: >
+        When you publish a module on Gala you agree to distribute it with a Creative Commons license.
       put_your_own_cases_on_gala: >
         Put your case on Gala and enrich your teaching with integrated discussion, curated media, and embedded assessments. You keep the rights to the cases you publish on Gala and we make them easy to deploy in and beyond the classroom.
       youre_not_authoring_any_cases: You’re not authoring any cases yet
@@ -856,8 +1045,8 @@ es:
     show:
       with_host:
         js: "con {count, plural, one {el/la anfitrión(a)} other {los/las anfitriones(as)}}"
-        one: con el/la anfitrión(a)
         other: con los/las anfitriones(as)
+        one: con el/la anfitrión(a)
   pundit:
     not_authorized: You are not authorized to perform this action.
   quizzes:
@@ -865,13 +1054,13 @@ es:
       new_quiz: New Quiz
     quiz:
       multiple_choice_questions:
-        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
         one: "%{count} Multiple Choice Question"
         other: "%{count} Multiple Choice Questions"
+        js: "{count, number} Multiple Choice {count, plural, one {Question} other {Questions}}"
       open_ended_questions:
-        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
         one: "%{count} Open Ended Question"
         other: "%{count} Open Ended Questions"
+        js: "{count, number} Open Ended {count, plural, one {Question} other {Questions}}"
     show:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
@@ -892,6 +1081,11 @@ es:
         We can show contextual tips about features that are relevant to you.
       you_have_not_created_a_password: >
         Porque iniciaste tú primera sesión con %{provider}, no creaste una contraseña. Si creas una contraseña, podrás usarla o %{provider} para iniciar la sesión.
+    edit_tos:
+      accept_tos: Continue
+      terms_of_service_title: Please read and accept the Gala Terms of Service and Privacy Policy
+      must_accept: You must accept the Terms of Service and Privacy Policy to continue.
+      accepted: You have accepted the Terms of Service and Privacy Policy.
   reading_lists:
     actions:
       sharing_instructions: >
@@ -928,12 +1122,13 @@ es:
     didnt_match: Tu búsqueda no ha generado resultados.
     full_text_search: Full text search...
     no_results: Sin resultados
-    propose_a_case: >
-      Si tienes un estudio de caso (o una buena idea para un estudio de caso) que te gustaría ver en Gala, escríbanos. Juntos podemos crear un recurso de enseñanza sobre el ambiente y sostenibilidad más comprensivo.
+    author_a_case: >
+      If you have an idea for a case on topic that isn’t on Gala yet, why not create your own? The Getting Started Guide can help you take the first step.
     refine: Limitar busqueda
     results: Resultados de busqueda
     search: Buscar
     search_cases: Search Cases...
+    submit_search: Submit search
     try_again: Intente cambiar tu búsqueda.
   spotlights:
     add_citation: >
@@ -942,6 +1137,8 @@ es:
       Invite another Gala user to work with you on your case by clicking here.
     add_edgenote: >
       Attach a media resource by linking an Edgenote to the text.
+    add_revealable: >
+      Attach revealable text.
     add_quiz: >
       You can administer a comprehension quiz at the end of the case, and optionally pair it with an identical pretest.
     caselog: >
