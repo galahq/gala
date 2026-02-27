@@ -6,10 +6,8 @@ class MyCasesController < ApplicationController
 
   before_action :authenticate_reader!, only: %i[index]
 
-
   def index
     @cases = find_cases.decorate
-    @show_stats_column = @cases.any?
   end
 
   private

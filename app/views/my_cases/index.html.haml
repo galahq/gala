@@ -50,8 +50,7 @@
           %td= t 'activerecord.attributes.case.locale'
           %td= t 'activerecord.attributes.case.library'
           %td= t 'activerecord.attributes.case.published'
-          - if @show_stats_column
-            %td= t 'my_cases.index.case_stats'
+          %td= t 'my_cases.index.case_stats'
           %td
           %td
           %td
@@ -90,12 +89,10 @@
                   = localize kase.published_at.to_date, format: :long
                 - else
                   —
-
-              - if @show_stats_column
-                %td
-                  = link_to '', case_stats_path(kase),
-                            aria: { label: t('.case_stats') },
-                            class: 'pt-button pt-minimal pt-icon-series-search'
+              %td
+                = link_to '', case_stats_path(kase),
+                          aria: { label: t('.case_stats') },
+                          class: 'pt-button pt-minimal pt-icon-series-search'
 
 
               %td
