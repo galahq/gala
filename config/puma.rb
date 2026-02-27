@@ -3,29 +3,23 @@
 require 'barnes'
 
 # Thread per process count allows context switching on IO-bound tasks for better CPU utilization.
-threads_count = ENV.fetch('RAILS_MAX_THREADS', 3).to_i
+threads_count = ENV.fetch('RAILS_MAX_THREADS') { 3 }
 threads(threads_count, threads_count)
 
 # Processes count, allows better CPU utilization when executing Ruby code.
 # Recommended to always run in at least one process so `rack-timeout` RACK_TERM_ON_TIMEOUT=1 can be used
 # https://devcenter.heroku.com/articles/h12-request-timeout-in-ruby-mri
-workers_count = ENV.fetch('WEB_CONCURRENCY', 2).to_i
-workers(workers_count)
+workers(ENV.fetch('WEB_CONCURRENCY') { 1 })
 
-bind "tcp://0.0.0.0:#{ENV.fetch('PORT', 3000)}"
+# PORT environment variable is set by Heroku in production.
+port(ENV.fetch('PORT') { 3000 })
 
-# restart server with $ touch tmp/restart.txt
+# Allow Puma to be restarted by the `rails restart` command locally.
 plugin(:tmp_restart)
-
-preload_app!
 
 # Barnes plugin for memory profiling
 before_fork do
   Barnes.start
-end
-
-on_worker_boot do
-  MemoryProfiling.start if defined?(MemoryProfiling)
 end
 
 # Heroku strongly recommends upgrading to Puma 7+. If you cannot upgrade,

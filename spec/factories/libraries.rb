@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :library do
-    sequence(:slug) { |n| "michigan-sustainaility-cases-#{n}" }
+    sequence(:slug) { |n| "michigan-sustainability-cases-#{n}-#{SecureRandom.hex(4)}" }
     name { 'Michigan Sustainability Cases' }
     background_color { '#00274c' }
     foreground_color { '#ffcb05' }

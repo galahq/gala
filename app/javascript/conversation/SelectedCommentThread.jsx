@@ -52,7 +52,7 @@ type StateProps =
       threadId: string,
     |}
   | {| commentThreadFound: false |}
-function mapStateToProps (
+export function mapStateToProps (
   { caseData, commentThreadsById, commentsById, cardsById, pagesById }: State,
   ownProps: OwnProps
 ) {
@@ -66,7 +66,9 @@ function mapStateToProps (
   const { originalHighlightText, cardId, readerId, readers } = commentThread
 
   const leadCommenter = readers[0] || activeReader
-  const comments = commentThread.commentIds.map(id => commentsById[id])
+  const comments = commentThread.commentIds
+    .map(id => commentsById[id])
+    .filter(Boolean)
   const leadComment: ?Comment = comments[0]
   const [, ...responses] = comments
 

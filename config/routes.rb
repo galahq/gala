@@ -114,7 +114,9 @@ Rails.application.routes.draw do
 
     resource :settings, module: 'cases', only: %i[edit update]
 
-    resource :stats, module: 'cases', only: %i[show]
+    resource :stats, module: 'cases', only: %i[show] do
+      get :overview, on: :member
+    end
 
     resources :taggings, only: %i[create destroy], param: :tag_name
 

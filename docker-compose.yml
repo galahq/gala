@@ -1,6 +1,6 @@
 services:
   web:
-    image: gala_ruby3-2-9_rails7-0x_1:latest
+    image: gala_ruby3-2-9_rails7-0x_2:latest
     platform: linux/amd64
     build:
       dockerfile: Dockerfile
@@ -20,16 +20,16 @@ services:
       RUBY_YJIT_ENABLE: 1
       DOCKER_DEV: true
       TEMPORARY_UNCONFIRMED_ACCESS: false
-      ENABLE_MEMORY_PROFILING: true
-      MEMORY_PROFILING_INTERVAL_SECONDS: 300
       BASE_URL: http://localhost:3000
       PORT: 3000
     ports:
       - 3000:3000
       - 3035:3035
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - .:/gala:delegated
       - node_modules:/gala/node_modules

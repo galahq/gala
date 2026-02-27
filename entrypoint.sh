@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euo pipefail
 
 export LD_PRELOAD="${LD_PRELOAD:-}"
 export MALLOC_CONF="${MALLOC_CONF:-}"
