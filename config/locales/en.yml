@@ -451,6 +451,25 @@ en:
       create_a_case_button_text: Create a Case
       welcome_title: Open tools for collaborative learning
       welcome_back_title: Welcome back
+    about_how_to_news:
+      about_title: About Gala
+      about_body: >
+        Gala is working to make learning more grounded, dynamic, and collaborative.
+        We maintain the Gala platform for open educational modules and case students
+        and work with teams innovating around module creation and use.
+      team_link_text: Team
+      publications_link_text: Publications
+      projects_partners_link_text: Projects & Partners
+      partner_with_us_link_text: Partner With Us
+      how_to_title: How-to
+      quick_start_authoring_guide_text: Quick Start Authoring Guide
+      planning_a_case_text: Planning a Case
+      teaching_strategies_text: Teaching Strategies
+      more_text: More
+      news_updates_title: News & Updates
+      loading_latest_updates_text: Loading latest updates...
+      unable_to_load_updates_text: Unable to load updates right now.
+      no_updates_available_text: No updates available yet.
     your_library: Your library
   comment_threads:
     destroy:

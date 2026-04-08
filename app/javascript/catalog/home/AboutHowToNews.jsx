@@ -5,6 +5,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
+import { FormattedMessage } from 'react-intl'
 
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
@@ -73,19 +74,32 @@ function AboutHowToNews() {
   return (
     <Columns>
       <StyledCatalogSection solid>
-        <SectionTitle>About Gala</SectionTitle>
+        <SectionTitle>
+          <FormattedMessage id="catalog.aboutHowToNews.aboutTitle" />
+        </SectionTitle>
         <BodyText>
-          Gala is working to make learning more grounded, dynamic, and collaborative. We maintain the Gala platform for open educational modules and case students and work with teams innovating around module creation and use.
+          <FormattedMessage id="catalog.aboutHowToNews.aboutBody" />
         </BodyText>
         <AboutList>
           <li>
-            <AboutLink href="https://docs.learngala.com/team">Team</AboutLink>
+            <AboutLink href="https://docs.learngala.com/team">
+              <FormattedMessage id="catalog.aboutHowToNews.teamLinkText" />
+            </AboutLink>
           </li>
           <li>
-            <AboutLink href="https://docs.learngala.com/publications">Publications</AboutLink>
+            <AboutLink href="https://docs.learngala.com/publications">
+              <FormattedMessage id="catalog.aboutHowToNews.publicationsLinkText" />
+            </AboutLink>
           </li>
           <li>
-            <AboutLink href="https://docs.learngala.com/projects">Projects & Partners</AboutLink>
+            <AboutLink href="https://docs.learngala.com/projects">
+              <FormattedMessage id="catalog.aboutHowToNews.projectsPartnersLinkText" />
+            </AboutLink>
+          </li>
+          <li>
+            <AboutLink href="https://docs.learngala.com/projects">
+              <FormattedMessage id="catalog.aboutHowToNews.partnerWithUsLinkText" />
+            </AboutLink>
           </li>
         </AboutList>
         <SocialLinks>
@@ -93,7 +107,7 @@ function AboutHowToNews() {
             href="https://www.linkedin.com/company/learngala"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Gala on LinkedIn"
+            aria-label="LinkedIn"
             title="LinkedIn"
           >
             <SocialIcon
@@ -109,7 +123,7 @@ function AboutHowToNews() {
             href="https://bsky.app"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Gala on Bluesky"
+            aria-label="Bluesky"
             title="Bluesky"
           >
             <SocialIcon
@@ -125,7 +139,7 @@ function AboutHowToNews() {
             href="https://github.com/galahq/gala"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Gala on GitHub"
+            aria-label="GitHub"
             title="GitHub"
           >
             <SocialIcon
@@ -141,7 +155,9 @@ function AboutHowToNews() {
       </StyledCatalogSection>
 
       <StyledCatalogSection solid>
-        <SectionTitle>How-to</SectionTitle>
+        <SectionTitle>
+          <FormattedMessage id="catalog.aboutHowToNews.howToTitle" />
+        </SectionTitle>
         <VideoFrame
           title="How-to video"
           src={YOUTUBE_EMBED_URL}
@@ -150,26 +166,40 @@ function AboutHowToNews() {
         />
         <LinkList>
           <HowToListItem href="https://docs.learngala.com/docs/" iconType="guide">
-            Quick Start Authoring Guide
-          </HowToListItem>
-          <HowToListItem href="https://docs.learngala.com/docs/teaching-strategies" iconType="guide">
-            Teaching Strategies
+            <FormattedMessage id="catalog.aboutHowToNews.quickStartAuthoringGuideText" />
           </HowToListItem>
           <HowToListItem href="https://docs.learngala.com/docs/advanced-planning-your-case" iconType="guide">
-            Planning a Case
+            <FormattedMessage id="catalog.aboutHowToNews.planningACaseText" />
           </HowToListItem>
-          <HowToListItem href="https://docs.learngala.com/docs/general-licensing" iconType="guide">
-            Module Licensing
+          <HowToListItem href="https://docs.learngala.com/docs/teaching-strategies" iconType="guide">
+            <FormattedMessage id="catalog.aboutHowToNews.teachingStrategiesText" />
           </HowToListItem>
         </LinkList>
+        <MoreLink href="https://docs.learngala.com/docs/" target="_blank" rel="noopener noreferrer">
+          <FormattedMessage id="catalog.aboutHowToNews.moreText" />
+        </MoreLink>
 
       </StyledCatalogSection>
 
       <StyledCatalogSection solid>
-        <SectionTitle>News & Updates</SectionTitle>
-        {loading && <StatusText>Loading latest updates...</StatusText>}
-        {!loading && error && <StatusText>Unable to load updates right now.</StatusText>}
-        {!loading && !error && newsItems.length === 0 && <StatusText>No updates available yet.</StatusText>}
+        <SectionTitle>
+          <FormattedMessage id="catalog.aboutHowToNews.newsUpdatesTitle" />
+        </SectionTitle>
+        {loading && (
+          <StatusText>
+            <FormattedMessage id="catalog.aboutHowToNews.loadingLatestUpdatesText" />
+          </StatusText>
+        )}
+        {!loading && error && (
+          <StatusText>
+            <FormattedMessage id="catalog.aboutHowToNews.unableToLoadUpdatesText" />
+          </StatusText>
+        )}
+        {!loading && !error && newsItems.length === 0 && (
+          <StatusText>
+            <FormattedMessage id="catalog.aboutHowToNews.noUpdatesAvailableText" />
+          </StatusText>
+        )}
         {!loading && !error && newsItems.length > 0 && (
           <>
             <NewsList>
@@ -182,7 +212,7 @@ function AboutHowToNews() {
               ))}
             </NewsList>
             <MoreLink href="https://docs.learngala.com/blog" target="_blank" rel="noopener noreferrer">
-              More
+              <FormattedMessage id="catalog.aboutHowToNews.moreText" />
             </MoreLink>
           </>
         )}
@@ -342,6 +372,11 @@ const MoreLink = styled.a`
   display: table;
   margin-left: auto;
   margin-top: 10px;
+
+  &:after {
+    content: '›';
+    margin-left: 5px;
+  }
 
   &:hover {
     color: #ebeae4;
