@@ -38,7 +38,7 @@ function Home() {
       {({ selecting }) => (
         <>
           <WelcomeMessage reader={reader} />
-          {readerLoading || !!reader || selecting || <ValueProposition />}
+          {/*{readerLoading || !!reader || selecting || <ValueProposition />}*/}
 
           {selecting || <Sidebar />}
 

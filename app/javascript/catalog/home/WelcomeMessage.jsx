@@ -12,19 +12,14 @@ import { Link } from 'react-router-dom'
 
 const aboutLinks = [
   {
-    message: 'aboutButtonText',
-    icon: 'predictive-analysis',
-    href: 'https://about.learngala.com',
+    message: 'findACaseButtonText',
+    icon: 'search',
+    href: 'https://www.learngala.com/my_cases',
   },
   {
-    message: 'howButtonText',
-    icon: 'manual',
-    href: 'https://docs.learngala.com/docs/',
-  },
-  {
-    message: 'newsButtonText',
-    icon: 'feed',
-    href: 'https://about.learngala.com/blog',
+    message: 'createACaseButtonText',
+    icon: 'annotation',
+    to: 'https://www.learngala.com/catalog/search',
   },
 ]
 
@@ -52,21 +47,6 @@ const getStartedMsg = (
       </h1>
       <AboutLinksList links={aboutLinks} />
     </div>
-    <div className="getStartedContained">
-      <FormattedMessage
-        id="catalog.welcomeMessage.toGetStarted"
-        values={{
-          createAccount: (
-            <a href="/readers/sign_up">
-              <FormattedMessage
-                id="catalog.welcomeMessage.createAccount"
-                defaultMessage="Create an account"
-              />
-            </a>
-          ),
-        }}
-      />
-    </div>
   </>
 )
 
@@ -78,21 +58,6 @@ const welcomeBackMsg = (
       </h1>
     </div>
     <AboutLinksList links={aboutLinks} />
-    <div>
-      <FormattedMessage
-        id="catalog.welcomeMessage.welcomeBackMessage"
-        values={{
-          createCase: (
-            <a href="/my_cases">
-              <FormattedMessage
-                id="catalog.createCase"
-                defaultMessage="create your own"
-              />
-            </a>
-          ),
-        }}
-      />
-    </div>
   </>
 )
 
@@ -106,7 +71,6 @@ const Container = styled.aside.attrs({ className: 'pt-dark' })`
   font-family: tenso;
   grid-area: welcome-message;
   hyphens: auto;
-  margin-bottom: 1.5em;
 
   ul {
     display: inline-block;

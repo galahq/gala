@@ -11,6 +11,23 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 const RSS_URL = 'https://docs.learngala.com/blog/rss.xml'
 const MAX_NEWS_ITEMS = 5
 const YOUTUBE_EMBED_URL = 'https://www.youtube.com/embed/VIDEO_ID'
+const HOW_TO_ICON_CLASS_BY_TYPE = {
+  guide: 'pt-icon-manual',
+  video: 'pt-icon-video',
+}
+
+function HowToListItem({ href, iconType = 'guide', children }) {
+  const iconClass = HOW_TO_ICON_CLASS_BY_TYPE[iconType] || HOW_TO_ICON_CLASS_BY_TYPE.guide
+
+  return (
+    <li>
+      <HowToLink href={href}>
+        <HowToIcon className={`pt-icon ${iconClass}`} aria-hidden />
+        {children}
+      </HowToLink>
+    </li>
+  )
+}
 
 function AboutHowToNews() {
   const [newsItems, setNewsItems] = React.useState([])
@@ -132,30 +149,18 @@ function AboutHowToNews() {
           allowFullScreen
         />
         <LinkList>
-          <li>
-            <HowToLink href="https://example.com/how-to/getting-started">
-              <HowToIcon className="pt-icon pt-icon-video" aria-hidden />
-              Getting Started with Gala
-            </HowToLink>
-          </li>
-          <li>
-            <HowToLink href="https://example.com/how-to/navigation">
-              <HowToIcon className="pt-icon pt-icon-manual" aria-hidden />
-              Navigating the Catalog
-            </HowToLink>
-          </li>
-          <li>
-            <HowToLink href="https://example.com/how-to/search">
-              <HowToIcon className="pt-icon pt-icon-video" aria-hidden />
-              Searching and Filtering Content
-            </HowToLink>
-          </li>
-          <li>
-            <HowToLink href="https://example.com/how-to/maps">
-              <HowToIcon className="pt-icon pt-icon-manual" aria-hidden />
-              Using the Map View
-            </HowToLink>
-          </li>
+          <HowToListItem href="https://docs.learngala.com/docs/" iconType="guide">
+            Quick Start Authoring Guide
+          </HowToListItem>
+          <HowToListItem href="https://docs.learngala.com/docs/teaching-strategies" iconType="guide">
+            Teaching Strategies
+          </HowToListItem>
+          <HowToListItem href="https://docs.learngala.com/docs/advanced-planning-your-case" iconType="guide">
+            Planning a Case
+          </HowToListItem>
+          <HowToListItem href="https://docs.learngala.com/docs/general-licensing" iconType="guide">
+            Module Licensing
+          </HowToListItem>
         </LinkList>
 
       </StyledCatalogSection>
@@ -206,6 +211,7 @@ const BodyText = styled.p`
   color: #ebeae4;
   line-height: 1.4;
   margin: 0 0 10px;
+  hyphens: auto;
 `
 
 const VideoFrame = styled.iframe`
