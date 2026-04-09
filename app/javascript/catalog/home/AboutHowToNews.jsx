@@ -82,11 +82,6 @@ function AboutHowToNews({ intl }) {
         </BodyText>
         <AboutList>
           <li>
-            <AboutLink href="https://docs.learngala.com/team">
-              <FormattedMessage id="catalog.aboutHowToNews.teamLinkText" />
-            </AboutLink>
-          </li>
-          <li>
             <AboutLink href="https://docs.learngala.com/publications">
               <FormattedMessage id="catalog.aboutHowToNews.publicationsLinkText" />
             </AboutLink>
@@ -167,7 +162,16 @@ function AboutHowToNews({ intl }) {
             </SocialNav>
           </li>
         </AboutList>
-        
+        <MoreLink
+          href="https://about.learngala.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={intl.formatMessage({
+            id: 'catalog.aboutHowToNews.moreHowToAriaLabel',
+          })}
+        >
+          <FormattedMessage id="catalog.aboutHowToNews.moreText" />
+        </MoreLink>
       </StyledCatalogSection>
 
       <StyledCatalogSection solid $hasMoreLink>
