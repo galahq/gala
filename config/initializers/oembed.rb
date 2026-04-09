@@ -30,6 +30,7 @@ OEmbed::Providers.register social_ex
 
 sketchfab = OEmbed::Provider.new 'http://sketchfab.com/oembed'
 sketchfab << 'http://sketchfab.com/models/*'
+sketchfab << 'https://sketchfab.com/3d-models/*'
 sketchfab << 'https://sketchfab.com/models/*'
 sketchfab << 'https://sketchfab.com/*/folders/*'
 OEmbed::Providers.register sketchfab
