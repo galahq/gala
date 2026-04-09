@@ -48,6 +48,7 @@ const EMBED_RATIOS: { [string]: [number, number] } = {
   'observablehq.com': [16, 9],
   'crowdsignal.com': [1, 1],
   'my.matterport.com': [16, 9],
+  'sketchfab.com': [16, 9],
 }
 
 const Expansion = ({ contents, expansion }: Props) => {
