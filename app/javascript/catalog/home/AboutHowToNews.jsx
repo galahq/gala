@@ -385,9 +385,7 @@ const StatusText = styled.p`
   margin: 0;
 `
 
-const LiveRegion = styled.div`
-  min-height: 1.4em;
-`
+const LiveRegion = styled.div``
 
 const StyledCatalogSection = styled(CatalogSection)`
   position: relative;
