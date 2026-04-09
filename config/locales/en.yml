@@ -461,11 +461,20 @@ en:
       publications_link_text: Publications
       projects_partners_link_text: Projects & Partners
       partner_with_us_link_text: Partner With Us
+      follow_us_text: "Follow us:"
+      social_nav_aria_label: Follow Gala
+      linkedin_aria_label: LinkedIn (opens in new tab)
+      bluesky_aria_label: Bluesky (opens in new tab)
+      github_aria_label: GitHub (opens in new tab)
       how_to_title: How-to
+      how_to_video_title: How-to video
       quick_start_authoring_guide_text: Quick Start Authoring Guide
       planning_a_case_text: Planning a Case
       teaching_strategies_text: Teaching Strategies
       more_text: More
+      more_how_to_aria_label: More how-to resources (opens in new tab)
+      more_news_aria_label: More news and updates (opens in new tab)
+      opens_in_new_tab_suffix: (opens in new tab)
       news_updates_title: News & Updates
       loading_latest_updates_text: Loading latest updates...
       unable_to_load_updates_text: Unable to load updates right now.

@@ -8,7 +8,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
-import { Link } from 'react-router-dom'
 
 const aboutLinks = [
   {
@@ -19,7 +18,7 @@ const aboutLinks = [
   {
     message: 'createACaseButtonText',
     icon: 'annotation',
-    to: 'https://www.learngala.com/catalog/search',
+    href: '/catalog/search',
   },
 ]
 
