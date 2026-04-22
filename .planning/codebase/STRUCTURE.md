@@ -5,336 +5,410 @@
 ## Directory Layout
 
 ```text
-gala/
-+-- app/                 # Rails application code: MVC, services, policies, serializers, jobs, React, Stimulus, assets
-+-- bin/                 # Rails, Webpacker, setup, and helper executables
-+-- cable/               # ActionCable client-side/generated support files
-+-- config/              # Rails, environment, initializers, routes, webpacker, puma, sidekiq, locales
-+-- db/                  # SQL schema, migrations, seeds
-+-- docs/                # Project documentation and release notes
-+-- flow-typed/          # Flow library type stubs
-+-- infra/               # Separate SST v4 Node project for AWS infrastructure
-+-- lib/                 # Rake tasks and custom library files
-+-- public/              # Static public files and generated asset pack output
-+-- scripts/             # Project scripts
-+-- spec/                # RSpec test suite and support files
-+-- storage/             # Local ActiveStorage files
-+-- Gemfile              # Ruby dependencies
-+-- package.json         # Root JavaScript dependencies and Jest scripts
-+-- Procfile             # Runtime web/worker process definitions
-+-- Procfile.dev         # Local web/webpack/worker process definitions
-+-- Dockerfile           # Container image for Rails app
-+-- docker-compose.yml   # Local Docker app services
+/Users/nathanpapes/projects/gala/
+├── app/                    # Rails application code: controllers, models, views, jobs, channels, frontend, services
+├── app/assets/             # Sprockets images, stylesheets, and JavaScript loaded by Rails layouts
+├── app/channels/           # Action Cable connection and channel classes
+├── app/cloners/            # Clowne object cloning classes for cases and nested content
+├── app/controllers/        # Rails controllers, namespaces, and controller concerns
+├── app/dashboards/         # Administrate dashboard field definitions
+├── app/decorators/         # Draper presentation decorators
+├── app/fields/             # Custom Administrate field types
+├── app/forms/              # Form objects
+├── app/helpers/            # Rails view helpers and custom form builders
+├── app/javascript/         # Webpacker React, Stimulus, Redux, Flow, shared frontend modules, and packs
+├── app/jobs/               # ActiveJob jobs executed by Sidekiq
+├── app/mailboxes/          # Action Mailbox inbound email handlers
+├── app/mailers/            # Action Mailer classes
+├── app/models/             # ActiveRecord models, null objects, domain concerns, and nested model namespaces
+├── app/policies/           # Pundit policies and scopes
+├── app/serializers/        # ActiveModelSerializers JSON serializers
+├── app/services/           # Service objects and query/formatting helpers
+├── app/validators/         # Custom ActiveModel validators
+├── app/views/              # Rails ERB/Haml views, layouts, partials, mailer views, and React mount shells
+├── bin/                    # Rails, RSpec, Webpacker, Yarn, setup, and utility executables
+├── cable/                  # Standalone Action Cable Rack config
+├── config/                 # Rails, environment, route, initializer, webpacker, database, storage, and runtime config
+├── db/                     # SQL schema, migrations, and seeds
+├── docs/                   # Project documentation and architecture/domain notes
+├── flow-typed/             # Flow library definitions
+├── infra/                  # Separate SST v4 AWS infrastructure Node package
+├── lib/                    # Ruby support code, rake tasks, and Webpack support files
+├── public/                 # Static public files and large public assets such as countries.geojson
+├── scripts/                # Standalone Ruby scripts
+├── spec/                   # RSpec tests, factories, fixtures, support, mailer previews, and feature specs
+├── config.ru               # Rack entrypoint for Rails
+├── Procfile                # Runtime process definitions for web and worker
+├── Procfile.dev            # Local dev process definitions for Rails, Webpacker, and Sidekiq
+├── Gemfile                 # Root Rails Ruby dependencies
+├── package.json            # Root Webpacker/Jest/Yarn frontend dependencies
+├── infra/package.json      # Separate SST infrastructure dependencies
+└── jest.config.js          # Jest configuration for app/javascript tests
 ```
 
 ## Directory Purposes
 
-**`app/controllers`:**
-- Purpose: Rails request controllers and reusable controller concerns.
-- Contains: Top-level resource controllers, nested namespaces, admin controllers, Devise overrides, LTI controllers, and concerns.
-- Key files: `app/controllers/application_controller.rb`, `app/controllers/cases_controller.rb`, `app/controllers/cases/stats_controller.rb`, `app/controllers/deployments_controller.rb`, `app/controllers/admin/application_controller.rb`, `app/controllers/concerns/broadcast_edits.rb`
+**`app/controllers/`:**
+- Purpose: Place Rails HTTP controllers, resource namespaces, and shared controller concerns here.
+- Contains: Top-level controllers such as `app/controllers/cases_controller.rb`, namespaced controllers such as `app/controllers/cases/stats_controller.rb`, admin controllers under `app/controllers/admin/`, and concerns under `app/controllers/concerns/`.
+- Key files: `app/controllers/application_controller.rb`, `app/controllers/cases_controller.rb`, `app/controllers/catalog_controller.rb`, `app/controllers/deployments_controller.rb`, `app/controllers/cases/stats_controller.rb`, `app/controllers/runtime_controller.rb`
 
-**`app/models`:**
-- Purpose: ActiveRecord models, value objects, model concerns, and nested domain classes.
-- Contains: Database-backed models, non-persistent model objects, polymorphic content models, and concerns.
-- Key files: `app/models/application_record.rb`, `app/models/case.rb`, `app/models/reader.rb`, `app/models/deployment.rb`, `app/models/content_state.rb`, `app/models/concerns/lockable.rb`, `app/models/case/archive.rb`
+**`app/models/`:**
+- Purpose: Place ActiveRecord models, domain null objects, and model namespaces here.
+- Contains: Core domain models, nested namespaces such as `app/models/case/`, custom value/type support under `app/models/content_state/`, and concerns under `app/models/concerns/`.
+- Key files: `app/models/application_record.rb`, `app/models/case.rb`, `app/models/reader.rb`, `app/models/deployment.rb`, `app/models/case_element.rb`, `app/models/card.rb`, `app/models/page.rb`, `app/models/podcast.rb`, `app/models/edgenote.rb`, `app/models/anonymous_user.rb`
 
-**`app/services`:**
-- Purpose: Plain Ruby objects for multi-step domain operations, search/stat queries, linking, broadcasting, and API integrations.
-- Contains: Service classes with initializer dependencies and explicit methods such as `call`, `country_stats`, or query helpers.
-- Key files: `app/services/deploy_case_service.rb`, `app/services/customize_deployment_service.rb`, `app/services/case_stats_service.rb`, `app/services/case_stats_service/query.rb`, `app/services/case_stats_service/formatter.rb`, `app/services/linker_service.rb`, `app/services/broadcast_edit.rb`
+**`app/models/concerns/`:**
+- Purpose: Place reusable ActiveRecord concern behavior here.
+- Contains: Model concerns for content elements, locking, licensing, serialization, and tracking.
+- Key files: `app/models/concerns/element.rb`, `app/models/concerns/lockable.rb`, `app/models/concerns/trackable.rb`, `app/models/concerns/licensable.rb`, `app/models/concerns/serializable.rb`
 
-**`app/policies`:**
-- Purpose: Pundit policies and scopes.
-- Contains: Base policy, resource policies, and namespaced policies.
-- Key files: `app/policies/application_policy.rb`, `app/policies/case_policy.rb`, `app/policies/deployment_policy.rb`, `app/policies/reader_policy.rb`, `app/policies/cases/feature_policy.rb`
+**`app/services/`:**
+- Purpose: Place plain Ruby service objects, query objects, formatters, and workflow orchestration here.
+- Contains: Single-file services and nested service namespaces.
+- Key files: `app/services/deploy_case_service.rb`, `app/services/customize_deployment_service.rb`, `app/services/case_stats_service.rb`, `app/services/case_stats_service/query.rb`, `app/services/case_stats_service/formatter.rb`, `app/services/broadcast_edit.rb`, `app/services/find_cases.rb`, `app/services/wikidata.rb`
 
-**`app/serializers`:**
-- Purpose: ActiveModelSerializers JSON payloads for frontend consumers.
-- Contains: Base serializer, resource serializers, nested namespace serializers, and relation-by-id helpers.
-- Key files: `app/serializers/application_serializer.rb`, `app/serializers/case_serializer.rb`, `app/serializers/cases/show_serializer.rb`, `app/serializers/cases/preview_serializer.rb`, `app/serializers/cases/stats_serializer.rb`, `app/serializers/comment_threads/index_serializer.rb`
+**`app/serializers/`:**
+- Purpose: Place ActiveModelSerializers classes for JSON response shapes here.
+- Contains: Shared serializer base class plus resource serializers and nested serializer namespaces.
+- Key files: `app/serializers/application_serializer.rb`, `app/serializers/case_serializer.rb`, `app/serializers/cases/show_serializer.rb`, `app/serializers/cases/preview_serializer.rb`, `app/serializers/cases/stats_serializer.rb`, `app/serializers/reader_serializer.rb`
 
-**`app/views`:**
-- Purpose: Rails HTML, Haml, ERB, mailer templates, layouts, and React mount shells.
-- Contains: Layouts, resource views, admin views, mailer views, partials, and no-JS fallbacks.
-- Key files: `app/views/layouts/application.html.erb`, `app/views/layouts/with_header.html.erb`, `app/views/cases/show.html.erb`, `app/views/catalog/home.html.haml`, `app/views/cases/stats/show.html.erb`
+**`app/policies/`:**
+- Purpose: Place Pundit policy classes and query scopes here.
+- Contains: Base policy, resource policies, nested policy namespaces, and custom admin scopes.
+- Key files: `app/policies/application_policy.rb`, `app/policies/case_policy.rb`, `app/policies/deployment_policy.rb`, `app/policies/reader_policy.rb`, `app/policies/cases/`
 
-**`app/javascript`:**
-- Purpose: Webpacker source tree for React, Redux, React Router, Stimulus, Flow types, feature modules, and browser utilities.
-- Contains: Entrypoints in `packs`, React feature directories, Redux modules, Stimulus controllers, shared utilities, tests, and styles imported through Webpacker.
-- Key files: `app/javascript/packs/case.entry.jsx`, `app/javascript/packs/catalog.entry.jsx`, `app/javascript/packs/deployment.entry.jsx`, `app/javascript/packs/controllers.js`, `app/javascript/Case.jsx`, `app/javascript/shared/orchard.js`, `app/javascript/redux/reducers/index.js`, `app/javascript/stats/StatsPage.jsx`
+**`app/decorators/`:**
+- Purpose: Place Draper decorators for presentation-only methods here.
+- Contains: Base decorator and resource decorators for cases, deployments, media, libraries, readers, and reading lists.
+- Key files: `app/decorators/application_decorator.rb`, `app/decorators/case_decorator.rb`, `app/decorators/image_decorator.rb`, `app/decorators/deployment_decorator.rb`
 
-**`app/assets`:**
-- Purpose: Sprockets assets for global JavaScript, stylesheets, and images.
-- Contains: `application.js` manifest, global channel JS, CSS/SCSS, static images, SVGs.
-- Key files: `app/assets/javascripts/application.js`, `app/assets/javascripts/channels`, `app/assets/stylesheets`, `app/assets/images`
+**`app/cloners/`:**
+- Purpose: Place Clowne cloners for copying cases and nested content here.
+- Contains: Case/content cloners and content state cloning helpers.
+- Key files: `app/cloners/case_cloner.rb`, `app/cloners/card_cloner.rb`, `app/cloners/content_state_cloner.rb`, `app/cloners/element_cloner.rb`, `app/cloners/page_cloner.rb`, `app/cloners/podcast_cloner.rb`
 
-**`app/jobs`:**
-- Purpose: ActiveJob classes backed by Sidekiq.
-- Contains: Background jobs for clones, locks, broadcasts, archive refresh, social images, memory snapshots, and search index refresh.
-- Key files: `app/jobs/application_job.rb`, `app/jobs/case_clone_job.rb`, `app/jobs/refresh_indices_job.rb`, `app/jobs/comment_broadcast_job.rb`, `app/jobs/case_archive_refresh_job.rb`
+**`app/jobs/`:**
+- Purpose: Place ActiveJob classes for Sidekiq-backed asynchronous work here.
+- Contains: Base retry/discard policy, broadcast jobs, clone jobs, index refresh jobs, notification jobs, archive refresh jobs, and reporting jobs.
+- Key files: `app/jobs/application_job.rb`, `app/jobs/edit_broadcast_job.rb`, `app/jobs/case_clone_job.rb`, `app/jobs/refresh_indices_job.rb`, `app/jobs/comment_broadcast_job.rb`, `app/jobs/reply_notification_broadcast_job.rb`
 
-**`app/channels`:**
-- Purpose: ActionCable server channels and connection identification.
-- Contains: Base channel, connection, edit/forum/notification/stats channels.
-- Key files: `app/channels/application_cable/connection.rb`, `app/channels/application_cable/channel.rb`, `app/channels/edits_channel.rb`, `app/channels/forum_channel.rb`, `app/channels/stats_channel.rb`, `app/channels/reader_notifications_channel.rb`
+**`app/channels/`:**
+- Purpose: Place Action Cable connection and channel classes here.
+- Contains: Authenticated Cable connection, application channel base, edit/stat/forum/reader notification channels.
+- Key files: `app/channels/application_cable/connection.rb`, `app/channels/application_cable/channel.rb`, `app/channels/edits_channel.rb`, `app/channels/stats_channel.rb`, `app/channels/forum_channel.rb`, `app/channels/reader_notifications_channel.rb`
 
-**`app/mailers` and `app/mailboxes`:**
-- Purpose: Outbound notification/report emails and inbound reply processing.
-- Contains: Application mailer, reply/library/report mailers, ActionMailbox classes.
-- Key files: `app/mailers/application_mailer.rb`, `app/mailers/reply_notification_mailer.rb`, `app/mailboxes/application_mailbox.rb`, `app/mailboxes/replies_mailbox.rb`
+**`app/javascript/`:**
+- Purpose: Place Webpacker-managed frontend source here.
+- Contains: React apps, Stimulus controllers, Redux actions/reducers, Flow types, shared UI/utilities, images, and packs.
+- Key files: `app/javascript/Case.jsx`, `app/javascript/catalog/index.jsx`, `app/javascript/deployment/index.jsx`, `app/javascript/stats/StatsPage.jsx`, `app/javascript/controllers/case_stats_controller.js`, `app/javascript/redux/actions/`, `app/javascript/redux/reducers/`, `app/javascript/packs/case.entry.jsx`, `app/javascript/packs/catalog.entry.jsx`, `app/javascript/packs/controllers.js`
 
-**`app/cloners`:**
-- Purpose: Clowne clone definitions for cases and nested content.
-- Contains: Case, page, card, edgenote, podcast, content state, and element cloners.
-- Key files: `app/cloners/case_cloner.rb`, `app/cloners/page_cloner.rb`, `app/cloners/card_cloner.rb`, `app/cloners/edgenote_cloner.rb`, `app/cloners/content_state_cloner.rb`
+**`app/javascript/packs/`:**
+- Purpose: Place Webpacker entrypoints here; Rails views reference these names through `javascript_pack_tag`.
+- Contains: Page/application entrypoints, shared style entrypoint, Stimulus controller boot entrypoint, and feature app bootstraps.
+- Key files: `app/javascript/packs/case.entry.jsx`, `app/javascript/packs/catalog.entry.jsx`, `app/javascript/packs/deployment.entry.jsx`, `app/javascript/packs/main-menu.entry.jsx`, `app/javascript/packs/controllers.js`, `app/javascript/packs/styles.js`, `app/javascript/packs/onboarding.js`
 
-**`app/decorators`:**
-- Purpose: Draper presentation wrappers.
-- Contains: Decorators for cases, deployments, libraries, readers, content elements, and image presentation.
-- Key files: `app/decorators/application_decorator.rb`, `app/decorators/case_decorator.rb`, `app/decorators/deployment_decorator.rb`, `app/decorators/library_decorator.rb`
+**`app/javascript/controllers/`:**
+- Purpose: Place Stimulus controllers here.
+- Contains: DOM behavior controllers and React-island mount controllers.
+- Key files: `app/javascript/controllers/case_stats_controller.js`, `app/javascript/controllers/clipboard_controller.js`, `app/javascript/controllers/confirmation_controller.js`, `app/javascript/controllers/reading_list_controller.js`, `app/javascript/controllers/spotlight_controller.js`
 
-**`app/dashboards` and `app/fields`:**
-- Purpose: Administrate configuration and custom admin fields.
-- Contains: Dashboard classes per admin resource and custom field classes/views.
-- Key files: `app/dashboards/case_dashboard.rb`, `app/dashboards/reader_dashboard.rb`, `app/fields/percent_field.rb`, `app/views/fields/percent_field`
+**`app/javascript/stats/`:**
+- Purpose: Place the stats dashboard React implementation here.
+- Contains: Stats page, table, summary, map, HTTP normalization, local reducer state, tests, and docs.
+- Key files: `app/javascript/stats/StatsPage.jsx`, `app/javascript/stats/state/statsStore.js`, `app/javascript/stats/http/statsHttp.js`, `app/javascript/stats/map/MapContainer.jsx`, `app/javascript/stats/__tests__/StatsPage.test.jsx`, `app/javascript/stats/STATS.md`
 
-**`config`:**
-- Purpose: Rails app configuration, routes, initializers, environment configs, Webpacker, Puma, Sidekiq, storage, locales.
-- Contains: Boot files, initializers, environment-specific settings, locale YAML/JS loader, webpack config, queue/server config.
-- Key files: `config/application.rb`, `config/routes.rb`, `config/environments/production.rb`, `config/webpacker.yml`, `config/webpack/environment.js`, `config/puma.rb`, `config/sidekiq.yml`, `config/initializers/active_model_serializers.rb`
+**`app/views/`:**
+- Purpose: Place Rails templates, layouts, partials, mailer views, admin views, and React mount shells here.
+- Contains: Resource view folders, layout templates, mailer templates, Devise views, stats views, and catalog/case mount pages.
+- Key files: `app/views/layouts/application.html.erb`, `app/views/layouts/with_header.html.erb`, `app/views/cases/show.html.erb`, `app/views/catalog/home.html.haml`, `app/views/cases/stats/show.html.erb`, `app/views/cases/stats/_overview.html.erb`
 
-**`db`:**
-- Purpose: Database schema, migrations, seeds.
-- Contains: SQL schema dump, migration history, seeds.
-- Key files: `db/structure.sql`, `db/seeds.rb`, `db/migrate/20241011080359_update_case_search_index_for_postgres16.rb`, `db/migrate/20250107000000_add_case_id_to_ahoy_events.rb`
+**`app/assets/`:**
+- Purpose: Place Sprockets-managed assets here.
+- Contains: Asset pipeline config, images, stylesheets, and Sprockets JavaScript.
+- Key files: `app/assets/config/manifest.js`, `app/assets/javascripts/application.js`, `app/assets/stylesheets/application.scss`
 
-**`lib`:**
-- Purpose: Custom library files and Rake tasks.
-- Contains: Rake tasks for factories, emails, docs, locks, tests, index refresh; custom Ruby files; webpack helper file.
-- Key files: `lib/tasks/indices.rake`, `lib/tasks/emails.rake`, `lib/tasks/factory_bot.rake`, `lib/sieve.rb`, `lib/webpack/application.js`
+**`app/dashboards/`:**
+- Purpose: Place Administrate dashboard definitions here.
+- Contains: One dashboard class per admin resource plus custom field configuration.
+- Key files: `app/dashboards/case_dashboard.rb`, `app/dashboards/reader_dashboard.rb`, `app/dashboards/deployment_dashboard.rb`, `app/dashboards/visit_dashboard.rb`
 
-**`spec`:**
-- Purpose: RSpec test suite and fixtures.
-- Contains: Specs mirroring app directories, factories, support helpers, fixtures, feature/request/model/controller/service/job/policy specs.
-- Key files: `spec/rails_helper.rb`, `spec/spec_helper.rb`, `spec/factories`, `spec/support`, `spec/controllers/cases`, `spec/services/case_stats_service`
+**`app/helpers/`:**
+- Purpose: Place Rails view helpers and custom builders here.
+- Contains: General helpers, resource helpers, Blueprint form builder, translation helpers, and identicon helpers.
+- Key files: `app/helpers/application_helper.rb`, `app/helpers/blueprint_form_builder.rb`, `app/helpers/cases_helper.rb`, `app/helpers/deployments_helper.rb`, `app/helpers/translations_helper.rb`
 
-**`infra`:**
-- Purpose: Separate Node/SST project for AWS deployment infrastructure.
-- Contains: SST config, package metadata, TypeScript config, Node lockfile.
+**`app/mailers/` and `app/mailboxes/`:**
+- Purpose: Place outbound mailers and inbound email handlers here.
+- Contains: Application mailer, Devise/auth mailer, report/reply/library request mailers, application mailbox, and replies mailbox.
+- Key files: `app/mailers/application_mailer.rb`, `app/mailers/reply_notification_mailer.rb`, `app/mailers/report_mailer.rb`, `app/mailboxes/application_mailbox.rb`, `app/mailboxes/replies_mailbox.rb`
+
+**`config/`:**
+- Purpose: Place Rails app config, routes, initializers, Webpacker config, environment config, and storage/database config here.
+- Contains: Rails boot files, environment files, initializers, locale files, Webpacker files, Puma/Sidekiq config, and route definitions.
+- Key files: `config/application.rb`, `config/routes.rb`, `config/puma.rb`, `config/sidekiq.yml`, `config/webpacker.yml`, `config/webpack/environment.js`, `config/initializers/active_model_serializers.rb`, `config/initializers/sidekiq.rb`, `config/initializers/ahoy.rb`
+
+**`config/initializers/`:**
+- Purpose: Place boot-time configuration for framework behavior and gems here.
+- Contains: ActiveModelSerializers, Ahoy, Devise, FriendlyId, Mobility, Sidekiq, Sentry, Rack::Attack, Lograge, PDFKit, and app-specific terms/configuration initializers.
+- Key files: `config/initializers/active_model_serializers.rb`, `config/initializers/ahoy.rb`, `config/initializers/json_param_key_transform.rb`, `config/initializers/mobility.rb`, `config/initializers/sidekiq.rb`, `config/initializers/sentry.rb`
+
+**`db/`:**
+- Purpose: Place database schema, migrations, and seed data here.
+- Contains: SQL schema, Rails migrations, and seed script.
+- Key files: `db/structure.sql`, `db/migrate/`, `db/seeds.rb`
+
+**`lib/`:**
+- Purpose: Place Ruby support code and rake tasks that do not belong in `app/`.
+- Contains: `Sv` parameter filtering helper, batch user script, rake tasks, and Webpack support file.
+- Key files: `lib/sieve.rb`, `lib/tasks/indices.rake`, `lib/tasks/factory_bot.rake`, `lib/tasks/emails.rake`, `lib/tasks/locks.rake`
+
+**`spec/`:**
+- Purpose: Place RSpec test suites, factories, fixtures, support helpers, and feature specs here.
+- Contains: Tests that mirror app layers, FactoryBot factories, fixtures, shared support, and mailer previews.
+- Key files: `spec/rails_helper.rb`, `spec/spec_helper.rb`, `spec/controllers/`, `spec/models/`, `spec/services/`, `spec/policies/`, `spec/serializers/`, `spec/factories/`, `spec/support/`
+
+**`infra/`:**
+- Purpose: Place AWS infrastructure code in a separate Node/SST project here.
+- Contains: SST config, TypeScript config, Node package files, and generated SST metadata.
 - Key files: `infra/sst.config.ts`, `infra/package.json`, `infra/package-lock.json`, `infra/tsconfig.json`
 
-**`public`:**
-- Purpose: Static public assets and compiled asset output.
-- Contains: Public static files, generated `packs`, generated `packs-test`, generated Sprockets assets.
-- Key files: `public/packs`, `public/packs-test`, `public/assets`
+**`flow-typed/`:**
+- Purpose: Place Flow library definitions here.
+- Contains: Third-party and project-specific Flow type stubs.
+- Key files: `flow-typed/actioncable.js`, `flow-typed/sentry.js`, `flow-typed/npm/`
 
-**`storage`:**
-- Purpose: Local ActiveStorage file storage.
-- Contains: Hash-sharded local files.
-- Key files: `storage/*`
+**`public/`:**
+- Purpose: Place static files served directly by Rails/web server here.
+- Contains: favicon/apple icons, robots file, and public geojson.
+- Key files: `public/robots.txt`, `public/favicon.ico`, `public/countries.geojson`
 
 ## Key File Locations
 
 **Entry Points:**
-- `config.ru`: Rack entrypoint for Puma/Rack servers.
-- `Procfile`: Runtime web and worker processes.
-- `Procfile.dev`: Local web, webpack dev server, and Sidekiq processes.
-- `config/routes.rb`: HTTP route map and Sidekiq UI mount.
-- `app/views/layouts/application.html.erb`: Global HTML layout and asset loading.
-- `app/javascript/packs/case.entry.jsx`: Case reader/editor React app entrypoint.
-- `app/javascript/packs/catalog.entry.jsx`: Catalog React app entrypoint.
-- `app/javascript/packs/deployment.entry.jsx`: Deployment customization React app entrypoint.
-- `app/javascript/packs/controllers.js`: Stimulus autoload entrypoint.
-- `app/assets/javascripts/application.js`: Sprockets JavaScript manifest.
-- `app/channels/application_cable/connection.rb`: ActionCable connection entrypoint.
-- `app/mailboxes/application_mailbox.rb`: ActionMailbox base entrypoint.
-- `infra/sst.config.ts`: AWS infrastructure entrypoint.
+- `config.ru`: Rack entrypoint for the Rails application.
+- `config/application.rb`: Rails application boot defaults, environment flag normalization, SQL schema format, and middleware setup.
+- `config/routes.rb`: HTTP route map, React Router fallbacks, Sidekiq mount, admin namespace, and runtime stats route.
+- `Procfile`: Runtime web and worker process definitions.
+- `Procfile.dev`: Local Rails, Webpacker dev server, and Sidekiq process definitions.
+- `app/javascript/packs/case.entry.jsx`: Case React app boot entrypoint.
+- `app/javascript/packs/catalog.entry.jsx`: Catalog React app boot entrypoint.
+- `app/javascript/packs/deployment.entry.jsx`: Deployment React app boot entrypoint.
+- `app/javascript/packs/controllers.js`: Stimulus controller auto-loader.
+- `infra/sst.config.ts`: AWS infrastructure entrypoint for SST.
 
 **Configuration:**
-- `config/application.rb`: Rails defaults, app flags, middleware, schema format.
-- `config/environments/development.rb`: Development environment config.
-- `config/environments/test.rb`: Test environment config.
-- `config/environments/production.rb`: Production environment config.
-- `config/webpacker.yml`: Webpacker source path, pack path, dev server port, compile behavior.
-- `config/webpack/environment.js`: Custom Webpacker loaders and split chunks.
-- `config/sidekiq.yml`: Queue names, weights, timeouts, concurrency.
-- `config/puma.rb`: Puma threads, workers, port, Barnes hook.
-- `config/initializers/devise.rb`: Devise setup.
-- `config/initializers/active_model_serializers.rb`: JSON key transform and serializer helper.
-- `config/initializers/sentry.rb`: Sentry configuration.
-- `config/initializers/lograge.rb`: Request logging configuration.
-- `.env`, `.env.dev`, `.env.ignore`: Environment configuration files present; do not read or quote contents.
+- `Gemfile`: Root Ruby dependencies for the Rails app.
+- `package.json`: Root Webpacker/Jest/Yarn dependencies.
+- `yarn.lock`: Root Yarn 1 lockfile.
+- `infra/package.json`: Infrastructure package dependencies and scripts.
+- `infra/package-lock.json`: Infrastructure npm lockfile.
+- `config/webpacker.yml`: Webpacker source root, pack path, and dev server settings.
+- `config/webpack/environment.js`: Custom Webpack loaders for SVG/YAML/assets and split chunks.
+- `.flowconfig`: Flow configuration for `app/javascript/`.
+- `jest.config.js`: Jest configuration for frontend tests.
+- `.eslintrc.json`: ESLint configuration for Flow JavaScript.
+- `.prettierrc.json`: Prettier configuration for Flow parser, single quotes, and no semicolons.
+- `config/database.yml`: Rails database configuration.
+- `config/storage.yml`: ActiveStorage service configuration.
+- `config/cable.yml`: Action Cable adapter configuration.
+- `config/sidekiq.yml`: Sidekiq queue/concurrency configuration.
 
 **Core Logic:**
-- `app/models/case.rb`: Central content aggregate.
-- `app/models/reader.rb`: Authenticated reader/editor identity.
-- `app/models/deployment.rb`: Case deployment and group/quiz relationships.
-- `app/controllers/cases_controller.rb`: Main case HTML/JSON controller.
-- `app/controllers/catalog_controller.rb`: Catalog home controller.
-- `app/controllers/deployments_controller.rb`: Deployment management controller.
-- `app/controllers/cases/stats_controller.rb`: Stats dashboard controller.
-- `app/services/case_stats_service.rb`: Stats date normalization, caching, and formatting facade.
-- `app/services/deploy_case_service.rb`: Deployment creation workflow.
-- `app/services/linker_service.rb`: LTI reader/group linking workflow.
-- `app/services/broadcast_edit.rb`: Edit broadcast payloads.
-- `app/policies/application_policy.rb`: Default authorization behavior.
-- `app/serializers/application_serializer.rb`: Shared JSON serializer behavior.
+- `app/models/case.rb`: Case aggregate, publication/translation metadata, content associations, search index callback, and attachment validation.
+- `app/models/case_element.rb`: Ordered polymorphic join for the case table of contents.
+- `app/models/card.rb`: Draft.js card content, tracking, locking, and direct case association.
+- `app/models/page.rb`: Narrative element with ordered cards.
+- `app/models/podcast.rb`: Audio element with one associated card.
+- `app/models/edgenote.rb`: Curated media/reference model attached to a case and referenced from card content.
+- `app/models/reader.rb`: Devise-authenticated user, roles, enrollments, libraries, deployments, and notification preferences.
+- `app/models/deployment.rb`: Case/group/quiz assignment model.
+- `app/controllers/cases_controller.rb`: Case index/show/create/update/destroy/copy request orchestration.
+- `app/controllers/cases/stats_controller.rb`: Case stats HTML/JSON/CSV dashboard endpoint.
+- `app/services/case_stats_service.rb`: Date range resolution, caching, stats query orchestration, and output API.
+- `app/services/case_stats_service/query.rb`: Country stats SQL query.
+- `app/services/deploy_case_service.rb`: Transactional deployment creation workflow.
+- `app/services/broadcast_edit.rb`: Service entrypoint for edit broadcast jobs.
+- `app/jobs/edit_broadcast_job.rb`: Serialized edit broadcast to Action Cable.
+- `app/jobs/refresh_indices_job.rb`: PostgreSQL materialized search index refresh.
 
-**Frontend Logic:**
-- `app/javascript/Case.jsx`: Case React app root and case router.
-- `app/javascript/catalog/index.jsx`: Catalog React app root and catalog router.
-- `app/javascript/deployment/index.jsx`: Deployment UI root.
-- `app/javascript/stats/StatsPage.jsx`: Stats dashboard React root.
-- `app/javascript/shared/orchard.js`: Browser API client.
-- `app/javascript/redux/actions`: Case editor Redux action creators.
-- `app/javascript/redux/reducers`: Case editor Redux reducers.
-- `app/javascript/controllers`: Stimulus controllers.
-- `app/javascript/utility`: Shared React/browser utilities.
-- `app/javascript/shared`: Cross-feature helpers, theme-adjacent components, route helpers, i18n helpers.
+**Frontend:**
+- `app/javascript/Case.jsx`: Case React router and top-level case app orchestration.
+- `app/javascript/catalog/index.jsx`: Catalog React router and provider composition.
+- `app/javascript/deployment/index.jsx`: Deployment customization React app.
+- `app/javascript/stats/StatsPage.jsx`: Stats dashboard React page.
+- `app/javascript/stats/state/statsStore.js`: Stats reducer/selectors/range state.
+- `app/javascript/stats/http/statsHttp.js`: Stats HTTP fetching, payload normalization, timeout, abort, and cache logic.
+- `app/javascript/controllers/case_stats_controller.js`: Stimulus bridge that mounts stats React and subscribes to stats channel.
+- `app/javascript/redux/actions/`: Case app Redux actions.
+- `app/javascript/redux/reducers/`: Case app Redux reducers.
+- `app/javascript/shared/`: Shared React/frontend helpers.
+- `app/javascript/utility/`: Shared frontend utility modules.
+
+**Views:**
+- `app/views/layouts/application.html.erb`: Base HTML layout, global JavaScript data, Sprockets/Webpacker includes, fonts, and global meta.
+- `app/views/layouts/with_header.html.erb`: Header/footer layout wrapper.
+- `app/views/cases/show.html.erb`: Case React app mount and serialized `window.caseData`.
+- `app/views/catalog/home.html.haml`: Catalog React app mount and preload links.
+- `app/views/cases/stats/show.html.erb`: Stats page shell and Stimulus mount.
+- `app/views/cases/stats/_overview.html.erb`: Cached stats overview partial.
+- `app/views/cases/stats/show.csv.erb`: Stats CSV export template.
 
 **Testing:**
-- `spec`: RSpec suite.
-- `spec/factories`: FactoryBot factories.
-- `spec/support`: RSpec support helpers.
-- `spec/features`: Feature specs.
-- `spec/requests`: Request specs.
-- `app/javascript/**/__tests__`: Jest tests near frontend modules.
-- `jest.config.js`: Jest configuration.
+- `spec/rails_helper.rb`: RSpec Rails setup.
+- `spec/spec_helper.rb`: Shared RSpec setup.
+- `spec/factories/`: FactoryBot factories.
+- `spec/support/`: Shared RSpec support helpers.
+- `spec/controllers/`: Controller specs.
+- `spec/models/`: Model specs.
+- `spec/services/`: Service specs.
+- `spec/serializers/`: Serializer specs.
+- `spec/features/`: Feature specs.
+- `app/javascript/**/__tests__/`: Jest tests colocated with frontend modules.
 
 ## Naming Conventions
 
 **Files:**
-- Rails classes use snake_case filenames matching constant names: `CasesController` in `app/controllers/cases_controller.rb`, `CaseStatsService` in `app/services/case_stats_service.rb`.
-- Namespaced Rails classes use nested directories: `Cases::StatsController` in `app/controllers/cases/stats_controller.rb`, `Cases::ShowSerializer` in `app/serializers/cases/show_serializer.rb`.
-- Concerns use snake_case module files under concerns directories: `BroadcastEdits` in `app/controllers/concerns/broadcast_edits.rb`, `Lockable` in `app/models/concerns/lockable.rb`.
-- React components use PascalCase filenames when the file exports a component: `app/javascript/Case.jsx`, `app/javascript/stats/StatsPage.jsx`, `app/javascript/overview/CaseOverview.jsx`.
-- JavaScript utility modules use camelCase or descriptive lower-case filenames: `app/javascript/shared/orchard.js`, `app/javascript/stats/dateHelpers.js`, `app/javascript/stats/urlParams.js`.
-- Webpacker entry files live in `app/javascript/packs` and use entry-oriented names: `case.entry.jsx`, `catalog.entry.jsx`, `deployment.entry.jsx`, plus global pack names such as `controllers.js` and `styles.js`.
-- Stimulus controllers use the `*_controller.js` suffix: `app/javascript/controllers/case_stats_controller.js`, `app/javascript/controllers/clipboard_controller.js`.
-- RSpec files use `_spec.rb` and mirror source directories: `spec/controllers/cases/stats_controller_spec.rb`, `spec/services/case_stats_service/query_spec.rb`.
-- Jest files use `.test.js` or `.test.jsx` inside `__tests__` directories: `app/javascript/stats/__tests__/StatsPage.test.jsx`.
+- Rails models use singular snake_case names under `app/models/`, such as `app/models/case.rb`, `app/models/reader.rb`, and `app/models/deployment.rb`.
+- Rails controllers use plural snake_case names ending in `_controller.rb`, such as `app/controllers/cases_controller.rb` and `app/controllers/deployments_controller.rb`.
+- Namespaced Rails classes mirror directory paths, such as `Cases::StatsController` in `app/controllers/cases/stats_controller.rb` and `Cases::ShowSerializer` in `app/serializers/cases/show_serializer.rb`.
+- Pundit policies use singular resource names ending in `_policy.rb`, such as `app/policies/case_policy.rb` and `app/policies/deployment_policy.rb`.
+- ActiveJob classes use snake_case filenames ending in `_job.rb`, such as `app/jobs/case_clone_job.rb` and `app/jobs/edit_broadcast_job.rb`.
+- Service objects use snake_case filenames ending in `_service.rb` when workflow-oriented, such as `app/services/deploy_case_service.rb`, and nested helper files when they belong to a service namespace, such as `app/services/case_stats_service/query.rb`.
+- Draper decorators use snake_case filenames ending in `_decorator.rb`, such as `app/decorators/case_decorator.rb`.
+- ActiveModelSerializers use snake_case filenames ending in `_serializer.rb`, such as `app/serializers/case_serializer.rb`.
+- React components use PascalCase `.jsx` filenames, such as `app/javascript/stats/StatsPage.jsx` and `app/javascript/catalog/CatalogToolbar.jsx`.
+- Frontend helpers/state modules use camelCase `.js` filenames, such as `app/javascript/stats/dateHelpers.js` and `app/javascript/stats/state/statsStore.js`.
+- Webpacker packs use descriptive entry filenames under `app/javascript/packs/`, with React entries ending in `.entry.jsx`, such as `app/javascript/packs/case.entry.jsx`.
+- Jest frontend tests live in `__tests__` directories and use `.test.js` or `.test.jsx`, such as `app/javascript/stats/__tests__/StatsPage.test.jsx`.
+- RSpec tests use `_spec.rb`, such as `spec/controllers/cases/stats_controller_spec.rb` and `spec/services/case_stats_service_spec.rb`.
 
 **Directories:**
-- Rails domain namespaces mirror route/module namespaces: `app/controllers/cases`, `app/views/cases`, `app/serializers/cases`, `app/policies/cases`.
-- Frontend feature directories group by product area: `app/javascript/catalog`, `app/javascript/deployment`, `app/javascript/stats`, `app/javascript/conversation`, `app/javascript/overview`.
-- Shared frontend code belongs in `app/javascript/shared` for cross-feature domain helpers and `app/javascript/utility` for generic UI/browser utilities.
-- Redux code belongs in `app/javascript/redux/actions`, `app/javascript/redux/reducers`, and `app/javascript/redux/state.js`.
-- Admin resource configuration belongs in `app/controllers/admin`, `app/dashboards`, `app/views/admin`, and `app/fields`.
+- Rails namespaces map to directory names under the layer directory, such as `app/controllers/cases/`, `app/serializers/cases/`, and `app/policies/cases/`.
+- Frontend feature folders group components by product area, such as `app/javascript/catalog/`, `app/javascript/deployment/`, `app/javascript/conversation/`, `app/javascript/overview/`, and `app/javascript/stats/`.
+- Frontend shared code belongs in `app/javascript/shared/` for reusable UI/domain helpers and `app/javascript/utility/` for lower-level utility modules.
+- Nested service collaborators belong under a service-named directory, such as `app/services/case_stats_service/`.
 
 ## Where to Add New Code
 
 **New Rails Resource:**
-- Primary code: add model in `app/models`, controller in `app/controllers`, policy in `app/policies`, serializer in `app/serializers` when JSON is exposed, views in `app/views/<resource>`, and routes in `config/routes.rb`.
-- Tests: add specs under matching `spec/models`, `spec/controllers` or `spec/requests`, `spec/policies`, `spec/serializers`, and `spec/factories`.
-- Example pattern: `app/controllers/reading_lists_controller.rb`, `app/models/reading_list.rb`, `app/policies/reading_list_policy.rb`, `app/serializers/reading_list_serializer.rb`, `app/views/reading_lists`.
+- Primary code: Add the model in `app/models/`, controller in `app/controllers/`, policy in `app/policies/`, serializer in `app/serializers/` when JSON is needed, and view templates in `app/views/<resource>/`.
+- Routes: Add route declarations in `config/routes.rb`.
+- Tests: Add model specs in `spec/models/`, controller/request specs in `spec/controllers/` or `spec/requests/`, policy specs in `spec/policies/`, serializer specs in `spec/serializers/`, and factories in `spec/factories/`.
 
-**New Case-Scoped Endpoint:**
-- Primary code: place controller under `app/controllers/cases` if it is nested under `/cases/:case_slug/...`, add route inside the `resources :cases` block in `config/routes.rb`, and authorize via `app/policies/case_policy.rb` or a specific nested policy.
-- Tests: mirror namespace under `spec/controllers/cases` or use request specs under `spec/requests`.
-- Example pattern: `app/controllers/cases/stats_controller.rb`, `app/views/cases/stats`, `app/serializers/cases/stats_serializer.rb`.
+**New Case Subresource:**
+- Primary code: Add nested route under `resources :cases` in `config/routes.rb`, controller under `app/controllers/cases/` when case-specific, and views under `app/views/cases/<feature>/`.
+- Authorization: Add or extend policy behavior in `app/policies/case_policy.rb` or `app/policies/cases/`.
+- Tests: Add focused specs under `spec/controllers/cases/`, `spec/policies/`, and any relevant service/model spec directory.
 
-**New Frontend Pack:**
-- Primary code: add an entrypoint under `app/javascript/packs`, a feature root under `app/javascript/<feature>`, and mount markup in the matching Rails view under `app/views`.
-- Tests: place Jest tests in `app/javascript/<feature>/__tests__`.
-- Example pattern: `app/javascript/packs/catalog.entry.jsx` mounting `app/javascript/catalog/index.jsx` from `app/views/catalog/home.html.haml`.
-
-**New React Component Inside Existing Feature:**
-- Implementation: add the component to the relevant feature directory such as `app/javascript/stats`, `app/javascript/catalog`, `app/javascript/deployment`, or `app/javascript/conversation`.
-- Shared implementation: place cross-feature components in `app/javascript/shared` or generic UI helpers in `app/javascript/utility`.
-- Tests: use co-located `__tests__` when the feature already has one, such as `app/javascript/stats/__tests__`.
-
-**New Stimulus Behavior:**
-- Implementation: add `app/javascript/controllers/<name>_controller.js`.
-- Wiring: `app/javascript/packs/controllers.js` autoloads controllers through `require.context`, so Rails markup only needs matching `data-controller` attributes.
-- Example pattern: `app/javascript/controllers/case_stats_controller.js`.
-
-**New Redux Case Editor Behavior:**
-- Primary code: add action creators to `app/javascript/redux/actions`, reducer logic to `app/javascript/redux/reducers`, and state shape updates in `app/javascript/redux/state.js`.
-- Tests: add reducer/action tests near existing reducer tests under `app/javascript/redux/reducers/__tests__`.
-- Example pattern: `app/javascript/redux/actions/case.js`, `app/javascript/redux/reducers/caseData.js`.
-
-**New Multi-Step Backend Operation:**
-- Primary code: add a service object to `app/services`.
-- Controller usage: instantiate the service from the controller and keep authorization in the controller/policy layer.
-- Tests: add service specs under `spec/services`.
-- Example pattern: `app/services/deploy_case_service.rb`, `app/services/customize_deployment_service.rb`.
+**New Service Workflow:**
+- Primary code: Add a plain Ruby object under `app/services/`, following `app/services/deploy_case_service.rb` for transactional workflow or `app/services/case_stats_service.rb` for query/formatting collaborators.
+- Tests: Add service specs under `spec/services/`, with nested directories when the service has nested collaborators such as `spec/services/case_stats_service/`.
 
 **New Background Job:**
-- Primary code: add an ActiveJob class to `app/jobs` inheriting from `app/jobs/application_job.rb`.
-- Queue configuration: use queues declared in `config/sidekiq.yml` or add queue config deliberately.
-- Tests: add job specs under `spec/jobs`.
-- Example pattern: `app/jobs/case_clone_job.rb`, `app/jobs/refresh_indices_job.rb`.
+- Primary code: Add an ActiveJob subclass under `app/jobs/`, inheriting retry behavior from `app/jobs/application_job.rb`.
+- Queue config: Use queue names compatible with `config/sidekiq.yml`.
+- Tests: Add job specs under `spec/jobs/`.
 
-**New Realtime Channel:**
-- Primary code: add a channel under `app/channels`, authorize subscriptions with Pundit or explicit reader checks, and add frontend subscription code in the consuming feature.
-- Tests: add channel or integration coverage matching existing ActionCable conventions.
-- Example pattern: `app/channels/edits_channel.rb` plus subscription behavior in `app/javascript/Case.jsx`.
+**New Action Cable Channel:**
+- Primary code: Add the channel class under `app/channels/`, use `app/channels/application_cable/connection.rb` for authenticated `current_reader`, and gate subscription access with Pundit policies in `app/policies/`.
+- Frontend: Subscribe from the relevant React/Stimulus module under `app/javascript/`.
+- Tests: Add channel or integration coverage under `spec/` where existing channel test patterns apply.
 
-**New Serializer/API Payload:**
-- Primary code: add serializer under `app/serializers`, use camel-lower JSON behavior from `config/initializers/active_model_serializers.rb`, and include route links through `app/serializers/application_serializer.rb` helpers.
-- Tests: add serializer specs under `spec/serializers`.
-- Example pattern: `app/serializers/cases/show_serializer.rb`, `app/serializers/comment_threads/index_serializer.rb`.
+**New React Feature App:**
+- Primary code: Add feature modules under `app/javascript/<feature>/`, a Webpacker pack under `app/javascript/packs/<feature>.entry.jsx`, and a Rails view mount shell under `app/views/`.
+- Rails wiring: Include the pack with `javascript_pack_tag` from the relevant view, following `app/views/cases/show.html.erb` and `app/views/catalog/home.html.haml`.
+- Tests: Add Jest tests under `app/javascript/<feature>/__tests__/`.
 
-**New Admin Resource:**
-- Primary code: add dashboard in `app/dashboards`, controller override in `app/controllers/admin` only when behavior differs from Administrate defaults, and views/fields only when custom rendering is needed.
-- Routes: add resource under the `admin` namespace in `config/routes.rb`.
-- Example pattern: `app/dashboards/case_dashboard.rb`, `app/controllers/admin/cases_controller.rb`, `app/views/admin/cases`.
+**New Stimulus Behavior:**
+- Primary code: Add controller file under `app/javascript/controllers/`; `app/javascript/packs/controllers.js` auto-loads controllers from that directory.
+- Rails wiring: Add `data-controller="<name>"` and data attributes in the relevant `app/views/` template.
+- Tests: Add Jest coverage under the closest frontend `__tests__` directory when the behavior has logic beyond DOM glue.
 
-**New Database Change:**
-- Primary code: add migration under `db/migrate`.
-- Schema: this app uses SQL schema format, so verify resulting changes in `db/structure.sql`.
-- Model updates: add associations/validations/scopes to the relevant `app/models` file.
+**New Serializer:**
+- Primary code: Add serializer under `app/serializers/` or a matching namespace such as `app/serializers/cases/`.
+- Base behavior: Reuse `app/serializers/application_serializer.rb` for links, route helpers, `type`, `table`, `param`, and view context support.
+- Tests: Add serializer specs under `spec/serializers/`.
 
-**New Infrastructure Change:**
-- Primary code: edit `infra/sst.config.ts` and keep Node package changes inside `infra/package.json` and `infra/package-lock.json`.
-- Boundary: do not mix root Yarn/Webpacker dependencies with `infra` npm dependencies.
+**New Policy:**
+- Primary code: Add policy under `app/policies/`, with nested `Scope` when query visibility is needed and `AdminScope` when admin/editor views differ from public/user visibility.
+- Tests: Add policy specs under `spec/policies/`.
+
+**New Decorator:**
+- Primary code: Add decorator under `app/decorators/` only for presentation-specific methods used by views or serializers.
+- Usage: Decorate in controllers with `decorate` or `decorates_assigned`, following `app/controllers/cases_controller.rb` and `app/controllers/deployments_controller.rb`.
+- Tests: Add decorator specs under `spec/decorators/`.
+
+**New Case Content Type:**
+- Primary code: Add the model under `app/models/`, include `app/models/concerns/element.rb` when it belongs in the case table of contents, add a cloner under `app/cloners/`, add serializers/decorators/policies as needed, and add UI modules under `app/javascript/elements/` or a feature folder.
+- Database: Add migrations under `db/migrate/` and confirm `db/structure.sql` reflects the SQL schema.
+- Tests: Add model, cloner, serializer, policy, and frontend tests in the matching `spec/` and `app/javascript/**/__tests__/` locations.
 
 **Utilities:**
-- Shared Ruby helpers: use `app/services` for domain operations, `app/models/concerns` for reusable model behavior, `app/controllers/concerns` for reusable controller behavior, and `lib` for Rake tasks or non-autoloaded library support.
-- Shared frontend helpers: use `app/javascript/shared` for app/domain helpers and `app/javascript/utility` for reusable UI/browser helpers.
+- Ruby shared helpers: Add general support code to `lib/` only when it is not app-layer domain code, following `lib/sieve.rb`.
+- Rails concerns: Add reusable controller concerns to `app/controllers/concerns/` and model concerns to `app/models/concerns/`.
+- Frontend shared helpers: Add reusable frontend helpers to `app/javascript/shared/` or `app/javascript/utility/` depending on scope.
+
+**Infrastructure:**
+- Primary code: Add AWS/SST infrastructure changes in `infra/sst.config.ts` and dependency changes in `infra/package.json`.
+- Boundary: Keep infra package dependency management in `infra/package-lock.json`; root app dependency management stays in `Gemfile`, `Gemfile.lock`, `package.json`, and `yarn.lock`.
 
 ## Special Directories
 
-**`public/packs`:**
-- Purpose: Webpacker compiled development/production pack output.
-- Generated: Yes.
-- Committed: No files detected in git for `public/packs`.
+**`infra/`:**
+- Purpose: Separate SST v4 Node project for AWS infrastructure.
+- Generated: Partially; `infra/.sst/` is generated metadata, while `infra/sst.config.ts`, `infra/package.json`, `infra/package-lock.json`, and `infra/tsconfig.json` are source/config files.
+- Committed: Source/config files are committed; generated SST cache content under `infra/.sst/` is project tooling output.
 
-**`public/packs-test`:**
-- Purpose: Webpacker compiled test pack output.
-- Generated: Yes.
-- Committed: No files detected in git for `public/packs-test`.
-
-**`public/assets`:**
-- Purpose: Sprockets compiled asset output.
-- Generated: Yes.
-- Committed: No files detected in git for `public/assets`.
-
-**`storage`:**
-- Purpose: Local ActiveStorage file store.
-- Generated: Yes.
-- Committed: No files detected in git for `storage`.
-
-**`infra/node_modules`:**
-- Purpose: Installed dependencies for the separate SST project.
-- Generated: Yes.
-- Committed: No files detected in git for `infra/node_modules`.
-
-**`flow-typed`:**
-- Purpose: Flow type stubs for JavaScript dependencies.
-- Generated: Partially, through Flow tooling.
+**`app/javascript/packs/`:**
+- Purpose: Webpacker entrypoint directory referenced by Rails `javascript_pack_tag`.
+- Generated: No.
 - Committed: Yes.
 
-**`db/migrate`:**
+**`app/assets/`:**
+- Purpose: Sprockets asset pipeline source for Rails-managed assets.
+- Generated: No.
+- Committed: Yes.
+
+**`db/structure.sql`:**
+- Purpose: Canonical SQL schema for PostgreSQL-specific database objects, including `cases_search_index`.
+- Generated: Yes, by Rails database schema dump.
+- Committed: Yes.
+
+**`db/migrate/`:**
 - Purpose: Rails migration history.
-- Generated: No; migration files are source-controlled application changes.
+- Generated: No.
 - Committed: Yes.
 
-**`.planning/codebase`:**
-- Purpose: GSD codebase intelligence documents consumed by planning/execution commands.
-- Generated: Yes, by mapper agents.
-- Committed: Managed by the GSD orchestrator.
+**`flow-typed/`:**
+- Purpose: Flow type definitions for third-party packages and project stubs.
+- Generated: Partially, depending on `flow-typed` usage.
+- Committed: Yes.
+
+**`spec/fixtures/`:**
+- Purpose: Test fixture files for RSpec.
+- Generated: No.
+- Committed: Yes.
+
+**`.planning/codebase/`:**
+- Purpose: Generated codebase intelligence consumed by GSD planning/execution commands.
+- Generated: Yes.
+- Committed: Project-dependent; update only requested documents such as `.planning/codebase/ARCHITECTURE.md` and `.planning/codebase/STRUCTURE.md` during mapping.
+
+**`.env`, `.env.dev`, `.env.ignore`, `.envrc`:**
+- Purpose: Environment configuration files at the project root.
+- Generated: No.
+- Committed: Project-dependent; do not read or quote contents because these files may contain secrets.
+
+**`config/credentials.yml.enc` and `config/secrets.yml`:**
+- Purpose: Rails credential/secret configuration files.
+- Generated: No.
+- Committed: Project-dependent; do not read or quote contents because these files may contain secrets.
+
+**`tmp/` and `log/`:**
+- Purpose: Runtime temporary files and logs.
+- Generated: Yes.
+- Committed: Only placeholder/control files such as `log/.keep` and `tmp/restart.txt` should be treated as source-adjacent.
 
 ---
 
