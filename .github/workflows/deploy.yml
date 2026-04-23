@@ -1,7 +1,28 @@
-name: Deploy
+name: Deploy AWS
 
 on:
   workflow_dispatch:
+    inputs:
+      stage:
+        description: SST stage to deploy
+        required: true
+        type: choice
+        default: staging
+        options:
+          - staging
+          - production
+      action:
+        description: Deploy or remove the selected stage
+        required: true
+        type: choice
+        default: deploy
+        options:
+          - deploy
+          - remove
+
+concurrency:
+  group: gala-${{ github.event.inputs.stage }}
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -12,9 +33,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: infra/package-lock.json
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
           aws-region: us-west-2
 
-      - run: aws sts get-caller-identity | cat
+      - name: Refuse production removal
+        if: github.event.inputs.stage == 'production' && github.event.inputs.action == 'remove'
+        run: |
+          echo "Refusing to remove production from CI."
+          exit 1
+
+      - name: Install infra dependencies
+        working-directory: infra
+        run: npm ci
+
+      - name: Install SST providers
+        working-directory: infra
+        run: npx sst install
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity | cat
+
+      - name: Deploy or remove with SST
+        working-directory: infra
+        run: |
+          if [ "${{ github.event.inputs.action }}" = "remove" ]; then
+            npx sst remove --stage "${{ github.event.inputs.stage }}"
+          else
+            npx sst deploy --stage "${{ github.event.inputs.stage }}"
+          fi

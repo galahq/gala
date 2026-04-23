@@ -42,6 +42,7 @@ localhost.key
 /config/master.key
 
 /storage
+/infra/.sst/
 
 spec/examples.txt
 .OLD
