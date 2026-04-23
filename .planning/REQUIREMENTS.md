@@ -101,53 +101,53 @@ Explicitly excluded from the v1 migration milestone.
 
 ## Traceability
 
-Roadmap creation fills the phase mapping. Until then, every v1 requirement is pending and unmapped.
+Roadmap creation maps every v1 requirement to exactly one phase.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HLTH-01 | TBD | Pending |
-| HLTH-02 | TBD | Pending |
-| HLTH-03 | TBD | Pending |
-| DPLY-01 | TBD | Pending |
-| DPLY-02 | TBD | Pending |
-| DPLY-03 | TBD | Pending |
-| DPLY-04 | TBD | Pending |
-| SECR-01 | TBD | Pending |
-| SECR-02 | TBD | Pending |
-| SECR-03 | TBD | Pending |
-| SECR-04 | TBD | Pending |
-| STOR-01 | TBD | Pending |
-| STOR-02 | TBD | Pending |
-| STOR-03 | TBD | Pending |
-| STOR-04 | TBD | Pending |
-| STAG-01 | TBD | Pending |
-| STAG-02 | TBD | Pending |
-| STAG-03 | TBD | Pending |
-| STAG-04 | TBD | Pending |
-| STAG-05 | TBD | Pending |
-| STAG-06 | TBD | Pending |
-| STAG-07 | TBD | Pending |
-| STAG-08 | TBD | Pending |
-| TASK-01 | TBD | Pending |
-| TASK-02 | TBD | Pending |
-| TASK-03 | TBD | Pending |
-| TASK-04 | TBD | Pending |
-| TASK-05 | TBD | Pending |
-| DATA-01 | TBD | Pending |
-| DATA-02 | TBD | Pending |
-| DATA-03 | TBD | Pending |
-| DATA-04 | TBD | Pending |
-| DATA-05 | TBD | Pending |
-| PROD-01 | TBD | Pending |
-| PROD-02 | TBD | Pending |
-| PROD-03 | TBD | Pending |
-| PROD-04 | TBD | Pending |
+| HLTH-01 | Phase 1 | Pending |
+| HLTH-02 | Phase 1 | Pending |
+| HLTH-03 | Phase 1 | Pending |
+| DPLY-01 | Phase 1 | Pending |
+| DPLY-02 | Phase 1 | Pending |
+| DPLY-03 | Phase 1 | Pending |
+| DPLY-04 | Phase 1 | Pending |
+| SECR-01 | Phase 1 | Pending |
+| SECR-02 | Phase 1 | Pending |
+| SECR-03 | Phase 1 | Pending |
+| SECR-04 | Phase 1 | Pending |
+| STOR-01 | Phase 1 | Pending |
+| STOR-02 | Phase 1 | Pending |
+| STOR-03 | Phase 2 | Pending |
+| STOR-04 | Phase 2 | Pending |
+| STAG-01 | Phase 2 | Pending |
+| STAG-02 | Phase 2 | Pending |
+| STAG-03 | Phase 2 | Pending |
+| STAG-04 | Phase 2 | Pending |
+| STAG-05 | Phase 2 | Pending |
+| STAG-06 | Phase 2 | Pending |
+| STAG-07 | Phase 2 | Pending |
+| STAG-08 | Phase 2 | Pending |
+| TASK-01 | Phase 2 | Pending |
+| TASK-02 | Phase 2 | Pending |
+| TASK-03 | Phase 2 | Pending |
+| TASK-04 | Phase 4 | Pending |
+| TASK-05 | Phase 2 | Pending |
+| DATA-01 | Phase 3 | Pending |
+| DATA-02 | Phase 3 | Pending |
+| DATA-03 | Phase 4 | Pending |
+| DATA-04 | Phase 4 | Pending |
+| DATA-05 | Phase 4 | Pending |
+| PROD-01 | Phase 4 | Pending |
+| PROD-02 | Phase 5 | Pending |
+| PROD-03 | Phase 5 | Pending |
+| PROD-04 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 37 total
-- Mapped to phases: 0
-- Unmapped: 37 (pending roadmap)
+- Mapped to phases: 37
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-23*
-*Last updated: 2026-04-23 after initial definition*
+*Last updated: 2026-04-23 after roadmap creation*
