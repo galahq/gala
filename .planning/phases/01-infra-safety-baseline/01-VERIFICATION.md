@@ -35,6 +35,7 @@ score: 9/9 truths verified
 |----------|----------|--------|---------|
 | `config/routes.rb` | Dedicated Rails health route | VERIFIED | Contains `get 'up'` with constant `OK` response. |
 | `infra/sst.config.ts` | SST health checks, env, and S3 task-role policy | VERIFIED | Contains `/up`, shared environment, and `msc-gala` S3 role policies. |
+| `infra/package.json`, `infra/package-lock.json`, `infra/tsconfig.json` | SST package boundary | VERIFIED | Tracks Node >=20/npm/SST v4 package metadata required by Phase 2 deploy commands. |
 | `spec/requests/health_check_spec.rb` | Request coverage for health endpoint | VERIFIED | Focused spec passes in Docker. |
 | `docs/aws-sst-secret-inventory.md` | Secret and runtime environment inventory | VERIFIED | Required and candidate config names documented without values. |
 | `docs/aws-sst-phase-1-preflight.md` | Deploy/tooling/image/storage checklist | VERIFIED | Includes guardrails, platform-specific image build, storage provider-chain checks. |
@@ -108,6 +109,7 @@ score: 9/9 truths verified
 - `rg -n 'AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY' config/storage.yml` - no matches, expected exit 1.
 - `docker build --build-arg rails_env=production --build-arg secret_key_base=build-placeholder -t gala-production-preflight .` - failed on host-default `linux/arm64` due `node-sass`/`node-gyp` Python lookup; not the SST target platform.
 - `docker build --platform linux/amd64 --build-arg rails_env=production --build-arg secret_key_base=build-placeholder -t gala-production-preflight .` - passed, including `bundle exec rails assets:precompile`.
+- `infra/package.json`, `infra/package-lock.json`, and `infra/tsconfig.json` are tracked with the SST v4 package boundary required by Phase 2.
 
 ---
 *Verified: 2026-04-23T08:56:04Z*
