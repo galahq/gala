@@ -70,6 +70,25 @@ Expected checks:
 - The build does not require live production secrets beyond the placeholder `secret_key_base`.
 - Root app dependencies stay on the app's pinned runtime versions.
 
+## Storage Provider Chain Preflight
+
+`config/storage.yml` should keep the `amazon` service free of explicit static AWS access keys. In AWS ECS, Active Storage should use the AWS SDK provider chain and receive S3 credentials from the task role policies declared in `infra/sst.config.ts`.
+
+Run from the repo root:
+
+```bash
+ruby -rpathname -rerb -ryaml -e 'class NullCredentials; def dig(*); nil; end; end; class NullApplication; def credentials; NullCredentials.new; end; end; module Rails; def self.root; Pathname.new(Dir.pwd); end; def self.application; NullApplication.new; end; end; YAML.safe_load(ERB.new(File.read("config/storage.yml")).result, aliases: true); puts "storage yaml ok"'
+rg -n 'AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY' config/storage.yml
+```
+
+Expected checks:
+
+- `storage.yml` parses after ERB evaluation.
+- The `amazon` service uses `AWS_REGION` and `S3_BUCKET` with safe defaults.
+- `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are not required by the storage config.
+- ECS web, worker, and task roles keep scoped access to the existing `msc-gala` bucket.
+- Full Active Storage upload/download behavior remains a Phase 2 staging validation item.
+
 ## Secrets And Runtime Config Preflight
 
 Use `docs/aws-sst-secret-inventory.md` as the value-free checklist.

@@ -6,13 +6,13 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-# Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
+# In AWS ECS, omit explicit keys so the AWS SDK can use task-role credentials.
+# Locally or on legacy platforms, standard AWS credential environment variables
+# are still picked up by the SDK provider chain when present.
 amazon:
   service: S3
-  access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
-  secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
-  region: us-west-2
-  bucket: msc-gala
+  region: <%= ENV.fetch('AWS_REGION', 'us-west-2') %>
+  bucket: <%= ENV.fetch('S3_BUCKET', 'msc-gala') %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
