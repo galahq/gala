@@ -9,25 +9,25 @@ Requirements for the first AWS/SST migration milestone. Each requirement must be
 
 ### Health And Deploy Guardrails
 
-- [ ] **HLTH-01**: An unauthenticated lightweight health endpoint returns a fast successful response without depending on the catalog root page or user-facing rendering.
-- [ ] **HLTH-02**: SST ALB target health checks use the dedicated health endpoint instead of `/`.
-- [ ] **HLTH-03**: ECS container health checks use the dedicated health endpoint instead of `/`.
-- [ ] **DPLY-01**: The GitHub Actions AWS deploy workflow keeps `staging` and `production` stage selection explicit.
-- [ ] **DPLY-02**: Production removal remains blocked in GitHub Actions and retained by SST production removal policy.
-- [ ] **DPLY-03**: The `infra/` package remains isolated on Node >=20, npm, SST v4, and `package-lock.json`, while the Rails app root remains on its pinned Ruby/Node/Yarn toolchain.
-- [ ] **DPLY-04**: The production Docker image build path is validated with the existing Rails/Webpacker/Sprockets asset precompile behavior.
+- [x] **HLTH-01**: An unauthenticated lightweight health endpoint returns a fast successful response without depending on the catalog root page or user-facing rendering.
+- [x] **HLTH-02**: SST ALB target health checks use the dedicated health endpoint instead of `/`.
+- [x] **HLTH-03**: ECS container health checks use the dedicated health endpoint instead of `/`.
+- [x] **DPLY-01**: The GitHub Actions AWS deploy workflow keeps `staging` and `production` stage selection explicit.
+- [x] **DPLY-02**: Production removal remains blocked in GitHub Actions and retained by SST production removal policy.
+- [x] **DPLY-03**: The `infra/` package remains isolated on Node >=20, npm, SST v4, and `package-lock.json`, while the Rails app root remains on its pinned Ruby/Node/Yarn toolchain.
+- [x] **DPLY-04**: The production Docker image build path is validated with the existing Rails/Webpacker/Sprockets asset precompile behavior.
 
 ### Secrets And Environment
 
-- [ ] **SECR-01**: Required Heroku production config vars are inventoried and classified as boot-critical, feature-critical, or optional for SST stages.
-- [ ] **SECR-02**: SST secrets are declared, set, and injected for Rails keys, LTI, Mapbox, SES SMTP, and any production-used OAuth/Sentry integrations.
-- [ ] **SECR-03**: Web, worker, migration, search refresh, and weekly report tasks receive the same required runtime environment values unless a difference is explicitly documented.
-- [ ] **SECR-04**: Stage-specific `BASE_URL`, domains, Rails environment, Redis URL, database URL, S3 bucket, and concurrency values are verified for staging and production.
+- [x] **SECR-01**: Required Heroku production config vars are inventoried and classified as boot-critical, feature-critical, or optional for SST stages.
+- [x] **SECR-02**: SST secrets are declared, set, and injected for Rails keys, LTI, Mapbox, SES SMTP, and any production-used OAuth/Sentry integrations.
+- [x] **SECR-03**: Web, worker, migration, search refresh, and weekly report tasks receive the same required runtime environment values unless a difference is explicitly documented.
+- [x] **SECR-04**: Stage-specific `BASE_URL`, domains, Rails environment, Redis URL, database URL, S3 bucket, and concurrency values are verified for staging and production.
 
 ### Storage And AWS Identity
 
-- [ ] **STOR-01**: Active Storage production S3 configuration works in ECS using IAM task-role credentials without requiring static AWS access keys.
-- [ ] **STOR-02**: ECS web, worker, migration, search refresh, and weekly report task roles have only the S3 bucket permissions they need for `msc-gala`.
+- [x] **STOR-01**: Active Storage production S3 configuration works in ECS using IAM task-role credentials without requiring static AWS access keys.
+- [x] **STOR-02**: ECS web, worker, migration, search refresh, and weekly report task roles have only the S3 bucket permissions they need for `msc-gala`.
 - [ ] **STOR-03**: Staging validates Active Storage direct upload, object read, object delete/purge, and background analysis/purge behavior.
 - [ ] **STOR-04**: The project documents whether staging writes to `msc-gala`, uses a stage prefix, or uses a separate staging bucket.
 
@@ -105,19 +105,19 @@ Roadmap creation maps every v1 requirement to exactly one phase.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HLTH-01 | Phase 1 | Pending |
-| HLTH-02 | Phase 1 | Pending |
-| HLTH-03 | Phase 1 | Pending |
-| DPLY-01 | Phase 1 | Pending |
-| DPLY-02 | Phase 1 | Pending |
-| DPLY-03 | Phase 1 | Pending |
-| DPLY-04 | Phase 1 | Pending |
-| SECR-01 | Phase 1 | Pending |
-| SECR-02 | Phase 1 | Pending |
-| SECR-03 | Phase 1 | Pending |
-| SECR-04 | Phase 1 | Pending |
-| STOR-01 | Phase 1 | Pending |
-| STOR-02 | Phase 1 | Pending |
+| HLTH-01 | Phase 1 | Complete |
+| HLTH-02 | Phase 1 | Complete |
+| HLTH-03 | Phase 1 | Complete |
+| DPLY-01 | Phase 1 | Complete |
+| DPLY-02 | Phase 1 | Complete |
+| DPLY-03 | Phase 1 | Complete |
+| DPLY-04 | Phase 1 | Complete |
+| SECR-01 | Phase 1 | Complete |
+| SECR-02 | Phase 1 | Complete |
+| SECR-03 | Phase 1 | Complete |
+| SECR-04 | Phase 1 | Complete |
+| STOR-01 | Phase 1 | Complete |
+| STOR-02 | Phase 1 | Complete |
 | STOR-03 | Phase 2 | Pending |
 | STOR-04 | Phase 2 | Pending |
 | STAG-01 | Phase 2 | Pending |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
+status: ready_to_plan
 stopped_at: Phase 1 context gathered
-last_updated: "2026-04-23T08:22:16.724Z"
-last_activity: 2026-04-23 — Initialized project, research, requirements, and roadmap for Gala SST Infrastructure Migration
+last_updated: "2026-04-23T08:56:04Z"
+last_activity: 2026-04-23 — Completed Phase 1: Infra Safety Baseline
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 0
   completed_plans: 0
-  percent: 0
+  percent: 20
 ---
 
 # Project State
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-23)
 
 **Core value:** Gala can run on AWS through SST with the same production behavior users rely on today, at lower recurring cost and without adding unnecessary operational complexity.
-**Current focus:** Phase 1: Infra Safety Baseline
+**Current focus:** Phase 2: Staging Runtime Parity
 
 ## Current Position
 
-Phase: 1 of 5 (Infra Safety Baseline)
-Plan: 0 of 3 in current phase
+Phase: 2 of 5 (staging runtime parity)
+Plan: Not started
 Status: Ready to plan
-Last activity: 2026-04-23 — Initialized project, research, requirements, and roadmap for Gala SST Infrastructure Migration
+Last activity: 2026-04-23 — Completed Phase 1: Infra Safety Baseline
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
+- Total plans completed: 3
 - Average duration: N/A
 - Total execution time: 0.0 hours
 
@@ -44,7 +44,7 @@ Progress: [░░░░░░░░░░] 0%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 1 | 3 | - | - |
 
 **Recent Trend:**
 
@@ -70,7 +70,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 1 must resolve or validate Active Storage S3 IAM task-role behavior because `config/storage.yml` still references static AWS key env vars.
+- Staging SST secret values must be set outside the repo before Phase 2 deploy validation. See `.planning/phases/01-infra-safety-baseline/01-USER-SETUP.md`.
 - Action Mailbox Amazon ingress setup is not fully represented in the current SST config and must be documented or validated before production cutover.
 
 ## Deferred Items
@@ -83,6 +83,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-23T08:22:16.717Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-infra-safety-baseline/01-CONTEXT.md
+Last session: 2026-04-23T08:56:04Z
+Stopped at: Phase 2 ready to plan
+Resume file: .planning/phases/01-infra-safety-baseline/01-VERIFICATION.md

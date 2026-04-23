@@ -10,7 +10,7 @@ This roadmap moves Gala from its Heroku-style runtime to AWS/SST by proving the 
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Infra Safety Baseline** - Make AWS deploys, health checks, secrets, app image builds, and storage identity safe enough for staging.
+- [x] **Phase 1: Infra Safety Baseline** - Make AWS deploys, health checks, secrets, app image builds, and storage identity safe enough for staging. (completed 2026-04-23)
 - [ ] **Phase 2: Staging Runtime Parity** - Prove the current Gala runtime behavior on AWS staging across web, worker, Redis, uploads, mail, scheduled tasks, and diagnostics.
 - [ ] **Phase 3: Data Migration Rehearsal** - Rehearse Heroku Postgres to RDS migration and validate data, schema, search, and rollback assumptions before production pressure.
 - [ ] **Phase 4: Production Cutover** - Move production data and traffic to AWS with freeze/drain, DNS/TLS, callback, smoke-test, schedule handoff, and rollback controls.
@@ -39,9 +39,9 @@ This roadmap moves Gala from its Heroku-style runtime to AWS/SST by proving the 
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Add dedicated health endpoint and wire SST health checks
-- [ ] 01-02: Inventory secrets, stage environment, and deploy guardrails
-- [ ] 01-03: Validate image build/tooling boundary and IAM-based S3 credential path
+- [x] 01-01: Add dedicated health endpoint and wire SST health checks
+- [x] 01-02: Inventory secrets, stage environment, and deploy guardrails
+- [x] 01-03: Validate image build/tooling boundary and IAM-based S3 credential path
 
 ### Phase 2: Staging Runtime Parity
 **Goal**: AWS staging proves the existing Gala application behavior across web, worker, Redis/Valkey, uploads, mail, scheduled tasks, Action Cable, logs, and diagnostics.
@@ -141,7 +141,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Infra Safety Baseline | 0/3 | Not started | - |
+| 1. Infra Safety Baseline | 3/3 | Complete    | 2026-04-23 |
 | 2. Staging Runtime Parity | 0/3 | Not started | - |
 | 3. Data Migration Rehearsal | 0/2 | Not started | - |
 | 4. Production Cutover | 0/3 | Not started | - |
