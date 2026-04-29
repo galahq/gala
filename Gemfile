@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 ruby file: '.ruby-version' # 3.2.9
 
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 8.0'
 
 # Infrastructure
 gem 'aws-sdk-s3'
@@ -51,7 +51,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.13' # consider jsonapi-serializer
+gem 'active_model_serializers', '~> 0.10', '>= 0.10.16' # consider jsonapi-serializer
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'
@@ -69,8 +69,9 @@ gem 'rexml'
 # gem 'case_grid', git: 'https://github.com/galahq/case_grid'
 
 gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
+gem 'sprockets', '~> 4.2'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'webpacker', '~> 5.4'
+gem 'webpacker', '= 6.0.0.rc.5'
 
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
@@ -95,7 +96,7 @@ gem 'factory_bot_rails'
 gem 'faker'
 
 group :development do
-  gem 'bullet'
+  gem 'bullet', require: false
   gem 'foreman'
   gem 'listen', '~> 3.7'
   # Spring speeds up development

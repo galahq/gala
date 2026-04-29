@@ -28,6 +28,13 @@ describe('Orchard (API service)', () => {
       await expect(handleResponse(res)).resolves.toBeUndefined()
     })
 
+    it('resolves with no value from an empty successful JSON res', async () => {
+      const headers = new Headers({ 'Content-Type': 'application/json' })
+      const res = new Response(null, { status: 201, headers })
+
+      await expect(handleResponse(res)).resolves.toBeUndefined()
+    })
+
     it('throws if a successful res has a malformed body', async () => {
       const body = '{ id: 1'
       const headers = new Headers({ 'Content-Type': 'application/json' })

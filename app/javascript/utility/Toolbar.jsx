@@ -41,6 +41,18 @@ type BarGroup = Array<?BarElement>
 const pass = (element: BarButton | BarMenu) =>
   omit(['message', 'spotlightKey'], element)
 
+function withBlueprint4Classes(className: string): string {
+  return className
+    .split(/\s+/)
+    .filter(Boolean)
+    .reduce((classes: string[], name: string) => {
+      classes.push(name)
+      if (name.startsWith('pt-')) classes.push(name.replace(/^pt-/, 'bp4-'))
+      return classes
+    }, [])
+    .join(' ')
+}
+
 type Props = {
   light?: boolean,
   groups: [BarGroup, BarGroup, BarGroup],
@@ -150,7 +162,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
 export default injectIntl(Toolbar)
 
 const Bar = styled.div.attrs(props => ({
-  className: props.light || 'pt-dark',
+  className: props.light || 'pt-dark bp4-dark',
 }))`
   width: 100%;
   overflow: auto;
@@ -181,7 +193,9 @@ const MaxWidthFlexContainer = styled(MaxWidthContainer)`
     justify-content: flex-end;
   }
 `
-const Group = styled.div.attrs(() => ({ className: 'pt-navbar-group' }))`
+const Group = styled.div.attrs(() => ({
+  className: 'pt-navbar-group bp4-navbar-group',
+}))`
   height: 36px !important;
   margin: 0 8px;
   flex: 1;
@@ -203,9 +217,13 @@ const Group = styled.div.attrs(() => ({ className: 'pt-navbar-group' }))`
         `
       : ''};
 `
-const Item = styled(Button).attrs(props => ({
-  className: props.className || 'pt-minimal',
-}))``
+const Item = styled(Button).attrs(props => {
+  const className = props.className || 'pt-minimal'
+
+  return {
+    className: withBlueprint4Classes(className),
+  }
+})``
 
 const StyledMenu = styled(Menu)`
   font-size: 90%;

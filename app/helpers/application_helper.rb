@@ -7,6 +7,21 @@ module ApplicationHelper
     self.output_buffer = render template: "layouts/#{layout}"
   end
 
+  def append_javascript_pack(*names)
+    names.each { |name| content_for(:javascript_pack_names, "#{name}\n") }
+    nil
+  end
+
+  def collected_javascript_pack_tag(*default_names, **options)
+    names = default_names + content_for(:javascript_pack_names).to_s.split
+    javascript_pack_tag(*names.uniq, **options)
+  end
+
+  def collected_stylesheet_pack_tag(*default_names, **options)
+    names = default_names + content_for(:javascript_pack_names).to_s.split
+    stylesheet_pack_tag(*names.uniq, **options)
+  end
+
   # Helpers for content_for blocks in view layouts
   %i[headline background_image_url email_footer].each do |key|
     ApplicationHelper.send(:define_method, key) do |val|

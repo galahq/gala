@@ -1,13 +1,13 @@
 # syntax = docker/dockerfile:1
 
-FROM ruby:3.2.9-bullseye
+FROM ruby:3.2.9-bookworm
 
 WORKDIR /gala
 
 # environment variables
 ENV BUNDLE_PATH="/usr/local/bundle" \
     NVM_DIR="/usr/local/nvm" \
-    NODE_VERSION="12.5.0" \
+    NODE_VERSION="18.20.4" \
     RAILS_LOG_TO_STDOUT="true" \
     RAILS_SERVE_STATIC_FILES="true"
 

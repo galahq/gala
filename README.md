@@ -12,7 +12,7 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 
 - Docker
 - Ruby 3.2.9
-- Node 12.5.0
+- Node 18.20.4
 - jemalloc (via `Aptfile` + Docker, preloaded in `entrypoint.sh`)
 
 Deployments target the `heroku-22` stack declared in `app.json`, so the
@@ -28,8 +28,8 @@ configuration.
 
 #### Using nodenv
 
-1. `nodenv install 12.5.0`
-2. `nodenv shell 12.5.0`
+1. `nodenv install 18.20.4`
+2. `nodenv shell 18.20.4`
 3. `npm install yarn`
 4. `yarn`
 
@@ -53,6 +53,11 @@ When you update dependencies be sure to run these commands locally first
 Then you can run `docker compose up --build` to rebuild the containers with the new dependencies.
 
 If you update Javascript dependencies, you'll need to additionally run `docker compose run web yarn` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
+
+The JavaScript build now runs on Webpacker 6 / webpack 5 and uses Dart Sass
+through `sass-loader` 12.x.
+Blueprint styles now import the package CSS artifacts from `@blueprintjs/*`
+instead of the unpublished source SCSS paths.
 
 #### Other useful commands
 
@@ -84,4 +89,3 @@ per week.
 | [Sentry](https://sentry.io/) | Error monitoring |
 | [Semaphore CI](https://semaphoreci.com/) | Continuous integration |
 | [Github](https://github.com/) | Open source code management |
-

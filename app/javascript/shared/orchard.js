@@ -130,7 +130,9 @@ async function handleSuccessfulResponse (response: Response): Promise<any> {
     const contentType = response.headers.get('Content-Type')
     if (contentType != null) {
       if (contentType.match('application/json')) {
-        return await response.json()
+        const text = await response.text()
+        if (text.length === 0) return undefined
+        return JSON.parse(text)
       } else {
         return await response.text()
       }

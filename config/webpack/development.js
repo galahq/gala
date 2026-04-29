@@ -1,5 +1,5 @@
 /* @flow */
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const environment = require('./environment')
 
 // While webpacker still defaults to 'cheap-eval-source-map', we need to
@@ -7,4 +7,4 @@ const environment = require('./environment')
 // from surfacing
 const cheapModuleSourceMap = { devtool: 'cheap-module-source-map' }
 
-module.exports = merge(environment.toWebpackConfig(), cheapModuleSourceMap)
+module.exports = merge(environment, cheapModuleSourceMap)

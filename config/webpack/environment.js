@@ -2,32 +2,68 @@
  * @noflow
  */
 
-const { environment } = require('@rails/webpacker')
-const { flatten } = require('ramda')
+const { webpackConfig } = require('@rails/webpacker')
+const { merge } = require('webpack-merge')
 
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 //   .BundleAnalyzerPlugin
 //
 // environment.plugins.append('BundleAnalyzer', new BundleAnalyzerPlugin())
 
-const nodeModules = environment.loaders.get('nodeModules')
-nodeModules.exclude = flatten([nodeModules.exclude, /mapbox-gl/])
+const fileRule = webpackConfig.module.rules.find(
+  (rule) => rule.type === 'asset/resource'
+)
 
-environment.loaders.get(
-  'file'
-).test = /\.(jpg|jpeg|png|gif|eot|otf|ttf|woff|woff2)$/i
+const sassRule = webpackConfig.module.rules.find((rule) =>
+  String(rule.test).includes('scss')
+)
 
-environment.loaders.append('svg', {
-  test: /\.svg$/,
-  loader: 'raw-loader',
-})
+if (sassRule) {
+  const sassLoader = sassRule.use.find(
+    (entry) =>
+      typeof entry === 'object' &&
+      entry.loader &&
+      entry.loader.includes('sass-loader')
+  )
 
-environment.loaders.append('yaml', {
-  test: /\.yaml$|\.yml$/,
-  use: [{ loader: 'json-loader' }, { loader: 'yaml-loader' }],
-})
+  if (sassLoader) {
+    sassLoader.options = sassLoader.options || {}
+    sassLoader.options.implementation = require('sass')
+    sassLoader.options.sassOptions = {
+      ...(sassLoader.options.sassOptions || {}),
+      outputStyle: process.env.NODE_ENV === 'production' ? 'compressed' : 'expanded',
+    }
+  }
+}
 
-environment.config.merge({
+if (fileRule) {
+  fileRule.test = /\.(jpg|jpeg|png|gif|eot|otf|ttf|woff|woff2)$/i
+}
+
+module.exports = merge(webpackConfig, {
+  resolve: {
+    extensions: [
+      ...webpackConfig.resolve.extensions,
+      '.scss',
+      '.sass',
+      '.css',
+    ],
+    fallback: {
+      path: require.resolve('path-browserify'),
+    },
+  },
+  module: {
+    rules: [
+      {
+        test: /\.svg$/,
+        use: [{ loader: 'raw-loader', options: { esModule: false } }],
+      },
+      {
+        test: /\.yaml$|\.yml$/,
+        use: [{ loader: 'json-loader' }, { loader: 'yaml-loader' }],
+      },
+    ],
+  },
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -43,5 +79,3 @@ environment.config.merge({
     runtimeChunk: 'single',
   },
 })
-
-module.exports = environment
