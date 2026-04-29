@@ -97,7 +97,7 @@ function AboutHowToNews({ intl }) {
             </AboutLink>
           </li>
           <li>
-            <FormattedMessage id="catalog.aboutHowToNews.followUsText" />
+            <i><FormattedMessage id="catalog.aboutHowToNews.followUsText" /></i>
             <SocialNav
               aria-label={intl.formatMessage({
                 id: 'catalog.aboutHowToNews.socialNavAriaLabel',

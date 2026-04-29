@@ -454,14 +454,14 @@ en:
     about_how_to_news:
       about_title: About Gala
       about_body: >
-        Gala is working to make learning more grounded, dynamic, and collaborative.
+       Gala is making learning more grounded, dynamic, and collaborative.
         We maintain the Gala platform for open educational modules and case studies
         and work with teams innovating around module creation and use.
       team_link_text: Team
       publications_link_text: Publications
       projects_partners_link_text: Projects & Partners
       partner_with_us_link_text: Partner With Us
-      follow_us_text: "Follow Gala:"
+      follow_us_text: "Follow:"
       social_nav_aria_label: Follow Gala
       linkedin_aria_label: LinkedIn (opens in new tab)
       bluesky_aria_label: Bluesky (opens in new tab)
