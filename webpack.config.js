@@ -9,7 +9,8 @@ module.exports = (_env, argv) => {
 
   return {
     mode: isProduction ? 'production' : 'development',
-    devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+    // Disable source maps to prevent noisy *.map asset requests in Rails logs.
+    devtool: false,
     entry: {
       billboard: path.resolve(packsPath, 'billboard.entry.jsx'),
       case: path.resolve(packsPath, 'case.entry.jsx'),
@@ -44,7 +45,12 @@ module.exports = (_env, argv) => {
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader',
-            'sass-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                implementation: require('sass'),
+              },
+            },
           ],
         },
         {

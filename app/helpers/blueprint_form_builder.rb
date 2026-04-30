@@ -134,9 +134,11 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
-  def capture_yielding(*args)
-    @template.capture do
-      yield(*args)
+  def capture_yielding(*args, &block)
+    if @template.respond_to?(:capture_haml)
+      @template.capture_haml(*args, &block)
+    else
+      @template.capture(*args, &block)
     end
   end
 

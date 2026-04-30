@@ -3,17 +3,13 @@
 = form_for resource, as: resource_name, url: session_path(resource_name),
            builder: BlueprintFormBuilder do |f|
 
-  .pt-form-group
-    = f.label :email, class: 'pt-label'
-    .pt-form-content
-      = f.email_field :email, class: %w[pt-input pt-fill], spellcheck: false
+  = f.form_group :email do |f, error_classes|
+    = f.email_field :email, class: (%w[pt-input pt-fill] + error_classes),
+                            spellcheck: false
 
-  .pt-form-group
-    = f.label :password, class: 'pt-label'
-    .pt-form-content
-      = f.password_field :password,
-                         class: %w[pt-input pt-fill],
-                         autocomplete: "current-password"
+  = f.form_group :password do |f, error_classes|
+    = f.password_field :password, class: (%w[pt-input pt-fill] + error_classes),
+                                  autocomplete: "current-password"
 
   - if devise_mapping.rememberable?
     .pt-form-group
