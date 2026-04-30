@@ -32,6 +32,8 @@ localhost.key
 /public/assets
 !public/robots.txt
 !public/favicon.ico
+/app/assets/builds/*
+!/app/assets/builds/.keep
 
 /.yardoc/
 /doc/

@@ -24,7 +24,6 @@ services:
       PORT: 3000
     ports:
       - 3000:3000
-      - 3035:3035
     depends_on:
       db:
         condition: service_healthy

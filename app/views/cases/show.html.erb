@@ -15,7 +15,7 @@
   %>
 <% end %>
 
-<%=javascript_pack_tag "case"%>
+<%= javascript_include_tag "case", defer: true %>
 
 <%= content_for :head do %>
   <meta name="twitter:card" content="summary" />

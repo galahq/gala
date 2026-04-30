@@ -12,7 +12,7 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 
 - Docker
 - Ruby 3.2.9
-- Node 12.5.0
+- Node 20.19.0 (LTS baseline)
 - jemalloc (via `Aptfile` + Docker, preloaded in `entrypoint.sh`)
 
 Deployments target the `heroku-22` stack declared in `app.json`, so the
@@ -28,8 +28,8 @@ configuration.
 
 #### Using nodenv
 
-1. `nodenv install 12.5.0`
-2. `nodenv shell 12.5.0`
+1. `nodenv install 20.19.0`
+2. `nodenv shell 20.19.0`
 3. `npm install yarn`
 4. `yarn`
 

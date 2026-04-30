@@ -12,4 +12,4 @@
 #deployment-app{data: {params: render(template: 'deployments/edit',
                                       formats: [:json])}, style: "width: 100%"}
 
-= javascript_pack_tag 'deployment'
+= javascript_include_tag 'deployment', defer: true

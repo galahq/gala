@@ -7,7 +7,7 @@ WORKDIR /gala
 # environment variables
 ENV BUNDLE_PATH="/usr/local/bundle" \
     NVM_DIR="/usr/local/nvm" \
-    NODE_VERSION="12.5.0" \
+    NODE_VERSION="20.19.0" \
     RAILS_LOG_TO_STDOUT="true" \
     RAILS_SERVE_STATIC_FILES="true"
 
@@ -35,7 +35,7 @@ RUN mkdir -p $NVM_DIR \
     && nvm alias default "$NODE_VERSION" \
     && nvm use default \
     && npm install -g yarn \
-    && yarn install --check-files
+    && yarn install --frozen-lockfile
 
 # install gems
 RUN echo "gem: --no-document" > /etc/gemrc \

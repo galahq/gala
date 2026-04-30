@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 ruby file: '.ruby-version' # 3.2.9
 
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 7.1.0'
 
 # Infrastructure
 gem 'aws-sdk-s3'
@@ -51,7 +51,7 @@ gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.13' # consider jsonapi-serializer
+gem 'active_model_serializers', '~> 0.10.15' # compatible with Rails 7.1
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'
@@ -70,7 +70,8 @@ gem 'rexml'
 
 gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'webpacker', '~> 5.4'
+gem 'sprockets', '>= 4.2'
+gem 'jsbundling-rails'
 
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
