@@ -256,7 +256,7 @@ Common feature secrets to carry if used in production:
 The repo includes a GitHub Actions workflow that:
 
 - assumes an AWS role via OIDC
-- installs the separate `infra/` Node 20 package
+- installs the separate `infra/` Node 24 package
 - runs `sst deploy` or `sst remove`
 - supports `production` and on-demand `staging`
 

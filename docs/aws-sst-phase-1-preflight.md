@@ -6,8 +6,8 @@ GitHub Actions.
 
 ## Tooling Boundary
 
-- App root: Rails monolith with Ruby `3.2.9`, Bundler `2.4.19`, Node 12.5.0, and Yarn 1.
-- `infra/`: separate SST package with Node >=20, npm, `package-lock.json`, and SST `4.7.1`.
+- App root: Rails monolith with Ruby `4.0.3`, Bundler `2.4.19`, Node 24.15.0, and Yarn 1.
+- `infra/`: separate SST package with Node >=24 <25, npm, `package-lock.json`, and SST `4.7.1`.
 - Do not run root Yarn or Node 12 commands inside `infra/`.
 - Do not run `npm ci` from the app root.
 - Do not replace the app root Yarn dependency flow with npm.
@@ -23,7 +23,7 @@ GitHub Actions.
 
 ## Infra Preflight
 
-Run from `infra/` with Node `>=20`:
+Run from `infra/` with Node `>=24 <25`:
 
 ```bash
 npm ci
@@ -40,7 +40,7 @@ Expected checks:
 
 ## Root App Preflight
 
-Run from the repo root with the Rails app runtime, preferably through Docker when the host shell does not match Ruby `3.2.9` and Bundler `2.4.19`:
+Run from the repo root with the Rails app runtime, preferably through Docker when the host shell does not match Ruby `4.0.3` and Bundler `2.4.19`:
 
 ```bash
 docker compose run --no-deps -e RAILS_ENV=test web bundle exec rspec spec/requests/health_check_spec.rb
@@ -69,7 +69,7 @@ Expected checks:
 - Asset compilation runs through the Dockerfile path used by SST.
 - The Dockerfile still reaches `bundle exec rails assets:precompile` for production builds.
 - The build does not require live production secrets beyond the placeholder `secret_key_base`.
-- Root app dependencies stay on the app's pinned runtime versions.
+- Root app dependencies stay on the app's pinned Ruby 4.0.3 / Node 24.15.0 runtime versions.
 - The local platform matches SST's current `x86_64` service architecture. Without `--platform linux/amd64`, Apple Silicon hosts may build `linux/arm64` and fail in `node-sass` before reaching the actual AWS image path.
 
 ## Storage Provider Chain Preflight
