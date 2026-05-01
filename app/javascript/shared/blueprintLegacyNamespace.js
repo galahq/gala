@@ -1,69 +1,18 @@
 /**
  * @noflow
+ *
+ * Blueprint 4 changed the generated CSS namespace from `pt-` to `bp4-`, but
+ * Gala still has many hand-authored legacy `pt-*` class names. The actual
+ * Blueprint package CSS is loaded by Sprockets `application.css`; this file
+ * only mirrors legacy classes onto runtime DOM nodes so those elements
+ * receive the BP4 styles. Gala's JS-pack overrides stay in
+ * `shared/blueprint.scss`, so this bridge avoids a second raw-loader copy of
+ * Blueprint's CSS.
  */
 
-import blueprintCoreCss from '!!raw-loader!@blueprintjs/core/lib/css/blueprint.css'
-import blueprintDatetimeCss from '!!raw-loader!@blueprintjs/datetime/lib/css/blueprint-datetime.css'
-import blueprintPopoverCss from '!!raw-loader!@blueprintjs/popover2/lib/css/blueprint-popover2.css'
-import blueprintSelectCss from '!!raw-loader!@blueprintjs/select/lib/css/blueprint-select.css'
-
-const STYLE_ID = 'blueprint-legacy-pt-namespace'
 const LEGACY_NAMESPACE = 'pt-'
 const BLUEPRINT_NAMESPACE = 'bp4-'
-const RAILS_RENDERED_LEGACY_SELECTOR = '.Toolbar__bar, .window-admin'
-
-function cssText(module) {
-  return typeof module === 'string' ? module : module.default
-}
-
-function legacyNamespaceCss() {
-  return [
-    blueprintCoreCss,
-    blueprintDatetimeCss,
-    blueprintPopoverCss,
-    blueprintSelectCss,
-  ]
-    .map(cssText)
-    .join('\n\n')
-    .replace(/bp4/g, 'pt')
-}
-
-function firstApplicationStylesheet() {
-  return Array.from(document.querySelectorAll('link[rel~="stylesheet"]')).find(
-    link => {
-      const href = link.getAttribute('href') || ''
-      return (
-        href.includes('/assets/') ||
-        href.includes('/stylesheets/') ||
-        /application(?:-[a-f0-9]+)?\\.css/.test(href)
-      )
-    }
-  )
-}
-
-function installLegacyNamespaceStyle() {
-  if (typeof document === 'undefined' || document.getElementById(STYLE_ID)) {
-    return
-  }
-
-  const style = document.createElement('style')
-  style.id = STYLE_ID
-  style.appendChild(document.createTextNode(legacyNamespaceCss()))
-
-  // Shakapacker emits pack scripts with defer, so appending this bridge at
-  // runtime places Blueprint's generated `.pt-*` rules after Sprockets'
-  // application.css. Main loaded Blueprint before application.css, allowing
-  // Gala's Rails-rendered Sprockets styles (toolbar, admin buttons, forms) to
-  // win. Preserve that cascade by inserting the bridge before application.css.
-  const applicationStylesheet = firstApplicationStylesheet()
-  if (applicationStylesheet && applicationStylesheet.parentNode) {
-    applicationStylesheet.parentNode.insertBefore(style, applicationStylesheet)
-  } else {
-    document.head.appendChild(style)
-  }
-}
-
-installLegacyNamespaceStyle()
+const RAILS_RENDERED_LEGACY_SELECTOR = '.Toolbar__bar, .window-admin, .window.admin'
 
 function isRailsRenderedLegacyElement(node) {
   return (
