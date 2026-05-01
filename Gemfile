@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 ruby file: '.ruby-version' # 4.0.3
 
-gem 'rails', '~> 8.0'
+gem 'rails', '~> 8.1'
 
 # Ruby stdlib gems that are no longer available by default in Ruby 4.
 gem 'benchmark'

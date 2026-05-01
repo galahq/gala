@@ -1,13 +1,16 @@
 # syntax = docker/dockerfile:1
 
-FROM ruby:4.0.3-bookworm
+ARG RUBY_VERSION=4.0.3
+FROM ruby:${RUBY_VERSION}-slim-bookworm
 
 WORKDIR /gala
+
+ARG NODE_VERSION=24.15.0
 
 # environment variables
 ENV BUNDLE_PATH="/usr/local/bundle" \
     NVM_DIR="/usr/local/nvm" \
-    NODE_VERSION="24.15.0" \
+    NODE_VERSION="${NODE_VERSION}" \
     RAILS_LOG_TO_STDOUT="true" \
     RAILS_SERVE_STATIC_FILES="true"
 
@@ -39,7 +42,6 @@ RUN mkdir -p $NVM_DIR \
 
 # install gems
 RUN echo "gem: --no-document" > /etc/gemrc \
-    && gem update --system 3.3.22 \
     && gem install bundler:2.4.19 \
     && bundle config build.sassc --disable-march-tune-native \
     && bundle install --jobs 20 --retry 2 \
