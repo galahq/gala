@@ -49,8 +49,9 @@ export const Item = styled.li``
 
 // $FlowFixMe
 export const Link = styled(NavLink)`
-  color: #ebeae4;
+  color: #ebeae4 !important;
   display: flex;
+  text-decoration: none;
   flex-direction: row;
 
   ${p =>
