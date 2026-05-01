@@ -10,6 +10,7 @@ import blueprintSelectCss from '!!raw-loader!@blueprintjs/select/lib/css/bluepri
 const STYLE_ID = 'blueprint-legacy-pt-namespace'
 const LEGACY_NAMESPACE = 'pt-'
 const BLUEPRINT_NAMESPACE = 'bp4-'
+const RAILS_RENDERED_LEGACY_SELECTOR = '.Toolbar__bar, .window-admin'
 
 function cssText(module) {
   return typeof module === 'string' ? module : module.default
@@ -64,8 +65,16 @@ function installLegacyNamespaceStyle() {
 
 installLegacyNamespaceStyle()
 
+function isRailsRenderedLegacyElement(node) {
+  return (
+    node instanceof Element &&
+    node.closest(RAILS_RENDERED_LEGACY_SELECTOR) != null
+  )
+}
+
 function mirrorLegacyClasses(node) {
   if (!(node instanceof Element)) return
+  if (isRailsRenderedLegacyElement(node)) return
 
   const blueprintClasses = Array.from(node.classList)
     .filter(className => className.startsWith(LEGACY_NAMESPACE))
