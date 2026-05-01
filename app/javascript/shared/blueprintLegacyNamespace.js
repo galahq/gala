@@ -27,12 +27,42 @@ function legacyNamespaceCss() {
     .replace(/bp4/g, 'pt')
 }
 
-if (typeof document !== 'undefined' && !document.getElementById(STYLE_ID)) {
+function firstApplicationStylesheet() {
+  return Array.from(document.querySelectorAll('link[rel~="stylesheet"]')).find(
+    link => {
+      const href = link.getAttribute('href') || ''
+      return (
+        href.includes('/assets/') ||
+        href.includes('/stylesheets/') ||
+        /application(?:-[a-f0-9]+)?\\.css/.test(href)
+      )
+    }
+  )
+}
+
+function installLegacyNamespaceStyle() {
+  if (typeof document === 'undefined' || document.getElementById(STYLE_ID)) {
+    return
+  }
+
   const style = document.createElement('style')
   style.id = STYLE_ID
   style.appendChild(document.createTextNode(legacyNamespaceCss()))
-  document.head.appendChild(style)
+
+  // Shakapacker emits pack scripts with defer, so appending this bridge at
+  // runtime places Blueprint's generated `.pt-*` rules after Sprockets'
+  // application.css. Main loaded Blueprint before application.css, allowing
+  // Gala's Rails-rendered Sprockets styles (toolbar, admin buttons, forms) to
+  // win. Preserve that cascade by inserting the bridge before application.css.
+  const applicationStylesheet = firstApplicationStylesheet()
+  if (applicationStylesheet && applicationStylesheet.parentNode) {
+    applicationStylesheet.parentNode.insertBefore(style, applicationStylesheet)
+  } else {
+    document.head.appendChild(style)
+  }
 }
+
+installLegacyNamespaceStyle()
 
 function mirrorLegacyClasses(node) {
   if (!(node instanceof Element)) return
