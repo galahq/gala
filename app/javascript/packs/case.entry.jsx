@@ -2,6 +2,8 @@
  * @noflow
  */
 
+import 'shims/installProcess'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 

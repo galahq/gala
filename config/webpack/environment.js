@@ -7,6 +7,7 @@ const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 
 const webpackConfig = generateWebpackConfig()
+const nodeEnv = process.env.NODE_ENV || 'development'
 
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 //   .BundleAnalyzerPlugin
@@ -34,7 +35,7 @@ if (sassRule) {
     sassLoader.options.implementation = require('sass')
     sassLoader.options.sassOptions = {
       ...(sassLoader.options.sassOptions || {}),
-      outputStyle: process.env.NODE_ENV === 'production' ? 'compressed' : 'expanded',
+      outputStyle: nodeEnv === 'production' ? 'compressed' : 'expanded',
     }
   }
 }
@@ -47,11 +48,14 @@ module.exports = merge(webpackConfig, {
   plugins: [
     // Webpack 5 no longer injects Node's `process` global. Some legacy
     // browser dependencies still guard development-only code with
-    // process.env.NODE_ENV, so inline that value at compile time.
+    // process.env.NODE_ENV, so inline that value and provide a tiny local
+    // process object for lazy chunks that reference process directly.
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        process.env.NODE_ENV || 'development'
-      ),
+      __GALA_NODE_ENV__: JSON.stringify(nodeEnv),
+      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+    }),
+    new webpack.ProvidePlugin({
+      process: require.resolve('../../app/javascript/shims/process'),
     }),
   ],
   resolve: {
