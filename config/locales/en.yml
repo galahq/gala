@@ -194,18 +194,18 @@ en:
   cards:
     edit:
       citation_added: |
-        Citation added. Click the <span class="pt-tag pt-intent-success">
-        <span class="pt-icon pt-icon-ring"></span> Citation Marker</span> to
+        Citation added. Click the <span class="bp4-tag bp4-intent-success">
+        <span class="bp4-icon bp4-icon-ring"></span> Citation Marker</span> to
         edit.
       math_added: Math added.
       math_instructions: |
         To add math to your case, select the text you want to turn into a math
-        equation, then click the <span class="pt-tag">
-        <span class="pt-icon pt-icon-function"></span> Math</span> button.
+        equation, then click the <span class="bp4-tag">
+        <span class="bp4-icon bp4-icon-function"></span> Math</span> button.
       make_revealable_selection: |
         Please select the phrase that you would like to make revealable,
-        then click the <span class="pt-tag">
-        <span class="pt-icon pt-icon-search-template"></span> Add
+        then click the <span class="bp4-tag">
+        <span class="bp4-icon bp4-icon-search-template"></span> Add
         Revealable</span> button.
       citation_text: Title
       citation_url: URL
@@ -442,28 +442,6 @@ en:
       entry_exists: This entry already exists
       404_error: This QID does not exist or belongs to a different category
       schema_mismatch: The Wikidata item you selected doesn't match this item type. Select a different item type or Wikidata item.
-    linked_resources:
-      title: Linked resources
-      add: Add resource
-      save: Save resource
-      remove: Remove
-      resource_type_label: Resource Type
-      name_label: Name
-      url_or_doi_label: URL/DOI
-      wikidata_qid_label: Wikidata QID
-      description_label: Description
-      name_placeholder: Enter a resource name
-      url_or_doi_placeholder: Enter a URL or DOI
-      wikidata_qid_placeholder: Enter an optional Wikidata QID
-      description_placeholder: Add an optional short description
-      required_fields_error: Resource Type, name, and URL/DOI are required.
-      invalid_url_or_doi: Enter a valid URL (https://...) or DOI (10.xxxx/...).
-      description_too_long: Description must be 160 characters or fewer.
-      categories:
-        publication: Publication
-        event: Event
-        teaching_resource: Teaching resource
-        other: Other
     learn_more: Learn more
     my_library: My Dashboard
     natural_resources: Natural Resources
@@ -765,8 +743,8 @@ en:
     new:
       make_selection_html: >
         Please select the phrase that you would like to attach an Edgenote to,
-        then click the <span class="pt-tag">
-        <span class="pt-icon pt-icon-add-column-right"></span> Add
+        then click the <span class="bp4-tag">
+        <span class="bp4-icon bp4-icon-add-column-right"></span> Add
         Edgenote</span> button.
       new_edgenote: New Edgenote
   editorships:

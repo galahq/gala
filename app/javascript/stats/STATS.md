@@ -201,7 +201,7 @@ Ordered by impact-to-risk.
 - **PR7 (Date Picker State Simplification)**:
   - Removed `MutationObserver`-based DOM syncing from `DatePicker.jsx`.
   - Retained shortcut highlighting via computed selected index + scoped class sync effect.
-  - Simplified shortcut CSS to style only Blueprint’s `.pt-active` class.
+  - Simplified shortcut CSS to style only Blueprint’s `.bp4-active` class.
   - Added `DatePicker` unit test coverage.
 - **PR8 (Map Presentation Consolidation)**:
   - Inlined map presentation UI into `map/MapView.jsx`:

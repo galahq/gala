@@ -122,8 +122,6 @@ Rails.application.routes.draw do
 
     resources :translations, only: %i[new create show], param: :case_locale
 
-    resources :linked_resources, only: %i[create destroy]
-
     resources :wikidata_links, only: %i[create destroy]
 
     collection do

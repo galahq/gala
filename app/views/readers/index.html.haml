@@ -1,34 +1,34 @@
 .admin
   .admin__readers
-    %nav.pt-navbar
-      .pt-navbar-group.pt-align-left
-        .pt-navbar-heading Readers
+    %nav.bp4-navbar
+      .bp4-navbar-group.bp4-align-left
+        .bp4-navbar-heading Readers
         = form_for readers_path, method: :get, enforce_utf8: false do |f|
           = hidden_field_tag :role, params[:role]
-          .pt-input-group
-            %span.pt-icon.pt-icon-search
+          .bp4-input-group
+            %span.bp4-icon.bp4-icon-search
             = text_field_tag :name, params[:name],
-                             class: %w[pt-input pt-round pt-icon-search],
+                             class: %w[bp4-input bp4-round bp4-icon-search],
                              placeholder: 'Search readers...'
 
-      .pt-navbar-group.pt-align-right
+      .bp4-navbar-group.bp4-align-right
         = link_to readers_path,
-                  class: ['pt-button', 'pt-minimal',
-                          ('pt-active' unless params[:role] )] do
+                  class: ['bp4-button', 'bp4-minimal',
+                          ('bp4-active' unless params[:role] )] do
           All Readers
         = link_to readers_path(role: 'editor'),
-                  class: ['pt-button', 'pt-minimal',
-                          ('pt-active' if params[:role] == 'editor' )] do
+                  class: ['bp4-button', 'bp4-minimal',
+                          ('bp4-active' if params[:role] == 'editor' )] do
           Editors
         = link_to readers_path(role: 'invisible'),
-                  class: ['pt-button', 'pt-minimal',
-                          ('pt-active' if params[:role] == 'invisible')] do
+                  class: ['bp4-button', 'bp4-minimal',
+                          ('bp4-active' if params[:role] == 'invisible')] do
           Invisible Readers
 
 
 
-    .pt-dark
-      %table.admin__table.pt-html-table
+    .bp4-dark
+      %table.admin__table.bp4-html-table
         %thead
           %td Name
           %td Email

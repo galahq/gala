@@ -130,16 +130,6 @@ export type WikidataLink = {
   data?: SparqlResult,
 }
 
-export type LinkedResource = {
-  id?: string,
-  category: 'publication' | 'event' | 'teaching_resource' | 'other',
-  name: string,
-  urlOrDoi: string,
-  wikidataQid?: string,
-  description?: string,
-  position: number,
-}
-
 export type SparqlResult = {
   entity: string,
   entityLabel: string,
@@ -179,7 +169,6 @@ export type Case = {
     newTranslation: string,
     self: string,
     settings: string,
-    linkedResources: string,
     taggings: string,
     wikidataLinks: string,
     teach: string,
@@ -197,7 +186,6 @@ export type Case = {
   teachingGuideUrl: ?string,
   title: string,
   zoom: ?number,
-  linkedResources: LinkedResource[],
   wikidataLinks: WikidataLink[],
 } & Byline
 

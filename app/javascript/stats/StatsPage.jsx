@@ -163,7 +163,7 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
         {intl.formatMessage({ id: 'cases.stats.show.filterByDate' })}
       </h2>
       <div className="c-stats-layout">
-        <div className="c-stats-picker pt-card pt-elevation-1">
+        <div className="c-stats-picker bp4-card bp4-elevation-1">
           <DatePicker
             className="pt"
             minDate={pickerMinDate}
@@ -172,7 +172,7 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
             onRangeChange={setFromDates}
           />
         </div>
-        <div className="c-stats-summary pt-card pt-elevation-1">
+        <div className="c-stats-summary bp4-card bp4-elevation-1">
           {isLoading ? (
             <SummaryLoadingSkeleton />
           ) : (
@@ -185,7 +185,7 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
         </div>
       </div>
 
-      <div className="c-stats-map-table-card pt-card pt-elevation-1">
+      <div className="c-stats-map-table-card bp4-card bp4-elevation-1">
         <div className="c-stats-map-table__header">
           <h3 className="c-stats-map-table__heading">
             {intl.formatMessage({ id: 'cases.stats.show.tableTitle' })}
@@ -223,7 +223,7 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
               <a
                 download
                 href={`${dataUrl}.csv?from=${state.range.from || ''}&to=${state.range.to || ''}`}
-                className="pt-button pt-intent-primary pt-icon-export"
+                className="bp4-button bp4-intent-primary bp4-icon-export"
               >
                 {intl.formatMessage({ id: 'cases.stats.show.tableExportCsv' })}
               </a>

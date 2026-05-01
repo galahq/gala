@@ -49,7 +49,7 @@ function SearchForm ({ history, intl, params }: Props) {
   }
 
   return (
-    <CatalogSection className="pt-dark">
+    <CatalogSection className="bp4-dark">
       <SectionTitle>
         <FormattedMessage id="search.refine" />
       </SectionTitle>
@@ -57,7 +57,7 @@ function SearchForm ({ history, intl, params }: Props) {
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <InputGroup
-            className="pt-fill"
+            className="bp4-fill"
             aria-label={intl.formatMessage({
               id: 'search.fullTextSearch',
             })}

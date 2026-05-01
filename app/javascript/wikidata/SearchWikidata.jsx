@@ -182,21 +182,21 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
         <Dialog
           isOpen={isOpen}
           title={intl.formatMessage({ id: 'catalog.wikidata.addDialogTitle' })}
-          className="pt-dark"
+          className="bp4-dark"
           onClose={() => setIsOpen(false)}
         >
-          <div className="pt-dialog-body">
+          <div className="bp4-dialog-body">
             <StyledControlGroup
               label={<FormattedMessage id="catalog.wikidata.findItem" />}
-              className="pt-vertical"
+              className="bp4-vertical"
             >
-              <div className="pt-callout pt-dark pt-icon-hand-right">
+              <div className="bp4-callout bp4-dark bp4-icon-hand-right">
                 <Markdown source={intl.formatMessage({ id: 'catalog.wikidata.findItemInstructions' })} />
               </div>
               <SectionTitle><FormattedMessage id="catalog.wikidata.chooseItemType" /></SectionTitle>
               <div style={{ width: '180px' }}>
                 <Select
-                  className="pt-select pt-fill pt-dark"
+                  className="bp4-select bp4-fill bp4-dark"
                   filterable={false}
                   items={orderedSchemas}
                   itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
@@ -216,7 +216,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   onItemSelect={handleSchemaSelect}
                 >
                   <Button
-                    className="pt-fill pt-dark"
+                    className="bp4-fill bp4-dark"
                     text={schemasMap[selectedSchema]}
                   />
                 </Select>
@@ -272,7 +272,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                       text={
                         loading ? (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <Spinner className="pt-small" intent="primary" />
+                            <Spinner className="bp4-small" intent="primary" />
                             <span>Searching...</span>
                           </div>
                         ) : error ? (
@@ -291,7 +291,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
             </StyledControlGroup>
 
             {selectedItem && (
-              <div className="pt-card pt-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
+              <div className="bp4-card bp4-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
                 <h5>{schemasMap[selectedSchema]}</h5>
                 <p>
                   <strong>{selectedItem.label}</strong> ({selectedItem.qid})
@@ -299,7 +299,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   {selectedItem.description}
                 </p>
                 {schemaError && (
-                  <div className="pt-callout pt-intent-danger" style={{ marginTop: '10px', marginBottom: '10px' }}>
+                  <div className="bp4-callout bp4-intent-danger" style={{ marginTop: '10px', marginBottom: '10px' }}>
                     {schemaError}
                   </div>
                 )}
@@ -323,15 +323,15 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   href={`${WIKIDATA_URL}${selectedItem.qid}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pt-text-link pt-dark"
+                  className="bp4-text-link bp4-dark"
                 >
                   View on Wikidata
                 </a>
               </div>
             )}
           </div>
-          <div className="pt-dialog-footer">
-            <div className="pt-dialog-footer-actions">
+          <div className="bp4-dialog-footer">
+            <div className="bp4-dialog-footer-actions">
               <Button text="Cancel" onClick={() => setIsOpen(false)} />
               <Button
                 intent={Intent.SUCCESS}

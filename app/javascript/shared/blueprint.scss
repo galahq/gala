@@ -1,5 +1,5 @@
 $icon-font-path: '~@blueprintjs/icons/resources/icons';
-$pt-line-height: 1.22;
+$bp4-line-height: 1.22;
 
 $white: hsl(60, 43%, 99%);
 
@@ -33,9 +33,396 @@ $green3: hsl(125, 41%, 44%);
 $green4: hsl(125, 40%, 51%);
 $green5: hsl(125, 48%, 61%);
 
+$orange1: hsl(34, 77%, 40%);
+$orange2: hsl(34, 82%, 46%);
+$orange3: hsl(34, 88%, 53%);
+$orange4: hsl(34, 92%, 60%);
+$orange5: hsl(34, 97%, 68%);
+
+$red1: hsl(3, 65%, 41%);
+$red2: hsl(3, 70%, 46%);
+$red3: hsl(3, 75%, 52%);
+$red4: hsl(3, 81%, 60%);
+$red5: hsl(3, 87%, 68%);
+
 @import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
 @import '~@blueprintjs/core/lib/css/blueprint.css';
 @import '~@blueprintjs/datetime/lib/css/blueprint-datetime.css';
+
+/*
+ * Blueprint v2 source SCSS is not Dart Sass compatible.
+ * Re-apply our theme via explicit selector overrides on top of compiled CSS.
+ */
+.bp4-app-theme {
+  color: $dark-gray1;
+}
+
+.bp4-app-theme,
+.bp4-light {
+  .bp4-input,
+  .bp4-tag-input,
+  .bp4-input-group .bp4-input {
+    background-color: $light-gray5;
+    color: $dark-gray1;
+  }
+
+  .bp4-input::placeholder,
+  .bp4-tag-input .bp4-input::placeholder {
+    color: $gray3;
+  }
+
+  .bp4-input:focus,
+  .bp4-tag-input.bp4-active {
+    box-shadow: inset 0 0 0 1px $blue3, inset 0 1px 1px rgba(16, 22, 26, 0.2);
+  }
+
+  .bp4-menu {
+    background: $light-gray5;
+    color: $dark-gray1;
+  }
+
+  .bp4-menu-item:hover,
+  .bp4-menu-item.bp4-active {
+    background: $light-gray4;
+    color: $dark-gray1;
+  }
+
+  .bp4-tab-indicator-wrapper .bp4-tab-indicator {
+    background-color: $blue3;
+  }
+
+  .bp4-tab[aria-selected='true'],
+  .bp4-tab:not([aria-disabled='true']):hover {
+    color: $blue2;
+  }
+
+  .bp4-callout.bp4-intent-success {
+    background: rgba($green3, 0.14);
+    color: $green1;
+  }
+
+  .bp4-intent-primary {
+    color: $blue2;
+  }
+
+  .bp4-intent-success {
+    color: $green2;
+  }
+
+  .bp4-intent-warning {
+    color: $orange2;
+  }
+
+  .bp4-intent-danger {
+    color: $red2;
+  }
+
+  .bp4-button.bp4-intent-primary,
+  .bp4-button-group .bp4-button.bp4-intent-primary {
+    background-color: $blue3;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-primary:hover,
+  .bp4-button-group .bp4-button.bp4-intent-primary:hover {
+    background-color: $blue4;
+  }
+
+  .bp4-button.bp4-intent-primary:active,
+  .bp4-button-group .bp4-button.bp4-intent-primary:active {
+    background-color: $blue2;
+  }
+
+  .bp4-button.bp4-intent-success,
+  .bp4-button-group .bp4-button.bp4-intent-success {
+    background-color: $green3;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-success:hover,
+  .bp4-button-group .bp4-button.bp4-intent-success:hover {
+    background-color: $green4;
+  }
+
+  .bp4-button.bp4-intent-success:active,
+  .bp4-button-group .bp4-button.bp4-intent-success:active {
+    background-color: $green2;
+  }
+
+  .bp4-button.bp4-intent-warning,
+  .bp4-button-group .bp4-button.bp4-intent-warning {
+    background-color: $orange3;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-warning:hover,
+  .bp4-button-group .bp4-button.bp4-intent-warning:hover {
+    background-color: $orange4;
+  }
+
+  .bp4-button.bp4-intent-warning:active,
+  .bp4-button-group .bp4-button.bp4-intent-warning:active {
+    background-color: $orange2;
+  }
+
+  .bp4-button.bp4-intent-danger,
+  .bp4-button-group .bp4-button.bp4-intent-danger {
+    background-color: $red3;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-danger:hover,
+  .bp4-button-group .bp4-button.bp4-intent-danger:hover {
+    background-color: $red4;
+  }
+
+  .bp4-button.bp4-intent-danger:active,
+  .bp4-button-group .bp4-button.bp4-intent-danger:active {
+    background-color: $red2;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-primary,
+  .bp4-button.bp4-outlined.bp4-intent-primary {
+    color: $blue2;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-primary:hover,
+  .bp4-button.bp4-outlined.bp4-intent-primary:hover {
+    background: rgba($blue3, 0.12);
+    color: $blue1;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-success,
+  .bp4-button.bp4-outlined.bp4-intent-success {
+    color: $green2;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-success:hover,
+  .bp4-button.bp4-outlined.bp4-intent-success:hover {
+    background: rgba($green3, 0.12);
+    color: $green1;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-warning,
+  .bp4-button.bp4-outlined.bp4-intent-warning {
+    color: $orange2;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-warning:hover,
+  .bp4-button.bp4-outlined.bp4-intent-warning:hover {
+    background: rgba($orange3, 0.12);
+    color: $orange1;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-danger,
+  .bp4-button.bp4-outlined.bp4-intent-danger {
+    color: $red2;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-danger:hover,
+  .bp4-button.bp4-outlined.bp4-intent-danger:hover {
+    background: rgba($red3, 0.12);
+    color: $red1;
+  }
+
+  .bp4-progress-bar .bp4-progress-meter {
+    background-color: $blue3;
+  }
+
+  .bp4-slider-progress {
+    background-color: $blue3;
+  }
+
+  .bp4-control.bp4-checkbox input:checked ~ .bp4-control-indicator,
+  .bp4-control.bp4-radio input:checked ~ .bp4-control-indicator,
+  .bp4-control.bp4-switch input:checked ~ .bp4-control-indicator {
+    background-color: $blue3;
+  }
+}
+
+.bp4-dark {
+  color: $light-gray5;
+
+  .bp4-input,
+  .bp4-tag-input,
+  .bp4-input-group .bp4-input {
+    background-color: $dark-gray3;
+    color: $light-gray5;
+  }
+
+  .bp4-input::placeholder,
+  .bp4-tag-input .bp4-input::placeholder {
+    color: $gray4;
+  }
+
+  .bp4-input:focus,
+  .bp4-tag-input.bp4-active {
+    box-shadow: inset 0 0 0 1px $blue4, inset 0 1px 1px rgba(16, 22, 26, 0.4);
+  }
+
+  .bp4-menu {
+    background: $dark-gray2;
+    color: $light-gray5;
+  }
+
+  .bp4-menu-item:hover,
+  .bp4-menu-item.bp4-active {
+    background: $dark-gray3;
+    color: $light-gray5;
+  }
+
+  .bp4-tab-indicator-wrapper .bp4-tab-indicator {
+    background-color: $blue4;
+  }
+
+  .bp4-tab[aria-selected='true'],
+  .bp4-tab:not([aria-disabled='true']):hover {
+    color: $blue4;
+  }
+
+  .bp4-callout.bp4-intent-success {
+    background: rgba($green2, 0.22);
+    color: $green5;
+  }
+
+  .bp4-intent-primary {
+    color: $blue4;
+  }
+
+  .bp4-intent-success {
+    color: $green5;
+  }
+
+  .bp4-intent-warning {
+    color: $orange5;
+  }
+
+  .bp4-intent-danger {
+    color: $red5;
+  }
+
+  .bp4-button.bp4-intent-primary,
+  .bp4-button-group .bp4-button.bp4-intent-primary {
+    background-color: $blue2;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-primary:hover,
+  .bp4-button-group .bp4-button.bp4-intent-primary:hover {
+    background-color: $blue3;
+  }
+
+  .bp4-button.bp4-intent-primary:active,
+  .bp4-button-group .bp4-button.bp4-intent-primary:active {
+    background-color: $blue1;
+  }
+
+  .bp4-button.bp4-intent-success,
+  .bp4-button-group .bp4-button.bp4-intent-success {
+    background-color: $green2;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-success:hover,
+  .bp4-button-group .bp4-button.bp4-intent-success:hover {
+    background-color: $green3;
+  }
+
+  .bp4-button.bp4-intent-success:active,
+  .bp4-button-group .bp4-button.bp4-intent-success:active {
+    background-color: $green1;
+  }
+
+  .bp4-button.bp4-intent-warning,
+  .bp4-button-group .bp4-button.bp4-intent-warning {
+    background-color: $orange2;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-warning:hover,
+  .bp4-button-group .bp4-button.bp4-intent-warning:hover {
+    background-color: $orange3;
+  }
+
+  .bp4-button.bp4-intent-warning:active,
+  .bp4-button-group .bp4-button.bp4-intent-warning:active {
+    background-color: $orange1;
+  }
+
+  .bp4-button.bp4-intent-danger,
+  .bp4-button-group .bp4-button.bp4-intent-danger {
+    background-color: $red2;
+    color: $white;
+  }
+
+  .bp4-button.bp4-intent-danger:hover,
+  .bp4-button-group .bp4-button.bp4-intent-danger:hover {
+    background-color: $red3;
+  }
+
+  .bp4-button.bp4-intent-danger:active,
+  .bp4-button-group .bp4-button.bp4-intent-danger:active {
+    background-color: $red1;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-primary,
+  .bp4-button.bp4-outlined.bp4-intent-primary {
+    color: $blue4;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-primary:hover,
+  .bp4-button.bp4-outlined.bp4-intent-primary:hover {
+    background: rgba($blue4, 0.2);
+    color: $blue5;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-success,
+  .bp4-button.bp4-outlined.bp4-intent-success {
+    color: $green5;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-success:hover,
+  .bp4-button.bp4-outlined.bp4-intent-success:hover {
+    background: rgba($green4, 0.2);
+    color: $green5;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-warning,
+  .bp4-button.bp4-outlined.bp4-intent-warning {
+    color: $orange5;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-warning:hover,
+  .bp4-button.bp4-outlined.bp4-intent-warning:hover {
+    background: rgba($orange4, 0.22);
+    color: $orange5;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-danger,
+  .bp4-button.bp4-outlined.bp4-intent-danger {
+    color: $red5;
+  }
+
+  .bp4-button.bp4-minimal.bp4-intent-danger:hover,
+  .bp4-button.bp4-outlined.bp4-intent-danger:hover {
+    background: rgba($red4, 0.22);
+    color: $red5;
+  }
+
+  .bp4-progress-bar .bp4-progress-meter {
+    background-color: $blue2;
+  }
+
+  .bp4-slider-progress {
+    background-color: $blue2;
+  }
+
+  .bp4-control.bp4-checkbox input:checked ~ .bp4-control-indicator,
+  .bp4-control.bp4-radio input:checked ~ .bp4-control-indicator,
+  .bp4-control.bp4-switch input:checked ~ .bp4-control-indicator {
+    background-color: $blue2;
+  }
+}
 
 h1, h2, h3, h4, h5, h6 {
   line-height: unset;
@@ -46,53 +433,54 @@ h1, h2, h3, h4, h5, h6 {
   outline-offset: 2px;
 }
 
-.pt-toast-container {
+.bp4-toast-container {
   z-index: 500;
 }
 
-.pt-editable-text.pt-disabled {
+.bp4-editable-text.bp4-disabled {
   display: inline !important;
   cursor: inherit;
 }
 
-.pt-button {
+.bp4-button {
   margin: 0;
 }
 
-.pt-button.pt-button--baseline-aligned {
+.bp4-button.bp4-button--baseline-aligned {
   display: inline-block;
   text-align: center;
 }
 
-input[type="submit"].pt-button:empty {
+input[type="submit"].bp4-button:empty {
   padding: 5px 10px;
 }
 
-.pt-input {
+.bp4-input {
+  appearance: none;
   -webkit-appearance: none;
 }
 
-.pt-toast-message {
-  .pt-progress-bar {
+.bp4-toast-message {
+  .bp4-progress-bar {
     margin-top: 5px;
   }
 }
 
-.pt-control {
+.bp4-control {
   input {
     position: absolute !important;
   }
 }
 
-.pt-dark [class*="pt-intent-"],
-[class*="pt-intent-"] .pt-dark {
-  .pt-tag:not(.pt-minimal):not([class*="pt-intent-"]) {
+.bp4-dark [class*="bp4-intent-"],
+[class*="bp4-intent-"] .bp4-dark {
+  .bp4-tag:not(.bp4-minimal):not([class*="bp4-intent-"]) {
     background-color: hsl(48, 33%, 97%);
   }
 }
 
-.pt-tag {
-  .pt-icon {
+.bp4-tag {
+  .bp4-icon {
     margin: 0 0.25em;
 
     &:first-child {
@@ -105,7 +493,7 @@ input[type="submit"].pt-button:empty {
   }
 }
 
-.pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
+.bp4-button.bp4-minimal.bp4-unsaturated[class*="bp4-intent-"]:not(:hover) {
   color: hsl(209, 96%, 9%);
 
   &:before {
@@ -113,8 +501,8 @@ input[type="submit"].pt-button:empty {
   }
 }
 
-.pt-dark {
-  .pt-button.pt-minimal.pt-unsaturated[class*="pt-intent-"]:not(:hover) {
+.bp4-dark {
+  .bp4-button.bp4-minimal.bp4-unsaturated[class*="bp4-intent-"]:not(:hover) {
     color: hsl(48, 33%, 97%);
 
     &::before {
@@ -123,27 +511,27 @@ input[type="submit"].pt-button:empty {
   }
 }
 
-.pt-tag-input input {
+.bp4-tag-input input {
   font-size: 100%;
   margin-left: 1px;
   margin-bottom: 6px;
 }
 
 
-.pt-popover.pt-multi-select-popover {
+.bp4-popover.bp4-multi-select-popover {
   max-height: 30em;
   overflow: auto;
 }
 
-.pt-label .pt-file-input {
+.bp4-label .bp4-file-input {
   margin-top: 5px;
 }
 
-.pt-icon-drag-handle-horizontal {
+.bp4-icon-drag-handle-horizontal {
   cursor: ns-resize;
 }
 
-.pt-form-group .pt-label .pt-file-input {
+.bp4-form-group .bp4-label .bp4-file-input {
   margin-top: 0;
 }
 
@@ -153,13 +541,13 @@ button > svg > title {
   pointer-events: none;
 }
 
-.pt-callout .pt-callout-title {
+.bp4-callout .bp4-callout-title {
   font-size: 16px !important;
 }
 
-.pt-dark .pt-callout {
+.bp4-dark .bp4-callout {
   background-color: hsl(209, 31%, 39%);
 }
-.pt-callout p:last-child {
+.bp4-callout p:last-child {
   margin-bottom: 0;
 }

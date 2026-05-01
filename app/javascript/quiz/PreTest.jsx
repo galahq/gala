@@ -36,7 +36,7 @@ const PreTest = ({
     <div style={{ height: '100%' }}>
       <Route component={CaseOverview} />
       <Dialog
-        className="pt-dark"
+        className="bp4-dark"
         isOpen={!!match}
         title={intl.formatMessage({
           id: 'submissions.new.beforeYouGetStarted',
@@ -46,12 +46,12 @@ const PreTest = ({
           history.replace('/')
         }}
       >
-        <div className="pt-dialog-body">
+        <div className="bp4-dialog-body">
           <p>
             <FormattedMessage id="submissions.new.pleaseAnswer" />
           </p>
 
-          <div className="pt-card">
+          <div className="bp4-card">
             {questions.map((q: QuestionT) => (
               <Question
                 selectedAnswer={answers[q.id]}
@@ -63,8 +63,8 @@ const PreTest = ({
           </div>
         </div>
 
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp4-dialog-footer">
+          <div className="bp4-dialog-footer-actions">
             <Button
               disabled={!canSubmit}
               text={intl.formatMessage({ id: 'helpers.submit.submit' })}

@@ -121,7 +121,7 @@ function MapLegend ({
   }
 
   return (
-    <div className="c-stats-map-legend pt-typography">
+    <div className="c-stats-map-legend bp4-typography">
       <div className="c-stats-map-legend__title">
         <FormattedMessage id="cases.stats.show.mapLegendTitle" />
         <Popover
@@ -140,7 +140,7 @@ function MapLegend ({
         >
           <button
             type="button"
-            className="pt-button pt-minimal pt-small pt-icon-info-sign c-stats-map-legend__help-icon"
+            className="bp4-button bp4-minimal bp4-small bp4-icon-info-sign c-stats-map-legend__help-icon"
             aria-label={intl.formatMessage({
               id: 'cases.stats.show.mapLegendHelpTitle',
             })}
@@ -246,7 +246,7 @@ function MapTooltip ({
   return (
     <div
       ref={tooltipRef}
-      className="c-stats-map-tooltip pt-typography"
+      className="c-stats-map-tooltip bp4-typography"
       style={{ left: position.left, top: position.top }}
       role="tooltip"
     >

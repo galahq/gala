@@ -34,7 +34,7 @@ function MyLibrary ({ intl }: Props) {
 
   if (casesLoading) return null
 
-  const pendingRequest = (count) => count === 0 ? null : <PendingRequests className='pt-tag pt-interactive pt-round pt-intent-primary'>{count}</PendingRequests>
+  const pendingRequest = (count) => count === 0 ? null : <PendingRequests className='bp4-tag bp4-interactive bp4-round bp4-intent-primary'>{count}</PendingRequests>
 
   return (
     <div>
@@ -197,7 +197,7 @@ const SidebarSubsectionTitle = styled(SectionTitle).attrs({ as: 'h3' })`
 `
 
 const SidebarButton = styled(Button).attrs({
-  className: 'pt-minimal pt-button--baseline-aligned',
+  className: 'bp4-minimal bp4-button--baseline-aligned',
 })`
   margin-right: -10px;
   z-index: 1;

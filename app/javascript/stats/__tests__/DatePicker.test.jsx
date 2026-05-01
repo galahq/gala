@@ -12,12 +12,12 @@ jest.mock('@blueprintjs/datetime', () => {
 
   return {
     DateRangePicker: jest.fn((props) => (
-      <div className="pt-daterangepicker">
-        <div className="pt-daterangepicker-shortcuts">
+      <div className="bp4-daterangepicker">
+        <div className="bp4-daterangepicker-shortcuts">
           {(props.shortcuts || []).map((shortcut, index) => (
             <button
               type="button"
-              className="pt-menu-item"
+              className="bp4-menu-item"
               data-testid={`shortcut-${index}`}
               key={shortcut.label}
             >
@@ -70,12 +70,12 @@ describe('DatePicker', () => {
     expect(DateRangePicker.mock.calls[0][0]).toMatchObject({ value: [minDate, end] })
     await waitForElement(() => {
       const shortcut = getByTestId('shortcut-0')
-      if (!shortcut.classList.contains('pt-active')) {
+      if (!shortcut.classList.contains('bp4-active')) {
         throw new Error('shortcut is not active yet')
       }
       return shortcut
     })
-    expect(getByTestId('shortcut-1').classList.contains('pt-active')).toBe(false)
+    expect(getByTestId('shortcut-1').classList.contains('bp4-active')).toBe(false)
   })
 
   it('does not highlight a shortcut for custom ranges', () => {
@@ -89,8 +89,8 @@ describe('DatePicker', () => {
     })
 
     expect(DateRangePicker).toHaveBeenCalled()
-    expect(getByTestId('shortcut-0').classList.contains('pt-active')).toBe(false)
-    expect(getByTestId('shortcut-1').classList.contains('pt-active')).toBe(false)
+    expect(getByTestId('shortcut-0').classList.contains('bp4-active')).toBe(false)
+    expect(getByTestId('shortcut-1').classList.contains('bp4-active')).toBe(false)
   })
 
   it('forwards DateRangePicker changes to onRangeChange', () => {

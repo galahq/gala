@@ -12,7 +12,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   def form_group(method, label: nil, in_parens: nil, placeholder: nil,
                  helper_text: nil, **kwargs, &block)
     without_field_error_wrapper do
-      classes = ['pt-form-group'] + error_classes(method)
+      classes = ['bp4-form-group'] + error_classes(method)
       @template.content_tag :div, class: classes, **kwargs do
         contents = ''.html_safe
         contents << label_with_text_in_parens(method, label, in_parens)
@@ -25,7 +25,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   def errors
     return if @object.errors.empty?
 
-    classes = %w[pt-callout pt-intent-danger pt-icon-error form__callout]
+    classes = %w[bp4-callout bp4-intent-danger bp4-icon-error form__callout]
     @template.content_tag :div, class: classes do
       contents = ''.html_safe
       contents << error_header
@@ -35,10 +35,10 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
 
   def check_box(method, **options)
     without_field_error_wrapper do
-      @template.content_tag :label, class: %i[pt-control pt-checkbox] do
+      @template.content_tag :label, class: %i[bp4-control bp4-checkbox] do
         content = ''.html_safe
         content << super(method, options)
-        content << @template.content_tag(:span, '', class: %i[pt-control-indicator])
+        content << @template.content_tag(:span, '', class: %i[bp4-control-indicator])
         content << default_label_text(method)
       end
     end
@@ -46,10 +46,10 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
 
   def radio_button(method, value, **options)
     without_field_error_wrapper do
-      @template.content_tag :label, class: %i[pt-control pt-radio] do
+      @template.content_tag :label, class: %i[bp4-control bp4-radio] do
         content = ''.html_safe
         content << super(method, value, options)
-        content << @template.content_tag(:span, '', class: %i[pt-control-indicator])
+        content << @template.content_tag(:span, '', class: %i[bp4-control-indicator])
         content << default_label_text([method, value].join('.'))
       end
     end
@@ -66,11 +66,11 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
 
   def submit(*args, **kwargs)
     class_argument = Array(kwargs.delete(:class)) || []
-    classes = %w[pt-button]
+    classes = %w[bp4-button]
 
-    if !class_argument.delete('pt-intent-none') &&
-       !class_argument.one?(/^pt-intent/)
-      classes.push('pt-intent-success')
+    if !class_argument.delete('bp4-intent-none') &&
+       !class_argument.one?(/^bp4-intent/)
+      classes.push('bp4-intent-success')
     end
 
     classes.push(*class_argument)
@@ -81,7 +81,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
 
   def error_classes(method)
     if @object.errors[method].any?
-      ['pt-intent-danger']
+      ['bp4-intent-danger']
     else
       []
     end
@@ -95,10 +95,10 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     unless in_parens.nil?
       contents << ' '
       contents << @template.content_tag(:span, "(#{in_parens})".html_safe,
-                                        class: 'pt-text-muted')
+                                        class: 'bp4-text-muted')
     end
 
-    label method, contents, class: 'pt-label'
+    label method, contents, class: 'bp4-label'
   end
 
   def default_label_text(method)
@@ -114,20 +114,20 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def form_content(method, placeholder, helper_text, &block)
-    @template.content_tag :div, class: 'pt-form-content' do
+    @template.content_tag :div, class: 'bp4-form-content' do
       contents = ''.html_safe
 
       error_classes = error_classes(method)
       contents << if block_given?
                     capture_yielding self, error_classes, &block
                   else
-                    classes = %w[pt-input pt-fill] + error_classes
+                    classes = %w[bp4-input bp4-fill] + error_classes
                     text_field(method, class: classes, placeholder: placeholder)
                   end
 
       unless helper_text.nil?
         contents << @template.content_tag(:div, helper_text,
-                                          class: 'pt-form-helper-text')
+                                          class: 'bp4-form-helper-text')
       end
 
       contents
@@ -153,7 +153,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def error_header
-    @template.content_tag :h5, class: %w[pt-callout-title] do
+    @template.content_tag :h5, class: %w[bp4-callout-title] do
       I18n.translate 'errors.template.header',
                      model: @object.model_name.human.downcase,
                      count: @object.errors.count
@@ -168,9 +168,9 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def with_blueprint_file_input(method, instructions: nil, **options)
-    label method, class: 'pt-label' do
+    label method, class: 'bp4-label' do
       contents = ''.html_safe
-      classes = %w[pt-file-input].concat Array(options.delete(:class))
+      classes = %w[bp4-file-input].concat Array(options.delete(:class))
       contents << @template.content_tag(:div, class: classes) do
         div_contents = ''.html_safe
         div_contents << yield(options)
@@ -180,7 +180,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def file_input_span(instructions)
-    @template.content_tag :span, class: %i[pt-file-upload-input] do
+    @template.content_tag :span, class: %i[bp4-file-upload-input] do
       instructions || I18n.t('helpers.choose_an_image')
     end
   end

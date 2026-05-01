@@ -102,7 +102,7 @@ class MapViewController extends React.Component<Props, State> {
 
     const { height, cases, title, editing, intl } = this.props
     return (
-      <div className="pt-dark">
+      <div className="bp4-dark">
         {editing && (
           <Instructions>
             <FormattedMessage id="cases.edit.map.instructions" />
@@ -229,7 +229,7 @@ const PositionedSectionTitle = styled(SectionTitle)`
   left: 58px;
   z-index: 1;
 `
-const PositionedButtons = styled.div.attrs({ className: 'pt-dark' })`
+const PositionedButtons = styled.div.attrs({ className: 'bp4-dark' })`
   position: absolute;
   top: 40px;
   right: 58px;
@@ -312,7 +312,7 @@ const MapViewport = styled.div`
   height: 100%;
 `
 const Instructions = styled.div.attrs({
-  className: 'pt-callout pt-intent-success pt-icon-locate',
+  className: 'bp4-callout bp4-intent-success bp4-icon-locate',
 })`
   margin-bottom: -2em;
   margin-top: 1em;

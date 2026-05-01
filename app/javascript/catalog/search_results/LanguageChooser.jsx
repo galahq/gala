@@ -64,7 +64,7 @@ function LanguageChooser({ intl, onChange, languages }) {
   }, [onChange, languages])
 
   return (
-    <div className="pt-dark">
+    <div className="bp4-dark">
       <MultiSelect
         items={items}
         selectedItems={languages}

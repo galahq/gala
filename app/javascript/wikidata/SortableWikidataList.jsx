@@ -87,7 +87,7 @@ type ChildProps<Item> = {
 
 const Handle = SortableHandle(() => (
   <span
-    className="pt-button pt-icon-drag-handle-horizontal pt-fixed"
+    className="bp4-button bp4-icon-drag-handle-horizontal bp4-fixed"
     style={{ marginRight: -3 }}
   />
 ))
@@ -103,7 +103,7 @@ const Item = SortableElement(
     editing,
     position,
   }: ItemProps<*>) => (
-    <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
+    <div className="bp4-control-group bp4-fill" style={{ marginBottom: '0.5em' }}>
       {editing && <Handle />}
 
       <Render
@@ -117,7 +117,7 @@ const Item = SortableElement(
 
       {editing && (
         <Button
-          className="pt-fixed"
+          className="bp4-fixed"
           intent={Intent.DANGER}
           icon="delete"
           onClick={onRemove}
@@ -177,7 +177,7 @@ const SortableWikidataList = (props: Props<*>) => {
       {...props}
       useDragHandle={true}
       transitionDuration={100}
-      helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
+      helperClass={`sortable-helper${props.dark ? ' bp4-dark' : ''}`}
       schema={props.schema}
       onSortEnd={({ oldIndex, newIndex }) => {
         const orderedItems = arrayMove(props.items, oldIndex, newIndex)
@@ -439,9 +439,9 @@ const ShowState = ({ loading, results, editing }) => {
               href={results.entity}
               target="_blank"
               rel="noopener noreferrer"
-              className="wikidata-title pt-minimal pt-dark pt-align-left"
+              className="wikidata-title bp4-minimal bp4-dark bp4-align-left"
             >
-              <span className="pt-text-overflow-ellipsis wikidata-link">
+              <span className="bp4-text-overflow-ellipsis wikidata-link">
                 {results.entityLabel}
               </span>
               <span className="wikidata-separator"></span>
@@ -478,8 +478,8 @@ const ShowState = ({ loading, results, editing }) => {
             <div className="data-container">
               <div className="person-container">
                 <div>
-                  <span className="wikidata-title pt-minimal pt-dark pt-align-left">
-                    <span className="pt-text-overflow-ellipsis">
+                  <span className="wikidata-title bp4-minimal bp4-dark bp4-align-left">
+                    <span className="bp4-text-overflow-ellipsis">
                       {results.entityLabel}
                     </span>
                     <span className="wikidata-separator"></span>
@@ -650,7 +650,7 @@ const WikiDataContainer = styled.div`
 `
 
 const WikidataTag = styled.span.attrs(({ isLoading }) => ({
-  className: `pt-tag ${isLoading ? 'pt-skeleton' : ''}`,
+  className: `bp4-tag ${isLoading ? 'bp4-skeleton' : ''}`,
   role: 'link',
   tabIndex: 0,
   'aria-label': isLoading ? 'Loading Wikidata item' : 'View Wikidata entry'
@@ -669,7 +669,7 @@ const WikidataTag = styled.span.attrs(({ isLoading }) => ({
     background-color:rgb(206, 210, 212);
   }
 
-  &.pt-skeleton {
+  &.bp4-skeleton {
     min-width: 100px;
     height: 20px;
     display: inline-block;

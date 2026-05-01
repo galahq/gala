@@ -40,15 +40,15 @@ class Acknowledgements extends React.Component<
       <Dialog
         key="2"
         title={acknowledgements}
-        className="pt-dark"
+        className="bp4-dark"
         {...this.state}
         onClose={this.handleClick}
       >
-        <div className="pt-dialog-body">
+        <div className="bp4-dialog-body">
           <AcknowledgementsContents>{contents}</AcknowledgementsContents>
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp4-dialog-footer">
+          <div className="bp4-dialog-footer-actions">
             <Button onClick={this.handleClick}>
               <FormattedMessage id="helpers.close" />
             </Button>
@@ -61,7 +61,7 @@ class Acknowledgements extends React.Component<
 export default injectIntl(Acknowledgements)
 
 const AcknowledgementsButton = styled(Button).attrs({
-  className: 'pt-minimal pt-small pt-button--baseline-aligned',
+  className: 'bp4-minimal bp4-small bp4-button--baseline-aligned',
   rightIcon: 'more',
 })`
   transform: translate(-7px);
@@ -76,7 +76,7 @@ svg {
 `
 
 const AcknowledgementsContents = styled.p.attrs({
-  className: 'pt-running-text',
+  className: 'bp4-running-text',
 })`
   white-space: pre-wrap;
   margin: 0;

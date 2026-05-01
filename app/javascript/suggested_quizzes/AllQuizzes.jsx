@@ -53,7 +53,7 @@ function AllQuizzes ({
   }
 
   return (
-    <div className="pt-dialog-body">
+    <div className="bp4-dialog-body">
       {quizzes.length > 0 ? (
         <>
           <List>
@@ -154,12 +154,12 @@ const QuizTitle = styled.span`
   padding-right: 1em;
 `
 
-const Tag = styled.span.attrs({ className: 'pt-tag pt-minimal pt-large' })`
+const Tag = styled.span.attrs({ className: 'bp4-tag bp4-minimal bp4-large' })`
   margin-left: 0.3em;
 `
 
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
+  className: 'bp4-button bp4-minimal bp4-intent-danger bp4-icon-trash',
 })``
 
 function NewQuizButton ({ onClick }) {

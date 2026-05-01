@@ -19,7 +19,7 @@ export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props):
 
   const errorAction = (
     <button
-      className="pt-button pt-intent-primary"
+      className="bp4-button bp4-intent-primary"
       disabled={isRetrying}
       onClick={onRetry}
     >

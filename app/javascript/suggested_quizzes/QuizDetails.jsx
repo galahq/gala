@@ -110,7 +110,7 @@ function QuizDetails ({
 
   return (
     <>
-      <div className="pt-dialog-body">
+      <div className="bp4-dialog-body">
         <FormGroup label="Quiz title" labelFor="quiz[title]">
           <TitleField
             id="quiz[title]"
@@ -128,8 +128,8 @@ function QuizDetails ({
         </Card>
       </div>
 
-      <div className="pt-dialog-footer">
-        <div className="pt-dialog-footer-actions">
+      <div className="bp4-dialog-footer">
+        <div className="bp4-dialog-footer-actions">
           <Button style={{ marginRight: '10px' }} onClick={handleCancel}>
             <FormattedMessage id="helpers.cancel" defaultMessage="Cancel" />
           </Button>
@@ -155,7 +155,7 @@ const TitleField = styled(InputGroup).attrs({
 })``
 
 const Card = styled.ol.attrs({
-  className: 'pt-card',
+  className: 'bp4-card',
 })`
   padding: 1em 1em 1em 2em;
 `

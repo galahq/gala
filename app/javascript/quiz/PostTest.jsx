@@ -109,7 +109,7 @@ class PostTest extends React.Component<
             <FormattedMessage id="submissions.new.postCaseQuiz" />
           </h1>
           <div
-            className="pt-card"
+            className="bp4-card"
             style={{ backgroundColor: '#EBEAE4', maxWidth: '45em' }}
           >
             <Instructions needsResponse={needsResponse}>
@@ -192,7 +192,7 @@ export default providesQuiz(injectIntl(PostTest))
 
 const Instructions = styled.div.attrs({
   className: ({ needsResponse }) =>
-    `pt-callout${needsResponse ? '' : ' pt-intent-success'}`,
+    `bp4-callout${needsResponse ? '' : ' bp4-intent-success'}`,
 })`
   margin-bottom: 1em;
 `

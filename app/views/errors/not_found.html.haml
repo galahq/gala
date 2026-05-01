@@ -1,24 +1,24 @@
 - content_for :title, '404 Not Found'
 
-.pt-dark
-  .pt-non-ideal-state
-    .pt-non-ideal-state-visual.pt-non-ideal-state-icon
-      %span.pt-icon.pt-icon-error
+.bp4-dark
+  .bp4-non-ideal-state
+    .bp4-non-ideal-state-visual.bp4-non-ideal-state-icon
+      %span.bp4-icon.bp4-icon-error
 
-    %h4.pt-non-ideal-state-title Not Found
+    %h4.bp4-non-ideal-state-title Not Found
 
-    .pt-non-ideal-state-description
+    .bp4-non-ideal-state-description
       %p
         The page you were looking for doesn’t exist.
         %br
         Try searching to find what you’re looking for.
 
-      .pt-non-ideal-state-action
+      .bp4-non-ideal-state-action
         = form_with url: '/catalog/search', local: true, method: :get do
-          .pt-input-group.pt-round
-            %span.pt-icon.pt-icon-search
-            %input.pt-input{ name: "q",
+          .bp4-input-group.bp4-round
+            %span.bp4-icon.bp4-icon-search
+            %input.bp4-input{ name: "q",
                              placeholder: I18n.t('search.search_cases'),
                              type: "text" }
-              %span.pt-input-action
-              %button.pt-button.pt-minimal.pt-icon-arrow-right(type="submit")
+              %span.bp4-input-action
+              %button.bp4-button.bp4-minimal.bp4-icon-arrow-right(type="submit")

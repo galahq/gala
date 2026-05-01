@@ -281,7 +281,7 @@ const Card = styled.div`
   padding-top: ${p => p.editable && '2em'};
   z-index: ${p => p.theseCommentThreadsOpen && 300};
 
-  & > .pt-button-group {
+  & > .bp4-button-group {
     position: absolute;
     margin-top: -14px;
   }
@@ -300,7 +300,7 @@ const Card = styled.div`
 `
 
 const DeleteCardButton = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-icon-trash pt-intent-danger',
+  className: 'bp4-button bp4-minimal bp4-icon-trash bp4-intent-danger',
 })`
   position: absolute;
   top: 0;
@@ -315,7 +315,7 @@ const DeleteCardButton = styled.button.attrs({
 `
 
 const DragHandle = styled.span.attrs({
-  className: 'pt-icon pt-icon-drag-handle-vertical',
+  className: 'bp4-icon bp4-icon-drag-handle-vertical',
 })`
   ${p =>
     p.hidden &&

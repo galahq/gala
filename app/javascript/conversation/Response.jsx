@@ -130,7 +130,7 @@ const Edited = styled.span`
 `
 
 const EditButton = styled.button.attrs({
-  className: 'pt-button pt-icon-edit pt-minimal',
+  className: 'bp4-button bp4-icon-edit bp4-minimal',
 })`
   margin-left: 4px;
   transition: opacity 0.2s;
@@ -146,7 +146,7 @@ const Spacer = styled.div`
   flex: 999;
 `
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
+  className: 'bp4-button bp4-intent-danger bp4-icon-trash bp4-minimal',
 })`
   transition: opacity 0.2s;
 

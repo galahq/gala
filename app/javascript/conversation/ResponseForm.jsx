@@ -71,8 +71,8 @@ function ResponseForm ({
 
       <SendButton
         aria-label={intl.formatMessage({ id: 'comments.new.respond' })}
-        className={`pt-button pt-small pt-minimal pt-intent-primary ${
-          isSaving ? '' : 'pt-icon-upload'
+        className={`bp4-button bp4-small bp4-minimal bp4-intent-primary ${
+          isSaving ? '' : 'bp4-icon-upload'
         }`}
         disabled={
           isSaving ||
@@ -129,7 +129,7 @@ export const EmptyResponseFormContainer = styled(Container)`
   padding: 1px;
 `
 
-const Input = styled.div.attrs({ className: 'pt-card' })`
+const Input = styled.div.attrs({ className: 'bp4-card' })`
   background-color: white;
   border-radius: 20px;
   margin-left: 10px;

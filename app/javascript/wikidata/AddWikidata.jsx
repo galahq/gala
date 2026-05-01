@@ -43,7 +43,7 @@ const AddWikidata = ({
 
   return (
     <Container>
-      <div className="pt-dark">
+      <div className="bp4-dark">
         <div className="wikidata-item-title">
           <FormattedMessage id={`catalog.wikidata.${schema}`} />
         </div>
