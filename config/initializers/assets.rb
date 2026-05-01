@@ -9,8 +9,21 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.paths << Emoji.images_path
 # Add Yarn node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join('node_modules')
+Rails.application.config.assets.paths << Rails.root.join(
+  'node_modules/@blueprintjs/icons/lib/css'
+)
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
-Rails.application.config.assets.precompile += %w[print.css]
+Rails.application.config.assets.precompile += %w[
+  print.css
+  blueprint-icons-16.eot
+  blueprint-icons-16.ttf
+  blueprint-icons-16.woff
+  blueprint-icons-16.woff2
+  blueprint-icons-20.eot
+  blueprint-icons-20.ttf
+  blueprint-icons-20.woff
+  blueprint-icons-20.woff2
+]
