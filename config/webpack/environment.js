@@ -3,6 +3,7 @@
  */
 
 const { generateWebpackConfig } = require('shakapacker')
+const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 
 const webpackConfig = generateWebpackConfig()
@@ -43,6 +44,16 @@ if (fileRule) {
 }
 
 module.exports = merge(webpackConfig, {
+  plugins: [
+    // Webpack 5 no longer injects Node's `process` global. Some legacy
+    // browser dependencies still guard development-only code with
+    // process.env.NODE_ENV, so inline that value at compile time.
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(
+        process.env.NODE_ENV || 'development'
+      ),
+    }),
+  ],
   resolve: {
     extensions: [
       ...webpackConfig.resolve.extensions,
