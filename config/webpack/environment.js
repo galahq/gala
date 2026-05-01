@@ -2,8 +2,10 @@
  * @noflow
  */
 
-const { webpackConfig } = require('@rails/webpacker')
+const { generateWebpackConfig } = require('shakapacker')
 const { merge } = require('webpack-merge')
+
+const webpackConfig = generateWebpackConfig()
 
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 //   .BundleAnalyzerPlugin

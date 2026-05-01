@@ -2,9 +2,13 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.2.9
+ruby file: '.ruby-version' # 4.0.3
 
 gem 'rails', '~> 8.0'
+
+# Ruby stdlib gems that are no longer available by default in Ruby 4.
+gem 'benchmark'
+gem 'csv'
 
 # Infrastructure
 gem 'aws-sdk-s3'
@@ -71,7 +75,7 @@ gem 'rexml'
 gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
 gem 'sprockets', '~> 4.2'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'webpacker', '= 6.0.0.rc.5'
+gem 'shakapacker', '10.0.0'
 
 # Logging and Monitoring
 gem 'administrate', '0.17.0'

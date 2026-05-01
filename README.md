@@ -11,8 +11,8 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 ## Dependencies
 
 - Docker
-- Ruby 3.2.9
-- Node 18.20.4
+- Ruby 4.0.3
+- Node 24.15.0
 - jemalloc (via `Aptfile` + Docker, preloaded in `entrypoint.sh`)
 
 Deployments target the `heroku-22` stack declared in `app.json`, so the
@@ -21,15 +21,15 @@ configuration.
 
 #### Using rbenv
 
-1. `rbenv install 3.2.9`
-2. `rbenv shell 3.2.9`
+1. `rbenv install 4.0.3`
+2. `rbenv shell 4.0.3`
 3. `gem install bundler -v 2.4.19`
 4. `bundle install --jobs 4`
 
 #### Using nodenv
 
-1. `nodenv install 18.20.4`
-2. `nodenv shell 18.20.4`
+1. `nodenv install 24.15.0`
+2. `nodenv shell 24.15.0`
 3. `npm install yarn`
 4. `yarn`
 
@@ -54,8 +54,9 @@ Then you can run `docker compose up --build` to rebuild the containers with the 
 
 If you update Javascript dependencies, you'll need to additionally run `docker compose run web yarn` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
 
-The JavaScript build now runs on Webpacker 6 / webpack 5 and uses Dart Sass
-through `sass-loader` 12.x.
+The JavaScript build now runs on Shakapacker 10 / webpack 5 and uses Dart Sass
+through `sass-loader` 12.x. The development bundler process runs via
+`bin/shakapacker-dev-server`.
 Blueprint styles now import the package CSS artifacts from `@blueprintjs/*`
 instead of the unpublished source SCSS paths.
 

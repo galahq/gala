@@ -43,6 +43,9 @@ module Orchard
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Rails 8 no longer initializes this option before legacy 6.x defaults are
+    # applied, but this app still carries those upgrade defaults.
+    config.active_storage.queues ||= ActiveSupport::InheritableOptions.new
     config.load_defaults 7.0
     config.active_support.cache_format_version = 7.0
 
