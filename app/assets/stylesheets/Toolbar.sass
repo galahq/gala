@@ -13,6 +13,8 @@
       display: flex
 
   &__group
+    display: flex
+    align-items: center
     height: 36px
     margin: 0 8px
     flex: 1
@@ -26,6 +28,88 @@
 
     &:nth-child(3)
       justify-content: flex-end
+
+  &__bar .pt-input-group
+    display: block
+    position: relative
+    min-height: 0
+
+    .pt-input
+      appearance: none
+      background: rgba(16, 22, 26, 0.3)
+      border: none
+      border-radius: 30px
+      box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4)
+      box-sizing: border-box
+      color: #f5f8fa
+      font-size: 14px
+      font-weight: 400
+      height: 30px
+      line-height: 30px
+      outline: none
+      padding: 0 30px
+      position: relative
+      vertical-align: middle
+      width: 100%
+
+      &::placeholder
+        color: rgba(191, 204, 214, 0.5)
+        opacity: 1
+
+    .pt-input-action,
+    > .pt-button,
+    > .pt-icon
+      position: absolute
+      top: 0
+
+      &:first-child
+        left: 0
+
+      &:last-child
+        right: 0
+
+    .pt-button.pt-minimal:not(:hover):not(:focus)
+      color: #bfccd6
+
+    .pt-button
+      align-items: center
+      background: none
+      border: none
+      border-radius: 30px
+      box-shadow: none
+      display: inline-flex
+      justify-content: center
+      margin: 3px
+      min-height: 24px
+      min-width: 24px
+      outline: none
+      padding: 0 7px
+
+      &:empty
+        padding: 0
+
+    .pt-icon-search::before,
+    .pt-icon-arrow-right::before
+      background-color: currentColor
+      content: ''
+      display: block
+      height: 16px
+      width: 16px
+
+    .pt-icon-search::before
+      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+    .pt-icon-arrow-right::before
+      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+    > .pt-icon
+      color: #bfccd6
+      font-size: 16px
+      line-height: 1
+      margin: 7px
+      z-index: 1
 
 .MaxWidthContainer
   max-width: 1667px
