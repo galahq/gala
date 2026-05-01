@@ -196,6 +196,8 @@ const MaxWidthFlexContainer = styled(MaxWidthContainer)`
 const Group = styled.div.attrs(() => ({
   className: 'pt-navbar-group bp4-navbar-group',
 }))`
+  display: flex;
+  align-items: center;
   height: 36px !important;
   margin: 0 8px;
   flex: 1;
@@ -223,7 +225,50 @@ const Item = styled(Button).attrs(props => {
   return {
     className: withBlueprint4Classes(className),
   }
-})``
+})`
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 3px;
+  box-shadow: none;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  justify-content: center;
+  min-height: 30px;
+  padding: 5px 7px;
+  text-align: left;
+  vertical-align: middle;
+
+  &:hover:not(:disabled):not(.bp4-disabled) {
+    background: rgba(167, 182, 194, 0.3);
+    text-decoration: none;
+  }
+
+  &:disabled,
+  &.bp4-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .bp4-icon,
+  .pt-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    margin-right: 3px;
+  }
+
+  .bp4-icon svg,
+  .pt-icon svg {
+    display: block;
+    fill: currentColor;
+  }
+
+  .bp4-button-text {
+    display: inline-block;
+  }
+`
 
 const StyledMenu = styled(Menu)`
   font-size: 90%;
