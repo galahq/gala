@@ -8,7 +8,7 @@ GitHub Actions.
 
 - App root: Rails monolith with Ruby `4.0.3`, Bundler `2.4.19`, Node 24.15.0, and Yarn 1.
 - `infra/`: separate SST package with Node >=24 <25, npm, `package-lock.json`, and SST `4.7.1`.
-- Do not run root Yarn or Node 12 commands inside `infra/`.
+- Do not run root Yarn commands inside `infra/`.
 - Do not run `npm ci` from the app root.
 - Do not replace the app root Yarn dependency flow with npm.
 

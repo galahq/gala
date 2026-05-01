@@ -746,7 +746,7 @@ DEPENDENCIES
   rack-canonical-host
   rack-mini-profiler
   rack-timeout
-  rails (~> 8.0)
+  rails (~> 8.1)
   redcarpet
   redis (~> 5.0)
   rexml
