@@ -37,6 +37,7 @@ localhost.key
 /doc/
 
 /db_dumps
+/db/sqldump/
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

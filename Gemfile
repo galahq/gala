@@ -125,7 +125,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
   gem 'pry', '~> 0.14.1'
-  gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
 
   gem 'capybara'

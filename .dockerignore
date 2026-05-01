@@ -7,9 +7,9 @@ log/*
 tmp/*
 node_modules
 /db/*.sqlite3*
+/db/sqldump/
 config/master.key
 .byebug_history
 
 .DS_Store
 coverage
-

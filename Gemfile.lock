@@ -165,7 +165,6 @@ GEM
     bullet (8.0.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
-    byebug (11.1.1)
     capybara (3.40.0)
       addressable
       matrix
@@ -421,9 +420,6 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.10.1)
-      byebug (~> 11.0)
-      pry (>= 0.13, < 0.15)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     psych (5.3.1)
@@ -738,7 +734,6 @@ DEPENDENCIES
   pdfkit (>= 0.8.7.2)
   pg (~> 1.5.4)
   pry (~> 0.14.1)
-  pry-byebug
   pry-rails
   puma (~> 7.1)
   pundit
