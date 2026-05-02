@@ -9,6 +9,19 @@ const { merge } = require('webpack-merge')
 const webpackConfig = generateWebpackConfig()
 const nodeEnv = process.env.NODE_ENV || 'development'
 
+const manifestPlugin = webpackConfig.plugins.find(
+  (plugin) =>
+    plugin.constructor &&
+    plugin.constructor.name === 'WebpackAssetsManifest'
+)
+
+if (manifestPlugin && manifestPlugin.options) {
+  // Avoid stale entrypoint chunks after splitChunks changes. When the manifest
+  // preserves old chunk names, the Docker dev server can proxy 404s for those
+  // scripts before Stimulus mounts stats/date-picker/map views.
+  manifestPlugin.options.merge = false
+}
+
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 //   .BundleAnalyzerPlugin
 //
