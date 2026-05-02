@@ -82,6 +82,7 @@ function LanguageChooser({ intl, onChange, languages }) {
         )}
         popoverProps={{
           className: 'language-chooser__popover',
+          popoverClassName: 'pt-popover pt-multi-select-popover',
           minimal: true,
         }}
         //

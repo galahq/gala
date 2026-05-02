@@ -77,6 +77,7 @@ class KeywordsChooser extends React.Component<Props, State> {
           )}
           popoverProps={{
             className: 'keywords-chooser__popover',
+            popoverClassName: 'pt-popover pt-multi-select-popover',
             minimal: true,
           }}
           //

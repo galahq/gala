@@ -107,6 +107,7 @@ export function getSearchPath (params: Object): string {
 }
 
 const SubmitButton = styled(Button).attrs({
+  className: 'pt-button pt-intent-success',
   type: 'submit',
   intent: Intent.SUCCESS,
 })`
