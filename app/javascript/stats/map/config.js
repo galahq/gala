@@ -40,6 +40,6 @@ export const DEFAULT_VIEWPORT = {
 }
 
 export const MAP_BOUNDS = [
-  [-180, -10],
-  [180, 10],
+  [-180, -85],
+  [180, 85],
 ]
