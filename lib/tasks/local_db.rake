@@ -35,6 +35,7 @@ module LocalDb
       verify_schema_match!
       backup_current_database! if @backup
       replace_local_database!
+      run_smoke_checks!
       puts "✅ Restored #{@dump_path.basename} into compose service '#{DB_SERVICE}' database '#{DB_NAME}'."
     ensure
       drop_database(@verify_db_name) if @verify_db_name
@@ -134,6 +135,39 @@ module LocalDb
       restore_into(DB_NAME)
     end
 
+    def run_smoke_checks!
+      puts 'Running post-restore smoke checks...'
+
+      [
+        {
+          label: 'cases count',
+          sql: 'SELECT COUNT(*) FROM public.cases;',
+          expect_rows: true
+        },
+        {
+          label: 'readers count',
+          sql: 'SELECT COUNT(*) FROM public.readers;',
+          expect_rows: true
+        },
+        {
+          label: 'sample published cases',
+          sql: "SELECT COALESCE(NULLIF(title, ''), slug) AS label FROM public.cases ORDER BY published_at DESC NULLS LAST, id DESC LIMIT 3;",
+          expect_rows: true
+        },
+        {
+          label: 'sample reader emails',
+          sql: "SELECT email FROM public.readers WHERE email <> '' ORDER BY id DESC LIMIT 3;",
+          expect_rows: true
+        }
+      ].each do |query|
+        output = run_sql(query[:sql])
+        values = output.lines.map(&:strip).reject(&:empty?)
+        raise "Smoke check failed: #{query[:label]} returned no rows" if query[:expect_rows] && values.empty?
+
+        puts "  • #{query[:label]}: #{values.join(', ')}"
+      end
+    end
+
     def create_database(name)
       run_command!(
         'docker', 'compose', 'exec', '-T', DB_SERVICE,
@@ -176,6 +210,13 @@ module LocalDb
           '-U', DB_USER, '-d', name, @dump_mount_path
         )
       end
+    end
+
+    def run_sql(sql)
+      run_capture!(
+        'docker', 'compose', 'exec', '-T', DB_SERVICE,
+        'psql', '-t', '-A', '-v', 'ON_ERROR_STOP=1', '-U', DB_USER, '-d', DB_NAME, '-c', sql
+      )
     end
 
     def sql_dump?
