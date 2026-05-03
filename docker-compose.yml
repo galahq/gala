@@ -52,8 +52,9 @@ services:
     expose:
       - "5432"
     volumes:
-      - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
-      - ./db/sqldump:/sqldumps:ro
+      - ./db/structure.sql:/docker-entrypoint-initdb.d/10-structure.sql:ro
+      - ./scripts/docker/db-init-restore.sh:/docker-entrypoint-initdb.d/20-restore-dump.sh:ro
+      - ./db:/seeddb:ro
       - db_data:/var/lib/postgresql/data
   redis:
     image: redis:7
