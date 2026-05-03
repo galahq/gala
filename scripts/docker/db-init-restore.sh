@@ -4,6 +4,11 @@ set -euo pipefail
 DUMPS_DIR="/seeddb/sqldumps"
 LEGACY_DUMPS_DIR="/seeddb/sqldump"
 
+if [ "${RESTORE_DB_SNAPSHOTS:-true}" != "true" ]; then
+  echo "Skipping database snap restore"
+  exit 0
+fi
+
 if [ -d "$DUMPS_DIR" ] && find "$DUMPS_DIR" -maxdepth 1 -type f \( -name '*.dump' -o -name '*.sql' \) | grep -q .; then
   SOURCE_DIR="$DUMPS_DIR"
 elif [ -d "$LEGACY_DUMPS_DIR" ] && find "$LEGACY_DUMPS_DIR" -maxdepth 1 -type f \( -name '*.dump' -o -name '*.sql' \) | grep -q .; then
