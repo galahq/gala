@@ -1,15 +1,25 @@
 .personas {
   margin: 0 auto;
   max-width: 960px;
-  padding: 0 25px;
+  padding: 32px 25px 48px;
   width: 100%;
+  color: #182026;
 
   &__welcome {
     max-width: 700px;
   }
 
   &__headline {
+    color: #182026;
     font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  &__intro {
+    color: #5c7080;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
   }
 
   &__choices {
@@ -28,26 +38,42 @@
     border-width: 6px 0 0;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
+    padding: 24px;
 
-    h2 {
-      color: inherit;
-      font-size: 20px;
-    }
-
-    p {
-      flex: 1;
+    .button_to {
+      margin-top: auto;
+      width: 100%;
     }
   }
 
+  &__choice-title {
+    color: inherit;
+    font-size: 20px;
+    margin: 0 0 12px;
+  }
+
+  &__choice-description {
+    color: inherit;
+    flex: 1;
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  &__choice-button {
+    width: 100%;
+  }
+
   &__skip {
-    color: hsl(210, 54%, 86%);
+    color: #5c7080;
+    margin-top: 8px;
 
     a {
       color: inherit;
       transition: color 0.1s ease-out;
 
       &:hover {
-        color: white;
+        color: #182026;
       }
 
       &::after {
