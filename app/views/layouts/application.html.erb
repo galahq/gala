@@ -24,7 +24,9 @@
     <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
-    <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
+    <% if Rails.env.production? || Rails.env.staging? %>
+      <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
+    <% end %>
     <%= collected_javascript_pack_tag 'styles', 'controllers', 'onboarding' %>
     <%= collected_stylesheet_pack_tag 'styles' %>
     <%= stylesheet_link_tag 'application', media: 'all' %>

@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { injectIntl } from 'react-intl'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { omit } from 'ramda'
 
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
@@ -41,6 +41,9 @@ type BarGroup = Array<?BarElement>
 const pass = (element: BarButton | BarMenu) =>
   omit(['message', 'spotlightKey'], element)
 
+const joinClasses = (...classNames: Array<?string>): string =>
+  classNames.filter(Boolean).join(' ')
+
 function withBlueprint4Classes(className: string): string {
   return className
     .split(/\s+/)
@@ -65,10 +68,18 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
   const t = (id: ?string) => (id ? intl.formatMessage({ id }) : null)
 
   return (
-    <Bar light={light}>
-      <MaxWidthFlexContainer>
+    <div className={joinClasses('Toolbar__bar', light ? 'Toolbar__bar--light' : 'pt-dark bp4-dark')}>
+      <MaxWidthContainer>
         {groups.map((group, i) => (
-          <Group key={i} canBeIconsOnly={canBeIconsOnly}>
+          <div
+            key={i}
+            className={joinClasses(
+              'Toolbar__group',
+              'pt-navbar-group',
+              'bp4-navbar-group',
+              canBeIconsOnly ? 'Toolbar__group--icons-only' : null
+            )}
+          >
             {group.map((element, j) => {
               if (element == null) return null
 
@@ -152,124 +163,24 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                */
               return <span key={j}>{t(element.message)}</span>
             })}
-          </Group>
+          </div>
         ))}
-      </MaxWidthFlexContainer>
-    </Bar>
+      </MaxWidthContainer>
+    </div>
   )
 }
 
 export default injectIntl(Toolbar)
-
-const Bar = styled.div.attrs(props => ({
-  className: props.light || 'pt-dark bp4-dark',
-}))`
-  width: 100%;
-  overflow: auto;
-
-  color: ${({ light }) => (light ? '#262626' : '#ebeae4')};
-  background-color: ${({ light }) => (light ? '#ebeae4' : '#1d3f5e')};
-  border-color: ${({ light }) => (light ? '#ebeae4' : '#1d3f5e')};
-  border-width: 2px;
-  border-style: solid;
-  border-bottom-color: ${({ light }) => (light ? '#c0bca9' : '#193c5b')};
-
-  font: 90% ${p => p.theme.sansFont};
-  text-transform: uppercase;
-  text-align: center;
-  letter-spacing: 0.05em;
-  text-transform: initial;
-  letter-spacing: 0em;
-`
-const MaxWidthFlexContainer = styled(MaxWidthContainer)`
-  display: flex;
-  justify-content: space-between;
-
-  & > div:nth-child(2) {
-    flex: 0;
-  }
-
-  & > div:nth-child(3) {
-    justify-content: flex-end;
-  }
-`
-const Group = styled.div.attrs(() => ({
-  className: 'pt-navbar-group bp4-navbar-group',
-}))`
-  display: flex;
-  align-items: center;
-  height: 36px !important;
-  margin: 0 8px;
-  flex: 1;
-  white-space: nowrap;
-
-  ${({ canBeIconsOnly }) =>
-    canBeIconsOnly
-      ? css`
-          @media screen and (max-width: 513px) {
-            & .pt-button {
-              &:before {
-                margin-right: 0;
-              }
-              span {
-                display: none;
-              }
-            }
-          }
-        `
-      : ''};
-`
 const Item = styled(Button).attrs(props => {
-  const className = props.className || 'pt-minimal'
+  const className = joinClasses('Toolbar__item', props.className || 'pt-minimal')
 
   return {
     className: withBlueprint4Classes(className),
   }
 })`
-  align-items: center;
-  background: none;
-  border: none;
-  border-radius: 3px;
-  box-shadow: none;
-  color: inherit;
-  cursor: pointer;
-  display: inline-flex;
-  font: inherit;
-  justify-content: center;
-  min-height: 30px;
-  padding: 5px 7px;
-  text-align: left;
-  vertical-align: middle;
-
-  &:hover:not(:disabled):not(.bp4-disabled) {
-    background: rgba(167, 182, 194, 0.3);
-    text-decoration: none;
-  }
-
-  &:disabled,
-  &.bp4-disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-
-  .bp4-icon,
-  .pt-icon {
-    display: inline-flex;
-    flex: 0 0 auto;
-    margin-right: 3px;
-  }
-
-  .bp4-icon svg,
-  .pt-icon svg {
-    display: block;
-    fill: currentColor;
-  }
-
-  .bp4-button-text {
-    display: inline-block;
-  }
 `
 
-const StyledMenu = styled(Menu)`
-  font-size: 90%;
+const StyledMenu = styled(Menu).attrs(() => ({
+  className: 'Toolbar__menu',
+}))`
 `

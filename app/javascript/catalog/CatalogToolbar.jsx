@@ -102,7 +102,7 @@ class SearchField extends React.Component<
 
             <InputGroup
               inputRef={el => (this.input = el)}
-              className="pt-round bp4-round"
+              className="Toolbar__search pt-round bp4-round"
               leftIcon="search"
               aria-label={this.props.intl.formatMessage({
                 id: 'search.searchCases',
@@ -111,9 +111,9 @@ class SearchField extends React.Component<
                 <button
                   type="button"
                   aria-label={this.props.intl.formatMessage({
-                id: 'search.submitSearch',
-              })}
-                  className="pt-button bp4-button pt-minimal bp4-minimal pt-icon-arrow-right bp4-icon-arrow-right"
+                    id: 'search.submitSearch',
+                  })}
+                  className="Toolbar__item Toolbar__search-action pt-button bp4-button pt-minimal bp4-minimal pt-icon-arrow-right bp4-icon-arrow-right"
                   onClick={this.handleSubmit}
                 />
               }
