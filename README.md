@@ -44,6 +44,38 @@ configuration.
 - `bundle exec rake test:unit` to run the Ruby tests
 - `yarn test` to run the Javascript tests
 
+### Running two local stacks
+
+To run two Gala clones side by side, give each clone its own `COMPOSE_PROJECT_NAME`
+and host ports in `.env`:
+
+- `APP_HOST_PORT` controls Rails on the host, default `3000`
+- `WEBPACK_HOST_PORT` controls the Shakapacker dev server on the host, default `3035`
+- `REDIS_HOST_PORT` controls Redis on the host, default `6379`
+
+Example for a second clone:
+
+```dotenv
+COMPOSE_PROJECT_NAME=gala_main
+APP_HOST_PORT=3001
+WEBPACK_HOST_PORT=3036
+REDIS_HOST_PORT=6380
+BASE_URL=http://localhost:3001
+```
+
+If you use host-side Rails or Redis commands with `.env.dev`, update
+`DATABASE_URL` and `REDIS_URL` there to match the published host ports.
+
+### Codex / OMX on stale clones
+
+If entering a clone switches your shell to Node `12.5.0`, modern `codex` and
+`omx` CLIs will fail before Docker starts. The crash you saw from top-level
+`import` syntax is a Node runtime mismatch, not a Docker or OpenAI API error.
+
+This repo's maintained setup expects Node `24.15.0`. If an older clone or branch
+still pins Node `12.5.0`, switch back to Node 24 before launching `codex` or
+`omx`.
+
 ### Updating dependencies
 
 When you update dependencies be sure to run these commands locally first

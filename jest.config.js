@@ -3,6 +3,7 @@
 module.exports = {
   modulePathIgnorePatterns: [
     '<rootDir>/vendor/',
+    '<rootDir>/.omx/',
   ],
   moduleFileExtensions: ['js', 'jsx', 'json', 'yml'],
   modulePaths: ['<rootDir>/app/javascript'],

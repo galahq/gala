@@ -22,11 +22,11 @@ services:
       NODE_ENV: development
       DOCKER_DEV: true
       TEMPORARY_UNCONFIRMED_ACCESS: false
-      BASE_URL: http://localhost:3000
-      PORT: 3000
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+      PORT: ${PORT:-3000}
     ports:
-      - 3000:3000
-      - 3035:3035
+      - "${APP_HOST_PORT:-3000}:3000"
+      - "${WEBPACK_HOST_PORT:-3035}:3035"
     depends_on:
       db:
         condition: service_healthy
@@ -60,7 +60,7 @@ services:
   redis:
     image: redis:7
     ports:
-      - 6379:6379
+      - "${REDIS_HOST_PORT:-6379}:6379"
 volumes:
   db_data:
   node_modules:
