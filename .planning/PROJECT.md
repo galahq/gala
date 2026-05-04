@@ -61,7 +61,7 @@ Route QA should be driven from `config/routes.rb`, not by guessing only the most
 
 QA should use tools and best judgment as gates. At minimum, each phase should run the local app on port 3000 or verify it is already running, visit representative routes with Playwright/browser tooling where possible, inspect console and network errors, verify Blueprint controls have expected spacing/sizing/icons/popovers/forms, run targeted Jest/RSpec tests where practical, and commit the phase before moving on.
 
-When visual QA needs authenticated/protected routes in the local Docker Compose environment, browser testing should use the real local sign-in flow instead of treating protected routes as anonymous-only. Visit `/readers/sign_in`, click the "Sign in with Google" button, and rely on `config/initializers/mock_omniauth.rb` to authenticate the development mock user `dev@learnmsc.org` / "Developer Admin". Use that signed-in admin session to inspect protected BlueprintJS surfaces for parity regressions.
+When visual QA needs authenticated/protected routes in the local Docker Compose environment, browser testing should use the real local sign-in flow instead of treating protected routes as anonymous-only. Visit `/readers/sign_in`, click `a.oauth-icon-google` (the "Sign in with Google" button), and rely on `config/initializers/mock_omniauth.rb` to authenticate the development mock user `dev@learnmsc.org` / "Developer Admin". Use that signed-in admin session to inspect protected BlueprintJS surfaces for parity regressions.
 
 ## Constraints
 

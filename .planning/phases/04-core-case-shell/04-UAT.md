@@ -45,3 +45,18 @@ blocked: 0
 ## Gaps
 
 [none yet]
+
+## Future Protected-Route Visual UAT Gate
+
+For protected-route visual UAT with Playwright/MCP, authenticate through the
+local Google mock before checking protected BlueprintJS surfaces:
+
+1. Navigate to `http://host.docker.internal:3000/readers/sign_in` from the
+   browser container.
+2. Click `a.oauth-icon-google`, the "Sign in with Google" button.
+3. Let `config/initializers/mock_omniauth.rb` sign in the mock admin user
+   `dev@learnmsc.org` / "Developer Admin".
+4. Visit the protected route and confirm it is not still showing the sign-in
+   form.
+5. Then perform visual UAT for BlueprintJS parity: layout, spacing, icons,
+   form controls, popovers, disabled/loading states, and console/network errors.

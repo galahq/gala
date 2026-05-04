@@ -172,11 +172,19 @@ The Phase 4 QA evidence must record:
 For authenticated visual checks in local Docker Compose, the browser flow is part of the contract:
 
 1. Open `/readers/sign_in`.
-2. Click the "Sign in with Google" button rendered by the Devise sign-in view.
+2. Click `a.oauth-icon-google`, the "Sign in with Google" button rendered by the Devise sign-in view.
 3. Let `config/initializers/mock_omniauth.rb` complete the development OmniAuth callback as `dev@learnmsc.org` / "Developer Admin".
 4. Revisit protected case routes in the signed-in session and visually inspect Blueprint controls before marking those protected surfaces acceptable.
 
 Only fall back to anonymous redirect checks or request specs after this Google mock flow is attempted and the failure reason is documented.
+
+Playwright/MCP gate instructions:
+
+- Use `host.docker.internal:3000` from the browser container when `localhost:3000` is not reachable.
+- Start every protected-route visual UAT pass from a fresh or known browser context, then navigate to `/readers/sign_in`.
+- Click `a.oauth-icon-google` and wait for the OmniAuth callback/session redirect to settle before visiting protected URLs.
+- Confirm the resulting page is not the sign-in form before visually asserting protected BlueprintJS controls.
+- Record console and network errors after authentication; keep known HMR host/origin noise separate from protected-route rendering regressions.
 
 Visual pass means the route is usable, nonblank, recognizably Gala, and not obviously regressed from the prior Blueprint-era shape. It does not mean pixel-perfect redesign.
 
