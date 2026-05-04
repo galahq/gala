@@ -2,17 +2,17 @@
 project: Gala
 milestone: v1.0
 milestone_name: Upgrade Stabilization
-status: ready_for_phase_2
-current_phase: 2
-current_phase_name: Public and Utility Routes
+status: ready_for_phase_3
+current_phase: 3
+current_phase_name: Catalog Routes
 current_plan: 00
 updated: 2026-05-04
 resume_file: .planning/ROADMAP.md
 progress:
-  phases_complete: 1
+  phases_complete: 2
   phases_total: 9
-  plans_complete: 3
-  plans_total: 3
+  plans_complete: 4
+  plans_total: 4
 ---
 
 # GSD State
@@ -22,14 +22,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 2 - Public and Utility Routes
+**Current focus:** Phase 3 - Catalog Routes
 
 ## Current Position
 
-Phase: 2 - Public and Utility Routes
+Phase: 3 - Catalog Routes
 Plan: 00 - not planned yet
-Status: Phase 1 passed after corrective toolbar visual gate; ready to discuss/plan Phase 2
-Last activity: 2026-05-04 - Phase 1 oversized navbar regression fixed and verified in browser at 40px
+Status: Phase 2 passed; ready to discuss/plan Phase 3
+Last activity: 2026-05-04 - Phase 2 public/utility routes hardened with static Blueprint 4 classes and verified
 Resume file: `.planning/ROADMAP.md`
 
 ## Milestone
@@ -49,12 +49,13 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 ## Blockers
 
-- None for Phase 1.
+- None for Phases 1-2.
 
 ## Follow-Up Noise
 
 - Browser tooling reaches the app via `host.docker.internal:3000`, which produces webpack-dev-server `Invalid Host/Origin header` HMR console errors.
 - Root catalog browser QA observed an external Mapbox style `404` and React runtime warnings; defer to route-specific phases unless they block visible behavior.
+- Phase 2 legacy redirect destinations can show missing local data after redirect; redirect targets are still preserved.
 
 ## Notes
 

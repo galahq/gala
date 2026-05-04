@@ -59,6 +59,8 @@ Plans:
 
 **Goal:** Verify low-authentication public and utility surfaces before deeper app workflows.
 
+**Status:** completed 2026-05-04
+
 **Routes from `config/routes.rb`:**
 - `GET /403`, `/404`, `/422`, `/500`
 - `GET /up`
