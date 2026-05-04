@@ -28,9 +28,9 @@
 
 ### Cases
 
-- [ ] **CASE-01**: Case index, show, create, edit, update, destroy, copy, delete confirmation, archive, settings, translations, and library routes keep existing behavior.
-- [ ] **CASE-02**: Case React Router suffix routes under `/cases/:case_slug/...` render the same case shell and preserve nested route behavior.
-- [ ] **CASE-03**: Case overview/editor Blueprint controls such as buttons, dialogs, editable text, popovers, tags, switches, and inputs retain acceptable spacing, icons, and interaction states.
+- [x] **CASE-01**: Case index, show, create, edit, update, destroy, copy, delete confirmation, archive, settings, translations, and library routes keep existing behavior.
+- [x] **CASE-02**: Case React Router suffix routes under `/cases/:case_slug/...` render the same case shell and preserve nested route behavior.
+- [x] **CASE-03**: Case overview/editor Blueprint controls such as buttons, dialogs, editable text, popovers, tags, switches, and inputs retain acceptable spacing, icons, and interaction states.
 - [ ] **CASE-04**: Case comments, forums, comment threads, activities, locks, taggings, podcasts, pages, cards, edgenotes, quizzes, stats, and Wikidata links remain functional after style fixes.
 
 ### Reader Workflows
@@ -53,10 +53,10 @@
 
 ### Regression Gates
 
-- [ ] **QA-01**: Each phase includes a route checklist derived from `config/routes.rb`.
-- [ ] **QA-02**: Each phase performs browser QA on representative routes with console and network checks.
-- [ ] **QA-03**: Each phase runs targeted automated tests where practical, choosing from `bundle exec rspec`, `./run-rspec.sh`, `bundle exec rake test:unit`, and `yarn test`.
-- [ ] **QA-04**: Each phase commits only after the current route group passes QA or has documented, non-blocking exceptions.
+- [x] **QA-01**: Each phase includes a route checklist derived from `config/routes.rb`.
+- [x] **QA-02**: Each phase performs browser QA on representative routes with console and network checks.
+- [x] **QA-03**: Each phase runs targeted automated tests where practical, choosing from `bundle exec rspec`, `./run-rspec.sh`, `bundle exec rake test:unit`, and `yarn test`.
+- [x] **QA-04**: Each phase commits only after the current route group passes QA or has documented, non-blocking exceptions.
 
 ### Cleanup
 
@@ -99,9 +99,9 @@
 | CAT-02 | Phase 3 | Pending |
 | CAT-03 | Phase 3 | Pending |
 | CAT-04 | Phase 3 | Pending |
-| CASE-01 | Phase 4 | Pending |
-| CASE-02 | Phase 4 | Pending |
-| CASE-03 | Phase 4 | Pending |
+| CASE-01 | Phase 4 | Complete |
+| CASE-02 | Phase 4 | Complete |
+| CASE-03 | Phase 4 | Complete |
 | CASE-04 | Phase 5 | Pending |
 | READ-01 | Phase 6 | Pending |
 | READ-02 | Phase 6 | Pending |
@@ -112,10 +112,10 @@
 | ADM-01 | Phase 8 | Pending |
 | ADM-02 | Phase 8 | Pending |
 | ADM-03 | Phase 8 | Pending |
-| QA-01 | All phases | Pending |
-| QA-02 | All phases | Pending |
-| QA-03 | All phases | Pending |
-| QA-04 | All phases | Pending |
+| QA-01 | All phases | Complete |
+| QA-02 | All phases | Complete |
+| QA-03 | All phases | Complete |
+| QA-04 | All phases | Complete |
 | CLEAN-01 | Phase 9 | Pending |
 | CLEAN-02 | Phase 9 | Pending |
 | CLEAN-03 | Phase 9 | Pending |

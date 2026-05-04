@@ -110,6 +110,13 @@ Plans:
 
 **Goal:** Stabilize the primary case reader/editor shell before nested interactions.
 
+**Status:** completed 2026-05-04
+
+**Plans:** 1 plan
+
+Plans:
+- [x] `04-01-PLAN.md` — Derived the core case route checklist, browser-QAed public shell routes and protected redirects, documented editor-auth limitations, and passed the targeted controller spec.
+
 **Routes from `config/routes.rb`:**
 - `cases#index`, `cases#show`, `cases#create`, `cases#edit`, `cases#update`, `cases#destroy`
 - `cases/:slug/copy`

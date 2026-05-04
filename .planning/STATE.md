@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
-status: executing
-last_updated: "2026-05-04T14:55:42.207Z"
-last_activity: 2026-05-04 -- Phase 04 planning complete
+status: ready_for_verification
+last_updated: "2026-05-04T15:08:15.241Z"
+last_activity: 2026-05-04 -- Phase 04 execution complete
 progress:
   total_phases: 9
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 3
-  percent: 50
+  completed_plans: 4
+  percent: 67
 ---
 
 # GSD State
@@ -20,15 +20,15 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 4 - Core Case Shell
+**Current focus:** Phase 4 verification, then Phase 5 - Nested Case Interactions
 
 ## Current Position
 
-Phase: 4 - Core Case Shell
-Plan: 00 - not planned yet
-Status: Ready to execute
-Last activity: 2026-05-04 -- Phase 04 planning complete
-Resume file: .planning/phases/04-core-case-shell/04-UI-SPEC.md
+Phase: 04 (core-case-shell) — COMPLETE
+Plan: 1 of 1
+Status: Ready for verification
+Last activity: 2026-05-04 -- Phase 04 execution complete
+Resume file: None
 
 ## Milestone
 
@@ -47,7 +47,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 ## Blockers
 
-- None for Phases 1-3.
+- None for Phases 1-4.
 
 ## Follow-Up Noise
 
@@ -55,6 +55,8 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 - Root catalog browser QA observed an external Mapbox style `404` and React runtime warnings; defer to route-specific phases unless they block visible behavior.
 - Phase 2 legacy redirect destinations can show missing local data after redirect; redirect targets are still preserved.
 - Phase 3 search returns `[]` if the local `cases_search_index` materialized view is present but unpopulated; refresh the index for real local search data.
+- Phase 4 feature-spec supplement coverage was blocked by local Selenium/Capybara setup: `Can't initialize Selenium::WebDriver::Chrome::Driver with :url`.
+- Phase 4 had no existing local editor-accessible case; protected case routes were verified as anonymous sign-in redirects and controller specs supplemented route behavior.
 
 ## Notes
 
