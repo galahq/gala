@@ -31,7 +31,7 @@ This milestone finishes the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJ
 Plans:
 - [x] `01-01-PLAN.md` — Lock down global Blueprint asset loading ownership and layout order with focused tests.
 - [x] `01-02-PLAN.md` — Test and preserve the runtime legacy Blueprint namespace bridge.
-- [ ] `01-03-PLAN.md` — Create and execute the local browser QA gate and phase evidence artifact. Evidence recorded; status `human_needed`.
+- [x] `01-03-PLAN.md` — Create and execute the local browser QA gate and phase evidence artifact. Oversized toolbar regression fixed and browser-verified.
 
 **Primary files:**
 - `app/views/layouts/application.html.erb`

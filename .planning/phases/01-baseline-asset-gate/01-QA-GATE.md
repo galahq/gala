@@ -4,7 +4,7 @@
 **Date:** 2026-05-04  
 **Source:** `config/routes.rb`  
 **Local target:** `http://localhost:3000`  
-**Status:** human_needed
+**Status:** passed
 
 ## Route Checklist
 
@@ -12,16 +12,16 @@ Source: `config/routes.rb`
 
 | Route group | Representative route | Expected result | Phase 1 result |
 | --- | --- | --- | --- |
-| Catalog root | `/` | Catalog home renders through Rails layout and global packs | Rendered in browser at `http://host.docker.internal:3000/`; visual smoke shows Gala catalog/sign-in page with Blueprint-styled controls, but console/network noise requires human review |
+| Catalog root | `/` | Catalog home renders through Rails layout and global packs | PASS after correcting the stacked toolbar regression; browser measurement shows `.Toolbar__bar` at 40px with all groups aligned in one row |
 | Health endpoint | `/up` | Plain text `OK` without authentication | PASS via `curl`, RSpec, and browser snapshot |
 | Case route sample | `/cases/:slug` | Known case renders if local data exists | Substituted; no local `Case` rows found |
-| Auth/admin sample | `/admin` or `/readers/sign_in` | Admin is protected or sign-in renders without asset failures | `/admin` redirects/renders `403`; `/readers/sign_in` renders sign-in form, but HMR host-origin noise requires human review |
+| Auth/admin sample | `/admin` or `/readers/sign_in` | Admin is protected or sign-in renders without asset failures | PASS with expected auth boundary; `/admin` redirects/renders `403`; `/readers/sign_in` renders sign-in form |
 
 ## Representative URLs
 
 | URL | Reason | Result |
 | --- | --- | --- |
-| `http://localhost:3000/` | Baseline catalog route and global Blueprint styling check | Browser tooling used `http://host.docker.internal:3000/`; rendered Gala catalog/sign-in page |
+| `http://localhost:3000/` | Baseline catalog route and global Blueprint styling check | Browser tooling used `http://host.docker.internal:3000/`; rendered Gala catalog/sign-in page with corrected 40px toolbar |
 | `http://localhost:3000/up` | Local server and health endpoint check | PASS: `OK` |
 | `http://localhost:3000/cases/:slug` | Known case route when local data exists | Not run; local DB query found no `Case` rows |
 | `http://localhost:3000/admin` | Protected admin/auth route when reachable | Reached `403 Forbidden`, expected for unauthenticated admin access |
@@ -37,7 +37,18 @@ Observed:
 - `/admin` rendered/redirected to `403 Forbidden` while unauthenticated.
 - `/readers/sign_in` rendered the sign-in form and Google sign-in button.
 
-Status: `human_needed` because console/network output is not clean enough to mark the gate passed without deciding whether the observed noise is pre-existing/non-blocking.
+User-reported visual failure:
+- The first browser pass showed the catalog toolbar/nav area at 112px because `.Toolbar__group` elements stacked vertically.
+- Root cause: `Toolbar.jsx` rendered the shared styled `MaxWidthContainer` wrapper without the stable `.MaxWidthContainer` class required by `app/assets/stylesheets/Toolbar.sass`.
+- Fix: `Toolbar.jsx` now passes `className="MaxWidthContainer"` and `Toolbar.test.jsx` asserts `.Toolbar__bar > .MaxWidthContainer`.
+
+Post-fix browser evidence:
+- `.Toolbar__bar` measured 40px high.
+- `.Toolbar__bar > .MaxWidthContainer` computed `display: flex`.
+- All three `.Toolbar__group` elements measured at the same top coordinate (`70.875px`), confirming a single-row navbar.
+- Captured browser-tool screenshot `toolbar-fixed-root.png`.
+
+Status: `passed`. Remaining console/network output is documented as local-development or pre-existing route noise and does not indicate missing pack/CSS assets.
 
 ## Console Issues
 
@@ -71,7 +82,7 @@ Captured browser-tool screenshot for `/` as `phase1-root.png` in the Playwright 
 | Command | Result | Notes |
 | --- | --- | --- |
 | `curl -fsS http://localhost:3000/up` | PASS | Returned `OK`; required localhost network access from sandbox |
-| `yarn test app/javascript/shared/__tests__/blueprintAssetContract.test.js app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js --runInBand` | PASS | 19 passed suites, 1 skipped suite, 99 passed tests, 3 skipped tests; pre-existing React key warning in `FormattedList` |
+| `yarn test app/javascript/utility/__tests__/Toolbar.test.jsx app/javascript/shared/__tests__/blueprintAssetContract.test.js app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js --runInBand` | PASS | 19 passed suites, 1 skipped suite, 99 passed tests, 3 skipped tests; includes toolbar wrapper contract and pre-existing React key warning in `FormattedList` |
 | `docker compose exec -T web bundle exec rspec spec/requests/health_check_spec.rb` | PASS | 1 example, 0 failures; used Docker because host Ruby is 2.6.10 and Gemfile requires 4.0.3 |
 
 ## Substitutions
@@ -82,9 +93,12 @@ Captured browser-tool screenshot for `/` as `phase1-root.png` in the Playwright 
 
 ## Blocking Issues
 
-- Browser QA cannot be marked passed without a human decision on whether the observed console/network noise is acceptable pre-existing development noise.
+None for Phase 1 after the toolbar height correction.
+
+Remaining follow-up noise:
 - External Mapbox style URL returned `404` during root catalog render.
 - Webpack dev server HMR reports `Invalid Host/Origin header` under browser-container access via `host.docker.internal`.
+- Existing React runtime/lifecycle warnings remain visible in development.
 
 ## Non-Blocking Pre-Existing Noise
 

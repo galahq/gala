@@ -2,16 +2,16 @@
 project: Gala
 milestone: v1.0
 milestone_name: Upgrade Stabilization
-status: human_needed
-current_phase: 1
-current_phase_name: Baseline Asset Gate
-current_plan: 03
+status: ready_for_phase_2
+current_phase: 2
+current_phase_name: Public and Utility Routes
+current_plan: 00
 updated: 2026-05-04
-resume_file: .planning/phases/01-baseline-asset-gate/01-VERIFICATION.md
+resume_file: .planning/ROADMAP.md
 progress:
-  phases_complete: 0
+  phases_complete: 1
   phases_total: 9
-  plans_complete: 2
+  plans_complete: 3
   plans_total: 3
 ---
 
@@ -22,15 +22,15 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 1 - Baseline Asset Gate
+**Current focus:** Phase 2 - Public and Utility Routes
 
 ## Current Position
 
-Phase: 1 - Baseline Asset Gate
-Plan: 03 - Local browser QA gate
-Status: Human verification needed for Phase 1 browser QA noise
-Last activity: 2026-05-04 - Phase 1 Plans 01 and 02 completed; Plan 03 evidence recorded as human_needed
-Resume file: `.planning/phases/01-baseline-asset-gate/01-VERIFICATION.md`
+Phase: 2 - Public and Utility Routes
+Plan: 00 - not planned yet
+Status: Phase 1 passed after corrective toolbar visual gate; ready to discuss/plan Phase 2
+Last activity: 2026-05-04 - Phase 1 oversized navbar regression fixed and verified in browser at 40px
+Resume file: `.planning/ROADMAP.md`
 
 ## Milestone
 
@@ -49,9 +49,12 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 ## Blockers
 
-- Phase 1 browser QA is not clean enough to mark passed automatically. See `.planning/phases/01-baseline-asset-gate/01-QA-GATE.md` and `01-VERIFICATION.md`.
-- Browser tooling reached the app via `host.docker.internal:3000`, which produces webpack-dev-server `Invalid Host/Origin header` HMR console errors. Confirm in a normal browser at `http://localhost:3000`.
-- Root catalog browser QA observed an external Mapbox style `404` and React runtime warnings that need acceptance as pre-existing noise or follow-up before phase transition.
+- None for Phase 1.
+
+## Follow-Up Noise
+
+- Browser tooling reaches the app via `host.docker.internal:3000`, which produces webpack-dev-server `Invalid Host/Origin header` HMR console errors.
+- Root catalog browser QA observed an external Mapbox style `404` and React runtime warnings; defer to route-specific phases unless they block visible behavior.
 
 ## Notes
 

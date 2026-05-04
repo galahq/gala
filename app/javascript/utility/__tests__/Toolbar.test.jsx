@@ -43,6 +43,7 @@ describe('Toolbar', () => {
     const { container, getByText } = renderToolbar()
 
     expect(container.querySelector('.Toolbar__bar')).toBeTruthy()
+    expect(container.querySelector('.Toolbar__bar > .MaxWidthContainer')).toBeTruthy()
     expect(container.querySelectorAll('.Toolbar__group')).toHaveLength(3)
     expect(container.querySelectorAll('.Toolbar__item')).toHaveLength(3)
 

@@ -69,7 +69,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
 
   return (
     <div className={joinClasses('Toolbar__bar', light ? 'Toolbar__bar--light' : 'pt-dark bp4-dark')}>
-      <MaxWidthContainer>
+      <MaxWidthContainer className="MaxWidthContainer">
         {groups.map((group, i) => (
           <div
             key={i}
