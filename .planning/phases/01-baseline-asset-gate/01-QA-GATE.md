@@ -104,5 +104,7 @@ Plan commits recorded so far:
 - `c2ec0986` - namespace bridge observer fix
 - `911c4968` - Plan 02 summary
 - `7d152229` - initial QA gate artifact
+- `5a81e56e` - QA verification evidence and `human_needed` status
+- `3f61f76b` - Plan 03 summary
 
 Final QA evidence and summary commits are recorded in the plan summary.
