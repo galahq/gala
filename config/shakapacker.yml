@@ -44,6 +44,12 @@ development:
     host: 0.0.0.0
     port: 3035
     hmr: true
+    # Browser automation runs in a separate container and reaches the app
+    # through Docker's host gateway. Keep that host allowed so HMR/websocket
+    # requests are not rejected as invalid origins during visual QA.
+    allowed_hosts:
+      - localhost
+      - host.docker.internal
 
 test:
   <<: *default
