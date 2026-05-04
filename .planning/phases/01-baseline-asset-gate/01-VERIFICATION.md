@@ -39,7 +39,24 @@ Fix and evidence:
 
 - External Mapbox style `404` observed on `/`; defer to catalog-route phase unless it blocks visible UI.
 - React runtime warning `Cannot update during an existing state transition`; defer unless tied to a route regression.
-- Webpack-dev-server `Invalid Host/Origin header`; caused by browser-container access through `host.docker.internal`, not normal `localhost:3000`.
+- Historical Webpack-dev-server `Invalid Host/Origin header`; resolved in the 2026-05-04 rerun after allowing `host.docker.internal` in Shakapacker dev-server config.
+
+## Revalidation 2026-05-04
+
+Playwright MCP reran the Phase 1 PASS browser routes through
+`http://host.docker.internal:3000`.
+
+| Route | Status | Notes |
+| --- | --- | --- |
+| `/` | PASS | Catalog root rendered; WDS started; `Invalid Host/Origin header` did not recur. |
+| `/up` | PASS | `200 OK`, body `OK`, no console messages. |
+| `/admin` | PASS with expected auth boundary | Final route `/403`, no HMR host/origin errors. |
+| `/readers/sign_in` | PASS | Sign-in form and Google mock-login button rendered, no HMR host/origin errors. |
+
+Automated gate rerun:
+
+- `docker compose exec web bundle exec rspec spec/config/shakapacker_dev_server_spec.rb spec/requests/health_check_spec.rb spec/requests/public_utility_routes_spec.rb spec/requests/catalog_routes_spec.rb spec/controllers/cases_controller_spec.rb` — PASS, 27 examples, 0 failures.
+- `docker compose exec -e NODE_ENV=test web yarn jest app/javascript/utility/__tests__/Toolbar.test.jsx app/javascript/shared/__tests__/blueprintAssetContract.test.js app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js app/javascript/catalog/home/__tests__/helpers.test.js --runInBand` — PASS, 4 suites, 12 tests.
 
 ## Outcome
 

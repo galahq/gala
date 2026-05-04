@@ -56,7 +56,8 @@ Status: `passed`. Remaining console/network output is documented as local-develo
 
 Observed console items:
 - `401 Unauthorized` API responses on unauthenticated catalog page: `profile.json`, `enrollments.json`, `saved_reading_lists.json`, `managerships.json`.
-- Repeated `[webpack-dev-server] Invalid Host/Origin header` and reconnect logs when browser tooling used `host.docker.internal:3000`.
+- Historical: repeated `[webpack-dev-server] Invalid Host/Origin header` and reconnect logs when browser tooling used `host.docker.internal:3000`.
+- Revalidated 2026-05-04 after the Shakapacker dev-server host allowlist: Playwright MCP reached `http://host.docker.internal:3000/`, `/up`, `/admin`, and `/readers/sign_in` with `invalidHostCount: 0`.
 - React 16 lifecycle deprecation warnings for React Router components.
 - React warning: `Cannot update during an existing state transition`.
 - Mapbox style load failure logged from vendor bundle after external style URL returned `404`.
@@ -99,8 +100,27 @@ None for Phase 1 after the toolbar height correction.
 
 Remaining follow-up noise:
 - External Mapbox style URL returned `404` during root catalog render.
-- Webpack dev server HMR reports `Invalid Host/Origin header` under browser-container access via `host.docker.internal`.
+- Historical Webpack dev-server HMR `Invalid Host/Origin header` under browser-container access via `host.docker.internal` is resolved as of the 2026-05-04 revalidation pass.
 - Existing React runtime/lifecycle warnings remain visible in development.
+
+## Revalidation 2026-05-04
+
+Reason: rerun the previously PASS browser QA gate after allowing
+`host.docker.internal` in the Shakapacker dev server configuration.
+
+| Route | Result | HMR host/origin |
+| --- | --- | --- |
+| `/` | PASS: catalog root rendered through Playwright MCP at `http://host.docker.internal:3000/`; toolbar remains usable and the page mounted. Existing unauthenticated JSON `401`s, React warnings, and local Mapbox style 404 remain non-blocking route noise. | `invalidHostCount: 0`; WDS started |
+| `/up` | PASS: `200 OK`, body `OK`. | `invalidHostCount: 0` |
+| `/admin` | PASS with expected auth boundary: final route `/403`, title `403 Forbidden - Gala`. | `invalidHostCount: 0` |
+| `/readers/sign_in` | PASS: sign-in form and "Sign in with Google" button rendered. | `invalidHostCount: 0`; WDS started |
+
+Retested automated gates:
+
+| Command | Result | Notes |
+| --- | --- | --- |
+| `docker compose exec web bundle exec rspec spec/config/shakapacker_dev_server_spec.rb spec/requests/health_check_spec.rb spec/requests/public_utility_routes_spec.rb spec/requests/catalog_routes_spec.rb spec/controllers/cases_controller_spec.rb` | PASS | 27 examples, 0 failures |
+| `docker compose exec -e NODE_ENV=test web yarn jest app/javascript/utility/__tests__/Toolbar.test.jsx app/javascript/shared/__tests__/blueprintAssetContract.test.js app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js app/javascript/catalog/home/__tests__/helpers.test.js --runInBand` | PASS | 4 suites, 12 tests |
 
 ## Non-Blocking Pre-Existing Noise
 

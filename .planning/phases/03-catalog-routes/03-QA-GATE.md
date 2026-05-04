@@ -46,6 +46,28 @@ Browser tooling used `http://host.docker.internal:3000`.
 
 ## Non-Blocking Noise
 
-- Browser-container HMR origin errors remain when using `host.docker.internal`.
+- Historical browser-container HMR origin errors were resolved in the 2026-05-04 rerun after allowing `host.docker.internal` in Shakapacker dev-server config.
 - Unauthenticated catalog root/search requests still produce expected `401` responses for user-specific JSON endpoints.
 - Existing React lifecycle/key warnings remain visible in development.
+
+## Revalidation 2026-05-04
+
+Reason: rerun previously PASS catalog QA gates through Playwright MCP after the
+Docker browser host was accepted by Shakapacker.
+
+| Route | Browser/MCP result | HMR host/origin |
+| --- | --- | --- |
+| `/` | PASS: catalog root rendered at `http://host.docker.internal:3000/`; WDS started; existing unauthenticated JSON `401`s, React warnings, and local Mapbox style 404 remain non-blocking. | `invalidHostCount: 0` |
+| `/catalog/search?q=zzzz-no-results` | PASS: catalog search shell rendered, no-results state visible, no `/search.json` 500. | `invalidHostCount: 0` |
+| `/catalog/libraries.json` | PASS: `200`, JSON array. | `invalidHostCount: 0` |
+| `/catalog/languages.json` | PASS: `200`, JSON includes English. | `invalidHostCount: 0` |
+| `/search.json` | PASS: `200`, JSON case slug array. | `invalidHostCount: 0` |
+| `/search.json?q[]=zzzz-no-results` | PASS: `200`, JSON `[]`. | `invalidHostCount: 0` |
+| `/tags.json` | PASS: `200`, JSON array. | `invalidHostCount: 0` |
+
+Retested automated gates:
+
+| Command | Result | Notes |
+| --- | --- | --- |
+| `docker compose exec web bundle exec rspec spec/config/shakapacker_dev_server_spec.rb spec/requests/health_check_spec.rb spec/requests/public_utility_routes_spec.rb spec/requests/catalog_routes_spec.rb spec/controllers/cases_controller_spec.rb` | PASS | 27 examples, 0 failures |
+| `docker compose exec -e NODE_ENV=test web yarn jest app/javascript/utility/__tests__/Toolbar.test.jsx app/javascript/shared/__tests__/blueprintAssetContract.test.js app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js app/javascript/catalog/home/__tests__/helpers.test.js --runInBand` | PASS | 4 suites, 12 tests. Running through `yarn test ...` without overriding `NODE_ENV` is not valid inside the compose service because it keeps `NODE_ENV=development` and prevents `babel-jest` from transforming import syntax. |

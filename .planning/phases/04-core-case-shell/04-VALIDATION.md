@@ -80,6 +80,25 @@ Audit notes:
 - `.planning/phases/04-core-case-shell/04-UI-REVIEW.md` records the protected-route Playwright/MCP mock-login gate using `a.oauth-icon-google`.
 - No Phase 4 implementation files changed during execution, so no new implementation test files were needed for narrow compatibility fixes.
 
+## Validation Audit 2026-05-04 — Playwright MCP Rerun
+
+| Metric | Count |
+|--------|-------|
+| Previously PASS route gates rerun | 19 |
+| HMR host/origin regressions | 0 |
+| Authenticated protected routes rerun | 3 |
+| Automated command groups rerun | 2 |
+| Open gaps | 0 |
+
+Audit notes:
+
+- Playwright MCP reached the Dockerized app through `http://host.docker.internal:3000` after the Shakapacker `allowed_hosts` update.
+- Fresh reruns across Phase 1, Phase 2, Phase 3, and Phase 4 browser gates recorded `invalidHostCount: 0`; the previous `Invalid Host/Origin header` note is now historical rather than active.
+- Phase 4 protected-route visual prelude succeeded through the Google mock login. Edit mode, settings, and translations rendered as authenticated routes instead of stopping at anonymous redirects.
+- Targeted RSpec rerun passed: `docker compose exec web bundle exec rspec spec/config/shakapacker_dev_server_spec.rb spec/requests/health_check_spec.rb spec/requests/public_utility_routes_spec.rb spec/requests/catalog_routes_spec.rb spec/controllers/cases_controller_spec.rb` — 27 examples, 0 failures.
+- Targeted Jest rerun passed with the compose service explicitly set to test mode: `docker compose exec -e NODE_ENV=test web yarn jest app/javascript/utility/__tests__/Toolbar.test.jsx app/javascript/shared/__tests__/blueprintAssetContract.test.js app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js app/javascript/catalog/home/__tests__/helpers.test.js --runInBand` — 4 suites, 12 tests.
+- Running the same Jest selection through `yarn test ...` without overriding `NODE_ENV` is not a valid Docker Compose gate because the service exports `NODE_ENV=development`, which prevents `babel-jest` from transforming ES module syntax.
+
 ---
 
 ## Validation Sign-Off

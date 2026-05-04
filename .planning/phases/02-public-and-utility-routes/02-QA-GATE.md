@@ -41,5 +41,27 @@ Browser tooling used `http://host.docker.internal:3000` because the containerize
 ## Non-Blocking Noise
 
 - Docker/Rails test output includes existing RubyGems and Rails 8.2 deprecation warnings.
-- Browser-container HMR origin errors remain a tooling artifact when using `host.docker.internal`.
+- Historical browser-container HMR origin errors were resolved in the 2026-05-04 rerun after allowing `host.docker.internal` in Shakapacker dev-server config.
 - Legacy redirect destinations may fail in this local DB if referenced case slugs are absent; redirect behavior itself is covered.
+
+## Revalidation 2026-05-04
+
+Reason: rerun previously PASS public/utility QA gates after Playwright MCP could
+reach the Dockerized app without Shakapacker host-origin rejection.
+
+| Route | Browser/MCP result | HMR host/origin |
+| --- | --- | --- |
+| `/403` | PASS: `403`, `403 Forbidden - Gala`, expected forbidden page. | `invalidHostCount: 0` |
+| `/404` | PASS: `404`, `404 Not Found - Gala`, expected not-found page. | `invalidHostCount: 0` |
+| `/422` | PASS: `422`, `422 Unprocessable Entity - Gala`, expected error page. | `invalidHostCount: 0` |
+| `/500` | PASS: `500`, `500 Internal Server Error - Gala`, expected error page. | `invalidHostCount: 0` |
+| `/up` | PASS: `200 OK`, body `OK`. | `invalidHostCount: 0` |
+| `/runtime/stats` | PASS: unauthenticated request returns `401` JSON auth boundary. | `invalidHostCount: 0` |
+| `/read/1071`, `/read/862`, `/read/611`, `/read/497` | PASS for redirect behavior; browser follows to missing local case data and lands on local `404` exception pages, matching the existing data-limitation note. | `invalidHostCount: 0` |
+| `/en/catalog/libraries`, `/en/catalog/libraries.json` | PASS: locale prefix removed, final routes `/catalog/libraries` and `/catalog/libraries.json` returned `200`. | `invalidHostCount: 0` |
+
+Retested automated gate:
+
+| Command | Result | Notes |
+| --- | --- | --- |
+| `docker compose exec web bundle exec rspec spec/config/shakapacker_dev_server_spec.rb spec/requests/health_check_spec.rb spec/requests/public_utility_routes_spec.rb spec/requests/catalog_routes_spec.rb spec/controllers/cases_controller_spec.rb` | PASS | 27 examples, 0 failures |
