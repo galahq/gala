@@ -43,9 +43,16 @@ function mirrorLegacyClassesIn(root) {
 }
 
 function observeLegacyClassChanges() {
-  if (typeof MutationObserver === 'undefined') return
+  const Observer =
+    typeof MutationObserver !== 'undefined'
+      ? MutationObserver
+      : typeof window !== 'undefined'
+        ? window.MutationObserver
+        : undefined
 
-  const observer = new MutationObserver(mutations => {
+  if (typeof Observer === 'undefined') return
+
+  const observer = new Observer(mutations => {
     mutations.forEach(mutation => {
       if (mutation.type === 'attributes') {
         mirrorLegacyClasses(mutation.target)

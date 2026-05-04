@@ -7,14 +7,21 @@ const loadBridge = () => {
   require(bridgePath)
 }
 
-const nextMutationTick = () =>
-  new Promise(resolve => {
-    setTimeout(resolve, 0)
+const installMutationObserverMock = () => {
+  let callback
+
+  global.MutationObserver = jest.fn(function MutationObserverMock(observer) {
+    callback = observer
+    this.observe = jest.fn()
   })
+
+  return mutations => callback(mutations)
+}
 
 describe('blueprintLegacyNamespace', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
+    delete global.MutationObserver
   })
 
   it('mirrors legacy classes on existing DOM nodes without removing them', () => {
@@ -57,27 +64,29 @@ describe('blueprintLegacyNamespace', () => {
     })
   })
 
-  it('mirrors legacy classes on nodes appended after startup', async () => {
+  it('mirrors legacy classes on nodes appended after startup', () => {
+    const notifyMutation = installMutationObserverMock()
     loadBridge()
 
     const button = document.createElement('button')
     button.className = 'pt-button'
     document.body.appendChild(button)
 
-    await nextMutationTick()
+    notifyMutation([{ type: 'childList', addedNodes: [button] }])
 
     expect(button.classList.contains('pt-button')).toBe(true)
     expect(button.classList.contains('bp4-button')).toBe(true)
   })
 
-  it('mirrors legacy classes added after startup', async () => {
+  it('mirrors legacy classes added after startup', () => {
+    const notifyMutation = installMutationObserverMock()
     document.body.innerHTML = '<button>Save</button>'
     loadBridge()
 
     const button = document.querySelector('button')
     button.classList.add('pt-intent-primary')
 
-    await nextMutationTick()
+    notifyMutation([{ type: 'attributes', target: button }])
 
     expect(button.classList.contains('pt-intent-primary')).toBe(true)
     expect(button.classList.contains('bp4-intent-primary')).toBe(true)
