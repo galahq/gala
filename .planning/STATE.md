@@ -7,6 +7,7 @@ current_phase: 1
 current_phase_name: Baseline Asset Gate
 current_plan: null
 updated: 2026-05-03
+resume_file: .planning/phases/01-baseline-asset-gate/01-CONTEXT.md
 progress:
   phases_complete: 0
   phases_total: 9
@@ -27,8 +28,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 Phase: 1 - Baseline Asset Gate
 Plan: -
-Status: Ready to discuss Phase 1
-Last activity: 2026-05-03 - Project initialized from upgrade stabilization milestone
+Status: Phase 1 context gathered
+Last activity: 2026-05-03 - Phase 1 context gathered
+Resume file: `.planning/phases/01-baseline-asset-gate/01-CONTEXT.md`
 
 ## Milestone
 
