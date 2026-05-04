@@ -116,4 +116,25 @@ describe('DatePicker', () => {
 
     expect(onRangeChange).toHaveBeenCalledWith(start, end)
   })
+
+  it('passes a separate calendar min date so the picker can keep two calendars visible', () => {
+    const minDate = new Date(2026, 4, 4)
+    const calendarMinDate = new Date(2026, 3, 1)
+    const maxDate = new Date(2026, 4, 4)
+
+    renderPicker({
+      minDate,
+      calendarMinDate,
+      maxDate,
+      value: [minDate, maxDate],
+    })
+
+    expect(DateRangePicker.mock.calls[0][0]).toMatchObject({
+      minDate: calendarMinDate,
+      maxDate,
+      singleMonthOnly: false,
+      selectedShortcutIndex: 0,
+    })
+    expect(DateRangePicker.mock.calls[0][0].shortcuts[0].dateRange).toEqual([minDate, maxDate])
+  })
 })

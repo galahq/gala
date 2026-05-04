@@ -139,6 +139,11 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
 
   const pickerMinDate = minDate ? parseLocalDate(minDate) : new Date(2000, 0, 1)
   const maxDate = new Date()
+  const calendarMinDate =
+    pickerMinDate.getFullYear() === maxDate.getFullYear() &&
+    pickerMinDate.getMonth() === maxDate.getMonth()
+      ? new Date(maxDate.getFullYear(), maxDate.getMonth() - 1, 1)
+      : pickerMinDate
 
   // Parse and clamp dates to be within valid bounds.
   const parsedFrom = state.range.from ? parseLocalDate(state.range.from) : null
@@ -167,6 +172,7 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
           <DatePicker
             className="pt"
             minDate={pickerMinDate}
+            calendarMinDate={calendarMinDate}
             maxDate={maxDate}
             value={dateRangeValue}
             onRangeChange={setFromDates}

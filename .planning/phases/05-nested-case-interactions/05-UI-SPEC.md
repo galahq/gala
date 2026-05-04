@@ -36,7 +36,7 @@ Phase 5 UI work covers these nested case surfaces:
 | Edgenotes | `app/javascript/edgenotes`, `app/controllers/edgenotes_controller.rb`, `app/controllers/edgenotes/link_expansions_controller.rb` | Edgenote library, editor dialog, preview, attachment controls, pull quote/image/link expansion surfaces, and visibility toggles retain their current dialog/form density and do not introduce blank or overlapping states. |
 | Podcasts | `app/javascript/podcast`, `app/controllers/podcasts_controller.rb` | Podcast editor fields, credits list, artwork/audio inputs, and save/delete controls keep existing form structure and Blueprint-compatible buttons/inputs. |
 | Forums and locks | `app/javascript/redux/actions/forum.js`, `app/javascript/redux/actions/lock.js`, `app/javascript/redux/reducers/forums.js`, `app/javascript/redux/reducers/locks.js`, `app/controllers/forums_controller.rb`, `app/controllers/locks_controller.rb` | Forum loading and lock controls remain invisible or low-noise when idle, and blocking/edit-lock states remain clear without disrupting layout. |
-| Stats and map | `app/javascript/controllers/case_stats_controller.js`, `app/javascript/stats`, `app/controllers/cases/stats_controller.rb`, `app/views/cases/stats` | Stats page, overview cards, date controls, loading/error states, country table, and Mapbox map remain visible and usable; accepted local Mapbox production-style errors are classified only when visible behavior is intact. |
+| Stats and map | `app/javascript/controllers/case_stats_controller.js`, `app/javascript/stats`, `app/controllers/cases/stats_controller.rb`, `app/views/cases/stats` | Stats page, overview cards, two-calendar date range controls, loading/error states, country table, and Mapbox map remain visible and usable; accepted local Mapbox production-style errors are classified only when visible behavior is intact. |
 | Quizzes and submissions | `app/javascript/suggested_quizzes`, `app/javascript/quiz`, `app/controllers/quizzes_controller.rb` | Suggested quiz list/editor, quiz show, question/option editor, destructive confirmation, and submission controls retain existing Blueprint form and button behavior. |
 | Wikidata and SPARQL | `app/javascript/wikidata`, `app/controllers/wikidata_links_controller.rb`, `app/controllers/sparql_controller.rb` | Wikidata search, add/remove list, sortable linked item list, and SPARQL-backed results keep existing compact metadata-editor behavior and classify remote failures separately from local UI regressions. |
 | Tags and activities | `app/javascript/overview/keywords`, `app/controllers/taggings_controller.rb`, `app/controllers/activities_controller.rb`, `app/controllers/case_elements_controller.rb` | Tag controls and activity/page creation affordances remain compact, reversible where tested, and aligned with current case editor behavior. |
@@ -100,6 +100,12 @@ Accent is reserved for:
 
 Do not create route-specific colors unless a verified Blueprint upgrade regression makes an existing state unreadable and no shared compatibility rule already exists.
 
+Stats date-picker exception:
+
+- The stats `DateRangePicker` must preserve the Blueprint 2-era two-calendar range layout on desktop, even when local stats data begins in the current month.
+- Selected date cells, selected ranges, and active date shortcuts must use Gala purple `#7351D4` with white foreground, not Blueprint 4 blue.
+- Hovered date ranges may use a translucent Gala purple state. This override must stay scoped to `.c-stats-picker`.
+
 ## Blueprint Compatibility Contract
 
 Phase 5 must follow the locked compatibility strategy from prior phases:
@@ -131,7 +137,7 @@ Likely Phase 5 inspection targets:
 | Pages/cards | Existing page/card routes and low-risk card/comment-thread checks preserve JSON behavior and do not visibly disturb Draft editor content. |
 | Edgenotes | Library/editor dialog/link expansion surfaces open, close, save or report errors without overlapped controls, blank previews, or broken progress states. |
 | Podcasts | Form fields, nested credits list controls, save/delete buttons, and media inputs remain usable and do not overflow. |
-| Stats/map | `/cases/:slug/stats` renders overview, date controls, loading/error states, country table, and map container; local production-style Mapbox failures are accepted only if controls and fallback content remain usable. |
+| Stats/map | `/cases/:slug/stats` renders overview, two-calendar date controls, loading/error states, country table, and map container; active date selections use Gala purple; local production-style Mapbox failures are accepted only if controls and fallback content remain usable. |
 | Quizzes | Suggested quiz list/editor, show view, question/option controls, submission controls, and delete affordance remain usable and preserve existing copy. |
 | Wikidata/SPARQL | Search/add/remove/sort controls render; remote or malformed SPARQL failures are classified as risk notes unless they break the local UI shell. |
 | Tags/locks | Low-risk tag/lock create/delete checks use existing data, clean up immediately when possible, and leave editor controls understandable. |
@@ -192,7 +198,7 @@ Visual pass means the route is usable, nonblank, recognizably Gala, and not obvi
 | Pages/cards/case elements | Editor surface remains nonblank; reorder/update controls do not overlap; JSON mutation failures show existing error behavior. |
 | Edgenotes/link expansion | Editor dialog and preview render; link expansion loading/error/visibility controls remain reachable; remote fetch risks are documented if non-blocking. |
 | Podcasts | Credits list and media inputs stay aligned with existing form rhythm. |
-| Stats/map | Date range controls, overview, loading/error states, table, and map container render; map errors are classified. |
+| Stats/map | Date range controls render as two calendars on desktop, active/selected states use Gala purple, overview/loading/error states/table/map container render, and map errors are classified. |
 | Quizzes/submissions | Quiz editor/show route and question/option controls render without broken form state or destructive-control ambiguity. |
 | Wikidata/SPARQL | Search/add/remove/sort UI renders; no blank widget when SPARQL returns empty/error; malformed input risks are documented separately. |
 | Locks/tags/forums/activities | Low-risk controls and JSON responses are verified through UI/API/spec evidence without broad redesign. |

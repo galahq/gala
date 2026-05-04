@@ -7,6 +7,7 @@ import { formatLocalDate } from './dateHelpers'
 
 function DatePicker ({
   minDate: minDateProp,
+  calendarMinDate: calendarMinDateProp,
   maxDate: maxDateProp,
   value,
   onRangeChange,
@@ -14,6 +15,7 @@ function DatePicker ({
   intl,
 }) {
   const minDate = minDateProp || new Date(2000, 0, 1)
+  const calendarMinDate = calendarMinDateProp || minDate
   const maxDate = maxDateProp || new Date()
   const pickerRootRef: { current: null | HTMLDivElement } = useRef(null)
 
@@ -120,10 +122,12 @@ function DatePicker ({
       <DateRangePicker
         className={className}
         value={value}
-        minDate={minDate}
+        minDate={calendarMinDate}
         maxDate={maxDate}
         allowSingleDayRange={true}
         contiguousCalendarMonths={false}
+        singleMonthOnly={false}
+        selectedShortcutIndex={selectedShortcutIndex}
         shortcuts={translatedShortcuts}
         initialMonth={getInitialMonth(value)}
         onChange={handleChange}

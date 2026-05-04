@@ -62,6 +62,22 @@ $stats-danger: #db3737
     color: $white !important
     font-weight: 500
 
+.c-stats-picker
+  .DayPicker-Day--selected,
+  .DayPicker-Day--selected-range,
+  .DayPicker-Day--selected-range-start,
+  .DayPicker-Day--selected-range-end
+    background-color: $purple !important
+    color: $white !important
+
+  .DayPicker-Day--hovered-range:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside)
+    background-color: rgba(115, 81, 212, 0.18) !important
+
+  .bp4-datepicker-day-wrapper .DayPicker-Day--selected,
+  .pt-datepicker-day-wrapper .DayPicker-Day--selected
+    background-color: $purple !important
+    color: $white !important
+
 .c-stats-filter-card__heading,
 .c-stats-information__heading
   margin: 20px 0 10px 0
