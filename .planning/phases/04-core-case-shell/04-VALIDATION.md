@@ -5,6 +5,7 @@ status: approved
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-05-04
+updated: 2026-05-04T17:52:00Z
 ---
 
 # Phase 04 — Validation Strategy
@@ -38,9 +39,9 @@ Per-phase validation contract for Core Case Shell execution.
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 04-01-01 | 01 | 1 | CASE-01, CASE-02, QA-01 | T-04-01 | Auth boundaries remain intact while sampling protected routes. | request/browser | `bundle exec rspec spec/controllers/cases_controller_spec.rb` | yes | pending |
-| 04-01-02 | 01 | 1 | CASE-03, QA-02 | T-04-02 | No unreviewed class/style changes are made without browser evidence. | browser/Jest | `yarn test app/javascript/utility/__tests__/Toolbar.test.jsx` | yes | pending |
-| 04-01-03 | 01 | 1 | QA-03, QA-04 | T-04-03 | QA evidence distinguishes real app failures from known HMR tooling noise. | evidence | `bundle exec rspec spec/controllers/cases_controller_spec.rb spec/features/viewing_a_case_spec.rb spec/features/deleting_a_case_spec.rb spec/features/publishing_a_case_spec.rb` | yes | pending |
+| 04-01-01 | 01 | 1 | CASE-01, CASE-02, QA-01 | T-04-01 | Auth boundaries remain intact while sampling protected routes. | request/browser/UAT | `docker compose exec web bundle exec rspec spec/controllers/cases_controller_spec.rb` | yes | green |
+| 04-01-02 | 01 | 1 | CASE-03, QA-02 | T-04-02 | No unreviewed class/style changes are made without browser evidence. | browser/UI review/UAT | `yarn test app/javascript/utility/__tests__/Toolbar.test.jsx` when toolbar changes | yes | green |
+| 04-01-03 | 01 | 1 | QA-03, QA-04 | T-04-03 | QA evidence distinguishes real app failures from known HMR tooling noise. | evidence/security | `docker compose exec web bundle exec rspec spec/controllers/cases_controller_spec.rb spec/features/viewing_a_case_spec.rb spec/features/deleting_a_case_spec.rb spec/features/publishing_a_case_spec.rb` | yes | green |
 
 *Status: pending / green / red / flaky*
 
@@ -58,6 +59,26 @@ Existing infrastructure covers all phase requirements. No new test framework or 
 |----------|-------------|------------|-------------------|
 | Visual shell compatibility | CASE-03, QA-02 | Approximate Blueprint 2-era visual compatibility is not captured by current automated tests. | Visit selected case shell routes on `localhost:3000`, inspect console/network output, and record visual/browser results in Phase 4 QA evidence. |
 | Existing local slug selection | CASE-01, CASE-02, QA-01 | Local data varies by developer database. | Identify usable local case slug(s), record why they cover the route sample, and document substitutions. |
+| Protected-route Blueprint parity | CASE-03, QA-02, QA-03 | Local feature specs are blocked by Selenium/Capybara driver setup, and protected-route visual state requires a browser session. | With Playwright/MCP, visit `http://host.docker.internal:3000/readers/sign_in`, click `a.oauth-icon-google`, wait for `config/initializers/mock_omniauth.rb` to sign in `dev@learnmsc.org`, then visit protected case routes and inspect BlueprintJS layout, spacing, icons, forms, popovers, and console/network output. |
+
+## Validation Audit 2026-05-04
+
+| Metric | Count |
+|--------|-------|
+| Requirements audited | 7 |
+| Automated green | 1 |
+| Evidence/UAT/security green | 6 |
+| Manual-only | 3 |
+| Open gaps | 0 |
+
+Audit notes:
+
+- `docker compose exec web bundle exec rspec spec/controllers/cases_controller_spec.rb` passed during security verification with `5 examples, 0 failures`.
+- `.planning/phases/04-core-case-shell/04-QA.md` records route-derived browser QA, console/network classifications, known HMR/Mapbox/React local noise, and feature-spec Selenium setup blocker.
+- `.planning/phases/04-core-case-shell/04-UAT.md` is complete with 5 passed and 0 issues.
+- `.planning/phases/04-core-case-shell/04-SECURITY.md` is verified with `threats_open: 0`.
+- `.planning/phases/04-core-case-shell/04-UI-REVIEW.md` records the protected-route Playwright/MCP mock-login gate using `a.oauth-icon-google`.
+- No Phase 4 implementation files changed during execution, so no new implementation test files were needed for narrow compatibility fixes.
 
 ---
 
