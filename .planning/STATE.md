@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
 status: Phase 3 passed; ready to discuss/plan Phase 4
-last_updated: "2026-05-04T14:41:07.316Z"
+last_updated: "2026-05-04T14:53:31.138Z"
 last_activity: 2026-05-04 - Phase 3 catalog routes hardened and search fallback fixed for unpopulated local index
 progress:
   total_phases: 9
@@ -28,7 +28,7 @@ Phase: 4 - Core Case Shell
 Plan: 00 - not planned yet
 Status: Phase 3 passed; ready to discuss/plan Phase 4
 Last activity: 2026-05-04 - Phase 3 catalog routes hardened and search fallback fixed for unpopulated local index
-Resume file: .planning/phases/04-core-case-shell/04-CONTEXT.md
+Resume file: .planning/phases/04-core-case-shell/04-UI-SPEC.md
 
 ## Milestone
 
