@@ -73,4 +73,17 @@ describe('Blueprint asset ownership contract', () => {
     expect(stylesheetPackIndex).toBeGreaterThan(javascriptPackIndex)
     expect(sprocketsStylesheetIndex).toBeGreaterThan(stylesheetPackIndex)
   })
+
+  it('uses the maintained stats map style fallback for global Mapbox views', () => {
+    const source = applicationLayout()
+
+    expect(source).toEqual(
+      expect.stringContaining(
+        'ENV.fetch("MAPBOX_STYLE", "mapbox://styles/mapbox/dark-v11")'
+      )
+    )
+    expect(source).not.toEqual(
+      expect.stringContaining('mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14')
+    )
+  })
 })
