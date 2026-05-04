@@ -26,6 +26,13 @@ This milestone finishes the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJ
 
 **Goal:** Establish repeatable local QA and fix global BlueprintJS asset loading issues before route-specific work begins.
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] `01-01-PLAN.md` — Lock down global Blueprint asset loading ownership and layout order with focused tests.
+- [ ] `01-02-PLAN.md` — Test and preserve the runtime legacy Blueprint namespace bridge.
+- [ ] `01-03-PLAN.md` — Create and execute the local browser QA gate and phase evidence artifact.
+
 **Primary files:**
 - `app/views/layouts/application.html.erb`
 - `app/assets/stylesheets/application.css`
