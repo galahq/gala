@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
 status: ready_for_verification
-last_updated: "2026-05-04T16:16:12.297Z"
-last_activity: 2026-05-04 -- Quick task restored production Mapbox style fallback
+last_updated: "2026-05-04T17:16:02.011Z"
+last_activity: 2026-05-04 -- Quick task documented Google mock login for visual QA
 progress:
   total_phases: 9
   completed_phases: 2
@@ -69,3 +69,4 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 | Date | Task | Status | Commit |
 | --- | --- | --- | --- |
 | 2026-05-04 | Restore production Mapbox style fallback | complete | this commit |
+| 2026-05-04 | Document Google mock login for protected-route visual QA | complete | this commit |

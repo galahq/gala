@@ -135,7 +135,7 @@ Known likely inspection targets:
 | Settings forms | Form fields, selects, submit buttons, sidebar actions, and help links retain usable layout and visible Blueprint states. |
 | Delete confirmation | Confirmation input enables/disables the destructive submit correctly and danger styling remains visible. |
 | React suffix routes | `/cases/:slug`, `/cases/:slug/1`, and `/cases/:slug/conversation` sample the client shell without Rails 404s or blank React states. |
-| Auth boundaries | Editor-only surfaces should be browser-tested with editor auth when available; request specs may supplement when browser auth setup is impractical. |
+| Auth boundaries | Editor-only surfaces should be browser-tested through the local Google mock sign-in flow before relying on anonymous redirects or request specs. |
 
 Do not add new user-facing flows, navigation, or product copy beyond narrow compatibility fixes.
 
@@ -168,6 +168,15 @@ The Phase 4 QA evidence must record:
 - screenshots when visual judgment is ambiguous or a fix is made
 - targeted automated tests run and results
 - substitutions or skipped route families with reason
+
+For authenticated visual checks in local Docker Compose, the browser flow is part of the contract:
+
+1. Open `/readers/sign_in`.
+2. Click the "Sign in with Google" button rendered by the Devise sign-in view.
+3. Let `config/initializers/mock_omniauth.rb` complete the development OmniAuth callback as `dev@learnmsc.org` / "Developer Admin".
+4. Revisit protected case routes in the signed-in session and visually inspect Blueprint controls before marking those protected surfaces acceptable.
+
+Only fall back to anonymous redirect checks or request specs after this Google mock flow is attempted and the failure reason is documented.
 
 Visual pass means the route is usable, nonblank, recognizably Gala, and not obviously regressed from the prior Blueprint-era shape. It does not mean pixel-perfect redesign.
 

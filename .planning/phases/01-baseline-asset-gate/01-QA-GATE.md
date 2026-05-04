@@ -31,6 +31,8 @@ Source: `config/routes.rb`
 
 Automated browser QA used Playwright through the available browser MCP. Because that browser runs in a separate container, route URLs used `host.docker.internal:3000`; direct browser navigation to `localhost:3000` from that container was refused.
 
+For future protected-route visual QA in this same Docker/browser topology, do not stop at anonymous redirects when BlueprintJS parity depends on seeing the protected page. Navigate to `/readers/sign_in`, click the "Sign in with Google" button, and use the development OmniAuth mock configured in `config/initializers/mock_omniauth.rb`. That flow signs in as `dev@learnmsc.org` / "Developer Admin" locally and should be used to inspect admin/editor Blueprint surfaces before declaring protected routes visually acceptable.
+
 Observed:
 - `/` rendered the Gala catalog/sign-in baseline with Blueprint-styled form controls and nav.
 - `/up` rendered plain `OK` with no console messages.
