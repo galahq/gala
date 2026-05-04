@@ -80,6 +80,8 @@ Plans:
 
 **Goal:** Restore and verify the catalog entry point and catalog React Router flows.
 
+**Status:** completed 2026-05-04
+
 **Routes from `config/routes.rb`:**
 - `GET /`
 - `catalog/content_items` and nested session destroy

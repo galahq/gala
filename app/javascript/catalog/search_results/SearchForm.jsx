@@ -49,7 +49,7 @@ function SearchForm ({ history, intl, params }: Props) {
   }
 
   return (
-    <CatalogSection className="pt-dark">
+    <CatalogSection className="pt-dark bp4-dark">
       <SectionTitle>
         <FormattedMessage id="search.refine" />
       </SectionTitle>
@@ -57,7 +57,7 @@ function SearchForm ({ history, intl, params }: Props) {
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <InputGroup
-            className="pt-fill"
+            className="pt-fill bp4-fill"
             aria-label={intl.formatMessage({
               id: 'search.fullTextSearch',
             })}
@@ -107,7 +107,7 @@ export function getSearchPath (params: Object): string {
 }
 
 const SubmitButton = styled(Button).attrs({
-  className: 'pt-button pt-intent-success',
+  className: 'pt-button bp4-button pt-intent-success bp4-intent-success',
   type: 'submit',
   intent: Intent.SUCCESS,
 })`
