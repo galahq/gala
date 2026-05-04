@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
 status: executing
-last_updated: "2026-05-04T22:33:30.000Z"
-last_activity: 2026-05-04 -- Phase 05 Plan 03 completed
+last_updated: "2026-05-04T22:44:00.000Z"
+last_activity: 2026-05-04 -- Phase 05 completed
 progress:
   total_phases: 9
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 5
-  percent: 50
+  completed_plans: 6
+  percent: 60
 ---
 
 # GSD State
@@ -20,15 +20,15 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 05 — nested-case-interactions
+**Current focus:** Phase 06 — reader-library-and-reading-lists
 
 ## Current Position
 
-Phase: 05 (nested-case-interactions) — EXECUTING
-Plan: 4 of 4
-Status: Executing Phase 05 Plan 04
-Last activity: 2026-05-04 -- Phase 05 Plan 03 completed
-Resume file: .planning/phases/05-nested-case-interactions/05-04-PLAN.md
+Phase: 06 (reader-library-and-reading-lists) — READY
+Plan: not started
+Status: Phase 05 complete; ready to discuss or plan Phase 06
+Last activity: 2026-05-04 -- Phase 05 completed
+Resume file: .planning/ROADMAP.md
 
 ## Milestone
 
@@ -47,7 +47,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 ## Blockers
 
-- None for Phases 1-4.
+- None for Phases 1-5.
 
 ## Follow-Up Noise
 

@@ -144,7 +144,7 @@ Plans:
 
 **Goal:** Stabilize the high-risk nested case route groups and components after the case shell is stable.
 
-**Status:** executing 2026-05-04
+**Status:** completed 2026-05-04
 
 **Plans:** 4 plans
 
@@ -152,7 +152,7 @@ Plans:
 - [x] `05-01-PLAN.md` — Stabilized nested comment/forum JSON routes with request specs, browser QA, and a comment thread range-param fix.
 - [x] `05-02-PLAN.md` — Verified stats HTML/JSON/CSV/overview/map behavior with targeted specs and browser QA.
 - [x] `05-03-PLAN.md` — Stabilized quiz/submission JSON routes with request specs, protected browser editor QA, and quiz payload normalization.
-- [ ] `05-04-PLAN.md` — Verify Wikidata, SPARQL, locks, tags, and final Phase 05 route evidence.
+- [x] `05-04-PLAN.md` — Verified Wikidata, SPARQL, locks, tags, and final Phase 05 route evidence.
 
 **Routes from `config/routes.rb`:**
 - `cards`, `case_elements`, `pages`, `podcasts`, `edgenotes`, `comment_threads`, `comments`

@@ -1,9 +1,9 @@
 ---
 phase: 05
 slug: nested-case-interactions
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-04
 ---
 
@@ -33,13 +33,13 @@ Per-phase validation contract for nested case route stabilization.
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 05-01-01 | 01 | 1 | CASE-04, QA-01 | T-05-01 | Protected nested writes require mock admin auth and preserve expected JSON status/body behavior. | RSpec/request or controller | `docker compose exec web bundle exec rspec spec/controllers/cards_controller_spec.rb spec/requests/forums_index_spec.rb` | existing | pending |
-| 05-01-02 | 01 | 1 | CASE-04, QA-02 | T-05-02 | Comment/editor routes remain nonblank after mock Google login and do not expose protected actions when unauthenticated. | Playwright MCP | Manual MCP route pass via `http://host.docker.internal:3000` | existing | pending |
-| 05-02-01 | 02 | 1 | CASE-04, QA-02 | T-05-03 | Stats JSON/HTML/CSV remain authorized and render without new blocking map or console failures. | RSpec/Jest/Playwright | `docker compose exec web bundle exec rspec spec/controllers/cases/stats_controller_spec.rb spec/services/case_stats_service_spec.rb spec/serializers/cases/stats_serializer_spec.rb` | existing | pending |
-| 05-02-02 | 02 | 1 | CASE-04, QA-02 | T-05-04 | Stats map/date controls keep usable Blueprint-era interactions; local Mapbox production-style noise is classified. | Jest/Playwright | `docker compose exec -e NODE_ENV=test web yarn jest app/javascript/stats/__tests__/DatePicker.test.jsx app/javascript/stats/__tests__/StatsPage.test.jsx app/javascript/stats/__tests__/mapInternals.test.js app/javascript/stats/__tests__/statsResponse.test.js app/javascript/stats/__tests__/statsStore.test.js --runInBand` | existing | pending |
-| 05-03-01 | 03 | 2 | CASE-04, QA-01 | T-05-05 | Quiz create/update/destroy and show/submission routes preserve auth and expected JSON/HTML behavior. | RSpec/Jest/Playwright | `docker compose exec web bundle exec rspec spec/services/quiz_updater_spec.rb spec/policies/quiz_policy_spec.rb` | existing | pending |
-| 05-04-01 | 04 | 2 | CASE-04, QA-03 | T-05-06 | Wikidata/SPARQL/tag/lock risks are either fixed if blocking or documented as follow-up concerns. | Request specs/Playwright | Focused request specs added or existing specs for touched files | to be planned | pending |
-| 05-04-02 | 04 | 3 | QA-01, QA-02, QA-03, QA-04 | T-05-07 | Final QA evidence covers every Phase 5 route group and classifies console/network findings. | Documentation + commands | Focused RSpec/Jest commands from plan plus Playwright MCP evidence | to be planned | pending |
+| 05-01-01 | 01 | 1 | CASE-04, QA-01 | T-05-01 | Protected nested writes require mock admin auth and preserve expected JSON status/body behavior. | RSpec/request or controller | `docker compose exec web bundle exec rspec spec/requests/forums_index_spec.rb spec/requests/nested_case_interactions_spec.rb` | existing | complete |
+| 05-01-02 | 01 | 1 | CASE-04, QA-02 | T-05-02 | Comment/editor routes remain nonblank after mock Google login and do not expose protected actions when unauthenticated. | Playwright MCP | Manual MCP route pass via `http://host.docker.internal:3000` | existing | complete |
+| 05-02-01 | 02 | 1 | CASE-04, QA-02 | T-05-03 | Stats JSON/HTML/CSV remain authorized and render without new blocking map or console failures. | RSpec/Jest/Playwright | `docker compose exec web bundle exec rspec spec/controllers/cases/stats_controller_spec.rb spec/services/case_stats_service_spec.rb spec/serializers/cases/stats_serializer_spec.rb` | existing | complete |
+| 05-02-02 | 02 | 1 | CASE-04, QA-02 | T-05-04 | Stats map/date controls keep usable Blueprint-era interactions; local Mapbox production-style noise is classified. | Jest/Playwright | `docker compose exec -e NODE_ENV=test web yarn jest app/javascript/stats/__tests__/DatePicker.test.jsx app/javascript/stats/__tests__/StatsPage.test.jsx app/javascript/stats/__tests__/mapInternals.test.js app/javascript/stats/__tests__/statsResponse.test.js app/javascript/stats/__tests__/statsStore.test.js --runInBand` | existing | complete |
+| 05-03-01 | 03 | 2 | CASE-04, QA-01 | T-05-05 | Quiz create/update/destroy and show/submission routes preserve auth and expected JSON/HTML behavior. | RSpec/Jest/Playwright | `docker compose exec web bundle exec rspec spec/services/quiz_updater_spec.rb spec/policies/quiz_policy_spec.rb spec/requests/quiz_routes_spec.rb` | existing | complete |
+| 05-04-01 | 04 | 2 | CASE-04, QA-03 | T-05-06 | Wikidata/SPARQL/tag/lock risks are either fixed if blocking or documented as follow-up concerns. | Request specs/Playwright | `docker compose exec web bundle exec rspec spec/requests/wikidata_sparql_routes_spec.rb spec/requests/locks_and_taggings_spec.rb spec/jobs/cleanup_locks_job_spec.rb` | added | complete |
+| 05-04-02 | 04 | 3 | QA-01, QA-02, QA-03, QA-04 | T-05-07 | Final QA evidence covers every Phase 5 route group and classifies console/network findings. | Documentation + commands | Combined RSpec/Jest final gates plus Playwright MCP evidence in `05-QA.md` | added | complete |
 
 ## Wave 0 Requirements
 
@@ -57,11 +57,11 @@ Per-phase validation contract for nested case route stabilization.
 
 ## Validation Sign-Off
 
-- [ ] All plans include targeted RSpec/Jest verification for touched backend/frontend files.
-- [ ] All protected Playwright UAT instructions include mock Google login via `a.oauth-icon-google`.
-- [ ] Route evidence table is derived from `config/routes.rb`.
-- [ ] Non-blocking risks are documented separately from upgrade blockers.
-- [ ] No watch-mode test commands.
-- [ ] `nyquist_compliant: true` is set after execution evidence confirms coverage.
+- [x] All plans include targeted RSpec/Jest verification for touched backend/frontend files.
+- [x] All protected Playwright UAT instructions include mock Google login via `a.oauth-icon-google`.
+- [x] Route evidence table is derived from `config/routes.rb`.
+- [x] Non-blocking risks are documented separately from upgrade blockers.
+- [x] No watch-mode test commands.
+- [x] `nyquist_compliant: true` is set after execution evidence confirms coverage.
 
-Approval: pending
+Approval: pass

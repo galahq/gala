@@ -31,7 +31,7 @@
 - [x] **CASE-01**: Case index, show, create, edit, update, destroy, copy, delete confirmation, archive, settings, translations, and library routes keep existing behavior.
 - [x] **CASE-02**: Case React Router suffix routes under `/cases/:case_slug/...` render the same case shell and preserve nested route behavior.
 - [x] **CASE-03**: Case overview/editor Blueprint controls such as buttons, dialogs, editable text, popovers, tags, switches, and inputs retain acceptable spacing, icons, and interaction states.
-- [ ] **CASE-04**: Case comments, forums, comment threads, activities, locks, taggings, podcasts, pages, cards, edgenotes, quizzes, stats, and Wikidata links remain functional after style fixes.
+- [x] **CASE-04**: Case comments, forums, comment threads, activities, locks, taggings, podcasts, pages, cards, edgenotes, quizzes, stats, and Wikidata links remain functional after style fixes.
 
 ### Reader Workflows
 
@@ -102,7 +102,7 @@
 | CASE-01 | Phase 4 | Complete |
 | CASE-02 | Phase 4 | Complete |
 | CASE-03 | Phase 4 | Complete |
-| CASE-04 | Phase 5 | Pending |
+| CASE-04 | Phase 5 | Complete |
 | READ-01 | Phase 6 | Pending |
 | READ-02 | Phase 6 | Pending |
 | READ-03 | Phase 6 | Pending |
