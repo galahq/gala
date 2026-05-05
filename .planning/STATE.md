@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
 status: active
-last_updated: "2026-05-05T14:31:23Z"
-last_activity: 2026-05-05 -- Phase 02 summary reconciled
+last_updated: "2026-05-05T15:18:02Z"
+last_activity: 2026-05-05 -- Completed quick task 260505-fp1: remove legacy automation residue
 progress:
   total_phases: 9
   completed_phases: 5
@@ -27,7 +27,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-03)
 Phase: 03 — PLANNED
 Plan: 0 of 1
 Status: Phase 03 has a plan but no matching summary
-Last activity: 2026-05-05 -- Phase 02 summary reconciled
+Last activity: 2026-05-05 -- Completed quick task 260505-fp1: remove legacy automation residue
 Resume file: .planning/phases/03-catalog-routes/03-01-PLAN.md
 
 ## Milestone
@@ -68,6 +68,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 | Date | Task | Status | Commit |
 | --- | --- | --- | --- |
+| 2026-05-05 | Remove legacy automation residue | complete | this commit |
 | 2026-05-05 | Fix missing reading-list UUID nil title error | complete | this commit |
 | 2026-05-04 | Restore production Mapbox style fallback | complete | this commit |
 | 2026-05-04 | Document Google mock login for protected-route visual QA | complete | this commit |

@@ -327,11 +327,6 @@ gala/
 - Generated: Yes
 - Committed: Project-dependent.
 
-**`.omx`:**
-- Purpose: Workflow/spec/state artifacts from OMX automation.
-- Generated: Yes
-- Committed: Project-dependent.
-
 **`public/packs` and `public/packs-test`:**
 - Purpose: Compiled Shakapacker assets.
 - Generated: Yes

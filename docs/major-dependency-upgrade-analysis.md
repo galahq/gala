@@ -11,8 +11,6 @@ Primary evidence sources:
 - `Gemfile.lock`
 - `app/assets/`
 - `docs/asset-pipeline.md`
-- `.omx/context/*upgrade*`
-- `.omx/plans/*rails8*`
 - `.planning/codebase/*`
 
 ## Executive summary
@@ -79,7 +77,6 @@ Conclusion: the `node-sass` removal is real, but only for the webpack/tooling si
 
 ### Evidence
 
-- Historical baseline in `.omx/reference/main-readonly/package.json` shows `node-sass: 4.12.0`.
 - Current `package.json` removes `node-sass` and adds `sass: 1.92.1`.
 - Current `config/webpack/environment.js` sets the Sass loader implementation to `require('sass')`.
 
@@ -99,8 +96,6 @@ The repo still depends on `sassc-rails` for Sprockets, so Sass remains part of t
 
 ### Evidence
 
-- Historical baseline in `.omx/reference/main-readonly/Gemfile` used `webpacker`.
-- Historical baseline in `.omx/reference/main-readonly/package.json` used `@rails/webpacker`.
 - Current `Gemfile` uses `shakapacker 10.0.0`.
 - Current `package.json` uses `shakapacker 10.0.0`.
 - `config/webpacker.yml` is gone.
@@ -135,10 +130,8 @@ So this is a successful compatibility-preserving migration, not a bundler simpli
 
 ### Evidence
 
-- Historical baseline in `.omx/reference/main-readonly/Gemfile` used `rails '~> 7.0'`.
 - Current `Gemfile` uses `rails '~> 8.1'`.
 - `Gemfile.lock` resolves `rails 8.1.3`.
-- `.omx/plans/test-spec-rails8-shakapacker-ruby-node-upgrade.md` records successful asset precompile and test runs after the upgrade work.
 
 ### Implication
 
@@ -156,11 +149,10 @@ The `.planning` GSD materials are stale and still describe this repo as Rails 7-
 
 ### Evidence
 
-- Historical baseline in `.omx/reference/main-readonly/.ruby-version` was `3.2.9`.
 - Current `.ruby-version` is `4.0.3`.
 - `Gemfile.lock` records `ruby 4.0.3p0`.
 - `Dockerfile` uses `ARG RUBY_VERSION=4.0.3`.
-- `README.md` and `.omx` plan artifacts both describe Ruby 4 as the target runtime.
+- `README.md` describes Ruby 4 as the target runtime.
 
 ### Implication
 
@@ -178,10 +170,6 @@ The move required explicit stdlib dependency additions (`benchmark`, `csv`), whi
 
 ### Evidence: dependency layer
 
-- Historical baseline in `.omx/reference/main-readonly/package.json` used:
-  - `@blueprintjs/core ^2.3.1`
-  - `@blueprintjs/select ^2.0.1`
-  - `@blueprintjs/datetime ^2.0.3`
 - Current `package.json` uses:
   - `@blueprintjs/core 4.20.2`
   - `@blueprintjs/select 4.3.1`
@@ -227,8 +215,6 @@ Recent history shows several follow-up fixes after the initial upgrade:
 - `6f68cd67` fix: restore stats date picker namespace
 - `5739695f` fix: prevent stale stats pack chunks
 
-The `.omx/context/` and `.omx/plans/` artifacts also show repeated route-specific Blueprint 4 investigations for `/my_cases`, `/reading_lists/new`, stats pages, and Rails admin surfaces.
-
 ### Implication
 
 Blueprint 4 is installed, but the app has **not** fully migrated off the old Blueprint namespace or assumptions.
@@ -257,22 +243,7 @@ This explains why Blueprint regressions remained the most visible after the bund
 
 ## Planning-context mismatch
 
-The repository currently has two different planning stories:
-
-### `.omx` context and plans
-
-These are current and aligned with the active repo state. They describe:
-
-- Rails 8.1
-- Ruby 4.0.3
-- Node 24.15.0
-- Shakapacker 10
-- webpack 5
-- captured verification for install/build/test steps
-
-### `.planning` GSD artifacts
-
-These are stale for dependency/runtime analysis. They still describe:
+The repository planning artifacts are stale for dependency/runtime analysis. They still describe:
 
 - Ruby 3.2.9
 - Node 12.5.0
@@ -282,7 +253,7 @@ These are stale for dependency/runtime analysis. They still describe:
 
 ### Practical takeaway
 
-For dependency-upgrade analysis, `.omx` is the current source of truth and `.planning` is historical context unless refreshed.
+For dependency-upgrade analysis, active dependency files are the current source of truth and `.planning` is historical context unless refreshed.
 
 ## Recommended interpretation of current state
 
@@ -320,4 +291,3 @@ If these upgrades are ranked by how "done" they appear today:
 
 - `docs/asset-pipeline.md`
 - `README.md`
-- `docs/agent-playbooks/omx-high-madmax-blueprint4.md`

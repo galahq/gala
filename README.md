@@ -66,16 +66,6 @@ BASE_URL=http://localhost:3001
 If you use host-side Rails or Redis commands with `.env.dev`, update
 `DATABASE_URL` and `REDIS_URL` there to match the published host ports.
 
-### Codex / OMX on stale clones
-
-If entering a clone switches your shell to Node `12.5.0`, modern `codex` and
-`omx` CLIs will fail before Docker starts. The crash you saw from top-level
-`import` syntax is a Node runtime mismatch, not a Docker or OpenAI API error.
-
-This repo's maintained setup expects Node `24.15.0`. If an older clone or branch
-still pins Node `12.5.0`, switch back to Node 24 before launching `codex` or
-`omx`.
-
 ### Updating dependencies
 
 When you update dependencies be sure to run these commands locally first
