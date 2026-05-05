@@ -37,6 +37,18 @@ RSpec.describe 'Reading lists' do
     expect(response).to have_http_status(:success)
   end
 
+  it 'returns not found for a malformed reading list UUID' do
+    get reading_list_path('missing-reading-list')
+
+    expect(response).to have_http_status(:not_found)
+  end
+
+  it 'returns not found for a valid but missing reading list UUID' do
+    get reading_list_path('00000000-0000-4000-8000-000000000000')
+
+    expect(response).to have_http_status(:not_found)
+  end
+
   it 'renders the edit form for the owner' do
     list = create(:reading_list)
     sign_in list.reader

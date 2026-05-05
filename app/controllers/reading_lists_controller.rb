@@ -2,7 +2,10 @@
 
 # @see ReadingList
 class ReadingListsController < ApplicationController
+  UUID_PATTERN = /\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i.freeze
+
   before_action :authenticate_reader!, only: %i[new create edit update destroy]
+  before_action :set_reading_list, only: %i[show edit update destroy]
 
   layout 'admin'
 
@@ -11,9 +14,7 @@ class ReadingListsController < ApplicationController
   end
 
   # @route [GET] `/reading_lists/:uuid`
-  def show
-    set_reading_list
-  end
+  def show; end
 
   # @route [GET] `/reading_lists/new`
   def new
@@ -33,13 +34,11 @@ class ReadingListsController < ApplicationController
 
   # @route [GET] `/reading_lists/:uuid/edit`
   def edit
-    set_reading_list
     authorize @reading_list
   end
 
   # @route [PUT/PATCH] `/reading_lists/:uuid`
   def update
-    set_reading_list
     authorize @reading_list
 
     if update_reading_list
@@ -51,7 +50,6 @@ class ReadingListsController < ApplicationController
 
   # @route [DELETE] `/reading_lists/:uuid`
   def destroy
-    set_reading_list
     authorize @reading_list
     @reading_list.destroy
     redirect_to root_path
@@ -60,10 +58,14 @@ class ReadingListsController < ApplicationController
   private
 
   def set_reading_list
+    return head :not_found unless params[:uuid].match?(UUID_PATTERN)
+
     @reading_list =
       ReadingList
       .includes(reading_list_items: [case: [cover_image_attachment: :blob]])
-      .find_by_uuid(params[:uuid])
+      .find_by(uuid: params[:uuid])
+
+    head :not_found unless @reading_list
   end
 
   def update_reading_list

@@ -68,5 +68,6 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 | Date | Task | Status | Commit |
 | --- | --- | --- | --- |
+| 2026-05-05 | Fix missing reading-list UUID nil title error | complete | this commit |
 | 2026-05-04 | Restore production Mapbox style fallback | complete | this commit |
 | 2026-05-04 | Document Google mock login for protected-route visual QA | complete | this commit |
