@@ -27,6 +27,8 @@ export default class extends Controller {
   }
 
   async connect () {
+    if (!this.hasEditorTarget) return
+
     const messages = await this._loadIntlData()
 
     render(
@@ -40,6 +42,8 @@ export default class extends Controller {
   }
 
   disconnect () {
+    if (!this.hasEditorTarget) return
+
     this.editorTarget.innerHTML = ''
   }
 

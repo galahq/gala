@@ -72,6 +72,7 @@ class ReadingListsController < ApplicationController
     end
 
     @reading_list.update_social_image
+    true
   end
 
   def reading_list_params

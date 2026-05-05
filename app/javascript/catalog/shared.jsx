@@ -106,7 +106,7 @@ export const ElementImage = styled.div.attrs({ role: 'presentation' })`
   width: ${props => props.wide ? "56px" : "36px"};
   height: 36px;
   border-radius: 2px;
-  background-image: ${({ src }) => `url(${src})`};
+  background-image: ${({ src }) => src ? `url(${src})` : 'none'};
   background-size: cover;
   background-position: center;
 `

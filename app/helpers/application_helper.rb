@@ -19,7 +19,15 @@ module ApplicationHelper
 
   def collected_stylesheet_pack_tag(*default_names, **options)
     names = default_names + content_for(:javascript_pack_names).to_s.split
-    stylesheet_pack_tag(*names.uniq, **options)
+    safe_stylesheet_pack_tags(*names.uniq, **options)
+  end
+
+  def safe_stylesheet_pack_tags(*names, **options)
+    safe_join(names.filter_map do |name|
+      stylesheet_pack_tag(name, **options)
+    rescue Shakapacker::Manifest::MissingEntryError
+      nil
+    end, "\n")
   end
 
   # Helpers for content_for blocks in view layouts
