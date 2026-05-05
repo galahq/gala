@@ -182,6 +182,8 @@ Plans:
 
 **Goal:** Stabilize user account, profile, library, and reading-list workflows.
 
+**Status:** completed 2026-05-05
+
 **Routes from `config/routes.rb`:**
 - Devise `readers` routes
 - `profile`, nested `persona`
@@ -210,6 +212,13 @@ Plans:
 
 **Goal:** Stabilize deployment workflows and integration surfaces without weakening validation boundaries.
 
+**Status:** completed 2026-05-05
+
+**Plans:** 1 plan
+
+Plans:
+- [x] `07-01-PLAN.md` — Stabilized deployment views/pack classes, added integration route specs, browser-QAed deployment surfaces, and passed targeted route/build gates.
+
 **Routes from `config/routes.rb`:**
 - `deployments#index/show/new/create/edit/update`
 - nested deployment submissions
@@ -235,6 +244,8 @@ Plans:
 ### Phase 8: Admin and Operations
 
 **Goal:** Stabilize admin dashboards and operational routes after public/user-facing flows are stable.
+
+**Status:** next
 
 **Routes from `config/routes.rb`:**
 - `admin` root and all Administrate resources

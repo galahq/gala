@@ -31,13 +31,13 @@ const Toolbar = ({
 }: Props) => {
   const { coverUrl, kicker } = caseData
   return (
-    <BottomFixedToolbar className="pt-navbar">
-      <div className="pt-navbar-group pt-align-left">
+    <BottomFixedToolbar className="pt-navbar bp4-navbar">
+      <div className="pt-navbar-group bp4-navbar-group pt-align-left bp4-align-left">
         <CaseIcon src={coverUrl} />
-        <div className="pt-navbar-heading">{kicker}</div>
+        <div className="pt-navbar-heading bp4-navbar-heading">{kicker}</div>
       </div>
 
-      <div className="pt-navbar-group pt-align-right">
+      <div className="pt-navbar-group bp4-navbar-group pt-align-right bp4-align-right">
         <Switch
           checked={withPretest}
           label="Use pre-test"
@@ -51,7 +51,7 @@ const Toolbar = ({
         />
 
         <button
-          className="pt-button pt-intent-success"
+          className="pt-button bp4-button pt-intent-success bp4-intent-success"
           style={{ marginLeft: 10 }}
           onClick={onSubmit}
         >

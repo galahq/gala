@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
 status: active
-last_updated: "2026-05-05T15:18:02Z"
-last_activity: 2026-05-05 -- Completed quick task 260505-fp1: remove legacy automation residue
+last_updated: "2026-05-05T15:35:00Z"
+last_activity: 2026-05-05 -- Completed Phase 07 deployment and integration route stabilization
 progress:
   total_phases: 9
-  completed_phases: 5
-  total_plans: 13
-  completed_plans: 12
-  percent: 92
+  completed_phases: 7
+  total_plans: 14
+  completed_plans: 14
+  percent: 78
 ---
 
 # GSD State
@@ -20,15 +20,15 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 03 — catalog-routes
+**Current focus:** Phase 08 — admin-and-operations
 
 ## Current Position
 
-Phase: 03 — PLANNED
-Plan: 0 of 1
-Status: Phase 03 has a plan but no matching summary
-Last activity: 2026-05-05 -- Completed quick task 260505-fp1: remove legacy automation residue
-Resume file: .planning/phases/03-catalog-routes/03-01-PLAN.md
+Phase: 08 — READY
+Plan: 0 of 0
+Status: Phase 07 passed QA gate and was completed; Phase 08 is the next route group.
+Last activity: 2026-05-05 -- Completed Phase 07 deployment and integration route stabilization
+Resume file: .planning/ROADMAP.md#phase-8-admin-and-operations
 
 ## Milestone
 
@@ -47,7 +47,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 ## Blockers
 
-- None for Phases 1-5.
+- None for Phases 1-7.
 
 ## Follow-Up Noise
 
@@ -57,6 +57,8 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 - Phase 3 search returns `[]` if the local `cases_search_index` materialized view is present but unpopulated; refresh the index for real local search data.
 - Phase 4 feature-spec supplement coverage was blocked by local Selenium/Capybara setup: `Can't initialize Selenium::WebDriver::Chrome::Driver with :url`.
 - Phase 4 had no existing local editor-accessible case; protected case routes were verified as anonymous sign-in redirects and controller specs supplemented route behavior.
+- Phase 7 full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; targeted RSpec and Shakapacker gates passed.
+- Phase 7 browser QA on deployment routes showed existing local dev-server stale chunk 404/MIME noise and shared styled-components deprecation warnings, with no deployment-specific blocker.
 
 ## Notes
 
