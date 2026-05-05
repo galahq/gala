@@ -45,7 +45,7 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
 
         <form onSubmit={handleSearch}>
           <InputGroup
-            className="pt-round"
+            className="pt-round bp4-round"
             leftIcon="search"
             name="q"
             role="search"
@@ -54,7 +54,7 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
             })}
             rightElement={
               <button
-                className="pt-button pt-minimal pt-icon-arrow-right"
+                className="pt-button bp4-button pt-minimal bp4-minimal pt-icon-arrow-right bp4-icon-arrow-right"
                 type="submit"
                 aria-label={intl.formatMessage({
               id: 'search.submitSearch',
@@ -120,7 +120,7 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
 
 export default injectIntl(CaseChooser)
 
-const Container = styled.div.attrs({ className: 'pt-card' })`
+const Container = styled.div.attrs({ className: 'pt-card bp4-card' })`
   &:not(:first-child) {
     margin-top: 64px;
   }
