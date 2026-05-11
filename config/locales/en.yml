@@ -668,6 +668,7 @@ en:
       sample_answer: "Sample Answer:"
   devise:
     providers:
+      google: Google
       google_oauth2: Google
       lti: Canvas
     registrations:
