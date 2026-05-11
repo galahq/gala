@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
+milestone_name: Upgrade Stabilization
 status: planning
-last_updated: "2026-05-11T22:16:19.198Z"
+last_updated: "2026-05-11T22:20:13.000Z"
 last_activity: 2026-05-11
 progress:
   total_phases: 10
   completed_phases: 8
   total_plans: 17
   completed_plans: 16
-  percent: 80
+  percent: 94
 ---
 
 # GSD State
@@ -20,7 +20,7 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 09 — deslopification-and-final-regression
+**Current focus:** Phase 999.8 — follow-up-—-phase-8-incomplete-plans-(backlog)
 
 ## Current Position
 
@@ -28,7 +28,7 @@ Phase: 999.8
 Plan: Not started
 Status: Ready to plan
 Last activity: 2026-05-11
-Resume file: .planning/ROADMAP.md#phase-9-deslopification-and-final-regression
+Resume file: .planning/ROADMAP.md#phase-999-8-follow-up--phase-8-incomplete-plans-(backlog)
 
 ## Milestone
 
