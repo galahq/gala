@@ -18,7 +18,7 @@ This milestone finishes the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJ
 | 6 | Reader, Library, and Reading Lists | Stabilize Devise reader flows, profiles, enrollments, libraries, reading lists, saved lists, and management routes | READ-01, READ-02, READ-03, QA-01, QA-02, QA-03, QA-04 |
 | 7 | Deployments and Integrations | Stabilize deployments, submissions, Canvas/LTI/content-item flows, SPARQL, and external integration route behavior | DEP-01, DEP-02, DEP-03, QA-01, QA-02, QA-03, QA-04 |
 | 8 | Admin and Operations | Stabilize admin resources, admin case copy, Sidekiq, and operational access boundaries | ADM-01, ADM-02, ADM-03, QA-01, QA-02, QA-03, QA-04 |
-| 9 | Deslopification and Final Regression | Remove upgrade leftovers and run broad regression checks | CLEAN-01, CLEAN-02, CLEAN-03, QA-01, QA-02, QA-03, QA-04 |
+| 9 | 1/1 | Complete    | 2026-05-11 |
 
 ## Phase Details
 
@@ -294,6 +294,16 @@ Plans:
 4. Final commit leaves the codebase cleaner than the start of the milestone and records any remaining risks.
 
 **UI hint:** yes
+
+## Backlog
+
+### Phase 999.8: Follow-up — Phase 8 incomplete plans (BACKLOG)
+
+**Goal:** Resolve execution gap from Phase 8 before finalization.
+**Source phase:** 8
+**Deferred at:** 2026-05-11 during $gsd-progress --next advancement to Phase 9
+**Plans:**
+1/1 plans complete
 
 ## Execution Rules
 
