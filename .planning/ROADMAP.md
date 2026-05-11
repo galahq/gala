@@ -245,7 +245,13 @@ Plans:
 
 **Goal:** Stabilize admin dashboards and operational routes after public/user-facing flows are stable.
 
-**Status:** next
+**Status:** completed 2026-05-11
+
+**Plans:** 2 plans
+
+Plans:
+- [x] `08-01-PLAN.md` — Built the routed admin checklist, dataset recipe, and targeted request/controller coverage for admin access, Ahoy ordering, copy behavior, and `/sidekiq`.
+- [x] `08-02-PLAN.md` — Browser-QAed representative admin routes, fixed shared admin field rendering regressions, validated the live copy flow and Ahoy ordering, and passed the final targeted spec gate.
 
 **Routes from `config/routes.rb`:**
 - `admin` root and all Administrate resources
@@ -270,6 +276,8 @@ Plans:
 ### Phase 9: Deslopification and Final Regression
 
 **Goal:** Clean up upgrade leftovers after all route groups have passed.
+
+**Status:** next
 
 **Primary files:**
 - Any compatibility CSS/JS touched in earlier phases

@@ -46,6 +46,10 @@ module Ahoy
       "Stats/#{kase.id}/#{max_id}"
     end
 
+    def user_name
+      user&.name || 'Anonymous'
+    end
+
     def populate_case_id
       self.case_id ||= Case.friendly.find(properties['case_slug']).id
     rescue ActiveRecord::RecordNotFound

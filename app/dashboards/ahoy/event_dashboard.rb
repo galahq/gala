@@ -11,7 +11,7 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     visit: Field::BelongsTo,
-    user: Field::BelongsTo.with_options(class_name: 'Reader'),
+    user_name: Field::String,
     id: Field::Number,
     user_id: Field::Number,
     name: Field::String,
@@ -25,7 +25,7 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
-    user
+    user_name
     name
     properties
     time
@@ -35,7 +35,7 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
     # :visit,
-    :user,
+    :user_name,
     :id,
     :name,
     :properties,
@@ -47,7 +47,6 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     # :visit,
-    :user,
     :user_id,
     :name,
     :properties,

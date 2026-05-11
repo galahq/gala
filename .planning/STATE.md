@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
 status: active
-last_updated: "2026-05-05T15:35:00Z"
-last_activity: 2026-05-05 -- Completed Phase 07 deployment and integration route stabilization
+last_updated: "2026-05-11T21:26:35Z"
+last_activity: 2026-05-11 -- Completed Phase 08 admin and operations stabilization
 progress:
   total_phases: 9
-  completed_phases: 7
-  total_plans: 14
-  completed_plans: 14
-  percent: 78
+  completed_phases: 8
+  total_plans: 16
+  completed_plans: 16
+  percent: 89
 ---
 
 # GSD State
@@ -20,15 +20,15 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-03)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 08 — admin-and-operations
+**Current focus:** Phase 09 — deslopification-and-final-regression
 
 ## Current Position
 
-Phase: 08 — READY
+Phase: 09 — READY
 Plan: 0 of 0
-Status: Phase 07 passed QA gate and was completed; Phase 08 is the next route group.
-Last activity: 2026-05-05 -- Completed Phase 07 deployment and integration route stabilization
-Resume file: .planning/ROADMAP.md#phase-8-admin-and-operations
+Status: Phase 08 passed QA gate and was completed; Phase 09 is the next route group.
+Last activity: 2026-05-11 -- Completed Phase 08 admin and operations stabilization
+Resume file: .planning/ROADMAP.md#phase-9-deslopification-and-final-regression
 
 ## Milestone
 
@@ -47,7 +47,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 ## Blockers
 
-- None for Phases 1-7.
+- None for Phases 1-8.
 
 ## Follow-Up Noise
 
@@ -59,6 +59,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 - Phase 4 had no existing local editor-accessible case; protected case routes were verified as anonymous sign-in redirects and controller specs supplemented route behavior.
 - Phase 7 full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; targeted RSpec and Shakapacker gates passed.
 - Phase 7 browser QA on deployment routes showed existing local dev-server stale chunk 404/MIME noise and shared styled-components deprecation warnings, with no deployment-specific blocker.
+- Phase 8 browser QA confirmed the routed admin and Sidekiq surfaces are stable; remaining public-shell React/styled-components warnings and a Mapbox style `404` were accepted as unrelated noise for this route group.
 
 ## Notes
 
