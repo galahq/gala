@@ -367,22 +367,25 @@ Source: Vite manifest docs. [CITED: https://vite.dev/guide/backend-integration.h
 | A1 | The Vite production replacement will likely be deferred for v1.1 unless the spike is unusually clean. [ASSUMED] | Summary / fallback | If wrong, planner may under-plan a production migration; VITE-05 still requires route/build/asset proof before replacement. |
 | A2 | `vite-plugin-babel` is sufficient to test Flow stripping in a temporary spike. [ASSUMED] | Standard Stack / Pattern 1 | If wrong, the spike should record Flow parsing as a blocker and defer to Phase 13/16 rather than adding custom transforms. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Can Vite parse all active Flow-bearing entry dependencies without source rewrites?**
    - What we know: Current Babel config strips Flow and many app files contain Flow annotations. [VERIFIED: .babelrc.js] [VERIFIED: rg repo scan]
    - What's unclear: Whether a temporary Vite/Babel bridge handles every dependency path and dynamic import shape. [ASSUMED]
    - Recommendation: Make Flow parse success/failure an explicit Vite and Vitest spike result.
+   - RESOLVED for planning: Phase 12 will not assume compatibility. The plan resolves this by running temporary Vitest and Vite configs with the existing Babel/Flow path and recording pass/fail evidence in `12-01-SUMMARY.md`; failures become Phase 13/16 blockers rather than Phase 12 source rewrites.
 
 2. **Can `require.context` for Stimulus controllers be replaced without broad behavior change?**
    - What we know: `controllers.js` uses `stimulus/webpack-helpers` and `require.context`. [VERIFIED: app/javascript/packs/controllers.js]
    - What's unclear: Whether a Vite equivalent can be introduced narrowly or must wait for a production migration phase. [ASSUMED]
    - Recommendation: Record as blocker if Vite build fails here; do not rewrite controllers in Phase 12.
+   - RESOLVED for planning: The Vite spike will include `controllers.js` as representative Webpack-only coverage. If `require.context` blocks the build, the decision artifact will defer Vite production replacement and keep Shakapacker/Webpack for v1.1.
 
 3. **Will Blueprint namespace bridging behave identically when bundled by Vite?**
    - What we know: Tests cover legacy `pt-` to `bp4-` class mirroring and CSS ownership. [VERIFIED: app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js] [VERIFIED: app/javascript/shared/__tests__/blueprintAssetContract.test.js]
    - What's unclear: Whether output chunk order and CSS injection under Vite preserves route behavior. [ASSUMED]
    - Recommendation: Keep Sprockets Blueprint CSS unchanged during spike and require browser QA before accepting production replacement.
+   - RESOLVED for planning: The plan treats Blueprint compatibility as a Vite acceptance gate. Phase 12 preserves Sprockets-owned Blueprint CSS, inspects Vite CSS/manifest output, and requires localhost route QA before any production replacement can be accepted.
 
 ## Environment Availability
 
