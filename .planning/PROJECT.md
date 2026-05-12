@@ -11,10 +11,11 @@ Every important route must keep working and looking recognizably like the pre-up
 ## Current State
 
 **Shipped:** v1.0 Upgrade Stabilization on 2026-05-12.
+**Active:** v1.1 Dependency Modernization and Test Coverage.
 
 The v1.0 milestone completed the route-driven Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade stabilization. Route groups from `config/routes.rb` were checked through focused browser QA, console/network triage, and targeted RSpec/Jest gates. Detailed records are archived in `.planning/milestones/`.
 
-The active planning state is now between milestones. Start the next one with `$gsd-new-milestone`.
+The v1.1 milestone will modernize Ruby and JavaScript dependencies using current recommended stable releases, migrate Node package management from Yarn 1 to pnpm, restore reliable frontend test execution, and add Playwright visual regression coverage for high-value route groups.
 
 ## Requirements
 
@@ -30,12 +31,12 @@ The active planning state is now between milestones. Start the next one with `$g
 
 ### Active
 
-- [ ] Define the next milestone requirements with `$gsd-new-milestone`.
+- [ ] Define v1.1 requirements for dependency modernization, pnpm migration, frontend tests, and Playwright visual regression coverage.
 
 ### Out of Scope
 
 - Full redesign of Gala UI — compatibility with the prior BlueprintJS-era experience remains the goal unless a future milestone explicitly changes that.
-- Rewriting React 16/Flow/Redux architecture — only change it where required by a scoped stabilization or modernization milestone.
+- Rewriting React 16/Flow/Redux architecture — only change it where required to unblock dependency modernization or reliable frontend tests.
 - Replacing BlueprintJS with a different component library — this requires a separate product/technical milestone.
 - Large product feature changes — route behavior should remain stable unless a future milestone deliberately expands scope.
 - Production deployment automation changes — v1.0 focused on local route QA and code stabilization.
@@ -48,6 +49,8 @@ BlueprintJS packages are currently `@blueprintjs/core` 4.20.2, `@blueprintjs/dat
 
 Known remaining technical debt:
 - Full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; targeted Jest gates passed.
+- Package management still uses Yarn 1 and `yarn.lock`; v1.1 will replace that workflow with pnpm and `pnpm-lock.yaml`.
+- Playwright is present as a dependency but no durable visual regression harness is established for route coverage.
 - Browser QA may report existing styled-components/React warnings and local Mapbox style `404` noise. These were classified as non-blocking where visible route behavior was unaffected.
 - Nyquist validation artifacts are not uniform across the archived milestone; see `.planning/milestones/v1.0-MILESTONE-AUDIT.md`.
 
@@ -58,6 +61,7 @@ Known remaining technical debt:
 - **Visual target:** Use the approximate BlueprintJS 2.3.1-era Gala appearance as the compatibility baseline unless explicitly changed.
 - **Route scope:** Route groups should be derived from `config/routes.rb`.
 - **Regression control:** Keep fixes narrow and route-driven; avoid broad styling or dependency changes without a scoped milestone.
+- **Package manager:** Use pnpm for Node dependency installation and lockfile management during v1.1.
 
 ## Key Decisions
 
@@ -68,16 +72,17 @@ Known remaining technical debt:
 | Require QA and commit before moving to the next route group | The user explicitly asked to prevent regressions and commit after each route/phase gate | Good — phase artifacts record QA gates and commits |
 | Treat BlueprintJS 2.3.1-era visuals as the approximation baseline | Current packages are BlueprintJS 4.x, but desired outcome was compatibility with the prior app look | Good — shared compatibility layers were preserved and tested |
 | End with deslopification | Upgrade work left compatibility shims and duplicated assumptions that needed cleanup after behavior was stable | Good — Phase 9 cleaned shared assumptions and ran final regression gates |
+| Start v1.1 with dependency and test research | Latest package guidance changes over time, and this milestone touches multiple toolchains | Pending — research is being captured before requirements are finalized |
 
 ## Evolution
 
 This document evolves at milestone boundaries.
 
-**Next milestone setup** should:
-1. Define fresh requirements.
-2. Decide whether to address known frontend/Jest modernization debt.
-3. Decide whether Nyquist artifact uniformity matters for archived v1.0 phases.
-4. Keep route-driven QA expectations for any route-affecting work.
+**v1.1 milestone setup** should:
+1. Capture current Ruby, Rails gem, pnpm, Jest/frontend-test, and Playwright visual regression guidance.
+2. Define fresh requirements from that research.
+3. Preserve route-driven QA expectations for route-affecting dependency changes.
+4. Avoid product/UI redesign while modernizing the underlying toolchain.
 
 ---
-*Last updated: 2026-05-12 after v1.0 milestone*
+*Last updated: 2026-05-12 for v1.1 milestone planning*
