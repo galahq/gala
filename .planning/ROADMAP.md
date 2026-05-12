@@ -66,6 +66,8 @@ Plans:
 
 ### Phase 13: Flow Removal and TypeScript/JSDoc Foundation
 
+- [x] Phase 13: Complete (2026-05-12)
+
 **Goal:** Remove Flow from the active frontend toolchain and establish the modern typing path.
 
 **Requirements:** TYPE-01, TYPE-02, TYPE-03, TYPE-04, TYPE-05, TYPE-06
@@ -76,6 +78,12 @@ Plans:
 3. TypeScript is configured as the forward type-system target.
 4. JSDoc is used where plain JavaScript is the lower-risk migration path.
 5. Broad replacement ignores are avoided or documented with a specific migration reason.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [x] 13-01-PLAN.md — Remove Flow tooling and source annotations, then add TypeScript/JSDoc baseline.
 
 ### Phase 14: Ruby Dependency Modernization
 

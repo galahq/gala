@@ -22,12 +22,12 @@
 
 ### Flow Removal and Modern Typing
 
-- [ ] **TYPE-01**: Flow-specific Node dependencies and tooling are removed from active project configuration.
-- [ ] **TYPE-02**: Source files no longer require Flow parsing to build or test.
-- [ ] **TYPE-03**: Flow annotations, `$FlowFixMe`, `@flow`, and `@noflow` comments are removed or converted.
-- [ ] **TYPE-04**: TypeScript is introduced as the forward type-system target.
-- [ ] **TYPE-05**: JSDoc is allowed for JavaScript files where TypeScript/TSX conversion would add unnecessary churn.
-- [ ] **TYPE-06**: New broad ignore comments are avoided unless a specific migration reason is documented.
+- [x] **TYPE-01**: Flow-specific Node dependencies and tooling are removed from active project configuration.
+- [x] **TYPE-02**: Source files no longer require Flow parsing to build or test.
+- [x] **TYPE-03**: Flow annotations, `$FlowFixMe`, `@flow`, and `@noflow` comments are removed or converted.
+- [x] **TYPE-04**: TypeScript is introduced as the forward type-system target.
+- [x] **TYPE-05**: JSDoc is allowed for JavaScript files where TypeScript/TSX conversion would add unnecessary churn.
+- [x] **TYPE-06**: New broad ignore comments are avoided unless a specific migration reason is documented.
 
 ### Ruby Dependency Modernization
 
@@ -110,12 +110,12 @@
 | PNPM-03 | Phase 11 | Complete |
 | PNPM-04 | Phase 11 | Complete |
 | PNPM-05 | Phase 11 | Complete |
-| TYPE-01 | Phase 13 | Pending |
-| TYPE-02 | Phase 13 | Pending |
-| TYPE-03 | Phase 13 | Pending |
-| TYPE-04 | Phase 13 | Pending |
-| TYPE-05 | Phase 13 | Pending |
-| TYPE-06 | Phase 13 | Pending |
+| TYPE-01 | Phase 13 | Complete |
+| TYPE-02 | Phase 13 | Complete |
+| TYPE-03 | Phase 13 | Complete |
+| TYPE-04 | Phase 13 | Complete |
+| TYPE-05 | Phase 13 | Complete |
+| TYPE-06 | Phase 13 | Complete |
 | RUBY-01 | Phase 14 | Pending |
 | RUBY-02 | Phase 14 | Pending |
 | RUBY-03 | Phase 14 | Pending |

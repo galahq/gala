@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization and Test Coverage
 status: Ready to discuss
-last_updated: "2026-05-12T03:33:55.060Z"
-last_activity: 2026-05-12 -- Phase 12 complete; ready for Phase 13
+last_updated: "2026-05-12T03:39:30.000Z"
+last_activity: 2026-05-12 -- Phase 13 complete; ready for Phase 14
 progress:
   total_phases: 9
-  completed_phases: 3
-  total_plans: 4
-  completed_plans: 4
-  percent: 33
+  completed_phases: 4
+  total_plans: 5
+  completed_plans: 5
+  percent: 44
 ---
 
 # GSD State
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 13 Flow removal and TypeScript/JSDoc foundation
+**Current focus:** Phase 14 Ruby dependency modernization
 
 ## Current Position
 
-Phase: 13 — Flow Removal and TypeScript/JSDoc Foundation
+Phase: 14 — Ruby Dependency Modernization
 Plan: —
 Status: Ready to discuss
-Last activity: 2026-05-12 -- Phase 12 complete; ready for Phase 13
+Last activity: 2026-05-12 -- Phase 13 complete; ready for Phase 14
 
 ## Milestone
 
@@ -64,6 +64,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 7 full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; v1.1 should replace this with a reliable pnpm-backed frontend test command, preferably Vitest if feasible.
 - Phase 7 browser QA on deployment routes showed existing local dev-server stale chunk 404/MIME noise and shared styled-components deprecation warnings, with no deployment-specific blocker.
 - Phase 8 browser QA confirmed the routed admin and Sidekiq surfaces are stable; remaining public-shell React/styled-components warnings and a Mapbox style `404` were accepted as unrelated noise for this route group.
+- Phase 13 removed Flow syntax/tooling with a mechanical strip. TypeScript is present as a non-emitting `allowJs`/JSDoc baseline with `skipLibCheck` until third-party React/webpack ambient types are addressed by a later typing phase.
 
 ## Notes
 
@@ -83,4 +84,4 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Operator Next Steps
 
-- Continue Phase 13 with `$gsd-discuss-phase 13 --auto`.
+- Continue Phase 14 with `$gsd-discuss-phase 14 --auto`.
