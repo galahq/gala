@@ -355,17 +355,19 @@ RUN bundle install --jobs 20 --retry 2 \
 | A1 | Existing Jest failures should be preserved or documented rather than fixed in Phase 11. [ASSUMED] | Standard Stack, Validation Architecture | Planner may under-test if Phase 11 unexpectedly requires repairing Jest to prove parity; mitigate by comparing pnpm failures to the known Yarn baseline. |
 | A2 | Standard pnpm node_modules layout will probably work for Shakapacker/Webpack after missing direct dependencies are addressed. [ASSUMED] | Summary, Pitfalls | Planner may need a fallback `.npmrc` `node-linker=hoisted` task if legacy tooling breaks on symlinks. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should pre-existing `package.json`/`yarn.lock` diffs be adopted into the pnpm migration commit?**
    - What we know: Current diff changes `test` to set `NODE_ENV=test` and adds `playwright`; Phase 10 summary says these diffs were pre-existing. [VERIFIED: git diff, .planning/phases/10-dependency-target-baseline/10-01-SUMMARY.md]
    - What's unclear: Whether the user intends these diffs to be part of Phase 11 or preserved separately. [ASSUMED]
    - Recommendation: Planner should start with an explicit diff-read task and either include the changes as accepted baseline or keep them untouched while migrating. [VERIFIED: .planning/phases/11-pnpm-package-manager-migration/11-CONTEXT.md]
+   - RESOLVED: Preserve pre-existing `package.json`/`yarn.lock` diffs as user work initially. Phase 11 Task 1 must classify them before mutation, then the executor may carry those changes forward only as existing baseline for migration, not expand or revert them. If migration needs to mutate the same files, preserve the `NODE_ENV=test` script adjustment and Playwright additions unless the user later says otherwise, and record that in the summary.
 
 2. **Does `pnpm install` pass with default symlinked layout?**
    - What we know: pnpm default layout differs from Yarn Classic hoisting. [CITED: https://pnpm.io/motivation]
    - What's unclear: Whether Gala's legacy Babel/Jest/Webpack stack imports undeclared transitive dependencies. [ASSUMED]
    - Recommendation: Run default pnpm first, then add direct dependencies or `node-linker=hoisted` only with error evidence. [CITED: https://pnpm.io/cli/why]
+   - RESOLVED: Default pnpm symlinked layout is the starting path. Add `.npmrc` or `node-linker=hoisted` only after concrete install/build/test error evidence, and document the reason in the summary.
 
 ## Environment Availability
 
