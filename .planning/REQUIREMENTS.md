@@ -7,10 +7,10 @@
 
 ### Dependency Policy
 
-- [ ] **DEPS-01**: Dependency target selection uses current official registry/doc data at implementation time.
-- [ ] **DEPS-02**: React remains on the current 16.8 line during v1.1.
-- [ ] **DEPS-03**: BlueprintJS remains on the current 4.x line during v1.1.
-- [ ] **DEPS-04**: Any dependency intentionally held below latest is documented with the compatibility reason.
+- [x] **DEPS-01**: Dependency target selection uses current official registry/doc data at implementation time.
+- [x] **DEPS-02**: React remains on the current 16.8 line during v1.1.
+- [x] **DEPS-03**: BlueprintJS remains on the current 4.x line during v1.1.
+- [x] **DEPS-04**: Any dependency intentionally held below latest is documented with the compatibility reason.
 
 ### pnpm Migration
 
@@ -101,10 +101,10 @@
 
 | Requirement | Phase | Status |
 | --- | --- | --- |
-| DEPS-01 | Phase 10 | Pending |
-| DEPS-02 | Phase 10 | Pending |
-| DEPS-03 | Phase 10 | Pending |
-| DEPS-04 | Phase 10 | Pending |
+| DEPS-01 | Phase 10 | Complete |
+| DEPS-02 | Phase 10 | Complete |
+| DEPS-03 | Phase 10 | Complete |
+| DEPS-04 | Phase 10 | Complete |
 | PNPM-01 | Phase 11 | Pending |
 | PNPM-02 | Phase 11 | Pending |
 | PNPM-03 | Phase 11 | Pending |
