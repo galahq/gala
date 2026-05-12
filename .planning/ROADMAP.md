@@ -37,7 +37,7 @@
 
 Plans:
 **Wave 1**
-- [ ] 11-01-PLAN.md — Pin pnpm metadata, generate `pnpm-lock.yaml`, and prove install/build/test parity before removing `yarn.lock`.
+- [x] 11-01-PLAN.md — Pin pnpm metadata, generate `pnpm-lock.yaml`, and prove install/build/test parity before removing `yarn.lock`.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 11-02-PLAN.md — Replace Docker, Semaphore, README/docs, bin, and asset-comment Yarn assumptions with pnpm equivalents.
