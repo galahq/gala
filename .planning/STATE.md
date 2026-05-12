@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization and Test Coverage
 status: planning
-last_updated: "2026-05-12T02:28:00.000Z"
-last_activity: 2026-05-12 — v1.1 roadmap approved
+last_updated: "2026-05-12T02:30:00.000Z"
+last_activity: 2026-05-12 — Phase 10 context and research captured
 progress:
   total_phases: 9
   completed_phases: 0
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Defining v1.1 dependency modernization and test coverage requirements
+**Current focus:** Planning Phase 10 dependency target baseline
 
 ## Current Position
 
 Phase: 10 — Dependency Target Baseline
 Plan: —
-Status: Ready to discuss Phase 10
-Last activity: 2026-05-12 — v1.1 roadmap approved
+Status: Planning Phase 10
+Last activity: 2026-05-12 — Phase 10 context and research captured
 
 ## Milestone
 
@@ -51,7 +51,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Blockers
 
-- Phase 10 has not started yet.
+- None.
 
 ## Follow-Up Noise
 
@@ -83,4 +83,4 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Operator Next Steps
 
-- Start Phase 10 with `$gsd-discuss-phase 10`.
+- Continue Phase 10 with `$gsd-plan-phase 10 --auto`.
