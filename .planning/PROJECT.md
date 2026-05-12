@@ -4,100 +4,80 @@
 
 Gala is a Rails application for the collaborative study of media-rich teaching cases. It combines Rails-rendered pages, React islands, catalog search, case reading/editing workflows, admin dashboards, deployments, quizzes, statistics, comments, reading lists, and authentication flows.
 
-The current project work is a brownfield upgrade stabilization effort: finish the major Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS migration while preserving the approximate visual and behavioral shape of the previous BlueprintJS 2.3.1-era application.
-
 ## Core Value
 
 Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
 
-## Current Milestone: v1.0 Upgrade Stabilization
+## Current State
 
-**Goal:** Finish the Ruby, Node.js, and BlueprintJS upgrade by iterating through route groups from `config/routes.rb`, fixing style and behavior regressions, and committing after each QA gate.
+**Shipped:** v1.0 Upgrade Stabilization on 2026-05-12.
 
-**Target features:**
-- Restore BlueprintJS styling compatibility after moving JavaScript and CSS loading into the application layout.
-- Verify each route group from `config/routes.rb` on `localhost:3000` with pragmatic visual and functional QA.
-- Preserve Rails, React, Shakapacker, authentication, admin, catalog, case, deployment, stats, search, and reading-list behavior while upgrading.
-- Establish repeatable route-by-route QA gates before moving to the next phase.
-- Finish with a cleanup/deslopification pass to remove dead compatibility code, duplicated styling, and upgrade leftovers.
+The v1.0 milestone completed the route-driven Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade stabilization. Route groups from `config/routes.rb` were checked through focused browser QA, console/network triage, and targeted RSpec/Jest gates. Detailed records are archived in `.planning/milestones/`.
+
+The active planning state is now between milestones. Start the next one with `$gsd-new-milestone`.
 
 ## Requirements
 
 ### Validated
 
-- Gala serves a Rails application with public catalog, case, authentication, admin, deployment, statistics, reading-list, search, and utility routes - existing.
-- Gala uses Rails controllers and views with React islands mounted through Shakapacker packs in `app/javascript/packs` - existing.
-- Gala currently loads BlueprintJS CSS globally through `app/assets/stylesheets/application.css` and JavaScript support through `app/javascript/packs/styles.js` - existing.
-- Gala has a fresh codebase map in `.planning/codebase/` describing the current stack, architecture, conventions, tests, integrations, and concerns - existing.
+- Gala serves a Rails application with public catalog, case, authentication, admin, deployment, statistics, reading-list, search, and utility routes — existing.
+- Gala uses Rails controllers and views with React islands mounted through Shakapacker packs in `app/javascript/packs` — existing.
+- Gala loads BlueprintJS CSS globally through `app/assets/stylesheets/application.css` and JavaScript support through `app/javascript/packs/styles.js` — validated in v1.0.
+- Global BlueprintJS CSS and namespace behavior are stable enough for the upgraded stack — v1.0.
+- Public catalog, search, public utility, case shell, nested case, reader, library, reading-list, deployment, integration, admin, and operational route groups passed route-driven stabilization — v1.0.
+- Route-level QA gates on `localhost:3000` or browser-container `host.docker.internal:3000` were recorded with console/network classification — v1.0.
+- Upgrade cleanup removed or consolidated dead compatibility assumptions without introducing route-specific regressions — v1.0.
 
 ### Active
 
-- [ ] Stabilize global BlueprintJS CSS and namespace behavior after application-layout loading.
-- [ ] Audit public catalog and search routes for visual and behavioral regressions.
-- [ ] Audit case reader/editor routes and React Router subroutes for visual and behavioral regressions.
-- [ ] Audit case management, library, reading-list, profile, enrollment, and reader routes for visual and behavioral regressions.
-- [ ] Audit comments, quizzes, podcasts, edgenotes, pages, cards, stats, and deployment route groups for visual and behavioral regressions.
-- [ ] Audit admin and operational routes without regressing authentication or authorization.
-- [ ] Run route-level QA gates on `localhost:3000` before committing each phase.
-- [ ] Clean up upgrade leftovers once route verification is complete.
+- [ ] Define the next milestone requirements with `$gsd-new-milestone`.
 
 ### Out of Scope
 
-- Full redesign of Gala UI - the goal is compatibility with the prior BlueprintJS-era experience, not a new visual system.
-- Rewriting React 16/Flow/Redux architecture - only change it where required to stabilize the upgrade.
-- Replacing BlueprintJS with a different component library - this milestone is about making the current BlueprintJS upgrade work.
-- Large product feature changes - route behavior should remain stable unless a fix requires a narrow compatibility adjustment.
-- Production deployment automation changes - this milestone focuses on local route QA and code stabilization.
+- Full redesign of Gala UI — compatibility with the prior BlueprintJS-era experience remains the goal unless a future milestone explicitly changes that.
+- Rewriting React 16/Flow/Redux architecture — only change it where required by a scoped stabilization or modernization milestone.
+- Replacing BlueprintJS with a different component library — this requires a separate product/technical milestone.
+- Large product feature changes — route behavior should remain stable unless a future milestone deliberately expands scope.
+- Production deployment automation changes — v1.0 focused on local route QA and code stabilization.
 
 ## Context
 
 The repository is a Rails 8.1.3 application running Ruby 4.0.3 and Node 24.15.0 with Shakapacker 10 and Webpack 5. The frontend is a legacy React 16.8, Flow, Redux, Stimulus, styled-components, and BlueprintJS application.
 
-BlueprintJS packages are currently `@blueprintjs/core` 4.20.2, `@blueprintjs/datetime` 4.4.37, and `@blueprintjs/select` 4.3.1 in `package.json`. The prior app behavior should be judged against the approximate BlueprintJS 2.3.1-era visual shape, especially where old `.pt-*` class expectations or page-specific Webpacker bundles no longer line up with globally loaded application layout assets.
+BlueprintJS packages are currently `@blueprintjs/core` 4.20.2, `@blueprintjs/datetime` 4.4.37, and `@blueprintjs/select` 4.3.1 in `package.json`. The v1.0 work preserved the approximate BlueprintJS 2.3.1-era Gala appearance using shared compatibility layers and route-level evidence.
 
-The main layout `app/views/layouts/application.html.erb` now loads collected Shakapacker packs `styles`, `controllers`, and `onboarding`, then the collected stylesheet pack `styles`, then the Sprockets `application` stylesheet. The Sprockets stylesheet imports BlueprintJS core, icons, datetime, popover2, and select CSS from `node_modules`.
-
-Route QA should be driven from `config/routes.rb`, not by guessing only the most visible pages. The route groups include public error and health pages, catalog root/search libraries/languages catch-alls, case routes and nested React Router paths, admin resources, comments, deployments, edgenotes, libraries, profile/readers, quizzes, reading lists, search, tags, Devise reader routes, LTI/auth strategy routes, Sidekiq, and runtime stats.
-
-QA should use tools and best judgment as gates. At minimum, each phase should run the local app on port 3000 or verify it is already running, visit representative routes with Playwright/browser tooling where possible, inspect console and network errors, verify Blueprint controls have expected spacing/sizing/icons/popovers/forms, run targeted Jest/RSpec tests where practical, and commit the phase before moving on.
-
-When visual QA needs authenticated/protected routes in the local Docker Compose environment, browser testing should use the real local sign-in flow instead of treating protected routes as anonymous-only. Visit `/readers/sign_in`, click `a.oauth-icon-google` (the "Sign in with Google" button), and rely on `config/initializers/mock_omniauth.rb` to authenticate the development mock user `dev@learnmsc.org` / "Developer Admin". Use that signed-in admin session to inspect protected BlueprintJS surfaces for parity regressions.
+Known remaining technical debt:
+- Full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; targeted Jest gates passed.
+- Browser QA may report existing styled-components/React warnings and local Mapbox style `404` noise. These were classified as non-blocking where visible route behavior was unaffected.
+- Nyquist validation artifacts are not uniform across the archived milestone; see `.planning/milestones/v1.0-MILESTONE-AUDIT.md`.
 
 ## Constraints
 
-- **Runtime:** Local Rails app is expected on `localhost:3000` - route QA should use that server.
-- **Upgrade compatibility:** Ruby 4.0.3, Node 24.x, Rails 8.1.3, Shakapacker 10, Webpack 5, React 16.8, and BlueprintJS 4.x must coexist during this milestone.
-- **Visual target:** Use the approximate BlueprintJS 2.3.1-era Gala appearance as the compatibility baseline, not a new BlueprintJS 4 visual redesign.
-- **Route scope:** Route groups must be derived from `config/routes.rb`; phases should not skip hidden/admin/utility routes just because they are less visible.
-- **QA gate:** Do not advance to the next route group until the current route group has a documented QA pass, targeted tests where practical, and a commit.
-- **Regression control:** Keep fixes narrow and route-driven; avoid broad styling changes unless they are required by multiple verified regressions.
+- **Runtime:** Local Rails app is expected on `localhost:3000`; browser-container QA may use `host.docker.internal:3000`.
+- **Upgrade compatibility:** Ruby 4.0.3, Node 24.x, Rails 8.1.3, Shakapacker 10, Webpack 5, React 16.8, and BlueprintJS 4.x must coexist until a future modernization milestone changes them.
+- **Visual target:** Use the approximate BlueprintJS 2.3.1-era Gala appearance as the compatibility baseline unless explicitly changed.
+- **Route scope:** Route groups should be derived from `config/routes.rb`.
+- **Regression control:** Keep fixes narrow and route-driven; avoid broad styling or dependency changes without a scoped milestone.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Initialize this as the first GSD project/milestone | `$gsd-new-milestone` was requested before `.planning/PROJECT.md` existed, and the user approved initializing from the milestone | - Pending |
-| Use route groups from `config/routes.rb` as phase boundaries | The regression risk is route/page-specific after the asset-loading change | - Pending |
-| Require QA and commit before moving to the next route group | The user explicitly asked to prevent regressions and commit after each route/phase gate | - Pending |
-| Treat BlueprintJS 2.3.1-era visuals as the approximation baseline | The current packages are BlueprintJS 4.x, but the desired outcome is compatibility with the prior app look | - Pending |
-| End with deslopification | Upgrade work often leaves compatibility shims and duplicated styles; cleanup should happen after behavior is stable | - Pending |
+| Initialize this as the first GSD project/milestone | `$gsd-new-milestone` was requested before `.planning/PROJECT.md` existed, and the user approved initializing from the milestone | Good — v1.0 shipped and archived |
+| Use route groups from `config/routes.rb` as phase boundaries | The regression risk was route/page-specific after the asset-loading change | Good — route coverage drove all v1.0 phases |
+| Require QA and commit before moving to the next route group | The user explicitly asked to prevent regressions and commit after each route/phase gate | Good — phase artifacts record QA gates and commits |
+| Treat BlueprintJS 2.3.1-era visuals as the approximation baseline | Current packages are BlueprintJS 4.x, but desired outcome was compatibility with the prior app look | Good — shared compatibility layers were preserved and tested |
+| End with deslopification | Upgrade work left compatibility shims and duplicated assumptions that needed cleanup after behavior was stable | Good — Phase 9 cleaned shared assumptions and ran final regression gates |
 
 ## Evolution
 
-This document evolves at phase transitions and milestone boundaries.
+This document evolves at milestone boundaries.
 
-**After each phase transition** (via `$gsd-transition`):
-1. Requirements invalidated? Move to Out of Scope with reason
-2. Requirements validated? Move to Validated with phase reference
-3. New requirements emerged? Add to Active
-4. Decisions to log? Add to Key Decisions
-5. "What This Is" still accurate? Update if drifted
-
-**After each milestone** (via `$gsd-complete-milestone`):
-1. Full review of all sections
-2. Core Value check - still the right priority?
-3. Audit Out of Scope - reasons still valid?
-4. Update Context with current state
+**Next milestone setup** should:
+1. Define fresh requirements.
+2. Decide whether to address known frontend/Jest modernization debt.
+3. Decide whether Nyquist artifact uniformity matters for archived v1.0 phases.
+4. Keep route-driven QA expectations for any route-affecting work.
 
 ---
-*Last updated: 2026-05-03 after initialization*
+*Last updated: 2026-05-12 after v1.0 milestone*

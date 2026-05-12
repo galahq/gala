@@ -2,33 +2,32 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Upgrade Stabilization
-status: milestone_complete
-last_updated: "2026-05-12T01:38:06.895Z"
-last_activity: 2026-05-12 -- Phase 999.8 execution started
+status: Awaiting next milestone
+last_updated: "2026-05-12T01:45:20.269Z"
+last_activity: 2026-05-12 — Milestone v1.0 completed and archived
 progress:
   total_phases: 10
-  completed_phases: 11
+  completed_phases: 10
   total_plans: 18
   completed_plans: 19
-  percent: 110
+  percent: 100
 ---
 
 # GSD State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-03)
+See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 999.8 — follow-up-phase-8-incomplete-plans-backlog
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 999.8
-Plan: Not started
-Status: Milestone complete
-Last activity: 2026-05-12
-Resume file: .planning/phases/999.8-follow-up-phase-8-incomplete-plans-backlog/999.8-CONTEXT.md
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-05-12 — Milestone v1.0 completed and archived
 
 ## Milestone
 
@@ -47,7 +46,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 
 ## Blockers
 
-- None for Phases 1-8.
+- None for v1.0 closeout.
 
 ## Follow-Up Noise
 
@@ -64,8 +63,8 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 ## Notes
 
 - `.planning/codebase/` contains the current codebase map.
-- `gsd-sdk` is not available on PATH in this environment, so initial artifacts were written directly and committed with regular git.
-- Phase 1 execution used regular git commits and did not transition to Phase 2.
+- v1.0 archives live in `.planning/milestones/`.
+- Phase execution directories were archived to `.planning/milestones/v1.0-phases/`.
 
 ## Quick Tasks Completed
 
@@ -75,3 +74,7 @@ Finish the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade by iter
 | 2026-05-05 | Fix missing reading-list UUID nil title error | complete | this commit |
 | 2026-05-04 | Restore production Mapbox style fallback | complete | this commit |
 | 2026-05-04 | Document Google mock login for protected-route visual QA | complete | this commit |
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
