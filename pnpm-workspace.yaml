@@ -1,0 +1,6 @@
+allowBuilds:
+  '@parcel/watcher': true
+  core-js: true
+  ejs: true
+  fsevents: false
+  styled-components: true

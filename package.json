@@ -9,13 +9,13 @@
   },
   "author": "Cameron L Bothner",
   "license": "MIT",
-  "packageManager": "yarn@1.22.22",
+  "packageManager": "pnpm@11.1.0",
   "scripts": {
-    "test": "jest app/javascript"
+    "test": "NODE_ENV=test jest app/javascript"
   },
   "engines": {
     "node": ">=24 <25",
-    "yarn": "1.x"
+    "pnpm": "11.1.0"
   },
   "dependencies": {
     "@babel/cli": "^7.2.0",
@@ -133,6 +133,7 @@
     "jest": "^24.5.0",
     "jest-dom": "^3.0.0",
     "jest-fetch-mock": "^2.0.1",
+    "playwright": "^1.59.1",
     "prettier": "^1.15.3",
     "react-testing-library": "^6.0.0",
     "style-loader": "3.3.4",
