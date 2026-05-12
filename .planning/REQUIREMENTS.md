@@ -14,11 +14,11 @@
 
 ### pnpm Migration
 
-- [ ] **PNPM-01**: Node package management uses pnpm instead of Yarn 1.
-- [ ] **PNPM-02**: `package.json` declares a pinned pnpm package manager version compatible with Node 24.
-- [ ] **PNPM-03**: `pnpm-lock.yaml` is generated and committed after install/test parity is proven.
-- [ ] **PNPM-04**: Yarn-specific scripts, docs, and lockfile assumptions are removed or replaced.
-- [ ] **PNPM-05**: Existing JavaScript build and test commands run through pnpm.
+- [x] **PNPM-01**: Node package management uses pnpm instead of Yarn 1.
+- [x] **PNPM-02**: `package.json` declares a pinned pnpm package manager version compatible with Node 24.
+- [x] **PNPM-03**: `pnpm-lock.yaml` is generated and committed after install/test parity is proven.
+- [x] **PNPM-04**: Yarn-specific scripts, docs, and lockfile assumptions are removed or replaced.
+- [x] **PNPM-05**: Existing JavaScript build and test commands run through pnpm.
 
 ### Flow Removal and Modern Typing
 
@@ -105,11 +105,11 @@
 | DEPS-02 | Phase 10 | Complete |
 | DEPS-03 | Phase 10 | Complete |
 | DEPS-04 | Phase 10 | Complete |
-| PNPM-01 | Phase 11 | Pending |
-| PNPM-02 | Phase 11 | Pending |
-| PNPM-03 | Phase 11 | Pending |
-| PNPM-04 | Phase 11 | Pending |
-| PNPM-05 | Phase 11 | Pending |
+| PNPM-01 | Phase 11 | Complete |
+| PNPM-02 | Phase 11 | Complete |
+| PNPM-03 | Phase 11 | Complete |
+| PNPM-04 | Phase 11 | Complete |
+| PNPM-05 | Phase 11 | Complete |
 | TYPE-01 | Phase 13 | Pending |
 | TYPE-02 | Phase 13 | Pending |
 | TYPE-03 | Phase 13 | Pending |

@@ -21,7 +21,7 @@
 3. Dependency holdbacks below latest are recorded with compatibility reasons.
 4. The phase produces a target matrix that later phases can execute against.
 
-### Phase 11: pnpm Package Manager Migration
+### Phase 11: pnpm Package Manager Migration - Complete (2026-05-12)
 
 **Goal:** Replace Yarn 1 with pnpm while preserving install, build, and test parity.
 
