@@ -33,12 +33,16 @@ Last activity: 2026-05-12 — Milestone v1.1 started
 
 **v1.1 Dependency Modernization and Test Coverage**
 
-Modernize Ruby and JavaScript dependencies toward current recommended stable versions, migrate Node package management from Yarn 1 to pnpm, restore reliable frontend test execution, and add Playwright visual regression coverage for high-value route groups.
+Modernize Ruby and JavaScript dependencies toward current recommended stable versions, migrate Node package management from Yarn 1 to pnpm, remove Flow from the frontend toolchain in favor of TypeScript/JSDoc, evaluate Vitest/Vite as the modern frontend test/build direction, restore reliable frontend test execution, and add Playwright visual regression coverage for high-value route groups.
 
 ## Active Rules
 
 - Use official package registries and project documentation when selecting dependency targets.
 - Use pnpm for Node dependency installation and lockfile management.
+- Keep current React and BlueprintJS major versions during v1.1.
+- Remove Flow tooling and annotations rather than upgrading Flow.
+- Prefer Vitest for frontend tests if a spike proves it is compatible; keep Jest modernization as fallback.
+- Treat Vite production bundler replacement as optional and gated by feasibility evidence.
 - Preserve route behavior and the approximate BlueprintJS 2.3.1-era visual baseline unless a requirement explicitly changes it.
 - Use `config/routes.rb` as the source of truth for route groups covered by browser and visual regression tests.
 - Use `localhost:3000` for browser QA.
@@ -57,7 +61,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 3 search returns `[]` if the local `cases_search_index` materialized view is present but unpopulated; refresh the index for real local search data.
 - Phase 4 feature-spec supplement coverage was blocked by local Selenium/Capybara setup: `Can't initialize Selenium::WebDriver::Chrome::Driver with :url`.
 - Phase 4 had no existing local editor-accessible case; protected case routes were verified as anonymous sign-in redirects and controller specs supplemented route behavior.
-- Phase 7 full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; v1.1 should replace this with a reliable pnpm-backed frontend test command.
+- Phase 7 full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; v1.1 should replace this with a reliable pnpm-backed frontend test command, preferably Vitest if feasible.
 - Phase 7 browser QA on deployment routes showed existing local dev-server stale chunk 404/MIME noise and shared styled-components deprecation warnings, with no deployment-specific blocker.
 - Phase 8 browser QA confirmed the routed admin and Sidekiq surfaces are stable; remaining public-shell React/styled-components warnings and a Mapbox style `404` were accepted as unrelated noise for this route group.
 

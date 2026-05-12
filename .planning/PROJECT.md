@@ -15,7 +15,7 @@ Every important route must keep working and looking recognizably like the pre-up
 
 The v1.0 milestone completed the route-driven Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade stabilization. Route groups from `config/routes.rb` were checked through focused browser QA, console/network triage, and targeted RSpec/Jest gates. Detailed records are archived in `.planning/milestones/`.
 
-The v1.1 milestone will modernize Ruby and JavaScript dependencies using current recommended stable releases, migrate Node package management from Yarn 1 to pnpm, restore reliable frontend test execution, and add Playwright visual regression coverage for high-value route groups.
+The v1.1 milestone will modernize Ruby and JavaScript dependencies using current recommended stable releases, migrate Node package management from Yarn 1 to pnpm, remove Flow from the frontend dependency/tooling surface, restore reliable frontend test execution, and add Playwright visual regression coverage for high-value route groups.
 
 ## Requirements
 
@@ -31,12 +31,13 @@ The v1.1 milestone will modernize Ruby and JavaScript dependencies using current
 
 ### Active
 
-- [ ] Define v1.1 requirements for dependency modernization, pnpm migration, frontend tests, and Playwright visual regression coverage.
+- [ ] Define v1.1 requirements for dependency modernization, pnpm migration, Flow removal, frontend tests, and Playwright visual regression coverage.
 
 ### Out of Scope
 
 - Full redesign of Gala UI — compatibility with the prior BlueprintJS-era experience remains the goal unless a future milestone explicitly changes that.
 - Rewriting React 16/Flow/Redux architecture — only change it where required to unblock dependency modernization or reliable frontend tests.
+- Upgrading React or BlueprintJS major versions — v1.1 must keep current React 16.8 and BlueprintJS 4.x package lines unless a patch-level compatibility fix is required.
 - Replacing BlueprintJS with a different component library — this requires a separate product/technical milestone.
 - Large product feature changes — route behavior should remain stable unless a future milestone deliberately expands scope.
 - Production deployment automation changes — v1.0 focused on local route QA and code stabilization.
@@ -50,6 +51,7 @@ BlueprintJS packages are currently `@blueprintjs/core` 4.20.2, `@blueprintjs/dat
 Known remaining technical debt:
 - Full `yarn test --runInBand` is blocked by existing Jest transform configuration failures on ES module imports; targeted Jest gates passed.
 - Package management still uses Yarn 1 and `yarn.lock`; v1.1 will replace that workflow with pnpm and `pnpm-lock.yaml`.
+- Flow remains present in Node dependencies and many frontend source annotations; v1.1 will remove Flow tooling and migrate source typing toward TypeScript-oriented checks with JSDoc allowed as a bridge.
 - Playwright is present as a dependency but no durable visual regression harness is established for route coverage.
 - Browser QA may report existing styled-components/React warnings and local Mapbox style `404` noise. These were classified as non-blocking where visible route behavior was unaffected.
 - Nyquist validation artifacts are not uniform across the archived milestone; see `.planning/milestones/v1.0-MILESTONE-AUDIT.md`.
@@ -62,6 +64,8 @@ Known remaining technical debt:
 - **Route scope:** Route groups should be derived from `config/routes.rb`.
 - **Regression control:** Keep fixes narrow and route-driven; avoid broad styling or dependency changes without a scoped milestone.
 - **Package manager:** Use pnpm for Node dependency installation and lockfile management during v1.1.
+- **Frontend type direction:** Remove Flow tooling and annotations; prefer TypeScript configuration and types, using JSDoc in plain JavaScript where a full file conversion would add unnecessary risk.
+- **Compatibility hold:** Keep current React and BlueprintJS major versions during v1.1.
 
 ## Key Decisions
 
