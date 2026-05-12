@@ -20,7 +20,7 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 11 pnpm package manager migration
+**Current focus:** Phase 12 Vitest and Vite feasibility
 
 ## Current Position
 
