@@ -39,9 +39,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xfonts-base \
     && ln -sf ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && ln -sf ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+    && ln -sf ../lib/node_modules/corepack/dist/corepack.js /usr/local/bin/corepack \
     && node --version \
     && npm --version \
-    && npm install -g yarn@1.22.22 \
+    && corepack enable \
+    && corepack prepare pnpm@11.1.0 --activate \
+    && pnpm --version \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives /root/.npm
 
@@ -64,13 +67,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
-COPY .ruby-version Gemfile Gemfile.lock package.json yarn.lock ./
+COPY .ruby-version Gemfile Gemfile.lock package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN echo "gem: --no-document" > /etc/gemrc \
     && gem install bundler:2.4.19 \
     && bundle config set build.sassc --disable-march-tune-native \
     && bundle install --jobs 20 --retry 2 \
-    && yarn install --check-files \
+    && pnpm install --frozen-lockfile \
     && rm -rf ~/.bundle/ $BUNDLE_PATH/ruby/*/cache $BUNDLE_PATH/ruby/*/bundler/gems/*/.git \
     && gem cleanup all \
     && bundle exec bootsnap precompile --gemfile

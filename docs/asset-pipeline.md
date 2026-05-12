@@ -28,7 +28,7 @@ sequenceDiagram
 
     Dev->>DC: docker compose up
     DC->>Web: build target=development
-    Web->>Web: install gems + yarn deps
+    Web->>Web: install gems + pnpm deps
     Web->>Rails: start via Procfile.dev
     Web->>WDS: start on :3035
     Dev->>FS: edit Ruby / JS / SCSS / assets
@@ -55,7 +55,7 @@ sequenceDiagram
     participant CI as CI / image builder
     participant Docker as Docker build
     participant Gems as Bundler
-    participant Yarn as Yarn
+    participant Pnpm as pnpm
     participant RailsTask as rails assets:precompile
     participant Webpack as Shakapacker/Webpack
     participant Public as public/packs + manifest
@@ -65,7 +65,7 @@ sequenceDiagram
 
     CI->>Docker: build production image
     Docker->>Gems: bundle install
-    Docker->>Yarn: yarn install
+    Docker->>Pnpm: pnpm install
     Docker->>RailsTask: SECRET_KEY_BASE=build-placeholder rails assets:precompile
     RailsTask->>Webpack: compile JS/CSS entrypoints
     Webpack->>Public: emit hashed assets + manifest.json

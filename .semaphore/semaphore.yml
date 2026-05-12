@@ -16,7 +16,7 @@ blocks:
   - name: Setup
     task:
       jobs:
-        - name: Bundle & Yarn
+        - name: Bundle & pnpm
           commands:
             - checkout
             
@@ -39,11 +39,13 @@ blocks:
             - bundle install
             - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
             
-            # Yarn install with caching
+            # pnpm install with caching
             - sem-version node 24.15.0
-            - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)
-            - yarn install --ignore-engines
-            - cache store node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock) node_modules
+            - npm install --global corepack@latest
+            - corepack prepare pnpm@11.1.0 --activate
+            - cache restore pnpm-store-$SEMAPHORE_GIT_BRANCH-$(checksum pnpm-lock.yaml)
+            - pnpm install --frozen-lockfile
+            - cache store pnpm-store-$SEMAPHORE_GIT_BRANCH-$(checksum pnpm-lock.yaml) node_modules
 
   - name: Tests
     task:
@@ -52,10 +54,13 @@ blocks:
           - checkout
           - sem-version ruby 4.0.3
           - sem-version node 24.15.0
+          - npm install --global corepack@latest
+          - corepack prepare pnpm@11.1.0 --activate
           - sem-service start postgres
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)
-          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum yarn.lock)
+          - cache restore pnpm-store-$SEMAPHORE_GIT_BRANCH-$(checksum pnpm-lock.yaml)
           - bundle install --deployment --path vendor/bundle
+          - pnpm install --frozen-lockfile
           - cat /dev/null > config/database.yml
           - bundle exec rake db:drop db:create db:schema:load
           - bundle exec rake db:test:prepare
@@ -65,7 +70,7 @@ blocks:
           commands:
             - bundle exec rails assets:precompile
             - bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb" --format progress --color
-            - yarn test
+            - pnpm test
             
         - name: Factory Bot Lint
           commands:

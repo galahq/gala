@@ -30,8 +30,9 @@ configuration.
 
 1. `nodenv install 24.15.0`
 2. `nodenv shell 24.15.0`
-3. `npm install yarn`
-4. `yarn`
+3. `corepack enable`
+4. `corepack prepare pnpm@11.1.0 --activate`
+5. `pnpm install --frozen-lockfile`
 
 #### Using direnv
 
@@ -42,7 +43,7 @@ configuration.
 - `docker compose up` to start the app
 - `docker compose down` to stop the app
 - `bundle exec rake test:unit` to run the Ruby tests
-- `yarn test` to run the Javascript tests
+- `pnpm test` to run the Javascript tests
 
 ### Running two local stacks
 
@@ -70,11 +71,11 @@ If you use host-side Rails or Redis commands with `.env.dev`, update
 
 When you update dependencies be sure to run these commands locally first
 - `bundle install --jobs 4` to install Ruby dependencies
-- `yarn` to install Javascript dependencies
+- `pnpm install --frozen-lockfile` to install Javascript dependencies
 
 Then you can run `docker compose up --build` to rebuild the containers with the new dependencies.
 
-If you update Javascript dependencies, you'll need to additionally run `docker compose run web yarn` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
+If you update Javascript dependencies, you'll need to additionally run `docker compose run web pnpm install --frozen-lockfile` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
 
 The JavaScript build now runs on Shakapacker 10 / webpack 5 and uses Dart Sass
 through `sass-loader` 12.x. The development bundler process runs via
@@ -86,7 +87,7 @@ instead of the unpublished source SCSS paths.
 
 - `docker system prune -a --volumes -f` to delete all containers, images, and volumes for a fresh start
 - `docker compose up --build` to rebuild the containers
-- `docker compose run web yarn` to install new JS dependencies in the web container
+- `docker compose run web pnpm install --frozen-lockfile` to install new JS dependencies in the web container
 - `docker compose run web bash` to get a shell inside the web container
 - `docker volume rm gala_db_data` to delete the database volume
 
