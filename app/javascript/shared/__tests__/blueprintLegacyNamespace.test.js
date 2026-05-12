@@ -1,4 +1,4 @@
-/* @noflow */
+/*  */
 
 const bridgePath = '../blueprintLegacyNamespace'
 

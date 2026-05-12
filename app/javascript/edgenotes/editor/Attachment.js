@@ -3,28 +3,28 @@
  * NOTE: It is the consumer’s responsibility to call `cleanup` when finished.
  *
  * @providesModule Attachment
- * @flow
+ * 
  */
 
 import { DirectUpload } from 'activestorage'
 import { Orchard } from 'shared/orchard'
 
 class Attachment {
-  static truthy (attachment: ?Attachment | string) {
+  static truthy (attachment) {
     return (
       attachment != null &&
       (typeof attachment === 'string' || !!attachment.objectUrl)
     )
   }
 
-  _fileList: ?FileList
-  _objectUrl: ?string
+  _fileList
+  _objectUrl
 
-  get fileList (): ?FileList {
+  get fileList () {
     return this._fileList
   }
 
-  set fileList (newFileList: ?FileList) {
+  set fileList (newFileList) {
     if (this._objectUrl) URL.revokeObjectURL(this.objectUrl)
     this._fileList = newFileList
 
@@ -32,17 +32,14 @@ class Attachment {
     this._objectUrl = file ? URL.createObjectURL(file) : null
   }
 
-  get objectUrl (): string {
+  get objectUrl () {
     return this._objectUrl || ''
   }
 
   save ({
     detachEndpoint,
     onProgress,
-  }: {
-    detachEndpoint: string,
-    onProgress?: number => mixed,
-  }): Promise<string> {
+  }) {
     const file = this._file()
     if (file) return uploadBlob(file, onProgress)
     else return detachBlob(detachEndpoint).then(() => '')
@@ -58,19 +55,19 @@ class Attachment {
       : null
   }
 
-  _upload (onProgress?: number => mixed) {}
+  _upload (onProgress) {}
 }
 
 export default Attachment
 
-function uploadBlob (file: File, onProgress?: number => mixed): Promise<string> {
+function uploadBlob (file, onProgress) {
   return new Promise((resolve, reject) => {
     const upload = new DirectUpload(
       file,
       '/rails/active_storage/direct_uploads',
       {
         directUploadWillStoreFileWithXHR: xhr => {
-          xhr.upload.addEventListener('progress', (event: ProgressEvent) => {
+          xhr.upload.addEventListener('progress', (event) => {
             const progress = (event.loaded / event.total) * 100
             onProgress && progress && onProgress(progress)
           })
@@ -84,6 +81,6 @@ function uploadBlob (file: File, onProgress?: number => mixed): Promise<string> 
   })
 }
 
-async function detachBlob (endpoint: string) {
+async function detachBlob (endpoint) {
   return Orchard.prune(endpoint)
 }

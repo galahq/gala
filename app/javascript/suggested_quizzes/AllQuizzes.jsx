@@ -1,6 +1,6 @@
 /**
  * @providesModule AllQuizzes
- * @flow
+ * 
  */
 
 import React, { useEffect } from 'react'
@@ -12,22 +12,13 @@ import { Link } from 'react-router-dom'
 
 import { deleteSuggestedQuiz, fetchSuggestedQuizzes } from 'redux/actions'
 
-import type { IntlShape } from 'react-intl'
-import type { DraftQuestion, State, SuggestedQuiz } from 'redux/state'
 
-function mapStateToProps ({ suggestedQuizzes }: State) {
+function mapStateToProps ({ suggestedQuizzes }) {
   return {
     quizzes: Object.values(suggestedQuizzes),
   }
 }
 
-type Props = {
-  deleteSuggestedQuiz: typeof deleteSuggestedQuiz,
-  fetchSuggestedQuizzes: typeof fetchSuggestedQuizzes,
-  intl: IntlShape,
-  quizzes: SuggestedQuiz[],
-  onCreateQuiz: () => any,
-}
 
 function AllQuizzes ({
   deleteSuggestedQuiz,
@@ -35,7 +26,7 @@ function AllQuizzes ({
   intl,
   onCreateQuiz,
   quizzes,
-}: Props) {
+}) {
   useEffect(() => {
     fetchSuggestedQuizzes()
   }, [])
@@ -114,7 +105,7 @@ export default injectIntl(
   )(AllQuizzes)
 )
 
-function countQuestionTypes (questions: DraftQuestion[]) {
+function countQuestionTypes (questions) {
   let multipleChoiceCount = 0
   let openEndedCount = 0
 

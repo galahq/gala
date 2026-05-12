@@ -2,7 +2,7 @@
  * Welcome message that changes depending on if the reader is signed in
  *
  * @providesModule WelcomeMessage
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -100,7 +100,6 @@ export default function WelcomeMessage() {
   return <Container>{reader ? welcomeBackMsg : getStartedMsg}</Container>
 }
 
-// $FlowFixMe
 const Container = styled.aside.attrs({ className: 'pt-dark bp4-dark' })`
   color: white;
   font-family: tenso;

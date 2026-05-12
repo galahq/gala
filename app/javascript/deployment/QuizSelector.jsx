@@ -1,6 +1,6 @@
 /**
  * @providesModule QuizSelector
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -8,18 +8,12 @@ import styled from 'styled-components'
 
 import QuizCard from './QuizCard'
 
-import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
-type Props = {
-  suggestedQuizzes: { [id: string]: CustomizedQuiz },
-  customQuestions: { [id: string]: DraftQuestion[] },
-  onSelect: (?ID) => void,
-}
 const QuizSelector = ({
   suggestedQuizzes,
   customQuestions,
   onSelect,
-}: Props) => (
+}) => (
   <Container>
     <div className="pt-callout bp4-callout pt-icon-help bp4-icon-help" style={{ lineHeight: 1.2 }}>
       <h5>Assessment options</h5>
@@ -31,7 +25,7 @@ const QuizSelector = ({
         : 'Think of a few multiple choice or short answer questions and they will be presented to your students before and after the case materials.'}
     </div>
     <TwoColumns>
-      {Object.keys(suggestedQuizzes).map((id: string, i: number) => (
+      {Object.keys(suggestedQuizzes).map((id, i) => (
         <QuizCard
           key={id}
           {...suggestedQuizzes[id]}

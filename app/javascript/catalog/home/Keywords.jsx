@@ -1,6 +1,6 @@
 /**
  * @providesModule Keywords
- * @flow
+ * 
  */
 
 import * as React from 'react'

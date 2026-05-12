@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import HiddenFormInputs from '../HiddenFormInputs'

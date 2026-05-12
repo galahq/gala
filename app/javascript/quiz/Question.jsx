@@ -1,21 +1,14 @@
 /**
  * @providesModule Question
- * @flow
+ * 
  */
 
 import React from 'react'
 import styled from 'styled-components'
 
 import { RadioGroup } from '@blueprintjs/core'
-import type { IOptionProps } from '@blueprintjs/core'
 
-import type { Question as QuestionT } from 'redux/state'
 
-type Props = QuestionT & {
-  selectedAnswer: string,
-  correctAnswer?: string,
-  onChange: (e: SyntheticInputEvent<*>) => void,
-}
 const Question = ({
   id,
   content,
@@ -23,7 +16,7 @@ const Question = ({
   selectedAnswer,
   correctAnswer,
   options = [],
-}: Props) =>
+}) =>
   options.length > 0 ? (
     <div style={{ marginBottom: 25 }}>
       <StyledRadioGroup
@@ -50,7 +43,7 @@ const Question = ({
 
 export default Question
 
-function toRadioProps (option: string, correctAnswer: ?string): IOptionProps {
+function toRadioProps (option, correctAnswer) {
   return {
     className: option === correctAnswer ? 'pt-intent-success' : '',
     disabled: !!correctAnswer,

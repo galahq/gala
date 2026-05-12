@@ -32,9 +32,6 @@ importers:
       '@babel/preset-env':
         specifier: ^7.16.11
         version: 7.29.3(@babel/core@7.29.0)
-      '@babel/preset-flow':
-        specifier: ^7.0.0
-        version: 7.0.0(@babel/core@7.29.0)
       '@babel/preset-react':
         specifier: ^7.0.0
         version: 7.7.0(@babel/core@7.29.0)
@@ -306,9 +303,6 @@ importers:
       eslint-plugin-babel:
         specifier: ^5.3.0
         version: 5.3.0(eslint@5.16.0)
-      eslint-plugin-flowtype:
-        specifier: ^3.2.0
-        version: 3.13.0(eslint@5.16.0)
       eslint-plugin-import:
         specifier: ^2.14.0
         version: 2.18.2(eslint@5.16.0)
@@ -327,12 +321,6 @@ importers:
       eslint-plugin-standard:
         specifier: ^4.0.0
         version: 4.0.1(eslint@5.16.0)
-      flow-bin:
-        specifier: 0.87.0
-        version: 0.87.0
-      flow-inspect:
-        specifier: ^1.0.1
-        version: 1.0.1
       jest:
         specifier: ^24.5.0
         version: 24.9.0
@@ -363,6 +351,9 @@ importers:
       stylelint-color-format:
         specifier: ^0.2.0
         version: 0.2.0(style-search@0.1.0)(stylelint@9.10.1)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
       vite:
         specifier: 8.0.12
         version: 8.0.12(sass@1.92.1)(terser@5.46.2)
@@ -570,11 +561,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-syntax-flow@7.7.0':
-    resolution: {integrity: sha512-vQMV07p+L+jZeUnvX3pEJ9EiXGCjB5CTTvsirFD9rpEuATnoAvLBLoYbw1v5tyn3d2XxSuvEKi8cV3KqYUa0vQ==}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   '@babel/plugin-syntax-import-assertions@7.28.6':
     resolution: {integrity: sha512-pSJUpFHdx9z5nqTSirOCMtYVP2wFgoWhP0p3g8ONK/4IHhLIBd0B9NYqAvIUAhq+OkhO4VM1tENCt0cjlsNShw==}
     engines: {node: '>=6.9.0'}
@@ -707,11 +693,6 @@ packages:
   '@babel/plugin-transform-export-namespace-from@7.27.1':
     resolution: {integrity: sha512-tQvHWSZ3/jH2xuq/vZDy0jNn+ZdXJeM8gHvX4lnJmsc3+50yPlWdZXIc5ay+umX+2/tJIqHqiEqcJvxlmIvRvQ==}
     engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
-  '@babel/plugin-transform-flow-strip-types@7.6.3':
-    resolution: {integrity: sha512-l0ETkyEofkqFJ9LS6HChNIKtVJw2ylKbhYMlJ5C6df+ldxxaLIyXY4yOdDQQspfFpV8/vDiaWoJlvflstlYNxg==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -958,11 +939,6 @@ packages:
   '@babel/preset-env@7.29.3':
     resolution: {integrity: sha512-ySZypNLAIH1ClygLDQzVMoGQRViATnkHkYYV6TcNDz+8+jwZCdsguGvsb3EY5d9wyWyhmF1iSuFM0Yh5XPnqSA==}
     engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
-  '@babel/preset-flow@7.0.0':
-    resolution: {integrity: sha512-bJOHrYOPqJZCkPVbG1Lot2r5OSsB+iUOaxiHdlOeB1yPWS6evswVHwvkDLZ54WTaTRIk89ds0iHmGZSnxlPejQ==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -1891,10 +1867,6 @@ packages:
     engines: {'0': node >= 0.8.0}
     hasBin: true
 
-  ansi-regex@2.1.1:
-    resolution: {integrity: sha512-TIGnTpdo+E3+pCyAluZvtED5p5wCqLdezCyhPZzKPcxvFplEt4i+W7OONCKgeZFT3+y5NZZfOOS/Bdcanm1MYA==}
-    engines: {node: '>=0.10.0'}
-
   ansi-regex@3.0.0:
     resolution: {integrity: sha512-wFUFA5bg5dviipbQQ32yOQhl6gcJaJXiHE7dvR8VYPG97+J/GNC5FKGepKdEDUFeXRzDxPF1X/Btc8L+v7oqIQ==}
     engines: {node: '>=4'}
@@ -1906,10 +1878,6 @@ packages:
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
-
-  ansi-styles@2.2.1:
-    resolution: {integrity: sha512-kmCevFghRiWM7HB5zTPULl4r9bVFSWjz62MhqizDGUrq2NWuNMQyuv4tHHoKJHs69M/MF64lEcHdYIocrdWQYA==}
-    engines: {node: '>=0.10.0'}
 
   ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -2301,10 +2269,6 @@ packages:
   chai@6.2.2:
     resolution: {integrity: sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg==}
     engines: {node: '>=18'}
-
-  chalk@1.1.3:
-    resolution: {integrity: sha512-U3lRVLMSlsCfjqYPbLyVv11M9CPW4I728d6TCKMAOJueEeB9/8o+eSsMnxPJD+Q+K909sdESg7C+tIkoH6on1A==}
-    engines: {node: '>=0.10.0'}
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -2986,12 +2950,6 @@ packages:
     peerDependencies:
       eslint: '>=4.19.1'
 
-  eslint-plugin-flowtype@3.13.0:
-    resolution: {integrity: sha512-bhewp36P+t7cEV0b6OdmoRWJCBYRiHFlqPZAG1oS3SF+Y0LQkeDvFSM4oxoxvczD1OdONCXMlJfQFiWLcV9urw==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      eslint: '>=5.0.0'
-
   eslint-plugin-import@2.18.2:
     resolution: {integrity: sha512-5ohpsHAiUBRNaBWAF08izwUGlbrJoJJ+W9/TBwsGoR1MnlgfwMIKrFeSjWbt6moabiXW9xNvtFz+97KHRfI4HQ==}
     engines: {node: '>=4'}
@@ -3279,15 +3237,6 @@ packages:
     resolution: {integrity: sha512-dVsPA/UwQ8+2uoFe5GHtiBMu48dWLTdsuEd7CKGlZlD78r1TTWBvDuFaFGKCo/ZfEr95Uk56vZoX86OsHkUeIg==}
     deprecated: flatten is deprecated in favor of utility frameworks such as lodash.
 
-  flow-bin@0.87.0:
-    resolution: {integrity: sha512-mnvBXXZkUp4y6A96bR5BHa3q1ioIIN2L10w5osxJqagAakTXFYZwjl0t9cT3y2aCEf1wnK6n91xgYypQS/Dqbw==}
-    engines: {node: '>=0.10.0'}
-    hasBin: true
-
-  flow-inspect@1.0.1:
-    resolution: {integrity: sha512-8b/1F2OheUhQsYJWt6ADy/7pesQNK2Yj40n/CKqrKfsE+cg6W8uhjYIlLN7v634+VTaCOR4vFj/pTXqiNAMjBQ==}
-    hasBin: true
-
   follow-redirects@1.9.0:
     resolution: {integrity: sha512-CRcPzsSIbXyVDl0QI01muNDu69S8trU4jArW9LpOt2WtC6LyUJetcIrmfHsRBx7/Jb6GHJUiuqyYxPooFfNt6A==}
     engines: {node: '>=4.0'}
@@ -3472,10 +3421,6 @@ packages:
     resolution: {integrity: sha512-sNvOCzEQNr/qrvJgc3UG/kD4QtlHycrzwS+6mfTrrSq97BvaYcPZZI1ZSqGSPR73Cxn4LKTD4PttRwfU7jWq5g==}
     engines: {node: '>=6'}
     deprecated: this library is no longer supported
-
-  has-ansi@2.0.0:
-    resolution: {integrity: sha512-C8vBJ8DwUCx19vhm7urhTuUsr4/IyP6l4VzNQDv+ryHQObW3TTTp9yB68WpYgRe2bbaGuZ/se74IqFeVnMnLZg==}
-    engines: {node: '>=0.10.0'}
 
   has-flag@3.0.0:
     resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==}
@@ -6256,10 +6201,6 @@ packages:
   stringify-entities@1.3.2:
     resolution: {integrity: sha512-nrBAQClJAPN2p+uGCVJRPIPakKeKWZ9GtBCmormE7pWOSlHat7+x5A8gx85M7HM5Dt0BP3pP5RhVW77WdbJJ3A==}
 
-  strip-ansi@3.0.1:
-    resolution: {integrity: sha512-VhumSSbBqDTP8p2ZLKj40UjBCV4+v8bUSEpUb4KjRgWk9pbqGF4REFj6KEagidb2f/M6AzC0EmFyDNGaw9OCzg==}
-    engines: {node: '>=0.10.0'}
-
   strip-ansi@4.0.0:
     resolution: {integrity: sha512-4XaJ2zQdCzROZDivEVIDPkcQn8LMFSa8kj8Gxb/Lnwzv9A8VctNZ+lfivC/sV3ivW8ElJTERXZoPBRrZKkNKow==}
     engines: {node: '>=4'}
@@ -6331,10 +6272,6 @@ packages:
 
   supercluster@6.0.2:
     resolution: {integrity: sha512-aa0v2HURjBTOpbcknilcfxGDuArM8khklKSmZ/T8ZXL0BuRwb5aRw95lz+2bmWpFvCXDX/+FzqHxmg0TIaJErw==}
-
-  supports-color@2.0.0:
-    resolution: {integrity: sha512-KKNVtd6pCYgPIKU4cp2733HWYCpplQhddZLBUryaAHou723x+FRzQ5Df824Fj+IyyuiQTRoub4SnIFfIcrp70g==}
-    engines: {node: '>=0.8.0'}
 
   supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -6550,6 +6487,11 @@ packages:
 
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
+
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
 
   ua-parser-js@0.7.20:
     resolution: {integrity: sha512-8OaIKfzL5cpx8eCMAhhvTlft8GYF8b2eQr6JkCyVdrgjcytyOmPCXrqXFcUnhonRpLlh5yxEZVohm6mzaowUOw==}
@@ -7339,11 +7281,6 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/helper-plugin-utils': 7.28.6
 
-  '@babel/plugin-syntax-flow@7.7.0(@babel/core@7.29.0)':
-    dependencies:
-      '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
-
   '@babel/plugin-syntax-import-assertions@7.28.6(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
@@ -7489,12 +7426,6 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.0
       '@babel/helper-plugin-utils': 7.28.6
-
-  '@babel/plugin-transform-flow-strip-types@7.6.3(@babel/core@7.29.0)':
-    dependencies:
-      '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
-      '@babel/plugin-syntax-flow': 7.7.0(@babel/core@7.29.0)
 
   '@babel/plugin-transform-for-of@7.27.1(@babel/core@7.29.0)':
     dependencies:
@@ -7830,12 +7761,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/preset-flow@7.0.0(@babel/core@7.29.0)':
-    dependencies:
-      '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
-      '@babel/plugin-transform-flow-strip-types': 7.6.3(@babel/core@7.29.0)
-
   '@babel/preset-modules@0.1.6-no-external-plugins(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
@@ -8060,9 +7985,7 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@jest/source-map@24.9.0':
     dependencies:
@@ -8948,15 +8871,11 @@ snapshots:
 
   ansi-html-community@0.0.8: {}
 
-  ansi-regex@2.1.1: {}
-
   ansi-regex@3.0.0: {}
 
   ansi-regex@4.1.0: {}
 
   ansi-regex@5.0.1: {}
-
-  ansi-styles@2.2.1: {}
 
   ansi-styles@3.2.1:
     dependencies:
@@ -9398,14 +9317,6 @@ snapshots:
   ccount@1.0.4: {}
 
   chai@6.2.2: {}
-
-  chalk@1.1.3:
-    dependencies:
-      ansi-styles: 2.2.1
-      escape-string-regexp: 1.0.5
-      has-ansi: 2.0.0
-      strip-ansi: 3.0.1
-      supports-color: 2.0.0
 
   chalk@2.4.2:
     dependencies:
@@ -10135,11 +10046,6 @@ snapshots:
       eslint-utils: 1.4.3
       regexpp: 2.0.1
 
-  eslint-plugin-flowtype@3.13.0(eslint@5.16.0):
-    dependencies:
-      eslint: 5.16.0
-      lodash: 4.17.15
-
   eslint-plugin-import@2.18.2(eslint@5.16.0):
     dependencies:
       array-includes: 3.0.3
@@ -10531,12 +10437,6 @@ snapshots:
 
   flatten@1.0.3: {}
 
-  flow-bin@0.87.0: {}
-
-  flow-inspect@1.0.1:
-    dependencies:
-      chalk: 1.1.3
-
   follow-redirects@1.9.0:
     dependencies:
       debug: 3.2.6
@@ -10710,10 +10610,6 @@ snapshots:
     dependencies:
       ajv: 6.15.0
       har-schema: 2.0.0
-
-  has-ansi@2.0.0:
-    dependencies:
-      ansi-regex: 2.1.1
 
   has-flag@3.0.0: {}
 
@@ -11347,9 +11243,7 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:
@@ -13933,10 +13827,6 @@ snapshots:
       is-alphanumerical: 1.0.3
       is-hexadecimal: 1.0.3
 
-  strip-ansi@3.0.1:
-    dependencies:
-      ansi-regex: 2.1.1
-
   strip-ansi@4.0.0:
     dependencies:
       ansi-regex: 3.0.0
@@ -14056,8 +13946,6 @@ snapshots:
   supercluster@6.0.2:
     dependencies:
       kdbush: 3.0.0
-
-  supports-color@2.0.0: {}
 
   supports-color@5.5.0:
     dependencies:
@@ -14243,6 +14131,8 @@ snapshots:
   typed-styles@0.0.7: {}
 
   typedarray@0.0.6: {}
+
+  typescript@6.0.3: {}
 
   ua-parser-js@0.7.20: {}
 

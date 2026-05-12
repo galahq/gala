@@ -1,6 +1,6 @@
 /**
  * @providesModule NewCommentButton
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -16,11 +16,9 @@ import CommunityChooser from 'overview/CommunityChooser'
 import { acceptSelection } from 'redux/actions'
 import { getSelectionText, getParagraphs } from 'shared/draftHelpers'
 
-import type { State } from 'redux/state'
 
-type OwnProps = { cardId: string }
 
-function mapStateToProps (state: State, { cardId }: OwnProps) {
+function mapStateToProps (state, { cardId }) {
   const editorState =
     state.cardsById[cardId].editorState || EditorState.createEmpty()
 
@@ -31,13 +29,6 @@ function mapStateToProps (state: State, { cardId }: OwnProps) {
   }
 }
 
-type Props = {
-  acceptingSelection: boolean,
-  selectionPending: boolean,
-  selectionNotUnique: boolean,
-  addCommentThread: () => Promise<void>,
-  acceptSelection: typeof acceptSelection,
-}
 
 const NewCommentButton = ({
   acceptingSelection,
@@ -45,7 +36,7 @@ const NewCommentButton = ({
   selectionNotUnique,
   addCommentThread,
   acceptSelection,
-}: Props) => (
+}) => (
   <Container>
     <FlexTooltip
       position={Position.BOTTOM}
@@ -91,7 +82,6 @@ const NewCommentButton = ({
   </Container>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { acceptSelection }
@@ -103,7 +93,7 @@ const UniquenessWarning = () => (
   </div>
 )
 
-function selectionNotUnique (editorState: EditorState): boolean {
+function selectionNotUnique (editorState) {
   const selection = getSelectionText(editorState)
   if (selection === '') return false
 

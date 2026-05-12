@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 import * as React from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import { Button, Intent, NonIdealState, Popover, Position } from '@blueprintjs/core'
@@ -12,46 +12,11 @@ import {
   MAPBOX_STYLE,
   MAPBOX_TOKEN,
 } from './config'
-import type { StatsBin, StatsCountryRow } from '../state/types'
 
 const shouldShowDebugMapErrorDetails = process.env.NODE_ENV !== 'production'
 
-type Viewport = {
-  latitude: number,
-  longitude: number,
-  zoom: number,
-}
 
-type MapViewProps = {
-  viewport: Viewport,
-  mapRef: { current: any },
-  tooltipRef: { current: HTMLDivElement | null },
-  mapLoaded: boolean,
-  mapError: boolean,
-  hasData: boolean,
-  fillLayer: any,
-  lineLayer: any,
-  hoveredCountry: ?StatsCountryRow,
-  tooltipPosition: { left: number, top: number },
-  binColors: string[],
-  binTextColors: string[],
-  bins: StatsBin[],
-  errorMessage: string,
-  onRetry: () => void,
-  onViewportChange: (viewport: Viewport) => void,
-  onLoad: () => void,
-  onHover: (event: any) => void,
-  onError: (error: any) => void,
-  intl: any,
-}
 
-type MapErrorStateProps = {
-  errorMessage: string,
-  mapboxToken: string,
-  mapboxStyle: string,
-  mapboxDataUrl: string,
-  onRetry: () => void,
-}
 
 function MapErrorState ({
   errorMessage,
@@ -59,7 +24,7 @@ function MapErrorState ({
   mapboxStyle,
   mapboxDataUrl,
   onRetry,
-}: MapErrorStateProps): React.Node {
+}) {
   return (
     <div className="c-stats-map-error" role="alert" aria-live="assertive">
       <p className="c-stats-map-error__title">
@@ -89,11 +54,8 @@ function MapErrorState ({
   )
 }
 
-type MapEmptyStateProps = {
-  intl: any,
-}
 
-function MapEmptyState ({ intl }: MapEmptyStateProps): React.Node {
+function MapEmptyState ({ intl }) {
   return (
     <NonIdealState
       title={intl.formatMessage({ id: 'cases.stats.show.errorNoDataTitle' })}
@@ -103,19 +65,13 @@ function MapEmptyState ({ intl }: MapEmptyStateProps): React.Node {
   )
 }
 
-type MapLegendProps = {
-  bins: StatsBin[],
-  binColors: string[],
-  binTextColors: string[],
-  intl: any,
-}
 
 function MapLegend ({
   bins,
   binColors,
   binTextColors,
   intl,
-}: MapLegendProps): React.Node {
+}) {
   if (!bins || bins.length === 0) {
     return null
   }
@@ -195,22 +151,14 @@ function MapLegend ({
   )
 }
 
-type MapTooltipProps = {
-  country: StatsCountryRow,
-  position: { left: number, top: number },
-  binColors: string[],
-  binTextColors: string[],
-  intl: any,
-  tooltipRef: { current: HTMLDivElement | null },
-}
 
-function normalizeIso2 (value: mixed): ?string {
+function normalizeIso2 (value) {
   if (typeof value !== 'string') return null
   const normalized = value.trim().toUpperCase()
   return normalized.length === 2 ? normalized : null
 }
 
-function buildFlagUrl (iso2: ?string): ?string {
+function buildFlagUrl (iso2) {
   if (!iso2) return null
   return `https://flagcdn.com/${iso2.toLowerCase()}.svg`
 }
@@ -222,7 +170,7 @@ function MapTooltip ({
   binTextColors,
   intl,
   tooltipRef,
-}: MapTooltipProps): React.Node {
+}) {
   const colorIndex =
     binColors.length > 0
       ? Math.min(country.bin || 0, binColors.length - 1)
@@ -302,7 +250,7 @@ export default function MapView ({
   onHover,
   onError,
   intl,
-}: MapViewProps): React.Node {
+}) {
   return (
     <div className="c-stats-map-root">
       <ReactMapGL

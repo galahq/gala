@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseElement
- * @flow
+ * 
  */
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -20,10 +20,8 @@ import { FormattedMessage } from 'react-intl'
 
 import { deleteElement } from 'redux/actions'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State, Reader } from 'redux/state'
 
-function mapStateToProps (state: State, { match, location }) {
+function mapStateToProps (state, { match, location }) {
   const position = parseInt(match.params.position, 10) - 1
   const caseElement = state.caseData.caseElements[position]
   if (!caseElement) return {}
@@ -56,22 +54,8 @@ function mapStateToProps (state: State, { match, location }) {
   }
 }
 
-class CaseElement extends React.Component<{
-  kicker: string,
-  reader: Reader,
-  editing: boolean,
-  next: ?{ position: string, title: string },
-  id: string,
-  url: string,
-  title: string,
-  model: string,
-  position: number,
-  deleteElement: typeof deleteElement,
-  commentThreadsOpen: boolean,
-  commentsOpen: boolean,
-  ...ContextRouter,
-}> {
-  _scrollToTop: () => void
+class CaseElement extends React.Component {
+  _scrollToTop
 
   constructor (props) {
     super(props)
@@ -156,15 +140,13 @@ class CaseElement extends React.Component<{
   }
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { deleteElement }
 )(CaseElement)
 
-type NextProps = ?{ title: string, position: string }
 
-const NextLink = ({ next }: { next: NextProps }) =>
+const NextLink = ({ next }) =>
   next ? (
     <Link className="nextLink" to={`/${next.position}`}>
       <FormattedMessage id="cases.show.next" />
@@ -179,7 +161,7 @@ const NextLink = ({ next }: { next: NextProps }) =>
   )
 
 const ConditionalNextLink = connect(
-  (state: State, ownProps: { next: NextProps }) => {
+  (state, ownProps) => {
     const postTestNext = state.quiz.needsPosttest
       ? {
           title: 'Check your understanding',

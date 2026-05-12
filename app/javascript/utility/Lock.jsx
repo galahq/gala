@@ -1,6 +1,6 @@
 /**
  * @providesModule Lock
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -10,17 +10,11 @@ import { FormattedRelative, FormattedMessage } from 'react-intl'
 
 import { createLock, deleteLock, enqueueLockForDeletion } from 'redux/actions'
 
-import type { Dispatch } from 'redux/actions'
-import type { State, Lock as LockT } from 'redux/state'
 
-type OwnProps = {
-  param: string,
-  type: string,
-}
 
 function mapStateToProps (
-  { caseData, edit, locks }: State,
-  { type, param }: OwnProps
+  { caseData, edit, locks },
+  { type, param }
 ) {
   const { reader } = caseData
   const lock = locks[`${type}/${param}`]
@@ -31,7 +25,7 @@ function mapStateToProps (
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
+function mapDispatchToProps (dispatch, { type, param }) {
   return {
     onBeginEditing: () => {
       dispatch(createLock(type, param))
@@ -43,18 +37,7 @@ function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
   }
 }
 
-type LockableProps = {
-  locked: boolean,
-  onBeginEditing: () => void,
-  onFinishEditing: () => void,
-}
 
-type Props = {
-  children: LockableProps => React.Node,
-  lock: ?LockT,
-  onEditAnyway: () => mixed,
-  visible: boolean,
-} & LockableProps
 
 const Lock = ({
   children,
@@ -64,7 +47,7 @@ const Lock = ({
   onEditAnyway,
   onFinishEditing,
   visible,
-}: Props) => (
+}) => (
   <>
     {children({ locked, onBeginEditing, onFinishEditing })}
     {visible && locked && lock && (
@@ -97,7 +80,6 @@ const Lock = ({
   </>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   mapDispatchToProps

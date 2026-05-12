@@ -1,6 +1,6 @@
 /**
  * @providesModule schema
- * @flow
+ * 
  */
 
 export const orderedSchemas = [

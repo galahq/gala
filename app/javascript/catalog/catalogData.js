@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -8,32 +8,13 @@ import { useImmer } from 'use-immer'
 import { Orchard, OrchardError } from 'shared/orchard'
 import { normalize } from 'shared/functions'
 
-import type {
-  Announcement,
-  Case,
-  Enrollment,
-  Library,
-  ReadingList,
-  Tag,
-} from 'redux/state'
 
-export type CatalogData = {
-  loading: boolean,
-  announcements: Announcement[],
-  cases: { [string]: Case },
-  enrollments: Enrollment[],
-  features: string[],
-  libraries: Library[],
-  managerships: Library[],
-  savedReadingLists: ReadingList[],
-  tags: Tag[],
-}
 
-function ignoreUnauthorized (e: OrchardError | Error) {
+function ignoreUnauthorized (e) {
   if (!(e instanceof OrchardError && e.status === 401)) throw e
 }
 
-function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
+function useCatalogData () {
   const [data, update] = useImmer(getDefaultCatalogData())
 
   React.useEffect(() => {
@@ -110,9 +91,7 @@ function useCatalogData (): [CatalogData, ((CatalogData) => void) => void] {
   return [data, update]
 }
 
-export const CatalogDataContext = React.createContext<
-  [CatalogData, ((CatalogData) => void) => void]
->([getDefaultCatalogData(), () => {}])
+export const CatalogDataContext = React.createContext([getDefaultCatalogData(), () => {}])
 
 function getDefaultCatalogData () {
   return {
@@ -130,8 +109,6 @@ function getDefaultCatalogData () {
 
 export function CatalogDataContextProvider ({
   children,
-}: {
-  children: React.Node,
 }) {
   const [catalogData, updateCatalogData] = useCatalogData()
 

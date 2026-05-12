@@ -1,20 +1,12 @@
 /**
  * @providesModule CallToAction
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 
-import type { ILinkExpansion } from './expansion/LinkExpansion'
 
-type Props = {
-  contents: string,
-  expansion: ILinkExpansion,
-  canHighlight: boolean,
-  selected: boolean,
-  websiteUrl: string,
-}
 
 export default function CallToAction ({
   contents,
@@ -22,7 +14,7 @@ export default function CallToAction ({
   canHighlight,
   selected,
   websiteUrl,
-}: Props) {
+}) {
   if (!contents && !expansion.linkDomain) return null
 
   const maybeLink = expansion.hasEmbed ? { as: 'a', href: websiteUrl } : {}

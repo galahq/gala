@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -7,7 +7,6 @@ import styled, { css } from 'styled-components'
 import { FormattedDate } from 'react-intl'
 import Markdown from 'utility/Markdown'
 
-// $FlowFixMe
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
   className: 'pt-breadcrumbs',
 })`
@@ -19,16 +18,11 @@ export const CommentThreadBreadcrumbs = styled.ul.attrs({
   grid-template-columns: min-content auto;
 `
 
-type CommentThreadBreadcrumbProps = {
-  href?: string,
-  quotation?: boolean,
-  children: React.Node,
-}
 export const CommentThreadBreadcrumb = ({
   href,
   quotation,
   children,
-}: CommentThreadBreadcrumbProps) => {
+}) => {
   const Breadcrumb = href
     ? StyledBreadcrumbLink
     : StyledBreadcrumbLink.withComponent('span')
@@ -98,14 +92,14 @@ const CONVERSATION_DATE_FORMAT = {
   day: 'numeric',
   year: 'numeric',
 }
-export const ConversationTimestamp = ({ value }: { value: string }) => (
+export const ConversationTimestamp = ({ value }) => (
   <span>
     <FormattedDate {...CONVERSATION_DATE_FORMAT} value={value} /> ·{' '}
     <FormattedDate {...CONVERSATION_TIME_FORMAT} value={value} />
   </span>
 )
 
-export const StyledComment = ({ markdown }: { markdown: string }) => (
+export const StyledComment = ({ markdown }) => (
   <StyledCommentContainer>
     <Markdown source={markdown} />
   </StyledCommentContainer>

@@ -2,31 +2,16 @@
  * Value object for the expansion of a link into an embed or a preview.
  *
  * @providesModule LinkExpansion
- * @flow
+ * 
  */
 
 import { Orchard } from 'shared/orchard'
 
-import type { LinkExpansionVisibility } from 'redux/state'
 
-type Embed = { __html?: string }
-type Preview = {
-  title?: string,
-  type?: string,
-  url?: string,
-  description?: string,
-  images?: string[],
-}
 
-export interface ILinkExpansion {
-  +actsAsLink: boolean;
-  +hasEmbed: boolean;
-  +linkDomain: string;
-  previewVisibility(visibility: LinkExpansionVisibility): ILinkExpansion;
-}
 
-class LinkExpansion implements ILinkExpansion {
-  static async fetch (params: { slug: string, updatedAt: Date, url: string }) {
+class LinkExpansion {
+  static async fetch (params) {
     const { slug, updatedAt, url } = params
     if (!url) return new NullLinkExpansion(url)
 
@@ -38,19 +23,19 @@ class LinkExpansion implements ILinkExpansion {
     )
   }
 
-  embed: ?Embed
-  preview: Preview
+  embed
+  preview
 
-  constructor ({ embed, preview }: { embed: ?Embed, preview: Preview }) {
+  constructor ({ embed, preview }) {
     this.embed = embed
     this.preview = preview
   }
 
-  get actsAsLink (): boolean {
+  get actsAsLink () {
     return !this.embed?.__html
   }
 
-  get hasEmbed (): boolean {
+  get hasEmbed () {
     return !!this.embed?.__html
   }
 
@@ -62,7 +47,7 @@ class LinkExpansion implements ILinkExpansion {
     noDescription,
     noEmbed,
     noImage,
-  }: LinkExpansionVisibility) {
+  }) {
     return new LinkExpansion({
       embed: noEmbed ? undefined : this.embed,
       preview: {
@@ -76,10 +61,10 @@ class LinkExpansion implements ILinkExpansion {
 
 export default LinkExpansion
 
-export class NullLinkExpansion implements ILinkExpansion {
-  url: ?string
+export class NullLinkExpansion {
+  url
 
-  constructor (url: ?string) {
+  constructor (url) {
     this.url = url
   }
 
@@ -95,12 +80,12 @@ export class NullLinkExpansion implements ILinkExpansion {
     return domain(this.url)
   }
 
-  previewVisibility (_: mixed) {
+  previewVisibility (_) {
     return this
   }
 }
 
-function domain (url: ?string): string {
+function domain (url) {
   if (url == null) return ''
   try {
     return new URL(url).host.replace(/^www\./, '')

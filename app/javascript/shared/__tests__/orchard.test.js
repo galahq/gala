@@ -1,4 +1,4 @@
-/* @noflow */
+/*  */
 
 import { handleResponse, OrchardError, OrchardInputError } from '../orchard'
 

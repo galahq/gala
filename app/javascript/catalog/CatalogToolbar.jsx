@@ -1,6 +1,6 @@
 /**
  * @providesModule CatalogToolbar
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,12 +16,9 @@ import { getSearchPath } from 'catalog/search_results/SearchForm'
 import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 import { ReaderDataContext } from 'catalog/readerData'
 
-import type { IntlShape } from 'react-intl'
-import type { ContextRouter } from 'react-router-dom'
 
-type Props = {| ...ContextRouter |}
 
-const CatalogToolbar = ({ history }: Props) => {
+const CatalogToolbar = ({ history }) => {
   const {
     roles: { author, instructor },
   } = React.useContext(ReaderDataContext)
@@ -66,17 +63,13 @@ const CatalogToolbar = ({ history }: Props) => {
   )
 }
 
-// $FlowFixMe
 export default withRouter(CatalogToolbar)
 
-class SearchField extends React.Component<
-  ContextRouter & { intl: IntlShape },
-  { active: boolean }
-> {
+class SearchField extends React.Component {
   state = { active: false }
-  input: ?HTMLInputElement
+  input
 
-  handleSubmit = (e: SyntheticEvent<*>) => {
+  handleSubmit = (e) => {
     e.preventDefault()
     if (!this.input || this.input.value === '') return
 

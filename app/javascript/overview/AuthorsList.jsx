@@ -1,6 +1,6 @@
 /**
  * @providesModule AuthorsList
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,29 +16,18 @@ import Acknowledgements from './Acknowledgements'
 import { FormattedList } from 'shared/react-intl'
 import { LabelForScreenReaders } from 'utility/A11y'
 
-import type { Author, Byline } from 'redux/state'
-import type { AuthorsListFormState } from './AuthorsListForm'
 
-class AuthorsList extends React.Component<
-  {
-    canEdit: boolean,
-    byline: Byline,
-    onChange: Byline => any,
-    onStartEditing?: () => void,
-    onFinishEditing?: () => void,
-  },
-  { editing: boolean }
-> {
+class AuthorsList extends React.Component {
   state = { editing: false }
 
-  handleStartEditing = (e: SyntheticEvent<*>) => {
+  handleStartEditing = (e) => {
     if (this.props.canEdit) {
       this.setState({ editing: true })
       this.props.onStartEditing && this.props.onStartEditing()
     }
   }
 
-  handleFinishEditing = (formState: ?AuthorsListFormState) => {
+  handleFinishEditing = (formState) => {
     this.setState({ editing: false })
     if (formState != null) {
       this.props.onChange(formState)
@@ -107,9 +96,6 @@ export default AuthorsList
 const AuthorName = ({
   author,
   canEdit,
-}: {
-  author: Author,
-  canEdit: boolean,
 }) => {
   const { name, institution } = author
   return institution ? (

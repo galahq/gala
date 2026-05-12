@@ -1,5 +1,5 @@
 /**
- * @noflow
+ * 
  */
 
 import SpotlightManager from '../SpotlightManager'

@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseList
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -9,10 +9,8 @@ import { FormattedMessage } from 'react-intl'
 
 import { CaseLinkRow } from 'catalog/shared'
 
-import type { Case } from 'redux/state'
 
-type Props = { cases: Case[], readerIsEditor: boolean }
-const CaseList = ({ cases, readerIsEditor }: Props) => (
+const CaseList = ({ cases, readerIsEditor }) => (
   <UnstyledList>
     {cases.map(kase => {
       return (

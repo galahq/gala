@@ -1,6 +1,6 @@
 /**
  * @providesModule TableOfContents
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -25,9 +25,8 @@ import {
 
 import PostTestLink from 'quiz/PostTestLink'
 
-import type { State, CaseElement } from 'redux/state'
 
-function mapStateToProps ({ caseData, edit, quiz }: State) {
+function mapStateToProps ({ caseData, edit, quiz }) {
   return {
     caseSlug: caseData.slug,
     caseElements: caseData.caseElements,
@@ -37,17 +36,6 @@ function mapStateToProps ({ caseData, edit, quiz }: State) {
   }
 }
 
-type Props = {
-  caseSlug: string,
-  createActivity: typeof createActivity,
-  createPage: typeof createPage,
-  createPodcast: typeof createPodcast,
-  disabled: boolean,
-  editing: boolean,
-  caseElements: CaseElement[],
-  hasQuiz: boolean,
-  onSidebar: boolean,
-}
 
 function TableOfContents ({
   caseSlug,
@@ -59,7 +47,7 @@ function TableOfContents ({
   caseElements,
   hasQuiz,
   onSidebar,
-}: Props) {
+}) {
   return (
     <OuterContainer>
       <Container>
@@ -119,7 +107,6 @@ function TableOfContents ({
   )
 }
 
-// $FlowFixMe
 export default withRouter(
   connect(
     mapStateToProps,

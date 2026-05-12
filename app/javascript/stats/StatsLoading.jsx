@@ -1,10 +1,10 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
-export function MapLoadingOverlay (): React$Node {
+export function MapLoadingOverlay () {
   return (
     <div className="c-stats-map__loading-overlay">
       <div className="pt-spinner pt-large">
@@ -34,10 +34,7 @@ export function MapLoadingOverlay (): React$Node {
 function SkeletonRow ({
   labelWidth,
   valueWidth,
-}: {
-  labelWidth: string,
-  valueWidth: string,
-}): React$Node {
+}) {
   return (
     <div className="c-stats-summary__row">
       <div className="pt-skeleton" style={{ height: '16px', width: labelWidth, minWidth: labelWidth }} />
@@ -46,7 +43,7 @@ function SkeletonRow ({
   )
 }
 
-export function SummaryLoadingSkeleton (): React$Node {
+export function SummaryLoadingSkeleton () {
   return (
     <div className="c-stats-summary__content">
       <SkeletonRow labelWidth="140px" valueWidth="60px" />
@@ -60,10 +57,7 @@ export function SummaryLoadingSkeleton (): React$Node {
 function InformationSkeletonRow ({
   labelWidth,
   valueWidth,
-}: {
-  labelWidth: string,
-  valueWidth: string,
-}): React$Node {
+}) {
   return (
     <div className="c-stats-information__row">
       <div className="pt-skeleton" style={{ height: '16px', width: labelWidth, minWidth: labelWidth }} />
@@ -72,7 +66,7 @@ function InformationSkeletonRow ({
   )
 }
 
-export function InformationLoadingSkeleton (): React$Node {
+export function InformationLoadingSkeleton () {
   return (
     <div className="c-stats-information__content">
       <InformationSkeletonRow labelWidth="180px" valueWidth="60px" />
@@ -84,7 +78,7 @@ export function InformationLoadingSkeleton (): React$Node {
   )
 }
 
-export function TableLoadingSkeleton (): React$Node {
+export function TableLoadingSkeleton () {
   return (
     <div className="pt-card c-stats-skeleton-card">
       <div className="pt-skeleton c-stats-skeleton--table-header" />
@@ -93,7 +87,7 @@ export function TableLoadingSkeleton (): React$Node {
   )
 }
 
-export function PageLoadingSkeleton (): React$Node {
+export function PageLoadingSkeleton () {
   return (
     <div className="c-stats-page c-stats-page--loading">
       <div className="pt-skeleton c-stats-skeleton--page-title" />

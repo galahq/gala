@@ -2,7 +2,7 @@
  * MultiSelect dropdown to present keyword suggestions.
  *
  * @providesModule KeywordsChooser
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -14,19 +14,8 @@ import { MenuItem } from '@blueprintjs/core'
 import { MultiSelect } from '@blueprintjs/select'
 import { Orchard } from 'shared/orchard'
 
-import type { IntlShape } from 'react-intl'
-import type { Tag } from 'redux/state'
-import type TaggingsManager from './TaggingsManager'
 
-type Props = {
-  intl: IntlShape,
-  fullWidth?: boolean,
-  onChange: (Tag[]) => mixed,
-  taggingsManager?: TaggingsManager,
-  tags: Tag[],
-}
-type State = { items: Tag[], query: string }
-class KeywordsChooser extends React.Component<Props, State> {
+class KeywordsChooser extends React.Component {
   state = { items: [], query: '' }
 
   isTagSelected = tag => this.props.tags.map(t => t.name).includes(tag.name)

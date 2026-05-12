@@ -1,6 +1,6 @@
 /**
  * @providesModule CardContents
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -25,27 +25,17 @@ import { OnScreenTracker } from 'utility/Tracker'
 import { FocusContainer } from 'utility/A11y'
 import { ScrollIntoView } from 'utility/ScrollView'
 
-import type { IntlShape } from 'react-intl'
-import type { CardProps } from 'card'
 
 const CommentThreadsCard = asyncComponent(() =>
   import('comments/CommentThreadsCard').then(m => m.default)
 )
 
-type Props = CardProps & { intl: IntlShape }
-type State = {
-  commentable: boolean,
-  editorState: EditorState,
-  hoveredCommentThread: ?string,
-  selectedCommentThread: ?string,
-  theseCommentThreadsOpen: boolean,
-}
 
-class CardContents extends React.Component<Props, State> {
+class CardContents extends React.Component {
   // We have to be able to respond to props change that would change
   // customStyleMap by "jiggling" each block of editorState to trigger a
   // rerender. Internal state should exactly track props, plus jiggle.
-  static getDerivedStateFromProps (props: Props, state: State) {
+  static getDerivedStateFromProps (props, state) {
     let { editorState } = props
     const {
       commentable,
@@ -75,10 +65,10 @@ class CardContents extends React.Component<Props, State> {
     theseCommentThreadsOpen: this.props.theseCommentThreadsOpen,
   }
 
-  cardRef: ?HTMLElement
+  cardRef
 
   _getClassNames = () => {
-    let n: string[] = []
+    let n = []
     n = append(this.props.solid ? 'Card' : 'nonCard', n)
     if (this.props.anyCommentThreadsOpen) {
       n = append('has-comment-threads-open', n)
@@ -129,7 +119,7 @@ class CardContents extends React.Component<Props, State> {
       selectedCommentThread,
     })
 
-    function keyBindingFnWithOverrides (e: SyntheticKeyboardEvent<*>): ?string {
+    function keyBindingFnWithOverrides (e) {
       if (theseCommentThreadsOpen && acceptingSelection && e.key === 'Enter') {
         addCommentThread()
         return
@@ -245,7 +235,7 @@ class CardContents extends React.Component<Props, State> {
 
 export default injectIntl(CardContents)
 
-function shouldJiggle (props: Props, state: State) {
+function shouldJiggle (props, state) {
   return (
     props.commentable !== state.commentable ||
     props.theseCommentThreadsOpen !== state.theseCommentThreadsOpen ||
@@ -254,7 +244,7 @@ function shouldJiggle (props: Props, state: State) {
   )
 }
 
-function jiggle (editorState: EditorState): EditorState {
+function jiggle (editorState) {
   const contentState = editorState.getCurrentContent()
   const blockMap = contentState.getBlockMap()
 
@@ -266,7 +256,7 @@ function jiggle (editorState: EditorState): EditorState {
   })
 }
 
-function citationInsideThisCard (card: ?Element, citation: ?Element): boolean {
+function citationInsideThisCard (card, citation) {
   if (!card || !citation) return false
   if (card === citation) return true
   return citationInsideThisCard(card, citation.parentElement)

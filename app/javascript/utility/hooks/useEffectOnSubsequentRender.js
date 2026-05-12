@@ -1,10 +1,10 @@
 /**
  * @providesModule useEffectOnSubsequentRender
- * @flow
+ * 
  */
 
 import { useEffect, useRef } from 'react'
-export default function useEffectOnSubsequentRender (effect: any, inputs: any) {
+export default function useEffectOnSubsequentRender (effect, inputs) {
   const hasBeenCalled = useRef(false)
 
   useEffect(() => {

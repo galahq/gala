@@ -1,6 +1,6 @@
 /**
  * @providesModule LeadComment
- * @flow
+ * 
  */
 
 import React, { useState } from 'react'
@@ -18,27 +18,14 @@ import {
   SmallGreyText,
 } from 'conversation/shared'
 
-import type { IntlShape } from 'react-intl'
-import type { Dispatch } from 'redux/actions'
-import type { State, ReaderState, Comment } from 'redux/state'
 
-type OwnProps = {
-  intl: IntlShape,
-  leadComment: Comment,
-  responseCount: number,
-  onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
-}
 
-type StateProps = {
-  readerCanDeleteComments: boolean,
-  currentReader: ?ReaderState,
-}
 
 function mapStateToProps ({
   commentThreadsById,
   forums,
   caseData: { reader },
-}: State) {
+}) {
   return {
     readerCanDeleteComments: forums.find(forum => forum.community.active)
       ?.moderateable,
@@ -46,21 +33,17 @@ function mapStateToProps ({
   }
 }
 
-type DispatchProps = {
-  handleDeleteThread: (SyntheticMouseEvent<*>) => Promise<any>,
-}
 
 function mapDispatchToProps (
-  dispatch: Dispatch,
-  { leadComment: { id }, onCancel }: OwnProps
+  dispatch,
+  { leadComment: { id }, onCancel }
 ) {
   return {
-    handleDeleteThread: (e: SyntheticMouseEvent<*>) =>
+    handleDeleteThread: (e) =>
       dispatch(deleteComment(id)).then(() => onCancel(e)),
   }
 }
 
-type Props = OwnProps & StateProps & DispatchProps
 
 function LeadComment ({
   currentReader,
@@ -69,10 +52,10 @@ function LeadComment ({
   leadComment,
   readerCanDeleteComments,
   responseCount,
-}: Props) {
+}) {
   const [editing, setEditing] = useState(false)
 
-  const previews: any = leadComment.attachments.filter(a => a.representable)
+  const previews = leadComment.attachments.filter(a => a.representable)
   const attachments = leadComment.attachments.filter(a => !a.representable)
 
   return editing ? (

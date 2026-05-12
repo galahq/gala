@@ -3,7 +3,7 @@
  * case whether or not they have an account.
  *
  * @providesModule MagicLin
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -11,9 +11,8 @@ import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import { CSRF } from 'shared/orchard'
 
-type Props = { deploymentKey: string }
 
-const MagicLink = ({ deploymentKey }: Props) => {
+const MagicLink = ({ deploymentKey }) => {
   const csrfObj = CSRF.param()
   return (
     <form action="/magic_link" method="POST">

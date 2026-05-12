@@ -1,6 +1,5 @@
 /**
  * @providesModule NoSearchResults
- * @flow
  */
 
 import * as React from 'react'

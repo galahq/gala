@@ -2,20 +2,18 @@
  * Show the keywords assigned to a case in nice bubbles.
  *
  * @providesModule KeywordsDisplay
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 
-import type { Tag } from 'redux/state'
 
 function categoryQueryPath (name) {
   return `/catalog/search?tags[]=${name}`
 }
 
-type Props = { tags: Tag[] }
-const KeywordsDisplay = ({ tags }: Props) => (
+const KeywordsDisplay = ({ tags }) => (
   <>
     <div>
       {tags

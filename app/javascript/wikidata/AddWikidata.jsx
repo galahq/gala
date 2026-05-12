@@ -1,24 +1,15 @@
 /**
  * @providesModule AddWikidata
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import type { WikidataLink } from 'redux/state'
 import SortableWikidataList, {
   createSortableInput,
 } from './SortableWikidataList'
 
-type Props = {
-  editing: boolean,
-  schema: string,
-  editing: boolean,
-  onChange: (wikidataLinks: WikidataLink[]) => mixed,
-  wikidataLinks: WikidataLink[],
-  wikidataLinksPath: string,
-}
 
 const AddWikidata = ({
   editing,
@@ -26,10 +17,10 @@ const AddWikidata = ({
   onChange,
   wikidataLinks,
   wikidataLinksPath,
-}: Props): React.Node => {
+}) => {
   const items = wikidataLinks.filter(link => link.schema === schema)
 
-  const handleChange = (updates: WikidataLink[]) => {
+  const handleChange = (updates) => {
     const updatedLinks = [
       ...wikidataLinks.filter(link => link.schema !== schema),
       ...updates,

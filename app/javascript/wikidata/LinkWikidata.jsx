@@ -1,6 +1,6 @@
 /**
  * @providesModule LinkWikidata
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -9,20 +9,11 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 import styled from 'styled-components'
 import { Popover, Position } from '@blueprintjs/core'
 
-import type { WikidataLink } from 'redux/state'
-import type { IntlShape } from 'react-intl'
 
 import AddWikidata from './AddWikidata'
 import SearchWikidata from './SearchWikidata'
 import { orderedSchemas } from './schema'
 
-type Props = {
-  editing: boolean,
-  wikidataLinksPath: string,
-  onChange: (wikidataLinks: WikidataLink[]) => mixed,
-  wikidataLinks: WikidataLink[],
-  intl: IntlShape,
-}
 
 const PopoverContent = styled.div`
   padding: 1em;
@@ -47,7 +38,7 @@ const LinkWikidata = ({
   onChange,
   wikidataLinksPath,
   intl,
-}: Props) => {
+}) => {
   // Use memo to prevent recomputing this on every render
   const linksBySchema = React.useMemo(() => {
     const result = {}

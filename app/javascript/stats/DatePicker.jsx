@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 
 import React, { useEffect, useMemo, useRef } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
@@ -17,7 +17,7 @@ function DatePicker ({
   const minDate = minDateProp || new Date(2000, 0, 1)
   const calendarMinDate = calendarMinDateProp || minDate
   const maxDate = maxDateProp || new Date()
-  const pickerRootRef: { current: null | HTMLDivElement } = useRef(null)
+  const pickerRootRef = useRef(null)
 
   const today = new Date()
   const end = new Date(today.getFullYear(), today.getMonth(), today.getDate())

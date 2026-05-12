@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import { FormattedList } from '../react-intl'

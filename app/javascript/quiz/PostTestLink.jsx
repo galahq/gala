@@ -1,13 +1,12 @@
 /**
  * @providesModule PostTestLink
- * @flow
+ * 
  */
 
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
-// $FlowFixMe
 const PurpleTOCFooterButton = styled(Link)`
   background-color: #373566;
   border-radius: 0 0 2pt 2pt;

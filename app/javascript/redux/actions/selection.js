@@ -1,38 +1,27 @@
 /**
- * @flow
+ * 
  */
 
-import type { SelectionState } from 'draft-js'
 
-export type AcceptSelectionAction = {
-  type: 'ACCEPT_SELECTION',
-  enabled: boolean,
-}
 
 export function acceptSelection (
-  enabled: boolean = true
-): AcceptSelectionAction {
+  enabled = true
+) {
   clearSelection()
   return { type: 'ACCEPT_SELECTION', enabled }
 }
 
-type OldDocument = { selection: { empty: () => void } }
-function clearSelection (): void {
-  if ((document: any).selection) {
-    ;((document: any): OldDocument).selection.empty()
+function clearSelection () {
+  if ((document).selection) {
+    ;((document)).selection.empty()
   } else if (window.getSelection) {
     window.getSelection().removeAllRanges()
   }
 }
 
-export type ApplySelectionAction = {
-  type: 'APPLY_SELECTION',
-  cardId: string,
-  selectionState: SelectionState,
-}
 export function applySelection (
-  cardId: string,
-  selectionState: SelectionState
-): ApplySelectionAction {
+  cardId,
+  selectionState
+) {
   return { type: 'APPLY_SELECTION', cardId, selectionState }
 }

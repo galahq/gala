@@ -1,5 +1,5 @@
 /**
- * @noflow
+ * 
  * Minimal browser `process` shim for legacy dependencies under Webpack 5.
  */
 /* global __GALA_NODE_ENV__ */

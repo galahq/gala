@@ -1,6 +1,6 @@
 /**
  * @providesModule OptionCustomizer
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -8,17 +8,9 @@ import styled from 'styled-components'
 import { Button, Intent, InputGroup, Radio } from '@blueprintjs/core'
 import { hotkeyDispatch } from 'shared/keyboard'
 
-type Props = {
-  option: string,
-  checked: boolean,
-  onAdd: () => void,
-  onChange: string => void,
-  onCheck: () => void,
-  onRemove: () => void,
-}
 
 function OptionCustomizer (
-  { option, checked, onAdd, onChange, onCheck, onRemove }: Props,
+  { option, checked, onAdd, onChange, onCheck, onRemove },
   ref
 ) {
   return (
@@ -27,7 +19,7 @@ function OptionCustomizer (
         value={option}
         checked={checked}
         className="pt-fixed"
-        onChange={(e: SyntheticInputEvent<*>) => {
+        onChange={(e) => {
           if (e.target.checked) onCheck()
         }}
       />
@@ -57,13 +49,12 @@ function OptionCustomizer (
             }
           },
         })}
-        onChange={(e: SyntheticInputEvent<*>) => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
     </div>
   )
 }
 
-// $FlowFixMe
 export default React.forwardRef(OptionCustomizer)
 
 const GroupedRadio = styled(Radio)`

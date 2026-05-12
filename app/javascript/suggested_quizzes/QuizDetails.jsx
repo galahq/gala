@@ -1,6 +1,6 @@
 /**
  * @providesModule QuizDetails
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -20,29 +20,14 @@ import {
   removeSuggestedQuiz,
 } from 'redux/actions'
 
-import type { IntlShape } from 'react-intl'
-import type { RouterHistory } from 'react-router-dom'
-import type { State, DraftQuestion, SuggestedQuiz } from 'redux/state'
 
-type OwnProps = {
-  id: string,
-}
 
-function mapStateToProps ({ suggestedQuizzes }: State, { id }: OwnProps) {
+function mapStateToProps ({ suggestedQuizzes }, { id }) {
   return {
     quiz: suggestedQuizzes[id],
   }
 }
 
-type Props = OwnProps & {
-  displayErrorToast: typeof displayErrorToast,
-  intl: IntlShape,
-  history: RouterHistory,
-  quiz: SuggestedQuiz,
-  updateSuggestedQuiz: typeof updateSuggestedQuiz,
-  createSuggestedQuiz: typeof createSuggestedQuiz,
-  removeSuggestedQuiz: typeof removeSuggestedQuiz,
-}
 function QuizDetails ({
   displayErrorToast,
   history,
@@ -52,15 +37,15 @@ function QuizDetails ({
   updateSuggestedQuiz,
   createSuggestedQuiz,
   removeSuggestedQuiz,
-}: Props) {
+}) {
   const [draftQuiz, setDraftQuiz] = React.useState(quiz)
   const { questions, title } = draftQuiz
 
-  function handleChangeTitle (e: SyntheticInputEvent<*>) {
+  function handleChangeTitle (e) {
     setDraftQuiz({ ...draftQuiz, title: e.target.value })
   }
 
-  function handleChangeQuestions (questions: DraftQuestion[]) {
+  function handleChangeQuestions (questions) {
     setDraftQuiz({ ...draftQuiz, questions })
   }
 

@@ -1,6 +1,6 @@
 /**
  * @providesModule CommentThreadsTag
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -12,12 +12,10 @@ import { acceptSelection } from 'redux/actions'
 
 import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 
-import type { State } from 'redux/state'
 
-type OwnProps = { cardId: string }
 function mapStateToProps (
-  { cardsById, commentThreadsById }: State,
-  { cardId }: OwnProps
+  { cardsById, commentThreadsById },
+  { cardId }
 ) {
   const { commentThreads } = cardsById[cardId]
   if (commentThreads == null) return { count: 0 }
@@ -54,7 +52,6 @@ const CommentThreadsTag = ({ match, count, cardId, acceptSelection }) => (
   </TranslatedSpotlight>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { acceptSelection }

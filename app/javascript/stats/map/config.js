@@ -1,14 +1,14 @@
-/* @flow */
+/*  */
 import { Colors } from './mapColors'
 
-function readWindowString (key: string, fallback: string): string {
-  const value = (window: any)[key]
+function readWindowString (key, fallback) {
+  const value = (window)[key]
   if (typeof value !== 'string') return fallback
   const trimmed = value.trim()
   return trimmed || fallback
 }
 
-function readMapboxToken (): ?string {
+function readMapboxToken () {
   const token = readWindowString('MAPBOX_ACCESS_TOKEN', '')
   if (!token || token === 'MAPBOX_TOKEN_REMOVED' || token === 'CHANGEME') {
     return null

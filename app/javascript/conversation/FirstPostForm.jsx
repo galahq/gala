@@ -1,6 +1,6 @@
 /**
  * @providesModule FirstPostForm
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -15,29 +15,13 @@ import commentFormConnector from 'conversation/commentFormConnector'
 import CommentAttachmentsChooser from 'conversation/CommentAttachmentsChooser'
 import FormattingToolbar from 'draft/FormattingToolbar'
 
-import type { Editor } from 'draft-js'
-import type {
-  CommentFormProps,
-  StateProps,
-  DispatchProps,
-} from 'conversation/commentFormConnector'
 
-type OwnProps = {
-  onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
-}
-type Props = {
-  ...OwnProps,
-  ...CommentFormProps,
-  ...StateProps,
-  ...DispatchProps,
-}
-type State = { editorState: EditorState }
-class FirstPostForm extends React.Component<Props, State> {
-  editor: ?Editor
+class FirstPostForm extends React.Component {
+  editor
 
   state = { editorState: this.props.editorState }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate (prevProps) {
     if (
       prevProps.threadId !== this.props.threadId ||
       prevProps.editorState !== this.props.editorState

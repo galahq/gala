@@ -1,4 +1,3 @@
-/* @noflow */
 
 import React from 'react'
 import { cleanup, render, waitForElement } from 'react-testing-library'
@@ -46,7 +45,7 @@ function renderPicker (props = {}) {
   )
 }
 
-function todayStart (): Date {
+function todayStart () {
   const now = new Date()
   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }

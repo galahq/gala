@@ -1,22 +1,22 @@
 /**
  * @providesModule TaggingsManager
- * @flow
+ * 
  */
 
 import { Orchard } from 'shared/orchard'
 
 class TaggingsManager {
-  taggingsPath: string
+  taggingsPath
 
-  constructor (taggingsPath: string) {
+  constructor (taggingsPath) {
     this.taggingsPath = taggingsPath
   }
 
-  add (tagName: string) {
+  add (tagName) {
     return Orchard.graft(this.taggingsPath, { tagging: { tagName }})
   }
 
-  remove (tagName: string) {
+  remove (tagName) {
     return Orchard.prune(`${this.taggingsPath}/${tagName}`)
   }
 }

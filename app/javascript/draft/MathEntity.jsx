@@ -1,6 +1,6 @@
 /**
  * @providesModule MathEntity
- * @flow
+ * 
  */
 
 import React, { useState, useRef } from 'react'
@@ -8,11 +8,10 @@ import { EditorState, SelectionState } from 'draft-js'
 import Tex2SVG from "react-hook-mathjax"
 import { connect } from 'react-redux'
 import { applySelection } from 'redux/actions'
-import type { State } from 'redux/state'
 import styled from 'styled-components'
 
 function mapStateToProps (
-  state: State,
+  state,
   { contentState, entityKey }
 ) {
   const { cardId } = contentState.getEntity(entityKey).getData()
@@ -186,7 +185,6 @@ function MathComponent (props) {
   )
 }
 
-// $FlowFixMe
 const MathEntity = connect(
   mapStateToProps,
   mapDispatchToProps

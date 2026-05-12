@@ -1,32 +1,15 @@
 /**
  * @providesModule Tracker
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import type { State } from 'redux/state'
 
-declare class Ahoy {
-  track(name: string, properties: Object): void;
-}
 
-type TimerState = 'STOPPED' | 'RUNNING' | 'PAUSED'
-type TrackerProps = {
-  caseSlug?: string,
-  targetKey: string,
-  targetParameters: $Supertype<{ name: string }>,
-  timerState: TimerState,
-  instantaneous?: boolean,
-  innerRef?: (?HTMLSpanElement) => any,
-}
-type TrackerState = {
-  durationSoFar: number,
-  timeArrived: number,
-}
 
-class BaseTracker extends React.Component<TrackerProps, TrackerState> {
+class BaseTracker extends React.Component {
   state = {
     durationSoFar: 0,
     timeArrived: Date.now(),
@@ -48,12 +31,12 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     this.setState({ durationSoFar: 0 })
   }
 
-  _log = (duration: number) => {
+  _log = (duration) => {
     const { targetParameters, caseSlug, instantaneous } = this.props
 
     const loggedDuration = instantaneous ? 3000 : duration
     if (loggedDuration >= 3000) {
-      ;(window.ahoy: Ahoy).track(targetParameters.name, {
+      ;(window.ahoy).track(targetParameters.name, {
         ...targetParameters,
         case_slug: caseSlug,
         duration: loggedDuration,
@@ -61,7 +44,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     }
   }
 
-  _timeSinceArrival (state: TrackerState) {
+  _timeSinceArrival (state) {
     const thisSegment =
       this.props.timerState === 'RUNNING' ? Date.now() - state.timeArrived : 0
     return state.durationSoFar + thisSegment
@@ -71,7 +54,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     if (this.props.timerState === 'RUNNING') this._startTimer()
   }
 
-  componentDidUpdate (prevProps: TrackerProps) {
+  componentDidUpdate (prevProps) {
     if (
       prevProps.timerState === this.props.timerState &&
       prevProps.targetKey === this.props.targetKey
@@ -109,12 +92,11 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
   }
 }
 
-function mapStateToProps ({ caseData }: State) {
+function mapStateToProps ({ caseData }) {
   return {
     caseSlug: caseData.slug,
   }
 }
-// $FlowFixMe
 const Tracker = connect(
   mapStateToProps,
   () => ({})
@@ -123,22 +105,10 @@ export default Tracker
 
 // Specializations
 //
-type OnScreenTrackerProps = {|
-  targetKey: string,
-  targetParameters: $Supertype<{ name: string }>,
-|}
 
-type OnScreenTrackerState = {
-  isVisible: boolean,
-  needsVisibilityCheck: boolean,
-  interval?: IntervalID,
-}
 
-export class OnScreenTracker extends React.Component<
-  OnScreenTrackerProps,
-  OnScreenTrackerState
-> {
-  node: ?HTMLElement
+export class OnScreenTracker extends React.Component {
+  node
 
   state = {
     isVisible: false,

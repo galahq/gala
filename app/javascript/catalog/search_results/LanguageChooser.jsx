@@ -2,7 +2,7 @@
  * MultiSelect dropdown to present language suggestions.
  *
  * @providesModule LanguageChooser
- * @flow
+ * 
  */
 
 import * as React from 'react'

@@ -1,6 +1,6 @@
 /**
  * @providesModule GalaDragDropContext
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -9,17 +9,12 @@ import { DragDropContext } from 'react-beautiful-dnd'
 
 import { reorderCaseElements, reorderCard } from 'redux/actions'
 
-type Props = {
-  children: React.Node,
-  reorderCaseElements: typeof reorderCaseElements,
-  reorderCard: typeof reorderCard,
-}
 
 function GalaDragDropContext ({
   children,
   reorderCaseElements,
   reorderCard,
-}: Props) {
+}) {
   function onDragEnd (result) {
     const { draggableId, type, source, destination } = result
 

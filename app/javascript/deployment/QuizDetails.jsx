@@ -1,6 +1,6 @@
 /**
  * @providesModule QuizDetails
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -9,20 +9,13 @@ import styled from 'styled-components'
 import QuizCustomizer from 'quiz/customizer'
 import { QuestionType } from './QuizCard'
 
-import type { DraftQuestion, CustomizedQuiz } from './types'
 
-type Props = {
-  quiz: CustomizedQuiz,
-  customQuestions: DraftQuestion[],
-  onChangeCustomQuestions: (DraftQuestion[]) => void,
-  onDeselect: () => void,
-}
 const QuizDetails = ({
   quiz = { id: 'new', questions: [], customQuestions: [], customized: true },
   customQuestions = [],
   onChangeCustomQuestions,
   onDeselect,
-}: Props) => (
+}) => (
   <DetailsCard className="pt-card bp4-card">
     <CloseLink onClick={onDeselect} />
     <CardTitle>Quiz details</CardTitle>
@@ -35,7 +28,7 @@ const QuizDetails = ({
             <QuestionType className="pt-icon-standard bp4-icon-standard pt-icon-comment bp4-icon-comment" />
           ) : (
             <OptionsList>
-              {question.options.map((option: string, i: number) => {
+              {question.options.map((option, i) => {
                 const correct = question.correctAnswer === option
 
                 return (

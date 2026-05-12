@@ -5,7 +5,7 @@
  *
  * NOTE: This is for use with HTML forms, not React components.
  *
- * @flow
+ * 
  */
 
 import * as ActiveStorage from 'activestorage'

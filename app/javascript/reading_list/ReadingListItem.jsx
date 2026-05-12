@@ -1,6 +1,6 @@
 /**
  * @providesModule ReadingListItem
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,19 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { Element as CatalogElement } from 'catalog/shared'
 
-import type { IntlShape } from 'react-intl'
-import type { DraggableProps, DragHandleProps } from 'react-beautiful-dnd'
-import type { Case, ReadingListItem as ReadingListItemT } from 'redux/state'
 
-type Props = {
-  caseData: ?Case,
-  intl: IntlShape,
-  item: ReadingListItemT,
-  onChange: ReadingListItemT => void,
-  onDelete: () => void,
-  ...DraggableProps,
-  ...DragHandleProps,
-}
 
 function ReadingListItem (
   {
@@ -33,7 +21,7 @@ function ReadingListItem (
     onChange,
     onDelete,
     ...draggableAndHandleProps
-  }: Props,
+  },
   ref
 ) {
   return (

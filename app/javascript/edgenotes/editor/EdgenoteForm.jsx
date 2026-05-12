@@ -2,7 +2,7 @@
  * Form allowing all the attributes of Edgenotes to be set.
  *
  * @providesModule EdgenoteForm
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,20 +16,8 @@ import Markdown from 'utility/Markdown'
 import { IconChooser } from 'utility/Icon'
 import { ensureHttp } from 'shared/functions'
 
-import type { IntlShape } from 'react-intl'
-import type { ChangesToAttachments } from 'edgenotes/editor'
-import type { Edgenote, ExtractReturn } from 'redux/state'
-import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
 
-export type FormContents = { ...Edgenote, ...$Shape<ChangesToAttachments> }
 
-type Props = {
-  contents: FormContents,
-  expansion: ILinkExpansion,
-  intl: IntlShape,
-  onChange: ($Shape<Edgenote>) => mixed,
-  onChangeAttachment: ($Keys<ChangesToAttachments>, ?FileList) => mixed,
-}
 
 const EdgenoteForm = ({
   contents,
@@ -37,7 +25,7 @@ const EdgenoteForm = ({
   intl,
   onChange,
   onChangeAttachment,
-}: Props) => {
+}) => {
   const disabled = shouldDisable(contents, expansion)
   const commonProps = { contents, disabled, intl, onChange, onChangeAttachment }
   return (
@@ -64,7 +52,7 @@ const EdgenoteForm = ({
           />
         )}
         {...commonProps}
-        onChange={(edgenote: Edgenote) => { onChange(edgenote) }
+        onChange={(edgenote) => { onChange(edgenote) }
         }
       />
 
@@ -179,7 +167,7 @@ const EdgenoteForm = ({
             value={value || 'file-basic'}
             {...props}
             onChange={iconSlug =>
-              onChange(({ target: { value: iconSlug }}: $FlowIssue))
+              onChange(({ target: { value: iconSlug }}))
             }
           />
         )}
@@ -201,33 +189,13 @@ const EdgenoteForm = ({
 }
 export default EdgenoteForm
 
-const Heading = ({ messageId }: { messageId: string }) => (
+const Heading = ({ messageId }) => (
   <h5>
     <FormattedMessage id={messageId} />
   </h5>
 )
 
-type CommonFieldProps = {
-  contents: *,
-  disabled: *,
-  intl: IntlShape,
-  onChange: *,
-  onChangeAttachment: *,
-  label?: string,
-  helperText?: React.Node,
-  placeholder?: string,
-  intent?: string,
-}
 
-type FieldProps = CommonFieldProps & {
-  name: $Keys<ExtractReturn<typeof shouldDisable>>,
-  render: ({
-    disabled: boolean,
-    placeholder?: string,
-    value: string,
-    onChange: (SyntheticInputEvent<*>) => any,
-  }) => React.Node,
-}
 
 const Field = ({
   contents,
@@ -240,7 +208,7 @@ const Field = ({
   placeholder,
   render,
   intent,
-}: FieldProps) => (
+}) => (
   <FormGroup
     disabled={disabled[name]}
     helperText={helperText}
@@ -253,7 +221,7 @@ const Field = ({
       id: name,
       value: contents[name] || '',
       placeholder: placeholder && intl.formatMessage({ id: placeholder }),
-      onChange: (e: SyntheticInputEvent<*>) =>
+      onChange: (e) =>
         onChange({ [name]: e.target.value }),
     })}
   </FormGroup>
@@ -263,12 +231,8 @@ const Input = styled.input.attrs({ className: 'pt-input pt-fill' })``
 const TextArea = Input.withComponent('textarea')
 
 const FileField = (
-  props: CommonFieldProps & {
-    name: $Keys<ChangesToAttachments>,
-    accept?: string,
-  }
-) => {
-  const attachment: ?Attachment | string = props.contents[props.name]
+  props) => {
+  const attachment = props.contents[props.name]
   const fileList = attachment instanceof Attachment && attachment.fileList
   return (
     <Row>
@@ -280,7 +244,7 @@ const FileField = (
               accept={props.accept}
               type="file"
               disabled={disabled}
-              onChange={(e: SyntheticInputEvent<*>) =>
+              onChange={(e) =>
                 props.onChangeAttachment(props.name, e.target.files)
               }
             />
@@ -307,8 +271,8 @@ const FileField = (
 }
 
 const shouldDisable = (
-  contents: { ...Edgenote, ...ChangesToAttachments },
-  expansion: ILinkExpansion
+  contents,
+  expansion
 ) => ({
   websiteUrl:
     Attachment.truthy(contents.audioUrl) || Attachment.truthy(contents.fileUrl),

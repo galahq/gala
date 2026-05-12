@@ -2,7 +2,7 @@
  * Presents download and upload links for the teaching guide attachment
  *
  * @providesModule TeachingGuide
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -15,12 +15,11 @@ import { isBlank } from 'shared/functions'
 import FileUploadWidget from 'utility/FileUploadWidget'
 import { deleteTeachingGuide, updateCase } from 'redux/actions'
 
-import type { State } from 'redux/state'
 
 function mapStateToProps ({
   edit: { inProgress: editing },
   caseData: { slug: caseSlug, teachingGuideUrl },
-}: State) {
+}) {
   return {
     editing,
     caseSlug,
@@ -28,13 +27,6 @@ function mapStateToProps ({
   }
 }
 
-type Props = {
-  caseSlug: string,
-  deleteTeachingGuide: typeof deleteTeachingGuide,
-  editing: boolean,
-  teachingGuideUrl: ?string,
-  updateCase: typeof updateCase,
-}
 
 const TeachingGuide = ({
   caseSlug,
@@ -42,7 +34,7 @@ const TeachingGuide = ({
   editing,
   teachingGuideUrl,
   updateCase,
-}: Props) => {
+}) => {
   const blank = isBlank(teachingGuideUrl)
   return (
     <Container>
@@ -64,7 +56,7 @@ const TeachingGuide = ({
                 {...renderProps}
               />
             )}
-            onSubmit={({ teachingGuideUrl }: Props) =>
+            onSubmit={({ teachingGuideUrl }) =>
               updateCase({ teachingGuideUrl }, false)
             }
           />
@@ -87,7 +79,6 @@ const TeachingGuide = ({
   )
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { deleteTeachingGuide, updateCase }

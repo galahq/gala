@@ -1,21 +1,11 @@
 /**
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { Orchard, OrchardError } from 'shared/orchard'
 
-import type { Reader } from 'redux/state'
 
-export type ReaderData = {|
-  loading: boolean,
-  reader: ?Reader,
-  roles: {
-    author: boolean,
-    editor: boolean,
-    instructor: boolean,
-  },
-|}
 
 export function useReaderData () {
   const [reader, setReader] = React.useState(null)
@@ -37,7 +27,7 @@ export function useReaderData () {
   return { reader, loading, roles: { author, instructor, editor }}
 }
 
-export const ReaderDataContext = React.createContext<ReaderData>({
+export const ReaderDataContext = React.createContext({
   loading: true,
   reader: null,
   roles: { author: false, editor: false, instructor: false },
@@ -45,8 +35,6 @@ export const ReaderDataContext = React.createContext<ReaderData>({
 
 export function ReaderDataContextProvider ({
   children,
-}: {
-  children: React.Node,
 }) {
   const readerData = useReaderData()
 

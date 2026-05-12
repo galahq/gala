@@ -1,6 +1,6 @@
 /**
  * @providesModule BillboardTitle
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -18,9 +18,8 @@ import AuthorsList from './AuthorsList'
 import { PositionedFileUploadWidget } from 'utility/FileUploadWidget'
 import * as TitleCard from 'shared/TitleCard'
 
-import type { State, CaseDataState, Byline, Library } from 'redux/state'
 
-function mapStateToProps ({ edit, caseData }: State) {
+function mapStateToProps ({ edit, caseData }) {
   const {
     slug,
     kicker,
@@ -49,21 +48,6 @@ function mapStateToProps ({ edit, caseData }: State) {
   }
 }
 
-type Props = {
-  slug: string,
-  editing: boolean,
-  kicker: string,
-  title: string,
-  photoCredit: string,
-  coverUrl: string,
-  updateCase: typeof updateCase,
-  displayErrorToast: typeof displayErrorToast,
-  minimal?: boolean,
-  library: Library,
-  links: $PropertyType<CaseDataState, 'links'>,
-  onBeginEditing?: () => void,
-  onFinishEditing?: () => void,
-} & Byline
 
 export const UnconnectedBillboardTitle = ({
   slug,
@@ -82,7 +66,7 @@ export const UnconnectedBillboardTitle = ({
   onBeginEditing,
   onFinishEditing,
   displayErrorToast,
-}: Props) => {
+}) => {
   return (
     <Container>
       <TitleCard.Container>
@@ -101,7 +85,7 @@ export const UnconnectedBillboardTitle = ({
                   {...renderProps}
                 />
               )}
-              onSubmit={({ coverUrl }: CaseDataState) =>
+              onSubmit={({ coverUrl }) =>
                 updateCase({ coverUrl }, false)
               }
               onError={error => {
@@ -166,7 +150,7 @@ export const UnconnectedBillboardTitle = ({
                 translators,
                 acknowledgements,
               }}
-              onChange={(value: Byline) => updateCase(value)}
+              onChange={(value) => updateCase(value)}
               onStartEditing={onBeginEditing}
               onFinishEditing={onFinishEditing}
             />
@@ -179,7 +163,6 @@ export const UnconnectedBillboardTitle = ({
   )
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updateCase, displayErrorToast }

@@ -1,6 +1,6 @@
 /**
  * @providesModule Case
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -27,7 +27,6 @@ import CaseOverview from 'overview/CaseOverview'
 import { Provider as ContentItemSelectionContextProvider } from 'deployment/contentItemSelectionContext'
 import GalaDragDropContext from 'shared/GalaDragDropContext'
 
-import type { State } from 'redux/state'
 
 const CaseElement = asyncComponent(() =>
   import('elements/CaseElement').then(m => m.default)
@@ -45,7 +44,7 @@ const SuggestedQuizzes = asyncComponent(() =>
   import('suggested_quizzes').then(m => m.default)
 )
 
-function mapStateToProps ({ edit, quiz, caseData }: State) {
+function mapStateToProps ({ edit, quiz, caseData }) {
   return {
     needsPretest: quiz.needsPretest,
     hasQuiz: !!quiz.questions && quiz.questions.length > 0,
@@ -66,24 +65,7 @@ function mapStateToProps ({ edit, quiz, caseData }: State) {
   }
 }
 
-class Case extends React.Component<{
-  needsPretest: boolean,
-  hasQuiz: boolean,
-  caseSlug: string,
-  kicker: string,
-  hasReader: boolean,
-  loadComments: boolean,
-  basename: string,
-  parseAllCards: typeof parseAllCards,
-  fetchCommentThreads: typeof fetchCommentThreads,
-  fetchForums: typeof fetchForums,
-  toggleEditing: typeof toggleEditing,
-  subscribeToActiveForumChannel: typeof subscribeToActiveForumChannel,
-  subscribeToEditsChannel: typeof subscribeToEditsChannel,
-  handleNotification: typeof handleNotification,
-  editable: ?boolean,
-  editing: boolean,
-}> {
+class Case extends React.Component {
   _subscribe = () => {
     if (
       typeof App === 'undefined' ||
@@ -205,7 +187,7 @@ class Case extends React.Component<{
     )
   }
 
-  _shouldStartInEditMode (): boolean {
+  _shouldStartInEditMode () {
     if (!this.props.editable) return false
     if (URLSearchParams == null) return false
 
@@ -215,7 +197,6 @@ class Case extends React.Component<{
   }
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   {

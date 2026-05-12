@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseChooser
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,17 +11,10 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Element } from 'catalog/shared'
 import { Orchard } from 'shared/orchard'
 
-import type { IntlShape } from 'react-intl'
-import type { Case, Enrollment } from 'redux/state'
 
-type Props = {
-  cases: { string: Case },
-  intl: IntlShape,
-  onSelect: string => void,
-}
 
-function CaseChooser ({ cases, intl, onSelect }: Props) {
-  const [enrollments, setEnrollments] = React.useState<Enrollment[]>([])
+function CaseChooser ({ cases, intl, onSelect }) {
+  const [enrollments, setEnrollments] = React.useState([])
 
   React.useEffect(() => {
     Orchard.harvest('enrollments').then(enrollments =>
@@ -30,7 +23,7 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
   }, [])
 
   const [query, setQuery] = React.useState('')
-  const [results, setResults] = React.useState<string[]>([])
+  const [results, setResults] = React.useState([])
 
   const choosableCases = query
     ? results.map(slug => cases[slug]).filter(Boolean)
@@ -107,7 +100,7 @@ function CaseChooser ({ cases, intl, onSelect }: Props) {
 
   async function handleSearch (e) {
     e.preventDefault()
-    const q = (e.target: any).elements['q'].value
+    const q = (e.target).elements['q'].value
 
     setQuery(q)
     setResults([])

@@ -1,6 +1,6 @@
 /**
  * @providesModule Announcements
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,9 +11,8 @@ import { Orchard } from 'shared/orchard'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
 
-import type { IntlShape } from 'react-intl'
 
-function Announcements ({ intl }: { intl: IntlShape }) {
+function Announcements ({ intl }) {
   const [{ announcements }, update] = React.useContext(CatalogDataContext)
   const { reader } = React.useContext(ReaderDataContext)
 
@@ -56,7 +55,6 @@ function Announcements ({ intl }: { intl: IntlShape }) {
 
 export default injectIntl(Announcements)
 
-// $FlowFixMe
 const Container = styled.aside.attrs({
   className: 'pt-callout pt-icon-star pt-elevation-2',
 })`

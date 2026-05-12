@@ -1,6 +1,6 @@
 /**
  * @providesModule SortableList
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -15,51 +15,11 @@ import { injectIntl } from 'react-intl'
 
 import { append, update, remove } from 'ramda'
 
-import type { IntlShape } from 'react-intl'
 
-type ItemProps<Item> = ChildProps<Item> & {
-  render: React.ComponentType<Item>,
-  onRemove: () => void,
-}
-type ContainerProps<Item> = {
-  items: Item[],
-  newItem: Item,
-  render: React.ComponentType<Item>,
-  onChange: (Item[]) => void,
-}
 
 // Use SortableList as a component with these props:
-type Props<Item> = {
-  // A function that renders one Item. It will be called with ChildProps.
-  render: React.ComponentType<Item>,
-
-  // An array of items that make up the SortableList. Each element will be
-  // passed to children as item so that its contents may be rendered.
-  items: Item[],
-
-  // An example of a "blank" or "new" item to be added when the user presses the
-  // "Add item" button
-  newItem: Item,
-
-  // Your chance to handle any change to the list. You will be called with a
-  // changed copy of items.
-  onChange: (Item[]) => void,
-
-  // So the elements don’t change theme while being dragged
-  dark?: boolean,
-}
 
 // The props with which the `render` props of SortableList will be called
-type ChildProps<Item> = {
-  // The item that this child should render
-  item: Item,
-
-  // The index of this child in the array (for numbering, etc.)
-  index: number,
-
-  // A function which takes a modified copy of the child to replace it.
-  onChangeItem: Item => void,
-}
 
 const Handle = SortableHandle(() => (
   <span
@@ -69,7 +29,7 @@ const Handle = SortableHandle(() => (
 ))
 
 const Item = SortableElement(
-  ({ item, index, render: Render, onChangeItem, onRemove }: ItemProps<*>) => (
+  ({ item, index, render: Render, onChangeItem, onRemove }) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
       <Handle />
 
@@ -85,9 +45,8 @@ const Item = SortableElement(
   )
 )
 
-// $FlowFixMe
 const Container = SortableContainer(
-  ({ newItem, items, render, onChange }: ContainerProps<*>) => (
+  ({ newItem, items, render, onChange }) => (
     <div>
       {items.map((item, i) => (
         <Item
@@ -109,7 +68,7 @@ const Container = SortableContainer(
   )
 )
 
-const SortableList = (props: Props<*>) => (
+const SortableList = (props) => (
   <Container
     {...props}
     useDragHandle={true}
@@ -126,19 +85,19 @@ export default SortableList
 export function createSortableInput ({
   placeholderId,
   ...props
-}: { placeholderId?: string } = {}) {
+} = {}) {
   const SortableInput = ({
     intl,
     item,
     onChangeItem,
-  }: ChildProps<string> & { intl: IntlShape }) => (
+  }) => (
     <input
       className="pt-input"
       type="text"
       placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
       {...props}
       value={item}
-      onChange={(e: SyntheticInputEvent<*>) => onChangeItem(e.target.value)}
+      onChange={(e) => onChangeItem(e.target.value)}
     />
   )
   return injectIntl(SortableInput)

@@ -1,6 +1,6 @@
 /**
  * @providesModule CommentEditor
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -12,11 +12,10 @@ import createLinkifyPlugin from 'draft-js-linkify-plugin'
 
 import { StyledCommentContainer } from 'conversation/shared'
 
-import type { IntlShape } from 'react-intl'
 
 const linkifyPlugin = createLinkifyPlugin({ target: '_blank' })
 
-function handleKeyCommand (command: string, editorState: EditorState) {
+function handleKeyCommand (command, editorState) {
   const newState = RichUtils.handleKeyCommand(editorState, command)
   if (newState) {
     this.onChange(newState) // `this` is the Editor component
@@ -40,14 +39,6 @@ const styleMapWithCode = {
   },
 }
 
-type Props = {|
-  editorState: EditorState,
-  innerRef: (?Editor) => any,
-  intl: IntlShape,
-  keyBindingFn?: (e: SyntheticKeyboardEvent<*>) => ?string,
-  onChange: EditorState => any,
-  onBlur: (SyntheticEvent<*>) => any,
-|}
 
 const CommentEditor = ({
   editorState,
@@ -56,7 +47,7 @@ const CommentEditor = ({
   keyBindingFn,
   onChange,
   onBlur,
-}: Props) => (
+}) => (
   <StyledCommentContainer
     hidePlaceholder={
       !editorState.getCurrentContent().hasText() &&

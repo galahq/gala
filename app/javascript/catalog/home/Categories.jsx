@@ -1,6 +1,6 @@
 /**
  * @providesModule Categories
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -120,12 +120,8 @@ const GlobalSystemLink = ({ tag }) => (
   <Link tag={tag} labelComponent={GlobalSystemLabel} />
 )
 
-type LinkParams = {
-  tag: ?Tag,
-  labelComponent: React.ComponentType<*>,
-}
 
-const Link = ({ tag, labelComponent: Label }: LinkParams) => (
+const Link = ({ tag, labelComponent: Label }) => (
   <LinkContainer href={tag && `/catalog/search?tags[]=${tag.name}`}>
     <img alt="" src={require(`images/category-${tag?.name || 'water'}.jpg`)} />
     <Label>{tag?.displayName}</Label>

@@ -1,6 +1,6 @@
 /**
  * @providesModule StatusBar
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -12,10 +12,8 @@ import { toggleEditing, saveChanges, togglePublished } from 'redux/actions'
 import Toolbar from 'utility/Toolbar'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State } from 'redux/state'
 
-function mapStateToProps(state: State, { location, history }: ContextRouter) {
+function mapStateToProps(state, { location, history }) {
   const { edit, caseData } = state
   const { inProgress } = edit
   const { commentable, links, publishedAt, reader, slug } = caseData
@@ -182,7 +180,6 @@ function StatusBar({
   )
 }
 
-// $FlowFixMe
 export default withRouter(
   connect(mapStateToProps, {
     toggleEditing,

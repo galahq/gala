@@ -1,30 +1,18 @@
 /**
  * @providesModule commentThreadsById
- * @flow
+ * 
  */
 
 import { without } from 'ramda'
 
-import type { CommentThreadsState } from 'redux/state'
-import type {
-  SetCommentThreadsByIdAction,
-  AddCommentThreadAction,
-  RemoveCommentThreadAction,
-  RemoveCommentAction,
-} from 'redux/actions'
 
-type Action =
-  | SetCommentThreadsByIdAction
-  | AddCommentThreadAction
-  | RemoveCommentThreadAction
-  | RemoveCommentAction
 
 export default function commentThreadsById (
-  state: CommentThreadsState = ({
+  state = ({
     ...window.caseData.commentThreads,
-  }: CommentThreadsState),
-  action: Action
-): CommentThreadsState {
+  }),
+  action
+) {
   switch (action.type) {
     case 'SET_COMMENT_THREADS_BY_ID':
       return action.commentThreadsById || {}

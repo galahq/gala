@@ -1,6 +1,6 @@
 /**
  * @providesModule Catalog
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -26,9 +26,8 @@ import { MaxWidthContainer } from 'utility/styledComponents'
 import Home from 'catalog/home'
 import Results from 'catalog/search_results'
 
-import type { IntlShape } from 'react-intl'
 
-export function Catalog({ intl }: { intl: IntlShape }) {
+export function Catalog({ intl }) {
   const basename = window.location.pathname.match(/^(\/\w{2}(-\w{2})?)?\//)[0]
 
   return (

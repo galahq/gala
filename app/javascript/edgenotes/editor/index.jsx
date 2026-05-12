@@ -1,6 +1,6 @@
 /**
  * @providesModule EdgenoteEditor
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -18,38 +18,11 @@ import { Overlay, EditButton } from './styled'
 import EditorDialog from './EditorDialog'
 import Attachment from './Attachment'
 
-import type { IntlShape } from 'react-intl'
-import type { Edgenote } from 'redux/state'
-import type { VisibilityChangeProps } from './withVisibilityChanges'
 
-type ChangeToAttachment = ?Attachment
-export type ChangesToAttachments = {|
-  audioUrl: ChangeToAttachment,
-  fileUrl: ChangeToAttachment,
-  imageUrl: ChangeToAttachment,
-|}
 
-type Props = {
-  changeEdgenote: typeof changeEdgenote,
-  contents: Edgenote,
-  intl: IntlShape,
-  locked: boolean,
-  slug: string,
-  updateLinkExpansionVisibility: typeof updateLinkExpansionVisibility,
-  displayErrorToast: typeof displayErrorToast,
-  onChange: ($Shape<Edgenote>) => Promise<any>,
-  onClose?: () => void,
-  onOpen?: () => void,
-  ...VisibilityChangeProps,
-}
 
-type State = {
-  open: boolean,
-  contents: Edgenote,
-  changesToAttachments: ChangesToAttachments,
-}
 
-class EdgenoteEditor extends React.Component<Props, State> {
+class EdgenoteEditor extends React.Component {
   state = {
     open: false,
     contents: this.props.contents,
@@ -100,20 +73,20 @@ class EdgenoteEditor extends React.Component<Props, State> {
       .then(this._reset())
       .then(this.props.onClose)
 
-  handleChangeContents = (attributes: $Shape<Edgenote>) =>
-    this.setState(({ contents }: State) => ({
+  handleChangeContents = (attributes) =>
+    this.setState(({ contents }) => ({
       contents: { ...contents, ...attributes },
     }))
 
   handleChangeAttachment = (
-    attribute: $Keys<ChangesToAttachments>,
-    attachment: ?FileList
+    attribute,
+    attachment
   ) => {
     const changeToAttachment =
       this.state.changesToAttachments[attribute] || new Attachment()
     changeToAttachment.fileList = attachment
 
-    return this.setState(({ changesToAttachments }: State) => ({
+    return this.setState(({ changesToAttachments }) => ({
       changesToAttachments: Object.freeze({
         ...changesToAttachments,
         [attribute]: changeToAttachment,
@@ -139,7 +112,7 @@ class EdgenoteEditor extends React.Component<Props, State> {
           ({
             ...contents,
             ...changesToAttachments,
-          }: $FlowIssue)
+          })
         )
       )
       .then(this._reset)

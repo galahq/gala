@@ -1,6 +1,6 @@
 /**
  * @providesModule Toolbar
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -13,42 +13,19 @@ import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
 import { MaxWidthContainer } from 'utility/styledComponents'
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 
-import type { IntlShape } from 'react-intl'
 
-type BarButton = {|
-  className?: string,
-  disabled?: boolean,
-  icon: string,
-  message?: string,
-  onClick: () => any,
-  spotlightKey?: string,
-|}
-type BarMessage = {| message: string, spotlightKey?: string |}
-type BarMenu = {|
-  message?: string,
-  icon: string,
-  spotlightKey?: string,
-  submenu: Array<BarButton>,
-|}
-type BarComponent = {|
-  message?: string,
-  component: React.Element<*>,
-  spotlightKey?: string,
-|}
-type BarElement = BarButton | BarMessage | BarMenu | BarComponent
-type BarGroup = Array<?BarElement>
 
-const pass = (element: BarButton | BarMenu) =>
+const pass = (element) =>
   omit(['message', 'spotlightKey'], element)
 
-const joinClasses = (...classNames: Array<?string>): string =>
+const joinClasses = (...classNames) =>
   classNames.filter(Boolean).join(' ')
 
-function withBlueprint4Classes(className: string): string {
+function withBlueprint4Classes(className) {
   return className
     .split(/\s+/)
     .filter(Boolean)
-    .reduce((classes: string[], name: string) => {
+    .reduce((classes, name) => {
       classes.push(name)
       if (name.startsWith('pt-')) classes.push(name.replace(/^pt-/, 'bp4-'))
       return classes
@@ -56,16 +33,10 @@ function withBlueprint4Classes(className: string): string {
     .join(' ')
 }
 
-type Props = {
-  light?: boolean,
-  groups: [BarGroup, BarGroup, BarGroup],
-  intl: IntlShape,
-  canBeIconsOnly: boolean,
-}
-const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
+const Toolbar = ({ light, groups, intl, canBeIconsOnly }) => {
   if (!groups.some(group => group.some(element => element))) return null
 
-  const t = (id: ?string) => (id ? intl.formatMessage({ id }) : null)
+  const t = (id) => (id ? intl.formatMessage({ id }) : null)
 
   return (
     <div className={joinClasses('Toolbar__bar', light ? 'Toolbar__bar--light' : 'pt-dark bp4-dark')}>
@@ -98,7 +69,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarMenu -- a button with a dropdown menu of other buttons
                  */
-                const menuElement: BarMenu = (element: any)
+                const menuElement = (element)
                 return (
                   <Popover
                     key={j}
@@ -140,7 +111,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarButton -- a clickable button
                  */
-                const buttonElement: BarButton = (element: any)
+                const buttonElement = (element)
                 return (
                   <MaybeSpotlight
                     key={spotlightKey || j}

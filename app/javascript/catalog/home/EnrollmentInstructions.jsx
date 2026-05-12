@@ -1,6 +1,6 @@
 /**
  * @providesModule EnrollmentInstructions
- * @flow
+ * 
  */
 
 import React from 'react'

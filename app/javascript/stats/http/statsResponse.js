@@ -1,35 +1,27 @@
-/* @flow */
+/*  */
 import {
   binForValue,
   calculateBins,
   sortedUniqueVisits,
 } from '../bins'
 
-import type {
-  ApiStatsPayload,
-  ApiStatsRow,
-  StatsBin,
-  StatsCountryRow,
-  StatsData,
-  StatsSummary,
-} from '../state/types'
 
-function parseNumber (value: mixed): number {
+function parseNumber (value) {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : 0
 }
 
-function parseStringOrNull (value: mixed): ?string {
+function parseStringOrNull (value) {
   if (typeof value !== 'string') return null
   const trimmed = value.trim()
   return trimmed === '' ? null : trimmed
 }
 
-function parseCountryName (value: mixed): string {
+function parseCountryName (value) {
   return parseStringOrNull(value) || 'Unknown'
 }
 
-function normalizeApiRow (row: ApiStatsRow): StatsCountryRow {
+function normalizeApiRow (row) {
   const country = row && row.country ? row.country : {}
   const metrics = row && row.metrics ? row.metrics : {}
 
@@ -47,14 +39,14 @@ function normalizeApiRow (row: ApiStatsRow): StatsCountryRow {
   }
 }
 
-function buildBins (rows: StatsCountryRow[]): StatsBin[] {
+function buildBins (rows) {
   const values = sortedUniqueVisits(
     rows.map(row => ({ unique_visits: row.unique_visits }))
   )
   return calculateBins(values)
 }
 
-function buildSummary (rows: StatsCountryRow[], bins: StatsBin[]): StatsSummary {
+function buildSummary (rows, bins) {
   return {
     total_visits: rows.reduce((sum, row) => sum + row.unique_visits, 0),
     country_count: rows.length,
@@ -67,15 +59,15 @@ function buildSummary (rows: StatsCountryRow[], bins: StatsBin[]): StatsSummary 
   }
 }
 
-export function parseApiStatsPayload (payload: mixed): ApiStatsPayload {
+export function parseApiStatsPayload (payload) {
   if (!payload || typeof payload !== 'object' || !Array.isArray(payload.data)) {
     throw new Error('Invalid response')
   }
 
-  return (payload: any)
+  return (payload)
 }
 
-export function normalizeStatsPayload (payload: ApiStatsPayload): StatsData {
+export function normalizeStatsPayload (payload) {
   if (payload.error) {
     throw new Error(payload.error || 'Invalid response')
   }

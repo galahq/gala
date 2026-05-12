@@ -1,5 +1,4 @@
 /**
- * @noflow
  *
  * Blueprint 4 changed the generated CSS namespace from `pt-` to `bp4-`, but
  * Gala still has many hand-authored legacy `pt-*` class names. The actual

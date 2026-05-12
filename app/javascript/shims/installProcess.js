@@ -1,5 +1,5 @@
 /**
- * @noflow
+ * 
  * Minimal browser global `process` shim for legacy dependencies loaded by
  * lazy chunks or editor-only paths under Webpack 5.
  */

@@ -1,5 +1,5 @@
 /**
- * @noflow
+ * 
  */
 
 const { generateWebpackConfig } = require('shakapacker')

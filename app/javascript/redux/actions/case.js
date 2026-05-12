@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import {
@@ -11,25 +11,18 @@ import {
 
 import { Orchard } from 'shared/orchard'
 
-import type { GetState, ThunkAction } from 'redux/actions'
-import type { CaseDataState } from 'redux/state'
 
-export type UpdateCaseAction = {
-  type: 'UPDATE_CASE',
-  data: $Shape<CaseDataState>,
-  needsSaving: boolean,
-}
 
 export function updateCase (
-  data: $Shape<CaseDataState>,
-  needsSaving?: boolean = true
-): UpdateCaseAction {
+  data,
+  needsSaving = true
+) {
   if (needsSaving) setUnsaved()
   return { type: 'UPDATE_CASE', data, needsSaving }
 }
 
-export function togglePublished (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function togglePublished () {
+  return (dispatch, getState) => {
     const { caseData } = getState()
     const { slug, publishedAt, licenseConfig } = caseData
     const licenseName = licenseConfig?.name || 'unknown'
@@ -50,8 +43,8 @@ export function togglePublished (): ThunkAction {
   }
 }
 
-export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
-  return async (dispatch: Dispatch) => {
+export function enrollReader (readerId, caseSlug) {
+  return async (dispatch) => {
     await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
 
     dispatch(setReaderEnrollment(true))
@@ -60,17 +53,13 @@ export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
   }
 }
 
-export type SetReaderEnrollmentAction = {
-  type: 'SET_READER_ENROLLMENT',
-  enrollment: boolean,
-}
 
-function setReaderEnrollment (enrollment: boolean): SetReaderEnrollmentAction {
+function setReaderEnrollment (enrollment) {
   return { type: 'SET_READER_ENROLLMENT', enrollment }
 }
 
-export function deleteTeachingGuide (): ThunkAction {
-  return async (dispatch: Dispatch, getState: GetState) => {
+export function deleteTeachingGuide () {
+  return async (dispatch, getState) => {
     const url = getState().caseData.links.teachingGuide
     Orchard.prune(url).then(() =>
       dispatch(updateCase({ teachingGuideUrl: null }, false))

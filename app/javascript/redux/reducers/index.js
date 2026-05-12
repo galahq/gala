@@ -1,6 +1,6 @@
 /**
  * @providesModule reducers
- * @flow
+ * 
  */
 
 import { combineReducers } from 'redux'
@@ -37,7 +37,6 @@ const state = {
   ui,
 }
 
-// $FlowFixMe
 const reducer = combineReducers(state)
 
 export default reducer

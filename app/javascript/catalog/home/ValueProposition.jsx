@@ -2,7 +2,7 @@
  * Marketing language visible when the user is not signed in.
  *
  * @providesModule ValueProposition
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -41,7 +41,6 @@ const ValueProposition = () => (
 )
 export default ValueProposition
 
-// $FlowFixMe
 const Container = styled.aside.attrs({ className: 'pt-dark bp4-dark' })`
   color: white;
   display: grid;

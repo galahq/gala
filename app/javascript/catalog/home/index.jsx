@@ -1,6 +1,6 @@
 /**
  * @providesModule Home
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -20,7 +20,6 @@ import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/cont
 import { useDocumentTitle } from 'utility/hooks'
 import WelcomeMessage from 'catalog/home/WelcomeMessage'
 
-// $FlowFixMe
 const MapView = React.lazy(() => import('map_view'))
 
 function Home() {
@@ -54,7 +53,6 @@ function Home() {
               </>
             )}
             {casesLoading || (
-              // $FlowFixMe
               <React.Suspense
                 fallback={
                   <CatalogSection className="pt-skeleton">

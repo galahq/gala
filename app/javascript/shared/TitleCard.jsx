@@ -3,7 +3,7 @@
  * shared between the case overview and the catalog features block.
  *
  * @providesModule TitleCard
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -13,17 +13,9 @@ import { FormattedList } from 'shared/react-intl'
 import { FeaturesCell } from 'catalog/home/shared'
 import { Container as MagicLinkContainer } from 'magic_link/shared'
 
-import type { Author } from 'redux/state'
 
-type Props = {
-  kicker: string,
-  title: string,
-  authors: Author[],
-  photoCredit: string,
-  coverUrl: string,
-}
 
-function TitleCard ({ authors, coverUrl, kicker, photoCredit, title }: Props) {
+function TitleCard ({ authors, coverUrl, kicker, photoCredit, title }) {
   return (
     <Container>
       <Image src={coverUrl}>
@@ -151,7 +143,6 @@ export const Container = styled.div`
   ${whenOneColumn(grid.oneColumn)}
 `
 
-// $FlowFixMe
 export const Image = styled.div.attrs({ className: 'pt-dark' })`
   background-color: hsl(209, 53%, 76%);
   background-image: ${p => css`url(${p.src})`};

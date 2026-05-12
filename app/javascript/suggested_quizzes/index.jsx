@@ -1,6 +1,6 @@
 /**
  * @providesModule SuggestedQuizzes
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,12 +16,8 @@ import CaseOverview from 'overview/CaseOverview'
 
 import { newSuggestedQuiz } from 'redux/actions'
 
-import type { ContextRouter } from 'react-router-dom'
 
-type Props = ContextRouter & {
-  newSuggestedQuiz: typeof newSuggestedQuiz,
-}
-function SuggestedQuizzes ({ newSuggestedQuiz, history, match }: Props) {
+function SuggestedQuizzes ({ newSuggestedQuiz, history, match }) {
   return (
     <Container>
       <Route component={CaseOverview} />

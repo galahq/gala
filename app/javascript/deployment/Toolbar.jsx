@@ -1,6 +1,6 @@
 /**
  * @providesModule Toolbar
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -8,18 +8,6 @@ import styled from 'styled-components'
 
 import { Switch as BaseSwitch } from '@blueprintjs/core'
 
-type Props = {
-  caseData: {
-    kicker: string,
-    title: string,
-    coverUrl: string,
-  },
-  withPretest: boolean,
-  withPosttest: boolean,
-  onTogglePretest: () => void,
-  onTogglePosttest: () => void,
-  onSubmit: () => void,
-}
 
 const Toolbar = ({
   caseData,
@@ -28,7 +16,7 @@ const Toolbar = ({
   onTogglePretest,
   onTogglePosttest,
   onSubmit,
-}: Props) => {
+}) => {
   const { coverUrl, kicker } = caseData
   return (
     <BottomFixedToolbar className="pt-navbar bp4-navbar">

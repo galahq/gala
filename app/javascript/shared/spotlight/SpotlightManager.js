@@ -4,33 +4,28 @@
  * visibility.
  *
  * @providesModule SpotlightManager
- * @flow
+ * 
  */
 
 import { Orchard } from 'shared/orchard'
 
-type SubscriberOptions = { key: string, ref: { current: Node } }
-type Subscriber = SubscriberOptions & {
-  setVisibility: boolean => mixed,
-}
 
-type Options = { enabled?: boolean }
 
 export default class SpotlightManager {
-  unacknowledgedKeys: string[]
+  unacknowledgedKeys
 
   get enabled () {
     return this._enabled
   }
 
-  set enabled (value: boolean) {
+  set enabled (value) {
     this._enabled = value
     this._notifySubscribers()
   }
 
-  _current: ?Subscriber
-  _enabled: boolean = true
-  _subscribers: { [key: string]: Subscriber[] } = {}
+  _current
+  _enabled = true
+  _subscribers = {}
 
   get _visible () {
     if (!this.enabled) return undefined
@@ -44,17 +39,17 @@ export default class SpotlightManager {
     }
   }
 
-  constructor (unacknowledgedKeys: string[], { enabled = true }: Options = {}) {
+  constructor (unacknowledgedKeys, { enabled = true } = {}) {
     this.unacknowledgedKeys = unacknowledgedKeys
     this._enabled = enabled
   }
 
-  subscribe ({ key, ref }: SubscriberOptions, setVisibility: boolean => mixed) {
+  subscribe ({ key, ref }, setVisibility) {
     this._subscribersForKey(key).push({ key, ref, setVisibility })
     this._notifySubscribers()
   }
 
-  unsubscribe ({ key, ref }: SubscriberOptions) {
+  unsubscribe ({ key, ref }) {
     this._subscribers[key] = this._subscribersForKey(key).filter(
       s => s.ref.current !== ref.current
     )
@@ -62,13 +57,13 @@ export default class SpotlightManager {
     this._notifySubscribers()
   }
 
-  acknowledge (key: string) {
+  acknowledge (key) {
     this.unacknowledgedKeys = this.unacknowledgedKeys.filter(k => k !== key)
     this._notifySubscribers()
     this._createAcknowledgement(key)
   }
 
-  _subscribersForKey (key: string) {
+  _subscribersForKey (key) {
     if (!this._subscribers.hasOwnProperty(key)) {
       this._subscribers[key] = []
     }
@@ -84,14 +79,14 @@ export default class SpotlightManager {
     this._current = this._visible
   }
 
-  _createAcknowledgement (key: string) {
+  _createAcknowledgement (key) {
     Orchard.graft('spotlight_acknowledgements', {
       spotlight_acknowledgement: { spotlight_key: key },
     })
   }
 }
 
-function byDocumentPosition (a: Subscriber, b: Subscriber) {
+function byDocumentPosition (a, b) {
   const relativePosition = a.ref.current.compareDocumentPosition(b.ref.current)
   if (relativePosition & Node.DOCUMENT_POSITION_FOLLOWING) return -1
   if (relativePosition & Node.DOCUMENT_POSITION_PRECEDING) return 1

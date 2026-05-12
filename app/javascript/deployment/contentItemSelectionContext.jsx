@@ -4,34 +4,22 @@
  * in Canvas or another LTI Tool Consumer to select a case to be assigned. This
  * context allows the app to vary its appearance and to commit the selection.
  *
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { submitForm } from 'shared/lti'
 import { Orchard, CSRF } from 'shared/orchard'
 
-const defaultContext = { selecting: false, onSelect: (caseSlug: string) => {} }
-const { Provider: BaseProvider, Consumer } = React.createContext<
-  typeof defaultContext
->(defaultContext)
+const defaultContext = { selecting: false, onSelect: (caseSlug) => {} }
+const { Provider: BaseProvider, Consumer } = React.createContext(defaultContext)
 
-type ContentItemSelectionParams = {
-  lti_uid: string,
-  return_url: string,
-  return_data: string,
-  context_id: string,
-  canvas_deployments_path: string,
-}
-type State = {
-  params: ?ContentItemSelectionParams,
-}
 
-function getContentItemSelectionParams (): ?ContentItemSelectionParams {
+function getContentItemSelectionParams () {
   return window['content_item_selection_params']
 }
 
-export class Provider extends React.Component<{ children: React.Node }, State> {
+export class Provider extends React.Component {
   state = {
     params: getContentItemSelectionParams(),
   }
@@ -40,7 +28,7 @@ export class Provider extends React.Component<{ children: React.Node }, State> {
     if (this.state.params) this.ensurePresentedWithinIframe()
   }
 
-  handleSelect = (caseSlug: string) => {
+  handleSelect = (caseSlug) => {
     const { params } = this.state
     if (!params) return
 

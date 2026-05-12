@@ -1,6 +1,6 @@
 /**
  * @providesModule MainMenu
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -19,10 +19,8 @@ import Identicon from 'shared/Identicon'
 import { Orchard } from 'shared/orchard'
 import { acceptKeyboardClick } from 'shared/keyboard'
 
-import type { Reader } from 'redux/state'
-import type { IntlShape } from 'react-intl'
 
-class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
+class MainMenu extends React.Component {
   state = window.reader
 
   render () {

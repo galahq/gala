@@ -1,6 +1,6 @@
 /**
  * @providesModule QuizCard
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -11,10 +11,8 @@ import { NonIdealState } from '@blueprintjs/core'
 import { acceptKeyboardClick } from 'shared/keyboard'
 import { SectionTitle } from './QuizDetails'
 
-import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
-type Params = CustomizedQuiz & { onClick: (quizId: ID) => void }
-const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
+const QuizCard = ({ id, questions, customQuestions, onClick }) => (
   <Link
     className="pt-card bp4-card pt-elevation-1 bp4-elevation-1 pt-interactive bp4-interactive"
     tabIndex="0"
@@ -41,9 +39,6 @@ export default QuizCard
 const Questions = ({
   questions,
   sectionTitle,
-}: {
-  questions: DraftQuestion[],
-  sectionTitle?: string,
 }) =>
   questions.length > 0 ? (
     <>

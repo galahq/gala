@@ -1,29 +1,25 @@
 /**
  * @providesModule getQueryParams
- * @flow
+ * 
  */
 
 import qs from 'qs'
 import { map } from 'ramda'
 
-import type { Location } from 'react-router-dom'
 
-export type Query = { [string]: string[] }
 
-export default function getQueryParams ({ search, pathname }: Location): Query {
+export default function getQueryParams ({ search, pathname }) {
   return {
     ...coerceIntoArrayValues(qs.parse(search, { ignoreQueryPrefix: true })),
     ...getQueryFromPathname(pathname),
   }
 }
 
-function coerceIntoArrayValues (params: {
-  [string]: string | string[],
-}): { [string]: string[] } {
+function coerceIntoArrayValues (params) {
   return map(x => (Array.isArray(x) ? x : [x]), params)
 }
 
-function getQueryFromPathname (pathname: string): { [string]: string[] } {
+function getQueryFromPathname (pathname) {
   return ['libraries', 'tags', 'languages'].reduce((params, key) => {
     const match = pathname.match(RegExp(`${key}/([0-9a-z%+-]+)`))
     if (!match) return params

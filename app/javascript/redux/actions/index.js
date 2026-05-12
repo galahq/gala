@@ -1,8 +1,7 @@
 /**
- * @flow
+ * 
  */
 
-import type { State } from 'redux/state'
 
 import * as CardActions from './card.js'
 import * as CaseActions from './case.js'
@@ -41,60 +40,4 @@ export * from './statistics.js'
 export * from './suggestedQuizzes.js'
 export * from './toast.js'
 
-export type GetState = () => State
-export type PromiseAction = Promise<Action>
-export type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
-export type Dispatch = (
-  action: Action | ThunkAction | PromiseAction | Array<Action>
-) => Promise<any>
 
-export type Action =
-  | CardActions.AddCardAction
-  | CardActions.OpenCitationAction
-  | CardActions.ParseAllCardsAction
-  | CardActions.RemoveCardAction
-  | CardActions.ReplaceCardAction
-  | CardActions.ReorderCardAction
-  | CardActions.SetCardsAction
-  | CardActions.UpdateCardContentsAction
-  | CaseActions.SetReaderEnrollmentAction
-  | CaseActions.UpdateCaseAction
-  | CaseElementActions.RemoveElementAction
-  | CaseElementActions.UpdateCaseElementAction
-  | CaseElementActions.UpdateCaseElementsAction
-  | CommentActions.AddCommentAction
-  | CommentActions.ChangeCommentInProgressAction
-  | CommentActions.RemoveCommentAction
-  | CommentActions.SetCommentsByIdAction
-  | CommentThreadActions.AddCommentThreadAction
-  | CommentThreadActions.HoverCommentThreadAction
-  | CommentThreadActions.RemoveCommentThreadAction
-  | CommentThreadActions.SetCommentThreadsByIdAction
-  | CommentThreadActions.SetMostRecentCommentThreadsAction
-  | EdgenoteActions.ActivateEdgenoteAction
-  | EdgenoteActions.AddEdgenoteAction
-  | EdgenoteActions.HighlightEdgenoteAction
-  | EdgenoteActions.RemoveEdgenoteAction
-  | EdgenoteActions.UpdateEdgenoteAction
-  | EditingActions.ClearUnsavedAction
-  | EditingActions.ToggleEditingAction
-  | ForumActions.SetForumsAction
-  | LockActions.SetLocksAction
-  | LockActions.AddLockAction
-  | LockActions.EnqueueLockForDeletionAction
-  | LockActions.RemoveLockAction
-  | LockActions.RemoveLockFromDeletionQueueAction
-  | PageActions.AddPageAction
-  | PageActions.UpdatePageAction
-  | PodcastActions.AddPodcastAction
-  | PodcastActions.UpdatePodcastAction
-  | QuizActions.RecordQuizSubmissionAction
-  | SelectionActions.AcceptSelectionAction
-  | SelectionActions.ApplySelectionAction
-  | StatisticsActions.SetStatisticsAction
-  | SuggestedQuizActions.SetSuggestedQuizzesAction
-  | SuggestedQuizActions.AddSuggestedQuizAction
-  | SuggestedQuizActions.UpdateSuggestedQuizAction
-  | SuggestedQuizActions.RemoveSuggestedQuizAction
-  | ToastActions.DisplayToastAction
-  | ToastActions.DismissToastAction

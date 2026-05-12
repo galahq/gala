@@ -1,5 +1,5 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import React, {
   useCallback,
@@ -38,28 +38,14 @@ import {
 } from './StatsLoading'
 import { StatsErrorState } from './StatsError'
 
-declare class AbortController {
-  signal: {
-    aborted: boolean,
-    addEventListener?: (event: 'abort', callback: () => mixed) => mixed,
-    removeEventListener?: (event: 'abort', callback: () => mixed) => mixed,
-    ...
-  };
-  abort(): void;
-}
 
-type Props = {
-  dataUrl: string,
-  minDate: ?string,
-  intl: any,
-}
 
-function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
+function StatsPage ({ dataUrl, minDate, intl }) {
   const initialState = useMemo(() => createInitialState(minDate), [minDate])
   const [state, dispatch] = useReducer(statsReducer, initialState)
   const hasMountedRef = useRef(false)
 
-  const setFromDates = useCallback((from: ?Date, to: ?Date) => {
+  const setFromDates = useCallback((from, to) => {
     dispatch({
       type: 'range/set',
       range: buildValidatedRange(from, to, minDate),

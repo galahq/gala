@@ -1,6 +1,6 @@
 /**
  * @providesModule MyLibrary
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,13 +16,9 @@ import { Orchard } from 'shared/orchard'
 
 import { useToggle } from 'utility/hooks'
 
-import type { IntlShape } from 'react-intl'
 
-type Props = {
-  intl: IntlShape,
-}
 
-function MyLibrary ({ intl }: Props) {
+function MyLibrary ({ intl }) {
   const [editing, toggleEditing] = useToggle(false)
 
   const [

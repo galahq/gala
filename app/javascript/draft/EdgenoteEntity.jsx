@@ -1,6 +1,6 @@
 /**
  * @providesModule EdgenoteEntity
- * @flow
+ * 
  */
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -12,10 +12,9 @@ import { highlightEdgenote, activateEdgenote } from 'redux/actions'
 import { FormattedMessage } from 'react-intl'
 import { LabelForScreenReaders } from 'utility/A11y'
 
-import type { State } from 'redux/state'
 
 function mapStateToProps (
-  state: State,
+  state,
   { location, contentState, entityKey, children }
 ) {
   let { slug } = contentState.getEntity(entityKey).getData()
@@ -87,5 +86,4 @@ const EdgenoteEntity = connect(
   mergeProps
 )(EdgenoteSpan)
 
-// $FlowFixMe
 export default withRouter(EdgenoteEntity)

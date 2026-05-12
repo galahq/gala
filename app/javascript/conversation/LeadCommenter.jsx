@@ -1,17 +1,14 @@
 /**
  * @providesModule LeadCommenter
- * @flow
+ * 
  */
 
 import React from 'react'
 import styled from 'styled-components'
 import Identicon from 'shared/Identicon'
 
-type Props = {
-  reader: { imageUrl: ?string, hashKey: string, name: string },
-}
 
-export default function LeadCommenter ({ reader }: Props) {
+export default function LeadCommenter ({ reader }) {
   return (
     <Container>
       <Identicon presentational width={32} reader={reader} />

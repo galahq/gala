@@ -1,6 +1,6 @@
 /**
  * @providesModule CommentThreadLocation
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -15,16 +15,7 @@ import {
 } from 'conversation/shared'
 import { styles } from 'draft/config'
 
-import type { Page } from 'redux/state'
 
-type Props = {
-  cardPosition: ?number,
-  detached: boolean,
-  inSitu: ?boolean,
-  inSituPath: ?string,
-  originalHighlightText: ?string,
-  page: ?Page,
-}
 
 export default function CommentThreadLocation ({
   cardPosition,
@@ -33,7 +24,7 @@ export default function CommentThreadLocation ({
   inSituPath,
   originalHighlightText,
   page,
-}: Props) {
+}) {
   if (page == null || inSituPath == null) return null
 
   return (
