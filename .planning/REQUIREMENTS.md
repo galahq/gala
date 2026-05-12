@@ -45,12 +45,12 @@
 
 ### Vitest and Vite Evaluation
 
-- [ ] **VITE-01**: A focused spike determines whether Vitest can replace Jest for the existing frontend test suite.
+- [x] **VITE-01**: A focused spike determines whether Vitest can replace Jest for the existing frontend test suite.
 - [ ] **VITE-02**: If Vitest is feasible, frontend test scripts use Vitest under pnpm.
 - [ ] **VITE-03**: If Vitest is not feasible within v1.1, the fallback Jest modernization path is documented and implemented.
-- [ ] **VITE-04**: A focused spike determines whether Vite can support Gala's Rails frontend entrypoints, CSS imports, static assets, and Blueprint compatibility layers.
-- [ ] **VITE-05**: Vite production bundler replacement only proceeds if the spike proves route, build, and asset compatibility.
-- [ ] **VITE-06**: If Vite build replacement is not accepted for v1.1, Shakapacker/Webpack remains the production bundler.
+- [x] **VITE-04**: A focused spike determines whether Vite can support Gala's Rails frontend entrypoints, CSS imports, static assets, and Blueprint compatibility layers.
+- [x] **VITE-05**: Vite production bundler replacement only proceeds if the spike proves route, build, and asset compatibility.
+- [x] **VITE-06**: If Vite build replacement is not accepted for v1.1, Shakapacker/Webpack remains the production bundler.
 
 ### Frontend Test Coverage
 
@@ -124,12 +124,12 @@
 | JS-02 | Phase 15 | Pending |
 | JS-03 | Phase 15 | Pending |
 | JS-04 | Phase 15 | Pending |
-| VITE-01 | Phase 12 | Pending |
+| VITE-01 | Phase 12 | Complete |
 | VITE-02 | Phase 16 | Pending |
 | VITE-03 | Phase 16 | Pending |
-| VITE-04 | Phase 12 | Pending |
-| VITE-05 | Phase 12 | Pending |
-| VITE-06 | Phase 12 | Pending |
+| VITE-04 | Phase 12 | Complete |
+| VITE-05 | Phase 12 | Complete |
+| VITE-06 | Phase 12 | Complete |
 | TEST-01 | Phase 16 | Pending |
 | TEST-02 | Phase 16 | Pending |
 | TEST-03 | Phase 16 | Pending |

@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization and Test Coverage
-status: executing
-last_updated: "2026-05-12T03:11:32.030Z"
-last_activity: 2026-05-12 -- Phase 11 marked complete
+status: Ready to discuss
+last_updated: "2026-05-12T03:33:55.060Z"
+last_activity: 2026-05-12 -- Phase 12 complete; ready for Phase 13
 progress:
   total_phases: 9
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
-  percent: 22
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
+  percent: 33
 ---
 
 # GSD State
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 12 Vitest and Vite feasibility
+**Current focus:** Phase 13 Flow removal and TypeScript/JSDoc foundation
 
 ## Current Position
 
-Phase: 12 — Vitest and Vite Feasibility
+Phase: 13 — Flow Removal and TypeScript/JSDoc Foundation
 Plan: —
 Status: Ready to discuss
-Last activity: 2026-05-12 -- Phase 11 complete; ready for Phase 12
+Last activity: 2026-05-12 -- Phase 12 complete; ready for Phase 13
 
 ## Milestone
 
@@ -83,4 +83,4 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Operator Next Steps
 
-- Continue Phase 11 with `$gsd-discuss-phase 11 --auto`.
+- Continue Phase 13 with `$gsd-discuss-phase 13 --auto`.

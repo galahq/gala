@@ -46,6 +46,8 @@ Plans:
 
 ### Phase 12: Vitest and Vite Feasibility
 
+- [x] Phase 12: Complete (2026-05-12)
+
 **Goal:** Decide how far v1.1 should move toward Vitest and Vite before committing to implementation.
 
 **Requirements:** VITE-01, VITE-04, VITE-05, VITE-06
@@ -55,6 +57,12 @@ Plans:
 2. A focused Vite build spike tests Rails entrypoints, CSS imports, static assets, and Blueprint compatibility layers.
 3. The roadmap decision is documented: Vitest path, Jest fallback, Vite build replacement, or Shakapacker/Webpack retention.
 4. Vite production build replacement proceeds only if route, build, and asset compatibility evidence is strong.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [x] 12-01-PLAN.md — Run bounded Vitest and Vite feasibility spikes, document blockers, and preserve Shakapacker/Webpack as the production bundler for v1.1.
 
 ### Phase 13: Flow Removal and TypeScript/JSDoc Foundation
 
