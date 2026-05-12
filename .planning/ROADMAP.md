@@ -18,7 +18,7 @@ This milestone finishes the Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJ
 | 6 | Reader, Library, and Reading Lists | Stabilize Devise reader flows, profiles, enrollments, libraries, reading lists, saved lists, and management routes | READ-01, READ-02, READ-03, QA-01, QA-02, QA-03, QA-04 |
 | 7 | Deployments and Integrations | Stabilize deployments, submissions, Canvas/LTI/content-item flows, SPARQL, and external integration route behavior | DEP-01, DEP-02, DEP-03, QA-01, QA-02, QA-03, QA-04 |
 | 8 | Admin and Operations | Stabilize admin resources, admin case copy, Sidekiq, and operational access boundaries | ADM-01, ADM-02, ADM-03, QA-01, QA-02, QA-03, QA-04 |
-| 9 | 1/1 | Complete    | 2026-05-11 |
+| 9 | Deslopification and Final Regression | Clean up upgrade leftovers and run final regression sweep | CLEAN-01, CLEAN-02, CLEAN-03, QA-01, QA-02, QA-03, QA-04 |
 
 ## Phase Details
 
@@ -277,7 +277,7 @@ Plans:
 
 **Goal:** Clean up upgrade leftovers after all route groups have passed.
 
-**Status:** next
+**Status:** completed 2026-05-11
 
 **Primary files:**
 - Any compatibility CSS/JS touched in earlier phases
