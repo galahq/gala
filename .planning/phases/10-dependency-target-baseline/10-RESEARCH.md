@@ -82,7 +82,7 @@ The main policy risk is frontend compatibility: React latest is 19.2.6 but v1.1 
 | Vitest | absent | 4.1.6 | Candidate for Phase 12/16 spike, not installed here | Vitest is Vite-powered, Jest-compatible, and supports ESM/TypeScript/JSX; registry engines include Node 24. [CITED: https://main.vitest.dev/] [VERIFIED: npm registry] |
 | Vite | absent | 8.0.12 | Spike only; production replacement gated | Vite requires Node 20.19+ or 22.12+, and official docs support pnpm commands. [CITED: https://vite.dev/guide/] [VERIFIED: npm registry] |
 | Playwright Test | `playwright` 1.59.1 only | `@playwright/test` 1.60.0 | Target `@playwright/test` latest in Phase 17 | Playwright Test supports visual comparisons with screenshot snapshots. [VERIFIED: package.json, npm registry] [CITED: https://playwright.dev/docs/api/class-snapshotassertions] |
-| React | package constraint `^16.8.6`, lock 16.12.0 | latest major 19.2.6; latest 16.x 16.14.0 | Hold React 16.x; do not target React 19 | v1.1 explicitly keeps React 16.8 line; later phases may choose whether 16.14.0 patch movement is acceptable within the hold. [VERIFIED: package.json, yarn.lock, npm registry, 10-CONTEXT.md] |
+| React | package constraint `^16.8.6`, lock 16.12.0 | latest major 19.2.6; latest 16.x 16.14.0 | Hold the existing React 16 baseline for v1.1; record 16.14.0 as a Phase 15 candidate only | v1.1 explicitly keeps the current React 16.8-compatible line and defers any 16.x patch movement to Phase 15 route/test verification; React 19 is outside v1.1. [VERIFIED: package.json, yarn.lock, npm registry, 10-CONTEXT.md] |
 | BlueprintJS | core 4.20.2, datetime 4.4.37, select 4.3.1 | latest major core 6.12.1/datetime 6.0.25/select 6.1.10 | Hold 4.x; consider `@blueprintjs/select` 4.9.24 only in later JS phase | BlueprintJS 6 peers require React 18, while 4.x packages peer on React 16.8-compatible ranges. [VERIFIED: npm registry, package.json] |
 
 ### Supporting
@@ -261,22 +261,19 @@ done
 |---|-------|---------|---------------|
 | A1 | Matrix rows without compatibility explanations are an early warning sign. | Common Pitfalls | Low; planner can still enforce holdback reason column from verified requirements. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should React patch target be 16.8.6, current lock 16.12.0, or latest 16.x 16.14.0?**
    - What we know: v1.1 must keep React on the 16.8 line, `package.json` allows `^16.8.6`, `yarn.lock` resolves React 16.12.0, and npm lists React 16.14.0 as latest 16.x. [VERIFIED: 10-CONTEXT.md, package.json, yarn.lock, npm registry]
-   - What's unclear: whether "current 16.8 line" means no React patch movement or latest 16.x patch within the major. [ASSUMED]
-   - Recommendation: matrix should classify React as `hold 16.x` and defer exact patch movement to Phase 15 with route/test verification. [VERIFIED: .planning/ROADMAP.md]
+   - RESOLVED: Phase 10 should not target a React manifest or lockfile change. The matrix should record the v1.1 target as the existing React 16 baseline (`package.json` `^16.8.6`, current lock 16.12.0) and list React 16.14.0 only as a Phase 15 candidate that requires route/component/visual verification before any later lockfile edit. React 19 remains outside v1.1. [VERIFIED: .planning/ROADMAP.md, npm registry]
 
 2. **Should BlueprintJS `@blueprintjs/select` move from 4.3.1 to 4.9.24?**
    - What we know: `@blueprintjs/select@4.9.24` exists and peers on React 16.8/17/18, while latest select 6.1.10 is outside the 4.x hold. [VERIFIED: npm registry]
-   - What's unclear: whether visual compatibility with the BlueprintJS 2.3.1-era Gala target tolerates this package-level 4.x patch/minor jump. [ASSUMED]
-   - Recommendation: record it as a Phase 15 candidate with visual QA required, not a Phase 10 change. [VERIFIED: AGENTS.md, .planning/ROADMAP.md]
+   - RESOLVED: Phase 10 should not target a BlueprintJS package change. The matrix should record `@blueprintjs/select@4.9.24` as a Phase 15 candidate within the 4.x hold, with visual QA against the BlueprintJS 2.3.1-era Gala target required before any later manifest/lockfile edit. BlueprintJS 6 remains outside v1.1 because its current peer dependencies require React 18. [VERIFIED: AGENTS.md, .planning/ROADMAP.md, npm registry]
 
 3. **Should Ruby 4.0.4 be in v1.1?**
    - What we know: official Ruby downloads list Ruby 4.0.4, and the project pins Ruby 4.0.3. [CITED: https://www.ruby-lang.org/en/downloads/] [VERIFIED: .ruby-version]
-   - What's unclear: whether the Ruby patch bump belongs in Phase 14 or should remain held for deployment parity. [ASSUMED]
-   - Recommendation: matrix should mark Ruby 4.0.4 as a Phase 14 candidate requiring boot, RSpec, Dockerfile, and deployment-image review. [VERIFIED: .planning/ROADMAP.md, .planning/codebase/STACK.md]
+   - RESOLVED: Phase 10 should not target a Ruby runtime change. The matrix should mark Ruby 4.0.4 as a Phase 14 candidate requiring Rails boot, targeted RSpec, Dockerfile/runtime image review, and deployment parity checks before changing `.ruby-version` or runtime images. [VERIFIED: .planning/ROADMAP.md, .planning/codebase/STACK.md]
 
 ## Environment Availability
 
