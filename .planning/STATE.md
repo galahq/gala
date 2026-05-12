@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization and Test Coverage
 status: planning
-last_updated: "2026-05-12T01:57:47.546Z"
-last_activity: 2026-05-12
+last_updated: "2026-05-12T02:28:00.000Z"
+last_activity: 2026-05-12 — v1.1 roadmap approved
 progress:
-  total_phases: 0
+  total_phases: 9
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 10 — Dependency Target Baseline
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-12 — Milestone v1.1 started
+Status: Ready to discuss Phase 10
+Last activity: 2026-05-12 — v1.1 roadmap approved
 
 ## Milestone
 
@@ -51,7 +51,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Blockers
 
-- Requirements and roadmap are not yet finalized.
+- Phase 10 has not started yet.
 
 ## Follow-Up Noise
 
@@ -69,7 +69,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 - `.planning/codebase/` contains the current codebase map.
 - v1.0 archives live in `.planning/milestones/`.
-- v1.1 research will be captured in `.planning/research/` before requirements are finalized.
+- v1.1 research is captured in `.planning/research/`.
+- v1.1 roadmap starts at Phase 10, continuing the regular phase sequence after v1.0 Phase 9.
 
 ## Quick Tasks Completed
 
@@ -82,4 +83,4 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Operator Next Steps
 
-- Confirm v1.1 requirements after research synthesis.
+- Start Phase 10 with `$gsd-discuss-phase 10`.

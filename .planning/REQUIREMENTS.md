@@ -101,56 +101,56 @@
 
 | Requirement | Phase | Status |
 | --- | --- | --- |
-| DEPS-01 | TBD | Pending |
-| DEPS-02 | TBD | Pending |
-| DEPS-03 | TBD | Pending |
-| DEPS-04 | TBD | Pending |
-| PNPM-01 | TBD | Pending |
-| PNPM-02 | TBD | Pending |
-| PNPM-03 | TBD | Pending |
-| PNPM-04 | TBD | Pending |
-| PNPM-05 | TBD | Pending |
-| TYPE-01 | TBD | Pending |
-| TYPE-02 | TBD | Pending |
-| TYPE-03 | TBD | Pending |
-| TYPE-04 | TBD | Pending |
-| TYPE-05 | TBD | Pending |
-| TYPE-06 | TBD | Pending |
-| RUBY-01 | TBD | Pending |
-| RUBY-02 | TBD | Pending |
-| RUBY-03 | TBD | Pending |
-| RUBY-04 | TBD | Pending |
-| JS-01 | TBD | Pending |
-| JS-02 | TBD | Pending |
-| JS-03 | TBD | Pending |
-| JS-04 | TBD | Pending |
-| VITE-01 | TBD | Pending |
-| VITE-02 | TBD | Pending |
-| VITE-03 | TBD | Pending |
-| VITE-04 | TBD | Pending |
-| VITE-05 | TBD | Pending |
-| VITE-06 | TBD | Pending |
-| TEST-01 | TBD | Pending |
-| TEST-02 | TBD | Pending |
-| TEST-03 | TBD | Pending |
-| TEST-04 | TBD | Pending |
-| VIS-01 | TBD | Pending |
-| VIS-02 | TBD | Pending |
-| VIS-03 | TBD | Pending |
-| VIS-04 | TBD | Pending |
-| VIS-05 | TBD | Pending |
-| VIS-06 | TBD | Pending |
-| QA-01 | TBD | Pending |
-| QA-02 | TBD | Pending |
-| QA-03 | TBD | Pending |
-| QA-04 | TBD | Pending |
-| QA-05 | TBD | Pending |
+| DEPS-01 | Phase 10 | Pending |
+| DEPS-02 | Phase 10 | Pending |
+| DEPS-03 | Phase 10 | Pending |
+| DEPS-04 | Phase 10 | Pending |
+| PNPM-01 | Phase 11 | Pending |
+| PNPM-02 | Phase 11 | Pending |
+| PNPM-03 | Phase 11 | Pending |
+| PNPM-04 | Phase 11 | Pending |
+| PNPM-05 | Phase 11 | Pending |
+| TYPE-01 | Phase 13 | Pending |
+| TYPE-02 | Phase 13 | Pending |
+| TYPE-03 | Phase 13 | Pending |
+| TYPE-04 | Phase 13 | Pending |
+| TYPE-05 | Phase 13 | Pending |
+| TYPE-06 | Phase 13 | Pending |
+| RUBY-01 | Phase 14 | Pending |
+| RUBY-02 | Phase 14 | Pending |
+| RUBY-03 | Phase 14 | Pending |
+| RUBY-04 | Phase 14 | Pending |
+| JS-01 | Phase 15 | Pending |
+| JS-02 | Phase 15 | Pending |
+| JS-03 | Phase 15 | Pending |
+| JS-04 | Phase 15 | Pending |
+| VITE-01 | Phase 12 | Pending |
+| VITE-02 | Phase 16 | Pending |
+| VITE-03 | Phase 16 | Pending |
+| VITE-04 | Phase 12 | Pending |
+| VITE-05 | Phase 12 | Pending |
+| VITE-06 | Phase 12 | Pending |
+| TEST-01 | Phase 16 | Pending |
+| TEST-02 | Phase 16 | Pending |
+| TEST-03 | Phase 16 | Pending |
+| TEST-04 | Phase 16 | Pending |
+| VIS-01 | Phase 17 | Pending |
+| VIS-02 | Phase 17 | Pending |
+| VIS-03 | Phase 17 | Pending |
+| VIS-04 | Phase 17 | Pending |
+| VIS-05 | Phase 17 | Pending |
+| VIS-06 | Phase 17 | Pending |
+| QA-01 | Phase 17 | Pending |
+| QA-02 | Phase 17 | Pending |
+| QA-03 | Phase 14 | Pending |
+| QA-04 | Phase 16 | Pending |
+| QA-05 | Phase 18 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 46 total
-- Mapped to phases: 0
-- Unmapped: 46
+- Mapped to phases: 46
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-12 after v1.1 scope refinement*
+*Last updated: 2026-05-12 after v1.1 roadmap draft*

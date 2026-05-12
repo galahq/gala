@@ -1,20 +1,41 @@
 {
   "mode": "yolo",
   "granularity": "fine",
-  "parallelization": false,
+  "parallelization": true,
   "commit_docs": true,
-  "model_profile": "inherit",
+  "model_profile": "balanced",
   "workflow": {
     "research": true,
     "plan_check": true,
     "verifier": true,
     "nyquist_validation": true,
-    "auto_advance": false,
-    "text_mode": true
+    "auto_advance": true,
+    "text_mode": true,
+    "_auto_chain_active": false,
+    "use_worktrees": true,
+    "inline_plan_threshold": 0
   },
   "planning": {
     "phase_strategy": "route-group",
     "qa_gate": "localhost:3000 route verification before each phase commit",
     "baseline": "approximate BlueprintJS 2.3.1-era Gala UI"
-  }
+  },
+  "runtime": "codex",
+  "model_profile_overrides": {
+    "codex": {
+      "opus": {
+        "model": "gpt-5.5",
+        "reasoning_effort": "low"
+      },
+      "sonnet": {
+        "model": "gpt-5.3-codex-spark",
+        "reasoning_effort": "high"
+      },
+      "haiku": {
+        "model": "gpt-5.4-mini",
+        "reasoning_effort": "low"
+      }
+    }
+  },
+  "context_window": 1000000
 }
