@@ -31,10 +31,10 @@
 
 ### Ruby Dependency Modernization
 
-- [ ] **RUBY-01**: Ruby gem constraints are audited against current stable compatible releases.
-- [ ] **RUBY-02**: Runtime gem updates are applied in small groups with boot and targeted test gates.
-- [ ] **RUBY-03**: Development/test gem updates are applied with targeted RSpec or unit test gates.
-- [ ] **RUBY-04**: Major runtime gem jumps, such as Puma or Sidekiq, receive separate verification notes.
+- [x] **RUBY-01**: Ruby gem constraints are audited against current stable compatible releases.
+- [x] **RUBY-02**: Runtime gem updates are applied in small groups with boot and targeted test gates.
+- [x] **RUBY-03**: Development/test gem updates are applied with targeted RSpec or unit test gates.
+- [x] **RUBY-04**: Major runtime gem jumps, such as Puma or Sidekiq, receive separate verification notes.
 
 ### JavaScript Dependency Modernization
 
@@ -72,7 +72,7 @@
 
 - [ ] **QA-01**: Route-facing changes are checked on `localhost:3000`.
 - [ ] **QA-02**: Browser console and network errors are classified before route-facing phases are accepted.
-- [ ] **QA-03**: Targeted Ruby tests run for touched Ruby dependency or behavior changes.
+- [x] **QA-03**: Targeted Ruby tests run for touched Ruby dependency or behavior changes.
 - [ ] **QA-04**: Targeted frontend tests run for touched JavaScript, typing, test-runner, or visual harness changes.
 - [ ] **QA-05**: Final verification includes Ruby boot/test checks, JavaScript install/build/test checks, and selected route visual checks.
 
@@ -116,10 +116,10 @@
 | TYPE-04 | Phase 13 | Complete |
 | TYPE-05 | Phase 13 | Complete |
 | TYPE-06 | Phase 13 | Complete |
-| RUBY-01 | Phase 14 | Pending |
-| RUBY-02 | Phase 14 | Pending |
-| RUBY-03 | Phase 14 | Pending |
-| RUBY-04 | Phase 14 | Pending |
+| RUBY-01 | Phase 14 | Complete |
+| RUBY-02 | Phase 14 | Complete |
+| RUBY-03 | Phase 14 | Complete |
+| RUBY-04 | Phase 14 | Complete |
 | JS-01 | Phase 15 | Pending |
 | JS-02 | Phase 15 | Pending |
 | JS-03 | Phase 15 | Pending |
@@ -142,7 +142,7 @@
 | VIS-06 | Phase 17 | Pending |
 | QA-01 | Phase 17 | Pending |
 | QA-02 | Phase 17 | Pending |
-| QA-03 | Phase 14 | Pending |
+| QA-03 | Phase 14 | Complete |
 | QA-04 | Phase 16 | Pending |
 | QA-05 | Phase 18 | Pending |
 
@@ -153,4 +153,4 @@
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-12 after v1.1 roadmap draft*
+*Last updated: 2026-05-12 after Phase 14 Ruby dependency modernization*

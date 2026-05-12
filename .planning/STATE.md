@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization and Test Coverage
 status: Ready to discuss
-last_updated: "2026-05-12T03:39:30.000Z"
-last_activity: 2026-05-12 -- Phase 13 complete; ready for Phase 14
+last_updated: "2026-05-12T04:14:42.000Z"
+last_activity: 2026-05-12 -- Phase 14 complete; ready for Phase 15
 progress:
   total_phases: 9
-  completed_phases: 4
-  total_plans: 5
-  completed_plans: 5
-  percent: 44
+  completed_phases: 5
+  total_plans: 7
+  completed_plans: 7
+  percent: 56
 ---
 
 # GSD State
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 14 Ruby dependency modernization
+**Current focus:** Phase 15 JavaScript dependency and build modernization
 
 ## Current Position
 
-Phase: 14 — Ruby Dependency Modernization
+Phase: 15 — JavaScript Dependency and Build Modernization
 Plan: —
 Status: Ready to discuss
-Last activity: 2026-05-12 -- Phase 13 complete; ready for Phase 14
+Last activity: 2026-05-12 -- Phase 14 complete; ready for Phase 15
 
 ## Milestone
 
@@ -65,6 +65,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 7 browser QA on deployment routes showed existing local dev-server stale chunk 404/MIME noise and shared styled-components deprecation warnings, with no deployment-specific blocker.
 - Phase 8 browser QA confirmed the routed admin and Sidekiq surfaces are stable; remaining public-shell React/styled-components warnings and a Mapbox style `404` were accepted as unrelated noise for this route group.
 - Phase 13 removed Flow syntax/tooling with a mechanical strip. TypeScript is present as a non-emitting `allowJs`/JSDoc baseline with `skipLibCheck` until third-party React/webpack ambient types are addressed by a later typing phase.
+- Phase 14 updated compatible Ruby runtime and dev/test gems. Runtime gates passed (`bundle check`, Rails boot, full RSpec, assets precompile), and dev/test gates passed (`bundle check`, full RSpec, `rake test:unit`). RSpec now forces `RAILS_ENV=test` because Docker exports `RAILS_ENV=development`.
 
 ## Notes
 
@@ -84,4 +85,4 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Operator Next Steps
 
-- Continue Phase 14 with `$gsd-discuss-phase 14 --auto`.
+- Continue Phase 15 with `$gsd-discuss-phase 15 --auto`.

@@ -87,6 +87,8 @@ Plans:
 
 ### Phase 14: Ruby Dependency Modernization
 
+- [x] Phase 14: Complete (2026-05-12)
+
 **Goal:** Modernize compatible Ruby gems in small, verified groups.
 
 **Requirements:** RUBY-01, RUBY-02, RUBY-03, RUBY-04, QA-03
@@ -96,6 +98,15 @@ Plans:
 2. Runtime gem updates are applied in small groups with boot and targeted test gates.
 3. Development/test gem updates run targeted RSpec or unit gates.
 4. Major runtime jumps, such as Puma or Sidekiq, receive separate verification notes.
+
+**Plans:** 2 plans
+
+Plans:
+**Wave 1**
+- [x] 14-01-PLAN.md — Update compatible runtime Ruby gems.
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [x] 14-02-PLAN.md — Update compatible development and test Ruby gems.
 
 ### Phase 15: JavaScript Dependency and Build Modernization
 

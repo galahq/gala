@@ -16,7 +16,7 @@ Rechecked against official sources on 2026-05-12:
 | Ruby | 4.0.3 | 4.0.4 | Hold runtime; document candidate |
 | Rails | 8.1.3 | 8.1.3 | Hold current |
 | Puma | 7.1.0 | 8.0.1 on RubyGems, 7.2.0 under current constraints | Update to 7.2.x, hold 8.x |
-| Sidekiq | 7.3.6 | 8.1.4 on RubyGems, 7.3.9 under current constraints | Update to 7.3.9, hold 8.x |
+| Sidekiq | 7.3.6 | 8.1.4 on RubyGems, 7.3.10 under current constraints | Update to 7.3.10, hold 8.x |
 | pg | 1.5.9 | 1.6.3 | Relax to `~> 1.6` and update |
 | redis | 5.3.0 | 5.4.1 | Update within 5.x |
 | Sentry gems | 5.28.1 | 6.5.0 | Hold 5.x |
