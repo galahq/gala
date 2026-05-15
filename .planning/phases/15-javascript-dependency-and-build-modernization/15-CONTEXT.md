@@ -49,11 +49,11 @@ Downstream agents MUST read these before planning or implementing.
 
 ### Phase Continuity and Constraints
 
-- `.planning/PHASES/14-ruby-dependency-modernization/14-CONTEXT.md` — scope discipline and constraint carryover pattern from phase 14.
+- `.planning/phases/14-ruby-dependency-modernization/14-CONTEXT.md` — scope discipline and constraint carryover pattern from phase 14.
 - `.planning/phases/14-ruby-dependency-modernization/14-VERIFICATION.md` — gate style for dependency-focused phases.
 - `.planning/STATE.md` — current v1.1 sequencing and execution constraints.
 - `AGENTS.md` (`/.planning/` top section provided by user) — explicit route-grouping and console/network QA directives for this milestone.
-- `.planning/continue-javascript?` — none.
+- `.planning/phases/15-javascript-dependency-and-build-modernization/15-CONTEXT.md` and linked phase artifacts — this phase-specific context.
 
 ### Existing Feasibility Decisions
 
