@@ -95,7 +95,9 @@ Downstream agents MUST read these before planning or implementing.
 
 ## Specific Ideas
 
-No new specific implementation references were introduced during discussion; follow standard conservative dependency modernization patterns and upstream constraints above.
+1. Toolbar consistency: case-editor toolbar styles must target `.Toolbar__bar--case-editor` (the class produced by `Toolbar` wrapper), not `.Toolbar--case-editor`/other mismatched selectors.
+2. Duplicate style consolidation scope (cleanup): repeated semantic color tokens (e.g., `#5d6b77` in case/settings/admin toolbar and form surfaces) should be consolidated in a follow-up cleanup phase, not in this dependency-only phase.
+3. Shakapacker optimization: no immediate split-chunk or manifest-alignment behavior changes are approved in this phase. Performance tuning is deferred to cleanup planning with bundle-size and QA evidence before any config-level chunking changes.
 
 ## Deferred Ideas
 

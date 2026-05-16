@@ -65,6 +65,22 @@
 
 - No areas were explicitly handed to agent discretion in this `--auto` run.
 
+## Duplicate CSS and Toolbar Consistency Audit
+
+The user asked for a quick dedupe/consistency pass while staying in phase scope.
+
+| Item | Observation | Decision |
+|------|-------------|----------|
+| `Toolbar` modifiers | Case-editor toolbar styling was written to a selector that does not match rendered class names (`.Toolbar--case-editor` style did not target `.Toolbar__bar--case-editor`). | Fix selector to `.Toolbar__bar--case-editor` in the stylesheet and keep the gray intent (`#5d6b77`) for case/editor controls via explicit override.
+| Repeated palette usage | `#5d6b77` is used in both `Toolbar.sass` and `admin.sass` with identical semantic intent for case/settings text color. | Keep for this phase; capture as cleanup candidate for a shared token file in a follow-up UI cleanup sweep.
+
+## Shakapacker performance audit request
+
+| Item | Observation | Decision |
+|------|-------------|----------|
+| `splitChunks` cache groups | Current config splits only `node_modules` JavaScript (`*.jsx?`) into `vendor`; CSS remains tied to entry CSS extraction behavior. | No immediate behavioral change in Phase 15; keep conservative bundling to protect v1.0 visual contract. Add a follow-up cleanup plan for CSS/vendor chunk tuning only after a baseline bundle-size diff.
+| Manifest and cache behavior | Manifest merge remains disabled (`merge = false`) to avoid stale entrypoints with split-chunk changes. | Preserve this constraint in this phase; avoid `manifest`/runtime refactors that can regress loader stability.
+
 ## Deferred Ideas
 
 - React major upgrade, Blueprint 6 migration, and Vite production migration are deferred to future phases.
