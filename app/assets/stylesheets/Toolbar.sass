@@ -18,6 +18,23 @@
       border-bottom-color: #c0bca9
       color: #262626
 
+    &--case-editor
+      .Toolbar__item
+        color: #5d6b77
+
+        &:hover,
+        &:focus
+          color: #5d6b77
+
+      &.pt-dark,
+      &.bp4-dark
+        .Toolbar__item
+          color: #5d6b77
+
+          &:hover,
+          &:focus
+            color: #5d6b77
+
   &__group
     display: flex
     align-items: center
@@ -51,7 +68,7 @@
     border-radius: 3px
     box-shadow: none
     box-sizing: border-box
-    color: #ebeae4
+    color: #bfccd6
     display: inline-flex
     font: inherit
     height: 30px
@@ -64,8 +81,24 @@
     &:hover,
     &:focus
       background: rgba(167, 182, 194, 0.3)
-      color: #ebeae4
+      color: #bfccd6
       text-decoration: none
+
+  &__item--stop-editing,
+  &__bar &__item--stop-editing
+    color: #5d6b77 !important
+
+    &:hover,
+    &:focus
+      color: #5d6b77 !important
+
+  &__bar.pt-dark &__item,
+  &__bar.bp4-dark &__item
+    color: #bfccd6
+
+    &:hover,
+    &:focus
+      color: #bfccd6
 
     &.bp4-disabled,
     &:disabled

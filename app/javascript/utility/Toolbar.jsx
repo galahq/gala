@@ -33,13 +33,19 @@ function withBlueprint4Classes(className) {
     .join(' ')
 }
 
-const Toolbar = ({ light, groups, intl, canBeIconsOnly }) => {
+const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
   if (!groups.some(group => group.some(element => element))) return null
 
   const t = (id) => (id ? intl.formatMessage({ id }) : null)
 
   return (
-    <div className={joinClasses('Toolbar__bar', light ? 'Toolbar__bar--light' : 'pt-dark bp4-dark')}>
+    <div
+      className={joinClasses(
+        'Toolbar__bar',
+        light ? 'Toolbar__bar--light' : 'pt-dark bp4-dark',
+        className
+      )}
+    >
       <MaxWidthContainer className="MaxWidthContainer">
         {groups.map((group, i) => (
           <div

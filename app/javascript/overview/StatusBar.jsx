@@ -129,6 +129,7 @@ function StatusBar({
                     message: editing
                       ? 'cases.edit.stopEditing'
                       : 'cases.edit.edit',
+                    className: editing ? 'Toolbar__item--stop-editing' : null,
                     icon: editing ? 'cross' : 'edit',
                     onClick: toggleEditing,
                   }),
@@ -174,7 +175,14 @@ function StatusBar({
           ],
         ]
         if (!groups.some(x => x)) return null
-        return <Toolbar canBeIconsOnly groups={groups} light={editing} />
+        return (
+          <Toolbar
+            className="Toolbar__bar--case-editor"
+            canBeIconsOnly
+            groups={groups}
+            light={editing}
+          />
+        )
       }}
     </ContentItemSelectionContextConsumer>
   )
