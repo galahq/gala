@@ -7,7 +7,7 @@
         "warning:.*Potentially unsafe event handler"
       ],
       "network": [
-        ".*segment\.io.*",
+        ".*segment\\.io.*",
         ".*analytics.*"
       ],
       "status": ["404", "410"]
@@ -18,7 +18,7 @@
         "warning:.*ResizeObserver"
       ],
       "network": [
-        ".*segment\.io.*"
+        ".*segment\\.io.*"
       ],
       "status": ["404"]
     },
@@ -28,7 +28,7 @@
         "warning:.*ResizeObserver"
       ],
       "network": [
-        ".*segment\.io.*"
+        ".*segment\\.io.*"
       ],
       "status": ["404"]
     },
@@ -38,7 +38,7 @@
         "warning:.*ResizeObserver"
       ],
       "network": [
-        ".*segment\.io.*"
+        ".*segment\\.io.*"
       ],
       "status": ["302", "403"]
     },
@@ -48,7 +48,7 @@
         "warning:.*ResizeObserver"
       ],
       "network": [
-        ".*segment\.io.*"
+        ".*segment\\.io.*"
       ],
       "status": ["302", "403"]
     }

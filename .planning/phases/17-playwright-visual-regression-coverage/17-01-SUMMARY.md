@@ -1,7 +1,7 @@
 ---
 phase: 17
 plan: 1
-status: executed
+status: ready
 result: partial
 run_date: 2026-05-16
 runner: pnpm
@@ -39,11 +39,17 @@ runner: pnpm
 
 ## Checks completed
 
-- Structural file presence and contract checks were aligned to plan requirements.
-- Local execution/recording was not run in this pass:
-  - `pnpm test:visual` (not executed)
-  - `pnpm test:visual:update` (not executed)
-  - Playwright install + Rails server (not executed)
+- Structural and contract checks:
+  - `node -e` validation for Playwright script contract and `@playwright/test` presence: passed.
+  - `node -e` config loader validation for `playwright.config.mjs`: passed.
+  - `pnpm exec playwright test --config playwright.config.mjs --list`: passed (1 test discovered).
+  - `pnpm test:visual --help`: passed.
+- Lockfile sync:
+  - Ran `pnpm install --no-frozen-lockfile` and aligned `playwright`/`@playwright/test` to `^1.60.0`.
+- Runtime baseline update/generation remains pending:
+  - `pnpm test:visual` (not executed in this pass)
+  - `pnpm test:visual:update` (not executed in this pass)
+  - Playwright browser install + Rails server on `localhost:3000` (not executed in this pass)
 
 ## Follow-up
 
