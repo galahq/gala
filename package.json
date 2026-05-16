@@ -11,7 +11,12 @@
   "license": "MIT",
   "packageManager": "pnpm@11.1.0",
   "scripts": {
-    "test": "NODE_ENV=test jest app/javascript"
+    "test": "NODE_ENV=test jest app/javascript",
+    "test:frontend": "NODE_ENV=test jest app/javascript",
+    "test:vitest:spike": "pnpm exec vitest run --config .planning/phases/12-vitest-and-vite-feasibility/spikes/vitest.config.mjs --reporter verbose",
+    "test:visual": "pnpm exec playwright test --config playwright.config.mjs",
+    "test:visual:update": "pnpm exec playwright test --config playwright.config.mjs --update-snapshots",
+    "test:visual:install": "pnpm exec playwright install --with-deps"
   },
   "engines": {
     "node": ">=24 <25",
@@ -132,6 +137,7 @@
     "jest-fetch-mock": "^2.0.1",
     "jsdom": "11.12.0",
     "playwright": "^1.59.1",
+    "@playwright/test": "^1.59.1",
     "prettier": "^1.15.3",
     "react-testing-library": "^6.0.0",
     "style-loader": "3.3.4",
