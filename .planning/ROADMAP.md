@@ -158,6 +158,28 @@ Plans:
 3. Selected visual regression checks pass against committed baselines.
 4. Documentation and scripts no longer point developers to Yarn or Flow workflows.
 
+### Phase 19: Production Deployment to AWS (no-vpc first)
+
+- [ ] Phase 19: Planned
+
+**Goal:** Plan a production deployment route for AWS that loads `db/**/*` data dumps locally, builds and pushes a Docker image to ECR, and migrates static assets to the Gala asset bucket strategy without impacting existing Heroku production resources.
+
+**Requirements:** deployment-only planning requirements for migration safety, rollout, and rollback readiness
+
+**Success Criteria:**
+1. Local deployment script `scripts/deploy-gala-aws-production.sh` is committed and supports ECR push + asset sync workflow.
+2. Architecture plan keeps one ALB, one small PostgreSQL, ECS web task with 500 MB memory target, and one Sidekiq worker task.
+3. S3 media/asset handling is non-destructive to current production assets: reuse existing production bucket when possible, otherwise copy from source to new `gala-static-assets` bucket in `us-west-2`.
+4. AWS secrets are sourced for ECS via Secrets Manager, with Heroku read-only fallback only.
+5. BASE_URL strategy and ACM/TLS plan are explicit and do not alter active `https://www.learngala.com` Heroku runtime.
+6. Rollback mechanics are defined for ECS task definitions and ECR image tags.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [ ] 19-01-PLAN.md — Design a non-disruptive production-deploy package for AWS (ECR, ECS, ALB, Postgres, Redis retained, S3 import/copy path, Heroku read-only fallback, rollback, and security group policy).
+
 ## Completed Milestones
 
 <details>
