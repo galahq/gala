@@ -135,7 +135,11 @@ else
   log "Using data dump: $DATA_DUMP_FILE"
 fi
 
-ACCOUNT_ID="${AWS_ACCOUNT_ID:-$(aws --profile "$PROFILE" sts get-caller-identity --query Account --output text --region "$REGION")}"
+if [[ "$DRY_RUN" == "true" ]]; then
+  ACCOUNT_ID="${AWS_ACCOUNT_ID:-000000000000}"
+else
+  ACCOUNT_ID="${AWS_ACCOUNT_ID:-$(aws --profile "$PROFILE" sts get-caller-identity --query Account --output text --region "$REGION")}"
+fi
 ECR_URI="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE_NAME}"
 LOCAL_IMAGE="${IMAGE_NAME}:deploy-${IMAGE_TAG}"
 REMOTE_IMAGE="${ECR_URI}:${IMAGE_TAG}"
