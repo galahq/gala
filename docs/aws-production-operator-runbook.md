@@ -54,14 +54,13 @@ flowchart LR
 
 - AWS profile/environment:
   - `AWS_PROFILE=gala`
-  - `REGION=us-west-2`
   - `AWS_REGION=us-west-2`
 - Image naming:
   - `IMAGE_TAG` optional override
 - S3 target:
   - default `GALA_STATIC_ASSETS_BUCKET` or `--asset-bucket`
 - Optional read-only secrets fallback:
-  - `HEROKU_APP_NAME`
+  - `HEROKU_APP_NAME=msc-gala`
 
 ## Deployment commands (no Heroku mutation)
 
@@ -77,6 +76,7 @@ scripts/deploy-gala-aws-production.sh --dry-run --skip-heroku-secret-check --ski
 
 ```bash
 AWS_PROFILE=gala \
+AWS_REGION=us-west-2 \
 scripts/deploy-gala-aws-production.sh \
   --image-tag "$(git rev-parse --short HEAD)" \
   --asset-bucket gala-static-assets \
@@ -87,11 +87,13 @@ scripts/deploy-gala-aws-production.sh \
 ### 3) Optional Heroku fallback (read-only only)
 
 ```bash
-HEROKU_APP_NAME=<existing-heroku-app-name> \
+HEROKU_APP_NAME=msc-gala \
+AWS_PROFILE=gala \
+AWS_REGION=us-west-2 \
 scripts/deploy-gala-aws-production.sh --skip-asset-import
 ```
 
-This path only runs `heroku config:get` calls and never calls:
+This path only runs Heroku `config` read commands and never calls:
 - `heroku create`
 - `heroku git:remote`
 - `heroku releases`

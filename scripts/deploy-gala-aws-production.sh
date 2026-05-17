@@ -26,14 +26,15 @@ USAGE
 DRY_RUN="false"
 IMAGE_TAG="$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d%H%M%S)"
 IMAGE_NAME="gala"
-REGION="us-west-2"
-PROFILE="${AWS_PROFILE:-gala}"
+REGION="${AWS_REGION:-us-west-2}"
+PROFILE="${AWS_PROFILE:-${AWS_PROFILW:-gala}}"
 TARGET_ASSET_BUCKET="${GALA_STATIC_ASSETS_BUCKET:-gala-static-assets}"
 SOURCE_MEDIA_BUCKET="${SOURCE_MEDIA_BUCKET:-msc-gala}"
 REUSE_MEDIA_BUCKET="false"
 SKIP_HEROKU_CHECK="false"
 IMPORT_ASSETS="true"
 DATA_DUMP_PATH="${DATA_DUMP_PATH:-}"
+HEROKU_APP_NAME="${HEROKU_APP_NAME:-msc-gala}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -191,10 +192,7 @@ done
 
 if [[ "${HEROKU_APP_NAME:-}" != "" && "$SKIP_HEROKU_CHECK" != "true" ]] && command -v heroku >/dev/null 2>&1; then
   log "Attempting read-only Heroku fallback secret checks."
-  run_cmd bash -lc "heroku config:get SES_SMTP_USERNAME -a \"$HEROKU_APP_NAME\" 2>/dev/null || true"
-  run_cmd bash -lc "heroku config:get SES_SMTP_PASSWORD -a \"$HEROKU_APP_NAME\" 2>/dev/null || true"
-  run_cmd bash -lc "heroku config:get RAILS_MASTER_KEY -a \"$HEROKU_APP_NAME\" 2>/dev/null || true"
-  run_cmd bash -lc "heroku config:get SECRET_KEY_BASE -a \"$HEROKU_APP_NAME\" 2>/dev/null || true"
+  run_cmd bash -lc "heroku config -a \"$HEROKU_APP_NAME\""
 else
   log "Skipping Heroku secret fallback checks."
 fi
