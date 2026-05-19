@@ -11,7 +11,7 @@ import classNames from 'classnames'
 import Sidebar from './Sidebar'
 import Page from 'page'
 import Podcast from 'podcast'
-import EdgenoteContents from 'deprecated/EdgenoteContents'
+import EdgenoteContents from 'edgenotes/EdgenoteContents'
 
 import Tracker from 'utility/Tracker'
 

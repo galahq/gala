@@ -16,28 +16,111 @@ export default $config({
   async run() {
     const stage = $app.stage;
     const isProduction = stage === "production";
-    const domain = isProduction ? "www.learngala.com" : "staging.learngala.com";
-    const baseUrl = `https://${domain}`;
+    const explicitBaseUrl = process.env.ALB_BASE_URL ?? "";
+    const baseUrl = explicitBaseUrl.length > 0
+      ? explicitBaseUrl
+      : isProduction
+        ? "https://localhost:3000"
+        : "https://staging.learngala.com";
     const mediaBucketName = "msc-gala";
+    const staticAssetsBucketName = process.env.GALA_STATIC_ASSETS_BUCKET ??
+      "gala-static-assets";
+    const webImage = process.env.GALA_WEB_IMAGE_URI?.trim().length
+      ? process.env.GALA_WEB_IMAGE_URI
+      : {
+          context: "..",
+          dockerfile: "Dockerfile",
+          args: {
+            rails_env: "production",
+            secret_key_base: "build-placeholder",
+          },
+        };
 
-    const RAILS_MASTER_KEY = new sst.Secret("RAILS_MASTER_KEY");
-    const SECRET_KEY_BASE = new sst.Secret("SECRET_KEY_BASE");
-    const LTI_KEY = new sst.Secret("LTI_KEY");
-    const LTI_SECRET = new sst.Secret("LTI_SECRET");
-    const MAPBOX_ACCESS_TOKEN = new sst.Secret("MAPBOX_ACCESS_TOKEN");
-    const SES_SMTP_USERNAME = new sst.Secret("SES_SMTP_USERNAME");
-    const SES_SMTP_PASSWORD = new sst.Secret("SES_SMTP_PASSWORD");
+    new sst.aws.Bucket("GalaMediaBucket", {
+      transform: {
+        bucket: (bucketConfig) => ({
+          ...bucketConfig,
+          bucket: mediaBucketName,
+        }),
+      },
+    });
 
-    // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
+    const staticAssetsBucket = new sst.aws.Bucket("GalaStaticAssets", {
+      access: "public",
+      transform: {
+        bucket: (bucketConfig) => ({
+          ...bucketConfig,
+          bucket: staticAssetsBucketName,
+        }),
+      },
+    });
+
+    const staticAssetsDistribution = new aws.cloudfront.Distribution(
+      "GalaStaticAssetsDistribution",
+      {
+        enabled: true,
+        comment: `${$app.name}-${stage} static assets`,
+        defaultRootObject: "",
+        origins: [
+          {
+            domainName: staticAssetsBucket.domain,
+            originId: "gala-static-assets-origin",
+            customOriginConfig: {
+              httpPort: 80,
+              httpsPort: 443,
+              originProtocolPolicy: "https-only",
+              originSslProtocols: ["TLSv1.2"],
+            },
+          },
+        ],
+        defaultCacheBehavior: {
+          targetOriginId: "gala-static-assets-origin",
+          viewerProtocolPolicy: "redirect-to-https",
+          allowedMethods: ["GET", "HEAD", "OPTIONS"],
+          cachedMethods: ["GET", "HEAD", "OPTIONS"],
+          compress: true,
+          minTtl: 60,
+          defaultTtl: 31536000,
+          maxTtl: 31536000,
+          forwardedValues: {
+            queryString: false,
+            cookies: {
+              forward: "none",
+            },
+          },
+        },
+        restrictions: {
+          geoRestriction: {
+            restrictionType: "none",
+          },
+        },
+        viewerCertificate: {
+          cloudfrontDefaultCertificate: true,
+        },
+        priceClass: "PriceClass_100",
+      },
+    );
+
+    const resolveSecret = (key: string) =>
+      aws.secretsmanager.getSecretVersionOutput({
+        secretId: `gala/production/${key}`,
+        versionStage: "AWSCURRENT",
+      }).secretString;
+
     const vpc = new sst.aws.Vpc("GalaVpc", {
       az: 2,
     });
 
-    const cluster = new sst.aws.Cluster("GalaCluster", { vpc });
+    // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
+    const cluster = new sst.aws.Cluster("GalaCluster", {
+      vpc,
+    });
 
     const database = new sst.aws.Postgres("GalaDatabase", {
-      vpc,
-      version: "16.4",
+      version: "16",
+      vpc: {
+        subnets: vpc.publicSubnets,
+      },
       database: "gala",
       instance: isProduction ? "t4g.small" : "t4g.micro",
       storage: isProduction ? "50 GB" : "20 GB",
@@ -47,7 +130,10 @@ export default $config({
 
     // Phase 1 keeps a Redis-compatible cache so the current app can move without a rewrite.
     const cache = new sst.aws.Redis("GalaCache", {
-      vpc,
+      vpc: {
+        subnets: vpc.publicSubnets,
+        securityGroups: vpc.securityGroups,
+      },
       engine: "valkey",
       version: "7.2",
       instance: "t4g.micro",
@@ -60,23 +146,25 @@ export default $config({
     const sharedEnvironment = {
       AWS_REGION: "us-west-2",
       BASE_URL: baseUrl,
+      ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}`,
       DATABASE_URL: databaseUrl,
-      LTI_KEY: LTI_KEY.value,
-      LTI_SECRET: LTI_SECRET.value,
-      MAPBOX_ACCESS_TOKEN: MAPBOX_ACCESS_TOKEN.value,
-      MapboxAccessToken: MAPBOX_ACCESS_TOKEN.value,
+      LTI_KEY: resolveSecret("LTI_KEY"),
+      LTI_SECRET: resolveSecret("LTI_SECRET"),
+      MAPBOX_ACCESS_TOKEN: resolveSecret("MAPBOX_ACCESS_TOKEN"),
+      MapboxAccessToken: resolveSecret("MAPBOX_ACCESS_TOKEN"),
       NODE_ENV: "production",
       PORT: "3000",
       RAILS_ENV: "production",
       RAILS_LOG_TO_STDOUT: "true",
       RAILS_MAX_THREADS: "3",
-      RAILS_MASTER_KEY: RAILS_MASTER_KEY.value,
+      RAILS_MASTER_KEY: resolveSecret("RAILS_MASTER_KEY"),
       RAILS_SERVE_STATIC_FILES: "true",
       REDIS_URL: redisUrl,
       S3_BUCKET: mediaBucketName,
-      SECRET_KEY_BASE: SECRET_KEY_BASE.value,
-      SES_SMTP_PASSWORD: SES_SMTP_PASSWORD.value,
-      SES_SMTP_USERNAME: SES_SMTP_USERNAME.value,
+      GALA_STATIC_ASSETS_BUCKET: staticAssetsBucketName,
+      SECRET_KEY_BASE: resolveSecret("SECRET_KEY_BASE"),
+      SES_SMTP_PASSWORD: resolveSecret("SES_SMTP_PASSWORD"),
+      SES_SMTP_USERNAME: resolveSecret("SES_SMTP_USERNAME"),
       SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
       WEB_CONCURRENCY: isProduction ? "2" : "1",
       COMMIT_SHA: process.env.GITHUB_SHA ?? "",
@@ -88,31 +176,23 @@ export default $config({
 
     const web = new sst.aws.Service("GalaWeb", {
       cluster,
-      image: {
-        context: "..",
-        dockerfile: "Dockerfile",
-        args: {
-          rails_env: "production",
-          secret_key_base: "build-placeholder",
-        },
-      },
+      image: webImage,
       command: ["bundle", "exec", "puma", "-C", "config/puma.rb"],
       cpu: "0.5 vCPU",
-      memory: "512 MB",
+      memory: "1 GB",
       architecture: "x86_64",
       capacity: serviceCapacity,
       environment: sharedEnvironment,
       scaling: {
-        min: 1,
+        min: isProduction ? 2 : 1,
         max: isProduction ? 3 : 1,
         cpuUtilization: 70,
         memoryUtilization: 80,
       },
       loadBalancer: {
-        domain,
         ports: [
           { listen: "80/http", forward: "3000/http" },
-          { listen: "443/https", forward: "3000/http" },
+          { listen: "443/http", forward: "3000/http" },
         ],
         health: {
           "3000/http": {
@@ -135,17 +215,10 @@ export default $config({
 
     const worker = new sst.aws.Service("GalaWorker", {
       cluster,
-      image: {
-        context: "..",
-        dockerfile: "Dockerfile",
-        args: {
-          rails_env: "production",
-          secret_key_base: "build-placeholder",
-        },
-      },
+      image: webImage,
       command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"],
       cpu: "0.25 vCPU",
-      memory: "512 MB",
+      memory: "1 GB",
       architecture: "x86_64",
       capacity: serviceCapacity,
       environment: sharedEnvironment,
@@ -166,14 +239,7 @@ export default $config({
 
     const migration = new sst.aws.Task("GalaMigrate", {
       cluster,
-      image: {
-        context: "..",
-        dockerfile: "Dockerfile",
-        args: {
-          rails_env: "production",
-          secret_key_base: "build-placeholder",
-        },
-      },
+      image: webImage,
       command: ["bundle", "exec", "rails", "db:migrate"],
       cpu: "0.25 vCPU",
       memory: "1 GB",
@@ -183,14 +249,7 @@ export default $config({
 
     const refreshIndices = new sst.aws.Task("GalaRefreshIndices", {
       cluster,
-      image: {
-        context: "..",
-        dockerfile: "Dockerfile",
-        args: {
-          rails_env: "production",
-          secret_key_base: "build-placeholder",
-        },
-      },
+      image: webImage,
       command: ["bundle", "exec", "rake", "indices:refresh"],
       cpu: "0.25 vCPU",
       memory: "1 GB",
@@ -200,14 +259,7 @@ export default $config({
 
     const weeklyReport = new sst.aws.Task("GalaWeeklyReport", {
       cluster,
-      image: {
-        context: "..",
-        dockerfile: "Dockerfile",
-        args: {
-          rails_env: "production",
-          secret_key_base: "build-placeholder",
-        },
-      },
+      image: webImage,
       command: ["bundle", "exec", "rake", "emails:send_weekly_report"],
       cpu: "0.25 vCPU",
       memory: "1 GB",
@@ -231,11 +283,17 @@ export default $config({
       statements: [
         {
           actions: ["s3:ListBucket"],
-          resources: [`arn:aws:s3:::${mediaBucketName}`],
+          resources: [
+            `arn:aws:s3:::${mediaBucketName}`,
+            `arn:aws:s3:::${staticAssetsBucketName}`,
+          ],
         },
         {
           actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
-          resources: [`arn:aws:s3:::${mediaBucketName}/*`],
+          resources: [
+            `arn:aws:s3:::${mediaBucketName}/*`,
+            `arn:aws:s3:::${staticAssetsBucketName}/*`,
+          ],
         },
       ],
     }).json;
@@ -256,7 +314,7 @@ export default $config({
     return {
       stage,
       region: "us-west-2",
-      appDomain: domain,
+      appDomain: isProduction ? "https://localhost:3000" : "https://staging.learngala.com",
       appUrl: web.url,
       migrationClusterArn: migration.cluster,
       migrationTaskDefinitionArn: migration.taskDefinition,

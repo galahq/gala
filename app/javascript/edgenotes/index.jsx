@@ -15,7 +15,7 @@ import { connect } from 'react-redux'
 import { values } from 'ramda'
 
 import { EditorState, convertToRaw } from 'draft-js'
-import OldEdgenote from 'deprecated/OldEdgenote'
+import OldEdgenote from 'edgenotes/OldEdgenote'
 import Edgenote from 'edgenotes/Edgenote'
 
 

@@ -9,7 +9,7 @@
 
 import * as React from 'react'
 import { submitForm } from 'shared/lti'
-import { Orchard, CSRF } from 'shared/orchard'
+import { Orchard } from 'shared/orchard'
 
 const defaultContext = { selecting: false, onSelect: (caseSlug) => {} }
 const { Provider: BaseProvider, Consumer } = React.createContext(defaultContext)
@@ -34,7 +34,6 @@ export class Provider extends React.Component {
 
     submitForm(params.canvas_deployments_path, {
       case_slug: caseSlug,
-      ...CSRF.param(),
     })
   }
 

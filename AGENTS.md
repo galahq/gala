@@ -19,7 +19,7 @@ Start with:
 - Use `config/routes.rb` as the source of truth for route coverage.
 - Use `localhost:3000` for browser QA.
 - Check browser console and network errors before marking a route group complete.
-- Run targeted tests for touched files. Relevant commands include `yarn test`, `bundle exec rspec`, `./run-rspec.sh`, and `bundle exec rake test:unit`.
+- Run targeted tests for touched files. Relevant commands include `pnpm test`, `bundle exec rspec`, `./run-rspec.sh`, and `bundle exec rake test:unit`.
 - Commit after each phase QA gate passes.
 - Keep fixes narrow and route-driven. Avoid broad redesigns or unrelated dependency upgrades.
 

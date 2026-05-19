@@ -3,13 +3,17 @@ name: Deploy AWS
 on:
   workflow_dispatch:
     inputs:
+      branch:
+        description: Git branch to deploy
+        required: true
+        default: main
       stage:
         description: SST stage to deploy
         required: true
         type: choice
-        default: staging
+        default: dev
         options:
-          - staging
+          - dev
           - production
       action:
         description: Deploy or remove the selected stage
@@ -32,6 +36,8 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - uses: actions/setup-node@v4
         with:
@@ -50,6 +56,12 @@ jobs:
           echo "Refusing to remove production from CI."
           exit 1
 
+      - name: Update script defaults for branch and stage
+        run: |
+          echo "Deploying branch: ${{ github.event.inputs.branch }}"
+          echo "Stage: ${{ github.event.inputs.stage }}"
+          echo "Action: ${{ github.event.inputs.action }}"
+
       - name: Install infra dependencies
         working-directory: infra
         run: npm ci
@@ -61,11 +73,9 @@ jobs:
       - name: Verify AWS identity
         run: aws sts get-caller-identity | cat
 
-      - name: Deploy or remove with SST
-        working-directory: infra
+      - name: Deploy or remove with SST script
         run: |
-          if [ "${{ github.event.inputs.action }}" = "remove" ]; then
-            npx sst remove --stage "${{ github.event.inputs.stage }}"
-          else
-            npx sst deploy --stage "${{ github.event.inputs.stage }}"
-          fi
+          bash scripts/deploy-sst.sh \
+            --branch "${{ github.event.inputs.branch }}" \
+            --stage "${{ github.event.inputs.stage }}" \
+            --action "${{ github.event.inputs.action }}"

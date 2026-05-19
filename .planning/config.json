@@ -11,7 +11,7 @@
     "nyquist_validation": true,
     "auto_advance": true,
     "text_mode": true,
-    "_auto_chain_active": false,
+    "_auto_chain_active": true,
     "use_worktrees": true,
     "inline_plan_threshold": 0
   },

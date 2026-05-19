@@ -9,18 +9,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
-import { CSRF } from 'shared/orchard'
-
 
 const MagicLink = ({ deploymentKey }) => {
-  const csrfObj = CSRF.param()
   return (
     <form action="/magic_link" method="POST">
       <input type="hidden" name="deployment_key" value={deploymentKey} />
-
-      {Object.keys(csrfObj).map(name => (
-        <input key={name} type="hidden" name={name} value={csrfObj[name]} />
-      ))}
 
       <Button>
         <FormattedMessage id="magicLink.show.letsGetStarted" />

@@ -1,0 +1,403 @@
+%PDF-1.4
+1 0 obj
+<< /Length 5055 >>
+stream
+BT /F1 18 Tf 0 g
+1 0 0 1 48 750 Tm
+(Gala AWS Deployment Architecture) Tj
+ET
+q
+0.94 0.98 1 rg
+40.8 700.8 218.4 40.4 re f
+Q
+q
+1 w 0 0 0 RG
+40 700 220 42 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 44.00 730.00 Tm
+(GitHub Actions) Tj
+0 -10.0 Td
+(workflow_dispatch) Tj
+0 -10.0 Td
+(branch / stage / action) Tj
+ET
+q
+1.3 w 0 0 0 RG
+150 700 m 150 672 l S
+Q
+q
+1.3 w 0 0 0 RG
+153 678 m 150 672 l 147 678 l S
+Q
+q
+0.94 0.98 1 rg
+40.8 662.8 218.4 34.4 re f
+Q
+q
+1 w 0 0 0 RG
+40 662 220 36 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 44.00 686.00 Tm
+(Deploy script) Tj
+0 -10.0 Td
+(scripts/deploy-sst.sh) Tj
+ET
+BT /F1 7 Tf 0 g
+1 0 0 1 92.00 630.00 Tm
+(validate stage/action, checkout branch) Tj
+ET
+q
+1.3 w 0 0 0 RG
+150 626 m 150 597 l S
+Q
+q
+1.3 w 0 0 0 RG
+153 603 m 150 597 l 147 603 l S
+Q
+q
+0.94 0.98 1 rg
+40.8 593.8 218.4 44.4 re f
+Q
+q
+1 w 0 0 0 RG
+40 593 220 46 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 44.00 627.00 Tm
+(deploy action path) Tj
+0 -10.0 Td
+(build Docker image) Tj
+0 -10.0 Td
+(push to ECR) Tj
+0 -10.0 Td
+(run SST deploy) Tj
+ET
+BT /F1 7 Tf 0 g
+1 0 0 1 76.00 630.00 Tm
+(deploy) Tj
+ET
+q
+1.3 w 0 0 0 RG
+150 589 m 150 560 l S
+Q
+q
+1.3 w 0 0 0 RG
+153 566 m 150 560 l 147 566 l S
+Q
+q
+0.94 0.98 1 rg
+40.8 555.8 218.4 32.4 re f
+Q
+q
+1 w 0 0 0 RG
+40 555 220 34 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 44.00 577.00 Tm
+(remove action path) Tj
+0 -10.0 Td
+(npx sst remove --stage) Tj
+ET
+BT /F1 7 Tf 0 g
+1 0 0 1 86.00 527.00 Tm
+(remove) Tj
+ET
+q
+0.94 0.98 1 rg
+330.8 700.8 233.4 323.4 re f
+Q
+q
+1 w 0 0 0 RG
+330 700 235 325 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 334.00 1013.00 Tm
+(SST App \(infra\)) Tj
+0 -10.0 Td
+(gala) Tj
+0 -10.0 Td
+(stage aware config) Tj
+ET
+BT /F1 8 Tf 0 g
+1 0 0 1 382.00 1014.00 Tm
+(home: aws / region us-west-2) Tj
+ET
+q
+0.94 0.98 1 rg
+350.8 642.8 193.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+350 642 195 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 354.00 660.00 Tm
+(VPC) Tj
+0 -10.0 Td
+(2 Availability Zones) Tj
+ET
+q
+1.3 w 0 0 0 RG
+447 642 m 447 614 l S
+Q
+q
+1.3 w 0 0 0 RG
+450 620 m 447 614 l 444 620 l S
+Q
+q
+0.94 0.98 1 rg
+350.8 610.8 93.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+350 610 95 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 354.00 628.00 Tm
+(Postgres) Tj
+0 -10.0 Td
+(RDS) Tj
+ET
+q
+0.94 0.98 1 rg
+460.8 610.8 83.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+460 610 85 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 464.00 628.00 Tm
+(Valkey) Tj
+0 -10.0 Td
+(Redis) Tj
+ET
+q
+1.3 w 0 0 0 RG
+447 578 m 447 550 l S
+Q
+q
+1.3 w 0 0 0 RG
+450 556 m 447 550 l 444 556 l S
+Q
+q
+0.94 0.98 1 rg
+350.8 550.8 193.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+350 550 195 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 354.00 568.00 Tm
+(GalaCluster \(public-subnet tasks\)) Tj
+ET
+q
+1.3 w 0 0 0 RG
+447 550 m 447 517 l S
+Q
+q
+1.3 w 0 0 0 RG
+450 523 m 447 517 l 444 523 l S
+Q
+q
+0.94 0.98 1 rg
+348.8 514.8 93.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+348 514 95 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 352.00 532.00 Tm
+(Bucket: msc-gala) Tj
+0 -10.0 Td
+(Media) Tj
+ET
+q
+0.94 0.98 1 rg
+458.8 514.8 93.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+458 514 95 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 462.00 532.00 Tm
+(Bucket: gala-static-assets) Tj
+0 -10.0 Td
+(Static) Tj
+ET
+q
+1.3 w 0 0 0 RG
+395 484 m 507 484 l S
+Q
+q
+1.3 w 0 0 0 RG
+501 487 m 507 484 l 501 481 l S
+Q
+q
+0.94 0.98 1 rg
+348.8 464.8 93.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+348 464 95 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 352.00 482.00 Tm
+(CloudFront) Tj
+0 -10.0 Td
+(Static distribution) Tj
+0 -10.0 Td
+(1yr TTL) Tj
+ET
+q
+1.3 w 0 0 0 RG
+395 434 m 507 434 l S
+Q
+q
+1.3 w 0 0 0 RG
+501 437 m 507 434 l 501 431 l S
+Q
+q
+0.94 0.98 1 rg
+348.8 424.8 203.4 30.4 re f
+Q
+q
+1 w 0 0 0 RG
+348 424 205 32 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 352.00 444.00 Tm
+(ALB + Web Service) Tj
+0 -10.0 Td
+(GalaWeb) Tj
+0 -10.0 Td
+(puma, production min 2) Tj
+ET
+q
+0.94 0.98 1 rg
+348.8 382.8 203.4 28.4 re f
+Q
+q
+1 w 0 0 0 RG
+348 382 205 30 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 352.00 400.00 Tm
+(GalaWorker) Tj
+0 -10.0 Td
+(sidekiq) Tj
+0 -10.0 Td
+(min 1 \(max 2 prod\)) Tj
+ET
+q
+1.3 w 0 0 0 RG
+448 391 m 448 362 l S
+Q
+q
+1.3 w 0 0 0 RG
+451 368 m 448 362 l 445 368 l S
+Q
+q
+0.94 0.98 1 rg
+348.8 350.8 203.4 34.4 re f
+Q
+q
+1 w 0 0 0 RG
+348 350 205 36 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 352.00 374.00 Tm
+(GalaMigrate / RefreshIndices / WeeklyReport tasks) Tj
+ET
+q
+0.94 0.98 1 rg
+348.8 309.8 203.4 30.4 re f
+Q
+q
+1 w 0 0 0 RG
+348 309 205 32 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 352.00 329.00 Tm
+(Cron schedules) Tj
+0 -10.0 Td
+(15m refresh + weekly email) Tj
+ET
+q
+1.3 w 0 0 0 RG
+448 334 m 448 309 l S
+Q
+q
+1.3 w 0 0 0 RG
+451 315 m 448 309 l 445 315 l S
+Q
+q
+1.3 w 0 0 0 RG
+565 490 m 260 490 l S
+Q
+q
+1.3 w 0 0 0 RG
+266 487 m 260 490 l 266 493 l S
+Q
+BT /F1 7 Tf 0 g
+1 0 0 1 265.00 486.00 Tm
+(ASSET_HOST points to CloudFront) Tj
+ET
+q
+0.94 0.98 1 rg
+270.8 480.8 243.4 42.4 re f
+Q
+q
+1 w 0 0 0 RG
+270 480 245 44 re S
+Q
+BT /F1 8 Tf 0 g
+1 0 0 1 274.00 512.00 Tm
+(Shared task env and IAM) Tj
+0 -10.0 Td
+(Secrets Manager values) Tj
+0 -10.0 Td
+(S3 policy:) Tj
+0 -10.0 Td
+(media + static) Tj
+ET
+BT /F1 9 Tf 0 g
+1 0 0 1 40.00 130.00 Tm
+(Legend: solid arrow indicates deployment/control flow; boxes map major nodes from workflow to AWS resources.) Tj
+ET
+BT /F1 8 Tf 0 g
+1 0 0 1 40.00 115.00 Tm
+(Image tag flow: Git SHA -> ECR remote image -> GALA_WEB_IMAGE_URI -> SST webImage \(and all tasks\).) Tj
+ET
+endstream
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 4 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 2 0 R >> >> /Contents 1 0 R >>
+endobj
+4 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+5 0 obj
+<< /Type /Catalog /Pages 4 0 R >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000005116 00000 n 
+0000005186 00000 n 
+0000005312 00000 n 
+0000005369 00000 n 
+trailer
+<< /Size 6 /Root 5 0 R >>
+startxref
+5418
+%%EOF

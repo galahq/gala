@@ -180,6 +180,28 @@ Plans:
 **Wave 1**
 - [ ] 19-01-PLAN.md — Design a non-disruptive production-deploy package for AWS (ECR, ECS, ALB, Postgres, Redis retained, S3 import/copy path, Heroku read-only fallback, rollback, and security group policy).
 
+### Phase 20: Production Deployment Execution (AWS)
+
+- [ ] Phase 20: Planned
+
+**Goal:** Execute and verify the AWS production cutover path with non-destructive ActiveStorage and static-assets bucket handling, seeded database restore from `db/sqldump/seed.dump`, Heroku secret hydration to Secrets Manager, and CloudFront-backed cache delivery.
+
+**Requirements:** deployment execution readiness, AWS runtime validation, rollback confidence
+
+**Success Criteria:**
+1. Deployment script performs: ECR push, dual-bucket policy (media + static), required seed restore, and Secrets Manager hydration.
+2. New `gala-static-assets` bucket is used for compiled frontend artifacts while ActiveStorage continues using `msc-gala` unless a safe bucket switch is configured.
+3. CloudFront distributions are configured for static assets and ActiveStorage objects.
+4. Deployment rollback procedure succeeds with previous ECS image/tag and task definition.
+5. Deploy and verification commands are executable in dry-run mode before any live environment changes.
+6. No Heroku production resources are mutated as part of deployment.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [ ] 20-01-PLAN.md — Execute AWS deployment runbook: media/static bucket split, seed restore from `db/sqldump/seed.dump`, secret sync to Secrets Manager, CloudFront, validation, and rollback.
+
 ## Completed Milestones
 
 <details>
