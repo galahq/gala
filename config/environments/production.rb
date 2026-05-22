@@ -4,7 +4,9 @@
 #  production: https://www.learngala.com
 #     staging: https://msc-gala-staging.herokuapp.com
 
+BASE_URL_SCHEME = ENV['BASE_URL'].to_s.start_with?('http://') ? 'http' : 'https'
 BASE_URL_HOST = ENV['BASE_URL']&.gsub(%r{^https?://}, '')
+FORCE_SSL = ENV.fetch('FORCE_SSL', BASE_URL_SCHEME == 'https' ? 'true' : 'false') == 'true'
 
 Rails.application.routes.default_url_options = { host: BASE_URL_HOST }
 
@@ -58,7 +60,8 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
-  config.action_cable.url = "wss://#{BASE_URL_HOST}/cable"
+  action_cable_scheme = FORCE_SSL ? 'wss' : 'ws'
+  config.action_cable.url = "#{action_cable_scheme}://#{BASE_URL_HOST}/cable"
   config.action_cable.allowed_request_origins = [
     "http://#{BASE_URL_HOST}",
     "https://#{BASE_URL_HOST}"
@@ -70,7 +73,7 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
   # secure cookies.
-  config.force_ssl = true unless ENV['DOCKER_DEV'].present?
+  config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.

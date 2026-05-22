@@ -31,6 +31,10 @@ on:
         description: Space-separated Heroku config keys approved for read-only retention; database/cache keys are refused
         required: false
         default: "RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET"
+      seed_dump_s3_uri:
+        description: Private S3 URI for db/sqldump/seed.dump used to initialize the AWS database
+        required: false
+        default: ""
 
 concurrency:
   group: gala-${{ github.event.inputs.stage }}
@@ -45,6 +49,7 @@ jobs:
       SST_STAGE: ${{ github.event.inputs.stage }}
       ALB_BASE_URL: ${{ github.event.inputs.alb_base_url }}
       RETAINED_SECRET_KEYS: ${{ github.event.inputs.retained_secret_keys }}
+      SEED_DUMP_S3_URI: ${{ github.event.inputs.seed_dump_s3_uri }}
     permissions:
       id-token: write
       contents: read
@@ -87,6 +92,11 @@ jobs:
             exit 1
           fi
 
+          if [[ -n "${SEED_DUMP_S3_URI}" && ! "${SEED_DUMP_S3_URI}" =~ ^s3:// ]]; then
+            echo "Refusing deploy: seed_dump_s3_uri must be an s3:// URI when provided."
+            exit 1
+          fi
+
       - name: Update script defaults for branch and stage
         run: |
           echo "Deploying branch: ${{ github.event.inputs.branch }}"
@@ -109,4 +119,5 @@ jobs:
           AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" ALB_BASE_URL="${ALB_BASE_URL}" bash scripts/deploy-sst.sh \
             --branch "${{ github.event.inputs.branch }}" \
             --stage "${{ github.event.inputs.stage }}" \
-            --action "${{ github.event.inputs.action }}"
+            --action "${{ github.event.inputs.action }}" \
+            --seed-dump-s3-uri "${SEED_DUMP_S3_URI}"

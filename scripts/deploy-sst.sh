@@ -18,6 +18,8 @@ Options:
   --region REGION      AWS region (default: us-west-2).
   --profile PROFILE    AWS profile name (default: gala).
   --alb-base-url URL    Generated AWS ALB URL used as BASE_URL for production deploys.
+  --seed-dump-s3-uri URI
+                      Private S3 URI used to hydrate db/sqldump/seed.dump before image build.
   --help               Show this help text.
 USAGE
 }
@@ -31,6 +33,7 @@ REGION="${AWS_REGION:-us-west-2}"
 PROFILE="${AWS_PROFILE:-gala}"
 ALB_BASE_URL="${ALB_BASE_URL:-}"
 RETAINED_SECRET_KEYS="${RETAINED_SECRET_KEYS:-}"
+SEED_DUMP_S3_URI="${SEED_DUMP_S3_URI:-}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -60,6 +63,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --alb-base-url)
       ALB_BASE_URL="$2"
+      shift 2
+      ;;
+    --seed-dump-s3-uri)
+      SEED_DUMP_S3_URI="$2"
       shift 2
       ;;
     --help)
@@ -147,6 +154,11 @@ if [[ "$STAGE" == "production" && "$ACTION" == "deploy" && -z "$ALB_BASE_URL" ]]
   echo "Warning: ALB_BASE_URL is empty. First deploy may create the ALB; rerun with the generated ALB URL before accepting route validation." >&2
 fi
 
+if [[ -n "$SEED_DUMP_S3_URI" && ! "$SEED_DUMP_S3_URI" =~ ^s3:// ]]; then
+  echo "Invalid seed dump URI: expected s3:// URI." >&2
+  exit 1
+fi
+
 validate_secret_sync_plan
 
 if [[ "$STAGE" == "production" && "$ACTION" == "remove" ]]; then
@@ -164,6 +176,7 @@ log "  branch: $BRANCH"
 log "  stage: $STAGE"
 log "  action: $ACTION"
 log "  alb_base_url: ${ALB_BASE_URL:-<unset>}"
+log "  seed_dump_s3_uri: ${SEED_DUMP_S3_URI:-<unset>}"
 
 run_cmd git checkout "$BRANCH"
 
@@ -179,6 +192,16 @@ ACCOUNT_ID="$(aws_cmd sts get-caller-identity --query Account --output text)"
 ECR_URI="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE_NAME}"
 LOCAL_IMAGE="${IMAGE_NAME}:${IMAGE_TAG}"
 REMOTE_IMAGE="${ECR_URI}:${IMAGE_TAG}"
+
+if [[ ! -f db/sqldump/seed.dump && -n "$SEED_DUMP_S3_URI" ]]; then
+  run_cmd mkdir -p db/sqldump
+  run_aws_cmd s3 cp "$SEED_DUMP_S3_URI" db/sqldump/seed.dump
+fi
+
+if [[ ! -f db/sqldump/seed.dump ]]; then
+  echo "Missing db/sqldump/seed.dump. Provide SEED_DUMP_S3_URI or --seed-dump-s3-uri for CI deploys." >&2
+  exit 1
+fi
 
 log_aws_cmd "ecr get-login-password | docker login --username AWS --password-stdin ${ECR_URI}"
 aws_cmd ecr get-login-password | docker login --username AWS --password-stdin "${ECR_URI}"

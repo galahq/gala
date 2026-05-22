@@ -124,12 +124,25 @@ inside ECS using the SST-provisioned `DATABASE_URL`, then runs migrations. Do no
 provide Heroku `DATABASE_URL`, `REDIS_URL`, `REDIS_HOST`, or equivalent cache or
 database connection strings to the AWS runtime.
 
+GitHub Actions deploys run from a clean checkout, while `db/sqldump/seed.dump` is
+gitignored locally. Provide a private seed artifact URI when dispatching the
+workflow:
+
+```bash
+seed_dump_s3_uri=s3://gala-deploy-artifacts-353760060567/phase-20/seed.dump
+```
+
+The artifact bucket must keep public access blocked and server-side encryption
+enabled. The deploy script downloads this object into `db/sqldump/seed.dump`
+before building the production image, then fails fast if the dump is still
+missing.
+
 ### 5) Verify web endpoint after ECS deployment
 
 Replace `<ALB-DNS>` with the ALB output DNS from this release.
 
 ```bash
-curl -I "https://<ALB-DNS>/up"
+curl -I "http://<ALB-DNS>/up"
 ```
 
 ### 6) CloudFront layout for buckets (phase 1)
@@ -144,7 +157,7 @@ curl -I "https://<ALB-DNS>/up"
 ### 7) BASE_URL assignment for ALB-first rollout
 
 - After each run, confirm ALB DNS output and set app `BASE_URL` to:
-  - `https://<ALB-DNS>`
+  - `http://<ALB-DNS>`
 - Keep this separate from `https://www.learngala.com` until route cutover is approved.
 
 ## Rollback guidance
