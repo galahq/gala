@@ -30,16 +30,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     fontconfig \
     git \
+    gnupg \
     libjemalloc2 \
     libvips \
-    postgresql-client \
     procps \
     wkhtmltopdf \
     xfonts-75dpi \
     xfonts-base \
+    && install -d /usr/share/postgresql-common/pgdg \
+    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+    && echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends postgresql-client-17 \
     && ln -sf ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && ln -sf ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
     && ln -sf ../lib/node_modules/corepack/dist/corepack.js /usr/local/bin/corepack \
+    && pg_restore --version \
     && node --version \
     && npm --version \
     && corepack enable \
