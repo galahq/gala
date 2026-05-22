@@ -96,7 +96,7 @@ aws_cmd() {
   if aws_uses_profile; then
     AWS_PROFILE="$PROFILE" AWS_REGION="$REGION" SST_STAGE="$STAGE" aws --region "$REGION" --profile "$PROFILE" "$@"
   else
-    AWS_PROFILE="$PROFILE" AWS_REGION="$REGION" SST_STAGE="$STAGE" aws --region "$REGION" "$@"
+    AWS_REGION="$REGION" SST_STAGE="$STAGE" aws --region "$REGION" "$@"
   fi
 }
 
@@ -120,7 +120,11 @@ run_cmd() {
 
 run_sst_cmd() {
   log "RUN: AWS_PROFILE=$PROFILE AWS_REGION=$REGION SST_STAGE=$STAGE ALB_BASE_URL=${ALB_BASE_URL:-<unset>} $*"
-  AWS_PROFILE="$PROFILE" AWS_REGION="$REGION" SST_STAGE="$STAGE" ALB_BASE_URL="$ALB_BASE_URL" "$@"
+  if aws_uses_profile; then
+    AWS_PROFILE="$PROFILE" AWS_REGION="$REGION" SST_STAGE="$STAGE" ALB_BASE_URL="$ALB_BASE_URL" "$@"
+  else
+    AWS_REGION="$REGION" SST_STAGE="$STAGE" ALB_BASE_URL="$ALB_BASE_URL" "$@"
+  fi
 }
 
 validate_secret_sync_plan() {
@@ -190,6 +194,10 @@ cd "$REPO_ROOT/infra"
 run_cmd npm ci
 run_sst_cmd npx sst install
 log "RUN: AWS_PROFILE=$PROFILE AWS_REGION=$REGION SST_STAGE=$STAGE ALB_BASE_URL=${ALB_BASE_URL} GALA_WEB_IMAGE_URI=$REMOTE_IMAGE npx sst deploy --stage $STAGE"
-AWS_PROFILE="$PROFILE" AWS_REGION="$REGION" SST_STAGE="$STAGE" ALB_BASE_URL="$ALB_BASE_URL" GALA_WEB_IMAGE_URI="$REMOTE_IMAGE" npx sst deploy --stage "$STAGE"
+if aws_uses_profile; then
+  AWS_PROFILE="$PROFILE" AWS_REGION="$REGION" SST_STAGE="$STAGE" ALB_BASE_URL="$ALB_BASE_URL" GALA_WEB_IMAGE_URI="$REMOTE_IMAGE" npx sst deploy --stage "$STAGE"
+else
+  AWS_REGION="$REGION" SST_STAGE="$STAGE" ALB_BASE_URL="$ALB_BASE_URL" GALA_WEB_IMAGE_URI="$REMOTE_IMAGE" npx sst deploy --stage "$STAGE"
+fi
 
 log "Deploy completed for stage '$STAGE' with image '$REMOTE_IMAGE'"

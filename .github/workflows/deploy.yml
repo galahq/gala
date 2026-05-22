@@ -40,7 +40,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      AWS_PROFILE: gala
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2
       SST_STAGE: ${{ github.event.inputs.stage }}
@@ -103,11 +102,11 @@ jobs:
         run: npx sst install
 
       - name: Verify AWS identity
-        run: AWS_PROFILE="${AWS_PROFILE}" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
+        run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
       - name: Deploy or remove with SST script
         run: |
-          AWS_PROFILE="${AWS_PROFILE}" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" ALB_BASE_URL="${ALB_BASE_URL}" bash scripts/deploy-sst.sh \
+          AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" ALB_BASE_URL="${ALB_BASE_URL}" bash scripts/deploy-sst.sh \
             --branch "${{ github.event.inputs.branch }}" \
             --stage "${{ github.event.inputs.stage }}" \
             --action "${{ github.event.inputs.action }}"
