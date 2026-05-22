@@ -3,7 +3,7 @@
 ## Milestones
 
 - Shipped: **v1.0 Upgrade Stabilization** — route-driven Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade stabilization. See `.planning/milestones/v1.0-ROADMAP.md`.
-- Active: **v1.1 Dependency Modernization and Test Coverage** — pnpm migration, compatible dependency modernization, Flow removal, Vitest/Vite evaluation, frontend test repair, and Playwright visual regression coverage.
+- Active: **v1.1 Dependency Modernization, Test Coverage, and AWS Deployment** — pnpm migration, compatible dependency modernization, Flow removal, Vitest/Vite evaluation, frontend test repair, Playwright visual regression coverage, and non-disruptive AWS deployment through SST.
 
 ## Active Work
 
@@ -160,47 +160,47 @@ Plans:
 
 ### Phase 19: Production Deployment to AWS (no-vpc first)
 
-- [ ] Phase 19: Planned
+- [ ] Phase 19: Superseded by Phase 20 audit
 
-**Goal:** Plan a production deployment route for AWS that loads `db/**/*` data dumps locally, builds and pushes a Docker image to ECR, and migrates static assets to the Gala asset bucket strategy without impacting existing Heroku production resources.
+**Goal:** Preserve the earlier AWS deployment planning context while treating Phase 20 as the current executable deployment plan. The previous local script-first deployment route is superseded by SST IaC through `.github/workflows/deploy.yml`.
 
 **Requirements:** deployment-only planning requirements for migration safety, rollout, and rollback readiness
 
 **Success Criteria:**
-1. Local deployment script `scripts/deploy-gala-aws-production.sh` is committed and supports ECR push + asset sync workflow.
-2. Architecture plan keeps one ALB, one small PostgreSQL, ECS web task with 500 MB memory target, and one Sidekiq worker task.
-3. S3 media/asset handling is non-destructive to current production assets: reuse existing production bucket when possible, otherwise copy from source to new `gala-static-assets` bucket in `us-west-2`.
-4. AWS secrets are sourced for ECS via Secrets Manager, with Heroku read-only fallback only.
-5. BASE_URL strategy and ACM/TLS plan are explicit and do not alter active `https://www.learngala.com` Heroku runtime.
-6. Rollback mechanics are defined for ECS task definitions and ECR image tags.
+1. Earlier deployment research remains available as context for Phase 20.
+2. Local script-first deployment is not accepted as the Phase 20 production deploy boundary.
+3. SST, GitHub Actions, generated ALB URL testing, fresh AWS database/cache ownership, and non-destructive resource import are handled in Phase 20.
 
 **Plans:** 1 plan
 
 Plans:
 **Wave 1**
-- [ ] 19-01-PLAN.md — Design a non-disruptive production-deploy package for AWS (ECR, ECS, ALB, Postgres, Redis retained, S3 import/copy path, Heroku read-only fallback, rollback, and security group policy).
+- [ ] 19-01-PLAN.md — Superseded planning context; do not execute ahead of Phase 20 without reconciling against the SST/deploy.yml deployment boundary.
 
 ### Phase 20: Production Deployment Execution (AWS)
 
-- [ ] Phase 20: Planned
+- [ ] Phase 20: Current
 
-**Goal:** Execute and verify the AWS production cutover path with non-destructive ActiveStorage and static-assets bucket handling, seeded database restore from `db/sqldump/seed.dump`, Heroku secret hydration to Secrets Manager, and CloudFront-backed cache delivery.
+**Goal:** Execute and verify the AWS production deployment path through SST IaC in `.github/workflows/deploy.yml` without mutating current Heroku production at `https://www.learngala.com`, using the generated AWS ALB URL as the test entrypoint, freshly provisioned AWS database/cache connections, database initialization from `db/sqldump/seed.dump`, and non-destructive reuse/import of existing AWS resources.
 
-**Requirements:** deployment execution readiness, AWS runtime validation, rollback confidence
+**Requirements:** DPLY-01, DPLY-02, DPLY-03, DPLY-04, DPLY-05, DPLY-06, DPLY-07, DPLY-08, DPLY-09
 
 **Success Criteria:**
-1. Deployment script performs: ECR push, dual-bucket policy (media + static), required seed restore, and Secrets Manager hydration.
-2. New `gala-static-assets` bucket is used for compiled frontend artifacts while ActiveStorage continues using `msc-gala` unless a safe bucket switch is configured.
-3. CloudFront distributions are configured for static assets and ActiveStorage objects.
-4. Deployment rollback procedure succeeds with previous ECS image/tag and task definition.
-5. Deploy and verification commands are executable in dry-run mode before any live environment changes.
-6. No Heroku production resources are mutated as part of deployment.
+1. `.github/workflows/deploy.yml` runs the approved SST deploy path for the target stage and refuses destructive production actions.
+2. SST imports or references existing AWS resources where required, including S3/ActiveStorage, SES/Gmail-related credentials, and any pre-existing resource that must be retained.
+3. The AWS runtime uses SST-provisioned `DATABASE_URL` and `REDIS_URL`/cache output, never Heroku production `DATABASE_URL` or Redis connection strings.
+4. The AWS database is initialized from `db/sqldump/seed.dump`.
+5. The deployed app is validated through the generated AWS ALB URL; `https://www.learngala.com` remains hosted on Heroku until a separate DNS cutover is approved.
+6. Heroku `msc-gala` secrets are read only through Heroku CLI, copied only for retained non-database/non-Redis keys, and never used for destructive Heroku commands.
+7. ActiveStorage S3 objects remain intact; any bucket import/sync is additive and avoids delete, overwrite, lifecycle, or public-access mutations unless separately approved.
+8. Rollback procedure is documented and verified using prior ECS/SST deployment state without changing Heroku production.
+9. All AWS/SST execution commands use `AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production`; all read-only Heroku commands use `heroku --app msc-gala`.
 
 **Plans:** 1 plan
 
 Plans:
 **Wave 1**
-- [ ] 20-01-PLAN.md — Execute AWS deployment runbook: media/static bucket split, seed restore from `db/sqldump/seed.dump`, secret sync to Secrets Manager, CloudFront, validation, and rollback.
+- [ ] 20-01-PLAN.md — Execute AWS deployment through SST/deploy.yml: resource import safety, ALB URL validation, database initialization from `db/sqldump/seed.dump`, Heroku read-only secret sync excluding database/cache strings, and rollback.
 
 ## Completed Milestones
 

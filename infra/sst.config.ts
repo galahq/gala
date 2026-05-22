@@ -20,11 +20,13 @@ export default $config({
     const baseUrl = explicitBaseUrl.length > 0
       ? explicitBaseUrl
       : isProduction
-        ? "https://localhost:3000"
+        ? "https://pending-alb-url.invalid"
         : "https://staging.learngala.com";
     const mediaBucketName = "msc-gala";
     const staticAssetsBucketName = process.env.GALA_STATIC_ASSETS_BUCKET ??
-      "gala-static-assets";
+      "gala-static-assets-353760060567";
+    const importExistingStaticAssetsBucket =
+      process.env.GALA_IMPORT_STATIC_ASSETS_BUCKET === "true";
     const webImage = process.env.GALA_WEB_IMAGE_URI?.trim().length
       ? process.env.GALA_WEB_IMAGE_URI
       : {
@@ -36,22 +38,20 @@ export default $config({
           },
         };
 
-    new sst.aws.Bucket("GalaMediaBucket", {
-      transform: {
-        bucket: (bucketConfig) => ({
-          ...bucketConfig,
-          bucket: mediaBucketName,
-        }),
-      },
-    });
+    // Reference the retained ActiveStorage bucket instead of recreating it.
+    aws.s3.BucketV2.get("GalaMediaBucket", mediaBucketName);
 
     const staticAssetsBucket = new sst.aws.Bucket("GalaStaticAssets", {
       access: "public",
       transform: {
-        bucket: (bucketConfig) => ({
-          ...bucketConfig,
-          bucket: staticAssetsBucketName,
-        }),
+        bucket: (args, opts) => {
+          args.bucket = staticAssetsBucketName;
+          args.forceDestroy = undefined;
+
+          if (importExistingStaticAssetsBucket) {
+            opts.import = staticAssetsBucketName;
+          }
+        },
       },
     });
 
@@ -101,11 +101,18 @@ export default $config({
       },
     );
 
-    const resolveSecret = (key: string) =>
-      aws.secretsmanager.getSecretVersionOutput({
-        secretId: `gala/production/${key}`,
-        versionStage: "AWSCURRENT",
-      }).secretString;
+    const retainedSecrets = {
+      RAILS_MASTER_KEY: new sst.Secret("RAILS_MASTER_KEY"),
+      SECRET_KEY_BASE: new sst.Secret("SECRET_KEY_BASE"),
+      LTI_KEY: new sst.Secret("LTI_KEY"),
+      LTI_SECRET: new sst.Secret("LTI_SECRET"),
+      MAPBOX_ACCESS_TOKEN: new sst.Secret("MAPBOX_ACCESS_TOKEN"),
+      SES_SMTP_PASSWORD: new sst.Secret("SES_SMTP_PASSWORD"),
+      SES_SMTP_USERNAME: new sst.Secret("SES_SMTP_USERNAME"),
+    };
+
+    const resolveSecret = (key: keyof typeof retainedSecrets) =>
+      retainedSecrets[key].value;
 
     const vpc = new sst.aws.Vpc("GalaVpc", {
       az: 2,
@@ -247,6 +254,26 @@ export default $config({
       environment: sharedEnvironment,
     });
 
+    const seedDatabase = new sst.aws.Task("GalaSeedDatabase", {
+      cluster,
+      image: webImage,
+      command: [
+        "bash",
+        "-lc",
+        [
+          "set -euo pipefail",
+          "test -f db/sqldump/seed.dump",
+          "case \"${DATABASE_URL}\" in *heroku*|*HEROKU*|\"\") echo \"Refusing seed restore: DATABASE_URL is missing or appears Heroku-derived\" >&2; exit 1 ;; esac",
+          "pg_restore --clean --if-exists --no-owner --no-privileges -d \"${DATABASE_URL}\" db/sqldump/seed.dump",
+          "bundle exec rails db:migrate",
+        ].join(" && "),
+      ],
+      cpu: "0.5 vCPU",
+      memory: "1 GB",
+      architecture: "x86_64",
+      environment: sharedEnvironment,
+    });
+
     const refreshIndices = new sst.aws.Task("GalaRefreshIndices", {
       cluster,
       image: webImage,
@@ -289,7 +316,7 @@ export default $config({
           ],
         },
         {
-          actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+          actions: ["s3:GetObject", "s3:PutObject"],
           resources: [
             `arn:aws:s3:::${mediaBucketName}/*`,
             `arn:aws:s3:::${staticAssetsBucketName}/*`,
@@ -302,6 +329,7 @@ export default $config({
       ["Web", web.nodes.taskRole.name],
       ["Worker", worker.nodes.taskRole.name],
       ["Migrate", migration.nodes.taskRole.name],
+      ["SeedDatabase", seedDatabase.nodes.taskRole.name],
       ["RefreshIndices", refreshIndices.nodes.taskRole.name],
       ["WeeklyReport", weeklyReport.nodes.taskRole.name],
     ] as const) {
@@ -314,13 +342,19 @@ export default $config({
     return {
       stage,
       region: "us-west-2",
-      appDomain: isProduction ? "https://localhost:3000" : "https://staging.learngala.com",
+      appDomain: baseUrl,
       appUrl: web.url,
+      albBaseUrl: baseUrl,
       migrationClusterArn: migration.cluster,
       migrationTaskDefinitionArn: migration.taskDefinition,
       migrationSubnets: migration.subnets,
       migrationSecurityGroups: migration.securityGroups,
       migrationAssignPublicIp: migration.assignPublicIp,
+      seedClusterArn: seedDatabase.cluster,
+      seedTaskDefinitionArn: seedDatabase.taskDefinition,
+      seedSubnets: seedDatabase.subnets,
+      seedSecurityGroups: seedDatabase.securityGroups,
+      seedAssignPublicIp: seedDatabase.assignPublicIp,
     };
   },
 });

@@ -1,7 +1,7 @@
-# Requirements: Gala v1.1 Dependency Modernization and Test Coverage
+# Requirements: Gala v1.1 Dependency Modernization, Test Coverage, and AWS Deployment
 
 **Defined:** 2026-05-12
-**Core Value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
+**Core Value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized, and AWS deployment proceeds without disrupting current Heroku production.
 
 ## v1.1 Requirements
 
@@ -76,6 +76,18 @@
 - [ ] **QA-04**: Targeted frontend tests run for touched JavaScript, typing, test-runner, or visual harness changes.
 - [ ] **QA-05**: Final verification includes Ruby boot/test checks, JavaScript install/build/test checks, and selected route visual checks.
 
+### AWS SST Deployment Safety
+
+- [ ] **DPLY-01**: AWS deployment runs through SST IaC in `.github/workflows/deploy.yml`.
+- [ ] **DPLY-02**: Current Heroku production at `https://www.learngala.com` is not mutated by AWS deployment work.
+- [ ] **DPLY-03**: The AWS environment is validated through the generated AWS ALB URL until separate DNS cutover approval.
+- [ ] **DPLY-04**: AWS runtime uses freshly provisioned SST database and cache connection strings, not Heroku production `DATABASE_URL`, `REDIS_HOST`, `REDIS_URL`, or equivalent values.
+- [ ] **DPLY-05**: The AWS database is initialized from `db/sqldump/seed.dump`.
+- [ ] **DPLY-06**: Heroku `msc-gala` secrets are read only through Heroku CLI and copied only for retained non-database/non-cache keys.
+- [ ] **DPLY-07**: Existing ActiveStorage S3 objects and retained AWS resources are imported or referenced without destructive actions.
+- [ ] **DPLY-08**: Rollback is documented and verified through SST/ECS deployment state without changing Heroku production.
+- [ ] **DPLY-09**: Every AWS/SST execution command uses `AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production`; every read-only Heroku command uses `heroku --app msc-gala`.
+
 ## v1.2+ Candidates
 
 ### Larger Frontend Migrations
@@ -145,12 +157,21 @@
 | QA-03 | Phase 14 | Complete |
 | QA-04 | Phase 16 | Pending |
 | QA-05 | Phase 18 | Pending |
+| DPLY-01 | Phase 20 | Pending |
+| DPLY-02 | Phase 20 | Pending |
+| DPLY-03 | Phase 20 | Pending |
+| DPLY-04 | Phase 20 | Pending |
+| DPLY-05 | Phase 20 | Pending |
+| DPLY-06 | Phase 20 | Pending |
+| DPLY-07 | Phase 20 | Pending |
+| DPLY-08 | Phase 20 | Pending |
+| DPLY-09 | Phase 20 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 46 total
-- Mapped to phases: 46
+- v1.1 requirements: 55 total
+- Mapped to phases: 55
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-12 after Phase 14 Ruby dependency modernization*
+*Last updated: 2026-05-22 after Phase 20 AWS deployment audit*

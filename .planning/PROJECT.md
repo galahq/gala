@@ -11,11 +11,11 @@ Every important route must keep working and looking recognizably like the pre-up
 ## Current State
 
 **Shipped:** v1.0 Upgrade Stabilization on 2026-05-12.
-**Active:** v1.1 Dependency Modernization and Test Coverage.
+**Active:** v1.1 Dependency Modernization, Test Coverage, and AWS Deployment.
 
 The v1.0 milestone completed the route-driven Ruby, Node.js, Shakapacker/Webpacker, and BlueprintJS upgrade stabilization. Route groups from `config/routes.rb` were checked through focused browser QA, console/network triage, and targeted RSpec/Jest gates. Detailed records are archived in `.planning/milestones/`.
 
-The v1.1 milestone will modernize Ruby and JavaScript dependencies using current recommended stable releases, migrate Node package management from Yarn 1 to pnpm, remove Flow from the frontend dependency/tooling surface, restore reliable frontend test execution, and add Playwright visual regression coverage for high-value route groups.
+The v1.1 milestone will modernize Ruby and JavaScript dependencies using current recommended stable releases, migrate Node package management from Yarn 1 to pnpm, remove Flow from the frontend dependency/tooling surface, restore reliable frontend test execution, add Playwright visual regression coverage for high-value route groups, and execute a non-disruptive AWS deployment path through SST.
 
 ## Requirements
 
@@ -31,7 +31,7 @@ The v1.1 milestone will modernize Ruby and JavaScript dependencies using current
 
 ### Active
 
-- [ ] Define v1.1 requirements for dependency modernization, pnpm migration, Flow removal, frontend tests, and Playwright visual regression coverage.
+- [ ] Define v1.1 requirements for dependency modernization, pnpm migration, Flow removal, frontend tests, Playwright visual regression coverage, and AWS deployment safety.
 
 ### Out of Scope
 
@@ -40,7 +40,8 @@ The v1.1 milestone will modernize Ruby and JavaScript dependencies using current
 - Upgrading React or BlueprintJS major versions — v1.1 must keep current React 16.8 and BlueprintJS 4.x package lines unless a patch-level compatibility fix is required.
 - Replacing BlueprintJS with a different component library — this requires a separate product/technical milestone.
 - Large product feature changes — route behavior should remain stable unless a future milestone deliberately expands scope.
-- Production deployment automation changes — v1.0 focused on local route QA and code stabilization.
+- DNS cutover from Heroku production to AWS — AWS deployment validation must use the generated ALB URL until cutover is explicitly approved.
+- Destructive changes to current Heroku production at `https://www.learngala.com`.
 
 ## Context
 
@@ -77,6 +78,7 @@ Known remaining technical debt:
 | Treat BlueprintJS 2.3.1-era visuals as the approximation baseline | Current packages are BlueprintJS 4.x, but desired outcome was compatibility with the prior app look | Good — shared compatibility layers were preserved and tested |
 | End with deslopification | Upgrade work left compatibility shims and duplicated assumptions that needed cleanup after behavior was stable | Good — Phase 9 cleaned shared assumptions and ran final regression gates |
 | Start v1.1 with dependency and test research | Latest package guidance changes over time, and this milestone touches multiple toolchains | Pending — research is being captured before requirements are finalized |
+| Promote Phase 20 AWS deployment execution to current work | User redirected the active goal to successful SST deployment through GitHub Actions without breaking Heroku production | Active — Phase 20 audit captured non-negotiable deployment safety gates |
 
 ## Evolution
 
@@ -87,6 +89,7 @@ This document evolves at milestone boundaries.
 2. Define fresh requirements from that research.
 3. Preserve route-driven QA expectations for route-affecting dependency changes.
 4. Avoid product/UI redesign while modernizing the underlying toolchain.
+5. Keep AWS deployment validation isolated from `https://www.learngala.com` until DNS cutover is approved.
 
 ---
-*Last updated: 2026-05-12 for v1.1 milestone planning*
+*Last updated: 2026-05-22 for Phase 20 AWS deployment audit*

@@ -7,7 +7,8 @@ log/*
 tmp/*
 node_modules
 /db/*.sqlite3*
-/db/sqldump/
+/db/sqldump/*
+!/db/sqldump/seed.dump
 config/master.key
 .byebug_history
 

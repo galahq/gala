@@ -11,7 +11,7 @@ on:
         description: SST stage to deploy
         required: true
         type: choice
-        default: dev
+        default: production
         options:
           - dev
           - production
@@ -23,6 +23,14 @@ on:
         options:
           - deploy
           - remove
+      alb_base_url:
+        description: Generated AWS ALB URL to use as BASE_URL for production validation
+        required: false
+        default: ""
+      retained_secret_keys:
+        description: Space-separated Heroku config keys approved for read-only retention; database/cache keys are refused
+        required: false
+        default: "RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET"
 
 concurrency:
   group: gala-${{ github.event.inputs.stage }}
@@ -31,6 +39,13 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      AWS_PROFILE: gala
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+      SST_STAGE: ${{ github.event.inputs.stage }}
+      ALB_BASE_URL: ${{ github.event.inputs.alb_base_url }}
+      RETAINED_SECRET_KEYS: ${{ github.event.inputs.retained_secret_keys }}
     permissions:
       id-token: write
       contents: read
@@ -56,6 +71,23 @@ jobs:
           echo "Refusing to remove production from CI."
           exit 1
 
+      - name: Validate production deploy inputs
+        run: |
+          set -euo pipefail
+          echo "Deploying branch: ${{ github.event.inputs.branch }}"
+          echo "Stage: ${SST_STAGE}"
+          echo "Action: ${{ github.event.inputs.action }}"
+
+          if [[ "${SST_STAGE}" == "production" && "${{ github.event.inputs.action }}" == "deploy" && -z "${ALB_BASE_URL}" ]]; then
+            echo "Warning: alb_base_url is empty. First deploy may create the ALB; rerun with the generated ALB URL before accepting route validation."
+          fi
+
+          forbidden='(^|[[:space:]])(DATABASE_URL|REDIS_HOST|REDIS_URL|HEROKU_POSTGRESQL_[A-Z0-9_]+_URL|CACHE_URL)([[:space:]]|$)'
+          if [[ "${RETAINED_SECRET_KEYS}" =~ $forbidden ]]; then
+            echo "Refusing deploy: retained_secret_keys includes a Heroku database/cache connection key."
+            exit 1
+          fi
+
       - name: Update script defaults for branch and stage
         run: |
           echo "Deploying branch: ${{ github.event.inputs.branch }}"
@@ -71,11 +103,11 @@ jobs:
         run: npx sst install
 
       - name: Verify AWS identity
-        run: aws sts get-caller-identity | cat
+        run: AWS_PROFILE="${AWS_PROFILE}" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
       - name: Deploy or remove with SST script
         run: |
-          bash scripts/deploy-sst.sh \
+          AWS_PROFILE="${AWS_PROFILE}" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" ALB_BASE_URL="${ALB_BASE_URL}" bash scripts/deploy-sst.sh \
             --branch "${{ github.event.inputs.branch }}" \
             --stage "${{ github.event.inputs.stage }}" \
             --action "${{ github.event.inputs.action }}"

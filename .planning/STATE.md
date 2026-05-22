@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.1
-milestone_name: Dependency Modernization and Test Coverage
-status: Ready to discuss
-stopped_at: Phase 15 context gathered
-last_updated: "2026-05-15T15:50:31.603Z"
-last_activity: 2026-05-15 -- Session resumed; Phase 15 handoff found and awaiting next action
+milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
+status: executing
+stopped_at: Phase 20 context gathered
+last_updated: "2026-05-22T21:34:15.057Z"
+last_activity: 2026-05-22 -- Phase 20 AWS SST deployment execution audited against deploy.yml, ALB testing, isolated RDS/Redis, Heroku safety, and existing AWS resource import constraints
 progress:
-  total_phases: 9
-  completed_phases: 5
-  total_plans: 7
-  completed_plans: 7
-  percent: 100
+  total_phases: 11
+  completed_phases: 9
+  total_plans: 13
+  completed_plans: 11
+  percent: 85
 ---
 
 # GSD State
@@ -21,20 +21,20 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 15 JavaScript dependency and build modernization
+**Current focus:** Phase 20 AWS production deployment execution via SST and GitHub Actions
 
 ## Current Position
 
-Phase: 15 — JavaScript Dependency and Build Modernization
-Plan: —
-Status: Ready to discuss
-Last activity: 2026-05-15 -- Session resumed; Phase 15 handoff found and awaiting next action
+Phase: 20 — AWS Production Deployment Execution
+Plan: 20-01
+Status: Ready to execute Phase 20 audit follow-ups
+Last activity: 2026-05-22 -- Phase 20 AWS SST deployment execution audited against deploy.yml, ALB testing, isolated RDS/Redis, Heroku safety, and existing AWS resource import constraints
 
 ## Milestone
 
-**v1.1 Dependency Modernization and Test Coverage**
+**v1.1 Dependency Modernization, Test Coverage, and AWS Deployment**
 
-Modernize Ruby and JavaScript dependencies toward current recommended stable versions, migrate Node package management from Yarn 1 to pnpm, remove Flow from the frontend toolchain in favor of TypeScript/JSDoc, evaluate Vitest/Vite as the modern frontend test/build direction, restore reliable frontend test execution, and add Playwright visual regression coverage for high-value route groups.
+Modernize Ruby and JavaScript dependencies toward current recommended stable versions, migrate Node package management from Yarn 1 to pnpm, remove Flow from the frontend toolchain in favor of TypeScript/JSDoc, evaluate Vitest/Vite as the modern frontend test/build direction, restore reliable frontend test execution, add Playwright visual regression coverage for high-value route groups, and execute an AWS deployment path through SST without mutating current Heroku production.
 
 ## Active Rules
 
@@ -45,6 +45,13 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Prefer Vitest for frontend tests if a spike proves it is compatible; keep Jest modernization as fallback.
 - Treat Vite production bundler replacement as optional and gated by feasibility evidence.
 - Preserve route behavior and the approximate BlueprintJS 2.3.1-era visual baseline unless a requirement explicitly changes it.
+- Deploy AWS production candidates only through SST IaC and `.github/workflows/deploy.yml`.
+- Do not mutate Heroku production at `https://www.learngala.com`; Heroku CLI use is read-only for `msc-gala` config values.
+- Do not copy Heroku `DATABASE_URL` or Redis connection strings into AWS runtime config; use freshly provisioned SST database/cache outputs.
+- Use the generated AWS ALB URL as the test entrypoint until DNS cutover is separately approved.
+- Reuse/import existing AWS resources, including SES, Gmail, and S3 credentials, without destructive actions.
+- Prefix AWS/SST execution commands with `AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production`.
+- Prefix every read-only Heroku CLI command with `heroku --app msc-gala`.
 - Use `config/routes.rb` as the source of truth for route groups covered by browser and visual regression tests.
 - Use `localhost:3000` for browser QA.
 - Run targeted automated tests for touched Ruby and JavaScript files.
@@ -67,6 +74,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 8 browser QA confirmed the routed admin and Sidekiq surfaces are stable; remaining public-shell React/styled-components warnings and a Mapbox style `404` were accepted as unrelated noise for this route group.
 - Phase 13 removed Flow syntax/tooling with a mechanical strip. TypeScript is present as a non-emitting `allowJs`/JSDoc baseline with `skipLibCheck` until third-party React/webpack ambient types are addressed by a later typing phase.
 - Phase 14 updated compatible Ruby runtime and dev/test gems. Runtime gates passed (`bundle check`, Rails boot, full RSpec, assets precompile), and dev/test gates passed (`bundle check`, full RSpec, `rake test:unit`). RSpec now forces `RAILS_ENV=test` because Docker exports `RAILS_ENV=development`.
+- Phase 20 audit found the documented AWS deployment phase must be executed through SST in `.github/workflows/deploy.yml`, not the older local script-first runbook. The AWS environment must test through the generated ALB URL, use SST-provisioned `DATABASE_URL`/`REDIS_URL`, seed from `db/sqldump/seed.dump`, and exclude Heroku production database/cache strings from secret sync.
 
 ## Notes
 
@@ -77,9 +85,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-05-15T15:50:31.598Z
-Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-javascript-dependency-and-build-modernization/15-CONTEXT.md
+Last session: 2026-05-22T21:34:15.051Z
+Stopped at: Phase 20 context gathered
+Resume file: .planning/phases/20-aws-production-deployment-execution/20-CONTEXT.md
 
 ## Quick Tasks Completed
 
@@ -92,4 +100,4 @@ Resume file: .planning/phases/15-javascript-dependency-and-build-modernization/1
 
 ## Operator Next Steps
 
-- Continue Phase 15 with `$gsd-discuss-phase 15 --auto`.
+- Execute Phase 20 follow-ups from `.planning/phases/20-aws-production-deployment-execution/20-01-PLAN.md`, starting with SST/deploy workflow guardrails before any live deployment.

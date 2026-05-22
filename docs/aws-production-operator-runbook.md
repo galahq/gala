@@ -72,73 +72,57 @@ flowchart LR
 - Optional managed storage/seed settings:
   - `SOURCE_MEDIA_BUCKET` (default `msc-gala`, existing ActiveStorage)
   - `TARGET_MEDIA_BUCKET` (default reuse source or explicit new upload bucket)
-  - `GALA_STATIC_ASSETS_BUCKET` (default `gala-static-assets`)
+  - `GALA_STATIC_ASSETS_BUCKET` (default `gala-static-assets-353760060567`)
   - `DATABASE_URL` (required for seed restore step)
   - `DATA_DUMP_PATH` (default `db/sqldump/seed.dump`)
   - `AWS_SECRET_PREFIX` (default `gala/production`)
 
 ## Deployment commands (no Heroku mutation)
 
-### 1) Local safety checks
+Phase 20 production deployment is executed through `.github/workflows/deploy.yml`.
+The local scripts below are support tooling and historical context only; do not use
+`scripts/deploy-gala-aws-production.sh` as the approved Phase 20 production
+entrypoint.
+
+### 1) SST workflow safety checks
 
 ```bash
-bash -n scripts/deploy-gala-aws-production.sh
-bash scripts/deploy-gala-aws-production.sh --help
-scripts/deploy-gala-aws-production.sh --dry-run --skip-heroku-secret-check --skip-asset-import
+bash -n scripts/deploy-sst.sh
+scripts/deploy-sst.sh --help
+AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production sh -lc 'cd infra && npm ci && npx sst install'
+AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production ALB_BASE_URL="https://<ALB-DNS>" sh -lc 'cd infra && npx sst diff --stage "$SST_STAGE"'
 ```
 
-### 2) Execute deployment (non-Heroku)
+### 2) Execute deployment through GitHub Actions
 
-```bash
-AWS_PROFILE=gala \
-AWS_REGION=us-west-2 \
-scripts/deploy-gala-aws-production.sh \
-  --image-tag "$(git rev-parse --short HEAD)" \
-  --asset-bucket gala-static-assets \
-  --source-bucket msc-gala \
-  --create-asset-bucket \
-  --reuse-source-bucket \
-  --seed-database \
-  --database-url "$DATABASE_URL" \
-  --skip-asset-import
-```
+Run the `Deploy AWS` workflow with:
+
+- `stage`: `production`
+- `action`: `deploy`
+- `branch`: the reviewed deployment branch
+- `alb_base_url`: empty only for the first ALB-creating deploy; rerun with the generated ALB URL before accepting validation
+- `retained_secret_keys`: non-database, non-cache keys only
 
 ### 3) Optional Heroku fallback (read-only only)
 
 ```bash
-HEROKU_APP_NAME=msc-gala \
-AWS_PROFILE=gala \
-AWS_REGION=us-west-2 \
-scripts/deploy-gala-aws-production.sh --skip-asset-import
+heroku config:get RAILS_MASTER_KEY --app msc-gala
 ```
 
-This path only runs Heroku `config` read commands and never calls:
+This path only runs Heroku `config:get` read commands and never calls:
 - `heroku create`
 - `heroku git:remote`
 - `heroku releases`
 - `heroku apps:destroy`
+- `heroku config:set`
+- `heroku restart`
 
-### 4) Full rollback-safe deployment with secret sync and seed restore
+### 4) Database seed task
 
-```bash
-AWS_PROFILE=gala \
-AWS_REGION=us-west-2 \
-HEROKU_APP_NAME=msc-gala \
-AWS_SECRET_PREFIX="gala/production" \
-scripts/deploy-gala-aws-production.sh \
-  --image-tag "$(git rev-parse --short HEAD)" \
-  --asset-bucket gala-static-assets \
-  --source-bucket msc-gala \
-  --target-media-bucket msc-gala \
-  --create-asset-bucket \
-  --seed-database \
-  --database-url "$DATABASE_URL"
-```
-
-Notes:
-- `--seed-database` restores from `db/sqldump/seed.dump` unless `--data-dump` is provided.
-- `--target-media-bucket` defaults to `SOURCE_MEDIA_BUCKET` for existing ActiveStorage reuse.
-- Secret sync reads Heroku values (read-only) for required runtime keys and writes them under `AWS_SECRET_PREFIX/<KEY>` in Secrets Manager.
+The SST config includes `GalaSeedDatabase`, which restores `db/sqldump/seed.dump`
+inside ECS using the SST-provisioned `DATABASE_URL`, then runs migrations. Do not
+provide Heroku `DATABASE_URL`, `REDIS_URL`, `REDIS_HOST`, or equivalent cache or
+database connection strings to the AWS runtime.
 
 ### 5) Verify web endpoint after ECS deployment
 
