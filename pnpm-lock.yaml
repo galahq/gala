@@ -41,6 +41,12 @@ importers:
       '@blueprintjs/datetime':
         specifier: 4.4.37
         version: 4.4.37(react-dom@16.12.0(react@16.12.0))(react@16.12.0)
+      '@blueprintjs/icons':
+        specifier: 4.16.0
+        version: 4.16.0
+      '@blueprintjs/popover2':
+        specifier: 1.14.11
+        version: 1.14.11(react-dom@16.12.0(react@16.12.0))(react@16.12.0)
       '@blueprintjs/select':
         specifier: 4.3.1
         version: 4.3.1(react-dom@16.12.0(react@16.12.0))(react@16.12.0)
@@ -74,6 +80,9 @@ importers:
       color-hash:
         specifier: ^1.0.3
         version: 1.0.3
+      core-js:
+        specifier: 2.6.10
+        version: 2.6.10
       css-loader:
         specifier: 6.11.0
         version: 6.11.0(webpack@5.106.1)
@@ -107,12 +116,18 @@ importers:
       loader-utils:
         specifier: ^1.1.0
         version: 1.2.3
+      lodash:
+        specifier: 4.17.15
+        version: 4.17.15
       lodash.debounce:
         specifier: ^4.0.8
         version: 4.0.8
       lodash.throttle:
         specifier: ^4.1.1
         version: 4.1.1
+      mapbox-gl:
+        specifier: 0.54.1
+        version: 0.54.1
       markdown-draft-js:
         specifier: ^1.3.1
         version: 1.7.1
@@ -197,6 +212,9 @@ importers:
       react-redux:
         specifier: ^5.1.1
         version: 5.1.2(react@16.12.0)(redux@4.0.4)
+      react-router:
+        specifier: 4.3.1
+        version: 4.3.1(react@16.12.0)
       react-router-dom:
         specifier: ^4.3.1
         version: 4.3.1(react@16.12.0)
