@@ -34,6 +34,7 @@ PROFILE="${AWS_PROFILE:-gala}"
 ALB_BASE_URL="${ALB_BASE_URL:-}"
 RETAINED_SECRET_KEYS="${RETAINED_SECRET_KEYS:-}"
 SEED_DUMP_S3_URI="${SEED_DUMP_S3_URI:-}"
+STATIC_ASSETS_BUCKET="${GALA_STATIC_ASSETS_BUCKET:-gala-static-assets-353760060567}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -177,6 +178,7 @@ log "  stage: $STAGE"
 log "  action: $ACTION"
 log "  alb_base_url: ${ALB_BASE_URL:-<unset>}"
 log "  seed_dump_s3_uri: ${SEED_DUMP_S3_URI:-<unset>}"
+log "  static_assets_bucket: $STATIC_ASSETS_BUCKET"
 
 run_cmd git checkout "$BRANCH"
 
@@ -208,6 +210,28 @@ aws_cmd ecr get-login-password | docker login --username AWS --password-stdin "$
 run_aws_cmd ecr describe-repositories --repository-names "$IMAGE_NAME" >/dev/null || \
   run_aws_cmd ecr create-repository --repository-name "$IMAGE_NAME"
 run_cmd docker build --platform linux/amd64 -t "$LOCAL_IMAGE" --build-arg rails_env=production --build-arg secret_key_base=build-placeholder .
+
+sync_static_assets() {
+  local container_id
+  local assets_dir
+
+  assets_dir="$(mktemp -d)"
+  container_id="$(docker create "$LOCAL_IMAGE")"
+
+  cleanup_static_assets() {
+    docker rm "$container_id" >/dev/null 2>&1 || true
+    rm -rf "$assets_dir"
+  }
+  trap cleanup_static_assets RETURN
+
+  run_cmd mkdir -p "$assets_dir/public"
+  run_cmd docker cp "${container_id}:/gala/public/assets" "$assets_dir/public/assets"
+  run_cmd docker cp "${container_id}:/gala/public/packs" "$assets_dir/public/packs"
+  run_aws_cmd s3 sync "$assets_dir/public/assets/" "s3://${STATIC_ASSETS_BUCKET}/assets/" --delete
+  run_aws_cmd s3 sync "$assets_dir/public/packs/" "s3://${STATIC_ASSETS_BUCKET}/packs/" --delete
+}
+
+sync_static_assets
 run_cmd docker tag "$LOCAL_IMAGE" "$REMOTE_IMAGE"
 run_cmd docker push "$REMOTE_IMAGE"
 run_cmd docker tag "$LOCAL_IMAGE" "${ECR_URI}:latest"
