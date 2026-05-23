@@ -237,7 +237,7 @@ export default $config({
         memoryUtilization: 80,
       },
       health: {
-        command: ["CMD-SHELL", "ps -o comm= 1 | grep -q ruby"],
+        command: ["CMD-SHELL", "pgrep -f sidekiq >/dev/null"],
         startPeriod: "60 seconds",
         interval: "30 seconds",
         timeout: "5 seconds",
