@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
-status: executing
-stopped_at: Phase 20 context gathered
-last_updated: "2026-05-22T21:34:15.057Z"
-last_activity: 2026-05-22 -- Phase 20 AWS SST deployment execution audited against deploy.yml, ALB testing, isolated RDS/Redis, Heroku safety, and existing AWS resource import constraints
+status: complete
+stopped_at: Phase 20 complete
+last_updated: "2026-05-23T01:06:13Z"
+last_activity: 2026-05-23 -- Phase 20 AWS SST production deployment completed through GitHub Actions, seeded from db/sqldump/seed.dump, validated through the generated ALB URL, and left Heroku production unchanged
 progress:
   total_phases: 11
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 13
-  completed_plans: 11
-  percent: 85
+  completed_plans: 12
+  percent: 92
 ---
 
 # GSD State
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 20 AWS production deployment execution via SST and GitHub Actions
+**Current focus:** Phase 20 AWS production deployment completed via SST and GitHub Actions
 
 ## Current Position
 
 Phase: 20 — AWS Production Deployment Execution
 Plan: 20-01
-Status: Ready to execute Phase 20 audit follow-ups
-Last activity: 2026-05-22 -- Phase 20 AWS SST deployment execution audited against deploy.yml, ALB testing, isolated RDS/Redis, Heroku safety, and existing AWS resource import constraints
+Status: Complete
+Last activity: 2026-05-23 -- Phase 20 AWS SST production deployment completed through GitHub Actions, seeded from db/sqldump/seed.dump, validated through the generated ALB URL, and left Heroku production unchanged
 
 ## Milestone
 
@@ -74,7 +74,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 8 browser QA confirmed the routed admin and Sidekiq surfaces are stable; remaining public-shell React/styled-components warnings and a Mapbox style `404` were accepted as unrelated noise for this route group.
 - Phase 13 removed Flow syntax/tooling with a mechanical strip. TypeScript is present as a non-emitting `allowJs`/JSDoc baseline with `skipLibCheck` until third-party React/webpack ambient types are addressed by a later typing phase.
 - Phase 14 updated compatible Ruby runtime and dev/test gems. Runtime gates passed (`bundle check`, Rails boot, full RSpec, assets precompile), and dev/test gates passed (`bundle check`, full RSpec, `rake test:unit`). RSpec now forces `RAILS_ENV=test` because Docker exports `RAILS_ENV=development`.
-- Phase 20 audit found the documented AWS deployment phase must be executed through SST in `.github/workflows/deploy.yml`, not the older local script-first runbook. The AWS environment must test through the generated ALB URL, use SST-provisioned `DATABASE_URL`/`REDIS_URL`, seed from `db/sqldump/seed.dump`, and exclude Heroku production database/cache strings from secret sync.
+- Phase 20 completed the AWS SST deployment through `.github/workflows/deploy.yml` run `26318968133` at commit `d6d99b940e0a51ffdada992d9951a9666b5b1c01`. The environment is available at `http://GalaWebLoadBala-chdmccbn-1073735116.us-west-2.elb.amazonaws.com`, seeded from `db/sqldump/seed.dump`, steady on ECS task definition revision `:7`, and Heroku production remains unchanged.
 
 ## Notes
 
@@ -85,9 +85,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-05-22T21:34:15.051Z
-Stopped at: Phase 20 context gathered
-Resume file: .planning/phases/20-aws-production-deployment-execution/20-CONTEXT.md
+Last session: 2026-05-23T01:06:13Z
+Stopped at: Phase 20 complete
+Resume file: .planning/phases/20-aws-production-deployment-execution/20-VALIDATION.md
 
 ## Quick Tasks Completed
 
@@ -100,4 +100,6 @@ Resume file: .planning/phases/20-aws-production-deployment-execution/20-CONTEXT.
 
 ## Operator Next Steps
 
-- Execute Phase 20 follow-ups from `.planning/phases/20-aws-production-deployment-execution/20-01-PLAN.md`, starting with SST/deploy workflow guardrails before any live deployment.
+- Use the generated ALB URL for any additional AWS smoke testing.
+- Keep `https://www.learngala.com` on Heroku until a separate DNS cutover phase is explicitly approved.
+- If rollback is needed, update ECS services back to task definition revision `:6` or redeploy image tag `831d5293bc53b5af0b5a641ac04a6d2ef50a4fa0`.

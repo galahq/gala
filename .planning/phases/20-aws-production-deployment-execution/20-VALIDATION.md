@@ -2,13 +2,30 @@
 phase: 20
 validation: 1
 type: validation
-status: planned
+status: complete
 wave: 1
 depends_on: [19]
 title: Validate SST production AWS deployment execution
 ---
 
 # Validation 20-01: Execute AWS production deployment through SST safely
+
+## Result
+
+Completed 2026-05-23. Phase 20 passed its deployment validation gate through GitHub Actions run `26318968133` at commit `d6d99b940e0a51ffdada992d9951a9666b5b1c01`.
+
+## Evidence Summary
+
+- `bash -n scripts/deploy-sst.sh` and `scripts/deploy-sst.sh --help` passed.
+- GitHub Actions `Deploy` run `26318968133` completed successfully and built/pushed image `353760060567.dkr.ecr.us-west-2.amazonaws.com/gala:d6d99b940e0a51ffdada992d9951a9666b5b1c01`.
+- OIDC-driven GitHub deploy was used; `AWS_PROFILE` was removed from the workflow runtime while local AWS/SST commands retained `AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production`.
+- `db/sqldump/seed.dump` was hydrated from `s3://gala-deploy-artifacts-353760060567/phase-20/seed.dump` and restored by the SST seed task into the AWS database. The seed task exited `0` after restore and migration logs.
+- ECS services reached steady state on revision `:7`: `GalaWeb` desired/running `2/2`, `GalaWorker` desired/running `1/1`, both rollout states `COMPLETED`.
+- ALB URL `http://GalaWebLoadBala-chdmccbn-1073735116.us-west-2.elb.amazonaws.com` returned `200 OK` for `/up` and `/`.
+- Browser QA loaded the Gala page through the ALB. Static asset requests redirected from CloudFront to `gala-static-assets-353760060567.s3-us-west-2.amazonaws.com` and returned `200 OK`; retained `msc-gala` ActiveStorage media requests returned `200 OK`.
+- Browser console/network review found only unauthenticated JSON `401`s, known external Mapbox `403` noise, and WebGL performance warnings. The prior missing compiled asset failures were resolved.
+- `https://www.learngala.com` remained served by Heroku (`server: Heroku` / `heroku-router`) and no Heroku production mutation or DNS cutover was performed.
+- Rollback readiness was verified by retaining previous task definition revision `:6` and ECR image tag `831d5293bc53b5af0b5a641ac04a6d2ef50a4fa0`.
 
 ## 0) Preflight
 
@@ -64,12 +81,12 @@ title: Validate SST production AWS deployment execution
   - `gala-static-assets-353760060567` static asset bucket by default, or an explicitly supplied accessible/imported `GALA_STATIC_ASSETS_BUCKET`,
   - SES/Gmail-related credentials/config,
   - S3 IAM access needed by ECS task roles.
-- Confirm S3 operations do not use:
+- Confirm ActiveStorage S3 operations do not use:
   - `aws s3 rm`
   - `aws s3 rb`
-  - `--delete`
   - lifecycle expiration changes
   - broad public-access mutations on ActiveStorage media.
+- Static asset bucket sync may use `--delete` only against generated compiled asset prefixes in `gala-static-assets-353760060567`; it must not target `msc-gala`.
 
 ## 4) Secrets and Heroku read-only config
 

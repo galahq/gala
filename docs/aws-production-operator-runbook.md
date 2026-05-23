@@ -163,7 +163,7 @@ curl -I "http://<ALB-DNS>/up"
 ## Rollback guidance
 
 1. Revert ECS service to previous healthy image tag using ECS deployment history:
-   - update `scripts/deploy-gala-aws-production.sh` tag and redeploy, or
+   - rerun `.github/workflows/deploy.yml` with the previous commit SHA as the branch/ref, or
    - ECS console/CLI: rollout with previous task definition revision.
 2. If the rollout is broken, switch Service desired image back to the previous ECR tag immediately.
 3. Keep deployment artifacts immutable:
@@ -189,5 +189,5 @@ curl -I "http://<ALB-DNS>/up"
 
 - New ALB route is healthy.
 - Asset sync completed without deleting/replacing existing production Heroku resources.
-- `scripts/deploy-gala-aws-production.sh` logs resolved target image and bucket.
+- `scripts/deploy-sst.sh` logs resolved target image and bucket.
 - Rollback path tested and documented before production traffic increases.

@@ -179,7 +179,7 @@ Plans:
 
 ### Phase 20: Production Deployment Execution (AWS)
 
-- [ ] Phase 20: Current
+- [x] Phase 20: Complete (2026-05-23)
 
 **Goal:** Execute and verify the AWS production deployment path through SST IaC in `.github/workflows/deploy.yml` without mutating current Heroku production at `https://www.learngala.com`, using the generated AWS ALB URL as the test entrypoint, freshly provisioned AWS database/cache connections, database initialization from `db/sqldump/seed.dump`, and non-destructive reuse/import of existing AWS resources.
 
@@ -200,7 +200,7 @@ Plans:
 
 Plans:
 **Wave 1**
-- [ ] 20-01-PLAN.md — Execute AWS deployment through SST/deploy.yml: resource import safety, ALB URL validation, database initialization from `db/sqldump/seed.dump`, Heroku read-only secret sync excluding database/cache strings, and rollback.
+- [x] 20-01-PLAN.md — Execute AWS deployment through SST/deploy.yml: resource import safety, ALB URL validation, database initialization from `db/sqldump/seed.dump`, Heroku read-only secret sync excluding database/cache strings, and rollback.
 
 ## Completed Milestones
 
