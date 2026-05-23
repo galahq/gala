@@ -268,7 +268,7 @@ export default $config({
           "echo \"Checking DATABASE_URL guard\"",
           "case \"${DATABASE_URL}\" in *heroku*|*HEROKU*|\"\") echo \"Refusing seed restore: DATABASE_URL is missing or appears Heroku-derived\" >&2; exit 1 ;; esac",
           "echo \"Restoring db/sqldump/seed.dump into SST database\"",
-          "pg_restore --clean --if-exists --no-owner --no-privileges -d \"${DATABASE_URL}\" db/sqldump/seed.dump",
+          "pg_restore --clean --if-exists --no-owner --no-privileges -f - db/sqldump/seed.dump | sed '/^SET transaction_timeout = 0;$/d' | psql \"${DATABASE_URL}\"",
           "echo \"Running migrations after seed restore\"",
           "bundle exec rails db:migrate",
         ].join(" && "),
