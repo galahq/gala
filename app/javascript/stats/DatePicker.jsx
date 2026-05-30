@@ -19,8 +19,7 @@ function DatePicker ({
   const maxDate = maxDateProp || new Date()
   const pickerRootRef = useRef(null)
 
-  const today = new Date()
-  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate())
   const startFromDays = d =>
     new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
 

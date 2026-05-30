@@ -38,10 +38,10 @@
 
 ### JavaScript Dependency Modernization
 
-- [ ] **JS-01**: JavaScript dependencies are audited against current stable compatible releases.
-- [ ] **JS-02**: Shakapacker Ruby and npm package versions remain aligned.
-- [ ] **JS-03**: Webpack/Shakapacker production build behavior is preserved unless Vite replacement is explicitly proven safe.
-- [ ] **JS-04**: JavaScript dependency updates preserve the v1.0 Blueprint compatibility layers.
+- [x] **JS-01**: JavaScript dependencies are audited against current stable compatible releases.
+- [x] **JS-02**: Shakapacker Ruby and npm package versions remain aligned.
+- [x] **JS-03**: Webpack/Shakapacker production build behavior is preserved unless Vite replacement is explicitly proven safe.
+- [x] **JS-04**: JavaScript dependency updates preserve the v1.0 Blueprint compatibility layers.
 
 ### Vitest and Vite Evaluation
 
@@ -132,10 +132,10 @@
 | RUBY-02 | Phase 14 | Complete |
 | RUBY-03 | Phase 14 | Complete |
 | RUBY-04 | Phase 14 | Complete |
-| JS-01 | Phase 15 | Pending |
-| JS-02 | Phase 15 | Pending |
-| JS-03 | Phase 15 | Pending |
-| JS-04 | Phase 15 | Pending |
+| JS-01 | Phase 15 | Complete |
+| JS-02 | Phase 15 | Complete |
+| JS-03 | Phase 15 | Complete |
+| JS-04 | Phase 15 | Complete |
 | VITE-01 | Phase 12 | Complete |
 | VITE-02 | Phase 16 | Pending |
 | VITE-03 | Phase 16 | Pending |

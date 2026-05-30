@@ -110,6 +110,8 @@ Plans:
 
 ### Phase 15: JavaScript Dependency and Build Modernization
 
+- [x] Phase 15: Complete (2026-05-30)
+
 **Goal:** Modernize compatible JavaScript dependencies while preserving React, BlueprintJS, Shakapacker, and route behavior constraints.
 
 **Requirements:** JS-01, JS-02, JS-03, JS-04
@@ -119,6 +121,12 @@ Plans:
 2. Shakapacker Ruby and npm package versions remain aligned.
 3. Webpack/Shakapacker production behavior is preserved unless Phase 12 explicitly approved Vite replacement.
 4. v1.0 Blueprint compatibility layers remain intact and verified after dependency changes.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [x] 15-01-PLAN.md — Apply one conservative JavaScript dependency batch and verify install, frontend tests, and Docker asset precompile.
 
 ### Phase 16: Frontend Test Runner Modernization
 

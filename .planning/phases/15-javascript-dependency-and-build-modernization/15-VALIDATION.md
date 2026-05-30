@@ -1,10 +1,11 @@
 ---
 phase: 15
 slug: javascript-dependency-and-build-modernization
-status: draft
+status: complete
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: 2026-05-15
+completed: 2026-05-30
 ---
 
 # Phase 15 Validation Strategy
@@ -40,15 +41,15 @@ The validation strategy confirms:
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|----------|-------------------|-------------|--------|
-| 15-01-01 | 01 | 1 | JS-01 | T-15-01 | manifest audit | `rg -n "candidate|hold|webpack|shakapacker|React 16|Blueprint" .planning/phases/15-javascript-dependency-and-build-modernization/15-RESEARCH.md` | yes | ⬜ pending |
-| 15-01-02 | 01 | 1 | JS-02 | T-15-03 | dependency gates | `pnpm install --frozen-lockfile && git diff -- package.json pnpm-lock.yaml` | yes | ⬜ pending |
-| 15-01-03 | 01 | 1 | JS-01, JS-03, JS-04 | T-15-01, T-15-02, T-15-03 | automated tests/precompile | `pnpm test -- --runInBand && docker compose exec web sh -lc 'pnpm install --frozen-lockfile && SECRET_KEY_BASE=build-placeholder DATABASE_URL=postgresql://placeholder/placeholder bundle exec rails assets:precompile'` | yes | ⬜ pending |
-| 15-01-04 | 01 | 1 | JS-01, JS-02, JS-03, JS-04 | T-15-01 | completion evidence | `test -f .planning/phases/15-javascript-dependency-and-build-modernization/15-01-SUMMARY.md` | no | ⬜ pending |
+| 15-01-01 | 01 | 1 | JS-01 | T-15-01 | manifest audit | `rg -n "candidate|hold|webpack|shakapacker|React 16|Blueprint" .planning/phases/15-javascript-dependency-and-build-modernization/15-RESEARCH.md` | yes | passed |
+| 15-01-02 | 01 | 1 | JS-02 | T-15-03 | dependency gates | `pnpm install --frozen-lockfile && git diff -- package.json pnpm-lock.yaml` | yes | passed |
+| 15-01-03 | 01 | 1 | JS-01, JS-03, JS-04 | T-15-01, T-15-02, T-15-03 | automated tests/precompile | `pnpm test -- --runInBand && docker compose exec web sh -lc 'pnpm install --frozen-lockfile && SECRET_KEY_BASE=build-placeholder DATABASE_URL=postgresql://placeholder/placeholder bundle exec rails assets:precompile'` | yes | passed |
+| 15-01-04 | 01 | 1 | JS-01, JS-02, JS-03, JS-04 | T-15-01 | completion evidence | `test -f .planning/phases/15-javascript-dependency-and-build-modernization/15-01-SUMMARY.md` | yes | passed |
 
 ## Wave 0 Requirements
 
-- [ ] Route QA checklist for production-bundle-affecting edits is in `15-CONTEXT.md` and `AGENTS.md`.
-- [ ] `15-01-SUMMARY.md` captures package-level hold/defer notes and gate outcomes.
+- [x] Route QA checklist for production-bundle-affecting edits is in `15-CONTEXT.md` and `AGENTS.md`.
+- [x] `15-01-SUMMARY.md` captures package-level hold/defer notes and gate outcomes.
 
 ## Manual-Only Verifications
 
@@ -60,9 +61,9 @@ The validation strategy confirms:
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies.
-- [ ] No 3 consecutive tasks without an automated verify command.
-- [ ] Feedback latency target documented and enforced.
-- [ ] `nyquist_compliant: true` set in frontmatter.
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies.
+- [x] No 3 consecutive tasks without an automated verify command.
+- [x] Feedback latency target documented and enforced.
+- [x] `nyquist_compliant: true` set in frontmatter.
 
-**Approval:** pending
+**Approval:** complete

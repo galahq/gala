@@ -4,14 +4,14 @@ milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: complete
 stopped_at: Phase 20 complete
-last_updated: "2026-05-23T01:06:13Z"
-last_activity: 2026-05-23 -- Phase 20 AWS SST production deployment completed through GitHub Actions, seeded from db/sqldump/seed.dump, validated through the generated ALB URL, and left Heroku production unchanged
+last_updated: "2026-05-30T08:45:44Z"
+last_activity: 2026-05-30 -- Phase 15 JavaScript dependency modernization backfill completed with a conservative webpack/dev-server/Sass batch, frozen pnpm install, frontend tests, and Docker asset precompile
 progress:
   total_phases: 11
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 13
-  completed_plans: 12
-  percent: 92
+  completed_plans: 13
+  percent: 100
 ---
 
 # GSD State
@@ -74,6 +74,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 8 browser QA confirmed the routed admin and Sidekiq surfaces are stable; remaining public-shell React/styled-components warnings and a Mapbox style `404` were accepted as unrelated noise for this route group.
 - Phase 13 removed Flow syntax/tooling with a mechanical strip. TypeScript is present as a non-emitting `allowJs`/JSDoc baseline with `skipLibCheck` until third-party React/webpack ambient types are addressed by a later typing phase.
 - Phase 14 updated compatible Ruby runtime and dev/test gems. Runtime gates passed (`bundle check`, Rails boot, full RSpec, assets precompile), and dev/test gates passed (`bundle check`, full RSpec, `rake test:unit`). RSpec now forces `RAILS_ENV=test` because Docker exports `RAILS_ENV=development`.
+- Phase 15 completed the conservative JavaScript dependency batch: `webpack` 5.107.2, `webpack-dev-server` 5.2.4, and `sass` 1.100.0. Shakapacker stayed aligned at 10.0.0, React/Blueprint majors stayed held, `pnpm install --frozen-lockfile`, `pnpm test -- --runInBand`, and Docker asset precompile passed.
 - Phase 20 completed the AWS SST deployment through `.github/workflows/deploy.yml` run `26318968133` at commit `d6d99b940e0a51ffdada992d9951a9666b5b1c01`. The environment is available at `http://GalaWebLoadBala-chdmccbn-1073735116.us-west-2.elb.amazonaws.com`, seeded from `db/sqldump/seed.dump`, steady on ECS task definition revision `:7`, and Heroku production remains unchanged.
 
 ## Notes

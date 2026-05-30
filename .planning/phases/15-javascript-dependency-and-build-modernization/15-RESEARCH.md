@@ -38,6 +38,22 @@ Result in this environment:
 - Partial JSON result still captured, but the command is not a trustworthy latest baseline in this environment.
 - Execution-time recheck with network access is required before any dependency bump decisions are finalized.
 
+### Execution-time registry recheck (2026-05-30)
+
+Network metadata checks succeeded during phase execution.
+
+| Package | Registry latest on 2026-05-30 | Decision |
+|---|---:|---|
+| `webpack` | `5.107.2` | Update within 5.x patch/minor safety lane. |
+| `webpack-dev-server` | `5.2.4` | Update within 5.x patch safety lane. |
+| `sass` | `1.100.0` | Update; deploy/runtime path uses Node `24.15.0`, matching this dependency graph. |
+| `babel-loader` | `10.1.1` | Already resolved; no manifest change. |
+| `shakapacker` | `10.1.0` | Hold npm and gem at aligned `10.0.0`; Shakapacker minor update is a separate alignment decision. |
+| `sass-loader` | `17.0.0` | Hold major; current `16.0.7` remains compatible with webpack 5 and Sass 1.x. |
+| `css-loader` | `7.1.4` | Hold major; current `6.11.0` remains compatible with webpack 5. |
+| `webpack-cli` | `7.0.3` | Hold major; current direct major is compatible with Shakapacker 10. |
+| `webpack-merge` | `6.0.1` | Hold direct major at `5.10.0`; `webpack-cli` may resolve its own transitive major. |
+
 ### Baseline versions from repo manifests
 
 | Family | Package | Manifest current | Constraint source | Phase constraint |
@@ -92,4 +108,3 @@ npm view prop-types version
 - JS-02: Ruby gem and npm package `shakapacker` remain aligned unless roadmap changes ownership.
 - JS-03: webpack/manifests/precompile gates run after each batch.
 - JS-04: Blueprint 4.x ownership and the legacy class bridge remain intact unless this phase explicitly proves compatibility.
-
