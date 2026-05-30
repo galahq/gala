@@ -6,6 +6,10 @@
 
 declare module "sst" {
   export interface Resource {
+    "GalaAppRouter": {
+      "type": "sst.aws.Router"
+      "url": string
+    }
     "GalaCache": {
       "host": string
       "password": string
