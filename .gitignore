@@ -22,6 +22,11 @@
 
 node_modules/
 
+/.pnpm-store
+/.playwright-browsers
+/playwright-report
+/test-results
+
 app/assets/javascripts/react
 /node_modules
 
