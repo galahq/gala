@@ -3,6 +3,7 @@
 # @see Case
 class CasesController < ApplicationController
   include BroadcastEdits
+  include PublicCatalogCache
   include SelectionParams
   include VerifyLock
 
@@ -36,6 +37,21 @@ class CasesController < ApplicationController
              .with_attached_cover_image
              .includes(:library, :tags)
              .decorate
+
+    if anonymous_json_catalog_request?
+      render_public_catalog_json(
+        [
+          'cases-preview',
+          I18n.locale.to_s,
+          catalog_cache_timestamp(Case),
+          catalog_cache_timestamp(Library),
+          catalog_cache_timestamp(Tag)
+        ],
+        json: @cases,
+        each_serializer: Cases::PreviewSerializer
+      )
+      return
+    end
 
     render json: @cases, each_serializer: Cases::PreviewSerializer
   end

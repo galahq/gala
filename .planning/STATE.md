@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: complete
-stopped_at: Phase 20 complete
-last_updated: "2026-05-30T08:45:44Z"
-last_activity: 2026-05-30 -- Phase 15 JavaScript dependency modernization backfill completed with a conservative webpack/dev-server/Sass batch, frozen pnpm install, frontend tests, and Docker asset precompile
+stopped_at: Phase 21 complete
+last_updated: "2026-05-30T09:20:09Z"
+last_activity: 2026-05-30 -- Phase 21 AWS performance optimization completed with app-edge CloudFront preview, immutable static asset cache metadata, anonymous catalog JSON cache headers, and Puma/SST runtime tuning
 progress:
-  total_phases: 11
-  completed_phases: 11
-  total_plans: 13
-  completed_plans: 13
+  total_phases: 12
+  completed_phases: 12
+  total_plans: 14
+  completed_plans: 14
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 20 AWS production deployment completed via SST and GitHub Actions
+**Current focus:** Phase 21 AWS performance and edge cache optimization completed for the AWS dev/prod candidate path
 
 ## Current Position
 
-Phase: 20 — AWS Production Deployment Execution
-Plan: 20-01
+Phase: 21 — AWS Performance and Edge Cache Optimization
+Plan: 21-01
 Status: Complete
-Last activity: 2026-05-23 -- Phase 20 AWS SST production deployment completed through GitHub Actions, seeded from db/sqldump/seed.dump, validated through the generated ALB URL, and left Heroku production unchanged
+Last activity: 2026-05-30 -- Phase 21 added safe app-edge CloudFront caching for anonymous catalog JSON, immutable static asset cache metadata, Rails/Puma catalog cache headers, and SST production web CPU/memory headroom while leaving Heroku, SES, DNS, and the `msc-gala` media bucket unchanged
 
 ## Milestone
 
@@ -76,6 +76,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 14 updated compatible Ruby runtime and dev/test gems. Runtime gates passed (`bundle check`, Rails boot, full RSpec, assets precompile), and dev/test gates passed (`bundle check`, full RSpec, `rake test:unit`). RSpec now forces `RAILS_ENV=test` because Docker exports `RAILS_ENV=development`.
 - Phase 15 completed the conservative JavaScript dependency batch: `webpack` 5.107.2, `webpack-dev-server` 5.2.4, and `sass` 1.100.0. Shakapacker stayed aligned at 10.0.0, React/Blueprint majors stayed held, `pnpm install --frozen-lockfile`, `pnpm test -- --runInBand`, and Docker asset precompile passed.
 - Phase 20 completed the AWS SST deployment through `.github/workflows/deploy.yml` run `26318968133` at commit `d6d99b940e0a51ffdada992d9951a9666b5b1c01`. The environment is available at `http://GalaWebLoadBala-chdmccbn-1073735116.us-west-2.elb.amazonaws.com`, seeded from `db/sqldump/seed.dump`, steady on ECS task definition revision `:7`, and Heroku production remains unchanged.
+- Phase 21 addressed the AWS catalog bottleneck found on 2026-05-30: `/cases.json` was dominated by Rails serialization, not static asset delivery. The rollout adds a separate app CloudFront distribution with default caching disabled and short TTL behavior only for public anonymous catalog JSON paths, adds immutable static asset headers, increases production web CPU/memory, and raises Puma concurrency. Targeted catalog request specs passed in Docker compose.
 
 ## Notes
 
@@ -86,9 +87,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-05-23T01:06:13Z
-Stopped at: Phase 20 complete
-Resume file: .planning/phases/20-aws-production-deployment-execution/20-VALIDATION.md
+Last session: 2026-05-30T09:20:09Z
+Stopped at: Phase 21 complete
+Resume file: .planning/phases/21-aws-performance-and-edge-cache-optimization/21-VALIDATION.md
 
 ## Quick Tasks Completed
 
@@ -102,5 +103,6 @@ Resume file: .planning/phases/20-aws-production-deployment-execution/20-VALIDATI
 ## Operator Next Steps
 
 - Use the generated ALB URL for any additional AWS smoke testing.
+- Use the generated app CloudFront URL from the next SST deploy output for edge-cache smoke testing before any DNS work.
 - Keep `https://www.learngala.com` on Heroku until a separate DNS cutover phase is explicitly approved.
 - If rollback is needed, update ECS services back to task definition revision `:6` or redeploy image tag `831d5293bc53b5af0b5a641ac04a6d2ef50a4fa0`.

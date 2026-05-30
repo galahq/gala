@@ -88,6 +88,15 @@
 - [x] **DPLY-08**: Rollback is documented and verified through SST/ECS deployment state without changing Heroku production.
 - [x] **DPLY-09**: Every AWS/SST execution command uses `AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production`; every read-only Heroku command uses `heroku --app msc-gala`.
 
+### AWS Performance and Edge Cache Optimization
+
+- [x] **AWSPERF-01**: AWS performance work must not mutate Heroku production, production DNS, SES, or the retained `msc-gala` ActiveStorage media bucket.
+- [x] **AWSPERF-02**: The AWS app CloudFront rollout keeps default dynamic behavior uncached/pass-through and adds caching only to explicitly listed public anonymous catalog JSON GET routes.
+- [x] **AWSPERF-03**: Anonymous public catalog JSON routes emit short public `Cache-Control`/`s-maxage` headers; signed-in or query-specific personalized responses remain private or uncached.
+- [x] **AWSPERF-04**: Fingerprinted Rails/Shakapacker static assets under `/assets/*` and `/packs/*` receive immutable cache headers at upload and viewer response time.
+- [x] **AWSPERF-05**: SST production web tasks have increased CPU/memory headroom, and Puma runs multiple threads and production workers while preserving local defaults.
+- [x] **AWSPERF-06**: AWS infrastructure validation uses read-only preview/inspection commands with `AWS_PROFILE=gala AWS_REGION=us-west-2`.
+
 ## v1.2+ Candidates
 
 ### Larger Frontend Migrations
@@ -166,12 +175,18 @@
 | DPLY-07 | Phase 20 | Complete |
 | DPLY-08 | Phase 20 | Complete |
 | DPLY-09 | Phase 20 | Complete |
+| AWSPERF-01 | Phase 21 | Complete |
+| AWSPERF-02 | Phase 21 | Complete |
+| AWSPERF-03 | Phase 21 | Complete |
+| AWSPERF-04 | Phase 21 | Complete |
+| AWSPERF-05 | Phase 21 | Complete |
+| AWSPERF-06 | Phase 21 | Complete |
 
 **Coverage:**
-- v1.1 requirements: 55 total
-- Mapped to phases: 55
+- v1.1 requirements: 61 total
+- Mapped to phases: 61
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-23 after Phase 20 AWS deployment execution*
+*Last updated: 2026-05-30 after Phase 21 AWS performance and edge cache optimization*

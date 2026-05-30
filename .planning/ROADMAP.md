@@ -210,6 +210,28 @@ Plans:
 **Wave 1**
 - [x] 20-01-PLAN.md — Execute AWS deployment through SST/deploy.yml: resource import safety, ALB URL validation, database initialization from `db/sqldump/seed.dump`, Heroku read-only secret sync excluding database/cache strings, and rollback.
 
+### Phase 21: AWS Performance and Edge Cache Optimization
+
+- [x] Phase 21: Complete (2026-05-30)
+
+**Goal:** Reduce AWS catalog load latency without changing Heroku production, SES, or the retained `msc-gala` media bucket by adding safe CloudFront behavior for anonymous public catalog JSON, improving static asset cache headers, and giving the SST web runtime enough CPU and memory headroom for Puma concurrency.
+
+**Requirements:** AWSPERF-01, AWSPERF-02, AWSPERF-03, AWSPERF-04, AWSPERF-05, AWSPERF-06
+
+**Success Criteria:**
+1. AWS IaC changes are isolated to `infra/sst.config.ts` and avoid S3 media bucket, SES, Heroku, and production DNS mutation.
+2. CloudFront default app behavior remains pass-through/no-cache, with short TTL caching only for known anonymous public catalog JSON routes.
+3. Static `/assets/*` and `/packs/*` upload and CloudFront responses set immutable browser cache headers for fingerprinted assets.
+4. Public catalog JSON endpoints emit short public cache headers only for anonymous JSON requests and keep signed-in responses private.
+5. The SST web service has higher production CPU/memory, and Puma is configured for multiple threads and production workers.
+6. The rollout is verified with read-only `AWS_PROFILE=gala AWS_REGION=us-west-2` SST preview and targeted local syntax/test gates.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [x] 21-01-PLAN.md — Add safe app-edge CloudFront caching, static asset cache metadata, public catalog JSON cache headers, and Puma/SST runtime tuning.
+
 ## Completed Milestones
 
 <details>
@@ -243,6 +265,6 @@ Archive:
 
 ## Coverage
 
-- v1.1 requirements: 46
-- Requirements mapped to phases: 46
+- v1.1 requirements: 61
+- Requirements mapped to phases: 61
 - Unmapped requirements: 0

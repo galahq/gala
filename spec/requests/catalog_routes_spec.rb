@@ -3,6 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe 'Catalog routes', type: :request do
+  def expect_public_catalog_cache
+    expect(response.headers['Cache-Control'])
+      .to include('public', 'max-age=60', 's-maxage=60')
+    expect(response.headers['Vary'])
+      .to include('Accept', 'Accept-Language', 'Accept-Encoding')
+    expect(response.headers['Set-Cookie']).to be_blank
+  end
+
   it 'renders the catalog shell at root with the catalog pack mount' do
     get '/'
 
@@ -28,6 +36,38 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.media_type).to eq 'application/json'
     expect(response.parsed_body).to be_an(Array)
+    expect_public_catalog_cache
+  end
+
+  it 'returns catalog case previews as cacheable JSON for anonymous readers' do
+    create(:case, :published)
+
+    get '/cases.json'
+
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq 'application/json'
+    expect(response.parsed_body).to be_an(Array)
+    expect_public_catalog_cache
+  end
+
+  it 'keeps signed-in case previews private' do
+    sign_in create(:reader)
+
+    get '/cases.json'
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['Cache-Control']).not_to include('public')
+  end
+
+  it 'returns featured cases as cacheable JSON for anonymous readers' do
+    create(:case, :published, featured: true)
+
+    get '/cases/features.json'
+
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq 'application/json'
+    expect(response.parsed_body).to include('features')
+    expect_public_catalog_cache
   end
 
   it 'returns catalog languages as JSON' do
@@ -44,6 +84,7 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.media_type).to eq 'application/json'
     expect(response.parsed_body).to be_an(Array)
+    expect_public_catalog_cache
   end
 
   it 'returns search results as JSON' do

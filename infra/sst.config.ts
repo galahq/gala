@@ -27,6 +27,8 @@ export default $config({
       "gala-static-assets-353760060567";
     const importExistingStaticAssetsBucket =
       process.env.GALA_IMPORT_STATIC_ASSETS_BUCKET === "true";
+    const immutableStaticCacheControl =
+      "public,max-age=31536000,immutable";
     const webImage = process.env.GALA_WEB_IMAGE_URI?.trim().length
       ? process.env.GALA_WEB_IMAGE_URI
       : {
@@ -55,6 +57,23 @@ export default $config({
       },
     });
 
+    const staticAssetResponseHeaders = new aws.cloudfront.ResponseHeadersPolicy(
+      "GalaStaticAssetResponseHeaders",
+      {
+        name: `${$app.name}-${stage}-static-asset-cache`,
+        comment: "Immutable browser cache headers for fingerprinted assets",
+        customHeadersConfig: {
+          items: [
+            {
+              header: "Cache-Control",
+              override: true,
+              value: immutableStaticCacheControl,
+            },
+          ],
+        },
+      },
+    );
+
     const staticAssetsDistribution = new aws.cloudfront.Distribution(
       "GalaStaticAssetsDistribution",
       {
@@ -82,6 +101,7 @@ export default $config({
           minTtl: 60,
           defaultTtl: 31536000,
           maxTtl: 31536000,
+          responseHeadersPolicyId: staticAssetResponseHeaders.id,
           forwardedValues: {
             queryString: false,
             cookies: {
@@ -98,6 +118,7 @@ export default $config({
           cloudfrontDefaultCertificate: true,
         },
         priceClass: "PriceClass_100",
+        retainOnDelete: isProduction,
       },
     );
 
@@ -164,7 +185,7 @@ export default $config({
       PORT: "3000",
       RAILS_ENV: "production",
       RAILS_LOG_TO_STDOUT: "true",
-      RAILS_MAX_THREADS: "3",
+      RAILS_MAX_THREADS: isProduction ? "5" : "3",
       RAILS_MASTER_KEY: resolveSecret("RAILS_MASTER_KEY"),
       RAILS_SERVE_STATIC_FILES: "true",
       REDIS_URL: redisUrl,
@@ -186,8 +207,8 @@ export default $config({
       cluster,
       image: webImage,
       command: ["bundle", "exec", "puma", "-C", "config/puma.rb"],
-      cpu: "0.5 vCPU",
-      memory: "1 GB",
+      cpu: isProduction ? "1 vCPU" : "0.5 vCPU",
+      memory: isProduction ? "2 GB" : "1 GB",
       architecture: "x86_64",
       capacity: serviceCapacity,
       environment: sharedEnvironment,
@@ -225,7 +246,7 @@ export default $config({
       cluster,
       image: webImage,
       command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"],
-      cpu: "0.25 vCPU",
+      cpu: isProduction ? "0.5 vCPU" : "0.25 vCPU",
       memory: "1 GB",
       architecture: "x86_64",
       capacity: serviceCapacity,
@@ -243,6 +264,81 @@ export default $config({
         timeout: "5 seconds",
         retries: 3,
       },
+    });
+
+    const appOriginId = "gala-app-alb-origin";
+    const appOriginDomain = $resolve([web.url]).apply(([url]) =>
+      new URL(url).hostname,
+    );
+    const publicCatalogCachePaths = [
+      "/cases.json",
+      "/cases/features.json",
+      "/catalog/languages.json",
+      "/catalog/libraries.json",
+      "/tags.json",
+    ];
+    const publicCatalogCacheBehavior = (pathPattern: string) => ({
+      pathPattern,
+      targetOriginId: appOriginId,
+      viewerProtocolPolicy: "redirect-to-https",
+      allowedMethods: ["GET", "HEAD", "OPTIONS"],
+      cachedMethods: ["GET", "HEAD", "OPTIONS"],
+      compress: true,
+      minTtl: 0,
+      defaultTtl: 60,
+      maxTtl: 300,
+      forwardedValues: {
+        queryString: true,
+        headers: ["Accept", "Accept-Language", "Authorization"],
+        cookies: {
+          forward: "all",
+        },
+      },
+    });
+
+    const appDistribution = new aws.cloudfront.Distribution("GalaAppDistribution", {
+      enabled: true,
+      comment: `${$app.name}-${stage} app edge cache`,
+      origins: [
+        {
+          domainName: appOriginDomain,
+          originId: appOriginId,
+          customOriginConfig: {
+            httpPort: 80,
+            httpsPort: 443,
+            originProtocolPolicy: "http-only",
+            originSslProtocols: ["TLSv1.2"],
+          },
+        },
+      ],
+      defaultCacheBehavior: {
+        targetOriginId: appOriginId,
+        viewerProtocolPolicy: "redirect-to-https",
+        allowedMethods: ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"],
+        cachedMethods: ["GET", "HEAD"],
+        compress: true,
+        minTtl: 0,
+        defaultTtl: 0,
+        maxTtl: 0,
+        forwardedValues: {
+          queryString: true,
+          headers: ["*"],
+          cookies: {
+            forward: "all",
+          },
+        },
+      },
+      orderedCacheBehaviors: publicCatalogCachePaths.map(publicCatalogCacheBehavior),
+      restrictions: {
+        geoRestriction: {
+          restrictionType: "none",
+        },
+      },
+      viewerCertificate: {
+        cloudfrontDefaultCertificate: true,
+      },
+      priceClass: "PriceClass_100",
+      retainOnDelete: isProduction,
     });
 
     const migration = new sst.aws.Task("GalaMigrate", {
@@ -349,7 +445,9 @@ export default $config({
       region: "us-west-2",
       appDomain: baseUrl,
       appUrl: web.url,
+      appCdnUrl: $interpolate`https://${appDistribution.domainName}`,
       albBaseUrl: baseUrl,
+      staticAssetsCdnUrl: $interpolate`https://${staticAssetsDistribution.domainName}`,
       migrationClusterArn: migration.cluster,
       migrationTaskDefinitionArn: migration.taskDefinition,
       migrationSubnets: migration.subnets,
