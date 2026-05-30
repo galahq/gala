@@ -12,6 +12,7 @@ module PublicCatalogCache
 
   def anonymous_json_catalog_request?(allow_query: false)
     return false if reader_signed_in?
+    return false if request.cookies.present?
     return false unless request.format.json?
     return true if allow_query
 

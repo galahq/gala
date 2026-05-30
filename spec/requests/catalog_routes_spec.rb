@@ -69,6 +69,15 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response.headers['Cache-Control']).not_to include('public')
   end
 
+  it 'keeps cookie-bearing case previews private' do
+    create(:case, :published)
+
+    get '/cases.json', headers: { 'Cookie' => 'gala_anonymous_session=1' }
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['Cache-Control']).not_to include('public')
+  end
+
   it 'returns featured cases as cacheable JSON for anonymous readers' do
     create(:case, :published, featured: true)
 
