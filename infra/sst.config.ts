@@ -285,7 +285,7 @@ export default $config({
       cachedMethods: ["GET", "HEAD", "OPTIONS"],
       compress: true,
       minTtl: 0,
-      defaultTtl: 60,
+      defaultTtl: 300,
       maxTtl: 300,
       forwardedValues: {
         queryString: true,

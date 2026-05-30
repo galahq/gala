@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Catalog routes', type: :request do
   def expect_public_catalog_cache
     expect(response.headers['Cache-Control'])
-      .to include('public', 'max-age=60', 's-maxage=60')
+      .to include('public', 'max-age=300', 's-maxage=300')
     expect(response.headers['Vary'])
       .to include('Accept', 'Accept-Language', 'Accept-Encoding')
     expect(response.headers['Set-Cookie']).to be_blank
@@ -19,6 +19,16 @@ RSpec.describe 'Catalog routes', type: :request do
     document = Nokogiri::HTML.parse(response.body)
     expect(document.css('#catalog-app')).to be_present
     expect(response.body).to include('catalog')
+  end
+
+  it 'does not preload signed-in catalog data for anonymous readers' do
+    get '/'
+
+    document = Nokogiri::HTML.parse(response.body)
+    preloads = document.css('link[rel="preload"][as="fetch"]').map { |node| node['href'] }
+
+    expect(preloads).to include('/cases.json', '/cases/features.json', '/tags.json', '/catalog/libraries.json')
+    expect(preloads).not_to include('/profile.json', '/enrollments.json')
   end
 
   it 'routes catalog React Router paths back to the catalog shell' do

@@ -28,14 +28,16 @@
 
 - content_for :head do
   %meta{ name: 'twitter:card', content: 'summary'}
-  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
-         href: profile_path(format: :json) }
+  - if reader_signed_in?
+    %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+           href: profile_path(format: :json) }
   %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
          href: cases_path(format: :json) }
   %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
          href: features_path(format: :json) }
-  %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
-         href: enrollments_path(format: :json) }
+  - if reader_signed_in?
+    %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
+           href: enrollments_path(format: :json) }
   %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',
          href: tags_path(format: :json) }
   %link{ rel: 'preload', as: 'fetch', crossorigin: 'anonymous',

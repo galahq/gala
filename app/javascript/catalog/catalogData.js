@@ -7,6 +7,7 @@ import { useImmer } from 'use-immer'
 
 import { Orchard, OrchardError } from 'shared/orchard'
 import { normalize } from 'shared/functions'
+import { hasSerializedReader } from 'catalog/readerData'
 
 
 
@@ -35,6 +36,8 @@ function useCatalogData () {
   }, [])
 
   React.useEffect(() => {
+    if (!hasSerializedReader()) return
+
     Orchard.harvest('enrollments')
       .then(enrollments =>
         update(draft => {
@@ -61,6 +64,8 @@ function useCatalogData () {
   }, [])
 
   React.useEffect(() => {
+    if (!hasSerializedReader()) return
+
     Orchard.harvest('saved_reading_lists')
       .then(lists =>
         update(draft => {
@@ -79,6 +84,8 @@ function useCatalogData () {
   }, [])
 
   React.useEffect(() => {
+    if (!hasSerializedReader()) return
+
     Orchard.harvest('managerships')
       .then(managerships =>
         update(draft => {

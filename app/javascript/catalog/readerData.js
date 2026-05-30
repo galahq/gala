@@ -6,12 +6,20 @@ import * as React from 'react'
 import { Orchard, OrchardError } from 'shared/orchard'
 
 
+export function hasSerializedReader () {
+  return typeof window !== 'undefined' && window.reader != null
+}
 
 export function useReaderData () {
   const [reader, setReader] = React.useState(null)
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = React.useState(hasSerializedReader())
 
   React.useEffect(() => {
+    if (!hasSerializedReader()) {
+      setLoading(false)
+      return
+    }
+
     Orchard.harvest('profile')
       .then(setReader)
       .catch(e => {

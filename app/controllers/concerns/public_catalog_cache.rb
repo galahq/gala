@@ -5,8 +5,8 @@
 module PublicCatalogCache
   extend ActiveSupport::Concern
 
-  PUBLIC_CATALOG_CACHE_TTL = 1.minute
-  PUBLIC_CATALOG_STALE_TTL = 30.seconds
+  PUBLIC_CATALOG_CACHE_TTL = 5.minutes
+  PUBLIC_CATALOG_STALE_TTL = 1.minute
 
   private
 
