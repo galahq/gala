@@ -232,6 +232,28 @@ Plans:
 **Wave 1**
 - [x] 21-01-PLAN.md — Add safe app-edge CloudFront caching, static asset cache metadata, public catalog JSON cache headers, and Puma/SST runtime tuning.
 
+### Phase 22: AWS Edge Cache Validation and Catalog Load Optimization
+
+**Goal:** Validate the Phase 21 app CloudFront rollout in the live AWS environment, then make the smallest safe follow-up changes that improve anonymous root catalog load performance without moving production DNS, altering Heroku, changing SES, or changing the retained `msc-gala` ActiveStorage media bucket.
+
+**Requirements:** AWSPERF-07, AWSPERF-08, AWSPERF-09, AWSPERF-10, AWSPERF-11
+
+**Depends on:** Phase 21
+
+**Success Criteria:**
+1. The existing Phase 21 app CloudFront distribution is deployed and validated before adding broader edge changes.
+2. Root and catalog cache behavior remains anonymous-only, with signed-in, cookie-bearing, query-specific, or personalized responses kept private or uncached.
+3. Anonymous catalog JSON TTLs are increased only after confirming CloudFront cache hits and no personalized cache leakage.
+4. Anonymous root catalog JavaScript avoids unnecessary private endpoint fetches that return 401s and add network/app load.
+5. SST Router and CloudFront bucket routing are documented as viable for managed static assets but out of scope for the retained `msc-gala` ActiveStorage bucket in this phase.
+6. All AWS validation commands use `AWS_PROFILE=gala AWS_REGION=us-west-2`, and the rollout remains deployable through the existing SST GitHub Action.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [x] 22-01-PLAN.md — Validate the live app CloudFront path, tune safe anonymous catalog cache TTLs, and remove anonymous private catalog fetch noise.
+
 ## Completed Milestones
 
 <details>
@@ -265,6 +287,6 @@ Archive:
 
 ## Coverage
 
-- v1.1 requirements: 61
-- Requirements mapped to phases: 61
+- v1.1 requirements: 66
+- Requirements mapped to phases: 66
 - Unmapped requirements: 0

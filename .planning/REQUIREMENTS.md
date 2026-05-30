@@ -96,6 +96,11 @@
 - [x] **AWSPERF-04**: Fingerprinted Rails/Shakapacker static assets under `/assets/*` and `/packs/*` receive immutable cache headers at upload and viewer response time.
 - [x] **AWSPERF-05**: SST production web tasks have increased CPU/memory headroom, and Puma runs multiple threads and production workers while preserving local defaults.
 - [x] **AWSPERF-06**: AWS infrastructure validation uses read-only preview/inspection commands with `AWS_PROFILE=gala AWS_REGION=us-west-2`.
+- [x] **AWSPERF-07**: The Phase 21 app CloudFront distribution is deployed and validated in AWS before broader CloudFront or SST Router changes are accepted.
+- [x] **AWSPERF-08**: Root HTML or catalog JSON cache changes remain anonymous-only and do not cache signed-in, cookie-bearing, query-specific, or personalized responses.
+- [x] **AWSPERF-09**: Anonymous public catalog JSON TTLs are increased only after confirming CloudFront cache hits and signed-in/private response safety.
+- [x] **AWSPERF-10**: Anonymous root catalog JavaScript avoids unnecessary private endpoint fetches that return 401s and add avoidable network or Rails load.
+- [x] **AWSPERF-11**: SST Router and CloudFront bucket routing are evaluated for static assets and app routing, while the retained `msc-gala` ActiveStorage media bucket remains out of scope for bucket-policy or signed-media changes.
 
 ## v1.2+ Candidates
 
@@ -181,12 +186,17 @@
 | AWSPERF-04 | Phase 21 | Complete |
 | AWSPERF-05 | Phase 21 | Complete |
 | AWSPERF-06 | Phase 21 | Complete |
+| AWSPERF-07 | Phase 22 | Complete |
+| AWSPERF-08 | Phase 22 | Complete |
+| AWSPERF-09 | Phase 22 | Complete |
+| AWSPERF-10 | Phase 22 | Complete |
+| AWSPERF-11 | Phase 22 | Complete |
 
 **Coverage:**
-- v1.1 requirements: 61 total
-- Mapped to phases: 61
+- v1.1 requirements: 66 total
+- Mapped to phases: 66
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-30 after Phase 21 AWS performance and edge cache optimization*
+*Last updated: 2026-05-30 after Phase 22 AWS edge cache validation and catalog load optimization completion*
