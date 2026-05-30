@@ -4,8 +4,8 @@ milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: complete
 stopped_at: Phase 22 complete
-last_updated: "2026-05-30T10:29:10Z"
-last_activity: 2026-05-30 -- Phase 22 completed live app CloudFront validation, raised anonymous catalog JSON cache TTLs to 300 seconds, removed anonymous private catalog preload/fetch noise, and verified the SST GitHub Actions deploy path
+last_updated: "2026-05-30T10:44:07Z"
+last_activity: 2026-05-30 -- Phase 22 completed live app CloudFront validation, raised no-cookie anonymous catalog JSON cache TTLs to 300 seconds, kept cookie/query/private variants uncached, removed anonymous private catalog preload/fetch noise, and verified the SST GitHub Actions deploy path
 progress:
   total_phases: 13
   completed_phases: 13
@@ -28,7 +28,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-12)
 Phase: 22 — AWS Edge Cache Validation and Catalog Load Optimization
 Plan: 22-01
 Status: Complete
-Last activity: 2026-05-30 -- Phase 22 deployed through `.github/workflows/deploy.yml` run `26681207844` at commit `a7376c365a8b91691fde017417103808ceb09b91`, validated `https://d3sn0yc7ms2w6o.cloudfront.net`, confirmed repeat anonymous `/cases.json` CloudFront hits at about 0.19s with 300-second public cache headers, and kept Heroku, DNS, SES, and the retained `msc-gala` media bucket unchanged
+Last activity: 2026-05-30 -- Phase 22 deployed through `.github/workflows/deploy.yml` run `26681591794` at commit `3f2a03948ead4f31f895de7a5710cdd9a9ade6b4`, validated `https://d3sn0yc7ms2w6o.cloudfront.net`, confirmed repeat no-cookie anonymous `/cases.json` CloudFront hits at about 0.19s with 300-second public cache headers, confirmed cookie-bearing `/cases.json` stays private and uncached, and kept Heroku, DNS, SES, and the retained `msc-gala` media bucket unchanged
 
 ## Milestone
 
@@ -77,7 +77,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 15 completed the conservative JavaScript dependency batch: `webpack` 5.107.2, `webpack-dev-server` 5.2.4, and `sass` 1.100.0. Shakapacker stayed aligned at 10.0.0, React/Blueprint majors stayed held, `pnpm install --frozen-lockfile`, `pnpm test -- --runInBand`, and Docker asset precompile passed.
 - Phase 20 completed the AWS SST deployment through `.github/workflows/deploy.yml` run `26318968133` at commit `d6d99b940e0a51ffdada992d9951a9666b5b1c01`. The environment is available at `http://GalaWebLoadBala-chdmccbn-1073735116.us-west-2.elb.amazonaws.com`, seeded from `db/sqldump/seed.dump`, steady on ECS task definition revision `:7`, and Heroku production remains unchanged.
 - Phase 21 addressed the AWS catalog bottleneck found on 2026-05-30: `/cases.json` was dominated by Rails serialization, not static asset delivery. The rollout adds a separate app CloudFront distribution with default caching disabled and short TTL behavior only for public anonymous catalog JSON paths, adds immutable static asset headers, increases production web CPU/memory, and raises Puma concurrency. Targeted catalog request specs passed in Docker compose.
-- Phase 22 deployed and validated the app CloudFront distribution `EF4NIYHMN17KT` / `https://d3sn0yc7ms2w6o.cloudfront.net`. Anonymous catalog JSON now emits `max-age=300, s-maxage=300, stale-while-revalidate=60`, query/private variants remain uncached, and anonymous root HTML no longer preloads `/profile.json` or `/enrollments.json`.
+- Phase 22 deployed and validated the app CloudFront distribution `EF4NIYHMN17KT` / `https://d3sn0yc7ms2w6o.cloudfront.net`. No-cookie anonymous catalog JSON now emits `max-age=300, s-maxage=300, stale-while-revalidate=60`; cookie-bearing, query, and private variants remain uncached; and anonymous root HTML no longer preloads `/profile.json` or `/enrollments.json`.
 
 ## Accumulated Context
 
@@ -94,7 +94,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-05-30T10:29:10Z
+Last session: 2026-05-30T10:44:07Z
 Stopped at: Phase 22 complete
 Resume file: .planning/phases/22-aws-edge-cache-validation-and-catalog-load-optimization/22-01-SUMMARY.md
 
