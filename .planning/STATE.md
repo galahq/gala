@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
-status: complete
-stopped_at: Phase 22 complete
-last_updated: "2026-05-30T10:44:07Z"
-last_activity: 2026-05-30 -- Phase 22 completed live app CloudFront validation, raised no-cookie anonymous catalog JSON cache TTLs to 300 seconds, kept cookie/query/private variants uncached, removed anonymous private catalog preload/fetch noise, and verified the SST GitHub Actions deploy path
+status: active
+stopped_at: Phase 23 implementation
+last_updated: "2026-05-30T00:00:00Z"
+last_activity: 2026-05-30 -- Phase 23 added for SST-owned Cloudflare DNS on `learngala.dev`, branch preview subdomains, immutable release asset namespaces, minimal deploy workflow inputs, and automated production release metadata
 progress:
-  total_phases: 13
+  total_phases: 14
   completed_phases: 13
-  total_plans: 15
+  total_plans: 16
   completed_plans: 15
-  percent: 100
+  percent: 93
 ---
 
 # GSD State
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** v1.1 AWS deployment candidate has validated app-edge catalog caching while Heroku production remains untouched
+**Current focus:** Phase 23 is adding SST-owned Cloudflare DNS and immutable preview/release deployment mechanics for `learngala.dev`
 
 ## Current Position
 
-Phase: 22 — AWS Edge Cache Validation and Catalog Load Optimization
-Plan: 22-01
-Status: Complete
-Last activity: 2026-05-30 -- Phase 22 deployed through `.github/workflows/deploy.yml` run `26681591794` at commit `3f2a0394b42b954a9bd27c44f1269fd69885b6a3`, validated `https://d3sn0yc7ms2w6o.cloudfront.net`, confirmed repeat no-cookie anonymous `/cases.json` CloudFront hits at about 0.19s with 300-second public cache headers, confirmed cookie-bearing `/cases.json` stays private and uncached, and kept Heroku, DNS, SES, and the retained `msc-gala` media bucket unchanged
+Phase: 23 — Immutable Cloudflare DNS and preview deployment pipeline
+Plan: 23-01
+Status: In progress
+Last activity: 2026-05-30 -- Phase 23 deployed production `learngala.dev` through SST Router/Cloudflare and created the permanent dev stage; dev is currently blocked on Rails credentials decryption (`RAILS_MASTER_KEY`) causing ALB target timeouts
 
 ## Milestone
 
@@ -49,6 +49,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Do not mutate Heroku production at `https://www.learngala.com`; Heroku CLI use is read-only for `msc-gala` config values.
 - Do not copy Heroku `DATABASE_URL` or Redis connection strings into AWS runtime config; use freshly provisioned SST database/cache outputs.
 - Use the generated AWS ALB URL as the test entrypoint until DNS cutover is separately approved.
+- Treat `learngala.dev` and preview subdomains as Phase 23 Cloudflare DNS targets owned by SST; `https://www.learngala.com` remains out of scope.
+- Derive deploy release IDs as `github_run_id.YYYYMMDDHHMMSS.shortsha`, and store assets under immutable `releases/<stage>/<release_id>/` prefixes.
 - Reuse/import existing AWS resources, including SES, Gmail, and S3 credentials, without destructive actions.
 - Prefix AWS/SST execution commands with `AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=production`.
 - Prefix every read-only Heroku CLI command with `heroku --app msc-gala`.
@@ -78,12 +80,15 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 20 completed the AWS SST deployment through `.github/workflows/deploy.yml` run `26318968133` at commit `d6d99b940e0a51ffdada992d9951a9666b5b1c01`. The environment is available at `http://GalaWebLoadBala-chdmccbn-1073735116.us-west-2.elb.amazonaws.com`, seeded from `db/sqldump/seed.dump`, steady on ECS task definition revision `:7`, and Heroku production remains unchanged.
 - Phase 21 addressed the AWS catalog bottleneck found on 2026-05-30: `/cases.json` was dominated by Rails serialization, not static asset delivery. The rollout adds a separate app CloudFront distribution with default caching disabled and short TTL behavior only for public anonymous catalog JSON paths, adds immutable static asset headers, increases production web CPU/memory, and raises Puma concurrency. Targeted catalog request specs passed in Docker compose.
 - Phase 22 deployed and validated the app CloudFront distribution `EF4NIYHMN17KT` / `https://d3sn0yc7ms2w6o.cloudfront.net`. No-cookie anonymous catalog JSON now emits `max-age=300, s-maxage=300, stale-while-revalidate=60`; cookie-bearing, query, and private variants remain uncached; and anonymous root HTML no longer preloads `/profile.json` or `/enrollments.json`.
+- Phase 23 adds a new deployment architecture layer: Cloudflare DNS for `learngala.dev`, branch preview subdomains, release-ID asset prefixes, GitHub releases for production deploys, PR comments for previews, and contributor-gated deploy workflow inputs.
+- Phase 23 live breakpoint: production Router `E3FF4TTU9Q4XTY` / `d1ky1nvgqyxj8z.cloudfront.net` serves `learngala.dev`; dev stage deployed at `pr-745.dev.learngala.dev` but web health is failing because Puma workers cannot decrypt Rails credentials (`key must be 16 bytes`). Resume from `.planning/phases/23-immutable-cloudflare-dns-and-preview-deployment-pipeline/23-01-SUMMARY.md`.
 
 ## Accumulated Context
 
 ### Roadmap Evolution
 
 - Phase 22 added: AWS Edge Cache Validation and Catalog Load Optimization
+- Phase 23 added: Immutable Cloudflare DNS and preview deployment pipeline
 
 ## Notes
 
@@ -94,14 +99,15 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-05-30T10:44:07Z
-Stopped at: Phase 22 complete
-Resume file: .planning/phases/22-aws-edge-cache-validation-and-catalog-load-optimization/22-01-SUMMARY.md
+Last session: 2026-05-30T00:00:00Z
+Stopped at: Phase 23 implementation
+Resume file: .planning/phases/23-immutable-cloudflare-dns-and-preview-deployment-pipeline/23-01-SUMMARY.md
 
 ## Quick Tasks Completed
 
 | Date | Task | Status | Commit |
 | --- | --- | --- | --- |
+| 2026-05-30 | Add root CODEOWNERS file | complete | this commit |
 | 2026-05-05 | Remove legacy automation residue | complete | this commit |
 | 2026-05-05 | Fix missing reading-list UUID nil title error | complete | this commit |
 | 2026-05-04 | Restore production Mapbox style fallback | complete | this commit |
@@ -109,7 +115,7 @@ Resume file: .planning/phases/22-aws-edge-cache-validation-and-catalog-load-opti
 
 ## Operator Next Steps
 
-- Use the generated app CloudFront URL for any additional AWS smoke testing before any DNS work.
-- Use the generated ALB URL as the rollback and direct-origin comparison path.
-- Keep `https://www.learngala.com` on Heroku until a separate DNS cutover phase is explicitly approved.
-- If rollback is needed, redeploy the previous known-good branch state or point testing back to the direct ALB URL while leaving Heroku production unchanged.
+- Use `https://learngala.dev` and branch subdomains under `*.dev.learngala.dev` for Phase 23 AWS/Cloudflare validation after SST deploy succeeds.
+- Use the generated ALB URL as the direct-origin comparison path.
+- Keep `https://www.learngala.com` on Heroku until a separate `.com` DNS cutover phase is explicitly approved.
+- If rollback is needed, redeploy the previous known-good branch or commit through `.github/workflows/deploy.yml`; retained release asset namespaces preserve the prior static assets during the rollback window.

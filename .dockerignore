@@ -17,3 +17,7 @@ coverage
 
 # SST local state
 /infra/.sst/
+
+
+# sst
+.sst
