@@ -28,7 +28,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-12)
 Phase: 22 — AWS Edge Cache Validation and Catalog Load Optimization
 Plan: 22-01
 Status: Complete
-Last activity: 2026-05-30 -- Phase 22 deployed through `.github/workflows/deploy.yml` run `26681591794` at commit `3f2a03948ead4f31f895de7a5710cdd9a9ade6b4`, validated `https://d3sn0yc7ms2w6o.cloudfront.net`, confirmed repeat no-cookie anonymous `/cases.json` CloudFront hits at about 0.19s with 300-second public cache headers, confirmed cookie-bearing `/cases.json` stays private and uncached, and kept Heroku, DNS, SES, and the retained `msc-gala` media bucket unchanged
+Last activity: 2026-05-30 -- Phase 22 deployed through `.github/workflows/deploy.yml` run `26681591794` at commit `3f2a0394b42b954a9bd27c44f1269fd69885b6a3`, validated `https://d3sn0yc7ms2w6o.cloudfront.net`, confirmed repeat no-cookie anonymous `/cases.json` CloudFront hits at about 0.19s with 300-second public cache headers, confirmed cookie-bearing `/cases.json` stays private and uncached, and kept Heroku, DNS, SES, and the retained `msc-gala` media bucket unchanged
 
 ## Milestone
 

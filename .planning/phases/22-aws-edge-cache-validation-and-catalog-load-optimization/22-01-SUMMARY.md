@@ -4,7 +4,7 @@ plan: 1
 type: summary
 status: complete
 completed_at: "2026-05-30T10:44:07Z"
-commit: 3f2a03948ead4f31f895de7a5710cdd9a9ade6b4
+commit: 3f2a0394b42b954a9bd27c44f1269fd69885b6a3
 deploy_run: 26681591794
 ---
 
@@ -22,7 +22,7 @@ deploy_run: 26681591794
 
 ## Post-Deploy Validation
 
-- GitHub Actions deploy `26681591794` completed successfully with image `353760060567.dkr.ecr.us-west-2.amazonaws.com/gala:3f2a03948ead4f31f895de7a5710cdd9a9ade6b4`.
+- GitHub Actions deploy `26681591794` completed successfully with image `353760060567.dkr.ecr.us-west-2.amazonaws.com/gala:3f2a0394b42b954a9bd27c44f1269fd69885b6a3`.
 - ECS `GalaWeb` stabilized on task definition revision `:10` after the GitHub Action completed.
 - App CloudFront distribution status: `Deployed`, origin `galawebloadbala-chdmccbn-1073735116.us-west-2.elb.amazonaws.com`.
 - Fresh anonymous `/cases.json` through CloudFront:
