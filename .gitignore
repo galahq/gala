@@ -55,6 +55,7 @@ spec/examples.txt
 *.*.OLD
 .env
 .env.dev
+dev.learngala.global
 .DS_Store
 .*OLD
 .*.OLD
