@@ -1,71 +1,92 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-05-03
+**Analysis Date:** 2026-05-30
 
 ## Test Framework
 
 **Runner:**
-- RSpec for Rails backend tests.
-- Config: `.rspec`, `spec/spec_helper.rb`, and `spec/rails_helper.rb`.
-- Jest 24 for frontend JavaScript and React tests.
-- Config: `jest.config.js`.
+- RSpec `3.13.2` with `rspec-rails` `7.1.0` for Rails tests.
+  - Config: `.rspec`, `spec/spec_helper.rb`, `spec/rails_helper.rb`
+  - Rake wrapper: `lib/tasks/tests.rake`
+- Jest `24.9.0` with `babel-jest` `24.9.0` for frontend JavaScript and React tests.
+  - Config: `jest.config.js`
+  - Setup: `spec/support/jest-setup.js`
+- Playwright Test `1.60.0` for visual route coverage.
+  - Config: `playwright.config.mjs`
+  - Specs: `tests/visual/visual-routes.spec.mjs`
+- Vitest `4.1.6` exists only as a spike command in `package.json`; it is not the normal app test runner.
 
 **Assertion Library:**
-- RSpec expectations and rspec-mocks for Ruby tests, configured in `spec/spec_helper.rb`.
-- Shoulda Matchers for Rails model/controller-style matchers, configured in `spec/rails_helper.rb`.
-- `rspec-composable_json_matchers` for JSON response assertions, configured in `spec/rails_helper.rb`.
-- Jest `expect`, `jest-dom`, and React Testing Library for frontend tests, configured in `spec/support/jest-setup.js`.
+- RSpec expectations and mocks from `spec/spec_helper.rb`.
+- Pundit permission matchers through `pundit/rspec` in `spec/spec_helper.rb`, used by specs such as `spec/policies/case_policy_spec.rb`.
+- Shoulda Matchers configured in `spec/rails_helper.rb`.
+- `rspec-composable_json_matchers` configured in `spec/rails_helper.rb`, used by request specs such as `spec/requests/wikidata_sparql_routes_spec.rb`.
+- Jest `expect`, `jest-dom`, and `react-testing-library`, configured through `spec/support/jest-setup.js`.
+- Playwright `test` and `expect` in `tests/visual/visual-routes.spec.mjs`.
 
 **Run Commands:**
 ```bash
-bundle exec rspec                    # Run RSpec using .rspec defaults; feature specs are excluded by .rspec
-./run-rspec.sh                       # Run non-feature RSpec through docker compose with RAILS_ENV=test
-bundle exec rake test:unit           # Run non-feature RSpec via lib/tasks/tests.rake
-yarn test                            # Run Jest against app/javascript
+bundle exec rake test:unit
+bundle exec rspec spec/requests/catalog_routes_spec.rb
+docker compose run -e RAILS_ENV=test web bundle exec rspec spec/requests/catalog_routes_spec.rb --format progress --color
+pnpm test -- --runInBand
+pnpm exec jest app/javascript/stats/__tests__/StatsPage.test.jsx --runInBand
+pnpm test:visual
+pnpm test:visual:update
 ```
+
+Use Docker Compose for Rails specs when the host Ruby, database, or browser-driver environment is not aligned with `.ruby-version`, `mise.toml`, and `docker-compose.yml`.
 
 ## Test File Organization
 
 **Location:**
-- Backend specs live under `spec/` grouped by Rails type: `spec/models`, `spec/controllers`, `spec/requests`, `spec/services`, `spec/policies`, `spec/features`, `spec/jobs`, `spec/mailboxes`, `spec/mailers`, `spec/decorators`, `spec/forms`, `spec/cloners`, and `spec/config`.
-- Frontend tests are co-located under feature-level `__tests__/` directories in `app/javascript`, such as `app/javascript/stats/__tests__`, `app/javascript/shared/__tests__`, and `app/javascript/redux/reducers/__tests__`.
-- Factories live in `spec/factories/`, with one file per domain model where practical: `spec/factories/readers.rb`, `spec/factories/cases.rb`, and `spec/factories/ahoy_events.rb`.
-- Shared Ruby test helpers live in `spec/support/`, including `spec/support/factory_bot.rb` and `spec/support/integration/authentication.rb`.
-- Static test files live under `spec/fixtures/files/`, such as `spec/fixtures/files/block-m.png`.
+- Rails tests live under `spec/` by type: `spec/models/`, `spec/requests/`, `spec/controllers/`, `spec/features/`, `spec/policies/`, `spec/services/`, `spec/jobs/`, `spec/mailboxes/`, `spec/decorators/`, and `spec/serializers/`.
+- Rails factories live under `spec/factories/`, with support helpers in `spec/support/`.
+- Frontend tests are colocated under feature-level `__tests__` directories in `app/javascript/`: `app/javascript/stats/__tests__/`, `app/javascript/shared/__tests__/`, `app/javascript/reading_list/__tests__/`, and `app/javascript/redux/reducers/__tests__/`.
+- Visual tests live outside `app/` in `tests/visual/`, with helper code in `tests/visual/visual-route-helpers.mjs` and noise rules in `tests/visual/noise-allowlist.json`.
+- No Rails Minitest files are present under `test/`.
 
 **Naming:**
-- Ruby specs use `*_spec.rb`: `spec/services/case_stats_service/query_spec.rb`, `spec/models/case_spec.rb`, and `spec/requests/health_check_spec.rb`.
-- JavaScript specs use `.test.js` or `.test.jsx`: `app/javascript/stats/__tests__/statsStore.test.js`, `app/javascript/stats/__tests__/StatsPage.test.jsx`, and `app/javascript/reading_list/__tests__/HiddenFormInputs.test.jsx`.
-- Feature specs are named by user workflow in gerund form: `spec/features/creating_a_reading_list_spec.rb`, `spec/features/editing_a_case_spec.rb`, and `spec/features/viewing_a_case_spec.rb`.
+- Rails spec files end in `_spec.rb`: `spec/services/case_stats_service_spec.rb`, `spec/requests/catalog_routes_spec.rb`, `spec/policies/case_policy_spec.rb`.
+- JavaScript test files end in `.test.js` or `.test.jsx`: `app/javascript/shared/__tests__/orchard.test.js`, `app/javascript/stats/__tests__/DatePicker.test.jsx`.
+- Visual specs end in `.spec.mjs`: `tests/visual/visual-routes.spec.mjs`.
 
 **Structure:**
-```
+```text
 spec/
-├── factories/                # FactoryBot factories and traits
-├── support/                  # RSpec support helpers
-├── models/                   # ActiveRecord/domain model specs
-├── services/                 # Service object specs
-├── requests/                 # Request specs
-├── controllers/              # Controller specs
-├── policies/                 # Pundit policy specs
-└── features/                 # Capybara browser workflow specs
+├── factories/          # FactoryBot factories
+├── support/            # RSpec and integration helpers
+├── requests/           # Route and HTTP behavior specs
+├── features/           # Capybara/Selenium browser specs
+├── models/             # ActiveRecord/domain specs
+├── policies/           # Pundit permission specs
+└── services/           # Service object specs
 
 app/javascript/<feature>/__tests__/
-├── <Component>.test.jsx      # React component tests
-└── <helper>.test.js          # Pure JS helper/reducer tests
+└── <Unit>.test.js[x]   # Jest tests colocated with frontend feature code
+
+tests/visual/
+├── visual-routes.spec.mjs
+├── visual-route-helpers.mjs
+└── noise-allowlist.json
 ```
 
 ## Test Structure
 
 **Suite Organization:**
 ```ruby
-# Pattern from spec/services/case_stats_service/query_spec.rb
+# spec/services/case_stats_service/query_spec.rb
 require 'rails_helper'
 
 RSpec.describe CaseStatsService::Query do
   let(:kase) { create(:case) }
   let(:reader) { create(:reader) }
-  let(:visit) { create(:visit, user: reader, country: 'US') }
+  let(:time_range) do
+    {
+      from_time: 1.week.ago.beginning_of_day,
+      to_time: Time.current.end_of_day
+    }
+  end
 
   subject(:query) { described_class.new(kase, time_range) }
 
@@ -80,178 +101,202 @@ end
 ```
 
 ```javascript
-/* @flow */
+// app/javascript/reading_list/__tests__/HiddenFormInputs.test.jsx
+import HiddenFormInputs from '../HiddenFormInputs'
+import * as React from 'react'
+import { render } from 'react-testing-library'
 
-// Pattern from app/javascript/shared/__tests__/functions.test.js
-import { reorder } from '../functions'
+describe('HiddenFormInputs', () => {
+  it('has the right form values for nested reading list item attributes', () => {
+    const items = [{ caseSlug: 'mi-wolves', notes: 'Cool!', param: '' }]
+    const form = renderForm(
+      <HiddenFormInputs initialItems={[]} items={items} />
+    )
 
-describe('reorder', () => {
-  it('works', () => {
-    const array = 'abcd'.split('')
-    expect(reorder(1, 2, array)).toEqual('acbd'.split(''))
+    expect(form).toHaveFormValues({
+      'reading_list[reading_list_items_attributes][0][case_slug]': 'mi-wolves',
+    })
   })
 })
 ```
 
 **Patterns:**
-- Require `rails_helper` in Rails specs, not `spec_helper`, as shown across `spec/services/case_stats_service/query_spec.rb`, `spec/models/case_spec.rb`, and `spec/requests/health_check_spec.rb`.
-- Use `RSpec.describe <ClassOrFeature>` with nested `describe '#instance_method'`, `describe '.class_method'`, and `context 'with condition'` blocks.
-- Prefer `let` and named `subject` for reusable setup: `subject(:query)` in `spec/services/case_stats_service/query_spec.rb` and `subject(:service)` in `spec/services/case_stats_service_spec.rb`.
-- Use `before` blocks for persisted records or repeated setup that is required by multiple examples in the same context.
-- In frontend tests, define render helpers near the top of the file when providers are required, as in `renderPage` in `app/javascript/stats/__tests__/StatsPage.test.jsx`.
-- Use `data-testid` for React Testing Library queries when component text or structure is not the behavior under test, as in `app/javascript/stats/__tests__/StatsPage.test.jsx`.
+- Require `rails_helper` for Rails specs that need the app, database, factories, Devise helpers, Pundit, Capybara, or ActiveJob helpers. Examples: `spec/requests/catalog_routes_spec.rb`, `spec/services/case_stats_service_spec.rb`.
+- Use `spec_helper` only indirectly through `.rspec`; `spec/rails_helper.rb` requires it for Rails specs.
+- Use `let`, `subject`, `before`, `describe`, and `context` for RSpec organization. Keep behavior descriptions user/domain-facing.
+- Prefer request specs for route coverage and response semantics. Route-group examples include `spec/requests/catalog_routes_spec.rb`, `spec/requests/admin_operations_routes_spec.rb`, and `spec/requests/wikidata_sparql_routes_spec.rb`.
+- Use feature specs for full browser workflows with Capybara helpers from `spec/support/integration/authentication.rb`, such as `spec/features/creating_a_reading_list_spec.rb`.
+- Use pure Jest tests for reducers, selectors, helpers, DOM side-effect bridges, and React rendering. Examples: `app/javascript/stats/__tests__/statsStore.test.js`, `app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js`, and `app/javascript/redux/reducers/__tests__/cards.test.js`.
+- Playwright visual tests build route coverage from `config/routes.rb` through `tests/visual/visual-route-helpers.mjs`.
 
 ## Mocking
 
-**Framework:** RSpec mocks for Ruby; Jest mocks and spies for JavaScript.
+**Framework:** RSpec mocks, Jest mocks, and Playwright browser instrumentation.
 
 **Patterns:**
 ```ruby
-# Pattern from spec/policies/comment_policy_spec.rb and spec/jobs/cleanup_locks_job_spec.rb
-forum_policy = instance_double ForumPolicy
-allow(forum_policy).to receive(:show?).and_return(true)
-expect(BroadcastEdit).to receive(:to)
+# spec/requests/wikidata_sparql_routes_spec.rb
+wikidata = instance_double(Wikidata)
+allow(Wikidata).to receive(:new).and_return(wikidata)
+allow(wikidata).to receive(:search)
+  .with('python', 'software')
+  .and_return([{ qid: 'Q28865', label: 'Python' }])
 ```
 
 ```javascript
-// Pattern from app/javascript/stats/__tests__/StatsPage.test.jsx
+// app/javascript/stats/__tests__/StatsPage.test.jsx
 const mockFetchStats = jest.fn()
 
 jest.mock('../http/statsHttp', () => ({
   fetchStats: (...args) => mockFetchStats(...args),
+  fetchWithTimeout: (promise) => promise,
 }))
-
-beforeEach(() => {
-  jest.clearAllMocks()
-})
 ```
 
 **What to Mock:**
-- Mock external services, browser APIs, network calls, maps, heavyweight UI widgets, and background broadcast boundaries.
-- Use `instance_double` for Ruby collaborator contracts where available, as in `spec/policies/comment_policy_spec.rb` and `spec/decorators/card_decorator_spec.rb`.
-- Mock frontend HTTP modules and large child components when testing container behavior, as in `app/javascript/stats/__tests__/StatsPage.test.jsx`.
-- Mock third-party UI components when their behavior is not the test target, as in `app/javascript/stats/__tests__/DatePicker.test.jsx`.
+- Mock external network/service boundaries. `spec/requests/wikidata_sparql_routes_spec.rb` stubs `Wikidata` instead of calling Wikidata/SPARQL services.
+- Mock authentication/OAuth providers at the test boundary. `spec/rails_helper.rb` enables OmniAuth test mode and configures a Google auth hash.
+- Mock isolated collaborators when verifying job or service interactions. `spec/jobs/cleanup_locks_job_spec.rb` stubs `Lock.where` and expects `BroadcastEdit.to`.
+- Mock heavy React children or browser-only dependencies when the component under test owns orchestration. `app/javascript/stats/__tests__/StatsPage.test.jsx` mocks `DatePicker`, `MapContainer`, `StatsTable`, loading components, and error components.
+- Mock DOM observers when testing side-effect modules. `app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js` installs a `MutationObserver` mock and reloads the module with `jest.resetModules()`.
+- Mock fetch through `global.fetch = require('jest-fetch-mock')` from `spec/support/jest-setup.js`.
 
 **What NOT to Mock:**
-- Do not mock the object under test.
-- Do not mock ActiveRecord persistence when validating query behavior or model integration; `spec/services/case_stats_service/query_spec.rb` creates real `Ahoy::Event`, `Visit`, `Reader`, and `Case` records.
-- Do not mock pure reducers/selectors/helpers; test them directly, as in `app/javascript/stats/__tests__/statsStore.test.js`, `app/javascript/stats/__tests__/statsResponse.test.js`, and `app/javascript/shared/__tests__/functions.test.js`.
-- Avoid stubbing methods that do not exist; `spec/spec_helper.rb` enables `mocks.verify_partial_doubles = true`.
+- Do not mock Rails request routing or controller rendering in request specs; assert `response`, `response.headers`, `response.media_type`, `response.parsed_body`, and parsed HTML directly as in `spec/requests/catalog_routes_spec.rb`.
+- Do not mock ActiveRecord persistence when the behavior depends on associations, validations, scopes, or SQL. `spec/services/case_stats_service/query_spec.rb` creates real `Ahoy::Event` and `Visit` rows to exercise SQL.
+- Do not mock Redux reducers or pure selectors. Test them as pure functions, as in `app/javascript/stats/__tests__/statsStore.test.js` and `app/javascript/redux/reducers/__tests__/pagesById.test.js`.
+- Do not silence unknown browser console/network errors in Playwright. Add intentional route noise to `tests/visual/noise-allowlist.json`; `tests/visual/visual-routes.spec.mjs` fails on unclassified noise.
 
 ## Fixtures and Factories
 
 **Test Data:**
 ```ruby
-# Pattern from spec/factories/readers.rb
+# spec/factories/readers.rb
 FactoryBot.define do
   factory :reader do
     name { Faker::Name.name }
-    initials { name.split(' ').map { |x| x[0] }.join }
     email { Faker::Internet.email }
-    password { 'secret' }
     locale { 'en' }
     confirmed_at { Time.zone.now }
-    terms_of_service { 1 }
 
-    trait :invisible do
-      after :create do |this|
-        this.add_role :invisible
+    trait :editor do
+      after :build do |this|
+        this.add_role :editor
       end
     end
   end
 end
 ```
 
-```javascript
-// Pattern from app/javascript/stats/__tests__/StatsPage.test.jsx
-const sampleData = {
-  formatted: [
-    {
-      iso2: 'US',
-      iso3: 'USA',
-      name: 'United States',
-      unique_visits: 10,
-      unique_users: 8,
-      events_count: 15,
-    },
-  ],
-  summary: {
-    total_visits: 10,
-    country_count: 1,
-  },
-}
+```ruby
+# spec/factories/cases.rb
+FactoryBot.define do
+  factory :case do
+    kicker { Faker::Hipster.words(number: 2).join(' ').titlecase }
+    title { Faker::Hipster.sentence }
+
+    trait :published do
+      library
+      published_at { rand(30).minutes.ago }
+    end
+  end
+end
 ```
 
 **Location:**
-- FactoryBot factories live in `spec/factories/` and are auto-loaded by `factory_bot_rails`.
-- Factory syntax is included globally through `spec/rails_helper.rb` and `spec/support/factory_bot.rb`; use `create(:reader)`, `build_stubbed(:case)`, and traits such as `create(:reader, :invisible)`.
-- JavaScript fixtures are usually file-local constants inside the relevant `.test.js` or `.test.jsx`, as in `app/javascript/stats/__tests__/StatsPage.test.jsx`.
-- Binary/file fixtures belong in `spec/fixtures/files/`.
+- FactoryBot factories: `spec/factories/`
+- File fixtures: `spec/fixtures/files/`, including `spec/fixtures/files/block-m.png`
+- RSpec support helpers: `spec/support/factory_bot.rb`, `spec/support/integration/authentication.rb`, `spec/support/integration/lti_launch.rb`
+- Jest setup: `spec/support/jest-setup.js`
+- Playwright route noise fixtures: `tests/visual/noise-allowlist.json`
+
+Use factories for domain records. Prefer `build_stubbed` for policy/model specs that do not need database writes, as in `spec/models/case_spec.rb` and `spec/policies/enrollment_policy_spec.rb`. Use `create` when scopes, SQL, callbacks, associations, or request behavior need persisted records.
 
 ## Coverage
 
-**Requirements:** No enforced coverage threshold detected. No SimpleCov setup is present in `spec/spec_helper.rb` or `spec/rails_helper.rb`, and `jest.config.js` does not set `collectCoverage` or coverage thresholds.
+**Requirements:** None enforced.
+
+- No SimpleCov configuration is detected in `spec/spec_helper.rb`, `spec/rails_helper.rb`, `Gemfile`, or `Gemfile.lock`.
+- Jest coverage collection is not configured in `jest.config.js` or `package.json`.
+- Playwright visual coverage is route-matrix based rather than percentage based. It captures snapshots for route definitions in `tests/visual/visual-route-helpers.mjs` and compares them through `tests/visual/visual-routes.spec.mjs`.
 
 **View Coverage:**
 ```bash
-yarn jest app/javascript --coverage      # Ad hoc frontend coverage if needed
+# No canonical coverage command is configured.
+pnpm exec jest app/javascript --coverage
 ```
+
+Treat the coverage command above as ad hoc only; it is not a documented project gate.
 
 ## Test Types
 
 **Unit Tests:**
-- Ruby unit/service/model tests cover domain logic with FactoryBot records and direct assertions. Examples: `spec/services/case_stats_service/query_spec.rb`, `spec/services/case_stats_service/formatter_spec.rb`, `spec/models/content_state_spec.rb`, and `spec/policies/comment_policy_spec.rb`.
-- JavaScript unit tests cover pure helpers, reducers, state selectors, and component containers. Examples: `app/javascript/stats/__tests__/statsStore.test.js`, `app/javascript/stats/__tests__/statsResponse.test.js`, `app/javascript/redux/reducers/__tests__/cards.test.js`, and `app/javascript/shared/spotlight/__tests__/SpotlightManager.test.js`.
+- Model specs under `spec/models/` exercise validations, methods, and concerns. Example: `spec/models/case_spec.rb`.
+- Policy specs under `spec/policies/` use Pundit `permissions` blocks. Example: `spec/policies/case_policy_spec.rb`.
+- Service specs under `spec/services/` test service public APIs and SQL behavior. Examples: `spec/services/case_stats_service_spec.rb`, `spec/services/case_stats_service/query_spec.rb`.
+- Jest unit tests cover helper functions, reducers, selectors, and component output. Examples: `app/javascript/shared/__tests__/functions.test.js`, `app/javascript/stats/__tests__/statsStore.test.js`, `app/javascript/reading_list/__tests__/HiddenFormInputs.test.jsx`.
 
 **Integration Tests:**
-- Request specs live in `spec/requests/` and exercise HTTP behavior through Rails: `spec/requests/health_check_spec.rb`, `spec/requests/announcements_index_spec.rb`, and `spec/requests/persona_update_spec.rb`.
-- Controller specs live in `spec/controllers/`, including nested controller namespaces such as `spec/controllers/cases/stats_controller_spec.rb` and `spec/controllers/edgenotes/attachments_controller_spec.rb`.
-- Mailbox, mailer, job, serializer, decorator, cloner, and config specs cover Rails integration boundaries in `spec/mailboxes/replies_mailbox_spec.rb`, `spec/mailers/reply_notification_mailer_spec.rb`, `spec/jobs/cleanup_locks_job_spec.rb`, `spec/serializers/cases/stats_serializer_spec.rb`, `spec/decorators/card_decorator_spec.rb`, `spec/cloners/case_cloner_spec.rb`, and `spec/config/rack_attack_spec.rb`.
+- Request specs under `spec/requests/` cover route behavior, authentication, response formats, cache headers, redirects, and JSON bodies. Examples: `spec/requests/catalog_routes_spec.rb`, `spec/requests/admin_operations_routes_spec.rb`, `spec/requests/reading_lists_spec.rb`.
+- Controller specs still exist under `spec/controllers/` for controller-specific behavior. Examples: `spec/controllers/cases_controller_spec.rb`, `spec/controllers/admin/cases_controller_spec.rb`.
+- Mailbox/mail specs live under `spec/mailboxes/` and `spec/mailers/`, such as `spec/mailboxes/replies_mailbox_spec.rb`.
+- Feature specs under `spec/features/` use Capybara/Selenium for browser-level workflows. `.rspec` excludes `spec/features/**/*_spec.rb` from default RSpec runs.
 
 **E2E Tests:**
-- Capybara feature specs live in `spec/features/`, use Selenium Chrome headless by default, and cover full user workflows such as `spec/features/signing_up_spec.rb`, `spec/features/creating_a_new_deployment_spec.rb`, and `spec/features/leaving_a_comment_spec.rb`.
-- `.rspec` excludes `spec/features/**/*_spec.rb` by default, so feature specs require an explicit include/run command when needed.
-- Capybara browser configuration is in `spec/rails_helper.rb`, including the Selenium driver, server host/port, app host, and default 1600x1200 browser size.
-- Feature authentication helpers live in `spec/support/integration/authentication.rb` and are included for `type: :feature`.
+- Capybara/Selenium feature specs are the Rails browser workflow tests. `spec/rails_helper.rb` registers a headless Chrome Selenium driver and sets Capybara server host/port.
+- Playwright visual regression is configured in `playwright.config.mjs` and uses `http://localhost:3000` as `baseURL`.
+- Playwright route tests use credentials from environment variable names such as `VISUAL_READER_EMAIL`, `VISUAL_READER_PASSWORD`, `VISUAL_EDITOR_EMAIL`, and `VISUAL_EDITOR_PASSWORD` when protected routes need auth.
 
 ## Common Patterns
 
 **Async Testing:**
 ```javascript
-// Pattern from app/javascript/stats/__tests__/StatsPage.test.jsx
+// app/javascript/stats/__tests__/StatsPage.test.jsx
 mockFetchStats.mockResolvedValueOnce(sampleData)
 
 const view = renderPage()
 
 expect(view.getByTestId('page-loading')).toBeTruthy()
 await waitForElement(() => view.getByTestId('stats-summary'))
-expect(view.queryByTestId('page-loading')).toBeNull()
-```
 
-**Error Testing:**
-```ruby
-# Pattern from spec/services/case_stats_service_spec.rb
-context 'with invalid date strings' do
-  subject(:service) { described_class.new(kase, from: 'invalid', to: 'also-invalid') }
-
-  it 'falls back to case created_at for from_date' do
-    expect(service.from_date).to eq(kase.created_at.to_date)
-  end
-end
+expect(mockFetchStats).toHaveBeenCalledTimes(1)
 ```
 
 ```javascript
-// Pattern from app/javascript/stats/__tests__/StatsPage.test.jsx
-mockFetchStats
-  .mockRejectedValueOnce(new Error('network down'))
-  .mockResolvedValueOnce(sampleData)
-
-const view = renderPage()
-
-await waitForElement(() => view.getByTestId('stats-error'))
-expect(view.getByTestId('stats-error-message')).toHaveTextContent('network down')
+// app/javascript/stats/__tests__/StatsPage.test.jsx
+await act(async () => {
+  await new Promise(resolve => setTimeout(resolve, 220))
+})
 ```
+
+Use `waitForElement` from `react-testing-library` for UI that appears after promises or effects. Use `act` around manual timers and promise flushing.
+
+**Error Testing:**
+```javascript
+// app/javascript/shared/__tests__/orchard.test.js
+const res = new Response(null, { status: 404, statusText: 'Not Found' })
+
+const error = await handleResponse(res).catch(x => x)
+
+expect(error).toBeInstanceOf(OrchardError)
+expect(error.message).toEqual('404 Not Found')
+```
+
+```ruby
+# spec/requests/wikidata_sparql_routes_spec.rb
+get '/sparql', params: { query: '', schema: 'software' }
+
+expect(response).to have_http_status(:not_found)
+```
+
+Use HTTP status assertions for route errors, typed error assertions for frontend API helpers, and `change(Model, :count)` matchers for create/destroy side effects.
+
+**State and Database Setup:**
+- Clear shared caches when a service caches values. `spec/services/case_stats_service_spec.rb` calls `Rails.cache.clear` in a `before` block.
+- Use Devise request helpers from `spec/rails_helper.rb`: `sign_in create(:reader)` in request specs such as `spec/requests/catalog_routes_spec.rb`.
+- Use feature helper `login_as reader` from `spec/support/integration/authentication.rb` in Capybara specs such as `spec/features/creating_a_reading_list_spec.rb`.
+- Keep route smoke specs route-group focused. `spec/requests/admin_operations_routes_spec.rb` checks representative admin index/show routes and Sidekiq access without asserting every HTML detail.
 
 ---
 
-*Testing analysis: 2026-05-03*
+*Testing analysis: 2026-05-30*

@@ -1,109 +1,135 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-05-03
+**Analysis Date:** 2026-05-30
 
 ## Naming Patterns
 
 **Files:**
-- Ruby application files use Rails snake_case conventions matching class names: `app/models/case.rb` defines `Case`, `app/services/case_stats_service.rb` defines `CaseStatsService`, and `app/controllers/application_controller.rb` defines `ApplicationController`.
-- Ruby specs use `*_spec.rb` under type-specific `spec/` directories: `spec/services/case_stats_service/query_spec.rb`, `spec/controllers/cases/stats_controller_spec.rb`, and `spec/models/case/pdf_spec.rb`.
-- JavaScript and React files use PascalCase for components and camelCase for plain modules: `app/javascript/stats/StatsPage.jsx`, `app/javascript/utility/ErrorBoundary.jsx`, `app/javascript/stats/state/statsStore.js`, and `app/javascript/stats/dateHelpers.js`.
-- Frontend tests live under `__tests__/` and use `.test.js` or `.test.jsx`: `app/javascript/stats/__tests__/StatsPage.test.jsx` and `app/javascript/shared/__tests__/functions.test.js`.
-- Flow type stubs live under `flow-typed/`, and source files should keep `/* @flow */` or `/* @noflow */` annotations consistent with `.eslintrc.json`.
+- Ruby files use `snake_case.rb` and Rails autoloading. Put `CaseStatsService::Query` in `app/services/case_stats_service/query.rb`, `Cases::StatsSerializer` in `app/serializers/cases/stats_serializer.rb`, and `RepliesMailbox` in `app/mailboxes/replies_mailbox.rb`.
+- Rails specs mirror the implementation path with `_spec.rb`: `app/services/case_stats_service.rb` maps to `spec/services/case_stats_service_spec.rb`; `app/policies/case_policy.rb` maps to `spec/policies/case_policy_spec.rb`.
+- React components use `PascalCase.jsx`: `app/javascript/stats/StatsPage.jsx`, `app/javascript/reading_list/HiddenFormInputs.jsx`, and `app/javascript/utility/ErrorBoundary.jsx`.
+- JavaScript helper modules use `camelCase.js` or domain names: `app/javascript/stats/http/statsHttp.js`, `app/javascript/stats/state/statsStore.js`, `app/javascript/shared/orchard.js`.
+- Stimulus controllers use `snake_case_controller.js`: `app/javascript/controllers/clipboard_controller.js`, `app/javascript/controllers/case_stats_controller.js`, and `app/javascript/controllers/deployments/invite_drawer_controller.js`.
+- Frontend tests live in colocated `__tests__` directories with `.test.js` or `.test.jsx`: `app/javascript/shared/__tests__/orchard.test.js`, `app/javascript/stats/__tests__/StatsPage.test.jsx`.
+- Infrastructure TypeScript is isolated in `infra/` and uses `.ts` files such as `infra/sst.config.ts`; app code under `app/javascript/` remains JavaScript/JSX.
 
 **Functions:**
-- Ruby methods use snake_case and clear predicate/bang suffixes: `Case#archive_needs_refresh?`, `Case#refresh_archive!`, `ApplicationController#set_locale`, and `CaseStatsService#country_stats`.
-- Ruby class methods use `self.method_name`: `Case.with_locale_or_fallback` in `app/models/case.rb`.
-- JavaScript functions use camelCase: `renderPage`, `flushPromises`, `buildValidatedRange`, `createInitialState`, `selectDateRangeParams`, and `statsReducer`.
-- React component functions and classes use PascalCase: `StatsPage` in `app/javascript/stats/StatsPage.jsx`, `ErrorBoundary` and `InfoBox` in `app/javascript/utility/ErrorBoundary.jsx`.
+- Ruby methods use `snake_case`, including predicate methods such as `archive_needs_refresh?` in `app/models/case.rb` and policy predicates such as `show?`, `update?`, and `stats?` in `app/policies/case_policy.rb`.
+- JavaScript functions and hooks use lower camel case: `fetchStats`, `fetchWithTimeout`, `buildValidatedRange`, `selectCountries`, and `useDocumentTitle` in `app/javascript/stats/http/statsHttp.js`, `app/javascript/stats/state/statsStore.js`, and `app/javascript/utility/hooks/useDocumentTitle.js`.
+- React components use PascalCase function or class names: `StatsPage` in `app/javascript/stats/StatsPage.jsx`, `HiddenFormInputs` in `app/javascript/reading_list/HiddenFormInputs.jsx`, and `ErrorBoundary` in `app/javascript/utility/ErrorBoundary.jsx`.
+- Redux action creators use lower camel case and return plain actions or thunks: `updateCase`, `togglePublished`, and `enrollReader` in `app/javascript/redux/actions/case.js`.
 
 **Variables:**
-- Ruby local variables and ivars use snake_case: `from_date`, `to_date`, `time_range`, `@country_stats`, and `@cache_key` in `app/services/case_stats_service.rb`.
-- Ruby domain variables often use `kase` when referring to the `Case` model to avoid the reserved word: `let(:kase)` in `spec/services/case_stats_service/query_spec.rb` and `attr_reader :kase` in `app/services/case_stats_service.rb`.
-- JavaScript locals, props, and selectors use camelCase: `dataUrl`, `minDate`, `mockFetchStats`, `dateRangeText`, `hasMountedRef`, and `selectIsInitialLoad`.
-- JavaScript constants use SCREAMING_SNAKE_CASE when representing module-level constants: `EMPTY_SUMMARY` in `app/javascript/stats/state/statsStore.js`.
+- Ruby locals and instance variables use `snake_case`: `from_date`, `to_date`, `time_range`, and `@country_stats` in `app/services/case_stats_service.rb`.
+- Rails controllers use conventional instance variables for view/serializer state: `@case`, `@deployment`, and `@enrollment` in `app/controllers/cases_controller.rb`.
+- JavaScript variables and props use lower camel case: `dataUrl`, `minDate`, `hasMountedRef`, `dateRangeText`, and `calendarMinDate` in `app/javascript/stats/StatsPage.jsx`.
+- Constants use screaming snake case in JavaScript and Ruby when they are module-level configuration: `CACHE_LIMIT` in `app/javascript/stats/http/statsHttp.js`, `COUNTRY_STATS_SQL` in `app/services/case_stats_service/query.rb`, and `CASE_EAGER_LOADING_CONFIG` in `app/controllers/cases_controller.rb`.
+- Redux action type strings use both existing all-caps names (`UPDATE_CASE` in `app/javascript/redux/actions/case.js`) and domain/action names (`fetch/started` in `app/javascript/stats/state/statsStore.js`). Match the local reducer/action family instead of mixing styles.
 
 **Types:**
-- Ruby classes/modules use PascalCase and Rails namespaces: `CaseStatsService::Query`, `ApplicationController`, `Ahoy::Store`, and `Orchard::Integration::TestHelpers::Authentication`.
-- Flow types use PascalCase and are exported from dedicated state/type modules: `StatsState`, `StatsAction`, `StatsDateRange`, and `StatsSummary` in `app/javascript/stats/state/statsStore.js` and `app/javascript/stats/state/types.js`.
-- React props types are named `Props` locally when scoped to a component, as in `app/javascript/stats/StatsPage.jsx`.
+- Ruby classes and modules use CamelCase and Rails namespaces: `ApplicationPolicy` in `app/policies/application_policy.rb`, `CasePolicy::Scope` in `app/policies/case_policy.rb`, `Cases::StatsSerializer` in `app/serializers/cases/stats_serializer.rb`.
+- JavaScript application code does not enforce TypeScript types. `tsconfig.json` enables `allowJs`, disables `checkJs`, and sets `strict` to `false`.
+- TypeScript types are limited to infrastructure code in `infra/sst.config.ts` and `infra/sst-env.d.ts`; keep SST-specific typing in `infra/`.
 
 ## Code Style
 
 **Formatting:**
-- JavaScript formatting uses Prettier via `.prettierrc.json`.
-- Use 80-column print width, Flow parser, no semicolons, single quotes, and ES5 trailing commas as configured in `.prettierrc.json`.
-- Ruby files consistently start with `# frozen_string_literal: true`, as shown in `app/models/case.rb`, `spec/rails_helper.rb`, and `spec/services/case_stats_service/query_spec.rb`.
-- Ruby style follows standard Rails formatting plus RuboCop. Long Rails calls are wrapped with aligned continuations, as in `app/models/case.rb` validations and `app/controllers/application_controller.rb` redirects.
-- CSS linting uses `stylelint.config.js`; colors should be expressed in HSL format under the `stylelint-color-format` rule.
+- Ruby files start with `# frozen_string_literal: true`; follow this in new Ruby files under `app/`, `lib/`, `config/`, and `spec/`.
+- Ruby uses two-space indentation, Rails keyword arguments, and multiline method calls for readability, as in `app/controllers/cases_controller.rb` and `app/services/case_stats_service/query.rb`.
+- RuboCop configuration lives in `.rubocop.yml`. It sets `TargetRubyVersion: 3.2`, disables several style cops, excludes `spec/**/*` from `Metrics/BlockLength`, and enables `Layout/ClassStructure`.
+- Rails class bodies should follow the `.rubocop.yml` class structure order: module inclusion, constants, attributes, associations, validations, hooks, class methods, initializer, public methods, protected methods, private methods.
+- JavaScript app formatting follows `.prettierrc.json`: `printWidth: 80`, `semi: false`, `singleQuote: true`, `trailingComma: es5`, and `parser: flow`.
+- App JavaScript uses the StandardJS no-semicolon style configured in `.eslintrc.json`; preserve the existing extra blank-line spacing around imports and major local sections when touching nearby files.
+- Infrastructure TypeScript in `infra/sst.config.ts` uses a separate style with double quotes and semicolons. Match the file-local TypeScript/SST style inside `infra/`, not the app JavaScript style.
+- CSS and SCSS live in `app/assets/stylesheets/` and `app/javascript/shared/`. `stylelint.config.js` enforces HSL color formatting through `stylelint-color-format`.
 
 **Linting:**
-- Ruby linting uses RuboCop configured in `.rubocop.yml`.
-- `.rubocop.yml` targets Ruby 3.2 and enables `Layout/ClassStructure`; model and service classes should order module inclusion, constants, associations, validations, public class methods, initializers, public methods, protected methods, and private methods in that sequence.
-- `.rubocop.yml` excludes `spec/**/*` from `Metrics/BlockLength`, so long spec contexts are acceptable when they preserve readable scenario grouping.
-- JavaScript linting uses ESLint configured in `.eslintrc.json` with `babel-eslint`, `standard`, `plugin:react/recommended`, `plugin:jsx-a11y/recommended`, and `plugin:flowtype/recommended`.
-- ESLint requires Flow annotations in source files through `flowtype/require-valid-file-annotation`; use `/* @flow */` for checked files and `/* @noflow */` only where needed, as in `jest.config.js` and `app/javascript/stats/__tests__/StatsPage.test.jsx`.
-- JSX props should be sorted with shorthand props first and callbacks last per `react/jsx-sort-props`; multiline JSX should place one prop per line per `react/jsx-max-props-per-line`.
+- Ruby linting is configured by `.rubocop.yml`; run RuboCop directly with `bundle exec rubocop` when changing Ruby style-sensitive code.
+- JavaScript linting is configured by `.eslintrc.json` with `babel-eslint`, `standard`, `plugin:react/recommended`, and `plugin:jsx-a11y/recommended`.
+- `.eslintignore` ignores `flow-typed/*`; no package script wraps ESLint in `package.json`.
+- Prettier is configured in `.prettierrc.json`; no package script wraps Prettier in `package.json`.
+- TypeScript configuration for app JavaScript is in `tsconfig.json`; it is a no-emit project used for compatibility checking, not strict typing.
 
 ## Import Organization
 
 **Order:**
-1. Third-party imports first: `React`, `react-intl`, `styled-components`, `@blueprintjs/core`, and testing libraries.
-2. Absolute app imports next using `app/javascript` module paths: `utility/ErrorBoundary`, `redux/actions`, `conversation/CommentThreadItem`, and `shared/Identicon`.
-3. Relative feature imports next: `./dateHelpers`, `./urlParams`, `./state/statsStore`, and `../http/statsHttp`.
-4. Flow `import type` declarations appear after runtime imports in many frontend modules, as in `app/javascript/stats/state/statsStore.js` and `app/javascript/conversation/RecentCommentThreads.jsx`.
+1. Third-party packages first: React, Blueprint, Ramda, Redux, React Intl, DraftJS, and styled-components. Examples: `app/javascript/stats/StatsPage.jsx`, `app/javascript/conversation/SelectedCommentThread.jsx`.
+2. App-level absolute imports from the `app/javascript` root next, using paths such as `utility/ErrorBoundary`, `shared/orchard`, `redux/actions`, and `conversation/Response`.
+3. Relative imports from the local feature directory last, such as `./dateHelpers`, `./http/statsHttp`, and `./state/statsStore` in `app/javascript/stats/StatsPage.jsx`.
+4. Component imports generally follow helper imports inside a file, as in `app/javascript/stats/StatsPage.jsx`.
 
 **Path Aliases:**
-- Jest and runtime module resolution use `app/javascript` as an absolute module root via `modulePaths` in `jest.config.js`.
-- Prefer existing absolute frontend imports for shared modules: `utility/ErrorBoundary`, `redux/actions`, `shared/spotlight`, and `overview/CommunityChooser`.
-- Use relative imports inside tightly scoped feature subtrees: `./map/MapContainer`, `./StatsTable`, and `../dateHelpers` under `app/javascript/stats/`.
+- `jest.config.js` sets `modulePaths: ['<rootDir>/app/javascript']`; tests can import from app-root aliases such as `utility/ErrorBoundary` and `shared/orchard`.
+- Shakapacker resolves modules from `app/javascript`; production code uses app-root aliases such as `overview/CommunityChooser`, `conversation/CommentThreadItem`, and `utility/ScrollView`.
+- Relative imports are preferred for same-folder helpers, especially in newer feature directories such as `app/javascript/stats/`.
+- Ruby uses Rails autoloading; do not add manual `require` calls for app classes unless the code is outside Rails autoload paths. Examples of explicit external requires are `require 'sieve'` in `app/controllers/application_controller.rb` and `require 'cgi'` / `require 'uri'` in `spec/support/integration/lti_launch.rb`.
 
 ## Error Handling
 
 **Patterns:**
-- Rails controllers centralize authorization failures with `rescue_from Pundit::NotAuthorizedError` in `app/controllers/application_controller.rb`; new controller authorization errors should use this path instead of ad hoc redirects.
-- Rails actions and services rescue specific exception classes where possible: `ActiveRecord::RecordNotFound` in `app/channels/edits_channel.rb`, `ActiveRecord::RecordInvalid` in `app/services/quiz_updater.rb`, and `ArgumentError` in `app/services/case_stats_service.rb`.
-- Service objects should return safe fallback values for invalid user input when the domain supports it; `CaseStatsService#parse_date` returns `nil` for invalid ISO8601 date strings in `app/services/case_stats_service.rb`.
-- External service code logs and re-raises when callers need failure visibility, as in `app/services/wikidata.rb`.
-- React async flows should catch errors, ignore aborts explicitly, log useful context, and store an `Error` object in state, as in `app/javascript/stats/StatsPage.jsx`.
-- React rendering failures should be contained with `ErrorBoundary` from `app/javascript/utility/ErrorBoundary.jsx`, which reports to `sentryLog` and browser `Sentry` when available.
+- Rails authorization errors are centralized in `ApplicationController` through `rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized` in `app/controllers/application_controller.rb`.
+- Controllers should return the existing Rails response shape for failed writes: render validation errors as JSON with `status: :unprocessable_entity`, as in `app/controllers/cases_controller.rb`.
+- Services that intentionally return invalid records follow the `CustomizeDeploymentService#customize` pattern in `app/services/customize_deployment_service.rb`: wrap writes in `ActiveRecord::Base.transaction`, use bang saves, rescue `ActiveRecord::RecordInvalid`, and return `e.record`.
+- Jobs should isolate per-record failures and log through `Rails.logger`, as `CleanupLocksJob#unlock_single_resource` does in `app/jobs/cleanup_locks_job.rb`.
+- JavaScript API failures flow through `OrchardError` and `OrchardInputError` in `app/javascript/shared/orchard.js`; use `handleResponse` for fetch response parsing instead of duplicating status handling.
+- React UI errors should be caught with `ErrorBoundary` from `app/javascript/utility/ErrorBoundary.jsx`, which reports to Sentry when available.
+- Async React flows should handle aborts and network failures explicitly. `app/javascript/stats/StatsPage.jsx` ignores `AbortError`, logs real fetch errors with `console.error`, stores an `Error`, and renders `StatsErrorState`.
 
 ## Logging
 
-**Framework:** Rails logger, browser console, and Sentry.
+**Framework:** Rails logger, Sentry, and limited browser console logging.
 
 **Patterns:**
-- Use `Rails.logger` for backend operational events and failures: `Rails.logger.info` in `app/controllers/application_controller.rb`, `Rails.logger.warn` in `config/initializers/rack_attack.rb`, and `Rails.logger.error` in `app/jobs/cleanup_locks_job.rb`.
-- Sentry backend context is set in `ApplicationController#set_sentry_context` in `app/controllers/application_controller.rb`; request-scoped metadata should be added there or in similarly scoped code.
-- Sentry initialization lives in `config/initializers/sentry.rb`; do not initialize Sentry in feature code.
-- Frontend code uses `console.error` and `console.warn` for local diagnostics where user-facing recovery exists, such as `app/javascript/stats/StatsPage.jsx` and `app/javascript/stats/map/MapContainer.jsx`.
-- Avoid leaving raw `console.log` in new frontend code; existing examples in `app/javascript/wikidata/SearchWikidata.jsx` and `app/javascript/wikidata/SortableWikidataList.jsx` are not the preferred pattern for new work.
+- Server-side operational messages use `Rails.logger` in files such as `app/jobs/cleanup_locks_job.rb`, `app/services/wikidata.rb`, `config/initializers/rack_attack.rb`, and `config/initializers/sentry.rb`.
+- Sentry context is set per request in `ApplicationController#set_sentry_context` in `app/controllers/application_controller.rb`; do not duplicate user/context setup in individual controllers.
+- React runtime exceptions are reported in `app/javascript/utility/ErrorBoundary.jsx` through `sentryLog` and `Sentry.captureException` when those globals exist.
+- Browser logging should be reserved for actionable error paths. Existing diagnostic `console.log` calls appear in `app/javascript/wikidata/SearchWikidata.jsx` and `app/javascript/wikidata/SortableWikidataList.jsx`; prefer structured UI error state or Sentry for new code.
 
 ## Comments
 
 **When to Comment:**
-- Use YARD-style comments for important Ruby domain models and public service APIs, as in `app/models/case.rb` and `app/services/case_stats_service.rb`.
-- Use comments to explain domain constraints or compatibility reasons, not restate code. Examples include the universal community forum note in `Case#create_forum_for_universal_communities` and the `Lockable` compatibility note in `app/models/case.rb`.
-- Keep test comments focused on scenario setup that would otherwise be surprising, as in `spec/services/quiz_updater_spec.rb`.
+- Use short comments for domain rules, compatibility constraints, or non-obvious framework behavior. Good examples are `CASE_EAGER_LOADING_CONFIG` context in `app/controllers/cases_controller.rb`, Blueprint namespace bridge notes in `app/javascript/shared/blueprintLegacyNamespace.js`, and PDFKit URL comments in `spec/models/case/pdf_spec.rb`.
+- Avoid comments that restate the method name. Prefer extraction to comments for simple procedural steps.
+- Keep route annotations where they already exist on controller actions, such as `# @route [GET]` comments in `app/controllers/cases_controller.rb` and `app/mailboxes/replies_mailbox.rb`.
 
 **JSDoc/TSDoc:**
-- JavaScript does not use broad JSDoc. Prefer Flow type annotations and exported type definitions, as in `app/javascript/stats/state/statsStore.js`.
-- File-level pragmas are important in JS: use `/* @flow */`, `/* @noflow */`, and special pragmas such as `/** @jsx React.createElement */` only when required by the file.
+- Ruby public APIs often use YARD comments, especially model/service boundaries: `app/models/case.rb`, `app/services/case_stats_service.rb`, and `app/serializers/cases/stats_serializer.rb`.
+- JavaScript files contain sparse block headers and some `@providesModule` comments, for example `app/javascript/reading_list/HiddenFormInputs.jsx` and `app/javascript/shared/orchard.js`. Preserve nearby headers when editing, but do not add new empty documentation blocks.
+- Infrastructure TypeScript in `infra/sst.config.ts` uses inline comments to document deployment and resource-retention constraints.
 
 ## Function Design
 
-**Size:** Ruby methods should stay focused and small, with private helpers for parsing and query construction as in `app/services/case_stats_service.rb`. React components may be larger when they coordinate state/effects, but extract reducers, selectors, HTTP helpers, and display components into sibling modules like `app/javascript/stats/state/statsStore.js`, `app/javascript/stats/http/statsHttp.js`, and `app/javascript/stats/StatsSummary.jsx`.
+**Size:** Keep public methods small and push details into private helpers.
+- Service objects expose a narrow public API and private helper methods. Follow `CaseStatsService` in `app/services/case_stats_service.rb`: public query/format methods call private `query`, `parse_date`, and `time_range` helpers.
+- Controllers should keep request orchestration in actions and move repeated setup into private methods such as `set_case`, `slug`, `set_group_and_deployment`, and strong parameter methods in `app/controllers/cases_controller.rb`.
+- Reducers should use switch statements and pure state transitions, as in `app/javascript/stats/state/statsStore.js` and `app/javascript/redux/reducers/cards.js`.
 
-**Parameters:** Ruby service objects should accept domain objects positionally and options by keyword, as in `CaseStatsService.new(kase, from: nil, to: nil)`. JavaScript components should destructure props in the function signature and annotate with Flow, as in `function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node`.
+**Parameters:**
+- Ruby services prefer explicit constructor arguments plus keyword options: `CaseStatsService.new(kase, from: nil, to: nil)` in `app/services/case_stats_service.rb`.
+- Rails strong params should stay private and close to the controller action, as `create_case_params` and `update_case_params` do in `app/controllers/cases_controller.rb`.
+- React components destructure props at the function boundary: `StatsPage ({ dataUrl, minDate, intl })` in `app/javascript/stats/StatsPage.jsx` and `HiddenFormInputs ({ initialItems, items })` in `app/javascript/reading_list/HiddenFormInputs.jsx`.
+- JavaScript functions with multiple related options should accept an object, as `fetchStats({ dataUrl, params, signal, bypassCache })` does in `app/javascript/stats/http/statsHttp.js`.
 
-**Return Values:** Use explicit domain-shaped returns. Ruby service methods return hashes and arrays with stable keys, such as `CaseStatsService#date_range`, `#stats_rows`, and `#api_data`. JS selectors return typed primitives or safe defaults, such as `selectCountries`, `selectSummary`, and `selectError` in `app/javascript/stats/state/statsStore.js`.
+**Return Values:**
+- Rails controller actions return redirects, renders, or `head` responses; preserve response shapes tested by request specs under `spec/requests/`.
+- Service methods return domain objects or simple hashes/arrays. Examples: `CustomizeDeploymentService#customize` returns a `Deployment` or invalid `Quiz` in `app/services/customize_deployment_service.rb`; `CaseStatsService#country_stats` returns a hash in `app/services/case_stats_service.rb`.
+- JavaScript selectors return derived values and safe defaults: `selectCountries`, `selectSummary`, and `selectHasData` in `app/javascript/stats/state/statsStore.js`.
+- API helpers should throw typed errors instead of returning mixed success/error tuples. Follow `OrchardError` / `OrchardInputError` in `app/javascript/shared/orchard.js`.
 
 ## Module Design
 
-**Exports:** Prefer one default export for React components and named exports for pure helpers, reducers, selectors, and data functions. Examples: default `StatsPage` in `app/javascript/stats/StatsPage.jsx`; named `buildValidatedRange`, `createInitialState`, `statsReducer`, and selectors in `app/javascript/stats/state/statsStore.js`.
+**Exports:**
+- Rails files should define one primary class/module that matches the path. Use nested classes when the namespace is tightly owned, such as `CaseStatsService::Query` in `app/services/case_stats_service/query.rb`.
+- React component files normally default-export the connected/injected component: `app/javascript/stats/StatsPage.jsx`, `app/javascript/conversation/SelectedCommentThread.jsx`, and `app/javascript/utility/ErrorBoundary.jsx`.
+- Pure JavaScript helper modules should use named exports for testable units: `app/javascript/shared/functions.js`, `app/javascript/shared/routes.js`, `app/javascript/stats/http/statsHttp.js`, and `app/javascript/stats/state/statsStore.js`.
+- Redux reducers default-export reducer functions, as in `app/javascript/redux/reducers/cards.js`; action modules named-export action creators, as in `app/javascript/redux/actions/case.js`.
+- Side-effect modules should keep side effects obvious at the bottom of the file, as `app/javascript/shared/blueprintLegacyNamespace.js` does with DOM startup logic.
 
-**Barrel Files:** Barrel/index files exist for feature entry points and package-style modules, such as `app/javascript/edgenotes/expansion/index.jsx`, `app/javascript/shared/spotlight/index.jsx`, and `app/javascript/redux/actions/index.js`. Add barrel exports only when a directory already uses an index entry point or when the module is intended as a public feature boundary.
+**Barrel Files:**
+- Existing barrel files are used for established shared areas: `app/javascript/redux/actions/index.js` re-exports Redux action modules, and `app/javascript/utility/hooks/index.js` re-exports hook helpers.
+- Add to a barrel only when the local package already imports through that barrel. Do not introduce a new barrel for one or two files.
+- Rails concerns belong under `app/controllers/concerns/` or `app/models/concerns/`; include them from the owning class as `ApplicationController` and `Case` do in `app/controllers/application_controller.rb` and `app/models/case.rb`.
 
 ---
 
-*Convention analysis: 2026-05-03*
+*Convention analysis: 2026-05-30*

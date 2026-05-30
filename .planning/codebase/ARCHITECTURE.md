@@ -1,359 +1,365 @@
-<!-- refreshed: 2026-05-03 -->
+<!-- refreshed: 2026-05-30 -->
 # Architecture
 
-**Analysis Date:** 2026-05-03
+**Analysis Date:** 2026-05-30
 
 ## System Overview
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                     Rails HTTP Application                   │
-├──────────────────┬──────────────────┬───────────────────────┤
-│ REST Controllers │ Admin Controllers│ React Shell Views      │
-│ `app/controllers`│ `app/controllers/admin` │ `app/views`     │
-└────────┬─────────┴────────┬─────────┴──────────┬────────────┘
-         │                  │                     │
-         ▼                  ▼                     ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Domain, Authorization, Serialization            │
-│ `app/models`, `app/services`, `app/policies`,                │
-│ `app/serializers`, `app/decorators`                          │
-└─────────────────────────────────────────────────────────────┘
-         │                  │                     │
-         ▼                  ▼                     ▼
-┌─────────────────────────────────────────────────────────────┐
-│       PostgreSQL, Active Storage, Sidekiq, Action Cable       │
-│ `db/structure.sql`, `app/jobs`, `app/channels`                │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                Shakapacker React Frontend                    │
-│ `app/javascript/packs`, `app/javascript/redux`,               │
-│ `app/javascript/catalog`, `app/javascript/Case.jsx`           │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                         Browser / Route Surfaces                             │
+├─────────────────────┬─────────────────────┬──────────────────────────────────┤
+│ Rails-rendered HTML │ React route islands  │ Stimulus enhancements            │
+│ `app/views`         │ `app/javascript`     │ `app/javascript/controllers`      │
+└──────────┬──────────┴──────────┬──────────┴──────────────┬───────────────────┘
+           │                     │                         │
+           ▼                     ▼                         ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ Rails request layer                                                          │
+│ `config/routes.rb` -> `app/controllers` -> `app/views/layouts`               │
+└──────────┬──────────────────────┬─────────────────────────┬──────────────────┘
+           │                      │                         │
+           ▼                      ▼                         ▼
+┌─────────────────────┐  ┌──────────────────────┐  ┌───────────────────────────┐
+│ Domain layer         │  │ API serialization     │  │ Async/realtime layer       │
+│ `app/models`         │  │ `app/serializers`     │  │ `app/jobs`, `app/channels`  │
+│ `app/policies`       │  │ `app/decorators`      │  │ `app/services`             │
+└──────────┬──────────┘  └──────────┬───────────┘  └──────────┬────────────────┘
+           │                        │                         │
+           ▼                        ▼                         ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ Storage and infrastructure                                                   │
+│ PostgreSQL schema `db/structure.sql`, ActiveStorage `storage`, Redis cable   │
+│ and jobs `config/cable.yml` / `config/sidekiq.yml`, AWS SST `infra/`          │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Component Responsibilities
 
 | Component | Responsibility | File |
 |-----------|----------------|------|
-| Route map | Defines Rails routes, React Router catch-all paths, admin namespace, Devise endpoints, Sidekiq mount, health check, and runtime stats endpoint | `config/routes.rb` |
-| Application controller | Owns cross-request locale selection, Sentry context, ToS enforcement, Pundit rescue behavior, LTI validation helpers, and current user null-object fallback | `app/controllers/application_controller.rb` |
-| Case controller | Owns case listing, case show bootstrap, case create/update/delete, eager loading, lock verification, and edit broadcasts | `app/controllers/cases_controller.rb` |
-| Catalog controller | Owns root catalog shell and initial case scope for the catalog page | `app/controllers/catalog_controller.rb` |
-| Domain models | Own persistence associations, scopes, callbacks, validations, and domain relationships | `app/models` |
-| Services | Own multi-step operations, external API access, reports, stats queries, and orchestration that does not fit a model callback | `app/services` |
-| Policies | Own authorization scopes and action predicates via Pundit | `app/policies` |
-| Serializers | Own JSON shapes sent from Rails controllers and broadcast jobs to React | `app/serializers` |
-| Decorators | Own view-facing model presentation through Draper | `app/decorators` |
-| Jobs | Own async archive refreshes, clone operations, broadcasts, notification delivery, search index refreshes, and snapshots | `app/jobs` |
-| Channels | Own Action Cable subscriptions for collaborative editing, forum updates, stats, and reader notifications | `app/channels` |
-| React packs | Mount page-level React applications from Rails views through Shakapacker | `app/javascript/packs` |
-| Case React app | Owns in-case routing, comment/forum fetch bootstrap, edit mode startup, Action Cable subscription lifecycle, and lazy subroutes | `app/javascript/Case.jsx` |
-| Redux | Owns the case reader/editor state tree, reducers, actions, thunks, and Action Cable event mapping | `app/javascript/redux` |
-| Catalog React app | Owns catalog search/home routing and client data contexts | `app/javascript/catalog` |
+| Rails router | Defines public catalog, case, admin, deployment, authentication, Sidekiq, and runtime routes. | `config/routes.rb` |
+| Base controller | Applies locale, Sentry context, Devise location storage, ToS enforcement, and Pundit failures. | `app/controllers/application_controller.rb` |
+| Catalog controller | Serves the root catalog shell and policy-scoped case list. | `app/controllers/catalog_controller.rb` |
+| Cases controller | Owns case index JSON, case shell HTML, case JSON state, authoring updates, locks, and public catalog cache behavior. | `app/controllers/cases_controller.rb` |
+| Deployments controller | Owns instructor deployment screens and delegates creation/customization to services. | `app/controllers/deployments_controller.rb` |
+| Domain models | Represent case studies, readers, deployments, case elements, cards, edgenotes, quizzes, libraries, roles, and enrollments. | `app/models/case.rb`, `app/models/reader.rb`, `app/models/deployment.rb` |
+| Policies | Centralize authorization and policy scopes for controllers, channels, and serializers. | `app/policies/application_policy.rb`, `app/policies/case_policy.rb` |
+| Serializers | Produce JSON contracts consumed by React islands and API endpoints. | `app/serializers/application_serializer.rb`, `app/serializers/cases/show_serializer.rb` |
+| Service objects | Encapsulate workflows that cross models, such as search, deployment creation, quiz customization, broadcast payloads, and stats. | `app/services/find_cases.rb`, `app/services/deploy_case_service.rb`, `app/services/customize_deployment_service.rb` |
+| React case app | Renders case reader/editor routes from serialized `window.caseData` and Redux state. | `app/javascript/Case.jsx`, `app/javascript/packs/case.entry.jsx` |
+| React catalog app | Renders catalog home/search routes from context providers and JSON endpoints. | `app/javascript/catalog/index.jsx`, `app/javascript/packs/catalog.entry.jsx` |
+| Shared JS API client | Wraps same-origin fetches, CSRF headers, JSON parsing, and session IDs. | `app/javascript/shared/orchard.js` |
+| Realtime editing | Broadcasts persisted edits through ActiveJob and ActionCable to Redux actions. | `app/controllers/concerns/broadcast_edits.rb`, `app/jobs/edit_broadcast_job.rb`, `app/channels/edits_channel.rb` |
+| Admin dashboard | Uses Administrate dashboards and controllers for editor-only admin surfaces. | `app/controllers/admin/application_controller.rb`, `app/dashboards/case_dashboard.rb` |
+| Asset pipeline | Combines Sprockets global CSS with Shakapacker packs and Blueprint compatibility bridges. | `app/assets/stylesheets/application.css`, `app/javascript/packs/styles.js`, `app/javascript/shared/blueprintLegacyNamespace.js` |
+| Deployment IaC | Provisions AWS web/worker services, database, cache, CDN, static assets, Cloudflare DNS, and one-off tasks. | `infra/sst.config.ts`, `.github/workflows/deploy.yml`, `scripts/deploy-sst.sh` |
 
 ## Pattern Overview
 
-**Overall:** Rails MVC with service objects and React islands.
+**Overall:** Rails monolith with server-rendered route shells, React/Shakapacker islands, service-object workflows, ActiveModel Serializer API contracts, ActionCable realtime updates, and SST-owned AWS infrastructure.
 
 **Key Characteristics:**
-- Rails owns routing, authentication, authorization, server rendering shells, JSON endpoints, background jobs, Action Cable channels, and persistence.
-- React is mounted per page through Shakapacker packs in `app/javascript/packs`; it is not a standalone SPA server.
-- The primary case reader/editor is a React Router and Redux application seeded by `window.caseData` from `app/views/cases/show.html.erb`.
-- Catalog UI uses React context providers rather than Redux and is mounted from `app/javascript/packs/catalog.entry.jsx`.
-- Server mutations commonly return ActiveModelSerializer JSON and can broadcast changes through `BroadcastEdits`, `BroadcastEdit`, `EditBroadcastJob`, and `EditsChannel`.
+- Use `config/routes.rb` as the source of truth for route groups and browser QA coverage.
+- Render durable Rails shells in `app/views`, then mount route-specific React packs through `append_javascript_pack` and `collected_javascript_pack_tag`.
+- Keep domain persistence in ActiveRecord models, authorization in Pundit policies, JSON shape in serializers, and cross-model commands in `app/services`.
+- Use Redis-backed ActionCable and Sidekiq for collaborative editing, stats refresh, mailers, ActiveStorage work, and index refresh jobs.
+- Keep AWS production and preview deployment topology in `infra/sst.config.ts` and `.github/workflows/deploy.yml`, with Rails runtime settings passed by environment variables.
 
 ## Layers
 
 **Routing Layer:**
-- Purpose: Convert HTTP paths to Rails controllers and delegate nested case/catalog paths to React Router when no explicit format is requested.
+- Purpose: Map URL groups to Rails controllers and mount operational surfaces.
 - Location: `config/routes.rb`
-- Contains: REST resources, nested case resources, catalog catch-all, Devise routes, Sidekiq mount, health endpoint, runtime diagnostics endpoint.
-- Depends on: Rails routing, Devise, Sidekiq Web.
-- Used by: All controllers and Rails URL helpers.
-- Use this layer for new public endpoints, admin resources, and React catch-all changes.
+- Contains: REST resources, nested case routes, catalog React-router catch-alls, Devise routes, editor-only Sidekiq mount, runtime health/stats endpoints.
+- Depends on: Rails routing, Devise, Sidekiq Web, constants `LOCALE_REGEX` and `REACT_ROUTER_LOCATION_REGEX`.
+- Used by: Controllers in `app/controllers`, React catch-all routes in `app/javascript/Case.jsx` and `app/javascript/catalog/index.jsx`.
 
 **Controller Layer:**
-- Purpose: Authenticate, authorize, load records, select response formats, call services, and render HTML/JSON/CSV.
+- Purpose: Authenticate, authorize, load records, choose HTML/JSON responses, coordinate service calls, and set cache/flash/session behavior.
 - Location: `app/controllers`
-- Contains: `ApplicationController`, resource controllers, namespaced controllers such as `app/controllers/cases/stats_controller.rb`, concerns in `app/controllers/concerns`.
-- Depends on: Models, services, serializers, decorators, policies, Rails responders.
-- Used by: Rails routes.
-- Keep controller actions thin; move reusable multi-step operations to `app/services`.
+- Contains: Resource controllers, namespaced route controllers, admin controllers, and reusable concerns.
+- Depends on: `app/models`, `app/policies`, `app/services`, `app/serializers`, Devise, Pundit, Draper.
+- Used by: Rails routes in `config/routes.rb` and browser/API clients.
 
-**Domain Model Layer:**
-- Purpose: Represent persisted entities and domain relationships.
-- Location: `app/models`
-- Contains: ActiveRecord models, concerns, null-object style models such as `app/models/anonymous_user.rb`, namespace models such as `app/models/case/archive.rb`.
-- Depends on: ActiveRecord, Active Storage, gems such as FriendlyId, Rolify, Mobility, and domain concerns.
-- Used by: Controllers, services, policies, serializers, jobs, decorators.
-- Put associations, scopes, validations, and small domain methods here. Use services for long workflows or external calls.
+**View and Layout Layer:**
+- Purpose: Render route shells, metadata, shared navigation, flash messages, and React mount points.
+- Location: `app/views`
+- Contains: ERB/Haml route templates, layouts, Administrate views, Devise views, mailer views, field partials.
+- Depends on: `app/helpers/application_helper.rb`, Shakapacker tag helpers, Sprockets assets, serializers for inline state.
+- Used by: HTML controller actions such as `CatalogController#home`, `CasesController#show`, and `DeploymentsController#edit`.
 
-**Service Layer:**
-- Purpose: Encapsulate operations that coordinate multiple models, raw SQL, external APIs, reports, or side effects.
-- Location: `app/services`
-- Contains: `app/services/case_stats_service.rb`, `app/services/deploy_case_service.rb`, `app/services/wikidata.rb`, `app/services/find_cases.rb`, `app/services/quiz_updater.rb`.
-- Depends on: Models, Rails cache, external clients, ActiveRecord connections.
-- Used by: Controllers, jobs, and models when needed.
-- Add new services as plain Ruby classes with explicit initializer dependencies and a narrow public method such as `call`, `execute`, or named query methods.
-
-**Authorization Layer:**
-- Purpose: Centralize user permissions and query scopes.
-- Location: `app/policies`
-- Contains: Pundit policy classes and scopes, including `app/policies/case_policy.rb`.
-- Depends on: Reader roles, model associations, Pundit.
-- Used by: Controllers, channels, serializers where permission-derived JSON is required.
-- Add or update policies when a new controller action, channel subscription, admin view, or serializer exposes protected data.
-
-**Serialization Layer:**
-- Purpose: Shape JSON for REST endpoints, initial React bootstraps, and Action Cable broadcasts.
-- Location: `app/serializers`
-- Contains: ActiveModelSerializer classes, namespaced serializers such as `app/serializers/cases/show_serializer.rb`.
-- Depends on: Models, decorators, Rails route helpers through `view_context`.
-- Used by: Controllers and jobs.
-- Prefer serializers over ad hoc controller hashes for model-backed responses.
-
-**Presentation Layer:**
-- Purpose: Render Rails HTML shells, HAML/ERB pages, layouts, mailer views, JSON builders, and model presentation helpers.
-- Location: `app/views`, `app/decorators`, `app/helpers`
-- Contains: React mount shells like `app/views/cases/show.html.erb`, catalog shell `app/views/catalog/home.html.haml`, layouts in `app/views/layouts`.
-- Depends on: Controllers, decorators, serializers, helpers.
-- Used by: Browser requests and mailers.
-- Mount React by rendering a stable DOM target and appending a Shakapacker pack.
-
-**Frontend Entry Layer:**
-- Purpose: Mount page-level JavaScript bundles into Rails-rendered DOM nodes.
+**Frontend Pack Layer:**
+- Purpose: Mount React apps and Stimulus controllers from Shakapacker entries.
 - Location: `app/javascript/packs`
-- Contains: `case.entry.jsx`, `catalog.entry.jsx`, `deployment.entry.jsx`, `billboard.entry.jsx`, Stimulus/controller entrypoints.
-- Depends on: Shakapacker, React, ReactDOM, locale loader, app modules.
-- Used by: Rails views through `append_javascript_pack`.
-- Add new React page bootstraps here only when a Rails view needs a separate bundle.
+- Contains: `catalog.entry.jsx`, `case.entry.jsx`, `deployment.entry.jsx`, `controllers.js`, `styles.js`, `main-menu.entry.jsx`, and smaller utility packs.
+- Depends on: React 16, React Router, Redux, Stimulus, styled-components, react-intl, Blueprint packages, local aliases under `app/javascript`.
+- Used by: `app/views` through `append_javascript_pack` and `collected_javascript_pack_tag`.
 
-**Frontend Domain UI Layer:**
-- Purpose: Implement browser interactions for cases, catalog, comments, edgenotes, quizzes, stats, reading lists, maps, and shared UI.
+**Frontend Feature Layer:**
+- Purpose: Implement domain-specific browser experiences.
 - Location: `app/javascript`
-- Contains: feature folders such as `app/javascript/catalog`, `app/javascript/conversation`, `app/javascript/edgenotes`, `app/javascript/stats`, `app/javascript/wikidata`, and shared utilities.
-- Depends on: React, styled-components, Blueprint, Flow types, local modules.
-- Used by: Packs and other components.
-- Use feature folders for page-specific UI and `app/javascript/shared` or `app/javascript/utility` for cross-feature helpers.
+- Contains: Catalog, case reader/editor, deployment customizer, comments, edgenotes, stats, reading list, quiz, map, overview, shared UI, and utility modules.
+- Depends on: Shared API client `app/javascript/shared/orchard.js`, route helpers `app/javascript/shared/routes.js`, Redux in `app/javascript/redux`, React Context providers.
+- Used by: Route entry packs and Stimulus controllers.
 
-**State and API Layer:**
-- Purpose: Manage case app state, Redux actions/reducers, fetch helpers, and Action Cable event mapping.
-- Location: `app/javascript/redux`, `app/javascript/shared/orchard.js`
-- Contains: reducers in `app/javascript/redux/reducers`, thunks in `app/javascript/redux/actions`, Flow state shape in `app/javascript/redux/state.js`, fetch wrapper `Orchard`.
-- Depends on: Redux, redux-thunk, fetch, CSRF meta tags, Action Cable global `App`.
-- Used by: `app/javascript/Case.jsx` and case feature components.
-- Use `Orchard.harvest/graft/espalier/prune` for JSON HTTP calls so CSRF and session-id broadcast suppression stay consistent.
+**Domain Layer:**
+- Purpose: Model case-study content, readers, deployments, community membership, assessment, comments, reading lists, and analytics.
+- Location: `app/models`
+- Contains: ActiveRecord models, null objects, model concerns, custom content-state types, FriendlyId slugs, ActiveStorage attachments, Ahoy models.
+- Depends on: PostgreSQL schema in `db/structure.sql`, Rails ActiveRecord, ActiveStorage, rolify, FriendlyId, Ahoy.
+- Used by: Controllers, policies, serializers, services, jobs, channels, and dashboards.
+
+**Service and Workflow Layer:**
+- Purpose: Keep multi-step operations outside controllers and models.
+- Location: `app/services`
+- Contains: Search (`app/services/find_cases.rb`), deployment creation (`app/services/deploy_case_service.rb`), quiz customization (`app/services/customize_deployment_service.rb`), edit broadcasting (`app/services/broadcast_edit.rb`), stats (`app/services/case_stats_service.rb`).
+- Depends on: ActiveRecord transactions, models, policies, serializers, external APIs where relevant.
+- Used by: Controllers, jobs, channels, Rake tasks.
+
+**Serialization and Presentation Layer:**
+- Purpose: Shape JSON and decorated view presentation.
+- Location: `app/serializers`, `app/decorators`, `app/dashboards`, `app/fields`
+- Contains: ActiveModel Serializers, Draper decorators, Administrate dashboards/fields.
+- Depends on: Rails route helpers, `view_context`, Pundit, ActiveModel Serializer.
+- Used by: JSON controllers, inline React boot data, broadcast jobs, admin pages.
 
 **Async and Realtime Layer:**
-- Purpose: Process background work and broadcast live updates.
-- Location: `app/jobs`, `app/channels`, `app/controllers/concerns/broadcast_edits.rb`, `app/services/broadcast_edit.rb`
-- Contains: ActiveJob classes, Action Cable channels, edit broadcast pipeline.
-- Depends on: Sidekiq, Action Cable, ActiveModelSerializer, Pundit.
-- Used by: Controllers, services, React Action Cable subscriptions.
-- Use `BroadcastEdits` in controllers that mutate case components and need collaborative editor updates.
+- Purpose: Run background jobs and push updates to connected readers.
+- Location: `app/jobs`, `app/channels`
+- Contains: Sidekiq-backed ActiveJob jobs, ActionCable channels, broadcast jobs, archive/index/notification jobs.
+- Depends on: Redis via `config/cable.yml` and Sidekiq via `config/sidekiq.yml`.
+- Used by: Model callbacks, controller concerns, frontend subscriptions.
 
-**Data Layer:**
-- Purpose: Persist relational data and file attachments.
-- Location: `db/structure.sql`, `db/migrate`, `config/database.yml`, `config/storage.yml`, `storage`
-- Contains: PostgreSQL schema, migrations, Active Storage configuration and local storage.
-- Depends on: ActiveRecord, PostgreSQL, Active Storage.
-- Used by: Models, services, jobs.
-- Add migrations under `db/migrate` and keep schema format as SQL.
+**Infrastructure Layer:**
+- Purpose: Package and deploy Rails, worker, database, cache, CDN, DNS, and scheduled jobs.
+- Location: `infra`, `.github/workflows`, `scripts`, `Dockerfile`, `Procfile`
+- Contains: SST config, GitHub Actions deploy workflow, deploy shell script, Docker build/runtime image, local and production process declarations.
+- Depends on: AWS, Cloudflare provider, SST, Docker, pnpm/npm, Ruby bundler.
+- Used by: CI/CD, production deploys, preview deploys, local development.
 
 ## Data Flow
 
-### Primary Case Page Load
+### Catalog HTML and JSON Path
 
-1. Browser requests `/cases/:slug`; route maps to `CasesController#show` and React catch-all suffixes also route to `CasesController#show` (`config/routes.rb:84`, `config/routes.rb:134`).
-2. `CasesController#set_case` loads a decorated case through FriendlyId and eager-loads cards, podcasts, edgenotes, pages, and attachments (`app/controllers/cases_controller.rb:104`).
-3. `CasesController#show` authenticates unpublished cases, authorizes via Pundit, resolves enrollment/group/deployment, and renders HTML or JSON (`app/controllers/cases_controller.rb:44`).
-4. `app/views/cases/show.html.erb` serializes `@case` through `Cases::ShowSerializer` into `window.caseData` and appends the `case` JavaScript pack (`app/views/cases/show.html.erb:7`, `app/views/cases/show.html.erb:18`).
-5. `app/javascript/packs/case.entry.jsx` creates the Redux store, loads locale messages, wraps providers, and mounts `<Case />` into `#container` (`app/javascript/packs/case.entry.jsx:27`, `app/javascript/packs/case.entry.jsx:40`).
-6. `app/javascript/Case.jsx` parses cards, fetches comments/forums when appropriate, starts edit mode from the `edit` query param, subscribes to Action Cable, and routes to overview, quiz, conversation, suggested quizzes, or case element screens (`app/javascript/Case.jsx:133`, `app/javascript/Case.jsx:181`).
+1. `GET /` enters `CatalogController#home` through `config/routes.rb:35`.
+2. `CatalogController#home` loads `policy_scope(Case).ordered` in `app/controllers/catalog_controller.rb:12`.
+3. `app/views/catalog/home.html.haml:3` provides `#catalog-app` and `app/views/catalog/home.html.haml:4` appends the `catalog` pack.
+4. `app/views/layouts/application.html.erb:34` emits default and appended packs through `collected_javascript_pack_tag`.
+5. `app/javascript/packs/catalog.entry.jsx:33` mounts `Catalog` into `#catalog-app`.
+6. `app/javascript/catalog/catalogData.js:30` fetches `cases.json` through `Orchard.harvest`.
+7. `CasesController#index` in `app/controllers/cases_controller.rb:34` returns `Cases::PreviewSerializer` JSON, using public cache headers for anonymous JSON at `app/controllers/cases_controller.rb:41` and `app/controllers/cases_controller.rb:42`.
+8. `app/controllers/concerns/public_catalog_cache.rb:26` stores anonymous catalog JSON in `Rails.cache` and `app/controllers/concerns/public_catalog_cache.rb:36` sets CDN-aware `Cache-Control`.
 
-### Catalog Page Load
+### Case Reader and Editor Path
 
-1. Browser requests `/`; route maps to `CatalogController#home` (`config/routes.rb:35`).
-2. `CatalogController#home` assigns `@cases = policy_scope(Case).ordered` and renders with the `with_header` layout (`app/controllers/catalog_controller.rb`).
-3. `app/views/catalog/home.html.haml` renders `#catalog-app`, appends the `catalog` pack, and preloads JSON endpoints for profile, cases, features, enrollments, tags, and catalog libraries.
-4. `app/javascript/packs/catalog.entry.jsx` loads locale messages and mounts `<Catalog />` into `#catalog-app`.
-5. `app/javascript/catalog/index.jsx` uses React Router, catalog data contexts, reader data context, content selection context, and routes between catalog home and search results.
+1. `GET /cases/:slug` enters the case resource route at `config/routes.rb:84`; nested React locations fall through `config/routes.rb:134`.
+2. `CasesController#set_case` eager-loads case content in `app/controllers/cases_controller.rb:120` and `app/controllers/cases_controller.rb:121`.
+3. `CasesController#show` authorizes and responds with HTML or JSON in `app/controllers/cases_controller.rb:60`.
+4. `app/views/cases/show.html.erb:8` serializes `Cases::ShowSerializer` into `window.caseData`.
+5. `app/views/cases/show.html.erb:18` appends the `case` pack, and `app/javascript/packs/case.entry.jsx:50` mounts React into `#container`.
+6. `app/javascript/Case.jsx:68` creates the React Router/Redux case app; `app/javascript/Case.jsx:115` initializes after mount.
+7. `app/javascript/Case.jsx:125` parses serialized card content into Redux, then fetches comments/forums when the reader is enrolled.
+8. `app/javascript/Case.jsx:96` subscribes to edit broadcasts so other editors' persisted changes update local Redux state.
 
-### JSON Mutation and Broadcast Flow
+### Case Edit Broadcast Path
 
-1. A React action calls `Orchard.graft`, `Orchard.espalier`, or `Orchard.prune`, which sends JSON, CSRF token, credentials, and an `X-Session-ID` header (`app/javascript/shared/orchard.js:21`, `app/javascript/shared/orchard.js:38`, `app/javascript/shared/orchard.js:54`).
-2. A Rails controller action authenticates, authorizes, verifies locks when required, and persists the model (`app/controllers/cases_controller.rb:24`, `app/controllers/cases_controller.rb:75`).
-3. Controllers that include `BroadcastEdits` enqueue a broadcast after successful create/update/destroy responses (`app/controllers/concerns/broadcast_edits.rb:8`).
-4. `BroadcastEdit` enqueues `EditBroadcastJob` with resource, case slug, cached params, action type, and session id (`app/services/broadcast_edit.rb`).
-5. `EditBroadcastJob` serializes the changed resource and broadcasts to `EditsChannel` for that case (`app/jobs/edit_broadcast_job.rb:31`).
-6. `app/javascript/redux/actions/editsChannel.js` maps incoming watchables to Redux actions and ignores messages from the same browser session.
+1. A JSON update reaches `CasesController#update` at `app/controllers/cases_controller.rb:91`.
+2. `app/controllers/cases_controller.rb:29` registers `broadcast_edits to: :@case`.
+3. `app/controllers/concerns/broadcast_edits.rb:9` runs an after-action for successful create/update/destroy responses.
+4. `app/services/broadcast_edit.rb:17` enqueues `EditBroadcastJob` with resource, case slug, cached params, action type, and browser session id.
+5. `app/jobs/edit_broadcast_job.rb:32` broadcasts serialized payloads through `EditsChannel`.
+6. `app/channels/edits_channel.rb:6` streams only when Pundit allows the current reader to read the case.
+7. `app/javascript/redux/actions/editsChannel.js:72` subscribes on the frontend and `app/javascript/redux/actions/editsChannel.js:90` ignores echoes from the same browser session.
 
-### Stats Flow
+### Deployment Customization Path
 
-1. Browser requests `/cases/:case_slug/stats` or `/cases/:case_slug/stats.json`; route maps to `Cases::StatsController#show` (`config/routes.rb:118`).
-2. `Cases::StatsController#set_case` finds the case and authorizes `stats?` (`app/controllers/cases/stats_controller.rb:35`).
-3. `CaseStatsService` resolves date ranges, queries `Ahoy::Event`, caches normalized country stats, and exposes API rows and totals (`app/services/case_stats_service.rb:17`, `app/services/case_stats_service.rb:24`).
-4. The controller renders HTML with cached overview, JSON through `Cases::StatsSerializer`, or CSV via `send_data` (`app/controllers/cases/stats_controller.rb:11`).
+1. Deployment routes are declared at `config/routes.rb:159`.
+2. `DeploymentsController#create` uses `DeployCaseService` in `app/controllers/deployments_controller.rb:34` and `app/controllers/deployments_controller.rb:35`.
+3. `DeployCaseService` wraps deployment creation, group administrator assignment, Caselog invitation, and instructor enrollment in `app/services/deploy_case_service.rb:4`.
+4. `DeploymentsController#edit` renders the customizer mount at `app/views/deployments/edit.html.haml:9` and appends `deployment` at `app/views/deployments/edit.html.haml:13`.
+5. `app/javascript/packs/deployment.entry.jsx` reads JSON from the mount element and renders the deployment React app.
+6. `DeploymentsController#update` delegates quiz changes to `CustomizeDeploymentService` at `app/controllers/deployments_controller.rb:55` and `app/controllers/deployments_controller.rb:113`.
+7. `CustomizeDeploymentService` creates/reuses quizzes and questions transactionally in `app/services/customize_deployment_service.rb:5`.
+
+### AWS Deploy Path
+
+1. Operators start deploys through `workflow_dispatch` in `.github/workflows/deploy.yml:4`.
+2. The workflow builds release metadata in `.github/workflows/deploy.yml:103`, validates input safety, installs infra dependencies, and runs the SST deploy script at `.github/workflows/deploy.yml:180`.
+3. `scripts/deploy-sst.sh` validates release IDs, secret-sync constraints, user-data hooks, and runs SST commands.
+4. `infra/sst.config.ts:186` provisions PostgreSQL and `infra/sst.config.ts:199` provisions Redis/Valkey.
+5. `infra/sst.config.ts:250` runs the Rails web service and `infra/sst.config.ts:289` runs the Sidekiq worker service.
+6. `infra/sst.config.ts:343` defines the app CDN and cache behaviors for public catalog JSON.
+7. `infra/sst.config.ts:394`, `infra/sst.config.ts:404`, `infra/sst.config.ts:428`, and `infra/sst.config.ts:438` define one-off migrate, seed, refresh-index, and weekly-report tasks.
 
 **State Management:**
-- Rails server state lives in ActiveRecord models under `app/models` and PostgreSQL schema `db/structure.sql`.
-- Case app browser state lives in Redux under `app/javascript/redux`; initial state is seeded from `window.caseData` in `app/javascript/redux/reducers/caseData.js`.
-- Catalog browser state uses React contexts under `app/javascript/catalog/catalogData` and `app/javascript/catalog/readerData`.
-- Per-browser edit session identity comes from `sessionId()` in `app/javascript/shared/orchard.js` and is used to suppress echo broadcasts.
-- Server-side cached stats use `Rails.cache` in `app/services/case_stats_service.rb` and `app/controllers/cases/stats_controller.rb`.
+- Persistent state lives in PostgreSQL tables recorded by `db/structure.sql`; major domains include `cases`, `case_elements`, `cards`, `edgenotes`, `readers`, `deployments`, `quizzes`, `comments`, `libraries`, `roles`, `active_storage_*`, and `ahoy_events`.
+- Sessions hold Devise login state and LTI content-item selection data through concerns such as `app/controllers/concerns/selection_params.rb`.
+- Case reader/editor client state lives in Redux reducers under `app/javascript/redux/reducers`.
+- Catalog client state lives in React Context providers at `app/javascript/catalog/catalogData.js` and `app/javascript/catalog/readerData.js`.
+- Realtime connection state is globalized on `window.App` for ActionCable subscriptions and `window.sessionId` for edit echo suppression in `app/javascript/shared/orchard.js:172`.
+- Deploy/runtime configuration is environment-driven through `config/application.rb`, `infra/sst.config.ts`, and `.github/workflows/deploy.yml`.
 
 ## Key Abstractions
 
 **Case:**
-- Purpose: Root content aggregate for teaching cases, metadata, pages, podcasts, cards, edgenotes, forums, deployments, quizzes, tags, translations, libraries, archives, and Wikidata links.
-- Examples: `app/models/case.rb`, `app/controllers/cases_controller.rb`, `app/serializers/cases/show_serializer.rb`, `app/javascript/Case.jsx`.
-- Pattern: ActiveRecord aggregate with nested REST resources and a React editor/reader frontend.
+- Purpose: Central teaching-case aggregate with metadata, locale, publication state, translations, library membership, editors, enrollments, content elements, comments, deployments, quizzes, and attachments.
+- Examples: `app/models/case.rb`, `app/controllers/cases_controller.rb`, `app/serializers/case_serializer.rb`.
+- Pattern: ActiveRecord aggregate with FriendlyId slugs, model concerns, serializer-backed React state, and policy-scoped access.
 
-**Reader:**
-- Purpose: Authenticated user identity, roles, enrollments, communities, editorships, library management, saved reading lists, and Devise account behavior.
-- Examples: `app/models/reader.rb`, `app/controllers/readers_controller.rb`, `app/policies/application_policy.rb`.
-- Pattern: Devise model with Rolify roles, Active Storage image, and association-derived permissions.
+**Case Element:**
+- Purpose: Ordered table-of-contents entry that points to polymorphic content such as `Page` or `Podcast`.
+- Examples: `app/models/case_element.rb`, `app/models/concerns/element.rb`, `app/models/page.rb`, `app/models/podcast.rb`.
+- Pattern: Polymorphic join model plus `acts_as_list`, with direct `case` access for efficient eager loading and tracking.
 
-**Policy:**
-- Purpose: Pundit authorization for controller actions, route access, channels, and serializer-derived permission flags.
-- Examples: `app/policies/case_policy.rb`, `app/policies/library_policy.rb`, `app/channels/edits_channel.rb`.
-- Pattern: One policy per resource with nested Scope classes for query visibility.
+**Card and Edgenote:**
+- Purpose: Narrative content and attached media/annotation entities inside a case.
+- Examples: `app/models/card.rb`, `app/models/edgenote.rb`, `app/javascript/card`, `app/javascript/edgenotes`.
+- Pattern: ActiveRecord content records with `Lockable` and `Trackable` concerns, rendered and edited by the case React app.
 
-**Serializer:**
-- Purpose: Shared contract for server-rendered JSON bootstraps, API responses, and broadcast payloads.
-- Examples: `app/serializers/cases/show_serializer.rb`, `app/serializers/cases/stats_serializer.rb`, `app/serializers/card_serializer.rb`.
-- Pattern: ActiveModelSerializer classes with route links and `view_context` scope.
+**Reader and AnonymousUser:**
+- Purpose: Signed-in identity and anonymous null-object identity used by authorization and serializers.
+- Examples: `app/models/reader.rb`, `app/models/anonymous_user.rb`, `app/controllers/application_controller.rb`.
+- Pattern: Devise model with rolify roles, onboarding/persona state, and null object fallback from `current_user`.
+
+**Deployment:**
+- Purpose: Instructor-specific connection between a case, group, quiz, enrollments, and magic-link access.
+- Examples: `app/models/deployment.rb`, `app/controllers/deployments_controller.rb`, `app/services/deploy_case_service.rb`.
+- Pattern: ActiveRecord workflow aggregate with service-object commands for creation and customization.
+
+**Serializer Contract:**
+- Purpose: Keep frontend state shape stable across Rails HTML boot data, JSON endpoints, and ActionCable broadcasts.
+- Examples: `app/serializers/application_serializer.rb`, `app/serializers/case_serializer.rb`, `app/serializers/cases/show_serializer.rb`.
+- Pattern: ActiveModel Serializer with `view_context`, route links, normalized `has_many_by_id` collections, and conditional reader data.
+
+**Orchard API Client:**
+- Purpose: Shared browser wrapper for GET/POST/PUT/DELETE JSON calls.
+- Examples: `app/javascript/shared/orchard.js`, `app/javascript/redux/actions/case.js`, `app/javascript/catalog/catalogData.js`.
+- Pattern: Same-origin fetch wrapper with CSRF headers, `X-Session-ID`, URL resolution, and typed error classes.
 
 **BroadcastEdits:**
-- Purpose: Controller concern for broadcasting successful case-resource mutations.
-- Examples: `app/controllers/concerns/broadcast_edits.rb`, `app/services/broadcast_edit.rb`, `app/jobs/edit_broadcast_job.rb`, `app/channels/edits_channel.rb`.
-- Pattern: `after_action` concern plus service object plus ActiveJob plus Action Cable channel.
+- Purpose: Reconcile collaborative authoring state after successful persisted changes.
+- Examples: `app/controllers/concerns/broadcast_edits.rb`, `app/services/broadcast_edit.rb`, `app/jobs/edit_broadcast_job.rb`, `app/javascript/redux/actions/editsChannel.js`.
+- Pattern: Controller concern -> service -> ActiveJob -> ActionCable -> Redux action mapping.
 
-**Orchard:**
-- Purpose: Browser-side HTTP client for Rails JSON endpoints.
-- Examples: `app/javascript/shared/orchard.js`, `app/javascript/redux/actions/case.js`.
-- Pattern: Static fetch helper methods named for GET/POST/PUT/DELETE and shared CSRF/session handling.
-
-**Shakapacker Pack:**
-- Purpose: Page-level JavaScript entry mounted by Rails views.
-- Examples: `app/javascript/packs/case.entry.jsx`, `app/javascript/packs/catalog.entry.jsx`, `config/shakapacker.yml`.
-- Pattern: Rails view creates DOM target and appends named pack.
-
-**CaseStatsService:**
-- Purpose: Stats query and formatting boundary for case analytics.
-- Examples: `app/services/case_stats_service.rb`, `app/services/case_stats_service/query.rb`, `app/services/case_stats_service/formatter.rb`, `app/controllers/cases/stats_controller.rb`.
-- Pattern: Service object with nested query/formatter classes and cache key helpers.
+**SST Runtime:**
+- Purpose: Codify AWS production and preview infrastructure.
+- Examples: `infra/sst.config.ts`, `scripts/deploy-sst.sh`, `.github/workflows/deploy.yml`.
+- Pattern: Infrastructure-as-code config with explicit environment inputs, retained production resources, immutable release asset prefixes, and service/task outputs.
 
 ## Entry Points
 
-**Rails Boot:**
-- Location: `config/application.rb`, `config/environment.rb`, `config.ru`
-- Triggers: Puma, Rails console, jobs, tests.
-- Responsibilities: Load Rails, gems, defaults, middleware, schema format, and global app flags.
+**Rack/Rails App:**
+- Location: `config.ru`, `config/environment.rb`, `config/application.rb`
+- Triggers: Puma, Rails server, Docker container, SST web service.
+- Responsibilities: Boot Rails, middleware, routes, controllers, ActiveRecord, assets, and Rack app.
 
-**HTTP Routes:**
+**Local Dev Processes:**
+- Location: `Procfile.dev`
+- Triggers: Local foreman-style process manager or equivalent.
+- Responsibilities: Run Rails on `localhost:3000`, Shakapacker dev server, and Sidekiq.
+
+**Production Processes:**
+- Location: `Procfile`, `Dockerfile`, `config/puma.rb`, `config/sidekiq.yml`
+- Triggers: Heroku-style process managers or SST ECS services.
+- Responsibilities: Run Puma web process and Sidekiq worker process.
+
+**Route Table:**
 - Location: `config/routes.rb`
-- Triggers: Browser and API requests.
-- Responsibilities: Route REST, HTML, JSON, CSV, Devise, admin, Sidekiq, health, runtime, and React Router catch-all requests.
+- Triggers: Every HTTP request.
+- Responsibilities: Dispatch Rails resources, React-router catch-alls, Devise auth routes, Sidekiq Web, runtime stats, and health check.
 
-**Root Catalog:**
-- Location: `app/controllers/catalog_controller.rb`, `app/views/catalog/home.html.haml`, `app/javascript/packs/catalog.entry.jsx`
-- Triggers: `GET /` and catalog catch-all routes.
-- Responsibilities: Render the catalog shell and mount the catalog React app.
+**Shakapacker Packs:**
+- Location: `app/javascript/packs`
+- Triggers: `app/views/layouts/application.html.erb` plus route-level `append_javascript_pack`.
+- Responsibilities: Mount React apps, global styles, Stimulus controllers, file upload widgets, main menu, onboarding behavior.
 
-**Case Reader/Editor:**
-- Location: `app/controllers/cases_controller.rb`, `app/views/cases/show.html.erb`, `app/javascript/packs/case.entry.jsx`, `app/javascript/Case.jsx`
-- Triggers: `GET /cases/:slug`, `GET /cases/:slug/*.html-compatible-path`, and `GET /cases/:slug.json`.
-- Responsibilities: Load case data, authorize, serialize bootstrap state, mount React, and manage client routes.
+**Stimulus Controllers:**
+- Location: `app/javascript/packs/controllers.js`, `app/javascript/controllers`
+- Triggers: DOM elements with matching data-controller attributes in Rails views.
+- Responsibilities: Progressive interactions around stats, reading lists, confirmations, clipboard, invite drawer, and settings.
 
-**Admin UI:**
-- Location: `app/controllers/admin/application_controller.rb`, `app/dashboards`
-- Triggers: `/admin` routes.
-- Responsibilities: Administrate dashboard access for editor users.
-
-**Action Cable:**
-- Location: `cable/config.ru`, `app/channels`, `app/javascript/redux/actions/*Channel.js`
-- Triggers: Browser WebSocket subscriptions.
-- Responsibilities: Collaborative edit updates, forums, stats, and reader notifications.
+**ActionCable:**
+- Location: `app/channels`, `config/cable.yml`
+- Triggers: Browser ActionCable subscriptions through `window.App.cable`.
+- Responsibilities: Reader notifications, edit broadcasts, forum updates, and stats updates.
 
 **Background Jobs:**
-- Location: `app/jobs`, `config/sidekiq.yml`, `config/initializers/sidekiq.rb`
-- Triggers: ActiveJob enqueues from controllers, models, and services.
-- Responsibilities: Broadcasts, cloning, archive refreshes, notifications, cleanup, snapshots, and search index refreshes.
+- Location: `app/jobs`, `config/sidekiq.yml`
+- Triggers: ActiveJob enqueue calls from models, controllers, services, or tasks.
+- Responsibilities: Broadcasts, archive refresh, index refresh, notifications, memory snapshots, ActiveStorage queues, mailers.
 
-**JavaScript Build:**
-- Location: `config/shakapacker.yml`, `config/webpack/environment.js`, `app/javascript/packs`
-- Triggers: Shakapacker compile/dev server/precompile.
-- Responsibilities: Compile React, Flow-era JavaScript, Sass/CSS, images, YAML locale imports, and Webpack chunks into `public/packs`.
+**Rake Tasks:**
+- Location: `Rakefile`, `lib/tasks`
+- Triggers: `bundle exec rake ...`, SST tasks, or operator commands.
+- Responsibilities: Indices refresh, email reports, tests, local DB utilities, locks cleanup, docs/factory helpers.
+
+**CI/CD and SST:**
+- Location: `.github/workflows/deploy.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`
+- Triggers: Manual GitHub Actions workflow dispatch or local deploy script.
+- Responsibilities: Build release metadata, validate deploy inputs, run SST diff/deploy, create preview comments, create production GitHub releases, deploy AWS/Cloudflare resources.
 
 ## Architectural Constraints
 
-- **Threading:** Rails request handling is Puma-based; background work is ActiveJob with Sidekiq, and Action Cable uses Redis-backed subscriptions. Runtime diagnostics read thread counts in `app/controllers/runtime_controller.rb`.
-- **Global state:** Browser code relies on globals `window.caseData`, `window.i18n`, `window.Orchard`, `window.sessionId`, and Action Cable global `App`; see `app/views/cases/show.html.erb`, `app/javascript/shared/orchard.js`, and `app/javascript/Case.jsx`.
-- **Global constants:** Routes define `LOCALES`, `LOCALE_REGEX`, and `REACT_ROUTER_LOCATION_REGEX` in `config/routes.rb`; app boot defines `STAGING_ENV` and `TEMPORARY_UNCONFIRMED_ACCESS` in `config/application.rb`.
-- **Circular imports:** Not detected during static mapping. Keep Redux action imports through `redux/actions/index.js` and avoid feature components importing reducers.
-- **React Router integration:** Rails must route HTML-compatible nested case/catalog paths back to Rails shell actions; update `config/routes.rb` when adding top-level React routes.
-- **Serialization contract:** `window.caseData` and broadcast payloads depend on ActiveModelSerializer output. Frontend state shape changes require coordinated updates in `app/serializers`, `app/javascript/redux/state.js`, and reducers.
-- **Schema format:** ActiveRecord schema is SQL, configured in `config/application.rb`; rely on `db/structure.sql` rather than `schema.rb`.
+- **Threading:** Rails web uses Puma threads and workers configured in `config/puma.rb`; Sidekiq concurrency and queue priorities are configured in `config/sidekiq.yml`; browser JavaScript runs on the single browser event loop with async fetches and ActionCable callbacks.
+- **Global state:** Rails route constants live in `config/routes.rb`; environment flags are normalized in `config/application.rb`; frontend globals include `window.i18n` and `window.MAPBOX_*` in `app/views/layouts/application.html.erb`, `window.caseData` in `app/views/cases/show.html.erb`, `window.Orchard` and `window.sessionId` in `app/javascript/shared/orchard.js`, and ActionCable subscriptions under `window.App` in `app/javascript/Case.jsx`.
+- **Default scopes:** `Case` orders catalog visibility in `app/models/case.rb`, `Deployment` orders newest first in `app/models/deployment.rb`, and `Reader` orders by name in `app/models/reader.rb`; new queries must account for these defaults when order matters.
+- **Circular imports:** Not detected in the focused source scan. JavaScript aliases rely on `jest.config.js` module paths and Shakapacker resolution, so prefer existing alias imports such as `catalog/...`, `shared/...`, and `redux/...`.
+- **Route catch-alls:** `config/routes.rb` sends catalog and case subpaths without explicit formats to React Router; do not add conflicting Rails routes after catch-alls without checking order.
+- **Secrets:** Runtime secrets are named in `infra/sst.config.ts`, `.github/workflows/deploy.yml`, `config/storage.yml`, and initializers; documents and logs must name env vars only and never include values.
+- **Blueprint compatibility:** Raw Blueprint CSS is loaded through Sprockets in `app/assets/stylesheets/application.css`; the Shakapacker `styles` pack adds JS behavior and the legacy namespace bridge in `app/javascript/shared/blueprintLegacyNamespace.js`.
+- **Database schema:** Rails uses SQL schema format via `config/application.rb`, so `db/structure.sql` is the schema source rather than `db/schema.rb`.
 
 ## Anti-Patterns
 
-### Bypassing Orchard for Case JSON Mutations
+### Bypassing Collected Pack Loading
 
-**What happens:** Frontend code calls `fetch` directly for Rails JSON mutations.
-**Why it's wrong:** It can omit CSRF headers, credentials, JSON handling, and `X-Session-ID`, which breaks same-session broadcast suppression.
-**Do this instead:** Use `Orchard.graft`, `Orchard.espalier`, or `Orchard.prune` from `app/javascript/shared/orchard.js`.
+**What happens:** A route view directly emits Shakapacker tags instead of appending pack names through `append_javascript_pack`.
+**Why it's wrong:** `app/views/layouts/application.html.erb` centralizes global packs and route packs through `collected_javascript_pack_tag`; bypassing it can duplicate packs, omit matching stylesheet packs, or skip shared defaults.
+**Do this instead:** Add the mount point in the route view and call `append_javascript_pack` as shown in `app/views/catalog/home.html.haml:4`, `app/views/cases/show.html.erb:18`, and `app/views/deployments/edit.html.haml:13`.
 
-### Returning Ad Hoc JSON for Model-backed UI State
+### Duplicating Blueprint CSS
 
-**What happens:** Controllers hand-build JSON for data that React also receives through serializers or broadcasts.
-**Why it's wrong:** It creates competing contracts between REST responses, `window.caseData`, and Action Cable payloads.
-**Do this instead:** Add or update serializers in `app/serializers`; follow `app/serializers/cases/show_serializer.rb` and controller rendering in `app/controllers/cases_controller.rb`.
+**What happens:** A route-specific pack imports raw Blueprint package CSS or adds local CSS shims for `pt-*`/`bp4-*` classes.
+**Why it's wrong:** Global Blueprint CSS is already loaded in `app/assets/stylesheets/application.css`, while `app/javascript/shared/blueprintLegacyNamespace.js` mirrors legacy class names for JS-rendered DOM without creating another Blueprint CSS copy.
+**Do this instead:** Keep Blueprint package CSS in `app/assets/stylesheets/application.css`; add shared compatibility behavior in `app/javascript/packs/styles.js` or `app/javascript/shared/blueprintLegacyNamespace.js` only when route QA proves a shared need.
 
-### Putting Multi-step Workflows in Controllers
+### Returning Ad Hoc React State
 
-**What happens:** Controllers perform many model updates, external calls, caching, or raw SQL inline.
-**Why it's wrong:** It makes actions hard to authorize, test, reuse, and cache.
-**Do this instead:** Move orchestration to `app/services`; follow `app/services/deploy_case_service.rb` for transactional workflows and `app/services/case_stats_service.rb` for query/caching workflows.
-
-### Mutating Case Components Without BroadcastEdits
-
-**What happens:** A case component create/update/destroy action persists successfully but does not broadcast to other editors.
-**Why it's wrong:** Collaborative editor clients can show stale case state.
-**Do this instead:** Include `BroadcastEdits` and declare `broadcast_edits` in the controller, as in `app/controllers/cases_controller.rb` and `app/controllers/wikidata_links_controller.rb`.
+**What happens:** Controllers render custom hashes for case/catalog state outside the serializer contract.
+**Why it's wrong:** React reducers and context providers expect normalized keys, `links`, `type`, `table`, and `param` fields from `ApplicationSerializer` and related serializers.
+**Do this instead:** Extend the relevant serializer under `app/serializers`, then consume the new field through `app/javascript/redux` or the matching React Context provider.
 
 ## Error Handling
 
-**Strategy:** Use framework-level rescue and format-specific responses on the server, and typed fetch errors in the frontend.
+**Strategy:** Use Rails conventions at the boundary, service-object transactions for workflow failures, serializer/API error shapes for JavaScript, and narrow rescue paths for expected operational gaps.
 
 **Patterns:**
-- Pundit authorization failures are rescued in `ApplicationController#user_not_authorized`, redirecting HTML and returning `403` for JSON.
-- Validation failures commonly return model errors with `:unprocessable_entity`, as in `app/controllers/cases_controller.rb`.
-- `Orchard.handleResponse` parses successful JSON/text, raises `OrchardInputError` for 422 responses, and raises `OrchardError` for other failures.
-- Jobs can handle deleted records during async broadcast through `rescue_from ActiveJob::DeserializationError` in `app/jobs/edit_broadcast_job.rb`.
-- External API failures in `app/services/wikidata.rb` log to Rails and re-raise.
+- Pundit authorization failures redirect HTML users or return `403` JSON in `app/controllers/application_controller.rb`.
+- `SearchController#index` returns `[]` for an unpopulated `cases_search_index` while re-raising unrelated database failures in `app/controllers/search_controller.rb`.
+- `DeployCaseService` and `CustomizeDeploymentService` wrap multi-record writes in ActiveRecord transactions in `app/services/deploy_case_service.rb` and `app/services/customize_deployment_service.rb`.
+- `VerifyLock` returns HTTP `423 Locked` JSON when another reader owns a lock in `app/controllers/concerns/verify_lock.rb`.
+- `Orchard` throws `OrchardInputError` for HTTP `422` and `OrchardError` for other failed responses in `app/javascript/shared/orchard.js`.
+- `EditBroadcastJob` handles `ActiveJob::DeserializationError` by broadcasting a destroy payload with cached params in `app/jobs/edit_broadcast_job.rb`.
 
 ## Cross-Cutting Concerns
 
-**Logging:** Rails logger is used for server logs; Lograge is configured in `config/initializers/lograge.rb`; Wikidata logs query and error messages in `app/services/wikidata.rb`.
+**Logging:** Rails logging is primary; `SearchController#index` logs missing search-index state, `config/initializers/lograge.rb` configures request logging, `config/initializers/sentry.rb` enables Sentry logs outside development/test, and `app/services/memory_profile_logger.rb` supports memory diagnostics.
 
-**Validation:** ActiveRecord validations live in models such as `app/models/case.rb` and `app/models/reader.rb`; strong parameters live in controllers such as `app/controllers/cases_controller.rb`; frontend fetch 422 handling lives in `app/javascript/shared/orchard.js`.
+**Validation:** Strong params live in controllers such as `app/controllers/cases_controller.rb` and `app/controllers/deployments_controller.rb`; ActiveRecord validations live on models such as `app/models/case.rb`, `app/models/card.rb`, `app/models/edgenote.rb`, and `app/models/quiz.rb`; deploy input validation lives in `.github/workflows/deploy.yml` and `scripts/deploy-sst.sh`.
 
-**Authentication:** Devise authenticates readers through `app/models/reader.rb`, Devise routes in `config/routes.rb`, and reader controllers under `app/controllers/readers`.
+**Authentication:** Devise authenticates `Reader` records from `app/models/reader.rb`; OmniAuth/LTI callbacks live under `app/controllers/authentication_strategies`; `ApplicationController` exposes `current_user` as `current_reader || AnonymousUser.new`; Sidekiq Web is mounted only for editor readers in `config/routes.rb:243`.
 
-**Authorization:** Pundit policies in `app/policies` gate controller actions, policy scopes, admin access, channel subscriptions, and serializer-derived permission flags.
+**Authorization:** Pundit policies in `app/policies` gate controllers, policy scopes, ActionCable subscriptions, and serializer-visible actions. `ApplicationPolicy::Scope` defaults to editor-only data access unless a resource policy expands it.
 
-**Internationalization:** Rails locale selection lives in `ApplicationController#set_locale`; locale files live under `config/locales`; React packs dynamically import `react-intl` locale data and load messages through `config/locales/index.js`.
+**Internationalization:** `ApplicationController#set_locale` selects locale from route params, reader preference, or Accept-Language; route locale stripping is defined in `config/routes.rb`; frontend packs load messages from `config/locales`.
 
-**Realtime:** Action Cable channels live in `app/channels`; browser subscription lifecycle lives in `app/javascript/Case.jsx` and Redux channel actions; server broadcast jobs live in `app/jobs`.
+**Assets:** Sprockets serves global CSS/images under `app/assets`; Shakapacker builds JS/CSS packs from `app/javascript`; Webpack customization lives in `config/webpack/environment.js`; production static asset delivery is fronted by SST CloudFront resources in `infra/sst.config.ts`.
 
-**Caching:** Rails cache is used for stats payloads and stats overview HTML in `app/services/case_stats_service.rb` and `app/controllers/cases/stats_controller.rb`.
+**Caching:** Rails anonymous catalog JSON caching lives in `app/controllers/concerns/public_catalog_cache.rb`; app CDN catalog cache paths live in `infra/sst.config.ts`; immutable static asset prefixes are set by `.github/workflows/deploy.yml` and `infra/sst.config.ts`.
 
-**File Attachments:** Active Storage associations live in models such as `app/models/case.rb`, and direct upload support is used from JavaScript in `app/javascript/edgenotes/editor/Attachment.js`.
+**Analytics and Stats:** Ahoy setup is in `config/initializers/ahoy.rb`; trackable models use `app/models/concerns/trackable.rb`; stats requests and realtime refresh use `app/controllers/cases/stats_controller.rb`, `app/services/case_stats_service.rb`, `app/channels/stats_channel.rb`, and `app/javascript/controllers/case_stats_controller.js`.
 
 ---
 
-*Architecture analysis: 2026-05-03*
+*Architecture analysis: 2026-05-30*
