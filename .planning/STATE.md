@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
-status: milestone_complete
-stopped_at: Completed 26-02-PLAN.md
-last_updated: "2026-06-01T07:50:07.118Z"
+status: completed
+stopped_at: Phase 27 context gathered
+last_updated: "2026-06-01T08:20:32.899Z"
 last_activity: 2026-06-01
 progress:
-  total_phases: 17
-  completed_phases: 18
+  total_phases: 18
+  completed_phases: 17
   total_plans: 23
   completed_plans: 24
-  percent: 106
+  percent: 100
 ---
 
 # GSD State
@@ -93,6 +93,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 24 follow-up added: canonical test DB/run command documentation and deterministic `run-rspec.sh` DB prepare path
 - Phase 22 added: AWS Edge Cache Validation and Catalog Load Optimization
 - Phase 23 added: Immutable Cloudflare DNS and preview deployment pipeline
+- Phase 27 added: spot and remove ambiguous environment variables like the GIT_* ones defined in the task definitions if the value is empty or blank then it shall be removed
 
 ## Notes
 
@@ -103,9 +104,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-06-01T07:50:07.113Z
-Stopped at: Completed 26-02-PLAN.md
-Resume file: None
+Last session: 2026-06-01T08:20:32.893Z
+Stopped at: Phase 27 context gathered
+Resume file: .planning/phases/27-spot-and-remove-ambiguous-environment-variables-like-the-git/27-CONTEXT.md
 
 ## Quick Tasks Completed
 
