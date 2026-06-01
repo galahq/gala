@@ -84,7 +84,10 @@ jobs:
             local summary="$6"
             local artifact="$7"
             local duration_ms="$8"
-            CATEGORY="$category" NAME="$name" COMMAND="$command" STATUS="$status" REASON="$reason" SUMMARY="$summary" ARTIFACT="$artifact" DURATION_MS="$duration_ms" \
+            local exit_code="$9"
+            local timed_out="${10}"
+            local triage="${11}"
+            CATEGORY="$category" NAME="$name" COMMAND="$command" STATUS="$status" REASON="$reason" SUMMARY="$summary" ARTIFACT="$artifact" DURATION_MS="$duration_ms" EXIT_CODE="$exit_code" TIMED_OUT="$timed_out" TRIAGE="$triage" \
               node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const record = {
@@ -96,6 +99,9 @@ jobs:
             summary: process.env.SUMMARY,
             artifact: process.env.ARTIFACT,
             durationMs: Number(process.env.DURATION_MS || 0),
+            exitCode: Number(process.env.EXIT_CODE || 0),
+            timedOut: process.env.TIMED_OUT === 'true',
+            triage: process.env.TRIAGE,
           };
           fs.appendFileSync(`${process.env.CI_VALIDATION_DIR}/suite-results.jsonl`, `${JSON.stringify(record)}\n`);
           NODE
@@ -105,22 +111,38 @@ jobs:
             local category="$1"
             local name="$2"
             local command="$3"
+            local timeout_seconds="${4:-240}"
             local artifact="${CI_VALIDATION_DIR}/${category}.log"
-            local start end exit_code status summary
+            local start end exit_code status reason summary timed_out triage
             start="$(date +%s%3N)"
             set +e
-            bash -lc "$command" > "$artifact" 2>&1
+            timeout "${timeout_seconds}s" bash -lc "$command" > "$artifact" 2>&1
             exit_code=$?
             set -e
             end="$(date +%s%3N)"
-            if [[ "$exit_code" -eq 0 ]]; then status="passed"; else status="failed"; fi
+            if [[ "$exit_code" -eq 0 ]]; then
+              status="passed"
+              reason=""
+              timed_out="false"
+              triage="passed"
+            elif [[ "$exit_code" -eq 124 ]]; then
+              status="failed"
+              reason="timeout after ${timeout_seconds}s"
+              timed_out="true"
+              triage="suite timed out; inspect ${artifact} and rerun: ${command}"
+            else
+              status="failed"
+              reason="exit ${exit_code}"
+              timed_out="false"
+              triage="non-zero exit; inspect ${artifact} and rerun: ${command}"
+            fi
             summary="$(tail -n 12 "$artifact" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
-            append_suite "$category" "$name" "$command" "$status" "" "$summary" "$artifact" "$((end - start))"
+            append_suite "$category" "$name" "$command" "$status" "$reason" "$summary" "$artifact" "$((end - start))" "$exit_code" "$timed_out" "$triage"
           }
 
-          run_suite unit "report unit tests" "node --test scripts/ci/*.test.mjs"
-          run_suite integration "request specs" "./run-rspec.sh spec/requests/case_routes_spec.rb"
-          run_suite system "visual harness list" "pnpm test:visual -- --list"
+          run_suite unit "report unit tests" "node --test scripts/ci/*.test.mjs" 120
+          run_suite integration "request specs" "./run-rspec.sh spec/requests/case_routes_spec.rb" 240
+          run_suite system "visual harness list" "pnpm test:visual -- --list" 120
 
           SST_REFRESH_STATUS="not_run"
           SST_REFRESH_REASON="AWS credentials or dev SST stage unavailable"
@@ -133,13 +155,13 @@ jobs:
 
           if [[ "${AWS_REGION}" == "us-west-2" && "${SST_STAGE}" == "dev" && -n "${AWS_ACCESS_KEY_ID:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
             set +e
-            (cd infra && npx sst refresh --stage dev) > "${SST_REFRESH_ARTIFACT}" 2>&1
+            (cd infra && timeout 180s npx sst refresh --stage dev) > "${SST_REFRESH_ARTIFACT}" 2>&1
             refresh_exit=$?
-            (cd infra && npx sst diff --stage dev --json) > "${SST_DIFF_ARTIFACT}" 2>&1
+            (cd infra && timeout 180s npx sst diff --stage dev --json) > "${SST_DIFF_ARTIFACT}" 2>&1
             diff_exit=$?
             set -e
-            if [[ "$refresh_exit" -eq 0 ]]; then SST_REFRESH_STATUS="passed"; SST_REFRESH_REASON=""; else SST_REFRESH_STATUS="warning"; SST_REFRESH_REASON="sst refresh exited ${refresh_exit}"; fi
-            if [[ "$diff_exit" -eq 0 ]]; then SST_DIFF_STATUS="passed"; SST_DIFF_REASON=""; else SST_DIFF_STATUS="warning"; SST_DIFF_REASON="sst diff exited ${diff_exit}"; fi
+            if [[ "$refresh_exit" -eq 0 ]]; then SST_REFRESH_STATUS="passed"; SST_REFRESH_REASON=""; elif [[ "$refresh_exit" -eq 124 ]]; then SST_REFRESH_STATUS="warning"; SST_REFRESH_REASON="sst refresh timed out after 180s"; else SST_REFRESH_STATUS="warning"; SST_REFRESH_REASON="sst refresh exited ${refresh_exit}"; fi
+            if [[ "$diff_exit" -eq 0 ]]; then SST_DIFF_STATUS="passed"; SST_DIFF_REASON=""; elif [[ "$diff_exit" -eq 124 ]]; then SST_DIFF_STATUS="warning"; SST_DIFF_REASON="sst diff timed out after 180s"; else SST_DIFF_STATUS="warning"; SST_DIFF_REASON="sst diff exited ${diff_exit}"; fi
             SST_REFRESH_SUMMARY="$(tail -n 8 "${SST_REFRESH_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
             SST_DIFF_SUMMARY="$(tail -n 8 "${SST_DIFF_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
           else

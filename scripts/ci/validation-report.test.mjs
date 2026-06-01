@@ -70,6 +70,27 @@ test('report text contains required high-signal dimensions', () => {
   }
 });
 
+test('report text includes actionable failed-suite context', () => {
+  const report = buildReport({
+    suites: [{
+      category: 'integration',
+      status: 'failed',
+      reason: 'timeout after 240s',
+      command: './run-rspec.sh spec/requests/case_routes_spec.rb',
+      artifact: 'tmp/ci-validation/integration.log',
+      summary: 'bundle exec rspec hung waiting for database',
+      exitCode: 124,
+      timedOut: true,
+      triage: 'suite timed out; inspect tmp/ci-validation/integration.log',
+    }],
+  });
+  const text = renderReportText(report);
+  assert.match(text, /failure_context/);
+  assert.match(text, /integration/);
+  assert.match(text, /timeout after 240s/);
+  assert.match(text, /tmp\/ci-validation\/integration\.log/);
+});
+
 test('failed suites map report state to failure', () => {
   const report = buildReport({ suites: [{ category: 'unit', status: 'failed' }] });
   assert.equal(report.state, 'failure');

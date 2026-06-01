@@ -80,6 +80,12 @@ function compact(value) {
   return `${value ?? ''}`.replace(/\s+/g, ' ').trim();
 }
 
+function clip(value, limit = 120) {
+  const clean = compact(value);
+  if (clean.length <= limit) return clean;
+  return `${clean.slice(0, Math.max(0, limit - 3))}...`;
+}
+
 function normalizeStatus(status) {
   return STATUS_MAP.get(compact(status).toLowerCase()) ?? 'not_run';
 }
@@ -124,6 +130,9 @@ export function normalizeSuites(suites = []) {
       summary: compact(suite.summary),
       durationMs: Number.isFinite(Number(suite.durationMs)) ? Number(suite.durationMs) : null,
       artifact: compact(suite.artifact),
+      exitCode: Number.isFinite(Number(suite.exitCode)) ? Number(suite.exitCode) : null,
+      timedOut: Boolean(suite.timedOut),
+      triage: compact(suite.triage),
       failures: Array.isArray(suite.failures) ? suite.failures.map((failure) => redactSecrets(failure)) : [],
     });
   }
@@ -140,6 +149,9 @@ export function normalizeSuites(suites = []) {
         summary: 'not run',
         durationMs: null,
         artifact: '',
+        exitCode: null,
+        timedOut: false,
+        triage: 'collector did not provide this suite result',
         failures: [],
       },
     ]),
@@ -268,13 +280,13 @@ function table(rows) {
 
 export function renderReportText(report) {
   const suiteRows = [
-    ['dimension', 'status', 'summary', 'artifact'],
+    ['dimension', 'status', 'why', 'artifact'],
     ...REQUIRED_SUITE_CATEGORIES.map((category) => {
       const suite = report.suites[category];
-      return [category, suite.status, suite.reason || suite.summary || 'recorded', suite.artifact || '-'];
+      return [category, suite.status, clip(suite.reason || suite.summary || 'recorded', 96), suite.artifact || '-'];
     }),
-    ['sst_refresh', report.infra.sst_refresh.status, report.infra.sst_refresh.reason || report.infra.sst_refresh.summary || 'recorded', report.infra.sst_refresh.artifact || '-'],
-    ['sst_diff', report.infra.sst_diff.status, report.infra.sst_diff.reason || report.infra.sst_diff.summary || 'recorded', report.infra.sst_diff.artifact || '-'],
+    ['sst_refresh', report.infra.sst_refresh.status, clip(report.infra.sst_refresh.reason || report.infra.sst_refresh.summary || 'recorded', 96), report.infra.sst_refresh.artifact || '-'],
+    ['sst_diff', report.infra.sst_diff.status, clip(report.infra.sst_diff.reason || report.infra.sst_diff.summary || 'recorded', 96), report.infra.sst_diff.artifact || '-'],
   ];
 
   const warningRows = [
@@ -290,7 +302,25 @@ export function renderReportText(report) {
   ];
 
   const failingLinks = Object.values(report.suites)
-    .flatMap((suite) => suite.failures.map((failure) => `${suite.category}: ${failure.file ?? suite.artifact ?? '-'}${failure.line ? `:${failure.line}` : ''} ${failure.message ?? ''}`.trim()));
+    .flatMap((suite) => {
+      const extracted = suite.failures.map((failure) => `${suite.category}: ${failure.file ?? suite.artifact ?? '-'}${failure.line ? `:${failure.line}` : ''} ${failure.message ?? ''}`.trim());
+      if (extracted.length > 0) return extracted;
+      if (!['failed', 'error'].includes(suite.status)) return [];
+      return [`${suite.category}: ${suite.artifact || '-'} ${suite.reason || suite.summary || 'failed'}`.trim()];
+    });
+
+  const failureContextRows = [
+    ['dimension', 'exit', 'timeout', 'next', 'last_log'],
+    ...Object.values(report.suites)
+      .filter((suite) => ['failed', 'error'].includes(suite.status))
+      .map((suite) => [
+        suite.category,
+        suite.exitCode ?? '-',
+        suite.timedOut ? 'yes' : 'no',
+        clip(suite.triage || suite.command || 'inspect artifact', 96),
+        clip(suite.summary || suite.reason || '-', 140),
+      ]),
+  ];
 
   return [
     'GALA CI VALIDATION',
@@ -313,6 +343,9 @@ export function renderReportText(report) {
     '',
     'failure_links:',
     ...(failingLinks.length ? failingLinks.map((link) => `- ${link}`) : ['- none']),
+    '',
+    'failure_context:',
+    failureContextRows.length > 1 ? table(failureContextRows) : '- none',
     '',
   ].join('\n');
 }
