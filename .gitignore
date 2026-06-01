@@ -23,6 +23,7 @@
 node_modules/
 
 /.pnpm-store
+/.playwright-mcp
 /.playwright-browsers
 /playwright-report
 /test-results

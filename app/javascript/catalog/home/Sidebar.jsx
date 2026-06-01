@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { ReaderDataContext } from 'catalog/readerData'
 import { Element, ElementImage } from 'catalog/shared'
 import MyLibrary from 'catalog/home/MyLibrary'
-import SignInForm from 'utility/SignInForm'
+import SignInCard from 'catalog/home/SignInCard'
 import { identiconStyle } from 'shared/Identicon'
 
 const Sidebar = () => {
@@ -18,7 +18,7 @@ const Sidebar = () => {
   return (
     <Container>
       {readerLoading ? null : reader == null ? (
-        <SignInForm />
+        <SignInCard />
       ) : (
         <div className="pt-dark">
           <IdentigradientElement
