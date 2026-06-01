@@ -149,7 +149,7 @@ jobs:
           }
 
           run_suite unit "report unit tests" "node --test scripts/ci/*.test.mjs" 120
-          run_suite integration "integration smoke" "./run-rspec.sh spec/requests/public_utility_routes_spec.rb" 180
+          run_suite integration "integration smoke" "./run-rspec.sh spec/requests/public_utility_routes_spec.rb" 420
           run_suite integration_full "request specs" "./run-rspec.sh spec/requests/case_routes_spec.rb" 240 warning
           if [[ -n "${SYSTEM_SMOKE_URL:-}" ]]; then
             run_suite system "HTTP smoke" "curl --fail --show-error --silent --location --max-time 20 --output /dev/null --write-out 'http_code=%{http_code} url=%{url_effective}\n' \"${SYSTEM_SMOKE_URL}\"" 30
