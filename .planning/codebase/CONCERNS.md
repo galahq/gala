@@ -80,6 +80,12 @@
 - Current mitigation: `.env`, `.env.dev`, `/tmp/*`, `/db/sqldump/`, and `config/master.key` are ignored in `.gitignore`; `scripts/scan-staged-secrets` reports candidate staged secrets without printing values.
 - Recommendations: Verify tracked secret-named files contain no live values, rotate any value that has been committed, extend `.dockerignore`, and wire `scripts/scan-staged-secrets` into CI or a documented pre-commit path.
 
+**Runtime secret injection to ECS task environments is not masked:**
+- Risk: ECS task definitions currently place `DATABASE_URL`, `REDIS_URL`, `LTI_SECRET`, `SES_SMTP_PASSWORD`, `SECRET_KEY_BASE`, and `RAILS_MASTER_KEY` in plain `environment` values instead of `secrets`.
+- Files: `infra/sst.config.ts`, `scripts/deploy-sst.sh`, `gala-dev` and `gala-production` ECS task definitions.
+- Current evidence: `aws ecs describe-task-definition` shows `secrets: []` for both web and worker tasks in dev and production; all sensitive values appear as plain environment entries.
+- Recommendation: Add a follow-on phase item to migrate sensitive values to ECS `secrets` with runtime-only naming and keep non-sensitive values in `environment`.
+
 **Redis TLS certificate verification is disabled:**
 - Risk: Production cache, Sidekiq, and ActionCable Redis clients use `OpenSSL::SSL::VERIFY_NONE` for `rediss://` connections.
 - Files: `config/environments/production.rb`, `config/initializers/sidekiq.rb`, `config/cable.yml`, `infra/sst.config.ts`
@@ -256,7 +262,7 @@
 
 **Deployment preview branch input is constrained to a fixed choice list:**
 - Problem: The deploy workflow `branch` input only lists selected branches.
-- Blocks: Arbitrary branch preview subdomains under `*.learngala.dev` require workflow edits or branch-list expansion.
+- Blocks: Arbitrary branch preview subdomains under `*.dev.learngala.dev` require workflow edits or branch-list expansion.
 - Files: `.github/workflows/deploy.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`
 
 ## Test Coverage Gaps
