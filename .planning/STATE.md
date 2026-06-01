@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
-status: active
-stopped_at: Phase 23 implementation
-last_updated: "2026-05-30T00:00:00Z"
-last_activity: 2026-05-30 -- Phase 23 added for SST-owned Cloudflare DNS on `learngala.dev`, branch preview subdomains, immutable release asset namespaces, minimal deploy workflow inputs, and automated production release metadata
+status: executing
+stopped_at: Phase 24 context gathered
+last_updated: "2026-06-01T04:16:46.179Z"
+last_activity: 2026-05-30 -- Phase 23 deployed production `learngala.dev` through SST Router/Cloudflare and created the permanent dev stage; dev is currently blocked on Rails credentials decryption (`RAILS_MASTER_KEY`) causing ALB target timeouts
 progress:
-  total_phases: 14
-  completed_phases: 13
+  total_phases: 15
+  completed_phases: 14
   total_plans: 16
-  completed_plans: 15
-  percent: 93
+  completed_plans: 16
+  percent: 100
 ---
 
 # GSD State
@@ -21,7 +21,7 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 23 is adding SST-owned Cloudflare DNS and immutable preview/release deployment mechanics for `learngala.dev`
+**Current focus:** Phase 23 remains the active AWS/Cloudflare stabilization phase; Phase 24 is queued next to reduce production Docker image size and eliminate duplicate SST image builds.
 
 ## Current Position
 
@@ -87,6 +87,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ### Roadmap Evolution
 
+- Phase 24 added: Cut Gala production Docker image size with reusable base image and slimmer production Dockerfiles
 - Phase 22 added: AWS Edge Cache Validation and Catalog Load Optimization
 - Phase 23 added: Immutable Cloudflare DNS and preview deployment pipeline
 
@@ -99,9 +100,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-05-30T00:00:00Z
-Stopped at: Phase 23 implementation
-Resume file: .planning/phases/23-immutable-cloudflare-dns-and-preview-deployment-pipeline/23-01-SUMMARY.md
+Last session: 2026-06-01T04:16:46.173Z
+Stopped at: Phase 24 context gathered
+Resume file: .planning/phases/24-cut-gala-production-docker-image-size-with-reusable-base-ima/24-CONTEXT.md
 
 ## Quick Tasks Completed
 
