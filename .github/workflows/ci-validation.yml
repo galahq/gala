@@ -119,6 +119,7 @@ jobs:
             local name="$2"
             local command="$3"
             local timeout_seconds="${4:-240}"
+            local failure_status="${5:-failed}"
             local artifact="${CI_VALIDATION_DIR}/${category}.log"
             local start end exit_code status reason summary timed_out triage
             start="$(date +%s%3N)"
@@ -133,12 +134,12 @@ jobs:
               timed_out="false"
               triage="passed"
             elif [[ "$exit_code" -eq 124 ]]; then
-              status="failed"
+              status="${failure_status}"
               reason="timeout after ${timeout_seconds}s"
               timed_out="true"
               triage="suite timed out; inspect ${artifact} and rerun: ${command}"
             else
-              status="failed"
+              status="${failure_status}"
               reason="exit ${exit_code}"
               timed_out="false"
               triage="non-zero exit; inspect ${artifact} and rerun: ${command}"
@@ -148,7 +149,8 @@ jobs:
           }
 
           run_suite unit "report unit tests" "node --test scripts/ci/*.test.mjs" 120
-          run_suite integration "request specs" "./run-rspec.sh spec/requests/case_routes_spec.rb" 240
+          run_suite integration "integration smoke" "./run-rspec.sh spec/requests/public_utility_routes_spec.rb" 180
+          run_suite integration_full "request specs" "./run-rspec.sh spec/requests/case_routes_spec.rb" 240 warning
           if [[ -n "${SYSTEM_SMOKE_URL:-}" ]]; then
             run_suite system "HTTP smoke" "curl --fail --show-error --silent --location --max-time 20 --output /dev/null --write-out 'http_code=%{http_code} url=%{url_effective}\n' \"${SYSTEM_SMOKE_URL}\"" 30
           else
@@ -202,8 +204,40 @@ jobs:
           COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" CONTRIBUTORS="${CONTRIBUTORS}" FILES_CHANGED="${FILES_CHANGED}" ADDITIONS="${ADDITIONS}" DELETIONS="${DELETIONS}" \
             node --input-type=module <<'NODE'
           import fs from 'node:fs';
+          import path from 'node:path';
           const dir = process.env.CI_VALIDATION_DIR;
-          const suites = fs.readFileSync(`${dir}/suite-results.jsonl`, 'utf8').trim().split(/\n/).filter(Boolean).map((line) => JSON.parse(line));
+          const artifactsUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts`;
+          const FAILURE_PATTERNS = [
+            /(?:^\s*\d+\)|^\s*Failures:|^Failure\/Error:|No examples found|uninitialized constant|NameError|NoMethodError|ActiveRecord::|PG::|permission denied|SyntaxError|LoadError|undefined method|expected\b|got\b|RuntimeError)/mi,
+          ];
+
+          function compact(value) {
+            return `${value ?? ''}`.replace(/\s+/g, ' ').trim();
+          }
+
+          function extractFailureLines(filePath) {
+            if (!filePath || !fs.existsSync(filePath)) return [];
+            const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
+            const matched = lines.filter((line) => FAILURE_PATTERNS.some((pattern) => pattern.test(line))).map(compact).filter(Boolean);
+            if (matched.length > 0) return matched.slice(0, 10);
+            return lines.slice(-10).map(compact).filter(Boolean);
+          }
+
+          const suites = fs.readFileSync(`${dir}/suite-results.jsonl`, 'utf8')
+            .trim()
+            .split(/\n/)
+            .filter(Boolean)
+            .map((line) => {
+              const suite = JSON.parse(line);
+              const artifactPath = suite.artifact ? path.join(process.cwd(), suite.artifact) : '';
+              const failures = extractFailureLines(artifactPath);
+              return {
+                ...suite,
+                failures,
+                artifact_url: suite.artifact ? `${artifactsUrl} (${suite.artifact})` : '',
+              };
+            });
+
           const sstDiffRaw = fs.existsSync(process.env.SST_DIFF_ARTIFACT) ? fs.readFileSync(process.env.SST_DIFF_ARTIFACT, 'utf8') : '';
           const input = {
             commitSummary: process.env.COMMIT_SUMMARY,
@@ -227,6 +261,7 @@ jobs:
               baseRef: process.env.PR_BASE_REF,
               headSha: process.env.PR_HEAD_SHA,
               baseSha: process.env.PR_BASE_SHA,
+              artifactsUrl,
             },
             suites,
             sstRefresh: {

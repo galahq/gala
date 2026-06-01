@@ -33,12 +33,14 @@ export function buildStatusPayload({
 }
 
 export function payloadFromReport(report, targetUrl) {
-  const failedSuites = Object.values(report.suites ?? {}).filter((suite) => suite.status === 'failed').length;
-  const notRunSuites = Object.values(report.suites ?? {}).filter((suite) => suite.status === 'not_run').length;
+  const suites = Object.values(report.suites ?? {});
+  const failedSuites = suites.filter((suite) => suite.status === 'failed').length;
+  const warningSuites = suites.filter((suite) => suite.status === 'warning').length;
+  const notRunSuites = suites.filter((suite) => suite.status === 'not_run').length;
   return buildStatusPayload({
     state: report.state ?? 'error',
     targetUrl,
-    description: `${report.state ?? 'error'}: failed=${failedSuites} not_run=${notRunSuites} warnings=${report.destructive_warnings?.length ?? 0} confidence=${report.confidence ?? 'n/a'}`,
+    description: `${report.state ?? 'error'}: failed=${failedSuites} warning=${warningSuites} not_run=${notRunSuites} destructive=${report.destructive_warnings?.length ?? 0} confidence=${report.confidence ?? 'n/a'}`,
   });
 }
 

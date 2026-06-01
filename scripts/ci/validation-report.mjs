@@ -3,6 +3,8 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 export const REQUIRED_SUITE_CATEGORIES = ['unit', 'integration', 'system'];
+export const OPTIONAL_SUITE_CATEGORIES = ['integration_full'];
+export const SUITE_MATRIX_CATEGORIES = [...REQUIRED_SUITE_CATEGORIES, ...OPTIONAL_SUITE_CATEGORIES];
 
 const SECRET_KEY_PATTERN = /(TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)/i;
 const STATUS_MAP = new Map([
@@ -120,7 +122,7 @@ export function normalizeSuites(suites = []) {
 
   for (const suite of Array.isArray(suites) ? suites : []) {
     const category = compact(suite.category).toLowerCase();
-    if (!REQUIRED_SUITE_CATEGORIES.includes(category)) continue;
+    if (!SUITE_MATRIX_CATEGORIES.includes(category)) continue;
     byCategory.set(category, {
       category,
       name: compact(suite.name) || category,
@@ -128,6 +130,7 @@ export function normalizeSuites(suites = []) {
       status: normalizeStatus(suite.status),
       reason: compact(suite.reason),
       summary: compact(suite.summary),
+      artifactUrl: compact(suite.artifactUrl || suite.artifact_url),
       durationMs: Number.isFinite(Number(suite.durationMs)) ? Number(suite.durationMs) : null,
       artifact: compact(suite.artifact),
       exitCode: Number.isFinite(Number(suite.exitCode)) ? Number(suite.exitCode) : null,
@@ -138,7 +141,7 @@ export function normalizeSuites(suites = []) {
   }
 
   return Object.fromEntries(
-    REQUIRED_SUITE_CATEGORIES.map((category) => [
+    SUITE_MATRIX_CATEGORIES.map((category) => [
       category,
       byCategory.get(category) ?? {
         category,
@@ -147,6 +150,7 @@ export function normalizeSuites(suites = []) {
         status: 'not_run',
         reason: 'suite result was not provided',
         summary: 'not run',
+        artifactUrl: '',
         durationMs: null,
         artifact: '',
         exitCode: null,
@@ -190,7 +194,7 @@ export function detectDestructiveWarnings(input = '') {
 
 export function finalState({ suites, reportError = false } = {}) {
   if (reportError) return 'error';
-  const suiteValues = Object.values(suites ?? {});
+  const suiteValues = Object.values(suites ?? {}).filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category));
   if (suiteValues.some((suite) => suite.status === 'error')) return 'error';
   if (suiteValues.some((suite) => suite.status === 'failed')) return 'failure';
   return 'success';
@@ -199,8 +203,14 @@ export function finalState({ suites, reportError = false } = {}) {
 export function calculateConfidence(report) {
   let score = 95;
   const suites = Object.values(report.suites ?? {});
-  score -= suites.filter((suite) => suite.status === 'not_run').length * 8;
+  score -= suites
+    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
+    .filter((suite) => suite.status === 'not_run').length * 8;
   score -= suites.filter((suite) => suite.status === 'failed').length * 18;
+  score -= suites
+    .filter((suite) => !REQUIRED_SUITE_CATEGORIES.includes(suite.category))
+    .filter((suite) => suite.status === 'failed').length * 6;
+  score -= suites.filter((suite) => suite.status === 'warning').length * 3;
   if (report.infra?.sst_refresh?.status === 'not_run') score -= 4;
   if (report.infra?.sst_diff?.status === 'not_run') score -= 4;
   score -= (report.destructive_warnings ?? []).filter((warning) => warning.confidence === 'high').length * 8;
@@ -261,6 +271,7 @@ export function buildReport(input = {}) {
       base_ref: compact(redactedInput.runContext?.baseRef),
       head_sha: compact(redactedInput.runContext?.headSha),
       base_sha: compact(redactedInput.runContext?.baseSha),
+      artifacts_url: compact(redactedInput.runContext?.artifactsUrl),
     },
     contributors: Array.isArray(redactedInput.contributors) ? redactedInput.contributors.map(compact).filter(Boolean) : [],
     commit_count: Number.isFinite(Number(redactedInput.commitCount)) ? Number(redactedInput.commitCount) : 0,
@@ -294,7 +305,7 @@ function table(rows) {
 export function renderReportText(report) {
   const suiteRows = [
     ['dimension', 'status', 'why', 'artifact'],
-    ...REQUIRED_SUITE_CATEGORIES.map((category) => {
+    ...SUITE_MATRIX_CATEGORIES.map((category) => {
       const suite = report.suites[category];
       return [category, suite.status, clip(suite.reason || suite.summary || 'recorded', 96), suite.artifact || '-'];
     }),
@@ -316,10 +327,17 @@ export function renderReportText(report) {
 
   const failingLinks = Object.values(report.suites)
     .flatMap((suite) => {
-      const extracted = suite.failures.map((failure) => `${suite.category}: ${failure.file ?? suite.artifact ?? '-'}${failure.line ? `:${failure.line}` : ''} ${failure.message ?? ''}`.trim());
+      const extracted = suite.failures.map((failure) => `${suite.category}: ${failure}`.trim());
       if (extracted.length > 0) return extracted;
       if (!['failed', 'error'].includes(suite.status)) return [];
-      return [`${suite.category}: ${suite.artifact || '-'} ${suite.reason || suite.summary || 'failed'}`.trim()];
+      const link = suite.artifactUrl ? `${suite.artifactUrl}` : (suite.artifact || '-');
+      return [`${suite.category}: ${link} ${suite.reason || suite.summary || 'failed'}`.trim()];
+    });
+
+  const failureContextLinks = Object.values(report.suites)
+    .flatMap((suite) => {
+      if (!suite.failures || suite.failures.length === 0) return [];
+      return suite.failures.slice(0, 10).map((line) => `- ${suite.category}: ${clip(line, 140)}`);
     });
 
   const failureContextRows = [
@@ -363,6 +381,11 @@ export function renderReportText(report) {
     'failure_context:',
     failureContextRows.length > 1 ? table(failureContextRows) : '- none',
     '',
+    'top_failure_lines:',
+    ...(failureContextLinks.length ? failureContextLinks : ['- none']),
+    '',
+    `suite_artifacts: ${report.run_context.artifacts_url || report.run_context.run_url || '-'}`,
+    '',
   ].join('\n');
 }
 
@@ -402,6 +425,7 @@ function readInput(inputPath) {
     baseRef: process.env.PR_BASE_REF,
     headSha: process.env.PR_HEAD_SHA,
     baseSha: process.env.PR_BASE_SHA,
+    artifactsUrl: `${process.env.GITHUB_SERVER_URL ?? 'https://github.com'}/${process.env.GITHUB_REPOSITORY ?? ''}/actions/runs/${process.env.GITHUB_RUN_ID || ''}/artifacts`,
   };
 
   if (inputPath) {

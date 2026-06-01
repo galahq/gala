@@ -15,6 +15,7 @@ test('normalizes unit integration system categories and marks missing suites not
   const suites = normalizeSuites([{ category: 'unit', status: 'passed', summary: 'ok' }]);
   assert.equal(suites.unit.status, 'passed');
   assert.equal(suites.integration.status, 'not_run');
+  assert.equal(suites.integration_full.status, 'not_run');
   assert.equal(suites.system.reason, 'suite result was not provided');
 });
 
@@ -55,6 +56,16 @@ test('destructive warnings alone do not map final state to failure', () => {
   assert.equal(finalState({ suites, warnings: [{ confidence: 'high' }] }), 'success');
 });
 
+test('final state ignores optional advisory suite failures', () => {
+  const suites = normalizeSuites([
+    { category: 'unit', status: 'passed' },
+    { category: 'integration', status: 'passed' },
+    { category: 'integration_full', status: 'failed' },
+    { category: 'system', status: 'not_run' },
+  ]);
+  assert.equal(finalState({ suites }), 'success');
+});
+
 test('report text contains required high-signal dimensions', () => {
   const report = buildReport({
     commitSummary: 'Add CI validation report',
@@ -76,7 +87,7 @@ test('report text contains required high-signal dimensions', () => {
     sstDiff: { status: 'passed', rawText: 'no changes' },
   });
   const text = renderReportText(report);
-  for (const token of ['unit', 'integration', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence', 'run:', 'pr_ref:', 'run_url:']) {
+  for (const token of ['unit', 'integration', 'integration_full', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
     assert.match(text, new RegExp(token));
   }
 });
