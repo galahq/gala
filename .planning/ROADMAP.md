@@ -386,3 +386,13 @@ Plans:
 
 Plans:
 - [x] TBD (run /gsd-plan-phase 26 to break down) (completed 2026-06-01)
+
+### Phase 27: spot and remove ambiguous environment variables like the GIT_* ones defined in the task definitions if the value is empty or blank then it shall be removed
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 26
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 27 to break down)
