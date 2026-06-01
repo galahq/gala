@@ -259,7 +259,24 @@ export default $config({
     const databaseUrl = $interpolate`postgresql://${encodeUriComponent(database.username)}:${encodeUriComponent(database.password)}@${database.host}:${database.port}/${database.database}?sslmode=require`;
     const redisUrl = $interpolate`rediss://${encodeUriComponent(cache.username)}:${encodeUriComponent(cache.password)}@${cache.host}:${cache.port}`;
 
-    const railsRuntimeEnvironment = {
+    const compactRuntimeEnvironment = <T extends Record<string, unknown>>(
+      environment: T,
+    ) =>
+      Object.fromEntries(
+        Object.entries(environment).filter(([, value]) => {
+          if (value == null) {
+            return false;
+          }
+
+          if (typeof value === "string") {
+            return value.trim().length > 0;
+          }
+
+          return true;
+        }),
+      ) as { [K in keyof T]: Exclude<T[K], null | undefined> };
+
+    const railsRuntimeEnvironment = compactRuntimeEnvironment({
       AWS_REGION: "us-west-2",
       BASE_URL: baseUrl,
       ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}/${assetReleasePrefix}`,
@@ -274,13 +291,13 @@ export default $config({
       GALA_STATIC_ASSETS_BUCKET: staticAssetsBucketName,
       GALA_ASSET_PREFIX: assetReleasePrefix,
       GALA_RELEASE_ID: releaseId,
-      GITHUB_RUN_ID: process.env.GITHUB_RUN_ID ?? "",
+      GITHUB_RUN_ID: process.env.GITHUB_RUN_ID,
       SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
       WEB_CONCURRENCY: isProduction ? "2" : "1",
-      COMMIT_SHA: process.env.GITHUB_SHA ?? "",
-      RELEASE: process.env.RELEASE ?? releaseId,
-      RELEASE_URL: process.env.GALA_RELEASE_URL ?? "",
-    };
+      COMMIT_SHA: process.env.GITHUB_SHA,
+      RELEASE: process.env.RELEASE?.trim() || releaseId,
+      RELEASE_URL: process.env.GALA_RELEASE_URL,
+    });
 
     const sharedSecrets = Object.fromEntries([
       ["DATABASE_URL", secretValueToParameter("DATABASE_URL", databaseUrl)],
