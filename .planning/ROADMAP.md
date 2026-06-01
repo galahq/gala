@@ -130,6 +130,8 @@ Plans:
 
 ### Phase 16: Frontend Test Runner Modernization
 
+- [x] Phase 16: Complete (2026-06-01)
+
 **Goal:** Restore a reliable pnpm-backed frontend test command, preferably with Vitest.
 
 **Requirements:** VITE-02, VITE-03, TEST-01, TEST-02, TEST-03, TEST-04, QA-04
@@ -142,6 +144,8 @@ Plans:
 5. React 16 test environment and modern package transforms are covered by runner config.
 
 ### Phase 17: Playwright Visual Regression Coverage
+
+- [x] Phase 17: Complete (baseline harness, 2026-06-01)
 
 **Goal:** Add durable Playwright visual regression coverage for high-value deterministic routes.
 
@@ -156,6 +160,8 @@ Plans:
 
 ### Phase 18: Final Verification and Cleanup
 
+- [x] Phase 18: Complete (2026-06-01)
+
 **Goal:** Prove v1.1 is coherent end to end and remove leftover Yarn/Flow/test-runner assumptions.
 
 **Requirements:** QA-05
@@ -168,7 +174,7 @@ Plans:
 
 ### Phase 19: Production Deployment to AWS (no-vpc first)
 
-- [ ] Phase 19: Superseded by Phase 20 audit
+- [x] Phase 19: Superseded by Phase 20 audit
 
 **Goal:** Preserve the earlier AWS deployment planning context while treating Phase 20 as the current executable deployment plan. The previous local script-first deployment route is superseded by SST IaC through `.github/workflows/deploy.yml`.
 
@@ -183,7 +189,7 @@ Plans:
 
 Plans:
 **Wave 1**
-- [ ] 19-01-PLAN.md — Superseded planning context; do not execute ahead of Phase 20 without reconciling against the SST/deploy.yml deployment boundary.
+- [x] 19-01-PLAN.md — Superseded planning context; do not execute ahead of Phase 20 without reconciling against the SST/deploy.yml deployment boundary.
 
 ### Phase 20: Production Deployment Execution (AWS)
 
@@ -234,6 +240,8 @@ Plans:
 
 ### Phase 22: AWS Edge Cache Validation and Catalog Load Optimization
 
+- [x] Phase 22: Complete (2026-05-30)
+
 **Goal:** Validate the Phase 21 app CloudFront rollout in the live AWS environment, then make the smallest safe follow-up changes that improve anonymous root catalog load performance without moving production DNS, altering Heroku, changing SES, or changing the retained `msc-gala` ActiveStorage media bucket.
 
 **Requirements:** AWSPERF-07, AWSPERF-08, AWSPERF-09, AWSPERF-10, AWSPERF-11
@@ -256,6 +264,8 @@ Plans:
 
 ### Phase 23: Immutable Cloudflare DNS and preview deployment pipeline
 
+- [x] Phase 23: Complete (validated by later Phase 30 guardrail checks, 2026-06-01)
+
 **Goal:** Move the AWS deployment pipeline from generated ALB/CloudFront URL validation to SST-owned Cloudflare DNS for `learngala.dev` and preview subdomains, while making deploys release-ID based, S3 asset namespaces immutable, production releases transparent, and rollback/promotion idempotent.
 
 **Requirements:** DPLYIMM-01, DPLYIMM-02, DPLYIMM-03, DPLYIMM-04, DPLYIMM-05, DPLYIMM-06, DPLYIMM-07, DPLYIMM-08, DPLYIMM-09
@@ -275,7 +285,7 @@ Plans:
 
 Plans:
 **Wave 1**
-- [ ] 23-01-PLAN.md — Add SST Cloudflare DNS, immutable release asset namespaces, minimal deploy workflow inputs, release metadata, preview comments, and safety docs.
+- [x] 23-01-PLAN.md — Add SST Cloudflare DNS, immutable release asset namespaces, minimal deploy workflow inputs, release metadata, preview comments, and safety docs.
 
 ## Completed Milestones
 
@@ -316,6 +326,8 @@ Archive:
 
 ### Phase 24: Cut Gala production Docker image size with reusable base image and slimmer production Dockerfiles
 
+- [x] Phase 24: Complete (closed by Phase 30 validation, 2026-06-01)
+
 **Goal:** Reduce the AWS production/runtime Docker image footprint and deploy latency by separating development-only build needs from production runtime needs, introducing a reusable production base image, and ensuring web, worker, migration, and maintenance tasks reuse one app image instead of triggering duplicate SST Docker asset builds.
 
 **Requirements:** IMG-01, IMG-02, IMG-03, IMG-04, IMG-05, IMG-06, IMG-07
@@ -331,13 +343,17 @@ Archive:
 6. The Dockerfile follows current Rails/37signals-style production conventions where appropriate: multi-stage build, build-only Node/package tooling, `SECRET_KEY_BASE_DUMMY` asset compilation, Bootsnap precompile, jemalloc where useful, non-root runtime user, and optional Thruster evaluation without adding unnecessary runtime weight.
 7. Validation is safe and non-destructive: no Heroku production mutation, no Heroku database/Redis reuse, no SES mutation, no retained `msc-gala` S3 media bucket mutation, and all AWS checks use `AWS_PROFILE=gala AWS_REGION=us-west-2` with `SST_STAGE=dev` unless a separate production deploy gate is explicitly approved.
 
-**Plans:** 1 plan
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
-- [ ] 24-03-SUMMARY.md — Test-harness and request-cache follow-up handoff for `/cases/:slug`, deterministic test DB targeting, and continuation after Phase 24.
+- [x] 24-01-PLAN.md — Production image size reduction and reusable base image.
+- [x] 24-02-PLAN.md — Single app image reuse for SST web, worker, migration, and maintenance tasks.
+- [x] 24-03-SUMMARY.md — Test-harness and request-cache follow-up handoff for `/cases/:slug`, deterministic test DB targeting, and continuation after Phase 24.
 
 ### Phase 25: Audit Docker architecture and GitHub Actions operator guardrails for secure reliable platform operations
+
+- [x] Phase 25: Complete (2026-06-01)
 
 **Goal:** Research and audit whether the production Dockerfile/image architecture, SST task model, and GitHub Actions workflows align with the repository's safety guardrails, then define a secure, reliable operator-run platform workflow manual for CODEOWNER-held operations.
 **Requirements**: TBD
@@ -367,6 +383,8 @@ Plans:
 
 ### Phase 26: Simplify ECS task definitions and add CI validation status reporting
 
+- [x] Phase 26: Complete (2026-06-01)
+
 **Goal:** Reduce ECS task-definition complexity and establish an operator-driven CI validation workflow that automatically reports high-signal verification status to GitHub without coupling deploy execution to CI pass/fail state.
 
 **Requirements**: CI-01, CI-02, CI-03, CI-04, CI-05, CI-06, CI-07, CI-08
@@ -388,6 +406,8 @@ Plans:
 - [x] TBD (run /gsd-plan-phase 26 to break down) (completed 2026-06-01)
 
 ### Phase 27: spot and remove ambiguous environment variables like the GIT_* ones defined in the task definitions if the value is empty or blank then it shall be removed
+
+- [x] Phase 27: Complete (2026-06-01)
 
 **Goal:** [To be planned]
 **Requirements**: TBD
@@ -456,3 +476,28 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 - [x] 29-03-PLAN.md - Validate SPEND.md and harden decision quality.
+
+### Phase 30: Close dirty cache/deploy artifacts and validate guardrails
+
+- [x] Phase 30: Complete (2026-06-01)
+
+**Goal:** Audit and commit the remaining dirty GSD/cache/deploy artifacts, close stale phase status, and validate the GitHub/AWS/SST guardrails without touching Heroku production or changing deferred ARM64/Thruster decisions.
+
+**Requirements:** QA-05, DPLY-01, DPLY-03, DPLY-05, DPLYIMM-01, CI-08
+
+**Depends on:** Phase 29
+
+**Success Criteria:**
+1. Dirty files are classified before commit, and unrelated app behavior changes are avoided.
+2. Cache work from the previous request-cache workflows is incorporated into `.planning` state and validated with focused request specs.
+3. GitHub workflow definitions, operator scripts, and CI reporting are checked locally without broad unrelated rewrites.
+4. GitHub CLI validation inspects workflow runs and validation artifacts rather than trusting a green workflow conclusion alone.
+5. AWS CLI validation is read-only and confirms SST-managed CloudFront/ECS health under `AWS_PROFILE=gala AWS_REGION=us-west-2`.
+6. Heroku production remains untouched, SST in `infra/sst.config.ts` remains the infrastructure authority, ARM64 production adoption remains deferred, and Thruster remains deferred/no-adopt.
+7. Remaining CI validation debt is recorded as milestone audit debt before any milestone archive.
+
+**Plans:** 1/1 plans complete
+
+Plans:
+**Wave 1**
+- [x] 30-01-PLAN.md — Audit dirty cache/deploy artifacts, validate focused gates, record CI/AWS evidence, and commit closeout state.

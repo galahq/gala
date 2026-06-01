@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: All phases complete; milestone audit next
-last_updated: "2026-06-01T12:11:36Z"
-last_activity: 2026-06-01 -- Phase 28 ARM64 runtime proof completed; production default kept on x86_64 because direct task-definition rollback proof failed
+stopped_at: Phase 30 complete; milestone audit has CI validation tech debt
+last_updated: "2026-06-01T22:29:36Z"
+last_activity: 2026-06-01 -- Phase 30 closed dirty cache/deploy artifacts, validated focused cache specs, verified GitHub/AWS guardrails, and recorded CI validation debt
 progress:
-  total_phases: 20
-  completed_phases: 20
-  total_plans: 31
-  completed_plans: 31
+  total_phases: 21
+  completed_phases: 21
+  total_plans: 33
+  completed_plans: 33
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 28 - verify-arm-ecs-fargate-runtime-architecture-and-resolve-thru complete; milestone audit is next
+**Current focus:** Phase 30 - close-dirty-cache-deploy-artifacts-and-validate-gates complete; milestone audit has CI validation tech debt before archive
 
 ## Current Position
 
-Phase: 28
-Plan: 4 of 4
-Status: Phase complete
-Last activity: 2026-06-01 -- ARM64 dev deploy succeeded, one-off ECS tasks passed, dev rolled back to X86_64, and final decision is keep-amd64 until rollback workflow handles inactive task definitions
+Phase: 30
+Plan: 1 of 1
+Status: Phase complete; milestone archive blocked by CI validation debt
+Last activity: 2026-06-01 -- Dirty planning artifacts were closed, cache request specs passed, GitHub/AWS guardrails were inspected, ARM64/Thruster deferrals were preserved, and exact-head CI validation remains the next archive gate
 
 ## Milestone
 
@@ -58,6 +58,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Use `localhost:3000` for browser QA.
 - Run targeted automated tests for touched Ruby and JavaScript files.
 - Commit each phase after its verification gate passes.
+- Use SST in `infra/sst.config.ts` as the infrastructure authority for AWS production candidates and preview environments.
+- Keep production-capable deploys on `x86_64` until ARM64 rollback proof is automated and rerun.
+- Keep Thruster no-adopt/deferred for the current CloudFront/S3/ECS/Puma architecture.
 
 ## Blockers
 
@@ -81,7 +84,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 21 addressed the AWS catalog bottleneck found on 2026-05-30: `/cases.json` was dominated by Rails serialization, not static asset delivery. The rollout adds a separate app CloudFront distribution with default caching disabled and short TTL behavior only for public anonymous catalog JSON paths, adds immutable static asset headers, increases production web CPU/memory, and raises Puma concurrency. Targeted catalog request specs passed in Docker compose.
 - Phase 22 deployed and validated the app CloudFront distribution `EF4NIYHMN17KT` / `https://d3sn0yc7ms2w6o.cloudfront.net`. No-cookie anonymous catalog JSON now emits `max-age=300, s-maxage=300, stale-while-revalidate=60`; cookie-bearing, query, and private variants remain uncached; and anonymous root HTML no longer preloads `/profile.json` or `/enrollments.json`.
 - Phase 23 adds a new deployment architecture layer: Cloudflare DNS for `learngala.dev`, branch preview subdomains, release-ID asset prefixes, GitHub releases for production deploys, PR comments for previews, and contributor-gated deploy workflow inputs.
-- Phase 23 live breakpoint: production Router `E3FF4TTU9Q4XTY` / `d1ky1nvgqyxj8z.cloudfront.net` serves `learngala.dev`; dev stage deployed at `pr-745.dev.learngala.dev` but web health is failing because Puma workers cannot decrypt Rails credentials (`key must be 16 bytes`). Resume from `.planning/phases/23-immutable-cloudflare-dns-and-preview-deployment-pipeline/23-01-SUMMARY.md`.
+- Phase 23 live breakpoint was resolved by later deploy work: production Router `E3FF4TTU9Q4XTY` / `d1ky1nvgqyxj8z.cloudfront.net` serves `learngala.dev`; `https://dev.learngala.dev/up` returned HTTP 200 during Phase 30 validation; ECS `GalaWeb` and `GalaWorker` were running 1/1 on `GalaWeb:13` and `GalaWorker:12`.
+- Phase 30 CI validation warning: latest inspected remote `gala/ci-validation` status remained `failure` on `e2445ae9` even though workflow run `26755143627` concluded `success`; the downloaded validation report recorded failed integration, Ruby lint, ESLint, and Stylelint dimensions. Inspect the exact closeout head before milestone archive.
 
 ## Accumulated Context
 
@@ -98,6 +102,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 28 completed: dev ARM64 runtime was proven for web, worker, migration, and one-off tasks, but production default remains `x86_64` because direct rollback to captured X86_64 task definitions failed once those revisions were inactive; recovery required re-registering active X86_64 copies. Thruster decision is `no-adopt`.
 - Phase 29 added: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
 - Phase 29 completed: root `SPEND.md` now records SST-tracked AWS inventory, May 2026 account-wide spend evidence, capex/opex framing, growth scenarios, cost-cut recommendations, Heroku stay/hybrid/migrate thresholds, drift, and unknowns.
+- Phase 30 added and completed: dirty cache/deploy closeout artifacts were audited and committed, focused cache specs passed, GitHub/AWS/SST guardrails were inspected, Heroku remained untouched, ARM64/Thruster deferrals were preserved, and milestone archive remains gated on exact-head CI validation.
 
 ## Notes
 
@@ -108,9 +113,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-06-01T09:10:15.152Z
-Stopped at: Phase 28 context gathered
-Resume file: .planning/phases/28-verify-arm-ecs-fargate-runtime-architecture-and-resolve-thru/28-CONTEXT.md
+Last session: 2026-06-01T22:29:36Z
+Stopped at: Phase 30 closeout complete; exact-head GitHub CI validation remains before milestone archive
+Resume file: .planning/phases/30-close-dirty-cache-deploy-artifacts-and-validate-gates/30-CONTEXT.md
 
 ## Quick Tasks Completed
 
@@ -122,6 +127,7 @@ Resume file: .planning/phases/28-verify-arm-ecs-fargate-runtime-architecture-and
 | 2026-05-04 | Restore production Mapbox style fallback | complete | this commit |
 | 2026-05-04 | Document Google mock login for protected-route visual QA | complete | this commit |
 | 2026-06-01 | Standardize test DB URL selection and update `run-rspec.sh` / `bin/run_ci_tests` | complete | this change |
+| 2026-06-01 | Close dirty GSD cache/deploy artifacts and validate guardrails | complete | this change |
 
 ## Operator Next Steps
 
@@ -130,3 +136,4 @@ Resume file: .planning/phases/28-verify-arm-ecs-fargate-runtime-architecture-and
 - Keep `https://www.learngala.com` on Heroku until a separate `.com` DNS cutover phase is explicitly approved.
 - If rollback is needed, redeploy the previous known-good branch or commit through `.github/workflows/deploy.yml`; retained release asset namespaces preserve the prior static assets during the rollback window.
 - Before rerunning Rails request specs, use `./run-rspec.sh <specs>` or `RAILS_ENV=test DATABASE_URL=postgres://gala:alpine@<host>:5432/gala_test bundle exec rspec ...` so tests target the dedicated test DB.
+- Before archiving v1.1, push the Phase 30 closeout commit and inspect the exact-head `gala-ci-validation` artifact with `gh run download`; do not trust workflow conclusion alone.
