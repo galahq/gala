@@ -76,7 +76,14 @@ jobs:
           : > "${CI_VALIDATION_DIR}/suite-results.jsonl"
 
           append_suite() {
-            local category="$1" name="$2" command="$3" status="$4" reason="$5" summary="$6" artifact="$7" duration_ms="$8"
+            local category="$1"
+            local name="$2"
+            local command="$3"
+            local status="$4"
+            local reason="$5"
+            local summary="$6"
+            local artifact="$7"
+            local duration_ms="$8"
             CATEGORY="$category" NAME="$name" COMMAND="$command" STATUS="$status" REASON="$reason" SUMMARY="$summary" ARTIFACT="$artifact" DURATION_MS="$duration_ms" \
               node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -95,7 +102,10 @@ jobs:
           }
 
           run_suite() {
-            local category="$1" name="$2" command="$3" artifact="${CI_VALIDATION_DIR}/${category}.log"
+            local category="$1"
+            local name="$2"
+            local command="$3"
+            local artifact="${CI_VALIDATION_DIR}/${category}.log"
             local start end exit_code status summary
             start="$(date +%s%3N)"
             set +e
