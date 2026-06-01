@@ -480,6 +480,7 @@ export default $config({
     const appCacheBehavior = (
       pathPattern: string,
       cacheSeconds: number,
+      forwardCookies: "all" | "none" = "all",
     ) => ({
       pathPattern,
       targetOriginId: appOriginId,
@@ -500,7 +501,7 @@ export default $config({
           "Authorization",
         ],
         cookies: {
-          forward: "all",
+          forward: forwardCookies,
         },
       },
     });
@@ -540,7 +541,7 @@ export default $config({
       },
       orderedCacheBehaviors: [
         ...publicCatalogCachePaths.map((pathPattern) =>
-          appCacheBehavior(pathPattern, thirtyDaysInSeconds)
+          appCacheBehavior(pathPattern, thirtyDaysInSeconds, "none")
         ),
         ...nonCacheableCaseShowPaths.map((pathPattern) =>
           appCacheBehavior(pathPattern, 0)
