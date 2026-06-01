@@ -69,9 +69,8 @@ require CODEOWNER/environment approval and exact typed confirmation.
 `GalaRefreshIndices`, and `GalaWeeklyReport`; migrations and one-off scripts must
 run as ECS tasks using that production app image and shared AWS environment.
 `Dockerfile.production` builds the app image from `Dockerfile.production-base`.
-Existing outputs cover migration/seed task execution and web/worker services.
-Missing for maintenance/rollback: stable outputs for refresh-index task execution
-and CloudFront distribution IDs must be consumed by helpers before mutation.
+Existing outputs and AWS discovery cover migration task execution, web/worker
+services, task-definition rollback targets, and CloudFront distribution IDs.
 
 ## Known Gaps
 - `25-02`: preview trigger boundary and dry-run summary hardening.

@@ -132,16 +132,6 @@ jobs:
           fi
           operator_require_confirmation "${STAGE}" rollback "${target}" "${DRY_RUN}" "${CONFIRMATION}"
 
-      - name: Load SST outputs for task rollback
-        if: github.event.inputs.lane == 'task_definition'
-        working-directory: infra
-        run: |
-          set -euo pipefail
-          npm ci
-          npx sst install
-          AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" npx sst diff --stage "${SST_STAGE}"
-          test -f .sst/outputs.json
-
       - name: Roll back ECS task definition
         if: github.event.inputs.lane == 'task_definition'
         env:

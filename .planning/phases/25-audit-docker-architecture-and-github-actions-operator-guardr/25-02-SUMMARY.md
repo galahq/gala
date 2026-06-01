@@ -36,4 +36,4 @@ Results:
 ## Notes
 
 - No AWS, GitHub, Cloudflare, or Heroku mutation was performed.
-- `infra/sst.config.ts` was not changed because existing migration and distribution outputs are enough for the guarded workflows.
+- `infra/sst.config.ts` was not changed; the guarded workflows use existing SST outputs when present and AWS discovery fallback on fresh runners.
