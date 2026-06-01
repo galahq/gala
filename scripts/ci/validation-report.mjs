@@ -249,6 +249,19 @@ export function buildReport(input = {}) {
   const report = {
     generated_at: new Date().toISOString(),
     summary80: truncateSummary(redactedInput.changeset?.summary ?? redactedInput.commitSummary),
+    run_context: {
+      run_id: compact(redactedInput.runContext?.runId),
+      run_attempt: compact(redactedInput.runContext?.runAttempt),
+      run_url: compact(redactedInput.runContext?.runUrl),
+      event: compact(redactedInput.runContext?.eventName),
+      actor: compact(redactedInput.runContext?.actor),
+      pr_number: compact(redactedInput.runContext?.prNumber),
+      pr_title: compact(redactedInput.runContext?.prTitle),
+      head_ref: compact(redactedInput.runContext?.headRef),
+      base_ref: compact(redactedInput.runContext?.baseRef),
+      head_sha: compact(redactedInput.runContext?.headSha),
+      base_sha: compact(redactedInput.runContext?.baseSha),
+    },
     contributors: Array.isArray(redactedInput.contributors) ? redactedInput.contributors.map(compact).filter(Boolean) : [],
     commit_count: Number.isFinite(Number(redactedInput.commitCount)) ? Number(redactedInput.commitCount) : 0,
     changeset: {
@@ -328,6 +341,9 @@ export function renderReportText(report) {
     `state: ${report.state}`,
     `confidence: ${report.confidence}`,
     `commit_summary: ${report.summary80}`,
+    `run: id=${report.run_context.run_id || '-'} attempt=${report.run_context.run_attempt || '-'} event=${report.run_context.event || '-'} actor=${report.run_context.actor || '-'}`,
+    `pr_ref: #${report.run_context.pr_number || '-'} ${report.run_context.head_ref || '-'} -> ${report.run_context.base_ref || '-'} head=${report.run_context.head_sha ? report.run_context.head_sha.slice(0, 8) : '-'}`,
+    `run_url: ${report.run_context.run_url || '-'}`,
     `contributors: ${report.contributors.length ? report.contributors.join(', ') : 'not available'}`,
     `commit_count: ${report.commit_count}`,
     `changeset: files=${report.changeset.files_changed} additions=${report.changeset.additions} deletions=${report.changeset.deletions}`,
@@ -372,11 +388,28 @@ function parseArgs(argv) {
 }
 
 function readInput(inputPath) {
+  const envRunContext = {
+    runId: process.env.GITHUB_RUN_ID,
+    runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+    runUrl: process.env.GITHUB_RUN_ID
+      ? `${process.env.GITHUB_SERVER_URL ?? 'https://github.com'}/${process.env.GITHUB_REPOSITORY ?? ''}/actions/runs/${process.env.GITHUB_RUN_ID}`
+      : '',
+    eventName: process.env.GITHUB_EVENT_NAME,
+    actor: process.env.GITHUB_ACTOR,
+    prNumber: process.env.PR_NUMBER,
+    prTitle: process.env.PR_TITLE,
+    headRef: process.env.PR_HEAD_REF,
+    baseRef: process.env.PR_BASE_REF,
+    headSha: process.env.PR_HEAD_SHA,
+    baseSha: process.env.PR_BASE_SHA,
+  };
+
   if (inputPath) {
     if (!fs.existsSync(inputPath)) {
       return {
         reportError: true,
         commitSummary: 'validation input missing',
+        runContext: envRunContext,
         suites: [],
         sstRefresh: {
           status: 'not_run',
@@ -398,7 +431,7 @@ function readInput(inputPath) {
     return JSON.parse(fs.readFileSync(inputPath, 'utf8'));
   }
   if (process.env.CI_VALIDATION_INPUT) return JSON.parse(process.env.CI_VALIDATION_INPUT);
-  return {};
+  return { runContext: envRunContext };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

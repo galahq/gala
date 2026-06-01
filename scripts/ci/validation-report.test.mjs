@@ -9,7 +9,7 @@ import {
   renderReportText,
   truncateSummary,
 } from './validation-report.mjs';
-import { buildStatusPayload, payloadFromReport, STATUS_CONTEXT } from './post-commit-status.mjs';
+import { buildStatusPayload, payloadFromReport, resolveStatusSha, STATUS_CONTEXT } from './post-commit-status.mjs';
 
 test('normalizes unit integration system categories and marks missing suites not_run', () => {
   const suites = normalizeSuites([{ category: 'unit', status: 'passed', summary: 'ok' }]);
@@ -60,12 +60,23 @@ test('report text contains required high-signal dimensions', () => {
     commitSummary: 'Add CI validation report',
     commitCount: 2,
     contributors: ['alice', 'bob'],
+    runContext: {
+      runId: '26745216631',
+      runAttempt: '1',
+      runUrl: 'https://github.com/galahq/gala/actions/runs/26745216631',
+      eventName: 'pull_request',
+      actor: 'papes1ns',
+      prNumber: '785',
+      headRef: 'infra/sst-aws-poc',
+      baseRef: 'main',
+      headSha: '998e5c9921aa04cd4876e3965a7a57300c40809d',
+    },
     suites: [{ category: 'unit', status: 'passed', artifact: 'unit.log' }],
     sstRefresh: { status: 'not_run', reason: 'missing credentials' },
     sstDiff: { status: 'passed', rawText: 'no changes' },
   });
   const text = renderReportText(report);
-  for (const token of ['unit', 'integration', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence']) {
+  for (const token of ['unit', 'integration', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence', 'run:', 'pr_ref:', 'run_url:']) {
     assert.match(text, new RegExp(token));
   }
 });
@@ -112,6 +123,14 @@ test('builds final status payload from report artifact data', () => {
   assert.equal(payload.context, 'gala/ci-validation');
   assert.equal(payload.state, 'success');
   assert.equal(payload.target_url, 'https://example.test/artifact');
+});
+
+test('prefers PR head sha for advisory commit statuses', () => {
+  assert.equal(resolveStatusSha({
+    GITHUB_SHA: 'merge-sha',
+    PR_HEAD_SHA: 'head-sha',
+  }), 'head-sha');
+  assert.equal(resolveStatusSha({ GITHUB_SHA: 'merge-sha' }, 'explicit-sha'), 'explicit-sha');
 });
 
 test('report generation marks infrastructure errors as error state', () => {

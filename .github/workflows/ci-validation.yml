@@ -30,6 +30,12 @@ jobs:
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2
       SST_STAGE: dev
+      PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+      PR_TITLE: ${{ github.event.pull_request.title || '' }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      PR_BASE_REF: ${{ github.event.pull_request.base.ref || '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -169,14 +175,25 @@ jobs:
             printf '%s\n' "${SST_DIFF_REASON}" > "${SST_DIFF_ARTIFACT}"
           fi
 
-          COMMIT_SUMMARY="$(git log -1 --pretty=%s)"
-          COMMIT_COUNT="$(git rev-list --count HEAD ^origin/main 2>/dev/null || echo 1)"
+          COMMIT_SUMMARY="${PR_TITLE:-$(git log -1 --pretty=%s)}"
+          if [[ -n "${PR_BASE_SHA:-}" && -n "${PR_HEAD_SHA:-}" ]] && git cat-file -e "${PR_BASE_SHA}^{commit}" 2>/dev/null && git cat-file -e "${PR_HEAD_SHA}^{commit}" 2>/dev/null; then
+            COMMIT_COUNT="$(git rev-list --count "${PR_BASE_SHA}..${PR_HEAD_SHA}" 2>/dev/null || echo 1)"
+            SHORTSTAT="$(git diff --shortstat "${PR_BASE_SHA}...${PR_HEAD_SHA}" 2>/dev/null || true)"
+          else
+            COMMIT_COUNT="$(git rev-list --count HEAD ^origin/main 2>/dev/null || echo 1)"
+            SHORTSTAT="$(git diff --shortstat origin/main...HEAD 2>/dev/null || true)"
+          fi
           CONTRIBUTORS="$(git log --format='%an <%ae>' -n 25 | sort -u | paste -sd ',' -)"
-          FILES_CHANGED="$(git diff --stat --oneline origin/main...HEAD 2>/dev/null | tail -n 1 | awk '{print $1}' || echo 0)"
+          FILES_CHANGED="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) files? changed.*/\1/p')"
+          ADDITIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) insertions?\\(\\+\\).*/\1/p')"
+          DELETIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) deletions?\\(-\\).*/\1/p')"
+          FILES_CHANGED="${FILES_CHANGED:-0}"
+          ADDITIONS="${ADDITIONS:-0}"
+          DELETIONS="${DELETIONS:-0}"
 
           SST_REFRESH_STATUS="${SST_REFRESH_STATUS}" SST_REFRESH_REASON="${SST_REFRESH_REASON}" SST_REFRESH_SUMMARY="${SST_REFRESH_SUMMARY}" SST_REFRESH_ARTIFACT="${SST_REFRESH_ARTIFACT}" \
           SST_DIFF_STATUS="${SST_DIFF_STATUS}" SST_DIFF_REASON="${SST_DIFF_REASON}" SST_DIFF_SUMMARY="${SST_DIFF_SUMMARY}" SST_DIFF_ARTIFACT="${SST_DIFF_ARTIFACT}" \
-          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" CONTRIBUTORS="${CONTRIBUTORS}" FILES_CHANGED="${FILES_CHANGED}" \
+          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" CONTRIBUTORS="${CONTRIBUTORS}" FILES_CHANGED="${FILES_CHANGED}" ADDITIONS="${ADDITIONS}" DELETIONS="${DELETIONS}" \
             node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const dir = process.env.CI_VALIDATION_DIR;
@@ -189,6 +206,21 @@ jobs:
             changeset: {
               summary: process.env.COMMIT_SUMMARY,
               filesChanged: Number(process.env.FILES_CHANGED || 0),
+              additions: Number(process.env.ADDITIONS || 0),
+              deletions: Number(process.env.DELETIONS || 0),
+            },
+            runContext: {
+              runId: process.env.GITHUB_RUN_ID,
+              runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+              runUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+              eventName: process.env.GITHUB_EVENT_NAME,
+              actor: process.env.GITHUB_ACTOR,
+              prNumber: process.env.PR_NUMBER,
+              prTitle: process.env.PR_TITLE,
+              headRef: process.env.PR_HEAD_REF,
+              baseRef: process.env.PR_BASE_REF,
+              headSha: process.env.PR_HEAD_SHA,
+              baseSha: process.env.PR_BASE_SHA,
             },
             suites,
             sstRefresh: {

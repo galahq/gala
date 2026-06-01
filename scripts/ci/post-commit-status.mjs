@@ -42,6 +42,10 @@ export function payloadFromReport(report, targetUrl) {
   });
 }
 
+export function resolveStatusSha(env = process.env, explicitSha = '') {
+  return compact(explicitSha || env.CI_STATUS_SHA || env.PR_HEAD_SHA || env.GITHUB_SHA);
+}
+
 export async function postCommitStatus({
   ownerRepo,
   sha,
@@ -86,6 +90,7 @@ function parseArgs(argv) {
     else if (arg === '--description') args.description = argv[++index];
     else if (arg === '--context') args.context = argv[++index];
     else if (arg === '--report') args.report = argv[++index];
+    else if (arg === '--sha') args.sha = argv[++index];
     else if (arg === '--strict') args.strict = true;
   }
   return args;
@@ -115,7 +120,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 
   const result = await postCommitStatus({
     ownerRepo: process.env.GITHUB_REPOSITORY,
-    sha: process.env.GITHUB_SHA,
+    sha: resolveStatusSha(process.env, args.sha),
     credential: process.env.GITHUB_TOKEN,
     apiUrl: process.env.GITHUB_API_URL,
     payload,
