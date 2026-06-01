@@ -154,7 +154,7 @@ jobs:
             failures="$(grep -E -n '(^[[:space:]]*[0-9]+\))|(^[[:space:]]*Failures:)|(^[[:space:]]*Failure/Error:)|(^[[:space:]]*NoEnvironmentInSchemaError)|(^[[:space:]]*PG::)|(^[[:space:]]*ActiveRecord::)|(^[[:space:]]*uninitialized constant)|(^[[:space:]]*undefined method)|(^[[:space:]]*RuntimeError)|(^[[:space:]]*# spec/.+_spec\.rb:[0-9]+:)|(^[[:space:]]*rspec .*\/spec\/.+_spec\.rb:[0-9]+)|(^[[:space:]]*\/.+(spec|app)\/.+\.rb:[0-9]+)' "$artifact" 2>/dev/null \
               | tail -n 12 \
               | sed -E 's/^[0-9]+://' \
-              | sed -E 's/[[:space:]]+/ /g'
+              | sed -E 's/[[:space:]]+/ /g')"
 
             if [[ -n "$failures" ]]; then
               printf '%s' "$failures"
