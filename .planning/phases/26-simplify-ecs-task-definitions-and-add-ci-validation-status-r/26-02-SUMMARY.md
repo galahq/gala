@@ -58,6 +58,7 @@ completed: 2026-06-01
 ## Task Commits
 
 1. **Tasks 26-02-01 through 26-02-06: Advisory CI workflow, report generator, destructive warnings, SST evidence, and status publisher** - `2be2e697` (feat)
+2. **Review fix: Preserve advisory status on missing CI input** - `22d1711a` (fix)
 
 ## Files Created/Modified
 
@@ -93,9 +94,17 @@ completed: 2026-06-01
 - **Verification:** Staged secret scan passed during commit and Node tests stayed green.
 - **Committed in:** `2be2e697`
 
+**3. [Rule 3 - Blocking] Missing report input during always-run status steps**
+- **Found during:** Advisory code review gate
+- **Issue:** If an earlier workflow step failed before `validation-input.json` existed, the `always()` report and status steps could fail instead of publishing an error report/status.
+- **Fix:** Report generation now emits an error-state report when the input file is missing, and the status publisher can build an error payload when the report JSON is unavailable.
+- **Files modified:** `scripts/ci/validation-report.mjs`, `scripts/ci/post-commit-status.mjs`, `scripts/ci/validation-report.test.mjs`
+- **Verification:** `node --test scripts/ci/*.test.mjs` passes with 11 tests.
+- **Committed in:** `22d1711a`
+
 ---
 
-**Total deviations:** 2 auto-fixed (2 blocking)
+**Total deviations:** 3 auto-fixed (3 blocking)
 **Impact on plan:** Both fixes were local to validation plumbing and did not change scope.
 
 ## Issues Encountered
@@ -104,7 +113,7 @@ completed: 2026-06-01
 
 ## Verification
 
-- `node --test scripts/ci/*.test.mjs` - passed, 10/10 tests.
+- `node --test scripts/ci/*.test.mjs` - passed, 11/11 tests.
 - `ruby -e 'require "yaml"; YAML.load_file(".github/workflows/ci-validation.yml"); puts "ci-validation-yaml-ok"'` - passed.
 - `rg -n "pull_request_target|workflow_run|repository_dispatch|sst deploy|heroku |aws s3 rm|--delete|environment: production" .github/workflows/ci-validation.yml scripts/ci/*.mjs` - no matches.
 - `node scripts/ci/validation-report.mjs --input /tmp/phase26-validation-input.json --out-dir tmp/ci-validation --print` - rendered the ANSI/plain-text matrix with unit, integration, system, sst_refresh, sst_diff, destructive_warnings, release_gates, contributors, commit_count, and confidence.
