@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: Phase 24 complete
-last_updated: "2026-06-01T05:20:00.000Z"
-last_activity: 2026-06-01 -- Phase 24 Docker image architecture and SST wiring validated
+stopped_at: Completed 26-01-PLAN.md
+last_updated: "2026-06-01T07:45:04.467Z"
+last_activity: 2026-06-01
 progress:
-  total_phases: 15
+  total_phases: 17
   completed_phases: 15
-  total_plans: 18
-  completed_plans: 18
-  percent: 100
+  total_plans: 23
+  completed_plans: 21
+  percent: 91
 ---
 
 # GSD State
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 24 complete; PR #785 now documents the Docker image architecture and catalog/cache strategy while remaining PR gates continue.
+**Current focus:** Phase 26 — simplify-ecs-task-definitions-and-add-ci-validation-status-r
 
 ## Current Position
 
-Phase: 24 (cut-gala-production-docker-image-size-with-reusable-base-ima) — COMPLETE
+Phase: 26 (simplify-ecs-task-definitions-and-add-ci-validation-status-r) — EXECUTING
 Plan: 2 of 2
-Status: Phase 24 complete
-Last activity: 2026-06-01 -- Phase 24 Docker image architecture and SST wiring validated
+Status: Ready to execute
+Last activity: 2026-06-01
 
 ## Milestone
 
@@ -87,7 +87,10 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ### Roadmap Evolution
 
+- Phase 26 added: Simplify ECS task definitions and add CI validation status reporting
+- Phase 25 added: Audit Docker architecture and GitHub Actions operator guardrails for secure reliable platform operations
 - Phase 24 added: Cut Gala production Docker image size with reusable base image and slimmer production Dockerfiles
+- Phase 24 follow-up added: canonical test DB/run command documentation and deterministic `run-rspec.sh` DB prepare path
 - Phase 22 added: AWS Edge Cache Validation and Catalog Load Optimization
 - Phase 23 added: Immutable Cloudflare DNS and preview deployment pipeline
 
@@ -100,9 +103,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-06-01T04:16:46.173Z
-Stopped at: Phase 24 context gathered
-Resume file: .planning/phases/24-cut-gala-production-docker-image-size-with-reusable-base-ima/24-CONTEXT.md
+Last session: 2026-06-01T07:45:04.461Z
+Stopped at: Completed 26-01-PLAN.md
+Resume file: None
 
 ## Quick Tasks Completed
 
@@ -113,6 +116,7 @@ Resume file: .planning/phases/24-cut-gala-production-docker-image-size-with-reus
 | 2026-05-05 | Fix missing reading-list UUID nil title error | complete | this commit |
 | 2026-05-04 | Restore production Mapbox style fallback | complete | this commit |
 | 2026-05-04 | Document Google mock login for protected-route visual QA | complete | this commit |
+| 2026-06-01 | Standardize test DB URL selection and update `run-rspec.sh` / `bin/run_ci_tests` | complete | this change |
 
 ## Operator Next Steps
 
@@ -120,3 +124,4 @@ Resume file: .planning/phases/24-cut-gala-production-docker-image-size-with-reus
 - Use the generated ALB URL as the direct-origin comparison path.
 - Keep `https://www.learngala.com` on Heroku until a separate `.com` DNS cutover phase is explicitly approved.
 - If rollback is needed, redeploy the previous known-good branch or commit through `.github/workflows/deploy.yml`; retained release asset namespaces preserve the prior static assets during the rollback window.
+- Before rerunning Rails request specs, use `./run-rspec.sh <specs>` or `RAILS_ENV=test DATABASE_URL=postgres://gala:alpine@<host>:5432/gala_test bundle exec rspec ...` so tests target the dedicated test DB.

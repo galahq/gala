@@ -331,5 +331,58 @@ Archive:
 6. The Dockerfile follows current Rails/37signals-style production conventions where appropriate: multi-stage build, build-only Node/package tooling, `SECRET_KEY_BASE_DUMMY` asset compilation, Bootsnap precompile, jemalloc where useful, non-root runtime user, and optional Thruster evaluation without adding unnecessary runtime weight.
 7. Validation is safe and non-destructive: no Heroku production mutation, no Heroku database/Redis reuse, no SES mutation, no retained `msc-gala` S3 media bucket mutation, and all AWS checks use `AWS_PROFILE=gala AWS_REGION=us-west-2` with `SST_STAGE=dev` unless a separate production deploy gate is explicitly approved.
 
-**Plans:** Not planned yet
+**Plans:** 1 plan
 
+Plans:
+**Wave 1**
+- [ ] 24-03-SUMMARY.md — Test-harness and request-cache follow-up handoff for `/cases/:slug`, deterministic test DB targeting, and continuation after Phase 24.
+
+### Phase 25: Audit Docker architecture and GitHub Actions operator guardrails for secure reliable platform operations
+
+**Goal:** Research and audit whether the production Dockerfile/image architecture, SST task model, and GitHub Actions workflows align with the repository's safety guardrails, then define a secure, reliable operator-run platform workflow manual for CODEOWNER-held operations.
+**Requirements**: TBD
+**Depends on:** Phase 24
+**Success Criteria:**
+1. The Dockerfile, reusable base image, app image, migration task, worker task, and one-off maintenance task architecture are audited against the intended safety guardrails: least privilege, reproducibility, no accidental Heroku production mutation, explicit AWS stage/profile targeting, deterministic artifact selection, and rollback readiness.
+2. Core GitHub Actions workflows are documented and/or specified as `workflow_dispatch` operator jobs with explicit dry-run-first behavior, verification gates, validation outputs, and side-effect summaries before any mutating production action.
+3. The operator workflow set covers feature-branch dev deploys, PR merge-to-base behavior, production promotion, migrations, one-off scripts in AWS, rollback to a prior task/image/artifact, `Rails.cache` invalidation, CloudFront invalidation, and preview-environment PR comments when a preview is created.
+4. Each workflow has high-rigor validation expectations: preflight checks, required inputs, permission boundaries, stage/environment confirmation, artifact provenance, post-run health checks, log links, and an operator-visible failure/rollback path.
+5. Operator documentation is written in terse manpage(7)-style pages, with one page per core workflow and no page exceeding one printed page.
+6. The phase produces clear recommendations for any required Dockerfile, workflow, CODEOWNERS, or operations documentation changes without broad unrelated dependency upgrades.
+
+**Plans:** 0/3 plans executed
+
+Plans:
+**Wave 1**
+- [ ] 25-01-PLAN.md — Operator Surface Audit and Guardrail Contract
+
+**Wave 2**
+- [ ] 25-02-PLAN.md — Manual Operator Workflows and Guarded Maintenance Actions
+
+**Wave 3**
+- [ ] 25-03-PLAN.md — One-Page Operator Manpages and Static Validation
+
+**Cross-cutting constraints:**
+- D-17: Operator docs live under docs/ops/workflows/*.md.
+
+### Phase 26: Simplify ECS task definitions and add CI validation status reporting
+
+**Goal:** Reduce ECS task-definition complexity and establish an operator-driven CI validation workflow that automatically reports high-signal verification status to GitHub without coupling deploy execution to CI pass/fail state.
+
+**Requirements**: CI-01, CI-02, CI-03, CI-04, CI-05, CI-06, CI-07, CI-08
+**Depends on:** Phase 25
+
+**Success Criteria:**
+1. ECS/SST task-definition configuration is simplified without weakening the existing Heroku-safety, fresh AWS database/cache, shared SES, and retained S3 boundaries.
+2. CI runs automatically for commits pushed to `main` and for every PR commit regardless of PR state.
+3. Deploy remains operator-driven; CI results inform operator judgment but do not automatically deploy or block manual deploy intent.
+4. CI collects unit, integration, and system test results into a standardized terse report that links CODEOWNER-facing failures to the failing test or artifact.
+5. CI runs and reports `sst refresh` and `sst diff` evidence without mutating Heroku or production DNS.
+6. The report detects potentially destructive infrastructure keywords, includes an 80-character single-line truncated commit/change summary, and avoids dumping low-signal log noise.
+7. The report includes tests summary, changeset, contributors, commit count, infra changes, release gates, destructive-action warnings, and confidence score in an ANSI matrix format.
+8. GitHub commit status is updated through the GitHub REST API with links to the standardized validation report.
+
+**Plans:** 1/2 plans executed
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 26 to break down)

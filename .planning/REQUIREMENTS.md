@@ -102,6 +102,18 @@
 - [x] **AWSPERF-10**: Anonymous root catalog JavaScript avoids unnecessary private endpoint fetches that return 401s and add avoidable network or Rails load.
 - [x] **AWSPERF-11**: SST Router and CloudFront bucket routing are evaluated for static assets and app routing, while the retained `msc-gala` ActiveStorage media bucket remains out of scope for bucket-policy or signed-media changes.
 
+### Immutable Cloudflare DNS and Preview Deployment
+
+- [ ] **DPLYIMM-01**: SST IaC is the source of truth for `learngala.dev`, `dev.learngala.dev`, and `*.dev.learngala.dev` app DNS through Cloudflare-managed records.
+- [ ] **DPLYIMM-02**: The deploy workflow exposes only `branch`, `stage`, `dry_run`, `invalidate_cache`, and optional `user_data` inputs.
+- [ ] **DPLYIMM-03**: Preview deploys use branch-derived subdomains under `*.dev.learngala.dev` and post a live preview comment when an open pull request exists.
+- [ ] **DPLYIMM-04**: Static assets are uploaded under immutable S3 namespaces using `releases/<stage>/<release_id>/`, and only the latest 10 release namespaces per stage are retained.
+- [ ] **DPLYIMM-05**: Release IDs use `github_run_id.YYYYMMDDHHMMSS.shortsha` with values joined by periods.
+- [ ] **DPLYIMM-06**: Production deploys create GitHub releases with commit-list notes and trait-bearing date headings, and the Rails layout points to the release URL.
+- [ ] **DPLYIMM-07**: Deploy execution is restricted to repository contributors with write, maintain, or admin permission and does not print secret values.
+- [ ] **DPLYIMM-08**: `user_data` accepts only hard-coded operational hooks for known infra actions such as DNS/certificate handling, migrations, snapshots, rake tasks, cache invalidation, and ECS restarts.
+- [ ] **DPLYIMM-09**: Rollback remains idempotent by rerunning the deploy workflow against a prior branch or commit while retained release asset namespaces and dormant production app distributions remain available.
+
 ## v1.2+ Candidates
 
 ### Larger Frontend Migrations
@@ -191,12 +203,21 @@
 | AWSPERF-09 | Phase 22 | Complete |
 | AWSPERF-10 | Phase 22 | Complete |
 | AWSPERF-11 | Phase 22 | Complete |
+| DPLYIMM-01 | Phase 23 | Pending |
+| DPLYIMM-02 | Phase 23 | Pending |
+| DPLYIMM-03 | Phase 23 | Pending |
+| DPLYIMM-04 | Phase 23 | Pending |
+| DPLYIMM-05 | Phase 23 | Pending |
+| DPLYIMM-06 | Phase 23 | Pending |
+| DPLYIMM-07 | Phase 23 | Pending |
+| DPLYIMM-08 | Phase 23 | Pending |
+| DPLYIMM-09 | Phase 23 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 66 total
-- Mapped to phases: 66
+- v1.1 requirements: 75 total
+- Mapped to phases: 75
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-30 after Phase 22 AWS edge cache validation and catalog load optimization completion*
+*Last updated: 2026-05-30 for Phase 23 immutable Cloudflare DNS and preview deployment pipeline*
