@@ -3,13 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Catalog routes', type: :request do
+  # rubocop:disable Metrics/AbcSize
   def expect_public_catalog_cache
     expect(response.headers['Cache-Control'])
-      .to include('public', 'max-age=300', 's-maxage=300')
+      .to include('public', 'stale-while-revalidate=')
     expect(response.headers['Vary'])
       .to include('Accept', 'Accept-Language', 'Accept-Encoding')
     expect(response.headers['Set-Cookie']).to be_blank
   end
+  # rubocop:enable Metrics/AbcSize
 
   it 'renders the catalog shell at root with the catalog pack mount' do
     get '/'
@@ -19,6 +21,23 @@ RSpec.describe 'Catalog routes', type: :request do
     document = Nokogiri::HTML.parse(response.body)
     expect(document.css('#catalog-app')).to be_present
     expect(response.body).to include('catalog')
+  end
+
+  it 'changes the root ETag when the visible case set changes with the same timestamp and count' do
+    timestamp = Time.zone.parse('2025-01-01 12:00:00 UTC')
+    replaced_case = create(:case, :published, published_at: timestamp, updated_at: timestamp)
+    create(:case, :published, published_at: timestamp, updated_at: timestamp)
+
+    get '/'
+    original_etag = response.headers['ETag']
+
+    replaced_case.update_columns(published_at: nil, updated_at: timestamp)
+    create(:case, :published, published_at: timestamp, updated_at: timestamp)
+
+    get '/', headers: { 'If-None-Match' => original_etag }
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['ETag']).not_to eq(original_etag)
   end
 
   it 'does not preload signed-in catalog data for anonymous readers' do
@@ -66,16 +85,18 @@ RSpec.describe 'Catalog routes', type: :request do
     get '/cases.json'
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).not_to include('public')
+    expect(response.headers['Cache-Control']).to include('public', 's-maxage=300', 'max-age=300')
+    expect(response.body).to be_present
   end
 
-  it 'keeps cookie-bearing case previews private' do
+  it 'allows cacheable catalog previews for anonymous cookie-bearing readers' do
     create(:case, :published)
 
     get '/cases.json', headers: { 'Cookie' => 'gala_anonymous_session=1' }
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).not_to include('public')
+    expect(response.headers['Cache-Control']).to include('public', 's-maxage=2592000', 'max-age=2592000')
+    expect(response.body).to be_present
   end
 
   it 'returns featured cases as cacheable JSON for anonymous readers' do

@@ -169,7 +169,7 @@
 - Test coverage: `app/javascript/shared/__tests__/blueprintAssetContract.test.js` and `app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js` cover part of the contract; visual baselines cover only the root screenshots.
 
 **SST deployment release mechanics:**
-- Files: `.github/workflows/deploy.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`, `.github/CODEOWNERS`, `SECURITY.md`
+- Files: `.github/workflows/deploy.yml`, `.github/workflows/preview.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`, `CODEOWNERS`, `SECURITY.md`
 - Why fragile: Release IDs, preview hostnames, Cloudflare DNS, immutable asset prefixes, CloudFront alias detachment, S3 pruning, and GitHub releases are coupled across workflow YAML, Bash, and SST TypeScript.
 - Safe modification: Use dry-run first, keep contributor authorization in place, preserve `https://www.learngala.com` isolation, and require owner review for deployment-sensitive paths.
 - Test coverage: No dedicated automated tests exercise `scripts/deploy-sst.sh`, `.github/workflows/deploy.yml`, or `infra/sst.config.ts`.
@@ -260,10 +260,10 @@
 - Blocks: Secret hygiene depends on local operator discipline.
 - Files: `scripts/scan-staged-secrets`, `.github/workflows/deploy.yml`, `SECURITY.md`, `.gitignore`, `.dockerignore`
 
-**Deployment preview branch input is constrained to a fixed choice list:**
-- Problem: The deploy workflow `branch` input only lists selected branches.
-- Blocks: Arbitrary branch preview subdomains under `*.dev.learngala.dev` require workflow edits or branch-list expansion.
-- Files: `.github/workflows/deploy.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`
+**Preview deployments share one dev runtime:**
+- Problem: Branch preview hostnames under `*.dev.learngala.dev` all route to the shared `dev` SST stage, so the latest preview deployment owns the active app runtime and database/cache state.
+- Blocks: Multiple simultaneous preview branches cannot be validated as isolated environments without a later design for branch-scoped data/runtime resources.
+- Files: `.github/workflows/preview.yml`, `.github/workflows/deploy.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`
 
 ## Test Coverage Gaps
 

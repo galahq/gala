@@ -12,7 +12,7 @@
     "auto_advance": true,
     "text_mode": true,
     "_auto_chain_active": false,
-    "use_worktrees": false,
+    "use_worktrees": true,
     "inline_plan_threshold": 0
   },
   "planning": {
@@ -37,5 +37,8 @@
       }
     }
   },
-  "context_window": 1000000
+  "context_window": 1000000,
+  "git": {},
+  "intel": {},
+  "graphify": {}
 }

@@ -1,14 +1,21 @@
 # Release Process
 
-Production and preview deployments run through `.github/workflows/deploy.yml`.
+Production deployments run through `.github/workflows/deploy.yml`.
+Dev preview deployments run through `.github/workflows/preview.yml`.
 
-Required inputs are intentionally small:
+Production workflow inputs are intentionally small:
 
 - `branch`: selected branch to deploy.
 - `stage`: `dev` for preview or `production` for release.
 - `dry_run`: preview changes with `sst diff`.
 - `invalidate_cache`: explicitly request CloudFront invalidation.
 - `user_data`: optional comma-separated approved hooks such as `database_migrate`, `db_snapshot`, `restart_ecs`, `refresh_indices`, or `rake:<task>`.
+
+Preview workflow behavior:
+
+- Pull requests from same-repository, non-draft branches deploy to the shared `dev` SST stage.
+- Manual preview dispatch accepts only `branch`, `dry_run`, and optional `user_data`.
+- Preview URLs use `<branch>.dev.learngala.dev`; the shared dev stage means the most recent preview deploy owns the active app runtime.
 
 Each deploy derives a release ID from `github_run_id.YYYYMMDDHHMMSS.shortsha` and stores assets under `s3://gala-static-assets-353760060567/releases/<stage>/<release_id>/`. The latest 10 release asset namespaces per stage are retained.
 

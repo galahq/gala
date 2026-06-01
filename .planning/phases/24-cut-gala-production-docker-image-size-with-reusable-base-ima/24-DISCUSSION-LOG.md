@@ -65,6 +65,23 @@
 - Choose exact build-arg/env wiring for `GALA_PRODUCTION_BASE_IMAGE`, provided missing configuration fails clearly.
 - Identify additional safe cleanup targets during image inspection without changing runtime behavior.
 
+---
+
+## Request-Cache/Runtime Test Harness Follow-up
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Keep current test runner behavior | Require developers to pass test DB URL manually in each command and rely on environment defaults in `.env.dev`. | |
+| Enforce canonical test DB targeting in project helpers | Add explicit `gala_test` URL and helper scripts for `RAILS_ENV=test` runs, and document host/container conventions in README/codebase testing guidance. | yes |
+
+**User's choice:** Enforce canonical DB targeting in helpers.
+
+**Notes:**  
+Added:
+- `./run-rspec.sh` defaults to `postgres://gala:alpine@db:5432/gala_test`, prepares schema, and supports additional rspec args.
+- `bin/run_ci_tests` now enforces `DATABASE_URL` to a `gala_test` DB.
+- planning documentation (`README.md`, `.planning/codebase/TESTING.md`, `.planning/STATE.md`) now captures deterministic test commands and the non-negotiable `gala_test` target.
+
 ## Deferred Ideas
 
 None.

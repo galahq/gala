@@ -2,8 +2,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-export const REQUIRED_SUITE_CATEGORIES = ['unit', 'integration', 'system'];
-export const OPTIONAL_SUITE_CATEGORIES = ['integration_full'];
+export const REQUIRED_SUITE_CATEGORIES = [
+  'unit',
+  'integration',
+  'lint_ruby',
+  'lint_eslint',
+  'lint_style',
+  'lint_factory',
+  'integration_frontend',
+];
+export const OPTIONAL_SUITE_CATEGORIES = ['system'];
 export const SUITE_MATRIX_CATEGORIES = [...REQUIRED_SUITE_CATEGORIES, ...OPTIONAL_SUITE_CATEGORIES];
 
 const SECRET_KEY_PATTERN = /(TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)/i;
@@ -123,11 +131,13 @@ export function normalizeSuites(suites = []) {
   for (const suite of Array.isArray(suites) ? suites : []) {
     const category = compact(suite.category).toLowerCase();
     if (!SUITE_MATRIX_CATEGORIES.includes(category)) continue;
+    const normalizedStatus = normalizeStatus(suite.status);
+    const hasFailureContext = ['failed', 'error', 'warning'].includes(normalizedStatus);
     byCategory.set(category, {
       category,
       name: compact(suite.name) || category,
       command: compact(suite.command),
-      status: normalizeStatus(suite.status),
+      status: normalizedStatus,
       reason: compact(suite.reason),
       summary: compact(suite.summary),
       artifactUrl: compact(suite.artifactUrl || suite.artifact_url),
@@ -136,7 +146,9 @@ export function normalizeSuites(suites = []) {
       exitCode: Number.isFinite(Number(suite.exitCode)) ? Number(suite.exitCode) : null,
       timedOut: Boolean(suite.timedOut),
       triage: compact(suite.triage),
-      failures: Array.isArray(suite.failures) ? suite.failures.map((failure) => redactSecrets(failure)) : [],
+      failures: hasFailureContext && Array.isArray(suite.failures)
+        ? suite.failures.map((failure) => redactSecrets(failure))
+        : [],
     });
   }
 
@@ -265,6 +277,7 @@ export function buildReport(input = {}) {
       run_url: compact(redactedInput.runContext?.runUrl),
       event: compact(redactedInput.runContext?.eventName),
       actor: compact(redactedInput.runContext?.actor),
+      repository: compact(redactedInput.runContext?.repository),
       pr_number: compact(redactedInput.runContext?.prNumber),
       pr_title: compact(redactedInput.runContext?.prTitle),
       head_ref: compact(redactedInput.runContext?.headRef),
@@ -302,6 +315,29 @@ function table(rows) {
   return [line, format(rows[0]), line, ...rows.slice(1).map(format), line].join('\n');
 }
 
+function extractFailureLocations(failures = []) {
+  const locationPattern = /([A-Za-z0-9_./-]+\.rb:\d+\b)/g;
+  const locations = [];
+  for (const failure of failures) {
+    const match = `${failure}`.match(locationPattern);
+    if (match) {
+      locations.push(match[0]);
+    }
+  }
+  return Array.from(new Set(locations)).slice(0, 10);
+}
+
+function makeFailureLocationLink(location, runContext) {
+  const match = String(location).match(/([A-Za-z0-9_./-]+\.rb):(\d+)\b/);
+  if (!match) return location;
+  const repository = compact(runContext?.repository || '');
+  const sha = compact(runContext?.head_sha || runContext?.base_sha || '');
+  if (!repository || !sha) return location;
+  const filePath = match[1].replace(/^\.\//, '');
+  const line = match[2];
+  return `[${filePath}:${line}](https://github.com/${repository}/blob/${sha}/${filePath}#L${line})`;
+}
+
 export function renderReportText(report) {
   const suiteRows = [
     ['dimension', 'status', 'why', 'artifact'],
@@ -325,17 +361,18 @@ export function renderReportText(report) {
     ...report.release_gates.map((gate) => [gate.name || '-', gate.status, gate.summary || '-']),
   ];
 
-  const failingLinks = Object.values(report.suites)
-    .flatMap((suite) => {
-      const extracted = suite.failures.map((failure) => `${suite.category}: ${failure}`.trim());
-      if (extracted.length > 0) return extracted;
-      if (!['failed', 'error'].includes(suite.status)) return [];
-      const link = suite.artifactUrl ? `${suite.artifactUrl}` : (suite.artifact || '-');
-      return [`${suite.category}: ${link} ${suite.reason || suite.summary || 'failed'}`.trim()];
-    });
+  const failedSuites = Object.values(report.suites).filter((suite) => ['failed', 'error', 'warning'].includes(suite.status));
+
+  const failingLinks = failedSuites.flatMap((suite) => {
+    const extracted = suite.failures.slice(0, 8).map((failure) => `${suite.category}: ${failure}`.trim());
+    if (extracted.length > 0) return extracted;
+    const link = suite.artifactUrl ? `${suite.artifactUrl}` : (suite.artifact || '-');
+    return [`${suite.category}: ${link} ${suite.reason || suite.summary || 'failed'}`.trim()];
+  });
 
   const failureContextLinks = Object.values(report.suites)
     .flatMap((suite) => {
+      if (!['failed', 'error'].includes(suite.status)) return [];
       if (!suite.failures || suite.failures.length === 0) return [];
       return suite.failures.slice(0, 10).map((line) => `- ${suite.category}: ${clip(line, 140)}`);
     });
@@ -349,9 +386,12 @@ export function renderReportText(report) {
         suite.exitCode ?? '-',
         suite.timedOut ? 'yes' : 'no',
         clip(suite.triage || suite.command || 'inspect artifact', 96),
-        clip(suite.summary || suite.reason || '-', 140),
+        clip(suite.summary || suite.reason || '-', 200),
       ]),
   ];
+
+  const failureLocations = failedSuites.flatMap((suite) => extractFailureLocations(suite.failures)
+    .map((location) => `- ${suite.category}: ${makeFailureLocationLink(location, report.run_context)}`));
 
   return [
     'GALA CI VALIDATION',
@@ -383,6 +423,9 @@ export function renderReportText(report) {
     '',
     'top_failure_lines:',
     ...(failureContextLinks.length ? failureContextLinks : ['- none']),
+    '',
+    'failure_locations:',
+    ...(failureLocations.length ? failureLocations : ['- none']),
     '',
     `suite_artifacts: ${report.run_context.artifacts_url || report.run_context.run_url || '-'}`,
     '',
@@ -425,6 +468,7 @@ function readInput(inputPath) {
     baseRef: process.env.PR_BASE_REF,
     headSha: process.env.PR_HEAD_SHA,
     baseSha: process.env.PR_BASE_SHA,
+    repository: process.env.GITHUB_REPOSITORY,
     artifactsUrl: `${process.env.GITHUB_SERVER_URL ?? 'https://github.com'}/${process.env.GITHUB_REPOSITORY ?? ''}/actions/runs/${process.env.GITHUB_RUN_ID || ''}/artifacts`,
   };
 

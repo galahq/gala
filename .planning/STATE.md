@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: Phase 29 complete
-last_updated: "2026-06-01T15:35:00Z"
-last_activity: 2026-06-01 -- Phase 29 SPEND.md report completed
+stopped_at: All phases complete; milestone audit next
+last_updated: "2026-06-01T12:11:36Z"
+last_activity: 2026-06-01 -- Phase 28 ARM64 runtime proof completed; production default kept on x86_64 because direct task-definition rollback proof failed
 progress:
   total_phases: 20
-  completed_phases: 19
+  completed_phases: 20
   total_plans: 31
-  completed_plans: 29
-  percent: 94
+  completed_plans: 31
+  percent: 100
 ---
 
 # GSD State
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 28 - verify-arm-ecs-fargate-runtime-architecture-and-resolve-thru
+**Current focus:** Phase 28 - verify-arm-ecs-fargate-runtime-architecture-and-resolve-thru complete; milestone audit is next
 
 ## Current Position
 
 Phase: 28
-Plan: 2 of 4
-Status: Paused before live ARM64 deployment/rollback validation
-Last activity: 2026-06-01 -- Phase 29 SPEND.md report completed; Phase 28 ARM64 proof remains open
+Plan: 4 of 4
+Status: Phase complete
+Last activity: 2026-06-01 -- ARM64 dev deploy succeeded, one-off ECS tasks passed, dev rolled back to X86_64, and final decision is keep-amd64 until rollback workflow handles inactive task definitions
 
 ## Milestone
 
@@ -95,6 +95,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 23 added: Immutable Cloudflare DNS and preview deployment pipeline
 - Phase 27 added: spot and remove ambiguous environment variables like the GIT_* ones defined in the task definitions if the value is empty or blank then it shall be removed
 - Phase 28 added: Verify ARM ECS Fargate runtime architecture and resolve Thruster AWS fit
+- Phase 28 completed: dev ARM64 runtime was proven for web, worker, migration, and one-off tasks, but production default remains `x86_64` because direct rollback to captured X86_64 task definitions failed once those revisions were inactive; recovery required re-registering active X86_64 copies. Thruster decision is `no-adopt`.
 - Phase 29 added: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
 - Phase 29 completed: root `SPEND.md` now records SST-tracked AWS inventory, May 2026 account-wide spend evidence, capex/opex framing, growth scenarios, cost-cut recommendations, Heroku stay/hybrid/migrate thresholds, drift, and unknowns.
 

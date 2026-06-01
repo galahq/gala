@@ -35,8 +35,8 @@
 
 **DNS & Edge:**
 - Cloudflare DNS - owns `learngala.dev` and preview subdomain DNS for AWS deployments.
-  - SDK/Client: SST Cloudflare provider in `infra/sst.config.ts` and workflow-provided credentials in `.github/workflows/deploy.yml`.
-  - Auth: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_DEFAULT_ACCOUNT_ID`, and `CLOUDFLARE_ZONE_ID`.
+  - SDK/Client: SST Cloudflare provider in `infra/sst.config.ts` and workflow-provided credentials in `.github/workflows/deploy.yml` and `.github/workflows/preview.yml`.
+  - Auth: `CLOUDFLARE_API_TOKEN`, optional `CLOUDFLARE_ACCOUNT_ID`, and `CLOUDFLARE_ZONE_ID`.
 
 **Authentication & OAuth Services:**
 - Google OAuth2 - reader authentication strategy.
@@ -68,7 +68,7 @@
   - SDK/Client: `sentry-ruby`, `sentry-rails`, `sentry-sidekiq`, `config/initializers/sentry.rb`, and `app/views/layouts/application.html.erb`.
   - Auth: `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, `SENTRY_TRACES_SAMPLE_RATE`, and `SENTRY_PROFILES_SAMPLE_RATE`.
 - GitHub - source hosting, workflow dispatch, OIDC deployment, PR preview comments, and production release creation.
-  - SDK/Client: GitHub Actions and `gh` usage in `.github/workflows/deploy.yml`.
+  - SDK/Client: GitHub Actions and `gh` usage in `.github/workflows/deploy.yml` and `.github/workflows/preview.yml`.
   - Auth: GitHub Actions token and repository/environment secrets managed by GitHub.
 - Heroku - declared legacy/current compatibility for app runtime, review apps, PostgreSQL, Redis, and scheduler-style tasks.
   - SDK/Client: `app.json`, `Procfile`, `README.md`, and Heroku references in `scripts/deploy-sst.sh`.
@@ -130,17 +130,19 @@
 ## CI/CD & Deployment
 
 **Hosting:**
-- AWS/SST - primary AWS deployment path in `infra/sst.config.ts`, `.github/workflows/deploy.yml`, and `scripts/deploy-sst.sh`.
+- AWS/SST - primary AWS deployment path in `infra/sst.config.ts`, `.github/workflows/deploy.yml`, `.github/workflows/preview.yml`, and `scripts/deploy-sst.sh`.
 - Heroku - declared compatibility/current production boundary in `app.json`, `Procfile`, and `README.md`.
 - Cloudflare - DNS management for AWS custom domains through `infra/sst.config.ts`.
 - CloudFront - app and static edge distributions in `infra/sst.config.ts`.
 
 **CI Pipeline:**
-- GitHub Actions deploy workflow - manual deployment pipeline in `.github/workflows/deploy.yml`.
+- GitHub Actions deploy workflow - manual production-capable deployment pipeline in `.github/workflows/deploy.yml`.
+- GitHub Actions preview workflow - dev-only preview deployment pipeline in `.github/workflows/preview.yml`.
 - Deploy helper script - image build, ECR push, immutable asset sync, SST deploy, approved hooks, CloudFront invalidation, release pruning, and guardrails in `scripts/deploy-sst.sh`.
 - Infrastructure package install - `npm ci` for `infra/package-lock.json` in `.github/workflows/deploy.yml`.
 - Root app build - Docker build from `Dockerfile`, Ruby install from `Gemfile.lock`, and pnpm install from `pnpm-lock.yaml`.
-- Production release metadata - GitHub release and preview PR comments in `.github/workflows/deploy.yml`.
+- Production release metadata - GitHub release creation in `.github/workflows/deploy.yml`.
+- Preview metadata - PR preview comments in `.github/workflows/preview.yml`.
 - Semaphore - referenced as a repository CI service in `README.md`; no `.github/workflows` test workflow is present besides `.github/workflows/deploy.yml`.
 
 ## Environment Configuration
@@ -149,7 +151,7 @@
 - Rails/runtime: `RAILS_ENV`, `NODE_ENV`, `BASE_URL`, `FORCE_SSL`, `PORT`, `RAILS_LOG_TO_STDOUT`, `RAILS_SERVE_STATIC_FILES`, `RAILS_MAX_THREADS`, `WEB_CONCURRENCY`, `SIDEKIQ_CONCURRENCY`, `RAILS_MASTER_KEY`, `SECRET_KEY_BASE`, `RELEASE`, `RELEASE_URL`, and `COMMIT_SHA` in `config/application.rb`, `config/environments/production.rb`, `config/puma.rb`, `config/sidekiq.yml`, and `infra/sst.config.ts`.
 - Data/storage: `DATABASE_URL`, `REDIS_URL`, `S3_BUCKET`, `AWS_REGION`, and `ASSET_HOST` in `config/database.yml`, `config/cable.yml`, `config/storage.yml`, `config/environments/production.rb`, and `infra/sst.config.ts`.
 - Authentication/external services: `LTI_KEY`, `LTI_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`, `MAPBOX_ACCESS_TOKEN`, `MapboxAccessToken`, `MAPBOX_STYLE`, `MAPBOX_DATA`, `MAPBOX_STYLE_STATS`, `MAPBOX_DEFAULT_COLOR`, `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, `SENTRY_TRACES_SAMPLE_RATE`, `SENTRY_PROFILES_SAMPLE_RATE`, `SES_SMTP_USERNAME`, and `SES_SMTP_PASSWORD` in `config/initializers/devise.rb`, `app/controllers/application_controller.rb`, `app/javascript/stats/map/config.js`, `config/initializers/sentry.rb`, `config/environments/production.rb`, and `infra/sst.config.ts`.
-- Deploy/SST/Cloudflare: `AWS_PROFILE`, `AWS_DEFAULT_REGION`, `AWS_REGION`, `SST_STAGE`, `GALA_DOMAIN_NAME`, `GALA_PREVIEW_HOST`, `GALA_BASE_URL`, `GALA_RELEASE_ID`, `GALA_ASSET_PREFIX`, `GALA_STATIC_ASSETS_BUCKET`, `GALA_RELEASE_RETAIN_COUNT`, `GALA_ENABLE_CUSTOM_DOMAIN`, `GALA_CLOUDFLARE_PROXY`, `GALA_IMMUTABLE_CLOUDFRONT`, `GALA_WEB_IMAGE_URI`, `GALA_IMPORT_STATIC_ASSETS_BUCKET`, `GALA_RELEASE_URL`, `SEED_DUMP_S3_URI`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_DEFAULT_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `GITHUB_RUN_ID`, `GITHUB_SHA`, `GITHUB_REPOSITORY`, `USER_DATA`, and `RETAINED_SECRET_KEYS` in `infra/sst.config.ts`, `.github/workflows/deploy.yml`, and `scripts/deploy-sst.sh`.
+- Deploy/SST/Cloudflare: `AWS_PROFILE`, `AWS_DEFAULT_REGION`, `AWS_REGION`, `SST_STAGE`, `GALA_DOMAIN_NAME`, `GALA_PREVIEW_HOST`, `GALA_BASE_URL`, `GALA_RELEASE_ID`, `GALA_ASSET_PREFIX`, `GALA_STATIC_ASSETS_BUCKET`, `GALA_RELEASE_RETAIN_COUNT`, `GALA_ENABLE_CUSTOM_DOMAIN`, `GALA_CLOUDFLARE_PROXY`, `GALA_IMMUTABLE_CLOUDFRONT`, `GALA_WEB_IMAGE_URI`, `GALA_IMPORT_STATIC_ASSETS_BUCKET`, `GALA_RELEASE_URL`, `SEED_DUMP_S3_URI`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `GITHUB_RUN_ID`, `GITHUB_SHA`, `GITHUB_REPOSITORY`, `USER_DATA`, and `RETAINED_SECRET_KEYS` in `infra/sst.config.ts`, `.github/workflows/deploy.yml`, `.github/workflows/preview.yml`, and `scripts/deploy-sst.sh`.
 - Local/test toggles: `MOCK_OMNIAUTH`, `LOCALHOST_SSL`, `DOCKER_DEV`, `STAGING`, `TEMPORARY_UNCONFIRMED_ACCESS`, `APP_HOST_PORT`, `WEBPACK_HOST_PORT`, `REDIS_HOST_PORT`, and `COMPOSE_PROJECT_NAME` in `config/initializers/mock_omniauth.rb`, `config/application.rb`, `README.md`, and `docker-compose.yml` by name only.
 
 **Secrets location:**
@@ -180,7 +182,7 @@
 - Wikidata SPARQL requests - outbound queries run from `app/services/wikidata.rb`.
 - oEmbed/Open Graph fetches - outbound preview/embed fetches run through `config/initializers/oembed.rb` and `app/models/link_expansion/`.
 - Mapbox tile/style/data requests - browser-side map requests originate from `app/javascript/map_view/`, `app/javascript/stats/map/config.js`, and `app/views/layouts/application.html.erb`.
-- GitHub release and PR comment operations - workflow operations run through `.github/workflows/deploy.yml`.
+- GitHub release and PR comment operations - production releases run through `.github/workflows/deploy.yml`; preview comments run through `.github/workflows/preview.yml`.
 
 ---
 

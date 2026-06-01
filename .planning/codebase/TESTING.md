@@ -29,6 +29,7 @@
 bundle exec rake test:unit
 bundle exec rspec spec/requests/catalog_routes_spec.rb
 docker compose run -e RAILS_ENV=test web bundle exec rspec spec/requests/catalog_routes_spec.rb --format progress --color
+./run-rspec.sh spec/requests/catalog_routes_spec.rb
 pnpm test -- --runInBand
 pnpm exec jest app/javascript/stats/__tests__/StatsPage.test.jsx --runInBand
 pnpm test:visual
@@ -36,6 +37,14 @@ pnpm test:visual:update
 ```
 
 Use Docker Compose for Rails specs when the host Ruby, database, or browser-driver environment is not aligned with `.ruby-version`, `mise.toml`, and `docker-compose.yml`.
+
+Rails test DB conventions:
+
+- `RAILS_ENV=test` must be set explicitly for request/controller specs.
+- Test connection URLs must point to `gala_test`:
+  - Host: `postgres://gala:alpine@localhost:5432/gala_test`
+  - Container: `postgres://gala:alpine@db:5432/gala_test`
+- `./run-rspec.sh` is the preferred repository command and will prepare the test DB and apply the test database URL before invoking RSpec.
 
 ## Test File Organization
 

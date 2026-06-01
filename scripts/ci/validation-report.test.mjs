@@ -11,12 +11,23 @@ import {
 } from './validation-report.mjs';
 import { buildStatusPayload, payloadFromReport, resolveStatusSha, STATUS_CONTEXT } from './post-commit-status.mjs';
 
-test('normalizes unit integration system categories and marks missing suites not_run', () => {
+test('normalizes current suite matrix categories and marks missing suites not_run', () => {
   const suites = normalizeSuites([{ category: 'unit', status: 'passed', summary: 'ok' }]);
   assert.equal(suites.unit.status, 'passed');
   assert.equal(suites.integration.status, 'not_run');
-  assert.equal(suites.integration_full.status, 'not_run');
+  assert.equal(suites.lint_ruby.status, 'not_run');
+  assert.equal(suites.lint_eslint.status, 'not_run');
+  assert.equal(suites.lint_style.status, 'not_run');
+  assert.equal(suites.lint_factory.status, 'not_run');
+  assert.equal(suites.integration_frontend.status, 'not_run');
   assert.equal(suites.system.reason, 'suite result was not provided');
+});
+
+test('drops failure lines for suites that passed', () => {
+  const report = buildReport({
+    suites: [{ category: 'unit', status: 'passed', failures: ['unexpected failure line'] }],
+  });
+  assert.equal(report.suites.unit.failures.length, 0);
 });
 
 test('truncates commit summaries to 80 characters', () => {
@@ -60,8 +71,7 @@ test('final state ignores optional advisory suite failures', () => {
   const suites = normalizeSuites([
     { category: 'unit', status: 'passed' },
     { category: 'integration', status: 'passed' },
-    { category: 'integration_full', status: 'failed' },
-    { category: 'system', status: 'not_run' },
+    { category: 'system', status: 'failed' },
   ]);
   assert.equal(finalState({ suites }), 'success');
 });
@@ -87,7 +97,7 @@ test('report text contains required high-signal dimensions', () => {
     sstDiff: { status: 'passed', rawText: 'no changes' },
   });
   const text = renderReportText(report);
-  for (const token of ['unit', 'integration', 'integration_full', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
+  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
     assert.match(text, new RegExp(token));
   }
 });
@@ -111,6 +121,29 @@ test('report text includes actionable failed-suite context', () => {
   assert.match(text, /integration/);
   assert.match(text, /timeout after 240s/);
   assert.match(text, /tmp\/ci-validation\/integration\.log/);
+});
+
+test('report text includes failure location links', () => {
+  const report = buildReport({
+    suites: [{
+      category: 'integration',
+      status: 'failed',
+      failures: [
+        '# ./spec/requests/catalog_routes_spec.rb:123 expected: got',
+        '# ./app/services/catalog_cache_invalidation.rb:8 expected: to eq(5.minutes)',
+      ],
+      command: './run-rspec.sh spec/requests/catalog_routes_spec.rb',
+      artifact: 'tmp/ci-validation/integration.log',
+      reason: 'exit 1',
+      summary: 'failed examples',
+      exitCode: 1,
+      timedOut: false,
+      triage: 'inspect integration failures',
+    }],
+  });
+  const text = renderReportText(report);
+  assert.match(text, /failure_locations:/);
+  assert.match(text, /catalog_routes_spec\.rb:123/);
 });
 
 test('failed suites map report state to failure', () => {

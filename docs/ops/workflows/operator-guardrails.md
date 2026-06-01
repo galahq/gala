@@ -34,6 +34,9 @@ comment when created, release metadata, CloudFront distribution IDs, and logs.
 Immediate recovery uses ECS task-definition rollback. Reproducible recovery or
 drift repair redeploys a selected release/image/artifact. Neither path reverses
 database migrations, Rails cache, CloudFront cache, or static asset prefixes.
+Task-definition rollback targets must be ACTIVE; if a captured prior revision is
+inactive, re-register an equivalent copy first and then roll back to that new
+ACTIVE revision.
 
 ## EXAMPLES
 Use dev deploy for feature branches, promote-production for production release,
@@ -77,6 +80,9 @@ platform and SST task definitions. The current default remains `x86_64`.
 definitions do not already match the requested architecture, use the full SST
 task-definition deployment path for the first transition before resuming
 ECS-only image promotion.
+Phase 28 proved dev ARM64 runtime but kept the production default at `x86_64`
+because direct rollback to captured X86_64 task definitions failed after those
+revisions became inactive.
 
 ## Known Gaps
 - `25-02`: preview trigger boundary and dry-run summary hardening.

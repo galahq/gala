@@ -9,10 +9,33 @@ Implemented locally. Live AWS/Cloudflare verification is still pending a GitHub 
 - Added Phase 23 planning requirements for `learngala.dev`, preview subdomains, immutable release assets, minimal workflow inputs, production release notes, and contributor-gated deploy safety.
 - Updated SST IaC to derive release metadata, set release-scoped asset hosts, use a shared SST Router distribution with Cloudflare DNS for the app edge, and expose deploy outputs needed for cache invalidation and operational hooks.
 - Reworked the deploy workflow to accept only `branch`, `stage`, `dry_run`, `invalidate_cache`, and `user_data`.
+- Added `.github/workflows/preview.yml` as a dev-only preview workflow for same-repository pull requests and manual branch previews.
 - Reworked the deploy script to build release IDs, upload assets to `releases/<stage>/<release_id>/`, prune older asset namespaces, invalidate CloudFront on request, and run approved `user_data` hooks.
 - Added CODEOWNERS, SECURITY.md, and RELEASE.md.
 - Updated Rails release metadata and cloud architecture docs.
 - Added gap notes to carry to the next phase: move container secrets from plaintext env to ECS task secrets and tighten Cloudflare secret variable expectations.
+
+### Caching and authorization context mapping added
+
+- Added role/association impact notes for case and catalog endpoints:
+  - anonymous vs signed-in users on `/cases`, `/cases/:slug`, and catalog JSON endpoints.
+  - role/persona paths that can alter payloads:
+    - `:editor` users can trigger privileged response fields and access paths.
+    - `:admin` is represented through `editor` role on `Role` and bypasses normal policy scope limits in admin gates.
+    - `editorships` and `my_cases` change case-policy scope.
+    - `library managers` (`managerships` + library policy) can access library-owned cases via request flow and case library requests.
+    - `request_for_case` / `CaseLibraryRequest` for pending/accepted requests can expose additional unpublished/unavailable cases.
+    - `enrollments` (including status and active group/deployment) changes show payload and quiz/deployment branches.
+    - `GroupMembership` admin status can impact deployment scoping (group/community behavior) and therefore deployment-based content.
+    - `reader.persona` (`learner`, `teacher`, `writer`) currently does not currently branch case show JSON payload, but is tracked for future split-cache strategy to avoid over-fragmentation.
+  - No code change was made yet to alter cache keys; this is now tracked as a Phase 23 hardening follow-up for StaticSite/CloudFront and `Rails.cache.fetch` TTL/keys.
+- Added explicit request-variance buckets for `/cases/:slug` and catalog JSON in plan:
+  - anonymous shared buckets are allowed where payload is globally visible.
+  - signed-in request buckets remain short TTL with reader-scoped variation because serialized HTML includes `reader` and `enrollment`-dependent values (`caseData` on page bootstraps).
+  - editor/admin users are isolated by policy visibility and payload branches (`can_update_case`, `statistics`) from shared caches.
+- Added brotli/readability note:
+  - StaticSite/CloudFront behavior should keep `compress: true` and explicitly include `Accept-Encoding` in cache-safe request headers so browsers can receive Brotli (`br`) when supported.
+  - Existing Vary `Accept-Encoding` response policy for cache objects should be retained; avoid removing this header from cacheable responses.
 
 ## Verification
 
@@ -22,10 +45,13 @@ Implemented locally. Live AWS/Cloudflare verification is still pending a GitHub 
 - `npx sst install` — pass after updating the Cloudflare provider pin to `6.13.0`.
 - `npx tsc sst.config.ts --noEmit --skipLibCheck --target ES2022 --module NodeNext --moduleResolution NodeNext --ignoreConfig` — pass.
 - `git diff --check` — pass.
+- `sed -n`/`rg` of `infra/sst.config.ts` to confirm:
+  - `/cases/*` cache allowlist exists with non-cacheable exclusions for comment/community/deployments/quizzes/stats/settings paths.
+  - static/app CloudFront behaviors include `compress: true` and `Accept-Encoding`-aware compression policy for browser payload negotiation.
 
 ## Pending Live Gate
 
-- Run `.github/workflows/deploy.yml` with `stage=dev`, `dry_run=true`, then `dry_run=false` after confirming Cloudflare and AWS credentials are available.
+- Run `.github/workflows/preview.yml` against the target branch, first with `dry_run=true` for manual dispatch or automatically through a same-repository pull request.
 - Promote with `stage=production`, `dry_run=true` first because production attach/detach of stage DNS aliases occurs during deploy.
 
 ## Breakpoint: 2026-05-30 AWS/Cloudflare live experiment

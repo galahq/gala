@@ -1,6 +1,6 @@
 # Gala
 
-[![Build Status](https://gala.semaphoreci.com/badges/gala/branches/main.svg?style=shields&key=20c5d16c-4ccf-4a1c-9d94-fa81d9b0224e)](https://gala.semaphoreci.com/projects/gala)
+[![CI Validation](https://github.com/galahq/gala/actions/workflows/ci-validation.yml/badge.svg)](https://github.com/galahq/gala/actions/workflows/ci-validation.yml)
 [![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/main/LICENSE)
 [![Greenkeeper badge.](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
 
@@ -90,6 +90,34 @@ instead of the unpublished source SCSS paths.
 - `docker compose run web pnpm install --frozen-lockfile` to install new JS dependencies in the web container
 - `docker compose run web bash` to get a shell inside the web container
 - `docker volume rm gala_db_data` to delete the database volume
+- `./run-rspec.sh` to run the Rails spec suite with a dedicated test database URL and `RAILS_ENV=test`
+- `./run-rspec.sh spec/requests/catalog_routes_spec.rb` to run a focused RSpec file
+
+Conventional DB setup for local test runs:
+
+- Container path (recommended when host Ruby/DB tooling is out of sync):
+
+```bash
+docker compose run --rm \
+  -e RAILS_ENV=test \
+  -e DATABASE_URL=postgres://gala:alpine@db:5432/gala_test \
+  web bundle exec rspec spec/requests/catalog_routes_spec.rb
+```
+
+- Host path (when local Ruby/Postgres matches project requirements):
+
+```bash
+RAILS_ENV=test \
+DATABASE_URL=postgres://gala:alpine@localhost:5432/gala_test \
+bundle exec rails db:prepare && \
+bundle exec rspec spec/requests/catalog_routes_spec.rb
+```
+
+If you are still seeing `PG::ConnectionNotEstablished` or connection refused errors:
+
+- confirm PostgreSQL is running at the host URL in `DATABASE_URL`
+- confirm the host/db command uses the `gala_test` database name
+- prefer `./run-rspec.sh` so test DB URL and schema preparation are explicit
 
 ## Cron jobs via Heroku Scheduler
 
@@ -111,5 +139,5 @@ per week.
 | [Heroku](https://www.heroku.com/) | Production and staging environments |
 | [Docker](https://www.docker.com/) | Local development environment only |
 | [Sentry](https://sentry.io/) | Error monitoring |
-| [Semaphore CI](https://semaphoreci.com/) | Continuous integration |
+| [GitHub Actions](https://github.com/features/actions/) | Continuous integration |
 | [Github](https://github.com/) | Open source code management |

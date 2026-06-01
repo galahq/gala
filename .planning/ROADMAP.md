@@ -399,6 +399,8 @@ Plans:
 
 ### Phase 28: Verify ARM ECS Fargate runtime architecture and resolve Thruster AWS fit
 
+- [x] Phase 28: Complete (2026-06-01)
+
 **Goal:** Determine whether Gala's AWS/SST production image and ECS Fargate web, worker, migration, and one-off task definitions can safely run on ARM64, then close the prior Thruster research by deciding whether Thruster adds real value in the current CloudFront/S3 static asset plus ECS Puma compute architecture or should be retired as a self-hosted-server-oriented experiment.
 
 **Requirements**: TBD
@@ -412,13 +414,13 @@ Plans:
 5. If Thruster mainly benefits a self-hosted single-server asset-serving model and does not improve Gala's CloudFront/S3/ECS design, the spike is closed with a clear no-adopt decision and any stale references removed or documented.
 6. Any accepted architecture change includes targeted local checks, read-only AWS/SST inspection where possible, and explicit operator validation steps before production adoption.
 
-**Plans:** 4 plans
+**Plans:** 4/4 plans complete
 
 Plans:
-- [ ] 28-01: Add explicit container architecture controls
-- [ ] 28-02: Prove ARM64 image build and read-only dev rendering
-- [ ] 28-03: Validate ARM64 in dev ECS and prove rollback
-- [ ] 28-04: Finalize ARM64 and Thruster architecture decisions
+- [x] 28-01: Add explicit container architecture controls (completed 2026-06-01)
+- [x] 28-02: Prove ARM64 image build and read-only dev rendering (completed 2026-06-01)
+- [x] 28-03: Validate ARM64 in dev ECS and prove rollback (completed 2026-06-01)
+- [x] 28-04: Finalize ARM64 and Thruster architecture decisions (completed 2026-06-01)
 
 **Cross-cutting constraints:**
 - D-08: Evidence includes task definition architecture, image architecture, rollback path, and operator notes.
