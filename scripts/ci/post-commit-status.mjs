@@ -37,10 +37,14 @@ export function payloadFromReport(report, targetUrl) {
   const failedSuites = suites.filter((suite) => suite.status === 'failed').length;
   const warningSuites = suites.filter((suite) => suite.status === 'warning').length;
   const notRunSuites = suites.filter((suite) => suite.status === 'not_run').length;
+  const summary80 = truncate(report.summary80 || report.commitSummary || 'No summary available', 80);
+  const statusBits = `failed=${failedSuites} warning=${warningSuites} not_run=${notRunSuites}`;
+  const destructiveCount = report.destructive_warnings?.length ?? 0;
+  const destructiveBits = destructiveCount > 0 ? ` destructive=${destructiveCount}` : '';
   return buildStatusPayload({
     state: report.state ?? 'error',
     targetUrl,
-    description: `${report.state ?? 'error'}: failed=${failedSuites} warning=${warningSuites} not_run=${notRunSuites} destructive=${report.destructive_warnings?.length ?? 0} confidence=${report.confidence ?? 'n/a'}`,
+    description: `${report.state ?? 'error'}: ${summary80} ${statusBits}${destructiveBits} confidence=${report.confidence ?? 'n/a'}`,
   });
 }
 
