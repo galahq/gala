@@ -92,3 +92,8 @@ test('builds final status payload from report artifact data', () => {
   assert.equal(payload.state, 'success');
   assert.equal(payload.target_url, 'https://example.test/artifact');
 });
+
+test('report generation marks infrastructure errors as error state', () => {
+  const report = buildReport({ reportError: true });
+  assert.equal(report.state, 'error');
+});

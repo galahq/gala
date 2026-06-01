@@ -96,8 +96,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const targetUrl = args.targetUrl || `${process.env.GITHUB_SERVER_URL ?? 'https://github.com'}/${process.env.GITHUB_REPOSITORY ?? ''}/actions/runs/${process.env.GITHUB_RUN_ID ?? ''}`;
   let payload;
 
-  if (args.report) {
+  if (args.report && fs.existsSync(args.report)) {
     payload = payloadFromReport(JSON.parse(fs.readFileSync(args.report, 'utf8')), targetUrl);
+  } else if (args.report) {
+    payload = buildStatusPayload({
+      state: 'error',
+      targetUrl,
+      description: 'error: validation report artifact was unavailable',
+    });
   } else {
     payload = buildStatusPayload({
       state: args.state || 'pending',

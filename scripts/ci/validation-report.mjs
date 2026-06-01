@@ -339,7 +339,31 @@ function parseArgs(argv) {
 }
 
 function readInput(inputPath) {
-  if (inputPath) return JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+  if (inputPath) {
+    if (!fs.existsSync(inputPath)) {
+      return {
+        reportError: true,
+        commitSummary: 'validation input missing',
+        suites: [],
+        sstRefresh: {
+          status: 'not_run',
+          reason: `input file not found: ${inputPath}`,
+        },
+        sstDiff: {
+          status: 'not_run',
+          reason: `input file not found: ${inputPath}`,
+        },
+        releaseGates: [
+          {
+            name: 'report_generation',
+            status: 'error',
+            summary: 'validation input was unavailable',
+          },
+        ],
+      };
+    }
+    return JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+  }
   if (process.env.CI_VALIDATION_INPUT) return JSON.parse(process.env.CI_VALIDATION_INPUT);
   return {};
 }
