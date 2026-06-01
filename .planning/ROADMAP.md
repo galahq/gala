@@ -350,17 +350,17 @@ Plans:
 5. Operator documentation is written in terse manpage(7)-style pages, with one page per core workflow and no page exceeding one printed page.
 6. The phase produces clear recommendations for any required Dockerfile, workflow, CODEOWNERS, or operations documentation changes without broad unrelated dependency upgrades.
 
-**Plans:** 0/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
-- [ ] 25-01-PLAN.md — Operator Surface Audit and Guardrail Contract
+- [x] 25-01-PLAN.md — Operator Surface Audit and Guardrail Contract
 
 **Wave 2**
-- [ ] 25-02-PLAN.md — Manual Operator Workflows and Guarded Maintenance Actions
+- [x] 25-02-PLAN.md — Manual Operator Workflows and Guarded Maintenance Actions
 
 **Wave 3**
-- [ ] 25-03-PLAN.md — One-Page Operator Manpages and Static Validation
+- [x] 25-03-PLAN.md — One-Page Operator Manpages and Static Validation
 
 **Cross-cutting constraints:**
 - D-17: Operator docs live under docs/ops/workflows/*.md.
