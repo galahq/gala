@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'cgi'
 require 'rails_helper'
 
 RSpec.describe 'Devise reader routes' do
@@ -20,6 +21,45 @@ RSpec.describe 'Devise reader routes' do
     get new_reader_registration_path
 
     expect(response).to have_http_status(:success)
+  end
+
+  it 'creates a reader over an HTTPS origin with CSRF protection enabled' do
+    previous_forgery_protection = ActionController::Base.allow_forgery_protection
+    previous_origin_check =
+      Rails.application.config.action_controller.forgery_protection_origin_check
+    ActionController::Base.allow_forgery_protection = true
+    Rails.application.config.action_controller.forgery_protection_origin_check =
+      true
+    host! 'learngala.dev'
+    https!
+
+    get new_reader_registration_path
+
+    token = response.body[/name="authenticity_token" value="([^"]+)"/, 1]
+    expect(token).to be_present
+
+    email = "signup-#{SecureRandom.hex(4)}@example.com"
+    post reader_registration_path,
+         params: {
+           authenticity_token: CGI.unescapeHTML(token),
+           reader: {
+             name: 'Sign Up Reader',
+             locale: 'en',
+             email:,
+             password: 'password123',
+             password_confirmation: 'password123'
+           }
+         },
+         headers: { 'HTTP_ORIGIN' => 'https://learngala.dev' }
+
+    expect(response).not_to have_http_status(:unprocessable_entity)
+    expect(Reader.exists?(email:)).to be(true)
+  ensure
+    https!(false)
+    ActionController::Base.allow_forgery_protection =
+      previous_forgery_protection
+    Rails.application.config.action_controller.forgery_protection_origin_check =
+      previous_origin_check
   end
 
   it 'redirects an unauthenticated profile edit request to sign in' do

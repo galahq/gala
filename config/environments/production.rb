@@ -73,6 +73,7 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
   # secure cookies.
+  config.assume_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
   config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
   # Use the lowest log level to ensure availability of diagnostic information

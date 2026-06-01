@@ -303,6 +303,64 @@ validate_container_architecture() {
   esac
 }
 
+trim_value() {
+  local value="$1"
+  value="${value#"${value%%[![:space:]]*}"}"
+  value="${value%"${value##*[![:space:]]}"}"
+  printf '%s' "$value"
+}
+
+effective_base_url() {
+  local base_url root_domain
+
+  base_url="$(trim_value "${GALA_BASE_URL:-}")"
+  if [[ -z "$base_url" ]]; then
+    base_url="$(trim_value "$ALB_BASE_URL")"
+  fi
+
+  if [[ -z "$base_url" && "$STAGE" == "production" ]]; then
+    root_domain="$(trim_value "${GALA_DOMAIN_NAME:-learngala.dev}")"
+    if [[ -z "$root_domain" ]]; then
+      root_domain="learngala.dev"
+    fi
+    base_url="https://${root_domain}"
+  fi
+
+  printf '%s' "$base_url"
+}
+
+effective_force_ssl() {
+  local base_url
+
+  base_url="$(effective_base_url)"
+  if [[ "$STAGE" == "production" || "$base_url" == https://* ]]; then
+    printf 'true'
+  else
+    printf 'false'
+  fi
+}
+
+validate_ecs_only_runtime_environment() {
+  local base_url force_ssl
+
+  base_url="$(effective_base_url)"
+  force_ssl="$(effective_force_ssl)"
+
+  if [[ "$STAGE" == "production" && "$base_url" != https://* ]]; then
+    {
+      echo "Refusing ECS-only rollout: production BASE_URL must use https://."
+      echo "Effective BASE_URL is '${base_url:-<empty>}'."
+      echo "Set GALA_BASE_URL=https://${GALA_DOMAIN_NAME:-learngala.dev} or use the full SST deployment path to repair runtime environment drift."
+    } >&2
+    exit 1
+  fi
+
+  if [[ "$STAGE" == "production" && "$force_ssl" != "true" ]]; then
+    echo "Refusing ECS-only rollout: production FORCE_SSL must be true." >&2
+    exit 1
+  fi
+}
+
 short_sha() {
   git rev-parse --short=8 HEAD
 }
@@ -679,15 +737,19 @@ discover_static_assets_cdn_url() {
 ecs_rollout_task_definition_payload() {
   local task_definition="$1"
   local asset_host="$2"
-  local commit_sha
+  local base_url commit_sha force_ssl
 
+  base_url="$(effective_base_url)"
   commit_sha="$(git rev-parse HEAD)"
+  force_ssl="$(effective_force_ssl)"
   aws_cmd ecs describe-task-definition --task-definition "$task_definition" |
     jq \
       --arg image "$REMOTE_IMAGE" \
       --arg release_id "$RELEASE_ID" \
       --arg asset_prefix "$ASSET_PREFIX" \
       --arg asset_host "$asset_host" \
+      --arg base_url "$base_url" \
+      --arg force_ssl "$force_ssl" \
       --arg release_url "${GALA_RELEASE_URL:-}" \
       --arg github_run_id "${GITHUB_RUN_ID:-}" \
       --arg commit_sha "$commit_sha" '
@@ -712,6 +774,8 @@ ecs_rollout_task_definition_payload() {
               | .environment = (
                   (.environment // [])
                   | compact_env
+                  | upsert_env("BASE_URL"; $base_url)
+                  | upsert_env("FORCE_SSL"; $force_ssl)
                   | upsert_env("GALA_RELEASE_ID"; $release_id)
                   | upsert_env("GALA_ASSET_PREFIX"; $asset_prefix)
                   | upsert_env("ASSET_HOST"; $asset_host)
@@ -859,6 +923,7 @@ dry_run_ecs_only_rollout() {
   cluster="${targets[0]}"
   web_service="${targets[1]}"
   worker_service="${targets[2]}"
+  validate_ecs_only_runtime_environment
   validate_ecs_only_architecture "$cluster" "$web_service" "$worker_service"
 
   if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
@@ -893,6 +958,7 @@ run_ecs_only_rollout() {
   cluster="${targets[0]}"
   web_service="${targets[1]}"
   worker_service="${targets[2]}"
+  validate_ecs_only_runtime_environment
   validate_ecs_only_architecture "$cluster" "$web_service" "$worker_service"
 
   if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
@@ -997,6 +1063,22 @@ if [[ "$STAGE" != "${SST_STAGE:-$STAGE}" ]]; then
 fi
 
 validate_container_architecture
+
+if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_PAYLOAD:-false}" == "true" ]]; then
+  validate_ecs_only_runtime_environment
+  RELEASE_ID="${RELEASE_ID:-test-release}"
+  ASSET_PREFIX="${ASSET_PREFIX:-releases/${STAGE}/${RELEASE_ID}}"
+  REMOTE_IMAGE="${GALA_DEPLOY_SST_TEST_REMOTE_IMAGE:-example.test/gala:test}"
+  ecs_rollout_task_definition_payload \
+    "${GALA_DEPLOY_SST_TEST_TASK_DEFINITION:-test-task-definition}" \
+    "${GALA_DEPLOY_SST_TEST_ASSET_HOST:-https://assets.example.test/releases/test}" |
+    jq -r '
+      .containerDefinitions[0].environment[]
+      | select(.name == "BASE_URL" or .name == "FORCE_SSL" or .name == "ASSET_HOST")
+      | "\(.name)=\(.value)"
+    '
+  exit 0
+fi
 
 if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
   if [[ "${GALA_ECS_ONLY_DEPLOY:-false}" != "true" ]]; then
