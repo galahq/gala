@@ -662,9 +662,20 @@ ecs_rollout_task_definition_payload() {
       --arg asset_prefix "$ASSET_PREFIX" \
       --arg asset_host "$asset_host" \
       --arg release_url "${GALA_RELEASE_URL:-}" \
+      --arg github_run_id "${GITHUB_RUN_ID:-}" \
       --arg commit_sha "$commit_sha" '
+      def present($value):
+        (($value // "") | tostring | gsub("^\\s+|\\s+$"; "") | length) > 0;
+
+      def compact_env:
+        map(select(present(.value)));
+
       def upsert_env($name; $value):
-        map(select(.name != $name)) + [{"name": $name, "value": $value}];
+        if present($value) then
+          map(select(.name != $name)) + [{"name": $name, "value": $value}]
+        else
+          map(select(.name != $name))
+        end;
 
       .taskDefinition
       | .containerDefinitions = (
@@ -673,11 +684,13 @@ ecs_rollout_task_definition_payload() {
               .image = $image
               | .environment = (
                   (.environment // [])
+                  | compact_env
                   | upsert_env("GALA_RELEASE_ID"; $release_id)
                   | upsert_env("GALA_ASSET_PREFIX"; $asset_prefix)
                   | upsert_env("ASSET_HOST"; $asset_host)
                   | upsert_env("RELEASE"; $release_id)
                   | upsert_env("RELEASE_URL"; $release_url)
+                  | upsert_env("GITHUB_RUN_ID"; $github_run_id)
                   | upsert_env("COMMIT_SHA"; $commit_sha)
                 )
             )
