@@ -18,6 +18,14 @@ on:
         required: true
         default: true
         type: boolean
+      container_architecture:
+        description: ECS task and Docker image architecture
+        required: true
+        type: choice
+        default: x86_64
+        options:
+          - x86_64
+          - arm64
       confirmation:
         description: Type "promote production <source_ref-or-release_id>" for mutation
         required: false
@@ -41,6 +49,7 @@ jobs:
       GALA_RELEASE_RETAIN_COUNT: "10"
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
       GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_CONTAINER_ARCHITECTURE: ${{ github.event.inputs.container_architecture }}
       GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
       GALA_CLOUDFLARE_PROXY: "false"
@@ -88,6 +97,11 @@ jobs:
 
           target="${RELEASE_ID_INPUT:-$SOURCE_REF}"
           operator_require_confirmation production promote "${target}" "${DRY_RUN}" "${CONFIRMATION}"
+
+          if [[ "${GALA_CONTAINER_ARCHITECTURE}" != "x86_64" && "${GALA_CONTAINER_ARCHITECTURE}" != "arm64" ]]; then
+            echo "Refusing production promotion: GALA_CONTAINER_ARCHITECTURE must be x86_64 or arm64."
+            exit 1
+          fi
 
       - name: Build production release metadata
         id: meta
@@ -202,6 +216,7 @@ jobs:
             echo "- Dry run: ${{ github.event.inputs.dry_run }}"
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
+            echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
             echo "- Release tag: ${{ steps.meta.outputs.release_tag }}"
             echo "- Heroku production: out of scope"
             echo "- Verify: production workflow logs, ECS service health, /up, GitHub release when mutated"

@@ -35,6 +35,14 @@ on:
         required: false
         default: ""
         type: string
+      container_architecture:
+        description: ECS task and Docker image architecture
+        required: true
+        type: choice
+        default: x86_64
+        options:
+          - x86_64
+          - arm64
       confirmation:
         description: Type "promote production <branch-or-release_id>" for production mutation
         required: false
@@ -58,6 +66,7 @@ jobs:
       GALA_RELEASE_RETAIN_COUNT: "10"
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
       GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_CONTAINER_ARCHITECTURE: ${{ github.event.inputs.container_architecture }}
       GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
       GALA_CLOUDFLARE_PROXY: "false"
@@ -190,6 +199,11 @@ jobs:
             exit 1
           fi
 
+          if [[ "${GALA_CONTAINER_ARCHITECTURE}" != "x86_64" && "${GALA_CONTAINER_ARCHITECTURE}" != "arm64" ]]; then
+            echo "Refusing deploy: GALA_CONTAINER_ARCHITECTURE must be x86_64 or arm64."
+            exit 1
+          fi
+
       - name: Install infra dependencies
         working-directory: infra
         run: npm ci
@@ -235,6 +249,7 @@ jobs:
             echo "- Base URL: ${{ steps.meta.outputs.preview_url }}"
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
+            echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
             echo "- Cache invalidation requested: ${{ github.event.inputs.invalidate_cache }}"
             echo "- Custom domain mutation: ${GALA_ENABLE_CUSTOM_DOMAIN}"
             echo "- ECS-only rollout: ${GALA_ECS_ONLY_DEPLOY}"

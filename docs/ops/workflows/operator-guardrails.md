@@ -71,6 +71,12 @@ run as ECS tasks using that production app image and shared AWS environment.
 `Dockerfile.production` builds the app image from `Dockerfile.production-base`.
 Existing outputs and AWS discovery cover migration task execution, web/worker
 services, task-definition rollback targets, and CloudFront distribution IDs.
+`GALA_CONTAINER_ARCHITECTURE` is the shared architecture knob for Docker image
+platform and SST task definitions. The current default remains `x86_64`.
+`GALA_ECS_ONLY_DEPLOY=true` is an image-only path: if web or worker task
+definitions do not already match the requested architecture, use the full SST
+task-definition deployment path for the first transition before resuming
+ECS-only image promotion.
 
 ## Known Gaps
 - `25-02`: preview trigger boundary and dry-run summary hardening.

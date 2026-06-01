@@ -22,6 +22,8 @@ Options:
   --production-base-image IMAGE
                           Required base image for Dockerfile.production.
   --dockerfile PATH        Production Dockerfile path (default: Dockerfile.production).
+  --container-architecture ARCH
+                          Container architecture: x86_64 or arm64 (default: x86_64).
   --region REGION          AWS region (default: us-west-2).
   --profile PROFILE        AWS profile name (default: gala).
   --alb-base-url URL       Backward-compatible BASE_URL override.
@@ -52,6 +54,9 @@ IMAGE_TAG="${SST_IMAGE_TAG:-}"
 IMAGE_NAME="${SST_IMAGE_NAME:-gala}"
 PRODUCTION_BASE_IMAGE="${GALA_PRODUCTION_BASE_IMAGE:-}"
 PRODUCTION_DOCKERFILE="${GALA_PRODUCTION_DOCKERFILE:-Dockerfile.production}"
+CONTAINER_ARCHITECTURE="${GALA_CONTAINER_ARCHITECTURE:-x86_64}"
+DOCKER_PLATFORM=""
+ECS_RUNTIME_ARCHITECTURE=""
 MAX_IMAGE_SIZE_BYTES="${GALA_MAX_IMAGE_SIZE_BYTES:-1500000000}"
 REGION="${AWS_REGION:-us-west-2}"
 PROFILE="${AWS_PROFILE:-gala}"
@@ -105,6 +110,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --dockerfile)
       PRODUCTION_DOCKERFILE="$2"
+      shift 2
+      ;;
+    --container-architecture)
+      CONTAINER_ARCHITECTURE="$2"
       shift 2
       ;;
     --region)
@@ -181,6 +190,7 @@ run_sst_cmd() {
     "AWS_REGION=$REGION"
     "AWS_DEFAULT_REGION=$REGION"
     "SST_STAGE=$STAGE"
+    "GALA_CONTAINER_ARCHITECTURE=$CONTAINER_ARCHITECTURE"
     "ALB_BASE_URL=$ALB_BASE_URL"
     "GALA_RELEASE_ID=$RELEASE_ID"
     "GALA_ASSET_PREFIX=$ASSET_PREFIX"
@@ -274,6 +284,23 @@ validate_production_image_inputs() {
     echo "Refusing deploy: GALA_MAX_IMAGE_SIZE_BYTES must be a positive integer." >&2
     exit 1
   fi
+}
+
+validate_container_architecture() {
+  case "$CONTAINER_ARCHITECTURE" in
+    x86_64)
+      DOCKER_PLATFORM="linux/amd64"
+      ECS_RUNTIME_ARCHITECTURE="X86_64"
+      ;;
+    arm64)
+      DOCKER_PLATFORM="linux/arm64"
+      ECS_RUNTIME_ARCHITECTURE="ARM64"
+      ;;
+    *)
+      echo "Refusing deploy: GALA_CONTAINER_ARCHITECTURE must be x86_64 or arm64." >&2
+      exit 1
+      ;;
+  esac
 }
 
 short_sha() {
@@ -748,6 +775,61 @@ ecs_rollout_service() {
     --task-definition "$new_task_definition" >/dev/null
 }
 
+ecs_service_task_definition() {
+  local cluster="$1"
+  local service="$2"
+  local task_definition
+
+  task_definition="$(aws_cmd ecs describe-services \
+    --cluster "$cluster" \
+    --services "$service" \
+    --query 'services[0].taskDefinition' \
+    --output text)"
+  if [[ -z "$task_definition" || "$task_definition" == "None" ]]; then
+    echo "Missing current task definition for ECS service '$service'." >&2
+    exit 1
+  fi
+
+  echo "$task_definition"
+}
+
+ecs_task_definition_architecture() {
+  local task_definition="$1"
+  local architecture
+
+  architecture="$(aws_cmd ecs describe-task-definition \
+    --task-definition "$task_definition" \
+    --query 'taskDefinition.runtimePlatform.cpuArchitecture' \
+    --output text)"
+  if [[ -z "$architecture" || "$architecture" == "None" || "$architecture" == "null" ]]; then
+    architecture="X86_64"
+  fi
+
+  echo "$architecture"
+}
+
+validate_ecs_only_architecture() {
+  local cluster="$1"
+  local web_service="$2"
+  local worker_service="$3"
+  local service task_definition current_architecture
+
+  for service in "$web_service" "$worker_service"; do
+    task_definition="$(ecs_service_task_definition "$cluster" "$service")"
+    current_architecture="$(ecs_task_definition_architecture "$task_definition")"
+
+    if [[ "$current_architecture" != "$ECS_RUNTIME_ARCHITECTURE" ]]; then
+      {
+        echo "Refusing ECS-only rollout: GALA_ECS_ONLY_DEPLOY=true is image-only."
+        echo "Service '$service' currently uses task definition '$task_definition' with runtimePlatform.cpuArchitecture=${current_architecture}."
+        echo "GALA_CONTAINER_ARCHITECTURE=${CONTAINER_ARCHITECTURE} expects runtimePlatform.cpuArchitecture=${ECS_RUNTIME_ARCHITECTURE}."
+        echo "Use the full SST task-definition deployment path for the first architecture transition, then resume ECS-only image promotion after web and worker task definitions match."
+      } >&2
+      exit 1
+    fi
+  done
+}
+
 ecs_only_targets() {
   local cluster web_service worker_service
 
@@ -770,9 +852,20 @@ dry_run_ecs_only_rollout() {
   local targets cluster web_service worker_service asset_host
 
   mapfile -t targets < <(ecs_only_targets)
+  if [[ "${#targets[@]}" -ne 3 ]]; then
+    echo "Missing ECS-only rollout targets for stage '$STAGE'." >&2
+    exit 1
+  fi
   cluster="${targets[0]}"
   web_service="${targets[1]}"
   worker_service="${targets[2]}"
+  validate_ecs_only_architecture "$cluster" "$web_service" "$worker_service"
+
+  if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
+    log "ECS-only architecture guard test completed for dry run."
+    return
+  fi
+
   asset_host="$(discover_static_assets_cdn_url)"
 
   log "ECS-only dry run:"
@@ -793,9 +886,20 @@ run_ecs_only_rollout() {
   local targets cluster web_service worker_service asset_host
 
   mapfile -t targets < <(ecs_only_targets)
+  if [[ "${#targets[@]}" -ne 3 ]]; then
+    echo "Missing ECS-only rollout targets for stage '$STAGE'." >&2
+    exit 1
+  fi
   cluster="${targets[0]}"
   web_service="${targets[1]}"
   worker_service="${targets[2]}"
+  validate_ecs_only_architecture "$cluster" "$web_service" "$worker_service"
+
+  if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
+    log "ECS-only architecture guard test completed for live rollout."
+    return
+  fi
+
   asset_host="$(discover_static_assets_cdn_url)"
 
   log "Running ECS-only rollout:"
@@ -892,6 +996,22 @@ if [[ "$STAGE" != "${SST_STAGE:-$STAGE}" ]]; then
   exit 1
 fi
 
+validate_container_architecture
+
+if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
+  if [[ "${GALA_ECS_ONLY_DEPLOY:-false}" != "true" ]]; then
+    echo "Architecture guard test mode requires GALA_ECS_ONLY_DEPLOY=true." >&2
+    exit 1
+  fi
+
+  if [[ "$DRY_RUN" == "true" ]]; then
+    dry_run_ecs_only_rollout
+  else
+    run_ecs_only_rollout
+  fi
+  exit 0
+fi
+
 if [[ -n "$SEED_DUMP_S3_URI" && ! "$SEED_DUMP_S3_URI" =~ ^s3:// ]]; then
   echo "Invalid seed dump URI: expected s3:// URI." >&2
   exit 1
@@ -923,6 +1043,8 @@ log "  asset_prefix: $ASSET_PREFIX"
 log "  static_assets_bucket: $STATIC_ASSETS_BUCKET"
 log "  production_dockerfile: $PRODUCTION_DOCKERFILE"
 log "  production_base_image: $PRODUCTION_BASE_IMAGE"
+log "  container_architecture: $CONTAINER_ARCHITECTURE"
+log "  docker_platform: $DOCKER_PLATFORM"
 
 if [[ "$ACTION" == "remove" ]]; then
   cd "$REPO_ROOT/infra"
@@ -967,7 +1089,7 @@ log_aws_cmd "ecr get-login-password | docker login --username AWS --password-std
 aws_cmd ecr get-login-password | docker login --username AWS --password-stdin "${ECR_URI}"
 run_aws_cmd ecr describe-repositories --repository-names "$IMAGE_NAME" >/dev/null || \
   run_aws_cmd ecr create-repository --repository-name "$IMAGE_NAME"
-run_cmd docker build --platform linux/amd64 \
+run_cmd docker build --platform "$DOCKER_PLATFORM" \
   -f "$PRODUCTION_DOCKERFILE" \
   -t "$LOCAL_IMAGE" \
   --build-arg GALA_PRODUCTION_BASE_IMAGE="$PRODUCTION_BASE_IMAGE" \

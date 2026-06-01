@@ -17,6 +17,14 @@ on:
         description: Optional comma-separated approved dev ops hooks
         required: false
         default: ""
+      container_architecture:
+        description: ECS task and Docker image architecture
+        required: true
+        type: choice
+        default: x86_64
+        options:
+          - x86_64
+          - arm64
 
 concurrency:
   group: gala-preview-${{ github.event.pull_request.number || github.event.inputs.branch || github.ref_name }}
@@ -35,6 +43,7 @@ jobs:
       GALA_RELEASE_RETAIN_COUNT: "10"
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
       GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_CONTAINER_ARCHITECTURE: ${{ github.event.inputs.container_architecture }}
       GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
       GALA_CLOUDFLARE_PROXY: "false"
@@ -144,6 +153,11 @@ jobs:
             exit 1
           fi
 
+          if [[ "${GALA_CONTAINER_ARCHITECTURE}" != "x86_64" && "${GALA_CONTAINER_ARCHITECTURE}" != "arm64" ]]; then
+            echo "Refusing preview deploy: GALA_CONTAINER_ARCHITECTURE must be x86_64 or arm64."
+            exit 1
+          fi
+
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
@@ -204,6 +218,7 @@ jobs:
             echo "- Preview URL: ${{ steps.meta.outputs.preview_url }}"
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
+            echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
             echo "- Release tag: ${{ steps.meta.outputs.release_tag }}"
             echo "- PR comment: posted when an open PR exists for the branch and dry_run is false"
             echo "- Automatic PR trigger: disabled; this workflow is manual workflow_dispatch only"

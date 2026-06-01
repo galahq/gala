@@ -76,6 +76,17 @@ export default $config({
       "";
     const productionBaseImage =
       process.env.GALA_PRODUCTION_BASE_IMAGE?.trim() || "";
+    const rawContainerArchitecture =
+      process.env.GALA_CONTAINER_ARCHITECTURE?.trim() || "x86_64";
+    if (
+      rawContainerArchitecture !== "x86_64" &&
+      rawContainerArchitecture !== "arm64"
+    ) {
+      throw new Error(
+        "GALA_CONTAINER_ARCHITECTURE must be one of: x86_64, arm64",
+      );
+    }
+    const containerArchitecture: "x86_64" | "arm64" = rawContainerArchitecture;
 
     if (!appImageUri && !productionBaseImage) {
       throw new Error(
@@ -368,7 +379,7 @@ export default $config({
     const railsTaskDefaults = {
       cluster,
       image: railsContainerImage,
-      architecture: "x86_64" as const,
+      architecture: containerArchitecture,
       environment: railsRuntimeEnvironment,
       ssm: railsRuntimeSecrets,
     };
