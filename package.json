@@ -14,6 +14,7 @@
     "test": "NODE_ENV=test jest app/javascript",
     "test:frontend": "NODE_ENV=test jest app/javascript",
     "test:vitest:spike": "pnpm exec vitest run --config .planning/phases/12-vitest-and-vite-feasibility/spikes/vitest.config.mjs --reporter verbose",
+    "test:smoke": "pnpm exec playwright test --config playwright.smoke.config.mjs",
     "test:visual": "pnpm exec playwright test --config playwright.config.mjs",
     "test:visual:update": "pnpm exec playwright test --config playwright.config.mjs --update-snapshots",
     "test:visual:install": "pnpm exec playwright install --with-deps"

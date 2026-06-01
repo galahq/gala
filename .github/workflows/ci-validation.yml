@@ -53,6 +53,8 @@ jobs:
       PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
       PR_BASE_REF: ${{ github.event.pull_request.base.ref || '' }}
       SYSTEM_SMOKE_URL: ${{ vars.GALA_CI_SMOKE_URL }}
+      GALA_SMOKE_READER_EMAIL: ${{ secrets.GALA_SMOKE_READER_EMAIL }}
+      GALA_SMOKE_READER_PASSWORD: ${{ secrets.GALA_SMOKE_READER_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -209,11 +211,11 @@ jobs:
           run_suite lint_style "Styles lint" "pnpm exec stylelint \"app/assets/stylesheets/**/*.scss\" \"app/assets/stylesheets/**/*.css\"" 300
           run_suite lint_factory "factory_bot lint" "bundle exec rake factory_bot:lint" 180
           run_suite integration_frontend "node tests" "pnpm test" 300
-          if [[ -n "${SYSTEM_SMOKE_URL:-}" ]]; then
-            run_suite system "HTTP smoke" "curl --fail --show-error --silent --location --max-time 20 --output /dev/null --write-out 'http_code=%{http_code} url=%{url_effective}\n' \"${SYSTEM_SMOKE_URL}\"" 30
+          if [[ -n "${SYSTEM_SMOKE_URL:-}" && -n "${GALA_SMOKE_READER_EMAIL:-}" && -n "${GALA_SMOKE_READER_PASSWORD:-}" ]]; then
+            run_suite system "Playwright auth catalog smoke" "pnpm exec playwright install --with-deps chromium && PLAYWRIGHT_BASE_URL=\"${SYSTEM_SMOKE_URL}\" PLAYWRIGHT_OUTPUT_DIR=\"${CI_VALIDATION_DIR}/playwright-smoke-results\" PLAYWRIGHT_HTML_REPORT=\"${CI_VALIDATION_DIR}/playwright-smoke-report\" pnpm test:smoke" 600
           else
-            printf '%s\n' "GALA_CI_SMOKE_URL is not configured. Manual operator system validation: curl --fail --location --max-time 20 <target-url>." > "${CI_VALIDATION_DIR}/system.log"
-            append_suite system "HTTP smoke" "curl --fail --location --max-time 20 <target-url>" "not_run" "manual operator run; GALA_CI_SMOKE_URL not configured" "Playwright is not run in CI. Use curl against the selected preview or cutover-candidate URL." "${CI_VALIDATION_DIR}/system.log" 0 0 false "manual operator smoke: curl --fail --location --max-time 20 <target-url>"
+            printf '%s\n' "GALA_CI_SMOKE_URL, GALA_SMOKE_READER_EMAIL, and GALA_SMOKE_READER_PASSWORD are required for Playwright auth catalog smoke." > "${CI_VALIDATION_DIR}/system.log"
+            append_suite system "Playwright auth catalog smoke" "PLAYWRIGHT_BASE_URL=<target-url> pnpm test:smoke" "not_run" "system smoke URL or credentials not configured" "Playwright auth catalog smoke is not run in CI until GALA_CI_SMOKE_URL and smoke reader secrets are configured." "${CI_VALIDATION_DIR}/system.log" 0 0 false "configure GALA_CI_SMOKE_URL plus GALA_SMOKE_READER_EMAIL and GALA_SMOKE_READER_PASSWORD"
           fi
 
           SST_REFRESH_STATUS="not_run"

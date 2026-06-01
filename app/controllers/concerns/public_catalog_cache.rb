@@ -39,9 +39,14 @@ module PublicCatalogCache
   def set_public_catalog_cache_headers
     ttl = public_catalog_cache_ttl.to_i
     stale_ttl = public_catalog_stale_ttl.to_i
-    response.headers['Cache-Control'] =
-      "public, max-age=#{ttl}, s-maxage=#{ttl}, stale-while-revalidate=#{stale_ttl}"
-    response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding'
+
+    response.headers['Cache-Control'] = if reader_signed_in?
+                                          'private, no-store'
+                                        else
+                                          "public, max-age=#{ttl}, s-maxage=#{ttl}, " \
+                                            "stale-while-revalidate=#{stale_ttl}"
+                                        end
+    response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding, Cookie'
   end
 
   def public_catalog_cache_ttl

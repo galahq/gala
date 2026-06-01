@@ -8,10 +8,18 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response.headers['Cache-Control'])
       .to include('public', 'stale-while-revalidate=')
     expect(response.headers['Vary'])
-      .to include('Accept', 'Accept-Language', 'Accept-Encoding')
+      .to include('Accept', 'Accept-Language', 'Accept-Encoding', 'Cookie')
     expect(response.headers['Set-Cookie']).to be_blank
   end
   # rubocop:enable Metrics/AbcSize
+
+  def expect_private_catalog_cache
+    expect(response.headers['Cache-Control'])
+      .to include('private', 'no-store')
+    expect(response.headers['Cache-Control']).not_to include('public', 's-maxage')
+    expect(response.headers['Vary'])
+      .to include('Accept', 'Accept-Language', 'Accept-Encoding', 'Cookie')
+  end
 
   it 'renders the catalog shell at root with the catalog pack mount' do
     get '/'
@@ -21,6 +29,9 @@ RSpec.describe 'Catalog routes', type: :request do
     document = Nokogiri::HTML.parse(response.body)
     expect(document.css('#catalog-app')).to be_present
     expect(response.body).to include('catalog')
+    expect(response.headers['Cache-Control'])
+      .to include('public', 'max-age=0', 's-maxage=2592000')
+    expect(response.headers['Vary']).to include('Cookie')
   end
 
   it 'changes the root ETag when the visible case set changes with the same timestamp and count' do
@@ -48,6 +59,33 @@ RSpec.describe 'Catalog routes', type: :request do
 
     expect(preloads).to include('/cases.json', '/cases/features.json', '/tags.json', '/catalog/libraries.json')
     expect(preloads).not_to include('/profile.json', '/enrollments.json')
+  end
+
+  it 'renders signed-in catalog data with private cache headers' do
+    reader = create(:reader)
+    sign_in reader
+
+    get '/'
+
+    expect(response).to have_http_status(:ok)
+    expect_private_catalog_cache
+    expect(response.body).to include('window.reader', reader.email)
+
+    document = Nokogiri::HTML.parse(response.body)
+    preloads = document.css('link[rel="preload"][as="fetch"]').map { |node| node['href'] }
+    expect(preloads).to include('/profile.json', '/enrollments.json')
+  end
+
+  it 'does not reuse the anonymous root ETag after a reader signs in' do
+    get '/'
+    anonymous_etag = response.headers['ETag']
+
+    sign_in create(:reader)
+    get '/', headers: { 'If-None-Match' => anonymous_etag }
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['ETag']).not_to eq(anonymous_etag)
+    expect(response.body).to include('window.reader')
   end
 
   it 'routes catalog React Router paths back to the catalog shell' do
@@ -85,7 +123,7 @@ RSpec.describe 'Catalog routes', type: :request do
     get '/cases.json'
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).to include('public', 's-maxage=300', 'max-age=300')
+    expect_private_catalog_cache
     expect(response.body).to be_present
   end
 
