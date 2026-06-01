@@ -80,7 +80,7 @@ export default $config({
       );
     }
 
-    const webImage = appImageUri.length
+    const railsContainerImage = appImageUri.length
       ? appImageUri
       : {
           context: "..",
@@ -209,6 +209,16 @@ export default $config({
 
     const resolveSecret = (key: keyof typeof retainedSecrets) =>
       retainedSecrets[key].value;
+    const secretParameterName = (name: string) =>
+      `/${$app.name}/${stage}/${name}`;
+    const secretValueToParameter = (name: string, value: any) =>
+      new aws.ssm.Parameter(`${name}Parameter`, {
+        name: secretParameterName(name),
+        type: "SecureString",
+        description: `${$app.name} ${stage} secret ${name}`,
+        value: trimSecretValue(value),
+        overwrite: true,
+      }).arn;
 
     const vpc = new sst.aws.Vpc("GalaVpc", {
       az: 2,
@@ -246,32 +256,22 @@ export default $config({
     const databaseUrl = $interpolate`postgresql://${encodeUriComponent(database.username)}:${encodeUriComponent(database.password)}@${database.host}:${database.port}/${database.database}?sslmode=require`;
     const redisUrl = $interpolate`rediss://${encodeUriComponent(cache.username)}:${encodeUriComponent(cache.password)}@${cache.host}:${cache.port}`;
 
-    const sharedEnvironment = {
+    const railsRuntimeEnvironment = {
       AWS_REGION: "us-west-2",
       BASE_URL: baseUrl,
       ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}/${assetReleasePrefix}`,
-      DATABASE_URL: databaseUrl,
       FORCE_SSL: isProduction ? "true" : "false",
-      LTI_KEY: trimSecretValue(resolveSecret("LTI_KEY")),
-      LTI_SECRET: trimSecretValue(resolveSecret("LTI_SECRET")),
-      MAPBOX_ACCESS_TOKEN: trimSecretValue(resolveSecret("MAPBOX_ACCESS_TOKEN")),
-      MapboxAccessToken: trimSecretValue(resolveSecret("MAPBOX_ACCESS_TOKEN")),
       NODE_ENV: "production",
       PORT: "3000",
       RAILS_ENV: "production",
       RAILS_LOG_TO_STDOUT: "true",
       RAILS_MAX_THREADS: isProduction ? "5" : "3",
-      RAILS_MASTER_KEY: trimSecretValue(resolveSecret("RAILS_MASTER_KEY")),
       RAILS_SERVE_STATIC_FILES: "true",
-      REDIS_URL: redisUrl,
       S3_BUCKET: mediaBucketName,
       GALA_STATIC_ASSETS_BUCKET: staticAssetsBucketName,
       GALA_ASSET_PREFIX: assetReleasePrefix,
       GALA_RELEASE_ID: releaseId,
       GITHUB_RUN_ID: process.env.GITHUB_RUN_ID ?? "",
-      SECRET_KEY_BASE: trimSecretValue(resolveSecret("SECRET_KEY_BASE")),
-      SES_SMTP_PASSWORD: trimSecretValue(resolveSecret("SES_SMTP_PASSWORD")),
-      SES_SMTP_USERNAME: trimSecretValue(resolveSecret("SES_SMTP_USERNAME")),
       SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
       WEB_CONCURRENCY: isProduction ? "2" : "1",
       COMMIT_SHA: process.env.GITHUB_SHA ?? "",
@@ -279,27 +279,91 @@ export default $config({
       RELEASE_URL: process.env.GALA_RELEASE_URL ?? "",
     };
 
+    const sharedSecrets = Object.fromEntries([
+      ["DATABASE_URL", secretValueToParameter("DATABASE_URL", databaseUrl)],
+      ["REDIS_URL", secretValueToParameter("REDIS_URL", redisUrl)],
+      [
+        "RAILS_MASTER_KEY",
+        secretValueToParameter(
+          "RAILS_MASTER_KEY",
+          resolveSecret("RAILS_MASTER_KEY"),
+        ),
+      ],
+      [
+        "SECRET_KEY_BASE",
+        secretValueToParameter(
+          "SECRET_KEY_BASE",
+          resolveSecret("SECRET_KEY_BASE"),
+        ),
+      ],
+      ["LTI_KEY", secretValueToParameter("LTI_KEY", resolveSecret("LTI_KEY"))],
+      [
+        "LTI_SECRET",
+        secretValueToParameter("LTI_SECRET", resolveSecret("LTI_SECRET")),
+      ],
+      [
+        "MAPBOX_ACCESS_TOKEN",
+        secretValueToParameter(
+          "MAPBOX_ACCESS_TOKEN",
+          resolveSecret("MAPBOX_ACCESS_TOKEN"),
+        ),
+      ],
+      [
+        "MapboxAccessToken",
+        secretValueToParameter(
+          "MapboxAccessToken",
+          resolveSecret("MAPBOX_ACCESS_TOKEN"),
+        ),
+      ],
+      [
+        "SES_SMTP_PASSWORD",
+        secretValueToParameter(
+          "SES_SMTP_PASSWORD",
+          resolveSecret("SES_SMTP_PASSWORD"),
+        ),
+      ],
+      [
+        "SES_SMTP_USERNAME",
+        secretValueToParameter(
+          "SES_SMTP_USERNAME",
+          resolveSecret("SES_SMTP_USERNAME"),
+        ),
+      ],
+    ]);
+    const railsRuntimeSecrets = sharedSecrets;
+
     const serviceCapacity = isProduction
-      ? { fargate: { weight: 1 } }
-      : "spot";
+      ? ({ fargate: { weight: 1 } } as const)
+      : ("spot" as const);
     const singleTaskDeploymentTransform = isProduction
       ? {}
       : {
           service: (args: any) => {
             args.deploymentMinimumHealthyPercent = 0;
             args.deploymentMaximumPercent = 200;
+            return undefined;
           },
         };
 
-    const web = new sst.aws.Service("GalaWeb", {
+    const railsTaskDefaults = {
       cluster,
-      image: webImage,
+      image: railsContainerImage,
+      architecture: "x86_64" as const,
+      environment: railsRuntimeEnvironment,
+      ssm: railsRuntimeSecrets,
+    };
+
+    const railsServiceDefaults = {
+      ...railsTaskDefaults,
+      capacity: serviceCapacity,
+      transform: singleTaskDeploymentTransform,
+    };
+
+    const web = new sst.aws.Service("GalaWeb", {
+      ...railsServiceDefaults,
       command: ["bundle", "exec", "puma", "-C", "config/puma.rb"],
       cpu: isProduction ? "1 vCPU" : "0.5 vCPU",
       memory: isProduction ? "2 GB" : "1 GB",
-      architecture: "x86_64",
-      capacity: serviceCapacity,
-      environment: sharedEnvironment,
       scaling: {
         min: isProduction ? 2 : 1,
         max: isProduction ? 3 : 1,
@@ -329,18 +393,13 @@ export default $config({
         timeout: "5 seconds",
         retries: 3,
       },
-      transform: singleTaskDeploymentTransform,
     });
 
     const worker = new sst.aws.Service("GalaWorker", {
-      cluster,
-      image: webImage,
+      ...railsServiceDefaults,
       command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"],
       cpu: isProduction ? "0.5 vCPU" : "0.25 vCPU",
       memory: "1 GB",
-      architecture: "x86_64",
-      capacity: serviceCapacity,
-      environment: sharedEnvironment,
       scaling: {
         min: 1,
         max: isProduction ? 2 : 1,
@@ -354,7 +413,6 @@ export default $config({
         timeout: "5 seconds",
         retries: 3,
       },
-      transform: singleTaskDeploymentTransform,
     });
 
     const appOriginId = "gala-app-alb-origin";
@@ -517,18 +575,14 @@ export default $config({
     }
 
     const migration = new sst.aws.Task("GalaMigrate", {
-      cluster,
-      image: webImage,
+      ...railsTaskDefaults,
       command: ["bundle", "exec", "rails", "db:migrate"],
       cpu: "0.25 vCPU",
       memory: "1 GB",
-      architecture: "x86_64",
-      environment: sharedEnvironment,
     });
 
     const seedDatabase = new sst.aws.Task("GalaSeedDatabase", {
-      cluster,
-      image: webImage,
+      ...railsTaskDefaults,
       command: [
         "bash",
         "-lc",
@@ -546,28 +600,20 @@ export default $config({
       ],
       cpu: "0.5 vCPU",
       memory: "1 GB",
-      architecture: "x86_64",
-      environment: sharedEnvironment,
     });
 
     const refreshIndices = new sst.aws.Task("GalaRefreshIndices", {
-      cluster,
-      image: webImage,
+      ...railsTaskDefaults,
       command: ["bundle", "exec", "rake", "indices:refresh"],
       cpu: "0.25 vCPU",
       memory: "1 GB",
-      architecture: "x86_64",
-      environment: sharedEnvironment,
     });
 
     const weeklyReport = new sst.aws.Task("GalaWeeklyReport", {
-      cluster,
-      image: webImage,
+      ...railsTaskDefaults,
       command: ["bundle", "exec", "rake", "emails:send_weekly_report"],
       cpu: "0.25 vCPU",
       memory: "1 GB",
-      architecture: "x86_64",
-      environment: sharedEnvironment,
     });
 
     if (isProduction) {
