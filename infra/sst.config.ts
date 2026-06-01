@@ -2,6 +2,9 @@
 
 export default $config({
   app(input) {
+    const customDomainEnabled =
+      process.env.GALA_ENABLE_CUSTOM_DOMAIN !== "false";
+
     return {
       name: "gala",
       home: "aws",
@@ -10,7 +13,7 @@ export default $config({
         aws: {
           region: "us-west-2",
         },
-        cloudflare: "6.13.0",
+        ...(customDomainEnabled ? { cloudflare: "6.13.0" } : {}),
       },
     };
   },
