@@ -275,3 +275,18 @@ Result:
 - Capex, opex, growth, cost-cut, and Heroku decision sections are present.
 - Secret-pattern scans passed for `SPEND.md` and the phase evidence file.
 - AWS identity check passed.
+
+Follow-up automation added on 2026-06-01:
+
+```sh
+node --check scripts/ops/generate-spend-report.mjs
+AWS_PROFILE=gala AWS_REGION=us-west-2 node scripts/ops/generate-spend-report.mjs --output SPEND.md
+rg -n "REPRODUCIBLE REPORT GENERATION|STAGE CHARACTERISTICS|ADDITIONAL INFRA PRICE CARD|Production web task|RDS production class|GalaWeb|GalaWorker|PriceClass|Cost Explorer" SPEND.md scripts/ops/generate-spend-report.mjs
+ruby -e '<section check plus sensitive connection/config pattern scan for generated SPEND.md>'
+```
+
+Result:
+
+- `scripts/ops/generate-spend-report.mjs` passes Node syntax check.
+- The generator rewrote `SPEND.md` from read-only AWS CLI and AWS Price List data.
+- Generated `SPEND.md` includes production/dev SST stage characteristics, current account-wide Cost Explorer totals, and add-one price estimates for Fargate web/worker tasks, ARM64 task shape, RDS classes, Valkey node, and ALB hour.

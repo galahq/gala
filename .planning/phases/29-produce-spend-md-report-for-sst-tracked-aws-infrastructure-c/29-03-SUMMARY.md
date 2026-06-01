@@ -13,6 +13,7 @@ completed: 2026-06-01
 - Ran secret-pattern scans against `SPEND.md` and `29-EVIDENCE.md`.
 - Reconciled source/live drift and unknowns into the report.
 - Tightened the executive summary around cost shape, growth, cost cuts, missing evidence, and Heroku migration thresholds.
+- Added `scripts/ops/generate-spend-report.mjs` so `SPEND.md` can be regenerated consistently from tracked `infra/sst.config.ts`, read-only AWS CLI inventory, Cost Explorer, and AWS Price List data.
 
 ## Drift And Unknowns Preserved
 
@@ -27,3 +28,5 @@ completed: 2026-06-01
 - Full Ruby section and secret-pattern check passed.
 - Additional evidence-file secret-pattern check passed.
 - `AWS_PROFILE=gala AWS_REGION=us-west-2 aws sts get-caller-identity >/dev/null` passed.
+- `node --check scripts/ops/generate-spend-report.mjs` passed.
+- `AWS_PROFILE=gala AWS_REGION=us-west-2 node scripts/ops/generate-spend-report.mjs --output SPEND.md` passed.
