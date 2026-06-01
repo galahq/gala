@@ -10,33 +10,85 @@ export default $config({
         aws: {
           region: "us-west-2",
         },
+        cloudflare: "6.13.0",
       },
     };
   },
   async run() {
     const stage = $app.stage;
     const isProduction = stage === "production";
-    const explicitBaseUrl = process.env.ALB_BASE_URL ?? "";
+    const releaseId = (
+      process.env.GALA_RELEASE_ID ??
+      process.env.GITHUB_RUN_ID ??
+      `${stage}.local`
+    )
+      .trim()
+      .replace(/[^A-Za-z0-9._-]/g, "-")
+      .slice(0, 96);
+    const requireEnv = (name: string) => {
+      const value = process.env[name]?.trim();
+      if (!value) {
+        throw new Error(`${name} is required for the ${stage} SST stage`);
+      }
+      return value;
+    };
+    const trimSecretValue = (value: unknown) =>
+      $resolve([value]).apply((resolvedValues) =>
+        `${resolvedValues[0] ?? ""}`.trim()
+      );
+    const encodeUriComponent = (value: unknown) =>
+      $resolve([value]).apply((resolvedValues) =>
+        encodeURIComponent(`${resolvedValues[0] ?? ""}`)
+      );
+    const appCdnName = isProduction
+      ? "GalaAppDistribution"
+      : "GalaAppDistributionDev";
+    const rootDomain = process.env.GALA_DOMAIN_NAME?.trim() || "learngala.dev";
+    const devDomain = `dev.${rootDomain}`;
+    const devWildcardDomain = `*.${devDomain}`;
+    const previewHost = process.env.GALA_PREVIEW_HOST?.trim() ||
+      (isProduction ? rootDomain : devDomain);
+    const customDomainEnabled =
+      process.env.GALA_ENABLE_CUSTOM_DOMAIN !== "false";
+    const cloudflareProxy = process.env.GALA_CLOUDFLARE_PROXY === "true";
+    const cloudflareZoneId = process.env.CLOUDFLARE_ZONE_ID?.trim();
+    const assetReleasePrefix = (
+      process.env.GALA_ASSET_PREFIX || `releases/${stage}/${releaseId}`
+    ).replace(/^\/+|\/+$/g, "");
+    const explicitBaseUrl =
+      process.env.GALA_BASE_URL ?? process.env.ALB_BASE_URL ?? "";
     const baseUrl = explicitBaseUrl.length > 0
       ? explicitBaseUrl
-      : isProduction
-        ? "https://pending-alb-url.invalid"
-        : "https://staging.learngala.com";
+      : `https://${previewHost}`;
     const mediaBucketName = "msc-gala";
     const staticAssetsBucketName = process.env.GALA_STATIC_ASSETS_BUCKET ??
       "gala-static-assets-353760060567";
     const importExistingStaticAssetsBucket =
-      process.env.GALA_IMPORT_STATIC_ASSETS_BUCKET === "true";
+      process.env.GALA_IMPORT_STATIC_ASSETS_BUCKET === "true" || !isProduction;
     const immutableStaticCacheControl =
       "public,max-age=31536000,immutable";
-    const webImage = process.env.GALA_WEB_IMAGE_URI?.trim().length
-      ? process.env.GALA_WEB_IMAGE_URI
+    const appImageUri =
+      process.env.GALA_APP_IMAGE_URI?.trim() ||
+      process.env.GALA_WEB_IMAGE_URI?.trim() ||
+      "";
+    const productionBaseImage =
+      process.env.GALA_PRODUCTION_BASE_IMAGE?.trim() || "";
+
+    if (!appImageUri && !productionBaseImage) {
+      throw new Error(
+        "GALA_PRODUCTION_BASE_IMAGE is required when SST builds Dockerfile.production",
+      );
+    }
+
+    const webImage = appImageUri.length
+      ? appImageUri
       : {
           context: "..",
-          dockerfile: "Dockerfile",
+          dockerfile: process.env.GALA_PRODUCTION_DOCKERFILE?.trim() ||
+            "Dockerfile.production",
           args: {
+            GALA_PRODUCTION_BASE_IMAGE: productionBaseImage,
             rails_env: "production",
-            secret_key_base: "build-placeholder",
           },
         };
 
@@ -46,7 +98,7 @@ export default $config({
     const staticAssetsBucket = new sst.aws.Bucket("GalaStaticAssets", {
       access: "public",
       transform: {
-        bucket: (args, opts) => {
+        bucket: (args: any, opts: any) => {
           args.bucket = staticAssetsBucketName;
           args.forceDestroy = undefined;
 
@@ -68,6 +120,29 @@ export default $config({
               header: "Cache-Control",
               override: true,
               value: immutableStaticCacheControl,
+            },
+            {
+              header: "Vary",
+              override: true,
+              value: "Accept-Encoding",
+            },
+          ],
+        },
+      },
+    );
+
+    const browserCompressionHeaders = new aws.cloudfront.ResponseHeadersPolicy(
+      "GalaBrowserCompressionHeaders",
+      {
+        name: `${$app.name}-${stage}-browser-compression`,
+        comment:
+          "Preserve request-level compression negotiation for browser payloads",
+        customHeadersConfig: {
+          items: [
+            {
+              header: "Vary",
+              override: true,
+              value: "Accept-Encoding",
             },
           ],
         },
@@ -168,40 +243,53 @@ export default $config({
       cluster: false,
     });
 
-    const databaseUrl = $interpolate`postgresql://${database.username}:${database.password}@${database.host}:${database.port}/${database.database}?sslmode=require`;
-    const redisUrl = $interpolate`rediss://${cache.username}:${cache.password}@${cache.host}:${cache.port}`;
+    const databaseUrl = $interpolate`postgresql://${encodeUriComponent(database.username)}:${encodeUriComponent(database.password)}@${database.host}:${database.port}/${database.database}?sslmode=require`;
+    const redisUrl = $interpolate`rediss://${encodeUriComponent(cache.username)}:${encodeUriComponent(cache.password)}@${cache.host}:${cache.port}`;
 
     const sharedEnvironment = {
       AWS_REGION: "us-west-2",
       BASE_URL: baseUrl,
-      ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}`,
+      ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}/${assetReleasePrefix}`,
       DATABASE_URL: databaseUrl,
-      FORCE_SSL: baseUrl.startsWith("https://") ? "true" : "false",
-      LTI_KEY: resolveSecret("LTI_KEY"),
-      LTI_SECRET: resolveSecret("LTI_SECRET"),
-      MAPBOX_ACCESS_TOKEN: resolveSecret("MAPBOX_ACCESS_TOKEN"),
-      MapboxAccessToken: resolveSecret("MAPBOX_ACCESS_TOKEN"),
+      FORCE_SSL: isProduction ? "true" : "false",
+      LTI_KEY: trimSecretValue(resolveSecret("LTI_KEY")),
+      LTI_SECRET: trimSecretValue(resolveSecret("LTI_SECRET")),
+      MAPBOX_ACCESS_TOKEN: trimSecretValue(resolveSecret("MAPBOX_ACCESS_TOKEN")),
+      MapboxAccessToken: trimSecretValue(resolveSecret("MAPBOX_ACCESS_TOKEN")),
       NODE_ENV: "production",
       PORT: "3000",
       RAILS_ENV: "production",
       RAILS_LOG_TO_STDOUT: "true",
       RAILS_MAX_THREADS: isProduction ? "5" : "3",
-      RAILS_MASTER_KEY: resolveSecret("RAILS_MASTER_KEY"),
+      RAILS_MASTER_KEY: trimSecretValue(resolveSecret("RAILS_MASTER_KEY")),
       RAILS_SERVE_STATIC_FILES: "true",
       REDIS_URL: redisUrl,
       S3_BUCKET: mediaBucketName,
       GALA_STATIC_ASSETS_BUCKET: staticAssetsBucketName,
-      SECRET_KEY_BASE: resolveSecret("SECRET_KEY_BASE"),
-      SES_SMTP_PASSWORD: resolveSecret("SES_SMTP_PASSWORD"),
-      SES_SMTP_USERNAME: resolveSecret("SES_SMTP_USERNAME"),
+      GALA_ASSET_PREFIX: assetReleasePrefix,
+      GALA_RELEASE_ID: releaseId,
+      GITHUB_RUN_ID: process.env.GITHUB_RUN_ID ?? "",
+      SECRET_KEY_BASE: trimSecretValue(resolveSecret("SECRET_KEY_BASE")),
+      SES_SMTP_PASSWORD: trimSecretValue(resolveSecret("SES_SMTP_PASSWORD")),
+      SES_SMTP_USERNAME: trimSecretValue(resolveSecret("SES_SMTP_USERNAME")),
       SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
       WEB_CONCURRENCY: isProduction ? "2" : "1",
       COMMIT_SHA: process.env.GITHUB_SHA ?? "",
+      RELEASE: process.env.RELEASE ?? releaseId,
+      RELEASE_URL: process.env.GALA_RELEASE_URL ?? "",
     };
 
     const serviceCapacity = isProduction
       ? { fargate: { weight: 1 } }
       : "spot";
+    const singleTaskDeploymentTransform = isProduction
+      ? {}
+      : {
+          service: (args: any) => {
+            args.deploymentMinimumHealthyPercent = 0;
+            args.deploymentMaximumPercent = 200;
+          },
+        };
 
     const web = new sst.aws.Service("GalaWeb", {
       cluster,
@@ -230,6 +318,7 @@ export default $config({
             timeout: "5 seconds",
             healthyThreshold: 5,
             unhealthyThreshold: 2,
+            successCodes: "200-399",
           },
         },
       },
@@ -240,6 +329,7 @@ export default $config({
         timeout: "5 seconds",
         retries: 3,
       },
+      transform: singleTaskDeploymentTransform,
     });
 
     const worker = new sst.aws.Service("GalaWorker", {
@@ -264,6 +354,7 @@ export default $config({
         timeout: "5 seconds",
         retries: 3,
       },
+      transform: singleTaskDeploymentTransform,
     });
 
     const appOriginId = "gala-app-alb-origin";
@@ -273,30 +364,70 @@ export default $config({
     const publicCatalogCachePaths = [
       "/cases.json",
       "/cases/features.json",
+      "/cases/features",
       "/catalog/languages.json",
       "/catalog/libraries.json",
       "/tags.json",
     ];
-    const publicCatalogCacheBehavior = (pathPattern: string) => ({
+    const thirtyDaysInSeconds = 30 * 24 * 60 * 60;
+    const caseShowCacheTtl = 2 * 60;
+    const caseShowCachePaths = ["/cases/*"];
+    const nonCacheableCaseShowPaths = [
+      "/cases/*/comment_threads*",
+      "/cases/*/comments*",
+      "/cases/*/confirm_deletion*",
+      "/cases/*/locks*",
+      "/cases/*/archive*",
+      "/cases/*/community*",
+      "/cases/*/deployments*",
+      "/cases/*/editorships*",
+      "/cases/*/quizzes*",
+      "/cases/*/settings*",
+      "/cases/*/stats*",
+      "/cases/*/translation*",
+      "/cases/*/edgenotes*",
+      "/cases/*/library*",
+      "/cases/*/libraries*",
+      "/cases/*/enrollment*",
+      "/cases/*/edit*",
+      "/cases/*/copy*",
+      "/cases/*/wiki*",
+      "/cases/*/taggings*",
+      "/cases/*/pages*",
+      "/cases/*/podcasts*",
+      "/cases/*/forums*",
+      "/cases/*/features*",
+    ];
+
+    const appCacheBehavior = (
+      pathPattern: string,
+      cacheSeconds: number,
+    ) => ({
       pathPattern,
       targetOriginId: appOriginId,
       viewerProtocolPolicy: "redirect-to-https",
       allowedMethods: ["GET", "HEAD", "OPTIONS"],
       cachedMethods: ["GET", "HEAD", "OPTIONS"],
       compress: true,
+      responseHeadersPolicyId: browserCompressionHeaders.id,
       minTtl: 0,
-      defaultTtl: 300,
-      maxTtl: 300,
+      defaultTtl: cacheSeconds,
+      maxTtl: cacheSeconds,
       forwardedValues: {
         queryString: true,
-        headers: ["Accept", "Accept-Language", "Authorization"],
+        headers: [
+          "Accept",
+          "Accept-Language",
+          "Accept-Encoding",
+          "Authorization",
+        ],
         cookies: {
           forward: "all",
         },
       },
     });
 
-    const appDistribution = new aws.cloudfront.Distribution("GalaAppDistribution", {
+    const appDistribution = new aws.cloudfront.Distribution(appCdnName, {
       enabled: true,
       comment: `${$app.name}-${stage} app edge cache`,
       origins: [
@@ -317,6 +448,7 @@ export default $config({
         allowedMethods: ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"],
         cachedMethods: ["GET", "HEAD"],
         compress: true,
+        responseHeadersPolicyId: browserCompressionHeaders.id,
         minTtl: 0,
         defaultTtl: 0,
         maxTtl: 0,
@@ -328,7 +460,17 @@ export default $config({
           },
         },
       },
-      orderedCacheBehaviors: publicCatalogCachePaths.map(publicCatalogCacheBehavior),
+      orderedCacheBehaviors: [
+        ...publicCatalogCachePaths.map((pathPattern) =>
+          appCacheBehavior(pathPattern, thirtyDaysInSeconds)
+        ),
+        ...nonCacheableCaseShowPaths.map((pathPattern) =>
+          appCacheBehavior(pathPattern, 0)
+        ),
+        ...caseShowCachePaths.map((pathPattern) =>
+          appCacheBehavior(pathPattern, caseShowCacheTtl)
+        ),
+      ],
       restrictions: {
         geoRestriction: {
           restrictionType: "none",
@@ -340,6 +482,39 @@ export default $config({
       priceClass: "PriceClass_100",
       retainOnDelete: isProduction,
     });
+
+    const appRouter = customDomainEnabled
+      ? isProduction
+        ? new sst.aws.Router("GalaAppRouter", {
+            domain: {
+              name: rootDomain,
+              aliases: [devDomain, devWildcardDomain],
+              dns: sst.cloudflare.dns({
+                ...(cloudflareZoneId ? { zone: cloudflareZoneId } : {}),
+                proxy: cloudflareProxy,
+              }),
+            },
+            transform: {
+              cdn: (args: any) => {
+                args.priceClass = "PriceClass_100";
+                args.retainOnDelete = true;
+              },
+            },
+          })
+        : sst.aws.Router.get(
+            "GalaAppRouter",
+            requireEnv("GALA_ROUTER_DISTRIBUTION_ID"),
+          )
+      : undefined;
+
+    if (appRouter) {
+      if (isProduction) {
+        appRouter.route(`${rootDomain}/`, web.url);
+      } else {
+        appRouter.route(`${devDomain}/`, web.url);
+        appRouter.route(`${devWildcardDomain}/`, web.url);
+      }
+    }
 
     const migration = new sst.aws.Task("GalaMigrate", {
       cluster,
@@ -446,8 +621,19 @@ export default $config({
       appDomain: baseUrl,
       appUrl: web.url,
       appCdnUrl: $interpolate`https://${appDistribution.domainName}`,
+      appCdnDistributionId: appDistribution.id,
+      appCustomDomainUrl: undefined,
+      appRouterUrl: appRouter?.url,
+      appRouterDistributionId: appRouter?.distributionID,
+      previewUrl: baseUrl,
       albBaseUrl: baseUrl,
       staticAssetsCdnUrl: $interpolate`https://${staticAssetsDistribution.domainName}`,
+      staticAssetsDistributionId: staticAssetsDistribution.id,
+      staticAssetReleasePrefix: assetReleasePrefix,
+      releaseId,
+      databaseInstanceId: database.id,
+      webServiceName: web.nodes.service.name,
+      workerServiceName: worker.nodes.service.name,
       migrationClusterArn: migration.cluster,
       migrationTaskDefinitionArn: migration.taskDefinition,
       migrationSubnets: migration.subnets,
