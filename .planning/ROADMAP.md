@@ -254,6 +254,29 @@ Plans:
 **Wave 1**
 - [x] 22-01-PLAN.md — Validate the live app CloudFront path, tune safe anonymous catalog cache TTLs, and remove anonymous private catalog fetch noise.
 
+### Phase 23: Immutable Cloudflare DNS and preview deployment pipeline
+
+**Goal:** Move the AWS deployment pipeline from generated ALB/CloudFront URL validation to SST-owned Cloudflare DNS for `learngala.dev` and preview subdomains, while making deploys release-ID based, S3 asset namespaces immutable, production releases transparent, and rollback/promotion idempotent.
+
+**Requirements:** DPLYIMM-01, DPLYIMM-02, DPLYIMM-03, DPLYIMM-04, DPLYIMM-05, DPLYIMM-06, DPLYIMM-07, DPLYIMM-08, DPLYIMM-09
+
+**Depends on:** Phase 22
+
+**Success Criteria:**
+1. `infra/sst.config.ts` defines the `learngala.dev` app CDN domain through the SST Cloudflare DNS adapter, with production owning the apex and wildcard alias and preview stages using exact branch subdomains.
+2. `.github/workflows/deploy.yml` exposes only the approved five dispatch inputs and refuses non-contributor execution before secrets or AWS credentials are used.
+3. Deploys derive `github_run_id.YYYYMMDDHHMMSS.shortsha` release IDs, upload assets under `releases/<stage>/<release_id>/`, retain only 10 release namespaces per stage, and inject release metadata into Rails.
+4. Production deploys reuse the stage-specific app CDN and keep at most one active stage distribution by default; dormant app distributions are retained only as needed for rollback and cleaned according to the configured retention rules.
+5. Preview deploys publish the live branch subdomain in a PR comment when possible, and production deploys create GitHub releases whose notes are commit lists.
+6. `user_data` supports only explicitly hard-coded operations and rejects secret-looking values.
+7. Cloudflare DNS, release, rollback, and secret expectations are reflected in `.planning/codebase/`, `docs/aws-sst-secret-inventory.md`, and repository safety files.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [ ] 23-01-PLAN.md — Add SST Cloudflare DNS, immutable release asset namespaces, minimal deploy workflow inputs, release metadata, preview comments, and safety docs.
+
 ## Completed Milestones
 
 <details>
@@ -287,6 +310,26 @@ Archive:
 
 ## Coverage
 
-- v1.1 requirements: 66
-- Requirements mapped to phases: 66
+- v1.1 requirements: 75
+- Requirements mapped to phases: 75
 - Unmapped requirements: 0
+
+### Phase 24: Cut Gala production Docker image size with reusable base image and slimmer production Dockerfiles
+
+**Goal:** Reduce the AWS production/runtime Docker image footprint and deploy latency by separating development-only build needs from production runtime needs, introducing a reusable production base image, and ensuring web, worker, migration, and maintenance tasks reuse one app image instead of triggering duplicate SST Docker asset builds.
+
+**Requirements:** IMG-01, IMG-02, IMG-03, IMG-04, IMG-05, IMG-06, IMG-07
+
+**Depends on:** Phase 23
+
+**Success Criteria:**
+1. Production image design is split from development ergonomics: development images may keep broad tooling, but production images include only runtime libraries, app code, compiled assets, and gems required at runtime.
+2. A reusable production base image strategy is documented and implemented so Ruby, system packages, runtime libraries, and stable toolchain layers stay cached across follow-up app image builds.
+3. The production app image target is <= 1.5 GB in ECR/compressed registry size, with measured before/after evidence captured from local Docker and AWS ECR.
+4. SST deploys build or reference one production app image per release and reuse it for web, worker, migration, and maintenance tasks rather than producing duplicated `sst-asset` images per task.
+5. The Docker build context is reduced with a tighter `.dockerignore` and/or dedicated production Dockerfile context so `.git`, local build outputs, caches, and development-only artifacts do not enter production builds.
+6. The Dockerfile follows current Rails/37signals-style production conventions where appropriate: multi-stage build, build-only Node/package tooling, `SECRET_KEY_BASE_DUMMY` asset compilation, Bootsnap precompile, jemalloc where useful, non-root runtime user, and optional Thruster evaluation without adding unnecessary runtime weight.
+7. Validation is safe and non-destructive: no Heroku production mutation, no Heroku database/Redis reuse, no SES mutation, no retained `msc-gala` S3 media bucket mutation, and all AWS checks use `AWS_PROFILE=gala AWS_REGION=us-west-2` with `SST_STAGE=dev` unless a separate production deploy gate is explicitly approved.
+
+**Plans:** Not planned yet
+
