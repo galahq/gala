@@ -185,8 +185,8 @@ jobs:
           fi
           CONTRIBUTORS="$(git log --format='%an <%ae>' -n 25 | sort -u | paste -sd ',' -)"
           FILES_CHANGED="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) files? changed.*/\1/p')"
-          ADDITIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) insertions?\\(\\+\\).*/\1/p')"
-          DELETIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) deletions?\\(-\\).*/\1/p')"
+          ADDITIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) insertions?\(\+\).*/\1/p')"
+          DELETIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) deletions?\(-\).*/\1/p')"
           FILES_CHANGED="${FILES_CHANGED:-0}"
           ADDITIONS="${ADDITIONS:-0}"
           DELETIONS="${DELETIONS:-0}"
