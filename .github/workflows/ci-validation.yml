@@ -36,6 +36,7 @@ jobs:
       PR_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
       PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
       PR_BASE_REF: ${{ github.event.pull_request.base.ref || '' }}
+      SYSTEM_SMOKE_URL: ${{ vars.GALA_CI_SMOKE_URL }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -148,7 +149,12 @@ jobs:
 
           run_suite unit "report unit tests" "node --test scripts/ci/*.test.mjs" 120
           run_suite integration "request specs" "./run-rspec.sh spec/requests/case_routes_spec.rb" 240
-          run_suite system "visual harness list" "pnpm test:visual -- --list" 120
+          if [[ -n "${SYSTEM_SMOKE_URL:-}" ]]; then
+            run_suite system "HTTP smoke" "curl --fail --show-error --silent --location --max-time 20 --output /dev/null --write-out 'http_code=%{http_code} url=%{url_effective}\n' \"${SYSTEM_SMOKE_URL}\"" 30
+          else
+            printf '%s\n' "GALA_CI_SMOKE_URL is not configured. Manual operator system validation: curl --fail --location --max-time 20 <target-url>." > "${CI_VALIDATION_DIR}/system.log"
+            append_suite system "HTTP smoke" "curl --fail --location --max-time 20 <target-url>" "not_run" "manual operator run; GALA_CI_SMOKE_URL not configured" "Playwright is not run in CI. Use curl against the selected preview or cutover-candidate URL." "${CI_VALIDATION_DIR}/system.log" 0 0 false "manual operator smoke: curl --fail --location --max-time 20 <target-url>"
+          fi
 
           SST_REFRESH_STATUS="not_run"
           SST_REFRESH_REASON="AWS credentials or dev SST stage unavailable"
