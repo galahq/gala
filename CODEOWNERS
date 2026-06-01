@@ -10,6 +10,8 @@
 /.github/workflows/                     @waisaed @papes1ns @cbothner @michaelkli1998
 /infra/                                 @waisaed @papes1ns @cbothner @michaelkli1998
 /scripts/deploy-sst.sh                  @waisaed @papes1ns @cbothner @michaelkli1998
+/scripts/ops/                           @waisaed @papes1ns @cbothner @michaelkli1998
+/docs/ops/workflows/                    @waisaed @papes1ns @cbothner @michaelkli1998
 
 # Dependencies (supply chain)
 /Gemfile                                @waisaed @papes1ns @cbothner @michaelkli1998
