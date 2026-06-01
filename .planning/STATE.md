@@ -4,8 +4,8 @@ milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
 stopped_at: Phase 24 context gathered
-last_updated: "2026-06-01T04:19:16.300Z"
-last_activity: 2026-06-01 -- Phase 24 planning complete
+last_updated: "2026-06-01T04:21:24.558Z"
+last_activity: 2026-06-01 -- Phase 24 execution started
 progress:
   total_phases: 15
   completed_phases: 14
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 23 remains the active AWS/Cloudflare stabilization phase; Phase 24 is queued next to reduce production Docker image size and eliminate duplicate SST image builds.
+**Current focus:** Phase 24 — cut-gala-production-docker-image-size-with-reusable-base-ima
 
 ## Current Position
 
-Phase: 23 — Immutable Cloudflare DNS and preview deployment pipeline
-Plan: 23-01
-Status: Ready to execute
-Last activity: 2026-06-01 -- Phase 24 planning complete
+Phase: 24 (cut-gala-production-docker-image-size-with-reusable-base-ima) — EXECUTING
+Plan: 1 of 2
+Status: Executing Phase 24
+Last activity: 2026-06-01 -- Phase 24 execution started
 
 ## Milestone
 
