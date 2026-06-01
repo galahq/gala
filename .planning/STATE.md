@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
-status: completed
-stopped_at: Phase 28 context gathered
-last_updated: "2026-06-01T09:10:15.159Z"
-last_activity: 2026-06-01
+status: executing
+stopped_at: Phase 28 planning complete
+last_updated: "2026-06-01T09:30:57.563Z"
+last_activity: 2026-06-01 -- Phase 28 planning complete
 progress:
   total_phases: 19
   completed_phases: 18
-  total_plans: 24
+  total_plans: 28
   completed_plans: 25
-  percent: 100
+  percent: 89
 ---
 
 # GSD State
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 27 — spot-and-remove-ambiguous-environment-variables-like-the-git
+**Current focus:** Phase 28 — verify-arm-ecs-fargate-runtime-architecture-and-resolve-thru
 
 ## Current Position
 
-Phase: 27
-Plan: Not started
-Status: Milestone complete
-Last activity: 2026-06-01
+Phase: 28
+Plan: 1 of 4
+Status: Ready to execute
+Last activity: 2026-06-01 -- Phase 28 planning complete
 
 ## Milestone
 

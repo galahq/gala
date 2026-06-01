@@ -396,3 +396,32 @@ Plans:
 
 Plans:
 - [x] TBD (run /gsd-plan-phase 27 to break down) (completed 2026-06-01)
+
+### Phase 28: Verify ARM ECS Fargate runtime architecture and resolve Thruster AWS fit
+
+**Goal:** Determine whether Gala's AWS/SST production image and ECS Fargate web, worker, migration, and one-off task definitions can safely run on ARM64, then close the prior Thruster research by deciding whether Thruster adds real value in the current CloudFront/S3 static asset plus ECS Puma compute architecture or should be retired as a self-hosted-server-oriented experiment.
+
+**Requirements**: TBD
+**Depends on:** Phase 27
+
+**Success Criteria:**
+1. Current Dockerfile, SST task definitions, GitHub Actions build path, ECR image publishing, and ECS Fargate runtime settings are audited for explicit x86_64/amd64 assumptions and ARM64 compatibility.
+2. A low-risk validation path proves or disproves ARM64 image builds and ECS Fargate task runtime for web, worker, migration, and one-off maintenance tasks without mutating Heroku production or `.com` DNS.
+3. Cost, performance, operational simplicity, and long-term maintenance tradeoffs are documented for ARM64 versus the current architecture, including rollback to x86_64/amd64.
+4. Thruster research is reconciled against Gala's actual AWS edge model: CloudFront and S3 serve fingerprinted/static assets with caching while ECS Puma handles dynamic Rails compute.
+5. If Thruster mainly benefits a self-hosted single-server asset-serving model and does not improve Gala's CloudFront/S3/ECS design, the spike is closed with a clear no-adopt decision and any stale references removed or documented.
+6. Any accepted architecture change includes targeted local checks, read-only AWS/SST inspection where possible, and explicit operator validation steps before production adoption.
+
+**Plans:** 4 plans
+
+Plans:
+- [ ] 28-01: Add explicit container architecture controls
+- [ ] 28-02: Prove ARM64 image build and read-only dev rendering
+- [ ] 28-03: Validate ARM64 in dev ECS and prove rollback
+- [ ] 28-04: Finalize ARM64 and Thruster architecture decisions
+
+**Cross-cutting constraints:**
+- D-08: Evidence includes task definition architecture, image architecture, rollback path, and operator notes.
+- D-04: Production defaults may flip to ARM64 only after dev ARM64 proof passes.
+- D-20: ARM64 production default requires task-definition rollback proof.
+- D-23: Incomplete rollback proof blocks the ARM64 production default flip.
