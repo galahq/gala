@@ -425,3 +425,32 @@ Plans:
 - D-04: Production defaults may flip to ARM64 only after dev ARM64 proof passes.
 - D-20: ARM64 production default requires task-definition rollback proof.
 - D-23: Incomplete rollback proof blocks the ARM64 production default flip.
+
+### Phase 29: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
+
+- [x] Phase 29: Complete (2026-06-01)
+
+**Goal:** Produce a CODEOWNER-facing `SPEND.md` report that inventories the AWS platform described by `infra/sst.config.ts` and the live SST-tracked AWS resources, frames current and projected cost in capex/opex dimensions, and supports an informed Heroku-to-AWS migration decision with clear cost growth and cost-cut recommendations.
+
+**Success Criteria:**
+1. `infra/sst.config.ts`, SST outputs/state where available, GitHub workflow deploy behavior, and live AWS resources are reconciled into a concrete platform inventory covering ECS/Fargate, ECR images, ALB, CloudFront distributions, S3 asset/media buckets, database/cache resources, logs, DNS, secrets, and operational workflows.
+2. `SPEND.md` separates capex-style one-time engineering/migration costs from opex-style recurring cloud/runtime/operator costs, with assumptions stated tersely and evidence linked to repository files or read-only AWS CLI observations.
+3. Current AWS spend drivers are estimated with enough rigor for a migration decision: compute sizing, always-on versus burst workloads, data transfer, cache/CDN effects, storage retention, logs, image/build artifacts, NAT/networking exposure if present, and GitHub Actions/operator workload costs where relevant.
+4. The report models how cost grows under at least low, expected, and high usage scenarios, including catalog traffic, authenticated case activity, background jobs, preview environments, release asset retention, CloudFront cache hit ratio, database/storage growth, and log volume.
+5. The report identifies the highest-leverage cost-cut opportunities and safety tradeoffs, including rightsizing ECS tasks, ARM64 adoption if Phase 28 proves it, preview lifecycle/TTL, image and asset retention, log retention, cache policy tuning, database/cache sizing, and removing unused distributions or duplicated infrastructure.
+6. The report compares AWS migration economics against the current Heroku posture without requiring destructive Heroku changes, and calls out migration risks, unknowns, validation gaps, and decision thresholds for staying on Heroku, hybrid operation, or moving fully to AWS.
+7. Validation uses read-only AWS commands with `AWS_PROFILE=gala AWS_REGION=us-west-2`, avoids production mutation, and documents any pricing assumptions that cannot be verified directly from tracked infra.
+
+**Requirements**: TBD
+**Depends on:** Phase 28
+**Plans:** 3/3 plans complete
+
+Plans:
+**Wave 1**
+- [x] 29-01-PLAN.md - Build AWS spend inventory and pricing evidence.
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [x] 29-02-PLAN.md - Model capex opex growth and cost-cut decisions.
+
+**Wave 3** *(blocked on Wave 2 completion)*
+- [x] 29-03-PLAN.md - Validate SPEND.md and harden decision quality.

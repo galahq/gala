@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: Phase 28 plan 28-01 complete
-last_updated: "2026-06-01T09:43:28Z"
-last_activity: 2026-06-01 -- Phase 28 plan 28-01 complete
+stopped_at: Phase 29 complete
+last_updated: "2026-06-01T15:35:00Z"
+last_activity: 2026-06-01 -- Phase 29 SPEND.md report completed
 progress:
-  total_phases: 19
-  completed_phases: 18
-  total_plans: 28
-  completed_plans: 26
-  percent: 93
+  total_phases: 20
+  completed_phases: 19
+  total_plans: 31
+  completed_plans: 29
+  percent: 94
 ---
 
 # GSD State
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 28 — verify-arm-ecs-fargate-runtime-architecture-and-resolve-thru
+**Current focus:** Phase 28 - verify-arm-ecs-fargate-runtime-architecture-and-resolve-thru
 
 ## Current Position
 
 Phase: 28
 Plan: 2 of 4
-Status: Ready to execute
-Last activity: 2026-06-01 -- Phase 28 plan 28-01 complete
+Status: Paused before live ARM64 deployment/rollback validation
+Last activity: 2026-06-01 -- Phase 29 SPEND.md report completed; Phase 28 ARM64 proof remains open
 
 ## Milestone
 
@@ -95,6 +95,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 23 added: Immutable Cloudflare DNS and preview deployment pipeline
 - Phase 27 added: spot and remove ambiguous environment variables like the GIT_* ones defined in the task definitions if the value is empty or blank then it shall be removed
 - Phase 28 added: Verify ARM ECS Fargate runtime architecture and resolve Thruster AWS fit
+- Phase 29 added: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
+- Phase 29 completed: root `SPEND.md` now records SST-tracked AWS inventory, May 2026 account-wide spend evidence, capex/opex framing, growth scenarios, cost-cut recommendations, Heroku stay/hybrid/migrate thresholds, drift, and unknowns.
 
 ## Notes
 
