@@ -35,17 +35,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.0
+          run_install: false
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24.15.0
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
-
-      - name: Enable pnpm
-        run: |
-          set -euo pipefail
-          corepack enable
-          corepack prepare pnpm@11.1.0 --activate
 
       - name: Prepare validation directory
         run: mkdir -p "${CI_VALIDATION_DIR}"
